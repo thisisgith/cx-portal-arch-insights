@@ -1,0 +1,35 @@
+# temporary until we find another suitable image
+image: blakecallens/nodejs-chromium
+
+stages:
+  - audit
+  - lint
+  - test
+
+# add 'node_modules' to cache for speeding up builds
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths: 
+    - node_modules/ # Node modules and dependencies
+
+# install our node modules for later stages
+before_script:
+  - npm install --package-lock=true --audit=false
+
+# run npm audit to verify depdency security
+audit:
+  stage: audit
+  script:
+    - npm audit
+
+# run our lint process against the committed files
+lint:
+  stage: lint
+  script:
+    - npm run lint
+
+# run our test:ci process for the commit
+test:
+  stage: test
+  script:
+    - npm run test:ci
