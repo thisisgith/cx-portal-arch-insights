@@ -24,6 +24,10 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { I18n, Language } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 
+/**
+ * Base application component which handles loading i18n as well as navigation
+ * spinners
+ */
 @Component({
 	selector: 'app-root',
 	styleUrls: ['./app.component.scss'],
@@ -37,14 +41,13 @@ export class AppComponent implements OnInit {
 	@ViewChild('routerElement')
 	private routerElement: ElementRef;
 
+	/**
+	 * Options represent those used by cui-header
+	 */
 	public headerOptions = {
-		breadcrumbs: [
-			{
-				label: 'Home',
-				url: '/',
-			},
-		],
-		menuToggleButton: true,
+		compressed: true,
+		menuToggleButton: false,
+		showBrandingLogo: true,
 		title: '',
 	};
 
@@ -62,10 +65,16 @@ export class AppComponent implements OnInit {
 		);
 	}
 
+	/**
+	 * Begins the process of loading the page
+	 */
 	public ngOnInit () {
 		this.loadI18n();
 	}
 
+	/**
+	 * Fetches locale specific as well as the en-US i18n files and loads them into our dictionary
+	 */
 	private loadI18n () {
 		forkJoin(
 			this.getI18n(`assets/i18n/${Language.getPreferred()}.json`),
@@ -88,6 +97,12 @@ export class AppComponent implements OnInit {
 		);
 	}
 
+	/**
+	 * Getter function which will return an API call to get the i18n files
+	 *
+	 * @param path Path of the i18n JSON file
+	 * @returns The observable representing the HTTP GET call
+	 */
 	private getI18n (path: string): Observable<object | { }> {
 		return this.http.get(path)
 		.pipe(
@@ -100,7 +115,11 @@ export class AppComponent implements OnInit {
 		);
 	}
 
-	// Shows and hides the loading spinner during RouterEvent changes
+	/**
+	 * Shows and hides the loading spinner during RouterEvent changes
+	 *
+	 * @param event The RouterEvent object
+	 */
 	private navigationInterceptor (event: RouterEvent): void {
 		if (event instanceof NavigationStart) {
 			this.showSpinner();
@@ -112,9 +131,11 @@ export class AppComponent implements OnInit {
 		}
 	}
 
+	/**
+	 * Hides the loading spinner,
+	 * run outside of Angular zone to bypass change detection
+	 */
 	private hideSpinner (): void {
-		// we wanna run this function outside of Angular's zone to
-		// bypass change detection
 		this.ngZone.runOutsideAngular(() => {
 			this.renderer.setElementStyle(
 				this.spinnerElement.nativeElement,
@@ -129,9 +150,11 @@ export class AppComponent implements OnInit {
 		});
 	}
 
+	/**
+	 * Shows the loading spinner,
+	 * run outside of Angular zone to bypass change detection
+	 */
 	private showSpinner (): void {
-		// We wanna run this function outside of Angular's zone to
-		// bypass change detection
 		this.ngZone.runOutsideAngular(() => {
 			// for simplicity we are going to turn opacity on/off
 			// you could add.remove a slcass for more advanced styling

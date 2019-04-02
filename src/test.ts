@@ -7,7 +7,10 @@ import {
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
 
-declare const require: any;
+/**
+ * Require is used by karma to load spec files
+ */
+declare const require: any; // tslint:disable-line:no-any
 
 // First, initialize the Angular testing environment.
 getTestBed()
@@ -16,7 +19,9 @@ getTestBed()
 		platformBrowserDynamicTesting(),
 );
 
-// Then we find all the tests.
+/**
+ * context represents all of the tests found via require
+ */
 const context = require.context('./', true, /\.spec\.ts$/);
 
 // And load the modules.

@@ -29,7 +29,13 @@ lint:
     - npm run lint
 
 # run our test:ci process for the commit
-test:
+unit:
   stage: test
   script:
     - npm run test:ci
+
+# run out test:automation process for the commit
+automation:
+  stage: test
+  script:
+    - npm run test:automation

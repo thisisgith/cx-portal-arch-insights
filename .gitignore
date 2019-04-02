@@ -4,7 +4,12 @@
 /dist
 /tmp
 /out-tsc
-/src/environments
+
+cypress/tmp
+cypress/screenshots
+cypress/videos
+cypress/fixtures/tmp
+
 # Only exists if Bazel was run
 /bazel-out
 

@@ -1,12 +1,16 @@
-<cui-header [title]="'_ApplicationName_' | i18n"></cui-header>
-<main>
-	<div #routerElement>
-		<router-outlet></router-outlet>
+<div class="content-wrapper">
+	<cui-header [title]="'_ApplicationName_' | i18n"
+		[options]="headerOptions">
+	</cui-header>
+	<div class="content">
+		<div #routerElement>
+			<router-outlet></router-outlet>
+		</div>
+		<div #spinnerElement class="absolute-center">
+			<cui-spinner></cui-spinner>
+		</div>
 	</div>
-	<div #spinnerElement class="absolute-center">
-		<cui-spinner></cui-spinner>
-	</div>
-	<cui-toaster></cui-toaster>
-	<cui-modal></cui-modal>
-</main>
-<cui-footer [showLegal]="true"></cui-footer>
+	<cui-footer [showLegal]="true"></cui-footer>
+</div>
+<cui-toaster></cui-toaster>
+<cui-modal></cui-modal>

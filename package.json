@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"scripts": {
 		"ng": "ng",
-		"start": "npx ngdeploy dev local --no-validate --env-only --source='src' && ng serve",
+		"start": "ng serve",
 		"sync": "npx ngdeploy -vns --source='src'",
 		"deploy": "npx ngdeploy dev --source='src'",
 		"deploy:auto": "npx ngdeploy qa -vn --source='src' --gzip --ng-build=\"--aot\"",
@@ -16,6 +16,7 @@
 		"build:docs": "npx compodoc -n \"persona-based-console Documentation\" -d /documentation --disablePrivate --hideGenerator --unitTestCoverage coverage/coverage-summary.json",
 		"test": "ngdeploy --env-only --source='src' && ng test --source-map=true --browsers=ChromeHeadless --code-coverage",
 		"test:ci": "npm run test -- --watch=false",
+		"test:automation": "npx cypress run",
 		"posttest": "npx istanbul report --include **/coverage-final.json json && combine-coverage.js",
 		"lint": "npx apolloLint lint --type=* --path=*"
 	},
@@ -36,7 +37,7 @@
 	},
 	"devDependencies": {
 		"@angular-devkit/build-angular": "~0.13.0",
-		"@apollo/schematics": "^1.0.0",
+		"@apollo/schematics": "^1.0.1",
 		"@apollo/linting": "^1.0.2",
 		"@apollo/configs": "^1.0.1",
 		"@angular/cli": "~7.3.5",
@@ -52,40 +53,17 @@
 		"@cisco-ngx/cui-utils": "^7.0.0",
 		"cisco-ui": "~1.3.4",
 		"codelyzer": "~4.5.0",
+		"cypress": "3.1.5",
+		"cypress-xpath": "^1.3.0",
+		"eslint-plugin-cypress": "^2.2.1",
+		"istanbul-api": "^2.1.1",
+		"istanbul-lib-coverage": "^2.0.3",
 		"ngdeploy": "^1.3.0",
 		"protractor": "~5.4.0",
 		"ts-node": "~7.0.0",
 		"typescript": "~3.2.2"
 	},
 	"cisco": {
-		"config": {
-			"client": {
-				"*": {
-					"origin": "https://swtgdev-apollo-2.cisco.com",
-					"production": false
-				},
-				"local": {
-					"auth": {
-						"tokenUrl": "https://swtgdev-apollo-2.cisco.com/ws/oauth/v3/token/cway/{INSERT_CLIENT_ID}",
-						"accountUrl": "https://swtgdev-apollo-2.cisco.com/ws/account/v2/",
-						"referUrl": "https://swtgdev-apollo-2.cisco.com/ws/oauth/v3/sso/"
-					}
-				},
-				"dev": {},
-				"auto": {
-					"production": true
-				},
-				"qa": {
-					"production": true
-				},
-				"stage": {
-					"production": true
-				},
-				"prod": {
-					"production": true
-				}
-			}
-		},
 		"app-descriptor": {
 			"appId": "@APP_ID@",
 			"name": "persona-based-console",

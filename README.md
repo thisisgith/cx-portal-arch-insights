@@ -1,3 +1,6 @@
+[![pipeline status](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/badges/master/pipeline.svg)](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/commits/master)
+[![coverage report](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/badges/master/coverage.svg)](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/commits/master)
+
 # PersonaBasedConsole
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.5.

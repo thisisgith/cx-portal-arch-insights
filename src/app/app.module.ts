@@ -28,6 +28,9 @@ import {
 	LogService,
 } from '@cisco-ngx/cui-services';
 
+/**
+ * Default module for the application
+ */
 @NgModule({
 	bootstrap: [AppComponent],
 	declarations: [
@@ -50,7 +53,7 @@ import {
 	providers: [
 		CuiModalService,
 		LogService,
-		{ provide: APP_BASE_HREF, useValue: '/PersonaBasedConsole/' },
+		{ provide: APP_BASE_HREF, useValue: '/pbc/' },
 		{ provide: 'ENVIRONMENT', useValue: environment },
 	],
 })
