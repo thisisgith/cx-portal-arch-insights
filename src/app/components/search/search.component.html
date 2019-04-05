@@ -1,0 +1,20 @@
+<div class="form-group input--icon">
+	<form [formGroup]="searchForm" novalidate>
+		<div class="form-group__text">
+			<input id="input-type-search" type="text" #searchInput formControlName="search"
+				[placeholder]="'_SearchLabel_' | i18n" ngDefaultControl>
+			<button type="button" class="link">
+				<span class="icon-search"></span>
+			</button>
+		</div>
+	</form>
+</div>
+
+<div class="modal-container" *ngIf="!hidden">
+	<div class="modal-backdrop" [ngClass]="{ hide: hidden }"></div>
+	<div class="modal modal--large" [ngClass]="{ hide: hidden }">
+		<div class="modal__dialog">
+			<app-search-results></app-search-results>
+		</div>
+	</div>
+</div>

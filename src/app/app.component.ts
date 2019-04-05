@@ -1,9 +1,5 @@
 import {
 	Component,
-	NgZone,
-	Renderer,
-	ElementRef,
-	ViewChild,
 	OnInit,
 } from '@angular/core';
 
@@ -35,11 +31,10 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class AppComponent implements OnInit {
 
-	@ViewChild('spinnerElement')
-	private spinnerElement: ElementRef;
-
-	@ViewChild('routerElement')
-	private routerElement: ElementRef;
+	public status = {
+		i18n: false,
+		loading: true,
+	};
 
 	/**
 	 * Options represent those used by cui-header
@@ -54,13 +49,19 @@ export class AppComponent implements OnInit {
 	constructor (
 		private http: HttpClient,
 		private router: Router,
-		private ngZone: NgZone,
-		private renderer: Renderer,
 		private logger: LogService,
 	) {
 		this.router.events.subscribe(
 			(event: RouterEvent): void => {
-				this.navigationInterceptor(event);
+				if (event instanceof NavigationStart) {
+					this.status.loading = true;
+				}
+
+				if (event instanceof NavigationEnd
+						|| event instanceof NavigationCancel
+						|| event instanceof NavigationError) {
+					this.status.loading = false;
+				}
 			},
 		);
 	}
@@ -74,21 +75,30 @@ export class AppComponent implements OnInit {
 
 	/**
 	 * Fetches locale specific as well as the en-US i18n files and loads them into our dictionary
+	 *
+	 * @ignore
 	 */
 	private loadI18n () {
-		forkJoin(
-			this.getI18n(`assets/i18n/${Language.getPreferred()}.json`),
+		const preferredLanguage = Language.getPreferred();
+		const observables = [
 			this.getI18n('assets/i18n/en-US.json'),
-		)
+		];
+
+		if (preferredLanguage !== 'en-US') {
+			observables.push(this.getI18n(`assets/i18n/${Language.getPreferred()}.json`));
+		}
+
+		forkJoin(observables)
 		.subscribe(
-			([preferred, enUS]) => {
+			([enUS, preferred]) => {
 				if (preferred) {
 					I18n.injectDictionary(preferred);
 				}
 				if (enUS) {
-					I18n.injectDictionary(preferred, false);
+					I18n.injectDictionary(enUS, false);
 				}
 
+				this.status.i18n = true;
 				this.headerOptions.title = I18n.get('_ApplicationName_');
 			},
 			() => {
@@ -100,6 +110,7 @@ export class AppComponent implements OnInit {
 	/**
 	 * Getter function which will return an API call to get the i18n files
 	 *
+	 * @ignore
 	 * @param path Path of the i18n JSON file
 	 * @returns The observable representing the HTTP GET call
 	 */
@@ -113,62 +124,5 @@ export class AppComponent implements OnInit {
 				return of({ });
 			}),
 		);
-	}
-
-	/**
-	 * Shows and hides the loading spinner during RouterEvent changes
-	 *
-	 * @param event The RouterEvent object
-	 */
-	private navigationInterceptor (event: RouterEvent): void {
-		if (event instanceof NavigationStart) {
-			this.showSpinner();
-		}
-		if (event instanceof NavigationEnd
-				|| event instanceof NavigationCancel
-				|| event instanceof NavigationError) {
-			this.hideSpinner();
-		}
-	}
-
-	/**
-	 * Hides the loading spinner,
-	 * run outside of Angular zone to bypass change detection
-	 */
-	private hideSpinner (): void {
-		this.ngZone.runOutsideAngular(() => {
-			this.renderer.setElementStyle(
-				this.spinnerElement.nativeElement,
-				'display',
-				'none',
-			);
-			this.renderer.setElementStyle(
-				this.routerElement.nativeElement,
-				'display',
-				'block',
-			);
-		});
-	}
-
-	/**
-	 * Shows the loading spinner,
-	 * run outside of Angular zone to bypass change detection
-	 */
-	private showSpinner (): void {
-		this.ngZone.runOutsideAngular(() => {
-			// for simplicity we are going to turn opacity on/off
-			// you could add.remove a slcass for more advanced styling
-			// and enter/leave animation for spinner
-			this.renderer.setElementStyle(
-				this.spinnerElement.nativeElement,
-				'display',
-				'block',
-			);
-			this.renderer.setElementStyle(
-				this.routerElement.nativeElement,
-				'display',
-				'none',
-			);
-		});
 	}
 }
