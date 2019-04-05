@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/documentation
 
 cypress/tmp
 cypress/screenshots
