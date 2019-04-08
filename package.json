@@ -4,6 +4,7 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
+		"start:background": "npm start & npx wait-on http-get://localhost:4200",
 		"sync": "npx ngdeploy -vns --source='src'",
 		"deploy": "npx ngdeploy dev --source='src'",
 		"deploy:auto": "npx ngdeploy qa -vn --no-environment --source='src' --gzip --ng-build=\"--aot\"",
@@ -61,7 +62,8 @@
 		"ngdeploy": "^2.0.0",
 		"protractor": "~5.4.0",
 		"ts-node": "~7.0.0",
-		"typescript": "~3.2.2"
+		"typescript": "~3.2.2",
+		"wait-on": "^3.2.0"
 	},
 	"cisco": {
 		"app-descriptor": {
