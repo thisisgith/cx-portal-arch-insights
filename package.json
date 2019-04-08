@@ -18,7 +18,8 @@
 		"test:ci": "npm run test -- --watch=false",
 		"test:automation": "npx cypress run",
 		"posttest": "npx istanbul report --include **/coverage-final.json json && node combine-coverage.js",
-		"lint": "npx apolloLint lint"
+		"lint": "npx apolloLint lint",
+		"cypress": "npx cypress open"
 	},
 	"private": true,
 	"dependencies": {
