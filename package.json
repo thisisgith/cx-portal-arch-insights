@@ -4,6 +4,7 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
+		"start:background": "npm start & npx wait-on http-get://localhost:4200",
 		"sync": "npx ngdeploy -vns --source='src'",
 		"deploy": "npx ngdeploy dev --source='src'",
 		"deploy:auto": "npx ngdeploy qa -vn --no-environment --source='src' --gzip --ng-build=\"--aot\"",
@@ -18,7 +19,8 @@
 		"test:ci": "npm run test -- --watch=false",
 		"test:automation": "npx cypress run",
 		"posttest": "npx istanbul report --include **/coverage-final.json json && node combine-coverage.js",
-		"lint": "npx apolloLint lint"
+		"lint": "npx apolloLint lint",
+		"cypress": "npx cypress open"
 	},
 	"private": true,
 	"dependencies": {
@@ -54,14 +56,14 @@
 		"cisco-ui": "~1.3.4",
 		"codelyzer": "~4.5.0",
 		"cypress": "3.1.5",
-		"cypress-xpath": "^1.3.0",
 		"eslint-plugin-cypress": "^2.2.1",
 		"istanbul-api": "^2.1.1",
 		"istanbul-lib-coverage": "^2.0.3",
 		"ngdeploy": "^2.0.0",
 		"protractor": "~5.4.0",
 		"ts-node": "~7.0.0",
-		"typescript": "~3.2.2"
+		"typescript": "~3.2.2",
+		"wait-on": "^3.2.0"
 	},
 	"cisco": {
 		"app-descriptor": {
