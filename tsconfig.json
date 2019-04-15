@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"baseUrl": "./",
 		"paths": {
-			"@components/*": ["src/app/components/*"]
+			"@components/*": ["src/app/components/*"],
+			"@environment": ["src/environments/environment.ts"]
 		}
 	}
 }

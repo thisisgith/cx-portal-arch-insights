@@ -16,6 +16,12 @@
 			</div>
 		</div>
 		<div class="header-toolbar">
+			<a *ngIf="mocking"
+				data-auto-id="MockingSettings"
+				(click)="openMockModal()"
+				class="btn btn--icon btn--small">
+				<span class="icon-diagnostics"></span>
+			</a>
 			<a class="btn btn--small btn--icon">
 				<span class="icon-briefcase"></span>
 			</a>
@@ -23,7 +29,7 @@
 				<span class="icon-comment"></span>
 			</a>
 			<a class="btn btn--icon btn--small">
-				<span class="icon-cog"></span>
+				<span class="icon-learning"></span>
 			</a>
 		</div>
 	</div>

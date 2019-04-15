@@ -6,13 +6,13 @@ import { Routes, RouterModule } from '@angular/router';
  */
 const routes: Routes = [
 	{
-		loadChildren: './pages/inventory/inventory.module#InventoryModule',
+		loadChildren: './pages/solution/solution.module#SolutionModule',
 		path: '',
 		pathMatch: 'full',
 	},
 	{
-		loadChildren: './pages/solution/solution.module#SolutionModule',
-		path: 'solutions',
+		loadChildren: './pages/inventory/inventory.module#InventoryModule',
+		path: 'metrics',
 		pathMatch: 'full',
 	},
 	{

@@ -9,16 +9,17 @@ stages:
 
 # add 'node_modules' to cache for speeding up builds
 cache:
-  key: "$CI_COMMIT_REF_SLUG"
+  key: "PIPELINE-$CI_PIPELINE_ID"
   paths: 
     - node_modules/ # Node modules and dependencies
+    - package-lock.json # cache package-lock for audit
 
 setup:
   stage: setup
   script:
     - npm install --package-lock=true --audit=false
 
-# run npm audit to verify depdency security
+# run npm audit to verify dependency security
 audit:
   stage: audit
   allow_failure: true # temporary until @compodoc fixes their vulnerability issue, since this is only used for document generation, I dont consider it breaking

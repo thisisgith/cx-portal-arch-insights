@@ -1,24 +1,32 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SearchComponent } from './search.component';
+import { SearchComponent, HighlightPipe } from './search.component';
 import {
-	I18nPipeModule,
+	I18nPipeModule, TruncatePipeModule,
 } from '@cisco-ngx/cui-pipes';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SearchResultsModule } from './search-results/search-results.module';
+import { SearchService } from './search.service';
+import { CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import { HttpClientModule } from '@angular/common/http';
 
 /**
  * Module representing the Search Component
  */
 @NgModule({
-	declarations: [SearchComponent],
+	declarations: [
+		HighlightPipe,
+		SearchComponent,
+	],
 	exports: [SearchComponent],
 	imports: [
 		CommonModule,
+		CuiSpinnerModule,
 		FormsModule,
+		HttpClientModule,
 		I18nPipeModule,
 		ReactiveFormsModule,
-		SearchResultsModule,
+		TruncatePipeModule,
 	],
+	providers: [SearchService],
 })
 export class SearchModule { }
