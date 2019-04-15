@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -72,9 +72,8 @@ describe('AppComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should load the i18n files', fakeAsync(() => {
+	it('should load the i18n files', () => {
 		const title = 'Persona Based Console';
-		tick(500);
 		fixture.detectChanges();
 
 		fixture.whenStable()
@@ -82,10 +81,9 @@ describe('AppComponent', () => {
 				expect(I18n.get('_ApplicationName_'))
 					.toBe(title);
 			});
-	}));
+	});
 
 	it('should show the header', () => {
-		component.status.i18n = true;
 		fixture.detectChanges();
 		de = fixture.debugElement.query(By.directive(HeaderComponent));
 		expect(de)
