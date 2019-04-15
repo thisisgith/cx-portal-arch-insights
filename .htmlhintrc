@@ -22,5 +22,6 @@
 	"href-abs-or-rel": false,
 	"attr-unsafe-chars": true,
 	"head-script-disabled": true,
-	"auto-id-require": true
+	"auto-id-require": true,
+	"balanced-brackets-parens": true
 }
