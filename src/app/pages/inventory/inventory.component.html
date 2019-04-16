@@ -1,3 +1,106 @@
-<p>
-	inventory works!
-</p>
+<div class="page-container">
+	<div class="row">
+		<div class="col-md-2">
+			<app-sidebar></app-sidebar>
+		</div>
+		<div class="col-md-10 base-margin-top base-margin-bottom">
+			<div class="panel">
+				<div class="row">
+					<div id="rightarrow" class="col-md-1">
+						<div class="flex-center">
+							<span class="icon-right-arrow icon-medium"></span>
+						</div>
+					</div>
+					<div class="container space-around col-md-10">
+						<div>
+							<div align="center" data-auto-id="vulnerabilityTitle" class="subheader" [innerHtml]= "'_Vulnerability_' | i18n"></div>
+							<div class="progressbar progressbar--warning" data-percentage="70">
+								<div class="progressbar__fill"></div>
+							</div>
+							<div align="center">
+								<img alt="'_Vulnerability_' | i18n" src="assets/img/inventory/vulnerability.png">
+							</div>
+						</div>
+						<div id="networkhealth">
+							<div align="center" data-auto-id="networkhealthTitle" class="subheader" [innerHtml]= "'_NetworkHealth_' | i18n"></div>
+							<div class="progressbar progressbar--success" data-percentage="80">
+								<div class="progressbar__fill"></div>
+							</div>
+							<div align="center">
+								<img alt="'_NetworkHealth_' | i18n" src="assets/img/inventory/networkhealth.png">
+							</div>
+						</div>
+						<div id="contracts">
+							<div>
+								<div align="center" data-auto-id="contractsTitle" class="subheader" [innerHtml]= "'_Contracts_' | i18n"></div>
+								<div class="progressbar progressbar--warning" data-percentage="50">
+									<div class="progressbar__fill"></div>
+								</div>
+							</div>
+							<div align="center">
+								<div class="gauge gauge--small gauge--primary" data-percentage="60">
+									<div class="gauge__circle">
+										<div class="mask full">
+											<div class="fill"></div>
+										</div>
+										<div class="mask half">
+											<div class="fill"></div>
+											<div class="fill fix"></div>
+										</div>
+									</div>
+									<div class="gauge__inset">
+										<div class="gauge__percentage">60</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="costs">
+							<div>
+								<div align="center" data-auto-id="costTitle" class="subheader" [innerHtml]= "'_Cost_' | i18n"></div>
+								<div class="progressbar progressbar--success" data-percentage="50">
+									<div class="progressbar__fill"></div>
+								</div>
+								<div align="center">
+									<img alt="'_Cost_' | i18n" src="assets/img/inventory/cost.png">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-1">
+						<div id="horizontal-button-group" class="row">
+							<div class="flex-center">
+								<span class="icon-filter icon-small"></span>
+							</div>
+							<div class="flex-center">
+								<span class="icon-clock icon-small"></span>
+							</div>
+							<div id="solutionslink" class="flex-center">
+								<a [routerLink]="['/']"><span data-auto-id="navtosolutions" class="icon-analysis icon-small"></span></a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div id="map" class="base-margin-top">
+					<img alt="'_Map_' | i18n"  src="assets/img/inventory/cisco_rtp10_map.png" />
+					<div id="vertical-button-group" class="flex-container flex-end">
+						<div id="iconimage" class="flex-end">
+							<span class="icon-image icon-small"></span>
+						</div>
+						<div id="iconinsights" class="flex-end">
+							<span class="icon-insights icon-small"></span>
+						</div>
+						<div id="iconapps" class="flex-end">
+							<span class="icon-apps icon-small"></span>
+						</div>
+						<div id="iconcodeo" class="flex-end">
+							<span class="icon-file-code-o icon-small"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
