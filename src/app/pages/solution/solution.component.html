@@ -1,4 +1,239 @@
-<p>
-	solution works!
-</p>
-<img src="assets/img/solutions/RACETRACK.svg" alt="{{ '_Racetrack_' | i18n }}">
+<div class="container-fluid base-margin-top base-margin-bottom">
+	<app-gauge-panel></app-gauge-panel>
+	<div class="panel panel--ltgray panel--bordered no-padding half-padding-right">
+		<div class="row">
+			<div class="col-md-2">
+				<div class="row half-padding-top half-padding-left">
+					<div class="col-md">
+						<span class="subheader text-small" [innerText]="'_CircuitLabel_' | i18n"></span>
+					</div>
+				</div>
+				<div class="row half-padding-left">
+					<div class="col-md-6">
+						<h2 class="text-primary" [innerText]="'_OnboardLabel_' | i18n"></h2>
+					</div>
+					<div class="col-md-6">
+						<img alt="'_FinishLine_' | i18n" class="pull-right" src="assets/img/solutions/finishline.png">
+					</div>
+				</div>
+				<div class="panel panel--bordered half-margin-bottom half-margin-top half-margin-left">
+					<div class="row no-margin">
+						<span class="subheader text-muted text-small" [innerText]="'_SuggestedActionsHeader_' | i18n"></span>
+					</div>
+					<div class="row no-margin">
+						<div class="form-group form-group--compressed">
+							<label class="checkbox">
+								<input type="checkbox">
+								<span class="checkbox__input"></span>
+								<span class="checkbox__label text-medium" [innerText]="'_DiscoverDevicesCheckbox_' | i18n"></span>
+							</label>
+						</div>
+						<div class="form-group form-group--compressed">
+							<label class="checkbox">
+								<input type="checkbox">
+								<span class="checkbox__input"></span>
+								<span class="checkbox__label text-medium" [innerText]="'_NetworkHierarchyCheckbox_' | i18n"></span>
+							</label>
+						</div>
+						<div class="form-group form-group--compressed">
+							<label class="checkbox">
+								<input type="checkbox">
+								<span class="checkbox__input"></span>
+								<span class="checkbox__label text-medium" [innerText]="'_MapWLCCheckbox_' | i18n"></span>
+							</label>
+						</div>
+						<div class="form-group form-group--compressed">
+							<label class="checkbox">
+								<input type="checkbox">
+								<span class="checkbox__input"></span>
+								<span class="checkbox__label text-medium" [innerText]="'_MapAPCheckbox_' | i18n"></span>
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel--ltblue panel--bordered half-margin-bottom half-margin-top half-margin-left">
+					<div class="row no-margin">
+						<div class="col-md-7 no-padding">
+							<span class="subheader no-margin text-muted text-small" [innerText]="'_CXLevel3Header_' | i18n"></span>
+						</div>
+						<div class="col-md-5">
+							<button class="btn btn--primary text-small qtr-padding-right qtr-padding-left btn--small pull-right" [innerText]="'_ContactUs_' | i18n"></button>
+						</div>
+					</div>
+					<div class="row no-margin">
+						<span [innerText]="'_HandOffCiscoHeader_' | i18n"></span>
+					</div>
+					<div class="row no-margin">
+						<div class="col-md-3">
+							<img alt="'_Handshake_' | i18n" class="flex-left" src="assets/img/solutions/handshake.png">
+						</div>
+						<div class="col-md-9">
+							<span class="text-small flex-right" [innerText]="'_CXUpgradeNow_' | i18n"></span>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel--bordered panel--ltblue half-margin-bottom half-margin-top half-margin-left">
+					<div class="row no-margin">
+						<span class="subheader text-muted text-small no-margin" [innerText]="'_Communities_' | i18n"></span>
+					</div>
+					<div class="row no-margin">
+						<span class="text-small" [innerText]="'_TechDiscussions_' | i18n"></span>
+					</div>
+					<div class="row no-margin">
+						<div class="col-md-4">
+							<img alt="'_JasonPicture_' | i18n" src="assets/img/solutions/jason.png">
+						</div>
+						<div class="col-md-8">
+							<div class="panel panel--bordered">
+								<div class="row no-margin">
+									<span class="subheader text-muted text-small no-margin half-padding-bottom" [innerText]="'_TrendingHeader_' | i18n"></span>
+								</div>
+								<div class="row no-margin qtr-padding-bottom">
+									<a class="pull-left text-small" data-auto-id="DNACActivationLink" href="https://www.cisco.com" [innerText]="'_5DayDNACActivation_' | i18n"></a>
+								</div>
+								<div class="row no-margin qtr-padding-bottom">
+									<a class="pull-left text-small" data-auto-id="OfflineUpgradesLink" href="https://www.cisco.com" [innerText]="'_OfflineUpgrades_' | i18n"></a>
+								</div>
+								<div class="row no-margin qtr-padding-bottom">
+									<a class="pull-left text-small" data-auto-id="PackageOrderLink" href="https://www.cisco.com" [innerText]="'_PackageSpecificOrder_' | i18n"></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-10">
+				<div class="row flex-center">
+					<img alt="'_Racetrack_' | i18n" class="base-margin-top" src="assets/img/solutions/RACETRACK.svg">
+				</div>
+				<div class="row flex-fill half-margin-bottom">
+					<div class="col-md-3">
+						<div class="card racetrack-card">
+							<div class="card__header">
+								<h4 class="row card__title">
+									<img alt="'_AskTheExpert_' | i18n" src="assets/img/solutions/asktheexpert.png">
+									<span class="flex-center" [innerText]="'_AskTheExpert_' | i18n"></span>
+								</h4>
+								<div class="card__subtitle" [innerText]="'_InteractiveWebinars_' | i18n"></div>
+								<div class="divider"></div>
+							</div>
+							<div class="card__body card-scroll">
+								<a href="https://www.cisco.com" data-auto-id="DNACenterStartedLink" [innerText]="'_DNACenterStarted_' | i18n"></a>
+								<a href="https://www.cisco.com" data-auto-id="DNABestPracticesLink" [innerText]="'_DNACenterBestPractices_' | i18n"></a>
+								<a href="https://www.cisco.com" data-auto-id="DNAPlatformFeaturesLink" [innerText]="'_DNAPlatformFeatures_' | i18n"></a>
+								<a href="https://www.cisco.com" data-auto-id="DNAAssuranceLink" [innerText]="'_DNAAssurance_' | i18n"></a>
+								<a href="https://www.cisco.com" data-auto-id="AskTheExpertLink" [innerText]="'_AskExpertLibrary_' | i18n"></a>
+							</div>
+							<div class="divider"></div>
+							<div class="card__footer">
+								<span class="icon-more icon-small"></span>
+								<span class="qtr-padding-left" [innerText]="'_ViewAll_' | i18n"></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card racetrack-card">
+							<div class="card__header">
+								<h4 class="row card__title">
+									<img alt="'_Accelerators_' | i18n" src="assets/img/solutions/accelerators.png">
+									<span class="flex-center" [innerText]="'_Accelerators_' | i18n"></span>
+								</h4>
+								<div class="card__subtitle" [innerText]="'_OneOnOneCoaching_' | i18n"></div>
+								<div class="divider"></div>
+							</div>
+							<div class="card__body card-scroll">
+								<div data-auto-id="ScheduledToggle" (click)="showScheduled = !showScheduled">
+									<span class="icon-calendar"></span>
+									<span class="qtr-padding-left text-uppercase text-small" [innerText]="'_ScheduledLabel_' | i18n"></span>
+									<span class="qtr-padding-left" [ngClass]="{ 'icon-chevron-right':!showScheduled, 'icon-chevron-down':showScheduled }"></span>
+								</div>
+								<div class="half-padding-left" *ngIf="showScheduled">
+									<a href="https://www.cisco.com" data-auto-id="DNAFeatureLink2" [innerText]="'_DNAFeatureOverview_' | i18n"></a>
+									<a href="https://www.cisco.com" data-auto-id="DNAAssuranceLink2" [innerText]="'_DNAAssuranceOverview_' | i18n"></a>
+								</div>
+								<div data-auto-id="RecommendedToggle" (click)="showRecommended = !showRecommended">
+									<span class="icon-flagged"></span>
+									<span class="qtr-padding-left text-uppercase text-small" [innerText]="'_RecommendedLabel_' | i18n"></span>
+									<span class="qtr-padding-left" [ngClass]="{ 'icon-chevron-right':!showRecommended, 'icon-chevron-down':showRecommended }"></span>
+								</div>
+								<div class="half-padding-left" *ngIf="showRecommended">
+									<a href="https://www.cisco.com" data-auto-id="DNAFeatureLink3" [innerText]="'_DNAFeatureOverview_' | i18n"></a>
+									<a href="https://www.cisco.com" data-auto-id="DNAAssuranceLink3" [innerText]="'_DNAAssuranceOverview_' | i18n"></a>
+									<a href="https://www.cisco.com" data-auto-id="AskTheExpert2" [innerText]="'_AskExpertLibrary_' | i18n"></a>
+								</div>
+							</div>
+							<div class="divider"></div>
+							<div class="card__footer">
+								<span class="icon-square-o-checked icon-small"></span>
+								<span class="qtr-padding-left" [innerText]="'_CompletedLabel_' | i18n"></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card racetrack-card">
+							<div class="card__header">
+								<h4 class="row card__title">
+									<img alt="'_Accelerators_' | i18n" src="assets/img/solutions/accelerators.png">
+									<span class="flex-center" [innerText]="'_eLearningLabel_' | i18n"></span>
+								</h4>
+								<div class="card__subtitle" [innerText]="'_AcquireSkills_' | i18n"></div>
+								<div class="divider"></div>
+							</div>
+							<div class="card__body card-scroll">
+								<div data-auto-id="CoursesToggle" (click)="showCourses = !showCourses">
+									<span class="text-uppercase text-small" [innerText]="'_1TimeCourses_' | i18n"></span>
+									<span class="qtr-padding-left" [ngClass]="{ 'icon-chevron-right':!showCourses, 'icon-chevron-down':showCourses }"></span>
+								</div>
+								<div *ngIf="showCourses">
+									<a data-auto-id="SDPlanningLink" href="https://www.cisco.com" [innerText]="'_SDAccessPlanning_' | i18n"></a>
+									<a data-auto-id="DNACircuitLink" href="https://www.cisco.com" [innerText]="'_DNACircuit_' | i18n"></a>
+								</div>
+								<div data-auto-id="CertificationsToggle" (click)="showCertifications = !showCertifications">
+									<span class="text-uppercase text-small" [innerText]="'_Certifications_' | i18n"></span>
+									<span class="qtr-padding-left" [ngClass]="{ 'icon-chevron-right':!showCertifications, 'icon-chevron-down':showCertifications }"></span>
+								</div>
+								<div *ngIf="showCertifications">
+									<div>
+										<a href="https://www.cisco.com" data-auto-id="CCNAWireless" [innerText]="'_CCNAWireless_' | i18n"></a>
+									</div>
+									<div>
+										<a href="https://www.cisco.com" data-auto-id="CCNPWireless" [innerText]="'_CCNPWireless_' | i18n"></a>
+									</div>
+								</div>
+							</div>
+							<div class="divider"></div>
+							<div class="card__footer">
+								<span [innerText]="'_LearningLibrary_' | i18n"></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="card racetrack-card" >
+							<div class="card__header">
+								<h4 class="row card__title">
+									<img alt="'_Accelerators_' | i18n" class="" src="assets/img/solutions/accelerators.png">
+									<span class="flex-center" [innerText]="'_SuccessPaths_' | i18n"></span>
+								</h4>
+								<div class="card__subtitle" [innerText]="'_LearningBundles_' | i18n"></div>
+								<div class="divider"></div>
+							</div>
+							<div class="card__body">
+								<div class="text-bold half-padding-bottom" [innerText]="'_GettingStartedInstallation_' | i18n"></div>
+								<div class="qtr-padding-bottom" [innerText]="'_CommonPitfalls_' | i18n"></div>
+								<span class="icon-time icon-small half-padding-right"></span>
+								<span [innerText]="'_14h0m_' | i18n"></span>
+								<span class="icon-play icon-small half-padding-right pull-right"></span>
+								<span class="icon-notes icon-small half-padding-right pull-right"></span>
+							</div>
+							<div class="divider"></div>
+							<div class="card__footer">
+								<span class="icon-more icon-small"></span>
+								<span class="qtr-padding-left" [innerText]="'_ViewAll_' | i18n"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

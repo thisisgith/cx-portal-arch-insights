@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { LogService } from '@cisco-ngx/cui-services';
 
 /**
@@ -17,4 +16,9 @@ export class SolutionComponent {
 	) {
 		this.logger.debug('SolutionComponent Created!');
 	}
+
+	public showScheduled = false;
+	public showRecommended = false;
+	public showCourses = false;
+	public showCertifications = false;
 }
