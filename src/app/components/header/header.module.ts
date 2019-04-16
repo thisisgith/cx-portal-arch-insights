@@ -5,30 +5,21 @@ import {
 	I18nPipeModule,
 } from '@cisco-ngx/cui-pipes';
 import { SearchModule } from '@components/search/search.module';
-import { MicroMockModule } from '@cui-x-views/mock';
-import { environment } from '@environment';
 import { HttpClientModule } from '@angular/common/http';
-
-/**
- * List of imports
- */
-const imports = [
-	CommonModule,
-	HttpClientModule,
-	I18nPipeModule,
-	SearchModule,
-];
-
-if (environment.mock) {
-	imports.push(MicroMockModule);
-}
+import { HeaderImportsModule } from './headerImports.module';
 
 /**
  * Module representing the Header Component
  */
 @NgModule({
-	imports,
 	declarations: [HeaderComponent],
 	exports: [HeaderComponent],
+	imports: [
+		CommonModule,
+		HeaderImportsModule,
+		HttpClientModule,
+		I18nPipeModule,
+		SearchModule,
+	],
 })
 export class HeaderModule { }
