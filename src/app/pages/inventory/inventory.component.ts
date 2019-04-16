@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { LogService } from '@cisco-ngx/cui-services';
 
 /**

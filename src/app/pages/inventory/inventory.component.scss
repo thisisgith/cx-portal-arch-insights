@@ -1,1 +1,79 @@
 /* Empty SCSS Component File */
+.tempMarginLeft {
+	margin-left: -250px;
+}
+
+.col-md-2 {
+	padding-right: 20px;
+	padding-left: 20px;
+	background-color: white;
+}
+
+#rightarrow {
+	color: lightgray;
+	padding-top: 60px;
+	padding-left: 20px;
+	width: 48px;
+	height: 48px;
+}
+
+.flex-center {
+	margin-right: 10px;
+}
+
+#networkhealth,
+#contracts,
+#costs {
+	width: 165px;
+}
+
+#tinybutton {
+	width: 20px;
+	height: 20px;
+}
+
+#map {
+	position: relative;
+	border: thin solid lightgray;
+}
+
+#vertical-button-group {
+	z-index: 1;
+	position: absolute;
+	top: 20px;
+	right: 10px;
+	box-shadow: 1px 1px 1px 1px #ccc;
+}
+
+#iconimage {
+	background-color: lightgray;
+	border: solid thin lightgray;
+}
+
+#iconinsights,
+#iconapps,
+#iconcodeo {
+	background-color: white;
+	border: solid thin lightgray;
+}
+
+#horizontal-button-group {
+	float: right;
+}
+
+#solutionslink {
+	padding-left: 10px;
+	border-left: 1px solid darkgray;
+}
+
+.col-md-border {
+	border-left: 1px solid lightgray;
+}
+
+.container {
+	display: flex;
+}
+
+.container.space-around {
+	justify-content: space-around;
+}

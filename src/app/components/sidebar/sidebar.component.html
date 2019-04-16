@@ -1,0 +1,156 @@
+<div id="sidebar" class="panel-group">
+	<div class="panel base-margin-top">
+		<div class="row">
+			<div class="col-md-10">
+				<button class="btn btn--small btn--icon">
+					<span class="icon-transit"></span>
+				</button>
+				<button class="btn btn--small btn--icon">
+					<span class="icon-briefcase"></span>
+				</button>
+				<button class="btn btn--small btn--icon">
+					<span class="icon-lightbulb"></span>
+				</button>
+				<button class="btn btn--small btn--icon">
+					<span class="icon-learning"></span>
+				</button>
+				<button class="btn btn--small btn--icon">
+					<span class="icon-file-text-o"></span>
+				</button>
+			</div>
+			<div class="col-md-2 col-md-border">
+				<button class="btn btn--small btn--icon" type="button" data-toggle="collapse" data-target="#demo">
+					<span class="icon-download-contain"></span>
+				</button>
+			</div>
+		</div>
+		<div>
+			<div class="form-group input--icon base-margin-bottom base-margin-top">
+				<div class="form-group__text">
+					<input type="search" required [placeholder]="'_SidebarSearchLabel_' | i18n">
+					<button type="button" class="link" tabindex="-1">
+						<span class="icon-search"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="demo" class="collapse show" data-parent="#sidebar">
+		<div class="row">
+			<div class="col-md-10">
+				<h6 data-auto-id="racetrackProgressHead" class="subheading text-small text-uppercase" [innerHtml]="'_RacetrackProgress_' | i18n"></h6>
+			</div>
+			<div class="col-md-2">
+				<div class="text-right">
+					<button class="btn btn--small btn--icon">
+						<span class="icon-learning"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<h6 data-auto-id="useCasesHead" class="text-medium text-bold" [innerHtml]="'_UseCases_' | i18n"></h6>
+		<div align="center">
+			<img alt="'_RacetrackProgress_' | i18n" src="assets/img/inventory/use_case.png">
+		</div>
+		<div class="divider"></div>
+		<div class="row">
+			<div class="col-md-10">
+				<h6 data-auto-id="vulverabilityHead" class="subheading text-small text-uppercase" [innerHtml]="'_Vulberability_' | i18n"></h6>
+			</div>
+			<div class="col-md-2">
+				<div class="text-right">
+					<button class="btn btn--small btn--icon">
+						<span class="icon-lightbulb"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<h6 data-auto-id="psirtHeader" class="text-bold text-medium" [innerHtml]="'_RecentlyIdentifiedPsirt_' | i18n"></h6>
+		<img alt="PSIRT" src="assets/img/inventory/psirt.png">
+		<div class="divider"></div>
+		<div class="row">
+			<div class="col-md-10">
+				<h6 data-auto-id="contractHeader" class="subheading text-small text-uppercase" [innerHtml]="'_Contract_' | i18n"></h6>
+			</div>
+			<div class="col-md-2">
+				<div class="text-right">
+					<button class="btn btn--small btn--icon btn--primary">
+						<span class="icon-contract-login"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<h6 data-auto-id="contractExpiredHead" class="text-bold text-medium" [innerHtml]="'_ContractExpired_' | i18n"></h6>
+		<div class="divider"></div>
+		<div class="row">
+			<div class="col-md-10">
+				<h6 data-auto-id="networkWarningHead" class="subheading text-small text-uppercase" [innerHtml]="'_NetworkEarlyWarning_' | i18n"></h6>
+			</div>
+			<div class="col-md-2">
+				<div class="text-right">
+					<button class="btn btn--small btn--icon">
+						<span class="icon-lightbulb"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<h6 data-auto-id="secuityRiskHead" class="text-bold text-medium" [innerHtml]="'_SecuityComplianceRisk_' | i18n"></h6>
+		<img alt="Security Risk" src="assets/img/inventory/security_risk.png">
+		<div class="divider"></div>
+		<div class="row">
+			<div class="col-md-10">
+				<h6 data-auto-id="level1Head" class="subheading text-small text-uppercase" [innerHtml]="'_CXLevel1_' | i18n"></h6>
+			</div>
+			<div class="col-md-2">
+				<div class="text-right">
+					<button class="btn btn--small btn--icon btn--success">
+						<span class="icon-briefcase"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<h6 data-auto-id="supportCaseHead" class="text-bold text-medium" [innerHtml]="'_SupportCaseInProgress_' | i18n"></h6>
+		<div class="ui-steps ui-steps--success ui-steps--tiny">
+			<div class="ui-step active">
+				<div class="step__icon"></div>
+				<div data-auto-id="responseLabel" class="step__label" [innerHtml]="'_1HourResponse_' | i18n"></div>
+			</div>
+			<div class="ui-step visited">
+				<div class="step__icon"></div>
+				<div data-auto-id="troubleshootingLabel" class="step__label" [innerHtml]="'_TroubleShooting_' | i18n"></div>
+			</div>
+			<div class="ui-step">
+				<div class="step__icon"></div>
+			</div>
+		</div>
+		<div class="divider"></div>
+		<div class="row">
+			<div class="col-md-10">
+				<h6 data-auto-id="rmaLevel1Head" class="subheading text-small text-uppercase" [innerHtml]="'_CXLevel1_' | i18n"></h6>
+			</div>
+			<div class="col-md-2">
+				<div class="text-right">
+					<button class="btn btn--small btn--icon btn--success">
+						<span class="icon-briefcase"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<h6 data-auto-id="rmaProgressHead" class="text-bold text-medium" [innerHtml]="'_RMAInProgress_' | i18n"></h6>
+		<div align="right">
+			<p data-auto-id="upgradeLink" id="upgradetext" class="text-muted text-small" [innerHtml]="'_UpgradeForDelivery_' | i18n"></p>
+		</div>
+		<div class="ui-steps ui-steps--success ui-steps--tiny">
+			<div class="ui-step active">
+				<div class="step__icon"></div>
+			</div>
+			<div class="ui-step visited">
+				<div class="step__icon"></div>
+				<div data-auto-id="nextDayLabel" class="step__label" [innerHtml]="'_NextDayProcess_' | i18n"></div>
+			</div>
+			<div class="ui-step">
+				<div class="step__icon"></div>
+			</div>
+		</div>
+	</div>
+</div>
