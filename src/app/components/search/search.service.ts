@@ -79,6 +79,7 @@ export class SearchService {
 	 */
 	public search (query: string): Observable<SearchResults> {
 		this.logger.debug(`Search query :: ${query}`);
+
 		return this.http.get<SearchResults>(`${this.serviceUrl}`);
 	}
 }

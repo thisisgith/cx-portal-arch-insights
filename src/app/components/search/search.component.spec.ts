@@ -44,7 +44,6 @@ describe('SearchComponent', () => {
 	});
 
 	describe('search result', () => {
-		let spy: any;
 		const searchTerm = 'Timeout error when configuring new node in DNA cluster';
 
 		beforeEach(() => {
@@ -83,7 +82,7 @@ describe('SearchComponent', () => {
 
 		it('should show a message if there are no results',
 			inject([SearchService], (service: SearchService) => {
-				spy = spyOn(service, 'search')
+				spyOn(service, 'search')
 					.and
 					.returnValue(of({ results: [] }));
 
@@ -106,7 +105,7 @@ describe('SearchComponent', () => {
 		describe('insights', () => {
 			it('should hide the insights if they dont exist',
 				inject([SearchService], (service: SearchService) => {
-					spy = spyOn(service, 'search')
+					spyOn(service, 'search')
 						.and
 						.returnValue(of({ results: [] }));
 
@@ -126,7 +125,7 @@ describe('SearchComponent', () => {
 
 			it('should show the insights if they do exist ',
 				inject([SearchService], (service: SearchService) => {
-					spy = spyOn(service, 'search')
+					spyOn(service, 'search')
 						.and
 						.returnValue(of(mockData));
 
@@ -146,7 +145,7 @@ describe('SearchComponent', () => {
 		describe('top results', () => {
 			it('should show the results if they do exist',
 				inject([SearchService], (service: SearchService) => {
-					spy = spyOn(service, 'search')
+					spyOn(service, 'search')
 						.and
 						.returnValue(of(mockData));
 
