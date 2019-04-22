@@ -11,7 +11,7 @@
 							<span class="icon-right-arrow icon-medium"></span>
 						</div>
 					</div>
-					<div class="container space-around col-md-10">
+					<div class="inventory-top-panel container space-around col-md-10">
 						<div>
 							<div align="center" data-auto-id="vulnerabilityTitle" class="subheader" [innerHtml]= "'_Vulnerability_' | i18n"></div>
 							<div class="progressbar progressbar--warning" data-percentage="70">
@@ -68,12 +68,6 @@
 					</div>
 					<div class="col-md-1">
 						<div id="horizontal-button-group" class="row">
-							<div class="flex-center">
-								<span class="icon-filter icon-small"></span>
-							</div>
-							<div class="flex-center">
-								<span class="icon-clock icon-small"></span>
-							</div>
 							<div id="solutionslink" class="flex-center">
 								<a [routerLink]="['/']" data-auto-id="navtosolutions"><span class="icon-analysis icon-small"></span></a>
 							</div>
@@ -82,25 +76,54 @@
 				</div>
 			</div>
 			<div>
-				<div id="map" class="base-margin-top">
-					<img alt="'_Map_' | i18n"  src="assets/img/inventory/cisco_rtp10_map.png" />
-					<div id="vertical-button-group" class="flex-container flex-end">
-						<div id="iconimage" class="flex-end">
-							<span class="icon-image icon-small"></span>
+				<div class="panel panel--compressed base-margin-bottom base-margin-top">
+					<div id="tableheaderpanel" class="row half-padding-left half-padding-right">
+						<div class="col-md-7">
+							<div class="row">
+								<h4 data-auto-id="tableTitle" id="tabletitle"
+									class="base-margin-top base-margin-bottom text-uppercase" [innerHtml]="'_Assets_' | i18n"></h4>
+								<h6 data-auto-id="tableSubtitle" id="tablesubtitle" class="base-margin-top base-margin-bottom"
+									[innerHtml]="'_NumberOfAssets_' | i18n: totalAssets"></h6>
+							</div>
 						</div>
-						<div id="iconinsights" class="flex-end">
-							<span class="icon-insights icon-small"></span>
-						</div>
-						<div id="iconapps" class="flex-end">
-							<span class="icon-apps icon-small"></span>
-						</div>
-						<div id="iconcodeo" class="flex-end">
-							<span class="icon-file-code-o icon-small"></span>
+						<div class="col-md-5">
+							<div id="table-toolbar" class="row qtr-margin-top qtr-margin-bottom">
+								<div>
+									<div class="form-group input--icon">
+										<div class="form-group__text">
+											<input type="search" [placeholder]="'_SearchAssets_' | i18n">
+											<button type="button" class="link" tabindex="-1">
+												<span class="icon-search"></span>
+											</button>
+										</div>
+									</div>
+								</div>
+								<div class="flex-center">
+									<button class="w3-button w3--icon w3--small base-margin-left" aria-checked="true"><span
+											class="icon-list-view icon-small"></span></button>
+								</div>
+								<div class="flex-center">
+									<span class="icon-grid-view icon-small"></span>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div>
+					<div class="responsive-table assets-table">
+						<cui-table *ngIf="assets && assets.length" [data]="assets" [limit]="limit"
+							(onSortingChanged)="onSort($event)" [options]="tableOptions">
+						</cui-table>
+					</div>
+				</div>
+			
 			</div>
 		</div>
 	</div>
 </div>
+
+<!-- Table Templates -->
+<ng-template #productid let-asset="celldata">
+	<span>{{asset.productId}}</span>
+</ng-template>
 

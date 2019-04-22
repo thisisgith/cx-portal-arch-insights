@@ -113,5 +113,11 @@
 	"_ViewAllXImpactedDevices_": "View all {0} impacted devices >",
 	"_Vulnerability_": "Vulnerability",
 	"_Workaround_": "Workaround",
-	"_YourImpactedDevices_": "Your Impacted Devices"
+	"_YourImpactedDevices_": "Your Impacted Devices",
+	"_NumberOfAssets_": "{0} of {0}",
+	"_Hostname_": "Hostname",
+	"_ProductId_": "Product ID",
+	"_IpAddress_": "IP Address",
+	"_SerialNumber_": "Serial Number",
+	"_SearchAssets_": "Search Assets"
 }

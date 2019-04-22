@@ -53,7 +53,7 @@
 		"@cisco-ngx/cui-pipes": "^7.0.0",
 		"@cisco-ngx/cui-services": "^7.0.0",
 		"@cisco-ngx/cui-utils": "^7.0.0",
-		"@cui-x-views/mock": "^1.0.0",
+		"@cui-x-views/mock": "^1.0.2",
 		"@cui-x/cui-x-components": "^7.3.0",
 		"@cui-x/services": "^1.0.0",
 		"@cui-x/utilities": "^1.0.0",

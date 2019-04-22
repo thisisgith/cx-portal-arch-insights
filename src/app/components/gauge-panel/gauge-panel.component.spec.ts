@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { GaugePanelComponent } from './gauge-panel.component';
 import { GaugePanelModule } from './gauge-panel.module';
+// import { SolutionModule } from 'src/app/pages/solution/solution.module';
 
 describe('GaugePanelComponent', () => {
 	let component: GaugePanelComponent;
@@ -11,8 +12,7 @@ describe('GaugePanelComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				GaugePanelModule,
-				RouterTestingModule,
-			],
+				RouterTestingModule],
 		})
 		.compileComponents();
 	}));
