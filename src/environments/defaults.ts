@@ -22,5 +22,8 @@ export const defaults = {
 	production: false,
 	services: {
 		search: '/ws/search',
+		solution: {
+			webinar: '/ws/webinars',
+		},
 	},
 };
