@@ -4,6 +4,7 @@ import { SolutionComponent } from './solution.component';
 import { RouterModule, Routes } from '@angular/router';
 import { GaugePanelModule } from '@components/gauge-panel/gauge-panel.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { CuiSpinnerModule } from '@cisco-ngx/cui-components';
 
 /**
  * Child routes for Inventory Module for lazy loading
@@ -26,6 +27,7 @@ const childRoutes: Routes = [
 		RouterModule.forChild(childRoutes),
 		I18nPipeModule,
 		GaugePanelModule,
+		CuiSpinnerModule,
 	],
 })
 export class SolutionModule { }

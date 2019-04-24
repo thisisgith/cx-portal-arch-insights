@@ -3,10 +3,39 @@
 }
 
 .card-scroll {
-	height: 100px;
+	height: 165px;
 	overflow: scroll;
 }
 
 .racetrack-card {
 	height: 100%;
+}
+
+.tab-background {
+	background: #f2f2f2;
+}
+
+.row-border-bottom {
+	border-bottom: 1px solid #aaa;
+}
+
+.selected-tab-border {
+	border-bottom: 3px solid #aaa;
+}
+
+.webinar-title-background {
+	background: #00bceb;
+}
+
+.modal__dialog .modal__content {
+	padding: 0;
+}
+
+.text-white {
+	color: #fff;
+}
+
+.webinar-card {
+	height: 150px;
+	overflow: scroll;
 }
