@@ -1,6 +1,6 @@
 <div class="page-container">
 	<div class="row">
-		<div class="col-md-2">
+		<div class="sidebarstyle col-md-2">
 			<app-sidebar></app-sidebar>
 		</div>
 		<div class="col-md-10 base-margin-top base-margin-bottom">
@@ -13,7 +13,8 @@
 					</div>
 					<div class="inventory-top-panel container space-around col-md-10">
 						<div>
-							<div align="center" data-auto-id="vulnerabilityTitle" class="subheader" [innerHtml]= "'_Vulnerability_' | i18n"></div>
+							<div align="center" data-auto-id="vulnerabilityTitle" class="subheader"
+								[innerText]="'_Vulnerability_' | i18n"></div>
 							<div class="progressbar progressbar--warning" data-percentage="70">
 								<div class="progressbar__fill"></div>
 							</div>
@@ -22,7 +23,8 @@
 							</div>
 						</div>
 						<div id="networkhealth">
-							<div align="center" data-auto-id="networkhealthTitle" class="subheader" [innerHtml]= "'_NetworkHealth_' | i18n"></div>
+							<div align="center" data-auto-id="networkhealthTitle" class="subheader"
+								[innerText]="'_NetworkHealth_' | i18n"></div>
 							<div class="progressbar progressbar--success" data-percentage="80">
 								<div class="progressbar__fill"></div>
 							</div>
@@ -32,7 +34,8 @@
 						</div>
 						<div id="contracts">
 							<div>
-								<div align="center" data-auto-id="contractsTitle" class="subheader" [innerHtml]= "'_Contracts_' | i18n"></div>
+								<div align="center" data-auto-id="contractsTitle" class="subheader"
+									[innerText]="'_Contracts_' | i18n"></div>
 								<div class="progressbar progressbar--warning" data-percentage="50">
 									<div class="progressbar__fill"></div>
 								</div>
@@ -56,7 +59,8 @@
 						</div>
 						<div id="costs">
 							<div>
-								<div align="center" data-auto-id="costTitle" class="subheader" [innerHtml]= "'_Cost_' | i18n"></div>
+								<div align="center" data-auto-id="costTitle" class="subheader"
+									[innerText]="'_Cost_' | i18n"></div>
 								<div class="progressbar progressbar--success" data-percentage="50">
 									<div class="progressbar__fill"></div>
 								</div>
@@ -69,7 +73,8 @@
 					<div class="col-md-1">
 						<div id="horizontal-button-group" class="row">
 							<div id="solutionslink" class="flex-center">
-								<a [routerLink]="['/']" data-auto-id="navtosolutions"><span class="icon-analysis icon-small"></span></a>
+								<a [routerLink]="['/']" data-auto-id="navtosolutions"><span
+										class="icon-analysis icon-small"></span></a>
 							</div>
 						</div>
 					</div>
@@ -81,9 +86,11 @@
 						<div class="col-md-7">
 							<div class="row">
 								<h4 data-auto-id="tableTitle" id="tabletitle"
-									class="base-margin-top base-margin-bottom text-uppercase" [innerHtml]="'_Assets_' | i18n"></h4>
-								<h6 data-auto-id="tableSubtitle" id="tablesubtitle" class="base-margin-top base-margin-bottom"
-									[innerHtml]="'_NumberOfAssets_' | i18n: totalAssets"></h6>
+									class="base-margin-top base-margin-bottom text-uppercase"
+									[innerText]="'_Assets_' | i18n"></h4>
+								<h6 data-auto-id="tableSubtitle" id="tablesubtitle"
+									class="base-margin-top base-margin-bottom"
+									[innerText]="'_NumberOfAssets_' | i18n: totalAssets"></h6>
 							</div>
 						</div>
 						<div class="col-md-5">
@@ -99,8 +106,8 @@
 									</div>
 								</div>
 								<div class="flex-center">
-									<button class="w3-button w3--icon w3--small base-margin-left" aria-checked="true"><span
-											class="icon-list-view icon-small"></span></button>
+									<button class="w3-button w3--icon w3--small base-margin-left"
+										aria-checked="true"><span class="icon-list-view icon-small"></span></button>
 								</div>
 								<div class="flex-center">
 									<span class="icon-grid-view icon-small"></span>
@@ -111,19 +118,156 @@
 				</div>
 				<div>
 					<div class="responsive-table assets-table">
-						<cui-table *ngIf="assets && assets.length" [data]="assets" [limit]="limit"
-							(onSortingChanged)="onSort($event)" [options]="tableOptions">
-						</cui-table>
+						<table class="table table--fixed table--hover table--loose" 
+							*ngIf="assets && assets.length">
+							<thead>
+								<tr>
+									<th class="table-header" [innerText]="'_Hostname_' | i18n"></th>
+									<th class="table-header" [innerText]="'_ProductId_' | i18n"></th>
+									<th class="table-header" [innerText]="'_IpAddress_' | i18n"></th>
+									<th class="table-header" [innerText]="'_SerialNumber_' | i18n"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="clickable-row" *ngFor="let asset of assets"
+									(click)="showSidePanel = !showSidePanel" data-auto-id="showsidepanel">
+									<td class="table-data" [innerText]="asset.hostname"></td>
+									<td class="table-data" [innerText]="asset.productId"></td>
+									<td class="table-data" [innerText]="asset.ipaddress"></td>
+									<td class="table-data" [innerText]="asset.serialNumber"></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
-			
+
+			</div>
+		</div>
+	</div>
+
+	<div class="asset-detail-panel panel panel--open" *ngIf="showSidePanel">
+		<div class="panel-block">
+			<a class="no-link fade-in-pop closebtn" (click)="showSidePanel = !showSidePanel" data-auto-id="closebtn">
+				<span class="icon-close icon-medium"></span>
+			</a>
+			<h4 class="text-center base-margin-top base-margin-bottom">{{sampleDevice.hostname}}</h4>
+			<p class="text-center">
+				<img alt="'_Cat3650Img_' | i18n" id="deviceimage" src="assets/img/inventory/CAT-3650.png">
+			</p>
+			<p class="text-center">{{sampleDevice.deviceName}}</p>
+			<ul class="list list--inline">
+				<li class="deviceinfo panel haft-margin-bottom">
+					<dl>
+						<dt class="descTitle text-uppercase" [innerText]="'_ProductId_' | i18n"
+							data-auto-id="productid"></dt>
+						<dd>{{sampleDevice.productID}}</dd>
+						<dt class="descTitle text-uppercase" [innerText]="'_ProductFamily_' | i18n"
+							data-auto-id="productfamily"></dt>
+						<dd>{{sampleDevice.productFamily}}</dd>
+						<dt class="descTitle text-uppercase" [innerText]="'_ProductSeries_' | i18n"
+							data-auto-id="productseries"></dt>
+						<dd>{{sampleDevice.productSeries}}</dd>
+					</dl>
+				</li>
+				<li class="deviceinfo panel haft-margin-bottom">
+					<dt class="descTitle text-uppercase" [innerText]="'_IPAddress_' | i18n" data-auto-id="ipaddress">
+					</dt>
+					<dd>{{sampleDevice.ipAddress}}</dd>
+					<dt class="descTitle text-uppercase" [innerText]="'_SerialNo_' | i18n" data-auto-id="serialno"></dt>
+					<dd>{{sampleDevice.serialNo}}</dd>
+					<dt class="descTitle text-uppercase" [innerText]="'_Software_' | i18n" data-auto-id="software"></dt>
+					<dd>{{sampleDevice.software}}</dd>
+				</li>
+			</ul>
+			<ul id="tabds" class="tabs tabs--centered">
+				<li id="tabds-1" class="tab" [ngClass]="{'active': currentTab === 'vulnerability'}"
+					(click)="selectTab('vulnerability')" data-auto-id="vultab">
+					<a tabindex="0">
+						<div class="tab__heading" [innerText]="'_Vulnerability_' | i18n" data-auto-id="vultabhead">
+						</div>
+					</a>
+				</li>
+				<li id="tabds-2" class="tab" [ngClass]="{'active': currentTab === 'health'}"
+					(click)="selectTab('health')" data-auto-id="healthtab">
+					<a tabindex="0">
+						<div class="tab__heading" [innerText]="'_Health_' | i18n" data-auto-id="healthhead"></div>
+					</a>
+				</li>
+				<li id="tabds-3" class="tab" [ngClass]="{'active': currentTab === 'coverage'}"
+					(click)="selectTab('coverage')" data-auto-id="covertab">
+					<a tabindex="0">
+						<div class="tab__heading" [innerText]="'_Coverage_' | i18n" data-auto-id="coverhead"></div>
+					</a>
+				</li>
+			</ul>
+			<div id="tabds-content" class="tab-content">
+				<div id="tabds-1-content" *ngIf="currentTab === 'vulnerability'">
+					<div *ngIf="showSidePanel" id="vulbtngroup" class="btn-group base-margin-top base-margin-bottom">
+						<button id="securityadvisory" class="button"
+							[ngStyle]="{background: currentButton === 'securityadvisory' ? 'darkgray' : 'white'}"
+							[innerText]="'_SecurityAdvisory_' | i18n" (click)="clickButton('securityadvisory')"
+							data-auto-id="securebutton">
+						</button>
+						<button id="fieldnotice" class="button"
+							[ngStyle]="{background: currentButton === 'fieldnotice' ? 'darkgray' : 'white'}"
+							[innerText]="'_FieldNotice_' | i18n" (click)="clickButton('fieldnotice')"
+							data-auto-id="fieldbutton">
+						</button>
+					</div>
+					<div *ngIf="currentButton === 'securityadvisory'">
+						<ul>
+							<li>
+								<ul class="deviceVul list list--inline">
+									<li class="devicename" [innerText]="'_CVE20173881_' | i18n"
+										data-auto-id="lidevicename1"></li>
+									<li class="version" [innerText]="'_V1.1_' | i18n" data-auto-id="liversion1"></li>
+									<li class="date" [innerText]="'_Update3Days_' | i18n" data-auto-id="lidate1"></li>
+								</ul>
+							</li>
+							<p [innerText]="'_VulnerabilityDetail1_' | i18n" data-auto-id="vuldetail1"></p>
+							<li>
+								<ul class="deviceVul list list--inline">
+									<li class="devicename" [innerText]="'_CVE20173881_' | i18n"
+										data-auto-id="lidevicename2"></li>
+									<li class="version" [innerText]="'_V1.1_' | i18n" data-auto-id="liversion2"></li>
+									<li class="date" [innerText]="'_Update3Days_' | i18n" data-auto-id="lidate2"></li>
+								</ul>
+							</li>
+							<p [innerText]="'_VulnerabilityDetail1_' | i18n" data-auto-id="vuldetail2"></p>
+						</ul>
+						<ul *ngIf="less === false">
+							<li>
+								<ul class="deviceVul list list--inline">
+									<li class="devicename" [innerText]="'_CVE20173881_' | i18n"
+										data-auto-id="lidevicename3"></li>
+									<li class="version" [innerText]="'_V1.1_' | i18n" data-auto-id="liversion3"></li>
+									<li class="date" [innerText]="'_Update3Days_' | i18n" data-auto-id="lidate3"></li>
+								</ul>
+							</li>
+							<p [innerText]="'_VulnerabilityDetail1_' | i18n" data-auto-id="vuldetail3"></p>
+						</ul>
+
+						<a *ngIf="less === true" (click)="showMore()" data-auto-id="showmore">
+							<p [innerText]="'_ViewMore_' | i18n"></p>
+						</a>
+						<a *ngIf="less === false" (click)="showLess()" data-auto-id="showless">
+							<p [innerText]="'_ViewLess_' | i18n"></p>
+						</a>
+					</div>
+					<div *ngIf="currentButton === 'fieldnotice'">
+						<p [innerText]="'_FieldNoticeDetail_' | i18n" data-auto-id="fielddetail"></p>
+					</div>
+				</div>
+				<div id="tabds-2-content" *ngIf="currentTab === 'health'">
+					<p [innerText]="'_HealthDetail_' | i18n" data-auto-id="healthdetail"></p>
+				</div>
+				<div id="tabds-3-content" *ngIf="currentTab === 'coverage'">
+					<p [innerText]="'_CoverageDetail_' | i18n" data-auto-id="coverdetail"></p>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
-<!-- Table Templates -->
-<ng-template #productid let-asset="celldata">
-	<span>{{asset.productId}}</span>
-</ng-template>
+
 

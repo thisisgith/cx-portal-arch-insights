@@ -29,12 +29,16 @@ audit:
 # run our lint process against the committed files
 lint:
   stage: lint
+  before_script:
+    - npm install --audit=false
   script:
     - npm run lint
 
 # run our test:ci process for the commit
 unit:
   stage: test
+  before_script:
+    - npm install --audit=false
   script:
     - npm run test:ci
 
@@ -42,6 +46,7 @@ unit:
 automation:
   stage: test
   before_script:
+    - npm install --audit=false
     - apt-get update && apt-get -y install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
     - npx cypress install
     - npm run start:background

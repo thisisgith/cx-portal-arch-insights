@@ -1,11 +1,13 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
 /* Empty SCSS Component File */
 .tempMarginLeft {
 	margin-left: -250px;
 }
 
-.col-md-2 {
+.sidebarstyle {
 	padding-right: 20px;
-	padding-left: 20px;
+	padding-left: 30px;
 	background-color: white;
 }
 
@@ -71,4 +73,97 @@
 #tablesubtitle,
 .form-group {
 	max-height: 58px;
+}
+
+.panel--closed {
+	width: 0;
+}
+
+.panel--open {
+	box-shadow: $base-box-shadow;
+	height: 100%;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	background-color: white;
+	transition: 0.5s;
+
+	#deviceimage {
+		float: center;
+	}
+}
+
+.asset-detail-panel {
+	margin-left: '20px' !important;
+	margin-right: '20px' !important;
+	margin-top: '20px' !important;
+	width: '500px' !important;
+	border: '1px solid lightgray' !important;
+}
+
+.deviceinfo {
+	width: 220px;
+}
+
+.devicelabel {
+	text-align: center;
+	width: 200px;
+}
+
+.descTitle {
+	color: #9e9ea2;
+}
+
+.deviceVul {
+	width: 100%;
+
+	.devicename {
+		width: 50%;
+	}
+
+	.version {
+		width: 10%;
+		font-size: 12px;
+	}
+
+	.date {
+		width: 40%;
+		font-size: 12px;
+		font-style: italic;
+	}
+}
+
+.btn-group {
+	width: 100%;
+
+	.button {
+		width: 50%;
+		height: 30px;
+		text-align: center;
+		background-color: white;
+	}
+}
+
+#tabds {
+	justify-content: space-around;
+}
+
+#tabds-1 {
+	margin-right: 55px;
+}
+
+#tabds-2 {
+	margin-left: 55px;
+	margin-right: 55px;
+}
+
+#tabds-3 {
+	margin-left: 55px;
+}
+
+#tabds-1-content,
+#tabds-2-content,
+#tabds-3-content {
+	width: 513px;
 }
