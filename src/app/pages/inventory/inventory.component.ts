@@ -1,13 +1,11 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  *  Define interface
  */
 export interface Asset {
-	_id?: number;
+	_id: number;
 	hostname: string;
 	productId?: string;
 	ipaddress?: string;
@@ -24,15 +22,26 @@ export interface Asset {
 })
 
 export class InventoryComponent implements OnInit {
-	public tableOptions: CuiTableOptions;
 	public loading = false;
 	public limit = 15;
 	public totalAssets = 20;
 	public assets: Asset[] = [];
-	@ViewChild('hostname') public hostnameTemplate: TemplateRef<string>;
+	public currentTab = 'vulnerability';
+	public less = true;
+	public currentButton = 'securityadvisory';
+	public showSidePanel = false;
+	public sampleDevice = {
+		deviceName: 'Cisco Catalyst 3650-12x48FD-E Switch',
+		hostname: 'SJ-CAT-3650-12x48',
+		ipAddress: '10.10.10.1',
+		productFamily: 'Catalyst Switch',
+		productID: 'WS-C3650-12X48FD-E',
+		productSeries: 'Catalyst 3600',
+		serialNo: 'TMX1919OU4',
+		software: 'Everest-16.6.5',
+	};
+
 	@ViewChild('productid') public productidTemplate: TemplateRef<string>;
-	@ViewChild('ip')  public ipTemplate: TemplateRef<string>;
-	@ViewChild('serial') public serialTemplate: TemplateRef<string>;
 
 	constructor (
 		private logger: LogService,
@@ -44,41 +53,6 @@ export class InventoryComponent implements OnInit {
  	* Implement ngOnInit
  	*/
 	public ngOnInit () {
-		this.tableOptions = new CuiTableOptions({
-			bordered: false,
-			columns: [
-				{
-					key: 'hostname',
-					name: I18n.get('_Hostname_'),
-					sortable: true,
-					sorting: false,
-					sortKey: 'hostname',
-					width: '25%',
-				},
-				{
-					name: I18n.get('_ProductId_'),
-					sortable: false,
-					sorting: false,
-					template: this.productidTemplate,
-				},
-				{
-					key: 'ipaddress',
-					name: I18n.get('_IpAddress_'),
-					sortable: false,
-					sorting: false,
-				},
-				{
-					key: 'serialNumber',
-					name: I18n.get('_SerialNumber_'),
-					sortable: false,
-					sorting: false,
-				},
-			],
-			dynamicData: true,
-			padding: 'loose',
-			selectable: false,
-			sortable: true,
-		});
 		this.loadData();
 	}
 
@@ -98,5 +72,35 @@ export class InventoryComponent implements OnInit {
 			this.assets.push(asset);
 		}
 		this.loading = false;
+	}
+
+	/**
+	 * Implement selectTab function
+	 * @param tab : future active Tab
+	 */
+	public selectTab (tab: string) {
+		this.currentTab = tab;
+	}
+
+	/**
+ 	* Implement showMore funciton
+ 	*/
+	public showMore () {
+		this.less = false;
+	}
+
+	/**
+ 	* Implement showLess funciton
+ 	*/
+	public showLess () {
+		this.less = true;
+	}
+
+	/**
+	 * Implement clickButton function
+	 * @param button : Button Clicked
+	 */
+	public clickButton (button: string) {
+		this.currentButton = button;
 	}
 }
