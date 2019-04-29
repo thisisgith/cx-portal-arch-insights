@@ -18,6 +18,18 @@ export const defaults = {
 		tags: {
 			appId: 'pbc',
 		},
+		settings: [
+			{
+				method: 'GET',
+				url: '/ws/search',
+				scenario: '200ok Example Response',
+			},
+			{
+				method: 'GET',
+				url: '/ws/webinars',
+				scenario: '200ok',
+			},
+		],
 	},
 	production: false,
 	services: {
