@@ -89,6 +89,40 @@ describe('InventoryComponent', () => {
 				.toBeFalsy();
 		});
 
+		it('should show sidepanel when click tablerow', () => {
+			const assetId = 1;
+			component.clickTableRow(assetId);
+			expect(component.showSidePanel)
+				.toBeTruthy();
+		});
+
+		it('should close sidepanel when click another tablerow if there is sidepanel', () => {
+			component.activeAssetId = 1;
+			const assetId = 2;
+			component.showSidePanel = true;
+			component.clickTableRow(assetId);
+			expect(component.showSidePanel)
+				.toBeFalsy();
+		});
+
+		it('should still show sidepanel when click the same table row', () => {
+			component.activeAssetId = 1;
+			const assetId = 1;
+			component.showSidePanel = true;
+			component.clickTableRow(assetId);
+			expect(component.showSidePanel)
+				.toBeTruthy();
+		});
+
+		it('should not show sidepanel when click Close button', () => {
+			component.closeSidePanel();
+			expect(component.showSidePanel)
+				.toBeFalsy();
+			de = fixture.debugElement.query(By.css('asset-detail-panel'));
+			expect(de)
+				.toBeFalsy();
+		});
+
 		it('should show Vulnerability tab content at default', () => {
 			expect(component.currentTab)
 				.toEqual('vulnerability');

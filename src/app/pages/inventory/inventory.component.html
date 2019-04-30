@@ -118,11 +118,14 @@
 				</div>
 				<div>
 					<div class="responsive-table assets-table">
-						<table class="table table--fixed table--hover table--loose" 
+						<table id="mytable" class="table table--fixed table--hover table--loose table--selectable" 
 							*ngIf="assets && assets.length">
 							<thead>
 								<tr>
-									<th class="table-header" [innerText]="'_Hostname_' | i18n"></th>
+									<!-- <th class="sortable" [innerText]="'_Hostname_' | i18n"><span class="sort-indicator icon-chevron-down"></span></th> -->
+									<th class="sortable"><b [innerText]="'_Hostname_' | i18n"></b>
+										<span class="sort-indicator icon-chevron-down"></span>
+									</th>
 									<th class="table-header" [innerText]="'_ProductId_' | i18n"></th>
 									<th class="table-header" [innerText]="'_IpAddress_' | i18n"></th>
 									<th class="table-header" [innerText]="'_SerialNumber_' | i18n"></th>
@@ -130,7 +133,8 @@
 							</thead>
 							<tbody>
 								<tr class="clickable-row" *ngFor="let asset of assets"
-									(click)="showSidePanel = !showSidePanel" data-auto-id="showsidepanel">
+									(click)="clickTableRow(asset._id)" data-auto-id="assetrow"
+									[ngClass]="{'active': asset.status && showSidePanel}">
 									<td class="table-data" [innerText]="asset.hostname"></td>
 									<td class="table-data" [innerText]="asset.productId"></td>
 									<td class="table-data" [innerText]="asset.ipaddress"></td>
@@ -140,14 +144,13 @@
 						</table>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
 
 	<div class="asset-detail-panel panel panel--open" *ngIf="showSidePanel">
 		<div class="panel-block">
-			<a class="no-link fade-in-pop closebtn" (click)="showSidePanel = !showSidePanel" data-auto-id="closebtn">
+			<a class="no-link fade-in-pop closebtn" (click)="closeSidePanel()" data-auto-id="closebtn">
 				<span class="icon-close icon-medium"></span>
 			</a>
 			<h4 class="text-center base-margin-top base-margin-bottom">{{sampleDevice.hostname}}</h4>
@@ -183,7 +186,7 @@
 				<li id="tabds-1" class="tab" [ngClass]="{'active': currentTab === 'vulnerability'}"
 					(click)="selectTab('vulnerability')" data-auto-id="vultab">
 					<a tabindex="0">
-						<div class="tab__heading" [innerText]="'_Vulnerability_' | i18n" data-auto-id="vultabhead">
+						<div class="tab__heading" [innerText]="'_Vulnerabilities_' | i18n" data-auto-id="vultabhead">
 						</div>
 					</a>
 				</li>
@@ -246,13 +249,14 @@
 							</li>
 							<p [innerText]="'_VulnerabilityDetail1_' | i18n" data-auto-id="vuldetail3"></p>
 						</ul>
-
-						<a *ngIf="less === true" (click)="showMore()" data-auto-id="showmore">
-							<p [innerText]="'_ViewMore_' | i18n"></p>
-						</a>
-						<a *ngIf="less === false" (click)="showLess()" data-auto-id="showless">
-							<p [innerText]="'_ViewLess_' | i18n"></p>
-						</a>
+						<div class="base-margin-left">
+							<a *ngIf="less === true" (click)="showMore()" data-auto-id="showmore">
+								<p [innerText]="'_ViewMore_' | i18n"></p>
+							</a>
+							<a *ngIf="less === false" (click)="showLess()" data-auto-id="showless">
+								<p [innerText]="'_ViewLess_' | i18n"></p>
+							</a>
+						</div>
 					</div>
 					<div *ngIf="currentButton === 'fieldnotice'">
 						<p [innerText]="'_FieldNoticeDetail_' | i18n" data-auto-id="fielddetail"></p>
