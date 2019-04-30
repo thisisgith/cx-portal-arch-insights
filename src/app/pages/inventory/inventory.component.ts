@@ -10,6 +10,7 @@ export interface Asset {
 	productId?: string;
 	ipaddress?: string;
 	serialNumber?: string;
+	status: boolean;
 }
 
 /**
@@ -23,7 +24,7 @@ export interface Asset {
 
 export class InventoryComponent implements OnInit {
 	public loading = false;
-	public limit = 15;
+	public activeAssetId = -1;
 	public totalAssets = 20;
 	public assets: Asset[] = [];
 	public currentTab = 'vulnerability';
@@ -68,6 +69,7 @@ export class InventoryComponent implements OnInit {
 				ipaddress :  `${i.toString()}.${i.toString()}.${i.toString()}.${i.toString()}`,
 				productId : `${i.toString()}`,
 				serialNumber : `TMX${i.toString()}`,
+				status: false,
 			};
 			this.assets.push(asset);
 		}
@@ -102,5 +104,46 @@ export class InventoryComponent implements OnInit {
 	 */
 	public clickButton (button: string) {
 		this.currentButton = button;
+	}
+
+	/**
+	 * Implement clickTableRow funciton
+	 * @param assetId : the asset selected
+ 	*/
+	public clickTableRow (assetId: number) {
+		// clicked the active row, will do nothing
+		if (assetId === this.activeAssetId) {
+			return;
+		}
+
+		// If sidepanel is opened, click the other row should close the sidepanel first
+		if (this.showSidePanel && (this.activeAssetId !== assetId)) {
+			this.closeSidePanel();
+
+			return;
+		}
+		this.showSidePanel = this.showSidePanel ? false : true;
+		if (this.activeAssetId > -1) {
+			this.assets[this.activeAssetId].status = false;
+		}
+		this.assets[assetId].status = true;
+		this.activeAssetId = assetId;
+	}
+
+	/**
+ 	* Implement closeSidePanel funciton
+ 	*/
+	public closeSidePanel () {
+		this.showSidePanel = false;
+		for (const asset of this.assets) {
+			asset.status = false;
+		}
+
+		// For now will reset all of the sidepanel information when close the sidepanel
+		// In the future another API call will do the same
+		this.activeAssetId = -1;
+		this.currentButton = 'securityadvisory';
+		this.currentTab = 'vulnerability';
+		this.less = true;
 	}
 }

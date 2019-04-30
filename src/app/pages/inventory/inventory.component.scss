@@ -95,15 +95,18 @@
 }
 
 .asset-detail-panel {
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-top: 20px;
 	margin-left: '20px' !important;
 	margin-right: '20px' !important;
 	margin-top: '20px' !important;
 	width: '500px' !important;
-	border: '1px solid lightgray' !important;
+	border: '1px solid darkgray' !important;
 }
 
 .deviceinfo {
-	width: 220px;
+	width: 250px;
 }
 
 .devicelabel {
@@ -150,16 +153,16 @@
 }
 
 #tabds-1 {
-	margin-right: 55px;
+	margin-right: 60px;
 }
 
 #tabds-2 {
-	margin-left: 55px;
-	margin-right: 55px;
+	margin-left: 60px;
+	margin-right: 60px;
 }
 
 #tabds-3 {
-	margin-left: 55px;
+	margin-left: 60px;
 }
 
 #tabds-1-content,
