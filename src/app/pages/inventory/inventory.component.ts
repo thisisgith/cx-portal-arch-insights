@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
+import * as _ from 'lodash';
 
 /**
  *  Define interface
@@ -31,6 +32,7 @@ export class InventoryComponent implements OnInit {
 	public less = true;
 	public currentButton = 'securityadvisory';
 	public showSidePanel = false;
+	public sortDirection = 'desc';
 	public sampleDevice = {
 		deviceName: 'Cisco Catalyst 3650-12x48FD-E Switch',
 		hostname: 'SJ-CAT-3650-12x48',
@@ -74,6 +76,15 @@ export class InventoryComponent implements OnInit {
 			this.assets.push(asset);
 		}
 		this.loading = false;
+	}
+
+	/**
+ 	* Implement onSort funciton
+ 	*/
+	public onSort () {
+		this.assets = _.orderBy(
+			this.assets, ['hostname'], [this.sortDirection]);
+		this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
 	}
 
 	/**

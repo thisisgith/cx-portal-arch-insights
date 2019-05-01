@@ -122,9 +122,12 @@
 							*ngIf="assets && assets.length">
 							<thead>
 								<tr>
-									<!-- <th class="sortable" [innerText]="'_Hostname_' | i18n"><span class="sort-indicator icon-chevron-down"></span></th> -->
-									<th class="sortable"><b [innerText]="'_Hostname_' | i18n"></b>
-										<span class="sort-indicator icon-chevron-down"></span>
+									<th class="sortable" (click)="onSort()" data-auto-id="sortabletitle">
+										<b [innerText]="'_Hostname_' | i18n"></b>
+										<span 
+											class="sort-indicator" 
+											[ngClass]="{ 'icon-chevron-down': sortDirection === 'desc', 'icon-chevron-up': sortDirection === 'asc' }">
+										</span>
 									</th>
 									<th class="table-header" [innerText]="'_ProductId_' | i18n"></th>
 									<th class="table-header" [innerText]="'_IpAddress_' | i18n"></th>
