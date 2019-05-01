@@ -150,5 +150,15 @@ describe('InventoryComponent', () => {
 			expect(component.less)
 				.toBeTruthy();
 		});
+
+		it('should change the sortDirection after click sort icon', () => {
+			component.sortDirection = 'desc';
+			component.onSort();
+			expect(component.sortDirection)
+				.toEqual('asc');
+			component.onSort();
+			expect(component.sortDirection)
+				.toEqual('desc');
+		});
 	});
 });
