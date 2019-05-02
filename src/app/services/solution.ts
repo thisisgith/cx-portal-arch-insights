@@ -1,16 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { LogService } from '@cisco-ngx/cui-services';
 import { Observable } from 'rxjs';
-
-/**
- * Interface representing a Webinar from the Interactive Webinars results
- */
-export interface Webinar {
-	title: string;
-	summary: string;
-}
+import { Webinar } from '@interfaces';
 
 /**
  * Interface representing a list of Webinar Results
@@ -31,7 +23,6 @@ export class SolutionService {
 
 	constructor (
 		private http: HttpClient,
-		private logger: LogService,
 	) {
 		const origin = environment.origin || window.location.origin;
 		this.webinarUrl = `${origin}${environment.services.solution.webinar}`;

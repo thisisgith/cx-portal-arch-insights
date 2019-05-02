@@ -6,15 +6,16 @@ import {
 	Pipe,
 	PipeTransform,
 	ViewChild,
+	OnDestroy,
 } from '@angular/core';
 
-import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl } from '@angular/forms';
-import { fromEvent } from 'rxjs';
+import { Subscription, fromEvent } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { SearchService, SearchResults } from './search.service';
+import { SearchService, SearchResults } from '@services';
 
 import * as _ from 'lodash';
+import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Pipe used to highlight given key words in a text string by returning parseable HTML
@@ -54,7 +55,7 @@ export class HighlightPipe implements PipeTransform {
 	styleUrls: ['./search.component.scss'],
 	templateUrl: './search.component.html',
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
 
 	public searchForm: FormGroup;
 	public search: FormControl = new FormControl('');
@@ -74,6 +75,11 @@ export class SearchComponent implements OnInit {
 	public searchInput: ElementRef;
 
 	/**
+	 * The subscription we attach to our search input during initialization for debouncing
+	 */
+	private searchSubscribe: Subscription;
+
+	/**
 	 * Listener to detect the escape key and hide the modal if pressed
 	 */
 	@HostListener('document:keydown.escape', ['$event'])
@@ -82,11 +88,9 @@ export class SearchComponent implements OnInit {
 	}
 
 	constructor (
-		private logger: LogService,
 		private service: SearchService,
-	) {
-		this.logger.debug('SearchComponent Created!');
-	}
+		private logger: LogService,
+	) { }
 
 	/**
 	 * Performs the search query against the search service and handles showing/hiding the modal
@@ -101,11 +105,11 @@ export class SearchComponent implements OnInit {
 			this.service.search(query)
 			.subscribe((results: SearchResults) => {
 				this.searchResults = results;
+				this.status.searching = false;
 			},
 			err => {
-				this.logger.error(`Search Query :: ${query} :: Error ${err}`);
-			},
-			() => {
+				const errMsg = `(${err.status}) ${err.statusText}`;
+				this.logger.error(`Search Query :: ${query} :: Error ${errMsg}`);
 				this.status.searching = false;
 			});
 		}
@@ -119,7 +123,7 @@ export class SearchComponent implements OnInit {
 			search: this.search,
 		});
 
-		fromEvent(this.searchInput.nativeElement, 'keyup')
+		this.searchSubscribe = fromEvent(this.searchInput.nativeElement, 'keyup')
 			.pipe(map((evt: KeyboardEvent) => (<HTMLInputElement> evt.target).value))
 			.pipe(debounceTime(this.options.debounce))
 			.pipe(distinctUntilChanged())
@@ -128,5 +132,12 @@ export class SearchComponent implements OnInit {
 					this.doSearch(query);
 				}
 			});
+	}
+
+	/**
+	 * Handler for destroying subscriptions
+	 */
+	public ngOnDestroy () {
+		_.invoke(this.searchSubscribe, 'unsubscribe');
 	}
 }

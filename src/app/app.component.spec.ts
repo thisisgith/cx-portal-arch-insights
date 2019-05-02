@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -13,6 +13,7 @@ import {
 } from '@cisco-ngx/cui-components';
 import { HeaderComponent } from './components/header/header.component';
 import { Subject } from 'rxjs';
+import { AppService } from './app.service';
 
 /**
  * MockRouter used to help show/hide the spinner
@@ -39,8 +40,9 @@ describe('AppComponent', () => {
 	let fixture: ComponentFixture<AppComponent>;
 	let router: Router;
 	let de: DebugElement;
+	let service: AppService;
 
-	beforeEach(() => {
+	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RouterTestingModule,
@@ -55,6 +57,10 @@ describe('AppComponent', () => {
 		})
 		.compileComponents();
 
+		service = TestBed.get(AppService);
+	}));
+
+	beforeEach(() => {
 		fixture = TestBed.createComponent(AppComponent);
 		component = fixture.componentInstance;
 		router = fixture.debugElement.injector.get(Router);
@@ -73,7 +79,7 @@ describe('AppComponent', () => {
 	});
 
 	it('should load the i18n files', () => {
-		const title = 'Persona Based Console';
+		const title = 'Persona-Based Console';
 		fixture.detectChanges();
 
 		fixture.whenStable()
@@ -171,5 +177,12 @@ describe('AppComponent', () => {
 
 		expect(de)
 			.toBeNull();
+	});
+
+	it('should not reload the i18n if already loaded', () => {
+		expect(service.i18nLoaded)
+			.toBeTruthy();
+
+		service.loadI18n();
 	});
 });

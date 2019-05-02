@@ -5,53 +5,38 @@ import { environment } from '@environment';
 import { LogService } from '@cisco-ngx/cui-services';
 
 /**
- * Interface representing the Device in the insight results
- */
-export interface Device {
-	model: string;
-	swVersion: string;
-	cxLevel: number;
-}
-
-/**
- * Interface to represent a Top Result returned from a search query
- */
-export interface Result {
-	type: string;
-	title: string;
-	summary: string;
-	link: string;
-	answered?: string;
-	start?: string;
-}
-
-/**
- * Interface to represent the Insight result returned from a search query
- */
-export interface Insight {
-	bug?: {
-		description: string;
-		details: string;
-	};
-	fix?: {
-		description: string;
-		details: string;
-		download: string;
-	};
-	workaround?: {
-		description: string;
-		details: string;
-	};
-	devices: Device[];
-}
-
-/**
  * Interface representing the Search Results
  */
 export interface SearchResults {
 	highlightTerms?: string[];
-	insight?: Insight;
-	results: Result[];
+	insight?: {
+		bug?: {
+			description: string;
+			details: string;
+		};
+		devices: {
+			cxLevel: number;
+			model: string;
+			swVersion: string;
+		}[];
+		fix?: {
+			description: string;
+			details: string;
+			download: string;
+		};
+		workaround?: {
+			description: string;
+			details: string;
+		};
+	};
+	results?: {
+		answered?: string;
+		link: string;
+		start?: string;
+		summary: string;
+		title: string;
+		type: string;
+	}[];
 }
 
 /**
@@ -80,6 +65,6 @@ export class SearchService {
 	public search (query: string): Observable<SearchResults> {
 		this.logger.debug(`Search query :: ${query}`);
 
-		return this.http.get<SearchResults>(`${this.serviceUrl}`);
+		return this.http.get<SearchResults>(this.serviceUrl);
 	}
 }

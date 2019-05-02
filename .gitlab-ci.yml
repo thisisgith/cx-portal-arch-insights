@@ -1,10 +1,8 @@
 # temporary until we find another suitable image
-image: blakecallens/nodejs-chromium
+image: trion/ng-cli-karma
 
 stages:
   - setup
-  - audit
-  - lint
   - test
 
 # add 'node_modules' to cache for speeding up builds
@@ -12,33 +10,30 @@ cache:
   key: "PIPELINE-$CI_PIPELINE_ID"
   paths:
     - node_modules/ # Node modules and dependencies
-    - package-lock.json
 
 setup:
   stage: setup
   script:
-    - npm install --audit=false --package-lock=true
+    - npm install --audit=false
 
 # run npm audit to verify dependency security
 audit:
-  stage: audit
+  stage: setup
   allow_failure: true # temporary until @compodoc fixes their vulnerability issue, since this is only used for document generation, I dont consider it breaking
+  before_script:
+    - npm install --package-lock=true --package-lock-only
   script:
     - npm audit
 
 # run our lint process against the committed files
 lint:
-  stage: lint
-  before_script:
-    - npm install --audit=false
+  stage: test
   script:
     - npm run lint
 
 # run our test:ci process for the commit
 unit:
   stage: test
-  before_script:
-    - npm install --audit=false
   script:
     - npm run test:ci
 
@@ -46,7 +41,6 @@ unit:
 automation:
   stage: test
   before_script:
-    - npm install --audit=false
     - apt-get update && apt-get -y install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
     - npx cypress install
     - npm run start:background

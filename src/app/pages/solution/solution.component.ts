@@ -6,7 +6,7 @@ import {
  } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
-import { SolutionService, WebinarResults } from './solution.service';
+import { SolutionService, WebinarResults } from '@services';
 
 /**
  * Main Solution Page Component
@@ -17,11 +17,11 @@ import { SolutionService, WebinarResults } from './solution.service';
 	templateUrl: './solution.component.html',
 })
 export class SolutionComponent implements OnInit {
-	@ViewChild('coaching') public coachingTemplate: TemplateRef<any>;
-	@ViewChild('webinars') public webinarTemplate: TemplateRef<any>;
+	@ViewChild('coaching') public coachingTemplate: TemplateRef<{ }>;
+	@ViewChild('webinars') public webinarTemplate: TemplateRef<{ }>;
 
-	public visibleTemplate: TemplateRef<any>;
-	public visibleContext: any;
+	public visibleTemplate: TemplateRef<{ }>;
+	public visibleContext: WebinarResults;
 
 	public showScheduled = false;
 	public showRecommended = false;
@@ -40,9 +40,7 @@ export class SolutionComponent implements OnInit {
 	constructor (
 		private logger: LogService,
 		private service: SolutionService,
-	) {
-		this.logger.debug('SolutionComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Determines which modal to display
@@ -87,7 +85,8 @@ export class SolutionComponent implements OnInit {
 			this.webinarResults = results;
 		},
 		err => {
-			this.logger.error(err);
+			this.logger.error(`solution.component : getWebinars() :: Error : (${
+				err.status}) ${err.message}`);
 		},
 		() => {
 			this.webinarWaiting = false;

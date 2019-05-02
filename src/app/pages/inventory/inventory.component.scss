@@ -1,78 +1,56 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
-/* Empty SCSS Component File */
-.tempMarginLeft {
-	margin-left: -250px;
+.info-container {
+	border-color: $light-gray-3;
+	border-width: 0 2px 0 0;
+	border-style: none solid none none;
+	height: 85px;
 }
 
-.sidebarstyle {
-	padding-right: 20px;
-	padding-left: 30px;
-	background-color: white;
+.text-giant {
+	font-size: 72px !important;
+	line-height: 72px !important;
+	font-weight: 200;
 }
 
-#rightarrow {
-	color: lightgray;
-	padding-top: 60px;
-	padding-left: 20px;
-	width: 48px;
-	height: 48px;
+.summary-text {
+	width: 100px;
 }
 
-.flex-center {
-	margin-right: 10px;
+.inventory-sidebar {
+	background-color: $white;
 }
 
-#networkhealth,
-#contracts,
-#costs {
-	width: 165px;
+.alert-tab-selected {
+	background: $white;
 }
 
-#tinybutton {
-	width: 20px;
-	height: 20px;
+.alert-panel-popup {
+	z-index: 999999;
+	position: absolute;
+	width: 100%;
+
+	.alert-blur {
+		box-shadow: $base-box-shadow-large;
+	}
+
+	.responsive-table {
+		max-height: 200px;
+	}
 }
 
-#horizontal-button-group {
-	float: right;
-}
-
-.col-md-border {
-	border-left: 1px solid lightgray;
-}
-
-.inventory-top-panel {
-	display: flex;
-}
-
-.container.space-around {
-	justify-content: space-around;
-}
-
-#tabletitle {
-	margin-left: 20px;
-	margin-right: 50px;
-	max-height: 58px;
-}
-
-#table-toolbar {
-	float: right;
-	max-height: 58px;
-}
-
-.assets-table {
-	overflow-y: scroll;
-	height: 700px;
-	display: block;
-}
-
-#tableheaderpanel,
-.col-md-7,
-.col-md-5,
-#tablesubtitle,
-.form-group {
-	max-height: 58px;
+.arrowBox::after {
+	position: absolute;
+	content: '';
+	width: 0;
+	height: 0;
+	left: 50%;
+	top: 100%;
+	border-top: 1px solid transparent;
+	border-left: 30px solid transparent;
+	border-bottom: 20px solid $light-gray-3;
+	border-right: 30px solid transparent;
+	margin-left: -30px;
 }
 
 .panel--closed {
@@ -86,7 +64,7 @@
 	z-index: 1;
 	top: 0;
 	right: 0;
-	background-color: white;
+	background-color: $white;
 	transition: 0.5s;
 
 	#deviceimage {
@@ -115,7 +93,7 @@
 }
 
 .descTitle {
-	color: #9e9ea2;
+	color: $light-gray-3;
 }
 
 .deviceVul {
@@ -134,17 +112,6 @@
 		width: 40%;
 		font-size: 12px;
 		font-style: italic;
-	}
-}
-
-.btn-group {
-	width: 100%;
-
-	.button {
-		width: 50%;
-		height: 30px;
-		text-align: center;
-		background-color: white;
 	}
 }
 

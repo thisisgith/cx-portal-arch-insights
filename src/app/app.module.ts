@@ -21,7 +21,7 @@ import {
 import {
 	LogService,
 } from '@cisco-ngx/cui-services';
-import { HeaderModule } from '@components/header/header.module';
+import { HeaderModule } from '@components';
 
 /**
  * Initialization function which will load our i18n files

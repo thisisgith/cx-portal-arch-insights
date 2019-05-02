@@ -13,7 +13,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class AppService {
 
-	private i18nLoaded = false;
+	public i18nLoaded = false;
 
 	constructor (
 		private http: HttpClient,
