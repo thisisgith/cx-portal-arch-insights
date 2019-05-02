@@ -3,8 +3,12 @@
 	"compilerOptions": {
 		"baseUrl": "./",
 		"paths": {
-			"@components/*": ["src/app/components/*"],
-			"@environment": ["src/environments/environment.ts"]
+			"@classes": ["src/app/classes/index.ts"],
+			"@components": ["src/app/components/index.ts"],
+			"@environment": ["src/environments/environment.ts"],
+			"@interfaces": ["src/app/interfaces/index.ts"],
+			"@mock": ["src/app/services/mock/index.ts"],
+			"@services": ["src/app/services/index.ts"]
 		}
 	}
 }

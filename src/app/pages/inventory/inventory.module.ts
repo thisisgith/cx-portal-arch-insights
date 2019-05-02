@@ -2,13 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InventoryComponent } from './inventory.component';
 import { RouterModule, Routes } from '@angular/router';
-import { SidebarModule } from '@components/sidebar/sidebar.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CuiTableModule } from '@cisco-ngx/cui-components';
+import { ChartModule } from 'angular-highcharts';
+import { AlertService } from '@services';
+import { AlertInfoModule } from './alert-info/alert-info.module';
+import { AlertSidebarModule } from './alert-sidebar/alert-sidebar.module';
+import { CuiSpinnerModule, CuiTableModule, CuiGaugeModule } from '@cisco-ngx/cui-components';
 
 /**
- * Child routes for Inventory Module for lazy loading
+ * Routes for lazy loading
  */
 const childRoutes: Routes = [
 	{
@@ -18,18 +20,22 @@ const childRoutes: Routes = [
 ];
 
 /**
- * Module representing the Inventory Pages
+ * Module representing the Inventory Page Component
  */
 @NgModule({
 	declarations: [InventoryComponent],
 	imports: [
+		AlertInfoModule,
+		AlertSidebarModule,
+		ChartModule,
 		CommonModule,
-		SidebarModule,
+		CuiGaugeModule,
+		CuiSpinnerModule,
+		CuiTableModule,
 		I18nPipeModule,
-		FormsModule,
-		ReactiveFormsModule,
 		CuiTableModule,
 		RouterModule.forChild(childRoutes),
 	],
+	providers: [AlertService],
 })
 export class InventoryModule { }

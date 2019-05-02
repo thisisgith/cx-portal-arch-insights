@@ -5,7 +5,6 @@ import { defaults } from './defaults';
  */
 export const environment = {
 	...defaults,
-	mock: false,
 	origin: 'https://cway.cisco.com',
 	production: true,
 };

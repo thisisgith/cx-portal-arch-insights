@@ -1,4 +1,19 @@
 const karmaConfig = require('@apollo/configs/karma');
 const path = require('path');
 
-module.exports = config => karmaConfig(config, path.join(__dirname, '../coverage/persona-based-console'));
+const eachValue = 50;
+const globalValue = 75;
+const each = {
+	branches: eachValue,
+	functions: eachValue,
+	lines: eachValue,
+	statements: eachValue,
+};
+const global = {
+	branches: globalValue,
+	functions: globalValue,
+	lines: globalValue,
+	statements: globalValue,
+};
+
+module.exports = config => karmaConfig(config, path.join(__dirname, '../coverage'), { each, global });

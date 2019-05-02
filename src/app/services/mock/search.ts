@@ -1,4 +1,4 @@
-import { SearchResults } from './search.service';
+import { SearchResults } from '../search';
 
 /**
  * Mock Data for search results

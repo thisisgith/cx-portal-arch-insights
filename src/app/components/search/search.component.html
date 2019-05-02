@@ -84,7 +84,8 @@
 								</div>
 							</div>
 						</div>
-						<h5 id="noResults" *ngIf="!searchResults?.results?.length"
+						<h5 id="noResults"
+							*ngIf="!searchResults || !searchResults?.results?.length"
 							data-auto-id="NoResults"
 							class="text-large base-margin-left"
 							[innerText]="'_NoResultsFoundForX_' | i18n: search.value">

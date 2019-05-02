@@ -5,7 +5,7 @@ import {
 	I18nPipeModule, TruncatePipeModule,
 } from '@cisco-ngx/cui-pipes';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SearchService } from './search.service';
+import { SearchService } from '@services';
 import { CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { HttpClientModule } from '@angular/common/http';
 

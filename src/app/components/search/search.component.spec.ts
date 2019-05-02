@@ -1,33 +1,44 @@
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { SearchComponent } from './search.component';
 import { SearchModule } from './search.module';
 import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
-import { SearchService } from './search.service';
-import { AppModule } from '../../app.module';
+import { SearchService } from '@services';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { mockData } from './search.component.spec.mock';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { environment } from '@environment';
+import { searchData } from '@mock';
+
+import * as enUSJson from '../../../assets/i18n/en-US.json';
 
 describe('SearchComponent', () => {
 	let component: SearchComponent;
 	let fixture: ComponentFixture<SearchComponent>;
 	let de: DebugElement;
 	let el: HTMLElement;
+	let service: SearchService;
+	let httpMock: HttpTestingController;
 
-	beforeEach(() => {
+	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				AppModule,
+				HttpClientTestingModule,
 				SearchModule,
 			],
 		})
 		.compileComponents();
-	});
+
+		service = TestBed.get(SearchService);
+		httpMock = TestBed.get(HttpTestingController);
+	}));
 
 	beforeEach(() => {
+		I18n.injectDictionary(enUSJson);
+
 		fixture = TestBed.createComponent(SearchComponent);
 		component = fixture.componentInstance;
+		de = fixture.debugElement;
 		fixture.detectChanges();
 	});
 
@@ -80,86 +91,104 @@ describe('SearchComponent', () => {
 				.toBeTruthy();
 		});
 
-		it('should show a message if there are no results',
-			inject([SearchService], (service: SearchService) => {
+		it('should show a message if there are no results', () => {
+			spyOn(service, 'search')
+				.and
+				.returnValue(of({ results: [] }));
+
+			component.search.setValue(searchTerm);
+			component.doSearch(searchTerm);
+
+			fixture.detectChanges();
+
+			expect(service.search)
+				.toHaveBeenCalled();
+			expect(component.searchResults.results.length)
+				.toEqual(0);
+
+			de = fixture.debugElement.query(By.css('h5'));
+			el = de.nativeElement;
+			expect(el.innerText)
+				.toEqual(I18n.get('_NoResultsFoundForX_', searchTerm));
+		});
+
+		describe('insights', () => {
+			it('should hide the insights if they dont exist', () => {
 				spyOn(service, 'search')
 					.and
 					.returnValue(of({ results: [] }));
 
-				component.search.setValue(searchTerm);
 				component.doSearch(searchTerm);
 
 				fixture.detectChanges();
 
 				expect(service.search)
 					.toHaveBeenCalled();
-				expect(component.searchResults.results.length)
-					.toEqual(0);
+				expect(component.searchResults.insight)
+					.toBeUndefined();
+				de = fixture.debugElement.query(By.css('#insight'));
 
-				de = fixture.debugElement.query(By.css('h5'));
+				expect(de)
+					.toBeFalsy();
+			});
+
+			it('should show the insights if they do exist ', () => {
+				spyOn(service, 'search')
+					.and
+					.returnValue(of(searchData));
+
+				component.doSearch(searchTerm);
+
+				fixture.detectChanges();
+				expect(service.search)
+					.toHaveBeenCalled();
+				expect(component.searchResults.insight)
+					.toBeDefined();
+				de = fixture.debugElement.query(By.css('#insight'));
+				expect(de)
+					.toBeTruthy();
+			});
+
+			it('should not fail if receive an error message', () => {
+				component.search.setValue(searchTerm);
+				component.doSearch(searchTerm);
+
+				const req = httpMock.expectOne(
+					`${environment.origin}${environment.services.search}`);
+
+				const mockErrorResponse = { status: 404, statusText: 'Bad Request' };
+
+				expect(req.request.method)
+					.toBe('GET');
+
+				req.flush({ }, mockErrorResponse);
+
+				fixture.detectChanges();
+
+				de = fixture.debugElement.query(By.css('#noResults'));
 				el = de.nativeElement;
 				expect(el.innerText)
 					.toEqual(I18n.get('_NoResultsFoundForX_', searchTerm));
-			}));
-
-		describe('insights', () => {
-			it('should hide the insights if they dont exist',
-				inject([SearchService], (service: SearchService) => {
-					spyOn(service, 'search')
-						.and
-						.returnValue(of({ results: [] }));
-
-					component.doSearch(searchTerm);
-
-					fixture.detectChanges();
-
-					expect(service.search)
-						.toHaveBeenCalled();
-					expect(component.searchResults.insight)
-						.toBeUndefined();
-					de = fixture.debugElement.query(By.css('#insight'));
-
-					expect(de)
-						.toBeFalsy();
-				}));
-
-			it('should show the insights if they do exist ',
-				inject([SearchService], (service: SearchService) => {
-					spyOn(service, 'search')
-						.and
-						.returnValue(of(mockData));
-
-					component.doSearch(searchTerm);
-
-					fixture.detectChanges();
-					expect(service.search)
-						.toHaveBeenCalled();
-					expect(component.searchResults.insight)
-						.toBeDefined();
-					de = fixture.debugElement.query(By.css('#insight'));
-					expect(de)
-						.toBeTruthy();
-				}));
+			});
 		});
 
 		describe('top results', () => {
-			it('should show the results if they do exist',
-				inject([SearchService], (service: SearchService) => {
-					spyOn(service, 'search')
-						.and
-						.returnValue(of(mockData));
+			it('should show the results if they do exist', () => {
+				spyOn(service, 'search')
+					.and
+					.returnValue(of(searchData));
 
-					component.doSearch(searchTerm);
+				component.doSearch(searchTerm);
 
-					fixture.detectChanges();
-					expect(service.search)
-						.toHaveBeenCalled();
-					expect(component.searchResults.results.length)
-						.toEqual(8);
-					de = fixture.debugElement.query(By.css('#topResults'));
-					expect(de)
-						.toBeTruthy();
-				}));
+				fixture.detectChanges();
+				expect(service.search)
+					.toHaveBeenCalled();
+				expect(component.searchResults.results.length)
+					.toEqual(8);
+				de = fixture.debugElement.query(By.css('#topResults'));
+				expect(de)
+					.toBeTruthy();
+			});
 		});
 	});
 });

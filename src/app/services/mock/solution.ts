@@ -1,4 +1,4 @@
-import { WebinarResults } from './solution.service';
+import { WebinarResults } from '../solution';
 
 /**
  * Mock data for webinar API results
