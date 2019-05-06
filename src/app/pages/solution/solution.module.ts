@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SolutionComponent } from './solution.component';
 import { RouterModule, Routes } from '@angular/router';
-import { GaugePanelModule } from '@components';
+import { GaugePanelModule, RacetrackModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiSpinnerModule } from '@cisco-ngx/cui-components';
 
@@ -28,6 +28,7 @@ const childRoutes: Routes = [
 		I18nPipeModule,
 		GaugePanelModule,
 		CuiSpinnerModule,
+		RacetrackModule,
 	],
 })
 export class SolutionModule { }
