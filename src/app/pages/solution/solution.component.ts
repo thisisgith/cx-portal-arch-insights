@@ -4,9 +4,13 @@ import {
 	ViewChild,
 	TemplateRef,
  } from '@angular/core';
-
 import { LogService } from '@cisco-ngx/cui-services';
-import { SolutionService, WebinarResults } from '@services';
+import {
+	SolutionService,
+	WebinarResults,
+	RacetrackResponseObject,
+	RacetrackPitstop,
+} from '@services';
 
 /**
  * Main Solution Page Component
@@ -17,24 +21,31 @@ import { SolutionService, WebinarResults } from '@services';
 	templateUrl: './solution.component.html',
 })
 export class SolutionComponent implements OnInit {
-	@ViewChild('coaching') public coachingTemplate: TemplateRef<{ }>;
-	@ViewChild('webinars') public webinarTemplate: TemplateRef<{ }>;
+	@ViewChild('coaching') public coachingTemplate: TemplateRef<any>;
+	@ViewChild('webinars') public webinarTemplate: TemplateRef<any>;
+	@ViewChild('webinarPanel') public webinarPanel: TemplateRef<any>;
 
-	public visibleTemplate: TemplateRef<{ }>;
-	public visibleContext: WebinarResults;
+	public visiblePanel: TemplateRef<any>;
+	public visiblePanelContext: any;
+	public visibleTemplate: TemplateRef<any>;
+	public visibleContext: any;
 
-	public showScheduled = false;
-	public showRecommended = false;
-	public showCourses = false;
-	public showCertifications = false;
+	public showScheduled = true;
+	public showRecommended = true;
+	public showCourses = true;
+	public showCertifications = true;
 	// supportTab is the default open racetrack tab
 	public showSupportTab = true;
 	public showProductTab = false;
+
 	public webinarResults: WebinarResults;
-	public webinarWaiting = true;
+	public racetrackResults: RacetrackResponseObject;
+	public currentPitstop: RacetrackPitstop;
 
 	public status = {
-		hidden: true,
+		modalHidden: true,
+		panelHidden: true,
+		waiting: true,
 	};
 
 	constructor (
@@ -49,14 +60,14 @@ export class SolutionComponent implements OnInit {
 	public showModal (type: string) {
 		this.visibleTemplate = (type === 'webinars') ? this.webinarTemplate : this.coachingTemplate;
 		this.visibleContext = (type === 'webinars') ? this.webinarResults : this.webinarResults;
-		this.status.hidden = false;
+		this.status.modalHidden = false;
 	}
 
 	/**
 	 * Closes the currently open modal
 	 */
 	public closeModal () {
-		this.status.hidden = true;
+		this.status.modalHidden = true;
 	}
 
 	/**
@@ -79,7 +90,7 @@ export class SolutionComponent implements OnInit {
 	 * Performs the API call to retrieve Interactive Webinar data
 	 */
 	public getWebinars () {
-		this.webinarWaiting = true;
+		this.status.waiting = true;
 		this.service.queryWebinars()
 		.subscribe((results: WebinarResults) => {
 			this.webinarResults = results;
@@ -89,8 +100,31 @@ export class SolutionComponent implements OnInit {
 				err.status}) ${err.message}`);
 		},
 		() => {
-			this.webinarWaiting = false;
+			this.status.waiting = false;
 		});
+	}
+
+	/**
+	 * Performs the API call to retrieve Racetrack information
+	 * and populates racetrack tabs
+	 */
+	public getRacetrackInfo () {
+		this.service.queryRacetrack()
+		.subscribe((results: RacetrackResponseObject) => {
+			this.racetrackResults = results;
+		},
+		err => {
+			this.logger.error(`solution.component : getRacetrackInfo() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * Sets this components current pitstop
+	 * @param currentPitstop the current pitstop
+	 */
+	public onTechChange (currentPitstop: RacetrackPitstop) {
+		this.currentPitstop = currentPitstop;
 	}
 
 	/**
@@ -98,5 +132,6 @@ export class SolutionComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		this.getWebinars();
+		this.getRacetrackInfo();
 	}
 }

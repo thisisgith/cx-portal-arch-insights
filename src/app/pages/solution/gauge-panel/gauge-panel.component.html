@@ -1,0 +1,41 @@
+<div class="panel panel--bordered base-margin-bottom no-padding">
+	<div id="tabsRow" class="row no-margin" *ngIf="tabs">
+		<div attr.data-auto-id="tab-{{ tab.name }}" *ngFor="let tab of tabs"
+				class="col-md-2 text-center col-border-right toggle"
+				(click)="tab.subTabs? selectTab(tab) : null">
+			<div class="subheader no-margin half-padding-top text-small" [innerText]="tab.name"></div>
+			<div class="progressbar progressbar--warning qtr-margin-top half-margin-left half-margin-right" [attr.data-percentage]="tab.percentComplete">
+				<div class="progressbar__fill"></div>
+			</div>
+		</div>
+		<div class="col-md no-padding-right flex-center-vertical flex-right tab-background">
+			<div>
+				<span class="icon-filter icon-small half-padding-right"></span>
+			</div>
+			<div>
+				<span class="icon-clock icon-small half-padding-right"></span>
+			</div>
+			<div>
+				<a [routerLink]="['/metrics']" data-auto-id="navtometrics">
+					<span class="icon-diagnostics icon-small half-padding-right border-left"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="row no-margin">
+		<ng-container *ngIf="selectedTab">
+			<div attr.data-auto-id="subTab-{{ sub.technology.name }}" *ngFor="let sub of selectedTab.subTabs"
+					[id]="'subtabSelect-' + sub.technology.name"
+					class="col-md-2 col-border-right no-padding half-padding-top toggle"
+					[ngClass]="{ 'gauge-selected': sub.selected }"
+					(click)="selectSubTab(sub)">
+				<span class="text-primary subheader half-margin-bottom flex-center-horizontal" [innerText]="sub.technology.name"></span>
+				<span class="icon-right-arrow icon-small half-margin-bottom pull-right"></span>
+				<div class="text-center">
+					<cui-gauge [percentage]="sub.gaugePercentage" color="primary" size="medium" [alt]="true" [animated]="true"></cui-gauge>
+				</div>
+			</div>
+		</ng-container>
+	</div>
+</div>
