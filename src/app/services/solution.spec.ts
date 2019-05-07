@@ -3,7 +3,7 @@ import { SolutionService, WebinarResults } from './solution';
 import { HttpClientModule } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
-import { mockData } from './mock/solution';
+import { solutionATX } from '@mock';
 
 describe('SolutionService', () => {
 
@@ -31,7 +31,7 @@ describe('SolutionService', () => {
 			.subscribe(
 			(results: WebinarResults) => {
 				expect(results.webinars.length)
-					.toEqual(mockData.webinars.length);
+					.toEqual(solutionATX.webinars.length);
 			});
 	}));
 });
