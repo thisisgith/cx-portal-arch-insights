@@ -137,7 +137,7 @@
 							</div>
 						</div>
 						<div class="btn-group btn-group--square">
-							<button class="btn btn--gray-ghost selected">
+							<button class="btn btn--gray-ghost selected" (click)="toggleSoftwareColumns()" data-auto-id="showmorecolumn">
 								<span class="icon-list-view"></span>
 							</button>
 							<button class="btn btn--gray-ghost">
@@ -165,6 +165,8 @@
 					<th class="table-header" [innerText]="'_ProductId_' | i18n"></th>
 					<th class="table-header" [innerText]="'_IpAddress_' | i18n"></th>
 					<th class="table-header" [innerText]="'_SerialNumber_' | i18n"></th>
+					<th *ngIf="!hideSoftwareColumns" class="table-header" [innerText]="'_SoftwareType_' | i18n"></th>
+					<th *ngIf="!hideSoftwareColumns" class="table-header" [innerText]="'_SoftwareVersion_' | i18n"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -173,8 +175,10 @@
 					[ngClass]="{'active': asset.status && showSidePanel}">
 					<td class="table-data" [innerText]="asset.hostname"></td>
 					<td class="table-data" [innerText]="asset.productId"></td>
-					<td class="table-data" [innerText]="asset.ipaddress"></td>
+					<td class="table-data" [innerText]="asset.ipAddress"></td>
 					<td class="table-data" [innerText]="asset.serialNumber"></td>
+					<td *ngIf="!hideSoftwareColumns" class="table-data" [innerText]="asset.softwareType"></td>
+					<td *ngIf="!hideSoftwareColumns" class="table-data" [innerText]="asset.softwareVersion"></td>					
 				</tr>
 			</tbody>
 		</table>
@@ -189,55 +193,55 @@
 			<span class="icon-close icon-medium"></span>
 		</a>
 		<h4 class="text-center base-margin-top base-margin-bottom"
-			[innerText]="sampleDevice.hostname">
+			[innerText]="selectedAsset.hostname">
 		</h4>
 		<p class="text-center">
 			<img alt="'_Cat3650Img_' | i18n"
 				id="deviceimage"
 				src="assets/img/inventory/CAT-3650.png">
 		</p>
-		<p class="text-center" [innerText]="sampleDevice.deviceName"></p>
+		<p class="text-center" [innerText]="selectedAsset.sysName"></p>
 		<ul class="list list--inline">
 			<li class="deviceinfo panel haft-margin-bottom">
 				<dl>
 					<dt class="descTitle text-uppercase"
 						[innerText]="'_ProductId_' | i18n"
-						data-auto-id="productid">
+						data-auto-id="productId">
 					</dt>
-					<dd [innerText]="sampleDevice.productID || 'N/A'"></dd>
+					<dd [innerText]="selectedAsset.productId || 'N/A'"></dd>
 
 					<dt class="descTitle text-uppercase"
 						[innerText]="'_ProductFamily_' | i18n"
 						data-auto-id="productfamily">
 					</dt>
-					<dd [innerText]="sampleDevice.productFamily || 'N/A'"></dd>
+					<dd [innerText]="selectedAsset.productFamily || 'N/A'"></dd>
 
 					<dt class="descTitle text-uppercase"
 						[innerText]="'_ProductSeries_' | i18n"
 						data-auto-id="productseries">
 					</dt>
-					<dd [innerText]="sampleDevice.productSeries || 'N/A'"></dd>
+					<dd [innerText]="selectedAsset.productSeries || 'N/A'"></dd>
 
 				</dl>
 			</li>
 			<li class="deviceinfo panel half-margin-bottom">
 				<dt class="descTitle text-uppercase"
 					[innerText]="'_IPAddress_' | i18n"
-					data-auto-id="ipaddress">
+					data-auto-id="ipAddress">
 				</dt>
-				<dd [innerText]="sampleDevice.ipAddress || 'N/A'"></dd>
+				<dd [innerText]="selectedAsset.ipAddress || 'N/A'"></dd>
 
 				<dt class="descTitle text-uppercase"
 					[innerText]="'_SerialNo_' | i18n"
 					data-auto-id="serialno">
 				</dt>
-				<dd [innerText]="sampleDevice.serialNo || 'N/A'"></dd>
+				<dd [innerText]="selectedAsset.serialNumber || 'N/A'"></dd>
 
 				<dt class="descTitle text-uppercase"
 					[innerText]="'_Software_' | i18n"
 					data-auto-id="software">
 				</dt>
-				<dd [innerText]="sampleDevice.software || 'N/A'"></dd>
+				<dd [innerText]="selectedAsset.swVersion || 'N/A'"></dd>
 			</li>
 		</ul>
 		<ul id="tabds" class="tabs tabs--centered">

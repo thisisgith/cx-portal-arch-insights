@@ -12,9 +12,11 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	AlertResults,
 	AlertService,
+	InventoryService,
+	InventoryResults,
 } from '@services';
 
-import { AlertData } from '@interfaces';
+import { AlertData, Asset, DeviceDetails } from '@interfaces';
 
 import * as _ from 'lodash';
 import { Row } from './alert-info/alert-info.component';
@@ -60,18 +62,6 @@ interface Tab {
 }
 
 /**
- * Interface representing an Asset
- */
-interface Asset {
-	_id: number;
-	hostname: string;
-	productId?: string;
-	ipaddress?: string;
-	serialNumber?: string;
-	status: boolean;
-}
-
-/**
  * The possible sort directions
  */
 type SortDir = 'asc' | 'desc';
@@ -106,31 +96,24 @@ export class InventoryComponent implements OnInit {
 		sidebarCollapsed: false,
 	};
 	public loading = false;
-	public activeAssetId = -1;
+	public activeAssetId = 0;
 	public totalAssets = 20;
 	public assets: Asset[] = [];
 	private cachedAssets: Asset[] = [];
+	public selectedAsset: DeviceDetails;
 	public currentTab = 'vulnerability';
 	public less = true;
 	public currentButton = 'securityadvisory';
 	public showSidePanel = false;
 	public sortDirection: SortDir = 'desc';
-	public sampleDevice = {
-		deviceName: 'Cisco Catalyst 3650-12x48FD-E Switch',
-		hostname: 'SJ-CAT-3650-12x48',
-		ipAddress: '10.10.10.1',
-		productFamily: 'Catalyst Switch',
-		productID: 'WS-C3650-12X48FD-E',
-		productSeries: 'Catalyst 3600',
-		serialNo: 'TMX1919OU4',
-		software: 'Everest-16.6.5',
-	};
+	public hideSoftwareColumns = true;
 
 	@ViewChild('productid') public productidTemplate: TemplateRef<string>;
 
 	constructor (
 		private logger: LogService,
 		private alertService: AlertService,
+		private service: InventoryService,
 	) { }
 
 	/**
@@ -242,23 +225,44 @@ export class InventoryComponent implements OnInit {
 	}
 
 	/**
-	 * Implement loadData function
+	 * Performs the API call to retrieve Interactive hardware data
 	 */
-	public loadData () {
+	public getAssets () {
+		this.service.queryAssets()
+		.subscribe((results: InventoryResults) => {
+			this.assets = results.assets;
+			// default all table row to be unselected
+			_.each(this.assets, (asset: Asset) => {
+				asset.status = false;
+			});
+		},
+		err => {
+			this.logger.error(err);
+		},
+		() => {
+			this.cachedAssets = _.cloneDeep(this.assets);
+			this.loading = false;
+		});
+	}
+
+	/**
+	 * Performs the API call to retrieve DeviceDetails info
+	 * @param assetId : device id
+	 */
+	public getAssetById (assetId: number) {
 		this.loading = true;
-		for (let i = 0; i < this.totalAssets; i = i + 1) {
-			const asset = {
-				_id : i,
-				hostname: `${i.toString()}.cisco.com`,
-				ipaddress :  `${i.toString()}.${i.toString()}.${i.toString()}.${i.toString()}`,
-				productId : `${i.toString()}`,
-				serialNumber : `TMX${i.toString()}`,
-				status: false,
-			};
-			this.assets.push(asset);
-		}
-		this.cachedAssets = _.cloneDeep(this.assets);
-		this.loading = false;
+		this.service.queryAssetById(assetId)
+			.subscribe((results: DeviceDetails) => {
+				this.selectedAsset = results;
+				this.showSidePanel = results === null ? false : true;
+			},
+				err => {
+					this.logger.error(err);
+					this.showSidePanel = false;
+				},
+				() => {
+					this.loading = false;
+				});
 	}
 
 	/**
@@ -614,7 +618,7 @@ export class InventoryComponent implements OnInit {
 	public ngOnInit () {
 		this.initializeTabs();
 		this.selectTab(this.tabs[0]);
-		this.loadData();
+		this.getAssets();
 	}
 
 	/**
@@ -753,8 +757,11 @@ export class InventoryComponent implements OnInit {
 		if (this.activeAssetId > -1) {
 			this.assets[this.activeAssetId].status = false;
 		}
-		this.assets[assetId].status = true;
+		this.assets[assetId - 1].status = true;
 		this.activeAssetId = assetId;
+		// For mock purpose, will alway use assetId = 1 for now
+		// this.getAssetById(assetId);
+		this.getAssetById(1);
 	}
 
 	/**
@@ -768,9 +775,16 @@ export class InventoryComponent implements OnInit {
 
 		// For now will reset all of the side panel information when close the side panel
 		// In the future another API call will do the same
-		this.activeAssetId = -1;
+		this.activeAssetId = 0;
 		this.currentButton = 'securityadvisory';
 		this.currentTab = 'vulnerability';
 		this.less = true;
+	}
+
+	/**
+	 * Implement toggleSoftwareColumns
+	 */
+	public toggleSoftwareColumns () {
+		this.hideSoftwareColumns = !this.hideSoftwareColumns;
 	}
 }

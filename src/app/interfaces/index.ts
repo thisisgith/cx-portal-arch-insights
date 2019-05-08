@@ -8,3 +8,5 @@ export * from './fieldNotice';
 export * from './license';
 export * from './rma';
 export * from './webinar';
+export * from './asset';
+export * from './deviceDetails';

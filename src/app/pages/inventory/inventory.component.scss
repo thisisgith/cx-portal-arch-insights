@@ -100,7 +100,7 @@
 	width: 100%;
 
 	.devicename {
-		width: 50%;
+		width: 60%;
 	}
 
 	.version {
@@ -109,9 +109,20 @@
 	}
 
 	.date {
-		width: 40%;
+		width: 30%;
 		font-size: 12px;
 		font-style: italic;
+	}
+}
+
+#vulbtngroup {
+	width: 100%;
+
+	.button {
+		width: 50%;
+		height: 30px;
+		text-align: center;
+		background-color: white;
 	}
 }
 
