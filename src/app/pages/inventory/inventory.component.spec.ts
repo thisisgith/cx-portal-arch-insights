@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
-import { AlertService } from '@services';
+import { AlertService, InventoryService } from '@services';
 import { InventoryComponent } from './inventory.component';
 import { InventoryModule } from './inventory.module';
 import { DebugElement } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { of } from 'rxjs';
-import { alertData } from '@mock';
+import { alertData, inventoryData, deviceDetailData } from '@mock';
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import * as enUSJson from '../../../assets/i18n/en-US.json';
@@ -18,6 +18,7 @@ describe('InventoryComponent', () => {
 	let de: DebugElement;
 	let el: HTMLElement;
 	let service: AlertService;
+	let inventoryService: InventoryService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -32,6 +33,7 @@ describe('InventoryComponent', () => {
 
 	beforeEach(() => {
 		service = TestBed.get(AlertService);
+		inventoryService = TestBed.get(InventoryService);
 		I18n.injectDictionary(enUSJson);
 
 		fixture = TestBed.createComponent(InventoryComponent);
@@ -40,6 +42,14 @@ describe('InventoryComponent', () => {
 		spyOn(service, 'read')
 			.and
 			.returnValue(of(alertData));
+
+		spyOn(inventoryService, 'queryAssets')
+			.and
+			.returnValue(of(inventoryData));
+
+		spyOn(inventoryService, 'queryAssetById')
+			.and
+			.returnValue(of(deviceDetailData));
 
 		fixture.detectChanges();
 	});
@@ -220,9 +230,6 @@ describe('InventoryComponent', () => {
 	});
 
 	describe('Should show Assets table', () => {
-		beforeEach(() => {
-			component.loadData();
-		});
 
 		it('should show Asset table if Asset data has been load', () => {
 			de = fixture.debugElement.query(By.css('table'));
@@ -238,9 +245,6 @@ describe('InventoryComponent', () => {
 	});
 
 	describe('details', () => {
-		beforeEach(() => {
-			component.loadData();
-		});
 
 		it('should not show details at default', () => {
 			expect(component.showSidePanel)
