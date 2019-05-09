@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { ExtraOptions, Routes, RouterModule } from '@angular/router';
 
 /**
  * Representation of the routes used by @angular/router
@@ -7,25 +7,26 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
 	{
 		loadChildren: './pages/solution/solution.module#SolutionModule',
-		path: '',
-		pathMatch: 'full',
-	},
-	{
-		loadChildren: './pages/inventory/inventory.module#InventoryModule',
-		path: 'metrics',
-		pathMatch: 'full',
+		path: 'solution',
 	},
 	{
 		path: '**',
-		redirectTo: '',
+		redirectTo: 'solution',
 	},
 ];
 
 /**
- * Base routing module for the application
+ * ExtraOptions[https://angular.io/api/router/ExtraOptions]
+ */
+const routerOptions: ExtraOptions = {
+	enableTracing: false,
+};
+
+/**
+ * App Routing Module
  */
 @NgModule({
 	exports: [RouterModule],
-	imports: [RouterModule.forRoot(routes)],
+	imports: [RouterModule.forRoot(routes, routerOptions)],
 })
 export class AppRoutingModule { }

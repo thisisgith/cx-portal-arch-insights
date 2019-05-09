@@ -13,29 +13,6 @@ export const defaults = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/{INSERT_CLIENT_ID}`,
 	},
-	mock: {
-		origin,
-		settings: [
-			{
-				method: 'GET',
-				scenario: '200ok Example Response',
-				url: '/ws/search',
-			},
-			{
-				method: 'GET',
-				scenario: '200ok',
-				url: '/ws/webinars',
-			},
-			{
-				method: 'GET',
-				scenario: '200ok',
-				url: '/api/v1/racetrack',
-			},
-		],
-		tags: {
-			appId: 'pbc',
-		},
-	},
 	production: false,
 	services: {
 		alert: '/ws/alert',

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { LogService } from '@cisco-ngx/cui-services';
-
 import * as d3 from 'd3-selection';
 import { d3Transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
@@ -37,10 +35,6 @@ export class RacetrackComponent implements OnInit {
 	public points: DOMPoint[];
 	public current: string;
 
-	constructor (
-		private logger: LogService,
-	) { }
-
 	/**
 	 * Initializes racetrack variables and begins first animation
 	 *
@@ -74,21 +68,21 @@ export class RacetrackComponent implements OnInit {
 		this.points = points;
 
 		// at what % of the path does the stop for each stage fall
-			// (path does not start at 'purchase' stage)
+		// (path does not start at 'purchase' stage)
 		this.stageMap = {
-			need: 33,
-			evaluate: 43,
-			select: 54,
-			purchase: 66,
-			onboard: 82,
-			implement: 87,
-			use: 91,
-			engage: 95,
 			adopt: 99.5,
-			optimize: 4.5,
-			renew: 8,
-			recommend: 12,
 			advocate: 16,
+			engage: 95,
+			evaluate: 43,
+			implement: 87,
+			need: 33,
+			onboard: 82,
+			optimize: 4.5,
+			purchase: 66,
+			recommend: 12,
+			renew: 8,
+			select: 54,
+			use: 91,
 		};
 
 		Object.keys(this.stageMap)

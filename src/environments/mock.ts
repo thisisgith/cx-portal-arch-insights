@@ -22,8 +22,38 @@ export const mock = {
 			},
 			{
 				method: 'GET',
+				scenario: '200Ok',
+				url: '/ws/inventory',
+			},
+			{
+				method: 'GET',
 				scenario: 'Example Response',
 				url: '/ws/alert',
+			},
+			{
+				method: 'GET',
+				scenario: '200ok',
+				url: '/api/v1/racetrack',
+			},
+			{
+				method: 'GET',
+				scenario: '200Ok Example Response',
+				url: '/ws/inventory/hardware',
+			},
+			{
+				method: 'GET',
+				scenario: '200Ok',
+				url: '/ws/inventory/hardware?_id=1',
+			},
+			{
+				method: 'GET',
+				scenario: '200ok',
+				url: '/api/v1/racetrack/atx',
+			},
+			{
+				method: 'GET',
+				scenario: '200 OK',
+				url: '/api/customerportal/v1/racetrack?customerId=9998000000091',
 			},
 		],
 		tags: {

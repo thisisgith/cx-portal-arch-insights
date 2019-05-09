@@ -1,9 +1,9 @@
 import { async, inject, TestBed } from '@angular/core/testing';
-import { SolutionService, WebinarResults } from './solution';
+import { SolutionService, WebinarResults, RacetrackResponseObject } from './solution';
 import { HttpClientModule } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
-import { solutionATX } from '@mock';
+import { solutionATX, solutionRacetrack } from '@mock';
 
 describe('SolutionService', () => {
 
@@ -26,7 +26,7 @@ describe('SolutionService', () => {
 			.toBeTruthy();
 	}));
 
-	it('should handle a read', inject([SolutionService], (service: SolutionService) => {
+	it('should handle querying webinars', inject([SolutionService], (service: SolutionService) => {
 		service.queryWebinars()
 			.subscribe(
 			(results: WebinarResults) => {
@@ -34,4 +34,14 @@ describe('SolutionService', () => {
 					.toEqual(solutionATX.webinars.length);
 			});
 	}));
+
+	it('should handle querying the racerack', inject([SolutionService],
+		(service: SolutionService) => {
+			service.queryRacetrack()
+			.subscribe(
+			(results: RacetrackResponseObject) => {
+				expect(results.solutions.length)
+					.toEqual(solutionRacetrack.solutions.length);
+			});
+		}));
 });
