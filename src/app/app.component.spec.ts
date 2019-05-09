@@ -79,7 +79,7 @@ describe('AppComponent', () => {
 	});
 
 	it('should load the i18n files', () => {
-		const title = 'Persona-Based Console';
+		const title = 'CX Console';
 		fixture.detectChanges();
 
 		fixture.whenStable()
@@ -184,5 +184,9 @@ describe('AppComponent', () => {
 			.toBeTruthy();
 
 		service.loadI18n();
+	});
+
+	it('should attempt to load foreign language i18n if requested', () => {
+		service.loadI18n(true, 'es');
 	});
 });

@@ -1,22 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SolutionComponent } from './solution.component';
-import { RouterModule, Routes } from '@angular/router';
-import { RacetrackModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { CuiSpinnerModule, CuiGaugeModule } from '@cisco-ngx/cui-components';
-import { FormsModule } from '@angular/forms';
-import { GaugePanelModule } from './gauge-panel/gauge-panel.module';
-
-/**
- * Child routes for Inventory Module for lazy loading
- */
-const childRoutes: Routes = [
-	{
-		component: SolutionComponent,
-		path: '',
-	},
-];
+import { SolutionComponent } from './solution.component';
+import { CuiGaugeModule } from '@cisco-ngx/cui-components';
+import { SolutionRoutingModule } from './solution-routing.module';
+import { RouterModule } from '@angular/router';
 
 /**
  * Module representing the Solution Pages
@@ -25,14 +13,10 @@ const childRoutes: Routes = [
 	declarations: [SolutionComponent],
 	imports: [
 		CommonModule,
-		I18nPipeModule,
-		RouterModule.forChild(childRoutes),
-		I18nPipeModule,
-		CuiSpinnerModule,
 		CuiGaugeModule,
-		FormsModule,
-		GaugePanelModule,
-		RacetrackModule,
+		I18nPipeModule,
+		RouterModule,
+		SolutionRoutingModule,
 	],
 })
 export class SolutionModule { }

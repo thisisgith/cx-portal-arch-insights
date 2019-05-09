@@ -1,8 +1,21 @@
-.tempMarginLeft {
-	margin-left: -250px;
+
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.maxWidth {
+	width: 100%;
 }
 
-.header-toolbar {
-	padding-right: 10px;
+.divider--left {
+	border-color: $light-gray-3;
+	border-style: none none none solid;
+	border-width: 0 0 0 2px;
 }
 
+.icon--mid {
+	font-size: 24px;
+}
+
+.thumb--tiny {
+	height: 24px;
+	width: 24px;
+}

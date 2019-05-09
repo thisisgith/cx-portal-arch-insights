@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { LogService } from '@cisco-ngx/cui-services';
 import { Observable } from 'rxjs';
 import { Asset, DeviceDetails } from '@interfaces';
 
@@ -24,7 +23,6 @@ export class InventoryService {
 
 	constructor (
 		private http: HttpClient,
-		private logger: LogService,
 	) {
 		const origin = environment.origin || window.location.origin;
 		this.serviceUrl = `${origin}${environment.services.inventory}`;

@@ -1,0 +1,338 @@
+<div class="container-fluid base-margin-top base-margin-bottom">
+
+	<div class="panel panel--ltgray panel--bordered no-padding half-padding-right">
+		<div class="row">
+			<div class="col-md-2">
+
+				<ng-container *ngIf="racetrackResults">
+					<div class="row half-padding-top half-padding-left">
+						<div class="col-md">
+							<span class="subheader text-small" [innerText]="'_CircuitLabel_' | i18n"></span>
+						</div>
+					</div>
+					<div class="row half-padding-left">
+						<div class="col-md-6">
+							<h2 class="text-primary" [innerText]="currentPitstop?.description"></h2>
+						</div>
+						<div class="col-md-6">
+							<img alt="'_FinishLine_' | i18n" class="pull-right" src="assets/img/solutions/finishline.png">
+						</div>
+					</div>
+					<div class="panel panel--bordered half-margin-bottom half-margin-top half-margin-left">
+						<div class="row no-margin">
+							<span class="subheader text-muted text-small" [innerText]="'_SuggestedActions_' | i18n"></span>
+						</div>
+						<div class="row no-margin" *ngIf="currentPitstop">
+							<div *ngFor="let action of currentPitstop?.pitstopActions" class="form-group form-group--compressed">
+								<label class="checkbox">
+									<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.isComplete" [checked]="action.isComplete">
+									<span class="checkbox__input"></span>
+									<span class="checkbox__label text-medium" [innerText]="action.description"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+
+				<div class="panel panel--ltblue panel--bordered half-margin-bottom half-margin-top half-margin-left">
+					<div class="row no-margin">
+						<div class="col-md-7 no-padding">
+							<span class="subheader no-margin text-muted text-small" [innerText]="'_UpgradeToCXLevelX_' | i18n:3"></span>
+						</div>
+						<div class="col-md-5">
+							<button class="btn btn--primary text-small qtr-padding-right qtr-padding-left btn--small pull-right" [innerText]="'_ContactUs_' | i18n"></button>
+						</div>
+					</div>
+					<div class="row no-margin">
+						<span [innerText]="'_HandOffToCisco_' | i18n"></span>
+					</div>
+					<div class="row no-margin">
+						<div class="col-md-3">
+							<img alt="'_Handshake_' | i18n" class="flex-left" src="assets/img/solutions/handshake.png">
+						</div>
+						<div class="col-md-9">
+							<span class="text-small flex-right" [innerText]="'_CXUpgradeNow_' | i18n"></span>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel--bordered panel--ltblue half-margin-bottom half-margin-top half-margin-left">
+					<div class="row no-margin">
+						<span class="subheader text-muted text-small no-margin" [innerText]="'_Communities_' | i18n"></span>
+					</div>
+					<div class="row no-margin">
+						<span class="text-small" [innerText]="'_TechDiscussions_' | i18n"></span>
+					</div>
+					<div class="row no-margin">
+						<div class="col-md-4">
+							<img alt="'_StockPhoto_' | i18n" src="assets/img/solutions/jason.png">
+						</div>
+						<div class="col-md-8">
+							<div class="panel panel--bordered">
+								<div class="row no-margin qtr-padding-bottom">
+									<a class="pull-left text-small" data-auto-id="DNACActivationLink" target="_blank" href="https://www.cisco.com" [innerText]="'_5DayDNACActivation_' | i18n"></a>
+								</div>
+								<div class="row no-margin qtr-padding-bottom">
+									<a class="pull-left text-small" data-auto-id="OfflineUpgradesLink" target="_blank" href="https://www.cisco.com" [innerText]="'_OfflineUpgrades_' | i18n"></a>
+								</div>
+								<div class="row no-margin qtr-padding-bottom">
+									<a class="pull-left text-small" data-auto-id="PackageOrderLink" target="_blank" href="https://www.cisco.com" [innerText]="'_PackageSpecificOrder_' | i18n"></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-10">
+				<div class="row flex-center">
+					<app-racetrack *ngIf="!status.racetrackLoading"></app-racetrack>
+					<cui-spinner *ngIf="status.racetrackLoading"></cui-spinner>
+				</div>
+				<div class="row row-border-bottom no-margin half-margin-bottom">
+					<div class="col-md-6 toggle"
+						*ngFor="let tab of tabs"
+						(click)="selectTab(tab)"
+						attr.data-auto-id="{{ tab.title }}Tab">
+						<div class="row" [ngClass]="{ 'selected-tab-border': tab.selected }">
+							<div class="col-md-1">
+								<img alt="{{ tab.image.alt }}" class="flex-left" [src]="tab.image.src">
+							</div>
+							<div class="col-md-11 half-margin-top">
+								<div class="text-large flex-left" [innerText]="tab.title"></div>
+								<div class="text-medium flex-left" [innerText]="tab.description"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row half-margin-bottom">
+					<ng-container *ngTemplateOutlet="currentTab.template; context: {}"></ng-container>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal-container" *ngIf="!status.modalHidden">
+	<div class="modal-backdrop" [ngClass]="{ hide: status.modalHidden }"></div>
+	<div class="modal modal--full" [ngClass]="{ hide: status.modalHidden }">
+		<div class="modal__dialog">
+			<ng-container *ngTemplateOutlet="visibleTemplate; context: { results: visibleContext }"></ng-container>
+		</div>
+	</div>
+</div>
+
+<ng-template #supportHelpTab>
+	<div id="supportTab">
+		<div class="col-md-4">
+			<div class="card racetrack-card no-padding">
+				<div class="card__header">
+					<h4 class="card__title base-margin-right base-margin-left half-margin-top half-margin-bottom">
+						<span [innerText]="'_InteractiveWebinars_' | i18n"></span>
+					</h4>
+					<div class="divider no-margin-top base-margin-left"></div>
+				</div>
+				<div class="card__body card-scroll base-margin-left base-margin-right">
+					<div *ngIf="status.webinarsLoading">
+						<cui-spinner></cui-spinner>
+					</div>
+					<div id="webinarResults" *ngIf="webinarResults?.webinars?.length">
+						<div *ngFor="let result of webinarResults.webinars">
+							<span [id]="'webinarResult:' + result.title" class="toggle" [innerText]="result.title"></span>
+						</div>
+					</div>
+				</div>
+				<div class="card__footer tab-background qtr-padding-top qtr-padding-bottom">
+					<span class="base-margin-left base-margin-right toggle" data-auto-id="WebinarModalSelect" (click)="showModal('webinars')" [innerText]="'_ViewAll_' | i18n"></span>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="card racetrack-card no-padding">
+				<div class="card__header">
+					<h4 class="card__title base-margin-right base-margin-left half-margin-top half-margin-bottom">
+						<span [innerText]="'_1on1Coaching_' | i18n"></span>
+					</h4>
+					<div class="divider no-margin-top base-margin-left"></div>
+				</div>
+				<div class="card__body card-scroll base-margin-left base-margin-right">
+					<div data-auto-id="ScheduledToggle" (click)="showScheduled = !showScheduled">
+						<span class="icon-calendar"></span>
+						<span class="qtr-padding-left text-uppercase text-small" [innerText]="'_Scheduled_' | i18n"></span>
+						<span class="qtr-padding-left" [ngClass]="{ 'icon-chevron-right':!showScheduled, 'icon-chevron-down':showScheduled }"></span>
+					</div>
+					<div class="half-padding-left" *ngIf="showScheduled">
+						<div>
+							<a href="https://www.cisco.com" target="_blank" data-auto-id="DNAFeatureLink2" [innerText]="'_CiscoDNAFeatureOverview_' | i18n"></a>
+						</div>
+						<div>
+							<a href="https://www.cisco.com" target="_blank" data-auto-id="DNAAssuranceLink2" [innerText]="'_CiscoDNAAssuranceOverview_' | i18n"></a>
+						</div>
+					</div>
+					<div data-auto-id="RecommendedToggle" (click)="showRecommended = !showRecommended">
+						<span class="icon-flagged"></span>
+						<span class="qtr-padding-left text-uppercase text-small" [innerText]="'_Recommended_' | i18n"></span>
+						<span class="qtr-padding-left" [ngClass]="{ 'icon-chevron-right':!showRecommended, 'icon-chevron-down':showRecommended }"></span>
+					</div>
+					<div class="half-padding-left" *ngIf="showRecommended">
+						<div>
+							<a href="https://www.cisco.com" target="_blank" data-auto-id="DNAFeatureLink2" [innerText]="'_CiscoDNAFeatureOverview_' | i18n"></a>
+						</div>
+						<div>
+							<a href="https://www.cisco.com" target="_blank" data-auto-id="DNAAssuranceLink2" [innerText]="'_CiscoDNAAssuranceOverview_' | i18n"></a>
+						</div>
+					</div>
+				</div>
+				<div class="card__footer tab-background qtr-padding-top qtr-padding-bottom">
+					<span class="base-margin-left base-margin-right" [innerText]="'_ViewAll_' | i18n"></span>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4">
+			<div class="card racetrack-card no-padding">
+				<div class="card__header">
+					<h4 class="card__title base-margin-right base-margin-left half-margin-top half-margin-bottom">
+						<span [innerText]="'_ProfessionalDevelopment_' | i18n"></span>
+					</h4>
+					<div class="divider no-margin-top base-margin-left"></div>
+				</div>
+				<div class="card__body card-scroll base-margin-left base-margin-right">
+					<div data-auto-id="CoursesToggle" (click)="showCourses = !showCourses">
+						<span class="text-uppercase text-small" [innerText]="'_Classes_' | i18n"></span>
+						<span class="qtr-padding-left" [ngClass]="{ 'icon-chevron-right':!showCourses, 'icon-chevron-down':showCourses }"></span>
+					</div>
+					<div *ngIf="showCourses">
+						<div>
+							<a data-auto-id="SDPlanningLink" href="https://www.cisco.com" target="_blank" [innerText]="'_SDAccessPlanning_' | i18n"></a>
+						</div>
+						<div>
+							<a data-auto-id="DNACircuitLink" href="https://www.cisco.com" target="_blank" [innerText]="'_DNACircuit_' | i18n"></a>
+						</div>
+					</div>
+					<div data-auto-id="CertificationsToggle" (click)="showCertifications = !showCertifications">
+						<span class="text-uppercase text-small" [innerText]="'_Certifications_' | i18n"></span>
+						<span class="qtr-padding-left" [ngClass]="{ 'icon-chevron-right':!showCertifications, 'icon-chevron-down':showCertifications }"></span>
+					</div>
+					<div *ngIf="showCertifications">
+						<div>
+							<a href="https://www.cisco.com" data-auto-id="CCNAWireless" target="_blank" [innerText]="'_CCNAWireless_' | i18n"></a>
+						</div>
+						<div>
+							<a href="https://www.cisco.com" data-auto-id="CCNPWireless" target="_blank" [innerText]="'_CCNPWireless_' | i18n"></a>
+						</div>
+					</div>
+				</div>
+				<div class="card__footer tab-background qtr-padding-top qtr-padding-bottom">
+					<span class="base-margin-left base-margin-right" [innerText]="'_LearningLibrary_' | i18n"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #productDocTab>
+	<div id="productTab">
+		<div class="col-md-4">
+			<div class="card racetrack-card no-padding">
+				<div class="card__header">
+					<h4 class="card__title base-margin-right base-margin-left half-margin-top half-margin-bottom">
+						<span [innerText]="'_UnderConstruction_' | i18n"></span>
+					</h4>
+					<div class="divider no-margin-top base-margin-left"></div>
+				</div>
+				<div class="card__body card-scroll base-margin-left base-margin-right"></div>
+				<div class="card__footer">
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card racetrack-card no-padding">
+				<div class="card__header">
+					<h4 class="card__title base-margin-right base-margin-left half-margin-top half-margin-bottom">
+						<span [innerText]="'_UnderConstruction_' | i18n"></span>
+					</h4>
+					<div class="divider no-margin-top base-margin-left"></div>
+				</div>
+				<div class="card__body card-scroll base-margin-left base-margin-right"></div>
+				<div class="card__footer">
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card racetrack-card no-padding">
+				<div class="card__header">
+					<h4 class="card__title base-margin-right base-margin-left half-margin-top half-margin-bottom">
+						<span [innerText]="'_UnderConstruction_' | i18n"></span>
+					</h4>
+					<div class="divider no-margin-top base-margin-left"></div>
+				</div>
+				<div class="card__body card-scroll base-margin-left base-margin-right"></div>
+				<div class="card__footer">
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #webinars let-results="results">
+	<div id="webinarModal" class="modal__content no-padding">
+		<div class="modal__header webinar-title-background no-margin">
+			<div class="row half-padding-top">
+				<div class="col-md-1 no-padding qtr-padding-bottom">
+					<img alt="'_Handshake_' | i18n" class="flex-left base-padding-" src="assets/img/solutions/infinity.png">
+				</div>
+				<div class="col-md-10 half-margin-top">
+					<div class="text-xlarge text-left text-white" [innerText]="'_InteractiveWebinars_' | i18n"></div>
+					<div class="text-medium text-left text-white" [innerText]="'_AvailableLive_' | i18n"></div>
+				</div>
+				<div class="col-md-1 half-margin-top">
+					<span (click)="closeModal()" data-auto-id="WebinarModalClose" class="toggle icon-close icon-medium text-right"></span>
+				</div>
+			</div>
+		</div>
+		<div class="modal__body">
+			<div class="base-padding-left text-medium text-bold text-left half-padding-bottom half-padding-top"
+				[innerText]="results.webinars.length + ' ' + ('_TopicsAvailable_' | i18n) + ':'">
+			</div>
+			<div class="row base-padding-left base-padding-right base-padding-bottom">
+				<div class="col-md-3 base-padding-bottom" *ngFor="let result of results.webinars">
+					<div class="card racetrack-card tab-background">
+						<div class="card__header text-left text-bold" [innerText]="result.title"></div>
+						<div class="card__body webinar-card text-left" [innerText]="result.summary"></div>
+						<div class="card__footer">
+							<div class="col-md-8">
+								<div class="row">
+									<span class="icon-play-contained icon-small half-padding-right toggle"></span>
+									<span [innerText]="'_WatchOnDemand_' | i18n"></span>
+								</div>
+								<div class="row">
+									<span class="icon-calendar icon-small half-padding-right toggle"></span>
+									<span [innerText]="'_ChooseSession_' | i18n"></span>
+								</div>
+							</div>
+							<div class="col-md">
+								<div class="row flex-center-vertical">
+									<span class="icon-clock icon-small half-padding-right toggle"></span>
+									<span [innerText]="'_Placeholder_' | i18n"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #coaching let-results="results">
+	<div id="coachingModal" class="mondal-content no-padding"></div>
+	<div class="modal__header webinar-title-background no-margin"></div>
+	<div class="modal__body"></div>
+</ng-template>
+
+<ng-template #webinarPanel let-result="result">
+	<div id="webinarPanel" class="panel overlay-panel panel--bordered panel--raised-small">
+		<span [innerText]="result.title"></span>
+	</div>
+</ng-template>
