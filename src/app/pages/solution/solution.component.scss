@@ -1,1 +1,10 @@
-/* Empty SCSS component file */
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.icon--mid {
+	font-size: 24px;
+}
+
+.facet--selected {
+	border-bottom: 4px solid $primary;
+	box-shadow: $base-box-shadow-large;
+}

@@ -1,1 +1,127 @@
-<router-outlet></router-outlet>
+<div class="page-container">
+	<div class="panel no-padding-left no-padding-right no-padding-bottom base-padding-top panel--bordered-bottom">
+		<div class="row base-margin-left half-margin-bottom">
+			<div class="col-md-11">
+				<ng-container *ngTemplateOutlet="breadcrumbs; context: {}"></ng-container>
+			</div>
+			<div class="col-md-1">
+				<div class="panel panel--compressed panel--mdgray pull-right">
+					<span class="icon-arrow-left-tail base-margin-bottom"></span>
+					<button class="btn btn--icon btn--white-ghost">
+						<span class="icon-lightbulb"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="flex flex-fluid no-margin-bottom">
+			<div class="flex-center base-margin-left base-margin-right">
+				<span class="icon-chevron-left icon--mid text-muted"></span>
+			</div>
+			<ng-container *ngTemplateOutlet="facetPanel; context: {}"></ng-container>
+			<div class="flex-center base-margin-left base-margin-right">
+					<span class="icon-chevron-right icon--mid text-muted"></span>
+			</div>
+		</div>
+	</div>
+
+	<router-outlet></router-outlet>
+</div>
+
+<ng-template #breadcrumbs>
+	<div class="flex flex-fluid flex-center-vertical">
+		<div class="icon-home icon--mid"></div>
+		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"></div>
+		<div>
+			<div class="text-muted" [innerText]="'_Solution_' | i18n"></div>
+			<div class="dropdown dropdown--tail"
+				data-auto-id="SolutionDropdown"
+				[ngClass]="{'active': solutionDropdown }"
+				(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
+				<a class="text-dkgray-4 text-large text-bold"
+					[innerText]="selectedSolution.title | i18n"></a>
+				<div class="dropdown__menu">
+					<a *ngFor="let solution of solutions"
+						class="text-uppercase"
+						[ngClass]="{ 'selected': selectedSolution.key === solution.key }"
+						[innerText]="solution.title | i18n">
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"></div>
+		<div>
+			<div class="text-muted" [innerText]="'_UseCase_' | i18n"></div>
+			<div class="dropdown dropdown--tail"
+				data-auto-id="UseCaseDropdown"
+				[ngClass]="{'active': useCaseDropdown }"
+				(click)="solutionDropdown = false; useCaseDropdown = !useCaseDropdown">
+				<a class="text-dkgray-4 text-large text-bold"
+					[innerText]="selectedUseCase">
+				</a>
+				<div class="dropdown__menu" *ngIf="useCases[selectedSolution.key].length">
+					<a *ngFor="let case of useCases[selectedSolution.key]"
+						[ngClass]="{ 'selected': selectedUseCase === case }"
+						[innerText]="case">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #facetPanel>
+	<div class="row flex-fill flex-center">
+		<div *ngFor="let facet of facets; index as i"
+			attr.data-auto-id="Facet-{{ facet.key }}"
+			(click)="selectFacet(facet)"
+			class="panel panel--bordered-right flex-center"
+			[ngClass]="{
+				'panel--bordered-left': i === 0,
+				'facet--selected': facet.selected,
+				'col-md-2': shownTabs === 5,
+				'col-md-3': shownTabs === 4
+			}">
+			<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #lifecycleFacet let-facet="facet">
+	<cui-gauge percentage="75"
+		value="75%"
+		color="primary"
+		[label]="facet.title">
+	</cui-gauge>
+</ng-template>
+
+<ng-template #assetsFacet let-facet="facet">
+	<cui-gauge percentage="75"
+		value="75%"
+		color="primary"
+		[label]="facet.title">
+	</cui-gauge>
+</ng-template>
+
+<ng-template #securityFacet let-facet="facet">
+	<cui-gauge percentage="75"
+		value="75%"
+		color="primary"
+		[label]="facet.title">
+	</cui-gauge>
+</ng-template>
+
+<ng-template #advisoriesFact let-facet="facet">
+	<cui-gauge percentage="75"
+		value="75%"
+		color="primary"
+		[label]="facet.title">
+	</cui-gauge>
+</ng-template>
+
+<ng-template #resolutionFacet let-facet="facet">
+	<cui-gauge percentage="75"
+		value="75%"
+		color="primary"
+		[label]="facet.title">
+	</cui-gauge>
+</ng-template>
