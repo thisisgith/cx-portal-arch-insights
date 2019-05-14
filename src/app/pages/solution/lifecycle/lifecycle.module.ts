@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { LifecycleComponent } from './lifecycle.component';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { RacetrackModule } from '@components';
+import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
+import { LifecycleComponent } from './lifecycle.component';
 
 /**
  * Child routes for Lifecycle Module for lazy loading
@@ -18,17 +18,18 @@ const childRoutes: Routes = [
 ];
 
 /**
- * Module representing the Lifecycle component of the Solution Page
+ * Module representing the Lifecycle Component of the Solution Page
  */
 @NgModule({
 	declarations: [LifecycleComponent],
 	imports: [
 		CommonModule,
+		I18nPipeModule,
+		RouterModule.forChild(childRoutes),
+		I18nPipeModule,
 		CuiSpinnerModule,
 		FormsModule,
-		I18nPipeModule,
 		RacetrackModule,
-		RouterModule.forChild(childRoutes),
 	],
 })
 export class LifecycleModule { }

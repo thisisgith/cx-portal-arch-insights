@@ -1,14 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
-import { RouterTestingModule } from '@angular/router/testing';
 import { solutionATX, solutionRacetrack } from '@mock';
 import { SolutionService } from '@services';
 import { of } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import * as _ from 'lodash';
 
 describe('LifecycleComponent', () => {
 	let component: LifecycleComponent;
@@ -46,27 +45,6 @@ describe('LifecycleComponent', () => {
 
 	it('should create', () => {
 		expect(component)
-			.toBeTruthy();
-	});
-
-	it('should show the support help tab by default', () => {
-		expect(component.currentTab.key)
-			.toEqual('support');
-
-		de = fixture.debugElement.query(By.css('#supportTab'));
-		expect(de)
-			.toBeTruthy();
-	});
-
-	it('should show the product tab', () => {
-		component.selectTab(_.find(component.tabs, { key: 'product' }));
-
-		expect(component.currentTab.key)
-			.toEqual('product');
-
-		fixture.detectChanges();
-		de = fixture.debugElement.query(By.css('#productTab'));
-		expect(de)
 			.toBeTruthy();
 	});
 

@@ -1,9 +1,11 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
 .container {
 	display: flex;
 }
 
-.card-scroll {
-	height: 165px;
+.more-scroll {
+	height: 43px;
 	overflow: scroll;
 }
 
@@ -31,8 +33,20 @@
 	padding: 0;
 }
 
+.round-edges {
+	border-radius: 15px;
+}
+
+.round-edges-top {
+	border-radius: 10px 10px 0 0;
+}
+
+.max-width {
+	width: 100%;
+}
+
 .text-white {
-	color: #fff;
+	color: $white;
 }
 
 .webinar-card {
