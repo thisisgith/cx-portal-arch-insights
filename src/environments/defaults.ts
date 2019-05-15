@@ -11,12 +11,17 @@ export const defaults = {
 	origin,
 	auth: {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
-		tokenUrl: `${origin}/ws/oauth/v3/token/cway/{INSERT_CLIENT_ID}`,
+		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
+		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco/{INSERT_CLIENT_ID}`,
 	},
 	production: false,
 	services: {
 		alert: '/ws/alert',
 		inventory: '/ws/inventory',
+		sdp: {
+			clientId: '4jr3csg78pg7ws7gwvj82sfa',
+			origin: 'https://api-stage.cisco.com',
+		},
 		search: '/ws/search',
 		solution: {
 			customerId: '123',

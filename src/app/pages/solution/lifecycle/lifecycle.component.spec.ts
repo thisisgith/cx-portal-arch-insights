@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
 import { solutionATX, solutionRacetrack } from '@mock';
-import { SolutionService } from '@services';
+import { RacetrackService, RacetrackContentService } from '@cui-x/sdp-api';
 import { of } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -13,7 +13,8 @@ describe('LifecycleComponent', () => {
 	let component: LifecycleComponent;
 	let fixture: ComponentFixture<LifecycleComponent>;
 	let de: DebugElement;
-	let service: SolutionService;
+	let racetrackService: RacetrackService;
+	let racetrackContentService: RacetrackContentService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -25,18 +26,19 @@ describe('LifecycleComponent', () => {
 		})
 		.compileComponents();
 
-		service = TestBed.get(SolutionService);
+		racetrackService = TestBed.get(RacetrackService);
+		racetrackContentService = TestBed.get(RacetrackContentService);
 	}));
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(LifecycleComponent);
 		component = fixture.componentInstance;
 
-		spyOn(service, 'queryWebinars')
+		spyOn(racetrackContentService, 'getRacetrackATX')
 			.and
 			.returnValue(of(solutionATX));
 
-		spyOn(service, 'queryRacetrack')
+		spyOn(racetrackService, 'getRacetrack')
 			.and
 			.returnValue(of(solutionRacetrack));
 
@@ -48,11 +50,11 @@ describe('LifecycleComponent', () => {
 			.toBeTruthy();
 	});
 
-	describe('webinars', () => {
-		it('should show webinars in the webinar card', () => {
-			expect(component.webinarResults.webinars.length)
-				.toEqual(6);
-			de = fixture.debugElement.query(By.css('#webinarResults'));
+	describe('ATX', () => {
+		it('should show atx items in the ATX card', () => {
+			expect(component.atxResults.items.length)
+				.toEqual(4);
+			de = fixture.debugElement.query(By.css('#atxResults'));
 			expect(de)
 				.toBeTruthy();
 		});

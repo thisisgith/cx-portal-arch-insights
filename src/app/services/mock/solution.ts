@@ -1,34 +1,185 @@
-import { RacetrackResponseObject, WebinarResults } from '../solution';
+import { RacetrackResponse, ATXResponse } from '@cui-x/sdp-api';
 
 /**
  * Mock data for webinar API results
  * @ignore
  */
-export const mockATX: WebinarResults = {
-	webinars: [
+export const mockATX: ATXResponse = {
+	solution: 'ibn',
+	usecase: 'assurance',
+	pitstop: 'onboard',
+	items: [
 		{
-			summary: 'Learn about interface and network design overview, policy management',
-			title: 'Cisco DNA Center Getting Started',
+			title: 'Cisco DNA Center Getting started',
+			description: 'Topics inlcude inteface and network design overview, policy' +
+				'management and deployment, device provisioning, and automation/assurance',
+			duration: '1h 15m',
+			registrationUrl: 'Webinar Registration Url',
+			viewOnDemandUrl: 'Webinar View on demand Url',
+			moderator: 'Romeo Mezzaluna',
+			attendeeLink:
+				'https://cisco.webex.com/cisco/onstage/g.php?MTID=eccf7e6179a44cccb7122b72fec6b0bda',
+			panelistLink:
+				'https://cisco.webex.com/cisco/onstage/g.php?MTID=eccf7e6179a44cccb7122b72fec6b0bda',
+			sessions: [
+				{
+					date: 'TUE MAY 3, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 5, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 12, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 15, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 18, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 20, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 22, 2019',
+					time: '9:00AM PDT',
+				},
+			],
 		},
 		{
-			summary: 'A high level look at the planning stage of your project.  Address device',
-			title: 'Cisco DNA Project Plan Best Practices',
+			title: 'Cisco DNA Project Plan Best Practice',
+			description: 'Topics inlcude inteface and network design overview, policy' +
+				'management and deployment, device provisioning, and automation/assurance',
+			duration: '1h 15m',
+			registrationUrl: 'Webinar Registration Url',
+			viewOnDemandUrl: 'Webinar View on demand Url',
+			moderator: 'Romeo Mezzaluna',
+			attendeeLink:
+				'https://cisco.webex.com/cisco/onstage/g.php?MTID=eccf7e6179a44cccb7122b72fec6b0bda',
+			panelistLink:
+				'https://cisco.webex.com/cisco/onstage/g.php?MTID=eccf7e6179a44cccb7122b72fec6b0bda',
+			sessions: [
+				{
+					date: 'TUE MAY 3, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 5, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 12, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 15, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 18, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 20, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 22, 2019',
+					time: '9:00AM PDT',
+				},
+			],
 		},
 		{
-			summary: 'Learn how to successfully transition from APIC-EM to Cisco DNA Center.',
-			title: 'Cisco APIC-EM Infrastructure Transition Best Practices',
+			title: 'Cisco DNA Infrastructure Transition Best Practice',
+			description: 'Topics inlcude inteface and network design overview,' +
+				'policy management and deployment, device provisioning, and automation/assurance',
+			duration: '1h 15m',
+			registrationUrl: 'Webinar Registration Url',
+			viewOnDemandUrl: 'Webinar View on demand Url',
+			moderator: 'Romeo Mezzaluna',
+			attendeeLink:
+				'https://cisco.webex.com/cisco/onstage/g.php?MTID=eccf7e6179a44cccb7122b72fec6b0bda',
+			panelistLink:
+				'https://cisco.webex.com/cisco/onstage/g.php?MTID=eccf7e6179a44cccb7122b72fec6b0bda',
+			sessions: [
+				{
+					date: 'TUE MAY 3, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 5, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 12, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 15, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 18, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 20, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 22, 2019',
+					time: '9:00AM PDT',
+				},
+			],
 		},
 		{
-			summary: 'A high level look at the planning stage of your project.  Address device',
-			title: 'Cisco DNA Project Plan Best Practices',
-		},
-		{
-			summary: 'Learn about interface and network design overview, policy management and',
-			title: 'Cisco DNA Center Getting Started',
-		},
-		{
-			summary: 'A high level look at the planning stage of your project.  Address device',
-			title: 'Cisco DNA Project Plan Best Practices',
+			title: 'Cisco DNA Center Wireless Assurance',
+			description: 'Topics inlcude inteface and network design overview, policy management' +
+				'and deployment, device provisioning, and automation/assurance',
+			duration: '1h 15m',
+			registrationUrl: 'Webinar Registration Url',
+			viewOnDemandUrl: 'Webinar View on demand Url',
+			moderator: 'Romeo Mezzaluna',
+			attendeeLink:
+				'https://cisco.webex.com/cisco/onstage/g.php?MTID=eccf7e6179a44cccb7122b72fec6b0bda',
+			panelistLink:
+				'https://cisco.webex.com/cisco/onstage/g.php?MTID=eccf7e6179a44cccb7122b72fec6b0bda',
+			sessions: [
+				{
+					date: 'TUE MAY 3, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 5, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 12, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 15, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 18, 2019',
+					time: '9:00AM PDT',
+				},
+				{
+					date: 'TUE MAY 20, 2019',
+					time: '2:00PM PDT',
+				},
+				{
+					date: 'TUE MAY 22, 2019',
+					time: '9:00AM PDT',
+				},
+			],
 		},
 	],
 };
@@ -37,10 +188,9 @@ export const mockATX: WebinarResults = {
  * Mock data for racetrack API results
  * @ignore
  */
-export const mockRacetrack: RacetrackResponseObject = {
-	customerId: '55843',
+export const mockRacetrack: RacetrackResponse = {
 	solutions: [
-	  {
+		{
 			description: 'IBN solution',
 			name: 'ibn',
 			technologies: [
@@ -58,21 +208,41 @@ export const mockRacetrack: RacetrackResponseObject = {
 									description: 'Discover Devices',
 									isComplete: false,
 									name: 'discoverDevices',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 								{
 									description: 'Configure Network Hierarchy',
 									isComplete: false,
 									name: 'configureNetworkHierarchy',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 								{
 									description: 'Map WLCs To Sites',
 									isComplete: false,
 									name: 'mapWLCsToSites',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 								{
 									description: 'Map APs To Sites',
 									isComplete: false,
 									name: 'mapAPsToSites',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 							],
 						},
@@ -92,21 +262,41 @@ export const mockRacetrack: RacetrackResponseObject = {
 									description: 'SD Access Test 1',
 									isComplete: true,
 									name: 'Engage Test 1',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 								{
 									description: 'SD Access Test 2',
 									isComplete: true,
 									name: 'Engage Test 2',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 								{
 									description: 'Map WLCs To Sites',
 									isComplete: false,
 									name: 'mapWLCsToSites',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 								{
 									description: 'Map APs To Sites',
 									isComplete: false,
 									name: 'mapAPsToSites',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 							],
 						},
@@ -126,27 +316,47 @@ export const mockRacetrack: RacetrackResponseObject = {
 									description: 'Automation Test 1',
 									isComplete: true,
 									name: 'Automation Test 1',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 								{
 									description: 'Automation Test 3',
 									isComplete: false,
 									name: 'Automation Test 2',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 								{
 									description: 'Map WLCs To Sites',
 									isComplete: true,
 									name: 'mapWLCsToSites',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 								{
 									description: 'Map APs To Sites',
 									isComplete: false,
 									name: 'mapAPsToSites',
+									updateMethod: 'NA',
+									isCompleteAuto: false,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
 								},
 							],
 						},
 					],
 				},
 			],
-	 	},
+		},
 	],
 };
