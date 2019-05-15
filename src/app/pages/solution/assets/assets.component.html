@@ -1,3 +1,98 @@
-<p>
-	assets works!
-</p>
+<div class="panel">
+	<ul class="tabs base-margin-bottom remove-shadow">
+		<li *ngFor="let tab of tabs"
+			[ngClass]="{ 'active': tab.selected }" [attr.disabled]="tab.disabled">
+			<a (click)="selectTab(tab)"
+				attr.data-auto-id="AssetSelectTab-{{ tab.key }}"
+				class="no-padding-bottom">
+				<div class="tab__heading qtr-padding-bottom" [innerText]="tab.title"></div>
+			</a>
+		</li>
+	</ul>
+	
+	<div class="half-margin-top">
+		<ng-container *ngTemplateOutlet="visibleTemplate; context: {}"></ng-container>
+	</div>
+</div>
+
+<!-- Templates for our Tabs -->
+<ng-template #assetsContent>
+	<span class="icon-filter icon-medium text-muted qtr-margin-right"></span>
+	<span class="text-large text-muted" [innerText]="'_VisualFilters_' | i18n"></span>
+	<div class="flex flex-fill flex-fluid">
+		<div *ngFor="let filter of filters; index as i"
+			attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}"
+			(click)="selectFilter(filter)"
+			[ngClass]="{
+				'panel--bordered-left': i !== 0,
+				'panel--bordered-right': i !== (filters.length - 1),
+				'filter__selected': filter.selected,
+				'filter__not-selected': !filter.selected
+			}"
+			class="panel panel--bordered-right flex-center flex-fill filter">
+			<div *ngIf="filter.template" class="base-margin-bottom">
+				<ng-container *ngTemplateOutlet="filter.template; context: {}"></ng-container>
+			</div>
+			<div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
+		</div>
+	</div>
+	<div class="dbl-margin-top">
+		<div *ngIf="inventory.length && !status.isLoading">
+			<div class="flex flex-fluid">
+				<div class="flex-fill half-padding-top" [innerText]="'_ShowingXofYAssets_' | i18n:inventory.length:assetParams.total"></div>
+				<div class="btn-group btn-group--square">
+					<button class="btn btn--small btn--gray-ghost disabled"><span class="icon-location"></span></button>
+					<button class="btn btn--small btn--gray-ghost"><span class="icon-grid-view"></span></button>
+					<button class="btn btn--small btn--gray-ghost selected"><span class="icon-list-view"></span></button>
+					<button class="btn btn--small btn--gray-ghost disabled"><span class="icon-more"></span></button>
+				</div>
+			</div>
+			<cui-table *ngIf="inventory.length && assetsTable"
+				[data]="inventory"
+				[options]="assetsTable">
+			</cui-table>
+			<div class="base-margin-top">
+				<cui-pager [page]="assetParams.page"
+					[limit]="assetParams.limit"
+					[totalItems]="assetParams?.total || 0">
+				</cui-pager>
+			</div>
+		</div>
+		<div *ngIf="!inventory.length || status.isLoading">
+			<cui-spinner></cui-spinner>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #contractsContent>
+	<!-- TODO: Add data for contracts panel -->
+</ng-template>
+
+<ng-template #eoxContent>
+<!-- TODO: Add data for eox panel -->
+</ng-template>
+
+<!-- Templates for our Visual Filters for the Assets Tab -->
+<ng-template #totalAssetsFilter>
+	<div class="text-huge flex-center" [innerText]="assetParams?.total || 0"></div>
+</ng-template>
+
+<ng-template #casesAssetsFilter>
+	<ng-container *ngTemplateOutlet="assetsWithChange; context: { assets: 17, trend: 'down', trendCount: 3 }"></ng-container>
+</ng-template>
+
+<ng-template #rmasAssetsFilter>
+	<ng-container *ngTemplateOutlet="assetsWithChange; context: { assets: 12, trend: 'up', trendCount: 2 }"></ng-container>
+</ng-template>
+
+<ng-template #assetsWithChange let-assets="assets" let-trend="trend" let-trendCount="trendCount">
+	<div class="half-margin-bottom flex-center">
+		<span class="text-huge" [innerText]="assets"></span>
+		<span class="text-medium" [innerText]="'_Assets_' | i18n"></span>
+	</div>
+	<div>
+		<span class="icon-arrow-{{ trend }}-tail"></span>
+		<span class="qtr-margin-left" [innerText]="trendCount"></span>
+		<span class="qtr-margin-left">(24h change)</span>
+	</div>
+</ng-template>

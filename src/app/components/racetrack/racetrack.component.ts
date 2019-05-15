@@ -54,6 +54,9 @@ export class RacetrackComponent implements OnInit {
 		this.progress = progress;
 		this.length = length;
 
+		/**
+		 * @TODO figure out how to replace this 'any'
+		 */
 		let points: any[] = Array.from({ length: 200 })
 			.fill(null);
 

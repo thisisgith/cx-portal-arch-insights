@@ -55,12 +55,10 @@
 				alt="{{ '_StockPhoto_' | i18n }}"
 				src="assets/img/header/user-photo-thumb-1.png">
 			<div class="divider--left base-margin-left">
-				<span class="icon-cog half-margin-left icon--mid text-muted"></span>
-				<a *ngIf="mocking"
-					data-auto-id="MockingSettings"
-					(click)="openMockModal()"
-					class="btn btn--icon btn--small base-margin-left">
-					<span class="icon-diagnostics"></span>
+				<a class="half-margin-left icon--mid"
+					data-auto-id="HeaderSettings"
+					(click)="mocking ? openMockModal() : null">
+					<span class="icon-cog text-muted"></span>
 				</a>
 			</div>
 		</div>	

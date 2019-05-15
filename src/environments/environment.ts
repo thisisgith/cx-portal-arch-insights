@@ -1,10 +1,10 @@
 import { defaults } from './defaults';
-import { mock } from './mock';
+import { mockSettings } from './mock';
 
 /**
  * Contains configurations for development builds, will extend the default configuration
  */
 export const environment = {
 	...defaults,
-	...mock,
+	...mockSettings,
 };

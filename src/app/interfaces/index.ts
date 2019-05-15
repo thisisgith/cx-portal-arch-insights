@@ -1,6 +1,7 @@
 export * from './advisory';
 export * from './alertData';
 export * from './announcement';
+export * from './asset';
 export * from './bug';
 export * from './case';
 export * from './contract';
@@ -8,5 +9,3 @@ export * from './fieldNotice';
 export * from './license';
 export * from './rma';
 export * from './webinar';
-export * from './asset';
-export * from './deviceDetails';
