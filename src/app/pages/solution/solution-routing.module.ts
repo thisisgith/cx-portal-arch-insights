@@ -28,6 +28,11 @@ const routes: Routes = [
 				loadChildren: './resolution/resolution.module#ResolutionModule',
 				path: 'resolution',
 			},
+			{
+				path: '',
+				pathMatch: 'full',
+				redirectTo: 'lifecycle',
+			},
 		],
 		component: SolutionComponent,
 		path: '',

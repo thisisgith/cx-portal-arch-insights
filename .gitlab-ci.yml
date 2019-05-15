@@ -15,6 +15,7 @@ setup:
   stage: setup
   script:
     - npm install --audit=false
+    - rm -rf node_modules/@types/lodash
 
 # run npm audit to verify dependency security
 audit:

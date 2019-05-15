@@ -24,7 +24,9 @@
 		</div>
 	</div>
 
-	<router-outlet></router-outlet>
+	<div class="base-margin">
+		<router-outlet></router-outlet>
+	</div>
 </div>
 
 <ng-template #breadcrumbs>
@@ -70,18 +72,29 @@
 </ng-template>
 
 <ng-template #facetPanel>
-	<div class="row flex-fill flex-center">
+	<div class="row no-gutters flex-fill flex-center">
 		<div *ngFor="let facet of facets; index as i"
 			attr.data-auto-id="Facet-{{ facet.key }}"
 			(click)="selectFacet(facet)"
-			class="panel panel--bordered-right flex-center"
+			class="panel panel--bordered-right flex-center row"
 			[ngClass]="{
 				'panel--bordered-left': i === 0,
 				'facet--selected': facet.selected,
 				'col-md-2': shownTabs === 5,
 				'col-md-3': shownTabs === 4
 			}">
-			<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
+			<div class="col-md-10 flex-center">
+				<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
+			</div>
+			<div class="col-md-2"></div>
+			<div class="col-md-10 flex flex-center">
+				<span [innerText]="facet.title"></span>
+			</div>
+			<div class="col-md-2 flex flex-center">				
+				<button class="btn btn--icon btn--small" disabled>
+					<span class="icon-lightbulb"></span>
+				</button>
+			</div>
 		</div>
 	</div>
 </ng-template>
@@ -89,39 +102,34 @@
 <ng-template #lifecycleFacet let-facet="facet">
 	<cui-gauge percentage="75"
 		value="75%"
-		color="primary"
-		[label]="facet.title">
+		color="primary">
 	</cui-gauge>
 </ng-template>
 
 <ng-template #assetsFacet let-facet="facet">
 	<cui-gauge percentage="75"
 		value="75%"
-		color="primary"
-		[label]="facet.title">
+		color="primary">
 	</cui-gauge>
 </ng-template>
 
 <ng-template #securityFacet let-facet="facet">
 	<cui-gauge percentage="75"
 		value="75%"
-		color="primary"
-		[label]="facet.title">
+		color="primary">
 	</cui-gauge>
 </ng-template>
 
 <ng-template #advisoriesFact let-facet="facet">
 	<cui-gauge percentage="75"
 		value="75%"
-		color="primary"
-		[label]="facet.title">
+		color="primary">
 	</cui-gauge>
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
 	<cui-gauge percentage="75"
 		value="75%"
-		color="primary"
-		[label]="facet.title">
+		color="primary">
 	</cui-gauge>
 </ng-template>
