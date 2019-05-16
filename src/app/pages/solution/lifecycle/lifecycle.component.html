@@ -25,7 +25,7 @@
 							<span class="text-med text-uppercase" [innerText]="'_Actions_' | i18n"></span>
 						</div>
 						<div class="row no-margin">
-							<div *ngFor="let action of currentPitstop.pitstopActions" class="form-group form-group--compressed">
+							<div *ngFor="let action of currentPitstop?.pitstopActions" class="form-group form-group--compressed">
 								<label class="checkbox">
 									<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.isComplete" [checked]="action.isComplete">
 									<span class="checkbox__input"></span>

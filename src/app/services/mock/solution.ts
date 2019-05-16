@@ -11,7 +11,7 @@ export const mockATX: ATXResponse = {
 	items: [
 		{
 			title: 'Cisco DNA Center Getting started',
-			description: 'Topics inlcude inteface and network design overview, policy' +
+			description: 'Topics include interface and network design overview, policy' +
 				'management and deployment, device provisioning, and automation/assurance',
 			duration: '1h 15m',
 			registrationUrl: 'Webinar Registration Url',
@@ -54,7 +54,7 @@ export const mockATX: ATXResponse = {
 		},
 		{
 			title: 'Cisco DNA Project Plan Best Practice',
-			description: 'Topics inlcude inteface and network design overview, policy' +
+			description: 'Topics include interface and network design overview, policy' +
 				'management and deployment, device provisioning, and automation/assurance',
 			duration: '1h 15m',
 			registrationUrl: 'Webinar Registration Url',
@@ -97,7 +97,7 @@ export const mockATX: ATXResponse = {
 		},
 		{
 			title: 'Cisco DNA Infrastructure Transition Best Practice',
-			description: 'Topics inlcude inteface and network design overview,' +
+			description: 'Topics include interface and network design overview,' +
 				'policy management and deployment, device provisioning, and automation/assurance',
 			duration: '1h 15m',
 			registrationUrl: 'Webinar Registration Url',
@@ -140,7 +140,7 @@ export const mockATX: ATXResponse = {
 		},
 		{
 			title: 'Cisco DNA Center Wireless Assurance',
-			description: 'Topics inlcude inteface and network design overview, policy management' +
+			description: 'Topics include interface and network design overview, policy management' +
 				'and deployment, device provisioning, and automation/assurance',
 			duration: '1h 15m',
 			registrationUrl: 'Webinar Registration Url',
@@ -357,6 +357,20 @@ export const mockRacetrack: RacetrackResponse = {
 					],
 				},
 			],
+		},
+	],
+};
+
+/**
+ * Mock empty data for racetrack API results
+ * @ignore
+ */
+export const mockEmptyRacetrack: RacetrackResponse = {
+	solutions: [
+		{
+			description: 'IBN solution',
+			name: 'ibn',
+			technologies: [],
 		},
 	],
 };

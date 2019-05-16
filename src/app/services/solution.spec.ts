@@ -3,7 +3,6 @@ import { SolutionService } from './solution';
 import { HttpClientModule } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
-// import { solutionATX, solutionRacetrack } from '@mock';
 
 describe('SolutionService', () => {
 

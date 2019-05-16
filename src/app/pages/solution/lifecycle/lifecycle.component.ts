@@ -41,6 +41,7 @@ export class LifecycleComponent implements OnInit {
 	public currentPitstop: RacetrackPitstop;
 	public atxCardOpened = false;
 	public sessionSelected: ATXSession;
+	public customerId = '2431199';
 
 	public status = {
 		modalHidden: true,
@@ -78,7 +79,7 @@ export class LifecycleComponent implements OnInit {
 	public getATX () {
 		this.status.webinarsLoading = true;
 		const params: RacetrackContentService.GetRacetrackATXParams = {
-			customerId: '2431199',
+			customerId: this.customerId,
 			pitstop: 'Onboard',
 			solution: 'ibn',
 			usecase: 'Wireless Assurance',
@@ -124,13 +125,13 @@ export class LifecycleComponent implements OnInit {
 	public getRacetrackInfo () {
 		this.status.racetrackLoading = true;
 		const params: RacetrackService.GetRacetrackParams = {
-			customerId: '2431199',
+			customerId: this.customerId,
 		};
 		this.racetrackService.getRacetrack(params)
 		.subscribe((results: RacetrackResponse) => {
 			this.racetrackResults = results;
 			const technology: RacetrackTechnology =
-			this.racetrackResults ? this.racetrackResults.solutions[0].technologies[0] : null;
+				_.get(this.racetrackResults, 'solutions[0].technologies[0]', null);
 			if (technology) {
 				const currentPitstop = technology.currentPitstop;
 				this.currentPitstop = _.find(technology.pitstops, { name: currentPitstop });
