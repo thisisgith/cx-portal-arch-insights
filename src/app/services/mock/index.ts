@@ -7,4 +7,5 @@ export {
 export {
 	mockATX as solutionATX,
 	mockRacetrack as solutionRacetrack,
+	mockEmptyRacetrack as solutionEmptyRacetrack,
 } from './solution';

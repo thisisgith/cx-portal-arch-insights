@@ -25,7 +25,7 @@
 							<span class="text-med text-uppercase" [innerText]="'_Actions_' | i18n"></span>
 						</div>
 						<div class="row no-margin">
-							<div *ngFor="let action of currentPitstop.pitstopActions" class="form-group form-group--compressed">
+							<div *ngFor="let action of currentPitstop?.pitstopActions" class="form-group form-group--compressed">
 								<label class="checkbox">
 									<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.isComplete" [checked]="action.isComplete">
 									<span class="checkbox__input"></span>
@@ -48,6 +48,59 @@
 					</div>
 					<div class="col-md-4 half-padding-top">
 						<ng-container *ngTemplateOutlet="accPanel"></ng-container>
+					</div>
+				</div>
+				<div class="dna-start-panel panel panel--open panel--bordered" *ngIf="atxCardOpened">
+					<div class="row base-margin-top half-margin-left half-margin-right">
+						<div class="col-md-11">
+							<h5 [innerText]="recommendedATX.title"></h5>
+						</div>
+						<div class="col-md-1">
+							<a class="no-link fade-in-pop closebtn" (click)="closeAtxCard()" data-auto-id="closebtn">
+								<span class="icon-close icon-small"></span>
+							</a>
+						</div>
+					</div>
+					<div class="base-margin-left base-margin-right half-margin-top">
+						<span class="text-small" [innerText]="recommendedATX.description"></span>
+					</div>
+					<div class="half-margin-top base-margin-left base-margin-bottom">
+						<a data-auto-id="viewOnDemand" class="no-link fade-in-pop" href="recommendedATX.viewOnDemandUrl">
+							<div class="flex">
+								<div id="watchnowicon" class="btn--square">
+									<span class="icon-play icon-small"></span>
+								</div>
+								<div id="watchnowlabel" class="half-margin-left flex-fluid">
+									<span class="text-small" [innerText]="'_WatchNow_' | i18n"></span>
+								</div>
+							</div>
+						</a>
+					</div>
+					<h6 class="half-margin-left base-margin-top half-margin-bottom" [innerText]="'_ChooseSession_' | i18n"></h6>
+					<div class="session-table responsive-table">
+						<table class="table table--bordered table--selectable">
+							<tbody>
+								<tr data-auto-id="selectSession" *ngFor="let session of recommendedATX.sessions"
+									(click)="selectSession(session)"
+									[ngClass]="{ 'active': sessionSelected?.date === session.date && sessionSelected?.time === session.time }">
+									<td class="table-data text-xsmall" [innerText]="session.date"></td>
+									<td class="table-data text-xsmall" [innerText]="session.time"></td>
+									<td class="table-data text-xsmall" [innerText]="recommendedATX.moderator"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="row">
+						<div class="col-md-8">
+							<a data-auto-id="regbutton" href="recommendedATX.registrationUrl"><button class="btn base-margin-top"
+									[innerText]="'_Register_' | i18n"></button></a>
+						</div>
+						<div class="col-md">
+							<div id="duration" class="row flex-center-vertical dbl-margin-top base-margin-right">
+								<span class="icon-clock icon-small half-padding-right toggle"></span>
+								<span class="text-xsmall" [innerText]="recommendedATX.duration"></span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -91,15 +144,20 @@
 				<span class="text-large" [innerText]="recommendedATX.title"></span>
 			</div>
 			<div class="row base-padding-left base-padding-top">
-				<button class="btn btn--small btn--gray-ghost text-uppercase" [innerText]="'_Schedule_' | i18n"></button>
+				<button 
+					data-auto-id="scheduleBtn"
+					class="btn btn--small btn--gray-ghost text-uppercase"
+					(click)="openATXSchedule()"
+					[innerText]="'_Schedule_' | i18n">
+				</button>
 				<button class="btn btn--small btn--gray-ghost text-uppercase" [innerText]="'_WatchNow_' | i18n"></button>
 			</div>
 		</div>
 		<div class="base-padding-top half-padding-bottom">
 			<span class="text-large text-uppercase" [innerText]="'_More_' | i18n"></span>
 		</div>
-		<div class="more-scroll base-padding-bottom" id="webinarResults" *ngIf="webinarResults?.webinars?.length">
-			<div class="qtr-padding-bottom" *ngFor="let result of webinarResults.webinars | slice:1; let i = index;">
+		<div class="more-scroll base-padding-bottom" id="atxResults" *ngIf="atxResults?.items?.length">
+			<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items | slice:1; let i = index;">
 				<span [id]="'webinarResult:' + result.title" class="toggle" [innerText]="result.title"></span>
 			</div>
 		</div>
@@ -141,8 +199,8 @@
 		<div class="base-padding-top half-padding-bottom">
 			<span class="text-large text-uppercase" [innerText]="'_More_' | i18n"></span>
 		</div>
-		<div class="more-scroll base-padding-bottom" id="accResults" *ngIf="webinarResults?.webinars?.length">
-			<div class="qtr-padding-bottom" *ngFor="let result of webinarResults.webinars | slice:1; let i = index;">
+		<div class="more-scroll base-padding-bottom" id="accResults" *ngIf="atxResults?.items?.length">
+			<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items | slice:1; let i = index;">
 				<span [id]="'webinarResult:' + result.title" class="toggle" [innerText]="result.title"></span>
 			</div>
 		</div>
@@ -196,8 +254,8 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="base-padding-bottom half-padding-top half-padding-left" id="eLearningResults" *ngIf="webinarResults?.webinars?.length">
-				<div class="qtr-padding-bottom" *ngFor="let result of webinarResults.webinars;">
+			<div class="base-padding-bottom half-padding-top half-padding-left" id="eLearningResults" *ngIf="atxResults?.items?.length">
+				<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items;">
 					<span id="eLearningResult: {{ result.title }}" class="toggle" [innerText]="result.title"></span>
 				</div>
 			</div>
@@ -216,8 +274,8 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="base-padding-bottom half-padding-top half-padding-left" id="certResults" *ngIf="webinarResults?.webinars?.length">
-				<div class="qtr-padding-bottom" *ngFor="let result of webinarResults.webinars;">
+			<div class="base-padding-bottom half-padding-top half-padding-left" id="certResults" *ngIf="atxResults?.items?.length">
+				<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items;">
 					<span id="certResult: {{ result.title }}" class="toggle" [innerText]="result.title"></span>
 				</div>
 			</div>
@@ -236,8 +294,8 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="base-padding-bottom half-padding-top half-padding-left" id="learningLabResults" *ngIf="webinarResults?.webinars?.length">
-				<div class="qtr-padding-bottom" *ngFor="let result of webinarResults.webinars;">
+			<div class="base-padding-bottom half-padding-top half-padding-left" id="learningLabResults" *ngIf="atxResults?.items?.length">
+				<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items;">
 					<span id="learningLabResult: {{ result.title }}" class="toggle" [innerText]="result.title"></span>
 				</div>
 			</div>
@@ -256,8 +314,8 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="base-padding-bottom half-padding-top half-padding-left" id="successPathResults" *ngIf="webinarResults?.webinars?.length">
-				<div class="qtr-padding-bottom" *ngFor="let result of webinarResults.webinars;">
+			<div class="base-padding-bottom half-padding-top half-padding-left" id="successPathResults" *ngIf="atxResults?.items?.length">
+				<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items;">
 					<span id="successPathResult: {{ result.title }}" class="toggle" [innerText]="result.title"></span>
 				</div>
 			</div>
@@ -279,12 +337,12 @@
 			</div>
 		</div>
 		<div class="modal__body">
-			<div class="base-padding-left text-medium text-bold text-left half-padding-bottom half-padding-top" [innerText]="'_TopicsAvailable_' | i18n:results.webinars.length"></div>
+			<div class="base-padding-left text-medium text-bold text-left half-padding-bottom half-padding-top" [innerText]="'_TopicsAvailable_' | i18n:results.items.length"></div>
 			<div class="row base-padding-left base-padding-right base-padding-bottom">
-				<div class="col-md-3 base-padding-bottom" *ngFor="let result of results.webinars">
+				<div class="col-md-3 base-padding-bottom" *ngFor="let result of results.items">
 					<div class="card racetrack-card tab-background">
 						<div class="card__header text-left text-bold" [innerText]="result.title"></div>
-						<div class="card__body webinar-card text-left" [innerText]="result.summary"></div>
+						<div class="card__body webinar-card text-left" [innerText]="result.description"></div>
 						<div class="card__footer">
 							<div class="col-md-8">
 								<div class="row">
@@ -299,7 +357,7 @@
 							<div class="col-md-4">
 								<div class="row flex-center-vertical">
 									<span class="icon-clock icon-small half-padding-right toggle"></span>
-									<span [innerText]="'_Placeholder_' | i18n"></span>
+									<span [innerText]="result.duration"></span>
 								</div>
 							</div>
 						</div>
@@ -323,12 +381,12 @@
 			</div>
 		</div>
 		<div class="modal__body">
-			<div class="base-padding-left text-medium text-bold text-left half-padding-bottom half-padding-top" [innerText]="'_TopicsAvailable_' | i18n:results.webinars.length"></div>
+			<div class="base-padding-left text-medium text-bold text-left half-padding-bottom half-padding-top" [innerText]="'_TopicsAvailable_' | i18n:results.items.length"></div>
 			<div class="row base-padding-left base-padding-right base-padding-bottom">
-				<div class="col-md-3 base-padding-bottom" *ngFor="let result of results.webinars">
+				<div class="col-md-3 base-padding-bottom" *ngFor="let result of results.items">
 					<div class="card racetrack-card tab-background">
 						<div class="card__header text-left text-bold" [innerText]="result.title"></div>
-						<div class="card__body webinar-card text-left" [innerText]="result.summary"></div>
+						<div class="card__body webinar-card text-left" [innerText]="result.description"></div>
 						<div class="card__footer">
 							<div class="col-md-8">
 								<div class="row">
@@ -343,7 +401,7 @@
 							<div class="col-md">
 								<div class="row flex-center-vertical">
 									<span class="icon-clock icon-small half-padding-right toggle"></span>
-									<span [innerText]="'_Placeholder_' | i18n"></span>
+									<span [innerText]="result.duration"></span>
 								</div>
 							</div>
 						</div>

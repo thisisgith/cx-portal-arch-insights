@@ -1,5 +1,6 @@
-import { NgModule } from '@angular/core';
 import { ExtraOptions, Routes, RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
+import { ClientSSOGuard } from '@cisco-ngx/cui-auth';
 
 /**
  * Representation of the routes used by @angular/router
@@ -7,6 +8,7 @@ import { ExtraOptions, Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
 	{
 		loadChildren: './pages/solution/solution.module#SolutionModule',
+		canActivate: [ClientSSOGuard],
 		path: 'solution',
 	},
 	{

@@ -72,3 +72,29 @@
 .gauge-selected {
 	border-bottom: 3px solid #00bceb;
 }
+
+.panel--closed {
+	width: 0;
+}
+
+.panel--open {
+	box-shadow: $base-box-shadow;
+	height: 400px;
+	width: 500px;
+	position: absolute;
+	top: 150px;
+	left: 140px;
+	z-index: 1;
+	background-color: $white;
+	border-radius: 10px;
+}
+
+.session-table {
+	overflow-y: scroll;
+	height: 80px;
+	display: block;
+}
+
+#duration {
+	float: right;
+}

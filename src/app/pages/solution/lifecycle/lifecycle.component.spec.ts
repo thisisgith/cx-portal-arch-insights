@@ -2,8 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
-import { solutionATX, solutionRacetrack } from '@mock';
-import { SolutionService } from '@services';
+import { solutionATX, solutionRacetrack, solutionEmptyRacetrack } from '@mock';
+import { RacetrackService, RacetrackContentService } from '@cui-x/sdp-api';
 import { of } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
@@ -13,7 +13,8 @@ describe('LifecycleComponent', () => {
 	let component: LifecycleComponent;
 	let fixture: ComponentFixture<LifecycleComponent>;
 	let de: DebugElement;
-	let service: SolutionService;
+	let racetrackService: RacetrackService;
+	let racetrackContentService: RacetrackContentService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -25,59 +26,85 @@ describe('LifecycleComponent', () => {
 		})
 		.compileComponents();
 
-		service = TestBed.get(SolutionService);
+		racetrackService = TestBed.get(RacetrackService);
+		racetrackContentService = TestBed.get(RacetrackContentService);
 	}));
 
-	beforeEach(() => {
-		fixture = TestBed.createComponent(LifecycleComponent);
-		component = fixture.componentInstance;
+	describe('Racetrack', () => {
 
-		spyOn(service, 'queryWebinars')
-			.and
-			.returnValue(of(solutionATX));
+		beforeEach(() => {
+			fixture = TestBed.createComponent(LifecycleComponent);
+			component = fixture.componentInstance;
 
-		spyOn(service, 'queryRacetrack')
-			.and
-			.returnValue(of(solutionRacetrack));
+			spyOn(racetrackContentService, 'getRacetrackATX')
+				.and
+				.returnValue(of(solutionATX));
 
-		fixture.detectChanges();
-	});
+			spyOn(racetrackService, 'getRacetrack')
+				.and
+				.returnValue(of(solutionRacetrack));
 
-	it('should create', () => {
-		expect(component)
-			.toBeTruthy();
-	});
+			fixture.detectChanges();
+		});
 
-	describe('webinars', () => {
-		it('should show webinars in the webinar card', () => {
-			expect(component.webinarResults.webinars.length)
-				.toEqual(6);
-			de = fixture.debugElement.query(By.css('#webinarResults'));
-			expect(de)
+		it('should create', () => {
+			expect(component)
 				.toBeTruthy();
 		});
 
-		it('should show webinar view-all modal', () => {
-			component.showModal('webinars');
-			fixture.detectChanges();
+		describe('ATX', () => {
+			it('should show atx items in the ATX card', () => {
+				expect(component.atxResults.items.length)
+					.toEqual(4);
+				de = fixture.debugElement.query(By.css('#atxResults'));
+				expect(de)
+					.toBeTruthy();
+			});
 
-			de = fixture.debugElement.query(By.css('#webinarModal'));
-			expect(de)
-				.toBeTruthy();
+			it('should show webinar view-all modal', () => {
+				component.showModal('webinars');
+				fixture.detectChanges();
+
+				de = fixture.debugElement.query(By.css('#webinarModal'));
+				expect(de)
+					.toBeTruthy();
+			});
+		});
+
+		/**
+		 * This currently has no working functionality, just testing the other branch of showModal()
+		 */
+		describe('coaching', () => {
+			it('should show coaching modal', () => {
+				component.showModal('coaching');
+				fixture.detectChanges();
+
+				de = fixture.debugElement.query(By.css('#coachingModal'));
+				expect(de)
+					.toBeTruthy();
+			});
 		});
 	});
 
-	/**
-	 * This currently has no working functionality, just testing the other branch of showModal()
-	 */
-	describe('coaching', () => {
-		it('should show coaching modal', () => {
-			component.showModal('coaching');
-			fixture.detectChanges();
+	describe('Racetrack with empty technologies', () => {
+		beforeEach(() => {
+			fixture = TestBed.createComponent(LifecycleComponent);
+			component = fixture.componentInstance;
 
-			de = fixture.debugElement.query(By.css('#coachingModal'));
-			expect(de)
-				.toBeTruthy();
+			spyOn(racetrackContentService, 'getRacetrackATX')
+				.and
+				.returnValue(of(solutionATX));
+
+			spyOn(racetrackService, 'getRacetrack')
+				.and
+				.returnValue(of(solutionEmptyRacetrack));
+
+			fixture.detectChanges();
+		});
+
+		it('should not show currentPitstop', () => {
+			expect(component.currentPitstop)
+				.toBeFalsy();
 		});
 	});
 });

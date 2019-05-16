@@ -11,9 +11,12 @@ import { HttpHeaders } from '@angular/common/http';
 import {
 	AlertResults,
 	SearchResults,
-	WebinarResults,
-	RacetrackResponseObject,
 } from '@services';
+
+import {
+	RacetrackResponse,
+	ATXResponse,
+} from '@cui-x/sdp-api';
 
 import {
 	Asset,
@@ -30,9 +33,9 @@ interface Scenario {
 		body?: (
 			AlertResults |
 			Asset | Asset[] |
-			RacetrackResponseObject |
 			SearchResults |
-			WebinarResults
+			RacetrackResponse |
+			ATXResponse
 		);
 		headers?: HttpHeaders;
 		status: number;
@@ -146,7 +149,8 @@ export const mockSettings: MockSettings = {
 					},
 				],
 			},
-			url: '/ws/webinars',
+			url: '/api/customerportal/racetrack/v1/atx?' +
+			'usecase=Wireless Assurance&solution=ibn&pitstop=Onboard&customerId=2431199',
 		},
 		{
 			scenarios: {
@@ -178,7 +182,7 @@ export const mockSettings: MockSettings = {
 					},
 				],
 			},
-			url: '/api/v1/racetrack',
+			url: '/api/customerportal/pitstop/v1/info?customerId=2431199',
 		},
 	],
 };

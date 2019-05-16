@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RacetrackComponent } from './racetrack.component';
-import { RacetrackModule } from './racetrack.module';
+import { RacetrackCarModule } from './racetrack.module';
 
 describe('RacetrackComponent', () => {
 	let component: RacetrackComponent;
@@ -11,7 +11,7 @@ describe('RacetrackComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [RacetrackModule],
+			imports: [RacetrackCarModule],
 		})
 		.compileComponents();
 	}));
