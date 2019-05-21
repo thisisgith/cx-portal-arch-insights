@@ -52,10 +52,7 @@ export class SearchService {
 	constructor (
 		private http: HttpClient,
 		private logger: LogService,
-	) {
-		const origin = environment.origin || window.location.origin;
-		this.serviceUrl = `${origin}${environment.services.search}`;
-	}
+	) { }
 
 	/**
 	 * Performs a query against the search api
@@ -65,6 +62,7 @@ export class SearchService {
 	public search (query: string): Observable<SearchResults> {
 		this.logger.debug(`Search query :: ${query}`);
 
-		return this.http.get<SearchResults>(this.serviceUrl);
+		return this.http.get<SearchResults>(`${
+			environment.origin }${environment.services.search}`);
 	}
 }

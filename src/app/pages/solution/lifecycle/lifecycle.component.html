@@ -1,364 +1,343 @@
-<div class="container-fluid base-margin-top base-margin-bottom">
-	<div class="panel panel--ltgray panel--bordered no-padding base-padding-right">
-		<div class="row">
-			<div class="col-md-2 half-padding-top">
-				<ng-container *ngIf="racetrackResults">
-					<div class="row base-padding-left half-margin-top">
-						<div class="col-md-6">
-							<h2 class="text-primary" [innerText]="currentPitstop?.description"></h2>
-						</div>
-						<div class="col-md-6">
-							<img alt="'_FinishLine_' | i18n" class="pull-right" src="assets/img/solutions/finishline.png">
-						</div>
-					</div>
-					<div class="row half-padding-top half-padding-left">
-						<div class="col-md">
-							<app-racetrack></app-racetrack>
-							<div class="half-padding-left">
-								<span [innerHTML]="'_OnboardDescription_' | i18n"></span>
-							</div>
-							<div class="divider no-margin-bottom"></div>
-						</div>
-					</div>
-					<div class="panel panel--ltgray half-margin-bottom half-margin-left">
-						<div class="row no-margin half-padding-top half-padding-bottom">
-							<span class="text-med text-uppercase" [innerText]="'_Actions_' | i18n"></span>
-						</div>
-						<div class="row no-margin">
-							<div *ngFor="let action of currentPitstop?.pitstopActions" class="form-group form-group--compressed">
-								<label class="checkbox">
-									<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.isComplete" [checked]="action.isComplete">
-									<span class="checkbox__input"></span>
-									<span class="checkbox__label text-medium" [innerText]="action.description"></span>
-								</label>
-							</div>
-						</div>
-					</div>
-				</ng-container>
-			</div>
+<div class="panel panel--ltgray panel--bordered no-padding base-padding-right">
+	<div class="row base-padding-top">
+		<div class="col-md-2" *ngIf="!status.loading.racetrack">
+			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
+		</div>
 
-			<div class="col-md-10 half-padding-top">
-				<div class="row half-padding-bottom">
-					<div class="col-md-4 half-padding-top">
-						<ng-container *ngTemplateOutlet="atxPanel"></ng-container>
-						<ng-container *ngTemplateOutlet="communityPanel"></ng-container>
-					</div>
-					<div class="col-md-4 half-padding-top">
-						<ng-container *ngTemplateOutlet="learnPanel"></ng-container>
-					</div>
-					<div class="col-md-4 half-padding-top">
-						<ng-container *ngTemplateOutlet="accPanel"></ng-container>
-					</div>
+		<div class="col-md-10">
+			<div class="row">
+				<div class="col-md-4">
+					<ng-container *ngTemplateOutlet="panel; context: {
+							template: atxPanel,
+							title: '_AskTheExpert_',
+							loading: status.loading.atx,
+							data: componentData.atx,
+							viewAllLabel: '_ViewAll_',
+							viewAll: 'atx'
+						}">
+					</ng-container>
+					<ng-container *ngTemplateOutlet="panel; context: {
+							template: communityPanel,
+							title: '_Communities_',
+							loading: status.loading.communities,
+							data: componentData.communities,
+							viewAllLabel: '_SearchCommunities_',
+							viewAll: 'communities'
+						}">
+					</ng-container>
 				</div>
-				<div class="dna-start-panel panel panel--open panel--bordered" *ngIf="atxCardOpened">
-					<div class="row base-margin-top half-margin-left half-margin-right">
-						<div class="col-md-11">
-							<h5 [innerText]="recommendedATX.title"></h5>
-						</div>
-						<div class="col-md-1">
-							<a class="no-link fade-in-pop closebtn" (click)="closeAtxCard()" data-auto-id="closebtn">
-								<span class="icon-close icon-small"></span>
-							</a>
-						</div>
-					</div>
-					<div class="base-margin-left base-margin-right half-margin-top">
-						<span class="text-small" [innerText]="recommendedATX.description"></span>
-					</div>
-					<div class="half-margin-top base-margin-left base-margin-bottom">
-						<a data-auto-id="viewOnDemand" class="no-link fade-in-pop" href="recommendedATX.viewOnDemandUrl">
-							<div class="flex">
-								<div id="watchnowicon" class="btn--square">
-									<span class="icon-play icon-small"></span>
-								</div>
-								<div id="watchnowlabel" class="half-margin-left flex-fluid">
-									<span class="text-small" [innerText]="'_WatchNow_' | i18n"></span>
-								</div>
-							</div>
-						</a>
-					</div>
-					<h6 class="half-margin-left base-margin-top half-margin-bottom" [innerText]="'_ChooseSession_' | i18n"></h6>
-					<div class="session-table responsive-table">
-						<table class="table table--bordered table--selectable">
-							<tbody>
-								<tr data-auto-id="selectSession" *ngFor="let session of recommendedATX.sessions"
-									(click)="selectSession(session)"
-									[ngClass]="{ 'active': sessionSelected?.date === session.date && sessionSelected?.time === session.time }">
-									<td class="table-data text-xsmall" [innerText]="session.date"></td>
-									<td class="table-data text-xsmall" [innerText]="session.time"></td>
-									<td class="table-data text-xsmall" [innerText]="recommendedATX.moderator"></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="row">
-						<div class="col-md-8">
-							<a data-auto-id="regbutton" href="recommendedATX.registrationUrl"><button class="btn base-margin-top"
-									[innerText]="'_Register_' | i18n"></button></a>
-						</div>
-						<div class="col-md">
-							<div id="duration" class="row flex-center-vertical dbl-margin-top base-margin-right">
-								<span class="icon-clock icon-small half-padding-right toggle"></span>
-								<span class="text-xsmall" [innerText]="recommendedATX.duration"></span>
-							</div>
-						</div>
-					</div>
+				<div class="col-md-4">
+					<ng-container *ngTemplateOutlet="panel; context: {
+							template: learnPanel,
+							title: '_Learn_',
+							loading: (status.loading.elearning && !status.loading.success),
+							data: componentData.learning
+						}">
+					</ng-container>
+				</div>
+				<div class="col-md-4">
+					<ng-container *ngTemplateOutlet="panel; context: {
+							template: accPanel,
+							title: '_Accelerator_',
+							loading: status.loading.acc,
+							data: componentData.acc
+						}">
+					</ng-container>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-<div class="modal-container" *ngIf="!status.modalHidden">
-	<div class="modal-backdrop" [ngClass]="{ hide: status.modalHidden }"></div>
-	<div class="modal modal--full" [ngClass]="{ hide: status.modalHidden }">
+	
+<div class="modal-container" *ngIf="modal.visible">
+	<div class="modal-backdrop" [ngClass]="{ hide: !modal.visible }"></div>
+	<div class="modal modal--full" [ngClass]="{ hide: !modal.visible }">
 		<div class="modal__dialog">
-			<ng-container *ngTemplateOutlet="visibleTemplate; context: { results: visibleContext }"></ng-container>
+			<ng-container *ngTemplateOutlet="modal.content; context: modal.context"></ng-container>
 		</div>
 	</div>
 </div>
 
-<ng-template #atxPanel>
-	<div class="panel base-padding-top base-padding-left base-padding-right half-margin-bottom">
-		<div class="row">
-			<div class="col-md-6">
-				<span class="text-uppercase text-large" [innerText]="'_AskTheExpert_' | i18n"></span>
+<ng-template #racetrack>
+	<div class="row base-padding-left">
+		<div class="col-md-7">
+			<h2 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h2>
+		</div>
+		<div class="col-md-5 flex-center">
+			<img alt="'_FinishLine_' | i18n" class="pull-right" src="assets/img/solutions/finishline.png">
+		</div>
+	</div>
+	<div class="half-padding-top half-padding-left">
+		<app-racetrack *ngIf="!status.racetrackLoading && componentData?.racetrack?.stage"
+			[stage]="componentData.racetrack.stage">
+		</app-racetrack>
+		<div class="half-padding-left">
+			<span *ngIf="currentPitstop" [innerHTML]="'_DuringXStage_' | i18n:currentPitstop.name"></span>
+			<span [ngSwitch]="componentData?.racetrack?.stage">
+				<span *ngSwitchCase="'onboard'" [innerHTML]="'_OnboardDescription_' | i18n"></span>
+				<span *ngSwitchCase="'implement'" [innerHTML]="'_ImplementDescription_' | i18n"></span>
+				<span *ngSwitchCase="'adopt'" [innerHTML]="'_AdoptDescription_' | i18n"></span>
+			</span>
+		</div>
+	</div>
+	<div class="base-margin-left" *ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
+		<div class="divider divider--compressed"></div>
+		<div class="half-padding-bottom text-uppercase" [innerText]="'_Actions_' | i18n"></div>
+		<div *ngFor="let action of currentPitstop.pitstopActions"
+			class="form-group form-group--compressed">
+			<label class="checkbox">
+				<input data-auto-id="pitstopCheckbox"
+					type="checkbox"
+					[disabled]="action.isComplete"
+					[(ngModel)]="action.isComplete"
+					[checked]="action.isComplete">
+				<span class="checkbox__input"></span>
+				<span class="checkbox__label text-medium" [innerText]="action.name"></span>
+			</label>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #atxPanel let-data="data">
+	<ng-container *ngIf="data.recommended">
+		<ng-container *ngTemplateOutlet="recommended; context: {
+				template: recommendedATX,
+				title: data.recommended.title,
+				src: 'assets/img/solutions/driver.png'
+			}">
+		</ng-container>
+	</ng-container>
+	<ng-container *ngIf="data.sessions.length">
+		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions }"></ng-container>
+	</ng-container>
+	<ng-container *ngIf="componentData?.atx?.recommended">
+		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.recommended }"></ng-container>
+	</ng-container>
+</ng-template>
+
+<ng-template #recommended let-src="src" let-title="title" let-template="template">
+	<div class="qtr-padding-bottom">
+		<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
+		<span class="text-uppercase" [innerText]="'_Recommended_' | i18n"></span>
+	</div>
+	<div class="panel panel--bordered panel no-padding-top no-padding-left no-padding-right round-edges">
+		<img class="round-edges-top max-width" alt="'_Placeholder_' | i18n" [src]="src">
+		<div class="base-padding-top half-padding-left">
+			<div class="text-large base-padding-bottom" [innerText]="title"></div>
+			<ng-container *ngTemplateOutlet="template"></ng-container>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #recommendedATX>
+	<button data-auto-id="recommendedATXScheduleButton"
+		class="btn btn--small btn--gray-ghost text-uppercase"
+		(click)="atxScheduleCardOpened = true"
+		[innerText]="'_Schedule_' | i18n">
+	</button>
+	<button class="btn btn--small btn--gray-ghost text-uppercase" [innerText]="'_WatchNow_' | i18n"></button>
+</ng-template>
+
+<ng-template #recommendedACC>
+	<button class="btn btn--small btn--gray-ghost text-uppercase" [innerText]="'_Register_' | i18n"></button>
+</ng-template>
+
+<ng-template #recommendedATXSchedule let-data="data">
+	<div class="panel panel--open panel--bordered"
+		*ngIf="atxScheduleCardOpened">
+		<div class="row base-margin-top half-margin-left half-margin-right">
+			<div class="col-md-11">
+				<h5 [innerText]="data.title"></h5>
 			</div>
-			<div class="col-md-6 text-right">
-				<div data-auto-id="WebinarModalSelect" (click)="showModal('webinars')" class="toggle">
-					<span class="text-right text-med" [innerText]="'_ViewAll_' | i18n"></span>
-					<span class="icon-play qtr-padding-left qtr-padding-bottom"></span>
-				</div>
+			<div class="col-md-1">
+				<a class="no-link fade-in-pop closebtn"
+					(click)="this.atxScheduleCardOpened = false"
+					data-auto-id="AtxScheduleCardClose">
+					<span class="icon-close icon-small"></span>
+				</a>
 			</div>
 		</div>
-		<div class="row base-padding-top qtr-padding-bottom">
+		<div class="base-margin-left base-margin-right half-margin-top">
+			<span class="text-small" [innerText]="data.description"></span>
+		</div>
+		<div class="half-margin-top base-margin-left base-margin-bottom">
+			<a data-auto-id="viewOnDemand"
+				class="no-link fade-in-pop"
+				[href]="data.viewOnDemandUrl">
+				<div class="flex">
+					<div class="btn--square">
+						<span class="icon-play icon-small"></span>
+					</div>
+					<div class="half-margin-left flex-fluid">
+						<span class="text-small" [innerText]="'_WatchNow_' | i18n"></span>
+					</div>
+				</div>
+			</a>
+		</div>
+		<h6 class="half-margin-left base-margin-top half-margin-bottom"
+			[innerText]="'_ChooseSession_' | i18n">
+		</h6>
+		<div class="session-table responsive-table">
+			<table class="table table--bordered table--selectable">
+				<tbody>
+					<tr attr.data-auto-id="SelectSession-{{ session.title }}"
+						*ngFor="let session of data.sessions"
+						(click)="selectSession(session)"
+						[ngClass]="{ 'active': sessionSelected?.date === session.date && sessionSelected?.time === session.time }">
+						<td class="text-xsmall" [innerText]="session.date"></td>
+						<td class="text-xsmall" [innerText]="session.time"></td>
+						<td class="text-xsmall" [innerText]="data.moderator"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="row">
+			<div class="col-md-8">
+				<a data-auto-id="AtxScheduleCardRegisterButton"
+					[href]="data.registrationUrl">
+					<button class="btn base-margin-top"
+						[innerText]="'_Register_' | i18n">
+					</button>
+				</a>
+			</div>
 			<div class="col-md">
-				<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
-				<span class="text-uppercase" [innerText]="'_Recommended_' | i18n"></span>
-			</div>
-		</div>
-		<div *ngIf="recommendedATX" class="panel panel--bordered panel no-padding-top round-edges">
-			<div class="row no-padding">
-				<img class="round-edges-top max-width" alt="'_Handshake_' | i18n" src="assets/img/solutions/driver.png">
-			</div>
-			<div class="row base-padding-top base-padding-left">
-				<span class="text-large" [innerText]="recommendedATX.title"></span>
-			</div>
-			<div class="row base-padding-left base-padding-top">
-				<button 
-					data-auto-id="scheduleBtn"
-					class="btn btn--small btn--gray-ghost text-uppercase"
-					(click)="openATXSchedule()"
-					[innerText]="'_Schedule_' | i18n">
-				</button>
-				<button class="btn btn--small btn--gray-ghost text-uppercase" [innerText]="'_WatchNow_' | i18n"></button>
-			</div>
-		</div>
-		<div class="base-padding-top half-padding-bottom">
-			<span class="text-large text-uppercase" [innerText]="'_More_' | i18n"></span>
-		</div>
-		<div class="more-scroll base-padding-bottom" id="atxResults" *ngIf="atxResults?.items?.length">
-			<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items | slice:1; let i = index;">
-				<span [id]="'webinarResult:' + result.title" class="toggle" [innerText]="result.title"></span>
+				<div class="row flex-center-vertical dbl-margin-top base-margin-right">
+					<span class="icon-clock icon-small half-padding-right"></span>
+					<span class="text-xsmall" [innerText]="data.duration"></span>
+				</div>
 			</div>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #accPanel>
-	<div class="panel base-padding-top base-padding-left base-padding-right">
-		<div class="row">
-			<div class="col-md-6">
-				<span class="text-uppercase text-large" [innerText]="'_Accelerator_' | i18n"></span>
-			</div>
-			<div class="col-md-6 text-right">
-				<div data-auto-id="WebinarModalSelect" (click)="showModal('coaching')" class="toggle">
-					<span class="text-right text-med" [innerText]="'_ViewAll_' | i18n"></span>
-					<span class="icon-play qtr-padding-left qtr-padding-bottom"></span>
-				</div>
-			</div>
-		</div>
-		<div class="row base-padding-top half-padding-left">
-			<span class="base-padding-bottom" innerText="{{ '_UpgradeToCXLevelX_' | i18n:3 }} {{ '_Accelerator1on1CoachingDescription_' | i18n }}"></span>
-			<button class="btn btn--small btn--gray-ghost text-uppercase" [innerText]="'_ContactUs_' | i18n"></button>
-		</div>
-		<div class="row base-padding-top qtr-padding-bottom half-padding-left">
-			<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
-			<span class="text-uppercase" [innerText]="'_Recommended_' | i18n"></span>
-		</div>
-		<div *ngIf="recommendedATX" class="panel panel--bordered panel no-padding-top round-edges">
-			<div class="row no-padding">
-				<img class="round-edges-top max-width" alt="'_Handshake_' | i18n" src="assets/img/solutions/acc.png">
-			</div>
-			<div class="row base-padding-top base-padding-left">
-				<span class="text-large" [innerText]="recommendedATX.title"></span>
-			</div>
-			<div class="row base-padding-left base-padding-top">
-				<button class="btn btn--small btn--gray-ghost text-uppercase" [innerText]="'_Register_' | i18n"></button>
-			</div>
-		</div>
-		<div class="base-padding-top half-padding-bottom">
-			<span class="text-large text-uppercase" [innerText]="'_More_' | i18n"></span>
-		</div>
-		<div class="more-scroll base-padding-bottom" id="accResults" *ngIf="atxResults?.items?.length">
-			<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items | slice:1; let i = index;">
-				<span [id]="'webinarResult:' + result.title" class="toggle" [innerText]="result.title"></span>
-			</div>
+<ng-template #accPanel let-data="data">
+	<div innerText="{{ '_UpgradeToCXLevelX_' | i18n:3 }} {{ '_Accelerator1on1CoachingDescription_' | i18n }}"></div>
+	<button class="btn btn--small btn--gray-ghost base-margin-top base-margin-bottom text-uppercase"
+		[innerText]="'_ContactUs_' | i18n">
+	</button>
+
+	<ng-container *ngIf="data.recommended">
+		<ng-container *ngTemplateOutlet="recommended; context: {
+				template: recommendedACC,
+				title: data.recommended.title,
+				src: 'assets/img/solutions/acc.png'
+			}">
+		</ng-container>
+	</ng-container>
+	<ng-container *ngIf="data.sessions.length">
+		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions }"></ng-container>
+	</ng-container>
+</ng-template>
+
+<ng-template #more let-data="data">
+	<div class="base-padding-top half-padding-bottom">
+		<span class="text-large text-uppercase" [innerText]="'_More_' | i18n"></span>
+	</div>
+	<div class="more-scroll base-padding-bottom">
+		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:1">
+			<span [innerText]="item.title"></span>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #communityPanel>
-	<div class="panel base-padding-top base-padding-left base-padding-right">
-		<div class="row">
-			<div class="col-md-6">
-				<span class="text-uppercase text-large" [innerText]="'_Communities_' | i18n"></span>
-			</div>
-			<div class="col-md-6 text-right">
-				<div data-auto-id="WebinarModalSelect" class="toggle">
-					<span class="text-right text-med" [innerText]="'_SearchCommunities_' | i18n"></span>
-					<span class="icon-play qtr-padding-left qtr-padding-bottom"></span>
-				</div>
-			</div>
-		</div>
-		<div class="row half-padding-left">
+<ng-template #communityPanel let-data="data">
+	<div *ngFor="let community of data">
+		<div class="half-padding-left">
 			<span class="icon-communities qtr-padding-right"></span>
-			<span [innerText]="'_Lifecycle_' | i18n"></span>
-			<span class="icon-play qtr-padding-left qtr-padding-bottom"></span>
-		</div>
-		<div class="row half-padding-left">
-			<span class="icon-communities qtr-padding-right"></span>
-			<span [innerText]="'_Public_' | i18n"></span>
-			<span class="icon-play qtr-padding-left qtr-padding-bottom"></span>
-		</div>
-		<div class="row half-padding-left">
-			<span class="icon-communities qtr-padding-right"></span>
-			<span [innerText]="'_Partner_' | i18n"></span>
-			<span class="icon-play qtr-padding-left qtr-padding-bottom"></span>
+			<span [innerText]="community.title"></span>
+			<span class="icon-play icon-tiny qtr-padding-left qtr-padding-bottom"></span>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #learnPanel>
-	<div class="panel base-padding-top base-padding-left no-padding-right">
-		<span class="text-uppercase text-large" [innerText]="'_Learn_' | i18n"></span>
-		<div class="row base-padding-top base-padding-right">
-			<div class="col-md-6">
-				<span class="icon-clipboard-md qtr-padding-right qtr-padding-bottom"></span>
-				<span class="text-uppercase text-large text-muted" [innerText]="'_Elearning_' | i18n"></span>
-			</div>
-			<div class="col-md-6 text-right">
-				<div class="toggle">
-					<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
-					<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="base-padding-bottom half-padding-top half-padding-left" id="eLearningResults" *ngIf="atxResults?.items?.length">
-				<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items;">
-					<span id="eLearningResult: {{ result.title }}" class="toggle" [innerText]="result.title"></span>
-				</div>
-			</div>
-		</div>
+<ng-template #learnPanel let-data="data">
+	<div *ngIf="data.elearning?.length">
+		<ng-container *ngTemplateOutlet="learningBlock; context:
+			{ icon: 'clipboard-md', title: '_ELearning_', data: componentData.learning.elearning }">
+		</ng-container>
 		<div class="divider"></div>
-		<div class="row base-padding-top base-padding-right">
-			<div class="col-md-6">
-				<span class="icon-certified qtr-padding-right qtr-padding-bottom"></span>
-				<span class="text-uppercase text-large text-muted" [innerText]="'_Certifications_' | i18n"></span>
-			</div>
-			<div class="col-md-6 text-right">
-				<div class="toggle">
-					<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
-					<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="base-padding-bottom half-padding-top half-padding-left" id="certResults" *ngIf="atxResults?.items?.length">
-				<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items;">
-					<span id="certResult: {{ result.title }}" class="toggle" [innerText]="result.title"></span>
-				</div>
-			</div>
-		</div>
+	</div>
+
+	<div *ngIf="data.certifications?.length">
+		<ng-container *ngTemplateOutlet="learningBlock; context:
+			{ icon: 'certified', title: '_Certifications_', data: componentData.learning.certifications }">
+		</ng-container>
 		<div class="divider"></div>
-		<div class="row base-padding-top base-padding-right">
-			<div class="col-md-6">
-				<span class="icon-audio-broadcast qtr-padding-right qtr-padding-bottom"></span>
-				<span class="text-uppercase text-large text-muted" [innerText]="'_RemoteLearningLabs_' | i18n"></span>
-			</div>
-			<div class="col-md-6 text-right">
-				<div class="toggle">
-					<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
-					<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="base-padding-bottom half-padding-top half-padding-left" id="learningLabResults" *ngIf="atxResults?.items?.length">
-				<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items;">
-					<span id="learningLabResult: {{ result.title }}" class="toggle" [innerText]="result.title"></span>
-				</div>
-			</div>
-		</div>
+	</div>
+
+	<div *ngIf="data.training?.length">
+		<ng-container *ngTemplateOutlet="learningBlock; context:
+			{ icon: 'audio-broadcast',title: '_RemoteLearningLabs_', data: componentData.learning.training }">
+		</ng-container>
 		<div class="divider"></div>
-		<div class="row base-padding-top base-padding-right">
-			<div class="col-md-6">
-				<span class="icon-transit qtr-padding-right qtr-padding-bottom"></span>
-				<span class="text-uppercase text-large text-muted" [innerText]="'_SuccessPaths_' | i18n"></span>
-			</div>
-			<div class="col-md-6 text-right">
-				<div data-auto-id="WebinarModalSelect" (click)="showModal('webinars')" class="toggle">
-					<span class="text-med" [innerText]="'_ViewAll_' | i18n"></span>
-					<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
-				</div>
-			</div>
+	</div>
+
+	<div *ngIf="data.success?.length">
+		<ng-container *ngTemplateOutlet="learningBlock; context:
+			{ icon: 'transit',title: '_SuccessPaths_', data: componentData.learning.success }">
+		</ng-container>
+	</div>
+</ng-template>
+
+<ng-template #learningBlock let-title="title" let-data="data" let-icon="icon">
+	<div class="row">
+		<div class="col-md-9">
+			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
+			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
 		</div>
-		<div class="row">
-			<div class="base-padding-bottom half-padding-top half-padding-left" id="successPathResults" *ngIf="atxResults?.items?.length">
-				<div class="qtr-padding-bottom" *ngFor="let result of atxResults.items;">
-					<span id="successPathResult: {{ result.title }}" class="toggle" [innerText]="result.title"></span>
-				</div>
-			</div>
+		<div class="col-md-3 text-right">
+			<span [innerText]="'_ViewAll_' | i18n"></span>
+			<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
+		</div>
+	</div>
+	<div class="base-padding-bottom half-padding-top half-padding-left">
+		<div class="qtr-padding-bottom" *ngFor="let item of data">
+			<span [innerText]="item.title"></span>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #webinars let-results="results">
-	<div id="webinarModal" class="modal__content no-padding">
-		<div class="modal__header webinar-title-background no-margin">
+<ng-template #atxModal let-data="data">
+	<div id="atxModal" class="modal__content no-padding">
+
+		<div class="modal__header atx__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top">
 				<div class="col-md-11 half-margin-top base-padding-left">
 					<div class="text-xlarge text-left text-white" [innerText]="'_AskTheExpert_' | i18n"></div>
 					<div class="text-medium text-left text-white" [innerText]="'_AvailableLive_' | i18n"></div>
 				</div>
 				<div class="col-md-1 half-margin-top">
-					<span (click)="closeModal()" data-auto-id="WebinarModalClose" class="toggle icon-close icon-medium text-right"></span>
+					<span (click)="closeModal()"
+						data-auto-id="ATXCloseModal"
+						class="icon-close icon-medium text-right text-white"></span>
 				</div>
 			</div>
 		</div>
-		<div class="modal__body">
-			<div class="base-padding-left text-medium text-bold text-left half-padding-bottom half-padding-top" [innerText]="'_TopicsAvailable_' | i18n:results.items.length"></div>
-			<div class="row base-padding-left base-padding-right base-padding-bottom">
-				<div class="col-md-3 base-padding-bottom" *ngFor="let result of results.items">
-					<div class="card racetrack-card tab-background">
-						<div class="card__header text-left text-bold" [innerText]="result.title"></div>
-						<div class="card__body webinar-card text-left" [innerText]="result.description"></div>
-						<div class="card__footer">
-							<div class="col-md-8">
-								<div class="row">
-									<span class="icon-play-contained icon-small half-padding-right toggle"></span>
+
+		<div class="modal__body base-padding">
+			<div class="text-large text-bold text-left" 
+				[innerText]="'_TopicsAvailable_' | i18n:data.length">
+			</div>
+
+			<div class="grid grid--3up base-padding-top">
+				<div class="card atx__card__background" *ngFor="let item of data">
+					<div class="card__header text-left text-bold" [innerText]="item.title"></div>
+					<div class="card__body atx-card__body text-left" [innerText]="item.description"></div>
+					<div class="card__footer">
+						<div class="row flex-fill">
+							<div class="col-md-8 text-left">
+								<div>
+									<span class="icon-play-contained icon-small half-padding-right"></span>
 									<span [innerText]="'_WatchOnDemand_' | i18n"></span>
 								</div>
-								<div class="row">
-									<span class="icon-calendar icon-small half-padding-right toggle"></span>
+								<div>
+									<span class="icon-calendar icon-small half-padding-right"></span>
 									<span [innerText]="'_ChooseSession_' | i18n"></span>
 								</div>
 							</div>
-							<div class="col-md-4">
-								<div class="row flex-center-vertical">
-									<span class="icon-clock icon-small half-padding-right toggle"></span>
-									<span [innerText]="result.duration"></span>
-								</div>
+							<div class="col-md-4 text-right">
+								<span class="icon-clock icon-small half-padding-right"></span>
+								<span [innerText]="item.duration"></span>
 							</div>
 						</div>
 					</div>
@@ -376,38 +355,63 @@
 					<div class="text-xlarge text-left text-white" [innerText]="'_Accelerator_' | i18n"></div>
 				</div>
 				<div class="col-md-1 half-margin-top">
-					<span (click)="closeModal()" data-auto-id="WebinarModalClose" class="toggle icon-close icon-medium text-right"></span>
+					<span (click)="closeModal()" data-auto-id="WebinarModalClose" class="icon-close icon-medium text-right"></span>
 				</div>
 			</div>
 		</div>
 		<div class="modal__body">
-			<div class="base-padding-left text-medium text-bold text-left half-padding-bottom half-padding-top" [innerText]="'_TopicsAvailable_' | i18n:results.items.length"></div>
+			<div class="base-padding-left text-medium text-bold text-left half-padding-bottom half-padding-top" [innerText]="'_TopicsAvailable_' | i18n:results.webinars.length"></div>
 			<div class="row base-padding-left base-padding-right base-padding-bottom">
-				<div class="col-md-3 base-padding-bottom" *ngFor="let result of results.items">
-					<div class="card racetrack-card tab-background">
+				<div class="col-md-3 base-padding-bottom" *ngFor="let result of results.webinars">
+					<div class="card max-height tab-background">
 						<div class="card__header text-left text-bold" [innerText]="result.title"></div>
-						<div class="card__body webinar-card text-left" [innerText]="result.description"></div>
+						<div class="card__body webinar-card text-left" [innerText]="result.summary"></div>
 						<div class="card__footer">
 							<div class="col-md-8">
 								<div class="row">
-									<span class="icon-play-contained icon-small half-padding-right toggle"></span>
+									<span class="icon-play-contained icon-small half-padding-right"></span>
 									<span [innerText]="'_WatchOnDemand_' | i18n"></span>
 								</div>
 								<div class="row">
-									<span class="icon-calendar icon-small half-padding-right toggle"></span>
+									<span class="icon-calendar icon-small half-padding-right"></span>
 									<span [innerText]="'_ChooseSession_' | i18n"></span>
 								</div>
 							</div>
 							<div class="col-md">
 								<div class="row flex-center-vertical">
-									<span class="icon-clock icon-small half-padding-right toggle"></span>
-									<span [innerText]="result.duration"></span>
+									<span class="icon-clock icon-small half-padding-right"></span>
+									<span [innerText]="'_Placeholder_' | i18n"></span>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel">
+	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom">
+		<div class="row base-padding-bottom">
+			<div class="col-md-6 flex-center-vertical">
+				<div class="text-uppercase text-large" [innerText]="title | i18n"></div>
+			</div>
+			<div class="col-md-6 text-right" *ngIf="viewAll">
+				<div *ngIf="data"
+					(click)="showModal(viewAll)"
+					attr.data-auto-id="ShowModalPanel-{{ title }}">
+					<span class="text-right text-med" [innerText]="viewAllLabel | i18n"></span>
+					<span class="icon-play qtr-padding-left qtr-padding-bottom"></span>
+				</div>
+			</div>
+		</div>
+	
+		<div *ngIf="!loading && data">
+			<ng-container *ngTemplateOutlet="template; context: { data: data }"></ng-container>
+		</div>
+		<div *ngIf="loading">
+			<cui-spinner></cui-spinner>
 		</div>
 	</div>
 </ng-template>

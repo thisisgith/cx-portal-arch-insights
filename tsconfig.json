@@ -7,7 +7,7 @@
 			"@components": ["src/app/components/index.ts"],
 			"@environment": ["src/environments/environment.ts"],
 			"@interfaces": ["src/app/interfaces/index.ts"],
-			"@mock": ["src/app/services/mock/index.ts"],
+			"@mock": ["src/environments/mock/index.ts"],
 			"@services": ["src/app/services/index.ts"]
 		}
 	}

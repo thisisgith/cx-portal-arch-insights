@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 
 import * as d3 from 'd3-selection';
 import { d3Transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
 import { scalePow } from 'd3-scale';
+import * as _ from 'lodash';
 
 d3.transition = d3Transition;
 
@@ -34,6 +35,8 @@ export class RacetrackComponent implements OnInit {
 	public stages: string[];
 	public points: DOMPoint[];
 	public current: string;
+
+	@Input('stage') public stage: string;
 
 	/**
 	 * Initializes racetrack variables and begins first animation
@@ -176,7 +179,7 @@ export class RacetrackComponent implements OnInit {
 			.on('click', () => this.zoomToNext());
 
 		// customer has already purchased, starts at onboarding
-		this.zoomToStage('onboard', true);
+		this.zoomToStage(this.stage, true);
 	}
 
 	/**
@@ -295,5 +298,16 @@ export class RacetrackComponent implements OnInit {
 		if (prev === -1) { prev = this.stages.length - 1; }
 
 		this.zoomToStage(this.stages[prev], trackProgress);
+	}
+
+	/**
+	 * Checks if our current status has changed
+	 * @param changes the changes detected
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentStage = _.get(changes, ['stage', 'currentValue']);
+		if (currentStage && !changes.stage.firstChange) {
+			this.zoomToStage(currentStage, true);
+		}
 	}
 }

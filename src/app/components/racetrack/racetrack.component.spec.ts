@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RacetrackComponent } from './racetrack.component';
-import { RacetrackCarModule } from './racetrack.module';
+import { RacetrackComponentModule } from './racetrack.module';
 
 describe('RacetrackComponent', () => {
 	let component: RacetrackComponent;
@@ -11,7 +11,7 @@ describe('RacetrackComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [RacetrackCarModule],
+			imports: [RacetrackComponentModule],
 		})
 		.compileComponents();
 	}));
@@ -19,6 +19,9 @@ describe('RacetrackComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(RacetrackComponent);
 		component = fixture.componentInstance;
+
+		component.stage = 'onboard';
+
 		fixture.detectChanges();
 	});
 
@@ -83,4 +86,34 @@ describe('RacetrackComponent', () => {
 		});
 	});
 
+	it('should reset if at the end', () => {
+		const stageName = component.stages[component.stages.length - 1];
+		component.zoomToStage(stageName);
+
+		expect(component.current)
+			.toEqual(stageName);
+
+		component.zoomToNext(true);
+
+		fixture.detectChanges();
+
+		expect(component.current)
+			.toEqual(component.stages[0]);
+	});
+
+	it('should go back if at the beginning', () => {
+		const stageName = component.stages[0];
+
+		component.zoomToStage(stageName);
+
+		expect(component.current)
+			.toEqual(stageName);
+
+		component.zoomToPrevious(true);
+
+		fixture.detectChanges();
+
+		expect(component.current)
+			.toEqual(component.stages[component.stages.length - 1]);
+	});
 });
