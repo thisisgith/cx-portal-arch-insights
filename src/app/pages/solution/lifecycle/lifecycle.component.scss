@@ -1,36 +1,29 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
-.container {
-	display: flex;
-}
-
 .more-scroll {
 	height: 43px;
 	overflow: scroll;
 }
 
-.racetrack-card {
-	height: 100%;
+.modal-backdrop {
+	margin-left: -20px;
 }
 
-.tab-background {
-	background: #f2f2f2;
-}
+.atx {
+	&__header {
+		background: $indigo;
+	}
 
-.row-border-bottom {
-	border-bottom: 1px solid #aaa;
-}
+	&__card {
+		&__background {
+			background: $light-gray-5;
+		}
 
-.selected-tab-border {
-	border-bottom: 3px solid #aaa;
-}
-
-.webinar-title-background {
-	background: #00bceb;
-}
-
-.modal__dialog .modal__content {
-	padding: 0;
+		&__body {
+			height: 150px;
+			overflow: scroll;
+		}
+	}
 }
 
 .round-edges {
@@ -49,34 +42,6 @@
 	color: $white;
 }
 
-.webinar-card {
-	height: 150px;
-	overflow: scroll;
-}
-
-.overlay-panel {
-	z-index: 9999;
-	position: absolute;
-}
-
-.col-border-right {
-	border-right: 1px solid #f2f2f2;
-	padding: 1px;
-}
-
-.border-left {
-	border-left: 1px solid black;
-	padding: 3px;
-}
-
-.gauge-selected {
-	border-bottom: 3px solid #00bceb;
-}
-
-.panel--closed {
-	width: 0;
-}
-
 .panel--open {
 	box-shadow: $base-box-shadow;
 	height: 400px;
@@ -93,8 +58,4 @@
 	overflow-y: scroll;
 	height: 80px;
 	display: block;
-}
-
-#duration {
-	float: right;
 }

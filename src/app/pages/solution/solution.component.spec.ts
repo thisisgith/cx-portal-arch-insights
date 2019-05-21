@@ -93,4 +93,28 @@ describe('SolutionComponent', () => {
 		expect(component.selectedFacet)
 			.toEqual(assetsFacet);
 	});
+
+	it('should change the active solution', () => {
+		expect(component.selectedSolution.key)
+			.toEqual('ibn');
+
+		component.changeSolution(component.solutions[1]);
+
+		fixture.detectChanges();
+
+		expect(component.selectedSolution.key)
+			.toEqual('aci');
+	});
+
+	it('should change the active use case', () => {
+		expect(component.selectedUseCase.key)
+			.toEqual('assurance');
+
+		component.changeUseCase(component.useCases.ibn[1]);
+
+		fixture.detectChanges();
+
+		expect(component.selectedUseCase.key)
+			.toEqual('sd-access');
+	});
 });

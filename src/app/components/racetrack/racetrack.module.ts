@@ -12,4 +12,4 @@ import { RacetrackComponent } from './racetrack.component';
 		CommonModule,
 	],
 })
-export class RacetrackCarModule { }
+export class RacetrackComponentModule { }
