@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { AssetService } from '@services';
-import { Asset } from '@interfaces';
+import { HardwareResponse, InventoryService } from '@cui-x/sdp-api';
 import * as _ from 'lodash';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 
@@ -19,6 +18,7 @@ interface Filter {
  * Interface which represents params to send to the asset service
  */
 interface AssetParams {
+	customerId: string;
 	limit: number;
 	page: number;
 	total?: number;
@@ -57,6 +57,7 @@ export class AssetsComponent implements OnInit {
 	public filters: Filter[];
 	public visibleTemplate: TemplateRef<{ }>;
 	public assetParams: AssetParams = {
+		customerId: '2431199',
 		limit: 10,
 		page: 0,
 	};
@@ -68,7 +69,7 @@ export class AssetsComponent implements OnInit {
 	public inventory = [];
 
 	constructor (
-		private assetService: AssetService,
+		private inventoryService: InventoryService,
 	) { }
 
 	/**
@@ -191,16 +192,16 @@ export class AssetsComponent implements OnInit {
 						value: 'location',
 					},
 					{
-						key: 'softwareType',
+						key: 'swType',
 						name: I18n.get('_OSType_'),
 						sortable: true,
-						value: 'softwareType',
+						value: 'swType',
 					},
 					{
-						key: 'softwareVersion',
+						key: 'swVersion',
 						name: I18n.get('_OSVersion_'),
 						sortable: true,
-						value: 'softwareVersion',
+						value: 'swVersion',
 					},
 					{
 						key: 'cxLevel',
@@ -249,10 +250,12 @@ export class AssetsComponent implements OnInit {
 	 * Fetches the users inventory
 	 */
 	private fetchInventory () {
-		this.assetService.queryAssets()
-			.subscribe((results: Asset[]) => {
-				this.assetParams.total = results.length;
-				this.inventory = results.slice(0, this.assetParams.limit);
+		this.inventoryService.getHardware(this.assetParams)
+			.subscribe((results: HardwareResponse) => {
+				const data = _.get(results, 'data', []);
+
+				this.assetParams.total = data.length;
+				this.inventory = data.slice(0, this.assetParams.limit);
 				this.buildTable();
 				this.status.isLoading = false;
 			});
