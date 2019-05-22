@@ -17,17 +17,10 @@ export const defaults = {
 	},
 	production: false,
 	services: {
-		alert: '/ws/alert',
-		inventory: '/ws/inventory',
 		sdp: {
 			clientId: '4jr3csg78pg7ws7gwvj82sfa',
 			origin: 'https://api-stage.cisco.com',
 		},
 		search: '/ws/search',
-		solution: {
-			customerId: '123',
-			racetrack: '/api/v1/racetrack',
-			webinar: '/ws/webinars',
-		},
 	},
 };
