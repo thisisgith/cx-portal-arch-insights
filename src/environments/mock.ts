@@ -5,6 +5,7 @@ import {
 	searchData,
 	solutionATX,
 	solutionRacetrack,
+	updatePitstopAction,
 } from '@mock';
 import { HttpHeaders } from '@angular/common/http';
 
@@ -16,6 +17,7 @@ import {
 import {
 	RacetrackResponse,
 	ATXResponse,
+	PitstopActionUpdateResponse,
 } from '@cui-x/sdp-api';
 
 import {
@@ -35,7 +37,8 @@ interface Scenario {
 			Asset | Asset[] |
 			SearchResults |
 			RacetrackResponse |
-			ATXResponse
+			ATXResponse |
+			PitstopActionUpdateResponse
 		);
 		headers?: HttpHeaders;
 		status: number;
@@ -54,6 +57,7 @@ interface Mock {
 		HEAD?: Scenario[];
 		POST?: Scenario[];
 		PUT?: Scenario[];
+		PATCH?: Scenario[];
 	};
 }
 
@@ -183,6 +187,22 @@ export const mockSettings: MockSettings = {
 				],
 			},
 			url: '/api/customerportal/pitstop/v1/info?customerId=2431199',
+		},
+		{
+			scenarios: {
+				PATCH: [
+					{
+						delay: 500,
+						description: 'Generic Example',
+						response: {
+							body: updatePitstopAction,
+							status: 200,
+						},
+						selected: true,
+					},
+				],
+			},
+			url: '/api/customerportal/pitstop/v1/action/status?customerId=2431199',
 		},
 	],
 };

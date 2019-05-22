@@ -2,7 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
-import { solutionATX, solutionRacetrack, solutionEmptyRacetrack } from '@mock';
+import {
+	solutionATX,
+	solutionRacetrack,
+	solutionEmptyRacetrack,
+	updatePitstopAction,
+ } from '@mock';
 import { RacetrackService, RacetrackContentService } from '@cui-x/sdp-api';
 import { of } from 'rxjs';
 import { DebugElement } from '@angular/core';
@@ -13,6 +18,7 @@ describe('LifecycleComponent', () => {
 	let component: LifecycleComponent;
 	let fixture: ComponentFixture<LifecycleComponent>;
 	let de: DebugElement;
+	let el: HTMLElement;
 	let racetrackService: RacetrackService;
 	let racetrackContentService: RacetrackContentService;
 
@@ -44,6 +50,10 @@ describe('LifecycleComponent', () => {
 				.and
 				.returnValue(of(solutionRacetrack));
 
+			spyOn(racetrackService, 'updatePitstopAction')
+				.and
+				.returnValue(of(updatePitstopAction));
+
 			fixture.detectChanges();
 		});
 
@@ -68,6 +78,69 @@ describe('LifecycleComponent', () => {
 				de = fixture.debugElement.query(By.css('#webinarModal'));
 				expect(de)
 					.toBeTruthy();
+			});
+		});
+
+		describe('PitstopActions', () => {
+
+			it('should show 25% in the prograss label', () => {
+				de = fixture.debugElement.query(By.css('#compActPct'));
+				el = de.nativeElement;
+				expect(el.innerText)
+					.toEqual('25%');
+			});
+
+			it('should show action description when click action name', () => {
+				component.selectAction(component.currentPitActionsWithStatus[1]);
+				fixture.detectChanges();
+
+				expect(component.currentPitActionsWithStatus[1].selected)
+					.toBeTruthy();
+
+				// click the same action again, will unselect the action
+				component.selectAction(component.currentPitActionsWithStatus[1]);
+
+				expect(component.currentPitActionsWithStatus[1].selected)
+					.toBeFalsy();
+
+				// since suggestedAction does not change, so will not trigger ATX API call
+				expect(racetrackContentService.getRacetrackATX)
+				.toHaveBeenCalledTimes(1);
+			});
+
+			it('should call racetrackService API to update pitstopAction', () => {
+				component.completeAction(component.currentPitActionsWithStatus[1]);
+				fixture.detectChanges();
+
+				expect(racetrackService.updatePitstopAction)
+				.toHaveBeenCalled();
+
+				expect(racetrackContentService.getRacetrackATX)
+				.toHaveBeenCalledTimes(2);
+
+			});
+
+			it('should refresh ATX if suggestedAction changes', () => {
+				component.selectAction(component.currentPitActionsWithStatus[3]);
+				fixture.detectChanges();
+
+				expect(component.currentPitActionsWithStatus[3].selected)
+					.toBeTruthy();
+
+				expect(racetrackContentService.getRacetrackATX)
+				.toHaveBeenCalled();
+
+			});
+
+			it('should refresh ATX if suggestedAction changes', () => {
+				component.completeAction(component.currentPitActionsWithStatus[2]);
+				fixture.detectChanges();
+
+				expect(racetrackService.updatePitstopAction)
+				.toHaveBeenCalled();
+
+				expect(racetrackContentService.getRacetrackATX)
+				.toHaveBeenCalled();
 			});
 		});
 

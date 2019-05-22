@@ -5,17 +5,18 @@
 				<ng-container *ngIf="racetrackResults">
 					<div class="row base-padding-left half-margin-top">
 						<div class="col-md-6">
-							<h2 class="text-primary" [innerText]="currentPitstop?.description"></h2>
+							<h3 class="text-primary" [innerText]="currentPitstop?.name"></h3>
 						</div>
 						<div class="col-md-6">
-							<img alt="'_FinishLine_' | i18n" class="pull-right" src="assets/img/solutions/finishline.png">
+							<div id="compActPct" class="label label--info label--huge pull-right text-large"><i [innerText]="currentPitCompActPct"></i>
+							</div>
 						</div>
 					</div>
 					<div class="row half-padding-top half-padding-left">
 						<div class="col-md">
 							<app-racetrack></app-racetrack>
 							<div class="half-padding-left">
-								<span [innerHTML]="'_OnboardDescription_' | i18n"></span>
+								<span [innerText]="currentPitstop?.description"></span>
 							</div>
 							<div class="divider no-margin-bottom"></div>
 						</div>
@@ -24,13 +25,32 @@
 						<div class="row no-margin half-padding-top half-padding-bottom">
 							<span class="text-med text-uppercase" [innerText]="'_Actions_' | i18n"></span>
 						</div>
-						<div class="row no-margin">
-							<div *ngFor="let action of currentPitstop?.pitstopActions" class="form-group form-group--compressed">
-								<label class="checkbox">
-									<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.isComplete" [checked]="action.isComplete">
-									<span class="checkbox__input"></span>
-									<span class="checkbox__label text-medium" [innerText]="action.description"></span>
-								</label>
+						<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select">
+							<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
+								<div class="col-md-2">
+									<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete}">
+										<input data-auto-id="pitstopCheckbox" 
+											type="checkbox" 
+											[(ngModel)]="action.action.isComplete"
+											(change)="completeAction(action.action)"
+											[checked]="action.action.isComplete">
+										<span class="checkbox__input"></span>
+									</label>
+								</div>
+								<div class="col-md-10">
+									<a data-auto-id="actionlink" class="no-link fade-in-pop" [ngClass]="{'disabled': action.action.isComplete}"
+										(click)="selectAction(action)">
+										<div>
+											<span class="checkbox__label text-medium" [innerText]="action.action.name"></span>
+											<span *ngIf="action.action.isCompleteAuto" class="qtr-padding-top">
+												<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png">
+											</span>
+										</div>
+									</a>
+								</div>
+							</div>
+							<div *ngIf="action.selected" class="des-dropdown base-padding-left half-margin-top half-margin-bottom">
+								<span class="text-small" [innerText]="action.action.description"></span>
 							</div>
 						</div>
 					</div>
@@ -61,7 +81,7 @@
 							</a>
 						</div>
 					</div>
-					<div class="base-margin-left base-margin-right half-margin-top">
+					<div id="description" class="base-margin-left base-margin-right half-margin-top">
 						<span class="text-small" [innerText]="recommendedATX.description"></span>
 					</div>
 					<div class="half-margin-top base-margin-left base-margin-bottom">

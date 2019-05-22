@@ -87,14 +87,29 @@
 	z-index: 1;
 	background-color: $white;
 	border-radius: 10px;
+
+	#description {
+		height: 60px;
+		overflow-y: auto;
+	}
 }
 
 .session-table {
 	overflow-y: scroll;
-	height: 80px;
+	height: 120px;
 	display: block;
 }
 
 #duration {
 	float: right;
+}
+
+.actionname.selected {
+	background-color: darkgray;
+	color: white;
+}
+
+.small-size {
+	width: 30px;
+	height: 20px;
 }

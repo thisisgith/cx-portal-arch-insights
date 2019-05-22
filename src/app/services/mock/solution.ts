@@ -1,4 +1,4 @@
-import { RacetrackResponse, ATXResponse } from '@cui-x/sdp-api';
+import { RacetrackResponse, ATXResponse, PitstopActionUpdateResponse } from '@cui-x/sdp-api';
 
 /**
  * Mock data for webinar API results
@@ -195,19 +195,32 @@ export const mockRacetrack: RacetrackResponse = {
 			name: 'ibn',
 			technologies: [
 				{
-					currentPitstop: 'onboard',
+					currentPitstop: 'Onboard',
 					description: 'Assurance use case',
-					name: 'assurance',
+					name: 'Wireless Assurance',
 					pitstops: [
 						{
-							description: 'Onboard',
+							description: 'During Onboard, you will become familiar with your ' +
+								'Cisco solutions and identify success criteria with your CSE.',
 							isComplete: false,
-							name: 'onboard',
+							name: 'Onboard',
 							pitstopActions: [
 								{
-									description: 'Discover Devices',
+									description: 'Set network controls, flow and operation that ' +
+										'support netowrk communiation',
+									isComplete: true,
+									name: 'Plan your Cisco DNA Center project',
+									updateMethod: 'NA',
+									isCompleteAuto: true,
+									isCompleteManual: false,
+									isManaualOverride: false,
+									manualCheckAllowed: false,
+								},
+								{
+									description: 'Set network controls, flow and operation that ' +
+									'support netowrk communiation',
 									isComplete: false,
-									name: 'discoverDevices',
+									name: 'Learn about Cisco DNA Center',
 									updateMethod: 'NA',
 									isCompleteAuto: false,
 									isCompleteManual: false,
@@ -215,19 +228,9 @@ export const mockRacetrack: RacetrackResponse = {
 									manualCheckAllowed: false,
 								},
 								{
-									description: 'Configure Network Hierarchy',
+									description: 'Complete your Cisco DNA Center installation',
 									isComplete: false,
-									name: 'configureNetworkHierarchy',
-									updateMethod: 'NA',
-									isCompleteAuto: false,
-									isCompleteManual: false,
-									isManaualOverride: false,
-									manualCheckAllowed: false,
-								},
-								{
-									description: 'Map WLCs To Sites',
-									isComplete: false,
-									name: 'mapWLCsToSites',
+									name: 'Complete your Cisco DNA Center installation',
 									updateMethod: 'NA',
 									isCompleteAuto: false,
 									isCompleteManual: false,
@@ -237,7 +240,7 @@ export const mockRacetrack: RacetrackResponse = {
 								{
 									description: 'Map APs To Sites',
 									isComplete: false,
-									name: 'mapAPsToSites',
+									name: 'Map APs to Sites',
 									updateMethod: 'NA',
 									isCompleteAuto: false,
 									isCompleteManual: false,
@@ -373,4 +376,16 @@ export const mockEmptyRacetrack: RacetrackResponse = {
 			technologies: [],
 		},
 	],
+};
+
+/**
+ * Mock data for rupdatePitstopAction API results
+ * @ignore
+ */
+export const mockUpdatePitstopAction: PitstopActionUpdateResponse = {
+	isAtxChanged: true,
+	isAccChanged: true,
+	isElearningChanged: true,
+	isCommunitiesChanged: true,
+	isSuccessPathChanged: true,
 };
