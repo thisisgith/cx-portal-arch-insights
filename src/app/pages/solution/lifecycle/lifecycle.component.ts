@@ -211,7 +211,7 @@ export class LifecycleComponent {
 		// If suggestedAction changes, refresh ATX, ACC and others
 		if (this.componentData.params.suggestedAction !== actionWithStatus.action.name) {
 			this.componentData.params.suggestedAction = actionWithStatus.action.name;
-			this.loadATX();
+			this.loadRacetrackInfo();
 		}
 	}
 
