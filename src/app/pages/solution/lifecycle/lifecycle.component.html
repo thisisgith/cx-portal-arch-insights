@@ -172,7 +172,7 @@
 				</a>
 			</div>
 		</div>
-		<div class="base-margin-left base-margin-right half-margin-top">
+		<div id="atxdescription" class="base-margin-left base-margin-right half-margin-top">
 			<span class="text-small" [innerText]="data.description"></span>
 		</div>
 		<div class="half-margin-top base-margin-left base-margin-bottom">
@@ -189,10 +189,10 @@
 				</div>
 			</a>
 		</div>
-		<h6 class="half-margin-left base-margin-top half-margin-bottom"
+		<h6 class="half-margin-left base-margin-top half-margin-bottom base-margin-left"
 			[innerText]="'_ChooseSession_' | i18n">
 		</h6>
-		<div class="session-table responsive-table">
+		<div class="session-table responsive-table half-margin-left">
 			<table class="table table--bordered table--selectable">
 				<tbody>
 					<tr attr.data-auto-id="SelectSession-{{ session.title }}"
@@ -210,13 +210,13 @@
 			<div class="col-md-8">
 				<a data-auto-id="AtxScheduleCardRegisterButton"
 					[href]="data.registrationUrl">
-					<button class="btn base-margin-top"
+					<button class="btn base-margin-top base-margin-left"
 						[innerText]="'_Register_' | i18n">
 					</button>
 				</a>
 			</div>
 			<div class="col-md">
-				<div class="row flex-center-vertical dbl-margin-top base-margin-right">
+				<div class="row flex-center-vertical dbl-margin-top base-margin-right pull-right">
 					<span class="icon-clock icon-small half-padding-right"></span>
 					<span class="text-xsmall" [innerText]="data.duration"></span>
 				</div>

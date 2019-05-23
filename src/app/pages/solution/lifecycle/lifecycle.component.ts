@@ -123,7 +123,7 @@ export class LifecycleComponent {
 	}
 
 	get currentActionsCompPert () {
-		return _.get(this.componentData, ['racetrack', 'actionsCompPercent']);
+		return _.get(this.componentData, ['racetrack', 'actionsCompPercent'], '0%');
 	}
 
 	constructor (
