@@ -10,6 +10,7 @@ import { SolutionRoutingModule } from './solution-routing.module';
  */
 @NgModule({
 	declarations: [SolutionComponent],
+	exports: [SolutionComponent],
 	imports: [
 		CommonModule,
 		CuiGaugeModule,

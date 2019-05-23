@@ -1,25 +1,71 @@
 import {
 	Component,
-	OnInit,
 	ViewChild,
 	TemplateRef,
  } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
+
 import {
-	RacetrackService,
-	RacetrackContentService,
 	RacetrackResponse,
+	RacetrackTechnology,
 	RacetrackPitstop,
+	RacetrackService,
+	ELearning,
+	RacetrackContentService,
 	ATXResponse,
 	ATX,
 	ATXSession,
-	RacetrackTechnology,
 	RacetrackPitstopAction,
 	PitstopActionUpdateResponse,
 	PitstopActionUpdateRequest,
+	ACC,
+	Community,
+	ACCResponse,
+	CommunitiesResponse,
+	SuccessPath,
+	ELearningResponse,
+	SuccessPathsResponse,
 } from '@cui-x/sdp-api';
 
+import { Solution, UseCase } from '../solution.component';
+import { SolutionService } from '../solution.service';
 import * as _ from 'lodash';
+import { Observable, of, forkJoin } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+
+/**
+ * Interface representing our data object
+ */
+interface ComponentData {
+	racetrack?: {
+		pitstop?: RacetrackPitstop;
+		stage?: string;
+		// suggestedAction?: string;
+		actionsCompPercent?: string;
+	};
+	params: {
+		customerId: string;
+		pitstop: string;
+		solution: string;
+		usecase: string;
+		suggestedAction?: string;
+	};
+	atx?: {
+		sessions?: ATX[];
+		recommended?: ATX;
+	};
+	learning?: {
+		certifications?: ELearning[];
+		elearning?: ELearning[];
+		training?: ELearning[];
+		success?: SuccessPath[];
+	};
+	acc?: {
+		sessions: ACC[];
+		recommended: ACC;
+	};
+	communities?: Community[];
+}
 
 /**
  * Interface representing combine a seletable status with PitstopAction
@@ -36,141 +82,120 @@ export interface PitstopActionWithStatus {
 	styleUrls: ['./lifecycle.component.scss'],
 	templateUrl: './lifecycle.component.html',
 })
-export class LifecycleComponent implements OnInit {
-	@ViewChild('coaching') public coachingTemplate: TemplateRef<{ }>;
-	@ViewChild('webinars') public webinarTemplate: TemplateRef<{ }>;
-	@ViewChild('webinarPanel') public webinarPanel: TemplateRef<{ }>;
-
-	public visiblePanel: TemplateRef<{ }>;
-	public visibleTemplate: TemplateRef<{ }>;
-	public visibleContext: any;
-
-	public atxResults: ATXResponse;
-	public recommendedATX: ATX;
-
-	public racetrackResults: RacetrackResponse;
-	public currentPitstop: RacetrackPitstop;
-	public atxCardOpened = false;
+export class LifecycleComponent {
+	@ViewChild('atxModal') public atxTemplate: TemplateRef<{ }>;
+	public modalContent: TemplateRef<{ }>;
+	public modal = {
+		content: null,
+		context: null,
+		visible: false,
+	};
+	public visibleContext: ATX[];
+	public atxScheduleCardOpened = false;
 	public sessionSelected: ATXSession;
 	public customerId = '2431199';
 
-	public currentPitCompActPct = '0%';
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
-	public suggestedAction: string;
 
 	public status = {
-		modalHidden: true,
-		panelHidden: true,
-		racetrackLoading: true,
-		webinarsLoading: true,
+		loading: {
+			acc: false,
+			atx: false,
+			communities: false,
+			elearning: false,
+			racetrack: false,
+			success: false,
+		},
 	};
+
+	public componentData: ComponentData = {
+		params: {
+			customerId: '',
+			pitstop: '',
+			solution: '',
+			usecase: '',
+			suggestedAction: '',
+		},
+	};
+
+	get currentPitstop () {
+		return _.get(this.componentData, ['racetrack', 'pitstop']);
+	}
+
+	get currentActionsCompPert () {
+		return _.get(this.componentData, ['racetrack', 'actionsCompPercent']);
+	}
 
 	constructor (
 		private logger: LogService,
+		private contentService: RacetrackContentService,
 		private racetrackService: RacetrackService,
-		private racetrackContentService: RacetrackContentService,
-	) { }
+		private solutionService: SolutionService,
+	) {
+		this.solutionService.getCurrentSolution()
+		.subscribe((solution: Solution) => {
+			this.componentData.params.solution = solution.key;
+		});
+
+		this.solutionService.getCurrentUseCase()
+		.subscribe((useCase: UseCase) => {
+			const currentSolution = this.componentData.params.solution;
+
+			this.resetComponentData();
+
+			this.componentData.params.usecase = useCase.key;
+			this.componentData.params.solution = currentSolution;
+
+			this.getRacetrackInfo();
+		});
+	}
+
+	/**
+	 * Resets our component data to its base requirements
+	 */
+	private resetComponentData () {
+		this.componentData = {
+			params: {
+				customerId: this.customerId,
+				pitstop: '',
+				solution: '',
+				usecase: '',
+				suggestedAction: '',
+			},
+		};
+	}
 
 	/**
 	 * Determines which modal to display
 	 * @param type the modal template to display
 	 */
 	public showModal (type: string) {
-		this.visibleTemplate = (type === 'webinars') ? this.webinarTemplate : this.coachingTemplate;
-		this.visibleContext = this.atxResults;
-		this.status.modalHidden = false;
+		if (type === 'atx') {
+			this.modal = {
+				content: this.atxTemplate,
+				context: { data: this.componentData.atx.sessions },
+				visible: true,
+			};
+		}
 	}
 
 	/**
 	 * Closes the currently open modal
 	 */
 	public closeModal () {
-		this.status.modalHidden = true;
-	}
-
-	/**
-	 * Performs the API call to retrieve Interactive Webinar data
-	 * @param suggested_action string
-	 */
-	public getATX (suggested_action: string) {
-		this.status.webinarsLoading = true;
-		const params: RacetrackContentService.GetRacetrackATXParams = {
-			customerId: this.customerId,
-			pitstop: 'Onboard',
-			solution: 'ibn',
-			suggestedAction: suggested_action !== '' ? suggested_action : null,
-			usecase: 'Wireless Assurance',
+		this.modal = {
+			content: null,
+			context: null,
+			visible: false,
 		};
-		this.racetrackContentService.getRacetrackATX(params)
-			.subscribe((results: ATXResponse) => {
-				this.atxResults = results;
-				this.status.webinarsLoading = false;
-				this.recommendedATX = results.items[0];
-			},
-				err => {
-					this.status.webinarsLoading = false;
-					this.logger.error(`lifecycle.component : getATX() :: Error : (${
-						err.status}) ${err.message}`);
-				});
 	}
 
 	/**
-	 * Click to open ATX card to view the sessions
-	 */
-	public openATXSchedule () {
-		this.atxCardOpened = true;
-	}
-
-	/**
-	 * Close the ATX detail card
-	 */
-	public closeAtxCard () {
-		this.atxCardOpened = false;
-	}
-
-	/**
-	 * Select the session to view on Click the row
-	 * @param session the session row on click
+	 * Selects the session
+	 * @param session the session we've clicked on
 	 */
 	public selectSession (session: ATXSession) {
-		this.sessionSelected = session;
-	}
-
-	/**
-	 * API calls the Racetrack Info
-	 */
-	public getRacetrackInfo () {
-		this.status.racetrackLoading = true;
-		const params: RacetrackService.GetRacetrackParams = {
-			customerId: this.customerId,
-		};
-		this.racetrackService.getRacetrack(params)
-		.subscribe((results: RacetrackResponse) => {
-			this.racetrackResults = results;
-			const technology: RacetrackTechnology =
-				_.get(this.racetrackResults, 'solutions[0].technologies[0]', null);
-			if (technology) {
-				const currentPitstop = technology.currentPitstop;
-				this.currentPitstop = _.find(technology.pitstops, { name: currentPitstop });
-				this.currentPitCompActPct = this.calculateActionPercentage(this.currentPitstop);
-				this.suggestedAction = _.find(this.currentPitstop.pitstopActions,
-					{ isComplete: false }).name;
-				this.currentPitActionsWithStatus = _.map(
-					this.currentPitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
-					({
-						action: pitstopAction,
-						selected: false,
-					}));
-			} else {
-				this.currentPitstop = null;
-			}
-			this.status.racetrackLoading = false;
-		},
-		err => {
-			this.status.racetrackLoading = false;
-			this.logger.error(`lifecycle.component : getRacetrackInfo() :: Error  : (${
-				err.status}) ${err.message}`);
-		});
+		this.sessionSelected = (_.isEqual(this.sessionSelected, session)) ? null : session;
 	}
 
 	/**
@@ -180,14 +205,13 @@ export class LifecycleComponent implements OnInit {
 	public selectAction (actionWithStatus: PitstopActionWithStatus) {
 		if (!actionWithStatus.selected) {
 			this.resetSelectStatus();
-			actionWithStatus.selected = !actionWithStatus.selected;
-		} else {
-			actionWithStatus.selected = !actionWithStatus.selected;
 		}
+		actionWithStatus.selected = !actionWithStatus.selected;
+
 		// If suggestedAction changes, refresh ATX, ACC and others
-		if (this.suggestedAction !== actionWithStatus.action.name) {
-			this.suggestedAction = actionWithStatus.action.name;
-			this.getATX(this.suggestedAction);
+		if (this.componentData.params.suggestedAction !== actionWithStatus.action.name) {
+			this.componentData.params.suggestedAction = actionWithStatus.action.name;
+			this.loadATX();
 		}
 	}
 
@@ -195,16 +219,16 @@ export class LifecycleComponent implements OnInit {
 	 * function to call Racetrack API to complete an Action
 	 * @param action the action to complete
 	 */
-	public completeAction (action: PitstopActionWithStatus) {
+	public completeAction (action: RacetrackPitstopAction) {
 		// Call racetrack API to complete an action
-		this.status.racetrackLoading = true;
+		this.status.loading.racetrack = true;
 		this.resetSelectStatus();
 		const actionUpdated: PitstopActionUpdateRequest = {
 			actionComplete: true,
-			pitstop: 'Onboard',
-			pitstopAction: action.action.name,
-			solution: 'ibn',
-			technology: 'Wireless Assurance',
+			pitstop: this.componentData.params.pitstop,
+			pitstopAction: action.name,
+			solution: this.componentData.params.solution,
+			technology: this.componentData.params.usecase,
 		};
 		const params: RacetrackService.UpdatePitstopActionParams = {
 			actionUpdate: actionUpdated,
@@ -212,13 +236,21 @@ export class LifecycleComponent implements OnInit {
 		};
 		this.racetrackService.updatePitstopAction(params)
 		.subscribe((results: PitstopActionUpdateResponse) => {
-			if (results.isAtxChanged) {
-				this.getATX(this.suggestedAction);
-			}
-			// check other fileds in results too to update other panel
+			this.status.loading.racetrack = false;
+
+			const source = [];
+			if (results.isAtxChanged) { source.push(this.loadATX()); }
+			if (results.isAccChanged) { source.push(this.loadACC()); }
+			if (results.isElearningChanged) { source.push(this.loadELearning()); }
+			if (results.isCommunitiesChanged) { source.push(this.loadCommunites()); }
+			if (results.isSuccessPathChanged) { source.push(this.loadSuccessPaths()); }
+			forkJoin(
+				source,
+			)
+			.subscribe();
 		},
 		err => {
-			this.status.racetrackLoading = false;
+			this.status.loading.racetrack = false;
 			this.logger.error(`lifecycle.component : completeAction() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
@@ -250,10 +282,233 @@ export class LifecycleComponent implements OnInit {
 	}
 
 	/**
-	 * Function which will get webinar data on page load
+	 * Loads the ACC for the given params
+	 * @returns the accResponse
 	 */
-	public ngOnInit () {
-		this.getRacetrackInfo();
-		this.getATX(this.suggestedAction);
+	private loadACC (): Observable<ACCResponse> {
+		this.status.loading.acc = true;
+
+		// Temporarily not pick up optional query param suggestedAction
+		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+
+		return this.contentService.getRacetrackACC(
+			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+		.pipe(
+			map((result: ACCResponse) => {
+				this.status.loading.acc = false;
+
+				this.componentData.acc = {
+					recommended: result.items[0],
+					sessions: result.items,
+				};
+
+				return result;
+			}),
+			catchError(err => {
+				this.status.loading.acc = false;
+				this.logger.error(`lifecycle.component : loadACC() :: Error : (${
+					err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Loads the ATX data
+	 * @returns the ATXResponse
+	 */
+	private loadATX (): Observable<ATXResponse> {
+		this.status.loading.atx = true;
+		// Temporarily not pick up optional query param suggestedAction
+		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+
+		return this.contentService.getRacetrackATX(
+			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+		.pipe(
+			map((result: ATXResponse) => {
+				this.componentData.atx = {
+					recommended: _.head(result.items),
+					sessions: result.items,
+				};
+				this.status.loading.atx = false;
+
+				return result;
+			}),
+			catchError(err => {
+				this.status.loading.atx = false;
+				this.logger.error(`lifecycle.component : loadATX() :: Error : (${
+				err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Loads the success paths from the api
+	 * @returns the success paths
+	 */
+	private loadSuccessPaths (): Observable<SuccessPathsResponse> {
+		this.status.loading.success = true;
+		// Temporarily not pick up optional query param suggestedAction
+		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+
+		return this.contentService.getRacetrackSuccessPaths(
+			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+		.pipe(
+			map((result: SuccessPathsResponse) => {
+				if (result.items.length) {
+					_.set(this.componentData, ['learning', 'success'], result.items);
+				}
+
+				this.status.loading.success = false;
+
+				return result;
+			}),
+			catchError(err => {
+				this.status.loading.success = false;
+				this.logger.error(`lifecycle.component : loadSuccessPaths() :: Error : (${
+					err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Loads the e-learning api response
+	 * @returns the elearning response
+	 */
+	private loadELearning (): Observable<ELearningResponse> {
+		this.status.loading.elearning = true;
+		// Temporarily not pick up optional query param suggestedAction
+		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+
+		return this.contentService.getRacetrackElearning(
+			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+		.pipe(
+			map((result: ELearningResponse) => {
+
+				if (result.items.length) {
+					_.set(this.componentData, ['learning', 'certifications'], []);
+					_.set(this.componentData, ['learning', 'elearning'], []);
+					_.set(this.componentData, ['learning', 'training'], []);
+
+					_.each(result.items, (item: ELearning) => {
+						if (_.get(this.componentData.learning, item.type)) {
+							this.componentData.learning[item.type].push(item);
+						}
+					});
+				}
+
+				this.status.loading.elearning = false;
+
+				return result;
+			}),
+			catchError(err => {
+				this.status.loading.elearning = false;
+				this.logger.error(`lifecycle.component : loadELearning() :: Error : (${
+					err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Loads the communities for the given params
+	 * @returns the communities response
+	 */
+	private loadCommunites (): Observable<CommunitiesResponse> {
+		this.status.loading.communities = true;
+		// Temporarily not pick up optional query param suggestedAction
+		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+
+		return this.contentService.getRacetrackCommunities(
+			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+		.pipe(
+			map((result: CommunitiesResponse) => {
+				this.status.loading.communities = false;
+
+				if (result.items.length) {
+					this.componentData.communities = result.items;
+				}
+
+				return result;
+			}),
+			catchError(err => {
+				this.status.loading.communities = false;
+				this.logger.error(`lifecycle.component : loadCommunites() :: Error : (${
+					err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * ForkJoin to load the other API Calls
+	 */
+	private loadRacetrackInfo () {
+		forkJoin(
+			this.loadACC(),
+			this.loadATX(),
+			this.loadCommunites(),
+			this.loadELearning(),
+			this.loadSuccessPaths(),
+		)
+		.subscribe();
+	}
+
+	/**
+	 * Fetches the racetrack info for the given params, if successful
+	 * will then call loadRacetrackInfo for the other api calls
+	 */
+	private getRacetrackInfo () {
+		if (this.componentData.params.solution && this.componentData.params.usecase) {
+			this.status.loading.racetrack = true;
+
+			this.racetrackService.getRacetrack(
+				_.pick(this.componentData.params, ['customerId', 'solution', 'usecase']))
+			.subscribe((results: RacetrackResponse) => {
+				const solution = _.find(results.solutions,
+						{ name: this.componentData.params.solution.toUpperCase() });
+
+				if (solution) {
+					const usecase = _.find(solution.technologies, (tech: RacetrackTechnology) =>
+						tech.name.toLowerCase() === this.componentData.params.usecase);
+
+					if (usecase) {
+						const stop = _.find(usecase.pitstops,
+							(pitstop: RacetrackPitstop) =>
+							pitstop.name.toLowerCase() === usecase.currentPitstop.toLowerCase());
+						this.componentData.racetrack = {
+							pitstop: stop,
+							stage: usecase.currentPitstop.toLowerCase(),
+						};
+						this.componentData.racetrack.actionsCompPercent =
+							this.calculateActionPercentage(stop);
+						this.componentData.params.suggestedAction =
+							_.find(stop.pitstopActions, { isComplete: false }).name;
+						this.currentPitActionsWithStatus = _.map(
+							stop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
+							({
+								action: pitstopAction,
+								selected: false,
+							}));
+						this.componentData.params.pitstop = this.componentData.racetrack.stage;
+						this.loadRacetrackInfo();
+					}
+				}
+
+				this.status.loading.racetrack = false;
+			},
+			err => {
+				this.status.loading.racetrack = false;
+				this.logger.error(`lifecycle.component : getRacetrackInfo() :: Error  : (${
+					err.status}) ${err.message}`);
+			});
+		}
 	}
 }

@@ -1,28 +1,48 @@
 import {
-	alertData,
 	assetData,
 	assetsData,
 	searchData,
-	solutionATX,
-	solutionRacetrack,
-	updatePitstopAction,
-} from '@mock';
+	ActionScenarios,
+	RacetrackScenarios,
+	ATXScenarios,
+	ACCScenarios,
+	CommunitiesScenarios,
+	ELearningScenarios,
+	SuccessPathScenarios,
+} from './';
 import { HttpHeaders } from '@angular/common/http';
+import * as _ from 'lodash';
 
 import {
-	AlertResults,
+	ATXResponse,
+	PitstopActionUpdateResponse,
+	RacetrackResponse,
+	CommunitiesResponse,
+	ELearningResponse,
+	ACCResponse,
+	SuccessPathsResponse,
+} from '@cui-x/sdp-api';
+
+import {
 	SearchResults,
 } from '@services';
 
 import {
-	RacetrackResponse,
-	ATXResponse,
-	PitstopActionUpdateResponse,
-} from '@cui-x/sdp-api';
-
-import {
 	Asset,
 } from '@interfaces';
+
+/** Alias type for the Response Body */
+type ResponseBody = (
+	Asset | Asset[] |
+	ATXResponse |
+	CommunitiesResponse |
+	ELearningResponse |
+	SuccessPathsResponse |
+	ACCResponse |
+	RacetrackResponse |
+	SearchResults |
+	PitstopActionUpdateResponse
+);
 
 /**
  * Interface representing a scenario for a Mock test
@@ -32,14 +52,7 @@ interface Scenario {
 	description: string;
 	delay?: number;
 	response: {
-		body?: (
-			AlertResults |
-			Asset | Asset[] |
-			SearchResults |
-			RacetrackResponse |
-			ATXResponse |
-			PitstopActionUpdateResponse
-		);
+		body?: ResponseBody;
 		headers?: HttpHeaders;
 		status: number;
 		statusText?: string;
@@ -49,7 +62,7 @@ interface Scenario {
 /**
  * Interface Representing a mock object
  */
-interface Mock {
+export interface Mock {
 	url: string;
 	scenarios: {
 		DELETE?: Scenario[];
@@ -72,7 +85,14 @@ interface MockSettings {
  * Our default mock settings
  */
 export const mockSettings: MockSettings = {
-	mock: [
+	mock: _.flatten([
+		ATXScenarios,
+		ACCScenarios,
+		ELearningScenarios,
+		SuccessPathScenarios,
+		CommunitiesScenarios,
+		ActionScenarios,
+		RacetrackScenarios,
 		{
 			scenarios: {
 				GET: [
@@ -139,70 +159,5 @@ export const mockSettings: MockSettings = {
 			},
 			url: '/ws/search',
 		},
-		{
-			scenarios: {
-				GET: [
-					{
-						delay: 500,
-						description: 'Generic Example',
-						response: {
-							body: solutionATX,
-							status: 200,
-						},
-						selected: true,
-					},
-				],
-			},
-			url: '/api/customerportal/racetrack/v1/atx?' +
-			'usecase=Wireless Assurance&solution=ibn&pitstop=Onboard&customerId=2431199',
-		},
-		{
-			scenarios: {
-				GET: [
-					{
-						delay: 500,
-						description: 'Generic Example',
-						response: {
-							body: alertData,
-							status: 200,
-						},
-						selected: true,
-					},
-				],
-			},
-			url: '/ws/alert',
-		},
-		{
-			scenarios: {
-				GET: [
-					{
-						delay: 500,
-						description: 'Generic Example',
-						response: {
-							body: solutionRacetrack,
-							status: 200,
-						},
-						selected: true,
-					},
-				],
-			},
-			url: '/api/customerportal/pitstop/v1/info?customerId=2431199',
-		},
-		{
-			scenarios: {
-				PATCH: [
-					{
-						delay: 500,
-						description: 'Generic Example',
-						response: {
-							body: updatePitstopAction,
-							status: 200,
-						},
-						selected: true,
-					},
-				],
-			},
-			url: '/api/customerportal/pitstop/v1/action/status?customerId=2431199',
-		},
-	],
+	]),
 };

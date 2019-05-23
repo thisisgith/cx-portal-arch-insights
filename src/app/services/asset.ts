@@ -17,8 +17,7 @@ export class AssetService {
 	constructor (
 		private http: HttpClient,
 	) {
-		const origin = environment.origin || window.location.origin;
-		this.serviceUrl = `${origin}${environment.services.inventory}`;
+		this.serviceUrl = `${environment.origin}${environment.services.inventory}`;
 	}
 
 	/**

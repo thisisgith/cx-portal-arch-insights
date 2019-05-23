@@ -70,4 +70,29 @@ describe('AssetsComponent', () => {
 		expect(_.find(component.filters, 'selected'))
 			.toEqual(casesFilter);
 	});
+
+	it('should default to first filter if unselecting all filters', () => {
+		expect(component.selectedTab.key)
+			.toEqual('assets');
+
+		const totalFilter = _.find(component.filters, { key: 'total' });
+		const casesFilter = _.find(component.filters, { key: 'cases' });
+
+		expect(_.find(component.filters, 'selected'))
+			.toEqual(totalFilter);
+
+		component.selectFilter(casesFilter);
+
+		fixture.detectChanges();
+
+		expect(_.find(component.filters, 'selected'))
+			.toEqual(casesFilter);
+
+		component.selectFilter(casesFilter);
+
+		fixture.detectChanges();
+
+		expect(_.find(component.filters, 'selected'))
+			.toEqual(totalFilter);
+	});
 });

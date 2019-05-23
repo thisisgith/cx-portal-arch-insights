@@ -2,17 +2,36 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
-import {
-	solutionATX,
-	solutionRacetrack,
-	solutionEmptyRacetrack,
-	updatePitstopAction,
- } from '@mock';
 import { RacetrackService, RacetrackContentService } from '@cui-x/sdp-api';
-import { of } from 'rxjs';
+import { SolutionService } from '../solution.service';
+import {
+	RacetrackScenarios,
+	ATXScenarios,
+	ACCScenarios,
+	CommunitiesScenarios,
+	ELearningScenarios,
+	SuccessPathScenarios,
+	ActionScenarios,
+	Mock,
+} from '@mock';
+import { of, throwError } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import * as _ from 'lodash';
+import { HttpErrorResponse } from '@angular/common/http';
+
+/**
+ * Will fetch the currently active response body from the mock object
+ * @param mock the mock object
+ * @param type the scenario type
+ * @returns the body response
+ */
+function getActiveBody (mock: Mock, type: string = 'GET') {
+	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
+
+	return active.response.body;
+}
 
 describe('LifecycleComponent', () => {
 	let component: LifecycleComponent;
@@ -21,69 +40,258 @@ describe('LifecycleComponent', () => {
 	let el: HTMLElement;
 	let racetrackService: RacetrackService;
 	let racetrackContentService: RacetrackContentService;
+	let solutionService: SolutionService;
+
+	let racetrackATXSpy;
+	let racetrackAccSpy;
+	let racetrackCommunitiesSpy;
+	let racetrackLearningSpy;
+	let racetrackInfoSpy;
+	let racetrackSPSpy;
+	let racetrackActionSpy;
+
+	/**
+	 * Restore spies
+	 */
+	const restoreSpies = () => {
+		_.invoke(racetrackATXSpy, 'restore');
+		_.invoke(racetrackInfoSpy, 'restore');
+		_.invoke(racetrackAccSpy, 'restore');
+		_.invoke(racetrackLearningSpy, 'restore');
+		_.invoke(racetrackCommunitiesSpy, 'restore');
+		_.invoke(racetrackSPSpy, 'restore');
+		_.invoke(racetrackActionSpy, 'restore');
+	};
+
+	/**
+	 * Builds our spies for our services
+	 */
+	const buildSpies = () => {
+		racetrackATXSpy = spyOn(racetrackContentService, 'getRacetrackATX')
+			.and
+			.returnValue(of(getActiveBody(ATXScenarios[0])));
+
+		racetrackAccSpy = spyOn(racetrackContentService, 'getRacetrackACC')
+			.and
+			.returnValue(of(getActiveBody(ACCScenarios[0])));
+
+		racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
+			.and
+			.returnValue(of(getActiveBody(ELearningScenarios[0])));
+
+		racetrackSPSpy = spyOn(racetrackContentService, 'getRacetrackSuccessPaths')
+			.and
+			.returnValue(of(getActiveBody(SuccessPathScenarios[0])));
+
+		racetrackCommunitiesSpy = spyOn(racetrackContentService, 'getRacetrackCommunities')
+			.and
+			.returnValue(of(getActiveBody(CommunitiesScenarios[0])));
+
+		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
+			.and
+			.returnValue(of(getActiveBody(RacetrackScenarios[0])));
+
+		racetrackActionSpy = spyOn(racetrackService, 'updatePitstopAction')
+			.and
+			.returnValue(of(getActiveBody(ActionScenarios[0], 'PATCH')));
+	};
+
+	/**
+	 * Sends the current solution and use case via subscriptions
+	 */
+	const sendParams = () => {
+		solutionService.sendCurrentSolution({
+			key: 'ibn',
+			selected: true,
+			title: 'IBN',
+		});
+
+		solutionService.sendCurrentUseCase({
+			key: 'assurance',
+			selected: true,
+			title: 'Assurance',
+		});
+	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				HttpClientModule,
+				HttpClientTestingModule,
 				RouterTestingModule,
 				LifecycleModule,
 			],
 		})
 		.compileComponents();
 
+		solutionService = TestBed.get(SolutionService);
 		racetrackService = TestBed.get(RacetrackService);
 		racetrackContentService = TestBed.get(RacetrackContentService);
 	}));
 
-	describe('Racetrack', () => {
+	beforeEach(() => {
+		fixture = TestBed.createComponent(LifecycleComponent);
+		component = fixture.componentInstance;
+		restoreSpies();
+	});
 
-		beforeEach(() => {
-			fixture = TestBed.createComponent(LifecycleComponent);
-			component = fixture.componentInstance;
+	it('should create', () => {
+		expect(component)
+			.toBeTruthy();
+	});
 
-			spyOn(racetrackContentService, 'getRacetrackATX')
-				.and
-				.returnValue(of(solutionATX));
-
-			spyOn(racetrackService, 'getRacetrack')
-				.and
-				.returnValue(of(solutionRacetrack));
-
-			spyOn(racetrackService, 'updatePitstopAction')
-				.and
-				.returnValue(of(updatePitstopAction));
+	describe('ATX', () => {
+		it('should have loaded the atx items', () => {
+			buildSpies();
+			sendParams();
 
 			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.atx.sessions.length)
+						.toEqual(9);
+				});
 		});
 
-		it('should create', () => {
-			expect(component)
+		it('should not load anything else if racetrack fails', () => {
+			racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+			sendParams();
+
+			fixture.detectChanges();
+
+			expect(component.componentData.racetrack)
+				.toBeUndefined();
+		});
+
+		it('should gracefully handle failures for all other api calls', () => {
+			racetrackATXSpy = spyOn(racetrackContentService, 'getRacetrackATX')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
+			racetrackAccSpy = spyOn(racetrackContentService, 'getRacetrackACC')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
+			racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
+			racetrackSPSpy = spyOn(racetrackContentService, 'getRacetrackSuccessPaths')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
+			racetrackCommunitiesSpy = spyOn(racetrackContentService, 'getRacetrackCommunities')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
+			racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
+				.and
+				.returnValue(of(getActiveBody(RacetrackScenarios[0])));
+
+			sendParams();
+
+			fixture.detectChanges();
+
+			expect(component.componentData.racetrack)
+				.toBeDefined();
+
+			expect(component.componentData.atx)
+				.toBeUndefined();
+
+			expect(component.componentData.learning)
+				.toBeUndefined();
+
+			expect(component.componentData.atx)
+				.toBeUndefined();
+
+			expect(component.componentData.communities)
+				.toBeUndefined();
+		});
+
+		it('should have a selected session', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			const recommended = component.componentData.atx.recommended;
+
+			expect(component.sessionSelected)
+				.toBeUndefined();
+
+			component.selectSession(recommended.sessions[0]);
+
+			fixture.detectChanges();
+
+			expect(component.sessionSelected)
+				.toEqual(recommended.sessions[0]);
+
+			component.selectSession(recommended.sessions[0]);
+
+			fixture.detectChanges();
+
+			expect(component.sessionSelected)
+				.toBeNull();
+		});
+
+		it('should show the atx view-all modal', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('atx');
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
 				.toBeTruthy();
-		});
 
-		describe('ATX', () => {
-			it('should show atx items in the ATX card', () => {
-				expect(component.atxResults.items.length)
-					.toEqual(4);
-				de = fixture.debugElement.query(By.css('#atxResults'));
-				expect(de)
-					.toBeTruthy();
-			});
+			de = fixture.debugElement.query(By.css('#atxModal'));
+			expect(de)
+				.toBeTruthy();
 
-			it('should show webinar view-all modal', () => {
-				component.showModal('webinars');
-				fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('.icon-close'));
+			el = de.nativeElement;
 
-				de = fixture.debugElement.query(By.css('#webinarModal'));
-				expect(de)
-					.toBeTruthy();
-			});
+			el.click();
+
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeFalsy();
+
+			de = fixture.debugElement.query(By.css('#atxModal'));
+			expect(de)
+				.toBeFalsy();
 		});
 
 		describe('PitstopActions', () => {
 
 			it('should show 25% in the prograss label', () => {
+				buildSpies();
+				sendParams();
+				fixture.detectChanges();
+
 				de = fixture.debugElement.query(By.css('#compActPct'));
 				el = de.nativeElement;
 				expect(el.innerText)
@@ -91,6 +299,8 @@ describe('LifecycleComponent', () => {
 			});
 
 			it('should show action description when click action name', () => {
+				buildSpies();
+				sendParams();
 				component.selectAction(component.currentPitActionsWithStatus[1]);
 				fixture.detectChanges();
 
@@ -109,18 +319,23 @@ describe('LifecycleComponent', () => {
 			});
 
 			it('should call racetrackService API to update pitstopAction', () => {
-				component.completeAction(component.currentPitActionsWithStatus[1]);
+				buildSpies();
+				sendParams();
+				component.completeAction(component.currentPitActionsWithStatus[1].action);
 				fixture.detectChanges();
 
 				expect(racetrackService.updatePitstopAction)
 				.toHaveBeenCalled();
 
+				// update Action response back with isAtxChanged as true, so need to call ATX API
 				expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(2);
 
 			});
 
 			it('should refresh ATX if suggestedAction changes', () => {
+				buildSpies();
+				sendParams();
 				component.selectAction(component.currentPitActionsWithStatus[3]);
 				fixture.detectChanges();
 
@@ -133,51 +348,19 @@ describe('LifecycleComponent', () => {
 			});
 
 			it('should refresh ATX if suggestedAction changes', () => {
-				component.completeAction(component.currentPitActionsWithStatus[2]);
+				buildSpies();
+				sendParams();
+				component.completeAction(component.currentPitActionsWithStatus[2].action);
 				fixture.detectChanges();
 
 				expect(racetrackService.updatePitstopAction)
 				.toHaveBeenCalled();
 
+				// ATX should be refreshed since isAtxChanged is true from updateAction
 				expect(racetrackContentService.getRacetrackATX)
-				.toHaveBeenCalled();
+				.toHaveBeenCalledTimes(2);
 			});
 		});
 
-		/**
-		 * This currently has no working functionality, just testing the other branch of showModal()
-		 */
-		describe('coaching', () => {
-			it('should show coaching modal', () => {
-				component.showModal('coaching');
-				fixture.detectChanges();
-
-				de = fixture.debugElement.query(By.css('#coachingModal'));
-				expect(de)
-					.toBeTruthy();
-			});
-		});
-	});
-
-	describe('Racetrack with empty technologies', () => {
-		beforeEach(() => {
-			fixture = TestBed.createComponent(LifecycleComponent);
-			component = fixture.componentInstance;
-
-			spyOn(racetrackContentService, 'getRacetrackATX')
-				.and
-				.returnValue(of(solutionATX));
-
-			spyOn(racetrackService, 'getRacetrack')
-				.and
-				.returnValue(of(solutionEmptyRacetrack));
-
-			fixture.detectChanges();
-		});
-
-		it('should not show currentPitstop', () => {
-			expect(component.currentPitstop)
-				.toBeFalsy();
-		});
 	});
 });
