@@ -61,12 +61,11 @@
 <ng-template #racetrack>
 	<div class="row base-padding-left">
 		<div class="col-md-7">
-			<h3 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h3>
+			<h2 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h2>
 		</div>
 		<div class="col-md-5 flex-center">
-			<div id="compActPct" class="label label--info label--huge pull-right text-large"><i
-					[innerText]="currentActionsCompPert"></i>
-			</div>
+			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert"></span>
+			<span><img class="finishline qtr-margin-top" alt="'_FinishLine_' | i18n" src="assets/img/solutions/finishline_side.png"> </span>
 		</div>
 	</div>
 	<div class="half-padding-top half-padding-left">
