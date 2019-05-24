@@ -1,0 +1,243 @@
+<div class="container flex-center-horizontal bg-white max-height">
+	<div class="col-md-7 base-padding-top">
+		<ng-container *ngTemplateOutlet="visibleTemplate"></ng-container>
+	</div>
+</div>
+
+<ng-template #caseMoreInfo>
+	<div id="caseMoreInfo" class="flex-center display-4 base-padding-top base-padding-bottom" [innerText]="'_OpenACase_' | i18n"></div>
+	<div class="text-large text-bold base-padding-top dbl-padding-bottom" [innerText]="'_NeedMoreInfo_' | i18n"></div>
+	<div class="text-large text-bold" [innerText]="'_SelectTheProduct_' | i18n"></div>
+	<div class="base-padding-bottom" [innerText]="'_Placeholder_' | i18n"></div>
+	<div class="text-large text-bold base-padding-bottom" [innerText]="'_SelectTechnologyAndProblem_' | i18n"></div>
+	<div innerText="{{ '_Technology_' | i18n}} {{ '_ShowingSuggestions_' | i18n}}" class="qtr-padding-bottom"></div>
+	<div class="form-group">
+		<label class="radio">
+			<input type="radio" name="technology-radio">
+			<span class="radio__input"></span>
+			<span class="qtr-padding-left" innerText="{{ lanTech }} > {{ lanSubTech }}"></span>
+		</label>
+	</div>
+	<div class="form-group">
+		<label class="radio">
+			<input type="radio" name="technology-radio">
+			<span class="radio__input"></span>
+			<span class="qtr-padding-left" innerText="{{ dnaTech }} > {{ dnaSubTech }}"></span>
+		</label>
+	</div>
+	<div class="form-group">
+		<label class="radio">
+			<input type="radio" name="technology-radio">
+			<span class="radio__input"></span>
+			<span class="qtr-padding-left" innerText="{{ voiceTech }} > {{ voiceSubTech }}"></span>
+		</label>
+	</div>
+	<div class="toggle text-info half-padding-top base-padding-bottom" [innerText]="'_SelectAllOptions_' | i18n" ></div>
+	<div innerText="{{ '_ProblemArea_' | i18n}} {{ '_ShowingSuggestions_' | i18n}}" class="qtr-padding-bottom"></div>
+	<div class="form-group">
+		<label class="radio">
+			<input type="radio" name="problem-area-radio">
+			<span class="radio__input"></span>
+			<span class="qtr-padding-left" innerText="{{ configProblem }} > {{ errorSubProblem }}"></span>
+		</label>
+	</div>
+	<div class="form-group">
+		<label class="radio">
+			<input type="radio" name="problem-area-radio">
+			<span class="radio__input"></span>
+			<span class="qtr-padding-left" innerText="{{ operateProblem }} > {{ errorSubProblem }}"></span>
+		</label>
+	</div>
+	<div class="form-group">
+		<label class="radio">
+			<input type="radio" name="problem-area-radio">
+			<span class="radio__input"></span>
+			<span class="qtr-padding-left" innerText="{{ installProblem }} > {{ configSubProblem }}"></span>
+		</label>
+	</div>
+	<div [innerText]="'_SelectAllOptions_' | i18n" class="toggle text-info half-padding-top"></div>
+	<div class="row">
+		<div class="col-md-4 dbl-padding-top">
+			<button data-auto-id="caseInfoBack" class="btn btn--secondary pull-left" (click)="showCasesPage('caseInfo')" [innerText]="'_Back_' | i18n"></button>
+		</div>
+		<div class="col-md-8 dbl-padding-top">
+			<button class="btn btn--secondary" [innerText]="'_Cancel_' | i18n"></button>
+			<button data-auto-id="lastQuestionNext" class="btn btn--primary" (click)="showCasesPage('caseSubmit')" [innerText]="'_Next_' | i18n"></button>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #caseSubmit>
+	<div id="caseSubmit"  class="flex-center display-4 base-padding-top base-padding-bottom" [innerText]="'_OpenACase_' | i18n"></div>
+	<div class="row">
+		<div class="col-md-6">
+			<span class="text-bold base-padding-top" [innerText]="'_LastQuestion_' | i18n"></span>
+			<div class="form-group half-padding-top">
+				<label class="checkbox">
+					<input type="checkbox">
+					<span class="checkbox__input"></span>
+					<span class="checkbox__label hidden-xs" [innerText]="'_ReviewCiscoSuggestions_' | i18n"></span>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="checkbox">
+					<input type="checkbox">
+					<span class="checkbox__input"></span>
+					<span class="checkbox__label hidden-xs" [innerText]="'_ReviewThisBug_' | i18n"></span>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="checkbox">
+					<input type="checkbox">
+					<span class="checkbox__input"></span>
+					<span class="checkbox__label hidden-xs" [innerText]="'_CommunityThread_' | i18n"></span>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="checkbox">
+					<input type="checkbox">
+					<span class="checkbox__input"></span>
+					<span class="checkbox__label hidden-xs" [innerText]="'_ReadThisDoc_' | i18n"></span>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="checkbox">
+					<input type="checkbox">
+					<span class="checkbox__input"></span>
+					<span class="checkbox__label hidden-xs" [innerText]="'_DidTheseThings_' | i18n"></span>
+				</label>
+			</div>
+			<div class="form-group base-padding-left">
+				<div class="form-group__text">
+					<textarea id="input-textarea-multiple" class="textarea" rows="5"></textarea>
+				</div>
+				<div class="help-block text-muted" role="alert">
+					<span [innerText]="'_DescribeOtherResources_' | i18n"></span>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<ng-container *ngTemplateOutlet="suggestedSolution"></ng-container>
+		</div>
+	</div>
+	<div class="divider"></div>
+	<div class="row">
+		<div class="col-md-6">
+			<button data-auto-id="moreInfoBack" class="btn btn--secondary" (click)="showCasesPage('caseMoreInfo')" [innerText]="'_Back_' | i18n"></button>
+			<button class="btn btn--secondary pull-right" [innerText]="'_Cancel_' | i18n"></button>
+		</div>
+		<div class="col-md-6">
+			<button class="btn btn--primary" [innerText]="'_Submit_' | i18n"></button>
+			<button class="btn btn--secondary pull-right" [innerText]="'_SaveCase_' | i18n"></button>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #caseInfo>
+	<div id="caseInfo" class="flex-center display-4 base-padding-top base-padding-bottom" [innerText]="'_OpenACase_' | i18n"></div>
+	<div class="form-group">
+		<div class="form-group__text">
+			<input id="caseTitle" type="text">
+			<label for="caseTitle" [innerText]="'_CaseTitle_' | i18n"></label>
+		</div>
+		<div class="help-block text-muted">
+			<span [innerText]="'_UsedReference_' | i18n"></span>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="form-group__text">
+			<textarea id="caseDescription" type="text" rows="15"></textarea>
+			<label for="caseDescription" [innerText]="'_Description_' | i18n"></label>
+		</div>
+		<div class="help-block text-muted">
+			<span [innerText]="'_MoreDetails_' | i18n"></span>
+		</div>
+	</div>
+	<div class="qtr-padding-bottom" [innerText]="'_Severity_' | i18n"></div>
+	<div class="form-group form-group--inline">
+		<label class="radio">
+			<input type="radio" name="inline-radio">
+			<span class="radio__input"></span>
+			<span class="radio__label hidden-xs" [innerText]="'_NetworkDown_' | i18n"></span>
+		</label>
+	</div>
+	<div class="form-group form-group--inline">
+		<label class="radio">
+			<input type="radio" name="inline-radio">
+			<span class="radio__input"></span>
+			<span class="radio__label hidden-xs" [innerText]="'_SeverelyDegraded_' | i18n"></span>
+		</label>
+	</div>
+	<div class="form-group form-group--inline">
+		<label class="radio">
+			<input type="radio" name="inline-radio">
+			<span class="radio__input"></span>
+			<span class="radio__label hidden-xs" [innerText]="'_NetworkImpaired_' | i18n"></span>
+		</label>
+	</div>
+	<div class="form-group form-group--inline">
+		<label class="radio">
+			<input type="radio" name="inline-radio">
+			<span class="radio__input"></span>
+			<span class="radio__label hidden-xs" [innerText]="'_AskAQuestion_' | i18n"></span>
+		</label>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+				<div class="form-group half-margin-bottom">
+					<div class="form-group__text">
+					<input id="input-type-telephone" type="tel">
+					<label for="input-type-telephone" [innerText]="'_Phone_' | i18n"></label>
+				</div>
+			</div>
+			<div class="form-group half-margin-bottom">
+				<div class="form-group__text">
+					<input id="input-type-email" type="email">
+					<label for="input-type-email" [innerText]="'_Email_' | i18n"></label>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-9 base-padding-top">
+			<div class="form-group half-padding-top">
+				<label class="radio">
+					<input type="radio" name="stacked-radio">
+					<span class="radio__input"></span>
+					<span class="radio__label hidden-xs" [innerText]="'_Preferred_' | i18n"></span>
+				</label>
+			</div>
+			<div class="form-group dbl-padding-top">
+				<label class="radio">
+					<input type="radio" name="stacked-radio">
+					<span class="radio__input"></span>
+					<span class="radio__label hidden-xs" [innerText]="'_Preferred_' | i18n"></span>
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="text-center dbl-padding-top">
+		<button class="btn btn--secondary" [innerText]="'_Cancel_' | i18n"></button>
+		<button data-auto-id="moreInfoNext" (click)="showCasesPage('caseMoreInfo')" class="btn btn--primary" [innerText]="'_Next_' | i18n"></button>
+	</div>
+</ng-template>
+
+<ng-template #suggestedSolution>
+	<div class="panel panel--ltgreen">
+		<span class="icon-lightbulb icon-medium"></span>
+		<span class="text-large base-padding-top" [innerText]="'_Cisco Suggested Solution_' | i18n"></span>
+		<div class="row base-padding-top base-padding-left">
+			<span [innerText]="'_Placeholder_' | i18n"></span>
+		</div>
+		<div class="row base-padding-top half-padding-left">
+			<div class="col-md-6">
+				<div class="text-large" [innerText]="'_RecommendedFix_' | i18n"></div>
+				<div class="qtr-padding-top" [innerText]="'_Placeholder_' | i18n"></div>
+			</div>
+		</div>
+		<div class="row base-padding-top half-padding-left">
+			<div class="col-md-6">
+				<div class="text-large" [innerText]="'_Workaround_' | i18n"></div>
+				<div class="qtr-padding-top" [innerText]="'_Placeholder_' | i18n"></div>
+			</div>
+		</div>
+	</div>
+</ng-template>

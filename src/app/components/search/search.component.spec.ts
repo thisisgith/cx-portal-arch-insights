@@ -9,6 +9,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from '@environment';
 import { searchData } from '@mock';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import * as enUSJson from '../../../assets/i18n/en-US.json';
 
@@ -25,6 +26,7 @@ describe('SearchComponent', () => {
 			imports: [
 				HttpClientTestingModule,
 				SearchModule,
+				RouterTestingModule.withRoutes([]),
 			],
 		})
 		.compileComponents();
