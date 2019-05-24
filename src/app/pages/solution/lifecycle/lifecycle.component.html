@@ -95,7 +95,7 @@
 					</label>
 				</div>
 				<div class="col-md-10">
-					<a data-auto-id="actionlink" class="no-link fade-in-pop" [ngClass]="{'disabled': action.action.isComplete}"
+					<a data-auto-id="actionlink" class="no-link" [ngClass]="{'disabled': action.action.isComplete}"
 						(click)="selectAction(action)">
 						<div>
 							<span class="checkbox__label text-medium" [innerText]="action.action.name"></span>
@@ -161,7 +161,7 @@
 	<div class="panel panel--open panel--bordered"
 		*ngIf="atxScheduleCardOpened">
 		<div class="row base-margin-top half-margin-left half-margin-right">
-			<div class="col-md-11">
+			<div id="atxtitle" class="col-md-11 text-left">
 				<h5 [innerText]="data.title"></h5>
 			</div>
 			<div class="col-md-1">
@@ -172,10 +172,10 @@
 				</a>
 			</div>
 		</div>
-		<div id="atxdescription" class="base-margin-left base-margin-right half-margin-top">
+		<div id="atxdescription" class="base-margin-left base-margin-right half-margin-top text-left">
 			<span class="text-small" [innerText]="data.description"></span>
 		</div>
-		<div class="half-margin-top base-margin-left base-margin-bottom">
+		<div class="half-margin-top base-margin-left base-margin-bottom text-left">
 			<a data-auto-id="viewOnDemand"
 				class="no-link fade-in-pop"
 				[href]="data.viewOnDemandUrl">
@@ -189,7 +189,7 @@
 				</div>
 			</a>
 		</div>
-		<h6 class="half-margin-left base-margin-top half-margin-bottom base-margin-left"
+		<h6 class="half-margin-left base-margin-top half-margin-bottom base-margin-left text-left"
 			[innerText]="'_ChooseSession_' | i18n">
 		</h6>
 		<div class="session-table responsive-table half-margin-left">
@@ -209,6 +209,7 @@
 		<div class="row">
 			<div class="col-md-8">
 				<a data-auto-id="AtxScheduleCardRegisterButton"
+					class="pull-left"
 					[href]="data.registrationUrl">
 					<button class="btn base-margin-top base-margin-left"
 						[innerText]="'_Register_' | i18n">
@@ -346,8 +347,11 @@
 									<span [innerText]="'_WatchOnDemand_' | i18n"></span>
 								</div>
 								<div>
-									<span class="icon-calendar icon-small half-padding-right"></span>
-									<span [innerText]="'_ChooseSession_' | i18n"></span>
+									<a data-auto-id="recommendedATXScheduleButton" class="no-link fade-in-pop" 
+										(click)="atxScheduleCardOpened = true; componentData.atx.interested = item">
+										<span class="icon-calendar icon-small half-padding-right"></span>
+										<span [innerText]="'_ChooseSession_' | i18n"></span>
+									</a>
 								</div>
 							</div>
 							<div class="col-md-4 text-right">
@@ -356,6 +360,9 @@
 							</div>
 						</div>
 					</div>
+					<ng-container *ngIf="item == componentData.atx.interested && atxScheduleCardOpened">
+						<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }"></ng-container>
+					</ng-container>
 				</div>
 			</div>
 		</div>

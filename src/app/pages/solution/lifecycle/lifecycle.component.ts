@@ -40,7 +40,6 @@ interface ComponentData {
 	racetrack?: {
 		pitstop?: RacetrackPitstop;
 		stage?: string;
-		// suggestedAction?: string;
 		actionsCompPercent?: string;
 	};
 	params: {
@@ -53,6 +52,7 @@ interface ComponentData {
 	atx?: {
 		sessions?: ATX[];
 		recommended?: ATX;
+		interested?: ATX;
 	};
 	learning?: {
 		certifications?: ELearning[];
@@ -188,6 +188,7 @@ export class LifecycleComponent {
 			context: null,
 			visible: false,
 		};
+		this.atxScheduleCardOpened = false;
 	}
 
 	/**
