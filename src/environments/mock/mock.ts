@@ -1,25 +1,25 @@
 import {
-	assetData,
-	assetsData,
-	searchData,
 	ActionScenarios,
-	RacetrackScenarios,
-	ATXScenarios,
 	ACCScenarios,
+	ATXScenarios,
 	CommunitiesScenarios,
 	ELearningScenarios,
+	HardwareScenarios,
+	RacetrackScenarios,
+	searchData,
 	SuccessPathScenarios,
 } from './';
 import { HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash';
 
 import {
+	ACCResponse,
 	ATXResponse,
 	PitstopActionUpdateResponse,
-	RacetrackResponse,
 	CommunitiesResponse,
 	ELearningResponse,
-	ACCResponse,
+	HardwareResponse,
+	RacetrackResponse,
 	SuccessPathsResponse,
 } from '@cui-x/sdp-api';
 
@@ -27,13 +27,9 @@ import {
 	SearchResults,
 } from '@services';
 
-import {
-	Asset,
-} from '@interfaces';
-
 /** Alias type for the Response Body */
 type ResponseBody = (
-	Asset | Asset[] |
+	HardwareResponse |
 	ATXResponse |
 	CommunitiesResponse |
 	ELearningResponse |
@@ -86,45 +82,14 @@ interface MockSettings {
  */
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
-		ATXScenarios,
 		ACCScenarios,
-		ELearningScenarios,
-		SuccessPathScenarios,
+		ATXScenarios,
 		CommunitiesScenarios,
 		ActionScenarios,
+		ELearningScenarios,
+		HardwareScenarios,
 		RacetrackScenarios,
-		{
-			scenarios: {
-				GET: [
-					{
-						delay: 500,
-						description: 'Generic Example',
-						response: {
-							body: assetsData,
-							status: 200,
-						},
-						selected: true,
-					},
-				],
-			},
-			url: '/ws/inventory/hardware',
-		},
-		{
-			scenarios: {
-				GET: [
-					{
-						delay: 500,
-						description: 'Generic Example',
-						response: {
-							body: assetData,
-							status: 200,
-						},
-						selected: true,
-					},
-				],
-			},
-			url: '/ws/inventory/hardware/1',
-		},
+		SuccessPathScenarios,
 		{
 			scenarios: {
 				GET: [

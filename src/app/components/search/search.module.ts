@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchService } from '@services';
 import { CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 /**
  * Module representing the Search Component
@@ -26,6 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
 		I18nPipeModule,
 		ReactiveFormsModule,
 		TruncatePipeModule,
+		RouterModule,
 	],
 	providers: [SearchService],
 })
