@@ -44,18 +44,60 @@
 
 .panel--open {
 	box-shadow: $base-box-shadow;
-	height: 400px;
+	height: 430px;
 	width: 500px;
 	position: absolute;
-	top: 150px;
-	left: 140px;
+	bottom: -20px;
+	left: 70px;
 	z-index: 1;
 	background-color: $white;
 	border-radius: 10px;
+
+	#atxtitle {
+		height: 48px;
+	}
+
+	#atxdescription {
+		height: 60px;
+		overflow-y: auto;
+	}
+}
+
+.panel--open::after {
+	content: "";
+	position: absolute;
+	top: 60%;
+	left: -15px;
+	border-top: 30px solid transparent;
+	border-right: 50px solid white;
+	border-bottom: 30px solid transparent;
 }
 
 .session-table {
 	overflow-y: scroll;
-	height: 80px;
+	height: 120px;
 	display: block;
+}
+
+.actionname.selected {
+	background-color: darkgray;
+}
+
+.small-size {
+	width: 30px;
+	height: 20px;
+}
+
+.finishline {
+	width: 10px;
+	height: 30px;
+}
+
+#compActPct {
+	width: 70px;
+	height: 30px;
+	text-align: center;
+	font-style: italic;
+	font-size: 20px;
+	background-color: $primary;
 }

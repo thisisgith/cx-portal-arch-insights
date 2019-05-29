@@ -1,4 +1,5 @@
 import {
+	ActionScenarios,
 	ACCScenarios,
 	ATXScenarios,
 	CommunitiesScenarios,
@@ -14,6 +15,7 @@ import * as _ from 'lodash';
 import {
 	ACCResponse,
 	ATXResponse,
+	PitstopActionUpdateResponse,
 	CommunitiesResponse,
 	ELearningResponse,
 	HardwareResponse,
@@ -34,7 +36,8 @@ type ResponseBody = (
 	SuccessPathsResponse |
 	ACCResponse |
 	RacetrackResponse |
-	SearchResults
+	SearchResults |
+	PitstopActionUpdateResponse
 );
 
 /**
@@ -63,6 +66,7 @@ export interface Mock {
 		HEAD?: Scenario[];
 		POST?: Scenario[];
 		PUT?: Scenario[];
+		PATCH?: Scenario[];
 	};
 }
 
@@ -81,6 +85,7 @@ export const mockSettings: MockSettings = {
 		ACCScenarios,
 		ATXScenarios,
 		CommunitiesScenarios,
+		ActionScenarios,
 		ELearningScenarios,
 		HardwareScenarios,
 		RacetrackScenarios,
