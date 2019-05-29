@@ -35,13 +35,13 @@ function MockRacetrack (
 								pitstopActions: [
 									{
 										description: 'DNAC discover network devices',
-										isComplete: false,
-										isCompleteAuto: false,
+										isComplete: true,
+										isCompleteAuto: true,
 										isCompleteManual: true,
 										isManaualOverride: true,
 										manualCheckAllowed: true,
 										name: 'Discover Devices',
-										updateMethod: 'MANUAL',
+										updateMethod: 'NA',
 									},
 									{
 										description: 'The hierarchy',
@@ -51,7 +51,7 @@ function MockRacetrack (
 										isManaualOverride: false,
 										manualCheckAllowed: false,
 										name: 'Configure Network Hierarchy',
-										updateMethod: 'NA',
+										updateMethod: 'MANUAL',
 									},
 									{
 										description: 'Map WLCs',

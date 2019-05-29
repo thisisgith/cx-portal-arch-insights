@@ -64,7 +64,8 @@
 			<h2 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h2>
 		</div>
 		<div class="col-md-5 flex-center">
-			<img alt="'_FinishLine_' | i18n" class="pull-right" src="assets/img/solutions/finishline.png">
+			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert"></span>
+			<span><img class="finishline qtr-margin-top" alt="'_FinishLine_' | i18n" src="assets/img/solutions/finishline_side.png"> </span>
 		</div>
 	</div>
 	<div class="half-padding-top half-padding-left">
@@ -83,18 +84,31 @@
 	<div class="base-margin-left" *ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
 		<div class="divider divider--compressed"></div>
 		<div class="half-padding-bottom text-uppercase" [innerText]="'_Actions_' | i18n"></div>
-		<div *ngFor="let action of currentPitstop.pitstopActions"
-			class="form-group form-group--compressed">
-			<label class="checkbox">
-				<input data-auto-id="pitstopCheckbox"
-					type="checkbox"
-					[disabled]="action.isComplete"
-					[(ngModel)]="action.isComplete"
-					[checked]="action.isComplete">
-				<span class="checkbox__input"></span>
-				<span class="checkbox__label text-medium" [innerText]="action.name"></span>
-			</label>
-		</div>
+		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select">
+			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
+				<div class="col-md-2">
+					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete}">
+						<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.action.isComplete"
+							(change)="completeAction(action.action)" [checked]="action.action.isComplete">
+						<span class="checkbox__input"></span>
+					</label>
+				</div>
+				<div class="col-md-10">
+					<a data-auto-id="actionlink" class="no-link" [ngClass]="{'disabled': action.action.isComplete}"
+						(click)="selectAction(action)">
+						<div>
+							<span class="checkbox__label text-medium" [innerText]="action.action.name"></span>
+							<span *ngIf="action.action.isCompleteAuto" class="qtr-padding-top">
+								<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png">
+							</span>
+						</div>
+					</a>
+				</div>
+			</div>
+			<div *ngIf="action.selected" class="des-dropdown base-padding-left half-margin-top half-margin-bottom">
+				<span class="text-small" [innerText]="action.action.description"></span>
+			</div>
+		</div>			
 	</div>
 </ng-template>
 
@@ -146,7 +160,7 @@
 	<div class="panel panel--open panel--bordered"
 		*ngIf="atxScheduleCardOpened">
 		<div class="row base-margin-top half-margin-left half-margin-right">
-			<div class="col-md-11">
+			<div id="atxtitle" class="col-md-11 text-left">
 				<h5 [innerText]="data.title"></h5>
 			</div>
 			<div class="col-md-1">
@@ -157,10 +171,10 @@
 				</a>
 			</div>
 		</div>
-		<div class="base-margin-left base-margin-right half-margin-top">
+		<div id="atxdescription" class="base-margin-left base-margin-right half-margin-top text-left">
 			<span class="text-small" [innerText]="data.description"></span>
 		</div>
-		<div class="half-margin-top base-margin-left base-margin-bottom">
+		<div class="half-margin-top base-margin-left base-margin-bottom text-left">
 			<a data-auto-id="viewOnDemand"
 				class="no-link fade-in-pop"
 				[href]="data.viewOnDemandUrl">
@@ -174,10 +188,10 @@
 				</div>
 			</a>
 		</div>
-		<h6 class="half-margin-left base-margin-top half-margin-bottom"
+		<h6 class="half-margin-left base-margin-top half-margin-bottom base-margin-left text-left"
 			[innerText]="'_ChooseSession_' | i18n">
 		</h6>
-		<div class="session-table responsive-table">
+		<div class="session-table responsive-table half-margin-left">
 			<table class="table table--bordered table--selectable">
 				<tbody>
 					<tr attr.data-auto-id="SelectSession-{{ session.title }}"
@@ -194,14 +208,15 @@
 		<div class="row">
 			<div class="col-md-8">
 				<a data-auto-id="AtxScheduleCardRegisterButton"
+					class="pull-left"
 					[href]="data.registrationUrl">
-					<button class="btn base-margin-top"
+					<button class="btn base-margin-top base-margin-left"
 						[innerText]="'_Register_' | i18n">
 					</button>
 				</a>
 			</div>
 			<div class="col-md">
-				<div class="row flex-center-vertical dbl-margin-top base-margin-right">
+				<div class="row flex-center-vertical dbl-margin-top base-margin-right pull-right">
 					<span class="icon-clock icon-small half-padding-right"></span>
 					<span class="text-xsmall" [innerText]="data.duration"></span>
 				</div>
@@ -331,8 +346,11 @@
 									<span [innerText]="'_WatchOnDemand_' | i18n"></span>
 								</div>
 								<div>
-									<span class="icon-calendar icon-small half-padding-right"></span>
-									<span [innerText]="'_ChooseSession_' | i18n"></span>
+									<a data-auto-id="recommendedATXScheduleButton" class="no-link fade-in-pop" 
+										(click)="atxScheduleCardOpened = true; componentData.atx.interested = item">
+										<span class="icon-calendar icon-small half-padding-right"></span>
+										<span [innerText]="'_ChooseSession_' | i18n"></span>
+									</a>
 								</div>
 							</div>
 							<div class="col-md-4 text-right">
@@ -341,6 +359,9 @@
 							</div>
 						</div>
 					</div>
+					<ng-container *ngIf="item == componentData.atx.interested && atxScheduleCardOpened">
+						<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }"></ng-container>
+					</ng-container>
 				</div>
 			</div>
 		</div>
