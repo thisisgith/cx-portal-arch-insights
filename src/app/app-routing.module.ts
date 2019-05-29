@@ -12,8 +12,8 @@ const routes: Routes = [
 		pathMatch: 'full',
 	},
 	{
-		loadChildren: './pages/solution/solution.module#SolutionModule',
 		canActivate: [ClientSSOGuard],
+		loadChildren: './pages/solution/solution.module#SolutionModule',
 		path: 'solution',
 	},
 	{

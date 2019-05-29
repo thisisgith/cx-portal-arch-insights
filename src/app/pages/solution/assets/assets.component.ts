@@ -51,7 +51,13 @@ export class AssetsComponent implements OnInit {
 	@ViewChild('casesAssetsFilter') private casesAssetsFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('rmasAssetsFilter') private rmasAssetsFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter') private totalAssetsFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('coverageFilter') private coverageFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('statusFilter') private statusFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('typeFilter') private typeFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('advisoryFilter') private advisoryFilterTemplate: TemplateRef<{ }>;
 
+	public bulkDropdown = false;
+	public selectedAssets: any[] = [];
 	public tabs: Tab[];
 	public selectedTab: Tab;
 	public filters: Filter[];
@@ -122,15 +128,18 @@ export class AssetsComponent implements OnInit {
 				},
 				{
 					key: 'coverage',
+					template: this.coverageFilterTemplate,
 					title: I18n.get('_Coverage_'),
 				},
 				{
-					key: 'usage',
-					title: I18n.get('_Usage_'),
+					key: 'status',
+					template: this.statusFilterTemplate,
+					title: I18n.get('_Status_'),
 				},
 				{
-					key: 'impact',
-					title: I18n.get('_AdvisoryImpact_'),
+					key: 'advisories',
+					template: this.advisoryFilterTemplate,
+					title: I18n.get('_Advisories_'),
 				},
 				{
 					key: 'cases',
@@ -143,8 +152,9 @@ export class AssetsComponent implements OnInit {
 					title: I18n.get('_OpenRMAs_'),
 				},
 				{
-					key: 'role',
-					title: I18n.get('_DeviceRole_'),
+					key: 'type',
+					title: I18n.get('_Type_'),
+					template: this.typeFilterTemplate,
 				},
 			];
 			this.fetchInventory();
@@ -259,6 +269,15 @@ export class AssetsComponent implements OnInit {
 				this.buildTable();
 				this.status.isLoading = false;
 			});
+	}
+
+	/**
+	 * Sets the list of selected asset table elements
+	 * @param selectedItems array of selected table elements
+	 *
+	 */
+	public onSelectionChanged (selectedItems: any[]) {
+		this.selectedAssets = selectedItems;
 	}
 
 	/**
