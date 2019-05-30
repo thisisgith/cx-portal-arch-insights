@@ -49,7 +49,7 @@
 	position: absolute;
 	bottom: -20px;
 	left: 70px;
-	z-index: 1;
+	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
 
@@ -100,4 +100,46 @@
 	font-style: italic;
 	font-size: 20px;
 	background-color: $primary;
+}
+
+.card_footer_item {
+	width: 100%;
+}
+
+.ribbon {
+	&__blue {
+		position: absolute;
+		right: 7px;
+		top: 0;
+		z-index: 1;
+		color: $indigo;
+	}
+
+	&__green {
+		position: absolute;
+		right: 7px;
+		top: 0;
+		z-index: 2;
+		color: $success;
+	}
+
+	&__clear {
+		position: absolute;
+		right: 7px;
+		top: 0;
+		z-index: 2;
+		color: transparent;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: $info;
+	}
+}
+
+.star {
+	position: absolute;
+	right: 20px;
+	top: 1px;
+	color: white;
+	width: 8px;
+	height: 7px;
+	z-index: 2;
 }

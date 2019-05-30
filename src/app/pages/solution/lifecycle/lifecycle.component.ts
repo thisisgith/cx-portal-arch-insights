@@ -192,6 +192,31 @@ export class LifecycleComponent {
 	}
 
 	/**
+	 * Determines which modal to display
+	 * @param atx ATX item
+	 * @returns ribbon
+	 */
+	public getRibbonClass (atx: ATX) {
+		let ribbon = 'ribbon__clear';
+		switch (atx.status) {
+			case 'completed': {
+				ribbon = 'ribbon__green';
+				break;
+			}
+			case 'scheduled':
+			case 'inProgress': {
+				ribbon = 'ribbon__blue';
+				break;
+			}
+			default: {
+				ribbon = 'ribbon__clear';
+				break;
+			}
+		}
+
+		return ribbon;
+	}
+	/**
 	 * Selects the session
 	 * @param session the session we've clicked on
 	 */
@@ -238,6 +263,8 @@ export class LifecycleComponent {
 		this.racetrackService.updatePitstopAction(params)
 		.subscribe((results: PitstopActionUpdateResponse) => {
 			this.status.loading.racetrack = false;
+			this.componentData.racetrack.actionsCompPercent =
+				this.calculateActionPercentage(this.componentData.racetrack.pitstop);
 
 			const source = [];
 			if (results.isAtxChanged) { source.push(this.loadATX()); }
@@ -490,8 +517,9 @@ export class LifecycleComponent {
 						};
 						this.componentData.racetrack.actionsCompPercent =
 							this.calculateActionPercentage(stop);
-						this.componentData.params.suggestedAction =
-							_.find(stop.pitstopActions, { isComplete: false }).name;
+						const nextAction = _.find(stop.pitstopActions, { isComplete: false });
+						this.componentData.params.suggestedAction = nextAction ?
+							nextAction.name : null;
 						this.currentPitActionsWithStatus = _.map(
 							stop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
 							({
