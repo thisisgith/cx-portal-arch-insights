@@ -75,6 +75,7 @@
 		"ngdeploy": "^2.0.2",
 		"papaparse": "^4.4.0",
 		"protractor": "~5.4.0",
+		"swtg-cypress-util": "^1.0.0",
 		"ts-node": "~7.0.0",
 		"typescript": "~3.2.2",
 		"wait-on": "^3.2.0"

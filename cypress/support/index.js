@@ -16,5 +16,9 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+require('swtg-cypress-util');
+
+// Whitelist ObSSOCookie from getting cleared before each test
+Cypress.Cookies.defaults({
+	whitelist: ['ObSSOCookie'],
+});

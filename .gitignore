@@ -8,6 +8,7 @@
 /tmp
 /out-tsc
 /documentation
+module-commit-hashes.json
 
 cypress/tmp
 cypress/screenshots
