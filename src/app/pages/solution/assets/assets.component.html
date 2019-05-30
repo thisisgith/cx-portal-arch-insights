@@ -1,15 +1,27 @@
 <div class="panel">
-	<ul class="tabs base-margin-bottom remove-shadow">
-		<li *ngFor="let tab of tabs"
-			[ngClass]="{ 'active': tab.selected }" [attr.disabled]="tab.disabled">
-			<a (click)="selectTab(tab)"
-				attr.data-auto-id="AssetSelectTab-{{ tab.key }}"
-				class="no-padding-bottom">
-				<div class="tab__heading qtr-padding-bottom" [innerText]="tab.title"></div>
-			</a>
-		</li>
-	</ul>
-	
+	<div class="row">
+		<div class="col-md-8">
+			<ul class="tabs remove-shadow">
+				<li *ngFor="let tab of tabs"
+					[ngClass]="{ 'active': tab.selected }" [attr.disabled]="tab.disabled">
+					<a (click)="selectTab(tab)"
+						attr.data-auto-id="AssetSelectTab-{{ tab.key }}"
+						class="no-padding-bottom">
+						<div class="tab__heading qtr-padding-bottom" [innerText]="tab.title"></div>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="col-md-4 text-right">
+			<span class="icon-filter icon-medium text-muted qtr-margin-right toggle"></span>
+			<span class="text-large text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
+			<span class="icon-dropdown qtr-padding-left toggle"></span>
+			<span class="icon-location icon-small base-padding-left toggle"></span>
+			<span class="icon-list-view icon-small qtr-padding-left toggle"></span>
+			<span class="icon-grid-view icon-small qtr-padding-left toggle"></span>
+		</div>
+	</div>
+
 	<div class="half-margin-top">
 		<ng-container *ngTemplateOutlet="visibleTemplate; context: {}"></ng-container>
 	</div>
@@ -17,23 +29,25 @@
 
 <!-- Templates for our Tabs -->
 <ng-template #assetsContent>
-	<span class="icon-filter icon-medium text-muted qtr-margin-right"></span>
-	<span class="text-large text-muted" [innerText]="'_VisualFilters_' | i18n"></span>
 	<div class="flex flex-fill flex-fluid">
+		<div class="flex-center">
+			<span class="icon-chevron-left icon-medium text-muted toggle"></span>
+		</div>
 		<div *ngFor="let filter of filters; index as i"
 			attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}"
 			(click)="selectFilter(filter)"
 			[ngClass]="{
-				'panel--bordered-left': i !== 0,
-				'panel--bordered-right': i !== (filters.length - 1),
 				'filter__selected': filter.selected,
 				'filter__not-selected': !filter.selected
 			}"
-			class="panel panel--bordered-right flex-center flex-fill filter">
+			class="panel flex-center flex-fill filter">
 			<div *ngIf="filter.template" class="base-margin-bottom">
 				<ng-container *ngTemplateOutlet="filter.template; context: {}"></ng-container>
 			</div>
 			<div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
+		</div>
+		<div class="flex-center">
+			<span class="icon-chevron-right icon-medium text-muted toggle"></span>
 		</div>
 	</div>
 	<div class="dbl-margin-top">
@@ -41,15 +55,24 @@
 			<div class="flex flex-fluid">
 				<div class="flex-fill half-padding-top" [innerText]="'_ShowingXofYAssets_' | i18n:inventory.length:assetParams.total"></div>
 				<div class="btn-group btn-group--square">
-					<button class="btn btn--small btn--gray-ghost disabled"><span class="icon-location"></span></button>
-					<button class="btn btn--small btn--gray-ghost"><span class="icon-grid-view"></span></button>
-					<button class="btn btn--small btn--gray-ghost selected"><span class="icon-list-view"></span></button>
-					<button class="btn btn--small btn--gray-ghost disabled"><span class="icon-more"></span></button>
+					<div class="dropdown active dropdown--tail dropdown--left"
+						data-auto-id="BulkDropdown"
+						[ngClass]="{'active': bulkDropdown }"
+						(click)="bulkDropdown = !bulkDropdown">
+						<button class="btn btn--small btn--gray-ghost"><span class="icon-more"></span></button>
+						<div class="dropdown__menu">
+							<a [innerText]="'_ExportAssets_' | i18n:selectedAssets.length"></a>
+							<a [innerText]="'_EditAssetTags_' | i18n:selectedAssets.length"></a>
+							<a [innerText]="'_RunScanAssets_' | i18n:selectedAssets.length"></a>
+							<div class="dropdown__divider"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<cui-table *ngIf="inventory.length && assetsTable"
 				[data]="inventory"
-				[options]="assetsTable">
+				[options]="assetsTable"
+				(onSelectionChanged)="onSelectionChanged($event)">
 			</cui-table>
 			<div class="base-margin-top">
 				<cui-pager [page]="assetParams.page"
@@ -72,9 +95,25 @@
 <!-- TODO: Add data for eox panel -->
 </ng-template>
 
+<ng-template #advisoryFilter>
+	<assets-bar-chart></assets-bar-chart>
+</ng-template>
+
+<ng-template #coverageFilter>
+	<assets-pie-chart></assets-pie-chart>
+</ng-template>
+
+<ng-template #statusFilter>
+	<assets-pie-chart></assets-pie-chart>
+</ng-template>
+
+<ng-template #typeFilter>
+	<assets-pie-chart></assets-pie-chart>
+</ng-template>
+
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter>
-	<div class="text-huge flex-center" [innerText]="assetParams?.total || 0"></div>
+	<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="assetParams?.total || 0"></div>
 </ng-template>
 
 <ng-template #casesAssetsFilter>

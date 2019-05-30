@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
+import {
+	RouterModule,
+	Routes,
+} from '@angular/router';
 import { AssetsComponent } from './assets.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import {
@@ -10,6 +13,8 @@ import {
 } from '@cisco-ngx/cui-components';
 import { InventoryModule } from '@cui-x/sdp-api';
 import { environment } from '@environment';
+import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
+import { AssetsBarChartModule } from './assets-bar-chart/assets-bar-chart.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -32,6 +37,8 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [AssetsComponent],
 	imports: [
+		AssetsBarChartModule,
+		AssetsPieChartModule,
 		CommonModule,
 		CuiPagerModule,
 		CuiSpinnerModule,
