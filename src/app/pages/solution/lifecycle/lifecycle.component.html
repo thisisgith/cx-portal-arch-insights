@@ -337,7 +337,7 @@
 			<div class="grid grid--3up base-padding-top">
 				<div class="card atx__card__background" *ngFor="let item of data">
 					<div class="icon-bookmark icon-medium" [ngClass]="getRibbonClass(item)"></div>
-					<div class="icon-star star" *ngIf="item.status === 'completed'"></div>
+					<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
 					<div class="card__header text-left text-bold" [innerText]="item.title"></div>
 					<div class="card__body atx-card__body text-left" [innerText]="item.description"></div>
 					<div class="card__footer">
