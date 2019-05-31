@@ -12,3 +12,11 @@ declare module '*.json' {
 	 */
 	export default value;
 }
+
+/**
+ * Custom properties added to the global 'window' object during Cypress tests
+ */
+interface Window {
+	Cypress: any,
+	loading: boolean,
+}

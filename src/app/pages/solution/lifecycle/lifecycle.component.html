@@ -117,19 +117,20 @@
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedATX,
 				title: data.recommended.title,
-				src: 'assets/img/solutions/driver.png'
+				src: 'assets/img/solutions/driver.png',
+				autoid: 'recommendedATXTitle'
 			}">
 		</ng-container>
 	</ng-container>
 	<ng-container *ngIf="data.sessions.length">
-		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions }"></ng-container>
+		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions, autoid: 'moreATXList' }"></ng-container>
 	</ng-container>
 	<ng-container *ngIf="componentData?.atx?.recommended">
 		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.recommended }"></ng-container>
 	</ng-container>
 </ng-template>
 
-<ng-template #recommended let-src="src" let-title="title" let-template="template">
+<ng-template #recommended let-src="src" let-title="title" let-template="template" let-autoid="autoid">
 	<div class="qtr-padding-bottom">
 		<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
 		<span class="text-uppercase" [innerText]="'_Recommended_' | i18n"></span>
@@ -137,7 +138,7 @@
 	<div class="panel panel--bordered panel no-padding-top no-padding-left no-padding-right round-edges">
 		<img class="round-edges-top max-width" alt="'_Placeholder_' | i18n" [src]="src">
 		<div class="base-padding-top half-padding-left">
-			<div class="text-large base-padding-bottom" [innerText]="title"></div>
+			<div class="text-large base-padding-bottom" [innerText]="title" [attr.data-auto-id]="autoid"></div>
 			<ng-container *ngTemplateOutlet="template"></ng-container>
 		</div>
 	</div>
@@ -149,11 +150,17 @@
 		(click)="atxScheduleCardOpened = true"
 		[innerText]="'_Schedule_' | i18n">
 	</button>
-	<button class="btn btn--small btn--gray-ghost text-uppercase" [innerText]="'_WatchNow_' | i18n"></button>
+	<button data-auto-id="recommendedATXWatchButton"
+		class="btn btn--small btn--gray-ghost text-uppercase"
+		[innerText]="'_WatchNow_' | i18n"
+	></button>
 </ng-template>
 
 <ng-template #recommendedACC>
-	<button class="btn btn--small btn--gray-ghost text-uppercase" [innerText]="'_Register_' | i18n"></button>
+	<button data-auto-id="recommendedACCWatchButton"
+		class="btn btn--small btn--gray-ghost text-uppercase"
+		[innerText]="'_Register_' | i18n">
+	</button>
 </ng-template>
 
 <ng-template #recommendedATXSchedule let-data="data">
@@ -235,20 +242,21 @@
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedACC,
 				title: data.recommended.title,
-				src: 'assets/img/solutions/acc.png'
+				src: 'assets/img/solutions/acc.png',
+				autoid: 'recommendedACCTitle'
 			}">
 		</ng-container>
 	</ng-container>
 	<ng-container *ngIf="data.sessions.length">
-		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions }"></ng-container>
+		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions, autoid: 'moreACCList' }"></ng-container>
 	</ng-container>
 </ng-template>
 
-<ng-template #more let-data="data">
+<ng-template #more let-data="data" let-autoid="autoid">
 	<div class="base-padding-top half-padding-bottom">
 		<span class="text-large text-uppercase" [innerText]="'_More_' | i18n"></span>
 	</div>
-	<div class="more-scroll base-padding-bottom">
+	<div class="more-scroll base-padding-bottom" [attr.data-auto-id]="autoid">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:1">
 			<span [innerText]="item.title"></span>
 		</div>
@@ -416,7 +424,7 @@
 	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom">
 		<div class="row base-padding-bottom">
 			<div class="col-md-6 flex-center-vertical">
-				<div class="text-uppercase text-large" [innerText]="title | i18n"></div>
+				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
 			</div>
 			<div class="col-md-6 text-right" *ngIf="viewAll">
 				<div *ngIf="data"
