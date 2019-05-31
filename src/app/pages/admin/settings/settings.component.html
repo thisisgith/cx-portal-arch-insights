@@ -1,0 +1,128 @@
+<admin-wrapper>
+	<div *ngIf="!loading" class="container settings-container">
+		<div class="row">
+			<div class="col-lg-6">
+				<h5
+					class="base-margin-top half-margin-bottom"
+					[innerText]="'_Status_' | i18n | uppercase"
+				></h5>
+				<div class="panel panel--bordered flex base-margin-right">
+					<div class="col-5">
+						<div [innerText]="'_CiscoCXCollectorConnectivityModule_' | i18n"></div>
+						<!-- <div class="text-small">Last data sent 6 min ago</div> -->
+					</div>
+					<div class="col-2" [innerText]="data.ieVersion || ''"></div>
+					<div class="col-2">
+						<span class="icon-circle half-margin-right"
+							[ngClass]="{
+								'active': 'text-success',
+								'Running': 'text-success',
+								'Restarting...': 'text-warning',
+								'Stopped': 'text-secondary',
+								'Error': 'text-danger',
+								'CrashLoopBackOff':'text-danger'
+							}[data.ieStatus]"></span>
+						<span [innerText]="data.ieStatus || ''"></span>
+						<!-- <div> -->
+						<!-- 	<span class="icon-circle text-success half-margin-right"></span> -->
+						<!-- 	<span>Connected</span> -->
+						<!-- </div> -->
+					</div>
+				</div>
+				<h5
+					class="base-margin-top half-margin-bottom"
+					[innerText]="'_Applications_' | i18n | uppercase"
+				></h5>
+				<div *ngFor="let app of data.component_details; index as i">
+					<div class="
+						settings-panel
+						panel
+						panel--bordered-top
+						panel--bordered-left
+						panel--bordered-right
+						base-margin-right"
+						[ngClass]="{
+							'panel--bordered-bottom': i === (data.component_details.length - 1)
+						}"
+					>
+						<div class="flex">
+							<div class="col-5" [innerText]="app.name || ''"></div>
+							<div class="col-2" [innerText]="app.version || ''"></div>
+							<div class="col-3">
+								<span class="icon-circle half-margin-right"
+									[ngClass]="{
+										'Running':'text-success',
+										'Restarting...':'text-warning',
+										'Stopped':'text-secondary',
+										'Error':'text-danger',
+										'CrashLoopBackOff':'text-danger'
+									}[app.status]"></span>
+								<span [innerText]="app.status || ''"></span>
+							</div>
+							<div
+								*ngIf="app.additional_details?.error"
+								class="col-2"
+							>
+								<a
+									data-auto-id="errorLink"
+									[innerText]="!app.showError
+										? ('_ErrorDetails_' | i18n)
+										: ('_HideErrorDetails_' | i18n)"
+									(click)="app.showError = !app.showError"
+								></a>
+							</div>
+						</div>
+						<div
+							heightTransition
+							[heightTransitionExpanded]="app.showError"
+						>
+							<div
+								class="base-padding-top"
+								[innerText]="app.additional_details?.error"
+							></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<h5
+					class="base-margin-top base-margin-bottom"
+					[innerText]="'_MemoryUsage_' | i18n | uppercase"
+				></h5>
+				<div
+					*ngFor="let gauge of data.memoryUsage"
+					class="flex-center-vertical base-margin-bottom"
+				>
+					<cui-gauge
+						[percentage]="gauge.percentage"
+						[value]="gauge.percentage + '%'"
+						size="small"
+						color="success"
+					></cui-gauge>
+					<div class="base-margin-left base-margin-bottom">
+						<div class="text-bold" [innerText]="gauge.label | uppercase"></div>
+						<div *ngIf="gauge.value" [innerText]="gauge.value"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<h5
+					class="base-margin-top half-margin-bottom"
+					[innerText]="'_SystemInfo_' | i18n | uppercase"
+				></h5>
+				<div *ngFor="let info of data.systemInfo">
+					<div class="base-margin-top">
+						<div class="text-bold" [innerText]="info.label | uppercase"></div>
+						<div [innerText]="info.value"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div
+		*ngIf="loading"
+		class="absolute-center"
+	>
+		<cui-loader></cui-loader>
+	</div>
+</admin-wrapper>

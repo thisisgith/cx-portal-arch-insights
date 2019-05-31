@@ -23,6 +23,7 @@
     "generate:sdp": "npm run generate:sdp:contracts && npm run generate:sdp:customer-users && npm run generate:sdp:inventory && npm run generate:sdp:product-alerts && npm run generate:sdp:racetrack-info && npm run generate:sdp:search && npm run generate:sdp:solution-based-racetrack-view",
     "generate:sdp:contracts": "cd projects/sdp-api && ng-swagger-gen --config ./configs/Contracts.json",
     "generate:sdp:customer-users": "cd projects/sdp-api && ng-swagger-gen --config ./configs/CustomerUsers.json",
+    "generate:sdp:control-points": "cd projects/sdp-api && ng-swagger-gen --config ./configs/ControlPoints.json",
     "generate:sdp:inventory": "cd projects/sdp-api && ng-swagger-gen --config ./configs/Inventory.json",
     "generate:sdp:product-alerts": "cd projects/sdp-api && ng-swagger-gen --config ./configs/ProductAlerts.json",
     "generate:sdp:racetrack-info": "cd projects/sdp-api && ng-swagger-gen --config ./configs/RacetrackInfo.json",

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 
@@ -12,28 +12,8 @@ import {
 	CuiModalComponent,
 } from '@cisco-ngx/cui-components';
 import { HeaderComponent } from './components/header/header.component';
-import { Subject } from 'rxjs';
 import { AppService } from './app.service';
-
-/**
- * MockRouter used to help show/hide the spinner
- */
-class MockRouter {
-	public subject = new Subject();
-	public events = this.subject.asObservable();
-
-	/**
-	 * Mocking navigate from Router
-	 * @param url The url to mock route to
-	 */
-	public navigate (url: string) {
-		if (!url) {
-			this.subject.next(new NavigationEnd(1, null, url));
-		} else {
-			this.subject.next(new NavigationStart(0, url));
-		}
-	}
-}
+import { AppTestModule } from './app-test.module.spec';
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -42,151 +22,167 @@ describe('AppComponent', () => {
 	let de: DebugElement;
 	let service: AppService;
 
-	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			imports: [
-				RouterTestingModule,
-				AppModule,
-			],
-			providers: [
-				{
-					provide: Router,
-					useClass: MockRouter,
-				},
-			],
-		})
-		.compileComponents();
+	describe('Spinner', () => {
+		beforeEach(async(() => {
+			TestBed.configureTestingModule({
+				imports: [AppTestModule],
+			})
+				.compileComponents();
 
-		service = TestBed.get(AppService);
-	}));
+			service = TestBed.get(AppService);
+		}));
 
-	beforeEach(() => {
-		fixture = TestBed.createComponent(AppComponent);
-		component = fixture.componentInstance;
-		router = fixture.debugElement.injector.get(Router);
-		fixture.detectChanges();
+		beforeEach(() => {
+			fixture = TestBed.createComponent(AppComponent);
+			component = fixture.componentInstance;
+			router = fixture.debugElement.injector.get(Router);
+			fixture.detectChanges();
+		});
+
+		it('should show the loading spinner by default', () => {
+			expect(component.status.loading)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('#spinner-container'));
+			expect(de)
+				.toBeTruthy();
+			expect(de.nativeElement.getAttribute('hidden'))
+				.toBeNull();
+		});
+
+		it('should show the loading spinner on route start', () => {
+			expect(component.status.loading)
+				.toBeTruthy();
+
+			component.status.loading = false;
+
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#spinner-container'));
+			expect(de.nativeElement.getAttribute('hidden'))
+				.toBe('');
+
+			router.navigate(['']);
+
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#spinner-container'));
+
+			expect(component.status.loading)
+				.toBeTruthy();
+
+			expect(de.nativeElement.getAttribute('hidden'))
+				.toBeNull();
+		});
+
+		it('should hide the loading spinner on route end', () => {
+			expect(component.status.loading)
+				.toBeTruthy();
+
+			component.status.loading = false;
+
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#spinner-container'));
+			expect(de.nativeElement.getAttribute('hidden'))
+				.toBe('');
+
+			router.navigate(['']);
+
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#spinner-container'));
+
+			expect(component.status.loading)
+				.toBeTruthy();
+
+			expect(de.nativeElement.getAttribute('hidden'))
+				.toBeNull();
+
+			router.navigate(null);
+
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#spinner-container'));
+
+			expect(component.status.loading)
+				.toBeFalsy();
+
+			expect(de.nativeElement.getAttribute('hidden'))
+				.toBe('');
+		});
 	});
 
-	it('should create', () => {
-		expect(component)
-			.toBeTruthy();
-	});
+	describe('General', () => {
+		beforeEach(async(() => {
+			TestBed.configureTestingModule({
+				imports: [
+					RouterTestingModule,
+					AppModule,
+				],
+			})
+				.compileComponents();
 
-	it('should create the app', () => {
-		const app = fixture.debugElement.componentInstance;
-		expect(app)
-			.toBeTruthy();
-	});
+			service = TestBed.get(AppService);
+		}));
 
-	it('should load the i18n files', () => {
-		const title = 'CX Console';
-		fixture.detectChanges();
+		beforeEach(() => {
+			fixture = TestBed.createComponent(AppComponent);
+			component = fixture.componentInstance;
+			router = fixture.debugElement.injector.get(Router);
+			fixture.detectChanges();
+		});
 
-		fixture.whenStable()
-			.then(() => {
-				expect(I18n.get('_ApplicationName_'))
-					.toBe(title);
-			});
-	});
+		it('should create', () => {
+			expect(component)
+				.toBeTruthy();
+		});
 
-	it('should show the header', () => {
-		fixture.detectChanges();
-		de = fixture.debugElement.query(By.directive(HeaderComponent));
-		expect(de)
-			.toBeTruthy();
-	});
+		it('should create the app', () => {
+			const app = fixture.debugElement.componentInstance;
+			expect(app)
+				.toBeTruthy();
+		});
 
-	it('should have the toaster', () => {
-		de = fixture.debugElement.query(By.directive(CuiToasterComponent));
-		expect(de)
-			.toBeTruthy();
-	});
+		it('should load the i18n files', () => {
+			const title = 'CX Console';
+			fixture.detectChanges();
 
-	it('should have the modals', () => {
-		de = fixture.debugElement.query(By.directive(CuiModalComponent));
-		expect(de)
-			.toBeTruthy();
-	});
+			fixture.whenStable()
+				.then(() => {
+					expect(I18n.get('_ApplicationName_'))
+						.toBe(title);
+				});
+		});
 
-	it('should show the loading spinner by default', () => {
-		expect(component.status.loading)
-			.toBeTruthy();
+		it('should show the header', () => {
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.directive(HeaderComponent));
+			expect(de)
+				.toBeTruthy();
+		});
 
-		de = fixture.debugElement.query(By.css('cui-spinner'));
-		expect(de)
-			.toBeTruthy();
-	});
+		it('should have the toaster', () => {
+			de = fixture.debugElement.query(By.directive(CuiToasterComponent));
+			expect(de)
+				.toBeTruthy();
+		});
 
-	it('should show the loading spinner on route start', () => {
-		expect(component.status.loading)
-			.toBeTruthy();
+		it('should have the modals', () => {
+			de = fixture.debugElement.query(By.directive(CuiModalComponent));
+			expect(de)
+				.toBeTruthy();
+		});
 
-		component.status.loading = false;
+		it('should not reload the i18n if already loaded', () => {
+			expect(service.i18nLoaded)
+				.toBeTruthy();
 
-		fixture.detectChanges();
+			service.loadI18n();
+		});
 
-		de = fixture.debugElement.query(By.css('cui-spinner'));
-		expect(de)
-			.toBeNull();
-
-		router.navigate(['']);
-
-		fixture.detectChanges();
-
-		de = fixture.debugElement.query(By.css('cui-spinner'));
-
-		expect(component.status.loading)
-			.toBeTruthy();
-
-		expect(de)
-			.toBeTruthy();
-	});
-
-	it('should hide the loading spinner on route end', () => {
-		expect(component.status.loading)
-			.toBeTruthy();
-
-		component.status.loading = false;
-
-		fixture.detectChanges();
-
-		de = fixture.debugElement.query(By.css('cui-spinner'));
-		expect(de)
-			.toBeNull();
-
-		router.navigate(['']);
-
-		fixture.detectChanges();
-
-		de = fixture.debugElement.query(By.css('cui-spinner'));
-
-		expect(component.status.loading)
-			.toBeTruthy();
-
-		expect(de)
-			.toBeTruthy();
-
-		router.navigate(null);
-
-		fixture.detectChanges();
-
-		de = fixture.debugElement.query(By.css('cui-spinner'));
-
-		expect(component.status.loading)
-			.toBeFalsy();
-
-		expect(de)
-			.toBeNull();
-	});
-
-	it('should not reload the i18n if already loaded', () => {
-		expect(service.i18nLoaded)
-			.toBeTruthy();
-
-		service.loadI18n();
-	});
-
-	it('should attempt to load foreign language i18n if requested', () => {
-		service.loadI18n(true, 'es');
+		it('should attempt to load foreign language i18n if requested', () => {
+			service.loadI18n(true, 'es');
+		});
 	});
 });
