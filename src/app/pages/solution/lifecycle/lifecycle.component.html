@@ -274,28 +274,28 @@
 </ng-template>
 
 <ng-template #learnPanel let-data="data">
-	<div *ngIf="data.elearning?.length">
+	<div *ngIf="data.elearning?.length" data-auto-id="LearnPanel-ELearningBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'clipboard-md', title: '_ELearning_', data: componentData.learning.elearning }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
 
-	<div *ngIf="data.certifications?.length">
+	<div *ngIf="data.certifications?.length" data-auto-id="LearnPanel-CertificationsBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'certified', title: '_Certifications_', data: componentData.learning.certifications }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
 
-	<div *ngIf="data.training?.length">
+	<div *ngIf="data.training?.length" data-auto-id="LearnPanel-RemoteLearningLabsBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'audio-broadcast',title: '_RemoteLearningLabs_', data: componentData.learning.training }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
 
-	<div *ngIf="data.success?.length">
+	<div *ngIf="data.success?.length" data-auto-id="LearnPanel-SuccessPathsBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'transit',title: '_SuccessPaths_', data: componentData.learning.success }">
 		</ng-container>
@@ -421,7 +421,7 @@
 </ng-template>
 
 <ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel">
-	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom">
+	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom" attr.data-auto-id="{{ title | i18n }} Panel">
 		<div class="row base-padding-bottom">
 			<div class="col-md-6 flex-center-vertical">
 				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
