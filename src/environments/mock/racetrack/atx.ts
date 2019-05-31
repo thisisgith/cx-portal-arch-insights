@@ -250,7 +250,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 1200,
+					delay: 100,
 					description: '(ATX) IBN-Assurance-Onboard',
 					response: {
 						body: MockATX('ibn', 'assurance', 'onboard'),
@@ -266,7 +266,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 600,
+					delay: 100,
 					description: '(ATX) IBN-Assurance-Implement',
 					response: {
 						body: MockATX('ibn', 'assurance', 'implement'),
@@ -282,7 +282,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 600,
+					delay: 100,
 					description: '(ATX) IBN-SD-Access-Adopt',
 					response: {
 						body: MockATX('ibn', 'sd-access', 'Adopt'),

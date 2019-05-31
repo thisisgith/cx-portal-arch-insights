@@ -190,10 +190,10 @@ export class AssetsComponent implements OnInit {
 						value: 'productId',
 					},
 					{
-						key: 'ipAddress',
+						key: 'managementAddress',
 						name: I18n.get('_IPAddress_'),
 						sortable: true,
-						value: 'ipAddress',
+						value: 'managementAddress',
 					},
 					{
 						key: 'location',
@@ -214,10 +214,10 @@ export class AssetsComponent implements OnInit {
 						value: 'swVersion',
 					},
 					{
-						key: 'cxLevel',
+						key: 'productDescription',
 						name: I18n.get('_CXLevel_'),
 						sortable: false,
-						value: 'cxLevel',
+						value: 'productDescription',  // -- temporaily use productDescription
 					},
 				],
 				dynamicData: true,
