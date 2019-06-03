@@ -12,7 +12,7 @@ import { environment } from '@environment';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.services.sdp.origin;
+const rootUrl = environment.sdpOrigin;
 
 /**
  * Child routes for Lifecycle Module for lazy loading

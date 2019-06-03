@@ -19,7 +19,7 @@ import { AssetsBarChartModule } from './assets-bar-chart/assets-bar-chart.module
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.services.sdp.origin;
+const rootUrl = environment.sdpOrigin;
 
 /**
  * Child routes for Assets Module for lazy loading

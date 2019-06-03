@@ -1,0 +1,170 @@
+<div class="panel panel--bordered-left flex-fill base-padding-right">
+	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
+	<div class="divider divider--thick qtr-margin-top qtr-margin-bottom"></div>
+	<ng-container *ngTemplateOutlet="tabs"></ng-container>
+	<ng-container *ngIf="selectedTab">
+		<ng-container *ngTemplateOutlet="selectedTab.template"></ng-container>
+	</ng-container>
+</div>
+
+<ng-template #assetHeader>
+	<div class="row">
+		<div class="col-md-1">
+			<button class="btn btn--icon btn--small">
+				<span class="icon-warning"></span>
+			</button>
+		</div>
+		<div class="col-md-7 qtr-padding-top">
+			<div class="text-xlarge" [innerText]="asset?.hostname || asset?.serialNumber"></div>
+			<div class="text-small">
+				<span *ngIf="asset?.hostname"
+					class="half-margin-right"
+					innerText="{{ '_Hostname_' | i18n }}: {{ asset?.hostname }}">
+				</span>
+				<span *ngIf="asset?.ipAddress"
+					class="half-margin-right"
+					innerText="{{ '_IP_' | i18n }}: {{ asset?.ipAddress }}">
+				</span>
+				<span class="half-margin-right"
+					innerText="{{ '_SN_' | i18n }}: {{ asset?.serialNumber || ('_NA_' | i18n) }}">
+				</span>
+			</div>
+			<!-- TODO: Hook this up to real API data -->
+			<div class="text-small"
+				innerText="{{ '_LastScan_' | i18n }}: {{ '_DeviceUnreachable_' | i18n }}">
+			</div>
+		</div>
+		<div class="col-md-4 text-right">
+			<a class="text-dkgray-4"
+				data-auto-id="FullScreen">
+				<span class="icon-fullscreen icon--mid half-margin-right"></span>
+			</a>
+			<a class="text-dkgray-4"
+				data-auto-id="ClearAsset"
+				(click)="clearAsset()">
+				<span class="icon-close icon--mid"></span>
+			</a>
+		</div>
+	</div>
+	<div class="row base-margin-top">
+		<div class="col-md-6"
+			*ngIf="!status.loading.cases"
+			innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
+		</div>
+		<div class="text-right"
+			[ngClass]="{
+				'col-md-12': status.loading.cases,
+				'col-md-6': !status.loading.cases
+			}">
+			<span [innerText]="'_RunDiagnostics_' | i18n"></span>
+			<span> | </span>
+			<span [innerText]="'_OpenCase_' | i18n"></span>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #tabs>
+	<ul class="tabs tabs--inline">
+		<li class="tab"
+			*ngFor="let tab of assetTabs"
+			[ngClass]="{
+				'active': tab.selected,
+				'disabled': tab.disabled
+			}">
+			<a class="qtr-padding-bottom">
+				<div class="tab__heading no-padding-bottom"
+					[innerText]="tab.title | i18n">
+				</div>
+			</a>
+		</li>
+	</ul>
+</ng-template>
+
+<ng-template #details>
+	<div class="row base-margin-top">
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col-md-12">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductSeries_', data: asset?.productFamily }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductID_', data: asset?.productId }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_OSVersion_', data: asset?.swVersion }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_UpcomingEOXMilestones_', data: '' }"></ng-container>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 flex flex-center">
+			<img alt="{{ '_StockPhoto_' | i18n }}"
+				src="assets/img/inventory/CAT-3650.png">
+		</div>
+	</div>
+
+	<div class="row base-margin-top">
+		<div class="col-md-8">
+			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_CXSubscription_', data: '' }"></ng-container>
+		</div>
+		<div class="col-md-4">
+			<button class="btn btn--gray-ghost btn--small btn--tiny half-padding-left half-padding-right text-small"
+				[innerText]="'_Upgrade_' | i18n">
+			</button>
+		</div>
+	</div>
+
+	<div class="row base-margin-top">
+		<div class="col-md-8">
+			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_SupportContract_', data: '' }"></ng-container>
+		</div>
+		<div class="col-md-4">
+			<button class="btn btn--gray-ghost btn--small btn--tiny half-padding-left half-padding-right text-small"
+				[innerText]="'_Renew_' | i18n">
+			</button>
+		</div>
+	</div>
+
+	<div class="row base-margin-top">
+		<div class="col-md-8">
+			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Warranty_', data: '' }"></ng-container>
+		</div>
+		<div class="col-md-4">
+			<!-- Empty for Spacing -->
+		</div>
+	</div>
+
+	<div class="row base-margin-top">
+		<div class="col-md-8">
+			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_DiagnosticScanSchedule_', data: '' }"></ng-container>
+		</div>
+		<div class="col-md-4">
+			<button class="btn btn--gray-ghost btn--small btn--tiny half-padding-left half-padding-right text-small"
+				[innerText]="'_Change_' | i18n">
+			</button>
+		</div>
+	</div>
+
+	<div class="row base-margin-top">
+		<div class="col-md-8">
+			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Location_', data: '' }"></ng-container>
+		</div>
+		<div class="col-md-4">
+			Map
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #detailsData let-title="title" let-data="data">
+	<div class="row">
+		<div class="col-md-6 text-right" [innerText]="title | i18n"></div>
+		<div class="col-md-6" [innerText]="data || ('_NA_' | i18n)"></div>
+	</div>
+</ng-template>
+
+
+
+
+
+

@@ -7,4 +7,5 @@ export const environment = {
 	...defaults,
 	origin: 'https://cway.cisco.com',
 	production: true,
+	sdpOrigin: 'https://api-stage.cisco.com',
 };
