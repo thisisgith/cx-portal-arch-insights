@@ -19,14 +19,14 @@ function MockCommunities (
 	let items = [
 		{
 			title: 'Lifecycle',
+			description: 'Avoid common pitfalls with how-tos and step-by-step videos ' +
+				'that cruise you through installation of your new appliance from start to finish',
 			url: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
 		},
 		{
 			title: 'Public',
-			url: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
-		},
-		{
-			title: 'Partner',
+			description: 'Avoid common pitfalls with how-tos and step-by-step videos ' +
+			'that cruise you through installation of your new appliance from start to finish',
 			url: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
 		},
 	];

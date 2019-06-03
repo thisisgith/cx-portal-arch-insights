@@ -373,6 +373,25 @@ describe('LifecycleComponent', () => {
 				.toHaveBeenCalledTimes(2);
 			});
 		});
+	});
+	describe('Community', () => {
+		it('should have loaded the community items', () => {
+			buildSpies();
+			sendParams();
 
+			fixture.detectChanges();
+			fixture.whenStable()
+			.then(() => {
+				expect(component.componentData.communities.length)
+					.toEqual(2);
+			});
+
+			de = fixture.debugElement.query(By.css('#communitytitle'));
+			el = de.nativeElement;
+			el.click();
+			fixture.detectChanges();
+			spyOn(component, 'disableMe').and
+				.callThrough();
+		});
 	});
 });

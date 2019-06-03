@@ -37,7 +37,7 @@
 	"_CiscoTeam_": "Cisco Team",
 	"_Classes_": "Classes",
 	"_Collab_": "Collab",
-	"_Communities_": "Communities",
+	"_Communities_": "CISCO COMMUNITY",
 	"_Community_": "Community",
 	"_CommunityThread_": "I looked at this community thread",
 	"_ConfigurationAssistance_": "Configuration Assistance",
@@ -170,5 +170,7 @@
 	"_WirelessAssurance_": "Wireless Assurance",
 	"_Workaround_": "Workaround",
 	"_YourImpactedDevices_": "Your Impacted Devices",
-	"_YourProducts_": "Your products, documentation & Learning Library resources"
+	"_YourProducts_": "Your products, documentation & Learning Library resources",
+	"_MyCheckList_": "My CheckList",
+	"_ChecklistDesc_": "Complete this list to advance on the track"
 }

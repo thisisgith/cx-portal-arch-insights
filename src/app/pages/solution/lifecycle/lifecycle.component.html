@@ -8,21 +8,19 @@
 			<div class="row">
 				<div class="col-md-4">
 					<ng-container *ngTemplateOutlet="panel; context: {
+							template: communityPanel,
+							title: '_Communities_',
+							loading: status.loading.communities,
+							data: componentData.communities
+						}">
+					</ng-container>
+					<ng-container *ngTemplateOutlet="panel; context: {
 							template: atxPanel,
 							title: '_AskTheExpert_',
 							loading: status.loading.atx,
 							data: componentData.atx,
 							viewAllLabel: '_ViewAll_',
 							viewAll: 'atx'
-						}">
-					</ng-container>
-					<ng-container *ngTemplateOutlet="panel; context: {
-							template: communityPanel,
-							title: '_Communities_',
-							loading: status.loading.communities,
-							data: componentData.communities,
-							viewAllLabel: '_SearchCommunities_',
-							viewAll: 'communities'
 						}">
 					</ng-container>
 				</div>
@@ -61,7 +59,7 @@
 <ng-template #racetrack>
 	<div class="row base-padding-left">
 		<div class="col-md-7">
-			<h2 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h2>
+			<h3 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h3>
 		</div>
 		<div class="col-md-5 flex-center">
 			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert"></span>
@@ -83,7 +81,11 @@
 	</div>
 	<div class="base-margin-left" *ngIf="currentPitstop && currentPitstop?.pitstopActions?.length">
 		<div class="divider divider--compressed"></div>
-		<div class="half-padding-bottom text-uppercase" [innerText]="'_Actions_' | i18n"></div>
+		<div class="base-margin-top">
+			<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
+			<span class="text-uppercase" [innerText]="'_MyCheckList_' | i18n"></span>
+		</div>
+		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select">
 			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
 				<div class="col-md-2">
@@ -94,10 +96,14 @@
 					</label>
 				</div>
 				<div class="col-md-10">
-					<a data-auto-id="actionlink" class="no-link" [ngClass]="{'disabled': action.action.isComplete}"
+					<a data-auto-id="actionlink" 
+						class="no-link" 
+						[ngClass]="{'disabled': action.action.isComplete, 'selected': action.selected}"
 						(click)="selectAction(action)">
 						<div>
-							<span class="checkbox__label text-medium" [innerText]="action.action.name"></span>
+							<span class="checkbox__label text-medium"
+								[innerText]="action.action.name">
+							</span>
 							<span *ngIf="action.action.isCompleteAuto" class="qtr-padding-top">
 								<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png">
 							</span>
@@ -264,11 +270,12 @@
 </ng-template>
 
 <ng-template #communityPanel let-data="data">
-	<div *ngFor="let community of data">
+	<div class="half-margin-bottom" *ngFor="let community of data">
 		<div class="half-padding-left">
-			<span class="icon-communities qtr-padding-right"></span>
-			<span [innerText]="community.title"></span>
-			<span class="icon-play icon-tiny qtr-padding-left qtr-padding-bottom"></span>
+			<span class="icon-communities qtr-padding-right qtr-padding-bottom"></span>
+			<span><a class="no-link half-padding-left" href="#" data-toggle="tooltip" data-placement="bottom" title="{{community.description}}"
+				id="communitytitle" data-auto-id="communitytitle" [innerText]="community.title" (click)="disableMe()"></a>
+			</span>
 		</div>
 	</div>
 </ng-template>
