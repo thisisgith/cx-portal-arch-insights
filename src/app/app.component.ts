@@ -34,12 +34,14 @@ export class AppComponent {
 			(event: RouterEvent): void => {
 				if (event instanceof NavigationStart) {
 					this.status.loading = true;
+					if (window.Cypress) { window.loading = true; }
 				}
 
 				if (event instanceof NavigationEnd
 						|| event instanceof NavigationCancel
 						|| event instanceof NavigationError) {
 					this.status.loading = false;
+					if (window.Cypress) { window.loading = false; }
 				}
 			},
 		);

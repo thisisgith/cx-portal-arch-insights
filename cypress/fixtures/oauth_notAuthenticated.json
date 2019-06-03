@@ -1,0 +1,7 @@
+{
+	"state":"notloggedin",
+	"loggedIn":false,
+	"expires":300,
+	"url":"https://cloudsso-test.cisco.com/idp/SSO.saml2",
+	"loginUrl":"https://cloudsso-test.cisco.com/idp/SSO.saml2"
+}

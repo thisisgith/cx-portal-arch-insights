@@ -1,0 +1,64 @@
+import * as mocks from '../../src/environments/mock/index';
+
+/**
+ * Used to interact with the application's mock scenarios.
+ */
+export default class MockService {
+	/**
+	 * @param {string} mock The name of the mock to load.
+	 * This should map to the name of export from the app's mock/index.ts (ex: ATXScenarios)
+	 */
+	constructor (mock) {
+		this.mock = mocks[mock];
+	}
+
+	/**
+	 * Get a mocked scenario object based on its request method and name
+	 * @param {string} method HTTP request method
+	 * @param {string} scenarioName
+	 * @returns {object} foundScenario
+	 * @example
+	 * mockService.getScenario('GET', '(ATX) IBN-Assurance-Onboard');
+	 */
+	getScenario (method, scenarioName) {
+		let foundScenario;
+		this.mock.forEach(mock => {
+			mock.scenarios[method.toUpperCase()].forEach(scenario => {
+				if (scenario.description === scenarioName) {
+					foundScenario = scenario;
+				}
+			});
+		});
+
+		return foundScenario;
+	}
+
+	/**
+	 * Intercept XHRs and optionally stub the response'
+	 * @static
+	 * @param {object[]} routes An array of options for cypress.route
+	 */
+	static stubXHR (routes) {
+		cy.server();
+		routes.forEach(route => cy.route(route));
+	}
+
+	/**
+	 * Create mocks to simulate a user who is not authenticated
+	 * @static
+	 */
+	static mockUnauthenticatedUser () {
+		const routes = [
+			{
+				method: 'GET', url: '/ws/account/v2', status: 401, response: {},
+			},
+			{
+				method: 'GET',
+				url: '/ws/oauth/v3/**',
+				status: 200,
+				response: 'fixture:oauth_notAuthenticated.json',
+			}
+		];
+		this.stubXHR(routes);
+	}
+}
