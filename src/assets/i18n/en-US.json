@@ -25,6 +25,7 @@
 	"_CCNAWireless_": "CCNA Wireless",
 	"_CCNPWireless_": "CCNP Wireless",
 	"_ViewSessions_": "View Sessions",
+	"_ChecklistDesc_": "Complete this list to advance on the track",
 	"_CircuitLabel_": "CX Circuit Overview",
 	"_CiscoDNAAssuranceOverview_": "Cisco DNA Assurance Overview",
 	"_CiscoDNAFeatureOverview_": "Cisco DNA Feature Overview",
@@ -85,6 +86,7 @@
 	"_MapWLCToSites_": "Map WLCs to Sites",
 	"_MoreDetails_": "The more details, the better",
 	"_MoreDNAServices_": "More DNA Services",
+	"_MyCheckList_": "My CheckList",
 	"_MyLearning_": "My Learning",
 	"_NeedMoreInfo_": "We need a little more information in order to handle your case most efficiently",
 	"_NetworkDown_": "Network Down (S1)",
@@ -170,7 +172,5 @@
 	"_WirelessAssurance_": "Wireless Assurance",
 	"_Workaround_": "Workaround",
 	"_YourImpactedDevices_": "Your Impacted Devices",
-	"_YourProducts_": "Your products, documentation & Learning Library resources",
-	"_MyCheckList_": "My CheckList",
-	"_ChecklistDesc_": "Complete this list to advance on the track"
+	"_YourProducts_": "Your products, documentation & Learning Library resources"
 }
