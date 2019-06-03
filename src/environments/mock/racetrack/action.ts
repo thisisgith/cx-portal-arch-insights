@@ -38,7 +38,7 @@ export const ActionScenarios = [
 		scenarios: {
 			PATCH: [
 				{
-					delay: 1200,
+					delay: 50,
 					description: 'Update to complete the first Action',
 					response: {
 						body: MockActionUpdate(true, false, false, false, false),

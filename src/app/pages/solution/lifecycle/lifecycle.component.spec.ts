@@ -270,6 +270,18 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
+			de = fixture.debugElement.query(By.css('.ribbon__green'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__blue'));
+			expect(de)
+				.toBeTruthy();
+
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
 

@@ -25,6 +25,7 @@ const onboardItems = [
 				time: '7:00 AM PST',
 			},
 		],
+		status: 'completed',
 		title: 'Cisco DNA Center Getting started',
 		viewOnDemandUrl: '',
 	},
@@ -41,6 +42,7 @@ const onboardItems = [
 				time: '7:00 AM PST',
 			},
 		],
+		status: 'scheduled',
 		title: 'Cisco DNA Project Plan Best Practices',
 		viewOnDemandUrl: '',
 	},
@@ -57,6 +59,7 @@ const onboardItems = [
 				time: '7:00 AM PST',
 			},
 		],
+		status: 'inProgress',
 		title: 'Cisco APIC-EM Infrastructure Transition Best Practices',
 		viewOnDemandUrl: '',
 	},
@@ -89,6 +92,7 @@ const onboardItems = [
 				time: '7:00 AM PST',
 			},
 		],
+		status: 'recommended',
 		title: 'Some other Session title',
 		viewOnDemandUrl: '',
 	},
@@ -105,6 +109,7 @@ const onboardItems = [
 				time: '7:00 AM PST',
 			},
 		],
+		status: 'recommended',
 		title: 'Some other Session title',
 		viewOnDemandUrl: '',
 	},
@@ -121,6 +126,7 @@ const onboardItems = [
 				time: '7:00 AM PST',
 			},
 		],
+		status: 'recommended',
 		title: 'Some other Session title',
 		viewOnDemandUrl: '',
 	},
@@ -137,6 +143,7 @@ const onboardItems = [
 				time: '7:00 AM PST',
 			},
 		],
+		status: 'recommended',
 		title: 'Some other Session title',
 		viewOnDemandUrl: '',
 	},
@@ -153,6 +160,7 @@ const onboardItems = [
 				time: '7:00 AM PST',
 			},
 		],
+		status: 'recommended',
 		title: 'Some other Session title',
 		viewOnDemandUrl: '',
 	},
@@ -242,7 +250,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 1200,
+					delay: 100,
 					description: '(ATX) IBN-Assurance-Onboard',
 					response: {
 						body: MockATX('ibn', 'assurance', 'onboard'),
@@ -258,7 +266,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 600,
+					delay: 100,
 					description: '(ATX) IBN-Assurance-Implement',
 					response: {
 						body: MockATX('ibn', 'assurance', 'implement'),
@@ -274,7 +282,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 600,
+					delay: 100,
 					description: '(ATX) IBN-SD-Access-Adopt',
 					response: {
 						body: MockATX('ibn', 'sd-access', 'Adopt'),
