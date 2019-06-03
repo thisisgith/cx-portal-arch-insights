@@ -14,7 +14,8 @@ import {
 
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
-import { SolutionService } from './solution.service';
+import { HardwareInfo } from '@cui-x/sdp-api';
+import { Solution, SolutionService, UseCase } from './solution.service';
 
 /**
  * Interface representing a facet
@@ -34,25 +35,6 @@ interface UseCases {
 	collab: UseCase[];
 	ibn: UseCase[];
 	security: UseCase[];
-}
-
-/**
- * Interface representing a Use Case
- */
-export interface UseCase {
-	key: string;
-	selected: boolean;
-	title: string;
-}
-
-/**
- * Interface representing a solution
- */
-export interface Solution {
-	disabled?: boolean;
-	key: string;
-	selected: boolean;
-	title: string;
 }
 
 /**
@@ -130,7 +112,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public selectedUseCase = this.useCases[this.selectedSolution.key][0];
 	private activeRoute: string;
 	public facets: Facet[];
+	public selectedAsset: HardwareInfo;
 	private eventsSubscribe: Subscription;
+	private assetSubscribe: Subscription;
 
 	@ViewChild('advisoriesFact') public advisoriesTemplate: TemplateRef<{ }>;
 	@ViewChild('assetsFacet') public assetsTemplate: TemplateRef<{ }>;
@@ -157,6 +141,11 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				}
 			},
 		);
+
+		this.assetSubscribe = this.solutionService.getCurrentAsset()
+		.subscribe((asset: HardwareInfo) => {
+			this.selectedAsset = asset;
+		});
 	}
 
 	/**
@@ -270,21 +259,20 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public ngOnInit () {
 		this.initializeFacets();
 
-		if (this.selectedSolution) {
-			this.solutionService.sendCurrentSolution(this.selectedSolution);
-
-			if (this.selectedUseCase) {
-				this.solutionService.sendCurrentUseCase(this.selectedUseCase);
-			}
-		}
+		this.solutionService.sendCurrentSolution(this.selectedSolution);
+		this.solutionService.sendCurrentUseCase(this.selectedUseCase);
 	}
 
 	/**
-	 * Handles unsubscribing from observables
+	 * Handler for clean up on component destruction
 	 */
 	public ngOnDestroy () {
 		if (this.eventsSubscribe) {
-			this.eventsSubscribe.unsubscribe();
+			_.invoke(this.eventsSubscribe, 'unsubscribe');
+		}
+
+		if (this.assetSubscribe) {
+			_.invoke(this.assetSubscribe, 'unsubscribe');
 		}
 	}
 }

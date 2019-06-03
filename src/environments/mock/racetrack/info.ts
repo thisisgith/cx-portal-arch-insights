@@ -279,22 +279,6 @@ export const RacetrackScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&usecase=assurance&solution=ibn`,
-	},
-	{
-		scenarios: {
-			GET: [
-				{
-					delay: 250,
-					description: '(Racetrack) IBN-SDAccess-Adopt',
-					response: {
-						body: MockRacetrack('ibn', 'sd-access', 'Adopt'),
-						status: 200,
-					},
-					selected: true,
-				},
-			],
-		},
-		url: `${api}?customerId=${customerId}&usecase=sd-access&solution=ibn`,
+		url: `${api}?customerId=${customerId}`,
 	},
 ];

@@ -2,6 +2,7 @@ import { Component, Optional } from '@angular/core';
 import { MicroMockService } from '@cui-x-views/mock';
 
 import { environment } from '@environment';
+import * as _ from 'lodash';
 
 /**
  * Main Header Component
@@ -16,7 +17,7 @@ export class HeaderComponent {
 	/**
 	 * Whether we show the mocking interface
 	 */
-	public mocking = environment.mock;
+	public mocking = _.get(environment, 'mock');
 
 	constructor (
 		@Optional() private mockService: MicroMockService,

@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { HardwareResponse, InventoryService } from '@cui-x/sdp-api';
+import { HardwareResponse, InventoryService, HardwareInfo } from '@cui-x/sdp-api';
 import * as _ from 'lodash';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { SolutionService } from '../solution.service';
 
 /**
  * Interface representing our visual filters
@@ -21,6 +22,7 @@ interface AssetParams {
 	customerId: string;
 	limit: number;
 	page: number;
+	rows: number;
 	total?: number;
 }
 
@@ -57,7 +59,7 @@ export class AssetsComponent implements OnInit {
 	@ViewChild('advisoryFilter') private advisoryFilterTemplate: TemplateRef<{ }>;
 
 	public bulkDropdown = false;
-	public selectedAssets: any[] = [];
+	public selectedAssets: HardwareInfo[] = [];
 	public tabs: Tab[];
 	public selectedTab: Tab;
 	public filters: Filter[];
@@ -65,7 +67,8 @@ export class AssetsComponent implements OnInit {
 	public assetParams: AssetParams = {
 		customerId: '2431199',
 		limit: 10,
-		page: 0,
+		page: 1,
+		rows: 10,
 	};
 	public status = {
 		isLoading: true,
@@ -76,6 +79,7 @@ export class AssetsComponent implements OnInit {
 
 	constructor (
 		private inventoryService: InventoryService,
+		private solutionService: SolutionService,
 	) { }
 
 	/**
@@ -93,6 +97,16 @@ export class AssetsComponent implements OnInit {
 			this.buildFilters(tab);
 			this.visibleTemplate = tab.template;
 		}
+	}
+
+	/**
+	 * Handler for table event selection, will send out an update for the solution service
+	 * @param row the selected row
+	 */
+	public rowSelected (row: HardwareInfo) {
+		const active = _.get(row, 'active', false);
+
+		this.solutionService.sendCurrentAsset(active ? row : null);
 	}
 
 	/**
@@ -153,8 +167,8 @@ export class AssetsComponent implements OnInit {
 				},
 				{
 					key: 'type',
-					title: I18n.get('_Type_'),
 					template: this.typeFilterTemplate,
+					title: I18n.get('_Type_'),
 				},
 			];
 			this.fetchInventory();
@@ -223,7 +237,8 @@ export class AssetsComponent implements OnInit {
 				dynamicData: true,
 				hover: true,
 				paddding: 'loose',
-				selectable: true,
+				selectable: false,
+				singleSelect: true,
 				sortable: true,
 				striped: false,
 				wrapText: true,
@@ -276,7 +291,7 @@ export class AssetsComponent implements OnInit {
 	 * @param selectedItems array of selected table elements
 	 *
 	 */
-	public onSelectionChanged (selectedItems: any[]) {
+	public onSelectionChanged (selectedItems: HardwareInfo[]) {
 		this.selectedAssets = selectedItems;
 	}
 
