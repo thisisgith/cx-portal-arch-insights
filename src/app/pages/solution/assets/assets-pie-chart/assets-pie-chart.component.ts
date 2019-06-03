@@ -34,12 +34,8 @@ export class AssetsPieChartComponent implements OnInit {
 			credits: {
 				enabled: false,
 			},
-			title: {
-				text: '',
-			},
 			series: [
 				{
-					name: 'Placeholder',
 					data: [
 						{
 							name: 'Placeholder',
@@ -58,9 +54,13 @@ export class AssetsPieChartComponent implements OnInit {
 							y: 25,
 						},
 					],
+					name: 'Placeholder',
 					type: undefined,
 				},
 			],
+			title: {
+				text: '',
+			},
 		});
 	}
 }

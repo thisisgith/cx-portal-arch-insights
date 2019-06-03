@@ -9,6 +9,7 @@ import { LifecycleModule } from './lifecycle/lifecycle.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AssetsComponent } from './assets/assets.component';
 import { AssetsModule } from './assets/assets.module';
+import { SolutionService } from './solution.service';
 
 import * as _ from 'lodash';
 
@@ -32,6 +33,7 @@ describe('SolutionComponent', () => {
 	let component: SolutionComponent;
 	let fixture: ComponentFixture<SolutionComponent>;
 	let router: Router;
+	let solutionService: SolutionService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -53,6 +55,8 @@ describe('SolutionComponent', () => {
 			],
 		})
 		.compileComponents();
+
+		solutionService = TestBed.get(SolutionService);
 	}));
 
 	beforeEach(() => {
@@ -116,5 +120,15 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedUseCase.key)
 			.toEqual('sd-access');
+	});
+
+	it('should change the active asset', () => {
+		expect(component.selectedAsset)
+			.toBeUndefined();
+
+		solutionService.sendCurrentAsset(null);
+
+		expect(component.selectedAsset)
+			.toBeNull();
 	});
 });

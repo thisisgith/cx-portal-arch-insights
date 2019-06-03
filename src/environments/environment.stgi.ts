@@ -7,7 +7,7 @@ import { mockSettings } from './mock/mock';
 const origin = 'https://apollo-stage.cisco.com';
 
 /**
- * Contains configurations for production builds, will extend the default configuration
+ * Contains configurations for internal stage builds, will extend the default configuration
  * and currently the mock configuration
  */
 export const environment = {
@@ -21,4 +21,5 @@ export const environment = {
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	production: true,
+	sdpOrigin: 'https://api-stage.cisco.com',
 };
