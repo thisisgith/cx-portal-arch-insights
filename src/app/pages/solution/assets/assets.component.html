@@ -71,8 +71,8 @@
 			</div>
 			<cui-table *ngIf="inventory.length && assetsTable"
 				[data]="inventory"
-				[options]="assetsTable"
-				(onSelectionChanged)="onSelectionChanged($event)">
+				(onTableRowClicked)="rowSelected($event)"
+				[options]="assetsTable">
 			</cui-table>
 			<div class="base-margin-top">
 				<cui-pager [page]="assetParams.page"
