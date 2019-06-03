@@ -18,7 +18,7 @@
 		"build:docs": "npx compodoc -p tsconfig.json -n \"Persona Based Console Documentation\" -d documentation --disablePrivate --hideGenerator --unitTestCoverage coverage/coverage-summary.json",
 		"test": "ng test --source-map=true --code-coverage",
 		"test:ci": "npm run test -- --watch=false --browsers=ChromeHeadless",
-		"test:automation": "npx cypress run",
+		"test:automation": "cypress run",
 		"posttest": "npx istanbul report --include **/coverage-final.json json && node combine-coverage.js",
 		"lint": "npx apolloLint lint",
 		"cypress": "npx cypress open"
