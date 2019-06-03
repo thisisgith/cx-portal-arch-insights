@@ -22,10 +22,10 @@ function MockActionUpdate (
 	isCommunitiesChanged: boolean,
 	isSuccessPathChanged: boolean): PitstopActionUpdateResponse {
 	return {
-		isAtxChanged,
 		isAccChanged,
-		isElearningChanged,
+		isAtxChanged,
 		isCommunitiesChanged,
+		isElearningChanged,
 		isSuccessPathChanged,
 	};
 }

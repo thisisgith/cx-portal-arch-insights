@@ -24,9 +24,9 @@ export const mockResponse: HardwareResponse = {
 			productId: 'ASAv',
 			productName: null,
 			productType: 'Security',
-			serialNumber: null,
+			serialNumber: '1234',
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '3.4.1',
 			tags: [],
 		},
 		{
@@ -42,9 +42,9 @@ export const mockResponse: HardwareResponse = {
 			productId: 'WS-X4232-GB-RJ',
 			productName: null,
 			productType: 'Modules',
-			serialNumber: null,
+			serialNumber: 'AAA',
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '3.4.1',
 			tags: [],
 		},
 		{
@@ -60,9 +60,9 @@ export const mockResponse: HardwareResponse = {
 			productId: 'WS-X4516',
 			productName: null,
 			productType: 'Modules',
-			serialNumber: null,
+			serialNumber: '1234',
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '3.1.1',
 			tags: [],
 		},
 		{
@@ -116,7 +116,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '1.1.1',
 			tags: [],
 		},
 		{
@@ -134,7 +134,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '2.2(3)',
 			tags: [],
 		},
 		{
@@ -152,7 +152,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -206,7 +206,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -224,7 +224,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -242,7 +242,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -260,7 +260,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -278,7 +278,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -296,7 +296,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Fans',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -314,7 +314,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Power Supplies',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -332,7 +332,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -368,7 +368,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -386,7 +386,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -476,7 +476,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Power Supplies',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -494,7 +494,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -512,7 +512,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -602,25 +602,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
-			tags: [],
-		},
-		{
-			customerId,
-			containingHwId: 'NA',
-			equipmentType: 'POWERSUPPLY',
-			hostname: 'C3750G-12S',
-			hwInstanceId: 'DTN2046V1R0,PWR-C1-1100WAC,NA,NA,FOC2045X0WJ,WS-C3850-48U-L,NA',
-			managedNeId: '172.20.70.10,NA,NA,NA',
-			managementAddress: '172.20.70.10',
-			productDescription: null,
-			productFamily: 'Catalyst 2K/3K Series Power Supplies',
-			productId: 'PWR-C1-1100WAC',
-			productName: null,
-			productType: 'Power Supplies',
-			serialNumber: null,
-			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -638,7 +620,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -656,7 +638,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -674,7 +656,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -692,7 +674,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Routers',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -710,7 +692,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Power Supplies',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -728,7 +710,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -746,7 +728,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Fans',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -782,7 +764,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -908,7 +890,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -926,7 +908,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -944,7 +926,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Routers',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -962,7 +944,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -980,7 +962,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -998,7 +980,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -1016,7 +998,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -1034,7 +1016,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Security',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -1052,7 +1034,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'LAN Switches',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -1070,7 +1052,7 @@ export const mockResponse: HardwareResponse = {
 			productType: 'Modules',
 			serialNumber: null,
 			swType: 'IOS',
-			swVersion: 'NA',
+			swVersion: '15.4(3)S',
 			tags: [],
 		},
 		{
@@ -1164,6 +1146,6 @@ export const HardwareScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&page=0`,
+		url: `${api}?customerId=${customerId}&rows=10&page=1`,
 	},
 ];

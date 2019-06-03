@@ -36,8 +36,6 @@ export class AssetsBarChartComponent implements OnInit {
 			},
 			series: [
 				{
-					name: 'Placeholder',
-					showInLegend: false,
 					data: [
 						{
 							y: 20,
@@ -49,6 +47,8 @@ export class AssetsBarChartComponent implements OnInit {
 							y: 15,
 						},
 					],
+					name: 'Placeholder',
+					showInLegend: false,
 					type: undefined,
 				},
 			],

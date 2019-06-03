@@ -1,6 +1,6 @@
 <div class="panel panel--ltgray panel--bordered no-padding base-padding-right">
 	<div class="row base-padding-top">
-		<div class="col-md-2" *ngIf="!status.loading.racetrack">
+		<div class="col-md-2" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
 		</div>
 
@@ -67,9 +67,7 @@
 		</div>
 	</div>
 	<div class="half-padding-top half-padding-left">
-		<app-racetrack *ngIf="!status.racetrackLoading && componentData?.racetrack?.stage"
-			[stage]="componentData.racetrack.stage">
-		</app-racetrack>
+		<app-racetrack [stage]="componentData.racetrack.stage"></app-racetrack>
 		<div class="half-padding-left">
 			<span *ngIf="currentPitstop" [innerHTML]="'_DuringXStage_' | i18n:currentPitstop.name"></span>
 			<span [ngSwitch]="componentData?.racetrack?.stage">

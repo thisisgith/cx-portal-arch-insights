@@ -2,6 +2,7 @@ import {
 	Component,
 	ViewChild,
 	TemplateRef,
+	OnDestroy,
  } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -27,10 +28,9 @@ import {
 	SuccessPathsResponse,
 } from '@cui-x/sdp-api';
 
-import { Solution, UseCase } from '../solution.component';
-import { SolutionService } from '../solution.service';
+import { Solution, SolutionService, UseCase } from '../solution.service';
 import * as _ from 'lodash';
-import { Observable, of, forkJoin } from 'rxjs';
+import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 /**
@@ -82,7 +82,7 @@ export interface PitstopActionWithStatus {
 	styleUrls: ['./lifecycle.component.scss'],
 	templateUrl: './lifecycle.component.html',
 })
-export class LifecycleComponent {
+export class LifecycleComponent implements OnDestroy {
 	@ViewChild('atxModal') public atxTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
@@ -113,10 +113,13 @@ export class LifecycleComponent {
 			customerId: '',
 			pitstop: '',
 			solution: '',
-			usecase: '',
 			suggestedAction: '',
+			usecase: '',
 		},
 	};
+
+	private solutionSubscribe: Subscription;
+	private useCaseSubscribe: Subscription;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -132,12 +135,12 @@ export class LifecycleComponent {
 		private racetrackService: RacetrackService,
 		private solutionService: SolutionService,
 	) {
-		this.solutionService.getCurrentSolution()
+		this.solutionSubscribe = this.solutionService.getCurrentSolution()
 		.subscribe((solution: Solution) => {
 			this.componentData.params.solution = solution.key;
 		});
 
-		this.solutionService.getCurrentUseCase()
+		this.useCaseSubscribe = this.solutionService.getCurrentUseCase()
 		.subscribe((useCase: UseCase) => {
 			const currentSolution = this.componentData.params.solution;
 
@@ -159,8 +162,8 @@ export class LifecycleComponent {
 				customerId: this.customerId,
 				pitstop: '',
 				solution: '',
-				usecase: '',
 				suggestedAction: '',
+				usecase: '',
 			},
 		};
 	}
@@ -507,7 +510,7 @@ export class LifecycleComponent {
 			this.status.loading.racetrack = true;
 
 			this.racetrackService.getRacetrack(
-				_.pick(this.componentData.params, ['customerId', 'solution', 'usecase']))
+				_.pick(this.componentData.params, ['customerId']))
 			.subscribe((results: RacetrackResponse) => {
 				const solution = _.find(results.solutions,
 						{ name: this.componentData.params.solution.toUpperCase() });
@@ -547,6 +550,19 @@ export class LifecycleComponent {
 				this.logger.error(`lifecycle.component : getRacetrackInfo() :: Error  : (${
 					err.status}) ${err.message}`);
 			});
+		}
+	}
+
+	/**
+	 * Handler for clean up on component destruction
+	 */
+	public ngOnDestroy () {
+		if (this.solutionSubscribe) {
+			_.invoke(this.solutionSubscribe, 'unsubscribe');
+		}
+
+		if (this.useCaseSubscribe) {
+			_.invoke(this.useCaseSubscribe, 'unsubscribe');
 		}
 	}
 }
