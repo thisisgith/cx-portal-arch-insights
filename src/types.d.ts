@@ -17,8 +17,8 @@ declare module '*.json' {
  * Custom properties added to the global 'window' object during Cypress tests
  */
 interface Window {
-    Cypress: any,
-    loading: boolean,
-    elearningLoading: boolean,
-    successPathsLoading: boolean
+	Cypress: any;
+	loading: boolean;
+	elearningLoading: boolean;
+	successPathsLoading: boolean;
 }
