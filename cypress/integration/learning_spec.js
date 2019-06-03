@@ -15,6 +15,10 @@ describe('PBC-125 Learning Content', () => {
 		cy.login();
 		cy.loadApp();
 		cy.waitForAppLoading();
+
+		// Wait for both E-Learning and Success Paths to finish loading
+		cy.waitForAppLoading('elearningLoading', 15000);
+		cy.waitForAppLoading('successPathsLoading', 15000);
 	});
 
 	it('Learning panel should be displayed', () => {
@@ -41,25 +45,25 @@ describe('PBC-125 Learning Content', () => {
 			}
 		});
 		if(elearningFound) {
-			cy.getByAutoId('LearnPanel-ELearningBlock').children().should('have.length.greaterThan', 0);
+			cy.getByAutoId('LearnPanel-ELearningBlock').should('exist');
 		} else {
-			cy.getByAutoId('LearnPanel-ELearningBlock').children().should('have.length', 0);
+			cy.getByAutoId('LearnPanel-ELearningBlock').should('not.exist');
 		}
 		if(certificationsFound) {
-			cy.getByAutoId('LearnPanel-CertificationsBlock').children().should('have.length.greaterThan', 0);
+			cy.getByAutoId('LearnPanel-CertificationsBlock').should('exist');
 		} else {
-			cy.getByAutoId('LearnPanel-CertificationsBlock').children().should('have.length', 0);
+			cy.getByAutoId('LearnPanel-CertificationsBlock').should('not.exist');
 		}
 		if(trainingFound) {
-			cy.getByAutoId('LearnPanel-RemoteLearningLabsBlock').children().should('have.length.greaterThan', 0);
+			cy.getByAutoId('LearnPanel-RemoteLearningLabsBlock').should('exist');
 		} else {
-			cy.getByAutoId('LearnPanel-RemoteLearningLabsBlock').children().should('have.length', 0);
+			cy.getByAutoId('LearnPanel-RemoteLearningLabsBlock').should('not.exist');
 		}
 
 		if(successPathItems.length > 0) {
-			cy.getByAutoId('LearnPanel-SuccessPathsBlock').children().should('have.length.greaterThan', 0);
+			cy.getByAutoId('LearnPanel-SuccessPathsBlock').should('exist');
 		} else {
-			cy.getByAutoId('LearnPanel-SuccessPathsBlock').children().should('have.length', 0);
+			cy.getByAutoId('LearnPanel-SuccessPathsBlock').should('not.exist');
 		}
 	});
 
