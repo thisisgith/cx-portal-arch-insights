@@ -384,6 +384,8 @@ describe('LifecycleComponent', () => {
 
 		afterAll(() => {
 			window.Cypress = undefined;
+			window.elearningLoading = undefined;
+			window.successPathsLoading = undefined;
 		});
 
 		it('Should not set loading flags when loading without Cypress', () => {
@@ -406,6 +408,8 @@ describe('LifecycleComponent', () => {
 
 		afterAll(() => {
 			window.Cypress = undefined;
+			window.elearningLoading = undefined;
+			window.successPathsLoading = undefined;
 		});
 
 		it('Should set loading flags when loading with Cypress', () => {
