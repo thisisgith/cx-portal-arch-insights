@@ -32,4 +32,33 @@ export default class MockService {
 
 		return foundScenario;
 	}
+
+	/**
+	 * Intercept XHRs and optionally stub the response'
+	 * @static
+	 * @param {object[]} routes An array of options for cypress.route
+	 */
+	static stubXHR (routes) {
+		cy.server();
+		routes.forEach(route => cy.route(route));
+	}
+
+	/**
+	 * Create mocks to simulate a user who is not authenticated
+	 * @static
+	 */
+	static mockUnauthenticatedUser () {
+		const routes = [
+			{
+				method: 'GET', url: '/ws/account/v2', status: 401, response: {},
+			},
+			{
+				method: 'GET',
+				url: '/ws/oauth/v3/**',
+				status: 200,
+				response: 'fixture:oauth_notAuthenticated.json',
+			}
+		];
+		this.stubXHR(routes);
+	}
 }
