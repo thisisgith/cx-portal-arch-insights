@@ -1,4 +1,4 @@
-<div class="panel panel--bordered-left flex-fill base-padding-right">
+<div class="panel panel--bordered-left flex-fill panel--no-padding">
 	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
 	<div class="divider divider--thick qtr-margin-top qtr-margin-bottom"></div>
 	<ng-container *ngTemplateOutlet="tabs"></ng-container>
@@ -8,59 +8,67 @@
 </div>
 
 <ng-template #assetHeader>
-	<div class="row">
-		<div class="col-md-1">
-			<button class="btn btn--icon btn--small">
-				<span class="icon-warning"></span>
-			</button>
-		</div>
-		<div class="col-md-7 qtr-padding-top">
-			<div class="text-xlarge" [innerText]="asset?.hostname || asset?.serialNumber"></div>
-			<div class="text-small">
-				<span *ngIf="asset?.hostname"
-					class="half-margin-right"
-					innerText="{{ '_Hostname_' | i18n }}: {{ asset?.hostname }}">
-				</span>
-				<span *ngIf="asset?.ipAddress"
-					class="half-margin-right"
-					innerText="{{ '_IP_' | i18n }}: {{ asset?.ipAddress }}">
-				</span>
-				<span class="half-margin-right"
-					innerText="{{ '_SN_' | i18n }}: {{ asset?.serialNumber || ('_NA_' | i18n) }}">
-				</span>
+	<div class="assets-header base-padding">
+			<div class="row base-padding-bottom">
+				<div class="col-md-8 qtr-padding-top">
+					<div class="flex">
+						<button class="btn btn--icon btn--tiny btn--light-gray qtr-margin-right">
+							<span class="icon-maximize icon-positioned icon-positioned--left"></span>
+							<span class="icon-minimize icon-positioned icon-positioned--right"></span>
+						</button>
+						<div class="text-xlarge" [innerText]="asset?.hostname || asset?.serialNumber"></div>
+					</div>
+				</div>
+			
+				<div class="col-md-4 text-right">
+					<a class="text-dkgray-4" data-auto-id="FullScreen">
+						<span class="icon-fullscreen icon--mid half-margin-right"></span>
+					</a>
+					<a class="text-dkgray-4" data-auto-id="ClearAsset" (click)="clearAsset()">
+						<span class="icon-close icon--mid"></span>
+					</a>
+				</div>
 			</div>
-			<!-- TODO: Hook this up to real API data -->
-			<div class="text-small"
-				innerText="{{ '_LastScan_' | i18n }}: {{ '_DeviceUnreachable_' | i18n }}">
+			
+			<div class="col-md-8">
+				<div class="base-margin-left flex">
+					<div *ngIf="asset?.hostname" class="dbl-margin-right">
+						<div class="text-muted text-small text-uppercase" innerText="{{ '_Hostname_' | i18n }}"></div>
+						<div innerText="{{ asset?.hostname }}"></div>
+					</div>
+
+					<div *ngIf="asset?.ipAddress" class="dbl-margin-right">
+						<div class="text-muted text-small text-uppercase" innerText="{{ '_IPAddress_' | i18n }}"></div>
+						<div innerText="{{ asset?.ipAddress }}"></div>
+					</div>
+
+					<div *ngIf="asset?.serialNumber" class="dbl-margin-right">
+						<div class="text-muted text-small text-uppercase" innerText="{{ '_SerialNumber_' | i18n }}"></div>
+						<div innerText="{{ asset?.serialNumber }}"></div>
+					</div>
+				</div>
+					<!-- TODO: Hook this up to real API data -->
+			<!-- <div class="text-small" innerText="{{ '_LastScan_' | i18n }}: {{ '_DeviceUnreachable_' | i18n }}">
+				</div> -->
 			</div>
-		</div>
-		<div class="col-md-4 text-right">
-			<a class="text-dkgray-4"
-				data-auto-id="FullScreen">
-				<span class="icon-fullscreen icon--mid half-margin-right"></span>
-			</a>
-			<a class="text-dkgray-4"
-				data-auto-id="ClearAsset"
-				(click)="clearAsset()">
-				<span class="icon-close icon--mid"></span>
-			</a>
-		</div>
+			<!-- 
+				<div class="row base-margin-top">
+					<div class="col-md-6"
+						*ngIf="!status.loading.cases"
+						innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
+					</div>
+					<div class="text-right"
+						[ngClass]="{
+							'col-md-12': status.loading.cases,
+							'col-md-6': !status.loading.cases
+						}">
+						<span [innerText]="'_RunDiagnostics_' | i18n"></span>
+						<span> | </span>
+						<span [innerText]="'_OpenCase_' | i18n"></span>
+					</div>
+				</div> -->
 	</div>
-	<div class="row base-margin-top">
-		<div class="col-md-6"
-			*ngIf="!status.loading.cases"
-			innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
-		</div>
-		<div class="text-right"
-			[ngClass]="{
-				'col-md-12': status.loading.cases,
-				'col-md-6': !status.loading.cases
-			}">
-			<span [innerText]="'_RunDiagnostics_' | i18n"></span>
-			<span> | </span>
-			<span [innerText]="'_OpenCase_' | i18n"></span>
-		</div>
-	</div>
+
 </ng-template>
 
 <ng-template #tabs>

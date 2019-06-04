@@ -1,7 +1,35 @@
+.assets-header {
+	background-color: #FAFBFC;
+}
+
+.panel--no-padding {
+	padding: 0;
+}
+
 .icon--mid {
 	font-size: 24px;
 }
 
 .btn.btn--tiny {
 	height: 24px !important;
+}
+
+.btn--light-gray {
+	background-color: #B1BBCF;
+	min-width: 24px !important;
+}
+
+.icon-positioned {
+	font-size: 17px !important;
+	line-height: 17px;
+	position: absolute;
+    left: 50%;
+    z-index: 2;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.icon-positioned--left {
+	transform: rotate(90deg);
+    transform-origin: top;
 }
