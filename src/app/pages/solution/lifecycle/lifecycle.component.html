@@ -271,8 +271,8 @@
 	<div class="half-margin-bottom" *ngFor="let community of data">
 		<div class="half-padding-left">
 			<span class="icon-communities qtr-padding-right qtr-padding-bottom"></span>
-			<span><a class="no-link half-padding-left" href="#" data-toggle="tooltip" data-placement="bottom" title="{{community.description}}"
-				id="communitytitle" data-auto-id="communitytitle" [innerText]="community.title" (click)="disableMe()"></a>
+			<span><a class="no-link half-padding-left" href="{{community.url}}" data-toggle="tooltip" data-placement="bottom" title="{{community.description}}"
+				id="communitytitle" data-auto-id="communitytitle" [innerText]="community.title"></a>
 			</span>
 		</div>
 	</div>

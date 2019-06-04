@@ -287,13 +287,13 @@ export class LifecycleComponent implements OnDestroy {
 		});
 	}
 
-	/**
-	 * to disable the click function
-	 * @returns false to disable the click funciton
-	 */
-	public disableMe () {
-		return false;
-	}
+	// /**
+	//  * to disable the click function
+	//  * @returns false to disable the click funciton
+	//  */
+	// public disableMe () {
+	// 	return false;
+	// }
 
 	/**
 	 * private utility function to clear out seleted status
