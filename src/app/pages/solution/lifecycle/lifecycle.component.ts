@@ -286,6 +286,15 @@ export class LifecycleComponent implements OnDestroy {
 				err.status}) ${err.message}`);
 		});
 	}
+
+	// /**
+	//  * to disable the click function
+	//  * @returns false to disable the click funciton
+	//  */
+	// public disableMe () {
+	// 	return false;
+	// }
+
 	/**
 	 * private utility function to clear out seleted status
 	 */
@@ -306,10 +315,10 @@ export class LifecycleComponent implements OnDestroy {
 			const pct = Math.floor(
 				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
 
-			return `${pct.toString()}%`;
+			return pct === 0 ? 'start' : `${pct.toString()}%`;
 		}
 
-		 return '0%';
+		 return 'start';
 	}
 
 	/**

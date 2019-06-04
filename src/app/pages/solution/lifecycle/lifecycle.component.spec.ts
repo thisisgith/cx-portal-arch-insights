@@ -373,6 +373,17 @@ describe('LifecycleComponent', () => {
 				.toHaveBeenCalledTimes(2);
 			});
 		});
+	});
 
+	it('should have loaded the community items', () => {
+		buildSpies();
+		sendParams();
+
+		fixture.detectChanges();
+		fixture.whenStable()
+			.then(() => {
+				expect(component.componentData.communities.length)
+					.toEqual(2);
+			});
 	});
 });
