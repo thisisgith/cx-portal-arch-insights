@@ -37,7 +37,16 @@
 		<div class="col-md-4 text-right">
 			<a class="text-dkgray-4"
 				data-auto-id="FullScreen">
-				<span class="icon-fullscreen icon--mid half-margin-right"></span>
+				<span
+					data-auto-id="asset-details-toggle-fullscreen-icon"
+					class="icon--mid half-margin-right"
+					[title]="'_ToggleFullscreen_' | i18n"
+					[ngClass]="{
+						'icon-fullscreen': !fullscreen,
+						'icon-exit-fullscreen': fullscreen
+					}"
+					(click)="toggleFullscreen()"
+				></span>
 			</a>
 			<a class="text-dkgray-4"
 				data-auto-id="ClearAsset"

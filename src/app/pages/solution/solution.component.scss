@@ -8,12 +8,3 @@
 	border-bottom: 4px solid $primary;
 	box-shadow: $base-box-shadow-large;
 }
-
-.detailsContainer {
-	box-shadow: $base-box-shadow-large;
-	position: absolute;
-	z-index: 10000;
-	height: 100%;
-	right: 0;
-	width: 30%;
-}
