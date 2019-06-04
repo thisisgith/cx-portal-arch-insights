@@ -3,11 +3,11 @@ import MockService from '../support/mockService';
 /// <reference types="Cypress" />
 
 
-const commMock = new MockService('ATXScenarios');
+const commMock = new MockService('CommunitiesScenarios');
 const commOnboardScenario = commMock.getScenario('GET', '(Communities) IBN-Assurance-Onboard');  //environments/mock/communities.ts
 // const commItems = commOnboardScenario.response.body.items;  // will give error if commItems is not used below
 
-describe('Communities (Communities)', () => { // PBC-fedoriw
+describe('Communities (Communities)', () => { // Jira: PBC-tbd
 	before(() => {
 		cy.login();
 		cy.loadApp();
