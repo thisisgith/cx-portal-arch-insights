@@ -1,5 +1,7 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
+$vibblue: #017cad;
+
 .more-scroll {
 	height: 43px;
 	overflow: scroll;
@@ -79,8 +81,15 @@
 	display: block;
 }
 
+
 .actionname.selected {
-	background-color: darkgray;
+	background-color: $vibblue;
+}
+
+.no-link.selected {
+	color: white !important;
+	-webkit-text-stroke-width: 0.5px;
+	text-decoration: none !important;
 }
 
 .small-size {
@@ -100,6 +109,16 @@
 	font-style: italic;
 	font-size: 20px;
 	background-color: $primary;
+	-webkit-text-stroke-width: 1px;
+}
+
+#compActPct::before {
+	content: '';
+	position: absolute;
+	bottom: 12%;
+	left: 4.5%;
+	border-right: 15px solid $primary;
+	border-bottom: 30px solid transparent;
 }
 
 .card_footer_item {
