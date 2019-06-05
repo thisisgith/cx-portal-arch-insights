@@ -19,4 +19,5 @@ declare module '*.json' {
 interface Window {
 	Cypress: any;
 	loading: boolean;
+	carMoving: boolean;
 }

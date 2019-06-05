@@ -136,6 +136,7 @@ export class RacetrackComponent implements OnInit {
 				})
 				.attr('transform', () =>
 					this.track.attr('transform'))
+				.attr('data-auto-id', name => `Racetrack-StagePoint-${name}`)
 				.raise()
 				.on('click', d => this.zoomToStage(d, true));
 
@@ -191,17 +192,24 @@ export class RacetrackComponent implements OnInit {
 	 * @memberof RacetrackComponent
 	 */
 	public zoomToStage (endpoint: string, trackProgress = false) {
-		const start = this.stageMap[this.current];
+		let start = this.stageMap[this.current];
 		const end = this.stageMap[endpoint];
+
+		// Due to the way split works, and the fact that we've got double the points
+		let moddedStart = start;
+		if (start % 2 > 0 && end % 2 === 0) {
+			moddedStart += moddedStart;
+		}
+		start = moddedStart;
 
 		let points = [
 			...this.points.slice(start),
-			...this.points.slice(0, end),
+			...this.points.slice(0, end + 1),
 		];
 
 		// if wrapping around the 'end' of the path, add an extra loop
 		if (end < start) {
-			points = [...points, ...this.points.slice(end), ...this.points.slice(0, end)];
+			points = [...points, ...this.points.slice(end + 1), ...this.points.slice(0, end + 1)];
 		}
 
 		// rotate car to match track
@@ -231,7 +239,7 @@ export class RacetrackComponent implements OnInit {
 
 		points.reduce((chain, pt, i) => {
 			// skip half of the points to speed up animation, reduce calculations
-			if (i % 2) { return chain; }
+			if (i % 2 && i !== points.length - 1) { return chain; }
 
 			// each segment of transition gets its own duration from a parabolic function
 				// (slower at beginning and end, faster in the middle)
@@ -248,7 +256,14 @@ export class RacetrackComponent implements OnInit {
 				.attr('transform', () => `${this.track.attr('transform')}
 					translate(${[pt.x, pt.y]})
 					rotate(${17 + rotations[i]})
-					translate(-15, -20)`);
+					translate(-15, -20)`)
+				.attr('data-auto-id', `Racecar-CurrentStage-${endpoint}`)
+				.on('start', () => {
+					window.carMoving = true;
+				})
+				.on('end', () => {
+					window.carMoving = false;
+				});
 		}, this.racecar);
 
 		this.current = endpoint;
