@@ -62,11 +62,11 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private assetSubscribe: Subscription;
 	public solutions: RacetrackSolution[];
 
-	@ViewChild('advisoriesFact') public advisoriesTemplate: TemplateRef<{ }>;
-	@ViewChild('assetsFacet') public assetsTemplate: TemplateRef<{ }>;
-	@ViewChild('lifecycleFacet') public lifecycleTemplate: TemplateRef<{ }>;
-	@ViewChild('resolutionFacet') public resolutionTemplate: TemplateRef<{ }>;
-	@ViewChild('securityFacet') public securityTemplate: TemplateRef<{ }>;
+	@ViewChild('advisoriesFact', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
+	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
+	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
+	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
+	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
 
 	constructor (
 		private router: Router,

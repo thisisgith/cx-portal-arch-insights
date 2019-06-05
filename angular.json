@@ -122,7 +122,10 @@
 						"styles": [
 							"src/styles.scss"
 						],
-						"tsConfig": "src/tsconfig.spec.json"
+						"tsConfig": "src/tsconfig.spec.json",
+						"codeCoverageExclude": [
+							"./src/app/**/*-routing.module.ts"
+						]
 					}
 				}
 			},
