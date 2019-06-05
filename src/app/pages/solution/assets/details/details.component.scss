@@ -1,5 +1,6 @@
 .assets-header {
-	background-color: #FAFBFC;
+	background-color: #fbfbfc;
+	border-bottom: solid 1px #DFDFDF;
 }
 
 .panel--no-padding {
@@ -15,21 +16,54 @@
 }
 
 .btn--light-gray {
-	background-color: #B1BBCF;
+	background-color: transparent;
+	border: solid 1px #CED0D1;
 	min-width: 24px !important;
+
+	&:hover {
+		background-color:  #CED0D1;
+		border-color: transparent;
+	}
+}
+
+.btn.btn--bright-blue {
+	border-color: #00BCEB;
+	background-color: transparent;
+	color: #58585b;
+
+	&:hover {
+		background-color: #00BCEB;
+		color: white!important;
+	}
 }
 
 .icon-positioned {
+	color: #676769;
 	font-size: 17px !important;
 	line-height: 17px;
 	position: absolute;
-    left: 50%;
-    z-index: 2;
+	left: 50%;
+	z-index: 2;
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
 
 .icon-positioned--left {
 	transform: rotate(90deg);
-    transform-origin: top;
+	transform-origin: top;
+}
+
+.icon--rotated {
+	color: #C6C7CA;
+	transform: rotate(90deg);
+
+	&:hover {
+		color: #00BCEB;
+	}
+}
+
+.dropdown--actions.active {
+	.icon--rotated {
+		color: #00BCEB;
+	}
 }

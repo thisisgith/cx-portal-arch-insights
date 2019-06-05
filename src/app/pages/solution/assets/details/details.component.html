@@ -1,6 +1,5 @@
 <div class="panel panel--bordered-left flex-fill panel--no-padding">
 	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
-	<div class="divider divider--thick qtr-margin-top qtr-margin-bottom"></div>
 	<ng-container *ngTemplateOutlet="tabs"></ng-container>
 	<ng-container *ngIf="selectedTab">
 		<ng-container *ngTemplateOutlet="selectedTab.template"></ng-container>
@@ -9,10 +8,10 @@
 
 <ng-template #assetHeader>
 	<div class="assets-header base-padding">
-			<div class="row base-padding-bottom">
-				<div class="col-md-8 qtr-padding-top">
+			<div class="row ">
+				<div class="col-md-8 base-padding-bottom qtr-padding-top">
 					<div class="flex">
-						<button class="btn btn--icon btn--tiny btn--light-gray qtr-margin-right">
+						<button class="btn btn--icon btn--tiny btn--light-gray half-margin-right">
 							<span class="icon-maximize icon-positioned icon-positioned--left"></span>
 							<span class="icon-minimize icon-positioned icon-positioned--right"></span>
 						</button>
@@ -20,7 +19,7 @@
 					</div>
 				</div>
 			
-				<div class="col-md-4 text-right">
+				<div class="col-md-4 base-padding-bottom text-right">
 					<a class="text-dkgray-4" data-auto-id="FullScreen">
 						<span class="icon-fullscreen icon--mid half-margin-right"></span>
 					</a>
@@ -28,45 +27,77 @@
 						<span class="icon-close icon--mid"></span>
 					</a>
 				</div>
-			</div>
-			
-			<div class="col-md-8">
-				<div class="base-margin-left flex">
-					<div *ngIf="asset?.hostname" class="dbl-margin-right">
-						<div class="text-muted text-small text-uppercase" innerText="{{ '_Hostname_' | i18n }}"></div>
-						<div innerText="{{ asset?.hostname }}"></div>
-					</div>
 
-					<div *ngIf="asset?.ipAddress" class="dbl-margin-right">
-						<div class="text-muted text-small text-uppercase" innerText="{{ '_IPAddress_' | i18n }}"></div>
-						<div innerText="{{ asset?.ipAddress }}"></div>
-					</div>
-
-					<div *ngIf="asset?.serialNumber" class="dbl-margin-right">
-						<div class="text-muted text-small text-uppercase" innerText="{{ '_SerialNumber_' | i18n }}"></div>
-						<div innerText="{{ asset?.serialNumber }}"></div>
+				<div class="col-md-8 base-margin-bottom">
+					<div class="dbl-margin-left flex">
+						<div *ngIf="asset?.hostname" class="dbl-margin-right">
+							<div class="text-muted text-small text-uppercase" innerText="{{ '_Hostname_' | i18n }}"></div>
+							<div innerText="{{ asset?.hostname }}"></div>
+						</div>
+				
+						<div *ngIf="asset?.managementAddress" class="dbl-margin-right">
+							<div class="text-muted text-small text-uppercase" innerText="{{ '_IPAddress_' | i18n }}"></div>
+							<div innerText="{{ asset?.managementAddress }}"></div>
+						</div>
+				
+						<div *ngIf="asset?.serialNumber" class="dbl-margin-right">
+							<div class="text-muted text-small text-uppercase" innerText="{{ '_SerialNumber_' | i18n }}"></div>
+							<div innerText="{{ asset?.serialNumber }}"></div>
+						</div>
 					</div>
 				</div>
+				
+				<div class="col-md-4 half-margin-top">
 					<!-- TODO: Hook this up to real API data -->
-			<!-- <div class="text-small" innerText="{{ '_LastScan_' | i18n }}: {{ '_DeviceUnreachable_' | i18n }}">
-				</div> -->
+					<div class="flex justify-content-end">
+						<span class="text-danger icon-circle qtr-margin-right">
+						</span>
+						<div innerText="{{ '_DeviceUnreachable_' | i18n }}">
+					</div>
+				</div>
 			</div>
-			<!-- 
-				<div class="row base-margin-top">
-					<div class="col-md-6"
-						*ngIf="!status.loading.cases"
-						innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
+
+			<div class="col-md-6 qtr-margin-top" *ngIf="!status.loading.cases">
+
+			<div 
+				class="dropdown dropdown--center dropdown--tail"
+				[ngClass]="{ active: casesDropdownActive }"
+			>
+				<a 
+					(click)="toggleActiveCases()"
+					href="javascript:;"
+					class="dbl-margin-left"
+					innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})"
+				>
+				</a>
+				<div class="dropdown__menu">
+					<a>Menu Action One</a>
+					<a>Menu Action Two</a>
+					<div class="dropdown__divider"></div>
+					<a class="selected">Menu Action Three</a>
+				</div>
+			</div>
+
+			</div>
+			<div class="text-right" [ngClass]="{
+										'col-md-12': status.loading.cases,
+										'col-md-6': !status.loading.cases
+									}">
+				<button class="text-uppercase btn btn--bright-blue btn--small" [innerText]="'_Scan_' | i18n"></button>
+				<button class="text-uppercase btn btn--bright-blue btn--small" [innerText]="'_OpenCase_' | i18n"></button>
+				<div 
+					(click)="toggleActiveAction()"
+					[ngClass]="{ active: actionDropdownActive }"
+					class="dropdown dropdown--actions dropdown--tail dropdown--left">
+					<span class="icon-more icon-medium icon--rotated"></span>
+					<div class="dropdown__menu">
+						<!-- TODO: add edit and delete functionality once open cases return -->
+						<a innerText="{{ '_Edit_' | i18n}}"></a> 
+						<a innerText="{{ '_Delete' | i18n}}"></a>
 					</div>
-					<div class="text-right"
-						[ngClass]="{
-							'col-md-12': status.loading.cases,
-							'col-md-6': !status.loading.cases
-						}">
-						<span [innerText]="'_RunDiagnostics_' | i18n"></span>
-						<span> | </span>
-						<span [innerText]="'_OpenCase_' | i18n"></span>
-					</div>
-				</div> -->
+				</div>
+			</div>
+		</div>
 	</div>
 
 </ng-template>

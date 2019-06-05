@@ -45,6 +45,9 @@ export class AssetDetailsComponent implements OnInit {
 		},
 	};
 
+	public actionDropdownActive = false;
+	public casesDropdownActive = false;
+
 	constructor (
 		private caseService: CaseService,
 		private solutionService: SolutionService,
@@ -79,6 +82,20 @@ export class AssetDetailsComponent implements OnInit {
 	public clearAsset () {
 		this.asset = null;
 		this.solutionService.sendCurrentAsset(null);
+	}
+
+	/**
+	 * Toggles the action dropdown
+	 */
+	public toggleActiveAction () {
+		this.actionDropdownActive = !this.actionDropdownActive;
+	}
+
+	/**
+	 * Toggles the open cases dropdown
+	 */
+	public toggleActiveCases () {
+		this.casesDropdownActive = !this.casesDropdownActive;
 	}
 
 	/**
