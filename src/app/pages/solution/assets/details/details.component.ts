@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, SimpleChanges, ViewChild, TemplateRef } from '@angular/core';
+import {
+	Component,
+	Input,
+	OnChanges,
+	OnInit,
+	SimpleChanges,
+	TemplateRef,
+	ViewChild,
+} from '@angular/core';
 import { HardwareInfo } from '@cui-x/sdp-api';
 import { SolutionService } from '../../solution.service';
 import { CaseParams, CaseService } from '@cui-x/services';
@@ -19,11 +27,15 @@ interface Tab {
  * Asset Details Component
  */
 @Component({
+	host: {
+		'[class.fullscreen]': 'fullscreen',
+		'[class.hidden]': 'hidden',
+	},
 	selector: 'asset-details',
 	styleUrls: ['./details.component.scss'],
 	templateUrl: './details.component.html',
 })
-export class AssetDetailsComponent implements OnInit {
+export class AssetDetailsComponent implements OnChanges, OnInit {
 
 	@Input('asset') public asset: HardwareInfo;
 	@ViewChild('details') private detailsTemplate: TemplateRef<{ }>;
@@ -44,6 +56,8 @@ export class AssetDetailsComponent implements OnInit {
 			cases: false,
 		},
 	};
+	public hidden = true;
+	public fullscreen = false;
 
 	constructor (
 		private caseService: CaseService,
@@ -79,6 +93,7 @@ export class AssetDetailsComponent implements OnInit {
 	public clearAsset () {
 		this.asset = null;
 		this.solutionService.sendCurrentAsset(null);
+		this.hidden = true;
 	}
 
 	/**
@@ -88,7 +103,7 @@ export class AssetDetailsComponent implements OnInit {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['asset', 'currentValue']);
 		if (currentAsset && !changes.asset.firstChange) {
-			this.ngOnInit();
+			this.refresh();
 		}
 	}
 
@@ -137,7 +152,24 @@ export class AssetDetailsComponent implements OnInit {
 	 * Initializer
 	 */
 	public ngOnInit () {
+		this.refresh();
+	}
+
+	/**
+	 * Refreshes the component
+	 */
+	public refresh () {
 		this.buildTabs();
 		this.fetchCases();
+		if (this.asset) {
+			this.hidden = false;
+		}
+	}
+
+	/**
+	 * Toggle fullscreen details
+	 */
+	public toggleFullscreen () {
+		this.fullscreen = !this.fullscreen;
 	}
 }
