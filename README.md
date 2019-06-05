@@ -1,5 +1,5 @@
-[![pipeline status](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/badges/master/pipeline.svg)](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/commits/master)
-[![coverage report](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/badges/master/coverage.svg)](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/commits/master)
+[![pipeline status](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/badges/develop/pipeline.svg)](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/commits/develop)
+[![coverage report](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/badges/develop/coverage.svg)](https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/commits/develop)
 
 # Persona Based Console
 
