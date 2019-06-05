@@ -84,6 +84,7 @@ export interface PitstopActionWithStatus {
 })
 export class LifecycleComponent implements OnDestroy {
 	@ViewChild('atxModal') public atxTemplate: TemplateRef<{ }>;
+	@ViewChild('accModal') public accTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -177,6 +178,12 @@ export class LifecycleComponent implements OnDestroy {
 			this.modal = {
 				content: this.atxTemplate,
 				context: { data: this.componentData.atx.sessions },
+				visible: true,
+			};
+		} else if (type === 'acc') {
+			this.modal = {
+				content: this.accTemplate,
+				context: { data: this.componentData.acc.sessions },
 				visible: true,
 			};
 		}
@@ -286,14 +293,6 @@ export class LifecycleComponent implements OnDestroy {
 				err.status}) ${err.message}`);
 		});
 	}
-
-	// /**
-	//  * to disable the click function
-	//  * @returns false to disable the click funciton
-	//  */
-	// public disableMe () {
-	// 	return false;
-	// }
 
 	/**
 	 * private utility function to clear out seleted status
