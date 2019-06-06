@@ -8,6 +8,7 @@ import { AssetsComponent } from './assets.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import {
 	CuiTableModule,
+	CuiTabsModule,
 	CuiPagerModule,
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
@@ -43,6 +44,7 @@ const childRoutes: Routes = [
 		CuiPagerModule,
 		CuiSpinnerModule,
 		CuiTableModule,
+		CuiTabsModule,
 		I18nPipeModule,
 		InventoryModule.forRoot({ rootUrl }),
 		RouterModule.forChild(childRoutes),

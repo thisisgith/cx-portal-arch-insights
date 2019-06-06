@@ -1,30 +1,22 @@
 <div class="panel">
-	<div class="row">
-		<div class="col-md-8">
-			<ul class="tabs remove-shadow">
-				<li *ngFor="let tab of tabs"
-					[ngClass]="{ 'active': tab.selected }" [attr.disabled]="tab.disabled">
-					<a (click)="selectTab(tab)"
-						attr.data-auto-id="AssetSelectTab-{{ tab.key }}"
-						class="no-padding-bottom">
-						<div class="tab__heading qtr-padding-bottom" [innerText]="tab.title"></div>
-					</a>
-				</li>
-			</ul>
-		</div>
-		<div class="col-md-4 text-right">
-			<span class="icon-filter icon-medium text-muted qtr-margin-right toggle"></span>
-			<span class="text-large text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
-			<span class="icon-dropdown qtr-padding-left toggle"></span>
-			<span class="icon-location icon-small base-padding-left toggle"></span>
-			<span class="icon-list-view icon-small qtr-padding-left toggle"></span>
-			<span class="icon-grid-view icon-small qtr-padding-left toggle"></span>
-		</div>
-	</div>
-
-	<div class="half-margin-top">
-		<ng-container *ngTemplateOutlet="visibleTemplate; context: {}"></ng-container>
-	</div>
+	<cui-tabs inline="true">
+		<cui-tab [label]="'_Assets_' | i18n">
+			<!-- TODO we should probably move this assets content to its own "assets-pager" component or similar when we add other tabs-->
+			<ng-container *ngTemplateOutlet="assetsContent"></ng-container>
+		</cui-tab>
+		<cui-tab [label]="'_EoXMilestones_' | i18n" disabled="true"></cui-tab>
+		<cui-tab [label]="'_Contracts_' | i18n" disabled="true"></cui-tab>
+		<ng-template cuiTabPost>
+			<div class="flex-fluid text-right">
+				<span class="icon-filter icon-medium text-muted qtr-margin-right toggle"></span>
+				<span class="text-large text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
+				<span class="icon-dropdown qtr-padding-left toggle"></span>
+				<span class="icon-location icon-small base-padding-left toggle"></span>
+				<span class="icon-list-view icon-small qtr-padding-left toggle"></span>
+				<span class="icon-grid-view icon-small qtr-padding-left toggle"></span>
+			</div>
+		</ng-template>
+	</cui-tabs>
 </div>
 
 <!-- Templates for our Tabs -->

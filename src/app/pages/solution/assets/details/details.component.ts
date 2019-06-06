@@ -14,15 +14,6 @@ import { CaseParams, CaseService } from '@cui-x/services';
 import * as _ from 'lodash';
 import { LogService } from '@cisco-ngx/cui-services';
 
-/** Interface representing our tab */
-interface Tab {
-	disabled?: boolean;
-	selected?: boolean;
-	template?: TemplateRef<{ }>;
-	key: string;
-	title: string;
-}
-
 /**
  * Asset Details Component
  */
@@ -40,11 +31,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	@Input('asset') public asset: HardwareInfo;
 	@ViewChild('details', { static: true }) private detailsTemplate: TemplateRef<{ }>;
 
-	public selectedTab: Tab;
 	public componentData = {
 		openCases: 0,
 	};
-	public assetTabs: Tab[];
 	private caseParams: CaseParams = new CaseParams({
 		page: 0,
 		size: 20,
@@ -108,47 +97,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	}
 
 	/**
-	 * Creates and assigns the asset tabs
-	 */
-	private buildTabs () {
-		this.assetTabs = [
-			{
-				key: 'details',
-				selected: true,
-				template: this.detailsTemplate,
-				title: '_Details_',
-			},
-			{
-				disabled: true,
-				key: 'hardware',
-				title: '_Hardware_',
-			},
-			{
-				disabled: true,
-				key: 'software',
-				title: '_Software_',
-			},
-			{
-				disabled: true,
-				key: 'advisories',
-				title: '_Advisories_',
-			},
-			{
-				disabled: true,
-				key: 'insights',
-				title: '_Insights_',
-			},
-			{
-				disabled: true,
-				key: 'activity',
-				title: '_Activity_',
-			},
-		];
-
-		this.selectedTab = this.assetTabs[0];
-	}
-
-	/**
 	 * Initializer
 	 */
 	public ngOnInit () {
@@ -159,7 +107,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	 * Refreshes the component
 	 */
 	public refresh () {
-		this.buildTabs();
 		this.fetchCases();
 		if (this.asset) {
 			this.hidden = false;
