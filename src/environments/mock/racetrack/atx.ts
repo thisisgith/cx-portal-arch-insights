@@ -251,47 +251,47 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: 100,
-					description: '(ATX) IBN-Assurance-Onboard',
+					description: '(ATX) IBN-Wireless Assurance-Onboard',
 					response: {
-						body: MockATX('ibn', 'assurance', 'onboard'),
+						body: MockATX('IBN', 'Wireless Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=assurance&solution=ibn&pitstop=onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Wireless Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
 	},
 	{
 		scenarios: {
 			GET: [
 				{
 					delay: 100,
-					description: '(ATX) IBN-Assurance-Implement',
+					description: '(ATX) IBN-Wireless Assurance-Implement',
 					response: {
-						body: MockATX('ibn', 'assurance', 'implement'),
+						body: MockATX('IBN', 'Wireless Assurance', 'Implement'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=assurance&solution=ibn&pitstop=implement&customerId=${customerId}`,
+		url: `${api}?usecase=Wireless Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
 	},
 	{
 		scenarios: {
 			GET: [
 				{
 					delay: 100,
-					description: '(ATX) IBN-SD-Access-Adopt',
+					description: '(ATX) IBN-SD Access-Onboard',
 					response: {
-						body: MockATX('ibn', 'sd-access', 'Adopt'),
+						body: MockATX('IBN', 'SD Access', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=sd-access&solution=ibn&pitstop=adopt&customerId=${customerId}`,
+		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
 	},
 ];
