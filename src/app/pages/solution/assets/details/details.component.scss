@@ -67,3 +67,19 @@
 		color: #00BCEB;
 	}
 }
+
+.label--bordered-dark {
+	white-space: nowrap;
+	border: solid 1px #58585b;
+}
+
+.open-case-toggle {
+	color: #00BCEB!important;
+}
+
+.dropdown-case {
+	&:not(:first-of-type) {
+		border-top: solid 1px #DFDFDF;
+		padding-top: 10px;
+	}
+}

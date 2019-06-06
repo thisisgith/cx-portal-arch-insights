@@ -60,22 +60,52 @@
 			<div class="col-md-6 qtr-margin-top" *ngIf="!status.loading.cases">
 
 			<div 
-				class="dropdown dropdown--center dropdown--tail"
+				class="dropdown dropdown--center dropdown--tail open-case-toggle-btn"
 				[ngClass]="{ active: casesDropdownActive }"
 			>
 				<a 
 					(click)="toggleActiveCases()"
 					href="javascript:;"
-					class="dbl-margin-left"
+					class="text-uppercase open-case-toggle dbl-margin-left"
 					innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})"
 				>
 				</a>
-				<div class="dropdown__menu">
-					<a>Menu Action One</a>
-					<a>Menu Action Two</a>
-					<div class="dropdown__divider"></div>
-					<a class="selected">Menu Action Three</a>
+
+				<!-- BEGIN TODO: use API data when it returns -->
+				<div class="dropdown__menu half-padding">
+					<div class="dropdown-case">
+						<div class="flex align-items-center justify-content-between half-margin-bottom">
+							<div class="flex dbl-margin-right">
+								<span class="icon-circle qtr-margin-right"></span>
+								<span class="half-margin-right">S2</span>
+								<span class="flex qtr-margin-right">Case</span> <strong>667389903</strong>
+							</div>
+							<div class="label label--bordered-dark">customer pending</div>
+						</div>
+						<div class="half-margin-bottom">
+							Automated diagnostic result case. A security anomaly was detected in the SMTP configuration.
+						</div>
+						<div class="text-italic	half-margin-bottom">Updated by Cisco 1 day ago</div>
+					</div>
+
+					<div class="dropdown-case">
+						<div class="flex align-items-center justify-content-between half-margin-bottom">
+							<div class="flex dbl-margin-right">
+								<span class="icon-circle qtr-margin-right"></span>
+								<span class="half-margin-right">S3</span>
+								<span class="flex qtr-margin-right">Case</span> <strong>667389903</strong>
+							</div>
+							<div class="label label--bordered-dark">cisco pending</div>
+						</div>
+						<div class="half-margin-bottom">
+							Automated diagnostic result case. A security anomaly was detected in the SMTP configuration.
+						</div>
+						<div class="text-italic	half-margin-bottom">Updated by you 3 days ago</div>
+					</div>
+					
+				
 				</div>
+				<!-- END TODO -->
 			</div>
 
 			</div>
