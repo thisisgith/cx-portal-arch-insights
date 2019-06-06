@@ -83,7 +83,7 @@ export interface PitstopActionWithStatus {
 	templateUrl: './lifecycle.component.html',
 })
 export class LifecycleComponent implements OnDestroy {
-	@ViewChild('atxModal') public atxTemplate: TemplateRef<{ }>;
+	@ViewChild('atxModal', { static: true }) public atxTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
