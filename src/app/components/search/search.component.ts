@@ -71,7 +71,7 @@ export class SearchComponent implements OnInit, OnDestroy {
 		pattern: /^[a-zA-Z ]*$/,
 	};
 
-	@ViewChild('searchInput')
+	@ViewChild('searchInput', { static: true })
 	public searchInput: ElementRef;
 
 	/**

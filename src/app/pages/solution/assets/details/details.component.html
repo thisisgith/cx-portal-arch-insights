@@ -1,9 +1,33 @@
 <div class="panel panel--bordered-left flex-fill panel--no-padding">
 	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
+<<<<<<< HEAD
 	<ng-container *ngTemplateOutlet="tabs"></ng-container>
 	<ng-container *ngIf="selectedTab">
 		<ng-container *ngTemplateOutlet="selectedTab.template"></ng-container>
 	</ng-container>
+=======
+	<div class="divider divider--thick qtr-margin-top qtr-margin-bottom"></div>
+	<cui-tabs>
+		<cui-tab [label]="'_Details_' | i18n">
+			<ng-container *ngTemplateOutlet="details"></ng-container>
+		</cui-tab>
+		<cui-tab [label]="'_Hardware_' | i18n" disabled="true">
+
+		</cui-tab>
+		<cui-tab [label]="'_Software_' | i18n" disabled="true">
+
+		</cui-tab>
+		<cui-tab [label]="'_Vulnerabilities_' | i18n" disabled="true">
+
+		</cui-tab>
+		<cui-tab [label]="'_Insights_' | i18n" disabled="true">
+
+		</cui-tab>
+		<cui-tab [label]="'_Activity_' | i18n" disabled="true">
+
+		</cui-tab>
+	</cui-tabs>
+>>>>>>> develop
 </div>
 
 <ng-template #assetHeader>
@@ -135,26 +159,47 @@
 					</div>
 				</div>
 			</div>
+<<<<<<< HEAD
+=======
+		</div>
+		<div class="col-md-4 text-right">
+			<a class="text-dkgray-4"
+				data-auto-id="FullScreen">
+				<span
+					data-auto-id="asset-details-toggle-fullscreen-icon"
+					class="icon--mid half-margin-right"
+					[title]="'_ToggleFullscreen_' | i18n"
+					[ngClass]="{
+						'icon-fullscreen': !fullscreen,
+						'icon-exit-fullscreen': fullscreen
+					}"
+					(click)="toggleFullscreen()"
+				></span>
+			</a>
+			<a class="text-dkgray-4"
+				data-auto-id="ClearAsset"
+				(click)="clearAsset()">
+				<span class="icon-close icon--mid"></span>
+			</a>
+		</div>
+	</div>
+	<div class="row base-margin-top">
+		<div class="col-md-6"
+			*ngIf="!status.loading.cases"
+			innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
+		</div>
+		<div class="text-right"
+			[ngClass]="{
+				'col-md-12': status.loading.cases,
+				'col-md-6': !status.loading.cases
+			}">
+			<span [innerText]="'_RunDiagnostics_' | i18n"></span>
+			<span> | </span>
+			<span [innerText]="'_OpenCase_' | i18n"></span>
+>>>>>>> develop
 		</div>
 	</div>
 
-</ng-template>
-
-<ng-template #tabs>
-	<ul class="tabs tabs--inline">
-		<li class="tab"
-			*ngFor="let tab of assetTabs"
-			[ngClass]="{
-				'active': tab.selected,
-				'disabled': tab.disabled
-			}">
-			<a class="qtr-padding-bottom">
-				<div class="tab__heading no-padding-bottom"
-					[innerText]="tab.title | i18n">
-				</div>
-			</a>
-		</li>
-	</ul>
 </ng-template>
 
 <ng-template #details>
@@ -239,9 +284,3 @@
 		<div class="col-md-6" [innerText]="data || ('_NA_' | i18n)"></div>
 	</div>
 </ng-template>
-
-
-
-
-
-

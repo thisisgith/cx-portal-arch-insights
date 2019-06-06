@@ -1,4 +1,12 @@
-import { Component, Input, OnInit, SimpleChanges, ViewChild, TemplateRef } from '@angular/core';
+import {
+	Component,
+	Input,
+	OnChanges,
+	OnInit,
+	SimpleChanges,
+	TemplateRef,
+	ViewChild,
+} from '@angular/core';
 import { HardwareInfo } from '@cui-x/sdp-api';
 import { SolutionService } from '../../solution.service';
 import { CaseParams, CaseService } from '@cui-x/services';
@@ -6,33 +14,26 @@ import { CaseParams, CaseService } from '@cui-x/services';
 import * as _ from 'lodash';
 import { LogService } from '@cisco-ngx/cui-services';
 
-/** Interface representing our tab */
-interface Tab {
-	disabled?: boolean;
-	selected?: boolean;
-	template?: TemplateRef<{ }>;
-	key: string;
-	title: string;
-}
-
 /**
  * Asset Details Component
  */
 @Component({
+	host: {
+		'[class.fullscreen]': 'fullscreen',
+		'[class.hidden]': 'hidden',
+	},
 	selector: 'asset-details',
 	styleUrls: ['./details.component.scss'],
 	templateUrl: './details.component.html',
 })
-export class AssetDetailsComponent implements OnInit {
+export class AssetDetailsComponent implements OnChanges, OnInit {
 
 	@Input('asset') public asset: HardwareInfo;
 	@ViewChild('details') private detailsTemplate: TemplateRef<{ }>;
 
-	public selectedTab: Tab;
 	public componentData = {
 		openCases: 0,
 	};
-	public assetTabs: Tab[];
 	private caseParams: CaseParams = new CaseParams({
 		page: 0,
 		size: 20,
@@ -44,6 +45,8 @@ export class AssetDetailsComponent implements OnInit {
 			cases: false,
 		},
 	};
+	public hidden = true;
+	public fullscreen = false;
 
 	public actionDropdownActive = false;
 	public casesDropdownActive = false;
@@ -82,6 +85,7 @@ export class AssetDetailsComponent implements OnInit {
 	public clearAsset () {
 		this.asset = null;
 		this.solutionService.sendCurrentAsset(null);
+		this.hidden = true;
 	}
 
 	/**
@@ -105,56 +109,31 @@ export class AssetDetailsComponent implements OnInit {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['asset', 'currentValue']);
 		if (currentAsset && !changes.asset.firstChange) {
-			this.ngOnInit();
+			this.refresh();
 		}
-	}
-
-	/**
-	 * Creates and assigns the asset tabs
-	 */
-	private buildTabs () {
-		this.assetTabs = [
-			{
-				key: 'details',
-				selected: true,
-				template: this.detailsTemplate,
-				title: '_Details_',
-			},
-			{
-				disabled: true,
-				key: 'hardware',
-				title: '_Hardware_',
-			},
-			{
-				disabled: true,
-				key: 'software',
-				title: '_Software_',
-			},
-			{
-				disabled: true,
-				key: 'advisories',
-				title: '_Advisories_',
-			},
-			{
-				disabled: true,
-				key: 'insights',
-				title: '_Insights_',
-			},
-			{
-				disabled: true,
-				key: 'activity',
-				title: '_Activity_',
-			},
-		];
-
-		this.selectedTab = this.assetTabs[0];
 	}
 
 	/**
 	 * Initializer
 	 */
 	public ngOnInit () {
-		this.buildTabs();
+		this.refresh();
+	}
+
+	/**
+	 * Refreshes the component
+	 */
+	public refresh () {
 		this.fetchCases();
+		if (this.asset) {
+			this.hidden = false;
+		}
+	}
+
+	/**
+	 * Toggle fullscreen details
+	 */
+	public toggleFullscreen () {
+		this.fullscreen = !this.fullscreen;
 	}
 }

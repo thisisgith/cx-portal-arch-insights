@@ -92,31 +92,32 @@ export const ELearningScenarios = [
 			GET: [
 				{
 					delay: 800,
-					description: '(E-Learning) IBN-Assurance-Onboard',
+					description: '(E-Learning) IBN-Wireless Assurance-Onboard',
 					response: {
-						body: MockELearning('ibn', 'assurance', 'onboard'),
+						body: MockELearning('ibn', 'Wireless Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=assurance&solution=ibn&pitstop=onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
+			`&pitstop=Onboard&customerId=${customerId}`,
 	},
 	{
 		scenarios: {
 			GET: [
 				{
 					delay: 800,
-					description: '(E-Learning) IBN-SD-Access-Adopt',
+					description: '(E-Learning) IBN-SD Access-Onboard',
 					response: {
-						body: MockELearning('ibn', 'sd-access', 'Adopt'),
+						body: MockELearning('IBN', 'SD Access', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=sd-access&solution=ibn&pitstop=adopt&customerId=${customerId}`,
+		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
 	},
 ];

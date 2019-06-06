@@ -1,1 +1,3 @@
-module.exports = require('@apollo/style');
+module.exports = {
+	extends: '@apollo/linting/style',
+};

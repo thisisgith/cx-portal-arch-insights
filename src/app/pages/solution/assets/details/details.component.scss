@@ -11,8 +11,34 @@
 	font-size: 24px;
 }
 
-.btn.btn--tiny {
-	height: 24px !important;
+:host {
+	width: 50vw;
+	position: fixed;
+	z-index: 1000;
+	height: calc(100vh - 55px);
+	right: 0;
+	transition: width 0.5s, transform 0.5s;
+
+	.icon--mid {
+		font-size: 24px;
+	}
+
+	.btn.btn--tiny {
+		height: 24px !important;
+	}
+
+	&.hidden {
+		transform: translateX(100vw);
+	}
+
+	&.fullscreen:not(.hidden) {
+		width: 100vw;
+		transform: translateX(0);
+	}
+
+	> .panel {
+		height: 100%;
+	}
 }
 
 .btn--light-gray {

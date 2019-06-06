@@ -11,9 +11,9 @@ import { LogService } from '@cisco-ngx/cui-services';
 	templateUrl: './cases.component.html',
 })
 export class CasesComponent  implements OnInit {
-	@ViewChild('caseInfo') public caseInfoTemplate: TemplateRef<{ }>;
-	@ViewChild('caseMoreInfo') public caseMoreInfoTemplate: TemplateRef<{ }>;
-	@ViewChild('caseSubmit') public caseSubmitTemplate: TemplateRef<{ }>;
+	@ViewChild('caseInfo', { static: true }) public caseInfoTemplate: TemplateRef<{ }>;
+	@ViewChild('caseMoreInfo', { static: true }) public caseMoreInfoTemplate: TemplateRef<{ }>;
+	@ViewChild('caseSubmit', { static: true }) public caseSubmitTemplate: TemplateRef<{ }>;
 
 	public visibleTemplate: TemplateRef<{ }>;
 	public lanTech = 'LAN Switching';
