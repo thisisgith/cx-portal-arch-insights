@@ -73,6 +73,13 @@ export class RacetrackComponent implements OnInit {
 
 		this.points = points;
 
+		// Shove the points array onto the track so Cypress tests have access to it
+		this.track.attr('pointsLength', this.points.length);
+		this.points.forEach((point, index) => {
+			this.track.attr(`point${index}x`, point.x);
+			this.track.attr(`point${index}y`, point.y);
+		});
+
 		// at what % of the path does the stop for each stage fall
 		// (path does not start at 'purchase' stage)
 		this.stageMap = {
@@ -136,7 +143,7 @@ export class RacetrackComponent implements OnInit {
 				})
 				.attr('transform', () =>
 					this.track.attr('transform'))
-				.attr('data-auto-id', name => `Racetrack-StagePoint-${name}`)
+				.attr('data-auto-id', name => `Racetrack-Point-${name}`)
 				.raise()
 				.on('click', d => this.zoomToStage(d, true));
 
@@ -192,15 +199,8 @@ export class RacetrackComponent implements OnInit {
 	 * @memberof RacetrackComponent
 	 */
 	public zoomToStage (endpoint: string, trackProgress = false) {
-		let start = this.stageMap[this.current];
+		const start = this.stageMap[this.current];
 		const end = this.stageMap[endpoint];
-
-		// Due to the way split works, and the fact that we've got double the points
-		let moddedStart = start;
-		if (start % 2 > 0 && end % 2 === 0) {
-			moddedStart += moddedStart;
-		}
-		start = moddedStart;
 
 		let points = [
 			...this.points.slice(start),
@@ -239,6 +239,7 @@ export class RacetrackComponent implements OnInit {
 
 		points.reduce((chain, pt, i) => {
 			// skip half of the points to speed up animation, reduce calculations
+			// However, make sure we don't skip the last point
 			if (i % 2 && i !== points.length - 1) { return chain; }
 
 			// each segment of transition gets its own duration from a parabolic function
@@ -257,7 +258,6 @@ export class RacetrackComponent implements OnInit {
 					translate(${[pt.x, pt.y]})
 					rotate(${17 + rotations[i]})
 					translate(-15, -20)`)
-				.attr('data-auto-id', `Racecar-CurrentStage-${endpoint}`)
 				.on('start', () => {
 					window.carMoving = true;
 				})
