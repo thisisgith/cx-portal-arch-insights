@@ -76,7 +76,7 @@
 				<!-- BEGIN TODO: use API data when it returns -->
 				<div class="dropdown__menu half-padding">
 					<div class="dropdown-case">
-						<div class="flex align-items-center justify-content-between half-margin-bottom">
+						<div class="flex align-items-center justify-content-between half-margin-bottom"> 
 							<div class="flex dbl-margin-right">
 								<span class="icon-circle qtr-margin-right"></span>
 								<span class="half-margin-right">S2</span>
@@ -110,7 +110,7 @@
 				<!-- END TODO -->
 			</div>
 
-			<div *ngIf="componentData.openCases" class="text-uppercase dbl-margin-left"
+			<div *ngIf="!componentData.openCases" class="text-uppercase dbl-margin-left"
 				innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
 			</div>
 

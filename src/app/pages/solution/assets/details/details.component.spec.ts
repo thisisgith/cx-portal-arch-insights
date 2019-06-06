@@ -140,7 +140,7 @@ describe('AssetDetailsComponent', () => {
 			.toBeNull();
 	});
 
-	it('should has active class if actions dropdown is active', () => {
+	it('should have active class if actions dropdown is active', () => {
 		component.actionDropdownActive = true;
 
 		fixture.detectChanges();
@@ -165,6 +165,7 @@ describe('AssetDetailsComponent', () => {
 
 	it('should have active class to cases dropddown if active', () => {
 		component.casesDropdownActive = true;
+		component.componentData.openCases = 1;
 
 		fixture.detectChanges();
 
@@ -176,6 +177,7 @@ describe('AssetDetailsComponent', () => {
 
 	it('should not add active class to cases dropddown if not active', () => {
 		component.casesDropdownActive = false;
+		component.componentData.openCases = 1;
 
 		fixture.detectChanges();
 
