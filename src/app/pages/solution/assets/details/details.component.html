@@ -60,12 +60,14 @@
 			<div class="col-md-6 qtr-margin-top" *ngIf="!status.loading.cases">
 
 			<div 
+				*ngIf="componentData.openCases"
 				class="dropdown dropdown--center dropdown--tail open-case-toggle-btn"
 				[ngClass]="{ active: casesDropdownActive }"
 			>
-				<a 
+				<a 	
+					data-auto-id="ToggleActiveCases"
 					(click)="toggleActiveCases()"
-					href="javascript:;"
+					href="#"
 					class="text-uppercase open-case-toggle dbl-margin-left"
 					innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})"
 				>
@@ -108,14 +110,20 @@
 				<!-- END TODO -->
 			</div>
 
+			<div *ngIf="componentData.openCases" class="text-uppercase dbl-margin-left"
+				innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
+			</div>
+
 			</div>
 			<div class="text-right" [ngClass]="{
 										'col-md-12': status.loading.cases,
 										'col-md-6': !status.loading.cases
 									}">
+				<!-- TODO: hook up buttons -->
 				<button class="text-uppercase btn btn--bright-blue btn--small" [innerText]="'_Scan_' | i18n"></button>
 				<button class="text-uppercase btn btn--bright-blue btn--small" [innerText]="'_OpenCase_' | i18n"></button>
 				<div 
+					data-auto-id="ToggleActiveAction"
 					(click)="toggleActiveAction()"
 					[ngClass]="{ active: actionDropdownActive }"
 					class="dropdown dropdown--actions dropdown--tail dropdown--left">
