@@ -39,31 +39,32 @@ export const SuccessPathScenarios = [
 			GET: [
 				{
 					delay: 250,
-					description: '(SP) IBN-Assurance-Onboard',
+					description: '(SP) IBN-Wireless Assurance-Onboard',
 					response: {
-						body: MockSP('ibn', 'assurance', 'onboard'),
+						body: MockSP('IBN', 'Wireless Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=assurance&solution=ibn&pitstop=onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
+			`&pitstop=Onboard&customerId=${customerId}`,
 	},
 	{
 		scenarios: {
 			GET: [
 				{
 					delay: 250,
-					description: '(SP) IBN-SD-Access-Adopt',
+					description: '(SP) IBN-SD Access-Onboard',
 					response: {
-						body: MockSP('ibn', 'sd-access', 'adopt'),
+						body: MockSP('IBN', 'SD Access', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=sd-access&solution=ibn&pitstop=adopt&customerId=${customerId}`,
+		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
 	},
 ];

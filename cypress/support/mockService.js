@@ -18,7 +18,7 @@ export default class MockService {
 	 * @param {string} scenarioName
 	 * @returns {object} foundScenario
 	 * @example
-	 * mockService.getScenario('GET', '(ATX) IBN-Assurance-Onboard');
+	 * mockService.getScenario('GET', '(ATX) IBN-Wireless Assurance-Onboard');
 	 */
 	getScenario (method, scenarioName) {
 		let foundScenario;
@@ -57,7 +57,7 @@ export default class MockService {
 				url: '/ws/oauth/v3/**',
 				status: 200,
 				response: 'fixture:oauth_notAuthenticated.json',
-			}
+			},
 		];
 		this.stubXHR(routes);
 	}

@@ -34,44 +34,43 @@
 	<div class="flex flex-fluid flex-center-vertical">
 		<div class="icon-home icon--mid"></div>
 		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"></div>
-		<div>
+		<div *ngIf="selectedSolution">
 			<div class="text-muted" [innerText]="'_Solution_' | i18n"></div>
 			<div class="dropdown dropdown--tail"
 				data-auto-id="SolutionDropdown"
 				[ngClass]="{'active': solutionDropdown }"
 				(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
 				<a class="text-dkgray-4 text-large text-bold"
-					[innerText]="selectedSolution.title | i18n"></a>
+					[innerText]="selectedSolution.name"></a>
 				<div class="dropdown__menu">
 					<a *ngFor="let solution of solutions"
-						attr.data-auto-id="SolutionDropdown-{{ solution.key }}"
+						attr.data-auto-id="SolutionDropdown-{{ solution.name }}"
 						class="text-uppercase"
 						(click)="changeSolution(solution)"
 						[ngClass]="{
-							'selected': solution.selected,
-							'disabled': solution.disabled
+							'selected': selectedSolution.name === solution.name
 						}"
-						[innerText]="solution.title | i18n">
+						[innerText]="solution.name">
 					</a>
 				</div>
 			</div>
 		</div>
 		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"></div>
-		<div *ngIf="useCases[selectedSolution.key].length">
+		<div *ngIf="selectedTechnology">
 			<div class="text-muted" [innerText]="'_UseCase_' | i18n"></div>
 			<div class="dropdown dropdown--tail"
 				data-auto-id="UseCaseDropdown"
 				[ngClass]="{'active': useCaseDropdown }"
 				(click)="solutionDropdown = false; useCaseDropdown = !useCaseDropdown">
 				<a class="text-dkgray-4 text-large text-bold"
-					[innerText]="selectedUseCase.title | i18n">
+					[innerText]="selectedTechnology.name">
 				</a>
-				<div class="dropdown__menu" *ngIf="useCases[selectedSolution.key].length">
-					<a *ngFor="let case of useCases[selectedSolution.key]"
-						attr.data-auto-id="UseCaseDropdown-{{ case.key }}"
-						(click)="changeUseCase(case)"
-						[ngClass]="{ 'selected': case.selected }"
-						[innerText]="case.title | i18n">
+				<div class="dropdown__menu">
+					<a *ngFor="let technology of technologies"
+						attr.data-auto-id="TechnologyDropdown-{{ technology.name }}"
+						(click)="changeTechnology(technology)"
+						[ngClass]="{ 'selected': selectedTechnology.name === technology.name }"
+						[innerText]="technology.name">
 					</a>
 				</div>
 			</div>

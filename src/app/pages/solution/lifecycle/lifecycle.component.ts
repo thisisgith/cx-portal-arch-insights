@@ -7,28 +7,28 @@ import {
 import { LogService } from '@cisco-ngx/cui-services';
 
 import {
-	RacetrackResponse,
-	RacetrackTechnology,
-	RacetrackPitstop,
-	RacetrackService,
-	ELearning,
-	RacetrackContentService,
-	ATXResponse,
-	ATX,
-	ATXSession,
-	RacetrackPitstopAction,
-	PitstopActionUpdateResponse,
-	PitstopActionUpdateRequest,
 	ACC,
-	Community,
 	ACCResponse,
+	ATX,
+	ATXResponse,
+	ATXSession,
 	CommunitiesResponse,
-	SuccessPath,
+	Community,
+	ELearning,
 	ELearningResponse,
+	PitstopActionUpdateRequest,
+	PitstopActionUpdateResponse,
+	RacetrackContentService,
+	RacetrackPitstop,
+	RacetrackPitstopAction,
+	RacetrackService,
+	RacetrackSolution,
+	RacetrackTechnology,
+	SuccessPath,
 	SuccessPathsResponse,
 } from '@cui-x/sdp-api';
 
-import { Solution, SolutionService, UseCase } from '../solution.service';
+import { SolutionService } from '../solution.service';
 import * as _ from 'lodash';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -118,8 +118,10 @@ export class LifecycleComponent implements OnDestroy {
 		},
 	};
 
+	private selectedSolution: RacetrackSolution;
+	private selectedTechnology: RacetrackTechnology;
 	private solutionSubscribe: Subscription;
-	private useCaseSubscribe: Subscription;
+	private technologySubscribe: Subscription;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -136,17 +138,19 @@ export class LifecycleComponent implements OnDestroy {
 		private solutionService: SolutionService,
 	) {
 		this.solutionSubscribe = this.solutionService.getCurrentSolution()
-		.subscribe((solution: Solution) => {
-			this.componentData.params.solution = solution.key;
+		.subscribe((solution: RacetrackSolution) => {
+			this.selectedSolution = solution;
+			this.componentData.params.solution = solution.name;
 		});
 
-		this.useCaseSubscribe = this.solutionService.getCurrentUseCase()
-		.subscribe((useCase: UseCase) => {
+		this.technologySubscribe = this.solutionService.getCurrentTechnology()
+		.subscribe((technology: RacetrackTechnology) => {
+			this.selectedTechnology = technology;
 			const currentSolution = this.componentData.params.solution;
 
 			this.resetComponentData();
 
-			this.componentData.params.usecase = useCase.key;
+			this.componentData.params.usecase = technology.name;
 			this.componentData.params.solution = currentSolution;
 
 			this.getRacetrackInfo();
@@ -201,7 +205,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public getRibbonClass (atx: ATX) {
 		let ribbon = 'ribbon__clear';
-		switch (atx.status) {
+		switch (_.get(atx, 'status')) {
 			case 'completed': {
 				ribbon = 'ribbon__green';
 				break;
@@ -509,47 +513,33 @@ export class LifecycleComponent implements OnDestroy {
 		if (this.componentData.params.solution && this.componentData.params.usecase) {
 			this.status.loading.racetrack = true;
 
-			this.racetrackService.getRacetrack(
-				_.pick(this.componentData.params, ['customerId']))
-			.subscribe((results: RacetrackResponse) => {
-				const solution = _.find(results.solutions,
-						{ name: this.componentData.params.solution.toUpperCase() });
+			const stage = _.get(this.selectedTechnology, 'currentPitstop', 'Onboard');
 
-				if (solution) {
-					const usecase = _.find(solution.technologies, (tech: RacetrackTechnology) =>
-						tech.name.toLowerCase() === this.componentData.params.usecase);
+			const pitstop = _.find(
+				_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
+				stop.name.toLowerCase() === stage.toLowerCase());
 
-					if (usecase) {
-						const stop = _.find(usecase.pitstops,
-							(pitstop: RacetrackPitstop) =>
-							pitstop.name.toLowerCase() === usecase.currentPitstop.toLowerCase());
-						this.componentData.racetrack = {
-							pitstop: stop,
-							stage: usecase.currentPitstop.toLowerCase(),
-						};
-						this.componentData.racetrack.actionsCompPercent =
-							this.calculateActionPercentage(stop);
-						const nextAction = _.find(stop.pitstopActions, { isComplete: false });
-						this.componentData.params.suggestedAction = nextAction ?
-							nextAction.name : null;
-						this.currentPitActionsWithStatus = _.map(
-							stop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
-							({
-								action: pitstopAction,
-								selected: false,
-							}));
-						this.componentData.params.pitstop = this.componentData.racetrack.stage;
-						this.loadRacetrackInfo();
-					}
-				}
+			this.componentData.racetrack = {
+				pitstop,
+				actionsCompPercent: this.calculateActionPercentage(pitstop),
+				stage: stage.toLowerCase(),
+			};
 
-				this.status.loading.racetrack = false;
-			},
-			err => {
-				this.status.loading.racetrack = false;
-				this.logger.error(`lifecycle.component : getRacetrackInfo() :: Error  : (${
-					err.status}) ${err.message}`);
-			});
+			const nextAction = _.find(pitstop.pitstopActions, { isComplete: false });
+
+			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
+
+			this.currentPitActionsWithStatus = _.map(
+				pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
+					({
+						action: pitstopAction,
+						selected: false,
+					}));
+
+			this.componentData.params.pitstop = stage;
+			this.loadRacetrackInfo();
+
+			this.status.loading.racetrack = false;
 		}
 	}
 
@@ -561,8 +551,8 @@ export class LifecycleComponent implements OnDestroy {
 			_.invoke(this.solutionSubscribe, 'unsubscribe');
 		}
 
-		if (this.useCaseSubscribe) {
-			_.invoke(this.useCaseSubscribe, 'unsubscribe');
+		if (this.technologySubscribe) {
+			_.invoke(this.technologySubscribe, 'unsubscribe');
 		}
 	}
 }

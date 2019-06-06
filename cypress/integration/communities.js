@@ -1,6 +1,4 @@
-import MockService from '../support/mockService';
-
-/// <reference types="Cypress" />
+// import MockService from '../support/mockService';
 
 
 // const commMock = new MockService('CommunitiesScenarios'); // for future changes
