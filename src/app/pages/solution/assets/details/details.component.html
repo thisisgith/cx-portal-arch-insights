@@ -47,15 +47,6 @@
 						<span class="icon-close icon--mid"></span>
 					</a>
 				</div>
-			
-				<!-- <div class="col-md-4 base-padding-bottom text-right">
-					<a class="text-dkgray-4" data-auto-id="FullScreen">
-						<span class="icon-fullscreen icon--mid half-margin-right"></span>
-					</a>
-					<a class="text-dkgray-4" data-auto-id="ClearAsset" (click)="clearAsset()">
-						<span class="icon-close icon--mid"></span>
-					</a>
-				</div> -->
 
 				<div class="col-md-8 base-margin-bottom">
 					<div class="dbl-margin-left flex">
@@ -93,14 +84,13 @@
 				class="dropdown dropdown--center dropdown--tail open-case-toggle-btn"
 				[ngClass]="{ active: casesDropdownActive }"
 			>
-				<a 	
+				<div 	
 					data-auto-id="ToggleActiveCases"
 					(click)="toggleActiveCases()"
-					href="#"
 					class="text-uppercase open-case-toggle dbl-margin-left"
 					innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})"
 				>
-				</a>
+			</div>
 
 				<!-- BEGIN TODO: use API data when it returns -->
 				<div class="dropdown__menu half-padding">

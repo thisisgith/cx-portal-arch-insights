@@ -99,12 +99,16 @@
 	border: solid 1px #58585b;
 }
 
+.open-case-toggle-btn.active {
+	.open-case-toggle {
+		color: #00bceb !important;
+	}
+}
 
-.open-case-toggle-btn {
+.open-case-toggle {
 	color: #58585b !important;
 
-	&:hover,
-	&.active {
+	&:hover {
 		color: #00bceb !important;
 	}
 }
