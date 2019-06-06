@@ -39,25 +39,7 @@ describe('AssetsComponent', () => {
 	/**
 	 * @TODO modify test to use UI
 	 */
-	it('should switch active tabs', () => {
-		expect(component.selectedTab.key)
-			.toEqual('assets');
-
-		component.selectTab(component.tabs[1]);
-
-		fixture.detectChanges();
-
-		expect(component.selectedTab.key)
-			.toEqual('eox');
-	});
-
-	/**
-	 * @TODO modify test to use UI
-	 */
 	it('should switch active filters', () => {
-		expect(component.selectedTab.key)
-			.toEqual('assets');
-
 		const totalFilter = _.find(component.filters, { key: 'total' });
 		const casesFilter = _.find(component.filters, { key: 'cases' });
 		expect(_.find(component.filters, 'selected'))
@@ -72,9 +54,6 @@ describe('AssetsComponent', () => {
 	});
 
 	it('should default to first filter if unselecting all filters', () => {
-		expect(component.selectedTab.key)
-			.toEqual('assets');
-
 		const totalFilter = _.find(component.filters, { key: 'total' });
 		const casesFilter = _.find(component.filters, { key: 'cases' });
 
