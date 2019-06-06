@@ -100,17 +100,11 @@ describe('LifecycleComponent', () => {
 	 * Sends the current solution and use case via subscriptions
 	 */
 	const sendParams = () => {
-		solutionService.sendCurrentSolution({
-			key: 'ibn',
-			selected: true,
-			title: 'IBN',
-		});
+		const racetrack = getActiveBody(RacetrackScenarios[0]);
 
-		solutionService.sendCurrentUseCase({
-			key: 'assurance',
-			selected: true,
-			title: 'Assurance',
-		});
+		solutionService.sendCurrentSolution(racetrack.solutions[0]);
+
+		solutionService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
 	};
 
 	beforeEach(async(() => {
@@ -151,21 +145,6 @@ describe('LifecycleComponent', () => {
 					expect(component.componentData.atx.sessions.length)
 						.toEqual(9);
 				});
-		});
-
-		it('should not load anything else if racetrack fails', () => {
-			racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
-				.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-					statusText: 'Resource not found',
-				})));
-			sendParams();
-
-			fixture.detectChanges();
-
-			expect(component.componentData.racetrack)
-				.toBeUndefined();
 		});
 
 		it('should gracefully handle failures for all other api calls', () => {
@@ -373,7 +352,18 @@ describe('LifecycleComponent', () => {
 				.toHaveBeenCalledTimes(2);
 			});
 		});
+	});
 
+	it('should have loaded the community items', () => {
+		buildSpies();
+		sendParams();
+
+		fixture.detectChanges();
+		fixture.whenStable()
+			.then(() => {
+				expect(component.componentData.communities.length)
+					.toEqual(2);
+			});
 	});
 
 	describe('Learn - Non-cypress', () => {
