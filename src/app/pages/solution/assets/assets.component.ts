@@ -46,17 +46,17 @@ interface Tab {
 })
 export class AssetsComponent implements OnInit {
 
-	@ViewChild('assetsContent') private assetsTemplate: TemplateRef<{ }>;
-	@ViewChild('eoxContent') private eoxTemplate: TemplateRef<{ }>;
-	@ViewChild('contractsContent') private contractsTemplate: TemplateRef<{ }>;
+	@ViewChild('assetsContent', { static: true }) private assetsTemplate: TemplateRef<{ }>;
+	@ViewChild('eoxContent', { static: true }) private eoxTemplate: TemplateRef<{ }>;
+	@ViewChild('contractsContent', { static: true }) private contractsTemplate: TemplateRef<{ }>;
 
-	@ViewChild('casesAssetsFilter') private casesAssetsFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('rmasAssetsFilter') private rmasAssetsFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('totalAssetsFilter') private totalAssetsFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('coverageFilter') private coverageFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('statusFilter') private statusFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('typeFilter') private typeFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('advisoryFilter') private advisoryFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('casesAssetsFilter', { static: true }) private casesAssetsFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('rmasAssetsFilter', { static: true }) private rmasAssetsFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('coverageFilter', { static: true }) private coverageFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('statusFilter', { static: true }) private statusFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('typeFilter', { static: true }) private typeFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('advisoryFilter', { static: true }) private advisoryFilterTemplate: TemplateRef<{ }>;
 
 	public bulkDropdown = false;
 	public selectedAssets: HardwareInfo[] = [];

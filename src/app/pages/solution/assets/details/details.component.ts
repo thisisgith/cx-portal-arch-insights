@@ -38,7 +38,7 @@ interface Tab {
 export class AssetDetailsComponent implements OnChanges, OnInit {
 
 	@Input('asset') public asset: HardwareInfo;
-	@ViewChild('details') private detailsTemplate: TemplateRef<{ }>;
+	@ViewChild('details', { static: true }) private detailsTemplate: TemplateRef<{ }>;
 
 	public selectedTab: Tab;
 	public componentData = {

@@ -9,23 +9,28 @@ const routes: Routes = [
 	{
 		children: [
 			{
-				loadChildren: './lifecycle/lifecycle.module#LifecycleModule',
+				loadChildren: () => import('./lifecycle/lifecycle.module')
+					.then(m => m.LifecycleModule),
 				path: 'lifecycle',
 			},
 			{
-				loadChildren: './assets/assets.module#AssetsModule',
+				loadChildren: () => import('./assets/assets.module')
+					.then(m => m.AssetsModule),
 				path: 'assets',
 			},
 			{
-				loadChildren: './security/security.module#SecurityModule',
+				loadChildren: () => import('./security/security.module')
+					.then(m => m.SecurityModule),
 				path: 'security',
 			},
 			{
-				loadChildren: './advisories/advisories.module#AdvisoriesModule',
+				loadChildren: () => import('./advisories/advisories.module')
+					.then(m => m.AdvisoriesModule),
 				path: 'advisories',
 			},
 			{
-				loadChildren: './resolution/resolution.module#ResolutionModule',
+				loadChildren: () => import('./resolution/resolution.module')
+					.then(m => m.ResolutionModule),
 				path: 'resolution',
 			},
 			{
