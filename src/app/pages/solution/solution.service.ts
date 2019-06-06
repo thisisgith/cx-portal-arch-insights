@@ -1,25 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { HardwareInfo } from '@cui-x/sdp-api';
-
-/**
- * Interface representing a Use Case
- */
-export interface UseCase {
-	key: string;
-	selected: boolean;
-	title: string;
-}
-
-/**
- * Interface representing a solution
- */
-export interface Solution {
-	disabled?: boolean;
-	key: string;
-	selected: boolean;
-	title: string;
-}
+import {
+	HardwareInfo,
+	RacetrackSolution,
+	RacetrackTechnology,
+} from '@cui-x/sdp-api';
 
 /**
  * Service which represents our senders and listeners for UseCases Solutions and selected Hardware
@@ -29,23 +14,23 @@ export interface Solution {
 })
 export class SolutionService {
 
-	private currentUseCase = new Subject<UseCase>();
-	private currentSolution = new Subject<Solution>();
+	private currentTechnology = new Subject<RacetrackTechnology>();
+	private currentSolution = new Subject<RacetrackSolution>();
 	private currentAsset = new Subject<HardwareInfo>();
 
 	/**
 	 * Returns the currently selected use case
 	 * @returns the observable representing the use case
 	 */
-	public getCurrentUseCase (): Observable<UseCase> {
-		return this.currentUseCase.asObservable();
+	public getCurrentTechnology (): Observable<RacetrackTechnology> {
+		return this.currentTechnology.asObservable();
 	}
 
 	/**
 	 * Returns the currently selected solution
 	 * @returns the observable representing the solution
 	 */
-	public getCurrentSolution (): Observable<Solution> {
+	public getCurrentSolution (): Observable<RacetrackSolution> {
 		return this.currentSolution.asObservable();
 	}
 
@@ -61,16 +46,16 @@ export class SolutionService {
 	 * Sends out an update for the currently selected solution
 	 * @param solution the solution to send
 	 */
-	public sendCurrentSolution (solution: Solution) {
+	public sendCurrentSolution (solution: RacetrackSolution) {
 		this.currentSolution.next(solution);
 	}
 
 	/**
-	 * Sends out an update for the currently selected use case
-	 * @param useCase the use case to send
+	 * Sends out an update for the currently selected technology
+	 * @param technology the technology to send
 	 */
-	public sendCurrentUseCase (useCase: UseCase) {
-		this.currentUseCase.next(useCase);
+	public sendCurrentTechnology (technology: RacetrackTechnology) {
+		this.currentTechnology.next(technology);
 	}
 
 	/**
@@ -80,5 +65,4 @@ export class SolutionService {
 	public sendCurrentAsset (asset: HardwareInfo) {
 		this.currentAsset.next(asset);
 	}
-
 }

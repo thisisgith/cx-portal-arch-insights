@@ -70,31 +70,32 @@ export const ACCScenarios = [
 			GET: [
 				{
 					delay: 250,
-					description: '(ACC) IBN-Assurance-Onboard',
+					description: '(ACC) IBN-Wireless Assurance-Onboard',
 					response: {
-						body: MockACC('ibn', 'assurance', 'onboard'),
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=assurance&solution=ibn&pitstop=onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Wireless Assurance&` +
+			`solution=IBN&pitstop=Onboard&customerId=${customerId}`,
 	},
 	{
 		scenarios: {
 			GET: [
 				{
 					delay: 250,
-					description: '(ACC) IBN-SD-Access-Adopt',
+					description: '(ACC) IBN-SD Access-Onboard',
 					response: {
-						body: MockACC('ibn', 'sd-access', 'adopt'),
+						body: MockACC('IBN', 'SD Access', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=sd-access&solution=ibn&pitstop=adopt&customerId=${customerId}`,
+		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
 	},
 ];
