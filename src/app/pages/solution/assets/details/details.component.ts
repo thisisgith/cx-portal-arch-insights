@@ -66,6 +66,8 @@ export class AssetDetailsComponent implements OnInit {
 			.subscribe((data: any) => {
 				this.componentData.openCases = _.get(data, 'totalElements', 0);
 				this.status.loading.cases = false;
+				console.log('>>>>', data);
+
 			},
 			err => {
 				this.componentData.openCases = 0;

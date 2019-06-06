@@ -1,6 +1,6 @@
 .assets-header {
 	background-color: #fbfbfc;
-	border-bottom: solid 1px #DFDFDF;
+	border-bottom: solid 1px #dfdfdf;
 }
 
 .panel--no-padding {
@@ -17,22 +17,22 @@
 
 .btn--light-gray {
 	background-color: transparent;
-	border: solid 1px #CED0D1;
+	border: solid 1px #ced0d1; 
 	min-width: 24px !important;
 
 	&:hover {
-		background-color:  #CED0D1;
+		background-color: #ced0d1;
 		border-color: transparent;
 	}
 }
 
 .btn.btn--bright-blue {
-	border-color: #00BCEB;
+	border-color: #00bceb;
 	background-color: transparent;
 	color: #58585b;
 
 	&:hover {
-		background-color: #00BCEB;
+		background-color: #00bceb;
 		color: white!important;
 	}
 }
@@ -54,32 +54,32 @@
 }
 
 .icon--rotated {
-	color: #C6C7CA;
+	color: #c6c7ca;
 	transform: rotate(90deg);
 
 	&:hover {
-		color: #00BCEB;
+		color: #00bceb;
 	}
 }
 
 .dropdown--actions.active {
 	.icon--rotated {
-		color: #00BCEB;
+		color: #00bceb;
 	}
 }
 
 .label--bordered-dark {
 	white-space: nowrap;
-	border: solid 1px #58585b;
+	border: solid 1px #58585b; 
 }
 
 .open-case-toggle {
-	color: #00BCEB!important;
+	color: #00bceb !important;
 }
 
 .dropdown-case {
 	&:not(:first-of-type) {
-		border-top: solid 1px #DFDFDF;
+		border-top: solid 1px #dfdfdf;
 		padding-top: 10px;
 	}
 }
