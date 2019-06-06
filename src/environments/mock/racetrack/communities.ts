@@ -18,15 +18,15 @@ function MockCommunities (
 
 	let items = [
 		{
-			title: 'Lifecycle',
 			description: 'Avoid common pitfalls with how-tos and step-by-step videos ' +
-				'that cruise you through installation of your new appliance from start to finish',
+			'that cruise you through installation of your new appliance from start to finish',
+			title: 'Lifecycle',
 			url: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
 		},
 		{
-			title: 'Public',
 			description: 'Avoid common pitfalls with how-tos and step-by-step videos ' +
 			'that cruise you through installation of your new appliance from start to finish',
+			title: 'Public',
 			url: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
 		},
 	];
@@ -52,31 +52,32 @@ export const CommunitiesScenarios = [
 			GET: [
 				{
 					delay: 750,
-					description: '(Communities) IBN-Assurance-Onboard',
+					description: '(Communities) IBN-Wireless Assurance-Onboard',
 					response: {
-						body: MockCommunities('ibn', 'assurance', 'onboard'),
+						body: MockCommunities('IBN', 'Wireless Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=assurance&solution=ibn&pitstop=onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
+			`&pitstop=Onboard&customerId=${customerId}`,
 	},
 	{
 		scenarios: {
 			GET: [
 				{
 					delay: 750,
-					description: '(Communities) IBN-SD-Access-Adopt',
+					description: '(Communities) IBN-SD Access-Onboard',
 					response: {
-						body: MockCommunities('ibn', 'sd-access', 'adopt'),
+						body: MockCommunities('IBN', 'SD Access', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=sd-access&solution=ibn&pitstop=adopt&customerId=${customerId}`,
+		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
 	},
 ];

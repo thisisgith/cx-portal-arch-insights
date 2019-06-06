@@ -11,11 +11,9 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-const wp = require('@cypress/webpack-preprocessor')
+const wp = require('@cypress/webpack-preprocessor');
+const webpackOptions = require('../../webpack.config');
 
-module.exports = (on) => {
-  const options = {
-    webpackOptions: require('../../webpack.config'),
-  }
-  on('file:preprocessor', wp(options))
-}
+module.exports = on => {
+	on('file:preprocessor', wp({ webpackOptions }));
+};
