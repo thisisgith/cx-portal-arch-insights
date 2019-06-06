@@ -14,8 +14,15 @@ import {
 
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs';
-import { HardwareInfo } from '@cui-x/sdp-api';
-import { Solution, SolutionService, UseCase } from './solution.service';
+import {
+	HardwareInfo,
+	RacetrackService,
+	RacetrackResponse,
+	RacetrackSolution,
+	RacetrackTechnology,
+} from '@cui-x/sdp-api';
+import { SolutionService } from './solution.service';
+import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Interface representing a facet
@@ -28,16 +35,6 @@ interface Facet {
 }
 
 /**
- * Interface representing the use cases object
- */
-interface UseCases {
-	aci: UseCase[];
-	collab: UseCase[];
-	ibn: UseCase[];
-	security: UseCase[];
-}
-
-/**
  * Solution Page
  */
 @Component({
@@ -47,74 +44,23 @@ interface UseCases {
 export class SolutionComponent implements OnInit, OnDestroy {
 
 	public shownTabs = 5;
-	public solutionDropdown = false;
-	public useCaseDropdown = false;
-
 	public selectedFacet: Facet;
+	public selectedSolution: RacetrackSolution;
+	public selectedTechnology: RacetrackTechnology;
 
-	/** Temporary until we figure out what this is supposed to look like */
-	public useCases: UseCases = {
-		aci: [
-			{
-				key: 'someKey',
-				selected: false,
-				title: '_Placeholder_',
-			},
-		],
-		collab: [],
-		ibn: [
-			{
-				key: 'assurance',
-				selected: true,
-				title: '_WirelessAssurance_',
-			},
-			{
-				key: 'sd-access',
-				selected: false,
-				title: '_SDAccess_',
-			},
-			{
-				key: 'automation',
-				selected: false,
-				title: '_Automation_',
-			},
-		],
-		security: [],
+	public status = {
+		dropdowns: {
+			solution: false,
+			technology: false,
+		},
+		loading: false,
 	};
-
-	/** Temporary until we figure out what this is supposed to look like */
-	public solutions: Solution[] = [
-		{
-			key: 'ibn',
-			selected: true,
-			title: '_IBN_',
-		},
-		{
-			disabled: true,
-			key: 'aci',
-			selected: false,
-			title: '_ACI_',
-		},
-		{
-			disabled: true,
-			key: 'collab',
-			selected: false,
-			title: '_Collab_',
-		},
-		{
-			disabled: true,
-			key: 'security',
-			selected: false,
-			title: '_Security_',
-		},
-	];
-	public selectedSolution = this.solutions[0];
-	public selectedUseCase = this.useCases[this.selectedSolution.key][0];
 	private activeRoute: string;
 	public facets: Facet[];
 	public selectedAsset: HardwareInfo;
 	private eventsSubscribe: Subscription;
 	private assetSubscribe: Subscription;
+	public solutions: RacetrackSolution[];
 
 	@ViewChild('advisoriesFact') public advisoriesTemplate: TemplateRef<{ }>;
 	@ViewChild('assetsFacet') public assetsTemplate: TemplateRef<{ }>;
@@ -125,6 +71,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	constructor (
 		private router: Router,
 		private solutionService: SolutionService,
+		private racetrackService: RacetrackService,
+		private logger: LogService,
 	) {
 		this.eventsSubscribe = this.router.events.subscribe(
 			(event: RouterEvent): void => {
@@ -146,6 +94,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		.subscribe((asset: HardwareInfo) => {
 			this.selectedAsset = asset;
 		});
+	}
+
+	get technologies (): RacetrackTechnology[] {
+		const name = _.get(this.selectedSolution, 'name');
+
+		return _.get(_.find(this.solutions, { name }), 'technologies', []);
 	}
 
 	/**
@@ -170,8 +124,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			if (this.selectedSolution) {
 				this.solutionService.sendCurrentSolution(this.selectedSolution);
 
-				if (this.selectedUseCase) {
-					this.solutionService.sendCurrentUseCase(this.selectedUseCase);
+				if (this.selectedTechnology) {
+					this.solutionService.sendCurrentTechnology(this.selectedTechnology);
 				}
 			}
 		}
@@ -215,52 +169,53 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Change our use case
-	 * @param useCase the use case
+	 * Change our technology
+	 * @param technology the technology
 	 */
-	public changeUseCase (useCase: UseCase) {
-		const solution = _.get(_.find(this.solutions, 'selected'), 'key');
-
-		if (solution) {
-			_.each(this.useCases[solution], (uc: UseCase) => {
-				uc.selected = false;
-			});
-		}
-
-		this.selectedUseCase = useCase;
-		useCase.selected = true;
-		this.solutionService.sendCurrentUseCase(useCase);
+	public changeTechnology (technology: RacetrackTechnology) {
+		this.selectedTechnology = technology;
+		this.solutionService.sendCurrentTechnology(technology);
 	}
 
 	/**
 	 * Change the solution
 	 * @param solution the selected solution
 	 */
-	public changeSolution (solution: Solution) {
-		_.each(this.solutions, (s: Solution) => {
-			s.selected = false;
-			_.each(this.useCases[s.key], (uc: UseCase) => {
-				uc.selected = false;
-			});
-		});
-
+	public changeSolution (solution: RacetrackSolution) {
 		this.selectedSolution = solution;
-		solution.selected = true;
 		this.solutionService.sendCurrentSolution(solution);
-		const topUseCase = this.useCases[solution.key][0];
-		if (topUseCase) {
-			this.changeUseCase(topUseCase);
+
+		const topTechnology = _.head(_.get(this.selectedSolution, 'technologies', []));
+
+		if (topTechnology) {
+			this.changeTechnology(topTechnology);
 		}
+	}
+
+	/**
+	 * Will retrieve the solutions and associated use cases and build out the dropdowns
+	 */
+	private fetchSolutions () {
+		this.status.loading = true;
+		this.racetrackService.getRacetrack({ customerId: '2431199' })
+		.subscribe((results: RacetrackResponse) => {
+			this.solutions = results.solutions;
+			this.changeSolution(_.head(this.solutions));
+			this.status.loading = false;
+		},
+		err => {
+			this.status.loading = false;
+			this.logger.error('solution.component : fetchSolutions() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
 	}
 
 	/**
 	 * OnInit Functionality
 	 */
 	public ngOnInit () {
+		this.fetchSolutions();
 		this.initializeFacets();
-
-		this.solutionService.sendCurrentSolution(this.selectedSolution);
-		this.solutionService.sendCurrentUseCase(this.selectedUseCase);
 	}
 
 	/**

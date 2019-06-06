@@ -1,7 +1,7 @@
 import MockService from '../support/mockService';
 
 const atxMock = new MockService('ATXScenarios');
-const atxOnboardScenario = atxMock.getScenario('GET', '(ATX) IBN-Assurance-Onboard');
+const atxOnboardScenario = atxMock.getScenario('GET', '(ATX) IBN-Wireless Assurance-Onboard');
 const atxItems = atxOnboardScenario.response.body.items;
 
 describe('Ask The Expert (ATX)', () => { // PBC-31
