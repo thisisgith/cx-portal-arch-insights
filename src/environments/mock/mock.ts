@@ -123,6 +123,7 @@ export const mockSettings: MockSettings = {
 				],
 			},
 			url: '/ws/search',
+			usecases: ['Example', 'More Example'],
 		},
 	]),
 };
