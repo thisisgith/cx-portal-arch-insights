@@ -29,7 +29,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 export class AssetDetailsComponent implements OnChanges, OnInit {
 
 	@Input('asset') public asset: HardwareInfo;
-	@ViewChild('details') private detailsTemplate: TemplateRef<{ }>;
+	@ViewChild('details', { static: true }) private detailsTemplate: TemplateRef<{ }>;
 
 	public componentData = {
 		openCases: 0,

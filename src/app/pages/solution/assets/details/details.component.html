@@ -1,12 +1,5 @@
 <div class="panel panel--bordered-left flex-fill panel--no-padding">
 	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
-<<<<<<< HEAD
-	<ng-container *ngTemplateOutlet="tabs"></ng-container>
-	<ng-container *ngIf="selectedTab">
-		<ng-container *ngTemplateOutlet="selectedTab.template"></ng-container>
-	</ng-container>
-=======
-	<div class="divider divider--thick qtr-margin-top qtr-margin-bottom"></div>
 	<cui-tabs>
 		<cui-tab [label]="'_Details_' | i18n">
 			<ng-container *ngTemplateOutlet="details"></ng-container>
@@ -27,7 +20,6 @@
 
 		</cui-tab>
 	</cui-tabs>
->>>>>>> develop
 </div>
 
 <ng-template #assetHeader>
@@ -42,15 +34,28 @@
 						<div class="text-xlarge" [innerText]="asset?.hostname || asset?.serialNumber"></div>
 					</div>
 				</div>
+
+				<div class="col-md-4 text-right">
+					<a class="text-dkgray-4" data-auto-id="FullScreen">
+						<span data-auto-id="asset-details-toggle-fullscreen-icon" class="icon--mid half-margin-right"
+							[title]="'_ToggleFullscreen_' | i18n" [ngClass]="{
+										'icon-fullscreen': !fullscreen,
+										'icon-exit-fullscreen': fullscreen
+									}" (click)="toggleFullscreen()"></span>
+					</a>
+					<a class="text-dkgray-4" data-auto-id="ClearAsset" (click)="clearAsset()">
+						<span class="icon-close icon--mid"></span>
+					</a>
+				</div>
 			
-				<div class="col-md-4 base-padding-bottom text-right">
+				<!-- <div class="col-md-4 base-padding-bottom text-right">
 					<a class="text-dkgray-4" data-auto-id="FullScreen">
 						<span class="icon-fullscreen icon--mid half-margin-right"></span>
 					</a>
 					<a class="text-dkgray-4" data-auto-id="ClearAsset" (click)="clearAsset()">
 						<span class="icon-close icon--mid"></span>
 					</a>
-				</div>
+				</div> -->
 
 				<div class="col-md-8 base-margin-bottom">
 					<div class="dbl-margin-left flex">
@@ -159,45 +164,8 @@
 					</div>
 				</div>
 			</div>
-<<<<<<< HEAD
-=======
 		</div>
-		<div class="col-md-4 text-right">
-			<a class="text-dkgray-4"
-				data-auto-id="FullScreen">
-				<span
-					data-auto-id="asset-details-toggle-fullscreen-icon"
-					class="icon--mid half-margin-right"
-					[title]="'_ToggleFullscreen_' | i18n"
-					[ngClass]="{
-						'icon-fullscreen': !fullscreen,
-						'icon-exit-fullscreen': fullscreen
-					}"
-					(click)="toggleFullscreen()"
-				></span>
-			</a>
-			<a class="text-dkgray-4"
-				data-auto-id="ClearAsset"
-				(click)="clearAsset()">
-				<span class="icon-close icon--mid"></span>
-			</a>
-		</div>
-	</div>
-	<div class="row base-margin-top">
-		<div class="col-md-6"
-			*ngIf="!status.loading.cases"
-			innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
-		</div>
-		<div class="text-right"
-			[ngClass]="{
-				'col-md-12': status.loading.cases,
-				'col-md-6': !status.loading.cases
-			}">
-			<span [innerText]="'_RunDiagnostics_' | i18n"></span>
-			<span> | </span>
-			<span [innerText]="'_OpenCase_' | i18n"></span>
->>>>>>> develop
-		</div>
+
 	</div>
 
 </ng-template>
