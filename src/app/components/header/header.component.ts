@@ -39,6 +39,7 @@ export class HeaderComponent {
 	public record () {
 		this.isRecording = !this.isRecording;
 		if (this.isRecording) {
+			this.recordingClass = 'negative';
 			this.recordBtnInterval = setInterval(() => {
 				this.recordingClass = this.recordingClass === 'negative'
 					? 'gray-ghost' : 'negative';
