@@ -15,7 +15,7 @@ describe('Communities (Communities)', () => { // Jira: PBC-tbd
 	});
 
 	it('Renders Communities tile', () => {
-		cy.getByAutoId('PanelTitle-_Communities_').should('have.text', 'CISCO COMMUNITY');
+		cy.getByAutoId('PanelTitle-_Communities_').should('have.text', 'Cisco Community');
 		cy.getByAutoId('communitytitle-Lifecycle').should('have.text', 'Lifecycle');
 		cy.getByAutoId('communitytitle-Public').should('have.text', 'Public');
 		// No other data-auto-id's exist at this time
