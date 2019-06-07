@@ -63,6 +63,7 @@ export const ACCScenarios = [
 		},
 		url: `${api}?usecase=Wireless Assurance&` +
 			`solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['ACC'],
 	},
 	{
 		scenarios: {
@@ -79,5 +80,6 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['ACC'],
 	},
 ];
