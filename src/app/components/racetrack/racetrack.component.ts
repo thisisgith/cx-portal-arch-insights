@@ -74,7 +74,8 @@ export class RacetrackComponent implements OnInit {
 		this.points = points;
 
 		// Shove the points array onto the track so Cypress tests have access to it
-		this.track.attr('pointsLength', this.points.length);
+		this.track.attr('tracklength', this.length);
+		this.track.attr('pointslength', this.points.length);
 		this.points.forEach((point, index) => {
 			this.track.attr(`point${index}x`, point.x);
 			this.track.attr(`point${index}y`, point.y);
@@ -281,7 +282,13 @@ export class RacetrackComponent implements OnInit {
 			this.progress.transition()
 				.delay(500)
 				.duration(2000)
-				.attr('stroke-dasharray', `${progressDistance} ${this.length - progressDistance}`);
+				.attr('stroke-dasharray', `${progressDistance} ${this.length - progressDistance}`)
+				.on('start', () => {
+					window.progressMoving = true;
+				})
+				.on('end', () => {
+					window.progressMoving = false;
+				});
 
 			this.progressSoFar = progressDistance;
 		}

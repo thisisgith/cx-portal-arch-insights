@@ -1,7 +1,7 @@
 import RacetrackHelper from '../support/racetrackHelper';
 
-const racetrackHelper = new RacetrackHelper();
-let trackPoints = Array.from({ length: 200 });
+let racetrackHelper;
+let trackPoints;
 
 describe('Racetrack Content', () => {
 	before(() => {
@@ -11,7 +11,8 @@ describe('Racetrack Content', () => {
 
 		// Pull all the points off the track for rotation and position calculations
 		cy.get('#secrettrack').then(track => {
-			trackPoints = Array.from({ length: track.attr('pointsLength') });
+			trackPoints = Array.from({ length: track.attr('pointslength') });
+			racetrackHelper = new RacetrackHelper(parseFloat(track.attr('tracklength')), parseFloat(track.attr('pointslength')));
 			for (let index = 0; index < 200; index += 1) {
 				trackPoints[index] = { x: parseFloat(track.attr(`point${index}x`)), y: parseFloat(track.attr(`point${index}y`)) };
 			}
@@ -34,7 +35,7 @@ describe('Racetrack Content', () => {
 		'advocate',
 	];
 	stages.forEach(stageName => {
-		it(`Racetrack - Car position for stage ${stageName}`, () => {
+		it(`Racetrack - Car position for stage '${stageName}'`, () => {
 			// Click the stage circle to move the car there
 			cy.getByAutoId(`Racetrack-Point-${stageName}`).click();
 
@@ -67,6 +68,24 @@ describe('Racetrack Content', () => {
 					expect(translateY).contains(expectedCoords.y.toString().split('.')[0]);
 					expect(transformRotate).contains(rotations.toString().split('.')[0]);
 				});
+			});
+		});
+	});
+
+	stages.forEach(stageName => {
+		it(`Racetrack - Progress path for stage '${stageName}'`, () => {
+			// Click the stage circle to move the car there
+			cy.getByAutoId(`Racetrack-Point-${stageName}`).click();
+
+			// Wait for the car and progress path to finish moving
+			cy.waitForAppLoading('carMoving');
+			cy.waitForAppLoading('progressMoving');
+
+			cy.get('#progress').then(progressPath => {
+				const progressStrokeDasharray = progressPath.attr('stroke-dasharray');
+				const expectedStrokeDasharray = racetrackHelper.calculateTrackProgress(stageName);
+
+				expect(progressStrokeDasharray).eq(expectedStrokeDasharray);
 			});
 		});
 	});

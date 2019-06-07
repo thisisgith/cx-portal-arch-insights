@@ -1,4 +1,3 @@
-
 /**
  * Used to convert point coordinates to racecar coordinates
  */
@@ -6,12 +5,37 @@ export default class RacetrackHelper {
 	/**
 	 * Initializes the racetrack and car offsets.
 	 * These are hard-coded in the app, so hard-coded here as well.
+	 * @param {Integer} trackLength - The length of the racetrack
+	 * @param {Integer} pointsLength - The length of the points array for the racetrack
 	 */
-	constructor () {
+	constructor (trackLength, pointsLength) {
 		this.racetrackOffsetX = -22.6100006103515;
 		this.racetrackOffsetY = -287.230010986328;
 		this.carCenterOffsetX = -15;
 		this.carCenterOffsetY = -20;
+
+		this.length = trackLength;
+		this.pointsLength = pointsLength;
+		this.stageMap = {
+			adopt: 99.5,
+			advocate: 16,
+			engage: 95,
+			evaluate: 43,
+			implement: 87,
+			need: 33,
+			onboard: 82,
+			optimize: 4.5,
+			purchase: 66,
+			recommend: 12,
+			renew: 8,
+			select: 54,
+			use: 91,
+		};
+		Object.keys(this.stageMap)
+			.forEach(key => {
+				// convert % points to use granularity of pointsLength
+				this.stageMap[key] *= (this.pointsLength / 100);
+			});
 	}
 
 	/**
@@ -71,5 +95,21 @@ export default class RacetrackHelper {
 		}
 
 		return rotations;
+	}
+
+	/**
+	 * Calculates the length of the progressline around the track, starting from the
+	 * 'purchase' point, to the specified targetPoint
+	 * @param {String} targetPoint - the point that the progress line should have moved to
+	 * @returns {String} expectedProgress - The expected stroke-dasharray setting for the progress
+	 */
+	calculateTrackProgress (targetPoint) {
+		const end = this.stageMap[targetPoint];
+		const progressDistance = (end - this.stageMap.purchase < 0
+			? (end + this.pointsLength) - this.stageMap.purchase
+			: end - this.stageMap.purchase) * this.length / this.pointsLength;
+
+		const expectedProgress = `${progressDistance} ${this.length - progressDistance}`;
+		return expectedProgress;
 	}
 }
