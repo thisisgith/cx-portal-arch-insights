@@ -28,6 +28,31 @@ $vibblue: #017cad;
 	}
 }
 
+#accModal {
+	background-color: $light-gray-5;
+}
+
+.acc {
+	&__header {
+		background: transparent;
+	}
+
+	&__card {
+		&__background {
+			background: $white;
+		}
+
+		&__body {
+			height: 150px;
+			overflow: scroll;
+		}
+
+		&__recommended {
+			border-left: 2px solid $vibblue !important;
+		}
+	}
+}
+
 .round-edges {
 	border-radius: 15px;
 }
@@ -42,6 +67,18 @@ $vibblue: #017cad;
 
 .text-white {
 	color: $white;
+}
+
+.text-info {
+	color: $info;
+}
+
+.text-clear {
+	color: transparent;
+}
+
+.text-success {
+	color: $success;
 }
 
 .panel--open {
@@ -123,6 +160,9 @@ $vibblue: #017cad;
 
 .card_footer_item {
 	width: 100%;
+	position: absolute;
+	bottom: 20px;
+	padding-right: 40px;
 }
 
 .ribbon {
@@ -159,4 +199,8 @@ $vibblue: #017cad;
 	top: -2px;
 	color: white;
 	z-index: 2;
+}
+
+.grid.grid--4up {
+	gap: 20px 20px;
 }
