@@ -40,6 +40,9 @@ export class AssetsComponent implements OnInit {
 		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
 		TemplateRef<{ }>;
+	@ViewChild('assetsContent', { static: true }) private assetsTemplate: TemplateRef<{ }>;
+	@ViewChild('eoxContent', { static: true }) private eoxTemplate: TemplateRef<{ }>;
+	@ViewChild('contractsContent', { static: true }) private contractsTemplate: TemplateRef<{ }>;
 	@ViewChild('coverageFilter', { static: true }) private coverageFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('statusFilter', { static: true }) private statusFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('typeFilter', { static: true }) private typeFilterTemplate: TemplateRef<{ }>;

@@ -1,0 +1,99 @@
+<div class="pbc-timeline">
+	<div class="pbc-timeline__top flex">
+		<div
+			class="pbc-timeline__timestamp text-center"
+			*ngFor="let timestamp of timestampsOdd"
+		>
+			<div
+				*ngIf="!timestamp.isToday"
+				class="pbc-timeline__timestamp--content-top"
+				[ngClass]="{ 'text-muted': timestamp.muted }"
+			>
+				<div
+					class="text-bold"
+					[innerHTML]="timestamp.title"
+				></div>
+				<small [innerHTML]="timestamp.subTitle"></small>
+			</div>
+			<div
+				*ngIf="timestamp.isToday"
+				class="base-margin-top
+					pbc-timeline__timestamp--content-top
+					pbc-timeline__timestamp--today-top"
+			>
+				<div class="text-info" [innerText]="'_Today_' | i18n"></div>
+				<div class="pbc-timeline__timestamp--today-circle-top"></div>
+				<div
+					*ngIf="todayButtonText"
+					class="pbc-timeline__timestamp--today-btn-connector-top"
+				></div>
+				<button
+					*ngIf="todayButtonText"
+					class="pbc-timeline__timestamp--today-btn-top
+						btn btn--primary-ghost btn--small"
+					[innerText]="todayButtonText"
+					(click)="todayButtonClick.emit()"
+					data-auto-id="top-timeline-button"
+				>
+				</button>
+			</div>
+			<div
+				class="pbc-timeline__connector-down"
+				[ngClass]="{ 'muted': timestamp.isFuture }"
+			></div>
+		</div>
+	</div>
+	<div class="pbc-timeline__line-container flex">
+		<div
+			class="pbc-timeline__line-blue"
+			[ngStyle]="{ 'width': blueTimelineWidth }"
+			></div>
+		<div
+			class="pbc-timeline__line-gray"
+			[ngStyle]="{ 'width': grayTimelineWidth }"
+			></div>
+	</div>
+	<div class="pbc-timeline__bottom flex">
+		<div
+			class="pbc-timeline__timestamp text-center"
+			*ngFor="let timestamp of timestampsEven"
+		>
+			<div
+				class="pbc-timeline__connector-up"
+				[ngClass]="{ 'muted': timestamp.isFuture }"
+			></div>
+			<div
+				*ngIf="!timestamp.isToday"
+				class="pbc-timeline__timestamp--content-bottom"
+				[ngClass]="{ 'text-muted': timestamp.muted }"
+			>
+				<div
+					class="text-bold"
+					[innerHTML]="timestamp.title"
+				></div>
+				<small [innerHTML]="timestamp.subTitle"></small>
+			</div>
+			<div
+				*ngIf="timestamp.isToday"
+				class="pbc-timeline__timestamp--content-bottom
+					pbc-timeline__timestamp--today-bottom"
+			>
+				<div class="text-info" [innerText]="'_Today_' | i18n"></div>
+				<div class="pbc-timeline__timestamp--today-circle-bottom"></div>
+				<div
+					*ngIf="todayButtonText"
+					class="pbc-timeline__timestamp--today-btn-connector-bottom"
+				></div>
+				<button
+					*ngIf="todayButtonText"
+					class="pbc-timeline__timestamp--today-btn-bottom
+						btn btn--primary-ghost btn--small"
+					[innerText]="todayButtonText"
+					(click)="todayButtonClick.emit()"
+					data-auto-id="bottom-timeline-button"
+				>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
