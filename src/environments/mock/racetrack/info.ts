@@ -44,13 +44,14 @@ function MockRacetrack (
 										updateMethod: 'NA',
 									},
 									{
-										description: 'The hierarchy',
+										description: '- Explore Cisco DNA Center feature, ' +
+											'- Plan the deployment of your appliance',
 										isComplete: false,
 										isCompleteAuto: false,
 										isCompleteManual: false,
 										isManaualOverride: false,
 										manualCheckAllowed: false,
-										name: 'Configure Network Hierarchy',
+										name: 'Get to know Cisco DNA Center',
 										updateMethod: 'MANUAL',
 									},
 									{

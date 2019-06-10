@@ -98,20 +98,18 @@
 				<div class="col-md-10">
 					<a data-auto-id="actionlink" 
 						class="no-link" 
-						[ngClass]="{'disabled': action.action.isComplete, 'selected': action.selected}"
+						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
+						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
 						<div>
 							<span class="checkbox__label text-medium"
-								[innerText]="action.action.name">
+								[innerText]="action?.action?.name">
 							</span>
 							<span *ngIf="action.action.isCompleteAuto" class="qtr-padding-top">
 								<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png">
 							</span>
 						</div>
 					</a>
-				</div>
-				<div class="actiondesc panel panel--bordered">
-					<div class="half-margin-left" [innerText]="action.action.description"></div>
 				</div>
 			</div>
 		</div>			
