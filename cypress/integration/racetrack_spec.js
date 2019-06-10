@@ -37,16 +37,18 @@ describe('Racetrack Content', () => {
 	stages.forEach(stageName => {
 		it(`Racetrack - Car position for stage '${stageName}'`, () => {
 			// Click the stage circle to move the car there
-			cy.getByAutoId(`Racetrack-Point-${stageName}`).click();
+			// When scaling, points can end up "behind" the car or the secrettrack, so we need to
+			// force the click
+			cy.getByAutoId(`Racetrack-Point-${stageName}`).click({ force: true });
 
 			cy.getByAutoId(`Racetrack-Point-${stageName}`).then(point => {
-				const rotations = racetrackHelper.calculateRacecarRotations(point, trackPoints);
+				const expectedRotations = racetrackHelper.calculateRacecarRotations(point, trackPoints);
 
 				const pointCX = parseFloat(point.attr('cx'));
 				const pointCY = parseFloat(point.attr('cy'));
 
 				const expectedCoords = racetrackHelper
-					.calculateRacecarCoords(pointCX, pointCY, rotations);
+					.calculateRacecarCoords(pointCX, pointCY, expectedRotations);
 
 				// Wait for the car to finish moving
 				cy.waitForAppLoading('carMoving');
@@ -57,16 +59,18 @@ describe('Racetrack Content', () => {
 				 * like the SVG transform gets mangled slightly.
 				 * For example, setting an element to [100, 100] works, but setting an element to
 				 * [100.1, 100.1] becomes translate(100.0999984741211, 100.0999984741211)... Go figure...
+				 * Also, since the rounding does not appear to be linear, we'll check that the translate is
+				 * within +/- 1 of the expected values, to account for future moving/scaling/etc.
 				 */
 				cy.get('#racecar').should('have.attr', 'transform').then(transform => {
 					// Note: The tranform attribute look like transform: "translate(10, 20) rotate(30)"
 					const transformSplit = transform.split(' ');
-					const translateX = transformSplit[0];
-					const translateY = transformSplit[1];
-					const transformRotate = transformSplit[2];
-					expect(translateX).contains(expectedCoords.x.toString().split('.')[0]);
-					expect(translateY).contains(expectedCoords.y.toString().split('.')[0]);
-					expect(transformRotate).contains(rotations.toString().split('.')[0]);
+					const translateX = parseFloat(transformSplit[0].replace('translate(', ''));
+					const translateY = parseFloat(transformSplit[1].replace(')', ''));
+					const transformRotate = parseFloat(transformSplit[2].replace('rotate(', '').replace(')', ''));
+					expect(translateX).to.be.within(expectedCoords.x - 1, expectedCoords.x + 1);
+					expect(translateY).to.be.within(expectedCoords.y - 1, expectedCoords.y + 1);
+					expect(transformRotate).to.be.within(expectedRotations - 1, expectedRotations + 1);
 				});
 			});
 		});
@@ -75,7 +79,9 @@ describe('Racetrack Content', () => {
 	stages.forEach(stageName => {
 		it(`Racetrack - Progress path for stage '${stageName}'`, () => {
 			// Click the stage circle to move the car there
-			cy.getByAutoId(`Racetrack-Point-${stageName}`).click();
+			// When scaling, points can end up "behind" the car or the secrettrack, so we need to
+			// force the click
+			cy.getByAutoId(`Racetrack-Point-${stageName}`).click({ force: true });
 
 			// Wait for the car and progress path to finish moving
 			cy.waitForAppLoading('carMoving');
