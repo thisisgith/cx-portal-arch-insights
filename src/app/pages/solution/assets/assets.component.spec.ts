@@ -94,5 +94,9 @@ describe('AssetsComponent', () => {
 		component.ngOnInit();
 		expect(window.loading)
 			.toBe(false);
+
+		// cleanup
+		window.Cypress = undefined;
+		window.loading = undefined;
 	});
 });
