@@ -123,6 +123,22 @@ $vibblue: #017cad;
 	background-color: $vibblue;
 }
 
+.actiondesc {
+	display: none;
+}
+
+.actionname:hover .actiondesc {
+	display: block;
+	position: absolute;
+	box-shadow: $base-box-shadow;
+	z-index: 1;
+	background-color: $white;
+	height: 40px;
+	width: 250px;
+	bottom: -30px;
+	left: 30px;
+}
+
 .no-link.selected {
 	color: white !important;
 	-webkit-text-stroke-width: 0.5px;
@@ -203,4 +219,55 @@ $vibblue: #017cad;
 
 .grid.grid--4up {
 	gap: 20px 20px;
+}
+
+#hover-panel {
+	&-recommendedACCTitle,
+	&-recommendedATXTitle {
+		display: none;
+	}
+
+	&-recommendedACCTitle::after,
+	&-recommendedATXTitle::after {
+		content: "";
+		position: absolute;
+		top: 45%;
+		border-top: 10px solid transparent;
+		border-bottom: 10px solid transparent;
+	}
+
+	&-recommendedACCTitle::after {
+		right: -15px;
+		border-left: 15px solid white;
+	}
+
+	&-recommendedATXTitle::after {
+		left: -15px;
+		border-right: 15px solid white;
+	}
+}
+
+#recommended-item:hover {
+	#hover-panel {
+		&-recommendedACCTitle,
+		&-recommendedATXTitle {
+			display: block;
+			position: absolute;
+			box-shadow: $base-box-shadow;
+			z-index: 1;
+			background-color: $white;
+			border-radius: 5px;
+			height: 200px;
+			width: 500px;
+			top: 100px;
+		}
+
+		&-recommendedACCTitle {
+			left: -480px;
+		}
+
+		&-recommendedATXTitle {
+			right: -480px;
+		}
+	}
 }
