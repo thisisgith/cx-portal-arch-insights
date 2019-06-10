@@ -103,6 +103,7 @@ export const ELearningScenarios = [
 		},
 		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
 			`&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['ELearning'],
 	},
 	{
 		scenarios: {
@@ -119,5 +120,6 @@ export const ELearningScenarios = [
 			],
 		},
 		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['ELearning'],
 	},
 ];
