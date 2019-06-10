@@ -74,6 +74,9 @@ export class AssetsComponent implements OnInit {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
+		if (window.Cypress) {
+			window.loading = true;
+		}
 		this.buildFilters();
 	}
 
@@ -234,6 +237,9 @@ export class AssetsComponent implements OnInit {
 				this.inventory = data.slice(0, this.assetParams.limit);
 				this.buildTable();
 				this.status.isLoading = false;
+				if (window.Cypress) {
+					window.loading = false;
+				}
 			});
 	}
 
