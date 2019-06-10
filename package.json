@@ -36,6 +36,7 @@
     "core-js": "^2.6.9",
     "d3": "^5.9.2",
     "rxjs": "~6.5.2",
+    "stylelint-scss": "^3.8.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
   },
@@ -47,7 +48,7 @@
     "@angular/language-service": "^8.0.0",
     "@apollo/configs": "^1.0.2",
     "@apollo/cypress-util": "^1.0.1",
-    "@apollo/linting": "^1.0.5",
+    "@apollo/linting": "^1.0.8",
     "@apollo/schematics": "^1.0.1",
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
