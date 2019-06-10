@@ -17,20 +17,38 @@ function MockACC (
 	solution: string, usecase: string, pitstop: string): ACCResponse {
 	let items = [
 		{
-			description: 'Lorem Ipsum',
-			title: 'Cisco DNA Center Project Best Practices',
+			description: 'Discover the standard steps required to engineer and commission ' +
+				'your appliance from an experienced Cisco DNA Center project manager. Unerstand ' +
+				'basic delpoymnet reqirements and schedules',
+			status: 'recommended',
+			title: 'Cisco DNA Center Project Planning',
+			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
 		{
-			description: 'Lorem Ipsum',
-			title: 'Cisco DNA Center Feature Planning',
+			description: 'Gain actionable insights into Cisco DNA Center use case ' +
+				'deployments and assists. Understand how to design, adopt, and leverage to ' +
+				'save time and resources within your network',
+			status: 'scheduled',
+			title: 'Cisco DNA Pilot Usecase Deployment',
+			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+		},
+		{
+			description: 'Experience this live coaching engagement on general Assurance ' +
+				'concepts and features such as network, device, client, and application ' +
+				'analytics. Help your team hit the ground running',
+			status: 'completed',
+			title: 'Cisco DNA Center Wireless Assurance Feature Planning',
+			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
 	];
 
 	if (pitstop.toLowerCase() === 'adopt') {
 		items = [
 			{
-				description: 'Lorem Ipsum',
+				description: 'This is a title for Adoption',
+				status: 'completed',
 				title: 'This is a title for Adoption',
+				url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 			},
 		];
 	}
@@ -63,6 +81,7 @@ export const ACCScenarios = [
 		},
 		url: `${api}?usecase=Wireless Assurance&` +
 			`solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['ACC'],
 	},
 	{
 		scenarios: {
@@ -79,5 +98,6 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['ACC'],
 	},
 ];
