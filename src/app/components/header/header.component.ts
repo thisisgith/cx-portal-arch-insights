@@ -19,7 +19,7 @@ export class HeaderComponent {
 	 */
 	public mocking = _.get(environment, 'mock');
 	public recordingClass: 'negative' | 'gray-ghost' = 'gray-ghost';
-	private isRecording = false;
+	public isRecording = false;
 	private recordBtnInterval: NodeJS.Timer;
 
 	constructor (

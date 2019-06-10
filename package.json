@@ -57,7 +57,7 @@
     "@cisco-ngx/cui-pipes": "^7.10.7",
     "@cisco-ngx/cui-services": "^7.10.7",
     "@cisco-ngx/cui-utils": "^7.10.7",
-    "@cui-x-views/mock": "1.1.0-beta.3",
+    "@cui-x-views/mock": "1.1.0-beta.5",
     "@cui-x/cui-x-components": "^7.3.0",
     "@cui-x/sdp-api": "0.0.3",
     "@cui-x/services": "^1.0.0",
