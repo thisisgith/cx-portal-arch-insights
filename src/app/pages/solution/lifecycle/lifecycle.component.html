@@ -38,7 +38,9 @@
 							template: accPanel,
 							title: '_Accelerator_',
 							loading: status.loading.acc,
-							data: componentData.acc
+							data: componentData.acc,
+							viewAllLabel: '_ViewAll_',
+							viewAll: 'acc'							
 						}">
 					</ng-container>
 				</div>
@@ -369,7 +371,7 @@
 								</a>
 							</div>
 							<div class="divider divider--compressed"></div>
-							<div class="pull-right">
+							<div class="text-right">
 								<span class="icon-clock icon-small half-padding-right"></span>
 								<span [innerText]="item.duration"></span>
 							</div>
@@ -379,6 +381,63 @@
 						<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }">
 						</ng-container>
 					</ng-container>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #accModal let-data="data">
+	<div id="accModal" class="modal__content no-padding">
+
+		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
+			<div class="row half-padding-top">
+				<div class="col-md-11 half-margin-top base-padding-left">
+					<div class="text-xlarge text-left" [innerText]="'_Accelerator_' | i18n"></div>
+					<div class="text-medium text-left qtr-margin-top" [innerText]="'_1on1Coaching_' | i18n"></div>
+				</div>
+				<div class="col-md-1 half-margin-top">
+					<span (click)="closeModal()" data-auto-id="ACCCloseModal"
+						class="icon-close icon-medium text-right"></span>
+				</div>
+			</div>
+		</div>
+		<div class="divider base-margin-left base-margin-right"></div>
+		<div class="modal__body base-padding">
+			<div class="text-large text-bold text-left" 
+				[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase">
+			</div>
+
+			<div class="grid grid--4up base-padding-top">
+				<div class="card acc__card__background" *ngFor="let item of data" [ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null">
+					<div class="text-left" [ngClass]="item.status === 'recommended' ? 'text-info' : 'text-clear'">
+						<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
+						<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
+					</div>
+					<div class="icon-bookmark icon-medium" [ngClass]="getRibbonClass(item)"></div>
+					<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
+					<div class="card__header text-left text-bold" 
+						[ngClass]="item.status === 'recommended' ? 'text-info' : null" 
+						[innerText]="item.title">
+					</div>
+					<div class="card__body atx-card__body text-left" [innerText]="item.description"></div>
+					<div class="card__footer">
+						<div class="card_footer_item">
+							<div class="text-left text-info"  *ngIf="item.status === 'recommended'">
+								<a data-auto-id="request1on1" class="no-link" [href]="item.url">
+									<span class="icon-persistent-chat icon-small half-padding-right"></span>
+									<span [innerText]="'_Request1on1_' | i18n"></span>
+								</a>
+							</div>
+							<div class="text-left text-info" *ngIf="item.status === 'scheduled'">
+								<span class="icon-persistent-chat icon-small half-padding-right"></span>
+								<span [innerText]="'_CSETouch_' | i18n"></span>
+							</div>
+							<div class="text-left text-success" *ngIf="item.status === 'completed'">
+								<span [innerText]="'_Completed_' | i18n"></span>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -50,6 +50,7 @@ export const SuccessPathScenarios = [
 		},
 		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
 			`&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Success Path'],
 	},
 	{
 		scenarios: {
@@ -66,5 +67,6 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Success Path'],
 	},
 ];

@@ -1,8 +1,8 @@
 /**
 * Launches the app under test
 */
-Cypress.Commands.add('loadApp', () => {
-	cy.visit('/pbc/');
+Cypress.Commands.add('loadApp', (path = '/') => {
+	cy.visit(`pbc${path}`);
 });
 
 /**

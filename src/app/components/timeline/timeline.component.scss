@@ -1,0 +1,139 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+:host {
+	.pbc-timeline {
+		margin: 70px $base-spacing 70px $base-spacing;
+		overflow: auto;
+		height: 220px;
+
+		&__top,
+		&__bottom { height: 80px; }
+
+		&__bottom { margin-left: 100px; }
+
+		&__timestamp {
+			flex-shrink: 0;
+			position: relative;
+			width: 200px;
+
+			&--content {
+				position: absolute;
+				width: 100%;
+
+				&-top {
+					@extend .pbc-timeline__timestamp--content;
+
+					bottom: $base-spacing;
+				}
+
+				&-bottom {
+					@extend .pbc-timeline__timestamp--content;
+
+					top: $base-spacing;
+				}
+			}
+
+			&--today {
+				&-circle {
+					position: absolute;
+					height: 10px;
+					width: 10px;
+					background: $vibrant-blue;
+					left: 94px;
+					border-radius: 100px;
+
+					&-top {
+						@extend .pbc-timeline__timestamp--today-circle;
+
+						bottom: -25px;
+					}
+
+					&-bottom {
+						@extend .pbc-timeline__timestamp--today-circle;
+
+						top: -25px;
+					}
+				}
+
+				&-btn-connector {
+					width: 50%;
+					position: absolute;
+					border-right: 2px solid $vibrant-blue;
+
+					&-top {
+						@extend .pbc-timeline__timestamp--today-btn-connector;
+
+						top: 100%;
+						height: 115px;
+					}
+
+					&-bottom {
+						@extend .pbc-timeline__timestamp--today-btn-connector;
+
+						top: 23px;
+						height: 42px;
+					}
+				}
+
+				&-btn-top {
+					position: absolute;
+					top: 134px;
+					transform: translateX(-50%);
+				}
+
+				&-btn-bottom {
+					position: absolute;
+					top: 64px;
+					transform: translateX(-50%);
+				}
+			}
+		}
+
+		&__connector {
+			width: 50%;
+			height: 15px;
+			border-right: 2px solid $vibrant-blue;
+			position: absolute;
+
+			&-down {
+				@extend .pbc-timeline__connector;
+
+				bottom: 0;
+			}
+
+			&-up {
+				@extend .pbc-timeline__connector;
+
+				top: 0;
+			}
+		}
+
+		&__line {
+			height: 2px;
+			flex-shrink: 0;
+
+			&-blue {
+				@extend .pbc-timeline__line;
+
+				background: $vibrant-blue;
+				margin-left: 98px;
+			}
+
+			&-gray {
+				@extend .pbc-timeline__line;
+
+				background: $med-gray-2;
+			}
+		}
+
+		&__today-btn {
+			position: relative;
+			right: 50%;
+			top: 90px;
+		}
+
+		.muted {
+			border-right: 2px solid $med-gray-2;
+		}
+	}
+}

@@ -261,6 +261,7 @@ export const ATXScenarios = [
 			],
 		},
 		url: `${api}?usecase=Wireless Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['ATX'],
 	},
 	{
 		scenarios: {
@@ -277,6 +278,7 @@ export const ATXScenarios = [
 			],
 		},
 		url: `${api}?usecase=Wireless Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
+		usecases: ['ATX'],
 	},
 	{
 		scenarios: {
@@ -293,5 +295,6 @@ export const ATXScenarios = [
 			],
 		},
 		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['ATX'],
 	},
 ];
