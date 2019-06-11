@@ -40,6 +40,9 @@ export class AssetsComponent implements OnInit {
 		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
 		TemplateRef<{ }>;
+	@ViewChild('assetsContent', { static: true }) private assetsTemplate: TemplateRef<{ }>;
+	@ViewChild('eoxContent', { static: true }) private eoxTemplate: TemplateRef<{ }>;
+	@ViewChild('contractsContent', { static: true }) private contractsTemplate: TemplateRef<{ }>;
 	@ViewChild('coverageFilter', { static: true }) private coverageFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('statusFilter', { static: true }) private statusFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('typeFilter', { static: true }) private typeFilterTemplate: TemplateRef<{ }>;
@@ -71,6 +74,9 @@ export class AssetsComponent implements OnInit {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
+		if (window.Cypress) {
+			window.loading = true;
+		}
 		this.buildFilters();
 	}
 
@@ -231,6 +237,9 @@ export class AssetsComponent implements OnInit {
 				this.inventory = data.slice(0, this.assetParams.limit);
 				this.buildTable();
 				this.status.isLoading = false;
+				if (window.Cypress) {
+					window.loading = false;
+				}
 			});
 	}
 

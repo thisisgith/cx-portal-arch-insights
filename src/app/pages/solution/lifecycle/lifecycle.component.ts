@@ -394,6 +394,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadSuccessPaths (): Observable<SuccessPathsResponse> {
 		this.status.loading.success = true;
+		if (window.Cypress) {
+			window.successPathsLoading = true;
+		}
 		// Temporarily not pick up optional query param suggestedAction
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
@@ -406,11 +409,17 @@ export class LifecycleComponent implements OnDestroy {
 				}
 
 				this.status.loading.success = false;
+				if (window.Cypress) {
+					window.successPathsLoading = false;
+				}
 
 				return result;
 			}),
 			catchError(err => {
 				this.status.loading.success = false;
+				if (window.Cypress) {
+					window.successPathsLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadSuccessPaths() :: Error : (${
 					err.status}) ${err.message}`);
 
@@ -425,6 +434,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadELearning (): Observable<ELearningResponse> {
 		this.status.loading.elearning = true;
+		if (window.Cypress) {
+			window.elearningLoading = true;
+		}
 		// Temporarily not pick up optional query param suggestedAction
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
@@ -446,11 +458,17 @@ export class LifecycleComponent implements OnDestroy {
 				}
 
 				this.status.loading.elearning = false;
+				if (window.Cypress) {
+					window.elearningLoading = false;
+				}
 
 				return result;
 			}),
 			catchError(err => {
 				this.status.loading.elearning = false;
+				if (window.Cypress) {
+					window.elearningLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadELearning() :: Error : (${
 					err.status}) ${err.message}`);
 
