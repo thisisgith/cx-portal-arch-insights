@@ -49,5 +49,6 @@ export const ActionScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}`,
+		usecases: ['Action'],
 	},
 ];

@@ -83,7 +83,8 @@ export interface PitstopActionWithStatus {
 	templateUrl: './lifecycle.component.html',
 })
 export class LifecycleComponent implements OnDestroy {
-	@ViewChild('atxModal') public atxTemplate: TemplateRef<{ }>;
+	@ViewChild('accModal', { static: true }) public accTemplate: TemplateRef<{ }>;
+	@ViewChild('atxModal', { static: true }) public atxTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -181,6 +182,12 @@ export class LifecycleComponent implements OnDestroy {
 			this.modal = {
 				content: this.atxTemplate,
 				context: { data: this.componentData.atx.sessions },
+				visible: true,
+			};
+		} else if (type === 'acc') {
+			this.modal = {
+				content: this.accTemplate,
+				context: { data: this.componentData.acc.sessions },
 				visible: true,
 			};
 		}
@@ -291,14 +298,6 @@ export class LifecycleComponent implements OnDestroy {
 		});
 	}
 
-	// /**
-	//  * to disable the click function
-	//  * @returns false to disable the click funciton
-	//  */
-	// public disableMe () {
-	// 	return false;
-	// }
-
 	/**
 	 * private utility function to clear out seleted status
 	 */
@@ -395,6 +394,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadSuccessPaths (): Observable<SuccessPathsResponse> {
 		this.status.loading.success = true;
+		if (window.Cypress) {
+			window.successPathsLoading = true;
+		}
 		// Temporarily not pick up optional query param suggestedAction
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
@@ -407,11 +409,17 @@ export class LifecycleComponent implements OnDestroy {
 				}
 
 				this.status.loading.success = false;
+				if (window.Cypress) {
+					window.successPathsLoading = false;
+				}
 
 				return result;
 			}),
 			catchError(err => {
 				this.status.loading.success = false;
+				if (window.Cypress) {
+					window.successPathsLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadSuccessPaths() :: Error : (${
 					err.status}) ${err.message}`);
 
@@ -426,6 +434,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadELearning (): Observable<ELearningResponse> {
 		this.status.loading.elearning = true;
+		if (window.Cypress) {
+			window.elearningLoading = true;
+		}
 		// Temporarily not pick up optional query param suggestedAction
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
@@ -447,11 +458,17 @@ export class LifecycleComponent implements OnDestroy {
 				}
 
 				this.status.loading.elearning = false;
+				if (window.Cypress) {
+					window.elearningLoading = false;
+				}
 
 				return result;
 			}),
 			catchError(err => {
 				this.status.loading.elearning = false;
+				if (window.Cypress) {
+					window.elearningLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadELearning() :: Error : (${
 					err.status}) ${err.message}`);
 
