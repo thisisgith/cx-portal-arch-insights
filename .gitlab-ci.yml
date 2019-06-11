@@ -10,6 +10,10 @@ cache:
   paths:
     - node_modules/ # Node modules and dependencies
 
+# disable gitlab cli analytics
+before_script:
+  - export NG_CLI_ANALYTICS=false
+
 setup:
   stage: setup
   script:
