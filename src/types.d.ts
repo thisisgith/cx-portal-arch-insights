@@ -21,4 +21,6 @@ interface Window {
 	loading: boolean;
 	elearningLoading: boolean;
 	successPathsLoading: boolean;
+	carMoving: boolean;
+	progressMoving: boolean;
 }

@@ -17,6 +17,16 @@ interface StageMap {
 	[propName: string]: number;
 }
 
+// Offset to center the car on a point. These are exported so Cypress can access them
+export const carCenterOffsetX = -15;
+export const carCenterOffsetY = -20; 
+
+// 17 is magic number to get car svg horizontal. Exported so Cypress can access it
+export const carBaseRotations = 17;
+
+export const trackOffsetX = -22.61;
+export const trackOffsetY = -287.23;
+
 /**
  * RacetrackComponent
  */
@@ -57,6 +67,8 @@ export class RacetrackComponent implements OnInit {
 		this.progress = progress;
 		this.length = length;
 
+		this.track.attr('transform', `translate(${trackOffsetX} ${trackOffsetY})`);
+
 		/**
 		 * @TODO figure out how to replace this 'any'
 		 */
@@ -72,6 +84,14 @@ export class RacetrackComponent implements OnInit {
 			.reverse(); // reversed because #secrettrack path goes in wrong direction
 
 		this.points = points;
+
+		// Shove the points array onto the track so Cypress tests have access to it
+		this.track.attr('tracklength', this.length);
+		this.track.attr('pointslength', this.points.length);
+		this.points.forEach((point, index) => {
+			this.track.attr(`point${index}x`, point.x);
+			this.track.attr(`point${index}y`, point.y);
+		});
 
 		// at what % of the path does the stop for each stage fall
 		// (path does not start at 'purchase' stage)
@@ -136,6 +156,7 @@ export class RacetrackComponent implements OnInit {
 				})
 				.attr('transform', () =>
 					this.track.attr('transform'))
+				.attr('data-auto-id', name => `Racetrack-Point-${name}`)
 				.raise()
 				.on('click', d => this.zoomToStage(d, true));
 
@@ -196,12 +217,12 @@ export class RacetrackComponent implements OnInit {
 
 		let points = [
 			...this.points.slice(start),
-			...this.points.slice(0, end),
+			...this.points.slice(0, end + 1),
 		];
 
 		// if wrapping around the 'end' of the path, add an extra loop
 		if (end < start) {
-			points = [...points, ...this.points.slice(end), ...this.points.slice(0, end)];
+			points = [...points, ...this.points.slice(end + 1), ...this.points.slice(0, end + 1)];
 		}
 
 		// rotate car to match track
@@ -231,7 +252,8 @@ export class RacetrackComponent implements OnInit {
 
 		points.reduce((chain, pt, i) => {
 			// skip half of the points to speed up animation, reduce calculations
-			if (i % 2) { return chain; }
+			// However, make sure we don't skip the last point
+			if (i % 2 && i !== points.length - 1) { return chain; }
 
 			// each segment of transition gets its own duration from a parabolic function
 				// (slower at beginning and end, faster in the middle)
@@ -243,12 +265,18 @@ export class RacetrackComponent implements OnInit {
 				.ease(easeLinear)
 				// this.track.attr('transform') puts car on track
 				// first 'translate' puts car at point on track
-				// rotate sets angle of car, 17 is magic number to get car svg horizontal
+				// rotate sets angle of car, 17 (carBaseRotations) is magic number to get car svg horizontal
 				// second 'translate' is to put center of car over the endpoint
 				.attr('transform', () => `${this.track.attr('transform')}
 					translate(${[pt.x, pt.y]})
-					rotate(${17 + rotations[i]})
-					translate(-15, -20)`);
+					rotate(${carBaseRotations + rotations[i]})
+					translate(${carCenterOffsetX}, ${carCenterOffsetY})`)
+				.on('start', () => {
+					window.carMoving = true;
+				})
+				.on('end', () => {
+					window.carMoving = false;
+				});
 		}, this.racecar);
 
 		this.current = endpoint;
@@ -266,7 +294,13 @@ export class RacetrackComponent implements OnInit {
 			this.progress.transition()
 				.delay(500)
 				.duration(2000)
-				.attr('stroke-dasharray', `${progressDistance} ${this.length - progressDistance}`);
+				.attr('stroke-dasharray', `${progressDistance} ${this.length - progressDistance}`)
+				.on('start', () => {
+					window.progressMoving = true;
+				})
+				.on('end', () => {
+					window.progressMoving = false;
+				});
 
 			this.progressSoFar = progressDistance;
 		}
