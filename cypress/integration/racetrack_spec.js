@@ -11,9 +11,10 @@ describe('Racetrack Content', () => {
 
 		// Pull all the points off the track for rotation and position calculations
 		cy.get('#secrettrack').then(track => {
-			trackPoints = Array.from({ length: track.attr('pointslength') });
-			racetrackHelper = new RacetrackHelper(parseFloat(track.attr('tracklength')), parseFloat(track.attr('pointslength')));
-			for (let index = 0; index < 200; index += 1) {
+			const pointsLength = parseFloat(track.attr('pointslength'));
+			trackPoints = Array.from({ length: pointsLength });
+			racetrackHelper = new RacetrackHelper(parseFloat(track.attr('tracklength')), pointsLength);
+			for (let index = 0; index < pointsLength; index += 1) {
 				trackPoints[index] = { x: parseFloat(track.attr(`point${index}x`)), y: parseFloat(track.attr(`point${index}y`)) };
 			}
 		});
