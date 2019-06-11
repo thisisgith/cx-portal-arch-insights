@@ -427,9 +427,12 @@ describe('LifecycleComponent', () => {
 
 			fixture.detectChanges();
 
-			expect(window.Cypress).toBe(undefined);
-			expect(window.elearningLoading).toBe(undefined);
-			expect(window.successPathsLoading).toBe(undefined);
+			expect(window.Cypress)
+				.toBe(undefined);
+			expect(window.elearningLoading)
+				.toBe(undefined);
+			expect(window.successPathsLoading)
+				.toBe(undefined);
 		});
 	});
 
@@ -451,9 +454,12 @@ describe('LifecycleComponent', () => {
 
 			fixture.detectChanges();
 
-			expect(window.Cypress).toEqual('Bogus Cypress Data');
-			expect(window.elearningLoading).toBe(false);
-			expect(window.successPathsLoading).toBe(false);
+			expect(window.Cypress)
+				.toEqual('Bogus Cypress Data');
+			expect(window.elearningLoading)
+				.toBe(false);
+			expect(window.successPathsLoading)
+				.toBe(false);
 		});
 	});
 });

@@ -37,7 +37,7 @@
 							"sourceMap": false,
 							"vendorChunk": false
 						},
-						"stage:internal": {
+						"stageInternal": {
 							"aot": true,
 							"budgets": [
 								{
