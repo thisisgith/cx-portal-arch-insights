@@ -34,6 +34,7 @@ lint:
   stage: test
   script:
     - npm run lint
+    - npm run lint:cypress
 
 # run our test:ci process for the commit
 unit:
