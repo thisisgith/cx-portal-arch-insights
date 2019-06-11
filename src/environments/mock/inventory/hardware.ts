@@ -1147,6 +1147,6 @@ export const HardwareScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=10&page=1`,
-		usecases: ['Hardware'],
+		usecases: ['Use Case 1'],
 	},
 ];

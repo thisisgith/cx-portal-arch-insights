@@ -648,6 +648,6 @@ export const RacetrackScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}`,
-		usecases: ['Racetrack'],
+		usecases: ['Use Case 1'],
 	},
 ];
