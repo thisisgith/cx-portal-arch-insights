@@ -17,6 +17,16 @@ interface StageMap {
 	[propName: string]: number;
 }
 
+// Offset to center the car on a point. These are exported so Cypress can access them
+export const carCenterOffsetX = -15;
+export const carCenterOffsetY = -20; 
+
+// 17 is magic number to get car svg horizontal. Exported so Cypress can access it
+export const carBaseRotations = 17;
+
+export const trackOffsetX = -22.61;
+export const trackOffsetY = -287.23;
+
 /**
  * RacetrackComponent
  */
@@ -56,6 +66,8 @@ export class RacetrackComponent implements OnInit {
 		this.track = track;
 		this.progress = progress;
 		this.length = length;
+
+		this.track.attr('transform', `translate(${trackOffsetX} ${trackOffsetY})`);
 
 		/**
 		 * @TODO figure out how to replace this 'any'
@@ -253,12 +265,12 @@ export class RacetrackComponent implements OnInit {
 				.ease(easeLinear)
 				// this.track.attr('transform') puts car on track
 				// first 'translate' puts car at point on track
-				// rotate sets angle of car, 17 is magic number to get car svg horizontal
+				// rotate sets angle of car, 17 (carBaseRotations) is magic number to get car svg horizontal
 				// second 'translate' is to put center of car over the endpoint
 				.attr('transform', () => `${this.track.attr('transform')}
 					translate(${[pt.x, pt.y]})
-					rotate(${17 + rotations[i]})
-					translate(-15, -20)`)
+					rotate(${carBaseRotations + rotations[i]})
+					translate(${carCenterOffsetX}, ${carCenterOffsetY})`)
 				.on('start', () => {
 					window.carMoving = true;
 				})

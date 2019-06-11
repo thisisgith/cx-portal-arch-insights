@@ -1,18 +1,20 @@
+import * as racetrackComponent from '../../src/app/components/racetrack/racetrack.component.ts';
+
 /**
  * Used to convert point coordinates to racecar coordinates
  */
 export default class RacetrackHelper {
 	/**
 	 * Initializes the racetrack and car offsets.
-	 * These are hard-coded in the app, so hard-coded here as well.
 	 * @param {Integer} trackLength - The length of the racetrack
 	 * @param {Integer} pointsLength - The length of the points array for the racetrack
 	 */
 	constructor (trackLength, pointsLength) {
-		this.racetrackOffsetX = -22.6100006103515;
-		this.racetrackOffsetY = -287.230010986328;
-		this.carCenterOffsetX = -15;
-		this.carCenterOffsetY = -20;
+		this.racetrackOffsetX = racetrackComponent.trackOffsetX;
+		this.racetrackOffsetY = racetrackComponent.trackOffsetY;
+		this.carCenterOffsetX = racetrackComponent.carCenterOffsetX;
+		this.carCenterOffsetY = racetrackComponent.carCenterOffsetY;
+		this.carBaseRotations = racetrackComponent.carBaseRotations;
 
 		this.length = trackLength;
 		this.pointsLength = pointsLength;
@@ -87,7 +89,7 @@ export default class RacetrackHelper {
 		const deltaY = pt1CY - pt2CY;
 		const deltaX = pt2CX - pt1CX;
 		const result = Math.atan2(deltaY, deltaX) * 180.0 / Math.PI;
-		let rotations = (17.0 + (360.0 - result)) % 360;
+		let rotations = (this.carBaseRotations + (360.0 - result)) % 360;
 
 		// The d3 transform will actually convert rotations to be between [-179, 180] degrees...
 		if (rotations > 180) {
