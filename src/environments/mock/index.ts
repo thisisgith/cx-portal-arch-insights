@@ -1,5 +1,5 @@
 export { Mock } from './mock';
-export { mockData as searchData } from './search';
+export { SearchScenarios } from './search/search';
 export { HardwareScenarios } from './inventory/hardware';
 export { RacetrackScenarios } from './racetrack/info';
 export { ATXScenarios } from './racetrack/atx';
