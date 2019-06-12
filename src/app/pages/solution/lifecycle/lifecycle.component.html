@@ -98,11 +98,12 @@
 				<div class="col-md-10">
 					<a data-auto-id="actionlink" 
 						class="no-link" 
-						[ngClass]="{'disabled': action.action.isComplete, 'selected': action.selected}"
+						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
+						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
 						<div>
 							<span class="checkbox__label text-medium"
-								[innerText]="action.action.name">
+								[innerText]="action?.action?.name">
 							</span>
 							<span *ngIf="action.action.isCompleteAuto" class="qtr-padding-top">
 								<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png">
@@ -111,19 +112,18 @@
 					</a>
 				</div>
 			</div>
-			<div *ngIf="action.selected" class="des-dropdown base-padding-left half-margin-top half-margin-bottom">
-				<span class="text-small" [innerText]="action.action.description"></span>
-			</div>
 		</div>			
 	</div>
 </ng-template>
 
 <ng-template #atxPanel let-data="data">
+	<div class="base-margin-bottom text-dkgray-4" [innerText]="'_TrainingWebinars_' | i18n"></div>
 	<ng-container *ngIf="data.recommended">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedATX,
 				title: data.recommended.title,
-				src: 'assets/img/solutions/driver.png',
+				description: data.recommended.description,
+				src: 'assets/img/solutions/atx.png',
 				autoid: 'recommendedATXTitle'
 			}">
 		</ng-container>
@@ -136,37 +136,54 @@
 	</ng-container>
 </ng-template>
 
-<ng-template #recommended let-src="src" let-title="title" let-template="template" let-autoid="autoid">
-	<div class="qtr-padding-bottom">
-		<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
-		<span class="text-uppercase" [innerText]="'_Recommended_' | i18n"></span>
-	</div>
-	<div class="panel panel--bordered panel no-padding-top no-padding-left no-padding-right round-edges">
+<ng-template #recommended let-src="src" let-title="title" let-description="description" let-template="template" let-autoid="autoid">
+	<div id="recommended-item" class="panel panel--bordered no-padding-top no-padding-left no-padding-right round-edges">
 		<img class="round-edges-top max-width" alt="'_Placeholder_' | i18n" [src]="src">
 		<div class="base-padding-top half-padding-left">
+			<div class="qtr-padding-bottom text-blue">
+				<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
+				<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
+			</div>
 			<div class="text-large base-padding-bottom" [innerText]="title" [attr.data-auto-id]="autoid"></div>
 			<ng-container *ngTemplateOutlet="template"></ng-container>
 		</div>
+		<ng-container *ngIf="autoid">
+			<ng-container *ngTemplateOutlet="recommendedDescription; context: { 
+				title: title,
+				description: description,
+				autoid: autoid
+			}">
+			</ng-container>
+		</ng-container>
+	</div>
+</ng-template>
+
+<ng-template #recommendedDescription let-title="title" let-description="description" let-autoid="autoid">
+	<div id="hover-panel-{{ autoid }}" class="panel panel--bordered">
+		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title"></h6>
+		<div class="divider divider--compressed"></div>
+		<div class="half-margin-left" [innerText]="description"></div>
 	</div>
 </ng-template>
 
 <ng-template #recommendedATX>
 	<button data-auto-id="recommendedATXScheduleButton"
-		class="btn btn--small btn--gray-ghost text-uppercase"
+		class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
 		(click)="atxScheduleCardOpened = true"
-		[innerText]="'_Schedule_' | i18n">
+		[innerText]="'_ViewSessions_' | i18n">
 	</button>
-	<button data-auto-id="recommendedATXWatchButton"
-		class="btn btn--small btn--gray-ghost text-uppercase"
-		[innerText]="'_WatchNow_' | i18n"
-	></button>
+	<a class="no-link" [href]="componentData.atx?.recommended?.viewOnDemandUrl">
+		<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+			[innerText]="'_WatchNow_' | i18n"></button>
+	</a>
 </ng-template>
 
 <ng-template #recommendedACC>
-	<button data-auto-id="recommendedACCWatchButton"
-		class="btn btn--small btn--gray-ghost text-uppercase"
-		[innerText]="'_Register_' | i18n">
-	</button>
+	<a class="no-link" [href]="componentData.acc?.recommended?.url">
+		<button data-auto-id="recommendedACCWatchButton" class="btn btn--small btn--secondary text-uppercase"
+			[innerText]="'_Request1on1_' | i18n">
+		</button>
+	</a>
 </ng-template>
 
 <ng-template #recommendedATXSchedule let-data="data">
@@ -239,15 +256,12 @@
 </ng-template>
 
 <ng-template #accPanel let-data="data">
-	<div innerText="{{ '_UpgradeToCXLevelX_' | i18n:3 }} {{ '_Accelerator1on1CoachingDescription_' | i18n }}"></div>
-	<button class="btn btn--small btn--gray-ghost base-margin-top base-margin-bottom text-uppercase"
-		[innerText]="'_ContactUs_' | i18n">
-	</button>
-
+	<div class="base-margin-bottom text-dkgray-4" [innerText]="'_1on1Coaching_' | i18n"></div>
 	<ng-container *ngIf="data.recommended">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedACC,
 				title: data.recommended.title,
+				description: data.recommended.description,
 				src: 'assets/img/solutions/acc.png',
 				autoid: 'recommendedACCTitle'
 			}">
@@ -264,7 +278,7 @@
 	</div>
 	<div class="more-scroll base-padding-bottom" [attr.data-auto-id]="autoid">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:1">
-			<span [innerText]="item.title"></span>
+			<span class="text-blue" [innerText]="item.title"></span>
 		</div>
 	</div>
 </ng-template>
@@ -322,7 +336,7 @@
 	</div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data">
-			<span [innerText]="item.title"></span>
+			<span class="text-blue" [innerText]="item.title"></span>
 		</div>
 	</div>
 </ng-template>
@@ -490,7 +504,7 @@
 
 <ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel">
 	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom" attr.data-auto-id="{{ title | i18n }} Panel">
-		<div class="row base-padding-bottom">
+		<div class="row half-padding-bottom">
 			<div class="col-md-6 flex-center-vertical">
 				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
 			</div>
