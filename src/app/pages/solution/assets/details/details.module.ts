@@ -4,6 +4,7 @@ import { AssetDetailsComponent } from './details.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiTabsModule } from '@cisco-ngx/cui-components';
 import { CaseService } from '@cui-x/services';
+import { DetailsHeaderModule } from '../details-header/details-header.module';
 
 /** Module representing the Asset Details Component */
 @NgModule({
@@ -13,6 +14,7 @@ import { CaseService } from '@cui-x/services';
 		CommonModule,
 		CuiTabsModule,
 		I18nPipeModule,
+		DetailsHeaderModule,
 	],
 	providers: [
 		CaseService,
