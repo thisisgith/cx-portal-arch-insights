@@ -15,7 +15,7 @@ describe('Accelerator (Accelerator)', () => { // Jira: PBC-tbd
 	it('Renders Accelerator tile', () => {
 		cy.getByAutoId('Accelerator Panel').should('exist');
 		cy.getByAutoId('PanelTitle-_Accelerator_').should('have.text', 'Accelerator');
-		cy.getByAutoId('recommendedACCTitle').should('have.text', 'Cisco DNA Center Project Best Practices');
+		cy.getByAutoId('recommendedACCTitle').should('have.text', 'Cisco DNA Center Project Planning');
 		cy.getByAutoId('recommendedACCWatchButton').should('have.text', 'Register');
 		cy.getByAutoId('moreACCList').should('exist');
 		// No other data-auto-id's exist at this time

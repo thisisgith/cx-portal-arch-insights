@@ -123,7 +123,9 @@ export const mockSettings: MockSettings = {
 				],
 			},
 			url: '/ws/search',
-			usecases: ['Example', 'More Example'],
+			usecases: ['Use Case 1', 'Use Case 2', 'Use Case 3', 'Use Case 4', 'Use Case 5',
+				'Use Case 6', 'Use Case 7', 'Use Case 8', 'Use Case 9', 'Use Case 10',
+				'Use Case 11', 'Use Case 12'],
 		},
 	]),
 };

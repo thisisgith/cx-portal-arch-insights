@@ -63,7 +63,7 @@ export const CommunitiesScenarios = [
 		},
 		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
 			`&pitstop=Onboard&customerId=${customerId}`,
-		usecases: ['Communities'],
+		usecases: ['Use Case 1'],
 	},
 	{
 		scenarios: {
@@ -80,6 +80,6 @@ export const CommunitiesScenarios = [
 			],
 		},
 		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
-		usecases: ['Communities'],
+		usecases: ['Use Case 1'],
 	},
 ];

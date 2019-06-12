@@ -276,6 +276,49 @@ describe('LifecycleComponent', () => {
 				.toBeFalsy();
 		});
 
+		it('should show the acc view-all modal', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('acc');
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('#accModal'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__green'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__blue'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.icon-close'));
+			el = de.nativeElement;
+
+			el.click();
+
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeFalsy();
+
+			de = fixture.debugElement.query(By.css('#accModal'));
+			expect(de)
+				.toBeFalsy();
+		});
+
 		describe('PitstopActions', () => {
 
 			it('should show 25% in the prograss label', () => {
@@ -364,5 +407,59 @@ describe('LifecycleComponent', () => {
 				expect(component.componentData.communities.length)
 					.toEqual(2);
 			});
+	});
+
+	describe('Learn - Non-cypress', () => {
+
+		beforeAll(() => {
+			window.Cypress = undefined;
+		});
+
+		afterAll(() => {
+			window.Cypress = undefined;
+			window.elearningLoading = undefined;
+			window.successPathsLoading = undefined;
+		});
+
+		it('Should not set loading flags when loading without Cypress', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			expect(window.Cypress)
+				.toBe(undefined);
+			expect(window.elearningLoading)
+				.toBe(undefined);
+			expect(window.successPathsLoading)
+				.toBe(undefined);
+		});
+	});
+
+	describe('Learn - Cypress', () => {
+
+		beforeAll(() => {
+			window.Cypress = 'Bogus Cypress Data';
+		});
+
+		afterAll(() => {
+			window.Cypress = undefined;
+			window.elearningLoading = undefined;
+			window.successPathsLoading = undefined;
+		});
+
+		it('Should set loading flags when loading with Cypress', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			expect(window.Cypress)
+				.toEqual('Bogus Cypress Data');
+			expect(window.elearningLoading)
+				.toBe(false);
+			expect(window.successPathsLoading)
+				.toBe(false);
+		});
 	});
 });

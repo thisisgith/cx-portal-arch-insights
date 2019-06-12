@@ -55,11 +55,17 @@
 				alt="{{ '_StockPhoto_' | i18n }}"
 				src="assets/img/header/user-photo-thumb-1.png">
 			<div class="divider--left base-margin-left">
-				<a class="half-margin-left icon--mid"
+				<a class="half-margin-left icon--mid half-margin-right"
 					data-auto-id="HeaderSettings"
 					(click)="mocking ? openMockModal() : null">
 					<span class="icon-cog text-muted"></span>
 				</a>
+				<button *ngIf="mocking"
+					data-do-not-record="true"
+					data-auto-id="MockRecordBtn"
+					(click)="record()" class="btn btn--icon btn--small btn--{{recordingClass}}">
+					<span data-do-not-record="true" class="icon-record" title="Record Test"></span>
+				</button>
 			</div>
 		</div>
 	</div>
