@@ -140,54 +140,6 @@ describe('AssetDetailsComponent', () => {
 			.toBeNull();
 	});
 
-	it('should have active class if actions dropdown is active', () => {
-		component.actionDropdownActive = true;
-
-		fixture.detectChanges();
-
-		const button = fixture.debugElement.nativeElement.querySelector('.dropdown--actions');
-
-		expect(button)
-			.toHaveClass('active');
-	});
-
-	it('should not have active class if actions dropdown is not active', () => {
-		component.actionDropdownActive = false;
-
-		fixture.detectChanges();
-
-		const button = fixture.debugElement.nativeElement.querySelector('.dropdown--actions');
-
-		expect(button)
-			.not
-			.toHaveClass('active');
-	});
-
-	it('should have active class to cases dropddown if active', () => {
-		component.casesDropdownActive = true;
-		component.componentData.openCases = 1;
-
-		fixture.detectChanges();
-
-		const button = fixture.debugElement.nativeElement.querySelector('.open-case-toggle-btn');
-
-		expect(button)
-			.toHaveClass('active');
-	});
-
-	it('should not add active class to cases dropddown if not active', () => {
-		component.casesDropdownActive = false;
-		component.componentData.openCases = 1;
-
-		fixture.detectChanges();
-
-		const button = fixture.debugElement.nativeElement.querySelector('.open-case-toggle-btn');
-
-		expect(button)
-			.not
-			.toHaveClass('active');
-	});
-
 	it('should handle changing assets', () => {
 		buildSpies();
 

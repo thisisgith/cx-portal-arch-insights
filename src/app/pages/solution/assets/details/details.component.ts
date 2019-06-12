@@ -48,9 +48,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	public hidden = true;
 	public fullscreen = false;
 
-	public actionDropdownActive = false;
-	public casesDropdownActive = false;
-
 	constructor (
 		private caseService: CaseService,
 		private solutionService: SolutionService,
@@ -89,20 +86,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	}
 
 	/**
-	 * Toggles the action dropdown
-	 */
-	public toggleActiveAction () {
-		this.actionDropdownActive = !this.actionDropdownActive;
-	}
-
-	/**
-	 * Toggles the open cases dropdown
-	 */
-	public toggleActiveCases () {
-		this.casesDropdownActive = !this.casesDropdownActive;
-	}
-
-	/**
 	 * Checks if our currently selected asset has changed
 	 * @param changes the changes detected
 	 */
@@ -131,9 +114,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	}
 
 	/**
-	 * Toggle fullscreen details
+	 * Determine if fullscreen from child data
 	 */
-	public toggleFullscreen () {
-		this.fullscreen = !this.fullscreen;
+	public determineFullScreen ($event: boolean) {
+		if ($event) {
+			this.fullscreen = true;
+		} else {
+			this.fullscreen = false;
+		}
 	}
 }
