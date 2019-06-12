@@ -21,6 +21,7 @@ type RefreshType = 'query' | 'filters' | 'newPage';
  */
 @Component({
 	selector: 'app-general-search',
+	styleUrls: ['./general-search.component.scss'],
 	templateUrl: './general-search.component.html',
 })
 export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
