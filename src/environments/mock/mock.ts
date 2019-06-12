@@ -6,7 +6,7 @@ import {
 	ELearningScenarios,
 	HardwareScenarios,
 	RacetrackScenarios,
-	searchData,
+	SearchScenarios,
 	SuccessPathScenarios,
 } from './';
 import { HttpHeaders } from '@angular/common/http';
@@ -90,42 +90,6 @@ export const mockSettings: MockSettings = {
 		HardwareScenarios,
 		RacetrackScenarios,
 		SuccessPathScenarios,
-		{
-			scenarios: {
-				GET: [
-					{
-						delay: 500,
-						description: 'Generic Example',
-						response: {
-							body: searchData,
-							status: 200,
-						},
-						selected: true,
-					},
-					{
-						delay: 5000,
-						description: 'Empty Response',
-						response: {
-							body: {
-								results: [],
-							},
-							status: 200,
-						},
-					},
-					{
-						delay: 1000,
-						description: 'Failure Response',
-						response: {
-							status: 404,
-							statusText: 'Unable to find results',
-						},
-					},
-				],
-			},
-			url: '/ws/search',
-			usecases: ['Use Case 1', 'Use Case 2', 'Use Case 3', 'Use Case 4', 'Use Case 5',
-				'Use Case 6', 'Use Case 7', 'Use Case 8', 'Use Case 9', 'Use Case 10',
-				'Use Case 11', 'Use Case 12'],
-		},
+		SearchScenarios,
 	]),
 };

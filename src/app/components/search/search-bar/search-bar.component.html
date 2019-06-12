@@ -1,0 +1,27 @@
+<div class="form-group input--icon">
+	<div class="form-group__text">
+		<input id="input-type-search"
+			data-auto-id="searchBarInput"
+			type="text"
+			autocomplete="off"
+			#searchInput
+			[ngModel]="searchText"
+			(ngModelChange)="onSearch($event)"
+			[maxlength]="options.max"
+			[pattern]="options.pattern"
+			[placeholder]="'_SearchLabel_' | i18n">
+		<button type="button" class="link">
+			<span class="icon-search"></span>
+		</button>
+	</div>
+	<div class="dropdown active"
+		*ngIf="typeaheadItems && typeaheadItems.length">
+		<div class="dropdown__menu">
+			<a class="typeahead"
+				data-auto-id="searchBarTypeahead"
+				*ngFor="let item of typeaheadItems"
+				(click)="onSearchSelect(item.name, true)"
+				[innerText]="item.name"></a>
+		</div>
+	</div>
+</div>

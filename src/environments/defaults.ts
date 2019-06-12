@@ -25,6 +25,6 @@ export const defaults = {
 			clientId: '4jr3csg78pg7ws7gwvj82sfa',
 			origin: 'https://api-stage.cisco.com',
 		},
-		search: '/ws/search',
+		search: '/api/customerportal/search/v1/cdcSearch',
 	},
 };

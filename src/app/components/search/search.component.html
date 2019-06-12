@@ -1,274 +1,31 @@
-<div class="form-group input--icon">
-	<form [formGroup]="searchForm" novalidate>
-		<div class="form-group__text">
-			<input id="input-type-search"
-				type="text"
-				#searchInput
-				[minlength]="options.min"
-				[maxlength]="options.max"
-				[pattern]="options.pattern"
-				formControlName="search"
-				[placeholder]="'_SearchLabel_' | i18n"
-				ngDefaultControl>
-			<button type="button" class="link">
-				<span class="icon-search"></span>
-			</button>
-		</div>
-	</form>
-</div>
+<app-search-bar
+	[items]="products"
+	(searchChange)="onSearchChange($event)"
+	[(searchText)]="searchText">
+</app-search-bar>
 
 <div class="modal-container" *ngIf="!status.hidden">
 	<div class="modal-backdrop" [ngClass]="{ hide: status.hidden }"></div>
 	<div class="modal modal--full" [ngClass]="{ hide: status.hidden }">
 		<div class="modal__dialog">
-
-			<div *ngIf="status.searching" class="row no-gutters">
-				<div class="col-md-12">
-					<div class="panel panel--loose">
-						<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_Searching_' | i18n"></h4>
-						<cui-spinner></cui-spinner>
-					</div>
-				</div>
-			</div>
-
-			<div id="insight"
-				data-auto-id="Insight"
-				*ngIf="!status.searching && searchResults?.insight"
-				class="row no-gutters">
-				<div class="col-md-12">
-					<div class="panel panel--ltgray panel--loose">
-						<h4 class="text-uppercase text-muted" [innerText]="'_CiscoInsight_' | i18n"></h4>
-						<div class="row base-margin-top">
-							<div class="col-md-5">
-								<ng-container *ngTemplateOutlet="insightProblem;
-									context: {
-										bug: searchResults.insight?.bug,
-										fix: searchResults.insight?.fix,
-										workaround: searchResults.insight?.workaround
-									}">
-								</ng-container>
-							</div>
-							<div class="col-md-3">
-								<img src="assets/img/search/campus-fabric.png"
-									class="campusFabric" 
-									alt="{{ '_CampusFabricALT_' | i18n }}" />
-							</div>
-							<div class="col-md-4" *ngIf="searchResults.insight?.devices?.length">
-								<ng-container *ngTemplateOutlet="insightDevices;
-									context: { devices: searchResults.insight?.devices }">
-								</ng-container>
-							</div>
+			<div class="modal__content text-left">
+				<a data-auto-id="searchClose" class="modal__close" (click)="onClose()">
+					<span class="icon-close"></span>
+				</a>
+				<div class="row no-gutters">
+					<div class="flex-fluid">
+						<div class="panel panel--loose">
+							<!-- TODO add special search views depending on query type -->
+							<app-general-search
+								[query]="generalQuery">
+							</app-general-search>
 						</div>
 					</div>
-				</div>
-			</div>
-
-			
-			<div *ngIf="!status.searching" class="row no-gutters">
-				<div class="col-md-12">
-					<div class="panel panel--loose">
-						<div id="topResults"
-							data-auto-id="TopResults"
-							*ngIf="searchResults?.results?.length">
-							<div class="row">
-								<div class="col-md-8">
-									<h5 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_TopResults_' | i18n"></h5>
-									<div *ngFor="let result of searchResults.results; index as i">
-										<ng-container *ngTemplateOutlet="(i > 2 ? secondaryResult : topResult);
-											context: { result: result }">
-										</ng-container>
-									</div>
-								</div>
-								<div class="col-md-4">
-									<ng-container *ngTemplateOutlet="resultSidebar; context: {}"></ng-container>
-								</div>
-							</div>
-						</div>
-						<h5 id="noResults"
-							*ngIf="!searchResults || !searchResults?.results?.length"
-							data-auto-id="NoResults"
-							class="text-large base-margin-left"
-							[innerText]="'_NoResultsFoundForX_' | i18n: search.value">
-						</h5>
+					<div>
+						<!-- TODO the right-hand sidebar content for each special search view can be projected here -->
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-<ng-template #resultSidebar>
-	<div [innerText]="'_Accelerators_' | i18n" 	class="text-bold"></div>
-	<div [innerHTML]="'_AcceleratorsDescription_' | i18n" class="text-muted"></div>
-	<div class="text-muted">
-		<span class="icon-lock"></span>
-		<span innerText=" ({{ '_RequiresCXLevelUpgrade_' | i18n }})"></span>
-	</div>
-
-	<div [innerText]="'_CiscoLearning_' | i18n"
-		class="text-bold base-margin-top">
-	</div>
-	<div [innerHTML]="'_CiscoLearningDescription_' | i18n" class="text-muted"></div>
-
-	<div [innerText]="'_CiscoDNAServices_' | i18n"
-		class="text-bold base-margin-top">
-	</div>
-	<div [innerHTML]="'_CiscoDNAServicesDescription_' | i18n" class="text-muted"></div>
-	<div>
-		<a class="base-margin-top text-small text-dkgray-4"
-			innerText="{{ '_MoreDNAServices_' | i18n }} >">
-		</a>
-	</div>
-
-	<div class="base-margin-top">
-		<button class="btn btn--small btn--secondary half-padding-left
-			half-padding-right text-small ciscoCommunityBtn"
-			[innerText]="'_PostQuestionInCiscoCommunity_' | i18n">
-		</button>
-		<button [routerLink]="['/cases']" class="btn btn--small btn--primary no-margin-left qtr-margin-top"
-			[innerText]="'_OpenACase_' | i18n">
-		</button>
-	</div>
-</ng-template>
-
-<ng-template #topResult let-result="result">
-	<div class="row base-margin-top">
-		<div class="col-md-2 flex-center no-padding-right" [ngSwitch]="result.type">
-			<span *ngSwitchCase="'community'"
-				class="icon-communities icon-medium text-success"
-				[title]="'_Community_' | i18n">
-			</span>
-			<span *ngSwitchCase="'document'"
-				class="icon-document icon-medium text-primary"
-				[title]="'_Document_' | i18n">
-			</span>
-			<span *ngSwitchCase="'presentation'"
-				class="icon-presentation icon-medium text-warning"
-				[title]="'_Presentation_' | i18n">
-			</span>
-			<span *ngSwitchDefault class="icon-link icon-medium text-dkgray-4"></span>
-		</div>
-		<div class="col-md-10 no-padding-left">
-			<div>
-				<div [innerHTML]="result.title | truncate:true:100 | highlight:searchResults.highlightTerms"></div>
-				<div class="text-small" [innerHTML]="result.summary | truncate:true:115 | highlight:searchResults.highlightTerms"></div>
-				<div *ngIf="result.type === 'community' && result.answered"
-					class="text-small text-muted"
-					[innerText]="'_AnsweredBy_' | i18n: result.answered">
-				</div>
-				<div *ngIf="result.type === 'presentation' && result.start"
-					class="text-small text-muted"
-					[innerText]="'_StartingAt_' | i18n: result.start">
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="divider divider--compressed"></div>
-</ng-template>
-
-<ng-template #secondaryResult let-result="result">
-	<div class="row base-margin-top">
-		<div class="col-md-2 flex-center no-padding-right" [ngSwitch]="result.type">
-			<span *ngSwitchCase="'community'"
-				class="qtr-padding-left qtr-padding-right text-success
-					label label--tiny label--success label--outlined"
-				[title]="'_Community_' | i18n">COM
-			</span>
-			<span *ngSwitchCase="'document'"
-				class="qtr-padding-left qtr-padding-right text-info
-					label label--tiny label--info label--outlined"
-				[title]="'_Document_' | i18n">DOC
-			</span>
-			<span *ngSwitchCase="'presentation'"
-				class="qtr-padding-left qtr-padding-right text-warning
-					label label--tiny label--warning label--outlined"
-				[title]="'_Presentation_' | i18n">ATX
-			</span>
-			<span *ngSwitchDefault
-				class="qtr-padding-left qtr-padding-right text-dkgray-4
-					label label--tiny label--outlined text-uppercase"
-				[innerText]="'_Link_' | i18n"
-				[title]="'_Link' | i18n">
-			</span>
-		</div>
-		<div class="col-md-10 flex-center-vertical no-padding-left">
-			<span class="text-small" [innerText]="result.title"></span>
-			<span *ngIf="result.type === 'presentation' && result.start"
-				class="qtr-padding-left text-dkgray-4 text-xsmall"
-				[innerText]="'_StartingAt_' | i18n: result.start"></span>
-		</div>
-	</div>
-</ng-template>
-
-<ng-template #insightProblem let-bug="bug" let-fix="fix" let-workaround="workaround">
-	<div class="dbl-margin-left">
-		<div *ngIf="bug">
-			<span [innerText]="bug.description"></span>
-			<a *ngIf="bug.details"
-				data-auto-id="SearchInsightsBugDetails"
-				class="qtr-padding-left text-dkgray-4 text-small"
-				target="_blank"
-				href="bug.details"
-				innerText="{{ '_Details_' | i18n }} >">
-			</a>
-		</div>
-
-		<div *ngIf="fix" class="base-margin-top">
-			<div [innerText]="'_Fix_' | i18n" class="insightLabel"></div>
-			<div>
-				<span [innerText]="fix.description"></span>
-				<a *ngIf="fix.download"
-					data-auto-id="SearchInsightsFixDownload"
-					class="qtr-padding-left text-dkgray-4"
-					target="_blank"
-					[href]="fix.download"
-					[title]="'_Download_' | i18n">
-					<span class="icon-download"></span>
-				</a>
-				<a *ngIf="fix.details"
-					data-auto-id="SearchInsightsFixDocumentation"
-					class="qtr-padding-left text-dkgray-4"
-					target="_blank"
-					[href]="fix.details"
-					[title]="'_Documentation_' | i18n">
-					<span class="icon-document"></span>
-				</a>
-			</div>
-		</div>
-
-		<div *ngIf="workaround" class="base-margin-top">
-			<div [innerText]="'_Workaround_' | i18n" class="insightLabel"></div>
-			<div>
-				<span [innerText]="workaround.description"></span>
-				<a *ngIf="workaround.details"
-					data-auto-id="SearchInsightsWorkaroundDetails"
-					class="qtr-padding-left text-dkgray-4 text-small"
-					target="_blank"
-					href="workaround.details"
-					innerText="{{ '_SeeHowToDoThis_' | i18n }} >">
-				</a>
-			</div>
-		</div>
-	</div>
-</ng-template>
-
-<ng-template #insightDevices let-devices="devices">
-	<div [innerText]="'_YourImpactedDevices_' | i18n"
-		class="base-margin-bottom text-uppercase text-bold text-muted">
-	</div>
-
-	<div [innerText]="'_HWModel_' | i18n" class="insightLabel"></div>
-	<div [innerText]="devices[0].model" class="text-small"></div>
-
-	<div [innerText]="'_SWVersion_' | i18n" class="insightLabel"></div>
-	<div [innerText]="devices[0].swVersion" class="text-small"></div>
-
-	<div [innerText]="'_CXLevel_' | i18n" class="insightLabel"></div>
-	<div [innerText]="'_LevelX_' | i18n: devices[0].cxLevel" class="text-small"></div>
-
-	<a *ngIf="devices.length > 1"
-		class="base-margin-top text-small text-dkgray-4"
-		[innerText]="'_ViewAllXImpactedDevices_' | i18n: devices.length">
-	</a>
-</ng-template>
-

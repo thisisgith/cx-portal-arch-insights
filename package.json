@@ -20,8 +20,8 @@
     "test:ci": "npm run test -- --watch=false --browsers=ChromeHeadless",
     "test:automation": "cypress run --config screenshotOnRunFailure=false,video=false",
     "posttest": "npx istanbul report --include **/coverage-final.json json && node combine-coverage.js",
-		"lint": "npx apolloLint lint",
-		"lint:cypress": "npx apolloLint lint --path=\"cypress\"",
+    "lint": "npx apolloLint lint",
+    "lint:cypress": "npx apolloLint lint --path=\"cypress\"",
     "cypress": "npx cypress open"
   },
   "private": true,
