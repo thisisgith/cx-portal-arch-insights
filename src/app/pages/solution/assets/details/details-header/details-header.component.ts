@@ -22,6 +22,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 export class DetailsHeaderComponent {
 	@Input('asset') public asset: HardwareInfo;
 	@Output() public fullscreenEvent = new EventEmitter<boolean>();
+	@Output() public closeEvent = new EventEmitter<boolean>();
 
 	public componentData = {
 		openCases: 0,
@@ -53,10 +54,11 @@ export class DetailsHeaderComponent {
 	/**
 	 * Clear the currently displayed asset and close the details window
 	 */
-	public clearAsset() {
+	public clearAsset () {
 		this.asset = null;
 		this.solutionService.sendCurrentAsset(null);
 		this.hidden = true;
+		this.closeEvent.emit(this.hidden);
 	}
 
 	// TODO WRITE TEST

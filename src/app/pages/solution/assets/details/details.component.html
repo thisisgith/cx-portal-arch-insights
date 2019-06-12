@@ -23,7 +23,9 @@
 </div>
 
 <ng-template #assetHeader>
-	<details-header (fullscreenEvent)="determineFullScreen($event)"></details-header>
+	<details-header 
+		(fullscreenEvent)="determineFullScreen($event)"
+		(closeEvent)="determineClose($event)"></details-header>
 </ng-template>
 
 <ng-template #details>
