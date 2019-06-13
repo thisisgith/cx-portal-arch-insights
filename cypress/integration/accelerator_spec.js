@@ -63,4 +63,20 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 		cy.getByAutoId('ACCCloseModal').click();
 	});
+
+	it('Accelerator Tile Tooltip', () => { // PBC-166
+		// Don't assume there is only one recommended item, so ensure the shown tooltip is recommended
+		cy.get('#hover-panel-recommendedACCTitle h6').then($panel => {
+			let foundItem;
+			Cypress._.each(accItems, item => {
+				if ($panel[0].innerText === item.title && item.status === 'recommended') {
+					foundItem = item;
+				}
+			});
+			cy.get('#hover-panel-recommendedACCTitle').should('exist');
+			cy.get('#hover-panel-recommendedACCTitle h6').should('have.text', foundItem.title);
+			cy.get('#hover-panel-recommendedACCTitle div:first').should('have.class', 'divider');
+			cy.get('#hover-panel-recommendedACCTitle div').should('have.text', foundItem.description);
+		});
+	});
 });
