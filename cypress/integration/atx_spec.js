@@ -44,4 +44,22 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		});
 		cy.getByAutoId('ATXCloseModal').click();
 	});
+
+	it('ATX Tile Tooltip', () => { // PBC-166
+		// Don't assume there is only one recommended item, so ensure the shown tooltip is recommended
+		cy.get('#hover-panel-recommendedATXTitle h6').then($panel => {
+			let foundItem;
+			Cypress._.each(atxItems, item => {
+				// TODO: Resolving PBC-189 should change 'completed' to 'recommended' below
+				if ($panel[0].innerText === item.title && item.status === 'completed') {
+					foundItem = item;
+				}
+			});
+			cy.get('#hover-panel-recommendedATXTitle').should('exist');
+			cy.get('#hover-panel-recommendedATXTitle h6').should('have.text', foundItem.title);
+			cy.get('#hover-panel-recommendedATXTitle div:first').should('have.class', 'divider');
+			cy.get('#hover-panel-recommendedATXTitle div').should('have.text', foundItem.description);
+		});
+	});
+
 });

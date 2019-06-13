@@ -1,9 +1,8 @@
-// import MockService from '../support/mockService'; //not needed yet for accelerator
-// const accMock = new MockService('CommunitiesScenarios'); // for future changes
-// environments/mock/communities.ts
-// const accOnboardScenario = accMock.getScenario('GET', '(Accelerator) IBN-Assurance-Onboard');
-// will give error if accItems is not used below
-// const accItems = accOnboardScenario.response.body.items;
+import MockService from '../support/mockService';
+
+const accMock = new MockService('ACCScenarios');
+const accOnboardScenario = accMock.getScenario('GET', '(ACC) IBN-Wireless Assurance-Onboard');
+const accItems = accOnboardScenario.response.body.items;
 
 describe('Accelerator (Accelerator)', () => { // Jira: PBC-tbd
 	before(() => {
@@ -19,5 +18,21 @@ describe('Accelerator (Accelerator)', () => { // Jira: PBC-tbd
 		cy.getByAutoId('recommendedACCWatchButton').should('have.text', 'Request a 1-on-1');
 		cy.getByAutoId('moreACCList').should('exist');
 		// No other data-auto-id's exist at this time
+	});
+
+	it('Accelerator Tile Tooltip', () => { // PBC-166
+		// Don't assume there is only one recommended item, so ensure the shown tooltip is recommended
+		cy.get('#hover-panel-recommendedACCTitle h6').then($panel => {
+			let foundItem;
+			Cypress._.each(accItems, item => {
+				if ($panel[0].innerText === item.title && item.status === 'recommended') {
+					foundItem = item;
+				}
+			});
+			cy.get('#hover-panel-recommendedACCTitle').should('exist');
+			cy.get('#hover-panel-recommendedACCTitle h6').should('have.text', foundItem.title);
+			cy.get('#hover-panel-recommendedACCTitle div:first').should('have.class', 'divider');
+			cy.get('#hover-panel-recommendedACCTitle div').should('have.text', foundItem.description);
+		});
 	});
 });
