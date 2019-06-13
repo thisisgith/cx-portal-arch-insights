@@ -61,5 +61,4 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.get('#hover-panel-recommendedATXTitle div').should('have.text', foundItem.description);
 		});
 	});
-
 });
