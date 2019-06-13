@@ -16,7 +16,7 @@ const caseRegex = /\b6\d{8}\b/;
  */
 const rmaRegex = /^8\d{8}$/;
 /** TODO get contract regex */
-// const contractRegex = '';
+const contractRegex = /somecontract/;
 
 /**
  * Service with utils for the personal search module
@@ -46,7 +46,9 @@ export class SearchService {
 		if (query.match(rmaRegex)) {
 			return 'rma';
 		}
-		// TODO add contract match
+		if (query.match(contractRegex)) {
+			return 'contract';
+		}
 		if (query.match(serialRegex)) {
 			return 'sn';
 		}

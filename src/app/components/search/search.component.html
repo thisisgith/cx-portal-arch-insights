@@ -13,16 +13,23 @@
 					<span class="icon-close"></span>
 				</a>
 				<div class="row no-gutters">
-					<div class="flex-fluid">
+					<div class="col-md-9">
 						<div class="panel panel--loose">
 							<!-- TODO add special search views depending on query type -->
+							<div class="base-margin-bottom">
+								<app-contract-search *ngIf="searchType === 'contract'"
+									[contractNumber]="selectedSearch">
+								</app-contract-search>
+							</div>
+							<hr *ngIf="specialSearch" />
 							<app-general-search
-								[query]="generalQuery">
+								[query]="selectedSearch">
 							</app-general-search>
 						</div>
 					</div>
-					<div>
+					<div class="col-md-3">
 						<!-- TODO the right-hand sidebar content for each special search view can be projected here -->
+						<ng-container *ngTemplateOutlet="specialSearch?.sidebarContent"></ng-container>
 					</div>
 				</div>
 			</div>
