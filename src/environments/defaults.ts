@@ -10,7 +10,6 @@ const origin = 'https://swtgdev-apollo-2.cisco.com';
 export const defaults = {
 	origin,
 	auth: {
-		accountUrl: `${origin}/ws/account/v2/`,
 		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco/{INSERT_CLIENT_ID}`,
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
