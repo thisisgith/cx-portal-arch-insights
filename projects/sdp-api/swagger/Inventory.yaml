@@ -1,0 +1,961 @@
+swagger: '2.0'
+info:
+  description: Inventory API Services
+  version: v1
+  title: Inventory API Services
+  termsOfService: ''
+  contact:
+    email: vpriyata@cisco.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'sdp.cisco.com'
+basePath: '/api'
+schemes:
+  - https
+security:
+  - OauthSecurity: []
+paths:
+  /api/customerportal/inventory/v1/hardware:
+    head:
+      tags:
+        - Inventory
+      summary: | 
+        Returns the number of total number of hardware entries for the identified customer along with query metadata (e.g. rows/page)
+      description: |
+        Returns the number of total number of hardware entries for the identified customer along with query metadata (e.g. rows/page)
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+    get:
+      tags:
+        - Inventory
+      summary: >-
+        The Hardware API retrieves hardware inventory details based on the
+        device IDs. This API can be used to return hardware details for a
+        specific customer.
+      description: >-
+        The Hardware API retrieves hardware inventory details based on the
+        device IDs. This API can be used to return hardware details for a
+        specific customer. All request parameters are optional other than
+        customerId.
+
+        If no device ID is provided in the request, the response will contain
+        hardware information for all device IDs associated with customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer
+        encoding. Refer to General API Feature section to see examples of how to
+        take advantage of these features in order to optimize and manipulate the
+        response.
+      operationId: getHardware
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string      
+        - name: managedNeId
+          in: query
+          description: 'The unique, generated ID of the managed network element'
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: hwInstanceId
+          in: query
+          description: hardware instance ID
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: containingHwId
+          in: query
+          description: >-
+            This is a reference to the physical container (equipment holder).
+            For example, module’s container is the chassis.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: productId
+          in: query
+          description: >-
+            The vendor-specific model name identifier string associated with
+            this physical component
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: serialNumber
+          in: query
+          description: The recognized/validated Serial Number
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: equipmentType
+          in: query
+          description: >-
+            An indication of the general hardware type of the physical entity
+            (e.g. CHASSIS, MODULE, POWER SUPPLY, POWERSUPPLY, FAN, IPPHONE,
+            OTHER)
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: >-
+            Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for
+            descending.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Requested fields in the response.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: Page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/HardwareResponse'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: 'Forbidden'
+  /api/customerportal/inventory/v1/network-elements:
+    head:
+      tags:
+        - Inventory
+      summary: | 
+        Returns the number of total number of managed NetworkElements along with query metadata (e.g. rows/page)
+      description: |
+        Returns the number of total number of managed NetworkElements along with query metadata (e.g. rows/page)
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+    get:
+      tags:
+        - Inventory
+      summary: >-
+        The Network-Element API retrieves a list of devices along with specific details.
+        All request parameters are optional other than customerId.
+
+        This API can be used to return the list of device IDs for a specific customer
+        associated with the Party ID in header meta-data.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      description: >-
+        The Network-Element API retrieves a list of devices along with specific details.
+        All request parameters are optional other than customerId.
+
+        This API can be used to return the list of device IDs for a specific customer
+        associated with the Party ID in header meta-data.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+        https://apx.cisco.com/cs/api/v1/inventory/network-elements
+      operationId: getNetworkElements
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: inventoryName
+          in: query
+          description: The name of inventory given by customers.
+          required: false
+          type: string
+        - name: neType
+          in: query
+          description: The type of the network element. Values include COMPOSITE, COMPOSED, VIRTURAL, APPLICATION, STANDALONE
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: neInstanceId
+          in: query
+          description: The unique, generated ID of the network element.
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: managedNeInstanceId
+          in: query
+          description: Unique identifier of a Network Resource ID
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: productFamily
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: false
+          type: string
+        - name: isManagedNe
+          in: query
+          description: Is it a managed NE
+          required: false
+          type: string
+        - name: ipAddress
+          in: query
+          description: A numerical label assigned to each device (For example, computer, printer) participating in a computer network that uses the Internet Protocol for communication.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: hostname
+          in: query
+          description: Hostnames are human-readable nicknames that correspond to the address of a device connected to a network.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sysName
+          in: query
+          description: The SNMP sysName of the network element. It will be a fully-qualified name, if domain name is set on the device.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: swVersion
+          in: query
+          description: The specific version of the software (Software Type) that is installed on the Network Element.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: swType
+          in: query
+          description: Software Type identifies the specific type of software that is installed on this host/system.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: ASC (ascending) or DESC (descending)
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Receive only requested fields in the response
+          required: false
+          type: array
+          items:
+            type: string
+            x-zenith-validation-declaration-required : true
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: The page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/NetworkElementResponse'
+        '400':
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: API not found
+  /api/customerportal/inventory/v1/software:
+    head:
+      tags:
+        - Inventory
+      summary: | 
+        Returns the number of total number of software entries for the NetworkElements in the inventory along with query metadata (e.g. rows/page)
+      description: |
+        Returns the number of total number of software entries for the NetworkElements in the inventory along with query metadata (e.g. rows/page)
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: sort
+          in: query
+          description: >-
+            Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for
+            descending.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: page
+          in: query
+          description: Page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1  
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+    get:
+      tags:
+        - Inventory
+      summary: >-
+        The Software API retrieves software details based on device IDs. This API can be
+        used to return software details for a specific customer associated with the
+        Party ID in header meta-data. All request parameters are optional other than
+        customerId.
+
+        If no device ID is provided in the request, the response will contain system
+        software information for all device IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      description: >-
+        The Software API retrieves software details based on device IDs. This API can be
+        used to return software details for a specific customer associated with the
+        Party ID in header meta-data. All request parameters are optional other than
+        customerId.
+
+        If no device ID is provided in the request, the response will contain system
+        software information for all device IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+        https://apx.cisco.com/cs/api/v1/inventory/software
+      operationId: getSoftware
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: inventoryName
+          in: query
+          description: The name of inventory given by customers.
+          required: false
+          type: string
+#       - name: groupId
+#          in: query
+#          description: group id
+#          required: false
+#          type: integer
+#          format: int64
+#          x-zenith-ds-fieldName: groupId
+        - name: managedNeInstanceId
+          in: query
+          description: The unique, generated ID of the network element.
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: swType
+          in: query
+          description: Software Type identifies the specific type of software that is installed on this host/system.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: swVersion
+          in: query
+          description: The specific version of the software (Software Type) that is installed on the Network Element. Example:- 15.1(4)M4
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: swMajorVersion
+          in: query
+          description: >-
+            The major version portion of the software version. Example: 15.1
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: swCategory
+          in: query
+          description: >-
+            The broader category of the software record. The Role of the Software running
+            on a Network Element. Example: System Software, Application Software; Patch;
+            Package
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: swStatus
+          in: query
+          description: >-
+            The Status of the Software running on the Network Element. Default value is
+            ACTIVE. For PIE and SMU it can also be COMMITTED.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: swName
+          in: query
+          description: >-
+            The Name of the Software running on Network Element. For System SW, the value
+            is the Image Name. For PIE it is the package name and for SMU the SMU name.
+            Example: asr9k-p-4.2.3.CSCtz41749-1.0.0
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: ASC (ascending) or DESC (descending)
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Receive only requested fields in the response
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: The page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/SoftwareResponse'
+        '400':
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: API not found
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: 'https://oauth.simple.api/authorization'
+    
+definitions:
+
+  HardwareResponse:
+   type: object
+   required:
+     [data]
+   description: The hardware in the inventory
+   properties:
+     data:
+       type: array
+       items:
+         $ref: '#/definitions/HardwareInfo'
+
+  HardwareInfo:
+    type: object
+    required:
+       [customerId, managedNeId, managementAddress, hwInstanceId]
+    properties:
+      customerId:
+        type: string
+        description: Unique identifier of a Cisco customer
+      managedNeId:
+        type: string
+        description: 'The unique, generated ID of the managed network element'
+      hostname:
+        type: string
+        example: 'TSPM-SJ-P1C1R11'
+        x-zenith-ds-fieldName: HOSTNAME
+        description: Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
+      managementAddress:
+        type: string
+        example: '1.1.1.1, dev10.cisco.com'
+        description: The address used to communicate with the managed NE. The synatx of this value is RFC2851.InetAddressType
+      hwInstanceId:
+        type: string
+        description: The unique identifier for hardware entry in a datastore
+      containingHwId:
+        type: string
+        description: >-
+          This is a reference to the physical container (equipment holder). For
+          example, module’s container is the chassis.
+      serialNumber:
+        type: string
+        description: The recognized/validated Serial Number
+      productId:
+        type: string
+        description: >-
+          The vendor-specific model name identifier string associated with this
+          physical component
+      productFamily:
+        type: string
+        description: The name of a group of products derived from a common product platform
+      productType:
+        type: string
+        description: >-
+          A single term that defines the physical nature of the product. This
+          value is derived based on the following order of preference:- PCE,
+          SNAS. Examples:- Firewall, Access Point
+      productName:
+        type: string
+        description: >-
+          The product name reported by PCE. Examples:- Cisco UCS B200 M4 Blade
+          Server, UCS-IOM-2208XP, N20-FAN5
+      equipmentType:
+        type: string
+        description: >-
+          An indication of the general hardware type of the physical entity
+          (e.g. CHASSIS, MODULE, POWER SUPPLY, POWERSUPPLY, FAN, IPPHONE, OTHER)
+      productDescription:
+        type: string
+        description: The description of a product
+      swType:
+        type: string
+        description: >-
+          This refers to the OS running on the managed network element. For
+          example:- IOS, IOS-XE, NxOS
+      swVersion:
+        type: string
+        description: The version of the softwareType running on the managed NE
+      tags:
+        type: array
+        items:
+          type: string
+        description: >-
+          The specific version of the software (Software Type) that is installed
+          on the Network Element. Example:- 15.1(4)M4
+          
+  
+  NetworkElementResponse:
+   type: object
+   required:
+     [data]
+   description: The NEs in the inventory
+   properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/NetworkElementInfo'
+          
+  NetworkElementInfo:
+    type: object
+    required:
+      [customerId, managedNEId, neInstanceId, managementAddress, isManagedNe]
+    properties:
+      customerId:
+        type: string
+        example: 167866829
+        x-zenith-ds-fieldName: CUSTOMERID
+        description: Unique identifier of a Cisco customer
+      collectorId:
+        type: string
+        example: 'CSP0001039747'
+        x-zenith-ds-fieldName: COLLECTORID
+        description: The unique identifier for a Cisco Collector (CSPC) appliance
+      neInstanceId:
+        type: integer
+        example: 23493607
+        format: int64
+        x-zenith-ds-fieldName: NEINSTANCEID
+        description: The unique, generated ID of the network element
+      managedNeInstanceId:
+        type: integer
+        example: 7676767
+        format: int64
+        x-zenith-ds-fieldName: MANAGEDNEINSTANCEID
+        description: The unique, generated ID of the network resource id
+      inventoryName:
+        type: string
+        example: 'SNTC_API_Test123'
+        x-zenith-ds-fieldName: INVENTORYNAME
+        description: Inventory Name of the processed Inventory File
+      managementAddress:
+        type: string
+        example: '172.21.34.57'
+        x-zenith-ds-fieldName: MANAGEMENTADDRESS
+        description: Management IP Address of the Device
+      neSubtype:
+        type: string
+        example: 'Child Device for ex:- Daughter Card in a Device'
+        x-zenith-ds-fieldName: NESUBTYPE
+        description: NE Subtype of the Device
+      inventoryAvailability:
+        type: string
+        example: 'Inventory Availability'
+        x-zenith-ds-fieldName: INVENTORYAVAILABILITY
+        description: Inventory Availability
+      lastConfigRegister:
+        type: string
+        example: 'Last Config Register 0*2102'
+        x-zenith-ds-fieldName: LASTCONFIGREGISTER
+        description: Last Config Register
+      ipAddress:
+        type: string
+        example: '172.21.34.94'
+        x-zenith-ds-fieldName: IPADDRESS
+        description: A numerical label assigned to each device (For example, computer, printer) participating in a computer network that uses the Internet Protocol for communication
+      hostname:
+        type: string
+        example: 'TSPM-SJ-P1C1R11'
+        x-zenith-ds-fieldName: HOSTNAME
+        description: Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
+      sysName:
+        type: string
+        example: 'bocgrp-ipswich-596313-WAP-11'
+        x-zenith-ds-fieldName: SYSNAME
+        description: The SNMP sysName of the network element. It will be a fully-qualified name, if domain name is set on the device
+      featureSet:
+        type: string
+        example: 'IP BASE, IP BASE W/O CRYPTO'
+        x-zenith-ds-fieldName: FEATURESET
+        description: The name of the software feature set running on the device. This data is primarily available for IOS
+      inventoryCollectionDate:
+        type: string
+        example: '2017-04-08T04:22:45Z'
+        format: date-time
+        x-zenith-ds-fieldName: INVENTORYCOLLECTIONDATE
+        description: The time when the collector last successfully collected inventory from the device. GMT date format YYYY-MM-DDTHH:MM:SS (Time is displayed in 24 hour format)
+      productFamily:
+        type: string
+        example: 'Cisco Catalyst 4500 Series Switches'
+        x-zenith-ds-fieldName: PRODUCTFAMILY
+        description: Product family the device belongs to
+      productId:
+        type: string
+        example: 'WS-C4506-E'
+        x-zenith-ds-fieldName: PRODUCTID
+        description: Refers to the validated product ID of the device. GMT date format YYYY-MM-DDTHH:MM:SS (Time is displayed in 24 hour format)
+      productType:
+        type: string
+        example: 'LAN Switches'
+        x-zenith-ds-fieldName: PRODUCTTYPE
+        description: A broad classification of Cisco product that categorizes its function
+      createDate:
+        type: string
+        example: '2017-10-24T09:19:17Z'
+        format: date-time
+        x-zenith-ds-fieldName: CREATEDATE
+        description: The date when the network element was first added to inventory. GMT date format YYYY-MM-DDTHH:MM:SS (Time is displayed in 24 hour format)
+      swType:
+        type: string
+        example: 'IOS'
+        x-zenith-ds-fieldName: SWTYPE
+        description: Software Type identifies the specific type of software that is installed on this host/system
+      swVersion:
+        type: string
+        example: '15.0(1)M4'
+        x-zenith-ds-fieldName: SWVERSION
+        description: The specific version of the software (Software Type) that is installed on the Network Element
+      reachabilityStatus:
+        type: string
+        example: 'REACHABLE'
+        x-zenith-ds-fieldName: REACHABILITYSTATUS
+        description: The status of the device as reported by the collector. Example:- Reachable or Not Reachable
+      neType:
+        type: string
+        example: 'APPLICATION'
+        x-zenith-ds-fieldName: NETYPE
+        description: The type of the network element. Values include COMPOSITE, COMPOSED, VIRTURAL, APPLICATION, STANDALONE
+      lastReset:
+        type: string
+        example: '2012-01-20T22:38:03Z'
+        format: date-time
+        x-zenith-ds-fieldName: LASTRESET
+        description: The date timestamp of the last reset of the device as reported by the show version command
+      resetReason:
+        type: string
+        example: 'power-on'
+        x-zenith-ds-fieldName: RESETREASON
+        description: The reason for the last system reset as reported in the show version output
+      sysContact:
+        type: string
+        example: 'Mark Doering'
+        x-zenith-ds-fieldName: SYSCONTACT
+        description: The SNMP sysContact of the network element which is populated in most devices using a configuration command
+      sysDescr:
+        type: string
+        example: 'Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.04.02.SG RELEASE SOFTWARE'
+        x-zenith-ds-fieldName: SYSDESCR
+        description: The SNMP system description from the network element
+      sysLocation:
+        type: string
+        example: 'SJC-J/2'
+        x-zenith-ds-fieldName: SYSLOCATION
+        description: The SNMP sysLocation of the network element which is populated in most devices using a configuration command
+      sysObjectId:
+        type: string
+        example: '1.3.6.1.4.1.9.1.576'
+        x-zenith-ds-fieldName: SYSOBJECTID
+        description: The SNMP sysObjectID of the network element
+      configRegister:
+        type: string
+        example: '0x2102'
+        x-zenith-ds-fieldName: CONFIGREGISTER
+        description: The Configuration register of the device at the next reload
+      configAvailability:
+        type: string
+        example: 'Available'
+        x-zenith-ds-fieldName: CONFIGAVAILABILITY
+        description: The availability of Network Element Configuration data for analytics. Example:- Available, Not Available, Not Supported
+      configCollectionDate:
+        type: string
+        example: '2012-06-19T14:15:33Z'
+        format: date-time
+        x-zenith-ds-fieldName: CONFIGCOLLECTIONDATE
+        description: The Date and time when the collector last successfully collected the configuration from the device. GMT date format YYYY-MM-DDTHH:MM:SS (Time is displayed in 24 hour format)
+      imageName:
+        type: string
+        example: 'C2800NM-IPBASE-M'
+        x-zenith-ds-fieldName: IMAGENAME
+        description: The Image Name of the software on the Network Element
+      bootstrapVersion:
+        type: string
+        example: 'NA'
+        x-zenith-ds-fieldName: BOOTSTRAPVERSION
+        description: The version of the boot code installed on the device
+      isManagedNe:
+        type: integer
+        example: 1
+        format: int64
+        x-zenith-ds-fieldName: ISMANAGEDNE
+        description: Indicates whether the device is directly managed by the collector
+      userField1:
+        type: string
+        example: null
+        x-zenith-ds-fieldName: USERFIELD1
+        description: The user field1 value populated in the collector seedfile
+      userField2:
+        type: string
+        example: null
+        x-zenith-ds-fieldName: USERFIELD2
+        description: The user field2 value populated in the collector seedfile
+      userField3:
+        type: string
+        example: null
+        x-zenith-ds-fieldName: USERFIELD3
+        description: The user field3 value populated in the collector seedfile
+      userField4:
+        type: string
+        example: null
+        x-zenith-ds-fieldName: USERFIELD4
+        description: The user field4 value populated in the collector seedfile
+      macAddress:
+        type: string
+        example: '00:06:28:d9:00:20'
+        x-zenith-ds-fieldName: MACADDRESS
+        description: A media access control address (MAC address) is a unique identifier assigned to network interfaces for communications on the physical network segment
+        
+  SoftwareResponse:
+   type: object
+   required:
+     [data]
+   description: The NE's software information
+   properties:
+     data:
+       type: array
+       items:
+         $ref: '#/definitions/SoftwareInfo'
+  
+  SoftwareInfo:
+    type: object
+    properties:
+      customerId:
+        type: string
+        example: 167866829
+        x-zenith-ds-fieldName: CUSTOMERID
+        description: 'Unique identifier of a Cisco customer.'
+      managedNeInstanceId:
+        type: integer
+        example: 23493626
+        format: int64
+        x-zenith-ds-fieldName: MANAGEDNEINSTANCEID
+        description: 'The unique, generated ID of the network element'
+      inventoryName:
+        type: string
+        example: 'SNTC_API_Test123'
+        x-zenith-ds-fieldName: INVENTORYNAME
+        description: The name of inventory given by customers
+      swType:
+        type: string
+        example: 'IOS'
+        x-zenith-ds-fieldName: SWTYPE
+        description: 'Software Type identifies the specific type of software that is installed on this host/system.'
+      swVersion:
+        type: string
+        example: '15.0(1)SE'
+        x-zenith-ds-fieldName: SWVERSION
+        description: 'The specific version of the software (Software Type) that is installed on the Network Element. Example: 15.1(4)M4'
+      swMajorVersion:
+        type: string
+        example: '15.0(1)SE'
+        x-zenith-ds-fieldName: SWMAJORVERSION
+        description: 'The major version portion of the software version. Example: 15.1'
+      swCategory:
+        type: string
+        example: 'System Software'
+        x-zenith-ds-fieldName: SWCATEGORY
+        description: 'The broader category of the software record. The Role of the Software running on a Network Element. Example: System Software, Application Software; Patch; Package'
+      swStatus:
+        type: string
+        example: 'ACTIVE'
+        x-zenith-ds-fieldName: SWSTATUS
+        description: 'The Status of the Software running on the Network Element. Default value is ACTIVE. For PIE and SMU it can also be COMMITTED'
+      swName:
+        type: string
+        example: 'C3750E-UNIVERSALK9-M'
+        x-zenith-ds-fieldName: SWNAME
+        description: 'The Name of the Software running on Network Element. For System SW, the value is the Image Name. For PIE it is the package name and for SMU the SMU name. Example: asr9k-p-4.2.3.CSCtz41749-1.0.0'
+  ErrorResponse:
+      type: object
+      required:
+        - status
+        - message
+        - reason
+      properties:
+        status:
+          type: integer
+          format: int32
+        message:
+          type: string
+        reason:
+          type: object
+          properties:
+            errorCode:
+              type: string
+            errorInfo:
+              type: string

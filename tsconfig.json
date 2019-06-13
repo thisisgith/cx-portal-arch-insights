@@ -8,7 +8,8 @@
 			"@environment": ["src/environments/environment.ts"],
 			"@interfaces": ["src/app/interfaces/index.ts"],
 			"@mock": ["src/environments/mock/index.ts"],
-			"@services": ["src/app/services/index.ts"]
+			"@services": ["src/app/services/index.ts"],
+			"@cui-x/sdp-api": ["projects/sdp-api/src"]
 		}
 	}
 }
