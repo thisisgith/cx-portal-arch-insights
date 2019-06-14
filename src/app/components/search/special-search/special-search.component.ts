@@ -5,7 +5,6 @@ import { Component, TemplateRef } from '@angular/core';
  */
 @Component({
 	selector: 'app-special-search',
-	styleUrls: ['./special-search.component.scss'],
 	templateUrl: './special-search.component.html',
 })
 export class SpecialSearchComponent {
