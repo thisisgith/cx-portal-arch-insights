@@ -1,82 +1,47 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
 :host {
-    .assets-header {
-        background-color: #fbfbfc;
-        border-bottom: solid 1px #dfdfdf;
-    }
+	.assets-header {
+		background-color: $light-gray-4;
+		border-bottom: solid 1px $light-gray-3;
+	}
 
-    .panel--no-padding {
-        padding: 0;
-    }
+	.icon--mid {
+		font-size: 24px;
+	}
 
-    .icon--mid {
-        font-size: 24px;
-    }
-    
-    .btn--light-gray {
-	background-color: transparent;
-	border: solid 1px #ced0d1;
-	min-width: 24px !important;
+	.icon--rotated {
+		color: $light-gray-2;
 
-        &:hover {
-            background-color: #ced0d1;
-            border-color: transparent;
-        }
-    }
+		&:hover {
+			color: $cisco-blue;
+		}
+	}
 
-    .icon-positioned {
-        color: #676769;
-        font-size: 17px !important;
-        line-height: 17px;
-        position: absolute;
-        left: 50%;
-        z-index: 2;
-        top: 50%;
-        transform: translate(-50%, -50%);
-    }
+	.dropdown--actions.active {
+		.icon--rotated {
+			color: $cisco-blue;
+		}
+	}
 
-    .icon-positioned--left {
-        transform: rotate(90deg);
-        transform-origin: top;
-    }
+	.open-case-toggle {
+		color: $dark-gray-2 !important;
 
-    .icon--rotated {
-        color: #c6c7ca;
-        transform: rotate(90deg);
+		&:hover {
+			color: $cisco-blue !important;
+		}
+	}
 
-        &:hover {
-            color: #00bceb;
-        }
-    }
+	.open-case-toggle-btn.active {
+		.open-case-toggle {
+			color: $cisco-blue !important;
+		}
+	}
 
-    .dropdown--actions.active {
-        .icon--rotated {
-            color: #00bceb;
-        }
-    }
-
-    .label--bordered-dark {
-        white-space: nowrap;
-        border: solid 1px #58585b;
-    }
-
-    .open-case-toggle {
-        color: #58585b !important;
-
-        &:hover {
-            color: #00bceb !important;
-        }
-    }
-
-    .open-case-toggle-btn.active {
-        .open-case-toggle {
-            color: #00bceb !important;
-        }
-    }
-
-    .dropdown-case {
-        &:not(:first-of-type) {
-            border-top: solid 1px #dfdfdf;
-            padding-top: 10px;
-        }
-    }
+	.dropdown-case {
+		&:not(:first-of-type) {
+			border-top: solid 1px $light-gray-3;
+			padding-top: 10px;
+		}
+	}
 }

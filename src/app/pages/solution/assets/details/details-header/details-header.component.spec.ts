@@ -16,7 +16,7 @@ import { DetailsHeaderModule } from './details-header.module';
  * @param type the scenario type
  * @returns the body response
  */
-function getActiveBody(mock: Mock, type: string = 'GET') {
+function getActiveBody (mock: Mock, type: string = 'GET') {
 	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
 
 	return active.response.body;

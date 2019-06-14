@@ -23,9 +23,11 @@
 </div>
 
 <ng-template #assetHeader>
-	<details-header 
+	<details-header
+		[asset]="asset"
 		(fullscreenEvent)="determineFullScreen($event)"
-		(closeEvent)="determineClose($event)"></details-header>
+		(closeEvent)="determineClose($event)">
+	</details-header>
 </ng-template>
 
 <ng-template #details>

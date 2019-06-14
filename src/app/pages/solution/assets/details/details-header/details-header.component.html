@@ -1,10 +1,9 @@
 	<div class="assets-header base-padding">
 		<div class="row ">
 			<div class="col-md-8 base-padding-bottom qtr-padding-top">
-				<div class="flex">
-					<button class="btn btn--icon half-margin-right">
-						<span class="icon-maximize icon-positioned icon-positioned--left"></span>
-						<span class="icon-minimize icon-positioned icon-positioned--right"></span>
+				<div class="flex align-items-center">
+					<button class="btn btn--icon btn--small half-margin-right">
+						<span class="icon-maximize icon-positioned icon--small"></span>
 					</button>
 					<div class="text-xlarge" [innerText]="asset?.hostname || asset?.serialNumber"></div>
 				</div>
@@ -75,7 +74,7 @@
 					class="dropdown dropdown--center dropdown--tail open-case-toggle-btn"
 					[ngClass]="{ active: casesDropdownActive }">
 					<div data-auto-id="ToggleActiveCases" (click)="toggleActiveCases()"
-						class="text-uppercase open-case-toggle dbl-margin-left"
+						class="text-uppercase open-case-toggle"
 						innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
 					</div>
 
@@ -88,7 +87,7 @@
 									<span class="half-margin-right">S2</span>
 									<span class="flex qtr-margin-right">Case</span> <strong>667389903</strong>
 								</div>
-								<div class="label label--bordered-dark">customer pending</div>
+								<div class="label label--dkgray label--outlined">customer pending</div>
 							</div>
 							<div class="half-margin-bottom">
 								Automated diagnostic result case. A security anomaly was detected in the SMTP
@@ -104,7 +103,7 @@
 									<span class="half-margin-right">S3</span>
 									<span class="flex qtr-margin-right">Case</span> <strong>667389903</strong>
 								</div>
-								<div class="label label--bordered-dark">cisco pending</div>
+								<div class="label label--dkgray label--outlined">cisco pending</div>
 							</div>
 							<div class="half-margin-bottom">
 								Automated diagnostic result case. A security anomaly was detected in the SMTP
@@ -128,13 +127,13 @@
 										'col-md-6': !status.loading.cases
 									}">
 				<!-- TODO: hook up buttons -->
-				<button class="text-uppercase btn btn--bright-blue btn--small" [innerText]="'_Scan_' | i18n"></button>
-				<button class="text-uppercase btn btn--bright-blue btn--small"
+				<button class="text-uppercase btn btn--gray-ghost btn--small" [innerText]="'_Scan_' | i18n"></button>
+				<button class="text-uppercase btn btn--gray-ghost btn--small"
 					[innerText]="'_OpenCase_' | i18n"></button>
 				<div data-auto-id="ToggleActiveAction" (click)="toggleActiveAction()"
 					[ngClass]="{ active: actionDropdownActive }"
 					class="dropdown dropdown--actions dropdown--tail dropdown--left">
-					<span class="icon-more icon-medium icon--rotated"></span>
+					<span class="icon-more icon--rotated icon-medium rotate-90"></span>
 					<div class="dropdown__menu"> 
 						<!-- TODO: add edit and delete functionality once open cases return -->
 						<a innerText="{{ '_Edit_' | i18n}}"></a>

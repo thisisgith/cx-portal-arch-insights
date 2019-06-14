@@ -1,11 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CaseParams, CaseService } from '@cui-x/services';
+import { CaseParams } from '@cui-x/services';
 import { SolutionService } from '../../../solution.service';
 
-import * as _ from 'lodash';
 import { HardwareInfo } from '@cui-x/sdp-api';
-
-import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Details Header Component
@@ -46,9 +43,7 @@ export class DetailsHeaderComponent {
 	public casesDropdownActive = false;
 
 	constructor (
-		private caseService: CaseService,
 		private solutionService: SolutionService,
-		private logger: LogService,
 	) { }
 
 	/**
