@@ -1,0 +1,13 @@
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="row">
+			<cui-timeline [items]="timelineData">
+			</cui-timeline>
+		</div>
+	</div>
+</div>
+
+<ng-template #timelineItem let-data="data">
+		<div class="text-bold" [innerText]="data.title"></div>
+		<div class="half-margin-top" [innerText]="data.content"></div>
+</ng-template>

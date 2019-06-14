@@ -11,6 +11,8 @@ import { HardwareInfo } from '@cui-x/sdp-api';
 import { SolutionService } from '../../solution.service';
 import { CaseParams, CaseService } from '@cui-x/services';
 
+import { CuiTimelineItem } from '@cisco-ngx/cui-components';
+
 import * as _ from 'lodash';
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -29,7 +31,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 export class AssetDetailsComponent implements OnChanges, OnInit {
 
 	@Input('asset') public asset: HardwareInfo;
-	@ViewChild('details', { static: true }) private detailsTemplate: TemplateRef<{ }>;
+	@ViewChild('timelineItem', { static: true }) private timelineItemTemplate: TemplateRef<{ }>;
 
 	public componentData = {
 		openCases: 0,
@@ -43,10 +45,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	public status = {
 		loading: {
 			cases: false,
+			timeline: false,
 		},
 	};
 	public hidden = true;
 	public fullscreen = false;
+
+	public timelineData: CuiTimelineItem[] = [];
 
 	constructor (
 		private caseService: CaseService,
