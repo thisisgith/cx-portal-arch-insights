@@ -119,27 +119,6 @@ describe('AssetDetailsComponent', () => {
 			});
 	});
 
-	it('should handle clearing an asset', () => {
-		buildSpies();
-
-		const deviceResponse = getActiveBody(HardwareScenarios[0]);
-		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
-
-		component.asset = asset;
-
-		fixture.detectChanges();
-
-		expect(component.asset.serialNumber)
-			.toEqual('1234');
-
-		component.clearAsset();
-
-		fixture.detectChanges();
-
-		expect(component.asset)
-			.toBeNull();
-	});
-
 	it('should handle changing assets', () => {
 		buildSpies();
 
@@ -189,7 +168,7 @@ describe('AssetDetailsComponent', () => {
 		expect(component.fullscreen)
 			.toBeFalsy();
 
-		component.toggleFullscreen();
+		component.fullscreen = true;
 
 		expect(component.fullscreen)
 			.toBeTruthy();

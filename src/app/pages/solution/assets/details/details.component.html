@@ -1,6 +1,5 @@
-<div class="panel panel--bordered-left flex-fill base-padding-right scroll">
+<div class="panel panel--bordered-left flex-fill panel--no-padding base-padding-right scroll">
 	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
-	<div class="divider divider--thick qtr-margin-top qtr-margin-bottom"></div>
 	<cui-tabs>
 		<cui-tab [label]="'_Details_' | i18n">
 			<ng-container *ngTemplateOutlet="details"></ng-container>
@@ -24,71 +23,11 @@
 </div>
 
 <ng-template #assetHeader>
-	<div class="row">
-		<div class="col-md-1">
-			<button class="btn btn--icon btn--small">
-				<span class="icon-warning"></span>
-			</button>
-		</div>
-		<div class="col-md-7 qtr-padding-top">
-			<div class="text-xlarge" [innerText]="asset?.hostname || asset?.serialNumber"></div>
-			<div class="text-small">
-				<span *ngIf="asset?.hostname"
-					class="half-margin-right"
-					innerText="{{ '_Hostname_' | i18n }}: {{ asset?.hostname }}"
-					data-auto-id="Asset360Hostname">
-				</span>
-				<span *ngIf="asset?.ipAddress"
-					class="half-margin-right"
-					innerText="{{ '_IP_' | i18n }}: {{ asset?.ipAddress }}"
-					data-auto-id="Asset360IPAddress">
-				</span>
-				<span class="half-margin-right"
-					innerText="{{ '_SN_' | i18n }}: {{ asset?.serialNumber || ('_NA_' | i18n) }}"
-					data-auto-id="Asset360SerialNumber">
-				</span>
-			</div>
-			<!-- TODO: Hook this up to real API data -->
-			<div class="text-small"
-				innerText="{{ '_LastScan_' | i18n }}: {{ '_DeviceUnreachable_' | i18n }}">
-			</div>
-		</div>
-		<div class="col-md-4 text-right">
-			<a class="text-dkgray-4"
-				data-auto-id="FullScreen">
-				<span
-					data-auto-id="asset-details-toggle-fullscreen-icon"
-					class="icon--mid half-margin-right"
-					[title]="'_ToggleFullscreen_' | i18n"
-					[ngClass]="{
-						'icon-fullscreen': !fullscreen,
-						'icon-exit-fullscreen': fullscreen
-					}"
-					(click)="toggleFullscreen()"
-				></span>
-			</a>
-			<a class="text-dkgray-4"
-				data-auto-id="ClearAsset"
-				(click)="clearAsset()">
-				<span class="icon-close icon--mid"></span>
-			</a>
-		</div>
-	</div>
-	<div class="row base-margin-top">
-		<div class="col-md-6"
-			*ngIf="!status.loading.cases"
-			innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
-		</div>
-		<div class="text-right"
-			[ngClass]="{
-				'col-md-12': status.loading.cases,
-				'col-md-6': !status.loading.cases
-			}">
-			<span [innerText]="'_RunDiagnostics_' | i18n"></span>
-			<span> | </span>
-			<span [innerText]="'_OpenCase_' | i18n"></span>
-		</div>
-	</div>
+	<details-header
+		[asset]="asset"
+		(fullscreenEvent)="determineFullScreen($event)"
+		(closeEvent)="determineClose($event)">
+	</details-header>
 </ng-template>
 
 <ng-template #details>
@@ -173,3 +112,4 @@
 		<div class="col-md-6" [innerText]="data || ('_NA_' | i18n)"></div>
 	</div>
 </ng-template>
+x

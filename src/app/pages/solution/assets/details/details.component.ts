@@ -82,15 +82,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	}
 
 	/**
-	 * Clear the currently displayed asset and close the details window
-	 */
-	public clearAsset () {
-		this.asset = null;
-		this.solutionService.sendCurrentAsset(null);
-		this.hidden = true;
-	}
-
-	/**
 	 * Checks if our currently selected asset has changed
 	 * @param changes the changes detected
 	 */
@@ -119,9 +110,26 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	}
 
 	/**
-	 * Toggle fullscreen details
+	 * determine if fullscreen from child data
+	 * @param $event gets the boolean value
 	 */
-	public toggleFullscreen () {
-		this.fullscreen = !this.fullscreen;
+	public determineFullScreen ($event: boolean) {
+		if ($event) {
+			this.fullscreen = true;
+		} else {
+			this.fullscreen = false;
+		}
+	}
+
+	/**
+	 * determine if close from child data
+	 * @param $event gets the boolean value
+	 */
+	public determineClose ($event: boolean) {
+		if ($event) {
+			this.hidden = true;
+		} else {
+			this.hidden = false;
+		}
 	}
 }
