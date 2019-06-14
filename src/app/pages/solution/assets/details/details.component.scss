@@ -27,6 +27,10 @@
 		transform: translateX(0);
 	}
 
+	> .scroll {
+		overflow: scroll;
+	}
+
 	> .panel {
 		height: 100%;
 	}
