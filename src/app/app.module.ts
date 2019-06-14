@@ -22,9 +22,6 @@ import {
 	LogService,
 } from '@cisco-ngx/cui-services';
 import { HeaderModule } from '@components';
-import {
-	DetailsHeaderModule,
-} from './pages/solution/assets/details/details-header/details-header.module';
 
 /**
  * Initialization function which will load our i18n files
@@ -53,7 +50,6 @@ export function loadI18n (service: AppService) {
 		FormsModule,
 		HeaderModule,
 		HttpClientModule,
-		DetailsHeaderModule,
 	],
 	providers: [
 		AppService,

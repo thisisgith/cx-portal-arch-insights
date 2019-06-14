@@ -7,7 +7,6 @@ import { SolutionRoutingModule } from './solution-routing.module';
 import { AssetDetailsModule } from './assets/details/details.module';
 import { RacetrackModule, RacetrackContentModule, SdpApiModule } from '@cui-x/sdp-api';
 import { environment } from '@environment';
-import { DetailsHeaderModule } from './assets/details/details-header/details-header.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -22,7 +21,6 @@ const rootUrl = environment.sdpOrigin;
 	exports: [SolutionComponent],
 	imports: [
 		AssetDetailsModule,
-		DetailsHeaderModule,
 		CommonModule,
 		CuiGaugeModule,
 		I18nPipeModule,
