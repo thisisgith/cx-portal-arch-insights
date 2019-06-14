@@ -45,3 +45,6 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 Current version of CUI is at 1.3.5.
 If this is upgraded and colors happen to change, to match the colors, the file at:
 `src/app/classes/severities.ts` will need to be updated with the latest CSS code
+
+### Generating sdp-api source files
+To generate all of the sdp-api files at once, use `npm run generate:sdp`. To generate only a single component, use `npm run generate:sdp:inventory` etc.
