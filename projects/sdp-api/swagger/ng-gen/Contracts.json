@@ -1,0 +1,29 @@
+{
+  "$schema": "/usr/local/lib/node_modules/ng-swagger-gen/ng-swagger-gen-schema.json",
+  "swagger": "./swagger/Contracts.yaml",
+  "output": "src/lib/contracts",
+  "outputCore": "../core",
+  "prefix": "Contracts",
+  "ignoreUnusedModels": true,
+  "minParamsForContainer": 2,
+  "sortParams": "desc",
+  "defaultTag": "Contracts",
+  "replaceTags": {
+    "Contract API Services": "Contracts"
+  },
+  "defaultOperationIds": {
+    "head": {
+      "/api/v1/contracts/products/coverages": "headContractsProductsCoverages"
+    }
+  },
+  "modelsExportAs": {
+    "ErrorResponse": "ContractsErrorResponse"
+  },
+  "removeStaleFiles": true,
+  "modelIndex": true,
+  "serviceIndex": true,
+  "apiModule": true,
+  "enumModule": true,
+  "generateExamples": true,
+  "camelCase": false
+}

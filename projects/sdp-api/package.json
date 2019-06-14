@@ -1,0 +1,11 @@
+{
+  "name": "@cui-x/sdp-api",
+  "version": "0.0.4",
+  "peerDependencies": {
+    "@angular/common": "^7.2.0",
+    "@angular/core": "^7.2.0"
+  },
+  "devDependencies": {
+	  "@apollo/configs": "^1.0.2"
+  }
+}

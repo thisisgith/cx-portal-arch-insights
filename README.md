@@ -21,7 +21,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `npm run build` to build the project.
+Run `npm run build` to build the project. To build only the sdp-api library, run `npm run build:sdp`;
 
 ## Running unit tests
 

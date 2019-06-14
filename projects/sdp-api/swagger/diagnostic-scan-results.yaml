@@ -1,0 +1,386 @@
+swagger: '2.0'
+info:
+  description: Diagnostics API Services
+  version: 1.0.0
+  title: Diagnostics API Services
+  termsOfService: ''
+  contact:
+    email: shreyara@cisco.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'sdp.cisco.com'
+basePath: '/api'
+schemes:
+  - https
+security:
+  - OauthSecurity: []
+paths:
+  /api/v1/diagnostics/scan-results:
+    head:
+      tags:
+        - Diagnostics API Services
+      description: |
+        Fetches meta information about the Diagnostics Scan results.
+      summary: |
+        Fetches meta information about the Diagnostics Scan results.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: sort
+          in: query
+          description: >-
+            Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for
+            descending.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: page
+          in: query
+          description: Page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1  
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+    get:
+      tags:
+        - Diagnostics API Services
+      summary: Diagnostics Scan results
+      description: Diagnostics Scan results
+      operationId: getScanResults
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: serialNumber
+          in: query
+          description: A serial number is a unique number used for identification.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: deviceId
+          in: query
+          description: Device ID
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: productId
+          in: query
+          description: The alphanumeric identifier used by customers to order Cisco products. Examples:- CISCO2921/K9 ; WS-C3750X-24S-S ; WS-X6748-GE-TX
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: alertId
+          in: query
+          description: Alert Id
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: issueId
+          in: query
+          description: Issue Id
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: severity
+          in: query
+          description: Severity
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: problemId
+          in: query
+          description: Problem Id
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Requested fields in the response.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: Page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/ResponseObject'
+        500:
+          description: '500 response'
+        401:
+          description: '401 response'
+        403:
+          description: '403 response'
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: 'https://oauth.simple.api/authorization'
+definitions:
+  ResponseObject:
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/ResponseObjectDetails'
+  AlertCounts:
+    type: object
+    properties:
+      totalChecks:
+        type: integer
+        format: int64
+      totalCount:
+        type: integer
+        format: int64
+      countBySeverity:
+        type: object
+        additionalProperties:
+          type: string
+  ResponseObjectDetails:
+    type: object
+    properties:
+      customerId:
+        type: string
+        description: This is the party identifier assigned by the profiling system
+      serialNumber:
+        type: string
+        description: A serial number is a unique number used for identification.
+      resultId:
+        type: string
+        description: Result Id
+      deviceId:
+        type: string
+        description: Device ID
+      scanId:
+        type: string
+        description: Scan Id
+      errorMessage:
+        type: string
+        description: Error Message
+      startTimeStamp:
+        type: string
+        format: date-time
+        description: Start TimeStamp
+      endTimeStamp:
+        type: string
+        format: date-time
+        description: End TimeStamp
+      checkCount:
+        type: string
+        description: Check Count
+      runId:
+        type: string
+        description: Run Id
+      executedCommands:
+        type: array
+        items:
+          type: object
+          properties:
+            command:
+              type: string
+              description: command
+            waitTimeBeforeMs:
+              type: string
+              description: waitTimeBeforeMs
+            captureOutput:
+              type: string
+              description: captureOutput
+            reference:
+              type: string
+              description: reference
+            expectlets:
+              type: array
+              items:
+                type: object
+                properties:
+                  regexp:
+                    type: string
+                    description: regexp
+                  sendEnter:
+                    type: boolean
+                    description: sendEnter
+      alerts:
+        type: array
+        items:
+          type: object
+          properties:
+            alertId:
+              type: string
+              description: alertId
+            resultId:
+              type: string
+              description: resultId
+            issueId:
+              type: string
+              description: issueId
+            bdbIssueId:
+              type: string
+              description: bdbIssueId
+            externalTitle:
+              type: string
+              description: externalTitle
+            externalText:
+              type: string
+              description: externalText
+            name:
+              type: string
+              description: name
+            severity:
+              type: string
+              description: severity
+            problemId:
+              type: string
+              description: problemId
+            originalIssueState:
+              type: string
+              description: originalIssueState
+            snippet:
+              type: array
+              items:
+                type: string
+            issue:
+              type: object
+              properties:
+                issueId:
+                  type: string
+                  description: issueId
+                deviceId:
+                  type: string
+                  description: deviceId
+                problemId:
+                  type: string
+                  description: problemId
+                externalIssueId:
+                  type: string
+                  description: externalIssueId
+                state:
+                  type: string
+                  description: state
+                ignored:
+                  type: string
+                  description: ignored
+                ignoreReason:
+                  type: string
+                  description: ignoreReason
+                ignoredBy:
+                  type: string
+                  description: ignoredBy
+                ignoreTimestamp:
+                  type: string
+                  description: ignoreTimestamp
+                lastAlertId:
+                  type: string
+                  description: lastAlertId
+                issueOccurences:
+                  type: string
+                  description: issueOccurences
+                appliedRemediations:
+                  type: string
+                  description: appliedRemediations
+            remediations:
+              type: array
+              items:
+                type: object
+                properties:
+                  remediationId:
+                    type: string
+                    description: remediationId
+                  alertId:
+                    type: string
+                    description: alertId
+                  title:
+                    type: string
+                    description: title
+                  remediationType:
+                    type: string
+                    description: remediationType
+                  remediationMethod:
+                    type: string
+                    description: remediationMethod
+                  payload:
+                    type: string
+                    description: payload
+                  rollbackPayload:
+                    type: string
+                    description: rollbackPayload
+                  description:
+                    type: string
+                    description: description
+                  bdbRemediationId:
+                    type: string
+                    description: bdbRemediationId
+      alertCounts:
+        type: object
+        $ref: '#/definitions/AlertCounts'

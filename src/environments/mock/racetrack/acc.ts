@@ -18,8 +18,8 @@ function MockACC (
 	let items = [
 		{
 			description: 'Discover the standard steps required to engineer and commission ' +
-				'your appliance from an experienced Cisco DNA Center project manager. Unerstand ' +
-				'basic delpoymnet reqirements and schedules',
+				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
+				'basic deployment requirements and schedules',
 			status: 'recommended',
 			title: 'Cisco DNA Center Project Planning',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
