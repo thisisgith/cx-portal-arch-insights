@@ -103,7 +103,8 @@ describe('SearchBarComponent', () => {
 		component.onSearchSelect('600000000'); // casenum
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
-				name: '600000000',
+				generalSearch: '600000000',
+				text: '600000000',
 				type: 'case',
 			});
 	});
@@ -112,8 +113,19 @@ describe('SearchBarComponent', () => {
 		component.onSearchSelect('800000000'); // RMA num
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
-				name: '800000000',
+				generalSearch: '800000000',
+				text: '800000000',
 				type: 'rma',
+			});
+	});
+
+	it('should emit a contract selection', () => {
+		component.onSearchSelect('23000000'); // RMA num
+		expect(component.searchChange.emit)
+			.toHaveBeenCalledWith({
+				generalSearch: 'contract',
+				text: '23000000',
+				type: 'contract',
 			});
 	});
 
@@ -121,7 +133,8 @@ describe('SearchBarComponent', () => {
 		component.onSearchSelect('1234'); // RMA num
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
-				name: '1234',
+				generalSearch: '1234',
+				text: '1234',
 				type: 'sn',
 			});
 	});
@@ -130,7 +143,8 @@ describe('SearchBarComponent', () => {
 		component.onSearchSelect('Some value with spaces'); // RMA num
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
-				name: 'Some value with spaces',
+				generalSearch: 'Some value with spaces',
+				text: 'Some value with spaces',
 				type: 'default',
 			});
 	});

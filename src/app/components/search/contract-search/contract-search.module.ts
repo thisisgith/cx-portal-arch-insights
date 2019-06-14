@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ContractSearchComponent } from './contract-search.component';
 
 import { CuiSpinnerModule } from '@cisco-ngx/cui-components';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { FromNowPipeModule, I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
  * Module for specialized contract lookup results
@@ -17,6 +17,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		CommonModule,
 
 		CuiSpinnerModule,
+		FromNowPipeModule,
 		I18nPipeModule,
 	],
 })

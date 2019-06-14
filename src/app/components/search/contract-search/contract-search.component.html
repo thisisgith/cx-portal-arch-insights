@@ -19,19 +19,20 @@
 				<span class="text-muted" [innerText]="'_Status_' | i18n | uppercase"></span>
 			</dt>
 			<dd>
-				<span [innerText]="contractData?.status"></span>
+				<span [innerText]="contractData?.contractStatus"></span>
 			</dd>
 			<dt>
 				<span class="text-muted" [innerText]="'_StartDate_' | i18n | uppercase"></span>
 			</dt>
 			<dd>
-				<span [innerText]="contractData?.contractStartDate"></span>
+				<span [innerText]="contractData?.contractStartDate | date:'mediumDate'"></span>
 			</dd>
 			<dt>
 				<span class="text-muted" [innerText]="'_ExpirationDate_' | i18n | uppercase"></span>
 			</dt>
 			<dd>
-				<span [innerText]="contractData?.contractEndDate"></span>
+				<span [innerText]="contractData?.contractEndDate | date:'mediumDate'"></span>
+				<span class="half-margin-left" [innerText]="'(' + (contractData?.contractEndDate | fromNow) + ')'"></span>
 			</dd>
 			<dt>
 				<span class="text-muted" [innerText]="'_DevicesCovered_' | i18n | uppercase"></span>

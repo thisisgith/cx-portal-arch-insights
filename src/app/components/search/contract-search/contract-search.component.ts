@@ -1,9 +1,11 @@
 import {
 	Component,
+	EventEmitter,
 	OnInit,
 	OnChanges,
 	OnDestroy,
 	Input,
+	Output,
 	TemplateRef,
 	ViewChild,
 	forwardRef,
@@ -33,6 +35,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	@ViewChild('sidebar', { static: true, read: TemplateRef })
 		public sidebarContent: TemplateRef<any>;
 	@Input('contractNumber') public contractNumber: string;
+	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
 	public contractData: ContractInfo;
 
@@ -60,6 +63,11 @@ export class ContractSearchComponent extends SpecialSearchComponent
 		.subscribe(result => {
 			this.loading = false;
 			this.contractData = result ? result.data[0] : null;
+			if (this.contractData) {
+				this.hide.emit(false);
+			} else {
+				this.hide.emit(true);
+			}
 		});
 		this.refresh$.next();
 	}

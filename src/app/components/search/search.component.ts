@@ -29,6 +29,7 @@ export class SearchComponent {
 	public selectedSearch: string;
 	public searchType: SearchType;
 	public generalSearch: string;
+	public hideSpecialSearch = false;
 
 	public status = {
 		hidden: true,
@@ -45,6 +46,20 @@ export class SearchComponent {
 		this.selectedSearch = search.text;
 		this.searchType = search.type;
 		this.generalSearch = search.generalSearch;
+	}
+
+	/**
+	 * Listen to special search component's "hide" event emitter
+	 * Hides it when emits true
+	 * @param hide whether to hide the component
+	 */
+	public onHide (hide: boolean) {
+		this.hideSpecialSearch = hide;
+		// This will trigger a new search on the plain searchText if it was changed to something
+		// else by the special search view
+		if (hide) {
+			this.generalSearch = this.searchText;
+		}
 	}
 
 	/**

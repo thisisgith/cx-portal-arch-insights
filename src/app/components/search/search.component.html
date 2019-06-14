@@ -14,26 +14,29 @@
 				</a>
 				<div class="row no-gutters">
 					<div [ngClass]="{
-							'col-md-12': !specialSearch || !specialSearch.sidebarContent,
-							'col-md-9': specialSearch?.sidebarContent
+							'col-md-12': !specialSearch || !specialSearch.sidebarContent || hideSpecialSearch,
+							'col-md-9': specialSearch?.sidebarContent && !hideSpecialSearch
 						}">
 						<div class="panel panel--loose">
 							<!-- Special search views depending on query type -->
-							<div class="base-margin-bottom">
+							<div id="specialContainer"
+								class="base-margin-bottom"
+								[hidden]="hideSpecialSearch">
 								<ng-container [ngSwitch]="searchType">
 									<app-contract-search *ngSwitchCase="'contract'"
-										[contractNumber]="selectedSearch">
+										[contractNumber]="selectedSearch"
+										(hide)="onHide($event)">
 									</app-contract-search>
 								</ng-container>
 							</div>
-							<hr *ngIf="specialSearch" />
+							<hr *ngIf="specialSearch && !hideSpecialSearch" />
 							<app-general-search
 								[query]="generalSearch">
 							</app-general-search>
 						</div>
 					</div>
 					<div class="col-md-3"
-						*ngIf="specialSearch?.sidebarContent">
+						*ngIf="specialSearch?.sidebarContent && !hideSpecialSearch">
 						<!-- The right-hand sidebar content for each special search view can be projected here -->
 						<ng-container *ngTemplateOutlet="specialSearch?.sidebarContent"></ng-container>
 					</div>
