@@ -177,4 +177,22 @@ describe('AssetDetailsComponent', () => {
 		expect(component.asset.serialNumber)
 			.toEqual('AAA');
 	});
+
+	it('should handle fullscreen', () => {
+		buildSpies();
+
+		const deviceResponse = getActiveBody(HardwareScenarios[0]);
+		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
+		component.asset = asset;
+		fixture.detectChanges();
+
+		expect(component.fullscreen)
+			.toBeFalsy();
+
+		component.toggleFullscreen();
+
+		expect(component.fullscreen)
+			.toBeTruthy();
+
+	});
 });

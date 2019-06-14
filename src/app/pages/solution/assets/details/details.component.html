@@ -1,4 +1,4 @@
-<div class="panel panel--bordered-left flex-fill base-padding-right">
+<div class="panel panel--bordered-left flex-fill base-padding-right scroll">
 	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
 	<div class="divider divider--thick qtr-margin-top qtr-margin-bottom"></div>
 	<cui-tabs>
@@ -17,8 +17,8 @@
 		<cui-tab [label]="'_Insights_' | i18n" disabled="true">
 
 		</cui-tab>
-		<cui-tab [label]="'_Activity_' | i18n" disabled="true">
-
+		<cui-tab [label]="'_Activity_' | i18n">
+			<asset-activity [asset]="asset"></asset-activity>
 		</cui-tab>
 	</cui-tabs>
 </div>

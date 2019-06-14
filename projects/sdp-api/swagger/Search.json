@@ -1,0 +1,550 @@
+{
+   "swagger":"2.0",
+   "info":{
+      "description":"Search REST API for Customer Portal UI",
+      "version":"1.0.0",
+      "title":"PBC Search API",
+      "contact":{
+         "name":"Santosh Nair",
+         "url":"https://directory.cisco.com/dir/reports/santnair",
+         "email":"santnair@cisco.com"
+      },
+      "license":{
+         "name":"Apache 2.0",
+         "url":"http://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+   },
+   "host":"cpp-api.sdp11-idev.csco.cloud",
+   "basePath":"/search",
+   "tags":[
+      {
+         "name":"search",
+         "description":"Search operations for Customer Portal"
+      }
+   ],
+   "paths":{
+      "/api/customerportal/search/v1/cdcSearch":{
+         "post":{
+            "tags":[
+               "search"
+            ],
+            "summary":"Search Cisco.com",
+            "operationId":"directCDCSearch",
+            "consumes":[
+               "application/x-www-form-urlencoded"
+            ],
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               {
+                  "name":"filters",
+                  "in":"formData",
+                  "description":"Filter CDC results",
+                  "required":false,
+                  "type":"string"
+               },
+               {
+                  "name":"limit",
+                  "in":"formData",
+                  "description":"Pagination - number of expected results",
+                  "required":false,
+                  "type":"string",
+                  "default":"10"
+               },
+               {
+                  "name":"offset",
+                  "in":"formData",
+                  "description":"Pagination offset",
+                  "required":false,
+                  "type":"string",
+                  "default":"0"
+               },
+               {
+                  "name":"searchTokens",
+                  "in":"formData",
+                  "description":"Tokens for search",
+                  "required":true,
+                  "type":"string"
+               },
+               {
+                  "name":"webSessionId",
+                  "in":"formData",
+                  "description":"Web Session Id",
+                  "required":false,
+                  "type":"string"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"Successfully retrieved results",
+                  "schema":{
+                     "$ref":"#/definitions/CDCSearchResponse"
+                  }
+               },
+               "201":{
+                  "description":"Created"
+               },
+               "401":{
+                  "description":"Unauthorized"
+               },
+               "403":{
+                  "description":"Forbidden"
+               },
+               "404":{
+                  "description":"Not Found"
+               },
+               "500":{
+                  "description":"Error during search"
+               }
+            },
+            "deprecated":false
+         }
+      },
+      "/api/customerportal/search/v1/communitySearch":{
+         "post":{
+            "tags":[
+               "search"
+            ],
+            "summary":"Search Communities",
+            "operationId":"directCommunitySearch",
+            "consumes":[
+               "application/x-www-form-urlencoded"
+            ],
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               {
+                  "name":"filters",
+                  "in":"formData",
+                  "description":"Filter Community results",
+                  "required":false,
+                  "type":"string"
+               },
+               {
+                  "name":"limit",
+                  "in":"formData",
+                  "description":"Pagination - number of expected results",
+                  "required":false,
+                  "type":"string",
+                  "default":"10"
+               },
+               {
+                  "name":"offset",
+                  "in":"formData",
+                  "description":"Pagination offset",
+                  "required":false,
+                  "type":"string",
+                  "default":"0"
+               },
+               {
+                  "name":"searchTokens",
+                  "in":"formData",
+                  "description":"Tokens for search",
+                  "required":true,
+                  "type":"string"
+               },
+               {
+                  "name":"webSessionId",
+                  "in":"formData",
+                  "description":"Web Session Id",
+                  "required":false,
+                  "type":"string"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"Successfully retrieved results",
+                  "schema":{
+                     "$ref":"#/definitions/CommunitySearchResponse"
+                  }
+               },
+               "201":{
+                  "description":"Created"
+               },
+               "401":{
+                  "description":"Unauthorized"
+               },
+               "403":{
+                  "description":"Forbidden"
+               },
+               "404":{
+                  "description":"Not Found"
+               },
+               "500":{
+                  "description":"Error during search"
+               }
+            },
+            "deprecated":false
+         }
+      },
+      "/api/customerportal/search/v1/globalSearch":{
+         "post":{
+            "tags":[
+               "search"
+            ],
+            "summary":"Aggregated Search - All Sources",
+            "operationId":"allSearch",
+            "consumes":[
+               "application/x-www-form-urlencoded"
+            ],
+            "produces":[
+               "application/json"
+            ],
+            "parameters":[
+               {
+                  "name":"filters",
+                  "in":"formData",
+                  "description":"Filter CDC results",
+                  "required":false,
+                  "type":"string"
+               },
+               {
+                  "name":"limit",
+                  "in":"formData",
+                  "description":"Pagination - number of expected results",
+                  "required":false,
+                  "type":"string",
+                  "default":"10"
+               },
+               {
+                  "name":"offset",
+                  "in":"formData",
+                  "description":"Pagination offset",
+                  "required":false,
+                  "type":"string",
+                  "default":"0"
+               },
+               {
+                  "name":"pitStop",
+                  "in":"formData",
+                  "description":"Pit Stop",
+                  "required":false,
+                  "type":"string"
+               },
+               {
+                  "name":"searchTokens",
+                  "in":"formData",
+                  "description":"Tokens for search",
+                  "required":true,
+                  "type":"string"
+               },
+               {
+                  "name":"solution",
+                  "in":"formData",
+                  "description":"Solution",
+                  "required":false,
+                  "type":"string"
+               },
+               {
+                  "name":"useCase",
+                  "in":"formData",
+                  "description":"Use Case",
+                  "required":false,
+                  "type":"string"
+               },
+               {
+                  "name":"webSessionId",
+                  "in":"formData",
+                  "description":"Web Session Id",
+                  "required":false,
+                  "type":"string"
+               }
+            ],
+            "responses":{
+               "200":{
+                  "description":"Successfully retrieved results",
+                  "schema":{
+                     "$ref":"#/definitions/GlobalSearchResponse"
+                  }
+               },
+               "201":{
+                  "description":"Created"
+               },
+               "401":{
+                  "description":"Unauthorized"
+               },
+               "403":{
+                  "description":"Forbidden"
+               },
+               "404":{
+                  "description":"Not Found"
+               },
+               "500":{
+                  "description":"Server Error during search"
+               }
+            },
+            "deprecated":false
+         }
+      }
+   },
+   "definitions":{
+      "Buckets":{
+         "type":"object",
+         "properties":{
+            "count":{
+               "type":"integer",
+               "format":"int64",
+               "description":"the count of search results in this category"
+            },
+            "filter":{
+               "type":"string",
+               "description":"the filter condition to be sent back to search API when user chooses to select this option"
+            },
+            "label":{
+               "type":"string",
+               "description":"label of the category item"
+            }
+         },
+         "title":"Buckets",
+         "description":"Category Item"
+      },
+      "CDC":{
+         "type":"object",
+         "properties":{
+            "score":{
+               "type":"number",
+               "format":"double"
+            },
+            "accesslevel":{
+               "type":"string"
+            },
+            "cdcdescription":{
+               "type":"string"
+            },
+            "collapseuri":{
+               "type":"string"
+            },
+            "contenttype":{
+               "type":"string"
+            },
+            "date":{
+               "type":"string",
+               "description":"Date string in ISO 8601 format"
+            },
+            "displaytitle":{
+               "type":"string"
+            },
+            "filesize":{
+               "type":"integer",
+               "format":"int64"
+            },
+            "filetype":{
+               "type":"string"
+            },
+            "impressionid":{
+               "type":"string"
+            },
+            "iocontentsource":{
+               "type":"string"
+            },
+            "lllisting":{
+               "type":"string"
+            },
+            "size":{
+               "type":"integer",
+               "format":"int64"
+            },
+            "teaser":{
+               "type":"string"
+            },
+            "text":{
+               "type":"string"
+            },
+            "title":{
+               "type":"string"
+            },
+            "uri":{
+               "type":"string"
+            }
+         },
+         "title":"CDC",
+         "description":"cdc search result item"
+      },
+      "CDCSearchResponse":{
+         "type":"object",
+         "properties":{
+            "documents":{
+               "type":"array",
+               "description":"search result documents",
+               "items":{
+                  "$ref":"#/definitions/CDC"
+               }
+            },
+            "facets":{
+               "type":"array",
+               "description":"list of filter categories applicable for current results",
+               "items":{
+                  "$ref":"#/definitions/Facets"
+               }
+            },
+            "totalHits":{
+               "type":"integer",
+               "format":"int64",
+               "description":"total hits for search"
+            },
+            "totalTime":{
+               "type":"integer",
+               "format":"int64",
+               "description":"time taken by cdc api"
+            }
+         },
+         "title":"CDCSearchResponse",
+         "description":"cdc api response"
+      },
+      "Community":{
+         "type":"object",
+         "properties":{
+            "attachmentcount":{
+               "type":"integer",
+               "format":"int64"
+            },
+            "cscauthor":{
+               "type":"string"
+            },
+            "cscauthorhref":{
+               "type":"string"
+            },
+            "cscboardhref":{
+               "type":"string"
+            },
+            "cscboardid":{
+               "type":"string"
+            },
+            "cscboardtitle":{
+               "type":"string"
+            },
+            "csccommunity":{
+               "type":"string"
+            },
+            "csccreateddate":{
+               "type":"string"
+            },
+            "cscid":{
+               "type":"string"
+            },
+            "csckudos":{
+               "type":"string"
+            },
+            "csclabels":{
+               "type":"string"
+            },
+            "csclanguage":{
+               "type":"string"
+            },
+            "csclastmodified":{
+               "type":"string"
+            },
+            "csclastupdatedby":{
+               "type":"string"
+            },
+            "csclastupdatedbyhref":{
+               "type":"string"
+            },
+            "csctags":{
+               "type":"string"
+            },
+            "csctype":{
+               "type":"string"
+            },
+            "cscviews":{
+               "type":"integer",
+               "format":"int64"
+            },
+            "imagecount":{
+               "type":"integer",
+               "format":"int64"
+            },
+            "iskudoed":{
+               "type":"boolean"
+            },
+            "issolved":{
+               "type":"boolean"
+            },
+            "replycount":{
+               "type":"integer",
+               "format":"int64"
+            },
+            "teaser":{
+               "type":"string"
+            },
+            "title":{
+               "type":"string"
+            },
+            "uri":{
+               "type":"string"
+            },
+            "videocount":{
+               "type":"integer",
+               "format":"int64"
+            }
+         },
+         "title":"Community"
+      },
+      "CommunitySearchResponse":{
+         "type":"object",
+         "properties":{
+            "documents":{
+               "type":"array",
+               "description":"search result documents",
+               "items":{
+                  "$ref":"#/definitions/Community"
+               }
+            },
+            "facets":{
+               "type":"array",
+               "description":"list of filter categories applicable for current results",
+               "items":{
+                  "$ref":"#/definitions/Facets"
+               }
+            },
+            "totalHits":{
+               "type":"integer",
+               "format":"int64",
+               "description":"total hits for search"
+            },
+            "totalTime":{
+               "type":"integer",
+               "format":"int64",
+               "description":"time taken by cdc api"
+            }
+         },
+         "title":"CommunitySearchResponse",
+         "description":"Community Search Response"
+      },
+      "Facets":{
+         "type":"object",
+         "properties":{
+            "buckets":{
+               "type":"array",
+               "description":"list of the category items",
+               "items":{
+                  "$ref":"#/definitions/Buckets"
+               }
+            },
+            "label":{
+               "type":"string",
+               "description":"Label of the category"
+            }
+         },
+         "title":"Facets",
+         "description":"Filter Categories"
+      },
+      "GlobalSearchResponse":{
+         "type":"object",
+         "properties":{
+            "cdcSearch":{
+               "description":"cdc search response",
+               "$ref":"#/definitions/CDCSearchResponse"
+            },
+            "communitySearch":{
+               "description":"community search response",
+               "$ref":"#/definitions/CommunitySearchResponse"
+            }
+         },
+         "title":"GlobalSearchResponse",
+         "description":"CDC Global Search Top level API Response"
+      }
+   }
+}

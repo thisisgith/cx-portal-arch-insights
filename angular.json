@@ -133,6 +133,38 @@
 			"projectType": "application",
 			"root": "",
 			"sourceRoot": "src"
+		},
+		"sdp-api": {
+			"root": "projects/sdp-api",
+			"sourceRoot": "projects/sdp-api/src",
+			"projectType": "library",
+			"prefix": "lib",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-ng-packagr:build",
+					"options": {
+						"tsConfig": "projects/sdp-api/tsconfig.lib.json",
+						"project": "projects/sdp-api/ng-package.json"
+					},
+				"configurations": {
+						"production": {
+							"project": "projects/sdp-api/ng-package.json"
+						}
+					}
+				},
+				"lint": {
+					"builder": "@angular-devkit/build-angular:tslint",
+					"options": {
+						"tsConfig": [
+							"projects/sdp-api/tsconfig.lib.json",
+							"projects/sdp-api/tsconfig.spec.json"
+						],
+						"exclude": [
+							"**/node_modules/**"
+						]
+					}
+				}
+			}
 		}
 	},
 	"cli": {

@@ -1,0 +1,300 @@
+swagger: '2.0'
+info:
+  description: SDP API Services
+  version: v1
+  title: SDP API Services
+  termsOfService: ''
+  contact:
+    email: htrevino@cisco.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: sdp.cisco.com
+basePath: /api
+security:
+  - OauthSecurity: []
+schemes:
+  - https
+paths:
+  /api/customerportal/pitstop/v1/info:
+     get:
+      tags:
+        - Solution Based Racetrack information
+      summary: Provides the solution(s) a customers is subscribed to, the current pitstop and status on the completion of the exit criteria
+      description: Racetrack information for a customer solution, use-case, pitstop, exit crtieria completion status
+
+      operationId: getRacetrack
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: solution
+          in: query
+          description: solution value ( ibn )
+          required: false
+          type: string
+        - name: usecase
+          in: query
+          description: Usecase value ( assurance | sd-access | automation )
+          required: false
+          type: string
+        - name: pitstop
+          in: query
+          description: Pitstop value (onboard | implement | use | engage | adopt | optimize)
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/RacetrackResponse'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Forbidden'
+        '500':
+          description: 'Internal server error'
+        '400':
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/customerportal/pitstop/v1/action/status:
+     patch:
+      tags:
+        - Solution Based Racetrack information
+      summary: Provides the solution(s) a customers is subscribed to, the current pitstop and status on the completion of the exit criteria
+      description: Racetrack information for a customer solution, use-case, pitstop, exit crtieria completion status
+
+      operationId: updatePitstopAction
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: actionUpdate
+          in: body
+          description: The action update set by the user
+          schema:
+            $ref: '#/definitions/PitstopActionUpdateRequest'
+      responses:
+        '200':
+          description: successful operation, returns the racetrack information for the solution
+          schema:
+            $ref: '#/definitions/PitstopActionUpdateResponse'
+        '401':
+          description: 'Unauthorized'
+        '403':
+          description: 'Forbidden'
+        '500':
+          description: 'Internal server error'
+        '400':
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: 'https://oauth.simple.api/authorization'
+definitions:
+  ErrorResponse:
+      type: object
+      required:
+        - status
+        - message
+        - reason
+      properties:
+        status:
+          type: integer
+          format: int32
+        message:
+          type: string
+        reason:
+          type: object
+          properties:
+            errorCode:
+              type: string
+            errorInfo:
+              type: string
+
+  RacetrackResponse:
+    type: object
+    required:
+      - customerId
+      - solutions
+    properties:
+      solution:
+        type: string
+      solutions:
+        type: array
+        items:
+          $ref: '#/definitions/RacetrackSolution'
+
+  PitstopActionUpdateRequest:
+    type: object
+    description: This object is used to update a pitstop action for the identified solution/technology/pitstop
+    required:
+      - customerId
+      - solutions
+    properties:
+      solution:
+        type: string
+        description: The solution
+      technology:
+        type: string
+        description: The technology
+      pitstop:
+        type: string
+        description: The pitstop
+      pitstopAction:
+        type: string
+        description: The pitstop action being updated
+      actionComplete:
+        type: boolean
+        description: This is set to true when the user sets the checkbox in the UI. Set to false if the action is unchecked
+
+  RacetrackSolution:
+    type: object
+    required:
+      - name
+      - description
+      - technologies
+    properties:
+      name:
+        type: string
+        description: The solution the customer subscribes to (ibn, collab)
+      description:
+        type: string
+        description: We cover subjects including interface and network design overview, policy management and deployment, device provisioning, and automation/assurance.
+      technologies:
+        type: array
+        items:
+          $ref: '#/definitions/RacetrackTechnology'
+
+  RacetrackTechnology:
+    type: object
+    required:
+      - name
+      - description
+      - currentPitstop
+      - pitstops
+    properties:
+      name:
+        type: string
+        description: The use cases for the solution (wireless assurance, sd access, automation)
+      description:
+        type: string
+        description: Webinar Session Time
+      currentPitstop:
+        type: string
+        description: The current customer's pitstop for this solution's use case
+      pitstops:
+        type: array
+        items:
+          $ref: '#/definitions/RacetrackPitstop'
+
+  RacetrackPitstop:
+    type: object
+    required:
+      - name
+      - description
+      - isComplete
+      - pitstopActions
+    properties:
+      name:
+        type: string
+        description: The name of the pitstop (onboard | implement | use | engage | adopt | optimize)
+      description:
+          type: string
+          description: Brief description of the pitstop
+      isComplete:
+        type: boolean
+        description: When set to true it indicates that the pre-requisites for advancing to the next pitstop have been met by the customer. This determination may be done through manual input (customer) or automated (LifecycleJourney).
+      pitstopActions:
+        type: array
+        items:
+          $ref: '#/definitions/RacetrackPitstopAction'
+
+  RacetrackPitstopAction:
+    type: object
+    required:
+      - name
+      - description
+      - isComplete
+      - manualCheckAllowed
+      - updateMethod
+      - isCompleteAuto
+      - isCompleteManual
+      - isManaualOverride
+    properties:
+      name:
+        type: string
+        description: A label identifying the action to be completed by the customer.  A set of actions identifies the exit criteria that must be met before proceeding to the next stage
+      description:
+        type: string
+        description: A brief description of the action to be taken by the customer
+      manualCheckAllowed:
+        type: boolean
+        description: When set to true it indicates that this action may be manually checked as completed/met. Otherwise completion must be automatically determined via analysis of collected data
+      isComplete:
+        type: boolean
+        description: When set to true it indicates that this action has been completed by the customer.  This is the reported status and it is set from one of isActionCompleteAuto (Auto determined), isActionCompleteManual (Manually determined). Manual input takes precedence over the automated means and once set to manual it cannot be changed by automated means. It requires manual input
+      updateMethod:
+        type: string
+        description: The method by which the the completion status was updated (MANUAL user input, AUTO Lifecycle Journey). This value must be set when isActionComplete is set to true and cleared if isActionComplte is set to false
+        enum:
+          - NA
+          - MANUAL
+          - AUTO
+      isCompleteAuto:
+        type: boolean
+        description: When set to true it indicates that this action was found to be completed/met through automated means.  An action manually set to completion takes precedence over the automated means.  An action set to completion via automated means may be manually overridden
+      isCompleteManual:
+        type: boolean
+        description: When set to true it indicates that action was manually set to completed / met
+      isManaualOverride:
+        type: boolean
+        description: When set to true it indicates that the automated result was overriden manually by a user
+
+  PitstopActionUpdateResponse:
+    required:
+     [isAtxChanged, isAccChanged, isElearningChanged, isCommunitiesChanged,isSuccessPathChanged]
+    type: object
+    properties:
+       isAtxChanged:
+        type: boolean
+        description: When set to true it indicates that new ATX sessions are available to the customer / user
+       isAccChanged:
+        type: boolean
+        description: When set to true it indicates that new accelerator content is available to the customer / user
+       isElearningChanged:
+        type: boolean
+        description: When set to true it indicates that new e-learning content is available to the customer / user
+       isCommunitiesChanged:
+        type: boolean
+        description: When set to true it indicates that new communities are available to the customer / user
+       isSuccessPathChanged:
+        type: boolean
+        description: When set to true it indicates that new success content is available to the customer / user

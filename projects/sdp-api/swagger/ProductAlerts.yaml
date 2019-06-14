@@ -1,0 +1,2213 @@
+swagger: '2.0'
+info:
+  description: Product Alert API Services
+  version: v1
+  title: Product Alert API Services
+  termsOfService: ''
+  contact:
+    email: vpriyata@cisco.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: 'sdp.cisco.com'
+basePath: '/api'
+schemes:
+  - https
+security:
+  - OauthSecurity: []
+paths:
+
+  /api/customerportal/v1/product-alerts:
+    head:
+      tags:
+        - Product Alerts
+      summary: |
+        Fetches meta information about alerts. For specific alert type use param alertType.
+      description: |
+        Fetches meta information about the security-advisories API.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: alertType
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: false
+          type: string
+          enum: [hardware-eol, software-eol, field-notice, security-advisory]
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+
+  /api/customerportal/v1/product-alerts/security-advisories:
+    head:
+      tags:
+        - Product Alerts
+      summary: |
+        Fetches meta information about alerts. For specific alert type use param alertType.
+      description: |
+        Fetches meta information about the security-advisories API.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      tags:
+        - Product Alerts
+      summary: Returns devices security advisories details
+      description: >-
+           The Security Advisories API retrieves security vulnerability information along with Common
+           Vulnerability and Exposure (CVE) identifiers, and Common Vulnerability Scoring
+           System (CVSS) for devices associated with customer ID. All request parameters
+           are optional other than customerId.
+
+           If no device ID is provided in the request, the response will contain security
+           advisory information for all device IDs associated with the customer.
+
+           This API supports filtering, pagination, sorting and chunked transfer encoding.
+           Refer to General API Feature section to see examples of how to take advantage of
+           these features in order to optimize and manipulate the response.
+      operationId: getSecurityAdvisories
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: managedNeId
+          in: query
+          description: CDX should indicate the physical|logical hierarchy of the product (chassis to card, server to client, etc
+          required: false
+          type: array
+          items:
+           type: string
+          collectionFormat: multi
+        - name: neInstanceId
+          in: query
+          description: CDX should provide a way to uniquely identify IB records, regardless of non-unique or invalid vendor-supplied identity strings
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: advisoryId
+          in: query
+          description: Internally generated ID for a security advisory
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: vulnerabilityStatus
+          in: query
+          description: The vulnerability status of a Network element.For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Requested fields in the response.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: Page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Security-AdvisoryResponseObject'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+
+  /api/customerportal/v1/product-alerts/security-advisories/summary:
+    get:
+      tags:
+        - Product Alerts
+      summary: |
+        Generates the total number of security advisories and the count by severity
+      description: |
+        Generates the total number of security advisoeries and the count by severity
+      operationId: getSecurityAdvisorySummary
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/Security-Advisory-Summary'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+
+  /api/customerportal/v1/product-alerts/security-advisories/list:
+    get:
+      tags:
+        - Product Alerts
+      summary: |
+        Generates the total number of security advisories and the count by severity
+      description: |
+        Generates the total number of security advisoeries and the count by severity
+      operationId: getSecurityAdvisoryList
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: sort
+          in: query
+          description: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: page
+          in: query
+          description: Page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: 'OK'
+          schema:
+            $ref: '#/definitions/Security-Advisory-ResponseObjectDetails'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+
+  /api/customerportal/v1/product-alerts/security-advisory-bulletins:
+    head:
+      tags:
+        - Product Alerts
+      summary: |
+        Fetches the count of advisories and/or bulletins. For specific alert type use param alertType.
+      description: |
+        Fetches meta information about the security-advisories API.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+    get:
+      tags:
+        - Product Alerts
+      summary: >-
+        The security-advisory-bulletins API retrieves security advisory bulletin details
+        for one or more security advisory IDs associated with the devices. All request
+        parameters are optional.
+
+        If no security advisory ID is provided in the request, the response will contain
+        security advisory bulletin information of all active security advisories.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      description: >-
+        The security-advisory-bulletins API retrieves security advisory bulletin details
+        for one or more security advisory IDs associated with the devices. All request
+        parameters are optional.
+
+        If no security advisory ID is provided in the request, the response will contain
+        security advisory bulletin information of all active security advisories.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      operationId: getPSIRTBulletin
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          type: string
+        - name: X-CSI-CCOID
+          in: header
+          description: X-CSI-CCOID
+          required: true
+          type: string
+        - name: advisoryId
+          in: query
+          description: Published identifier of security advisory.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: securityAdvisoryInstanceId
+          in: query
+          description: Internally generated ID for a security advisory.
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: securityImpactRating
+          in: query
+          description: The Security Impact Rating (SIR) for Cisco Security Advisories
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: publicReleaseIndicator
+          in: query
+          description: Public Release Indicator
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: alertStatusCode
+          in: query
+          description: Alert Status Code
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: severity
+          in: query
+          description: Severity
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: cvssBaseScore
+          in: query
+          description: Common Vulnerability Scoring System (CVSS) Base Score
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: cvssTemporalScore
+          in: query
+          description: Common Vulnerability Scoring System (CVSS) Temporal Score
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: ASC (ascending) or DESC (descending)
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Receive only requested fields in the response
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: The page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Security-Advisory-Bulletin-ResponseObject'
+        500:
+          description: '500 response'
+        401:
+          description: '401 response'
+        403:
+          description: '403 response'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/customerportal/v1/product-alerts/field-notices:
+    head:
+      tags:
+        - Product Alerts
+      summary: |
+        Fetches meta information about field notices
+      description: |
+        Fetches meta information about the field-notices API.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      tags:
+        - Product Alerts
+      summary:  >-
+           The Field Notices API retrieves all active field notices vulnerability details on
+           devices associated with a customer ID. All request parameters are optional other
+           than customerId.
+
+           If no device ID is provided in the request, the response will contain field notices
+           information for all device IDs associated with the customer.
+
+           This API supports filtering, pagination and sorting.
+           Refer to General API Feature section to see examples of how to take advantage of
+           these features in order to optimize and manipulate the response.
+      description: >-
+           The Field Notices API retrieves all active field notices vulnerability details on
+           devices associated with a customer ID. All request parameters are optional other
+           than customerId.
+
+           If no device ID is provided in the request, the response will contain field notices
+           information for all device IDs associated with the customer.
+
+           This API supports filtering, pagination and sorting.
+           Refer to General API Feature section to see examples of how to take advantage of
+           these features in order to optimize and manipulate the response.
+      operationId: getFieldNotice
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: managedNeId
+          in: query
+          description: CDX should indicate the physical|logical hierarchy of the product (chassis to card, server to client, etc
+          required: false
+          type: array
+          items:
+           type: string
+          collectionFormat: multi
+        - name: neInstanceId
+          in: query
+          description: CDX should provide a way to uniquely identify IB records, regardless of non-unique or invalid vendor-supplied identity strings
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: serialNumber
+          in: query
+          description: The recognized/validated Serial Number
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: vulnerabilityStatus
+          in: query
+          description: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Requested fields in the response.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: Page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Field-Notice-ResponseObjectDetails'
+        500:
+           description: 'Internal server error'
+        401:
+           description: 'Unauthorized'
+        403:
+           description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/customerportal/v1/product-alerts/field-notice-bulletins:
+
+    head:
+      tags:
+        - Product Alerts
+      summary: |
+        Fetches the count of field notice bulletins.
+      description: |
+        Fetches meta information about the field notices API.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      tags:
+      - Product Alerts
+      summary: >-
+        The field-notice-bulletins API retrieves field notice bulletin details for one or
+        more field notice ID associated with the devices. All request parameters are
+        optional.
+
+        If no device ID is provided in the request, the response will contain field notice
+        bulletin information of all field notices for device IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      description: >-
+        The field-notice-bulletins API retrieves field notice bulletin details for one or
+        more field notice ID associated with the devices. All request parameters are
+        optional.
+
+        If no device ID is provided in the request, the response will contain field notice
+        bulletin information of all field notices for device IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      operationId: getFieldNoticeBulletin
+      produces:
+        - application/json
+      parameters:
+        - name: fieldNoticeId
+          in: query
+          description: The Cisco.com bulletin number for Field Notices
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: bulletinFirstPublished
+          in: query
+          description: Date when the bulletin was first published to Cisco.com.
+          required: false
+          type: string
+          format: date
+        - name: distributionCode
+          in: query
+          description: Distribution Code
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fieldNoticeTypeCode
+          in: query
+          description: FieldNotice Type Code
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Requested fields in the response.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: Page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Field-Notice-Bulletin-ResponseObjectDetails'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/customerportal/v1/product-alerts/hardware-eol:
+    head:
+      tags:
+        - Product Alerts
+      summary: |
+        Fetches meta information about hardware-eol alerts.
+      description: |
+        Fetches meta information about the hardware-eol API.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      tags:
+      - Product Alerts
+      summary: >-
+        The Hardware End-Of-Life API retrieves end of life details for a specific hardware device.
+        All request parameters are optional other than customerId.
+
+        If no device ID is provided in the request, the response will contain end of life
+        information for all device IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      description: >-
+        The Hardware End-Of-Life API retrieves end of life details for a specific hardware device.
+        All request parameters are optional other than customerId.
+
+        If no device ID is provided in the request, the response will contain end of life
+        information for all device IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      operationId: getHardwareEox
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: managedNeId
+          in: query
+          description: The unique, generated ID of the network element
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: neInstanceId
+          in: query
+          description: The unique, generated ID of the network element
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: ASC (ascending) or DESC (descending)
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Receive only requested fields in the response
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: The page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Hardware-EOL-ResponseObjectDetails'
+        500:
+          description: '500 response'
+        401:
+          description: '401 response'
+        403:
+          description: '403 response'
+  /api/customerportal/v1/product-alerts/hardware-eol-bulletins:
+
+    head:
+      tags:
+        - Product Alerts
+      summary: |
+        Fetches the count of HW EOL bulletins.
+      description: |
+        Fetches meta information about the HW EOL Bulletins API.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      tags:
+      - Product Alerts
+      summary: >-
+        The hardware-eol-bulletins API retrieves end of life bulletin details for specific
+        hardware device based on the hardware end of life ID associated with the devices.
+        All request parameters are optional.
+
+        If no hardware end of life ID is provided in the request, the response will contain
+        end of life bulletin information on all hardware end of life and for all device
+        IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      description: >-
+        The hardware-eol-bulletins API retrieves end of life bulletin details for specific
+        hardware device based on the hardware end of life ID associated with the devices.
+        All request parameters are optional.
+
+        If no hardware end of life ID is provided in the request, the response will contain
+        end of life bulletin information on all hardware end of life and for all device
+        IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      operationId: getHardwareEoxBulletin
+      produces:
+        - application/json
+      parameters:
+        - name: hwEolInstanceId
+          in: query
+          description: The unique identifier for hardware end-of-life entry in a data store.
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: bulletinProductId
+          in: query
+          description: Cisco product published at the time of EOL announcement.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: bulletinNumber
+          in: query
+          description: The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: eoLifeAnnouncementDate
+          in: query
+          description: The date the document that announces the end-of-sale and end-of-life of a product is distributed to the general public. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoSaleDate
+          in: query
+          description: The last date to order the product through Cisco point-of-sale mechanisms. The product is no longer for sale after this date. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: lastShipDate
+          in: query
+          description: The last-possible ship date that can be requested of Cisco and/or its contract manufacturers. Actual ship date is dependent on lead time. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoSwMaintenanceReleasesDate
+          in: query
+          description: The last date that Cisco Engineering may release any final software maintenance releases or bug fixes. After this date, Cisco Engineering will no longer develop, repair, maintain, or test the product software. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoRoutineFailureAnalysisDate
+          in: query
+          description: The last-possible date a routine failure analysis may be performed to determine the cause of hardware product failure or defect. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoNewServiceAttachmentDate
+          in: query
+          description: For equipment and software that is not covered by a service-and-support contract, this is the last date to order a new service-and-support contract or add the equipment and/or software to an existing service-and-support contract. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoServiceContractRenewalDate
+          in: query
+          description: The last date to extend or renew a service contract for the product. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: lastDateOfSupport
+          in: query
+          description: The last date to receive applicable service and support for the product as entitled by active service contracts or by warranty terms and conditions. After this date, all support services for the product are unavailable, and the product becomes obsolete. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: sort
+          in: query
+          description: ASC (ascending) or DESC (decending)
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Receive only requested fields in the response
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: The page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Hardware-EOL-Bulletin-ResponseObjectDetails'
+        500:
+           description: 'Internal server error'
+        401:
+           description: 'Unauthorized'
+        403:
+           description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/customerportal/v1/product-alerts/software-eol:
+    head:
+      tags:
+        - Product Alerts
+      summary: |
+        Fetches meta information about the software-eol alert
+      description: |
+        Fetches meta information about the software-eol API.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      tags:
+      - Product Alerts
+      summary: >-
+        The Software End-Of-Life API retrieves system software end of life details for a
+        specific hardware device. All request parameters are optional other than customerId.
+
+        If no device ID is provided in the request, the response will contain system
+        software end of life information for all device IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      description: >-
+        The Software End-Of-Life API retrieves system software end of life details for a
+        specific hardware device. All request parameters are optional other than customerId.
+
+        If no device ID is provided in the request, the response will contain system
+        software end of life information for all device IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      operationId: getSoftwareEox
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: managedNeId
+          in: query
+          description: The unique, generated ID of the network element.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: neInstanceId
+          in: query
+          description: The unique, generated ID of the network element
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: sort
+          in: query
+          description: ASC (ascending) or DESC (descending)
+          required: false
+          type: array
+          items:
+            type: string
+            x-zenith-validation-declaration-required : true
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Receive only requested fields in the response
+          required: false
+          type: array
+          items:
+            type: string
+            x-zenith-validation-declaration-required : true
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: The page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Software-EOL-ResponseObjectDetails'
+        500:
+           description: 'Internal server error'
+        401:
+           description: 'Unauthorized'
+        403:
+           description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/customerportal/v1/product-alerts/software-eol-bulletins:
+    head:
+      tags:
+        - Product Alerts
+      summary: |
+        Fetches the count of SW EOL bulletins
+      description: |
+        Fetches meta information about the SW EOL bulletins API.
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: rows
+          in: query
+          description: Number of rows of data per page.
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: 'OK'
+          headers:
+            X-API-RESULT-COUNT:
+              type: 'integer'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+    get:
+      tags:
+      - Product Alerts
+      summary:  >-
+        The software-eol-bulletin API retrieves end of life bulleting details for specific
+        hardware device based on the software end of life ID associated with the devices.
+        All request parameters are optional.
+
+        If no software end of life ID is provided in the request, the response will contain
+        end of life bulleting information of all software end of life and for all device
+        IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      description: >-
+        The software-eol-bulletin API retrieves end of life bulleting details for specific
+        hardware device based on the software end of life ID associated with the devices.
+        All request parameters are optional.
+
+        If no software end of life ID is provided in the request, the response will contain
+        end of life bulleting information of all software end of life and for all device
+        IDs associated with the customer.
+
+        This API supports filtering, pagination, sorting and chunked transfer encoding.
+        Refer to General API Feature section to see examples of how to take advantage of
+        these features in order to optimize and manipulate the response.
+      operationId: getSoftwareEoxBulletin
+      produces:
+        - application/json
+      parameters:
+        - name: swEolInstanceId
+          in: query
+          description: The unique identifier for software end-of-life entry in a data store.
+          required: false
+          type: array
+          items:
+            type: integer
+            format: int64
+          collectionFormat: multi
+        - name: bulletinNumber
+          in: query
+          description: The Cisco.com bulletin number for an End-of-Life bulletin.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: eoLifeAnnouncementDate
+          in: query
+          description: The date the document that announces the end-of-sale and end-of-life of a product is distributed to the general public. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoSaleDate
+          in: query
+          description: The last date to order the product through Cisco point-of-sale mechanisms. The product is no longer for sale after this date. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: lastShipDate
+          in: query
+          description: The last-possible ship date that can be requested of Cisco and/or its contract manufacturers. Actual ship date is dependent on lead time. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoSwMaintenanceReleasesDate
+          in: query
+          description: The last date that Cisco Engineering may release any final software maintenance releases or bug fixes. After this date, Cisco Engineering will no longer develop, repair, maintain, or test the product software. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoVulnerabilitySecuritySupport
+          in: query
+          description: The last date that Cisco Engineering may release a planned maintenance release or scheduled software remedy for a security vulnerability issue. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoRoutineFailureAnalysisDate
+          in: query
+          description: The last-possible date a routine failure analysis may be performed to determine the cause of hardware product failure or defect. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoNewServiceAttachmentDate
+          in: query
+          description: For equipment and software that is not covered by a service-and-support contract, this is the last date to order a new service-and-support contract or add the equipment and/or software to an existing service-and-support contract. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: eoServiceContractRenewalDate
+          in: query
+          description: The last date to extend or renew a service contract for the product. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: lastDateOfSupport
+          in: query
+          description: The last date to receive applicable service and support for the product as entitled by active service contracts or by warranty terms and conditions. After this date, all support services for the product are unavailable, and the product becomes obsolete. GMT date format YYYY-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: sort
+          in: query
+          description: ASC (ascending) or DESC (decending)
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: fields
+          in: query
+          description: Receive only requested fields in the response
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: csv
+        - name: page
+          in: query
+          description: The page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Sofware-EOL-Bulletin-ResponseObjectDetails'
+        500:
+           description: 'Internal server error'
+        401:
+           description: 'Unauthorized'
+        403:
+           description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /api/customerportal/v1/product-alerts/security-advisories/top:
+
+    get:
+      tags:
+        - Product Alerts
+      summary: Returns devices security advisories details
+      description: >-
+           The Security Advisories API retrieves security vulnerability information along with Common
+           Vulnerability and Exposure (CVE) identifiers, and Common Vulnerability Scoring
+           System (CVSS) for devices associated with customer ID. All request parameters
+           are optional other than customerId.
+
+           If no device ID is provided in the request, the response will contain security
+           advisory information for all device IDs associated with the customer.
+
+           This API supports filtering, pagination, sorting and chunked transfer encoding.
+           Refer to General API Feature section to see examples of how to take advantage of
+           these features in order to optimize and manipulate the response.
+      operationId: getTopSecurityAdvisories
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: sort
+          in: query
+          description: Sorting details. Default sort severity, count, date (newest)
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: No of rows in a page
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Security-Advisory-ResponseObjectDetails'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        403:
+          description: 'Forbidden'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: implicit
+    authorizationUrl: 'https://oauth.simple.api/authorization'
+definitions:
+  ErrorResponse:
+    type: object
+    required:
+      - status
+      - message
+      - reason
+    properties:
+      status:
+        type: integer
+        format: int32
+      message:
+        type: string
+      reason:
+        type: object
+        properties:
+          errorCode:
+            type: string
+          errorInfo:
+            type: string
+
+  Security-AdvisoryResponseObject:
+    type: object
+    required:
+      - data
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Security-Advisory-ObjectDetails'
+
+  Security-Advisory-ObjectDetails:
+      type: object
+      properties:
+        customerId:
+          type: string
+          description: Unique identifier of a Cisco customer
+        managedNeId:
+          type: array
+          items:
+            type: string
+          description: The unique, generated ID of the network resource id
+        neInstanceId:
+          type: array
+          items:
+            type: string
+          description: The unique, generated ID of the network element
+        hostname:
+          type: string
+          example: 'TSPM-SJ-P1C1R11'
+          x-zenith-ds-fieldName: HOSTNAME
+          description: Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
+        hwInstanceId:
+          type: string
+          description: The unique identifier for hardware entry in a datastore
+        containingHwId:
+          type: string
+          description: This
+        serialNumber:
+          type: string
+          description: The recognized/validated Serial Number
+        productId:
+          type: string
+          description: The vendor-specific model name identifier string associated with this physical component
+        productFamily:
+          type: string
+          description: The name of a group of products derived from a common product platform
+        productType:
+          type: string
+          description: A single term that defines the physical nature of the product. This value is derived based on the following order of preference:- PCE, SNAS. Examples:- Firewall, Access Point
+        productName:
+          type: string
+          description: The product name reported by PCE. Examples:- Cisco UCS B200 M4 Blade Server, UCS-IOM-2208XP, N20-FAN5
+        equipmentType:
+          type: string
+          description: An indication of the general hardware type of the physical entity (e.g. CHASSIS, MODULE, POWER SUPPLY, POWERSUPPLY, FAN, IPPHONE, OTHER)
+        productDescription:
+          type: string
+          description: The description of a product
+        tags:
+          type: array
+          items:
+            type: string
+            description: The specific version of the software (Software Type) that is installed on the Network Element. Example:- 15.1(4)M4
+
+        swType:
+          type: string
+          description: This refers to the OS running on the managed network element. For example:- IOS, IOS-XE, NxOS
+        swVersion:
+          type: string
+          description: The version of the softwareType running on the managed NE
+        advisoryId:
+          type: integer
+          format: int64
+          description: Internally generated ID for a security advisory
+        bulletinName:
+          type: string
+          description: The Cisco.com Title/Headline for the bulletin
+        vulnerabilityStatus:
+          type: string
+          description: The vulnerability status of a Network element. Example:- Vulnerable, Potentially Vulnerable, Not Vulnerable
+        vulnerabilityReason:
+          type: string
+          description: The reason why a network element is Vulnerable or Potentially Vulnerable to a Security Advisory
+        cveId:
+          type: string
+          description: Common Vulnerabilities and Exposures (CVE) Identifier
+        bulletinFirstPublished:
+          type: string
+          format: date-time
+          description: The date when the bulletin was first published to Cisco.com. GMT date format YYYY-MM-DD
+        bulletinVersion:
+          type: string
+          description: The version '#' of the Cisco.com bulletin. Only applicable to Security Advisories
+        publicReleaseIndicator:
+          type: boolean
+          description: When set to true, it indicates that the PSIRT is publicly available. Otherwise it is internal use only to authorized users
+
+
+  Security-Advisory-Bulletin-ResponseObject:
+    type: object
+    description: The security advisory response with a list of advisories
+    required:
+      [data]
+    properties:
+      data:
+       type: array
+       items:
+         $ref: '#/definitions/Security-Advisory-Bulletin-Info'
+
+
+  Security-Advisory-Bulletin-Info:
+    type: object
+    properties:
+      securityAdvisoryInstanceId:
+        type: integer
+        format: int64
+        description: Internally generated ID for a security advisory
+      documentId:
+        type: integer
+        format: int64
+        description: Document Id
+      bulletinTitle:
+        type: string
+        description: The Cisco.com Title/Headline for the bulletin
+      bulletinVersion:
+        type: string
+        description: The version '#' of the Cisco.com bulletin. Only applicable to Security Advisories
+      summaryText:
+        type: string
+        description: The Summary of a Cisco.com bulletin
+      detailText:
+        type: string
+        description: Detail Text
+      codeName:
+        type: string
+        description: Code Name
+      bulletinFirstPublished:
+        type: string
+        format: date-time
+        description: The date when the bulletin was first published to Cisco.com. GMT date format YYYY-MM-DD
+      URL:
+        type: string
+        description: Uniform resource locator. The Cisco.com URL for the bulletin
+      publicReleaseIndicator:
+        type: string
+        description: Public Release Indicator
+      mappingStateName:
+        type: string
+        description: Mapping State Name
+      announcementTypeName:
+        type: string
+        description: Announcement Type Name
+      alertStatusCode:
+        type: string
+        description: Alert Status Code
+      advisoryId:
+        type: string
+        description: Published identifier of security advisory
+      defectId:
+        type: string
+        description: DefectId
+      severity:
+        type: string
+        description: Severity
+      cveId:
+        type: string
+        description: Common Vulnerabilities and Exposures (CVE) Identifier
+      cvssBaseScore:
+        type: string
+        description: Common Vulnerability Scoring System (CVSS) Base Score
+      cvssTemporalScore:
+        type: string
+        description: Common Vulnerability Scoring System (CVSS) Temporal Score
+      affectedImageName:
+        type: string
+        description: Affected Image Name
+      signatureReleaseDate:
+        type: string
+        format: date-time
+        description: Signature Release Date
+      softwareVossDate:
+        type: string
+        format: date-time
+        description: Software Voss Date
+
+
+  Field-Notice-ResponseObjectDetails:
+      type: object
+      required:
+        [data]
+      properties:
+        data:
+          type: array
+          items:
+              $ref: '#/definitions/Field-Notice-ResponseObjectInfo'
+
+  Field-Notice-ResponseObjectInfo:
+      type: object
+      properties:
+        customerId:
+          type: string
+          description: Unique identifier of a Cisco customer
+        managedNeId:
+          type: array
+          items:
+            type: string
+          description: The unique, generated ID of the network resource id
+        neInstanceId:
+          type: array
+          items:
+            type: string
+          description: The unique, generated ID of the network element
+        hwInstanceId:
+          type: integer
+          format: int64
+          description: The unique identifier for hardware entry in a datastore
+        productId:
+          type: string
+          description: The vendor-specific model name identifier string associated with this physical component
+        swType:
+          type: array
+          items:
+            type: string
+          description: This refers to the OS running on the managed network element. For example:- IOS, IOS-XE, NxOS
+        serialNumber:
+          type: string
+          description: The recognized/validated Serial Number
+        productFamily:
+          type: string
+          description: The name of a group of products derived from a common product platform
+        equipmentType:
+          type: string
+          description: A broad classification of Cisco product that categorizes its function.Examples :- OTHER, CHASIS, MODULE, POWERSUPPLY, FAN, IPPHONE
+        fieldNoticeId:
+          type: integer
+          format: int64
+          description: The unique, generated ID of the field notices
+        bulletinTitle:
+          type: string
+          description: The Cisco.com Title/Headline for the bulletin
+        vulnerabilityStatus:
+          type: string
+          description: The vulnerability status of a Network element. Example:- Vulnerable, Potentially Vulnerable, Not Vulnerable
+        vulnerabilityReason:
+          type: string
+          description: The reason why a network element is Vulnerable or Potentially Vulnerable to a Security Advisory
+        distributionCode:
+          type: boolean
+          description: The distribution code of the field notices
+        caveat:
+          type: string
+          description: The explanations about why the automation may need additional review by the customer
+
+
+  Field-Notice-Bulletin-ResponseObjectDetails:
+    type: object
+    required:
+      [data]
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Field-Notice-Bulletin-ResponseInfo'
+
+  Field-Notice-Bulletin-ResponseInfo:
+    type: object
+    properties:
+      fieldNoticeId:
+        type: integer
+        format: int64
+        description: The Cisco.com bulletin number for Field Notices
+      status:
+        type: string
+        description: Status
+      bulletinLastUpdated:
+        type: string
+        format: date-time
+        description: The date when the bulletin was last revised and published to Cisco.com. GMT date format YYYY-MM-DD
+      bulletinTitle:
+        type: string
+        description: The Cisco.com Title/Headline for the bulletin
+      bulletinFirstPublished:
+        type: string
+        format: date-time
+        description: The date when the bulletin was first published to Cisco.com. GMT date format YYYY-MM-DD
+      distributionCode:
+        type: string
+        description: Distribution Code
+      URL:
+        type: string
+        description: The Cisco.com URL for the bulletin
+      fieldNoticeType:
+        type: string
+        description: Category of field notices
+
+  Hardware-EOL-ResponseObjectDetails:
+    type: object
+    required:
+      [data]
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Hardware-EOL-ResponseInfo'
+
+  Hardware-EOL-ResponseInfo:
+    type: object
+    properties:
+      customerId:
+        type: string
+        description: Unique identifier of a Cisco customer
+      managedNeId:
+        type: string
+        description: The unique, generated ID of the network element
+      neInstanceId:
+        type: string
+        description: The unique, generated ID of the network element
+      hwInstanceId:
+        type: string
+        description: The unique identifier for hardware entry in a datastore
+      productId:
+        type: string
+        description: The alphanumeric identifier used by customers to order Cisco products. Examples:- CISCO2921/K9 ; WS-C3750X-24S-S ; WS-X6748-GE-TX
+      equipmentType:
+        type: string
+        description: An indication of the general hardware type of the physical entity (e.g. CHASSIS, MODULE, POWER SUPPLY, POWERSUPPLY, FAN, IPPHONE, OTHER)
+      hwEolInstanceId:
+        type: integer
+        format: int64
+        description: The unique identifier for hardware end-of-life entry in a data store
+      bulletinName:
+        type: string
+        description: Bulletin Name
+
+  Hardware-EOL-Bulletin-ResponseObjectDetails:
+    type: object
+    required:
+      [data]
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Hardware-EOL-Bulletin-ResponseInfo'
+
+
+  Hardware-EOL-Bulletin-ResponseInfo:
+    type: object
+    properties:
+      hwEolInstanceId:
+        type: integer
+        format: int64
+        description: The unique identifier for hardware end-of-life entry in a data store
+      bulletinNumber:
+        type: string
+        description: The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
+      bulletinProductId:
+        type: string
+        description: Cisco product published at the time of EOL announcement
+      bulletinTitle:
+        type: string
+        description: The Cisco.com Title/Headline for the bulletin
+      URL:
+        type: string
+        description: Uniform resource locator. The Cisco.com URL for the bulletin
+      bulletinFirstPublished:
+        type: string
+        format: date-time
+        description: The date when the bulletin was first published to Cisco.com. GMT date format YYYY-MM-DD
+      eoLifeExternalAnnouncementDate:
+        type: string
+        format: date-time
+        description: End of Life External Announcement Date. GMT date format YYYY-MM-DD
+      eoLifeInternalAnnouncementDate:
+        type: string
+        format: date-time
+        description: End of Life Internal Announcement Date. GMT date format YYYY-MM-DD
+      eoSaleDate:
+        type: string
+        format: date-time
+        description: The last date to order the product through Cisco point-of-sale mechanisms. The product is no longer for sale after this date. GMT date format YYYY-MM-DD
+      lastDateOfSupport:
+        type: string
+        format: date-time
+        description: The last date to receive applicable service and support for the product as entitled by active service contracts or by warranty terms and conditions. After this date, all support services for the product are unavailable, and the product becomes obsolete. GMT date format YYYY-MM-DD
+      lastShipDate:
+        type: string
+        format: date-time
+        description: The last-possible ship date that can be requested of Cisco and/or its contract manufacturers. Actual ship date is dependent on lead time. GMT date format YYYY-MM-DD
+      eoNewServiceAttachmentDate:
+        type: string
+        format: date-time
+        description: For equipment and software that is not covered by a service-and-support contract, this is the last date to order a new service-and-support contract or add the equipment and/or software to an existing service-and-support contract. GMT date format YYYY-MM-DD
+      eoRoutineFailureAnalysisDate:
+        type: string
+        format: date-time
+        description: The last-possible date a routine failure analysis may be performed to determine the cause of hardware product failure or defect. GMT date format YYYY-MM-DD
+      eoSwMaintenanceReleasesDate:
+        type: string
+        format: date-time
+        description: The last date that Cisco Engineering may release any final software maintenance releases or bug fixes. After this date, Cisco Engineering will no longer develop, repair, maintain, or test the product software. GMT date format YYYY-MM-DD
+      eoBuEngineeringSupportTacDate:
+        type: string
+        format: date-time
+        description: End of Bu Engineering Support Tac Date
+      eoServiceContractRenewalDate:
+        type: string
+        format: date-time
+        description: The last date to extend or renew a service contract for the product. GMT date format YYYY-MM-DD
+      eoSignatureReleasesDate:
+        type: string
+        format: date-time
+        description: End of Signature Releases Date
+      eoSoftwareAvailabilityDate:
+        type: string
+        format: date-time
+        description: End of Software Availability Date
+      eoSoftwareLicenseAvailabilityDate:
+        type: string
+        format: date-time
+        description: End of Software License Availability Date
+      eoVulnerabilitySecuritySupport:
+        type: string
+        format: date-time
+        description: The last date that Cisco Engineering may release a planned maintenance release or scheduled software remedy for a security vulnerability issue. GMT date format YYYY-MM-DD
+      milestoneInfo:
+        type: array
+        items:
+          type: object
+          properties:
+            currentHwEolMilestone:
+              type: string
+              description: The latest hardware end-of-life milestone that has passed for the product. If more than one milestone falls on the same date, the returned value will be a comma-separated list. Example:- EoSale, LDoS
+            nextHwEolMilestone:
+              type: string
+              description: The next hardware end-of-life milestone that is coming up. If more than one milestone falls on the same date, the returned value will be a comma-separated list. If the device is already LDoS it will not have a next milestone. Example:- EoSale, LDoS
+            currentHwEolMilestoneDate:
+              type: string
+              format: date-time
+              description: The date of the current hardware end-of-life milestone. GMT date format YYYY-MM-DD
+            nextHwEolMilestoneDate:
+              type: string
+              format: date-time
+              description: The date of the next hardware end-of-life milestone. GMT date format YYYY-MM-DD
+      migrationPid:
+        type: string
+        description: Migration Pid
+      migrationProductSeries:
+        type: string
+        description: Migration Product Series
+      migrationProductModel:
+        type: string
+        description: Migration Product Model
+      migrationPromotionText:
+        type: string
+        description: Migration Promotion Text
+      migrationProductPageUrl:
+        type: string
+        description: Migration Product Page Url
+      migrationProductDataUrl:
+        type: string
+        description: Migration Product Data Url
+      internalAnnouncementDate:
+        type: string
+        format: date-time
+        description: Internal Announcement Date
+
+
+  Software-EOL-ResponseObjectDetails:
+    type: object
+    required:
+      [data]
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Software-EOL-ResponseObjectInfo'
+
+
+  Software-EOL-ResponseObjectInfo:
+    type: object
+    properties:
+      customerId:
+        type: string
+        description: Unique identifier of a Cisco customer
+      neInstanceId:
+        type: string
+        description: The unique, generated ID of the network element
+      managedNeId:
+        type: string
+        description: The unique, generated ID of the network element
+      productId:
+        type: string
+        description: The alphanumeric identifier used by customers to order Cisco products. Examples:- CISCO2921/K9 ; WS-C3750X-24S-S ; WS-X6748-GE-TX
+      equipmentType:
+        type: string
+        description: An indication of the general hardware type of the physical entity (e.g. CHASSIS, MODULE, POWER SUPPLY, POWERSUPPLY, FAN, IPPHONE, OTHER)
+      swType:
+        type: string
+        description: Software Type identifies the specific type of software that is installed on this host/system. Common values include IOS, IOS XR, IOS-XE, NX-OS, etc
+      swVersion:
+        type: string
+        description: The specific version of the software (Software Type) that is installed on the Network Element. Example:- 15.1(4)M4
+      bulletinHeadline:
+        type: string
+        description: The Cisco.com Title/Headline for the bulletin
+      swEolInstanceId:
+        type: string
+        description: The unique identifier for software end-of-life entry in a data store
+
+  Sofware-EOL-Bulletin-ResponseObjectDetails:
+    type: object
+    required:
+      [data]
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Software-EOL-Bulletin-ResponseInfo'
+
+  Software-EOL-Bulletin-ResponseInfo:
+    type: object
+    properties:
+      swEolInstanceId:
+        type: integer
+        format: int64
+        description: The unique identifier for software end-of-life entry in a data store
+      bulletinNumber:
+        type: string
+        description: The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
+      bulletinTitle:
+        type: string
+        description: The Cisco.com Title/Headline for the bulletin
+      URL:
+        type: string
+        description: Uniform resource locator. The Cisco.com URL for the bulletin
+      publishedDate:
+        type: string
+        format: date-time
+        description: Published Date
+      eoLifeExternalAnnouncementDate:
+        type: string
+        format: date-time
+        description: End of Life External Announcement Date. GMT date format YYYY-MM-DD
+      eoLifeInternalAnnouncementDate:
+        type: string
+        format: date-time
+        description: End of Life Internal Announcement Date. GMT date format YYYY-MM-DD
+      eoSaleDate:
+        type: string
+        format: date-time
+        description: The last date to order the product through Cisco point-of-sale mechanisms. The product is no longer for sale after this date. GMT date format YYYY-MM-DD
+      eoEngineeringDate:
+        type: string
+        format: date-time
+        description: End of Engineering Date. GMT date format YYYY-MM-DD
+      eoLifeDate:
+        type: string
+        format: date-time
+        description: End of Life Date. GMT date format YYYY-MM-DD
+      lastDateOfSupport:
+        type: string
+        format: date-time
+        description: The last date to receive applicable service and support for the product as entitled by active service contracts or by warranty terms and conditions. After this date, all support services for the product are unavailable, and the product becomes obsolete. GMT date format YYYY-MM-DD
+      lastShipDate:
+        type: string
+        format: date-time
+        description: The last-possible ship date that can be requested of Cisco and/or its contract manufacturers. Actual ship date is dependent on lead time. GMT date format YYYY-MM-DD
+      eoNewServiceAttachmentDate:
+        type: string
+        format: date-time
+        description: For equipment and software that is not covered by a service-and-support contract, this is the last date to order a new service-and-support contract or add the equipment and/or software to an existing service-and-support contract. GMT date format YYYY-MM-DD
+      eoRoutineFailureAnalysisDate:
+        type: string
+        format: date-time
+        description: The last-possible date a routine failure analysis may be performed to determine the cause of hardware product failure or defect. GMT date format YYYY-MM-DD
+      eoSwMaintenanceReleasesDate:
+        type: string
+        format: date-time
+        description: The last date that Cisco Engineering may release any final software maintenance releases or bug fixes. After this date, Cisco Engineering will no longer develop, repair, maintain, or test the product software. GMT date format YYYY-MM-DD
+      eoBuEngineeringSupportTacDate:
+        type: string
+        format: date-time
+        description: End of Bu Engineering Support Tac Date
+      eoServiceContractRenewalDate:
+        type: string
+        format: date-time
+        description: The last date to extend or renew a service contract for the product. GMT date format YYYY-MM-DD
+      eoSignatureReleasesDate:
+        type: string
+        format: date-time
+        description: End of Signature Releases Date
+      eoSoftwareAvailabilityDate:
+        type: string
+        format: date-time
+        description: End of Software Availability Date
+      eoSoftwareLicenseAvailabilityDate:
+        type: string
+        format: date-time
+        description: End of Software License Availability Date
+      eoVulnerabilitySecuritySupport:
+        type: string
+        format: date-time
+        description: The last date that Cisco Engineering may release a planned maintenance release or scheduled software remedy for a security vulnerability issue. GMT date format YYYY-MM-DD
+      milestoneInfo:
+        type: array
+        items:
+          type: object
+          properties:
+            currentHwEolMilestone:
+              type: string
+              description: The latest hardware end-of-life milestone that has passed for the product. If more than one milestone falls on the same date, the returned value will be a comma-separated list. Example:- EoSale, LDoS
+            nextHwEolMilestone:
+              type: string
+              description: The next hardware end-of-life milestone that is coming up. If more than one milestone falls on the same date, the returned value will be a comma-separated list. If the device is already LDoS it will not have a next milestone. Example:- EoSale, LDoS
+            currentHwEolMilestoneDate:
+              type: string
+              format: date-time
+              description: The date of the current hardware end-of-life milestone. GMT date format YYYY-MM-DD
+            nextHwEolMilestoneDate:
+              type: string
+              format: date-time
+              description: The date of the next hardware end-of-life milestone. GMT date format YYYY-MM-DD
+
+
+  Security-Advisory-Summary-NOTUSED:
+    type: array
+    items:
+        type: object
+        properties:
+          alertSeverity:
+            type: string
+          alertCount:
+            type: integer
+
+  Security-Advisory-Summary:
+    type: object
+    properties:
+     advisoryCount:
+       type: integer
+       description: The total number of security advisories
+     advisorySummary:
+      type: array
+      items:
+        type: object
+        description: The security advisory breakdown by seerity/count
+        properties:
+          alertSeverity:
+            type: string
+            description: The security advisory severity assigned by Cisco
+          alertCount:
+            type: integer
+            description: The number of security advisories for a given severity
+
+  FieldNotice-Info:
+    type: array
+    items:
+        type: object
+        properties:
+          fnId:
+            type: string
+          fnName:
+            type: string
+          URL:
+            type: string
+            format: url
+          hwCount:
+            type: integer
+
+
+  Security-Advisory-ResponseObjectDetails:
+    type: object
+    required:
+      [data]
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Security-Advisory-Info'
+
+  Security-Advisory-Info:
+        type: object
+        properties:
+          id:
+            type: string
+            description: The psirtId
+          headline:
+            type: string
+            description: The security advisory headline
+          severity:
+            type: string
+            description: the severity of the security advisory (assigned by Cisco)
+          publishedDate:
+            type: string
+            description: The date the security advisory was published
+          revisedDate:
+            type: string
+            description: The date the security advisory was revised
+          summary:
+            type: string
+            description: The security advisory summary
+          advisoryURL:
+            type: string
+            format: url
+            description: The URL to the security advisory.
+          impactedEntityCount:
+            type: integer
+            description: The number of impacted network elements
+
+
+
+  SecurityAdvisoryInfo_NOTUSED:
+    type: object
+    properties:
+      psirtId:
+        type: string
+      alertCounts:
+        type: array
+        items:
+          type: object
+          properties:
+            alertSeverity:
+             type: string
+            alertCount:
+             type: integer
