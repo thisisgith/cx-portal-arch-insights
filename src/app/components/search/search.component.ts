@@ -1,7 +1,6 @@
 import {
 	Component,
 } from '@angular/core';
-import { SearchResults } from '@services';
 import { SearchType } from '@interfaces';
 
 import { products } from './products.const';
@@ -17,7 +16,6 @@ import { products } from './products.const';
 export class SearchComponent {
 	public products = products;
 
-	public searchResults: SearchResults;
 	public searchText = '';
 	public generalQuery: string;
 
