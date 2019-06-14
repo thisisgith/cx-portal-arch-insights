@@ -49,7 +49,7 @@ export class DetailsHeaderComponent {
 		private caseService: CaseService,
 		private solutionService: SolutionService,
 		private logger: LogService,
-	) {}
+	) { }
 
 	/**
 	 * Clear the currently displayed asset and close the details window
