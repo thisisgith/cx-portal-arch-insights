@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '@environment';
 import { LogService } from '@cisco-ngx/cui-services';
 import { SearchType } from '@interfaces';
 
@@ -21,20 +19,8 @@ const rmaRegex = /^8\d{8}$/;
 // const contractRegex = '';
 
 /**
- * Interface representing the Search Results
- */
-export interface SearchResults {
-	cdcSearch: {
-		domain: string;
-		search: {
-			uri: string;
-			title: string;
-		}[];
-	}[];
-}
-
-/**
- * Service which contains all calls to our search service
+ * Service with utils for the personal search module
+ * HTTP calls are contained in a different service under @cui-x/sdp-api
  */
 @Injectable({
 	providedIn: 'root',
@@ -66,20 +52,5 @@ export class SearchService {
 		}
 
 		return 'default';
-	}
-
-	/**
-	 * TODO this will be in a real sdp service under cui-x-staging once the swagger
-	 * is ironed out and we generate the whole thing
-	 *
-	 * Performs a query against the search api
-	 * @param query The query to search for
-	 * @returns Search Results
-	 */
-	public search (query: string): Observable<SearchResults> {
-		this.logger.debug(`Search query :: ${query}`);
-
-		return this.http.get<SearchResults>(`${
-			environment.sdpOrigin }${environment.services.search}`);
 	}
 }

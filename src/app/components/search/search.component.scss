@@ -20,6 +20,11 @@
 	z-index: 999998;
 }
 
+.modal__content {
+	max-height: 80vh;
+	overflow-y: auto;
+}
+
 .modal-backdrop {
 	top: 55px;
 }

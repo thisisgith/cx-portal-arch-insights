@@ -21,11 +21,8 @@ import {
 	HardwareResponse,
 	RacetrackResponse,
 	SuccessPathsResponse,
+	CDCSearchResponse,
 } from '@cui-x/sdp-api';
-
-import {
-	SearchResults,
-} from '@services';
 
 /** Alias type for the Response Body */
 type ResponseBody = (
@@ -36,8 +33,8 @@ type ResponseBody = (
 	SuccessPathsResponse |
 	ACCResponse |
 	RacetrackResponse |
-	SearchResults |
-	PitstopActionUpdateResponse
+	PitstopActionUpdateResponse |
+	CDCSearchResponse
 );
 
 /**

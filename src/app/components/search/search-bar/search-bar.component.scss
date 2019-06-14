@@ -1,7 +1,14 @@
 .dropdown__menu {
-	top: 0;
+	max-height: 170px;
+	max-width: none;
 	width: 100%;
-	max-width: 100%;
+	top: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.dropdown__menu a {
+	overflow: visible;
 }
 
 .dropdown {

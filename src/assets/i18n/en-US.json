@@ -10,6 +10,7 @@
 	"_AdoptDescription_": "you are going to do some adoption now",
 	"_Advisories_": "Advisories",
 	"_AdvisoryImpact_": "Advisory Impact",
+	"_AllCategories_": "All Categories",
 	"_AnsweredBy_": "Answered by {0}",
 	"_ApplicationName_": "CX Console",
 	"_AskAQuestion_": "Ask a Question (S4)",
@@ -94,6 +95,7 @@
 	"_LearningLibrary_": "View the Cisco Learning Library",
 	"_Lifecycle_": "Lifecycle",
 	"_Link_": "Link",
+	"_LoadMore_": "Load More",
 	"_Location_": "Location",
 	"_MapAPToSites_": "Map APs to Sites",
 	"_MapWLCToSites_": "Map WLCs to Sites",
@@ -197,6 +199,7 @@
 	"_WatchOnDemand_": "Watch On-Demand",
 	"_WirelessAssurance_": "Wireless Assurance",
 	"_Workaround_": "Workaround",
+	"_XResults_": "{0} Results for \"{1}\"",
 	"_YourImpactedDevices_": "Your Impacted Devices",
 	"_YourProducts_": "Your products, documentation & Learning Library resources"
 }

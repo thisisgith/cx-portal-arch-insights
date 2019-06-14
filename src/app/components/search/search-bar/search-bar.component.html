@@ -17,8 +17,7 @@
 	<div class="dropdown active"
 		*ngIf="typeaheadItems && typeaheadItems.length">
 		<div class="dropdown__menu">
-			<a class="typeahead"
-				data-auto-id="searchBarTypeahead"
+			<a data-auto-id="searchBarTypeahead"
 				*ngFor="let item of typeaheadItems"
 				(click)="onSearchSelect(item.name, true)"
 				[innerText]="item.name"></a>
