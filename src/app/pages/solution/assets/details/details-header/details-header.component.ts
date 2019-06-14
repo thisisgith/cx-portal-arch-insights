@@ -56,7 +56,6 @@ export class DetailsHeaderComponent {
 		this.closeEvent.emit(this.hidden);
 	}
 
-	// TODO WRITE TEST
 	/**
 	 * Toggle fullscreen details
 	 */

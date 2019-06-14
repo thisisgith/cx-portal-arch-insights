@@ -9,6 +9,7 @@ import { CaseService } from '@cui-x/services';
 
 import { DetailsHeaderComponent } from './details-header.component';
 import { DetailsHeaderModule } from './details-header.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -47,7 +48,10 @@ describe('DetailsHeaderComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [DetailsHeaderModule],
+			imports: [
+				DetailsHeaderModule,
+				HttpClientTestingModule,
+			],
 		})
 		.compileComponents();
 
