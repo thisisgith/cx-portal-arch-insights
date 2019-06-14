@@ -24,7 +24,7 @@
 
 			<div class="col-md-8 base-margin-bottom">
 				<div class="flex">
-					<div *ngIf="asset?.hostname" class="dbl-margin-right">
+					<div *ngIf="asset?.hostname" data-auto-id="Asset360Hostname" class="dbl-margin-right">
 						<div class="text-muted text-small text-uppercase" innerText="{{ '_Hostname_' | i18n }}"></div>
 						<div innerText="{{ asset?.hostname }}"></div>
 					</div> 
@@ -34,7 +34,7 @@
 						<div innerText="{{ '_NA_' | i18n }}"></div>
 					</div>
 
-					<div *ngIf="asset?.managementAddress" class="dbl-margin-right">
+					<div *ngIf="asset?.managementAddress" data-auto-id="Asset360IPAddress" class="dbl-margin-right">
 						<div class="text-muted text-small text-uppercase" innerText="{{ '_IPAddress_' | i18n }}"></div>
 						<div innerText="{{ asset?.managementAddress }}"></div>
 					</div>
@@ -44,7 +44,7 @@
 						<div innerText="{{ '_NA_' | i18n }}"></div>
 					</div>
 
-					<div *ngIf="asset?.serialNumber" class="dbl-margin-right">
+					<div *ngIf="asset?.serialNumber" data-auto-id="Asset360SerialNumber" class="dbl-margin-right">
 						<div class="text-muted text-small text-uppercase" innerText="{{ '_SerialNumber_' | i18n }}">
 						</div>
 						<div innerText="{{ asset?.serialNumber }}"></div>
