@@ -28,6 +28,7 @@ export class SearchComponent {
 	public searchText = '';
 	public selectedSearch: string;
 	public searchType: SearchType;
+	public generalSearch: string;
 
 	public status = {
 		hidden: true,
@@ -39,10 +40,11 @@ export class SearchComponent {
 	 * Fires when the user makes a new search (hits enter or selects from typeahead)
 	 * @param search the search text and type
 	 */
-	public onSearchChange (search: { name: string, type: SearchType }) {
+	public onSearchChange (search: { text: string, type: SearchType, generalSearch: string }) {
 		this.status.hidden = false;
-		this.selectedSearch = search.name;
+		this.selectedSearch = search.text;
 		this.searchType = search.type;
+		this.generalSearch = search.generalSearch;
 	}
 
 	/**

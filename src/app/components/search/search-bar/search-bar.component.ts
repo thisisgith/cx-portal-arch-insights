@@ -30,8 +30,9 @@ export class SearchBarComponent implements OnInit {
 	@Input('searchText') public searchText: string;
 	@Output('searchTextChange') public searchTextChange = new EventEmitter<string>();
 	@Output('searchChange') public searchChange = new EventEmitter<{
-		name: string;
+		text: string;
 		type: SearchType;
+		generalSearch: string;
 	}>();
 
 	public typeaheadItems: {
@@ -118,9 +119,15 @@ export class SearchBarComponent implements OnInit {
 		} else {
 			type = this.service.determineType(this.searchText);
 		}
+		let generalSearch = this.searchText;
+		if (type === 'contract') {
+			generalSearch = 'contract';
+		}
+
 		this.searchChange.emit({
+			generalSearch,
 			type,
-			name: this.searchText,
+			text: this.searchText,
 		});
 		this.typeaheadItems = null;
 		this.searchInput.nativeElement.blur();

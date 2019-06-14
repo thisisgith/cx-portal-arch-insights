@@ -15,8 +15,8 @@ const caseRegex = /\b6\d{8}\b/;
  * Regex for a RMA match
  */
 const rmaRegex = /^8\d{8}$/;
-/** TODO get contract regex */
-const contractRegex = /somecontract/;
+/** TODO get real contract regex, this is totally fake */
+const contractRegex = /^23\d{6}$/;
 
 /**
  * Service with utils for the personal search module

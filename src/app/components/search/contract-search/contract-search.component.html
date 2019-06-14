@@ -1,11 +1,84 @@
-<h2 [innerText]="'_ContractNumber_' | i18n:contractNumber"></h2>
-
+<div *ngIf="loading" class="row no-gutters">
+	<div class="col-md-12">
+		<div class="panel panel--loose">
+			<cui-spinner></cui-spinner>
+		</div>
+	</div>
+</div>
+<div *ngIf="!loading">
+	<h4 [innerText]="'_ContractNumber_' | i18n:contractNumber"></h4>
+	<div class="base-margin-top">
+		<dl class="dl--inline">
+			<dt>
+				<span class="text-muted" [innerText]="'_CXLevel_' | i18n | uppercase"></span>
+			</dt>
+			<dd>
+				<span [innerText]="contractData?.serviceLevel"></span>
+			</dd>
+			<dt>
+				<span class="text-muted" [innerText]="'_Status_' | i18n | uppercase"></span>
+			</dt>
+			<dd>
+				<span [innerText]="contractData?.status"></span>
+			</dd>
+			<dt>
+				<span class="text-muted" [innerText]="'_StartDate_' | i18n | uppercase"></span>
+			</dt>
+			<dd>
+				<span [innerText]="contractData?.contractStartDate"></span>
+			</dd>
+			<dt>
+				<span class="text-muted" [innerText]="'_ExpirationDate_' | i18n | uppercase"></span>
+			</dt>
+			<dd>
+				<span [innerText]="contractData?.contractEndDate"></span>
+			</dd>
+			<dt>
+				<span class="text-muted" [innerText]="'_DevicesCovered_' | i18n | uppercase"></span>
+			</dt>
+			<dd>
+				<span [innerText]="contractData?.devicesCovered"></span>
+			</dd>
+		</dl>
+	</div>
+	<div class="base-margin-top">
+		<!-- TODO get button link -->
+		<button class="btn btn--small btn--gray-ghost"
+			[innerText]="'_ContractDetails_' | i18n">
+		</button>
+	</div>
+</div>
+<!-- Sidebar, static html content from UX team -->
+<!-- TODO i18n all of this -->
 <ng-template #sidebar>
-	<div class="subheading">CX Level 2 Includes</div>
-	<div><span>Ask the Expert Webinars</span></div>
-	<div><span>Access to Lifecycle Communities</span></div>
-	<div><span>24x7 Software Support (30 minute Critical Response)</span></div>
-	<div><span>24x7 Hardware Support (30 minute Response)</span></div>
-	<div><span>24x7 Solution Support (30 minute Response)</span></div>
-	<div><span>24x7x4hr RMAs</span></div>
+	<div *ngIf="!loading">
+		<div class="subheading">CX Level 2 Includes</div>
+		<div><span>Ask the Expert Webinars</span></div>
+		<div class="half-margin-top"><span>Access to Lifecycle Communities</span></div>
+		<div class="half-margin-top"><span>24x7 Software Support (30 minute Critical Response)</span></div>
+		<div class="half-margin-top"><span>24x7 Hardware Support (30 minute Response)</span></div>
+		<div class="half-margin-top"><span>24x7 Solution Support (30 minute Response)</span></div>
+		<div class="half-margin-top"><span>24x7x4hr RMAs</span></div>
+		<div class="half-margin-top"><span>Access to CX Customer Portal including:</span></div>
+		<ul>
+	  	<li>Adoption view</li>
+	  	<li>Assets view</li>
+	  	<li>Rapid problem resolution</li>
+	  	<li>Personalized exposure checks</li>
+	  	<li>Case status</li>
+	  	<li>Case management KP eyes</li>
+	  	<li>Proactive notifications</li>
+		</ul>
+	<div class="half-margin-top"><span>Access to e-learning courses</span></div>
+	<div class="half-margin-top"><span>Remote practice labs</span></div>
+	<div class="half-margin-top"><span>Certification prep</span></div>
+	<div class="subheading base-margin-top">CX Level 3 Adds</div>
+	<div><span>Access to Designated Experts</span></div>
+	<div class="half-margin-top"><span>24x7 Solution Support (15 minute Response)</span></div>
+	<div class="half-margin-top"><span>24x7x4hr/2hr Onsite RMAs</span></div>
+	<div class="half-margin-top"><span>Asset/License Management</span></div>
+	<div class="half-margin-top"><span>And more…</span></div>
+	<!-- TODO get link href -->
+	<div class="half-margin-top"><a>Learn More</a></div>
+</div>
 </ng-template>

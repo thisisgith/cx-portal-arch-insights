@@ -8,3 +8,4 @@ export { CommunitiesScenarios } from './racetrack/communities';
 export { ELearningScenarios } from './racetrack/elearning';
 export { SuccessPathScenarios } from './racetrack/successPaths';
 export { ActionScenarios } from './racetrack/action';
+export { ContractScenarios } from './contract/contract';
