@@ -18,7 +18,7 @@ describe('Assets', () => { // PBC-41
 		cy.get('asset-details')
 			.should('be.visible')
 			.and('have.css', 'width', halfWidthInPx); // default to half width
-		cy.getByAutoId('Asset360SerialNumber').should('have.text', `SN: ${assets[0].serialNumber}`);
+		cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[0].serialNumber}`);
 		cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
 		cy.get('asset-details').should('have.css', 'width', widthInPx); // expand to full width
 		cy.getByAutoId('ClearAsset').click();
