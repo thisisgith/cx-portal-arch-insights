@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject, forkJoin, of } from 'rxjs';
 import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 /**
  * Indicates refresh type, either refreshing everything or fetching a new page
  */
-type RefreshType = 'all' | 'newPage';
+type RefreshType = 'query' | 'filters' | 'newPage';
 
 /**
  * Component representing "general" search results on the search modal
@@ -51,43 +51,50 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public ngOnInit () {
 		this.refresh$.pipe(
 			tap(refreshType => {
-				if (refreshType === 'all') {
+				if (refreshType === 'query' || refreshType === 'filters') {
 					this.loading = true;
 				} else {
 					this.loadingPage = true;
 				}
 			}),
-			switchMap(() => this.doSearch(this.query, this.pageOffset, this.selectedSite)),
+			switchMap(refreshType => forkJoin(
+				this.doSearch(this.query, this.pageOffset, this.selectedSite),
+				of(refreshType),
+			)),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(result => {
+		.subscribe(results => {
+			const [result, refreshType] = results;
 			this.loading = false;
 			this.loadingPage = false;
-			if (this.pageOffset === 0) {
-				this.searchResults = _.get(result, 'documents', []);
-			} else {
+			if (refreshType === 'newPage') {
 				this.searchResults = this.searchResults.concat(_.get(result, 'documents', []));
+			} else {
+				this.searchResults = _.get(result, 'documents', []);
 			}
 			this.totalCount = _.get(result, 'totalHits', 0);
-			const facets = <Facets []> _.get(result, 'facets', []);
-			if (facets && facets.length) {
-				this.siteOptions = facets
-					.find((o: Facets) => o.label === 'Site')
-					.buckets
-					.map((bucket: Buckets) => ({
-						...bucket,
-						label: `${bucket.label} (${bucket.count})`,
-					}));
-				this.siteOptions.unshift({
-					filter: null,
-					label: I18n.get('_AllCategories_'),
-				});
-				if (!this.selectedSite) {
-					this.selectedSite = this.siteOptions[0];
+			// Only change filter options when the query changes
+			if (refreshType === 'query') {
+				const facets = <Facets []> _.get(result, 'facets', []);
+				if (facets && facets.length) {
+					this.siteOptions = facets
+						.find((o: Facets) => o.label === 'Site')
+						.buckets
+						.map((bucket: Buckets) => ({
+							...bucket,
+							label: `${bucket.label} (${bucket.count})`,
+						}));
+					this.siteOptions.unshift({
+						filter: null,
+						label: I18n.get('_AllCategories_'),
+					});
+					if (!this.selectedSite) {
+						this.selectedSite = this.siteOptions[0];
+					}
 				}
 			}
 		});
-		this.refresh$.next('all');
+		this.refresh$.next('query');
 	}
 
 	/**
@@ -104,7 +111,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public ngOnChanges () {
 		this.pageOffset = 0;
-		this.refresh$.next('all');
+		this.selectedSite = null;
+		this.refresh$.next('query');
 	}
 
 	/**
@@ -114,7 +122,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public onSiteSelected (site: Buckets) {
 		this.pageOffset = 0;
 		this.selectedSite = site;
-		this.refresh$.next('all');
+		this.refresh$.next('filters');
 	}
 
 	/**
@@ -140,7 +148,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			searchTokens: query,
 			...(
 				site && site.filter ? {
-					filter: site.filter,
+					filters: site.filter,
 				} : { }
 			),
 		})
