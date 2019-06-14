@@ -41,7 +41,7 @@ describe('Assets', () => { // PBC-41
 		cy.getByAutoId('ClearAsset').click();
 	});
 
-	it('Provides an Activity timeline in the 360 view modal', () => {
+	it('Provides an Activity timeline in the 360 view modal', () => { // PBC-158
 		cy.get('tr').eq(1).click();
 		cy.get('asset-details div.tab__heading').eq(tabMap.Activity).click();
 
