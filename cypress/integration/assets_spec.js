@@ -27,7 +27,7 @@ describe('Assets', () => { // PBC-41
 		cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
 		cy.get('asset-details').should('have.css', 'width', halfWidthInPx); // shrink to half width
 		cy.get('tr').eq(3).click(); // switch to new asset without closing modal
-		cy.getByAutoId('Asset360SerialNumber').should('have.text', `SN: ${assets[2].serialNumber}`);
+		cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[2].serialNumber}`);
 		cy.getByAutoId('ClearAsset').click();
 	});
 });
