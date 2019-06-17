@@ -37,23 +37,4 @@ describe('HeaderComponent', () => {
 		expect(promptMockSettingsSpy)
 			.toHaveBeenCalled();
 	});
-
-	describe('record()', () => {
-		it('should set isRecording flag', () => {
-			expect(component.isRecording)
-				.toBe(false);
-			component.record();
-			expect(component.isRecording)
-				.toBe(true);
-		});
-
-		it('should set recordingClass to style record button', () => {
-			expect(component.recordingClass)
-				.toBe('gray-ghost');
-			component.record(); // start
-			expect(component.recordingClass)
-				.toBe('negative');
-			component.record(); // stop
-		});
-	});
 });

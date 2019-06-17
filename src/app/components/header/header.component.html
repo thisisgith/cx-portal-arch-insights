@@ -60,12 +60,7 @@
 					(click)="mocking ? openMockModal() : null">
 					<span class="icon-cog text-muted"></span>
 				</a>
-				<button *ngIf="mocking"
-					data-do-not-record="true"
-					data-auto-id="MockRecordBtn"
-					(click)="record()" class="btn btn--icon btn--small btn--{{recordingClass}}">
-					<span data-do-not-record="true" class="icon-record" title="Record Test"></span>
-				</button>
+				<record-button *ngIf="mocking"></record-button>
 			</div>
 		</div>
 	</div>
