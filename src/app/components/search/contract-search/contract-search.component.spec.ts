@@ -29,7 +29,7 @@ describe('ContractSearchComponent', () => {
 			.returnValue(of(ContractScenarios[0].scenarios.GET[0].response.body));
 		fixture = TestBed.createComponent(ContractSearchComponent);
 		component = fixture.componentInstance;
-		component.contractNumber = '23000000';
+		component.contractNumber = '230000000';
 		fixture.detectChanges();
 	});
 
@@ -39,7 +39,7 @@ describe('ContractSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
-		component.contractNumber = '23000001';
+		component.contractNumber = '230000001';
 		fixture.detectChanges();
 		expect(service.getContracts)
 			.toHaveBeenCalled();

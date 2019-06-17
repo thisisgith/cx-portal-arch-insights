@@ -120,11 +120,11 @@ describe('SearchBarComponent', () => {
 	});
 
 	it('should emit a contract selection', () => {
-		component.onSearchSelect('23000000'); // RMA num
+		component.onSearchSelect('230000000'); // RMA num
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
 				generalSearch: 'contract',
-				text: '23000000',
+				text: '230000000',
 				type: 'contract',
 			});
 	});

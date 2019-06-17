@@ -60,8 +60,8 @@ describe('SearchComponent', () => {
 
 	it('should show special search', () => {
 		component.onSearchChange({
-			generalSearch: '23000000', // Contract
-			text: '23000000',
+			generalSearch: '230000000', // Contract
+			text: '230000000',
 			type: 'contract',
 		});
 		fixture.detectChanges();
@@ -74,8 +74,8 @@ describe('SearchComponent', () => {
 
 	it('should hide special search', () => {
 		component.onSearchChange({
-			generalSearch: '23000000', // Contract
-			text: '23000000',
+			generalSearch: '230000000', // Contract
+			text: '230000000',
 			type: 'contract',
 		});
 		fixture.detectChanges();
