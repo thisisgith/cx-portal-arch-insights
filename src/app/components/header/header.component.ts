@@ -18,9 +18,6 @@ export class HeaderComponent {
 	 * Whether we show the mocking interface
 	 */
 	public mocking = _.get(environment, 'mock');
-	public recordingClass: 'negative' | 'gray-ghost' = 'gray-ghost';
-	public isRecording = false;
-	private recordBtnInterval: NodeJS.Timer;
 
 	constructor (
 		@Optional() private mockService: MicroMockService,
@@ -31,23 +28,5 @@ export class HeaderComponent {
 	 */
 	public openMockModal () {
 		this.mockService.promptMockSettings();
-	}
-
-	/**
-	 * Start recording clicks and generate a test case
-	 */
-	public record () {
-		this.isRecording = !this.isRecording;
-		if (this.isRecording) {
-			this.recordingClass = 'negative';
-			this.recordBtnInterval = setInterval(() => {
-				this.recordingClass = this.recordingClass === 'negative'
-					? 'gray-ghost' : 'negative';
-			}, 1000);
-		} else {
-			this.recordingClass = 'gray-ghost';
-			clearInterval(this.recordBtnInterval);
-		}
-		this.mockService.record(this.isRecording);
 	}
 }
