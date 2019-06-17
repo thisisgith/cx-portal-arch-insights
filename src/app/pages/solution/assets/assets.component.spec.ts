@@ -50,33 +50,49 @@ describe('AssetsComponent', () => {
 			.toEqual(totalFilter);
 
 		component.selectFilter(casesFilter);
-
 		fixture.detectChanges();
 
-		expect(_.find(component.filters, 'selected'))
-			.toEqual(casesFilter);
+		expect(_.filter(component.filters, 'selected'))
+			.toContain(casesFilter);
 	});
 
-	it('should default to first filter if unselecting all filters', () => {
-		const totalFilter = _.find(component.filters, { key: 'total' });
-		const casesFilter = _.find(component.filters, { key: 'cases' });
-
-		expect(_.find(component.filters, 'selected'))
-			.toEqual(totalFilter);
-
-		component.selectFilter(casesFilter);
-
+	/**
+	 * @TODO modify test to use UI
+	 */
+	it('should select a coverage subfilter', () => {
+		let coverageFilter = _.find(component.filters, { key: 'coverage' });
+		component.selectFilter(coverageFilter);
 		fixture.detectChanges();
 
-		expect(_.find(component.filters, 'selected'))
-			.toEqual(casesFilter);
+		expect(_.filter(component.filters, 'selected'))
+			.toContain(coverageFilter);
 
-		component.selectFilter(casesFilter);
+		component.onSubfilterSelect('Covered', 'coverage');
+		coverageFilter = _.find(component.filters, { key: 'coverage' });
+		expect(coverageFilter.subfilter)
+			.toEqual('Covered');
+	});
 
+	/**
+	 * @TODO modify test to use UI
+	 */
+	it('should clear the filter when selecting the same subfilter twice', () => {
+		let coverageFilter = _.find(component.filters, { key: 'coverage' });
+		component.selectFilter(coverageFilter);
 		fixture.detectChanges();
 
-		expect(_.find(component.filters, 'selected'))
-			.toEqual(totalFilter);
+		expect(_.filter(component.filters, 'selected'))
+			.toContain(coverageFilter);
+
+		component.onSubfilterSelect('Covered', 'coverage');
+		coverageFilter = _.find(component.filters, { key: 'coverage' });
+		expect(coverageFilter.subfilter)
+			.toEqual('Covered');
+
+		component.onSubfilterSelect('Covered', 'coverage');
+		coverageFilter = _.find(component.filters, { key: 'coverage' });
+		expect(coverageFilter.selected)
+			.toBeFalsy();
 	});
 
 	it('should set a loading boolean for Cypress runs', () => {

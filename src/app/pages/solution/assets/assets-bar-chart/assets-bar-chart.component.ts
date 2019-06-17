@@ -1,5 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { Chart } from 'angular-highcharts';
+import {
+	Component,
+	ElementRef,
+	EventEmitter,
+	OnInit,
+	Output,
+	ViewChild,
+} from '@angular/core';
+import {
+	Chart,
+	SeriesPointClickEventObject,
+} from 'highcharts';
 import { LogService } from '@cisco-ngx/cui-services';
 
 /**
@@ -12,6 +22,8 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class AssetsBarChartComponent implements OnInit {
 
+	@Output() public subfilter = new EventEmitter<string>();
+	@ViewChild('chart', { static: true }) public chartEl: ElementRef;
 	public chart: Chart;
 
 	constructor (
@@ -28,11 +40,21 @@ export class AssetsBarChartComponent implements OnInit {
 		this.chart = new Chart({
 			chart: {
 				height: 100,
+				renderTo: this.chartEl. nativeElement,
 				type: 'bar',
-				width: 200,
+				width: 300,
 			},
 			credits: {
 				enabled: false,
+			},
+			plotOptions: {
+				series: {
+					point: {
+						events: {
+							click: event => this.selectSubfilter(event),
+						},
+					},
+				},
 			},
 			series: [
 				{
@@ -56,11 +78,20 @@ export class AssetsBarChartComponent implements OnInit {
 				text: null,
 			},
 			xAxis: {
-				visible: false,
+				categories: ['Security Advisories', 'Field Notices', 'Bugs'],
 			},
 			yAxis: {
 				visible: false,
 			},
 		});
+	}
+
+	/**
+	 * Emits the subfilter selected
+	 * @param event highcharts click event
+	 */
+	public selectSubfilter (event: SeriesPointClickEventObject) {
+		event.stopPropagation();
+		this.subfilter.emit(event.point.category.toString());
 	}
 }

@@ -26,6 +26,7 @@
 			<span class="icon-chevron-left icon-medium text-muted toggle"></span>
 		</div>
 		<div *ngFor="let filter of filters; index as i"
+			attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
 			attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}"
 			(click)="selectFilter(filter)"
 			[ngClass]="{
@@ -34,7 +35,7 @@
 			}"
 			class="panel flex-center flex-fill filter">
 			<div *ngIf="filter.template" class="base-margin-bottom">
-				<ng-container *ngTemplateOutlet="filter.template; context: {}"></ng-container>
+				<ng-container *ngTemplateOutlet="filter.template; context:filter"></ng-container>
 			</div>
 			<div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
 		</div>
@@ -42,7 +43,8 @@
 			<span class="icon-chevron-right icon-medium text-muted toggle"></span>
 		</div>
 	</div>
-	<div class="dbl-margin-top">
+	<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+	<div>
 		<div *ngIf="inventory.length && !status.isLoading">
 			<div class="flex flex-fluid">
 				<div class="flex-fill half-padding-top" [innerText]="'_ShowingXofYAssets_' | i18n:inventory.length:assetParams.total"></div>
@@ -87,20 +89,28 @@
 <!-- TODO: Add data for eox panel -->
 </ng-template>
 
-<ng-template #advisoryFilter>
-	<assets-bar-chart></assets-bar-chart>
+<ng-template #advisoryFilter let-filter="key">
+	<assets-bar-chart
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</assets-bar-chart>
 </ng-template>
 
-<ng-template #coverageFilter>
-	<assets-pie-chart></assets-pie-chart>
+<ng-template #coverageFilter let-filter="key">
+	<assets-pie-chart
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</assets-pie-chart>
 </ng-template>
 
-<ng-template #statusFilter>
-	<assets-pie-chart></assets-pie-chart>
+<ng-template #statusFilter let-filter="key">
+	<assets-pie-chart
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</assets-pie-chart>
 </ng-template>
 
-<ng-template #typeFilter>
-	<assets-pie-chart></assets-pie-chart>
+<ng-template #typeFilter let-filter="key">
+	<assets-bubble-chart
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</assets-bubble-chart>
 </ng-template>
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
@@ -114,6 +124,29 @@
 
 <ng-template #rmasAssetsFilter>
 	<ng-container *ngTemplateOutlet="assetsWithChange; context: { assets: 12, trend: 'up', trendCount: 2 }"></ng-container>
+</ng-template>
+
+<ng-template #filterBar>
+	<div class="flex-center base-padding-top">
+		<span class="text-bold text-uppercase half-padding-right"
+			[innerText]="'_Filtered_' | i18n:getSelectedFilters().length">
+		</span>
+		<span data-auto-id="clear-selected-filters" class="text-lowercase dashed-border-bottom toggle"
+			(click)="clearSelectedFilters()"
+			[innerText]=" '_ClearAll_' | i18n">
+		</span>
+		<ng-container *ngFor="let filter of getSelectedFilters()">
+			<div class="full-border base-margin-left">
+				<span class="text-lowercase base-margin-left" [innerText]="filter.key"></span>
+				<ng-container *ngIf="filter.subfilter">
+					<span class="text-lowercase" innerText=":{{ filter.subfilter }}"></span>
+				</ng-container>
+				<span attr.data-auto-id="{{ filter.key }}-filter-clear" class="toggle base-margin-left icon-close half-padding-right small-padding-bottom"
+					(click)="selectFilter(filter)">
+				</span>
+			</div>
+		</ng-container>
+	</div>
 </ng-template>
 
 <ng-template #assetsWithChange let-assets="assets" let-trend="trend" let-trendCount="trendCount">
