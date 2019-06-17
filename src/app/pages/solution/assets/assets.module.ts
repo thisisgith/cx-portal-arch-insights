@@ -16,6 +16,7 @@ import { InventoryModule } from '@cui-x/sdp-api';
 import { environment } from '@environment';
 import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
 import { AssetsBarChartModule } from './assets-bar-chart/assets-bar-chart.module';
+import { AssetsBubbleChartModule } from './assets-bubble-chart/assets-bubble-chart.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -39,6 +40,7 @@ const childRoutes: Routes = [
 	declarations: [AssetsComponent],
 	imports: [
 		AssetsBarChartModule,
+		AssetsBubbleChartModule,
 		AssetsPieChartModule,
 		CommonModule,
 		CuiPagerModule,
