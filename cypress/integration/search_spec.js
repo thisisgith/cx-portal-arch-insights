@@ -17,7 +17,7 @@ describe('Search (Search)', () => { // Jira: PBC-tbd
 	it('Search and close', () => {
 		cy.getByAutoId('searchBarInput').should('exist').type('639530286{enter}');
 		cy.wait(1000);
-		cy.getByAutoId('searchClose').click();  
+		cy.getByAutoId('searchClose').click();
 		// cy.getByAutoId('searchBarInput').type('test string');
 		// cy.getByAutoId('communitytitle-Lifecycle').should('have.text', 'Lifecycle');
 		// cy.getByAutoId('communitytitle-Public').should('have.text', 'Public');
