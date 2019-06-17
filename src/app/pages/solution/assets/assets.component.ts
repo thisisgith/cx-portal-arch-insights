@@ -232,7 +232,6 @@ export class AssetsComponent implements OnInit {
 		this.inventoryService.getHardware(this.assetParams)
 			.subscribe((results: HardwareResponse) => {
 				const data = _.get(results, 'data', []);
-
 				this.assetParams.total = data.length;
 				this.inventory = data.slice(0, this.assetParams.limit);
 				this.buildTable();

@@ -7,10 +7,20 @@
 	</div>
 </div>
 <div *ngIf="!loading">
+	<h5 [innerText]="'_XResults_' | i18n:totalCount:query"
+		class="base-margin-bottom">
+	</h5>
 	<span [innerText]="'_FilterBy_' | i18n"></span>
 	<div class="row">
 		<div class="col-md-4">
-			<cui-select></cui-select>
+			<cui-select
+				data-auto-id="searchSiteSelect"
+				[ngModel]="selectedSite"
+				(ngModelChange)="onSiteSelected($event)"
+				[items]="siteOptions"
+				optionsKey="label"
+				modelAsObject="true">
+			</cui-select>
 		</div>
 		<div class="col-md-4">
 			<cui-select></cui-select>
@@ -19,13 +29,34 @@
 	<div *ngFor="let result of searchResults"
 		class="base-margin-top">
 		<div>
-			<a [href]="result.uri"><h5 [innerText]="result.title"></h5></a>
+			<a [href]="result.uri"
+				data-auto-id="searchResultLink"
+				target="_blank">
+				<h5 [innerText]="result.title"></h5>
+			</a>
 		</div>
 		<div>
-			<span>Some Text</span>
+			<span [innerText]="result.cdcdescription | truncate:false:300"></span>
 		</div>
-		<span class="text-turquoise"
+		<span class="text-darkgreen"
 			[innerText]="result.uri">
 		</span>
+	</div>
+	<div class="base-margin-top"
+		*ngIf="searchResults?.length && searchResults.length < totalCount">
+		<button *ngIf="!loadingPage"
+			data-auto-id="loadMoreButton"
+			class="btn btn--small btn--secondary"
+			(click)="onLoadMore()"
+			[innerText]="'_LoadMore_' | i18n">
+		</button>
+		<div
+			*ngIf="loadingPage"
+			class="loading-dots loading-dots--muted"
+			aria-label="Loading, please wait...">
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
 	</div>
 </div>
