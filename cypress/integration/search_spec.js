@@ -17,6 +17,14 @@ describe('Search (Search)', () => { // Jira: PBC-tbd
 	it('Search and close', () => {
 		cy.getByAutoId('searchBarInput').should('exist').type('639530286{enter}');
 		cy.wait(1000);
+		cy.getByAutoId('searchSiteSelect').should('exist');
+		cy.getByAutoId('cui-select').should('exist');			// 2 found
+		cy.getByAutoId('searchResultLink').should('exist');		// 3 found
+		cy.getByAutoId('loadMoreButton').should('exist').click();
+		cy.wait(1000);
+		cy.getByAutoId('loadMoreButton').should('exist').click();
+		cy.wait(1000);
+		cy.getByAutoId('searchResultLink').should('exist');		// now 9 found
 		cy.getByAutoId('searchClose').click();
 		// cy.getByAutoId('searchBarInput').type('test string');
 		// cy.getByAutoId('communitytitle-Lifecycle').should('have.text', 'Lifecycle');
