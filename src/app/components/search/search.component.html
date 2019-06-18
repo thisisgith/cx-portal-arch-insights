@@ -13,16 +13,32 @@
 					<span class="icon-close"></span>
 				</a>
 				<div class="row no-gutters">
-					<div class="flex-fluid">
+					<div [ngClass]="{
+							'col-md-12': !specialSearch || !specialSearch.sidebarContent || hideSpecialSearch,
+							'col-md-9': specialSearch?.sidebarContent && !hideSpecialSearch
+						}">
 						<div class="panel panel--loose">
-							<!-- TODO add special search views depending on query type -->
+							<!-- Special search views depending on query type -->
+							<div id="specialContainer"
+								class="base-margin-bottom"
+								[hidden]="hideSpecialSearch">
+								<ng-container [ngSwitch]="searchType">
+									<app-contract-search *ngSwitchCase="'contract'"
+										[contractNumber]="selectedSearch"
+										(hide)="onHide($event)">
+									</app-contract-search>
+								</ng-container>
+							</div>
+							<hr *ngIf="specialSearch && !hideSpecialSearch" />
 							<app-general-search
-								[query]="generalQuery">
+								[query]="generalSearch">
 							</app-general-search>
 						</div>
 					</div>
-					<div>
-						<!-- TODO the right-hand sidebar content for each special search view can be projected here -->
+					<div class="col-md-3"
+						*ngIf="specialSearch?.sidebarContent && !hideSpecialSearch">
+						<!-- The right-hand sidebar content for each special search view can be projected here -->
+						<ng-container *ngTemplateOutlet="specialSearch?.sidebarContent"></ng-container>
 					</div>
 				</div>
 			</div>

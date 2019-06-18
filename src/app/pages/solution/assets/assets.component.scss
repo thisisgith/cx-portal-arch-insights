@@ -4,6 +4,20 @@
 	box-shadow: unset !important;
 }
 
+.dashed-border-bottom {
+	border-bottom: 1px dashed;
+}
+
+// used to align the icon-close in the filter bar
+.small-padding-bottom {
+	padding-bottom: 2px;
+}
+
+.full-border {
+	outline: 1px solid;
+	outline-offset: 2px;
+}
+
 .filter {
 	&__selected {
 		border-bottom: 4px solid $primary;
