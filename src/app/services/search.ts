@@ -15,8 +15,10 @@ const caseRegex = /\b6\d{8}\b/;
  * Regex for a RMA match
  */
 const rmaRegex = /^8\d{8}$/;
-/** TODO get contract regex */
-// const contractRegex = '';
+/** Regex for contract match
+ * 2 followed by 8 digits or 9 followed by 7 digits
+ */
+const contractRegex = /^2\d{8}|9\d{7}$/;
 
 /**
  * Service with utils for the personal search module
@@ -46,7 +48,9 @@ export class SearchService {
 		if (query.match(rmaRegex)) {
 			return 'rma';
 		}
-		// TODO add contract match
+		if (query.match(contractRegex)) {
+			return 'contract';
+		}
 		if (query.match(serialRegex)) {
 			return 'sn';
 		}

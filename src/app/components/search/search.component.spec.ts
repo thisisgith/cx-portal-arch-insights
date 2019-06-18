@@ -46,7 +46,8 @@ describe('SearchComponent', () => {
 
 	it('should show up upon a selection', () => {
 		component.onSearchChange({
-			name: 'Test1',
+			generalSearch: 'Test1',
+			text: 'Test1',
 			type: 'default',
 		});
 		fixture.detectChanges();
@@ -55,5 +56,33 @@ describe('SearchComponent', () => {
 		const searchDiv = fixture.debugElement.query(By.css('.modal-container'));
 		expect(searchDiv)
 			.toBeTruthy();
+	});
+
+	it('should show special search', () => {
+		component.onSearchChange({
+			generalSearch: '230000000', // Contract
+			text: '230000000',
+			type: 'contract',
+		});
+		fixture.detectChanges();
+		component.onHide(false);
+		fixture.detectChanges();
+		const special = fixture.debugElement.query(By.css('#specialContainer'));
+		expect(special.nativeElement.hidden)
+			.toBe(false);
+	});
+
+	it('should hide special search', () => {
+		component.onSearchChange({
+			generalSearch: '230000000', // Contract
+			text: '230000000',
+			type: 'contract',
+		});
+		fixture.detectChanges();
+		component.onHide(true);
+		fixture.detectChanges();
+		const special = fixture.debugElement.query(By.css('#specialContainer'));
+		expect(special.nativeElement.hidden)
+			.toBe(true);
 	});
 });
