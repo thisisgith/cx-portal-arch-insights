@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ContractSearchModule } from './contract-search/contract-search.module';
 import { GeneralSearchModule } from './general-search/general-search.module';
+import { NoResultsModule } from './no-results/no-results.module';
 import { SearchBarModule } from './search-bar/search-bar.module';
 import { SpecialSearchModule } from './special-search/special-search.module';
 import {
@@ -33,6 +34,7 @@ const rootUrl = environment.sdpOrigin;
 		CommonModule,
 		ContractSearchModule,
 		GeneralSearchModule,
+		NoResultsModule,
 		SearchBarModule,
 		SpecialSearchModule,
 
