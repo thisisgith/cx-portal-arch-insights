@@ -1,25 +1,37 @@
 <div class="panel panel--bordered-left flex-fill panel--no-padding base-padding-right scroll">
 	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
-	<cui-tabs>
-		<cui-tab [label]="'_Details_' | i18n">
-			<ng-container *ngTemplateOutlet="details"></ng-container>
-		</cui-tab>
-		<cui-tab [label]="'_Hardware_' | i18n" disabled="true">
-
-		</cui-tab>
-		<cui-tab [label]="'_Software_' | i18n" disabled="true">
-
-		</cui-tab>
-		<cui-tab [label]="'_Vulnerabilities_' | i18n" disabled="true">
-
-		</cui-tab>
-		<cui-tab [label]="'_Insights_' | i18n" disabled="true">
-
-		</cui-tab>
-		<cui-tab [label]="'_Activity_' | i18n">
-			<asset-activity [asset]="asset"></asset-activity>
-		</cui-tab>
-	</cui-tabs>
+	<div class="base-margin-top base-margin-left">
+		<cui-tabs>
+				<!-- NOTE: This tab used to be called Details. May cause issue with localization. -->
+				<cui-tab [label]="'_Summary_' | i18n | uppercase">
+					<ng-container *ngTemplateOutlet="details"></ng-container>
+				</cui-tab>
+				<cui-tab [label]="'_Hardware_' | i18n | uppercase" disabled="true">
+		
+				</cui-tab>
+				<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true">
+		
+				<!-- Commenting out for discrepency with mock-up
+				</cui-tab>
+				<cui-tab [label]="'_Vulnerabilities_' | i18n" disabled="true">
+				-->
+		
+				<!-- Commenting out for discrepency with mock-up
+				</cui-tab>
+				<cui-tab [label]="'_Insights_' | i18n" disabled="true">
+				-->
+		
+				</cui-tab>
+				<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true">
+		
+				<!-- NOTE: This tab has content, but is not on latest mock-up -->
+				</cui-tab>
+				<cui-tab [label]="'_Activity_' | i18n | uppercase">
+					<asset-activity [asset]="asset"></asset-activity>
+				</cui-tab>
+			</cui-tabs>
+	</div>
+	
 </div>
 
 <ng-template #assetHeader>
@@ -32,28 +44,53 @@
 
 <ng-template #details>
 	<div class="row base-margin-top">
-		<div class="col-md-8">
-			<div class="row">
-				<div class="col-md-12">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductSeries_', data: asset?.productFamily }"></ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductID_', data: asset?.productId }"></ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_OSVersion_', data: asset?.swVersion }"></ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_UpcomingEOXMilestones_', data: '' }"></ng-container>
-				</div>
-			</div>
-		</div>
 		<div class="col-md-4 flex flex-center">
 			<img alt="{{ '_StockPhoto_' | i18n }}"
 				src="assets/img/inventory/CAT-3650.png">
 		</div>
+		<div class="col-md-8">
+			<h3>{{asset.productName}}</h3>
+			<label class="text-small">you have <a href="#">NUMBER</a> of these in your inventory</label>
+		</div>
+	</div>
+	<div class="row base-margin-top base-margin-left">
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductSeries_', linkData: asset?.productFamily, url: '#' }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductID_', linkData: asset?.productId, url: '#' }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_OSVersion_', linkData: asset?.swVersion, url: '#' }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_SupportContract_', data: 'N/A', linkData: 'N/A', url: '#' }"></ng-container>
+				</div>
+				<!-- Commenting out for discrepency with mock-up
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_UpcomingEOXMilestones_', data: '' }"></ng-container>
+				</div>
+				-->
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_EndOfSale_', data: '' }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: 'EndOfSupport', data: '' }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Warranty_', data: 'N/A', linkData: 'N/A', url: '#' }"></ng-container>
+				</div>
+			</div>
+		</div>
 	</div>
 
+	<!-- Commenting out for discrepency with mock-up
 	<div class="row base-margin-top">
 		<div class="col-md-8">
 			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_CXSubscription_', data: '' }"></ng-container>
@@ -64,7 +101,9 @@
 			</button>
 		</div>
 	</div>
+	-->
 
+	<!-- Commenting out for discrepency with mock-up
 	<div class="row base-margin-top">
 		<div class="col-md-8">
 			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_SupportContract_', data: '' }"></ng-container>
@@ -75,16 +114,21 @@
 			</button>
 		</div>
 	</div>
+	-->
 
+	<!-- Commenting out for discrepency with mock-up
 	<div class="row base-margin-top">
 		<div class="col-md-8">
 			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Warranty_', data: '' }"></ng-container>
-		</div>
-		<div class="col-md-4">
+		</div> 
+		<div class="col-md-4"> --> 
 			<!-- Empty for Spacing -->
+			<!-- Commenting out for discrepency with mock-up
 		</div>
 	</div>
+	-->
 
+	<!-- Commenting out for discrepency with mock-up
 	<div class="row base-margin-top">
 		<div class="col-md-8">
 			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_DiagnosticScanSchedule_', data: '' }"></ng-container>
@@ -95,21 +139,34 @@
 			</button>
 		</div>
 	</div>
+	-->
 
-	<div class="row base-margin-top">
-		<div class="col-md-8">
-			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Location_', data: '' }"></ng-container>
-		</div>
-		<div class="col-md-4">
-			Map
+	<div class="row dbl-margin-top">
+		<div class="col-md-12">
+			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Location_', titleOnly: true}"></ng-container>
 		</div>
 	</div>
+
+	<div class="flex map-box">
+		<div class="icon-chevron-left qtr-padding-left qtr-padding-right flex-center"></div>
+		<div class="flex-fluid flex-center map-box-content" style="height: 100px;"></div>
+		<div class="icon-chevron-right qtr-padding-left qtr-padding-right flex-center"></div>
+	</div>
+
 </ng-template>
 
-<ng-template #detailsData let-title="title" let-data="data">
+
+
+
+<ng-template #detailsData let-title="title" let-data="data" let-linkData="linkData" let-url="url" let-titleOnly="titleOnly">
 	<div class="row">
-		<div class="col-md-6 text-right" [innerText]="title | i18n"></div>
-		<div class="col-md-6" [innerText]="data || ('_NA_' | i18n)"></div>
+		<div class="col-md-12 text-bold" [innerText]="title | i18n | uppercase"></div>
+	</div>
+	<div class="row" *ngIf="!titleOnly">
+		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)"></div>
+		<div class="col-md-12" [innerText]="data || ('_NA_' | i18n)" *ngIf="data"></div>
+		<a [href]="url" *ngIf="linkData">
+			<div class="col-md-12" [innerText]="linkData"></div>
+		</a>
 	</div>
 </ng-template>
-x
