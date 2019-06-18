@@ -48,9 +48,9 @@
 			<img alt="{{ '_StockPhoto_' | i18n }}"
 				src="assets/img/inventory/CAT-3650.png">
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-8" *ngIf="asset?.productName">
 			<h3>{{asset.productName}}</h3>
-			<label class="text-small">you have <a href="#">NUMBER</a> of these in your inventory</label>
+			<label class="text-small">you have <a data-auto-id="assetCount" href="#">NUMBER</a> of these in your inventory</label>
 		</div>
 	</div>
 	<div class="row base-margin-top base-margin-left">
@@ -149,7 +149,7 @@
 
 	<div class="flex map-box">
 		<div class="icon-chevron-left qtr-padding-left qtr-padding-right flex-center"></div>
-		<div class="flex-fluid flex-center map-box-content" style="height: 100px;"></div>
+		<div class="flex-fluid flex-center map-box-content"></div>
 		<div class="icon-chevron-right qtr-padding-left qtr-padding-right flex-center"></div>
 	</div>
 
