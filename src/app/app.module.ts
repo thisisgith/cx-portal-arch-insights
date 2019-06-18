@@ -62,7 +62,7 @@ export function loadI18n (service: AppService) {
 			provide: APP_INITIALIZER,
 			useFactory: loadI18n,
 		},
-		{ provide: APP_BASE_HREF, useValue: '/pbc/' },
+		{ provide: APP_BASE_HREF, useValue: environment.baseHref },
 		{ provide: 'ENVIRONMENT', useValue: environment },
 	],
 })

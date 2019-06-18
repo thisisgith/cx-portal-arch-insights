@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssetDetailsComponent } from './details.component';
-import { AssetActivityComponent } from '../activity/activity.component';
+import { AssetActivityModule } from '../activity/activity.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiTimelineModule, CuiTabsModule } from '@cisco-ngx/cui-components';
 import { CaseService } from '@cui-x/services';
@@ -12,10 +12,10 @@ import { TimelineModule } from '@components';
 @NgModule({
 	declarations: [
 		AssetDetailsComponent,
-		AssetActivityComponent,
 	],
 	exports: [AssetDetailsComponent],
 	imports: [
+		AssetActivityModule,
 		CommonModule,
 		CuiTabsModule,
 		CuiTimelineModule,

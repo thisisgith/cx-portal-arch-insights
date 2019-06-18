@@ -23,7 +23,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class AssetActivityComponent implements OnInit, OnChanges {
 
-	@Input('asset') public asset: HardwareInfo;
+	@Input() public asset: HardwareInfo;
 	@ViewChild('timelineItem', { static: true }) private timelineItemTemplate: TemplateRef<{ }>;
 
 	public status = {
