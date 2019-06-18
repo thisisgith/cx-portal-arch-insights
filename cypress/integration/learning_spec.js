@@ -29,10 +29,11 @@ describe('PBC-125 Learning Content', () => {
 		let trainingFound = false;
 		elearningItems.forEach(scenario => {
 			switch (scenario.type) {
-				case 'elearning':
+				case 'E-Course':
 					elearningFound = true;
 					break;
-				case 'certifications':
+				case 'Cisco Training on Demand Course':
+				case 'Videos':
 					certificationsFound = true;
 					break;
 				case 'training':
@@ -85,9 +86,10 @@ describe('PBC-125 Learning Content', () => {
 			}
 		});
 
-		successPathItems.forEach(scenario => {
-			cy.getByAutoId('LearnPanel-SuccessPathsBlock')
-				.should('contain', scenario.title);
-		});
+		// We only limit to display 3 items now, will revisit this later
+		// successPathItems.forEach(scenario => {
+		// 	cy.getByAutoId('LearnPanel-SuccessPathsBlock')
+		// 		.should('contain', scenario.title);
+		// });
 	});
 });

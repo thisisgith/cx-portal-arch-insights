@@ -25,4 +25,9 @@ export interface SuccessPath {
    * http://ciscolearning.com
    */
   url?: string;
+
+  /**
+   * Getting Started How-to
+   */
+  archetype?: string;
 }
