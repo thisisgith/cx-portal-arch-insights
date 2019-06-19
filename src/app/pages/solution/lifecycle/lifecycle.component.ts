@@ -59,7 +59,6 @@ interface ComponentData {
 		elearning?: ELearning[];
 		training?: ELearning[];
 		success?: SuccessPath[];
-		// success?: SuccessPathWithType[];
 	};
 	acc?: {
 		sessions: ACC[];
@@ -86,7 +85,7 @@ export interface PitstopActionWithStatus {
 export class LifecycleComponent implements OnDestroy {
 	@ViewChild('accModal', { static: true }) public accTemplate: TemplateRef<{ }>;
 	@ViewChild('atxModal', { static: true }) public atxTemplate: TemplateRef<{ }>;
-	@ViewChild('learnModal', { static: true }) public successPathTemplate: TemplateRef<{ }>;
+	@ViewChild('successModal', { static: true }) public successPathTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -414,12 +413,6 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
-					// _.set(this.componentData, ['learning', 'success'], _.chain(result.items)
-					// 	.groupBy('archetype')
-					// 	.toPairs()
-					// 	.map((currentItem: SuccessPath) =>
-					// 		_.zipObject(['archetype', 'items'], currentItem))
-					// 	.value());
 				}
 
 				this.status.loading.success = false;
@@ -465,9 +458,6 @@ export class LifecycleComponent implements OnDestroy {
 					_.set(this.componentData, ['learning', 'training'], []);
 
 					_.each(result.items, (item: ELearning) => {
-						// if (_.get(this.componentData.learning, item.type)) {
-						// 	this.componentData.learning[item.type].push(item);
-						// }
 						switch (item.type) {
 							case 'E-Course': {
 								this.componentData.learning.elearning.push(item);
@@ -485,12 +475,12 @@ export class LifecycleComponent implements OnDestroy {
 						}
 					});
 					// To do order the list by ranking
-					// this.componentData.learning.elearning =
-					// _.orderBy(this.componentData.learning.elearning. ['ranking', 'asc']);
-					// this.componentData.learning.certifications =
-					// _.orderBy(this.componentData.learning.certifications. ['ranking', 'asc']);
-					// this.componentData.learning.training =
-					// _.orderBy(this.componentData.learning.training. ['ranking', 'asc']);
+					this.componentData.learning.elearning =
+						_.orderBy(this.componentData.learning.elearning, ['ranking', 'asc']);
+					this.componentData.learning.certifications =
+						_.orderBy(this.componentData.learning.certifications, ['ranking', 'asc']);
+					this.componentData.learning.training =
+						_.orderBy(this.componentData.learning.training, ['ranking', 'asc']);
 				}
 
 				this.status.loading.elearning = false;
