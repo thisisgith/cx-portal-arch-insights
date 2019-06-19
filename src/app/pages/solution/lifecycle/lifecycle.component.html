@@ -528,18 +528,20 @@
 						<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 							<div class="row">
 								<div class="col-md-3">
-									<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
-										<span class="icon-apps icon-small half-padding-right"></span>
-										<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
-									</div>
-									<div class="text-left text-muted" *ngIf="item.type === 'Video'">
-										<span class="icon-play-contained icon-small half-padding-right"></span>
-										<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-									</div>
-									<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
-										<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-										<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-									</div>
+									<a class="no-link fade-in-pop" data-auto-id="successlinl" [href]="item.url">
+										<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
+											<span class="icon-apps icon-small half-padding-right"></span>
+											<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
+										</div>
+										<div class="text-left text-muted" *ngIf="item.type === 'Video'">
+											<span class="icon-play-contained icon-small half-padding-right"></span>
+											<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+										</div>
+										<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
+											<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+											<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+										</div>
+									</a>
 								</div>
 								<div class="col-md-6 text-muted" *ngIf="item.duration">
 									<span class="icon-clock icon-small half-padding-right"></span>
