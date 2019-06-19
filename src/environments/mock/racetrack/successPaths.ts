@@ -51,7 +51,9 @@ function MockSP (
 				description: 'New and Changed Information',
 				duration: null,
 				type: 'PDF',
-				url: 'https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center-assurance/1-2-10/b_cisco_dna_assurance_1_2_10_ug/b_cisco_dna_assurance_1_2_10_ug_chapter_00.html',
+				url: 'https://www.cisco.com/c/en/us/products/collateral/' +
+					'cloud-systems-management/smart-net-total-care/' +
+					'q-and-a-c67-735432.pdf?dtid=osscdc000283',
 				archetype: 'Architecture Transition',
 			},
 			{

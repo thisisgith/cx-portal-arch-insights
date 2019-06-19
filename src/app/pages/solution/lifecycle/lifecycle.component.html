@@ -509,12 +509,26 @@
 		<div class="divider base-margin-left base-margin-right"></div>
 		<div class="modal__body base-padding">
 			<div class="row half-margin-left half-margin-right">
-				<div class="col-mod-8 text-large text-bold text-left"
+				<div class="col-md-8 text-large text-bold text-left"
 					[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase">
 				</div>
-				<div class="col-mod-4 flex-fluid text-right">
-					<span class="icon-list-view icon-medium qtr-padding-left toggle"></span>
-					<span class="icon-grid-view icon-medium qtr-padding-left toggle"></span>
+				<div class="col-md-3">
+					<div class="form-group input--icon">
+						<div class="form-group__text">
+							<input id="archetype-filter" type="search" [placeholder]="'_AllCategories_' | i18n">
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-mod-4 flex-fluid text-right"> -->
+				<div class="col-md-1 text-right">
+					<div class="btn-group btn-group--square">
+					<button class="btn btn--white">
+					<span class="icon-list-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+					</button>
+					<button class="btn btn--square">
+					<span class="icon-grid-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+					</button>
+					</div>
 				</div>
 			</div>
 			<div class="grid grid--4up base-padding-top">
