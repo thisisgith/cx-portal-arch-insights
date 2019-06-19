@@ -20,7 +20,7 @@ import { environment } from '@environment';
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
 const rootUrl = environment.sdpOrigin;
-import { SerialResultModule } from './serial-result/serial-result.module';
+import { SerialSearchModule } from './serial-search/serial-search.module';
 
 /**
  * Module representing the Search Component
@@ -38,7 +38,7 @@ import { SerialResultModule } from './serial-result/serial-result.module';
 		SpecialSearchModule,
 		HttpClientModule,
 		I18nPipeModule,
-		SerialResultModule,
+		SerialSearchModule,
 		TruncatePipeModule,
 		RouterModule,
 		ContractsModule.forRoot({ rootUrl }),
