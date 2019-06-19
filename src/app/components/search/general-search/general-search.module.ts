@@ -8,6 +8,7 @@ import {
 	TruncatePipeModule,
 } from '@cisco-ngx/cui-pipes';
 import { GeneralSearchComponent } from './general-search.component';
+import { NoResultsModule } from '../no-results/no-results.module';
 
 /**
  * Module for the "general search results" area of the search modal
@@ -19,6 +20,7 @@ import { GeneralSearchComponent } from './general-search.component';
 	],
 	imports: [
 		CommonModule,
+		NoResultsModule,
 		FormsModule,
 		CuiSelectModule,
 		CuiSpinnerModule,

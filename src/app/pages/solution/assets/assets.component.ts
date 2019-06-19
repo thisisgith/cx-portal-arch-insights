@@ -11,6 +11,7 @@ import { SolutionService } from '../solution.service';
 interface Filter {
 	key: string;
 	selected?: boolean;
+	subfilter?: string;
 	template?: TemplateRef<{ }>;
 	title: string;
 }
@@ -71,6 +72,48 @@ export class AssetsComponent implements OnInit {
 	) { }
 
 	/**
+	 * Returns the current selected visual filters
+	 * @returns the selected visual filters
+	 */
+	public getSelectedFilters () {
+		return _.filter(this.filters, 'selected');
+	}
+
+	/**
+	 * Unselects all selected visual filters
+	 */
+	public clearSelectedFilters () {
+		this.filters.forEach((f: Filter) => {
+			f.selected = false;
+			f.subfilter = undefined;
+		});
+	}
+
+	/**
+	 * Adds a subfilter to the given filer
+	 * @param subfilter the subfilter selected
+	 * @param key the key of the subfilter's filter
+	 */
+	public onSubfilterSelect (subfilter: string, key: string) {
+		this.filters.forEach((f: Filter) => {
+			if (f.key === key) {
+				// only select/deselect if the filter is unselected or
+				// selecting the same subfilter when already selected
+				if ((!f.selected) || (f.selected && f.subfilter === subfilter)) {
+					f.subfilter = subfilter;
+					this.selectFilter(f);
+				} else {
+					f.subfilter = subfilter;
+				}
+
+				return;
+			}
+		});
+	}
+
+	/**
+	 * Used to select which tab we want to view the data for
+	 * @param tab the tab we've clicked on
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
@@ -95,16 +138,11 @@ export class AssetsComponent implements OnInit {
 	 * @param filter the filter to select or unselect
 	 */
 	public selectFilter (filter: Filter) {
-		this.filters.forEach((f: Filter) => {
-			if (f.key !== filter.key) {
-				f.selected = false;
-			}
-		});
-
 		filter.selected = !filter.selected;
 
-		if (_.every(this.filters, { selected: false })) {
-			this.selectFilter(this.filters[0]);
+		// clear the subfilter when a filter has been deselected
+		if (!filter.selected) {
+			filter.subfilter = undefined;
 		}
 	}
 

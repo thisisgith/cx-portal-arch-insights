@@ -1,5 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { Chart } from 'angular-highcharts';
+import {
+	Component,
+	ElementRef,
+	EventEmitter,
+	OnInit,
+	Output,
+	ViewChild,
+} from '@angular/core';
+import {
+	Chart,
+	SeriesPointClickEventObject,
+} from 'highcharts';
 import { LogService } from '@cisco-ngx/cui-services';
 
 /**
@@ -12,6 +22,8 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class AssetsPieChartComponent implements OnInit {
 
+	@Output() public subfilter = new EventEmitter<string>();
+	@ViewChild('chart', { static: true }) public chartEl: ElementRef;
 	public chart: Chart;
 
 	constructor (
@@ -28,29 +40,42 @@ export class AssetsPieChartComponent implements OnInit {
 		this.chart = new Chart({
 			chart: {
 				height: 200,
+				renderTo: this.chartEl.nativeElement,
 				type: 'pie',
-				width: 300,
+				width: 250,
 			},
 			credits: {
 				enabled: false,
+			},
+			plotOptions: {
+				pie: {
+					innerSize: 95,
+				},
+				series: {
+					point: {
+						events: {
+							click: event => this.selectSubfilter(event),
+						},
+					},
+				},
 			},
 			series: [
 				{
 					data: [
 						{
-							name: 'Placeholder',
+							name: 'P1',
 							y: 20,
 						},
 						{
-							name: 'Placeholder',
+							name: 'P2',
 							y: 40,
 						},
 						{
-							name: 'Placeholder',
+							name: 'P3',
 							y: 15,
 						},
 						{
-							name: 'Placeholder',
+							name: 'P4',
 							y: 25,
 						},
 					],
@@ -62,5 +87,14 @@ export class AssetsPieChartComponent implements OnInit {
 				text: '',
 			},
 		});
+	}
+
+	/**
+	 * Emits the subfilter selected
+	 * @param event highcharts click event
+	 */
+	public selectSubfilter (event: SeriesPointClickEventObject) {
+		event.stopPropagation();
+		this.subfilter.emit(event.point.name);
 	}
 }
