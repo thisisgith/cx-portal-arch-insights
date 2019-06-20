@@ -5,7 +5,6 @@ import {
 } from '@angular/core';
 import { SearchType } from '@interfaces';
 
-import { products } from './products.const';
 import { SpecialSearchComponent } from './special-search/special-search.component';
 
 /**
@@ -23,7 +22,6 @@ export class SearchComponent {
 			this.cdr.detectChanges();
 		}
 	public specialSearch: SpecialSearchComponent;
-	public products = products;
 
 	public searchText = '';
 	public selectedSearch: string;

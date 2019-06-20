@@ -319,6 +319,37 @@ describe('LifecycleComponent', () => {
 				.toBeFalsy();
 		});
 
+		it('should show the Product Guides view-all modal', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('_ProductGuide_');
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('#successModal'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.icon-close'));
+			el = de.nativeElement;
+
+			el.click();
+
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeFalsy();
+
+			de = fixture.debugElement.query(By.css('#successModal'));
+			expect(de)
+				.toBeFalsy();
+		});
+
 		describe('PitstopActions', () => {
 
 			it('should show 25% in the prograss label', () => {

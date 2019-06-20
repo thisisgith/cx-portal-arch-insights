@@ -1,9 +1,9 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { BaseService as __BaseService } from '../../core/base-service';
+import { BaseService as __BaseService } from '../base-service';
 import { RacetrackContentConfiguration as __Configuration } from '../racetrack-content-configuration';
-import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
+import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-response';
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
@@ -73,8 +73,7 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json',
-//        withCredentials: true,
+        responseType: 'json'
       });
 
     return this.http.request<any>(req).pipe(
@@ -84,7 +83,6 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
-
   /**
    * Provides details of Future Webinars which the user can register for. Also, it provides the on-demand for the sessions held in the past
    * @param params The `RacetrackContentService.GetRacetrackATXParams` containing the following parameters:
@@ -159,8 +157,7 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json',
-//        withCredentials: true,
+        responseType: 'json'
       });
 
     return this.http.request<any>(req).pipe(
@@ -170,7 +167,6 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
-
   /**
    * Provides list of Accelerators for given Pitstop and Use Case
    * @param params The `RacetrackContentService.GetRacetrackACCParams` containing the following parameters:
@@ -245,8 +241,7 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json',
-//        withCredentials: true,
+        responseType: 'json'
       });
 
     return this.http.request<any>(req).pipe(
@@ -256,7 +251,6 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
-
   /**
    * Provides product documentation ,videos,tutorial, pdf
    * @param params The `RacetrackContentService.GetRacetrackSuccessPathsParams` containing the following parameters:
@@ -331,8 +325,7 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json',
-//        withCredentials: true,
+        responseType: 'json'
       });
 
     return this.http.request<any>(req).pipe(
@@ -342,7 +335,6 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
-
   /**
    * Provides list of communities based on contexual Pitstop and Use Case
    * @param params The `RacetrackContentService.GetRacetrackCommunitiesParams` containing the following parameters:
@@ -417,8 +409,7 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json',
-//        withCredentials: true,
+        responseType: 'json'
       });
 
     return this.http.request<any>(req).pipe(
@@ -428,7 +419,6 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
-
   /**
    * Provides eLearning content ( Certifications ,Courses, Training material etc)
    * @param params The `RacetrackContentService.GetRacetrackElearningParams` containing the following parameters:
