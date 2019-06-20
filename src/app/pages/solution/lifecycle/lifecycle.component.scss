@@ -36,8 +36,8 @@ $vibblue: #017cad;
 .learning-duration {
 	padding: 10px;
 	font-size: 12px;
-    position: absolute;
-    bottom: 0;
+	position: absolute;
+	bottom: 0;
 	right: 0;
 
 	.icon-clock {
@@ -253,7 +253,7 @@ $vibblue: #017cad;
 
 	&-recommendedACCTitle::after,
 	&-recommendedATXTitle::after,
-	&-learningModalTitle:after {
+	&-learningModalTitle::after {
 		content: "";
 		position: absolute;
 		top: 45%;
@@ -262,7 +262,7 @@ $vibblue: #017cad;
 	}
 
 	&-recommendedACCTitle::after,
-	&-learningModalTitle:after {
+	&-learningModalTitle::after {
 		right: -15px;
 		border-left: 15px solid white;
 	}
@@ -273,7 +273,8 @@ $vibblue: #017cad;
 	}
 }
 
-#recommended-item:hover {
+#recommended-item:hover,
+#recommended-elearning-item:hover {
 	#hover-panel {
 		&-recommendedACCTitle,
 		&-recommendedATXTitle,
@@ -301,6 +302,7 @@ $vibblue: #017cad;
 			.icon-star-half {
 				color: $status-yellow;
 			}
+
 			.icon-star-empty {
 				color: $light-gray-5;
 			}

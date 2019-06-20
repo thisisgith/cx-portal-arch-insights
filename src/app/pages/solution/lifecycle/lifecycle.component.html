@@ -351,7 +351,7 @@
 	</div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<div id="recommended-item" class=" panel learning-panel">
+			<div id="recommended-elearning-item" class=" panel learning-panel">
 				<a class="no-link fade-in-pop" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
 				<ng-container *ngTemplateOutlet="recommendedDescription; context: {
 					title: item.title,
