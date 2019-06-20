@@ -1,5 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
 import { GeneralSearchComponent } from './general-search.component';
@@ -44,4 +45,13 @@ describe('GeneralSearchComponent', () => {
 		expect(service.directCDCSearch)
 			.toHaveBeenCalled();
 	});
+
+	it('should load more', fakeAsync(() => {
+		const button = fixture.debugElement.query(By.css('button'));
+		button.nativeElement.click();
+		tick();
+		fixture.detectChanges();
+		expect(service.directCDCSearch)
+			.toHaveBeenCalledTimes(2);
+	}));
 });
