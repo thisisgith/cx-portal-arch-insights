@@ -24,5 +24,8 @@ export const defaults = {
 			clientId: '4jr3csg78pg7ws7gwvj82sfa',
 			origin: 'https://api-stage.cisco.com',
 		},
+		typeahead: {
+			origin: 'https://xresps-stage.cloudapps.cisco.com',
+		},
 	},
 };
