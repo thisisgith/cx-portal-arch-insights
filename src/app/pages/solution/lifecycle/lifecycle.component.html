@@ -40,7 +40,7 @@
 							loading: status.loading.acc,
 							data: componentData.acc,
 							viewAllLabel: '_ViewAll_',
-							viewAll: 'acc'							
+							viewAll: 'acc'
 						}">
 					</ng-container>
 				</div>
@@ -48,7 +48,7 @@
 		</div>
 	</div>
 </div>
-	
+
 <div class="modal-container" *ngIf="modal.visible">
 	<div class="modal-backdrop" [ngClass]="{ hide: !modal.visible }"></div>
 	<div class="modal modal--full" [ngClass]="{ hide: !modal.visible }">
@@ -96,8 +96,8 @@
 					</label>
 				</div>
 				<div class="col-md-10">
-					<a data-auto-id="actionlink" 
-						class="no-link" 
+					<a data-auto-id="actionlink"
+						class="no-link"
 						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
 						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
@@ -112,7 +112,7 @@
 					</a>
 				</div>
 			</div>
-		</div>			
+		</div>
 	</div>
 </ng-template>
 
@@ -148,7 +148,7 @@
 			<ng-container *ngTemplateOutlet="template"></ng-container>
 		</div>
 		<ng-container *ngIf="autoid">
-			<ng-container *ngTemplateOutlet="recommendedDescription; context: { 
+			<ng-container *ngTemplateOutlet="recommendedDescription; context: {
 				title: title,
 				description: description,
 				autoid: autoid
@@ -158,11 +158,20 @@
 	</div>
 </ng-template>
 
-<ng-template #recommendedDescription let-title="title" let-description="description" let-autoid="autoid">
+<ng-template #recommendedDescription let-title="title" let-item="item" let-description="description" let-autoid="autoid">
 	<div id="hover-panel-{{ autoid }}" class="panel panel--bordered">
 		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title"></h6>
 		<div class="divider divider--compressed"></div>
+		<div *ngIf="item && item.rating" class="half-margin-left half-margin-bottom" >
+			<span class="icon icon-star icon-small" *ngFor="let star of item.filledStars"></span>
+			<span class="icon icon-star-half icon-small" *ngFor="let star of item.halfFilledStars"></span>
+			<span class="icon icon-star-empty icon-small" *ngFor="let star of item.unfilledStars"></span>
+		</div>
 		<div class="half-margin-left" [innerText]="description"></div>
+		<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left">
+			<span class="icon-clock icon-small"></span>
+			<span [innerText]="item.duration"></span>
+		</div>
 	</div>
 </ng-template>
 
@@ -329,7 +338,7 @@
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
 			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
 		</div>
-		<div class="col-md-3 text-right text-indigo" 
+		<div class="col-md-3 text-right text-indigo"
 			*ngIf="data">
 			<a class="no-link fade-in-pop"
 				data-auto-id="Elearning-ViewAll"
@@ -342,7 +351,16 @@
 	</div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<a class="no-link fade-in-pop" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+			<div id="recommended-item" class=" panel learning-panel">
+				<a class="no-link fade-in-pop" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+				<ng-container *ngTemplateOutlet="recommendedDescription; context: {
+					title: item.title,
+					description: item.description,
+					item: item,
+					autoid: 'learningModalTitle'
+				}">
+				</ng-container>
+			</div>
 		</div>
 	</div>
 </ng-template>
@@ -353,7 +371,7 @@
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
 			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
 		</div>
-		<div class="col-md-3 text-right text-indigo" 
+		<div class="col-md-3 text-right text-indigo"
 			*ngIf="data"
 			(click)="showModal(title)"
 			attr.data-auto-id="ShowModalPanel-{{ title }}">
@@ -387,7 +405,7 @@
 		</div>
 
 		<div class="modal__body base-padding">
-			<div class="text-large text-bold text-left" 
+			<div class="text-large text-bold text-left"
 				[innerText]="'_TopicsAvailable_' | i18n:data.length">
 			</div>
 
@@ -418,7 +436,7 @@
 								<span [innerText]="item.duration"></span>
 							</div>
 						</div>
-					</div>				
+					</div>
 					<ng-container *ngIf="item == componentData.atx.interested && atxScheduleCardOpened">
 						<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }">
 						</ng-container>
@@ -430,66 +448,66 @@
 </ng-template>
 
 <ng-template #accModal let-data="data">
-	<div id="accModal" class="modal__content no-padding">
+		<div id="accModal" class="modal__content no-padding">
 
-		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
-			<div class="row half-padding-top">
-				<div class="col-md-11 half-margin-top base-padding-left">
-					<div class="text-xlarge text-left" [innerText]="'_Accelerator_' | i18n"></div>
-					<div class="text-medium text-left qtr-margin-top" [innerText]="'_1on1Coaching_' | i18n"></div>
-				</div>
-				<div class="col-md-1 half-margin-top">
-					<span (click)="closeModal()" data-auto-id="ACCCloseModal"
-						class="icon-close icon-medium text-right"></span>
+			<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
+				<div class="row half-padding-top">
+					<div class="col-md-11 half-margin-top base-padding-left">
+						<div class="text-xlarge text-left" [innerText]="'_Accelerator_' | i18n"></div>
+						<div class="text-medium text-left qtr-margin-top" [innerText]="'_1on1Coaching_' | i18n"></div>
+					</div>
+					<div class="col-md-1 half-margin-top">
+						<span (click)="closeModal()" data-auto-id="ACCCloseModal"
+							class="icon-close icon-medium text-right"></span>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="divider base-margin-left base-margin-right"></div>
-		<div class="modal__body base-padding">
-			<div class="text-large text-bold text-left" 
-				[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase"
-				data-auto-id="ACCTopicsAvailable">
-			</div>
+			<div class="divider base-margin-left base-margin-right"></div>
+			<div class="modal__body base-padding">
+				<div class="text-large text-bold text-left"
+					[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase"
+					data-auto-id="ACCTopicsAvailable">
+				</div>
 
-			<div class="grid grid--4up base-padding-top">
-				<div class="card acc__card__background"
-					*ngFor="let item of data"
-					[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null"
-					data-auto-id="ACCCard">
-					<div class="text-left" [ngClass]="item.status === 'recommended' ? 'text-info' : 'text-clear'" data-auto-id="ACCCardHeader">
-						<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
-						<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
-					</div>
-					<div class="icon-bookmark icon-medium" [ngClass]="getRibbonClass(item)" data-auto-id="ACCCardRibbon"></div>
-					<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
-					<div class="card__header text-left text-bold" 
-						[ngClass]="item.status === 'recommended' ? 'text-info' : null" 
-						[innerText]="item.title"
-						data-auto-id="ACCCardTitle">
-					</div>
-					<div class="card__body atx-card__body text-left" [innerText]="item.description"></div>
-					<div class="card__footer">
-						<div class="card_footer_item" data-auto-id="ACCCardFooter">
-							<div class="text-left text-info"  *ngIf="item.status === 'recommended'">
-								<a data-auto-id="request1on1" class="no-link" [href]="item.url">
+				<div class="grid grid--4up base-padding-top">
+					<div class="card acc__card__background"
+						*ngFor="let item of data"
+						[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null"
+						data-auto-id="ACCCard">
+						<div class="text-left" [ngClass]="item.status === 'recommended' ? 'text-info' : 'text-clear'" data-auto-id="ACCCardHeader">
+							<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
+							<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
+						</div>
+						<div class="icon-bookmark icon-medium" [ngClass]="getRibbonClass(item)" data-auto-id="ACCCardRibbon"></div>
+						<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
+						<div class="card__header text-left text-bold"
+							[ngClass]="item.status === 'recommended' ? 'text-info' : null"
+							[innerText]="item.title"
+							data-auto-id="ACCCardTitle">
+						</div>
+						<div class="card__body atx-card__body text-left" [innerText]="item.description"></div>
+						<div class="card__footer">
+							<div class="card_footer_item" data-auto-id="ACCCardFooter">
+								<div class="text-left text-info"  *ngIf="item.status === 'recommended'">
+									<a data-auto-id="request1on1" class="no-link" [href]="item.url">
+										<span class="icon-persistent-chat icon-small half-padding-right"></span>
+										<span [innerText]="'_Request1on1_' | i18n"></span>
+									</a>
+								</div>
+								<div class="text-left text-info" *ngIf="item.status === 'scheduled'">
 									<span class="icon-persistent-chat icon-small half-padding-right"></span>
-									<span [innerText]="'_Request1on1_' | i18n"></span>
-								</a>
-							</div>
-							<div class="text-left text-info" *ngIf="item.status === 'scheduled'">
-								<span class="icon-persistent-chat icon-small half-padding-right"></span>
-								<span [innerText]="'_CSETouch_' | i18n"></span>
-							</div>
-							<div class="text-left text-success" *ngIf="item.status === 'completed'">
-								<span [innerText]="'_Completed_' | i18n"></span>
+									<span [innerText]="'_CSETouch_' | i18n"></span>
+								</div>
+								<div class="text-left text-success" *ngIf="item.status === 'completed'">
+									<span [innerText]="'_Completed_' | i18n"></span>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</ng-template>
+	</ng-template>
 
 <ng-template #learnModal let-data="data">
 	<div id="learnModal" class="modal__content no-padding">
@@ -629,7 +647,7 @@
 				</div>
 			</div>
 		</div>
-	
+
 		<div *ngIf="!loading && data">
 			<ng-container *ngTemplateOutlet="template; context: { data: data }"></ng-container>
 		</div>

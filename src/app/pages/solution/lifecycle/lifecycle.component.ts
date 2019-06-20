@@ -470,7 +470,25 @@ export class LifecycleComponent implements OnDestroy {
 						// }
 						switch (item.type) {
 							case 'E-Course': {
-								this.componentData.learning.elearning.push(item);
+								const learningItem: ELearning = {
+									...item,
+									filledStars: [],
+									halfFilledStars: [],
+									unfilledStars: [],
+								};
+								// tslint:disable: no-increment-decrement
+								const ratingSplit = item.rating.split('.');
+								for (let i = 1; i <= 5; i++) {
+									// debugger;
+									if (+ratingSplit[0] >= i) {
+										learningItem.filledStars.push(i);
+									} else {
+										+ratingSplit[1] / 1000 >= 5 ?
+											learningItem.halfFilledStars.push(i) :
+											learningItem.unfilledStars.push(i);
+									 }
+								}
+								this.componentData.learning.elearning.push(learningItem);
 								break;
 							}
 							case 'Cisco Training on Demand Courses':
