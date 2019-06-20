@@ -1,6 +1,8 @@
 import { CDCSearchResponse } from '@cui-x/sdp-api';
 /** base API for search */
 const api = '/api/customerportal/search/v1';
+/** base API for typeahead search */
+const typeaheadApi = '/esps/search/suggest';
 
 /**
  * Mock body of results
@@ -108,6 +110,110 @@ const mockData: CDCSearchResponse = {
 	/* tslint:enable */
 };
 
+/* tslint:disable */
+const mockTypeaheadResponse = {
+	 "responses":[
+			{
+				 "hits":{
+						"hits":[
+							 {
+									"_source":{
+										 "cdc_displaytext":"Redundant Power System 2300",
+										 "cdc_displaytext1":"Redundant Power System 2300",
+										 "cdc_submittext":"Redundant Power System 2300",
+										 "cdc_category_name":"Uncategorized"
+									},
+									"fields":{
+										 "search_type":[
+												"uncategorized"
+										 ]
+									}
+							 },
+							 {
+									"_source":{
+										 "cdc_displaytext":"Redundant Power Systems",
+										 "cdc_displaytext1":"Redundant Power Systems",
+										 "cdc_submittext":"Redundant Power Systems",
+										 "cdc_category_name":"Uncategorized"
+									},
+									"fields":{
+										 "search_type":[
+												"uncategorized"
+										 ]
+									}
+							 },
+							 {
+									"_source":{
+										 "cdc_displaytext":"1800/2800/3800 Series 8-Port Async/Sync EIA-232 Serial High-Speed WAN Interface Card",
+										 "cdc_displaytext1":"1800/2800/3800 Series 8-Port Async/Sync EIA-232 Serial High-Speed WA",
+										 "cdc_submittext":"1800/2800/3800 Series 8-Port Async/Sync EIA-232 Serial High-Speed WAN Interface Card",
+										 "cdc_category_name":"Uncategorized"
+									},
+									"fields":{
+										 "search_type":[
+												"uncategorized"
+										 ]
+									}
+							 },
+							 {
+									"_source":{
+										 "cdc_displaytext":"IOS Software Release 12.2(23)SW",
+										 "cdc_displaytext1":"IOS Software Release 12.2(23)SW",
+										 "cdc_submittext":"IOS Software Release 12.2(23)SW",
+										 "cdc_category_name":"Uncategorized"
+									},
+									"fields":{
+										 "search_type":[
+												"uncategorized"
+										 ]
+									}
+							 },
+							 {
+									"_source":{
+										 "cdc_displaytext":"Nexus 2348TQ-E 10GE Fabric Extender",
+										 "cdc_displaytext1":"Nexus 2348TQ-E 10GE Fabric Extender",
+										 "cdc_submittext":"Nexus 2348TQ-E 10GE Fabric Extender",
+										 "cdc_category_name":"Uncategorized"
+									},
+									"fields":{
+										 "search_type":[
+												"uncategorized"
+										 ]
+									}
+							 },
+							 {
+									"_source":{
+										 "cdc_displaytext":"2800/3800 Series 23-Port EtherSwitch Service Module",
+										 "cdc_displaytext1":"2800/3800 Series 23-Port EtherSwitch Service Module",
+										 "cdc_submittext":"2800/3800 Series 23-Port EtherSwitch Service Module",
+										 "cdc_category_name":"Uncategorized"
+									},
+									"fields":{
+										 "search_type":[
+												"uncategorized"
+										 ]
+									}
+							 },
+							 {
+									"_source":{
+										 "cdc_displaytext":"Nexus 2348TQ 10GE Fabric Extender",
+										 "cdc_displaytext1":"Nexus 2348TQ 10GE Fabric Extender",
+										 "cdc_submittext":"Nexus 2348TQ 10GE Fabric Extender",
+										 "cdc_category_name":"Uncategorized"
+									},
+									"fields":{
+										 "search_type":[
+												"uncategorized"
+										 ]
+									}
+							 }
+						]
+				 }
+			}
+	 ]
+};
+/* tslint:enable */
+
 /**
  * The scenarios
  */
@@ -148,6 +254,23 @@ export const SearchScenarios = [
 			],
 		},
 		url: `${api}/cdcSearch`,
+		usecases: ['Example', 'More Example'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 300,
+					description: 'Typeahead Example',
+					response: {
+						body: mockTypeaheadResponse,
+						status: 200,
+					},
+					selected: false,
+				},
+			],
+		},
+		url: `${typeaheadApi}/cdcpr01zad?q=Test&locale=enus&bizcontext=ENT&h=7`,
 		usecases: ['Example', 'More Example'],
 	},
 ];

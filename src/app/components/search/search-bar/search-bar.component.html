@@ -5,6 +5,8 @@
 			type="text"
 			autocomplete="off"
 			#searchInput
+			(focus)="onFocus()"
+			(blur)="onBlur()"
 			[ngModel]="searchText"
 			(ngModelChange)="onSearch($event)"
 			[maxlength]="options.max"
@@ -19,6 +21,7 @@
 		<div class="dropdown__menu">
 			<a data-auto-id="searchBarTypeahead"
 				*ngFor="let item of typeaheadItems"
+				[ngClass]="{'keyboard-hover': item.keyHover}"
 				(click)="onSearchSelect(item.name, true)"
 				[innerText]="item.name"></a>
 		</div>
