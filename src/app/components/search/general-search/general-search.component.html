@@ -6,7 +6,7 @@
 		</div>
 	</div>
 </div>
-<div *ngIf="!loading">
+<div *ngIf="!loading && searchResults?.length">
 	<h5 [innerText]="'_XResults_' | i18n:totalCount:query"
 		class="base-margin-bottom">
 	</h5>
@@ -60,3 +60,6 @@
 		</div>
 	</div>
 </div>
+<app-no-results *ngIf="!loading && !searchResults?.length"
+	[query]="query">
+</app-no-results>

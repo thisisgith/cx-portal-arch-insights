@@ -76,14 +76,15 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			// Only change filter options when the query changes
 			if (refreshType === 'query') {
 				const facets = <Facets []> _.get(result, 'facets', []);
-				if (facets && facets.length) {
-					this.siteOptions = facets
-						.find((o: Facets) => o.label === 'Site')
-						.buckets
-						.map((bucket: Buckets) => ({
-							...bucket,
-							label: `${bucket.label} (${bucket.count})`,
-						}));
+				const siteBuckets = _.get(
+					facets.find((o: Facets) => o.label === 'Site'),
+					'buckets',
+				);
+				if (siteBuckets) {
+					this.siteOptions = siteBuckets.map((bucket: Buckets) => ({
+						...bucket,
+						label: `${bucket.label} (${bucket.count})`,
+					}));
 					this.siteOptions.unshift({
 						filter: null,
 						label: I18n.get('_AllCategories_'),
