@@ -34,7 +34,7 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchClose').click();
 		});
 
-		it.only('Search No Result Found', () => { // PBC-173
+		it('Search No Result Found', () => { // PBC-173
 			const rmaVal = '639530286';
 			cy.getByAutoId('searchBarInput').should('exist').type(rmaVal.concat('{enter}'));
 			cy.wait(800);
