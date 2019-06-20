@@ -1,0 +1,50 @@
+<div *ngIf="loading" class="row no-gutters">
+	<div class="col-md-12">
+		<div class="panel panel--loose">
+			<cui-spinner></cui-spinner>
+		</div>
+	</div>
+</div>
+<div *ngIf="!loading">
+	<h4 [innerText]="'_SerialNumberHeader_' | i18n:serialNumber"></h4>
+	<h5 class="base-margin-top">Cisco ASR 920-12SZ-IM Router</h5>
+
+	<div class="dbl-margin-top">
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_CXLevel_' | i18n"></span><span>Level 2</span></div>
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_ContractNumber_' | i18n"></span><span>9234623523</span></div>
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_ExpirationDate_' | i18n"></span><span>23-Oct-2019 (159 Days)</span></div>
+	</div>
+	<div class="base-margin-top">
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_SoftwareTypeOS_' | i18n"></span><span>IOS XE</span></div>
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_CurrentVersion_' | i18n"></span><span>Fuji 16.9.3</span></div>
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_LatestVersion_' | i18n"></span><span>Everest 16.6.6</span></div>
+	</div>
+	<div class="base-margin-top">
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_OpenCases_' | i18n"></span><span>2</span></div>
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_OpenRMAs_' | i18n"></span><span>0</span></div>
+	</div>
+	<div class="base-margin-top base-margin-bottom">
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_RelatedFieldNotices_' | i18n"></span><span>6</span></div>
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_RelatedSecurityAdvisories_' | i18n"></span><span>3</span></div>
+		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_RelatedBugs_' | i18n"></span><span>45</span></div>
+		<div class="half-nargin-top" [innerText]="'_BasedOnLastScanXDaysAgo_' | i18n:'7'"><span></span></div>
+	</div>
+	<div class="base-margin-top">
+		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
+		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true" [innerText]="'_OpenACase_' | i18n"></button>
+	</div>
+</div>
+
+<ng-template #sidebar>
+	<div class="dbl-padding-top" *ngIf="!loading">
+		<!-- TODO: Add Product image -->
+		<div class="subheading text-uppercase" [innerText]="'_ProductID_' | i18n"></div>
+		<div><span>ASR-920-12SZ-IM Router</span></div>
+		<div class="subheading half-margin-top" [innerText]="'_ProductSeries_' | i18n"></div>
+		<div><span>SR 920 Series Aggregation Services Router</span></div>
+		<div class="subheading half-margin-top" [innerText]="'_IPAddress_' | i18n"></div>
+		<div><span>10.10.10.1</span></div>
+		<div class="subheading half-margin-top" [innerText]="'_HostName_' | i18n"></div>
+		<div><span>SJ-BLD3-ASR920-02-147</span></div>
+</div>
+</ng-template>

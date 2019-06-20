@@ -27,6 +27,10 @@
 										[contractNumber]="selectedSearch"
 										(hide)="onHide($event)">
 									</app-contract-search>
+									<serial-search *ngSwitchCase="'sn'"
+										[serialNumber]="selectedSearch"
+										(hide)="onHide($event)">
+									</serial-search>
 								</ng-container>
 							</div>
 							<hr *ngIf="specialSearch && !hideSpecialSearch" />
