@@ -476,10 +476,8 @@ export class LifecycleComponent implements OnDestroy {
 									halfFilledStars: [],
 									unfilledStars: [],
 								};
-								// tslint:disable: no-increment-decrement
 								const ratingSplit = item.rating.split('.');
-								for (let i = 1; i <= 5; i++) {
-									// debugger;
+								for (let i = 1; i <= 5; i = i + 1) {
 									if (+ratingSplit[0] >= i) {
 										learningItem.filledStars.push(i);
 									} else {
