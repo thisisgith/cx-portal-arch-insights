@@ -85,6 +85,7 @@ export interface PitstopActionWithStatus {
 export class LifecycleComponent implements OnDestroy {
 	@ViewChild('accModal', { static: true }) public accTemplate: TemplateRef<{ }>;
 	@ViewChild('atxModal', { static: true }) public atxTemplate: TemplateRef<{ }>;
+	@ViewChild('successModal', { static: true }) public successPathTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -188,6 +189,12 @@ export class LifecycleComponent implements OnDestroy {
 			this.modal = {
 				content: this.accTemplate,
 				context: { data: this.componentData.acc.sessions },
+				visible: true,
+			};
+		} else if (type === '_ProductGuide_') {
+			this.modal = {
+				content: this.successPathTemplate,
+				context: { data: this.componentData.learning.success },
 				visible: true,
 			};
 		}
@@ -451,10 +458,29 @@ export class LifecycleComponent implements OnDestroy {
 					_.set(this.componentData, ['learning', 'training'], []);
 
 					_.each(result.items, (item: ELearning) => {
-						if (_.get(this.componentData.learning, item.type)) {
-							this.componentData.learning[item.type].push(item);
+						switch (item.type) {
+							case 'E-Course': {
+								this.componentData.learning.elearning.push(item);
+								break;
+							}
+							case 'Cisco Training on Demand Courses':
+							case 'Videos': {
+								this.componentData.learning.certifications.push(item);
+								break;
+							}
+							default: {
+								this.componentData.learning.training.push(item);
+								break;
+							}
 						}
 					});
+					// To do order the list by ranking
+					this.componentData.learning.elearning =
+						_.orderBy(this.componentData.learning.elearning, ['ranking', 'asc']);
+					this.componentData.learning.certifications =
+						_.orderBy(this.componentData.learning.certifications, ['ranking', 'asc']);
+					this.componentData.learning.training =
+						_.orderBy(this.componentData.learning.training, ['ranking', 'asc']);
 				}
 
 				this.status.loading.elearning = false;

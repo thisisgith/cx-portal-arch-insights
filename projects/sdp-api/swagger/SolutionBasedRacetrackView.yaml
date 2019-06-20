@@ -582,6 +582,9 @@ definitions:
       url:
         type: string
         description: http://ciscolearning.com
+      archetype:
+        type: string
+        description: Solution Type
 
   CommunitiesResponse:
     type: object
@@ -648,3 +651,12 @@ definitions:
       url:
         type: string
         description: http://elearning.com
+      ranking:
+        type:	integer
+        decription: ranking of the content
+      rating:
+        type: string
+        description: rating marked by the user for the content
+      cxlevel:
+        type: integer
+        description: CX Level
