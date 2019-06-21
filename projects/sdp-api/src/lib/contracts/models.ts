@@ -1,7 +1,7 @@
-export { CoveredResponse } from './models/covered-response';
-export { CoveredInfo } from './models/covered-info';
+export { CoverageResponse } from './models/coverage-response';
+export { CoverageInfo } from './models/coverage-info';
 export { ErrorResponse as ContractsErrorResponse } from './models/error-response';
-export { ContractsResponse } from './models/contracts-response';
-export { ContractInfo } from './models/contract-info';
-export { CoverageExpirationResponse } from './models/coverage-expiration-response';
-export { CoverageExpirationInfo } from './models/coverage-expiration-info';
+export { DeviceContractResponse } from './models/device-contract-response';
+export { DeviceContractInfo } from './models/device-contract-info';
+export { CoverageCountResponse } from './models/coverage-count-response';
+export { CoverageCountInfo } from './models/coverage-count-info';
