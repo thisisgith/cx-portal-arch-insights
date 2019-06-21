@@ -1,24 +1,40 @@
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { AsyncSubject, Observable, throwError } from 'rxjs';
+import { AsyncSubject, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
+import { environment } from '@environment';
 
-import * as _ from 'lodash';
+/**
+ * APIx token response format
+ */
+export interface ITokenResponse {
+	token: string;
+	expiration: string;
+}
 
+/**
+ * APIx token format
+ */
+export interface ITokenSubject {
+	subject: AsyncSubject<string>;
+	expiration?: string;
+	dateCreated?: number;
+}
+
+/**
+ * Service which contains all calls to our search service
+ */
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root',
 })
-export class TokenService {
-	private tokens: {
+export class APIxService {
+	/** Public to enable unit testing */
+	public tokens: {
 		[key: string]: ITokenSubject;
-	} = {};
+	} = { };
 
-	constructor(
-		@Optional() @Inject('ENVIRONMENT') private environment: any = { },
-		private http: HttpClient
-	) {
-	}
+	constructor (private http: HttpClient) { }
 
 	/**
 	 * Fetch an APIX bearer token.
@@ -32,22 +48,21 @@ export class TokenService {
 		// and it only triggers one request to the backend.
 		this.tokens[clientId] = {
 			subject: <AsyncSubject<string>> new AsyncSubject(),
-		}
+		};
 
 		return this.http.get(
-			this.getTokenUrl(clientId),
+			`${environment.auth.ciscoTokenUrl}/${clientId}`,
 			{ withCredentials: true })
 			.pipe(mergeMap((response: ITokenResponse) => {
-					// Set the value and trigger notification.
-					const token = this.tokens[clientId];
-					token.subject.next(response.token);
-					token.subject.complete();
-					token.expiration = response.expiration;
-					token.dateCreated = Date.now();
+				// Set the value and trigger notification.
+				const token = this.tokens[clientId];
+				token.subject.next(response.token);
+				token.subject.complete();
+				token.expiration = response.expiration;
+				token.dateCreated = Date.now();
 
-					return token.subject;
-				}
-			));
+				return token.subject;
+			}));
 	}
 
 	/**
@@ -65,20 +80,6 @@ export class TokenService {
 	}
 
 	/**
-	 * Get the request URL for acquiring a token.
-	 * @param clientId The APIX clientId
-	 * @returns string
-	 */
-	private getTokenUrl (clientId: string): string {
-		const ciscoTokenUrl = _.get(this.environment, ['auth', 'ciscoTokenUrl']);
-		if (!ciscoTokenUrl) {
-			throw new Error('No auth.ciscoTokenUrl in ENVIRONMENT');
-		}
-
-		return ciscoTokenUrl.replace('{INSERT_CLIENT_ID}', clientId);
-	}
-
-	/**
 	 * Return true if the token has expired so we can get another one.
 	 * @param token The token, expiration, date
 	 * @returns boolean - true if the token has expired; false if not
@@ -93,15 +94,4 @@ export class TokenService {
 
 		return secondsElapsed > Number(token.expiration);
 	}
-}
-
-export interface ITokenResponse {
-	token: string;
-	expiration: string;
-}
-
-export interface ITokenSubject {
-	subject: AsyncSubject<string>;
-	expiration?: string;
-	dateCreated?: number;
 }

@@ -1,12 +1,13 @@
 import {
-	ActionScenarios,
 	ACCScenarios,
+	ActionScenarios,
 	ATXScenarios,
 	CommunitiesScenarios,
 	ContractScenarios,
 	ELearningScenarios,
 	HardwareScenarios,
 	RacetrackScenarios,
+	RMAScenarios,
 	SearchScenarios,
 	SuccessPathScenarios,
 } from './';
@@ -16,26 +17,28 @@ import * as _ from 'lodash';
 import {
 	ACCResponse,
 	ATXResponse,
-	PitstopActionUpdateResponse,
+	CDCSearchResponse,
 	CommunitiesResponse,
 	ELearningResponse,
 	HardwareResponse,
+	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	SuccessPathsResponse,
-	CDCSearchResponse,
 } from '@cui-x/sdp-api';
+import { RMAResponse } from '@interfaces';
 
 /** Alias type for the Response Body */
 type ResponseBody = (
-	HardwareResponse |
+	ACCResponse |
 	ATXResponse |
+	CDCSearchResponse |
 	CommunitiesResponse |
 	ELearningResponse |
-	SuccessPathsResponse |
-	ACCResponse |
-	RacetrackResponse |
+	HardwareResponse |
 	PitstopActionUpdateResponse |
-	CDCSearchResponse
+	RacetrackResponse |
+	RMAResponse |
+	SuccessPathsResponse
 );
 
 /**
@@ -81,14 +84,15 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ActionScenarios,
 		ATXScenarios,
 		CommunitiesScenarios,
 		ContractScenarios,
-		ActionScenarios,
 		ELearningScenarios,
 		HardwareScenarios,
 		RacetrackScenarios,
-		SuccessPathScenarios,
+		RMAScenarios,
 		SearchScenarios,
+		SuccessPathScenarios,
 	]),
 };

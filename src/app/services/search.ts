@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { LogService } from '@cisco-ngx/cui-services';
-import { SearchType } from '@interfaces';
+import { SearchType, SearchEnum } from '@interfaces';
 import { environment } from '@environment';
 
 import { Observable, of } from 'rxjs';
@@ -56,20 +56,45 @@ export class SearchService {
 	 * @returns query type
 	 */
 	public determineType (query: string): SearchType {
-		if (query.match(caseRegex)) {
-			return 'case';
-		}
-		if (query.match(rmaRegex)) {
-			return 'rma';
-		}
-		if (query.match(contractRegex)) {
-			return 'contract';
-		}
-		if (query.match(serialRegex)) {
-			return 'sn';
+		let value = query.match(caseRegex);
+		if (value && value[0]) {
+			return {
+				name: SearchEnum.case,
+				value: value[0],
+			};
 		}
 
-		return 'default';
+		value = query.match(rmaRegex);
+
+		if (value && value[0]) {
+			return {
+				name: SearchEnum.rma,
+				value: value[0],
+			};
+		}
+
+		value = query.match(contractRegex);
+
+		if (value && value[0]) {
+			return {
+				name: SearchEnum.contract,
+				value: value[0],
+			};
+		}
+
+		// Serial Number matches the most strings and needs to be checked last
+		value = query.match(serialRegex);
+
+		if (value && value[0]) {
+			return {
+				name: SearchEnum.sn,
+				value: value[0],
+			};
+		}
+
+		return {
+			name: SearchEnum.default,
+		};
 	}
 
 	/**

@@ -41,7 +41,7 @@ describe('AssetsComponent', () => {
 	});
 
 	/**
-	 * @TODO modify test to use UI
+	 * @TODO: modify test to use UI
 	 */
 	it('should switch active filters', () => {
 		const totalFilter = _.find(component.filters, { key: 'total' });
@@ -57,7 +57,7 @@ describe('AssetsComponent', () => {
 	});
 
 	/**
-	 * @TODO modify test to use UI
+	 * @TODO: modify test to use UI
 	 */
 	it('should select a coverage subfilter', () => {
 		let coverageFilter = _.find(component.filters, { key: 'coverage' });
@@ -74,7 +74,7 @@ describe('AssetsComponent', () => {
 	});
 
 	/**
-	 * @TODO modify test to use UI
+	 * @TODO: modify test to use UI
 	 */
 	it('should clear the filter when selecting the same subfilter twice', () => {
 		let coverageFilter = _.find(component.filters, { key: 'coverage' });

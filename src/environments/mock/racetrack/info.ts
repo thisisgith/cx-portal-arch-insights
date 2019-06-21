@@ -628,7 +628,7 @@ export const RacetrackScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(Racetrack) IBN-Assurance-Onboard',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Onboard'),
@@ -637,7 +637,7 @@ export const RacetrackScenarios = [
 					selected: true,
 				},
 				{
-					delay: 250,
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(Racetrack) IBN-Assurance-Implement',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Implement'),
