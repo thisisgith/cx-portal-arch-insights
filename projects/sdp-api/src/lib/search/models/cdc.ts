@@ -4,25 +4,27 @@
  * cdc search result item
  */
 export interface CDC {
-  filetype?: string;
-  score?: number;
-  cdcdescription?: string;
-  collapseuri?: string;
-  contenttype?: string;
+  fields: {
+    filetype?: Array<string>;
+    score?: Array<number>;
+    cdcdescription?: Array<string>;
+    collapseuri?: Array<string>;
+    contenttype?: Array<string>;
 
-  /**
-   * Date string in ISO 8601 format
-   */
-  date?: string;
-  displaytitle?: string;
-  filesize?: number;
-  accesslevel?: string;
-  impressionid?: string;
-  iocontentsource?: string;
-  lllisting?: string;
-  size?: number;
-  teaser?: string;
-  text?: string;
-  title?: string;
-  uri?: string;
+    /**
+     * Date String[] in ISO 8601 format
+     */
+    date?: Array<string>;
+    displaytitle?: Array<string>;
+    filesize?: Array<number>;
+    accesslevel?: Array<string>;
+    impressionid?: Array<string>;
+    iocontentsource?: Array<string>;
+    lllisting?: Array<string>;
+    size?: Array<number>;
+    teaser?: Array<string>;
+    text?: Array<string>;
+    title?: Array<string>;
+    uri?: Array<string>;
+  }
 }

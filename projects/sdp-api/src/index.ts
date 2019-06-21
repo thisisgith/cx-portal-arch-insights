@@ -28,12 +28,13 @@ export * from './lib/contracts/services';
 export * from './lib/contracts/contracts.module';
 
 export {
+  Acc,
+  AtxFuture,
   Buckets,
   Community as SearchCommunity,
   CDC,
   CDCSearchResponse,
   CommunitySearchResponse,
-  Community,
   Facets,
   GlobalSearchResponse,
 } from './lib/search/models';
