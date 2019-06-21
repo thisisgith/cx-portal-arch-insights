@@ -302,6 +302,13 @@
 		<div class="divider"></div>
 	</div>
 
+	<div *ngIf="data.success?.length" data-auto-id="LearnPanel-SuccessPathsBlock">
+		<ng-container *ngTemplateOutlet="successBlock; context:
+				{ icon: 'transit',title: '_ProductGuide_', data: componentData.learning.success }">
+		</ng-container>
+		<div class="divider"></div>
+	</div>
+
 	<div *ngIf="data.certifications?.length" data-auto-id="LearnPanel-CertificationsBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'certified', title: '_Certifications_', data: componentData.learning.certifications }">
@@ -313,13 +320,6 @@
 		<ng-container *ngTemplateOutlet="learningBlock; context:
 			{ icon: 'audio-broadcast',title: '_RemoteLearningLabs_', data: componentData.learning.training }">
 		</ng-container>
-		<div class="divider"></div>
-	</div>
-
-	<div *ngIf="data.success?.length" data-auto-id="LearnPanel-SuccessPathsBlock">
-		<ng-container *ngTemplateOutlet="learningBlock; context:
-			{ icon: 'transit',title: '_SuccessPaths_', data: componentData.learning.success }">
-		</ng-container>
 	</div>
 </ng-template>
 
@@ -329,14 +329,42 @@
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
 			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
 		</div>
-		<div class="col-md-3 text-right">
+		<div class="col-md-3 text-right text-indigo" 
+			*ngIf="data">
+			<a class="no-link fade-in-pop"
+				data-auto-id="Elearning-ViewAll"
+				href="https://digital-learning.cisco.com/cx#/"
+				[ngClass]="{'disabled': title !== '_ELearning_'}">
+				<span [innerText]="'_ViewAll_' | i18n"></span>
+				<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
+			</a>
+		</div>
+	</div>
+	<div class="base-padding-bottom half-padding-top half-padding-left">
+		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
+			<a class="no-link fade-in-pop" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #successBlock let-title="title" let-data="data" let-icon="icon">
+	<div class="row">
+		<div class="col-md-9">
+			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
+			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
+		</div>
+		<div class="col-md-3 text-right text-indigo" 
+			*ngIf="data"
+			(click)="showModal(title)"
+			attr.data-auto-id="ShowModalPanel-{{ title }}">
 			<span [innerText]="'_ViewAll_' | i18n"></span>
 			<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
 		</div>
 	</div>
+	<div class="text-muted" [innerText]="'_ProductGuideSubtitle_' | i18n"></div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
-		<div class="qtr-padding-bottom" *ngFor="let item of data">
-			<span class="text-blue" [innerText]="item.title"></span>
+		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
+			<a class="no-link fade-in-pop" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
 		</div>
 	</div>
 </ng-template>
@@ -463,6 +491,85 @@
 	</div>
 </ng-template>
 
+<ng-template #successModal let-data="data">
+	<div id="successModal" class="modal__content no-padding">
+
+		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
+			<div class="row half-padding-top">
+				<div class="col-md-11 half-margin-top base-padding-left">
+					<div class="text-xlarge text-left text-uppercase" [innerText]="'_ProductGuide_' | i18n"></div>
+					<div class="text-medium text-left qtr-margin-top" [innerText]="'_ProductGuideHowto_' | i18n"></div>
+				</div>
+				<div class="col-md-1 half-margin-top">
+					<span (click)="closeModal()" data-auto-id="SuccessPathCloseModal"
+						class="icon-close icon-medium text-right"></span>
+				</div>
+			</div>
+		</div>
+		<div class="divider base-margin-left base-margin-right"></div>
+		<div class="modal__body base-padding">
+			<div class="row half-margin-left half-margin-right">
+				<div class="col-md-8 text-large text-bold text-left"
+					[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase">
+				</div>
+				<div class="col-md-3">
+					<div class="form-group input--icon">
+						<div class="form-group__text">
+							<input id="archetype-filter" type="search" [placeholder]="'_AllCategories_' | i18n">
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-mod-4 flex-fluid text-right"> -->
+				<div class="col-md-1 text-right">
+					<div class="btn-group btn-group--square">
+					<button class="btn btn--white">
+					<span class="icon-list-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+					</button>
+					<button class="btn btn--square">
+					<span class="icon-grid-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+					</button>
+					</div>
+				</div>
+			</div>
+			<div class="grid grid--4up base-padding-top">
+				<div class="card acc__card__background"
+					*ngFor="let item of data"
+					[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null"
+					data-auto-id="SuccessCard">
+					<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
+					<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
+					<div class="card__footer">
+						<div class="card_footer_item" data-auto-id="SuccessCardFooter">
+							<div class="row">
+								<div class="col-md-3">
+									<a class="no-link fade-in-pop" data-auto-id="successlinl" [href]="item.url">
+										<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
+											<span class="icon-apps icon-small half-padding-right"></span>
+											<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
+										</div>
+										<div class="text-left text-muted" *ngIf="item.type === 'Video'">
+											<span class="icon-play-contained icon-small half-padding-right"></span>
+											<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+										</div>
+										<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
+											<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+											<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+										</div>
+									</a>
+								</div>
+								<div class="col-md-6 text-muted" *ngIf="item.duration">
+									<span class="icon-clock icon-small half-padding-right"></span>
+									<span class="text-small" [innerText]="item.duration"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
 <ng-template #coaching let-results="results">
 	<div id="coachingModal" class="modal__content no-padding">
 		<div class="modal__header webinar-title-background no-margin">
@@ -517,8 +624,8 @@
 				<div *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">
-					<span class="text-right text-med" [innerText]="viewAllLabel | i18n"></span>
-					<span class="icon-play qtr-padding-left qtr-padding-bottom"></span>
+					<span class="text-indigo text-right text-med" [innerText]="viewAllLabel | i18n"></span>
+					<span class="text-indigo icon-play qtr-padding-left qtr-padding-bottom"></span>
 				</div>
 			</div>
 		</div>

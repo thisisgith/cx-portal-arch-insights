@@ -1,7 +1,6 @@
 /* tslint:disable */
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { SdpApiModule } from '../sdp-api.module';
 import { RacetrackContentConfiguration, RacetrackContentConfigurationInterface } from './racetrack-content-configuration';
 
 import { RacetrackContentService } from './services/racetrack-content.service';
@@ -11,8 +10,7 @@ import { RacetrackContentService } from './services/racetrack-content.service';
  */
 @NgModule({
   imports: [
-    HttpClientModule,
-    SdpApiModule,
+    HttpClientModule
   ],
   exports: [
     HttpClientModule
