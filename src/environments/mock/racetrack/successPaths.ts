@@ -28,15 +28,15 @@ function MockSP (
 				duration: '12 minutes',
 				type: 'Video',
 				url: 'https://www.youtube.com/watch?v=xh7odohoPEQ',
-				archetype: 'Project Planning How-to',
+				archetype: 'Project Planning',
 			},
 			{
 				title: 'Complete First-Time Setup',
 				description: 'Complete First-Time Setup',
-				duration: '45 mins',
+				duration: null,
 				type: 'Web Page',
 				url: 'https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center/1-2-10/install/b_dnac_install_1210_M5/b_dnac_install_1210_M5_chapter_0100.html',
-				archetype: 'Getting Started How-to',
+				archetype: 'Getting Started',
 			},
 			{
 				title: 'Cisco DNA Assurance Overview',
@@ -62,7 +62,7 @@ function MockSP (
 				duration: null,
 				type: 'Web Page',
 				url: 'https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center-assurance/1-2-10/b_cisco_dna_assurance_1_2_10_ug/b_cisco_dna_assurance_1_2_10_ug_chapter_010.html',
-				archetype: 'Project Planning How-to',
+				archetype: 'Project Planning',
 			},
 		],
 	};
