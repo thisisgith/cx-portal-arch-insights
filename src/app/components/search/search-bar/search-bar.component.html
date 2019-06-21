@@ -12,7 +12,7 @@
 			[maxlength]="options.max"
 			[pattern]="options.pattern"
 			[placeholder]="'_SearchLabel_' | i18n">
-		<button type="button" class="link">
+		<button type="button" class="link" (click)="onSearchSelect(searchText)" data-auto-id="SearchBarButton">
 			<span class="icon-search"></span>
 		</button>
 	</div>

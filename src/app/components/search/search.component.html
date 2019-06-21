@@ -21,7 +21,7 @@
 							<div id="specialContainer"
 								class="base-margin-bottom"
 								[hidden]="hideSpecialSearch">
-								<ng-container [ngSwitch]="searchType">
+								<ng-container [ngSwitch]="searchType.name">
 									<app-contract-search *ngSwitchCase="'contract'"
 										[contractNumber]="selectedSearch"
 										(hide)="onHide($event)">
@@ -30,10 +30,17 @@
 										[serialNumber]="selectedSearch"
 										(hide)="onHide($event)">
 									</serial-search>
+									<app-rma-search
+										*ngSwitchCase="'rma'"
+										[rmaNumber]="searchType.value"
+										(hide)="onHide($event)"
+										(toggleGeneralSearch)="toggleGeneralSearch($event)">
+									</app-rma-search>
 								</ng-container>
 							</div>
 							<hr *ngIf="specialSearch && !hideSpecialSearch" />
 							<app-general-search
+								[hidden]="hideGeneralSearch"
 								[query]="generalSearch">
 							</app-general-search>
 						</div>

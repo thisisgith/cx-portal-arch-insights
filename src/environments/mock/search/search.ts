@@ -534,7 +534,7 @@ export const SearchScenarios = [
 		scenarios: {
 			POST: [
 				{
-					delay: 500,
+					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Generic Example',
 					response: {
 						body: mockData,
@@ -543,7 +543,7 @@ export const SearchScenarios = [
 					selected: true,
 				},
 				{
-					delay: 5000,
+					delay: Math.floor(Math.random() * 8000) + 5000,
 					description: 'Empty Response',
 					response: {
 						body: {
@@ -556,7 +556,7 @@ export const SearchScenarios = [
 					},
 				},
 				{
-					delay: 1000,
+					delay: Math.floor(Math.random() * 2000) + 1000,
 					description: 'Failure Response',
 					response: {
 						status: 404,

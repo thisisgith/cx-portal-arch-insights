@@ -1,4 +1,12 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	Input,
+	OnChanges,
+	OnDestroy,
+	OnInit,
+	Output,
+} from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -44,6 +52,8 @@ interface RelatedResult {
 })
 export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	@Input('query') public query: string;
+	@Output('results') public results = new EventEmitter();
+
 	/** The actual search results used in the template
 	 * Important properties picked out of the CDCSearchResponse
 	 */
@@ -125,6 +135,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			} else {
 				this.searchResults = resultsMapped;
 			}
+			this.results.emit(this.searchResults);
 			this.totalCount = _.get(result, 'totalHits', 0);
 			// Only change filter options when the query changes
 			if (refreshType === 'query') {

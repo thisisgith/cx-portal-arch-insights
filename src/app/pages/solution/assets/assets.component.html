@@ -1,7 +1,7 @@
 <div class="panel">
 	<cui-tabs inline="true">
 		<cui-tab [label]="'_Assets_' | i18n">
-			<!-- TODO we should probably move this assets content to its own "assets-pager" component or similar when we add other tabs-->
+			<!-- TODO: we should probably move this assets content to its own "assets-pager" component or similar when we add other tabs-->
 			<ng-container *ngTemplateOutlet="assetsContent"></ng-container>
 		</cui-tab>
 		<cui-tab [label]="'_EoXMilestones_' | i18n" disabled="true"></cui-tab>

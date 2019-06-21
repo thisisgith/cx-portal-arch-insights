@@ -8,6 +8,7 @@ import { SearchBarComponent } from './search-bar.component';
 import { SearchBarModule } from './search-bar.module';
 import { SearchService } from '@services';
 import { SearchScenarios } from '@mock';
+import { SearchEnum } from '@interfaces';
 
 /** Mock typeahead response */
 const mockResponse = SearchScenarios[1].scenarios.GET[0].response.body;
@@ -181,7 +182,10 @@ describe('SearchBarComponent', () => {
 			.toHaveBeenCalledWith({
 				generalSearch: '600000000',
 				text: '600000000',
-				type: 'case',
+				type: {
+					name: SearchEnum.case,
+					value: '600000000',
+				},
 			});
 	});
 
@@ -191,7 +195,10 @@ describe('SearchBarComponent', () => {
 			.toHaveBeenCalledWith({
 				generalSearch: '800000000',
 				text: '800000000',
-				type: 'rma',
+				type: {
+					name: SearchEnum.rma,
+					value: '800000000',
+				},
 			});
 	});
 
@@ -201,7 +208,10 @@ describe('SearchBarComponent', () => {
 			.toHaveBeenCalledWith({
 				generalSearch: 'contract',
 				text: '230000000',
-				type: 'contract',
+				type: {
+					name: SearchEnum.contract,
+					value: '230000000',
+				},
 			});
 	});
 
@@ -211,7 +221,10 @@ describe('SearchBarComponent', () => {
 			.toHaveBeenCalledWith({
 				generalSearch: '1234',
 				text: '1234',
-				type: 'sn',
+				type: {
+					name: SearchEnum.sn,
+					value: '1234',
+				},
 			});
 	});
 
@@ -221,7 +234,9 @@ describe('SearchBarComponent', () => {
 			.toHaveBeenCalledWith({
 				generalSearch: 'Some value with spaces',
 				text: 'Some value with spaces',
-				type: 'default',
+				type: {
+					name: SearchEnum.default,
+				},
 			});
 	});
 });

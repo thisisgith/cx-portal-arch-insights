@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
-import { SearchType } from '@interfaces';
+import { SearchType, SearchEnum } from '@interfaces';
 import { SearchService } from '@services';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
@@ -177,13 +177,17 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 			return;
 		}
 		let type: SearchType;
-		if (typeahead || _.find(this.typeaheadItems, { name: this.searchText })) {
-			type = 'product';
+		const typeaheadItem = _.find(this.typeaheadItems, { name: this.searchText });
+		if (typeahead || typeaheadItem) {
+			type = {
+				name: SearchEnum.product,
+				value: typeaheadItem,
+			};
 		} else {
 			type = this.service.determineType(this.searchText);
 		}
 		let generalSearch = this.searchText;
-		if (type === 'contract') {
+		if (type.name === SearchEnum.contract) {
 			generalSearch = 'contract';
 		}
 

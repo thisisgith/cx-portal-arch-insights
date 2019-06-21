@@ -1,8 +1,6 @@
 /*
  * Public API Surface of sdp-api
  */
-export { SdpApiModule } from './lib/sdp-api.module';
-
 export * from './lib/user/models';
 export * from './lib/user/services';
 export * from './lib/user/user.module';

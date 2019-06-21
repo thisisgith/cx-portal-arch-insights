@@ -51,7 +51,7 @@ export const CommunitiesScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 750,
+					delay: Math.floor(Math.random() * 2000) + 750,
 					description: '(Communities) IBN-Wireless Assurance-Onboard',
 					response: {
 						body: MockCommunities('IBN', 'Wireless Assurance', 'Onboard'),
@@ -69,7 +69,7 @@ export const CommunitiesScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 750,
+					delay: Math.floor(Math.random() * 2000) + 750,
 					description: '(Communities) IBN-SD Access-Onboard',
 					response: {
 						body: MockCommunities('IBN', 'SD Access', 'Onboard'),

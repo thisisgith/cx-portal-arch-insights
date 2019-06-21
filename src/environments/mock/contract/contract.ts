@@ -48,7 +48,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Contract Details Success',
 					response: {
 						body: mockData,
@@ -65,7 +65,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 800,
+					delay: Math.floor(Math.random() * 2000) + 800,
 					description: 'Contract Details Success Other',
 					response: {
 						body: mockDataOther,

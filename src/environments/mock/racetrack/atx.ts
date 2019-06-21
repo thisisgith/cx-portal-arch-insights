@@ -250,7 +250,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: Math.floor(Math.random() * 2000) + 100,
 					description: '(ATX) IBN-Wireless Assurance-Onboard',
 					response: {
 						body: MockATX('IBN', 'Wireless Assurance', 'Onboard'),
@@ -267,7 +267,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: Math.floor(Math.random() * 2000) + 100,
 					description: '(ATX) IBN-Wireless Assurance-Implement',
 					response: {
 						body: MockATX('IBN', 'Wireless Assurance', 'Implement'),
@@ -284,7 +284,7 @@ export const ATXScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: Math.floor(Math.random() * 2000) + 100,
 					description: '(ATX) IBN-SD Access-Onboard',
 					response: {
 						body: MockATX('IBN', 'SD Access', 'Onboard'),

@@ -90,7 +90,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 
 	/**
 	 * Fetch contract API data
-	 * TODO some changes need to be made to the contract swagger and consequently the
+	 * TODO: some changes need to be made to the contract swagger and consequently the
 	 * service itself. This will include getting the devices covered count which isn't there yet
 	 * @param contractNumber number to fetch data for
 	 * @param customerId id of customer whose contracts we're searching
