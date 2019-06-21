@@ -15,6 +15,7 @@
     "start:docs": "npx compodoc -s",
     "postinstall": "cp node_modules/@apollo/linting/HTML/defaults.json .htmlhintrc",
     "build": "ng build",
+    "build:ci": "ng build --prod --build-optimizer",
     "build:sdp": "ng build sdp-api",
     "build:docs": "npx compodoc -p tsconfig.json -n \"Persona Based Console Documentation\" -d documentation --disablePrivate --hideGenerator --unitTestCoverage coverage/coverage-summary.json",
     "generate:sdp": "npm run generate:sdp:contracts && npm run generate:sdp:customer-users && npm run generate:sdp:inventory && npm run generate:sdp:product-alerts && npm run generate:sdp:racetrack-info && npm run generate:sdp:search && npm run generate:sdp:solution-based-racetrack-view",
