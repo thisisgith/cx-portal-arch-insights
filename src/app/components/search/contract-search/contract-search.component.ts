@@ -16,7 +16,7 @@ import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
-import { ContractsResponse, ContractsService, ContractInfo } from '@cui-x/sdp-api';
+import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@cui-x/sdp-api';
 
 /**
  * Component to fetch/display contract search results
@@ -37,7 +37,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	@Input('contractNumber') public contractNumber: string;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
-	public contractData: ContractInfo;
+	public contractData: DeviceContractInfo;
 
 	private customerId = '2431199';
 	private refresh$ = new Subject();
@@ -97,8 +97,8 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	 * @returns Observable with response data
 	 */
 	private getData (contractNumber: string, customerId: string):
-		Observable<ContractsResponse> {
-		return this.contractsService.getContracts({
+		Observable<DeviceContractResponse> {
+		return this.contractsService.getContractDetails({
 			customerId,
 			contractNumber: [parseInt(contractNumber, 10)],
 		})

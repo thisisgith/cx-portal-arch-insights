@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface ContractInfo {
+export interface DeviceContractInfo {
 
   /**
    * First address line of the bill-to site

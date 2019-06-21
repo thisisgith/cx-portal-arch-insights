@@ -1,6 +1,5 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { BaseConfiguration as __BaseConfiguration } from '../core/base-service';
 
 /**
  * Global configuration for Contracts services
@@ -8,7 +7,8 @@ import { BaseConfiguration as __BaseConfiguration } from '../core/base-service';
 @Injectable({
   providedIn: 'root',
 })
-export class ContractsConfiguration extends __BaseConfiguration {
+export class ContractsConfiguration {
+  rootUrl: string = 'https://sdp.cisco.com/api';
 }
 
 export interface ContractsConfigurationInterface {
