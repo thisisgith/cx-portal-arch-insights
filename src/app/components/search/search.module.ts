@@ -15,6 +15,7 @@ import { RMASearchModule } from './rma-search/rma-search.module';
 import {
 	SearchModule as SearchServiceModule,
 	ContractsModule,
+	InventoryModule,
 } from '@cui-x/sdp-api';
 import { environment } from '@environment';
 
@@ -46,6 +47,7 @@ import { SerialSearchModule } from './serial-search/serial-search.module';
 		RouterModule,
 		RMASearchModule,
 		ContractsModule.forRoot({ rootUrl }),
+		InventoryModule.forRoot({ rootUrl }),
 		SearchServiceModule.forRoot({ rootUrl }),
 	],
 })

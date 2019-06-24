@@ -265,6 +265,14 @@ paths:
             type: integer
             format: int64
           collectionFormat: multi
+        - name: serialNumber
+          in: query
+          description: The serial number to search on.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
         - name: fields
           in: query
           description: Filter fields

@@ -249,6 +249,7 @@ class ContractsService extends __BaseService {
     let __body: any = null;
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.inventoryName != null) __params = __params.set('inventoryName', params.inventoryName.toString());
+    if (params.serialNumber!= null) __params = __params.set('serialNumber', params.serialNumber.toString());
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
@@ -419,6 +420,11 @@ module ContractsService {
      * The number of the service contract.   Example:- 2689444; 91488861, 92246411
      */
     contractNumber?: Array<number>;
+
+    /**
+     * The serial number to search on. Example - FOX1306GFKH
+     */
+     serialNumber?: Array<string>;
   }
 }
 
