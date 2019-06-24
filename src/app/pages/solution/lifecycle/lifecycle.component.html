@@ -332,6 +332,7 @@
 		<div class="col-md-3 text-right text-indigo"
 			*ngIf="data">
 			<a class="no-link fade-in-pop"
+				target="_blank"
 				data-auto-id="Elearning-ViewAll"
 				href="https://digital-learning.cisco.com/cx#/"
 				[ngClass]="{'disabled': title !== '_ELearning_'}">
@@ -342,7 +343,7 @@
 	</div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<a class="no-link fade-in-pop" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+			<a class="no-link fade-in-pop" target="_blank" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
 		</div>
 	</div>
 </ng-template>
