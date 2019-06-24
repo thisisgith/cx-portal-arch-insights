@@ -164,5 +164,7 @@
     "_CarrierTrackingNumber_": "Carrier Tracking Number",
     "_ViewRMADetails_": "View RMA Details",
     "_RMATitle_": "RMA: {0}",
-    "_SearchingRMAs_": "Searching RMAs"
+    "_SearchingRMAs_": "Searching RMAs",
+    "_SearchingSerialNumbers_": "Searching Serial Numbers",
+    "_SearchingContracts_": "Searching Contracts"
 }

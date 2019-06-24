@@ -56,16 +56,17 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	 */
 	public ngOnInit () {
 		this.refresh$.pipe(
-			tap(() => this.loading = true),
+			tap(() => {
+				this.loading = true;
+				this.hide.emit(false);
+			}),
 			switchMap(() => this.getData(this.contractNumber, this.customerId)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(result => {
 			this.loading = false;
 			this.contractData = result ? result.data[0] : null;
-			if (this.contractData) {
-				this.hide.emit(false);
-			} else {
+			if (!this.contractData) {
 				this.hide.emit(true);
 			}
 		});

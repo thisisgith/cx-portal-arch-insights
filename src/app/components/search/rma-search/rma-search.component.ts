@@ -2,6 +2,7 @@ import {
 	Component,
 	Input,
 	OnDestroy,
+	OnChanges,
 	OnInit,
 	Output,
 	EventEmitter,
@@ -37,9 +38,10 @@ interface RmaTableData {
 	styleUrls: ['./rma-search.component.scss'],
 	templateUrl: './rma-search.component.html',
 })
-export class RMASearchComponent implements OnInit, OnDestroy {
+export class RMASearchComponent implements OnInit, OnChanges, OnDestroy {
 	@Input('rmaNumber') public rmaNumber: string;
 	@Output('hide') public hide = new EventEmitter<boolean>();
+	/** Emitter to show or hide general search */
 	@Output('toggleGeneralSearch') public toggleGeneralSearch = new EventEmitter<{
 		hide: boolean,
 		searchString?: string,
@@ -64,9 +66,12 @@ export class RMASearchComponent implements OnInit, OnDestroy {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.toggleGeneralSearch.emit({ hide: true });
 		this.refresh$.pipe(
-			tap(() => this.loading = true),
+			tap(() => {
+				this.toggleGeneralSearch.emit({ hide: true });
+				this.loading = true;
+				this.hide.emit(false);
+			}),
 			switchMap(() => this.getByNumber(this.rmaNumber)),
 			takeUntil(this.destroy$),
 		)
@@ -76,7 +81,8 @@ export class RMASearchComponent implements OnInit, OnDestroy {
 				(o: RMARecord) => o.rmaNo === parseInt(this.rmaNumber, 10),
 			);
 			if (!this.rma) {
-				this.hide.emit();
+				this.hide.emit(true);
+				this.toggleGeneralSearch.emit({ hide: false });
 
 				return;
 			}
@@ -105,6 +111,13 @@ export class RMASearchComponent implements OnInit, OnDestroy {
 
 			this.loading = false;
 		});
+		this.refresh$.next();
+	}
+
+	/**
+	 * OnChanges Lifecycle Hook
+	 */
+	public ngOnChanges () {
 		this.refresh$.next();
 	}
 

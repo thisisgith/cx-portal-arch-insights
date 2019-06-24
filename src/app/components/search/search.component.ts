@@ -54,10 +54,10 @@ export class SearchComponent {
 	 */
 	public onHide (hide: boolean) {
 		this.hideSpecialSearch = hide;
-		this.searchType.name = SearchEnum.default;
 		// This will trigger a new search on the plain searchText if it was changed to something
 		// else by the special search view
 		if (hide) {
+			this.searchType.name = SearchEnum.default;
 			this.generalSearch = this.searchText;
 		}
 	}
