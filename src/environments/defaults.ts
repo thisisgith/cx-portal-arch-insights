@@ -17,6 +17,10 @@ export const defaults = {
 	csone: {
 		clientId: '453b7e10f08b428c90d48432312889ad',
 	},
+	// ClientSSOInterceptor: No auth token for the typeahead url
+	noAuthEndpoints: [
+		'https://xresps-stage.cloudapps.cisco.com/esps/search/suggest/cdcpr01zad',
+	],
 	production: false,
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa1/home',
 	services: {
