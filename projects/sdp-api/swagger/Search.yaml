@@ -1,0 +1,729 @@
+swagger: '2.0'
+info:
+  description: Search REST API for Customer Portal UI
+  version: 1.0.0
+  title: PBC Search API
+  contact:
+    name: Santosh Nair
+    url: 'https://directory.cisco.com/dir/reports/santnair'
+    email: santnair@cisco.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: sdp.cisco.com
+basePath: /search
+tags:
+  - name: search
+    description: Search operations for Customer Portal
+paths:
+  /api/customerportal/search/v1/cdcSearch:
+    post:
+      tags:
+        - search
+      summary: Search Cisco.com
+      operationId: directCDCSearch
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: context
+          in: formData
+          description: Hint to do a special lookup before search
+          required: false
+          type: string
+          enum:
+            - serialno
+            - contract
+        - name: customerId
+          in: formData
+          description: Unique identifier of a Cisco customer
+          required: false
+          type: string
+        - name: filters
+          in: formData
+          description: Filter CDC results
+          required: false
+          type: string
+        - name: limit
+          in: formData
+          description: 'Pagination: number of expected results'
+          required: false
+          type: string
+          default: '10'
+        - name: offset
+          in: formData
+          description: 'Pagination: offset'
+          required: false
+          type: string
+          default: '0'
+        - name: searchTokens
+          in: formData
+          description: Tokens for search
+          required: true
+          type: string
+        - name: webSessionId
+          in: formData
+          description: Web Session Id
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved results
+          schema:
+            $ref: '#/definitions/CDCSearchResponse'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error during search
+      deprecated: false
+  /api/customerportal/search/v1/communitySearch:
+    post:
+      tags:
+        - search
+      summary: Search Communities
+      operationId: directCommunitySearch
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: filters
+          in: formData
+          description: Filter Community results
+          required: false
+          type: string
+        - name: limit
+          in: formData
+          description: Pagination - number of expected results
+          required: false
+          type: string
+          default: '10'
+        - name: offset
+          in: formData
+          description: Pagination offset
+          required: false
+          type: string
+          default: '0'
+        - name: searchTokens
+          in: formData
+          description: Tokens for search
+          required: true
+          type: string
+        - name: webSessionId
+          in: formData
+          description: Web Session Id
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved results
+          schema:
+            $ref: '#/definitions/CommunitySearchResponse'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Error during search
+      deprecated: false
+  /api/customerportal/search/v1/globalSearch:
+    post:
+      tags:
+        - search
+      summary: Aggregated Search - All Sources
+      operationId: allSearch
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: context
+          in: formData
+          description: Hint to do a special lookup before search
+          required: false
+          type: string
+          enum:
+            - serialno
+            - contract
+        - name: customerId
+          in: formData
+          description: Unique identifier of a Cisco customer
+          required: false
+          type: string
+        - name: filters
+          in: formData
+          description: Filter CDC results
+          required: false
+          type: string
+        - name: limit
+          in: formData
+          description: 'CDC Pagination: number of expected results'
+          required: false
+          type: string
+          default: '10'
+        - name: offset
+          in: formData
+          description: 'CDC Pagination: offset'
+          required: false
+          type: string
+          default: '0'
+        - name: pitStop
+          in: formData
+          description: Pit Stop
+          required: false
+          type: string
+        - name: searchTokens
+          in: formData
+          description: Tokens for search
+          required: true
+          type: string
+        - name: solution
+          in: formData
+          description: Solution
+          required: false
+          type: string
+        - name: useCase
+          in: formData
+          description: Use Case
+          required: false
+          type: string
+        - name: webSessionId
+          in: formData
+          description: Web Session Id
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved results
+          schema:
+            $ref: '#/definitions/GlobalSearchResponse'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Server Error during search
+      deprecated: false
+definitions:
+  ACCIndexModel:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: domain
+      search:
+        type: array
+        description: ACC search result structure
+        items:
+          $ref: '#/definitions/Acc'
+    title: ACCIndexModel
+    description: Accelerator index structure
+  ACCModel:
+    type: object
+    properties:
+      documents:
+        type: array
+        description: documents
+        items:
+          $ref: '#/definitions/ACCIndexModel'
+    title: ACCModel
+    description: Accelerator structure
+  ATXCompletedIndexModel:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: domain
+      search:
+        type: array
+        description: ATX-Completed search result structure
+        items:
+          $ref: '#/definitions/AtxCompleted'
+    title: ATXCompletedIndexModel
+    description: ATX-Completed index structure
+  ATXCompletedModel:
+    type: object
+    properties:
+      documents:
+        type: array
+        description: documents
+        items:
+          $ref: '#/definitions/ATXCompletedIndexModel'
+    title: ATXCompletedModel
+    description: ATX-Completed structure
+  ATXFutureIndexModel:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: domain
+      search:
+        type: array
+        description: ATX-Future search result structure
+        items:
+          $ref: '#/definitions/AtxFuture'
+    title: ATXFutureIndexModel
+    description: ATX-Future index structure
+  ATXFutureModel:
+    type: object
+    properties:
+      documents:
+        type: array
+        description: documents
+        items:
+          $ref: '#/definitions/ATXFutureIndexModel'
+    title: ATXFutureModel
+    description: ATX-Future structure
+  Acc:
+    type: object
+    properties:
+      Archetype:
+        type: string
+      Customer Question:
+        type: string
+      Month Released:
+        type: string
+      Pitstop:
+        type: string
+      Short Description:
+        type: string
+      Technology:
+        type: string
+      Title:
+        type: string
+      Use Case:
+        type: string
+      createdDate:
+        type: string
+      updatedDate:
+        type: string
+    title: Acc
+  AtxCompleted:
+    type: object
+    properties:
+      attended:
+        type: string
+      cco_id:
+        type: string
+      createdDate:
+        type: string
+      customer_party_key:
+        type: string
+      cxpi_customer_flag:
+        type: string
+      email:
+        type: string
+      event_id:
+        type: string
+      event_key:
+        type: string
+      event_name:
+        type: string
+      event_start_date:
+        type: string
+      hdp_created_by:
+        type: string
+      hdp_created_dtm:
+        type: string
+      hdp_last_update_by:
+        type: string
+      hdp_last_update_dtm:
+        type: string
+      join_time:
+        type: string
+      leave_time:
+        type: string
+      offer_code:
+        type: string
+      registered:
+        type: string
+      registration_date_time:
+        type: string
+      registration_id:
+        type: string
+      source_party_id:
+        type: string
+      source_refreshed_date:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      updatedDate:
+        type: string
+    title: AtxCompleted
+  AtxFuture:
+    type: object
+    properties:
+      Attendee Link:
+        type: string
+      Date:
+        type: string
+      Panelist Link:
+        type: string
+      Pit Stop:
+        type: string
+      Session Description:
+        type: string
+      Session Name:
+        type: string
+      TKL Session Staff:
+        type: string
+      Technology Area:
+        type: string
+      Use Case:
+        type: string
+      createdDate:
+        type: string
+      title:
+        type: string
+      updatedDate:
+        type: string
+    title: AtxFuture
+  Buckets:
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int64
+        description: the count of search results in this category
+      filter:
+        type: string
+        description: the filter condition to be sent back to search API when user chooses to select this option
+      label:
+        type: string
+        description: label of the category item
+    title: Buckets
+    description: Category Item
+  CDC:
+    type: object
+    properties:
+      fields:
+        type: object
+        properties:
+          score:
+            type: array
+            items:
+              type: number
+              format: double
+          accesslevel:
+            type: array
+            items:
+              type: string
+          cdcdescription:
+            type: array
+            items:
+              type: string
+          collapseuri:
+            type: array
+            items:
+              type: string
+          contenttype:
+            type: array
+            items:
+              type: string
+          date:
+            type: array
+            description: 'Date String[] in ISO 8601 format'
+            items:
+              type: string
+          displaytitle:
+            type: array
+            items:
+              type: string
+          filesize:
+            type: integer
+            format: int64
+          filetype:
+            type: array
+            items:
+              type: string
+          impressionid:
+            type: array
+            items:
+              type: string
+          iocontentsource:
+            type: array
+            items:
+              type: string
+          lllisting:
+            type: array
+            items:
+              type: string
+          size:
+            type: integer
+            format: int64
+          teaser:
+            type: array
+            items:
+              type: string
+          text:
+            type: array
+            items:
+              type: string
+          title:
+            type: array
+            items:
+              type: string
+          uri:
+            type: array
+            items:
+              type: string
+    title: CDC
+    description: cdc search result item
+  CDCSearchResponse:
+    type: object
+    properties:
+      documents:
+        type: array
+        description: search result documents
+        items:
+          $ref: '#/definitions/CDC'
+      facets:
+        type: array
+        description: list of filter categories applicable for current results
+        items:
+          $ref: '#/definitions/Facets'
+      totalHits:
+        type: integer
+        format: int64
+        description: total hits for search
+      totalTime:
+        type: integer
+        format: int64
+        description: time taken by cdc api
+    title: CDCSearchResponse
+    description: cdc api response
+  Community:
+    type: object
+    properties:
+      fields:
+        type: object
+        properties:
+          attachmentcount:
+            type: array
+            items:
+              type: integer
+              format: int64
+          cscauthor:
+            type: array
+            items:
+              type: string
+          cscauthorhref:
+            type: array
+            items:
+              type: string
+          cscboardhref:
+            type: array
+            items:
+              type: string
+          cscboardid:
+            type: array
+            items:
+              type: string
+          cscboardtitle:
+            type: array
+            items:
+              type: string
+          csccommunity:
+            type: array
+            items:
+              type: string
+          csccreateddate:
+            type: array
+            items:
+              type: string
+          cscid:
+            type: array
+            items:
+              type: string
+          csckudos:
+            type: array
+            items:
+              type: string
+          csclabels:
+            type: array
+            items:
+              type: string
+          csclanguage:
+            type: array
+            items:
+              type: string
+          csclastmodified:
+            type: array
+            items:
+              type: string
+          csclastupdatedby:
+            type: array
+            items:
+              type: string
+          csclastupdatedbyhref:
+            type: array
+            items:
+              type: string
+          csctags:
+            type: array
+            items:
+              type: string
+          csctype:
+            type: array
+            items:
+              type: string
+          cscviews:
+            type: array
+            items:
+              type: integer
+              format: int64
+          imagecount:
+            type: array
+            items:
+              type: integer
+              format: int64
+          replycount:
+            type: array
+            items:
+              type: integer
+              format: int64
+          teaser:
+            type: array
+            items:
+              type: string
+          title:
+            type: array
+            items:
+              type: string
+          uri:
+            type: array
+            items:
+              type: string
+          videocount:
+            type: array
+            items:
+              type: integer
+              format: int64
+    title: Community
+  CommunitySearchResponse:
+    type: object
+    properties:
+      documents:
+        type: array
+        description: search result documents
+        items:
+          $ref: '#/definitions/Community'
+      facets:
+        type: array
+        description: list of filter categories applicable for current results
+        items:
+          $ref: '#/definitions/Facets'
+      totalHits:
+        type: integer
+        format: int64
+        description: total hits for search
+      totalTime:
+        type: integer
+        format: int64
+        description: time taken by cdc api
+    title: CommunitySearchResponse
+    description: Community Search Response
+  Elearning:
+    type: object
+    properties:
+      createdDate:
+        type: string
+      description:
+        type: string
+      duration:
+        type: string
+      id:
+        type: string
+      level:
+        type: string
+      order:
+        type: string
+      rating:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+      updatedDate:
+        type: string
+      url:
+        type: string
+      url_type:
+        type: string
+    title: Elearning
+  ElearningIndexModel:
+    type: object
+    properties:
+      domain:
+        type: string
+        description: domain
+      search:
+        type: array
+        description: Elearning search result structure
+        items:
+          $ref: '#/definitions/Elearning'
+    title: ElearningIndexModel
+    description: Elearning index structure
+  ElearningModel:
+    type: object
+    properties:
+      documents:
+        type: array
+        description: documents
+        items:
+          $ref: '#/definitions/ElearningIndexModel'
+    title: ElearningModel
+    description: Elearning structure
+  Facets:
+    type: object
+    properties:
+      buckets:
+        type: array
+        description: list of the category items
+        items:
+          $ref: '#/definitions/Buckets'
+      label:
+        type: string
+        description: Label of the category
+    title: Facets
+    description: Filter Categories
+  GlobalSearchResponse:
+    type: object
+    properties:
+      acc:
+        description: Accelerator search response
+        $ref: '#/definitions/ACCModel'
+      atx-completed:
+        description: ATX-Completed search response
+        $ref: '#/definitions/ATXCompletedModel'
+      atx-future:
+        description: ATX-Future search response
+        $ref: '#/definitions/ATXFutureModel'
+      cdcSearch:
+        description: cdc search response
+        $ref: '#/definitions/CDCSearchResponse'
+      communitySearch:
+        description: community search response
+        $ref: '#/definitions/CommunitySearchResponse'
+      elearning:
+        description: Elearning search response
+        $ref: '#/definitions/ElearningModel'
+    title: GlobalSearchResponse
+    description: CDC Global Search Top level API Response

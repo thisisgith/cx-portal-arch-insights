@@ -1,11 +1,11 @@
-import { ContractsResponse } from '@cui-x/sdp-api';
+import { DeviceContractResponse } from '@cui-x/sdp-api';
 /** base API for contract details */
-const api = '/api/v1/contracts';
+const api = '/api/customerportal/contracts/v1/details';
 
 /**
  * Mock body of results
  */
-const mockData: ContractsResponse = {
+const mockData: DeviceContractResponse = {
 	/* tslint:disable:max-line-length ter-max-len no-irregular-whitespace object-literal-sort-keys*/
 	data: [
 		{
@@ -24,7 +24,7 @@ const mockData: ContractsResponse = {
 /**
  * Mock body of results
  */
-const mockDataOther: ContractsResponse = {
+const mockDataOther: DeviceContractResponse = {
 	/* tslint:disable:max-line-length ter-max-len no-irregular-whitespace object-literal-sort-keys*/
 	data: [
 		{
@@ -48,7 +48,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 500,
+					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Contract Details Success',
 					response: {
 						body: mockData,
@@ -65,7 +65,7 @@ export const ContractScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 800,
+					delay: Math.floor(Math.random() * 2000) + 800,
 					description: 'Contract Details Success Other',
 					response: {
 						body: mockDataOther,

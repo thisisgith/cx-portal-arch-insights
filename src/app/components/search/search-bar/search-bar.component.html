@@ -5,12 +5,14 @@
 			type="text"
 			autocomplete="off"
 			#searchInput
+			(focus)="onFocus()"
+			(blur)="onBlur()"
 			[ngModel]="searchText"
 			(ngModelChange)="onSearch($event)"
 			[maxlength]="options.max"
 			[pattern]="options.pattern"
 			[placeholder]="'_SearchLabel_' | i18n">
-		<button type="button" class="link">
+		<button type="button" class="link" (click)="onSearchSelect(searchText)" data-auto-id="SearchBarButton">
 			<span class="icon-search"></span>
 		</button>
 	</div>
@@ -19,6 +21,7 @@
 		<div class="dropdown__menu">
 			<a data-auto-id="searchBarTypeahead"
 				*ngFor="let item of typeaheadItems"
+				[ngClass]="{'keyboard-hover': item.keyHover}"
 				(click)="onSearchSelect(item.name, true)"
 				[innerText]="item.name"></a>
 		</div>

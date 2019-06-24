@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { LogService } from '@cisco-ngx/cui-services';
-import { SearchType } from '@interfaces';
+import { SearchType, SearchEnum } from '@interfaces';
+import { environment } from '@environment';
+
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 /**
  * Regex for a serial number match
@@ -21,8 +25,18 @@ const rmaRegex = /^8\d{8}$/;
 const contractRegex = /^2\d{8}|9\d{7}$/;
 
 /**
+ * Origin to call for product typeahead results
+ */
+const typeaheadOrigin = environment.services.typeahead.origin;
+/**
+ * Url to call for product typeahead results
+ */
+const typeaheadUrl = '/esps/search/suggest/cdcpr01zad';
+
+/**
  * Service with utils for the personal search module
  * HTTP calls are contained in a different service under @cui-x/sdp-api
+ * With the exception of the typeahead http call (different source)
  */
 @Injectable({
 	providedIn: 'root',
@@ -42,19 +56,100 @@ export class SearchService {
 	 * @returns query type
 	 */
 	public determineType (query: string): SearchType {
-		if (query.match(caseRegex)) {
-			return 'case';
-		}
-		if (query.match(rmaRegex)) {
-			return 'rma';
-		}
-		if (query.match(contractRegex)) {
-			return 'contract';
-		}
-		if (query.match(serialRegex)) {
-			return 'sn';
+		let value = query.match(caseRegex);
+		if (value && value[0]) {
+			return {
+				name: SearchEnum.case,
+				value: value[0],
+			};
 		}
 
-		return 'default';
+		value = query.match(rmaRegex);
+
+		if (value && value[0]) {
+			return {
+				name: SearchEnum.rma,
+				value: value[0],
+			};
+		}
+
+		value = query.match(contractRegex);
+
+		if (value && value[0]) {
+			return {
+				name: SearchEnum.contract,
+				value: value[0],
+			};
+		}
+
+		// Serial Number matches the most strings and needs to be checked last
+		value = query.match(serialRegex);
+
+		if (value && value[0]) {
+			return {
+				name: SearchEnum.sn,
+				value: value[0],
+			};
+		}
+
+		return {
+			name: SearchEnum.default,
+		};
 	}
+
+	/**
+	 * Fetch product typeahead results.
+	 * @param params { TypeaheadParams } query params
+	 * @returns Observable with results
+	 */
+	public fetchTypeahead (params: TypeaheadParams): Observable<TypeaheadResponse> {
+		const urlParams = new HttpParams()
+			.set('q', params.q)
+			.set('locale', params.locale)
+			.set('bizcontext', params.bizcontext)
+			.set('h', params.h.toString());
+
+		return this.http.get<TypeaheadResponse>(`${typeaheadOrigin}${typeaheadUrl}`, {
+			params: urlParams,
+		})
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Error fetching typehead, Err: ${err}`);
+
+					return of(null);
+				}),
+			);
+	}
+}
+
+/**
+ * Interface representing typeahead query params
+ * TODO possibly support more locales in the future Only en-US for now
+ */
+export interface TypeaheadParams {
+	q: string;
+	locale: 'enus';
+	bizcontext: 'ENT';
+	h: number;
+}
+
+/**
+ * Interface representing typeahead response
+ */
+export interface TypeaheadResponse {
+	responses?: {
+		hits: {
+			hits: {
+				'_source': {
+					cdc_displaytext: string;
+					cdc_displaytext1: string;
+					cdc_submittext: string;
+					cdc_category_name: string;
+				};
+				fields: {
+					search_type: string[];
+				};
+			}[];
+		};
+	}[];
 }

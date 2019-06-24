@@ -76,7 +76,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(SP) IBN-Wireless Assurance-Onboard',
 					response: {
 						body: MockSP('IBN', 'Wireless Assurance', 'Onboard'),
@@ -94,7 +94,7 @@ export const SuccessPathScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(SP) IBN-SD Access-Onboard',
 					response: {
 						body: MockSP('IBN', 'SD Access', 'Onboard'),

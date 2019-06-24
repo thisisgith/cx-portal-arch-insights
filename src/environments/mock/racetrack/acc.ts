@@ -69,7 +69,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard',
 					response: {
 						body: MockACC('IBN', 'Wireless Assurance', 'Onboard'),
@@ -87,7 +87,7 @@ export const ACCScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-SD Access-Onboard',
 					response: {
 						body: MockACC('IBN', 'SD Access', 'Onboard'),

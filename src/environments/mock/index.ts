@@ -9,3 +9,4 @@ export { ELearningScenarios } from './racetrack/elearning';
 export { SuccessPathScenarios } from './racetrack/successPaths';
 export { ActionScenarios } from './racetrack/action';
 export { ContractScenarios } from './contract/contract';
+export { RMAScenarios } from './rma/rma';

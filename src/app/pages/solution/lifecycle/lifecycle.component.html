@@ -40,7 +40,7 @@
 							loading: status.loading.acc,
 							data: componentData.acc,
 							viewAllLabel: '_ViewAll_',
-							viewAll: 'acc'							
+							viewAll: 'acc'
 						}">
 					</ng-container>
 				</div>
@@ -48,7 +48,7 @@
 		</div>
 	</div>
 </div>
-	
+
 <div class="modal-container" *ngIf="modal.visible">
 	<div class="modal-backdrop" [ngClass]="{ hide: !modal.visible }"></div>
 	<div class="modal modal--full" [ngClass]="{ hide: !modal.visible }">
@@ -96,8 +96,8 @@
 					</label>
 				</div>
 				<div class="col-md-10">
-					<a data-auto-id="actionlink" 
-						class="no-link" 
+					<a data-auto-id="actionlink"
+						class="no-link"
 						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
 						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
@@ -112,7 +112,7 @@
 					</a>
 				</div>
 			</div>
-		</div>			
+		</div>
 	</div>
 </ng-template>
 
@@ -148,7 +148,7 @@
 			<ng-container *ngTemplateOutlet="template"></ng-container>
 		</div>
 		<ng-container *ngIf="autoid">
-			<ng-container *ngTemplateOutlet="recommendedDescription; context: { 
+			<ng-container *ngTemplateOutlet="recommendedDescription; context: {
 				title: title,
 				description: description,
 				autoid: autoid
@@ -329,7 +329,7 @@
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
 			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
 		</div>
-		<div class="col-md-3 text-right text-indigo" 
+		<div class="col-md-3 text-right text-indigo"
 			*ngIf="data">
 			<a class="no-link fade-in-pop"
 				data-auto-id="Elearning-ViewAll"
@@ -353,7 +353,7 @@
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
 			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
 		</div>
-		<div class="col-md-3 text-right text-indigo viewall-link" 
+		<div class="col-md-3 text-right text-indigo toggle viewall-link"
 			*ngIf="data"
 			(click)="showModal(title)"
 			attr.data-auto-id="ShowModalPanel-{{ title }}">
@@ -364,7 +364,25 @@
 	<div class="text-muted" [innerText]="'_ProductGuideSubtitle_' | i18n"></div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<a class="no-link fade-in-pop" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+			<a class="no-link fade-in-pop" target="_blank" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #successPathBlock let-title="title" let-data="data" let-icon="icon">
+	<div class="row">
+		<div class="col-md-9">
+			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
+			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
+		</div>
+		<div class="col-md-3 text-right">
+			<span [innerText]="'_ViewAll_' | i18n"></span>
+			<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
+		</div>
+	</div>
+	<div class="base-padding-bottom half-padding-top half-padding-left">
+		<div class="qtr-padding-bottom" *ngFor="let item of data">
+			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
 		</div>
 	</div>
 </ng-template>
@@ -387,7 +405,7 @@
 		</div>
 
 		<div class="modal__body base-padding">
-			<div class="text-large text-bold text-left" 
+			<div class="text-large text-bold text-left"
 				[innerText]="'_TopicsAvailable_' | i18n:data.length">
 			</div>
 
@@ -418,7 +436,7 @@
 								<span [innerText]="item.duration"></span>
 							</div>
 						</div>
-					</div>				
+					</div>
 					<ng-container *ngIf="item == componentData.atx.interested && atxScheduleCardOpened">
 						<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }">
 						</ng-container>
@@ -446,7 +464,7 @@
 		</div>
 		<div class="divider base-margin-left base-margin-right"></div>
 		<div class="modal__body base-padding">
-			<div class="text-large text-bold text-left" 
+			<div class="text-large text-bold text-left"
 				[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase"
 				data-auto-id="ACCTopicsAvailable">
 			</div>
@@ -462,8 +480,8 @@
 					</div>
 					<div class="icon-bookmark icon-medium" [ngClass]="getRibbonClass(item)" data-auto-id="ACCCardRibbon"></div>
 					<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
-					<div class="card__header text-left text-bold" 
-						[ngClass]="item.status === 'recommended' ? 'text-info' : null" 
+					<div class="card__header text-left text-bold"
+						[ngClass]="item.status === 'recommended' ? 'text-info' : null"
 						[innerText]="item.title"
 						data-auto-id="ACCCardTitle">
 					</div>
@@ -541,7 +559,7 @@
 						<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 							<div class="row">
 								<div class="col-md-3">
-									<a class="no-link fade-in-pop" data-auto-id="successlinl" [href]="item.url">
+									<a class="no-link fade-in-pop" data-auto-id="successlinl" target="_blank" [href]="item.url">
 										<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
 											<span class="icon-apps icon-small half-padding-right"></span>
 											<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
@@ -628,7 +646,7 @@
 				</div>
 			</div>
 		</div>
-	
+
 		<div *ngIf="!loading && data">
 			<ng-container *ngTemplateOutlet="template; context: { data: data }"></ng-container>
 		</div>

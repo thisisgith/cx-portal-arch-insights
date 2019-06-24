@@ -11,6 +11,7 @@ import { GeneralSearchModule } from './general-search/general-search.module';
 import { NoResultsModule } from './no-results/no-results.module';
 import { SearchBarModule } from './search-bar/search-bar.module';
 import { SpecialSearchModule } from './special-search/special-search.module';
+import { RMASearchModule } from './rma-search/rma-search.module';
 import {
 	SearchModule as SearchServiceModule,
 	ContractsModule,
@@ -20,7 +21,8 @@ import { environment } from '@environment';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpOrigin;
+const rootUrl = environment.services.sdp.origin;
+import { SerialSearchModule } from './serial-search/serial-search.module';
 
 /**
  * Module representing the Search Component
@@ -37,11 +39,12 @@ const rootUrl = environment.sdpOrigin;
 		NoResultsModule,
 		SearchBarModule,
 		SpecialSearchModule,
-
 		HttpClientModule,
 		I18nPipeModule,
+		SerialSearchModule,
 		TruncatePipeModule,
 		RouterModule,
+		RMASearchModule,
 		ContractsModule.forRoot({ rootUrl }),
 		SearchServiceModule.forRoot({ rootUrl }),
 	],

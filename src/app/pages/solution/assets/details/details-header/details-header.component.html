@@ -27,7 +27,7 @@
 					<div *ngIf="asset?.hostname" data-auto-id="Asset360Hostname" class="dbl-margin-right">
 						<div class="text-muted text-small text-uppercase" innerText="{{ '_Hostname_' | i18n }}"></div>
 						<div innerText="{{ asset?.hostname }}"></div>
-					</div> 
+					</div>
 
 					<div *ngIf="!asset?.hostname" class="dbl-margin-right">
 						<div class="text-muted text-small text-uppercase" innerText="{{ '_Hostname_' | i18n }}"></div>
@@ -68,7 +68,7 @@
 				</div>
 			</div>
 
-			<div class="col-md-6 qtr-margin-top" *ngIf="!status.loading.cases"> 
+			<div class="col-md-6 qtr-margin-top" *ngIf="!status.loading.cases">
 
 				<div *ngIf="componentData.openCases"
 					class="dropdown dropdown--center dropdown--tail open-case-toggle-btn"
@@ -114,7 +114,7 @@
 
 
 					</div>
-					<!-- END TODO -->
+					<!-- END TODO: -->
 				</div>
 
 				<div *ngIf="!componentData.openCases" class="text-uppercase"
@@ -134,12 +134,12 @@
 					[ngClass]="{ active: actionDropdownActive }"
 					class="dropdown dropdown--actions dropdown--tail dropdown--left">
 					<span class="icon-more icon--rotated icon-medium rotate-90"></span>
-					<div class="dropdown__menu"> 
+					<div class="dropdown__menu">
 						<!-- TODO: add edit and delete functionality once open cases return -->
 						<a innerText="{{ '_Edit_' | i18n}}"></a>
-						<a innerText="{{ '_Delete' | i18n}}"></a>
+						<a innerText="{{ '_Delete_' | i18n}}"></a>
 					</div>
-				</div> 
+				</div>
 			</div>
 		</div>
 

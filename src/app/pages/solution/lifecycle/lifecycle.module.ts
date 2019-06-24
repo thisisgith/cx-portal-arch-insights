@@ -6,13 +6,13 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiSpinnerModule, CuiSelectModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
 import { LifecycleComponent } from './lifecycle.component';
-import { RacetrackModule, RacetrackContentModule, SdpApiModule } from '@cui-x/sdp-api';
+import { RacetrackModule, RacetrackContentModule } from '@cui-x/sdp-api';
 import { environment } from '@environment';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpOrigin;
+const rootUrl = environment.services.sdp.origin;
 
 /**
  * Child routes for Lifecycle Module for lazy loading
@@ -39,7 +39,6 @@ const childRoutes: Routes = [
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
 		RouterModule.forChild(childRoutes),
-		SdpApiModule,
 	],
 	providers: [
 		{ provide: 'ENVIRONMENT', useValue: environment },
