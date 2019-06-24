@@ -16,7 +16,7 @@ import { SearchService } from '@services';
 import { Subject } from 'rxjs';
 import { debounceTime, switchMap, takeUntil } from 'rxjs/operators';
 
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 /** Limit on number of typeahead results */
 const TYPEAHEAD_LIMIT = 7;

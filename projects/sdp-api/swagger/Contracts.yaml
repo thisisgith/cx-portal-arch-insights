@@ -34,6 +34,12 @@ paths:
           required: true
           type: string
 
+        - name: contractNumber
+          in: query
+          description: The contract number
+          required: false
+          type: string
+
         - name: coverage
           in: query
           description: Unique identifier of a Cisco customer.

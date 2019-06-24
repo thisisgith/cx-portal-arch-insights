@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '@environment';
 import { RMAResponse } from '@interfaces';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 /**
  * Service which contains all calls to our RMA service

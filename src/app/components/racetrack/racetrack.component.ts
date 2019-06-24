@@ -4,7 +4,7 @@ import * as d3 from 'd3-selection';
 import { d3Transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
 import { scalePow } from 'd3-scale';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 d3.transition = d3Transition;
 

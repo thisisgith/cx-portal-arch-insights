@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { HardwareResponse, InventoryService, HardwareInfo } from '@cui-x/sdp-api';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { SolutionService } from '../solution.service';
 

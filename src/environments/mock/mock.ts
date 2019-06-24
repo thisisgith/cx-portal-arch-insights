@@ -13,7 +13,7 @@ import {
 	SuccessPathScenarios,
 } from './';
 import { HttpHeaders } from '@angular/common/http';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
