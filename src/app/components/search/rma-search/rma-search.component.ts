@@ -16,7 +16,7 @@ import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { RMAService } from '@services';
 import { RMARecord, RMAResponse, PartsLineDetail, SearchContext } from '@interfaces';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { environment } from '@environment';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 

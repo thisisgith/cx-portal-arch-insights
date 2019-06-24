@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { InventoryService } from '@cui-x/sdp-api';
 import { environment } from '@environment';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 describe('AssetsComponent', () => {
 	let component: AssetsComponent;

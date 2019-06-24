@@ -29,7 +29,7 @@ import {
 } from '@cui-x/sdp-api';
 
 import { SolutionService } from '../solution.service';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 

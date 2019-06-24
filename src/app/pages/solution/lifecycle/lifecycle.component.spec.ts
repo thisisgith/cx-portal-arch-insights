@@ -18,7 +18,7 @@ import { of, throwError } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { HttpErrorResponse } from '@angular/common/http';
 
 /**

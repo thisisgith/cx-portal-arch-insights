@@ -6,7 +6,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { APIxService } from '@services';
 import { environment } from '@environment';
 
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 /**
  * Enum of possible APIx origin types

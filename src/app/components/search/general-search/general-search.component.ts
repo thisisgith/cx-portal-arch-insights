@@ -28,7 +28,7 @@ import {
 import { SearchService as SearchUtils } from '@services';
 import { SearchContext } from '@interfaces';
 
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 /**
  * Indicates refresh type, either refreshing everything or fetching a new page

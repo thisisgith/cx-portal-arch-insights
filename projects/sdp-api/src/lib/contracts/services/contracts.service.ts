@@ -40,6 +40,7 @@ class ContractsService extends __BaseService {
     let __body: any = null;
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.coverage != null) __params = __params.set('coverage', params.coverage.toString());
+    if (params.contractNumber != null) __params = __params.set('contractNumber', params.contractNumber.toString());
     let req = new HttpRequest<any>(
       'HEAD',
       this.rootUrl + `/api/customerportal/contracts/v1/products/coverages`,
@@ -302,6 +303,11 @@ module ContractsService {
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * The contract number
+     */
+    contractNumber?: string;
 
     /**
      * Unique identifier of a Cisco customer.
