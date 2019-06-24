@@ -68,6 +68,27 @@ interface ComponentData {
 }
 
 /**
+ * An ELearning DTO, but with extra arrays to help display the star ratings
+ */
+interface ELearningModel extends ELearning {
+
+	/**
+	 * The number of filled stars, based off of the rating
+	 */
+	filledStars?: number[];
+
+	/**
+	 * The number of unfilled stars, based off of the rating
+	 */
+	unfilledStars?: number[];
+
+	/**
+	 * The number of half filled stars, based off of the rating
+	 */
+	halfFilledStars?: number[];
+}
+
+/**
  * Interface representing combine a seletable status with PitstopAction
  */
 export interface PitstopActionWithStatus {
@@ -460,7 +481,7 @@ export class LifecycleComponent implements OnDestroy {
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
 							case 'E-Course': {
-								const learningItem: ELearning = {
+								const learningItem: ELearningModel = {
 									...item,
 									filledStars: [],
 									halfFilledStars: [],

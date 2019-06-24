@@ -33,21 +33,6 @@ export interface ELearning {
   rating?: string;
 
   /**
-   * The number of filled stars, based off of the rating
-   */
-  filledStars?: number[];
-
-  /**
-   * The number of unfilled stars, based off of the rating
-   */
-  unfilledStars?: number[];
-
-  /**
-   * The number of half filled stars, based off of the rating
-   */
-  halfFilledStars?: number[];
-
-  /**
    * CX Level
    */
   cxlevel?: number;
