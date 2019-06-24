@@ -27,5 +27,5 @@ describe('AssetDetailsComponent', () => {
 			.toBeTruthy();
 	});
 
-	// TODO Add unit test for asset switching once API is written
+	// TODO: Add unit test for asset switching once API is written
 });

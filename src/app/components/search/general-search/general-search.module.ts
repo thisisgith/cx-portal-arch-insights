@@ -8,6 +8,7 @@ import {
 	TruncatePipeModule,
 } from '@cisco-ngx/cui-pipes';
 import { GeneralSearchComponent } from './general-search.component';
+import { KeyHighlightPipeModule } from '../pipes/key-highlight.pipe.module';
 import { NoResultsModule } from '../no-results/no-results.module';
 
 /**
@@ -20,6 +21,7 @@ import { NoResultsModule } from '../no-results/no-results.module';
 	],
 	imports: [
 		CommonModule,
+		KeyHighlightPipeModule,
 		NoResultsModule,
 		FormsModule,
 		CuiSelectModule,

@@ -6,6 +6,13 @@ export { Case } from './case';
 export { Contract } from './contract';
 export { FieldNotice } from './fieldNotice';
 export { License } from './license';
-export { RMA } from './rma';
-export { SearchType } from './search';
+export {
+	LaborLine,
+	PartsLineDetail,
+	ReturnPart,
+	RMAAlert,
+	RMARecord,
+	RMAResponse,
+} from './rma';
+export { SearchEnum, SearchType } from './search';
 export { TimelineDatapoint, TimelineInternalDatapoint, TodayRelation } from './timelineDatapoint';

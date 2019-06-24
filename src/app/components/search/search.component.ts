@@ -3,7 +3,7 @@ import {
 	Component,
 	ViewChild,
 } from '@angular/core';
-import { SearchType } from '@interfaces';
+import { SearchType, SearchEnum } from '@interfaces';
 
 import { SpecialSearchComponent } from './special-search/special-search.component';
 
@@ -28,6 +28,7 @@ export class SearchComponent {
 	public searchType: SearchType;
 	public generalSearch: string;
 	public hideSpecialSearch = false;
+	public hideGeneralSearch = false;
 
 	public status = {
 		hidden: true,
@@ -53,10 +54,24 @@ export class SearchComponent {
 	 */
 	public onHide (hide: boolean) {
 		this.hideSpecialSearch = hide;
+		this.searchType.name = SearchEnum.default;
 		// This will trigger a new search on the plain searchText if it was changed to something
 		// else by the special search view
 		if (hide) {
 			this.generalSearch = this.searchText;
+		}
+	}
+
+	/**
+	 * Toggles the general search visibility.
+	 * @param event Event object
+	 * @param event.hide If true, hides general search. If false, displays it.
+	 * @param event.searchString If provided, overwrites the general search string.
+	 */
+	public toggleGeneralSearch (event: { hide: boolean, searchString: string }) {
+		this.hideGeneralSearch = event.hide;
+		if (event.searchString) {
+			this.generalSearch = event.searchString;
 		}
 	}
 

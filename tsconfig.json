@@ -5,11 +5,12 @@
 		"paths": {
 			"@classes": ["src/app/classes/index.ts"],
 			"@components": ["src/app/components/index.ts"],
+			"@cui-x/sdp-api": ["projects/sdp-api/src"],
 			"@environment": ["src/environments/environment.ts"],
+			"@interceptors": ["src/app/interceptors/index.ts"],
 			"@interfaces": ["src/app/interfaces/index.ts"],
 			"@mock": ["src/environments/mock/index.ts"],
 			"@services": ["src/app/services/index.ts"],
-			"@cui-x/sdp-api": ["projects/sdp-api/src"]
 		}
 	}
 }

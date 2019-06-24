@@ -125,7 +125,7 @@ export const ELearningScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 800,
+					delay: Math.floor(Math.random() * 2000) + 800,
 					description: '(E-Learning) IBN-Wireless Assurance-Onboard',
 					response: {
 						body: MockELearning('ibn', 'Wireless Assurance', 'Onboard'),
@@ -143,7 +143,7 @@ export const ELearningScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 800,
+					delay: Math.floor(Math.random() * 2000) + 800,
 					description: '(E-Learning) IBN-SD Access-Onboard',
 					response: {
 						body: MockELearning('IBN', 'SD Access', 'Onboard'),

@@ -24,7 +24,7 @@ describe('ContractSearchComponent', () => {
 
 	beforeEach(() => {
 		service = TestBed.get(ContractsService);
-		spyOn(service, 'getContracts')
+		spyOn(service, 'getContractDetails')
 			.and
 			.returnValue(of(ContractScenarios[0].scenarios.GET[0].response.body));
 		fixture = TestBed.createComponent(ContractSearchComponent);
@@ -41,7 +41,7 @@ describe('ContractSearchComponent', () => {
 	it('should refresh on query change', () => {
 		component.contractNumber = '230000001';
 		fixture.detectChanges();
-		expect(service.getContracts)
+		expect(service.getContractDetails)
 			.toHaveBeenCalled();
 	});
 });
