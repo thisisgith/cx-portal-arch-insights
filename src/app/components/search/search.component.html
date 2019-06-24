@@ -22,6 +22,11 @@
 								class="base-margin-bottom"
 								[hidden]="hideSpecialSearch">
 								<ng-container [ngSwitch]="searchType.name">
+									<app-case-search *ngSwitchCase="'case'"
+										[caseNumber]="selectedSearch"
+										(hide)="onHide($event)"
+										(toggleGeneralSearch)="toggleGeneralSearch($event)">
+									</app-case-search>
 									<app-contract-search *ngSwitchCase="'contract'"
 										[contractNumber]="selectedSearch"
 										(hide)="onHide($event)">
@@ -41,7 +46,8 @@
 							<hr *ngIf="specialSearch && !hideSpecialSearch" />
 							<app-general-search
 								[hidden]="hideGeneralSearch"
-								[query]="generalSearch">
+								[query]="generalSearch"
+								[context]="searchContext">
 							</app-general-search>
 						</div>
 					</div>

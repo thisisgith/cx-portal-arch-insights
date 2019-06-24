@@ -65,6 +65,11 @@ describe('RMASearchComponent', () => {
 		fixture.detectChanges();
 		expect(component.toggleGeneralSearch.emit)
 			.toHaveBeenCalledWith({
+				hide: true,
+			});
+		expect(component.toggleGeneralSearch.emit)
+			.toHaveBeenCalledWith({
+				context: 'serialno',
 				hide: false,
 				searchString: '^Cisco ASR 920-12SZ-IM Router 0',
 			});

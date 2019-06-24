@@ -3,7 +3,7 @@ import {
 	Component,
 	ViewChild,
 } from '@angular/core';
-import { SearchType, SearchEnum } from '@interfaces';
+import { SearchContext, SearchType, SearchEnum } from '@interfaces';
 
 import { SpecialSearchComponent } from './special-search/special-search.component';
 
@@ -27,6 +27,7 @@ export class SearchComponent {
 	public selectedSearch: string;
 	public searchType: SearchType;
 	public generalSearch: string;
+	public searchContext: string;
 	public hideSpecialSearch = false;
 	public hideGeneralSearch = false;
 
@@ -45,6 +46,14 @@ export class SearchComponent {
 		this.selectedSearch = search.text;
 		this.searchType = search.type;
 		this.generalSearch = search.generalSearch;
+		/** Set search context right away for the general searches fired in parallel */
+		if (search.type.name === SearchEnum.contract) {
+			this.searchContext = SearchContext.contract;
+		} else if (search.type.name === SearchEnum.sn) {
+			this.searchContext = SearchContext.serialno;
+		} else {
+			this.searchContext = null;
+		}
 	}
 
 	/**
@@ -59,6 +68,7 @@ export class SearchComponent {
 		if (hide) {
 			this.searchType.name = SearchEnum.default;
 			this.generalSearch = this.searchText;
+			this.searchContext = null;
 		}
 	}
 
@@ -68,10 +78,17 @@ export class SearchComponent {
 	 * @param event.hide If true, hides general search. If false, displays it.
 	 * @param event.searchString If provided, overwrites the general search string.
 	 */
-	public toggleGeneralSearch (event: { hide: boolean, searchString: string }) {
+	public toggleGeneralSearch (
+		event: { hide: boolean, searchString?: string, context?: SearchContext },
+	) {
 		this.hideGeneralSearch = event.hide;
 		if (event.searchString) {
 			this.generalSearch = event.searchString;
+		}
+		if (event.context) {
+			this.searchContext = event.context;
+		} else {
+			this.searchContext = null;
 		}
 	}
 
