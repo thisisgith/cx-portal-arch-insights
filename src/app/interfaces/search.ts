@@ -11,6 +11,14 @@ export enum SearchEnum {
 }
 
 /**
+ * Possibly additional search contexts
+ */
+export enum SearchContext {
+	serialno = 'serialno',
+	contract = 'contract',
+}
+
+/**
  * Type returned by determineType in search service
  */
 export interface SearchType {

@@ -6,6 +6,7 @@ import {
 	OnInit,
 	Output,
 	EventEmitter,
+	forwardRef,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -14,9 +15,10 @@ import { Observable, Subject, of } from 'rxjs';
 import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { RMAService } from '@services';
-import { RMARecord, RMAResponse, PartsLineDetail } from '@interfaces';
+import { RMARecord, RMAResponse, PartsLineDetail, SearchContext } from '@interfaces';
 import * as _ from 'lodash';
 import { environment } from '@environment';
+import { SpecialSearchComponent } from '../special-search/special-search.component';
 
 /**
  * Data format for the special RMA display table
@@ -34,17 +36,23 @@ interface RmaTableData {
  * Component representing "special" RMA search results on the search modal
  */
 @Component({
+	providers: [{
+		provide: SpecialSearchComponent,
+		useExisting: forwardRef(() => RMASearchComponent,
+	)}],
 	selector: 'app-rma-search',
 	styleUrls: ['./rma-search.component.scss'],
 	templateUrl: './rma-search.component.html',
 })
-export class RMASearchComponent implements OnInit, OnChanges, OnDestroy {
+export class RMASearchComponent extends SpecialSearchComponent
+	implements OnInit, OnChanges, OnDestroy {
 	@Input('rmaNumber') public rmaNumber: string;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	/** Emitter to show or hide general search */
 	@Output('toggleGeneralSearch') public toggleGeneralSearch = new EventEmitter<{
 		hide: boolean,
 		searchString?: string,
+		context?: SearchContext,
 	}>();
 
 	public loading = true;
@@ -60,7 +68,9 @@ export class RMASearchComponent implements OnInit, OnChanges, OnDestroy {
 	constructor (
 		private service: RMAService,
 		private logger: LogService,
-	) { }
+	) {
+		super();
+	}
 
 	/**
 	 * OnInit lifecycle hook
@@ -104,6 +114,7 @@ export class RMASearchComponent implements OnInit, OnChanges, OnDestroy {
 				&& _.has(this.rmaTableData, 'products[0].partsDescription')
 			) {
 				this.toggleGeneralSearch.emit({
+					context: SearchContext.serialno,
 					hide: false,
 					searchString: this.rmaTableData.products[0].partsDescription,
 				});

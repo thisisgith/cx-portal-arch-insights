@@ -7,6 +7,8 @@ import { SerialSearchComponent } from './serial-search.component';
 import { SerialSearchModule } from './serial-search.module';
 import { InventoryService } from '@cui-x/sdp-api';
 
+import { HardwareScenarios } from '@mock';
+
 describe('SerialSearchComponent', () => {
 	let component: SerialSearchComponent;
 	let service: InventoryService;
@@ -41,7 +43,22 @@ describe('SerialSearchComponent', () => {
 		component.serialNumber = 'FOX1306GBAD';
 		fixture.detectChanges();
 		expect(component.hide.emit)
-			.toHaveBeenCalled();
+			.toHaveBeenCalledWith(false);
+		expect(component.hide.emit)
+			.toHaveBeenCalledWith(true);
+	});
+
+	it('should show if SN data was found', () => {
+		spyOn(service, 'getHardware')
+			.and
+			.returnValues(of(HardwareScenarios[0].scenarios.GET[0].response.body));
+		spyOn(component.hide, 'emit');
+		component.serialNumber = 'FOX1306GBAD';
+		fixture.detectChanges();
+		expect(component.hide.emit)
+			.toHaveBeenCalledWith(false);
+		expect(component.hide.emit)
+			.toHaveBeenCalledTimes(1);
 	});
 
 	it('should refresh data when an input changes', () => {

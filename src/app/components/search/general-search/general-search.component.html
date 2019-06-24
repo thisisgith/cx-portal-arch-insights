@@ -62,14 +62,11 @@
 			(click)="onLoadMore()"
 			[innerText]="'_LoadMore_' | i18n">
 		</button>
-		<div
+		<cui-loader
 			*ngIf="loadingPage"
-			class="loading-dots loading-dots--muted"
+			color="muted"
 			aria-label="Loading, please wait...">
-			<span></span>
-			<span></span>
-			<span></span>
-		</div>
+		</cui-loader>
 	</div>
 </div>
 <app-no-results *ngIf="!loading && !searchResults?.length"
@@ -102,9 +99,9 @@
 <!-- Template for separate section containing related ATX/ACC/eLearning Results -->
 <ng-template #relatedTemplate>
 	<ng-container *ngIf="loadingRelated">
-		<div class="flex flex-center-horizontal">
-			<div class="loading-dots" aria-label="Loading, please wait..."></div>
-		</div>
+		<cui-loader color="muted"
+			aria-label="Loading, please wait...">
+		</cui-loader>
 	</ng-container>
 	<ng-container *ngIf="!loadingRelated">
 		<div *ngFor="let item of relatedResults"

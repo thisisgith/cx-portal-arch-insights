@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { CuiSelectModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import { CuiSelectModule, CuiLoaderModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import {
 	I18nPipeModule,
 	TruncatePipeModule,
@@ -25,6 +25,7 @@ import { NoResultsModule } from '../no-results/no-results.module';
 		NoResultsModule,
 		FormsModule,
 		CuiSelectModule,
+		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
 		TruncatePipeModule,

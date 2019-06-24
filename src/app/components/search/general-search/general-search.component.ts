@@ -26,6 +26,7 @@ import {
 	ELearning,
 } from '@cui-x/sdp-api';
 import { SearchService as SearchUtils } from '@services';
+import { SearchContext } from '@interfaces';
 
 import * as _ from 'lodash';
 
@@ -52,6 +53,7 @@ interface RelatedResult {
 })
 export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	@Input('query') public query: string;
+	@Input('context') public context: SearchContext;
 	@Output('results') public results = new EventEmitter();
 
 	/** The actual search results used in the template
@@ -73,6 +75,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public selectedSite: Buckets;
 	public selectedType: Buckets;
 
+	private customerId = '2431199';
 	private readonly pageSize = 10;
 	private pageOffset = 0;
 	private refresh$ = new Subject<RefreshType>();
@@ -214,6 +217,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	private doSearch (query: string, offset?: number, site?: Buckets, type?: Buckets):
 		Observable<CDCSearchResponse | null> {
 		return this.service.directCDCSearch({
+			...(
+				this.context ? {
+					context: this.context,
+					customerId: this.customerId,
+				} : { }
+			),
 			limit: this.pageSize.toString(),
 			offset: offset.toString(),
 			searchTokens: query,
@@ -233,6 +242,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	private doRelatedSearch (query: string): Observable<RelatedResult []> {
 		return this.service.allSearch({
+			...(
+				this.context ? {
+					context: this.context,
+					customerId: this.customerId,
+				} : { }
+			),
 			limit: '1',
 			offset: '0',
 			searchTokens: query,
