@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface CoveredInfo {
+export interface CoverageInfo {
 
   /**
    * First address line of the installed-at site
@@ -9,17 +9,17 @@ export interface CoveredInfo {
   /**
    * The unique, generated ID of the managed network element
    */
-  managedNeId?: string;
+  managedNeId: string;
 
   /**
    * The unique identifier for hardware entry in a datastore
    */
-  hwInstanceId?: string;
+  hwInstanceId: string;
 
   /**
    * A serial number is a unique number used for identification. Example:- FTX1512AHK2; FDO1541Z067; SAD07370169
    */
-  serialNumber: string;
+  serialNumber?: string;
 
   /**
    * The alphanumeric identifier used by customers to order Cisco products. Example:- CISCO2921/K9; WS-C3750X-24S-S; WS-X6748-GE-TX
@@ -94,7 +94,7 @@ export interface CoveredInfo {
   /**
    * CDX should provide a way to uniquely identify IB records, regardless of non-unique or invalid vendor-supplied identity strings
    */
-  neId?: string;
+  neId: string;
 
   /**
    * Second address line of the installed-at site

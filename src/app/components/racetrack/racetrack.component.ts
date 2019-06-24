@@ -82,7 +82,7 @@ export class RacetrackComponent implements OnInit {
 		this.track.attr('transform', `translate(${trackOffsetX} ${trackOffsetY})`);
 
 		/**
-		 * @TODO figure out how to replace this 'any'
+		 * @TODO: figure out how to replace this 'any'
 		 */
 		let points: any[] = Array.from({ length: 200 })
 			.fill(null);

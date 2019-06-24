@@ -1,7 +1,5 @@
 /* tslint:disable */
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { SdpApiModule } from '../sdp-api.module';
 import { InventoryConfiguration, InventoryConfigurationInterface } from './inventory-configuration';
 
 import { InventoryService } from './services/inventory.service';
@@ -10,13 +8,6 @@ import { InventoryService } from './services/inventory.service';
  * Provider for all Inventory services, plus InventoryConfiguration
  */
 @NgModule({
-  imports: [
-    HttpClientModule,
-    SdpApiModule,
-  ],
-  exports: [
-    HttpClientModule
-  ],
   declarations: [],
   providers: [
     InventoryConfiguration,

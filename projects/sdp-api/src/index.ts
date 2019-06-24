@@ -1,8 +1,6 @@
 /*
  * Public API Surface of sdp-api
  */
-export { SdpApiModule } from './lib/sdp-api.module';
-
 export * from './lib/user/models';
 export * from './lib/user/services';
 export * from './lib/user/user.module';
@@ -28,12 +26,13 @@ export * from './lib/contracts/services';
 export * from './lib/contracts/contracts.module';
 
 export {
+  Acc,
+  AtxFuture,
   Buckets,
   Community as SearchCommunity,
   CDC,
   CDCSearchResponse,
   CommunitySearchResponse,
-  Community,
   Facets,
   GlobalSearchResponse,
 } from './lib/search/models';
