@@ -278,6 +278,10 @@ $vibblue: #017cad;
 	}
 }
 
+.viewall-link {
+	cursor: pointer;
+}
+
 ::ng-deep #category-filter input,
 ::ng-deep #category-filter input:focus {
 	border: 0 !important;
