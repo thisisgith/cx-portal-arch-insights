@@ -1,10 +1,10 @@
 /* tslint:disable */
-export interface NetworkElementInfo {
+export interface NetworkElement {
 
   /**
-   * The specific version of the software (Software Type) that is installed on the Network Element
+   * Product family the device belongs to
    */
-  swVersion?: string;
+  productFamily?: string;
 
   /**
    * Unique identifier of a Cisco customer
@@ -14,17 +14,36 @@ export interface NetworkElementInfo {
   /**
    * The unique, generated ID of the network element
    */
-  neInstanceId: number;
+  neInstanceId: string;
+
+  /**
+   * The unique, generated ID of the network resource instance id
+   */
+  managedNeInstanceId?: number;
 
   /**
    * The unique, generated ID of the network resource id
    */
-  managedNeInstanceId?: number;
+  managedNeId?: string;
 
   /**
    * Inventory Name of the processed Inventory File
    */
   inventoryName?: string;
+
+  /**
+   * Hostname for the Element
+   */
+  hostName?: string;
+  neName?: string;
+  neRegistrationStatus?: string;
+  lastUpdateDate?: string;
+  tags?: Array<string>;
+  serialNumber?: string;
+  systemUptime?: string;
+  udiProductIdentifier?: string;
+  smartLicenseProductInstanceIdentifier?: string;
+  smartLicenseVirtualAccountName?: string;
 
   /**
    * Management IP Address of the Device
@@ -72,9 +91,9 @@ export interface NetworkElementInfo {
   inventoryCollectionDate?: string;
 
   /**
-   * Product family the device belongs to
+   * The unique identifier for a Cisco Collector (CSPC) appliance
    */
-  productFamily?: string;
+  collectorId?: string;
 
   /**
    * Refers to the validated product ID of the device. GMT date format YYYY-MM-DDTHH:MM:SS (Time is displayed in 24 hour format)
@@ -97,9 +116,9 @@ export interface NetworkElementInfo {
   swType?: string;
 
   /**
-   * The unique identifier for a Cisco Collector (CSPC) appliance
+   * The specific version of the software (Software Type) that is installed on the Network Element
    */
-  collectorId?: string;
+  swVersion?: string;
 
   /**
    * The status of the device as reported by the collector. Example:- Reachable or Not Reachable
@@ -169,7 +188,7 @@ export interface NetworkElementInfo {
   /**
    * Indicates whether the device is directly managed by the collector
    */
-  isManagedNe: number;
+  isManagedNE: boolean;
 
   /**
    * The user field1 value populated in the collector seedfile

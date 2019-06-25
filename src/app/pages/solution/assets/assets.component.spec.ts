@@ -45,15 +45,15 @@ describe('AssetsComponent', () => {
 	 */
 	it('should switch active filters', () => {
 		const totalFilter = _.find(component.filters, { key: 'total' });
-		const casesFilter = _.find(component.filters, { key: 'cases' });
+		const coverageFilter = _.find(component.filters, { key: 'coverage' });
 		expect(_.find(component.filters, 'selected'))
 			.toEqual(totalFilter);
 
-		component.selectFilter(casesFilter);
+		component.selectFilter(coverageFilter);
 		fixture.detectChanges();
 
 		expect(_.filter(component.filters, 'selected'))
-			.toContain(casesFilter);
+			.toContain(coverageFilter);
 	});
 
 	/**
@@ -104,7 +104,7 @@ describe('AssetsComponent', () => {
 		expect(window.loading)
 			.toBe(true);
 
-		spyOn(inventoryService, 'getHardware')
+		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(of({ data: [] }));
 		component.ngOnInit();
