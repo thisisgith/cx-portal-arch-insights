@@ -1,6 +1,7 @@
-import * as util from '@apollo/cypress-util/lib/util';
+import { Util } from '@apollo/cypress-util';
 import MockService from '../support/mockService';
 
+const util = new Util();
 const assetMock = new MockService('NetworkScenarios');
 const networkScenario = assetMock.getScenario('GET', 'Network Elements Page 1');
 const assets = networkScenario.response.body.data;
