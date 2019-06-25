@@ -540,7 +540,7 @@ export const SearchScenarios = [
 						body: mockData,
 						status: 200,
 					},
-					// selected: true,
+					selected: true,
 				},
 				{
 					delay: Math.floor(Math.random() * 8000) + 5000,
@@ -562,7 +562,7 @@ export const SearchScenarios = [
 						status: 404,
 						statusText: 'Unable to find results',
 					},
-					selected: true,
+					// selected: true,
 				},
 			],
 		},
