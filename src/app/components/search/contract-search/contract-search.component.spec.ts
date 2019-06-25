@@ -55,7 +55,7 @@ describe('ContractSearchComponent', () => {
 		spyOn(service, 'getContractDetails')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(service, 'headApiCustomerportalContractsV1ProductsCoveragesResponse')
+		spyOn(service, 'headContractsProductsCoveragesResponse')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnChanges();

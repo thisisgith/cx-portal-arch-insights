@@ -1,13 +1,12 @@
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 
 import { GeneralSearchComponent } from './general-search.component';
 import { GeneralSearchModule } from './general-search.module';
 import { SearchScenarios } from '@mock';
 import { CDCSearchResponse, GlobalSearchResponse, SearchService } from '@cui-x/sdp-api';
-import { HttpErrorResponse } from '@angular/common/http';
 
 describe('GeneralSearchComponent', () => {
 	let component: GeneralSearchComponent;
