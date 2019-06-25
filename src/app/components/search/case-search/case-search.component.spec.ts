@@ -108,11 +108,10 @@ describe('caseSearchComponent', () => {
 			.toHaveBeenCalledWith(true);
 	}));
 
-	it('should not hide when other requests error', fakeAsync(() => {
-		component.caseNumber = '688296392';
+	it('should not hide if only a case number is set', fakeAsync(() => {
 		spyOn(caseService, 'fetchCaseDetails')
 			.and
-			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of({ caseNumber: '680000000' }));
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -129,24 +128,10 @@ describe('caseSearchComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnChanges();
 		fixture.detectChanges();
+		tick(1000); // Wait for caseDetails to get the SN
 		expect(component.hide.emit)
 			.toHaveBeenCalledWith(false);
-		expect(component.hide.emit);
-	}));
-
-	it('should not hide if a case number is returned', fakeAsync(() => {
-		component.caseNumber = '699999999';
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of({ caseNumber: '699999999' }));
-		spyOn(caseService, 'fetchCaseNotes')
-			.and
-			.returnValue(of({ }));
-		spyOn(component.hide, 'emit');
-		component.ngOnChanges();
-		fixture.detectChanges();
 		expect(component.hide.emit)
-			.toHaveBeenCalledWith(false);
-		expect(component.hide.emit);
+			.toHaveBeenCalledTimes(1);
 	}));
 });

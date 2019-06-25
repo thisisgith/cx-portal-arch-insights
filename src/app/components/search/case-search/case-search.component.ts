@@ -200,7 +200,7 @@ implements OnInit, OnDestroy, OnChanges {
 		this.case.severity = caseDetails.priority;
 		this.case.status = caseDetails.status;
 		this.case.summary = caseDetails.summary;
-		if (!this.case.description) {
+		if (!this.case.description && this.case.summary) {
 			const splitSummary = this.case.summary.split(' ');
 			if (splitSummary.length <= 10) {
 				this.case.description = this.case.summary;
@@ -284,7 +284,7 @@ implements OnInit, OnDestroy, OnChanges {
 	 							Observable<HardwareResponse> {
 		return this.inventoryService.getHardware({
 			customerId: this.customerId,
-			serialNumber: [this.serialNumber],
+			serialNumber: [this.case.serialNumber],
 		})
 		.pipe(
 			catchError(err => {
