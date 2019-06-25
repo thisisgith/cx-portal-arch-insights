@@ -353,7 +353,7 @@
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
 			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
 		</div>
-		<div class="col-md-3 text-right text-indigo toggle viewall-link"
+		<div class="col-md-3 text-right text-indigo toggle"
 			*ngIf="data"
 			(click)="showModal(title)"
 			attr.data-auto-id="ShowModalPanel-{{ title }}">

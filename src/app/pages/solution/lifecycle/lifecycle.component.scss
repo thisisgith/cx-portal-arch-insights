@@ -278,10 +278,6 @@ $vibblue: #017cad;
 	}
 }
 
-.viewall-link {
-	cursor: pointer;
-}
-
 ::ng-deep #category-filter input,
 ::ng-deep #category-filter input:focus {
 	border: 0 !important;
@@ -290,6 +286,7 @@ $vibblue: #017cad;
 	border-bottom: 2px solid $vibblue !important;
 }
 
+// leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {
 // 	color:$vibblue !important;
 // 	background-color: transparent !important;
