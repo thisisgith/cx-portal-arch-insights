@@ -17,11 +17,11 @@ export const environment = {
 	...defaults,
 	origin,
 	auth: {
-		ciscoTokenUrl: `${authOrigin}/ws/oauth/v3/token/cisco/{INSERT_CLIENT_ID}`,
+		ciscoTokenUrl: `${authOrigin}/ws/oauth/v3/token/cisco`,
 		referUrl: `${authOrigin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${authOrigin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/',
 	production: true,
-	sdpOrigin: 'https://api-stage.cisco.com',
+	sdpServiceOrigin: 'https://api-stage.cisco.com',
 };

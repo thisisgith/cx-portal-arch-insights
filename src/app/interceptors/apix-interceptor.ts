@@ -24,8 +24,6 @@ enum OriginType {
 	providedIn: 'root',
 })
 export class APIxInterceptor implements HttpInterceptor {
-	private sdp = environment.services.sdp;
-	private rma = environment.services.rma;
 	private originRegex: RegExp;
 	private sdpRegex: RegExp;
 	private rmaRegex: RegExp;
@@ -34,17 +32,18 @@ export class APIxInterceptor implements HttpInterceptor {
 		private apixService: APIxService,
 		private logger: LogService,
 	) {
-		if (this.sdp.origin === this.rma.origin) {
-			this.originRegex = new RegExp(`^${this.sdp.origin}`);
+		if (environment.sdpServiceOrigin === environment.rmaServiceOrigin) {
+			this.originRegex = new RegExp(`^${environment.sdpServiceOrigin}`);
 		} else {
-			this.originRegex = new RegExp(`^${this.sdp.origin}|^${this.rma.origin}`);
+			this.originRegex =
+				new RegExp(`^${environment.sdpServiceOrigin}|^${environment.rmaServiceOrigin}`);
 		}
 		this.sdpRegex = new RegExp(`^${
-			_.values(this.sdp.paths)
+			_.values(environment.sdpServicePaths)
 			.join('|^')
 		}`);
 		this.rmaRegex = new RegExp(`^${
-			_.values(this.rma.paths)
+			_.values(environment.rmaServicePaths)
 			.join('|^')
 		}`);
 	}
@@ -81,10 +80,10 @@ export class APIxInterceptor implements HttpInterceptor {
 			let clientId: string;
 			switch (this.testOrigin(url)) {
 				case OriginType.sdp:
-					clientId = this.sdp.clientId;
+					clientId = environment.sdpServiceClientId;
 					break;
 				case OriginType.rma:
-					clientId = this.rma.clientId;
+					clientId = environment.rmaServiceClientId;
 					break;
 			}
 
