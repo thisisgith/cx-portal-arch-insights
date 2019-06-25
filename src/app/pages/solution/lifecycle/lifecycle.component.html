@@ -365,24 +365,6 @@
 	<div class="text-muted" [innerText]="'_ProductGuideSubtitle_' | i18n"></div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<a class="no-link fade-in-pop" target="_blank" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
-		</div>
-	</div>
-</ng-template>
-
-<ng-template #successPathBlock let-title="title" let-data="data" let-icon="icon">
-	<div class="row">
-		<div class="col-md-9">
-			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
-			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
-		</div>
-		<div class="col-md-3 text-right">
-			<span [innerText]="'_ViewAll_' | i18n"></span>
-			<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
-		</div>
-	</div>
-	<div class="base-padding-bottom half-padding-top half-padding-left">
-		<div class="qtr-padding-bottom" *ngFor="let item of data">
 			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
 		</div>
 	</div>
