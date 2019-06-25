@@ -50,6 +50,34 @@ describe('caseSearchComponent', () => {
 			.toHaveBeenCalled();
 	});
 
+	it('should not hide if only a case number is set', fakeAsync(() => {
+		component.caseNumber = '680000002';
+		spyOn(caseService, 'fetchCaseDetails')
+			.and
+			.returnValue(of({ caseNumber: '680000002' }));
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(component.hide, 'emit');
+		spyOn(caseService, 'fetchCaseNotes')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(inventoryService, 'getHardware')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.ngOnChanges();
+		fixture.detectChanges();
+		tick(1000); // Wait for caseDetails to get the SN
+		expect(component.hide.emit)
+			.toHaveBeenCalledWith(false);
+		expect(component.hide.emit)
+			.toHaveBeenCalledTimes(1);
+	}));
+
 	it('should call all of the required APIs for a valid case', fakeAsync(() => {
 		component.caseNumber = '688296392';
 		spyOn(caseService, 'fetchCaseDetails')
@@ -108,30 +136,4 @@ describe('caseSearchComponent', () => {
 			.toHaveBeenCalledWith(true);
 	}));
 
-	it('should not hide if only a case number is set', fakeAsync(() => {
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of({ caseNumber: '680000000' }));
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(component.hide, 'emit');
-		spyOn(caseService, 'fetchCaseNotes')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getHardware')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		component.ngOnChanges();
-		fixture.detectChanges();
-		tick(1000); // Wait for caseDetails to get the SN
-		expect(component.hide.emit)
-			.toHaveBeenCalledWith(false);
-		expect(component.hide.emit)
-			.toHaveBeenCalledTimes(1);
-	}));
 });
