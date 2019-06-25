@@ -333,7 +333,7 @@
 			*ngIf="data">
 			<a class="no-link fade-in-pop"
 				target="_blank"
-				data-auto-id="Elearning-ViewAll"
+				attr.data-auto-id="{{ title }}-ViewAll"
 				href="https://digital-learning.cisco.com/cx#/"
 				[ngClass]="{'disabled': title !== '_ELearning_'}">
 				<span [innerText]="'_ViewAll_' | i18n"></span>
