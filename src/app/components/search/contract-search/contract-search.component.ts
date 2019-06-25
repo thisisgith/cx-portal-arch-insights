@@ -144,7 +144,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	 */
 	private getCoverages (contractNumber: string, customerId: string):
 	Observable<HttpResponse<null>> {
-		return this.contractsService.headApiCustomerportalContractsV1ProductsCoveragesResponse(
+		return this.contractsService.headContractsProductsCoveragesResponse(
 			{
 				contractNumber,
 				customerId,

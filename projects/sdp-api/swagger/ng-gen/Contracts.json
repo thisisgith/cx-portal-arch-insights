@@ -13,7 +13,7 @@
   },
   "defaultOperationIds": {
     "head": {
-      "/api/v1/contracts/products/coverages": "headContractsProductsCoverages"
+      "/api/customerportal/contracts/v1/products/coverages": "headContractsProductsCoverages"
     }
   },
   "modelsExportAs": {

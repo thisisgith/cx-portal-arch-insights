@@ -1,9 +1,9 @@
 import * as util from '@apollo/cypress-util/lib/util';
 import MockService from '../support/mockService';
 
-const assetMock = new MockService('HardwareScenarios');
-const hardwareScenario = assetMock.getScenario('GET', 'Hardware');
-const assets = hardwareScenario.response.body.data;
+const assetMock = new MockService('NetworkScenarios');
+const networkScenario = assetMock.getScenario('GET', 'Network Elements Page 1');
+const assets = networkScenario.response.body.data;
 
 describe('Assets', () => { // PBC-41
 	before(() => {

@@ -9,7 +9,7 @@ import { Subject, of, Observable } from 'rxjs';
 import { tap, takeUntil, switchMap, catchError } from 'rxjs/operators';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 /**
  * Component representing case number search results on the search modal.
