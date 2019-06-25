@@ -18,6 +18,11 @@ export interface CDCSearchResponse {
   facets?: Array<Facets>;
 
   /**
+   * final search token sent to CDC. May differ from sent query if context is set
+   */
+  searchToken?: string;
+
+  /**
    * total hits for search
    */
   totalHits?: number;

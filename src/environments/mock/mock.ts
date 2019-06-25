@@ -1,41 +1,47 @@
 import {
-	ActionScenarios,
 	ACCScenarios,
+	ActionScenarios,
 	ATXScenarios,
 	CommunitiesScenarios,
+	CaseScenarios,
 	ContractScenarios,
+	CoverageScenarios,
 	ELearningScenarios,
 	HardwareScenarios,
+	NetworkScenarios,
 	RacetrackScenarios,
+	RMAScenarios,
 	SearchScenarios,
 	SuccessPathScenarios,
 } from './';
 import { HttpHeaders } from '@angular/common/http';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
 	ATXResponse,
-	PitstopActionUpdateResponse,
+	CDCSearchResponse,
 	CommunitiesResponse,
 	ELearningResponse,
 	HardwareResponse,
+	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	SuccessPathsResponse,
-	CDCSearchResponse,
 } from '@cui-x/sdp-api';
+import { RMAResponse } from '@interfaces';
 
 /** Alias type for the Response Body */
 type ResponseBody = (
-	HardwareResponse |
+	ACCResponse |
 	ATXResponse |
+	CDCSearchResponse |
 	CommunitiesResponse |
 	ELearningResponse |
-	SuccessPathsResponse |
-	ACCResponse |
-	RacetrackResponse |
+	HardwareResponse |
 	PitstopActionUpdateResponse |
-	CDCSearchResponse
+	RacetrackResponse |
+	RMAResponse |
+	SuccessPathsResponse
 );
 
 /**
@@ -81,14 +87,18 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ActionScenarios,
 		ATXScenarios,
+		CaseScenarios,
 		CommunitiesScenarios,
 		ContractScenarios,
-		ActionScenarios,
+		CoverageScenarios,
 		ELearningScenarios,
 		HardwareScenarios,
+		NetworkScenarios,
 		RacetrackScenarios,
-		SuccessPathScenarios,
+		RMAScenarios,
 		SearchScenarios,
+		SuccessPathScenarios,
 	]),
 };

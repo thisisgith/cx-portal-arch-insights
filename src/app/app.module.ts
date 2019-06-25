@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,6 +11,7 @@ import { AppService } from './app.service';
 import { ClientSSOModule } from '@cisco-ngx/cui-auth';
 
 import { environment } from '@environment';
+import { APIxInterceptor } from '@interceptors';
 
 import {
 	CuiModalModule,
@@ -64,6 +65,7 @@ export function loadI18n (service: AppService) {
 		},
 		{ provide: APP_BASE_HREF, useValue: environment.baseHref },
 		{ provide: 'ENVIRONMENT', useValue: environment },
+		{ provide: HTTP_INTERCEPTORS, useClass: APIxInterceptor, multi: true },
 	],
 })
 

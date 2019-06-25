@@ -1,6 +1,7 @@
 <div *ngIf="loading" class="row no-gutters">
 	<div class="col-md-12">
 		<div class="panel panel--loose">
+			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingContracts_' | i18n"></h4>
 			<cui-spinner></cui-spinner>
 		</div>
 	</div>
@@ -38,19 +39,19 @@
 				<span class="text-muted" [innerText]="'_DevicesCovered_' | i18n | uppercase"></span>
 			</dt>
 			<dd>
-				<span [innerText]="contractData?.devicesCovered"></span>
+				<span *ngIf="coverageCount !== null; else unavailable" [innerText]="coverageCount"></span>
 			</dd>
 		</dl>
 	</div>
 	<div class="base-margin-top">
-		<!-- TODO get button link -->
+		<!-- TODO: get button link -->
 		<button class="btn btn--small btn--gray-ghost"
 			[innerText]="'_ContractDetails_' | i18n">
 		</button>
 	</div>
 </div>
 <!-- Sidebar, static html content from UX team -->
-<!-- TODO i18n all of this -->
+<!-- TODO: i18n all of this -->
 <ng-template #sidebar>
 	<div *ngIf="!loading">
 		<div class="subheading">CX Level 2 Includes</div>
@@ -79,7 +80,11 @@
 	<div class="half-margin-top"><span>24x7x4hr/2hr Onsite RMAs</span></div>
 	<div class="half-margin-top"><span>Asset/License Management</span></div>
 	<div class="half-margin-top"><span>And more…</span></div>
-	<!-- TODO get link href -->
+	<!-- TODO: get link href -->
 	<div class="half-margin-top"><a>Learn More</a></div>
 </div>
+</ng-template>
+
+<ng-template #unavailable>
+	<span class="text-muted" [innerText]="'_Unavailable_' | i18n"></span>
 </ng-template>

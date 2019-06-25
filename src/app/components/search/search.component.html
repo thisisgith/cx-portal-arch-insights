@@ -1,5 +1,4 @@
 <app-search-bar
-	[items]="products"
 	(searchChange)="onSearchChange($event)"
 	[(searchText)]="searchText">
 </app-search-bar>
@@ -22,16 +21,34 @@
 							<div id="specialContainer"
 								class="base-margin-bottom"
 								[hidden]="hideSpecialSearch">
-								<ng-container [ngSwitch]="searchType">
+								<ng-container [ngSwitch]="searchType.name">
+									<app-case-search *ngSwitchCase="'case'"
+										[caseNumber]="selectedSearch"
+										(hide)="onHide($event)"
+										(toggleGeneralSearch)="toggleGeneralSearch($event)">
+									</app-case-search>
 									<app-contract-search *ngSwitchCase="'contract'"
 										[contractNumber]="selectedSearch"
 										(hide)="onHide($event)">
 									</app-contract-search>
+									<serial-search *ngSwitchCase="'sn'"
+										[serialNumber]="selectedSearch"
+										(hide)="onHide($event)">
+									</serial-search>
+									<app-rma-search
+										*ngSwitchCase="'rma'"
+										[rmaNumber]="searchType.value"
+										(hide)="onHide($event)"
+										(toggleGeneralSearch)="toggleGeneralSearch($event)">
+									</app-rma-search>
 								</ng-container>
 							</div>
 							<hr *ngIf="specialSearch && !hideSpecialSearch" />
 							<app-general-search
-								[query]="generalSearch">
+								[hidden]="hideGeneralSearch"
+								[query]="generalSearch"
+								[header]="generalSearchHeader"
+								[context]="searchContext">
 							</app-general-search>
 						</div>
 					</div>

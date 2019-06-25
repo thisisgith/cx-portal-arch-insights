@@ -18,6 +18,7 @@ security:
 paths:
   /api/customerportal/inventory/v1/hardware:
     head:
+      operationId: headHardware
       tags:
         - Inventory
       summary: | 
@@ -177,6 +178,7 @@ paths:
           description: 'Forbidden'
   /api/customerportal/inventory/v1/network-elements:
     head:
+      operationId: headNetworkElements
       tags:
         - Inventory
       summary: | 
@@ -361,6 +363,7 @@ paths:
           description: API not found
   /api/customerportal/inventory/v1/software:
     head:
+      operationId: headSoftware
       tags:
         - Inventory
       summary: | 
@@ -670,12 +673,14 @@ definitions:
       data:
         type: array
         items:
-          $ref: '#/definitions/NetworkElementInfo'
+          $ref: '#/definitions/NetworkElement'
+      Pagination:
+        $ref: '#/definitions/Pagination'
           
-  NetworkElementInfo:
+  NetworkElement:
     type: object
     required:
-      [customerId, managedNEId, neInstanceId, managementAddress, isManagedNe]
+      [customerId, managedNEId, neInstanceId, managementAddress, isManagedNE]
     properties:
       customerId:
         type: string
@@ -688,9 +693,8 @@ definitions:
         x-zenith-ds-fieldName: COLLECTORID
         description: The unique identifier for a Cisco Collector (CSPC) appliance
       neInstanceId:
-        type: integer
-        example: 23493607
-        format: int64
+        type: string
+        example: 'NA,FOC1544Y175,WS-C2960S-24PS-L,NA'
         x-zenith-ds-fieldName: NEINSTANCEID
         description: The unique, generated ID of the network element
       managedNeInstanceId:
@@ -698,12 +702,43 @@ definitions:
         example: 7676767
         format: int64
         x-zenith-ds-fieldName: MANAGEDNEINSTANCEID
+        description: The unique, generated ID of the network resource instance id
+      managedNeId:
+        type: string
+        example: '10.119.1.172,NA,NA,NA'
+        x-zenith-ds-fieldName: MANAGEDNEID
         description: The unique, generated ID of the network resource id
       inventoryName:
         type: string
         example: 'SNTC_API_Test123'
         x-zenith-ds-fieldName: INVENTORYNAME
         description: Inventory Name of the processed Inventory File
+      hostName:
+        type: string
+        example: '1971THE2-swi-LIMDR_P7_1_SD_DR'
+        description: Hostname for the Element
+      neName:
+        type: string
+        example: '1971THE2-swi-LIMDR_P7_1_SD_DR.tbc.limad.net'
+      neRegistrationStatus:
+        type: string
+      lastUpdateDate:
+        type: string
+        format: "date-time"
+      tags:
+        type: array
+        items:
+          type: string
+      serialNumber:
+        type: string
+      systemUptime:
+        type: string
+      udiProductIdentifier:
+        type: string
+      smartLicenseProductInstanceIdentifier:
+        type: string
+      smartLicenseVirtualAccountName:
+        type: string
       managementAddress:
         type: string
         example: '172.21.34.57'
@@ -848,10 +883,9 @@ definitions:
         example: 'NA'
         x-zenith-ds-fieldName: BOOTSTRAPVERSION
         description: The version of the boot code installed on the device
-      isManagedNe:
-        type: integer
-        example: 1
-        format: int64
+      isManagedNE:
+        type: boolean
+        example: true
         x-zenith-ds-fieldName: ISMANAGEDNE
         description: Indicates whether the device is directly managed by the collector
       userField1:
@@ -879,6 +913,31 @@ definitions:
         example: '00:06:28:d9:00:20'
         x-zenith-ds-fieldName: MACADDRESS
         description: A media access control address (MAC address) is a unique identifier assigned to network interfaces for communications on the physical network segment
+
+  Pagination:
+    type: object
+    description: The pagination results for the query
+    properties:
+      page:
+        type: integer
+        example: 1
+        format: int64
+        description: The current page
+      pages:
+        type: integer
+        example: 356
+        format: int64
+        description: The total number of pages
+      rows:
+        type: integer
+        example: 25
+        format: int64
+        description: The total number of rows in the response
+      total:
+        type: integer
+        example: 8918
+        format: int64
+        description: The total number of rows
         
   SoftwareResponse:
    type: object

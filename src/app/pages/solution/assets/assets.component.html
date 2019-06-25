@@ -1,7 +1,7 @@
 <div class="panel">
 	<cui-tabs inline="true">
 		<cui-tab [label]="'_Assets_' | i18n">
-			<!-- TODO we should probably move this assets content to its own "assets-pager" component or similar when we add other tabs-->
+			<!-- TODO: we should probably move this assets content to its own "assets-pager" component or similar when we add other tabs-->
 			<ng-container *ngTemplateOutlet="assetsContent"></ng-container>
 		</cui-tab>
 		<cui-tab [label]="'_EoXMilestones_' | i18n" disabled="true"></cui-tab>
@@ -47,7 +47,9 @@
 	<div>
 		<div *ngIf="inventory.length && !status.isLoading">
 			<div class="flex flex-fluid">
-				<div class="flex-fill half-padding-top" [innerText]="'_ShowingXofYAssets_' | i18n:inventory.length:assetParams.total"></div>
+				<div *ngIf="pagination?.total"
+					class="flex-fill half-padding-top"
+					[innerText]="'_ShowingXofYAssets_' | i18n:pagination.rows:pagination.total"></div>
 				<div class="btn-group btn-group--square">
 					<div class="dropdown active dropdown--tail dropdown--left"
 						data-auto-id="BulkDropdown"
@@ -68,10 +70,11 @@
 				(onTableRowClicked)="rowSelected($event)"
 				[options]="assetsTable">
 			</cui-table>
-			<div class="base-margin-top">
-				<cui-pager [page]="assetParams.page"
-					[limit]="assetParams.limit"
-					[totalItems]="assetParams?.total || 0">
+			<div *ngIf="pagination" class="base-margin-top">
+				<cui-pager [page]="pagination.page - 1"
+					[limit]="pagination.rows"
+					[totalItems]="pagination.total || 0"
+					(onPageChanged)="onPageChanged($event)">
 				</cui-pager>
 			</div>
 		</div>
@@ -101,7 +104,7 @@
 	</assets-pie-chart>
 </ng-template>
 
-<ng-template #statusFilter let-filter="key">
+<ng-template #contractFilter let-filter="key">
 	<assets-pie-chart
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
@@ -115,7 +118,7 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter>
-	<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="assetParams?.total || 0"></div>
+	<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="pagination?.total || 0"></div>
 </ng-template>
 
 <ng-template #casesAssetsFilter>

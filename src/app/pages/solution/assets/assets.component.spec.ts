@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { InventoryService } from '@cui-x/sdp-api';
 import { environment } from '@environment';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 describe('AssetsComponent', () => {
 	let component: AssetsComponent;
@@ -41,23 +41,23 @@ describe('AssetsComponent', () => {
 	});
 
 	/**
-	 * @TODO modify test to use UI
+	 * @TODO: modify test to use UI
 	 */
 	it('should switch active filters', () => {
 		const totalFilter = _.find(component.filters, { key: 'total' });
-		const casesFilter = _.find(component.filters, { key: 'cases' });
+		const coverageFilter = _.find(component.filters, { key: 'coverage' });
 		expect(_.find(component.filters, 'selected'))
 			.toEqual(totalFilter);
 
-		component.selectFilter(casesFilter);
+		component.selectFilter(coverageFilter);
 		fixture.detectChanges();
 
 		expect(_.filter(component.filters, 'selected'))
-			.toContain(casesFilter);
+			.toContain(coverageFilter);
 	});
 
 	/**
-	 * @TODO modify test to use UI
+	 * @TODO: modify test to use UI
 	 */
 	it('should select a coverage subfilter', () => {
 		let coverageFilter = _.find(component.filters, { key: 'coverage' });
@@ -74,7 +74,7 @@ describe('AssetsComponent', () => {
 	});
 
 	/**
-	 * @TODO modify test to use UI
+	 * @TODO: modify test to use UI
 	 */
 	it('should clear the filter when selecting the same subfilter twice', () => {
 		let coverageFilter = _.find(component.filters, { key: 'coverage' });
@@ -104,7 +104,7 @@ describe('AssetsComponent', () => {
 		expect(window.loading)
 			.toBe(true);
 
-		spyOn(inventoryService, 'getHardware')
+		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(of({ data: [] }));
 		component.ngOnInit();

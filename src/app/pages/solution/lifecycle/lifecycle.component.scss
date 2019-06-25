@@ -23,12 +23,13 @@ $vibblue: #017cad;
 
 		&__body {
 			height: 150px;
-			overflow: scroll;
+			overflow: auto;
 		}
 	}
 }
 
-#accModal {
+#accModal,
+#successModal {
 	background-color: $light-gray-5;
 }
 
@@ -44,13 +45,17 @@ $vibblue: #017cad;
 
 		&__body {
 			height: 150px;
-			overflow: scroll;
+			overflow: auto;
 		}
 
 		&__recommended {
 			border-left: 2px solid $vibblue !important;
 		}
 	}
+}
+
+.success__card__body {
+	height: 100px;
 }
 
 .round-edges {
@@ -217,7 +222,8 @@ $vibblue: #017cad;
 	z-index: 2;
 }
 
-.grid.grid--4up {
+.grid.grid--4up,
+.grid.grid--2up {
 	gap: 20px 20px;
 }
 
@@ -272,3 +278,16 @@ $vibblue: #017cad;
 	}
 }
 
+::ng-deep #category-filter input,
+::ng-deep #category-filter input:focus {
+	border: 0 !important;
+	border-color: transparent;
+	background: transparent !important;
+	border-bottom: 2px solid $vibblue !important;
+}
+
+// leave the following here, just in case we will use this style
+// ::ng-deep .cui .dropdown__menu a.selected {
+// 	color:$vibblue !important;
+// 	background-color: transparent !important;
+// }

@@ -3,9 +3,10 @@ import {
 	Component,
 	ViewChild,
 } from '@angular/core';
-import { SearchType } from '@interfaces';
+import { SearchContext, SearchType, SearchEnum } from '@interfaces';
 
-import { products } from './products.const';
+import { I18n } from '@cisco-ngx/cui-utils';
+
 import { SpecialSearchComponent } from './special-search/special-search.component';
 
 /**
@@ -23,13 +24,15 @@ export class SearchComponent {
 			this.cdr.detectChanges();
 		}
 	public specialSearch: SpecialSearchComponent;
-	public products = products;
 
 	public searchText = '';
 	public selectedSearch: string;
 	public searchType: SearchType;
 	public generalSearch: string;
+	public searchContext: string;
+	public generalSearchHeader: string;
 	public hideSpecialSearch = false;
+	public hideGeneralSearch = false;
 
 	public status = {
 		hidden: true,
@@ -46,6 +49,26 @@ export class SearchComponent {
 		this.selectedSearch = search.text;
 		this.searchType = search.type;
 		this.generalSearch = search.generalSearch;
+		/** Set general search header */
+		switch (search.type.name) {
+			case 'sn':
+			case 'rma':
+				this.generalSearchHeader = I18n.get('_RelatedToThisProduct_');
+				break;
+			case 'case':
+				this.generalSearchHeader = I18n.get('_RelatedToThisCase_');
+				break;
+			default:
+				this.generalSearchHeader = null;
+		}
+		/** Set search context right away for the general searches fired in parallel */
+		if (search.type.name === SearchEnum.contract) {
+			this.searchContext = SearchContext.contract;
+		} else if (search.type.name === SearchEnum.sn) {
+			this.searchContext = SearchContext.serialno;
+		} else {
+			this.searchContext = null;
+		}
 	}
 
 	/**
@@ -58,7 +81,30 @@ export class SearchComponent {
 		// This will trigger a new search on the plain searchText if it was changed to something
 		// else by the special search view
 		if (hide) {
+			this.searchType.name = SearchEnum.default;
 			this.generalSearch = this.searchText;
+			this.searchContext = null;
+			this.generalSearchHeader = null;
+		}
+	}
+
+	/**
+	 * Toggles the general search visibility.
+	 * @param event Event object
+	 * @param event.hide If true, hides general search. If false, displays it.
+	 * @param event.searchString If provided, overwrites the general search string.
+	 */
+	public toggleGeneralSearch (
+		event: { hide: boolean, searchString?: string, context?: SearchContext },
+	) {
+		this.hideGeneralSearch = event.hide;
+		if (event.searchString) {
+			this.generalSearch = event.searchString;
+		}
+		if (event.context) {
+			this.searchContext = event.context;
+		} else {
+			this.searchContext = null;
 		}
 	}
 
