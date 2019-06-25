@@ -14,7 +14,7 @@ const serialRegex = /^[0-9a-zA-Z-]{3,}$/;
 /**
  * Regex for a case number match
  */
-const caseRegex = /\b6\d{8}\b/;
+const caseRegex = /\b(?:SR)?6\d{8}\b/;
 /**
  * Regex for a RMA match
  */

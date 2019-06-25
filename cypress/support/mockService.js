@@ -23,11 +23,13 @@ export default class MockService {
 	getScenario (method, scenarioName) {
 		let foundScenario;
 		this.mock.forEach(mock => {
-			mock.scenarios[method.toUpperCase()].forEach(scenario => {
-				if (scenario.description === scenarioName) {
-					foundScenario = scenario;
-				}
-			});
+			if (mock.scenarios[method.toUpperCase()]) {
+				mock.scenarios[method.toUpperCase()].forEach(scenario => {
+					if (scenario.description === scenarioName) {
+						foundScenario = scenario;
+					}
+				});
+			}
 		});
 
 		return foundScenario;

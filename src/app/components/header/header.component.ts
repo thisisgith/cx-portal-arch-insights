@@ -2,7 +2,7 @@ import { Component, Optional } from '@angular/core';
 import { MicroMockService } from '@cui-x-views/mock';
 
 import { environment } from '@environment';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 /**
  * Main Header Component

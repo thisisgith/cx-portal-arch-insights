@@ -29,7 +29,7 @@ import {
 } from '@cui-x/sdp-api';
 
 import { SolutionService } from '../solution.service';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -59,6 +59,7 @@ interface ComponentData {
 		elearning?: ELearning[];
 		training?: ELearning[];
 		success?: SuccessPath[];
+		archetype?: string[];
 	};
 	acc?: {
 		sessions: ACC[];
@@ -96,6 +97,9 @@ export class LifecycleComponent implements OnDestroy {
 	public atxScheduleCardOpened = false;
 	public sessionSelected: ATXSession;
 	public customerId = '2431199';
+	public selectedCategory = '';
+	public selectedSuccessPaths: SuccessPath[];
+	public categoryOptions: [];
 
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 
@@ -194,7 +198,7 @@ export class LifecycleComponent implements OnDestroy {
 		} else if (type === '_ProductGuide_') {
 			this.modal = {
 				content: this.successPathTemplate,
-				context: { data: this.componentData.learning.success },
+				context: { data: this.selectedSuccessPaths },
 				visible: true,
 			};
 		}
@@ -243,6 +247,17 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public selectSession (session: ATXSession) {
 		this.sessionSelected = (_.isEqual(this.sessionSelected, session)) ? null : session;
+	}
+
+	/**
+	 * Selects the category
+	 */
+	public selectFilter () {
+		this.selectedSuccessPaths =
+			_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
+		if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
+			this.selectedSuccessPaths = this.componentData.learning.success;
+		}
 	}
 
 	/**
@@ -413,6 +428,18 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
+					_.set(this.componentData, ['learning', 'archetype'],
+						_.chain(result.items)
+						.map('archetype')
+						.uniq()
+						.value());
+					this.componentData.learning.archetype.unshift('Not selected');
+					this.selectedSuccessPaths = this.componentData.learning.success;
+					this.categoryOptions =
+						_.map(this.componentData.learning.archetype, item => ({
+							name: item,
+							value: item,
+						}));
 				}
 
 				this.status.loading.success = false;

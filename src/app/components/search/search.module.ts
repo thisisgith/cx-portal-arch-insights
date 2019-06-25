@@ -6,10 +6,12 @@ import {
 } from '@cisco-ngx/cui-pipes';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { CaseSearchModule } from './case-search/case-search.module';
 import { ContractSearchModule } from './contract-search/contract-search.module';
 import { GeneralSearchModule } from './general-search/general-search.module';
 import { NoResultsModule } from './no-results/no-results.module';
 import { SearchBarModule } from './search-bar/search-bar.module';
+import { SerialSearchModule } from './serial-search/serial-search.module';
 import { SpecialSearchModule } from './special-search/special-search.module';
 import { RMASearchModule } from './rma-search/rma-search.module';
 import {
@@ -23,7 +25,6 @@ import { environment } from '@environment';
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
 const rootUrl = environment.services.sdp.origin;
-import { SerialSearchModule } from './serial-search/serial-search.module';
 
 /**
  * Module representing the Search Component
@@ -35,6 +36,7 @@ import { SerialSearchModule } from './serial-search/serial-search.module';
 	exports: [SearchComponent],
 	imports: [
 		CommonModule,
+		CaseSearchModule,
 		ContractSearchModule,
 		GeneralSearchModule,
 		NoResultsModule,
@@ -49,6 +51,7 @@ import { SerialSearchModule } from './serial-search/serial-search.module';
 		ContractsModule.forRoot({ rootUrl }),
 		InventoryModule.forRoot({ rootUrl }),
 		SearchServiceModule.forRoot({ rootUrl }),
+		InventoryModule.forRoot({ rootUrl }),
 	],
 })
 export class SearchModule { }

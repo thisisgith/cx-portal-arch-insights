@@ -1,0 +1,117 @@
+<div *ngIf="detailsLoading" class="row no-gutters">
+	<div class="col-md-12">
+		<div class="panel panel--loose">
+			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingCases_' | i18n"></h4>
+			<cui-spinner></cui-spinner>
+		</div>
+	</div>
+</div>
+<div *ngIf="!detailsLoading">
+	<h4 class="text-dkgray-1" [innerText]="'_Case_' | i18n:caseNumber"></h4>
+	<div class="section">
+		<h5 class="text-dkgray-1 qtr-margin-top half-margin-bottom" [innerText]="case.description"></h5>
+		<h6><span class="text-dkgray-4" [innerText]="('_Status_' | i18n) + ': ' + case.status"></span></h6>
+	</div>
+	<div class="section qtr-margin-top">
+		<div class="row">
+			<div class="col-md-auto no-gutters">
+					<h5 class="text-dkgray-1 half-margin-bottom" [innerText]="'_LatestUpdate_' | i18n"></h5>
+			</div>
+			<div *ngIf="!notesLoading" class="col-md-auto no-gutters flex-center-vertical half-margin-bottom">
+					<span [innerText]="'(' + lastUpdated + ')'"></span>
+			</div>
+		</div>
+		<div *ngIf="!notesLoading; else loadingDots">
+			<div *ngIf="truncateLastNote; then partialLastNote else fullLastNote" ></div>
+				<ng-template #partialLastNote>
+					<div [innerHTML]="(lastNote.noteDetail | slice:0:NOTE_TRUNCATE_LENGTH) + '...'"></div>
+				</ng-template>
+				<ng-template #fullLastNote>
+					<div [innerHTML]="lastNote.noteDetail"></div>
+				</ng-template>
+				<div *ngIf="showTruncateToggle" class="dropdown dropdown--tail qtr-margin-top half-margin-bottom"
+					[ngClass]="{'active': !truncateLastNote}">
+					<a data-auto-id="seeMore" (click)="truncateLastNote = !truncateLastNote" [innerText]="'_SeeMore_' | i18n"></a>
+			</div>
+		</div>
+	</div>
+	<div class="section">
+		<a data-auto-id="viewCaseDetails"
+			target="_blank"
+			class="btn btn--small btn--gray-ghost"
+			[innerText]="'_ViewCaseDetails_' | i18n"
+			href="https://mycase.cloudapps.cisco.com/{{case.number}}">
+		</a>
+		&nbsp;&nbsp;
+		<a data-auto-id="viewAllOpenCases"
+			target="_blank"
+			[innerText]="'_ViewAllOpenCases_' | i18n"
+			href="https://mycase.cloudapps.cisco.com/case">
+		</a>
+	</div>
+</div>
+<ng-template #sidebar>
+	<div *ngIf="!detailsLoading">
+		<div class="base-margin-top base-margin-bottom">
+			<div class="subheading text-uppercase" [innerText]="'_Severity_' | i18n"></div>
+			<div>
+				<svg class="severityRectangle" [ngSwitch]="case.severity" width="15" height="15">
+					<rect *ngSwitchCase="'1'" class="statusRed" rx="3" ry="3" width="15" height="15" />
+					<rect *ngSwitchCase="'2'" class="statusOrange" rx="3" ry="3" width="15" height="15" />
+					<rect *ngSwitchCase="'3'" class="statusYellow" rx="3" ry="3" width="15" height="15" />
+					<rect *ngSwitchCase="'4'" class="statusBlue" rx="3" ry="3" width="15" height="15" />
+				</svg>
+				<span [ngSwitch]="case.severity">
+					<span class="half-margin-left" *ngSwitchCase="'1'" [innerText]="'_1NetworkDown_' | i18n"></span>
+					<span class="half-margin-left" *ngSwitchCase="'2'" [innerText]="'_2SeverelyDegraded_' | i18n"></span>
+					<span class="half-margin-left" *ngSwitchCase="'3'" [innerText]="'_3NetworkImpaired_' | i18n"></span>
+					<span class="half-margin-left" *ngSwitchCase="'4'" [innerText]="'_4AskAQuestion_' | i18n"></span>
+				</span>
+			</div>
+		</div>
+		<div class="base-margin-top base-margin-bottom">
+			<div class="subheading text-uppercase" [innerText]="'_Opened_' | i18n"></div>
+			<div [innerText]="case.opened | date:'dd-MMM-y hh:mm aa O'"></div>
+		</div>
+		<div class="base-margin-top base-margin-bottom">
+				<div class="subheading text-uppercase" [innerText]="'_Contract_' | i18n"></div>
+				<div [innerText]="case.contract"></div>
+		</div>
+		<div class="base-margin-top base-margin-bottom">
+			<div class="subheading text-uppercase" [innerText]="'_CaseOwner_' | i18n"></div>
+			<div [innerText]="case.owner"></div>
+		</div>
+		<div class="base-margin-top base-margin-bottom">
+			<div class="subheading text-uppercase" [innerText]="'_HostName_' | i18n"></div>
+			<div *ngIf="!hardwareLoading; else loadingDots" [innerText]="case.hostName"></div>
+		</div>
+		<div class="base-margin-top base-margin-bottom">
+			<div class="subheading text-uppercase" [innerText]="'_TACEngineer_' | i18n"></div>
+			<div *ngIf="!summaryLoading; else loadingDots" [innerText]="case.tacEngineer"></div>
+		</div>
+		<div class="base-margin-top base-margin-bottom">
+			<div class="subheading text-uppercase" [innerText]="'_TrackingNumber_' | i18n"></div>
+			<!-- TODO in the future: Link to carrier's website -->
+			<div [innerText]="case.trackingNumber"></div>
+		</div>
+		<div class="base-margin-top base-margin-bottom">
+			<div class="subheading text-uppercase" [innerText]="'_RelatedRMAs_' | i18n"></div>
+			<div *ngIf="case.relatedRmas; then listRmas else displayDefault" ></div>
+			<ng-template #listRmas>
+				<div *ngFor="let rmaNumber of case.relatedRmas">
+					<a data-auto-id="rmaNumber"
+						target="_blank"
+						href="https://ibpm.cisco.com/rma/home/?&OrderNumber={{rmaNumber}}"
+						[innerText]="rmaNumber">
+					</a>
+				</div>
+			</ng-template>
+			<ng-template #displayDefault>
+				<div [innerText]="DEFAULT_FIELD"></div>
+			</ng-template>
+		</div>
+	</div>
+</ng-template>
+<ng-template #loadingDots>
+	<cui-loader color="muted"></cui-loader>
+</ng-template>

@@ -17,7 +17,6 @@ security:
   - OauthSecurity: []
 paths:
   /api/customerportal/contracts/v1/products/coverages:
-
     head:
       tags:
       - Contracts
@@ -32,6 +31,12 @@ paths:
           in: query
           description: Unique identifier of a Cisco customer.
           required: true
+          type: string
+
+        - name: contractNumber
+          in: query
+          description: The contract number
+          required: false
           type: string
 
         - name: coverage
@@ -148,7 +153,6 @@ paths:
           description: API not found
 
   /api/customerportal/contracts/v1/products/coverages/top:
-
     get:
       tags:
       - Contracts

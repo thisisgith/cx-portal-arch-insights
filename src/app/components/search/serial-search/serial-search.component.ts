@@ -24,7 +24,7 @@ import {
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 /**
  * Interface representing all serial number data to go in the template

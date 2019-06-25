@@ -12,14 +12,16 @@ import {
 	NavigationEnd,
 } from '@angular/router';
 
-import * as _ from 'lodash';
-import { Subscription } from 'rxjs';
+import * as _ from 'lodash-es';
+import { Subscription, forkJoin } from 'rxjs';
 import {
+	ContractsService,
 	HardwareInfo,
 	RacetrackService,
 	RacetrackResponse,
 	RacetrackSolution,
 	RacetrackTechnology,
+	InventoryService,
 } from '@cui-x/sdp-api';
 import { SolutionService } from './solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -28,11 +30,16 @@ import { LogService } from '@cisco-ngx/cui-services';
  * Interface representing a facet
  */
 interface Facet {
+	data?: any;
+	key: string;
 	route: string;
 	selected?: boolean;
 	template: TemplateRef<{ }>;
 	title: string;
 }
+
+/** Current CustomerID Implementation */
+const customerId = '2431199';
 
 /**
  * Solution Page
@@ -43,7 +50,7 @@ interface Facet {
 })
 export class SolutionComponent implements OnInit, OnDestroy {
 
-	public shownTabs = 5;
+	public shownTabs = 4;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
@@ -69,6 +76,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
 
 	constructor (
+		private contractsService: ContractsService,
+		private inventoryService: InventoryService,
 		private router: Router,
 		private solutionService: SolutionService,
 		private racetrackService: RacetrackService,
@@ -137,26 +146,31 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private initializeFacets () {
 		this.facets = [
 			{
+				key: 'lifecycle',
 				route: '/solution/lifecycle',
 				template: this.lifecycleTemplate,
 				title: I18n.get('_Lifecycle_'),
 			},
 			{
+				key: 'assets',
 				route: '/solution/assets',
 				template: this.assetsTemplate,
 				title: I18n.get('_Assets&Coverage_'),
 			},
+			// {
+			// 	key: 'security',
+			// 	route: '/solution/security',
+			// 	template: this.securityTemplate,
+			// 	title: I18n.get('_Security_'),
+			// },
 			{
-				route: '/solution/security',
-				template: this.securityTemplate,
-				title: I18n.get('_Security_'),
-			},
-			{
+				key: 'advisories',
 				route: '/solution/advisories',
 				template: this.advisoriesTemplate,
 				title: I18n.get('_Advisories_'),
 			},
 			{
+				key: 'resolution',
 				route: '/solution/resolution',
 				template: this.resolutionTemplate,
 				title: I18n.get('_ProblemResolution_'),
@@ -197,7 +211,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	private fetchSolutions () {
 		this.status.loading = true;
-		this.racetrackService.getRacetrack({ customerId: '2431199' })
+		this.racetrackService.getRacetrack({ customerId })
 		.subscribe((results: RacetrackResponse) => {
 			this.solutions = results.solutions;
 			this.changeSolution(_.head(this.solutions));
@@ -211,11 +225,40 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Function used to fetch and build the assets & coverage facet
+	 */
+	private fetchCoverageCount () {
+		forkJoin(
+			this.contractsService.headContractsProductsCoveragesResponse({
+				customerId,
+				coverage: 'covered',
+			}),
+			this.inventoryService.headNetworkElementsResponse(customerId),
+		)
+		.subscribe((responses: any[]) => {
+			// haven't figured out if the full response has a type or not - hence the 'any'
+
+			const covered = _.invoke(_.get(responses[0], 'headers'), 'get', 'X-API-RESULT-COUNT');
+			const total = _.invoke(_.get(responses[1], 'headers'), 'get', 'X-API-RESULT-COUNT');
+
+			const assetsFacet = _.find(this.facets, { key: 'assets' });
+			assetsFacet.data = {
+				gaugePercent: Math.floor((covered / total) * 100) || 0,
+			};
+		},
+		err => {
+			this.logger.error('solution.component : fetchCoverageCount() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
+	}
+
+	/**
 	 * OnInit Functionality
 	 */
 	public ngOnInit () {
 		this.fetchSolutions();
 		this.initializeFacets();
+		this.fetchCoverageCount();
 	}
 
 	/**

@@ -10,8 +10,11 @@ import {
 	ViewChild,
 	forwardRef,
 } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
 import { Observable, Subject, of } from 'rxjs';
 import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
+
+import * as _ from 'lodash-es';
 
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -37,7 +40,9 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	@Input('contractNumber') public contractNumber: string;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
+	public loadingCoverages = true;
 	public contractData: DeviceContractInfo;
+	public coverageCount: number;
 
 	private customerId = '2431199';
 	private refresh$ = new Subject();
@@ -55,6 +60,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
+		/** Get main contract details */
 		this.refresh$.pipe(
 			tap(() => {
 				this.loading = true;
@@ -70,6 +76,24 @@ export class ContractSearchComponent extends SpecialSearchComponent
 				this.hide.emit(true);
 			}
 		});
+		/** Get contract coverages */
+		this.refresh$.pipe(
+			tap(() => {
+				this.loadingCoverages = true;
+			}),
+			switchMap(() => this.getCoverages(this.contractNumber, this.customerId)),
+			takeUntil(this.destroy$),
+		)
+		.subscribe(result => {
+			if (result === null) {
+				this.coverageCount = null;
+
+				return;
+			}
+			this.loadingCoverages = false;
+			this.coverageCount = _.toNumber(result.headers.get('X-API-RESULT-COUNT'));
+		});
+
 		this.refresh$.next();
 	}
 
@@ -106,6 +130,30 @@ export class ContractSearchComponent extends SpecialSearchComponent
 		.pipe(
 			catchError(err => {
 				this.logger.error(`Contract Data :: ${contractNumber} :: Error ${err}`);
+
+				return of(null);
+			}),
+		);
+	}
+
+	/**
+	 * Fetch contract coverages
+	 * @param contractNumber number to fetch data for
+	 * @param customerId id of customer whose contracts we're searching
+	 * @returns Observable with http response
+	 */
+	private getCoverages (contractNumber: string, customerId: string):
+	Observable<HttpResponse<null>> {
+		return this.contractsService.headContractsProductsCoveragesResponse(
+			{
+				contractNumber,
+				customerId,
+				coverage: 'covered',
+			},
+		)
+		.pipe(
+			catchError(err => {
+				this.logger.error(`Coverage :: ${contractNumber} :: Error ${err}`);
 
 				return of(null);
 			}),

@@ -26,8 +26,9 @@ import {
 	ELearning,
 } from '@cui-x/sdp-api';
 import { SearchService as SearchUtils } from '@services';
+import { SearchContext } from '@interfaces';
 
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 /**
  * Indicates refresh type, either refreshing everything or fetching a new page
@@ -52,7 +53,16 @@ interface RelatedResult {
 })
 export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	@Input('query') public query: string;
+	@Input('context') public context: SearchContext;
+	@Input('header') public header: string;
 	@Output('results') public results = new EventEmitter();
+
+	/**
+	 * Search token to display above the results
+	 * Generally this is the query the user typed in, but in the case of
+	 * an 'SN' context search it will be the productName instead.
+	 */
+	public searchToken: string;
 
 	/** The actual search results used in the template
 	 * Important properties picked out of the CDCSearchResponse
@@ -73,6 +83,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public selectedSite: Buckets;
 	public selectedType: Buckets;
 
+	private customerId = '2431199';
 	private readonly pageSize = 10;
 	private pageOffset = 0;
 	private refresh$ = new Subject<RefreshType>();
@@ -90,6 +101,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
+		this.searchToken = this.query;
 		/** Refresh main CDC results subscription */
 		this.refresh$.pipe(
 			tap(refreshType => {
@@ -109,6 +121,9 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			const [result, refreshType] = results;
 			this.loading = false;
 			this.loadingPage = false;
+			if (_.get(result, 'searchToken')) {
+				this.searchToken = result.searchToken;
+			}
 			const resultsMapped = (<CDC []> _.get(result, 'documents', []))
 				.map(doc => {
 					const o = {
@@ -169,6 +184,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 * Send another request whenever the query term changes.
 	 */
 	public ngOnChanges () {
+		this.searchToken = this.query;
 		this.pageOffset = 0;
 		this.selectedSite = null;
 		this.selectedType = null;
@@ -214,6 +230,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	private doSearch (query: string, offset?: number, site?: Buckets, type?: Buckets):
 		Observable<CDCSearchResponse | null> {
 		return this.service.directCDCSearch({
+			...(
+				this.context ? {
+					context: this.context,
+					customerId: this.customerId,
+				} : { }
+			),
 			limit: this.pageSize.toString(),
 			offset: offset.toString(),
 			searchTokens: query,
@@ -233,6 +255,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	private doRelatedSearch (query: string): Observable<RelatedResult []> {
 		return this.service.allSearch({
+			...(
+				this.context ? {
+					context: this.context,
+					customerId: this.customerId,
+				} : { }
+			),
 			limit: '1',
 			offset: '0',
 			searchTokens: query,

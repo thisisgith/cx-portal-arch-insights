@@ -10,6 +10,7 @@ const origin = 'https://swtgdev-apollo-2.cisco.com';
 export const defaults = {
 	origin,
 	auth: {
+		accountUrl: `${origin}/ws/account/v2/`,
 		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
@@ -17,6 +18,10 @@ export const defaults = {
 	csone: {
 		clientId: '453b7e10f08b428c90d48432312889ad',
 	},
+	// ClientSSOInterceptor: No auth token for the typeahead url
+	noAuthEndpoints: [
+		'https://xresps-stage.cloudapps.cisco.com/esps/search/suggest/cdcpr01zad',
+	],
 	production: false,
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa1/home',
 	services: {
