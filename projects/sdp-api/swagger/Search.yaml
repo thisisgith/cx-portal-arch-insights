@@ -499,6 +499,9 @@ definitions:
         description: list of filter categories applicable for current results
         items:
           $ref: '#/definitions/Facets'
+      searchToken:
+        type: string
+        description: final search token sent to CDC. May differ from sent query if context is set
       totalHits:
         type: integer
         format: int64

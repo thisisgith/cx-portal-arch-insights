@@ -54,7 +54,15 @@ interface RelatedResult {
 export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	@Input('query') public query: string;
 	@Input('context') public context: SearchContext;
+	@Input('header') public header: string;
 	@Output('results') public results = new EventEmitter();
+
+	/**
+	 * Search token to display above the results
+	 * Generally this is the query the user typed in, but in the case of
+	 * an 'SN' context search it will be the productName instead.
+	 */
+	public searchToken: string;
 
 	/** The actual search results used in the template
 	 * Important properties picked out of the CDCSearchResponse
@@ -93,6 +101,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
+		this.searchToken = this.query;
 		/** Refresh main CDC results subscription */
 		this.refresh$.pipe(
 			tap(refreshType => {
@@ -112,6 +121,9 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			const [result, refreshType] = results;
 			this.loading = false;
 			this.loadingPage = false;
+			if (_.get(result, 'searchToken')) {
+				this.searchToken = result.searchToken;
+			}
 			const resultsMapped = (<CDC []> _.get(result, 'documents', []))
 				.map(doc => {
 					const o = {
@@ -172,6 +184,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 * Send another request whenever the query term changes.
 	 */
 	public ngOnChanges () {
+		this.searchToken = this.query;
 		this.pageOffset = 0;
 		this.selectedSite = null;
 		this.selectedType = null;
