@@ -5,6 +5,8 @@ import {
 } from '@angular/core';
 import { SearchContext, SearchType, SearchEnum } from '@interfaces';
 
+import { I18n } from '@cisco-ngx/cui-utils';
+
 import { SpecialSearchComponent } from './special-search/special-search.component';
 
 /**
@@ -28,6 +30,7 @@ export class SearchComponent {
 	public searchType: SearchType;
 	public generalSearch: string;
 	public searchContext: string;
+	public generalSearchHeader: string;
 	public hideSpecialSearch = false;
 	public hideGeneralSearch = false;
 
@@ -46,6 +49,18 @@ export class SearchComponent {
 		this.selectedSearch = search.text;
 		this.searchType = search.type;
 		this.generalSearch = search.generalSearch;
+		/** Set general search header */
+		switch (search.type.name) {
+			case 'sn':
+			case 'rma':
+				this.generalSearchHeader = I18n.get('_RelatedToThisProduct_');
+				break;
+			case 'case':
+				this.generalSearchHeader = I18n.get('_RelatedToThisCase_');
+				break;
+			default:
+				this.generalSearchHeader = null;
+		}
 		/** Set search context right away for the general searches fired in parallel */
 		if (search.type.name === SearchEnum.contract) {
 			this.searchContext = SearchContext.contract;
@@ -69,6 +84,7 @@ export class SearchComponent {
 			this.searchType.name = SearchEnum.default;
 			this.generalSearch = this.searchText;
 			this.searchContext = null;
+			this.generalSearchHeader = null;
 		}
 	}
 

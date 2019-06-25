@@ -528,17 +528,19 @@
 		<div class="divider base-margin-left base-margin-right"></div>
 		<div class="modal__body base-padding">
 			<div class="row half-margin-left half-margin-right">
-				<div class="col-md-8 text-large text-bold text-left"
+				<div class="col-md-9 text-large text-bold text-left"
 					[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase">
 				</div>
-				<div class="col-md-3">
-					<div class="form-group input--icon">
-						<div class="form-group__text">
-							<input id="archetype-filter" type="search" [placeholder]="'_AllCategories_' | i18n">
-						</div>
-					</div>
+				<div class="col-md-2">
+					<cui-select id="category-filter"
+						data-auto-id="category-filter"
+						[items]="categoryOptions"
+						[empty]="true"
+						[placeholder]="'_AllCategories_' | i18n"
+						[(ngModel)]="selectedCategory"
+						(ngModelChange)="selectFilter()">
+					</cui-select>
 				</div>
-				<!-- <div class="col-mod-4 flex-fluid text-right"> -->
 				<div class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
 					<button class="btn btn--white">
@@ -551,10 +553,7 @@
 				</div>
 			</div>
 			<div class="grid grid--4up base-padding-top">
-				<div class="card acc__card__background"
-					*ngFor="let item of data"
-					[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null"
-					data-auto-id="SuccessCard">
+				<div class="card acc__card__background" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
 					<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
 					<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
 					<div class="card__footer">
