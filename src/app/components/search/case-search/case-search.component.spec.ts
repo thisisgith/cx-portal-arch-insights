@@ -50,6 +50,34 @@ describe('caseSearchComponent', () => {
 			.toHaveBeenCalled();
 	});
 
+	it('should not hide if only a case number is set', fakeAsync(() => {
+		component.caseNumber = '680000002';
+		spyOn(caseService, 'fetchCaseDetails')
+			.and
+			.returnValue(of({ caseNumber: '680000002' }));
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(component.hide, 'emit');
+		spyOn(caseService, 'fetchCaseNotes')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(inventoryService, 'getHardware')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.ngOnChanges();
+		fixture.detectChanges();
+		tick(1000); // Wait for caseDetails to get the SN
+		expect(component.hide.emit)
+			.toHaveBeenCalledWith(false);
+		expect(component.hide.emit)
+			.toHaveBeenCalledTimes(1);
+	}));
+
 	it('should call all of the required APIs for a valid case', fakeAsync(() => {
 		component.caseNumber = '688296392';
 		spyOn(caseService, 'fetchCaseDetails')
@@ -108,45 +136,4 @@ describe('caseSearchComponent', () => {
 			.toHaveBeenCalledWith(true);
 	}));
 
-	it('should not hide when other requests error', fakeAsync(() => {
-		component.caseNumber = '688296392';
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(component.hide, 'emit');
-		spyOn(caseService, 'fetchCaseNotes')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getHardware')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		component.ngOnChanges();
-		fixture.detectChanges();
-		expect(component.hide.emit)
-			.toHaveBeenCalledWith(false);
-		expect(component.hide.emit);
-	}));
-
-	it('should not hide if a case number is returned', fakeAsync(() => {
-		component.caseNumber = '699999999';
-		spyOn(caseService, 'fetchCaseDetails')
-			.and
-			.returnValue(of({ caseNumber: '699999999' }));
-		spyOn(caseService, 'fetchCaseNotes')
-			.and
-			.returnValue(of({ }));
-		spyOn(component.hide, 'emit');
-		component.ngOnChanges();
-		fixture.detectChanges();
-		expect(component.hide.emit)
-			.toHaveBeenCalledWith(false);
-		expect(component.hide.emit);
-	}));
 });

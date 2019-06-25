@@ -14,9 +14,9 @@ import * as _ from 'lodash-es';
 })
 export class RMAService {
 	private serviceUrl = `${
-		environment.services.rma.origin
+		environment.rmaServiceOrigin
 	}${
-		environment.services.rma.paths.returns
+		environment.rmaServicePaths.returns
 	}`;
 
 	constructor (private http: HttpClient) { }
