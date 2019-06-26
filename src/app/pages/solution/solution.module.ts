@@ -16,7 +16,7 @@ import { environment } from '@environment';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.services.sdp.origin;
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Module representing the Solution Pages

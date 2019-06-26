@@ -11,9 +11,9 @@ import { catchError } from 'rxjs/operators';
 describe('RMAService', () => {
 	const testRmaNumber = '800000000';
 	const testUrl = `${
-		environment.services.rma.origin
+		environment.rmaServiceOrigin
 	}${
-		environment.services.rma.paths.returns
+		environment.rmaServicePaths.returns
 	}/rma_numbers/${testRmaNumber}`;
 
 	beforeEach(() => {

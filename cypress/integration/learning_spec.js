@@ -209,6 +209,56 @@ describe('Learn Panel', () => {
 		});
 	});
 
+	describe('PBC-16: (UI) View - Solution Based: Success Path Content', () => {
+		it('PBC-188: All Success Path content should cross-launch to specified URL', () => {
+			// Cypress does not and will never support multiple tabs, so just check the link element
+			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
+			visibleSuccessPathItems.forEach(scenario => {
+				cy.get(`a[href="${scenario.url}"]`).should('contain', scenario.title)
+					.and('have.attr', 'target', '_blank');	// target: _blank indicates we'll open in a new tab
+			});
+		});
+
+		it('PBC-188: All Success Path View All links should cross-launch to specified URL', () => {
+			// Open the View All modal
+			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
+			cy.get('#successModal').should('exist');
+
+			// Cypress does not and will never support multiple tabs, so just check the link element
+			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
+			successPathItems.forEach(scenario => {
+				cy.get('#successModal').within(() => {
+					cy.get(`a[href="${scenario.url}"]`)
+						// Note that type: 'Web Page' gets displayed as 'Web'
+						.should('contain', (scenario.type === 'Web Page' ? 'Web' : scenario.type))
+						// target: _blank indicates we'll open in a new tab
+						.and('have.attr', 'target', '_blank');
+				});
+			});
+
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.get('#successModal').should('not.exist');
+		});
+	});
+
+	describe('PBC-110: (UI) View - Solution Racetrack - PBC Exposing Learning Content', () => {
+		it('PBC-210: All E-Learning content should cross-launch to specified URL', () => {
+			// Cypress does not and will never support multiple tabs, so just check the link element
+			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
+			visibleELearningItems.forEach(scenario => {
+				cy.get(`a[href="${scenario.url}"]`).should('contain', scenario.title)
+					.and('have.attr', 'target', '_blank');	// target: _blank indicates we'll open in a new tab
+			});
+		});
+
+		it('PBC-210: E-Learning View All should cross-launch to digital-learning', () => {
+			// Cypress does not and will never support multiple tabs, so just check the link element
+			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
+			cy.getByAutoId('_ELearning_-ViewAll').should('have.attr', 'href', 'https://digital-learning.cisco.com/cx#/')
+				.and('have.attr', 'target', '_blank');	// target: _blank indicates we'll open in a new tab
+		});
+	});
+
 	describe('PBC-200: (UI) View - Lifecycle - Product Guides - Filter by Category', () => {
 		before(() => {
 			// Open the View All modal
