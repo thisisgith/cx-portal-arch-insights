@@ -45,6 +45,7 @@ interface ComponentData {
 	params: {
 		customerId: string;
 		pitstop: string;
+		rows?: number;
 		solution: string;
 		usecase: string;
 		suggestedAction?: string;
@@ -171,6 +172,7 @@ export class LifecycleComponent implements OnDestroy {
 			params: {
 				customerId: this.customerId,
 				pitstop: '',
+				rows: 100,
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
@@ -423,7 +425,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackSuccessPaths(
-			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+			_.pick(this.componentData.params,
+				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
 				if (result.items.length) {
@@ -475,7 +478,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackElearning(
-			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+			_.pick(this.componentData.params,
+				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: ELearningResponse) => {
 
@@ -607,6 +611,8 @@ export class LifecycleComponent implements OnDestroy {
 					}));
 
 			this.componentData.params.pitstop = stage;
+			// UI not handling pagination for now, temporarily set to a large number
+			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
 
 			this.status.loading.racetrack = false;
