@@ -37,7 +37,7 @@ describe('GeneralSearchComponent', () => {
 			);
 		fixture = TestBed.createComponent(GeneralSearchComponent);
 		component = fixture.componentInstance;
-		component.query = 'query1';
+		component.query = { query: 'query1' };
 		fixture.detectChanges();
 	});
 
@@ -47,7 +47,7 @@ describe('GeneralSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
-		component.query = 'query2';
+		component.query = { query: 'query2' };
 		fixture.detectChanges();
 		expect(service.directCDCSearch)
 			.toHaveBeenCalled();

@@ -27,7 +27,7 @@ describe('ContractSearchComponent', () => {
 		service = TestBed.get(ContractsService);
 		fixture = TestBed.createComponent(ContractSearchComponent);
 		component = fixture.componentInstance;
-		component.contractNumber = '230000000';
+		component.contractNumber = { query: '230000000' };
 		fixture.detectChanges();
 	});
 
@@ -37,10 +37,10 @@ describe('ContractSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
-		component.contractNumber = '230000001';
 		spyOn(service, 'getContractDetails')
 			.and
 			.returnValue(of(ContractScenarios[0].scenarios.GET[0].response.body));
+		component.contractNumber = { query: '230000001' };
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(service.getContractDetails)

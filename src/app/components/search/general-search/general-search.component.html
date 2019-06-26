@@ -43,7 +43,8 @@
 		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result }"></ng-container>
 	</div>
 	<!-- Related ATX, ACC, Learning results -->
-	<div class="base-margin-top">
+	<div class="base-margin-top"
+		*ngIf="relatedResults?.length">
 		<div class="flex flex-center-vertical">
 			<span class="half-margin-right"
 				[innerText]="'_RelatedGeneralResults_' | i18n">

@@ -7,14 +7,14 @@
 	</div>
 </div>
 <div *ngIf="!loading">
-	<h4 [innerText]="'_ContractNumberX_' | i18n:contractNumber"></h4>
+	<h4 [innerText]="'_ContractNumberX_' | i18n:contractNumber.query"></h4>
 	<div class="base-margin-top">
 		<dl class="dl--inline">
 			<dt>
 				<span class="text-muted" [innerText]="'_CXLevel_' | i18n | uppercase"></span>
 			</dt>
 			<dd>
-				<span [innerText]="contractData?.serviceLevel"></span>
+				<span [innerText]="contractData?.cxLevel"></span>
 			</dd>
 			<dt>
 				<span class="text-muted" [innerText]="'_Status_' | i18n | uppercase"></span>
@@ -80,8 +80,6 @@
 	<div class="half-margin-top"><span>24x7x4hr/2hr Onsite RMAs</span></div>
 	<div class="half-margin-top"><span>Asset/License Management</span></div>
 	<div class="half-margin-top"><span>And more…</span></div>
-	<!-- TODO: get link href -->
-	<div class="half-margin-top"><a>Learn More</a></div>
 </div>
 </ng-template>
 
