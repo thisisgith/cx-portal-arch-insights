@@ -1,4 +1,3 @@
-import * as _ from 'lodash-es';
 import MockService from '../support/mockService';
 
 const elearningMock = new MockService('ELearningScenarios');
@@ -10,7 +9,7 @@ const successPathOnboardScenario = successPathMock.getScenario('GET', '(SP) IBN-
 const successPathItems = successPathOnboardScenario.response.body.items;
 
 // Strip out all possible archetypes
-const successPathArchetypes = _.chain(successPathItems)
+const successPathArchetypes = Cypress._.chain(successPathItems)
 	.map('archetype')
 	.uniq()
 	.value();
