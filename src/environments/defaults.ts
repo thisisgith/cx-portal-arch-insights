@@ -27,7 +27,7 @@ export const defaults = {
 	rmaServiceClientId: 'yvgjnzruyuh9a7tdnbj8ka3n',
 	rmaServiceOrigin: 'https://api-stage.cisco.com',
 	rmaServicePaths: {
-		returns: '/return/v1.0/return',
+		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa1/home',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',

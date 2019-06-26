@@ -3,7 +3,7 @@ import { Component, Input, OnInit, OnDestroy, OnChanges,
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { CaseService } from '@cui-x/services';
 import { InventoryService, HardwareResponse } from '@cui-x/sdp-api';
-import { Case, Note, SearchContext } from '@interfaces';
+import { Case, Note, SearchContext, SearchQuery } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Subject, of, Observable } from 'rxjs';
 import { tap, takeUntil, switchMap, catchError } from 'rxjs/operators';
@@ -28,7 +28,7 @@ export class CaseSearchComponent extends SpecialSearchComponent
 implements OnInit, OnDestroy, OnChanges {
 	@ViewChild('sidebar', { static: true, read: TemplateRef })
 	public sidebarContent: TemplateRef<any>;
-	@Input('caseNumber') public caseNumber: string;
+	@Input('caseNumber') public caseNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	/** Emitter to show or hide general search */
 	@Output('toggleGeneralSearch') public toggleGeneralSearch = new EventEmitter<{
@@ -86,7 +86,7 @@ implements OnInit, OnDestroy, OnChanges {
 				this.detailsLoading = this.hardwareLoading = true;
 				this.hide.emit(false);
 			}),
-			switchMap(() => this.getCaseDetails(this.caseNumber)),
+			switchMap(() => this.getCaseDetails(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(caseDetails => {
@@ -99,14 +99,14 @@ implements OnInit, OnDestroy, OnChanges {
 					searchString: this.case.serialNumber,
 				});
 			} else {
-				this.hide.emit(true);
 				this.toggleGeneralSearch.emit({ hide: false });
+				this.hide.emit(true);
 			}
 		});
 		// Case Notes
 		this.refresh$.pipe(
 			tap(() => this.notesLoading = true),
-			switchMap(() => this.getCaseNotes(this.caseNumber)),
+			switchMap(() => this.getCaseNotes(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(noteList => {
@@ -116,7 +116,7 @@ implements OnInit, OnDestroy, OnChanges {
 		// Case Summary
 		this.refresh$.pipe(
 			tap(() => this.summaryLoading = true),
-			switchMap(() => this.getCaseSummary(this.caseNumber)),
+			switchMap(() => this.getCaseSummary(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(caseSummary => {
@@ -218,7 +218,7 @@ implements OnInit, OnDestroy, OnChanges {
 	 * @returns Observable with response data.
 	 */
 	 public getCaseNotes (caseNumber: string): Observable<Note[]> {
-		return this.caseService.fetchCaseNotes(this.caseNumber)
+		return this.caseService.fetchCaseNotes(this.caseNumber.query)
 		.pipe(
 			catchError(err => {
 				this.logger.error(`Case Notes :: ${caseNumber} :: Error ${JSON.stringify(err)}`);

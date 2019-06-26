@@ -572,6 +572,11 @@ definitions:
         format: date-time
         x-zenith-ds-fieldName: CONTRACTENDDATE
         description: The date when the service contract ends. GMT date format YYYY-MM-DD
+      cxLevel:
+        type: string
+        example: 'Level 1'
+        x-zenith-ds-fieldName: CXLEVEL
+        description: CX support level
       serviceProgram:
         type: string
         example: 'PARTNER SUPPORT SERVICE'

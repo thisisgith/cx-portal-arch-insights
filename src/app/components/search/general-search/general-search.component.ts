@@ -26,7 +26,7 @@ import {
 	ELearning,
 } from '@cui-x/sdp-api';
 import { SearchService as SearchUtils } from '@services';
-import { SearchContext } from '@interfaces';
+import { SearchContext, SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
 
@@ -52,7 +52,7 @@ interface RelatedResult {
 	templateUrl: './general-search.component.html',
 })
 export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
-	@Input('query') public query: string;
+	@Input('query') public query: SearchQuery;
 	@Input('context') public context: SearchContext;
 	@Input('header') public header: string;
 	@Output('results') public results = new EventEmitter();
@@ -101,7 +101,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.searchToken = this.query;
+		this.searchToken = this.query.query;
 		/** Refresh main CDC results subscription */
 		this.refresh$.pipe(
 			tap(refreshType => {
@@ -112,7 +112,12 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				}
 			}),
 			switchMap(refreshType => forkJoin(
-				this.doSearch(this.query, this.pageOffset, this.selectedSite, this.selectedType),
+				this.doSearch(
+					this.query,
+					this.pageOffset,
+					this.selectedSite,
+					this.selectedType,
+				),
 				of(refreshType),
 			)),
 			takeUntil(this.destroy$),
@@ -184,7 +189,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 * Send another request whenever the query term changes.
 	 */
 	public ngOnChanges () {
-		this.searchToken = this.query;
+		this.searchToken = this.query.query;
 		this.pageOffset = 0;
 		this.selectedSite = null;
 		this.selectedType = null;
@@ -227,7 +232,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 * @param type optional type filter
 	 * @returns Observable with results
 	 */
-	private doSearch (query: string, offset?: number, site?: Buckets, type?: Buckets):
+	private doSearch (query: SearchQuery, offset?: number, site?: Buckets, type?: Buckets):
 		Observable<CDCSearchResponse | null> {
 		return this.service.directCDCSearch({
 			...(
@@ -238,7 +243,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			),
 			limit: this.pageSize.toString(),
 			offset: offset.toString(),
-			searchTokens: query,
+			searchTokens: query.query,
 			...this.buildFilterParam(site, type),
 		})
 		.pipe(catchError(err => {
@@ -253,7 +258,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 * @param query search term
 	 * @returns Observable with mapped results
 	 */
-	private doRelatedSearch (query: string): Observable<RelatedResult []> {
+	private doRelatedSearch (query: SearchQuery): Observable<RelatedResult []> {
 		return this.service.allSearch({
 			...(
 				this.context ? {
@@ -263,7 +268,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			),
 			limit: '1',
 			offset: '0',
-			searchTokens: query,
+			searchTokens: query.query,
 		})
 		.pipe(
 			map(result => {

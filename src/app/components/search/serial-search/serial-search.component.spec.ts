@@ -40,7 +40,7 @@ describe('SerialSearchComponent', () => {
 			.and
 			.returnValues(of({ data: [] }));
 		spyOn(component.hide, 'emit');
-		component.serialNumber = 'FOX1306GBAD';
+		component.serialNumber = { query: 'FOX1306GBAD' };
 		fixture.detectChanges();
 		expect(component.hide.emit)
 			.toHaveBeenCalledWith(false);
@@ -53,7 +53,7 @@ describe('SerialSearchComponent', () => {
 			.and
 			.returnValues(of(HardwareScenarios[0].scenarios.GET[0].response.body));
 		spyOn(component.hide, 'emit');
-		component.serialNumber = 'FOX1306GBAD';
+		component.serialNumber = { query: 'FOX1306GBAD' };
 		fixture.detectChanges();
 		expect(component.hide.emit)
 			.toHaveBeenCalledWith(false);
@@ -65,9 +65,9 @@ describe('SerialSearchComponent', () => {
 		spyOn(service, 'getHardware')
 			.and
 			.returnValues(of({ data: [] }), of({ data: [] }));
-		component.serialNumber = 'FOX1306GBA1';
+		component.serialNumber = { query: 'FOX1306GBA1' };
 		fixture.detectChanges();
-		component.serialNumber = 'FOX1306GBA2';
+		component.serialNumber = { query: 'FOX1306GBA2' };
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(service.getHardware)

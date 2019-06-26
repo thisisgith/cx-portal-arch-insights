@@ -30,7 +30,7 @@ describe('caseSearchComponent', () => {
 		inventoryService = TestBed.get(InventoryService);
 		fixture = TestBed.createComponent(CaseSearchComponent);
 		component = fixture.componentInstance;
-		component.caseNumber = '680000000';
+		component.caseNumber = { query: '680000000' };
 		fixture.detectChanges();
 	});
 
@@ -40,7 +40,7 @@ describe('caseSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
-		component.caseNumber = '680000001';
+		component.caseNumber = { query: '680000001' };
 		spyOn(caseService, 'fetchCaseDetails')
 			.and
 			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
@@ -51,7 +51,7 @@ describe('caseSearchComponent', () => {
 	});
 
 	it('should not hide if only a case number is set', fakeAsync(() => {
-		component.caseNumber = '680000002';
+		component.caseNumber = { query: '680000002' };
 		spyOn(caseService, 'fetchCaseDetails')
 			.and
 			.returnValue(of({ caseNumber: '680000002' }));
@@ -79,7 +79,7 @@ describe('caseSearchComponent', () => {
 	}));
 
 	it('should call all of the required APIs for a valid case', fakeAsync(() => {
-		component.caseNumber = '688296392';
+		component.caseNumber = { query: '688296392' };
 		spyOn(caseService, 'fetchCaseDetails')
 			.and
 			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
@@ -110,7 +110,7 @@ describe('caseSearchComponent', () => {
 			.and
 			.returnValue(of({ }));
 		spyOn(component.hide, 'emit');
-		component.caseNumber = '688296392';
+		component.caseNumber = { query: '688296392' };
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(component.hide.emit)
@@ -120,7 +120,7 @@ describe('caseSearchComponent', () => {
 	});
 
 	it('should hide on case detail error', fakeAsync(() => {
-		component.caseNumber = '688296392';
+		component.caseNumber = { query: '688296392' };
 		spyOn(caseService, 'fetchCaseDetails')
 			.and
 			.returnValue(throwError(new HttpErrorResponse({

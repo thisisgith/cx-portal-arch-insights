@@ -37,7 +37,7 @@
 									</serial-search>
 									<app-rma-search
 										*ngSwitchCase="'rma'"
-										[rmaNumber]="searchType.value"
+										[rmaNumber]="selectedSearch"
 										(hide)="onHide($event)"
 										(toggleGeneralSearch)="toggleGeneralSearch($event)">
 									</app-rma-search>
