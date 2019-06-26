@@ -7,7 +7,7 @@
 	</div>
 </div>
 <div *ngIf="!loading && data">
-	<h4 [innerText]="'_SerialNumberHeader_' | i18n:serialNumber"></h4>
+	<h4 [innerText]="'_SerialNumberHeader_' | i18n:serialNumber.query"></h4>
 	<h5 class="base-margin-top" [innerText]="data.productName"></h5>
 
 	<div class="dbl-margin-top">
@@ -17,7 +17,7 @@
 					<span class="subheading text-uppercase left-header" [innerText]="'_CXLevel_' | i18n"></span>
 				</dt>
 				<dd>
-					<span *ngIf="contractData.supportLevel; else loadingContract" [innerText]="contractData.supportLevel"></span>
+					<span *ngIf="contractData.cxLevel; else loadingContract" [innerText]="contractData.cxLevel"></span>
 				</dd>
 				<dt>
 					<span class="subheading text-uppercase left-header" [innerText]="'_ContractNumber_' | i18n"></span>

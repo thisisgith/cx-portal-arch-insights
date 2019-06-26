@@ -7,7 +7,7 @@
 	</div>
 </div>
 <div *ngIf="!detailsLoading">
-	<h4 class="text-dkgray-1" [innerText]="'_Case_' | i18n:caseNumber"></h4>
+	<h4 class="text-dkgray-1" [innerText]="'_Case_' | i18n:caseNumber.query"></h4>
 	<div class="section">
 		<h5 *ngIf="case.description" class="text-dkgray-1 qtr-margin-top half-margin-bottom" [innerText]="case.description"></h5>
 		<h6>

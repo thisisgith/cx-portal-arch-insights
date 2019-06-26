@@ -87,7 +87,7 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
-			`&pitstop=Onboard&customerId=${customerId}`,
+			`&pitstop=Onboard&customerId=${customerId}&rows=100`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -104,7 +104,8 @@ export const SuccessPathScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard` +
+			`&customerId=${customerId}&rows=100`,
 		usecases: ['Use Case 1'],
 	},
 ];
