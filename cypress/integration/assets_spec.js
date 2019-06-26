@@ -2,19 +2,12 @@ import { Util } from '@apollo/cypress-util';
 import MockService from '../support/mockService';
 
 const util = new Util();
-const assetMock = new MockService('NetworkScenarios');
-const networkScenario = assetMock.getScenario('GET', 'Network Elements Page 1');
-const assets = networkScenario.response.body.data;
-const totalCountScenario = assetMock.getScenario('HEAD', 'Network Elements Count');
-const totalElements = parseInt(
-	assetMock.getResponseHeader(totalCountScenario, 'X-API-RESULT-COUNT'), 10
-);
+const assetMock = new MockService('AssetScenarios');
 const coverageMock = new MockService('CoverageScenarios');
-const coverageScenario = coverageMock.getScenario('HEAD', 'Coverage');
-
-const totalCoverage = parseInt(
-	coverageMock.getResponseHeader(coverageScenario, 'X-API-RESULT-COUNT'), 10
-);
+const networkScenario = assetMock.getScenario('GET', 'Assets Page 1');
+const assets = networkScenario.response.body.data;
+const totalCountScenario = coverageMock.getScenario('GET', 'Coverage');
+const coverageElements = totalCountScenario.response.body;
 
 describe('Assets', () => { // PBC-41
 	before(() => {
@@ -23,7 +16,8 @@ describe('Assets', () => { // PBC-41
 		cy.waitForAppLoading();
 	});
 
-	it('Provides an Asset 360 view modal', () => { // PBC-151
+	// Skipping until asset360 is re-enabled
+	it.skip('Provides an Asset 360 view modal', () => { // PBC-151
 		const { halfWidthInPx, widthInPx } = util.getViewportSize();
 		cy.get('tr').eq(1).click();
 		cy.get('asset-details')
@@ -42,7 +36,8 @@ describe('Assets', () => { // PBC-41
 		cy.getByAutoId('ClearAsset').click();
 	});
 
-	it('Provides an Activity timeline in the 360 view modal', () => { // PBC-158
+	// Skipping until asset360 is re-enabled
+	it.skip('Provides an Activity timeline in the 360 view modal', () => { // PBC-158
 		cy.get('tr').eq(1).click();
 		cy.getByAutoId('ActivityTab').click();
 
@@ -56,7 +51,8 @@ describe('Assets', () => { // PBC-41
 
 	context('PBC-178: Assets & Coverage Gauge', () => {
 		it('Displays a gauge that shows coverage percentage', () => {
-			const coverage = ((totalCoverage * 100) / totalElements);
+			const total = Cypress._.reduce(coverageElements, (memo, value) => memo + value);
+			const coverage = Math.floor((coverageElements.covered / total) * 100);
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', `${coverage}%`)
 				.and('contain', 'Assets & Coverage');
 		});

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import {
-	HardwareInfo,
 	RacetrackSolution,
 	RacetrackTechnology,
+	Asset,
 } from '@cui-x/sdp-api';
 
 /**
@@ -16,7 +16,7 @@ export class SolutionService {
 
 	private currentTechnology = new Subject<RacetrackTechnology>();
 	private currentSolution = new Subject<RacetrackSolution>();
-	private currentAsset = new Subject<HardwareInfo>();
+	private currentAsset = new Subject<Asset>();
 
 	/**
 	 * Returns the currently selected use case
@@ -38,7 +38,7 @@ export class SolutionService {
 	 * Returns the currently selected asset
 	 * @returns the observable representing the asset
 	 */
-	public getCurrentAsset (): Observable<HardwareInfo> {
+	public getCurrentAsset (): Observable<Asset> {
 		return this.currentAsset.asObservable();
 	}
 
@@ -62,7 +62,7 @@ export class SolutionService {
 	 * Sends out an update for the currently selected asset
 	 * @param asset the asset to send
 	 */
-	public sendCurrentAsset (asset: HardwareInfo) {
+	public sendCurrentAsset (asset: Asset) {
 		this.currentAsset.next(asset);
 	}
 }
