@@ -70,6 +70,16 @@ interface ComponentData {
 }
 
 /**
+ * An ELearning DTO, but with extra arrays to help display the star ratings
+ */
+interface ELearningModel extends ELearning {
+	/**
+	 * The string rating parsed as a number
+	 */
+	fixedRating?: number;
+}
+
+/**
  * Interface representing combine a seletable status with PitstopAction
  */
 export interface PitstopActionWithStatus {
@@ -491,7 +501,11 @@ export class LifecycleComponent implements OnDestroy {
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
 							case 'E-Course': {
-								this.componentData.learning.elearning.push(item);
+								const learningItem: ELearningModel = {
+									...item,
+									fixedRating: parseFloat(item.rating),
+								};
+								this.componentData.learning.elearning.push(learningItem);
 								break;
 							}
 							case 'Cisco Training on Demand Courses':
