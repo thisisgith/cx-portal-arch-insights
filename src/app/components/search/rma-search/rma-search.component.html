@@ -1,0 +1,73 @@
+<div *ngIf="loading" class="row no-gutters">
+	<div class="col-md-12">
+		<div class="panel panel--loose">
+			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingRMAs_' | i18n"></h4>
+			<cui-spinner></cui-spinner>
+		</div>
+	</div>
+</div>
+<div *ngIf="!loading" class="row no-gutters">
+	<div class="col-12">
+		<h4 class="text-normal base-margin-bottom" [innerText]="'_RMATitle_' | i18n:rmaTableData.number"></h4>
+	</div>
+	<div class="col-md-9">
+		<table class="table table--nostripes rma-table">
+			<tbody>
+				<tr>
+					<th class="text-uppercase" [innerText]="'_Status_' | i18n"></th>
+					<td [innerText]="rmaTableData.status || '_NA_' | i18n"></td>
+				</tr>
+				<tr>
+					<th class="text-uppercase" [innerText]="'_CaseNumber_' | i18n"></th>
+					<!--TODO: Link to case details page -->
+					<td [innerText]="rmaTableData.caseId || '_NA_' | i18n"></td>
+				</tr>
+				<tr>
+					<th class="text-uppercase" [innerText]="'_CarrierTrackingNumber_' | i18n"></th>
+					<!--TODO: Link to external postal service tracking -->
+					<td [innerText]="rmaTableData.trackingNumber || '_NA_' | i18n"></td>
+				</tr>
+				<tr>
+					<th class="text-uppercase" [innerText]="'_ContractNumber_' | i18n"></th>
+					<!--TODO: Link to contract details page -->
+					<td [innerText]="rmaTableData.contractNumber || '_NA_' | i18n"></td>
+				</tr>
+				<tr>
+					<th class="text-uppercase" [innerText]="'_ReplacementProduct_' | i18n"></th>
+					<td *ngIf="rmaTableData.products.length <= 1" [innerText]="rmaTableData.products[0]?.partsDescription || '_NA_' | i18n"></td>
+					<td *ngIf="rmaTableData.products.length > 1" [innerText]="'_Multiple_' | i18n"></td>
+				</tr>
+				<tr *ngIf="rmaTableData.products.length <= 1">
+					<th class="text-uppercase" [innerText]="'_ReplacementProductID_' | i18n"></th>
+					<td [innerText]="rmaTableData.products[0]?.shippedPartNo || '_NA_' | i18n"></td>
+				</tr>
+				<tr *ngIf="rmaTableData.products.length > 1">
+					<th></th>
+					<td>
+						<table class="table table--fixed rma-product-table">
+							<thead>
+								<tr>
+									<td class="text-bold" [innerText]="'_ProductName_' | i18n"></td>
+									<td class="text-bold" [innerText]="'_ProductID_' | i18n"></td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let product of rmaTableData.products">
+									<td [innerText]="product.shippedPartNo || '_NA_' | i18n"></td>
+									<td [innerText]="product.partsDescription || '_NA_' | i18n"></td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<a
+			class="btn btn--gray-ghost btn--small qtr-margin-top base-margin-bottom"
+			[href]="rmaLink"
+			[innerText]="'_ViewRMADetails_' | i18n"
+			target="_blank"
+			data-auto-id="RMAViewDetailsButton">
+		</a>
+	</div>
+</div>

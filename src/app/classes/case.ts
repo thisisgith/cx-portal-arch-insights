@@ -1,6 +1,6 @@
 import { I18n } from '@cisco-ngx/cui-utils';
 import { severityMap } from './severities';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 /**
  * The title and color map for the severities

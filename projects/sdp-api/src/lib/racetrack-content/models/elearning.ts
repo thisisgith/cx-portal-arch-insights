@@ -25,4 +25,15 @@ export interface ELearning {
    * http://elearning.com
    */
   url?: string;
+  ranking?: number;
+
+  /**
+   * rating marked by the user for the content
+   */
+  rating?: string;
+
+  /**
+   * CX Level
+   */
+  cxlevel?: number;
 }

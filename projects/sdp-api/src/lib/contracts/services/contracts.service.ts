@@ -7,17 +7,17 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
-import { CoveredResponse } from '../models/covered-response';
-import { CoverageExpirationResponse } from '../models/coverage-expiration-response';
-import { ContractsResponse } from '../models/contracts-response';
+import { CoverageResponse } from '../models/coverage-response';
+import { CoverageCountResponse } from '../models/coverage-count-response';
+import { DeviceContractResponse } from '../models/device-contract-response';
 @Injectable({
   providedIn: 'root',
 })
 class ContractsService extends __BaseService {
-  static readonly headCoveragePath = '/api/v1/contracts/products/coverages';
-  static readonly getCoveragePath = '/api/v1/contracts/products/coverages';
-  static readonly getCoverageExpirationPath = '/api/v1/contracts/products/coverages/top';
-  static readonly getContractsPath = '/api/v1/contracts';
+  static readonly headContractsProductsCoveragesPath = '/api/customerportal/contracts/v1/products/coverages';
+  static readonly getDevicesAndCoveragePath = '/api/customerportal/contracts/v1/products/coverages';
+  static readonly getTopCoverageExpirationPath = '/api/customerportal/contracts/v1/products/coverages/top';
+  static readonly getContractDetailsPath = '/api/customerportal/contracts/v1/details';
 
   constructor(
     config: __Configuration,
@@ -28,26 +28,30 @@ class ContractsService extends __BaseService {
 
   /**
    * Returns the total number of products that have coverage information along with query metadata (e.g. rows/page).
-   * @param params The `ContractsService.HeadCoverageParams` containing the following parameters:
+   * @param params The `ContractsService.HeadContractsProductsCoveragesParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `coverage`: Unique identifier of a Cisco customer.
+   *
+   * - `contractNumber`: The contract number
    */
-  headCoverageResponse(params: ContractsService.HeadCoverageParams): __Observable<__StrictHttpResponse<null>> {
+  headContractsProductsCoveragesResponse(params: ContractsService.HeadContractsProductsCoveragesParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.coverage != null) __params = __params.set('coverage', params.coverage.toString());
+    if (params.contractNumber != null) __params = __params.set('contractNumber', params.contractNumber.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/v1/contracts/products/coverages`,
+      this.rootUrl + `/api/customerportal/contracts/v1/products/coverages`,
       __body,
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -57,16 +61,19 @@ class ContractsService extends __BaseService {
       })
     );
   }
+
   /**
    * Returns the total number of products that have coverage information along with query metadata (e.g. rows/page).
-   * @param params The `ContractsService.HeadCoverageParams` containing the following parameters:
+   * @param params The `ContractsService.HeadContractsProductsCoveragesParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `coverage`: Unique identifier of a Cisco customer.
+   *
+   * - `contractNumber`: The contract number
    */
-  headCoverage(params: ContractsService.HeadCoverageParams): __Observable<null> {
-    return this.headCoverageResponse(params).pipe(
+  headContractsProductsCoverages(params: ContractsService.HeadContractsProductsCoveragesParams): __Observable<null> {
+    return this.headContractsProductsCoveragesResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -74,7 +81,7 @@ class ContractsService extends __BaseService {
   /**
    * The not-covered API retrieves details of all devices in the inventory that are not covered by any Cisco service contracts.
    * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response. https://sdp.cisco.com/api/v1/collections/import-inventory-file
-   * @param params The `ContractsService.GetCoverageParams` containing the following parameters:
+   * @param params The `ContractsService.GetDevicesAndCoverageParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
@@ -96,7 +103,7 @@ class ContractsService extends __BaseService {
    *
    * @return successful operation
    */
-  getCoverageResponse(params: ContractsService.GetCoverageParams): __Observable<__StrictHttpResponse<CoveredResponse>> {
+  getDevicesAndCoverageResponse(params: ContractsService.GetDevicesAndCoverageParams): __Observable<__StrictHttpResponse<CoverageResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -111,25 +118,27 @@ class ContractsService extends __BaseService {
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/v1/contracts/products/coverages`,
+      this.rootUrl + `/api/customerportal/contracts/v1/products/coverages`,
       __body,
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<CoveredResponse>;
+        return _r as __StrictHttpResponse<CoverageResponse>;
       })
     );
   }
+
   /**
    * The not-covered API retrieves details of all devices in the inventory that are not covered by any Cisco service contracts.
    * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response. https://sdp.cisco.com/api/v1/collections/import-inventory-file
-   * @param params The `ContractsService.GetCoverageParams` containing the following parameters:
+   * @param params The `ContractsService.GetDevicesAndCoverageParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
@@ -151,16 +160,16 @@ class ContractsService extends __BaseService {
    *
    * @return successful operation
    */
-  getCoverage(params: ContractsService.GetCoverageParams): __Observable<CoveredResponse> {
-    return this.getCoverageResponse(params).pipe(
-      __map(_r => _r.body as CoveredResponse)
+  getDevicesAndCoverage(params: ContractsService.GetDevicesAndCoverageParams): __Observable<CoverageResponse> {
+    return this.getDevicesAndCoverageResponse(params).pipe(
+      __map(_r => _r.body as CoverageResponse)
     );
   }
 
   /**
    * The not-covered API retrieves details of all devices in the inventory that are not covered by any Cisco service contracts.
    * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response. https://sdp.cisco.com/api/v1/collections/import-inventory-file
-   * @param params The `ContractsService.GetCoverageExpirationParams` containing the following parameters:
+   * @param params The `ContractsService.GetTopCoverageExpirationParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
@@ -176,7 +185,7 @@ class ContractsService extends __BaseService {
    *
    * @return successful operation
    */
-  getCoverageExpirationResponse(params: ContractsService.GetCoverageExpirationParams): __Observable<__StrictHttpResponse<CoverageExpirationResponse>> {
+  getTopCoverageExpirationResponse(params: ContractsService.GetTopCoverageExpirationParams): __Observable<__StrictHttpResponse<CoverageCountResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -188,25 +197,27 @@ class ContractsService extends __BaseService {
     if (params.coverageExpiry != null) __params = __params.set('coverageExpiry', params.coverageExpiry.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/v1/contracts/products/coverages/top`,
+      this.rootUrl + `/api/customerportal/contracts/v1/products/coverages/top`,
       __body,
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<CoverageExpirationResponse>;
+        return _r as __StrictHttpResponse<CoverageCountResponse>;
       })
     );
   }
+
   /**
    * The not-covered API retrieves details of all devices in the inventory that are not covered by any Cisco service contracts.
    * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response. https://sdp.cisco.com/api/v1/collections/import-inventory-file
-   * @param params The `ContractsService.GetCoverageExpirationParams` containing the following parameters:
+   * @param params The `ContractsService.GetTopCoverageExpirationParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
@@ -222,18 +233,20 @@ class ContractsService extends __BaseService {
    *
    * @return successful operation
    */
-  getCoverageExpiration(params: ContractsService.GetCoverageExpirationParams): __Observable<CoverageExpirationResponse> {
-    return this.getCoverageExpirationResponse(params).pipe(
-      __map(_r => _r.body as CoverageExpirationResponse)
+  getTopCoverageExpiration(params: ContractsService.GetTopCoverageExpirationParams): __Observable<CoverageCountResponse> {
+    return this.getTopCoverageExpirationResponse(params).pipe(
+      __map(_r => _r.body as CoverageCountResponse)
     );
   }
 
   /**
    * The contract-details API retrieves details of specific contracts owned by customers or partners.
    * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response. https://sdp.cisco.com/api/v1/contracts/contract-details
-   * @param params The `ContractsService.GetContractsParams` containing the following parameters:
+   * @param params The `ContractsService.GetContractDetailsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `serialNumber`: The serial number to search on.
    *
    * - `inventoryName`: The name of inventory given by customers.
    *
@@ -243,37 +256,42 @@ class ContractsService extends __BaseService {
    *
    * @return successful operation
    */
-  getContractsResponse(params: ContractsService.GetContractsParams): __Observable<__StrictHttpResponse<ContractsResponse>> {
+  getContractDetailsResponse(params: ContractsService.GetContractDetailsParams): __Observable<__StrictHttpResponse<DeviceContractResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.inventoryName != null) __params = __params.set('inventoryName', params.inventoryName.toString());
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/v1/contracts`,
+      this.rootUrl + `/api/customerportal/contracts/v1/details`,
       __body,
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<ContractsResponse>;
+        return _r as __StrictHttpResponse<DeviceContractResponse>;
       })
     );
   }
+
   /**
    * The contract-details API retrieves details of specific contracts owned by customers or partners.
    * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response. https://sdp.cisco.com/api/v1/contracts/contract-details
-   * @param params The `ContractsService.GetContractsParams` containing the following parameters:
+   * @param params The `ContractsService.GetContractDetailsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `serialNumber`: The serial number to search on.
    *
    * - `inventoryName`: The name of inventory given by customers.
    *
@@ -283,9 +301,9 @@ class ContractsService extends __BaseService {
    *
    * @return successful operation
    */
-  getContracts(params: ContractsService.GetContractsParams): __Observable<ContractsResponse> {
-    return this.getContractsResponse(params).pipe(
-      __map(_r => _r.body as ContractsResponse)
+  getContractDetails(params: ContractsService.GetContractDetailsParams): __Observable<DeviceContractResponse> {
+    return this.getContractDetailsResponse(params).pipe(
+      __map(_r => _r.body as DeviceContractResponse)
     );
   }
 }
@@ -293,9 +311,9 @@ class ContractsService extends __BaseService {
 module ContractsService {
 
   /**
-   * Parameters for headCoverage
+   * Parameters for headContractsProductsCoverages
    */
-  export interface HeadCoverageParams {
+  export interface HeadContractsProductsCoveragesParams {
 
     /**
      * Unique identifier of a Cisco customer.
@@ -306,12 +324,17 @@ module ContractsService {
      * Unique identifier of a Cisco customer.
      */
     coverage: 'covered' | 'not-covered' | 'unknown';
+
+    /**
+     * The contract number
+     */
+    contractNumber?: string;
   }
 
   /**
-   * Parameters for getCoverage
+   * Parameters for getDevicesAndCoverage
    */
-  export interface GetCoverageParams {
+  export interface GetDevicesAndCoverageParams {
 
     /**
      * Unique identifier of a Cisco customer.
@@ -360,9 +383,9 @@ module ContractsService {
   }
 
   /**
-   * Parameters for getCoverageExpiration
+   * Parameters for getTopCoverageExpiration
    */
-  export interface GetCoverageExpirationParams {
+  export interface GetTopCoverageExpirationParams {
 
     /**
      * Unique identifier of a Cisco customer.
@@ -396,14 +419,19 @@ module ContractsService {
   }
 
   /**
-   * Parameters for getContracts
+   * Parameters for getContractDetails
    */
-  export interface GetContractsParams {
+  export interface GetContractDetailsParams {
 
     /**
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * The serial number to search on.
+     */
+    serialNumber?: Array<string>;
 
     /**
      * The name of inventory given by customers.

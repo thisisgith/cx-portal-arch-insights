@@ -81,7 +81,7 @@
 <ng-template #facetPanel>
 	<div class="row no-gutters flex-fill flex-center">
 		<div *ngFor="let facet of facets; index as i"
-			attr.data-auto-id="Facet-{{ facet.key }}"
+			attr.data-auto-id="Facet-{{ facet.title }}"
 			(click)="selectFacet(facet)"
 			class="panel panel--bordered-right flex-center row"
 			[ngClass]="{
@@ -114,8 +114,9 @@
 </ng-template>
 
 <ng-template #assetsFacet let-facet="facet">
-	<cui-gauge percentage="75"
-		value="75%"
+	<cui-gauge *ngIf="facet?.data"
+		[percentage]="facet.data.gaugePercent || 0"
+		value="{{ facet.data.gaugePercent || 0 }}%"
 		color="primary">
 	</cui-gauge>
 </ng-template>

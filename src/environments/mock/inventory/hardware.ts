@@ -1136,7 +1136,7 @@ export const HardwareScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Hardware',
 					response: {
 						body: mockResponse,

@@ -1,0 +1,28 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.rma-table {
+	> tbody {
+		> tr {
+			> th {
+				padding-left: 0 !important;
+				background-color: $white !important;
+				border: 0 !important;
+				font-weight: $h4-font-weight !important;
+				font-size: $base-font-size !important;
+				color: $dark-gray-4 !important;
+			}
+		}
+	}
+}
+
+.rma-product-table {
+	> tbody {
+		> tr:nth-child(odd) {
+			background-color: $base-table-striping-odd-background-color !important;
+		}
+
+		> tr:nth-child(even) {
+			background-color: $base-table-striping-even-background-color !important;
+		}
+	}
+}

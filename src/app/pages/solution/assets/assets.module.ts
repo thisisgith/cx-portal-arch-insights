@@ -21,7 +21,7 @@ import { AssetsBubbleChartModule } from './assets-bubble-chart/assets-bubble-cha
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpOrigin;
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Child routes for Assets Module for lazy loading

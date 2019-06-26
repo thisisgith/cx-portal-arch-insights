@@ -3,6 +3,7 @@ image: containers.cisco.com/cway/gitlab-ci
 stages:
   - setup
   - test
+  - build
 
 # add 'node_modules' to cache for speeding up builds
 cache:
@@ -19,6 +20,11 @@ setup:
   script:
     - npm install --audit=false
     - rm -rf node_modules/@types/lodash
+
+building:
+  stage: build
+  script:
+    - npm run build:ci
 
 # run npm audit to verify dependency security
 audit:

@@ -2,12 +2,21 @@ import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 
+import { of } from 'rxjs';
+
 import { SearchBarComponent } from './search-bar.component';
 import { SearchBarModule } from './search-bar.module';
+import { SearchService } from '@services';
+import { SearchScenarios } from '@mock';
+import { SearchEnum } from '@interfaces';
+
+/** Mock typeahead response */
+const mockResponse = SearchScenarios[1].scenarios.GET[0].response.body;
 
 describe('SearchBarComponent', () => {
 	let component: SearchBarComponent;
 	let fixture: ComponentFixture<SearchBarComponent>;
+	let service: SearchService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -20,18 +29,10 @@ describe('SearchBarComponent', () => {
 	}));
 
 	beforeEach(() => {
+		service = TestBed.get(SearchService);
 		fixture = TestBed.createComponent(SearchBarComponent);
 		component = fixture.componentInstance;
-		spyOn(component, 'keyHandler');
 		spyOn(component.searchChange, 'emit');
-		component.items = [
-			{
-				name: 'Test1',
-			},
-			{
-				name: 'Test2',
-			},
-		];
 		fixture.detectChanges();
 	});
 
@@ -46,39 +47,68 @@ describe('SearchBarComponent', () => {
 			.toBeFalsy();
 	});
 
-	it('should show options after typing', () => {
+	it('should call typahead search', fakeAsync(() => {
+		spyOn(service, 'fetchTypeahead')
+			.and
+			.returnValue(of(mockResponse));
+		const input = fixture.debugElement.query(By.css('input'));
+		input.nativeElement.value = 'Test1';
+		input.nativeElement.dispatchEvent(new Event('input'));
+		fixture.detectChanges();
+		tick(300);
+		expect(service.fetchTypeahead)
+			.toHaveBeenCalledWith({
+				bizcontext: 'ENT',
+				h: 7,
+				locale: 'enus',
+				q: 'Test1',
+			});
+	}));
+
+	it('should show no options on empty search', fakeAsync(() => {
+		spyOn(service, 'fetchTypeahead')
+			.and
+			.returnValue(of({ }));
+		const input = fixture.debugElement.query(By.css('input'));
+		input.nativeElement.value = 'Test1';
+		input.nativeElement.dispatchEvent(new Event('input'));
+		fixture.detectChanges();
+		tick(300);
+		fixture.detectChanges();
+		expect(component.typeaheadItems)
+			.toEqual(null);
+	}));
+
+	it('should show options after typing', fakeAsync(() => {
+		spyOn(service, 'fetchTypeahead')
+			.and
+			.returnValue(of(mockResponse));
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.value = 'Test';
 		input.nativeElement.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
+		tick(300);
+		fixture.detectChanges();
 		const dropdown = fixture.debugElement.query(By.css('.dropdown'));
 		expect(dropdown)
 			.toBeTruthy();
-	});
+	}));
 
-	it('should hide options with empty text search', () => {
+	it('should hide options with empty text search', fakeAsync(() => {
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.value = 'Test';
 		input.nativeElement.dispatchEvent(new Event('input'));
 		input.nativeElement.value = '';
 		input.nativeElement.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
+		tick(300);
 		const dropdown = fixture.debugElement.query(By.css('.dropdown'));
 		expect(dropdown)
 			.toBeFalsy();
-	});
-
-	it('should filter options', fakeAsync(() => {
-		const input = fixture.debugElement.query(By.css('input'));
-		input.nativeElement.value = 'Test1';
-		input.nativeElement.dispatchEvent(new Event('input'));
-		tick();
-		fixture.detectChanges();
-		expect(component.typeaheadItems.length)
-			.toEqual(1);
 	}));
 
 	it('should select on Enter', fakeAsync(() => {
+		spyOn(component, 'keyHandler');
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.dispatchEvent(new Event('focus'));
 		input.nativeElement.value = 'Test1';
@@ -88,10 +118,57 @@ describe('SearchBarComponent', () => {
 			key: 'Enter',
 		});
 		document.dispatchEvent(event);
-		tick();
+		tick(300);
 		expect(component.keyHandler)
 			.toHaveBeenCalled();
 	}));
+
+	it('should highlight first option on arrow press', () => {
+		const input = fixture.debugElement.query(By.css('input'));
+		input.nativeElement.dispatchEvent(new Event('focus'));
+		fixture.detectChanges();
+		component.searchText = 'Test';
+		component.typeaheadItems = [{
+			name: 'Item1',
+		}, {
+			name: 'Item2',
+		}];
+		fixture.detectChanges();
+		const event = new KeyboardEvent('keyup', {
+			key: 'ArrowDown',
+		});
+		component.keyHandler(event);
+		fixture.detectChanges();
+		const firstOption = fixture.debugElement.queryAll(By.css('a'))[0];
+		expect(firstOption.classes['keyboard-hover'])
+			.toBeTruthy();
+	});
+
+	it('should re-highlight after arrow up', () => {
+		const input = fixture.debugElement.query(By.css('input'));
+		input.nativeElement.dispatchEvent(new Event('focus'));
+		fixture.detectChanges();
+		component.searchText = 'Test';
+		component.typeaheadItems = [{
+			name: 'Item1',
+		}, {
+			name: 'Item2',
+		}];
+		fixture.detectChanges();
+		let event = new KeyboardEvent('keyup', {
+			key: 'ArrowDown',
+		});
+		component.keyHandler(event);
+		component.keyHandler(event);
+		event = new KeyboardEvent('keyup', {
+			key: 'ArrowUp',
+		});
+		component.keyHandler(event);
+		fixture.detectChanges();
+		const firstOption = fixture.debugElement.queryAll(By.css('a'))[0];
+		expect(firstOption.classes['keyboard-hover'])
+			.toBeTruthy();
+	});
 
 	it('should not emit on empty selection', () => {
 		component.onSearchSelect(''); // casenum
@@ -103,8 +180,12 @@ describe('SearchBarComponent', () => {
 		component.onSearchSelect('600000000'); // casenum
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
-				name: '600000000',
-				type: 'case',
+				generalSearch: '600000000',
+				text: '600000000',
+				type: {
+					name: SearchEnum.case,
+					value: '600000000',
+				},
 			});
 	});
 
@@ -112,8 +193,25 @@ describe('SearchBarComponent', () => {
 		component.onSearchSelect('800000000'); // RMA num
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
-				name: '800000000',
-				type: 'rma',
+				generalSearch: '800000000',
+				text: '800000000',
+				type: {
+					name: SearchEnum.rma,
+					value: '800000000',
+				},
+			});
+	});
+
+	it('should emit a contract selection', () => {
+		component.onSearchSelect('230000000'); // RMA num
+		expect(component.searchChange.emit)
+			.toHaveBeenCalledWith({
+				generalSearch: 'contract',
+				text: '230000000',
+				type: {
+					name: SearchEnum.contract,
+					value: '230000000',
+				},
 			});
 	});
 
@@ -121,8 +219,12 @@ describe('SearchBarComponent', () => {
 		component.onSearchSelect('1234'); // RMA num
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
-				name: '1234',
-				type: 'sn',
+				generalSearch: '1234',
+				text: '1234',
+				type: {
+					name: SearchEnum.sn,
+					value: '1234',
+				},
 			});
 	});
 
@@ -130,8 +232,11 @@ describe('SearchBarComponent', () => {
 		component.onSearchSelect('Some value with spaces'); // RMA num
 		expect(component.searchChange.emit)
 			.toHaveBeenCalledWith({
-				name: 'Some value with spaces',
-				type: 'default',
+				generalSearch: 'Some value with spaces',
+				text: 'Some value with spaces',
+				type: {
+					name: SearchEnum.default,
+				},
 			});
 	});
 });

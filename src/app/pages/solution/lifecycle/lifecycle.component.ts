@@ -29,7 +29,7 @@ import {
 } from '@cui-x/sdp-api';
 
 import { SolutionService } from '../solution.service';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -45,6 +45,7 @@ interface ComponentData {
 	params: {
 		customerId: string;
 		pitstop: string;
+		rows?: number;
 		solution: string;
 		usecase: string;
 		suggestedAction?: string;
@@ -59,6 +60,7 @@ interface ComponentData {
 		elearning?: ELearning[];
 		training?: ELearning[];
 		success?: SuccessPath[];
+		archetype?: string[];
 	};
 	acc?: {
 		sessions: ACC[];
@@ -85,6 +87,7 @@ export interface PitstopActionWithStatus {
 export class LifecycleComponent implements OnDestroy {
 	@ViewChild('accModal', { static: true }) public accTemplate: TemplateRef<{ }>;
 	@ViewChild('atxModal', { static: true }) public atxTemplate: TemplateRef<{ }>;
+	@ViewChild('successModal', { static: true }) public successPathTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -95,6 +98,9 @@ export class LifecycleComponent implements OnDestroy {
 	public atxScheduleCardOpened = false;
 	public sessionSelected: ATXSession;
 	public customerId = '2431199';
+	public selectedCategory = '';
+	public selectedSuccessPaths: SuccessPath[];
+	public categoryOptions: [];
 
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 
@@ -166,6 +172,7 @@ export class LifecycleComponent implements OnDestroy {
 			params: {
 				customerId: this.customerId,
 				pitstop: '',
+				rows: 100,
 				solution: '',
 				suggestedAction: '',
 				usecase: '',
@@ -188,6 +195,12 @@ export class LifecycleComponent implements OnDestroy {
 			this.modal = {
 				content: this.accTemplate,
 				context: { data: this.componentData.acc.sessions },
+				visible: true,
+			};
+		} else if (type === '_ProductGuide_') {
+			this.modal = {
+				content: this.successPathTemplate,
+				context: { data: this.selectedSuccessPaths },
 				visible: true,
 			};
 		}
@@ -236,6 +249,17 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public selectSession (session: ATXSession) {
 		this.sessionSelected = (_.isEqual(this.sessionSelected, session)) ? null : session;
+	}
+
+	/**
+	 * Selects the category
+	 */
+	public selectFilter () {
+		this.selectedSuccessPaths =
+			_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
+		if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
+			this.selectedSuccessPaths = this.componentData.learning.success;
+		}
 	}
 
 	/**
@@ -401,11 +425,24 @@ export class LifecycleComponent implements OnDestroy {
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackSuccessPaths(
-			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+			_.pick(this.componentData.params,
+				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
+					_.set(this.componentData, ['learning', 'archetype'],
+						_.chain(result.items)
+						.map('archetype')
+						.uniq()
+						.value());
+					this.componentData.learning.archetype.unshift('Not selected');
+					this.selectedSuccessPaths = this.componentData.learning.success;
+					this.categoryOptions =
+						_.map(this.componentData.learning.archetype, item => ({
+							name: item,
+							value: item,
+						}));
 				}
 
 				this.status.loading.success = false;
@@ -441,7 +478,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackElearning(
-			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+			_.pick(this.componentData.params,
+				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: ELearningResponse) => {
 
@@ -451,10 +489,29 @@ export class LifecycleComponent implements OnDestroy {
 					_.set(this.componentData, ['learning', 'training'], []);
 
 					_.each(result.items, (item: ELearning) => {
-						if (_.get(this.componentData.learning, item.type)) {
-							this.componentData.learning[item.type].push(item);
+						switch (item.type) {
+							case 'E-Course': {
+								this.componentData.learning.elearning.push(item);
+								break;
+							}
+							case 'Cisco Training on Demand Courses':
+							case 'Videos': {
+								this.componentData.learning.certifications.push(item);
+								break;
+							}
+							default: {
+								this.componentData.learning.training.push(item);
+								break;
+							}
 						}
 					});
+					// To do order the list by ranking
+					this.componentData.learning.elearning =
+						_.orderBy(this.componentData.learning.elearning, ['ranking', 'asc']);
+					this.componentData.learning.certifications =
+						_.orderBy(this.componentData.learning.certifications, ['ranking', 'asc']);
+					this.componentData.learning.training =
+						_.orderBy(this.componentData.learning.training, ['ranking', 'asc']);
 				}
 
 				this.status.loading.elearning = false;
@@ -554,6 +611,8 @@ export class LifecycleComponent implements OnDestroy {
 					}));
 
 			this.componentData.params.pitstop = stage;
+			// UI not handling pagination for now, temporarily set to a large number
+			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
 
 			this.status.loading.racetrack = false;

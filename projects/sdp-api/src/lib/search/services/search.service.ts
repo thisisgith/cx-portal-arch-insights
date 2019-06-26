@@ -1,9 +1,9 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { BaseService as __BaseService } from '../../core/base-service';
+import { BaseService as __BaseService } from '../base-service';
 import { SearchConfiguration as __Configuration } from '../search-configuration';
-import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
+import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-response';
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
@@ -36,11 +36,13 @@ class SearchService extends __BaseService {
    *
    * - `webSessionId`: Web Session Id
    *
-   * - `offset`: Pagination offset
+   * - `offset`: Pagination: offset
    *
-   * - `limit`: Pagination - number of expected results
+   * - `limit`: Pagination: number of expected results
    *
    * - `filters`: Filter CDC results
+   *
+   * - `context`: Hint to do a special lookup before search
    *
    * @return Successfully retrieved results
    */
@@ -54,7 +56,9 @@ class SearchService extends __BaseService {
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
    if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
    if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
-   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
+   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters.replace(/\\/g, '') as string);}
+   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', params.context as string);}
+   if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData = __formData.append('customerId', params.customerId as string);}
    __body = __formData;
     let req = new HttpRequest<any>(
       'POST',
@@ -63,8 +67,7 @@ class SearchService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json',
-//        withCredentials: true,
+        responseType: 'json'
       });
 
     return this.http.request<any>(req).pipe(
@@ -74,7 +77,6 @@ class SearchService extends __BaseService {
       })
     );
   }
-
   /**
    * @param params The `SearchService.DirectCDCSearchParams` containing the following parameters:
    *
@@ -82,11 +84,13 @@ class SearchService extends __BaseService {
    *
    * - `webSessionId`: Web Session Id
    *
-   * - `offset`: Pagination offset
+   * - `offset`: Pagination: offset
    *
-   * - `limit`: Pagination - number of expected results
+   * - `limit`: Pagination: number of expected results
    *
    * - `filters`: Filter CDC results
+   *
+   * - `context`: Hint to do a special lookup before search
    *
    * @return Successfully retrieved results
    */
@@ -121,7 +125,7 @@ class SearchService extends __BaseService {
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
    if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
    if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
-   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
+   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters.replace(/\\/g, '') as string);}
    __body = __formData;
     let req = new HttpRequest<any>(
       'POST',
@@ -130,8 +134,7 @@ class SearchService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json',
-//        withCredentials: true,
+        responseType: 'json'
       });
 
     return this.http.request<any>(req).pipe(
@@ -141,7 +144,6 @@ class SearchService extends __BaseService {
       })
     );
   }
-
   /**
    * @param params The `SearchService.DirectCommunitySearchParams` containing the following parameters:
    *
@@ -176,11 +178,13 @@ class SearchService extends __BaseService {
    *
    * - `pitStop`: Pit Stop
    *
-   * - `offset`: Pagination offset
+   * - `offset`: CDC Pagination: offset
    *
-   * - `limit`: Pagination - number of expected results
+   * - `limit`: CDC Pagination: number of expected results
    *
    * - `filters`: Filter CDC results
+   *
+   * - `context`: Hint to do a special lookup before search
    *
    * @return Successfully retrieved results
    */
@@ -192,9 +196,14 @@ class SearchService extends __BaseService {
     let __formData = new HttpParams();
    if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData = __formData.append('searchTokens', params.searchTokens as string);}
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
+   if(params.useCase !== null && typeof params.useCase !== "undefined") { __formData = __formData.append('useCase', params.useCase as string);}
+   if(params.solution !== null && typeof params.solution !== "undefined") { __formData = __formData.append('solution', params.solution as string);}
+   if(params.pitStop !== null && typeof params.pitStop !== "undefined") { __formData = __formData.append('pitStop', params.pitStop as string);}
    if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
    if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
-   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
+   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters.replace(/\\/g, '') as string);}
+   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', params.context as string);}
+   if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData = __formData.append('customerId', params.customerId as string);}
    __body = __formData;
     let req = new HttpRequest<any>(
       'POST',
@@ -203,8 +212,7 @@ class SearchService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json',
-//        withCredentials: true,
+        responseType: 'json'
       });
 
     return this.http.request<any>(req).pipe(
@@ -214,7 +222,6 @@ class SearchService extends __BaseService {
       })
     );
   }
-
   /**
    * @param params The `SearchService.AllSearchParams` containing the following parameters:
    *
@@ -228,11 +235,13 @@ class SearchService extends __BaseService {
    *
    * - `pitStop`: Pit Stop
    *
-   * - `offset`: Pagination offset
+   * - `offset`: CDC Pagination: offset
    *
-   * - `limit`: Pagination - number of expected results
+   * - `limit`: CDC Pagination: number of expected results
    *
    * - `filters`: Filter CDC results
+   *
+   * - `context`: Hint to do a special lookup before search
    *
    * @return Successfully retrieved results
    */
@@ -261,12 +270,12 @@ module SearchService {
     webSessionId?: string;
 
     /**
-     * Pagination offset
+     * Pagination: offset
      */
     offset?: string;
 
     /**
-     * Pagination - number of expected results
+     * Pagination: number of expected results
      */
     limit?: string;
 
@@ -274,6 +283,16 @@ module SearchService {
      * Filter CDC results
      */
     filters?: string;
+
+    /**
+     * Hint to do a special lookup before search
+     */
+    context?: string;
+
+    /**
+     * Unique identifier of a Cisco customer
+     */
+    customerId?: string;
   }
 
   /**
@@ -338,12 +357,12 @@ module SearchService {
     pitStop?: string;
 
     /**
-     * Pagination offset
+     * CDC Pagination: offset
      */
     offset?: string;
 
     /**
-     * Pagination - number of expected results
+     * CDC Pagination: number of expected results
      */
     limit?: string;
 
@@ -351,6 +370,16 @@ module SearchService {
      * Filter CDC results
      */
     filters?: string;
+
+    /**
+     * Hint to do a special lookup before search
+     */
+    context?: string;
+
+    /**
+     * Unique identifier of a Cisco customer
+     */
+    customerId?: string;
   }
 }
 

@@ -2,10 +2,17 @@ export { Advisory } from './advisory';
 export { AlertData } from './alertData';
 export { Announcement } from './announcement';
 export { Bug } from './bug';
-export { Case } from './case';
+export { Case, Note } from './case';
 export { Contract } from './contract';
 export { FieldNotice } from './fieldNotice';
 export { License } from './license';
-export { RMA } from './rma';
-export { SearchType } from './search';
+export {
+	LaborLine,
+	PartsLineDetail,
+	ReturnPart,
+	RMAAlert,
+	RMARecord,
+	RMAResponse,
+} from './rma';
+export { SearchContext, SearchEnum, SearchType, SearchQuery } from './search';
 export { TimelineDatapoint, TimelineInternalDatapoint, TodayRelation } from './timelineDatapoint';

@@ -6,11 +6,11 @@ import {
 	Bug,
 	FieldNotice,
 	License,
-	RMA,
+	RMAAlert,
 } from './index';
 
 /**
  * Type which contains an OR'ed interface for Alerts
  */
 export type AlertData = Advisory | Bug | Case | Contract |
-Announcement | FieldNotice | License | RMA;
+Announcement | FieldNotice | License | RMAAlert;

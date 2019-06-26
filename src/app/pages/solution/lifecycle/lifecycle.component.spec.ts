@@ -18,7 +18,7 @@ import { of, throwError } from 'rxjs';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { HttpErrorResponse } from '@angular/common/http';
 
 /**
@@ -315,6 +315,37 @@ describe('LifecycleComponent', () => {
 				.toBeFalsy();
 
 			de = fixture.debugElement.query(By.css('#accModal'));
+			expect(de)
+				.toBeFalsy();
+		});
+
+		it('should show the Product Guides view-all modal', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('_ProductGuide_');
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('#successModal'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.icon-close'));
+			el = de.nativeElement;
+
+			el.click();
+
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeFalsy();
+
+			de = fixture.debugElement.query(By.css('#successModal'));
 			expect(de)
 				.toBeFalsy();
 		});

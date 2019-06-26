@@ -15,10 +15,10 @@ export const environment = {
 	...mockSettings,
 	origin,
 	auth: {
-		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco/{INSERT_CLIENT_ID}`,
+		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	production: true,
-	sdpOrigin: 'https://api-stage.cisco.com',
+	sdpServiceOrigin: 'https://api-stage.cisco.com',
 };

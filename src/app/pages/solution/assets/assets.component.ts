@@ -1,9 +1,15 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { HardwareResponse, InventoryService, HardwareInfo } from '@cui-x/sdp-api';
-import * as _ from 'lodash';
+import {
+	InventoryService,
+	HardwareInfo,
+	NetworkElementResponse,
+	Pagination,
+} from '@cui-x/sdp-api';
+import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { SolutionService } from '../solution.service';
+import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Interface representing our visual filters
@@ -14,17 +20,6 @@ interface Filter {
 	subfilter?: string;
 	template?: TemplateRef<{ }>;
 	title: string;
-}
-
-/**
- * Interface which represents params to send to the asset service
- */
-interface AssetParams {
-	customerId: string;
-	limit: number;
-	page: number;
-	rows: number;
-	total?: number;
 }
 
 /**
@@ -45,7 +40,7 @@ export class AssetsComponent implements OnInit {
 	@ViewChild('eoxContent', { static: true }) private eoxTemplate: TemplateRef<{ }>;
 	@ViewChild('contractsContent', { static: true }) private contractsTemplate: TemplateRef<{ }>;
 	@ViewChild('coverageFilter', { static: true }) private coverageFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('statusFilter', { static: true }) private statusFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('contractFilter', { static: true }) private contractFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('typeFilter', { static: true }) private typeFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('advisoryFilter', { static: true }) private advisoryFilterTemplate: TemplateRef<{ }>;
 
@@ -53,12 +48,12 @@ export class AssetsComponent implements OnInit {
 	public selectedAssets: HardwareInfo[] = [];
 	public filters: Filter[];
 	public visibleTemplate: TemplateRef<{ }>;
-	public assetParams: AssetParams = {
+	public assetParams: InventoryService.GetNetworkElementsParams = {
 		customerId: '2431199',
-		limit: 10,
 		page: 1,
 		rows: 10,
 	};
+	public pagination: Pagination;
 	public status = {
 		isLoading: true,
 	};
@@ -67,6 +62,7 @@ export class AssetsComponent implements OnInit {
 	public inventory = [];
 
 	constructor (
+		private logger: LogService,
 		private inventoryService: InventoryService,
 		private solutionService: SolutionService,
 	) { }
@@ -87,6 +83,15 @@ export class AssetsComponent implements OnInit {
 			f.selected = false;
 			f.subfilter = undefined;
 		});
+	}
+
+	/**
+	 * Page change handler
+	 * @param event the event emitted
+	 */
+	public onPageChanged (event: any) {
+		this.assetParams.page = (event.page + 1);
+		this.fetchInventory();
 	}
 
 	/**
@@ -161,32 +166,32 @@ export class AssetsComponent implements OnInit {
 			{
 				key: 'coverage',
 				template: this.coverageFilterTemplate,
-				title: I18n.get('_Coverage_'),
+				title: I18n.get('_CoverageStatus_'),
 			},
 			{
-				key: 'status',
-				template: this.statusFilterTemplate,
-				title: I18n.get('_Status_'),
+				key: 'contract',
+				template: this.contractFilterTemplate,
+				title: I18n.get('_Contract_'),
 			},
 			{
 				key: 'advisories',
 				template: this.advisoryFilterTemplate,
 				title: I18n.get('_Advisories_'),
 			},
+			// {
+			// 	key: 'cases',
+			// 	template: this.casesAssetsFilterTemplate,
+			// 	title: I18n.get('_OpenCases_'),
+			// },
+			// {
+			// 	key: 'rmas',
+			// 	template: this.rmasAssetsFilterTemplate,
+			// 	title: I18n.get('_OpenRMAs_'),
+			// },
 			{
-				key: 'cases',
-				template: this.casesAssetsFilterTemplate,
-				title: I18n.get('_OpenCases_'),
-			},
-			{
-				key: 'rmas',
-				template: this.rmasAssetsFilterTemplate,
-				title: I18n.get('_OpenRMAs_'),
-			},
-			{
-				key: 'type',
+				key: 'role',
 				template: this.typeFilterTemplate,
-				title: I18n.get('_Type_'),
+				title: I18n.get('_NetworkRole_'),
 			},
 		];
 		this.fetchInventory();
@@ -201,36 +206,40 @@ export class AssetsComponent implements OnInit {
 				bordered: true,
 				columns: [
 					{
-						key: 'inUse',
-						name: I18n.get('_InUse_'),
-						sortable: false,
-						value: 'inUse',
-					},
-					{
-						key: 'hostname',
-						name: I18n.get('_Hostname_'),
+						key: 'hostName',
+						name: I18n.get('_Device_'),
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
-						value: 'hostname',
+						value: 'hostName',
 					},
 					{
-						key: 'productId',
-						name: I18n.get('_ProductID_'),
-						sortable: true,
-						value: 'productId',
-					},
-					{
-						key: 'managementAddress',
+						key: 'ipAddress',
 						name: I18n.get('_IPAddress_'),
 						sortable: true,
-						value: 'managementAddress',
+						value: 'ipAddress',
 					},
 					{
-						key: 'location',
-						name: I18n.get('_Location_'),
+						key: 'lastUpdateDate',
+						name: I18n.get('_LastScan_'),
 						sortable: false,
-						value: 'location',
+						value: 'lastUpdateDate',
+					},
+					{
+						name: I18n.get('_CriticalAdvisories_'),
+						render: item => item.criticalAdvisories ? item.criticalAdvisories : 0,
+						sortable: false,
+					},
+					{
+						name: I18n.get('_SupportCoverage_'),
+						render: item => item.supportCoverage ? item.supportCoverage : false,
+						sortable: false,
+					},
+					{
+						key: 'serialNumber',
+						name: I18n.get('_SerialNumber_'),
+						sortable: true,
+						value: 'serialNumber',
 					},
 					{
 						key: 'swType',
@@ -245,10 +254,10 @@ export class AssetsComponent implements OnInit {
 						value: 'swVersion',
 					},
 					{
-						key: 'productDescription',
-						name: I18n.get('_CXLevel_'),
+						key: 'productType',
+						name: I18n.get('_Role_'),
 						sortable: false,
-						value: 'productDescription',  // -- temporaily use productDescription
+						value: 'productType',
 					},
 				],
 				dynamicData: true,
@@ -267,16 +276,24 @@ export class AssetsComponent implements OnInit {
 	 * Fetches the users inventory
 	 */
 	private fetchInventory () {
-		this.inventoryService.getHardware(this.assetParams)
-			.subscribe((results: HardwareResponse) => {
-				const data = _.get(results, 'data', []);
-				this.assetParams.total = data.length;
-				this.inventory = data.slice(0, this.assetParams.limit);
+		this.status.isLoading = true;
+		this.inventoryService.getNetworkElements(this.assetParams)
+			.subscribe((results: NetworkElementResponse) => {
+				this.inventory = results.data;
+				this.pagination = results.Pagination;
+
 				this.buildTable();
+
 				this.status.isLoading = false;
+
 				if (window.Cypress) {
 					window.loading = false;
 				}
+			},
+			err => {
+				this.logger.error('assets.component : fetchInventory() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				this.status.isLoading = false;
 			});
 	}
 

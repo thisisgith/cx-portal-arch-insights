@@ -5,13 +5,18 @@ import { SolutionComponent } from './solution.component';
 import { CuiGaugeModule } from '@cisco-ngx/cui-components';
 import { SolutionRoutingModule } from './solution-routing.module';
 import { AssetDetailsModule } from './assets/details/details.module';
-import { RacetrackModule, RacetrackContentModule, SdpApiModule } from '@cui-x/sdp-api';
+import {
+	ContractsModule,
+	RacetrackModule,
+	RacetrackContentModule,
+	InventoryModule,
+} from '@cui-x/sdp-api';
 import { environment } from '@environment';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpOrigin;
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Module representing the Solution Pages
@@ -22,11 +27,12 @@ const rootUrl = environment.sdpOrigin;
 	imports: [
 		AssetDetailsModule,
 		CommonModule,
+		ContractsModule.forRoot({ rootUrl }),
 		CuiGaugeModule,
 		I18nPipeModule,
+		InventoryModule.forRoot({ rootUrl }),
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
-		SdpApiModule,
 		SolutionRoutingModule,
 	],
 })

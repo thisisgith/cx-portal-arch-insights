@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  description: Contract API Services
+  description: Contracts
   version: v1
-  title: Contract API Services
+  title: Contract
   termsOfService: ''
   contact:
     email: vpriyata@cisco.com
@@ -16,9 +16,8 @@ schemes:
 security:
   - OauthSecurity: []
 paths:
-  /api/v1/contracts/products/coverages:
+  /api/customerportal/contracts/v1/products/coverages:
     head:
-      operationId: headCoverage
       tags:
       - Contracts
       summary: |
@@ -33,6 +32,13 @@ paths:
           description: Unique identifier of a Cisco customer.
           required: true
           type: string
+
+        - name: contractNumber
+          in: query
+          description: The contract number
+          required: false
+          type: string
+
         - name: coverage
           in: query
           description: Unique identifier of a Cisco customer.
@@ -52,7 +58,6 @@ paths:
         403:
           description: 'Forbidden'
     get:
-      operationId: getCoverage
       tags:
       - Contracts
       summary:  >-
@@ -71,6 +76,7 @@ paths:
         Refer to General API Feature section to see examples of how to take advantage
         of these features in order to optimize and manipulate the response.
         https://sdp.cisco.com/api/v1/collections/import-inventory-file
+      operationId: getDevicesAndCoverage
       produces:
         - application/json
       parameters:
@@ -138,7 +144,7 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/CoveredResponse'
+            $ref: '#/definitions/CoverageResponse'
         '400':
           description: Operation failed
           schema:
@@ -146,9 +152,8 @@ paths:
         '404':
           description: API not found
 
-  /api/v1/contracts/products/coverages/top:
+  /api/customerportal/contracts/v1/products/coverages/top:
     get:
-      operationId: getCoverageExpiration
       tags:
       - Contracts
       summary:  >-
@@ -167,6 +172,7 @@ paths:
         Refer to General API Feature section to see examples of how to take advantage
         of these features in order to optimize and manipulate the response.
         https://sdp.cisco.com/api/v1/collections/import-inventory-file
+      operationId: getTopCoverageExpiration
       produces:
         - application/json
       parameters:
@@ -207,11 +213,12 @@ paths:
           type: integer
           format: int64
           minimum: 1
+
       responses:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/CoverageExpirationResponse'
+            $ref: '#/definitions/CoverageCountResponse'
         '400':
           description: Operation failed
           schema:
@@ -219,9 +226,10 @@ paths:
         '404':
           description: API not found
 
-  /api/v1/contracts:
+
+
+  /api/customerportal/contracts/v1/details:
     get:
-      operationId: getContracts
       tags:
       - Contracts
       summary: >-
@@ -237,6 +245,7 @@ paths:
         Refer to General API Feature section to see examples of how to take advantage
         of these features in order to optimize and manipulate the response.
         https://sdp.cisco.com/api/v1/contracts/contract-details
+      operationId: getContractDetails
       produces:
         - application/json
       x-zenith-preprocessor: true
@@ -260,6 +269,14 @@ paths:
             type: integer
             format: int64
           collectionFormat: multi
+        - name: serialNumber
+          in: query
+          description: The serial number to search on.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
         - name: fields
           in: query
           description: Filter fields
@@ -272,7 +289,7 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/ContractsResponse'
+            $ref: '#/definitions/DeviceContractResponse'
         '400':
           description: Operation failed
           schema:
@@ -287,21 +304,22 @@ securityDefinitions:
     authorizationUrl: 'https://oauth.simple.api/authorization'
 
 definitions:
-  CoveredResponse:
+
+  CoverageResponse:
     type: object
     required:
-      - data
+      [data]
     description: The product coverage information
     properties:
       data:
         type: array
         items:
-          $ref: '#/definitions/CoveredInfo'
+          $ref: '#/definitions/CoverageInfo'
 
-  CoveredInfo:
+  CoverageInfo:
     type: object
     required:
-      - serialNumber
+      [managedNeId, neId, hwInstanceId]
     properties:
           managedNeId:
             type: string
@@ -443,26 +461,88 @@ definitions:
           errorInfo:
             type: string
 
-  ContractsResponse:
+  DevicesNotCoveredDetails-NOTUSED:
+   type: array
+   items:
+    type: object
+    properties:
+      customerId:
+        type: string
+        example: 55843
+        x-zenith-ds-fieldName: CUSTOMERID
+        description: Unique identifier of a Cisco customer
+      contractInstanceNumber:
+        type: integer
+        example: 1806416854
+        format: int64
+        x-zenith-ds-fieldName: CONTRACTINSTANCENUMBER
+        description: Unique ID assigned to a piece of hardware
+      serialNumber:
+        type: string
+        example: 'FCW2022N3W5'
+        x-zenith-ds-fieldName: SERIALNUMBER
+        description: A serial number is a unique number used for identification. Example:- FTX1512AHK2; FDO1541Z067; SAD07370169
+      productId:
+        type: string
+        example: 'AIR-CAP3702I-B-K9'
+        x-zenith-ds-fieldName: PRODUCTID
+        description: The alphanumeric identifier used by customers to order Cisco products. Example:- CISCO2921/K9; WS-C3750X-24S-S; WS-X6748-GE-TX
+      hwType:
+        type: string
+        example: 'CHASSIS'
+        x-zenith-ds-fieldName: HWTYPE
+        description: The physical type of the hardware. Chassis, Module, Fan, Power Supply, Other
+      orderShipDate:
+        type: string
+        example: '2010-06-16T00:00:00Z'
+        format: date-time
+        x-zenith-ds-fieldName: ORDERSHIPDATE
+        description: Date when the product was shipped
+      installedatSiteId:
+        type: string
+        example: '416125950'
+        x-zenith-ds-fieldName: INSTALLEDATSITEID
+        description: Unique identifier of a site where the product was installed
+      installedatSiteName:
+        type: string
+        example: 'NEW YORK PRESBYTERIAN HOSPITAL'
+        x-zenith-ds-fieldName: INSTALLEDATSITENAME
+        description: Name of a site where the product was installed
+      installedatAddressLine1:
+       type: string
+       example: '627 W 165TH ST'
+       x-zenith-ds-fieldName: INSTALLEDATADDRESSLINE1
+       description: First address line of the installed-at site
+      installedatAddressLine2:
+        type: string
+        example: '6TH FLOOR ROOM 601'
+        x-zenith-ds-fieldName: INSTALLEDATADDRESSLINE2
+        description: Second address line of the installed-at site
+      installedatAddressLine3:
+        type: string
+        example: 'C/O TELECOM DEPT/ DAVID CARELA'
+        x-zenith-ds-fieldName: INSTALLEDATADDRESSLINE3
+        description: Third address line of the installed-at site
+      installedatAddressLine4:
+        type: string
+        example: '212-305-9282'
+        x-zenith-ds-fieldName: INSTALLEDATADDRESSLINE4
+
+
+  DeviceContractResponse:
    type: object
    required:
-     - data
+     [data]
    properties:
      data:
        type: array
        items:
-         $ref: '#/definitions/ContractInfo'
+         $ref: '#/definitions/DeviceContractInfo'
 
-  ContractInfo:
+  DeviceContractInfo:
     type: object
     required:
-      - customerId
-      - contractNumber
-      - contractStatus
-      - contractStartDate
-      - contractEndDate
-      - serviceProgram
-      - serviceLevel
+      [customerId, contractNumber, contractStatus, contractStartDate, contractEndDate, serviceProgram, serviceLevel]
     properties:
       customerId:
         type: string
@@ -492,6 +572,11 @@ definitions:
         format: date-time
         x-zenith-ds-fieldName: CONTRACTENDDATE
         description: The date when the service contract ends. GMT date format YYYY-MM-DD
+      cxLevel:
+        type: string
+        example: 'Level 1'
+        x-zenith-ds-fieldName: CXLEVEL
+        description: CX support level
       serviceProgram:
         type: string
         example: 'PARTNER SUPPORT SERVICE'
@@ -563,23 +648,23 @@ definitions:
         x-zenith-ds-fieldName: BILLTOGUNAME
         description: Name of a company where the contract was billed to
 
-  CoverageExpirationResponse:
+  CoverageCountResponse:
     type: object
     required:
-      - data
+      [data]
     description: The top n product coverage entries
     properties:
       data:
         type: array
         items:
-          $ref: '#/definitions/CoverageExpirationInfo'
+          $ref: '#/definitions/CoverageCountInfo'
 
-  CoverageExpirationInfo:
+  CoverageCountInfo:
+    type: array
+    required:
+      [contractNum, serviceLineName, coverageExpiryEntityCount]
+    items:
         type: object
-        required:
-          - contractNum
-          - serviceLineName
-          - coverageExpiryEntityCount
         properties:
           contractNum:
             type: string
