@@ -1,16 +1,13 @@
 import {
 	Component,
-	ElementRef,
 	EventEmitter,
 	OnInit,
 	Output,
-	ViewChild,
+	Input,
+	SimpleChanges,
 } from '@angular/core';
-import {
-	Chart,
-	SeriesPointClickEventObject,
-} from 'highcharts';
-import { LogService } from '@cisco-ngx/cui-services';
+import { Chart } from 'angular-highcharts';
+import * as _ from 'lodash-es';
 
 /**
  * Main component for the Assets Pie Chart
@@ -22,25 +19,29 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class AssetsPieChartComponent implements OnInit {
 
+	@Input() public seriesData;
 	@Output() public subfilter = new EventEmitter<string>();
-	@ViewChild('chart', { static: true }) public chartEl: ElementRef;
 	public chart: Chart;
 
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('AssetsPieChartComponent Created!');
+	/**
+	 * Component initialization
+	 */
+	public ngOnInit () {
+		if (this.seriesData) {
+			this.buildGraph();
+		}
 	}
 
 	/**
 	 * Initializes the pie chart
 	 */
-	public ngOnInit () {
-		// fake data until the API's are complete
+	private buildGraph () {
 		this.chart = new Chart({
 			chart: {
 				height: 200,
-				renderTo: this.chartEl.nativeElement,
+				plotBackgroundColor: null,
+				plotBorderWidth: null,
+				plotShadow: false,
 				type: 'pie',
 				width: 250,
 			},
@@ -49,7 +50,12 @@ export class AssetsPieChartComponent implements OnInit {
 			},
 			plotOptions: {
 				pie: {
-					innerSize: 95,
+					cursor: 'pointer',
+					dataLabels: {
+						allowOverlap: false,
+						enabled: true,
+					},
+					innerSize: 60,
 				},
 				series: {
 					point: {
@@ -59,30 +65,12 @@ export class AssetsPieChartComponent implements OnInit {
 					},
 				},
 			},
-			series: [
-				{
-					data: [
-						{
-							name: 'P1',
-							y: 20,
-						},
-						{
-							name: 'P2',
-							y: 40,
-						},
-						{
-							name: 'P3',
-							y: 15,
-						},
-						{
-							name: 'P4',
-							y: 25,
-						},
-					],
-					name: 'Placeholder',
-					type: undefined,
-				},
-			],
+			series: [{
+				colorByPoint: true,
+				data: this.seriesData,
+				name: '',
+				type: undefined,
+			}],
 			title: {
 				text: '',
 			},
@@ -93,8 +81,20 @@ export class AssetsPieChartComponent implements OnInit {
 	 * Emits the subfilter selected
 	 * @param event highcharts click event
 	 */
-	public selectSubfilter (event: SeriesPointClickEventObject) {
+	public selectSubfilter (event: any) {
 		event.stopPropagation();
 		this.subfilter.emit(event.point.name);
+	}
+
+	/**
+	 * OnChanges Functionality
+	 * @param changes The changes found
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const seriesInfo = _.get(changes, 'seriesData',
+			{ currentValue: null, firstChange: false });
+		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+			this.buildGraph();
+		}
 	}
 }

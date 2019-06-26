@@ -1,3 +1,6 @@
+export { CoverageCountsResponse } from './models/coverage-counts-response';
+export { ContractDeviceCountsResponse } from './models/contract-device-counts-response';
+export { ContractCount } from './models/contract-count';
 export { CoverageResponse } from './models/coverage-response';
 export { CoverageInfo } from './models/coverage-info';
 export { ErrorResponse as ContractsErrorResponse } from './models/error-response';

@@ -1,5 +1,6 @@
 export { ACCScenarios } from './racetrack/acc';
 export { ActionScenarios } from './racetrack/action';
+export { AssetScenarios } from './inventory/assets';
 export { ATXScenarios } from './racetrack/atx';
 export { CaseScenarios } from './case/case';
 export { CommunitiesScenarios } from './racetrack/communities';
@@ -11,5 +12,7 @@ export { Mock } from './mock';
 export { NetworkScenarios } from './inventory/network-elements';
 export { RacetrackScenarios } from './racetrack/info';
 export { RMAScenarios } from './rma/rma';
+export { RoleScenarios } from './inventory/roles';
 export { SearchScenarios } from './search/search';
 export { SuccessPathScenarios } from './racetrack/successPaths';
+export { VulnerabilityScenarios } from './product-alerts/vulnerabilities';

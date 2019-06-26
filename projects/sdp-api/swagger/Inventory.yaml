@@ -16,6 +16,70 @@ schemes:
 security:
   - OauthSecurity: []
 paths:
+  /api/customerportal/inventory/v1/assets:
+    get:
+      operationId: getAssets
+      tags:
+        - Inventory
+      summary: |
+        API to get all the assets
+      description: |
+        API to get all the assets
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: coverage
+          in: query
+          description: The coverage
+          required: false
+          type: array
+          items:
+            type: string
+            enum:
+            - "covered"
+            - "uncovered"
+            - "unknown"
+            - "expired"
+        - name: contractNumber
+          in: query
+          description: The contract numbers
+          required: false
+          type: array
+          items:
+            type: string
+        - name: role
+          in: query
+          description: The device role
+          required: false
+          type: array
+          items:
+            type: string
+        - name: page
+          in: query
+          description: The page number of the response
+          required: false
+          type: integer
+          format: int32
+          minimum: 1
+        - name: rows
+          in: query
+          description: Number of rows of data per page
+          required: false
+          type: integer
+          format: int64
+          minimum: 1
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Assets'
+        400:
+          description: 'Operation failed'
+        404:
+          description: 'API not found'
   /api/customerportal/inventory/v1/hardware:
     head:
       operationId: headHardware
@@ -456,13 +520,6 @@ paths:
           description: The name of inventory given by customers.
           required: false
           type: string
-#       - name: groupId
-#          in: query
-#          description: group id
-#          required: false
-#          type: integer
-#          format: int64
-#          x-zenith-ds-fieldName: groupId
         - name: managedNeInstanceId
           in: query
           description: The unique, generated ID of the network element.
@@ -570,6 +627,41 @@ paths:
             $ref: '#/definitions/ErrorResponse'
         '404':
           description: API not found
+  
+  /api/customerportal/inventory/v1/role/device/count:
+    get:
+      tags:
+        - Inventory
+      summary: The device roles set by DNAC
+      description: The Device roles set by DNAC.
+      operationId: getRoleCount
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: role
+          in: query
+          description: The device role
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/RoleCountResponse'
+        '400':
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: API not found
+
+
 securityDefinitions:
   OauthSecurity:
     type: oauth2
@@ -577,7 +669,59 @@ securityDefinitions:
     authorizationUrl: 'https://oauth.simple.api/authorization'
     
 definitions:
+  RoleCountResponse:
+    type: array
+    items:
+      $ref: '#/definitions/RoleCount'
+  
+  RoleCount:
+    type: object
+    properties:
+      role:
+        type: string
+      deviceCount:
+        type: integer
 
+  Assets:
+    type: object
+    required:
+     [data]
+    description: The hardware in the inventory
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Asset'
+      Pagination:
+        $ref: '#/definitions/Pagination'
+  Asset:
+    type: object
+    required:
+       [customerId]
+    properties:
+      deviceName:
+        type: string
+        description: Device name
+      ipAddress:
+        type: string
+        description: IP Address
+      supportCovered:
+        type: boolean
+      serialNumber:
+        type: string
+        description: 'Serial Number'
+      osType:
+        type: string
+        description: 'OS Type'
+      osVersion:
+        type: string
+        description: 'OS Version'
+      role:
+        type: string
+        description: 'Role'
+      contractNumber:
+        type: string
+        description: 'Contract Number'
   HardwareResponse:
    type: object
    required:
