@@ -27,7 +27,7 @@ const contractRegex = /^2\d{8}|9\d{7}$/;
 /**
  * Origin to call for product typeahead results
  */
-const typeaheadOrigin = environment.services.typeahead.origin;
+const typeaheadOrigin = environment.typeaheadServiceOrigin;
 /**
  * Url to call for product typeahead results
  */
