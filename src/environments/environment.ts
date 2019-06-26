@@ -7,4 +7,5 @@ import { mockSettings } from './mock/mock';
 export const environment = {
 	...defaults,
 	...mockSettings,
+	sdpServiceOrigin: 'https://api-stage.cisco.com',
 };

@@ -511,7 +511,7 @@
 		<div class="modal__body base-padding">
 			<div class="row half-margin-left half-margin-right">
 				<div class="col-md-9 text-large text-bold text-left"
-					[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase">
+					[innerText]="'_TopicsAvailableSolution_' | i18n:data?.length || 0:componentData.params.solution:componentData.params.usecase">
 				</div>
 				<div class="col-md-2">
 					<cui-select id="category-filter"
