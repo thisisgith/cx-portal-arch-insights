@@ -3,7 +3,7 @@ import {
 	Component,
 	ViewChild,
 } from '@angular/core';
-import { SearchContext, SearchType, SearchEnum } from '@interfaces';
+import { SearchContext, SearchType, SearchEnum, SearchQuery } from '@interfaces';
 
 import { I18n } from '@cisco-ngx/cui-utils';
 
@@ -26,9 +26,9 @@ export class SearchComponent {
 	public specialSearch: SpecialSearchComponent;
 
 	public searchText = '';
-	public selectedSearch: string;
+	public selectedSearch: SearchQuery;
 	public searchType: SearchType;
-	public generalSearch: string;
+	public generalSearch: SearchQuery;
 	public searchContext: string;
 	public generalSearchHeader: string;
 	public hideSpecialSearch = false;
@@ -46,9 +46,9 @@ export class SearchComponent {
 	 */
 	public onSearchChange (search: { text: string, type: SearchType, generalSearch: string }) {
 		this.status.hidden = false;
-		this.selectedSearch = search.text;
+		this.selectedSearch = { query: search.text };
 		this.searchType = search.type;
-		this.generalSearch = search.generalSearch;
+		this.generalSearch = { query: search.generalSearch };
 		/** Set general search header */
 		switch (search.type.name) {
 			case 'sn':
@@ -82,10 +82,11 @@ export class SearchComponent {
 		// else by the special search view
 		if (hide) {
 			this.searchType.name = SearchEnum.default;
-			this.generalSearch = this.searchText;
+			this.generalSearch = { query: this.searchText };
 			this.searchContext = null;
 			this.generalSearchHeader = null;
 		}
+		this.cdr.detectChanges();
 	}
 
 	/**
@@ -99,13 +100,14 @@ export class SearchComponent {
 	) {
 		this.hideGeneralSearch = event.hide;
 		if (event.searchString) {
-			this.generalSearch = event.searchString;
+			this.generalSearch = { query: event.searchString };
 		}
 		if (event.context) {
 			this.searchContext = event.context;
 		} else {
 			this.searchContext = null;
 		}
+		this.cdr.detectChanges();
 	}
 
 	/**

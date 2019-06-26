@@ -20,6 +20,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@cui-x/sdp-api';
+import { SearchQuery } from '@interfaces';
 
 /**
  * Component to fetch/display contract search results
@@ -37,7 +38,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	implements OnInit, OnChanges, OnDestroy {
 	@ViewChild('sidebar', { static: true, read: TemplateRef })
 		public sidebarContent: TemplateRef<any>;
-	@Input('contractNumber') public contractNumber: string;
+	@Input('contractNumber') public contractNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
 	public loadingCoverages = true;
@@ -66,7 +67,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 				this.loading = true;
 				this.hide.emit(false);
 			}),
-			switchMap(() => this.getData(this.contractNumber, this.customerId)),
+			switchMap(() => this.getData(this.contractNumber.query, this.customerId)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(result => {
@@ -81,7 +82,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 			tap(() => {
 				this.loadingCoverages = true;
 			}),
-			switchMap(() => this.getCoverages(this.contractNumber, this.customerId)),
+			switchMap(() => this.getCoverages(this.contractNumber.query, this.customerId)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(result => {

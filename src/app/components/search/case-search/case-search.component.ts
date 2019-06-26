@@ -3,11 +3,12 @@ import { Component, Input, OnInit, OnDestroy, OnChanges,
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { CaseService } from '@cui-x/services';
 import { InventoryService, HardwareResponse } from '@cui-x/sdp-api';
-import { Case, Note, SearchContext } from '@interfaces';
+import { Case, Note, SearchContext, SearchQuery } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Subject, of, Observable } from 'rxjs';
 import { tap, takeUntil, switchMap, catchError } from 'rxjs/operators';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
+import { environment } from '@environment';
 
 import * as _ from 'lodash-es';
 
@@ -27,7 +28,7 @@ export class CaseSearchComponent extends SpecialSearchComponent
 implements OnInit, OnDestroy, OnChanges {
 	@ViewChild('sidebar', { static: true, read: TemplateRef })
 	public sidebarContent: TemplateRef<any>;
-	@Input('caseNumber') public caseNumber: string;
+	@Input('caseNumber') public caseNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	/** Emitter to show or hide general search */
 	@Output('toggleGeneralSearch') public toggleGeneralSearch = new EventEmitter<{
@@ -36,8 +37,6 @@ implements OnInit, OnDestroy, OnChanges {
 		context?: SearchContext,
 	}>();
 
-	/** Text to use in place of unavailable fields. */
-	public DEFAULT_FIELD = 'NA';
 	/** Maximum length of a note to display before truncating. */
 	public NOTE_TRUNCATE_LENGTH = 256;
 	/** Mock fields for the call to the SDP InventoryService API. */
@@ -48,6 +47,9 @@ implements OnInit, OnDestroy, OnChanges {
 	public hardwareLoading = true;
 	public notesLoading = true;
 	public summaryLoading = true;
+
+	/** URL base for linking to MyCase */
+	private myCaseUrl = environment.myCase;
 
 	/** Observable used to begin searches. */
 	private refresh$ = new Subject();
@@ -84,7 +86,7 @@ implements OnInit, OnDestroy, OnChanges {
 				this.detailsLoading = this.hardwareLoading = true;
 				this.hide.emit(false);
 			}),
-			switchMap(() => this.getCaseDetails(this.caseNumber)),
+			switchMap(() => this.getCaseDetails(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(caseDetails => {
@@ -97,14 +99,14 @@ implements OnInit, OnDestroy, OnChanges {
 					searchString: this.case.serialNumber,
 				});
 			} else {
-				this.hide.emit(true);
 				this.toggleGeneralSearch.emit({ hide: false });
+				this.hide.emit(true);
 			}
 		});
 		// Case Notes
 		this.refresh$.pipe(
 			tap(() => this.notesLoading = true),
-			switchMap(() => this.getCaseNotes(this.caseNumber)),
+			switchMap(() => this.getCaseNotes(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(noteList => {
@@ -114,12 +116,11 @@ implements OnInit, OnDestroy, OnChanges {
 		// Case Summary
 		this.refresh$.pipe(
 			tap(() => this.summaryLoading = true),
-			switchMap(() => this.getCaseSummary(this.caseNumber)),
+			switchMap(() => this.getCaseSummary(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(caseSummary => {
-			this.case.tacEngineer = _.get(caseSummary, ['content', 0, 'caseOwner']) ||
-										this.DEFAULT_FIELD;
+			this.case.tacEngineer = _.get(caseSummary, ['content', 0, 'caseOwner']);
 			this.summaryLoading = false;
 		});
 		// Hardware - Tied to serial number from Case Details
@@ -128,8 +129,7 @@ implements OnInit, OnDestroy, OnChanges {
 			takeUntil(this.destroy$),
 		)
 		.subscribe(hardware => {
-			this.case.hostName = _.get(hardware, ['data', 0, 'hostname']) ||
-									this.DEFAULT_FIELD;
+			this.case.hostName = _.get(hardware, ['data', 0, 'hostname']);
 			this.hardwareLoading = false;
 		});
 
@@ -176,17 +176,17 @@ implements OnInit, OnDestroy, OnChanges {
 	 * @param caseDetails Case details to set in the component's case object.
 	 */
 	public setCaseDetails (caseDetails: any) {
-		this.case.contract = caseDetails.contractId || this.DEFAULT_FIELD;
-		this.case.description = caseDetails.description || this.DEFAULT_FIELD;
-		this.case.number = caseDetails.caseNumber || this.DEFAULT_FIELD;
-		this.case.opened = caseDetails.createdDate || this.DEFAULT_FIELD;
+		this.case.contract = caseDetails.contractId;
+		this.case.description = caseDetails.description;
+		this.case.number = caseDetails.caseNumber;
+		this.case.opened = caseDetails.createdDate;
 		if (caseDetails.ownerName) {
 			this.case.owner = caseDetails.ownerName;
 			if (caseDetails.ownerEmail) {
 				this.case.owner += ` (${caseDetails.ownerEmail})`;
 			}
 		} else {
-			this.case.owner = caseDetails.ownerEmail || this.DEFAULT_FIELD;
+			this.case.owner = caseDetails.ownerEmail;
 		}
 		if (caseDetails.rmaNumber) {
 			this.case.relatedRmas = caseDetails.rmaNumber.split(',')
@@ -196,13 +196,11 @@ implements OnInit, OnDestroy, OnChanges {
 			this.case.serialNumber = caseDetails.serialNumber;
 			// Emit serial number to trigger SDP hardware API call & general search
 			this.serialNumber$.next(this.case.serialNumber);
-		} else {
-			this.case.serialNumber = this.DEFAULT_FIELD;
 		}
-		this.case.severity = caseDetails.priority || this.DEFAULT_FIELD;
-		this.case.status = caseDetails.status || this.DEFAULT_FIELD;
-		this.case.summary = caseDetails.summary || this.DEFAULT_FIELD;
-		if (this.case.description === this.DEFAULT_FIELD) {
+		this.case.severity = caseDetails.priority;
+		this.case.status = caseDetails.status;
+		this.case.summary = caseDetails.summary;
+		if (!this.case.description && this.case.summary) {
 			const splitSummary = this.case.summary.split(' ');
 			if (splitSummary.length <= 10) {
 				this.case.description = this.case.summary;
@@ -212,7 +210,7 @@ implements OnInit, OnDestroy, OnChanges {
 				.join(' ');
 			}
 		}
-		this.case.trackingNumber = caseDetails.trackingNumber || this.DEFAULT_FIELD;
+		this.case.trackingNumber = caseDetails.trackingNumber;
 	}
 	/**
 	 * Call CSOne's fetchCaseNotes() to get the notes associated with the case.
@@ -220,7 +218,7 @@ implements OnInit, OnDestroy, OnChanges {
 	 * @returns Observable with response data.
 	 */
 	 public getCaseNotes (caseNumber: string): Observable<Note[]> {
-		return this.caseService.fetchCaseNotes(this.caseNumber)
+		return this.caseService.fetchCaseNotes(this.caseNumber.query)
 		.pipe(
 			catchError(err => {
 				this.logger.error(`Case Notes :: ${caseNumber} :: Error ${JSON.stringify(err)}`);
@@ -250,13 +248,6 @@ implements OnInit, OnDestroy, OnChanges {
 			this.truncateLastNote = this.lastNote.noteDetail.length > this.NOTE_TRUNCATE_LENGTH;
 			const fromNowPipe = new FromNowPipe();
 			this.lastUpdated = fromNowPipe.transform(this.lastNote.createdDate);
-		} else {
-			this.lastNote = <Note> {
-				createdDate: this.DEFAULT_FIELD,
-				noteDetail: this.DEFAULT_FIELD,
-			};
-			this.truncateLastNote = false;
-			this.lastUpdated = this.DEFAULT_FIELD;
 		}
 		this.showTruncateToggle = this.truncateLastNote;
 	}
@@ -293,7 +284,7 @@ implements OnInit, OnDestroy, OnChanges {
 	 							Observable<HardwareResponse> {
 		return this.inventoryService.getHardware({
 			customerId: this.customerId,
-			serialNumber: [this.serialNumber],
+			serialNumber: [this.case.serialNumber],
 		})
 		.pipe(
 			catchError(err => {

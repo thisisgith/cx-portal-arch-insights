@@ -14,5 +14,5 @@ export {
 	RMARecord,
 	RMAResponse,
 } from './rma';
-export { SearchContext, SearchEnum, SearchType } from './search';
+export { SearchContext, SearchEnum, SearchType, SearchQuery } from './search';
 export { TimelineDatapoint, TimelineInternalDatapoint, TodayRelation } from './timelineDatapoint';

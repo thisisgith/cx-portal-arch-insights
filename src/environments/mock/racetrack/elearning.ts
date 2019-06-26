@@ -56,6 +56,33 @@ const onboardItems = [
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
+		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
+		duration: '40hr 0min',
+		ranking: 4,
+		rating: '4.1000',
+		title: 'Cisco Training on Demand Courses 2',
+		type: 'Cisco Training on Demand Courses',
+		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+	},
+	{
+		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
+		duration: '40hr 0min',
+		ranking: 4,
+		rating: '4.1000',
+		title: 'Cisco Training on Demand Courses 3',
+		type: 'Cisco Training on Demand Courses',
+		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+	},
+	{
+		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
+		duration: '40hr 0min',
+		ranking: 4,
+		rating: '4.1000',
+		title: 'Cisco Training on Demand Courses 4',
+		type: 'Cisco Training on Demand Courses',
+		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+	},
+	{
 		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
 		duration: '8hr 0min',
 		ranking: 5,
@@ -65,11 +92,46 @@ const onboardItems = [
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
 	},
 	{
+		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
+		duration: '8hr 0min',
+		ranking: 5,
+		rating: '5.0000',
+		title: 'Videos 2',
+		type: 'Videos',
+		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+	},
+	{
+		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
+		duration: '8hr 0min',
+		ranking: 5,
+		rating: '5.0000',
+		title: 'Videos 3',
+		type: 'Videos',
+		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+	},
+	{
+		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
+		duration: '8hr 0min',
+		ranking: 5,
+		rating: '5.0000',
+		title: 'Videos 4',
+		type: 'Videos',
+		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+	},
+	{
 		title: 'Designing Cisco Wireless Enterprise Networks',
 		type: 'training',
 	},
 	{
 		title: 'Deploying Cisco Wireless Enterprise Networks',
+		type: 'training',
+	},
+	{
+		title: 'training 3',
+		type: 'training',
+	},
+	{
+		title: 'training 4',
 		type: 'training',
 	},
 ];
@@ -136,7 +198,7 @@ export const ELearningScenarios = [
 			],
 		},
 		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
-			`&pitstop=Onboard&customerId=${customerId}`,
+			`&pitstop=Onboard&customerId=${customerId}&rows=100`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -153,7 +215,8 @@ export const ELearningScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard` +
+			`&customerId=${customerId}&rows=100`,
 		usecases: ['Use Case 1'],
 	},
 ];

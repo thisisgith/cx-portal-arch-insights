@@ -6,8 +6,6 @@
 		</div>
 	</div>
 </div>
-<div [hidden]="!status.loading">
-	<cui-spinner class="absolute-center"></cui-spinner>
-</div>
+<cui-spinner class="absolute-center" *ngIf="status.loading"></cui-spinner>
 <cui-toaster></cui-toaster>
 <cui-modal></cui-modal>

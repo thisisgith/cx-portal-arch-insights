@@ -23,6 +23,7 @@ import {
 } from '@cui-x/sdp-api';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
+import { SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
 
@@ -52,7 +53,7 @@ interface SerialData {
  * Interface representing all contract data to go in the template
  */
 interface ContractData {
-	supportLevel?: string;
+	cxLevel?: string;
 	contractNum?: number;
 	expirationDate?: string;
 }
@@ -73,7 +74,7 @@ export class SerialSearchComponent extends SpecialSearchComponent
 implements OnInit, OnChanges, OnDestroy {
 	@ViewChild('sidebar', { static: true, read: TemplateRef })
 		public sidebarContent: TemplateRef<any>;
-	@Input('serialNumber') public serialNumber: string;
+	@Input('serialNumber') public serialNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
 	public loadingContractData = true;
@@ -103,7 +104,7 @@ implements OnInit, OnChanges, OnDestroy {
 				this.loading = true;
 				this.hide.emit(false);
 			}),
-			switchMap(() => this.getData(this.customerId, this.serialNumber)),
+			switchMap(() => this.getData(this.customerId, this.serialNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(response => {
@@ -130,7 +131,7 @@ implements OnInit, OnChanges, OnDestroy {
 				this.loadingContractData = true;
 				this.contractData = { };
 			}),
-			switchMap(() => this.getContractData(this.customerId, this.serialNumber)),
+			switchMap(() => this.getContractData(this.customerId, this.serialNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(response => {
@@ -139,8 +140,8 @@ implements OnInit, OnChanges, OnDestroy {
 			if (firstContract) {
 				this.contractData = {
 					contractNum: firstContract.contractNumber,
+					cxLevel: firstContract.cxLevel,
 					expirationDate: firstContract.contractEndDate,
-					supportLevel: firstContract.serviceLevel,
 				};
 			}
 		});

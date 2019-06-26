@@ -19,6 +19,7 @@ export const defaults = {
 	csone: {
 		clientId: '453b7e10f08b428c90d48432312889ad',
 	},
+	myCase: 'https://mycase.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [
 		'https://xresps-stage.cloudapps.cisco.com/esps/search/suggest/cdcpr01zad',
@@ -27,7 +28,7 @@ export const defaults = {
 	rmaServiceClientId: 'yvgjnzruyuh9a7tdnbj8ka3n',
 	rmaServiceOrigin: 'https://api-stage.cisco.com',
 	rmaServicePaths: {
-		returns: '/return/v1.0/return',
+		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa1/home',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',

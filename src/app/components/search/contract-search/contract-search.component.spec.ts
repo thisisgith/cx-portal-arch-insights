@@ -1,11 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { ContractsService } from '@cui-x/sdp-api';
 import { ContractScenarios } from '@mock';
 import { ContractSearchComponent } from './contract-search.component';
 import { ContractSearchModule } from './contract-search.module';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ContractSearchComponent', () => {
 	let component: ContractSearchComponent;
@@ -24,12 +25,9 @@ describe('ContractSearchComponent', () => {
 
 	beforeEach(() => {
 		service = TestBed.get(ContractsService);
-		spyOn(service, 'getContractDetails')
-			.and
-			.returnValue(of(ContractScenarios[0].scenarios.GET[0].response.body));
 		fixture = TestBed.createComponent(ContractSearchComponent);
 		component = fixture.componentInstance;
-		component.contractNumber = '230000000';
+		component.contractNumber = { query: '230000000' };
 		fixture.detectChanges();
 	});
 
@@ -39,9 +37,32 @@ describe('ContractSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
-		component.contractNumber = '230000001';
+		spyOn(service, 'getContractDetails')
+			.and
+			.returnValue(of(ContractScenarios[0].scenarios.GET[0].response.body));
+		component.contractNumber = { query: '230000001' };
+		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(service.getContractDetails)
 			.toHaveBeenCalled();
+	});
+
+	it('should set null values on request errors', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getContractDetails')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(service, 'headContractsProductsCoveragesResponse')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.ngOnChanges();
+		fixture.detectChanges();
+		expect(component.contractData)
+			.toBe(null);
+		expect(component.coverageCount)
+			.toBe(null);
 	});
 });
