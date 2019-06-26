@@ -72,21 +72,10 @@ interface ComponentData {
  * An ELearning DTO, but with extra arrays to help display the star ratings
  */
 interface ELearningModel extends ELearning {
-
 	/**
-	 * The number of filled stars, based off of the rating
+	 * The string rating parsed as a number
 	 */
-	filledStars?: number[];
-
-	/**
-	 * The number of unfilled stars, based off of the rating
-	 */
-	unfilledStars?: number[];
-
-	/**
-	 * The number of half filled stars, based off of the rating
-	 */
-	halfFilledStars?: number[];
+	fixedRating?: number;
 }
 
 /**
@@ -510,20 +499,8 @@ export class LifecycleComponent implements OnDestroy {
 							case 'E-Course': {
 								const learningItem: ELearningModel = {
 									...item,
-									filledStars: [],
-									halfFilledStars: [],
-									unfilledStars: [],
+									fixedRating: parseFloat(item.rating),
 								};
-								const ratingSplit = item.rating.split('.');
-								for (let i = 1; i <= 5; i = i + 1) {
-									if (+ratingSplit[0] >= i) {
-										learningItem.filledStars.push(i);
-									} else {
-										+ratingSplit[1] / 1000 >= 5 ?
-											learningItem.halfFilledStars.push(i) :
-											learningItem.unfilledStars.push(i);
-									 }
-								}
 								this.componentData.learning.elearning.push(learningItem);
 								break;
 							}
