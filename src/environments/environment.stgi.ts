@@ -15,10 +15,15 @@ export const environment = {
 	...mockSettings,
 	origin,
 	auth: {
+		accountUrl: `${origin}/ws/account/v2/`,
 		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	production: true,
+	/**
+	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
+	 * because it is used inside of a module forRoot() call
+	 */
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 };

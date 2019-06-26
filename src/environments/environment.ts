@@ -7,5 +7,9 @@ import { mockSettings } from './mock/mock';
 export const environment = {
 	...defaults,
 	...mockSettings,
+	/**
+	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
+	 * because it is used inside of a module forRoot() call
+	 */
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 };
