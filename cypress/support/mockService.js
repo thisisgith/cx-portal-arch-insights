@@ -36,6 +36,18 @@ export default class MockService {
 	}
 
 	/**
+	 * Gets the value of a given response header name
+	 * @param {Object} scenario
+	 * @param {String} headerName
+	 * @returns {String} Header value
+	 */
+	getResponseHeader (scenario, headerName) {
+		scenario.response.headers.lazyInit();
+		const headers = Cypress._.get(scenario, 'response.headers.headers', new Map());
+		return Cypress._.get(headers.get(headerName.toLowerCase()), 0);
+	}
+
+	/**
 	 * Intercept XHRs and optionally stub the response'
 	 * @static
 	 * @param {object[]} routes An array of options for cypress.route
