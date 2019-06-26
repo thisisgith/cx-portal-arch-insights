@@ -51,12 +51,13 @@ describe('Assets', () => { // PBC-41
 		cy.get('div.timeline__content').eq(0)
 			.should('contain', 'Title')
 			.and('contain', 'Lorem ipsum');
+		cy.getByAutoId('ClearAsset').click();
 	});
 
 	context('PBC-178: Assets & Coverage Gauge', () => {
 		it('Displays a gauge that shows coverage percentage', () => {
 			const coverage = ((totalCoverage * 100) / totalElements);
-			cy.getByAutoId('Facet-assets').should('contain', `${coverage}%`)
+			cy.getByAutoId('Facet-Assets & Coverage').should('contain', `${coverage}%`)
 				.and('contain', 'Assets & Coverage');
 		});
 
