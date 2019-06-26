@@ -38,7 +38,7 @@ describe('RMASearchComponent', () => {
 		spyOn(service, 'getByNumber')
 			.and
 			.returnValue(of(RMAScenarios[0].scenarios.GET[0].response.body));
-		component.rmaNumber = defaultRmaNumber;
+		component.rmaNumber = { query: defaultRmaNumber };
 		fixture.detectChanges();
 		expect(service.getByNumber)
 			.toHaveBeenCalled();
@@ -49,7 +49,7 @@ describe('RMASearchComponent', () => {
 			.and
 			.returnValue(of(RMAScenarios[0].scenarios.GET[3].response.body));
 		spyOn(component.hide, 'emit');
-		component.rmaNumber = '8000000001';
+		component.rmaNumber = { query: '8000000001' };
 		fixture.detectChanges();
 		expect(component.hide.emit)
 			.toHaveBeenCalled();
@@ -61,8 +61,12 @@ describe('RMASearchComponent', () => {
 			.and
 			.returnValue(of(RMAScenarios[0].scenarios.GET[0].response.body));
 		spyOn(component.toggleGeneralSearch, 'emit');
-		component.rmaNumber = defaultRmaNumber;
+		component.rmaNumber = { query: defaultRmaNumber };
 		fixture.detectChanges();
+		expect(component.toggleGeneralSearch.emit)
+			.toHaveBeenCalledWith({
+				hide: true,
+			});
 		expect(component.toggleGeneralSearch.emit)
 			.toHaveBeenCalledWith({
 				hide: false,
@@ -70,17 +74,5 @@ describe('RMASearchComponent', () => {
 			});
 		expect(component.toggleGeneralSearch.emit)
 			.toHaveBeenCalledTimes(2);
-	});
-
-	it(`should not emit a second toggleGeneralSearch event
-	when no product description is found`, () => {
-		spyOn(service, 'getByNumber')
-			.and
-			.returnValue(of(RMAScenarios[0].scenarios.GET[1].response.body));
-		spyOn(component.toggleGeneralSearch, 'emit');
-		component.rmaNumber = defaultRmaNumber;
-		fixture.detectChanges();
-		expect(component.toggleGeneralSearch.emit)
-			.toHaveBeenCalledTimes(1);
 	});
 });

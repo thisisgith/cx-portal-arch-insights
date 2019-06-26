@@ -6,7 +6,7 @@ import {
 import { AssetDetailsComponent } from './details.component';
 import { AssetDetailsModule } from './details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import { CaseService } from '@cui-x/services';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';

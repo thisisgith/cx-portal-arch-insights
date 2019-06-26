@@ -3,16 +3,19 @@ import {
 	ActionScenarios,
 	ATXScenarios,
 	CommunitiesScenarios,
+	CaseScenarios,
 	ContractScenarios,
+	CoverageScenarios,
 	ELearningScenarios,
 	HardwareScenarios,
+	NetworkScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	SearchScenarios,
 	SuccessPathScenarios,
 } from './';
 import { HttpHeaders } from '@angular/common/http';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
@@ -86,10 +89,13 @@ export const mockSettings: MockSettings = {
 		ACCScenarios,
 		ActionScenarios,
 		ATXScenarios,
+		CaseScenarios,
 		CommunitiesScenarios,
 		ContractScenarios,
+		CoverageScenarios,
 		ELearningScenarios,
 		HardwareScenarios,
+		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
 		SearchScenarios,

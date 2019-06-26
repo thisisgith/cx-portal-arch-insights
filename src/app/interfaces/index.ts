@@ -2,7 +2,7 @@ export { Advisory } from './advisory';
 export { AlertData } from './alertData';
 export { Announcement } from './announcement';
 export { Bug } from './bug';
-export { Case } from './case';
+export { Case, Note } from './case';
 export { Contract } from './contract';
 export { FieldNotice } from './fieldNotice';
 export { License } from './license';
@@ -14,5 +14,5 @@ export {
 	RMARecord,
 	RMAResponse,
 } from './rma';
-export { SearchEnum, SearchType } from './search';
+export { SearchContext, SearchEnum, SearchType, SearchQuery } from './search';
 export { TimelineDatapoint, TimelineInternalDatapoint, TodayRelation } from './timelineDatapoint';

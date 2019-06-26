@@ -14,7 +14,7 @@ const serialRegex = /^[0-9a-zA-Z-]{3,}$/;
 /**
  * Regex for a case number match
  */
-const caseRegex = /\b6\d{8}\b/;
+const caseRegex = /\b(?:SR)?6\d{8}\b/;
 /**
  * Regex for a RMA match
  */
@@ -27,7 +27,7 @@ const contractRegex = /^2\d{8}|9\d{7}$/;
 /**
  * Origin to call for product typeahead results
  */
-const typeaheadOrigin = environment.services.typeahead.origin;
+const typeaheadOrigin = environment.typeaheadServiceOrigin;
 /**
  * Url to call for product typeahead results
  */

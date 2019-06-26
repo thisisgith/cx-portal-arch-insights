@@ -17,7 +17,6 @@ security:
   - OauthSecurity: []
 paths:
   /api/customerportal/contracts/v1/products/coverages:
-
     head:
       tags:
       - Contracts
@@ -32,6 +31,12 @@ paths:
           in: query
           description: Unique identifier of a Cisco customer.
           required: true
+          type: string
+
+        - name: contractNumber
+          in: query
+          description: The contract number
+          required: false
           type: string
 
         - name: coverage
@@ -148,7 +153,6 @@ paths:
           description: API not found
 
   /api/customerportal/contracts/v1/products/coverages/top:
-
     get:
       tags:
       - Contracts
@@ -264,6 +268,14 @@ paths:
           items:
             type: integer
             format: int64
+          collectionFormat: multi
+        - name: serialNumber
+          in: query
+          description: The serial number to search on.
+          required: false
+          type: array
+          items:
+            type: string
           collectionFormat: multi
         - name: fields
           in: query
@@ -560,6 +572,11 @@ definitions:
         format: date-time
         x-zenith-ds-fieldName: CONTRACTENDDATE
         description: The date when the service contract ends. GMT date format YYYY-MM-DD
+      cxLevel:
+        type: string
+        example: 'Level 1'
+        x-zenith-ds-fieldName: CXLEVEL
+        description: CX support level
       serviceProgram:
         type: string
         example: 'PARTNER SUPPORT SERVICE'

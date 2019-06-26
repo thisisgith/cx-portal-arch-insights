@@ -341,7 +341,8 @@
 		<div class="col-md-3 text-right text-indigo"
 			*ngIf="data">
 			<a class="no-link fade-in-pop"
-				data-auto-id="Elearning-ViewAll"
+				target="_blank"
+				attr.data-auto-id="{{ title }}-ViewAll"
 				href="https://digital-learning.cisco.com/cx#/"
 				[ngClass]="{'disabled': title !== '_ELearning_'}">
 				<span [innerText]="'_ViewAll_' | i18n"></span>
@@ -352,7 +353,7 @@
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<div id="recommended-elearning-item" class=" panel learning-panel">
-				<a class="no-link fade-in-pop" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+				<a class="no-link fade-in-pop" target="_blank" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
 				<ng-container *ngTemplateOutlet="recommendedDescription; context: {
 					title: item.title,
 					description: item.description,
@@ -371,7 +372,7 @@
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
 			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
 		</div>
-		<div class="col-md-3 text-right text-indigo"
+		<div class="col-md-3 text-right text-indigo toggle"
 			*ngIf="data"
 			(click)="showModal(title)"
 			attr.data-auto-id="ShowModalPanel-{{ title }}">
@@ -382,7 +383,25 @@
 	<div class="text-muted" [innerText]="'_ProductGuideSubtitle_' | i18n"></div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<a class="no-link fade-in-pop" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+			<a class="no-link fade-in-pop" target="_blank" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #successPathBlock let-title="title" let-data="data" let-icon="icon">
+	<div class="row">
+		<div class="col-md-9">
+			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
+			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
+		</div>
+		<div class="col-md-3 text-right">
+			<span [innerText]="'_ViewAll_' | i18n"></span>
+			<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
+		</div>
+	</div>
+	<div class="base-padding-bottom half-padding-top half-padding-left">
+		<div class="qtr-padding-bottom" *ngFor="let item of data">
+			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
 		</div>
 	</div>
 </ng-template>
@@ -527,17 +546,19 @@
 		<div class="divider base-margin-left base-margin-right"></div>
 		<div class="modal__body base-padding">
 			<div class="row half-margin-left half-margin-right">
-				<div class="col-md-8 text-large text-bold text-left"
+				<div class="col-md-9 text-large text-bold text-left"
 					[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase">
 				</div>
-				<div class="col-md-3">
-					<div class="form-group input--icon">
-						<div class="form-group__text">
-							<input id="archetype-filter" type="search" [placeholder]="'_AllCategories_' | i18n">
-						</div>
-					</div>
+				<div class="col-md-2">
+					<cui-select id="category-filter"
+						data-auto-id="category-filter"
+						[items]="categoryOptions"
+						[empty]="true"
+						[placeholder]="'_AllCategories_' | i18n"
+						[(ngModel)]="selectedCategory"
+						(ngModelChange)="selectFilter()">
+					</cui-select>
 				</div>
-				<!-- <div class="col-mod-4 flex-fluid text-right"> -->
 				<div class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
 					<button class="btn btn--white">
@@ -550,17 +571,14 @@
 				</div>
 			</div>
 			<div class="grid grid--4up base-padding-top">
-				<div class="card acc__card__background"
-					*ngFor="let item of data"
-					[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null"
-					data-auto-id="SuccessCard">
+				<div class="card acc__card__background" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
 					<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
 					<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
 					<div class="card__footer">
 						<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 							<div class="row">
 								<div class="col-md-3">
-									<a class="no-link fade-in-pop" data-auto-id="successlinl" [href]="item.url">
+									<a class="no-link fade-in-pop" data-auto-id="successlinl" target="_blank" [href]="item.url">
 										<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
 											<span class="icon-apps icon-small half-padding-right"></span>
 											<span class="text-samll" [innerText]="'_Web_' | i18n"></span>

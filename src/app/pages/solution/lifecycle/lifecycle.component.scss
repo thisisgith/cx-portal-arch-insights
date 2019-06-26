@@ -314,9 +314,16 @@ $vibblue: #017cad;
 	}
 }
 
-#archetype-filter {
-	border: 0;
-	outline: 0;
-	background: transparent;
-	border-bottom: 1px solid black;
+::ng-deep #category-filter input,
+::ng-deep #category-filter input:focus {
+	border: 0 !important;
+	border-color: transparent;
+	background: transparent !important;
+	border-bottom: 2px solid $vibblue !important;
 }
+
+// leave the following here, just in case we will use this style
+// ::ng-deep .cui .dropdown__menu a.selected {
+// 	color:$vibblue !important;
+// 	background-color: transparent !important;
+// }

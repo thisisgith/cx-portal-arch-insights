@@ -2,9 +2,11 @@ import {
 	Component,
 	Input,
 	OnDestroy,
+	OnChanges,
 	OnInit,
 	Output,
 	EventEmitter,
+	forwardRef,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -13,9 +15,10 @@ import { Observable, Subject, of } from 'rxjs';
 import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { RMAService } from '@services';
-import { RMARecord, RMAResponse, PartsLineDetail } from '@interfaces';
-import * as _ from 'lodash';
+import { RMARecord, RMAResponse, PartsLineDetail, SearchContext, SearchQuery } from '@interfaces';
+import * as _ from 'lodash-es';
 import { environment } from '@environment';
+import { SpecialSearchComponent } from '../special-search/special-search.component';
 
 /**
  * Data format for the special RMA display table
@@ -33,16 +36,23 @@ interface RmaTableData {
  * Component representing "special" RMA search results on the search modal
  */
 @Component({
+	providers: [{
+		provide: SpecialSearchComponent,
+		useExisting: forwardRef(() => RMASearchComponent,
+	)}],
 	selector: 'app-rma-search',
 	styleUrls: ['./rma-search.component.scss'],
 	templateUrl: './rma-search.component.html',
 })
-export class RMASearchComponent implements OnInit, OnDestroy {
-	@Input('rmaNumber') public rmaNumber: string;
+export class RMASearchComponent extends SpecialSearchComponent
+	implements OnInit, OnChanges, OnDestroy {
+	@Input('rmaNumber') public rmaNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
+	/** Emitter to show or hide general search */
 	@Output('toggleGeneralSearch') public toggleGeneralSearch = new EventEmitter<{
 		hide: boolean,
 		searchString?: string,
+		context?: SearchContext,
 	}>();
 
 	public loading = true;
@@ -58,25 +68,31 @@ export class RMASearchComponent implements OnInit, OnDestroy {
 	constructor (
 		private service: RMAService,
 		private logger: LogService,
-	) { }
+	) {
+		super();
+	}
 
 	/**
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.toggleGeneralSearch.emit({ hide: true });
 		this.refresh$.pipe(
-			tap(() => this.loading = true),
-			switchMap(() => this.getByNumber(this.rmaNumber)),
+			tap(() => {
+				this.toggleGeneralSearch.emit({ hide: true });
+				this.loading = true;
+				this.hide.emit(false);
+			}),
+			switchMap(() => this.getByNumber(this.rmaNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe((rmaResult: RMAResponse) => {
 			this.rma = _.find(
 				_.get(rmaResult, 'returns.RmaRecord'),
-				(o: RMARecord) => o.rmaNo === parseInt(this.rmaNumber, 10),
+				(o: RMARecord) => o.rmaNo === parseInt(this.rmaNumber.query, 10),
 			);
 			if (!this.rma) {
-				this.hide.emit();
+				this.toggleGeneralSearch.emit({ hide: false });
+				this.hide.emit(true);
 
 				return;
 			}
@@ -98,13 +114,24 @@ export class RMASearchComponent implements OnInit, OnDestroy {
 				&& _.has(this.rmaTableData, 'products[0].partsDescription')
 			) {
 				this.toggleGeneralSearch.emit({
+					// Sending product name directly
+					// context: SearchContext.serialno
 					hide: false,
 					searchString: this.rmaTableData.products[0].partsDescription,
 				});
+			} else {
+				this.toggleGeneralSearch.emit({ hide: false });
 			}
 
 			this.loading = false;
 		});
+		this.refresh$.next();
+	}
+
+	/**
+	 * OnChanges Lifecycle Hook
+	 */
+	public ngOnChanges () {
 		this.refresh$.next();
 	}
 

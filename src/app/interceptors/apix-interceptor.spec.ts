@@ -9,16 +9,17 @@ import { RMAScenarios, HardwareScenarios } from '@mock';
 import { AsyncSubject } from 'rxjs';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-describe('RMAService', () => {
+describe('APIxIntercetptor', () => {
 	const testRmaNumber = '800000000';
 	const rmaUrl = `${
-		environment.services.rma.origin
+		environment.rmaServiceOrigin
 	}${
-		environment.services.rma.paths.returns
+		environment.rmaServicePaths.returns
 	}/rma_numbers/${testRmaNumber}`;
+
 	const customerId = '2431199';
 	const sdpUrl = `${
-		environment.services.sdp.origin
+		environment.sdpServiceOrigin
 	}/api/customerportal/inventory/v1/hardware?customerId=${customerId}`;
 	let apixService: APIxService;
 
@@ -26,7 +27,7 @@ describe('RMAService', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
-				InventoryModule.forRoot({ rootUrl: environment.services.sdp.origin }),
+				InventoryModule.forRoot({ rootUrl: environment.sdpServiceOrigin }),
 			],
 			providers: [
 				RMAService,
@@ -39,20 +40,20 @@ describe('RMAService', () => {
 			],
 		});
 		apixService = TestBed.get(APIxService);
-		apixService.tokens[environment.services.rma.clientId] = {
+		apixService.tokens[environment.rmaServiceClientId] = {
 			dateCreated: Date.now(),
 			expiration: '3599',
 			subject: <AsyncSubject<string>> new AsyncSubject(),
 		};
-		apixService.tokens[environment.services.rma.clientId].subject.next('rma_auth_token');
-		apixService.tokens[environment.services.rma.clientId].subject.complete();
-		apixService.tokens[environment.services.sdp.clientId] = {
+		apixService.tokens[environment.rmaServiceClientId].subject.next('rma_auth_token');
+		apixService.tokens[environment.rmaServiceClientId].subject.complete();
+		apixService.tokens[environment.sdpServiceClientId] = {
 			dateCreated: Date.now(),
 			expiration: '3599',
 			subject: <AsyncSubject<string>> new AsyncSubject(),
 		};
-		apixService.tokens[environment.services.sdp.clientId].subject.next('sdp_auth_token');
-		apixService.tokens[environment.services.sdp.clientId].subject.complete();
+		apixService.tokens[environment.sdpServiceClientId].subject.next('sdp_auth_token');
+		apixService.tokens[environment.sdpServiceClientId].subject.complete();
 	});
 
 	it(

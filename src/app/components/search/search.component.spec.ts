@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { GeneralSearchComponent } from './general-search/general-search.component';
 import { SearchComponent } from './search.component';
 import { SearchModule } from './search.module';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -61,6 +62,20 @@ describe('SearchComponent', () => {
 			.toBeTruthy();
 	});
 
+	it('should set a searchContext of \'serialno\'', () => {
+		component.onSearchChange({
+			generalSearch: 'FTX16148509',
+			text: 'FTX16148509',
+			type: {
+				name: SearchEnum.sn,
+				value: 'FTX16148509',
+			},
+		});
+		fixture.detectChanges();
+		expect(component.searchContext)
+			.toEqual('serialno');
+	});
+
 	it('should show special search', () => {
 		component.onSearchChange({
 			generalSearch: '230000000', // Contract
@@ -93,5 +108,39 @@ describe('SearchComponent', () => {
 		const special = fixture.debugElement.query(By.css('#specialContainer'));
 		expect(special.nativeElement.hidden)
 			.toBe(true);
+	});
+
+	it('should show general search', () => {
+		component.onSearchChange({
+			generalSearch: '230000000', // Contract
+			text: '230000000',
+			type: {
+				name: SearchEnum.contract,
+				value: '230000000',
+			},
+		});
+		fixture.detectChanges();
+		const general = fixture.debugElement.query(By.directive(GeneralSearchComponent));
+		expect(general.nativeElement.hidden)
+			.toBeFalsy();
+	});
+
+	it('should hide general search', () => {
+		component.onSearchChange({
+			generalSearch: '230000000', // Contract
+			text: '230000000',
+			type: {
+				name: SearchEnum.contract,
+				value: '230000000',
+			},
+		});
+		fixture.detectChanges();
+		component.toggleGeneralSearch({
+			hide: true,
+		});
+		fixture.detectChanges();
+		const general = fixture.debugElement.query(By.directive(GeneralSearchComponent));
+		expect(general.nativeElement.hidden)
+			.toBeTruthy();
 	});
 });

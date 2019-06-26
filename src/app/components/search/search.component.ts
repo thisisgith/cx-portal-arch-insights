@@ -3,7 +3,9 @@ import {
 	Component,
 	ViewChild,
 } from '@angular/core';
-import { SearchType, SearchEnum } from '@interfaces';
+import { SearchContext, SearchType, SearchEnum, SearchQuery } from '@interfaces';
+
+import { I18n } from '@cisco-ngx/cui-utils';
 
 import { SpecialSearchComponent } from './special-search/special-search.component';
 
@@ -24,9 +26,11 @@ export class SearchComponent {
 	public specialSearch: SpecialSearchComponent;
 
 	public searchText = '';
-	public selectedSearch: string;
+	public selectedSearch: SearchQuery;
 	public searchType: SearchType;
-	public generalSearch: string;
+	public generalSearch: SearchQuery;
+	public searchContext: string;
+	public generalSearchHeader: string;
 	public hideSpecialSearch = false;
 	public hideGeneralSearch = false;
 
@@ -42,9 +46,29 @@ export class SearchComponent {
 	 */
 	public onSearchChange (search: { text: string, type: SearchType, generalSearch: string }) {
 		this.status.hidden = false;
-		this.selectedSearch = search.text;
+		this.selectedSearch = { query: search.text };
 		this.searchType = search.type;
-		this.generalSearch = search.generalSearch;
+		this.generalSearch = { query: search.generalSearch };
+		/** Set general search header */
+		switch (search.type.name) {
+			case 'sn':
+			case 'rma':
+				this.generalSearchHeader = I18n.get('_RelatedToThisProduct_');
+				break;
+			case 'case':
+				this.generalSearchHeader = I18n.get('_RelatedToThisCase_');
+				break;
+			default:
+				this.generalSearchHeader = null;
+		}
+		/** Set search context right away for the general searches fired in parallel */
+		if (search.type.name === SearchEnum.contract) {
+			this.searchContext = SearchContext.contract;
+		} else if (search.type.name === SearchEnum.sn) {
+			this.searchContext = SearchContext.serialno;
+		} else {
+			this.searchContext = null;
+		}
 	}
 
 	/**
@@ -54,12 +78,15 @@ export class SearchComponent {
 	 */
 	public onHide (hide: boolean) {
 		this.hideSpecialSearch = hide;
-		this.searchType.name = SearchEnum.default;
 		// This will trigger a new search on the plain searchText if it was changed to something
 		// else by the special search view
 		if (hide) {
-			this.generalSearch = this.searchText;
+			this.searchType.name = SearchEnum.default;
+			this.generalSearch = { query: this.searchText };
+			this.searchContext = null;
+			this.generalSearchHeader = null;
 		}
+		this.cdr.detectChanges();
 	}
 
 	/**
@@ -68,11 +95,19 @@ export class SearchComponent {
 	 * @param event.hide If true, hides general search. If false, displays it.
 	 * @param event.searchString If provided, overwrites the general search string.
 	 */
-	public toggleGeneralSearch (event: { hide: boolean, searchString: string }) {
+	public toggleGeneralSearch (
+		event: { hide: boolean, searchString?: string, context?: SearchContext },
+	) {
 		this.hideGeneralSearch = event.hide;
 		if (event.searchString) {
-			this.generalSearch = event.searchString;
+			this.generalSearch = { query: event.searchString };
 		}
+		if (event.context) {
+			this.searchContext = event.context;
+		} else {
+			this.searchContext = null;
+		}
+		this.cdr.detectChanges();
 	}
 
 	/**

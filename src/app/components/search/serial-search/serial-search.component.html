@@ -1,33 +1,99 @@
 <div *ngIf="loading" class="row no-gutters">
 	<div class="col-md-12">
 		<div class="panel panel--loose">
+			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingSerialNumbers_' | i18n"></h4>
 			<cui-spinner></cui-spinner>
 		</div>
 	</div>
 </div>
-<div *ngIf="!loading">
-	<h4 [innerText]="'_SerialNumberHeader_' | i18n:serialNumber"></h4>
-	<h5 class="base-margin-top">Cisco ASR 920-12SZ-IM Router</h5>
+<div *ngIf="!loading && data">
+	<h4 [innerText]="'_SerialNumberHeader_' | i18n:serialNumber.query"></h4>
+	<h5 class="base-margin-top" [innerText]="data.productName"></h5>
 
 	<div class="dbl-margin-top">
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_CXLevel_' | i18n"></span><span>Level 2</span></div>
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_ContractNumber_' | i18n"></span><span>9234623523</span></div>
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_ExpirationDate_' | i18n"></span><span>23-Oct-2019 (159 Days)</span></div>
+		<div>
+			<dl class="dl--inline">
+				<dt>
+					<span class="subheading text-uppercase left-header" [innerText]="'_CXLevel_' | i18n"></span>
+				</dt>
+				<dd>
+					<span *ngIf="contractData.cxLevel; else loadingContract" [innerText]="contractData.cxLevel"></span>
+				</dd>
+				<dt>
+					<span class="subheading text-uppercase left-header" [innerText]="'_ContractNumber_' | i18n"></span>
+				</dt>
+				<dd>
+					<a data-auto-id="contractNumber" href="#" *ngIf="contractData.contractNum; else loadingContract" [innerText]="contractData.contractNum"></a>
+				</dd>
+				<dt>
+					<span class="subheading text-uppercase left-header" [innerText]="'_ExpirationDate_' | i18n"></span>
+				</dt>
+				<dd>
+					<span *ngIf="contractData.expirationDate; else loadingContract" [innerText]="contractData.expirationDate"></span>
+				</dd>
+			</dl>
+		</div>
+		<div class="base-margin-top">
+			<dl class="dl--inline">
+				<dt>
+					<span class="subheading text-uppercase left-header" [innerText]="'_SoftwareTypeOS_' | i18n"></span>
+				</dt>
+				<dd>
+					<a data-auto-id="softwareTypeOS" href="#" *ngIf="data.softwareType; else unavailable" [innerText]="data.softwareType"></a>
+				</dd>
+				<dt>
+					<span class="subheading text-uppercase left-header" [innerText]="'_CurrentVersion_' | i18n"></span>
+				</dt>
+				<dd>
+					<a data-auto-id="currentVersion" href="#" *ngIf="data.currentVersion; else unavailable" [innerText]="data.currentVersion"></a>
+				</dd>
+				<dt>
+					<span class="subheading text-uppercase left-header" [innerText]="'_LatestVersion_' | i18n"></span>
+				</dt>
+				<dd>
+					<a data-auto-id="latestVersion" href="#" *ngIf="data.latestVersion; else unavailable" [innerText]="data.latestVersion"></a>
+				</dd>
+			</dl>
+		</div>
 	</div>
 	<div class="base-margin-top">
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_SoftwareTypeOS_' | i18n"></span><span>IOS XE</span></div>
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_CurrentVersion_' | i18n"></span><span>Fuji 16.9.3</span></div>
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_LatestVersion_' | i18n"></span><span>Everest 16.6.6</span></div>
+		<dl class="dl--inline">
+			<dt>
+				<span class="subheading text-uppercase left-header" [innerText]="'_OpenCases_' | i18n"></span>
+			</dt>
+			<dd>
+				<a data-auto-id="openCases" href="#" *ngIf="data.openCase; else unavailable" [innerText]="data.openCase"></a>
+			</dd>
+			<dt>
+				<span class="subheading text-uppercase left-header" [innerText]="'_OpenRMAs_' | i18n"></span>
+			</dt>
+			<dd>
+				<span *ngIf="data.openRmas; else unavailable" [innerText]="data.openRmas"></span>
+			</dd>
+		</dl>
 	</div>
 	<div class="base-margin-top">
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_OpenCases_' | i18n"></span><span>2</span></div>
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_OpenRMAs_' | i18n"></span><span>0</span></div>
-	</div>
-	<div class="base-margin-top base-margin-bottom">
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_RelatedFieldNotices_' | i18n"></span><span>6</span></div>
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_RelatedSecurityAdvisories_' | i18n"></span><span>3</span></div>
-		<div class="half-nargin-top"><span class="subheading text-uppercase left-header" [innerText]="'_RelatedBugs_' | i18n"></span><span>45</span></div>
-		<div class="half-nargin-top" [innerText]="'_BasedOnLastScanXDaysAgo_' | i18n:'7'"><span></span></div>
+		<dl class="dl--inline">
+			<dt>
+				<span class="subheading text-uppercase left-header" [innerText]="'_RelatedFieldNotices_' | i18n"></span>
+			</dt>
+			<dd>
+				<a data-auto-id="relatedFieldNotices" href="#" *ngIf="data.advisoryCounts?.fn; else unavailable" [innerText]="data.advisoryCounts.fn"></a>
+			</dd>
+			<dt>
+				<span class="subheading text-uppercase left-header" [innerText]="'_RelatedSecurityAdvisories_' | i18n"></span>
+			</dt>
+			<dd>
+				<a data-auto-id="relatedSecurityAdvisories" href="#" *ngIf="data.advisoryCounts?.sa; else unavailable" [innerText]="data.advisoryCounts.sa"></a>
+			</dd>
+			<dt>
+				<span class="subheading text-uppercase left-header" [innerText]="'_RelatedBugs_' | i18n"></span>
+			</dt>
+			<dd>
+				<a data-auto-id="relatedBugs" href="#" *ngIf="data.advisoryCounts?.bugs; else unavailable" [innerText]="data.advisoryCounts.bugs"></a>
+			</dd>
+		</dl>
+		<div class="half-margin-top text-muted" [innerText]="'_BasedOnLastScanRunXDaysAgo_' | i18n:'7'"><span></span></div>
 	</div>
 	<div class="base-margin-top">
 		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
@@ -39,12 +105,22 @@
 	<div class="dbl-padding-top" *ngIf="!loading">
 		<!-- TODO: Add Product image -->
 		<div class="subheading text-uppercase" [innerText]="'_ProductID_' | i18n"></div>
-		<div><span>ASR-920-12SZ-IM Router</span></div>
-		<div class="subheading half-margin-top" [innerText]="'_ProductSeries_' | i18n"></div>
-		<div><span>SR 920 Series Aggregation Services Router</span></div>
-		<div class="subheading half-margin-top" [innerText]="'_IPAddress_' | i18n"></div>
-		<div><span>10.10.10.1</span></div>
-		<div class="subheading half-margin-top" [innerText]="'_HostName_' | i18n"></div>
-		<div><span>SJ-BLD3-ASR920-02-147</span></div>
+		<div><span [innerText]="data.productId"></span></div>
+		<div class="subheading text-uppercase half-margin-top" [innerText]="'_ProductSeries_' | i18n"></div>
+		<div><span [innerText]="data.productSeries"></span></div>
+		<div class="subheading text-uppercase half-margin-top" [innerText]="'_IPAddress_' | i18n"></div>
+		<div><span [innerText]="data.ipAddress"></span></div>
+		<div class="subheading text-uppercase half-margin-top" [innerText]="'_HostName_' | i18n"></div>
+		<div><span [innerText]="data.hostName"></span></div>
 </div>
+</ng-template>
+
+<ng-template #loadingContract>
+	<cui-loader color="muted"
+		*ngIf="loadingContractData; else unavailable">
+	</cui-loader>
+</ng-template>
+
+<ng-template #unavailable>
+	<span class="text-muted" [innerText]="'_Unavailable_' | i18n"></span>
 </ng-template>
