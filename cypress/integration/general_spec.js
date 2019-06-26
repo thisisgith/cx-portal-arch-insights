@@ -1,4 +1,5 @@
 import MockService from '../support/mockService';
+// import { mockSettings } from '../../src/environments/mock/mock';
 
 describe('General Spec', () => {
 	it('Loads the app', () => {
@@ -12,16 +13,15 @@ describe('General Spec', () => {
 		cy.url().should('contain', 'https://cloudsso-test.cisco.com/idp/SSO.saml2');
 	});
 
-	context.skip('General Search', () => {
+	context('General Search', () => {
 		// TODO  Skipped for now since mock only allows for results or not
-
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
 
-		it('Search and close', () => {
+		it.skip('Search and close', () => {
 			const rmaVal = '639530286';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
@@ -37,7 +37,10 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
-		it('Search No Result Found', () => { // PBC-173
+		it.skip('Search No Result Found', () => { // PBC-173
+			// TODO With existing mock limitations we still need to fully integrate automation
+			// for 'no results' scenario into all runs.  This will be accomplished in the near
+			// future with new mock functionality to enable/disable as desired.
 			const rmaVal = '639530286639530286';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
