@@ -31,6 +31,10 @@ export const defaults = {
 	},
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa1/home',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
+	/**
+	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
+	 * because it is used inside of a module forRoot() call
+	 */
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/v1/contracts',
