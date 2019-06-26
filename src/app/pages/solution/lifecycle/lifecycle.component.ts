@@ -342,7 +342,6 @@ export class LifecycleComponent implements OnDestroy {
 			const pct = Math.floor(
 				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
 
-
 			if (!_.isNil(pct)) {
 				return (pct === 0) ? 'start' : `${pct.toString()}%`;
 			}
