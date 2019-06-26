@@ -13,15 +13,15 @@ import {
 } from '@angular/router';
 
 import * as _ from 'lodash-es';
-import { Subscription, forkJoin } from 'rxjs';
+import { Subscription } from 'rxjs';
 import {
+	Asset,
 	ContractsService,
-	HardwareInfo,
 	RacetrackService,
 	RacetrackResponse,
 	RacetrackSolution,
 	RacetrackTechnology,
-	InventoryService,
+	CoverageCountsResponse,
 } from '@cui-x/sdp-api';
 import { SolutionService } from './solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -64,7 +64,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	};
 	private activeRoute: string;
 	public facets: Facet[];
-	public selectedAsset: HardwareInfo;
+	public selectedAsset: Asset;
 	private eventsSubscribe: Subscription;
 	private assetSubscribe: Subscription;
 	public solutions: RacetrackSolution[];
@@ -77,7 +77,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 	constructor (
 		private contractsService: ContractsService,
-		private inventoryService: InventoryService,
 		private router: Router,
 		private solutionService: SolutionService,
 		private racetrackService: RacetrackService,
@@ -100,7 +99,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		);
 
 		this.assetSubscribe = this.solutionService.getCurrentAsset()
-		.subscribe((asset: HardwareInfo) => {
+		.subscribe((asset: Asset) => {
 			this.selectedAsset = asset;
 		});
 	}
@@ -228,18 +227,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Function used to fetch and build the assets & coverage facet
 	 */
 	private fetchCoverageCount () {
-		forkJoin(
-			this.contractsService.headContractsProductsCoveragesResponse({
-				customerId,
-				coverage: 'covered',
-			}),
-			this.inventoryService.headNetworkElementsResponse(customerId),
-		)
-		.subscribe((responses: any[]) => {
-			// haven't figured out if the full response has a type or not - hence the 'any'
-
-			const covered = _.invoke(_.get(responses[0], 'headers'), 'get', 'X-API-RESULT-COUNT');
-			const total = _.invoke(_.get(responses[1], 'headers'), 'get', 'X-API-RESULT-COUNT');
+		this.contractsService.getCoverageCounts({ customerId })
+		.subscribe((counts: CoverageCountsResponse) => {
+			const covered = _.get(counts, 'covered', 0);
+			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
 			const assetsFacet = _.find(this.facets, { key: 'assets' });
 			assetsFacet.data = {

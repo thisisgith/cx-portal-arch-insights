@@ -7,6 +7,7 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
+import { VulnerabilityResponse } from '../models/vulnerability-response';
 import { SecurityAdvisoryResponseObject } from '../models/security-advisory-response-object';
 import { SecurityAdvisorySummary } from '../models/security-advisory-summary';
 import { SecurityAdvisoryResponseObjectDetails } from '../models/security-advisory-response-object-details';
@@ -21,6 +22,7 @@ import { SofwareEOLBulletinResponseObjectDetails } from '../models/sofware-eolbu
   providedIn: 'root',
 })
 class ProductAlertsService extends __BaseService {
+  static readonly getVulnerabilityCountsPath = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
   static readonly headApiCustomerportalV1ProductAlertsPath = '/api/customerportal/v1/product-alerts';
   static readonly headApiCustomerportalV1ProductAlertsSecurityAdvisoriesPath = '/api/customerportal/v1/product-alerts/security-advisories';
   static readonly getSecurityAdvisoriesPath = '/api/customerportal/v1/product-alerts/security-advisories';
@@ -50,6 +52,57 @@ class ProductAlertsService extends __BaseService {
   }
 
   /**
+   * The Vulnerabilities count API retrieves counts for product vulnerabilities. This includes counts for security advisories, field notices, and bugs.
+   * @param params The `ProductAlertsService.GetVulnerabilityCountsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `serialNumber`: The recognized/validated Serial Number
+   *
+   * @return successful operation
+   */
+  getVulnerabilityCountsResponse(params: ProductAlertsService.GetVulnerabilityCountsParams): __Observable<__StrictHttpResponse<VulnerabilityResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/product-alerts/v1/vulnerabilities/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+//        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<VulnerabilityResponse>;
+      })
+    );
+  }
+
+  /**
+   * The Vulnerabilities count API retrieves counts for product vulnerabilities. This includes counts for security advisories, field notices, and bugs.
+   * @param params The `ProductAlertsService.GetVulnerabilityCountsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `serialNumber`: The recognized/validated Serial Number
+   *
+   * @return successful operation
+   */
+  getVulnerabilityCounts(params: ProductAlertsService.GetVulnerabilityCountsParams): __Observable<VulnerabilityResponse> {
+    return this.getVulnerabilityCountsResponse(params).pipe(
+      __map(_r => _r.body as VulnerabilityResponse)
+    );
+  }
+
+  /**
    * Fetches meta information about the security-advisories API.
    * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsParams` containing the following parameters:
    *
@@ -73,7 +126,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -83,6 +137,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Fetches meta information about the security-advisories API.
    * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsParams` containing the following parameters:
@@ -115,7 +170,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -125,6 +181,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Fetches meta information about the security-advisories API.
    * @param customerId Unique identifier of a Cisco customer.
@@ -181,7 +238,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -191,6 +249,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * The Security Advisories API retrieves security vulnerability information along with Common Vulnerability and Exposure (CVE) identifiers, and Common Vulnerability Scoring System (CVSS) for devices associated with customer ID. All request parameters are optional other than customerId.
    * If no device ID is provided in the request, the response will contain security advisory information for all device IDs associated with the customer.
@@ -240,7 +299,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -250,6 +310,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Generates the total number of security advisoeries and the count by severity
    * @param customerId Unique identifier of a Cisco customer.
@@ -290,7 +351,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -300,6 +362,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Generates the total number of security advisoeries and the count by severity
    * @param params The `ProductAlertsService.GetSecurityAdvisoryListParams` containing the following parameters:
@@ -341,7 +404,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -351,6 +415,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Fetches meta information about the security-advisories API.
    * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletinsParams` containing the following parameters:
@@ -426,7 +491,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -436,6 +502,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * The security-advisory-bulletins API retrieves security advisory bulletin details for one or more security advisory IDs associated with the devices. All request parameters are optional.
    * If no security advisory ID is provided in the request, the response will contain security advisory bulletin information of all active security advisories.
@@ -494,7 +561,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -504,6 +572,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Fetches meta information about the field-notices API.
    * @param customerId Unique identifier of a Cisco customer.
@@ -560,7 +629,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -570,6 +640,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * The Field Notices API retrieves all active field notices vulnerability details on devices associated with a customer ID. All request parameters are optional other than customerId.
    * If no device ID is provided in the request, the response will contain field notices information for all device IDs associated with the customer.
@@ -623,7 +694,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -633,6 +705,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Fetches meta information about the field notices API.
    * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsFieldNoticeBulletinsParams` containing the following parameters:
@@ -690,7 +763,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -700,6 +774,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * The field-notice-bulletins API retrieves field notice bulletin details for one or more field notice ID associated with the devices. All request parameters are optional.
    * If no device ID is provided in the request, the response will contain field notice bulletin information of all field notices for device IDs associated with the customer.
@@ -746,7 +821,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -756,6 +832,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Fetches meta information about the hardware-eol API.
    * @param customerId Unique identifier of a Cisco customer.
@@ -806,7 +883,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -816,6 +894,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * The Hardware End-Of-Life API retrieves end of life details for a specific hardware device. All request parameters are optional other than customerId.
    * If no device ID is provided in the request, the response will contain end of life information for all device IDs associated with the customer.
@@ -865,7 +944,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -875,6 +955,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Fetches meta information about the HW EOL Bulletins API.
    * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsHardwareEolBulletinsParams` containing the following parameters:
@@ -953,7 +1034,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -963,6 +1045,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * The hardware-eol-bulletins API retrieves end of life bulletin details for specific hardware device based on the hardware end of life ID associated with the devices. All request parameters are optional.
    * If no hardware end of life ID is provided in the request, the response will contain end of life bulletin information on all hardware end of life and for all device IDs associated with the customer.
@@ -1023,7 +1106,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -1033,6 +1117,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Fetches meta information about the software-eol API.
    * @param customerId Unique identifier of a Cisco customer.
@@ -1083,7 +1168,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -1093,6 +1179,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * The Software End-Of-Life API retrieves system software end of life details for a specific hardware device. All request parameters are optional other than customerId.
    * If no device ID is provided in the request, the response will contain system software end of life information for all device IDs associated with the customer.
@@ -1142,7 +1229,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -1152,6 +1240,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * Fetches meta information about the SW EOL bulletins API.
    * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSoftwareEolBulletinsParams` containing the following parameters:
@@ -1230,7 +1319,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -1240,6 +1330,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * The software-eol-bulletin API retrieves end of life bulleting details for specific hardware device based on the software end of life ID associated with the devices. All request parameters are optional.
    * If no software end of life ID is provided in the request, the response will contain end of life bulleting information of all software end of life and for all device IDs associated with the customer.
@@ -1315,7 +1406,8 @@ class ProductAlertsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -1325,6 +1417,7 @@ class ProductAlertsService extends __BaseService {
       })
     );
   }
+
   /**
    * The Security Advisories API retrieves security vulnerability information along with Common Vulnerability and Exposure (CVE) identifiers, and Common Vulnerability Scoring System (CVSS) for devices associated with customer ID. All request parameters are optional other than customerId.
    * If no device ID is provided in the request, the response will contain security advisory information for all device IDs associated with the customer.
@@ -1349,6 +1442,22 @@ class ProductAlertsService extends __BaseService {
 }
 
 module ProductAlertsService {
+
+  /**
+   * Parameters for getVulnerabilityCounts
+   */
+  export interface GetVulnerabilityCountsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * The recognized/validated Serial Number
+     */
+    serialNumber?: Array<string>;
+  }
 
   /**
    * Parameters for headApiCustomerportalV1ProductAlerts

@@ -10,6 +10,8 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { CoverageResponse } from '../models/coverage-response';
 import { CoverageCountResponse } from '../models/coverage-count-response';
 import { DeviceContractResponse } from '../models/device-contract-response';
+import { ContractDeviceCountsResponse } from '../models/contract-device-counts-response';
+import { CoverageCountsResponse } from '../models/coverage-counts-response';
 @Injectable({
   providedIn: 'root',
 })
@@ -18,6 +20,8 @@ class ContractsService extends __BaseService {
   static readonly getDevicesAndCoveragePath = '/api/customerportal/contracts/v1/products/coverages';
   static readonly getTopCoverageExpirationPath = '/api/customerportal/contracts/v1/products/coverages/top';
   static readonly getContractDetailsPath = '/api/customerportal/contracts/v1/details';
+  static readonly getContractCountsPath = '/api/customerportal/contracts/v1/device/count';
+  static readonly getCoverageCountsPath = '/api/customerportal/contracts/v1/coverages/count';
 
   constructor(
     config: __Configuration,
@@ -306,6 +310,108 @@ class ContractsService extends __BaseService {
       __map(_r => _r.body as DeviceContractResponse)
     );
   }
+
+  /**
+   * The contract-details API retrieves details of specific contracts owned by customers or partners. This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response. https://sdp.cisco.com/api/v1/contracts/contract-details
+   * @param params The `ContractsService.GetContractCountsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `contractNumber`: The number of the service contract. Example:- 2689444; 91488861, 92246411
+   *
+   * @return successful operation
+   */
+  getContractCountsResponse(params: ContractsService.GetContractCountsParams): __Observable<__StrictHttpResponse<ContractDeviceCountsResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/contracts/v1/device/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+//        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<ContractDeviceCountsResponse>;
+      })
+    );
+  }
+
+  /**
+   * The contract-details API retrieves details of specific contracts owned by customers or partners. This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response. https://sdp.cisco.com/api/v1/contracts/contract-details
+   * @param params The `ContractsService.GetContractCountsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `contractNumber`: The number of the service contract. Example:- 2689444; 91488861, 92246411
+   *
+   * @return successful operation
+   */
+  getContractCounts(params: ContractsService.GetContractCountsParams): __Observable<ContractDeviceCountsResponse> {
+    return this.getContractCountsResponse(params).pipe(
+      __map(_r => _r.body as ContractDeviceCountsResponse)
+    );
+  }
+
+  /**
+   * The contract-details API retrieves details of specific contracts owned by customers or partners.
+   * @param params The `ContractsService.GetCoverageCountsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `coverage`: The values will be covered | uncovered | unknown | expired
+   *
+   * @return successful operation
+   */
+  getCoverageCountsResponse(params: ContractsService.GetCoverageCountsParams): __Observable<__StrictHttpResponse<CoverageCountsResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/contracts/v1/coverages/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+//        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<CoverageCountsResponse>;
+      })
+    );
+  }
+
+  /**
+   * The contract-details API retrieves details of specific contracts owned by customers or partners.
+   * @param params The `ContractsService.GetCoverageCountsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `coverage`: The values will be covered | uncovered | unknown | expired
+   *
+   * @return successful operation
+   */
+  getCoverageCounts(params: ContractsService.GetCoverageCountsParams): __Observable<CoverageCountsResponse> {
+    return this.getCoverageCountsResponse(params).pipe(
+      __map(_r => _r.body as CoverageCountsResponse)
+    );
+  }
 }
 
 module ContractsService {
@@ -447,6 +553,38 @@ module ContractsService {
      * The number of the service contract.   Example:- 2689444; 91488861, 92246411
      */
     contractNumber?: Array<number>;
+  }
+
+  /**
+   * Parameters for getContractCounts
+   */
+  export interface GetContractCountsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * The number of the service contract. Example:- 2689444; 91488861, 92246411
+     */
+    contractNumber?: Array<string>;
+  }
+
+  /**
+   * Parameters for getCoverageCounts
+   */
+  export interface GetCoverageCountsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * The values will be covered | uncovered | unknown | expired
+     */
+    coverage?: Array<string>;
   }
 }
 
