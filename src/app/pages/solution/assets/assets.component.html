@@ -70,7 +70,7 @@
 						<span *ngIf="selected > 0">
 							<span class="text-small text-muted qtr-margin-left qtr-margin-right">|</span>
 							<span [innerText]="'_XSelected_' | i18n:selected"
-								class="text-bold text-small text-muted">
+								class="text-bold text-small text-muted" data-auto-id="TotalSelectedCount">
 							</span>
 						</span>
 					</div>
@@ -152,9 +152,10 @@
 							<label class="checkbox">
 								<input type="checkbox"
 									[checked]="allAssetsSelected"
-									(click)="onAllSelect(!allAssetsSelected)"
-									data-auto-id="AllAssetSelect" />
-								<span class="checkbox__input"></span>
+									(click)="onAllSelect(!allAssetsSelected)" />
+								<span class="checkbox__input"
+									data-auto-id="AllAssetSelect">
+								</span>
 							</label>
 						</th>
 						<th *ngFor="let column of assetsTable.columns"
@@ -179,9 +180,10 @@
 							<label class="checkbox">
 								<input type="checkbox"
 									[checked]="item.selected"
-									(click)="onItemSelect(item)"
-									attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}" />
-								<span class="checkbox__input"></span>
+									(click)="onItemSelect(item)" />
+								<span class="checkbox__input"
+									attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}">
+								</span>
 							</label>
 						</td>
 						<td *ngFor="let column of assetsTable.columns">
@@ -189,8 +191,10 @@
 								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data }"></ng-container>
 							</ng-container>
 							<ng-container *ngIf="!column.template">
-								<span *ngIf="column.render" [innerHTML]="column.render(item.data)"></span>
-								<span *ngIf="!column.render" [innerText]="item.data[column.key]"></span>
+								<span *ngIf="column.render" [innerHTML]="column.render(item.data)"
+									attr.data-auto-id="{{ column.name }}-{{ item.data.serialNumber }}"></span>
+								<span *ngIf="!column.render" [innerText]="item.data[column.key]"
+									attr.data-auto-id="{ {column.name }}-{{ item.data.serialNumber }}"></span>
 							</ng-container>
 						</td>
 					</tr>
@@ -229,7 +233,10 @@
 
 <ng-template #supportCoverage let-celldata="celldata">
 	<div class="flex flex-fill flex-center">
-		<span *ngIf="celldata?.supportCovered" class="icon-check-outline icon-small text--success"></span>
+		<span
+			*ngIf="celldata?.supportCovered" class="icon-check-outline icon-small text--success"
+			data-auto-id="SupportCoveredIcon">
+		</span>
 	</div>
 </ng-template>
 
