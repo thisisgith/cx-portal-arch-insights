@@ -38,11 +38,12 @@
 			<img alt="{{ '_StockPhoto_' | i18n }}"
 				src="assets/img/inventory/CAT-3650.png">
 		</div>
-		<div class="col-md-8" *ngIf="asset?.productName">
-			<h3>{{asset.productName}}</h3>
-			<label class="text-small">you have <a data-auto-id="assetCount" href="#">NUMBER</a> of these in your inventory</label>
+		<div class="col-md-8" *ngIf="asset">
+			<h3>{{asset?.productName}}</h3>
+			<div [innerHtml]="'_YouHaveInventory_' | i18n:22"></div>
 		</div>
 	</div>
+		
 	<div class="row base-margin-top base-margin-left">
 		<div class="col-md-6">
 			<div class="row">
