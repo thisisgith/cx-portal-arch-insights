@@ -1,6 +1,7 @@
 import {
 	ACCScenarios,
 	ActionScenarios,
+	AssetScenarios,
 	ATXScenarios,
 	CommunitiesScenarios,
 	CaseScenarios,
@@ -11,14 +12,17 @@ import {
 	NetworkScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
+	RoleScenarios,
 	SearchScenarios,
 	SuccessPathScenarios,
+	VulnerabilityScenarios,
 } from './';
 import { HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
+	Assets,
 	ATXResponse,
 	CDCSearchResponse,
 	CommunitiesResponse,
@@ -26,13 +30,16 @@ import {
 	HardwareResponse,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
+	RoleCountResponse,
 	SuccessPathsResponse,
+	VulnerabilityResponse,
 } from '@cui-x/sdp-api';
 import { RMAResponse } from '@interfaces';
 
 /** Alias type for the Response Body */
 type ResponseBody = (
 	ACCResponse |
+	Assets |
 	ATXResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
@@ -41,7 +48,9 @@ type ResponseBody = (
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
-	SuccessPathsResponse
+	RoleCountResponse |
+	SuccessPathsResponse |
+	VulnerabilityResponse
 );
 
 /**
@@ -88,6 +97,7 @@ export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
 		ActionScenarios,
+		AssetScenarios,
 		ATXScenarios,
 		CaseScenarios,
 		CommunitiesScenarios,
@@ -98,7 +108,9 @@ export const mockSettings: MockSettings = {
 		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
+		RoleScenarios,
 		SearchScenarios,
 		SuccessPathScenarios,
+		VulnerabilityScenarios,
 	]),
 };

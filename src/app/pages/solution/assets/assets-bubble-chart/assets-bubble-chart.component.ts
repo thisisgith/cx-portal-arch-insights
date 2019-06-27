@@ -1,16 +1,13 @@
 import {
 	Component,
-	ElementRef,
 	EventEmitter,
+	Input,
 	OnInit,
 	Output,
-	ViewChild,
+	SimpleChanges,
 } from '@angular/core';
-import {
-	Chart,
-	SeriesPointClickEventObject,
-} from 'highcharts';
-import { LogService } from '@cisco-ngx/cui-services';
+import { Chart } from 'angular-highcharts';
+import * as _ from 'lodash-es';
 
 /**
  * Main component for the Assets Bubble Chart
@@ -22,25 +19,26 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class AssetsBubbleChartComponent implements OnInit {
 
+	@Input() public seriesData;
 	@Output() public subfilter = new EventEmitter<string>();
-	@ViewChild('chart', { static: true }) public chartEl: ElementRef;
 	public chart: Chart;
-
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('AssetsBubbleChartComponent Created!');
-	}
 
 	/**
 	 * Initializes the bubble chart
 	 */
 	public ngOnInit () {
-		// TODO: replace fake data with API's
+		if (this.seriesData) {
+			this.buildGraph();
+		}
+	}
+
+	/**
+	 * Builds our bubble graph
+	 */
+	private buildGraph () {
 		this.chart = new Chart({
 			chart: {
 				height: 200,
-				renderTo: this.chartEl.nativeElement,
 				type: 'packedbubble',
 				width: 250,
 			},
@@ -74,58 +72,7 @@ export class AssetsBubbleChartComponent implements OnInit {
 					showInLegend: false,
 				},
 			},
-			series: [
-				{
-					data: [
-						{
-							name: 'Access',
-							value: 467.1,
-						},
-					],
-					name: 'Access',
-					type: undefined,
-				},
-				{
-					data: [
-						{
-							name: 'Aggregation',
-							value: 567.1,
-						},
-					],
-					name: 'Aggregation',
-					type: undefined,
-				},
-				{
-					data: [
-						{
-							name: 'Edge',
-							value: 477.1,
-						},
-					],
-					name: 'Edge',
-					type: undefined,
-				},
-				{
-					data: [
-						{
-							name: 'Core',
-							value: 477.1,
-						},
-					],
-					name: 'Core',
-					type: undefined,
-				},
-				{
-					data: [
-						{
-							name: 'Branch',
-							value: 452.16,
-						},
-					],
-					name: 'Branch',
-					type: undefined,
-				},
-			],
+			series: this.seriesData,
 			title: {
 				text: null,
 			},
@@ -136,8 +83,20 @@ export class AssetsBubbleChartComponent implements OnInit {
 	 * Emits the subfilter selected
 	 * @param event highcharts click event
 	 */
-	public selectSubfilter (event: SeriesPointClickEventObject) {
+	public selectSubfilter (event: any) {
 		event.stopPropagation();
 		this.subfilter.emit(event.point.name);
+	}
+
+	/**
+	 * OnChanges Functionality
+	 * @param changes The changes found
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const seriesInfo = _.get(changes, 'seriesData',
+			{ currentValue: null, firstChange: false });
+		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+			this.buildGraph();
+		}
 	}
 }
