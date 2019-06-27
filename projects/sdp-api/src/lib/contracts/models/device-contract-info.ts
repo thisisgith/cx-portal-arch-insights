@@ -2,14 +2,14 @@
 export interface DeviceContractInfo {
 
   /**
-   * First address line of the bill-to site
-   */
-  billtoAddressLine1?: string;
-
-  /**
    * Unique identifier of a Cisco customer
    */
   customerId: string;
+
+  /**
+   * The number of the service contract. Example:- 2689444; 91488861, 92246411
+   */
+  contractNumber: number;
 
   /**
    * The status of a contract. Example:- Active, Signed, QA Hold , Overdue, Terminated, Service, Entered, Expired & Inactive
@@ -27,9 +27,9 @@ export interface DeviceContractInfo {
   contractEndDate: string;
 
   /**
-   * CX Support Level
+   * CX support level
    */
-   cxLevel?: string;
+  cxLevel?: string;
 
   /**
    * A program designed to support Cisco customers or partners. Example:- SNTC, PSS
@@ -52,9 +52,9 @@ export interface DeviceContractInfo {
   billtoSiteName?: string;
 
   /**
-   * The number of the service contract. Example:- 2689444; 91488861, 92246411
+   * First address line of the bill-to site
    */
-  contractNumber: number;
+  billtoAddressLine1?: string;
 
   /**
    * Second address line of the bill-to site
