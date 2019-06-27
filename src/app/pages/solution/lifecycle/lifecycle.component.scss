@@ -33,6 +33,23 @@ $vibblue: #017cad;
 	background-color: $light-gray-5;
 }
 
+.learning-duration {
+	padding: 10px;
+	font-size: 12px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+
+	.icon-clock {
+		padding-right: 4px;
+	}
+}
+
+.learning-panel {
+	padding: 0;
+	line-height: initial;
+}
+
 .acc {
 	&__header {
 		background: transparent;
@@ -229,12 +246,14 @@ $vibblue: #017cad;
 
 #hover-panel {
 	&-recommendedACCTitle,
-	&-recommendedATXTitle {
+	&-recommendedATXTitle,
+	&-learningModalTitle {
 		display: none;
 	}
 
 	&-recommendedACCTitle::after,
-	&-recommendedATXTitle::after {
+	&-recommendedATXTitle::after,
+	&-learningModalTitle::after {
 		content: "";
 		position: absolute;
 		top: 45%;
@@ -242,7 +261,8 @@ $vibblue: #017cad;
 		border-bottom: 10px solid transparent;
 	}
 
-	&-recommendedACCTitle::after {
+	&-recommendedACCTitle::after,
+	&-learningModalTitle::after {
 		right: -15px;
 		border-left: 15px solid white;
 	}
@@ -253,10 +273,12 @@ $vibblue: #017cad;
 	}
 }
 
-#recommended-item:hover {
+#recommended-item:hover,
+#recommended-elearning-item:hover {
 	#hover-panel {
 		&-recommendedACCTitle,
-		&-recommendedATXTitle {
+		&-recommendedATXTitle,
+		&-learningModalTitle {
 			display: block;
 			position: absolute;
 			box-shadow: $base-box-shadow;
@@ -268,8 +290,22 @@ $vibblue: #017cad;
 			top: 100px;
 		}
 
-		&-recommendedACCTitle {
+		&-recommendedACCTitle,
+		&-learningModalTitle {
 			left: -480px;
+		}
+
+		&-learningModalTitle {
+			top: -90px;
+
+			.icon-star,
+			.icon-star-half {
+				color: $status-yellow;
+			}
+
+			.icon-star-empty {
+				color: $light-gray-5;
+			}
 		}
 
 		&-recommendedATXTitle {

@@ -15,13 +15,13 @@
 			</div>
 		</div>
 		<div class="flex flex-fluid no-margin-bottom">
-			<div class="flex-center base-margin-left base-margin-right">
+			<!-- <div class="flex-center base-margin-left base-margin-right">
 				<span class="icon-chevron-left icon--mid text-muted"></span>
-			</div>
+			</div> -->
 			<ng-container *ngTemplateOutlet="facetPanel; context: {}"></ng-container>
-			<div class="flex-center base-margin-left base-margin-right">
+			<!-- <div class="flex-center base-margin-left base-margin-right">
 					<span class="icon-chevron-right icon--mid text-muted"></span>
-			</div>
+			</div> -->
 		</div>
 	</div>
 
@@ -90,18 +90,19 @@
 				'col-md-2': shownTabs === 5,
 				'col-md-3': shownTabs === 4
 			}">
-			<div class="col-md-10 flex-center">
+			<div class="col-md-12 flex-center">
 				<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
 			</div>
-			<div class="col-md-2"></div>
-			<div class="col-md-10 flex flex-center">
+			<!-- TODO reenable the lightbulbs if we have some data to work with -->
+			<!-- <div class="col-md-2"></div> -->
+			<div class="col-md-12 flex flex-center">
 				<span [innerText]="facet.title"></span>
 			</div>
-			<div class="col-md-2 flex flex-center">
+			<!-- <div class="col-md-2 flex flex-center">
 				<button class="btn btn--icon btn--small" disabled>
 					<span class="icon-lightbulb"></span>
 				</button>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </ng-template>
@@ -114,9 +115,8 @@
 </ng-template>
 
 <ng-template #assetsFacet let-facet="facet">
-	<cui-gauge *ngIf="facet?.data"
-		[percentage]="facet.data.gaugePercent || 0"
-		value="{{ facet.data.gaugePercent || 0 }}%"
+	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
+		value="{{ facet?.data?.gaugePercent || 0 }}%"
 		color="primary">
 	</cui-gauge>
 </ng-template>

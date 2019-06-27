@@ -54,6 +54,7 @@ export const CaseScenarios = [
 			],
 		},
 		url: `${api}/453b7e10f08b428c90d48432312889ad/details/688296392`,
+		usecases: ['Use Case 1'],
 	},
 	// Valid Case Notes
 	{
@@ -71,6 +72,7 @@ export const CaseScenarios = [
 			],
 		},
 		url: `${api}/453b7e10f08b428c90d48432312889ad/notes/688296392`,
+		usecases: ['Use Case 1'],
 	},
 	// Valid Case Summary
 	{
@@ -88,5 +90,6 @@ export const CaseScenarios = [
 			],
 		},
 		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O,C&pageSize=1&page=1&sortBy=caseNumber&sortOrder=ASC&caseNumbers=688296392`,
+		usecases: ['Use Case 1'],
 	},
 ];
