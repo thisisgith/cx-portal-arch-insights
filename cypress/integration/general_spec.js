@@ -1,4 +1,7 @@
 import MockService from '../support/mockService';
+
+// const searchMock = new MockService('SearchScenarios');
+// const rmaMock = new MockService('RMAResponse');
 // import { mockSettings } from '../../src/environments/mock/mock';
 
 describe('General Spec', () => {
@@ -99,9 +102,15 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
-		it('RMA 800000000 four replacement parts', () => {
+		it.only('RMA 800000000 four replacement parts', () => {
 			// RMA with 4 replacement part PBC-171
 			// mock set at "RMA with four replacement parts"
+			cy.window().then(win => {
+				win.mockService.disable('RMA with one replacement part'); // disable the default
+				// cy.log(win.mockService.getEnabledScenarios());
+				win.mockService.enable('RMA with four replacement parts'); // enable the desired
+			});
+			// cy.log("one");
 			const rmaVal = '800000000';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
@@ -113,7 +122,7 @@ describe('General Spec', () => {
 			cy.get('app-rma-search table th').eq(3).should('have.text', 'Contract Number');
 			cy.get('app-rma-search table th').eq(4).should('have.text', 'Replacement Product');
 			// TODO confirm replacement product contains four product strings
-			cy.get('app-rma-search table th').eq(5).should('have.text', 'Replacement Product ID');
+			// cy.get('app-rma-search table th').eq(5).should('have.text', 'Replacement Product ID');
 			cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
 			cy.get('h5').should('contain', 'Related to this Product');
 			// cy.get('app-no-results').should('contain', 'Suggestions');
@@ -130,9 +139,15 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
-		it('RMA 800000000 no replacement parts', () => {
-			// RMA with 4 replacement part PBC-171
+		it.only('RMA 800000000 no replacement parts', () => {
+			// RMA with no replacement part PBC-171
 			// mock set at "RMA with no replacement parts"
+			cy.window().then(win => {
+				win.mockService.disable('RMA with four replacement parts');
+				// cy.log(win.mockService.getEnabledScenarios());
+				win.mockService.enable('RMA with no replacement parts'); // enable the desired
+			});
+
 			const rmaVal = '800000000';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
