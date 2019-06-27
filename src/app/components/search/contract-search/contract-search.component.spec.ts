@@ -7,6 +7,7 @@ import { ContractScenarios } from '@mock';
 import { ContractSearchComponent } from './contract-search.component';
 import { ContractSearchModule } from './contract-search.module';
 import { HttpErrorResponse } from '@angular/common/http';
+import * as _ from 'lodash-es';
 
 describe('ContractSearchComponent', () => {
 	let component: ContractSearchComponent;
@@ -37,9 +38,10 @@ describe('ContractSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
+		const response = _.get(ContractScenarios[0], ['scenarios', 'GET[0]', 'response', 'body']);
 		spyOn(service, 'getContractDetails')
 			.and
-			.returnValue(of(ContractScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(response));
 		component.contractNumber = { query: '230000001' };
 		component.ngOnChanges();
 		fixture.detectChanges();

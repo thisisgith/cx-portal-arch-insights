@@ -8,6 +8,12 @@ const successPathMock = new MockService('SuccessPathScenarios');
 const successPathOnboardScenario = successPathMock.getScenario('GET', '(SP) IBN-Wireless Assurance-Onboard');
 const successPathItems = successPathOnboardScenario.response.body.items;
 
+// Strip out all possible archetypes
+const successPathArchetypes = Cypress._.chain(successPathItems)
+	.map('archetype')
+	.uniq()
+	.value();
+
 // Split up the eLearning response by type
 const allELearningItems = [];
 const allCertificationsItems = [];
@@ -249,6 +255,117 @@ describe('Learn Panel', () => {
 			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
 			cy.getByAutoId('_ELearning_-ViewAll').should('have.attr', 'href', 'https://pilot-digital-learning.cisco.com/cx#/')
 				.and('have.attr', 'target', '_blank');	// target: _blank indicates we'll open in a new tab
+		});
+	});
+
+	describe('PBC-200: (UI) View - Lifecycle - Product Guides - Filter by Category', () => {
+		before(() => {
+			// Open the View All modal
+			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
+			cy.get('#successModal').should('exist');
+		});
+
+		after(() => {
+			// Close the View All modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.get('#successModal').should('not.exist');
+		});
+
+		it('View All Product Guides modal shows all archetypes by default', () => {
+			// Verify all cards are displayed by default
+			cy.getByAutoId('SuccessCard').then(cards => {
+				expect(cards.length).to.eq(successPathItems.length);
+			});
+		});
+
+		successPathArchetypes.forEach(archetype => {
+			it(`View All Product Guides modal can filter by archetype: ${archetype}`, () => {
+				// Filter by archetype, verify the count
+				cy.get('#successModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get(`a[title="${archetype}"]`).click();
+
+					const filteredItems = successPathItems.filter(item => (item.archetype === archetype));
+					cy.getByAutoId('SuccessCard').then(cards => {
+						expect(cards.length).to.eq(filteredItems.length);
+					});
+				});
+			});
+		});
+
+		it('View All Product Guides modal can filter by archetype: Not selected', () => {
+			// Filter by archetype, verify the count. Note: 'Not selected' should show all items
+			cy.get('#successModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Not selected"]').click();
+
+				cy.getByAutoId('SuccessCard').then(cards => {
+					expect(cards.length).to.eq(successPathItems.length);
+				});
+			});
+		});
+
+		it('View All Product Guides modal filter should be sticky', () => {
+			cy.get('#successModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Project Planning"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+			});
+
+			// Close and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.get('#successModal').should('not.exist');
+
+			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
+			cy.get('#successModal').should('exist');
+
+			// Verify the filter is still in place
+			cy.get('#successModal').within(() => {
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				const filteredItems = successPathItems.filter(item => (item.archetype === 'Project Planning'));
+				cy.getByAutoId('SuccessCard').then(cards => {
+					expect(cards.length).to.eq(filteredItems.length);
+				});
+			});
+		});
+
+		it('View All Product Guides modal filter should be searchable', () => {
+			cy.get('#successModal').within(() => {
+				// Start typing an archetype in the filter field
+				cy.getByAutoId('cui-select').click()
+					.get('input')
+					.type('Gett');
+				cy.get('cui-vscroll-viewport').within(() => {
+					// Verify the filters have been filtered to match the input
+					cy.get('a').then($filters => {
+						$filters.toArray().forEach($filter => {
+							cy.wrap($filter).should('have.attr', 'title')
+								.and('contain', 'Gett');
+						});
+					});
+				});
+			});
+		});
+
+		it('View All Product Guides modal filter should be clearable', () => {
+			cy.get('#successModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Getting Started"]').click();
+
+				cy.getByAutoId('SuccessCard').then(cards => {
+					const filteredItems = successPathItems.filter(item => (item.archetype === 'Getting Started'));
+					expect(cards.length).to.eq(filteredItems.length);
+				});
+
+				// Click the clear filter button, should show all items again
+				cy.getByAutoId('category-filter').within(() => {
+					cy.get('span[class="icon-close"]').click();
+				});
+
+				cy.getByAutoId('SuccessCard').then(cards => {
+					expect(cards.length).to.eq(successPathItems.length);
+				});
+			});
 		});
 	});
 });

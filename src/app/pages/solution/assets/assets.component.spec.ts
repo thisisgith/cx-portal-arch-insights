@@ -43,56 +43,82 @@ describe('AssetsComponent', () => {
 	/**
 	 * @TODO: modify test to use UI
 	 */
-	it('should switch active filters', () => {
-		const totalFilter = _.find(component.filters, { key: 'total' });
-		const coverageFilter = _.find(component.filters, { key: 'coverage' });
-		expect(_.find(component.filters, 'selected'))
-			.toEqual(totalFilter);
+	it('should switch active filters', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const totalFilter = _.find(component.filters, { key: 'total' });
+			const coverageFilter = _.find(component.filters, { key: 'coverage' });
 
-		component.selectFilter(coverageFilter);
-		fixture.detectChanges();
+			expect(_.find(component.filters, 'selected'))
+				.toEqual(totalFilter);
 
-		expect(_.filter(component.filters, 'selected'))
-			.toContain(coverageFilter);
+			component.onSubfilterSelect('covered', coverageFilter);
+
+			fixture.detectChanges();
+
+			expect(_.filter(component.filters, 'selected'))
+				.toContain(coverageFilter);
+
+			done();
+		});
 	});
 
 	/**
 	 * @TODO: modify test to use UI
 	 */
-	it('should select a coverage subfilter', () => {
-		let coverageFilter = _.find(component.filters, { key: 'coverage' });
-		component.selectFilter(coverageFilter);
-		fixture.detectChanges();
+	it('should select a coverage subfilter', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const coverageFilter = _.find(component.filters, { key: 'coverage' });
+			component.onSubfilterSelect('covered', coverageFilter);
 
-		expect(_.filter(component.filters, 'selected'))
-			.toContain(coverageFilter);
+			fixture.detectChanges();
 
-		component.onSubfilterSelect('Covered', 'coverage');
-		coverageFilter = _.find(component.filters, { key: 'coverage' });
-		expect(coverageFilter.subfilter)
-			.toEqual('Covered');
+			expect(_.filter(component.filters, 'selected'))
+				.toContain(coverageFilter);
+
+			const subfilter = _.find(coverageFilter.subfilter, { filter: 'covered' });
+
+			expect(subfilter.selected)
+				.toBeTruthy();
+
+			done();
+		});
 	});
 
 	/**
 	 * @TODO: modify test to use UI
 	 */
-	it('should clear the filter when selecting the same subfilter twice', () => {
-		let coverageFilter = _.find(component.filters, { key: 'coverage' });
-		component.selectFilter(coverageFilter);
-		fixture.detectChanges();
+	it('should clear the filter when selecting the same subfilter twice', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const coverageFilter = _.find(component.filters, { key: 'coverage' });
+			component.onSubfilterSelect('covered', coverageFilter);
 
-		expect(_.filter(component.filters, 'selected'))
-			.toContain(coverageFilter);
+			fixture.detectChanges();
 
-		component.onSubfilterSelect('Covered', 'coverage');
-		coverageFilter = _.find(component.filters, { key: 'coverage' });
-		expect(coverageFilter.subfilter)
-			.toEqual('Covered');
+			expect(_.filter(component.filters, 'selected'))
+				.toContain(coverageFilter);
 
-		component.onSubfilterSelect('Covered', 'coverage');
-		coverageFilter = _.find(component.filters, { key: 'coverage' });
-		expect(coverageFilter.selected)
-			.toBeFalsy();
+			let subfilter = _.find(coverageFilter.subfilter, { filter: 'covered' });
+
+			expect(subfilter.selected)
+				.toBeTruthy();
+
+			component.onSubfilterSelect('covered', coverageFilter);
+
+			fixture.detectChanges();
+
+			subfilter = _.find(coverageFilter.subfilter, { filter: 'covered' });
+
+			expect(subfilter.selected)
+				.toBeFalsy();
+
+			done();
+		});
 	});
 
 	it('should set a loading boolean for Cypress runs', () => {
@@ -104,7 +130,7 @@ describe('AssetsComponent', () => {
 		expect(window.loading)
 			.toBe(true);
 
-		spyOn(inventoryService, 'getNetworkElements')
+		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValue(of({ data: [] }));
 		component.ngOnInit();
