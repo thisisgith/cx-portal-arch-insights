@@ -20,7 +20,7 @@ const allCertificationsItems = [];
 const allRemoteItems = [];
 elearningItems.forEach(scenario => {
 	switch (scenario.type) {
-		case 'E-Course':
+		case 'E-Courses':
 			allELearningItems.push(scenario);
 			break;
 		case 'Cisco Training on Demand Courses':
@@ -70,7 +70,7 @@ describe('Learn Panel', () => {
 			let trainingFound = false;
 			elearningItems.forEach(scenario => {
 				switch (scenario.type) {
-					case 'E-Course':
+					case 'E-Courses':
 						elearningFound = true;
 						break;
 					case 'Cisco Training on Demand Courses':

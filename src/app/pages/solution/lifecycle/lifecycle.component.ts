@@ -500,7 +500,7 @@ export class LifecycleComponent implements OnDestroy {
 
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
-							case 'E-Course': {
+							case 'E-Courses': {
 								const learningItem: ELearningModel = {
 									...item,
 									fixedRating: parseFloat(item.rating),
