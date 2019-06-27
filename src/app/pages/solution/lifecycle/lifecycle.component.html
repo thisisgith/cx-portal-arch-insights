@@ -341,7 +341,7 @@
 			<a class="no-link fade-in-pop"
 				target="_blank"
 				attr.data-auto-id="{{ title }}-ViewAll"
-				href="https://digital-learning.cisco.com/cx#/"
+				href="https://pilot-digital-learning.cisco.com/cx#/"
 				[ngClass]="{'disabled': title !== '_ELearning_'}">
 				<span [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
@@ -527,7 +527,7 @@
 		<div class="modal__body base-padding">
 			<div class="row half-margin-left half-margin-right">
 				<div class="col-md-9 text-large text-bold text-left"
-					[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase">
+					[innerText]="'_TopicsAvailableSolution_' | i18n:data?.length || 0:componentData.params.solution:componentData.params.usecase">
 				</div>
 				<div class="col-md-2">
 					<cui-select id="category-filter"

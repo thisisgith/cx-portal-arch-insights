@@ -253,7 +253,7 @@ describe('Learn Panel', () => {
 		it('PBC-210: E-Learning View All should cross-launch to digital-learning', () => {
 			// Cypress does not and will never support multiple tabs, so just check the link element
 			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
-			cy.getByAutoId('_ELearning_-ViewAll').should('have.attr', 'href', 'https://digital-learning.cisco.com/cx#/')
+			cy.getByAutoId('_ELearning_-ViewAll').should('have.attr', 'href', 'https://pilot-digital-learning.cisco.com/cx#/')
 				.and('have.attr', 'target', '_blank');	// target: _blank indicates we'll open in a new tab
 		});
 	});

@@ -352,7 +352,9 @@ export class LifecycleComponent implements OnDestroy {
 			const pct = Math.floor(
 				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
 
-			return pct === 0 ? 'start' : `${pct.toString()}%`;
+			if (!_.isNil(pct)) {
+				return (pct === 0) ? 'start' : `${pct.toString()}%`;
+			}
 		}
 
 		 return 'start';
@@ -441,11 +443,8 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: SuccessPathsResponse) => {
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
-					_.set(this.componentData, ['learning', 'archetype'],
-						_.chain(result.items)
-						.map('archetype')
-						.uniq()
-						.value());
+					const resultItems = _.uniq(_.map(result.items, 'archetype'));
+					_.set(this.componentData, ['learning', 'archetype'], resultItems);
 					this.componentData.learning.archetype.unshift('Not selected');
 					this.selectedSuccessPaths = this.componentData.learning.success;
 					this.categoryOptions =
@@ -613,16 +612,19 @@ export class LifecycleComponent implements OnDestroy {
 				stage: stage.toLowerCase(),
 			};
 
-			const nextAction = _.find(pitstop.pitstopActions, { isComplete: false });
+			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false })
+				: null;
 
 			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
 
-			this.currentPitActionsWithStatus = _.map(
-				pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
-					({
-						action: pitstopAction,
-						selected: false,
-					}));
+			if (pitstop) {
+				this.currentPitActionsWithStatus = _.map(
+					pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
+						({
+							action: pitstopAction,
+							selected: false,
+						}));
+			}
 
 			this.componentData.params.pitstop = stage;
 			// UI not handling pagination for now, temporarily set to a large number
