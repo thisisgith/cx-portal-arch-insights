@@ -17,6 +17,7 @@ import { environment } from '@environment';
 import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
 import { AssetsBarChartModule } from './assets-bar-chart/assets-bar-chart.module';
 import { AssetsBubbleChartModule } from './assets-bubble-chart/assets-bubble-chart.module';
+import { AssetsCardViewModule } from './assets-card-view/assets-card-view.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -41,6 +42,7 @@ const childRoutes: Routes = [
 	imports: [
 		AssetsBarChartModule,
 		AssetsBubbleChartModule,
+		AssetsCardViewModule,
 		AssetsPieChartModule,
 		CommonModule,
 		CuiPagerModule,

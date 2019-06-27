@@ -12,8 +12,8 @@
 				<span class="text-large text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
 				<span class="icon-dropdown qtr-padding-left toggle"></span>
 				<span class="icon-location icon-small base-padding-left toggle"></span>
-				<span class="icon-list-view icon-small qtr-padding-left toggle"></span>
-				<span class="icon-grid-view icon-small qtr-padding-left toggle"></span>
+				<span class="icon-list-view icon-small qtr-padding-left toggle" (click)="selectView('list')"></span>
+				<span class="icon-grid-view icon-small qtr-padding-left toggle" (click)="selectView('grid')"></span>
 			</div>
 		</ng-template>
 	</cui-tabs>
@@ -65,11 +65,15 @@
 					</div>
 				</div>
 			</div>
-			<cui-table *ngIf="inventory.length && assetsTable"
+			<cui-table *ngIf="inventory.length && assetsTable && view == 'list'"
 				[data]="inventory"
 				(onTableRowClicked)="rowSelected($event)"
 				[options]="assetsTable">
 			</cui-table>
+			<assets-card-view 
+				*ngIf="inventory.length && assetsTable && view == 'grid'"
+				[data]="inventory"
+			></assets-card-view>
 			<div *ngIf="pagination" class="base-margin-top">
 				<cui-pager [page]="pagination.page - 1"
 					[limit]="pagination.rows"

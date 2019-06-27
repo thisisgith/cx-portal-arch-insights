@@ -61,6 +61,8 @@ export class AssetsComponent implements OnInit {
 
 	public inventory = [];
 
+	public view: 'list' | 'grid' = 'list';
+
 	constructor (
 		private logger: LogService,
 		private inventoryService: InventoryService,
@@ -306,4 +308,11 @@ export class AssetsComponent implements OnInit {
 		this.selectedAssets = selectedItems;
 	}
 
+	/**
+	 * Changes the view to either list or grid
+	 * @param view view to set
+	 */
+	public selectView (view: 'list' | 'grid') {
+		this.view = view;
+	}
 }
