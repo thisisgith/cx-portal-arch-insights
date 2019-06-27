@@ -599,16 +599,19 @@ export class LifecycleComponent implements OnDestroy {
 				stage: stage.toLowerCase(),
 			};
 
-			const nextAction = _.find(pitstop.pitstopActions, { isComplete: false });
+			const nextAction = pitstop ? _.find(pitstop.pitstopActions, { isComplete: false })
+				: null;
 
 			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
 
-			this.currentPitActionsWithStatus = _.map(
-				pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
-					({
-						action: pitstopAction,
-						selected: false,
-					}));
+			if (pitstop) {
+				this.currentPitActionsWithStatus = _.map(
+					pitstop.pitstopActions, (pitstopAction: RacetrackPitstopAction) =>
+						({
+							action: pitstopAction,
+							selected: false,
+						}));
+			}
 
 			this.componentData.params.pitstop = stage;
 			// UI not handling pagination for now, temporarily set to a large number
