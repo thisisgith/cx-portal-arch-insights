@@ -68,7 +68,7 @@ describe('General Spec', () => {
 		});
 
 		it('RMA 800000000 one replacement parts', () => {
-			// RMA with 1 replacement part PBC-171 
+			// RMA with 1 replacement part PBC-171
 			// mock set at "RMA with one replacement part"
 			const rmaVal = '800000000';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
@@ -100,7 +100,7 @@ describe('General Spec', () => {
 		});
 
 		it('RMA 800000000 four replacement parts', () => {
-			// RMA with 4 replacement part PBC-171 
+			// RMA with 4 replacement part PBC-171
 			// mock set at "RMA with four replacement parts"
 			const rmaVal = '800000000';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
@@ -131,7 +131,7 @@ describe('General Spec', () => {
 		});
 
 		it('RMA 800000000 no replacement parts', () => {
-			// RMA with 4 replacement part PBC-171 
+			// RMA with 4 replacement part PBC-171
 			// mock set at "RMA with no replacement parts"
 			const rmaVal = '800000000';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
@@ -165,9 +165,8 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(inputVal.concat('{enter}'));
 			cy.wait(4000);
-			// eslint-disable-next-line max-len
-			// cy.get('app-general-search').should('contain', '10 Results for "'.concat(inputVal).concat('"'));
-			cy.get('app-general-search').should('contain', '10 Results for');
+			cy.get('app-general-search').should('contain', '10 Results for "'.concat(inputVal).concat('"'));
+			// cy.get('app-general-search').should('contain', '10 Results for');
 			cy.getByAutoId('searchSiteSelect').should('exist');
 			cy.getByAutoId('cui-select').should('exist');			// 2 found
 			cy.getByAutoId('searchClose').should('exist').click();
