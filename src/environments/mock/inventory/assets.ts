@@ -436,6 +436,15 @@ export const AssetScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 0,
+					description: '(Assets) Unreachable API',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=10&page=1`,

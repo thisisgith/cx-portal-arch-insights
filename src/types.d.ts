@@ -23,4 +23,5 @@ interface Window {
 	successPathsLoading: boolean;
 	carMoving: boolean;
 	progressMoving: boolean;
+	activeComponent: any;
 }

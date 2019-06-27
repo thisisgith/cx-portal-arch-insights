@@ -66,7 +66,7 @@ describe('Assets', () => { // PBC-41
 		});
 	});
 
-	context.only('PBC-36: Asset List', () => {
+	context('PBC-36: Asset List', () => {
 		it('Displays assets correctly in list view', () => {
 			cy.get('tbody > tr').should('have.length', assets.length);
 			Cypress._.each(assets, asset => {
@@ -109,7 +109,14 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Renders table gracefully when APIs are unavailable', () => {
-			// TODO: Needs mock service changes
+			assetMock.disable('Assets Page 1');
+			assetMock.enable('(Assets) Unreachable API');
+
+			cy.window().then(win => win.activeComponent.ngOnInit()); // refresh component
+			cy.get('span.text-muted.text-xlarge').should('have.text', 'No Results Found');
+
+			assetMock.disable('(Assets) Unreachable API');
+			assetMock.enable('Assets Page 1');
 		});
 
 		it('Filters asset list with all visual filters', () => {
