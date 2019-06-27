@@ -7,25 +7,100 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
+import { Assets } from '../models/assets';
 import { HardwareResponse } from '../models/hardware-response';
 import { NetworkElementResponse } from '../models/network-element-response';
 import { SoftwareResponse } from '../models/software-response';
+import { RoleCountResponse } from '../models/role-count-response';
 @Injectable({
   providedIn: 'root',
 })
 class InventoryService extends __BaseService {
+  static readonly getAssetsPath = '/api/customerportal/inventory/v1/assets';
   static readonly headHardwarePath = '/api/customerportal/inventory/v1/hardware';
   static readonly getHardwarePath = '/api/customerportal/inventory/v1/hardware';
   static readonly headNetworkElementsPath = '/api/customerportal/inventory/v1/network-elements';
   static readonly getNetworkElementsPath = '/api/customerportal/inventory/v1/network-elements';
   static readonly headSoftwarePath = '/api/customerportal/inventory/v1/software';
   static readonly getSoftwarePath = '/api/customerportal/inventory/v1/software';
+  static readonly getRoleCountPath = '/api/customerportal/inventory/v1/role/device/count';
 
   constructor(
     config: __Configuration,
     http: HttpClient
   ) {
     super(config, http);
+  }
+
+  /**
+   * API to get all the assets
+   * @param params The `InventoryService.GetAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `rows`: Number of rows of data per page
+   *
+   * - `role`: The device role
+   *
+   * - `page`: The page number of the response
+   *
+   * - `coverage`: The coverage
+   *
+   * - `contractNumber`: The contract numbers
+   *
+   * @return successful operation
+   */
+  getAssetsResponse(params: InventoryService.GetAssetsParams): __Observable<__StrictHttpResponse<Assets>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
+    (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/inventory/v1/assets`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+//        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<Assets>;
+      })
+    );
+  }
+
+  /**
+   * API to get all the assets
+   * @param params The `InventoryService.GetAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `rows`: Number of rows of data per page
+   *
+   * - `role`: The device role
+   *
+   * - `page`: The page number of the response
+   *
+   * - `coverage`: The coverage
+   *
+   * - `contractNumber`: The contract numbers
+   *
+   * @return successful operation
+   */
+  getAssets(params: InventoryService.GetAssetsParams): __Observable<Assets> {
+    return this.getAssetsResponse(params).pipe(
+      __map(_r => _r.body as Assets)
+    );
   }
 
   /**
@@ -495,9 +570,96 @@ class InventoryService extends __BaseService {
       __map(_r => _r.body as SoftwareResponse)
     );
   }
+
+  /**
+   * The Device roles set by DNAC.
+   * @param params The `InventoryService.GetRoleCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `role`: The device role
+   *
+   * @return successful operation
+   */
+  getRoleCountResponse(params: InventoryService.GetRoleCountParams): __Observable<__StrictHttpResponse<RoleCountResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/inventory/v1/role/device/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+//        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<RoleCountResponse>;
+      })
+    );
+  }
+
+  /**
+   * The Device roles set by DNAC.
+   * @param params The `InventoryService.GetRoleCountParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `role`: The device role
+   *
+   * @return successful operation
+   */
+  getRoleCount(params: InventoryService.GetRoleCountParams): __Observable<RoleCountResponse> {
+    return this.getRoleCountResponse(params).pipe(
+      __map(_r => _r.body as RoleCountResponse)
+    );
+  }
 }
 
 module InventoryService {
+
+  /**
+   * Parameters for getAssets
+   */
+  export interface GetAssetsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Number of rows of data per page
+     */
+    rows?: number;
+
+    /**
+     * The device role
+     */
+    role?: Array<string>;
+
+    /**
+     * The page number of the response
+     */
+    page?: number;
+
+    /**
+     * The coverage
+     */
+    coverage?: Array<'covered' | 'uncovered' | 'unknown' | 'expired'>;
+
+    /**
+     * The contract numbers
+     */
+    contractNumber?: Array<string>;
+  }
 
   /**
    * Parameters for getHardware
@@ -741,6 +903,22 @@ module InventoryService {
      * Receive only requested fields in the response
      */
     fields?: Array<string>;
+  }
+
+  /**
+   * Parameters for getRoleCount
+   */
+  export interface GetRoleCountParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * The device role
+     */
+    role?: Array<string>;
   }
 }
 

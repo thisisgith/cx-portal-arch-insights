@@ -1,16 +1,13 @@
 import {
 	Component,
-	ElementRef,
 	EventEmitter,
+	Input,
 	OnInit,
 	Output,
-	ViewChild,
+	SimpleChanges,
 } from '@angular/core';
-import {
-	Chart,
-	SeriesPointClickEventObject,
-} from 'highcharts';
-import { LogService } from '@cisco-ngx/cui-services';
+import { Chart } from 'angular-highcharts';
+import * as _ from 'lodash-es';
 
 /**
  * Main component for the Assets Bar Chart
@@ -22,25 +19,36 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class AssetsBarChartComponent implements OnInit {
 
+	@Input() public seriesData;
 	@Output() public subfilter = new EventEmitter<string>();
-	@ViewChild('chart', { static: true }) public chartEl: ElementRef;
 	public chart: Chart;
-
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('AssetsBarChartComponent Created!');
-	}
 
 	/**
 	 * Initializes the bar chart
 	 */
 	public ngOnInit () {
-		// all placeholder until the API's are finalized
+		if (this.seriesData) {
+			this.buildGraph();
+		}
+	}
+
+	/**
+	 * Builds our bar graph
+	 */
+	private buildGraph () {
+		const data = [];
+		const categories = [];
+		_.each(this.seriesData, d => {
+			data.push({
+				name: d.label,
+				y: d.y,
+			});
+
+			categories.push(d.label);
+		});
 		this.chart = new Chart({
 			chart: {
 				height: 100,
-				renderTo: this.chartEl. nativeElement,
 				type: 'bar',
 				width: 300,
 			},
@@ -58,18 +66,8 @@ export class AssetsBarChartComponent implements OnInit {
 			},
 			series: [
 				{
-					data: [
-						{
-							y: 20,
-						},
-						{
-							y: 40,
-						},
-						{
-							y: 15,
-						},
-					],
-					name: 'Placeholder',
+					data,
+					name: '',
 					showInLegend: false,
 					type: undefined,
 				},
@@ -78,7 +76,7 @@ export class AssetsBarChartComponent implements OnInit {
 				text: null,
 			},
 			xAxis: {
-				categories: ['Security Advisories', 'Field Notices', 'Bugs'],
+				categories,
 			},
 			yAxis: {
 				visible: false,
@@ -90,8 +88,21 @@ export class AssetsBarChartComponent implements OnInit {
 	 * Emits the subfilter selected
 	 * @param event highcharts click event
 	 */
-	public selectSubfilter (event: SeriesPointClickEventObject) {
+	public selectSubfilter (event: any) {
 		event.stopPropagation();
-		this.subfilter.emit(event.point.category.toString());
+		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
+		this.subfilter.emit(filterName);
+	}
+
+	/**
+	 * OnChanges Functionality
+	 * @param changes The changes found
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const seriesInfo = _.get(changes, 'seriesData',
+			{ currentValue: null, firstChange: false });
+		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+			this.buildGraph();
+		}
 	}
 }

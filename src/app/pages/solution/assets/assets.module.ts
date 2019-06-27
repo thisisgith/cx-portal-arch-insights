@@ -11,9 +11,11 @@ import {
 	CuiTabsModule,
 	CuiPagerModule,
 	CuiSpinnerModule,
+	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
-import { InventoryModule } from '@cui-x/sdp-api';
+import { InventoryModule, ContractsModule, ProductAlertsModule } from '@cui-x/sdp-api';
 import { environment } from '@environment';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
 import { AssetsBarChartModule } from './assets-bar-chart/assets-bar-chart.module';
 import { AssetsBubbleChartModule } from './assets-bubble-chart/assets-bubble-chart.module';
@@ -43,12 +45,17 @@ const childRoutes: Routes = [
 		AssetsBubbleChartModule,
 		AssetsPieChartModule,
 		CommonModule,
+		ContractsModule.forRoot({ rootUrl }),
+		CuiDropdownModule,
 		CuiPagerModule,
 		CuiSpinnerModule,
 		CuiTableModule,
 		CuiTabsModule,
+		FormsModule,
 		I18nPipeModule,
 		InventoryModule.forRoot({ rootUrl }),
+		ProductAlertsModule.forRoot({ rootUrl }),
+		ReactiveFormsModule,
 		RouterModule.forChild(childRoutes),
 	],
 })

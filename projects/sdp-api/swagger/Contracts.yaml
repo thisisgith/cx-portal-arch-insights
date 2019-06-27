@@ -226,8 +226,6 @@ paths:
         '404':
           description: API not found
 
-
-
   /api/customerportal/contracts/v1/details:
     get:
       tags:
@@ -296,6 +294,77 @@ paths:
             $ref: '#/definitions/ErrorResponse'
         '404':
           description: API not found
+  
+  /api/customerportal/contracts/v1/device/count:
+    get:
+      tags:
+        - Contracts
+      summary: >-
+        The contract-details API retrieves details of specific contracts owned by customers or partners. This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response.
+      description: >-
+        The contract-details API retrieves details of specific contracts owned by customers or partners.
+        This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response. https://sdp.cisco.com/api/v1/contracts/contract-details
+      operationId: getContractCounts
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: contractNumber
+          in: query
+          description: The number of the service contract. Example:- 2689444; 91488861, 92246411
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/ContractDeviceCountsResponse'
+        '400':
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: API not found
+
+  /api/customerportal/contracts/v1/coverages/count:
+    get:
+      tags:
+        - contracts
+      summary: >-
+        The contract-coverage counts API retrieves counts of the coverage covered | not covered | unknown | expired
+      description: >-
+        The contract-details API retrieves details of specific contracts owned by customers or partners.
+      operationId: getCoverageCounts
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: coverage
+          in: query
+          description: The values will be covered | uncovered | unknown | expired
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/CoverageCountsResponse'
+        '400':
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        '404':
+          description: API not found
 
 securityDefinitions:
   OauthSecurity:
@@ -304,6 +373,31 @@ securityDefinitions:
     authorizationUrl: 'https://oauth.simple.api/authorization'
 
 definitions:
+
+  CoverageCountsResponse:
+    type: object
+    properties:
+      covered:
+        type: number
+      uncovered:
+        type: number
+      unknown:
+        type: number
+      expired:
+        type: number
+
+  ContractDeviceCountsResponse:
+    type: array
+    items:
+      $ref: '#/definitions/ContractCount'
+
+  ContractCount:
+    type: object
+    properties:
+      contractNumber:
+        type: string
+      deviceCount:
+        type: number
 
   CoverageResponse:
     type: object

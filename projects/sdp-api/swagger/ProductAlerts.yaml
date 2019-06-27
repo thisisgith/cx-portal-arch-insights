@@ -16,6 +16,42 @@ schemes:
 security:
   - OauthSecurity: []
 paths:
+  /api/customerportal/product-alerts/v1/vulnerabilities/count:
+    get:
+      tags:
+        - Product Alerts
+      summary: Returns vulnerability counts
+      description: The Vulnerabilities count API retrieves counts for product vulnerabilities. This includes counts for security advisories, field notices, and bugs.
+      produces:
+        - application/json
+      operationId: getVulnerabilityCounts
+      parameters:
+        - name: customerId
+          in: query
+          description: Unique identifier of a Cisco customer.
+          required: true
+          type: string
+        - name: serialNumber
+          in: query
+          description: The recognized/validated Serial Number
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/VulnerabilityResponse'
+        500:
+          description: 'Internal server error'
+        401:
+          description: 'Unauthorized'
+        400:
+          description: Operation failed
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        403:
+          description: 'Forbidden'
 
   /api/customerportal/v1/product-alerts:
     head:
@@ -1467,6 +1503,16 @@ securityDefinitions:
     flow: implicit
     authorizationUrl: 'https://oauth.simple.api/authorization'
 definitions:
+  VulnerabilityResponse:
+    type: object
+    properties:
+      security-advisories:
+        type: number
+      field-notices:
+        type: number
+      bugs:
+        type: number
+
   ErrorResponse:
     type: object
     required:

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RacetrackComponentModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { CuiSpinnerModule, CuiSelectModule } from '@cisco-ngx/cui-components';
+import { CuiSpinnerModule, CuiSelectModule, CuiRatingModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
 import { LifecycleComponent } from './lifecycle.component';
 import { RacetrackModule, RacetrackContentModule } from '@cui-x/sdp-api';
@@ -31,8 +31,9 @@ const childRoutes: Routes = [
 	declarations: [LifecycleComponent],
 	imports: [
 		CommonModule,
-		CuiSpinnerModule,
+		CuiRatingModule,
 		CuiSelectModule,
+		CuiSpinnerModule,
 		FormsModule,
 		I18nPipeModule,
 		RacetrackComponentModule,
