@@ -97,14 +97,14 @@ describe('Assets', () => { // PBC-41
 		it('Supports selecting one or more assets in the list', () => {
 			cy.get('tbody > tr').eq(0).click() // click row
 				.should('have.class', 'active');
-			cy.getByAutoId(`InventoryItemSelect-${assets[1].serialNumber}`).click(); // click checkbox
+			cy.getByAutoId(`InventoryItemCheckbox-${assets[1].serialNumber}`).click(); // click checkbox
 			cy.get('tbody > tr').eq(2).should('not.have.class', 'active');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '2 Selected');
 			cy.get('tbody > tr').eq(0).click()
 				.should('not.have.class', 'active');
-			cy.getByAutoId('AllAssetSelect').click();
+			cy.getByAutoId('AllAssetSelectCheckbox').click();
 			cy.getByAutoId('TotalSelectedCount').should('have.text', `${assets.length} Selected`);
-			cy.getByAutoId('AllAssetSelect').click();
+			cy.getByAutoId('AllAssetSelectCheckbox').click();
 			cy.getByAutoId('TotalSelectedCount').should('not.exist');
 		});
 
@@ -112,23 +112,88 @@ describe('Assets', () => { // PBC-41
 			assetMock.disable('Assets Page 1');
 			assetMock.enable('(Assets) Unreachable API');
 
-			cy.window().then(win => win.activeComponent.ngOnInit()); // refresh component
-			cy.get('span.text-muted.text-xlarge').should('have.text', 'No Results Found');
+			cy.refreshComponent('AssetsComponent');
+			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
 
 			assetMock.disable('(Assets) Unreachable API');
 			assetMock.enable('Assets Page 1');
 		});
 
-		it('Filters asset list with all visual filters', () => {
+		it('Uses proper pagination for asset list', () => {
+			// TODO: When AP-5378 is implemented, this test can be done with mocked data
+			assetMock.disable(['Assets Page 1', 'Assets Page 2', 'Assets Page 3', 'Assets Page 4']);
+			assetMock.disable('Assets Page 2');
+			assetMock.disable('Assets Page 3');
+			assetMock.disable('Assets Page 4');
+			cy.server();
+			cy.route('**/inventory/v1/assets?*').as('assets');
 
+			// TODO: Add auto-ids to cui-pager
+			cy.get('.cui-pager-page').eq(1).click();
+			cy.wait('@assets').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.get('page')).to.eq('2');
+			});
+			cy.get('cui-pager li').last().click();
+			cy.wait('@assets').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.get('page')).to.eq('3');
+			});
+			cy.get('cui-pager li').first().click();
+			cy.wait('@assets').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.get('page')).to.eq('2');
+			});
+
+			cy.get('.cui-pager-page').eq(0).click();
+			assetMock.enable(['Assets Page 1', 'Assets Page 2', 'Assets Page 3', 'Assets Page 4']);
 		});
 
-		it.skip('Renders visual filtes gracefully when APIs are unavailable', () => {
+		it('Filters asset list with all visual filters', () => {
+			const { contractNumber, role } = assets[0];
+			cy.getByAutoId('coveredPoint').click();
+			cy.getByAutoId('FilterTag-covered').should('be.visible');
+			cy.getByAutoId(`${contractNumber}Point`).click();
+			cy.getByAutoId(`FilterTag-${contractNumber}`).should('be.visible');
+			cy.getByAutoId(`${role}Point`).click({ force: true });
+			cy.getByAutoId(`FilterTag-${role}`).should('be.visible');
+			// TODO: Field notice/security advisory filter (CSCvq32046)
+			cy.getByAutoId(`FilterTag-${contractNumber}`).click().should('not.exist');
+			cy.getByAutoId('FilterBarClearAllFilters').click();
+			cy.getByAutoId('FilterTag-covered').should('not.exist');
+		});
+
+		it.skip('Renders visual filters gracefully when APIs are unavailable', () => {
 			// TODO: PBC-254
 		});
 
 		it('Combines visual filters appropriately', () => {
+			// TODO: When AP-5378 is implemented, this test can be done with mocked data
+			assetMock.disable('Assets Page 1');
+			cy.server();
+			cy.route('**/inventory/v1/assets?*').as('assets');
 
+			cy.getByAutoId('coveredPoint').click().wait('@assets');
+			cy.getByAutoId('uncoveredPoint').click({ force: true }).wait('@assets');
+			cy.getByAutoId(`${assets[0].contractNumber}Point`).click();
+			cy.wait('@assets').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.getAll('coverage')).to.have.length(2)
+					.and.include.members(['covered', 'uncovered']);
+				expect(params.getAll('contractNumber')).to.have.length(1)
+					.and.include.members([assets[0].contractNumber]);
+			});
+
+			assetMock.enable('Assets Page 1');
+		});
+
+		it('Visual filters can be collapsed/expanded', () => {
+			cy.getByAutoId('coveredPoint').click();
+			cy.getByAutoId('VisualFilterCollapse').click();
+			cy.getByAutoId('FilterTag-covered').should('be.visible');
+			cy.getByAutoId('AssetsSelectVisualFilter-total').should('not.be.visible');
+			cy.getByAutoId('VisualFilterCollapse').click();
+			cy.getByAutoId('AssetsSelectVisualFilter-total').should('be.visible');
 		});
 	});
 });

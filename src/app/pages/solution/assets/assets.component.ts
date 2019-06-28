@@ -276,7 +276,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public ngOnInit () {
 		if (window.Cypress) {
 			window.loading = true;
-			window.activeComponent = this;
+			window.activeComponents = { AssetsComponent: this, ...window.activeComponents };
 		}
 
 		this.buildFilters();

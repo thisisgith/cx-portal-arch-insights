@@ -11,5 +11,22 @@ Cypress.Commands.add('loadApp', (path = '/') => {
  * @param {Integer} timeout - Time in milliseconds to wait before failing
  */
 Cypress.Commands.add('waitForAppLoading', (property = 'loading', timeout = 30000) => {
-	cy.window({ timeout }).should('have.property', property, false);
+	Cypress.log({
+		name: 'loading',
+		message: { property, timeout },
+	});
+	cy.window({ timeout, log: false }).should('have.property', property, false);
+});
+
+/**
+ * Refreshes a component by calling its ngOnInit function.
+ * NOTE: The component must be exposed in the window.activeComponents object.
+ * @param {String} componentName - Name of the component to refresh
+ */
+Cypress.Commands.add('refreshComponent', componentName => {
+	Cypress.log({
+		name: 'refresh',
+		message: componentName,
+	});
+	cy.window({ log: false }).then(win => win.activeComponents[componentName].ngOnInit());
 });

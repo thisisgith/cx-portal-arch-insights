@@ -50,29 +50,47 @@ export default class MockService {
 	/**
 	 * Enables a specified mock scenario
 	 * NOTE: Until AP-5405 is resolved, you might need to manually disable other scenarios
-	 * @param {String} scenario Scenario description
+	 * @param {Array | String} scenarios Scenario description(s)
 	 */
-	enable (scenario) {
+	enable (scenarios) {
+		let scenarioList;
+		if (!Array.isArray(scenarios)) {
+			scenarioList = [scenarios];
+		} else {
+			scenarioList = scenarios;
+		}
+
 		cy.window({ log: false }).then(win => {
 			Cypress.log({
 				name: 'Mock On',
-				message: scenario,
+				message: scenarioList,
 			});
-			win.mockService.enable(scenario);
+			Cypress._.each(scenarioList, scenario => {
+				win.mockService.enable(scenario);
+			});
 		});
 	}
 
 	/**
 	 * Disables a specified mock scenario
-	 * @param {String} scenario Scenario description
+	 * @param {Array | String} scenarios Scenario description(s)
 	 */
-	disable (scenario) {
+	disable (scenarios) {
+		let scenarioList;
+		if (!Array.isArray(scenarios)) {
+			scenarioList = [scenarios];
+		} else {
+			scenarioList = scenarios;
+		}
+
 		cy.window({ log: false }).then(win => {
 			Cypress.log({
 				name: 'Mock Off',
-				message: scenario,
+				message: scenarioList,
 			});
-			win.mockService.disable(scenario);
+			Cypress._.each(scenarioList, scenario => {
+				win.mockService.disable(scenario);
+			});
 		});
 	}
 

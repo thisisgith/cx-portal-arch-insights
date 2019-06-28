@@ -129,7 +129,10 @@
 		<div *ngIf="!inventory.length && !status.isLoading">
 			<div class="text-center dbl-margin-top dbl-margin-bottom">
 				<div>
-					<span class="text-muted text-xlarge" [innerText]="'_NoResultsFound_' | i18n"></span>
+					<span class="text-muted text-xlarge"
+						[innerText]="'_NoResultsFound_' | i18n"
+						data-auto-id="NoResultsFoundTxt" >
+					</span>
 				</div>
 				<div>
 					<a (click)="clearFilters()"
@@ -152,9 +155,10 @@
 							<label class="checkbox">
 								<input type="checkbox"
 									[checked]="allAssetsSelected"
-									(click)="onAllSelect(!allAssetsSelected)" />
+									(click)="onAllSelect(!allAssetsSelected)"
+									data-auto-id="AllAssetSelect" />
 								<span class="checkbox__input"
-									data-auto-id="AllAssetSelect">
+									data-auto-id="AllAssetSelectCheckbox">
 								</span>
 							</label>
 						</th>
@@ -180,9 +184,10 @@
 							<label class="checkbox">
 								<input type="checkbox"
 									[checked]="item.selected"
-									(click)="onItemSelect(item)" />
+									(click)="onItemSelect(item)"
+									attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}" />
 								<span class="checkbox__input"
-									attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}">
+									attr.data-auto-id="InventoryItemCheckbox-{{ item.data.serialNumber }}">
 								</span>
 							</label>
 						</td>

@@ -15,7 +15,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '172.21.140.183',
 		osType: '',
 		osVersion: '12.2(55)SE1',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'FDO1503P0D7',
 		supportCovered: true,
 	},
