@@ -405,19 +405,33 @@ export const mockResponse: Asset[] = [
  * Function to generate the mock Assets Response
  * @param rows the rows to return
  * @param page the page to return
+ * @param contractNumber the contractNumber to filter on
  * @returns the assets response
  */
-function MockAssets (rows: number, page: number): Assets {
-	const data = _.cloneDeep(mockResponse)
-		.slice((rows * (page - 1)), (rows * page));
+function MockAssets (rows: number, page: number, contractNumber?: string[]): Assets {
+	let data = _.cloneDeep(mockResponse);
+
+	if (contractNumber) {
+		const filtered = [];
+
+		_.each(contractNumber, (cNumber: string) => {
+			filtered.push(_.filter(data, { contractNumber: cNumber }));
+		});
+
+		data = _.flatten(filtered);
+	}
+	const total = data.length;
+	const pages = Math.ceil(data.length / rows);
+
+	data = data.slice((rows * (page - 1)), (rows * page));
 
 	return {
 		data,
 		Pagination: {
 			page,
+			pages,
 			rows,
-			pages: Math.ceil(mockResponse.length / rows),
-			total: mockResponse.length,
+			total,
 		},
 	};
 }
@@ -429,6 +443,23 @@ export const AssetScenarios = [
 			GET: [
 				{
 					delay: 100,
+					description: 'Assets Count',
+					response: {
+						body: MockAssets(1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=1&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 500,
 					description: 'Assets Page 1',
 					response: {
 						body: MockAssets(10, 1),
@@ -445,7 +476,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 250,
 					description: 'Assets Page 2',
 					response: {
 						body: MockAssets(10, 2),
@@ -462,7 +493,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 325,
 					description: 'Assets Page 3',
 					response: {
 						body: MockAssets(10, 3),
@@ -479,7 +510,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 150,
 					description: 'Assets Page 4',
 					response: {
 						body: MockAssets(10, 4),
@@ -490,6 +521,23 @@ export const AssetScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=10&page=4`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 225,
+					description: 'Contract 93856991 Filtering',
+					response: {
+						body: MockAssets(10, 1, ['93856991']),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=1&contractNumber=93856991`,
 		usecases: ['Use Case 1'],
 	},
 ];
