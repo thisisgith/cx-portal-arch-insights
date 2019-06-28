@@ -178,7 +178,8 @@
 						attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
 						(click)="onRowSelect(item)"
 						[ngClass]="{ 'active': item.details }">
-						<td (click)="$event.stopPropagation();">
+						<td (click)="$event.stopPropagation();"
+							attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}">
 							<label class="checkbox">
 								<input type="checkbox"
 									[checked]="item.selected"
@@ -187,7 +188,9 @@
 								<span class="checkbox__input"></span>
 							</label>
 						</td>
-						<td *ngFor="let column of assetsTable.columns" (click)="column.click ? $event.stopPropagation() : null">
+						<td *ngFor="let column of assetsTable.columns"
+							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
+							(click)="column.click ? $event.stopPropagation() : null">
 							<ng-container *ngIf="column.template">
 								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data }"></ng-container>
 							</ng-container>
