@@ -562,7 +562,7 @@ export const SearchScenarios = [
 						status: 404,
 						statusText: 'Unable to find results',
 					},
-					// selected: true,
+					selected: false,
 				},
 			],
 		},
