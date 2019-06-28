@@ -43,12 +43,12 @@
 		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result }"></ng-container>
 	</div>
 	<!-- Related ATX, ACC, Learning results -->
-	<div class="base-margin-top"
+	<div class="half-margin-top"
 		*ngIf="relatedResults?.length">
 		<div class="flex flex-center-vertical">
-			<span class="half-margin-right"
+			<h6 class="half-margin-right"
 				[innerText]="'_RelatedGeneralResults_' | i18n">
-			</span>
+			</h6>
 			<div class="divider flex-fluid"></div>
 		</div>
 		<ng-container *ngTemplateOutlet="relatedTemplate"></ng-container>
@@ -90,13 +90,13 @@
 	<div>
 		<span [innerHTML]="result.description | truncate:false:300 | keyHighlight"></span>
 	</div>
-	<span class="text-darkgreen"
-		[innerText]="result.displayUrl">
-	</span>
+	<a class="text-dkgray-4" target="_blank" [href]="result.displayUrl"
+		[innerText]="result.displayUrl | truncate:false:100">
+	</a>
 	<div *ngIf="result.pdfUrl">
-		<a target="_blank"
-			[innerText]="'_PDFSize_' | i18n:result.pdfSize"
-			[href]="result.pdfUrl">
+		<a class="text-dkgray-4" target="_blank" [href]="result.pdfUrl">
+			<span class="icon-file-pdf-o icon-xsmall qtr-margin-right"></span>
+			<span [innerText]="'_PDFSize_' | i18n:result.pdfSize"></span>
 		</a>
 	</div>
 </ng-template>
@@ -110,12 +110,12 @@
 	</ng-container>
 	<ng-container *ngIf="!loadingRelated">
 		<div *ngFor="let item of relatedResults"
-			class="half-margin-bottom">
+			class="half-padding-top half-margin-bottom">
 			<div>
 				<a [href]="item.url"
 					data-auto-id="relatedResultLink"
 					target="_blank">
-					<h6 [innerHTML]="item.title | keyHighlight"></h6>
+					<h5 [innerHTML]="item.title | keyHighlight"></h5>
 				</a>
 			</div>
 			<span [innerHTML]="item.description | truncate:false:100 | keyHighlight"></span>
