@@ -4,7 +4,6 @@ import { AssetsComponent } from './assets.component';
 import { AssetsModule } from './assets.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
-import { InventoryService } from '@cui-x/sdp-api';
 import { environment } from '@environment';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
