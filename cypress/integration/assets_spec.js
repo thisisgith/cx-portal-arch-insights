@@ -117,14 +117,13 @@ describe('Assets', () => { // PBC-41
 
 			assetMock.disable('(Assets) Unreachable API');
 			assetMock.enable('Assets Page 1');
+			cy.refreshComponent('AssetsComponent');
+			cy.waitForAppLoading();
 		});
 
 		it('Uses proper pagination for asset list', () => {
 			// TODO: When AP-5378 is implemented, this test can be done with mocked data
 			assetMock.disable(['Assets Page 1', 'Assets Page 2', 'Assets Page 3', 'Assets Page 4']);
-			assetMock.disable('Assets Page 2');
-			assetMock.disable('Assets Page 3');
-			assetMock.disable('Assets Page 4');
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
@@ -184,6 +183,7 @@ describe('Assets', () => { // PBC-41
 					.and.include.members([assets[0].contractNumber]);
 			});
 
+			cy.getByAutoId('FilterBarClearAllFilters').click();
 			assetMock.enable('Assets Page 1');
 		});
 
