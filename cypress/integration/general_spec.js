@@ -1,7 +1,6 @@
 import MockService from '../support/mockService';
 
 // const searchMock = new MockService('SearchScenarios');
-// const rmaMock = new MockService('RMAResponse');
 // import { mockSettings } from '../../src/environments/mock/mock';
 
 describe('General Spec', () => {
@@ -17,18 +16,17 @@ describe('General Spec', () => {
 	});
 
 	context('General Search', () => {
-		// TODO  Skipped for now since mock only allows for results or not
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
 
-		it.skip('General Search and close', () => {
+		it('General Search and close', () => { // PBC-173
 			const searchVal = '639530286';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(searchVal.concat('{enter}'));
-			cy.wait(1000);
+			cy.wait(5000);
 			cy.getByAutoId('searchSiteSelect').should('exist');
 			cy.getByAutoId('cui-select').should('exist');			// 2 found
 			cy.getByAutoId('searchResultLink').should('exist');		// 3 found
@@ -40,14 +38,17 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
-		it.skip('Search No Result Found', () => { // PBC-173
-			// TODO With existing mock limitations we still need to fully integrate automation
-			// for 'no results' scenario into all runs.  This will be accomplished in the near
-			// future with new mock functionality to enable/disable as desired.
+		it('Search No Result Found', () => { // PBC-173
+			// disable default mock and enable desired for this test
+			cy.window().then(win => {
+				win.mockService.disable('Generic Example');
+				// cy.log(win.mockService.getEnabledScenarios());
+				win.mockService.enable('Unable to find results'); // enable the desired
+			});
 			const rmaVal = '639530286639530286';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
-			cy.wait(800);
+			cy.wait(5000);
 			cy.get('h4').should('have.text', 'No Results Found');
 			cy.get('h5').should('contain', 'We did not find results for: '.concat(rmaVal));
 			cy.get('app-no-results').should('contain', 'Suggestions');
