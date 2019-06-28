@@ -258,6 +258,31 @@ describe('Learn Panel', () => {
 		});
 	});
 
+	describe('PBC-133: Learn: Hover-over to show more content about the module', () => {
+		visibleELearningItems.forEach(elearningItem => {
+			it(`Should have hover modal on E-Learning links: ${elearningItem.title}`, () => {
+				// NOTE: Cypress can not trigger elements with :hover css property, so we'll just check
+				// that the hover modal and it's elements exist in the DOM. See below for reference:
+				// https://docs.cypress.io/api/commands/hover.html#Workarounds
+				// https://github.com/cypress-io/cypress/issues/10
+				cy.get(`a[href="${elearningItem.url}"]`).parent()
+					.should('contain', elearningItem.title)
+					.within(() => {
+						cy.getByAutoId('learningHoverModal-Title').should('contain', elearningItem.title);
+						cy.getByAutoId('learningHoverModal-Description').should('contain', elearningItem.description);
+						cy.getByAutoId('learningHoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(elearningItem.rating).toString());
+						// Duration/clock are only displayed if duration is set
+						if (elearningItem.duration) {
+							cy.getByAutoId('learningHoverModal-DurationClock').should('exist');
+							cy.getByAutoId('learningHoverModal-Duration').should('contain', elearningItem.duration);
+						} else {
+							cy.getByAutoId('learningHoverModal-DurationClock').should('not.exist');
+						}
+					});
+			});
+		});
+	});
+
 	describe('PBC-200: (UI) View - Lifecycle - Product Guides - Filter by Category', () => {
 		before(() => {
 			// Open the View All modal
