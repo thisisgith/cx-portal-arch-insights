@@ -99,10 +99,10 @@
 							<button class="btn btn--small btn--gray-ghost disabled">
 									<span class="icon-location"></span>
 							</button>
-							<button class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'list' }" (click)="selectView('list')">
+							<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'list' }" (click)="selectView('list')">
 									<span class="icon-list-view"></span>
 							</button>
-							<button class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'grid' }" (click)="selectView('grid')">
+							<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'grid' }" (click)="selectView('grid')">
 									<span class="icon-grid-view"></span>
 							</button>
 						</div>
@@ -213,8 +213,8 @@
 				<span class="text-large" [innerText]="item.data.deviceName"></span>
 			</div>
 			<div class="flex-center dbl-margin-top dbl-margin-bottom">
-				<img *ngIf="item.data?.image" [src]="item.image"/>
-				<span *ngIf="!item.data?.image" class="text-dkgray-4" [innerText]="'_NoPhotoAvailable_' | i18n"></span>
+				<img [src]="item.image" alt="'_NoPhotoAvailable_' | i18n"/>
+				<!-- <span *ngIf="!item.data?.image" class="text-dkgray-4" [innerText]="'_NoPhotoAvailable_' | i18n"></span> -->
 			</div>
 		</div>
 		<div class="card__body text-small dbl-margin-bottom">
@@ -256,11 +256,11 @@
 	</div>
 </ng-template>
 	
-<ng-template #NA let-type='type' let-verison='version'>
+<ng-template #NA let-type="type" let-verison="version">
 	<span [innerText]="'_NA_' | i18n"></span>
 </ng-template>
 	
-<ng-template #hasSoftware let-type='type' let-version='version'>
+<ng-template #hasSoftware let-type="type" let-version="version">
 	<span *ngIf="type" innerText="{{type}} "></span>
 	<span *ngIf="version" [innerText]="version"></span>
 </ng-template>
