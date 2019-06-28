@@ -62,13 +62,13 @@
 				<span class="subheading text-uppercase left-header" [innerText]="'_OpenCases_' | i18n"></span>
 			</dt>
 			<dd>
-				<a data-auto-id="openCases" href="#" *ngIf="data.openCase; else unavailable" [innerText]="data.openCase"></a>
+				<a data-auto-id="openCases" href="#" *ngIf="caseData; else loadingCase" [innerText]="caseData.openCases"></a>
 			</dd>
 			<dt>
 				<span class="subheading text-uppercase left-header" [innerText]="'_OpenRMAs_' | i18n"></span>
 			</dt>
 			<dd>
-				<span *ngIf="data.openRmas; else unavailable" [innerText]="data.openRmas"></span>
+				<span *ngIf="caseData; else loadingCase" [innerText]="caseData.openRmas"></span>
 			</dd>
 		</dl>
 	</div>
@@ -124,6 +124,12 @@
 <ng-template #loadingAlerts>
 	<cui-loader color="muted"
 		*ngIf="loadingAlertsData; else unavailable">
+	</cui-loader>
+</ng-template>
+
+<ng-template #loadingCase>
+	<cui-loader color="muted"
+		*ngIf="loadingCaseData; else unavailable">
 	</cui-loader>
 </ng-template>
 

@@ -47,8 +47,6 @@
     "@angular/platform-browser": "^8.0.3",
     "@angular/platform-browser-dynamic": "^8.0.3",
     "@angular/router": "^8.0.3",
-    "@cisco-mv/services": "^7.0.16",
-    "@cisco-mv/utilities": "^8.0.1",
     "core-js": "^2.6.9",
     "d3": "^5.9.4",
     "lodash-es": "^4.17.11",
