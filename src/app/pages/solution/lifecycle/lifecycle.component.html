@@ -158,11 +158,18 @@
 	</div>
 </ng-template>
 
-<ng-template #recommendedDescription let-title="title" let-description="description" let-autoid="autoid">
+<ng-template #recommendedDescription let-title="title" let-item="item" let-description="description" let-autoid="autoid">
 	<div id="hover-panel-{{ autoid }}" class="panel panel--bordered">
 		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title"></h6>
 		<div class="divider divider--compressed"></div>
+		<div *ngIf="item && item.fixedRating" class="half-margin-left half-margin-bottom">
+			<cui-rating [rating]="item.fixedRating" [alt]="true" [noClick]="true" [size]="small"></cui-rating>
+		</div>
 		<div class="half-margin-left" [innerText]="description"></div>
+		<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left">
+			<span class="icon-clock icon-small"></span>
+			<span [innerText]="item.duration"></span>
+		</div>
 	</div>
 </ng-template>
 
@@ -343,7 +350,16 @@
 	</div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<a class="no-link fade-in-pop" target="_blank" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+			<div id="recommended-elearning-item" class=" panel learning-panel">
+				<a class="no-link fade-in-pop" target="_blank" [href]="item.url"><span class="text-blue" [innerText]="item.title"></span></a>
+				<ng-container *ngTemplateOutlet="recommendedDescription; context: {
+					title: item.title,
+					description: item.description,
+					item: item,
+					autoid: 'learningModalTitle'
+				}">
+				</ng-container>
+			</div>
 		</div>
 	</div>
 </ng-template>

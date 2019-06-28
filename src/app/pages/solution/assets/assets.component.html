@@ -1,19 +1,24 @@
 <div class="panel">
 	<cui-tabs inline="true">
-		<cui-tab [label]="'_Assets_' | i18n">
+		<cui-tab [label]="'_Assets_' | i18n | uppercase">
 			<!-- TODO: we should probably move this assets content to its own "assets-pager" component or similar when we add other tabs-->
+			<div class="divider no-margin-top qtr-margin-bottom"></div>
 			<ng-container *ngTemplateOutlet="assetsContent"></ng-container>
 		</cui-tab>
-		<cui-tab [label]="'_EoXMilestones_' | i18n" disabled="true"></cui-tab>
-		<cui-tab [label]="'_Contracts_' | i18n" disabled="true"></cui-tab>
+		<cui-tab [label]="'_Licensing_' | i18n | uppercase" disabled="true"></cui-tab>
 		<ng-template cuiTabPost>
-			<div class="flex-fluid text-right">
-				<span class="icon-filter icon-medium text-muted qtr-margin-right toggle"></span>
-				<span class="text-large text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
-				<span class="icon-dropdown qtr-padding-left toggle"></span>
-				<span class="icon-location icon-small base-padding-left toggle"></span>
-				<span class="icon-list-view icon-small qtr-padding-left toggle" (click)="selectView('list')"></span>
-				<span class="icon-grid-view icon-small qtr-padding-left toggle" (click)="selectView('grid')"></span>
+			<div class="text-right">
+				<div (click)="filterCollapse = !filterCollapse"
+					data-auto-id="VisualFilterCollapse">
+					<span class="icon-filter icon-medium text-muted qtr-margin-right toggle"></span>
+					<span class="text-large text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
+					<span class="qtr-padding-left icon-small text-muted toggle"
+						[ngClass]="{
+							'icon-chevron-up': !filterCollapse,
+							'icon-chevron-down': filterCollapse
+						}">
+					</span>
+				</div>
 			</div>
 		</ng-template>
 	</cui-tabs>
@@ -21,59 +26,95 @@
 
 <!-- Templates for our Tabs -->
 <ng-template #assetsContent>
-	<div class="flex flex-fill flex-fluid">
-		<div class="flex-center">
+	<div class="flex flex-fill flex-fluid"
+		*ngIf="!filterCollapse">
+		<!-- <div class="flex-center">
 			<span class="icon-chevron-left icon-medium text-muted toggle"></span>
-		</div>
+		</div> -->
 		<div *ngFor="let filter of filters; index as i"
 			attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
 			attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}"
-			(click)="selectFilter(filter)"
 			[ngClass]="{
 				'filter__selected': filter.selected,
 				'filter__not-selected': !filter.selected
 			}"
 			class="panel flex-center flex-fill filter">
-			<div *ngIf="filter.template" class="base-margin-bottom">
-				<ng-container *ngTemplateOutlet="filter.template; context:filter"></ng-container>
+			<div *ngIf="!filter.loading" class="base-margin-bottom">
+				<div *ngIf="filter.template">
+					<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
+				</div>
+			</div>
+			<div *ngIf="filter.loading" class="base-margin-bottom">
+				<cui-spinner></cui-spinner>
 			</div>
 			<div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
 		</div>
-		<div class="flex-center">
+		<!-- <div class="flex-center">
 			<span class="icon-chevron-right icon-medium text-muted toggle"></span>
-		</div>
+		</div> -->
 	</div>
-	<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!filterCollapse"></div>
+	<ng-container *ngIf="filtered">
+		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+		<div class="divider qtr-margin-top"></div>
+	</ng-container>
 	<div>
 		<div *ngIf="inventory.length && !status.isLoading">
-			<div class="flex flex-fluid">
-				<div *ngIf="pagination?.total"
-					class="flex-fill half-padding-top"
-					[innerText]="'_ShowingXofYAssets_' | i18n:pagination.rows:pagination.total"></div>
-				<div class="btn-group btn-group--square">
-					<div class="dropdown active dropdown--tail dropdown--left"
-						data-auto-id="BulkDropdown"
-						[ngClass]="{'active': bulkDropdown }"
-						(click)="bulkDropdown = !bulkDropdown">
-						<button class="btn btn--small btn--gray-ghost"><span class="icon-more"></span></button>
-						<div class="dropdown__menu">
-							<a [innerText]="'_ExportAssets_' | i18n:selectedAssets.length"></a>
-							<a [innerText]="'_EditAssetTags_' | i18n:selectedAssets.length"></a>
-							<a [innerText]="'_RunScanAssets_' | i18n:selectedAssets.length"></a>
-							<div class="dropdown__divider"></div>
+			<div class="row">
+				<div class="col-md-9 flex flex-fill">
+					<div class="flex-center-vertical">
+						<span [innerText]="'_Assets_' | i18n" class="text-large"></span>
+						<span [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
+							class="qtr-margin-left text-small text-muted">
+						</span>
+						<span *ngIf="selected > 0">
+							<span class="text-small text-muted qtr-margin-left qtr-margin-right">|</span>
+							<span [innerText]="'_XSelected_' | i18n:selected"
+								class="text-bold text-small text-muted">
+							</span>
+						</span>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="flex flex-fluid">
+						<div class="flex-fill form-group input--compressed input--icon half-margin-right">
+							<form [formGroup]="searchForm" novalidate>
+								<div class="form-group__text disabled">
+									<input id="searchInput"
+										type="search"
+										#searchInput
+										[minlength]="searchOptions.min"
+										[maxlength]="searchOptions.max"
+										[pattern]="searchOptions.pattern"
+										formControlName="search"
+										placeholder="{{ '_Search_' | i18n }} {{ options?.title }}"
+										ngDefaultControl>
+									<button type="button" class="link">
+										<span class="icon-search"></span>
+									</button>
+								</div>
+							</form>
 						</div>
+						<div class="btn-group btn-group--square half-margin-right">
+							<button class="btn btn--small btn--gray-ghost disabled">
+									<span class="icon-location"></span>
+							</button>
+							<button class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'list' }" (click)="selectView('list')">
+									<span class="icon-list-view"></span>
+							</button>
+							<button class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'grid' }" (click)="selectView('grid')">
+									<span class="icon-grid-view"></span>
+							</button>
+						</div>
+						<cui-dropdown [actions]="dropdownActions"
+							position="left"
+							icon="icon-more icon-medium text-muted">
+						</cui-dropdown>
 					</div>
 				</div>
 			</div>
-			<cui-table *ngIf="inventory.length && assetsTable && view == 'list'"
-				[data]="inventory"
-				(onTableRowClicked)="rowSelected($event)"
-				[options]="assetsTable">
-			</cui-table>
-			<assets-card-view 
-				*ngIf="inventory.length && assetsTable && view == 'grid'"
-				[data]="inventory"
-			></assets-card-view>
+			<div class="divider qtr-margin-top"></div>
+			<ng-container *ngTemplateOutlet="tableAssets"></ng-container>
 			<div *ngIf="pagination" class="base-margin-top">
 				<cui-pager [page]="pagination.page - 1"
 					[limit]="pagination.rows"
@@ -82,77 +123,226 @@
 				</cui-pager>
 			</div>
 		</div>
-		<div *ngIf="!inventory.length || status.isLoading">
+		<div *ngIf="status.isLoading">
 			<cui-spinner></cui-spinner>
+		</div>
+		<div *ngIf="!inventory.length && !status.isLoading">
+			<div class="text-center dbl-margin-top dbl-margin-bottom">
+				<div>
+					<span class="text-muted text-xlarge" [innerText]="'_NoResultsFound_' | i18n"></span>
+				</div>
+				<div>
+					<a (click)="clearFilters()"
+						class="text-lowercase"
+						data-auto-id="NoResultsClearAll"
+						[innerText]="'_ClearAll_' | i18n">
+					</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #contractsContent>
-	<!-- TODO: Add data for contracts panel -->
+<ng-template #tableAssets>
+	<div class="responsive-table" *ngIf="assetsTable && inventory.length && view == 'list'">
+		<table class="table table--selectable table--compressed table--lined table--hover">
+				<thead>
+					<tr>
+						<th>
+							<label class="checkbox">
+								<input type="checkbox"
+									[checked]="allAssetsSelected"
+									(click)="onAllSelect(!allAssetsSelected)"
+									data-auto-id="AllAssetSelect" />
+								<span class="checkbox__input"></span>
+							</label>
+						</th>
+						<th *ngFor="let column of assetsTable.columns"
+							[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
+							<span [innerText]="column.name"></span>
+							<span *ngIf="column.sortable && column.sorting"
+								class="qtr-margin-left"
+								[ngClass]="{
+									'icon-chevron-down': column.sortDirection === 'asc',
+									'icon-chevron-up': column.sortDirection === 'desc'
+								}">
+							</span>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of inventory"
+						attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
+						(click)="onItemSelect(item)"
+						[ngClass]="{ 'active': item.selected }">
+						<td>
+							<label class="checkbox">
+								<input type="checkbox"
+									[checked]="item.selected"
+									(click)="onItemSelect(item)"
+									attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}" />
+								<span class="checkbox__input"></span>
+							</label>
+						</td>
+						<td *ngFor="let column of assetsTable.columns">
+							<ng-container *ngIf="column.template">
+								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data }"></ng-container>
+							</ng-container>
+							<ng-container *ngIf="!column.template">
+								<span *ngIf="column.render" [innerHTML]="column.render(item.data)"></span>
+								<span *ngIf="!column.render" [innerText]="item.data[column.key]"></span>
+							</ng-container>
+						</td>
+					</tr>
+				</tbody>
+		</table>
+	</div>
+	<div class="panel panel--ltgray" *ngIf="assetsTable && inventory.length && view == 'grid'">
+		<div class="row" > 
+			<div *ngFor="let item of inventory" class="col-md-2 base-margin-top flex">
+				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
+			</div>
+		</div>
+	</div>
 </ng-template>
 
-<ng-template #eoxContent>
-<!-- TODO: Add data for eox panel -->
+<ng-template #cardTemplate let-item="item">
+	<div class="card curved-corners flex-fluid" [ngClass]="{ 'selected': item.selected }" (click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
+		<div class="card__header">
+			<div class="card__title flex-center card-title-height">
+				<span class="text-large" [innerText]="item.data.deviceName"></span>
+			</div>
+			<div class="flex-center dbl-margin-top dbl-margin-bottom">
+				<img *ngIf="item.data?.image" [src]="item.image"/>
+				<span *ngIf="!item.data?.image" class="text-dkgray-4" [innerText]="'_NoPhotoAvailable_' | i18n"></span>
+			</div>
+		</div>
+		<div class="card__body text-small dbl-margin-bottom">
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_IPAddress_' | i18n"></div>
+				<div class="col-md-6" [innerText]="item.data?.ipAddress || ('_NA_' | i18n)"></div>
+			</div>
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_LastScan_' | i18n"></div>
+				<div class="col-md-6" [innerText]="item.data?.lastScan || ('_Never_' | i18n)"></div>
+			</div>
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_SerialNumber_' | i18n"></div>
+				<div class="col-md-6" [innerText]="item.data?.serialNumber || ('_NA_' | i18n)"></div>
+			</div>
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Software_' | i18n"></div>
+				<div class="col-md-6">
+					<ng-container 
+						*ngTemplateOutlet="(item.data?.osType || item.data?.osVersion) ? hasSoftware : NA; context: {type: item.data.osType, version: item.data.osVersion}">
+					</ng-container>
+				</div>
+			</div>
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Role_' | i18n"></div>
+				<div class="col-md-6" [innerText]="item.data?.role || ('_NA_' | i18n)"></div>
+			</div>
+		</div>
+		<div class="card__footer qtr-margin-bottom absolute-bottom absolute-left">
+			<span class="badge-wrapper base-margin-left" [ngClass]="{ 'invisible': !item.data?.criticalAdvisories }">
+				<span class="icon-alert icon-small text-dkgray-4"></span>
+				<span class="badge badge--tiny badge--danger" [innerText]="item.data?.criticalAdvisories"></span>
+			</span>
+			<span class="badge-wrapper base-margin-left" [ngClass]="{ 'invisible': !item.data?.supportCovered }">
+				<span class="icon-headset icon-small text-dkgray-4"></span>
+				<span class="badge badge--tiny badge--success icon-check"></span>
+			</span>
+		</div>
+	</div>
+</ng-template>
+	
+<ng-template #NA let-type='type' let-verison='version'>
+	<span [innerText]="'_NA_' | i18n"></span>
+</ng-template>
+	
+<ng-template #hasSoftware let-type='type' let-version='version'>
+	<span *ngIf="type" innerText="{{type}} "></span>
+	<span *ngIf="version" [innerText]="version"></span>
 </ng-template>
 
-<ng-template #advisoryFilter let-filter="key">
+<ng-template #advisoryFilter let-filter="filter">
 	<assets-bar-chart
+		[seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-bar-chart>
 </ng-template>
 
-<ng-template #coverageFilter let-filter="key">
+<ng-template #coverageFilter let-filter="filter">
 	<assets-pie-chart
+		[seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
 </ng-template>
 
-<ng-template #contractFilter let-filter="key">
+<ng-template #contractFilter let-filter="filter">
 	<assets-pie-chart
+		[seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
 </ng-template>
 
-<ng-template #typeFilter let-filter="key">
+<ng-template #roleFilter let-filter="filter">
 	<assets-bubble-chart
+		[seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-bubble-chart>
 </ng-template>
 
+<ng-template #supportCoverage let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span *ngIf="celldata?.supportCovered" class="icon-check-outline icon-small text--success"></span>
+	</div>
+</ng-template>
+
+<ng-template #criticalAdvisories let-celldata="celldata">
+	<!-- TODO -->
+</ng-template>
+
+<ng-template #actionsTemplate let-celldata="celldata">
+	<cui-dropdown [actions]="dropdownActions"
+		position="left"
+		icon="icon-more icon-medium text-muted">
+	</cui-dropdown>
+</ng-template>
+
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter>
-	<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="pagination?.total || 0"></div>
-</ng-template>
-
-<ng-template #casesAssetsFilter>
-	<ng-container *ngTemplateOutlet="assetsWithChange; context: { assets: 17, trend: 'down', trendCount: 3 }"></ng-container>
-</ng-template>
-
-<ng-template #rmasAssetsFilter>
-	<ng-container *ngTemplateOutlet="assetsWithChange; context: { assets: 12, trend: 'up', trendCount: 2 }"></ng-container>
+	<div class="text-huge flex-center dbl-padding-left dbl-padding-right"
+		(click)="clearFilters()"
+		data-auto-id="TotalAssetsVisualFilter"
+		[innerText]="assetTotal || 0">
+	</div>
 </ng-template>
 
 <ng-template #filterBar>
-	<div class="flex-center base-padding-top">
-		<span class="text-bold text-uppercase half-padding-right"
-			[innerText]="'_Filtered_' | i18n:getSelectedFilters().length">
-		</span>
-		<span data-auto-id="clear-selected-filters" class="text-lowercase dashed-border-bottom toggle"
-			(click)="clearSelectedFilters()"
-			[innerText]=" '_ClearAll_' | i18n">
-		</span>
-		<ng-container *ngFor="let filter of getSelectedFilters()">
-			<div class="full-border base-margin-left">
-				<span class="text-lowercase base-margin-left" [innerText]="filter.key"></span>
-				<ng-container *ngIf="filter.subfilter">
-					<span class="text-lowercase" innerText=":{{ filter.subfilter }}"></span>
+	<div class="row">
+		<div class="col-md-1 flex flex-center-vertical">
+			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
+		</div>
+		<div class="col-md-10">
+			<ng-container *ngFor="let filter of selectedFilters">
+				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
+					<span class="label label--dkgray text-large"
+						(click)="onSubfilterSelect(subfilter.filter, filter)"
+						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
+						<span [innerText]="subfilter.filter"></span>
+						<span class="icon-close"></span>
+					</span>
 				</ng-container>
-				<span attr.data-auto-id="{{ filter.key }}-filter-clear" class="toggle base-margin-left icon-close half-padding-right small-padding-bottom"
-					(click)="selectFilter(filter)">
-				</span>
-			</div>
-		</ng-container>
+			</ng-container>
+		</div>
+		<div class="col-md-1 text-center text-right">
+			<a (click)="clearFilters()"
+				class="text-lowercase"
+				[innerText]="'_ClearAll_' | i18n"
+				data-auto-id="FilterBarClearAllFilters">
+			</a>
+		</div>
 	</div>
 </ng-template>
 
