@@ -28,7 +28,8 @@ import { SolutionService } from '../solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subscription, forkJoin, fromEvent, of } from 'rxjs';
-import { map, debounceTime, catchError, distinctUntilChanged } from 'rxjs/operators';
+import { map, debounceTime, catchError, distinctUntilChanged, mergeMap } from 'rxjs/operators';
+import { Router, ActivatedRoute } from '@angular/router';
 
 /**
  * Interface representing our visual filters
@@ -36,11 +37,15 @@ import { map, debounceTime, catchError, distinctUntilChanged } from 'rxjs/operat
 interface Filter {
 	key: string;
 	selected?: boolean;
-	subfilter?: string;
 	template?: TemplateRef<{ }>;
 	title: string;
 	loading: boolean;
-	seriesData?: any;
+	seriesData: {
+		filter: string,
+		label: string,
+		selected: boolean,
+		value: number,
+	}[];
 }
 
 /**
@@ -48,6 +53,7 @@ interface Filter {
  */
 interface Item {
 	selected?: boolean;
+	details?: boolean;
 	data: Asset;
 }
 
@@ -69,6 +75,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	@ViewChild('contractFilter', { static: true }) private contractFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('roleFilter', { static: true }) private roleFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('advisoryFilter', { static: true }) private advisoryFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('deviceTemplate', { static: true }) private deviceTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('supportCoverage', { static: true })
 		private supportCoverageTemplate: TemplateRef<{ }>;
@@ -99,6 +106,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public pagination: Pagination;
 	public paginationCount: string;
 	public status = {
+		inventoryLoading: true,
 		isLoading: true,
 	};
 	public assetsTable: CuiTableOptions;
@@ -115,13 +123,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public assetsDropdown = false;
 	public allAssetsSelected = false;
 	public filtered = false;
-	public assetTotal;
 
 	constructor (
 		private contractsService: ContractsService,
 		private logger: LogService,
 		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
+		private route: ActivatedRoute,
+		private router: Router,
 		private solutionService: SolutionService,
 	) { }
 
@@ -130,7 +139,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @returns the number of rows
 	 */
 	get selected (): number {
-		return _.sumBy(this.inventory, 'selected') || 0;
+		return _.sumBy(this.inventory, (item: Item) => item.selected ? 1 : 0) || 0;
 	}
 
 	/**
@@ -157,6 +166,22 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Returns the row specific actions
+	 * @param asset the asset we're building the actions for
+	 * @returns the built actions
+	 */
+	public getRowActions (asset: Asset) {
+		return _.filter([
+			_.get(asset, 'supportCovered', false) ? {
+				label: I18n.get('_OpenSupportCase_'),
+			} : undefined,
+			{
+				label: I18n.get('_Scan_'),
+			},
+		]);
+	}
+
+	/**
 	 * Returns the selected sub filters
 	 * @param key the key to match to the filter
 	 * @returns the array of filters
@@ -165,7 +190,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		const filter = _.find(this.filters, { key });
 
 		if (filter) {
-			return _.filter(filter.subfilter, 'selected');
+			return _.filter(filter.seriesData, 'selected');
 		}
 	}
 
@@ -175,7 +200,19 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public clearSelectedFilters () {
 		this.filters.forEach((f: Filter) => {
 			f.selected = false;
-			f.subfilter = undefined;
+			_.each(f.seriesData, sd => {
+				sd.selected = false;
+			});
+		});
+	}
+
+	/**
+	 * Will adjust the browsers query params to preserve the current state
+	 */
+	private adjustQueryParams () {
+		this.router.navigate([], {
+			queryParams: _.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page']),
+			relativeTo: this.route,
 		});
 	}
 
@@ -197,7 +234,21 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		item.selected = !item.selected;
 
 		this.allAssetsSelected = _.every(this.inventory, 'selected');
-		// this.solutionService.sendCurrentAsset(item.selected ? item.data : null);
+	}
+
+	/**
+	 * Function used to handle single row selection
+	 * @param item the item we selected
+	 */
+	public onRowSelect (item: Item) {
+		this.inventory.forEach((i: Item) => {
+			if (i !== item) {
+				i.details = false;
+			}
+		});
+		item.details = !item.details;
+
+		this.solutionService.sendCurrentAsset(item.details ? item.data : null);
 	}
 
 	/**
@@ -222,12 +273,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.unset(this.assetParams, filter.key);
-			_.each(filter.subfilter, f => {
+			_.each(filter.seriesData, f => {
 				f.selected = false;
 			});
 		});
 
 		totalFilter.selected = true;
+		this.adjustQueryParams();
 		this.fetchInventory()
 			.subscribe();
 	}
@@ -236,15 +288,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Adds a subfilter to the given filer
 	 * @param subfilter the subfilter selected
 	 * @param filter the filter we selected the subfilter on
+	 * @param reload if we're reloading our assets
 	 */
-	public onSubfilterSelect (subfilter: string, filter: Filter) {
-		const sub = _.find(filter.subfilter, { filter: subfilter });
+	public onSubfilterSelect (subfilter: string, filter: Filter, reload: boolean = true) {
+		const sub = _.find(filter.seriesData, { filter: subfilter });
 		if (sub) {
 			sub.selected = !sub.selected;
 		}
 
-		filter.selected = _.some(filter.subfilter, 'selected');
-		this.assetParams[filter.key] = _.map(_.filter(filter.subfilter, 'selected'), 'filter');
+		filter.selected = _.some(filter.seriesData, 'selected');
+		this.assetParams[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
 		this.assetParams.page = 1;
 
 		const totalFilter = _.find(this.filters, { key: 'total' });
@@ -254,7 +307,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		} else {
 			const total = _.reduce(this.filters, (memo, f) => {
 				if (!memo) {
-					return _.some(f.subfilter, 'selected');
+					return _.some(f.seriesData, 'selected');
 				}
 
 				return memo;
@@ -264,8 +317,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.filtered = total;
 		}
 
-		this.fetchInventory()
-			.subscribe();
+		if (reload) {
+			this.adjustQueryParams();
+			this.fetchInventory()
+				.subscribe();
+		}
 	}
 
 	/**
@@ -279,21 +335,76 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			window.activeComponents = { AssetsComponent: this, ...window.activeComponents };
 		}
 
+		this.route.queryParams.subscribe(params => {
+			if (params.contractNumber) {
+				this.assetParams.contractNumber = _.castArray(params.contractNumber);
+			}
+
+			if (params.coverage) {
+				this.assetParams.coverage = _.castArray(params.coverage);
+			}
+
+			if (params.role) {
+				this.assetParams.role = _.castArray(params.role);
+			}
+		});
+
 		this.buildFilters();
+	}
+
+	/**
+	 * Selects all the sub filters based on a list of parameters
+	 * @param params the array list of params
+	 * @param key the key to search for in the filters
+	 */
+	private selectSubFilters (params: string[], key: string) {
+		const filter = _.find(this.filters, { key });
+
+		if (filter) {
+			_.each(filter.seriesData, d => {
+				if (params.indexOf(d.filter) > -1) {
+					this.onSubfilterSelect(d.filter, filter, false);
+				}
+			});
+		}
 	}
 
 	/**
 	 * Function used to load all of the data
 	 */
 	private loadData () {
+		this.status.isLoading = true;
 		forkJoin(
 			this.getCoverageCounts(),
 			this.getContractCounts(),
 			this.getAdvisoryCount(),
 			this.getRoleCounts(),
-			this.fetchInventory(),
+			this.getInventoryCounts(),
+		)
+		.pipe(
+			mergeMap(() => {
+				if (this.assetParams.contractNumber) {
+					this.selectSubFilters(this.assetParams.contractNumber, 'contractNumber');
+				}
+
+				if (this.assetParams.role) {
+					this.selectSubFilters(this.assetParams.role, 'role');
+				}
+
+				if (this.assetParams.coverage) {
+					this.selectSubFilters(this.assetParams.coverage, 'coverage');
+				}
+
+				return this.fetchInventory();
+			}),
 		)
 		.subscribe(() => {
+			this.status.isLoading = false;
+
+			if (window.Cypress) {
+				window.loading = false;
+			}
+
 			this.logger.debug('assets.component : loadData() :: Finished Loading');
 		});
 	}
@@ -308,30 +419,35 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				key: 'total',
 				loading: true,
 				selected: true,
+				seriesData: [],
 				template: this.totalAssetsFilterTemplate,
 				title: I18n.get('_Total_'),
 			},
 			{
 				key: 'coverage',
 				loading: true,
+				seriesData: [],
 				template: this.coverageFilterTemplate,
 				title: I18n.get('_CoverageStatus_'),
 			},
 			{
 				key: 'contractNumber',
 				loading: true,
+				seriesData: [],
 				template: this.contractFilterTemplate,
 				title: I18n.get('_ContractNumber_'),
 			},
 			{
 				key: 'advisories',
 				loading: true,
+				seriesData: [],
 				template: this.advisoryFilterTemplate,
 				title: I18n.get('_Advisories_'),
 			},
 			{
 				key: 'role',
 				loading: true,
+				seriesData: [],
 				template: this.roleFilterTemplate,
 				title: I18n.get('_NetworkRole_'),
 			},
@@ -371,17 +487,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return this.contractsService.getContractCounts(this.contractCountParams)
 		.pipe(
 			map((data: ContractDeviceCountsResponse) => {
-				const seriesData = _.map(data, (d: ContractCount) => ({
-					name: d.contractNumber,
-					y: d.deviceCount,
-				}));
-
-				contractFilter.subfilter = _.map(data, (d: ContractCount) => ({
+				contractFilter.seriesData = _.map(data, (d: ContractCount) => ({
 					filter: d.contractNumber,
+					label: _.capitalize(d.contractNumber),
 					selected: false,
+					value: d.deviceCount,
 				}));
 
-				contractFilter.seriesData = seriesData;
 				contractFilter.loading = false;
 			}),
 			catchError(err => {
@@ -404,21 +516,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return this.contractsService.getCoverageCounts({ customerId })
 		.pipe(
 			map((data: CoverageCountsResponse) => {
-				const seriesData = _.compact(_.map(data, (value: number, key: string) => {
+				coverageFilter.seriesData = _.compact(_.map(data, (value: number, key: string) => {
 					if (value !== 0) {
 						return {
-							name: key,
-							y: value,
+							value,
+							filter: key,
+							label: _.capitalize(key),
+							selected: false,
 						};
 					}
 				}));
-
-				coverageFilter.subfilter = _.map(_.keys(data), key => ({
-					filter: key,
-					selected: false,
-				}));
-
-				coverageFilter.seriesData = seriesData;
 				coverageFilter.loading = false;
 			}),
 			catchError(err => {
@@ -450,7 +557,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						filter: 'bugs',
 						label: I18n.get('_Bugs_'),
 						selected: false,
-						y: bugs,
+						value: bugs,
 					});
 				}
 
@@ -461,7 +568,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						filter: 'field-notices',
 						label: I18n.get('_FieldNotices_'),
 						selected: false,
-						y: notices,
+						value: notices,
 					});
 				}
 
@@ -472,11 +579,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						filter: 'security-advisories',
 						label: I18n.get('_SecurityAdvisories_'),
 						selected: false,
-						y: security,
+						value: security,
 					});
 				}
 
-				advisoryFilter.subfilter = series;
 				advisoryFilter.seriesData = series;
 				advisoryFilter.loading = false;
 			}),
@@ -500,23 +606,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return this.inventoryService.getRoleCount({ customerId })
 		.pipe(
 			map((data: RoleCountResponse) => {
-				const series = _.map(data, (d: RoleCount) => ({
-					data: [
-						{
-							name: d.role,
-							value: d.deviceCount,
-						},
-					],
-					name: d.role,
-					type: undefined,
-				}));
-
-				roleFilter.subfilter = _.map(data, (d: RoleCount) => ({
+				roleFilter.seriesData = _.map(data, (d: RoleCount) => ({
 					filter: d.role,
+					label: _.capitalize(d.role),
 					selected: false,
+					value: d.deviceCount,
 				}));
-
-				roleFilter.seriesData = series;
 				roleFilter.loading = false;
 			}),
 			catchError(err => {
@@ -538,22 +633,22 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				bordered: true,
 				columns: [
 					{
-						key: 'deviceName',
 						name: I18n.get('_Device_'),
 						sortable: false,
 						sortDirection: 'asc',
-						value: 'hostName',
+						template: this.deviceTemplate,
+					},
+					{
+						key: 'serialNumber',
+						name: I18n.get('_SerialNumber_'),
+						sortable: false,
+						value: 'serialNumber',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_IPAddress_'),
 						sortable: false,
 						value: 'ipAddress',
-					},
-					{
-						name: I18n.get('_LastScan_'),
-						render: item => item.lastScan ? item.lastScan : I18n.get('_Never_'),
-						sortable: false,
 					},
 					{
 						name: I18n.get('_CriticalAdvisories_'),
@@ -564,12 +659,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						name: I18n.get('_SupportCoverage_'),
 						sortable: false,
 						template: this.supportCoverageTemplate,
-					},
-					{
-						key: 'serialNumber',
-						name: I18n.get('_SerialNumber_'),
-						sortable: false,
-						value: 'serialNumber',
 					},
 					{
 						key: 'osType',
@@ -584,12 +673,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						value: 'osVersion',
 					},
 					{
+						name: I18n.get('_LastScan_'),
+						render: item => item.lastScan ? item.lastScan : I18n.get('_Never_'),
+						sortable: false,
+					},
+					{
 						key: 'role',
 						name: I18n.get('_Role_'),
 						sortable: false,
 						value: 'role',
 					},
 					{
+						click: true,
 						sortable: false,
 						template: this.actionsTemplate,
 					},
@@ -611,11 +706,41 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Fetches the count of the inventory
+	 * @returns the inventory count
+	 */
+	private getInventoryCounts () {
+		const totalFilter = _.find(this.filters, { key: 'total' });
+
+		const params = _.assignIn(
+			_.pick(
+				_.cloneDeep(this.assetParams), ['customerId', 'page']), { rows: 1 });
+
+		return this.inventoryService.getAssets(params)
+		.pipe(
+			map((results: Assets) => {
+				totalFilter.seriesData = [{
+					value: _.get(results, ['Pagination', 'total'], 0),
+				}];
+
+				totalFilter.loading = false;
+			}),
+			catchError(err => {
+				this.logger.error('assets.component : fetchInventoryCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				totalFilter.loading = false;
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
 	 * Fetches the users inventory
 	 * @returns the inventory
 	 */
 	private fetchInventory () {
-		this.status.isLoading = true;
+		this.status.inventoryLoading = true;
 		this.inventory = [];
 
 		const assetParams = _.omit(_.cloneDeep(this.assetParams), ['advisories']);
@@ -626,22 +751,17 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		const totalFilter = _.find(this.filters, { key: 'total' });
-
 		return this.inventoryService.getAssets(assetParams)
 			.pipe(
 				map((results: Assets) => {
 					results.data.forEach((a: Asset) => {
 						this.inventory.push({
 							data: a,
+							details: false,
 							selected: false,
 						});
 					});
 					this.pagination = results.Pagination;
-
-					if (!this.assetTotal) {
-						this.assetTotal = this.pagination.total;
-					}
 
 					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
 					let last = (this.pagination.rows * this.pagination.page);
@@ -654,22 +774,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 					this.buildTable();
 
-					this.status.isLoading = false;
-					totalFilter.loading = false;
-
-					if (window.Cypress) {
-						window.loading = false;
-					}
+					this.status.inventoryLoading = false;
 				}),
 				catchError(err => {
 					this.logger.error('assets.component : fetchInventory() ' +
 						`:: Error : (${err.status}) ${err.message}`);
-					this.status.isLoading = false;
-					totalFilter.loading = false;
-
-					if (window.Cypress) {
-						window.loading = false;
-					}
+					this.status.inventoryLoading = false;
 
 					return of({ });
 				}),

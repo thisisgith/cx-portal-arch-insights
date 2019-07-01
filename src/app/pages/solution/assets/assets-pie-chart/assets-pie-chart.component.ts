@@ -36,6 +36,11 @@ export class AssetsPieChartComponent implements OnInit {
 	 * Initializes the pie chart
 	 */
 	private buildGraph () {
+		const data = _.map(this.seriesData, d => ({
+			name: d.label,
+			y: d.value,
+		}));
+
 		this.chart = new Chart({
 			chart: {
 				events: {
@@ -84,8 +89,8 @@ export class AssetsPieChartComponent implements OnInit {
 				},
 			},
 			series: [{
+				data,
 				colorByPoint: true,
-				data: this.seriesData,
 				name: '',
 				type: undefined,
 			}],
@@ -101,7 +106,9 @@ export class AssetsPieChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-		this.subfilter.emit(event.point.name);
+
+		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
+		this.subfilter.emit(filterName);
 	}
 
 	/**

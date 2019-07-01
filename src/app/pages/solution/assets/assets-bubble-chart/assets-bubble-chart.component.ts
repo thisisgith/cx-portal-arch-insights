@@ -36,7 +36,19 @@ export class AssetsBubbleChartComponent implements OnInit {
 	 * Builds our bubble graph
 	 */
 	private buildGraph () {
+		const series = _.map(this.seriesData, d => ({
+			data: [
+				{
+					name: d.label,
+					value: d.value,
+				},
+			],
+			name: d.label,
+			type: undefined,
+		}));
+
 		this.chart = new Chart({
+			series,
 			chart: {
 				events: {
 					load: () => {
@@ -76,6 +88,7 @@ export class AssetsBubbleChartComponent implements OnInit {
 						textPath: undefined,
 					},
 					layoutAlgorithm: {
+						enableSimulation: false,
 						gravitationalConstant: 0.02,
 					},
 					maxSize: '120%',
@@ -90,7 +103,6 @@ export class AssetsBubbleChartComponent implements OnInit {
 					showInLegend: false,
 				},
 			},
-			series: this.seriesData,
 			title: {
 				text: null,
 			},
@@ -103,7 +115,9 @@ export class AssetsBubbleChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-		this.subfilter.emit(event.point.name);
+
+		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
+		this.subfilter.emit(filterName);
 	}
 
 	/**
