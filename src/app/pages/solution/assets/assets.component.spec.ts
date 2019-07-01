@@ -1,18 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
 
 import { AssetsComponent } from './assets.component';
 import { AssetsModule } from './assets.module';
 import { HttpClientModule } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
-import { InventoryService } from '@cui-x/sdp-api';
 import { environment } from '@environment';
 import * as _ from 'lodash-es';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AssetsComponent', () => {
 	let component: AssetsComponent;
 	let fixture: ComponentFixture<AssetsComponent>;
-	let inventoryService: InventoryService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -20,6 +18,7 @@ describe('AssetsComponent', () => {
 				AssetsModule,
 				HttpClientModule,
 				MicroMockModule,
+				RouterTestingModule,
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
@@ -31,7 +30,6 @@ describe('AssetsComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AssetsComponent);
 		component = fixture.componentInstance;
-		inventoryService = TestBed.get(InventoryService);
 		fixture.detectChanges();
 	});
 
@@ -79,7 +77,7 @@ describe('AssetsComponent', () => {
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(coverageFilter);
 
-			const subfilter = _.find(coverageFilter.subfilter, { filter: 'covered' });
+			const subfilter = _.find(coverageFilter.seriesData, { filter: 'covered' });
 
 			expect(subfilter.selected)
 				.toBeTruthy();
@@ -103,7 +101,7 @@ describe('AssetsComponent', () => {
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(coverageFilter);
 
-			let subfilter = _.find(coverageFilter.subfilter, { filter: 'covered' });
+			let subfilter = _.find(coverageFilter.seriesData, { filter: 'covered' });
 
 			expect(subfilter.selected)
 				.toBeTruthy();
@@ -112,7 +110,7 @@ describe('AssetsComponent', () => {
 
 			fixture.detectChanges();
 
-			subfilter = _.find(coverageFilter.subfilter, { filter: 'covered' });
+			subfilter = _.find(coverageFilter.seriesData, { filter: 'covered' });
 
 			expect(subfilter.selected)
 				.toBeFalsy();
@@ -121,7 +119,7 @@ describe('AssetsComponent', () => {
 		});
 	});
 
-	it('should set a loading boolean for Cypress runs', () => {
+	it('should set a loading boolean for Cypress runs', done => {
 		expect(window.loading)
 			.toBeUndefined();
 		window.Cypress = true;
@@ -130,15 +128,18 @@ describe('AssetsComponent', () => {
 		expect(window.loading)
 			.toBe(true);
 
-		spyOn(inventoryService, 'getAssets')
-			.and
-			.returnValue(of({ data: [] }));
 		component.ngOnInit();
-		expect(window.loading)
-			.toBe(false);
 
-		// cleanup
-		window.Cypress = undefined;
-		window.loading = undefined;
+		fixture.whenStable()
+		.then(() => {
+			expect(window.loading)
+				.toBe(false);
+
+				// cleanup
+			window.Cypress = undefined;
+			window.loading = undefined;
+
+			done();
+		});
 	});
 });

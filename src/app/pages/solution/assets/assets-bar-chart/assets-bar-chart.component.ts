@@ -41,11 +41,12 @@ export class AssetsBarChartComponent implements OnInit {
 		_.each(this.seriesData, d => {
 			data.push({
 				name: d.label,
-				y: d.y,
+				y: d.value,
 			});
 
 			categories.push(d.label);
 		});
+
 		this.chart = new Chart({
 			chart: {
 				height: 100,
