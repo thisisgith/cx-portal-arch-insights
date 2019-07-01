@@ -1,6 +1,5 @@
 import MockService from '../support/mockService';
 
-// const searchMock = new MockService('SearchScenarios');
 // const rmaMock = new MockService('RMAResponse');
 // import { mockSettings } from '../../src/environments/mock/mock';
 
