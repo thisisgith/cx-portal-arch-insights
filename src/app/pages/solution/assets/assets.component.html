@@ -216,11 +216,11 @@
 	<div class="card curved-corners flex-fluid" [ngClass]="{ 'selected': item.selected }" (click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
-				<a class="text-large" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
+				<a data-auto-id="InventoryItem-{{ item.data?.deviceName}}" class="text-large" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
 			</div>
 			<div class="flex-center dbl-margin-top dbl-margin-bottom">
 				<!-- ngIf's using literal values until source of image is confirmed -->
-				<img *ngIf="false" [src]="" [alt]=""/>
+				<img *ngIf="false" [src]="" alt=""/>
 				<span *ngIf="true" class="col-md-6 text-muted center-xs text-uppercase text-wrap-normal" [innerText]="'_NoPhotoAvailable_' | i18n"></span>
 			</div>
 		</div>
