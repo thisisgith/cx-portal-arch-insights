@@ -12,6 +12,7 @@
     "deploy:stgi": "npx ngdeploy stgi -vn --source='src' --gzip --ng-build=\"-c stageInternal --aot\"",
     "deploy:stage": "npx ngdeploy stage -vn --source='src' --gzip --ng-build=\"--aot\"",
     "deploy:prod": "npx ngdeploy prod -vn --source='src' --gzip --ng-build=\"--aot\"",
+    "deploy:tie": "npx ngdeploy tie -vn --source='src' --gzip --ng-build=\"-c tie --aot\"",
     "start:docs": "npx compodoc -s",
     "postinstall": "cp node_modules/@apollo/linting/HTML/defaults.json .htmlhintrc",
     "build": "ng build",
