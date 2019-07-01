@@ -20,7 +20,7 @@ const allCertificationsItems = [];
 const allRemoteItems = [];
 elearningItems.forEach(scenario => {
 	switch (scenario.type) {
-		case 'E-Course':
+		case 'E-Courses':
 			allELearningItems.push(scenario);
 			break;
 		case 'Cisco Training on Demand Courses':
@@ -70,7 +70,7 @@ describe('Learn Panel', () => {
 			let trainingFound = false;
 			elearningItems.forEach(scenario => {
 				switch (scenario.type) {
-					case 'E-Course':
+					case 'E-Courses':
 						elearningFound = true;
 						break;
 					case 'Cisco Training on Demand Courses':
@@ -255,6 +255,31 @@ describe('Learn Panel', () => {
 			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
 			cy.getByAutoId('_ELearning_-ViewAll').should('have.attr', 'href', 'https://pilot-digital-learning.cisco.com/cx#/')
 				.and('have.attr', 'target', '_blank');	// target: _blank indicates we'll open in a new tab
+		});
+	});
+
+	describe('PBC-133: Learn: Hover-over to show more content about the module', () => {
+		visibleELearningItems.forEach(elearningItem => {
+			it(`Should have hover modal on E-Learning links: ${elearningItem.title}`, () => {
+				// NOTE: Cypress can not trigger elements with :hover css property, so we'll just check
+				// that the hover modal and it's elements exist in the DOM. See below for reference:
+				// https://docs.cypress.io/api/commands/hover.html#Workarounds
+				// https://github.com/cypress-io/cypress/issues/10
+				cy.get(`a[href="${elearningItem.url}"]`).parent()
+					.should('contain', elearningItem.title)
+					.within(() => {
+						cy.getByAutoId('learningHoverModal-Title').should('contain', elearningItem.title);
+						cy.getByAutoId('learningHoverModal-Description').should('contain', elearningItem.description);
+						cy.getByAutoId('learningHoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(elearningItem.rating).toString());
+						// Duration/clock are only displayed if duration is set
+						if (elearningItem.duration) {
+							cy.getByAutoId('learningHoverModal-DurationClock').should('exist');
+							cy.getByAutoId('learningHoverModal-Duration').should('contain', elearningItem.duration);
+						} else {
+							cy.getByAutoId('learningHoverModal-DurationClock').should('not.exist');
+						}
+					});
+			});
 		});
 	});
 
