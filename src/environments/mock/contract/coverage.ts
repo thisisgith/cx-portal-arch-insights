@@ -46,6 +46,15 @@ export const CoverageScenarios = [
 						body: mockCoverageCounts,
 						status: 200,
 					},
+					selected: false,
+				},
+				{
+					delay: 500,
+					description: 'Coverage 500 Failure',
+					response: {
+						status: 500,
+						statusText: 'Internal Server Error',
+					},
 					selected: true,
 				},
 			],

@@ -232,6 +232,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private fetchCoverageCount () {
 		this.contractsService.getCoverageCounts({ customerId })
 		.subscribe((counts: CoverageCountsResponse) => {
+			console.log('Here');
 			const covered = _.get(counts, 'covered', 0);
 			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
