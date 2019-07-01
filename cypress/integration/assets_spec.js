@@ -95,13 +95,13 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Supports selecting one or more assets in the list', () => {
-			cy.get('tbody > tr').eq(0).click() // click row
-				.should('have.class', 'active');
-			cy.getByAutoId(`InventoryItemCheckbox-${assets[1].serialNumber}`).click(); // click checkbox
-			cy.get('tbody > tr').eq(2).should('not.have.class', 'active');
+			cy.getByAutoId(`InventoryItemCheckbox-${assets[0].serialNumber}`).click();
+			cy.getByAutoId(`InventoryItemCheckbox-${assets[1].serialNumber}`).click();
+			cy.getByAutoId(`InventoryItemSelect-${assets[0].serialNumber}`).should('be.checked');
+			cy.getByAutoId(`InventoryItemSelect-${assets[1].serialNumber}`).should('be.checked');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '2 Selected');
-			cy.get('tbody > tr').eq(0).click()
-				.should('not.have.class', 'active');
+			cy.getByAutoId(`InventoryItemCheckbox-${assets[0].serialNumber}`).click();
+			cy.getByAutoId(`InventoryItemSelect-${assets[0].serialNumber}`).should('not.be.checked');
 			cy.getByAutoId('AllAssetSelectCheckbox').click();
 			cy.getByAutoId('TotalSelectedCount').should('have.text', `${assets.length} Selected`);
 			cy.getByAutoId('AllAssetSelectCheckbox').click();
@@ -112,12 +112,14 @@ describe('Assets', () => { // PBC-41
 			assetMock.disable('Assets Page 1');
 			assetMock.enable('(Assets) Unreachable API');
 
-			cy.refreshComponent('AssetsComponent');
+			cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
+			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
 
 			assetMock.disable('(Assets) Unreachable API');
 			assetMock.enable('Assets Page 1');
-			cy.refreshComponent('AssetsComponent');
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.waitForAppLoading();
 		});
 
@@ -127,34 +129,35 @@ describe('Assets', () => { // PBC-41
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
-			// TODO: Add auto-ids to cui-pager
-			cy.get('.cui-pager-page').eq(1).click();
+			cy.getByAutoId('CUIPager-Page2').click();
 			cy.wait('@assets').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
 				expect(params.get('page')).to.eq('2');
 			});
-			cy.get('cui-pager li').last().click();
+			cy.getByAutoId('CUIPager-NextPage').click();
 			cy.wait('@assets').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
 				expect(params.get('page')).to.eq('3');
 			});
-			cy.get('cui-pager li').first().click();
+			cy.getByAutoId('CUIPager-PrevPage').click();
 			cy.wait('@assets').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
 				expect(params.get('page')).to.eq('2');
 			});
 
-			cy.get('.cui-pager-page').eq(0).click();
+			cy.getByAutoId('CUIPager-Page1').click();
 			assetMock.enable(['Assets Page 1', 'Assets Page 2', 'Assets Page 3', 'Assets Page 4']);
 		});
 
 		it('Filters asset list with all visual filters', () => {
 			const { contractNumber, role } = assets[0];
-			cy.getByAutoId('coveredPoint').click();
+			cy.getByAutoId('CoveredPoint').click();
 			cy.getByAutoId('FilterTag-covered').should('be.visible');
 			cy.getByAutoId(`${contractNumber}Point`).click();
 			cy.getByAutoId(`FilterTag-${contractNumber}`).should('be.visible');
-			cy.getByAutoId(`${role}Point`).click({ force: true });
+			// cy.getByAutoId(`${Cypress._.capitalize(role)}Point`).click({ force: true });
+			cy.getByAutoId(`${Cypress._.capitalize(role.toLowerCase())}Point`)
+				.click({ force: true });
 			cy.getByAutoId(`FilterTag-${role}`).should('be.visible');
 			// TODO: Field notice/security advisory filter (CSCvq32046)
 			cy.getByAutoId(`FilterTag-${contractNumber}`).click().should('not.exist');
@@ -172,8 +175,8 @@ describe('Assets', () => { // PBC-41
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
-			cy.getByAutoId('coveredPoint').click().wait('@assets');
-			cy.getByAutoId('uncoveredPoint').click({ force: true }).wait('@assets');
+			cy.getByAutoId('CoveredPoint').click().wait('@assets');
+			cy.getByAutoId('UncoveredPoint').click({ force: true }).wait('@assets');
 			cy.getByAutoId(`${assets[0].contractNumber}Point`).click();
 			cy.wait('@assets').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
@@ -188,7 +191,7 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Visual filters can be collapsed/expanded', () => {
-			cy.getByAutoId('coveredPoint').click();
+			cy.getByAutoId('CoveredPoint').click();
 			cy.getByAutoId('VisualFilterCollapse').click();
 			cy.getByAutoId('FilterTag-covered').should('be.visible');
 			cy.getByAutoId('AssetsSelectVisualFilter-total').should('not.be.visible');

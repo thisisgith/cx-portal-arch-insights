@@ -257,8 +257,12 @@
 
 <ng-template #deviceTemplate let-celldata="celldata">
 	<!-- TODO: Need specific icons for different device types -->
-	<span class="icon-4-way-nav qtr-margin-right"></span>
-	<span [innerText]="celldata.deviceName"></span>
+	<span class="icon-4-way-nav qtr-margin-right"
+		attr.data-auto-id="DeviceIcon-{{celldata.serialNumber}}">
+	</span>
+	<span [innerText]="celldata.deviceName"
+		attr.data-auto-id="Device-{{celldata.serialNumber}}">
+	</span>
 </ng-template>
 
 <ng-template #actionsTemplate let-celldata="celldata">

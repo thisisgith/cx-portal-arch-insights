@@ -332,7 +332,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public ngOnInit () {
 		if (window.Cypress) {
 			window.loading = true;
-			window.activeComponents = { AssetsComponent: this, ...window.activeComponents };
 		}
 
 		this.route.queryParams.subscribe(params => {
