@@ -31,13 +31,15 @@ describe('RMA Spec', () => {
 				.type(rmaVal.concat('{enter}'));
 			cy.wait(4000);
 			cy.get('app-rma-search').should('contain', 'RMA: '.concat(rmaVal));
-			// cy.get('table').should('contain', 'STATUS');
 			cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
 			cy.get('app-rma-search table th').eq(1).should('have.text', 'Case Number');
 			cy.get('app-rma-search table th').eq(2).should('have.text', 'Carrier Tracking Number');
 			cy.get('app-rma-search table th').eq(3).should('have.text', 'Contract Number');
-			cy.get('app-rma-search table th').eq(4).should('have.text', 'Replacement Product');
-			// TODO confirm replacement product contains one product string
+			// Confirm replacement product contains one product string
+			cy.get('app-rma-search table').within(() => {
+				cy.get('th').eq(4).should('have.text', 'Replacement Product');
+				cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 0');
+			});
 			cy.get('app-rma-search table th').eq(5).should('have.text', 'Replacement Product ID');
 			// TODO  uncommend the following to test the click
 			// cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
@@ -64,9 +66,14 @@ describe('RMA Spec', () => {
 			cy.get('app-rma-search table th').eq(1).should('have.text', 'Case Number');
 			cy.get('app-rma-search table th').eq(2).should('have.text', 'Carrier Tracking Number');
 			cy.get('app-rma-search table th').eq(3).should('have.text', 'Contract Number');
-			cy.get('app-rma-search table th').eq(4).should('have.text', 'Replacement Product');
-			// TODO confirm replacement product contains four product strings
-			// cy.get('app-rma-search table th').eq(5).should('have.text', 'Replacement Product ID');
+			// Confirm replacement product contains four product string
+			cy.get('app-rma-search table').within(() => {
+				cy.get('th').eq(4).should('have.text', 'Replacement Product');
+				cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 0');
+				cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 1');
+				cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 2');
+				cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 3');
+			});
 			// TODO  uncommend the following to test the click
 			// cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
 			cy.get('h5').should('contain', 'Related to this Product');
@@ -97,9 +104,11 @@ describe('RMA Spec', () => {
 			cy.get('app-rma-search table th').eq(1).should('have.text', 'Case Number');
 			cy.get('app-rma-search table th').eq(2).should('have.text', 'Carrier Tracking Number');
 			cy.get('app-rma-search table th').eq(3).should('have.text', 'Contract Number');
-			cy.get('app-rma-search table th').eq(4).should('have.text', 'Replacement Product');
-			// cy.get('app-rma-search table th td').eq(4).should('have.text', 'N/A');
-			// TODO confirm replacement product contains "N/A"
+			// Confirm replacement product contains N/A product string
+			cy.get('app-rma-search table').within(() => {
+				cy.get('th').eq(4).should('have.text', 'Replacement Product');
+				cy.get('td').should('contain', 'N/A');
+			});
 			cy.get('app-rma-search table th').eq(5).should('have.text', 'Replacement Product ID');
 			// TODO  uncommend the following to test the click
 			// cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
@@ -110,7 +119,6 @@ describe('RMA Spec', () => {
 				win.mockService.enable('RMA with four replacement parts');
 				cy.getByAutoId('Facet-Assets & Coverage').should('exist').click();
 			});
-
 		});
 		it('RMA 800000009', () => {
 			const inputVal = '800000009';
