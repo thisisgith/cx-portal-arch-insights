@@ -160,14 +160,14 @@
 
 <ng-template #recommendedDescription let-title="title" let-item="item" let-description="description" let-autoid="autoid">
 	<div id="hover-panel-{{ autoid }}" class="panel panel--bordered">
-		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title"></h6>
+		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-Title"></h6>
 		<div class="divider divider--compressed"></div>
 		<div *ngIf="item && item.fixedRating" class="half-margin-left half-margin-bottom">
-			<cui-rating [rating]="item.fixedRating" [alt]="true" [noClick]="true" [size]="small"></cui-rating>
+			<cui-rating [rating]="item.fixedRating" [alt]="true" [noClick]="true" [size]="small" attr.data-auto-id="{{ autoid }}-Rating"></cui-rating>
 		</div>
-		<div class="half-margin-left" [innerText]="description"></div>
-		<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left">
-			<span class="icon-clock icon-small"></span>
+		<div class="half-margin-left" [innerText]="description" attr.data-auto-id="{{ autoid }}-Description"></div>
+		<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-Duration">
+			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-DurationClock"></span>
 			<span [innerText]="item.duration"></span>
 		</div>
 	</div>
@@ -356,7 +356,7 @@
 					title: item.title,
 					description: item.description,
 					item: item,
-					autoid: 'learningModalTitle'
+					autoid: 'learningHoverModal'
 				}">
 				</ng-container>
 			</div>
