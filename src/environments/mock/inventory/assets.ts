@@ -436,6 +436,7 @@ function MockAssets (
 			data,
 			i => _.indexOf(supportCovered, i.supportCovered) >= 0);
 	}
+
 	const total = data.length;
 	const pages = Math.ceil(data.length / rows);
 
