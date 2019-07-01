@@ -26,7 +26,7 @@
     "generate:sdp:product-alerts": "cd projects/sdp-api && ng-swagger-gen --config ./swagger/ng-gen/ProductAlerts.json",
     "generate:sdp:racetrack-info": "cd projects/sdp-api && ng-swagger-gen --config ./swagger/ng-gen/RacetrackInfo.json",
     "generate:sdp:search": "cd projects/sdp-api && ng-swagger-gen --config ./swagger/ng-gen/Search.json",
-    "generate:sdp:solution-based-racetrack-view": "cd projects/sdp-api && ng-swagger-gen --config ./swagger/ng-gen/SolutionBasedRacetrackView.json",
+    "generate:sdp:solution-based-racetrack-view": "cd projects/sdp-api && ng-swagger-gen --config ./swagger/ng-gen/SolutionBasedTracetrackView.json",
     "test": "ng test --source-map=true --code-coverage",
     "test:ci": "npm run test -- --watch=false --browsers=ChromeHeadless",
     "test:automation": "cypress run --config screenshotOnRunFailure=false,video=false",
