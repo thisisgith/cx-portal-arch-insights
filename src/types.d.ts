@@ -21,6 +21,9 @@ interface Window {
 	loading: boolean;
 	elearningLoading: boolean;
 	successPathsLoading: boolean;
+	atxLoading: boolean;
+	accLoading: boolean;
+	communitiesLoading: boolean;
 	carMoving: boolean;
 	progressMoving: boolean;
 }

@@ -12,6 +12,9 @@ describe('Communities (Communities)', () => { // Jira: PBC-tbd
 		cy.login();
 		cy.loadApp();
 		cy.waitForAppLoading();
+
+		// Wait for the Communities panel to finish loading
+		cy.waitForAppLoading('communitiesLoading', 15000);
 	});
 
 	it('Renders Communities tile', () => {
