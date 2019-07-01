@@ -8,7 +8,8 @@
 		<cui-tab [label]="'_Licensing_' | i18n | uppercase" disabled="true"></cui-tab>
 		<ng-template cuiTabPost>
 			<div class="text-right">
-				<div (click)="filterCollapse = !filterCollapse"
+				<div *ngIf="!status.isLoading"
+					(click)="filterCollapse = !filterCollapse"
 					data-auto-id="VisualFilterCollapse">
 					<span class="icon-filter icon-medium text-muted qtr-margin-right toggle"></span>
 					<span class="text-large text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
@@ -27,39 +28,41 @@
 <!-- Templates for our Tabs -->
 <ng-template #assetsContent>
 	<div class="flex flex-fill flex-fluid"
-		*ngIf="!filterCollapse">
+		*ngIf="!filterCollapse && !status.isLoading">
 		<!-- <div class="flex-center">
 			<span class="icon-chevron-left icon-medium text-muted toggle"></span>
 		</div> -->
-		<div *ngFor="let filter of filters; index as i"
-			attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
-			attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}"
-			[ngClass]="{
-				'filter__selected': filter.selected,
-				'filter__not-selected': !filter.selected
-			}"
-			class="panel flex-center flex-fill filter">
-			<div *ngIf="!filter.loading" class="base-margin-bottom">
-				<div *ngIf="filter.template">
-					<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
+		<ng-container *ngFor="let filter of filters; index as i">
+			<div *ngIf="!filter.loading && filter.seriesData.length"
+				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
+				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}"
+				[ngClass]="{
+					'filter__selected': filter.selected,
+					'filter__not-selected': !filter.selected
+				}"
+				class="panel flex-center flex-fill filter">
+				<div class="base-margin-bottom">
+					<div *ngIf="filter.template">
+						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
+					</div>
 				</div>
+				<div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
 			</div>
 			<div *ngIf="filter.loading" class="base-margin-bottom">
 				<cui-spinner></cui-spinner>
 			</div>
-			<div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
-		</div>
+		</ng-container>
 		<!-- <div class="flex-center">
 			<span class="icon-chevron-right icon-medium text-muted toggle"></span>
 		</div> -->
 	</div>
-	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!filterCollapse"></div>
+	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!filterCollapse && !status.isLoading"></div>
 	<ng-container *ngIf="filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div>
-		<div *ngIf="inventory.length && !status.isLoading">
+		<div *ngIf="inventory.length && !status.inventoryLoading">
 			<div class="row">
 				<div class="col-md-9 flex flex-fill">
 					<div class="flex-center-vertical">
@@ -123,10 +126,10 @@
 				</cui-pager>
 			</div>
 		</div>
-		<div *ngIf="status.isLoading">
+		<div *ngIf="status.inventoryLoading">
 			<cui-spinner></cui-spinner>
 		</div>
-		<div *ngIf="!inventory.length && !status.isLoading">
+		<div *ngIf="!inventory.length && !status.inventoryLoading">
 			<div class="text-center dbl-margin-top dbl-margin-bottom">
 				<div>
 					<span class="text-muted text-xlarge" [innerText]="'_NoResultsFound_' | i18n"></span>
@@ -145,7 +148,7 @@
 
 <ng-template #tableAssets>
 	<div class="responsive-table" *ngIf="assetsTable && inventory.length">
-		<table class="table table--selectable table--compressed table--lined table--hover">
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
 				<thead>
 					<tr>
 						<th>
@@ -173,9 +176,10 @@
 				<tbody>
 					<tr *ngFor="let item of inventory"
 						attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
-						(click)="onItemSelect(item)"
-						[ngClass]="{ 'active': item.selected }">
-						<td>
+						(click)="onRowSelect(item)"
+						[ngClass]="{ 'active': item.details }">
+						<td (click)="$event.stopPropagation();"
+							attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}">
 							<label class="checkbox">
 								<input type="checkbox"
 									[checked]="item.selected"
@@ -184,7 +188,9 @@
 								<span class="checkbox__input"></span>
 							</label>
 						</td>
-						<td *ngFor="let column of assetsTable.columns">
+						<td *ngFor="let column of assetsTable.columns"
+							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
+							(click)="column.click ? $event.stopPropagation() : null">
 							<ng-container *ngIf="column.template">
 								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data }"></ng-container>
 							</ng-container>
@@ -237,19 +243,25 @@
 	<!-- TODO -->
 </ng-template>
 
+<ng-template #deviceTemplate let-celldata="celldata">
+	<!-- TODO: Need specific icons for different device types -->
+	<span class="icon-4-way-nav qtr-margin-right"></span>
+	<span [innerText]="celldata.deviceName"></span>
+</ng-template>
+
 <ng-template #actionsTemplate let-celldata="celldata">
-	<cui-dropdown [actions]="dropdownActions"
+	<cui-dropdown [actions]="getRowActions(celldata)"
 		position="left"
 		icon="icon-more icon-medium text-muted">
 	</cui-dropdown>
 </ng-template>
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
-<ng-template #totalAssetsFilter>
+<ng-template #totalAssetsFilter let-filter="filter">
 	<div class="text-huge flex-center dbl-padding-left dbl-padding-right"
 		(click)="clearFilters()"
 		data-auto-id="TotalAssetsVisualFilter"
-		[innerText]="assetTotal || 0">
+		[innerText]="filter.seriesData[0].value || 0">
 	</div>
 </ng-template>
 
@@ -264,7 +276,7 @@
 					<span class="label label--dkgray text-large"
 						(click)="onSubfilterSelect(subfilter.filter, filter)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
-						<span [innerText]="subfilter.filter"></span>
+						<span [innerText]="subfilter.label"></span>
 						<span class="icon-close"></span>
 					</span>
 				</ng-container>

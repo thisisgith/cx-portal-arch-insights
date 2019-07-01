@@ -54,7 +54,7 @@ describe('Assets', () => { // PBC-41
 			const total = Cypress._.reduce(coverageElements, (memo, value) => memo + value);
 			const coverage = Math.floor((coverageElements.covered / total) * 100);
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', `${coverage}%`)
-				.and('contain', 'Assets & Coverage');
+				.and('contain', 'ASSETS & COVERAGE');
 		});
 
 		it.skip('Gracefully handles invalid responses from the API', () => {
