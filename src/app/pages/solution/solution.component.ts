@@ -32,6 +32,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 interface Facet {
 	data?: any;
 	key: string;
+	label?: string;
 	route: string;
 	selected?: boolean;
 	template: TemplateRef<{ }>;
@@ -146,12 +147,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.facets = [
 			{
 				key: 'lifecycle',
+				label: I18n.get('_AdoptionProgress_'),
 				route: '/solution/lifecycle',
 				template: this.lifecycleTemplate,
 				title: I18n.get('_Lifecycle_'),
 			},
 			{
 				key: 'assets',
+				label: I18n.get('_SupportCoverage_'),
 				route: '/solution/assets',
 				template: this.assetsTemplate,
 				title: I18n.get('_Assets&Coverage_'),

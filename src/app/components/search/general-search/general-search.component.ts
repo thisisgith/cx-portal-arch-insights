@@ -64,7 +64,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public searchToken: string;
 
-	/** The actual search results used in the template
+	/**
+	 * The actual search results used in the template
 	 * Important properties picked out of the CDCSearchResponse
 	 */
 	public searchResults: {
@@ -157,10 +158,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			}
 			this.results.emit(this.searchResults);
 			this.totalCount = _.get(result, 'totalHits', 0);
-			// Only change filter options when the query changes
-			if (refreshType === 'query') {
-				this.populateFilters(result);
-			}
+			this.populateFilters(result);
 		});
 		/** Refresh "related" results subsection subscription */
 		this.refresh$.pipe(
@@ -378,6 +376,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		}
 		if (type && type.filter) {
 			filter = `${filter}${filter ? ',' : ''}${type.filter}`;
+			this.logger.debug(JSON.stringify(type));
 		}
 
 		return { filters: filter };

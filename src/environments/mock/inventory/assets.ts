@@ -410,25 +410,44 @@ export const mockResponse: Asset[] = [
  * Function to generate the mock Assets Response
  * @param rows the rows to return
  * @param page the page to return
- * @param supportCovered array of values for support coverage
+ * @param contractNumber the contractNumber to filter on
+ * @param supportCovered the values to filter coverage
  * @returns the assets response
  */
 function MockAssets (
 	rows: number,
 	page: number,
-	supportCovered: boolean[] = [true, false]): Assets {
-	const data = _.filter(
-		_.cloneDeep(mockResponse),
-		i => _.indexOf(supportCovered, i.supportCovered) >= 0)
-		.slice((rows * (page - 1)), (rows * page));
+	contractNumber?: string[],
+	supportCovered?: boolean[]): Assets {
+	let data = _.cloneDeep(mockResponse);
+
+	if (contractNumber) {
+		const filtered = [];
+
+		_.each(contractNumber, (cNumber: string) => {
+			filtered.push(_.filter(data, { contractNumber: cNumber }));
+		});
+
+		data = _.flatten(filtered);
+	}
+
+	if (supportCovered) {
+		data = _.filter(
+			data,
+			i => _.indexOf(supportCovered, i.supportCovered) >= 0);
+	}
+	const total = data.length;
+	const pages = Math.ceil(data.length / rows);
+
+	data = data.slice((rows * (page - 1)), (rows * page));
 
 	return {
 		data,
 		Pagination: {
 			page,
+			pages,
 			rows,
-			pages: Math.ceil(mockResponse.length / rows),
-			total: mockResponse.length,
+			total,
 		},
 	};
 }
@@ -440,9 +459,26 @@ export const AssetScenarios = [
 			GET: [
 				{
 					delay: 100,
+					description: 'Assets Count',
+					response: {
+						body: MockAssets(1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=1&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
 					description: 'Covered Assets',
 					response: {
-						body: MockAssets(10, 1, [true]),
+						body: MockAssets(10, 1, null , [true]),
 						status: 200,
 					},
 					selected: true,
@@ -459,7 +495,7 @@ export const AssetScenarios = [
 					delay: 100,
 					description: 'Covered Assets - Grid View',
 					response: {
-						body: MockAssets(12, 1, [true]),
+						body: MockAssets(12, 1, null , [true]),
 						status: 200,
 					},
 					selected: true,
@@ -473,7 +509,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 500,
 					description: 'Assets Page 1',
 					response: {
 						body: MockAssets(10, 1),
@@ -490,7 +526,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 250,
 					description: 'Assets Page 2',
 					response: {
 						body: MockAssets(10, 2),
@@ -507,7 +543,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 325,
 					description: 'Assets Page 3',
 					response: {
 						body: MockAssets(10, 3),
@@ -524,7 +560,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 150,
 					description: 'Assets Page 4',
 					response: {
 						body: MockAssets(10, 4),
@@ -603,6 +639,23 @@ export const AssetScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=12&page=4`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 225,
+					description: 'Contract 93856991 Filtering',
+					response: {
+						body: MockAssets(10, 1, ['93856991']),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=1&contractNumber=93856991`,
 		usecases: ['Use Case 1'],
 	},
 ];
