@@ -29,12 +29,16 @@ describe('General Spec', () => {
 			cy.wait(5000);
 			cy.getByAutoId('searchSiteSelect').should('exist');
 			cy.getByAutoId('cui-select').should('exist');			// 2 found
-			cy.getByAutoId('searchResultLink').should('exist');		// 3 found
+			cy.getByAutoId('searchResultLinkPre0').should('exist');
+			cy.getByAutoId('searchResultLinkPre1').should('exist');
+			cy.getByAutoId('searchResultLinkPre2').should('exist');
 			cy.getByAutoId('loadMoreButton').should('exist').click();
 			cy.wait(1000);
 			cy.getByAutoId('loadMoreButton').should('exist').click();
 			cy.wait(1000);
-			cy.getByAutoId('searchResultLink').should('exist');		// now 9 found
+			cy.getByAutoId('searchResultLinkPost0').should('exist');
+			cy.getByAutoId('searchResultLinkPost1').should('exist');
+			cy.getByAutoId('searchResultLinkPost2').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
