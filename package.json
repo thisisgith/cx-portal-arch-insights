@@ -73,7 +73,7 @@
     "@cisco-ngx/cui-pipes": "^7.13.2",
     "@cisco-ngx/cui-services": "^7.13.2",
     "@cisco-ngx/cui-utils": "^7.13.2",
-    "@cui-x-views/mock": "1.1.0",
+    "@cui-x-views/mock": "^1.1.0",
     "@cui-x/services": "^1.0.0",
     "@cui-x/utilities": "^1.0.0",
     "@cypress/webpack-preprocessor": "^4.0.4",
