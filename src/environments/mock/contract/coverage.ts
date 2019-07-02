@@ -48,6 +48,24 @@ export const CoverageScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 100,
+					description: 'Coverage - Empty Body',
+					response: {
+						body: { },
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: 100,
+					description: 'Coverage - Invalid Body',
+					response: {
+						body: { covered: true },
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}coverages/count?customerId=${customerId}`,
