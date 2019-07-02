@@ -1,7 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { GeneralSearchComponent } from './general-search/general-search.component';
 import { SearchComponent } from './search.component';
 import { SearchModule } from './search.module';
+import { CaseService } from '@cui-x/services';
+import { CaseScenarios } from '@mock';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -9,10 +11,12 @@ import { By } from '@angular/platform-browser';
 import { SearchEnum } from '@interfaces';
 
 import * as enUSJson from '../../../assets/i18n/en-US.json';
+import { of } from 'rxjs';
 
 describe('SearchComponent', () => {
 	let component: SearchComponent;
 	let fixture: ComponentFixture<SearchComponent>;
+	let caseService: CaseService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -75,6 +79,27 @@ describe('SearchComponent', () => {
 		expect(component.searchContext)
 			.toEqual('serialno');
 	});
+
+	it('should toggle general search with a searchString and searchContext', fakeAsync(() => {
+		caseService = TestBed.get(CaseService);
+		spyOn(caseService, 'fetchCaseDetails')
+			.and
+			.returnValue(of(CaseScenarios[0].scenarios.GET[0].response.body));
+		component.onSearchChange({
+			generalSearch: '688296392',
+			text: '688296392',
+			type: {
+				name: SearchEnum.case,
+				value: '688296392',
+			},
+		});
+		tick(1000);
+		fixture.detectChanges();
+		expect(component.generalSearch)
+			.toEqual({ query: 'FOX1306GFKH' });
+		expect(component.searchContext)
+			.toEqual('serialno');
+	}));
 
 	it('should show special search', () => {
 		component.onSearchChange({
@@ -143,4 +168,23 @@ describe('SearchComponent', () => {
 		expect(general.nativeElement.hidden)
 			.toBeTruthy();
 	});
+
+	it('should close', () => {
+		component.onSearchChange({
+			generalSearch: 'Test1',
+			text: 'Test1',
+			type: {
+				name: SearchEnum.default,
+			},
+		});
+		fixture.detectChanges();
+		expect(component.status.hidden)
+			.toBeFalsy();
+		const closeButton = fixture.debugElement.query(By.css('.modal__close')).nativeElement;
+		closeButton.click();
+		fixture.detectChanges();
+		expect(component.status.hidden)
+			.toBeTruthy();
+	});
+
 });
