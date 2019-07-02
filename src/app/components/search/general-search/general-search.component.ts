@@ -304,7 +304,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: community.fields.teaser[0],
 						title: community.fields.title[0],
-						url: community.fields.url[0],
+						url: community.fields.uri[0],
 					});
 				}
 

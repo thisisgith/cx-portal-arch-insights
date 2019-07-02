@@ -12,6 +12,7 @@
 		"Contract API Services": "Search"
 	},
 	"modelsExportAs": {
+		"Community": "SearchCommunity",
 		"ErrorResponse": "SearchErrorResponse"
 	},
 	"removeStaleFiles": true,

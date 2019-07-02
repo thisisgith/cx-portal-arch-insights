@@ -10,7 +10,7 @@ export { AtxFuture } from './models/atx-future';
 export { Buckets } from './models/buckets';
 export { CDC } from './models/cdc';
 export { CDCSearchResponse } from './models/cdcsearch-response';
-export { Community } from './models/community';
+export { Community as SearchCommunity } from './models/community';
 export { CommunitySearchResponse } from './models/community-search-response';
 export { Elearning } from './models/elearning';
 export { ElearningIndexModel } from './models/elearning-index-model';
