@@ -267,7 +267,7 @@
 			</div>
 			<div class="pull-right">
 				<cui-dropdown
-					data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
+					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
 					(click)="$event.stopPropagation()"
 					[actions]="getRowActions(item)"
 					icon="icon-more icon-small text-muted rotate-90">
