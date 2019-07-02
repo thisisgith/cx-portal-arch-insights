@@ -16,7 +16,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	it('Renders Accelerator tile', () => {
 		cy.getByAutoId('Accelerator Panel').should('exist');
 		cy.getByAutoId('PanelTitle-_Accelerator_').should('have.text', 'Accelerator');
-		cy.getByAutoId('recommendedACCTitle').should('have.text', 'Cisco DNA Center Project Planning');
+		cy.getByAutoId('recommendedACC-Title').should('have.text', 'Cisco DNA Center Project Planning');
 		cy.getByAutoId('recommendedACCWatchButton').should('have.text', 'Request a 1-on-1');
 		cy.getByAutoId('moreACCList').should('exist');
 		// No other data-auto-id's exist at this time
@@ -64,19 +64,55 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		cy.getByAutoId('ACCCloseModal').click();
 	});
 
-	it('Accelerator Tile Tooltip', () => { // PBC-166
-		// Don't assume there is only one recommended item, so ensure the shown tooltip is recommended
-		cy.get('#hover-panel-recommendedACCTitle h6').then($panel => {
-			let foundItem;
-			Cypress._.each(accItems, item => {
-				if ($panel[0].innerText === item.title && item.status === 'recommended') {
-					foundItem = item;
-				}
-			});
-			cy.get('#hover-panel-recommendedACCTitle').should('exist');
-			cy.get('#hover-panel-recommendedACCTitle h6').should('have.text', foundItem.title);
-			cy.get('#hover-panel-recommendedACCTitle div:first').should('have.class', 'divider');
-			cy.get('#hover-panel-recommendedACCTitle div').should('have.text', foundItem.description);
+	describe.skip('PBC-166: Mouse hover to show recommended ACC/ATX description', () => {
+		// NOTE: Cypress can not trigger elements with :hover css property, so we'll just check
+		// that the hover modal and it's elements exist in the DOM. See below for reference:
+		// https://docs.cypress.io/api/commands/hover.html#Workarounds
+		// https://github.com/cypress-io/cypress/issues/10
+
+		afterEach(() => {
+			// Ensure we are set back to mock data with a recommended item
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-No Recommended');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+		});
+
+		it('Accelerator Tile Tooltip', () => {
+			// The recommended panel should only show the first recommended ACC item
+			const firstRecommendedACC = Cypress._.head(Cypress._.filter(accItems, { status: 'recommended' }));
+
+			if (firstRecommendedACC) {
+				// Recommended panel should show title, image (placeholder), and request button
+				cy.getByAutoId('recommendedACC').should('exist');
+				cy.getByAutoId('recommendedACC-Title').should('exist')
+					.and('contain', firstRecommendedACC.title);
+				cy.getByAutoId('recommendedACC-Image').should('exist')
+					.and('have.attr', 'src', 'assets/img/solutions/acc.png');
+				cy.getByAutoId('recommendedACCWatchButton').should('exist')
+					.and('have.text', 'Request a 1-on-1');
+
+				// Recommended hover modal should show title and description
+				cy.getByAutoId('recommendedACC-HoverModal').should('exist');
+				cy.getByAutoId('recommendedACC-HoverModal-Title').should('exist')
+					.and('contain', firstRecommendedACC.title);
+				cy.getByAutoId('recommendedACC-HoverModal-Description').should('exist')
+					.and('contain', firstRecommendedACC.description);
+			}
+		});
+
+		it('Should not have hover modal if there are no recommended ACC', () => {
+			// Switch the mock data to one with no recommended items
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-No Recommended');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+
+			cy.getByAutoId('recommendedACC').should('not.exist');
 		});
 	});
 });

@@ -245,15 +245,15 @@ $vibblue: #017cad;
 }
 
 #hover-panel {
-	&-recommendedACCTitle,
-	&-recommendedATXTitle,
-	&-learningHoverModal {
+	&-recommendedACC,
+	&-recommendedATX,
+	&-recommendedElearning {
 		display: none;
 	}
 
-	&-recommendedACCTitle::after,
-	&-recommendedATXTitle::after,
-	&-learningHoverModal::after {
+	&-recommendedACC::after,
+	&-recommendedATX::after,
+	&-recommendedElearning::after {
 		content: "";
 		position: absolute;
 		top: 45%;
@@ -261,13 +261,13 @@ $vibblue: #017cad;
 		border-bottom: 10px solid transparent;
 	}
 
-	&-recommendedACCTitle::after,
-	&-learningHoverModal::after {
+	&-recommendedACC::after,
+	&-recommendedElearning::after {
 		right: -15px;
 		border-left: 15px solid white;
 	}
 
-	&-recommendedATXTitle::after {
+	&-recommendedATX::after {
 		left: -15px;
 		border-right: 15px solid white;
 	}
@@ -276,9 +276,9 @@ $vibblue: #017cad;
 #recommended-item:hover,
 #recommended-elearning-item:hover {
 	#hover-panel {
-		&-recommendedACCTitle,
-		&-recommendedATXTitle,
-		&-learningHoverModal {
+		&-recommendedACC,
+		&-recommendedATX,
+		&-recommendedElearning {
 			display: block;
 			position: absolute;
 			box-shadow: $base-box-shadow;
@@ -290,12 +290,12 @@ $vibblue: #017cad;
 			top: 100px;
 		}
 
-		&-recommendedACCTitle,
-		&-learningHoverModal {
+		&-recommendedACC,
+		&-recommendedElearning {
 			left: -480px;
 		}
 
-		&-learningHoverModal {
+		&-recommendedElearning {
 			top: -90px;
 
 			.icon-star,
@@ -308,7 +308,7 @@ $vibblue: #017cad;
 			}
 		}
 
-		&-recommendedATXTitle {
+		&-recommendedATX {
 			right: -480px;
 		}
 	}
