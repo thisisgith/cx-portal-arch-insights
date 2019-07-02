@@ -108,18 +108,70 @@ describe('SearchBarComponent', () => {
 	}));
 
 	it('should select on Enter', fakeAsync(() => {
-		spyOn(component, 'keyHandler');
+		spyOn(component, 'onSearchSelect');
 		const input = fixture.debugElement.query(By.css('input'));
 		input.nativeElement.dispatchEvent(new Event('focus'));
-		input.nativeElement.value = 'Test1';
-		input.nativeElement.dispatchEvent(new Event('input'));
+		component.searchText = 'Test';
+		component.typeaheadItems = [{
+			name: 'Item1',
+		}, {
+			name: 'Item2',
+		}];
 		fixture.detectChanges();
 		const event = new KeyboardEvent('keyup', {
 			key: 'Enter',
 		});
 		document.dispatchEvent(event);
+		expect(component.onSearchSelect)
+			.toHaveBeenCalled();
+	}));
+
+	it('should select on pressing enter on a typeahead option', fakeAsync(() => {
+		spyOn(component, 'onSearchSelect');
+		const input = fixture.debugElement.query(By.css('input'));
+		input.nativeElement.dispatchEvent(new Event('focus'));
+		fixture.detectChanges();
+		component.searchText = 'Test';
+		component.typeaheadItems = [{
+			name: 'Item1',
+		}, {
+			name: 'Item2',
+		}];
+		fixture.detectChanges();
+		let event = new KeyboardEvent('keyup', {
+			key: 'ArrowDown',
+		});
+		component.keyHandler(event);
+		fixture.detectChanges();
+		event = new KeyboardEvent('keyup', {
+			key: 'Enter',
+		});
+		component.keyHandler(event);
+		expect(component.onSearchSelect)
+			.toHaveBeenCalled();
+	}));
+
+	it('should select on clicking a typeahead option', fakeAsync(() => {
+		spyOn(component, 'clickHandler');
+		const input = fixture.debugElement.query(By.css('input'));
+		input.nativeElement.dispatchEvent(new Event('focus'));
+		fixture.detectChanges();
+		component.searchText = 'Test';
+		component.typeaheadItems = [{
+			name: 'Item1',
+		}, {
+			name: 'Item2',
+		}];
+		fixture.detectChanges();
+		const event = new KeyboardEvent('keyup', {
+			key: 'ArrowDown',
+		});
+		component.keyHandler(event);
+		fixture.detectChanges();
+		const firstOption = fixture.debugElement.queryAll(By.css('a'))[0];
+		firstOption.nativeElement.click();
 		tick(300);
-		expect(component.keyHandler)
+		expect(component.clickHandler)
 			.toHaveBeenCalled();
 	}));
 
@@ -168,6 +220,42 @@ describe('SearchBarComponent', () => {
 		const firstOption = fixture.debugElement.queryAll(By.css('a'))[0];
 		expect(firstOption.classes['keyboard-hover'])
 			.toBeTruthy();
+	});
+
+	it('should not highlight on arrow up or down if not focused', () => {
+		component.searchText = 'Test';
+		component.typeaheadItems = [{
+			name: 'Item1',
+		}, {
+			name: 'Item2',
+		}];
+		const event = new KeyboardEvent('keyup', {
+			key: 'ArrowDown',
+		});
+		component.keyHandler(event);
+		expect(component.typeaheadItems.find(item => item.keyHover))
+			.toBeUndefined();
+	});
+
+	it('should not allow the key hover to go out of bounds', () => {
+		const input = fixture.debugElement.query(By.css('input'));
+		input.nativeElement.dispatchEvent(new Event('focus'));
+		fixture.detectChanges();
+		component.searchText = 'Test';
+		component.typeaheadItems = [{
+			name: 'Item1',
+		}, {
+			name: 'Item2',
+		}];
+		fixture.detectChanges();
+		const event = new KeyboardEvent('keyup', {
+			key: 'ArrowUp',
+		});
+		expect(component.keyHoverIndex)
+			.toBe(-1);
+		component.keyHandler(event);
+		expect(component.keyHoverIndex)
+			.toBe(-1);
 	});
 
 	it('should not emit on empty selection', () => {
@@ -239,4 +327,5 @@ describe('SearchBarComponent', () => {
 				},
 			});
 	});
+
 });

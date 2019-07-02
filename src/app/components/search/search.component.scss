@@ -25,6 +25,10 @@
 	overflow-y: auto;
 }
 
+.modal__close {
+	z-index: 1;
+}
+
 .modal-backdrop {
 	top: 55px;
 }
