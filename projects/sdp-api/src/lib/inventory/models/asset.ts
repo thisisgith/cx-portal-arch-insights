@@ -36,4 +36,9 @@ export interface Asset {
    * Contract Number
    */
   contractNumber?: string;
+
+  /**
+   * Critical advisories
+   */
+  criticalAdvisories?: number;
 }
