@@ -19,7 +19,9 @@ import {
 	ContractsService,
 	DeviceContractResponse,
 	InventoryService,
+	ProductAlertsService,
 	HardwareResponse,
+	VulnerabilityResponse,
 } from '@cui-x/sdp-api';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
@@ -41,12 +43,6 @@ interface SerialData {
 	latestVersion?: string;
 	openCase?: number;
 	openRmas?: number;
-	advisoryCounts?: {
-		scanTime: string;
-		fn: number;
-		sa: number;
-		bugs: number;
-	};
 }
 
 /**
@@ -56,6 +52,15 @@ interface ContractData {
 	cxLevel?: string;
 	contractNum?: number;
 	expirationDate?: string;
+}
+
+/**
+ * Interface representing Product Alerts data to go in the template
+ */
+interface AlertsData {
+	securityAdvisories: number;
+	bugs: number;
+	fieldNotices: number;
 }
 
 /**
@@ -78,9 +83,11 @@ implements OnInit, OnChanges, OnDestroy {
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
 	public loadingContractData = true;
+	public loadingAlertsData = true;
 	public customerId = '2431199';
 	public data: SerialData;
 	public contractData: ContractData = { };
+	public alertsData: AlertsData;
 
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
@@ -88,6 +95,7 @@ implements OnInit, OnChanges, OnDestroy {
 	constructor (
 		private contractService: ContractsService,
 		private logger: LogService,
+		private alertsService: ProductAlertsService,
 		private inventoryService: InventoryService,
 	) {
 		super();
@@ -146,6 +154,23 @@ implements OnInit, OnChanges, OnDestroy {
 			}
 		});
 		/** TODO: Get Case data as well, once that service code is merged in */
+		/** Alerts Data Refresh */
+		this.refresh$.pipe(
+			tap(() => {
+				this.loadingAlertsData = true;
+				this.alertsData = null;
+			}),
+			switchMap(() => this.getAlertsData(this.customerId, this.serialNumber.query)),
+			takeUntil(this.destroy$),
+		)
+		.subscribe(response => {
+			this.loadingAlertsData = false;
+			this.alertsData = {
+				bugs: _.get(response, 'bugs', 0),
+				fieldNotices: _.get(response, 'field-notices', 0),
+				securityAdvisories: _.get(response, 'security-advisories', 0),
+			};
+		});
 
 		this.refresh$.next();
 	}
@@ -199,6 +224,27 @@ implements OnInit, OnChanges, OnDestroy {
 		.pipe(
 			catchError(err => {
 				this.logger.error(`Device Contract Data :: ${serialNumber} :: Error ${err}`);
+
+				return of(null);
+			}),
+		);
+	}
+
+	/**
+	 * Fetch product alerts data
+	 * @param customerId id of customer whose device we're searching
+	 * @param serialNumber serial number of the device we're fetching
+	 * @returns Observable with alerts counts data
+	 */
+	private getAlertsData (customerId: string, serialNumber: string):
+	Observable<VulnerabilityResponse> {
+		return this.alertsService.getVulnerabilityCounts({
+			customerId,
+			serialNumber: [serialNumber],
+		})
+		.pipe(
+			catchError(err => {
+				this.logger.error(`Product Alerts Data :: ${serialNumber} :: Error ${err}`);
 
 				return of(null);
 			}),
