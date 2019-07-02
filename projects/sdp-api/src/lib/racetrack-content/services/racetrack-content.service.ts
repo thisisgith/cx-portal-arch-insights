@@ -74,7 +74,6 @@ class RacetrackContentService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -160,7 +159,6 @@ class RacetrackContentService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -246,7 +244,6 @@ class RacetrackContentService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -332,7 +329,6 @@ class RacetrackContentService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -418,7 +414,6 @@ class RacetrackContentService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(

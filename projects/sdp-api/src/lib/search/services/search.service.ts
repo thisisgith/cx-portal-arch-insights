@@ -52,9 +52,9 @@ class SearchService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __headers.append('Content-Type', 'multipart/form-data');
     let __formData = new FormData();
     __body = __formData;
+    __headers.append("Content-Type", "application/x-www-form-urlencoded");
    if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData.append('searchTokens', params.searchTokens as string | Blob);}
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData.append('webSessionId', params.webSessionId as string | Blob);}
    if(params.offset !== null && typeof params.offset !== "undefined") { __formData.append('offset', params.offset as string | Blob);}
@@ -70,7 +70,6 @@ class SearchService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -125,9 +124,9 @@ class SearchService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __headers.append('Content-Type', 'multipart/form-data');
     let __formData = new FormData();
     __body = __formData;
+    __headers.append("Content-Type", "application/x-www-form-urlencoded");
    if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData.append('searchTokens', params.searchTokens as string | Blob);}
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData.append('webSessionId', params.webSessionId as string | Blob);}
    if(params.offset !== null && typeof params.offset !== "undefined") { __formData.append('offset', params.offset as string | Blob);}
@@ -141,7 +140,6 @@ class SearchService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -202,9 +200,9 @@ class SearchService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __headers.append('Content-Type', 'multipart/form-data');
     let __formData = new FormData();
     __body = __formData;
+    __headers.append("Content-Type", "application/x-www-form-urlencoded");
    if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData.append('searchTokens', params.searchTokens as string | Blob);}
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData.append('webSessionId', params.webSessionId as string | Blob);}
    if(params.useCase !== null && typeof params.useCase !== "undefined") { __formData.append('useCase', params.useCase as string | Blob);}
@@ -223,7 +221,6 @@ class SearchService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
