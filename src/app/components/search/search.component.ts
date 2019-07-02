@@ -31,7 +31,7 @@ export class SearchComponent {
 	public generalSearch: SearchQuery;
 	public searchContext: string;
 	public generalSearchHeader: string;
-	public hideSpecialSearch = false;
+	public hideSpecialSearch = true;
 	public hideGeneralSearch = false;
 
 	public status = {
@@ -45,6 +45,7 @@ export class SearchComponent {
 	 * @param search the search text and type
 	 */
 	public onSearchChange (search: { text: string, type: SearchType, generalSearch: string }) {
+		this.hideSpecialSearch = true;
 		this.status.hidden = false;
 		this.selectedSearch = { query: search.text };
 		this.searchType = search.type;

@@ -4,6 +4,7 @@ export { ATX } from './models/atx';
 export { ATXSession } from './models/atxsession';
 export { ACCResponse } from './models/accresponse';
 export { ACC } from './models/acc';
+export { ACCBookmarkSchema } from './models/accbookmark-schema';
 export { SuccessPathsResponse } from './models/success-paths-response';
 export { SuccessPath } from './models/success-path';
 export { CommunitiesResponse } from './models/communities-response';

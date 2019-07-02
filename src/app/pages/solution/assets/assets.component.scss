@@ -22,6 +22,15 @@
 	min-height: 100px;
 }
 
+.curved-corners {
+	border-radius: 5px;
+}
+
+.card-title-height {
+	height: 3em;
+	overflow: hidden;
+}
+
 .filter {
 	&__selected {
 		border-bottom: 4px solid $primary;

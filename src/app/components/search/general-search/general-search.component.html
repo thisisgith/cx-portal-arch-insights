@@ -7,10 +7,10 @@
 	</div>
 </div>
 <div *ngIf="!loading && searchResults?.length">
-	<h5 *ngIf="header"
+	<h6 *ngIf="header"
 		[innerText]="header"
-		class="base-margin-bottom">
-	</h5>
+		class="base-margin-top half-margin-bottom">
+	</h6>
 	<h5 [innerText]="'_XResults_' | i18n:totalCount:searchToken"
 		class="base-margin-bottom">
 	</h5>
@@ -38,9 +38,9 @@
 		</div>
 	</div>
 	<!-- CDC Search Results, first 3 -->
-	<div *ngFor="let result of searchResults | slice:0:3"
+	<div *ngFor="let result of searchResults | slice:0:3; index as idx"
 		class="base-margin-top">
-		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result }"></ng-container>
+		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result, idx: idx, place: 'Pre' }"></ng-container>
 	</div>
 	<!-- Related ATX, ACC, Learning results -->
 	<div class="half-margin-top"
@@ -55,9 +55,9 @@
 		<div class="divider"></div>
 	</div>
 	<!-- Remaining CDC results -->
-	<div *ngFor="let result of searchResults | slice:3"
+	<div *ngFor="let result of searchResults | slice:3; index as idx"
 		class="base-margin-top">
-		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result }"></ng-container>
+		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result, idx: idx, place: 'Post' }"></ng-container>
 	</div>
 	<div class="base-margin-top"
 		*ngIf="searchResults?.length && searchResults.length < totalCount">
@@ -79,10 +79,10 @@
 </app-no-results>
 
 <!-- Template for regular CDC result -->
-<ng-template #resultTemplate let-result="result">
+<ng-template #resultTemplate let-result="result" let-index="idx" let-place="place">
 	<div>
 		<a [href]="result.displayUrl"
-			data-auto-id="searchResultLink"
+			[attr.data-auto-id]="'searchResultLink' + place + index"
 			target="_blank">
 			<h5 [innerHTML]="result.title | keyHighlight"></h5>
 		</a>
@@ -113,7 +113,7 @@
 			class="half-padding-top half-margin-bottom">
 			<div>
 				<a [href]="item.url"
-					data-auto-id="relatedResultLink"
+					[attr.data-auto-id]="'relatedResultLink' + item.type"
 					target="_blank">
 					<h5 [innerHTML]="item.title | keyHighlight"></h5>
 				</a>

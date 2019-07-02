@@ -36,11 +36,17 @@ import * as _ from 'lodash-es';
 type RefreshType = 'query' | 'filters' | 'newPage';
 
 /**
+ * Possible types of "related" results
+ */
+type RelatedResultType = 'acc' | 'atx' | 'learning' | 'community';
+
+/**
  * Interface representing related ACC/ATX/eLearning/Community results
  */
 interface RelatedResult {
 	url: string;
 	title: string;
+	type: RelatedResultType;
 	description: string;
 }
 
@@ -277,6 +283,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: atx['Session Description'],
 						title: atx['Session Name'],
+						type: 'atx',
 						url: atx['Attendee Link'],
 					});
 				}
@@ -286,6 +293,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: acc['Short Description'],
 						title: acc.Title,
+						type: 'acc',
 						url: null,
 					});
 				}
@@ -295,6 +303,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: learning.description,
 						title: learning.title,
+						type: 'learning',
 						url: learning.url,
 					});
 				}
@@ -304,6 +313,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: community.fields.teaser[0],
 						title: community.fields.title[0],
+						type: 'community',
 						url: community.fields.uri[0],
 					});
 				}

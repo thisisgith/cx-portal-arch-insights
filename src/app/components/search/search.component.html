@@ -6,57 +6,48 @@
 <div class="modal-container" *ngIf="!status.hidden">
 	<div class="modal-backdrop" [ngClass]="{ hide: status.hidden }"></div>
 	<div class="modal modal--full" [ngClass]="{ hide: status.hidden }">
-		<div class="modal__dialog no-margin-top no-padding-top">
-			<div class="modal__content text-left no-margin-top no-padding-top">
-				<a data-auto-id="searchClose no-margin no-padding" class="modal__close" (click)="onClose()">
-					<span class="icon-close icon-small"></span>
+		<div class="modal__dialog">
+			<div class="modal__content text-left no-padding">
+				<a data-auto-id="searchClose"
+					class="modal__close icon-close icon-small"
+					(click)="onClose()">
 				</a>
-				<div class="row no-gutters">
-					<div [ngClass]="{
-							'col-md-12': !specialSearch || !specialSearch.sidebarContent || hideSpecialSearch,
-							'col-md-9': specialSearch?.sidebarContent && !hideSpecialSearch
-						}">
-						<div class="panel panel--loose">
-							<!-- Special search views depending on query type -->
-							<div id="specialContainer"
-								class="base-margin-bottom"
-								[hidden]="hideSpecialSearch">
-								<ng-container [ngSwitch]="searchType.name">
-									<app-case-search *ngSwitchCase="'case'"
-										[caseNumber]="selectedSearch"
-										(hide)="onHide($event)"
-										(toggleGeneralSearch)="toggleGeneralSearch($event)">
-									</app-case-search>
-									<app-contract-search *ngSwitchCase="'contract'"
-										[contractNumber]="selectedSearch"
-										(hide)="onHide($event)">
-									</app-contract-search>
-									<serial-search *ngSwitchCase="'sn'"
-										[serialNumber]="selectedSearch"
-										(hide)="onHide($event)">
-									</serial-search>
-									<app-rma-search
-										*ngSwitchCase="'rma'"
-										[rmaNumber]="selectedSearch"
-										(hide)="onHide($event)"
-										(toggleGeneralSearch)="toggleGeneralSearch($event)">
-									</app-rma-search>
-								</ng-container>
-							</div>
-							<hr *ngIf="specialSearch && !hideSpecialSearch" />
-							<app-general-search
-								[hidden]="hideGeneralSearch"
-								[query]="generalSearch"
-								[header]="generalSearchHeader"
-								[context]="searchContext">
-							</app-general-search>
+				<!-- Special search views depending on query type -->
+				<div id="specialContainer" [hidden]="hideSpecialSearch">
+					<div class="panel panel--ltgray dbl-padding">
+						<div class="panel dbl-padding">
+							<ng-container [ngSwitch]="searchType.name">
+								<app-case-search *ngSwitchCase="'case'"
+									[caseNumber]="selectedSearch"
+									(hide)="onHide($event)"
+									(toggleGeneralSearch)="toggleGeneralSearch($event)">
+								</app-case-search>
+								<app-contract-search *ngSwitchCase="'contract'"
+									[contractNumber]="selectedSearch"
+									(hide)="onHide($event)">
+								</app-contract-search>
+								<serial-search *ngSwitchCase="'sn'"
+									[serialNumber]="selectedSearch"
+									(hide)="onHide($event)">
+								</serial-search>
+								<app-rma-search
+									*ngSwitchCase="'rma'"
+									[rmaNumber]="selectedSearch"
+									(hide)="onHide($event)"
+									(toggleGeneralSearch)="toggleGeneralSearch($event)">
+								</app-rma-search>
+							</ng-container>
 						</div>
 					</div>
-					<div class="col-md-3"
-						*ngIf="specialSearch?.sidebarContent && !hideSpecialSearch">
-						<!-- The right-hand sidebar content for each special search view can be projected here -->
-						<ng-container *ngTemplateOutlet="specialSearch?.sidebarContent"></ng-container>
-					</div>
+				</div>
+				<div class="base-padding-top" [hidden]="!hideSpecialSearch"></div>
+				<div class="panel dbl-padding-left dbl-padding-right">
+					<app-general-search
+						[hidden]="hideGeneralSearch"
+						[query]="generalSearch"
+						[header]="generalSearchHeader"
+						[context]="searchContext">
+					</app-general-search>
 				</div>
 			</div>
 		</div>

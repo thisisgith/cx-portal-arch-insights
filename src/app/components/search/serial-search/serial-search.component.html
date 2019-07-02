@@ -78,19 +78,19 @@
 				<span class="subheading text-uppercase left-header" [innerText]="'_RelatedFieldNotices_' | i18n"></span>
 			</dt>
 			<dd>
-				<a data-auto-id="relatedFieldNotices" href="#" *ngIf="data.advisoryCounts?.fn; else unavailable" [innerText]="data.advisoryCounts.fn"></a>
+				<a data-auto-id="relatedFieldNotices" href="#" *ngIf="alertsData; else loadingAlerts" [innerText]="alertsData.fieldNotices"></a>
 			</dd>
 			<dt>
 				<span class="subheading text-uppercase left-header" [innerText]="'_RelatedSecurityAdvisories_' | i18n"></span>
 			</dt>
 			<dd>
-				<a data-auto-id="relatedSecurityAdvisories" href="#" *ngIf="data.advisoryCounts?.sa; else unavailable" [innerText]="data.advisoryCounts.sa"></a>
+				<a data-auto-id="relatedSecurityAdvisories" href="#" *ngIf="alertsData; else loadingAlerts" [innerText]="alertsData.securityAdvisories"></a>
 			</dd>
 			<dt>
 				<span class="subheading text-uppercase left-header" [innerText]="'_RelatedBugs_' | i18n"></span>
 			</dt>
 			<dd>
-				<a data-auto-id="relatedBugs" href="#" *ngIf="data.advisoryCounts?.bugs; else unavailable" [innerText]="data.advisoryCounts.bugs"></a>
+				<a data-auto-id="relatedBugs" href="#" *ngIf="alertsData; else loadingAlerts" [innerText]="alertsData.bugs"></a>
 			</dd>
 		</dl>
 		<div class="half-margin-top text-muted" [innerText]="'_BasedOnLastScanRunXDaysAgo_' | i18n:'7'"><span></span></div>
@@ -118,6 +118,12 @@
 <ng-template #loadingContract>
 	<cui-loader color="muted"
 		*ngIf="loadingContractData; else unavailable">
+	</cui-loader>
+</ng-template>
+
+<ng-template #loadingAlerts>
+	<cui-loader color="muted"
+		*ngIf="loadingAlertsData; else unavailable">
 	</cui-loader>
 </ng-template>
 

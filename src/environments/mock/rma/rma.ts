@@ -189,7 +189,7 @@ export const RMAScenarios = [
 						body: MockRMA({ devices: 0 }),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 500,

@@ -124,6 +124,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public allAssetsSelected = false;
 	public filtered = false;
 
+	public view: 'list' | 'grid' = 'list';
+
 	constructor (
 		private contractsService: ContractsService,
 		private logger: LogService,
@@ -210,8 +212,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Will adjust the browsers query params to preserve the current state
 	 */
 	private adjustQueryParams () {
+		const queryParams = _.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page']);
+		queryParams.view = this.view;
 		this.router.navigate([], {
-			queryParams: _.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page']),
+			queryParams,
 			relativeTo: this.route,
 		});
 	}
@@ -346,8 +350,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			if (params.role) {
 				this.assetParams.role = _.castArray(params.role);
 			}
-		});
 
+			if (params.view) {
+				this.view = params.view;
+			}
+		});
 		this.buildFilters();
 	}
 
@@ -765,7 +772,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
 					let last = (this.pagination.rows * this.pagination.page);
-
 					if (last > this.pagination.total) {
 						last = this.pagination.total;
 					}
@@ -801,4 +807,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public ngOnDestroy () {
 		_.invoke(this.searchSubscribe, 'unsubscribe');
 	}
+
+	/**
+	 * Changes the view to either list or grid
+	 * @param view view to set
+	 */
+   	public selectView (view: 'list' | 'grid') {
+		if (this.view !== view) {
+			this.view = view;
+			this.assetParams.rows = this.view === 'list' ? 10 : 12;
+			this.adjustQueryParams();
+			this.fetchInventory()
+				.subscribe();
+		}
+   	}
 }
