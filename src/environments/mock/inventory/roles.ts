@@ -9,19 +9,19 @@ const customerId = '2431199';
 /** The mock response for role counts */
 const mockRoleCounts: RoleCountResponse = [
 	{
-		deviceCount: 11,
+		deviceCount: 9,
 		role: 'ACCESS',
 	},
 	{
-		deviceCount: 4,
+		deviceCount: 1,
 		role: 'CORE',
 	},
 	{
-		deviceCount: 3,
+		deviceCount: 2,
 		role: 'BORDER ROUTER',
 	},
 	{
-		deviceCount: 3,
+		deviceCount: 1,
 		role: 'DISTRIBUTION',
 	},
 ];
