@@ -207,6 +207,7 @@ describe('Assets', () => { // PBC-41
 		it('Combines visual filters appropriately', () => {
 			// TODO: When AP-5378 is implemented, this test can be done with mocked data
 			assetMock.disable('Assets Page 1');
+			assetMock.disable('Covered Assets');
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
@@ -223,6 +224,7 @@ describe('Assets', () => { // PBC-41
 
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 			assetMock.enable('Assets Page 1');
+			assetMock.enable('Covered Assets');
 			cy.waitForAppLoading();
 		});
 
