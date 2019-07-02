@@ -1,4 +1,4 @@
-import { ACCResponse } from '@cui-x/sdp-api';
+import { ACCResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/racetrack/v1/acc';

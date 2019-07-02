@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CaseParams } from '@cui-x/services';
 import { SolutionService } from '../../../solution.service';
 
-import { HardwareInfo } from '@cui-x/sdp-api';
+import { HardwareInfo } from '@sdp-api';
 
 /**
  * Details Header Component

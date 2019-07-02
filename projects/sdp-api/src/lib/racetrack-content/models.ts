@@ -1,4 +1,4 @@
-export { ErrorResponse } from './models/error-response';
+export { ErrorResponse as RacetrackContentErrorResponse } from './models/error-response';
 export { ATXResponse } from './models/atxresponse';
 export { ATX } from './models/atx';
 export { ATXSession } from './models/atxsession';

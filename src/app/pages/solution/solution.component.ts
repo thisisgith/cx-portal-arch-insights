@@ -10,6 +10,7 @@ import {
 	Router,
 	Event as RouterEvent,
 	NavigationEnd,
+	ActivatedRoute,
 } from '@angular/router';
 
 import * as _ from 'lodash-es';
@@ -22,7 +23,7 @@ import {
 	RacetrackSolution,
 	RacetrackTechnology,
 	CoverageCountsResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { SolutionService } from './solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -86,7 +87,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.eventsSubscribe = this.router.events.subscribe(
 			(event: RouterEvent): void => {
 				if (event instanceof NavigationEnd && event.url) {
-					const route = (_.isArray(event.url)) ? event.url[0] : event.url;
+					const route = _.split(
+						(_.isArray(event.url) ? event.url[0] : event.url), '?')[0];
+
+					console.log('ROUTE', route);
 
 					if (route.includes('solution')) {
 						this.activeRoute = route;

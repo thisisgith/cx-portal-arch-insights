@@ -1,4 +1,4 @@
-import { CommunitiesResponse } from '@cui-x/sdp-api';
+import { CommunitiesResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/racetrack/v1/communities';

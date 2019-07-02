@@ -24,7 +24,7 @@ import {
 	Buckets,
 	Facets,
 	ELearning,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { SearchService as SearchUtils } from '@services';
 import { SearchContext, SearchQuery } from '@interfaces';
 

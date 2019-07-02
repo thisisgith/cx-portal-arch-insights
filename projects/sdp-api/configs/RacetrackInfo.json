@@ -1,0 +1,24 @@
+{
+	"$schema": "../../../node_modules/@apollo/ng-swagger-gen/ng-swagger-gen-schema.json",
+	"swagger": "../../node_modules/@swagger/cx-portal/swagger/RacetrackInfo.yaml",
+	"output": "src/lib/racetrack",
+	"outputCore": "../core",
+	"prefix": "Racetrack",
+	"ignoreUnusedModels": true,
+	"minParamsForContainer": 2,
+	"sortParams": "desc",
+	"defaultTag": "Racetrack",
+	"replaceTags": {
+		"Solution Based Racetrack information": "Racetrack"
+	},
+	"modelsExportAs": {
+		"ErrorResponse": "RacetrackErrorResponse"
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
+}

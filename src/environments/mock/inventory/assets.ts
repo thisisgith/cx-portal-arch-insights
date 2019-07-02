@@ -1,4 +1,4 @@
-import { Assets, Asset } from '@cui-x/sdp-api';
+import { Assets, Asset } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */

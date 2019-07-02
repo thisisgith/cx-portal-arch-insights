@@ -1,4 +1,4 @@
-import { CDCSearchResponse, GlobalSearchResponse } from '@cui-x/sdp-api';
+import { CDCSearchResponse, GlobalSearchResponse } from '@sdp-api';
 /** base API for search */
 const api = '/api/customerportal/search/v1';
 /** base API for typeahead search */

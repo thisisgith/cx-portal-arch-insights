@@ -1,0 +1,22 @@
+{
+	"$schema": "../../../node_modules/@apollo/ng-swagger-gen/ng-swagger-gen-schema.json",
+	"swagger": "../../node_modules/@swagger/cx-portal/swagger/CustomerUsers.yaml",
+	"output": "src/lib/user",
+	"outputCore": "../core",
+	"prefix": "User",
+	"ignoreUnusedModels": true,
+	"minParamsForContainer": 2,
+	"sortParams": "desc",
+	"defaultTag": "User",
+	"replaceTags": {},
+	"modelsExportAs": {
+		"ErrorResponse": "UserErrorResponse"
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
+}
