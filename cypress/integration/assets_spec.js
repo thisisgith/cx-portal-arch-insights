@@ -16,37 +16,34 @@ describe('Assets', () => { // PBC-41
 		cy.waitForAppLoading();
 	});
 
-	// Skipping until asset360 is re-enabled
-	it.skip('Provides an Asset 360 view modal', () => { // PBC-151
-		const { halfWidthInPx, widthInPx } = util.getViewportSize();
-		cy.get('tr').eq(1).click();
-		cy.get('asset-details')
-			.should('be.visible')
-			.and('have.css', 'width', halfWidthInPx); // default to half width
-		cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[0].serialNumber}`);
-		cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
-		cy.get('asset-details').should('have.css', 'width', widthInPx); // expand to full width
-		cy.getByAutoId('ClearAsset').click();
-		cy.get('tr').eq(2).click();
-		cy.get('asset-details').should('have.css', 'width', widthInPx); // remember last width
-		cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
-		cy.get('asset-details').should('have.css', 'width', halfWidthInPx); // shrink to half width
-		cy.get('tr').eq(3).click(); // switch to new asset without closing modal
-		cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[2].serialNumber}`);
-		cy.getByAutoId('ClearAsset').click();
-	});
+	context('PBC-151: Asset 360 view', () => {
+		it('Provides an Asset 360 view modal', () => {
+			const { halfWidthInPx, widthInPx } = util.getViewportSize();
+			cy.get('tr').eq(1).click();
+			cy.get('asset-details')
+				.should('be.visible')
+				.and('have.css', 'width', halfWidthInPx); // default to half width
+			cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[0].serialNumber}`);
+			cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
+			cy.get('asset-details').should('have.css', 'width', widthInPx); // expand to full width
+			cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
+			cy.get('asset-details').should('have.css', 'width', halfWidthInPx); // shrink to half width
+			cy.get('tr').eq(3).click(); // switch to new asset without closing modal
+			cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[2].serialNumber}`);
+			cy.getByAutoId('ClearAsset').click();
+		});
 
-	// Skipping until asset360 is re-enabled
-	it.skip('Provides an Activity timeline in the 360 view modal', () => { // PBC-158
-		cy.get('tr').eq(1).click();
-		cy.getByAutoId('ActivityTab').click();
+		it('Provides an Activity timeline in the 360 view modal', () => { // PBC-158
+			cy.get('tr').eq(1).click();
+			cy.getByAutoId('ActivityTab').click();
 
-		// TODO: This is all placeholder data to be replaced when the API is ready
-		cy.get('div.timeline__time').eq(0).should('have.text', 'a few seconds ago');
-		cy.get('div.timeline__content').eq(0)
-			.should('contain', 'Title')
-			.and('contain', 'Lorem ipsum');
-		cy.getByAutoId('ClearAsset').click();
+			// TODO: This is all placeholder data to be replaced when the API is ready
+			cy.get('div.timeline__time').eq(0).should('have.text', 'a few seconds ago');
+			cy.get('div.timeline__content').eq(0)
+				.should('contain', 'Title')
+				.and('contain', 'Lorem ipsum');
+			cy.getByAutoId('ClearAsset').click();
+		});
 	});
 
 	context('PBC-178: Assets & Coverage Gauge', () => {
@@ -82,8 +79,9 @@ describe('Assets', () => { // PBC-41
 			cy.get('tbody > tr').should('have.length', assets.length);
 			Cypress._.each(assets, asset => {
 				const serial = asset.serialNumber;
-				cy.getByAutoId(`InventoryItem-${serial}`).within(() => {
-					// TODO: Asset device icon exists after PBC-257
+				cy.getByAutoId(`InventoryItem-${serial}`).within(() => { // PBC-257
+					// Icon is a static placeholder for now
+					cy.getByAutoId(`DeviceIcon-${serial}`).should('have.class', 'icon-4-way-nav');
 					cy.getByAutoId(`Device-${serial}`).should('have.text', asset.deviceName);
 					cy.getByAutoId(`IP Address-${serial}`).should('have.text', asset.ipAddress);
 					// TODO: "Last Scan" is not implemented yet
@@ -95,9 +93,11 @@ describe('Assets', () => { // PBC-41
 					} else {
 						cy.getByAutoId('SupportCoveredIcon').should('not.be.visible');
 					}
-					cy.getByAutoId(`Serial Number-${serial}`).should('have.text', asset.serialNumber);
+					cy.getByAutoId(`Serial Number-${serial}`)
+						.should('have.text', asset.serialNumber);
 					cy.getByAutoId(`Software Type-${serial}`).should('have.text', asset.osType);
-					cy.getByAutoId(`Software Version-${serial}`).should('have.text', asset.osVersion);
+					cy.getByAutoId(`Software Version-${serial}`)
+						.should('have.text', asset.osVersion);
 					if (asset.role) {
 						cy.getByAutoId(`Role-${serial}`).should('have.text', asset.role);
 					}
@@ -117,6 +117,14 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('TotalSelectedCount').should('have.text', `${assets.length} Selected`);
 			cy.getByAutoId('AllAssetSelectCheckbox').click();
 			cy.getByAutoId('TotalSelectedCount').should('not.exist');
+
+			// PBC-258
+			const singleDeviceContract = '93856991';
+			cy.getByAutoId(`${singleDeviceContract}Point`).click();
+			cy.get('tbody tr').should('have.length', 1);
+			cy.get('td[data-auto-id*="InventoryItemSelect"]').click();
+			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
+			cy.getByAutoId('FilterBarClearAllFilters').click();
 		});
 
 		it('Renders table gracefully when APIs are unavailable', () => {
@@ -160,24 +168,40 @@ describe('Assets', () => { // PBC-41
 			assetMock.enable(['Assets Page 1', 'Assets Page 2', 'Assets Page 3', 'Assets Page 4']);
 		});
 
-		it('Filters asset list with all visual filters', () => {
+		it('Filters asset list with all visual filters', () => { // PBC-228, PBC-253
 			const { contractNumber, role } = assets[0];
 			cy.getByAutoId('CoveredPoint').click();
 			cy.getByAutoId('FilterTag-covered').should('be.visible');
 			cy.getByAutoId(`${contractNumber}Point`).click();
 			cy.getByAutoId(`FilterTag-${contractNumber}`).should('be.visible');
-			// cy.getByAutoId(`${Cypress._.capitalize(role)}Point`).click({ force: true });
 			cy.getByAutoId(`${Cypress._.capitalize(role.toLowerCase())}Point`)
 				.click({ force: true });
 			cy.getByAutoId(`FilterTag-${role}`).should('be.visible');
 			// TODO: Field notice/security advisory filter (CSCvq32046)
+			cy.url().should('contain', 'coverage=covered')
+				.and('contain', `contractNumber=${contractNumber}`)
+				.and('contain', `role=${role}`);
 			cy.getByAutoId(`FilterTag-${contractNumber}`).click().should('not.exist');
+			cy.url().should('not.contain', 'contractNumber');
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 			cy.getByAutoId('FilterTag-covered').should('not.exist');
+			cy.url().should('not.contain', 'coverage').and('not.contain', 'role');
 		});
 
-		it.skip('Renders visual filters gracefully when APIs are unavailable', () => {
-			// TODO: PBC-254
+		it('Hides visual filters when count APIs are unavailable', () => { // PBC-254
+			coverageMock.disable('Contract Counts Data');
+			coverageMock.enable('Contract Counts Data Unavailable');
+			cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+
+			cy.getByAutoId('AssetsSelectVisualFilter-contractNumber').should('not.be.visible');
+			cy.getByAutoId('AssetsSelectVisualFilter-coverage').should('be.visible');
+
+			coverageMock.disable('Contract Counts Data Unavailable');
+			coverageMock.enable('Contract Counts Data');
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.waitForAppLoading();
 		});
 
 		it('Combines visual filters appropriately', () => {
@@ -199,6 +223,7 @@ describe('Assets', () => { // PBC-41
 
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 			assetMock.enable('Assets Page 1');
+			cy.waitForAppLoading();
 		});
 
 		it('Visual filters can be collapsed/expanded', () => {
@@ -208,6 +233,31 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('AssetsSelectVisualFilter-total').should('not.be.visible');
 			cy.getByAutoId('VisualFilterCollapse').click();
 			cy.getByAutoId('AssetsSelectVisualFilter-total').should('be.visible');
+
+			cy.getByAutoId('FilterBarClearAllFilters').click();
+		});
+
+		it('Provides an actions menu for each asset', () => { // PBC-255
+			const coveredAsset = assets[0].serialNumber;
+			const uncoveredAsset = assets[1].serialNumber;
+			cy.getByAutoId(`InventoryItem-${coveredAsset}`).within(() => {
+				cy.get('cui-dropdown').within($dropdown => {
+					cy.wrap($dropdown).click();
+					cy.get('a').should('have.length', 2);
+					cy.get('a').eq(0).should('have.text', 'Open Support Case');
+					cy.get('a').eq(1).should('have.text', 'Scan');
+					cy.wrap($dropdown).click();
+				});
+			});
+
+			cy.getByAutoId(`InventoryItem-${uncoveredAsset}`).within(() => {
+				cy.get('cui-dropdown').within($dropdown => {
+					cy.wrap($dropdown).click();
+					cy.get('a').should('have.length', 1);
+					cy.get('a').eq(0).should('have.text', 'Scan');
+					cy.wrap($dropdown).click();
+				});
+			});
 		});
 	});
 });
