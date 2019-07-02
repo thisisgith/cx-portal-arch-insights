@@ -636,7 +636,7 @@
 			<div class="col-md-6 flex-center-vertical">
 				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
 			</div>
-			<div class="col-md-6 text-right" *ngIf="viewAll">
+			<div class="col-md-6 text-right toggle" *ngIf="viewAll">
 				<div *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">
