@@ -18,6 +18,10 @@
 	outline-offset: 2px;
 }
 
+.responsive-table {
+	min-height: 100px;
+}
+
 .filter {
 	&__selected {
 		border-bottom: 4px solid $primary;

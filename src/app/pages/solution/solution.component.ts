@@ -90,8 +90,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					const route = _.split(
 						(_.isArray(event.url) ? event.url[0] : event.url), '?')[0];
 
-					console.log('ROUTE', route);
-
 					if (route.includes('solution')) {
 						this.activeRoute = route;
 						const routeFacet = _.find(this.facets, { route });
@@ -236,13 +234,16 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private fetchCoverageCount () {
 		this.contractsService.getCoverageCounts({ customerId })
 		.subscribe((counts: CoverageCountsResponse) => {
-			console.log('Here');
 			const covered = _.get(counts, 'covered', 0);
 			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
 			const assetsFacet = _.find(this.facets, { key: 'assets' });
+
+			const percent = ((covered / total) * 100);
+			const gaugePercent = Math.floor(percent) || 0;
 			assetsFacet.data = {
-				gaugePercent: Math.floor((covered / total) * 100) || 0,
+				gaugePercent,
+				gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
 			};
 		},
 		err => {
