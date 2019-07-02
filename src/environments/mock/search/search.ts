@@ -301,7 +301,7 @@ const mockGlobalResponse: GlobalSearchResponse = {
 							 "title":[
 									"Changing logging level of services on <key>DNA Center<\/key>"
 							 ],
-							 "url":[
+							 "uri":[
 									"https:\/\/community-stage.cisco.com\/t5\/network-architecture-videos\/changing-logging-level-of-services-on-dna-center\/ba-p\/3189205",
 									"https:\/\/community-stage.cisco.com\/t5\/network-architecture-videos\/changing-logging-level-of-services-on-dna-center\/ba-p\/3189205"
 							 ],
