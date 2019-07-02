@@ -51,15 +51,26 @@ describe('Assets', () => { // PBC-41
 			const total = Cypress._.reduce(coverageElements, (memo, value) => memo + value);
 			const coverage = Math.floor((coverageElements.covered / total) * 100);
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', `${coverage}%`)
-				.and('contain', 'ASSETS & COVERAGE');
+				.and('contain', 'ASSETS & COVERAGE')
+				.and('contain', 'Support Coverage');
 		});
 
-		it.skip('Gracefully handles invalid responses from the API', () => {
-			// TODO: Percentage should default to 0% if:
-			// - X-API-RESULT-COUNT headers are missing from API response (*)
-			// - X-API-RESULT-COUNT headers are not valid numbers (*)
-			// - API isn't responding - waiting on PBC-227
-			// (*) waiting on https://gitlab-sjc.cisco.com/sso-apps/libraries/cui-x-staging/merge_requests/13
+		it('Gracefully handles invalid responses from the API', () => {
+			coverageMock.disable('Coverage');
+			coverageMock.enable('Coverage - Empty Body');
+			cy.loadApp('/solution/assets');
+
+			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '0%');
+			coverageMock.disable('Coverage - Empty Body');
+			coverageMock.enable('Coverage - Invalid Body');
+			cy.loadApp('/solution/assets');
+			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '0%');
+			// TODO: Test for API not responding - waiting on PBC-227
+
+			coverageMock.disable('Coverage - Invalid Body');
+			coverageMock.enable('Coverage');
+			cy.loadApp('/solution/assets');
+			cy.waitForAppLoading();
 		});
 	});
 
@@ -196,6 +207,7 @@ describe('Assets', () => { // PBC-41
 		it('Combines visual filters appropriately', () => {
 			// TODO: When AP-5378 is implemented, this test can be done with mocked data
 			assetMock.disable('Assets Page 1');
+			assetMock.disable('Covered Assets');
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
@@ -212,6 +224,7 @@ describe('Assets', () => { // PBC-41
 
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 			assetMock.enable('Assets Page 1');
+			assetMock.enable('Covered Assets');
 			cy.waitForAppLoading();
 		});
 
