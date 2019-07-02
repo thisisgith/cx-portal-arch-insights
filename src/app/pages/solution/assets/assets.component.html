@@ -203,9 +203,9 @@
 				</tbody>
 		</table>
 	</div>
-	<div class="panel panel--ltgray" *ngIf="assetsTable && inventory.length && view == 'grid'">
-		<div class="row" > 
-			<div *ngFor="let item of inventory" class="col-md-2 base-margin-top flex">
+	<div class="panel panel--ltgray dbl-padding-right dbl-padding-left" *ngIf="assetsTable && inventory.length && view == 'grid'">
+		<div class="row"> 
+			<div *ngFor="let item of inventory" class="col-md-2 half-margin-bottom half-margin-top flex">
 				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
 			</div>
 		</div>
@@ -216,12 +216,12 @@
 	<div class="card curved-corners flex-fluid" [ngClass]="{ 'selected': item.selected }" (click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
-				<a attr.data-auto-id="InventoryItem-{{ item.data?.deviceName}}" class="text-large" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
+				<a attr.data-auto-id="InventoryItem-{{ item.data?.deviceName}}" class="text-large text-center" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
 			</div>
 			<div class="flex-center dbl-margin-top dbl-margin-bottom">
 				<!-- ngIf's using literal values until source of image is confirmed -->
 				<img *ngIf="false" [src]="" alt=""/>
-				<span *ngIf="true" class="col-md-6 text-muted center-xs text-uppercase text-wrap-normal" [innerText]="'_NoPhotoAvailable_' | i18n"></span>
+				<span *ngIf="true" class="col-md-6 text-muted text-center text-uppercase text-wrap-normal" [innerText]="'_NoPhotoAvailable_' | i18n"></span>
 			</div>
 		</div>
 		<div class="card__body text-small dbl-margin-bottom">
@@ -250,15 +250,28 @@
 				<div class="col-md-6" [innerText]="item.data?.role || ('_NA_' | i18n)"></div>
 			</div>
 		</div>
-		<div class="card__footer qtr-margin-bottom absolute-bottom absolute-left">
-			<span class="badge-wrapper base-margin-left" [ngClass]="{ 'invisible': !item.data?.criticalAdvisories }">
-				<span class="icon-alert icon-small text-dkgray-4"></span>
-				<span class="badge badge--tiny badge--danger" [innerText]="item.data?.criticalAdvisories"></span>
-			</span>
-			<span class="badge-wrapper base-margin-left" [ngClass]="{ 'invisible': !item.data?.supportCovered }">
-				<span class="icon-headset icon-small text-dkgray-4"></span>
-				<span class="badge badge--tiny badge--success icon-check"></span>
-			</span>
+		<div class="max-width">
+			<div class="pull-left">
+				<span class="badge-wrapper base-margin-right" [ngClass]="{ 'invisible': !item.data?.criticalAdvisories }">
+					<span tabindex="0" class="icon-alert" data-balloon-indigo [attr.data-balloon]="'_CriticalAdvisories_' | i18n" data-balloon-pos="down">
+						<span class="icon-alert icon-small text-dkgray-4"></span>
+					</span>
+					<span class="badge badge--tiny badge--danger" [innerText]="item.data?.criticalAdvisories"></span>
+				</span>
+				<span class="badge-wrapper" [ngClass]="{ 'invisible': !item.data?.supportCovered }">
+					<span tabindex="0" class="icon-alert" data-balloon-indigo [attr.data-balloon]="'_SupportCoverage_' | i18n" data-balloon-pos="down">
+						<span class="icon-headset icon-small text-dkgray-4"></span>
+					</span>
+					<span class="badge badge--tiny badge--success icon-check"></span>
+				</span>
+			</div>
+			<div class="pull-right">
+				<cui-dropdown
+					(click)="$event.stopPropagation()"
+					[actions]="getRowActions(item)"
+					icon="icon-more icon-small text-muted rotate-90">
+				</cui-dropdown>
+			</div>
 		</div>
 	</div>
 </ng-template>
