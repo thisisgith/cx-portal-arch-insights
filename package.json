@@ -12,6 +12,7 @@
     "deploy:stgi": "npx ngdeploy stgi -vn --source='src' --gzip --ng-build=\"-c stageInternal --aot\"",
     "deploy:stage": "npx ngdeploy stage -vn --source='src' --gzip --ng-build=\"--aot\"",
     "deploy:prod": "npx ngdeploy prod -vn --source='src' --gzip --ng-build=\"--aot\"",
+    "deploy:tie": "npx ngdeploy tie -vn --source='src' --gzip --ng-build=\"-c tie --aot\"",
     "start:docs": "npx compodoc -s",
     "postinstall": "cp node_modules/@apollo/linting/HTML/defaults.json .htmlhintrc",
     "build": "ng build",
@@ -70,11 +71,15 @@
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "@cisco-ngx/cui-auth": "^7.13.2",
-    "@cisco-ngx/cui-components": "^7.13.2",
+    "@cisco-ngx/cui-components": "^7.13.3",
     "@cisco-ngx/cui-pipes": "^7.13.2",
     "@cisco-ngx/cui-services": "^7.13.2",
     "@cisco-ngx/cui-utils": "^7.13.2",
-    "@cui-x-views/mock": "^1.1.0-beta.7",
+<<<<<<< HEAD
+    "@cui-x-views/mock": "1.1.0-beta.7",
+=======
+    "@cui-x-views/mock": "1.1.0-beta.7",
+>>>>>>> develop
     "@cui-x/cui-x-components": "^7.3.0",
     "@cui-x/services": "^1.0.0",
     "@cui-x/utilities": "^1.0.0",
