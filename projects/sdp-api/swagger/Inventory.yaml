@@ -722,6 +722,9 @@ definitions:
       contractNumber:
         type: string
         description: 'Contract Number'
+      criticalAdvisories:
+        type: integer
+        description: 'Critical advisories'
   HardwareResponse:
    type: object
    required:
