@@ -36,8 +36,31 @@ export class AssetsPieChartComponent implements OnInit {
 	 * Initializes the pie chart
 	 */
 	private buildGraph () {
+		const data = _.map(this.seriesData, d => ({
+			name: d.label,
+			y: d.value,
+		}));
+
 		this.chart = new Chart({
 			chart: {
+				events: {
+					load: () => {
+						if (window.Cypress) {
+							// Hack to allow Cypress to click on highcharts series
+							_.each(this.chart.ref.series[0].points, point => {
+								point.graphic.element.setAttribute(
+									'data-auto-id', `${point.name}Point`,
+								);
+								// When a "normal" click event fires,
+								// turn it into a highcharts point event instead
+								point.graphic.element.addEventListener('click', () => {
+									const event = Object.assign(new MouseEvent('click'), { point });
+									point.firePointEvent('click', event);
+								});
+							});
+						}
+					},
+				},
 				height: 200,
 				plotBackgroundColor: null,
 				plotBorderWidth: null,
@@ -66,8 +89,8 @@ export class AssetsPieChartComponent implements OnInit {
 				},
 			},
 			series: [{
+				data,
 				colorByPoint: true,
-				data: this.seriesData,
 				name: '',
 				type: undefined,
 			}],
@@ -83,7 +106,9 @@ export class AssetsPieChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-		this.subfilter.emit(event.point.name);
+
+		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
+		this.subfilter.emit(filterName);
 	}
 
 	/**

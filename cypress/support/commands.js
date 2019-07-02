@@ -11,5 +11,9 @@ Cypress.Commands.add('loadApp', (path = '/') => {
  * @param {Integer} timeout - Time in milliseconds to wait before failing
  */
 Cypress.Commands.add('waitForAppLoading', (property = 'loading', timeout = 30000) => {
-	cy.window({ timeout }).should('have.property', property, false);
+	Cypress.log({
+		name: 'loading',
+		message: { property, timeout },
+	});
+	cy.window({ timeout, log: false }).should('have.property', property, false);
 });

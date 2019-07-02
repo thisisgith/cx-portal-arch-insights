@@ -22,3 +22,14 @@ require('@apollo/cypress-util');
 Cypress.Cookies.defaults({
 	whitelist: ['ObSSOCookie'],
 });
+
+// Use the data-auto-id in the selector playground if available
+Cypress.SelectorPlayground.defaults({
+	onElement: $el => {
+		const customId = $el.attr('data-auto-id');
+
+		if (customId) {
+			return `[data-auto-id="${customId}"]`;
+		}
+	},
+});
