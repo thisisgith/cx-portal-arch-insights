@@ -1047,6 +1047,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
