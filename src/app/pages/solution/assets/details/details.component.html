@@ -4,7 +4,7 @@
 		<cui-tabs>
 				<!-- NOTE: This tab used to be called Details. May cause issue with localization. -->
 				<cui-tab [label]="'_Summary_' | i18n | uppercase">
-					<ng-container *ngTemplateOutlet="details"></ng-container>
+					<ng-container *ngTemplateOutlet="summary"></ng-container>
 				</cui-tab>
 				<cui-tab [label]="'_Hardware_' | i18n | uppercase" disabled="true">
 		
@@ -33,14 +33,14 @@
 	<!-- (fullscreenEvent)="determineFullScreen($event)" -->
 </ng-template>
 
-<ng-template #details>
+<ng-template #summary>
 	<div class="row base-margin-top">
 		<div class="col-md-4 flex flex-center">
 			<img alt="{{ '_StockPhoto_' | i18n }}"
 				src="assets/img/inventory/CAT-3650.png">
 		</div>
 		<div class="col-md-8" *ngIf="asset">
-			<h3>{{asset?.deviceName}}</h3>
+			<h3 [innerText]="asset?.deviceName"></h3>
 			<div data-auto-id="YouHaveInventory" *ngIf="numberInInventory" [innerHtml]="'_YouHaveInventory_' | i18n:(numberInInventory || '')"></div>
 			<cui-loader *ngIf="!numberInInventory" class="float-left" color="info"></cui-loader>
 		</div>
