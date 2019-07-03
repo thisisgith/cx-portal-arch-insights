@@ -10,7 +10,6 @@ import {
 	Router,
 	Event as RouterEvent,
 	NavigationEnd,
-	ActivatedRoute,
 } from '@angular/router';
 
 import * as _ from 'lodash-es';

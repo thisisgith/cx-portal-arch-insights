@@ -28,8 +28,14 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { SolutionService } from '../solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Subscription, forkJoin, fromEvent, of } from 'rxjs';
-import { map, debounceTime, catchError, distinctUntilChanged, mergeMap } from 'rxjs/operators';
+import { Subscription, forkJoin, fromEvent, of, Subject } from 'rxjs';
+import {
+	map,
+	debounceTime,
+	catchError,
+	distinctUntilChanged,
+	switchMap,
+} from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 
 /**
@@ -126,6 +132,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public assetsDropdown = false;
 	public allAssetsSelected = false;
 	public filtered = false;
+	private InventorySubject: Subject<{ }>;
 
 	public view: 'list' | 'grid' = 'list';
 
@@ -229,8 +236,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onPageChanged (event: any) {
 		this.assetParams.page = (event.page + 1);
-		this.fetchInventory()
-			.subscribe();
+		this.InventorySubject.next();
 	}
 
 	/**
@@ -285,10 +291,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			});
 		});
 
+		this.allAssetsSelected = false;
 		totalFilter.selected = true;
 		this.adjustQueryParams();
-		this.fetchInventory()
-			.subscribe();
+		this.InventorySubject.next();
 	}
 
 	/**
@@ -328,9 +334,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 
 		if (reload) {
+			this.allAssetsSelected = false;
 			this.adjustQueryParams();
-			this.fetchInventory()
-				.subscribe();
+			this.InventorySubject.next();
 		}
 	}
 
@@ -361,6 +367,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.view = params.view;
 			}
 		});
+		this.buildInventorySubject();
 		this.buildFilters();
 	}
 
@@ -395,7 +402,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.getInventoryCounts(),
 		)
 		.pipe(
-			mergeMap(() => {
+			map(() => {
 				if (this.assetParams.contractNumber) {
 					this.selectSubFilters(this.assetParams.contractNumber, 'contractNumber');
 				}
@@ -411,7 +418,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				// TODO: Add handler for EOX <- when api supports it
 				// TODO: Add handler for advisories <- when API supports it
 
-				return this.fetchInventory();
+				return this.InventorySubject.next();
 			}),
 		)
 		.subscribe(() => {
@@ -780,12 +787,25 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}),
 			catchError(err => {
 				eoxFilter.loading = false;
-				this.logger.error('assets.component : getRoleCounts() ' +
+				this.logger.error('assets.component : getHardwareEOXCounts() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
 		);
+	}
+
+	/**
+	 * Builds our inventory subject for cancellable http requests
+	 */
+	private buildInventorySubject () {
+		this.InventorySubject = new Subject();
+
+		this.InventorySubject
+		.pipe(
+			switchMap(() => this.fetchInventory()),
+		)
+		.subscribe();
 	}
 
 	/**
@@ -863,8 +883,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.view = view;
 			this.assetParams.rows = this.view === 'list' ? 10 : 12;
 			this.adjustQueryParams();
-			this.fetchInventory()
-				.subscribe();
+			this.InventorySubject.next();
 		}
    	}
 }

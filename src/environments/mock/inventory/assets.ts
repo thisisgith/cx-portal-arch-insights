@@ -412,13 +412,15 @@ export const mockResponse: Asset[] = [
  * @param page the page to return
  * @param contractNumber the contractNumber to filter on
  * @param supportCovered the values to filter coverage
+ * @param role the roles to filter on
  * @returns the assets response
  */
 function MockAssets (
 	rows: number,
 	page: number,
 	contractNumber?: string[],
-	supportCovered?: boolean[]): Assets {
+	supportCovered?: boolean[],
+	role?: string[]): Assets {
 	let data = _.cloneDeep(mockResponse);
 
 	if (contractNumber) {
@@ -435,6 +437,16 @@ function MockAssets (
 		data = _.filter(
 			data,
 			i => _.indexOf(supportCovered, i.supportCovered) >= 0);
+	}
+
+	if (role) {
+		const filtered = [];
+
+		_.each(role, (r: string) => {
+			filtered.push(_.filter(data, { role: r }));
+		});
+
+		data = _.flatten(filtered);
 	}
 
 	const total = data.length;
@@ -504,6 +516,40 @@ export const AssetScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=12&page=1&coverage=covered`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 900,
+					description: 'ACCESS Assets Page 1',
+					response: {
+						body: MockAssets(10, 1, null, null, ['ACCESS']),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&role=ACCESS&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 900,
+					description: 'ACCESS Assets Page 1 - Grid',
+					response: {
+						body: MockAssets(12, 1, null, null, ['ACCESS']),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=12&role=ACCESS&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
