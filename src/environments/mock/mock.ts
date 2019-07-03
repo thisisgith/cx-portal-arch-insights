@@ -31,6 +31,8 @@ import {
 	ATXResponse,
 	CDCSearchResponse,
 	CommunitiesResponse,
+	CoverageCountsResponse,
+	CoverageResponse,
 	ELearningResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
@@ -53,6 +55,8 @@ type ResponseBody = (
 	ATXResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
+	CoverageResponse |
+	CoverageCountsResponse |
 	ELearningResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |

@@ -63,6 +63,7 @@
 	"_Contracts_": "Contracts",
 	"_Coverage_": "Coverage",
 	"_CoverageStatus_": "Coverage Status",
+	"_CoveredUntil_": "Covered until {0}",
 	"_CriticalAdvisories_": "Critical Advisories",
 	"_CSETouch_": "Your CSE will be in touch shortly",
 	"_CurrentVersion_": "Current Version",
@@ -91,6 +92,8 @@
 	"_EditAssetTags_": "Edit Tags on ({0}) Assets",
 	"_ELearning_": "E-Learning",
 	"_Email_": "Email",
+	"_EndOfSale_": "End of Sale",
+	"_EndOfSupport_": "End of Support",
 	"_EoXMilestones_": "EoX Milestones",
 	"_ExpirationDate_": "Expiration Date",
 	"_ExportAll_": "Export All",
@@ -277,6 +280,7 @@
 	"_Workaround_": "Workaround",
 	"_XResults_": "{0} Results for \"{1}\"",
 	"_XSelected_": "{0} Selected",
+	"_YouHaveInventory_": "You have <a href=\"#\">{0}</a> of these in your inventory",
 	"_YourImpactedDevices_": "Your Impacted Devices",
 	"_YourProducts_": "Your products, documentation & Learning Library resources"
 }

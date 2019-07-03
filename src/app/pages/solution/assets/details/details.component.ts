@@ -7,7 +7,17 @@ import {
 	TemplateRef,
 	ViewChild,
 } from '@angular/core';
-import { HardwareInfo } from '@sdp-api';
+import {
+	HardwareInfo,
+	ContractsService,
+	CoverageInfo,
+	ProductAlertsService,
+	HardwareEOLResponse,
+	HardwareEOL,
+	HardwareEOLBulletinResponse,
+	HardwareEOLBulletin,
+	InventoryService,
+} from '@sdp-api';
 import { SolutionService } from '../../solution.service';
 import { CaseParams, CaseService } from '@cui-x/services';
 
@@ -16,22 +26,36 @@ import { CuiTimelineItem } from '@cisco-ngx/cui-components';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 
+/** Our current customerId */
+const customerId = '2431199';
+
+/** Our current managedNeId */
+const managedNeId = 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA';
+
 /**
  * Asset Details Component
  */
 @Component({
 	host: {
-		'[class.fullscreen]': 'fullscreen',
+		// '[class.fullscreen]': 'fullscreen',
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'asset-details',
 	styleUrls: ['./details.component.scss'],
 	templateUrl: './details.component.html',
 })
+
 export class AssetDetailsComponent implements OnChanges, OnInit {
 
 	@Input('asset') public asset: HardwareInfo;
+	@Input('customerId') public customerId: string;
 	@ViewChild('timelineItem', { static: true }) private timelineItemTemplate: TemplateRef<{ }>;
+
+	public coverageData: CoverageInfo;
+	public eolData: HardwareEOL;
+	public eolBulletinData: HardwareEOLBulletin;
+	public hardwareData: HardwareInfo;
+	public numberInInventory: number;
 
 	public componentData = {
 		openCases: 0,
@@ -45,18 +69,22 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	public status = {
 		loading: {
 			cases: false,
+			coverage: false,
 			timeline: false,
 		},
 	};
 	public hidden = true;
-	public fullscreen = false;
+	// public fullscreen = false;
 
 	public timelineData: CuiTimelineItem[] = [];
 
 	constructor (
 		private caseService: CaseService,
 		private solutionService: SolutionService,
+		private contractsService: ContractsService,
 		private logger: LogService,
+		private productAlertsService: ProductAlertsService,
+		private inventoryService: InventoryService,
 	) { }
 
 	/**
@@ -77,6 +105,67 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 				this.status.loading.cases = false;
 				this.logger.error('assetDetails.component : fetchCases()' +
 					`:: Error : (${err.status}) ${err.message}`);
+			});
+		}
+	}
+
+	/**
+	 * Fetch the coverage data for the selected asset
+	 */
+	private fetchCoverageData () {
+		if (this.asset) {
+			this.contractsService.getDevicesAndCoverage(
+				{ customerId, managedNeId: [managedNeId] })
+			.subscribe((data: any) => {
+				this.coverageData = _.get(data, 'body.data[0]', undefined);
+				this.fetchHardwareData();
+			},
+			err => {
+				this.coverageData = undefined;
+				this.status.loading.coverage = false;
+				this.logger.error('assetDetails.component : fetchCoverageData()' +
+					`:: Error : (${err.status}) ${err.message}`);
+			});
+		}
+	}
+
+	/**
+	 * Fetch the eol bulletin data for the selected asset
+	 */
+	private fetchEOLBulletinData () {
+		if (this.asset && this.eolData) {
+			this.productAlertsService.getHardwareEoxBulletin(
+				{ hwEolInstanceId: [this.eolData.hwEolInstanceId] })
+			.subscribe((data: HardwareEOLBulletinResponse) => {
+				this.eolBulletinData = data[0];
+			});
+		}
+	}
+
+	/**
+	 * Fetch the eol data for the selected asset
+	 */
+	private fetchEOLData () {
+		if (this.asset) {
+			this.productAlertsService.getHardwareEox(
+				{ customerId, managedNeId: [managedNeId] })
+			.subscribe((data: HardwareEOLResponse) => {
+				this.eolData = data[0];
+				this.fetchEOLBulletinData();
+			});
+		}
+	}
+
+	/**
+	 * Fetch the hardware data for the selected asset
+	 */
+	private fetchHardwareData () {
+		if (this.asset && this.coverageData) {
+			this.inventoryService.getHardware(
+				{ customerId, productId: [this.coverageData.productId] })
+			.subscribe((results: any) => {
+				this.hardwareData = _.get(results, 'body.data[0]', undefined);
+				this.numberInInventory = _.get(results, 'body.data.length', 0);
 			});
 		}
 	}
@@ -106,6 +195,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 		this.fetchCases();
 		if (this.asset) {
 			this.hidden = false;
+			this.fetchCoverageData();
+			this.fetchEOLData();
 		}
 	}
 
@@ -113,23 +204,19 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	 * determine if fullscreen from child data
 	 * @param $event gets the boolean value
 	 */
-	public determineFullScreen ($event: boolean) {
-		if ($event) {
-			this.fullscreen = true;
-		} else {
-			this.fullscreen = false;
-		}
-	}
+	// public determineFullScreen ($event: boolean) {
+	// 	if ($event) {
+	// 		this.fullscreen = true;
+	// 	} else {
+	// 		this.fullscreen = false;
+	// 	}
+	// }
 
 	/**
 	 * determine if close from child data
 	 * @param $event gets the boolean value
 	 */
 	public determineClose ($event: boolean) {
-		if ($event) {
-			this.hidden = true;
-		} else {
-			this.hidden = false;
-		}
+		this.hidden = $event;
 	}
 }

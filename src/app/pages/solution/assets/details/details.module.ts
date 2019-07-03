@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AssetDetailsComponent } from './details.component';
 import { AssetActivityModule } from '../activity/activity.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { CuiTimelineModule, CuiTabsModule } from '@cisco-ngx/cui-components';
+import { CuiTimelineModule, CuiTabsModule, CuiLoaderModule } from '@cisco-ngx/cui-components';
 import { CaseService } from '@cui-x/services';
 import { DetailsHeaderModule } from './details-header/details-header.module';
 import { TimelineModule } from '@components';
@@ -22,6 +22,7 @@ import { TimelineModule } from '@components';
 		I18nPipeModule,
 		DetailsHeaderModule,
 		TimelineModule,
+		CuiLoaderModule,
 	],
 	providers: [
 		CaseService,

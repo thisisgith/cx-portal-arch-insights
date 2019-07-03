@@ -18,6 +18,7 @@ import { HardwareInfo } from '@sdp-api';
 })
 export class DetailsHeaderComponent {
 	@Input('asset') public asset: HardwareInfo;
+	@Input('hardwareData') public hardwareData: HardwareInfo;
 	@Output() public fullscreenEvent = new EventEmitter<boolean>();
 	@Output() public closeEvent = new EventEmitter<boolean>();
 

@@ -1,115 +1,109 @@
 <div class="panel panel--bordered-left flex-fill panel--no-padding base-padding-right scroll">
 	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
-	<cui-tabs>
-		<cui-tab [label]="'_Details_' | i18n">
-			<ng-container *ngTemplateOutlet="details"></ng-container>
-		</cui-tab>
-		<cui-tab [label]="'_Hardware_' | i18n" disabled="true">
-
-		</cui-tab>
-		<cui-tab [label]="'_Software_' | i18n" disabled="true">
-
-		</cui-tab>
-		<cui-tab [label]="'_Vulnerabilities_' | i18n" disabled="true">
-
-		</cui-tab>
-		<cui-tab [label]="'_Insights_' | i18n" disabled="true">
-
-		</cui-tab>
-		<cui-tab [label]="'_Activity_' | i18n">
-			<asset-activity [asset]="asset"></asset-activity>
-		</cui-tab>
-	</cui-tabs>
+	<div class="base-margin-top base-margin-left">
+		<cui-tabs>
+				<!-- NOTE: This tab used to be called Details. May cause issue with localization. -->
+				<cui-tab [label]="'_Summary_' | i18n | uppercase">
+					<ng-container *ngTemplateOutlet="summary"></ng-container>
+				</cui-tab>
+				<cui-tab [label]="'_Hardware_' | i18n | uppercase" disabled="true">
+		
+				</cui-tab>
+				<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true">
+		
+				</cui-tab>
+				<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true">
+		
+				<!-- NOTE: This tab has content, but is not on latest mock-up -->
+				</cui-tab>
+				<cui-tab [label]="'_Activity_' | i18n | uppercase">
+					<asset-activity [asset]="asset"></asset-activity>
+				</cui-tab>
+			</cui-tabs>
+	</div>
+	
 </div>
 
 <ng-template #assetHeader>
 	<details-header
 		[asset]="asset"
-		(fullscreenEvent)="determineFullScreen($event)"
+		[hardwareData]="hardwareData"
 		(closeEvent)="determineClose($event)">
 	</details-header>
+	<!-- (fullscreenEvent)="determineFullScreen($event)" -->
 </ng-template>
 
-<ng-template #details>
+<ng-template #summary>
 	<div class="row base-margin-top">
-		<div class="col-md-8">
-			<div class="row">
-				<div class="col-md-12">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductSeries_', data: asset?.productFamily }"></ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductID_', data: asset?.productId }"></ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_OSVersion_', data: asset?.swVersion }"></ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_UpcomingEOXMilestones_', data: '' }"></ng-container>
-				</div>
-			</div>
-		</div>
 		<div class="col-md-4 flex flex-center">
 			<img alt="{{ '_StockPhoto_' | i18n }}"
 				src="assets/img/inventory/CAT-3650.png">
 		</div>
-	</div>
-
-	<div class="row base-margin-top">
-		<div class="col-md-8">
-			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_CXSubscription_', data: '' }"></ng-container>
-		</div>
-		<div class="col-md-4">
-			<button class="btn btn--gray-ghost btn--small btn--tiny half-padding-left half-padding-right text-small"
-				[innerText]="'_Upgrade_' | i18n">
-			</button>
+		<div class="col-md-8" *ngIf="asset">
+			<h3 [innerText]="asset?.deviceName"></h3>
+			<div data-auto-id="YouHaveInventory" *ngIf="numberInInventory" [innerHtml]="'_YouHaveInventory_' | i18n:(numberInInventory || '')"></div>
+			<cui-loader *ngIf="!numberInInventory" class="float-left" color="info"></cui-loader>
 		</div>
 	</div>
-
-	<div class="row base-margin-top">
-		<div class="col-md-8">
-			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_SupportContract_', data: '' }"></ng-container>
+		
+	<div class="row base-margin-top base-margin-left">
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductSeries_', linkData: hardwareData?.productFamily, url: '#' }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductID_', linkData: coverageData?.productId, url: '#' }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_OSVersion_', linkData: asset?.osVersion, url: '#' }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_SupportContract_', data: ('_CoveredUntil_' | i18n:((coverageData?.contractEndDate | date:'yyyy MMM dd')) || ''), linkData: (coverageData?.contractNumber + ' ' + coverageData?.slaDescription), url: '#' }"></ng-container>
+				</div>
+			</div>
 		</div>
-		<div class="col-md-4">
-			<button class="btn btn--gray-ghost btn--small btn--tiny half-padding-left half-padding-right text-small"
-				[innerText]="'_Renew_' | i18n">
-			</button>
-		</div>
-	</div>
-
-	<div class="row base-margin-top">
-		<div class="col-md-8">
-			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Warranty_', data: '' }"></ng-container>
-		</div>
-		<div class="col-md-4">
-			<!-- Empty for Spacing -->
-		</div>
-	</div>
-
-	<div class="row base-margin-top">
-		<div class="col-md-8">
-			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_DiagnosticScanSchedule_', data: '' }"></ng-container>
-		</div>
-		<div class="col-md-4">
-			<button class="btn btn--gray-ghost btn--small btn--tiny half-padding-left half-padding-right text-small"
-				[innerText]="'_Change_' | i18n">
-			</button>
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_EndOfSale_', data: eolBulletinData?.eoSaleDate | date:'yyyy MMM dd'}"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_EndOfSupport_', data: eolBulletinData?.lastDateOfSupport | date:'yyyy MMM dd' }"></ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Warranty_', data: ('_CoveredUntil_' | i18n:((coverageData?.warrantyEndDate | date:'yyyy MMM dd')) || ''), linkData: coverageData?.warrantyType, url: '#' }"></ng-container>
+				</div>
+			</div>
 		</div>
 	</div>
 
-	<div class="row base-margin-top">
-		<div class="col-md-8">
-			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Location_', data: '' }"></ng-container>
-		</div>
-		<div class="col-md-4">
-			Map
+	<div class="row dbl-margin-top">
+		<div class="col-md-12">
+			<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Location_', titleOnly: true}"></ng-container>
 		</div>
 	</div>
+
+	<div class="flex map-box">
+		<div class="icon-chevron-left qtr-padding-left qtr-padding-right flex-center"></div>
+		<div class="flex-fluid flex-center map-box-content"></div>
+		<div class="icon-chevron-right qtr-padding-left qtr-padding-right flex-center"></div>
+	</div>
+
 </ng-template>
 
-<ng-template #detailsData let-title="title" let-data="data">
+
+
+
+<ng-template #detailsData let-title="title" let-data="data" let-linkData="linkData" let-url="url" let-titleOnly="titleOnly">
 	<div class="row">
-		<div class="col-md-6 text-right" [innerText]="title | i18n"></div>
-		<div class="col-md-6" [innerText]="data || ('_NA_' | i18n)"></div>
+		<div class="col-md-12 text-bold" [innerText]="title | i18n | uppercase"></div>
+	</div>
+	<div class="row" *ngIf="!titleOnly">
+		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)"></div>
+		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)"></div>
+		<a [href]="url" *ngIf="linkData">
+			<div class="col-md-12" [innerText]="linkData"></div>
+		</a>
 	</div>
 </ng-template>
-x

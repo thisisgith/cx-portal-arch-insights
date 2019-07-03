@@ -1815,7 +1815,7 @@ module ProductAlertsService {
     /**
      * The unique identifier for hardware end-of-life entry in a data store.
      */
-    hwEolInstanceId?: Array<number>;
+    hwEolInstanceId?: Array<string>;
 
     /**
      * Receive only requested fields in the response
