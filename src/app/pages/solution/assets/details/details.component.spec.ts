@@ -50,7 +50,6 @@ describe('AssetDetailsComponent', () => {
 	let fixture: ComponentFixture<AssetDetailsComponent>;
 	let wrapperComponentFixture: ComponentFixture<WrapperComponent>;
 	let caseService: CaseService;
-	let productAlertsService: ProductAlertsService;
 	let inventoryService: InventoryService;
 	let contractsService: ContractsService;
 
@@ -145,9 +144,6 @@ describe('AssetDetailsComponent', () => {
 	it('should fetch hardware data', fakeAsync(() => {
 		buildSpies();
 		tick(1000);
-		// fixture.detectChanges();
-		// const button = fixture.debugElement.query(By.css('button'));
-		// button.nativeElement.click();
 
 		const deviceResponse = getActiveBody(AssetScenarios[0]);
 		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
@@ -155,12 +151,7 @@ describe('AssetDetailsComponent', () => {
 
 		componentFromWrapper.assetDetailsComponent.refresh();
 
-		tick(10000000);
-		// fixture.detectChanges();
-
 		wrapperComponentFixture.detectChanges();
-		console.log(componentFromWrapper.assetDetailsComponent.asset);
-		console.log(componentFromWrapper.assetDetailsComponent.coverageData);
 		expect(contractsSpy)
 			.toHaveBeenCalled();
 	}));
@@ -188,7 +179,7 @@ describe('AssetDetailsComponent', () => {
 	});
 
 	it('should handle failing coverage api call', () => {
-		contractsSpy = spyOn(contractsService, 'getDevicesAndCoverageResponse')
+		contractsSpy = spyOn(contractsService, 'getDevicesAndCoverage')
 			.and
 			.returnValue(throwError(new HttpErrorResponse({
 				status: 404,
@@ -206,8 +197,7 @@ describe('AssetDetailsComponent', () => {
 			.then(() => {
 				expect(component.status.loading.coverage)
 					.toEqual(false);
-			})
-			.then(() => {
+
 				expect(component.coverageData)
 					.toEqual(undefined);
 			});

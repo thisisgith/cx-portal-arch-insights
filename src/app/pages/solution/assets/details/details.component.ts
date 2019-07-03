@@ -112,7 +112,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	 */
 	private fetchCoverageData () {
 		if (this.asset) {
-			this.contractsService.getDevicesAndCoverageResponse(
+			this.contractsService.getDevicesAndCoverage(
 				{ customerId, managedNeId })
 			.subscribe((data: any) => {
 				this.coverageData = _.get(data, 'body.data[0]', undefined);
@@ -215,10 +215,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	 * @param $event gets the boolean value
 	 */
 	public determineClose ($event: boolean) {
-		if ($event) {
-			this.hidden = true;
-		} else {
-			this.hidden = false;
-		}
+		this.hidden = $event;
 	}
 }

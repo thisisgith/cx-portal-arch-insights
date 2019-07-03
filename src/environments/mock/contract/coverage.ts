@@ -21,7 +21,6 @@ const mockCoverageCounts: CoverageCountsResponse = {
 const coverageResponse: CoverageResponse = {
 	data: [
 		{
-			// customerId: 2431199,
 			billToAddress1: '116 INVERNESS DRIVE EAST SUITE 375',
 			billToAddress2: 'C/O CASTLE PINES CAPITAL',
 			billToCity: 'ENGLEWOOD',
@@ -106,15 +105,6 @@ export const CoverageScenarios = [
 					selected: false,
 				},
 				{
-					delay: 100,
-					description: 'Coverage - Invalid Body',
-					response: {
-						body: { covered: true },
-						status: 200,
-					},
-					selected: false,
-				},
-				{
 					delay: 500,
 					description: 'Coverage 500 Failure',
 					response: {
@@ -133,6 +123,7 @@ export const CoverageScenarios = [
 							uncovered: 3,
 							unknown: 8915,
 						},
+						status: 200,
 					},
 					selected: false,
 				},
