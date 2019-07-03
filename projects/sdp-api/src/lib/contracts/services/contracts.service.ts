@@ -16,12 +16,12 @@ import { CoverageCountsResponse } from '../models/coverage-counts-response';
   providedIn: 'root',
 })
 class ContractsService extends __BaseService {
-  static readonly headContractsProductsCoveragesPath = '/api/customerportal/contracts/v1/products/coverages';
-  static readonly getDevicesAndCoveragePath = '/api/customerportal/contracts/v1/products/coverages';
-  static readonly getTopCoverageExpirationPath = '/api/customerportal/contracts/v1/products/coverages/top';
-  static readonly getContractDetailsPath = '/api/customerportal/contracts/v1/details';
-  static readonly getContractCountsPath = '/api/customerportal/contracts/v1/device/count';
-  static readonly getCoverageCountsPath = '/api/customerportal/contracts/v1/coverages/count';
+  static readonly headProductsCoveragesPath = '/products/coverages';
+  static readonly getDevicesAndCoveragePath = '/products/coverages';
+  static readonly getTopCoverageExpirationPath = '/products/coverages/top';
+  static readonly getContractDetailsPath = '/details';
+  static readonly getContractCountsPath = '/device/count';
+  static readonly getCoverageCountsPath = '/coverages/count';
 
   constructor(
     config: __Configuration,
@@ -32,7 +32,7 @@ class ContractsService extends __BaseService {
 
   /**
    * Returns the total number of products that have coverage information along with query metadata (e.g. rows/page).
-   * @param params The `ContractsService.HeadContractsProductsCoveragesParams` containing the following parameters:
+   * @param params The `ContractsService.HeadProductsCoveragesParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
@@ -40,7 +40,7 @@ class ContractsService extends __BaseService {
    *
    * - `contractNumber`: The contract number
    */
-  headContractsProductsCoveragesResponse(params: ContractsService.HeadContractsProductsCoveragesParams): __Observable<__StrictHttpResponse<null>> {
+  headProductsCoveragesResponse(params: ContractsService.HeadProductsCoveragesParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -67,7 +67,7 @@ class ContractsService extends __BaseService {
 
   /**
    * Returns the total number of products that have coverage information along with query metadata (e.g. rows/page).
-   * @param params The `ContractsService.HeadContractsProductsCoveragesParams` containing the following parameters:
+   * @param params The `ContractsService.HeadProductsCoveragesParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
@@ -75,8 +75,8 @@ class ContractsService extends __BaseService {
    *
    * - `contractNumber`: The contract number
    */
-  headContractsProductsCoverages(params: ContractsService.HeadContractsProductsCoveragesParams): __Observable<null> {
-    return this.headContractsProductsCoveragesResponse(params).pipe(
+  headProductsCoverages(params: ContractsService.HeadProductsCoveragesParams): __Observable<null> {
+    return this.headProductsCoveragesResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -411,9 +411,9 @@ class ContractsService extends __BaseService {
 module ContractsService {
 
   /**
-   * Parameters for headContractsProductsCoverages
+   * Parameters for headProductsCoverages
    */
-  export interface HeadContractsProductsCoveragesParams {
+  export interface HeadProductsCoveragesParams {
 
     /**
      * Unique identifier of a Cisco customer.

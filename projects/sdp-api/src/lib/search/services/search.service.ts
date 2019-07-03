@@ -18,9 +18,9 @@ import { GlobalSearchResponse } from '../models/global-search-response';
   providedIn: 'root',
 })
 class SearchService extends __BaseService {
-  static readonly directCDCSearchPath = '/api/customerportal/search/v1/cdcSearch';
-  static readonly directCommunitySearchPath = '/api/customerportal/search/v1/communitySearch';
-  static readonly allSearchPath = '/api/customerportal/search/v1/globalSearch';
+  static readonly directCDCSearchPath = '/cdcSearch';
+  static readonly directCommunitySearchPath = '/communitySearch';
+  static readonly allSearchPath = '/globalSearch';
 
   constructor(
     config: __Configuration,

@@ -14,8 +14,8 @@ import { PitstopActionUpdateRequest } from '../models/pitstop-action-update-requ
   providedIn: 'root',
 })
 class RacetrackService extends __BaseService {
-  static readonly getRacetrackPath = '/api/customerportal/pitstop/v1/info';
-  static readonly updatePitstopActionPath = '/api/customerportal/pitstop/v1/action/status';
+  static readonly getRacetrackPath = '/info';
+  static readonly updatePitstopActionPath = '/action/status';
 
   constructor(
     config: __Configuration,

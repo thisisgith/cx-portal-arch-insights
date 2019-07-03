@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface SecurityAdvisoryObjectDetails {
+export interface SecurityAdvisory {
 
   /**
    * The description of a product

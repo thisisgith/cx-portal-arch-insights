@@ -17,12 +17,12 @@ import { ELearningResponse } from '../models/elearning-response';
   providedIn: 'root',
 })
 class RacetrackContentService extends __BaseService {
-  static readonly getRacetrackATXPath = '/api/customerportal/racetrack/v1/atx';
-  static readonly getRacetrackACCPath = '/api/customerportal/racetrack/v1/acc';
-  static readonly updateACCBookmarkPath = '/api/customerportal/racetrack/v1/acc/{accId}/bookmark';
-  static readonly getRacetrackSuccessPathsPath = '/api/customerportal/racetrack/v1/successPaths';
-  static readonly getRacetrackCommunitiesPath = '/api/customerportal/racetrack/v1/communities';
-  static readonly getRacetrackElearningPath = '/api/customerportal/racetrack/v1/elearning';
+  static readonly getRacetrackATXPath = '/atx';
+  static readonly getRacetrackACCPath = '/acc';
+  static readonly updateACCBookmarkPath = '/acc/{accId}/bookmark';
+  static readonly getRacetrackSuccessPathsPath = '/successPaths';
+  static readonly getRacetrackCommunitiesPath = '/communities';
+  static readonly getRacetrackElearningPath = '/elearning';
 
   constructor(
     config: __Configuration,

@@ -12,7 +12,7 @@ import { UserResponse } from '../models/user-response';
   providedIn: 'root',
 })
 class UserService extends __BaseService {
-  static readonly getUserPath = '/api/customerportal/party/v1/system/users';
+  static readonly getUserPath = '/system/users';
 
   constructor(
     config: __Configuration,

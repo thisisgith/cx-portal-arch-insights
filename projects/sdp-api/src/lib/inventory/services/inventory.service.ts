@@ -16,14 +16,14 @@ import { RoleCountResponse } from '../models/role-count-response';
   providedIn: 'root',
 })
 class InventoryService extends __BaseService {
-  static readonly getAssetsPath = '/api/customerportal/inventory/v1/assets';
-  static readonly headHardwarePath = '/api/customerportal/inventory/v1/hardware';
-  static readonly getHardwarePath = '/api/customerportal/inventory/v1/hardware';
-  static readonly headNetworkElementsPath = '/api/customerportal/inventory/v1/network-elements';
-  static readonly getNetworkElementsPath = '/api/customerportal/inventory/v1/network-elements';
-  static readonly headSoftwarePath = '/api/customerportal/inventory/v1/software';
-  static readonly getSoftwarePath = '/api/customerportal/inventory/v1/software';
-  static readonly getRoleCountPath = '/api/customerportal/inventory/v1/role/device/count';
+  static readonly getAssetsPath = '/assets';
+  static readonly headHardwarePath = '/hardware';
+  static readonly getHardwarePath = '/hardware';
+  static readonly headNetworkElementsPath = '/network-elements';
+  static readonly getNetworkElementsPath = '/network-elements';
+  static readonly headSoftwarePath = '/software';
+  static readonly getSoftwarePath = '/software';
+  static readonly getRoleCountPath = '/role/device/count';
 
   constructor(
     config: __Configuration,

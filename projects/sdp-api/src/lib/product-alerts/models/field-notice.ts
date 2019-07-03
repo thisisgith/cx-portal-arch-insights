@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface FieldNoticeResponseObjectInfo {
+export interface FieldNotice {
 
   /**
    * The name of a group of products derived from a common product platform

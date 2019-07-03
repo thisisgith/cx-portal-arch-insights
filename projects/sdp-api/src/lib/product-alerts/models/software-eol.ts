@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface SoftwareEOLResponseObjectInfo {
+export interface SoftwareEOL {
 
   /**
    * Unique identifier of a Cisco customer

@@ -1,20 +1,15 @@
 /* tslint:disable */
-export interface HardwareEOLBulletinResponseInfo {
+export interface SoftwareEOLBulletin {
 
   /**
-   * End of Bu Engineering Support Tac Date
+   * The last-possible ship date that can be requested of Cisco and/or its contract manufacturers. Actual ship date is dependent on lead time. GMT date format YYYY-MM-DD
    */
-  eoBuEngineeringSupportTacDate?: string;
+  lastShipDate?: string;
 
   /**
-   * The unique identifier for hardware end-of-life entry in a data store
+   * The unique identifier for software end-of-life entry in a data store
    */
-  hwEolInstanceId?: number;
-
-  /**
-   * Cisco product published at the time of EOL announcement
-   */
-  bulletinProductId?: string;
+  swEolInstanceId?: number;
 
   /**
    * The Cisco.com Title/Headline for the bulletin
@@ -27,9 +22,9 @@ export interface HardwareEOLBulletinResponseInfo {
   URL?: string;
 
   /**
-   * The date when the bulletin was first published to Cisco.com. GMT date format YYYY-MM-DD
+   * Published Date
    */
-  bulletinFirstPublished?: string;
+  publishedDate?: string;
 
   /**
    * End of Life External Announcement Date. GMT date format YYYY-MM-DD
@@ -47,14 +42,24 @@ export interface HardwareEOLBulletinResponseInfo {
   eoSaleDate?: string;
 
   /**
+   * End of Engineering Date. GMT date format YYYY-MM-DD
+   */
+  eoEngineeringDate?: string;
+
+  /**
+   * End of Life Date. GMT date format YYYY-MM-DD
+   */
+  eoLifeDate?: string;
+
+  /**
    * The last date to receive applicable service and support for the product as entitled by active service contracts or by warranty terms and conditions. After this date, all support services for the product are unavailable, and the product becomes obsolete. GMT date format YYYY-MM-DD
    */
   lastDateOfSupport?: string;
 
   /**
-   * The last-possible ship date that can be requested of Cisco and/or its contract manufacturers. Actual ship date is dependent on lead time. GMT date format YYYY-MM-DD
+   * The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
    */
-  lastShipDate?: string;
+  bulletinNumber?: string;
 
   /**
    * For equipment and software that is not covered by a service-and-support contract, this is the last date to order a new service-and-support contract or add the equipment and/or software to an existing service-and-support contract. GMT date format YYYY-MM-DD
@@ -72,9 +77,9 @@ export interface HardwareEOLBulletinResponseInfo {
   eoSwMaintenanceReleasesDate?: string;
 
   /**
-   * The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
+   * End of Bu Engineering Support Tac Date
    */
-  bulletinNumber?: string;
+  eoBuEngineeringSupportTacDate?: string;
 
   /**
    * The last date to extend or renew a service contract for the product. GMT date format YYYY-MM-DD
@@ -101,39 +106,4 @@ export interface HardwareEOLBulletinResponseInfo {
    */
   eoVulnerabilitySecuritySupport?: string;
   milestoneInfo?: Array<{currentHwEolMilestone?: string, nextHwEolMilestone?: string, currentHwEolMilestoneDate?: string, nextHwEolMilestoneDate?: string}>;
-
-  /**
-   * Migration Pid
-   */
-  migrationPid?: string;
-
-  /**
-   * Migration Product Series
-   */
-  migrationProductSeries?: string;
-
-  /**
-   * Migration Product Model
-   */
-  migrationProductModel?: string;
-
-  /**
-   * Migration Promotion Text
-   */
-  migrationPromotionText?: string;
-
-  /**
-   * Migration Product Page Url
-   */
-  migrationProductPageUrl?: string;
-
-  /**
-   * Migration Product Data Url
-   */
-  migrationProductDataUrl?: string;
-
-  /**
-   * Internal Announcement Date
-   */
-  internalAnnouncementDate?: string;
 }

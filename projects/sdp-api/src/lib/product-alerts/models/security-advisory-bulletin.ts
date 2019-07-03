@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface SecurityAdvisoryBulletinInfo {
+export interface SecurityAdvisoryBulletin {
 
   /**
    * Announcement Type Name
