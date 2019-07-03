@@ -197,7 +197,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		item.selected = !item.selected;
 
 		this.allAssetsSelected = _.every(this.inventory, 'selected');
-		// this.solutionService.sendCurrentAsset(item.selected ? item.data : null);
+		this.solutionService.sendCurrentAsset(item.selected ? item.data : null);
 	}
 
 	/**

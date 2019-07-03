@@ -62,6 +62,7 @@
 	"_Contracts_": "Contracts",
 	"_Coverage_": "Coverage",
 	"_CoverageStatus_": "Coverage Status",
+	"_CoveredUntil_": "Covered until {0}",
 	"_CriticalAdvisories_": "Critical Advisories",
 	"_CSETouch_": "Your CSE will be in touch shortly",
 	"_CurrentVersion_": "Current Version",

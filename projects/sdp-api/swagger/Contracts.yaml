@@ -140,6 +140,11 @@ paths:
           type: integer
           format: int64
           minimum: 1
+        - name: managedNeId
+          in: query
+          description: The unique, generated ID of the network element
+          required: false
+          type: string
       responses:
         '200':
           description: successful operation

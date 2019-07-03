@@ -878,7 +878,7 @@ class ProductAlertsService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/hardware-eol`,
+      this.rootUrl + `/customerportal/v1/product-alerts/hardware-eol`,
       __body,
       {
         headers: __headers,
@@ -1029,7 +1029,7 @@ class ProductAlertsService extends __BaseService {
     (params.bulletinNumber || []).forEach(val => {if (val != null) __params = __params.append('bulletinNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/hardware-eol-bulletins`,
+      this.rootUrl + `/customerportal/v1/product-alerts/hardware-eol-bulletins`,
       __body,
       {
         headers: __headers,

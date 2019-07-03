@@ -6,6 +6,9 @@ const api = '/api/customerportal/inventory/v1/hardware';
 /** Default Customer ID */
 const customerId = '2431199';
 
+/** Default Product ID */
+const productId = 'ASAv';
+
 /**
  * Mock data for Inventory API results
  */
@@ -1147,6 +1150,23 @@ export const HardwareScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: 'Hardware productId',
+					response: {
+						body: mockResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&productId=${productId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

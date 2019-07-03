@@ -27,9 +27,10 @@
 <ng-template #assetHeader>
 	<details-header
 		[asset]="asset"
-		(fullscreenEvent)="determineFullScreen($event)"
+		[hardwareData]="hardwareData"
 		(closeEvent)="determineClose($event)">
 	</details-header>
+	<!-- (fullscreenEvent)="determineFullScreen($event)" -->
 </ng-template>
 
 <ng-template #details>
@@ -39,8 +40,9 @@
 				src="assets/img/inventory/CAT-3650.png">
 		</div>
 		<div class="col-md-8" *ngIf="asset">
-			<h3>{{asset?.productName}}</h3>
-			<div [innerHtml]="'_YouHaveInventory_' | i18n:22"></div>
+			<h3>{{asset?.deviceName}}</h3>
+			<div data-auto-id="YouHaveInventory" *ngIf="numberInInventory" [innerHtml]="'_YouHaveInventory_' | i18n:(numberInInventory || '')"></div>
+			<cui-loader *ngIf="!numberInInventory" class="float-left" color="info"></cui-loader>
 		</div>
 	</div>
 		
@@ -48,29 +50,29 @@
 		<div class="col-md-6">
 			<div class="row">
 				<div class="col-md-12">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductSeries_', linkData: asset?.productFamily, url: '#' }"></ng-container>
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductSeries_', linkData: hardwareData?.productFamily, url: '#' }"></ng-container>
 				</div>
 				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductID_', linkData: asset?.productId, url: '#' }"></ng-container>
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_ProductID_', linkData: coverageData?.productId, url: '#' }"></ng-container>
 				</div>
 				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_OSVersion_', linkData: asset?.swVersion, url: '#' }"></ng-container>
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_OSVersion_', linkData: asset?.osVersion, url: '#' }"></ng-container>
 				</div>
 				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_SupportContract_', data: 'N/A', linkData: 'N/A', url: '#' }"></ng-container>
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_SupportContract_', data: ('_CoveredUntil_' | i18n:((coverageData?.contractEndDate | date:'yyyy MMM dd')) || ''), linkData: (coverageData?.contractNumber + ' ' + coverageData?.slaDescription), url: '#' }"></ng-container>
 				</div>
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="row">
 				<div class="col-md-12">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_EndOfSale_', data: '' }"></ng-container>
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_EndOfSale_', data: eolBulletinData?.eoSaleDate | date:'yyyy MMM dd'}"></ng-container>
 				</div>
 				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: 'EndOfSupport', data: '' }"></ng-container>
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_EndOfSupport_', data: eolBulletinData?.lastDateOfSupport | date:'yyyy MMM dd' }"></ng-container>
 				</div>
 				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Warranty_', data: 'N/A', linkData: 'N/A', url: '#' }"></ng-container>
+					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Warranty_', data: ('_CoveredUntil_' | i18n:((coverageData?.warrantyEndDate | date:'yyyy MMM dd')) || ''), linkData: coverageData?.warrantyType, url: '#' }"></ng-container>
 				</div>
 			</div>
 		</div>
@@ -99,7 +101,7 @@
 	</div>
 	<div class="row" *ngIf="!titleOnly">
 		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)"></div>
-		<div class="col-md-12" [innerText]="data || ('_NA_' | i18n)" *ngIf="data"></div>
+		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)"></div>
 		<a [href]="url" *ngIf="linkData">
 			<div class="col-md-12" [innerText]="linkData"></div>
 		</a>

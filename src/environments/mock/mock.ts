@@ -16,6 +16,7 @@ import {
 	SearchScenarios,
 	SuccessPathScenarios,
 	VulnerabilityScenarios,
+	EOLScenarios,
 } from './';
 import { HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash-es';
@@ -33,6 +34,9 @@ import {
 	RoleCountResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
+	CoverageResponse,
+	CoverageCountsResponse,
+	HardwareEOLResponseObjectDetails,
 } from '@cui-x/sdp-api';
 import { RMAResponse } from '@interfaces';
 
@@ -43,6 +47,8 @@ type ResponseBody = (
 	ATXResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
+	CoverageResponse |
+	CoverageCountsResponse |
 	ELearningResponse |
 	HardwareResponse |
 	PitstopActionUpdateResponse |
@@ -50,7 +56,8 @@ type ResponseBody = (
 	RMAResponse |
 	RoleCountResponse |
 	SuccessPathsResponse |
-	VulnerabilityResponse
+	VulnerabilityResponse |
+	HardwareEOLResponseObjectDetails
 );
 
 /**
@@ -112,5 +119,6 @@ export const mockSettings: MockSettings = {
 		SearchScenarios,
 		SuccessPathScenarios,
 		VulnerabilityScenarios,
+		EOLScenarios,
 	]),
 };
