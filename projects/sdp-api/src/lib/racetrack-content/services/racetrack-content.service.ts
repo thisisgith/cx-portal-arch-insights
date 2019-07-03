@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { RacetrackContentConfiguration as __Configuration } from '../racetrack-content-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -59,6 +59,7 @@ class RacetrackContentService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
@@ -144,6 +145,7 @@ class RacetrackContentService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
@@ -213,7 +215,8 @@ class RacetrackContentService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __headers.append("Content-Type", "application/json");
+
+    __headers = __headers.append("Content-Type", "application/json");
     __body = params.bookmark;
 
     let req = new HttpRequest<any>(
@@ -276,6 +279,7 @@ class RacetrackContentService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
@@ -361,6 +365,7 @@ class RacetrackContentService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
@@ -446,6 +451,7 @@ class RacetrackContentService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
