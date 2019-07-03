@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { ProductAlertsConfiguration as __Configuration } from '../product-alerts-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -65,6 +65,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     let req = new HttpRequest<any>(
@@ -109,6 +110,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
@@ -168,6 +170,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.vulnerabilityStatus || []).forEach(val => {if (val != null) __params = __params.append('vulnerabilityStatus', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
@@ -236,6 +239,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
@@ -284,6 +288,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -338,6 +343,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
@@ -412,6 +418,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.XCSICCOID != null) __headers = __headers.set('X-CSI-CCOID', params.XCSICCOID.toString());
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
@@ -494,6 +501,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
@@ -553,6 +561,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.vulnerabilityStatus || []).forEach(val => {if (val != null) __params = __params.append('vulnerabilityStatus', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
@@ -624,6 +633,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
@@ -686,6 +696,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
@@ -750,6 +761,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
@@ -805,6 +817,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -870,6 +883,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
@@ -946,6 +960,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
@@ -1032,6 +1047,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
@@ -1070,6 +1086,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
@@ -1125,6 +1142,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -1190,6 +1208,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
@@ -1266,6 +1285,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     (params.swEolInstanceId || []).forEach(val => {if (val != null) __params = __params.append('swEolInstanceId', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -1363,6 +1383,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());

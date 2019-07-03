@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { ContractsConfiguration as __Configuration } from '../contracts-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -44,6 +44,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.coverage != null) __params = __params.set('coverage', params.coverage.toString());
     if (params.contractNumber != null) __params = __params.set('contractNumber', params.contractNumber.toString());
@@ -110,6 +111,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -191,6 +193,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -261,6 +264,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.inventoryName != null) __params = __params.set('inventoryName', params.inventoryName.toString());
@@ -321,6 +325,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
@@ -371,6 +376,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(

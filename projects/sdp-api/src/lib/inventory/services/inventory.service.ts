@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { InventoryConfiguration as __Configuration } from '../inventory-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -54,6 +54,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
@@ -110,6 +111,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
@@ -173,6 +175,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
@@ -246,6 +249,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
@@ -319,6 +323,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sysName || []).forEach(val => {if (val != null) __params = __params.append('sysName', val.toString())});
     (params.swVersion || []).forEach(val => {if (val != null) __params = __params.append('swVersion', val.toString())});
@@ -415,6 +420,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -493,6 +499,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.swVersion || []).forEach(val => {if (val != null) __params = __params.append('swVersion', val.toString())});
     (params.swType || []).forEach(val => {if (val != null) __params = __params.append('swType', val.toString())});
@@ -578,6 +585,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     let req = new HttpRequest<any>(
