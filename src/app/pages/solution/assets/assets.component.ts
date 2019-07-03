@@ -686,6 +686,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					{
 						key: 'role',
 						name: I18n.get('_Role_'),
+						render: item => _.capitalize(item.role),
 						sortable: false,
 						value: 'role',
 					},
