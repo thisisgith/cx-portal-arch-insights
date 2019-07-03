@@ -595,6 +595,31 @@ export const AssetScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 0,
+					description: '(Assets) Unreachable API - Grid View',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
+				{
+					delay: 0,
+					description: '(Assets) Missing data - Grid View',
+					response: {
+						body: (() => {
+							const { data, Pagination } = MockAssets(1, 1);
+
+							return {
+								Pagination,
+								data: [_.pick(data[0], ['deviceName', 'serialNumber'])],
+							};
+						})(),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=12&page=1`,
