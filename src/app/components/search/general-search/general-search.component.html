@@ -7,10 +7,10 @@
 	</div>
 </div>
 <div *ngIf="!loading && searchResults?.length">
-	<h5 *ngIf="header"
+	<h6 *ngIf="header"
 		[innerText]="header"
-		class="base-margin-bottom">
-	</h5>
+		class="base-margin-top half-margin-bottom">
+	</h6>
 	<h5 [innerText]="'_XResults_' | i18n:totalCount:searchToken"
 		class="base-margin-bottom">
 	</h5>

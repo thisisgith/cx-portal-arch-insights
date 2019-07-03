@@ -427,7 +427,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.status.loading.acc = false;
 
 				this.componentData.acc = {
-					recommended:  _.head(_.filter(result.items, { status: 'recommended' })),
+					recommended: _.head(_.filter(result.items, { status: 'recommended' })),
 					sessions: result.items,
 				};
 

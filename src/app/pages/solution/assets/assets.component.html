@@ -102,16 +102,16 @@
 							<button class="btn btn--small btn--gray-ghost disabled">
 									<span class="icon-location"></span>
 							</button>
-							<button class="btn btn--small btn--gray-ghost selected">
+							<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'list' }" (click)="selectView('list')">
 									<span class="icon-list-view"></span>
 							</button>
-							<button class="btn btn--small btn--gray-ghost disabled">
+							<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'grid' }" (click)="selectView('grid')">
 									<span class="icon-grid-view"></span>
 							</button>
 						</div>
 						<cui-dropdown [actions]="dropdownActions"
 							position="left"
-							icon="icon-more icon-medium text-muted">
+							icon="icon-more icon-medium text-muted rotate-90">
 						</cui-dropdown>
 					</div>
 				</div>
@@ -150,7 +150,7 @@
 </ng-template>
 
 <ng-template #tableAssets>
-	<div class="responsive-table" *ngIf="assetsTable && inventory.length">
+	<div class="responsive-table" *ngIf="assetsTable && inventory.length && (!view || view == 'list')">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
 				<thead>
 					<tr>
@@ -212,6 +212,86 @@
 				</tbody>
 		</table>
 	</div>
+	<div class="panel panel--ltgray dbl-padding-right dbl-padding-left" *ngIf="assetsTable && inventory.length && view == 'grid'">
+		<div class="row"> 
+			<div *ngFor="let item of inventory" class="col-md-2 half-margin-bottom half-margin-top flex">
+				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #cardTemplate let-item="item">
+	<div class="card curved-corners flex-fluid" [ngClass]="{ 'selected': item.selected }" (click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
+		<div class="card__header">
+			<div class="card__title flex-center card-title-height">
+				<a attr.data-auto-id="InventoryItem-{{ item.data?.deviceName}}" class="text-large text-center" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
+			</div>
+			<div class="flex-center dbl-margin-top dbl-margin-bottom">
+				<!-- ngIf's using literal values until source of image is confirmed -->
+				<img *ngIf="false" [src]="" alt=""/>
+				<span *ngIf="true" class="col-md-6 text-muted text-center text-uppercase text-wrap-normal" [innerText]="'_NoPhotoAvailable_' | i18n"></span>
+			</div>
+		</div>
+		<div class="card__body text-small dbl-margin-bottom">
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_IPAddress_' | i18n"></div>
+				<div class="col-md-6" [innerText]="item.data?.ipAddress || ('_NA_' | i18n)"></div>
+			</div>
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_LastScan_' | i18n"></div>
+				<div class="col-md-6" [innerText]="item.data?.lastScan || ('_Never_' | i18n)"></div>
+			</div>
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_SerialNumber_' | i18n"></div>
+				<div class="col-md-6" [innerText]="item.data?.serialNumber || ('_NA_' | i18n)"></div>
+			</div>
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Software_' | i18n"></div>
+				<div class="col-md-6">
+					<ng-container 
+						*ngTemplateOutlet="(item.data?.osType || item.data?.osVersion) ? hasSoftware : NA; context: {type: item.data.osType, version: item.data.osVersion}">
+					</ng-container>
+				</div>
+			</div>
+			<div class="row qtr-margin-top">
+				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Role_' | i18n"></div>
+				<div class="col-md-6" [innerText]="item.data?.role || ('_NA_' | i18n)"></div>
+			</div>
+		</div>
+		<div class="max-width">
+			<div class="pull-left">
+				<span class="badge-wrapper base-margin-right" [ngClass]="{ 'invisible': !item.data?.criticalAdvisories }">
+					<span tabindex="0" class="icon-alert" data-balloon-indigo [attr.data-balloon]="'_CriticalAdvisories_' | i18n" data-balloon-pos="down">
+						<span class="icon-alert icon-small text-dkgray-4"></span>
+					</span>
+					<span class="badge badge--tiny badge--danger" [innerText]="item.data?.criticalAdvisories"></span>
+				</span>
+				<span class="badge-wrapper" [ngClass]="{ 'invisible': !item.data?.supportCovered }">
+					<span tabindex="0" class="icon-alert" data-balloon-indigo [attr.data-balloon]="'_SupportCoverage_' | i18n" data-balloon-pos="down">
+						<span class="icon-headset icon-small text-dkgray-4"></span>
+					</span>
+					<span class="badge badge--tiny badge--success icon-check"></span>
+				</span>
+			</div>
+			<div class="pull-right">
+				<cui-dropdown (click)="$event.stopPropagation()"
+					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
+					[actions]="getRowActions(item)"
+					icon="icon-more icon-small text-muted rotate-90">
+				</cui-dropdown>
+			</div>
+		</div>
+	</div>
+</ng-template>
+	
+<ng-template #NA let-type="type" let-verison="version">
+	<span [innerText]="'_NA_' | i18n"></span>
+</ng-template>
+	
+<ng-template #hasSoftware let-type="type" let-version="version">
+	<span *ngIf="type" innerText="{{type}} "></span>
+	<span *ngIf="version" [innerText]="version"></span>
 </ng-template>
 
 <ng-template #advisoryFilter let-filter="filter">
@@ -268,7 +348,7 @@
 <ng-template #actionsTemplate let-celldata="celldata">
 	<cui-dropdown [actions]="getRowActions(celldata)"
 		position="left"
-		icon="icon-more icon-medium text-muted">
+		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
 </ng-template>
 
