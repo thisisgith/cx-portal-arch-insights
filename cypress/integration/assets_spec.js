@@ -1,4 +1,5 @@
 import { Util } from '@apollo/cypress-util';
+import { capitalize } from 'lodash-es';
 import MockService from '../support/mockService';
 
 const util = new Util();
@@ -99,7 +100,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId(`Software Version-${serial}`)
 						.should('have.text', asset.osVersion);
 					if (asset.role) {
-						cy.getByAutoId(`Role-${serial}`).should('have.text', asset.role);
+						cy.getByAutoId(`Role-${serial}`).should('have.text', capitalize(asset.role));
 					}
 				});
 			});

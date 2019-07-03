@@ -42,7 +42,7 @@ describe('RMA Spec', () => {
 			cy.get('app-rma-search table th').eq(5).should('have.text', 'Replacement Product ID');
 			// TODO  uncommend the following to test the click
 			// cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
-			cy.get('h5').should('contain', 'Related to this Product');
+			cy.get('h6').should('contain', 'Related to this Product');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
@@ -75,7 +75,7 @@ describe('RMA Spec', () => {
 			});
 			// TODO  uncommend the following to test the click
 			// cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
-			cy.get('h5').should('contain', 'Related to this Product');
+			cy.get('h6').should('contain', 'Related to this Product');
 			cy.getByAutoId('searchClose').should('exist').click();
 			cy.window().then(win => { // undo/reset changes.
 				win.mockService.disable('RMA with four replacement parts');
@@ -111,7 +111,7 @@ describe('RMA Spec', () => {
 			cy.get('app-rma-search table th').eq(5).should('have.text', 'Replacement Product ID');
 			// TODO  uncommend the following to test the click
 			// cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
-			cy.get('h5').should('contain', 'Related to this Product');
+			cy.get('h6').should('contain', 'Related to this Product');
 			cy.getByAutoId('searchClose').should('exist').click();
 			cy.window().then(win => { // undo/reset changes.
 				win.mockService.disable('RMA with no replacement parts');
