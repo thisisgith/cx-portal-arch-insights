@@ -111,7 +111,7 @@
 						</div>
 						<cui-dropdown [actions]="dropdownActions"
 							position="left"
-							icon="icon-more icon-medium text-muted">
+							icon="icon-more icon-medium text-muted rotate-90">
 						</cui-dropdown>
 					</div>
 				</div>
@@ -275,9 +275,8 @@
 				</span>
 			</div>
 			<div class="pull-right">
-				<cui-dropdown
+				<cui-dropdown (click)="$event.stopPropagation()"
 					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
-					(click)="$event.stopPropagation()"
 					[actions]="getRowActions(item)"
 					icon="icon-more icon-small text-muted rotate-90">
 				</cui-dropdown>
@@ -349,7 +348,7 @@
 <ng-template #actionsTemplate let-celldata="celldata">
 	<cui-dropdown [actions]="getRowActions(celldata)"
 		position="left"
-		icon="icon-more icon-medium text-muted">
+		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
 </ng-template>
 
