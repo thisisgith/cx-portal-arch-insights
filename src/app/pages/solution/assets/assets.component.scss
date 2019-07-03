@@ -22,9 +22,15 @@
 	border-radius: 5px;
 }
 
-.card-title-height {
-	height: 3em;
-	overflow: hidden;
+.card-content {
+	justify-content: space-between;
+	//height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.override-selected-z {
+	z-index: 100 !important;
 }
 
 .filter {

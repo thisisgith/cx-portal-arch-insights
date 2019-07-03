@@ -9,7 +9,6 @@ import {
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	ContractsService,
-	HardwareInfo,
 	InventoryService,
 	Asset,
 	Assets,
@@ -91,7 +90,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	public bulkDropdown = false;
-	public selectedAssets: HardwareInfo[] = [];
+	public selectedAssets: Asset[] = [];
 	public filters: Filter[];
 	public visibleTemplate: TemplateRef<{ }>;
 	public filterCollapse = false;
@@ -213,7 +212,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	private adjustQueryParams () {
 		const queryParams = _.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page']);
-		queryParams.view = this.view;
 		this.router.navigate([], {
 			queryParams,
 			relativeTo: this.route,
@@ -337,7 +335,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		if (window.Cypress) {
 			window.loading = true;
 		}
+		const currentView = window.sessionStorage.getItem('view');
+		if (!currentView) {
+			window.sessionStorage.setItem('view', this.view);
+		} else {
+			this.view = <'list' | 'grid'> currentView;
+		}
 
+		this.assetParams.rows = this.view === 'list' ? 10 : 12;
 		this.route.queryParams.subscribe(params => {
 			if (params.contractNumber) {
 				this.assetParams.contractNumber = _.castArray(params.contractNumber);
@@ -349,10 +354,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 			if (params.role) {
 				this.assetParams.role = _.castArray(params.role);
-			}
-
-			if (params.view) {
-				this.view = params.view;
 			}
 		});
 		this.buildFilters();
@@ -796,7 +797,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param selectedItems array of selected table elements
 	 *
 	 */
-	public onSelectionChanged (selectedItems: HardwareInfo[]) {
+	public onSelectionChanged (selectedItems: Asset[]) {
 		this.selectedAssets = selectedItems;
 	}
 
@@ -805,6 +806,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnDestroy () {
 		_.invoke(this.searchSubscribe, 'unsubscribe');
+		window.sessionStorage.setItem('view', this.view);
 	}
 
 	/**
@@ -814,10 +816,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
    	public selectView (view: 'list' | 'grid') {
 		if (this.view !== view) {
 			this.view = view;
-			this.assetParams.rows = this.view === 'list' ? 10 : 12;
+			const newRows = this.view === 'list' ? 10 : 12;
+			this.assetParams.page =
+				Math.ceil(this.assetParams.page * this.assetParams.rows / newRows);
+			this.assetParams.rows = newRows;
 			this.adjustQueryParams();
 			this.fetchInventory()
 				.subscribe();
 		}
-   	}
+	   }
+
 }

@@ -2,15 +2,19 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssetsComponent } from './assets.component';
 import { AssetsModule } from './assets.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
+import { InventoryService } from '@cui-x/sdp-api';
+import { throwError } from 'rxjs';
 
 describe('AssetsComponent', () => {
 	let component: AssetsComponent;
 	let fixture: ComponentFixture<AssetsComponent>;
+
+	let inventoryService: InventoryService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -25,9 +29,12 @@ describe('AssetsComponent', () => {
 			],
 		})
 		.compileComponents();
+
+		inventoryService = TestBed.get(InventoryService);
 	}));
 
 	beforeEach(() => {
+		window.sessionStorage.clear();
 		fixture = TestBed.createComponent(AssetsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -36,6 +43,28 @@ describe('AssetsComponent', () => {
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
+	});
+
+	/**
+	 * @TODO: modify test to use UI
+	 */
+	it('should set null values on request errors', done => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.inventory.length)
+				.toBe(0);
+
+			done();
+		});
 	});
 
 	/**
@@ -114,6 +143,50 @@ describe('AssetsComponent', () => {
 
 			expect(subfilter.selected)
 				.toBeFalsy();
+
+			done();
+		});
+	});
+
+	/**
+	 * @TODO: modify test to use UI
+	 */
+	it('should select view', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.view)
+				.toBe('list');
+
+			component.selectView('grid');
+
+			fixture.detectChanges();
+
+			expect(component.view)
+				.toBe('grid');
+
+			done();
+		});
+	});
+
+	/**
+	 * @TODO: modify test to use UI
+	 */
+	it('should detect selection changes', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.selectedAssets.length)
+				.toBe(0);
+
+			component.onSelectionChanged([{ }]);
+
+			fixture.detectChanges();
+
+			expect(component.selectedAssets.length)
+				.toBe(1);
 
 			done();
 		});
