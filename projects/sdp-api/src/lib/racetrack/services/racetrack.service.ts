@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { RacetrackConfiguration as __Configuration } from '../racetrack-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -14,8 +14,8 @@ import { PitstopActionUpdateRequest } from '../models/pitstop-action-update-requ
   providedIn: 'root',
 })
 class RacetrackService extends __BaseService {
-  static readonly getRacetrackPath = '/api/customerportal/pitstop/v1/info';
-  static readonly updatePitstopActionPath = '/api/customerportal/pitstop/v1/action/status';
+  static readonly getRacetrackPath = '/info';
+  static readonly updatePitstopActionPath = '/action/status';
 
   constructor(
     config: __Configuration,
@@ -46,6 +46,7 @@ class RacetrackService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
     if (params.solution != null) __params = __params.set('solution', params.solution.toString());
@@ -108,6 +109,7 @@ class RacetrackService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     __body = params.actionUpdate;
     let req = new HttpRequest<any>(

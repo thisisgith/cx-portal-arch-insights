@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface HardwareEOLResponseInfo {
+export interface HardwareEOL {
 
   /**
    * Unique identifier of a Cisco customer
@@ -7,7 +7,7 @@ export interface HardwareEOLResponseInfo {
   customerId?: string;
 
   /**
-   * The unique, generated ID of the network element
+   * The unique, generated ID of the managed network element
    */
   managedNeId?: string;
 
@@ -34,7 +34,7 @@ export interface HardwareEOLResponseInfo {
   /**
    * The unique identifier for hardware end-of-life entry in a data store
    */
-  hwEolInstanceId?: number;
+  hwEolInstanceId?: string;
 
   /**
    * Bulletin Name

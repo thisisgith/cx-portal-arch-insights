@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { SearchConfiguration as __Configuration } from '../search-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -18,9 +18,9 @@ import { GlobalSearchResponse } from '../models/global-search-response';
   providedIn: 'root',
 })
 class SearchService extends __BaseService {
-  static readonly directCDCSearchPath = '/api/customerportal/search/v1/cdcSearch';
-  static readonly directCommunitySearchPath = '/api/customerportal/search/v1/communitySearch';
-  static readonly allSearchPath = '/api/customerportal/search/v1/globalSearch';
+  static readonly directCDCSearchPath = '/cdcSearch';
+  static readonly directCommunitySearchPath = '/communitySearch';
+  static readonly allSearchPath = '/globalSearch';
 
   constructor(
     config: __Configuration,
@@ -52,16 +52,17 @@ class SearchService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    let __formData = new FormData();
-    __body = __formData;
-    __headers.append("Content-Type", "application/x-www-form-urlencoded");
-   if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData.append('searchTokens', params.searchTokens as string | Blob);}
-   if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData.append('webSessionId', params.webSessionId as string | Blob);}
-   if(params.offset !== null && typeof params.offset !== "undefined") { __formData.append('offset', params.offset as string | Blob);}
-   if(params.limit !== null && typeof params.limit !== "undefined") { __formData.append('limit', params.limit as string | Blob);}
-   if(params.filters !== null && typeof params.filters !== "undefined") { __formData.append('filters', params.filters as string | Blob);}
-   if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData.append('customerId', params.customerId as string | Blob);}
-   if(params.context !== null && typeof params.context !== "undefined") { __formData.append('context', JSON.stringify(params.context));}
+    let __formData = new HttpParams();
+
+    __headers = __headers.append("Content-Type", "application/x-www-form-urlencoded");
+   if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData = __formData.append('searchTokens', params.searchTokens as string);}
+   if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
+   if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
+   if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
+   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
+   if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData = __formData.append('customerId', params.customerId as string);}
+   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', JSON.stringify(params.context));}
+    __body = __formData
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/api/customerportal/search/v1/cdcSearch`,
@@ -124,14 +125,15 @@ class SearchService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    let __formData = new FormData();
-    __body = __formData;
-    __headers.append("Content-Type", "application/x-www-form-urlencoded");
-   if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData.append('searchTokens', params.searchTokens as string | Blob);}
-   if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData.append('webSessionId', params.webSessionId as string | Blob);}
-   if(params.offset !== null && typeof params.offset !== "undefined") { __formData.append('offset', params.offset as string | Blob);}
-   if(params.limit !== null && typeof params.limit !== "undefined") { __formData.append('limit', params.limit as string | Blob);}
-   if(params.filters !== null && typeof params.filters !== "undefined") { __formData.append('filters', params.filters as string | Blob);}
+    let __formData = new HttpParams();
+
+    __headers = __headers.append("Content-Type", "application/x-www-form-urlencoded");
+   if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData = __formData.append('searchTokens', params.searchTokens as string);}
+   if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
+   if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
+   if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
+   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
+    __body = __formData
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/api/customerportal/search/v1/communitySearch`,
@@ -200,19 +202,20 @@ class SearchService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    let __formData = new FormData();
-    __body = __formData;
-    __headers.append("Content-Type", "application/x-www-form-urlencoded");
-   if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData.append('searchTokens', params.searchTokens as string | Blob);}
-   if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData.append('webSessionId', params.webSessionId as string | Blob);}
-   if(params.useCase !== null && typeof params.useCase !== "undefined") { __formData.append('useCase', params.useCase as string | Blob);}
-   if(params.solution !== null && typeof params.solution !== "undefined") { __formData.append('solution', params.solution as string | Blob);}
-   if(params.pitStop !== null && typeof params.pitStop !== "undefined") { __formData.append('pitStop', params.pitStop as string | Blob);}
-   if(params.offset !== null && typeof params.offset !== "undefined") { __formData.append('offset', params.offset as string | Blob);}
-   if(params.limit !== null && typeof params.limit !== "undefined") { __formData.append('limit', params.limit as string | Blob);}
-   if(params.filters !== null && typeof params.filters !== "undefined") { __formData.append('filters', params.filters as string | Blob);}
-   if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData.append('customerId', params.customerId as string | Blob);}
-   if(params.context !== null && typeof params.context !== "undefined") { __formData.append('context', JSON.stringify(params.context));}
+    let __formData = new HttpParams();
+
+    __headers = __headers.append("Content-Type", "application/x-www-form-urlencoded");
+   if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData = __formData.append('searchTokens', params.searchTokens as string);}
+   if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
+   if(params.useCase !== null && typeof params.useCase !== "undefined") { __formData = __formData.append('useCase', params.useCase as string);}
+   if(params.solution !== null && typeof params.solution !== "undefined") { __formData = __formData.append('solution', params.solution as string);}
+   if(params.pitStop !== null && typeof params.pitStop !== "undefined") { __formData = __formData.append('pitStop', params.pitStop as string);}
+   if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
+   if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
+   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
+   if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData = __formData.append('customerId', params.customerId as string);}
+   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', JSON.stringify(params.context));}
+    __body = __formData
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/api/customerportal/search/v1/globalSearch`,

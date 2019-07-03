@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface SecurityAdvisoryBulletinInfo {
+export interface SecurityAdvisoryBulletin {
 
   /**
    * Announcement Type Name
@@ -49,7 +49,7 @@ export interface SecurityAdvisoryBulletinInfo {
   /**
    * Public Release Indicator
    */
-  publicReleaseIndicator?: string;
+  publicReleaseIndicator?: 'Y' | 'N';
 
   /**
    * Mapping State Name
@@ -79,7 +79,7 @@ export interface SecurityAdvisoryBulletinInfo {
   /**
    * Severity
    */
-  severity?: string;
+  severity?: 'Critical' | 'High' | 'Medium' | 'Low' | '';
 
   /**
    * Common Vulnerabilities and Exposures (CVE) Identifier

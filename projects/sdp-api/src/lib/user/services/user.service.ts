@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { UserConfiguration as __Configuration } from '../user-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -12,7 +12,7 @@ import { UserResponse } from '../models/user-response';
   providedIn: 'root',
 })
 class UserService extends __BaseService {
-  static readonly getUserPath = '/api/customerportal/party/v1/system/users';
+  static readonly getUserPath = '/system/users';
 
   constructor(
     config: __Configuration,
@@ -29,6 +29,7 @@ class UserService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/api/customerportal/party/v1/system/users`,

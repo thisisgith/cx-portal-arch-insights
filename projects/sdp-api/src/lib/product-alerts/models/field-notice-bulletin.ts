@@ -1,5 +1,5 @@
 /* tslint:disable */
-export interface FieldNoticeBulletinResponseInfo {
+export interface FieldNoticeBulletin {
 
   /**
    * The Cisco.com bulletin number for Field Notices
