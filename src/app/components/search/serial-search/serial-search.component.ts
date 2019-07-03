@@ -22,7 +22,7 @@ import {
 	ProductAlertsService,
 	HardwareResponse,
 	VulnerabilityResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 import { SearchQuery } from '@interfaces';

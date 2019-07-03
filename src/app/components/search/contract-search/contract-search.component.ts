@@ -19,7 +19,7 @@ import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
-import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@cui-x/sdp-api';
+import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@sdp-api';
 import { SearchQuery } from '@interfaces';
 
 /**
@@ -145,7 +145,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	 */
 	private getCoverages (contractNumber: string, customerId: string):
 	Observable<HttpResponse<null>> {
-		return this.contractsService.headContractsProductsCoveragesResponse(
+		return this.contractsService.headProductsCoveragesResponse(
 			{
 				contractNumber,
 				customerId,

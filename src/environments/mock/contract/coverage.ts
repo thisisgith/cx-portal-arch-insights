@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { CoverageCountsResponse } from '@cui-x/sdp-api';
+import { CoverageCountsResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/contracts/v1/';

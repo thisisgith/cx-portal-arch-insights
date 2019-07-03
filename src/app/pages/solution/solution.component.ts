@@ -22,7 +22,7 @@ import {
 	RacetrackSolution,
 	RacetrackTechnology,
 	CoverageCountsResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { SolutionService } from './solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
 

@@ -7,7 +7,7 @@ import {
 	OnChanges,
 	SimpleChanges,
 } from '@angular/core';
-import { HardwareInfo } from '@cui-x/sdp-api';
+import { HardwareInfo } from '@sdp-api';
 import { CuiTimelineItem } from '@cisco-ngx/cui-components';
 
 import * as _ from 'lodash-es';
