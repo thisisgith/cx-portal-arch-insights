@@ -20,6 +20,7 @@ import {
 	RoleCountResponse,
 	CoverageCountsResponse,
 	ProductAlertsService,
+	HardwareEOLResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
@@ -73,6 +74,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	@ViewChild('assetsContent', { static: true }) private assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('coverageFilter', { static: true }) private coverageFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('contractFilter', { static: true }) private contractFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('hardwareEOXFilter', { static: true })
+		private hardwareEOXFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('roleFilter', { static: true }) private roleFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('advisoryFilter', { static: true }) private advisoryFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('deviceTemplate', { static: true }) private deviceTemplate: TemplateRef<{ }>;
@@ -301,7 +304,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 
 		filter.selected = _.some(filter.seriesData, 'selected');
-		this.assetParams[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+
+		if (filter.key !== 'advisories' && filter.key !== 'eox') {
+			this.assetParams[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+		}
 		this.assetParams.page = 1;
 
 		const totalFilter = _.find(this.filters, { key: 'total' });
@@ -385,6 +391,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.getContractCounts(),
 			this.getAdvisoryCount(),
 			this.getRoleCounts(),
+			this.getHardwareEOXCounts(),
 			this.getInventoryCounts(),
 		)
 		.pipe(
@@ -400,6 +407,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				if (this.assetParams.coverage) {
 					this.selectSubFilters(this.assetParams.coverage, 'coverage');
 				}
+
+				// TODO: Add handler for EOX <- when api supports it
+				// TODO: Add handler for advisories <- when API supports it
 
 				return this.fetchInventory();
 			}),
@@ -449,6 +459,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				seriesData: [],
 				template: this.advisoryFilterTemplate,
 				title: I18n.get('_Advisories_'),
+			},
+			{
+				key: 'eox',
+				loading: true,
+				seriesData: [],
+				template: this.hardwareEOXFilterTemplate,
+				title: I18n.get('_HardwareEOX_'),
 			},
 			{
 				key: 'role',
@@ -736,6 +753,30 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.logger.error('assets.component : fetchInventoryCount() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 				totalFilter.loading = false;
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Fetches the hardware eox counts for the visual filter
+	 * @returns the counts
+	 */
+	private getHardwareEOXCounts () {
+		const eoxFilter = _.find(this.filters, { key: 'eox' });
+
+		return this.productAlertsService.getHardwareEox({ customerId })
+		.pipe(
+			map((eox: HardwareEOLResponse) => {
+				console.log(eox);
+
+				return { };
+			}),
+			catchError(err => {
+				eoxFilter.loading = false;
+				this.logger.error('assets.component : getRoleCounts() ' +
+					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),

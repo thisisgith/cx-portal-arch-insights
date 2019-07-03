@@ -9,6 +9,7 @@ import {
 	CoverageScenarios,
 	ELearningScenarios,
 	HardwareScenarios,
+	HardwareEOLScenarios,
 	NetworkScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
@@ -27,6 +28,7 @@ import {
 	CDCSearchResponse,
 	CommunitiesResponse,
 	ELearningResponse,
+	HardwareEOLResponseObjectDetails,
 	HardwareResponse,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
@@ -45,6 +47,7 @@ type ResponseBody = (
 	CommunitiesResponse |
 	ELearningResponse |
 	HardwareResponse |
+	HardwareEOLResponseObjectDetails |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
@@ -105,6 +108,7 @@ export const mockSettings: MockSettings = {
 		CoverageScenarios,
 		ELearningScenarios,
 		HardwareScenarios,
+		HardwareEOLScenarios,
 		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,

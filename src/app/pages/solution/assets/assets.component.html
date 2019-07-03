@@ -295,29 +295,31 @@
 </ng-template>
 
 <ng-template #advisoryFilter let-filter="filter">
-	<assets-bar-chart
-		[seriesData]="filter.seriesData"
+	<assets-bar-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-bar-chart>
 </ng-template>
 
 <ng-template #coverageFilter let-filter="filter">
-	<assets-pie-chart
-		[seriesData]="filter.seriesData"
+	<assets-pie-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
 </ng-template>
 
 <ng-template #contractFilter let-filter="filter">
-	<assets-pie-chart
-		[seriesData]="filter.seriesData"
+	<assets-pie-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
 </ng-template>
 
+<ng-template #hardwareEOXFilter let-filter="filter">
+	<assets-bar-chart [seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</assets-bar-chart>
+</ng-template>
+
 <ng-template #roleFilter let-filter="filter">
-	<assets-bubble-chart
-		[seriesData]="filter.seriesData"
+	<assets-bubble-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-bubble-chart>
 </ng-template>

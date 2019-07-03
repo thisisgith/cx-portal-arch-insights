@@ -1,4 +1,4 @@
-import { HardwareEOLResponseObjectDetails } from '@sdp-api';
+import { HardwareEOLResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/product-alerts/v1/hardware-eol';
@@ -7,7 +7,7 @@ const api = '/api/customerportal/product-alerts/v1/hardware-eol';
 const customerId = '2431199';
 
 /** The mock response for coverage counts */
-const mockEolResponse: HardwareEOLResponseObjectDetails = {
+const mockEolResponse: HardwareEOLResponse = {
 	/* tslint:disable */
 	"data": [
 			{

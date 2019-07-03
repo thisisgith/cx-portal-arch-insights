@@ -7,6 +7,7 @@ export { CommunitiesScenarios } from './racetrack/communities';
 export { ContractScenarios } from './contract/contract';
 export { CoverageScenarios } from './contract/coverage';
 export { ELearningScenarios } from './racetrack/elearning';
+export { HardwareEOLScenarios } from './product-alerts/hardware-eol';
 export { HardwareScenarios } from './inventory/hardware';
 export { Mock } from './mock';
 export { NetworkScenarios } from './inventory/network-elements';
