@@ -3,20 +3,22 @@ import {
 	ActionScenarios,
 	AssetScenarios,
 	ATXScenarios,
-	CommunitiesScenarios,
 	CaseScenarios,
+	CommunitiesScenarios,
 	ContractScenarios,
 	CoverageScenarios,
 	ELearningScenarios,
-	HardwareScenarios,
-	HardwareEOLScenarios,
 	HardwareEOLBulletinScenarios,
 	HardwareEOLCountScenarios,
+	HardwareEOLScenarios,
+	HardwareScenarios,
 	NetworkScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
+	SecurityAdvisoryBulletinScenarios,
+	SecurityAdvisoryScenarios,
 	SuccessPathScenarios,
 	VulnerabilityScenarios,
 } from './';
@@ -30,13 +32,15 @@ import {
 	CDCSearchResponse,
 	CommunitiesResponse,
 	ELearningResponse,
-	HardwareResponse,
-	HardwareEOLResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
+	HardwareEOLResponse,
+	HardwareResponse,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
+	SecurityAdvisoryBulletinResponse,
+	SecurityAdvisoryResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -50,14 +54,16 @@ type ResponseBody = (
 	CDCSearchResponse |
 	CommunitiesResponse |
 	ELearningResponse |
-	HardwareResponse |
-	HardwareEOLResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
+	HardwareEOLResponse |
+	HardwareResponse |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
+	SecurityAdvisoryBulletinResponse |
+	SecurityAdvisoryResponse |
 	SuccessPathsResponse |
 	VulnerabilityResponse
 );
@@ -113,15 +119,17 @@ export const mockSettings: MockSettings = {
 		ContractScenarios,
 		CoverageScenarios,
 		ELearningScenarios,
-		HardwareScenarios,
-		HardwareEOLScenarios,
 		HardwareEOLBulletinScenarios,
 		HardwareEOLCountScenarios,
+		HardwareEOLScenarios,
+		HardwareScenarios,
 		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
 		RoleScenarios,
 		SearchScenarios,
+		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryScenarios,
 		SuccessPathScenarios,
 		VulnerabilityScenarios,
 	]),

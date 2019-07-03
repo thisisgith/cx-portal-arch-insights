@@ -49,7 +49,7 @@ export interface SecurityAdvisoryBulletin {
   /**
    * Public Release Indicator
    */
-  publicReleaseIndicator?: string;
+  publicReleaseIndicator?: 'Y' | 'N';
 
   /**
    * Mapping State Name
@@ -79,7 +79,7 @@ export interface SecurityAdvisoryBulletin {
   /**
    * Severity
    */
-  severity?: string;
+  severity?: 'Critical' | 'High' | 'Medium' | 'Low' | '';
 
   /**
    * Common Vulnerabilities and Exposures (CVE) Identifier

@@ -17,5 +17,7 @@ export { RacetrackScenarios } from './racetrack/info';
 export { RMAScenarios } from './rma/rma';
 export { RoleScenarios } from './inventory/roles';
 export { SearchScenarios } from './search/search';
+export { SecurityAdvisoryScenarios } from './product-alerts/security-advisory';
+export { SecurityAdvisoryBulletinScenarios } from './product-alerts/security-advisory-bulletins';
 export { SuccessPathScenarios } from './racetrack/successPaths';
 export { VulnerabilityScenarios } from './product-alerts/vulnerabilities';
