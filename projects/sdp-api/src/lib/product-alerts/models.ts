@@ -12,6 +12,7 @@ export { HardwareEOLResponse } from './models/hardware-eolresponse';
 export { HardwareEOL } from './models/hardware-eol';
 export { HardwareEOLBulletinResponse } from './models/hardware-eolbulletin-response';
 export { HardwareEOLBulletin } from './models/hardware-eolbulletin';
+export { HardwareEOLCountResponse } from './models/hardware-eolcount-response';
 export { SoftwareEOLResponse } from './models/software-eolresponse';
 export { SoftwareEOL } from './models/software-eol';
 export { SofwareEOLBulletinResponse } from './models/sofware-eolbulletin-response';

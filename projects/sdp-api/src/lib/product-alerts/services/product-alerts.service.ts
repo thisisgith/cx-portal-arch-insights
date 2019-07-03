@@ -15,6 +15,7 @@ import { FieldNoticeResponse } from '../models/field-notice-response';
 import { FieldNoticeBulletinResponse } from '../models/field-notice-bulletin-response';
 import { HardwareEOLResponse } from '../models/hardware-eolresponse';
 import { HardwareEOLBulletinResponse } from '../models/hardware-eolbulletin-response';
+import { HardwareEOLCountResponse } from '../models/hardware-eolcount-response';
 import { SoftwareEOLResponse } from '../models/software-eolresponse';
 import { SofwareEOLBulletinResponse } from '../models/sofware-eolbulletin-response';
 @Injectable({
@@ -36,6 +37,7 @@ class ProductAlertsService extends __BaseService {
   static readonly getHardwareEoxPath = '/hardware-eol';
   static readonly headHardwareEolBulletinsPath = '/hardware-eol-bulletins';
   static readonly getHardwareEoxBulletinPath = '/hardware-eol-bulletins';
+  static readonly getHardwareEolCountsPath = '/hardware-eol/counts';
   static readonly headSoftwareEolPath = '/software-eol';
   static readonly getSoftwareEoxPath = '/software-eol';
   static readonly headSoftwareEolBulletinsPath = '/software-eol-bulletins';
@@ -1018,6 +1020,45 @@ class ProductAlertsService extends __BaseService {
   getHardwareEoxBulletin(params: ProductAlertsService.GetHardwareEoxBulletinParams): __Observable<HardwareEOLBulletinResponse> {
     return this.getHardwareEoxBulletinResponse(params).pipe(
       __map(_r => _r.body as HardwareEOLBulletinResponse)
+    );
+  }
+
+  /**
+   * Currently in use for mocking api routes, will be adjusted to match real api when comma-separated
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return successful operation
+   */
+  getHardwareEolCountsResponse(customerId: string): __Observable<__StrictHttpResponse<HardwareEOLCountResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol/counts`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<HardwareEOLCountResponse>;
+      })
+    );
+  }
+
+  /**
+   * Currently in use for mocking api routes, will be adjusted to match real api when comma-separated
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return successful operation
+   */
+  getHardwareEolCounts(customerId: string): __Observable<HardwareEOLCountResponse> {
+    return this.getHardwareEolCountsResponse(customerId).pipe(
+      __map(_r => _r.body as HardwareEOLCountResponse)
     );
   }
 

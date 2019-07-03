@@ -20,7 +20,7 @@ import {
 	RoleCountResponse,
 	CoverageCountsResponse,
 	ProductAlertsService,
-	HardwareEOLResponse,
+	HardwareEOLCountResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
@@ -766,12 +766,17 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getHardwareEOXCounts () {
 		const eoxFilter = _.find(this.filters, { key: 'eox' });
 
-		return this.productAlertsService.getHardwareEox({ customerId })
+		return this.productAlertsService.getHardwareEolCounts(customerId)
 		.pipe(
-			map((eox: HardwareEOLResponse) => {
-				console.log(eox);
+			map((data: HardwareEOLCountResponse) => {
+				eoxFilter.seriesData = _.map(data, d => ({
+					filter: d.range,
+					label: `${d.range} ${I18n.get('_Days_')}`,
+					selected: false,
+					value: d.deviceCount,
+				}));
 
-				return { };
+				eoxFilter.loading = false;
 			}),
 			catchError(err => {
 				eoxFilter.loading = false;

@@ -8,6 +8,8 @@ export { ContractScenarios } from './contract/contract';
 export { CoverageScenarios } from './contract/coverage';
 export { ELearningScenarios } from './racetrack/elearning';
 export { HardwareEOLScenarios } from './product-alerts/hardware-eol';
+export { HardwareEOLBulletinScenarios } from './product-alerts/hardware-eol-bulletins';
+export { HardwareEOLCountScenarios } from './product-alerts/hardware-eol-counts';
 export { HardwareScenarios } from './inventory/hardware';
 export { Mock } from './mock';
 export { NetworkScenarios } from './inventory/network-elements';
