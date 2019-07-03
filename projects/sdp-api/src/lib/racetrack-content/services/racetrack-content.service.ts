@@ -1,14 +1,15 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { BaseService as __BaseService } from '../base-service';
+import { BaseService as __BaseService } from '../../core/base-service';
 import { RacetrackContentConfiguration as __Configuration } from '../racetrack-content-configuration';
-import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-response';
+import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { ATXResponse } from '../models/atxresponse';
 import { ACCResponse } from '../models/accresponse';
+import { ACCBookmarkSchema } from '../models/accbookmark-schema';
 import { SuccessPathsResponse } from '../models/success-paths-response';
 import { CommunitiesResponse } from '../models/communities-response';
 import { ELearningResponse } from '../models/elearning-response';
@@ -18,6 +19,7 @@ import { ELearningResponse } from '../models/elearning-response';
 class RacetrackContentService extends __BaseService {
   static readonly getRacetrackATXPath = '/api/customerportal/racetrack/v1/atx';
   static readonly getRacetrackACCPath = '/api/customerportal/racetrack/v1/acc';
+  static readonly updateACCBookmarkPath = '/api/customerportal/racetrack/v1/acc/{accId}/bookmark';
   static readonly getRacetrackSuccessPathsPath = '/api/customerportal/racetrack/v1/successPaths';
   static readonly getRacetrackCommunitiesPath = '/api/customerportal/racetrack/v1/communities';
   static readonly getRacetrackElearningPath = '/api/customerportal/racetrack/v1/elearning';
@@ -73,7 +75,8 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -83,6 +86,7 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
+
   /**
    * Provides details of Future Webinars which the user can register for. Also, it provides the on-demand for the sessions held in the past
    * @param params The `RacetrackContentService.GetRacetrackATXParams` containing the following parameters:
@@ -157,7 +161,8 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -167,6 +172,7 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
+
   /**
    * Provides list of Accelerators for given Pitstop and Use Case
    * @param params The `RacetrackContentService.GetRacetrackACCParams` containing the following parameters:
@@ -194,6 +200,53 @@ class RacetrackContentService extends __BaseService {
   getRacetrackACC(params: RacetrackContentService.GetRacetrackACCParams): __Observable<ACCResponse> {
     return this.getRacetrackACCResponse(params).pipe(
       __map(_r => _r.body as ACCResponse)
+    );
+  }
+
+  /**
+   * Ability to add or remove bookmark for an accelerator.
+   * @param params The `RacetrackContentService.UpdateACCBookmarkParams` containing the following parameters:
+   *
+   * - `bookmark`: Payload to take action on the bookmark for an accelerator
+   *
+   * - `accId`: Unique identifier of the accelerator that was marked or removed favorite
+   */
+  updateACCBookmarkResponse(params: RacetrackContentService.UpdateACCBookmarkParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = params.bookmark;
+
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/api/customerportal/racetrack/v1/acc/${params.accId}/bookmark`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+//        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+
+  /**
+   * Ability to add or remove bookmark for an accelerator.
+   * @param params The `RacetrackContentService.UpdateACCBookmarkParams` containing the following parameters:
+   *
+   * - `bookmark`: Payload to take action on the bookmark for an accelerator
+   *
+   * - `accId`: Unique identifier of the accelerator that was marked or removed favorite
+   */
+  updateACCBookmark(params: RacetrackContentService.UpdateACCBookmarkParams): __Observable<null> {
+    return this.updateACCBookmarkResponse(params).pipe(
+      __map(_r => _r.body as null)
     );
   }
 
@@ -241,7 +294,8 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -251,6 +305,7 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
+
   /**
    * Provides product documentation ,videos,tutorial, pdf
    * @param params The `RacetrackContentService.GetRacetrackSuccessPathsParams` containing the following parameters:
@@ -325,7 +380,8 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -335,6 +391,7 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
+
   /**
    * Provides list of communities based on contexual Pitstop and Use Case
    * @param params The `RacetrackContentService.GetRacetrackCommunitiesParams` containing the following parameters:
@@ -409,7 +466,8 @@ class RacetrackContentService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
+//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -419,6 +477,7 @@ class RacetrackContentService extends __BaseService {
       })
     );
   }
+
   /**
    * Provides eLearning content ( Certifications ,Courses, Training material etc)
    * @param params The `RacetrackContentService.GetRacetrackElearningParams` containing the following parameters:
@@ -552,6 +611,22 @@ module RacetrackContentService {
      * Requested fields in the response.
      */
     fields?: Array<string>;
+  }
+
+  /**
+   * Parameters for updateACCBookmark
+   */
+  export interface UpdateACCBookmarkParams {
+
+    /**
+     * Payload to take action on the bookmark for an accelerator
+     */
+    bookmark: ACCBookmarkSchema;
+
+    /**
+     * Unique identifier of the accelerator that was marked or removed favorite
+     */
+    accId: string;
   }
 
   /**

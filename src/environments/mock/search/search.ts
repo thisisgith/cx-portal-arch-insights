@@ -254,10 +254,40 @@ const mockData: CDCSearchResponse = {
 			],
 			label: 'Site',
 		},
+		{
+			buckets: [
+				{
+					count: 484,
+					filter: 'site:PHRASE(TERM(Bug Info, TOKENIZED), facet=true, filter=true)',
+					label: 'Bug Info',
+				},
+				{
+					count: 20,
+					filter: 'site:PHRASE(TERM(Case Studies, TOKENIZED), facet=true, filter=true)',
+					label: 'Case Studies',
+				},
+				{
+					count: 10137,
+					filter: 'site:PHRASE(TERM(Command References, TOKENIZED), facet=true, filter=true)',
+					label: 'Command References',
+				},
+				{
+					count: 73937,
+					filter: 'site:PHRASE(TERM(Compatibility Information, TOKENIZED), facet=true, filter=true)',
+					label: 'Compatibility Information',
+				},
+			],
+			label: 'Site Subcategory',
+		},
 	],
 	totalHits: 10,
 	totalTime: 32,
 };
+
+const mockDataWithSearchToken = {
+	...mockData,
+	searchToken: 'Special Search Token',
+}
 
 const mockGlobalResponse: GlobalSearchResponse = {
 	 "communitySearch":{
@@ -561,6 +591,15 @@ export const SearchScenarios = [
 					response: {
 						status: 404,
 						statusText: 'Unable to find results',
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 1000,
+					description: 'Response with Search Token',
+					response: {
+						body: mockDataWithSearchToken,
+						status: 200,
 					},
 				},
 			],

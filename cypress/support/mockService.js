@@ -48,6 +48,53 @@ export default class MockService {
 	}
 
 	/**
+	 * Enables a specified mock scenario
+	 * NOTE: Until AP-5405 is resolved, you might need to manually disable other scenarios
+	 * @param {Array | String} scenarios Scenario description(s)
+	 */
+	enable (scenarios) {
+		let scenarioList;
+		if (!Array.isArray(scenarios)) {
+			scenarioList = [scenarios];
+		} else {
+			scenarioList = scenarios;
+		}
+
+		cy.window({ log: false }).then(win => {
+			Cypress.log({
+				name: 'Mock On',
+				message: scenarioList,
+			});
+			Cypress._.each(scenarioList, scenario => {
+				win.mockService.enable(scenario);
+			});
+		});
+	}
+
+	/**
+	 * Disables a specified mock scenario
+	 * @param {Array | String} scenarios Scenario description(s)
+	 */
+	disable (scenarios) {
+		let scenarioList;
+		if (!Array.isArray(scenarios)) {
+			scenarioList = [scenarios];
+		} else {
+			scenarioList = scenarios;
+		}
+
+		cy.window({ log: false }).then(win => {
+			Cypress.log({
+				name: 'Mock Off',
+				message: scenarioList,
+			});
+			Cypress._.each(scenarioList, scenario => {
+				win.mockService.disable(scenario);
+			});
+		});
+	}
+
+	/**
 	 * Intercept XHRs and optionally stub the response'
 	 * @static
 	 * @param {object[]} routes An array of options for cypress.route

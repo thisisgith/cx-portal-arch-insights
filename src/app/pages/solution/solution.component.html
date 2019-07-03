@@ -1,5 +1,5 @@
 <div class="page-container">
-	<asset-details [asset]="selectedAsset"></asset-details>
+	<asset-details *ngIf="selectedAsset" [asset]="selectedAsset"></asset-details>
 	<div class="panel no-padding-left no-padding-right no-padding-bottom base-padding-top panel--bordered-bottom">
 		<div class="row base-margin-left half-margin-bottom">
 			<div class="col-md-11">
@@ -79,11 +79,11 @@
 </ng-template>
 
 <ng-template #facetPanel>
-	<div class="row no-gutters flex-fill flex-center">
+	<div class="row no-gutters flex-fill">
 		<div *ngFor="let facet of facets; index as i"
 			attr.data-auto-id="Facet-{{ facet.title }}"
 			(click)="selectFacet(facet)"
-			class="panel panel--bordered-right flex-center row"
+			class="panel panel--bordered-right row"
 			[ngClass]="{
 				'panel--bordered-left': i === 0,
 				'facet--selected': facet.selected,
@@ -92,11 +92,14 @@
 			}">
 			<div class="col-md-12 flex-center">
 				<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
+				<div class="half-margin-left text-small facetLabel" *ngIf="facet.label">
+					<span [innerText]="facet.label"></span>
+				</div>
 			</div>
-			<!-- TODO reenable the lightbulbs if we have some data to work with -->
+			<!-- TODO: reenable the lightbulbs if we have some data to work with -->
 			<!-- <div class="col-md-2"></div> -->
-			<div class="col-md-12 flex flex-center">
-				<span [innerText]="facet.title"></span>
+			<div class="col-md-12 flex-center base-padding-top">
+				<span [ngClass]="{ 'text-primary': facet.selected }" [innerText]="facet.title | uppercase"></span>
 			</div>
 			<!-- <div class="col-md-2 flex flex-center">
 				<button class="btn btn--icon btn--small" disabled>
@@ -116,7 +119,7 @@
 
 <ng-template #assetsFacet let-facet="facet">
 	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugePercent || 0 }}%"
+		value="{{ facet?.data?.gaugeLabel || 0 }}"
 		color="primary">
 	</cui-gauge>
 </ng-template>

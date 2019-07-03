@@ -36,11 +36,17 @@ import * as _ from 'lodash-es';
 type RefreshType = 'query' | 'filters' | 'newPage';
 
 /**
+ * Possible types of "related" results
+ */
+type RelatedResultType = 'acc' | 'atx' | 'learning' | 'community';
+
+/**
  * Interface representing related ACC/ATX/eLearning/Community results
  */
 interface RelatedResult {
 	url: string;
 	title: string;
+	type: RelatedResultType;
 	description: string;
 }
 
@@ -64,7 +70,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public searchToken: string;
 
-	/** The actual search results used in the template
+	/**
+	 * The actual search results used in the template
 	 * Important properties picked out of the CDCSearchResponse
 	 */
 	public searchResults: {
@@ -157,10 +164,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			}
 			this.results.emit(this.searchResults);
 			this.totalCount = _.get(result, 'totalHits', 0);
-			// Only change filter options when the query changes
-			if (refreshType === 'query') {
-				this.populateFilters(result);
-			}
+			this.populateFilters(result);
 		});
 		/** Refresh "related" results subsection subscription */
 		this.refresh$.pipe(
@@ -279,6 +283,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: atx['Session Description'],
 						title: atx['Session Name'],
+						type: 'atx',
 						url: atx['Attendee Link'],
 					});
 				}
@@ -288,6 +293,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: acc['Short Description'],
 						title: acc.Title,
+						type: 'acc',
 						url: null,
 					});
 				}
@@ -297,6 +303,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: learning.description,
 						title: learning.title,
+						type: 'learning',
 						url: learning.url,
 					});
 				}
@@ -306,6 +313,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: community.fields.teaser[0],
 						title: community.fields.title[0],
+						type: 'community',
 						url: community.fields.url[0],
 					});
 				}
@@ -378,6 +386,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		}
 		if (type && type.filter) {
 			filter = `${filter}${filter ? ',' : ''}${type.filter}`;
+			this.logger.debug(JSON.stringify(type));
 		}
 
 		return { filters: filter };

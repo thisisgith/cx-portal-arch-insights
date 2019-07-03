@@ -36,8 +36,42 @@ export class AssetsBubbleChartComponent implements OnInit {
 	 * Builds our bubble graph
 	 */
 	private buildGraph () {
+		const series = _.map(this.seriesData, d => ({
+			data: [
+				{
+					name: d.label,
+					value: d.value,
+				},
+			],
+			name: d.label,
+			type: undefined,
+		}));
+
 		this.chart = new Chart({
+			series,
 			chart: {
+				events: {
+					load: () => {
+						if (window.Cypress) {
+							// Hack to allow Cypress to click on highcharts series
+							_.each(this.chart.ref.series, chartSeries => {
+								_.each(chartSeries.points, point => {
+									point.graphic.element.setAttribute(
+										'data-auto-id', `${point.name}Point`,
+									);
+									// When a "normal" click event fires,
+									// turn it into a highcharts point event instead
+									point.graphic.element.addEventListener('click', () => {
+										const event = Object.assign(
+											new MouseEvent('click'), { point },
+										);
+										point.firePointEvent('click', event);
+									});
+								});
+							});
+						}
+					},
+				},
 				height: 200,
 				type: 'packedbubble',
 				width: 250,
@@ -58,6 +92,7 @@ export class AssetsBubbleChartComponent implements OnInit {
 						textPath: undefined,
 					},
 					layoutAlgorithm: {
+						enableSimulation: false,
 						gravitationalConstant: 0.02,
 					},
 					maxSize: '120%',
@@ -72,7 +107,6 @@ export class AssetsBubbleChartComponent implements OnInit {
 					showInLegend: false,
 				},
 			},
-			series: this.seriesData,
 			title: {
 				text: null,
 			},
@@ -85,7 +119,9 @@ export class AssetsBubbleChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-		this.subfilter.emit(event.point.name);
+
+		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
+		this.subfilter.emit(filterName);
 	}
 
 	/**

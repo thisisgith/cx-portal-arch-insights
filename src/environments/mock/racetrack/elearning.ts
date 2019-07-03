@@ -16,7 +16,7 @@ const onboardItems = [
 		ranking: 0,
 		rating: '4.5000',
 		title: 'Catalyst 9800 Wireless Lan Controller Overview',
-		type: 'E-Course',
+		type: 'E-Courses',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53991',
 	},
 	{
@@ -25,7 +25,7 @@ const onboardItems = [
 		ranking: 1,
 		rating: '4.5000',
 		title: 'Configuring and Using Wireless Analytics in SDA',
-		type: 'E-Course',
+		type: 'E-Courses',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
@@ -34,7 +34,7 @@ const onboardItems = [
 		ranking: 2,
 		rating: '3.000',
 		title: 'Implementing Cisco IP Routing (ROUTE) v2.0',
-		type: 'E-Course',
+		type: 'E-Courses',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53691',
 	},
 	{
@@ -43,7 +43,7 @@ const onboardItems = [
 		ranking: 3,
 		rating: '2.7000',
 		title: 'Implementing Cisco IP Switched Networks (SWITCH) v2.0',
-		type: 'E-Course',
+		type: 'E-Courses',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53671',
 	},
 	{

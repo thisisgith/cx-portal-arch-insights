@@ -32,6 +32,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 interface Facet {
 	data?: any;
 	key: string;
+	label?: string;
 	route: string;
 	selected?: boolean;
 	template: TemplateRef<{ }>;
@@ -85,7 +86,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.eventsSubscribe = this.router.events.subscribe(
 			(event: RouterEvent): void => {
 				if (event instanceof NavigationEnd && event.url) {
-					const route = (_.isArray(event.url)) ? event.url[0] : event.url;
+					const route = _.split(
+						(_.isArray(event.url) ? event.url[0] : event.url), '?')[0];
 
 					if (route.includes('solution')) {
 						this.activeRoute = route;
@@ -146,12 +148,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.facets = [
 			{
 				key: 'lifecycle',
+				label: I18n.get('_AdoptionProgress_'),
 				route: '/solution/lifecycle',
 				template: this.lifecycleTemplate,
 				title: I18n.get('_Lifecycle_'),
 			},
 			{
 				key: 'assets',
+				label: I18n.get('_SupportCoverage_'),
 				route: '/solution/assets',
 				template: this.assetsTemplate,
 				title: I18n.get('_Assets&Coverage_'),
@@ -233,8 +237,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
 			const assetsFacet = _.find(this.facets, { key: 'assets' });
+
+			const percent = ((covered / total) * 100);
+			const gaugePercent = Math.floor(percent) || 0;
 			assetsFacet.data = {
-				gaugePercent: Math.floor((covered / total) * 100) || 0,
+				gaugePercent,
+				gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
 			};
 		},
 		err => {

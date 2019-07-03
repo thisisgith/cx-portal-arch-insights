@@ -15,6 +15,7 @@ import { SerialSearchModule } from './serial-search/serial-search.module';
 import { SpecialSearchModule } from './special-search/special-search.module';
 import { RMASearchModule } from './rma-search/rma-search.module';
 import {
+	ProductAlertsModule,
 	SearchModule as SearchServiceModule,
 	ContractsModule,
 	InventoryModule,
@@ -50,6 +51,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		RMASearchModule,
 		ContractsModule.forRoot({ rootUrl }),
 		InventoryModule.forRoot({ rootUrl }),
+		ProductAlertsModule.forRoot({ rootUrl }),
 		SearchServiceModule.forRoot({ rootUrl }),
 		InventoryModule.forRoot({ rootUrl }),
 	],

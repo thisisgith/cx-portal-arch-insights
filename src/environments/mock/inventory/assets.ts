@@ -11,11 +11,12 @@ const customerId = '2431199';
 export const mockResponse: Asset[] = [
 	{
 		contractNumber: '93425688',
+		criticalAdvisories: 2,
 		deviceName: 'Catalyst+3560X-24T-L+Switch',
 		ipAddress: '172.21.140.183',
 		osType: '',
 		osVersion: '12.2(55)SE1',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'FDO1503P0D7',
 		supportCovered: true,
 	},
@@ -65,7 +66,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '172.20.70.42',
 		osType: '',
 		osVersion: '12.4(15)T',
-		role: null,
+		role: 'BORDER ROUTER',
 		serialNumber: 'FOC10443XH6',
 		supportCovered: false,
 	},
@@ -75,7 +76,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '172.20.92.246',
 		osType: '',
 		osVersion: '12.2(44)SE6',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'FOC1348W6JP',
 		supportCovered: false,
 	},
@@ -95,7 +96,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '10.119.1.125',
 		osType: 'IOS',
 		osVersion: '12.2(55)SE3',
-		role: null,
+		role: 'DISTRIBUTION',
 		serialNumber: 'FOC1544Y16T',
 		supportCovered: false,
 	},
@@ -125,7 +126,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '172.20.70.42',
 		osType: '',
 		osVersion: '12.4(15)T',
-		role: null,
+		role: 'BORDER ROUTER',
 		serialNumber: '35334200',
 		supportCovered: false,
 	},
@@ -161,6 +162,7 @@ export const mockResponse: Asset[] = [
 	},
 	{
 		contractNumber: '93425688',
+		criticalAdvisories: 3,
 		deviceName: 'Cisco+Catalyst+4506-E+Switch',
 		ipAddress: '172.21.140.40',
 		osType: '',
@@ -185,7 +187,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '172.20.70.10',
 		osType: '',
 		osVersion: '12.2(55)SE9',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'CAT1042RG17',
 		supportCovered: false,
 	},
@@ -205,7 +207,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '172.21.142.148',
 		osType: '',
 		osVersion: '15.0(2)SE8',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'FOC1634Y28U',
 		supportCovered: false,
 	},
@@ -215,7 +217,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '172.23.164.92',
 		osType: '',
 		osVersion: '12.2(55)SE5',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'FOC1138Y1YS',
 		supportCovered: false,
 	},
@@ -225,7 +227,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '172.20.70.230',
 		osType: '',
 		osVersion: '12.1(22)EA11',
-		role: null,
+		role: 'CORE',
 		serialNumber: 'FAB0550Q1GT',
 		supportCovered: false,
 	},
@@ -321,21 +323,23 @@ export const mockResponse: Asset[] = [
 	},
 	{
 		contractNumber: '93856991',
+		criticalAdvisories: 1,
 		deviceName: 'Cisco+Catalyst+2960-24TC+Switch',
 		ipAddress: '192.168.99.114',
 		osType: '',
 		osVersion: '12.2(50)SE',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'FHK1045Y01E',
 		supportCovered: true,
 	},
 	{
 		contractNumber: '93425688',
+		criticalAdvisories: 0,
 		deviceName: 'Cisco+Catalyst+3750G-24T+Switch',
 		ipAddress: '172.23.183.31',
 		osType: '',
 		osVersion: '12.2(55)SE8',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'CAT1107NHD6',
 		supportCovered: true,
 	},
@@ -371,11 +375,12 @@ export const mockResponse: Asset[] = [
 	},
 	{
 		contractNumber: '93425688',
+		criticalAdvisories: 7,
 		deviceName: 'Catalyst+2960S-48TS-S+Switch',
 		ipAddress: '172.21.140.184',
 		osType: '',
 		osVersion: '12.2(55)SE3',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'FOC1448Z4U9',
 		supportCovered: true,
 	},
@@ -385,7 +390,7 @@ export const mockResponse: Asset[] = [
 		ipAddress: '192.168.99.215',
 		osType: '',
 		osVersion: '15.0(2)SE',
-		role: null,
+		role: 'ACCESS',
 		serialNumber: 'FDO1734H1MQ',
 		supportCovered: false,
 	},
@@ -405,19 +410,45 @@ export const mockResponse: Asset[] = [
  * Function to generate the mock Assets Response
  * @param rows the rows to return
  * @param page the page to return
+ * @param contractNumber the contractNumber to filter on
+ * @param supportCovered the values to filter coverage
  * @returns the assets response
  */
-function MockAssets (rows: number, page: number): Assets {
-	const data = _.cloneDeep(mockResponse)
-		.slice((rows * (page - 1)), (rows * page));
+function MockAssets (
+	rows: number,
+	page: number,
+	contractNumber?: string[],
+	supportCovered?: boolean[]): Assets {
+	let data = _.cloneDeep(mockResponse);
+
+	if (contractNumber) {
+		const filtered = [];
+
+		_.each(contractNumber, (cNumber: string) => {
+			filtered.push(_.filter(data, { contractNumber: cNumber }));
+		});
+
+		data = _.flatten(filtered);
+	}
+
+	if (supportCovered) {
+		data = _.filter(
+			data,
+			i => _.indexOf(supportCovered, i.supportCovered) >= 0);
+	}
+
+	const total = data.length;
+	const pages = Math.ceil(data.length / rows);
+
+	data = data.slice((rows * (page - 1)), (rows * page));
 
 	return {
 		data,
 		Pagination: {
 			page,
+			pages,
 			rows,
-			pages: Math.ceil(mockResponse.length / rows),
-			total: mockResponse.length,
+			total,
 		},
 	};
 }
@@ -429,12 +460,72 @@ export const AssetScenarios = [
 			GET: [
 				{
 					delay: 100,
+					description: 'Assets Count',
+					response: {
+						body: MockAssets(1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=1&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Covered Assets',
+					response: {
+						body: MockAssets(10, 1, null , [true]),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=1&coverage=covered`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Covered Assets - Grid View',
+					response: {
+						body: MockAssets(12, 1, null , [true]),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=12&page=1&coverage=covered`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 500,
 					description: 'Assets Page 1',
 					response: {
 						body: MockAssets(10, 1),
 						status: 200,
 					},
 					selected: true,
+				},
+				{
+					delay: 0,
+					description: '(Assets) Unreachable API',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
 				},
 			],
 		},
@@ -445,7 +536,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 250,
 					description: 'Assets Page 2',
 					response: {
 						body: MockAssets(10, 2),
@@ -462,7 +553,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 325,
 					description: 'Assets Page 3',
 					response: {
 						body: MockAssets(10, 3),
@@ -479,7 +570,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 150,
 					description: 'Assets Page 4',
 					response: {
 						body: MockAssets(10, 4),
@@ -490,6 +581,91 @@ export const AssetScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=10&page=4`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Assets Page 1 - Grid View',
+					response: {
+						body: MockAssets(12, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=12&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Assets Page 2 - Grid View',
+					response: {
+						body: MockAssets(12, 2),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=12&page=2`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Assets Page 3 - Grid View',
+					response: {
+						body: MockAssets(12, 3),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=12&page=3`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Assets Page 4 - Grid View',
+					response: {
+						body: MockAssets(12, 4),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=12&page=4`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 225,
+					description: 'Contract 93856991 Filtering',
+					response: {
+						body: MockAssets(10, 1, ['93856991']),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=1&contractNumber=93856991`,
 		usecases: ['Use Case 1'],
 	},
 ];

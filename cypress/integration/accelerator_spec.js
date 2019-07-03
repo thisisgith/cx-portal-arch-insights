@@ -53,11 +53,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							.should('have.class', 'ribbon__green');
 						cy.get('.star').should('exist');
 						break;
-					default: // recommended
-						cy.getByAutoId('request1on1').should('contain', 'Request a 1-on-1')
-							.and('have.attr', 'href', acc.url);
-						cy.getByAutoId('ACCCardRibbon')
-							.should('have.class', 'ribbon__clear');
+					default: // since we have more status now, need to rewrite the below
+						// cy.getByAutoId('request1on1').should('contain', 'Request a 1-on-1')
+						// 	.and('have.attr', 'href', acc.url);
+						// cy.getByAutoId('ACCCardRibbon')
+						// 	.should('have.class', 'ribbon__clear');
 				}
 			});
 		});
