@@ -1,4 +1,4 @@
-import { VulnerabilityResponse } from '@cui-x/sdp-api';
+import { VulnerabilityResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/product-alerts/v1/vulnerabilities/count';

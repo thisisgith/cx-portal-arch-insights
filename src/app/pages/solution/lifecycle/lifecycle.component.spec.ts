@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
-import { RacetrackService, RacetrackContentService } from '@cui-x/sdp-api';
+import { RacetrackService, RacetrackContentService } from '@sdp-api';
 import { SolutionService } from '../solution.service';
 import {
 	RacetrackScenarios,

@@ -2,7 +2,7 @@
 
 import {
 	ATXResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/racetrack/v1/atx';

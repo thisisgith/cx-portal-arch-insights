@@ -24,7 +24,7 @@ import {
 	Buckets,
 	Facets,
 	ELearning,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { SearchService as SearchUtils } from '@services';
 import { SearchContext, SearchQuery } from '@interfaces';
 
@@ -314,7 +314,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 						description: community.fields.teaser[0],
 						title: community.fields.title[0],
 						type: 'community',
-						url: community.fields.url[0],
+						url: community.fields.uri[0],
 					});
 				}
 

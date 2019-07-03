@@ -1,7 +1,7 @@
 import {
 	ContractDeviceCountsResponse,
 	DeviceContractResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 
 /** base API for contract details */
 const api = '/api/customerportal/contracts/v1/';

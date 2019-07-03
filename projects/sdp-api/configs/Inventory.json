@@ -1,0 +1,31 @@
+{
+	"$schema": "../../../node_modules/@apollo/ng-swagger-gen/ng-swagger-gen-schema.json",
+	"swagger": "../../node_modules/@swagger/cx-portal/swagger/Inventory.yaml",
+	"output": "src/lib/inventory",
+	"outputCore": "../core",
+	"prefix": "Inventory",
+	"ignoreUnusedModels": true,
+	"minParamsForContainer": 2,
+	"sortParams": "desc",
+	"defaultTag": "Inventory",
+	"replaceTags": {
+		"Inventory API Services": "Inventory"
+	},
+	"defaultOperationIds": {
+		"head": {
+			"/api/customerportal/inventory/v1/hardware": "headHardware",
+			"/api/customerportal/inventory/v1/network-elements": "headNetworkElements",
+			"/api/customerportal/inventory/v1/software": "headSoftware"
+		}
+	},
+	"modelsExportAs": {
+		"ErrorResponse": "InventoryErrorResponse"
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
+}
