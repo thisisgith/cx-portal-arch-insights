@@ -463,13 +463,30 @@
 		</div>
 		<div class="divider base-margin-left base-margin-right"></div>
 		<div class="modal__body base-padding">
-			<div class="text-large text-bold text-left"
-				[innerText]="'_TopicsAvailableSolution_' | i18n:data.length:componentData.params.solution:componentData.params.usecase"
-				data-auto-id="ACCTopicsAvailable">
+			<div class="row half-margin-left half-margin-right">
+				<div class="col-md-9 text-large text-bold text-left"
+					[innerText]="'_TopicsAvailableSolution_' | i18n:data?.length || 0:componentData.params.solution:componentData.params.usecase"
+					data-auto-id="ACCTopicsAvailable">
+				</div>
+				<div class="col-md-2">
+					<cui-select id="acc-filter" data-auto-id="acc-filter"
+						[placeholder]="'_FilterBy_' | i18n">
+					</cui-select>
+				</div>
+				<div class="col-md-1 text-right">
+					<div class="btn-group btn-group--square">
+						<button class="btn btn--white">
+							<span class="icon-list-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+						</button>
+						<button class="btn btn--square">
+							<span class="icon-grid-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+						</button>
+					</div>
+				</div>
 			</div>
 
 			<div class="grid grid--4up base-padding-top">
-				<div class="card acc__card__background"
+				<div class="card acc__card"
 					*ngFor="let item of data"
 					[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null"
 					data-auto-id="ACCCard">
@@ -477,7 +494,11 @@
 						<span class="icon-flagged qtr-padding-right qtr-padding-bottom"></span>
 						<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 					</div>
-					<div class="icon-bookmark icon-medium" [ngClass]="getRibbonClass(item)" data-auto-id="ACCCardRibbon"></div>
+					<div class="icon-bookmark icon-medium"
+						(click)="setFavorite(item)"
+						[ngClass]="getACCRibbonClass(item)" 
+						data-auto-id="ACCCardRibbon">
+					</div>
 					<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
 					<div class="card__header text-left text-bold"
 						[ngClass]="item.status === 'recommended' ? 'text-info' : null"
@@ -488,16 +509,16 @@
 					<div class="card__footer">
 						<div class="card_footer_item" data-auto-id="ACCCardFooter">
 							<div class="text-left text-info"  *ngIf="item.status === 'recommended'">
-								<a data-auto-id="request1on1" class="no-link" [href]="item.url">
-									<span class="icon-persistent-chat icon-small half-padding-right"></span>
-									<span [innerText]="'_Request1on1_' | i18n"></span>
+								<a class="no-link" [href]="item.url">
+									<button data-auto-id="Reqest1on1Button" class="btn btn--small btn--secondary text-uppercase"
+										[innerText]="'_Request1on1_' | i18n">
+									</button>
 								</a>
 							</div>
-							<div class="text-left text-info" *ngIf="item.status === 'scheduled'">
-								<span class="icon-persistent-chat icon-small half-padding-right"></span>
+							<div class="text-left text-success" *ngIf="item.status === 'in-progress'">
 								<span [innerText]="'_CSETouch_' | i18n"></span>
 							</div>
-							<div class="text-left text-success" *ngIf="item.status === 'completed'">
+							<div class="text-left text-olive" *ngIf="item.status === 'completed'">
 								<span [innerText]="'_Completed_' | i18n"></span>
 							</div>
 						</div>
@@ -551,7 +572,7 @@
 				</div>
 			</div>
 			<div class="grid grid--4up base-padding-top">
-				<div class="card acc__card__background" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
+				<div class="card acc__card" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
 					<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
 					<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
 					<div class="card__footer">
@@ -636,7 +657,7 @@
 			<div class="col-md-6 flex-center-vertical">
 				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
 			</div>
-			<div class="col-md-6 text-right" *ngIf="viewAll">
+			<div class="col-md-6 text-right toggle" *ngIf="viewAll">
 				<div *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">

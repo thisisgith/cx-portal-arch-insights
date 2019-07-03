@@ -1,3 +1,4 @@
+// tslint:disable: completed-docs
 import { ACCResponse } from '@cui-x/sdp-api';
 
 /** Base of URL for SDP API */
@@ -5,6 +6,11 @@ const api = '/api/customerportal/racetrack/v1/acc';
 
 /** Default Customer ID */
 const customerId = '2431199';
+/** Default acc ID */
+const accId1 = '111111';
+const accId2 = '222222';
+const accId3 = '333333';
+const accId4 = '444444';
 
 /**
  * Mock
@@ -32,7 +38,7 @@ function MockACC (
 				'deployments and assists. Understand how to design, adopt, and leverage to ' +
 				'save time and resources within your network',
 			isFavorite: true,
-			status: 'scheduled',
+			status: 'in-progress',
 			title: 'Cisco DNA Pilot Usecase Deployment',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
@@ -116,6 +122,70 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess Bookmark1',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId1}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark2',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId2}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark3',
+					response: {
+						status: 500,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId3}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark4',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId4}/bookmark`,
 		usecases: ['Use Case 1'],
 	},
 ];
