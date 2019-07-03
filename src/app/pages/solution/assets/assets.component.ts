@@ -687,6 +687,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					{
 						key: 'role',
 						name: I18n.get('_Role_'),
+						render: item => _.capitalize(item.role),
 						sortable: false,
 						value: 'role',
 					},
@@ -818,7 +819,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.view = view;
 			const newRows = this.view === 'list' ? 10 : 12;
 			this.assetParams.page =
-				Math.ceil(this.assetParams.page * this.assetParams.rows / newRows);
+				Math.floor(this.assetParams.page * this.assetParams.rows / newRows);
 			this.assetParams.rows = newRows;
 			this.adjustQueryParams();
 			this.fetchInventory()

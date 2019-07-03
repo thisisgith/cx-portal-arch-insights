@@ -108,6 +108,15 @@ export const ContractScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 0,
+					description: 'Contract Counts Data Unavailable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}device/count?customerId=2431199`,

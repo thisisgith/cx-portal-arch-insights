@@ -182,6 +182,45 @@ paths:
           description: Operation failed
           schema:
             $ref: '#/definitions/ErrorResponse'
+  /api/customerportal/racetrack/v1/acc/{accId}/bookmark:
+       post:
+        tags:
+          - Racetrack Content
+          - Accelerators
+          - Bookmark Accelerators
+        summary: Ability to add or remove bookmark for an accelerator
+        description: >-
+          Ability to add or remove bookmark for an accelerator.
+        operationId: updateACCBookmark
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        parameters:
+          - name: accId
+            in: path
+            description: Unique identifier of the accelerator that was marked or removed favorite
+            required: true
+            type: string
+          - name: bookmark
+            in: body
+            description: Payload to take action on the bookmark for an accelerator
+            required: true
+            schema:
+              $ref: '#/definitions/ACCBookmarkSchema'
+        responses:
+          '200':
+            description: successful operation
+          '401':
+            description: 'Unauthorized'
+          '403':
+            description: 'Forbidden'
+          '500':
+            description: 'Internal server error'
+          '400':
+            description: Bad Request
+            schema:
+              $ref: '#/definitions/ErrorResponse'
   /api/customerportal/racetrack/v1/successPaths:
      get:
       tags:
@@ -537,6 +576,9 @@ definitions:
   ACC:
     type: object
     properties:
+      accId:
+        type: string
+        description: Unique identifier of the accelerator.
       title:
         type: string
         description: DNA Assurance Self Guided Lab
@@ -546,6 +588,31 @@ definitions:
       url:
         type: string
         description: https://salesconnect.cisco.com/open.html?c=89230f5c-97e2-4891-99d0-42fcc953e7e1
+      status:
+        type: string
+        description: Accelrator status for logged in user (recommended | completed | in-progress | scheduled)
+      isFavorite:
+        type: boolean
+        description: If the User has favorite this item then it will be true else false
+
+  ACCBookmarkSchema:
+    type: object
+    properties:
+      isFavorite:
+        type: boolean
+        description: Boolean value to indicate if the acc is marked favorite
+      customerId:
+        type: string
+        description: Unique identifier of a Cisco customer.
+      solution:
+        type: string
+        description: ibn
+      usecase:
+        type: string
+        description: usecase name (assurance | sd-access | automation)
+      pitstop:
+        type: string
+        description: pitsop name (onboard | implement | use | engage)
 
   SuccessPathsResponse:
     type: object

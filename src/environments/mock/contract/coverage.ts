@@ -48,6 +48,46 @@ export const CoverageScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 100,
+					description: 'Coverage - Empty Body',
+					response: {
+						body: { },
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: 100,
+					description: 'Coverage - Invalid Body',
+					response: {
+						body: { covered: true },
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: 500,
+					description: 'Coverage 500 Failure',
+					response: {
+						status: 500,
+						statusText: 'Internal Server Error',
+					},
+					selected: false,
+				},
+				{
+					delay: 500,
+					description: 'Coverage < 1%',
+					response: {
+						body: {
+							covered: 8,
+							expired: 0,
+							uncovered: 3,
+							unknown: 8915,
+						},
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}coverages/count?customerId=${customerId}`,

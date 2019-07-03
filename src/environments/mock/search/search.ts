@@ -592,6 +592,7 @@ export const SearchScenarios = [
 						status: 404,
 						statusText: 'Unable to find results',
 					},
+					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 1000,
