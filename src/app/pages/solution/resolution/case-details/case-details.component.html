@@ -1,129 +1,61 @@
 <div class="case-details-container">
 	<div class="base-padding-left">
 		<div class="base-margin-bottom">
-			<span class="text-xlarge" [innerText]="'_RMACase_' | i18n:caseDetails?.caseNumber"></span>
+			<span class="text-xlarge" [innerText]="'_CaseNumberTitle_' | i18n:caseDetails?.caseNumber"></span>
 		</div>
 		<div class="row flex maxWidth">
-			<div class="col-md-3">
-				<div class="text-bold" [innerText]="'_RMASeverity_' | i18n"></div>
+			<div class="col-md-4">
+				<div class="text-bold" [innerText]="'_CaseSeverity_' | i18n | uppercase"></div>
 				<div>
-					<span class="text-bold" [innerText]="'S' + caseDetails?.priority"></span>
+					<span class="dot" [ngClass]="getSeverityColor(caseDetails?.priority)"></span>
+					<span class="text-bold qtr-padding-left" [innerText]="caseDetails?.priority? ('S'+ caseDetails.priority): ''"></span>
 					<span class="qtr-padding-left" [innerText]="caseDetails?.requestType"></span>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div>
-					<span class="text-bold" [innerText]="'_RMAStatus_' | i18n"></span>
+					<span class="text-bold" [innerText]="'_CaseStatus_' | i18n | uppercase"></span>
 				</div>
 				<div [innerText]="caseDetails?.status"></div>
 			</div>
-			<div class="col-md-3">
-				<div class="text-bold" [innerText]="'_RMACreated_' | i18n"></div>
+			<div class="col-md-2">
+				<div class="text-bold" [innerText]="'_CaseCreated_' | i18n | uppercase"></div>
 				<div [innerText]="caseDetails?.createdDate | date"></div>
 			</div>
 			<div class="col-md-3">
-				<div class="text-bold" [innerText]="'_RMALastUpdated_' | i18n"></div>
+				<div class="text-bold" [innerText]="'_CaseLastUpdated_' | i18n | uppercase"></div>
 				<div [innerText]="caseDetails?.lastUpdateDate | date"></div>
 			</div>
 		</div>
 
 		<div class="row base-padding-top base-padding-bottom">
-			<div class="col-md-3 text-center">
+			<div class="col-md-6 text-left">
 			</div>
-			<div class="col-md-3 text-center"></div>
-			<div class="col-md-3 text-center">
-				<button class="btn btn--small btn--secondary" [innerText]="'_RMAAttachFile_' | i18n"></button>
+			<div class="col-md-3 text-right">
+				<button class="btn btn--small btn--secondary" [innerText]="'_CaseAttachFile_' | i18n"></button>
 			</div>
 			<div class="col-md-3 text-center">
-				<button class="btn btn--small btn--secondary" [innerText]="'_RMAAddNote_' | i18n"></button>
+				<button class="btn btn--small btn--secondary" [innerText]="'_CaseAddNote_' | i18n"></button>
 			</div>
 		</div>
 	</div>
 	<div class="base-padding-left">
 		<div class="panel">
 			<cui-tabs inline="true">
-				<cui-tab [label]="'_RMASummary_' | i18n | uppercase">
-					<div class="divider no-margin-top qtr-margin-bottom"></div>
+				<cui-tab [label]="'_CaseSummary_' | i18n | uppercase">
+					<div class="divider no-margin-top"></div>
 					<ng-container *ngTemplateOutlet="summaryContent"></ng-container>
 				</cui-tab>
-				<cui-tab [label]="'_RMANotes_'| i18n| uppercase">
-					<div class="divider no-margin-top qtr-margin-bottom"></div>
+				<cui-tab [label]="'_CaseNotes_'| i18n | uppercase">
+					<div class="divider no-margin-top"></div>
 				</cui-tab>
-				<cui-tab [label]="'_RMAFiles_'| i18n | uppercase">
-					<div class="divider no-margin-top qtr-margin-bottom"></div>
-					<div>
-						<ng-container *ngTemplateOutlet="filesContent"></ng-container>
-					</div>
+				<cui-tab [label]="'_CaseFiles_'| i18n | uppercase">
+					<div class="divider no-margin-top"></div>
 				</cui-tab>
 			</cui-tabs>
 		</div>
 		<ng-template #summaryContent>
-
-			<div class="row flex maxWidth base-padding-top">
-				<div class="col-md-6">
-					<div class="text-bold" [innerText]="'_RMATechnology_' | i18n"></div>
-					<div>
-						<span [innerText]="caseDetails?.technologyName"></span>
-						<span class="icon-arrow-right-tail icon-arrow-color  qtr-padding-left qtr-padding-right"></span>
-						<span [innerText]="caseDetails?.subTechnologyName"></span>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="text-bold" [innerText]="'_RMAProblemType_' | i18n"></div>
-					<div>
-						<span [innerText]="caseDetails?.customerActivity"></span>
-						<span class="icon-arrow-right-tail icon-arrow-color qtr-padding-left qtr-padding-right"></span>
-						<span [innerText]="caseDetails?.problemCodeName"></span>
-					</div>
-				</div>
-			</div>
-			<div class="row flex maxWidth base-padding-top">
-				<div class="col-md-6">
-					<div class="text-bold" [innerText]="'_RMAAsset_' | i18n"></div>
-					<div [innerText]="caseDetails?.deviceName"></div>
-				</div>
-				<div class="col-md-6">
-					<div class="text-bold" [innerText]="'_RMASoftwareVersion_' | i18n"></div>
-					<div [innerText]="caseDetails?.softwareVersion"></div>
-				</div>
-			</div>
-			<div class="row flex maxWidth base-padding-top">
-				<div class="col-md-6">
-					<div class="text-bold" [innerText]="'_RMAContract_' | i18n"></div>
-					<div [innerText]="caseDetails?.contractId"></div>
-				</div>
-				<div class="col-md-6">
-					<div class="text-bold" [innerText]="'_RMATrackingNumber_' | i18n"></div>
-					<div [innerText]="caseDetails?.trackingNumber"></div>
-				</div>
-			</div>
-			<div class="row flex maxWidth base-padding-top">
-				<div class="col-md-6">
-					<div class="text-bold" [innerText]="'_RMACaseOwner_' | i18n"></div>
-					<div><a data-auto-id="mailCaseOwner" href="mailto:{{caseDetails?.contactEmail}}" [innerText]="caseDetails?.contactEmail"></a>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="text-bold" [innerText]="'_RMATacEngineer_' | i18n"></div>
-					<div>
-						<!-- should be replaced with correct key -->
-						<a data-auto-id="mailTacEngineer" href="mailto:{{caseDetails?.additionalEmail}}"
-							[innerText]="caseDetails?.additionalEmail"></a>
-					</div>
-				</div>
-			</div>
-			<div class="row flex maxWidth base-padding-top">
-				<div class="col-md-12">
-					<div class="text-bold" [innerText]="'_RMACaseTitle_' | i18n"></div>
-					<div [innerText]="caseDetails?.summary"></div>
-				</div>
-			</div>
-			<div class="row flex maxWidth base-padding-top">
-				<div class="col-md-12">
-					<div class="text-bold" [innerText]="'_RMADescription_' | i18n"></div>
-					<div [innerText]="caseDetails?.description"></div>
-				</div>
-			</div>
+				<app-case-summary [caseDetails]="caseDetails"></app-case-summary>
 		</ng-template>
 	</div>
 </div>

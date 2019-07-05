@@ -4,6 +4,26 @@
 	margin: 0 25% 0 25%;
 }
 
-.icon-arrow-color {
-	color: $accent-orange;
+.dot {
+	height: 12px;
+	width: 12px;
+	border-radius: 50%;
+	display: inline-block;
 }
+
+.orange {
+	background-color: $status-orange;
+}
+
+.red {
+	background-color: $status-red;
+}
+
+.yellow {
+	background-color: $status-yellow;
+}
+
+.blue {
+	background-color: $cisco-blue;
+}
+
