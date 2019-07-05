@@ -4,8 +4,8 @@
 			<span class="text-xlarge" [innerText]="'_CaseNumberTitle_' | i18n:caseDetails?.caseNumber"></span>
 		</div>
 		<div class="row flex maxWidth">
-			<div class="col-md-4">
-				<div class="text-bold" [innerText]="'_CaseSeverity_' | i18n | uppercase"></div>
+			<div class="col-md-5">
+				<div class="text-bold font-size" [innerText]="'_CaseSeverity_' | i18n | uppercase"></div>
 				<div>
 					<span class="dot" [ngClass]="getSeverityColor(caseDetails?.priority)"></span>
 					<span class="text-bold qtr-padding-left" [innerText]="caseDetails?.priority? ('S'+ caseDetails.priority): ''"></span>
@@ -14,16 +14,16 @@
 			</div>
 			<div class="col-md-3">
 				<div>
-					<span class="text-bold" [innerText]="'_CaseStatus_' | i18n | uppercase"></span>
+					<span class="text-bold font-size" [innerText]="'_CaseStatus_' | i18n | uppercase"></span>
 				</div>
 				<div [innerText]="caseDetails?.status"></div>
 			</div>
 			<div class="col-md-2">
-				<div class="text-bold" [innerText]="'_CaseCreated_' | i18n | uppercase"></div>
+				<div class="text-bold font-size" [innerText]="'_CaseCreated_' | i18n | uppercase"></div>
 				<div [innerText]="caseDetails?.createdDate | date"></div>
 			</div>
-			<div class="col-md-3">
-				<div class="text-bold" [innerText]="'_CaseLastUpdated_' | i18n | uppercase"></div>
+			<div class="col-md-2">
+				<div class="text-bold font-size" [innerText]="'_CaseLastUpdated_' | i18n | uppercase"></div>
 				<div [innerText]="caseDetails?.lastUpdateDate | date"></div>
 			</div>
 		</div>
@@ -31,11 +31,9 @@
 		<div class="row base-padding-top base-padding-bottom">
 			<div class="col-md-6 text-left">
 			</div>
-			<div class="col-md-3 text-right">
-				<button class="btn btn--small btn--secondary" [innerText]="'_CaseAttachFile_' | i18n"></button>
-			</div>
-			<div class="col-md-3 text-center">
-				<button class="btn btn--small btn--secondary" [innerText]="'_CaseAddNote_' | i18n"></button>
+			<div class="col-md-6 text-right">
+				<button class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right" [innerText]="'_CaseAttachFile_' | i18n"></button>
+				<button class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right" [innerText]="'_CaseAddNote_' | i18n"></button>
 			</div>
 		</div>
 	</div>
