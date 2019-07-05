@@ -12,6 +12,7 @@ import { CaseService, CaseDetails } from '@cui-x/services';
 export class CaseDetailsComponent implements OnInit {
 
 	public caseDetails: CaseDetails;
+	public caseNotes: any[] = [];
 
 	constructor (
 		private caseService: CaseService,
@@ -22,6 +23,7 @@ export class CaseDetailsComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		this.getCaseDetails();
+		this.getCaseNotes();
 	}
 
 	/**
@@ -54,5 +56,19 @@ export class CaseDetailsComponent implements OnInit {
 			case '4': return 'blue';
 				break;
 		}
+	}
+
+	/**
+	 * fetches case notes
+	 * @returns case notes
+	 */
+	public getCaseNotes () {
+		return this.caseService.fetchCaseNotes('688296392')
+			.subscribe(
+				(response: any) => {
+					if (response.responseDetails) {
+						this.caseNotes = response.responseDetails.notesList;
+					}
+				});
 	}
 }

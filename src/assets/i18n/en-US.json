@@ -299,7 +299,7 @@
 	"_CaseCancel_": "Cancel",
 	"_CaseClose_": "Close",
 	"_CaseSummary_":"Summary",
-	"_CaseNotes_":"Notes",
+	"_CaseNotes_":"Notes ({0})",
 	"_CaseFiles_":"Files"
 
 }

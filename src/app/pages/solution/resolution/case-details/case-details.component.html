@@ -44,16 +44,23 @@
 					<div class="divider no-margin-top"></div>
 					<ng-container *ngTemplateOutlet="summaryContent"></ng-container>
 				</cui-tab>
-				<cui-tab [label]="'_CaseNotes_'| i18n | uppercase">
+				<cui-tab [label]="'_CaseNotes_'| i18n:caseNotes?.length  | uppercase">
 					<div class="divider no-margin-top"></div>
+					<ng-container *ngTemplateOutlet="notesContent"></ng-container>
 				</cui-tab>
 				<cui-tab [label]="'_CaseFiles_'| i18n | uppercase">
 					<div class="divider no-margin-top"></div>
+					<ng-container *ngTemplateOutlet="filesContent"></ng-container>
 				</cui-tab>
 			</cui-tabs>
 		</div>
 		<ng-template #summaryContent>
 				<app-case-summary [caseDetails]="caseDetails"></app-case-summary>
+		</ng-template>
+		<ng-template #notesContent>
+				<app-case-notes [caseNotes]="caseNotes"></app-case-notes>
+		</ng-template>
+		<ng-template #filesContent>
 		</ng-template>
 	</div>
 </div>

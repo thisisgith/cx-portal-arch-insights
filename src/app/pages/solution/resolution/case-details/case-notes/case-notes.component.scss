@@ -1,0 +1,18 @@
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
+
+.timeline-date {
+	font-size: smaller;
+	color: $dark-gray-2;
+}
+
+.timeline-name {
+	font-style: normal;
+}
+
+.small-font-size {
+	font-size: $small-font-size;
+}
+
+.timeline-content-background {
+	background-color: $off-white;
+}
