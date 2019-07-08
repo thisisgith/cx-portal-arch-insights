@@ -1,3 +1,13 @@
+<!-- App Details 360 slide-out -->
+<app-panel360 [hidden]="!selectedAsset" [fullscreen]="fullscreen">
+	<app-panel360-header (close)="onPanelClose()"
+		[(fullscreen)]="fullscreen">
+		<details-header [asset]="selectedAsset"></details-header>
+		<div appPanel360Title class="text-xlarge" [innerText]="selectedAsset?.serialNumber"></div>
+	</app-panel360-header>
+	<asset-details [asset]="selectedAsset"></asset-details>
+</app-panel360>
+
 <div class="panel">
 	<cui-tabs inline="true">
 		<cui-tab [label]="'_Assets_' | i18n | uppercase">
@@ -213,7 +223,7 @@
 		</table>
 	</div>
 	<div class="panel panel--ltgray dbl-padding-right dbl-padding-left" *ngIf="assetsTable && inventory.length && view == 'grid'">
-		<div class="row"> 
+		<div class="row">
 			<div *ngFor="let item of inventory" class="col-md-2 half-margin-bottom half-margin-top flex">
 				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
 			</div>
@@ -225,50 +235,65 @@
 	<div class="card curved-corners flex-fluid" [ngClass]="{ 'selected': item.selected }" (click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
-				<a attr.data-auto-id="InventoryItem-{{ item.data?.deviceName}}" class="text-large text-center" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
+				<a attr.data-auto-id="Device-{{ item.data?.serialNumber }}" class="text-large text-center" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
 			</div>
 			<div class="flex-center dbl-margin-top dbl-margin-bottom">
 				<!-- ngIf's using literal values until source of image is confirmed -->
-				<img *ngIf="false" [src]="" alt=""/>
-				<span *ngIf="true" class="col-md-6 text-muted text-center text-uppercase text-wrap-normal" [innerText]="'_NoPhotoAvailable_' | i18n"></span>
+				<img *ngIf="false" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}" [src]="" alt=""/>
+				<span *ngIf="true" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}"
+					class="col-md-6 text-muted text-center text-uppercase text-wrap-normal"
+					[innerText]="'_NoPhotoAvailable_' | i18n">
+				</span>
 			</div>
 		</div>
 		<div class="card__body text-small dbl-margin-bottom">
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_IPAddress_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.ipAddress || ('_NA_' | i18n)"></div>
+				<div class="col-md-6" [innerText]="item.data?.ipAddress || ('_NA_' | i18n)" attr.data-auto-id="IPAddress-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_LastScan_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.lastScan || ('_Never_' | i18n)"></div>
+				<div class="col-md-6" [innerText]="item.data?.lastScan || ('_Never_' | i18n)" attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_SerialNumber_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.serialNumber || ('_NA_' | i18n)"></div>
+				<div class="col-md-6" [innerText]="item.data?.serialNumber || ('_NA_' | i18n)" attr.data-auto-id="SerialNumber-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Software_' | i18n"></div>
 				<div class="col-md-6">
-					<ng-container 
-						*ngTemplateOutlet="(item.data?.osType || item.data?.osVersion) ? hasSoftware : NA; context: {type: item.data.osType, version: item.data.osVersion}">
+					<ng-container
+						*ngTemplateOutlet="(item.data?.osType || item.data?.osVersion) ? hasSoftware : NA;
+							context: {type: item.data.osType, version: item.data.osVersion, serialNumber: item.data.serialNumber}">
 					</ng-container>
 				</div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Role_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.role || ('_NA_' | i18n)"></div>
+				<div class="col-md-6" [innerText]="item.data?.role || ('_NA_' | i18n)" attr.data-auto-id="Role-{{ item.data?.serialNumber }}"></div>
 			</div>
 		</div>
 		<div class="max-width">
 			<div class="pull-left">
 				<span class="badge-wrapper base-margin-right" [ngClass]="{ 'invisible': !item.data?.criticalAdvisories }">
-					<span tabindex="0" class="icon-alert" data-balloon-indigo [attr.data-balloon]="'_CriticalAdvisories_' | i18n" data-balloon-pos="down">
-						<span class="icon-alert icon-small text-dkgray-4"></span>
+					<span tabindex="0"
+						class="icon-alert"
+						data-balloon-indigo [attr.data-balloon]="'_CriticalAdvisories_' | i18n"
+						data-balloon-pos="down"
+						attr.data-auto-id="AdvisoryIcon-{{ item.data?.serialNumber }}">
+							<span class="icon-alert icon-small text-dkgray-4"></span>
 					</span>
-					<span class="badge badge--tiny badge--danger" [innerText]="item.data?.criticalAdvisories"></span>
+					<span class="badge badge--tiny badge--danger"
+						[innerText]="item.data?.criticalAdvisories"
+						attr.data-auto-id="AdvisoryCount-{{ item.data?.serialNumber }}">
+					</span>
 				</span>
 				<span class="badge-wrapper" [ngClass]="{ 'invisible': !item.data?.supportCovered }">
-					<span tabindex="0" class="icon-alert" data-balloon-indigo [attr.data-balloon]="'_SupportCoverage_' | i18n" data-balloon-pos="down">
+					<span tabindex="0"
+						class="icon-alert"
+						data-balloon-indigo [attr.data-balloon]="'_SupportCoverage_' | i18n"
+						data-balloon-pos="down"
+						attr.data-auto-id="CoveredIcon-{{ item.data?.serialNumber }}">
 						<span class="icon-headset icon-small text-dkgray-4"></span>
 					</span>
 					<span class="badge badge--tiny badge--success icon-check"></span>
@@ -284,14 +309,16 @@
 		</div>
 	</div>
 </ng-template>
-	
-<ng-template #NA let-type="type" let-verison="version">
-	<span [innerText]="'_NA_' | i18n"></span>
+
+<ng-template #NA let-type="type" let-verison="version" let-serialNumber="serialNumber">
+	<span [innerText]="'_NA_' | i18n" attr.data-auto-id="Software-{{ serialNumber }}"></span>
 </ng-template>
-	
-<ng-template #hasSoftware let-type="type" let-version="version">
-	<span *ngIf="type" innerText="{{type}} "></span>
-	<span *ngIf="version" [innerText]="version"></span>
+
+<ng-template #hasSoftware let-type="type" let-version="version" let-serialNumber="serialNumber">
+	<div attr.data-auto-id="Software-{{ serialNumber }}">
+		<span *ngIf="type" innerText="{{type}} "></span>
+		<span *ngIf="version" [innerText]="version"></span>
+	</div>
 </ng-template>
 
 <ng-template #advisoryFilter let-filter="filter">

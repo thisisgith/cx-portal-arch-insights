@@ -38,7 +38,6 @@ const customerId = '2431199';
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'asset-details',
-	styleUrls: ['./details.component.scss'],
 	templateUrl: './details.component.html',
 })
 

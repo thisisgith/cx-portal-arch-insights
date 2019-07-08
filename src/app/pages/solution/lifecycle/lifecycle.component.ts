@@ -8,6 +8,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import {
 	ACC,
+	ACCBookmarkSchema,
 	ACCResponse,
 	ATX,
 	ATXResponse,
@@ -253,6 +254,55 @@ export class LifecycleComponent implements OnDestroy {
 
 		return ribbon;
 	}
+
+	/**
+	 * Determines which modal to display
+	 * @param acc ACC item
+	 * @returns ribbon
+	 */
+	 public getACCRibbonClass (acc: ACC) {
+		let ribbon = 'ribbon__clear';
+		if (acc.status === 'completed') {
+			ribbon = 'ribbon__green';
+		}
+
+		if (acc.isFavorite) {
+			ribbon = 'ribbon__blue';
+		}
+
+		return ribbon;
+	}
+
+	/**
+	 * Determines which modal to display
+	 * @param item ACC item
+	 * @returns ribbon
+	 */
+	 public setFavorite (item: ACC) {
+		this.status.loading.acc = true;
+		const bookmarkParam: ACCBookmarkSchema = {
+			customerId: this.customerId,
+			isFavorite: !item.isFavorite,
+			pitstop: this.componentData.params.pitstop,
+			solution: this.componentData.params.solution,
+			usecase: this.componentData.params.usecase,
+		};
+		const params: RacetrackContentService.UpdateACCBookmarkParams = {
+			accId: item.accId,
+			bookmark: bookmarkParam,
+		};
+		this.contentService.updateACCBookmark(params)
+		.subscribe(() => {
+			this.status.loading.acc = false;
+			item.isFavorite = !item.isFavorite;
+		},
+		err => {
+			this.status.loading.acc = false;
+			this.logger.error(`lifecycle.component : setFavorite() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
+	 }
+
 	/**
 	 * Selects the session
 	 * @param session the session we've clicked on

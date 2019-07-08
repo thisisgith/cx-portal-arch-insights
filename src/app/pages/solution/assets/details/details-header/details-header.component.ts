@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CaseParams } from '@cui-x/services';
 import { SolutionService } from '../../../solution.service';
 
@@ -46,24 +46,6 @@ export class DetailsHeaderComponent {
 	constructor (
 		private solutionService: SolutionService,
 	) { }
-
-	/**
-	 * Clear the currently displayed asset and close the details window
-	 */
-	public clearAsset () {
-		this.asset = null;
-		this.solutionService.sendCurrentAsset(null);
-		this.hidden = true;
-		this.closeEvent.emit(this.hidden);
-	}
-
-	/**
-	 * Toggle fullscreen details
-	 */
-	public toggleFullscreen () {
-		this.fullscreen = !this.fullscreen;
-		this.fullscreenEvent.emit(this.fullscreen);
-	}
 
 	/**
 	 * Toggles the action dropdown
