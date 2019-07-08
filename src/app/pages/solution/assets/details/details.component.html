@@ -1,34 +1,23 @@
-<div class="panel panel--bordered-left flex-fill panel--no-padding base-padding-right scroll">
-	<ng-container *ngTemplateOutlet="assetHeader"></ng-container>
-	<cui-tabs>
-		<cui-tab [label]="'_Details_' | i18n">
-			<ng-container *ngTemplateOutlet="details"></ng-container>
-		</cui-tab>
-		<cui-tab [label]="'_Hardware_' | i18n" disabled="true">
+<cui-tabs>
+	<cui-tab [label]="'_Details_' | i18n">
+		<ng-container *ngTemplateOutlet="details"></ng-container>
+	</cui-tab>
+	<cui-tab [label]="'_Hardware_' | i18n" disabled="true">
 
-		</cui-tab>
-		<cui-tab [label]="'_Software_' | i18n" disabled="true">
+	</cui-tab>
+	<cui-tab [label]="'_Software_' | i18n" disabled="true">
 
-		</cui-tab>
-		<cui-tab [label]="'_Vulnerabilities_' | i18n" disabled="true">
+	</cui-tab>
+	<cui-tab [label]="'_Vulnerabilities_' | i18n" disabled="true">
 
-		</cui-tab>
-		<cui-tab [label]="'_Insights_' | i18n" disabled="true">
+	</cui-tab>
+	<cui-tab [label]="'_Insights_' | i18n" disabled="true">
 
-		</cui-tab>
-		<cui-tab [label]="'_Activity_' | i18n">
-			<asset-activity [asset]="asset"></asset-activity>
-		</cui-tab>
-	</cui-tabs>
-</div>
-
-<ng-template #assetHeader>
-	<details-header
-		[asset]="asset"
-		(fullscreenEvent)="determineFullScreen($event)"
-		(closeEvent)="determineClose($event)">
-	</details-header>
-</ng-template>
+	</cui-tab>
+	<cui-tab [label]="'_Activity_' | i18n">
+		<asset-activity [asset]="asset"></asset-activity>
+	</cui-tab>
+</cui-tabs>
 
 <ng-template #details>
 	<div class="row base-margin-top">
@@ -112,4 +101,3 @@
 		<div class="col-md-6" [innerText]="data || ('_NA_' | i18n)"></div>
 	</div>
 </ng-template>
-x

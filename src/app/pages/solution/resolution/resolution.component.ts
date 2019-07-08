@@ -9,4 +9,7 @@ import { Component } from '@angular/core';
 })
 export class ResolutionComponent {
 
+	public openPanel = false;
+	public fullscreen = false;
+
 }

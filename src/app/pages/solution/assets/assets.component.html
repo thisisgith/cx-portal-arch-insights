@@ -1,3 +1,13 @@
+<!-- App Details 360 slide-out -->
+<app-panel360 [hidden]="!selectedAsset" [fullscreen]="fullscreen">
+	<app-panel360-header (close)="onPanelClose()"
+		[(fullscreen)]="fullscreen">
+		<details-header [asset]="selectedAsset"></details-header>
+		<div appPanel360Title class="text-xlarge" [innerText]="selectedAsset?.serialNumber"></div>
+	</app-panel360-header>
+	<asset-details [asset]="selectedAsset"></asset-details>
+</app-panel360>
+
 <div class="panel">
 	<cui-tabs inline="true">
 		<cui-tab [label]="'_Assets_' | i18n | uppercase">
@@ -213,7 +223,7 @@
 		</table>
 	</div>
 	<div class="panel panel--ltgray dbl-padding-right dbl-padding-left" *ngIf="assetsTable && inventory.length && view == 'grid'">
-		<div class="row"> 
+		<div class="row">
 			<div *ngFor="let item of inventory" class="col-md-2 half-margin-bottom half-margin-top flex">
 				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
 			</div>
@@ -252,7 +262,7 @@
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Software_' | i18n"></div>
 				<div class="col-md-6">
-					<ng-container 
+					<ng-container
 						*ngTemplateOutlet="(item.data?.osType || item.data?.osVersion) ? hasSoftware : NA;
 							context: {type: item.data.osType, version: item.data.osVersion, serialNumber: item.data.serialNumber}">
 					</ng-container>
@@ -299,11 +309,11 @@
 		</div>
 	</div>
 </ng-template>
-	
+
 <ng-template #NA let-type="type" let-verison="version" let-serialNumber="serialNumber">
 	<span [innerText]="'_NA_' | i18n" attr.data-auto-id="Software-{{ serialNumber }}"></span>
 </ng-template>
-	
+
 <ng-template #hasSoftware let-type="type" let-version="version" let-serialNumber="serialNumber">
 	<div attr.data-auto-id="Software-{{ serialNumber }}">
 		<span *ngIf="type" innerText="{{type}} "></span>

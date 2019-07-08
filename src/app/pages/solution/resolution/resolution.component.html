@@ -1,3 +1,17 @@
 <p>
 	resolution works!
 </p>
+<input data-auto-id="Sample360" type="checkbox" [(ngModel)]="openPanel" />
+
+<app-panel360 [hidden]="!openPanel"
+	[fullscreen]="fullscreen">
+	<app-panel360-header (close)="openPanel = false"
+		[(fullscreen)]="fullscreen">
+		<div appPanel360Title class="text-xlarge"
+			[innerText]="'Sample Case 360'">
+		</div>
+		<div><span>Some stuff goes in the header here</span></div>
+		<div><span>And some more...</span></div>
+	</app-panel360-header>
+	<span>Some stuff in the body.</span>
+</app-panel360>
