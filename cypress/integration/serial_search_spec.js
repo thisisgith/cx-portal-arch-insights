@@ -19,7 +19,8 @@ describe('Serial Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Serial FOX1306GFKH Search', () => {
+		// TODO: Unskip and fix once PBC-219 is merged
+		it.skip('Serial FOX1306GFKH Search', () => {
 			// PBC-170
 			const serialVal = 'FOX1306GFKH';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
@@ -30,7 +31,7 @@ describe('Serial Spec', () => {
 			cy.getByAutoId('softwareTypeOS').should('exist');
 			cy.getByAutoId('currentVersion').should('exist');
 			cy.get('app-search').within(() => {
-				cy.get('h4').should('contain', 'Serial Number '.concat(serialVal));
+				cy.get('h3').should('contain', 'Serial Number '.concat(serialVal));
 				cy.get('h5').should('contain', 'Cat4500 E-Series 6-Slot Chassis, fan, no ps');
 				cy.get('span').should('contain', 'CX Level');
 				cy.get('span').should('contain', 'Contract Number');
@@ -61,14 +62,14 @@ describe('Serial Spec', () => {
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
-
-		it('Serial not found FOX1306GFJJ', () => {
+		// TODO: Unskip and fix once PBC-219 is merged
+		it.skip('Serial not found FOX1306GFJJ', () => {
 			// PBC-170
 			const serialVal = 'FOX1306GFJJ';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(serialVal.concat('{enter}'));
 			cy.wait(4000);
-			cy.get('h4').should('not.exist', 'Serial Number '.concat(serialVal));
+			cy.get('h3').should('not.exist', 'Serial Number '.concat(serialVal));
 			cy.get('app-general-search').should('contain', '10 Results for "'.concat(serialVal).concat('"'));
 			cy.getByAutoId('searchSiteSelect').should('exist');
 			cy.getByAutoId('searchTypeSelect').should('exist');

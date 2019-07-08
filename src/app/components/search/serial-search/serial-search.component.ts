@@ -29,6 +29,7 @@ import { SpecialSearchComponent } from '../special-search/special-search.compone
 import { SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
+import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 
 /**
  * Interface representing all serial number data to go in the template
@@ -41,7 +42,6 @@ interface SerialData {
 	hostName?: string;
 	softwareType: string;
 	currentVersion?: string;
-	latestVersion?: string;
 	openCase?: number;
 	openRmas?: number;
 }
@@ -96,7 +96,8 @@ implements OnInit, OnChanges, OnDestroy {
 	public loadingCaseData = true;
 	public customerId = '2431199';
 	public data: SerialData;
-	public contractData: ContractData = { };
+	public contractData: ContractData;
+	public expirationFromNow: string;
 	public alertsData: AlertsData;
 	public caseData: CaseData;
 
@@ -107,8 +108,8 @@ implements OnInit, OnChanges, OnDestroy {
 		private caseService: CaseService,
 		private contractService: ContractsService,
 		private logger: LogService,
-		private alertsService: ProductAlertsService,
 		private inventoryService: InventoryService,
+		private alertsService: ProductAlertsService,
 	) {
 		super();
 		this.logger.debug('SerialSearchComponent Created!');
@@ -149,21 +150,19 @@ implements OnInit, OnChanges, OnDestroy {
 		this.refresh$.pipe(
 			tap(() => {
 				this.loadingContractData = true;
-				this.contractData = { };
 			}),
 			switchMap(() => this.getContractData(this.customerId, this.serialNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(response => {
 			this.loadingContractData = false;
-			const firstContract = response.data[0];
-			if (firstContract) {
-				this.contractData = {
-					contractNum: firstContract.contractNumber,
-					cxLevel: firstContract.cxLevel,
-					expirationDate: firstContract.contractEndDate,
-				};
-			}
+			this.contractData = {
+				contractNum: _.get(response, ['data', 0, 'contractNumber'], null),
+				cxLevel: _.get(response, ['data', 0, 'cxLevel'], null),
+				expirationDate: _.get(response, ['data', 0, 'contractEndDate'], null),
+			};
+			const fromNowPipe = new FromNowPipe();
+			this.expirationFromNow = fromNowPipe.transform(this.contractData.expirationDate);
 		});
 		/** Alerts Data Refresh */
 		this.refresh$.pipe(
@@ -177,9 +176,9 @@ implements OnInit, OnChanges, OnDestroy {
 		.subscribe(response => {
 			this.loadingAlertsData = false;
 			this.alertsData = {
-				bugs: _.get(response, 'bugs', 0),
-				fieldNotices: _.get(response, 'field-notices', 0),
-				securityAdvisories: _.get(response, 'security-advisories', 0),
+				bugs: _.get(response, 'bugs', null),
+				fieldNotices: _.get(response, 'field-notices', null),
+				securityAdvisories: _.get(response, 'security-advisories', null),
 			};
 		});
 		/** Get Open Case/Open RMA Counts */
