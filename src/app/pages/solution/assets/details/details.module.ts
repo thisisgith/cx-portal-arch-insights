@@ -7,6 +7,7 @@ import { CuiTimelineModule, CuiTabsModule, CuiLoaderModule } from '@cisco-ngx/cu
 import { CaseService } from '@cui-x/services';
 import { DetailsHeaderModule } from './details-header/details-header.module';
 import { TimelineModule } from '@components';
+import { DetailsAdvisoriesModule } from './details-advisories/details-advisories.module';
 
 /** Module representing the Asset Details Component */
 @NgModule({
@@ -20,6 +21,7 @@ import { TimelineModule } from '@components';
 		CuiTabsModule,
 		CuiTimelineModule,
 		I18nPipeModule,
+		DetailsAdvisoriesModule,
 		DetailsHeaderModule,
 		TimelineModule,
 		CuiLoaderModule,

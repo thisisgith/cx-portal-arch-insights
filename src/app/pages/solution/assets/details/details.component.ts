@@ -17,8 +17,8 @@ import {
 	HardwareEOLBulletinResponse,
 	HardwareEOLBulletin,
 	InventoryService,
+	Asset,
 } from '@sdp-api';
-import { SolutionService } from '../../solution.service';
 import { CaseParams, CaseService } from '@cui-x/services';
 
 import { CuiTimelineItem } from '@cisco-ngx/cui-components';
@@ -28,9 +28,6 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 /** Our current customerId */
 const customerId = '2431199';
-
-/** Our current managedNeId */
-const managedNeId = 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA';
 
 /**
  * Asset Details Component
@@ -47,7 +44,7 @@ const managedNeId = 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA';
 
 export class AssetDetailsComponent implements OnChanges, OnInit {
 
-	@Input('asset') public asset: HardwareInfo;
+	@Input('asset') public asset: Asset;
 	@Input('customerId') public customerId: string;
 	@ViewChild('timelineItem', { static: true }) private timelineItemTemplate: TemplateRef<{ }>;
 
@@ -80,7 +77,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 
 	constructor (
 		private caseService: CaseService,
-		private solutionService: SolutionService,
 		private contractsService: ContractsService,
 		private logger: LogService,
 		private productAlertsService: ProductAlertsService,
@@ -115,7 +111,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	private fetchCoverageData () {
 		if (this.asset) {
 			this.contractsService.getDevicesAndCoverage(
-				{ customerId, managedNeId: [managedNeId] })
+				{ customerId, managedNeId: [this.asset.managedNeId] })
 			.subscribe((data: any) => {
 				this.coverageData = _.get(data, 'body.data[0]', undefined);
 				this.fetchHardwareData();
@@ -148,7 +144,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 	private fetchEOLData () {
 		if (this.asset) {
 			this.productAlertsService.getHardwareEox(
-				{ customerId, managedNeId: [managedNeId] })
+				{ customerId, managedNeId: [this.asset.managedNeId] })
 			.subscribe((data: HardwareEOLResponse) => {
 				this.eolData = data[0];
 				this.fetchEOLBulletinData();

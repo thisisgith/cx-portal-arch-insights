@@ -1,0 +1,29 @@
+<div class="flex flex-fluid flex-center-horizontal">
+	<div class="flex-fill btn-group btn-group--wide">
+		<button *ngFor="let tab of tabs"
+			class="btn btn--primary-ghost"
+			[ngClass]="{
+				'selected': tab.selected,
+				'disabled': tab.disabled
+			}"
+			(click)="selectTab(tab)"
+			attr.data-auto-id="AdvisoryTab-{{ tab.key }}"
+			[innerText]="tab.title | i18n">
+		</button>
+	</div>
+</div>
+<div class="flex flex-fluid flex-fill" *ngIf="visibleTab">
+	<ng-container *ngTemplateOutlet="visibleTab"></ng-container>
+</div>
+
+<ng-template #security>
+	security template
+</ng-template>
+
+<ng-template #fieldNotices>
+	field notices
+</ng-template>
+
+<ng-template #bugs>
+	bugs template
+</ng-template>
