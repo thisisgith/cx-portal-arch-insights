@@ -819,7 +819,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.view = view;
 			const newRows = this.view === 'list' ? 10 : 12;
 			this.assetParams.page =
-				Math.floor(this.assetParams.page * this.assetParams.rows / newRows);
+				Math.round(this.assetParams.page * this.assetParams.rows / newRows);
 			this.assetParams.rows = newRows;
 			this.adjustQueryParams();
 			this.fetchInventory()

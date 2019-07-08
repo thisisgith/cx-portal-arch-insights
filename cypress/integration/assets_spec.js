@@ -14,6 +14,7 @@ const coverageElements = totalCountScenario.response.body;
 
 describe('Assets', () => { // PBC-41
 	before(() => {
+		cy.window().then(win => win.sessionStorage.clear());
 		cy.login();
 		cy.loadApp('/solution/assets');
 		cy.waitForAppLoading();

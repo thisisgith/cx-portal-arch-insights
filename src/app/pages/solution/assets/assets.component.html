@@ -62,12 +62,12 @@
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div>
-		<div *ngIf="inventory.length && !status.inventoryLoading">
+		<div>
 			<div class="row">
 				<div class="col-md-9 flex flex-fill">
 					<div class="flex-center-vertical">
 						<span [innerText]="'_Assets_' | i18n" class="text-large"></span>
-						<span [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
+						<span *ngIf="pagination" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
 							class="qtr-margin-left text-small text-muted">
 						</span>
 						<span *ngIf="selected > 0">
@@ -222,7 +222,9 @@
 </ng-template>
 
 <ng-template #cardTemplate let-item="item">
-	<div class="card curved-corners container-fluid card-content" [ngClass]="{ 'selected': item.selected }" (click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
+	<div class="card curved-corners container-fluid card-content"
+		[ngClass]="{ 'selected': item.selected }"
+		(click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
 				<a attr.data-auto-id="Device-{{ item.data?.serialNumber }}" class="text-large text-center override-selected-z" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
