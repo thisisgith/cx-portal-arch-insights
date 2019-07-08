@@ -91,7 +91,7 @@
 				<div class="col-md-3">
 					<div class="flex flex-fluid">
 						<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-							<form [formGroup]="searchForm" novalidate>
+							<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
 								<div class="form-group__text disabled">
 									<input id="searchInput"
 										type="search"
