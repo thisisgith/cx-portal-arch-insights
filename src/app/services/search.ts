@@ -35,7 +35,7 @@ const typeaheadUrl = '/esps/search/suggest/cdcpr01zad';
 
 /**
  * Service with utils for the personal search module
- * HTTP calls are contained in a different service under @cui-x/sdp-api
+ * HTTP calls are contained in a different service under @sdp-api
  * With the exception of the typeahead http call (different source)
  */
 @Injectable({

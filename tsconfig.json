@@ -5,7 +5,7 @@
 		"paths": {
 			"@classes": ["src/app/classes/index.ts"],
 			"@components": ["src/app/components/index.ts"],
-			"@cui-x/sdp-api": ["projects/sdp-api/src"],
+			"@sdp-api": ["projects/sdp-api/src"],
 			"@csone-api": ["projects/csone-api/src"],
 			"@environment": ["src/environments/environment.ts"],
 			"@interceptors": ["src/app/interceptors/index.ts"],

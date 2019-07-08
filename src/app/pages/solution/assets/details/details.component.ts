@@ -7,7 +7,7 @@ import {
 	TemplateRef,
 	ViewChild,
 } from '@angular/core';
-import { HardwareInfo } from '@cui-x/sdp-api';
+import { HardwareInfo } from '@sdp-api';
 import { SolutionService } from '../../solution.service';
 import { CaseParams, CaseService } from '@cui-x/services';
 

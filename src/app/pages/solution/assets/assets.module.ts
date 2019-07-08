@@ -13,7 +13,7 @@ import {
 	CuiSpinnerModule,
 	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
-import { InventoryModule, ContractsModule, ProductAlertsModule } from '@cui-x/sdp-api';
+import { InventoryModule, ContractsModule, ProductAlertsModule } from '@sdp-api';
 import { environment } from '@environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';

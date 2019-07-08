@@ -19,7 +19,7 @@ import {
 	SearchModule as SearchServiceModule,
 	ContractsModule,
 	InventoryModule,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { environment } from '@environment';
 
 /**

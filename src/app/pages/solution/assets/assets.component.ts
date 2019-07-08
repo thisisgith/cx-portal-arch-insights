@@ -20,7 +20,7 @@ import {
 	CoverageCountsResponse,
 	ProductAlertsService,
 	VulnerabilityResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { SolutionService } from '../solution.service';

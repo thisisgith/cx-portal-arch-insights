@@ -1,4 +1,4 @@
-import { PitstopActionUpdateResponse } from '@cui-x/sdp-api';
+import { PitstopActionUpdateResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/pitstop/v1/action/status';

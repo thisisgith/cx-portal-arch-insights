@@ -18,6 +18,10 @@
 	outline-offset: 2px;
 }
 
+.responsive-table {
+	min-height: 100px;
+}
+
 .curved-corners {
 	border-radius: 5px;
 }
@@ -31,10 +35,6 @@
 
 .override-selected-z {
 	z-index: 100 !important;
-}
-
-.responsive-table {
-	min-height: 100px;
 }
 
 .filter {
