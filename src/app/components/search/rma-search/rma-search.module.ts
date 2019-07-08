@@ -8,12 +8,13 @@ import {
 } from '@cisco-ngx/cui-components';
 import { RMASearchComponent } from './rma-search.component';
 import { GeneralSearchModule } from '../general-search/general-search.module';
+import { CourierLinkPipe } from './pipes/courier-link.pipe';
 
 /**
  * Module for the "general search results" area of the search modal
  */
 @NgModule({
-	declarations: [RMASearchComponent],
+	declarations: [RMASearchComponent, CourierLinkPipe],
 	exports: [
 		RMASearchComponent,
 	],

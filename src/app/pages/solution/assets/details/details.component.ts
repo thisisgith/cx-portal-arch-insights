@@ -25,7 +25,6 @@ import { LogService } from '@cisco-ngx/cui-services';
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'asset-details',
-	styleUrls: ['./details.component.scss'],
 	templateUrl: './details.component.html',
 })
 export class AssetDetailsComponent implements OnChanges, OnInit {

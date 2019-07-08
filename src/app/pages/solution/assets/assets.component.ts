@@ -124,6 +124,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public filtered = false;
 
 	public view: 'list' | 'grid' = 'list';
+	public selectedAsset: Asset;
+	public fullscreen = false;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -229,6 +231,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Called on 360 details panel close button click
+	 */
+	public onPanelClose () {
+		this.selectedAsset = null;
+	}
+
+	/**
 	 * Function used to select an item from our inventory
 	 * @param item the item we selected
 	 */
@@ -243,14 +252,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: Item) {
+		item.selected = !item.selected;
 		this.inventory.forEach((i: Item) => {
 			if (i !== item) {
 				i.details = false;
 			}
 		});
 		item.details = !item.details;
-
-		this.solutionService.sendCurrentAsset(item.details ? item.data : null);
+		this.selectedAsset = item.selected ? item.data : null;
 	}
 
 	/**

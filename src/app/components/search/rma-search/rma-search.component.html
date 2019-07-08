@@ -15,31 +15,54 @@
 			<tbody>
 				<tr>
 					<th class="text-uppercase" [innerText]="'_Status_' | i18n"></th>
-					<td [innerText]="rmaTableData.status || '_NA_' | i18n"></td>
+					<td>
+						<span *ngIf="rmaTableData.status; else unavailable;"
+							[innerText]="rmaTableData.status | i18n">
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<th class="text-uppercase" [innerText]="'_CaseNumber_' | i18n"></th>
 					<!--TODO: Link to case details page -->
-					<td [innerText]="rmaTableData.caseId || '_NA_' | i18n"></td>
+					<td>
+						<span *ngIf="rmaTableData.caseId; else unavailable;"
+							[innerText]="rmaTableData.caseId | i18n">
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<th class="text-uppercase" [innerText]="'_CarrierTrackingNumber_' | i18n"></th>
-					<!--TODO: Link to external postal service tracking -->
-					<td [innerText]="rmaTableData.trackingNumber || '_NA_' | i18n"></td>
+					<td>
+						<div *ngIf="rmaTableData.courier; else unavailable;"
+							[innerHTML]="rmaTableData.courier | courierLink:rmaTableData.trackingNumber">
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<th class="text-uppercase" [innerText]="'_ContractNumber_' | i18n"></th>
 					<!--TODO: Link to contract details page -->
-					<td [innerText]="rmaTableData.contractNumber || '_NA_' | i18n"></td>
+					<td>
+						<span *ngIf="rmaTableData.contractNumber; else unavailable;"
+							[innerText]="rmaTableData.contractNumber | i18n">
+						</span>
+					</td>
 				</tr>
 				<tr>
 					<th class="text-uppercase" [innerText]="'_ReplacementProduct_' | i18n"></th>
-					<td *ngIf="rmaTableData.products.length <= 1" [innerText]="rmaTableData.products[0]?.partsDescription || '_NA_' | i18n"></td>
+					<td *ngIf="rmaTableData.products.length <= 1">
+						<span *ngIf="rmaTableData.products[0]?.partsDescription; else unavailable;"
+							[innerText]="rmaTableData.products[0]?.partsDescription | i18n">
+						</span>
+					</td>
 					<td *ngIf="rmaTableData.products.length > 1" [innerText]="'_Multiple_' | i18n"></td>
 				</tr>
 				<tr *ngIf="rmaTableData.products.length <= 1">
 					<th class="text-uppercase" [innerText]="'_ReplacementProductID_' | i18n"></th>
-					<td [innerText]="rmaTableData.products[0]?.shippedPartNo || '_NA_' | i18n"></td>
+					<td>
+						<span *ngIf="rmaTableData.products[0]?.shippedPartNo; else unavailable;"
+							[innerText]="rmaTableData.products[0]?.shippedPartNo | i18n">
+						</span>
+					</td>
 				</tr>
 				<tr *ngIf="rmaTableData.products.length > 1">
 					<th></th>
@@ -53,8 +76,16 @@
 							</thead>
 							<tbody>
 								<tr *ngFor="let product of rmaTableData.products">
-									<td [innerText]="product.shippedPartNo || '_NA_' | i18n"></td>
-									<td [innerText]="product.partsDescription || '_NA_' | i18n"></td>
+									<td>
+										<span *ngIf="product.shippedPartNo; else unavailable;"
+											[innerText]="product.shippedPartNo | i18n">
+										</span>
+									</td>
+									<td>
+										<span *ngIf="product.partsDescription; else unavailable;"
+											[innerText]="product.partsDescription | i18n">
+										</span>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -71,3 +102,7 @@
 		</a>
 	</div>
 </div>
+
+<ng-template #unavailable>
+		<span class="text-muted" [innerText]="'_Unavailable_' | i18n"></span>
+</ng-template>

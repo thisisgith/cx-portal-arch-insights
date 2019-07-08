@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CaseParams } from '@cui-x/services';
 import { SolutionService } from '../../../solution.service';
 
@@ -18,8 +18,6 @@ import { HardwareInfo } from '@sdp-api';
 })
 export class DetailsHeaderComponent {
 	@Input('asset') public asset: HardwareInfo;
-	@Output() public fullscreenEvent = new EventEmitter<boolean>();
-	@Output() public closeEvent = new EventEmitter<boolean>();
 
 	public componentData = {
 		openCases: 0,
@@ -45,24 +43,6 @@ export class DetailsHeaderComponent {
 	constructor (
 		private solutionService: SolutionService,
 	) { }
-
-	/**
-	 * Clear the currently displayed asset and close the details window
-	 */
-	public clearAsset () {
-		this.asset = null;
-		this.solutionService.sendCurrentAsset(null);
-		this.hidden = true;
-		this.closeEvent.emit(this.hidden);
-	}
-
-	/**
-	 * Toggle fullscreen details
-	 */
-	public toggleFullscreen () {
-		this.fullscreen = !this.fullscreen;
-		this.fullscreenEvent.emit(this.fullscreen);
-	}
 
 	/**
 	 * Toggles the action dropdown
