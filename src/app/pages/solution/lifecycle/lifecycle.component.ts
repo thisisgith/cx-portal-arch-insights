@@ -27,7 +27,7 @@ import {
 	RacetrackTechnology,
 	SuccessPath,
 	SuccessPathsResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 
 import { SolutionService } from '../solution.service';
 import * as _ from 'lodash-es';

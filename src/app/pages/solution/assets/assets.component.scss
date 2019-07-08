@@ -18,6 +18,10 @@
 	outline-offset: 2px;
 }
 
+.responsive-table {
+	min-height: 100px;
+}
+
 .curved-corners {
 	border-radius: 5px;
 }
@@ -25,10 +29,6 @@
 .card-title-height {
 	height: 3em;
 	overflow: hidden;
-}
-
-.responsive-table {
-	min-height: 100px;
 }
 
 .filter {

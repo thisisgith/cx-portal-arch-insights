@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 
-import { ContractsService } from '@cui-x/sdp-api';
+import { ContractsService } from '@sdp-api';
 import { ContractScenarios } from '@mock';
 import { ContractSearchComponent } from './contract-search.component';
 import { ContractSearchModule } from './contract-search.module';
@@ -57,7 +57,7 @@ describe('ContractSearchComponent', () => {
 		spyOn(service, 'getContractDetails')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(service, 'headContractsProductsCoveragesResponse')
+		spyOn(service, 'headProductsCoveragesResponse')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnChanges();

@@ -15,7 +15,7 @@ import {
 	Mock,
 } from '@mock';
 import * as _ from 'lodash-es';
-import { RacetrackService } from '@cui-x/sdp-api';
+import { RacetrackService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 /**

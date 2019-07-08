@@ -3,7 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 
 import { CaseService } from '@cui-x/services';
-import { InventoryService } from '@cui-x/sdp-api';
+import { InventoryService } from '@sdp-api';
 import { CaseScenarios, HardwareScenarios } from '@mock';
 import { CaseSearchComponent } from './case-search.component';
 import { CaseSearchModule } from './case-search.module';

@@ -1,4 +1,4 @@
-import { Assets, Asset } from '@cui-x/sdp-api';
+import { Assets, Asset } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
@@ -594,6 +594,31 @@ export const AssetScenarios = [
 						status: 200,
 					},
 					selected: true,
+				},
+				{
+					delay: 0,
+					description: '(Assets) Unreachable API - Grid View',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
+				{
+					delay: 0,
+					description: '(Assets) Missing data - Grid View',
+					response: {
+						body: (() => {
+							const { data, Pagination } = MockAssets(1, 1);
+
+							return {
+								Pagination,
+								data: [_.pick(data[0], ['deviceName', 'serialNumber'])],
+							};
+						})(),
+						status: 200,
+					},
+					selected: false,
 				},
 			],
 		},

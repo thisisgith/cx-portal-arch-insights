@@ -1,4 +1,4 @@
-import { RacetrackResponse } from '@cui-x/sdp-api';
+import { RacetrackResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/pitstop/v1/info';

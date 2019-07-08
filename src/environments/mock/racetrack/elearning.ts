@@ -1,4 +1,4 @@
-import { ELearningResponse } from '@cui-x/sdp-api';
+import { ELearningResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/racetrack/v1/elearning';

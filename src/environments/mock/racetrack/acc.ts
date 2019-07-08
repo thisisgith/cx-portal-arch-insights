@@ -1,5 +1,5 @@
 // tslint:disable: completed-docs
-import { ACCResponse } from '@cui-x/sdp-api';
+import { ACCResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/racetrack/v1/acc';
@@ -27,7 +27,7 @@ function MockACC (
 			description: 'Discover the standard steps required to engineer and commission ' +
 				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
 				'basic deployment requirements and schedules',
-			isFavorite: true,
+			isFavorite: false,
 			status: 'recommended',
 			title: 'Cisco DNA Center Project Planning',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
@@ -43,11 +43,11 @@ function MockACC (
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
 		{
-			accId: '333333',
+			accId: '33333',
 			description: 'Experience this live coaching engagement on general Assurance ' +
 				'concepts and features such as network, device, client, and application ' +
 				'analytics. Help your team hit the ground running',
-			isFavorite: false,
+			isFavorite: true,
 			status: 'in-progress',
 			title: 'Cisco DNA Center Use Cases',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
@@ -163,7 +163,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark3',
 					response: {
-						status: 500,
+						status: 200,
 					},
 					selected: true,
 				},

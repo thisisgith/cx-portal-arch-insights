@@ -27,9 +27,9 @@ export interface DeviceContractInfo {
   contractEndDate: string;
 
   /**
-   * CX Support Level
+   * CX support level
    */
-   cxLevel?: string;
+  cxLevel?: string;
 
   /**
    * A program designed to support Cisco customers or partners. Example:- SNTC, PSS

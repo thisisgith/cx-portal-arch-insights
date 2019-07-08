@@ -1,4 +1,4 @@
-import { RoleCountResponse } from '@cui-x/sdp-api';
+import { RoleCountResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/inventory/v1/role/device/count';

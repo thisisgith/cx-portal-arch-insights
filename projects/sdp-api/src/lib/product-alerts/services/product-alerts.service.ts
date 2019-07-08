@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { ProductAlertsConfiguration as __Configuration } from '../product-alerts-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -8,41 +8,41 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { VulnerabilityResponse } from '../models/vulnerability-response';
-import { SecurityAdvisoryResponseObject } from '../models/security-advisory-response-object';
+import { SecurityAdvisoryResponse } from '../models/security-advisory-response';
 import { SecurityAdvisorySummary } from '../models/security-advisory-summary';
-import { SecurityAdvisoryResponseObjectDetails } from '../models/security-advisory-response-object-details';
-import { SecurityAdvisoryBulletinResponseObject } from '../models/security-advisory-bulletin-response-object';
-import { FieldNoticeResponseObjectDetails } from '../models/field-notice-response-object-details';
-import { FieldNoticeBulletinResponseObjectDetails } from '../models/field-notice-bulletin-response-object-details';
-import { HardwareEOLResponseObjectDetails } from '../models/hardware-eolresponse-object-details';
-import { HardwareEOLBulletinResponseObjectDetails } from '../models/hardware-eolbulletin-response-object-details';
-import { SoftwareEOLResponseObjectDetails } from '../models/software-eolresponse-object-details';
-import { SofwareEOLBulletinResponseObjectDetails } from '../models/sofware-eolbulletin-response-object-details';
+import { SecurityAdvisoryBulletinResponse } from '../models/security-advisory-bulletin-response';
+import { FieldNoticeResponse } from '../models/field-notice-response';
+import { FieldNoticeBulletinResponse } from '../models/field-notice-bulletin-response';
+import { HardwareEOLResponse } from '../models/hardware-eolresponse';
+import { HardwareEOLBulletinResponse } from '../models/hardware-eolbulletin-response';
+import { HardwareEOLCountResponse } from '../models/hardware-eolcount-response';
+import { SoftwareEOLResponse } from '../models/software-eolresponse';
+import { SofwareEOLBulletinResponse } from '../models/sofware-eolbulletin-response';
 @Injectable({
   providedIn: 'root',
 })
 class ProductAlertsService extends __BaseService {
-  static readonly getVulnerabilityCountsPath = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
-  static readonly headApiCustomerportalV1ProductAlertsPath = '/api/customerportal/v1/product-alerts';
-  static readonly headApiCustomerportalV1ProductAlertsSecurityAdvisoriesPath = '/api/customerportal/v1/product-alerts/security-advisories';
-  static readonly getSecurityAdvisoriesPath = '/api/customerportal/v1/product-alerts/security-advisories';
-  static readonly getSecurityAdvisorySummaryPath = '/api/customerportal/v1/product-alerts/security-advisories/summary';
-  static readonly getSecurityAdvisoryListPath = '/api/customerportal/v1/product-alerts/security-advisories/list';
-  static readonly headApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletinsPath = '/api/customerportal/v1/product-alerts/security-advisory-bulletins';
-  static readonly getPSIRTBulletinPath = '/api/customerportal/v1/product-alerts/security-advisory-bulletins';
-  static readonly headApiCustomerportalV1ProductAlertsFieldNoticesPath = '/api/customerportal/v1/product-alerts/field-notices';
-  static readonly getFieldNoticePath = '/api/customerportal/v1/product-alerts/field-notices';
-  static readonly headApiCustomerportalV1ProductAlertsFieldNoticeBulletinsPath = '/api/customerportal/v1/product-alerts/field-notice-bulletins';
-  static readonly getFieldNoticeBulletinPath = '/api/customerportal/v1/product-alerts/field-notice-bulletins';
-  static readonly headApiCustomerportalV1ProductAlertsHardwareEolPath = '/api/customerportal/v1/product-alerts/hardware-eol';
-  static readonly getHardwareEoxPath = '/api/customerportal/v1/product-alerts/hardware-eol';
-  static readonly headApiCustomerportalV1ProductAlertsHardwareEolBulletinsPath = '/api/customerportal/v1/product-alerts/hardware-eol-bulletins';
-  static readonly getHardwareEoxBulletinPath = '/api/customerportal/v1/product-alerts/hardware-eol-bulletins';
-  static readonly headApiCustomerportalV1ProductAlertsSoftwareEolPath = '/api/customerportal/v1/product-alerts/software-eol';
-  static readonly getSoftwareEoxPath = '/api/customerportal/v1/product-alerts/software-eol';
-  static readonly headApiCustomerportalV1ProductAlertsSoftwareEolBulletinsPath = '/api/customerportal/v1/product-alerts/software-eol-bulletins';
-  static readonly getSoftwareEoxBulletinPath = '/api/customerportal/v1/product-alerts/software-eol-bulletins';
-  static readonly getTopSecurityAdvisoriesPath = '/api/customerportal/v1/product-alerts/security-advisories/top';
+  static readonly getVulnerabilityCountsPath = '/vulnerabilities/count';
+  static readonly headSecurityAdvisoriesPath = '/security-advisories';
+  static readonly getSecurityAdvisoriesPath = '/security-advisories';
+  static readonly getSecurityAdvisorySummaryPath = '/security-advisories/summary';
+  static readonly getSecurityAdvisoryListPath = '/security-advisories/list';
+  static readonly headSecurityAdvisoryBulletinsPath = '/security-advisory-bulletins';
+  static readonly getPSIRTBulletinPath = '/security-advisory-bulletins';
+  static readonly headFieldNoticesPath = '/field-notices';
+  static readonly getFieldNoticePath = '/field-notices';
+  static readonly headFieldNoticeBulletinsPath = '/field-notice-bulletins';
+  static readonly getFieldNoticeBulletinPath = '/field-notice-bulletins';
+  static readonly headHardwareEolPath = '/hardware-eol';
+  static readonly getHardwareEoxPath = '/hardware-eol';
+  static readonly headHardwareEolBulletinsPath = '/hardware-eol-bulletins';
+  static readonly getHardwareEoxBulletinPath = '/hardware-eol-bulletins';
+  static readonly getHardwareEolCountsPath = '/hardware-eol/counts';
+  static readonly headSoftwareEolPath = '/software-eol';
+  static readonly getSoftwareEoxPath = '/software-eol';
+  static readonly headSoftwareEolBulletinsPath = '/software-eol-bulletins';
+  static readonly getSoftwareEoxBulletinPath = '/software-eol-bulletins';
+  static readonly getTopSecurityAdvisoriesPath = '/security-advisories/top';
 
   constructor(
     config: __Configuration,
@@ -65,6 +65,7 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     let req = new HttpRequest<any>(
@@ -75,7 +76,6 @@ class ProductAlertsService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -104,74 +104,22 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the security-advisories API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsParams` containing the following parameters:
-   *
-   * - `customerId`: Unique identifier of a Cisco customer.
-   *
-   * - `rows`: Number of rows of data per page.
-   *
-   * - `alertType`: Unique identifier of a Cisco customer.
-   */
-  headApiCustomerportalV1ProductAlertsResponse(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsParams): __Observable<__StrictHttpResponse<null>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
-    if (params.alertType != null) __params = __params.set('alertType', params.alertType.toString());
-    let req = new HttpRequest<any>(
-      'HEAD',
-      this.rootUrl + `/api/customerportal/v1/product-alerts`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json',
-//        withCredentials: true,
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
-      })
-    );
-  }
-
-  /**
-   * Fetches meta information about the security-advisories API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsParams` containing the following parameters:
-   *
-   * - `customerId`: Unique identifier of a Cisco customer.
-   *
-   * - `rows`: Number of rows of data per page.
-   *
-   * - `alertType`: Unique identifier of a Cisco customer.
-   */
-  headApiCustomerportalV1ProductAlerts(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsParams): __Observable<null> {
-    return this.headApiCustomerportalV1ProductAlertsResponse(params).pipe(
-      __map(_r => _r.body as null)
-    );
-  }
-
-  /**
-   * Fetches meta information about the security-advisories API.
    * @param customerId Unique identifier of a Cisco customer.
    */
-  headApiCustomerportalV1ProductAlertsSecurityAdvisoriesResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
+  headSecurityAdvisoriesResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/security-advisories`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -186,8 +134,8 @@ class ProductAlertsService extends __BaseService {
    * Fetches meta information about the security-advisories API.
    * @param customerId Unique identifier of a Cisco customer.
    */
-  headApiCustomerportalV1ProductAlertsSecurityAdvisories(customerId: string): __Observable<null> {
-    return this.headApiCustomerportalV1ProductAlertsSecurityAdvisoriesResponse(customerId).pipe(
+  headSecurityAdvisories(customerId: string): __Observable<null> {
+    return this.headSecurityAdvisoriesResponse(customerId).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -218,10 +166,11 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSecurityAdvisoriesResponse(params: ProductAlertsService.GetSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<SecurityAdvisoryResponseObject>> {
+  getSecurityAdvisoriesResponse(params: ProductAlertsService.GetSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<SecurityAdvisoryResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.vulnerabilityStatus || []).forEach(val => {if (val != null) __params = __params.append('vulnerabilityStatus', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
@@ -233,19 +182,18 @@ class ProductAlertsService extends __BaseService {
     (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/security-advisories`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SecurityAdvisoryResponseObject>;
+        return _r as __StrictHttpResponse<SecurityAdvisoryResponse>;
       })
     );
   }
@@ -276,9 +224,9 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSecurityAdvisories(params: ProductAlertsService.GetSecurityAdvisoriesParams): __Observable<SecurityAdvisoryResponseObject> {
+  getSecurityAdvisories(params: ProductAlertsService.GetSecurityAdvisoriesParams): __Observable<SecurityAdvisoryResponse> {
     return this.getSecurityAdvisoriesResponse(params).pipe(
-      __map(_r => _r.body as SecurityAdvisoryResponseObject)
+      __map(_r => _r.body as SecurityAdvisoryResponse)
     );
   }
 
@@ -291,16 +239,16 @@ class ProductAlertsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/security-advisories/summary`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/summary`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -336,29 +284,29 @@ class ProductAlertsService extends __BaseService {
    *
    * @return OK
    */
-  getSecurityAdvisoryListResponse(params: ProductAlertsService.GetSecurityAdvisoryListParams): __Observable<__StrictHttpResponse<SecurityAdvisoryResponseObjectDetails>> {
+  getSecurityAdvisoryListResponse(params: ProductAlertsService.GetSecurityAdvisoryListParams): __Observable<__StrictHttpResponse<SecurityAdvisoryResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/security-advisories/list`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/list`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SecurityAdvisoryResponseObjectDetails>;
+        return _r as __StrictHttpResponse<SecurityAdvisoryResponse>;
       })
     );
   }
@@ -377,35 +325,35 @@ class ProductAlertsService extends __BaseService {
    *
    * @return OK
    */
-  getSecurityAdvisoryList(params: ProductAlertsService.GetSecurityAdvisoryListParams): __Observable<SecurityAdvisoryResponseObjectDetails> {
+  getSecurityAdvisoryList(params: ProductAlertsService.GetSecurityAdvisoryListParams): __Observable<SecurityAdvisoryResponse> {
     return this.getSecurityAdvisoryListResponse(params).pipe(
-      __map(_r => _r.body as SecurityAdvisoryResponseObjectDetails)
+      __map(_r => _r.body as SecurityAdvisoryResponse)
     );
   }
 
   /**
    * Fetches meta information about the security-advisories API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletinsParams` containing the following parameters:
+   * @param params The `ProductAlertsService.HeadSecurityAdvisoryBulletinsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `rows`: Number of rows of data per page.
    */
-  headApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletinsResponse(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletinsParams): __Observable<__StrictHttpResponse<null>> {
+  headSecurityAdvisoryBulletinsResponse(params: ProductAlertsService.HeadSecurityAdvisoryBulletinsParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/security-advisory-bulletins`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisory-bulletins`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -418,14 +366,14 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the security-advisories API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletinsParams` containing the following parameters:
+   * @param params The `ProductAlertsService.HeadSecurityAdvisoryBulletinsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `rows`: Number of rows of data per page.
    */
-  headApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletins(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletinsParams): __Observable<null> {
-    return this.headApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletinsResponse(params).pipe(
+  headSecurityAdvisoryBulletins(params: ProductAlertsService.HeadSecurityAdvisoryBulletinsParams): __Observable<null> {
+    return this.headSecurityAdvisoryBulletinsResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -466,10 +414,11 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getPSIRTBulletinResponse(params: ProductAlertsService.GetPSIRTBulletinParams): __Observable<__StrictHttpResponse<SecurityAdvisoryBulletinResponseObject>> {
+  getPSIRTBulletinResponse(params: ProductAlertsService.GetPSIRTBulletinParams): __Observable<__StrictHttpResponse<SecurityAdvisoryBulletinResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.XCSICCOID != null) __headers = __headers.set('X-CSI-CCOID', params.XCSICCOID.toString());
     if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
@@ -486,19 +435,18 @@ class ProductAlertsService extends __BaseService {
     (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/security-advisory-bulletins`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisory-bulletins`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SecurityAdvisoryBulletinResponseObject>;
+        return _r as __StrictHttpResponse<SecurityAdvisoryBulletinResponse>;
       })
     );
   }
@@ -539,9 +487,9 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getPSIRTBulletin(params: ProductAlertsService.GetPSIRTBulletinParams): __Observable<SecurityAdvisoryBulletinResponseObject> {
+  getPSIRTBulletin(params: ProductAlertsService.GetPSIRTBulletinParams): __Observable<SecurityAdvisoryBulletinResponse> {
     return this.getPSIRTBulletinResponse(params).pipe(
-      __map(_r => _r.body as SecurityAdvisoryBulletinResponseObject)
+      __map(_r => _r.body as SecurityAdvisoryBulletinResponse)
     );
   }
 
@@ -549,20 +497,20 @@ class ProductAlertsService extends __BaseService {
    * Fetches meta information about the field-notices API.
    * @param customerId Unique identifier of a Cisco customer.
    */
-  headApiCustomerportalV1ProductAlertsFieldNoticesResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
+  headFieldNoticesResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/field-notices`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notices`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -577,8 +525,8 @@ class ProductAlertsService extends __BaseService {
    * Fetches meta information about the field-notices API.
    * @param customerId Unique identifier of a Cisco customer.
    */
-  headApiCustomerportalV1ProductAlertsFieldNotices(customerId: string): __Observable<null> {
-    return this.headApiCustomerportalV1ProductAlertsFieldNoticesResponse(customerId).pipe(
+  headFieldNotices(customerId: string): __Observable<null> {
+    return this.headFieldNoticesResponse(customerId).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -609,10 +557,11 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getFieldNoticeResponse(params: ProductAlertsService.GetFieldNoticeParams): __Observable<__StrictHttpResponse<FieldNoticeResponseObjectDetails>> {
+  getFieldNoticeResponse(params: ProductAlertsService.GetFieldNoticeParams): __Observable<__StrictHttpResponse<FieldNoticeResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.vulnerabilityStatus || []).forEach(val => {if (val != null) __params = __params.append('vulnerabilityStatus', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
@@ -624,19 +573,18 @@ class ProductAlertsService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/field-notices`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notices`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<FieldNoticeResponseObjectDetails>;
+        return _r as __StrictHttpResponse<FieldNoticeResponse>;
       })
     );
   }
@@ -667,35 +615,35 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getFieldNotice(params: ProductAlertsService.GetFieldNoticeParams): __Observable<FieldNoticeResponseObjectDetails> {
+  getFieldNotice(params: ProductAlertsService.GetFieldNoticeParams): __Observable<FieldNoticeResponse> {
     return this.getFieldNoticeResponse(params).pipe(
-      __map(_r => _r.body as FieldNoticeResponseObjectDetails)
+      __map(_r => _r.body as FieldNoticeResponse)
     );
   }
 
   /**
    * Fetches meta information about the field notices API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsFieldNoticeBulletinsParams` containing the following parameters:
+   * @param params The `ProductAlertsService.HeadFieldNoticeBulletinsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `rows`: Number of rows of data per page.
    */
-  headApiCustomerportalV1ProductAlertsFieldNoticeBulletinsResponse(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsFieldNoticeBulletinsParams): __Observable<__StrictHttpResponse<null>> {
+  headFieldNoticeBulletinsResponse(params: ProductAlertsService.HeadFieldNoticeBulletinsParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/field-notice-bulletins`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notice-bulletins`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -708,14 +656,14 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the field notices API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsFieldNoticeBulletinsParams` containing the following parameters:
+   * @param params The `ProductAlertsService.HeadFieldNoticeBulletinsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `rows`: Number of rows of data per page.
    */
-  headApiCustomerportalV1ProductAlertsFieldNoticeBulletins(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsFieldNoticeBulletinsParams): __Observable<null> {
-    return this.headApiCustomerportalV1ProductAlertsFieldNoticeBulletinsResponse(params).pipe(
+  headFieldNoticeBulletins(params: ProductAlertsService.HeadFieldNoticeBulletinsParams): __Observable<null> {
+    return this.headFieldNoticeBulletinsResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -744,10 +692,11 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getFieldNoticeBulletinResponse(params: ProductAlertsService.GetFieldNoticeBulletinParams): __Observable<__StrictHttpResponse<FieldNoticeBulletinResponseObjectDetails>> {
+  getFieldNoticeBulletinResponse(params: ProductAlertsService.GetFieldNoticeBulletinParams): __Observable<__StrictHttpResponse<FieldNoticeBulletinResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
@@ -758,19 +707,18 @@ class ProductAlertsService extends __BaseService {
     if (params.bulletinFirstPublished != null) __params = __params.set('bulletinFirstPublished', params.bulletinFirstPublished.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/field-notice-bulletins`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notice-bulletins`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<FieldNoticeBulletinResponseObjectDetails>;
+        return _r as __StrictHttpResponse<FieldNoticeBulletinResponse>;
       })
     );
   }
@@ -799,9 +747,9 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getFieldNoticeBulletin(params: ProductAlertsService.GetFieldNoticeBulletinParams): __Observable<FieldNoticeBulletinResponseObjectDetails> {
+  getFieldNoticeBulletin(params: ProductAlertsService.GetFieldNoticeBulletinParams): __Observable<FieldNoticeBulletinResponse> {
     return this.getFieldNoticeBulletinResponse(params).pipe(
-      __map(_r => _r.body as FieldNoticeBulletinResponseObjectDetails)
+      __map(_r => _r.body as FieldNoticeBulletinResponse)
     );
   }
 
@@ -809,20 +757,20 @@ class ProductAlertsService extends __BaseService {
    * Fetches meta information about the hardware-eol API.
    * @param customerId Unique identifier of a Cisco customer.
    */
-  headApiCustomerportalV1ProductAlertsHardwareEolResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
+  headHardwareEolResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/hardware-eol`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -837,8 +785,8 @@ class ProductAlertsService extends __BaseService {
    * Fetches meta information about the hardware-eol API.
    * @param customerId Unique identifier of a Cisco customer.
    */
-  headApiCustomerportalV1ProductAlertsHardwareEol(customerId: string): __Observable<null> {
-    return this.headApiCustomerportalV1ProductAlertsHardwareEolResponse(customerId).pipe(
+  headHardwareEol(customerId: string): __Observable<null> {
+    return this.headHardwareEolResponse(customerId).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -865,10 +813,11 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getHardwareEoxResponse(params: ProductAlertsService.GetHardwareEoxParams): __Observable<__StrictHttpResponse<HardwareEOLResponseObjectDetails>> {
+  getHardwareEoxResponse(params: ProductAlertsService.GetHardwareEoxParams): __Observable<__StrictHttpResponse<HardwareEOLResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -878,19 +827,18 @@ class ProductAlertsService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/hardware-eol`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<HardwareEOLResponseObjectDetails>;
+        return _r as __StrictHttpResponse<HardwareEOLResponse>;
       })
     );
   }
@@ -917,35 +865,35 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getHardwareEox(params: ProductAlertsService.GetHardwareEoxParams): __Observable<HardwareEOLResponseObjectDetails> {
+  getHardwareEox(params: ProductAlertsService.GetHardwareEoxParams): __Observable<HardwareEOLResponse> {
     return this.getHardwareEoxResponse(params).pipe(
-      __map(_r => _r.body as HardwareEOLResponseObjectDetails)
+      __map(_r => _r.body as HardwareEOLResponse)
     );
   }
 
   /**
    * Fetches meta information about the HW EOL Bulletins API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsHardwareEolBulletinsParams` containing the following parameters:
+   * @param params The `ProductAlertsService.HeadHardwareEolBulletinsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `rows`: Number of rows of data per page.
    */
-  headApiCustomerportalV1ProductAlertsHardwareEolBulletinsResponse(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsHardwareEolBulletinsParams): __Observable<__StrictHttpResponse<null>> {
+  headHardwareEolBulletinsResponse(params: ProductAlertsService.HeadHardwareEolBulletinsParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/hardware-eol-bulletins`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol-bulletins`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -958,14 +906,14 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the HW EOL Bulletins API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsHardwareEolBulletinsParams` containing the following parameters:
+   * @param params The `ProductAlertsService.HeadHardwareEolBulletinsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `rows`: Number of rows of data per page.
    */
-  headApiCustomerportalV1ProductAlertsHardwareEolBulletins(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsHardwareEolBulletinsParams): __Observable<null> {
-    return this.headApiCustomerportalV1ProductAlertsHardwareEolBulletinsResponse(params).pipe(
+  headHardwareEolBulletins(params: ProductAlertsService.HeadHardwareEolBulletinsParams): __Observable<null> {
+    return this.headHardwareEolBulletinsResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -1008,10 +956,11 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getHardwareEoxBulletinResponse(params: ProductAlertsService.GetHardwareEoxBulletinParams): __Observable<__StrictHttpResponse<HardwareEOLBulletinResponseObjectDetails>> {
+  getHardwareEoxBulletinResponse(params: ProductAlertsService.GetHardwareEoxBulletinParams): __Observable<__StrictHttpResponse<HardwareEOLBulletinResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
@@ -1029,19 +978,18 @@ class ProductAlertsService extends __BaseService {
     (params.bulletinNumber || []).forEach(val => {if (val != null) __params = __params.append('bulletinNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/hardware-eol-bulletins`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol-bulletins`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<HardwareEOLBulletinResponseObjectDetails>;
+        return _r as __StrictHttpResponse<HardwareEOLBulletinResponse>;
       })
     );
   }
@@ -1084,9 +1032,49 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getHardwareEoxBulletin(params: ProductAlertsService.GetHardwareEoxBulletinParams): __Observable<HardwareEOLBulletinResponseObjectDetails> {
+  getHardwareEoxBulletin(params: ProductAlertsService.GetHardwareEoxBulletinParams): __Observable<HardwareEOLBulletinResponse> {
     return this.getHardwareEoxBulletinResponse(params).pipe(
-      __map(_r => _r.body as HardwareEOLBulletinResponseObjectDetails)
+      __map(_r => _r.body as HardwareEOLBulletinResponse)
+    );
+  }
+
+  /**
+   * Currently in use for mocking api routes, will be adjusted to match real api when comma-separated
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return successful operation
+   */
+  getHardwareEolCountsResponse(customerId: string): __Observable<__StrictHttpResponse<HardwareEOLCountResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol/counts`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<HardwareEOLCountResponse>;
+      })
+    );
+  }
+
+  /**
+   * Currently in use for mocking api routes, will be adjusted to match real api when comma-separated
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return successful operation
+   */
+  getHardwareEolCounts(customerId: string): __Observable<HardwareEOLCountResponse> {
+    return this.getHardwareEolCountsResponse(customerId).pipe(
+      __map(_r => _r.body as HardwareEOLCountResponse)
     );
   }
 
@@ -1094,20 +1082,20 @@ class ProductAlertsService extends __BaseService {
    * Fetches meta information about the software-eol API.
    * @param customerId Unique identifier of a Cisco customer.
    */
-  headApiCustomerportalV1ProductAlertsSoftwareEolResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
+  headSoftwareEolResponse(customerId: string): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/software-eol`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -1122,8 +1110,8 @@ class ProductAlertsService extends __BaseService {
    * Fetches meta information about the software-eol API.
    * @param customerId Unique identifier of a Cisco customer.
    */
-  headApiCustomerportalV1ProductAlertsSoftwareEol(customerId: string): __Observable<null> {
-    return this.headApiCustomerportalV1ProductAlertsSoftwareEolResponse(customerId).pipe(
+  headSoftwareEol(customerId: string): __Observable<null> {
+    return this.headSoftwareEolResponse(customerId).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -1150,10 +1138,11 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEoxResponse(params: ProductAlertsService.GetSoftwareEoxParams): __Observable<__StrictHttpResponse<SoftwareEOLResponseObjectDetails>> {
+  getSoftwareEoxResponse(params: ProductAlertsService.GetSoftwareEoxParams): __Observable<__StrictHttpResponse<SoftwareEOLResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -1163,19 +1152,18 @@ class ProductAlertsService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/software-eol`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SoftwareEOLResponseObjectDetails>;
+        return _r as __StrictHttpResponse<SoftwareEOLResponse>;
       })
     );
   }
@@ -1202,35 +1190,35 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEox(params: ProductAlertsService.GetSoftwareEoxParams): __Observable<SoftwareEOLResponseObjectDetails> {
+  getSoftwareEox(params: ProductAlertsService.GetSoftwareEoxParams): __Observable<SoftwareEOLResponse> {
     return this.getSoftwareEoxResponse(params).pipe(
-      __map(_r => _r.body as SoftwareEOLResponseObjectDetails)
+      __map(_r => _r.body as SoftwareEOLResponse)
     );
   }
 
   /**
    * Fetches meta information about the SW EOL bulletins API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSoftwareEolBulletinsParams` containing the following parameters:
+   * @param params The `ProductAlertsService.HeadSoftwareEolBulletinsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `rows`: Number of rows of data per page.
    */
-  headApiCustomerportalV1ProductAlertsSoftwareEolBulletinsResponse(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSoftwareEolBulletinsParams): __Observable<__StrictHttpResponse<null>> {
+  headSoftwareEolBulletinsResponse(params: ProductAlertsService.HeadSoftwareEolBulletinsParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/software-eol-bulletins`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol-bulletins`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -1243,14 +1231,14 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Fetches meta information about the SW EOL bulletins API.
-   * @param params The `ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSoftwareEolBulletinsParams` containing the following parameters:
+   * @param params The `ProductAlertsService.HeadSoftwareEolBulletinsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `rows`: Number of rows of data per page.
    */
-  headApiCustomerportalV1ProductAlertsSoftwareEolBulletins(params: ProductAlertsService.HeadApiCustomerportalV1ProductAlertsSoftwareEolBulletinsParams): __Observable<null> {
-    return this.headApiCustomerportalV1ProductAlertsSoftwareEolBulletinsResponse(params).pipe(
+  headSoftwareEolBulletins(params: ProductAlertsService.HeadSoftwareEolBulletinsParams): __Observable<null> {
+    return this.headSoftwareEolBulletinsResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -1293,10 +1281,11 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEoxBulletinResponse(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<__StrictHttpResponse<SofwareEOLBulletinResponseObjectDetails>> {
+  getSoftwareEoxBulletinResponse(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<__StrictHttpResponse<SofwareEOLBulletinResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     (params.swEolInstanceId || []).forEach(val => {if (val != null) __params = __params.append('swEolInstanceId', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -1314,19 +1303,18 @@ class ProductAlertsService extends __BaseService {
     (params.bulletinNumber || []).forEach(val => {if (val != null) __params = __params.append('bulletinNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/software-eol-bulletins`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol-bulletins`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SofwareEOLBulletinResponseObjectDetails>;
+        return _r as __StrictHttpResponse<SofwareEOLBulletinResponse>;
       })
     );
   }
@@ -1369,9 +1357,9 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEoxBulletin(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<SofwareEOLBulletinResponseObjectDetails> {
+  getSoftwareEoxBulletin(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<SofwareEOLBulletinResponse> {
     return this.getSoftwareEoxBulletinResponse(params).pipe(
-      __map(_r => _r.body as SofwareEOLBulletinResponseObjectDetails)
+      __map(_r => _r.body as SofwareEOLBulletinResponse)
     );
   }
 
@@ -1391,29 +1379,29 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getTopSecurityAdvisoriesResponse(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<SecurityAdvisoryResponseObjectDetails>> {
+  getTopSecurityAdvisoriesResponse(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<SecurityAdvisoryResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/v1/product-alerts/security-advisories/top`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/top`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SecurityAdvisoryResponseObjectDetails>;
+        return _r as __StrictHttpResponse<SecurityAdvisoryResponse>;
       })
     );
   }
@@ -1434,9 +1422,9 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getTopSecurityAdvisories(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<SecurityAdvisoryResponseObjectDetails> {
+  getTopSecurityAdvisories(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<SecurityAdvisoryResponse> {
     return this.getTopSecurityAdvisoriesResponse(params).pipe(
-      __map(_r => _r.body as SecurityAdvisoryResponseObjectDetails)
+      __map(_r => _r.body as SecurityAdvisoryResponse)
     );
   }
 }
@@ -1457,27 +1445,6 @@ module ProductAlertsService {
      * The recognized/validated Serial Number
      */
     serialNumber?: Array<string>;
-  }
-
-  /**
-   * Parameters for headApiCustomerportalV1ProductAlerts
-   */
-  export interface HeadApiCustomerportalV1ProductAlertsParams {
-
-    /**
-     * Unique identifier of a Cisco customer.
-     */
-    customerId: string;
-
-    /**
-     * Number of rows of data per page.
-     */
-    rows?: number;
-
-    /**
-     * Unique identifier of a Cisco customer.
-     */
-    alertType?: 'hardware-eol' | 'software-eol' | 'field-notice' | 'security-advisory';
   }
 
   /**
@@ -1558,9 +1525,9 @@ module ProductAlertsService {
   }
 
   /**
-   * Parameters for headApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletins
+   * Parameters for headSecurityAdvisoryBulletins
    */
-  export interface HeadApiCustomerportalV1ProductAlertsSecurityAdvisoryBulletinsParams {
+  export interface HeadSecurityAdvisoryBulletinsParams {
 
     /**
      * Unique identifier of a Cisco customer.
@@ -1697,9 +1664,9 @@ module ProductAlertsService {
   }
 
   /**
-   * Parameters for headApiCustomerportalV1ProductAlertsFieldNoticeBulletins
+   * Parameters for headFieldNoticeBulletins
    */
-  export interface HeadApiCustomerportalV1ProductAlertsFieldNoticeBulletinsParams {
+  export interface HeadFieldNoticeBulletinsParams {
 
     /**
      * Unique identifier of a Cisco customer.
@@ -1800,9 +1767,9 @@ module ProductAlertsService {
   }
 
   /**
-   * Parameters for headApiCustomerportalV1ProductAlertsHardwareEolBulletins
+   * Parameters for headHardwareEolBulletins
    */
-  export interface HeadApiCustomerportalV1ProductAlertsHardwareEolBulletinsParams {
+  export interface HeadHardwareEolBulletinsParams {
 
     /**
      * Unique identifier of a Cisco customer.
@@ -1938,9 +1905,9 @@ module ProductAlertsService {
   }
 
   /**
-   * Parameters for headApiCustomerportalV1ProductAlertsSoftwareEolBulletins
+   * Parameters for headSoftwareEolBulletins
    */
-  export interface HeadApiCustomerportalV1ProductAlertsSoftwareEolBulletinsParams {
+  export interface HeadSoftwareEolBulletinsParams {
 
     /**
      * Unique identifier of a Cisco customer.
