@@ -7,6 +7,7 @@ import { LogService } from '@cisco-ngx/cui-services';
  */
 @Component({
 	selector: 'app-no-results',
+	styleUrls: ['./no-results.component.scss'],
 	templateUrl: './no-results.component.html',
 })
 export class NoResultsComponent {

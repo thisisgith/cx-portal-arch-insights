@@ -1,86 +1,89 @@
 <div *ngIf="loading" class="row no-gutters">
 	<div class="col-md-12">
-		<div class="panel panel--loose">
+		<div class="innerSpecialPanel panel panel--loose">
 			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingContracts_' | i18n"></h4>
 			<cui-spinner></cui-spinner>
 		</div>
 	</div>
 </div>
 <div *ngIf="!loading">
-	<h4 [innerText]="'_ContractNumberX_' | i18n:contractNumber.query"></h4>
-	<div class="base-margin-top">
+	<div class="half-margin-bottom">
 		<dl class="dl--inline">
 			<dt>
-				<span class="text-muted" [innerText]="'_CXLevel_' | i18n | uppercase"></span>
+				<span class="flex-inline-center-vertical qtr-margin-right icon-tiny icon-circle" [ngClass]="statusColor"></span>
+				<span class="flex-inline-center-vertical text-dkgray-4 text-small" [innerText]="'_Status_' | i18n:contractData?.contractStatus"></span>
 			</dt>
-			<dd>
-				<span [innerText]="contractData?.cxLevel"></span>
-			</dd>
-			<dt>
-				<span class="text-muted" [innerText]="'_Status_' | i18n | uppercase"></span>
-			</dt>
-			<dd>
-				<span [innerText]="contractData?.contractStatus"></span>
-			</dd>
-			<dt>
-				<span class="text-muted" [innerText]="'_StartDate_' | i18n | uppercase"></span>
-			</dt>
-			<dd>
-				<span [innerText]="contractData?.contractStartDate | date:'mediumDate'"></span>
-			</dd>
-			<dt>
-				<span class="text-muted" [innerText]="'_ExpirationDate_' | i18n | uppercase"></span>
-			</dt>
-			<dd>
-				<span [innerText]="contractData?.contractEndDate | date:'mediumDate'"></span>
-				<span class="half-margin-left" [innerText]="'(' + (contractData?.contractEndDate | fromNow) + ')'"></span>
-			</dd>
-			<dt>
-				<span class="text-muted" [innerText]="'_DevicesCovered_' | i18n | uppercase"></span>
-			</dt>
-			<dd>
-				<span *ngIf="coverageCount !== null; else unavailable" [innerText]="coverageCount"></span>
-			</dd>
 		</dl>
 	</div>
-	<div class="base-margin-top">
-		<!-- TODO: get button link -->
-		<button class="btn btn--small btn--gray-ghost"
-			[innerText]="'_ContractDetails_' | i18n">
-		</button>
+	<h4 class="qtr-margin-top qtr-margin-bottom" [innerText]="'_ContractX_' | i18n:contractNumber.query"></h4>
+	<div class="row half-margin-top">
+		<div class="col-md-3">
+			<dl class="dl--inline-medium">
+				<dt>
+					<span class="text-muted text-small" [innerText]="'_Type_' | i18n | uppercase"></span>
+				</dt>
+				<dd>
+					<span [innerText]="contractData?.cxLevel"></span>
+					<span class="qtr-margin-left icon-small icon-info-circle text-muted"
+						(mouseenter)="showCxInfo = true" (mouseleave)="showCxInfo = false"></span>
+					<div *ngIf="showCxInfo" class="toast toast--loose">
+						<div class="toast__body text-small">
+							<!-- TODO: Make toast body dynamic according to CX Level -->
+							<div class="toast__title">CX Level 2 Includes:</div>
+							<div class="toast__message">
+								<div>Ask the Expert Webinars</div>
+								<div>Access to Lifecycle Communities</div>
+								<div>24x7 Software Support (30 minute Critical Response)</div>
+								<div>24x7 Hardware Support (30 minute Response)</div>
+								<div>24x7 Solution Support (30 minute Response)</div>
+								<div>24x7x4hr RMAs</div>
+								<div>Access to CX Customer Portal including:</div>
+								<ul>
+									<li>Adoption view</li>
+									<li>Assets view</li>
+									<li>Rapid problem resolution</li>
+									<li>Personalized exposure checks</li>
+									<li>Case status</li>
+									<li>Case management KP eyes</li>
+									<li>Proactive notifications</li>
+								</ul>
+								<div>Access to e-learning courses</div>
+								<div>Remote practice labs</div>
+								<div>Certification prep</div>
+							</div>
+						</div>
+					</div>
+				</dd>
+				<dt>
+					<span class="text-muted text-small" [innerText]="'_StartDate_' | i18n | uppercase"></span>
+				</dt>
+				<dd>
+					<span [innerText]="contractData?.contractStartDate | date:'dd-MMM-y'"></span>
+				</dd>
+			</dl>
+		</div>
+		<div class="col-md-3">
+			<dl class="dl--inline-medium">
+				<dt>
+					<span class="text-muted text-small" [innerText]="'_ExpirationDate_' | i18n | uppercase"></span>
+				</dt>
+				<dd>
+					<span [innerText]="contractData?.contractEndDate | date:'dd-MMM-y'"></span>
+					<span class="qtr-margin-left" [innerText]="'(' + (contractData?.contractEndDate | fromNow) + ')'"></span>
+				</dd>
+				<dt>
+					<span class="text-muted text-small" [innerText]="'_AssetsCovered_' | i18n | uppercase"></span>
+				</dt>
+				<dd>
+					<span *ngIf="coverageCount !== null; else loadingCoverages" [innerText]="coverageCount"></span>
+				</dd>
+			</dl>
+		</div>
 	</div>
 </div>
-<!-- Sidebar, static html content from UX team -->
-<!-- TODO: i18n all of this -->
-<ng-template #sidebar>
-	<div *ngIf="!loading">
-		<div class="subheading">CX Level 2 Includes</div>
-		<div><span>Ask the Expert Webinars</span></div>
-		<div class="half-margin-top"><span>Access to Lifecycle Communities</span></div>
-		<div class="half-margin-top"><span>24x7 Software Support (30 minute Critical Response)</span></div>
-		<div class="half-margin-top"><span>24x7 Hardware Support (30 minute Response)</span></div>
-		<div class="half-margin-top"><span>24x7 Solution Support (30 minute Response)</span></div>
-		<div class="half-margin-top"><span>24x7x4hr RMAs</span></div>
-		<div class="half-margin-top"><span>Access to CX Customer Portal including:</span></div>
-		<ul>
-			<li>Adoption view</li>
-			<li>Assets view</li>
-			<li>Rapid problem resolution</li>
-			<li>Personalized exposure checks</li>
-			<li>Case status</li>
-			<li>Case management KP eyes</li>
-			<li>Proactive notifications</li>
-		</ul>
-	<div class="half-margin-top"><span>Access to e-learning courses</span></div>
-	<div class="half-margin-top"><span>Remote practice labs</span></div>
-	<div class="half-margin-top"><span>Certification prep</span></div>
-	<div class="subheading base-margin-top">CX Level 3 Adds</div>
-	<div><span>Access to Designated Experts</span></div>
-	<div class="half-margin-top"><span>24x7 Solution Support (15 minute Response)</span></div>
-	<div class="half-margin-top"><span>24x7x4hr/2hr Onsite RMAs</span></div>
-	<div class="half-margin-top"><span>Asset/License Management</span></div>
-	<div class="half-margin-top"><span>And more…</span></div>
-</div>
+
+<ng-template #loadingCoverages>
+	<span *ngIf="loadingCoveragesData; else unavailable" class="base-margin"></span>
 </ng-template>
 
 <ng-template #unavailable>
