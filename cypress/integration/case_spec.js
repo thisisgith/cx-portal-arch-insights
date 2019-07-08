@@ -21,7 +21,7 @@ describe('Case Spec', () => {
 
 		it('Case Search', () => {
 			// PBC-169
-			const caseVal = '686569178'; // '688296392' also works
+			const caseVal = '688296392'; // '686569178' '688296392' also works
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(caseVal.concat('{enter}'));
 			cy.wait(4000);
