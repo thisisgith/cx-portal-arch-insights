@@ -7,7 +7,7 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
-import { InventoryService } from '@sdp-api';
+import { InventoryService, ProductAlertsService, ContractsService } from '@sdp-api';
 import { throwError } from 'rxjs';
 
 describe('AssetsComponent', () => {
@@ -15,6 +15,8 @@ describe('AssetsComponent', () => {
 	let fixture: ComponentFixture<AssetsComponent>;
 
 	let inventoryService: InventoryService;
+	let productAlertsService: ProductAlertsService;
+	let contractsService: ContractsService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -31,6 +33,8 @@ describe('AssetsComponent', () => {
 		.compileComponents();
 
 		inventoryService = TestBed.get(InventoryService);
+		productAlertsService = TestBed.get(ProductAlertsService);
+		contractsService = TestBed.get(ContractsService);
 	}));
 
 	beforeEach(() => {
@@ -56,11 +60,32 @@ describe('AssetsComponent', () => {
 		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(inventoryService, 'getRoleCount')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(productAlertsService, 'getVulnerabilityCounts')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(contractsService, 'getContractCounts')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(contractsService, 'getCoverageCounts')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.ngOnInit();
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();
 
 			expect(component.inventory.length)
+				.toBe(0);
+			expect(_.find(component.filters, { key: 'role' }).seriesData.length)
+				.toBe(0);
+			expect(_.find(component.filters, { key: 'advisories' }).seriesData.length)
+				.toBe(0);
+			expect(_.find(component.filters, { key: 'contractNumber' }).seriesData.length)
+				.toBe(0);
+			expect(_.find(component.filters, { key: 'coverage' }).seriesData.length)
 				.toBe(0);
 
 			done();
