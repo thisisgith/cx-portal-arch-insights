@@ -81,12 +81,38 @@ describe('Assets', () => { // PBC-41
 			coverageMock.enable('Coverage - Invalid Body');
 			cy.loadApp('/solution/assets');
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '0%');
-			// TODO: Test for API not responding - waiting on PBC-227
-
 			coverageMock.disable('Coverage - Invalid Body');
+			coverageMock.enable('Coverage 500 Failure');
+			cy.loadApp('/solution/assets');
+			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '0'); // PBC-227
+
+			coverageMock.disable('Coverage 500 Failure');
 			coverageMock.enable('Coverage');
 			cy.loadApp('/solution/assets');
 			cy.waitForAppLoading();
+		});
+
+		it('Shows <1% for small coverage values', () => { // PBC-226
+			coverageMock.disable('Coverage');
+			coverageMock.enable('Coverage < 1%');
+			cy.loadApp('/solution/assets');
+
+			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '<1%');
+
+			coverageMock.disable('Coverage < 1%');
+			coverageMock.enable('Coverage');
+			cy.loadApp('/solution/assets');
+			cy.waitForAppLoading();
+		});
+
+		it('Pre-selects the gauge when reloading a page with filters applied', () => { // PBC-271
+			cy.getByAutoId('CoveredPoint').click();
+			cy.reload();
+			cy.getByAutoId('Facet-Assets & Coverage').should('have.class', 'facet--selected');
+			cy.getByAutoId('AssetsSelectVisualFilter-coverage')
+				.should('have.class', 'filter__selected');
+
+			cy.getByAutoId('FilterBarClearAllFilters').click();
 		});
 	});
 
@@ -115,6 +141,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId(`Software Version-${serial}`)
 						.should('have.text', asset.osVersion);
 					if (asset.role) {
+						// PBC-270
 						cy.getByAutoId(`Role-${serial}`).should('have.text', capitalize(asset.role));
 					}
 				});
@@ -279,6 +306,26 @@ describe('Assets', () => { // PBC-41
 					cy.wrap($dropdown).click();
 				});
 			});
+		});
+
+		it('Properly closes the actions menu when clicking away', () => { // PBC-272
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.get('tr div.dropdown__menu').eq(0).should('be.visible');
+			cy.get('tr cui-dropdown').eq(5).click(); // another asset's menu
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.get('cui-dropdown').eq(0).click(); // bulk actions menu
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.get('[data-auto-id*="InventoryItemCheckbox"]').eq(0).click(); // select checkbox
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.getByAutoId('AssetsSelectVisualFilter-total').click(); // outside of table
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.get('tbody tr').eq(0).click(); // 360 view
+			cy.getByAutoId('ClearAsset').click();
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
 		});
 	});
 
