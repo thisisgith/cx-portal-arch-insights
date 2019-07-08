@@ -1,7 +1,6 @@
-import MockService from '../support/mockService';
+// import MockService from '../support/mockService';
 
 describe('Case Spec', () => {
-
 	context('Case Search', () => {
 		before(() => {
 			cy.login();
