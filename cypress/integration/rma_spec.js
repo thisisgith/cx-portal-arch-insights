@@ -1,4 +1,3 @@
-import MockService from '../support/mockService';
 
 describe('RMA Spec', () => {
 	context('RMA Search', () => {
