@@ -1,16 +1,6 @@
 import MockService from '../support/mockService';
 
 describe('Case Spec', () => {
-	it.skip('Loads the app', () => {
-		cy.loadApp();
-		cy.get('h1.page-title').should('have.text', 'CX Console');
-	});
-
-	it.skip('Requires SSO login', () => {
-		MockService.mockUnauthenticatedUser();
-		cy.loadApp();
-		cy.url().should('contain', 'https://cloudsso-test.cisco.com/idp/SSO.saml2');
-	});
 
 	context('Case Search', () => {
 		before(() => {
