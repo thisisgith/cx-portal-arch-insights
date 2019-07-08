@@ -2,7 +2,7 @@ import { Component, Input, OnInit, OnDestroy, OnChanges,
 	Output, EventEmitter, ViewChild, TemplateRef, forwardRef } from '@angular/core';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { CaseService } from '@cui-x/services';
-import { InventoryService, HardwareResponse } from '@cui-x/sdp-api';
+import { InventoryService, HardwareResponse } from '@sdp-api';
 import { Case, Note, SearchContext, SearchQuery } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Subject, of, Observable } from 'rxjs';

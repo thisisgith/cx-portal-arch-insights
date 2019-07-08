@@ -33,7 +33,7 @@ import {
 	RoleCountResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { RMAResponse } from '@interfaces';
 
 /** Alias type for the Response Body */

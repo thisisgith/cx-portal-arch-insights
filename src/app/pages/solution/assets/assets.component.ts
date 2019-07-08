@@ -21,7 +21,7 @@ import {
 	CoverageCountsResponse,
 	ProductAlertsService,
 	VulnerabilityResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { SolutionService } from '../solution.service';
@@ -686,6 +686,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					{
 						key: 'role',
 						name: I18n.get('_Role_'),
+						render: item => _.capitalize(item.role),
 						sortable: false,
 						value: 'role',
 					},

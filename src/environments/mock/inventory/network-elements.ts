@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { NetworkElementResponse, NetworkElement } from '@cui-x/sdp-api';
+import { NetworkElementResponse, NetworkElement } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */

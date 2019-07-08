@@ -6,7 +6,7 @@ import { of, throwError } from 'rxjs';
 import { GeneralSearchComponent } from './general-search.component';
 import { GeneralSearchModule } from './general-search.module';
 import { SearchScenarios } from '@mock';
-import { CDCSearchResponse, GlobalSearchResponse, SearchService } from '@cui-x/sdp-api';
+import { CDCSearchResponse, GlobalSearchResponse, SearchService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 
 describe('GeneralSearchComponent', () => {

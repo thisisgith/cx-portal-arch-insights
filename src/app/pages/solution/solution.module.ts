@@ -10,7 +10,7 @@ import {
 	RacetrackModule,
 	RacetrackContentModule,
 	InventoryModule,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { environment } from '@environment';
 
 /**

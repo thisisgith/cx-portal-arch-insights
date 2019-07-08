@@ -22,7 +22,7 @@ import {
 	RacetrackSolution,
 	RacetrackTechnology,
 	CoverageCountsResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { SolutionService } from './solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -86,7 +86,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.eventsSubscribe = this.router.events.subscribe(
 			(event: RouterEvent): void => {
 				if (event instanceof NavigationEnd && event.url) {
-					const route = (_.isArray(event.url)) ? event.url[0] : event.url;
+					const route = _.split(
+						(_.isArray(event.url) ? event.url[0] : event.url), '?')[0];
 
 					if (route.includes('solution')) {
 						this.activeRoute = route;
@@ -236,8 +237,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
 			const assetsFacet = _.find(this.facets, { key: 'assets' });
+
+			const percent = ((covered / total) * 100);
+			const gaugePercent = Math.floor(percent) || 0;
 			assetsFacet.data = {
-				gaugePercent: Math.floor((covered / total) * 100) || 0,
+				gaugePercent,
+				gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
 			};
 		},
 		err => {

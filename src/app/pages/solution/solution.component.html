@@ -119,7 +119,7 @@
 
 <ng-template #assetsFacet let-facet="facet">
 	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugePercent || 0 }}%"
+		value="{{ facet?.data?.gaugeLabel || 0 }}"
 		color="primary">
 	</cui-gauge>
 </ng-template>

@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 
 import { SerialSearchComponent } from './serial-search.component';
 import { SerialSearchModule } from './serial-search.module';
-import { InventoryService } from '@cui-x/sdp-api';
+import { InventoryService } from '@sdp-api';
 
 import { HardwareScenarios } from '@mock';
 
