@@ -20,7 +20,7 @@ describe('APIxIntercetptor', () => {
 	const customerId = '2431199';
 	const sdpUrl = `${
 		environment.sdpServiceOrigin
-	}/api/customerportal/inventory/v1/hardware?customerId=${customerId}`;
+	}/inventory/v1/hardware?customerId=${customerId}`;
 	let apixService: APIxService;
 
 	beforeEach(() => {

@@ -27,5 +27,5 @@ export const environment = {
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
 	 */
-	sdpServiceOrigin: 'https://api-stage.cisco.com',
+	sdpServiceOrigin: 'https://api-test.cisco.com/api/stg/customerportal',
 };

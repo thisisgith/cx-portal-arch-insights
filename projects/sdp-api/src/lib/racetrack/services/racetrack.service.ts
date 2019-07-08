@@ -55,7 +55,7 @@ class RacetrackService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/pitstop/v1/info`,
+      this.rootUrl + `/pitstop/v1/info`,
       __body,
       {
         headers: __headers,
@@ -114,7 +114,7 @@ class RacetrackService extends __BaseService {
     __body = params.actionUpdate;
     let req = new HttpRequest<any>(
       'PATCH',
-      this.rootUrl + `/api/customerportal/pitstop/v1/action/status`,
+      this.rootUrl + `/pitstop/v1/action/status`,
       __body,
       {
         headers: __headers,

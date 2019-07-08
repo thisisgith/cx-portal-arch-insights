@@ -50,7 +50,7 @@ class ContractsService extends __BaseService {
     if (params.contractNumber != null) __params = __params.set('contractNumber', params.contractNumber.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/contracts/v1/products/coverages`,
+      this.rootUrl + `/contracts/v1/products/coverages`,
       __body,
       {
         headers: __headers,
@@ -126,7 +126,7 @@ class ContractsService extends __BaseService {
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/contracts/v1/products/coverages`,
+      this.rootUrl + `/contracts/v1/products/coverages`,
       __body,
       {
         headers: __headers,
@@ -207,7 +207,7 @@ class ContractsService extends __BaseService {
     if (params.coverageExpiry != null) __params = __params.set('coverageExpiry', params.coverageExpiry.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/contracts/v1/products/coverages/top`,
+      this.rootUrl + `/contracts/v1/products/coverages/top`,
       __body,
       {
         headers: __headers,
@@ -277,7 +277,7 @@ class ContractsService extends __BaseService {
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/contracts/v1/details`,
+      this.rootUrl + `/contracts/v1/details`,
       __body,
       {
         headers: __headers,
@@ -335,7 +335,7 @@ class ContractsService extends __BaseService {
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/contracts/v1/device/count`,
+      this.rootUrl + `/contracts/v1/device/count`,
       __body,
       {
         headers: __headers,
@@ -386,7 +386,7 @@ class ContractsService extends __BaseService {
     (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/contracts/v1/coverages/count`,
+      this.rootUrl + `/contracts/v1/coverages/count`,
       __body,
       {
         headers: __headers,

@@ -75,7 +75,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/atx`,
+      this.rootUrl + `/racetrack/v1/atx`,
       __body,
       {
         headers: __headers,
@@ -161,7 +161,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc`,
+      this.rootUrl + `/racetrack/v1/acc`,
       __body,
       {
         headers: __headers,
@@ -225,7 +225,7 @@ class RacetrackContentService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc/${params.accId}/bookmark`,
+      this.rootUrl + `/racetrack/v1/acc/${params.accId}/bookmark`,
       __body,
       {
         headers: __headers,
@@ -381,7 +381,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/successPaths`,
+      this.rootUrl + `/racetrack/v1/successPaths`,
       __body,
       {
         headers: __headers,
@@ -467,7 +467,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/communities`,
+      this.rootUrl + `/racetrack/v1/communities`,
       __body,
       {
         headers: __headers,
@@ -553,7 +553,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/elearning`,
+      this.rootUrl + `/racetrack/v1/elearning`,
       __body,
       {
         headers: __headers,
