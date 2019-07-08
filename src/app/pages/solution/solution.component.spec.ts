@@ -8,7 +8,6 @@ import { LifecycleComponent } from './lifecycle/lifecycle.component';
 import { LifecycleModule } from './lifecycle/lifecycle.module';
 import { AssetsComponent } from './assets/assets.component';
 import { AssetsModule } from './assets/assets.module';
-import { SolutionService } from './solution.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
 	RacetrackScenarios,
@@ -50,7 +49,6 @@ describe('SolutionComponent', () => {
 	let component: SolutionComponent;
 	let fixture: ComponentFixture<SolutionComponent>;
 	let router: Router;
-	let solutionService: SolutionService;
 	let racetrackInfoSpy;
 	let racetrackService: RacetrackService;
 
@@ -92,7 +90,6 @@ describe('SolutionComponent', () => {
 		.compileComponents();
 
 		racetrackService = TestBed.get(RacetrackService);
-		solutionService = TestBed.get(SolutionService);
 	}));
 
 	beforeEach(() => {
@@ -177,25 +174,5 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedTechnology.name)
 			.toEqual('SD Access');
-	});
-
-	it('should change the active asset', () => {
-		expect(component.selectedAsset)
-			.toBeUndefined();
-
-		solutionService.sendCurrentAsset(null);
-
-		expect(component.selectedAsset)
-			.toBeNull();
-	});
-
-	it('should change the active asset', () => {
-		expect(component.selectedAsset)
-			.toBeUndefined();
-
-		solutionService.sendCurrentAsset(null);
-
-		expect(component.selectedAsset)
-			.toBeNull();
 	});
 });
