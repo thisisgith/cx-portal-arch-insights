@@ -23,17 +23,17 @@ function MockACC (
 	solution: string, usecase: string, pitstop: string): ACCResponse {
 	let items = [
 		{
-			accId: '111111',
+			accId: `${accId1}`,
 			description: 'Discover the standard steps required to engineer and commission ' +
 				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
 				'basic deployment requirements and schedules',
-			isFavorite: false,
+			isFavorite: true,
 			status: 'recommended',
 			title: 'Cisco DNA Center Project Planning',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
 		{
-			accId: '222222',
+			accId: `${accId2}`,
 			description: 'Gain actionable insights into Cisco DNA Center use case ' +
 				'deployments and assists. Understand how to design, adopt, and leverage to ' +
 				'save time and resources within your network',
@@ -43,17 +43,17 @@ function MockACC (
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
 		{
-			accId: '33333',
+			accId: `${accId3}`,
 			description: 'Experience this live coaching engagement on general Assurance ' +
 				'concepts and features such as network, device, client, and application ' +
 				'analytics. Help your team hit the ground running',
-			isFavorite: true,
+			isFavorite: false,
 			status: 'in-progress',
 			title: 'Cisco DNA Center Use Cases',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
 		{
-			accId: '444444',
+			accId: `${accId4}`,
 			description: 'Experience this live coaching engagement on general Assurance ' +
 				'concepts and features such as network, device, client, and application ' +
 				'analytics. Help your team hit the ground running',
