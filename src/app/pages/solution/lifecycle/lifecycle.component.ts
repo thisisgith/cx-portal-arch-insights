@@ -262,11 +262,14 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public getACCRibbonClass (acc: ACC) {
 		let ribbon = 'ribbon__clear';
-		if (acc && acc.status === 'completed') {
+		if (!acc) {
+			return ribbon;
+		}
+		if (acc.status === 'completed') {
 			ribbon = 'ribbon__green';
 		}
 
-		if (acc && acc.isFavorite) {
+		if (acc.isFavorite) {
 			ribbon = 'ribbon__blue';
 		}
 
