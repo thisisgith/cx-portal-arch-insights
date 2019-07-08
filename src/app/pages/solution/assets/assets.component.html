@@ -212,7 +212,7 @@
 				</tbody>
 		</table>
 	</div>
-	<div class="panel panel--ltgray" *ngIf="assetsTable && inventory.length && view == 'grid'">
+	<div class="panel panel--ltgray dbl-padding-left dbl-padding-right" *ngIf="assetsTable && inventory.length && view == 'grid'">
 		<div class="row"> 
 			<div *ngFor="let item of inventory" class="col-md-2 half-margin-bottom half-margin-top flex">
 				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
@@ -225,7 +225,7 @@
 	<div class="card curved-corners container-fluid card-content" [ngClass]="{ 'selected': item.selected }" (click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
-				<a attr.data-auto-id="Device-{{ item.data?.serialNumber }}" class="text-large text-center" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
+				<a attr.data-auto-id="Device-{{ item.data?.serialNumber }}" class="text-large text-center override-selected-z" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
 			</div>
 			<div class="flex-center dbl-margin-top dbl-margin-bottom">
 				<!-- ngIf's using literal values until source of image is confirmed -->
