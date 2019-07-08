@@ -106,7 +106,7 @@ describe('RMA Spec', () => {
 			// Confirm replacement product contains N/A product string
 			cy.get('app-rma-search table').within(() => {
 				cy.get('th').eq(4).should('have.text', 'Replacement Product');
-				cy.get('td').should('contain', 'N/A');
+				cy.get('td span').should('contain', 'Unavailable');
 			});
 			cy.get('app-rma-search table th').eq(5).should('have.text', 'Replacement Product ID');
 			// TODO  uncommend the following to test the click
