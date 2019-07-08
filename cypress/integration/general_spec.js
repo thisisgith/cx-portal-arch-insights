@@ -1,6 +1,6 @@
 import MockService from '../support/mockService';
 
-// const searchMock = new MockService('SearchScenarios');
+const searchMock = new MockService('SearchScenarios');
 // import { mockSettings } from '../../src/environments/mock/mock';
 
 describe('General Spec', () => {
@@ -44,11 +44,8 @@ describe('General Spec', () => {
 
 		it('Search No Result Found', () => { // PBC-173
 			// disable default mock and enable desired for this test
-			cy.window().then(win => {
-				win.mockService.disable('Generic Example');
-				// cy.log(win.mockService.getEnabledScenarios());
-				win.mockService.enable('Unable to find results'); // enable the desired
-			});
+			searchMock.disable('Generic Example');
+			searchMock.enable('Unable to find results');
 			const rmaVal = '639530286639530286';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
@@ -66,6 +63,9 @@ describe('General Spec', () => {
 			cy.get('app-no-results').should('contain', 'RMA Number');
 			cy.get('app-no-results').should('contain', 'Information about that item will be displayed if you are entitled to view it.');
 			cy.getByAutoId('searchClose').should('exist').click();
+
+			searchMock.disable('Unable to find results');
+			searchMock.enable('Generic Example');
 		});
 	});
 });
