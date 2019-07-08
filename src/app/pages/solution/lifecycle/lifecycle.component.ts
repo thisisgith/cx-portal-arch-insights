@@ -262,11 +262,11 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public getACCRibbonClass (acc: ACC) {
 		let ribbon = 'ribbon__clear';
-		if (acc.status === 'completed') {
+		if (acc && acc.status === 'completed') {
 			ribbon = 'ribbon__green';
 		}
 
-		if (acc.isFavorite) {
+		if (acc && acc.isFavorite) {
 			ribbon = 'ribbon__blue';
 		}
 
@@ -430,6 +430,8 @@ export class LifecycleComponent implements OnDestroy {
 					recommended: _.head(_.filter(result.items, { status: 'recommended' })),
 					sessions: result.items,
 				};
+				_.remove(this.componentData.acc.sessions, (session: ACC) =>
+					!session.title && !session.description);
 
 				return result;
 			}),
