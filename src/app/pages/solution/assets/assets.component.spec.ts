@@ -7,7 +7,7 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
-import { InventoryService } from '@cui-x/sdp-api';
+import { InventoryService } from '@sdp-api';
 import { throwError } from 'rxjs';
 
 describe('AssetsComponent', () => {
