@@ -317,6 +317,10 @@ $vibblue: #017cad;
 	border-bottom: 2px solid $vibblue !important;
 }
 
+::ng-deep .progressbar__fill {
+	margin-left: -10px !important;
+}
+
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {
 // 	color:$vibblue !important;
