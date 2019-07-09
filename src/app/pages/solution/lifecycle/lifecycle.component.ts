@@ -282,6 +282,10 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns ribbon
 	 */
 	 public setFavorite (item: ACC) {
+		if (item.status === 'completed') {
+			return;
+		}
+
 		this.status.loading.acc = true;
 		const bookmarkParam: ACCBookmarkSchema = {
 			customerId: this.customerId,
