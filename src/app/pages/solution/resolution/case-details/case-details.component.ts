@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CaseService, CaseDetails } from '@cui-x/services';
 import { RMAService } from '@services';
 import { CaseDetailsService } from 'src/app/services/case-details';
@@ -14,7 +14,7 @@ import { tap, switchMap, takeUntil } from 'rxjs/operators';
 	styleUrls: ['./case-details.component.scss'],
 	templateUrl: './case-details.component.html',
 })
-export class CaseDetailsComponent implements OnInit {
+export class CaseDetailsComponent implements OnInit, OnDestroy {
 
 	public caseDetails: CaseDetails;
 	public caseNotes: any[] = [];
@@ -33,13 +33,6 @@ export class CaseDetailsComponent implements OnInit {
 	 * Initialization hook
 	 */
 	public ngOnInit () {
-		this.subscription = this.caseDetailsService.addNote$
-			.subscribe((refresh: boolean) => {
-				if (refresh) {
-					this.logger.debug(`${refresh}`);
-					this.getCaseNotes();
-				}
-			});
 		this.refresh$.pipe(
 			tap(() => {
 				this.loading = true;
@@ -52,9 +45,19 @@ export class CaseDetailsComponent implements OnInit {
 		)
 			.subscribe(results => {
 				this.caseDetails = results[0];
-				this.caseNotes = results[1];
 				this.loading = false;
+				this.caseNotes = results[1];
 			});
+
+		this.subscription = this.caseDetailsService.addNote$
+			.subscribe((refresh: boolean) => {
+				if (refresh) {
+					this.logger.debug(`${refresh}`);
+					this.getCaseNotes()
+						.subscribe(caseNotes => this.caseNotes = caseNotes);
+				}
+			});
+
 		this.refresh$.next();
 	}
 
