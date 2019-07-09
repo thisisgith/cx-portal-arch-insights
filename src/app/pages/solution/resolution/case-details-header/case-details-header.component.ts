@@ -27,8 +27,8 @@ export class CaseDetailsHeaderComponent {
 		private caseService: CaseService, private rmaService: RMAService,
 	) { }
 
-    /**
-	 * intialization hook
+	/**
+	 * Initialization hook
 	 */
 	public ngOnInit () {
 		this.getCaseDetails();
@@ -42,16 +42,16 @@ export class CaseDetailsHeaderComponent {
 	public getCaseDetails () {
 		return this.caseService.fetchCaseDetails('686569635')
 			.subscribe(
-				(response: any) => {
+				(response: CaseDetails) => {
 					this.caseDetails = response;
 				});
 	}
 
-   /**
- 	* gets severity color code
- 	* @param severity of the case
- 	* @returns color for the severity
- 	*/
+	/**
+	 * getseverity color
+	 * @param severity of the case
+	 * @returns color for the severity
+	 */
 	public getSeverityColor (severity: string) {
 		switch (severity) {
 			case '1': return 'red';
@@ -85,18 +85,18 @@ export class CaseDetailsHeaderComponent {
 	public getRMADetails () {
 		this.rmaDetails = [
 			{
-				name: 'RMA 871245',
-				status: 'blocked',
-				shipTo: 'ACE Company, 123 Main Street, Your town CO 80231',
 				contatcId: '88332129',
+				name: 'RMA 871245',
 				orderDate: '2019-06-25T22:20:01.000Z',
+				shipTo: 'ACE Company, 123 Main Street, Your town CO 80231',
+				status: 'blocked',
 			},
 			{
-				name: 'RMA 871246',
-				status: 'blocked',
-				shipTo: 'ACE Company, 123 Main Street, Your town CO 80231',
 				contatcId: '88332129',
+				name: 'RMA 871246',
 				orderDate: '2019-06-13T22:20:01.000Z',
+				shipTo: 'ACE Company, 123 Main Street, Your town CO 80231',
+				status: 'blocked',
 			},
 		];
 		// this.rmaService.getByNumber('800000000')

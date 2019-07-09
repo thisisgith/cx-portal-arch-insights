@@ -32,9 +32,11 @@ export class CaseDetailsComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		this.subscription = this.caseDetailsService.addNote$
-			.subscribe(item => {
-				this.logger.debug(item);
-				this.getCaseNotes();
+			.subscribe((refresh: boolean) => {
+				if (refresh) {
+					this.logger.debug(`${refresh}`);
+					this.getCaseNotes();
+				}
 			});
 		this.getCaseDetails();
 		this.getCaseNotes();
@@ -47,6 +49,7 @@ export class CaseDetailsComponent implements OnInit {
 	 */
 	public getCaseDetails () {
 		this.summaryLoading = true;
+
 		return this.caseService.fetchCaseDetails('686569635')
 			.subscribe(
 				(response: any) => {
@@ -61,6 +64,7 @@ export class CaseDetailsComponent implements OnInit {
 	 */
 	public getCaseNotes () {
 		this.notesLoading = true;
+
 		return this.caseService.fetchCaseNotes('686569635')
 			.subscribe(
 				(response: any) => {

@@ -44,7 +44,17 @@ export interface Case {
  */
 export interface Note {
 	/** Creation date */
-	createdDate: string;
+	createdDate?: string;
 	/** Note body */
 	noteDetail: string;
+	/** Note Title */
+	note: string;
+	/** Note Status Internal/External */
+	noteStatus: string;
+	/** From where this note is getting added  */
+	noteType: string;
+	/** Note Creater */
+	createdBy: string;
+	/** Id of note creater */
+	createdByID: string;
 }

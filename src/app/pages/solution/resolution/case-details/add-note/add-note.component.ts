@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CaseService } from '@cui-x/services';
-import { Case } from '@interfaces';
+import { Case, Note } from '@interfaces';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { CaseDetailsService } from 'src/app/services/case-details';
 
@@ -53,15 +53,15 @@ export class AddNoteComponent {
  	*/
 	public addCaseNote () {
 		this.loading = true;
-		return this.caseService.addCaseNote('686569635',
-			{
-				note: this.note,
-				noteDetail: this.noteDetail,
-				noteType: 'WEB UPDATE',
-				noteStatus: 'external',
-				createdByID: 'charhall',
-				createdBy: 'Charlene Hall',
-			})
+		const body: Note = {
+			createdBy: 'Charlene Hall',
+			createdByID: 'charhall',
+			note: this.note,
+			noteDetail: this.noteDetail,
+			noteStatus: 'external',
+			noteType: 'WEB UPDATE',
+		}
+		return this.caseService.addCaseNote('686569635', body)
 			.subscribe(
 				(response: any) => {
 					this.loading = false;

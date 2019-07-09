@@ -8,14 +8,14 @@ import { BehaviorSubject } from 'rxjs';
 	providedIn: 'root',
 })
 export class CaseDetailsService {
-    private _addNoteSource = new BehaviorSubject<any>(0);
-    public addNote$ = this._addNoteSource.asObservable();
+	private _addNoteSource = new BehaviorSubject<boolean>(false);
+	public addNote$ = this._addNoteSource.asObservable();
 
-    /**
+	/**
 	 * new note is added
 	 * @param refresh true if add notes refresh is required
 	 */
-    public refreshNotesList (refresh) {
-        this._addNoteSource.next(refresh);
-    }
+	public refreshNotesList (refresh) {
+		this._addNoteSource.next(refresh);
+	}
 }
