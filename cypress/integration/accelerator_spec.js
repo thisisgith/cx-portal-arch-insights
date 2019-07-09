@@ -26,14 +26,20 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	});
 
 	it('ACC tile has a view all link to display ACCs in card view', () => { // PBC-159
+		const validACCItems = Cypress._.filter(accItems, acc => acc.description || acc.title);
+
 		cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 		cy.get('.modal__header.acc__header').should('contain', 'Accelerator')
 			.and('contain', '1-on-1 Coaching to put you in the fast lane');
 		cy.getByAutoId('ACCTopicsAvailable').should(
-			'have.text', `${accItems.length} topics available for ${solution} > ${useCase}:`
+			'have.text', `${validACCItems.length} topics available for ${solution} > ${useCase}:`
 		);
 
-		accItems.forEach((acc, index) => {
+		cy.getByAutoId('ACCCard').then($cards => {
+			expect($cards.length).to.eq(validACCItems.length);
+		});
+
+		validACCItems.forEach((acc, index) => {
 			cy.getByAutoId('ACCCard').eq(index).within(() => {
 				if (acc.status === 'recommended') {
 					cy.getByAutoId('ACCCardHeader').should('have.class', 'text-info');
