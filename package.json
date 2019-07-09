@@ -62,7 +62,7 @@
     "@angular/http": "^7.2.15",
     "@angular/language-service": "^8.0.3",
     "@apollo/configs": "^1.0.2",
-    "@apollo/cypress-util": "^2.0.0",
+    "@apollo/cypress-util": "^2.1.0",
     "@apollo/linting": "^1.0.11",
     "@apollo/ng-swagger-gen": "^1.0.3",
     "@apollo/schematics": "^1.0.1",
