@@ -284,13 +284,14 @@
 	"_RMACases_": "Cases ",
 	"_RMAShowingXCases_": "Showing {0} cases",
 	"_RMAShowingXofYCases_": "Showing {0} of {1} cases",
-	"_RMACaseSeverity_":"Severity",
-	"_RMACaseID_":"Case ID",
-	"_RMACaseDevice_":"Device",
-	"_RMACaseSummary_":"Summary",
-	"_RMACaseStatus_":"Status",
-	"_RMACaseUpdatedDate_":"Updated",
-	"_RMAInvalidCaseNo_":"Invalid Case Number",
-	"_RMANoCasesLabel_":"No Cases",
-	"_RMANoCasesText_":"All of your open cases will be listed here"
+	"_RMACaseSeverity_": "Severity",
+	"_RMACaseID_": "Case ID",
+	"_RMACaseDevice_": "Device",
+	"_RMACaseSummary_": "Summary",
+	"_RMACaseStatus_": "Status",
+	"_RMACaseUpdatedDate_": "Updated",
+	"_RMAInvalidCaseNo_": "Invalid Case Number",
+	"_RMANoCasesLabel_": "No Cases",
+	"_RMANoCasesText_": "All of your open cases will be listed here",
+	"_RMASearchCasePlaceholder_": "Enter Case Number"
 }

@@ -18,6 +18,9 @@ import { tap, switchMap, takeUntil } from 'rxjs/operators';
 	templateUrl: './resolution.component.html',
 })
 export class ResolutionComponent {
+	public openPanel = false;
+	public fullscreen = false;
+
 	public caseListData: any[];
 	public caseListTableOptions: CuiTableOptions;
 	private refresh$ = new Subject();
@@ -51,7 +54,6 @@ export class ResolutionComponent {
 
 	/** ngOnInit */
 	public ngOnInit () {
-		// this.getCaseList()
 		this.refresh$.pipe(
 			tap(() => {
 				this.isLoading = true;
