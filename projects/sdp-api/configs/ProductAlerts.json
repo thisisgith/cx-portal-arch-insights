@@ -1,0 +1,24 @@
+{
+	"$schema": "../../../node_modules/@apollo/ng-swagger-gen/ng-swagger-gen-schema.json",
+	"swagger": "../../node_modules/@swagger/cx-portal/swagger/ProductAlerts.yaml",
+	"output": "src/lib/product-alerts",
+	"outputCore": "../core",
+	"prefix": "ProductAlerts",
+	"ignoreUnusedModels": true,
+	"minParamsForContainer": 2,
+	"sortParams": "desc",
+	"defaultTag": "ProductAlerts",
+	"replaceTags": {
+		"Product Alert API Services": "ProductAlerts"
+	},
+	"modelsExportAs": {
+		"ErrorResponse": "ProductAlertsErrorResponse"
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
+}

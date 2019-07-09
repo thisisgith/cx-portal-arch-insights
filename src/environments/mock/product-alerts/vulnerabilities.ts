@@ -1,4 +1,4 @@
-import { VulnerabilityResponse } from '@cui-x/sdp-api';
+import { VulnerabilityResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
@@ -8,7 +8,7 @@ const customerId = '2431199';
 
 /** The mock response for coverage counts */
 const mockAdvisoryCounts: VulnerabilityResponse = {
-	bugs: 0,
+	bugs: 686,
 	'field-notices': 2244,
 	'security-advisories': 3772,
 };

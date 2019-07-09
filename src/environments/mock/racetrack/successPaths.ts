@@ -1,6 +1,6 @@
 /* tslint:disable max-line-length ter-max-len */
 
-import { SuccessPathsResponse } from '@cui-x/sdp-api';
+import { SuccessPathsResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/racetrack/v1/successPaths';

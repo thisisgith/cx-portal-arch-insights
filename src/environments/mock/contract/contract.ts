@@ -1,7 +1,7 @@
 import {
 	ContractDeviceCountsResponse,
 	DeviceContractResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 
 /** base API for contract details */
 const api = '/api/customerportal/contracts/v1/';
@@ -18,6 +18,7 @@ const mockData: DeviceContractResponse = {
 		  contractStartDate: '2012-02-01T00:00:00Z',
 		  contractStatus: 'Active',
 		  customerId: '21131',
+		  cxLevel: 'CX Level 2',
 		  serviceLevel: 'Level 2',
 		  serviceProgram: 'A Program',
 		},
@@ -36,6 +37,7 @@ const mockDataOther: DeviceContractResponse = {
 		  contractStartDate: '2011-02-01T00:00:00Z',
 		  contractStatus: 'Active',
 		  customerId: '21131',
+		  cxLevel: 'CX Level 1',
 		  serviceLevel: 'Level 1',
 		  serviceProgram: 'A Different Program',
 		},

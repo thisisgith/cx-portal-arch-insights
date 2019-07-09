@@ -9,6 +9,9 @@ import {
 	CoverageScenarios,
 	ELearningScenarios,
 	HardwareScenarios,
+	HardwareEOLScenarios,
+	HardwareEOLBulletinScenarios,
+	HardwareEOLCountScenarios,
 	NetworkScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
@@ -28,12 +31,15 @@ import {
 	CommunitiesResponse,
 	ELearningResponse,
 	HardwareResponse,
+	HardwareEOLResponse,
+	HardwareEOLBulletinResponse,
+	HardwareEOLCountResponse,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { RMAResponse } from '@interfaces';
 
 /** Alias type for the Response Body */
@@ -45,6 +51,9 @@ type ResponseBody = (
 	CommunitiesResponse |
 	ELearningResponse |
 	HardwareResponse |
+	HardwareEOLResponse |
+	HardwareEOLBulletinResponse |
+	HardwareEOLCountResponse |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
@@ -105,6 +114,9 @@ export const mockSettings: MockSettings = {
 		CoverageScenarios,
 		ELearningScenarios,
 		HardwareScenarios,
+		HardwareEOLScenarios,
+		HardwareEOLBulletinScenarios,
+		HardwareEOLCountScenarios,
 		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,

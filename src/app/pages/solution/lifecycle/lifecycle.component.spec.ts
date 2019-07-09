@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
-import { RacetrackService, RacetrackContentService } from '@cui-x/sdp-api';
+import { RacetrackService, RacetrackContentService } from '@sdp-api';
 import { SolutionService } from '../solution.service';
 import {
 	RacetrackScenarios,
@@ -49,6 +49,7 @@ describe('LifecycleComponent', () => {
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
 	let racetrackActionSpy;
+	let racetrackAccBookmarkSpy;
 
 	/**
 	 * Restore spies
@@ -61,6 +62,7 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackCommunitiesSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
+		_.invoke(racetrackAccBookmarkSpy, 'restore');
 	};
 
 	/**
@@ -94,6 +96,10 @@ describe('LifecycleComponent', () => {
 		racetrackActionSpy = spyOn(racetrackService, 'updatePitstopAction')
 			.and
 			.returnValue(of(getActiveBody(ActionScenarios[0], 'PATCH')));
+
+		racetrackAccBookmarkSpy = spyOn(racetrackContentService, 'updateACCBookmark')
+			.and
+			.returnValue(of(getActiveBody(ACCScenarios[4], 'POST')));
 	};
 
 	/**
@@ -303,6 +309,18 @@ describe('LifecycleComponent', () => {
 			de = fixture.debugElement.query(By.css('.ribbon__blue'));
 			expect(de)
 				.toBeTruthy();
+
+			const acc3 = component.componentData.acc.sessions[2];
+			component.setFavorite(acc3);
+			fixture.detectChanges();
+			expect(component.componentData.acc.sessions[2].isFavorite)
+				.toBeTruthy();
+
+			const acc1 = component.componentData.acc.sessions[0];
+			component.setFavorite(acc1);
+			fixture.detectChanges();
+			expect(component.componentData.acc.sessions[0].isFavorite)
+				.toBeFalsy();
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;

@@ -116,11 +116,13 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Fired when the input box is blurred
-	 * will trigger typeahead search if there's a value in it.
+	 * Fired when the input box is blurred.
 	 */
 	public onBlur () {
 		this.focused = false;
+		if (this.searchText) {
+			this.search$.next();
+		}
 	}
 
 	/**

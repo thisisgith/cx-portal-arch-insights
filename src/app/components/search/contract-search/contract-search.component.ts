@@ -19,8 +19,20 @@ import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
-import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@cui-x/sdp-api';
+import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@sdp-api';
 import { SearchQuery } from '@interfaces';
+
+enum StatusColorMap {
+	Active = 'text-success',
+	Entered = 'text-turquoise',
+	Expired = 'text-dkgray-4',
+	Inactive = 'text-dkgray-4',
+	Overdue = 'text-warning',
+	'QA Hold' = 'text-warning-alt',
+	Service = 'text-info',
+	Signed = 'text-info',
+	Terminated = 'text-danger',
+}
 
 /**
  * Component to fetch/display contract search results
@@ -41,9 +53,11 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	@Input('contractNumber') public contractNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
-	public loadingCoverages = true;
+	public loadingCoveragesData = true;
 	public contractData: DeviceContractInfo;
 	public coverageCount: number;
+	public statusColor: StatusColorMap;
+	public showCxInfo = false;
 
 	private customerId = '2431199';
 	private refresh$ = new Subject();
@@ -73,14 +87,17 @@ export class ContractSearchComponent extends SpecialSearchComponent
 		.subscribe(result => {
 			this.loading = false;
 			this.contractData = result ? result.data[0] : null;
-			if (!this.contractData) {
+			if (this.contractData) {
+				this.statusColor = StatusColorMap
+					[<string> _.get(this.contractData, 'contractStatus', 'Inactive')];
+			} else {
 				this.hide.emit(true);
 			}
 		});
 		/** Get contract coverages */
 		this.refresh$.pipe(
 			tap(() => {
-				this.loadingCoverages = true;
+				this.loadingCoveragesData = true;
 			}),
 			switchMap(() => this.getCoverages(this.contractNumber.query, this.customerId)),
 			takeUntil(this.destroy$),
@@ -91,7 +108,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 
 				return;
 			}
-			this.loadingCoverages = false;
+			this.loadingCoveragesData = false;
 			this.coverageCount = _.toNumber(result.headers.get('X-API-RESULT-COUNT'));
 		});
 
@@ -145,7 +162,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	 */
 	private getCoverages (contractNumber: string, customerId: string):
 	Observable<HttpResponse<null>> {
-		return this.contractsService.headContractsProductsCoveragesResponse(
+		return this.contractsService.headProductsCoveragesResponse(
 			{
 				contractNumber,
 				customerId,

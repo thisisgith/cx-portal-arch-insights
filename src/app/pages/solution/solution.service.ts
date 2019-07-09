@@ -4,7 +4,7 @@ import {
 	RacetrackSolution,
 	RacetrackTechnology,
 	Asset,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 
 /**
  * Service which represents our senders and listeners for UseCases Solutions and selected Hardware

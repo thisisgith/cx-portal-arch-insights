@@ -1,4 +1,4 @@
-import { HardwareResponse } from '@cui-x/sdp-api';
+import { HardwareResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/inventory/v1/hardware';

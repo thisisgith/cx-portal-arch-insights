@@ -7,7 +7,7 @@ import {
 	TemplateRef,
 	ViewChild,
 } from '@angular/core';
-import { HardwareInfo } from '@cui-x/sdp-api';
+import { HardwareInfo } from '@sdp-api';
 import { SolutionService } from '../../solution.service';
 import { CaseParams, CaseService } from '@cui-x/services';
 
@@ -25,7 +25,6 @@ import { LogService } from '@cisco-ngx/cui-services';
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'asset-details',
-	styleUrls: ['./details.component.scss'],
 	templateUrl: './details.component.html',
 })
 export class AssetDetailsComponent implements OnChanges, OnInit {

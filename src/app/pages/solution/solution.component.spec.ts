@@ -8,14 +8,13 @@ import { LifecycleComponent } from './lifecycle/lifecycle.component';
 import { LifecycleModule } from './lifecycle/lifecycle.module';
 import { AssetsComponent } from './assets/assets.component';
 import { AssetsModule } from './assets/assets.module';
-import { SolutionService } from './solution.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
 	RacetrackScenarios,
 	Mock,
 } from '@mock';
 import * as _ from 'lodash-es';
-import { RacetrackService } from '@cui-x/sdp-api';
+import { RacetrackService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 /**
@@ -50,7 +49,6 @@ describe('SolutionComponent', () => {
 	let component: SolutionComponent;
 	let fixture: ComponentFixture<SolutionComponent>;
 	let router: Router;
-	let solutionService: SolutionService;
 	let racetrackInfoSpy;
 	let racetrackService: RacetrackService;
 
@@ -92,7 +90,6 @@ describe('SolutionComponent', () => {
 		.compileComponents();
 
 		racetrackService = TestBed.get(RacetrackService);
-		solutionService = TestBed.get(SolutionService);
 	}));
 
 	beforeEach(() => {
@@ -177,25 +174,5 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedTechnology.name)
 			.toEqual('SD Access');
-	});
-
-	it('should change the active asset', () => {
-		expect(component.selectedAsset)
-			.toBeUndefined();
-
-		solutionService.sendCurrentAsset(null);
-
-		expect(component.selectedAsset)
-			.toBeNull();
-	});
-
-	it('should change the active asset', () => {
-		expect(component.selectedAsset)
-			.toBeUndefined();
-
-		solutionService.sendCurrentAsset(null);
-
-		expect(component.selectedAsset)
-			.toBeNull();
 	});
 });

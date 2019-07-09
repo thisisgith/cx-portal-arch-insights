@@ -9,6 +9,8 @@ import {
 	NavigationCancel,
 } from '@angular/router';
 
+import { setOptions } from 'highcharts';
+
 /**
  * Base application component which handles loading i18n as well as navigation
  * spinners
@@ -30,6 +32,8 @@ export class AppComponent {
 	constructor (
 		private router: Router,
 	) {
+		setOptions({ lang: { thousandsSep: ',' } });
+
 		this.router.events.subscribe(
 			(event: RouterEvent): void => {
 				if (event instanceof NavigationStart) {

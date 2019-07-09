@@ -1,5 +1,4 @@
 <div class="page-container">
-	<asset-details *ngIf="selectedAsset" [asset]="selectedAsset"></asset-details>
 	<div class="panel no-padding-left no-padding-right no-padding-bottom base-padding-top panel--bordered-bottom">
 		<div class="row base-margin-left half-margin-bottom">
 			<div class="col-md-11">
@@ -119,7 +118,7 @@
 
 <ng-template #assetsFacet let-facet="facet">
 	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugePercent || 0 }}%"
+		value="{{ facet?.data?.gaugeLabel || 0 }}"
 		color="primary">
 	</cui-gauge>
 </ng-template>
