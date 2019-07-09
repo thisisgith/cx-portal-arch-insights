@@ -217,27 +217,19 @@ describe('AssetsComponent', () => {
 		});
 	});
 
-	it('should set a loading boolean for Cypress runs', done => {
+	it('should set a loading boolean for Cypress runs', () => {
 		expect(window.loading)
 			.toBeUndefined();
 		window.Cypress = true;
 
 		component.ngOnInit();
+
+		fixture.detectChanges();
 		expect(window.loading)
 			.toBe(true);
 
-		component.ngOnInit();
-
-		fixture.whenStable()
-		.then(() => {
-			expect(window.loading)
-				.toBe(false);
-
-				// cleanup
-			window.Cypress = undefined;
-			window.loading = undefined;
-
-			done();
-		});
+		// cleanup
+		window.Cypress = undefined;
+		window.loading = undefined;
 	});
 });

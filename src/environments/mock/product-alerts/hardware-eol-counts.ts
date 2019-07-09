@@ -1,20 +1,29 @@
-import { VulnerabilityResponse } from '@sdp-api';
+import { HardwareEOLCountResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
-const api = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
+const api = '/api/customerportal/product-alerts/v1/hardware-eol/counts';
 
 /** Default Customer ID */
 const customerId = '2431199';
 
 /** The mock response for coverage counts */
-const mockAdvisoryCounts: VulnerabilityResponse = {
-	bugs: 686,
-	'field-notices': 2244,
-	'security-advisories': 3772,
-};
+const mockAdvisoryCounts: HardwareEOLCountResponse = [
+	{
+		deviceCount: 5,
+		range: '< 30',
+	},
+	{
+		deviceCount: 78,
+		range: '30 - 60',
+	},
+	{
+		deviceCount: 41,
+		range: '61 - 90',
+	},
+];
 
 /** The scenarios */
-export const VulnerabilityScenarios = [
+export const HardwareEOLCountScenarios = [
 	{
 		scenarios: {
 			GET: [
