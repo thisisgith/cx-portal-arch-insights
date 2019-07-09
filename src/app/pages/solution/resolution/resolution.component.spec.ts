@@ -1,12 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { By } from '@angular/platform-browser';
+import { of } from 'rxjs';
 
 import { ResolutionComponent } from './resolution.component';
 import { ResolutionModule } from './resolution.module';
+import { CaseService } from '@cui-x/services';
 
 describe('ResolutionComponent', () => {
 	let component: ResolutionComponent;
 	let fixture: ComponentFixture<ResolutionComponent>;
+	let service: CaseService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -19,6 +23,10 @@ describe('ResolutionComponent', () => {
 	}));
 
 	beforeEach(() => {
+		service = TestBed.get(CaseService);
+		spyOn(service, 'read')
+			.and
+			.returnValue(of([]));
 		fixture = TestBed.createComponent(ResolutionComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -27,5 +35,70 @@ describe('ResolutionComponent', () => {
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
+	});
+
+	it('should call case list on init', () => {
+		expect(service.read)
+			.toHaveBeenCalled();
+	});
+
+	it('should refresh on sort', () => {
+		component.onTableSortingChanged({
+			key: 'Key1',
+			value: 'Value1',
+		});
+		expect(service.read)
+			.toHaveBeenCalledTimes(2);
+	});
+
+	it('should refresh on page change', () => {
+		component.onPagerUpdated({ page: 2 });
+		expect(service.read)
+			.toHaveBeenCalledTimes(2);
+	});
+
+	it('should show invalid input on bad casenum', () => {
+		const input = fixture.debugElement.query(By.css('input'));
+		const form = fixture.debugElement.query(By.css('form'));
+		const el = input.nativeElement;
+		el.value = '123';
+		el.dispatchEvent(new Event('input'));
+		form.nativeElement
+			.dispatchEvent(new Event('submit'));
+		fixture.detectChanges();
+		// Expect only the 1 initial search on page load
+		expect(service.read)
+			.toHaveBeenCalledTimes(1);
+		expect(component.isSearchCaseFormInvalid)
+			.toBeTruthy();
+	});
+
+	it('should submit valid casenum search', () => {
+		const input = fixture.debugElement.query(By.css('input'));
+		const form = fixture.debugElement.query(By.css('form'));
+		const el = input.nativeElement;
+		el.value = '900000000';
+		el.dispatchEvent(new Event('input'));
+		form.nativeElement
+			.dispatchEvent(new Event('submit'));
+		fixture.detectChanges();
+		// Expect it to refresh again
+		expect(service.read)
+			.toHaveBeenCalledTimes(2);
+		expect(component.isSearchCaseFormInvalid)
+			.toBeFalsy();
+	});
+
+	it('should give the correct severity color', () => {
+		expect(component.getSeverityColor('1'))
+			.toEqual('red');
+		expect(component.getSeverityColor('2'))
+			.toEqual('orange');
+		expect(component.getSeverityColor('3'))
+			.toEqual('yellow');
+		expect(component.getSeverityColor('4'))
+			.toEqual('blue');
+		expect(component.getSeverityColor('42'))
+			.toEqual(undefined);
 	});
 });
