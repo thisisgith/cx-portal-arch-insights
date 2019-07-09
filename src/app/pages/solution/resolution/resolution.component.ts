@@ -181,13 +181,11 @@ export class ResolutionComponent {
 
 		if (this.searchCasesForm.get('caseNo').value) {
 			this.caseParams.search = this.searchCasesForm.get('caseNo').value;
-			// '688296392' - response from mock
-			this.refresh$.next();
-		} else {
-			this.caseParams.sort = 'lastModifiedDate,DESC';
-			this.caseParams.page = 0;
-			this.refresh$.next();
 		}
+
+		this.caseParams.sort = 'lastModifiedDate,DESC';
+		this.caseParams.page = 0;
+		this.refresh$.next();
 	}
 
 	/**
