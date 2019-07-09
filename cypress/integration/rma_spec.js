@@ -16,7 +16,7 @@ describe('RMA Spec', () => {
 			cy.wait(4000);
 			cy.get('app-rma-search').should('contain', 'RMA: '.concat(rmaVal));
 			// TODO - uncomment once PBC-298 is resolved
-			// cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
+			cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
 			cy.get('app-rma-search table th').eq(1).should('have.text', 'Case Number');
 			cy.get('app-rma-search table th').eq(2).should('have.text', 'Carrier Tracking Number');
 			cy.get('app-rma-search table th').eq(3).should('have.text', 'Contract Number');
@@ -47,7 +47,7 @@ describe('RMA Spec', () => {
 			cy.wait(4000);
 			cy.get('app-rma-search').should('contain', 'RMA: '.concat(rmaVal));
 			// TODO - uncomment once PBC-298 is resolved
-			// cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
+			cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
 			cy.get('app-rma-search table th').eq(1).should('have.text', 'Case Number');
 			cy.get('app-rma-search table th').eq(2).should('have.text', 'Carrier Tracking Number');
 			cy.get('app-rma-search table th').eq(3).should('have.text', 'Contract Number');
@@ -80,7 +80,7 @@ describe('RMA Spec', () => {
 			cy.wait(4000);
 			cy.get('app-rma-search').should('contain', 'RMA: '.concat(rmaVal));
 			// TODO - uncomment once PBC-298 is resolved
-			// cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
+			cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
 			cy.get('app-rma-search table th').eq(1).should('have.text', 'Case Number');
 			cy.get('app-rma-search table th').eq(2).should('have.text', 'Carrier Tracking Number');
 			cy.get('app-rma-search table th').eq(3).should('have.text', 'Contract Number');
