@@ -67,7 +67,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		cy.getByAutoId('ACCCloseModal').click();
 	});
 
-	describe.skip('PBC-166: Mouse hover to show recommended ACC/ATX description', () => {
+	describe('PBC-166: Mouse hover to show recommended ACC/ATX description', () => {
 		// NOTE: Cypress can not trigger elements with :hover css property, so we'll just check
 		// that the hover modal and it's elements exist in the DOM. See below for reference:
 		// https://docs.cypress.io/api/commands/hover.html#Workarounds
