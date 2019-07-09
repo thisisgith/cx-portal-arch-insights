@@ -502,10 +502,11 @@
 					<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
 					<div class="card__header text-left text-bold"
 						[ngClass]="item.status === 'recommended' ? 'text-info' : null"
+						*ngIf="item && item.title"
 						[innerText]="item.title"
 						data-auto-id="ACCCardTitle">
 					</div>
-					<div class="card__body atx-card__body text-left" [innerText]="item.description"></div>
+					<div class="card__body atx-card__body text-left" *ngIf="item && item.description" [innerText]="item.description"></div>
 					<div class="card__footer">
 						<div class="card_footer_item" data-auto-id="ACCCardFooter">
 							<div class="text-left text-info"  *ngIf="item.status === 'recommended'">
