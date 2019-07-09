@@ -43,15 +43,13 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('ACCCardTitle').should('have.text', acc.title);
 				cy.get('.atx-card__body').should('contain', acc.description);
 				switch (acc.status) {
-					case 'scheduled':
-						cy.getByAutoId('ACCCardFooter')
-							.should('contain', 'Your CSE will be in touch shortly');
-						break;
 					case 'completed':
 						cy.getByAutoId('ACCCardFooter')
 							.should('contain', 'Completed');
 						break;
 					case 'in-progress':
+						cy.getByAutoId('ACCCardFooter')
+							.should('contain', 'Your CSE will be in touch shortly');
 						break;
 					default:	// Default: recommended
 						cy.getByAutoId('Reqest1on1Button')
