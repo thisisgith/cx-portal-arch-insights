@@ -16,7 +16,7 @@ describe('RMA Spec', () => {
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
 			cy.wait('@rma').then(() => {
-			cy.get('app-rma-search').should('contain', 'RMA: '.concat(rmaVal));
+				cy.get('app-rma-search').should('contain', 'RMA: '.concat(rmaVal));
 				cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
 				cy.get('app-rma-search table th').eq(1).should('have.text', 'Case Number');
 				cy.get('app-rma-search table th').eq(2).should('have.text', 'Carrier Tracking Number');
@@ -82,7 +82,7 @@ describe('RMA Spec', () => {
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
 			cy.wait('@rma').then(() => {
-			cy.get('app-rma-search').should('contain', 'RMA: '.concat(rmaVal));
+				cy.get('app-rma-search').should('contain', 'RMA: '.concat(rmaVal));
 				cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
 				cy.get('app-rma-search table th').eq(1).should('have.text', 'Case Number');
 				cy.get('app-rma-search table th').eq(2).should('have.text', 'Carrier Tracking Number');
