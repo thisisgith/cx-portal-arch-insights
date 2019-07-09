@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { ResolutionComponent } from './resolution.component';
 import { ResolutionModule } from './resolution.module';
@@ -9,7 +10,10 @@ describe('ResolutionComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [ResolutionModule],
+			imports: [
+				ResolutionModule,
+				HttpClientTestingModule,
+			],
 		})
 		.compileComponents();
 	}));

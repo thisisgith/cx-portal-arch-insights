@@ -3,6 +3,9 @@ import { CaseService, CaseDetails } from '@cui-x/services';
 import { RMAService } from '@services';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { caseSeverities } from '@classes';
+
+import * as _ from 'lodash-es';
 
 /**
  * Case Details Header Component
@@ -53,16 +56,8 @@ export class CaseDetailsHeaderComponent {
 	 * @returns color for the severity
 	 */
 	public getSeverityColor (severity: string) {
-		switch (severity) {
-			case '1': return 'red';
-				break;
-			case '2': return 'orange';
-				break;
-			case '3': return 'yellow';
-				break;
-			case '4': return 'blue';
-				break;
-		}
+		const severityInt = parseInt(severity, 10);
+		return _.get(caseSeverities[severityInt], 'class');
 	}
 
 	/**

@@ -17,6 +17,7 @@ describe('CaseNotesComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CaseNotesComponent);
 		component = fixture.componentInstance;
+		component.caseNotes = [];
 		fixture.detectChanges();
 	});
 

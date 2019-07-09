@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CaseService, CaseDetails } from '@cui-x/services';
 import { RMAService } from '@services';
 import { CaseDetailsService } from 'src/app/services/case-details';
-import { Subscription, Subject, forkJoin } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import { tap, switchMap, takeUntil } from 'rxjs/operators';
 
@@ -19,7 +19,6 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	public caseDetails: CaseDetails;
 	public caseNotes: any[] = [];
 	public item: any;
-	public subscription: Subscription;
 	public loading = false;
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
@@ -49,11 +48,17 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 				this.caseNotes = results[1];
 			});
 
-		this.subscription = this.caseDetailsService.addNote$
+		this.caseDetailsService.addNote$
+			.pipe(
+				takeUntil(this.destroy$),
+			)
 			.subscribe((refresh: boolean) => {
 				if (refresh) {
 					this.logger.debug(`${refresh}`);
 					this.getCaseNotes()
+						.pipe(
+							takeUntil(this.destroy$),
+						)
 						.subscribe(caseNotes => this.caseNotes = caseNotes);
 				}
 			});
@@ -78,31 +83,10 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * gets severity color code
-	 * @param severity of the case
-	 * @returns color for the severity
-	 */
-	public getSeverityColor (severity: string) {
-		switch (severity) {
-			case '1': return 'red';
-				break;
-			case '2': return 'orange';
-				break;
-			case '3': return 'yellow';
-				break;
-			case '4': return 'blue';
-				break;
-		}
-	}
-
-	/**
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
-		if (this.subscription) {
-			this.subscription.unsubscribe();
-		}
 	}
 }

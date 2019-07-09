@@ -24,4 +24,15 @@ describe('CaseDetailsHeaderComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
+	it('should return the correct severity color', () => {
+		expect(component.getSeverityColor('1'))
+			.toEqual('danger');
+		expect(component.getSeverityColor('2'))
+			.toEqual('warning');
+		expect(component.getSeverityColor('3'))
+			.toEqual('warning-alt');
+		expect(component.getSeverityColor('4'))
+			.toEqual('info');
+	});
 });
