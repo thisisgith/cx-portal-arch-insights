@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { CaseDetailsComponent } from './case-details.component';
 import { CaseDetailsModule } from './case-details.module';
@@ -9,7 +10,10 @@ describe('CaseDetailsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CaseDetailsModule],
+			imports: [
+				CaseDetailsModule,
+				HttpClientTestingModule,
+			],
 		})
 		.compileComponents();
 	}));

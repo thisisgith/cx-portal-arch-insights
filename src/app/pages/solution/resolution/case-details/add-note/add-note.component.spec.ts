@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AddNoteComponent } from './add-note.component';
 import { AddNoteModule } from './add-note.module';
@@ -9,7 +10,10 @@ describe('AddNoteComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [AddNoteModule],
+			imports: [
+				AddNoteModule,
+				HttpClientTestingModule,
+			],
 		})
 		.compileComponents();
 	}));
