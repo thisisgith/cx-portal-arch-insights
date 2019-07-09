@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { CaseDetailsHeaderComponent } from './case-details-header.component';
 import { CaseDetailsHeaderModule } from './case-details-header.module';
@@ -9,7 +10,10 @@ describe('CaseDetailsHeaderComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CaseDetailsHeaderModule],
+			imports: [
+				CaseDetailsHeaderModule,
+				HttpClientTestingModule,
+			],
 		})
 		.compileComponents();
 	}));
