@@ -84,7 +84,7 @@ function MockRMA (options: { devices: number } = { devices: 1 }): RMAResponse {
 				replacementParts: {
 					partsLineDetails: [],
 					trackingInfo: {
-						courierList: '',
+						courierList: 'UPS',
 						shipDate: '',
 						trackingNumber: '23652346',
 					},

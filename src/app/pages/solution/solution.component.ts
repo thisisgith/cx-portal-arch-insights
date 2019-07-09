@@ -67,7 +67,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public facets: Facet[];
 	public selectedAsset: Asset;
 	private eventsSubscribe: Subscription;
-	private assetSubscribe: Subscription;
 	public solutions: RacetrackSolution[];
 
 	@ViewChild('advisoriesFact', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
@@ -99,11 +98,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				}
 			},
 		);
-
-		this.assetSubscribe = this.solutionService.getCurrentAsset()
-		.subscribe((asset: Asset) => {
-			this.selectedAsset = asset;
-		});
 	}
 
 	get technologies (): RacetrackTechnology[] {
@@ -266,10 +260,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public ngOnDestroy () {
 		if (this.eventsSubscribe) {
 			_.invoke(this.eventsSubscribe, 'unsubscribe');
-		}
-
-		if (this.assetSubscribe) {
-			_.invoke(this.assetSubscribe, 'unsubscribe');
 		}
 	}
 }

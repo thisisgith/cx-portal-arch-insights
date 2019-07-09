@@ -1,3 +1,13 @@
+<!-- App Details 360 slide-out -->
+<app-panel360 [hidden]="!selectedAsset" [fullscreen]="fullscreen">
+	<app-panel360-header (close)="onPanelClose()"
+		[(fullscreen)]="fullscreen">
+		<details-header [asset]="selectedAsset"></details-header>
+		<div appPanel360Title class="text-xlarge" [innerText]="selectedAsset?.serialNumber"></div>
+	</app-panel360-header>
+	<asset-details [asset]="selectedAsset"></asset-details>
+</app-panel360>
+
 <div class="panel">
 	<cui-tabs inline="true">
 		<cui-tab [label]="'_Assets_' | i18n | uppercase">
@@ -62,12 +72,12 @@
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div>
-		<div *ngIf="inventory.length && !status.inventoryLoading">
+		<div>
 			<div class="row">
 				<div class="col-md-9 flex flex-fill">
 					<div class="flex-center-vertical">
 						<span [innerText]="'_Assets_' | i18n" class="text-large"></span>
-						<span [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
+						<span *ngIf="pagination" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
 							class="qtr-margin-left text-small text-muted">
 						</span>
 						<span *ngIf="selected > 0">
@@ -81,7 +91,7 @@
 				<div class="col-md-3">
 					<div class="flex flex-fluid">
 						<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-							<form [formGroup]="searchForm" novalidate>
+							<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
 								<div class="form-group__text disabled">
 									<input id="searchInput"
 										type="search"
@@ -213,7 +223,7 @@
 		</table>
 	</div>
 	<div class="panel panel--ltgray dbl-padding-right dbl-padding-left" *ngIf="assetsTable && inventory.length && view == 'grid'">
-		<div class="row"> 
+		<div class="row">
 			<div *ngFor="let item of inventory" class="col-md-2 half-margin-bottom half-margin-top flex">
 				<ng-container *ngTemplateOutlet="cardTemplate; context: { item: item }"></ng-container>
 			</div>
@@ -222,10 +232,12 @@
 </ng-template>
 
 <ng-template #cardTemplate let-item="item">
-	<div class="card curved-corners flex-fluid" [ngClass]="{ 'selected': item.selected }" (click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
+	<div class="card curved-corners container-fluid card-content"
+		[ngClass]="{ 'selected': item.selected }"
+		(click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
-				<a attr.data-auto-id="Device-{{ item.data?.serialNumber }}" class="text-large text-center" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
+				<a attr.data-auto-id="Device-{{ item.data?.serialNumber }}" class="text-large text-center override-selected-z" [innerText]="item.data.deviceName" (click)="onRowSelect(item); $event.stopPropagation()"></a>
 			</div>
 			<div class="flex-center dbl-margin-top dbl-margin-bottom">
 				<!-- ngIf's using literal values until source of image is confirmed -->
@@ -252,7 +264,7 @@
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Software_' | i18n"></div>
 				<div class="col-md-6">
-					<ng-container 
+					<ng-container
 						*ngTemplateOutlet="(item.data?.osType || item.data?.osVersion) ? hasSoftware : NA;
 							context: {type: item.data.osType, version: item.data.osVersion, serialNumber: item.data.serialNumber}">
 					</ng-container>
@@ -260,12 +272,12 @@
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Role_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.role || ('_NA_' | i18n)" attr.data-auto-id="Role-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6 text-capitalize" [innerText]="item.data?.role || ('_NA_' | i18n)" attr.data-auto-id="Role-{{ item.data?.serialNumber }}"></div>
 			</div>
 		</div>
-		<div class="max-width">
-			<div class="pull-left">
-				<span class="badge-wrapper base-margin-right" [ngClass]="{ 'invisible': !item.data?.criticalAdvisories }">
+		<div class="card__footer justify-content-between override-selected-z">
+			<div>
+				<span *ngIf="item.data?.criticalAdvisories" class="badge-wrapper base-margin-right">
 					<span tabindex="0"
 						class="icon-alert"
 						data-balloon-indigo [attr.data-balloon]="'_CriticalAdvisories_' | i18n"
@@ -278,32 +290,35 @@
 						attr.data-auto-id="AdvisoryCount-{{ item.data?.serialNumber }}">
 					</span>
 				</span>
-				<span class="badge-wrapper" [ngClass]="{ 'invisible': !item.data?.supportCovered }">
-					<span tabindex="0"
-						class="icon-alert"
-						data-balloon-indigo [attr.data-balloon]="'_SupportCoverage_' | i18n"
-						data-balloon-pos="down"
-						attr.data-auto-id="CoveredIcon-{{ item.data?.serialNumber }}">
-						<span class="icon-headset icon-small text-dkgray-4"></span>
+				<span *ngIf="item.data?.supportCovered" class="badge-wrapper">
+					<span class="badge-wrapper" [ngClass]="{ 'invisible': !item.data?.supportCovered }">
+						<span tabindex="0"
+							class="icon-alert"
+							data-balloon-indigo [attr.data-balloon]="'_SupportCoverage_' | i18n"
+							data-balloon-pos="down"
+							attr.data-auto-id="CoveredIcon-{{ item.data?.serialNumber }}">
+							<span class="icon-headset icon-small text-dkgray-4"></span>
+						</span>
 					</span>
 					<span class="badge badge--tiny badge--success icon-check"></span>
 				</span>
 			</div>
-			<div class="pull-right">
-				<cui-dropdown (click)="$event.stopPropagation()"
+			<div>
+				<cui-dropdown
 					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
-					[actions]="getRowActions(item)"
+					(click)="$event.stopPropagation()"
+					[actions]="getRowActions(item.data)"
 					icon="icon-more icon-small text-muted rotate-90">
 				</cui-dropdown>
 			</div>
 		</div>
 	</div>
 </ng-template>
-	
+
 <ng-template #NA let-type="type" let-verison="version" let-serialNumber="serialNumber">
 	<span [innerText]="'_NA_' | i18n" attr.data-auto-id="Software-{{ serialNumber }}"></span>
 </ng-template>
-	
+
 <ng-template #hasSoftware let-type="type" let-version="version" let-serialNumber="serialNumber">
 	<div attr.data-auto-id="Software-{{ serialNumber }}">
 		<span *ngIf="type" innerText="{{type}} "></span>
@@ -312,29 +327,31 @@
 </ng-template>
 
 <ng-template #advisoryFilter let-filter="filter">
-	<assets-bar-chart
-		[seriesData]="filter.seriesData"
+	<assets-bar-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-bar-chart>
 </ng-template>
 
 <ng-template #coverageFilter let-filter="filter">
-	<assets-pie-chart
-		[seriesData]="filter.seriesData"
+	<assets-pie-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
 </ng-template>
 
 <ng-template #contractFilter let-filter="filter">
-	<assets-pie-chart
-		[seriesData]="filter.seriesData"
+	<assets-pie-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
 </ng-template>
 
+<ng-template #hardwareEOXFilter let-filter="filter">
+	<assets-bar-chart [seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</assets-bar-chart>
+</ng-template>
+
 <ng-template #roleFilter let-filter="filter">
-	<assets-bubble-chart
-		[seriesData]="filter.seriesData"
+	<assets-bubble-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-bubble-chart>
 </ng-template>

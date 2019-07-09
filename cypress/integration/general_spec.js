@@ -42,7 +42,8 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
-		it('Search No Result Found', () => { // PBC-173
+		// TODO: Unskip and fix once PBC-219 is merged
+		it.skip('Search No Result Found', () => { // PBC-173
 			// disable default mock and enable desired for this test
 			searchMock.disable('Generic Example');
 			searchMock.enable('Unable to find results');
@@ -50,7 +51,7 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
 			cy.wait(5000);
-			cy.get('h4').should('have.text', 'No Results Found');
+			cy.get('h3').should('have.text', 'No Results Found');
 			cy.get('h5').should('contain', 'We did not find results for: '.concat(rmaVal));
 			cy.get('app-no-results').should('contain', 'Suggestions');
 			cy.get('app-no-results').should('contain', 'Check your spelling');

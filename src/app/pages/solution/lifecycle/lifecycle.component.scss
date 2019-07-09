@@ -56,18 +56,11 @@ $vibblue: #017cad;
 	}
 
 	&__card {
-		&__background {
-			background: $white;
-		}
+		background: $white;
+	}
 
-		&__body {
-			height: 150px;
-			overflow: auto;
-		}
-
-		&__recommended {
-			border-left: 2px solid $vibblue !important;
-		}
+	&__card:hover {
+		border-left: 2px solid $vibblue !important;
 	}
 }
 
@@ -91,8 +84,8 @@ $vibblue: #017cad;
 	color: $white;
 }
 
-.text-info {
-	color: $info;
+.text-olive {
+	color: #556b2f;
 }
 
 .text-clear {
@@ -315,6 +308,8 @@ $vibblue: #017cad;
 }
 
 ::ng-deep #category-filter input,
+::ng-deep #acc-filter input,
+::ng-deep #acc-filter input:focus,
 ::ng-deep #category-filter input:focus {
 	border: 0 !important;
 	border-color: transparent;

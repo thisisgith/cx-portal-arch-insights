@@ -1,3 +1,4 @@
+// tslint:disable: completed-docs
 import { ACCResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
@@ -5,6 +6,11 @@ const api = '/api/customerportal/racetrack/v1/acc';
 
 /** Default Customer ID */
 const customerId = '2431199';
+/** Default acc ID */
+const accId1 = '111111';
+const accId2 = '222222';
+const accId3 = '333333';
+const accId4 = '444444';
 
 /**
  * Mock
@@ -17,7 +23,7 @@ function MockACC (
 	solution: string, usecase: string, pitstop: string): ACCResponse {
 	let items = [
 		{
-			accId: '111111',
+			accId: `${accId1}`,
 			description: 'Discover the standard steps required to engineer and commission ' +
 				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
 				'basic deployment requirements and schedules',
@@ -27,17 +33,17 @@ function MockACC (
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
 		{
-			accId: '222222',
+			accId: `${accId2}`,
 			description: 'Gain actionable insights into Cisco DNA Center use case ' +
 				'deployments and assists. Understand how to design, adopt, and leverage to ' +
 				'save time and resources within your network',
 			isFavorite: true,
-			status: 'scheduled',
+			status: 'in-progress',
 			title: 'Cisco DNA Pilot Usecase Deployment',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
 		{
-			accId: '333333',
+			accId: `${accId3}`,
 			description: 'Experience this live coaching engagement on general Assurance ' +
 				'concepts and features such as network, device, client, and application ' +
 				'analytics. Help your team hit the ground running',
@@ -47,7 +53,7 @@ function MockACC (
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
 		{
-			accId: '444444',
+			accId: `${accId4}`,
 			description: 'Experience this live coaching engagement on general Assurance ' +
 				'concepts and features such as network, device, client, and application ' +
 				'analytics. Help your team hit the ground running',
@@ -116,6 +122,70 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess Bookmark1',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId1}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark2',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId2}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark3',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId3}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark4',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId4}/bookmark`,
 		usecases: ['Use Case 1'],
 	},
 ];
