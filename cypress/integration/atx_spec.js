@@ -9,6 +9,9 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		cy.login();
 		cy.loadApp();
 		cy.waitForAppLoading();
+
+		// Wait for the ATX panel to finish loading
+		cy.waitForAppLoading('atxLoading', 15000);
 	});
 
 	it('Renders ATX tile', () => {
