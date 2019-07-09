@@ -46,21 +46,31 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					case 'scheduled':
 						cy.getByAutoId('ACCCardFooter')
 							.should('contain', 'Your CSE will be in touch shortly');
-						cy.getByAutoId('ACCCardRibbon')
-							.should('have.class', 'ribbon__blue');
 						break;
 					case 'completed':
 						cy.getByAutoId('ACCCardFooter')
 							.should('contain', 'Completed');
-						cy.getByAutoId('ACCCardRibbon')
-							.should('have.class', 'ribbon__green');
-						cy.get('.star').should('exist');
 						break;
-					default: // since we have more status now, need to rewrite the below
-						// cy.getByAutoId('request1on1').should('contain', 'Request a 1-on-1')
-						// 	.and('have.attr', 'href', acc.url);
-						// cy.getByAutoId('ACCCardRibbon')
-						// 	.should('have.class', 'ribbon__clear');
+					case 'in-progress':
+						break;
+					default:	// Default: recommended
+						cy.getByAutoId('Reqest1on1Button')
+							.should('contain', 'Request a 1-on-1')
+							.parent()
+							.should('have.attr', 'href', acc.url);
+				}
+
+				// PBC-237 Check bookmark ribbon
+				if (acc.status === 'completed') {
+					cy.getByAutoId('ACCCardRibbon')
+						.should('have.class', 'ribbon__green');
+					cy.get('.star').should('exist');
+				} else if (acc.isFavorite) {
+					cy.getByAutoId('ACCCardRibbon')
+						.should('have.class', 'ribbon__blue');
+				} else {
+					cy.getByAutoId('ACCCardRibbon')
+						.should('have.class', 'ribbon__clear');
 				}
 			});
 		});
@@ -80,6 +90,63 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.get('#hover-panel-recommendedACCTitle h6').should('have.text', foundItem.title);
 			cy.get('#hover-panel-recommendedACCTitle div:first').should('have.class', 'divider');
 			cy.get('#hover-panel-recommendedACCTitle div').should('have.text', foundItem.description);
+		});
+	});
+
+	describe('PBC-237: (UI) View -  Lifecycle - ACC Status Ribbons', () => {
+		before(() => {
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+		});
+
+		after(() => {
+			cy.getByAutoId('ACCCloseModal').click();
+		});
+
+		it('Should be able to bookmark an ACC item', () => {
+			accItems.forEach((acc, index) => {
+				if (!acc.isFavorite && acc.status !== 'completed') {
+					cy.getByAutoId('ACCCardRibbon')
+						.eq(index)
+						.should('have.class', 'ribbon__clear')
+						.click();
+					cy.waitForAppLoading('accLoading', 5000);
+					cy.getByAutoId('ACCCardRibbon')
+						.eq(index)
+						.should('have.class', 'ribbon__blue');
+				}
+			});
+		});
+
+		it('Should be able to UN-bookmark an ACC item', () => {
+			accItems.forEach((acc, index) => {
+				if (acc.isFavorite && acc.status !== 'completed') {
+					cy.getByAutoId('ACCCardRibbon')
+						.eq(index)
+						.should('have.class', 'ribbon__blue')
+						.click();
+					cy.waitForAppLoading('accLoading', 5000);
+					cy.getByAutoId('ACCCardRibbon')
+						.eq(index)
+						.should('have.class', 'ribbon__clear');
+				}
+			});
+		});
+
+		it.skip('Should NOT be able to bookmark a completed ACC item', () => {
+			// TODO: Fails due to PBC-299 http://swtg-jira-lnx.cisco.com:8080/browse/PBC-299
+			accItems.forEach((acc, index) => {
+				if (acc.status === 'completed') {
+					// For completed items, the ribbon is rendered behind the star, so force the click through
+					cy.getByAutoId('ACCCardRibbon')
+						.eq(index)
+						.click({ force: true });
+					cy.waitForAppLoading('accLoading', 5000);
+					// Ribbon should remain green
+					cy.getByAutoId('ACCCardRibbon')
+						.eq(index)
+						.should('have.class', 'ribbon__green');
+				}
+			});
 		});
 	});
 });
