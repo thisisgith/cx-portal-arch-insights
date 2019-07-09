@@ -3,9 +3,8 @@ import { CaseService, CaseDetails } from '@cui-x/services';
 import { RMAService } from '@services';
 import { CaseDetailsService } from 'src/app/services/case-details';
 import { LogService } from '@cisco-ngx/cui-services';
-
-import { Observable,Subscription, Subject, forkJoin, of } from 'rxjs';
-import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Subscription, Subject, forkJoin } from 'rxjs';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 /**
  * Case Details Component
  */
@@ -14,14 +13,14 @@ import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 	styleUrls: ['./case-details.component.scss'],
 	templateUrl: './case-details.component.html',
 })
-export class CaseDetailsComponent implements OnInit , OnDestroy {
+export class CaseDetailsComponent implements OnInit, OnDestroy {
 
 	public caseDetails: CaseDetails;
 	public caseNotes: any[] = [];
 	public item: any;
 	public subscription: Subscription;
 	public loading = false;
-	public tabIndex: number = 0;
+	public tabIndex = 0;
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 	constructor (
@@ -37,24 +36,25 @@ export class CaseDetailsComponent implements OnInit , OnDestroy {
 			tap(() => {
 				this.loading = true;
 			}),
-			switchMap(refreshType => forkJoin(
+			switchMap(() => forkJoin(
 				this.getCaseDetails(),
 				this.getCaseNotes(),
 			)),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(results => {
-			this.caseDetails = results[0]; 
-			this.loading = false;
-			this.caseNotes = results[1];
-		});
-		  
+			.subscribe(results => {
+				this.caseDetails = results[0];
+				this.loading = false;
+				this.caseNotes = results[1];
+			});
+
 		this.subscription = this.caseDetailsService.addNote$
 			.subscribe((refresh: boolean) => {
 				if (refresh) {
 					this.logger.debug(`${refresh}`);
 					this.tabIndex = 1;
-					this.getCaseNotes().subscribe(caseNotes => this.caseNotes = caseNotes);
+					this.getCaseNotes()
+					.subscribe(caseNotes => this.caseNotes = caseNotes);
 				}
 			});
 		this.refresh$.next();
@@ -65,8 +65,8 @@ export class CaseDetailsComponent implements OnInit , OnDestroy {
 	 * getCaseDetails function
 	 * @returns the case details
 	 */
-	public getCaseDetails () {		
-		return this.caseService.fetchCaseDetails('686569635')
+	public getCaseDetails () {
+		return this.caseService.fetchCaseDetails('686569635');
 	}
 
 	/**
@@ -74,7 +74,7 @@ export class CaseDetailsComponent implements OnInit , OnDestroy {
 	 * @returns case notes
 	 */
 	public getCaseNotes () {
-		return this.caseService.fetchCaseNotes('686569635',true)		
+		return this.caseService.fetchCaseNotes('686569635', true);
 	}
 
 	/**
@@ -94,7 +94,6 @@ export class CaseDetailsComponent implements OnInit , OnDestroy {
 				break;
 		}
 	}
-
 
 	/**
 	 * OnDestroy lifecycle hook
