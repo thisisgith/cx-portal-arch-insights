@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CaseService, CaseDetails } from '@cui-x/services';
 import { RMAService } from '@services';
 import { CaseDetailsService } from 'src/app/services/case-details';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject, forkJoin } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
+import { tap, switchMap, takeUntil } from 'rxjs/operators';
 
 /**
  * Case Details Component
@@ -19,8 +20,9 @@ export class CaseDetailsComponent implements OnInit {
 	public caseNotes: any[] = [];
 	public item: any;
 	public subscription: Subscription;
-	public summaryLoading = false;
-	public notesLoading = false;
+	public loading = false;
+	private refresh$ = new Subject();
+	private destroy$ = new Subject();
 
 	constructor (
 		private caseService: CaseService, private rmaService: RMAService,
@@ -38,9 +40,22 @@ export class CaseDetailsComponent implements OnInit {
 					this.getCaseNotes();
 				}
 			});
-		this.getCaseDetails();
-		this.getCaseNotes();
-		// this.getRMADetails();
+		this.refresh$.pipe(
+			tap(() => {
+				this.loading = true;
+			}),
+			switchMap(() => forkJoin(
+				this.getCaseDetails(),
+				this.getCaseNotes(),
+			)),
+			takeUntil(this.destroy$),
+		)
+			.subscribe(results => {
+				this.caseDetails = results[0];
+				this.caseNotes = results[1];
+				this.loading = false;
+			});
+		this.refresh$.next();
 	}
 
 	/**
@@ -48,14 +63,7 @@ export class CaseDetailsComponent implements OnInit {
 	 * @returns the case details
 	 */
 	public getCaseDetails () {
-		this.summaryLoading = true;
-
-		return this.caseService.fetchCaseDetails('686569635')
-			.subscribe(
-				(response: any) => {
-					this.summaryLoading = false;
-					this.caseDetails = response;
-				});
+		return this.caseService.fetchCaseDetails('686569635');
 	}
 
 	/**
@@ -63,14 +71,7 @@ export class CaseDetailsComponent implements OnInit {
 	 * @returns case notes
 	 */
 	public getCaseNotes () {
-		this.notesLoading = true;
-
-		return this.caseService.fetchCaseNotes('686569635')
-			.subscribe(
-				(response: any) => {
-					this.notesLoading = false;
-					this.caseNotes = response;
-				});
+		return this.caseService.fetchCaseNotes('686569635');
 	}
 
 	/**
@@ -88,6 +89,17 @@ export class CaseDetailsComponent implements OnInit {
 				break;
 			case '4': return 'blue';
 				break;
+		}
+	}
+
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
+		if (this.subscription) {
+			this.subscription.unsubscribe();
 		}
 	}
 }

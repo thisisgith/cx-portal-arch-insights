@@ -1,20 +1,17 @@
 <div class="panel">
 	<cui-tabs inline="true">
-		<cui-tab [label]="'_CaseSummary_' | i18n | uppercase">
+		<cui-tab [label]="'_RMACaseSummary_' | i18n | uppercase">
 			<div class="divider no-margin-top"></div>
-			<cui-spinner *ngIf="summaryLoading"></cui-spinner>
-			<app-case-summary *ngIf="!summaryLoading" [caseDetails]="caseDetails"></app-case-summary>
+			<cui-spinner *ngIf="loading"></cui-spinner>
+			<app-case-summary *ngIf="!loading" [caseDetails]="caseDetails"></app-case-summary>
 		</cui-tab>
-		<cui-tab [label]="'_CaseNotes_'| i18n:caseNotes?.length  | uppercase">
+		<cui-tab [label]="'_RMACaseNotes_'| i18n:caseNotes?.length  | uppercase">
 			<div class="divider no-margin-top"></div>
-			<cui-spinner *ngIf="notesLoading"></cui-spinner>
-			<app-case-notes *ngIf="!notesLoading" [caseNotes]="caseNotes"></app-case-notes>
+			<cui-spinner *ngIf="loading"></cui-spinner>
+			<app-case-notes *ngIf="!loading" [caseNotes]="caseNotes"></app-case-notes>
 		</cui-tab>
-		<cui-tab [label]="'_CaseFiles_'| i18n | uppercase">
+		<cui-tab [label]="'_RMACaseFiles_'| i18n | uppercase">
 			<div class="divider no-margin-top"></div>
 		</cui-tab>
 	</cui-tabs>
 </div>
-<!-- <ng-template #createdDate>
-		<span [innerText]="item[column.key] | fromNow"></span>
-	</ng-template> -->
