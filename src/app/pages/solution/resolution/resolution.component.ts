@@ -31,7 +31,7 @@ export class ResolutionComponent {
 		nocache: Date.now(),
 		statusTypes: 'O',
 		page: 0,
-		size: 2,
+		size: 10,
 		sort: 'lastModifiedDate,DESC',
 		search: '',
 	};
