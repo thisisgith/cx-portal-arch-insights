@@ -11,6 +11,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		cy.login();
 		cy.loadApp();
 		cy.waitForAppLoading();
+
+		// Wait for the ACC panel to finish loading
+		cy.waitForAppLoading('accLoading', 15000);
 	});
 
 	it('Renders Accelerator tile', () => {
