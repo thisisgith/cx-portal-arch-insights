@@ -1,13 +1,13 @@
 <div *ngIf="detailsLoading" class="row no-gutters">
 	<div class="col-md-12">
-		<div class="panel panel--loose">
+		<div class="innerSpecialPanel panel panel--loose">
 			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingCases_' | i18n"></h4>
 			<cui-spinner></cui-spinner>
 		</div>
 	</div>
 </div>
 <div *ngIf="!detailsLoading">
-	<h4 class="text-dkgray-1" [innerText]="'_Case_' | i18n:caseNumber.query"></h4>
+	<h3 class="text-dkgray-1" [innerText]="'_Case_' | i18n:caseNumber.query"></h3>
 	<div class="section">
 		<h5 *ngIf="case.description" class="text-dkgray-1 qtr-margin-top half-margin-bottom" [innerText]="case.description"></h5>
 		<h6>

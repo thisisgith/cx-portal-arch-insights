@@ -120,6 +120,9 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 	 */
 	public onBlur () {
 		this.focused = false;
+		if (this.searchText) {
+			this.search$.next();
+		}
 	}
 
 	/**
