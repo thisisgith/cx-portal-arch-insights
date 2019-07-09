@@ -91,13 +91,13 @@ describe('ResolutionComponent', () => {
 
 	it('should give the correct severity color', () => {
 		expect(component.getSeverityColor('1'))
-			.toEqual('red');
+			.toEqual('danger');
 		expect(component.getSeverityColor('2'))
-			.toEqual('orange');
+			.toEqual('warning');
 		expect(component.getSeverityColor('3'))
-			.toEqual('yellow');
+			.toEqual('warning-alt');
 		expect(component.getSeverityColor('4'))
-			.toEqual('blue');
+			.toEqual('info');
 		expect(component.getSeverityColor('42'))
 			.toEqual(undefined);
 	});

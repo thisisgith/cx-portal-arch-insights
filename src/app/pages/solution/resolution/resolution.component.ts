@@ -10,6 +10,10 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { tap, switchMap, takeUntil } from 'rxjs/operators';
 
+import * as _ from 'lodash-es';
+
+import { caseSeverities } from '@classes';
+
 /**
  * Resolution Component
  */
@@ -136,16 +140,8 @@ export class ResolutionComponent {
 	 * @returns void
 	 */
 	public getSeverityColor (severity: string) {
-		switch (severity) {
-			case '1': return 'red';
-				break;
-			case '2': return 'orange';
-				break;
-			case '3': return 'yellow';
-				break;
-			case '4': return 'blue';
-				break;
-		}
+		const severityInt = parseInt(severity, 10);
+		return _.get(caseSeverities[severityInt], 'class');
 	}
 
 	/**

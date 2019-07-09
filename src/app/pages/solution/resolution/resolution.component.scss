@@ -26,18 +26,18 @@
 	position: fixed;
 }
 
-.orange {
-	background-color: $status-orange;
-}
-
-.red {
-	background-color: $accent-red;
-}
-
-.yellow {
+.warning-alt {
 	background-color: $status-yellow;
 }
 
-.blue {
+.danger {
+	background-color: $accent-red;
+}
+
+.warning {
+	background-color: $status-orange;
+}
+
+.info {
 	background-color: $cisco-blue;
 }
