@@ -1,4 +1,4 @@
-import { Util } from '@apollo/cypress-util';
+import { RouteWatch, Util } from '@apollo/cypress-util';
 import { capitalize } from 'lodash-es';
 import MockService from '../support/mockService';
 
@@ -11,6 +11,9 @@ const assets = networkScenario.response.body.data;
 const assetCards = cardScenario.response.body.data;
 const totalCountScenario = coverageMock.getScenario('GET', 'Coverage');
 const coverageElements = totalCountScenario.response.body;
+const vulnMock = new MockService('VulnerabilityScenarios');
+const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
+const advisoryCounts = advisoryScenario.response.body;
 
 describe('Assets', () => { // PBC-41
 	before(() => {
@@ -282,6 +285,40 @@ describe('Assets', () => { // PBC-41
 					cy.wrap($dropdown).click();
 				});
 			});
+		});
+
+		it('Unchecks all select boxes after clearing filters', () => { // PBC-273
+			cy.getByAutoId('CoveredPoint').click();
+			cy.getByAutoId('AllAssetSelectCheckbox').click();
+			cy.getByAutoId('AllAssetSelect').should('be.checked');
+			cy.get('[data-auto-id*="InventoryItemSelect-"]').eq(0).should('be.checked');
+			cy.getByAutoId('FilterBarClearAllFilters').click();
+			cy.getByAutoId('AllAssetSelect').should('not.be.checked');
+			cy.get('[data-auto-id*="InventoryItemSelect-"]').eq(0).should('not.be.checked');
+		});
+
+		it('Only shows asset results from the most recent query', () => { // PBC-274
+			assetMock.disable(['Assets Page 1', 'Covered Assets']);
+			const filteredXHR = new RouteWatch('**/inventory/v1/assets?*coverage=covered');
+			cy.route('**/inventory/v1/assets?customerId=2431199&rows=10&page=1').as('unfiltered');
+
+			// Quickly set and clear filters
+			cy.getByAutoId('CoveredPoint').click();
+			cy.getByAutoId('FilterBarClearAllFilters').click();
+			cy.wait('@unfiltered').then(xhr => {
+				expect(filteredXHR.cancelled).to.eq(true);
+				cy.getByAutoId('ShowingAssetsCount').should(
+					'have.text', `Showing 1-10 of ${xhr.response.body.Pagination.total} assets`
+				);
+			});
+
+			assetMock.enable(['Assets Page 1', 'Covered Assets']);
+		});
+
+		it('Uses comma separator in visual filter tooltips', () => { // PBC-275
+			cy.getByAutoId('Security AdvisoriesPoint').hover();
+			cy.getByAutoId('Security AdvisoriesTooltip')
+				.should('contain', advisoryCounts['security-advisories'].toLocaleString());
 		});
 	});
 
