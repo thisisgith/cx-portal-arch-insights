@@ -35,7 +35,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('asset-details').should('have.css', 'width', halfWidthInPx); // shrink to half width
 			cy.get('tr').eq(3).click(); // switch to new asset without closing modal
 			cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[2].serialNumber}`);
-			cy.getByAutoId('ClearAsset').click();
+			cy.getByAutoId('CloseDetails').click();
 		});
 
 		// TODO: rewrite these tests around the 360 view
@@ -48,7 +48,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('div.timeline__content').eq(0)
 				.should('contain', 'Title')
 				.and('contain', 'Lorem ipsum');
-			cy.getByAutoId('ClearAsset').click();
+			cy.getByAutoId('CloseDetails').click();
 		});
 
 		// TODO: rewrite these tests around the 360 view
@@ -60,7 +60,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('asset-details').should('be.visible');
 			cy.getByAutoId('Asset360SerialNumber')
 				.should('have.text', `Serial Number${serial}`);
-			cy.getByAutoId('ClearAsset').click();
+			cy.getByAutoId('CloseDetails').click();
 
 			cy.getByAutoId('list-view-btn').click();
 		});
@@ -316,7 +316,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
 			cy.get('tr cui-dropdown').eq(0).click();
 			cy.get('tbody tr').eq(0).click(); // 360 view
-			cy.getByAutoId('ClearAsset').click();
+			cy.getByAutoId('CloseDetails').click();
 			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
 		});
 	});

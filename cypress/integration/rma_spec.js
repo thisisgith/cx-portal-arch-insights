@@ -39,17 +39,9 @@ describe('RMA Spec', () => {
 		it('RMA 800000000 four replacement parts', () => {
 			// RMA with 4 replacement part PBC-171
 			// mock set at "RMA with four replacement parts"
-<<<<<<< HEAD
 			rmaMock.enable('RMA with four replacement parts');
+			cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
 
-=======
-			cy.window().then(win => {
-				// cy.log(win.mockService.getEnabledScenarios());
-				win.mockService.enable('RMA with four replacement parts'); // enable the desired
-				cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
-			});
-			// cy.log("one");
->>>>>>> develop
 			const rmaVal = '800000000';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
@@ -72,27 +64,16 @@ describe('RMA Spec', () => {
 			cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
 			cy.get('h6').should('contain', 'Related to this Product');
 			cy.getByAutoId('searchClose').should('exist').click();
-<<<<<<< HEAD
 
 			rmaMock.enable('RMA with one replacement part');
 			cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
-=======
->>>>>>> develop
 		});
 
 		it('RMA 800000000 no replacement parts', () => {
 			// RMA with no replacement part PBC-171
 			// mock set at "RMA with no replacement parts"
-<<<<<<< HEAD
 			rmaMock.enable('RMA with no replacement parts');
 			cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
-=======
-			cy.window().then(win => {
-				// cy.log(win.mockService.getEnabledScenarios());
-				win.mockService.enable('RMA with no replacement parts'); // enable the desired
-				cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
-			});
->>>>>>> develop
 
 			const rmaVal = '800000000';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
@@ -114,12 +95,9 @@ describe('RMA Spec', () => {
 			cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
 			cy.get('h6').should('contain', 'Related to this Product');
 			cy.getByAutoId('searchClose').should('exist').click();
-<<<<<<< HEAD
 
 			rmaMock.enable('RMA with four replacement parts');
 			cy.getByAutoId('Facet-Assets & Coverage').should('exist').click();
-=======
->>>>>>> develop
 		});
 
 		it('RMA 800000009', () => {
