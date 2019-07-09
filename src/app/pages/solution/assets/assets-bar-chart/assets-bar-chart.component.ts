@@ -51,7 +51,7 @@ export class AssetsBarChartComponent implements OnInit {
 			chart: {
 				events: {
 					load: () => {
-						// if (window.Cypress) {
+						if (window.Cypress) {
 							// Hack to allow Cypress to click on highcharts series
 							_.each(this.chart.ref.series, chartSeries => {
 								_.each(chartSeries.points, point => {
@@ -68,7 +68,7 @@ export class AssetsBarChartComponent implements OnInit {
 									});
 								});
 							});
-						// }
+						}
 					},
 				},
 				height: 100,
