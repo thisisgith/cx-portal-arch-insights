@@ -16,7 +16,7 @@ describe('Case Spec', () => {
 			cy.wait(4000);
 
 			cy.get('app-case-search').within(() => {
-				cy.get('h4').should('exist', 'Case '.concat(caseVal));
+				cy.get('h3').should('exist', 'Case '.concat(caseVal));
 				cy.get('span').should('contain', 'Status:');
 				cy.get('h5').should('contain', 'Latest Update');
 				cy.getByAutoId('seeMore').should('exist');
