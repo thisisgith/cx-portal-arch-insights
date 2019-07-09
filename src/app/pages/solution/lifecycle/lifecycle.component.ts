@@ -262,6 +262,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	 public getACCRibbonClass (acc: ACC) {
 		let ribbon = 'ribbon__clear';
+		if (!acc) {
+			return ribbon;
+		}
 		if (acc.status === 'completed') {
 			ribbon = 'ribbon__green';
 		}
@@ -279,6 +282,10 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns ribbon
 	 */
 	 public setFavorite (item: ACC) {
+		if (item.status === 'completed') {
+			return;
+		}
+
 		this.status.loading.acc = true;
 		const bookmarkParam: ACCBookmarkSchema = {
 			customerId: this.customerId,
@@ -416,6 +423,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadACC (): Observable<ACCResponse> {
 		this.status.loading.acc = true;
+		if (window.Cypress) {
+			window.accLoading = true;
+		}
 
 		// Temporarily not pick up optional query param suggestedAction
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
@@ -425,16 +435,24 @@ export class LifecycleComponent implements OnDestroy {
 		.pipe(
 			map((result: ACCResponse) => {
 				this.status.loading.acc = false;
+				if (window.Cypress) {
+					window.accLoading = false;
+				}
 
 				this.componentData.acc = {
 					recommended: _.head(_.filter(result.items, { status: 'recommended' })),
 					sessions: result.items,
 				};
+				_.remove(this.componentData.acc.sessions, (session: ACC) =>
+					!session.title && !session.description);
 
 				return result;
 			}),
 			catchError(err => {
 				this.status.loading.acc = false;
+				if (window.Cypress) {
+					window.accLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadACC() :: Error : (${
 					err.status}) ${err.message}`);
 
@@ -449,6 +467,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadATX (): Observable<ATXResponse> {
 		this.status.loading.atx = true;
+		if (window.Cypress) {
+			window.atxLoading = true;
+		}
 		// Temporarily not pick up optional query param suggestedAction
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
@@ -461,11 +482,17 @@ export class LifecycleComponent implements OnDestroy {
 					sessions: result.items,
 				};
 				this.status.loading.atx = false;
+				if (window.Cypress) {
+					window.atxLoading = false;
+				}
 
 				return result;
 			}),
 			catchError(err => {
 				this.status.loading.atx = false;
+				if (window.Cypress) {
+					window.atxLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadATX() :: Error : (${
 				err.status}) ${err.message}`);
 
@@ -603,6 +630,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadCommunites (): Observable<CommunitiesResponse> {
 		this.status.loading.communities = true;
+		if (window.Cypress) {
+			window.communitiesLoading = true;
+		}
 		// Temporarily not pick up optional query param suggestedAction
 		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
@@ -611,6 +641,9 @@ export class LifecycleComponent implements OnDestroy {
 		.pipe(
 			map((result: CommunitiesResponse) => {
 				this.status.loading.communities = false;
+				if (window.Cypress) {
+					window.communitiesLoading = false;
+				}
 
 				if (result.items.length) {
 					this.componentData.communities = result.items;
@@ -620,6 +653,9 @@ export class LifecycleComponent implements OnDestroy {
 			}),
 			catchError(err => {
 				this.status.loading.communities = false;
+				if (window.Cypress) {
+					window.communitiesLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadCommunites() :: Error : (${
 					err.status}) ${err.message}`);
 
