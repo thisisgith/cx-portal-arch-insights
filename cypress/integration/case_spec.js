@@ -13,10 +13,10 @@ describe('Case Spec', () => {
 			const caseVal = '688296392'; // '686569178' '688296392' also works
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(caseVal.concat('{enter}'));
-			cy.wait(4000);
+			cy.wait(8000);
 
 			cy.get('app-case-search').within(() => {
-				cy.get('h4').should('exist', 'Case '.concat(caseVal));
+				cy.get('h3').should('exist', 'Case '.concat(caseVal));
 				cy.get('span').should('contain', 'Status:');
 				cy.get('h5').should('contain', 'Latest Update');
 				cy.getByAutoId('seeMore').should('exist');
@@ -39,7 +39,7 @@ describe('Case Spec', () => {
 			const caseVal = '686568888';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(caseVal.concat('{enter}'));
-			cy.wait(4000);
+			cy.wait(8000);
 			cy.get('h4').should('not.exist', 'Case '.concat(caseVal));
 			cy.get('app-general-search').should('contain', '10 Results for "'.concat(caseVal).concat('"'));
 			cy.getByAutoId('searchSiteSelect').should('exist');
