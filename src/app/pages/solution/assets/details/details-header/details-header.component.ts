@@ -1,8 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CaseParams } from '@cui-x/services';
-import { SolutionService } from '../../../solution.service';
 
-import { HardwareInfo } from '@sdp-api';
+import { Asset, HardwareInfo } from '@sdp-api';
 
 /**
  * Details Header Component
@@ -17,7 +16,7 @@ import { HardwareInfo } from '@sdp-api';
 	templateUrl: './details-header.component.html',
 })
 export class DetailsHeaderComponent {
-	@Input('asset') public asset: HardwareInfo;
+	@Input('asset') public asset: Asset;
 	@Input('hardwareData') public hardwareData: HardwareInfo;
 	@Output() public fullscreenEvent = new EventEmitter<boolean>();
 	@Output() public closeEvent = new EventEmitter<boolean>();
@@ -42,10 +41,6 @@ export class DetailsHeaderComponent {
 
 	public actionDropdownActive = false;
 	public casesDropdownActive = false;
-
-	constructor (
-		private solutionService: SolutionService,
-	) { }
 
 	/**
 	 * Toggles the action dropdown

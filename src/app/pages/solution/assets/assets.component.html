@@ -1,7 +1,8 @@
 <!-- App Details 360 slide-out -->
-<app-panel360 [hidden]="!selectedAsset" [fullscreen]="fullscreen">
+<app-panel360 *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
 	<app-panel360-header (close)="onPanelClose()"
-		[(fullscreen)]="fullscreen">
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false">
 		<details-header [asset]="selectedAsset"></details-header>
 		<div appPanel360Title class="text-xlarge" [innerText]="selectedAsset?.serialNumber"></div>
 	</app-panel360-header>

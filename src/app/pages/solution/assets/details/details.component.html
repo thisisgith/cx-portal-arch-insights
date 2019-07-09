@@ -1,22 +1,17 @@
 <cui-tabs>
-	<cui-tab [label]="'_Details_' | i18n">
-		<ng-container *ngTemplateOutlet="details"></ng-container>
+	<cui-tab [label]="'_Summary_' | i18n | uppercase">
+		<ng-container *ngTemplateOutlet="summary"></ng-container>
 	</cui-tab>
-	<cui-tab [label]="'_Hardware_' | i18n" disabled="true">
-
+	<cui-tab [label]="'_Hardware_' | i18n | uppercase" disabled></cui-tab>
+	<cui-tab [label]="'_Software_' | i18n | uppercase" disabled></cui-tab>
+	<cui-tab [label]="'_Advisories_' | i18n | uppercase">
+		<div class="dbl-margin-top">
+			<details-advisories [asset]="asset"></details-advisories>
+		</div>
 	</cui-tab>
-	<cui-tab [label]="'_Software_' | i18n" disabled="true">
-
-	</cui-tab>
-	<cui-tab [label]="'_Vulnerabilities_' | i18n" disabled="true">
-
-	</cui-tab>
-	<cui-tab [label]="'_Insights_' | i18n" disabled="true">
-
-	</cui-tab>
-	<cui-tab [label]="'_Activity_' | i18n">
+	<!-- <cui-tab [label]="'_Activity_' | i18n | uppercase">
 		<asset-activity [asset]="asset"></asset-activity>
-	</cui-tab>
+	</cui-tab> -->
 </cui-tabs>
 
 <ng-template #summary>
@@ -44,7 +39,7 @@
 				<div class="col-md-12 base-margin-top">
 					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_OSVersion_', linkData: asset?.osVersion, url: '#' }"></ng-container>
 				</div>
-				<div class="col-md-12 base-margin-top">
+				<div class="col-md-12 base-margin-top" *ngIf="coverageData">
 					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_SupportContract_', data: ('_CoveredUntil_' | i18n:((coverageData?.contractEndDate | date:'yyyy MMM dd')) || ''), linkData: (coverageData?.contractNumber + ' ' + coverageData?.slaDescription), url: '#' }"></ng-container>
 				</div>
 			</div>
@@ -57,7 +52,7 @@
 				<div class="col-md-12 base-margin-top">
 					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_EndOfSupport_', data: eolBulletinData?.lastDateOfSupport | date:'yyyy MMM dd' }"></ng-container>
 				</div>
-				<div class="col-md-12 base-margin-top">
+				<div class="col-md-12 base-margin-top" *ngIf="coverageData">
 					<ng-container *ngTemplateOutlet="detailsData; context: { title: '_Warranty_', data: ('_CoveredUntil_' | i18n:((coverageData?.warrantyEndDate | date:'yyyy MMM dd')) || ''), linkData: coverageData?.warrantyType, url: '#' }"></ng-container>
 				</div>
 			</div>
@@ -75,6 +70,7 @@
 		<div class="flex-fluid flex-center map-box-content"></div>
 		<div class="icon-chevron-right qtr-padding-left qtr-padding-right flex-center"></div>
 	</div>
+
 </ng-template>
 
 <ng-template #detailsData let-title="title" let-data="data" let-linkData="linkData" let-url="url" let-titleOnly="titleOnly">

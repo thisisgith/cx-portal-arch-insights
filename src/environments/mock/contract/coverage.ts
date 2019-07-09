@@ -7,7 +7,7 @@ const api = '/api/customerportal/contracts/v1/';
 /** Default Customer ID */
 const customerId = '2431199';
 /** Default network ID */
-const mangedNeId = 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA';
+const managedNeId = 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA';
 
 /** The mock response for coverage counts */
 const mockCoverageCounts: CoverageCountsResponse = {
@@ -146,7 +146,7 @@ export const CoverageScenarios = [
 				},
 			],
 		},
-		url: `${api}products/coverages?customerId=${customerId}&managedNeId=${mangedNeId}`,
+		url: `${api}products/coverages?customerId=${customerId}&managedNeId=${managedNeId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

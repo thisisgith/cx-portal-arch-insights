@@ -7,12 +7,16 @@
 				</div>
 			</div>
 			<div class="text-right">
-				<a class="text-dkgray-4" data-auto-id="FullScreen">
-					<span data-auto-id="asset-details-toggle-fullscreen-icon" class="icon--mid half-margin-right"
-						[title]="'_ToggleFullscreen_' | i18n" [ngClass]="{
-										'icon-fullscreen': !fullscreen,
-										'icon-exit-fullscreen': fullscreen
-									}" (click)="toggleFullscreen()"></span>
+				<a class="text-dkgray-4" data-auto-id="FullScreen" *ngIf="fullscreenToggle">
+					<span data-auto-id="asset-details-toggle-fullscreen-icon"
+						class="icon--mid half-margin-right"
+						[title]="'_ToggleFullscreen_' | i18n"
+						[ngClass]="{
+							'icon-fullscreen': !fullscreen,
+							'icon-exit-fullscreen': fullscreen
+						}"
+						(click)="toggleFullscreen()">
+					</span>
 				</a>
 				<a class="text-dkgray-4" data-auto-id="CloseDetails" (click)="closeDetails()">
 					<span class="icon-close icon--mid"></span>

@@ -12,18 +12,47 @@
 		</button>
 	</div>
 </div>
-<div class="flex flex-fluid flex-fill" *ngIf="visibleTab">
+<div class="flex flex-fluid flex-fill base-margin-top" *ngIf="visibleTab">
 	<ng-container *ngTemplateOutlet="visibleTab"></ng-container>
 </div>
 
 <ng-template #security>
-	security template
+	<ng-container *ngTemplateOutlet="displayTable; context: { data: selectedTab.data, options: selectedTab.table }"></ng-container>
 </ng-template>
 
 <ng-template #fieldNotices>
-	field notices
+	<ng-container *ngTemplateOutlet="displayTable; context: { data: selectedTab.data, options: selectedTab.table }"></ng-container>
 </ng-template>
 
 <ng-template #bugs>
 	bugs template
+</ng-template>
+
+<ng-template #displayTable let-data="data" let-options="options">
+	<cui-table *ngIf="options && data" [options]="options" [data]="data.bulletin"></cui-table>
+</ng-template>
+
+<ng-template #impact let-celldata="celldata">
+	<span class="label label--circle label--tiny qtr-margin-right"
+		[ngClass]="{
+			'label--danger': celldata.severity === 'Critical',
+			'label--warning': celldata.severity === 'High',
+			'label--warning-alt': celldata.severity === 'Medium',
+			'label--success': celldata.severity === 'Low'
+		}">
+	</span>
+	<ng-container [ngSwitch]="celldata.severity">
+		<span *ngSwitchCase="'Critical'" [innerText]="'_Critical_' | i18n"></span>
+		<span *ngSwitchCase="'High'" [innerText]="'_High_' | i18n"></span>
+		<span *ngSwitchCase="'Medium'" [innerText]="'_Medium_' | i18n"></span>
+		<span *ngSwitchCase="'Low'" [innerText]="'_Low_' | i18n"></span>
+		<span *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
+	</ng-container>
+</ng-template>
+
+<ng-template #fieldNoticeID let-celldata="celldata">
+	<a innerText="FN {{ celldata.fieldNoticeId }}"
+		target="_blank"
+		[href]="celldata.URL">
+	</a>
 </ng-template>

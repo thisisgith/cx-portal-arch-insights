@@ -34,7 +34,6 @@ const customerId = '2431199';
  */
 @Component({
 	host: {
-		// '[class.fullscreen]': 'fullscreen',
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'asset-details',
@@ -70,7 +69,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 		},
 	};
 	public hidden = true;
-	// public fullscreen = false;
+	public fullscreen = false;
 
 	public timelineData: CuiTimelineItem[] = [];
 
@@ -194,18 +193,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit {
 			this.fetchEOLData();
 		}
 	}
-
-	/**
-	 * determine if fullscreen from child data
-	 * @param $event gets the boolean value
-	 */
-	// public determineFullScreen ($event: boolean) {
-	// 	if ($event) {
-	// 		this.fullscreen = true;
-	// 	} else {
-	// 		this.fullscreen = false;
-	// 	}
-	// }
 
 	/**
 	 * determine if close from child data
