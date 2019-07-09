@@ -11,7 +11,7 @@ import {
 	ViewChild,
 } from '@angular/core';
 
-import { Subject, Observable, of } from 'rxjs';
+import { Subject, Observable, forkJoin, of } from 'rxjs';
 import { catchError, takeUntil, tap, switchMap } from 'rxjs/operators';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -23,11 +23,13 @@ import {
 	HardwareResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
+import { CaseService } from '@cui-x/services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 import { SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
+import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 
 /**
  * Interface representing all serial number data to go in the template
@@ -40,7 +42,6 @@ interface SerialData {
 	hostName?: string;
 	softwareType: string;
 	currentVersion?: string;
-	latestVersion?: string;
 	openCase?: number;
 	openRmas?: number;
 }
@@ -64,6 +65,14 @@ interface AlertsData {
 }
 
 /**
+ * Interface representing open case/rma data to go in template
+ */
+interface CaseData {
+	openCases: number;
+	openRmas: number;
+}
+
+/**
  * A Component to house the search results by serial number
  */
 @Component({
@@ -84,19 +93,23 @@ implements OnInit, OnChanges, OnDestroy {
 	public loading = true;
 	public loadingContractData = true;
 	public loadingAlertsData = true;
+	public loadingCaseData = true;
 	public customerId = '2431199';
 	public data: SerialData;
-	public contractData: ContractData = { };
+	public contractData: ContractData;
+	public expirationFromNow: string;
 	public alertsData: AlertsData;
+	public caseData: CaseData;
 
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 
 	constructor (
+		private caseService: CaseService,
 		private contractService: ContractsService,
 		private logger: LogService,
-		private alertsService: ProductAlertsService,
 		private inventoryService: InventoryService,
+		private alertsService: ProductAlertsService,
 	) {
 		super();
 		this.logger.debug('SerialSearchComponent Created!');
@@ -137,23 +150,20 @@ implements OnInit, OnChanges, OnDestroy {
 		this.refresh$.pipe(
 			tap(() => {
 				this.loadingContractData = true;
-				this.contractData = { };
 			}),
 			switchMap(() => this.getContractData(this.customerId, this.serialNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(response => {
 			this.loadingContractData = false;
-			const firstContract = response.data[0];
-			if (firstContract) {
-				this.contractData = {
-					contractNum: firstContract.contractNumber,
-					cxLevel: firstContract.cxLevel,
-					expirationDate: firstContract.contractEndDate,
-				};
-			}
+			this.contractData = {
+				contractNum: _.get(response, ['data', 0, 'contractNumber'], null),
+				cxLevel: _.get(response, ['data', 0, 'cxLevel'], null),
+				expirationDate: _.get(response, ['data', 0, 'contractEndDate'], null),
+			};
+			const fromNowPipe = new FromNowPipe();
+			this.expirationFromNow = fromNowPipe.transform(this.contractData.expirationDate);
 		});
-		/** TODO: Get Case data as well, once that service code is merged in */
 		/** Alerts Data Refresh */
 		this.refresh$.pipe(
 			tap(() => {
@@ -166,9 +176,25 @@ implements OnInit, OnChanges, OnDestroy {
 		.subscribe(response => {
 			this.loadingAlertsData = false;
 			this.alertsData = {
-				bugs: _.get(response, 'bugs', 0),
-				fieldNotices: _.get(response, 'field-notices', 0),
-				securityAdvisories: _.get(response, 'security-advisories', 0),
+				bugs: _.get(response, 'bugs', null),
+				fieldNotices: _.get(response, 'field-notices', null),
+				securityAdvisories: _.get(response, 'security-advisories', null),
+			};
+		});
+		/** Get Open Case/Open RMA Counts */
+		this.refresh$.pipe(
+			tap(() => {
+				this.loadingCaseData = true;
+				this.caseData = null;
+			}),
+			switchMap(() => this.getCaseData(this.serialNumber.query)),
+			takeUntil(this.destroy$),
+		)
+		.subscribe(response => {
+			const [caseResponse, rmaResponse] = response;
+			this.caseData = {
+				openCases: _.get(caseResponse, 'totalElements', 0),
+				openRmas: _.get(rmaResponse, 'totalElements', 0),
 			};
 		});
 
@@ -249,5 +275,44 @@ implements OnInit, OnChanges, OnDestroy {
 				return of(null);
 			}),
 		);
+	}
+/**
+	* Fetch Case/RMA counts for the given serial number
+	* @param serialNumber sn to search on
+	* @returns Observable with array of case followed by RMA counts
+	*/
+	private getCaseData (serialNumber: string) {
+	 const params = {
+		 nocache: Date.now(),
+		 page: 0,
+		 serialNumbers: [serialNumber],
+		 size: 1,
+		 sort: 'caseNumber,ASC',
+		 statusTypes: 'O',
+	 };
+
+	 return forkJoin(
+		 // Case Count
+		 this.caseService.read(params)
+		 .pipe(
+			 catchError(err => {
+				 this.logger.error(`Case Data :: ${serialNumber} :: Error ${err}`);
+
+				 return of(null);
+			 }),
+		 ),
+		 // RMA count
+		 this.caseService.read({
+			 ...params,
+			 hasRMAs: 'T',
+		 })
+		 .pipe(
+			 catchError(err => {
+				 this.logger.error(`RMA Data :: ${serialNumber} :: Error ${err}`);
+
+				 return of(null);
+			 }),
+		 ),
+	 );
 	}
 }

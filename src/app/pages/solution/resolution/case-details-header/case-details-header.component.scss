@@ -1,0 +1,28 @@
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
+
+.dot {
+	height: 12px;
+	width: 12px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.orange {
+	background-color: $status-orange;
+}
+
+.red {
+	background-color: $status-red;
+}
+
+.yellow {
+	background-color: $status-yellow;
+}
+
+.blue {
+	background-color: $cisco-blue;
+}
+
+.font-size {
+	font-size: $small-font-size;
+}

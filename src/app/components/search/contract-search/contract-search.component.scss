@@ -1,3 +1,21 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.innerSpecialPanel {
+	background-color: $off-white;
+}
+
+h4 {
+	font-weight: $base-font-weight;
+}
+
 dt {
-	font-weight: normal;
+	font-weight: $base-font-weight;
+}
+
+.toast {
+	position: absolute;
+	z-index: 1;
+	white-space: nowrap;
+	min-width: 100%;
+	max-width: inherit;
 }

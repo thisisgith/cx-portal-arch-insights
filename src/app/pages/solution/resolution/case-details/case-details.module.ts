@@ -3,9 +3,8 @@ import { CommonModule } from '@angular/common';
 import { CaseDetailsComponent } from './case-details.component';
 import {
 	CuiTabsModule,
-	CuiDropdownModule,
 	CuiTimelineModule,
-	CuiTableModule,
+	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 import { HttpClientModule } from '@angular/common/http';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
@@ -22,14 +21,13 @@ import { CaseNotesModule } from './case-notes/case-notes.module';
 	imports: [
 		CommonModule,
 		CuiTabsModule,
-		CuiDropdownModule,
 		CuiTimelineModule,
-		CuiTableModule,
 		HttpClientModule,
 		I18nPipeModule,
 		FormsModule,
 		CaseSummaryModule,
 		CaseNotesModule,
+		CuiSpinnerModule,
 	],
 })
 export class CaseDetailsModule { }

@@ -15,7 +15,7 @@
 				<!-- Special search views depending on query type -->
 				<div id="specialContainer" [hidden]="hideSpecialSearch">
 					<div class="panel panel--ltgray dbl-padding">
-						<div class="panel dbl-padding">
+						<div class="innerSpecialPanel panel base-padding-top dbl-padding-left base-padding-right base-padding-bottom">
 							<ng-container [ngSwitch]="searchType.name">
 								<app-case-search *ngSwitchCase="'case'"
 									[caseNumber]="selectedSearch"

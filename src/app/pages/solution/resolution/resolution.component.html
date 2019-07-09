@@ -1,1 +1,10 @@
-<app-case-details></app-case-details>
+<input data-auto-id="Sample360" type="checkbox" [(ngModel)]="openPanel" />
+
+<app-panel360 [hidden]="!openPanel"
+	[fullscreen]="fullscreen">
+	<app-panel360-header (close)="openPanel = false"
+		[(fullscreen)]="fullscreen">
+		<app-case-details-header ></app-case-details-header>
+	</app-panel360-header>
+	<app-case-details></app-case-details>
+</app-panel360>

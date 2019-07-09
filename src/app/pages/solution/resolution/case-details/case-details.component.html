@@ -1,66 +1,20 @@
-<div class="case-details-container">
-	<div class="base-padding-left">
-		<div class="base-margin-bottom">
-			<span class="text-xlarge" [innerText]="'_CaseNumberTitle_' | i18n:caseDetails?.caseNumber"></span>
-		</div>
-		<div class="row flex maxWidth">
-			<div class="col-md-5">
-				<div class="text-bold font-size" [innerText]="'_CaseSeverity_' | i18n | uppercase"></div>
-				<div>
-					<span class="dot" [ngClass]="getSeverityColor(caseDetails?.priority)"></span>
-					<span class="text-bold qtr-padding-left" [innerText]="caseDetails?.priority? ('S'+ caseDetails.priority): ''"></span>
-					<span class="qtr-padding-left" [innerText]="caseDetails?.requestType"></span>
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div>
-					<span class="text-bold font-size" [innerText]="'_CaseStatus_' | i18n | uppercase"></span>
-				</div>
-				<div [innerText]="caseDetails?.status"></div>
-			</div>
-			<div class="col-md-2">
-				<div class="text-bold font-size" [innerText]="'_CaseCreated_' | i18n | uppercase"></div>
-				<div [innerText]="caseDetails?.createdDate | date"></div>
-			</div>
-			<div class="col-md-2">
-				<div class="text-bold font-size" [innerText]="'_CaseLastUpdated_' | i18n | uppercase"></div>
-				<div [innerText]="caseDetails?.lastUpdateDate | date"></div>
-			</div>
-		</div>
-
-		<div class="row base-padding-top base-padding-bottom">
-			<div class="col-md-6 text-left">
-			</div>
-			<div class="col-md-6 text-right">
-				<button class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right" [innerText]="'_CaseAttachFile_' | i18n"></button>
-				<button class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right" [innerText]="'_CaseAddNote_' | i18n"></button>
-			</div>
-		</div>
-	</div>
-	<div class="base-padding-left">
-		<div class="panel">
-			<cui-tabs inline="true">
-				<cui-tab [label]="'_CaseSummary_' | i18n | uppercase">
-					<div class="divider no-margin-top"></div>
-					<ng-container *ngTemplateOutlet="summaryContent"></ng-container>
-				</cui-tab>
-				<cui-tab [label]="'_CaseNotes_'| i18n:caseNotes?.length  | uppercase">
-					<div class="divider no-margin-top"></div>
-					<ng-container *ngTemplateOutlet="notesContent"></ng-container>
-				</cui-tab>
-				<cui-tab [label]="'_CaseFiles_'| i18n | uppercase">
-					<div class="divider no-margin-top"></div>
-					<ng-container *ngTemplateOutlet="filesContent"></ng-container>
-				</cui-tab>
-			</cui-tabs>
-		</div>
-		<ng-template #summaryContent>
-				<app-case-summary [caseDetails]="caseDetails"></app-case-summary>
-		</ng-template>
-		<ng-template #notesContent>
-				<app-case-notes [caseNotes]="caseNotes"></app-case-notes>
-		</ng-template>
-		<ng-template #filesContent>
-		</ng-template>
-	</div>
+<div class="panel">
+	<cui-tabs inline="true">
+		<cui-tab [label]="'_CaseSummary_' | i18n | uppercase">
+			<div class="divider no-margin-top"></div>
+			<cui-spinner *ngIf="summaryLoading"></cui-spinner>
+			<app-case-summary *ngIf="!summaryLoading" [caseDetails]="caseDetails"></app-case-summary>
+		</cui-tab>
+		<cui-tab [label]="'_CaseNotes_'| i18n:caseNotes?.length  | uppercase">
+			<div class="divider no-margin-top"></div>
+			<cui-spinner *ngIf="notesLoading"></cui-spinner>
+			<app-case-notes *ngIf="!notesLoading" [caseNotes]="caseNotes"></app-case-notes>
+		</cui-tab>
+		<cui-tab [label]="'_CaseFiles_'| i18n | uppercase">
+			<div class="divider no-margin-top"></div>
+		</cui-tab>
+	</cui-tabs>
 </div>
+<!-- <ng-template #createdDate>
+		<span [innerText]="item[column.key] | fromNow"></span>
+	</ng-template> -->

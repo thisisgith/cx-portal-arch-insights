@@ -1,0 +1,84 @@
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CaseService } from '@cui-x/services';
+import { Case } from '@interfaces';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { CaseDetailsService } from 'src/app/services/case-details';
+
+/**
+ * Add Notes Component
+ */
+@Component({
+	selector: 'app-add-note',
+	styleUrls: ['./add-note.component.scss'],
+	templateUrl: './add-note.component.html',
+})
+export class AddNoteComponent {
+
+	@Input('case') public case: Case;
+	@Output('close') public close = new EventEmitter<boolean>();
+	public titleMaxLength = 80;
+	public descriptionMaxLength = 32000;
+	public loading = false;
+	public title: FormControl = new FormControl('',
+		[
+			Validators.required,
+			Validators.maxLength(this.titleMaxLength),
+		]);
+	public description: FormControl = new FormControl('',
+		[
+			Validators.required,
+			Validators.maxLength(this.descriptionMaxLength),
+		]);
+	public notesForm: FormGroup;
+	public note: string;
+	public noteDetail: string;
+
+	constructor (
+		private caseService: CaseService, private caseDetailsService: CaseDetailsService,
+	) { }
+
+	/**
+ 	* OnInit lifecycle hook
+ 	*/
+	public ngOnInit () {
+		this.notesForm = new FormGroup({
+			description: this.description,
+			title: this.title,
+		});
+	}
+
+	/**
+ 	* adds case notes
+ 	* @returns status of response
+ 	*/
+	public addCaseNote () {
+		this.loading = true;
+		return this.caseService.addCaseNote('686569635',
+			{
+				note: this.note,
+				noteDetail: this.noteDetail,
+				noteType: 'WEB UPDATE',
+				noteStatus: 'external',
+				createdByID: 'charhall',
+				createdBy: 'Charlene Hall',
+			})
+			.subscribe(
+				(response: any) => {
+					this.loading = false;
+					// success and error scenarios to be handled
+					if (response && response.status === 'SUCCESS') {
+						this.caseDetailsService.refreshNotesList(true);
+						this.note = '';
+						this.noteDetail = '';
+						this.close.emit(true);
+					}
+				});
+	}
+
+	/**
+	 * Hide the addNote popup
+	 */
+	public hide () {
+		this.close.emit(true);
+	}
+}

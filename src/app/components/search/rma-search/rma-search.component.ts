@@ -26,6 +26,7 @@ import { SpecialSearchComponent } from '../special-search/special-search.compone
 interface RmaTableData {
 	caseId?: string;
 	contractNumber?: string;
+	courier?: string;
 	number?: string;
 	products?: PartsLineDetail[];
 	status?: string;
@@ -99,6 +100,11 @@ export class RMASearchComponent extends SpecialSearchComponent
 			this.rmaTableData = {
 				caseId: _.get(this.rma, 'caseId'),
 				contractNumber: _.get(this.rma, 'contractId'),
+				courier: _.get(
+					this.rma,
+					['replacementParts', 'trackingInfo', 'courier'],
+					_.get(this.rma, ['replacementParts', 'trackingInfo', 'courierList']),
+				),
 				number: `${this.rma.rmaNo}`,
 				products: _.get(this.rma, 'replacementParts.partsLineDetails', []),
 				status: _.get(this.rma, 'status'),

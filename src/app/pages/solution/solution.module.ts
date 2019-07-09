@@ -4,7 +4,6 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SolutionComponent } from './solution.component';
 import { CuiGaugeModule } from '@cisco-ngx/cui-components';
 import { SolutionRoutingModule } from './solution-routing.module';
-import { AssetDetailsModule } from './assets/details/details.module';
 import {
 	ContractsModule,
 	RacetrackModule,
@@ -25,7 +24,6 @@ const rootUrl = environment.sdpServiceOrigin;
 	declarations: [SolutionComponent],
 	exports: [SolutionComponent],
 	imports: [
-		AssetDetailsModule,
 		CommonModule,
 		ContractsModule.forRoot({ rootUrl }),
 		CuiGaugeModule,
