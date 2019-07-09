@@ -21,7 +21,7 @@ export class CaseDetailsHeaderComponent {
 	public rmaForm: FormGroup;
 	public rmaTable: CuiTableOptions;
 	public rmaDetails: any[] = [];
-	@ViewChild('createdDate', { static: true }) private createdDateTemplate: TemplateRef<{}>;
+	@ViewChild('createdDate', { static: true }) private createdDateTemplate: TemplateRef<{ }>;
 
 	constructor (
 		private caseService: CaseService, private rmaService: RMAService,

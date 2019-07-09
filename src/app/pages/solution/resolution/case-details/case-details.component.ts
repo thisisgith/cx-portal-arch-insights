@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CaseService, CaseDetails } from '@cui-x/services';
 import { RMAService } from '@services';
 import { CaseDetailsService } from 'src/app/services/case-details';
-import { Subscription } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 
+import { Observable,Subscription, Subject, forkJoin, of } from 'rxjs';
+import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 /**
  * Case Details Component
  */
@@ -13,15 +14,16 @@ import { LogService } from '@cisco-ngx/cui-services';
 	styleUrls: ['./case-details.component.scss'],
 	templateUrl: './case-details.component.html',
 })
-export class CaseDetailsComponent implements OnInit {
+export class CaseDetailsComponent implements OnInit , OnDestroy {
 
 	public caseDetails: CaseDetails;
 	public caseNotes: any[] = [];
 	public item: any;
 	public subscription: Subscription;
-	public summaryLoading = false;
-	public notesLoading = false;
-
+	public loading = false;
+	public tabIndex: number = 0;
+	private refresh$ = new Subject();
+	private destroy$ = new Subject();
 	constructor (
 		private caseService: CaseService, private rmaService: RMAService,
 		private caseDetailsService: CaseDetailsService, private logger: LogService,
@@ -31,15 +33,31 @@ export class CaseDetailsComponent implements OnInit {
 	 * Initialization hook
 	 */
 	public ngOnInit () {
+		this.refresh$.pipe(
+			tap(() => {
+				this.loading = true;
+			}),
+			switchMap(refreshType => forkJoin(
+				this.getCaseDetails(),
+				this.getCaseNotes(),
+			)),
+			takeUntil(this.destroy$),
+		)
+		.subscribe(results => {
+			this.caseDetails = results[0]; 
+			this.loading = false;
+			this.caseNotes = results[1];
+		});
+		  
 		this.subscription = this.caseDetailsService.addNote$
 			.subscribe((refresh: boolean) => {
 				if (refresh) {
 					this.logger.debug(`${refresh}`);
-					this.getCaseNotes();
+					this.tabIndex = 1;
+					this.getCaseNotes().subscribe(caseNotes => this.caseNotes = caseNotes);
 				}
 			});
-		this.getCaseDetails();
-		this.getCaseNotes();
+		this.refresh$.next();
 		// this.getRMADetails();
 	}
 
@@ -47,15 +65,8 @@ export class CaseDetailsComponent implements OnInit {
 	 * getCaseDetails function
 	 * @returns the case details
 	 */
-	public getCaseDetails () {
-		this.summaryLoading = true;
-
+	public getCaseDetails () {		
 		return this.caseService.fetchCaseDetails('686569635')
-			.subscribe(
-				(response: any) => {
-					this.summaryLoading = false;
-					this.caseDetails = response;
-				});
 	}
 
 	/**
@@ -63,14 +74,7 @@ export class CaseDetailsComponent implements OnInit {
 	 * @returns case notes
 	 */
 	public getCaseNotes () {
-		this.notesLoading = true;
-
-		return this.caseService.fetchCaseNotes('686569635')
-			.subscribe(
-				(response: any) => {
-					this.notesLoading = false;
-					this.caseNotes = response;
-				});
+		return this.caseService.fetchCaseNotes('686569635',true)		
 	}
 
 	/**
@@ -89,5 +93,14 @@ export class CaseDetailsComponent implements OnInit {
 			case '4': return 'blue';
 				break;
 		}
+	}
+
+
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }
