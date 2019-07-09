@@ -30,8 +30,6 @@ export class AddNoteComponent {
 			Validators.maxLength(this.descriptionMaxLength),
 		]);
 	public notesForm: FormGroup;
-	public note: string;
-	public noteDetail: string;
 
 	constructor (
 		private caseService: CaseService, private caseDetailsService: CaseDetailsService,
@@ -56,8 +54,8 @@ export class AddNoteComponent {
 		const body: Note = {
 			createdBy: 'Charlene Hall',
 			createdByID: 'charhall',
-			note: this.note,
-			noteDetail: this.noteDetail,
+			note: this.title.value,
+			noteDetail: this.description.value,
 			noteStatus: 'external',
 			noteType: 'WEB UPDATE',
 		};
@@ -68,8 +66,8 @@ export class AddNoteComponent {
 					// success and error scenarios to be handled
 					if (response && response.status === 'SUCCESS') {
 						this.caseDetailsService.refreshNotesList(true);
-						this.note = '';
-						this.noteDetail = '';
+						this.title.setValue('');
+						this.description.setValue('');
 						this.close.emit(true);
 					}
 				});

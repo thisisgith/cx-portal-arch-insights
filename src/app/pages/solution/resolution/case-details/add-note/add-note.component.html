@@ -5,7 +5,7 @@
 			<div class="form-group">
 				<div class="form-group__text">
 					<textarea autofocus formControlName="title" #title id="add-note-title" class="textarea" rows="2"
-						[(ngModel)]="note" data-auto-id="title"></textarea>
+						data-auto-id="title"></textarea>
 					<label for="add-note-title">{{'_RMACaseSummaryTitle_'| i18n}}</label>
 				</div>
 				<div class="help-block text-muted" role="alert">
@@ -17,7 +17,7 @@
 			<div class="form-group">
 				<div class="form-group__text">
 					<textarea formControlName="description" #description id="add-note-description" class="textarea"
-						rows="5" [(ngModel)]="noteDetail" data-auto-id="description"></textarea>
+						rows="5" data-auto-id="description"></textarea>
 					<label for="add-note-description">{{'_RMACaseDescription_'| i18n}}</label>
 				</div>
 				<div class="help-block text-muted" role="alert">
