@@ -20,6 +20,7 @@ import {
 	RoleCountResponse,
 	CoverageCountsResponse,
 	ProductAlertsService,
+	HardwareEOLCountResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
@@ -27,8 +28,14 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { SolutionService } from '../solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Subscription, forkJoin, fromEvent, of } from 'rxjs';
-import { map, debounceTime, catchError, distinctUntilChanged, mergeMap } from 'rxjs/operators';
+import { Subscription, forkJoin, fromEvent, of, Subject } from 'rxjs';
+import {
+	map,
+	debounceTime,
+	catchError,
+	distinctUntilChanged,
+	switchMap,
+} from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 
 /**
@@ -73,6 +80,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	@ViewChild('assetsContent', { static: true }) private assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('coverageFilter', { static: true }) private coverageFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('contractFilter', { static: true }) private contractFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('hardwareEOXFilter', { static: true })
+		private hardwareEOXFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('roleFilter', { static: true }) private roleFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('advisoryFilter', { static: true }) private advisoryFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('deviceTemplate', { static: true }) private deviceTemplate: TemplateRef<{ }>;
@@ -123,6 +132,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public assetsDropdown = false;
 	public allAssetsSelected = false;
 	public filtered = false;
+	private InventorySubject: Subject<{ }>;
 
 	public view: 'list' | 'grid' = 'list';
 	public selectedAsset: Asset;
@@ -228,8 +238,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onPageChanged (event: any) {
 		this.assetParams.page = (event.page + 1);
-		this.fetchInventory()
-			.subscribe();
+		this.InventorySubject.next();
 	}
 
 	/**
@@ -291,10 +300,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			});
 		});
 
+		this.allAssetsSelected = false;
 		totalFilter.selected = true;
 		this.adjustQueryParams();
-		this.fetchInventory()
-			.subscribe();
+		this.InventorySubject.next();
 	}
 
 	/**
@@ -310,7 +319,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 
 		filter.selected = _.some(filter.seriesData, 'selected');
-		this.assetParams[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+
+		if (filter.key !== 'advisories' && filter.key !== 'eox') {
+			this.assetParams[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+		}
 		this.assetParams.page = 1;
 
 		const totalFilter = _.find(this.filters, { key: 'total' });
@@ -331,9 +343,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 
 		if (reload) {
+			this.allAssetsSelected = false;
 			this.adjustQueryParams();
-			this.fetchInventory()
-				.subscribe();
+			this.InventorySubject.next();
 		}
 	}
 
@@ -364,6 +376,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.view = params.view;
 			}
 		});
+		this.buildInventorySubject();
 		this.buildFilters();
 	}
 
@@ -394,10 +407,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.getContractCounts(),
 			this.getAdvisoryCount(),
 			this.getRoleCounts(),
+			this.getHardwareEOXCounts(),
 			this.getInventoryCounts(),
 		)
 		.pipe(
-			mergeMap(() => {
+			map(() => {
 				if (this.assetParams.contractNumber) {
 					this.selectSubFilters(this.assetParams.contractNumber, 'contractNumber');
 				}
@@ -410,7 +424,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.selectSubFilters(this.assetParams.coverage, 'coverage');
 				}
 
-				return this.fetchInventory();
+				// TODO: Add handler for EOX <- when api supports it
+				// TODO: Add handler for advisories <- when API supports it
+
+				return this.InventorySubject.next();
 			}),
 		)
 		.subscribe(() => {
@@ -458,6 +475,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				seriesData: [],
 				template: this.advisoryFilterTemplate,
 				title: I18n.get('_Advisories_'),
+			},
+			{
+				key: 'eox',
+				loading: true,
+				seriesData: [],
+				template: this.hardwareEOXFilterTemplate,
+				title: I18n.get('_HardwareEOX_'),
 			},
 			{
 				key: 'role',
@@ -752,6 +776,48 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Fetches the hardware eox counts for the visual filter
+	 * @returns the counts
+	 */
+	private getHardwareEOXCounts () {
+		const eoxFilter = _.find(this.filters, { key: 'eox' });
+
+		return this.productAlertsService.getHardwareEolCounts(customerId)
+		.pipe(
+			map((data: HardwareEOLCountResponse) => {
+				eoxFilter.seriesData = _.map(data, d => ({
+					filter: d.range,
+					label: `${d.range} ${I18n.get('_Days_')}`,
+					selected: false,
+					value: d.deviceCount,
+				}));
+
+				eoxFilter.loading = false;
+			}),
+			catchError(err => {
+				eoxFilter.loading = false;
+				this.logger.error('assets.component : getHardwareEOXCounts() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Builds our inventory subject for cancellable http requests
+	 */
+	private buildInventorySubject () {
+		this.InventorySubject = new Subject();
+
+		this.InventorySubject
+		.pipe(
+			switchMap(() => this.fetchInventory()),
+		)
+		.subscribe();
+	}
+
+	/**
 	 * Fetches the users inventory
 	 * @returns the inventory
 	 */
@@ -826,8 +892,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.view = view;
 			this.assetParams.rows = this.view === 'list' ? 10 : 12;
 			this.adjustQueryParams();
-			this.fetchInventory()
-				.subscribe();
+			this.InventorySubject.next();
 		}
    	}
 }
