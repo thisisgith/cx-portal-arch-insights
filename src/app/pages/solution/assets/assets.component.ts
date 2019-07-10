@@ -12,7 +12,7 @@ import {
 	InventoryService,
 	Asset,
 	Assets,
-	Pagination,
+	InventoryPagination as Pagination,
 	ContractCount,
 	ContractDeviceCountsResponse,
 	RoleCount,

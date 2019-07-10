@@ -353,6 +353,8 @@
 	"_ShowingSuggestions_": "(showing suggestions based on the info you provided)",
 	"_ShowingXAssets_": "Showing {0} Assets",
 	"_ShowingXofYAssets_": "Showing {0} of {1} assets",
+	"_ShowingXofYZ_": "Showing {0} of {1} {2}",
+	"_ShowMore_": "Show More",
 	"_SkipXTutorial_": "Skip {0} tutorial",
 	"_SN_": "SN",
 	"_Software_": "Software",
