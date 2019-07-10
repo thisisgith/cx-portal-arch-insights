@@ -301,10 +301,10 @@
 	<div class="base-padding-bottom" [attr.data-auto-id]="autoid">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:1:4">
 			<div class="row">
-				<div class="col-md-10 text-blue" [innerText]="item.title"></div>
-				<div class="col-md-2 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'"></div>
-				<div class="col-md-2 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite"></div>
-				<div class="col-md-1 progressbar qtr-margin-top" data-percentage="33" *ngIf="item.status === 'in-progress'">
+				<div class="col-md-11 text-blue" [innerText]="item.title"></div>
+				<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'"></div>
+				<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite"></div>
+				<div class="col-md-1 progressbar qtr-margin-top qtr-padding-right" data-percentage="33" *ngIf="item.status === 'in-progress'">
 					<div class="col-md-1 progressbar__fill"></div>
 				</div>
 			</div>
