@@ -240,12 +240,14 @@ $vibblue: #017cad;
 #hover-panel {
 	&-recommendedACCTitle,
 	&-recommendedATXTitle,
+	&-moreACCList,
 	&-learningHoverModal {
 		display: none;
 	}
 
 	&-recommendedACCTitle::after,
 	&-recommendedATXTitle::after,
+	&-moreACCList::after,
 	&-learningHoverModal::after {
 		content: "";
 		position: absolute;
@@ -255,6 +257,7 @@ $vibblue: #017cad;
 	}
 
 	&-recommendedACCTitle::after,
+	&-moreACCList::after,
 	&-learningHoverModal::after {
 		right: -15px;
 		border-left: 15px solid white;
@@ -271,6 +274,7 @@ $vibblue: #017cad;
 	#hover-panel {
 		&-recommendedACCTitle,
 		&-recommendedATXTitle,
+		&-moreACCList,
 		&-learningHoverModal {
 			display: block;
 			position: absolute;
@@ -284,10 +288,12 @@ $vibblue: #017cad;
 		}
 
 		&-recommendedACCTitle,
+		&-moreACCList,
 		&-learningHoverModal {
 			left: -480px;
 		}
 
+		&-moreACCList,
 		&-learningHoverModal {
 			top: -90px;
 
