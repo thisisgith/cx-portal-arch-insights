@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { CaseDetails } from '@cui-x/services';
 
 /**
  * Case Details Summary Component
@@ -11,5 +10,5 @@ import { CaseDetails } from '@cui-x/services';
 })
 
 export class CaseSummaryComponent {
-	@Input() public caseDetails: CaseDetails;
+	@Input() public caseDetails: any;
 }
