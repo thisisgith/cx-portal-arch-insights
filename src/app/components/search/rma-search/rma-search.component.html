@@ -42,7 +42,7 @@
 					</dt>
 					<dd>
 						<span *ngIf="rmaTableData?.products[0]?.partsDescription; else unavailable"
-						data-auto-id="rmaProductTable" [innerText]="rmaTableData.products[0].partsDescription"></span>
+						[innerText]="rmaTableData.products[0].partsDescription"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
@@ -119,14 +119,14 @@
 			</div>
 		</div>
 		<div class="row no-margin">
-			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" [innerText]="'_ProductName_' | i18n"></div>
-			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" [innerText]="'_ProductID_' | i18n"></div>
+			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProductNames" [innerText]="'_ProductName_' | i18n"></div>
+			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProductIDs" [innerText]="'_ProductID_' | i18n"></div>
 		</div>
 		<div class="divider no-margin"></div>
 		<div *ngFor="let product of rmaTableData.products">
 			<div class="row no-margin">
-					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" [innerText]="product.partsDescription | i18n"></div>
-					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" [innerText]="product.shippedPartNo | i18n"></div>
+					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProdDescr" [innerText]="product.partsDescription | i18n"></div>
+					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProdID" [innerText]="product.shippedPartNo | i18n"></div>
 			</div>
 			<div class="divider no-margin"></div>
 		</div>
@@ -167,5 +167,5 @@
 </ng-template>
 
 <ng-template #unavailable>
-	<span class="text-muted" [innerText]="'_Unavailable_' | i18n"></span>
+	<span class="text-muted" data-auto-id="rmaUnavail" [innerText]="'_Unavailable_' | i18n"></span>
 </ng-template>
