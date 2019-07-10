@@ -11,13 +11,13 @@
 		<dl class="dl--inline">
 			<dt class="flex-center-inline-vertical">
 				<span class="qtr-margin-right icon-small icon-circle" [ngClass]="statusColor"></span>
-				<span class="text-muted" [innerText]="('_Status_' | i18n) + ':'"></span>
+				<span class="text-muted" data-auto-id="rmaStatus" [innerText]="('_Status_' | i18n) + ':'"></span>
 				<span class="qtr-margin-left text-muted" *ngIf="rmaTableData?.status; else unavailable"
 					[innerText]="rmaTableData.status"></span>
 			</dt>
 		</dl>
 	</div>
-	<h3 [innerText]="'_RMA_' | i18n:rmaNumber.query"></h3>
+	<h3 data-auto-id="rmaNumber" [innerText]="'_RMA_' | i18n:rmaNumber.query"></h3>
 	<div *ngIf="rmaTableData.products.length <= 1" class="row">
 		<div class="row no-gutters col-md-6 half-margin-top">
 			<div class="col-md-6 dbl-margin-right">
@@ -25,10 +25,10 @@
 					<ng-container *ngTemplateOutlet="caseNumber"></ng-container>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_CarrierTrackingNumber_' | i18n"></span>
+							data-auto-id="rmaTrackingNumber" [innerText]="'_CarrierTrackingNumber_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="trackingNumber" *ngIf="rmaTableData?.courier; else unavailable"
+						<a  *ngIf="rmaTableData?.courier; else unavailable"
 							[innerHTML]="rmaTableData.courier | courierLink:rmaTableData.trackingNumber"></a>
 					</dd>
 					<ng-container *ngTemplateOutlet="contract"></ng-container>
@@ -38,7 +38,7 @@
 				<dl class="dl--inline-medium">
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_Product_' | i18n"></span>
+							data-auto-id="rmaProduct" [innerText]="'_Product_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="rmaTableData?.products[0]?.partsDescription; else unavailable"
@@ -46,7 +46,7 @@
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_ProductID_' | i18n"></span>
+						data-auto-id="rmaProdID" [innerText]="'_ProductID_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="rmaTableData?.products[0]?.shippedPartNo; else unavailable"
@@ -67,16 +67,16 @@
 						<dl class="col-md-6 dl--inline-medium">
 							<dt>
 								<span class="subheading text-small text-uppercase"
-									[innerText]="'_ProductSeries_' | i18n"></span>
+								data-auto-id="rmaProdSeries" [innerText]="'_ProductSeries_' | i18n"></span>
 							</dt>
 							<dd>
 								<!-- TODO: Get actual product series -->
 								<span *ngIf="rmaTableData?.productSeries; else unavailable"
-									[innerText]="rmaTableData.productSeries"></span>
+								[innerText]="rmaTableData.productSeries"></span>
 							</dd>
 							<dt>
 								<span class="subheading text-small text-uppercase"
-									[innerText]="'_EndOfSaleDate_' | i18n"></span>
+								data-auto-id="rmaEOSaleD" [innerText]="'_EndOfSaleDate_' | i18n"></span>
 							</dt>
 							<dd>
 								<!-- TODO: Get actual end of sale date -->
@@ -85,7 +85,7 @@
 							</dd>
 							<dt>
 								<span class="subheading text-small text-uppercase"
-									[innerText]="'_EndOfSupportDate_' | i18n"></span>
+								data-auto-id="rmaEOSupportD" [innerText]="'_EndOfSupportDate_' | i18n"></span>
 							</dt>
 							<dd>
 								<!-- TODO: Get actual end of support date -->
@@ -138,23 +138,23 @@
 <ng-template #caseNumber>
 	<dt>
 		<span class="subheading text-small text-uppercase"
-			[innerText]="'_CaseNumber_' | i18n"></span>
+		data-auto-id="caseNumber" [innerText]="'_CaseNumber_' | i18n"></span>
 	</dt>
 	<dd>
 		<!--TODO: Link to case details page -->
-		<a data-auto-id="caseNumber" *ngIf="rmaTableData?.caseId; else unavailable"
-			[innerText]="rmaTableData.caseId"></a>
+		<a  *ngIf="rmaTableData?.caseId; else unavailable"
+		 [innerText]="rmaTableData.caseId"></a>
 	</dd>
 </ng-template>
 
 <ng-template #contract>
 	<dt>
 		<span class="subheading text-small text-uppercase"
-			[innerText]="'_Contract_' | i18n"></span>
+		data-auto-id="contractNumber" [innerText]="'_Contract_' | i18n"></span>
 	</dt>
 	<dd>
 		<!--TODO: Link to contract details page -->
-		<a data-auto-id="contractNumber" *ngIf="rmaTableData.contractNumber; else unavailable"
+		<a  *ngIf="rmaTableData.contractNumber; else unavailable"
 			[innerText]="rmaTableData.contractNumber"></a>
 	</dd>
 </ng-template>
@@ -162,7 +162,7 @@
 <ng-template #detailsButton>
 	<div class="qtr-margin-top">
 		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
-			class="text-uppercase" [innerText]="'_ViewRMADetails_' | i18n"></button>
+			class="text-uppercase" data-auto-id="rmaViewDetButton" [innerText]="'_ViewRMADetails_' | i18n"></button>
 	</div>
 </ng-template>
 
