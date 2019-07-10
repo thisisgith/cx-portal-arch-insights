@@ -42,7 +42,7 @@
 					</dt>
 					<dd>
 						<span *ngIf="rmaTableData?.products[0]?.partsDescription; else unavailable"
-							[innerText]="rmaTableData.products[0].partsDescription"></span>
+						data-auto-id="rmaProductTable" [innerText]="rmaTableData.products[0].partsDescription"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"

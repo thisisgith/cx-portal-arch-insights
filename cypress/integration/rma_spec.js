@@ -19,7 +19,7 @@ describe('RMA Spec', () => {
 				.type(rmaVal.concat('{enter}'));
 
 			cy.wait('@rma').then(() => {
-				cy.getByAutoId('rmaStatus').should('exist');
+				cy.getByAutoId('rmaStatus').should('exist').should('contain', i18n._Status_);
 				cy.getByAutoId('rmaNumber').should('exist');
 				cy.getByAutoId('caseNumber').should('exist');
 				cy.getByAutoId('rmaTrackingNumber').should('exist');
@@ -33,15 +33,13 @@ describe('RMA Spec', () => {
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 			});
 			// Search
-			// cy.getByAutoId('searchHeader').should('exist').should('contain', i18n.header);
 			cy.getByAutoId('searchHeader').should('exist');
 			cy.getByAutoId('filterBy').should('exist');
 			cy.getByAutoId('relGenRes').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
-		// TODO: Unskip and refactor test once PBC-219 is merged
-		it.skip('RMA 800000000 four replacement parts', () => {
+		it('RMA 800000000 four replacement parts', () => {
 			// RMA with 4 replacement part PBC-171
 			// mock set at "RMA with four replacement parts"
 			cy.window().then(win => {
@@ -56,21 +54,23 @@ describe('RMA Spec', () => {
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(rmaVal.concat('{enter}'));
 			cy.wait('@rma').then(() => {
-				cy.get('app-rma-search').should('contain', 'RMA: '.concat(rmaVal));
-				cy.get('app-rma-search table th').eq(0).should('have.text', 'Status');
-				cy.get('app-rma-search table th').eq(1).should('have.text', 'Case Number');
-				cy.get('app-rma-search table th').eq(2).should('have.text', 'Carrier Tracking Number');
-				cy.get('app-rma-search table th').eq(3).should('have.text', 'Contract Number');
+				cy.getByAutoId('rmaStatus').should('exist').should('contain', i18n._Status_);
+				cy.getByAutoId('rmaNumber').should('exist');
+				cy.getByAutoId('caseNumber').should('exist');
 				// Confirm replacement product contains four product string
-				cy.get('app-rma-search table').within(() => {
-					cy.get('th').eq(4).should('have.text', 'Replacement Product');
-					cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 0');
-					cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 1');
-					cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 2');
-					cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 3');
-				});
-				cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
-				cy.get('h6').should('contain', 'Related to this Product');
+				cy.getByAutoId('rmaProductTable').should('exist'); // TODO start here
+				// cy.get('app-rma-search table').within(() => {
+				// 	cy.get('th').eq(4).should('have.text', 'Replacement Product');
+				// 	cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 0');
+				// 	cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 1');
+				// 	cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 2');
+				// 	cy.get('td').should('contain', '^Cisco ASR 920-12SZ-IM Router 3');
+				// });
+				cy.getByAutoId('rmaViewDetButton').should('exist');
+				// Search
+				cy.getByAutoId('searchHeader').should('exist');
+				cy.getByAutoId('filterBy').should('exist');
+				cy.getByAutoId('relGenRes').should('exist');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
 		});
