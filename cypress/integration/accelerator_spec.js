@@ -104,49 +104,54 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('Should be able to bookmark an ACC item', () => {
-			accItems.forEach((acc, index) => {
-				if (!acc.isFavorite && acc.status !== 'completed') {
-					cy.getByAutoId('ACCCardRibbon')
-						.eq(index)
-						.should('have.class', 'ribbon__clear')
-						.click();
-					cy.waitForAppLoading('accLoading', 5000);
-					cy.getByAutoId('ACCCardRibbon')
-						.eq(index)
-						.should('have.class', 'ribbon__blue');
-				}
+			cy.getByAutoId('accViewAllModal').within(() => {
+				accItems.forEach((acc, index) => {
+					if (!acc.isFavorite && acc.status !== 'completed') {
+						cy.getByAutoId('ACCCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__clear')
+							.click();
+						cy.waitForAppLoading('accLoading', 5000);
+						cy.getByAutoId('ACCCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__blue');
+					}
+				});
 			});
 		});
 
 		it('Should be able to UN-bookmark an ACC item', () => {
-			accItems.forEach((acc, index) => {
-				if (acc.isFavorite && acc.status !== 'completed') {
-					cy.getByAutoId('ACCCardRibbon')
-						.eq(index)
-						.should('have.class', 'ribbon__blue')
-						.click();
-					cy.waitForAppLoading('accLoading', 5000);
-					cy.getByAutoId('ACCCardRibbon')
-						.eq(index)
-						.should('have.class', 'ribbon__clear');
-				}
+			cy.getByAutoId('accViewAllModal').within(() => {
+				accItems.forEach((acc, index) => {
+					if (acc.isFavorite && acc.status !== 'completed') {
+						cy.getByAutoId('ACCCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__blue')
+							.click();
+						cy.waitForAppLoading('accLoading', 5000);
+						cy.getByAutoId('ACCCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__clear');
+					}
+				});
 			});
 		});
 
-		it.skip('Should NOT be able to bookmark a completed ACC item', () => {
-			// TODO: Fails due to PBC-299 http://swtg-jira-lnx.cisco.com:8080/browse/PBC-299
-			accItems.forEach((acc, index) => {
-				if (acc.status === 'completed') {
-					// For completed items, the ribbon is rendered behind the star, so force the click through
-					cy.getByAutoId('ACCCardRibbon')
-						.eq(index)
-						.click({ force: true });
-					cy.waitForAppLoading('accLoading', 5000);
-					// Ribbon should remain green
-					cy.getByAutoId('ACCCardRibbon')
-						.eq(index)
-						.should('have.class', 'ribbon__green');
-				}
+		it('Should NOT be able to bookmark a completed ACC item', () => {
+			cy.getByAutoId('accViewAllModal').within(() => {
+				accItems.forEach((acc, index) => {
+					if (acc.status === 'completed') {
+						// For completed items, the ribbon is behind the star, so force the click through
+						cy.getByAutoId('ACCCardRibbon')
+							.eq(index)
+							.click({ force: true });
+						cy.waitForAppLoading('accLoading', 5000);
+						// Ribbon should remain green
+						cy.getByAutoId('ACCCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__green');
+					}
+				});
 			});
 		});
 	});
