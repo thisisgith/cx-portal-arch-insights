@@ -6,6 +6,8 @@ const useCase = 'Wireless Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
 const accItems = accScenario.response.body.items;
 
+const i18n = require('../../src/assets/i18n/en-US.json');
+
 describe('Accelerator (ACC)', () => { // PBC-32
 	before(() => {
 		cy.login();
@@ -18,17 +20,17 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 	it('Renders Accelerator tile', () => {
 		cy.getByAutoId('Accelerator Panel').should('exist');
-		cy.getByAutoId('PanelTitle-_Accelerator_').should('have.text', 'Accelerator');
+		cy.getByAutoId('PanelTitle-_Accelerator_').should('have.text', i18n._Accelerator_);
 		cy.getByAutoId('recommendedACCTitle').should('have.text', 'Cisco DNA Center Project Planning');
-		cy.getByAutoId('recommendedACCWatchButton').should('have.text', 'Request a 1-on-1');
+		cy.getByAutoId('recommendedACCWatchButton').should('have.text', i18n._Request1on1_);
 		cy.getByAutoId('moreACCList').should('exist');
 		// No other data-auto-id's exist at this time
 	});
 
-	it('ACC tile has a view all link to display ACCs in card view', () => { // PBC-159
+	it.only('ACC tile has a view all link to display ACCs in card view', () => { // PBC-159
 		cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-		cy.get('.modal__header.acc__header').should('contain', 'Accelerator')
-			.and('contain', '1-on-1 Coaching to put you in the fast lane');
+		cy.get('.modal__header.acc__header').should('contain', i18n._Accelerator_)
+			.and('contain', i18n._1on1Coaching_);
 		cy.getByAutoId('ACCTopicsAvailable').should(
 			'have.text', `${accItems.length} topics available for ${solution} > ${useCase}:`
 		);
@@ -49,11 +51,11 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						break;
 					case 'in-progress':
 						cy.getByAutoId('ACCCardFooter')
-							.should('contain', 'Your CSE will be in touch shortly');
+							.should('contain', i18n._CSETouch_);
 						break;
 					default:	// Default: recommended
 						cy.getByAutoId('Reqest1on1Button')
-							.should('contain', 'Request a 1-on-1')
+							.should('contain', i18n._Request1on1_)
 							.parent()
 							.should('have.attr', 'href', acc.url);
 				}
