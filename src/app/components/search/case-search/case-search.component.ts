@@ -15,13 +15,13 @@ import * as _ from 'lodash-es';
  * TODO: Get definitive list of possible statuses/icons
  */
 enum StatusIconMap {
-	'Cisco Pending' = 'icon-time text-warning-alt',
-	'Close Pending' = 'icon-time text-success',
-	Closed = 'icon-check text-dkgray-4',
-	'Customer Pending' = 'icon-time text-primary',
-	'Customer Requested Closure' = 'icon-time text-dkgray-4',
-	'Release Pending' = 'icon-time text-turquoise',
-	'Service Order Pending' = 'icon-time text-warning',
+	'CISCO PENDING' = 'icon-time text-warning-alt',
+	'CLOSE PENDING' = 'icon-time text-success',
+	CLOSED = 'icon-check text-dkgray-4',
+	'CUSTOMER PENDING' = 'icon-time text-primary',
+	'CUSTOMER REQUESTED CLOSURE' = 'icon-time text-dkgray-4',
+	'RELEASE PENDING' = 'icon-time text-turquoise',
+	'SERVICE ORDER PENDING' = 'icon-time text-warning',
 }
 
 /**
@@ -204,7 +204,8 @@ implements OnInit, OnDestroy, OnChanges {
 		}
 		this.case.severity = caseDetails.priority;
 		this.case.status = caseDetails.status;
-		this.statusIcon = StatusIconMap[_.get(this.case, 'status', 'Customer Pending')];
+		this.statusIcon = StatusIconMap[<string> _.get(this.case, 'status', 'CUSTOMER PENDING')
+			.toUpperCase()];
 		this.case.summary = caseDetails.summary;
 		if (!this.case.description && this.case.summary) {
 			const splitSummary = this.case.summary.split(' ');

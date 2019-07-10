@@ -27,15 +27,15 @@ import { SearchQuery } from '@interfaces';
  * TODO: Get definitive list of possible statuses/colors
  */
 enum StatusColorMap {
-	Active = 'text-success',
-	Entered = 'text-turquoise',
-	Expired = 'text-dkgray-4',
-	Inactive = 'text-dkgray-4',
-	Overdue = 'text-warning',
-	'QA Hold' = 'text-warning-alt',
-	Service = 'text-info',
-	Signed = 'text-info',
-	Terminated = 'text-danger',
+	ACTIVE = 'text-success',
+	ENTERED = 'text-turquoise',
+	EXPIRED = 'text-dkgray-4',
+	INACTIVE = 'text-dkgray-4',
+	OVERDUE = 'text-warning',
+	'QA HOLD' = 'text-warning-alt',
+	SERVICE = 'text-info',
+	SIGNED = 'text-info',
+	TERMINATED = 'text-danger',
 }
 
 /**
@@ -92,8 +92,9 @@ export class ContractSearchComponent extends SpecialSearchComponent
 			this.loading = false;
 			this.contractData = result ? result.data[0] : null;
 			if (this.contractData) {
-				this.statusColor = StatusColorMap
-					[<string> _.get(this.contractData, 'contractStatus', 'Inactive')];
+				// tslint:disable-next-line: ter-max-len max-line-length
+				this.statusColor = StatusColorMap[<string> _.get(this.contractData, 'contractStatus', 'INACTIVE')
+					.toUpperCase()];
 			} else {
 				this.hide.emit(true);
 			}
