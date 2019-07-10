@@ -78,7 +78,8 @@
 					<div class="flex-center-vertical">
 						<span [innerText]="'_Assets_' | i18n" class="text-large"></span>
 						<span *ngIf="pagination" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
-							class="qtr-margin-left text-small text-muted">
+							class="qtr-margin-left text-small text-muted"
+							data-auto-id="ShowingAssetsCount">
 						</span>
 						<span *ngIf="selected > 0">
 							<span class="text-small text-muted qtr-margin-left qtr-margin-right">|</span>

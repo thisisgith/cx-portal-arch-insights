@@ -49,6 +49,28 @@ export class AssetsBarChartComponent implements OnInit {
 
 		this.chart = new Chart({
 			chart: {
+				events: {
+					load: () => {
+						if (window.Cypress) {
+							// Hack to allow Cypress to click on highcharts series
+							_.each(this.chart.ref.series, chartSeries => {
+								_.each(chartSeries.points, point => {
+									point.graphic.element.setAttribute(
+										'data-auto-id', `${point.name}Point`,
+									);
+									// When a "normal" click event fires,
+									// turn it into a highcharts point event instead
+									point.graphic.element.addEventListener('click', () => {
+										const event = Object.assign(
+											new MouseEvent('click'), { point },
+										);
+										point.firePointEvent('click', event);
+									});
+								});
+							});
+						}
+					},
+				},
 				height: 100,
 				type: 'bar',
 				width: 300,
@@ -75,6 +97,12 @@ export class AssetsBarChartComponent implements OnInit {
 			],
 			title: {
 				text: null,
+			},
+			tooltip: { // Add data-auto-id to the default tooltip format
+				footerFormat: '</div>',
+				headerFormat: '<div data-auto-id="{point.key}Tooltip">' +
+					'<span style="font-size: 10px">{point.key}</span><br/>',
+				useHTML: true,
 			},
 			xAxis: {
 				categories,

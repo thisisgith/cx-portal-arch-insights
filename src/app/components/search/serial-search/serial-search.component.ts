@@ -91,9 +91,9 @@ implements OnInit, OnChanges, OnDestroy {
 	@Input('serialNumber') public serialNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
-	public loadingContractData = true;
-	public loadingAlertsData = true;
-	public loadingCaseData = true;
+	public loadingContract = true;
+	public loadingAlerts = true;
+	public loadingCase = true;
 	public customerId = '2431199';
 	public data: SerialData;
 	public contractData: ContractData;
@@ -149,13 +149,13 @@ implements OnInit, OnChanges, OnDestroy {
 		/** Contract Data Refresh */
 		this.refresh$.pipe(
 			tap(() => {
-				this.loadingContractData = true;
+				this.loadingContract = true;
 			}),
 			switchMap(() => this.getContractData(this.customerId, this.serialNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(response => {
-			this.loadingContractData = false;
+			this.loadingContract = false;
 			this.contractData = {
 				contractNum: _.get(response, ['data', 0, 'contractNumber'], null),
 				cxLevel: _.get(response, ['data', 0, 'cxLevel'], null),
@@ -167,14 +167,14 @@ implements OnInit, OnChanges, OnDestroy {
 		/** Alerts Data Refresh */
 		this.refresh$.pipe(
 			tap(() => {
-				this.loadingAlertsData = true;
+				this.loadingAlerts = true;
 				this.alertsData = null;
 			}),
 			switchMap(() => this.getAlertsData(this.customerId, this.serialNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(response => {
-			this.loadingAlertsData = false;
+			this.loadingAlerts = false;
 			this.alertsData = {
 				bugs: _.get(response, 'bugs', null),
 				fieldNotices: _.get(response, 'field-notices', null),
@@ -184,7 +184,7 @@ implements OnInit, OnChanges, OnDestroy {
 		/** Get Open Case/Open RMA Counts */
 		this.refresh$.pipe(
 			tap(() => {
-				this.loadingCaseData = true;
+				this.loadingCase = true;
 				this.caseData = null;
 			}),
 			switchMap(() => this.getCaseData(this.serialNumber.query)),

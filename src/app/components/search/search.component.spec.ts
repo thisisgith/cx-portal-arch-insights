@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { GeneralSearchComponent } from './general-search/general-search.component';
 import { SearchComponent } from './search.component';
 import { SearchModule } from './search.module';
 import { CaseService } from '@cui-x/services';
@@ -145,7 +144,7 @@ describe('SearchComponent', () => {
 			},
 		});
 		fixture.detectChanges();
-		const general = fixture.debugElement.query(By.directive(GeneralSearchComponent));
+		const general = fixture.debugElement.query(By.css('#generalContainer'));
 		expect(general.nativeElement.hidden)
 			.toBeFalsy();
 	});
@@ -164,7 +163,7 @@ describe('SearchComponent', () => {
 			hide: true,
 		});
 		fixture.detectChanges();
-		const general = fixture.debugElement.query(By.directive(GeneralSearchComponent));
+		const general = fixture.debugElement.query(By.css('#generalContainer'));
 		expect(general.nativeElement.hidden)
 			.toBeTruthy();
 	});

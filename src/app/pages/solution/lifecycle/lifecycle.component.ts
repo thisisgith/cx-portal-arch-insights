@@ -287,6 +287,9 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		this.status.loading.acc = true;
+		if (window.Cypress) {
+			window.accLoading = true;
+		}
 		const bookmarkParam: ACCBookmarkSchema = {
 			customerId: this.customerId,
 			isFavorite: !item.isFavorite,
@@ -301,10 +304,16 @@ export class LifecycleComponent implements OnDestroy {
 		this.contentService.updateACCBookmark(params)
 		.subscribe(() => {
 			this.status.loading.acc = false;
+			if (window.Cypress) {
+				window.accLoading = false;
+			}
 			item.isFavorite = !item.isFavorite;
 		},
 		err => {
 			this.status.loading.acc = false;
+			if (window.Cypress) {
+				window.accLoading = false;
+			}
 			this.logger.error(`lifecycle.component : setFavorite() :: Error  : (${
 				err.status}) ${err.message}`);
 		});

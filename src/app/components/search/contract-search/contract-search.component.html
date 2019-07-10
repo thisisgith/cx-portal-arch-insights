@@ -9,21 +9,23 @@
 <div *ngIf="!loading">
 	<div class="half-margin-bottom">
 		<dl class="dl--inline">
-			<dt>
-				<span class="flex-inline-center-vertical qtr-margin-right icon-tiny icon-circle" [ngClass]="statusColor"></span>
-				<span class="flex-inline-center-vertical text-dkgray-4 text-small" [innerText]="'_StatusX_' | i18n:contractData?.contractStatus"></span>
+			<dt class="flex-center-inline-vertical">
+				<span class="qtr-margin-right icon-small icon-circle" [ngClass]="statusColor"></span>
+				<span class="text-muted" [innerText]="('_Status_' | i18n) + ':'"></span>
+				<span class="qtr-margin-left text-muted" *ngIf="contractData?.contractStatus; else unavailable"
+					[innerText]="contractData.contractStatus"></span>
 			</dt>
 		</dl>
 	</div>
-	<h4 class="qtr-margin-top qtr-margin-bottom" [innerText]="'_ContractX_' | i18n:contractNumber.query"></h4>
+	<h3 class="qtr-margin-top qtr-margin-bottom" [innerText]="'_ContractX_' | i18n:contractNumber.query"></h3>
 	<div class="row half-margin-top">
 		<div class="col-md-3">
 			<dl class="dl--inline-medium">
 				<dt>
-					<span class="text-muted text-small" [innerText]="'_Type_' | i18n | uppercase"></span>
+					<span class="subheading text-small text-uppercase" [innerText]="'_Type_' | i18n"></span>
 				</dt>
 				<dd>
-					<span [innerText]="contractData?.cxLevel"></span>
+					<span *ngIf="contractData?.cxLevel; else unavailable" [innerText]="contractData.cxLevel"></span>
 					<span class="qtr-margin-left icon-small icon-info-circle text-muted"
 						(mouseenter)="showCxInfo = true" (mouseleave)="showCxInfo = false"></span>
 					<div *ngIf="showCxInfo" class="toast toast--loose">
@@ -55,35 +57,38 @@
 					</div>
 				</dd>
 				<dt>
-					<span class="text-muted text-small" [innerText]="'_StartDate_' | i18n | uppercase"></span>
+					<span class="subheading text-small text-uppercase" [innerText]="'_StartDate_' | i18n"></span>
 				</dt>
 				<dd>
-					<span [innerText]="contractData?.contractStartDate | date:'dd-MMM-y'"></span>
+					<span *ngIf="contractData?.contractStartDate; else unavailable"
+						[innerText]="contractData.contractStartDate | date:'dd-MMM-y'"></span>
 				</dd>
 			</dl>
 		</div>
 		<div class="col-md-3">
 			<dl class="dl--inline-medium">
 				<dt>
-					<span class="text-muted text-small" [innerText]="'_ExpirationDate_' | i18n | uppercase"></span>
+					<span class="subheading text-small text-uppercase" [innerText]="'_ExpirationDate_' | i18n"></span>
 				</dt>
 				<dd>
-					<span [innerText]="contractData?.contractEndDate | date:'dd-MMM-y'"></span>
-					<span class="qtr-margin-left" [innerText]="'(' + (contractData?.contractEndDate | fromNow) + ')'"></span>
+					<span *ngIf="contractData?.contractEndDate; else unavailable"
+						[innerText]="contractData.contractEndDate | date:'dd-MMM-y'"></span>
+					<span *ngIf="contractData?.contractEndDate" class="qtr-margin-left"
+						[innerText]="'(' + (contractData?.contractEndDate | fromNow) + ')'"></span>
 				</dd>
 				<dt>
-					<span class="text-muted text-small" [innerText]="'_AssetsCovered_' | i18n | uppercase"></span>
+					<span class="subheading text-small text-uppercase" [innerText]="'_AssetsCovered_' | i18n"></span>
 				</dt>
 				<dd>
-					<span *ngIf="coverageCount !== null; else loadingCoverages" [innerText]="coverageCount"></span>
+					<span *ngIf="coverageCount; else loadingCoveragesTemplate" [innerText]="coverageCount"></span>
 				</dd>
 			</dl>
 		</div>
 	</div>
 </div>
 
-<ng-template #loadingCoverages>
-	<span *ngIf="loadingCoveragesData; else unavailable" class="base-margin"></span>
+<ng-template #loadingCoveragesTemplate>
+	<span *ngIf="loadingCoverages; else unavailable" class="base-margin"></span>
 </ng-template>
 
 <ng-template #unavailable>
