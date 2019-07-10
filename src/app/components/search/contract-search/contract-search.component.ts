@@ -22,6 +22,10 @@ import { SpecialSearchComponent } from '../special-search/special-search.compone
 import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@sdp-api';
 import { SearchQuery } from '@interfaces';
 
+/**
+ * Mapping of Contract statuses to status colors
+ * TODO: Get definitive list of possible statuses/colors
+ */
 enum StatusColorMap {
 	Active = 'text-success',
 	Entered = 'text-turquoise',
@@ -53,7 +57,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	@Input('contractNumber') public contractNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
-	public loadingCoveragesData = true;
+	public loadingCoverages = true;
 	public contractData: DeviceContractInfo;
 	public coverageCount: number;
 	public statusColor: StatusColorMap;
@@ -97,7 +101,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 		/** Get contract coverages */
 		this.refresh$.pipe(
 			tap(() => {
-				this.loadingCoveragesData = true;
+				this.loadingCoverages = true;
 			}),
 			switchMap(() => this.getCoverages(this.contractNumber.query, this.customerId)),
 			takeUntil(this.destroy$),
@@ -108,7 +112,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 
 				return;
 			}
-			this.loadingCoveragesData = false;
+			this.loadingCoverages = false;
 			this.coverageCount = _.toNumber(result.headers.get('X-API-RESULT-COUNT'));
 		});
 
