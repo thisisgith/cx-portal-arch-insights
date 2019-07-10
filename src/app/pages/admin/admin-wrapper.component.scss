@@ -1,0 +1,22 @@
+:host {
+	.admin-container {
+		position: relative;
+		left: 80px;
+		width: calc(100vw - 80px);
+		top: 55px;
+	}
+
+	.sidebar {
+		top: 110px;
+	}
+
+	.icon-close {
+		cursor: pointer;
+	}
+
+	.header {
+		position: fixed;
+		left: 0;
+		right: 0;
+	}
+}
