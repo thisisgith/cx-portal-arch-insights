@@ -294,7 +294,10 @@ $vibblue: #017cad;
 			left: -480px;
 		}
 
-		&-moreACCList,
+		&-moreACCList {
+			top: -90px;
+		}
+		
 		&-learningHoverModal {
 			top: -90px;
 
