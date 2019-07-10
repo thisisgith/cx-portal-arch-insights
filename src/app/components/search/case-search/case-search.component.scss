@@ -5,25 +5,9 @@
 }
 
 h3 {
-	font-weight: $h4-font-weight;
+	font-weight: $base-font-weight;
 }
 
-.severityRectangle {
-	vertical-align: text-top;
-}
-
-.statusRed {
-	fill: #e2231a;
-}
-
-.statusOrange {
-	fill: #fbab18;
-}
-
-.statusYellow {
-	fill: #fc0;
-}
-
-.statusBlue {
-	fill: #64bbe3;
+dt {
+	font-weight: $base-font-weight;
 }

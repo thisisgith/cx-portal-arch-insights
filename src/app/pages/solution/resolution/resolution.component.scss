@@ -1,1 +1,43 @@
-/* Empty SCSS Component File */
+/* SCSS Component File */
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.base-list {
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+}
+
+#input-type-search {
+	background-color: $light-gray-3;
+}
+
+.dot {
+	height: 12px;
+	width: 12px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.line-divider {
+	border-bottom: 2px solid $light-gray-3;// rgb(220,220,220);
+}
+
+.fixed-position {
+	position: fixed;
+}
+
+.warning-alt {
+	background-color: $status-yellow;
+}
+
+.danger {
+	background-color: $accent-red;
+}
+
+.warning {
+	background-color: $status-orange;
+}
+
+.info {
+	background-color: $cisco-blue;
+}

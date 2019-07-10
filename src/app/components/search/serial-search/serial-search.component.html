@@ -13,7 +13,7 @@
 			<div class="col-md-6 dbl-margin-right">
 				<dl class="dl--inline-medium">
 					<dt>
-						<span class="subheading text-small text-uppercase left-header" 
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_Product_' | i18n"></span>
 					</dt>
 					<dd>
@@ -21,31 +21,31 @@
 							[innerText]="data.productName"></span>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase left-header"
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_SupportCoverage_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="contractData?.cxLevel; else loadingContract"
+						<span *ngIf="contractData?.cxLevel; else loadingContractTemplate"
 							[innerText]="contractData.cxLevel"></span>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase left-header"
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_Contract_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="contractNumber" *ngIf="contractData?.contractNum; else loadingContract"
+						<a data-auto-id="contractNumber" *ngIf="contractData?.contractNum; else loadingContractTemplate"
 							[innerText]="contractData.contractNum"></a>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase left-header" [innerText]="'_ExpirationDate_' | i18n"></span>
+						<span class="subheading text-small text-uppercase" [innerText]="'_ExpirationDate_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="contractData?.expirationDate; else loadingContract" class="qtr-margin-right"
+						<span *ngIf="contractData?.expirationDate; else loadingContractTemplate" class="qtr-margin-right"
 							[innerText]="contractData.expirationDate | date:'dd-MMM-y'"></span>
 						<span *ngIf="expirationFromNow" [innerText]="'(' + expirationFromNow + ')'"></span>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase left-header" 
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_SoftwareTypeOS_' | i18n"></span>
 					</dt>
 					<dd>
@@ -53,7 +53,7 @@
 							[innerText]="data.softwareType"></a>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase left-header"
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_CurrentVersion_' | i18n"></span>
 					</dt>
 					<dd>
@@ -65,43 +65,43 @@
 			<div class="col-md-4">
 				<dl class="dl--inline-medium">
 					<dt>
-						<span class="subheading text-small text-uppercase left-header"
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_OpenCases_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="openCases" *ngIf="data?.openCase; else unavailable"
-							[innerText]="data.openCase"></a>
+						<a data-auto-id="openCases" *ngIf="caseData; else loadingCaseTemplate"
+							[innerText]="caseData.openCases"></a>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase left-header"
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_OpenRMAs_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="data?.openRmas; else unavailable"
-							[innerText]="data.openRmas"></span>
+						<span *ngIf="caseData; else loadingCaseTemplate"
+							[innerText]="caseData.openRmas"></span>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase left-header"
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_RelatedFieldNotices_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="relatedFieldNotices" *ngIf="alertsData?.fieldNotices; else loadingAlerts"
+						<a data-auto-id="relatedFieldNotices" *ngIf="alertsData?.fieldNotices !== null; else loadingAlertsTemplate"
 							[innerText]="alertsData.fieldNotices"></a>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase left-header"
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_RelatedSecurityAdvisories_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="relatedSecurityAdvisories" *ngIf="alertsData?.securityAdvisories; else loadingAlerts"
+						<a data-auto-id="relatedSecurityAdvisories" *ngIf="alertsData?.securityAdvisories !== null; else loadingAlertsTemplate"
 							[innerText]="alertsData.securityAdvisories"></a>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase left-header"
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_RelatedBugs_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="relatedBugs" *ngIf="alertsData?.bugs; else loadingAlerts"
+						<a data-auto-id="relatedBugs" *ngIf="alertsData?.bugs !== null; else loadingAlertsTemplate"
 							[innerText]="alertsData.bugs"></a>
 					</dd>
 				</dl>
@@ -117,7 +117,7 @@
 						</div>
 						<dl class="col-md-6 dl--inline-medium">
 							<dt>
-								<span class="subheading text-small text-uppercase left-header"
+								<span class="subheading text-small text-uppercase"
 									[innerText]="'_ProductID_' | i18n"></span>
 							</dt>
 							<dd>
@@ -125,7 +125,7 @@
 									[innerText]="data.productId"></span>
 							</dd>
 							<dt>
-								<span class="subheading text-small text-uppercase left-header"
+								<span class="subheading text-small text-uppercase"
 									[innerText]="'_ProductSeries_' | i18n"></span>
 							</dt>
 							<dd>
@@ -133,7 +133,7 @@
 									[innerText]="data.productSeries"></span>
 							</dd>
 							<dt>
-								<span class="subheading text-small text-uppercase left-header"
+								<span class="subheading text-small text-uppercase"
 									[innerText]="'_IPAddress_' | i18n"></span>
 							</dt>
 							<dd>
@@ -141,7 +141,7 @@
 									[innerText]="data.ipAddress"></span>
 							</dd>
 							<dt>
-								<span class="subheading text-small text-uppercase left-header"
+								<span class="subheading text-small text-uppercase"
 									[innerText]="'_HostName_' | i18n"></span>
 							</dt>
 							<dd>
@@ -162,18 +162,16 @@
 	</div>
 </div>
 
-<ng-template #loadingContract>
-	<span *ngIf="loadingContractData; else unavailable" class="base-margin"></span>
+<ng-template #loadingContractTemplate>
+	<span *ngIf="loadingContract; else unavailable" class="base-margin"></span>
 </ng-template>
 
-<ng-template #loadingAlerts>
-	<span *ngIf="loadingAlertsData; else unavailable" class="base-margin"></span>
+<ng-template #loadingAlertsTemplate>
+	<span *ngIf="loadingAlerts; else unavailable" class="base-margin"></span>
 </ng-template>
 
-<ng-template #loadingCase>
-	<cui-loader color="muted"
-		*ngIf="loadingCaseData; else unavailable">
-	</cui-loader>
+<ng-template #loadingCaseTemplate>
+	<span *ngIf="loadingCase; else unavailable" class="base-margin"></span>
 </ng-template>
 
 <ng-template #unavailable>
