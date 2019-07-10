@@ -18,6 +18,23 @@ const caseDetailsResponse = {
 	trackingNumber: '',
 };
 
+/** Mock data for valid CSOne Case Details API results with no description. */
+const caseDetailsResponseAlt = {
+	caseNumber: '688296392',
+	contractId: '912512343',
+	createdDate: '22 Apr 2019 07:50 AM PST',
+	description: '',
+	hostName: 'SJ-BLD3-02-147',
+	ownerEmail: 'testUser@cisco.com',
+	ownerName: '',
+	priority: '3',
+	rmaNumber: '88346234, 88346235',
+	serialNumber: 'FOX1306GFKH',
+	status: 'Customer Pending',
+	summary: 'Router not working',
+	trackingNumber: '',
+};
+
 /** Mock data for valid CSOne Case Notes API results */
 const caseNotesResponse = [
 	// tslint:disable:max-line-length ter-max-len
@@ -366,7 +383,7 @@ export const CaseScenarios = [
 						body: caseNotesResponse,
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 			],
 		},
@@ -384,11 +401,28 @@ export const CaseScenarios = [
 						body: caseSummaryResponse,
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 			],
 		},
 		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O,C&pageSize=1&page=1&sortBy=caseNumber&sortOrder=ASC&caseNumbers=688296392`,
+		usecases: ['Use Case 1'],
+	},
+	// Valid Case Details with no Description
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Case Details',
+					response: {
+						body: caseDetailsResponseAlt,
+						status: 200,
+					},
+					selected: false,
+				},
+			],
+		},
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case List - Page 1

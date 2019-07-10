@@ -1,11 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { RMASearchComponent } from './rma-search.component';
 import { RMASearchModule } from './rma-search.module';
 import { RMAScenarios } from '@mock';
 import { RMAService } from '@services';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('RMASearchComponent', () => {
 	let component: RMASearchComponent;
@@ -39,6 +40,7 @@ describe('RMASearchComponent', () => {
 			.and
 			.returnValue(of(RMAScenarios[0].scenarios.GET[0].response.body));
 		component.rmaNumber = { query: defaultRmaNumber };
+		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(service.getByNumber)
 			.toHaveBeenCalled();
@@ -50,6 +52,22 @@ describe('RMASearchComponent', () => {
 			.returnValue(of(RMAScenarios[0].scenarios.GET[3].response.body));
 		spyOn(component.hide, 'emit');
 		component.rmaNumber = { query: '8000000001' };
+		component.ngOnChanges();
+		fixture.detectChanges();
+		expect(component.hide.emit)
+			.toHaveBeenCalled();
+	});
+
+	it('should emit a hide event on error', () => {
+		spyOn(service, 'getByNumber')
+			.and
+			.returnValue(throwError(new HttpErrorResponse({
+				status: 404,
+				statusText: 'Resource not found',
+			})));
+		spyOn(component.hide, 'emit');
+		component.rmaNumber = { query: '8000000001' };
+		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(component.hide.emit)
 			.toHaveBeenCalled();
@@ -62,6 +80,7 @@ describe('RMASearchComponent', () => {
 			.returnValue(of(RMAScenarios[0].scenarios.GET[0].response.body));
 		spyOn(component.toggleGeneralSearch, 'emit');
 		component.rmaNumber = { query: defaultRmaNumber };
+		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(component.toggleGeneralSearch.emit)
 			.toHaveBeenCalledWith({
@@ -75,4 +94,5 @@ describe('RMASearchComponent', () => {
 		expect(component.toggleGeneralSearch.emit)
 			.toHaveBeenCalledTimes(2);
 	});
+
 });

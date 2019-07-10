@@ -8,7 +8,8 @@ describe('Case Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Case Search', () => {
+		// TODO: Unskip and refactor test once PBC-219 is merged
+		it.skip('Case Search', () => {
 			// PBC-169
 			const caseVal = '688296392'; // '686569178' '688296392' also works
 			cy.server();
