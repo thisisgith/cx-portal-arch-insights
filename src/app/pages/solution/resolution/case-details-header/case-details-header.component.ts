@@ -1,5 +1,5 @@
 import { Component, ViewChild, TemplateRef } from '@angular/core';
-import { CaseService, CaseDetails } from '@cui-x/services';
+import { CaseService } from '@cui-x/services';
 import { RMAService } from '@services';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -17,7 +17,7 @@ import * as _ from 'lodash-es';
 })
 export class CaseDetailsHeaderComponent {
 
-	public caseDetails: CaseDetails;
+	public caseDetails: any;
 	public isAddNoteClicked = false;
 	public isRMAClicked = false;
 	public rma: FormControl = new FormControl('');
@@ -45,7 +45,7 @@ export class CaseDetailsHeaderComponent {
 	public getCaseDetails () {
 		return this.caseService.fetchCaseDetails('686569635')
 			.subscribe(
-				(response: CaseDetails) => {
+				(response: any) => {
 					this.caseDetails = response;
 				});
 	}
