@@ -300,12 +300,12 @@
 	</div>
 	<div class="base-padding-bottom" [attr.data-auto-id]="autoid">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:1:3">
-			<div id="moreAccList-item" class="panel no-padding-top no-padding-left no-padding-right">
+			<div id="moreAccList-item" class="small-panel">
 				<div class="row">
 					<div class="col-md-11 text-blue" [innerText]="item.title"></div>
 					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'"></div>
 					<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite"></div>
-					<div class="col-md-1 progressbar qtr-margin-top" data-percentage="33" *ngIf="item.status === 'in-progress'">
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'in-progress'">
 						<div class="col-md-1 progressbar__fill"></div>
 					</div>
 				</div>
@@ -383,7 +383,7 @@
 	</div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<div id="recommended-elearning-item" class=" panel learning-panel">
+			<div id="recommended-elearning-item" class=" panel small-panel">
 				<a class="no-link fade-in-pop" target="_blank" [href]="item.url">
 					<span class="text-blue" [innerText]="item.title"></span>
 				</a>
