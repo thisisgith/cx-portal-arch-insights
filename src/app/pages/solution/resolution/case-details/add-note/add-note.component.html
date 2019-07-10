@@ -1,0 +1,35 @@
+<div class="absolute add-notes  base-padding-bottom">
+	<cui-spinner *ngIf="loading"></cui-spinner>
+	<form *ngIf="!loading" class="base-margin-top" [formGroup]="notesForm" novalidate>
+		<div class="col-md-12">
+			<div class="form-group">
+				<div class="form-group__text">
+					<textarea autofocus formControlName="title" #title id="add-note-title" class="textarea" rows="2"
+						data-auto-id="title"></textarea>
+					<label for="add-note-title">{{'_RMACaseSummaryTitle_'| i18n}}</label>
+				</div>
+				<div class="help-block text-muted" role="alert">
+					<span>{{title.value.length}}/{{titleMaxLength}} {{'_RMACharacters_' | i18n}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="form-group">
+				<div class="form-group__text">
+					<textarea formControlName="description" #description id="add-note-description" class="textarea"
+						rows="5" data-auto-id="description"></textarea>
+					<label for="add-note-description">{{'_RMACaseDescription_'| i18n}}</label>
+				</div>
+				<div class="help-block text-muted" role="alert">
+					<span>{{description.value.length}}/{{descriptionMaxLength}} {{'_RMACharacters_' | i18n}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<button data-auto-id="AddNote" class="btn btn--secondary btn--small" [innerText]="'_RMACaseAdd_' | i18n"
+				(click)="addCaseNote()"></button>
+			<button data-auto-id="CancelAddNote" class="btn btn--small" (click)="hide()"
+				[innerText]="'_RMACaseCancel_' | i18n"></button>
+		</div>
+	</form>
+</div>

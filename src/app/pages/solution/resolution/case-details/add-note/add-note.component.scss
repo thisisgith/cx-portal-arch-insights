@@ -1,0 +1,30 @@
+.add-notes {
+	z-index: 200;
+	top: 21px;
+	width: 100%;
+	border: 1px solid #d6d6d6;
+	background-color: #fff;
+	left: 0;
+
+	&::before {
+		border-color: transparent transparent #fff #fff;
+		border-style: solid;
+		border-width: 7px;
+		bottom: 7px;
+		box-shadow: -1px 1px 2px 0 rgba(0, 0, 0, 0.1);
+		box-sizing: border-box;
+		content: "";
+		display: block;
+		height: 0;
+		position: relative;
+		transform: rotate(135deg);
+		transform-origin: center center;
+		width: 0;
+		right: 60px;
+		float: right;
+	}
+
+	& > div {
+		padding: 10px;
+	}
+}

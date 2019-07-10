@@ -1,3 +1,14 @@
+<input data-auto-id="Sample360" type="checkbox" [(ngModel)]="openPanel" />
+
+<app-panel360 [hidden]="!openPanel"
+	[fullscreen]="fullscreen">
+	<app-panel360-header (close)="openPanel = false"
+		[(fullscreen)]="fullscreen">
+		<app-case-details-header ></app-case-details-header>
+	</app-panel360-header>
+	<app-case-details></app-case-details>
+</app-panel360>
+
 <div class="row align-items-center justify-content-between">
 	<div class="col-auto text-large">
 		<span [innerText]="'_RMACases_' | i18n"></span>

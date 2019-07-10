@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
@@ -57,21 +57,22 @@ describe('ResolutionComponent', () => {
 			.toHaveBeenCalledTimes(2);
 	});
 
-	it('should show invalid input on bad casenum', () => {
-		const input = fixture.debugElement.query(By.css('input'));
+	it('should show invalid input on bad casenum', fakeAsync(() => {
+		const input = fixture.debugElement.query(By.css('#input-type-search'));
 		const form = fixture.debugElement.query(By.css('form'));
 		const el = input.nativeElement;
-		el.value = '123';
+		el.value = 'abc';
 		el.dispatchEvent(new Event('input'));
 		form.nativeElement
 			.dispatchEvent(new Event('submit'));
+		tick();
 		fixture.detectChanges();
 		// Expect only the 1 initial search on page load
 		expect(service.read)
 			.toHaveBeenCalledTimes(1);
 		expect(component.isSearchCaseFormInvalid)
 			.toBeTruthy();
-	});
+	}));
 
 	it('should submit valid casenum search', () => {
 		const input = fixture.debugElement.query(By.css('input'));
@@ -91,13 +92,13 @@ describe('ResolutionComponent', () => {
 
 	it('should give the correct severity color', () => {
 		expect(component.getSeverityColor('1'))
-			.toEqual('red');
+			.toEqual('danger');
 		expect(component.getSeverityColor('2'))
-			.toEqual('orange');
+			.toEqual('warning');
 		expect(component.getSeverityColor('3'))
-			.toEqual('yellow');
+			.toEqual('warning-alt');
 		expect(component.getSeverityColor('4'))
-			.toEqual('blue');
+			.toEqual('info');
 		expect(component.getSeverityColor('42'))
 			.toEqual(undefined);
 	});
