@@ -13,7 +13,7 @@
 			<div class="col-md-6 dbl-margin-right">
 				<dl class="dl--inline-medium">
 					<dt>
-						<span class="subheading text-small text-uppercase" 
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_Product_' | i18n"></span>
 					</dt>
 					<dd>
@@ -45,7 +45,7 @@
 						<span *ngIf="expirationFromNow" [innerText]="'(' + expirationFromNow + ')'"></span>
 					</dd>
 					<dt>
-						<span class="subheading text-small text-uppercase" 
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_SoftwareTypeOS_' | i18n"></span>
 					</dt>
 					<dd>
@@ -69,23 +69,23 @@
 							[innerText]="'_OpenCases_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="openCases" *ngIf="data?.openCase; else unavailable"
-							[innerText]="data.openCase"></a>
+						<a data-auto-id="openCases" *ngIf="caseData; else loadingCaseTemplate"
+							[innerText]="caseData.openCases"></a>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
 							[innerText]="'_OpenRMAs_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="data?.openRmas; else unavailable"
-							[innerText]="data.openRmas"></span>
+						<span *ngIf="caseData; else loadingCaseTemplate"
+							[innerText]="caseData.openRmas"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
 							[innerText]="'_RelatedFieldNotices_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="relatedFieldNotices" *ngIf="alertsData?.fieldNotices; else loadingAlertsTemplate"
+						<a data-auto-id="relatedFieldNotices" *ngIf="alertsData?.fieldNotices !== null; else loadingAlertsTemplate"
 							[innerText]="alertsData.fieldNotices"></a>
 					</dd>
 					<dt>
@@ -93,7 +93,7 @@
 							[innerText]="'_RelatedSecurityAdvisories_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="relatedSecurityAdvisories" *ngIf="alertsData?.securityAdvisories; else loadingAlertsTemplate"
+						<a data-auto-id="relatedSecurityAdvisories" *ngIf="alertsData?.securityAdvisories !== null; else loadingAlertsTemplate"
 							[innerText]="alertsData.securityAdvisories"></a>
 					</dd>
 					<dt>
@@ -101,7 +101,7 @@
 							[innerText]="'_RelatedBugs_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="relatedBugs" *ngIf="alertsData?.bugs; else loadingAlertsTemplate"
+						<a data-auto-id="relatedBugs" *ngIf="alertsData?.bugs !== null; else loadingAlertsTemplate"
 							[innerText]="alertsData.bugs"></a>
 					</dd>
 				</dl>
@@ -171,9 +171,7 @@
 </ng-template>
 
 <ng-template #loadingCaseTemplate>
-	<cui-loader color="muted"
-		*ngIf="loadingCase; else unavailable">
-	</cui-loader>
+	<span *ngIf="loadingCase; else unavailable" class="base-margin"></span>
 </ng-template>
 
 <ng-template #unavailable>
