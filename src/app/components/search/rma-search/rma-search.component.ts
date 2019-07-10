@@ -34,6 +34,15 @@ interface RmaTableData {
 }
 
 /**
+ * Mapping of RMA statuses to status icon colors
+ * TODO: Get definitive list of possible statuses/colors
+ */
+enum StatusColorMap {
+	'IN-PROGRESS' = 'text-success',
+	UNKNOWN = 'txt-dkgray-4',
+}
+
+/**
  * Component representing "special" RMA search results on the search modal
  */
 @Component({
@@ -59,6 +68,7 @@ export class RMASearchComponent extends SpecialSearchComponent
 	public loading = true;
 	public rma: RMARecord;
 	public rmaTableData: RmaTableData;
+	public statusColor: StatusColorMap;
 	public caseLink: string;
 	public rmaLink: string;
 	public trackingLink: string;
@@ -113,7 +123,9 @@ export class RMASearchComponent extends SpecialSearchComponent
 					'replacementParts.trackingInfo.trackingNumber',
 				),
 			};
-
+			// tslint:disable-next-line: ter-max-len max-line-length
+			this.statusColor = StatusColorMap[<string> _.get(this.rmaTableData, 'status', 'UNKNOWN')
+				.toUpperCase()];
 			this.rmaLink = `${environment.rmaToolUrl}?&OrderNumber=${this.rma.rmaNo}`;
 			if (
 				this.rmaTableData.products.length === 1

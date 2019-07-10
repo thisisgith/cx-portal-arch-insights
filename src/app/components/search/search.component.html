@@ -40,10 +40,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="base-padding-top" [hidden]="!hideSpecialSearch"></div>
-				<div class="panel dbl-padding-left dbl-padding-right">
+				<div id="generalContainer" class="panel dbl-padding-left dbl-padding-right" [hidden]="hideGeneralSearch">
+					<div class="base-padding-top" [hidden]="generalSearchHeader"></div>
 					<app-general-search
-						[hidden]="hideGeneralSearch"
 						[query]="generalSearch"
 						[header]="generalSearchHeader"
 						[context]="searchContext">

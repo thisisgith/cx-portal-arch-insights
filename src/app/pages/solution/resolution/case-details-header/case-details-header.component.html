@@ -1,0 +1,91 @@
+<div appPanel360Title class="text-xlarge" [innerText]="'_RMACaseNumberTitle_' | i18n:caseDetails?.caseNumber">
+</div>
+<div class="case-details-container">
+	<div class="base-margin-top">
+		<!-- <div class="base-margin-bottom">
+				<span class="text-xlarge" [innerText]="'_RMACaseNumberTitle_' | i18n:caseDetails?.caseNumber"></span>
+			</div> -->
+		<div class="row flex maxWidth">
+			<div class="col-md-5">
+				<div class="text-bold font-size" [innerText]="'_RMACaseSeverity_' | i18n | uppercase"></div>
+				<div>
+					<span class="dot" [ngClass]="getSeverityColor(caseDetails?.priority)"></span>
+					<span class="text-bold qtr-padding-left"
+						[innerText]="caseDetails?.priority? ('S'+ caseDetails.priority): ''"></span>
+					<span class="qtr-padding-left" [innerText]="caseDetails?.requestType"></span>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div>
+					<span class="text-bold font-size" [innerText]="'_RMACaseStatus_' | i18n | uppercase"></span>
+				</div>
+				<div [innerText]="caseDetails?.status"></div>
+			</div>
+			<div class="col-md-2">
+				<div class="text-bold font-size" [innerText]="'_RMACaseCreated_' | i18n | uppercase"></div>
+				<div [innerText]="caseDetails?.createdDate | date"></div>
+			</div>
+			<div class="col-md-2">
+				<div class="text-bold font-size" [innerText]="'_RMACaseLastUpdated_' | i18n | uppercase"></div>
+				<div [innerText]="caseDetails?.lastUpdateDate | date"></div>
+			</div>
+		</div>
+
+		<div class="row base-padding-top">
+			<div class="col-md-6 text-left">
+				<div class="dropdown" *ngIf="rmaDetails?.length >= 1" [ngClass]="{'active': isRMAClicked}">
+					<button data-auto-id="relatedRMA" class="btn btn--small btn--secondary" (click)="toggleRMAList()"
+						[innerText]="'Related RMAs (' + rmaDetails?.length + ')'"></button>
+					<div class="dropdown__menu">
+						<div class="responsive-table" *ngIf="rmaTable && rmaDetails.length">
+							<table class="table table--selectable table--compressed table--lined table--hover">
+								<thead>
+									<tr>
+										<th *ngFor="let column of rmaTable.columns"
+											[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
+											<span [innerText]="column.name"></span>
+											<span *ngIf="column.sortable && column.sorting" class="qtr-margin-left"
+												[ngClass]="{
+																						'icon-chevron-down': column.sortDirection === 'asc',
+																						'icon-chevron-up': column.sortDirection === 'desc'
+																					}">
+											</span>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngFor="let item of rmaDetails" [ngClass]="{ 'active': item.selected }">
+										<td *ngFor="let column of rmaTable.columns">
+											<ng-container>
+												<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
+												<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
+											</ng-container>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<button data-auto-id="close" class="btn btn--small" [innerText]="'_RMACaseClose_' | i18n"
+							(click)="toggleRMAList()"></button>
+					</div>
+				</div>
+
+
+			</div>
+			<div class="col-md-6 text-right relatuve">
+				<button data-auto-id="CaseAttachFile"
+					class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right"
+					[innerText]="'_RMACaseAttachFile_' | i18n"></button>
+				<button data-auto-id="CaseAddNote"
+					class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right"
+					[innerText]="'_RMACaseAddNote_' | i18n" (click)="toggleAddNote()"></button>
+			</div>
+		</div>
+		<div class="col-md-12" *ngIf="isAddNoteClicked">
+			<app-add-note (close)="toggleAddNote()"></app-add-note>
+		</div>
+		<!-- <div class="col-md-12" *ngIf="isRMAClicked">
+					<app-add-note (close)="toggleAddNote()"></app-add-note>
+				</div> -->
+	</div>
+</div>

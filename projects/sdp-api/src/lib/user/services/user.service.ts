@@ -4,7 +4,7 @@ import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '
 import { BaseService as __BaseService } from '../../core/base-service';
 import { UserConfiguration as __Configuration } from '../user-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { Observable as __Observable } from 'rxjs';
+import { Observable as __Observable, of } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { UserResponse } from '../models/user-response';
@@ -13,6 +13,7 @@ import { UserResponse } from '../models/user-response';
 })
 class UserService extends __BaseService {
   static readonly getUserPath = '/system/users';
+	private userResponse: UserResponse;
 
   constructor(
     config: __Configuration,
@@ -53,9 +54,13 @@ class UserService extends __BaseService {
    * @return successful operation
    */
   getUser(): __Observable<UserResponse> {
-    return this.getUserResponse().pipe(
-      __map(_r => _r.body as UserResponse)
-    );
+    if (!this.userResponse){
+      return this.getUserResponse().pipe(
+        __map(_r => _r.body as UserResponse)
+      );
+    } else {
+      return of(this.userResponse);
+    }
   }
 }
 
