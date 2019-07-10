@@ -37,7 +37,7 @@ class ProductAlertsService extends __BaseService {
   static readonly getHardwareEoxPath = '/hardware-eol';
   static readonly headHardwareEolBulletinsPath = '/hardware-eol-bulletins';
   static readonly getHardwareEoxBulletinPath = '/hardware-eol-bulletins';
-  static readonly getHardwareEolCountsPath = '/hardware-eol/counts';
+  static readonly getHardwareEolTopCountPath = '/hardware-eol/top/count';
   static readonly headSoftwareEolPath = '/software-eol';
   static readonly getSoftwareEoxPath = '/software-eol';
   static readonly headSoftwareEolBulletinsPath = '/software-eol-bulletins';
@@ -1039,11 +1039,11 @@ class ProductAlertsService extends __BaseService {
   }
 
   /**
-   * Currently in use for mocking api routes, will be adjusted to match real api when comma-separated
+   * The Hardware EoL Top Count API retrieves count of assets reaching EoL associated with customer ID, by date range. All request parameters are optional other than customerId.
    * @param customerId Unique identifier of a Cisco customer.
    * @return successful operation
    */
-  getHardwareEolCountsResponse(customerId: string): __Observable<__StrictHttpResponse<HardwareEOLCountResponse>> {
+  getHardwareEolTopCountResponse(customerId: string): __Observable<__StrictHttpResponse<HardwareEOLCountResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -1051,7 +1051,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol/counts`,
+      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol/top/count`,
       __body,
       {
         headers: __headers,
@@ -1068,12 +1068,12 @@ class ProductAlertsService extends __BaseService {
   }
 
   /**
-   * Currently in use for mocking api routes, will be adjusted to match real api when comma-separated
+   * The Hardware EoL Top Count API retrieves count of assets reaching EoL associated with customer ID, by date range. All request parameters are optional other than customerId.
    * @param customerId Unique identifier of a Cisco customer.
    * @return successful operation
    */
-  getHardwareEolCounts(customerId: string): __Observable<HardwareEOLCountResponse> {
-    return this.getHardwareEolCountsResponse(customerId).pipe(
+  getHardwareEolTopCount(customerId: string): __Observable<HardwareEOLCountResponse> {
+    return this.getHardwareEolTopCountResponse(customerId).pipe(
       __map(_r => _r.body as HardwareEOLCountResponse)
     );
   }

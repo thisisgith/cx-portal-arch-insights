@@ -12,24 +12,33 @@
 		</button>
 	</div>
 </div>
-<div class="flex flex-fluid flex-fill base-margin-top" *ngIf="visibleTab">
+<div class="base-margin-top" *ngIf="visibleTab">
 	<ng-container *ngTemplateOutlet="visibleTab"></ng-container>
 </div>
 
 <ng-template #security>
-	<ng-container *ngTemplateOutlet="displayTable; context: { data: selectedTab.data, options: selectedTab.table }"></ng-container>
+	<ng-container *ngTemplateOutlet="displayTable; context: { data: selectedTab.data, options: selectedTab.table, loading: selectedTab.loading }"></ng-container>
 </ng-template>
 
 <ng-template #fieldNotices>
-	<ng-container *ngTemplateOutlet="displayTable; context: { data: selectedTab.data, options: selectedTab.table }"></ng-container>
+	<ng-container *ngTemplateOutlet="displayTable; context: { data: selectedTab.data, options: selectedTab.table, loading: selectedTab.loading }"></ng-container>
 </ng-template>
 
 <ng-template #bugs>
 	bugs template
 </ng-template>
 
-<ng-template #displayTable let-data="data" let-options="options">
-	<cui-table *ngIf="options && data" [options]="options" [data]="data.bulletin"></cui-table>
+<ng-template #displayTable let-data="data" let-options="options" let-loading="loading">
+	<cui-table *ngIf="!loading && options && data && data?.bulletin?.length > 0"
+		[options]="options"
+		[data]="data.bulletin">
+	</cui-table>
+	<div *ngIf="loading">
+		<cui-loader></cui-loader>
+	</div>
+	<div *ngIf="!loading && data?.bulletin?.length === 0">
+		<span [innerText]="'_NoResultsFound_' | i18n"></span>
+	</div>
 </ng-template>
 
 <ng-template #impact let-celldata="celldata">

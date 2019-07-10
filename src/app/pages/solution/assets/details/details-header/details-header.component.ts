@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CaseParams } from '@cui-x/services';
-
-import { Asset, HardwareInfo } from '@sdp-api';
+import { Component, Input, OnInit } from '@angular/core';
+import { CaseParams, CaseService } from '@cui-x/services';
+import { Asset } from '@sdp-api';
+import * as _ from 'lodash-es';
+import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Details Header Component
@@ -15,11 +16,8 @@ import { Asset, HardwareInfo } from '@sdp-api';
 	styleUrls: ['./details-header.component.scss'],
 	templateUrl: './details-header.component.html',
 })
-export class DetailsHeaderComponent {
+export class DetailsHeaderComponent implements OnInit {
 	@Input('asset') public asset: Asset;
-	@Input('hardwareData') public hardwareData: HardwareInfo;
-	@Output() public fullscreenEvent = new EventEmitter<boolean>();
-	@Output() public closeEvent = new EventEmitter<boolean>();
 
 	public componentData = {
 		openCases: 0,
@@ -30,29 +28,53 @@ export class DetailsHeaderComponent {
 		sort: 'lastModifiedDate,desc',
 		statusTypes: 'O',
 	});
-
 	public status = {
 		loading: {
 			cases: false,
 		},
 	};
-	public hidden = true;
-	public fullscreen = false;
-
-	public actionDropdownActive = false;
 	public casesDropdownActive = false;
 
-	/**
-	 * Toggles the action dropdown
-	 */
-	public toggleActiveAction () {
-		this.actionDropdownActive = !this.actionDropdownActive;
-	}
+	constructor (
+		private caseService: CaseService,
+		private logger: LogService,
+	) { }
 
 	/**
 	 * Toggles the open cases dropdown
 	 */
 	public toggleActiveCases () {
 		this.casesDropdownActive = !this.casesDropdownActive;
+	}
+
+	/**
+	 * Fetch the cases for the selected asset
+	 */
+	private fetchCases () {
+		if (_.get(this.asset, 'serialNumber')) {
+			this.status.loading.cases = true;
+			const params = _.cloneDeep(this.caseParams);
+			_.set(params, 'serialNumbers', this.asset.serialNumber);
+			this.caseService.read(params)
+			.subscribe((data: any) => {
+				this.componentData.openCases = _.get(data, 'totalElements', 0);
+				this.status.loading.cases = false;
+			},
+			err => {
+				this.componentData.openCases = 0;
+				this.status.loading.cases = false;
+				this.logger.error('details-header.component : fetchCases()' +
+					`:: Error : (${err.status}) ${err.message}`);
+			});
+		}
+	}
+
+	/**
+	 * Initializer
+	 */
+	public ngOnInit () {
+		if (this.asset) {
+			this.fetchCases();
+		}
 	}
 }

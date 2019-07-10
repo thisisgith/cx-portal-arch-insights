@@ -4,6 +4,7 @@ import {
 	OnInit,
 	ViewChild,
 	Input,
+	SimpleChanges,
 } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
@@ -24,14 +25,11 @@ import {
 } from '@sdp-api';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { Subscription, forkJoin, fromEvent, of, Subject } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import {
 	map,
 	mergeMap,
-	debounceTime,
 	catchError,
-	distinctUntilChanged,
-	switchMap,
 } from 'rxjs/operators';
 
 /** Our current customerId */
@@ -51,6 +49,7 @@ interface Tab {
 			ProductAlertsService.GetFieldNoticeBulletinParams |
 			ProductAlertsService.GetPSIRTBulletinParams;
 	};
+	loading: boolean;
 	disabled?: boolean;
 	key: string;
 	selected: boolean;
@@ -110,6 +109,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 	 */
 	private getSecurityAdvisories () {
 		const advisoryTab = _.find(this.tabs, { key: 'security' });
+		advisoryTab.loading = true;
 
 		return this.productAlertsService.getSecurityAdvisories(advisoryTab.params.notice)
 		.pipe(
@@ -122,6 +122,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 				return this.getSecurityAdvisoryBulletins();
 			}),
 			catchError(err => {
+				advisoryTab.loading = false;
 				this.logger.error('details-advisories.component : getSecurityAdvisories() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
@@ -141,8 +142,11 @@ export class DetailsAdvisoriesComponent implements OnInit {
 		.pipe(
 			map((response: SecurityAdvisoryBulletinResponse) => {
 				_.set(advisoryTab, ['data', 'bulletin'], response.data);
+
+				advisoryTab.loading = false;
 			}),
 			catchError(err => {
+				advisoryTab.loading = false;
 				this.logger.error('details-advisories.component : getSecurityAdvisoryBulletins() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
@@ -157,6 +161,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 	 */
 	private getFieldNotices () {
 		const fieldTab = _.find(this.tabs, { key: 'field' });
+		fieldTab.loading = true;
 
 		return this.productAlertsService.getFieldNotice(fieldTab.params.notice)
 		.pipe(
@@ -169,6 +174,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 				return this.getFieldNoticeBulletins();
 			}),
 			catchError(err => {
+				fieldTab.loading = false;
 				this.logger.error('details-advisories.component : getFieldNoticeBulletins() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
@@ -187,9 +193,22 @@ export class DetailsAdvisoriesComponent implements OnInit {
 		return this.productAlertsService.getFieldNoticeBulletin(fieldTab.params.bulletin)
 		.pipe(
 			map((response: SecurityAdvisoryBulletinResponse) => {
-				_.set(fieldTab, ['data', 'bulletin'], response.data);
+				_.set(fieldTab, ['data', 'bulletin'], []);
+				fieldTab.data.bulletin = _.map(response.data,
+					(bulletin: SecurityAdvisoryBulletin) => {
+						const newBulletin = _.cloneDeep(bulletin);
+
+						newBulletin.bulletinTitle = _.trim(
+							_.replace(newBulletin.bulletinTitle, /FN[0-9]{1,5}[ \t]+-/, ''));
+
+						return newBulletin;
+					});
+
+				fieldTab.loading = false;
 			}),
 			catchError(err => {
+				fieldTab.loading = false;
+
 				this.logger.error('details-advisories.component : getFieldNoticeBulletins() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
@@ -209,6 +228,10 @@ export class DetailsAdvisoriesComponent implements OnInit {
 		)
 		.subscribe(() => {
 			this.isLoading = false;
+
+			_.each(this.tabs, (tab: Tab) => {
+				tab.loading = false;
+			});
 		});
 	}
 
@@ -219,10 +242,12 @@ export class DetailsAdvisoriesComponent implements OnInit {
 		this.tabs = [
 			{
 				key: 'security',
+				loading: true,
 				params: {
 					bulletin: {
 						page: 1,
 						rows: 10,
+						sort: ['bulletinFirstPublished:DESC'],
 					},
 					notice: {
 						customerId,
@@ -238,6 +263,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 							name: I18n.get('_Impact_'),
 							sortable: false,
 							template: this.impactTemplate,
+							width: '100px',
 						},
 						{
 							key: 'bulletinTitle',
@@ -252,8 +278,13 @@ export class DetailsAdvisoriesComponent implements OnInit {
 									new Date(item.bulletinFirstPublished), 'yyyy MMM dd') :
 									I18n.get('_Never_'),
 							sortable: false,
+							sortDirection: 'desc',
+							sorting: true,
+							width: '125px',
 						},
 					],
+					padding: 'compressed',
+					striped: false,
 					wrapText: true,
 				}),
 				template: this.securityTemplate,
@@ -261,10 +292,12 @@ export class DetailsAdvisoriesComponent implements OnInit {
 			},
 			{
 				key: 'field',
+				loading: true,
 				params: {
 					bulletin: {
 						page: 1,
 						rows: 10,
+						sort: ['bulletinLastUpdated:DESC'],
 					},
 					notice: {
 						customerId,
@@ -280,6 +313,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 							name: I18n.get('_ID_'),
 							sortable: false,
 							template: this.fieldNoticeIDTemplate,
+							width: '100px',
 						},
 						{
 							key: 'bulletinTitle',
@@ -294,8 +328,13 @@ export class DetailsAdvisoriesComponent implements OnInit {
 									new Date(item.bulletinLastUpdated), 'yyyy MMM dd') :
 									I18n.get('_Never_'),
 							sortable: false,
+							sortDirection: 'desc',
+							sorting: true,
+							width: '125px',
 						},
 					],
+					padding: 'compressed',
+					striped: false,
 					wrapText: true,
 				}),
 				template: this.fieldNoticesTemplate,
@@ -304,6 +343,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 			{
 				disabled: true,
 				key: 'bugs',
+				loading: true,
 				selected: false,
 				template: this.bugsTemplate,
 				title: '_CriticalBugs_',
@@ -313,9 +353,37 @@ export class DetailsAdvisoriesComponent implements OnInit {
 		this.selectTab(_.find(this.tabs, 'selected'));
 	}
 
+	/**
+	 * Resets the data
+	 */
+	private clear () {
+		this.tabs = [];
+	}
+
+	/**
+	 * Refreshes and loads the date
+	 */
+	private refresh () {
+		if (this.asset) {
+			this.clear();
+			this.initializeTabs();
+			this.initializeData();
+		}
+	}
+
 	/** Function used to initialize the component */
 	public ngOnInit () {
-		this.initializeTabs();
-		this.initializeData();
+		this.refresh();
+	}
+
+	/**
+	 * Checks if our currently selected asset has changed
+	 * @param changes the changes detected
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+		if (currentAsset && !changes.asset.firstChange) {
+			this.refresh();
+		}
 	}
 }

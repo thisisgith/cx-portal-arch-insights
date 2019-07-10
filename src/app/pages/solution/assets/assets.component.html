@@ -4,7 +4,10 @@
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false">
 		<details-header [asset]="selectedAsset"></details-header>
-		<div appPanel360Title class="text-xlarge" [innerText]="selectedAsset?.serialNumber"></div>
+		<div appPanel360Title class="text-xlarge">
+			<span class="icon-wifi"></span>
+			<span class="qtr-margin-left" [innerText]="selectedAsset?.deviceName"></span>
+		</div>
 	</app-panel360-header>
 	<asset-details [asset]="selectedAsset"></asset-details>
 </app-panel360>
@@ -207,6 +210,7 @@
 							</label>
 						</td>
 						<td *ngFor="let column of assetsTable.columns"
+							[ngStyle]="{ 'width': column.width }"
 							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
 							(click)="column.click ? $event.stopPropagation() : null">
 							<ng-container *ngIf="column.template">
