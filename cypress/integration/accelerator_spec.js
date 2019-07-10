@@ -27,7 +27,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		// No other data-auto-id's exist at this time
 	});
 
-	it.only('ACC tile has a view all link to display ACCs in card view', () => { // PBC-159
+	it('ACC tile has a view all link to display ACCs in card view', () => { // PBC-159
 		cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 		cy.get('.modal__header.acc__header').should('contain', i18n._Accelerator_)
 			.and('contain', i18n._1on1Coaching_);
