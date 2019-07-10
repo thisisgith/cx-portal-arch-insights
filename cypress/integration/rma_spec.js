@@ -1,6 +1,7 @@
 
+const i18n = require('../../src/assets/i18n/en-US.json');
+
 describe('RMA Spec', () => {
-	const i18n = require('../../src/assets/i18n/en-US.json');
 
 	context('RMA Search', () => {
 		before(() => {
