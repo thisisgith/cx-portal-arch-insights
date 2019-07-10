@@ -56,6 +56,12 @@
 				src="assets/img/header/user-photo-thumb-1.png">
 			<div class="divider--left base-margin-left">
 				<a class="half-margin-left icon--mid half-margin-right"
+					data-auto-id="Admin"
+					[title]="'_Admin_' | i18n"
+					[routerLink]="['admin']">
+					<span class="icon-cog text-muted"></span>
+				</a>
+				<a class="half-margin-left icon--mid half-margin-right"
 					data-auto-id="HeaderSettings"
 					(click)="mocking ? openMockModal() : null">
 					<span class="icon-cog text-muted"></span>
