@@ -38,8 +38,8 @@ interface RmaTableData {
  * TODO: Get definitive list of possible statuses/colors
  */
 enum StatusColorMap {
-	'In-Progress' = 'text-success',
-	Unknown = 'txt-dkgray-4',
+	'IN-PROGRESS' = 'text-success',
+	UNKNOWN = 'txt-dkgray-4',
 }
 
 /**
@@ -123,9 +123,9 @@ export class RMASearchComponent extends SpecialSearchComponent
 					'replacementParts.trackingInfo.trackingNumber',
 				),
 			};
-
-			this.statusColor = StatusColorMap
-								[<string> _.get(this.rmaTableData, 'status', 'Unknown')];
+			// tslint:disable-next-line: ter-max-len max-line-length
+			this.statusColor = StatusColorMap[<string> _.get(this.rmaTableData, 'status', 'UNKNOWN')
+				.toUpperCase()];
 			this.rmaLink = `${environment.rmaToolUrl}?&OrderNumber=${this.rma.rmaNo}`;
 			if (
 				this.rmaTableData.products.length === 1
