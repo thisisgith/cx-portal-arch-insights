@@ -2,6 +2,8 @@ import MockService from '../support/mockService';
 
 const i18n = require('../../src/assets/i18n/en-US.json');
 
+const searchMock = new MockService('SearchScenarios');
+
 describe('General Spec', () => {
 	context('Basic Loading Sanity', () => {
 		it('Loads the app', () => {
@@ -51,11 +53,8 @@ describe('General Spec', () => {
 
 		it('Search No Result Found', () => { // PBC-173
 			// disable default mock and enable desired for this test
-			cy.window().then(win => {
-				win.mockService.disable('Generic Example');
-				// cy.log(win.mockService.getEnabledScenarios());
-				win.mockService.enable('Unable to find results'); // enable the desired
-			});
+			searchMock.disable('Generic Example');
+			searchMock.enable('Unable to find results');
 			const rmaVal = '639530286639530286';
 			cy.server();
 			cy.route('**/api/customerportal/inventory/v1/hardware?*').as('case');

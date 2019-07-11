@@ -62,6 +62,7 @@ function MockACC (
 			title: 'Cisco DNA Center Wireless Assurance Feature Planning',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
+		{ },
 	];
 
 	if (pitstop.toLowerCase() === 'adopt') {
@@ -97,6 +98,33 @@ export const ACCScenarios = [
 					description: '(ACC) IBN-Wireless Assurance-Onboard',
 					response: {
 						body: MockACC('IBN', 'Wireless Assurance', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-No Recommended',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Adopt'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-Empty',
+					response: {
+						body: { },
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-One-ACC',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'adopt'),
 						status: 200,
 					},
 					selected: true,

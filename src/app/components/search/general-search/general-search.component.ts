@@ -89,6 +89,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public loadingRelated = false;
 	public selectedSite: Buckets;
 	public selectedType: Buckets;
+	public lastFiltered: string;
 
 	private customerId = '2431199';
 	private readonly pageSize = 10;
@@ -207,6 +208,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public onSiteSelected (site: Buckets) {
 		this.pageOffset = 0;
 		this.selectedSite = site;
+		if (this.selectedSite.label.includes(I18n.get('_AllCategories_'))) {
+			this.lastFiltered = null;
+		} else {
+			this.lastFiltered = 'site';
+		}
 		this.refresh$.next('filters');
 	}
 
@@ -217,6 +223,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public onTypeSelected (type: Buckets) {
 		this.pageOffset = 0;
 		this.selectedType = type;
+		if (this.selectedType.label.includes(I18n.get('_AllTypes_'))) {
+			this.lastFiltered = null;
+		} else {
+			this.lastFiltered = 'type';
+		}
 		this.refresh$.next('filters');
 	}
 
@@ -342,7 +353,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			facets.find((o: Facets) => o.label === 'Site Subcategory'),
 			'buckets',
 		);
-		if (siteBuckets) {
+		if (this.lastFiltered !== 'site' && siteBuckets) {
 			this.siteOptions = siteBuckets.map((bucket: Buckets) => ({
 				...bucket,
 				label: `${bucket.label} (${bucket.count})`,
@@ -355,7 +366,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				this.selectedSite = this.siteOptions[0];
 			}
 		}
-		if (typeBuckets) {
+		if (this.lastFiltered !== 'type' && typeBuckets) {
 			this.typeOptions = typeBuckets.map((bucket: Buckets) => ({
 				...bucket,
 				label: `${bucket.label} (${bucket.count})`,
@@ -368,6 +379,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				this.selectedType = this.typeOptions[0];
 			}
 		}
+		this.lastFiltered = null;
 	}
 
 	/**

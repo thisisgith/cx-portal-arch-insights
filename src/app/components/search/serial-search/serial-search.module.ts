@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { SerialSearchComponent } from './serial-search.component';
 
 import {
-	CuiButtonModule,
 	CuiLoaderModule,
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
@@ -18,7 +17,6 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 	exports: [SerialSearchComponent],
 	imports: [
 		CommonModule,
-		CuiButtonModule,
 		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
