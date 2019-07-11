@@ -268,15 +268,15 @@ describe('Learn Panel', () => {
 				cy.get(`a[href="${elearningItem.url}"]`).parent()
 					.should('contain', elearningItem.title)
 					.within(() => {
-						cy.getByAutoId('learningHoverModal-Title').should('contain', elearningItem.title);
-						cy.getByAutoId('learningHoverModal-Description').should('contain', elearningItem.description);
-						cy.getByAutoId('learningHoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(elearningItem.rating).toString());
+						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', elearningItem.title);
+						cy.getByAutoId('recommendedElearning-HoverModal-Description').should('contain', elearningItem.description);
+						cy.getByAutoId('recommendedElearning-HoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(elearningItem.rating).toString());
 						// Duration/clock are only displayed if duration is set
 						if (elearningItem.duration) {
-							cy.getByAutoId('learningHoverModal-DurationClock').should('exist');
-							cy.getByAutoId('learningHoverModal-Duration').should('contain', elearningItem.duration);
+							cy.getByAutoId('recommendedElearning-HoverModal-DurationClock').should('exist');
+							cy.getByAutoId('recommendedElearning-HoverModal-Duration').should('contain', elearningItem.duration);
 						} else {
-							cy.getByAutoId('learningHoverModal-DurationClock').should('not.exist');
+							cy.getByAutoId('recommendedElearning-HoverModal-DurationClock').should('not.exist');
 						}
 					});
 			});
