@@ -6,6 +6,8 @@ const useCase = 'Wireless Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
 const accItems = accScenario.response.body.items;
 const validACCItems = Cypress._.filter(accItems, acc => acc.description || acc.title);
+const visibleACCItems = accItems.slice(0, 3);
+const invisibleACCItems = accItems.slice(3);
 
 const i18n = require('../../src/assets/i18n/en-US.json');
 
@@ -78,6 +80,50 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 		cy.getByAutoId('ACCCloseModal').click();
+	});
+
+	describe('PBC-33: (UI) View - Solution Based: ACC Details', () => {
+		afterEach(() => {
+			// Make sure we're set back to the default mock data
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-One-ACC');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading');
+		});
+
+		it.skip('Should only display the ACC section if there are ACC items', () => {
+			// TODO: Waiting on PBC-317: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-317
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading');
+
+			// The section should not exist at all
+			cy.getByAutoId('Accelerator Panel').should('not.exist');
+			cy.getByAutoId('recommendedACC').should('not.exist');
+			cy.getByAutoId('moreACCList').should('not.exist');
+		});
+
+		it('Should only display up to two items in the more list', () => {
+			// Verify only up to the first three ACC shown
+			// Note, however, the first recommended item will be displayed outside the More list
+			// TODO: Will need to be updated to account for cases where the first ACC is not
+			// recommended, but this is pending PBC-279: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-279
+			const accMoreItems = visibleACCItems.slice(1, 3);
+			accMoreItems.forEach(acc => {
+				cy.getByAutoId('moreACCList-item')
+					.should('contain', acc.title);
+			});
+			invisibleACCItems.forEach(acc => {
+				cy.getByAutoId('moreACCList-item')
+					.should('not.contain', acc.title);
+			});
+		});
 	});
 
 	describe('PBC-166: Mouse hover to show recommended ACC/ATX description', () => {
