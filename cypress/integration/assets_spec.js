@@ -192,8 +192,11 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('CUIPager-Page2').click();
 			cy.wait('@assets').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
+				const pagination = xhr.response.body.Pagination;
 				expect(params.get('page')).to.eq('2');
 				expect(params.get('rows')).to.eq('10');
+				cy.get('[data-auto-id*="CUIPager-Page"]') // PBC-288
+					.should('have.length', Cypress._.ceil(pagination.total / pagination.rows));
 			});
 			cy.getByAutoId('CUIPager-NextPage').click();
 			cy.wait('@assets').then(xhr => {
@@ -432,8 +435,11 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('CUIPager-Page2').click();
 			cy.wait('@assets').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
+				const pagination = xhr.response.body.Pagination;
 				expect(params.get('page')).to.eq('2');
 				expect(params.get('rows')).to.eq('12');
+				cy.get('[data-auto-id*="CUIPager-Page"]') // PBC-288
+					.should('have.length', Cypress._.ceil(pagination.total / pagination.rows));
 			});
 			cy.getByAutoId('CUIPager-NextPage').click();
 			cy.wait('@assets').then(xhr => {
@@ -484,17 +490,15 @@ describe('Assets', () => { // PBC-41
 			cy.waitForAppLoading();
 		});
 
-		it('Provides an actions menu for each card', () => {
+		it('Provides an actions menu for each card', () => { // PBC-280
 			const coveredAsset = assets[0].serialNumber;
 			const uncoveredAsset = assets[1].serialNumber;
 			cy.getByAutoId(`InventoryItem-${coveredAsset}`).within(() => {
 				cy.get('cui-dropdown').within($dropdown => {
 					cy.wrap($dropdown).click();
-					/* TODO: Disabled for PBC-280
 					cy.get('a').should('have.length', 2);
 					cy.get('a').eq(0).should('have.text', 'Open Support Case');
 					cy.get('a').eq(1).should('have.text', 'Scan');
-					*/
 					cy.wrap($dropdown).click();
 				});
 			});

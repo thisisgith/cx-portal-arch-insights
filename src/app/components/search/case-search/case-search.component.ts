@@ -19,11 +19,13 @@ import * as _ from 'lodash-es';
 enum StatusIconMap {
 	'CISCO PENDING' = 'icon-time text-warning-alt',
 	'CLOSE PENDING' = 'icon-time text-success',
-	CLOSED = 'icon-check text-dkgray-4',
+	CLOSED = 'icon-check-outline text-muted',
 	'CUSTOMER PENDING' = 'icon-time text-primary',
-	'CUSTOMER REQUESTED CLOSURE' = 'icon-time text-dkgray-4',
+	'CUSTOMER REQUESTED CLOSURE' = 'icon-time text-muted',
+	'CUSTOMER UPDATED' = 'icon-check-outline text-primary',
 	'RELEASE PENDING' = 'icon-time text-turquoise',
 	'SERVICE ORDER PENDING' = 'icon-time text-warning',
+	'UNKNOWN' = 'icon-circle text-muted',
 }
 
 /**
@@ -208,8 +210,9 @@ implements OnInit, OnDestroy, OnChanges {
 		}
 		this.case.severity = caseDetails.priority;
 		this.case.status = caseDetails.status;
-		this.statusIcon = StatusIconMap[<string> _.get(this.case, 'status', 'CUSTOMER PENDING')
-			.toUpperCase()];
+		const statusKey = _.get(this.case, 'status', 'UNKNOWN')
+			.toUpperCase();
+		this.statusIcon = _.get(StatusIconMap, statusKey);
 		this.case.summary = caseDetails.summary;
 		if (!this.case.description && this.case.summary) {
 			const splitSummary = this.case.summary.split(' ');

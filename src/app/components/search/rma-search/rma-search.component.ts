@@ -40,7 +40,7 @@ interface RmaTableData {
  */
 enum StatusColorMap {
 	'IN-PROGRESS' = 'text-success',
-	UNKNOWN = 'txt-dkgray-4',
+	UNKNOWN = 'text-muted',
 }
 
 /**
@@ -126,9 +126,9 @@ export class RMASearchComponent extends SpecialSearchComponent
 					'replacementParts.trackingInfo.trackingNumber',
 				),
 			};
-			// tslint:disable-next-line: ter-max-len max-line-length
-			this.statusColor = StatusColorMap[<string> _.get(this.rmaTableData, 'status', 'UNKNOWN')
-				.toUpperCase()];
+			const statusKey = _.get(this.rmaTableData, 'status', 'UNKNOWN')
+				.toUpperCase();
+			this.statusColor = _.get(StatusColorMap, statusKey);
 			this.rmaLink = `${environment.rmaToolUrl}?&OrderNumber=${this.rma.rmaNo}`;
 			if (
 				this.rmaTableData.products.length === 1

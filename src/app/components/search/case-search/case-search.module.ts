@@ -5,7 +5,6 @@ import { I18nPipeModule, FromNowPipeModule, TruncatePipeModule } from '@cisco-ng
 import { CaseSearchComponent } from './case-search.component';
 
 import {
-	CuiButtonModule,
 	CuiLoaderModule,
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
@@ -21,7 +20,6 @@ import {
 	imports: [
 		CommonModule,
 		RouterModule,
-		CuiButtonModule,
 		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,

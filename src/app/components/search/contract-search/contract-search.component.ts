@@ -29,13 +29,14 @@ import { SearchQuery } from '@interfaces';
 enum StatusColorMap {
 	ACTIVE = 'text-success',
 	ENTERED = 'text-turquoise',
-	EXPIRED = 'text-dkgray-4',
-	INACTIVE = 'text-dkgray-4',
+	EXPIRED = 'text-muted',
+	INACTIVE = 'text-muted',
 	OVERDUE = 'text-warning',
 	'QA HOLD' = 'text-warning-alt',
 	SERVICE = 'text-info',
 	SIGNED = 'text-info',
 	TERMINATED = 'text-danger',
+	UNKNOWN = 'text-muted',
 }
 
 /**
@@ -92,9 +93,9 @@ export class ContractSearchComponent extends SpecialSearchComponent
 			this.loading = false;
 			this.contractData = result ? result.data[0] : null;
 			if (this.contractData) {
-				// tslint:disable-next-line: ter-max-len max-line-length
-				this.statusColor = StatusColorMap[<string> _.get(this.contractData, 'contractStatus', 'INACTIVE')
-					.toUpperCase()];
+				const statusKey = _.get(this.contractData, 'contractStatus', 'UNKNOWN')
+					.toUpperCase();
+				this.statusColor = _.get(StatusColorMap, statusKey);
 			} else {
 				this.hide.emit(true);
 			}
