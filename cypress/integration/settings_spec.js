@@ -30,6 +30,11 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 
 			cy.getByAutoId('settings.system.info').should('exist');
 			cy.getByAutoId('settings.system.info.label').should('have.text', i18n._SystemInfo_.toUpperCase());
+
+			cy.getByAutoId('settings.sidebar').should('exist');
+			cy.getByAutoId('settings.sidebar').within(() => {
+				cy.get('a').should('contain', i18n._System_);
+			});
 		});
 
 		it('Renders Status Panel Content', () => {
@@ -44,15 +49,86 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 				cy.wrap($el).should('contain', mainData.component_details[index].version);
 				cy.wrap($el).should('contain', mainData.component_details[index].status);
 
-				if (mainData.component_details[index].status === 'CrashLoopBackOff') {
+				if (mainData.component_details[index].status === 'Running') {
+					cy.wrap($el).within(() => {
+						cy.get("[ng-reflect-ng-class='text-success']").should('exist');
+					});
+				}
+
+				if (mainData.component_details[index].status === 'Stopped') {
+					cy.wrap($el).within(() => {
+						// TODO: Verify the Restart Link (PBC-318)
+						cy.get("[ng-reflect-ng-class='text-secondary']").should('exist');
+					});
+				}
+
+				if (mainData.component_details[index].status.match(/^(CrashLoopBackOff|Error)$/)) {
 					cy.wrap($el).within(() => {
 						cy.getByAutoId('errorLink').should('exist');
 						cy.getByAutoId('errorLink').should('have.text', i18n._ErrorDetails_);
 						cy.getByAutoId('errorLink').click();
 						cy.getByAutoId('errorLink').should('have.text', i18n._HideErrorDetails_);
 						cy.get('div').should('contain', mainData.component_details[index].additional_details.error);
+						cy.get("[ng-reflect-ng-class='text-danger']").should('exist');
 					});
 				}
+			});
+		});
+
+		it('Renders Usage Panel Content', () => {
+			const hw = mainData.system_details.hardware_details;
+
+			cy.getByAutoId('settings.system.usage').within(() => {
+				cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`).should('contain', i18n._CurrentCPUUtilization_.toUpperCase());
+				cy.getByAutoId(`usage-${i18n._CurrentAvailableMemory_}`).should('contain', i18n._CurrentAvailableMemory_.toUpperCase());
+				cy.getByAutoId(`usage-${i18n._FreeDiskSpace_}`).should('contain', i18n._FreeDiskSpace_.toUpperCase());
+			});
+
+			cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`).within(() => {
+				cy.get('cui-gauge').should('exist');
+				cy.get('cui-gauge').should('have.text', `${Cypress._.parseInt(hw.cpu_utilization, 10)}%`);
+			});
+
+			cy.getByAutoId(`usage-${i18n._CurrentAvailableMemory_}`).within(() => {
+				cy.get('cui-gauge').should('exist');
+				const expected = Math.ceil(
+					(Cypress._.parseInt(hw.free_memory, 10) / Cypress._.parseInt(hw.total_memory, 10)) * 100
+				);
+				cy.get('cui-gauge').should('have.text', `${expected}%`);
+			});
+
+			cy.getByAutoId(`usage-${i18n._FreeDiskSpace_}`).within(() => {
+				cy.get('cui-gauge').should('exist');
+				const expected = Math.ceil(
+					(Cypress._.parseInt(hw.free_hdd_size, 10) / Cypress._.parseInt(hw.hdd_size, 10)) * 100
+				);
+				cy.get('cui-gauge').should('have.text', `${expected}%`);
+			});
+		});
+
+		it('Renders Info Panel Content', () => {
+			const os = mainData.system_details.os_details;
+			cy.getByAutoId('settings.system.info').within(() => {
+				cy.getByAutoId(`info-${i18n._OSImage_}`).should('exist');
+				cy.getByAutoId(`info-${i18n._KernelVersion_}`).should('exist');
+				cy.getByAutoId(`info-${i18n._DockerRuntimeVersion_}`).should('exist');
+				cy.getByAutoId(`info-${i18n._KubernetesVersion_}`).should('exist');
+			});
+			cy.getByAutoId(`info-${i18n._OSImage_}`).within(() => {
+				cy.get('div').should('contain', i18n._OSImage_.toUpperCase());
+				cy.get('div').should('contain', os.osImage);
+			});
+			cy.getByAutoId(`info-${i18n._KernelVersion_}`).within(() => {
+				cy.get('div').should('contain', i18n._KernelVersion_.toUpperCase());
+				cy.get('div').should('contain', os.kernelVersion);
+			});
+			cy.getByAutoId(`info-${i18n._DockerRuntimeVersion_}`).within(() => {
+				cy.get('div').should('contain', i18n._DockerRuntimeVersion_.toUpperCase());
+				cy.get('div').should('contain', os.containerRuntimeVersion);
+			});
+			cy.getByAutoId(`info-${i18n._KubernetesVersion_}`).within(() => {
+				cy.get('div').should('contain', i18n._KubernetesVersion_.toUpperCase());
+				cy.get('div').should('contain', os.kubeletVersion);
 			});
 		});
 	});

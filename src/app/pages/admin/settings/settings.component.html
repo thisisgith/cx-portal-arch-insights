@@ -92,6 +92,7 @@
 				<div
 					*ngFor="let gauge of data.memoryUsage"
 					class="flex-center-vertical base-margin-bottom"
+					[attr.data-auto-id]="'usage-' + gauge.label"
 				>
 					<cui-gauge
 						[percentage]="gauge.percentage"
@@ -110,7 +111,7 @@
 					class="base-margin-top half-margin-bottom" data-auto-id="settings.system.info.label"
 					[innerText]="'_SystemInfo_' | i18n | uppercase"
 				></h5>
-				<div *ngFor="let info of data.systemInfo">
+				<div *ngFor="let info of data.systemInfo" [attr.data-auto-id]="'info-' + info.label">
 					<div class="base-margin-top">
 						<div class="text-bold" [innerText]="info.label | uppercase"></div>
 						<div [innerText]="info.value"></div>
