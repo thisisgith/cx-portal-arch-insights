@@ -162,7 +162,7 @@
 <ng-template #recommendedDescription let-title="title" let-item="item" let-description="description" let-autoid="autoid">
 	<div id="hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="icon-bookmark icon-medium"
-			*ngIf="autoid==='recommendedACC'"
+			*ngIf="autoid==='recommendedACC' || autoid==='moreACCList'"
 			(click)="setFavorite(item)"
 			[ngClass]="getACCRibbonClass(item)" 
 			data-auto-id="ACCCardRibbon">
@@ -177,7 +177,7 @@
 			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 			<span [innerText]="item.duration"></span>
 		</div>
-		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACC'">
+		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACC' || autoid==='moreACCList'">
 			<a class="no-link" [href]="item.url">
 				<button data-auto-id="Request1on1ACCButton" class="btn btn--small btn--secondary text-uppercase"
 					[innerText]="'_Request1on1_' | i18n">
@@ -298,9 +298,27 @@
 	<div class="base-padding-top half-padding-bottom">
 		<span class="text-large text-uppercase" [innerText]="'_More_' | i18n"></span>
 	</div>
-	<div class="more-scroll base-padding-bottom" [attr.data-auto-id]="autoid">
-		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:1">
-			<span class="text-blue" [innerText]="item.title"></span>
+	<div class="base-padding-bottom" [attr.data-auto-id]="autoid">
+		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:1:3">
+			<div id="moreAccList-item" class="panel no-padding-top no-padding-left no-padding-right">
+				<div class="row">
+					<div class="col-md-11 text-blue" [innerText]="item.title"></div>
+					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'"></div>
+					<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite"></div>
+					<div class="col-md-1 progressbar qtr-margin-top" data-percentage="33" *ngIf="item.status === 'in-progress'">
+						<div class="col-md-1 progressbar__fill"></div>
+					</div>
+				</div>
+				<ng-container *ngIf="autoid==='moreACCList'">
+					<ng-container *ngTemplateOutlet="recommendedDescription; context: {
+						title: item.title,
+						description: item.description,
+						item: item,
+						autoid: 'moreACCList'
+					}">
+					</ng-container>
+				</ng-container>
+			</div>
 		</div>
 	</div>
 </ng-template>
@@ -464,7 +482,7 @@
 </ng-template>
 
 <ng-template #accModal let-data="data">
-	<div id="accModal" class="modal__content no-padding">
+	<div id="accModal" class="modal__content no-padding" data-auto-id="accViewAllModal">
 
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top">

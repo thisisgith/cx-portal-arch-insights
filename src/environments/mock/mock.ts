@@ -18,7 +18,9 @@ import {
 	RoleScenarios,
 	SearchScenarios,
 	SuccessPathScenarios,
+	HealthStatusScenarios,
 	VulnerabilityScenarios,
+	UserScenarios,
 } from './';
 import { HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash-es';
@@ -123,6 +125,8 @@ export const mockSettings: MockSettings = {
 		RoleScenarios,
 		SearchScenarios,
 		SuccessPathScenarios,
+		HealthStatusScenarios,
 		VulnerabilityScenarios,
+		UserScenarios,
 	]),
 };

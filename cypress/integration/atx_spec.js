@@ -14,7 +14,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		cy.waitForAppLoading('atxLoading', 15000);
 	});
 
-	it('Renders ATX tile', () => {
+	it.skip('Renders ATX tile', () => {
 		cy.getByAutoId('PanelTitle-_AskTheExpert_').should('have.text', 'Ask The Expert');
 		cy.getByAutoId('recommendedATX-Title')
 			.should('have.text', atxItems[0].title);

@@ -1,0 +1,66 @@
+<div class="row">
+	<div class="col-md-6">
+		<div class="text-bold font-size" [innerText]="'_RMACaseTechnology_' | i18n | uppercase"></div>
+		<div>
+			<span [innerText]="caseDetails?.technologyName"></span>
+			<span class="icon-arrow-right-tail icon-arrow-color  qtr-padding-left qtr-padding-right"></span>
+			<span [innerText]="caseDetails?.subTechnologyName"></span>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="text-bold font-size" [innerText]="'_RMACaseProblemType_' | i18n | uppercase"></div>
+		<div>
+			<span [innerText]="caseDetails?.customerActivity"></span>
+			<span class="icon-arrow-right-tail icon-arrow-color qtr-padding-left qtr-padding-right"></span>
+			<span [innerText]="caseDetails?.problemCodeName"></span>
+		</div>
+	</div>
+</div>
+<div class="row base-padding-top">
+	<div class="col-md-6">
+		<div class="text-bold font-size" [innerText]="'_RMACaseAsset_' | i18n | uppercase"></div>
+		<div [innerText]="caseDetails?.deviceName"></div>
+	</div>
+	<div class="col-md-6">
+		<div class="text-bold font-size" [innerText]="'_RMACaseSoftwareVersion_' | i18n | uppercase"></div>
+		<div [innerText]="caseDetails?.softwareVersion"></div>
+	</div>
+</div>
+<div class="row base-padding-top">
+	<div class="col-md-6">
+		<div class="text-bold font-size" [innerText]="'_RMACaseContract_' | i18n | uppercase"></div>
+		<div [innerText]="caseDetails?.contractId"></div>
+	</div>
+	<div class="col-md-6">
+		<div class="text-bold font-size" [innerText]="'_RMACaseTrackingNumber_' | i18n | uppercase"></div>
+		<div [innerText]="caseDetails?.trackingNumber"></div>
+	</div>
+</div>
+<div class="row base-padding-top">
+	<div class="col-md-6">
+		<div class="text-bold font-size" [innerText]="'_RMACaseOwnerEmail_' | i18n | uppercase"></div>
+		<div><a data-auto-id="mailCaseOwner" href="mailto:{{caseDetails?.contactEmail}}"
+				[innerText]="caseDetails?.contactEmail"></a>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="text-bold font-size" [innerText]="'_RMACaseTacEngineer_' | i18n | uppercase"></div>
+		<div>
+			<!-- should be replaced with correct key -->
+			<a data-auto-id="mailTacEngineer" href="mailto:{{caseDetails?.additionalEmail}}"
+				[innerText]="caseDetails?.additionalEmail"></a>
+		</div>
+	</div>
+</div>
+<div class="row base-padding-top">
+	<div class="col-md-12">
+		<div class="text-bold font-size" [innerText]="'_RMACaseSummaryTitle_' | i18n | uppercase"></div>
+		<div [innerText]="caseDetails?.summary"></div>
+	</div>
+</div>
+<div class="row base-padding-top">
+	<div class="col-md-12">
+		<div class="text-bold font-size" [innerText]="'_RMACaseDescription_' | i18n | uppercase"></div>
+		<div [innerText]="caseDetails?.description"></div>
+	</div>
+</div>
