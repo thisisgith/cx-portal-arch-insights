@@ -4,23 +4,25 @@
  */
 export interface Case {
 	/** Contract Id */
-	contract: string;
+	contract?: string;
 	/** Description or first 10 words of summary */
-	description: string;
+	description?: string;
 	/** Host Name */
-	hostName: string;
+	hostName?: string;
 	/** All notes. First note is description. Latest update is last note */
-	noteList: Note[];
+	noteList?: Note[];
 	/** Id Number */
-	number: string;
+	number?: string;
+	/** case Number */
+	caseNumber: string;
 	/** Created date */
-	opened: string;
+	opened?: string;
 	/** Owner name or email */
-	owner: string;
+	owner?: string;
 	/** Related RMA Numbers. Sent as a comma-separated list */
-	relatedRmas: string[];
+	relatedRmas?: string[];
 	/** Product serial number */
-	serialNumber: string;
+	serialNumber?: string;
 	/**
 	 * Priority
 	 * 1 - Red - Network down
@@ -28,15 +30,15 @@ export interface Case {
 	 * 3 - Yellow - Network impaired
 	 * 4 - Blue - Ask a question
 	 */
-	severity: string;
+	severity?: string;
 	/** Status */
-	status: string;
+	status?: string;
 	/** Summary */
-	summary: string;
+	summary?: string;
 	/** Case Owner */
-	tacEngineer: string;
+	tacEngineer?: string;
 	/** Tracking Number */
-	trackingNumber: string;
+	trackingNumber?: string;
 }
 
 /**
