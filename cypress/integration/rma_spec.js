@@ -2,7 +2,6 @@
 const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('RMA Spec', () => {
-
 	context('RMA Search', () => {
 		before(() => {
 			cy.login();
@@ -62,13 +61,13 @@ describe('RMA Spec', () => {
 				cy.getByAutoId('rmaProductIDs').should('exist');
 				// Confirm replacement product contains four product rows
 				cy.getByAutoId('rmaProdDescr')
-				.should(($rmaProdDescr) => {
-					expect($rmaProdDescr).to.have.length(4)
-				});	
+					.should($rmaProdDescr => {
+						expect($rmaProdDescr).to.have.length(4);
+					});
 				cy.getByAutoId('rmaProdID')
-				.should(($rmaProdID) => {
-					expect($rmaProdID).to.have.length(4)
-				});	
+					.should($rmaProdID => {
+						expect($rmaProdID).to.have.length(4);
+					});
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				// Search
 				cy.getByAutoId('searchHeader').should('exist');
@@ -101,8 +100,8 @@ describe('RMA Spec', () => {
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
 				cy.getByAutoId('rmaUnavail')
-					.should(($rmaUnavail) => {
-						expect($rmaUnavail).to.have.length(5)
+					.should($rmaUnavail => {
+						expect($rmaUnavail).to.have.length(5);
 					}); // Unavailable 5 times
 				cy.getByAutoId('rmaProdID').should('exist');
 				cy.getByAutoId('rmaProdSeries').should('exist');
