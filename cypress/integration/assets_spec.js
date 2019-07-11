@@ -185,32 +185,27 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Uses proper pagination for asset list', () => {
-			// TODO: When AP-5378 is implemented, this test can be done with mocked data
-			assetMock.disable(['Assets Page 1', 'Assets Page 2', 'Assets Page 3', 'Assets Page 4']);
-			cy.server();
-			cy.route('**/inventory/v1/assets?*').as('assets');
-
-			cy.getByAutoId('CUIPager-Page2').click();
-			cy.wait('@assets').then(xhr => {
-				const params = new URLSearchParams(new URL(xhr.url).search);
-				expect(params.get('page')).to.eq('2');
-				expect(params.get('rows')).to.eq('10');
-			});
+			cy.getByAutoId('CUIPager-Page2').click()
+				.wait('Assets Page 2')
+				.then(xhr => {
+					const params = new URLSearchParams(new URL(xhr.url).search);
+					expect(params.get('page')).to.eq('2');
+					expect(params.get('rows')).to.eq('10');
+				});
 			cy.getByAutoId('CUIPager-NextPage').click();
-			cy.wait('@assets').then(xhr => {
+			cy.wait('Assets Page 3').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
 				expect(params.get('page')).to.eq('3');
 				expect(params.get('rows')).to.eq('10');
 			});
 			cy.getByAutoId('CUIPager-PrevPage').click();
-			cy.wait('@assets').then(xhr => {
+			cy.wait('Assets Page 2').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
 				expect(params.get('page')).to.eq('2');
 				expect(params.get('rows')).to.eq('10');
 			});
 
 			cy.getByAutoId('CUIPager-Page1').click();
-			assetMock.enable(['Assets Page 1', 'Assets Page 2', 'Assets Page 3', 'Assets Page 4']);
 		});
 
 		it('Filters asset list with all visual filters', () => { // PBC-228, PBC-253
@@ -248,12 +243,10 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Combines visual filters appropriately', () => {
-			// TODO: When AP-5378 is implemented, this test can be done with mocked data
-			assetMock.disable(['Assets Page 1', 'Covered Assets']);
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
-			cy.getByAutoId('CoveredPoint').click().wait('@assets');
+			cy.getByAutoId('CoveredPoint').click().wait('Covered Assets');
 			cy.getByAutoId('UncoveredPoint').click({ force: true }).wait('@assets');
 			cy.getByAutoId(`${assets[0].contractNumber}Point`).click();
 			cy.wait('@assets').then(xhr => {
@@ -265,8 +258,6 @@ describe('Assets', () => { // PBC-41
 			});
 
 			cy.getByAutoId('FilterBarClearAllFilters').click();
-			assetMock.enable(['Assets Page 1', 'Covered Assets']);
-			cy.waitForAppLoading();
 		});
 
 		it('Visual filters can be collapsed/expanded', () => {
@@ -420,42 +411,26 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Uses proper pagination for asset cards', () => {
-			// TODO: When AP-5378 is implemented, this test can be done with mocked data
-			assetMock.disable([
-				'Assets Page 1 - Grid View',
-				'Assets Page 2 - Grid View',
-				'Assets Page 3 - Grid View',
-				'Assets Page 4 - Grid View',
-			]);
-			cy.server();
-			cy.route('**/inventory/v1/assets?*').as('assets');
-
 			cy.getByAutoId('CUIPager-Page2').click();
-			cy.wait('@assets').then(xhr => {
+			cy.wait('Assets Page 2 - Grid View').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
 				expect(params.get('page')).to.eq('2');
 				expect(params.get('rows')).to.eq('12');
 			});
 			cy.getByAutoId('CUIPager-NextPage').click();
-			cy.wait('@assets').then(xhr => {
+			cy.wait('Assets Page 3 - Grid View').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
 				expect(params.get('page')).to.eq('3');
 				expect(params.get('rows')).to.eq('12');
 			});
 			cy.getByAutoId('CUIPager-PrevPage').click();
-			cy.wait('@assets').then(xhr => {
+			cy.wait('Assets Page 2 - Grid View').then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
 				expect(params.get('page')).to.eq('2');
 				expect(params.get('rows')).to.eq('12');
 			});
 
 			cy.getByAutoId('CUIPager-Page1').click();
-			assetMock.enable([
-				'Assets Page 1 - Grid View',
-				'Assets Page 2 - Grid View',
-				'Assets Page 3 - Grid View',
-				'Assets Page 4 - Grid View',
-			]);
 		});
 
 		it('Gracefully handles lack of response from API', () => {
