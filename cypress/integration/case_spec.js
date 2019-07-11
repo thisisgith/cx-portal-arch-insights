@@ -17,11 +17,19 @@ describe('Case Spec', () => {
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(caseVal.concat('{enter}'));
 			cy.wait('@case').then(() => {
-				cy.getByAutoId('caseNum').should('exist'); // .should('contain', i18n._Case_);
-				cy.getByAutoId('latestUpdate').should('exist');
-				cy.getByAutoId('caseStatus').should('exist');
-				cy.getByAutoId('viewCaseDetailsB').should('exist');
-				cy.getByAutoId('viewAllOpenCasesB').should('exist');
+				cy.getByAutoId('caseNum').should('exist').should('contain', ('Case ').concat(caseVal));
+				cy.getByAutoId('latestUpdate').should('exist').should('contain', i18n._LatestUpdate_);
+				cy.getByAutoId('caseStatus').should('exist').should('contain', i18n._Status_);
+				cy.getByAutoId('caseOwner').should('exist').should('contain', i18n._CaseOwner_);
+				cy.getByAutoId('caseSeverity').should('exist').should('contain', i18n._Severity_);
+				cy.getByAutoId('caseCreated').should('exist').should('contain', i18n._Created_);
+				cy.getByAutoId('caseContract').should('exist').should('contain', i18n._Contract_);
+				cy.getByAutoId('caseDevice').should('exist').should('contain', i18n._Device_);
+				cy.getByAutoId('caseTACEng').should('exist').should('contain', i18n._TACEngineer_);
+				cy.getByAutoId('caseTracking').should('exist').should('contain', i18n._TrackingNumber_);
+				cy.getByAutoId('caseRelRMAs').should('exist').should('contain', i18n._RelatedRMAs_);
+				cy.getByAutoId('viewCaseDetailsB').should('exist').should('contain', i18n._ViewCaseDetails_);
+				cy.getByAutoId('viewAllOpenCasesB').should('exist').should('contain', i18n._ViewAllOpenCases_);
 			});
 			cy.getByAutoId('searchSiteSelect').should('exist');
 			cy.getByAutoId('searchTypeSelect').should('exist');
