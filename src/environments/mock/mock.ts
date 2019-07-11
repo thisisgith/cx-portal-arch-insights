@@ -20,6 +20,8 @@ import {
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryScenarios,
 	SuccessPathScenarios,
+	FieldNoticeScenarios,
+	FieldNoticeBulletinScenarios,
 	HealthStatusScenarios,
 	VulnerabilityScenarios,
 	UserScenarios,
@@ -36,6 +38,8 @@ import {
 	CoverageCountsResponse,
 	CoverageResponse,
 	ELearningResponse,
+	FieldNoticeBulletinResponse,
+	FieldNoticeResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
@@ -60,6 +64,8 @@ type ResponseBody = (
 	CoverageCountsResponse |
 	CoverageResponse |
 	ELearningResponse |
+	FieldNoticeBulletinResponse |
+	FieldNoticeResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
@@ -125,10 +131,13 @@ export const mockSettings: MockSettings = {
 		ContractScenarios,
 		CoverageScenarios,
 		ELearningScenarios,
+		FieldNoticeBulletinScenarios,
+		FieldNoticeScenarios,
 		HardwareEOLBulletinScenarios,
 		HardwareEOLCountScenarios,
 		HardwareEOLScenarios,
 		HardwareScenarios,
+		HealthStatusScenarios,
 		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
@@ -137,8 +146,7 @@ export const mockSettings: MockSettings = {
 		SecurityAdvisoryBulletinScenarios,
 		SecurityAdvisoryScenarios,
 		SuccessPathScenarios,
-		HealthStatusScenarios,
-		VulnerabilityScenarios,
 		UserScenarios,
+		VulnerabilityScenarios,
 	]),
 };

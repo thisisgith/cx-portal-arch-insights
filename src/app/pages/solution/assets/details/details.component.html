@@ -2,7 +2,9 @@
 	<cui-tab [label]="'_Summary_' | i18n | uppercase">
 		<ng-container *ngTemplateOutlet="summary"></ng-container>
 	</cui-tab>
-	<cui-tab [label]="'_Hardware_' | i18n | uppercase" disabled="true"></cui-tab>
+	<cui-tab [label]="'_Hardware_' | i18n | uppercase" disabled="true">
+		<asset-activity [asset]="asset"></asset-activity>
+	</cui-tab>
 	<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true"></cui-tab>
 	<cui-tab [label]="'_Advisories_' | i18n | uppercase">
 		<div class="dbl-margin-top" *ngIf="asset">

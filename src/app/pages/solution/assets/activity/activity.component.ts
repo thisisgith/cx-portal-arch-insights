@@ -7,11 +7,9 @@ import {
 	OnChanges,
 	SimpleChanges,
 } from '@angular/core';
-import { HardwareInfo } from '@sdp-api';
+import { Asset } from '@sdp-api';
 import { CuiTimelineItem } from '@cisco-ngx/cui-components';
-
 import * as _ from 'lodash-es';
-import { LogService } from '@cisco-ngx/cui-services';
 
 /**
  * Asset Details Component
@@ -23,7 +21,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class AssetActivityComponent implements OnInit, OnChanges {
 
-	@Input() public asset: HardwareInfo;
+	@Input() public asset: Asset;
 	@ViewChild('timelineItem', { static: true }) private timelineItemTemplate: TemplateRef<{ }>;
 
 	public status = {
@@ -32,14 +30,7 @@ export class AssetActivityComponent implements OnInit, OnChanges {
 		},
 	};
 
-	public hidden = true;
-	public fullscreen = false;
-
 	public timelineData: CuiTimelineItem[];
-
-	constructor (
-		private logger: LogService,
-	) { }
 
 	/**
 	 * Initializer
@@ -93,12 +84,5 @@ export class AssetActivityComponent implements OnInit, OnChanges {
 
 		// Later replace with API call
 		this.timelineData = timelineData;
-	}
-
-	/**
-	 * Toggle fullscreen details
-	 */
-	public toggleFullscreen () {
-		this.fullscreen = !this.fullscreen;
 	}
 }
