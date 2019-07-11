@@ -336,6 +336,15 @@ export const HealthStatusScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 500,
+					description: 'Health-Status - Failure',
+					response: {
+						body: '',
+						status: 500,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: api,
