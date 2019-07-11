@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges,
 	Output, EventEmitter, ViewChild, TemplateRef, forwardRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { CaseService } from '@cui-x/services';
 import { InventoryService, HardwareResponse } from '@sdp-api';
 import { Case, Note, SearchContext, SearchQuery } from '@interfaces';
@@ -7,6 +8,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { Subject, of, Observable } from 'rxjs';
 import { tap, takeUntil, switchMap, catchError } from 'rxjs/operators';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
+import { SearchService } from '@services';
 
 import * as _ from 'lodash-es';
 
@@ -17,11 +19,13 @@ import * as _ from 'lodash-es';
 enum StatusIconMap {
 	'CISCO PENDING' = 'icon-time text-warning-alt',
 	'CLOSE PENDING' = 'icon-time text-success',
-	CLOSED = 'icon-check text-dkgray-4',
+	CLOSED = 'icon-check-outline text-muted',
 	'CUSTOMER PENDING' = 'icon-time text-primary',
-	'CUSTOMER REQUESTED CLOSURE' = 'icon-time text-dkgray-4',
+	'CUSTOMER REQUESTED CLOSURE' = 'icon-time text-muted',
+	'CUSTOMER UPDATED' = 'icon-check-outline text-primary',
 	'RELEASE PENDING' = 'icon-time text-turquoise',
 	'SERVICE ORDER PENDING' = 'icon-time text-warning',
+	'UNKNOWN' = 'icon-circle text-muted',
 }
 
 /**
@@ -74,6 +78,8 @@ implements OnInit, OnDestroy, OnChanges {
 		private logger: LogService,
 		private caseService: CaseService,
 		private inventoryService: InventoryService,
+		private router: Router,
+		private searchService: SearchService,
 	) {
 		super();
 		this.logger.debug('caseSearchComponent Created!');
@@ -204,8 +210,9 @@ implements OnInit, OnDestroy, OnChanges {
 		}
 		this.case.severity = caseDetails.priority;
 		this.case.status = caseDetails.status;
-		this.statusIcon = StatusIconMap[<string> _.get(this.case, 'status', 'CUSTOMER PENDING')
-			.toUpperCase()];
+		const statusKey = _.get(this.case, 'status', 'UNKNOWN')
+			.toUpperCase();
+		this.statusIcon = _.get(StatusIconMap, statusKey);
 		this.case.summary = caseDetails.summary;
 		if (!this.case.description && this.case.summary) {
 			const splitSummary = this.case.summary.split(' ');
@@ -295,5 +302,18 @@ implements OnInit, OnDestroy, OnChanges {
 				return of(null);
 			}),
 		);
+	}
+
+	/**
+	 * Navigate to case list view and close modal
+	 * Occurs when user clicks "View all Cases" button
+	 * @param casenum optional casenumber to navigate to, otherwise just goes to list
+	 */
+	public onViewCase (casenum?: string) {
+		this.router.navigate(
+			['solution/resolution'],
+			{ queryParams: { ...(casenum ? { casenum } : { }) } },
+		);
+		this.searchService.close();
 	}
 }

@@ -18,9 +18,9 @@
 		</dl>
 	</div>
 	<h3 [innerText]="'_RMA_' | i18n:rmaNumber.query"></h3>
-	<div *ngIf="rmaTableData.products.length <= 1" class="row">
-		<div class="row no-gutters col-md-6 half-margin-top">
-			<div class="col-md-6 dbl-margin-right">
+	<div *ngIf="rmaTableData.products.length <= 1">
+		<div class="row half-margin-top">
+			<div class="col-md-3 dbl-margin-right">
 				<dl class="dl--inline-medium">
 					<ng-container *ngTemplateOutlet="caseNumber"></ng-container>
 					<dt>
@@ -34,7 +34,7 @@
 					<ng-container *ngTemplateOutlet="contract"></ng-container>
 				</dl>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<dl class="dl--inline-medium">
 					<dt>
 						<span class="subheading text-small text-uppercase"
@@ -53,54 +53,13 @@
 							[innerText]="rmaTableData.products[0].shippedPartNo"></span>
 					</dd>
 				</dl>
-			</div>
-			<ng-container *ngTemplateOutlet="detailsButton"></ng-container>
+			</div>	
 		</div>
-		<div class="row col-md-6 flex-right">
-			<div class="col-md-11">
-				<div class="panel panel--compact panel--bordered">
-					<div class="row half-margin-top qtr-margin-bottom">
-						<div class="col-md-5 flex-center qtr-margin">
-							<!-- TODO: Add real product image -->
-							<img alt="{{ '_Product_' | i18n }}" src="assets/img/inventory/CAT-3650.png">
-						</div>
-						<dl class="col-md-6 dl--inline-medium">
-							<dt>
-								<span class="subheading text-small text-uppercase"
-									[innerText]="'_ProductSeries_' | i18n"></span>
-							</dt>
-							<dd>
-								<!-- TODO: Get actual product series -->
-								<span *ngIf="rmaTableData?.productSeries; else unavailable"
-									[innerText]="rmaTableData.productSeries"></span>
-							</dd>
-							<dt>
-								<span class="subheading text-small text-uppercase"
-									[innerText]="'_EndOfSaleDate_' | i18n"></span>
-							</dt>
-							<dd>
-								<!-- TODO: Get actual end of sale date -->
-								<span *ngIf="rmaTableData?.endOfSale; else unavailable"
-									[innerText]="rmaTableData.endOfSale"></span>
-							</dd>
-							<dt>
-								<span class="subheading text-small text-uppercase"
-									[innerText]="'_EndOfSupportDate_' | i18n"></span>
-							</dt>
-							<dd>
-								<!-- TODO: Get actual end of support date -->
-								<span *ngIf="rmaTableData?.endOfSupport; else unavailable"
-									[innerText]="rmaTableData.endOfSupport"></span>
-							</dd>
-						</dl>
-					</div>
-				</div>
-			</div>
-		</div>
+		<ng-container *ngTemplateOutlet="detailsButton"></ng-container>
 	</div>
 	<div *ngIf="rmaTableData.products.length > 1">
-		<div class="row no-gutters col-md-6 half-margin-top no-padding">
-			<div class="col-md-6 dbl-margin-right">
+		<div class="row half-margin-top no-padding">
+			<div class="col-md-3 dbl-margin-right">
 				<dl class="dl--inline-medium">
 					<dt>
 						<span class="subheading text-small text-uppercase"
@@ -112,7 +71,7 @@
 					<ng-container *ngTemplateOutlet="caseNumber"></ng-container>
 				</dl>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-3">
 				<dl class="dl--inline-medium">
 					<ng-container *ngTemplateOutlet="contract"></ng-container>
 				</dl>
@@ -141,9 +100,10 @@
 			[innerText]="'_CaseNumber_' | i18n"></span>
 	</dt>
 	<dd>
-		<!--TODO: Link to case details page -->
-		<a data-auto-id="caseNumber" *ngIf="rmaTableData?.caseId; else unavailable"
-			[innerText]="rmaTableData.caseId"></a>
+		<a data-auto-id="caseNumber"
+		*ngIf="rmaTableData?.caseId; else unavailable"
+			[innerText]="rmaTableData.caseId"
+			(click)="onViewCaseDetails(rmaTableData.caseId)"></a>
 	</dd>
 </ng-template>
 
@@ -154,15 +114,14 @@
 	</dt>
 	<dd>
 		<!--TODO: Link to contract details page -->
-		<a data-auto-id="contractNumber" *ngIf="rmaTableData.contractNumber; else unavailable"
-			[innerText]="rmaTableData.contractNumber"></a>
+		<span *ngIf="rmaTableData.contractNumber; else unavailable"
+			[innerText]="rmaTableData.contractNumber"></span>
 	</dd>
 </ng-template>
 
 <ng-template #detailsButton>
 	<div class="qtr-margin-top">
-		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
-			class="text-uppercase" [innerText]="'_ViewRMADetails_' | i18n"></button>
+			<button class="btn btn--small btn--secondary text-uppercase" [innerText]="'_ViewRMADetails_' | i18n"></button>
 	</div>
 </ng-template>
 
