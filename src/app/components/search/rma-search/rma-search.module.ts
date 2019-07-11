@@ -5,7 +5,6 @@ import {
 	I18nPipeModule,
 } from '@cisco-ngx/cui-pipes';
 import {
-	CuiButtonModule,
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 import { RMASearchComponent } from './rma-search.component';
@@ -23,7 +22,6 @@ import { CourierLinkPipe } from './pipes/courier-link.pipe';
 	imports: [
 		CommonModule,
 		RouterModule,
-		CuiButtonModule,
 		CuiSpinnerModule,
 		GeneralSearchModule,
 		I18nPipeModule,
