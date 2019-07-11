@@ -111,6 +111,21 @@ export const ACCScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-Empty',
+					response: { },
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-One-ACC',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'adopt'),
+						status: 200,
+					},
+					selected: true,
+				},
 			],
 		},
 		url: `${api}?usecase=Wireless Assurance&` +
