@@ -11,6 +11,8 @@ const accId1 = '111111';
 const accId2 = '222222';
 const accId3 = '333333';
 const accId4 = '444444';
+const accId5 = '555555';
+const accId6 = '666666';
 
 /**
  * Mock
@@ -62,13 +64,23 @@ function MockACC (
 			title: 'Cisco DNA Center Wireless Assurance Feature Planning',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
+		{
+			accId: `${accId6}`,
+			description: 'Experience this live coaching engagement on general Assurance ' +
+				'concepts and features such as network, device, client, and application ' +
+				'analytics. Help your team hit the ground running',
+			isFavorite: false,
+			status: 'requested',
+			title: 'Cisco Software-Defined Access Transition Planning',
+			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+		},
 		{ },
 	];
 
 	if (pitstop.toLowerCase() === 'adopt') {
 		items = [
 			{
-				accId: '555555',
+				accId: `${accId5}`,
 				description: 'This is a title for Adoption',
 				isFavorite: false,
 				status: 'completed',
