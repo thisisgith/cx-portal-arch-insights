@@ -1,7 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import {
 	HardwareScenarios,
 	Mock,
+	CoverageScenarios,
+	AssetScenarios,
 } from '@mock';
 import { AssetDetailsComponent } from './details.component';
 import { AssetDetailsModule } from './details.module';
@@ -10,6 +12,8 @@ import * as _ from 'lodash-es';
 import { CaseService } from '@cui-x/services';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { InventoryService, ContractsService } from '@sdp-api';
+import { ViewChild, Component } from '@angular/core';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -23,18 +27,43 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
+// tslint:disable-next-line: completed-docs
+@Component({
+	template: `
+		<asset-details [asset]={}></asset-details>
+	`,
+})
+class WrapperComponent {
+	@ViewChild(AssetDetailsComponent, { static: true })
+		public assetDetailsComponent: AssetDetailsComponent;
+
+	public customerId;
+	@ViewChild('timelineItem', { static: true }) private timelineItemTemplate;
+
+	public asset;
+	public coverageData;
+}
+
 describe('AssetDetailsComponent', () => {
 	let component: AssetDetailsComponent;
+	let componentFromWrapper: WrapperComponent;
 	let fixture: ComponentFixture<AssetDetailsComponent>;
+	let wrapperComponentFixture: ComponentFixture<WrapperComponent>;
 	let caseService: CaseService;
+	let inventoryService: InventoryService;
+	let contractsService: ContractsService;
 
 	let caseSpy;
+	let contractsSpy;
+	let inventorySpy;
 
 	/**
 	 * Restore spies
 	 */
 	const restoreSpies = () => {
 		_.invoke(caseSpy, 'restore');
+		_.invoke(contractsSpy, 'restore');
+		_.invoke(inventorySpy, 'restore');
 	};
 
 	/**
@@ -44,10 +73,19 @@ describe('AssetDetailsComponent', () => {
 		caseSpy = spyOn(caseService, 'read')
 			.and
 			.returnValue(of({ totalElements: 30 }));
+		contractsSpy = spyOn(contractsService, 'getDevicesAndCoverageResponse')
+			.and
+			.callThrough();
+		inventorySpy = spyOn(inventoryService, 'getHardwareResponse')
+			.and
+			.callThrough();
 	};
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
+			declarations: [
+				WrapperComponent,
+			],
 			imports: [
 				AssetDetailsModule,
 				HttpClientTestingModule,
@@ -56,6 +94,12 @@ describe('AssetDetailsComponent', () => {
 		.compileComponents();
 
 		caseService = TestBed.get(CaseService);
+		contractsService = TestBed.get(ContractsService);
+		inventoryService = TestBed.get(InventoryService);
+
+		wrapperComponentFixture = TestBed.createComponent(WrapperComponent);
+		wrapperComponentFixture.detectChanges();
+		componentFromWrapper = wrapperComponentFixture.componentInstance;
 	}));
 
 	beforeEach(() => {
@@ -69,43 +113,30 @@ describe('AssetDetailsComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should not fail when no serial number is present', () => {
-		const deviceResponse = getActiveBody(HardwareScenarios[0]);
-		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
-
-		_.set(asset, 'serialNumber', null);
-
-		component.asset = asset;
-
-		fixture.detectChanges();
-
-		expect(component.status.loading.cases)
-			.toBeFalsy();
-	});
-
-	it('should try and fetch cases if a serial number is present', () => {
+	it('should fetch hardware data', fakeAsync(() => {
 		buildSpies();
+		tick(1000);
 
-		const deviceResponse = getActiveBody(HardwareScenarios[0]);
+		const deviceResponse = getActiveBody(AssetScenarios[0]);
 		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
+		componentFromWrapper.assetDetailsComponent.asset = asset;
 
-		component.asset = asset;
+		componentFromWrapper.assetDetailsComponent.refresh();
 
-		fixture.detectChanges();
+		wrapperComponentFixture.detectChanges();
+		expect(contractsSpy)
+			.toHaveBeenCalled();
+	}));
 
-		expect(component.componentData.openCases)
-			.toEqual(30);
-	});
-
-	it('should handle failing cases api call', () => {
-		caseSpy = spyOn(caseService, 'read')
+	it('should handle failing coverage api call', () => {
+		contractsSpy = spyOn(contractsService, 'getDevicesAndCoverage')
 			.and
 			.returnValue(throwError(new HttpErrorResponse({
 				status: 404,
 				statusText: 'Resource not found',
 			})));
 
-		const deviceResponse = getActiveBody(HardwareScenarios[0]);
+		const deviceResponse = getActiveBody(CoverageScenarios[2]);
 		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
 
 		component.asset = asset;
@@ -114,8 +145,11 @@ describe('AssetDetailsComponent', () => {
 
 		fixture.whenStable()
 			.then(() => {
-				expect(component.componentData.openCases)
-					.toEqual(0);
+				expect(component.status.loading.coverage)
+					.toEqual(false);
+
+				expect(component.coverageData)
+					.toEqual(undefined);
 			});
 	});
 
@@ -157,21 +191,21 @@ describe('AssetDetailsComponent', () => {
 			.toEqual('AAA');
 	});
 
-	it('should handle fullscreen', () => {
-		buildSpies();
+	// it('should handle fullscreen', () => {
+	// 	buildSpies();
 
-		const deviceResponse = getActiveBody(HardwareScenarios[0]);
-		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
-		component.asset = asset;
-		fixture.detectChanges();
+	// 	const deviceResponse = getActiveBody(HardwareScenarios[0]);
+	// 	const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
+	// 	component.asset = asset;
+	// 	fixture.detectChanges();
 
-		expect(component.fullscreen)
-			.toBeFalsy();
+	// 	expect(component.fullscreen)
+	// 		.toBeFalsy();
 
-		component.fullscreen = true;
+	// 	component.fullscreen = true;
 
-		expect(component.fullscreen)
-			.toBeTruthy();
+	// 	expect(component.fullscreen)
+	// 		.toBeTruthy();
 
-	});
+	// });
 });
