@@ -1,9 +1,8 @@
-import MockService from '../support/mockService';
+// import MockService from '../support/mockService';
 
 const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('Serial Spec', () => {
-
 	context('Serial Search', () => {
 		before(() => {
 			cy.login();
