@@ -32,9 +32,13 @@ describe('RMA Spec', () => {
 				cy.getByAutoId('rmaEOSupportD').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 			});
-			// Search
+			// General Search section
 			cy.getByAutoId('searchHeader').should('exist');
 			cy.getByAutoId('filterBy').should('exist');
+			cy.getByAutoId('cui-select')
+				.should($cuiselect => {
+					expect($cuiselect).to.have.length(2);
+				}); // Unavailable 2 times
 			cy.getByAutoId('relGenRes').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
@@ -69,9 +73,13 @@ describe('RMA Spec', () => {
 						expect($rmaProdID).to.have.length(4);
 					});
 				cy.getByAutoId('rmaViewDetButton').should('exist');
-				// Search
+				// General Search section
 				cy.getByAutoId('searchHeader').should('exist');
 				cy.getByAutoId('filterBy').should('exist');
+				cy.getByAutoId('cui-select')
+					.should($cuiselect => {
+						expect($cuiselect).to.have.length(2);
+					});
 				cy.getByAutoId('relGenRes').should('exist');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
@@ -102,15 +110,19 @@ describe('RMA Spec', () => {
 				cy.getByAutoId('rmaUnavail')
 					.should($rmaUnavail => {
 						expect($rmaUnavail).to.have.length(5);
-					}); // Unavailable 5 times
+					});
 				cy.getByAutoId('rmaProdID').should('exist');
 				cy.getByAutoId('rmaProdSeries').should('exist');
 				cy.getByAutoId('rmaEOSaleD').should('exist');
 				cy.getByAutoId('rmaEOSupportD').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
-				// Search
+				// General Search section
 				cy.getByAutoId('searchHeader').should('exist');
 				cy.getByAutoId('filterBy').should('exist');
+				cy.getByAutoId('cui-select')
+					.should($cuiselect => {
+						expect($cuiselect).to.have.length(2);
+					});
 				cy.getByAutoId('relGenRes').should('exist');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
@@ -125,7 +137,10 @@ describe('RMA Spec', () => {
 			cy.wait('@rma').then(() => {
 				cy.get('app-general-search').should('contain', '10 Results for "'.concat(inputVal).concat('"'));
 				cy.getByAutoId('searchSiteSelect').should('exist');
-				cy.getByAutoId('cui-select').should('exist');			// 2 found
+				cy.getByAutoId('cui-select')
+					.should($cuiselect => {
+						expect($cuiselect).to.have.length(2);
+					});
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');

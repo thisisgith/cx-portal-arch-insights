@@ -11,13 +11,13 @@
 		<dl class="dl--inline">
 			<dt class="flex-center-inline-vertical">
 				<span class="qtr-margin-right icon-small" [ngClass]="statusIcon"></span>
-				<span class="text-muted" [innerText]="('_Status_' | i18n) + ':'"></span>
+				<span class="text-muted" data-auto-id="caseStatus" [innerText]="('_Status_' | i18n) + ':'"></span>
 				<span class="qtr-margin-left text-muted" *ngIf="case?.status; else unavailable"
 					[innerText]="case.status"></span>
 			</dt>
 		</dl>
 	</div>
-	<h3 [innerText]="'_Case_' | i18n:caseNumber.query"></h3>
+	<h3 data-auto-id="caseNum" [innerText]="'_Case_' | i18n:caseNumber.query"></h3>
 	<div class="row">
 		<div class="row no-gutters col-md-6">
 			<div *ngIf="case?.description; else unavailable" [innerText]="case.description"></div>
@@ -103,16 +103,16 @@
 			</div>
 			<div class="base-margin-top">
 				<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
-					class="text-uppercase" [innerText]="'_ViewCaseDetails_' | i18n"></button>
+					class="text-uppercase" data-auto-id="viewCaseDetailsB" [innerText]="'_ViewCaseDetails_' | i18n"></button>
 				<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
-					class="text-uppercase" [innerText]="'_ViewAllOpenCases_' | i18n"></button>
+					class="text-uppercase" data-auto-id="viewAllOpenCasesB" [innerText]="'_ViewAllOpenCases_' | i18n"></button>
 			</div>
 		</div>
 		<div class="row col-md-6 flex-right">
 			<div class="col-md-11">
 				<div class="panel panel--loose panel--bordered">
 					<div class="half-margin-bottom">
-						<span [innerText]="'_LatestUpdate_' | i18n"></span>
+						<span data-auto-id="latestUpdate" [innerText]="'_LatestUpdate_' | i18n"></span>
 						<span class="half-margin-left" *ngIf="lastNote?.createdDate"
 							[innerText]="'(' + (lastNote.createdDate | fromNow) + ')'"></span>
 					</div>

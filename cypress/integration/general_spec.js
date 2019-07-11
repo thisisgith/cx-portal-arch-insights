@@ -30,7 +30,10 @@ describe('General Spec', () => {
 				.type(searchVal.concat('{enter}'));
 			cy.wait('@case').then(() => {
 				cy.getByAutoId('searchSiteSelect').should('exist');
-				cy.getByAutoId('cui-select').should('exist');			// 2 found
+				cy.getByAutoId('cui-select')
+					.should($cuiselect => { // variables can't have a hyphen
+						expect($cuiselect).to.have.length(2);
+					});
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');

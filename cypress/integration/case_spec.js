@@ -1,4 +1,5 @@
 // import MockService from '../support/mockService';
+const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('Case Spec', () => {
 	context('Case Search', () => {
@@ -8,8 +9,7 @@ describe('Case Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		// TODO: Unskip and refactor test once PBC-219 is merged
-		it.skip('Case Search', () => {
+		it('Case Search', () => {
 			// PBC-169
 			const caseVal = '688296392'; // '686569178' '688296392' also works
 			cy.server();
@@ -17,18 +17,18 @@ describe('Case Spec', () => {
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(caseVal.concat('{enter}'));
 			cy.wait('@case').then(() => {
-				cy.get('app-case-search').within(() => {
-					cy.get('h3').should('exist', 'Case '.concat(caseVal));
-					cy.get('span').should('contain', 'Status:');
-					cy.get('h5').should('contain', 'Latest Update');
-					cy.getByAutoId('seeMore').should('exist');
-					cy.getByAutoId('viewCaseDetails').should('exist');
-					cy.getByAutoId('viewAllOpenCases').should('exist');
-				});
+				cy.getByAutoId('caseNum').should('exist'); // .should('contain', i18n._Case_);
+				cy.getByAutoId('latestUpdate').should('exist');
+				cy.getByAutoId('caseStatus').should('exist');
+				cy.getByAutoId('viewCaseDetailsB').should('exist');
+				cy.getByAutoId('viewAllOpenCasesB').should('exist');
 			});
 			cy.getByAutoId('searchSiteSelect').should('exist');
 			cy.getByAutoId('searchTypeSelect').should('exist');
-			cy.getByAutoId('cui-select').should('exist');			// 2 found
+			cy.getByAutoId('cui-select')
+				.should($cuiselect => {
+					expect($cuiselect).to.have.length(2);
+				});
 			cy.getByAutoId('searchResultLinkPre0').should('exist');
 			cy.getByAutoId('searchResultLinkPre1').should('exist');
 			cy.getByAutoId('searchResultLinkPre2').should('exist');
@@ -43,11 +43,14 @@ describe('Case Spec', () => {
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(caseVal.concat('{enter}'));
 			cy.wait('@case').then(() => {
-				// cy.get('h3').should('not.exist', 'Case '.concat(caseVal));
+				cy.getByAutoId('caseNum').should('not.exist'); // .should('contain', i18n._Case_);
 				cy.get('app-general-search').should('contain', '10 Results for "'.concat(caseVal).concat('"'));
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
-				cy.getByAutoId('cui-select').should('exist');			// 2 found
+				cy.getByAutoId('cui-select')
+					.should($cuiselect => {
+						expect($cuiselect).to.have.length(2);
+					});
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
