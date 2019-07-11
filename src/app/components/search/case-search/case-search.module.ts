@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { I18nPipeModule, FromNowPipeModule, TruncatePipeModule } from '@cisco-ngx/cui-pipes';
 import { CaseSearchComponent } from './case-search.component';
 
@@ -19,6 +20,7 @@ import {
 	],
 	imports: [
 		CommonModule,
+		RouterModule,
 		CuiButtonModule,
 		CuiLoaderModule,
 		CuiSpinnerModule,

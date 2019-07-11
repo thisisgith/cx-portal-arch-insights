@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { RelatedRmaComponent } from './related-rma.component';
 import { RelatedRmaModule } from './related-rma.module';
@@ -9,7 +10,10 @@ describe('RelatedRmaComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [RelatedRmaModule],
+			imports: [
+				RelatedRmaModule,
+				RouterTestingModule,
+			],
 		})
 		.compileComponents();
 	}));

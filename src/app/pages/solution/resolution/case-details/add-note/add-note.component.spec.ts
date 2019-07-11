@@ -25,6 +25,9 @@ describe('AddNoteComponent', () => {
 		fixture = TestBed.createComponent(AddNoteComponent);
 		service = TestBed.get(CaseService);
 		component = fixture.componentInstance;
+		component.case = {
+			caseNumber: '123456789',
+		};
 		fixture.detectChanges();
 	});
 

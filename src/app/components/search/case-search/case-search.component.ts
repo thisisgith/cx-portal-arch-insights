@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges,
 	Output, EventEmitter, ViewChild, TemplateRef, forwardRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { CaseService } from '@cui-x/services';
 import { InventoryService, HardwareResponse } from '@sdp-api';
 import { Case, Note, SearchContext, SearchQuery } from '@interfaces';
@@ -7,6 +8,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { Subject, of, Observable } from 'rxjs';
 import { tap, takeUntil, switchMap, catchError } from 'rxjs/operators';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
+import { SearchService } from '@services';
 
 import * as _ from 'lodash-es';
 
@@ -74,6 +76,8 @@ implements OnInit, OnDestroy, OnChanges {
 		private logger: LogService,
 		private caseService: CaseService,
 		private inventoryService: InventoryService,
+		private router: Router,
+		private searchService: SearchService,
 	) {
 		super();
 		this.logger.debug('caseSearchComponent Created!');
@@ -295,5 +299,18 @@ implements OnInit, OnDestroy, OnChanges {
 				return of(null);
 			}),
 		);
+	}
+
+	/**
+	 * Navigate to case list view and close modal
+	 * Occurs when user clicks "View all Cases" button
+	 * @param casenum optional casenumber to navigate to, otherwise just goes to list
+	 */
+	public onViewCase (casenum?: string) {
+		this.router.navigate(
+			['solution/resolution'],
+			{ queryParams: { ...(casenum ? { casenum } : { }) } },
+		);
+		this.searchService.close();
 	}
 }

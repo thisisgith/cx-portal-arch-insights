@@ -40,7 +40,7 @@ function MockRMA (options: { devices: number } = { devices: 1 }): RMAResponse {
 					state: '',
 					stateProv: '',
 				},
-				caseId: '625774679',
+				caseId: '686569635',
 				contractId: '92156435',
 				customerRefInfo: {
 					customerPONumber: '',

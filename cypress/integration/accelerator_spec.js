@@ -61,10 +61,8 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							.should('contain', i18n._CSETouch_);
 						break;
 					default:	// Default: recommended
-						cy.getByAutoId('Reqest1on1Button')
-							.should('contain', i18n._Request1on1_)
-							.parent()
-							.should('have.attr', 'href', acc.url);
+						cy.getByAutoId('Request1on1Button')
+							.should('contain', i18n._Request1on1_);
 				}
 
 				// PBC-237 Check bookmark ribbon

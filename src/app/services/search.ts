@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+
 import { LogService } from '@cisco-ngx/cui-services';
 import { SearchType, SearchEnum } from '@interfaces';
 import { environment } from '@environment';
 
-import { Observable, of } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 /**
@@ -44,6 +45,7 @@ const typeaheadUrl = '/esps/search/suggest/cdcpr01zad';
 export class SearchService {
 
 	private serviceUrl: string;
+	public close$ = new Subject();
 
 	constructor (
 		private http: HttpClient,
@@ -119,6 +121,13 @@ export class SearchService {
 					return of(null);
 				}),
 			);
+	}
+
+	/**
+	 * Fire signal to close the main search modal
+	 */
+	public close () {
+		this.close$.next();
 	}
 }
 

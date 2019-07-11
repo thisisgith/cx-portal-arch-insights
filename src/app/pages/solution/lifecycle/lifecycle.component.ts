@@ -105,6 +105,11 @@ export class LifecycleComponent implements OnDestroy {
 		context: null,
 		visible: false,
 	};
+	public requestModal = {
+		content: null,
+		context: null,
+		visible: false,
+	};
 	public visibleContext: ATX[];
 	public atxScheduleCardOpened = false;
 	public sessionSelected: ATXSession;
@@ -140,6 +145,9 @@ export class LifecycleComponent implements OnDestroy {
 	private selectedTechnology: RacetrackTechnology;
 	private solutionSubscribe: Subscription;
 	private technologySubscribe: Subscription;
+
+	public selectAccComponent = false;
+	public accRequestSubmitted = false;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -189,6 +197,24 @@ export class LifecycleComponent implements OnDestroy {
 				usecase: '',
 			},
 		};
+	}
+
+	/**
+	 * Select/deselect the ACCRequestForm component
+	 * @param selected whether the component is visible or not
+	 */
+	public selectAccRequestForm (selected: boolean) {
+		this.selectAccComponent = selected;
+	}
+
+	/**
+	 * Trigger the submitted acc success text.  Currently placeholder and will be removed
+	 * because this info will come from the API
+	 * @param submitted if the request was submitted
+	 */
+	public accRequestSubmit  (submitted: boolean) {
+		this.accRequestSubmitted = submitted;
+		this.selectAccRequestForm(false);
 	}
 
 	/**

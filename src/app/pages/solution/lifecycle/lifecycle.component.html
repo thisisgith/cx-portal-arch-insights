@@ -164,7 +164,7 @@
 		<div class="icon-bookmark icon-medium"
 			*ngIf="autoid==='recommendedACC' || autoid==='moreACCList'"
 			(click)="setFavorite(item)"
-			[ngClass]="getACCRibbonClass(item)" 
+			[ngClass]="getACCRibbonClass(item)"
 			data-auto-id="ACCCardRibbon">
 		</div>
 		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
@@ -177,12 +177,10 @@
 			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 			<span [innerText]="item.duration"></span>
 		</div>
-		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACC' || autoid==='moreACCList'">
-			<a class="no-link" [href]="item.url">
-				<button data-auto-id="Request1on1ACCButton" class="btn btn--small btn--secondary text-uppercase"
-					[innerText]="'_Request1on1_' | i18n">
-				</button>
-			</a>
+		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACC'">
+			<button data-auto-id="Request1on1ACCButton" (click)="selectAccRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
+				[innerText]="'_Request1on1_' | i18n">
+			</button>
 		</div>
 	</div>
 </ng-template>
@@ -200,11 +198,14 @@
 </ng-template>
 
 <ng-template #recommendedACC>
-	<a class="no-link" [href]="componentData.acc?.recommended?.url">
-		<button data-auto-id="recommendedACCWatchButton" class="btn btn--small btn--secondary text-uppercase"
+	<ng-container *ngIf="!accRequestSubmitted">
+		<button data-auto-id="recommendedACCWatchButton" (click)="selectAccRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
 			[innerText]="'_Request1on1_' | i18n">
 		</button>
-	</a>
+	</ng-container>
+	<ng-container *ngIf="accRequestSubmitted">
+		<span class="text-success" [innerText]="'_ACCRequestSubmitted_' | i18n"></span>
+	</ng-container>
 </ng-template>
 
 <ng-template #recommendedATXSchedule let-data="data">
@@ -289,7 +290,7 @@
 			}">
 		</ng-container>
 	</ng-container>
-	<ng-container *ngIf="data.sessions.length">
+	<ng-container *ngIf="data.sessions.length>1">
 		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions, autoid: 'moreACCList' }"></ng-container>
 	</ng-container>
 </ng-template>
@@ -300,12 +301,12 @@
 	</div>
 	<div class="base-padding-bottom" [attr.data-auto-id]="autoid">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:1:3">
-			<div id="moreAccList-item" class="panel no-padding-top no-padding-left no-padding-right" attr.data-auto-id="{{ autoid }}-item">
+			<div id="moreAccList-item" class="panel small-panel" attr.data-auto-id="{{ autoid }}-item">
 				<div class="row">
 					<div class="col-md-11 text-blue" [innerText]="item.title"></div>
 					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'"></div>
 					<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite"></div>
-					<div class="col-md-1 progressbar qtr-margin-top" data-percentage="33" *ngIf="item.status === 'in-progress'">
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'in-progress'">
 						<div class="col-md-1 progressbar__fill"></div>
 					</div>
 				</div>
@@ -383,7 +384,7 @@
 	</div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<div id="recommended-elearning-item" class=" panel learning-panel">
+			<div id="recommended-elearning-item" class=" panel small-panel">
 				<a class="no-link fade-in-pop" target="_blank" [href]="item.url">
 					<span class="text-blue" [innerText]="item.title"></span>
 				</a>
@@ -531,7 +532,7 @@
 					</div>
 					<div class="icon-bookmark icon-medium"
 						(click)="setFavorite(item)"
-						[ngClass]="getACCRibbonClass(item)" 
+						[ngClass]="getACCRibbonClass(item)"
 						data-auto-id="ACCCardRibbon">
 					</div>
 					<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
@@ -545,11 +546,9 @@
 					<div class="card__footer">
 						<div class="card_footer_item" data-auto-id="ACCCardFooter">
 							<div class="text-left text-info"  *ngIf="item.status === 'recommended'">
-								<a class="no-link" [href]="item.url">
-									<button data-auto-id="Reqest1on1Button" class="btn btn--small btn--secondary text-uppercase"
-										[innerText]="'_Request1on1_' | i18n">
-									</button>
-								</a>
+								<button data-auto-id="Request1on1Button" (click)="selectAccRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
+									[innerText]="'_Request1on1_' | i18n">
+								</button>
 							</div>
 							<div class="text-left text-success" *ngIf="item.status === 'in-progress'">
 								<span [innerText]="'_CSETouch_' | i18n"></span>
@@ -711,3 +710,9 @@
 		</div>
 	</div>
 </ng-template>
+
+<ng-container *ngIf="selectAccComponent">
+	<acc-request-form (visibleComponent)="selectAccRequestForm($event)"
+		(submitted)="accRequestSubmit($event)">
+	</acc-request-form>
+</ng-container>

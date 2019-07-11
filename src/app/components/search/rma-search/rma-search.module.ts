@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import {
 	I18nPipeModule,
 } from '@cisco-ngx/cui-pipes';
@@ -21,6 +22,7 @@ import { CourierLinkPipe } from './pipes/courier-link.pipe';
 	],
 	imports: [
 		CommonModule,
+		RouterModule,
 		CuiButtonModule,
 		CuiSpinnerModule,
 		GeneralSearchModule,
