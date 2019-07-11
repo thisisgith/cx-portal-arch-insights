@@ -322,20 +322,25 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__blue'));
-			expect(de)
-				.toBeTruthy();
-
 			const acc3 = component.componentData.acc.sessions[2];
 			component.setFavorite(acc3);
 			fixture.detectChanges();
 			expect(component.componentData.acc.sessions[2].isFavorite)
 				.toBeTruthy();
 
-			const acc1 = component.componentData.acc.sessions[0];
-			component.setFavorite(acc1);
+			de = fixture.debugElement.query(By.css('.ribbon__blue'));
+			expect(de)
+				.toBeTruthy();
+
+			component.selectedStatus = 'isBookmarked';
+			component.selectFilter('acc');
 			fixture.detectChanges();
-			expect(component.componentData.acc.sessions[0].isFavorite)
+			expect(component.selectedACC.length)
+				.toEqual(1);
+
+			component.setFavorite(acc3);
+			fixture.detectChanges();
+			expect(component.componentData.acc.sessions[2].isFavorite)
 				.toBeFalsy();
 
 			component.selectedStatus = 'recommended';
@@ -343,12 +348,6 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 			expect(component.selectedACC.length)
 				.toEqual(1);
-
-			component.selectedStatus = 'isBookmarked';
-			component.selectFilter('acc');
-			fixture.detectChanges();
-			expect(component.selectedACC.length)
-				.toEqual(2);
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;

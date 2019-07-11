@@ -33,6 +33,7 @@ import { SolutionService } from '../solution.service';
 import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Interface representing our data object
@@ -118,23 +119,27 @@ export class LifecycleComponent implements OnDestroy {
 
 	public statusOptions = [
 		{
-			name: 'Recommended',
+			name: I18n.get('_AllTitles_'),
+			value: 'allTitles',
+		},
+		{
+			name: I18n.get('_Recommended_'),
 			value: 'recommended',
 		},
 		{
-			name: 'In Progress',
+			name: I18n.get('_InProgress_'),
 			value: 'in-progress',
 		},
 		{
-			name: 'Completed',
+			name: I18n.get('_Completed_'),
 			value: 'completed',
 		},
 		{
-			name: 'Favorite',
+			name: I18n.get('_Favorite_'),
 			value: 'isBookmarked',
 		},
 		{
-			name: 'Not Favorite',
+			name: I18n.get('_NotFavorite'),
 			value: 'hasNotBookmarked',
 		},
 	];
@@ -374,7 +379,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.selectedACC =
 					_.filter(this.componentData.acc.sessions, { status: this.selectedStatus });
 			}
-			if (!this.selectedStatus) {
+			if (this.selectedStatus === 'allTitles' || !this.selectedStatus) {
 				this.selectedACC = this.componentData.acc.sessions;
 			}
 		}
