@@ -1,5 +1,7 @@
 import MockService from '../support/mockService';
 
+const i18n = require('../../src/assets/i18n/en-US.json');
+
 describe('Serial Spec', () => {
 
 	context('Serial Search', () => {
@@ -9,7 +11,7 @@ describe('Serial Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Serial FOX1306GFKH Search', () => {
+		it.skip('Serial Search FOX1306GFKH', () => {
 			// PBC-170
 			const serialVal = 'FOX1306GFKH';
 			cy.server();
@@ -17,39 +19,35 @@ describe('Serial Spec', () => {
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(serialVal.concat('{enter}'));
 			cy.wait('@serial').then(() => {
-				cy.getByAutoId('contractNumber').should('exist');
+				cy.getByAutoId('serialConNum').should('exist');
 				cy.getByAutoId('softwareTypeOS').should('exist');
 				cy.getByAutoId('currentVersion').should('exist');
-				cy.get('app-search').within(() => {
-					cy.get('h3').should('contain', 'Serial Number '.concat(serialVal));
-					cy.get('h5').should('contain', 'Cat4500 E-Series 6-Slot Chassis, fan, no ps');
-					cy.get('span').should('contain', 'CX Level');
-					cy.get('span').should('contain', 'Contract Number');
-					cy.get('span').should('contain', 'Expiration Date');
-					cy.get('span').should('contain', 'Software Type (OS)');
-					cy.get('span').should('contain', 'Current Version');
-					cy.get('span').should('contain', 'Latest Version');
-					cy.get('span').should('contain', 'Open Cases');
-					cy.get('span').should('contain', 'Open RMAs');
-					cy.get('span').should('contain', 'Related Field Notices');
-					cy.get('span').should('contain', 'Related Security Advisories');
-					cy.get('span').should('contain', 'Related Bugs');
-					// TODO - PBC-219 & https://gitlab-sjc.cisco.com/sso-apps/persona-based-console/merge_requests/161 address the 4 fields below
-					// cy.get('div').should('contain', 'Product ID');
-					// cy.get('div').should('contain', 'Product Series');
-					// cy.get('div').should('contain', 'IP Address');
-					// cy.get('div').should('contain', 'Host Name');
-				});
+				cy.getByAutoId('serialProd').should('exist').should('contain', i18n._Product_);
+				cy.getByAutoId('serialCoverage').should('exist').should('contain', i18n._SupportCoverage_);
+				cy.getByAutoId('serialContract').should('exist').should('contain', i18n._Contract_);
+				cy.getByAutoId('serialExpDate').should('exist').should('contain', i18n._ExpirationDate_);
+				cy.getByAutoId('serialSWTypeOS').should('exist').should('contain', i18n._SoftwareTypeOS_);
+				cy.getByAutoId('serialCurrentVer').should('exist').should('contain', i18n._CurrentVersion_);
+				cy.getByAutoId('serialOpenCases').should('exist').should('contain', i18n._OpenCases_);
+				cy.getByAutoId('serialOpenRMAs').should('exist').should('contain', i18n._OpenRMAs_);
+				cy.getByAutoId('serialFieldNotice').should('exist').should('contain', i18n._RelatedFieldNotices_);
+				cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
+				cy.getByAutoId('serialBugs').should('exist').should('contain', i18n._RelatedBugs_);
+				cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
+				cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
+				cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
 			});
 			cy.getByAutoId('viewDeviceButton').should('exist');
 			cy.getByAutoId('openCaseButton').should('exist');
 
-			cy.getByAutoId('searchSiteSelect').should('exist');
-			cy.getByAutoId('searchTypeSelect').should('exist');
-			cy.getByAutoId('cui-select').should('exist');			// 2 found
-			cy.getByAutoId('searchResultLinkPre0').should('exist');
-			cy.getByAutoId('searchResultLinkPre1').should('exist');
-			cy.getByAutoId('searchResultLinkPre2').should('exist');
+			// General Search section
+			cy.getByAutoId('searchHeader').should('exist');
+			cy.getByAutoId('filterBy').should('exist');
+			cy.getByAutoId('cui-select')
+				.should($cuiselect => {
+					expect($cuiselect).to.have.length(2);
+				}); // Unavailable 2 times
+			cy.getByAutoId('relGenRes').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
