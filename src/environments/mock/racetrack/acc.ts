@@ -62,6 +62,7 @@ function MockACC (
 			title: 'Cisco DNA Center Wireless Assurance Feature Planning',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
+		{ },
 	];
 
 	if (pitstop.toLowerCase() === 'adopt') {
