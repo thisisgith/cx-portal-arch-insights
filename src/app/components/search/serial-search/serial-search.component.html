@@ -66,6 +66,15 @@
 				<dl class="dl--inline-medium">
 					<dt>
 						<span class="subheading text-small text-uppercase"
+							[innerText]="'_LatestVersion_' | i18n"></span>
+					</dt>
+					<dd>
+						<!-- TODO: Set else to new template for loading latest release -->
+						<span *ngIf="data?.latestVersion else unavailable"
+							[innerText]="data.latestVersion"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_OpenCases_' | i18n"></span>
 					</dt>
 					<dd>
