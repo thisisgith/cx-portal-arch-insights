@@ -177,7 +177,7 @@
 			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-DurationClock"></span>
 			<span [innerText]="item.duration"></span>
 		</div>
-		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACCTitle'">
+		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACCTitle' || autoid==='moreACCList'">
 			<button data-auto-id="Request1on1ACCButton" (click)="selectAccRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
