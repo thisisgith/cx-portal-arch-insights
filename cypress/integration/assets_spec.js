@@ -9,7 +9,7 @@ const networkScenario = assetMock.getScenario('GET', 'Assets Page 1');
 const cardScenario = assetMock.getScenario('GET', 'Assets Page 1 - Grid View');
 const assets = networkScenario.response.body.data;
 const assetCards = cardScenario.response.body.data;
-const totalCountScenario = coverageMock.getScenario('GET', 'Coverage');
+const totalCountScenario = coverageMock.getScenario('GET', 'Coverage Counts');
 const coverageElements = totalCountScenario.response.body;
 const vulnMock = new MockService('VulnerabilityScenarios');
 const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
@@ -23,9 +23,9 @@ describe('Assets', () => { // PBC-41
 		cy.waitForAppLoading();
 	});
 
-	context('PBC-151: Asset 360 view', () => {
-		// TODO: rewrite these tests around the 360 view
-		it.skip('Provides an Asset 360 view modal', () => {
+	// TODO: rewrite these tests around the new 360 view
+	context.skip('PBC-151: Asset 360 view', () => {
+		it('Provides an Asset 360 view modal', () => {
 			const { halfWidthInPx, widthInPx } = util.getViewportSize();
 			cy.get('tr').eq(1).click();
 			cy.get('asset-details')
@@ -41,8 +41,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('CloseDetails').click();
 		});
 
-		// TODO: rewrite these tests around the 360 view
-		it.skip('Provides an Activity timeline in the 360 view modal', () => { // PBC-158
+		it('Provides an Activity timeline in the 360 view modal', () => { // PBC-158
 			cy.get('tr').eq(1).click();
 			cy.getByAutoId('ActivityTab').click();
 
@@ -54,8 +53,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('CloseDetails').click();
 		});
 
-		// TODO: rewrite these tests around the 360 view
-		it.skip('Opens Asset 360 view when clicking asset cards', () => {
+		it('Opens Asset 360 view when clicking asset cards', () => {
 			cy.getByAutoId('grid-view-btn').click();
 
 			const serial = assetCards[0].serialNumber;
@@ -70,7 +68,7 @@ describe('Assets', () => { // PBC-41
 	});
 
 	context('PBC-178: Assets & Coverage Gauge', () => {
-		it.skip('Displays a gauge that shows coverage percentage', () => {
+		it('Displays a gauge that shows coverage percentage', () => {
 			const total = Cypress._.reduce(coverageElements, (memo, value) => memo + value);
 			const coverage = Math.floor((coverageElements.covered / total) * 100);
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', `${coverage}%`)
@@ -107,7 +105,7 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Pre-selects the gauge when reloading a page with filters applied', () => { // PBC-271
-			cy.getByAutoId('CoveredPoint').click();
+			cy.getByAutoId('CoveredPoint').click({ force: true });
 			cy.reload();
 			cy.getByAutoId('Facet-Assets & Coverage').should('have.class', 'facet--selected');
 			cy.getByAutoId('AssetsSelectVisualFilter-coverage')
@@ -215,7 +213,7 @@ describe('Assets', () => { // PBC-41
 			assetMock.enable(['Assets Page 1', 'Assets Page 2', 'Assets Page 3', 'Assets Page 4']);
 		});
 
-		it.skip('Filters asset list with all visual filters', () => { // PBC-228, PBC-253
+		it('Filters asset list with all visual filters', () => { // PBC-228, PBC-253
 			const { contractNumber, role } = assets[0];
 			cy.getByAutoId('CoveredPoint').click();
 			cy.getByAutoId('FilterTag-covered').should('be.visible');
@@ -249,7 +247,7 @@ describe('Assets', () => { // PBC-41
 			cy.waitForAppLoading();
 		});
 
-		it.skip('Combines visual filters appropriately', () => {
+		it('Combines visual filters appropriately', () => {
 			// TODO: When AP-5378 is implemented, this test can be done with mocked data
 			assetMock.disable(['Assets Page 1', 'Covered Assets']);
 			cy.server();
@@ -271,7 +269,7 @@ describe('Assets', () => { // PBC-41
 			cy.waitForAppLoading();
 		});
 
-		it.skip('Visual filters can be collapsed/expanded', () => {
+		it('Visual filters can be collapsed/expanded', () => {
 			cy.getByAutoId('CoveredPoint').click();
 			cy.getByAutoId('VisualFilterCollapse').click();
 			cy.getByAutoId('FilterTag-covered').should('be.visible');
@@ -282,7 +280,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 		});
 
-		it.skip('Provides an actions menu for each asset', () => { // PBC-255
+		it('Provides an actions menu for each asset', () => { // PBC-255
 			const coveredAsset = assets[0].serialNumber;
 			const uncoveredAsset = assets[1].serialNumber;
 			cy.getByAutoId(`InventoryItem-${coveredAsset}`).within(() => {
@@ -305,7 +303,7 @@ describe('Assets', () => { // PBC-41
 			});
 		});
 
-		it.skip('Properly closes the actions menu when clicking away', () => { // PBC-272
+		it('Properly closes the actions menu when clicking away', () => { // PBC-272
 			cy.get('tr cui-dropdown').eq(0).click();
 			cy.get('tr div.dropdown__menu').eq(0).should('be.visible');
 			cy.get('tr cui-dropdown').eq(5).click(); // another asset's menu
@@ -325,7 +323,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
 		});
 
-		it.skip('Unchecks all select boxes after clearing filters', () => { // PBC-273
+		it('Unchecks all select boxes after clearing filters', () => { // PBC-273
 			cy.getByAutoId('CoveredPoint').click();
 			cy.getByAutoId('AllAssetSelectCheckbox').click();
 			cy.getByAutoId('AllAssetSelect').should('be.checked');
@@ -335,6 +333,9 @@ describe('Assets', () => { // PBC-41
 			cy.get('[data-auto-id*="InventoryItemSelect-"]').eq(0).should('not.be.checked');
 		});
 
+		// TODO: Need to investigate possible bug
+		// Sometimes, clicking the visual filters in this test is just refreshing the table
+		//  and not triggering any filtering
 		it.skip('Only shows asset results from the most recent query', () => { // PBC-274
 			assetMock.disable(['Assets Page 1', 'Covered Assets']);
 			const filteredXHR = new RouteWatch('**/inventory/v1/assets?*coverage=covered');
@@ -353,7 +354,7 @@ describe('Assets', () => { // PBC-41
 			assetMock.enable(['Assets Page 1', 'Covered Assets']);
 		});
 
-		it.skip('Uses comma separator in visual filter tooltips', () => { // PBC-275
+		it('Uses comma separator in visual filter tooltips', () => { // PBC-275
 			cy.getByAutoId('Security AdvisoriesPoint').hover();
 			cy.getByAutoId('Security AdvisoriesTooltip')
 				.should('contain', advisoryCounts['security-advisories'].toLocaleString());
@@ -365,7 +366,7 @@ describe('Assets', () => { // PBC-41
 
 		after(() => cy.getByAutoId('list-view-btn').click());
 
-		it.skip('Displays assets correctly in card view', () => {
+		it('Displays assets correctly in card view', () => {
 			cy.get('div[data-auto-id*="InventoryItem"]').should('have.length', assetCards.length);
 			Cypress._.each(assetCards, asset => {
 				const serial = asset.serialNumber;
@@ -406,7 +407,7 @@ describe('Assets', () => { // PBC-41
 			});
 		});
 
-		it.skip('Supports multiple selections of cards', () => {
+		it('Supports multiple selections of cards', () => {
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(0).click()
 				.should('have.class', 'selected');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
@@ -421,7 +422,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('TotalSelectedCount').should('not.be.visible');
 		});
 
-		it.skip('Uses proper pagination for asset cards', () => {
+		it('Uses proper pagination for asset cards', () => {
 			// TODO: When AP-5378 is implemented, this test can be done with mocked data
 			assetMock.disable([
 				'Assets Page 1 - Grid View',
