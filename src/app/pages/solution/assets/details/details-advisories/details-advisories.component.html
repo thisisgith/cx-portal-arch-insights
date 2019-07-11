@@ -69,11 +69,11 @@
 <ng-template #impact let-celldata="celldata">
 	<span class="label label--circle label--tiny qtr-margin-right"
 		[ngClass]="{
-			'label--danger': celldata.severity === 'Critical',
-			'label--warning': celldata.severity === 'High',
-			'label--warning-alt': celldata.severity === 'Medium',
-			'label--success': celldata.severity === 'Low'
-		}">
+				'Critical': 'label--danger',
+				'High': 'label--warning',
+				'Medium': 'label--warning-alt',
+				'Low': 'label--success'
+		}[celldata.severity]">
 	</span>
 	<ng-container [ngSwitch]="celldata.severity">
 		<span *ngSwitchCase="'Critical'" [innerText]="'_Critical_' | i18n"></span>
