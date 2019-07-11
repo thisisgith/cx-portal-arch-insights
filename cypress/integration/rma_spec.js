@@ -1,3 +1,7 @@
+import MockService from '../support/mockService';
+
+const rmaMock = new MockService('RMAResponse');
+// import { mockSettings } from '../../src/environments/mock/mock';
 
 describe('RMA Spec', () => {
 	context('RMA Search', () => {
@@ -38,12 +42,9 @@ describe('RMA Spec', () => {
 		it.skip('RMA 800000000 four replacement parts', () => {
 			// RMA with 4 replacement part PBC-171
 			// mock set at "RMA with four replacement parts"
-			cy.window().then(win => {
-				// cy.log(win.mockService.getEnabledScenarios());
-				win.mockService.enable('RMA with four replacement parts'); // enable the desired
-				cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
-			});
-			// cy.log("one");
+			rmaMock.enable('RMA with four replacement parts');
+			cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
+
 			const rmaVal = '800000000';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('rma');
@@ -67,17 +68,21 @@ describe('RMA Spec', () => {
 				cy.get('h6').should('contain', 'Related to this Product');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
+			// TODO  uncommend the following to test the click
+			cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
+			cy.get('h6').should('contain', 'Related to this Product');
+			cy.getByAutoId('searchClose').should('exist').click();
+
+			rmaMock.enable('RMA with one replacement part');
+			cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
 		});
 
 		// TODO: Unskip and refactor test once PBC-219 is merged
 		it.skip('RMA 800000000 no replacement parts', () => {
 			// RMA with no replacement part PBC-171
 			// mock set at "RMA with no replacement parts"
-			cy.window().then(win => {
-				// cy.log(win.mockService.getEnabledScenarios());
-				win.mockService.enable('RMA with no replacement parts'); // enable the desired
-				cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
-			});
+			rmaMock.enable('RMA with no replacement parts');
+			cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
 
 			const rmaVal = '800000000';
 			cy.server();
@@ -100,6 +105,14 @@ describe('RMA Spec', () => {
 				cy.get('h6').should('contain', 'Related to this Product');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
+			cy.get('app-rma-search table th').eq(5).should('have.text', 'Replacement Product ID');
+			// TODO  uncommend the following to test the click
+			cy.getByAutoId('RMAViewDetailsButton').should('exist').click();
+			cy.get('h6').should('contain', 'Related to this Product');
+			cy.getByAutoId('searchClose').should('exist').click();
+
+			rmaMock.enable('RMA with four replacement parts');
+			cy.getByAutoId('Facet-Assets & Coverage').should('exist').click();
 		});
 
 		it('RMA 800000009', () => {

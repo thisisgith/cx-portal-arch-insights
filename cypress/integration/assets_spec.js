@@ -38,7 +38,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('asset-details').should('have.css', 'width', halfWidthInPx); // shrink to half width
 			cy.get('tr').eq(3).click(); // switch to new asset without closing modal
 			cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[2].serialNumber}`);
-			cy.getByAutoId('ClearAsset').click();
+			cy.getByAutoId('CloseDetails').click();
 		});
 
 		// TODO: rewrite these tests around the 360 view
@@ -51,7 +51,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('div.timeline__content').eq(0)
 				.should('contain', 'Title')
 				.and('contain', 'Lorem ipsum');
-			cy.getByAutoId('ClearAsset').click();
+			cy.getByAutoId('CloseDetails').click();
 		});
 
 		// TODO: rewrite these tests around the 360 view
@@ -63,7 +63,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('asset-details').should('be.visible');
 			cy.getByAutoId('Asset360SerialNumber')
 				.should('have.text', `Serial Number${serial}`);
-			cy.getByAutoId('ClearAsset').click();
+			cy.getByAutoId('CloseDetails').click();
 
 			cy.getByAutoId('list-view-btn').click();
 		});
@@ -79,21 +79,41 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Gracefully handles invalid responses from the API', () => {
-			coverageMock.disable('Coverage');
 			coverageMock.enable('Coverage - Empty Body');
 			cy.loadApp('/solution/assets');
 
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '0%');
-			coverageMock.disable('Coverage - Empty Body');
 			coverageMock.enable('Coverage - Invalid Body');
 			cy.loadApp('/solution/assets');
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '0%');
-			// TODO: Test for API not responding - waiting on PBC-227
+			coverageMock.enable('Coverage 500 Failure');
+			cy.loadApp('/solution/assets');
+			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '0'); // PBC-227
 
-			coverageMock.disable('Coverage - Invalid Body');
 			coverageMock.enable('Coverage');
 			cy.loadApp('/solution/assets');
 			cy.waitForAppLoading();
+		});
+
+		it('Shows <1% for small coverage values', () => { // PBC-226
+			coverageMock.enable('Coverage < 1%');
+			cy.loadApp('/solution/assets');
+
+			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '<1%');
+
+			coverageMock.enable('Coverage');
+			cy.loadApp('/solution/assets');
+			cy.waitForAppLoading();
+		});
+
+		it('Pre-selects the gauge when reloading a page with filters applied', () => { // PBC-271
+			cy.getByAutoId('CoveredPoint').click();
+			cy.reload();
+			cy.getByAutoId('Facet-Assets & Coverage').should('have.class', 'facet--selected');
+			cy.getByAutoId('AssetsSelectVisualFilter-coverage')
+				.should('have.class', 'filter__selected');
+
+			cy.getByAutoId('FilterBarClearAllFilters').click();
 		});
 	});
 
@@ -122,6 +142,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId(`Software Version-${serial}`)
 						.should('have.text', asset.osVersion);
 					if (asset.role) {
+						// PBC-270
 						cy.getByAutoId(`Role-${serial}`).should('have.text', capitalize(asset.role));
 					}
 				});
@@ -151,14 +172,12 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Renders table gracefully when APIs are unavailable', () => {
-			assetMock.disable('Assets Page 1');
 			assetMock.enable('(Assets) Unreachable API');
 
 			cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
 
-			assetMock.disable('(Assets) Unreachable API');
 			assetMock.enable('Assets Page 1');
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -215,7 +234,6 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Hides visual filters when count APIs are unavailable', () => { // PBC-254
-			coverageMock.disable('Contract Counts Data');
 			coverageMock.enable('Contract Counts Data Unavailable');
 			cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -223,7 +241,6 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('AssetsSelectVisualFilter-contractNumber').should('not.be.visible');
 			cy.getByAutoId('AssetsSelectVisualFilter-coverage').should('be.visible');
 
-			coverageMock.disable('Contract Counts Data Unavailable');
 			coverageMock.enable('Contract Counts Data');
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -232,8 +249,7 @@ describe('Assets', () => { // PBC-41
 
 		it('Combines visual filters appropriately', () => {
 			// TODO: When AP-5378 is implemented, this test can be done with mocked data
-			assetMock.disable('Assets Page 1');
-			assetMock.disable('Covered Assets');
+			assetMock.disable(['Assets Page 1', 'Covered Assets']);
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
@@ -249,8 +265,7 @@ describe('Assets', () => { // PBC-41
 			});
 
 			cy.getByAutoId('FilterBarClearAllFilters').click();
-			assetMock.enable('Assets Page 1');
-			assetMock.enable('Covered Assets');
+			assetMock.enable(['Assets Page 1', 'Covered Assets']);
 			cy.waitForAppLoading();
 		});
 
@@ -286,6 +301,26 @@ describe('Assets', () => { // PBC-41
 					cy.wrap($dropdown).click();
 				});
 			});
+		});
+
+		it('Properly closes the actions menu when clicking away', () => { // PBC-272
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.get('tr div.dropdown__menu').eq(0).should('be.visible');
+			cy.get('tr cui-dropdown').eq(5).click(); // another asset's menu
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.get('cui-dropdown').eq(0).click(); // bulk actions menu
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.get('[data-auto-id*="InventoryItemCheckbox"]').eq(0).click(); // select checkbox
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.getByAutoId('AssetsSelectVisualFilter-total').click(); // outside of table
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			cy.get('tr cui-dropdown').eq(0).click();
+			cy.get('tbody tr').eq(0).click(); // 360 view
+			cy.getByAutoId('CloseDetails').click();
+			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
 		});
 
 		it('Unchecks all select boxes after clearing filters', () => { // PBC-273
@@ -424,7 +459,6 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Gracefully handles lack of response from API', () => {
-			assetMock.disable('Assets Page 1 - Grid View');
 			assetMock.enable('(Assets) Unreachable API - Grid View');
 
 			cy.getByAutoId('Facet-Lifecycle').click(); // refresh grid
@@ -432,7 +466,6 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('grid-view-btn').click();
 			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
 
-			assetMock.disable('(Assets) Unreachable API - Grid View');
 			assetMock.enable('(Assets) Missing data - Grid View');
 			const serial = assetCards[0].serialNumber;
 
@@ -445,7 +478,6 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId(`AdvisoryCount-${serial}`).should('not.be.visible');
 			cy.getByAutoId(`CoveredIcon-${serial}`).should('not.be.visible');
 
-			assetMock.disable('(Assets) Missing data - Grid View');
 			assetMock.enable('Assets Page 1 - Grid View');
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.getByAutoId('Facet-Assets & Coverage').click();
