@@ -486,8 +486,13 @@
 					data-auto-id="ACCTopicsAvailable">
 				</div>
 				<div class="col-md-2">
-					<cui-select id="acc-filter" data-auto-id="acc-filter"
-						[placeholder]="'_FilterBy_' | i18n">
+					<cui-select id="acc-filter" 
+						data-auto-id="acc-filter"
+						[placeholder]="'_AllACC_' | i18n"
+						[items]="statusOptions"
+						[empty]="true"
+						[(ngModel)]="selectedStatus"
+						(ngModelChange)="selectFilter('acc')">
 					</cui-select>
 				</div>
 				<div class="col-md-1 text-right">
@@ -504,7 +509,7 @@
 
 			<div class="grid grid--4up base-padding-top">
 				<div class="card acc__card"
-					*ngFor="let item of data"
+					*ngFor="let item of selectedACC"
 					[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null"
 					data-auto-id="ACCCard">
 					<div class="text-left" [ngClass]="item.status === 'recommended' ? 'text-info' : 'text-clear'" data-auto-id="ACCCardHeader">
@@ -575,7 +580,7 @@
 						[empty]="true"
 						[placeholder]="'_AllCategories_' | i18n"
 						[(ngModel)]="selectedCategory"
-						(ngModelChange)="selectFilter()">
+						(ngModelChange)="selectFilter('productguide')">
 					</cui-select>
 				</div>
 				<div class="col-md-1 text-right">

@@ -110,10 +110,34 @@ export class LifecycleComponent implements OnDestroy {
 	public sessionSelected: ATXSession;
 	public customerId = '2431199';
 	public selectedCategory = '';
+	public selectedStatus = '';
 	public selectedSuccessPaths: SuccessPath[];
 	public categoryOptions: [];
-
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
+	public selectedACC: ACC[];
+
+	public statusOptions = [
+		{
+			name: 'Recommended',
+			value: 'recommended',
+		},
+		{
+			name: 'In Progress',
+			value: 'in-progress',
+		},
+		{
+			name: 'Completed',
+			value: 'completed',
+		},
+		{
+			name: 'Favorite',
+			value: 'isBookmarked',
+		},
+		{
+			name: 'Not Favorite',
+			value: 'hasNotBookmarked',
+		},
+	];
 
 	public status = {
 		loading: {
@@ -205,7 +229,7 @@ export class LifecycleComponent implements OnDestroy {
 		} else if (type === 'acc') {
 			this.modal = {
 				content: this.accTemplate,
-				context: { data: this.componentData.acc.sessions },
+				context: { data: this.selectedACC },
 				visible: true,
 			};
 		} else if (type === '_ProductGuide_') {
@@ -329,12 +353,30 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Selects the category
+	 * @param type the item type
 	 */
-	public selectFilter () {
-		this.selectedSuccessPaths =
-			_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
-		if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
-			this.selectedSuccessPaths = this.componentData.learning.success;
+	public selectFilter (type: string) {
+		if (type === 'productguide') {
+			this.selectedSuccessPaths =
+				_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
+			if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
+				this.selectedSuccessPaths = this.componentData.learning.success;
+			}
+		}
+		if (type === 'acc') {
+			if (this.selectedStatus === 'isBookmarked') {
+				this.selectedACC =
+				_.filter(this.componentData.acc.sessions, { isFavorite: true });
+			} else if (this.selectedStatus === 'hasNotBookmarked') {
+				this.selectedACC =
+				_.filter(this.componentData.acc.sessions, { isFavorite: false });
+			} else {
+				this.selectedACC =
+					_.filter(this.componentData.acc.sessions, { status: this.selectedStatus });
+			}
+			if (!this.selectedStatus) {
+				this.selectedACC = this.componentData.acc.sessions;
+			}
 		}
 	}
 
@@ -454,6 +496,8 @@ export class LifecycleComponent implements OnDestroy {
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
+
+				this.selectedACC = this.componentData.acc.sessions;
 
 				return result;
 			}),

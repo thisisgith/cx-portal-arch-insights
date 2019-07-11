@@ -282,6 +282,22 @@ describe('LifecycleComponent', () => {
 				.toBeFalsy();
 		});
 
+	});
+
+	describe('ACC', () => {
+		it('should have loaded the acc items', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.acc.sessions.length)
+						.toEqual(4);
+				});
+		});
+
 		it('should show the acc view-all modal', () => {
 			buildSpies();
 			sendParams();
@@ -322,6 +338,18 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.acc.sessions[0].isFavorite)
 				.toBeFalsy();
 
+			component.selectedStatus = 'recommended';
+			component.selectFilter('acc');
+			fixture.detectChanges();
+			expect(component.selectedACC.length)
+				.toEqual(1);
+
+			component.selectedStatus = 'isBookmarked';
+			component.selectFilter('acc');
+			fixture.detectChanges();
+			expect(component.selectedACC.length)
+				.toEqual(2);
+
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
 
@@ -335,6 +363,21 @@ describe('LifecycleComponent', () => {
 			de = fixture.debugElement.query(By.css('#accModal'));
 			expect(de)
 				.toBeFalsy();
+		});
+	});
+
+	describe('Product Guides', () => {
+		it('should have loaded the successPaths items', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.success.length)
+						.toEqual(5);
+				});
 		});
 
 		it('should show the Product Guides view-all modal', () => {
@@ -353,6 +396,18 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
+			component.selectedCategory = 'Project Planning';
+			component.selectFilter('productguide');
+			fixture.detectChanges();
+			expect(component.selectedSuccessPaths.length)
+				.toEqual(2);
+
+			component.selectedCategory = 'Getting Started';
+			component.selectFilter('productguide');
+			fixture.detectChanges();
+			expect(component.selectedSuccessPaths.length)
+				.toEqual(1);
+
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
 
@@ -367,82 +422,82 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeFalsy();
 		});
+	});
 
-		describe('PitstopActions', () => {
+	describe('PitstopActions', () => {
 
-			it('should show 25% in the prograss label', () => {
-				buildSpies();
-				sendParams();
-				fixture.detectChanges();
+		it('should show 25% in the prograss label', () => {
+			buildSpies();
+			sendParams();
+			fixture.detectChanges();
 
-				de = fixture.debugElement.query(By.css('#compActPct'));
-				el = de.nativeElement;
-				expect(el.innerText)
-					.toEqual('25%');
-			});
+			de = fixture.debugElement.query(By.css('#compActPct'));
+			el = de.nativeElement;
+			expect(el.innerText)
+				.toEqual('25%');
+		});
 
-			it('should show action description when click action name', () => {
-				buildSpies();
-				sendParams();
-				component.selectAction(component.currentPitActionsWithStatus[1]);
-				fixture.detectChanges();
+		it('should show action description when click action name', () => {
+			buildSpies();
+			sendParams();
+			component.selectAction(component.currentPitActionsWithStatus[1]);
+			fixture.detectChanges();
 
-				expect(component.currentPitActionsWithStatus[1].selected)
-					.toBeTruthy();
+			expect(component.currentPitActionsWithStatus[1].selected)
+				.toBeTruthy();
 
-				// click the same action again, will unselect the action
-				component.selectAction(component.currentPitActionsWithStatus[1]);
+			// click the same action again, will unselect the action
+			component.selectAction(component.currentPitActionsWithStatus[1]);
 
-				expect(component.currentPitActionsWithStatus[1].selected)
-					.toBeFalsy();
+			expect(component.currentPitActionsWithStatus[1].selected)
+				.toBeFalsy();
 
-				// since suggestedAction does not change, so will not trigger ATX API call
-				expect(racetrackContentService.getRacetrackATX)
+			// since suggestedAction does not change, so will not trigger ATX API call
+			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(1);
-			});
+		});
 
-			it('should call racetrackService API to update pitstopAction', () => {
-				buildSpies();
-				sendParams();
-				component.completeAction(component.currentPitActionsWithStatus[1].action);
-				fixture.detectChanges();
+		it('should call racetrackService API to update pitstopAction', () => {
+			buildSpies();
+			sendParams();
+			component.completeAction(component.currentPitActionsWithStatus[1].action);
+			fixture.detectChanges();
 
-				expect(racetrackService.updatePitstopAction)
+			expect(racetrackService.updatePitstopAction)
 				.toHaveBeenCalled();
 
-				// update Action response back with isAtxChanged as true, so need to call ATX API
-				expect(racetrackContentService.getRacetrackATX)
+			// update Action response back with isAtxChanged as true, so need to call ATX API
+			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(2);
 
-			});
+		});
 
-			it('should refresh ATX if suggestedAction changes', () => {
-				buildSpies();
-				sendParams();
-				component.selectAction(component.currentPitActionsWithStatus[3]);
-				fixture.detectChanges();
+		it('should refresh ATX if suggestedAction changes', () => {
+			buildSpies();
+			sendParams();
+			component.selectAction(component.currentPitActionsWithStatus[3]);
+			fixture.detectChanges();
 
-				expect(component.currentPitActionsWithStatus[3].selected)
-					.toBeTruthy();
+			expect(component.currentPitActionsWithStatus[3].selected)
+				.toBeTruthy();
 
-				expect(racetrackContentService.getRacetrackATX)
+			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalled();
 
-			});
+		});
 
-			it('should refresh ATX if suggestedAction changes', () => {
-				buildSpies();
-				sendParams();
-				component.completeAction(component.currentPitActionsWithStatus[2].action);
-				fixture.detectChanges();
+		it('should refresh ATX if suggestedAction changes', () => {
+			buildSpies();
+			sendParams();
+			component.completeAction(component.currentPitActionsWithStatus[2].action);
+			fixture.detectChanges();
 
-				expect(racetrackService.updatePitstopAction)
+			expect(racetrackService.updatePitstopAction)
 				.toHaveBeenCalled();
 
-				// ATX should be refreshed since isAtxChanged is true from updateAction
-				expect(racetrackContentService.getRacetrackATX)
+			// ATX should be refreshed since isAtxChanged is true from updateAction
+			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(2);
-			});
 		});
 	});
 
