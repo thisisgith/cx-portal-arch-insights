@@ -94,7 +94,8 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.waitForAppLoading('accLoading');
 		});
 
-		it('Should only display the ACC section if there are ACC items', () => {
+		it.skip('Should only display the ACC section if there are ACC items', () => {
+			// TODO: Waiting on PBC-317: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-317
 			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
 			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
 
@@ -102,8 +103,8 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.waitForAppLoading('accLoading');
 
-			// The section will exist, but be empty
-			cy.getByAutoId('Accelerator Panel').should('exist');
+			// The section should not exist at all
+			cy.getByAutoId('Accelerator Panel').should('not.exist');
 			cy.getByAutoId('recommendedACC').should('not.exist');
 			cy.getByAutoId('moreACCList').should('not.exist');
 		});
