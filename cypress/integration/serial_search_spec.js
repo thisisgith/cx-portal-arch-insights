@@ -1,16 +1,6 @@
 import MockService from '../support/mockService';
 
 describe('Serial Spec', () => {
-	it.skip('Loads the app', () => {
-		cy.loadApp();
-		cy.get('h1.page-title').should('have.text', 'CX Console');
-	});
-
-	it.skip('Requires SSO login', () => {
-		MockService.mockUnauthenticatedUser();
-		cy.loadApp();
-		cy.url().should('contain', 'https://cloudsso-test.cisco.com/idp/SSO.saml2');
-	});
 
 	context('Serial Search', () => {
 		before(() => {
@@ -19,8 +9,7 @@ describe('Serial Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		// TODO: Unskip and fix once PBC-219 is merged
-		it.skip('Serial FOX1306GFKH Search', () => {
+		it('Serial FOX1306GFKH Search', () => {
 			// PBC-170
 			const serialVal = 'FOX1306GFKH';
 			cy.server();

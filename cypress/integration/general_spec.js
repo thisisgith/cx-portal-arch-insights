@@ -77,6 +77,17 @@ describe('General Spec', () => {
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
 		});
+
+		it('Search Type Ahead PBC-168', () => {
+			const searchVal = 'cat';
+			cy.getByAutoId('searchBarinput').should('exist').clear()
+				.type(searchVal);
+			cy.getByAutoId('searchBarTypeahead').should('exist');
+			cy.getByAutoId('searchBarTypeahead')
+				.should($searchBarTypeahead => {
+					expect($searchBarTypeahead).to.have.length(7);
+				});
+		});
 	});
 
 	context('Case Search', () => {
@@ -143,6 +154,7 @@ describe('General Spec', () => {
 			});
 		});
 	});
+
 	context('RMA Search', () => {
 		before(() => {
 			cy.login();
@@ -287,6 +299,14 @@ describe('General Spec', () => {
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
+		});
+	});
+
+	context('Contract Search', () => {
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			cy.waitForAppLoading();
 		});
 	});
 });
