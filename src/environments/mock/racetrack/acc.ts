@@ -228,4 +228,20 @@ export const ACCScenarios = [
 		url: `${api}/${accId4}/bookmark`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark6',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId6}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
 ];
