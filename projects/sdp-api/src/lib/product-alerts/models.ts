@@ -8,6 +8,7 @@ export { FieldNoticeResponse } from './models/field-notice-response';
 export { FieldNotice } from './models/field-notice';
 export { FieldNoticeBulletinResponse } from './models/field-notice-bulletin-response';
 export { FieldNoticeBulletin } from './models/field-notice-bulletin';
+export { Pagination as ProductAlertsPagination } from './models/pagination';
 export { HardwareEOLResponse } from './models/hardware-eolresponse';
 export { HardwareEOL } from './models/hardware-eol';
 export { HardwareEOLBulletinResponse } from './models/hardware-eolbulletin-response';

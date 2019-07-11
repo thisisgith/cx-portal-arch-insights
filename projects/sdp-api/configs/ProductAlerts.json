@@ -12,7 +12,8 @@
 		"Product Alert API Services": "ProductAlerts"
 	},
 	"modelsExportAs": {
-		"ErrorResponse": "ProductAlertsErrorResponse"
+		"ErrorResponse": "ProductAlertsErrorResponse",
+		"Pagination": "ProductAlertsPagination"
 	},
 	"removeStaleFiles": true,
 	"modelIndex": true,
