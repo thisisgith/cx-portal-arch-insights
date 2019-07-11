@@ -362,7 +362,7 @@ describe('Assets', () => { // PBC-41
 
 		after(() => cy.getByAutoId('list-view-btn').click());
 
-		it.skip'Displays assets correctly in card view', () => {
+		it.skip('Displays assets correctly in card view', () => {
 			cy.get('div[data-auto-id*="InventoryItem"]').should('have.length', assetCards.length);
 			Cypress._.each(assetCards, asset => {
 				const serial = asset.serialNumber;
