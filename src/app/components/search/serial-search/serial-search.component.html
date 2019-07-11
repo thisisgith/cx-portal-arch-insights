@@ -33,8 +33,8 @@
 							[innerText]="'_Contract_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="contractNumber" *ngIf="contractData?.contractNum; else loadingContractTemplate"
-							[innerText]="contractData.contractNum"></a>
+						<span *ngIf="contractData?.contractNum; else loadingContractTemplate"
+							[innerText]="contractData.contractNum"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase" [innerText]="'_ExpirationDate_' | i18n"></span>
@@ -49,16 +49,16 @@
 							[innerText]="'_SoftwareTypeOS_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="softwareTypeOS" *ngIf="data?.softwareType; else unavailable"
-							[innerText]="data.softwareType"></a>
+						<span *ngIf="data?.softwareType; else unavailable"
+							[innerText]="data.softwareType"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
 							[innerText]="'_CurrentVersion_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="currentVersion" *ngIf="data?.currentVersion; else unavailable"
-							[innerText]="data.currentVersion"></a>
+						<span *ngIf="data?.currentVersion; else unavailable"
+							[innerText]="data.currentVersion"></span>
 					</dd>
 				</dl>
 			</div>
@@ -69,8 +69,8 @@
 							[innerText]="'_OpenCases_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="openCases" *ngIf="caseData; else loadingCaseTemplate"
-							[innerText]="caseData.openCases"></a>
+						<span *ngIf="caseData; else loadingCaseTemplate"
+							[innerText]="caseData.openCases"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
@@ -85,37 +85,34 @@
 							[innerText]="'_RelatedFieldNotices_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="relatedFieldNotices" *ngIf="alertsData?.fieldNotices !== null; else loadingAlertsTemplate"
-							[innerText]="alertsData.fieldNotices"></a>
+						<span *ngIf="alertsData?.fieldNotices !== null; else loadingAlertsTemplate"
+							[innerText]="alertsData.fieldNotices"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
 							[innerText]="'_RelatedSecurityAdvisories_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="relatedSecurityAdvisories" *ngIf="alertsData?.securityAdvisories !== null; else loadingAlertsTemplate"
-							[innerText]="alertsData.securityAdvisories"></a>
+						<span *ngIf="alertsData?.securityAdvisories !== null; else loadingAlertsTemplate"
+							[innerText]="alertsData.securityAdvisories"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
 							[innerText]="'_RelatedBugs_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="relatedBugs" *ngIf="alertsData?.bugs !== null; else loadingAlertsTemplate"
-							[innerText]="alertsData.bugs"></a>
+						<span *ngIf="alertsData?.bugs !== null; else loadingAlertsTemplate"
+							[innerText]="alertsData.bugs"></span>
 					</dd>
 				</dl>
 			</div>
 		</div>
-		<div class="row col-md-6 flex-right">
-			<div class="col-md-11">
-				<div class="panel panel--compact panel--bordered">
-					<div class="row half-margin-top qtr-margin-bottom">
-						<div class="col-md-5 flex-center qtr-margin">
-							<!-- TODO: Add real product image -->
-							<img alt="{{ '_Product_' | i18n }}" src="assets/img/inventory/CAT-3650.png">
-						</div>
-						<dl class="col-md-6 dl--inline-medium">
+		<div class="col-md-6 flex-right">
+			<div class="flex-center-horizontal">
+				<div class="panel panel--loose panel--bordered">
+					<div class="qtr-margin-top qtr-margin-left qtr-margin-right">
+						<!-- TODO: Add product photo here -->
+						<dl class="dl--inline-medium">
 							<dt>
 								<span class="subheading text-small text-uppercase"
 									[innerText]="'_ProductID_' | i18n"></span>
@@ -155,10 +152,8 @@
 		</div>
 	</div>
 	<div class="qtr-margin-top">
-		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
-			class="text-uppercase" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
-		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
-			class="text-uppercase" [innerText]="'_OpenACase_' | i18n"></button>
+		<button class="btn btn--small btn--secondary text-uppercase" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
+		<button class="btn btn--small btn--secondary text-uppercase" [innerText]="'_OpenACase_' | i18n"></button>
 	</div>
 </div>
 
