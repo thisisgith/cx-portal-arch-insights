@@ -59,6 +59,7 @@ export class AddNoteComponent {
 			noteStatus: 'external',
 			noteType: 'WEB UPDATE',
 		};
+
 		return this.caseService.addCaseNote('686569635', body)
 			.subscribe(
 				(response: any) => {

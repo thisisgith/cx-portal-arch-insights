@@ -57,6 +57,7 @@ export class CaseDetailsHeaderComponent {
 	 */
 	public getSeverityColor (severity: string) {
 		const severityInt = parseInt(severity, 10);
+
 		return _.get(caseSeverities[severityInt], 'class');
 	}
 

@@ -50,6 +50,7 @@
 		</div>
 		<div *ngIf="!moreLoading && data?.pagination?.total > data?.bulletin?.length"
 				class="flex-center-horizontal base-margin-top"
+				data-auto-id="LoadMoreButton"
 				(click)="loadMore()">
 			<div class="btn btn--primary" [innerText]="'_ShowMore_' | i18n"></div>
 		</div>

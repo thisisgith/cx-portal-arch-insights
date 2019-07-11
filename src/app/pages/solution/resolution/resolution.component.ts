@@ -31,16 +31,16 @@ export class ResolutionComponent {
 	private destroy$ = new Subject();
 	public isLoading = true;
 	public paginationInfo = {
-		totalElements: 0, // total number of records for user
 		currentPage: 0,
+		totalElements: 0, // total number of records for user
 	};
 	public caseParams = {
 		nocache: Date.now(),
-		statusTypes: 'O',
 		page: 0,
+		search: '',
 		size: 10,
 		sort: 'lastModifiedDate,DESC',
-		search: '',
+		statusTypes: 'O',
 	};
 	public paginationCount = '';
 	@ViewChild('severityTmpl', { static: true }) public severityTemplate: TemplateRef<any>;
@@ -90,47 +90,47 @@ export class ResolutionComponent {
 
 		this.caseListTableOptions = new CuiTableOptions({
 			bordered: false,
-			striped: false,
-			hover: true,
 			columns: [
 				{
+					key: 'priority',
 					name: I18n.get('_RMACaseSeverity_'),
 					sortable: true,
-					key: 'priority',
 					template: this.severityTemplate,
 				},
 				{
+					key: 'caseNumber',
 					name: I18n.get('_RMACaseID_'),
 					sortable: true,
-					key: 'caseNumber',
 					template: this.caseIDTemplate,
 				},
 				{
+					key: 'deviceName',
 					name: I18n.get('_RMACaseDevice_'),
 					sortable: true,
-					key: 'deviceName',
 					template: this.deviceTemplate,
 				},
 				{
+					key: 'summary',
 					name: I18n.get('_RMACaseSummary_'),
 					sortable: true,
-					key: 'summary',
 					template: this.summaryTemplate,
 				},
 				{
+					key: 'status',
 					name: I18n.get('_RMACaseStatus_'),
 					sortable: true,
-					key: 'status',
 					template: this.statusTemplate,
 				},
 				{
+					key: 'lastModifiedDate',
 					name: I18n.get('_RMACaseUpdatedDate_'),
 					sortable: true,
 					sorting: true,
-					key: 'lastModifiedDate',
 					template: this.updatedTemplate,
 				},
 			],
+			hover: true,
+			striped: false,
 		});
 	}
 
@@ -141,6 +141,7 @@ export class ResolutionComponent {
 	 */
 	public getSeverityColor (severity: string) {
 		const severityInt = parseInt(severity, 10);
+
 		return _.get(caseSeverities[severityInt], 'class');
 	}
 
@@ -169,6 +170,7 @@ export class ResolutionComponent {
 	public searchCaseNumber () {
 		if (this.searchCasesForm.invalid) {
 			this.isSearchCaseFormInvalid = true;
+
 			return;
 		}
 
@@ -200,5 +202,4 @@ export class ResolutionComponent {
 	public getCaseDetails (caseNo: string): Observable<any> {
 		return this.caseService.fetchCaseDetails(caseNo);
 	}
-
 }

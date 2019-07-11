@@ -12,7 +12,7 @@ import * as _ from 'lodash-es';
 import { CaseService } from '@cui-x/services';
 import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ProductAlertsService, InventoryService, ContractsService } from '@cui-x/sdp-api';
+import { InventoryService, ContractsService } from '@sdp-api';
 import { ViewChild, Component } from '@angular/core';
 
 /**
@@ -113,34 +113,6 @@ describe('AssetDetailsComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should not fail when no serial number is present', () => {
-		const deviceResponse = getActiveBody(HardwareScenarios[0]);
-		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
-
-		_.set(asset, 'serialNumber', null);
-
-		component.asset = asset;
-
-		fixture.detectChanges();
-
-		expect(component.status.loading.cases)
-			.toBeFalsy();
-	});
-
-	it('should try and fetch cases if a serial number is present', () => {
-		buildSpies();
-
-		const deviceResponse = getActiveBody(HardwareScenarios[0]);
-		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
-
-		component.asset = asset;
-
-		fixture.detectChanges();
-
-		expect(component.componentData.openCases)
-			.toEqual(30);
-	});
-
 	it('should fetch hardware data', fakeAsync(() => {
 		buildSpies();
 		tick(1000);
@@ -155,28 +127,6 @@ describe('AssetDetailsComponent', () => {
 		expect(contractsSpy)
 			.toHaveBeenCalled();
 	}));
-
-	it('should handle failing cases api call', () => {
-		caseSpy = spyOn(caseService, 'read')
-			.and
-			.returnValue(throwError(new HttpErrorResponse({
-				status: 404,
-				statusText: 'Resource not found',
-			})));
-
-		const deviceResponse = getActiveBody(HardwareScenarios[0]);
-		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
-
-		component.asset = asset;
-
-		fixture.detectChanges();
-
-		fixture.whenStable()
-			.then(() => {
-				expect(component.componentData.openCases)
-					.toEqual(0);
-			});
-	});
 
 	it('should handle failing coverage api call', () => {
 		contractsSpy = spyOn(contractsService, 'getDevicesAndCoverage')

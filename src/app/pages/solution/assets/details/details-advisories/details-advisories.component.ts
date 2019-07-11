@@ -222,8 +222,6 @@ export class DetailsAdvisoriesComponent implements OnInit {
 					fieldTab.data.bulletin = _.concat(fieldTab.data.bulletin, bulletins);
 				}
 
-				console.log('response', response);
-
 				_.set(fieldTab, ['data', 'pagination'], response.Pagination);
 
 				fieldTab.loading = false;
