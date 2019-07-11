@@ -1,6 +1,7 @@
 import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
-import { CaseService } from '@cui-x/services';
+import { CaseDetails, CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { Observable, Subject } from 'rxjs';
@@ -13,6 +14,7 @@ import { tap, switchMap, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
 import { caseSeverities } from '@classes';
+import { Case } from '@interfaces';
 
 /**
  * Resolution Component
@@ -22,7 +24,8 @@ import { caseSeverities } from '@classes';
 	templateUrl: './resolution.component.html',
 })
 export class ResolutionComponent {
-	public openPanel = false;
+	public selectedCase: Case;
+	public selectedDetails: CaseDetails;
 	public fullscreen = false;
 
 	public caseListData: any[];
@@ -31,33 +34,45 @@ export class ResolutionComponent {
 	private destroy$ = new Subject();
 	public isLoading = true;
 	public paginationInfo = {
-		totalElements: 0, // total number of records for user
 		currentPage: 0,
+		totalElements: 0, // total number of records for user
 	};
 	public caseParams = {
 		nocache: Date.now(),
-		statusTypes: 'O',
 		page: 0,
+		search: '',
 		size: 10,
 		sort: 'lastModifiedDate,DESC',
-		search: '',
+		statusTypes: 'O',
 	};
 	public paginationCount = '';
 	@ViewChild('severityTmpl', { static: true }) public severityTemplate: TemplateRef<any>;
-	@ViewChild('caseIDTmpl', { static: true }) public caseIDTemplate: TemplateRef<any>;
-	@ViewChild('deviceTmpl', { static: true }) public deviceTemplate: TemplateRef<any>;
-	@ViewChild('summaryTmpl', { static: true }) public summaryTemplate: TemplateRef<any>;
-	@ViewChild('statusTmpl', { static: true }) public statusTemplate: TemplateRef<any>;
 	@ViewChild('updatedTmpl', { static: true }) public updatedTemplate: TemplateRef<any>;
 
 	public searchCasesForm: FormGroup;
 	public isSearchCaseFormInvalid = false;
 
-	constructor (private logger: LogService, private caseService: CaseService,
-		private formBuilder: FormBuilder) { }
+	constructor (
+		private logger: LogService,
+		private caseService: CaseService,
+		private formBuilder: FormBuilder,
+		private route: ActivatedRoute,
+	) { }
 
 	/** ngOnInit */
 	public ngOnInit () {
+		/** Watch query params for a case number, show that 360 */
+		this.route.queryParamMap.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((params: ParamMap) => {
+			const casenum = params.get('casenum');
+			if (casenum) {
+				this.selectedCase = {
+					caseNumber: casenum,
+				};
+			}
+		});
 		this.refresh$.pipe(
 			tap(() => {
 				this.isLoading = true;
@@ -78,6 +93,9 @@ export class ResolutionComponent {
 				}
 				this.paginationCount = `${first}-${last}`;
 				this.paginationInfo.totalElements = cases.totalElements ? cases.totalElements : 0;
+			}, err => {
+				this.isLoading = false;
+				this.logger.error(`resolution component : case list - ${err}`);
 			});
 
 		this.refresh$.next();
@@ -90,47 +108,44 @@ export class ResolutionComponent {
 
 		this.caseListTableOptions = new CuiTableOptions({
 			bordered: false,
-			striped: false,
-			hover: true,
 			columns: [
 				{
+					key: 'priority',
 					name: I18n.get('_RMACaseSeverity_'),
 					sortable: true,
-					key: 'priority',
 					template: this.severityTemplate,
 				},
 				{
+					key: 'caseNumber',
 					name: I18n.get('_RMACaseID_'),
 					sortable: true,
-					key: 'caseNumber',
-					template: this.caseIDTemplate,
 				},
 				{
+					key: 'deviceName',
 					name: I18n.get('_RMACaseDevice_'),
 					sortable: true,
-					key: 'deviceName',
-					template: this.deviceTemplate,
 				},
 				{
+					key: 'summary',
 					name: I18n.get('_RMACaseSummary_'),
 					sortable: true,
-					key: 'summary',
-					template: this.summaryTemplate,
 				},
 				{
+					key: 'status',
 					name: I18n.get('_RMACaseStatus_'),
 					sortable: true,
-					key: 'status',
-					template: this.statusTemplate,
 				},
 				{
+					key: 'lastModifiedDate',
 					name: I18n.get('_RMACaseUpdatedDate_'),
 					sortable: true,
 					sorting: true,
-					key: 'lastModifiedDate',
 					template: this.updatedTemplate,
 				},
 			],
+			hover: true,
+			singleSelect: true,
+			striped: false,
 		});
 	}
 
@@ -141,6 +156,7 @@ export class ResolutionComponent {
 	 */
 	public getSeverityColor (severity: string) {
 		const severityInt = parseInt(severity, 10);
+
 		return _.get(caseSeverities[severityInt], 'class');
 	}
 
@@ -169,6 +185,7 @@ export class ResolutionComponent {
 	public searchCaseNumber () {
 		if (this.searchCasesForm.invalid) {
 			this.isSearchCaseFormInvalid = true;
+
 			return;
 		}
 
@@ -199,6 +216,39 @@ export class ResolutionComponent {
 	 */
 	public getCaseDetails (caseNo: string): Observable<any> {
 		return this.caseService.fetchCaseDetails(caseNo);
+	}
+
+	/**
+	 * on click of table row show case360
+	 * @param event is a Case
+	 */
+	public onTableRowClicked (event: Case) {
+		if (event.caseNumber === _.get(this.selectedCase, 'caseNumber')) {
+			_.set(event, 'active', false);
+			this.selectedCase = null;
+			this.selectedDetails = null;
+
+			return;
+		}
+		this.selectedCase = event;
+	}
+
+	/**
+	 * Fired when the user closes the case details 360
+	 */
+	public detailsClose () {
+		this.selectedCase = null;
+		this.selectedDetails = null;
+		_.each(this.caseListData, data => {
+			_.set(data, 'active', false);
+		});
+	}
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 
 }

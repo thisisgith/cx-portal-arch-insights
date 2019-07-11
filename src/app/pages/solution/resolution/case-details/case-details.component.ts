@@ -1,10 +1,20 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	OnInit,
+	OnDestroy,
+	Input,
+	Output,
+	SimpleChanges,
+} from '@angular/core';
 import { CaseService, CaseDetails } from '@cui-x/services';
 import { RMAService } from '@services';
 import { CaseDetailsService } from 'src/app/services/case-details';
-import { Subject, forkJoin } from 'rxjs';
+import { Subject, forkJoin, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
-import { tap, switchMap, takeUntil } from 'rxjs/operators';
+import { tap, switchMap, takeUntil, catchError } from 'rxjs/operators';
+import { Case } from '@interfaces';
+import * as _ from 'lodash-es';
 
 /**
  * Case Details Component
@@ -15,11 +25,13 @@ import { tap, switchMap, takeUntil } from 'rxjs/operators';
 	templateUrl: './case-details.component.html',
 })
 export class CaseDetailsComponent implements OnInit, OnDestroy {
-
-	public caseDetails: CaseDetails;
+	@Input() public case: Case;
+	@Input() public caseDetails: CaseDetails;
+	@Output() public caseDetailsChange = new EventEmitter<CaseDetails>();
 	public caseNotes: any[] = [];
 	public item: any;
 	public loading = false;
+	public tabIndex = 0;
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 
@@ -35,6 +47,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 		this.refresh$.pipe(
 			tap(() => {
 				this.loading = true;
+				this.caseNotes = [];
 			}),
 			switchMap(() => forkJoin(
 				this.getCaseDetails(),
@@ -44,26 +57,41 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 		)
 			.subscribe(results => {
 				this.caseDetails = results[0];
+				this.caseDetailsChange.emit(this.caseDetails);
 				this.loading = false;
 				this.caseNotes = results[1];
 			});
 
 		this.caseDetailsService.addNote$
-			.pipe(
-				takeUntil(this.destroy$),
-			)
 			.subscribe((refresh: boolean) => {
 				if (refresh) {
 					this.logger.debug(`${refresh}`);
+					this.loading = true;
+					this.tabIndex = 1;
 					this.getCaseNotes()
 						.pipe(
+							tap(() => {
+								this.caseNotes = [];
+							}),
 							takeUntil(this.destroy$),
 						)
-						.subscribe(caseNotes => this.caseNotes = caseNotes);
+						.subscribe(caseNotes => {
+							this.caseNotes = caseNotes;
+							this.loading = false;
+						});
 				}
 			});
+		this.refresh();
 
-		this.refresh$.next();
+	}
+
+	/**
+	 * Refreshes the component
+	 */
+	public refresh () {
+		if (this.case) {
+			this.refresh$.next();
+		}
 	}
 
 	/**
@@ -71,7 +99,15 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	 * @returns the case details
 	 */
 	public getCaseDetails () {
-		return this.caseService.fetchCaseDetails('686569635');
+		return this.caseService.fetchCaseDetails(this.case.caseNumber)
+			.pipe(
+				catchError(err => {
+					this.logger.error('casedetails.component : getCaseDetails() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
 	}
 
 	/**
@@ -79,7 +115,15 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	 * @returns case notes
 	 */
 	public getCaseNotes () {
-		return this.caseService.fetchCaseNotes('686569635');
+		return this.caseService.fetchCaseNotes(this.case.caseNumber, true)
+			.pipe(
+				catchError(err => {
+					this.logger.error('casedetails.component : getCaseDetails() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			);
 	}
 
 	/**
@@ -88,5 +132,16 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+	}
+
+	/**
+	 * Checks if our currently selected case has changed
+	 * @param changes the changes detected
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentCase = _.get(changes, ['case', 'currentValue']);
+		if (currentCase && !changes.case.firstChange) {
+			this.refresh();
+		}
 	}
 }

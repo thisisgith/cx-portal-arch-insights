@@ -1,0 +1,175 @@
+<div class="modal-container">
+	<div class="modal-backdrop force-left"></div>
+	<div class="modal modal--large">
+		<div class="modal__dialog">
+			<ng-container *ngTemplateOutlet="accRequestModal"></ng-container>
+		</div>
+	</div>
+</div>
+
+<ng-template #accRequestModal>
+	<div id="accRequestModal" class="modal__content no-padding">
+		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
+			<div class="row half-padding-top dbl-padding-left">
+				<div class="col-md-11 half-margin-top">
+					<div class="text-xlarge text-left text-uppercase" [innerText]="'_Request1on1_' | i18n"></div>
+					<div class="text-medium text-left qtr-margin-top text-muted" [innerText]="'_FindCiscoExpert_' | i18n"></div>
+				</div>
+				<div class="col-md-1 half-margin-top">
+					<span (click)="closeRequestForm()" data-auto-id="ACCCloseModal"
+						class="icon-close icon-medium text-right toggle"></span>
+				</div>
+			</div>
+			<div class="dbl-padding-left">
+				<div class="divider"></div>
+			</div>
+			<div class="dbl-padding-left text-left">
+					<span class="text-large" [innerText]="'_DNACenterProjectPlanning_' | i18n"></span>
+			</div>
+			<div class="row dbl-padding-left base-padding-top full-width">
+				<div class="col-md-4 text-left">
+					<div class="text-uppercase text-small text-muted" [innerText]="'_CompanyName_' | i18n"></div>
+					<div class="text-capitalize" [innerText]="custData.companyName"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CustomerUserName_' | i18n"></div>
+					<div class="text-capitalize" [innerText]="custData.userName"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_JobTitle_' | i18n"></div>
+					<div class="text-capitalize" [innerText]="custData.jobTitle"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Email_' | i18n"></div>
+					<div class="text-capitalize" [innerText]="custData.email"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Phone_' | i18n"></div>
+					<div class="text-capitalize" [innerText]="custData.phoneNumber"></div>
+					<div class="text-uppercase text-small text-muted dbl-padding-top"  [innerText]="'_CiscoContact_' | i18n"></div>
+					<div class="text-capitalize" [innerText]="custData.ciscoContact"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CCOID_' | i18n"></div>
+					<div class="text-capitalize" [innerText]="custData.ccoID"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Country_' | i18n"></div>
+					<div class="text-capitalize" [innerText]="custData.country"></div>
+				</div>
+				<div class="col-md-8">
+					<form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text select">
+								<select id="attendees-select"
+									(change)="addAdditionalAttendeeForms(requestForm.get('attendees').value)"
+									formControlName="attendees">
+									<option *ngFor="let option of attendeeOptions" [value]="option.value" [innerText]="option.key"></option>
+								</select>
+								<label class="text-uppercase text-small" for="attendees-select" [innerText]="'_NumberOfAttendees_' | i18n"></label>
+							</div>
+						</div>
+						<ng-container *ngIf="requestForm.get('attendees').value > 1">
+							<div class="row half-padding-top dbl-padding-left dbl-margin-right">
+								<div class="col-md-6 text-left">
+									<span class="text-uppercase text-small" [innerText]="'_AdditionalAttendeeName_' | i18n"></span>
+								</div>
+								<div class="col-md-6 text-left">
+									<span class="text-uppercase text-small" [innerText]="'_Email_' | i18n"></span>
+								</div>
+							</div>
+							<ng-container *ngIf="requestForm.get('additionalAttendees')">
+								<div class="row qtr-padding-top dbl-padding-left dbl-margin-right"
+									formArrayName="additionalAttendees"
+									*ngFor="let item of requestForm.get('additionalAttendees').controls; let i = index;">
+									<div class="col-md-6 no-padding-right" [formGroupName]="i">
+										<div class="form-group">
+											<div class="form-group__text">
+												<input id="attendeeName" formControlName="name" type="text" required>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6 no-padding-right" [formGroupName]="i">
+										<div class="form-group">
+											<div class="form-group__text">
+												<input id="attendeeEmail" formControlName="email" type="email" required>
+											</div>
+										</div>
+									</div>
+								</div>
+							</ng-container>
+						</ng-container>
+						<div class="form-group dbl-padding-left dbl-margin-right no-margin-top half-padding-top">
+							<div class="form-group__text select">
+								<select id="time-zone-select" formControlName="timeZone">
+									<option *ngFor="let option of timeZoneOptions" [value]="option.value" [innerText]="option.key"></option>
+								</select>
+								<label class="text-uppercase text-small" for="time-zone-select" [innerText]="'_TimeZone_' | i18n"></label>
+							</div>
+						</div>
+						<div class="text-left dbl-padding-left half-padding-top half-padding-bottom">
+							<div class="text-uppercase text-small qtr-padding-bottom" [innerText]="'_PreferredTimeMeeting_' | i18n"></div>
+							<div class="form-group form-group--inline">
+								<label class="radio">
+									<input type="radio" formControlName="meetingTime" [value]="'_Morning_' | i18n" required>
+									<span class="radio__input"></span>
+									<span class="radio__label hidden-xs" [innerText]="'_Morning_' | i18n"></span>
+								</label>
+							</div>
+							<div class="form-group form-group--inline dbl-padding-left">
+								<label class="radio">
+									<input type="radio" formControlName="meetingTime" [value]="'_Afternoon_' | i18n" required>
+									<span class="radio__input"></span>
+									<span class="radio__label hidden-xs" [innerText]="'_Afternoon_' | i18n"></span>
+								</label>
+							</div>
+						</div>
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text select">
+								<select id="language-select" formControlName="language">
+									<option *ngFor="let option of languageOptions" [value]="option.value" [innerText]="option.key"></option>
+								</select>
+								<label class="text-uppercase text-small" for="time-zone-select" [innerText]="'_LanguagePreference_' | i18n"></label>
+							</div>
+						</div>
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text select">
+								<select id="dnac-version-select" formControlName="dnacVersion">
+									<option *ngFor="let option of dnacOptions" [value]="option.value" [innerText]="option.key"></option>
+								</select>
+								<label class="text-uppercase text-small" for="time-zone-select" [innerText]="'_DNACVersion_' | i18n"></label>
+							</div>
+						</div>
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text">
+								<textarea id="input-textarea-accelerator" formControlName="acceleratorInterest" class="textarea" rows="5"></textarea>
+								<label class="text-uppercase text-small" for="input-textarea-accelerator" [innerText]="'_WhyInterestedAccelerator_' | i18n"></label>
+							</div>
+							<div class="help-block text-muted" role="alert">
+								<span>{{requestForm.get('acceleratorInterest').value.length}}/{{maxLength}} {{'_Characters_' | i18n}}</span>
+							</div>
+						</div>
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text">
+								<textarea id="input-textarea-outcome" formControlName="desiredOutcome" class="textarea" rows="5"></textarea>
+								<label class="text-uppercase text-small" for="input-textarea-outcome" [innerText]="'_WhatWouldLikeToSeeOutcome_' | i18n"></label>
+							</div>
+							<div class="help-block text-muted" role="alert">
+								<span>{{requestForm.get('desiredOutcome').value.length}}/{{maxLength}} {{'_Characters_' | i18n}}</span>
+							</div>
+						</div>
+						<div class="text-left dbl-padding-left half-padding-top half-padding-bottom">
+							<div class="text-uppercase text-small qtr-padding-bottom" [innerText]="'_PreferredEnvironmentAccelerator_' | i18n"></div>
+							<div class="form-group form-group--inline">
+								<label class="radio">
+									<input type="radio" formControlName="environment" [value]="'_NonProdEnvironment_' | i18n">
+									<span class="radio__input"></span>
+									<span class="radio__label hidden-xs" [innerText]="'_NonProdEnvironment_' | i18n"></span>
+								</label>
+							</div>
+							<div class="form-group form-group--inline dbl-padding-left">
+								<label class="radio">
+									<input type="radio" formControlName="environment" [value]="'_CiscoLab_' | i18n">
+									<span class="radio__input"></span>
+									<span class="radio__label hidden-xs" [innerText]="'_CiscoLab_' | i18n"></span>
+								</label>
+							</div>
+						</div>
+						<div class="half-padding-top dbl-padding-left text-left">
+							<button type="submit" [disabled]="!requestForm.valid" class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n"></button>
+							<button type="button" data-auto-id="form-cancel" class="btn btn--small -wide btn--secondary text-uppercase text-small" (click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>

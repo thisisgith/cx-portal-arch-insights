@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import {
 	I18nPipeModule,
 } from '@cisco-ngx/cui-pipes';
 import {
-	CuiButtonModule,
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 import { RMASearchComponent } from './rma-search.component';
@@ -21,7 +21,7 @@ import { CourierLinkPipe } from './pipes/courier-link.pipe';
 	],
 	imports: [
 		CommonModule,
-		CuiButtonModule,
+		RouterModule,
 		CuiSpinnerModule,
 		GeneralSearchModule,
 		I18nPipeModule,
