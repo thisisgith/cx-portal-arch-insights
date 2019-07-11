@@ -18,13 +18,13 @@
 		</dl>
 	</div>
 	<h3 [innerText]="'_Case_' | i18n:caseNumber.query"></h3>
+	<div *ngIf="case?.description; else unavailable" [innerText]="case.description"></div>
 	<div class="row">
 		<div class="row no-gutters col-md-6">
-			<div *ngIf="case?.description; else unavailable" [innerText]="case.description"></div>
 			<div class="col-md-7 base-margin-top base-margin-right">
 				<dl class="dl--inline-medium">
 					<dt>
-						<span class="subheading text-small text-uppercase" 
+						<span class="subheading text-small text-uppercase"
 							[innerText]="'_Severity_' | i18n"></span>
 					</dt>
 					<dd>
@@ -36,8 +36,8 @@
 							[innerText]="'_Created_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="case?.created; else unavailable"
-							[innerText]="case.created | date:'dd-MMM-y hh:mm aa O'"></span>
+						<span *ngIf="case?.opened; else unavailable"
+							[innerText]="case.opened | date:'dd-MMM-y hh:mm aa O'"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
@@ -102,10 +102,14 @@
 				</dl>
 			</div>
 			<div class="base-margin-top">
-				<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
-					class="text-uppercase" [innerText]="'_ViewCaseDetails_' | i18n"></button>
-				<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
-					class="text-uppercase" [innerText]="'_ViewAllOpenCases_' | i18n"></button>
+				<button class="btn btn--small btn--secondary text-uppercase"
+				[innerText]="'_ViewCaseDetails_' | i18n"
+				data-auto-id="CaseDetailsButton"
+				(click)="onViewCase(caseNumber.query)"></button>
+				<button class="btn btn--small btn--secondary text-uppercase"
+				[innerText]="'_ViewAllOpenCases_' | i18n"
+				data-auto-id="CaseListButton"
+				(click)="onViewCase()"></button>
 			</div>
 		</div>
 		<div class="row col-md-6 flex-right">

@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { LifecycleComponent } from './lifecycle.component';
 import { RacetrackModule, RacetrackContentModule } from '@sdp-api';
 import { environment } from '@environment';
+import { AccRequestFormModule } from './acc-request-form/acc-request-form.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -30,6 +31,7 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [LifecycleComponent],
 	imports: [
+		AccRequestFormModule,
 		CommonModule,
 		CuiRatingModule,
 		CuiSelectModule,

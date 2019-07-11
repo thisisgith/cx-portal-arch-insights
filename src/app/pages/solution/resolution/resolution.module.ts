@@ -7,7 +7,12 @@ import { CaseDetailsModule } from './case-details/case-details.module';
 import { Panel360Module } from '@components';
 import { CaseDetailsHeaderModule } from './case-details-header/case-details-header.module';
 
-import { CuiTableModule, CuiPagerModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import {
+	CuiTableModule,
+	CuiTabsModule,
+	CuiPagerModule,
+	CuiSpinnerModule,
+} from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
@@ -35,6 +40,7 @@ const childRoutes: Routes = [
 		CaseDetailsHeaderModule,
 		CuiPagerModule,
 		CuiTableModule,
+		CuiTabsModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
 	],
