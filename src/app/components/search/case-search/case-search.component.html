@@ -103,12 +103,12 @@
 			</div>
 			<div class="base-margin-top">
 				<button class="btn btn--small btn--secondary text-uppercase"
-				data-auto-id="viewCaseDetailsB" [innerText]="'_ViewCaseDetails_' | i18n"
-				data-auto-id="CaseDetailsButton"
+				[innerText]="'_ViewCaseDetails_' | i18n"
+				data-auto-id="viewCaseDetailsB"
 				(click)="onViewCase(caseNumber.query)"></button>
 				<button class="btn btn--small btn--secondary text-uppercase"
-				data-auto-id="viewAllOpenCasesB" [innerText]="'_ViewAllOpenCases_' | i18n"
-				data-auto-id="CaseListButton"
+				[innerText]="'_ViewAllOpenCases_' | i18n"
+				data-auto-id="viewAllOpenCasesB"
 				(click)="onViewCase()"></button>
 			</div>
 		</div>

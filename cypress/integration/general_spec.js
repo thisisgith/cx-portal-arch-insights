@@ -178,9 +178,6 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
 				cy.getByAutoId('rmaProdID').should('exist');
-				cy.getByAutoId('rmaProdSeries').should('exist');
-				cy.getByAutoId('rmaEOSaleD').should('exist');
-				cy.getByAutoId('rmaEOSupportD').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 			});
 			// General Search section
@@ -260,12 +257,9 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaProduct').should('exist');
 				cy.getByAutoId('rmaUnavail')
 					.should($rmaUnavail => {
-						expect($rmaUnavail).to.have.length(5);
+						expect($rmaUnavail).to.have.length(2);
 					});
 				cy.getByAutoId('rmaProdID').should('exist');
-				cy.getByAutoId('rmaProdSeries').should('exist');
-				cy.getByAutoId('rmaEOSaleD').should('exist');
-				cy.getByAutoId('rmaEOSupportD').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				// General Search section
 				cy.getByAutoId('searchHeader').should('exist');
