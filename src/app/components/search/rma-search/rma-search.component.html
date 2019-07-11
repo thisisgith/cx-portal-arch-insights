@@ -141,9 +141,10 @@
 			[innerText]="'_CaseNumber_' | i18n"></span>
 	</dt>
 	<dd>
-		<!--TODO: Link to case details page -->
-		<a data-auto-id="caseNumber" *ngIf="rmaTableData?.caseId; else unavailable"
-			[innerText]="rmaTableData.caseId"></a>
+		<a data-auto-id="caseNumber"
+		*ngIf="rmaTableData?.caseId; else unavailable"
+			[innerText]="rmaTableData.caseId"
+			(click)="onViewCaseDetails(rmaTableData.caseId)"></a>
 	</dd>
 </ng-template>
 

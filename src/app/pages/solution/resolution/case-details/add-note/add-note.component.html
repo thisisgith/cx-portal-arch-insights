@@ -1,6 +1,6 @@
 <div class="absolute add-notes  base-padding-bottom">
 	<cui-spinner *ngIf="loading"></cui-spinner>
-	<form *ngIf="!loading" class="base-margin-top" [formGroup]="notesForm" novalidate>
+	<form class="base-margin-top" [formGroup]="notesForm" novalidate>
 		<div class="col-md-12">
 			<div class="form-group">
 				<div class="form-group__text">
@@ -9,7 +9,7 @@
 					<label for="add-note-title">{{'_RMACaseSummaryTitle_'| i18n}}</label>
 				</div>
 				<div class="help-block text-muted" role="alert">
-					<span>{{title.value.length}}/{{titleMaxLength}} {{'_RMACharacters_' | i18n}}</span>
+					<span>{{title.value.length}}/{{titleMaxLength}} {{'_Characters_' | i18n}}</span>
 				</div>
 			</div>
 		</div>
@@ -21,7 +21,7 @@
 					<label for="add-note-description">{{'_RMACaseDescription_'| i18n}}</label>
 				</div>
 				<div class="help-block text-muted" role="alert">
-					<span>{{description.value.length}}/{{descriptionMaxLength}} {{'_RMACharacters_' | i18n}}</span>
+					<span>{{description.value.length}}/{{descriptionMaxLength}} {{'_Characters_' | i18n}}</span>
 				</div>
 			</div>
 		</div>

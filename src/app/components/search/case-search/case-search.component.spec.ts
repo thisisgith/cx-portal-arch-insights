@@ -1,5 +1,6 @@
 import { async, fakeAsync, tick, ComponentFixture, TestBed, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
 
 import { CaseService } from '@cui-x/services';
@@ -20,6 +21,7 @@ describe('caseSearchComponent', () => {
 			imports: [
 				CaseSearchModule,
 				HttpClientTestingModule,
+				RouterTestingModule,
 			],
 		})
 		.compileComponents();

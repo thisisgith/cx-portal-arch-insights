@@ -11,7 +11,7 @@ const caseDetailsResponse = {
 	ownerEmail: 'testUser@cisco.com',
 	ownerName: 'Test User',
 	priority: '3',
-	rmaNumber: '88346234, 88346235',
+	rmaNumber: '88346234, 88346235, 800000000',
 	serialNumber: 'FOX1306GFKH',
 	status: 'Customer Pending',
 	summary: 'Router not working',

@@ -1,11 +1,11 @@
 <div class="panel">
-	<cui-tabs inline="true">
+	<cui-tabs inline="true" [activeTabIndex]="tabIndex">
 		<cui-tab [label]="'_RMACaseSummary_' | i18n | uppercase">
 			<div class="divider no-margin-top"></div>
 			<cui-spinner *ngIf="loading"></cui-spinner>
 			<app-case-summary *ngIf="!loading" [caseDetails]="caseDetails"></app-case-summary>
 		</cui-tab>
-		<cui-tab [label]="'_RMACaseNotes_'| i18n:caseNotes?.length  | uppercase">
+		<cui-tab [label]="'_RMACaseNotes_'| i18n:(caseNotes?.length > 0? '('+caseNotes?.length+')': '') | uppercase">
 			<div class="divider no-margin-top"></div>
 			<cui-spinner *ngIf="loading"></cui-spinner>
 			<app-case-notes *ngIf="!loading" [caseNotes]="caseNotes"></app-case-notes>

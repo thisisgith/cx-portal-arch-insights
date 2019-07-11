@@ -1,11 +1,12 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
-import { CaseService } from '@cui-x/services';
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { CaseDetails } from '@cui-x/services';
 import { RMAService } from '@services';
-import { FormControl, FormGroup } from '@angular/forms';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { caseSeverities } from '@classes';
-
 import * as _ from 'lodash-es';
+import { Case, RMAResponse, RMARecord } from '@interfaces';
+import { LogService } from '@cisco-ngx/cui-services';
+import { switchMap, takeUntil, catchError } from 'rxjs/operators';
+import { Observable, Subject, forkJoin, of } from 'rxjs';
 
 /**
  * Case Details Header Component
@@ -16,38 +17,36 @@ import * as _ from 'lodash-es';
 	templateUrl: './case-details-header.component.html',
 })
 export class CaseDetailsHeaderComponent {
-
-	public caseDetails: any;
+	@Input() public case: Case;
+	@Input() public caseDetails: CaseDetails;
 	public isAddNoteClicked = false;
 	public isRMAClicked = false;
-	public rma: FormControl = new FormControl('');
-	public rmaForm: FormGroup;
-	public rmaTable: CuiTableOptions;
-	public rmaDetails: any[] = [];
-	@ViewChild('createdDate', { static: true }) private createdDateTemplate: TemplateRef<{ }>;
+	public rmaRecords: RMARecord[] = [];
+	public loading = true;
+	private refreshRma$ = new Subject<string>();
+	private destroy$ = new Subject();
 
 	constructor (
-		private caseService: CaseService, private rmaService: RMAService,
+		private rmaService: RMAService,
+		private logger: LogService,
 	) { }
 
 	/**
 	 * Initialization hook
 	 */
 	public ngOnInit () {
-		this.getCaseDetails();
-		this.getRMADetails();
-	}
-
-	/**
-	 * getCaseDetails function
-	 * @returns the case details
-	 */
-	public getCaseDetails () {
-		return this.caseService.fetchCaseDetails('686569635')
-			.subscribe(
-				(response: any) => {
-					this.caseDetails = response;
-				});
+		// Refresh RMA Details for current case
+		this.refreshRma$.pipe(
+			switchMap(rmaNumbers => this.getRMADetails(rmaNumbers)),
+			takeUntil(this.destroy$),
+		)
+		.subscribe(rmaDetails => {
+			if (rmaDetails) {
+				this.rmaRecords = _.filter(rmaDetails.map(details => _.get(
+					details, ['returns', 'RmaRecord', 0]),
+				));
+			}
+		});
 	}
 
 	/**
@@ -66,6 +65,9 @@ export class CaseDetailsHeaderComponent {
 	 */
 	public toggleAddNote () {
 		this.isAddNoteClicked = !this.isAddNoteClicked;
+		if (this.isAddNoteClicked) {
+			this.isRMAClicked = false;
+		}
 	}
 
 	/**
@@ -73,102 +75,52 @@ export class CaseDetailsHeaderComponent {
 	 */
 	public toggleRMAList () {
 		this.isRMAClicked = !this.isRMAClicked;
+		if (this.isRMAClicked) {
+			this.isAddNoteClicked = false;
+		}
 	}
 
 	/**
 	 * get RMA Details
+	 * @param rmaNumbers comma separated string of related rma numbers (often just 1)
+	 * @returns rma list
 	 */
-	public getRMADetails () {
-		this.rmaDetails = [
-			{
-				contatcId: '88332129',
-				name: 'RMA 871245',
-				orderDate: '2019-06-25T22:20:01.000Z',
-				shipTo: 'ACE Company, 123 Main Street, Your town CO 80231',
-				status: 'blocked',
-			},
-			{
-				contatcId: '88332129',
-				name: 'RMA 871246',
-				orderDate: '2019-06-13T22:20:01.000Z',
-				shipTo: 'ACE Company, 123 Main Street, Your town CO 80231',
-				status: 'blocked',
-			},
-		];
-		// this.rmaService.getByNumber('800000000')
-		// 	.subscribe(
-		// 		(response: any) => {
-		// 			if (response.returns) {
-		// 				this.rmaDetails = response.returns.RmaRecord;
+	public getRMADetails (rmaNumbers: string): Observable <RMAResponse []> {
+		if (!rmaNumbers || !rmaNumbers.length) {
+			return of(null);
+		}
+		const rmaStrings = rmaNumbers.split(',');
+		const rmaCalls = rmaStrings.map(
+			rmaNum => this.rmaService.getByNumber(rmaNum.trim())
+			.pipe(
+				catchError(err => {
+					this.logger.error('rma.component : getRmaDetails() ' +
+						`:: Error : (${err.status}) ${err.message}`);
 
-		// 				// this.rmaDetails.forEach(el => {
-		// 				// 	el.created = this.fromNowPipe.transform(new Date(el.created))
-		// 				//    })
+					return of(null);
+				}),
+			),
+		);
 
-		this.buildTable();
-		// 			}
-		// 		});
-
+		return forkJoin(...rmaCalls);
 	}
 
 	/**
-	 * builds RMA table
+	 * Checks if our currently selected case has changed
+	 * @param changes the changes detected
 	 */
-	private buildTable () {
-		if (!this.rmaTable) {
-			this.rmaTable = new CuiTableOptions({
-				bordered: true,
-				columns: [
-					{
-						key: 'name',
-						// name: I18n.get('_Device_'),
-						name: 'Name',
-						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
-						width: '25px',
-					},
-					{
-						key: 'status',
-						name: 'Status',
-						sortable: true,
-						value: 'status',
-					},
-					{
-						key: 'shipToInfo.customername',
-						// name: I18n.get('_Device_'),
-						name: 'Ship To',
-						sortable: true,
-						// sortDirection: 'asc',
-						value: 'shipToInfo.customername',
-						width: '10px',
-					},
-					{
-						key: 'contractId',
-						name: 'Contact Number',
-						sortable: true,
-						value: 'contractId',
-					},
-					{
-						key: 'orderDate',
-						name: 'Created',
-						sortable: true,
-						template: this.createdDateTemplate,
-					},
-				],
-				dynamicData: true,
-				hover: true,
-				padding: 'loose',
-				selectable: true,
-				singleSelect: true,
-				sortable: true,
-				striped: false,
-				wrapText: true,
-			});
+	public ngOnChanges (changes: SimpleChanges) {
+		if (changes.case) {
+			this.loading = true;
 		}
-
-		this.rmaForm = new FormGroup({
-			rma: this.rma,
-		});
+		if (changes.caseDetails) {
+			if (changes.caseDetails.currentValue) {
+				this.loading = false;
+			} else {
+				this.loading = true;
+			}
+			this.rmaRecords = [];
+			this.refreshRma$.next(_.get(this.caseDetails, 'rmaNumber'));
+		}
 	}
 }
