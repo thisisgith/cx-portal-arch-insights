@@ -75,7 +75,7 @@ describe('General Spec', () => {
 			});
 		});
 
-		it.only('Search Type Ahead', () => { // PBC-168
+		it('Search Type Ahead', () => { // PBC-168
 			const searchVal = 'cat';
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(searchVal);
