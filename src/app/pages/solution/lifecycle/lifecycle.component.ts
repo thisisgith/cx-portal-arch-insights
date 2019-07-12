@@ -303,25 +303,6 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
-	 * Returns sorted data
-	 * @param data ACC data
-	 * @returns modifiedData
-	 */
-	public modifyData (data: []) {
-		// let modifiedData = data;
-		let modifiedData = [];
-		data.forEach(function (item) {
-			if (_.get(item,'status') === 'recommended') {
-				modifiedData.push(item);
-				return false;
-			}
-		});
-		modifiedData = _.union(modifiedData, data);
-
-		return modifiedData;
-	}
-
-	/**
 	 * Determines which modal to display
 	 * @param item ACC item
 	 * @returns ribbon
@@ -495,7 +476,10 @@ export class LifecycleComponent implements OnDestroy {
 
 				this.componentData.acc = {
 					recommended: _.head(_.filter(result.items, { status: 'recommended' })),
-					sessions: result.items,
+					sessions: _.union(_.filter(result.items, { status: 'recommended' }),
+						_.filter(result.items, { status: 'requested' }),
+						_.filter(result.items, { status: 'in-progress' }),
+						_.filter(result.items, { status: 'completed' })),
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
