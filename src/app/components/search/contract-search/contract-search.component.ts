@@ -6,8 +6,6 @@ import {
 	OnDestroy,
 	Input,
 	Output,
-	TemplateRef,
-	ViewChild,
 	forwardRef,
 } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';

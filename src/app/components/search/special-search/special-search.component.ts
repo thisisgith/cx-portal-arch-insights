@@ -1,4 +1,4 @@
-import { Component, EventEmitter, TemplateRef } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 
 /**
  * Abstract class representing special search content

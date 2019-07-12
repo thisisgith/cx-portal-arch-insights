@@ -7,8 +7,6 @@ import {
 	OnDestroy,
 	OnInit,
 	OnChanges,
-	TemplateRef,
-	ViewChild,
 } from '@angular/core';
 
 import { Subject, Observable, forkJoin, of } from 'rxjs';

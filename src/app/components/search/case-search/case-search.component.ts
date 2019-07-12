@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges,
-	Output, EventEmitter, ViewChild, TemplateRef, forwardRef } from '@angular/core';
+	Output, EventEmitter, forwardRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CaseService } from '@cui-x/services';
 import { InventoryService, HardwareResponse } from '@sdp-api';
