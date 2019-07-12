@@ -294,7 +294,7 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.acc.sessions.length)
-						.toEqual(4);
+						.toEqual(5);
 				});
 		});
 
