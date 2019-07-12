@@ -40,9 +40,9 @@
 						<span class="subheading text-small text-uppercase" [innerText]="'_ExpirationDate_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="contractData?.expirationDate; else loadingContractTemplate" class="qtr-margin-right"
-							[innerText]="contractData.expirationDate | date:'dd-MMM-y'"></span>
-						<span *ngIf="expirationFromNow" [innerText]="'(' + expirationFromNow + ')'"></span>
+						<span *ngIf="contractData?.expirationDate; else loadingContractTemplate"
+							[innerText]="(contractData.expirationDate | date:'dd-MMM-y') +
+							' (' + (contractData.expirationDate | fromNow) + ')'"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
@@ -120,8 +120,8 @@
 		<div class="row col-md-5">
 			<div class="col-md-1"></div>
 			<div class="col-md-10">
-				<div class="panel panel--loose panel--bordered">
-					<div class="qtr-margin-top qtr-margin-left qtr-margin-right">
+				<div class="panel panel--bordered">
+					<div class="half-margin-top half-margin-left half-margin-right">
 						<!-- TODO: Add product photo here -->
 						<dl class="dl--inline-medium">
 							<dt>
@@ -169,9 +169,9 @@
 		</div>
 		<div class="row col-md-5">
 			<div class="col-md-1"></div>
-			<div class="col-md-10">
+			<div *ngIf="data?.lastScan" class="col-md-10">
 				<span class="icon-small icon-clock text-muted qtr-margin-right"></span>
-				<span class="text-muted">Last updated 2 days ago</span>
+				<span class="text-muted" [innerText]="('_BasedOnLastScan_' | i18n:(data.lastScan | fromNow))"></span>
 			</div>
 		</div>
 	</div>

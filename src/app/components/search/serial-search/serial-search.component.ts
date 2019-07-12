@@ -29,7 +29,6 @@ import { SpecialSearchComponent } from '../special-search/special-search.compone
 import { SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
-import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { HardwareInfo } from '@cui-x/sdp-api';
 
 /**
@@ -173,8 +172,6 @@ implements OnInit, OnChanges, OnDestroy {
 				cxLevel: _.get(response, ['data', 0, 'cxLevel'], null),
 				expirationDate: _.get(response, ['data', 0, 'contractEndDate'], null),
 			};
-			const fromNowPipe = new FromNowPipe();
-			this.expirationFromNow = fromNowPipe.transform(this.contractData.expirationDate);
 		});
 		/** Alerts Data Refresh */
 		this.refresh$.pipe(
