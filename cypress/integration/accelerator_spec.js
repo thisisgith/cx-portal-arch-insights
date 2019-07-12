@@ -193,12 +193,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					if (!acc.isFavorite && acc.status !== 'completed') {
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
-							.should('have.class', 'ribbon__clear')
-							.click();
-						cy.waitForAppLoading('accLoading', 5000);
-						cy.getByAutoId('ACCCardRibbon')
-							.eq(index)
-							.should('have.class', 'ribbon__blue');
+							.should('have.class', 'ribbon__clear');
+						// 	.click();
+						// cy.waitForAppLoading('accLoading', 5000);
+						// cy.getByAutoId('ACCCardRibbon')
+						// 	.eq(index)
+						// 	.should('have.class', 'ribbon__blue');
 					}
 				});
 			});
