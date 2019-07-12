@@ -3,21 +3,25 @@ import {
 	ActionScenarios,
 	AssetScenarios,
 	ATXScenarios,
-	CommunitiesScenarios,
 	CaseScenarios,
+	CommunitiesScenarios,
 	ContractScenarios,
 	CoverageScenarios,
 	ELearningScenarios,
-	HardwareScenarios,
-	HardwareEOLScenarios,
 	HardwareEOLBulletinScenarios,
 	HardwareEOLCountScenarios,
+	HardwareEOLScenarios,
+	HardwareScenarios,
 	NetworkScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
+	SecurityAdvisoryBulletinScenarios,
+	SecurityAdvisoryScenarios,
 	SuccessPathScenarios,
+	FieldNoticeScenarios,
+	FieldNoticeBulletinScenarios,
 	HealthStatusScenarios,
 	VulnerabilityScenarios,
 	UserScenarios,
@@ -31,14 +35,20 @@ import {
 	ATXResponse,
 	CDCSearchResponse,
 	CommunitiesResponse,
+	CoverageCountsResponse,
+	CoverageResponse,
 	ELearningResponse,
-	HardwareResponse,
-	HardwareEOLResponse,
+	FieldNoticeBulletinResponse,
+	FieldNoticeResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
+	HardwareEOLResponse,
+	HardwareResponse,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
+	SecurityAdvisoryBulletinResponse,
+	SecurityAdvisoryResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -51,15 +61,21 @@ type ResponseBody = (
 	ATXResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
+	CoverageCountsResponse |
+	CoverageResponse |
 	ELearningResponse |
-	HardwareResponse |
-	HardwareEOLResponse |
+	FieldNoticeBulletinResponse |
+	FieldNoticeResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
+	HardwareEOLResponse |
+	HardwareResponse |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
+	SecurityAdvisoryBulletinResponse |
+	SecurityAdvisoryResponse |
 	SuccessPathsResponse |
 	VulnerabilityResponse
 );
@@ -107,26 +123,30 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ATXScenarios,
 		ActionScenarios,
 		AssetScenarios,
-		ATXScenarios,
 		CaseScenarios,
 		CommunitiesScenarios,
 		ContractScenarios,
 		CoverageScenarios,
 		ELearningScenarios,
-		HardwareScenarios,
-		HardwareEOLScenarios,
+		FieldNoticeBulletinScenarios,
+		FieldNoticeScenarios,
 		HardwareEOLBulletinScenarios,
 		HardwareEOLCountScenarios,
+		HardwareEOLScenarios,
+		HardwareScenarios,
+		HealthStatusScenarios,
 		NetworkScenarios,
-		RacetrackScenarios,
 		RMAScenarios,
+		RacetrackScenarios,
 		RoleScenarios,
 		SearchScenarios,
+		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryScenarios,
 		SuccessPathScenarios,
-		HealthStatusScenarios,
-		VulnerabilityScenarios,
 		UserScenarios,
+		VulnerabilityScenarios,
 	]),
 };

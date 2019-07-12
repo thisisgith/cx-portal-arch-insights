@@ -13,6 +13,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 export class Panel360HeaderComponent {
 	@ViewChild(TemplateRef, { static: true }) public content: TemplateRef<any>;
 	@Input('fullscreen') public fullscreen = false;
+	@Input('fullscreenToggle') public fullscreenToggle = true;
 	@Output('close') public close = new EventEmitter<boolean>();
 	@Output('fullscreenChange') public fullscreenChange = new EventEmitter<boolean>();
 
