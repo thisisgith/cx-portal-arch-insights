@@ -4,7 +4,7 @@ import { RiskMigitaionComponent } from './risk-mitigation.component';
 import { RiskMitigationModule } from './risk-mitigation.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('SecurityComponent', () => {
+describe('RiskMigitaionComponent', () => {
 	let component: RiskMigitaionComponent;
 	let fixture: ComponentFixture<RiskMigitaionComponent>;
 

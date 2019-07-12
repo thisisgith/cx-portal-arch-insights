@@ -4,7 +4,7 @@ import { ArchitectureComponent } from './architecture.component';
 import { ArchitectureModule } from './architecture.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('SecurityComponent', () => {
+describe('ArchitectureComponent', () => {
 	let component: ArchitectureComponent;
 	let fixture: ComponentFixture<ArchitectureComponent>;
 

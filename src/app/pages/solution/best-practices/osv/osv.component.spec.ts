@@ -4,7 +4,7 @@ import { OptimalSoftwareVersionComponent } from './osv.component';
 import { OptimalSoftwareVersionModule } from './osv.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('SecurityComponent', () => {
+describe('OptimalSoftwareVersionComponent', () => {
 	let component: OptimalSoftwareVersionComponent;
 	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
 

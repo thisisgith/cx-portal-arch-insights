@@ -38,7 +38,6 @@ export class BestPracticesComponent implements OnInit {
 				if (event instanceof NavigationEnd && event.url) {
 					const route = _.split(
 						(_.isArray(event.url) ? event.url[0] : event.url), '?')[0];
-
 					if (route.includes('best-practices')) {
 						this.activeRoute = route;
 						const routeSubModule = _.find(this.subModules, { route });
