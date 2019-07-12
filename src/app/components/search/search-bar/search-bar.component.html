@@ -23,7 +23,7 @@
 				*ngFor="let item of typeaheadItems"
 				[ngClass]="{'keyboard-hover': item.keyHover}"
 				(click)="onSearchSelect(item.name, true)"
-				[innerText]="item.name"></a>
+				data-auto-id="searchBarTypeAhead" [innerText]="item.name"></a>
 		</div>
 	</div>
 </div>

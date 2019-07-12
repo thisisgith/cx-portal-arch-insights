@@ -75,13 +75,11 @@ describe('General Spec', () => {
 			});
 		});
 
-		// TODO add the auto-id's to the html and retest
-		it.skip('Search Type Ahead PBC-168', () => {
+		it.only('Search Type Ahead', () => { // PBC-168
 			const searchVal = 'cat';
-			cy.getByAutoId('searchBarinput').should('exist').clear()
+			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(searchVal);
-			cy.getByAutoId('searchBarTypeahead').should('exist');
-			cy.getByAutoId('searchBarTypeahead')
+			cy.getByAutoId('searchBarTypeAhead')
 				.should($searchBarTypeahead => {
 					expect($searchBarTypeahead).to.have.length(7);
 				});
@@ -294,7 +292,7 @@ describe('General Spec', () => {
 		});
 	});
 
-	context.only('Contract Search', () => {
+	context('Contract Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
