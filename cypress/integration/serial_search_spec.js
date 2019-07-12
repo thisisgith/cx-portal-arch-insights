@@ -32,9 +32,6 @@ describe('Serial Spec', () => {
 				cy.getByAutoId('serialFieldNotice').should('exist').should('contain', i18n._RelatedFieldNotices_);
 				cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
 				cy.getByAutoId('serialBugs').should('exist').should('contain', i18n._RelatedBugs_);
-				cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
-				cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
-				cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
 			});
 			cy.getByAutoId('viewDeviceButton').should('exist');
 			cy.getByAutoId('openCaseButton').should('exist');
