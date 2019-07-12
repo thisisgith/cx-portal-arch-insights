@@ -35,7 +35,7 @@ interface Facet {
 	label?: string;
 	route: string;
 	selected?: boolean;
-	template: TemplateRef<{ }>;
+	template: TemplateRef<{}>;
 	title: string;
 }
 
@@ -69,11 +69,11 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private eventsSubscribe: Subscription;
 	public solutions: RacetrackSolution[];
 
-	@ViewChild('advisoriesFact', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
-	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
-	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
-	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
-	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
+	@ViewChild('advisoriesFact', { static: true }) public advisoriesTemplate: TemplateRef<{}>;
+	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{}>;
+	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{}>;
+	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{}>;
+	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{}>;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -172,6 +172,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				template: this.resolutionTemplate,
 				title: I18n.get('_ProblemResolution_'),
 			},
+			{
+				key: 'best-practices',
+				route: '/solution/best-practices',
+				template: this.resolutionTemplate,
+				title: I18n.get('_BestPractices_'),
+			},
 		];
 
 		if (this.activeRoute) {
@@ -209,16 +215,16 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private fetchSolutions () {
 		this.status.loading = true;
 		this.racetrackService.getRacetrack({ customerId })
-		.subscribe((results: RacetrackResponse) => {
-			this.solutions = results.solutions;
-			this.changeSolution(_.head(this.solutions));
-			this.status.loading = false;
-		},
-		err => {
-			this.status.loading = false;
-			this.logger.error('solution.component : fetchSolutions() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-		});
+			.subscribe((results: RacetrackResponse) => {
+				this.solutions = results.solutions;
+				this.changeSolution(_.head(this.solutions));
+				this.status.loading = false;
+			},
+				err => {
+					this.status.loading = false;
+					this.logger.error('solution.component : fetchSolutions() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				});
 	}
 
 	/**
@@ -226,23 +232,23 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	private fetchCoverageCount () {
 		this.contractsService.getCoverageCounts({ customerId })
-		.subscribe((counts: CoverageCountsResponse) => {
-			const covered = _.get(counts, 'covered', 0);
-			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
+			.subscribe((counts: CoverageCountsResponse) => {
+				const covered = _.get(counts, 'covered', 0);
+				const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
-			const assetsFacet = _.find(this.facets, { key: 'assets' });
+				const assetsFacet = _.find(this.facets, { key: 'assets' });
 
-			const percent = ((covered / total) * 100);
-			const gaugePercent = Math.floor(percent) || 0;
-			assetsFacet.data = {
-				gaugePercent,
-				gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
-			};
-		},
-		err => {
-			this.logger.error('solution.component : fetchCoverageCount() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-		});
+				const percent = ((covered / total) * 100);
+				const gaugePercent = Math.floor(percent) || 0;
+				assetsFacet.data = {
+					gaugePercent,
+					gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
+				};
+			},
+				err => {
+					this.logger.error('solution.component : fetchCoverageCount() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				});
 	}
 
 	/**
