@@ -267,6 +267,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 		item.details = !item.details;
+		item.selected = item.details;
 		this.selectedAsset = item.details ? item.data : null;
 	}
 
@@ -875,6 +876,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((results: Assets) => {
 					results.data.forEach((a: Asset) => {
+						if (a.role) {
+							a.role = a.role[0].toUpperCase() + a.role.slice(1);
+						}
 						this.inventory.push({
 							data: a,
 							details: false,
@@ -919,7 +923,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnDestroy () {
 		_.invoke(this.searchSubscribe, 'unsubscribe');
-		window.sessionStorage.setItem('view', this.view);
 	}
 
 	/**
@@ -929,6 +932,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
    	public selectView (view: 'list' | 'grid') {
 		if (this.view !== view) {
 			this.view = view;
+			window.sessionStorage.setItem('view', this.view);
 			const newRows = this.view === 'list' ? 10 : 12;
 			this.assetParams.page =
 				Math.round(this.assetParams.page * this.assetParams.rows / newRows);
