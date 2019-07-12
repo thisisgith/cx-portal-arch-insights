@@ -303,6 +303,25 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Returns sorted data
+	 * @param data ACC data
+	 * @returns modifiedData
+	 */
+	public modifyData (data: []) {
+		// let modifiedData = data;
+		let modifiedData = [];
+		data.forEach(function (item) {
+			if (_.get(item,'status') === 'recommended') {
+				modifiedData.push(item);
+				return false;
+			}
+		});
+		modifiedData = _.union(modifiedData, data);
+
+		return modifiedData;
+	}
+
+	/**
 	 * Determines which modal to display
 	 * @param item ACC item
 	 * @returns ribbon
