@@ -19,7 +19,8 @@
 		}
 	},
 	"modelsExportAs": {
-		"ErrorResponse": "InventoryErrorResponse"
+		"ErrorResponse": "InventoryErrorResponse",
+		"Pagination": "InventoryPagination"
 	},
 	"removeStaleFiles": true,
 	"modelIndex": true,

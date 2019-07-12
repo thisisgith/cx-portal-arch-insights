@@ -1,26 +1,17 @@
 import { HardwareEOLCountResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
-const api = '/api/customerportal/product-alerts/v1/hardware-eol/counts';
+const api = '/api/customerportal/product-alerts/v1/hardware-eol/top/count';
 
 /** Default Customer ID */
 const customerId = '2431199';
 
 /** The mock response for coverage counts */
-const mockAdvisoryCounts: HardwareEOLCountResponse = [
-	{
-		deviceCount: 5,
-		range: '< 30',
-	},
-	{
-		deviceCount: 78,
-		range: '30 - 60',
-	},
-	{
-		deviceCount: 41,
-		range: '61 - 90',
-	},
-];
+const mockAdvisoryCounts: HardwareEOLCountResponse = {
+	'gt-0-lt-30-days': 5,
+	'gt-30-lt-60-days': 26,
+	'gt-60-lt-90-days': 8,
+};
 
 /** The scenarios */
 export const HardwareEOLCountScenarios = [
