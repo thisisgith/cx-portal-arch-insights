@@ -72,7 +72,7 @@ describe('BestPracticesComponent', () => {
 			.toBeTruthy();
 	});
 
-	xit('should change the active tab when the route changes', () => {
+	it('should change the active tab when the route changes', () => {
 		fixture.detectChanges();
 		expect(component.selectedSubModule.route)
 			.toEqual('/solution/best-practices/optimal-software-version');
@@ -88,8 +88,8 @@ describe('BestPracticesComponent', () => {
 	it('should change the selected facet', () => {
 		fixture.detectChanges();
 
-		// expect(component.selectedSubModule.route)
-		// 	.toEqual('/solution/best-practices/optimal-software-version');
+		expect(component.selectedSubModule.route)
+			.toEqual('/solution/best-practices/optimal-software-version');
 
 		const architectureSubModule = _.find(component.subModules, {
 			route: '/solution/best-practices/architecture',

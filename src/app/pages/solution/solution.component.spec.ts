@@ -16,6 +16,8 @@ import {
 import * as _ from 'lodash-es';
 import { RacetrackService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { BestPracticesComponent } from './best-practices/best-practices.component';
+import { BestPracticesModule } from './best-practices/best-practices.module';
 
 /**
  * MockRouter used to help show/hide the spinner
@@ -45,7 +47,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-describe('SolutionComponent', () => {
+fdescribe('SolutionComponent', () => {
 	let component: SolutionComponent;
 	let fixture: ComponentFixture<SolutionComponent>;
 	let router: Router;
@@ -74,9 +76,11 @@ describe('SolutionComponent', () => {
 				AssetsModule,
 				HttpClientTestingModule,
 				LifecycleModule,
+				BestPracticesModule,
 				RouterTestingModule.withRoutes([
 					{ path: 'solution/lifecycle', component: LifecycleComponent },
-					{ path: 'solution/lifecycle', component: AssetsComponent },
+					{ path: 'solution/assets', component: AssetsComponent },
+					{ path: 'solution/best-practices', component: BestPracticesComponent },
 				]),
 				SolutionModule,
 			],
@@ -87,7 +91,7 @@ describe('SolutionComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 
 		racetrackService = TestBed.get(RacetrackService);
 	}));
@@ -117,6 +121,13 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedFacet.route)
 			.toEqual('/solution/assets');
+
+		router.navigate(['/solution/best-practices/optimal-software-version']);
+
+		fixture.detectChanges();
+
+		expect(component.selectedFacet.route)
+			.toEqual('/solution/best-practices');
 	});
 
 	it('should not load anything else if racetrack fails', () => {

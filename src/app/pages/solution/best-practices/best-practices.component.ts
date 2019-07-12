@@ -55,6 +55,9 @@ export class BestPracticesComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		this.initializeSubModules();
+		if (this.activeRoute) {
+			this.selectSubModule(_.find(this.subModules, { route: this.activeRoute }));
+		}
 	}
 
 	/**
