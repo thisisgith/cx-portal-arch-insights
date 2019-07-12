@@ -294,14 +294,64 @@ describe('General Spec', () => {
 		});
 	});
 
-	context('Contract Search', () => {
+	context.only('Contract Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
+		it('Contract Search 93425688', () => {
+			// PBC-172
+			const contractVal = '93425688';
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('contract');
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(contractVal.concat('{enter}'));
+			cy.wait('@contract').then(() => {
+				cy.getByAutoId('contractStatus').should('exist');
+				cy.getByAutoId('contractHeader').should('exist');
+				cy.getByAutoId('contractType').should('exist').should('contain', i18n._Type_);
+				// cy.getByAutoId('contractLevel').should('exist');
+				cy.getByAutoId('contractStart').should('exist').should('contain', i18n._StartDate_);
+				cy.getByAutoId('contractExpire').should('exist').should('contain', i18n._ExpirationDate_);
+				cy.getByAutoId('contractAssets').should('exist').should('contain', i18n._AssetsCovered_);
+				cy.getByAutoId('contractAssetsCount').should('exist');
+			});
+			// General Search section
+			cy.getByAutoId('searchHeader').should('exist');
+			cy.getByAutoId('filterBy').should('exist');
+			cy.getByAutoId('cui-select')
+				.should($cuiselect => {
+					expect($cuiselect).to.have.length(2);
+				}); // 2 times
+			cy.getByAutoId('relGenRes').should('exist');
+			cy.getByAutoId('searchClose').should('exist').click();
+		});
+		it('Contract search not found 93425333', () => {
+			// PBC-172
+			const serialVal = '93425333';
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('contract'); // TODO might need to update route
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(serialVal.concat('{enter}'));
+			cy.wait('@contract').then(() => {
+				cy.getByAutoId('serialHeader').should('not.exist');
+				cy.get('app-general-search').should('contain', '10 Results for "'.concat(serialVal).concat('"'));
+				cy.getByAutoId('searchSiteSelect').should('exist');
+				cy.getByAutoId('searchTypeSelect').should('exist');
+				cy.getByAutoId('cui-select')
+					.should($cuiselect => {
+						expect($cuiselect).to.have.length(2);
+					}); // 2 times
+				cy.getByAutoId('searchResultLinkPre0').should('exist');
+				cy.getByAutoId('searchResultLinkPre1').should('exist');
+				cy.getByAutoId('searchResultLinkPre2').should('exist');
+				cy.getByAutoId('searchClose').should('exist').click();
+			});
+		});
 	});
-	context('Serial Search', () => {
+
+	context('Serial Search', () => { // Serial will be moved here in a future commit
 		before(() => {
 			cy.login();
 			cy.loadApp();
