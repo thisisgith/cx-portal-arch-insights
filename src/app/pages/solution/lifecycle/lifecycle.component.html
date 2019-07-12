@@ -177,7 +177,7 @@
 			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 			<span [innerText]="item.duration"></span>
 		</div>
-		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACC'">
+		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACC' || autoid==='moreACCList'">
 			<button data-auto-id="Request1on1ACCButton" (click)="selectAccRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
@@ -307,6 +307,9 @@
 					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'"></div>
 					<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite"></div>
 					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'in-progress'">
+						<div class="col-md-1 progressbar__fill"></div>
+					</div>
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'requested'">
 						<div class="col-md-1 progressbar__fill"></div>
 					</div>
 				</div>
@@ -550,7 +553,7 @@
 									[innerText]="'_Request1on1_' | i18n">
 								</button>
 							</div>
-							<div class="text-left text-success" *ngIf="item.status === 'in-progress'">
+							<div class="text-left text-success" *ngIf="item.status === 'in-progress' || item.status === 'requested'">
 								<span [innerText]="'_CSETouch_' | i18n"></span>
 							</div>
 							<div class="text-left text-olive" *ngIf="item.status === 'completed'">

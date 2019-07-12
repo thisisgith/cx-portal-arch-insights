@@ -88,7 +88,7 @@ export const CoverageScenarios = [
 			GET: [
 				{
 					delay: 100,
-					description: 'Coverage',
+					description: 'Coverage Counts',
 					response: {
 						body: mockCoverageCounts,
 						status: 200,
