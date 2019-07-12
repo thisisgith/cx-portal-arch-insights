@@ -42,7 +42,7 @@ describe('SerialSearchComponent', () => {
 	});
 
 	it('should emit a hide event if no SN has been found', () => {
-		spyOn(inventoryService, 'getHardware')
+		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValues(of({ data: [] }));
 		spyOn(component.hide, 'emit');
@@ -72,7 +72,7 @@ describe('SerialSearchComponent', () => {
 	});
 
 	it('should refresh data when an input changes', () => {
-		spyOn(inventoryService, 'getHardware')
+		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValues(of({ data: [] }), of({ data: [] }));
 		component.serialNumber = { query: 'FOX1306GBA1' };
@@ -80,7 +80,7 @@ describe('SerialSearchComponent', () => {
 		component.serialNumber = { query: 'FOX1306GBA2' };
 		component.ngOnChanges();
 		fixture.detectChanges();
-		expect(inventoryService.getHardware)
+		expect(inventoryService.getAssets)
 			.toHaveBeenCalledTimes(2);
 	});
 
@@ -89,6 +89,9 @@ describe('SerialSearchComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(inventoryService, 'getHardware')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));

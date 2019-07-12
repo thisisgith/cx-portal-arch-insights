@@ -154,8 +154,10 @@ implements OnInit, OnChanges, OnDestroy {
 		.subscribe(response => {
 			this.loadingHardware = false;
 			const hardwareData: HardwareInfo = _.get(response, ['data', 0]);
-			this.data.hostName = hardwareData.hostname;
-			this.data.productSeries = hardwareData.productFamily;
+			if (hardwareData) {
+				this.data.hostName = hardwareData.hostname;
+				this.data.productSeries = hardwareData.productFamily;
+			}
 		});
 		/** Contract Data Refresh */
 		this.refresh$.pipe(

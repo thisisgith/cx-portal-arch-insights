@@ -150,7 +150,7 @@
 									[innerText]="'_ProductSeries_' | i18n"></span>
 							</dt>
 							<dd>
-								<span *ngIf="data?.productSeries; else loadingHardware"
+								<span *ngIf="data?.productSeries; else loadingHardwareTemplate"
 									[innerText]="data.productSeries"></span>
 							</dd>
 							<dt>
@@ -166,7 +166,7 @@
 									[innerText]="'_HostName_' | i18n"></span>
 							</dt>
 							<dd>
-								<span *ngIf="data?.hostName; else loadingHardware"
+								<span *ngIf="data?.hostName; else loadingHardwareTemplate"
 									[innerText]="data.hostName"></span>
 							</dd>
 						</dl>
