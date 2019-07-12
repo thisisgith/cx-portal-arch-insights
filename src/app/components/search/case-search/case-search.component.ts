@@ -42,8 +42,6 @@ enum StatusIconMap {
 })
 export class CaseSearchComponent extends SpecialSearchComponent
 implements OnInit, OnDestroy, OnChanges {
-	@ViewChild('sidebar', { static: true, read: TemplateRef })
-	public sidebarContent: TemplateRef<any>;
 	@Input('caseNumber') public caseNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	/** Emitter to show or hide general search */

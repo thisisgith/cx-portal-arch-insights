@@ -70,7 +70,7 @@
 							[innerText]="'_LatestVersion_' | i18n"></span>
 					</dt>
 					<dd>
-						<!-- TODO: Set else to new template for loading latest release -->
+						<!-- TODO: Add template for loadingSoftware once API is set up -->
 						<span *ngIf="data?.latestVersion else unavailable"
 							[innerText]="data.latestVersion"></span>
 					</dd>
@@ -137,7 +137,7 @@
 									[innerText]="'_ProductSeries_' | i18n"></span>
 							</dt>
 							<dd>
-								<span *ngIf="data?.productSeries; else unavailable"
+								<span *ngIf="data?.productSeries; else loadingHardware"
 									[innerText]="data.productSeries"></span>
 							</dd>
 							<dt>
@@ -153,7 +153,7 @@
 									[innerText]="'_HostName_' | i18n"></span>
 							</dt>
 							<dd>
-								<span *ngIf="data?.hostName; else unavailable"
+								<span *ngIf="data?.hostName; else loadingHardware"
 									[innerText]="data.hostName"></span>
 							</dd>
 						</dl>
@@ -176,6 +176,10 @@
 		</div>
 	</div>
 </div>
+
+<ng-template #loadingHardwareTemplate>
+	<span *ngIf="loadingHardware; else unavailable" class="base-margin"></span>
+</ng-template>
 
 <ng-template #loadingContractTemplate>
 	<span *ngIf="loadingContract; else unavailable" class="base-margin"></span>

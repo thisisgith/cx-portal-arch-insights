@@ -53,8 +53,6 @@ enum StatusColorMap {
 })
 export class ContractSearchComponent extends SpecialSearchComponent
 	implements OnInit, OnChanges, OnDestroy {
-	@ViewChild('sidebar', { static: true, read: TemplateRef })
-		public sidebarContent: TemplateRef<any>;
 	@Input('contractNumber') public contractNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
