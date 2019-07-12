@@ -25,10 +25,12 @@
 					<ng-container *ngTemplateOutlet="caseNumber"></ng-container>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							data-auto-id="rmaTrackingNumber" [innerText]="'_CarrierTrackingNumber_' | i18n"></span>
+							data-auto-id="rmaTrackingNumber"
+							[innerText]="'_CarrierTrackingNumber_' | i18n"></span>
 					</dt>
 					<dd>
 						<a  *ngIf="rmaTableData?.courier; else unavailable"
+							data-auto-id="rmaCourierLink"
 							[innerHTML]="rmaTableData.courier | courierLink:rmaTableData.trackingNumber"></a>
 					</dd>
 					<ng-container *ngTemplateOutlet="contract"></ng-container>
