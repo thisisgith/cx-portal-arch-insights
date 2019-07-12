@@ -8,13 +8,13 @@
 </div>
 <div *ngIf="!loading && searchResults?.length">
 	<h6 *ngIf="header"
-		[innerText]="header"
+		data-auto-id="searchHeader" [innerText]="header"
 		class="base-margin-top half-margin-bottom">
 	</h6>
 	<h5 [innerText]="'_XResults_' | i18n:totalCount:searchToken"
 		class="base-margin-bottom">
 	</h5>
-	<span [innerText]="'_FilterBy_' | i18n"></span>
+	<span data-auto-id="filterBy" [innerText]="'_FilterBy_' | i18n"></span>
 	<div class="row">
 		<div class="col-md-4">
 			<cui-select
@@ -47,7 +47,7 @@
 		*ngIf="relatedResults?.length">
 		<div class="flex flex-center-vertical">
 			<h6 class="half-margin-right"
-				[innerText]="'_RelatedGeneralResults_' | i18n">
+				data-auto-id="relGenRes" [innerText]="'_RelatedGeneralResults_' | i18n">
 			</h6>
 			<div class="divider flex-fluid"></div>
 		</div>

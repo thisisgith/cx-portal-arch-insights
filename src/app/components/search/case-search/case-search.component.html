@@ -11,21 +11,21 @@
 		<dl class="dl--inline">
 			<dt class="flex-center-inline-vertical">
 				<span class="qtr-margin-right icon-small" [ngClass]="statusIcon"></span>
-				<span class="text-muted" [innerText]="('_Status_' | i18n) + ':'"></span>
+				<span class="text-muted" data-auto-id="caseStatus" [innerText]="('_Status_' | i18n) + ':'"></span>
 				<span class="qtr-margin-left text-muted" *ngIf="case?.status; else unavailable"
 					[innerText]="case.status"></span>
 			</dt>
 		</dl>
 	</div>
-	<h3 [innerText]="'_Case_' | i18n:caseNumber.query"></h3>
+	<h3 data-auto-id="caseNum" [innerText]="'_Case_' | i18n:caseNumber.query"></h3>
 	<div *ngIf="case?.description; else unavailable" [innerText]="case.description"></div>
 	<div class="row">
 		<div class="row no-gutters col-md-6">
 			<div class="col-md-7 base-margin-top base-margin-right">
 				<dl class="dl--inline-medium">
 					<dt>
-						<span class="subheading text-small text-uppercase"
-							[innerText]="'_Severity_' | i18n"></span>
+						<span class="subheading text-small text-uppercase" 
+							data-auto-id="caseSeverity" [innerText]="'_Severity_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="case?.severity; else unavailable"
@@ -33,7 +33,7 @@
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_Created_' | i18n"></span>
+							data-auto-id="caseCreated" [innerText]="'_Created_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="case?.opened; else unavailable"
@@ -41,7 +41,7 @@
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_Contract_' | i18n"></span>
+							data-auto-id="caseContract" [innerText]="'_Contract_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="case?.contract; else unavailable"
@@ -49,7 +49,7 @@
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_CaseOwner_' | i18n"></span>
+							data-auto-id="caseOwner" [innerText]="'_CaseOwner_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="case?.owner; else unavailable"
@@ -61,7 +61,7 @@
 				<dl class="dl--inline-medium">
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_Device_' | i18n"></span>
+							data-auto-id="caseDevice" [innerText]="'_Device_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="case?.hostName; else loadingHardwareTemplate"
@@ -69,7 +69,7 @@
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_TACEngineer_' | i18n"></span>
+							data-auto-id="caseTACEng" [innerText]="'_TACEngineer_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="case?.tacEngineer; else loadingSummaryTemplate"
@@ -77,7 +77,7 @@
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_TrackingNumber_' | i18n"></span>
+						data-auto-id="caseTracking" [innerText]="'_TrackingNumber_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="case?.trackingNumber; else unavailable"
@@ -85,7 +85,7 @@
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_RelatedRMAs_' | i18n"></span>
+						data-auto-id="caseRelRMAs" [innerText]="'_RelatedRMAs_' | i18n"></span>
 					</dt>
 				</dl>
 				<dl class="dl--inline-medium">
@@ -104,11 +104,11 @@
 			<div class="base-margin-top">
 				<button class="btn btn--small btn--secondary text-uppercase"
 				[innerText]="'_ViewCaseDetails_' | i18n"
-				data-auto-id="CaseDetailsButton"
+				data-auto-id="viewCaseDetailsB"
 				(click)="onViewCase(caseNumber.query)"></button>
 				<button class="btn btn--small btn--secondary text-uppercase"
 				[innerText]="'_ViewAllOpenCases_' | i18n"
-				data-auto-id="CaseListButton"
+				data-auto-id="viewAllOpenCasesB"
 				(click)="onViewCase()"></button>
 			</div>
 		</div>
@@ -116,7 +116,7 @@
 			<div class="col-md-11">
 				<div class="panel panel--loose panel--bordered">
 					<div class="half-margin-bottom">
-						<span [innerText]="'_LatestUpdate_' | i18n"></span>
+						<span data-auto-id="latestUpdate" [innerText]="'_LatestUpdate_' | i18n"></span>
 						<span class="half-margin-left" *ngIf="lastNote?.createdDate"
 							[innerText]="'(' + (lastNote.createdDate | fromNow) + ')'"></span>
 					</div>
