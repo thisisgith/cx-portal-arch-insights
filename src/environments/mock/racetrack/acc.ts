@@ -29,7 +29,7 @@ function MockACC (
 			description: 'Discover the standard steps required to engineer and commission ' +
 				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
 				'basic deployment requirements and schedules',
-			isFavorite: true,
+			isFavorite: false,
 			status: 'recommended',
 			title: 'Cisco DNA Center Project Planning',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
@@ -39,7 +39,7 @@ function MockACC (
 			description: 'Gain actionable insights into Cisco DNA Center use case ' +
 				'deployments and assists. Understand how to design, adopt, and leverage to ' +
 				'save time and resources within your network',
-			isFavorite: true,
+			isFavorite: false,
 			status: 'in-progress',
 			title: 'Cisco DNA Pilot Usecase Deployment',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
