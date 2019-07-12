@@ -113,7 +113,8 @@ describe('General Spec', () => {
 				cy.getByAutoId('caseTracking').should('exist').should('contain', i18n._TrackingNumber_);
 				cy.getByAutoId('caseRelRMAs').should('exist').should('contain', i18n._RelatedRMAs_);
 				// eslint-disable-next-line max-len
-				// cy.getByAutoId('rmaNumber').should('exist').click({ multiple: true }); // click causes test to fail
+				// cy.getByAutoId('rmaNumber').should('exist').click({ multiple: true });
+				// click causes test to fail
 				// because it opens in a new tab.  can it open in background instead so focus stays on UUT?
 				cy.getByAutoId('rmaNumber')
 					.should($rmaNum => {
@@ -123,7 +124,8 @@ describe('General Spec', () => {
 					.should('contain', i18n._ViewCaseDetails_);
 				// .click();
 				// eslint-disable-next-line max-len
-				// cy.getByAutoId('viewAllOpenCasesB').should('exist').should('contain', i18n._ViewAllOpenCases_).click();
+				// cy.getByAutoId('viewAllOpenCasesB').should('exist')
+				// .should('contain', i18n._ViewAllOpenCases_).click();
 				// TODO why this fail
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
