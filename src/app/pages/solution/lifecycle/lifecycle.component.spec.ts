@@ -310,10 +310,18 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			const acc3 = component.componentData.acc.sessions[2];
+			de = fixture.debugElement.query(By.css('.progressbar'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('#moreAccList-item'));
+			expect(de)
+				.toBeTruthy();
+
+			const acc3 = component.componentData.acc.sessions[3];
 			component.setFavorite(acc3);
 			fixture.detectChanges();
-			expect(component.componentData.acc.sessions[2].isFavorite)
+			expect(component.componentData.acc.sessions[3].isFavorite)
 				.toBeTruthy();
 
 			const acc1 = component.componentData.acc.sessions[0];
@@ -321,6 +329,12 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 			expect(component.componentData.acc.sessions[0].isFavorite)
 				.toBeFalsy();
+			expect(component.componentData.acc.sessions[0].status)
+			.toEqual('recommended');
+
+			const acc5 = component.componentData.acc.sessions[1];
+			expect(acc5.status)
+				.toEqual('requested');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
