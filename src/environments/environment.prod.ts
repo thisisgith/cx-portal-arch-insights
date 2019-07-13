@@ -21,8 +21,9 @@ export const environment = {
 		referUrl: `${authOrigin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${authOrigin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
-	baseHref: '/pbc/',
+	baseHref: '',
 	production: true,
+	sdpServiceClientId: 'bqvnsm6qc9fda66d4xttpst6',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
