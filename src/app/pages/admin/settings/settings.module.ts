@@ -6,6 +6,7 @@ import { AdminWrapperModule } from '../admin-wrapper.module';
 import { ControlPointsModule, UserModule } from '@sdp-api';
 import { HeightTransitionModule } from '@components';
 import { AppStatusColorPipe } from './app-status-color.pipe';
+import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 
 import { environment } from '@environment';
 
@@ -32,6 +33,7 @@ const sdpRootUrl = environment.sdpServiceOrigin;
 @NgModule({
 	declarations: [
 		AppStatusColorPipe,
+		ResourceGaugeColorPipe,
 		SettingsComponent,
 	],
 	imports: [
