@@ -38,7 +38,6 @@ const childRoutes: Routes = [
 	imports: [
 		AssetsPieChartModule,
 		CommonModule,
-		CuiDropdownModule,
 		CuiPagerModule,
 		CuiSpinnerModule,
 		CuiTableModule,
