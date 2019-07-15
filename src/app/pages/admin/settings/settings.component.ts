@@ -7,6 +7,7 @@ import {
 	UserService,
 } from '@sdp-api';
 import { AppStatusColorPipe } from './app-status-color.pipe';
+import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 
 import { empty, Subject } from 'rxjs';
 import { catchError, finalize, takeUntil, mergeMap } from 'rxjs/operators';
@@ -32,7 +33,10 @@ enum MemoryUsage {
  * Main Settings component
  */
 @Component({
-	providers: [AppStatusColorPipe],
+	providers: [
+		AppStatusColorPipe,
+		ResourceGaugeColorPipe,
+	],
 	selector: 'app-settings',
 	styleUrls: ['./settings.component.scss'],
 	templateUrl: './settings.component.html',

@@ -131,6 +131,10 @@ export class LifecycleComponent implements OnDestroy {
 			value: 'recommended',
 		},
 		{
+			name: I18n.get('_Requested_'),
+			value: 'requested',
+		},
+		{
 			name: I18n.get('_InProgress_'),
 			value: 'in-progress',
 		},
@@ -139,11 +143,11 @@ export class LifecycleComponent implements OnDestroy {
 			value: 'completed',
 		},
 		{
-			name: I18n.get('_Favorite_'),
+			name: I18n.get('_Bookmarked_'),
 			value: 'isBookmarked',
 		},
 		{
-			name: I18n.get('_NotFavorite_'),
+			name: I18n.get('_NotBookmarked_'),
 			value: 'hasNotBookmarked',
 		},
 	];

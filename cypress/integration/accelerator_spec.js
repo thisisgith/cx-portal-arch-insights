@@ -4,7 +4,18 @@ const accMock = new MockService('ACCScenarios'); // for future changes
 const solution = 'IBN';
 const useCase = 'Wireless Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
-const accItems = accScenario.response.body.items;
+let accItems = accScenario.response.body.items;
+
+// ACC items are being sorted by the UI in the following order by status:
+// recommended, requested, in-progress, completed
+// TODO: This sorting is currently incorrect. Should be in the following order, according to PBC-238
+// requested, in-progress, recommended, completed
+// Pending PBC-279: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-279
+accItems = Cypress._.union(Cypress._.filter(accItems, { status: 'recommended' }),
+	Cypress._.filter(accItems, { status: 'requested' }),
+	Cypress._.filter(accItems, { status: 'in-progress' }),
+	Cypress._.filter(accItems, { status: 'completed' }));
+
 const validACCItems = Cypress._.filter(accItems, acc => acc.description || acc.title);
 const visibleACCItems = accItems.slice(0, 3);
 const invisibleACCItems = accItems.slice(3);
@@ -24,13 +35,14 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	it('Renders Accelerator tile', () => {
 		cy.getByAutoId('Accelerator Panel').should('exist');
 		cy.getByAutoId('PanelTitle-_Accelerator_').should('have.text', i18n._Accelerator_);
+		cy.getByAutoId('recommendedACC-Flag').should('exist');
 		cy.getByAutoId('recommendedACC-Title').should('have.text', 'Cisco DNA Center Project Planning');
 		cy.getByAutoId('recommendedACCWatchButton').should('have.text', i18n._Request1on1_);
 		cy.getByAutoId('moreACCList').should('exist');
 		// No other data-auto-id's exist at this time
 	});
 
-	it.skip('ACC tile has a view all link to display ACCs in card view', () => { // PBC-159
+	it('ACC tile has a view all link to display ACCs in card view', () => { // PBC-159
 		cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 		cy.get('.modal__header.acc__header').should('contain', i18n._Accelerator_)
 			.and('contain', i18n._1on1Coaching_);
@@ -57,6 +69,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							.should('contain', 'Completed');
 						break;
 					case 'in-progress':
+					case 'requested':
 						cy.getByAutoId('ACCCardFooter')
 							.should('contain', i18n._CSETouch_);
 						break;
@@ -86,7 +99,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		afterEach(() => {
 			// Make sure we're set back to the default mock data
 			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-One-ACC');
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
 			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
 
 			// Refresh the data
@@ -109,7 +122,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('moreACCList').should('not.exist');
 		});
 
-		it.skip('Should only display up to two items in the more list', () => {
+		it('Should only display up to two items in the more list', () => {
 			// Verify only up to the first three ACC shown
 			// Note, however, the first recommended item will be displayed outside the More list
 			// TODO: Will need to be updated to account for cases where the first ACC is not
@@ -134,7 +147,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		afterEach(() => {
 			// Ensure we are set back to mock data with a recommended item
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-No Recommended');
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneNonRecommended');
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-allButRecommended');
 			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
@@ -166,9 +182,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it.skip('Should not have hover modal if there are no recommended ACC', () => {
+			// TODO: Pending PBC-279: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-279
 			// Switch the mock data to one with no recommended items
 			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-No Recommended');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-allButRecommended');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -185,20 +202,28 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		after(() => {
 			cy.getByAutoId('ACCCloseModal').click();
+
+			// Reload the page to force-reset any changed bookmarks
+			// This is required since the mock bookmark APIs don't actually bookmark the ACC items
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			// Wait for the ACC panel to finish loading
+			cy.waitForAppLoading('accLoading', 15000);
 		});
 
-		it.skip('Should be able to bookmark an ACC item', () => {
+		it('Should be able to bookmark an ACC item', () => {
 			cy.getByAutoId('accViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
 					if (!acc.isFavorite && acc.status !== 'completed') {
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
-							.should('have.class', 'ribbon__clear');
-						// 	.click();
-						// cy.waitForAppLoading('accLoading', 5000);
-						// cy.getByAutoId('ACCCardRibbon')
-						// 	.eq(index)
-						// 	.should('have.class', 'ribbon__blue');
+							.should('have.class', 'ribbon__clear')
+							.click();
+						cy.waitForAppLoading('accLoading', 5000);
+						cy.getByAutoId('ACCCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__blue');
 					}
 				});
 			});
@@ -221,7 +246,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it.skip('Should NOT be able to bookmark a completed ACC item', () => {
+		it('Should NOT be able to bookmark a completed ACC item', () => {
 			cy.getByAutoId('accViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
 					if (acc.status === 'completed') {
@@ -235,6 +260,71 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							.eq(index)
 							.should('have.class', 'ribbon__green');
 					}
+				});
+			});
+		});
+	});
+
+	describe('PBC-238: (UI) View - Lifecycle - ACC List & Hover', () => {
+		before(() => {
+			// Ensure we're set to the default mock data
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneNonRecommended');
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-allButRecommended');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading');
+		});
+
+		afterEach(() => {
+			// Make sure we're set back to the default mock data
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading');
+		});
+
+		it('Should only show the More section if there is more than 1 ACC item', () => {
+			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading');
+
+			// Should hide the "More" list
+			cy.getByAutoId('moreACCList-Header');
+			cy.getByAutoId('moreACCList').should('not.exist');
+		});
+
+		it('ACC More list items should have hover modal', () => {
+			// TODO: Will need to be updated to account for cases where the first ACC is not
+			// recommended, but this is pending PBC-279: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-279
+			const accMoreItems = visibleACCItems.slice(1, 3);
+			accMoreItems.forEach((acc, index) => {
+				cy.getByAutoId('moreACCList-item').eq(index).within(() => {
+					cy.getByAutoId('moreACCList-HoverModal').should('exist').within(() => {
+						cy.getByAutoId('moreACCList-HoverModal-Title').should('have.text', acc.title);
+						cy.getByAutoId('moreACCList-HoverModal-Description').should('have.text', acc.description);
+						cy.getByAutoId('ACCCardRibbon').should('exist');
+
+						// Ribbon is blue for bookmarked, green w/ star for completed, clear otherwise
+						if (acc.isFavorite) {
+							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__blue');
+							cy.getByAutoId('.star').should('not.exist');
+						} else if (acc.status === 'completed') {
+							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__green');
+							// cy.getByAutoId('.star').should('exist'); TODO: Pending PBC-325
+						} else {
+							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__clear');
+							cy.getByAutoId('.star').should('not.exist');
+						}
+					});
 				});
 			});
 		});
