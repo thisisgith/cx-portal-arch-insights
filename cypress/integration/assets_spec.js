@@ -85,6 +85,15 @@ describe('Assets', () => { // PBC-41
 			assetMock.disable('Assets Page 1 - Grid View');
 			cy.getByAutoId('list-view-btn').click();
 		});
+
+		it('Closes 360 view when leaving the assets page', () => { // PBC-165
+			cy.get('tbody tr').eq(0).click();
+			cy.get('app-panel360').should('be.visible');
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.get('app-panel360').should('not.exist');
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.get('app-panel360').should('not.exist');
+		});
 	});
 
 	context('PBC-178: Assets & Coverage Gauge', () => {
