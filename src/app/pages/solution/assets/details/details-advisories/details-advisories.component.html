@@ -8,47 +8,72 @@
 			}"
 			(click)="selectTab(tab)"
 			attr.data-auto-id="AdvisoryTab-{{ tab.key }}"
-			[innerText]="tab.title | i18n">
+			[innerText]="tab.title">
 		</button>
 	</div>
 </div>
 <div class="base-margin-top" *ngIf="visibleTab">
+	<span *ngIf="selectedTab?.data?.pagination"
+		[innerText]="'_ShowingXofYZ_' | i18n:selectedTab?.data?.bulletin?.length:selectedTab?.data?.pagination?.total:selectedTab?.title">
+	</span>
 	<ng-container *ngTemplateOutlet="visibleTab"></ng-container>
 </div>
 
 <ng-template #security>
-	<ng-container *ngTemplateOutlet="displayTable; context: { data: selectedTab.data, options: selectedTab.table, loading: selectedTab.loading }"></ng-container>
+	<ng-container *ngTemplateOutlet="displayTable; context: {
+			data: selectedTab.data,
+			options: selectedTab.table,
+			loading: selectedTab.loading,
+			moreLoading: selectedTab.moreLoading
+		}">
+	</ng-container>
 </ng-template>
 
 <ng-template #fieldNotices>
-	<ng-container *ngTemplateOutlet="displayTable; context: { data: selectedTab.data, options: selectedTab.table, loading: selectedTab.loading }"></ng-container>
+	<ng-container *ngTemplateOutlet="displayTable; context: {
+			data: selectedTab.data,
+			options: selectedTab.table,
+			loading: selectedTab.loading,
+			moreLoading: selectedTab.moreLoading
+		}">
+	</ng-container>
 </ng-template>
 
 <ng-template #bugs>
-	bugs template
+	<!-- TODO: Bugs Table -->
 </ng-template>
 
-<ng-template #displayTable let-data="data" let-options="options" let-loading="loading">
-	<cui-table *ngIf="!loading && options && data && data?.bulletin?.length > 0"
-		[options]="options"
-		[data]="data.bulletin">
-	</cui-table>
+<ng-template #displayTable let-data="data" let-options="options" let-loading="loading" let-moreLoading="moreLoading">
+	<div *ngIf="!loading && options && data && data?.bulletin?.length > 0">
+		<div class="advisoryTable">
+			<cui-table [options]="options" [data]="data.bulletin"></cui-table>
+		</div>
+		<div *ngIf="!moreLoading && data?.pagination?.total > data?.bulletin?.length"
+				class="flex-center-horizontal base-margin-top"
+				data-auto-id="LoadMoreButton"
+				(click)="loadMore()">
+			<div class="btn btn--primary" [innerText]="'_ShowMore_' | i18n"></div>
+		</div>
+		<div *ngIf="moreLoading">
+			<cui-loader></cui-loader>
+		</div>
+	</div>
 	<div *ngIf="loading">
 		<cui-loader></cui-loader>
 	</div>
-	<div *ngIf="!loading && data?.bulletin?.length === 0">
-		<span [innerText]="'_NoResultsFound_' | i18n"></span>
+	<div *ngIf="!loading && data?.bulletin?.length === 0" class="flex-center">
+		<span class="text-xlarge" [innerText]="'_NoResultsFound_' | i18n"></span>
 	</div>
 </ng-template>
 
 <ng-template #impact let-celldata="celldata">
 	<span class="label label--circle label--tiny qtr-margin-right"
 		[ngClass]="{
-			'label--danger': celldata.severity === 'Critical',
-			'label--warning': celldata.severity === 'High',
-			'label--warning-alt': celldata.severity === 'Medium',
-			'label--success': celldata.severity === 'Low'
-		}">
+				'Critical': 'label--danger',
+				'High': 'label--warning',
+				'Medium': 'label--warning-alt',
+				'Low': 'label--success'
+		}[celldata.severity]">
 	</span>
 	<ng-container [ngSwitch]="celldata.severity">
 		<span *ngSwitchCase="'Critical'" [innerText]="'_Critical_' | i18n"></span>

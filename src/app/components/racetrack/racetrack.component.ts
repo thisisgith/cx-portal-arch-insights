@@ -270,7 +270,12 @@ export class RacetrackComponent implements OnInit {
 			// each segment of transition gets its own duration from a parabolic function
 				// (slower at beginning and end, faster in the middle)
 			const parabolicDuration = Math.pow(Math.abs((i / (points.length - 15)) - 0.5), 3);
-			const dur = scaleDuration(parabolicDuration);
+			let dur;
+			if (window.Cypress) {
+				dur = 5; // speed up animation for cypress runs
+			} else {
+				dur = scaleDuration(parabolicDuration);
+			}
 
 			return chain.transition()
 				.duration(dur)
@@ -303,9 +308,16 @@ export class RacetrackComponent implements OnInit {
 			this.progress.attr('stroke-dasharray',
 				`${progressSoFar} ${this.length - (progressSoFar)}`);
 
+			let progressDur;
+			if (window.Cypress) {
+				progressDur = 5; // speed up animation for cypress runs
+			} else {
+				progressDur = 2000;
+			}
+
 			this.progress.transition()
 				.delay(500)
-				.duration(2000)
+				.duration(progressDur)
 				.attr('stroke-dasharray', `${progressDistance} ${this.length - progressDistance}`)
 				.on('start', () => {
 					window.progressMoving = true;

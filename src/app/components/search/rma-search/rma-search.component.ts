@@ -8,13 +8,14 @@ import {
 	EventEmitter,
 	forwardRef,
 } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { Observable, Subject, of } from 'rxjs';
 import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 
-import { RMAService } from '@services';
+import { RMAService, SearchService } from '@services';
 import { RMARecord, RMAResponse, PartsLineDetail, SearchContext, SearchQuery } from '@interfaces';
 import * as _ from 'lodash-es';
 import { environment } from '@environment';
@@ -39,7 +40,7 @@ interface RmaTableData {
  */
 enum StatusColorMap {
 	'IN-PROGRESS' = 'text-success',
-	UNKNOWN = 'txt-dkgray-4',
+	UNKNOWN = 'text-muted',
 }
 
 /**
@@ -77,6 +78,8 @@ export class RMASearchComponent extends SpecialSearchComponent
 	private destroy$ = new Subject();
 
 	constructor (
+		private router: Router,
+		private searchService: SearchService,
 		private service: RMAService,
 		private logger: LogService,
 	) {
@@ -123,9 +126,9 @@ export class RMASearchComponent extends SpecialSearchComponent
 					'replacementParts.trackingInfo.trackingNumber',
 				),
 			};
-			// tslint:disable-next-line: ter-max-len max-line-length
-			this.statusColor = StatusColorMap[<string> _.get(this.rmaTableData, 'status', 'UNKNOWN')
-				.toUpperCase()];
+			const statusKey = _.get(this.rmaTableData, 'status', 'UNKNOWN')
+				.toUpperCase();
+			this.statusColor = _.get(StatusColorMap, statusKey);
 			this.rmaLink = `${environment.rmaToolUrl}?&OrderNumber=${this.rma.rmaNo}`;
 			if (
 				this.rmaTableData.products.length === 1
@@ -173,5 +176,17 @@ export class RMASearchComponent extends SpecialSearchComponent
 
 				return of(null);
 			}));
+	}
+
+	/**
+	 * Navigate to a single case details
+	 * @param casenum case number to view details for
+	 */
+	public onViewCaseDetails (casenum: string) {
+		this.router.navigate(
+			['solution/resolution'],
+			{ queryParams: { casenum } },
+		);
+		this.searchService.close();
 	}
 }

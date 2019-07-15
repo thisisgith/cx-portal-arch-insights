@@ -3,6 +3,7 @@ import { SettingsComponent } from './settings.component';
 import { SettingsModule } from './settings.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Location } from '@angular/common';
+import { IEHealthStatusResponseModel } from '@sdp-api';
 import { HealthStatusScenarios } from '@mock';
 
 describe('SettingsComponent', () => {
@@ -54,7 +55,8 @@ describe('SettingsComponent', () => {
 
 	describe('handle test data', () => {
 		it('should handle test data', () => {
-			component.cpData = HealthStatusScenarios[0].scenarios.GET[0].response.body;
+			component.cpData = <IEHealthStatusResponseModel[]>
+				HealthStatusScenarios[0].scenarios.GET[0].response.body;
 			component.handleData();
 		});
 	});

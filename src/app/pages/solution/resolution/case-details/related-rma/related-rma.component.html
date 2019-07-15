@@ -1,0 +1,19 @@
+<div class="absolute related-rma qtr-padding-bottom">
+	<div class="col-md-12">
+		<cui-table [options]="rmaTable" [data]="rmaRecords"></cui-table>
+	</div>
+	<div class="col-md-12 text-center">
+		<button data-auto-id="close" class="btn btn--small" [innerText]="'_RMACaseClose_' | i18n" (click)="hide()">
+		</button>
+	</div>
+	<ng-template #createdDateTmpl let-item="celldata">
+		<span [innerText]="item?.orderDate | fromNow"></span>
+	</ng-template>
+	<ng-template #shipToTmpl let-item="celldata">
+		<div [innerText]="item?.shipToInfo.ackName"></div>
+		<div [innerText]="item?.shipToInfo.address1"></div>
+		<div>{{item?.shipToInfo.city}} {{item?.shipToInfo.city ? ', ' : ''}} {{item?.shipToInfo.state}}
+			{{item?.shipToInfo.postalCode}}
+		</div>
+	</ng-template>
+</div>

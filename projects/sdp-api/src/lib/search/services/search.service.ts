@@ -61,7 +61,7 @@ class SearchService extends __BaseService {
    if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
    if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
    if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData = __formData.append('customerId', params.customerId as string);}
-   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', JSON.stringify(params.context));}
+   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', params.context as string);}
     __body = __formData
     let req = new HttpRequest<any>(
       'POST',
@@ -214,7 +214,7 @@ class SearchService extends __BaseService {
    if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
    if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
    if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData = __formData.append('customerId', params.customerId as string);}
-   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', JSON.stringify(params.context));}
+   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', params.context as string);}
     __body = __formData
     let req = new HttpRequest<any>(
       'POST',

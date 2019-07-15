@@ -22,6 +22,8 @@ import {
 	SecurityAdvisoryResponse,
 	SecurityAdvisoryBulletinResponse,
 	FieldNoticeResponse,
+	ProductAlertsPagination as Pagination,
+	FieldNoticeBulletinResponse,
 } from '@sdp-api';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -40,6 +42,7 @@ interface Tab {
 	data?: {
 		notice: FieldNotice[] | SecurityAdvisory[];
 		bulletin: FieldNoticeBulletin[] | SecurityAdvisoryBulletin[];
+		pagination: Pagination;
 	};
 	params?: {
 		notice:
@@ -50,6 +53,7 @@ interface Tab {
 			ProductAlertsService.GetPSIRTBulletinParams;
 	};
 	loading: boolean;
+	moreLoading: boolean;
 	disabled?: boolean;
 	key: string;
 	selected: boolean;
@@ -133,15 +137,22 @@ export class DetailsAdvisoriesComponent implements OnInit {
 
 	/**
 	 * Retrieves the security advisory bulletins
+	 * @param append appends the values
 	 * @returns the data
 	 */
-	private getSecurityAdvisoryBulletins () {
+	private getSecurityAdvisoryBulletins (append = false) {
 		const advisoryTab = _.find(this.tabs, { key: 'security' });
 
 		return this.productAlertsService.getPSIRTBulletin(advisoryTab.params.bulletin)
 		.pipe(
 			map((response: SecurityAdvisoryBulletinResponse) => {
-				_.set(advisoryTab, ['data', 'bulletin'], response.data);
+				if (!append) {
+					_.set(advisoryTab, ['data', 'bulletin'], response.data);
+				} else {
+					advisoryTab.data.bulletin = _.concat(advisoryTab.data.bulletin, response.data);
+				}
+
+				_.set(advisoryTab, ['data', 'pagination'], response.Pagination);
 
 				advisoryTab.loading = false;
 			}),
@@ -185,16 +196,17 @@ export class DetailsAdvisoriesComponent implements OnInit {
 
 	/**
 	 * Retrieves the field notice bulletins
+	 * @param append appends the values
 	 * @returns the data
 	 */
-	private getFieldNoticeBulletins () {
+	private getFieldNoticeBulletins (append = false) {
 		const fieldTab = _.find(this.tabs, { key: 'field' });
 
 		return this.productAlertsService.getFieldNoticeBulletin(fieldTab.params.bulletin)
 		.pipe(
-			map((response: SecurityAdvisoryBulletinResponse) => {
-				_.set(fieldTab, ['data', 'bulletin'], []);
-				fieldTab.data.bulletin = _.map(response.data,
+			map((response: FieldNoticeBulletinResponse) => {
+
+				const bulletins = _.map(response.data,
 					(bulletin: SecurityAdvisoryBulletin) => {
 						const newBulletin = _.cloneDeep(bulletin);
 
@@ -203,6 +215,14 @@ export class DetailsAdvisoriesComponent implements OnInit {
 
 						return newBulletin;
 					});
+
+				if (!append) {
+					_.set(fieldTab, ['data', 'bulletin'], bulletins);
+				} else {
+					fieldTab.data.bulletin = _.concat(fieldTab.data.bulletin, bulletins);
+				}
+
+				_.set(fieldTab, ['data', 'pagination'], response.Pagination);
 
 				fieldTab.loading = false;
 			}),
@@ -235,6 +255,32 @@ export class DetailsAdvisoriesComponent implements OnInit {
 		});
 	}
 
+	/**
+	 * Loads more data if necessary
+	 */
+	public loadMore () {
+		const tab = this.selectedTab;
+		tab.moreLoading = true;
+
+		tab.params.bulletin.page = tab.params.bulletin.page += 1;
+
+		let obs;
+
+		if (tab.key === 'security') {
+			obs = this.getSecurityAdvisoryBulletins(true);
+		}
+
+		if (tab.key === 'field') {
+			obs = this.getFieldNoticeBulletins(true);
+		}
+
+		obs.subscribe(
+			() => {
+				tab.moreLoading = false;
+			},
+		);
+	}
+
 	/** Initializes our advisory tabs */
 	private initializeTabs () {
 		const datePipe = new DatePipe('en-US');
@@ -243,6 +289,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 			{
 				key: 'security',
 				loading: true,
+				moreLoading: false,
 				params: {
 					bulletin: {
 						page: 1,
@@ -288,11 +335,12 @@ export class DetailsAdvisoriesComponent implements OnInit {
 					wrapText: true,
 				}),
 				template: this.securityTemplate,
-				title: '_SecurityAdvisories_',
+				title: I18n.get('_SecurityAdvisories_'),
 			},
 			{
 				key: 'field',
 				loading: true,
+				moreLoading: false,
 				params: {
 					bulletin: {
 						page: 1,
@@ -338,15 +386,16 @@ export class DetailsAdvisoriesComponent implements OnInit {
 					wrapText: true,
 				}),
 				template: this.fieldNoticesTemplate,
-				title: '_FieldNotices_',
+				title: I18n.get('_FieldNotices_'),
 			},
 			{
 				disabled: true,
 				key: 'bugs',
 				loading: true,
+				moreLoading: false,
 				selected: false,
 				template: this.bugsTemplate,
-				title: '_CriticalBugs_',
+				title: I18n.get('_CriticalBugs_'),
 			},
 		];
 

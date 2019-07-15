@@ -3,6 +3,8 @@ import { CaseService } from '@cui-x/services';
 import { Case, Note } from '@interfaces';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { CaseDetailsService } from 'src/app/services/case-details';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 /**
  * Add Notes Component
@@ -30,6 +32,7 @@ export class AddNoteComponent {
 			Validators.maxLength(this.descriptionMaxLength),
 		]);
 	public notesForm: FormGroup;
+	private destroy$ = new Subject();
 
 	constructor (
 		private caseService: CaseService, private caseDetailsService: CaseDetailsService,
@@ -59,7 +62,11 @@ export class AddNoteComponent {
 			noteStatus: 'external',
 			noteType: 'WEB UPDATE',
 		};
-		return this.caseService.addCaseNote('686569635', body)
+
+		return this.caseService.addCaseNote(this.case.caseNumber, body)
+		.pipe(
+			takeUntil(this.destroy$),
+		)
 			.subscribe(
 				(response: any) => {
 					this.loading = false;

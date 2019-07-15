@@ -20,6 +20,8 @@ import {
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryScenarios,
 	SuccessPathScenarios,
+	FieldNoticeScenarios,
+	FieldNoticeBulletinScenarios,
 	HealthStatusScenarios,
 	VulnerabilityScenarios,
 	UserScenarios,
@@ -36,6 +38,8 @@ import {
 	CoverageCountsResponse,
 	CoverageResponse,
 	ELearningResponse,
+	FieldNoticeBulletinResponse,
+	FieldNoticeResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
@@ -60,6 +64,8 @@ type ResponseBody = (
 	CoverageCountsResponse |
 	CoverageResponse |
 	ELearningResponse |
+	FieldNoticeBulletinResponse |
+	FieldNoticeResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
@@ -117,28 +123,30 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ATXScenarios,
 		ActionScenarios,
 		AssetScenarios,
-		ATXScenarios,
 		CaseScenarios,
 		CommunitiesScenarios,
 		ContractScenarios,
 		CoverageScenarios,
 		ELearningScenarios,
+		FieldNoticeBulletinScenarios,
+		FieldNoticeScenarios,
 		HardwareEOLBulletinScenarios,
 		HardwareEOLCountScenarios,
 		HardwareEOLScenarios,
 		HardwareScenarios,
+		HealthStatusScenarios,
 		NetworkScenarios,
-		RacetrackScenarios,
 		RMAScenarios,
+		RacetrackScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
 		SecurityAdvisoryScenarios,
 		SuccessPathScenarios,
-		HealthStatusScenarios,
-		VulnerabilityScenarios,
 		UserScenarios,
+		VulnerabilityScenarios,
 	]),
 };

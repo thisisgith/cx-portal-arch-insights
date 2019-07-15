@@ -45,7 +45,7 @@ $vibblue: #017cad;
 	}
 }
 
-.learning-panel {
+.small-panel {
 	padding: 0;
 	line-height: initial;
 }
@@ -238,15 +238,17 @@ $vibblue: #017cad;
 }
 
 #hover-panel {
-	&-recommendedACCTitle,
-	&-recommendedATXTitle,
-	&-learningHoverModal {
+	&-recommendedACC,
+	&-recommendedATX,
+	&-moreACCList,
+	&-recommendedElearning {
 		display: none;
 	}
 
-	&-recommendedACCTitle::after,
-	&-recommendedATXTitle::after,
-	&-learningHoverModal::after {
+	&-recommendedACC::after,
+	&-recommendedATX::after,
+	&-moreACCList::after,
+	&-recommendedElearning::after {
 		content: "";
 		position: absolute;
 		top: 45%;
@@ -254,24 +256,27 @@ $vibblue: #017cad;
 		border-bottom: 10px solid transparent;
 	}
 
-	&-recommendedACCTitle::after,
-	&-learningHoverModal::after {
+	&-recommendedACC::after,
+	&-moreACCList::after,
+	&-recommendedElearning::after {
 		right: -15px;
 		border-left: 15px solid white;
 	}
 
-	&-recommendedATXTitle::after {
+	&-recommendedATX::after {
 		left: -15px;
 		border-right: 15px solid white;
 	}
 }
 
 #recommended-item:hover,
+#moreAccList-item:hover,
 #recommended-elearning-item:hover {
 	#hover-panel {
-		&-recommendedACCTitle,
-		&-recommendedATXTitle,
-		&-learningHoverModal {
+		&-recommendedACC,
+		&-recommendedATX,
+		&-moreACCList,
+		&-recommendedElearning {
 			display: block;
 			position: absolute;
 			box-shadow: $base-box-shadow;
@@ -283,12 +288,17 @@ $vibblue: #017cad;
 			top: 100px;
 		}
 
-		&-recommendedACCTitle,
-		&-learningHoverModal {
+		&-recommendedACC,
+		&-moreACCList,
+		&-recommendedElearning {
 			left: -480px;
 		}
 
-		&-learningHoverModal {
+		&-moreACCList {
+			top: -90px;
+		}
+
+		&-recommendedElearning {
 			top: -90px;
 
 			.icon-star,
@@ -301,7 +311,7 @@ $vibblue: #017cad;
 			}
 		}
 
-		&-recommendedATXTitle {
+		&-recommendedATX {
 			right: -480px;
 		}
 	}

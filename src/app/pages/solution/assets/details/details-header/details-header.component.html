@@ -20,11 +20,12 @@
 
 	<div class="col-md-6 qtr-margin-top" *ngIf="!status.loading.cases && componentData.openCases > 0">
 
-		<div class="dropdown"
+		<div class="dropdown open-case-toggle-btn"
 			[ngClass]="{
 				'active': casesDropdownActive
 			}">
 			<button class="btn btn--small btn--secondary"
+				data-auto-id="ToggleActiveCases"
 				(click)="toggleActiveCases()"
 				innerText="{{ '_ViewOpenCases_' | i18n }} ({{ componentData.openCases }})">
 			</button>

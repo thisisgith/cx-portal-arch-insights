@@ -11,6 +11,8 @@ const accId1 = '111111';
 const accId2 = '222222';
 const accId3 = '333333';
 const accId4 = '444444';
+const accId5 = '555555';
+const accId6 = '666666';
 
 /**
  * Mock
@@ -27,7 +29,7 @@ function MockACC (
 			description: 'Discover the standard steps required to engineer and commission ' +
 				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
 				'basic deployment requirements and schedules',
-			isFavorite: true,
+			isFavorite: false,
 			status: 'recommended',
 			title: 'Cisco DNA Center Project Planning',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
@@ -37,7 +39,7 @@ function MockACC (
 			description: 'Gain actionable insights into Cisco DNA Center use case ' +
 				'deployments and assists. Understand how to design, adopt, and leverage to ' +
 				'save time and resources within your network',
-			isFavorite: true,
+			isFavorite: false,
 			status: 'in-progress',
 			title: 'Cisco DNA Pilot Usecase Deployment',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
@@ -62,12 +64,23 @@ function MockACC (
 			title: 'Cisco DNA Center Wireless Assurance Feature Planning',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
 		},
+		{
+			accId: `${accId6}`,
+			description: 'Experience this live coaching engagement on general Assurance ' +
+				'concepts and features such as network, device, client, and application ' +
+				'analytics. Help your team hit the ground running',
+			isFavorite: false,
+			status: 'requested',
+			title: 'Cisco Software-Defined Access Transition Planning',
+			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+		},
+		{ },
 	];
 
 	if (pitstop.toLowerCase() === 'adopt') {
 		items = [
 			{
-				accId: '555555',
+				accId: `${accId5}`,
 				description: 'This is a title for Adoption',
 				isFavorite: false,
 				status: 'completed',
@@ -97,6 +110,33 @@ export const ACCScenarios = [
 					description: '(ACC) IBN-Wireless Assurance-Onboard',
 					response: {
 						body: MockACC('IBN', 'Wireless Assurance', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-No Recommended',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Adopt'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-Empty',
+					response: {
+						body: { },
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-One-ACC',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'adopt'),
 						status: 200,
 					},
 					selected: true,
@@ -186,6 +226,22 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}/${accId4}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark6',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId6}/bookmark`,
 		usecases: ['Use Case 1'],
 	},
 ];

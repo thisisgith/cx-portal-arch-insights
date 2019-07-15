@@ -1,61 +1,77 @@
-<input data-auto-id="Sample360" type="checkbox" [(ngModel)]="openPanel" />
-
-<app-panel360 [hidden]="!openPanel"
-	[fullscreen]="fullscreen">
-	<app-panel360-header (close)="openPanel = false"
-		[(fullscreen)]="fullscreen">
-		<app-case-details-header ></app-case-details-header>
+<app-panel360 [hidden]="!selectedCase" [fullscreen]="fullscreen">
+	<app-panel360-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
+		<div appPanel360Title class="text-xlarge" [innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
+		<app-case-details-header [case]="selectedCase"
+			[caseDetails]="selectedDetails">
+		</app-case-details-header>
 	</app-panel360-header>
-	<app-case-details></app-case-details>
+	<app-case-details [case]="selectedCase"
+		[(caseDetails)]="selectedDetails">
+	</app-case-details>
 </app-panel360>
 
-<div class="row align-items-center justify-content-between">
-	<div class="col-auto text-large">
-		<span [innerText]="'_RMACases_' | i18n"></span>
-		<span *ngIf="caseListData?.length==0" class="text-muted" [innerText]="'_RMAShowingXCases_' | i18n:paginationInfo.totalElements"></span>
-		<span *ngIf="caseListData?.length>0" [innerText]="'_RMAShowingXofYCases_' | i18n:paginationCount:paginationInfo.totalElements">
-		</span>
-	</div>
-	<div class="col-auto">
-		<form [formGroup]="searchCasesForm" (ngSubmit)="searchCaseNumber()">
-			<div class="form-group input--icon">
-				<div class="form-group__text">
-					<input id="input-type-search" type="search" placeholder="{{'_RMASearchCasePlaceholder_' | i18n}}" formControlName="caseNo">
-					<button type="submit" class="link">
-						<span class="icon-search"></span>
-					</button>
+<div class="panel">
+	<cui-tabs inline="true">
+		<cui-tab [label]="'_OpenCases_' | i18n | uppercase">
+			<div class="divider no-margin-top qtr-margin-bottom"></div>
+			<ng-container *ngTemplateOutlet="casesContent"></ng-container>
+		</cui-tab>
+		<cui-tab [label]="'_RMAS_' | i18n " disabled="true"></cui-tab>
+	</cui-tabs>
+</div>
+<ng-template #casesContent>
+	<div class="row align-items-center justify-content-between">
+		<div class="col-auto text-large">
+			<span [innerText]="'_RMACases_' | i18n" class="text-large"></span>
+			<span *ngIf="caseListData?.length==0" class="text-muted text-medium"
+				[innerText]="'_RMAShowingXCases_' | i18n:paginationInfo.totalElements"></span>
+			<span *ngIf="caseListData?.length>0" class="text-muted text-medium"
+				[innerText]="'_RMAShowingXofYCases_' | i18n:paginationCount:paginationInfo.totalElements">
+			</span>
+		</div>
+		<div class="col-auto">
+			<form [formGroup]="searchCasesForm" (ngSubmit)="searchCaseNumber()">
+				<div class="form-group input--icon">
+					<div class="form-group__text">
+						<input id="input-type-search" type="search" [placeholder]="'_RMASearchCasePlaceholder_' | i18n"
+							formControlName="caseNo">
+						<button type="submit" class="link">
+							<span class="icon-search"></span>
+						</button>
+					</div>
+					<div *ngIf="isSearchCaseFormInvalid" class="help-block text-danger" role="alert">
+						<span [innerText]="'_RMAInvalidCaseNo_' | i18n"></span>
+					</div>
 				</div>
-				<div *ngIf="isSearchCaseFormInvalid" class="help-block text-danger" role="alert">
-					<span [innerText]="'_RMAInvalidCaseNo_' | i18n"></span>
-				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
-</div>
-<hr>
-<div *ngIf="isLoading">
-	<cui-spinner></cui-spinner>
-</div>
-<div *ngIf="caseListData?.length > 0 && !isLoading">
-	<ng-container *ngTemplateOutlet="moreThanZeroCases"></ng-container>
-</div>
-<div *ngIf="caseListData?.length == 0 && !isLoading">
-		<ng-container *ngTemplateOutlet="zeroCases"></ng-container>
-</div>
+	<hr>
+	<div *ngIf="isLoading">
+		<cui-spinner></cui-spinner>
+	</div>
+	<div *ngIf="caseListData?.length > 0 && !isLoading">
+		<ng-container *ngTemplateOutlet="caseList"></ng-container>
+	</div>
+	<div *ngIf="caseListData?.length == 0 && !isLoading">
+		<ng-container *ngTemplateOutlet="noCases"></ng-container>
+	</div>
+</ng-template>
 
-<ng-template #zeroCases>
-	<div class="flex-center-horizontal text-xlarge text-muted dbl-margin-top half-margin-bottom" [innerText]="'_RMANoCasesLabel_' | i18n"></div>
+<ng-template #noCases>
+	<div class="flex-center-horizontal text-xlarge text-muted dbl-margin-top half-margin-bottom"
+		[innerText]="'_RMANoCasesLabel_' | i18n"></div>
 	<div class="flex-center-horizontal text-medium text-muted qtr-margin" [innerText]="'_RMANoCasesText_' | i18n"></div>
 </ng-template>
 
-<ng-template #moreThanZeroCases>
-	<cui-table [options]="caseListTableOptions" [data]="caseListData" (onSortingChanged)="onTableSortingChanged($event)"></cui-table>
-	<cui-pager class="half-margin" *ngIf="paginationInfo.totalElements>caseParams.size" [page]="caseParams.page" [limit]="caseParams.size" [totalItems]="paginationInfo.totalElements" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+<ng-template #caseList>
+	<cui-table (onTableRowClicked)="onTableRowClicked($event)" [options]="caseListTableOptions" [data]="caseListData"
+		(onSortingChanged)="onTableSortingChanged($event)"></cui-table>
+	<cui-pager class="half-margin" *ngIf="paginationInfo.totalElements>caseParams.size" [page]="caseParams.page"
+		[limit]="caseParams.size" [totalItems]="paginationInfo.totalElements" (onPageChanged)="onPagerUpdated($event)">
+	</cui-pager>
 </ng-template>
 
-<ng-template #severityTmpl let-item="celldata"><span><span class="dot" [ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
-<ng-template #caseIDTmpl let-item="celldata"><span>{{item["caseNumber"]}}</span></ng-template>
-<ng-template #deviceTmpl let-item="celldata"><span>{{item["deviceName"]}}</span></ng-template>
-<ng-template #summaryTmpl let-item="celldata"><span>{{item["summary"]}}</span></ng-template>
-<ng-template #statusTmpl let-item="celldata"><span>{{item["status"]}}</span></ng-template>
-<ng-template #updatedTmpl let-item="celldata"><span>{{item["lastModifiedDate"] | date}}</span></ng-template>
+<ng-template #severityTmpl let-item="celldata"><span><span class="icon-circle icon-small"
+			[ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
+<ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | date"></span></ng-template>
