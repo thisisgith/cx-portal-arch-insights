@@ -1,8 +1,7 @@
-import { RouteWatch, Util } from '@apollo/cypress-util';
+import { RouteWatch } from '@apollo/cypress-util';
 import { startCase, toLower } from 'lodash-es';
 import MockService from '../support/mockService';
 
-const util = new Util();
 const assetMock = new MockService('AssetScenarios');
 const coverageMock = new MockService('CoverageScenarios');
 const networkScenario = assetMock.getScenario('GET', 'Assets Page 1');
@@ -14,6 +13,9 @@ const coverageElements = totalCountScenario.response.body;
 const vulnMock = new MockService('VulnerabilityScenarios');
 const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
 const advisoryCounts = advisoryScenario.response.body;
+const caseMock = new MockService('CaseScenarios');
+const caseScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
+const caseResponse = caseScenario.response.body;
 
 describe('Assets', () => { // PBC-41
 	before(() => {
@@ -57,7 +59,8 @@ describe('Assets', () => { // PBC-41
 			cy.get('tbody tr').eq(0).click();
 			validate360(assets[0]);
 			// TODO: More tests for view open cases dropdown when it's implemented
-			cy.getByAutoId('ToggleActiveCases').should('be.visible');
+			cy.getByAutoId('ToggleActiveCases').should('be.visible')
+				.and('have.text', `View Open Cases (${caseResponse.totalElements})`);
 			cy.get('tbody tr').eq(3).click(); // switch to new asset without closing modal
 			validate360(assets[3]);
 			// TODO: Disabled for PBC-338
