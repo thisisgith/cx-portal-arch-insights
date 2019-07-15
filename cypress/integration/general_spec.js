@@ -33,10 +33,7 @@ describe('General Spec', () => {
 				.type(searchVal.concat('{enter}'));
 			cy.wait('@case').then(() => {
 				cy.getByAutoId('searchSiteSelect').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => { // variables can't have a hyphen
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
@@ -139,10 +136,7 @@ describe('General Spec', () => {
 				cy.get('app-general-search').should('contain', '10 Results for "'.concat(caseVal).concat('"'));
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => {
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
@@ -172,8 +166,7 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaNumber').should('exist');
 				cy.getByAutoId('caseNumber').should('exist');
 				cy.getByAutoId('rmaTrackingNumber').should('exist')
-					.should('contain', i18n._CarrierTrackingNumber_)
-					.click();
+					.should('contain', i18n._CarrierTrackingNumber_);
 				cy.getByAutoId('contractNumber').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
@@ -183,10 +176,7 @@ describe('General Spec', () => {
 			// General Search section
 			cy.getByAutoId('searchHeader').should('exist');
 			cy.getByAutoId('filterBy').should('exist');
-			cy.getByAutoId('cui-select')
-				.should($cuiselect => {
-					expect($cuiselect).to.have.length(2);
-				}); // Unavailable 2 times
+			cy.getByAutoId('cui-select').should('have.length', 2);
 			cy.getByAutoId('relGenRes').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
@@ -212,22 +202,13 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaProductNames').should('exist');
 				cy.getByAutoId('rmaProductIDs').should('exist');
 				// Confirm replacement product contains four product rows
-				cy.getByAutoId('rmaProdDescr')
-					.should($rmaProdDescr => {
-						expect($rmaProdDescr).to.have.length(4);
-					});
-				cy.getByAutoId('rmaProdID')
-					.should($rmaProdID => {
-						expect($rmaProdID).to.have.length(4);
-					});
+				cy.getByAutoId('rmaProdDescr').should('have.length', 4);
+				cy.getByAutoId('rmaProdID').should('have.length', 4);
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				// General Search section
 				cy.getByAutoId('searchHeader').should('exist');
 				cy.getByAutoId('filterBy').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => {
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('relGenRes').should('exist');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
@@ -255,19 +236,13 @@ describe('General Spec', () => {
 				cy.getByAutoId('contractNumber').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
-				cy.getByAutoId('rmaUnavail')
-					.should($rmaUnavail => {
-						expect($rmaUnavail).to.have.length(2);
-					});
+				cy.getByAutoId('rmaUnavail').should('have.length', 2);
 				cy.getByAutoId('rmaProdID').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				// General Search section
 				cy.getByAutoId('searchHeader').should('exist');
 				cy.getByAutoId('filterBy').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => {
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('relGenRes').should('exist');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
@@ -282,10 +257,7 @@ describe('General Spec', () => {
 			cy.wait('@rma').then(() => {
 				cy.get('app-general-search').should('contain', '10 Results for "'.concat(inputVal).concat('"'));
 				cy.getByAutoId('searchSiteSelect').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => {
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
@@ -320,10 +292,7 @@ describe('General Spec', () => {
 			// General Search section
 			cy.getByAutoId('searchHeader').should('exist');
 			cy.getByAutoId('filterBy').should('exist');
-			cy.getByAutoId('cui-select')
-				.should($cuiselect => {
-					expect($cuiselect).to.have.length(2);
-				}); // 2 times
+			cy.getByAutoId('cui-select').should('have.length', 2);
 			cy.getByAutoId('relGenRes').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
@@ -339,10 +308,7 @@ describe('General Spec', () => {
 				cy.get('app-general-search').should('contain', '10 Results for "'.concat(serialVal).concat('"'));
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => {
-						expect($cuiselect).to.have.length(2);
-					}); // 2 times
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
