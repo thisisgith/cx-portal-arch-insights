@@ -65,7 +65,7 @@ describe('Assets', () => { // PBC-41
 			validate360(assets[3]);
 			// TODO: Disabled for PBC-338
 			// cy.getByAutoId('ToggleActiveCases').should('not.be.visible');
-			cy.getByAutoId('CloseDetails').click();
+			cy.get('tbody tr').eq(3).click(); // PBC-164, close the 360 view
 			cy.get('tbody tr').eq(2).click();
 			validate360(assets[2]);
 
