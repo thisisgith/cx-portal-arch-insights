@@ -22,6 +22,7 @@ import {
 	HardwareResponse,
 	VulnerabilityResponse,
 	Assets,
+	HardwareInfo,
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 
@@ -29,7 +30,6 @@ import { SpecialSearchComponent } from '../special-search/special-search.compone
 import { SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
-import { HardwareInfo } from '@cui-x/sdp-api';
 
 /**
  * Interface representing all serial number data to go in the template
