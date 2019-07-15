@@ -130,7 +130,7 @@ export const ACCScenarios = [
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Wireless Assurance-Onboard-Empty,',
+					description: '(ACC) IBN-Wireless Assurance-Onboard-Empty',
 					response: {
 						body: { },
 						status: 200,
