@@ -279,12 +279,12 @@
 
 <ng-template #accPanel let-data="data">
 	<div class="base-margin-bottom text-dkgray-4" [innerText]="'_1on1Coaching_' | i18n"></div>
-	<ng-container *ngIf="data.recommended">
+	<ng-container *ngIf="data.sessions[0]">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedACC,
-				title: data.recommended.title,
-				description: data.recommended.description,
-				item: data.recommended,
+				title: data.sessions[0].title,
+				description: data.sessions[0].description,
+				item: data.sessions[0],
 				src: 'assets/img/solutions/acc.png',
 				autoid: 'recommendedACC'
 			}">

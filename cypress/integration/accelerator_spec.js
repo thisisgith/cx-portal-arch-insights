@@ -110,7 +110,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('moreACCList').should('not.exist');
 		});
 
-		it('Should only display up to two items in the more list', () => {
+		it.skip('Should only display up to two items in the more list', () => {
 			// Verify only up to the first three ACC shown
 			// Note, however, the first recommended item will be displayed outside the More list
 			// TODO: Will need to be updated to account for cases where the first ACC is not
@@ -166,7 +166,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			}
 		});
 
-		it('Should not have hover modal if there are no recommended ACC', () => {
+		it.skip('Should not have hover modal if there are no recommended ACC', () => {
 			// Switch the mock data to one with no recommended items
 			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
 			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-allButRecommended');
@@ -188,7 +188,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('ACCCloseModal').click();
 		});
 
-		it('Should be able to bookmark an ACC item', () => {
+		it.skip('Should be able to bookmark an ACC item', () => {
 			cy.getByAutoId('accViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
 					if (!acc.isFavorite && acc.status !== 'completed') {
@@ -222,7 +222,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('Should NOT be able to bookmark a completed ACC item', () => {
+		it.skip('Should NOT be able to bookmark a completed ACC item', () => {
 			cy.getByAutoId('accViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
 					if (acc.status === 'completed') {

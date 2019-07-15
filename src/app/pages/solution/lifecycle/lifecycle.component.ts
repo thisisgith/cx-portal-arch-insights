@@ -66,7 +66,6 @@ interface ComponentData {
 	};
 	acc?: {
 		sessions: ACC[];
-		recommended: ACC;
 	};
 	communities?: Community[];
 }
@@ -522,8 +521,10 @@ export class LifecycleComponent implements OnDestroy {
 				}
 
 				this.componentData.acc = {
-					recommended: _.head(_.filter(result.items, { status: 'recommended' })),
-					sessions: result.items,
+					sessions: _.union(_.filter(result.items, { status: 'recommended' }),
+						_.filter(result.items, { status: 'requested' }),
+						_.filter(result.items, { status: 'in-progress' }),
+						_.filter(result.items, { status: 'completed' })),
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);

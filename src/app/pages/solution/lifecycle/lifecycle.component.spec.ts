@@ -322,13 +322,21 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			const acc3 = component.componentData.acc.sessions[2];
+			const acc3 = component.componentData.acc.sessions[3];
 			component.setFavorite(acc3);
 			fixture.detectChanges();
-			expect(component.componentData.acc.sessions[2].isFavorite)
+			expect(component.componentData.acc.sessions[3].isFavorite)
 				.toBeTruthy();
 
 			de = fixture.debugElement.query(By.css('.ribbon__blue'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.progressbar'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('#moreAccList-item'));
 			expect(de)
 				.toBeTruthy();
 
@@ -340,14 +348,23 @@ describe('LifecycleComponent', () => {
 
 			component.setFavorite(acc3);
 			fixture.detectChanges();
-			expect(component.componentData.acc.sessions[2].isFavorite)
+			expect(component.componentData.acc.sessions[3].isFavorite)
 				.toBeFalsy();
 
 			component.selectedStatus = 'recommended';
 			component.selectFilter('acc');
 			fixture.detectChanges();
+
+			expect(component.componentData.acc.sessions[0].isFavorite)
+				.toBeFalsy();
+			expect(component.componentData.acc.sessions[0].status)
+			.toEqual('recommended');
 			expect(component.selectedACC.length)
 				.toEqual(1);
+
+			const acc5 = component.componentData.acc.sessions[1];
+			expect(acc5.status)
+				.toEqual('requested');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
