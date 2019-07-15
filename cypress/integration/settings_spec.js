@@ -26,7 +26,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			cy.getByAutoId('settings.system.app.panel').should('exist');
 
 			cy.getByAutoId('settings.system.usage').should('exist');
-			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._MemoryUsage_.toUpperCase());
+			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._ResourceUsage_.toUpperCase());
 
 			cy.getByAutoId('settings.system.info').should('exist');
 			cy.getByAutoId('settings.system.info.label').should('have.text', i18n._SystemInfo_.toUpperCase());
@@ -39,7 +39,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 
 		it('Renders Status Panel Content', () => {
 			cy.getByAutoId('settings.system.status.panel').within(() => {
-				cy.get('div').should('contain', i18n._CiscoCXCollectorConnectivityModule_);
+				cy.get('div').should('contain', i18n._CiscoCXCollector_);
 				cy.get('div').should('contain', mainData.ie_version);
 				cy.get('div').should('contain', mainData.ieStatus);
 			});
@@ -151,7 +151,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			cy.getByAutoId('settings.system.app.panel').should('not.exist');
 
 			cy.getByAutoId('settings.system.usage').should('exist');
-			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._MemoryUsage_.toUpperCase());
+			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._ResourceUsage_.toUpperCase());
 
 			cy.getByAutoId('settings.system.info').should('exist');
 			cy.getByAutoId('settings.system.info.label').should('have.text', i18n._SystemInfo_.toUpperCase());

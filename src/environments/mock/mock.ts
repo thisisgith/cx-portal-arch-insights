@@ -123,9 +123,9 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ATXScenarios,
 		ActionScenarios,
 		AssetScenarios,
-		ATXScenarios,
 		CaseScenarios,
 		CommunitiesScenarios,
 		ContractScenarios,
@@ -139,8 +139,8 @@ export const mockSettings: MockSettings = {
 		HardwareScenarios,
 		HealthStatusScenarios,
 		NetworkScenarios,
-		RacetrackScenarios,
 		RMAScenarios,
+		RacetrackScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,

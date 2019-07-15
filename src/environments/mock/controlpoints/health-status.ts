@@ -234,9 +234,13 @@ const mockData: IEHealthStatusResponseModel = {
 		{
 			additional_details: {
 				container_ready: 'false',
+				cpu_limits: 'NotSet',
+				cpu_requests: '1m',
 				error: 'Back-off 5m0s restarting failed container=' +
 					'nginx-ingress pod=nginx-ingress-default-backend-69b9c8f8f5-x9kbg' +
 					'_default(ddfe85a3-9e05-11e9-bff9-005056bef458)',
+				memory: '5Mi',
+				memory_limits: 'NotSet',
 				pod_name: 'nginx-ingress-default-backend-69b9c8f8f5-x9kbg',
 				pod_restart_count: '1',
 			},
