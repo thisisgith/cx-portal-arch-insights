@@ -91,9 +91,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 					if (route.includes('solution')) {
 						this.activeRoute = route;
-						const routeFacet = _.find(this.facets, (f: Facet) =>
-							route.indexOf(f.route) > -1,
-						);
+						const routeFacet = _.find(this.facets, { route });
 						if (routeFacet) {
 							this.selectFacet(routeFacet);
 						}
@@ -184,9 +182,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		];
 
 		if (this.activeRoute) {
-			this.selectFacet(_.find(this.facets, (f: Facet) =>
-				this.activeRoute.indexOf(f.route) > -1,
-			));
+			this.selectFacet(_.find(this.facets, { route: this.activeRoute }));
 		}
 	}
 
