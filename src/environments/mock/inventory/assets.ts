@@ -68,7 +68,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1544Y175,WS-C2960S-24PS-L,NA,FOC1544Y175,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+			"lastScan": "2019-07-09T09:27:32.482",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+2960-24PC-L+Switch",
