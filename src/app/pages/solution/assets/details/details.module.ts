@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssetDetailsComponent } from './details.component';
-import { AssetActivityModule } from '../activity/activity.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiTabsModule, CuiLoaderModule } from '@cisco-ngx/cui-components';
 import { CaseService } from '@cui-x/services';
@@ -17,7 +16,6 @@ import { DetailsHardwareModule } from './details-hardware/details-hardware.modul
 	],
 	exports: [AssetDetailsComponent],
 	imports: [
-		AssetActivityModule,
 		CommonModule,
 		CuiTabsModule,
 		I18nPipeModule,
