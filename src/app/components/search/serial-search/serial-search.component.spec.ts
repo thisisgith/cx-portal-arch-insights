@@ -6,16 +6,19 @@ import { of, throwError } from 'rxjs';
 import { SerialSearchComponent } from './serial-search.component';
 import { SerialSearchModule } from './serial-search.module';
 import { InventoryService, ContractsService, DeviceContractResponse,
-			ProductAlertsService } from '@sdp-api';
+	ProductAlertsService, Assets } from '@sdp-api';
 
-import { HardwareScenarios, ContractScenarios } from '@mock';
+import { HardwareScenarios, ContractScenarios, AssetScenarios,
+	VulnerabilityScenarios, CaseScenarios } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CaseService } from '@cui-x/services';
 
 describe('SerialSearchComponent', () => {
 	let component: SerialSearchComponent;
 	let inventoryService: InventoryService;
 	let contractsService: ContractsService;
 	let alertsService: ProductAlertsService;
+	let caseService: CaseService;
 	let fixture: ComponentFixture<SerialSearchComponent>;
 
 	beforeEach(async(() => {
@@ -32,6 +35,7 @@ describe('SerialSearchComponent', () => {
 		inventoryService = TestBed.get(InventoryService);
 		contractsService = TestBed.get(ContractsService);
 		alertsService = TestBed.get(ProductAlertsService);
+		caseService = TestBed.get(CaseService);
 		fixture = TestBed.createComponent(SerialSearchComponent);
 		component = fixture.componentInstance;
 	});
@@ -42,7 +46,7 @@ describe('SerialSearchComponent', () => {
 	});
 
 	it('should emit a hide event if no SN has been found', () => {
-		spyOn(inventoryService, 'getHardware')
+		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValues(of({ data: [] }));
 		spyOn(component.hide, 'emit');
@@ -55,6 +59,9 @@ describe('SerialSearchComponent', () => {
 	});
 
 	it('should show if SN data was found', () => {
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValues(of(<Assets> AssetScenarios[0].scenarios.GET[0].response.body));
 		spyOn(inventoryService, 'getHardware')
 			.and
 			.returnValues(of(HardwareScenarios[0].scenarios.GET[0].response.body));
@@ -62,6 +69,12 @@ describe('SerialSearchComponent', () => {
 			.and
 			.returnValues(of(<DeviceContractResponse>
 				ContractScenarios[0].scenarios.GET[0].response.body));
+		spyOn(alertsService, 'getVulnerabilityCounts')
+			.and
+			.returnValues(of(VulnerabilityScenarios[0].scenarios.GET[0].response.body));
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(of(CaseScenarios[2].scenarios.GET[0].response.body));
 		spyOn(component.hide, 'emit');
 		component.serialNumber = { query: 'FOX1306GBAD' };
 		fixture.detectChanges();
@@ -72,7 +85,7 @@ describe('SerialSearchComponent', () => {
 	});
 
 	it('should refresh data when an input changes', () => {
-		spyOn(inventoryService, 'getHardware')
+		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValues(of({ data: [] }), of({ data: [] }));
 		component.serialNumber = { query: 'FOX1306GBA1' };
@@ -80,7 +93,7 @@ describe('SerialSearchComponent', () => {
 		component.serialNumber = { query: 'FOX1306GBA2' };
 		component.ngOnChanges();
 		fixture.detectChanges();
-		expect(inventoryService.getHardware)
+		expect(inventoryService.getAssets)
 			.toHaveBeenCalledTimes(2);
 	});
 
@@ -89,6 +102,9 @@ describe('SerialSearchComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(inventoryService, 'getHardware')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
@@ -96,6 +112,9 @@ describe('SerialSearchComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(alertsService, 'getVulnerabilityCounts')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(caseService, 'read')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(component.hide, 'emit');
