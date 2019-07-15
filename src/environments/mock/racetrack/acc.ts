@@ -19,10 +19,11 @@ const accId6 = '666666';
  * @param solution the solution we're at
  * @param usecase the use case
  * @param pitstop the pitstop
+ * @param mockFileName the name of the corresponding json file to pull mock data from
  * @returns response
  */
 function MockACC (
-	solution: string, usecase: string, pitstop: string): ACCResponse {
+	solution: string, usecase: string, pitstop: string, mockFileName: string): ACCResponse {
 	let items = [
 		{
 			accId: `${accId1}`,
@@ -90,6 +91,10 @@ function MockACC (
 		];
 	}
 
+	if (mockFileName !== '') {
+		items = require(`./accMockData/${mockFileName}.json`);
+	}
+
 	return {
 		items,
 		pitstop,
@@ -109,23 +114,23 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard'),
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', ''),
 						status: 200,
 					},
 					selected: true,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Wireless Assurance-Onboard-No Recommended',
+					description: '(ACC) IBN-Wireless Assurance-Onboard-allButRecommended',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Adopt'),
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'allButRecommended'),
 						status: 200,
 					},
 					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Wireless Assurance-Onboard-Empty',
+					description: '(ACC) IBN-Wireless Assurance-Onboard-Empty,',
 					response: {
 						body: { },
 						status: 200,
@@ -134,9 +139,18 @@ export const ACCScenarios = [
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Wireless Assurance-Onboard-One-ACC',
+					description: '(ACC) IBN-Wireless Assurance-Onboard-oneRecommended',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'adopt'),
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneRecommended'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-oneNonRecommended',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneNonRecommended'),
 						status: 200,
 					},
 					selected: true,
@@ -154,7 +168,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-SD Access-Onboard',
 					response: {
-						body: MockACC('IBN', 'SD Access', 'Onboard'),
+						body: MockACC('IBN', 'SD Access', 'Onboard', ''),
 						status: 200,
 					},
 					selected: true,
