@@ -11,13 +11,13 @@
 		<dl class="dl--inline">
 			<dt class="flex-center-inline-vertical">
 				<span class="qtr-margin-right icon-small icon-circle" [ngClass]="statusColor"></span>
-				<span class="text-muted" [innerText]="('_Status_' | i18n) + ':'"></span>
+				<span class="text-muted" data-auto-id="rmaStatus" [innerText]="('_Status_' | i18n) + ':'"></span>
 				<span class="qtr-margin-left text-muted" *ngIf="rmaTableData?.status; else unavailable"
 					[innerText]="rmaTableData.status"></span>
 			</dt>
 		</dl>
 	</div>
-	<h3 [innerText]="'_RMA_' | i18n:rmaNumber.query"></h3>
+	<h3 data-auto-id="rmaNumber" [innerText]="'_RMA_' | i18n:rmaNumber.query"></h3>
 	<div *ngIf="rmaTableData.products.length <= 1">
 		<div class="row half-margin-top">
 			<div class="col-md-3 dbl-margin-right">
@@ -25,10 +25,10 @@
 					<ng-container *ngTemplateOutlet="caseNumber"></ng-container>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_CarrierTrackingNumber_' | i18n"></span>
+							data-auto-id="rmaTrackingNumber" [innerText]="'_CarrierTrackingNumber_' | i18n"></span>
 					</dt>
 					<dd>
-						<a data-auto-id="trackingNumber" *ngIf="rmaTableData?.courier; else unavailable"
+						<a  *ngIf="rmaTableData?.courier; else unavailable"
 							[innerHTML]="rmaTableData.courier | courierLink:rmaTableData.trackingNumber"></a>
 					</dd>
 					<ng-container *ngTemplateOutlet="contract"></ng-container>
@@ -38,15 +38,15 @@
 				<dl class="dl--inline-medium">
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_Product_' | i18n"></span>
+							data-auto-id="rmaProduct" [innerText]="'_Product_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="rmaTableData?.products[0]?.partsDescription; else unavailable"
-							[innerText]="rmaTableData.products[0].partsDescription"></span>
+						[innerText]="rmaTableData.products[0].partsDescription"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							[innerText]="'_ProductID_' | i18n"></span>
+						data-auto-id="rmaProdID" [innerText]="'_ProductID_' | i18n"></span>
 					</dt>
 					<dd>
 						<span *ngIf="rmaTableData?.products[0]?.shippedPartNo; else unavailable"
@@ -78,14 +78,14 @@
 			</div>
 		</div>
 		<div class="row no-margin">
-			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" [innerText]="'_ProductName_' | i18n"></div>
-			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" [innerText]="'_ProductID_' | i18n"></div>
+			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProductNames" [innerText]="'_ProductName_' | i18n"></div>
+			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProductIDs" [innerText]="'_ProductID_' | i18n"></div>
 		</div>
 		<div class="divider no-margin"></div>
 		<div *ngFor="let product of rmaTableData.products">
 			<div class="row no-margin">
-					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" [innerText]="product.partsDescription | i18n"></div>
-					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" [innerText]="product.shippedPartNo | i18n"></div>
+					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProdDescr" [innerText]="product.partsDescription | i18n"></div>
+					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProdID" [innerText]="product.shippedPartNo | i18n"></div>
 			</div>
 			<div class="divider no-margin"></div>
 		</div>
@@ -97,7 +97,7 @@
 <ng-template #caseNumber>
 	<dt>
 		<span class="subheading text-small text-uppercase"
-			[innerText]="'_CaseNumber_' | i18n"></span>
+		data-auto-id="caseNumber" [innerText]="'_CaseNumber_' | i18n"></span>
 	</dt>
 	<dd>
 		<a data-auto-id="caseNumber"
@@ -110,7 +110,7 @@
 <ng-template #contract>
 	<dt>
 		<span class="subheading text-small text-uppercase"
-			[innerText]="'_Contract_' | i18n"></span>
+		data-auto-id="contractNumber" [innerText]="'_Contract_' | i18n"></span>
 	</dt>
 	<dd>
 		<!--TODO: Link to contract details page -->
@@ -121,10 +121,10 @@
 
 <ng-template #detailsButton>
 	<div class="qtr-margin-top">
-			<button class="btn btn--small btn--secondary text-uppercase" [innerText]="'_ViewRMADetails_' | i18n"></button>
+			<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="rmaViewDetButton" [innerText]="'_ViewRMADetails_' | i18n"></button>
 	</div>
 </ng-template>
 
 <ng-template #unavailable>
-	<span class="text-muted" [innerText]="'_Unavailable_' | i18n"></span>
+	<span class="text-muted" data-auto-id="rmaUnavail" [innerText]="'_Unavailable_' | i18n"></span>
 </ng-template>

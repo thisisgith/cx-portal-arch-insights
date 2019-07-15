@@ -1,14 +1,18 @@
 <admin-wrapper>
 	<div *ngIf="!loading" class="container settings-container">
 		<div class="row">
-			<div class="col-lg-6">
+			<div class="col-lg-6" data-auto-id="settings.system.status">
 				<h5
 					class="base-margin-top half-margin-bottom"
+					data-auto-id="settings.system.status.label"
 					[innerText]="'_Status_' | i18n | uppercase"
 				></h5>
-				<div class="panel panel--bordered flex base-margin-right">
-					<div class="col-5">
-						<div [innerText]="'_CiscoCXCollectorConnectivityModule_' | i18n"></div>
+				<div
+					class="panel panel--bordered flex base-margin-right"
+					data-auto-id="settings.system.status.panel"
+				>
+					<div class="col-4">
+						<div [innerText]="'_CiscoCXCollector_' | i18n"></div>
 						<!-- <div class="text-small">Last data sent 6 min ago</div> -->
 					</div>
 					<div class="col-2" [innerText]="data.ieVersion || ''"></div>
@@ -31,9 +35,13 @@
 				</div>
 				<h5
 					class="base-margin-top half-margin-bottom"
+					data-auto-id="settings.system.app.label"
 					[innerText]="'_Applications_' | i18n | uppercase"
 				></h5>
-				<div *ngFor="let app of data.component_details; index as i">
+				<div
+					*ngFor="let app of data.component_details; index as i"
+					data-auto-id="settings.system.app.panel"
+				>
 					<div class="
 						settings-panel
 						panel
@@ -46,30 +54,35 @@
 						}"
 					>
 						<div class="flex">
-							<div class="col-5" [innerText]="app.name || ''"></div>
+							<div class="col-4" [innerText]="app.name || ''"></div>
 							<div class="col-2" [innerText]="app.version || ''"></div>
 							<div class="col-3">
 								<span class="icon-circle half-margin-right"
-									[ngClass]="{
-										'Running':'text-success',
-										'Restarting...':'text-warning',
-										'Stopped':'text-secondary',
-										'Error':'text-danger',
-										'CrashLoopBackOff':'text-danger'
-									}[app.status]"></span>
+									[ngClass]="app.status | appStatusColor">
+								</span>
 								<span [innerText]="app.status || ''"></span>
 							</div>
 							<div
 								*ngIf="app.additional_details?.error"
-								class="col-2"
+								class="col-3 text-right"
 							>
 								<a
 									data-auto-id="errorLink"
-									[innerText]="!app.showError
-										? ('_ErrorDetails_' | i18n)
-										: ('_HideErrorDetails_' | i18n)"
 									(click)="app.showError = !app.showError"
-								></a>
+								>
+									<span
+										[innerText]="!app.showError
+											? ('_ErrorDetails_' | i18n)
+											: ('_HideErrorDetails_' | i18n)"
+									></span>
+									<span
+										class="qtr-margin-left"
+										[ngClass]="{
+											'icon-chevron-down': !app.showError,
+											'icon-chevron-up': app.showError
+										}"
+									></span>
+								</a>
 							</div>
 						</div>
 						<div
@@ -84,14 +97,16 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-3">
+			<div class="col-lg-3" data-auto-id="settings.system.usage">
 				<h5
 					class="base-margin-top base-margin-bottom"
-					[innerText]="'_MemoryUsage_' | i18n | uppercase"
+					data-auto-id="settings.system.usage.label"
+					[innerText]="'_ResourceUsage_' | i18n | uppercase"
 				></h5>
 				<div
 					*ngFor="let gauge of data.memoryUsage"
 					class="flex-center-vertical base-margin-bottom"
+					[attr.data-auto-id]="'usage-' + gauge.label"
 				>
 					<cui-gauge
 						[percentage]="gauge.percentage"
@@ -105,12 +120,16 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-3">
+			<div class="col-lg-3" data-auto-id="settings.system.info">
 				<h5
 					class="base-margin-top half-margin-bottom"
+					data-auto-id="settings.system.info.label"
 					[innerText]="'_SystemInfo_' | i18n | uppercase"
 				></h5>
-				<div *ngFor="let info of data.systemInfo">
+				<div
+					*ngFor="let info of data.systemInfo"
+					[attr.data-auto-id]="'info-' + info.label"
+				>
 					<div class="base-margin-top">
 						<div class="text-bold" [innerText]="info.label | uppercase"></div>
 						<div [innerText]="info.value"></div>
