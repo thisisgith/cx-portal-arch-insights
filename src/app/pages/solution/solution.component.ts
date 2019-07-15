@@ -35,7 +35,7 @@ interface Facet {
 	label?: string;
 	route: string;
 	selected?: boolean;
-	template: TemplateRef<{ }>;
+	template: TemplateRef<{}>;
 	title: string;
 }
 
@@ -69,12 +69,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private eventsSubscribe: Subscription;
 	public solutions: RacetrackSolution[];
 
-	@ViewChild('advisoriesFact', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
-	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
-	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
-	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
-	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
-	@ViewChild('bestPracticesFacet', { static: true }) public bestPracticesTemp: TemplateRef<{ }>;
+	@ViewChild('advisoriesFact', { static: true }) public advisoriesTemplate: TemplateRef<{}>;
+	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{}>;
+	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{}>;
+	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{}>;
+	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{}>;
+	@ViewChild('bestPracticesFacet', { static: true }) public bestPracticesTemp: TemplateRef<{}>;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -161,12 +161,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			// 	template: this.securityTemplate,
 			// 	title: I18n.get('_Security_'),
 			// },
-			{
-				key: 'advisories',
-				route: '/solution/advisories',
-				template: this.advisoriesTemplate,
-				title: I18n.get('_Advisories_'),
-			},
+			// {
+			// 	key: 'advisories',
+			// 	route: '/solution/advisories',
+			// 	template: this.advisoriesTemplate,
+			// 	title: I18n.get('_Advisories_'),
+			// },
 			{
 				key: 'resolution',
 				route: '/solution/resolution',

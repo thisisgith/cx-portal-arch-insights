@@ -8,7 +8,7 @@ import { ClientSSOGuard } from '@cisco-ngx/cui-auth';
 const routes: Routes = [
 	{
 		loadChildren: () => import('./pages/admin/admin.module')
-		 	.then(m => m.AdminModule),
+			.then(m => m.AdminModule),
 		path: 'admin',
 	},
 	{
@@ -18,7 +18,7 @@ const routes: Routes = [
 		pathMatch: 'full',
 	},
 	{
-		canActivate: [ClientSSOGuard],
+		// canActivate: [ClientSSOGuard],
 		loadChildren: () => import('./pages/solution/solution.module')
 			.then(m => m.SolutionModule),
 		path: 'solution',

@@ -1,3 +1,51 @@
-<p>
-	optimal software version works!
-</p>
+<app-panel360 [hidden]="!openPanel" [fullscreen]="fullscreen">
+	<app-panel360-header (close)="openPanel = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
+		<div appPanel360Title class="text-xlarge">
+			<span class="icon-wifi"></span>
+			<span class="qtr-margin-left" [innerText]="'Asset 1'"></span>
+		</div>
+	</app-panel360-header>
+	<asset-software-details></asset-software-details>
+</app-panel360>
+
+<div class="panel">
+	<!-- *ngIf="!status.isLoading" -->
+	<div class="flex flex-fill flex-fluid">
+		<ng-container *ngFor="let filter of filters; index as i">
+			<div *ngIf="!filter.loading && filter.data.length" attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
+				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" [ngClass]="{
+					'filter__selected': filter.selected,
+					'filter__not-selected': !filter.selected
+				}" class="panel  flex-fill filter">
+				<div class="base-margin-bottom">
+					<div *ngIf="filter.template">
+						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
+					</div>
+				</div>
+				<div class="filter__title text-muted text-large" *ngIf="filter.title" [innerText]="filter.title"></div>
+			</div>
+			<div *ngIf="filter.loading" class="base-margin-bottom">
+				<cui-spinner></cui-spinner>
+			</div>
+		</ng-container>
+	</div>
+</div>
+
+<input data-auto-id="Sample360" type="checkbox" [(ngModel)]="openPanel" />
+
+
+<!-- Templates for our Visual Filters for the Assets Tab -->
+<ng-template #totalAssetsFilter let-filter="filter">
+	<div>
+		<span class="qtr-margin-right">{{filter.data[0].value}}</span>
+		<span>{{'Software Profiles'}}</span>
+	</div>
+	<div>
+		<span class="qtr-margin-right">{{filter.data[0].value}}</span>
+		<span>{{'Ungrouped Assets'}}</span>
+	</div>
+	<div>
+		<span class="qtr-margin-right">{{filter.data[0].value}}</span>
+		<span>{{'Software Versions'}}</span>
+	</div>
+</ng-template>

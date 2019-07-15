@@ -466,5 +466,6 @@
 	"_YouHaveInventory_": "You have <a href=\"#\">{0}</a> of these in your inventory",
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:",
 	"_YourImpactedDevices_": "Your Impacted Devices",
-	"_YourProducts_": "Your products, documentation & Learning Library resources"
+	"_YourProducts_": "Your products, documentation & Learning Library resources",
+	"_OsvBasicRecommendations_": "Basic Recommendations"
 }
