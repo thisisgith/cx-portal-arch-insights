@@ -1,0 +1,35 @@
+<cui-drawer projection="true" [expanded]="true">
+	<div class="cui-drawer-label text-large" [innerText]="'_Modules_' | i18n | uppercase"></div>
+	<div class="cui-drawer-content">
+		<ng-container *ngTemplateOutlet="modulesTable; context: { modules: modules }"></ng-container>
+	</div>
+</cui-drawer>
+<cui-drawer projection="true" [expanded]="true">
+	<div class="cui-drawer-label text-large" [innerText]="'_EOX_' | i18n | uppercase"></div>
+	<div class="cui-drawer-content">
+		<pbc-timeline class="no-margin" [data]="timelineData" [todayButtonText]="'_ViewMigrationOptions_' | i18n"></pbc-timeline>
+	</div>
+</cui-drawer>
+
+<ng-template #modulesTable let-modules="modules">
+	<div>
+		<table style="width:100%">
+			<tr class="th-row">
+				<th class="text-bold text-small"> 
+					<span [innerText]="'_Type_' | i18n"></span>
+					<a><span class="icon-dropdown text-tiny text-default"></span></a>
+				</th>
+				<th class="text-bold text-small" [innerText]="'_ProductFamily_' | i18n"></th> 
+				<th class="text-bold text-small" [innerText]="'_Slot_' | i18n"></th>
+				<th class="text-bold text-small" [innerText]="'_SerialNumber_' | i18n"></th>
+			</tr>
+			<tr class="td-row" *ngFor="let module of modules">
+				<td class="text-small" [innerText]="module.type"></td>
+				<td class="text-small" [innerText]="module.productFamily"></td>
+				<td class="text-small" [innerText]="module.slot"></td> 
+				<td class="text-small" [innerText]="module.serialNumber"></td>
+			</tr>
+		</table>
+	</div>
+	
+</ng-template>

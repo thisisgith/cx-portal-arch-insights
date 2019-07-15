@@ -8,6 +8,7 @@ import { CaseService } from '@cui-x/services';
 import { DetailsHeaderModule } from './details-header/details-header.module';
 import { TimelineModule } from '@components';
 import { DetailsAdvisoriesModule } from './details-advisories/details-advisories.module';
+import { DetailsHardwareModule } from './details-hardware/details-hardware.module';
 
 /** Module representing the Asset Details Component */
 @NgModule({
@@ -24,6 +25,7 @@ import { DetailsAdvisoriesModule } from './details-advisories/details-advisories
 		DetailsHeaderModule,
 		TimelineModule,
 		CuiLoaderModule,
+		DetailsHardwareModule,
 	],
 	providers: [
 		CaseService,

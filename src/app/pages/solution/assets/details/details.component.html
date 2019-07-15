@@ -2,7 +2,11 @@
 	<cui-tab [label]="'_Summary_' | i18n | uppercase">
 		<ng-container *ngTemplateOutlet="summary"></ng-container>
 	</cui-tab>
-	<cui-tab [label]="'_Hardware_' | i18n | uppercase" disabled="true"></cui-tab>
+	<cui-tab [label]="'_Hardware_' | i18n | uppercase">
+		<div class="half-margin-top" *ngIf="asset">
+			<details-hardware [asset]="asset"></details-hardware>
+		</div>
+	</cui-tab>
 	<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true"></cui-tab>
 	<cui-tab [label]="'_Advisories_' | i18n | uppercase">
 		<div class="dbl-margin-top" *ngIf="asset">

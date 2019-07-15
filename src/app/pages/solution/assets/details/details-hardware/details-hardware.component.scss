@@ -1,0 +1,43 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+::ng-deep .pbc-timeline {
+    // margin-left: 0px!important;
+    // margin-top: 0px!important;
+    margin: 0px!important;
+}
+
+::ng-deep .cui-drawer {
+    margin: 0px!important;
+}
+
+::ng-deep .panel {
+    padding-left: 0px!important;
+}
+
+%tr-shared {
+    border-bottom-style: solid;
+    border-bottom-color: $light-gray-3;
+  }
+
+tr.th-row th {
+    @extend %tr-shared;
+    border-bottom-width: 2px;
+}
+
+tr.td-row td {
+    @extend %tr-shared;
+    border-bottom-width: 1px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+// class="text-xsmall text-italic"
+::ng-deep small {
+    font-size: x-small;
+    font-style: italic;
+}
+
+// TODO: add button to timeline__timestamp--today-bottom and timeline__timestamp--today-top
+
