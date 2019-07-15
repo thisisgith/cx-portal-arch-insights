@@ -14,12 +14,12 @@ export interface FieldNotice {
   /**
    * The unique, generated ID of the network element
    */
-  neInstanceId?: Array<string>;
+  neInstanceId?: string;
 
   /**
    * The unique identifier for hardware entry in a datastore
    */
-  hwInstanceId?: number;
+  hwInstanceId?: string;
 
   /**
    * The vendor-specific model name identifier string associated with this physical component
@@ -29,7 +29,7 @@ export interface FieldNotice {
   /**
    * This refers to the OS running on the managed network element. For example:- IOS, IOS-XE, NxOS
    */
-  swType?: Array<string>;
+  swType?: string;
 
   /**
    * The recognized/validated Serial Number
@@ -39,7 +39,7 @@ export interface FieldNotice {
   /**
    * The unique, generated ID of the network resource id
    */
-  managedNeId?: Array<string>;
+  managedNeId?: string;
 
   /**
    * A broad classification of Cisco product that categorizes its function.Examples :- OTHER, CHASIS, MODULE, POWERSUPPLY, FAN, IPPHONE
@@ -59,7 +59,7 @@ export interface FieldNotice {
   /**
    * The vulnerability status of a Network element. Example:- Vulnerable, Potentially Vulnerable, Not Vulnerable
    */
-  vulnerabilityStatus?: string;
+  vulnerabilityStatus?: 'NOTVUL' | 'POTVUL' | 'VUL';
 
   /**
    * The reason why a network element is Vulnerable or Potentially Vulnerable to a Security Advisory
@@ -69,7 +69,7 @@ export interface FieldNotice {
   /**
    * The distribution code of the field notices
    */
-  distributionCode?: boolean;
+  distributionCode?: string;
 
   /**
    * The explanations about why the automation may need additional review by the customer

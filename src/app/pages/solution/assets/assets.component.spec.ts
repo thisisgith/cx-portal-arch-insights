@@ -2,7 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssetsComponent } from './assets.component';
 import { AssetsModule } from './assets.module';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import * as _ from 'lodash-es';
@@ -22,7 +23,7 @@ describe('AssetsComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetsModule,
-				HttpClientModule,
+				HttpClientTestingModule,
 				MicroMockModule,
 				RouterTestingModule,
 			],
