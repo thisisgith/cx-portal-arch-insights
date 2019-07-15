@@ -7,7 +7,7 @@
 	</div>
 </div>
 <div *ngIf="!loading && data">
-	<h3 [innerText]="'_SerialNumberHeader_' | i18n:serialNumber.query"></h3>
+	<h3 data-auto-id="serialHeader" [innerText]="'_SerialNumberHeader_' | i18n:serialNumber.query"></h3>
 	<div class="row">
 		<div class="row no-gutters col-md-6 base-margin-top">
 			<div class="col-md-6 dbl-margin-right">
@@ -32,7 +32,7 @@
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
-							data-auto-id="serialCoverage" 
+							data-auto-id="serialContract" 
 							[innerText]="'_Contract_' | i18n"></span>
 					</dt>
 					<dd>
@@ -128,6 +128,7 @@
 						<dl class="dl--inline-medium">
 							<dt>
 								<span class="subheading text-small text-uppercase"
+									data-auto-id="serialProdID"
 									[innerText]="'_ProductID_' | i18n"></span>
 							</dt>
 							<dd>
@@ -136,6 +137,7 @@
 							</dd>
 							<dt>
 								<span class="subheading text-small text-uppercase"
+									data-auto-id="serialProdSeries"
 									[innerText]="'_ProductSeries_' | i18n"></span>
 							</dt>
 							<dd>
@@ -144,6 +146,7 @@
 							</dd>
 							<dt>
 								<span class="subheading text-small text-uppercase"
+									data-auto-id="serialIP"
 									[innerText]="'_IPAddress_' | i18n"></span>
 							</dt>
 							<dd>
@@ -152,6 +155,7 @@
 							</dd>
 							<dt>
 								<span class="subheading text-small text-uppercase"
+									data-auto-id="serialHost"
 									[innerText]="'_HostName_' | i18n"></span>
 							</dt>
 							<dd>
@@ -165,8 +169,8 @@
 		</div>
 	</div>
 	<div class="qtr-margin-top">
-		<button class="btn btn--small btn--secondary text-uppercase" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
-		<button class="btn btn--small btn--secondary text-uppercase" [innerText]="'_OpenACase_' | i18n"></button>
+		<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="viewDeviceButton" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
+		<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="openCaseButton" [innerText]="'_OpenACase_' | i18n"></button>
 	</div>
 </div>
 
