@@ -31,12 +31,15 @@ describe('Serial Spec', () => {
 				cy.getByAutoId('serialFieldNotice').should('exist').should('contain', i18n._RelatedFieldNotices_);
 				cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
 				cy.getByAutoId('serialBugs').should('exist').should('contain', i18n._RelatedBugs_);
+<<<<<<< HEAD
 				cy.getByAutoId('serialProdID').should('exist').should('contain', i18n._ProductID_);
 				cy.getByAutoId('serialProdSeries').should('exist').should('contain', i18n._ProductSeries_);
 				cy.getByAutoId('serialIP').should('exist').should('contain', i18n._IPAddress_);
 				cy.getByAutoId('serialHost').should('exist').should('contain', i18n._HostName_);
 				cy.getByAutoId('viewDeviceButton').should('exist').should('contain', i18n._ViewDeviceDetails_);
 				cy.getByAutoId('openCaseButton').should('exist').should('contain', i18n._OpenACase_);
+=======
+>>>>>>> develop
 			});
 
 			// General Search section

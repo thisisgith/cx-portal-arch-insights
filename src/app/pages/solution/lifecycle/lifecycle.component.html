@@ -177,7 +177,7 @@
 			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 			<span [innerText]="item.duration"></span>
 		</div>
-		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACC'">
+		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACC' || autoid==='moreACCList'">
 			<button data-auto-id="Request1on1ACCButton" (click)="selectAccRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
@@ -279,12 +279,12 @@
 
 <ng-template #accPanel let-data="data">
 	<div class="base-margin-bottom text-dkgray-4" [innerText]="'_1on1Coaching_' | i18n"></div>
-	<ng-container *ngIf="data.recommended">
+	<ng-container *ngIf="data.sessions[0]">
 		<ng-container *ngTemplateOutlet="recommended; context: {
 				template: recommendedACC,
-				title: data.recommended.title,
-				description: data.recommended.description,
-				item: data.recommended,
+				title: data.sessions[0].title,
+				description: data.sessions[0].description,
+				item: data.sessions[0],
 				src: 'assets/img/solutions/acc.png',
 				autoid: 'recommendedACC'
 			}">
@@ -307,6 +307,9 @@
 					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'"></div>
 					<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite"></div>
 					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'in-progress'">
+						<div class="col-md-1 progressbar__fill"></div>
+					</div>
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'requested'">
 						<div class="col-md-1 progressbar__fill"></div>
 					</div>
 				</div>
@@ -505,8 +508,13 @@
 					data-auto-id="ACCTopicsAvailable">
 				</div>
 				<div class="col-md-2">
-					<cui-select id="acc-filter" data-auto-id="acc-filter"
-						[placeholder]="'_FilterBy_' | i18n">
+					<cui-select id="acc-filter" 
+						data-auto-id="acc-filter"
+						[placeholder]="'_FilterBy_' | i18n"
+						[items]="statusOptions"
+						[empty]="true"
+						[(ngModel)]="selectedStatus"
+						(ngModelChange)="selectFilter('acc')">
 					</cui-select>
 				</div>
 				<div class="col-md-1 text-right">
@@ -523,7 +531,7 @@
 
 			<div class="grid grid--4up base-padding-top">
 				<div class="card acc__card"
-					*ngFor="let item of data"
+					*ngFor="let item of selectedACC"
 					[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null"
 					data-auto-id="ACCCard">
 					<div class="text-left" [ngClass]="item.status === 'recommended' ? 'text-info' : 'text-clear'" data-auto-id="ACCCardHeader">
@@ -550,7 +558,7 @@
 									[innerText]="'_Request1on1_' | i18n">
 								</button>
 							</div>
-							<div class="text-left text-success" *ngIf="item.status === 'in-progress'">
+							<div class="text-left text-success" *ngIf="item.status === 'in-progress' || item.status === 'requested'">
 								<span [innerText]="'_CSETouch_' | i18n"></span>
 							</div>
 							<div class="text-left text-olive" *ngIf="item.status === 'completed'">
@@ -592,7 +600,7 @@
 						[empty]="true"
 						[placeholder]="'_AllCategories_' | i18n"
 						[(ngModel)]="selectedCategory"
-						(ngModelChange)="selectFilter()">
+						(ngModelChange)="selectFilter('productguide')">
 					</cui-select>
 				</div>
 				<div class="col-md-1 text-right">

@@ -95,6 +95,8 @@ class ContractsService extends __BaseService {
    *
    * - `page`: Page number
    *
+   * - `managedNeId`: The managed network id
+   *
    * - `inventoryName`: The name of inventory given by customers.
    *
    * - `fields`: Filter fields
@@ -116,6 +118,7 @@ class ContractsService extends __BaseService {
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     if (params.inventoryName != null) __params = __params.set('inventoryName', params.inventoryName.toString());
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     if (params.coverageExpiry != null) __params = __params.set('coverageExpiry', params.coverageExpiry.toString());
@@ -151,6 +154,8 @@ class ContractsService extends __BaseService {
    * - `rows`: No of rows in a page
    *
    * - `page`: Page number
+   *
+   * - `managedNeId`: The managed network id
    *
    * - `inventoryName`: The name of inventory given by customers.
    *
@@ -461,6 +466,11 @@ module ContractsService {
      * Page number
      */
     page?: number;
+
+    /**
+     * The managed network id
+     */
+    managedNeId?: Array<string>;
 
     /**
      * The name of inventory given by customers.

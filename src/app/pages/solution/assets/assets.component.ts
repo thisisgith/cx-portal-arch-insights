@@ -12,7 +12,7 @@ import {
 	InventoryService,
 	Asset,
 	Assets,
-	Pagination,
+	InventoryPagination as Pagination,
 	ContractCount,
 	ContractDeviceCountsResponse,
 	RoleCount,
@@ -24,7 +24,6 @@ import {
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SolutionService } from '../solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subscription, forkJoin, fromEvent, of, Subject } from 'rxjs';
@@ -36,6 +35,7 @@ import {
 	switchMap,
 } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 
 /**
  * Interface representing our visual filters
@@ -144,7 +144,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private productAlertsService: ProductAlertsService,
 		private route: ActivatedRoute,
 		private router: Router,
-		private solutionService: SolutionService,
+		private fromNow: FromNowPipe,
 	) { }
 
 	/**
@@ -261,14 +261,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: Item) {
-		item.selected = !item.selected;
 		this.inventory.forEach((i: Item) => {
 			if (i !== item) {
 				i.details = false;
 			}
 		});
 		item.details = !item.details;
-		this.selectedAsset = item.selected ? item.data : null;
+		item.selected = item.details;
+		this.selectedAsset = item.details ? item.data : null;
 	}
 
 	/**
@@ -648,7 +648,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			map((data: RoleCountResponse) => {
 				roleFilter.seriesData = _.map(data, (d: RoleCount) => ({
 					filter: d.role,
-					label: _.capitalize(d.role),
+					label: _.startCase(_.toLower(d.role)),
 					selected: false,
 					value: d.deviceCount,
 				}));
@@ -714,15 +714,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						name: I18n.get('_LastScan_'),
-						render: item => item.lastScan ? item.lastScan : I18n.get('_Never_'),
+						render: item => item.lastScan ?
+							this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
 						sortable: false,
+						width: '100px',
 					},
 					{
 						key: 'role',
 						name: I18n.get('_Role_'),
-						render: item => _.capitalize(item.role),
+						render: item => _.startCase(_.toLower(item.role)),
 						sortable: false,
 						value: 'role',
+						width: '100px',
 					},
 					{
 						click: true,
@@ -783,16 +786,51 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getHardwareEOXCounts () {
 		const eoxFilter = _.find(this.filters, { key: 'eox' });
 
-		return this.productAlertsService.getHardwareEolCounts(customerId)
+		return this.productAlertsService.getHardwareEolTopCount(customerId)
 		.pipe(
 			map((data: HardwareEOLCountResponse) => {
-				eoxFilter.seriesData = _.map(data, d => ({
-					filter: d.range,
-					label: `${d.range} ${I18n.get('_Days_')}`,
-					selected: false,
-					value: d.deviceCount,
-				}));
+				// eoxFilter.seriesData = _.map(data, d => ({
+				// 	filter: d.range,
+				// 	label: `${d.range} ${I18n.get('_Days_')}`,
+				// 	selected: false,
+				// 	value: d.deviceCount,
+				// }));
+				const series = [];
 
+				const sub30 = _.get(data, 'gt-0-lt-30-days', 0);
+
+				if (sub30 && sub30 > 0) {
+					series.push({
+						filter: 'gt-0-lt-30-days',
+						label: `< 30 ${I18n.get('_Days_')}`,
+						selected: false,
+						value: sub30,
+					});
+				}
+
+				const sub60 = _.get(data, 'gt-30-lt-60-days', 0);
+
+				if (sub60 && sub60 > 0) {
+					series.push({
+						filter: 'gt-30-lt-60-days',
+						label: `30 - 60 ${I18n.get('_Days_')}`,
+						selected: false,
+						value: sub60,
+					});
+				}
+
+				const sub90 = _.get(data, 'gt-60-lt-90-days', 0);
+
+				if (sub90 && sub90 > 0) {
+					series.push({
+						filter: 'gt-60-lt-90-days',
+						label: `61 - 90 ${I18n.get('_Days_')}`,
+						selected: false,
+						value: sub90,
+					});
+				}
+
+				eoxFilter.seriesData = series;
 				eoxFilter.loading = false;
 			}),
 			catchError(err => {
@@ -838,6 +876,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((results: Assets) => {
 					results.data.forEach((a: Asset) => {
+						if (a.role) {
+							a.role = a.role[0].toUpperCase() + a.role.slice(1);
+						}
 						this.inventory.push({
 							data: a,
 							details: false,
@@ -882,7 +923,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnDestroy () {
 		_.invoke(this.searchSubscribe, 'unsubscribe');
-		window.sessionStorage.setItem('view', this.view);
 	}
 
 	/**
@@ -892,6 +932,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
    	public selectView (view: 'list' | 'grid') {
 		if (this.view !== view) {
 			this.view = view;
+			window.sessionStorage.setItem('view', this.view);
 			const newRows = this.view === 'list' ? 10 : 12;
 			this.assetParams.page =
 				Math.round(this.assetParams.page * this.assetParams.rows / newRows);

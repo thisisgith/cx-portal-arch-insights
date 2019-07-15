@@ -11,7 +11,7 @@ const mockEolBulletinResponse: HardwareEOLBulletinResponse = {
 	/* tslint:disable */
 	"data": [
 			{
-					"hwEolInstanceId": null,
+					"hwEolInstanceId": 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
 					"bulletinNumber": null,
 					"bulletinProductId": null,
 					"bulletinTitle": null,
