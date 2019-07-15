@@ -25,7 +25,9 @@ import {
 } from '@cisco-ngx/cui-services';
 import { HeaderModule } from '@components';
 import { NoResultsModule } from './components/search/no-results/no-results.module';
-import { DetailsHardwareModule } from './pages/solution/assets/details/details-hardware/details-hardware.module';
+import {
+	DetailsHardwareModule,
+} from './pages/solution/assets/details/details-hardware/details-hardware.module';
 
 /**
  * Initialization function which will load our i18n files

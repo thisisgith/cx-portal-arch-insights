@@ -1,11 +1,18 @@
-import { Component, Input, OnInit, ViewChild, TemplateRef, SimpleChanges, OnChanges } from '@angular/core';
+import {
+	Component,
+	Input,
+	OnInit,
+	ViewChild,
+	TemplateRef,
+	SimpleChanges,
+	OnChanges,
+} from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 
 import { LogService } from '@cisco-ngx/cui-services';
-import { Asset, HardwareEOLBulletin, HardwareResponse } from '@sdp-api';
+import { Asset, HardwareEOLBulletin } from '@sdp-api';
 import { TimelineDatapoint } from '@interfaces';
-import { formatDate } from '@angular/common';
 
 /** Interface for displaying a property of the HardwareEOLBulletin object */
 interface EolTimelineProperty {
@@ -42,9 +49,12 @@ const eolTimelineProperties: EolTimelineProperty[] = [
 	{
 		label: '_LastDateOfSupport_',
 		propertyName: 'lastDateOfSupport',
-	}
+	},
 ];
 
+/**
+ * Hardware details component
+ */
 @Component({
 	selector: 'details-hardware',
 	styleUrls: ['./details-hardware.component.scss'],
@@ -53,10 +63,7 @@ const eolTimelineProperties: EolTimelineProperty[] = [
 export class DetailsHardwareComponent implements OnInit, OnChanges {
 
 	@Input('asset') public asset: Asset;
-	// @Input('eolBulletinData') public eolBulletinData: HardwareEOLBulletin;
 	public eolBulletinData: HardwareEOLBulletin;
-	// @ViewChild('modulesTable', { static: true }) public modulesTableTemplate:
-	// 	TemplateRef<{ }>;
 	@ViewChild('modulesTable', { static: true }) private modulesTableTemplate: TemplateRef<{ }>;
 
 	constructor (
@@ -115,18 +122,19 @@ export class DetailsHardwareComponent implements OnInit, OnChanges {
 
 	/** temporary  */
 	public timelineDataPoint: TimelineDatapoint = {
-		title: 'title',
-		subTitle: 'subtitle',
 		date: new Date(),
+		subTitle: 'subtitle',
+		title: 'title',
 	};
 
 	public timelineData: TimelineDatapoint[] = [
 		this.timelineDataPoint,
 	];
 
+	/**
+	 * Initializes the component
+	 */
 	public ngOnInit (): void {
-		console.log('implement me!');
-		// console.log(this.asset);
 		this.eolBulletinData = this.mockEolBulletin;
 		this.setTimelineData();
 	}
@@ -136,25 +144,18 @@ export class DetailsHardwareComponent implements OnInit, OnChanges {
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		// const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		// if (currentAsset && !changes.asset.firstChange) {
-		// 	this.refresh();
-		// }
-		if (changes.asset) {
-			console.log(this.asset);
-		}
 		if (changes.eolBulletinData) {
-			console.log(this.eolBulletinData);
 			this.setTimelineData();
 		}
 	}
 
+	/**
+	 * Sets the timeline data
+	 */
 	private setTimelineData () {
 		this.timelineData = [];
 		if (eolTimelineProperties) {
 			eolTimelineProperties.forEach(property => {
-				console.log(property);
-
 				const propertyName = _.get(property, 'propertyName', '');
 				const label = _.get(property, 'label', '');
 				const value: string = _.get(this.eolBulletinData, property.propertyName, '');
@@ -168,11 +169,5 @@ export class DetailsHardwareComponent implements OnInit, OnChanges {
 				}
 			});
 		}
-		// for (const propertyName in eolTimelinePropertyNames) {
-		// 	const value = _.get(this.eolBulletinData, propertyName, '');
-		// 	if (value) {
-		// 		console.log('hi');
-		// 	}
-		// }
 	}
 }
