@@ -9,8 +9,8 @@
 <div *ngIf="!loading && data">
 	<h3 data-auto-id="serialHeader" [innerText]="'_SerialNumberHeader_' | i18n:serialNumber.query"></h3>
 	<div class="row">
-		<div class="row no-gutters col-md-6 base-margin-top">
-			<div class="col-md-6 dbl-margin-right">
+		<div class="row no-gutters col-md-7 base-margin-top">
+			<div class="col-md-5">
 				<dl class="dl--inline-medium">
 					<dt>
 						<span class="subheading text-small text-uppercase"
@@ -46,9 +46,9 @@
 							[innerText]="'_ExpirationDate_' | i18n"></span>
 					</dt>
 					<dd>
-						<span *ngIf="contractData?.expirationDate; else loadingContractTemplate" class="qtr-margin-right"
-							[innerText]="contractData.expirationDate | date:'dd-MMM-y'"></span>
-						<span *ngIf="expirationFromNow" [innerText]="'(' + expirationFromNow + ')'"></span>
+						<span *ngIf="contractData?.expirationDate; else loadingContractTemplate"
+							[innerText]="(contractData.expirationDate | date:'dd-MMM-y') +
+							' (' + (contractData.expirationDate | fromNow) + ')'"></span>
 					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
@@ -70,8 +70,18 @@
 					</dd>
 				</dl>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-1"></div>
+			<div class="col-md-5">
 				<dl class="dl--inline-medium">
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							[innerText]="'_LatestVersion_' | i18n"></span>
+					</dt>
+					<dd>
+						<!-- TODO: Add template for loadingSoftware once API is set up -->
+						<span *ngIf="data?.latestVersion else unavailable"
+							[innerText]="data.latestVersion"></span>
+					</dd>
 					<dt>
 						<span class="subheading text-small text-uppercase"
 							data-auto-id="serialOpenCases"
@@ -120,10 +130,11 @@
 				</dl>
 			</div>
 		</div>
-		<div class="col-md-6 flex-right">
-			<div class="flex-center-horizontal">
-				<div class="panel panel--loose panel--bordered">
-					<div class="qtr-margin-top qtr-margin-left qtr-margin-right">
+		<div class="row col-md-5">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<div class="panel panel--bordered">
+					<div class="half-margin-top half-margin-left half-margin-right">
 						<!-- TODO: Add product photo here -->
 						<dl class="dl--inline-medium">
 							<dt>
@@ -141,7 +152,7 @@
 									[innerText]="'_ProductSeries_' | i18n"></span>
 							</dt>
 							<dd>
-								<span *ngIf="data?.productSeries; else unavailable"
+								<span *ngIf="data?.productSeries; else loadingHardwareTemplate"
 									[innerText]="data.productSeries"></span>
 							</dd>
 							<dt>
@@ -159,7 +170,7 @@
 									[innerText]="'_HostName_' | i18n"></span>
 							</dt>
 							<dd>
-								<span *ngIf="data?.hostName; else unavailable"
+								<span *ngIf="data?.hostName; else loadingHardwareTemplate"
 									[innerText]="data.hostName"></span>
 							</dd>
 						</dl>
@@ -168,11 +179,24 @@
 			</div>
 		</div>
 	</div>
-	<div class="qtr-margin-top">
-		<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="viewDeviceButton" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
-		<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="openCaseButton" [innerText]="'_OpenACase_' | i18n"></button>
+	<div class="row qtr-margin-top">
+		<div class="col-md-7">
+				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="viewDeviceButton" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
+				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="openCaseButton" [innerText]="'_OpenACase_' | i18n"></button>
+		</div>
+		<div class="row col-md-5">
+			<div class="col-md-1"></div>
+			<div *ngIf="data?.lastScan" class="col-md-10">
+				<span class="icon-small icon-clock text-muted qtr-margin-right"></span>
+				<span class="text-muted" [innerText]="('_BasedOnLastScan_' | i18n:(data.lastScan | fromNow))"></span>
+			</div>
+		</div>
 	</div>
 </div>
+
+<ng-template #loadingHardwareTemplate>
+	<span *ngIf="loadingHardware; else unavailable" class="base-margin"></span>
+</ng-template>
 
 <ng-template #loadingContractTemplate>
 	<span *ngIf="loadingContract; else unavailable" class="base-margin"></span>

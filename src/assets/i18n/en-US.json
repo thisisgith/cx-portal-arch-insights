@@ -35,7 +35,7 @@
 	"_Automation_": "Automation",
 	"_AvailableLive_": "Available live or on-demand",
 	"_Back_": "Back",
-	"_BasedOnLastScanXDaysAgo_": "(Based on last scan {0} days ago)",
+	"_BasedOnLastScan_": "Based on last scan run {0}",
 	"_BeginInstallation_": "Begin Installation",
 	"_Bookmarked_": "Bookmarked",
 	"_BrowseForIE_": "Browse for IE_0.9.1_Build-195.ova and select it.",

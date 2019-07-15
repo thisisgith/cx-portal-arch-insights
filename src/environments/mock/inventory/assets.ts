@@ -23,7 +23,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+2960X-24PS-L+Switch",
@@ -38,7 +39,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1922S6JU,WS-C2960X-24PS-L,NA,FOC1922S6JU,WS-C2960X-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960X-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -53,7 +55,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1446W570,WS-C2960S-24PS-L,NA,FOC1446W570,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -68,7 +71,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1544Y175,WS-C2960S-24PS-L,NA,FOC1544Y175,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+2960-24PC-L+Switch",
@@ -83,7 +87,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1348W6JP,WS-C2960-24PC-L,NA,FOC1348W6JP,WS-C2960-24PC-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960-24PC-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "VWIC-2MFT-T1",
@@ -128,7 +133,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1544Y1AV,WS-C2960S-24PS-L,NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+ASR+1004+Router",
@@ -143,7 +149,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FXS1731Q3VJ,ASR1004,NA,FXS1731Q3VJ,ASR1004,NA,NA",
 			"containingHwId": null,
 			"productId": "ASR1004",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "ASR1000-SIP10",
@@ -173,7 +180,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOX1306GFKH,WS-C4506-E,NA,FOX1306GFKH,WS-C4506-E,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C4506-E",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+3750G-12S+Switch",
@@ -188,7 +196,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "CAT1042RG17,WS-C3750G-12S-E,NA,CAT1042RG17,WS-C3750G-12S-E,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C3750G-12S-E",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "ASR1000-ESP10",
@@ -218,7 +227,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FDO1503P0D7,WS-C3560X-24T-L,NA,FDO1503P0D7,WS-C3560X-24T-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C3560X-24T-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+4506-E+Switch",
@@ -233,7 +243,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOX1335GRHG,WS-C4506-E,NA,FOX1335GRHG,WS-C4506-E,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C4506-E",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "ASR1000-RP1",
@@ -278,7 +289,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1446Z640,WS-C2960S-24PS-L,NA,FOC1446Z640,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -293,7 +305,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1446W5E6,WS-C2960S-24PS-L,NA,FOC1446W5E6,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -308,7 +321,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1544Y13S,WS-C2960S-24PS-L,NA,FOC1544Y13S,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -323,7 +337,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1544Y16V,WS-C2960S-24PS-L,NA,FOC1544Y16V,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -338,7 +353,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1544Y17Q,WS-C2960S-24PS-L,NA,FOC1544Y17Q,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -353,7 +369,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1544Y16S,WS-C2960S-24PS-L,NA,FOC1544Y16S,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -368,7 +385,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1446Z641,WS-C2960S-24PS-L,NA,FOC1446Z641,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+2950+24+Switch",
@@ -383,7 +401,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FAB0550Q1GT,WS-C2950-24,NA,FAB0550Q1GT,WS-C2950-24,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2950-24",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+3850-48U-L+Switch",
@@ -398,7 +417,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC2045X0WJ,WS-C3850-48U-L,NA,FOC2045X0WJ,WS-C3850-48U-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C3850-48U-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+2960C-12PC-L+Switch",
@@ -413,7 +433,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1634Y28U,WS-C2960C-12PC-L,NA,FOC1634Y28U,WS-C2960C-12PC-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960C-12PC-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+3560G-24TS+Switch",
@@ -428,7 +449,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1138Y1YS,WS-C3560G-24TS-E,NA,FOC1138Y1YS,WS-C3560G-24TS-E,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C3560G-24TS-E",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "SSM-4GE",
@@ -488,7 +510,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1446Z63M,WS-C2960S-24PS-L,NA,FOC1446Z63M,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -503,7 +526,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1446W5E3,WS-C2960S-24PS-L,NA,FOC1446W5E3,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+2960-24TC+Switch",
@@ -518,7 +542,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FHK1045Y01E,WS-C2960-24TC-L,NA,FHK1045Y01E,WS-C2960-24TC-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960-24TC-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+3750X-24T-L+Switch",
@@ -533,7 +558,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FDO1734H1MQ,WS-C3750X-24T-L,NA,FDO1734H1MQ,WS-C3750X-24T-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C3750X-24T-L",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Catalyst+2960S-48TS-S+Switch",
@@ -548,7 +574,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "FOC1448Z4U9,WS-C2960S-48TS-S,NA,FOC1448Z4U9,WS-C2960S-48TS-S,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-48TS-S",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "Cisco+Catalyst+3750G-24T+Switch",
@@ -563,7 +590,8 @@ export const mockResponse: Asset[] = [
 			"hwInstanceId": "CAT1107NHD6,WS-C3750G-24T-S,NA,CAT1107NHD6,WS-C3750G-24T-S,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C3750G-24T-S",
-			"equipmentType": "CHASSIS"
+			"equipmentType": "CHASSIS",
+ 			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "WS-X4516",
