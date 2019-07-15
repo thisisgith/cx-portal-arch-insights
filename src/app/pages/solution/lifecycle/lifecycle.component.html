@@ -182,10 +182,10 @@
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
 		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="autoid==='moreACCList' && (item.status==='requested' || item.status==='in-progress')">
+		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="autoid==='moreACCList' && (item.status==='requested' || item.status==='in-progress')" attr.data-auto-id="{{ autoid }}-HoverModal-CSEMessage">
 			<span [innerText]="'_CSETouch_' | i18n"></span>
 		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="autoid==='moreACCList' && item.status==='completed'">
+		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="autoid==='moreACCList' && item.status==='completed'"  attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
 			<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
 			<span [innerText]="'_Completed_' | i18n"></span>
 		</div>
