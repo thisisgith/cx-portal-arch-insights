@@ -111,8 +111,8 @@
 					<cui-gauge
 						[percentage]="gauge.percentage"
 						[value]="gauge.percentage + '%'"
+						[color]="gauge.percentage | guageColor"
 						size="small"
-						color="success"
 					></cui-gauge>
 					<div class="base-margin-left base-margin-bottom">
 						<div class="text-bold" [innerText]="gauge.label | uppercase"></div>
