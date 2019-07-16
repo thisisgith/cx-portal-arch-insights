@@ -7,7 +7,7 @@ import {
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
  * Module representing the Serial Number Search Component
@@ -20,6 +20,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
+		FromNowPipeModule,
 	],
 })
 export class SerialSearchModule { }
