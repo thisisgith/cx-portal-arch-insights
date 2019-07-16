@@ -88,6 +88,7 @@ export class SettingsComponent  implements OnInit {
 
 	public accepted = false;
 	public error = false;
+	public errorMessage = '';
 	public loading = false;
 
 	constructor (
@@ -106,8 +107,9 @@ export class SettingsComponent  implements OnInit {
 	public getIEHealthStatusData (customerId: string) {
 		return this.controlPointIEHealthStatusAPIService.getIEHealthStatusUsingGET(customerId)
 			.pipe(
-				catchError(() => {
+				catchError(err => {
 					this.error = true;
+					this.errorMessage = err.message;
 
 					return empty();
 				}),
@@ -188,6 +190,16 @@ export class SettingsComponent  implements OnInit {
 	public ngOnInit () {
 		this.loading = true;
 		this.userService.getUser()
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			)
 			.pipe(
 				mergeMap(userResponse =>
 					this.getIEHealthStatusData(String(_.get(userResponse, 'data.customerId')))),
