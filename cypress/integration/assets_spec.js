@@ -1,8 +1,7 @@
-import { RouteWatch, Util } from '@apollo/cypress-util';
+import { RouteWatch } from '@apollo/cypress-util';
 import { startCase, toLower } from 'lodash-es';
 import MockService from '../support/mockService';
 
-const util = new Util();
 const assetMock = new MockService('AssetScenarios');
 const coverageMock = new MockService('CoverageScenarios');
 const networkScenario = assetMock.getScenario('GET', 'Assets Page 1');
@@ -14,6 +13,9 @@ const coverageElements = totalCountScenario.response.body;
 const vulnMock = new MockService('VulnerabilityScenarios');
 const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
 const advisoryCounts = advisoryScenario.response.body;
+const caseMock = new MockService('CaseScenarios');
+const caseScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
+const caseResponse = caseScenario.response.body;
 
 describe('Assets', () => { // PBC-41
 	before(() => {
@@ -23,47 +25,74 @@ describe('Assets', () => { // PBC-41
 		cy.waitForAppLoading();
 	});
 
-	// TODO: rewrite these tests around the new 360 view
-	context.skip('PBC-151: Asset 360 view', () => {
-		it('Provides an Asset 360 view modal', () => {
-			const { halfWidthInPx, widthInPx } = util.getViewportSize();
-			cy.get('tr').eq(1).click();
-			cy.get('asset-details')
-				.should('be.visible')
-				.and('have.css', 'width', halfWidthInPx); // default to half width
-			cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[0].serialNumber}`);
+	context('PBC-151: Asset 360 view', () => {
+		it('Provides an Asset 360 view modal', () => { // PBC-152
+			/* TODO: Full screen view has been removed until a future sprint
+			// const { halfWidthInPx, widthInPx } = util.getViewportSize();
 			cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
 			cy.get('asset-details').should('have.css', 'width', widthInPx); // expand to full width
 			cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
 			cy.get('asset-details').should('have.css', 'width', halfWidthInPx); // shrink to half width
-			cy.get('tr').eq(3).click(); // switch to new asset without closing modal
-			cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${assets[2].serialNumber}`);
-			cy.getByAutoId('CloseDetails').click();
-		});
+			*/
+			const validate360 = asset => {
+				// Placeholder icon until PBC-335 is resolved
+				cy.get('.icon-wifi').should('be.visible');
+				cy.get('[apppanel360title]').should('have.text', asset.deviceName);
+				cy.getByAutoId('Asset360IPAddress')
+					.should('have.text', `IP Address${asset.ipAddress}`);
+				cy.getByAutoId('Asset360SerialNumber')
+					.should('have.text', `Serial Number${asset.serialNumber}`);
+				if (asset.lastScan) {
+					// TODO: This needs to be adjusted after PBC-336 is fixed
+					cy.getByAutoId('Asset360LastScan')
+						.should('have.text', `Last Scan${asset.lastScan}`);
+				} else {
+					cy.getByAutoId('Asset360LastScan').should('have.text', 'Last ScanNever');
+				}
+				// TODO: Disabled for PBC-338
+				// const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
+				const haveVisibility = 'be.visible';
+				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility);
+				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
+			};
 
-		it('Provides an Activity timeline in the 360 view modal', () => { // PBC-158
-			cy.get('tr').eq(1).click();
-			cy.getByAutoId('ActivityTab').click();
+			cy.get('tbody tr').eq(0).click();
+			validate360(assets[0]);
+			// TODO: More tests for view open cases dropdown when it's implemented
+			cy.getByAutoId('ToggleActiveCases').should('be.visible')
+				.and('have.text', `View Open Cases (${caseResponse.totalElements})`);
+			cy.get('tbody tr').eq(3).click(); // switch to new asset without closing modal
+			validate360(assets[3]);
+			// TODO: Disabled for PBC-338
+			// cy.getByAutoId('ToggleActiveCases').should('not.be.visible');
+			cy.get('tbody tr').eq(3).click(); // PBC-164, close the 360 view
+			cy.get('tbody tr').eq(2).click();
+			validate360(assets[2]);
 
-			// TODO: This is all placeholder data to be replaced when the API is ready
-			cy.get('div.timeline__time').eq(0).should('have.text', 'a few seconds ago');
-			cy.get('div.timeline__content').eq(0)
-				.should('contain', 'Title')
-				.and('contain', 'Lorem ipsum');
 			cy.getByAutoId('CloseDetails').click();
 		});
 
 		it('Opens Asset 360 view when clicking asset cards', () => {
+			assetMock.enable('(Assets) Missing data - Grid View');
 			cy.getByAutoId('grid-view-btn').click();
 
 			const serial = assetCards[0].serialNumber;
 			cy.getByAutoId(`Device-${serial}`).click();
-			cy.get('asset-details').should('be.visible');
-			cy.getByAutoId('Asset360SerialNumber')
-				.should('have.text', `Serial Number${serial}`);
+			cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${serial}`);
+			cy.getByAutoId('Asset360IPAddress').should('have.text', 'IP AddressN/A');
 			cy.getByAutoId('CloseDetails').click();
 
+			assetMock.disable('Assets Page 1 - Grid View');
 			cy.getByAutoId('list-view-btn').click();
+		});
+
+		it('Closes 360 view when leaving the assets page', () => { // PBC-165
+			cy.get('tbody tr').eq(0).click();
+			cy.get('app-panel360').should('be.visible');
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.get('app-panel360').should('not.exist');
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.get('app-panel360').should('not.exist');
 		});
 	});
 
