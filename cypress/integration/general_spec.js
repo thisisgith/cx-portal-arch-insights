@@ -112,8 +112,10 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaNumber').should('have.length', 3);
 				cy.getByAutoId('viewCaseDetailsB').should('exist')
 					.should('contain', i18n._ViewCaseDetails_);
+				// .should('have.attr', 'href', '/urlDetail'); // TODO currently not linked to anything
 				cy.getByAutoId('viewAllOpenCasesB').should('exist')
 					.should('contain', i18n._ViewAllOpenCases_);
+				// .should('have.attr', 'href', '/urlDetail'); // TODO currently not linked to anything
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
 				cy.getByAutoId('cui-select').should('have.length', 2);
@@ -214,7 +216,7 @@ describe('General Spec', () => {
 			});
 		});
 
-		it('RMA 800000000 no replacement parts', () => {
+		it.only('RMA 800000000 no replacement parts', () => {
 			// RMA with no replacement part PBC-171
 			// mock set at "RMA with no replacement parts"
 			cy.window().then(win => {
@@ -233,12 +235,16 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaNumber').should('exist');
 				cy.getByAutoId('caseNumber').should('exist');
 				cy.getByAutoId('rmaTrackingNumber').should('exist');
+				cy.getByAutoId('rmaCourierLink').children()
+					.should('have.attr', 'href')
+					.and('have.attr', 'target', '_blank');
 				cy.getByAutoId('contractNumber').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
 				cy.getByAutoId('rmaUnavail').should('have.length', 2);
 				cy.getByAutoId('rmaProdID').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
+				// .should('have.attr', 'href', '/urlDetail'); // TODO currently not linked to anything
 				// General Search section
 				cy.getByAutoId('searchHeader').should('exist');
 				cy.getByAutoId('filterBy').should('exist');
