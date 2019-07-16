@@ -154,7 +154,7 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it.only('RMA 800000000 one replacement parts', () => {
+		it('RMA 800000000 one replacement parts', () => {
 			// RMA with 1 replacement part PBC-171
 			// mock set at "RMA with one replacement part"
 			const rmaVal = '800000000';
