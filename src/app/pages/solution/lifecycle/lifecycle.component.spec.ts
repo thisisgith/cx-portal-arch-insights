@@ -344,7 +344,7 @@ describe('LifecycleComponent', () => {
 			component.selectFilter('acc');
 			fixture.detectChanges();
 			expect(component.selectedACC.length)
-				.toEqual(1);
+				.toEqual(2);
 
 			component.setFavorite(acc3);
 			fixture.detectChanges();
