@@ -2,14 +2,14 @@
 export interface Asset {
 
   /**
+   * OS Version
+   */
+  osVersion?: string;
+
+  /**
    * Device name
    */
   deviceName?: string;
-
-  /**
-   * IP Address
-   */
-  ipAddress?: string;
 
   /**
    * When the serial number was last scanned
@@ -33,9 +33,9 @@ export interface Asset {
   osType?: string;
 
   /**
-   * OS Version
+   * IP Address
    */
-  osVersion?: string;
+  ipAddress?: string;
 
   /**
    * Role

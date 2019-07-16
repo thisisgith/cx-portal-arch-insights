@@ -476,5 +476,21 @@ export const CaseScenarios = [
 		},
 		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=4&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=688296392`,
 	},
-
+	// Open cases for an asset (used by asset 360)
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Cases for SN FOC1544Y16T',
+					response: {
+						body: caseListResponse1,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
+	},
 ];
