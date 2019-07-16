@@ -94,6 +94,94 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.get('app-panel360').should('not.exist');
 		});
+
+		it('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
+			const getPaginationText = (pagination, type) => {
+				let pageText = pagination.total < pagination.rows
+					? `Showing ${pagination.total} of `
+					: `Showing ${pagination.rows} of `;
+				pageText += `${pagination.total} ${type}`;
+
+				return pageText;
+			};
+			const getImpactIcon = severity => {
+				switch (severity) {
+					case 'Critical':
+						return 'label--danger';
+					case 'High':
+						return 'label--warning';
+					case 'Medium':
+						return 'label--warning-alt';
+					case 'Low':
+					default:
+						return 'label--success';
+				}
+			};
+
+			cy.server();
+			cy.route('**/product-alerts/v1/security-advisory-bulletins?*').as('security');
+			cy.route('**/product-alerts/v1/field-notice-bulletins?*').as('fieldNotice');
+			cy.get('tbody tr').eq(0).click();
+			cy.wait('@security').then(xhr => {
+				if (xhr.response.body.data.length) {
+					const pageText = getPaginationText(
+						xhr.response.body.Pagination, 'Security Advisories'
+					);
+					cy.getByAutoId('ADVISORIESTab').click();
+					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+					Cypress._.each(xhr.response.body.data, (advisory, index) => {
+						cy.get('details-advisories tbody tr').eq(index).within(() => {
+							cy.getByAutoId('ImpactIcon')
+								.should('have.class', getImpactIcon(advisory.severity));
+							cy.getByAutoId('ImpactText').should('have.text', advisory.severity);
+							cy.getByAutoId('AdvisoryTitle')
+								.should('have.text', advisory.bulletinTitle);
+							cy.getByAutoId('AdvisoryLastUpdated')
+								.should('have.text',
+									Cypress.moment(advisory.bulletinFirstPublished)
+										.format('YYYY MMM DD'));
+						});
+					});
+					if (xhr.response.body.Pagination.total > xhr.response.body.data.length) {
+						cy.getByAutoId('LoadMoreButton').click();
+						cy.get('details-advisories tbody tr').should('have.length.greaterThan', 10);
+					} else {
+						cy.getByAutoId('LoadMoreButton').should('not.be.visible');
+					}
+				}
+			});
+			cy.wait('@fieldNotice').then(xhr => {
+				if (xhr.response.body.data.length) {
+					const pageText = getPaginationText(
+						xhr.response.body.Pagination, 'Field Notices'
+					);
+					cy.getByAutoId('AdvisoryTab-field').click();
+					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+					Cypress._.each(xhr.response.body.data, (advisory, index) => {
+						cy.get('details-advisories tbody tr').eq(index).within(() => {
+							cy.getByAutoId('FieldNoticeId')
+								.should('have.text', `FN ${advisory.fieldNoticeId}`)
+								.and('have.attr', 'href', advisory.URL)
+								.and('have.attr', 'target', '_blank');
+							const title = Cypress._.trim(
+								Cypress._.replace(advisory.bulletinTitle, /FN[0-9]{1,5}[ \t]+-/, '')
+							);
+							cy.getByAutoId('AdvisoryTitle').should('have.text', title);
+							cy.getByAutoId('AdvisoryLastUpdated')
+								.should('have.text',
+									Cypress.moment(advisory.bulletinLastUpdated)
+										.format('YYYY MMM DD'));
+						});
+					});
+					if (xhr.response.body.Pagination.total > xhr.response.body.data.length) {
+						cy.getByAutoId('LoadMoreButton').click();
+						cy.get('details-advisories tbody tr').should('have.length.greaterThan', 10);
+					} else {
+						cy.getByAutoId('LoadMoreButton').should('not.be.visible');
+					}
+				}
+			});
+		});
 	});
 
 	context('PBC-178: Assets & Coverage Gauge', () => {
@@ -169,7 +257,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId(`Software Type-${serial}`).should('have.text', asset.osType);
 					cy.getByAutoId(`Software Version-${serial}`)
 						.should('have.text', asset.osVersion);
-					if (asset.role) {
+					if (asset.role) { // PBC-297
 						cy.getByAutoId(`Role-${serial}`).should('have.text', startCase(toLower(asset.role)));
 					}
 				});

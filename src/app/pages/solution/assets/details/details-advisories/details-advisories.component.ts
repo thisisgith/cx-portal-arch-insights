@@ -313,12 +313,14 @@ export class DetailsAdvisoriesComponent implements OnInit {
 							width: '100px',
 						},
 						{
+							autoId: 'AdvisoryTitle',
 							key: 'bulletinTitle',
 							name: I18n.get('_Title_'),
 							sortable: false,
 							value: 'bulletinTitle',
 						},
 						{
+							autoId: 'AdvisoryLastUpdated',
 							name: I18n.get('_LastUpdated_'),
 							render: item => item.bulletinFirstPublished ?
 								datePipe.transform(
@@ -364,12 +366,14 @@ export class DetailsAdvisoriesComponent implements OnInit {
 							width: '100px',
 						},
 						{
+							autoId: 'AdvisoryTitle',
 							key: 'bulletinTitle',
 							name: I18n.get('_Title_'),
 							sortable: false,
 							value: 'bulletinTitle',
 						},
 						{
+							autoId: 'AdvisoryLastUpdated',
 							name: I18n.get('_LastUpdated_'),
 							render: item => item.bulletinLastUpdated ?
 								datePipe.transform(

@@ -14,7 +14,8 @@
 </div>
 <div class="base-margin-top" *ngIf="visibleTab">
 	<span *ngIf="selectedTab?.data?.pagination"
-		[innerText]="'_ShowingXofYZ_' | i18n:selectedTab?.data?.bulletin?.length:selectedTab?.data?.pagination?.total:selectedTab?.title">
+		[innerText]="'_ShowingXofYZ_' | i18n:selectedTab?.data?.bulletin?.length:selectedTab?.data?.pagination?.total:selectedTab?.title"
+		data-auto-id="AdvisoryTab-ShowingTxt">
 	</span>
 	<ng-container *ngTemplateOutlet="visibleTab"></ng-container>
 </div>
@@ -73,20 +74,22 @@
 				'High': 'label--warning',
 				'Medium': 'label--warning-alt',
 				'Low': 'label--success'
-		}[celldata.severity]">
+		}[celldata.severity]"
+		data-auto-id="ImpactIcon">
 	</span>
 	<ng-container [ngSwitch]="celldata.severity">
-		<span *ngSwitchCase="'Critical'" [innerText]="'_Critical_' | i18n"></span>
-		<span *ngSwitchCase="'High'" [innerText]="'_High_' | i18n"></span>
-		<span *ngSwitchCase="'Medium'" [innerText]="'_Medium_' | i18n"></span>
-		<span *ngSwitchCase="'Low'" [innerText]="'_Low_' | i18n"></span>
-		<span *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'Critical'" [innerText]="'_Critical_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'High'" [innerText]="'_High_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'Medium'" [innerText]="'_Medium_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchCase="'Low'" [innerText]="'_Low_' | i18n"></span>
+		<span data-auto-id="ImpactText" *ngSwitchDefault [innerText]="'_Unknown_' | i18n"></span>
 	</ng-container>
 </ng-template>
 
 <ng-template #fieldNoticeID let-celldata="celldata">
 	<a innerText="FN {{ celldata.fieldNoticeId }}"
 		target="_blank"
-		[href]="celldata.URL">
+		[href]="celldata.URL"
+		data-auto-id="FieldNoticeId">
 	</a>
 </ng-template>
