@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SecurityComponent } from './security.component';
 
 /**
- * Child routes for Assets Module for lazy loading
+ * Child routes for Security Module for lazy loading
  */
 const childRoutes: Routes = [
 	{
