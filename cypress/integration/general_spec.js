@@ -154,7 +154,7 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('RMA 800000000 one replacement parts', () => {
+		it.only('RMA 800000000 one replacement parts', () => {
 			// RMA with 1 replacement part PBC-171
 			// mock set at "RMA with one replacement part"
 			const rmaVal = '800000000';
@@ -169,6 +169,10 @@ describe('General Spec', () => {
 				cy.getByAutoId('caseNumber').should('exist');
 				cy.getByAutoId('rmaTrackingNumber').should('exist')
 					.should('contain', i18n._CarrierTrackingNumber_);
+				cy.getByAutoId('rmaCourierLink').children()
+					.should('have.attr', 'href'); // PBC-243
+				cy.getByAutoId('rmaCourierLink').children()
+					.should('have.attr', 'target', '_blank'); // PBC-243
 				cy.getByAutoId('contractNumber').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
@@ -216,7 +220,7 @@ describe('General Spec', () => {
 			});
 		});
 
-		it.only('RMA 800000000 no replacement parts', () => {
+		it('RMA 800000000 no replacement parts', () => {
 			// RMA with no replacement part PBC-171
 			// mock set at "RMA with no replacement parts"
 			cy.window().then(win => {
@@ -236,8 +240,9 @@ describe('General Spec', () => {
 				cy.getByAutoId('caseNumber').should('exist');
 				cy.getByAutoId('rmaTrackingNumber').should('exist');
 				cy.getByAutoId('rmaCourierLink').children()
-					.should('have.attr', 'href')
-					.and('have.attr', 'target', '_blank');
+					.should('have.attr', 'href'); // PBC-243
+				cy.getByAutoId('rmaCourierLink').children()
+					.should('have.attr', 'target', '_blank'); // PBC-243
 				cy.getByAutoId('contractNumber').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
