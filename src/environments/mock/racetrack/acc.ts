@@ -40,7 +40,7 @@ function MockACC (
 			description: 'Gain actionable insights into Cisco DNA Center use case ' +
 				'deployments and assists. Understand how to design, adopt, and leverage to ' +
 				'save time and resources within your network',
-			isFavorite: false,
+			isFavorite: true,
 			status: 'in-progress',
 			title: 'Cisco DNA Pilot Usecase Deployment',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
