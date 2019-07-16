@@ -278,6 +278,59 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 	});
 
+	describe('More list status indicators (PBC-96, PBC-99, PBC-300)', () => {
+		afterEach(() => {
+			// Ensure we are reset to the default mock data
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+		});
+
+		it('PBC-96: (UI) View - Solution Race Track - View Completed ACC', () => {
+			// Switch to data that will show us target status in the More list
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoCompleted');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+
+			// Check the completed item has the check mark in the "More" ACC list
+			cy.getByAutoId('moreACCList-item').within(() => {
+				cy.getByAutoId('moreACCList-Checkmark').should('be.visible');
+			});
+		});
+
+		it('PBC-99: (UI) View - Solution Racetrack - View Scheduled ACCs', () => {
+			// Switch to data that will show us target status in the More list
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoInprogress');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+
+			// Check the in-progress item has the progress bar in the "More" ACC list
+			cy.getByAutoId('moreACCList-item').within(() => {
+				cy.getByAutoId('moreACCList-ProgressBar').should('be.visible');
+			});
+		});
+
+		it('PBC-300: (UI View) Solution Racetrack - View Registered ACCs', () => {
+			// Switch to data that will show us target status in the More list
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRegistered');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+
+			// Check the registered item has the progress bar in the "More" ACC list
+			cy.getByAutoId('moreACCList-item').within(() => {
+				cy.getByAutoId('moreACCList-RequestedBar').should('be.visible');
+			});
+		});
+	});
+
 	describe('PBC-166: Mouse hover to show recommended ACC/ATX description', () => {
 		// NOTE: Cypress can not trigger elements with :hover css property, so we'll just check
 		// that the hover modal and it's elements exist in the DOM. See below for reference:

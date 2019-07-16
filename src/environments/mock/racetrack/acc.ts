@@ -144,7 +144,7 @@ export const ACCScenarios = [
 						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneRecommended'),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
@@ -153,7 +153,34 @@ export const ACCScenarios = [
 						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneNonRecommended'),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoCompleted',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoCompleted'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoInProgress',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoInProgress'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoRequested',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoRequested'),
+						status: 200,
+					},
+					selected: false,
 				},
 			],
 		},
