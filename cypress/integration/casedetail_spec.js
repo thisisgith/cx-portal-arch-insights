@@ -9,7 +9,7 @@ describe('Case Detail Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Case Details ', () => {
+		it.skip('Case Details ', () => {
 			// PBC-TBD
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click(); // refresh after making a mock change
 			cy.server();
