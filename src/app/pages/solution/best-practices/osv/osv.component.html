@@ -22,7 +22,7 @@
 			</div>
 		</div>
 	</app-panel360-header>
-	<asset-software-details></asset-software-details>
+	<asset-details></asset-details>
 </app-panel360>
 
 <div class="panel">
@@ -56,7 +56,7 @@
 		<app-profile-groups [(selectedProfileGroup)]="selectedProfileGroup"></app-profile-groups>
 	</div>
 	<div *ngIf="view == 'assets'">
-		<app-assets-software [(selectedAssetSoftware)]="selectedAssetSoftware"></app-assets-software>
+		<app-assets [(selectedAssetSoftware)]="selectedAssetSoftware"></app-assets>
 	</div>
 	<div *ngIf="view == 'softwareVersion'">
 		<app-software-versions></app-software-versions>
@@ -123,11 +123,11 @@
 </ng-template>
 
 <ng-template #deploymentStatusFilter let-filter="filter">
-	<assets-software-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
-	</assets-software-pie-chart>
+	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
+	</assets-pie-chart>
 </ng-template>
 
 <ng-template #riskLevelFilter let-filter="filter">
-	<assets-software-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
-	</assets-software-pie-chart>
+	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
+	</assets-pie-chart>
 </ng-template>

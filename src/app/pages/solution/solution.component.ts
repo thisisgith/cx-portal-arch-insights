@@ -51,7 +51,7 @@ const customerId = '2431199';
 })
 export class SolutionComponent implements OnInit, OnDestroy {
 
-	public shownTabs = 4;
+	public shownTabs = 5;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
@@ -161,12 +161,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			// 	template: this.securityTemplate,
 			// 	title: I18n.get('_Security_'),
 			// },
-			// {
-			// 	key: 'advisories',
-			// 	route: '/solution/advisories',
-			// 	template: this.advisoriesTemplate,
-			// 	title: I18n.get('_Advisories_'),
-			// },
+			{
+				key: 'advisories',
+				route: '/solution/advisories',
+				template: this.advisoriesTemplate,
+				title: I18n.get('_Advisories_'),
+			},
 			{
 				key: 'resolution',
 				route: '/solution/resolution',

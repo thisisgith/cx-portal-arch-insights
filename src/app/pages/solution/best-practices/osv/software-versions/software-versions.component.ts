@@ -66,6 +66,38 @@ export class SoftwareVersionsComponent {
 							releaseDate: '2015-10-10',
 							version: '10.1.171.1',
 						},
+						{
+							assetCount: 4,
+							goldenImage: 'Y',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							releaseDate: '2015-10-10',
+							version: '10.1.171.2',
+						},
+						{
+							assetCount: 6,
+							goldenImage: 'Y',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							releaseDate: '2015-10-10',
+							version: '10.1.171.3',
+						},
+						{
+							assetCount: 8,
+							goldenImage: 'Y',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							releaseDate: '2015-10-10',
+							version: '10.1.171.4',
+						},
+						{
+							assetCount: 10,
+							goldenImage: 'Y',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							releaseDate: '2015-10-10',
+							version: '10.1.171.5',
+						},
 					];
 					this.buildTable();
 				}),

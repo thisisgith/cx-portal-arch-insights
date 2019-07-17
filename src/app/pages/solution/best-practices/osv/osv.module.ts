@@ -4,12 +4,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { OptimalSoftwareVersionComponent } from './osv.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { Panel360Module } from '@components';
-import { AssetSoftwareDetailsModule } from './asset-software-detail/asset-software-detail.module';
+import { AssetDetailsModule } from './asset-detail/asset-detail.module';
 import { CuiTabsModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
-import { AssetsSoftwarePieChartModule } from './assets-pie-chart/assets-software-pie-chart.module';
+import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
 import { ProfileGroupsModule } from './profile-groups/profile-groups.module';
-import { AssetsSoftwareModule } from './assets-software/assets-software.module';
+import { AssetsModule } from './assets/assets.module';
 import { SoftwareVersionsModule } from './software-versions/software-versions.module';
 import { ProfileGroupDetailModule } from './profile-group-detail/profile-group-detail.module';
 
@@ -34,12 +34,12 @@ const childRoutes: Routes = [
 		I18nPipeModule,
 		Panel360Module,
 		CuiTabsModule,
-		AssetSoftwareDetailsModule,
+		AssetDetailsModule,
 		CuiSpinnerModule,
 		FormsModule,
-		AssetsSoftwarePieChartModule,
+		AssetsPieChartModule,
 		ProfileGroupsModule,
-		AssetsSoftwareModule,
+		AssetsModule,
 		SoftwareVersionsModule,
 		ProfileGroupDetailModule,
 

@@ -11,11 +11,11 @@ import * as _ from 'lodash-es';
  * AssetSoftware Component
  */
 @Component({
-	selector: 'app-assets-software',
-	styleUrls: ['./assets-software.component.scss'],
-	templateUrl: './assets-software.component.html',
+	selector: 'app-assets',
+	styleUrls: ['./assets.component.scss'],
+	templateUrl: './assets.component.html',
 })
-export class AssetsSoftwareComponent {
+export class AssetsComponent {
 	@Input() public selectedAssetSoftware;
 	@Output() public selectedAssetSoftwareChange = new EventEmitter<any>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
@@ -66,6 +66,38 @@ export class AssetsSoftwareComponent {
 							currentOSVersion: '3',
 							deploymentStatus: 'None',
 							hostName: 'Asset 1',
+							ipaddress: '10.1.171.1',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							productFamily: 'XYZ',
+						}, {
+							currentOSVersion: '3',
+							deploymentStatus: 'None',
+							hostName: 'Asset 2',
+							ipaddress: '10.1.171.1',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							productFamily: 'XYZ',
+						}, {
+							currentOSVersion: '3',
+							deploymentStatus: 'None',
+							hostName: 'Asset 3',
+							ipaddress: '10.1.171.1',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							productFamily: 'XYZ',
+						}, {
+							currentOSVersion: '3',
+							deploymentStatus: 'None',
+							hostName: 'Asset 4',
+							ipaddress: '10.1.171.1',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							productFamily: 'XYZ',
+						}, {
+							currentOSVersion: '3',
+							deploymentStatus: 'None',
+							hostName: 'Asset 5',
 							ipaddress: '10.1.171.1',
 							optimalVersion: '8.6.100.2',
 							osType: 'IOS-XE',

@@ -13,11 +13,11 @@ import * as _ from 'lodash-es';
  * Main component for the Assets Pie Chart
  */
 @Component({
-	selector: 'assets-software-pie-chart',
-	styleUrls: ['./assets-software-pie-chart.component.scss'],
-	templateUrl: './assets-software-pie-chart.component.html',
+	selector: 'assets-pie-chart',
+	styleUrls: ['./assets-pie-chart.component.scss'],
+	templateUrl: './assets-pie-chart.component.html',
 })
-export class AssetsSoftwarePieChartComponent implements OnInit {
+export class AssetsPieChartComponent implements OnInit {
 
 	@Input() public seriesData;
 	@Output() public subfilter = new EventEmitter<string>();

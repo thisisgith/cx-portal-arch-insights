@@ -11,11 +11,11 @@ import { LogService } from '@cisco-ngx/cui-services';
  * Asset Software Details Component
  */
 @Component({
-	selector: 'asset-software-details',
-	templateUrl: './asset-software-detail.component.html',
+	selector: 'asset-details',
+	templateUrl: './asset-detail.component.html',
 })
 
-export class AssetSoftwareDetailsComponent implements OnChanges, OnInit {
+export class AssetDetailsComponent implements OnChanges, OnInit {
 	public status = {
 		loading: {
 		},
