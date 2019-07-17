@@ -236,11 +236,32 @@ export class OptimalSoftwareVersionComponent {
 	private selectSubFilters (params: string[], key: string) {
 		const filter = _.find(this.filters, { key });
 		if (filter) {
-			_.each(filter.seriesData, d => {
+			_.each(filter.data, d => {
 				if (params.indexOf(d.filter) > -1) {
 					this.onSubfilterSelect(d.filter, filter, false);
 				}
 			});
+		}
+	}
+
+	/**
+	 * Returns the current selected visual filters
+	 * @returns the selected visual filters
+	 */
+	get selectedFilters () {
+		return _.filter(this.filters, 'selected');
+	}
+
+	/**
+	 * Returns the selected sub filters
+	 * @param key the key to match to the filter
+	 * @returns the array of filters
+	 */
+	public getSelectedSubFilters (key: string) {
+		const filter = _.find(this.filters, { key });
+
+		if (filter) {
+			return _.filter(filter.data, 'selected');
 		}
 	}
 
@@ -263,7 +284,7 @@ export class OptimalSoftwareVersionComponent {
 		} else {
 			const total = _.reduce(this.filters, (memo, f) => {
 				if (!memo) {
-					return _.some(f.seriesData, 'selected');
+					return _.some(f.data, 'selected');
 				}
 
 				return memo;
