@@ -7,7 +7,7 @@
 // will give error if commItems is not used below
 // const commItems = commOnboardScenario.response.body.items;
 
-describe('Communities (Communities)', () => { // Jira: PBC-tbd
+describe.skip('Communities (Communities)', () => { // Jira: PBC-tbd
 	before(() => {
 		cy.login();
 		cy.loadApp();
@@ -17,7 +17,7 @@ describe('Communities (Communities)', () => { // Jira: PBC-tbd
 		cy.waitForAppLoading('communitiesLoading', 15000);
 	});
 
-	it.skip('Renders Communities tile', () => {
+	it('Renders Communities tile', () => {
 		// TODO - currently failing possibly due to a loading speed/timing issue
 		cy.getByAutoId('PanelTitle-_Communities_').should('have.text', 'Cisco Community');
 		cy.getByAutoId('communitytitle-Lifecycle').should('have.text', 'Lifecycle');
