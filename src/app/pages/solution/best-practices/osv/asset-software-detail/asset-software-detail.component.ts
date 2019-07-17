@@ -30,7 +30,7 @@ export class AssetSoftwareDetailsComponent implements OnChanges, OnInit {
 	 * Resets data fields
 	 */
 	private clear () {
-		//todo clear
+		// todo clear
 	}
 
 	/**
@@ -55,6 +55,6 @@ export class AssetSoftwareDetailsComponent implements OnChanges, OnInit {
 	 * Refreshes the component
 	 */
 	public refresh () {
-		//todo
+		// todo
 	}
 }

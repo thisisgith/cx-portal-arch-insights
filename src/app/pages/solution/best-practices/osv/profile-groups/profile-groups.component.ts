@@ -5,8 +5,10 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as _ from 'lodash-es';
 
+/**
+ * ProfileGroups Component
+ */
 @Component({
 	selector: 'app-profile-groups',
 	styleUrls: ['./profile-groups.component.scss'],
@@ -14,8 +16,8 @@ import * as _ from 'lodash-es';
 })
 export class ProfileGroupsComponent {
 	@Input() public selectedProfileGroup;
-	@Output() selectedProfileGroupChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@Output() public selectedProfileGroupChange = new EventEmitter<any>();
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	public profileGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -50,90 +52,31 @@ export class ProfileGroupsComponent {
 			});
 	}
 
-
 	/**
 	 * Fetches the total counts for the visual filter
 	 * @returns the total counts observable
 	 */
 	private getProfileGroups () {
-		return of({}).pipe(
-			map(() => {
-				this.profileGroups = [
-					{
-						softwareProfile: 'Profile 1',
-						productFamily: 'XYZ',
-						assetCount: 2,
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						lastRecommendedDate: '2018-07-14',
-						deploymentStatus: 'None',
-						risk: '',
-						popularity: '',
-					}, {
-						softwareProfile: 'Profile 1',
-						productFamily: 'XYZ',
-						assetCount: 2,
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						lastRecommendedDate: '2018-07-14',
-						deploymentStatus: 'None',
-						risk: '',
-						popularity: '',
-					},
-					{
-						softwareProfile: 'Profile 1',
-						productFamily: 'XYZ',
-						assetCount: 2,
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						lastRecommendedDate: '2018-07-14',
-						deploymentStatus: 'None',
-						risk: '',
-						popularity: '',
-					},
-					{
-						softwareProfile: 'Profile 1',
-						productFamily: 'XYZ',
-						assetCount: 2,
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						lastRecommendedDate: '2018-07-14',
-						deploymentStatus: 'None',
-						risk: '',
-						popularity: '',
-					},
-					{
-						softwareProfile: 'Profile 1',
-						productFamily: 'XYZ',
-						assetCount: 2,
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						lastRecommendedDate: '2018-07-14',
-						deploymentStatus: 'None',
-						risk: '',
-						popularity: '',
-					},
-					{
-						softwareProfile: 'Profile 1',
-						productFamily: 'XYZ',
-						assetCount: 2,
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						lastRecommendedDate: '2018-07-14',
-						deploymentStatus: 'None',
-						risk: '',
-						popularity: '',
-					},
-				];
-				this.buildTable();
-			})
-		)
+		return of({ })
+			.pipe(
+				map(() => {
+					this.profileGroups = [
+						{
+							assetCount: 2,
+							currentOSVersion: '3',
+							deploymentStatus: 'None',
+							lastRecommendedDate: '2018-07-14',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							popularity: '',
+							productFamily: 'XYZ',
+							risk: '',
+							softwareProfile: 'Profile 1',
+						},
+					];
+					this.buildTable();
+				}),
+			);
 	}
 
 	/**
@@ -208,25 +151,25 @@ export class ProfileGroupsComponent {
 
 	/**
 	 * Returns the row specific actions
-	 * @param asset the asset we're building the actions for
+	 * @param profileGroup the progileGroup we're building the actions for
 	 * @returns the built actions
 	 */
 	public getRowActions (profileGroup: any) {
 		return [
 			{
+				profileGroup,
 				label: I18n.get('_OsvCompareRecommendations'),
-				profileGroup: profileGroup,
 			},
 			{
+				profileGroup,
 				label: I18n.get('_OsvRefreshRecommendations_'),
-				profileGroup: profileGroup,
 			},
 		];
 
 	}
 	/**
 	 * Return the action data whenever action is clicked
-	 * @param event 
+	 * @param event contains the profileGroup that is selected
 	 */
 	public onActionSelected (event: any) {
 		this.logger.debug(event);

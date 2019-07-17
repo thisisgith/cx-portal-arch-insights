@@ -4,6 +4,9 @@ import { ProfileGroupsComponent } from './profile-groups.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiTableModule, CuiDropdownModule } from '@cisco-ngx/cui-components';
 
+/**
+ * ProfileGroups Module
+ */
 @NgModule({
 	declarations: [ProfileGroupsComponent],
 	exports: [ProfileGroupsComponent],

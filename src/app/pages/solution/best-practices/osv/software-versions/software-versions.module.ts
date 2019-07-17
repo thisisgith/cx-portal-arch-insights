@@ -4,6 +4,9 @@ import { SoftwareVersionsComponent } from './software-versions.component';
 import { CuiTableModule } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
+/**
+ * SoftwareVersion Module
+ */
 @NgModule({
 	declarations: [SoftwareVersionsComponent],
 	exports: [SoftwareVersionsComponent],

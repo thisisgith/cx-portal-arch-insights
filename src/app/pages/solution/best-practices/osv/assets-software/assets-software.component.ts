@@ -7,6 +7,9 @@ import { forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
+/**
+ * AssetSoftware Component
+ */
 @Component({
 	selector: 'app-assets-software',
 	styleUrls: ['./assets-software.component.scss'],
@@ -14,8 +17,8 @@ import * as _ from 'lodash-es';
 })
 export class AssetsSoftwareComponent {
 	@Input() public selectedAssetSoftware;
-	@Output() selectedAssetSoftwareChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@Output() public selectedAssetSoftwareChange = new EventEmitter<any>();
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	public assetsSoftwareTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -50,76 +53,28 @@ export class AssetsSoftwareComponent {
 			});
 	}
 
-
 	/**
 	 * Fetches the total counts for the visual filter
 	 * @returns the total counts observable
 	 */
 	private getAssetSoftwares () {
-		return of({}).pipe(
-			map(() => {
-				this.assetSoftwares = [
-					{
-						hostName: 'Asset 1',
-						ipaddress: '10.1.171.1',
-						productFamily: 'XYZ',
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						deploymentStatus: 'None',
-					}, {
-						hostName: 'Asset 1',
-						ipaddress: '10.1.171.1',
-						productFamily: 'XYZ',
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						deploymentStatus: 'None',
-					}, {
-						hostName: 'Asset 1',
-						ipaddress: '10.1.171.1',
-						productFamily: 'XYZ',
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						deploymentStatus: 'None',
-					}, {
-						hostName: 'Asset 1',
-						ipaddress: '10.1.171.1',
-						productFamily: 'XYZ',
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						deploymentStatus: 'None',
-					}, {
-						hostName: 'Asset 1',
-						ipaddress: '10.1.171.1',
-						productFamily: 'XYZ',
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						deploymentStatus: 'None',
-					}, {
-						hostName: 'Asset 1',
-						ipaddress: '10.1.171.1',
-						productFamily: 'XYZ',
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						deploymentStatus: 'None',
-					}, {
-						hostName: 'Asset 1',
-						ipaddress: '10.1.171.1',
-						productFamily: 'XYZ',
-						osType: 'IOS-XE',
-						currentOSVersion: '3',
-						optimalVersion: '8.6.100.2',
-						deploymentStatus: 'None',
-					},
-				];
-				this.buildTable();
-			})
-		)
+		return of({ })
+			.pipe(
+				map(() => {
+					this.assetSoftwares = [
+						{
+							currentOSVersion: '3',
+							deploymentStatus: 'None',
+							hostName: 'Asset 1',
+							ipaddress: '10.1.171.1',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							productFamily: 'XYZ',
+						},
+					];
+					this.buildTable();
+				}),
+			);
 	}
 
 	/**
@@ -183,10 +138,9 @@ export class AssetsSoftwareComponent {
 
 	/**
 	 * Returns the row specific actions
-	 * @param asset the asset we're building the actions for
 	 * @returns the built actions
 	 */
-	public getRowActions (asset: any) {
+	public getRowActions () {
 		return _.filter([
 			{
 				label: I18n.get('_OsvCompareRecommendations'),
@@ -196,7 +150,6 @@ export class AssetsSoftwareComponent {
 			},
 		]);
 	}
-
 
 	/**
 	 * Function used to handle single row selection

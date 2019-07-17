@@ -91,9 +91,9 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div class="margin-auto" (click)="clearFilters()">
-		<div class="row toggle" (click)="selectView('profileGroups')"
-			[ngClass]="{'text-muted':view != 'profileGroups'}">
+	<div class="margin-auto" (click)="clearFilters()" data-auto-id="TotalVisualFilter">
+		<div class="row toggle" (click)="selectView('profileGroups')" [ngClass]="{'text-muted':view != 'profileGroups'}"
+			data-auto-id="TotalVisualFilterProfileGroups">
 			<div class="col-4 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].value"></span>
 			</div>
@@ -101,7 +101,8 @@
 				<span class="text-xlarge " [innerText]="filter.data[0].label"></span>
 			</div>
 		</div>
-		<div class="row toggle" (click)="selectView('assets')" [ngClass]="{'text-muted':view != 'assets'}">
+		<div class="row toggle" (click)="selectView('assets')" [ngClass]="{'text-muted':view != 'assets'}"
+			data-auto-id="TotalVisualFilterUngroupedAssets">
 			<div class="col-4 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.data[1].value"></span>
 			</div>
@@ -110,7 +111,7 @@
 			</div>
 		</div>
 		<div class="row toggle" (click)="selectView('softwareVersion')"
-			[ngClass]="{'text-muted':view != 'softwareVersion'}">
+			[ngClass]="{'text-muted':view != 'softwareVersion'}" data-auto-id="TotalVisualFilterSoftwareVersions">
 			<div class="col-4 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.data[2].value"></span>
 			</div>

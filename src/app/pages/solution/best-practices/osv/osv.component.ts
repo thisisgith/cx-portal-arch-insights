@@ -3,14 +3,14 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, of, Subject } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
-import { takeUntil, delay, map } from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 /**
  * Interface representing our visual filters
  */
 interface Filter {
 	key: string;
 	selected?: boolean;
-	template?: TemplateRef<{}>;
+	template?: TemplateRef<{ }>;
 	title?: string;
 	loading: boolean;
 	data: {
@@ -32,11 +32,11 @@ interface Filter {
 })
 export class OptimalSoftwareVersionComponent {
 	@ViewChild('riskLevelFilter', { static: true }) private riskLevelFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -69,7 +69,7 @@ export class OptimalSoftwareVersionComponent {
 				selected: true,
 				template: this.totalAssetsFilterTemplate,
 				data: [],
-				view: ['profileGroups', 'assets', 'softwareVersion']
+				view: ['profileGroups', 'assets', 'softwareVersion'],
 			},
 			{
 				key: 'deploymentStatus',
@@ -78,7 +78,7 @@ export class OptimalSoftwareVersionComponent {
 				template: this.deploymentStatusFilterTemplate,
 				data: [],
 				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
-				view: ['profileGroups', 'assets']
+				view: ['profileGroups', 'assets'],
 			},
 			{
 				key: 'riskLevel',
@@ -87,8 +87,8 @@ export class OptimalSoftwareVersionComponent {
 				template: this.deploymentStatusFilterTemplate,
 				data: [],
 				title: I18n.get('_OsvRiskLevel_'),
-				view: ['profileGroups']
-			}
+				view: ['profileGroups'],
+			},
 		];
 		this.loadData();
 	}
@@ -102,9 +102,10 @@ export class OptimalSoftwareVersionComponent {
 			this.getTotalAssetsCounts(),
 			this.getDeploymentStatusCounts(),
 			this.getRiskLevelStatusCounts(),
-		).pipe(
-			takeUntil(this.destroy$),
 		)
+			.pipe(
+				takeUntil(this.destroy$),
+			)
 			.subscribe(() => {
 				this.status.isLoading = false;
 				this.logger.debug('assets software.component: loadData()::Done Loading');
@@ -117,31 +118,32 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getTotalAssetsCounts () {
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
-		return of({}).pipe(
-			map(() => {
-				totalAssetsFilter.loading = false;
-				totalAssetsFilter.data = [
-					{
-						value: 50,
-						filter: 'profilegroups',
-						label: I18n.get('_OsvProfileGroups_'),
-						selected: false,
-					},
-					{
-						value: 100,
-						filter: 'assets',
-						label: I18n.get('_OsvUngroupedAssets_'),
-						selected: false,
-					},
-					{
-						value: 50,
-						filter: 'softwareversions',
-						label: I18n.get('_OsvSoftwareVersions_'),
-						selected: false,
-					}
-				]
-			})
-		)
+		return of({ })
+			.pipe(
+				map(() => {
+					totalAssetsFilter.loading = false;
+					totalAssetsFilter.data = [
+						{
+							filter: 'profilegroups',
+							label: I18n.get('_OsvProfileGroups_'),
+							selected: false,
+							value: 50,
+						},
+						{
+							filter: 'assets',
+							label: I18n.get('_OsvUngroupedAssets_'),
+							selected: false,
+							value: 100,
+						},
+						{
+							filter: 'softwareversions',
+							label: I18n.get('_OsvSoftwareVersions_'),
+							selected: false,
+							value: 50,
+						},
+					];
+				}),
+			);
 	}
 
 	/**
@@ -150,31 +152,32 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getDeploymentStatusCounts () {
 		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
-		return of({}).pipe(
-			map(() => {
-				deploymentStatusFilter.loading = false;
-				deploymentStatusFilter.data = [
-					{
-						value: 100,
-						filter: 'production',
-						label: _.capitalize(I18n.get('_OsvProduction_')),
-						selected: false,
-					},
-					{
-						value: 50,
-						filter: 'upgrade',
-						label: _.capitalize(I18n.get('_OsvUpgrade_')),
-						selected: false,
-					},
-					{
-						value: 20,
-						filter: 'none',
-						label: _.capitalize(I18n.get('_OsvNone_')),
-						selected: false,
-					}
-				]
-			})
-		)
+		return of({ })
+			.pipe(
+				map(() => {
+					deploymentStatusFilter.loading = false;
+					deploymentStatusFilter.data = [
+						{
+							filter: 'production',
+							label: _.capitalize(I18n.get('_OsvProduction_')),
+							selected: false,
+							value: 100,
+						},
+						{
+							filter: 'upgrade',
+							label: _.capitalize(I18n.get('_OsvUpgrade_')),
+							selected: false,
+							value: 50,
+						},
+						{
+							filter: 'none',
+							label: _.capitalize(I18n.get('_OsvNone_')),
+							selected: false,
+							value: 20,
+						},
+					];
+				}),
+			);
 	}
 
 	/**
@@ -183,31 +186,32 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getRiskLevelStatusCounts () {
 		const deploymentStatusFilter = _.find(this.filters, { key: 'riskLevel' });
-		return of({}).pipe(
-			map(() => {
-				deploymentStatusFilter.loading = false;
-				deploymentStatusFilter.data = [
-					{
-						value: 100,
-						filter: 'low',
-						label: _.capitalize(I18n.get('_OsvLow_')),
-						selected: false,
-					},
-					{
-						value: 50,
-						filter: 'medium',
-						label: _.capitalize(I18n.get('_OsvMedium_')),
-						selected: false,
-					},
-					{
-						value: 20,
-						filter: 'high',
-						label: _.capitalize(I18n.get('_OsvHigh_')),
-						selected: false,
-					}
-				]
-			})
-		)
+		return of({ })
+			.pipe(
+				map(() => {
+					deploymentStatusFilter.loading = false;
+					deploymentStatusFilter.data = [
+						{
+							filter: 'low',
+							label: _.capitalize(I18n.get('_OsvLow_')),
+							selected: false,
+							value: 100,
+						},
+						{
+							filter: 'medium',
+							label: _.capitalize(I18n.get('_OsvMedium_')),
+							selected: false,
+							value: 50,
+						},
+						{
+							filter: 'high',
+							label: _.capitalize(I18n.get('_OsvHigh_')),
+							selected: false,
+							value: 20,
+						},
+					];
+				}),
+			);
 	}
 
 	/**
@@ -249,6 +253,7 @@ export class OptimalSoftwareVersionComponent {
 	 * @returns the selected visual filters
 	 */
 	get selectedFilters () {
+
 		return _.filter(this.filters, 'selected');
 	}
 
@@ -259,8 +264,8 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	public getSelectedSubFilters (key: string) {
 		const filter = _.find(this.filters, { key });
-
 		if (filter) {
+
 			return _.filter(filter.data, 'selected');
 		}
 	}
@@ -292,6 +297,9 @@ export class OptimalSoftwareVersionComponent {
 
 			totalFilter.selected = !total;
 			this.filtered = total;
+			if (reload) {
+				// todo reload
+			}
 		}
 	}
 

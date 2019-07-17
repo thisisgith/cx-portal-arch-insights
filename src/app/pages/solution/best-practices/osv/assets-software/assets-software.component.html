@@ -19,11 +19,12 @@
 			</thead>
 			<tbody>
 				<tr *ngFor="let item of assetSoftwares" (click)="onRowSelect(item)"
-					[ngClass]="{ 'active': item.details }">
+					[ngClass]="{ 'active': item.details }" attr.data-auto-id="AssetSoftware-{{ item.hostName }}">
 					<td *ngFor="let column of assetsSoftwareTable.columns" [ngStyle]="{ 'width': column.width }"
-						(click)="column.click ? $event.stopPropagation() : null">
+						(click)="column.click ? $event.stopPropagation() : null"
+						attr.data-auto-id="AssetSoftwareItemClickHandler-{{ item.hostName }}">
 						<ng-container *ngIf="column.template">
-							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data }">
+							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }">
 							</ng-container>
 						</ng-container>
 						<ng-container *ngIf="!column.template">

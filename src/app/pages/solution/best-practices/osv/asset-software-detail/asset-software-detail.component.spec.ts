@@ -3,7 +3,6 @@ import { AssetSoftwareDetailsComponent } from './asset-software-detail.component
 import { AssetSoftwareDetailsModule } from './asset-software-detail.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-
 describe('AssetSoftwareDetailsComponent', () => {
 	let component: AssetSoftwareDetailsComponent;
 	let fixture: ComponentFixture<AssetSoftwareDetailsComponent>;

@@ -5,8 +5,10 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import * as _ from 'lodash-es';
 
+/**
+ * SoftwareVersion Component
+ */
 @Component({
 	selector: 'app-software-versions',
 	styleUrls: ['./software-versions.component.scss'],
@@ -47,75 +49,27 @@ export class SoftwareVersionsComponent {
 			});
 	}
 
-
 	/**
 	 * Fetches the total counts for the visual filter
 	 * @returns the total counts observable
 	 */
 	private getSoftwareVersions () {
-		return of({}).pipe(
-			map(() => {
-				this.softwareVersions = [
-					{
-						version: '10.1.171.1',
-						releaseDate: '2015-10-10',
-						osType: 'IOS-XE',
-						assetCount: 2,
-						goldenImage: 'Y',
-						optimalVersion: '8.6.100.2',
-					},
-					{
-						version: '10.1.171.1',
-						releaseDate: '2015-10-10',
-						osType: 'IOS-XE',
-						assetCount: 2,
-						goldenImage: 'Y',
-						optimalVersion: '8.6.100.2',
-					},
-					{
-						version: '10.1.171.1',
-						releaseDate: '2015-10-10',
-						osType: 'IOS-XE',
-						assetCount: 2,
-						goldenImage: 'Y',
-						optimalVersion: '8.6.100.2',
-					},
-					{
-						version: '10.1.171.1',
-						releaseDate: '2015-10-10',
-						osType: 'IOS-XE',
-						assetCount: 2,
-						goldenImage: 'Y',
-						optimalVersion: '8.6.100.2',
-					},
-					{
-						version: '10.1.171.1',
-						releaseDate: '2015-10-10',
-						osType: 'IOS-XE',
-						assetCount: 2,
-						goldenImage: 'Y',
-						optimalVersion: '8.6.100.2',
-					},
-					{
-						version: '10.1.171.1',
-						releaseDate: '2015-10-10',
-						osType: 'IOS-XE',
-						assetCount: 2,
-						goldenImage: 'Y',
-						optimalVersion: '8.6.100.2',
-					},
-					{
-						version: '10.1.171.1',
-						releaseDate: '2015-10-10',
-						osType: 'IOS-XE',
-						assetCount: 2,
-						goldenImage: 'Y',
-						optimalVersion: '8.6.100.2',
-					}
-				];
-				this.buildTable();
-			})
-		)
+		return of({ })
+			.pipe(
+				map(() => {
+					this.softwareVersions = [
+						{
+							assetCount: 2,
+							goldenImage: 'Y',
+							optimalVersion: '8.6.100.2',
+							osType: 'IOS-XE',
+							releaseDate: '2015-10-10',
+							version: '10.1.171.1',
+						},
+					];
+					this.buildTable();
+				}),
+			);
 	}
 
 	/**
@@ -150,7 +104,7 @@ export class SoftwareVersionsComponent {
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersionY'),
-					}
+					},
 				],
 				dynamicData: true,
 				hover: true,

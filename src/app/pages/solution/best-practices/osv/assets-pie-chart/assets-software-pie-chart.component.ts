@@ -65,8 +65,7 @@ export class AssetsSoftwarePieChartComponent implements OnInit {
 				plotBackgroundColor: null,
 				plotBorderWidth: null,
 				plotShadow: false,
-				type: 'pie'//,
-				//width: 250,
+				type: 'pie',
 			},
 			credits: {
 				enabled: false,

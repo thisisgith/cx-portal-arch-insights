@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 
+/**
+ * ProfileGroupDetail Component
+ */
 @Component({
 	selector: 'app-profile-group-detail',
 	styleUrls: ['./profile-group-detail.component.scss'],
