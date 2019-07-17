@@ -1,17 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SecurityComponent } from './security.component';
-import { SecurityModule } from './security.module';
+import { AssetSoftwareDetailsComponent } from './asset-software-detail.component';
+import { AssetSoftwareDetailsModule } from './asset-software-detail.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('SecurityComponent', () => {
-	let component: SecurityComponent;
-	let fixture: ComponentFixture<SecurityComponent>;
+
+describe('AssetSoftwareDetailsComponent', () => {
+	let component: AssetSoftwareDetailsComponent;
+	let fixture: ComponentFixture<AssetSoftwareDetailsComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				SecurityModule,
+				AssetSoftwareDetailsModule,
 				HttpClientTestingModule,
 			],
 		})
@@ -19,9 +19,8 @@ describe('SecurityComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(SecurityComponent);
+		fixture = TestBed.createComponent(AssetSoftwareDetailsComponent);
 		component = fixture.componentInstance;
-		fixture.detectChanges();
 	});
 
 	it('should create', () => {

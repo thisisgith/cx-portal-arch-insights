@@ -76,7 +76,7 @@ describe('SolutionComponent', () => {
 				LifecycleModule,
 				RouterTestingModule.withRoutes([
 					{ path: 'solution/lifecycle', component: LifecycleComponent },
-					{ path: 'solution/lifecycle', component: AssetsComponent },
+					{ path: 'solution/assets', component: AssetsComponent },
 				]),
 				SolutionModule,
 			],
@@ -87,7 +87,7 @@ describe('SolutionComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 
 		racetrackService = TestBed.get(RacetrackService);
 	}));

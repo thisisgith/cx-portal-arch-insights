@@ -1,17 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SecurityComponent } from './security.component';
-import { SecurityModule } from './security.module';
+import { ArchitectureComponent } from './architecture.component';
+import { ArchitectureModule } from './architecture.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('SecurityComponent', () => {
-	let component: SecurityComponent;
-	let fixture: ComponentFixture<SecurityComponent>;
+describe('ArchitectureComponent', () => {
+	let component: ArchitectureComponent;
+	let fixture: ComponentFixture<ArchitectureComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				SecurityModule,
+				ArchitectureModule,
 				HttpClientTestingModule,
 			],
 		})
@@ -19,7 +19,7 @@ describe('SecurityComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(SecurityComponent);
+		fixture = TestBed.createComponent(ArchitectureComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

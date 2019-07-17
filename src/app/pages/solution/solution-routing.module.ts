@@ -34,6 +34,11 @@ const routes: Routes = [
 				path: 'resolution',
 			},
 			{
+				loadChildren: () => import('./best-practices/best-practices.module')
+					.then(m => m.BestPracticesModule),
+				path: 'best-practices',
+			},
+			{
 				path: '',
 				pathMatch: 'full',
 				redirectTo: 'lifecycle',

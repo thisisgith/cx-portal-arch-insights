@@ -1,0 +1,21 @@
+<div class="flex flex-fluid no-margin-bottom">
+	<div class="row no-gutters flex-fill">
+		<ul class="tabs">
+			<ng-container *ngFor="let module of subModules; index as i;">
+				<li attr.data-auto-id="Module-{{ module.title }}" class="tab" [ngClass]="{
+								'active': module.selected,
+								'disabled': module.disabled
+							}" (click)="selectSubModule(module)">
+					<a [attr.data-auto-id]="module.label+'Tab'">
+						<div class="tab__heading">
+							<span [innerText]="module.label"></span>
+						</div>
+					</a>
+				</li>
+			</ng-container>
+		</ul>
+	</div>
+</div>
+<div class="base-margin">
+	<router-outlet></router-outlet>
+</div>

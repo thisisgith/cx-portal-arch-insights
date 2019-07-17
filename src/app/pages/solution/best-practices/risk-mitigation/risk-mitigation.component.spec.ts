@@ -1,17 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SecurityComponent } from './security.component';
-import { SecurityModule } from './security.module';
+import { RiskMigitaionComponent } from './risk-mitigation.component';
+import { RiskMitigationModule } from './risk-mitigation.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('SecurityComponent', () => {
-	let component: SecurityComponent;
-	let fixture: ComponentFixture<SecurityComponent>;
+describe('RiskMigitaionComponent', () => {
+	let component: RiskMigitaionComponent;
+	let fixture: ComponentFixture<RiskMigitaionComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				SecurityModule,
+				RiskMitigationModule,
 				HttpClientTestingModule,
 			],
 		})
@@ -19,7 +19,7 @@ describe('SecurityComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(SecurityComponent);
+		fixture = TestBed.createComponent(RiskMigitaionComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
