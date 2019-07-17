@@ -277,9 +277,10 @@ describe('Assets', () => { // PBC-41
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
 			cy.getByAutoId('CoveredPoint').click().wait('Covered Assets');
-			cy.getByAutoId('UncoveredPoint').click({ force: true }).wait('@assets');
+			cy.getByAutoId('UncoveredPoint').click({ force: true })
+				.wait('@assets', { timeout: 10000 });
 			cy.getByAutoId(`${assets[0].contractNumber}Point`).click();
-			cy.wait('@assets').then(xhr => {
+			cy.wait('@assets', { timeout: 10000 }).then(xhr => {
 				const params = new URLSearchParams(new URL(xhr.url).search);
 				expect(params.getAll('coverage')).to.have.length(2)
 					.and.include.members(['covered', 'uncovered']);
