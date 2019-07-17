@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { AssetSoftwareDetailsComponent } from './details.component';
-import { AssetSoftwareDetailsModule } from './details.module';
+import { AssetSoftwareDetailsComponent } from './asset-software-detail.component';
+import { AssetSoftwareDetailsModule } from './asset-software-detail.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 

@@ -1,51 +1,132 @@
-<app-panel360 [hidden]="!openPanel" [fullscreen]="fullscreen">
-	<app-panel360-header (close)="openPanel = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
-		<div appPanel360Title class="text-xlarge">
-			<span class="icon-wifi"></span>
-			<span class="qtr-margin-left" [innerText]="'Asset 1'"></span>
+<app-panel360 *ngIf="selectedProfileGroup" [hidden]="!selectedProfileGroup" [fullscreen]="fullscreen">
+	<app-panel360-header (close)="selectedProfileGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
+		<div appPanel360Title class="row">
+			<span class="icon-laser-pointer icon-large col-2 icon-xlarge"></span>
+			<div class="col-10">
+				<div class="qtr-margin-left text-xlarge half-margin-bottom"
+					[innerText]="'_OsvOptimalSoftwareVersions_' | i18n "></div>
+				<div class="qtr-margin-left text-large" [innerText]="selectedProfileGroup?.softwareProfile"></div>
+			</div>
+		</div>
+	</app-panel360-header>
+	<app-profile-group-detail></app-profile-group-detail>
+</app-panel360>
+<app-panel360 *ngIf="selectedAssetSoftware" [hidden]="!selectedAssetSoftware" [fullscreen]="fullscreen">
+	<app-panel360-header (close)="selectedAssetSoftware = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
+		<div appPanel360Title class="row">
+			<span class="icon-laser-pointer icon-large col-2 icon-xlarge"></span>
+			<div class="col-10">
+				<div class="qtr-margin-left text-xlarge half-margin-bottom"
+					[innerText]="'_OsvOptimalSoftwareVersions_' | i18n "></div>
+				<div class="qtr-margin-left text-large" [innerText]="selectedAssetSoftware?.hostName"></div>
+			</div>
 		</div>
 	</app-panel360-header>
 	<asset-software-details></asset-software-details>
 </app-panel360>
 
 <div class="panel">
-	<!-- *ngIf="!status.isLoading" -->
-	<div class="flex flex-fill flex-fluid">
+	<div class="row" *ngIf="!status.isLoading">
 		<ng-container *ngFor="let filter of filters; index as i">
-			<div *ngIf="!filter.loading && filter.data.length" attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
+			<div *ngIf="!filter.loading && filter.data.length && filter.view.indexOf(view) > -1"
+				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
 				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" [ngClass]="{
 					'filter__selected': filter.selected,
 					'filter__not-selected': !filter.selected
-				}" class="panel  flex-fill filter">
+				}" class="panel col-md-3 filter">
 				<div class="base-margin-bottom">
 					<div *ngIf="filter.template">
 						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
 					</div>
 				</div>
-				<div class="filter__title text-muted text-large" *ngIf="filter.title" [innerText]="filter.title"></div>
+				<div class="filter__title text-muted text-large text-center" *ngIf="filter.title"
+					[innerText]="filter.title"></div>
 			</div>
 			<div *ngIf="filter.loading" class="base-margin-bottom">
 				<cui-spinner></cui-spinner>
 			</div>
 		</ng-container>
 	</div>
+	<ng-container *ngIf="filtered">
+		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+		<div class="divider qtr-margin-top"></div>
+	</ng-container>
+	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading"></div>
+	<div *ngIf="view == 'profileGroups'">
+		<app-profile-groups [(selectedProfileGroup)]="selectedProfileGroup"></app-profile-groups>
+	</div>
+	<div *ngIf="view == 'assets'">
+		<app-assets-software [(selectedAssetSoftware)]="selectedAssetSoftware"></app-assets-software>
+	</div>
+	<div *ngIf="view == 'softwareVersion'">
+		<app-software-versions></app-software-versions>
+	</div>
 </div>
 
-<input data-auto-id="Sample360" type="checkbox" [(ngModel)]="openPanel" />
+<ng-template #filterBar>
+	<div class="row">
+		<div class="col-md-1 flex flex-center-vertical">
+			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
+		</div>
+		<div class="col-md-10">
+			<ng-container *ngFor="let filter of selectedFilters">
+				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
+					<span class="label label--dkgray text-large" (click)="onSubfilterSelect(subfilter.filter, filter)"
+						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
+						<span [innerText]="subfilter.label"></span>
+						<span class="icon-close"></span>
+					</span>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div class="col-md-1 text-center text-right">
+			<a (click)="clearFilters()" class="text-lowercase" [innerText]="'_ClearAll_' | i18n"
+				data-auto-id="FilterBarClearAllFilters">
+			</a>
+		</div>
+	</div>
+</ng-template>
+
 
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div>
-		<span class="qtr-margin-right">{{filter.data[0].value}}</span>
-		<span>{{'Software Profiles'}}</span>
+	<div class="margin-auto" (click)="clearFilters()">
+		<div class="row toggle" (click)="selectView('profileGroups')"
+			[ngClass]="{'text-muted':view != 'profileGroups'}">
+			<div class="col-4 text-right">
+				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].value"></span>
+			</div>
+			<div class="col-8 margin-auto">
+				<span class="text-xlarge " [innerText]="filter.data[0].label"></span>
+			</div>
+		</div>
+		<div class="row toggle" (click)="selectView('assets')" [ngClass]="{'text-muted':view != 'assets'}">
+			<div class="col-4 text-right">
+				<span class="qtr-margin-right text-huge" [innerText]="filter.data[1].value"></span>
+			</div>
+			<div class="col-8 margin-auto">
+				<span class="text-xlarge " [innerText]="filter.data[1].label"></span>
+			</div>
+		</div>
+		<div class="row toggle" (click)="selectView('softwareVersion')"
+			[ngClass]="{'text-muted':view != 'softwareVersion'}">
+			<div class="col-4 text-right">
+				<span class="qtr-margin-right text-huge" [innerText]="filter.data[2].value"></span>
+			</div>
+			<div class="col-8 margin-auto">
+				<span class="text-xlarge " [innerText]="filter.data[2].label"></span>
+			</div>
+		</div>
 	</div>
-	<div>
-		<span class="qtr-margin-right">{{filter.data[0].value}}</span>
-		<span>{{'Ungrouped Assets'}}</span>
-	</div>
-	<div>
-		<span class="qtr-margin-right">{{filter.data[0].value}}</span>
-		<span>{{'Software Versions'}}</span>
-	</div>
+</ng-template>
+
+<ng-template #deploymentStatusFilter let-filter="filter">
+	<assets-software-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
+	</assets-software-pie-chart>
+</ng-template>
+
+<ng-template #riskLevelFilter let-filter="filter">
+	<assets-software-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
+	</assets-software-pie-chart>
 </ng-template>

@@ -12,7 +12,7 @@ import { LogService } from '@cisco-ngx/cui-services';
  */
 @Component({
 	selector: 'asset-software-details',
-	templateUrl: './details.component.html',
+	templateUrl: './asset-software-detail.component.html',
 })
 
 export class AssetSoftwareDetailsComponent implements OnChanges, OnInit {

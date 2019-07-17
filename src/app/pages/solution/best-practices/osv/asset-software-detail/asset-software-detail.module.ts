@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AssetSoftwareDetailsComponent } from './details.component';
+import { AssetSoftwareDetailsComponent } from './asset-software-detail.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiTabsModule, CuiLoaderModule } from '@cisco-ngx/cui-components';
 

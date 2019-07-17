@@ -25,6 +25,7 @@ import {
 } from '@cisco-ngx/cui-services';
 import { HeaderModule } from '@components';
 import { NoResultsModule } from './components/search/no-results/no-results.module';
+import { AssetsSoftwareModule } from './pages/solution/best-practices/osv/assets-software/assets-software.module';
 
 /**
  * Initialization function which will load our i18n files
@@ -55,6 +56,7 @@ export function loadI18n (service: AppService) {
 		HeaderModule,
 		HttpClientModule,
 		NoResultsModule,
+		AssetsSoftwareModule,
 	],
 	providers: [
 		AppService,

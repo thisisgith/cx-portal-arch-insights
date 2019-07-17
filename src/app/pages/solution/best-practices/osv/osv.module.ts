@@ -4,9 +4,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { OptimalSoftwareVersionComponent } from './osv.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { Panel360Module } from '@components';
-import { AssetSoftwareDetailsModule } from './details/details.module';
+import { AssetSoftwareDetailsModule } from './asset-software-detail/asset-software-detail.module';
 import { CuiTabsModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
+import { AssetsSoftwarePieChartModule } from './assets-pie-chart/assets-software-pie-chart.module';
+import { ProfileGroupsModule } from './profile-groups/profile-groups.module';
+import { AssetsSoftwareModule } from './assets-software/assets-software.module';
+import { SoftwareVersionsModule } from './software-versions/software-versions.module';
+import { ProfileGroupDetailModule } from './profile-group-detail/profile-group-detail.module';
 
 /**
  * Child routes for OptimalSoftwareModule for lazy loading
@@ -32,6 +37,12 @@ const childRoutes: Routes = [
 		AssetSoftwareDetailsModule,
 		CuiSpinnerModule,
 		FormsModule,
+		AssetsSoftwarePieChartModule,
+		ProfileGroupsModule,
+		AssetsSoftwareModule,
+		SoftwareVersionsModule,
+		ProfileGroupDetailModule,
+
 	],
 })
 export class OptimalSoftwareVersionModule { }
