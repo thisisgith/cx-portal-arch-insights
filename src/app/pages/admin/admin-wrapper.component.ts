@@ -23,6 +23,14 @@ export class AdminWrapperComponent {
 				shortTitle: I18n.get('_Settings_'),
 				title: I18n.get('_Settings_'),
 			},
+			{
+				icon: 'icon-account',
+				onClick: () => {
+					// TODO
+				},
+				shortTitle: I18n.get('_Policies_'),
+				title: I18n.get('_Policies_'),
+			},
 		],
 		mini: true,
 		oneDrawerOpen: false,

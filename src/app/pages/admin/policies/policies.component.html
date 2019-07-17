@@ -1,0 +1,65 @@
+<admin-wrapper>
+	<div *ngIf="error">
+		<div class="alert alert--danger" role="alert">
+			<div class="alert__icon icon-error-outline"></div>
+			<div class="alert__message" [innerText]="errorMessage"></div>
+		</div>
+	</div>
+	<div *ngIf="!loading" class="container settings-container">
+		<div class="row">
+			<div class="col-lg-7" data-auto-id="settings.policies.scans">
+				<div class="row flex base-margin-right">
+					<div class="col-10">
+						<h5 class="base-margin-top half-margin-bottom" data-auto-id="settings.polices.scans.label"
+							[innerText]="'_DiagnosticScans_' | i18n | uppercase"></h5>
+					</div>
+					<div class="col-2">
+						<button class="btn btn--secondary qtr-margin-right"
+							[innerText]="'_NewPolicy_' | i18n | uppercase" (click)="onNewPolicy()">
+						</button>
+					</div>
+				</div>
+				<div class="panel panel--bordered flex base-margin-right" data-auto-id="settings.polices.scans.panel">
+					<div class="col-1 flex-center">
+						<span class="icon-circle half-margin-right" [ngClass]="text-success"></span>
+					</div>
+					<div class="col-10">
+						<div [innerText]="'X devices scanned daily at 1:30am PST' | i18n"></div>
+					</div>
+					<div class="col-1 flex-center">
+						<span class="icon-circle half-margin-right" [ngClass]="'text-primary'"></span>
+						Pencil
+					</div>
+				</div>
+
+				<h5 class="base-margin-top half-margin-bottom" data-auto-id="settings.policies.collection.label"
+					[innerText]="'_Collection_' | i18n | uppercase"></h5>
+				<div *ngFor="let app of [0, 0, 0, 0]" data-auto-id="settings.policies.collection.panel">
+					<div class="panel panel--bordered flex base-margin-right"
+						data-auto-id="settings.polices.scans.panel">
+						<div class="col-1">
+							<span class="icon-circle half-margin-right" [ngClass]="text-primary"></span>
+						</div>
+						<div class="col-10">
+							<div [innerText]="'X devices scanned daily at 1:30am PST'"></div>
+						</div>
+						<div class="col-1">
+							<span class="icon-circle half-margin-right" [ngClass]="text-primary"></span>
+							Pencil
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-5" data-auto-id="settings.collection.schedule">
+				<h5 class="base-margin-top base-margin-bottom" data-auto-id="settings.system.usage.label"
+					[innerText]="'_Scan&CollectionSchedule_' | i18n | uppercase"></h5>
+				<div>
+					Calendar
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="loading" class="absolute-center">
+		<cui-loader></cui-loader>
+	</div>
+</admin-wrapper>
