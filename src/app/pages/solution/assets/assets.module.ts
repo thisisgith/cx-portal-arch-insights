@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { AssetsComponent } from './assets.component';
-import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule, TruncatePipeModule } from '@cisco-ngx/cui-pipes';
 import {
 	CuiTableModule,
 	CuiTabsModule,
@@ -61,6 +61,7 @@ const childRoutes: Routes = [
 		ProductAlertsModule.forRoot({ rootUrl }),
 		ReactiveFormsModule,
 		RouterModule.forChild(childRoutes),
+		TruncatePipeModule,
 	],
 })
 export class AssetsModule { }

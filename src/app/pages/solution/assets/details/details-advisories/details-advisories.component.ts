@@ -205,7 +205,6 @@ export class DetailsAdvisoriesComponent implements OnInit {
 		return this.productAlertsService.getFieldNoticeBulletin(fieldTab.params.bulletin)
 		.pipe(
 			map((response: FieldNoticeBulletinResponse) => {
-
 				const bulletins = _.map(response.data,
 					(bulletin: SecurityAdvisoryBulletin) => {
 						const newBulletin = _.cloneDeep(bulletin);

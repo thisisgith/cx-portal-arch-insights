@@ -242,6 +242,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	/**
 	 * Function used to handle single row selection
+	 *
+	 * NOTE: Should only set the item.details, not item.selected
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: Item) {
@@ -251,7 +253,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 		item.details = !item.details;
-		item.selected = item.details;
 		this.selectedAsset = item.details ? item.data : null;
 	}
 

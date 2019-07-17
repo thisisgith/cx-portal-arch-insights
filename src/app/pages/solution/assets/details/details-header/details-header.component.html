@@ -13,7 +13,7 @@
 
 			<div data-auto-id="Asset360LastScan" class="dbl-margin-right">
 				<div class="text-bold text-uppercase" [innerText]="'_LastScan_' | i18n"></div>
-				<div innerText="{{ asset.lastScan || ('_Never_' | i18n) }}"></div>
+				<div innerText="{{ (asset.lastScan | fromNow) || ('_Never_' | i18n) }}"></div>
 			</div>
 		</div>
 	</div>
@@ -90,6 +90,7 @@
 			[innerText]="'_Scan_' | i18n"
 			data-auto-id="Asset360ScanBtn"></button>
 		<button class="text-uppercase btn btn--secondary btn--small"
+			*ngIf="asset?.supportCovered"
 			[innerText]="'_OpenCase_' | i18n"
 			data-auto-id="Asset360OpenCaseBtn">
 		</button>
