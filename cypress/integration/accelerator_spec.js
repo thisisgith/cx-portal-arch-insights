@@ -5,6 +5,8 @@ const solution = 'IBN';
 const useCase = 'Wireless Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
 let accItems = accScenario.response.body.items;
+const twoRecommendedScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard-twoRecommended`);
+const twoRecommendedItems = twoRecommendedScenario.response.body.items;
 
 // ACC items are being sorted by the UI in the following order by status:
 // recommended, requested, in-progress, completed
@@ -587,6 +589,51 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// cy.getByAutoId('accRequestSubmitted')
 				// 	.should('be.visible')
 				// 	.and('have.text', i18n._ACCRequestSubmitted_);
+			});
+		});
+
+		describe('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
+			before(() => {
+				// Change over to a mock with multiple "recommended" items
+				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.waitForAppLoading('accLoading');
+
+				// Open the ACC View All modal
+				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+				cy.getByAutoId('accViewAllModal').should('exist');
+			});
+
+			after(() => {
+				// Close the ACC View All modal
+				cy.getByAutoId('ACCCloseModal').click();
+				cy.getByAutoId('accViewAllModal').should('not.exist');
+
+				// Ensure we are using the default mock data
+				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+
+				// Refresh the data
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.waitForAppLoading('accLoading');
+			});
+
+			it('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
+				// For all recommended items, check that the "Request 1-on-1" button opens the modal
+				// for with the cooresponding title
+				twoRecommendedItems.forEach((acc, index) => {
+					if (acc.status === 'recommended') {
+						cy.getByAutoId('ACCCard').eq(index).within(() => {
+							cy.getByAutoId('Request1on1Button').click();
+						});
+						cy.getByAutoId('accRequestModal').should('exist');
+						cy.getByAutoId('accRequestModal-ItemTitle').should('have.text', acc.title);
+						// Close the form so it's not in the way of other checks
+						cy.getByAutoId('ACCCloseRequestModal').click();
+						cy.getByAutoId('accRequestModal').should('not.exist');
+					}
+				});
 			});
 		});
 	});
