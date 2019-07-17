@@ -247,6 +247,22 @@ export const ACCScenarios = [
 			POST: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard ACCRequestSubmit1',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId1}/request`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard Bookmark6',
 					response: {
 						status: 200,
