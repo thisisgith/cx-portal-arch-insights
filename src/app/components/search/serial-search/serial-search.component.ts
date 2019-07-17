@@ -8,6 +8,7 @@ import {
 	OnInit,
 	OnChanges,
 } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Subject, Observable, forkJoin, of } from 'rxjs';
 import { catchError, takeUntil, tap, switchMap } from 'rxjs/operators';
@@ -25,6 +26,7 @@ import {
 	HardwareInfo,
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
+import { SearchService } from '@services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 import { SearchQuery } from '@interfaces';
@@ -108,8 +110,10 @@ implements OnInit, OnChanges, OnDestroy {
 		private caseService: CaseService,
 		private contractService: ContractsService,
 		private logger: LogService,
+		private searchService: SearchService,
 		private inventoryService: InventoryService,
 		private alertsService: ProductAlertsService,
+		public router: Router,
 	) {
 		super();
 		this.logger.debug('SerialSearchComponent Created!');
@@ -343,5 +347,18 @@ implements OnInit, OnChanges, OnDestroy {
 			 }),
 		 ),
 	 );
+	}
+
+	/**
+	 * Navigate to asset view and close modal
+	 * Occurs when user clicks "View Device Details" button
+	 * @param serialNumber serial number of the device to view
+	 */
+	 public onViewDetails (serialNumber?: string) {
+		this.router.navigate(
+			['solution/assets'],
+			{ queryParams: { serialNumber, select: true } },
+		);
+		this.searchService.close();
 	}
 }

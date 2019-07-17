@@ -1,4 +1,10 @@
 <admin-wrapper>
+	<div *ngIf="error">
+		<div class="alert alert--danger" role="alert">
+			<div class="alert__icon icon-error-outline"></div>
+			<div class="alert__message" [innerText]="errorMessage"></div>
+		</div>
+	</div>
 	<div *ngIf="!loading" class="container settings-container">
 		<div class="row">
 			<div class="col-lg-6" data-auto-id="settings.system.status">
