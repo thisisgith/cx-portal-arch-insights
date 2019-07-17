@@ -19,6 +19,7 @@ export { RoleScenarios } from './inventory/roles';
 export { SearchScenarios } from './search/search';
 export { SecurityAdvisoryScenarios } from './product-alerts/security-advisory';
 export { SecurityAdvisoryBulletinScenarios } from './product-alerts/security-advisory-bulletins';
+export { SecurityAdvisorySummaryScenarios } from './product-alerts/summary';
 export { SuccessPathScenarios } from './racetrack/successPaths';
 export { UserScenarios } from './user/user';
 export { HealthStatusScenarios } from './controlpoints/health-status';
