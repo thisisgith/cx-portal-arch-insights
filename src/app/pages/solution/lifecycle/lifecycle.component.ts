@@ -678,7 +678,7 @@ export class LifecycleComponent implements OnDestroy {
 
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
-							case 'E-Courses': {
+							case 'E-Learning': {
 								const learningItem: ELearningModel = {
 									...item,
 									fixedRating: parseFloat(item.rating),
@@ -686,7 +686,7 @@ export class LifecycleComponent implements OnDestroy {
 								this.componentData.learning.elearning.push(learningItem);
 								break;
 							}
-							case 'Cisco Training on Demand Courses':
+							case 'Certifications':
 							case 'Videos': {
 								this.componentData.learning.certifications.push(item);
 								break;
