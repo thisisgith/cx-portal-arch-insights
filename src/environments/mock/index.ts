@@ -1,4 +1,5 @@
 export { ACCScenarios } from './racetrack/acc';
+export { ACCUserInfoScenarios } from './racetrack/accUserInfo';
 export { ActionScenarios } from './racetrack/action';
 export { AssetScenarios } from './inventory/assets';
 export { ATXScenarios } from './racetrack/atx';

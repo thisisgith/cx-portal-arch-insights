@@ -10,6 +10,8 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { ATXResponse } from '../models/atxresponse';
 import { ACCResponse } from '../models/accresponse';
 import { ACCBookmarkSchema } from '../models/accbookmark-schema';
+import { ACCRequestSessionSchema } from '../models/accrequest-session-schema';
+import { ACCUserInfoSchema } from '../models/accuser-info-schema';
 import { SuccessPathsResponse } from '../models/success-paths-response';
 import { CommunitiesResponse } from '../models/communities-response';
 import { ELearningResponse } from '../models/elearning-response';
@@ -20,6 +22,8 @@ class RacetrackContentService extends __BaseService {
   static readonly getRacetrackATXPath = '/atx';
   static readonly getRacetrackACCPath = '/acc';
   static readonly updateACCBookmarkPath = '/acc/{accId}/bookmark';
+  static readonly requestACCPath = '/acc/{accId}/request';
+  static readonly getACCUserInfoPath = '/acc/request/user-info';
   static readonly getRacetrackSuccessPathsPath = '/successPaths';
   static readonly getRacetrackCommunitiesPath = '/communities';
   static readonly getRacetrackElearningPath = '/elearning';
@@ -248,6 +252,92 @@ class RacetrackContentService extends __BaseService {
   updateACCBookmark(params: RacetrackContentService.UpdateACCBookmarkParams): __Observable<null> {
     return this.updateACCBookmarkResponse(params).pipe(
       __map(_r => _r.body as null)
+    );
+  }
+
+  /**
+   * Request to schedule a one to one session with Cisco.
+   * @param params The `RacetrackContentService.RequestACCParams` containing the following parameters:
+   *
+   * - `request`: Payload to submit a 1:1 request with Cisco
+   *
+   * - `accId`: Unique identifier of the accelerator for which 1:1 is requested.
+   */
+  requestACCResponse(params: RacetrackContentService.RequestACCParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = params.request;
+
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/api/customerportal/racetrack/v1/acc/${params.accId}/request`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+
+  /**
+   * Request to schedule a one to one session with Cisco.
+   * @param params The `RacetrackContentService.RequestACCParams` containing the following parameters:
+   *
+   * - `request`: Payload to submit a 1:1 request with Cisco
+   *
+   * - `accId`: Unique identifier of the accelerator for which 1:1 is requested.
+   */
+  requestACC(params: RacetrackContentService.RequestACCParams): __Observable<null> {
+    return this.requestACCResponse(params).pipe(
+      __map(_r => _r.body as null)
+    );
+  }
+
+  /**
+   * Get user information to pre-fill the request 1:1 form
+   * @return successful operation
+   */
+  getACCUserInfoResponse(): __Observable<__StrictHttpResponse<ACCUserInfoSchema>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/racetrack/v1/acc/request/user-info`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<ACCUserInfoSchema>;
+      })
+    );
+  }
+
+  /**
+   * Get user information to pre-fill the request 1:1 form
+   * @return successful operation
+   */
+  getACCUserInfo(): __Observable<ACCUserInfoSchema> {
+    return this.getACCUserInfoResponse().pipe(
+      __map(_r => _r.body as ACCUserInfoSchema)
     );
   }
 
@@ -626,6 +716,22 @@ module RacetrackContentService {
 
     /**
      * Unique identifier of the accelerator that was marked or removed favorite
+     */
+    accId: string;
+  }
+
+  /**
+   * Parameters for requestACC
+   */
+  export interface RequestACCParams {
+
+    /**
+     * Payload to submit a 1:1 request with Cisco
+     */
+    request: ACCRequestSessionSchema;
+
+    /**
+     * Unique identifier of the accelerator for which 1:1 is requested.
      */
     accId: string;
   }

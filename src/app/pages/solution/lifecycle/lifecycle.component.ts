@@ -118,6 +118,10 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedStatus = '';
 	public selectedSuccessPaths: SuccessPath[];
 	public categoryOptions: [];
+	// id of ACC in request form
+	public accTitleRequestForm: string;
+	public accIdRequestForm: string;
+
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
 
@@ -179,7 +183,6 @@ export class LifecycleComponent implements OnDestroy {
 	private technologySubscribe: Subscription;
 
 	public selectAccComponent = false;
-	public accRequestSubmitted = false;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -234,8 +237,15 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Select/deselect the ACCRequestForm component
 	 * @param selected whether the component is visible or not
+	 * @param accId accId of selected ACC
+	 * @param accTitle title of selected ACC
 	 */
-	public selectAccRequestForm (selected: boolean) {
+	public selectAccRequestForm (selected: boolean, accId: string, accTitle: string) {
+		if (selected) {
+			this.accIdRequestForm = accId;
+			this.accTitleRequestForm = accTitle;
+		}
+
 		this.selectAccComponent = selected;
 	}
 
@@ -244,9 +254,12 @@ export class LifecycleComponent implements OnDestroy {
 	 * because this info will come from the API
 	 * @param submitted if the request was submitted
 	 */
-	public accRequestSubmit  (submitted: boolean) {
-		this.accRequestSubmitted = submitted;
-		this.selectAccRequestForm(false);
+	public accRequestSubmit (submitted: boolean) {
+		if (submitted) {
+			this.selectAccComponent = false;
+			this.loadACC()
+				.subscribe();
+		}
 	}
 
 	/**
