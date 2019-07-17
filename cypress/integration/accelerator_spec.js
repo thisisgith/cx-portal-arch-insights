@@ -82,7 +82,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				switch (acc.status) {
 					case 'completed':
 						cy.getByAutoId('ACCCardFooter')
-							.should('contain', 'Completed');
+							.should('contain', i18n._Completed_);
 						break;
 					case 'in-progress':
 					case 'requested':
@@ -715,10 +715,30 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							cy.getByAutoId('.star').should('not.exist');
 						} else if (acc.status === 'completed') {
 							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__green');
-							// cy.getByAutoId('.star').should('exist'); TODO: Pending PBC-325
+							cy.getByAutoId('.star').should('exist');
 						} else {
 							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__clear');
 							cy.getByAutoId('.star').should('not.exist');
+						}
+
+						// Recommended should have "Request 1-on-1", requested/in-progress/completed have text
+						switch (acc.status) {
+							case 'completed':
+								cy.getByAutoId('moreACCList-HoverModal-CompletedMessage')
+									.should('have.text', i18n._Completed_);
+								cy.getByAutoId('Request1on1Button')
+									.should('not.exist');
+								break;
+							case 'in-progress':
+							case 'requested':
+								cy.getByAutoId('moreACCList-HoverModal-CSEMessage')
+									.should('contain', i18n._CSETouch_);
+								cy.getByAutoId('Request1on1Button')
+									.should('not.exist');
+								break;
+							default:	// Default: recommended
+								cy.getByAutoId('Request1on1Button')
+									.should('contain', i18n._Request1on1_);
 						}
 					});
 				});
