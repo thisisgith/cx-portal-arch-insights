@@ -16,7 +16,7 @@ import {
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
- * Child routes for Assets Module for lazy loading
+ * Child routes for Resolution Module for lazy loading
  */
 const childRoutes: Routes = [
 	{

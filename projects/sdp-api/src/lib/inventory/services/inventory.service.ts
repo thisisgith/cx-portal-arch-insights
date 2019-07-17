@@ -38,6 +38,8 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `serialNumber`: The serial number of the device
+   *
    * - `rows`: Number of rows of data per page
    *
    * - `role`: The device role
@@ -56,6 +58,7 @@ class InventoryService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.serialNumber != null) __params = __params.set('serialNumber', params.serialNumber.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     if (params.page != null) __params = __params.set('page', params.page.toString());
@@ -84,6 +87,8 @@ class InventoryService extends __BaseService {
    * @param params The `InventoryService.GetAssetsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `serialNumber`: The serial number of the device
    *
    * - `rows`: Number of rows of data per page
    *
@@ -634,6 +639,11 @@ module InventoryService {
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * The serial number of the device
+     */
+    serialNumber?: string;
 
     /**
      * Number of rows of data per page

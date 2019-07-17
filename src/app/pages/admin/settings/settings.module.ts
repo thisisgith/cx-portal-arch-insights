@@ -5,6 +5,8 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AdminWrapperModule } from '../admin-wrapper.module';
 import { ControlPointsModule, UserModule } from '@sdp-api';
 import { HeightTransitionModule } from '@components';
+import { AppStatusColorPipe } from './app-status-color.pipe';
+import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 
 import { environment } from '@environment';
 
@@ -29,7 +31,11 @@ const sdpRootUrl = environment.sdpServiceOrigin;
  * Main Settings module
  */
 @NgModule({
-	declarations: [SettingsComponent],
+	declarations: [
+		AppStatusColorPipe,
+		ResourceGaugeColorPipe,
+		SettingsComponent,
+	],
 	imports: [
 		AdminWrapperModule,
 		CommonModule,

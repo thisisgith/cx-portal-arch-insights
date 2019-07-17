@@ -21,7 +21,7 @@ export const environment = {
 		referUrl: `${authOrigin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${authOrigin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
-	baseHref: '/',
+	baseHref: '/pbc/',
 	production: true,
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,

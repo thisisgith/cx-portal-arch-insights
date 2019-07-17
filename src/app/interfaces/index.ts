@@ -17,3 +17,4 @@ export {
 export { SearchContext, SearchEnum, SearchType, SearchQuery } from './search';
 export { SetupStep, SetupComponent } from './ie';
 export { TimelineDatapoint, TimelineInternalDatapoint, TodayRelation } from './timelineDatapoint';
+export { VisualFilter } from './visualFilter';

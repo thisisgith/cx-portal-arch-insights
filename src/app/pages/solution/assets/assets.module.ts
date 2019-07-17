@@ -1,11 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-	RouterModule,
-	Routes,
-} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AssetsComponent } from './assets.component';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import {
 	CuiTableModule,
 	CuiTabsModule,
@@ -57,6 +54,7 @@ const childRoutes: Routes = [
 		CuiTabsModule,
 		DetailsHeaderModule,
 		FormsModule,
+		FromNowPipeModule,
 		I18nPipeModule,
 		InventoryModule.forRoot({ rootUrl }),
 		Panel360Module,

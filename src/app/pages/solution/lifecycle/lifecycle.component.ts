@@ -33,6 +33,7 @@ import { SolutionService } from '../solution.service';
 import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Interface representing our data object
@@ -65,7 +66,6 @@ interface ComponentData {
 	};
 	acc?: {
 		sessions: ACC[];
-		recommended: ACC;
 	};
 	communities?: Community[];
 }
@@ -115,10 +115,46 @@ export class LifecycleComponent implements OnDestroy {
 	public sessionSelected: ATXSession;
 	public customerId = '2431199';
 	public selectedCategory = '';
+	public selectedStatus = '';
 	public selectedSuccessPaths: SuccessPath[];
 	public categoryOptions: [];
+	// id of ACC in request form
+	public accTitleRequestForm: string;
+	public accIdRequestForm: string;
 
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
+	public selectedACC: ACC[];
+
+	public statusOptions = [
+		{
+			name: I18n.get('_AllTitles_'),
+			value: 'allTitles',
+		},
+		{
+			name: I18n.get('_Recommended_'),
+			value: 'recommended',
+		},
+		{
+			name: I18n.get('_Requested_'),
+			value: 'requested',
+		},
+		{
+			name: I18n.get('_InProgress_'),
+			value: 'in-progress',
+		},
+		{
+			name: I18n.get('_Completed_'),
+			value: 'completed',
+		},
+		{
+			name: I18n.get('_Bookmarked_'),
+			value: 'isBookmarked',
+		},
+		{
+			name: I18n.get('_NotBookmarked_'),
+			value: 'hasNotBookmarked',
+		},
+	];
 
 	public status = {
 		loading: {
@@ -147,7 +183,6 @@ export class LifecycleComponent implements OnDestroy {
 	private technologySubscribe: Subscription;
 
 	public selectAccComponent = false;
-	public accRequestSubmitted = false;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -202,8 +237,15 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Select/deselect the ACCRequestForm component
 	 * @param selected whether the component is visible or not
+	 * @param accId accId of selected ACC
+	 * @param accTitle title of selected ACC
 	 */
-	public selectAccRequestForm (selected: boolean) {
+	public selectAccRequestForm (selected: boolean, accId: string, accTitle: string) {
+		if (selected) {
+			this.accIdRequestForm = accId;
+			this.accTitleRequestForm = accTitle;
+		}
+
 		this.selectAccComponent = selected;
 	}
 
@@ -212,9 +254,12 @@ export class LifecycleComponent implements OnDestroy {
 	 * because this info will come from the API
 	 * @param submitted if the request was submitted
 	 */
-	public accRequestSubmit  (submitted: boolean) {
-		this.accRequestSubmitted = submitted;
-		this.selectAccRequestForm(false);
+	public accRequestSubmit (submitted: boolean) {
+		if (submitted) {
+			this.selectAccComponent = false;
+			this.loadACC()
+				.subscribe();
+		}
 	}
 
 	/**
@@ -231,7 +276,7 @@ export class LifecycleComponent implements OnDestroy {
 		} else if (type === 'acc') {
 			this.modal = {
 				content: this.accTemplate,
-				context: { data: this.componentData.acc.sessions },
+				context: { data: this.selectedACC },
 				visible: true,
 			};
 		} else if (type === '_ProductGuide_') {
@@ -355,12 +400,30 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Selects the category
+	 * @param type the item type
 	 */
-	public selectFilter () {
-		this.selectedSuccessPaths =
-			_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
-		if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
-			this.selectedSuccessPaths = this.componentData.learning.success;
+	public selectFilter (type: string) {
+		if (type === 'productguide') {
+			this.selectedSuccessPaths =
+				_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
+			if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
+				this.selectedSuccessPaths = this.componentData.learning.success;
+			}
+		}
+		if (type === 'acc') {
+			if (this.selectedStatus === 'isBookmarked') {
+				this.selectedACC =
+				_.filter(this.componentData.acc.sessions, { isFavorite: true });
+			} else if (this.selectedStatus === 'hasNotBookmarked') {
+				this.selectedACC =
+				_.filter(this.componentData.acc.sessions, { isFavorite: false });
+			} else {
+				this.selectedACC =
+					_.filter(this.componentData.acc.sessions, { status: this.selectedStatus });
+			}
+			if (this.selectedStatus === 'allTitles' || !this.selectedStatus) {
+				this.selectedACC = this.componentData.acc.sessions;
+			}
 		}
 	}
 
@@ -475,11 +538,15 @@ export class LifecycleComponent implements OnDestroy {
 				}
 
 				this.componentData.acc = {
-					recommended: _.head(_.filter(result.items, { status: 'recommended' })),
-					sessions: result.items,
+					sessions: _.union(_.filter(result.items, { status: 'recommended' }),
+						_.filter(result.items, { status: 'requested' }),
+						_.filter(result.items, { status: 'in-progress' }),
+						_.filter(result.items, { status: 'completed' })),
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
+
+				this.selectedACC = this.componentData.acc.sessions;
 
 				return result;
 			}),

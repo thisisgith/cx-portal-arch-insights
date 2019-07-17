@@ -1,23 +1,28 @@
 import {
 	ACCScenarios,
+	ACCUserInfoScenarios,
 	ActionScenarios,
 	AssetScenarios,
 	ATXScenarios,
-	CommunitiesScenarios,
 	CaseScenarios,
+	CommunitiesScenarios,
 	ContractScenarios,
 	CoverageScenarios,
 	ELearningScenarios,
-	HardwareScenarios,
-	HardwareEOLScenarios,
 	HardwareEOLBulletinScenarios,
 	HardwareEOLCountScenarios,
+	HardwareEOLScenarios,
+	HardwareScenarios,
 	NetworkScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
+	SecurityAdvisoryBulletinScenarios,
+	SecurityAdvisoryScenarios,
 	SuccessPathScenarios,
+	FieldNoticeScenarios,
+	FieldNoticeBulletinScenarios,
 	HealthStatusScenarios,
 	VulnerabilityScenarios,
 	UserScenarios,
@@ -27,18 +32,25 @@ import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
+	ACCUserInfoSchema,
 	Assets,
 	ATXResponse,
 	CDCSearchResponse,
 	CommunitiesResponse,
+	CoverageCountsResponse,
+	CoverageResponse,
 	ELearningResponse,
-	HardwareResponse,
-	HardwareEOLResponse,
+	FieldNoticeBulletinResponse,
+	FieldNoticeResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
+	HardwareEOLResponse,
+	HardwareResponse,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
+	SecurityAdvisoryBulletinResponse,
+	SecurityAdvisoryResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -47,19 +59,26 @@ import { RMAResponse } from '@interfaces';
 /** Alias type for the Response Body */
 type ResponseBody = (
 	ACCResponse |
+	ACCUserInfoSchema |
 	Assets |
 	ATXResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
+	CoverageCountsResponse |
+	CoverageResponse |
 	ELearningResponse |
-	HardwareResponse |
-	HardwareEOLResponse |
+	FieldNoticeBulletinResponse |
+	FieldNoticeResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
+	HardwareEOLResponse |
+	HardwareResponse |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
+	SecurityAdvisoryBulletinResponse |
+	SecurityAdvisoryResponse |
 	SuccessPathsResponse |
 	VulnerabilityResponse
 );
@@ -107,26 +126,31 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ACCUserInfoScenarios,
+		ATXScenarios,
 		ActionScenarios,
 		AssetScenarios,
-		ATXScenarios,
 		CaseScenarios,
 		CommunitiesScenarios,
 		ContractScenarios,
 		CoverageScenarios,
 		ELearningScenarios,
-		HardwareScenarios,
-		HardwareEOLScenarios,
+		FieldNoticeBulletinScenarios,
+		FieldNoticeScenarios,
 		HardwareEOLBulletinScenarios,
 		HardwareEOLCountScenarios,
+		HardwareEOLScenarios,
+		HardwareScenarios,
+		HealthStatusScenarios,
 		NetworkScenarios,
-		RacetrackScenarios,
 		RMAScenarios,
+		RacetrackScenarios,
 		RoleScenarios,
 		SearchScenarios,
+		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryScenarios,
 		SuccessPathScenarios,
-		HealthStatusScenarios,
-		VulnerabilityScenarios,
 		UserScenarios,
+		VulnerabilityScenarios,
 	]),
 };

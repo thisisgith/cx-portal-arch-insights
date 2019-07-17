@@ -6,6 +6,8 @@ import {
 	IEHealthStatusResponseModel,
 	UserService,
 } from '@sdp-api';
+import { AppStatusColorPipe } from './app-status-color.pipe';
+import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 
 import { empty, Subject } from 'rxjs';
 import { catchError, finalize, takeUntil, mergeMap } from 'rxjs/operators';
@@ -31,6 +33,10 @@ enum MemoryUsage {
  * Main Settings component
  */
 @Component({
+	providers: [
+		AppStatusColorPipe,
+		ResourceGaugeColorPipe,
+	],
 	selector: 'app-settings',
 	styleUrls: ['./settings.component.scss'],
 	templateUrl: './settings.component.html',
@@ -82,6 +88,7 @@ export class SettingsComponent  implements OnInit {
 
 	public accepted = false;
 	public error = false;
+	public errorMessage = '';
 	public loading = false;
 
 	constructor (
@@ -100,8 +107,9 @@ export class SettingsComponent  implements OnInit {
 	public getIEHealthStatusData (customerId: string) {
 		return this.controlPointIEHealthStatusAPIService.getIEHealthStatusUsingGET(customerId)
 			.pipe(
-				catchError(() => {
+				catchError(err => {
 					this.error = true;
+					this.errorMessage = err.message;
 
 					return empty();
 				}),
@@ -134,7 +142,10 @@ export class SettingsComponent  implements OnInit {
 		const hardware_details = _.get(this, 'cpData[0].system_details.hardware_details');
 		const os_details = _.get(this, 'cpData[0].system_details.os_details');
 
-		this.data.component_details = component_details;
+		this.data.component_details = _.map(
+			component_details,
+			app => this.prefixWithV(app, 'version'),
+		);
 
 		this.data.memoryUsage[MemoryUsage.CPU].percentage =
 			_.parseInt(_.get(hardware_details, 'cpu_utilization'), 10);
@@ -162,6 +173,7 @@ export class SettingsComponent  implements OnInit {
 
 		this.data.ieStatus = _.get(this, 'cpData[0].ieStatus');
 		this.data.ieVersion = _.get(this, 'cpData[0].ie_version');
+		this.prefixWithV(this.data, 'ieVersion');
 	}
 
 	/**
@@ -178,11 +190,37 @@ export class SettingsComponent  implements OnInit {
 	public ngOnInit () {
 		this.loading = true;
 		this.userService.getUser()
-			.pipe(mergeMap(userResponse =>
-				this.getIEHealthStatusData(String(_.get(userResponse, 'data.customerId')))))
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			)
+			.pipe(
+				mergeMap(userResponse =>
+					this.getIEHealthStatusData(String(_.get(userResponse, 'data.customerId')))),
+			)
 			.subscribe(response => {
 				this.cpData = response;
 				this.handleData();
 			});
+	}
+
+	/**
+	 * Prefixes a 'v' to some field in a provided object
+	 * @param obj {object}
+	 * @param field {string}
+	 * @returns object
+	 */
+	private prefixWithV (obj: object, field: string) {
+		if (!/^v/.test(obj[field])) {
+			obj[field] = `v${obj[field]}`;
+		}
+
+		return obj;
 	}
 }
