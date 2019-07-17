@@ -1,4 +1,4 @@
-image: containers.cisco.com/cway/gitlab-ci:3.3.2
+image: containers.cisco.com/cway/gitlab-ci:3.4.0
 
 stages:
   - setup

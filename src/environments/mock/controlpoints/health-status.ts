@@ -305,7 +305,7 @@ const mockData: IEHealthStatusResponseModel = {
 		hardware_details: {
 			cpu_utilization: '41.4%',
 			free_hdd_size: '519G',
-			free_memory: '18065MB',
+			free_memory: '22065MB',
 			hdd_size: '536G',
 			total_cpu: '12',
 			total_memory: '32163MB',

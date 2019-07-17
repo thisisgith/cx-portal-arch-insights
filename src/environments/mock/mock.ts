@@ -1,5 +1,6 @@
 import {
 	ACCScenarios,
+	ACCUserInfoScenarios,
 	ActionScenarios,
 	AssetScenarios,
 	ATXScenarios,
@@ -32,6 +33,7 @@ import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
+	ACCUserInfoSchema,
 	Assets,
 	ATXResponse,
 	CDCSearchResponse,
@@ -59,6 +61,7 @@ import { RMAResponse } from '@interfaces';
 /** Alias type for the Response Body */
 type ResponseBody = (
 	ACCResponse |
+	ACCUserInfoSchema |
 	Assets |
 	ATXResponse |
 	CDCSearchResponse |
@@ -126,6 +129,7 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ACCUserInfoScenarios,
 		ATXScenarios,
 		ActionScenarios,
 		AssetScenarios,
