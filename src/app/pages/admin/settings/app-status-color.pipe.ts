@@ -25,6 +25,7 @@ export class AppStatusColorPipe implements PipeTransform {
 		const classVal = {
 			ContainerCreation: 'text-warning',
 			Pending: 'text-warning',
+			PodInitializing: 'text-warning',
 			Running: 'text-success',
 			Stopped: 'text-secondary',
 		}[status];

@@ -36,23 +36,7 @@ import {
 } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
-
-/**
- * Interface representing our visual filters
- */
-interface Filter {
-	key: string;
-	selected?: boolean;
-	template?: TemplateRef<{ }>;
-	title: string;
-	loading: boolean;
-	seriesData: {
-		filter: string,
-		label: string,
-		selected: boolean,
-		value: number,
-	}[];
-}
+import { VisualFilter } from '@interfaces';
 
 /**
  * Interface representing an item of our inventory in our assets table
@@ -74,15 +58,15 @@ const customerId = '2431199';
 	templateUrl: './assets.component.html',
 })
 export class AssetsComponent implements OnInit, OnDestroy {
-	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{ }>;
-	@ViewChild('assetsContent', { static: true }) private assetsTemplate: TemplateRef<{ }>;
-	@ViewChild('coverageFilter', { static: true }) private coverageFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('contractFilter', { static: true }) private contractFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('hardwareEOXFilter', { static: true })
-		private hardwareEOXFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('roleFilter', { static: true }) private roleFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('advisoryFilter', { static: true }) private advisoryFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('totalFilter', { static: true })
+		private totalFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('bubbleChartFilter', { static: true })
+		private bubbleChartFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('pieChartFilter', { static: true })
+		private pieChartFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('horizontalBarChartFilter', { static: true })
+		private horizontalBarChartFilterTemplate: TemplateRef<{ }>;
+
 	@ViewChild('deviceTemplate', { static: true }) private deviceTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('supportCoverage', { static: true })
@@ -100,7 +84,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	public bulkDropdown = false;
 	public selectedAssets: Asset[] = [];
-	public filters: Filter[];
+	public filters: VisualFilter[];
 	public visibleTemplate: TemplateRef<{ }>;
 	public filterCollapse = false;
 	public assetParams: InventoryService.GetAssetsParams = {
@@ -134,6 +118,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private InventorySubject: Subject<{ }>;
 
 	public view: 'list' | 'grid' = 'list';
+	public selectOnLoad = false;
 	public selectedAsset: Asset;
 	public fullscreen = false;
 
@@ -211,7 +196,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Unselects all selected visual filters
 	 */
 	public clearSelectedFilters () {
-		this.filters.forEach((f: Filter) => {
+		this.filters.forEach((f: VisualFilter) => {
 			f.selected = false;
 			_.each(f.seriesData, sd => {
 				sd.selected = false;
@@ -290,7 +275,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		const totalFilter = _.find(this.filters, { key: 'total' });
 		this.filtered = false;
 
-		_.each(this.filters, (filter: Filter) => {
+		_.each(this.filters, (filter: VisualFilter) => {
 			filter.selected = false;
 			_.unset(this.assetParams, filter.key);
 			_.each(filter.seriesData, f => {
@@ -310,7 +295,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param filter the filter we selected the subfilter on
 	 * @param reload if we're reloading our assets
 	 */
-	public onSubfilterSelect (subfilter: string, filter: Filter, reload: boolean = true) {
+	public onSubfilterSelect (subfilter: string, filter: VisualFilter, reload: boolean = true) {
 		const sub = _.find(filter.seriesData, { filter: subfilter });
 		if (sub) {
 			sub.selected = !sub.selected;
@@ -376,6 +361,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			if (params.role) {
 				this.assetParams.role = _.castArray(params.role);
 			}
+
+			if (params.serialNumber) {
+				this.assetParams.serialNumber = params.serialNumber;
+			}
+
+			if (params.select) {
+				this.selectOnLoad = true;
+			}
+
+			this.fetchInventory();
 		});
 		this.buildInventorySubject();
 		this.buildFilters();
@@ -453,42 +448,42 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				loading: true,
 				selected: true,
 				seriesData: [],
-				template: this.totalAssetsFilterTemplate,
+				template: this.totalFilterTemplate,
 				title: I18n.get('_Total_'),
 			},
 			{
 				key: 'coverage',
 				loading: true,
 				seriesData: [],
-				template: this.coverageFilterTemplate,
+				template: this.pieChartFilterTemplate,
 				title: I18n.get('_CoverageStatus_'),
 			},
 			{
 				key: 'contractNumber',
 				loading: true,
 				seriesData: [],
-				template: this.contractFilterTemplate,
+				template: this.pieChartFilterTemplate,
 				title: I18n.get('_ContractNumber_'),
 			},
 			{
 				key: 'advisories',
 				loading: true,
 				seriesData: [],
-				template: this.advisoryFilterTemplate,
+				template: this.horizontalBarChartFilterTemplate,
 				title: I18n.get('_Advisories_'),
 			},
 			{
 				key: 'eox',
 				loading: true,
 				seriesData: [],
-				template: this.hardwareEOXFilterTemplate,
+				template: this.horizontalBarChartFilterTemplate,
 				title: I18n.get('_HardwareEOX_'),
 			},
 			{
 				key: 'role',
 				loading: true,
 				seriesData: [],
-				template: this.roleFilterTemplate,
+				template: this.bubbleChartFilterTemplate,
 				title: I18n.get('_NetworkRole_'),
 			},
 		];
@@ -896,6 +891,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.paginationCount = `${first}-${last}`;
 
 					this.buildTable();
+
+					if (this.selectOnLoad) {
+						this.onAllSelect(true);
+						this.onSelectionChanged(_.map(this.inventory, item => item.data));
+						if (this.selectedAssets.length === 1) {
+							this.selectedAsset = this.selectedAssets[0];
+						}
+					}
 
 					this.status.inventoryLoading = false;
 				}),

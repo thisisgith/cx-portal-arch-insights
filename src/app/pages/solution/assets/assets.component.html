@@ -333,36 +333,6 @@
 	</div>
 </ng-template>
 
-<ng-template #advisoryFilter let-filter="filter">
-	<assets-bar-chart [seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
-	</assets-bar-chart>
-</ng-template>
-
-<ng-template #coverageFilter let-filter="filter">
-	<assets-pie-chart [seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
-	</assets-pie-chart>
-</ng-template>
-
-<ng-template #contractFilter let-filter="filter">
-	<assets-pie-chart [seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
-	</assets-pie-chart>
-</ng-template>
-
-<ng-template #hardwareEOXFilter let-filter="filter">
-	<assets-bar-chart [seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
-	</assets-bar-chart>
-</ng-template>
-
-<ng-template #roleFilter let-filter="filter">
-	<assets-bubble-chart [seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
-	</assets-bubble-chart>
-</ng-template>
-
 <ng-template #supportCoverage let-celldata="celldata">
 	<div class="flex flex-fill flex-center">
 		<span
@@ -391,15 +361,6 @@
 		position="left"
 		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
-</ng-template>
-
-<!-- Templates for our Visual Filters for the Assets Tab -->
-<ng-template #totalAssetsFilter let-filter="filter">
-	<div class="text-huge flex-center dbl-padding-left dbl-padding-right"
-		(click)="clearFilters()"
-		data-auto-id="TotalAssetsVisualFilter"
-		[innerText]="filter.seriesData[0].value || 0">
-	</div>
 </ng-template>
 
 <ng-template #filterBar>
@@ -439,4 +400,31 @@
 		<span class="qtr-margin-left" [innerText]="trendCount"></span>
 		<span class="qtr-margin-left">(24h change)</span>
 	</div>
+</ng-template>
+
+<!-- Templates for our Visual Filters for the Assets Tab -->
+<ng-template #totalFilter let-filter="filter">
+	<div class="text-huge flex-center dbl-padding-left dbl-padding-right"
+		(click)="clearFilters()"
+		data-auto-id="TotalVisualFilter"
+		[innerText]="filter.seriesData[0].value || 0">
+	</div>
+</ng-template>
+
+<ng-template #bubbleChartFilter let-filter="filter">
+	<assets-bubble-chart [seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</assets-bubble-chart>
+</ng-template>
+
+<ng-template #pieChartFilter let-filter="filter">
+	<assets-pie-chart [seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</assets-pie-chart>
+</ng-template>
+
+<ng-template #horizontalBarChartFilter let-filter="filter">
+	<assets-bar-chart [seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</assets-bar-chart>
 </ng-template>

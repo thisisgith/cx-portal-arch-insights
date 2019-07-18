@@ -87,6 +87,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`).within(() => {
 				cy.get('cui-gauge').should('exist');
 				cy.get('cui-gauge').should('have.text', `${Cypress._.parseInt(hw.cpu_utilization, 10)}%`);
+				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'success');
 			});
 
 			cy.getByAutoId(`usage-${i18n._CurrentAvailableMemory_}`).within(() => {
@@ -95,6 +96,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 					(Cypress._.parseInt(hw.free_memory, 10) / Cypress._.parseInt(hw.total_memory, 10)) * 100
 				);
 				cy.get('cui-gauge').should('have.text', `${expected}%`);
+				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'warning');
 			});
 
 			cy.getByAutoId(`usage-${i18n._FreeDiskSpace_}`).within(() => {
@@ -103,6 +105,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 					(Cypress._.parseInt(hw.free_hdd_size, 10) / Cypress._.parseInt(hw.hdd_size, 10)) * 100
 				);
 				cy.get('cui-gauge').should('have.text', `${expected}%`);
+				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'danger');
 			});
 		});
 

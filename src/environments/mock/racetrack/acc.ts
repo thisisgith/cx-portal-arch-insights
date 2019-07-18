@@ -19,10 +19,11 @@ const accId6 = '666666';
  * @param solution the solution we're at
  * @param usecase the use case
  * @param pitstop the pitstop
+ * @param mockFileName the name of the corresponding json file to pull mock data from
  * @returns response
  */
 function MockACC (
-	solution: string, usecase: string, pitstop: string): ACCResponse {
+	solution: string, usecase: string, pitstop: string, mockFileName: string): ACCResponse {
 	let items = [
 		{
 			accId: `${accId1}`,
@@ -39,7 +40,7 @@ function MockACC (
 			description: 'Gain actionable insights into Cisco DNA Center use case ' +
 				'deployments and assists. Understand how to design, adopt, and leverage to ' +
 				'save time and resources within your network',
-			isFavorite: false,
+			isFavorite: true,
 			status: 'in-progress',
 			title: 'Cisco DNA Pilot Usecase Deployment',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
@@ -90,6 +91,10 @@ function MockACC (
 		];
 	}
 
+	if (mockFileName !== '') {
+		items = require(`./accMockData/${mockFileName}.json`);
+	}
+
 	return {
 		items,
 		pitstop,
@@ -109,16 +114,16 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard'),
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', ''),
 						status: 200,
 					},
 					selected: true,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Wireless Assurance-Onboard-No Recommended',
+					description: '(ACC) IBN-Wireless Assurance-Onboard-allButRecommended',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Adopt'),
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'allButRecommended'),
 						status: 200,
 					},
 					selected: false,
@@ -134,12 +139,48 @@ export const ACCScenarios = [
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Wireless Assurance-Onboard-One-ACC',
+					description: '(ACC) IBN-Wireless Assurance-Onboard-oneRecommended',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'adopt'),
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneRecommended'),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-oneNonRecommended',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneNonRecommended'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoCompleted',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoCompleted'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoInProgress',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoInProgress'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoRequested',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoRequested'),
+						status: 200,
+					},
+					selected: false,
 				},
 			],
 		},
@@ -154,7 +195,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-SD Access-Onboard',
 					response: {
-						body: MockACC('IBN', 'SD Access', 'Onboard'),
+						body: MockACC('IBN', 'SD Access', 'Onboard', ''),
 						status: 200,
 					},
 					selected: true,
@@ -226,6 +267,22 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}/${accId4}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard ACCRequestSubmit1',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId1}/request`,
 		usecases: ['Use Case 1'],
 	},
 	{

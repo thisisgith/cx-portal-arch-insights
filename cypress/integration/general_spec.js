@@ -33,10 +33,7 @@ describe('General Spec', () => {
 				.type(searchVal.concat('{enter}'));
 			cy.wait('@case').then(() => {
 				cy.getByAutoId('searchSiteSelect').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => { // variables can't have a hyphen
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
@@ -75,13 +72,11 @@ describe('General Spec', () => {
 			});
 		});
 
-		// TODO add the auto-id's to the html and retest
-		it.skip('Search Type Ahead PBC-168', () => {
+		it('Search Type Ahead', () => { // PBC-168
 			const searchVal = 'cat';
-			cy.getByAutoId('searchBarinput').should('exist').clear()
+			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(searchVal);
-			cy.getByAutoId('searchBarTypeahead').should('exist');
-			cy.getByAutoId('searchBarTypeahead')
+			cy.getByAutoId('searchBarTypeAhead')
 				.should($searchBarTypeahead => {
 					expect($searchBarTypeahead).to.have.length(7);
 				});
@@ -114,19 +109,19 @@ describe('General Spec', () => {
 				cy.getByAutoId('caseTACEng').should('exist').should('contain', i18n._TACEngineer_);
 				cy.getByAutoId('caseTracking').should('exist').should('contain', i18n._TrackingNumber_);
 				cy.getByAutoId('caseRelRMAs').should('exist').should('contain', i18n._RelatedRMAs_);
-				cy.getByAutoId('viewCaseDetailsB').should('exist').should('contain', i18n._ViewCaseDetails_);
-				cy.getByAutoId('viewAllOpenCasesB').should('exist').should('contain', i18n._ViewAllOpenCases_);
+				cy.getByAutoId('rmaNumber').should('have.length', 3);
+				cy.getByAutoId('viewCaseDetailsB').should('exist')
+					.should('contain', i18n._ViewCaseDetails_);
+				cy.getByAutoId('viewAllOpenCasesB').should('exist')
+					.should('contain', i18n._ViewAllOpenCases_);
+				cy.getByAutoId('searchSiteSelect').should('exist');
+				cy.getByAutoId('searchTypeSelect').should('exist');
+				cy.getByAutoId('cui-select').should('have.length', 2);
+				cy.getByAutoId('searchResultLinkPre0').should('exist');
+				cy.getByAutoId('searchResultLinkPre1').should('exist');
+				cy.getByAutoId('searchResultLinkPre2').should('exist');
+				cy.getByAutoId('searchClose').should('exist').click();
 			});
-			cy.getByAutoId('searchSiteSelect').should('exist');
-			cy.getByAutoId('searchTypeSelect').should('exist');
-			cy.getByAutoId('cui-select')
-				.should($cuiselect => {
-					expect($cuiselect).to.have.length(2);
-				});
-			cy.getByAutoId('searchResultLinkPre0').should('exist');
-			cy.getByAutoId('searchResultLinkPre1').should('exist');
-			cy.getByAutoId('searchResultLinkPre2').should('exist');
-			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
 		it('Case not found', () => {
@@ -141,10 +136,7 @@ describe('General Spec', () => {
 				cy.get('app-general-search').should('contain', '10 Results for "'.concat(caseVal).concat('"'));
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => {
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
@@ -173,7 +165,8 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaStatus').should('exist').should('contain', i18n._Status_);
 				cy.getByAutoId('rmaNumber').should('exist');
 				cy.getByAutoId('caseNumber').should('exist');
-				cy.getByAutoId('rmaTrackingNumber').should('exist');
+				cy.getByAutoId('rmaTrackingNumber').should('exist')
+					.should('contain', i18n._CarrierTrackingNumber_);
 				cy.getByAutoId('contractNumber').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
@@ -183,10 +176,7 @@ describe('General Spec', () => {
 			// General Search section
 			cy.getByAutoId('searchHeader').should('exist');
 			cy.getByAutoId('filterBy').should('exist');
-			cy.getByAutoId('cui-select')
-				.should($cuiselect => {
-					expect($cuiselect).to.have.length(2);
-				}); // Unavailable 2 times
+			cy.getByAutoId('cui-select').should('have.length', 2);
 			cy.getByAutoId('relGenRes').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
@@ -212,22 +202,13 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaProductNames').should('exist');
 				cy.getByAutoId('rmaProductIDs').should('exist');
 				// Confirm replacement product contains four product rows
-				cy.getByAutoId('rmaProdDescr')
-					.should($rmaProdDescr => {
-						expect($rmaProdDescr).to.have.length(4);
-					});
-				cy.getByAutoId('rmaProdID')
-					.should($rmaProdID => {
-						expect($rmaProdID).to.have.length(4);
-					});
+				cy.getByAutoId('rmaProdDescr').should('have.length', 4);
+				cy.getByAutoId('rmaProdID').should('have.length', 4);
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				// General Search section
 				cy.getByAutoId('searchHeader').should('exist');
 				cy.getByAutoId('filterBy').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => {
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('relGenRes').should('exist');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
@@ -255,19 +236,13 @@ describe('General Spec', () => {
 				cy.getByAutoId('contractNumber').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
-				cy.getByAutoId('rmaUnavail')
-					.should($rmaUnavail => {
-						expect($rmaUnavail).to.have.length(2);
-					});
+				cy.getByAutoId('rmaUnavail').should('have.length', 2);
 				cy.getByAutoId('rmaProdID').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				// General Search section
 				cy.getByAutoId('searchHeader').should('exist');
 				cy.getByAutoId('filterBy').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => {
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('relGenRes').should('exist');
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
@@ -282,10 +257,7 @@ describe('General Spec', () => {
 			cy.wait('@rma').then(() => {
 				cy.get('app-general-search').should('contain', '10 Results for "'.concat(inputVal).concat('"'));
 				cy.getByAutoId('searchSiteSelect').should('exist');
-				cy.getByAutoId('cui-select')
-					.should($cuiselect => {
-						expect($cuiselect).to.have.length(2);
-					});
+				cy.getByAutoId('cui-select').should('have.length', 2);
 				cy.getByAutoId('searchResultLinkPre0').should('exist');
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
@@ -300,12 +272,117 @@ describe('General Spec', () => {
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
+		it('Contract Search 93425688', () => {
+			// PBC-172
+			const contractVal = '93425688';
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('contract');
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(contractVal.concat('{enter}'));
+			cy.wait('@contract').then(() => {
+				cy.getByAutoId('contractStatus').should('exist');
+				cy.getByAutoId('contractHeader').should('exist');
+				cy.getByAutoId('contractType').should('exist').should('contain', i18n._Type_);
+				// cy.getByAutoId('contractLevel').should('exist');
+				cy.getByAutoId('contractStart').should('exist').should('contain', i18n._StartDate_);
+				cy.getByAutoId('contractExpire').should('exist').should('contain', i18n._ExpirationDate_);
+				cy.getByAutoId('contractAssets').should('exist').should('contain', i18n._AssetsCovered_);
+				cy.getByAutoId('contractAssetsCount').should('exist');
+			});
+			// General Search section
+			cy.getByAutoId('searchHeader').should('exist');
+			cy.getByAutoId('filterBy').should('exist');
+			cy.getByAutoId('cui-select').should('have.length', 2);
+			cy.getByAutoId('relGenRes').should('exist');
+			cy.getByAutoId('searchClose').should('exist').click();
+		});
+		it('Contract search not found 93425333', () => {
+			// PBC-172
+			const serialVal = '93425333';
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('contract'); // TODO might need to update route
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(serialVal.concat('{enter}'));
+			cy.wait('@contract').then(() => {
+				cy.getByAutoId('serialHeader').should('not.exist');
+				cy.get('app-general-search').should('contain', '10 Results for "'.concat(serialVal).concat('"'));
+				cy.getByAutoId('searchSiteSelect').should('exist');
+				cy.getByAutoId('searchTypeSelect').should('exist');
+				cy.getByAutoId('cui-select').should('have.length', 2);
+				cy.getByAutoId('searchResultLinkPre0').should('exist');
+				cy.getByAutoId('searchResultLinkPre1').should('exist');
+				cy.getByAutoId('searchResultLinkPre2').should('exist');
+				cy.getByAutoId('searchClose').should('exist').click();
+			});
+		});
 	});
+
 	context('Serial Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+		});
+
+		it('Serial Search FOX1306GFKH', () => {
+			// PBC-170
+			const serialVal = 'FOX1306GFKH';
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial');
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(serialVal.concat('{enter}'));
+			cy.wait('@serial');
+			cy.getByAutoId('serialHeader').should('exist');
+			cy.getByAutoId('serialProd').should('exist').should('contain', i18n._Product_);
+			cy.getByAutoId('serialCoverage').should('exist').should('contain', i18n._SupportCoverage_);
+			cy.getByAutoId('serialContract').should('exist').should('contain', i18n._Contract_);
+			cy.getByAutoId('serialConNum').should('exist');
+			cy.getByAutoId('serialExpDate').should('exist').should('contain', i18n._ExpirationDate_);
+			cy.getByAutoId('serialSWTypeOS').should('exist').should('contain', i18n._SoftwareTypeOS_);
+			cy.getByAutoId('serialCurrentVer').should('exist').should('contain', i18n._CurrentVersion_);
+			cy.getByAutoId('serialOpenCases').should('exist').should('contain', i18n._OpenCases_);
+			cy.getByAutoId('serialOpenRMAs').should('exist').should('contain', i18n._OpenRMAs_);
+			cy.getByAutoId('serialFieldNotice').should('exist').should('contain', i18n._RelatedFieldNotices_);
+			cy.getByAutoId('serialSecAdv').should('exist').should('contain', i18n._RelatedSecurityAdvisories_);
+			cy.getByAutoId('serialBugs').should('exist').should('contain', i18n._RelatedBugs_);
+			cy.getByAutoId('serialProdID').should('exist').should('contain', i18n._ProductID_);
+			cy.getByAutoId('serialProdSeries').should('exist').should('contain', i18n._ProductSeries_);
+			cy.getByAutoId('serialIP').should('exist').should('contain', i18n._IPAddress_);
+			cy.getByAutoId('serialHost').should('exist').should('contain', i18n._HostName_);
+			cy.getByAutoId('viewDeviceButton').should('exist').should('contain', i18n._ViewDeviceDetails_);
+			cy.getByAutoId('openCaseButton').should('exist').should('contain', i18n._OpenACase_);
+
+			// General Search section
+			cy.getByAutoId('searchHeader').should('exist');
+			cy.getByAutoId('filterBy').should('exist');
+			cy.getByAutoId('cui-select')
+				.should($cuiselect => {
+					expect($cuiselect).to.have.length(2);
+				}); // 2 times
+			cy.getByAutoId('relGenRes').should('exist');
+			cy.getByAutoId('searchClose').should('exist').click();
+		});
+
+		it('Serial search not found FOX1306GFJJ', () => {
+			// PBC-170
+			const serialVal = 'FOX1306GFJJ';
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial'); // TODO might need to update route
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(serialVal.concat('{enter}'));
+			cy.wait('@serial');
+			cy.getByAutoId('serialHeader').should('not.exist');
+			cy.get('app-general-search').should('contain', `10 Results for "${serialVal}"`);
+			cy.getByAutoId('searchSiteSelect').should('exist');
+			cy.getByAutoId('searchTypeSelect').should('exist');
+			cy.getByAutoId('cui-select')
+				.should($cuiselect => {
+					expect($cuiselect).to.have.length(2);
+				}); // 2 times
+			cy.getByAutoId('searchResultLinkPre0').should('exist');
+			cy.getByAutoId('searchResultLinkPre1').should('exist');
+			cy.getByAutoId('searchResultLinkPre2').should('exist');
+			cy.getByAutoId('searchClose').should('exist').click();
 		});
 	});
 });
