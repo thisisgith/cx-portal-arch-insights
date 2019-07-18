@@ -109,7 +109,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		return _.get(_.find(this.solutions, { name }), 'technologies', []);
 	}
 
-	get advisoriesFacet (): Facet {
+	get advisoriesFacet () {
 		return _.find(this.facets, { key: 'advisories' });
 	}
 
@@ -258,8 +258,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private fetchAdvisoryCounts () {
 		this.productAlertsService.getVulnerabilityCounts({ customerId })
 		.subscribe((counts: VulnerabilityResponse) => {
-			const advisoriesFacet = _.find(this.facets, { key: 'advisories' });
-			advisoriesFacet.seriesData = [
+			this.advisoriesFacet.seriesData = [
 				{
 					label: I18n.get('_SecurityAdvisories_'),
 					value: _.get(counts, 'security-advisories'),
