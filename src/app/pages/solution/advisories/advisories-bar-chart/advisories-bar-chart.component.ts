@@ -14,7 +14,6 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'advisories-bar-chart',
-	styleUrls: ['./advisories-bar-chart.component.scss'],
 	templateUrl: './advisories-bar-chart.component.html',
 })
 export class AdvisoriesBarChartComponent implements OnInit {
