@@ -73,7 +73,7 @@
     "@babel/core": "^7.5.0",
     "@babel/preset-env": "^7.5.0",
     "@cisco-ngx/cui-auth": "^7.13.4",
-    "@cisco-ngx/cui-components": "^7.13.4",
+    "@cisco-ngx/cui-components": "^7.14.2",
     "@cisco-ngx/cui-pipes": "^7.13.4",
     "@cisco-ngx/cui-services": "^7.13.4",
     "@cisco-ngx/cui-utils": "^7.13.3",
