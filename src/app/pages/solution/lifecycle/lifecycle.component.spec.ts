@@ -440,6 +440,21 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
+	describe('E-Learning', () => {
+		it('should have loaded the elearning items', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.elearning.length)
+						.toEqual(4);
+				});
+		});
+	});
+
 	describe('PitstopActions', () => {
 
 		it('should show 25% in the prograss label', () => {

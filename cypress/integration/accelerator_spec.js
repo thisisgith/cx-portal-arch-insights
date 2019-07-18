@@ -25,14 +25,13 @@ const firstRecommendedACC = Cypress._.head(Cypress._.filter(accItems, { status: 
 
 // Default ACC request form customer data
 const defaultCustomerData = {
-	ccoID: '12345678',
-	ciscoContact: 'CSE Name',
-	companyName: 'Company',
+	ccoID: 'vpriyata',
+	ciscoContact: 'John Doe',
+	companyName: 'Cisco Systems',
 	country: 'USA',
-	email: 'Breadf23@company.com',
-	jobTitle: 'Title',
-	phoneNumber: '1-818-555-5555',
-	userName: 'User',
+	email: 'johndoe@csco.com',
+	jobTitle: 'NETWORK SPECIALIST',
+	phoneNumber: '1-888-555-5555',
 };
 
 const possibleAttendeesValues = [1, 2, 3, 4, 5];
@@ -83,7 +82,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				switch (acc.status) {
 					case 'completed':
 						cy.getByAutoId('ACCCardFooter')
-							.should('contain', 'Completed');
+							.should('contain', i18n._Completed_);
 						break;
 					case 'in-progress':
 					case 'requested':
@@ -280,7 +279,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			it('PBC-260: Request 1-on-1 form should have employee information pre-filled', () => {
 				// TODO: This is default data. When PBC-259 is complete, switch to use mocks
 				cy.getByAutoId('accRequestModal-CompanyName-Value').should('have.text', defaultCustomerData.companyName);
-				cy.getByAutoId('accRequestModal-CustomerUserName-Value').should('have.text', defaultCustomerData.userName);
+				cy.getByAutoId('accRequestModal-CustomerUserName-Value').should('have.text', defaultCustomerData.ccoID);
 				cy.getByAutoId('accRequestModal-JobTitle-Value').should('have.text', defaultCustomerData.jobTitle);
 				cy.getByAutoId('accRequestModal-Email-Value').should('have.text', defaultCustomerData.email);
 				cy.getByAutoId('accRequestModal-Phone-Value').should('have.text', defaultCustomerData.phoneNumber);
@@ -584,7 +583,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// Click submit, should close the modal, and display the confirmation text
 				cy.getByAutoId('accRequestModal-Submit').should('be.enabled').click();
 				cy.getByAutoId('accRequestModal').should('not.exist');
-				cy.getByAutoId('accRequestSubmitted').should('be.visible').and('have.text', i18n._ACCRequestSubmitted_);
+				// Disabled; waiting for Refactor w/ API testing
+				// cy.getByAutoId('accRequestSubmitted')
+				// 	.should('be.visible')
+				// 	.and('have.text', i18n._ACCRequestSubmitted_);
 			});
 		});
 	});
@@ -713,10 +715,30 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							cy.getByAutoId('.star').should('not.exist');
 						} else if (acc.status === 'completed') {
 							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__green');
-							// cy.getByAutoId('.star').should('exist'); TODO: Pending PBC-325
+							cy.getByAutoId('.star').should('exist');
 						} else {
 							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__clear');
 							cy.getByAutoId('.star').should('not.exist');
+						}
+
+						// Recommended should have "Request 1-on-1", requested/in-progress/completed have text
+						switch (acc.status) {
+							case 'completed':
+								cy.getByAutoId('moreACCList-HoverModal-CompletedMessage')
+									.should('have.text', i18n._Completed_);
+								cy.getByAutoId('Request1on1Button')
+									.should('not.exist');
+								break;
+							case 'in-progress':
+							case 'requested':
+								cy.getByAutoId('moreACCList-HoverModal-CSEMessage')
+									.should('contain', i18n._CSETouch_);
+								cy.getByAutoId('Request1on1Button')
+									.should('not.exist');
+								break;
+							default:	// Default: recommended
+								cy.getByAutoId('Request1on1Button')
+									.should('contain', i18n._Request1on1_);
 						}
 					});
 				});
