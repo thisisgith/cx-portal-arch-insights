@@ -27,7 +27,7 @@ import {
 } from '@sdp-api';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, of, empty } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import {
 	map,
 	mergeMap,
