@@ -37,7 +37,7 @@
 					</dt>
 					<dd>
 						<span *ngIf="contractData?.contractNum; else loadingContractTemplate"
-							data-auto-id="serialConNum" 
+							data-auto-id="serialConNum"
 							[innerText]="contractData.contractNum"></span>
 					</dd>
 					<dt>
@@ -181,8 +181,10 @@
 	</div>
 	<div class="row qtr-margin-top">
 		<div class="col-md-7">
-				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="viewDeviceButton" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
-				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="openCaseButton" [innerText]="'_OpenACase_' | i18n"></button>
+				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="viewDeviceButton"
+					(click)="onViewDetails(serialNumber.query)" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
+				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="openCaseButton"
+					[innerText]="'_OpenACase_' | i18n"></button>
 		</div>
 		<div class="row col-md-5">
 			<div class="col-md-1"></div>
