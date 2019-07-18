@@ -9,7 +9,7 @@ describe('Case Detail Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Case Details', () => {
+		it('Case List', () => {
 			// PBC-231 - Check for expected assets
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click(); // refresh after making a mock change
 			// cy.server();
@@ -22,7 +22,7 @@ describe('Case Detail Spec', () => {
 			// cui-table build means cases in the table rows don't have a data-auto-id
 			// waiting for 2 MR's (add autoid's)
 		});
-		it('Case Details Invalid Case ID', () => {
+		it('Case List Invalid Case ID', () => {
 			// PBC-231 - Check for "invalid" message.
 			const invalidSearchVal = 'abcdefghij';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
@@ -32,6 +32,21 @@ describe('Case Detail Spec', () => {
 				.type(invalidSearchVal.concat('{enter}'));
 			cy.getByAutoId('invalidCaseNumber').should('exist').should('contain', i18n._RMAInvalidCaseNo_);
 			cy.getByAutoId('caseSearchBox').should('exist').clear();
+		});
+	});
+	context.skip('Case Detail View', () => {	
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('Case Details Click on case from List', () => {
+			// PBC-233
+		});
+
+		it('Case Details Click on case', () => {
+			// PBC-233
 		});
 	});
 });
