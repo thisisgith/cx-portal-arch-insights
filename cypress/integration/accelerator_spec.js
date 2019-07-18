@@ -1,10 +1,14 @@
 import MockService from '../support/mockService';
 
-const accMock = new MockService('ACCScenarios'); // for future changes
+const accMock = new MockService('ACCScenarios');
 const solution = 'IBN';
 const useCase = 'Wireless Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
 let accItems = accScenario.response.body.items;
+
+const accUserInfoMock = new MockService('ACCUserInfoScenarios');
+const accUserInfoScenario = accUserInfoMock.getScenario('GET', '(ACC) ACC-Request User Info');
+const accUserInfoResponse = accUserInfoScenario.response.body;
 
 // ACC items are being sorted by the UI in the following order by status:
 // recommended, requested, in-progress, completed
@@ -22,18 +26,6 @@ const invisibleACCItems = accItems.slice(3);
 
 // The recommended panel should only show the first recommended ACC item
 const firstRecommendedACC = Cypress._.head(Cypress._.filter(accItems, { status: 'recommended' }));
-
-// Default ACC request form customer data
-const defaultCustomerData = {
-	ccoID: '12345678',
-	ciscoContact: 'CSE Name',
-	companyName: 'Company',
-	country: 'USA',
-	email: 'Breadf23@company.com',
-	jobTitle: 'Title',
-	phoneNumber: '1-818-555-5555',
-	userName: 'User',
-};
 
 const possibleAttendeesValues = [1, 2, 3, 4, 5];
 
@@ -83,7 +75,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				switch (acc.status) {
 					case 'completed':
 						cy.getByAutoId('ACCCardFooter')
-							.should('contain', 'Completed');
+							.should('contain', i18n._Completed_);
 						break;
 					case 'in-progress':
 					case 'requested':
@@ -278,15 +270,14 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 
 			it('PBC-260: Request 1-on-1 form should have employee information pre-filled', () => {
-				// TODO: This is default data. When PBC-259 is complete, switch to use mocks
-				cy.getByAutoId('accRequestModal-CompanyName-Value').should('have.text', defaultCustomerData.companyName);
-				cy.getByAutoId('accRequestModal-CustomerUserName-Value').should('have.text', defaultCustomerData.userName);
-				cy.getByAutoId('accRequestModal-JobTitle-Value').should('have.text', defaultCustomerData.jobTitle);
-				cy.getByAutoId('accRequestModal-Email-Value').should('have.text', defaultCustomerData.email);
-				cy.getByAutoId('accRequestModal-Phone-Value').should('have.text', defaultCustomerData.phoneNumber);
-				cy.getByAutoId('accRequestModal-CiscoContact-Value').should('have.text', defaultCustomerData.ciscoContact);
-				cy.getByAutoId('accRequestModal-CCOID-Value').should('have.text', defaultCustomerData.ccoID);
-				cy.getByAutoId('accRequestModal-Country-Value').should('have.text', defaultCustomerData.country);
+				cy.getByAutoId('accRequestModal-CompanyName-Value').should('have.text', accUserInfoResponse.companyName);
+				cy.getByAutoId('accRequestModal-CustomerUserName-Value').should('have.text', accUserInfoResponse.ccoId);
+				cy.getByAutoId('accRequestModal-JobTitle-Value').should('have.text', accUserInfoResponse.jobTitle);
+				cy.getByAutoId('accRequestModal-Email-Value').should('have.text', accUserInfoResponse.userEmail);
+				cy.getByAutoId('accRequestModal-Phone-Value').should('have.text', accUserInfoResponse.userPhoneNumber);
+				cy.getByAutoId('accRequestModal-CiscoContact-Value').should('have.text', accUserInfoResponse.ciscoContact);
+				cy.getByAutoId('accRequestModal-CCOID-Value').should('have.text', accUserInfoResponse.ccoId);
+				cy.getByAutoId('accRequestModal-Country-Value').should('have.text', accUserInfoResponse.country);
 			});
 
 			it('PBC-260: Selecting number of attendees should configure additional attendee fields', () => {
@@ -581,10 +572,128 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
 				cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
 
-				// Click submit, should close the modal, and display the confirmation text
+				// Click submit, should close the modal
 				cy.getByAutoId('accRequestModal-Submit').should('be.enabled').click();
 				cy.getByAutoId('accRequestModal').should('not.exist');
-				cy.getByAutoId('accRequestSubmitted').should('be.visible').and('have.text', i18n._ACCRequestSubmitted_);
+			});
+		});
+
+		describe('PBC-259: API Integration', () => {
+			beforeEach(() => {
+				// Setup Cypress mocks and disable app-based mocks so we can verify calls/responses
+				cy.server();
+				cy.route({
+					method: 'GET',
+					url: '/api/customerportal/racetrack/v1/acc/request/user-info',
+				}).as('getUserInfo');
+				cy.route({
+					method: 'POST',
+					url: `/api/customerportal/racetrack/v1/acc/${firstRecommendedACC.accId}/request`,
+					status: 200,
+					response: '',
+				}).as('postRequestForm');
+
+				accUserInfoMock.disable('(ACC) ACC-Request User Info');
+				accMock.disable('(ACC) IBN-WirelessAssurance/SDAccess-Onboard ACCRequestSubmit1');
+			});
+
+			after(() => {
+				// Re-enable default app-based mocks
+				accUserInfoMock.enable('(ACC) ACC-Request User Info');
+				accMock.enable('(ACC) IBN-WirelessAssurance/SDAccess-Onboard ACCRequestSubmit1');
+			});
+
+			it('Opening the Request 1-on-1 form should call user info API', () => {
+				cy.getByAutoId('recommendedACCWatchButton').click();
+				cy.wait('@getUserInfo').its('response.body').then(body => {
+					cy.getByAutoId('accRequestModal-CompanyName-Value').should('have.text', body.companyName);
+					cy.getByAutoId('accRequestModal-CustomerUserName-Value').should('have.text', body.ccoId);
+					cy.getByAutoId('accRequestModal-JobTitle-Value').should('have.text', body.jobTitle);
+					cy.getByAutoId('accRequestModal-Email-Value').should('have.text', body.userEmail);
+					cy.getByAutoId('accRequestModal-Phone-Value').should('have.text', body.userPhoneNumber);
+					cy.getByAutoId('accRequestModal-CiscoContact-Value').should('have.text', body.ciscoContact);
+					cy.getByAutoId('accRequestModal-CCOID-Value').should('have.text', body.ccoId);
+					cy.getByAutoId('accRequestModal-Country-Value').should('have.text', body.country);
+				});
+
+				cy.getByAutoId('ACCCloseRequestModal').click();
+				cy.getByAutoId('accRequestModal').should('not.exist');
+			});
+
+			it('Submitting the Request 1-on-1 form should call the POST /acc/{accId}/request API with user input', () => {
+				// Open the request form modal
+				cy.getByAutoId('recommendedACCWatchButton').click();
+				cy.getByAutoId('accRequestModal').should('be.visible');
+				cy.wait('@getUserInfo').its('response.body').then(userInfoResponseBody => {
+					// Fill in all required fields
+					cy.getByAutoId('accRequestModal-NumberOfAttendees-Select').select('2');
+					cy.getByAutoId('accRequestModal-AdditionalAttendeeName-Input-0')
+						.clear()
+						.type('Automation User 1');
+					cy.getByAutoId('accRequestModal-AdditionalAttendeeEmail-Input-0')
+						.clear()
+						.type('automation1@cisco.com');
+					cy.getByAutoId('accRequestModal-TimeZone-Select').select(i18n['_EasternTime/US_']);
+					cy.getByAutoId('accRequestModal-PreferredTimeMeeting-Morning').click();
+					cy.getByAutoId('accRequestModal-LanguagePreference-Select').select(i18n._English_);
+					cy.getByAutoId('accRequestModal-DNACVersion-Select').select('1.20');
+					cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input').type('Automation - Test Interest');
+					cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input').type('Automation - Test Outcome');
+					cy.getByAutoId('accRequestModal-PreferredEnvironmentAccelerator-NonProd').click();
+
+					// Click submit, should close the modal
+					cy.getByAutoId('accRequestModal-Submit').should('be.enabled').click();
+					cy.getByAutoId('accRequestModal').should('not.exist');
+
+					// Wait for the API call and verify we sent the correct data
+					cy.wait('@postRequestForm').its('request').then(request => {
+						expect(request.body.accTitle)
+							.to.include(firstRecommendedACC.title);
+						expect(request.body.additionalAttendees.length)
+							.to.eq(1);
+						expect(request.body.additionalAttendees[0].name)
+							.to.eq('Automation User 1');
+						expect(request.body.additionalAttendees[0].email)
+							.to.eq('automation1@cisco.com');
+						expect(request.body.businessOutcome)
+							.to.include('Automation - Test Outcome');
+						expect(request.body.ccoId)
+							.to.include(userInfoResponseBody.ccoId);
+						expect(request.body.ciscoContact)
+							.to.include(userInfoResponseBody.ciscoContact);
+						expect(request.body.companyName)
+							.to.include(userInfoResponseBody.companyName);
+						expect(request.body.country)
+							.to.include(userInfoResponseBody.country);
+						expect(request.body.customerId)
+							.to.include('2431199');
+						expect(request.body.dnacVersion)
+							.to.include('1.20');
+						expect(request.body.environment)
+							.to.include('My non-production environment');
+						expect(request.body.jobTitle)
+							.to.include(userInfoResponseBody.jobTitle);
+						expect(request.body.pitstop)
+							.to.include('Onboard');
+						expect(request.body.preferredLanguage)
+							.to.include('English');
+						expect(request.body.preferredSlot)
+							.to.include('Morning');
+						expect(request.body.reasonForInterest)
+							.to.include('Automation - Test Interest');
+						expect(request.body.solution)
+							.to.include(solution);
+						expect(request.body.timezone)
+							.to.include('Eastern Time/US');
+						expect(request.body.usecase)
+							.to.include(useCase);
+						expect(request.body.userEmail)
+							.to.include(userInfoResponseBody.userEmail);
+						expect(request.body.userPhoneNumber)
+							.to.include(userInfoResponseBody.userPhoneNumber);
+					});
+				});
+				cy.getByAutoId('accRequestModal').should('not.exist');
 			});
 		});
 	});
@@ -713,10 +822,30 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							cy.getByAutoId('.star').should('not.exist');
 						} else if (acc.status === 'completed') {
 							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__green');
-							// cy.getByAutoId('.star').should('exist'); TODO: Pending PBC-325
+							cy.getByAutoId('.star').should('exist');
 						} else {
 							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__clear');
 							cy.getByAutoId('.star').should('not.exist');
+						}
+
+						// Recommended should have "Request 1-on-1", requested/in-progress/completed have text
+						switch (acc.status) {
+							case 'completed':
+								cy.getByAutoId('moreACCList-HoverModal-CompletedMessage')
+									.should('have.text', i18n._Completed_);
+								cy.getByAutoId('Request1on1Button')
+									.should('not.exist');
+								break;
+							case 'in-progress':
+							case 'requested':
+								cy.getByAutoId('moreACCList-HoverModal-CSEMessage')
+									.should('contain', i18n._CSETouch_);
+								cy.getByAutoId('Request1on1Button')
+									.should('not.exist');
+								break;
+							default:	// Default: recommended
+								cy.getByAutoId('Request1on1Button')
+									.should('contain', i18n._Request1on1_);
 						}
 					});
 				});

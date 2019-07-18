@@ -118,6 +118,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private InventorySubject: Subject<{ }>;
 
 	public view: 'list' | 'grid' = 'list';
+	public selectOnLoad = false;
 	public selectedAsset: Asset;
 	public fullscreen = false;
 
@@ -361,6 +362,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			if (params.role) {
 				this.assetParams.role = _.castArray(params.role);
 			}
+
+			if (params.serialNumber) {
+				this.assetParams.serialNumber = params.serialNumber;
+			}
+
+			if (params.select) {
+				this.selectOnLoad = true;
+			}
+
+			this.fetchInventory();
 		});
 		this.buildInventorySubject();
 		this.buildFilters();
@@ -881,6 +892,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.paginationCount = `${first}-${last}`;
 
 					this.buildTable();
+
+					if (this.selectOnLoad) {
+						this.onAllSelect(true);
+						this.onSelectionChanged(_.map(this.inventory, item => item.data));
+						if (this.selectedAssets.length === 1) {
+							this.selectedAsset = this.selectedAssets[0];
+						}
+					}
 
 					this.status.inventoryLoading = false;
 				}),
