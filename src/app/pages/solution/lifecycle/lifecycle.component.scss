@@ -331,6 +331,39 @@ $vibblue: #017cad;
 	margin-left: -10px !important;
 }
 
+.table-responsive {
+	margin-top: 20px;
+}
+
+%tr-shared {
+	border-bottom-style: solid;
+	border-bottom-color: $light-gray-3;
+	background-color: white;
+}
+
+tr.th-row th {
+	@extend %tr-shared;
+
+	border-bottom-width: 2px;
+	padding: 20px;
+}
+
+tr.td-row td {
+	@extend %tr-shared;
+
+	border-bottom-width: 1px;
+}
+
+::ng-deep .cui .table th {
+	margin-top: 10px;
+	border-right: transparent !important;
+}
+
+.icon-bookmark-clear {
+	color: transparent;
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: $info;
+}
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {
 // 	color:$vibblue !important;
