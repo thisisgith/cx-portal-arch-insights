@@ -115,6 +115,8 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('_Warranty_-N/A').should('have.text', 'N/A');
 			cy.get('tbody tr').eq(0).click();
 			coverageMock.enable('Covered');
+
+			// TODO: Add test for invalid API response after PBC-352 is fixed
 		});
 	});
 
