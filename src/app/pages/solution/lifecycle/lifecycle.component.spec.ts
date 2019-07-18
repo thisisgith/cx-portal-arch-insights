@@ -344,7 +344,7 @@ describe('LifecycleComponent', () => {
 			component.selectFilter('acc');
 			fixture.detectChanges();
 			expect(component.selectedACC.length)
-				.toEqual(1);
+				.toEqual(2);
 
 			component.setFavorite(acc3);
 			fixture.detectChanges();
@@ -437,6 +437,21 @@ describe('LifecycleComponent', () => {
 			de = fixture.debugElement.query(By.css('#successModal'));
 			expect(de)
 				.toBeFalsy();
+		});
+	});
+
+	describe('E-Learning', () => {
+		it('should have loaded the elearning items', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.elearning.length)
+						.toEqual(4);
+				});
 		});
 	});
 
