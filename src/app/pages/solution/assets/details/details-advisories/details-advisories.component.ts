@@ -27,7 +27,7 @@ import {
 } from '@sdp-api';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, empty } from 'rxjs';
 import {
 	map,
 	mergeMap,
@@ -241,11 +241,19 @@ export class DetailsAdvisoriesComponent implements OnInit {
 	 */
 	private initializeData () {
 		this.isLoading = true;
-		forkJoin(
-			this.getSecurityAdvisories(),
-			this.getFieldNotices(),
-		)
-		.subscribe(() => {
+
+		const obs = _.compact(_.map(this.tabs, (tab: Tab) => {
+			if (_.get(tab.params, ['notice', 'managedNeId'])) {
+				return (tab.key === 'security') ?
+					this.getSecurityAdvisories() : this.getFieldNotices();
+			}
+		}));
+
+		forkJoin(obs)
+		.subscribe(
+		null,
+		null,
+		() => {
 			this.isLoading = false;
 
 			_.each(this.tabs, (tab: Tab) => {
@@ -297,7 +305,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 					},
 					notice: {
 						customerId,
-						managedNeId: [this.asset.managedNeId],
+						managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
 						vulnerabilityStatus: ['POTVUL', 'VUL'],
 					},
 				},
@@ -348,7 +356,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 					},
 					notice: {
 						customerId,
-						managedNeId: [this.asset.managedNeId],
+						managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
 						vulnerabilityStatus: ['POTVUL', 'VUL'],
 					},
 				},
