@@ -26,6 +26,10 @@
 								{
 									"replace": "src/app/components/header/headerImports.module.ts",
 									"with": "src/app/components/header/headerImports.module.prod.ts"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.prod.html"
 								}
 							],
 							"buildOptimizer": true,
