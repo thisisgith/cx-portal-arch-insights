@@ -8,10 +8,10 @@
 </div>
 <div *ngIf="!loading && searchResults?.length">
 	<h6 *ngIf="header"
-		data-auto-id="searchHeader" [innerText]="header"
+		[innerText]="header"
 		class="base-margin-top half-margin-bottom">
 	</h6>
-	<h5 [innerText]="'_XResults_' | i18n:totalCount:searchToken"
+	<h5 data-auto-id="searchHeader" [innerText]="'_XResults_' | i18n:totalCount:searchToken"
 		class="base-margin-bottom">
 	</h5>
 	<span data-auto-id="filterBy" [innerText]="'_FilterBy_' | i18n"></span>

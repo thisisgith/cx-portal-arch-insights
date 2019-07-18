@@ -7,6 +7,7 @@ import {
 	UserService,
 } from '@sdp-api';
 import { AppStatusColorPipe } from './app-status-color.pipe';
+import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 
 import { empty, Subject } from 'rxjs';
 import { catchError, finalize, takeUntil, mergeMap } from 'rxjs/operators';
@@ -32,7 +33,10 @@ enum MemoryUsage {
  * Main Settings component
  */
 @Component({
-	providers: [AppStatusColorPipe],
+	providers: [
+		AppStatusColorPipe,
+		ResourceGaugeColorPipe,
+	],
 	selector: 'app-settings',
 	styleUrls: ['./settings.component.scss'],
 	templateUrl: './settings.component.html',
@@ -84,6 +88,7 @@ export class SettingsComponent  implements OnInit {
 
 	public accepted = false;
 	public error = false;
+	public errorMessage = '';
 	public loading = false;
 
 	constructor (
@@ -102,8 +107,9 @@ export class SettingsComponent  implements OnInit {
 	public getIEHealthStatusData (customerId: string) {
 		return this.controlPointIEHealthStatusAPIService.getIEHealthStatusUsingGET(customerId)
 			.pipe(
-				catchError(() => {
+				catchError(err => {
 					this.error = true;
+					this.errorMessage = err.message;
 
 					return empty();
 				}),
@@ -184,6 +190,16 @@ export class SettingsComponent  implements OnInit {
 	public ngOnInit () {
 		this.loading = true;
 		this.userService.getUser()
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			)
 			.pipe(
 				mergeMap(userResponse =>
 					this.getIEHealthStatusData(String(_.get(userResponse, 'data.customerId')))),
