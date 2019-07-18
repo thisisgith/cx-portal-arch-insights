@@ -11,9 +11,12 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+const plugins = require('@apollo/cypress-util/lib/plugins');
 const wp = require('@cypress/webpack-preprocessor');
 const webpackOptions = require('../webpack.config');
 
 module.exports = on => {
+	plugins.loadPlugins(on);
+
 	on('file:preprocessor', wp({ webpackOptions }));
 };
