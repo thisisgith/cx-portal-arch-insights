@@ -38,13 +38,6 @@ interface AdvisorySummaryItem {
 	alertCount?: number;
 }
 
-/** Index of the security advisories tab */
-const SECURITY_ADVISORIES_INDEX = 0;
-/** Index of the field notices tab */
-const FIELD_NOTICES_INDEX = 1;
-/** Index of the critical bugs tab */
-const CRITICAL_BUGS_INDEX = 2;
-
 /**
  * Advisories Component
  */
@@ -224,8 +217,9 @@ export class AdvisoriesComponent implements OnInit {
 	 * @returns the summary data for the advisories pie chart
 	 */
 	private getAdvisoriesSummary () {
+		const securityTab = _.find(this.tabs, { key: 'security' });
 		const impactFilter =
-			_.find(this.tabs[SECURITY_ADVISORIES_INDEX].filters, { key: 'impact' });
+			_.find(securityTab.filters, { key: 'impact' });
 
 		return this.productAlertsService.getSecurityAdvisorySummaryResponse(customerId)
 		.pipe(
@@ -258,8 +252,9 @@ export class AdvisoriesComponent implements OnInit {
 	 * @returns the info for the Last Updated bar chart on the advisories tab
 	 */
 	private getAdvisoriesLastUpdated () {
+		const securityTab = _.find(this.tabs, { key: 'security' });
 		const lastUpdateFilter =
-			_.find(this.tabs[SECURITY_ADVISORIES_INDEX].filters, { key: 'lastUpdate' });
+			_.find(securityTab.filters, { key: 'lastUpdate' });
 
 		// TODO: implement using endpoint once it exists
 		lastUpdateFilter.seriesData = [
@@ -298,8 +293,9 @@ export class AdvisoriesComponent implements OnInit {
 	 * @returns the info for the Last Updated bar chart on the field notices tab
 	 */
 	private getFieldNoticesLastUpdated () {
+		const fieldNoticesTab = _.find(this.tabs, { key: 'field' });
 		const lastUpdateFilter =
-			_.find(this.tabs[FIELD_NOTICES_INDEX].filters, { key: 'lastUpdate' });
+			_.find(fieldNoticesTab.filters, { key: 'lastUpdate' });
 
 		// TODO: implement using endpoint once it exists
 		lastUpdateFilter.seriesData = [
@@ -338,7 +334,8 @@ export class AdvisoriesComponent implements OnInit {
 	 * @returns the info for the Bug States pie chart on the critical bugs tab
 	 */
 	private getBugStates () {
-		const bugStateFilter = _.find(this.tabs[CRITICAL_BUGS_INDEX].filters, { key: 'state' });
+		const bugsTab = _.find(this.tabs, { key: 'bugs' });
+		const bugStateFilter = _.find(bugsTab.filters, { key: 'state' });
 
 		// TODO: implement using endpoint once it exists
 		bugStateFilter.seriesData = [
@@ -383,11 +380,13 @@ export class AdvisoriesComponent implements OnInit {
 	 * @returns the advisory counts
 	 */
 	private getTotals () {
-		const totalAdvisoryFilter =
-			_.find(this.tabs[SECURITY_ADVISORIES_INDEX].filters, { key: 'total' });
-		const totalFieldNoticesFilter =
-			_.find(this.tabs[FIELD_NOTICES_INDEX].filters, { key: 'total' });
-		const totalBugsFilter = _.find(this.tabs[CRITICAL_BUGS_INDEX].filters, { key: 'total' });
+		const securityTab = _.find(this.tabs, { key: 'security' });
+		const fieldNoticesTab = _.find(this.tabs, { key: 'field' });
+		const bugsTab = _.find(this.tabs, { key: 'bugs' });
+
+		const totalAdvisoryFilter = _.find(securityTab.filters, { key: 'total' });
+		const totalFieldNoticesFilter = _.find(fieldNoticesTab.filters, { key: 'total' });
+		const totalBugsFilter = _.find(bugsTab.filters, { key: 'total' });
 
 		return this.productAlertsService.getVulnerabilityCounts({ customerId })
 		.pipe(
