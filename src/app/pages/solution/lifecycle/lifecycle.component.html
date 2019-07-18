@@ -705,7 +705,7 @@
 </ng-template>
 
 <ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel">
-	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom" attr.data-auto-id="{{ title | i18n }} Panel" *ngIf="viewAll!=='acc' || (viewAll==='acc' && data && data.sessions.length>0)">
+	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom" attr.data-auto-id="{{ title | i18n }} Panel" *ngIf="viewAll!=='acc' || data?.sessions?.length>0">
 		<div class="row half-padding-bottom">
 			<div class="col-md-6 flex-center-vertical">
 				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
