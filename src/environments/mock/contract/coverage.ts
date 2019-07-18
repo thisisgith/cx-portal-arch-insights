@@ -1,8 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { CoverageResponse, CoverageCountsResponse } from '@sdp-api';
 
-import * as _ from 'lodash-es';
-
 /** Base of URL for SDP API */
 const api = '/api/customerportal/contracts/v1/';
 
