@@ -424,7 +424,7 @@
 </ng-template>
 
 <ng-template #horizontalBarChartFilter let-filter="filter">
-	<assets-bar-chart [seriesData]="filter.seriesData"
+	<assets-bar-chart [seriesData]="filter.seriesData" [width]="350"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-bar-chart>
 </ng-template>

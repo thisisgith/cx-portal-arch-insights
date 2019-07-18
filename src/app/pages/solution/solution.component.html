@@ -131,10 +131,10 @@
 </ng-template>
 
 <ng-template #advisoriesFact let-facet="facet">
-	<cui-gauge percentage="75"
-		value="75%"
-		color="primary">
-	</cui-gauge>
+	<div class="full-width">
+		<assets-bar-chart [seriesData]="advisoriesFacet?.seriesData"></assets-bar-chart>
+	</div>
+	
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
