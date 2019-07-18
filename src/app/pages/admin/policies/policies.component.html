@@ -9,13 +9,13 @@
 		<div class="row">
 			<div class="col-lg-7" data-auto-id="settings.policies.scans">
 				<div class="row flex base-margin-right">
-					<div class="col-10">
+					<div class="col-9">
 						<h5 class="base-margin-top half-margin-bottom" data-auto-id="settings.polices.scans.label"
 							[innerText]="'_DiagnosticScans_' | i18n | uppercase"></h5>
 					</div>
-					<div class="col-2">
-						<button class="btn btn--secondary qtr-margin-right"
-							[innerText]="'_NewPolicy_' | i18n | uppercase" (click)="onNewPolicy()">
+					<div class="col-3">
+						<button class="btn btn--small btn--secondary base-margin-top half-margin-bottom qtr-margin-right"
+							[innerText]="'_NewScheduledScan_' | i18n | uppercase" (click)="onNewPolicy()">
 						</button>
 					</div>
 				</div>
@@ -26,6 +26,7 @@
 					data-auto-id="settings.policies.collection.panel">
 					<div class="col-1 flex-center">
 						<span
+						class="icon-small"
 						[ngClass]="scan.enabled ? 'icon-diagnostics text-success' : 'icon-blocked text-muted'"
 						></span>
 					</div>
@@ -33,7 +34,7 @@
 						<div [innerText]="scan.message"></div>
 					</div>
 					<div class="col-1 flex-center">
-						<span class="icon-pencil" [ngClass]="'text-primary'"></span>
+						<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
 					</div>
 				</div>
 
@@ -44,19 +45,19 @@
 					class="panel panel--bordered flex base-margin-right"
 					data-auto-id="settings.policies.collection.panel">
 					<div class="col-1 flex-center">
-						<span class="icon-compliance text-primary"></span>
+						<span class="icon-compliance icon-small text-primary"></span>
 					</div>
 					<div class="col-10">
 						<div [innerText]="collection.message"></div>
 					</div>
 					<div class="col-1 flex-center">
-						<span class="icon-pencil" [ngClass]="'text-primary'"></span>
+						<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-5" data-auto-id="settings.collection.schedule">
 				<h5 class="base-margin-top base-margin-bottom" data-auto-id="settings.system.usage.label"
-					[innerText]="'_Scan&CollectionSchedule_' | i18n | uppercase"></h5>
+					[innerText]="'_ScanAndCollectionSchedule_' | i18n | uppercase"></h5>
 				<div>
 					Calendar
 				</div>
