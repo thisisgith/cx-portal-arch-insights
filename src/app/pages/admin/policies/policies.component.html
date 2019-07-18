@@ -19,34 +19,38 @@
 						</button>
 					</div>
 				</div>
-				<div class="panel panel--bordered flex base-margin-right" data-auto-id="settings.polices.scans.panel">
+
+				<div
+					*ngFor="let scan of scans"
+					class="panel panel--bordered flex base-margin-right"
+					data-auto-id="settings.policies.collection.panel">
 					<div class="col-1 flex-center">
-						<span class="icon-circle half-margin-right" [ngClass]="text-success"></span>
+						<span
+						[ngClass]="scan.enabled ? 'icon-diagnostics text-success' : 'icon-blocked text-muted'"
+						></span>
 					</div>
 					<div class="col-10">
-						<div [innerText]="'X devices scanned daily at 1:30am PST' | i18n"></div>
+						<div [innerText]="scan.message"></div>
 					</div>
 					<div class="col-1 flex-center">
-						<span class="icon-circle half-margin-right" [ngClass]="'text-primary'"></span>
-						Pencil
+						<span class="icon-pencil" [ngClass]="'text-primary'"></span>
 					</div>
 				</div>
 
 				<h5 class="base-margin-top half-margin-bottom" data-auto-id="settings.policies.collection.label"
 					[innerText]="'_Collection_' | i18n | uppercase"></h5>
-				<div *ngFor="let app of [0, 0, 0, 0]" data-auto-id="settings.policies.collection.panel">
-					<div class="panel panel--bordered flex base-margin-right"
-						data-auto-id="settings.polices.scans.panel">
-						<div class="col-1">
-							<span class="icon-circle half-margin-right" [ngClass]="text-primary"></span>
-						</div>
-						<div class="col-10">
-							<div [innerText]="'X devices scanned daily at 1:30am PST'"></div>
-						</div>
-						<div class="col-1">
-							<span class="icon-circle half-margin-right" [ngClass]="text-primary"></span>
-							Pencil
-						</div>
+				<div
+					*ngFor="let collection of collections"
+					class="panel panel--bordered flex base-margin-right"
+					data-auto-id="settings.policies.collection.panel">
+					<div class="col-1 flex-center">
+						<span class="icon-compliance text-primary"></span>
+					</div>
+					<div class="col-10">
+						<div [innerText]="collection.message"></div>
+					</div>
+					<div class="col-1 flex-center">
+						<span class="icon-pencil" [ngClass]="'text-primary'"></span>
 					</div>
 				</div>
 			</div>
