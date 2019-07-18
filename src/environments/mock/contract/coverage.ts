@@ -1,6 +1,8 @@
 import { HttpHeaders } from '@angular/common/http';
 import { CoverageResponse, CoverageCountsResponse } from '@sdp-api';
 
+import * as _ from 'lodash-es';
+
 /** Base of URL for SDP API */
 const api = '/api/customerportal/contracts/v1/';
 
@@ -144,9 +146,19 @@ export const CoverageScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 100,
+					description: 'Not Covered',
+					response: {
+						body: { data: [] },
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
-		url: `${api}products/coverages?customerId=${customerId}&managedNeId=${managedNeId}`,
+		url: `${api}products/coverages?customerId=${customerId}` +
+			`&rows=1&page=1&managedNeId=${managedNeId}`,
 		usecases: ['Use Case 1'],
 	},
 ];
