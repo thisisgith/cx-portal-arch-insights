@@ -17,6 +17,16 @@ const caseMock = new MockService('CaseScenarios');
 const caseScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
 const caseResponse = caseScenario.response.body;
 
+describe.only('test', () => {
+	it('mike 1', () => {
+		expect(true).to.eq(true);
+	});
+
+	it('mike 2', () => {
+		expect(true).to.eq(false);
+	});
+});
+
 describe('Assets', () => { // PBC-41
 	before(() => {
 		cy.window().then(win => win.sessionStorage.clear());

@@ -19,11 +19,4 @@ module.exports = on => {
 	plugins.loadPlugins(on);
 
 	on('file:preprocessor', wp({ webpackOptions }));
-	on('task', {
-		log (message) {
-			console.log(message);
-
-			return true;
-		},
-	});
 };
