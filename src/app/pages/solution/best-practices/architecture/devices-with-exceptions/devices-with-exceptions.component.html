@@ -1,0 +1,6 @@
+<div class="panel">
+		<cui-table [options]="tableOptions" [data]="tableData"></cui-table>
+		<div class="section">
+			<cui-pager [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+		  </div>
+	</div>

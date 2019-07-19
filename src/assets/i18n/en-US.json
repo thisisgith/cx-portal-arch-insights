@@ -272,5 +272,9 @@
 	"_XResults_": "{0} Results for \"{1}\"",
 	"_XSelected_": "{0} Selected",
 	"_YourImpactedDevices_": "Your Impacted Devices",
-	"_YourProducts_": "Your products, documentation & Learning Library resources"
+	"_YourProducts_": "Your products, documentation & Learning Library resources",
+
+	"_BestPractices_":"Best Practices",
+	"_Exceptions_" : "Exceptions",
+	"_AssetsWithExceptions_" : "Assets With Exception"
 }

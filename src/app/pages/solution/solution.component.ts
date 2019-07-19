@@ -74,6 +74,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
 	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
 	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
+	@ViewChild('bestPracticesFacet', { static: true }) public bestPracticesTemplate: TemplateRef<{ }>;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -156,18 +157,24 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				template: this.assetsTemplate,
 				title: I18n.get('_Assets&Coverage_'),
 			},
+			{
+				key: 'best-practices',
+				route: '/solution/bp',
+				template: this.bestPracticesTemplate,
+				title: I18n.get('_BestPractices_'),
+			},
 			// {
 			// 	key: 'security',
 			// 	route: '/solution/security',
 			// 	template: this.securityTemplate,
 			// 	title: I18n.get('_Security_'),
 			// },
-			{
-				key: 'advisories',
-				route: '/solution/advisories',
-				template: this.advisoriesTemplate,
-				title: I18n.get('_Advisories_'),
-			},
+			// {
+			// 	key: 'advisories',
+			// 	route: '/solution/advisories',
+			// 	template: this.advisoriesTemplate,
+			// 	title: I18n.get('_Advisories_'),
+			// },
 			{
 				key: 'resolution',
 				route: '/solution/resolution',

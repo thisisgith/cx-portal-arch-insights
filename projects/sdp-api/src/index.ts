@@ -25,6 +25,9 @@ export * from './lib/contracts/models';
 export * from './lib/contracts/services';
 export * from './lib/contracts/contracts.module';
 
+export * from './lib/architecture/services';
+export * from './lib/architecture/architecture.module';
+
 export {
   Acc,
   AtxFuture,

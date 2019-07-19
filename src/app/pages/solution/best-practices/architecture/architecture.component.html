@@ -1,0 +1,123 @@
+
+<!-- <div class="panel"> -->
+    <!-- <div class="row">
+        <div class="col-md-2" [chart]="chart" class="RiskChart" (click)="setTabIndex(0)"></div> 
+        <h1 class="col-md-2" (click)="setTabIndex(1)">557</h1>
+    </div> -->
+        <!-- <cui-tabs [inline]="inline"
+        [alignment]="alignment"
+        [bordered]="bordered"
+        [tall]="tall"
+        [vertical]="vertical"
+        [(activeTabIndex)]="tabIndex">  -->
+        <!-- NOTE cuiTabPre and cuiTabPost content is only visible if the cui-tabs [inline] input is set to true -->
+            
+            <!-- <cui-tab label="Exceptions">
+                <app-cbp-rule-violation></app-cbp-rule-violation>    
+            </cui-tab>
+            
+            <cui-tab label="Devices With Exceptions">
+                    <span> 
+                            <app-devices-with-exceptions></app-devices-with-exceptions>
+                    </span>
+            </cui-tab> -->
+        <!-- </cui-tabs> -->
+    <!-- <div class="row">
+        <div class="col-md-3">
+               
+        </div>
+    </div> -->
+
+
+<!-- </div> -->
+
+<!-- <div class="panel">
+        <ul id="tabsv1" class="tabs">
+                <li id="tabsv1-1" class="tab active">
+                    <a tabindex="0">
+                        <div [chart]="chart" class="RiskChart"></div>
+                        <div class="tab__heading">Devices</div>
+                    </a>
+                </li>
+                <li id="tabsv1-2" class="tab">
+                    <a tabindex="1">
+                        <div><h1>5544</h1></div>
+                        <div class="tab__heading">Devices With Exceptions</div>
+                    </a>
+                </li>
+            </ul>
+            <div id="tabsv1-content" class="tab-content">
+                <div id="tabsv1-1-content" class="tab-pane active">
+                        <app-cbp-rule-violation></app-cbp-rule-violation> 
+                </div>
+                <div id="tabsv1-2-content" class="tab-pane">
+                        <app-devices-with-exceptions></app-devices-with-exceptions>
+                </div>
+            </div>
+</div> -->
+
+<!-- <div class="panel">
+        <ng-template #facetPanel>
+                <div class="row no-gutters flex-fill flex-center">
+                    <div *ngFor="let facet of facets; index as i"
+                        attr.data-auto-id="Facet-{{ facet.title }}"
+                        (click)="selectFacet(facet)"
+                        class="panel panel--bordered-right flex-center row"
+                        [ngClass]="{
+                            'panel--bordered-left': i === 0,
+                            'facet--selected': facet.selected,
+                            'col-md-2': shownTabs === 5,
+                            'col-md-3': shownTabs === 4
+                        }"> -->
+                        <!-- <div class="col-md-12 flex-center">
+                            <ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
+                        </div> -->
+                        <!-- TODO reenable the lightbulbs if we have some data to work with -->
+                        <!-- <div class="col-md-2"></div> -->
+                        <!-- <div class="col-md-12 flex flex-center">
+                            <span [innerText]="facet.title"></span>
+                        </div> -->
+                        <!-- <div class="col-md-2 flex flex-center">
+                            <button class="btn btn--icon btn--small" disabled>
+                                <span class="icon-lightbulb"></span>
+                            </button>
+                        </div> -->
+                    <!-- </div>
+                </div>
+            </ng-template> -->
+            <!-- <ng-template #ExceptionFacet let-facet="facet">
+                    <cui-gauge percentage="75"
+                        value="75%"
+                        color="primary">
+                    </cui-gauge>
+                </ng-template> -->
+                
+                <!-- <ng-template #AssetWithExceptionFacet let-facet="facet">
+                    <cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
+                        value="{{ facet?.data?.gaugePercent || 0 }}%"
+                        color="primary">
+                    </cui-gauge>
+                </ng-template> -->
+<!-- </div> -->
+
+
+<div class="panel">
+    <cui-tabs-nav>
+  <!-- NOTE cuiTabLinkPre and cuiTabLinkPost content is only visible if the cui-tabs [inline] input is set to true -->
+
+
+  <cui-tab-link [url]="['Exceptions']">
+    <div>
+      <div [chart]="chart" class="RiskChart"></div>
+      <div>Exceptions</div>
+    </div>
+  </cui-tab-link>
+  <cui-tab-link [url]="['DevicesWithExceptions']">
+    <div>
+      <div><h1>4554</h1></div>
+      <div>Devices With Exceptions</div>
+    </div>
+  </cui-tab-link>
+  </cui-tabs-nav>
+</div>
+<router-outlet></router-outlet>

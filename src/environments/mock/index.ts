@@ -16,3 +16,4 @@ export { RoleScenarios } from './inventory/roles';
 export { SearchScenarios } from './search/search';
 export { SuccessPathScenarios } from './racetrack/successPaths';
 export { VulnerabilityScenarios } from './product-alerts/vulnerabilities';
+export { ArchitectureScenarios } from './architecture/architecture';
