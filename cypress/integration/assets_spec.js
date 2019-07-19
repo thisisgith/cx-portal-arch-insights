@@ -438,7 +438,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId(`SerialNumber-${serial}`)
 						.should('have.text', asset.serialNumber);
 					cy.getByAutoId(`Software-${serial}`).should('have.text', software);
-					const role = asset.role ? asset.role : 'N/A';
+					const role = asset.role ? startCase(toLower(asset.role)) : 'N/A'; // PBC-281
 					cy.getByAutoId(`Role-${serial}`).should('have.text', role);
 					if (asset.criticalAdvisories) {
 						cy.getByAutoId(`AdvisoryCount-${serial}`)
@@ -468,6 +468,14 @@ describe('Assets', () => { // PBC-41
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(1).click()
 				.should('not.have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
+			cy.get('[data-auto-id*="Device-"]').eq(0).click();
+			cy.get('app-panel360').should('be.visible'); // PBC-286
+			cy.get('[data-auto-id*="Device-"]').eq(0).click();
+			cy.get('cui-dropdown[data-auto-id*="InventoryItem-FOC1544Y16T-dropdown"]')
+				.eq(0).click();
+			cy.get('div.card div.dropdown__menu').eq(0).should('be.visible');
+			cy.get('cui-dropdown[data-auto-id*="InventoryItem-FOC1544Y16T-dropdown"]')
+				.eq(0).click();
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(0).click()
 				.should('not.have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('not.be.visible');
@@ -565,8 +573,14 @@ describe('Assets', () => { // PBC-41
 			});
 		});
 
-		it.skip('Remembers the user\'s view preference', () => {
-			// TODO: Waiting on PBC-289
+		it('Remembers the user\'s view preference', () => { // PBC-289
+			cy.reload();
+			cy.waitForAppLoading();
+			cy.get('div.card').should('be.visible');
+			cy.getByAutoId('list-view-btn').click();
+			cy.reload();
+			cy.waitForAppLoading();
+			cy.get('table').should('be.visible');
 		});
 	});
 });
