@@ -573,8 +573,14 @@ describe('Assets', () => { // PBC-41
 			});
 		});
 
-		it.skip('Remembers the user\'s view preference', () => {
-			// TODO: Waiting on PBC-289
+		it('Remembers the user\'s view preference', () => { // PBC-289
+			cy.reload();
+			cy.waitForAppLoading();
+			cy.get('div.card').should('be.visible');
+			cy.getByAutoId('list-view-btn').click();
+			cy.reload();
+			cy.waitForAppLoading();
+			cy.get('table').should('be.visible');
 		});
 	});
 });
