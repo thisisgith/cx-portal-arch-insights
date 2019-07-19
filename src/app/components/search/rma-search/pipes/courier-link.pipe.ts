@@ -5,8 +5,12 @@ import { Pipe, PipeTransform } from '@angular/core';
  * {0} param corresponds to trackingNumber
  */
 const courierMap = {
-	BLUEDART: `<a data-auto-id="courierID" target="_blank"
-		href='https://www.bluedart.com/'> https: // www.bluedart.com</a>`,
+	BLUEDART: `
+	<a data-auto-id="courierID" target="_blank"
+		href="https://www.bluedart.com/">
+		https://www.bluedart.com
+	</a>
+	`,
 	CHOICE: `
 	<a data-auto-id="courierID"
 		target="_blank" href="https://www.Choicecourier.com">
