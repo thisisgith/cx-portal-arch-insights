@@ -110,7 +110,7 @@ export class ResolutionComponent {
 			bordered: false,
 			columns: [
 				{
-					// autoIdHeader: 'Severity-Header',
+					autoIdHeader: 'Severity-Header',
 					key: 'priority',
 					name: I18n.get('_RMACaseSeverity_'),
 					sortable: true,

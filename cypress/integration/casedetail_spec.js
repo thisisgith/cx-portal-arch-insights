@@ -35,7 +35,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('Device-Cell').should('exist').should('have.length', 10);
 			cy.getByAutoId('Summary-Cell').should('exist').should('have.length', 10);
 			cy.getByAutoId('Status-Cell').should('exist').should('have.length', 10);
-			// need assert for updated-cell
+			// TODO need assert for updated-cell
 			// cy.getByAutoId('caseUpdatedDate').should('exist').should('have.length', 10);
 		});
 
@@ -64,6 +64,21 @@ describe('Case Detail Spec', () => {
 
 		it('Case Details Click on case', () => {
 			// PBC-233
+		});
+	});
+	context.skip('Case Detail Notes', () => {	
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('Case Details Notes test TBD', () => {
+			// PBC-234
+		});
+
+		it('Case Details Notes test TBD', () => {
+			// PBC-234
 		});
 	});
 });
