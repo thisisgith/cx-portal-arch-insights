@@ -27941,15 +27941,16 @@ function MockNotices (
 	rows?: number,
 	page?: number): FieldNoticeResponse {
 
-	const data = _.cloneDeep(mockNoticeResponse);
-
+	let data = _.cloneDeep(mockNoticeResponse);
+	const total = data.length;
 	let pagination: Pagination;
 	if (rows && page) {
+		data = data.slice((rows * (page - 1)), (rows * page));
 		pagination = {
 			page,
 			rows,
-			pages: Math.ceil(data.length / rows),
-			total: data.length,
+			total,
+			pages: Math.ceil(total / rows),
 		};
 	}
 
@@ -27976,6 +27977,60 @@ export const FieldNoticeScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Field Notices Advisories - Page 1',
+					response: {
+						body: MockNotices(10, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&` +
+			'vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&rows=10&page=1',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Field Notices Advisories - Page 2',
+					response: {
+						body: MockNotices(10, 2),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&` +
+			'vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&rows=10&page=2',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Field Notices Advisories - Page 1',
+					response: {
+						body: MockNotices(10, 3),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&` +
+			'vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&rows=10&page=3',
 		usecases: ['Use Case 1'],
 	},
 ];

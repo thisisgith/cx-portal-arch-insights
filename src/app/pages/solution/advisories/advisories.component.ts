@@ -1,35 +1,73 @@
 import {
 	Component,
 	OnInit,
-	TemplateRef,
 	ViewChild,
+	TemplateRef,
+	OnDestroy,
 } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { Subscription, of, forkJoin } from 'rxjs';
+import {
+	ProductAlertsService,
+	SecurityAdvisory,
+	SecurityAdvisoryImpactCountResponse,
+	SecurityAdvisoryImpactedInfoAndCount,
+	ProductAlertsPagination as Pagination,
+	FieldNoticeResponse,
+	FieldNoticeBulletinResponse,
+	FieldNoticeBulletin,
+	SecurityAdvisorySummary,
+	VulnerabilityResponse,
+} from '@sdp-api';
+import { of, forkJoin, Subject } from 'rxjs';
 import * as _ from 'lodash-es';
+import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { FormGroup, FormControl } from '@angular/forms';
+import {
+	map,
+	catchError,
+	switchMap,
+	mergeMap,
+} from 'rxjs/operators';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FromNowPipe } from '@cisco-ngx/cui-pipes';
+import { DatePipe } from '@angular/common';
 import { VisualFilter } from '@interfaces';
-import { ProductAlertsService, SecurityAdvisorySummary, VulnerabilityResponse } from '@sdp-api';
-import { catchError, map } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import { StrictHttpResponse } from 'projects/sdp-api/src/lib/core/strict-http-response';
 
-/** Our current customerId */
-const customerId = '2431199';
-
 /** Interface for a tab */
 interface Tab {
+	data: SecurityAdvisoryImpactedInfoAndCount[]; // add more types as they copme
 	disabled?: boolean;
 	key: string;
 	label: string;
+	loading: boolean;
 	template: TemplateRef<{ }>;
 	selected?: boolean;
 	filtered?: boolean;
 	filters?: VisualFilter[];
+	options?: CuiTableOptions;
 	pagination?: {
+		rows: number;
+		page: number;
 		countStr: string;
 		total: number;
 	};
+	params?: ProductAlertsService.GetTopSecurityAdvisoriesParams |
+	{
+		notice: ProductAlertsService.GetFieldNoticeParams;
+		bulletin: ProductAlertsService.GetFieldNoticeBulletinParams;
+	};
+	subject?: Subject<{ }>;
+}
+
+/** Our current customerId */
+const customerId = '2431199';
+
+/** Interface for advisory summary data */
+interface AdvisorySummaryItem {
+	alertSeverity?: string;
+	alertCount?: number;
 }
 
 /** Interface for advisory summary data */
@@ -46,18 +84,13 @@ interface AdvisorySummaryItem {
 	styleUrls: ['./advisories.component.scss'],
 	templateUrl: './advisories.component.html',
 })
-export class AdvisoriesComponent implements OnInit {
-
+export class AdvisoriesComponent implements OnInit, OnDestroy {
 	public status = {
 		filterCollapse: false,
 		isLoading: true,
-		loading: {
-
-		},
 	};
 	public search: FormControl = new FormControl('');
 	public searchForm: FormGroup;
-	private searchSubscribe: Subscription;
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
@@ -72,20 +105,25 @@ export class AdvisoriesComponent implements OnInit {
 	public tabs: Tab[] = [];
 
 	public fullscreen = false;
-
-	@ViewChild('securityContent', { static: true }) private securityTemplate: TemplateRef<{ }>;
-	@ViewChild('fieldContent', { static: true }) private fieldTemplate: TemplateRef<{ }>;
-	@ViewChild('bugContent', { static: true }) private bugTemplate: TemplateRef<{ }>;
+	public selectedAdvisory: SecurityAdvisory;
+	public securityAdvisories: SecurityAdvisoryImpactedInfoAndCount[];
+	public activeTab: number;
+	@ViewChild('impactTemplate', { static: true }) private impactTemplate: TemplateRef<{ }>;
+	@ViewChild('impactedCountTemplate', { static: true })
+		private impactedCountTemplate: TemplateRef<{ }>;
+	@ViewChild('content', { static: true }) private contentTemplate: TemplateRef<{ }>;
 	@ViewChild('totalFilter', { static: true }) private totalFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('pieChartFilter', { static: true }) private pieChartFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('verticalBarChartFilter', { static: true })
 		private verticalBarChartFilterTemplate: TemplateRef<{ }>;
 
 	constructor (
-		private productAlertsService: ProductAlertsService,
-		private logger: LogService,
+			private logger: LogService,
+			private route: ActivatedRoute,
+			private router: Router,
+			private fromNow: FromNowPipe,
+			private productAlertsService: ProductAlertsService,
 	) { }
-
 	/**
 	 * Returns the currently selected tab
 	 * @returns the tab
@@ -106,8 +144,10 @@ export class AdvisoriesComponent implements OnInit {
 	 * Initializes the tabs
 	 */
 	private buildTabs () {
+		const datePipe = new DatePipe('en-us');
 		this.tabs = [
 			{
+				data: [],
 				filters: [
 					{
 						key: 'total',
@@ -136,10 +176,60 @@ export class AdvisoriesComponent implements OnInit {
 				],
 				key: 'security',
 				label: I18n.get('_SecurityAdvisories_'),
+				loading: true,
+				options: new CuiTableOptions({
+					bordered: true,
+					columns: [
+						{
+							name: I18n.get('_Impact_'),
+							sortable: true,
+							sortDirection: 'asc',
+							template: this.impactTemplate,
+						},
+						{
+							key: 'headline',
+							name: I18n.get('_Title_'),
+							sortable: false,
+							value: 'headline',
+						},
+						{
+							name:
+								`${I18n.get('_ImpactedAsset_')} \
+								(${I18n.get('_PotentiallyImpacted_')})`,
+							sortable: false,
+							template: this.impactedCountTemplate,
+						},
+						{
+							key: 'revisedDate',
+							name: I18n.get('_LastUpdated_'),
+							render: item => item.revisedDate ?
+								datePipe.transform(
+									new Date(item.revisedDate), 'yyyy MMM dd') :
+									I18n.get('_Never_'),
+							sortable: false,
+							value: 'revisedDate',
+						},
+						{
+							name: I18n.get('_Version_'),
+							sortable: false,
+						},
+					],
+					dynamicData: true,
+					padding: 'loose',
+					striped: false,
+					wrapText: true,
+				}),
+				params: {
+					customerId,
+					page: 1,
+					rows: 10,
+				},
 				selected: true,
-				template: this.securityTemplate,
+				subject: new Subject(),
+				template: this.contentTemplate,
 			},
 			{
+				data: [],
 				filters: [
 					{
 						key: 'total',
@@ -160,9 +250,68 @@ export class AdvisoriesComponent implements OnInit {
 				],
 				key: 'field',
 				label: I18n.get('_FieldNotices_'),
-				template: this.fieldTemplate,
+				loading: false,
+				options: new CuiTableOptions({
+					bordered: true,
+					columns: [
+						{
+							key: 'fieldNoticeId',
+							name: I18n.get('_ID_'),
+							sortable: true,
+							sortDirection: 'asc',
+							value: 'fieldNoticeId',
+						},
+						{
+							key: 'bulletinTitle',
+							name: I18n.get('_Title_'),
+							sortable: false,
+							value: 'bulletinTitle',
+						},
+						{
+							name: `${I18n.get('_VulnerableAssets_')}`,
+							sortable: false,
+						},
+						{
+							name: `${I18n.get('_PotentiallyVulnerableAssets_')}`,
+							sortable: false,
+						},
+						{
+							key: 'bulletinLastUpdated',
+							name: I18n.get('_LastUpdated_'),
+							render: item => item.bulletinLastUpdated ?
+								datePipe.transform(
+									new Date(item.bulletinLastUpdated), 'yyyy MMM dd') :
+								I18n.get('_Never_'),
+							sortable: true,
+							value: 'bulletinLastUpdated',
+						},
+						{
+							name: I18n.get('_Version_'),
+							sortable: false,
+						},
+					],
+					dynamicData: true,
+					padding: 'loose',
+					striped: false,
+					wrapText: true,
+				}),
+				params: {
+					bulletin: { },
+					notice: {
+						customerId,
+						page: 1,
+						rows: 10,
+						vulnerabilityStatus: ['POTVUL', 'VUL'],
+					},
+					page: 1,
+					rows: 10,
+				},
+				subject: new Subject(),
+				template: this.contentTemplate,
 			},
 			{
+				data: [],
+				disabled: true,
 				filters: [
 					{
 						key: 'total',
@@ -183,33 +332,20 @@ export class AdvisoriesComponent implements OnInit {
 				],
 				key: 'bugs',
 				label: I18n.get('_CriticalBugs_'),
-				template: this.bugTemplate,
+				loading: false,
+				params: {
+					customerId,
+					page: 1,
+					rows: 10,
+				},
+				subject: new Subject(),
+				template: this.contentTemplate,
 			},
 		];
+
+		this.buildSecurityAdvisoriesSubject();
+		this.buildFieldNoticesSubject();
 		this.loadData();
-	}
-
-	/**
-	 * Function used to load all of the data
-	 */
-	private loadData () {
-		this.status.isLoading = true;
-		forkJoin(
-			this.getAdvisoriesSummary(),
-			this.getAdvisoriesLastUpdated(),
-			this.getFieldNoticesLastUpdated(),
-			this.getBugStates(),
-			this.getTotals(),
-		)
-		.subscribe(() => {
-			this.status.isLoading = false;
-
-			if (window.Cypress) {
-				window.loading = false;
-			}
-
-			this.logger.debug('advisories.component : loadData() :: Finished Loading');
-		});
 	}
 
 	/**
@@ -478,12 +614,203 @@ export class AdvisoriesComponent implements OnInit {
 		this.tabs[event].selected = true;
 	}
 
+	/**
+	 * Fetches the field notices
+	 * @returns an observable for fetching field notices
+	 */
+	private fetchFieldNotices () {
+		const tab = _.find(this.tabs, { key: 'field' });
+		tab.params.notice.page = tab.params.page;
+		tab.loading = true;
+
+		return this.productAlertsService.getFieldNotice(tab.params.notice)
+		.pipe(
+			mergeMap((response: FieldNoticeResponse) => {
+				tab.data = response.data;
+				const page = tab.params.notice.page;
+				const rows = tab.params.notice.rows;
+				tab.params.bulletin.fieldNoticeId = _.uniq(_.map(response.data, 'fieldNoticeId')
+					.splice((page - 1) * rows, page * rows));
+				tab.pagination = this.buildPagination(response.Pagination);
+
+				return tab.params.bulletin.fieldNoticeId ? this.getFieldNoticeBulletins() :
+					of({ });
+			}),
+			catchError(err => {
+				tab.loading = false;
+				this.logger.error('advisories.component : fetchFieldNotices() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Retrieves the field notice bulletins
+	 * @returns the data
+	 */
+	private getFieldNoticeBulletins () {
+		const fieldTab = _.find(this.tabs, { key: 'field' });
+
+		return this.productAlertsService.getFieldNoticeBulletin(fieldTab.params.bulletin)
+		.pipe(
+			map((response: FieldNoticeBulletinResponse) => {
+
+				const bulletins = _.reduce(response.data,
+					(obj: any, bulletin: FieldNoticeBulletin) => {
+						const newBulletin = _.cloneDeep(bulletin);
+						const id = _.get(newBulletin, 'fieldNoticeId');
+						newBulletin.bulletinTitle = _.trim(
+							_.replace(newBulletin.bulletinTitle, /FN[0-9]{1,5}[ \t]+-/, ''));
+
+						return {
+							...obj,
+							[id]: _.omit(newBulletin, ['fieldNoticeId']),
+						};
+					}, { });
+
+				fieldTab.data = _.map(fieldTab.data, notice => {
+					const id = _.get(notice, 'fieldNoticeId');
+
+					return { ...notice, ...bulletins[id] };
+				});
+
+				fieldTab.loading = false;
+			}),
+			catchError(err => {
+				fieldTab.loading = false;
+
+				this.logger.error('advisories.component : getFieldNoticeBulletins() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Fetches advisories
+	 * @returns an observable for fetching advisories
+	 */
+	private fetchSecurityAdvisories () {
+		const tab = _.find(this.tabs, { key: 'security' });
+		tab.loading = true;
+
+		return this.productAlertsService.getTopSecurityAdvisories(tab.params)
+			.pipe(
+				map((results: SecurityAdvisoryImpactCountResponse) => {
+					tab.data = results.data;
+					tab.pagination = this.buildPagination(results.Pagination);
+					tab.loading = false;
+				}),
+				catchError(err => {
+					this.logger.error('advisories.component : fetchSecurityAdvisories() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+					tab.loading = false;
+
+					return of({ });
+				}),
+			);
+	}
+
+	/**
+	 * Constructs the pagination
+	 * @param pagination Pagination object
+	 * @returns custom pagination object
+	 */
+	private buildPagination (pagination: Pagination) {
+		const first = (pagination.rows * (pagination.page - 1)) + 1;
+		let last = (pagination.rows * pagination.page);
+		if (last > pagination.total) {
+			last = pagination.total;
+		}
+
+		return {
+			countStr: `${first}-${last}`,
+			page: pagination.page,
+			rows: pagination.rows,
+			total: pagination.total,
+		};
+	}
+
+	/**
+	 * Builds our advisories subject for cancellable http requests
+	 */
+	private buildSecurityAdvisoriesSubject () {
+		const tab = _.find(this.tabs, { key: 'security' });
+		tab.subject.pipe(
+			switchMap(() => this.fetchSecurityAdvisories()),
+		)
+		.subscribe();
+	}
+
+	/**
+	 * Builds our advisories subject for cancellable http requests
+	 */
+	private buildFieldNoticesSubject () {
+		const tab = _.find(this.tabs, { key: 'field' });
+		tab.subject.pipe(
+			switchMap(() => this.fetchFieldNotices()),
+		)
+		.subscribe();
+	}
+
+	/**
+	 * Load data for the filters and table
+	 */
+	private loadData () {
+		this.status.isLoading = true;
+		forkJoin(
+			this.getAdvisoriesSummary(),
+			this.getAdvisoriesLastUpdated(),
+			this.getFieldNoticesLastUpdated(),
+			this.getBugStates(),
+			this.getTotals(),
+		)
+		.pipe(
+			map(() => _.map(this.tabs, tab => tab.subject.next())),
+		)
+		.subscribe(() => {
+			this.status.isLoading = false;
+
+			if (window.Cypress) {
+				window.loading = false;
+			}
+
+			this.logger.debug('advisories.component : loadData() :: Finished Loading');
+		});
+	}
+
+	/**
+	 * Page change handler
+	 * @param event the event emitted
+	 * @param tab tab to change page on
+	 */
+	public onPageChanged (event: any, tab) {
+		if (event.page + 1 !== tab.params.page) {
+			tab.params.page = (event.page + 1);
+			tab.subject.next();
+		}
+	}
+
 	/** Initializer Function */
 	public ngOnInit () {
+		if (window.Cypress) {
+			window.loading = true;
+		}
 		this.buildTabs();
 		this.searchForm = new FormGroup({
 			search: this.search,
 		});
+		this.loadData();
+	}
+
+	/**
+	 * Cancel all subjects
+	 */
+	public ngOnDestroy () {
+		_.every(this.tabs, tab => _.invoke(tab.subject, 'unsubscribe'));
 	}
 
 	/**
