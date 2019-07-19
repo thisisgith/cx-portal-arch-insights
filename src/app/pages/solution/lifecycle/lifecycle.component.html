@@ -140,12 +140,12 @@
 	<div id="recommended-item" class="panel panel--bordered no-padding-top no-padding-left no-padding-right round-edges" attr.data-auto-id="{{ autoid }}">
 		<img class="round-edges-top max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
 		<div class="base-padding-top half-padding-left">
-			<div class="qtr-padding-bottom text-blue">
-				<span class="icon-flagged qtr-padding-right qtr-padding-bottom" attr.data-auto-id="{{ autoid }}-Flag"></span>
-				<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
-			</div>
-			<div class="text-large base-padding-bottom" [innerText]="title" attr.data-auto-id="{{ autoid }}-Title"></div>
-			<ng-container *ngTemplateOutlet="template"></ng-container>
+			<ng-container *ngTemplateOutlet="template; context: {
+				item: item,
+				autoid: autoid,
+				title: title
+			}">
+			</ng-container>
 		</div>
 		<ng-container *ngIf="autoid">
 			<ng-container *ngTemplateOutlet="recommendedDescription; context: {
@@ -177,22 +177,27 @@
 			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 			<span [innerText]="item.duration"></span>
 		</div>
-		<div class="base-padding-top half-padding-left" *ngIf="autoid==='recommendedACC' || (autoid==='moreACCList' && item.status==='recommended')">
-			<button data-auto-id="Request1on1ACCButton" (click)="selectAccRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
+		<div class="base-padding-top half-padding-left" *ngIf="(autoid==='recommendedACC' || autoid==='moreACCList') && item.status==='recommended'">
+			<button data-auto-id="Request1on1ACCButton" (click)="selectAccRequestForm(true, item.accId, item.title)" class="btn btn--small btn--secondary text-uppercase"
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
 		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="autoid==='moreACCList' && (item.status==='requested' || item.status==='in-progress')">
+		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="(autoid==='moreACCList' || autoid==='recommendedACC') && (item.status==='requested' || item.status==='in-progress')" attr.data-auto-id="{{ autoid }}-HoverModal-CSEMessage">
 			<span [innerText]="'_CSETouch_' | i18n"></span>
 		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="autoid==='moreACCList' && item.status==='completed'">
+		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="(autoid==='moreACCList' || autoid==='recommendedACC') && item.status==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
 			<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
 			<span [innerText]="'_Completed_' | i18n"></span>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #recommendedATX>
+<ng-template #recommendedATX let-autoid="autoid" let-title="title">
+	<div class="qtr-padding-bottom text-blue">
+		<span class="icon-flagged qtr-padding-right qtr-padding-bottom" attr.data-auto-id="{{ autoid }}-Flag"></span>
+		<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
+	</div>
+	<div class="text-large base-padding-bottom text-capitalize" [innerText]="title" attr.data-auto-id="{{ autoid }}-Title"></div>
 	<button data-auto-id="recommendedATXScheduleButton"
 		class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
 		(click)="atxScheduleCardOpened = true"
@@ -204,14 +209,23 @@
 	</a>
 </ng-template>
 
-<ng-template #recommendedACC>
-	<ng-container *ngIf="!accRequestSubmitted">
-		<button data-auto-id="recommendedACCWatchButton" (click)="selectAccRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
+<ng-template #recommendedACC let-item="item" let-autoid="autoid">
+	<div class="qtr-padding-bottom text-blue">
+		<span class="icon-flagged qtr-padding-right qtr-padding-bottom" attr.data-auto-id="{{ autoid }}-Flag"></span>
+		<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
+	</div>
+	<div class="text-large base-padding-bottom" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-Title"></div>
+	<ng-container *ngIf="item.status === 'recommended'">
+		<button data-auto-id="recommendedACCWatchButton" (click)="selectAccRequestForm(true, item.accId, item.title)" class="btn btn--small btn--secondary text-uppercase"
 			[innerText]="'_Request1on1_' | i18n">
 		</button>
 	</ng-container>
-	<ng-container *ngIf="accRequestSubmitted">
+	<ng-container *ngIf="item.status === 'in-progress' || item.status === 'requested'">
 		<span class="text-success" [innerText]="'_ACCRequestSubmitted_' | i18n"></span>
+	</ng-container>
+	<ng-container *ngIf="item.status === 'completed'">
+		<div class="text-success icon-certified qtr-padding-right"></div>
+		<span [innerText]="'_Completed_' | i18n"></span>
 	</ng-container>
 </ng-template>
 
@@ -311,12 +325,12 @@
 			<div id="moreAccList-item" class="panel small-panel" attr.data-auto-id="{{ autoid }}-item">
 				<div class="row">
 					<div class="col-md-11 text-blue" [innerText]="item.title"></div>
-					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'"></div>
-					<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite"></div>
-					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'in-progress'">
+					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
+					<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite" attr.data-auto-id="{{ autoid }}-Bookmark"></div>
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'in-progress'" attr.data-auto-id="{{ autoid }}-ProgressBar">
 						<div class="col-md-1 progressbar__fill"></div>
 					</div>
-					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'requested'">
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'requested'"  attr.data-auto-id="{{ autoid }}-RequestedBar">
 						<div class="col-md-1 progressbar__fill"></div>
 					</div>
 				</div>
@@ -515,7 +529,7 @@
 					data-auto-id="ACCTopicsAvailable">
 				</div>
 				<div class="col-md-2">
-					<cui-select id="acc-filter" 
+					<cui-select id="acc-filter"
 						data-auto-id="acc-filter"
 						[placeholder]="'_FilterBy_' | i18n"
 						[items]="statusOptions"
@@ -561,7 +575,7 @@
 					<div class="card__footer">
 						<div class="card_footer_item" data-auto-id="ACCCardFooter">
 							<div class="text-left text-info"  *ngIf="item.status === 'recommended'">
-								<button data-auto-id="Request1on1Button" (click)="selectAccRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
+								<button data-auto-id="Request1on1Button" (click)="selectAccRequestForm(true, item.accId, item.title)" class="btn btn--small btn--secondary text-uppercase"
 									[innerText]="'_Request1on1_' | i18n">
 								</button>
 							</div>
@@ -702,7 +716,7 @@
 </ng-template>
 
 <ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel">
-	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom" attr.data-auto-id="{{ title | i18n }} Panel">
+	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom" attr.data-auto-id="{{ title | i18n }} Panel" *ngIf="viewAll!=='acc' || data?.sessions?.length>0">
 		<div class="row half-padding-bottom">
 			<div class="col-md-6 flex-center-vertical">
 				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
@@ -728,6 +742,11 @@
 
 <ng-container *ngIf="selectAccComponent">
 	<acc-request-form (visibleComponent)="selectAccRequestForm($event)"
+		[accId]="accIdRequestForm"
+		[accTitle]="accTitleRequestForm"
+		[solution]="selectedSolution.name"
+		[technology]="selectedTechnology.name"
+		[pitstop]="currentPitstop.name"
 		(submitted)="accRequestSubmit($event)">
 	</acc-request-form>
 </ng-container>

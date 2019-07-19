@@ -1,4 +1,4 @@
-image: containers.cisco.com/cway/gitlab-ci:3.3.2
+image: containers.cisco.com/cway/gitlab-ci:3.4.0
 
 stages:
   - setup
@@ -54,4 +54,4 @@ automation:
   before_script:
     - npm run start:background
   script:
-    - npm run test:automation
+    - CYPRESS_CI=$CI CYPRESS_CI_JOB_URL=$CI_JOB_URL CYPRESS_REPORT_URL=https://swtg-qa-apollo-2.cisco.com/ws/cypress-reporting/v1/report npm run test:automation
