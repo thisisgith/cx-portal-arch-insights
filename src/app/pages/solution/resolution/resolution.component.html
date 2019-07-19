@@ -74,6 +74,7 @@
 	</cui-pager>
 </ng-template>
 
-<ng-template #severityTmpl let-item="celldata"><span><span class="icon-circle icon-small"
-			[ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
+<ng-template #severityTmpl let-item="celldata"><span data-auto-id="severityValue" ><span class="icon-circle icon-small"
+			data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
+			
 <ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | date"></span></ng-template>

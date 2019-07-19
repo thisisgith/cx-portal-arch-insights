@@ -110,32 +110,38 @@ export class ResolutionComponent {
 			bordered: false,
 			columns: [
 				{
+					autoIdHeader: 'Severity-Header',
 					key: 'priority',
 					name: I18n.get('_RMACaseSeverity_'),
 					sortable: true,
 					template: this.severityTemplate,
 				},
 				{
+					autoIdHeader: 'Case ID-Header',
 					key: 'caseNumber',
 					name: I18n.get('_RMACaseID_'),
 					sortable: true,
 				},
 				{
+					autoIdHeader: 'Device-Header',
 					key: 'deviceName',
 					name: I18n.get('_RMACaseDevice_'),
 					sortable: true,
 				},
 				{
+					autoIdHeader: 'Summary-Header',
 					key: 'summary',
 					name: I18n.get('_RMACaseSummary_'),
 					sortable: true,
 				},
 				{
+					autoIdHeader: 'Status-Header',
 					key: 'status',
 					name: I18n.get('_RMACaseStatus_'),
 					sortable: true,
 				},
 				{
+					autoIdHeader: 'Updated-Header',
 					key: 'lastModifiedDate',
 					name: I18n.get('_RMACaseUpdatedDate_'),
 					sortable: true,
