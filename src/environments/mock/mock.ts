@@ -13,6 +13,7 @@ import {
 	HardwareEOLScenarios,
 	HardwareScenarios,
 	NetworkScenarios,
+	SerialNumberScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
@@ -26,6 +27,7 @@ import {
 	VulnerabilityScenarios,
 	UserScenarios,
 } from './';
+
 import { HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
@@ -51,7 +53,10 @@ import {
 	SecurityAdvisoryResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
+	DeviceContractResponse,
 } from '@sdp-api';
+// } from '../';
+
 import { RMAResponse } from '@interfaces';
 
 /** Alias type for the Response Body */
@@ -77,7 +82,8 @@ type ResponseBody = (
 	SecurityAdvisoryBulletinResponse |
 	SecurityAdvisoryResponse |
 	SuccessPathsResponse |
-	VulnerabilityResponse
+	VulnerabilityResponse |
+	DeviceContractResponse
 );
 
 /**
@@ -137,6 +143,7 @@ export const mockSettings: MockSettings = {
 		HardwareEOLCountScenarios,
 		HardwareEOLScenarios,
 		HardwareScenarios,
+		SerialNumberScenarios,
 		HealthStatusScenarios,
 		NetworkScenarios,
 		RMAScenarios,

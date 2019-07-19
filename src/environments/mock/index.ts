@@ -11,6 +11,7 @@ export { HardwareEOLBulletinScenarios } from './product-alerts/hardware-eol-bull
 export { HardwareEOLCountScenarios } from './product-alerts/hardware-eol-counts';
 export { HardwareEOLScenarios } from './product-alerts/hardware-eol';
 export { HardwareScenarios } from './inventory/hardware';
+export { SerialNumberScenarios } from './search/serialnumber';
 export { Mock } from './mock';
 export { NetworkScenarios } from './inventory/network-elements';
 export { RacetrackScenarios } from './racetrack/info';
