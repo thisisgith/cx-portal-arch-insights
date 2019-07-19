@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DetailsHeaderComponent } from './details-header.component';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 
 /** Module representing the Details Header Component */
 @NgModule({
@@ -10,6 +10,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 	imports: [
 		CommonModule,
 		I18nPipeModule,
+		FromNowPipeModule,
 	],
 })
 export class DetailsHeaderModule { }

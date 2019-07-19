@@ -80,8 +80,8 @@
 			<div class="row">
 				<div class="col-md-9 flex flex-fill">
 					<div class="flex-center-vertical">
-						<span [innerText]="'_Assets_' | i18n" class="text-large"></span>
-						<span *ngIf="pagination" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
+						<span [innerText]="'_Assets_' | i18n" class="text-large" *ngIf="!status.isLoading"></span>
+						<span *ngIf="!status.isLoading && pagination" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
 							class="qtr-margin-left text-small text-muted"
 							data-auto-id="ShowingAssetsCount">
 						</span>
@@ -239,14 +239,14 @@
 
 <ng-template #cardTemplate let-item="item">
 	<div class="card curved-corners container-fluid card-content"
-		[ngClass]="{ 'selected': item.selected }"
+		[ngClass]="{ 'card__selected': item.selected }"
 		(click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
 				<a
 					attr.data-auto-id="Device-{{ item.data?.serialNumber }}"
-					class="text-large text-center override-selected-z"
-					[innerText]="item.data.deviceName"
+					class="text-large text-center"
+					[innerText]="item.data.deviceName | truncate:true:35"
 					(click)="onRowSelect(item); $event.stopPropagation();"
 				></a>
 			</div>

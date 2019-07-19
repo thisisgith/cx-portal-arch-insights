@@ -17,6 +17,11 @@ const caseMock = new MockService('CaseScenarios');
 const caseScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
 const caseResponse = caseScenario.response.body;
 
+Cypress.moment.locale('en', {
+	// change moment's default '8d' format to '8 days' to match the app's format
+	relativeTime: { dd: '%d days' },
+});
+
 describe('Assets', () => { // PBC-41
 	before(() => {
 		cy.window().then(win => win.sessionStorage.clear());
@@ -45,14 +50,15 @@ describe('Assets', () => { // PBC-41
 				if (asset.lastScan) {
 					// TODO: This needs to be adjusted after PBC-336 is fixed
 					cy.getByAutoId('Asset360LastScan')
-						.should('have.text', `Last Scan${asset.lastScan}`);
+						.should(
+							'have.text',
+							`Last Scan${Cypress.moment(asset.lastScan).fromNow()}`
+						);
 				} else {
 					cy.getByAutoId('Asset360LastScan').should('have.text', 'Last ScanNever');
 				}
-				// TODO: Disabled for PBC-338
-				// const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
-				const haveVisibility = 'be.visible';
-				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility);
+				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
+				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-338
 				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
 			};
 
@@ -440,16 +446,16 @@ describe('Assets', () => { // PBC-41
 
 		it('Supports multiple selections of cards', () => {
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(0).click()
-				.should('have.class', 'selected');
+				.should('have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(1).click()
-				.should('have.class', 'selected');
+				.should('have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '2 Selected');
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(1).click()
-				.should('not.have.class', 'selected');
+				.should('not.have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(0).click()
-				.should('not.have.class', 'selected');
+				.should('not.have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('not.be.visible');
 		});
 
