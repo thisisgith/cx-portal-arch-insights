@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>CX Customer Portal</title>
+		<base href="/">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/x-icon" href="favicon.png">
+	</head>
+	<body class="cui cui--animated">
+		<app-root class="animated">
+			<div class="absolute-center">
+				<div class="loading-spinner--blue">
+					<div class="wrapper">
+						<div class="wheel"></div>
+					</div>
+				</div>
+			</div>
+		</app-root>
+	</body>
+	<script charset="UTF-8">
+		window['adrum-start-time'] = new Date().getTime();
+		(function(config){
+			config.appKey = 'AD-AAB-AAR-TDH';
+			config.adrumExtUrlHttp = 'http://cdn.appdynamics.com';
+			config.adrumExtUrlHttps = 'https://cdn.appdynamics.com';
+			config.beaconUrlHttp = 'http://col.eum-appdynamics.com';
+			config.beaconUrlHttps = 'https://col.eum-appdynamics.com';
+			config.xd = {enable : true};
+			config.spa = {
+				"spa2": true
+			};
+		})(window['adrum-config'] || (window['adrum-config'] = {}));
+	</script>
+	<script src="//cdn.appdynamics.com/adrum/adrum-4.5.9.2098.js"></script>
+</html>

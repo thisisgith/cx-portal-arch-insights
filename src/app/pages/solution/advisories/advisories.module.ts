@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProductAlertsModule } from '@sdp-api';
 import { environment } from '@environment';
 import { AssetsPieChartModule } from '../assets/assets-pie-chart/assets-pie-chart.module';
+import { AdvisoriesBarChartModule } from './advisories-bar-chart/advisories-bar-chart.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -36,6 +37,7 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [AdvisoriesComponent],
 	imports: [
+		AdvisoriesBarChartModule,
 		AssetsPieChartModule,
 		CommonModule,
 		CuiPagerModule,

@@ -1,0 +1,18 @@
+[
+    {
+        "accId": "111111",
+        "description": "Discover the standard steps required to engineer and commission your appliance from an experienced Cisco DNA Center project manager. Understand basic deployment requirements and schedules",
+        "isFavorite": false,
+        "status": "completed",
+        "title": "Cisco DNA Center Project Planning",
+        "url": "https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest"
+    },
+    {
+        "accId": "222222",
+        "description": "Gain actionable insights into Cisco DNA Center use case deployments and assists. Understand how to design, adopt, and leverage to save time and resources within your network",
+        "isFavorite": false,
+        "status": "completed",
+        "title": "Cisco DNA Pilot Usecase Deployment",
+        "url": "https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest"
+    }
+]
