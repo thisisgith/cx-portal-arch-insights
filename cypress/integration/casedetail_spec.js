@@ -11,7 +11,7 @@ describe('Case Detail Spec', () => {
 
 		it('Case List', () => {
 			// PBC-231 - Check for expected assets
-			cy.getByAutoId('Facet-Problem Resolution').should('exist').click(); 
+			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
 			cy.getByAutoId('OPEN CASESTab').should('exist');
 			cy.getByAutoId('RMAsTab').should('exist');
 			cy.getByAutoId('rmaCasesHeader').should('exist');
@@ -51,7 +51,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseSearchBox').should('exist').clear();
 		});
 	});
-	context.skip('Case Detail View', () => {	
+	context.skip('Case Detail View', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -66,7 +66,7 @@ describe('Case Detail Spec', () => {
 			// PBC-233
 		});
 	});
-	context.skip('Case Detail Notes', () => {	
+	context.skip('Case Detail Notes', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
