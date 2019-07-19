@@ -468,6 +468,14 @@ describe('Assets', () => { // PBC-41
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(1).click()
 				.should('not.have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
+			cy.get('[data-auto-id*="Device-"]').eq(0).click();
+			cy.get('app-panel360').should('be.visible'); // PBC-286
+			cy.get('[data-auto-id*="Device-"]').eq(0).click();
+			cy.get('cui-dropdown[data-auto-id*="InventoryItem-FOC1544Y16T-dropdown"]')
+				.eq(0).click();
+			cy.get('div.card div.dropdown__menu').eq(0).should('be.visible');
+			cy.get('cui-dropdown[data-auto-id*="InventoryItem-FOC1544Y16T-dropdown"]')
+				.eq(0).click();
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(0).click()
 				.should('not.have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('not.be.visible');
