@@ -402,8 +402,7 @@ describe('Assets', () => { // PBC-41
 
 		after(() => cy.getByAutoId('list-view-btn').click());
 
-		// TODO: Unskip and fix to accomodate "Last Scan" implementation
-		it.skip('Displays assets correctly in card view', () => {
+		it('Displays assets correctly in card view', () => {
 			cy.get('div[data-auto-id*="InventoryItem"]').should('have.length', assetCards.length);
 			Cypress._.each(assetCards, asset => {
 				const serial = asset.serialNumber;
@@ -415,12 +414,15 @@ describe('Assets', () => { // PBC-41
 					software += asset.osVersion;
 				}
 				cy.getByAutoId(`InventoryItem-${serial}`).within(() => {
-					cy.getByAutoId(`Device-${serial}`).should('have.text', asset.deviceName);
+					// PBC-304
+					cy.getByAutoId(`Device-${serial}`)
+						.should('have.text', Cypress._.truncate(asset.deviceName, { length: 38 }));
 					// Device image is a static placeholder for now
 					cy.getByAutoId(`DeviceImg-${serial}`).should('have.text', 'No Photo Available');
 					cy.getByAutoId(`IPAddress-${serial}`).should('have.text', asset.ipAddress);
-					// TODO: "Last Scan" is not implemented yet
-					cy.getByAutoId(`LastScan-${serial}`).should('have.text', 'Never');
+					if (asset.lastScan) {
+						cy.getByAutoId(`LastScan-${serial}`).should('have.text', asset.lastScan);
+					}
 					cy.getByAutoId(`SerialNumber-${serial}`)
 						.should('have.text', asset.serialNumber);
 					cy.getByAutoId(`Software-${serial}`).should('have.text', software);
