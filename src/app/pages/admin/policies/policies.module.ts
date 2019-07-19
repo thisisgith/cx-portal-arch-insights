@@ -9,14 +9,9 @@ import { environment } from '@environment';
 import { CuiLoaderModule } from '@cisco-ngx/cui-components';
 
 /**
- * The SDP Origin URL used for passing to the SDP-API Modules
- */
-const rootUrl = `${environment.sdpServiceOrigin}${environment.sdpServicePaths.controlpoints}`;
-
-/**
  * SDP Root url for the apis
  */
-const sdpRootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Main Policies module
@@ -31,7 +26,7 @@ const sdpRootUrl = environment.sdpServiceOrigin;
 		I18nPipeModule,
 		CuiLoaderModule,
 		ControlPointsModule.forRoot({ rootUrl }),
-		UserModule.forRoot({ rootUrl: sdpRootUrl }),
+		UserModule.forRoot({ rootUrl }),
 	],
 })
 export class PoliciesModule { }
