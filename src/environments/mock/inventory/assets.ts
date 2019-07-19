@@ -121,7 +121,7 @@ export const mockResponse: Asset[] = [
 			"equipmentType": "POWERSUPPLY"
 	},
 	{
-			"deviceName": "Catalyst+2960S-24PS-L+Switch",
+			"deviceName": "Catalyst+2960S-24PS-L+Switch+Catalyst+2960S-24PS-L+Switch",
 			"ipAddress": "10.119.1.151",
 			"supportCovered": false,
 			"serialNumber": "FOC1544Y1AV",
