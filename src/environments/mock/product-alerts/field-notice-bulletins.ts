@@ -9,7 +9,7 @@ import * as _ from 'lodash-es';
 const api = '/api/customerportal/product-alerts/v1/field-notice-bulletins';
 
 /** Default Customer ID */
-const customerId = '2431199';
+// const customerId = '2431199';
 
 /** The mock response for coverage counts */
 const mockNoticeResponse: FieldNoticeBulletin[] = [
