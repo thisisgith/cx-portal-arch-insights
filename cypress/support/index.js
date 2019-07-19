@@ -36,7 +36,13 @@ afterEach(function afterEachHook () {
 				test: test.currentTest.title,
 				url: Cypress.env('CI_JOB_URL'),
 			};
-			cy.request('POST', Cypress.env('REPORT_URL'), report); // TODO: real URL
+			cy.request({ // Need Error handling: https://github.com/cypress-io/cypress/issues/3161
+				method: 'POST',
+				url: Cypress.env('REPORT_URL'),
+				body: report,
+				failOnStatusCode: false,
+				log: false,
+			});
 		}
 	}
 });
