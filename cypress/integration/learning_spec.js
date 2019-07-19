@@ -23,7 +23,7 @@ elearningItems.forEach(scenario => {
 		case 'E-Learning':
 			allELearningItems.push(scenario);
 			break;
-		case 'Certifications':
+		case 'Certification':
 		case 'Videos':
 			allCertificationsItems.push(scenario);
 			break;

@@ -52,7 +52,7 @@ const onboardItems = [
 		ranking: 4,
 		rating: '4.1000',
 		title: 'CCNA Wireless',
-		type: 'Certifications',
+		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
@@ -61,7 +61,7 @@ const onboardItems = [
 		ranking: 4,
 		rating: '4.1000',
 		title: 'Cisco Training on Demand Courses 2',
-		type: 'Certifications',
+		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
@@ -70,7 +70,7 @@ const onboardItems = [
 		ranking: 4,
 		rating: '4.1000',
 		title: 'Cisco Training on Demand Courses 3',
-		type: 'Certifications',
+		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
@@ -79,7 +79,7 @@ const onboardItems = [
 		ranking: 4,
 		rating: '4.1000',
 		title: 'Cisco Training on Demand Courses 4',
-		type: 'Certifications',
+		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
