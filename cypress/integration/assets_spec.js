@@ -78,6 +78,7 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Opens Asset 360 view when clicking asset cards', () => {
+			const advisoryAPI = new RouteWatch('**/product-alerts/**');
 			assetMock.enable('(Assets) Missing data - Grid View');
 			cy.getByAutoId('grid-view-btn').click();
 
@@ -86,6 +87,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${serial}`);
 			cy.getByAutoId('Asset360IPAddress').should('have.text', 'IP AddressN/A');
 			cy.getByAutoId('CloseDetails').click();
+			expect(advisoryAPI.called).to.eq(0); // PBC-353
 
 			assetMock.disable('Assets Page 1 - Grid View');
 			cy.getByAutoId('list-view-btn').click();
