@@ -20,6 +20,7 @@ export { IERegistrationUpdateRequestModel } from './models/ieregistration-update
 export { IEStatusResponseModel } from './models/iestatus-response-model';
 export { InventoryDeviceEqContract } from './models/inventory-device-eq-contract';
 export { OSDetails } from './models/osdetails';
+export { PolicyResponseModel } from './models/policy-response-model';
 export { RemoveDevicesRequestModel } from './models/remove-devices-request-model';
 export { RemoveDevicesResponseModel } from './models/remove-devices-response-model';
 export { SystemDetails } from './models/system-details';

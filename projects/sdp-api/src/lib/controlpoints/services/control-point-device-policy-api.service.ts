@@ -1,26 +1,27 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { ControlPointsConfiguration as __Configuration } from '../control-points-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
-import { DefaultResponseModel } from '../models/default-response-model';
+import { PolicyResponseModel } from '../models/policy-response-model';
+import { DevicePolicyResponseModel } from '../models/device-policy-response-model';
 import { DevicePolicyRequestModel } from '../models/device-policy-request-model';
 import { DevicePolicyUpdateRequestModel } from '../models/device-policy-update-request-model';
 import { DevicePolicyStatusResponseModel } from '../models/device-policy-status-response-model';
-import { DevicePolicyResponseModel } from '../models/device-policy-response-model';
+import { DefaultResponseModel } from '../models/default-response-model';
 @Injectable({
   providedIn: 'root',
 })
 class ControlPointDevicePolicyAPIService extends __BaseService {
-  static readonly createDevicePolicyUsingPOSTPath = '/v1/policy';
-  static readonly updateDevicePolicyUsingPATCHPath = '/v1/policy';
-  static readonly getPolicyStatusUsingGETPath = '/v1/policy/status/{policyId}';
-  static readonly getDevicePolicyUsingGETPath = '/v1/policy/{policyId}';
-  static readonly deletePolicyUsingDELETEPath = '/v1/policy/{policyId}';
+  static readonly getAllPolicyUsingGETPath = '/policies/{customerId}';
+  static readonly createDevicePolicyUsingPOSTPath = '/policy';
+  static readonly updateDevicePolicyUsingPATCHPath = '/policy';
+  static readonly getPolicyStatusUsingGETPath = '/policy/status/{policyId}';
+  static readonly deletePolicyUsingDELETEPath = '/policy/{policyId}';
 
   constructor(
     config: __Configuration,
@@ -30,29 +31,68 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   }
 
   /**
-   * @param devicePolicyRequestModel devicePolicyRequestModel
+   * @param customerId customerId
    * @return OK
    */
-  createDevicePolicyUsingPOSTResponse(devicePolicyRequestModel: DevicePolicyRequestModel): __Observable<__StrictHttpResponse<DefaultResponseModel>> {
+  getAllPolicyUsingGETResponse(customerId: string): __Observable<__StrictHttpResponse<Array<PolicyResponseModel>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/controlpoint/v1/policies/${customerId}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<Array<PolicyResponseModel>>;
+      })
+    );
+  }
+
+  /**
+   * @param customerId customerId
+   * @return OK
+   */
+  getAllPolicyUsingGET(customerId: string): __Observable<Array<PolicyResponseModel>> {
+    return this.getAllPolicyUsingGETResponse(customerId).pipe(
+      __map(_r => _r.body as Array<PolicyResponseModel>)
+    );
+  }
+
+  /**
+   * @param devicePolicyRequestModel devicePolicyRequestModel
+   * @return OK
+   */
+  createDevicePolicyUsingPOSTResponse(devicePolicyRequestModel: DevicePolicyRequestModel): __Observable<__StrictHttpResponse<DevicePolicyResponseModel>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
     __body = devicePolicyRequestModel;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/v1/policy`,
+      this.rootUrl + `/api/customerportal/controlpoint/v1/policy`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<DefaultResponseModel>;
+        return _r as __StrictHttpResponse<DevicePolicyResponseModel>;
       })
     );
   }
@@ -61,9 +101,9 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
    * @param devicePolicyRequestModel devicePolicyRequestModel
    * @return OK
    */
-  createDevicePolicyUsingPOST(devicePolicyRequestModel: DevicePolicyRequestModel): __Observable<DefaultResponseModel> {
+  createDevicePolicyUsingPOST(devicePolicyRequestModel: DevicePolicyRequestModel): __Observable<DevicePolicyResponseModel> {
     return this.createDevicePolicyUsingPOSTResponse(devicePolicyRequestModel).pipe(
-      __map(_r => _r.body as DefaultResponseModel)
+      __map(_r => _r.body as DevicePolicyResponseModel)
     );
   }
 
@@ -71,26 +111,27 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
    * @param devicePolicyUpdateRequestModel devicePolicyUpdateRequestModel
    * @return OK
    */
-  updateDevicePolicyUsingPATCHResponse(devicePolicyUpdateRequestModel: DevicePolicyUpdateRequestModel): __Observable<__StrictHttpResponse<DefaultResponseModel>> {
+  updateDevicePolicyUsingPATCHResponse(devicePolicyUpdateRequestModel: DevicePolicyUpdateRequestModel): __Observable<__StrictHttpResponse<DevicePolicyResponseModel>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
     __body = devicePolicyUpdateRequestModel;
     let req = new HttpRequest<any>(
       'PATCH',
-      this.rootUrl + `/v1/policy`,
+      this.rootUrl + `/api/customerportal/controlpoint/v1/policy`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<DefaultResponseModel>;
+        return _r as __StrictHttpResponse<DevicePolicyResponseModel>;
       })
     );
   }
@@ -99,9 +140,9 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
    * @param devicePolicyUpdateRequestModel devicePolicyUpdateRequestModel
    * @return OK
    */
-  updateDevicePolicyUsingPATCH(devicePolicyUpdateRequestModel: DevicePolicyUpdateRequestModel): __Observable<DefaultResponseModel> {
+  updateDevicePolicyUsingPATCH(devicePolicyUpdateRequestModel: DevicePolicyUpdateRequestModel): __Observable<DevicePolicyResponseModel> {
     return this.updateDevicePolicyUsingPATCHResponse(devicePolicyUpdateRequestModel).pipe(
-      __map(_r => _r.body as DefaultResponseModel)
+      __map(_r => _r.body as DevicePolicyResponseModel)
     );
   }
 
@@ -114,15 +155,15 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
     let __headers = new HttpHeaders();
     let __body: any = null;
 
+
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/v1/policy/status/${policyId}`,
+      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/status/${policyId}`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -147,58 +188,20 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
    * @param policyId policyId
    * @return OK
    */
-  getDevicePolicyUsingGETResponse(policyId: string): __Observable<__StrictHttpResponse<DevicePolicyResponseModel>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-    let req = new HttpRequest<any>(
-      'GET',
-      this.rootUrl + `/v1/policy/${policyId}`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json',
-//        withCredentials: true,
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<DevicePolicyResponseModel>;
-      })
-    );
-  }
-
-  /**
-   * @param policyId policyId
-   * @return OK
-   */
-  getDevicePolicyUsingGET(policyId: string): __Observable<DevicePolicyResponseModel> {
-    return this.getDevicePolicyUsingGETResponse(policyId).pipe(
-      __map(_r => _r.body as DevicePolicyResponseModel)
-    );
-  }
-
-  /**
-   * @param policyId policyId
-   * @return OK
-   */
   deletePolicyUsingDELETEResponse(policyId: string): __Observable<__StrictHttpResponse<DefaultResponseModel>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
+
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/v1/policy/${policyId}`,
+      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/${policyId}`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
