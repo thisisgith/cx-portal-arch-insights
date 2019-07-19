@@ -1,7 +1,7 @@
 import { RiskCountResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
-const api = '/api/customerportal/osv/v1/risk/device/count';
+const api = '/api/customerportal/osv/v1/';
 
 /** Default Customer ID */
 const customerId = '2431199';
@@ -38,7 +38,25 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}`,
+		url: `${api}/risk/count?customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Device Count',
+					response: {
+						body: mockRiskCounts,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/risk/count?customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+
 ];

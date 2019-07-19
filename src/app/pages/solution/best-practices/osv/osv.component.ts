@@ -15,7 +15,7 @@ const customerId = '2431199';
 interface Filter {
 	key: string;
 	selected?: boolean;
-	template?: TemplateRef<{ }>;
+	template?: TemplateRef<{}>;
 	title?: string;
 	loading: boolean;
 	data: {
@@ -37,13 +37,13 @@ interface Filter {
 })
 export class OptimalSoftwareVersionComponent {
 	@ViewChild('riskLevelFilter', { static: true }) private riskLevelFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('deRecommendationFilter', { static: true }) private deRecommendationFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	public status = {
 		isLoading: true,
 	};
@@ -137,7 +137,7 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getDERecommendationCounts () {
 		const deRecommendationFilter = _.find(this.filters, { key: 'deRecommendation' });
-		return of({ })
+		return of({})
 			.pipe(
 				map(() => {
 					deRecommendationFilter.loading = false;
@@ -171,7 +171,7 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getTotalAssetsCounts () {
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
-		return of({ })
+		return of({})
 			.pipe(
 				map(() => {
 					totalAssetsFilter.loading = false;
@@ -211,7 +211,7 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getDeploymentStatusCounts () {
 		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
-		return of({ })
+		return of({})
 			.pipe(
 				map(() => {
 					deploymentStatusFilter.loading = false;
@@ -245,7 +245,7 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getRiskLevelStatusCounts () {
 		const deploymentStatusFilter = _.find(this.filters, { key: 'riskLevel' });
-		return this.osvService.getRoleCount({ customerId })
+		return this.osvService.getRiskCount({ customerId })
 			.pipe(
 				map(() => {
 					deploymentStatusFilter.loading = false;
