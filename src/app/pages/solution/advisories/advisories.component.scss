@@ -1,1 +1,67 @@
-/* Empty SCSS Component File */
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+:host ::ng-deep .table {
+	border: none;
+	border-bottom: 1px solid #dfdfdf;
+
+	th {
+		background-color: transparent;
+		border-right: none;
+		white-space: nowrap;
+	}
+
+	td {
+		border-right: none;
+	}
+}
+
+.remove-shadow {
+	box-shadow: unset !important;
+}
+
+.dashed-border-bottom {
+	border-bottom: 1px dashed;
+}
+
+// used to align the icon-close in the filter bar
+.small-padding-bottom {
+	padding-bottom: 2px;
+}
+
+.full-border {
+	outline: 1px solid;
+	outline-offset: 2px;
+}
+
+.responsive-table {
+	min-height: 100px;
+}
+
+.curved-corners {
+	border-radius: 5px;
+}
+
+.card-content {
+	justify-content: space-between;
+	display: flex;
+	flex-direction: column;
+}
+
+.override-selected-z {
+	z-index: 100 !important;
+}
+
+.filter {
+	&__selected {
+		border-bottom: 4px solid $primary;
+	}
+
+	&__not-selected {
+		border-bottom: 4px solid $white;
+	}
+
+	&__title {
+		position: absolute;
+		bottom: 0;
+	}
+}

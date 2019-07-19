@@ -20,6 +20,8 @@ import {
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryScenarios,
+	SecurityAdvisoryTopScenarios,
+	SecurityAdvisorySummaryScenarios,
 	SuccessPathScenarios,
 	FieldNoticeScenarios,
 	FieldNoticeBulletinScenarios,
@@ -50,7 +52,9 @@ import {
 	RacetrackResponse,
 	RoleCountResponse,
 	SecurityAdvisoryBulletinResponse,
+	SecurityAdvisoryImpactCountResponse,
 	SecurityAdvisoryResponse,
+	SecurityAdvisorySummary,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -78,7 +82,9 @@ type ResponseBody = (
 	RMAResponse |
 	RoleCountResponse |
 	SecurityAdvisoryBulletinResponse |
+	SecurityAdvisoryImpactCountResponse |
 	SecurityAdvisoryResponse |
+	SecurityAdvisorySummary |
 	SuccessPathsResponse |
 	VulnerabilityResponse
 );
@@ -148,7 +154,9 @@ export const mockSettings: MockSettings = {
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryTopScenarios,
 		SecurityAdvisoryScenarios,
+		SecurityAdvisorySummaryScenarios,
 		SuccessPathScenarios,
 		UserScenarios,
 		VulnerabilityScenarios,
