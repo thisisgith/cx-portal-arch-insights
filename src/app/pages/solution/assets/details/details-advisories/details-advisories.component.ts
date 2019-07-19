@@ -186,7 +186,7 @@ export class DetailsAdvisoriesComponent implements OnInit {
 			}),
 			catchError(err => {
 				fieldTab.loading = false;
-				this.logger.error('details-advisories.component : getFieldNoticeBulletins() ' +
+				this.logger.error('details-advisories.component : getFieldNotices() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });

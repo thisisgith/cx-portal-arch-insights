@@ -1,5 +1,20 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
+:host ::ng-deep .table {
+	border: none;
+	border-bottom: 1px solid #dfdfdf;
+
+	th {
+		background-color: transparent;
+		border-right: none;
+		white-space: nowrap;
+	}
+
+	td {
+		border-right: none;
+	}
+}
+
 .remove-shadow {
 	box-shadow: unset !important;
 }

@@ -20,6 +20,7 @@ import {
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryScenarios,
+	SecurityAdvisoryTopScenarios,
 	SecurityAdvisorySummaryScenarios,
 	SuccessPathScenarios,
 	FieldNoticeScenarios,
@@ -51,6 +52,7 @@ import {
 	RacetrackResponse,
 	RoleCountResponse,
 	SecurityAdvisoryBulletinResponse,
+	SecurityAdvisoryImpactCountResponse,
 	SecurityAdvisoryResponse,
 	SecurityAdvisorySummary,
 	SuccessPathsResponse,
@@ -80,6 +82,7 @@ type ResponseBody = (
 	RMAResponse |
 	RoleCountResponse |
 	SecurityAdvisoryBulletinResponse |
+	SecurityAdvisoryImpactCountResponse |
 	SecurityAdvisoryResponse |
 	SecurityAdvisorySummary |
 	SuccessPathsResponse |
@@ -151,6 +154,7 @@ export const mockSettings: MockSettings = {
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryTopScenarios,
 		SecurityAdvisoryScenarios,
 		SecurityAdvisorySummaryScenarios,
 		SuccessPathScenarios,
