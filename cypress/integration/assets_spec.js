@@ -16,6 +16,7 @@ const advisoryCounts = advisoryScenario.response.body;
 const caseMock = new MockService('CaseScenarios');
 const caseScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
 const caseResponse = caseScenario.response.body;
+const fnBulletinMock = new MockService('FieldNoticeBulletinScenarios');
 
 Cypress.moment.locale('en', {
 	// change moment's default '8d' format to '8 days' to match the app's format
@@ -97,6 +98,17 @@ describe('Assets', () => { // PBC-41
 			cy.get('app-panel360').should('not.exist');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.get('app-panel360').should('not.exist');
+		});
+
+		it('Gracefully handles API failures', () => {
+			fnBulletinMock.enable('Field Notice Bulletins - Unreachable'); // PBC-342
+			cy.get('tbody tr').eq(0).click();
+			cy.getByAutoId('ADVISORIESTab').click();
+			cy.getByAutoId('AdvisoryTab-field').click();
+			cy.getByAutoId('AdvisoriesNoResultsFound').should('have.text', 'No Results Found');
+
+			cy.get('tbody tr').eq(0).click();
+			fnBulletinMock.disable('Field Notice Bulletins - Unreachable');
 		});
 	});
 
