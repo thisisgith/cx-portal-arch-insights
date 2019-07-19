@@ -1,5 +1,6 @@
 import {
 	ACCScenarios,
+	ACCUserInfoScenarios,
 	ActionScenarios,
 	AssetScenarios,
 	ATXScenarios,
@@ -20,6 +21,7 @@ import {
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryScenarios,
+	SecurityAdvisorySummaryScenarios,
 	SuccessPathScenarios,
 	FieldNoticeScenarios,
 	FieldNoticeBulletinScenarios,
@@ -33,6 +35,7 @@ import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
+	ACCUserInfoSchema,
 	Assets,
 	ATXResponse,
 	CDCSearchResponse,
@@ -51,6 +54,7 @@ import {
 	RoleCountResponse,
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryResponse,
+	SecurityAdvisorySummary,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
 	DeviceContractResponse,
@@ -62,6 +66,7 @@ import { RMAResponse } from '@interfaces';
 /** Alias type for the Response Body */
 type ResponseBody = (
 	ACCResponse |
+	ACCUserInfoSchema |
 	Assets |
 	ATXResponse |
 	CDCSearchResponse |
@@ -81,6 +86,7 @@ type ResponseBody = (
 	RoleCountResponse |
 	SecurityAdvisoryBulletinResponse |
 	SecurityAdvisoryResponse |
+	SecurityAdvisorySummary |
 	SuccessPathsResponse |
 	VulnerabilityResponse |
 	DeviceContractResponse
@@ -129,6 +135,7 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ACCUserInfoScenarios,
 		ATXScenarios,
 		ActionScenarios,
 		AssetScenarios,
@@ -152,6 +159,7 @@ export const mockSettings: MockSettings = {
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
 		SecurityAdvisoryScenarios,
+		SecurityAdvisorySummaryScenarios,
 		SuccessPathScenarios,
 		UserScenarios,
 		VulnerabilityScenarios,
