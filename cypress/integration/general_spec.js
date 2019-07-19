@@ -335,9 +335,9 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Serial Search FOX1306GFKH', () => {
+		it('Serial Search FOX1333GGGG', () => {
 			// PBC-170
-			const serialVal = 'FOX1306GFKH';
+			const serialVal = 'FOX1333GGGG';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial');
 			cy.getByAutoId('searchBarInput').should('exist').clear()

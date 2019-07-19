@@ -9,7 +9,7 @@ import * as _ from 'lodash-es';
 const api = '/api/customerportal/product-alerts/v1/field-notice-bulletins';
 
 /** Default Customer ID */
-const customerId = '2431199';
+// const customerId = '2431199';
 
 /** The mock response for coverage counts */
 const mockNoticeResponse: FieldNoticeBulletin[] = [
@@ -1226,9 +1226,18 @@ export const FieldNoticeBulletinScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 250,
+					description: 'Field Notice Bulletins - Unreachable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
 			],
 		},
-		url: `${api}?customerId=${customerId}`,
+		url: `${api}?sort=bulletinLastUpdated:DESC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
