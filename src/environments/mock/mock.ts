@@ -13,6 +13,7 @@ import {
 	HardwareEOLScenarios,
 	HardwareScenarios,
 	NetworkScenarios,
+	OSVScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
@@ -25,6 +26,7 @@ import {
 	HealthStatusScenarios,
 	VulnerabilityScenarios,
 	UserScenarios,
+
 } from './';
 import { HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash-es';
@@ -46,6 +48,7 @@ import {
 	HardwareResponse,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
+	RiskCountResponse,
 	RoleCountResponse,
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryResponse,
@@ -72,6 +75,7 @@ type ResponseBody = (
 	HardwareResponse |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
+	RiskCountResponse |
 	RMAResponse |
 	RoleCountResponse |
 	SecurityAdvisoryBulletinResponse |
@@ -139,6 +143,7 @@ export const mockSettings: MockSettings = {
 		HardwareScenarios,
 		HealthStatusScenarios,
 		NetworkScenarios,
+		OSVScenarios,
 		RMAScenarios,
 		RacetrackScenarios,
 		RoleScenarios,

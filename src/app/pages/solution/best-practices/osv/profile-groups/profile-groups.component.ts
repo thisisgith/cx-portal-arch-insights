@@ -72,7 +72,8 @@ export class ProfileGroupsComponent {
 							productFamily: 'XYZ',
 							risk: '',
 							softwareProfile: 'Profile 1',
-						}, {
+						},
+						{
 							assetCount: 2,
 							currentOSVersion: '3',
 							deploymentStatus: 'None',
@@ -133,7 +134,8 @@ export class ProfileGroupsComponent {
 				columns: [
 					{
 						key: 'softwareProfile',
-						name: I18n.get('_OsvSoftwareProfile_'),
+						// name: I18n.get('_OsvSoftwareProfile_'),
+						name: 'Software',
 					},
 					{
 						key: 'productFamily',
@@ -154,26 +156,6 @@ export class ProfileGroupsComponent {
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
-					},
-					{
-						key: 'lastRecommendedDate',
-						name: I18n.get('_OsvLastRecommendedDate'),
-					},
-					{
-						key: 'deploymentStatus',
-						name: I18n.get('_OsvDeploymentStatus_'),
-					},
-					{
-						key: 'risk',
-						name: I18n.get('_OsvRisk_'),
-					},
-					{
-						key: 'popularity',
-						name: I18n.get('_OsvPopularity_'),
-					},
-					{
-						key: 'recommendations',
-						name: I18n.get('_OsvRecommendations_'),
 					},
 					{
 						click: true,

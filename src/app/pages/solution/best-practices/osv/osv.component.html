@@ -22,19 +22,35 @@
 			</div>
 		</div>
 	</app-panel360-header>
-	<asset-details></asset-details>
+	<asset-details [fullscreen]="fullscreen"></asset-details>
 </app-panel360>
 
 <div class="panel">
+	<div class="row">
+		<div class="col-md-3">
+			<div class="btn-group">
+				<button attr.data-auto-id="SelectSofwareProfilesView" attr.id="SelectSofwareProfilesView"
+					class="btn btn--small btn--gray-ghost " [innerText]="'_OsvSoftwareProfiles_' | i18n"
+					[ngClass]="{'selected':view == 'swProfiles' || view == 'assetsSwProfiles'}"
+					(click)="view = 'swProfiles'"></button>
+				<button attr.data-auto-id="SelectAssetsView" attr.id="SelectAssetsView"
+					class="btn btn--small btn--gray-ghost" [ngClass]="{'selected':view == 'assets'}"
+					[innerText]="'_OsvIndependentAssets_' | i18n" (click)="view = 'assets'"></button>
+				<button attr.data-auto-id="SelectSoftwareVersionsView" attr.id="SelectSoftwareVersionsView"
+					class="btn btn--small btn--gray-ghost" [innerText]="'_OsvSoftwareVersions_' | i18n"
+					[ngClass]="{'selected':view == 'swVersion'}" (click)="view = 'swVersion'"></button>
+			</div>
+		</div>
+	</div>
 	<div class="row" *ngIf="!status.isLoading">
 		<ng-container *ngFor="let filter of filters; index as i">
 			<div *ngIf="!filter.loading && filter.data.length && filter.view.indexOf(view) > -1"
 				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
-				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" [ngClass]="{
+				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" class="panel col-md-3 filter" [ngClass]="{
 					'filter__selected': filter.selected,
 					'filter__not-selected': !filter.selected
-				}" class="panel col-md-3 filter">
-				<div class="base-margin-bottom">
+				}">
+				<div class="base-margin-bottom relative max-height">
 					<div *ngIf="filter.template">
 						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
 					</div>
@@ -52,14 +68,17 @@
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading"></div>
-	<div *ngIf="view == 'profileGroups'">
+	<div *ngIf="view == 'swProfiles'">
 		<app-profile-groups [(selectedProfileGroup)]="selectedProfileGroup"></app-profile-groups>
 	</div>
 	<div *ngIf="view == 'assets'">
 		<app-assets [(selectedAssetSoftware)]="selectedAssetSoftware"></app-assets>
 	</div>
-	<div *ngIf="view == 'softwareVersion'">
+	<div *ngIf="view == 'swVersion'">
 		<app-software-versions></app-software-versions>
+	</div>
+	<div *ngIf="view == 'assetsSwProfiles'">
+		<app-assets [(selectedAssetSoftware)]="selectedAssetSoftware"></app-assets>
 	</div>
 </div>
 
@@ -91,32 +110,43 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div class="margin-auto" (click)="clearFilters()" data-auto-id="TotalVisualFilter">
-		<div class="row toggle" (click)="selectView('profileGroups')" [ngClass]="{'text-muted':view != 'profileGroups'}"
-			data-auto-id="TotalVisualFilterProfileGroups">
-			<div class="col-4 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].value"></span>
+	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter">
+		<div class="vertical-center" *ngIf="(view == 'swProfiles' || view == 'assetsSwProfiles')">
+			<div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-muted':view != 'swProfiles'}"
+				data-auto-id="TotalVisualFilterProfileGroups">
+				<div class="col-4 text-right">
+					<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].value"></span>
+				</div>
+				<div class="col-8 margin-auto">
+					<span class="text-xlarge " [innerText]="filter.data[0].label"></span>
+				</div>
 			</div>
-			<div class="col-8 margin-auto">
-				<span class="text-xlarge " [innerText]="filter.data[0].label"></span>
+			<div class="row toggle" (click)="selectView('assetsSwProfiles')"
+				[ngClass]="{'text-muted':view != 'assetsSwProfiles'}" data-auto-id="TotalVisualFilterProfileGroups">
+				<div class="col-4 text-right">
+					<span class="qtr-margin-right text-huge" [innerText]="filter.data[1].value"></span>
+				</div>
+				<div class="col-8 margin-auto">
+					<span class="text-xlarge " [innerText]="filter.data[1].label"></span>
+				</div>
 			</div>
 		</div>
-		<div class="row toggle" (click)="selectView('assets')" [ngClass]="{'text-muted':view != 'assets'}"
-			data-auto-id="TotalVisualFilterUngroupedAssets">
-			<div class="col-4 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.data[1].value"></span>
-			</div>
-			<div class="col-8 margin-auto">
-				<span class="text-xlarge " [innerText]="filter.data[1].label"></span>
-			</div>
-		</div>
-		<div class="row toggle" (click)="selectView('softwareVersion')"
-			[ngClass]="{'text-muted':view != 'softwareVersion'}" data-auto-id="TotalVisualFilterSoftwareVersions">
-			<div class="col-4 text-right">
+		<div *ngIf="view == 'assets'" class="vertical-center toggle text-center max-width"
+			(click)="selectView('assets')" data-auto-id="TotalVisualFilterUngroupedAssets">
+			<div>
 				<span class="qtr-margin-right text-huge" [innerText]="filter.data[2].value"></span>
 			</div>
-			<div class="col-8 margin-auto">
+			<div>
 				<span class="text-xlarge " [innerText]="filter.data[2].label"></span>
+			</div>
+		</div>
+		<div *ngIf="view == 'swVersion'" class="toggle text-center max-width" (click)="selectView('swVersion')"
+			data-auto-id="TotalVisualFilterSoftwareVersions">
+			<div>
+				<span class="qtr-margin-right text-huge" [innerText]="filter.data[3].value"></span>
+			</div>
+			<div>
+				<span class="text-xlarge " [innerText]="filter.data[3].label"></span>
 			</div>
 		</div>
 	</div>
@@ -128,6 +158,11 @@
 </ng-template>
 
 <ng-template #riskLevelFilter let-filter="filter">
+	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
+	</assets-pie-chart>
+</ng-template>
+
+<ng-template #deRecommendationFilter let-filter="filter">
 	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
 </ng-template>

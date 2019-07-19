@@ -3,6 +3,7 @@ import {
 	OnChanges,
 	OnInit,
 	SimpleChanges,
+	Input,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -16,11 +17,11 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit {
+	@Input() public fullscreen;
 	public status = {
 		loading: {
 		},
 	};
-	public fullscreen = false;
 
 	constructor (
 		private logger: LogService,

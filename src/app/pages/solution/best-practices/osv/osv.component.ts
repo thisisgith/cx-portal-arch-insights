@@ -4,6 +4,11 @@ import { forkJoin, of, Subject } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { takeUntil, map } from 'rxjs/operators';
+import { OSVService } from '@sdp-api';
+
+/** Our current customerId */
+const customerId = '2431199';
+
 /**
  * Interface representing our visual filters
  */
@@ -37,6 +42,8 @@ export class OptimalSoftwareVersionComponent {
 		TemplateRef<{ }>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
 		TemplateRef<{ }>;
+	@ViewChild('deRecommendationFilter', { static: true }) private deRecommendationFilterTemplate:
+		TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -45,8 +52,10 @@ export class OptimalSoftwareVersionComponent {
 	public filtered = false;
 	public filters: Filter[];
 	private destroy$ = new Subject();
-	public view: 'profileGroups' | 'assets' | 'softwareVersions' = 'profileGroups';
-	constructor (private logger: LogService) { }
+	public view: 'swProfiles' | 'assetsSwProfiles' | 'assets' | 'swVersions'
+		= 'swProfiles';
+	constructor (private logger: LogService,
+		private osvService: OSVService) { }
 
 	/**
 	 * Used to select which tab we want to view the data for
@@ -69,7 +78,7 @@ export class OptimalSoftwareVersionComponent {
 				selected: true,
 				template: this.totalAssetsFilterTemplate,
 				data: [],
-				view: ['profileGroups', 'assets', 'softwareVersion'],
+				view: ['swProfiles', 'assets', 'softwareVersion', 'assetsSwProfiles'],
 			},
 			{
 				key: 'deploymentStatus',
@@ -78,16 +87,25 @@ export class OptimalSoftwareVersionComponent {
 				template: this.deploymentStatusFilterTemplate,
 				data: [],
 				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
-				view: ['profileGroups', 'assets'],
+				view: ['swProfiles', 'assets'],
 			},
 			{
 				key: 'riskLevel',
 				loading: true,
 				selected: false,
-				template: this.deploymentStatusFilterTemplate,
+				template: this.riskLevelFilterTemplate,
 				data: [],
 				title: I18n.get('_OsvRiskLevel_'),
-				view: ['profileGroups'],
+				view: ['swProfiles'],
+			},
+			{
+				key: 'deRecommendation',
+				loading: true,
+				selected: false,
+				template: this.deRecommendationFilterTemplate,
+				data: [],
+				title: I18n.get('_OsvDERecommendation_'),
+				view: ['assetsSwProfiles'],
 			},
 		];
 		this.loadData();
@@ -102,6 +120,7 @@ export class OptimalSoftwareVersionComponent {
 			this.getTotalAssetsCounts(),
 			this.getDeploymentStatusCounts(),
 			this.getRiskLevelStatusCounts(),
+			this.getDERecommendationCounts(),
 		)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -110,6 +129,40 @@ export class OptimalSoftwareVersionComponent {
 				this.status.isLoading = false;
 				this.logger.debug('assets software.component: loadData()::Done Loading');
 			});
+	}
+
+	/**
+	 * Fetches the DE Recommendation Counts
+	 * @returns the total counts observable of DE Recommendations
+	 */
+	private getDERecommendationCounts () {
+		const deRecommendationFilter = _.find(this.filters, { key: 'deRecommendation' });
+		return of({ })
+			.pipe(
+				map(() => {
+					deRecommendationFilter.loading = false;
+					deRecommendationFilter.data = [
+						{
+							filter: 'none',
+							label: I18n.get('_OsvNone_'),
+							selected: false,
+							value: 124,
+						},
+						{
+							filter: 'upgrade',
+							label: I18n.get('_OsvUpgrade_'),
+							selected: false,
+							value: 3270,
+						},
+						{
+							filter: 'production',
+							label: I18n.get('_OsvProduction_'),
+							selected: false,
+							value: 1880,
+						},
+					];
+				}),
+			);
 	}
 
 	/**
@@ -124,16 +177,22 @@ export class OptimalSoftwareVersionComponent {
 					totalAssetsFilter.loading = false;
 					totalAssetsFilter.data = [
 						{
-							filter: 'profilegroups',
-							label: I18n.get('_OsvProfileGroups_'),
+							filter: 'swProfiles',
+							label: I18n.get('_OsvSoftwareProfiles_'),
 							selected: false,
-							value: 50,
+							value: 124,
+						},
+						{
+							filter: 'assetsSwProfiles',
+							label: I18n.get('_OsvAssetsOfSoftwareProfiles_'),
+							selected: false,
+							value: 3270,
 						},
 						{
 							filter: 'assets',
-							label: I18n.get('_OsvUngroupedAssets_'),
+							label: I18n.get('_OsvIndependentAssets_'),
 							selected: false,
-							value: 100,
+							value: 1880,
 						},
 						{
 							filter: 'softwareversions',
@@ -186,7 +245,7 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getRiskLevelStatusCounts () {
 		const deploymentStatusFilter = _.find(this.filters, { key: 'riskLevel' });
-		return of({ })
+		return this.osvService.getRoleCount({ customerId })
 			.pipe(
 				map(() => {
 					deploymentStatusFilter.loading = false;
@@ -223,10 +282,10 @@ export class OptimalSoftwareVersionComponent {
 	}
 
 	/**
-	 * Changes the view to either profileGroups or assets
+	 * Changes the view to either swProfiles or assets
 	 * @param view view to set
 	 */
-	public selectView (view: 'profileGroups' | 'assets' | 'softwareVersions') {
+	public selectView (view: 'swProfiles' | 'assetsSwProfiles' | 'assets' | 'swVersions') {
 		if (this.view !== view) {
 			this.view = view;
 		}

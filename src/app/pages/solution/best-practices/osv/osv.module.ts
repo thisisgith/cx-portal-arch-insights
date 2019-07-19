@@ -12,6 +12,14 @@ import { ProfileGroupsModule } from './profile-groups/profile-groups.module';
 import { AssetsModule } from './assets/assets.module';
 import { SoftwareVersionsModule } from './software-versions/software-versions.module';
 import { ProfileGroupDetailModule } from './profile-group-detail/profile-group-detail.module';
+import { environment } from '@environment';
+import { OSVModule } from '@sdp-api';
+import { AssetTimelineChartModule } from './asset-timeline-chart/asset-timeline-chart.module';
+
+/**
+ * The SDP Origin URL used for passing to the SDP-API Modules
+ */
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Child routes for OptimalSoftwareModule for lazy loading
@@ -42,6 +50,8 @@ const childRoutes: Routes = [
 		AssetsModule,
 		SoftwareVersionsModule,
 		ProfileGroupDetailModule,
+		OSVModule.forRoot({ rootUrl }),
+		AssetTimelineChartModule,
 
 	],
 })

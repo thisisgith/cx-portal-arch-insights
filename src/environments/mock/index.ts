@@ -25,3 +25,4 @@ export { HealthStatusScenarios } from './controlpoints/health-status';
 export { VulnerabilityScenarios } from './product-alerts/vulnerabilities';
 export { FieldNoticeScenarios } from './product-alerts/field-notice';
 export { FieldNoticeBulletinScenarios } from './product-alerts/field-notice-bulletins';
+export { OSVScenarios } from './osv/osv';

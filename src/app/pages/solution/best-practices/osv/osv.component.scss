@@ -19,3 +19,10 @@
 .margin-auto {
 	margin: auto;
 }
+
+.vertical-center {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
