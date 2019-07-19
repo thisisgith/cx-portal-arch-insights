@@ -438,7 +438,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId(`SerialNumber-${serial}`)
 						.should('have.text', asset.serialNumber);
 					cy.getByAutoId(`Software-${serial}`).should('have.text', software);
-					const role = asset.role ? asset.role : 'N/A';
+					const role = asset.role ? startCase(toLower(asset.role)) : 'N/A'; // PBC-281
 					cy.getByAutoId(`Role-${serial}`).should('have.text', role);
 					if (asset.criticalAdvisories) {
 						cy.getByAutoId(`AdvisoryCount-${serial}`)
