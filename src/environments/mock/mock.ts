@@ -23,6 +23,7 @@ import {
 	FieldNoticeScenarios,
 	FieldNoticeBulletinScenarios,
 	HealthStatusScenarios,
+	PolicesScenarios,
 	VulnerabilityScenarios,
 	UserScenarios,
 } from './';
@@ -138,6 +139,7 @@ export const mockSettings: MockSettings = {
 		HardwareEOLScenarios,
 		HardwareScenarios,
 		HealthStatusScenarios,
+		PolicesScenarios,
 		NetworkScenarios,
 		RMAScenarios,
 		RacetrackScenarios,
