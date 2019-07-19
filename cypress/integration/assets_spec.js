@@ -48,7 +48,6 @@ describe('Assets', () => { // PBC-41
 				cy.getByAutoId('Asset360SerialNumber')
 					.should('have.text', `Serial Number${asset.serialNumber}`);
 				if (asset.lastScan) {
-					// TODO: This needs to be adjusted after PBC-336 is fixed
 					cy.getByAutoId('Asset360LastScan')
 						.should(
 							'have.text',
@@ -58,7 +57,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId('Asset360LastScan').should('have.text', 'Last ScanNever');
 				}
 				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
-				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-338
+				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-339
 				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
 			};
 
@@ -69,8 +68,7 @@ describe('Assets', () => { // PBC-41
 				.and('have.text', `View Open Cases (${caseResponse.totalElements})`);
 			cy.get('tbody tr').eq(3).click(); // switch to new asset without closing modal
 			validate360(assets[3]);
-			// TODO: Disabled for PBC-338
-			// cy.getByAutoId('ToggleActiveCases').should('not.be.visible');
+			cy.getByAutoId('ToggleActiveCases').should('not.be.visible'); // PBC-338
 			cy.get('tbody tr').eq(3).click(); // PBC-164, close the 360 view
 			cy.get('tbody tr').eq(2).click();
 			validate360(assets[2]);
