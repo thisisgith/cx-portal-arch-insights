@@ -17,6 +17,27 @@
 import './commands';
 
 require('@apollo/cypress-util');
+// const path = require('path')
+
+/**
+ * Mocha's root scope afterEach hook
+ * Note: Cannot use arrow function here without breaking the scope of `this`.
+ */
+afterEach(function afterEachHook () {
+	cy.task('log', Cypress.env('CI'));
+	cy.task('log', Cypress.env('CI_JOB_URL'));
+	// const test = this;
+	// if (test.currentTest.state === 'failed') {
+	// 	const report = {
+	// 		error: test.currentTest.err.message,
+	// 		parent: test.currentTest.parent.title,
+	// 		spec: path.basename(global.window.location.pathname),
+	// 		state: test.currentTest.state,
+	// 		test: test.currentTest.title,
+	// 	};
+	// 	cy.request('POST', 'http://localhost:8888/report', report); // TODO: real URL
+	// }
+});
 
 // Whitelist ObSSOCookie from getting cleared before each test
 Cypress.Cookies.defaults({

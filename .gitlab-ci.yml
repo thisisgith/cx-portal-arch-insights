@@ -54,4 +54,4 @@ automation:
   before_script:
     - npm run start:background
   script:
-    - npm run test:automation
+    - CYPRESS_CI=$CI CYPRESS_CI_JOB_URL=$CI_JOB_URL npm run test:automation
