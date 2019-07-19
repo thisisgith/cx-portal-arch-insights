@@ -19,6 +19,7 @@ import { AssetsBubbleChartModule } from './assets-bubble-chart/assets-bubble-cha
 import { AssetDetailsModule } from './details/details.module';
 import { DetailsHeaderModule } from './details/details-header/details-header.module';
 import { Panel360Module } from '@components';
+import { DetailsHardwareModule } from './details/details-hardware/details-hardware.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -53,6 +54,7 @@ const childRoutes: Routes = [
 		CuiTableModule,
 		CuiTabsModule,
 		DetailsHeaderModule,
+		DetailsHardwareModule,
 		FormsModule,
 		FromNowPipeModule,
 		I18nPipeModule,
