@@ -27,11 +27,11 @@
 					<div class="col-1 flex-center">
 						<span
 						class="icon-small"
-						[ngClass]="scan.enabled ? 'icon-diagnostics text-success' : 'icon-blocked text-muted'"
+						[ngClass]="scan.policyType ? 'icon-diagnostics text-success' : 'icon-blocked text-muted'"
 						></span>
 					</div>
 					<div class="col-10">
-						<div [innerText]="scan.message"></div>
+						<div [innerText]="scan.deviceCount + ' devices are scanned ' + scan.formattedSchedule"></div>
 					</div>
 					<div class="col-1 flex-center">
 						<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
@@ -48,7 +48,7 @@
 						<span class="icon-compliance icon-small text-primary"></span>
 					</div>
 					<div class="col-10">
-						<div [innerText]="collection.message"></div>
+						<div [innerText]="'Network runs collection ' + collection.formattedSchedule"></div>
 					</div>
 					<div class="col-1 flex-center">
 						<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
