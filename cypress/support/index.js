@@ -17,7 +17,7 @@
 import './commands';
 
 require('@apollo/cypress-util');
-const path = require('path')
+const path = require('path');
 
 /**
  * Mocha's root scope afterEach hook
