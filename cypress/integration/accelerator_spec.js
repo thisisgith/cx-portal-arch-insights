@@ -135,6 +135,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// The section should not exist at all
 			cy.getByAutoId('Accelerator Panel').should('not.exist');
 			cy.getByAutoId('recommendedACC').should('not.exist');
+			cy.getByAutoId('recommendedACC-HoverModal').should('not.exist');
 			cy.getByAutoId('moreACCList').should('not.exist');
 		});
 
@@ -378,17 +379,53 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			}
 		});
 
-		it.skip('Should not have hover modal if there are no recommended ACC', () => {
-			// TODO: Pending PBC-279: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-279
-			// Switch the mock data to one with no recommended items
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
+		it('PBC-279: When there are no recommended ACCs, use the first requested item', () => {
 			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-allButRecommended');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.waitForAppLoading('accLoading', 5000);
 
-			cy.getByAutoId('recommendedACC').should('not.exist');
+			// Requested hover should have the CSE text, not completed text or request button
+			cy.getByAutoId('recommendedACC').should('exist').within(() => {
+				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
+				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('not.exist');
+
+				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('exist');
+			});
+		});
+
+		it('PBC-279: When there are no recommended/requested ACCs, use the first in-progress item', () => {
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-completedInProgress');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+
+			// In-progress hover should have the CSE text, not completed text or request button
+			cy.getByAutoId('recommendedACC').should('exist').within(() => {
+				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
+				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('not.exist');
+
+				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('exist');
+			});
+		});
+
+		it('PBC-279: When there are no recommended/requested/in-progress ACCs, use the first completed item', () => {
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoCompleted');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+
+			// Completed hover should have the completed text, not CSE text or request button
+			cy.getByAutoId('recommendedACC').should('exist').within(() => {
+				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
+				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('not.exist');
+
+				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('exist');
+				cy.getByAutoId('recommendedACC-Checkmark').should('exist');
+			});
 		});
 	});
 

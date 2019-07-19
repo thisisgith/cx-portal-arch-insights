@@ -224,7 +224,7 @@
 		<span class="text-success" [innerText]="'_ACCRequestSubmitted_' | i18n"></span>
 	</ng-container>
 	<ng-container *ngIf="item.status === 'completed'">
-		<div class="text-success icon-certified qtr-padding-right"></div>
+		<div class="text-success icon-certified qtr-padding-right" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
 		<span [innerText]="'_Completed_' | i18n"></span>
 	</ng-container>
 </ng-template>
