@@ -50,7 +50,7 @@
 
 <ng-template #visualFilters let-tab="tab">
 	<div class="flex flex-fill flex-fluid"
-		*ngIf="!filterCollapse && !status.isLoading">
+		*ngIf="!status.filterCollapse && !status.isLoading">
 		<ng-container *ngFor="let filter of tab.filters; index as i">
 			<div *ngIf="!filter.loading && filter.seriesData.length"
 				attr.id="SelectVisualFilter-{{ filter.key }}"
@@ -73,7 +73,7 @@
 		</ng-container>
 	</div>
 	<div class="divider no-margin-top qtr-margin-bottom"
-		*ngIf="!filterCollapse && !status.isLoading && tab.filters?.length">
+		*ngIf="!status.filterCollapse && !status.isLoading && tab.filters?.length">
 	</div>
 	<ng-container *ngIf="tab.filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
@@ -178,5 +178,7 @@
 </ng-template>
 
 <ng-template #verticalBarChartFilter let-filter="filter">
-	<!-- TODO -->
+	<advisories-bar-chart [seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</advisories-bar-chart>
 </ng-template>
