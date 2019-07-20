@@ -1,8 +1,11 @@
 <div class="divider qtr-margin-top"></div>
 <ng-container *ngTemplateOutlet="tableProfileGroups"></ng-container>
+<div *ngIf="status.isLoading">
+	<cui-spinner></cui-spinner>
+</div>
 
 <ng-template #tableProfileGroups>
-	<div class="responsive-table" *ngIf="profileGroupsTable && profileGroups.length">
+	<div class="responsive-table" *ngIf="!status.isLoading && profileGroupsTable && profileGroups.length">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
 			<thead>
 				<tr>

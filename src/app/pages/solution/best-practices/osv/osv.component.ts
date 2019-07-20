@@ -4,7 +4,7 @@ import { forkJoin, of, Subject } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { takeUntil, map } from 'rxjs/operators';
-import { OSVService } from '@sdp-api';
+import { OSVService, DeviceCountResponse, DeviceCount, RiskCountResponse, RiskCount, DeploymentStatusCountResponse, DeploymentStatusCount, SoftwareProfilesResponse } from '@sdp-api';
 
 /** Our current customerId */
 const customerId = '2431199';
@@ -78,7 +78,7 @@ export class OptimalSoftwareVersionComponent {
 				selected: true,
 				template: this.totalAssetsFilterTemplate,
 				data: [],
-				view: ['swProfiles', 'assets', 'softwareVersion', 'assetsSwProfiles'],
+				view: ['swProfiles', 'assets', 'swVersions', 'assetsSwProfiles'],
 			},
 			{
 				key: 'deploymentStatus',
@@ -170,37 +170,16 @@ export class OptimalSoftwareVersionComponent {
 	 * @returns the total counts observable
 	 */
 	private getTotalAssetsCounts () {
+
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
-		return of({})
+		return this.osvService.getDeviceCount({ customerId })
 			.pipe(
-				map(() => {
+				map((response: DeviceCountResponse) => {
 					totalAssetsFilter.loading = false;
-					totalAssetsFilter.data = [
-						{
-							filter: 'swProfiles',
-							label: I18n.get('_OsvSoftwareProfiles_'),
-							selected: false,
-							value: 124,
-						},
-						{
-							filter: 'assetsSwProfiles',
-							label: I18n.get('_OsvAssetsOfSoftwareProfiles_'),
-							selected: false,
-							value: 3270,
-						},
-						{
-							filter: 'assets',
-							label: I18n.get('_OsvIndependentAssets_'),
-							selected: false,
-							value: 1880,
-						},
-						{
-							filter: 'softwareversions',
-							label: I18n.get('_OsvSoftwareVersions_'),
-							selected: false,
-							value: 50,
-						},
-					];
+					totalAssetsFilter.data[0] = {};
+					_.map(response, (d: DeviceCount) => {
+						totalAssetsFilter.data[0][d.type] = d.deviceCount;
+					});
 				}),
 			);
 	}
@@ -211,30 +190,20 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getDeploymentStatusCounts () {
 		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
-		return of({})
+		return this.osvService.getDeploymentStatusCount({ customerId })
 			.pipe(
-				map(() => {
+				map((response: DeploymentStatusCountResponse) => {
 					deploymentStatusFilter.loading = false;
-					deploymentStatusFilter.data = [
-						{
-							filter: 'production',
-							label: _.capitalize(I18n.get('_OsvProduction_')),
-							selected: false,
-							value: 100,
-						},
-						{
-							filter: 'upgrade',
-							label: _.capitalize(I18n.get('_OsvUpgrade_')),
-							selected: false,
-							value: 50,
-						},
-						{
-							filter: 'none',
-							label: _.capitalize(I18n.get('_OsvNone_')),
-							selected: false,
-							value: 20,
-						},
-					];
+					deploymentStatusFilter.data = _.compact(_.map(response, (value: DeploymentStatusCount) => {
+						if (value !== 0) {
+							return {
+								value: value.deviceCount,
+								filter: value.status,
+								label: _.capitalize(value.status),
+								selected: false,
+							};
+						}
+					}));
 				}),
 			);
 	}
@@ -244,31 +213,21 @@ export class OptimalSoftwareVersionComponent {
 	 * @returns the total counts observable
 	 */
 	private getRiskLevelStatusCounts () {
-		const deploymentStatusFilter = _.find(this.filters, { key: 'riskLevel' });
+		const riskLevelStatusFilter = _.find(this.filters, { key: 'riskLevel' });
 		return this.osvService.getRiskCount({ customerId })
 			.pipe(
-				map(() => {
-					deploymentStatusFilter.loading = false;
-					deploymentStatusFilter.data = [
-						{
-							filter: 'low',
-							label: _.capitalize(I18n.get('_OsvLow_')),
-							selected: false,
-							value: 100,
-						},
-						{
-							filter: 'medium',
-							label: _.capitalize(I18n.get('_OsvMedium_')),
-							selected: false,
-							value: 50,
-						},
-						{
-							filter: 'high',
-							label: _.capitalize(I18n.get('_OsvHigh_')),
-							selected: false,
-							value: 20,
-						},
-					];
+				map((response: RiskCountResponse) => {
+					riskLevelStatusFilter.loading = false;
+					riskLevelStatusFilter.data = _.compact(_.map(response, (value: RiskCount) => {
+						if (value !== 0) {
+							return {
+								value: value.deviceCount,
+								filter: value.risk,
+								label: _.capitalize(value.risk),
+								selected: false,
+							};
+						}
+					}));
 				}),
 			);
 	}

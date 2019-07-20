@@ -5,19 +5,24 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { SoftwareProfilesResponse, OSVService } from '@sdp-api';
+
+
+/** Our current customerId */
+const customerId = '2431199';
 
 /**
  * ProfileGroups Component
  */
 @Component({
 	selector: 'app-profile-groups',
-	styleUrls: ['./profile-groups.component.scss'],
-	templateUrl: './profile-groups.component.html',
+	styleUrls: ['./software-profile.component.scss'],
+	templateUrl: './software-profile.component.html',
 })
-export class ProfileGroupsComponent {
+export class SoftwareProfileComponent {
 	@Input() public selectedProfileGroup;
 	@Output() public selectedProfileGroupChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	public profileGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -26,6 +31,7 @@ export class ProfileGroupsComponent {
 
 	constructor (
 		private logger: LogService,
+		private osvService: OSVService,
 	) {
 		this.logger.debug('ProfileGroupsComponent Created!');
 	}
@@ -57,68 +63,11 @@ export class ProfileGroupsComponent {
 	 * @returns the total counts observable
 	 */
 	private getProfileGroups () {
-		return of({ })
+		return this.osvService.getSoftwareProfiles({ customerId })
 			.pipe(
-				map(() => {
-					this.profileGroups = [
-						{
-							assetCount: 2,
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							lastRecommendedDate: '2018-07-14',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							popularity: '',
-							productFamily: 'XYZ',
-							risk: '',
-							softwareProfile: 'Profile 1',
-						},
-						{
-							assetCount: 2,
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							lastRecommendedDate: '2018-07-14',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							popularity: '',
-							productFamily: 'XYZ',
-							risk: '',
-							softwareProfile: 'Profile 2',
-						}, {
-							assetCount: 2,
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							lastRecommendedDate: '2018-07-14',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							popularity: '',
-							productFamily: 'XYZ',
-							risk: '',
-							softwareProfile: 'Profile 3',
-						}, {
-							assetCount: 2,
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							lastRecommendedDate: '2018-07-14',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							popularity: '',
-							productFamily: 'XYZ',
-							risk: '',
-							softwareProfile: 'Profile 4',
-						}, {
-							assetCount: 2,
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							lastRecommendedDate: '2018-07-14',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							popularity: '',
-							productFamily: 'XYZ',
-							risk: '',
-							softwareProfile: 'Profile 5',
-						},
-					];
+				map((response: SoftwareProfilesResponse) => {
+					this.status.isLoading = false;
+					this.profileGroups = response;
 					this.buildTable();
 				}),
 			);

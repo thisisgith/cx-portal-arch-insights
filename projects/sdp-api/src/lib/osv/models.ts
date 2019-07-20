@@ -1,2 +1,9 @@
 export { RiskCountResponse } from './models/risk-count-response';
+export { RiskCount } from './models/risk-count';
 export { Pagination } from './models/pagination';
+export { DeviceCountResponse } from './models/device-count-response';
+export { DeviceCount } from './models/device-count';
+export { DeploymentStatusCountResponse } from './models/deployment-status-response';
+export { DeploymentStatusCount } from './models/deployment-status-count';
+export { SoftwareProfile } from './models/software-profile';
+export { SoftwareProfilesResponse } from './models/software-profiles-response';

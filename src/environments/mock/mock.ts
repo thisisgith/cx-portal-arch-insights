@@ -39,6 +39,8 @@ import {
 	CommunitiesResponse,
 	CoverageCountsResponse,
 	CoverageResponse,
+	DeviceCountResponse,
+	DeploymentStatusCountResponse,
 	ELearningResponse,
 	FieldNoticeBulletinResponse,
 	FieldNoticeResponse,
@@ -52,6 +54,7 @@ import {
 	RoleCountResponse,
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryResponse,
+	SoftwareProfilesResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -66,6 +69,8 @@ type ResponseBody = (
 	CommunitiesResponse |
 	CoverageCountsResponse |
 	CoverageResponse |
+	DeviceCountResponse |
+	DeploymentStatusCountResponse |
 	ELearningResponse |
 	FieldNoticeBulletinResponse |
 	FieldNoticeResponse |
@@ -80,6 +85,7 @@ type ResponseBody = (
 	RoleCountResponse |
 	SecurityAdvisoryBulletinResponse |
 	SecurityAdvisoryResponse |
+	SoftwareProfilesResponse |
 	SuccessPathsResponse |
 	VulnerabilityResponse
 );

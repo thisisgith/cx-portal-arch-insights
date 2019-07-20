@@ -8,7 +8,7 @@ import { AssetDetailsModule } from './asset-detail/asset-detail.module';
 import { CuiTabsModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
 import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
-import { ProfileGroupsModule } from './profile-groups/profile-groups.module';
+import { SoftwareProfileModule } from './software-profile/software-profile.module';
 import { AssetsModule } from './assets/assets.module';
 import { SoftwareVersionsModule } from './software-versions/software-versions.module';
 import { ProfileGroupDetailModule } from './profile-group-detail/profile-group-detail.module';
@@ -46,7 +46,7 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		FormsModule,
 		AssetsPieChartModule,
-		ProfileGroupsModule,
+		SoftwareProfileModule,
 		AssetsModule,
 		SoftwareVersionsModule,
 		ProfileGroupDetailModule,
