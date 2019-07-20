@@ -3,10 +3,9 @@ import { Component, ViewChild, TemplateRef, Input, Output, EventEmitter } from '
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { SoftwareProfilesResponse, OSVService } from '@sdp-api';
-
 
 /** Our current customerId */
 const customerId = '2431199';
@@ -22,7 +21,7 @@ const customerId = '2431199';
 export class SoftwareProfileComponent {
 	@Input() public selectedProfileGroup;
 	@Output() public selectedProfileGroupChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	public profileGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,

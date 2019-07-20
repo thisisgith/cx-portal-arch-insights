@@ -4,7 +4,15 @@ import { forkJoin, of, Subject } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { takeUntil, map } from 'rxjs/operators';
-import { OSVService, DeviceCountResponse, DeviceCount, RiskCountResponse, RiskCount, DeploymentStatusCountResponse, DeploymentStatusCount, SoftwareProfilesResponse } from '@sdp-api';
+import {
+	OSVService,
+	DeviceCountResponse,
+	DeviceCount,
+	RiskCountResponse,
+	RiskCount,
+	DeploymentStatusCountResponse,
+	DeploymentStatusCount,
+} from '@sdp-api';
 
 /** Our current customerId */
 const customerId = '2431199';
@@ -15,7 +23,7 @@ const customerId = '2431199';
 interface Filter {
 	key: string;
 	selected?: boolean;
-	template?: TemplateRef<{}>;
+	template?: TemplateRef<{ }>;
 	title?: string;
 	loading: boolean;
 	data: {
@@ -37,13 +45,13 @@ interface Filter {
 })
 export class OptimalSoftwareVersionComponent {
 	@ViewChild('riskLevelFilter', { static: true }) private riskLevelFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('deRecommendationFilter', { static: true }) private deRecommendationFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -137,7 +145,7 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getDERecommendationCounts () {
 		const deRecommendationFilter = _.find(this.filters, { key: 'deRecommendation' });
-		return of({})
+		return of({ })
 			.pipe(
 				map(() => {
 					deRecommendationFilter.loading = false;
@@ -176,7 +184,7 @@ export class OptimalSoftwareVersionComponent {
 			.pipe(
 				map((response: DeviceCountResponse) => {
 					totalAssetsFilter.loading = false;
-					totalAssetsFilter.data[0] = {};
+					totalAssetsFilter.data[0] = { };
 					_.map(response, (d: DeviceCount) => {
 						totalAssetsFilter.data[0][d.type] = d.deviceCount;
 					});
@@ -194,16 +202,17 @@ export class OptimalSoftwareVersionComponent {
 			.pipe(
 				map((response: DeploymentStatusCountResponse) => {
 					deploymentStatusFilter.loading = false;
-					deploymentStatusFilter.data = _.compact(_.map(response, (value: DeploymentStatusCount) => {
-						if (value !== 0) {
-							return {
-								value: value.deviceCount,
-								filter: value.status,
-								label: _.capitalize(value.status),
-								selected: false,
-							};
-						}
-					}));
+					deploymentStatusFilter.data = _.compact(
+						_.map(response, (value: DeploymentStatusCount) => {
+							if (value !== 0) {
+								return {
+									value: value.deviceCount,
+									filter: value.status,
+									label: _.capitalize(value.status),
+									selected: false,
+								};
+							}
+						}));
 				}),
 			);
 	}

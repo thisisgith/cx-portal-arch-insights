@@ -1,5 +1,9 @@
-import { RiskCountResponse, DeviceCountResponse, DeploymentStatusCountResponse, SoftwareProfilesResponse } from '@sdp-api';
-
+import {
+	RiskCountResponse,
+	DeviceCountResponse,
+	DeploymentStatusCountResponse,
+	SoftwareProfilesResponse,
+} from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/osv/v1/';
@@ -178,5 +182,4 @@ export const OSVScenarios = [
 		url: `${api}softwareprofiles?customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
-
 ];
