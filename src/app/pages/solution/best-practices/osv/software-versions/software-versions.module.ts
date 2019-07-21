@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SoftwareVersionsComponent } from './software-versions.component';
-import { CuiTableModule } from '@cisco-ngx/cui-components';
+import { CuiTableModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
@@ -14,6 +14,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		CommonModule,
 		CuiTableModule,
 		I18nPipeModule,
+		CuiSpinnerModule,
 	],
 })
 export class SoftwareVersionsModule { }

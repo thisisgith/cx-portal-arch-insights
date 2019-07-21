@@ -9,7 +9,7 @@
 			</div>
 		</div>
 	</app-panel360-header>
-	<app-profile-group-detail></app-profile-group-detail>
+	<app-software-profile-detail></app-software-profile-detail>
 </app-panel360>
 <app-panel360 *ngIf="selectedAssetSoftware" [hidden]="!selectedAssetSoftware" [fullscreen]="fullscreen">
 	<app-panel360-header (close)="selectedAssetSoftware = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
@@ -72,7 +72,7 @@
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading"></div>
 	<div *ngIf="view == 'swProfiles'">
-		<app-profile-groups [(selectedProfileGroup)]="selectedProfileGroup"></app-profile-groups>
+		<app-software-profiles [(selectedProfileGroup)]="selectedProfileGroup"></app-software-profiles>
 	</div>
 	<div *ngIf="view == 'assets'">
 		<app-assets [(selectedAssetSoftware)]="selectedAssetSoftware"></app-assets>

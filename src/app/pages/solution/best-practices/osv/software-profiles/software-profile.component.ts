@@ -14,11 +14,11 @@ const customerId = '2431199';
  * ProfileGroups Component
  */
 @Component({
-	selector: 'app-profile-groups',
+	selector: 'app-software-profiles',
 	styleUrls: ['./software-profile.component.scss'],
 	templateUrl: './software-profile.component.html',
 })
-export class SoftwareProfileComponent {
+export class SoftwareProfilesComponent {
 	@Input() public selectedProfileGroup;
 	@Output() public selectedProfileGroupChange = new EventEmitter<any>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;

@@ -3,8 +3,12 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { OSVService, SoftwareVersionsResponse } from '@sdp-api';
+
+/** Our current customerId */
+const customerId = '2431199';
 
 /**
  * SoftwareVersion Component
@@ -23,6 +27,7 @@ export class SoftwareVersionsComponent {
 
 	constructor (
 		private logger: LogService,
+		private osvService: OSVService,
 	) {
 		this.logger.debug('SoftwareVersionsComponent Created!');
 	}
@@ -54,51 +59,11 @@ export class SoftwareVersionsComponent {
 	 * @returns the total counts observable
 	 */
 	private getSoftwareVersions () {
-		return of({ })
+		return this.osvService.getSoftwareVersions({ customerId })
 			.pipe(
-				map(() => {
-					this.softwareVersions = [
-						{
-							assetCount: 2,
-							goldenImage: 'Y',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							releaseDate: '2015-10-10',
-							version: '10.1.171.1',
-						},
-						{
-							assetCount: 4,
-							goldenImage: 'Y',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							releaseDate: '2015-10-10',
-							version: '10.1.171.2',
-						},
-						{
-							assetCount: 6,
-							goldenImage: 'Y',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							releaseDate: '2015-10-10',
-							version: '10.1.171.3',
-						},
-						{
-							assetCount: 8,
-							goldenImage: 'Y',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							releaseDate: '2015-10-10',
-							version: '10.1.171.4',
-						},
-						{
-							assetCount: 10,
-							goldenImage: 'Y',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							releaseDate: '2015-10-10',
-							version: '10.1.171.5',
-						},
-					];
+				map((response: SoftwareVersionsResponse) => {
+					this.status.isLoading = false;
+					this.softwareVersions = response;
 					this.buildTable();
 				}),
 			);
@@ -122,7 +87,7 @@ export class SoftwareVersionsComponent {
 						name: I18n.get('_OsvReleaseDate_'),
 					},
 					{
-						key: 'assetCount',
+						key: 'assetsCount',
 						name: I18n.get('_OsvUngroupedAssetsCount_'),
 					},
 					{

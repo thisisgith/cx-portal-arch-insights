@@ -55,6 +55,7 @@ import {
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryResponse,
 	SoftwareProfilesResponse,
+	SoftwareVersionsResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -86,6 +87,7 @@ type ResponseBody = (
 	SecurityAdvisoryBulletinResponse |
 	SecurityAdvisoryResponse |
 	SoftwareProfilesResponse |
+	SoftwareVersionsResponse |
 	SuccessPathsResponse |
 	VulnerabilityResponse
 );

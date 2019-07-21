@@ -1,9 +1,18 @@
 
-import { Component, Input, ViewEncapsulation, SimpleChanges } from '@angular/core';
+import {
+	Component,
+	Input,
+	ViewEncapsulation,
+	SimpleChanges,
+} from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { Chart } from 'angular-highcharts';
 import * as _ from 'lodash-es';
+import {
+	BasicRecommendationsResponse,
+	BasicRecommendation,
+} from '@sdp-api';
 /**
  * AssetTimelineChart Component
  */
@@ -14,7 +23,7 @@ import * as _ from 'lodash-es';
 	templateUrl: './asset-timeline-chart.component.html',
 })
 export class AssetTimelineChartComponent {
-	@Input() public seriesData;
+	@Input() public data: BasicRecommendationsResponse;
 	@Input() public fullscreen;
 	public chart: Chart;
 	constructor (
@@ -27,25 +36,29 @@ export class AssetTimelineChartComponent {
 	 * Initializes the bubble chart
 	 */
 	public ngOnInit () {
-		// if (this.seriesData) {
-		this.buildGraph();
-		// }
+		if (this.data) {
+			this.buildGraph();
+		}
 	}
 
 	/**
 	 * Builds our bubble graph
 	 */
 	private buildGraph () {
-		// const series = _.map(this.seriesData, d => ({
-		// 	data: [
-		// 		{
-		// 			name: d.label,
-		// 			value: d.value,
-		// 		},
-		// 	],
-		// 	name: d.label,
-		// 	type: undefined,
-		// }));
+		const seriesData = _.compact(
+			_.map(this.data, (value: BasicRecommendation) => {
+				const releaseDate = new Date(value.releaseDate);
+				return {
+					description: value.versionSummary,
+					label: value.version,
+					name: value.versionSummary,
+					x: Date.UTC(
+						releaseDate.getFullYear(),
+						releaseDate.getMonth(),
+						releaseDate.getDate(),
+					),
+				};
+			}));
 
 		this.chart = new Chart({
 			chart: {
@@ -81,38 +94,7 @@ export class AssetTimelineChartComponent {
 			},
 			series: [
 				{
-					data: [
-						{
-							description: 'Current',
-							label: '18 Mar 2013',
-							name: 'Current',
-							x: Date.UTC(2013, 2, 18),
-						},
-						{
-							description: 'Minumum',
-							label: '7 Mar 2014',
-							name: 'Minumum',
-							x: Date.UTC(2014, 2, 7),
-						},
-						{
-							description: 'Suggested',
-							label: '7 Dec 2014',
-							name: 'Suggested',
-							x: Date.UTC(2014, 11, 7),
-						},
-						{
-							description: 'Golden Image',
-							label: '7 Dec 2017',
-							name: 'Golden Image',
-							x: Date.UTC(2017, 11, 7),
-						},
-						{
-							description: 'Latest',
-							label: '21 Jan 2019',
-							name: 'Latest',
-							x: Date.UTC(2019, 0, 21),
-						},
-					],
+					data: seriesData,
 					type: 'timeline',
 				},
 			],

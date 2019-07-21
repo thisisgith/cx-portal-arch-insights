@@ -8,13 +8,17 @@ import { AssetDetailsModule } from './asset-detail/asset-detail.module';
 import { CuiTabsModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
 import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
-import { SoftwareProfileModule } from './software-profile/software-profile.module';
+import { SoftwareProfilesModule } from './software-profiles/software-profile.module';
 import { AssetsModule } from './assets/assets.module';
 import { SoftwareVersionsModule } from './software-versions/software-versions.module';
-import { ProfileGroupDetailModule } from './profile-group-detail/profile-group-detail.module';
+import {
+	SoftwareProfileDetailModule,
+} from './software-profile-detail/software-profile-detail.module';
 import { environment } from '@environment';
 import { OSVModule } from '@sdp-api';
-import { AssetTimelineChartModule } from './asset-timeline-chart/asset-timeline-chart.module';
+import {
+	AssetTimelineChartModule,
+} from './asset-timeline-chart/asset-timeline-chart.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -46,13 +50,12 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		FormsModule,
 		AssetsPieChartModule,
-		SoftwareProfileModule,
+		SoftwareProfilesModule,
 		AssetsModule,
 		SoftwareVersionsModule,
-		ProfileGroupDetailModule,
+		SoftwareProfileDetailModule,
 		OSVModule.forRoot({ rootUrl }),
 		AssetTimelineChartModule,
-
 	],
 })
 export class OptimalSoftwareVersionModule { }

@@ -7,3 +7,9 @@ export { DeploymentStatusCountResponse } from './models/deployment-status-respon
 export { DeploymentStatusCount } from './models/deployment-status-count';
 export { SoftwareProfile } from './models/software-profile';
 export { SoftwareProfilesResponse } from './models/software-profiles-response';
+export { SoftwareVersion } from './models/software-version';
+export { SoftwareVersionsResponse } from './models/software-versions-response';
+export { DERecommendationsCount } from './models/de-recommendations-count';
+export { DERecommendationsResponse } from './models/de-recommendations-response';
+export { BasicRecommendation } from './models/basic-recommendation';
+export { BasicRecommendationsResponse } from './models/basic-recommendations-response';

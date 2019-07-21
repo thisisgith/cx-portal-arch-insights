@@ -3,6 +3,9 @@ import {
 	DeviceCountResponse,
 	DeploymentStatusCountResponse,
 	SoftwareProfilesResponse,
+	SoftwareVersionsResponse,
+	DERecommendationsResponse,
+	BasicRecommendationsResponse,
 } from '@sdp-api';
 
 /** Base of URL for SDP API */
@@ -10,6 +13,84 @@ const api = '/api/customerportal/osv/v1/';
 
 /** Default Customer ID */
 const customerId = '2431199';
+
+/** The mock response for basic recommendations */
+const mockBasicRecommendations: BasicRecommendationsResponse = [
+	{
+		releaseDate: '2013-02-18T13:16:35.000Z',
+		status: '',
+		version: '1.1',
+		versionSummary: 'Current',
+	},
+	{
+		releaseDate: '2014-02-07T13:16:35.000Z',
+		status: '',
+		version: '1.2',
+		versionSummary: 'Minumum',
+	},
+	{
+		releaseDate: '2014-11-07T13:16:35.000Z',
+		status: '',
+		version: '1.3',
+		versionSummary: 'Suggested',
+	},
+	{
+		releaseDate: '2017-11-18T13:16:35.000Z',
+		status: '',
+		version: '1.3',
+		versionSummary: 'Golden Image',
+	},
+	{
+		releaseDate: '2019-01-21T13:16:35.000Z',
+		status: '',
+		version: '1.3',
+		versionSummary: 'Latest',
+	},
+];
+
+/** The mock response for software versions */
+const mockSoftwareVersions: SoftwareVersionsResponse = [
+	{
+		assetsCount: 2,
+		goldenImage: true,
+		optimalVersion: true,
+		osType: 'IOS-XE',
+		releaseDate: '2015-10-10',
+		version: '10.1.171.1',
+	},
+	{
+		assetsCount: 4,
+		goldenImage: true,
+		optimalVersion: true,
+		osType: 'IOS-XE',
+		releaseDate: '2015-10-10',
+		version: '10.1.171.2',
+	},
+	{
+		assetsCount: 6,
+		goldenImage: true,
+		optimalVersion: true,
+		osType: 'IOS-XE',
+		releaseDate: '2015-10-10',
+		version: '10.1.171.3',
+	},
+	{
+		assetsCount: 8,
+		goldenImage: true,
+		optimalVersion: true,
+		osType: 'IOS-XE',
+		releaseDate: '2015-10-10',
+		version: '10.1.171.4',
+	},
+	{
+		assetsCount: 10,
+		goldenImage: true,
+		optimalVersion: true,
+		osType: 'IOS-XE',
+		releaseDate: '2015-10-10',
+		version: '10.1.171.5',
+	},
+];
 
 /** The mock response for software profiles */
 const mockSoftwareProfile: SoftwareProfilesResponse = [
@@ -61,6 +142,22 @@ const mockSoftwareProfile: SoftwareProfilesResponse = [
 ];
 
 /** The mock response for role counts */
+const mockDERecommendationsCounts: DERecommendationsResponse = [
+	{
+		deviceCount: 9,
+		status: 'in progress',
+	},
+	{
+		deviceCount: 1,
+		status: 'none',
+	},
+	{
+		deviceCount: 2,
+		status: 'completed',
+	},
+];
+
+/** The mock response for role counts */
 const mockRiskCounts: RiskCountResponse = [
 	{
 		deviceCount: 9,
@@ -76,7 +173,7 @@ const mockRiskCounts: RiskCountResponse = [
 	},
 ];
 
-/** The mock response for role counts */
+/** The mock response for device counts */
 const mockDeviceCounts: DeviceCountResponse = [
 	{
 		deviceCount: 124,
@@ -96,7 +193,7 @@ const mockDeviceCounts: DeviceCountResponse = [
 	},
 ];
 
-/** The mock response for role counts */
+/** The mock response for deploymentstatus counts */
 const mockDeploymentStatusCounts: DeploymentStatusCountResponse = [
 	{
 		deviceCount: 124,
@@ -182,4 +279,56 @@ export const OSVScenarios = [
 		url: `${api}softwareprofiles?customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 2000,
+					description: 'Software Versions',
+					response: {
+						body: mockSoftwareVersions,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}softwareversions?customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 2000,
+					description: 'DE Recommendations Status Counts',
+					response: {
+						body: mockDERecommendationsCounts,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}derecommendations/count?customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 2000,
+					description: 'Basic Recommendations Status Counts',
+					response: {
+						body: mockBasicRecommendations,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}basicrecommendations?customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+
 ];

@@ -1,19 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProfileGroupDetailComponent } from './profile-group-detail.component';
+import { SoftwarProfileDetailComponent } from './software-profile-detail.component';
 import { CuiTabsModule } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
- * ProfileGroupDetail Component
+ * SoftwareProfileDetail Module
  */
 @NgModule({
-	declarations: [ProfileGroupDetailComponent],
-	exports: [ProfileGroupDetailComponent],
+	declarations: [SoftwarProfileDetailComponent],
+	exports: [SoftwarProfileDetailComponent],
 	imports: [
 		CommonModule,
 		CuiTabsModule,
 		I18nPipeModule,
 	],
 })
-export class ProfileGroupDetailModule { }
+export class SoftwareProfileDetailModule { }

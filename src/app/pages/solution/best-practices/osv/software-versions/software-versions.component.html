@@ -1,8 +1,11 @@
 <div class="divider qtr-margin-top"></div>
 <ng-container *ngTemplateOutlet="tableSoftwareVersion"></ng-container>
+<div *ngIf="status.isLoading">
+	<cui-spinner></cui-spinner>
+</div>
 
 <ng-template #tableSoftwareVersion>
-	<div class="responsive-table" *ngIf="softwareVersionsTable && softwareVersions.length">
+	<div class="responsive-table" *ngIf="!status.isLoading && softwareVersionsTable && softwareVersions.length">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
 			<thead>
 				<tr>

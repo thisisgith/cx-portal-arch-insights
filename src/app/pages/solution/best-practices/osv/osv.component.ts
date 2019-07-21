@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, of, Subject } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { takeUntil, map } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import {
 	RiskCount,
 	DeploymentStatusCountResponse,
 	DeploymentStatusCount,
+	DERecommendationsResponse,
 } from '@sdp-api';
 
 /** Our current customerId */
@@ -145,30 +146,21 @@ export class OptimalSoftwareVersionComponent {
 	 */
 	private getDERecommendationCounts () {
 		const deRecommendationFilter = _.find(this.filters, { key: 'deRecommendation' });
-		return of({ })
+		return this.osvService.getDERecommendations({ customerId })
 			.pipe(
-				map(() => {
+				map((response: DERecommendationsResponse) => {
 					deRecommendationFilter.loading = false;
-					deRecommendationFilter.data = [
-						{
-							filter: 'none',
-							label: I18n.get('_OsvNone_'),
-							selected: false,
-							value: 124,
-						},
-						{
-							filter: 'upgrade',
-							label: I18n.get('_OsvUpgrade_'),
-							selected: false,
-							value: 3270,
-						},
-						{
-							filter: 'production',
-							label: I18n.get('_OsvProduction_'),
-							selected: false,
-							value: 1880,
-						},
-					];
+					deRecommendationFilter.data = _.compact(
+						_.map(response, (value: DeploymentStatusCount) => {
+							if (value !== 0) {
+								return {
+									value: value.deviceCount,
+									filter: value.status,
+									label: _.capitalize(value.status),
+									selected: false,
+								};
+							}
+						}));
 				}),
 			);
 	}
