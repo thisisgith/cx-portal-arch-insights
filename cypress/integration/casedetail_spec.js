@@ -2,7 +2,7 @@
 const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('Case Detail Spec', () => {
-	context.skip('Case List View', () => {
+	context('Case List View', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -95,7 +95,7 @@ describe('Case Detail Spec', () => {
 			cy.get('app-panel360').should('not.exist');
 		});
 
-		it.only('Case Details Verify Buttons Exist', () => {
+		it('Case Details Verify Buttons Exist', () => {
 			// PBC-233
 			const validCaseID = '686350448';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
