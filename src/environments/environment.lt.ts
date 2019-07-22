@@ -24,7 +24,7 @@ export const environment = {
 	baseHref: '',
 	mock: [],
 	production: true,
-	rmaServiceOrigin: 'https://api-test.cisco.com/api/stg/customerportal',
+	rmaServiceOrigin: 'https://api-test.cisco.com/api/lt/customerportal',
 	rmaServicePaths: {
 		returns: '/return/v1.0/returns',
 	},
@@ -33,11 +33,11 @@ export const environment = {
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
 	 */
-	sdpServiceOrigin: 'https://api-test.cisco.com/api/stg/customerportal',
+	sdpServiceOrigin: 'https://api-test.cisco.com/api/lt/customerportal',
 	sdpServicePaths: {
-		contracts: '/api/stg/v1/contracts',
-		controlpoints: '/api/stg/customerportal/controlpoint',
-		customerportal: '/api/stg/customerportal',
-		inventory: '/api/stg/v1/inventory',
+		contracts: '/api/lt/v1/contracts',
+		controlpoints: '/api/lt/customerportal/controlpoint',
+		customerportal: '/api/lt/customerportal',
+		inventory: '/api/lt/v1/inventory',
 	},
 };
