@@ -686,7 +686,7 @@ export class LifecycleComponent implements OnDestroy {
 								this.componentData.learning.elearning.push(learningItem);
 								break;
 							}
-							case 'Certifications':
+							case 'Certification':
 							case 'Videos': {
 								this.componentData.learning.certifications.push(item);
 								break;
