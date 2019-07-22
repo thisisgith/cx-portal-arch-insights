@@ -129,16 +129,24 @@ describe('Assets', () => { // PBC-41
 
 			cy.server();
 			cy.route('**/product-alerts/v1/security-advisory-bulletins?*').as('security');
-			cy.route('**/product-alerts/v1/field-notice-bulletins?*').as('fieldNotice');
 			cy.get('tbody tr').eq(0).click();
+			let securityXHR;
+			let fnXHR;
+			cy.wait('Field Notice Bulletins').then(xhr => {
+				fnXHR = xhr;
+			});
 			cy.wait('@security').then(xhr => {
-				if (xhr.response.body.data.length) {
+				securityXHR = xhr;
+			});
+			cy.getByAutoId('ADVISORIESTab').click();
+
+			cy.wrap(securityXHR).then(() => {
+				if (securityXHR.response.body.data.length) {
 					const pageText = getPaginationText(
-						xhr.response.body.Pagination, 'Security Advisories'
+						securityXHR.response.body.Pagination, 'Security Advisories'
 					);
-					cy.getByAutoId('ADVISORIESTab').click();
 					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
-					Cypress._.each(xhr.response.body.data, (advisory, index) => {
+					Cypress._.each(securityXHR.response.body.data, (advisory, index) => {
 						cy.get('details-advisories tbody tr').eq(index).within(() => {
 							cy.getByAutoId('ImpactIcon')
 								.should('have.class', getImpactIcon(advisory.severity));
@@ -151,7 +159,7 @@ describe('Assets', () => { // PBC-41
 										.format('YYYY MMM DD'));
 						});
 					});
-					if (xhr.response.body.Pagination.total > xhr.response.body.data.length) {
+					if (securityXHR.response.body.Pagination.total > securityXHR.response.body.data.length) {
 						cy.getByAutoId('LoadMoreButton').click();
 						cy.get('details-advisories tbody tr').should('have.length.greaterThan', 10);
 					} else {
@@ -160,14 +168,15 @@ describe('Assets', () => { // PBC-41
 				}
 			});
 
-			cy.wait('@fieldNotice').then(xhr => {
-				if (xhr.response.body.data.length) {
+			cy.wrap(fnXHR).then(() => {
+				if (fnXHR.response.body.data.length) {
+					cy.getByAutoId('AdvisoryTab-field').click();
 					const pageText = getPaginationText(
-						xhr.response.body.Pagination, 'Field Notices'
+						fnXHR.response.body.Pagination, 'Field Notices'
 					);
 					cy.getByAutoId('AdvisoryTab-field').click();
 					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
-					Cypress._.each(xhr.response.body.data, (advisory, index) => {
+					Cypress._.each(fnXHR.response.body.data, (advisory, index) => {
 						cy.get('details-advisories tbody tr').eq(index).within(() => {
 							cy.getByAutoId('FieldNoticeId')
 								.should('have.text', `FN ${advisory.fieldNoticeId}`)
@@ -183,7 +192,7 @@ describe('Assets', () => { // PBC-41
 										.format('YYYY MMM DD'));
 						});
 					});
-					if (xhr.response.body.Pagination.total > xhr.response.body.data.length) {
+					if (fnXHR.response.body.Pagination.total > fnXHR.response.body.data.length) {
 						cy.getByAutoId('LoadMoreButton').click();
 						cy.get('details-advisories tbody tr').should('have.length.greaterThan', 10);
 					} else {
@@ -191,6 +200,7 @@ describe('Assets', () => { // PBC-41
 					}
 				}
 			});
+			cy.get('[data-auto-id*="Device-"]').eq(0).click();
 		});
 
 		it('Shows support and warranty coverage', () => { // PBC-52
@@ -558,7 +568,7 @@ describe('Assets', () => { // PBC-41
 					} else {
 						cy.getByAutoId(`AdvisoryCount-${serial}`).should('not.be.visible');
 					}
-					if (assert.supportCovered) {
+					if (asset.supportCovered) {
 						cy.getByAutoId(`CoveredIcon-${serial}`)
 							.should('have.attr', 'data-balloon', 'Support Coverage');
 					} else {
