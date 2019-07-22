@@ -558,8 +558,9 @@ describe('Assets', () => { // PBC-41
 					// Device image is a static placeholder for now
 					cy.getByAutoId(`DeviceImg-${serial}`).should('have.text', 'No Photo Available');
 					cy.getByAutoId(`IPAddress-${serial}`).should('have.text', asset.ipAddress);
-					if (asset.lastScan) {
-						cy.getByAutoId(`LastScan-${serial}`).should('have.text', Cypress.moment(asset.lastScan).fromNow());
+					if (asset.lastScan) { // PBC-355
+						cy.getByAutoId(`LastScan-${serial}`)
+							.should('have.text', Cypress.moment(asset.lastScan).fromNow());
 					}
 					cy.getByAutoId(`SerialNumber-${serial}`)
 						.should('have.text', asset.serialNumber);
