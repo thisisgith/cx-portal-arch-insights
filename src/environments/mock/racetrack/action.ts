@@ -12,6 +12,7 @@ const customerId = '2431199';
  * @param isAccChanged boolean
  * @param isElearningChanged boolean
  * @param isCommunitiesChanged boolean
+ * @param isCgtChanged boolean
  * @param isSuccessPathChanged boolean
  * @returns response
  */
@@ -20,6 +21,7 @@ function MockActionUpdate (
 	isAccChanged: boolean,
 	isElearningChanged: boolean,
 	isCommunitiesChanged: boolean,
+	isCgtChanged: boolean,
 	isSuccessPathChanged: boolean): PitstopActionUpdateResponse {
 	return {
 		isAccChanged,
@@ -27,6 +29,7 @@ function MockActionUpdate (
 		isCommunitiesChanged,
 		isElearningChanged,
 		isSuccessPathChanged,
+		isCgtChanged
 	};
 }
 
@@ -41,7 +44,7 @@ export const ActionScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 50,
 					description: 'Update to complete the first Action',
 					response: {
-						body: MockActionUpdate(true, false, false, false, false),
+						body: MockActionUpdate(true, false, false, false, false, false),
 						status: 200,
 					},
 					selected: true,

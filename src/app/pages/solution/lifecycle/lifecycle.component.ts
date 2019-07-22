@@ -67,6 +67,9 @@ interface ComponentData {
 	acc?: {
 		sessions: ACC[];
 	};
+	cgt?: {
+		sessions: ACC[];
+	}
 	communities?: Community[];
 }
 
@@ -164,6 +167,7 @@ export class LifecycleComponent implements OnDestroy {
 			elearning: false,
 			racetrack: false,
 			success: false,
+			cgt: false,
 		},
 	};
 
@@ -183,6 +187,7 @@ export class LifecycleComponent implements OnDestroy {
 	private technologySubscribe: Subscription;
 
 	public selectAccComponent = false;
+	public selectCgtComponent = false;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -258,6 +263,27 @@ export class LifecycleComponent implements OnDestroy {
 		if (submitted) {
 			this.selectAccComponent = false;
 			this.loadACC()
+				.subscribe();
+		}
+	}
+
+	/**
+	 * Select/deselect the CGTRequestForm component
+	 * @param selected whether the component is visible or not
+	 */
+	public selectCgtRequestForm (selected: boolean) {
+		this.selectCgtComponent = selected;
+	}
+
+	/**
+	 * Trigger the submitted acc success text.  Currently placeholder and will be removed
+	 * because this info will come from the API
+	 * @param submitted if the request was submitted
+	 */
+	public cgtRequestSubmit (submitted: boolean) {
+		if (submitted) {
+			this.selectCgtComponent = false;
+			this.loadCGT()
 				.subscribe();
 		}
 	}
@@ -475,6 +501,7 @@ export class LifecycleComponent implements OnDestroy {
 			if (results.isElearningChanged) { source.push(this.loadELearning()); }
 			if (results.isCommunitiesChanged) { source.push(this.loadCommunites()); }
 			if (results.isSuccessPathChanged) { source.push(this.loadSuccessPaths()); }
+			if (results.isCgtChanged) { source.push(this.loadCGT()); }
 			forkJoin(
 				source,
 			)
@@ -767,6 +794,42 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Loads the CGT for the given params
+	 * @returns the accResponse
+	 */
+	private loadCGT (): Observable<ACCResponse> {
+		this.status.loading.cgt = true;
+
+		// Temporarily not pick up optional query param suggestedAction
+		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+
+		return this.contentService.getRacetrackACC(
+			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+		.pipe(
+			map((result: ACCResponse) => {
+				this.status.loading.cgt = false;
+
+				this.componentData.cgt = {
+					sessions: _.filter(result.items, { status: 'in-progress' }),
+				};
+				_.remove(this.componentData.acc.sessions, (session: ACC) =>
+					!session.title && !session.description);
+				console.log(`********** cgt data = ${JSON.stringify(this.componentData.cgt)}`);
+				console.log(`********** cgt data = ${this.componentData.cgt.sessions[0].status}`);
+
+				return result;
+			}),
+			catchError(err => {
+				this.status.loading.cgt = false;
+				this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
+					err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
 	 * ForkJoin to load the other API Calls
 	 */
 	private loadRacetrackInfo () {
@@ -776,6 +839,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadCommunites(),
 			this.loadELearning(),
 			this.loadSuccessPaths(),
+			this.loadCGT(),
 		)
 		.subscribe();
 	}
