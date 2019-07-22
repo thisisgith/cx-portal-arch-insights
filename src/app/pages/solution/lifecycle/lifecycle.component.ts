@@ -514,7 +514,7 @@ export class LifecycleComponent implements OnDestroy {
 	public selectView (view: 'list' | 'grid') {
 		if (this.view !== view) {
 			this.view = view;
-			window.sessionStorage.setItem('view', this.view);
+			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:view', this.view);
 		}
 	}
 
