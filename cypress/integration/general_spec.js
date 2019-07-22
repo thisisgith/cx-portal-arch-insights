@@ -275,6 +275,26 @@ describe('General Spec', () => {
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
 		});
+		it.only('RMA 800000000 click the case link', () => {
+			// PBC-250
+			// mock set at "RMA with one replacement part"
+			const rmaVal = '800000000';
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('rma');
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(rmaVal.concat('{enter}'));
+
+			cy.wait('@rma').then(() => {
+				cy.getByAutoId('rmaStatus').should('exist').should('contain', i18n._Status_);
+				cy.getByAutoId('rmaNumber').should('exist');
+				cy.getByAutoId('caseNumber').should('exist').click({multiple: true});
+				// TODO rather than click multiple, how to click the second caseNumber?
+				cy.wait(3000);
+				cy.get('app-panel360').should('be.visible');
+				cy.getByAutoId('CloseDetails').should('exist').click();
+			});
+		});
+
 	});
 
 	context('Contract Search', () => {
