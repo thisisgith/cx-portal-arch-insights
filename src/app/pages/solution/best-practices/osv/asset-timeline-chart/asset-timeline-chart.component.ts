@@ -13,6 +13,7 @@ import {
 	BasicRecommendationsResponse,
 	BasicRecommendation,
 } from '@sdp-api';
+import { DatePipe } from '@angular/common';
 /**
  * AssetTimelineChart Component
  */
@@ -45,6 +46,7 @@ export class AssetTimelineChartComponent {
 	 * Builds our bubble graph
 	 */
 	private buildGraph () {
+		const datePipe = new DatePipe('en-US');
 		const seriesData = _.compact(
 			_.map(this.data, (value: BasicRecommendation) => {
 				const releaseDate = new Date(value.releaseDate);
@@ -55,8 +57,9 @@ export class AssetTimelineChartComponent {
 					x: Date.UTC(
 						releaseDate.getFullYear(),
 						releaseDate.getMonth(),
-					releaseDate.getDate(),
+						releaseDate.getDate(),
 					),
+					releaseDate: datePipe.transform(new Date(value.releaseDate), 'dd MMM yyyy'),
 				};
 			}));
 
@@ -79,6 +82,13 @@ export class AssetTimelineChartComponent {
 						connectorColor: 'blue',
 						distance: 50,
 						enabled: true,
+						/* tslint:disable:object-literal-shorthand*/
+						/* tslint:disable:no-string-literal */
+						formatter: function () {
+							return `<span style='font-weight: bold;' > ${this['point'].name}</span>
+							<br/>${this['point'].label}
+							<br/>${this['point'].releaseDate}`;
+						},
 						style: {
 							fontWeight: 'normal',
 							textOutline: 'none',
