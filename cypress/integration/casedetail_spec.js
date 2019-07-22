@@ -110,15 +110,39 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CloseDetails').should('exist').click();
 		});
 	});
-	context.skip('Case Detail Notes', () => {
+	context('Case Detail Notes', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
 
-		it('Case Details Notes test TBD', () => {
+		it.only('Case Details Notes', () => {
 			// PBC-234
+			const validCaseID = '686350448';
+			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('caseSearchBox').should('exist').clear()
+				.type(validCaseID.concat('{enter}'));
+			cy.wait(3000);
+			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
+			cy.wait(3000);
+			cy.getByAutoId('NOTES (3)Tab').should('exist').click(); // TODO this number increments as notes added
+			cy.getByAutoId('CaseAddNote').should('exist').click(); // click Add Note button
+			cy.getByAutoId('title').should('exist');
+			cy.getByAutoId('description').should('exist');
+			cy.getByAutoId('AddNote').should('exist');
+			cy.getByAutoId('CancelAddNote').should('exist').click();
+
+			cy.getByAutoId('CaseAddNote').should('exist').click(); // click Add Note button
+			cy.getByAutoId('title').type('Title 1 text');
+			cy.getByAutoId('description').type('Description 1 text');
+			cy.getByAutoId('AddNote').click();
+
+			cy.getByAutoId('createdDate').should('exist');
+			cy.getByAutoId('createdBy').should('exist');
+			cy.getByAutoId('noteTitle').should('exist');
+			cy.getByAutoId('noteDescr').should('exist');
+
 		});
 
 		it('Case Details Notes test TBD', () => {
