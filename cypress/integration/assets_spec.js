@@ -9,6 +9,8 @@ const cardScenario = assetMock.getScenario('GET', 'Assets Page 1 - Grid View');
 const assets = networkScenario.response.body.data;
 const assetCards = cardScenario.response.body.data;
 const totalCountScenario = coverageMock.getScenario('GET', 'Coverage Counts');
+const coveredScenario = coverageMock.getScenario('GET', 'Coverage');
+const coveredRes = coveredScenario.response.body.data[0];
 const coverageElements = totalCountScenario.response.body;
 const vulnMock = new MockService('VulnerabilityScenarios');
 const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
@@ -100,6 +102,27 @@ describe('Assets', () => { // PBC-41
 			cy.get('app-panel360').should('not.exist');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.get('app-panel360').should('not.exist');
+		});
+
+		it('Shows support and warranty coverage', () => { // PBC-52
+			const contractEnd = Cypress.moment(coveredRes.contractEndDate).format('YYYY MMM DD');
+			const warrantyEnd = Cypress.moment(coveredRes.warrantyEndDate).format('YYYY MMM DD');
+			cy.get('tbody tr').eq(0).click();
+			cy.getByAutoId('_SupportCoverage_-data')
+				.should('have.text', `Covered until ${contractEnd}`);
+			cy.getByAutoId('_SupportCoverage_-Link')
+				.should('have.text', `${coveredRes.contractNumber} ${coveredRes.slaDescription}`);
+			cy.getByAutoId('_Warranty_-data').should('have.text', `Covered until ${warrantyEnd}`);
+			cy.getByAutoId('_Warranty_-Link').should('have.text', coveredRes.warrantyType);
+			cy.get('tbody tr').eq(0).click();
+
+			coverageMock.enable('Not Covered');
+			cy.get('tbody tr').eq(0).click();
+			cy.getByAutoId('_SupportCoverage_-N/A').should('have.text', 'N/A');
+			cy.getByAutoId('_Warranty_-N/A').should('have.text', 'N/A');
+			cy.get('tbody tr').eq(0).click();
+			coverageMock.enable('Covered');
+			// TODO: Add test for invalid API response after PBC-352 is fixed
 		});
 
 		it('Gracefully handles API failures', () => {
