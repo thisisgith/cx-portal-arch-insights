@@ -121,7 +121,7 @@ export const mockResponse: Asset[] = [
 			"equipmentType": "POWERSUPPLY"
 	},
 	{
-			"deviceName": "Catalyst+2960S-24PS-L+Switch",
+			"deviceName": "Catalyst+2960S-24PS-L+Switch+Catalyst+2960S-24PS-L+Switch",
 			"ipAddress": "10.119.1.151",
 			"supportCovered": false,
 			"serialNumber": "FOC1544Y1AV",
@@ -708,7 +708,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 250,
 					description: 'Covered Assets',
 					response: {
 						body: MockAssets(10, 1, null , [true]),
@@ -895,7 +895,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 250,
 					description: 'Assets Page 2 - Grid View',
 					response: {
 						body: MockAssets(12, 2),
@@ -912,7 +912,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 250,
 					description: 'Assets Page 3 - Grid View',
 					response: {
 						body: MockAssets(12, 3),

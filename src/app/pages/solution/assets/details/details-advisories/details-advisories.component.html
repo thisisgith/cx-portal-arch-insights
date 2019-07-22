@@ -61,8 +61,8 @@
 	<div *ngIf="loading">
 		<cui-loader></cui-loader>
 	</div>
-	<div *ngIf="!loading && data?.bulletin?.length === 0" class="flex-center">
-		<span class="text-xlarge" [innerText]="'_NoResultsFound_' | i18n"></span>
+	<div *ngIf="!loading && (!data?.bulletin || data?.bulletin?.length === 0)" class="flex-center">
+		<span class="text-xlarge" [innerText]="'_NoResultsFound_' | i18n" data-auto-id="AdvisoriesNoResultsFound"></span>
 	</div>
 </ng-template>
 
