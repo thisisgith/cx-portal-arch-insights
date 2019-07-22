@@ -128,10 +128,10 @@
 		<div class="col-md-12 text-bold" [innerText]="title | i18n | uppercase"></div>
 	</div>
 	<div class="row" *ngIf="!titleOnly">
-		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)"></div>
-		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)"></div>
+		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>
+		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)" attr.data-auto-id="{{ title }}-data"></div>
 		<a [href]="url" *ngIf="linkData">
-			<div class="col-md-12" [innerText]="linkData"></div>
+			<div class="col-md-12" [innerText]="linkData" attr.data-auto-id="{{ title }}-Link"></div>
 		</a>
 	</div>
 </ng-template>
