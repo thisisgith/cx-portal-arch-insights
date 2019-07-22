@@ -456,7 +456,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId(`DeviceImg-${serial}`).should('have.text', 'No Photo Available');
 					cy.getByAutoId(`IPAddress-${serial}`).should('have.text', asset.ipAddress);
 					if (asset.lastScan) {
-						cy.getByAutoId(`LastScan-${serial}`).should('have.text', asset.lastScan);
+						cy.getByAutoId(`LastScan-${serial}`).should('have.text', Cypress.moment(asset.lastScan).fromNow());
 					}
 					cy.getByAutoId(`SerialNumber-${serial}`)
 						.should('have.text', asset.serialNumber);
