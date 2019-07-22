@@ -873,7 +873,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				map((results: Assets) => {
 					results.data.forEach((a: Asset) => {
 						if (a.role) {
-							a.role = a.role[0].toUpperCase() + a.role.slice(1);
+							a.role = _.startCase(_.toLower(a.role));
 						}
 						this.inventory.push({
 							data: a,

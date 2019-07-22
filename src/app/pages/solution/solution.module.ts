@@ -11,6 +11,7 @@ import {
 	InventoryModule,
 } from '@sdp-api';
 import { environment } from '@environment';
+import { AssetsBarChartModule } from './assets/assets-bar-chart/assets-bar-chart.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -31,6 +32,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		InventoryModule.forRoot({ rootUrl }),
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
+		AssetsBarChartModule,
 		SolutionRoutingModule,
 	],
 })

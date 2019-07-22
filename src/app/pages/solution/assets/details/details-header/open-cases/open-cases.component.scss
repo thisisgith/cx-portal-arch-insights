@@ -1,0 +1,66 @@
+/* SCSS Component File */
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.open-cases {
+	position: absolute;
+	z-index: 200;
+	top: 181px;
+	left: 0;
+	width: 100%;
+	border: 1px solid $light-gray-3;
+	box-shadow: 0 5px 10px $light-gray-3;
+	background-color: $white;
+
+	&::before {
+		border-color: transparent transparent $white $white;
+		border-style: solid;
+		border-width: 7px;
+		bottom: 7px;
+		box-shadow: -1px 1px 2px 0 rgba(0, 0, 0, 0.1);
+		box-sizing: border-box;
+		content: "";
+		display: block;
+		height: 0;
+		position: relative;
+		transform: rotate(135deg);
+		transform-origin: center center;
+		width: 0;
+		left: 60px;
+		float: left;
+	}
+
+	& > div {
+		padding: 10px;
+	}
+}
+
+::ng-deep .cui {
+	.table th {
+		background-color: $white !important;
+		border-top: none !important;
+		border-left: none !important;
+		border-right: none !important;
+		border-bottom: 3px solid $light-gray-3 !important;
+	}
+
+	.table--bordered {
+		border-top: none !important;
+		border-left: none !important;
+		border-right: none !important;
+		border-bottom: none !important;
+
+		td {
+			border-top: none !important;
+			border-left: none !important;
+			border-right: none !important;
+			border-bottom: 1px solid $light-gray-3 !important;
+		}
+	}
+}
+
+.grayBox {
+	background-color: $light-gray-3;
+	border: 3px solid $light-gray-3;
+	border-radius: 5px;
+}
+
