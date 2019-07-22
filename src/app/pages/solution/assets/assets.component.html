@@ -166,8 +166,8 @@
 
 <ng-template #tableAssets>
 	<div class="responsive-table" *ngIf="assetsTable && inventory.length && (!view || view == 'list')">
-		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
-				<thead>
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover" data-auto-id="AssetsTable">
+				<thead data-auto-id="AssetsTableHeader">
 					<tr>
 						<th>
 							<label class="checkbox">
@@ -193,7 +193,7 @@
 						</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody data-auto-id="AssetsTableBody">
 					<tr *ngFor="let item of inventory"
 						attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
 						(click)="onRowSelect(item)"
