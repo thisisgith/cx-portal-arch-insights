@@ -20,6 +20,7 @@ import * as _ from 'lodash-es';
 export class AssetsBarChartComponent implements OnInit {
 
 	@Input() public seriesData;
+	@Input() public width;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -73,7 +74,7 @@ export class AssetsBarChartComponent implements OnInit {
 				},
 				height: 100,
 				type: 'bar',
-				width: 300,
+				width: this.width,
 			},
 			credits: {
 				enabled: false,

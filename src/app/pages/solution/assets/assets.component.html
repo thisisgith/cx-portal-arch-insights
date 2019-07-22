@@ -266,7 +266,7 @@
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_LastScan_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.lastScan || ('_Never_' | i18n)" attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" innerText="{{ item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n) }}" attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_SerialNumber_' | i18n"></div>
@@ -424,7 +424,7 @@
 </ng-template>
 
 <ng-template #horizontalBarChartFilter let-filter="filter">
-	<assets-bar-chart [seriesData]="filter.seriesData"
+	<assets-bar-chart [seriesData]="filter.seriesData" [width]="350"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-bar-chart>
 </ng-template>
