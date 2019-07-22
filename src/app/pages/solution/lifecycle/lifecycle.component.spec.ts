@@ -487,6 +487,21 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
+	describe('Certifications', () => {
+		it('should have loaded the Certifications items', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.certifications.length)
+						.toEqual(8);
+				});
+		});
+	});
+
 	describe('PitstopActions', () => {
 
 		it('should show 25% in the prograss label', () => {
