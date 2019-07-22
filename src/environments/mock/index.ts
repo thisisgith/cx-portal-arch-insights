@@ -12,6 +12,7 @@ export { HardwareEOLBulletinScenarios } from './product-alerts/hardware-eol-bull
 export { HardwareEOLCountScenarios } from './product-alerts/hardware-eol-counts';
 export { HardwareEOLScenarios } from './product-alerts/hardware-eol';
 export { HardwareScenarios } from './inventory/hardware';
+export { SerialNumberScenarios } from './search/serialnumber';
 export { Mock } from './mock';
 export { NetworkScenarios } from './inventory/network-elements';
 export { RacetrackScenarios } from './racetrack/info';
@@ -20,6 +21,8 @@ export { RoleScenarios } from './inventory/roles';
 export { SearchScenarios } from './search/search';
 export { SecurityAdvisoryScenarios } from './product-alerts/security-advisory';
 export { SecurityAdvisoryBulletinScenarios } from './product-alerts/security-advisory-bulletins';
+export { SecurityAdvisoryTopScenarios } from './product-alerts/security-advisory-top';
+export { SecurityAdvisorySummaryScenarios } from './product-alerts/summary';
 export { SuccessPathScenarios } from './racetrack/successPaths';
 export { UserScenarios } from './user/user';
 export { HealthStatusScenarios } from './controlpoints/health-status';

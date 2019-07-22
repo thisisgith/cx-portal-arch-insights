@@ -18,6 +18,7 @@ import { HardwareEOLBulletinResponse } from '../models/hardware-eolbulletin-resp
 import { HardwareEOLCountResponse } from '../models/hardware-eolcount-response';
 import { SoftwareEOLResponse } from '../models/software-eolresponse';
 import { SofwareEOLBulletinResponse } from '../models/sofware-eolbulletin-response';
+import { SecurityAdvisoryImpactCountResponse } from '../models/security-advisory-impact-count-response';
 @Injectable({
   providedIn: 'root',
 })
@@ -1379,7 +1380,7 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getTopSecurityAdvisoriesResponse(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<SecurityAdvisoryResponse>> {
+  getTopSecurityAdvisoriesResponse(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<SecurityAdvisoryImpactCountResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -1401,7 +1402,7 @@ class ProductAlertsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SecurityAdvisoryResponse>;
+        return _r as __StrictHttpResponse<SecurityAdvisoryImpactCountResponse>;
       })
     );
   }
@@ -1422,9 +1423,9 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getTopSecurityAdvisories(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<SecurityAdvisoryResponse> {
+  getTopSecurityAdvisories(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<SecurityAdvisoryImpactCountResponse> {
     return this.getTopSecurityAdvisoriesResponse(params).pipe(
-      __map(_r => _r.body as SecurityAdvisoryResponse)
+      __map(_r => _r.body as SecurityAdvisoryImpactCountResponse)
     );
   }
 }

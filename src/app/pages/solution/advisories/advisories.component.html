@@ -25,8 +25,8 @@
 			<div class="divider no-margin-top qtr-margin-bottom"></div>
 			<ng-container *ngTemplateOutlet="visualFilters; context: { tab: tab }"></ng-container>
 			<ng-container *ngTemplateOutlet="titleBar; context: { tab: tab }"></ng-container>
-			<div class="divider qtr-margin-top"></div>
-			<ng-container *ngTemplateOutlet="tab.template"></ng-container>
+			<div class="divider qtr-margin-top no-margin-bottom"></div>
+			<ng-container *ngTemplateOutlet="tab.template; context: { tab: tab }"></ng-container>
 		</cui-tab>
 
 		<ng-template cuiTabPost>
@@ -50,7 +50,7 @@
 
 <ng-template #visualFilters let-tab="tab">
 	<div class="flex flex-fill flex-fluid"
-		*ngIf="!filterCollapse && !status.isLoading">
+		*ngIf="!status.filterCollapse && !status.isLoading">
 		<ng-container *ngFor="let filter of tab.filters; index as i">
 			<div *ngIf="!filter.loading && filter.seriesData.length"
 				attr.id="SelectVisualFilter-{{ filter.key }}"
@@ -73,7 +73,7 @@
 		</ng-container>
 	</div>
 	<div class="divider no-margin-top qtr-margin-bottom"
-		*ngIf="!filterCollapse && !status.isLoading && tab.filters?.length">
+		*ngIf="!status.filterCollapse && !status.isLoading && tab.filters?.length">
 	</div>
 	<ng-container *ngIf="tab.filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
@@ -144,22 +144,38 @@
 	</div>
 </ng-template>
 
-<ng-template #securityContent>
-	<!-- <cui-table></cui-table>
-	<cui-pager></cui-pager> -->
-	Security Content Goes Here
-</ng-template>
-
-<ng-template #fieldContent>
-	<!-- <cui-table></cui-table>
-	<cui-pager></cui-pager> -->
-	Field Notice Content Goes Here
-</ng-template>
-
-<ng-template #bugContent>
-	<!-- <cui-table></cui-table>
-	<cui-pager></cui-pager> -->
-	Critical Bugs Content Goes Here
+<ng-template #content let-tab="tab">
+	<div *ngIf="!tab.disabled">
+		<cui-table *ngIf="tab.data.length" [options]="tab.options" [data]="tab.data"></cui-table>
+		<cui-pager 
+			*ngIf="tab.data.length && tab.pagination"
+			class="base-padding"
+			[page]="tab.pagination.page - 1"
+			[limit]="tab.pagination.rows"
+			[totalItems]="tab.pagination.total || 0"
+			(onPageChanged)="onPageChanged($event, tab)">
+		</cui-pager>
+	</div>
+	<div *ngIf="tab.loading">
+			<cui-spinner></cui-spinner>
+	</div>
+	<div *ngIf="!tab.data.length && !tab.loading">
+		<div class="text-center dbl-margin-top dbl-margin-bottom">
+			<div>
+				<span class="text-muted text-xlarge"
+					[innerText]="'_NoResultsFound_' | i18n"
+					data-auto-id="NoResultsFoundTxt" >
+				</span>
+			</div>
+			<div>
+				<a (click)="clearFilters()"
+					class="text-lowercase"
+					data-auto-id="NoResultsClearAll"
+					[innerText]="'_ClearAll_' | i18n">
+				</a>
+			</div>
+		</div>
+	</div>
 </ng-template>
 
 <!-- Templates for our Visual Filters -->
@@ -178,5 +194,31 @@
 </ng-template>
 
 <ng-template #verticalBarChartFilter let-filter="filter">
-	<!-- TODO -->
+	<advisories-bar-chart [seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</advisories-bar-chart>
+</ng-template>
+
+<!-- Templates for Security Advisories Content-->
+<ng-template #impactTemplate let-celldata="celldata">
+	<div class="text-nowrap">
+		<span
+			class="label label--circle label--tiny qtr-margin-right"
+			[ngClass]="{
+				'label--indigo': celldata.severity == 'Info',
+				'label--success': celldata.severity == 'Low',
+				'label--warning': celldata.severity == 'Medium',
+				'label--warning-alt': celldata.severity == 'High',
+				'label--danger': celldata.severity == 'Critical'
+			}"
+		></span>
+		<span [innerText]="celldata?.severity"></span>
+	</div>
+</ng-template>
+
+<ng-template #impactedCountTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span [innerText]="celldata?.impactedEntityCount">
+		</span>
+	</div>
 </ng-template>

@@ -1,4 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+	Component,
+	Input,
+	OnInit,
+	OnChanges,
+	SimpleChanges,
+} from '@angular/core';
 import { CaseParams, CaseService } from '@cui-x/services';
 import { Asset } from '@sdp-api';
 import * as _ from 'lodash-es';
@@ -16,7 +22,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 	styleUrls: ['./details-header.component.scss'],
 	templateUrl: './details-header.component.html',
 })
-export class DetailsHeaderComponent implements OnInit {
+export class DetailsHeaderComponent implements OnChanges, OnInit {
 	@Input('asset') public asset: Asset;
 
 	public componentData = {
@@ -74,6 +80,17 @@ export class DetailsHeaderComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		if (this.asset) {
+			this.fetchCases();
+		}
+	}
+
+	/**
+	 * Checks if our currently selected asset has changed
+	 * @param changes the changes detected
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+		if (currentAsset && !changes.asset.firstChange) {
 			this.fetchCases();
 		}
 	}
