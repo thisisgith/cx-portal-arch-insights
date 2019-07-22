@@ -4,10 +4,11 @@
 .related-rma {
 	z-index: 200;
 	top: 21px;
-	width: 100%;
-	border: 1px solid $gray;
-	background-color: $white;
 	left: 0;
+	width: 100%;
+	border: 1px solid $light-gray-3;
+	box-shadow: 0 5px 10px $light-gray-3;
+	background-color: $white;
 
 	&::before {
 		border-color: transparent transparent $white $white;

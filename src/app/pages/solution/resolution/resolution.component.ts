@@ -82,21 +82,21 @@ export class ResolutionComponent {
 			),
 			takeUntil(this.destroy$),
 		)
-			.subscribe(cases => {
-				this.isLoading = false;
-				this.caseListData = cases.content;
+		.subscribe(cases => {
+			this.isLoading = false;
+			this.caseListData = cases.content;
 
-				const first = (this.caseParams.size * (this.paginationInfo.currentPage)) + 1;
-				let last = (this.caseParams.size * (this.paginationInfo.currentPage + 1));
-				if (last > cases.totalElements) {
-					last = cases.totalElements;
-				}
-				this.paginationCount = `${first}-${last}`;
-				this.paginationInfo.totalElements = cases.totalElements ? cases.totalElements : 0;
-			}, err => {
-				this.isLoading = false;
-				this.logger.error(`resolution component : case list - ${err}`);
-			});
+			const first = (this.caseParams.size * (this.paginationInfo.currentPage)) + 1;
+			let last = (this.caseParams.size * (this.paginationInfo.currentPage + 1));
+			if (last > cases.totalElements) {
+				last = cases.totalElements;
+			}
+			this.paginationCount = `${first}-${last}`;
+			this.paginationInfo.totalElements = cases.totalElements ? cases.totalElements : 0;
+		}, err => {
+			this.isLoading = false;
+			this.logger.error(`resolution component : case list - ${err}`);
+		});
 
 		this.refresh$.next();
 
