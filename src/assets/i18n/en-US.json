@@ -507,5 +507,6 @@
 	"_OsvAssets_": "Assets ({0})",
 	"_OsvCurrentVersions_": "Current Versions ({0})",
 	"_OsvVersionSummary_": "Version Summary",
-	"_OsvStatusOrAction_": "Status/Action"
+	"_OsvStatusOrAction_": "Status/Action",
+	"_ShowingXofYSoftwareProfiles_": "Showing {0} of {1} software profiles"
 }

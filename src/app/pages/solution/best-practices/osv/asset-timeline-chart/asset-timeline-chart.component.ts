@@ -55,7 +55,7 @@ export class AssetTimelineChartComponent {
 					x: Date.UTC(
 						releaseDate.getFullYear(),
 						releaseDate.getMonth(),
-						releaseDate.getDate(),
+					releaseDate.getDate(),
 					),
 				};
 			}));

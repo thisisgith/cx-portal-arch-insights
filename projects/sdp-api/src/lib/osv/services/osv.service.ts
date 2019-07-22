@@ -402,6 +402,14 @@ module OSVService {
 		 * Unique identifier of a Cisco customer.
 		 */
 		customerId: string;
+		/**
+		 * pageNumber to be fetched.
+		 */
+		page: number;
+		/**
+		 * No of rows to be fetched per page.
+		 */
+		rows: number;
 	}
 
 	/**

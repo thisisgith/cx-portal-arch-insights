@@ -93,53 +93,60 @@ const mockSoftwareVersions: SoftwareVersionsResponse = [
 ];
 
 /** The mock response for software profiles */
-const mockSoftwareProfile: SoftwareProfilesResponse = [
+const mockSoftwareProfile: SoftwareProfilesResponse = {
+	data: [
 
-	{
-		assetCount: 2,
-		currentOSVersion: '3',
-		optimalVersion: '8.6.100.2',
-		osType: 'IOS-XE',
-		productFamily: 'XYZ',
-		recommendations: '',
-		softwareProfile: 'Profile 1',
+		{
+			assetCount: 2,
+			currentOSVersion: '3',
+			optimalVersion: '8.6.100.2',
+			osType: 'IOS-XE',
+			productFamily: 'XYZ',
+			recommendations: '',
+			softwareProfile: 'Profile 1',
+		},
+		{
+			assetCount: 2,
+			currentOSVersion: '3',
+			optimalVersion: '8.6.100.2',
+			osType: 'IOS-XE',
+			productFamily: 'XYZ',
+			recommendations: '',
+			softwareProfile: 'Profile 2',
+
+		}, {
+			assetCount: 2,
+			currentOSVersion: '3',
+			optimalVersion: '8.6.100.2',
+			osType: 'IOS-XE',
+			productFamily: 'XYZ',
+			recommendations: '',
+			softwareProfile: 'Profile 3',
+		}, {
+			assetCount: 2,
+			currentOSVersion: '3',
+			optimalVersion: '8.6.100.2',
+			osType: 'IOS-XE',
+			productFamily: 'XYZ',
+			recommendations: '',
+			softwareProfile: 'Profile 4',
+		}, {
+			assetCount: 2,
+			currentOSVersion: '3',
+			optimalVersion: '8.6.100.2',
+			osType: 'IOS-XE',
+			productFamily: 'XYZ',
+			recommendations: '',
+			softwareProfile: 'Profile 5',
+		},
+
+	],
+	pagination: {
+		page: 1,
+		rows: 3,
+		total: 5,
 	},
-	{
-		assetCount: 2,
-		currentOSVersion: '3',
-		optimalVersion: '8.6.100.2',
-		osType: 'IOS-XE',
-		productFamily: 'XYZ',
-		recommendations: '',
-		softwareProfile: 'Profile 2',
-
-	}, {
-		assetCount: 2,
-		currentOSVersion: '3',
-		optimalVersion: '8.6.100.2',
-		osType: 'IOS-XE',
-		productFamily: 'XYZ',
-		recommendations: '',
-		softwareProfile: 'Profile 3',
-	}, {
-		assetCount: 2,
-		currentOSVersion: '3',
-		optimalVersion: '8.6.100.2',
-		osType: 'IOS-XE',
-		productFamily: 'XYZ',
-		recommendations: '',
-		softwareProfile: 'Profile 4',
-	}, {
-		assetCount: 2,
-		currentOSVersion: '3',
-		optimalVersion: '8.6.100.2',
-		osType: 'IOS-XE',
-		productFamily: 'XYZ',
-		recommendations: '',
-		softwareProfile: 'Profile 5',
-	},
-
-];
+};
 
 /** The mock response for role counts */
 const mockDERecommendationsCounts: DERecommendationsResponse = [

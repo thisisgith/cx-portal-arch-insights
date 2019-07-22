@@ -3,9 +3,9 @@ import { Component, ViewChild, TemplateRef, Input, Output, EventEmitter } from '
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { SoftwareProfilesResponse, OSVService } from '@sdp-api';
+import { forkJoin, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { SoftwareProfilesResponse, OSVService, Pagination } from '@sdp-api';
 
 /** Our current customerId */
 const customerId = '2431199';
@@ -27,6 +27,14 @@ export class SoftwareProfilesComponent {
 		isLoading: true,
 	};
 	public profileGroups: any;
+	public pagination: Pagination;
+	public paginationCount: string;
+	public destroy$ = new Subject();
+	public softwareProfileParams: OSVService.GetSoftwarProfilesParams = {
+		customerId,
+		page: 1,
+		rows: 10,
+	};
 
 	constructor (
 		private logger: LogService,
@@ -52,6 +60,9 @@ export class SoftwareProfilesComponent {
 		forkJoin(
 			this.getProfileGroups(),
 		)
+			.pipe(
+				takeUntil(this.destroy$),
+			)
 			.subscribe(() => {
 				this.status.isLoading = false;
 			});
@@ -62,11 +73,20 @@ export class SoftwareProfilesComponent {
 	 * @returns the total counts observable
 	 */
 	private getProfileGroups () {
-		return this.osvService.getSoftwareProfiles({ customerId })
+		return this.osvService.getSoftwareProfiles(this.softwareProfileParams)
 			.pipe(
 				map((response: SoftwareProfilesResponse) => {
 					this.status.isLoading = false;
-					this.profileGroups = response;
+					this.profileGroups = response.data;
+					this.pagination = response.pagination;
+
+					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
+					let last = (this.pagination.rows * this.pagination.page);
+					if (last > this.pagination.total) {
+						last = this.pagination.total;
+					}
+
+					this.paginationCount = `${first}-${last}`;
 					this.buildTable();
 				}),
 			);
@@ -156,6 +176,23 @@ export class SoftwareProfilesComponent {
 	public onRowSelect (item: any) {
 		this.selectedProfileGroup = item;
 		this.selectedProfileGroupChange.emit(this.selectedProfileGroup);
+	}
+
+	/**
+	 * Page change handler
+	 * @param event the event emitted
+	 */
+	public onPageChanged (event: any) {
+		this.softwareProfileParams.page = event.page;
+		this.loadData();
+	}
+
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 
 }

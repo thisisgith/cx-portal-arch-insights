@@ -2,7 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SoftwareProfilesComponent } from './software-profile.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { CuiTableModule, CuiDropdownModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import {
+	CuiTableModule,
+	CuiDropdownModule,
+	CuiSpinnerModule,
+	CuiPagerModule,
+} from '@cisco-ngx/cui-components';
 
 /**
  * ProfileGroups Module
@@ -16,6 +21,7 @@ import { CuiTableModule, CuiDropdownModule, CuiSpinnerModule } from '@cisco-ngx/
 		CuiTableModule,
 		CuiDropdownModule,
 		CuiSpinnerModule,
+		CuiPagerModule,
 	],
 })
 export class SoftwareProfilesModule { }
