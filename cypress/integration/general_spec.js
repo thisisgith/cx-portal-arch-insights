@@ -112,8 +112,10 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaNumber').should('have.length', 3);
 				cy.getByAutoId('viewCaseDetailsB').should('exist')
 					.should('contain', i18n._ViewCaseDetails_);
+				// .should('have.attr', 'href', '/urlDetail'); // TODO currently not linked to anything
 				cy.getByAutoId('viewAllOpenCasesB').should('exist')
 					.should('contain', i18n._ViewAllOpenCases_);
+				// .should('have.attr', 'href', '/urlDetail'); // TODO currently not linked to anything
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
 				cy.getByAutoId('cui-select').should('have.length', 2);
@@ -167,6 +169,10 @@ describe('General Spec', () => {
 				cy.getByAutoId('caseNumber').should('exist');
 				cy.getByAutoId('rmaTrackingNumber').should('exist')
 					.should('contain', i18n._CarrierTrackingNumber_);
+				cy.getByAutoId('rmaCourierLink').children()
+					.should('have.attr', 'href'); // PBC-243
+				cy.getByAutoId('rmaCourierLink').children()
+					.should('have.attr', 'target', '_blank'); // PBC-243
 				cy.getByAutoId('contractNumber').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
@@ -233,12 +239,17 @@ describe('General Spec', () => {
 				cy.getByAutoId('rmaNumber').should('exist');
 				cy.getByAutoId('caseNumber').should('exist');
 				cy.getByAutoId('rmaTrackingNumber').should('exist');
+				cy.getByAutoId('rmaCourierLink').children()
+					.should('have.attr', 'href'); // PBC-243
+				cy.getByAutoId('rmaCourierLink').children()
+					.should('have.attr', 'target', '_blank'); // PBC-243
 				cy.getByAutoId('contractNumber').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
 				cy.getByAutoId('rmaProduct').should('exist');
 				cy.getByAutoId('rmaUnavail').should('have.length', 2);
 				cy.getByAutoId('rmaProdID').should('exist');
 				cy.getByAutoId('rmaViewDetButton').should('exist');
+				// .should('have.attr', 'href', '/urlDetail'); // TODO currently not linked to anything
 				// General Search section
 				cy.getByAutoId('searchHeader').should('exist');
 				cy.getByAutoId('filterBy').should('exist');
@@ -324,9 +335,9 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Serial Search FOX1306GFKH', () => {
+		it('Serial Search FOX1333GGGG', () => {
 			// PBC-170
-			const serialVal = 'FOX1306GFKH';
+			const serialVal = 'FOX1333GGGG';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial');
 			cy.getByAutoId('searchBarInput').should('exist').clear()

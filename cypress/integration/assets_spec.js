@@ -16,6 +16,7 @@ const advisoryCounts = advisoryScenario.response.body;
 const caseMock = new MockService('CaseScenarios');
 const caseScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
 const caseResponse = caseScenario.response.body;
+const fnBulletinMock = new MockService('FieldNoticeBulletinScenarios');
 
 Cypress.moment.locale('en', {
 	// change moment's default '8d' format to '8 days' to match the app's format
@@ -48,7 +49,6 @@ describe('Assets', () => { // PBC-41
 				cy.getByAutoId('Asset360SerialNumber')
 					.should('have.text', `Serial Number${asset.serialNumber}`);
 				if (asset.lastScan) {
-					// TODO: This needs to be adjusted after PBC-336 is fixed
 					cy.getByAutoId('Asset360LastScan')
 						.should(
 							'have.text',
@@ -58,7 +58,7 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId('Asset360LastScan').should('have.text', 'Last ScanNever');
 				}
 				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
-				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-338
+				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-339
 				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
 			};
 
@@ -69,8 +69,7 @@ describe('Assets', () => { // PBC-41
 				.and('have.text', `View Open Cases (${caseResponse.totalElements})`);
 			cy.get('tbody tr').eq(3).click(); // switch to new asset without closing modal
 			validate360(assets[3]);
-			// TODO: Disabled for PBC-338
-			// cy.getByAutoId('ToggleActiveCases').should('not.be.visible');
+			cy.getByAutoId('ToggleActiveCases').should('not.be.visible'); // PBC-338
 			cy.get('tbody tr').eq(3).click(); // PBC-164, close the 360 view
 			cy.get('tbody tr').eq(2).click();
 			validate360(assets[2]);
@@ -79,6 +78,7 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Opens Asset 360 view when clicking asset cards', () => {
+			const advisoryAPI = new RouteWatch('**/product-alerts/**');
 			assetMock.enable('(Assets) Missing data - Grid View');
 			cy.getByAutoId('grid-view-btn').click();
 
@@ -87,6 +87,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('Asset360SerialNumber').should('have.text', `Serial Number${serial}`);
 			cy.getByAutoId('Asset360IPAddress').should('have.text', 'IP AddressN/A');
 			cy.getByAutoId('CloseDetails').click();
+			expect(advisoryAPI.called).to.eq(0); // PBC-353
 
 			assetMock.disable('Assets Page 1 - Grid View');
 			cy.getByAutoId('list-view-btn').click();
@@ -187,6 +188,17 @@ describe('Assets', () => { // PBC-41
 					}
 				}
 			});
+		});
+
+		it('Gracefully handles API failures', () => {
+			fnBulletinMock.enable('Field Notice Bulletins - Unreachable'); // PBC-342
+			cy.get('tbody tr').eq(0).click();
+			cy.getByAutoId('ADVISORIESTab').click();
+			cy.getByAutoId('AdvisoryTab-field').click();
+			cy.getByAutoId('AdvisoriesNoResultsFound').should('have.text', 'No Results Found');
+
+			cy.get('tbody tr').eq(0).click();
+			fnBulletinMock.disable('Field Notice Bulletins - Unreachable');
 		});
 	});
 
@@ -490,8 +502,7 @@ describe('Assets', () => { // PBC-41
 
 		after(() => cy.getByAutoId('list-view-btn').click());
 
-		// TODO: Unskip and fix to accomodate "Last Scan" implementation
-		it.skip('Displays assets correctly in card view', () => {
+		it('Displays assets correctly in card view', () => {
 			cy.get('div[data-auto-id*="InventoryItem"]').should('have.length', assetCards.length);
 			Cypress._.each(assetCards, asset => {
 				const serial = asset.serialNumber;
@@ -503,16 +514,19 @@ describe('Assets', () => { // PBC-41
 					software += asset.osVersion;
 				}
 				cy.getByAutoId(`InventoryItem-${serial}`).within(() => {
-					cy.getByAutoId(`Device-${serial}`).should('have.text', asset.deviceName);
+					// PBC-304
+					cy.getByAutoId(`Device-${serial}`)
+						.should('have.text', Cypress._.truncate(asset.deviceName, { length: 38 }));
 					// Device image is a static placeholder for now
 					cy.getByAutoId(`DeviceImg-${serial}`).should('have.text', 'No Photo Available');
 					cy.getByAutoId(`IPAddress-${serial}`).should('have.text', asset.ipAddress);
-					// TODO: "Last Scan" is not implemented yet
-					cy.getByAutoId(`LastScan-${serial}`).should('have.text', 'Never');
+					if (asset.lastScan) {
+						cy.getByAutoId(`LastScan-${serial}`).should('have.text', asset.lastScan);
+					}
 					cy.getByAutoId(`SerialNumber-${serial}`)
 						.should('have.text', asset.serialNumber);
 					cy.getByAutoId(`Software-${serial}`).should('have.text', software);
-					const role = asset.role ? asset.role : 'N/A';
+					const role = asset.role ? startCase(toLower(asset.role)) : 'N/A'; // PBC-281
 					cy.getByAutoId(`Role-${serial}`).should('have.text', role);
 					if (asset.criticalAdvisories) {
 						cy.getByAutoId(`AdvisoryCount-${serial}`)
@@ -542,6 +556,14 @@ describe('Assets', () => { // PBC-41
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(1).click()
 				.should('not.have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
+			cy.get('[data-auto-id*="Device-"]').eq(0).click();
+			cy.get('app-panel360').should('be.visible'); // PBC-286
+			cy.get('[data-auto-id*="Device-"]').eq(0).click();
+			cy.get('cui-dropdown[data-auto-id*="InventoryItem-FOC1544Y16T-dropdown"]')
+				.eq(0).click();
+			cy.get('div.card div.dropdown__menu').eq(0).should('be.visible');
+			cy.get('cui-dropdown[data-auto-id*="InventoryItem-FOC1544Y16T-dropdown"]')
+				.eq(0).click();
 			cy.get('div[data-auto-id*="InventoryItem"]').eq(0).click()
 				.should('not.have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('not.be.visible');
@@ -639,8 +661,14 @@ describe('Assets', () => { // PBC-41
 			});
 		});
 
-		it.skip('Remembers the user\'s view preference', () => {
-			// TODO: Waiting on PBC-289
+		it('Remembers the user\'s view preference', () => { // PBC-289
+			cy.reload();
+			cy.waitForAppLoading();
+			cy.get('div.card').should('be.visible');
+			cy.getByAutoId('list-view-btn').click();
+			cy.reload();
+			cy.waitForAppLoading();
+			cy.get('table').should('be.visible');
 		});
 	});
 });
