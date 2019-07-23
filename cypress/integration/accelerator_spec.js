@@ -920,6 +920,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			it('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
 				// For all recommended items, check that the "Request 1-on-1" button opens the modal
 				// for with the cooresponding title
+				cy.getByAutoId('ACCCard').should('have.length', twoRecommendedItems.length);
 				twoRecommendedItems.forEach((acc, index) => {
 					if (acc.status === 'recommended') {
 						cy.getByAutoId('ACCCard').eq(index).within(() => {
