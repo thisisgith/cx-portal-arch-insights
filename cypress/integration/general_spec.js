@@ -287,14 +287,13 @@ describe('General Spec', () => {
 			cy.wait('@rma').then(() => {
 				cy.getByAutoId('rmaStatus').should('exist').should('contain', i18n._Status_);
 				cy.getByAutoId('rmaNumber').should('exist');
-				cy.getByAutoId('caseNumber').should('exist').click({multiple: true});
+				cy.getByAutoId('caseNumber').should('exist').click({ multiple: true });
 				// TODO rather than click multiple, how to click the second caseNumber?
 				cy.wait(3000);
 				cy.get('app-panel360').should('be.visible');
 				cy.getByAutoId('CloseDetails').should('exist').click();
 			});
 		});
-
 	});
 
 	context('Contract Search', () => {
