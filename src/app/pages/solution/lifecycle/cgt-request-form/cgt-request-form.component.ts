@@ -19,8 +19,8 @@ interface CustInfo {
 	companyName: string;
 	userName: string;
 	jobTitle: string;
-	email: string;
-	phoneNumber: string;
+	userEmail: string;
+	userPhoneNumber: string;
 	ciscoContact: string;
 	ccoId: string;
 	country: string;
@@ -73,7 +73,19 @@ export class CgtRequestFormComponent implements OnInit {
 	];
 
 	public technologyOptions: SelectOption[] = [
+		{ key: I18n.get('_Cloud_'), value: I18n.get('_Cloud_') },
+		{ key: I18n.get('_Collaboration_'), value: I18n.get('_Collaboration_') },
+		{ key: I18n.get('_DataCenter_'), value: I18n.get('_DataCenter_') },
+		{ key: I18n.get('_IntentBasedNetworking_'), value: I18n.get('_IntentBasedNetworking_') },
+		{ key: I18n.get('_NetworkManagement_'), value: I18n.get('_NetworkManagement_') },
+		{ key: I18n.get('_NetworkProgrammability_'), value: I18n.get('_NetworkProgrammability_') },
+		{ key: I18n.get('_OpticalNetworking_'), value: I18n.get('_OpticalNetworking_') },
+		{ key: I18n.get('_RoutingAndSwitching_'), value: I18n.get('_RoutingAndSwitching_') },
 		{ key: I18n.get('_Security_'), value: I18n.get('_Security_') },
+		{ key: I18n.get('_ServiceProviderMobility_'), value: I18n.get('_ServiceProviderMobility_') },
+		{ key: I18n.get('_ServiceProviderVideo_'), value: I18n.get('_ServiceProviderVideo_') },
+		{ key: I18n.get('_SoftwareDefinedNetworking_'), value: I18n.get('_SoftwareDefinedNetworking_') },
+		{ key: I18n.get('_Other_'), value: I18n.get('_Other_') },
 	];
 
 	constructor (
@@ -98,8 +110,8 @@ export class CgtRequestFormComponent implements OnInit {
 			companyName: 'Company',
 			userName: 'John Doe',
 			jobTitle: 'Title',
-			email: 'johnDoe@cisco.com',
-			phoneNumber: '1-818-555-5555',
+			userEmail: 'johnDoe@cisco.com',
+			userPhoneNumber: '1-818-555-5555',
 			ciscoContact: 'CSE Name',
 			ccoId: '12345678',
 			country: 'USA',

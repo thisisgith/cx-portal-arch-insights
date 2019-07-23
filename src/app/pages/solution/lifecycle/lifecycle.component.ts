@@ -188,6 +188,7 @@ export class LifecycleComponent implements OnDestroy {
 
 	public selectAccComponent = false;
 	public selectCgtComponent = false;
+	public cgtRequestTrainingClicked = false;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -286,6 +287,15 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadCGT()
 				.subscribe();
 		}
+	}
+
+	/**
+	 * Get button class for CGT request training
+	 */
+	public getCgtButtonClass () {
+		let buttonClass = 'btn btn--small btn--secondary text-uppercase';
+		buttonClass = this.cgtRequestTrainingClicked ? 'btn btn--small btn--gray-ghost disabled text-uppercase' : 'btn btn--small btn--secondary text-uppercase';
+		return buttonClass;
 	}
 
 	/**
@@ -810,7 +820,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.status.loading.cgt = false;
 
 				this.componentData.cgt = {
-					sessions: _.filter(result.items, { status: 'in-progress' }),
+					sessions: _.filter(result.items, { status: 'completed' }),
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
