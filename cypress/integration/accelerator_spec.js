@@ -917,7 +917,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.waitForAppLoading('accLoading');
 			});
 
-			it('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
+			it.skip('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
 				// For all recommended items, check that the "Request 1-on-1" button opens the modal
 				// for with the cooresponding title
 				twoRecommendedItems.forEach((acc, index) => {
