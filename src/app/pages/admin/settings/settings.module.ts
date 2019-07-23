@@ -16,6 +16,7 @@ import {
 	CuiSidebarModule,
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
+import { RouterTestingModule } from '@angular/router/testing';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -45,6 +46,7 @@ const sdpRootUrl = environment.sdpServiceOrigin;
 		I18nPipeModule,
 		CuiSidebarModule,
 		CuiSpinnerModule,
+		RouterTestingModule,
 		ControlPointsModule.forRoot({ rootUrl }),
 		UserModule.forRoot({ rootUrl: sdpRootUrl }),
 	],
