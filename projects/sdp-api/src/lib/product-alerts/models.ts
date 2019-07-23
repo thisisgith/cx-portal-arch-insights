@@ -4,6 +4,8 @@ export { SecurityAdvisoryResponse } from './models/security-advisory-response';
 export { SecurityAdvisory } from './models/security-advisory';
 export { SecurityAdvisoryBulletinResponse } from './models/security-advisory-bulletin-response';
 export { SecurityAdvisoryBulletin } from './models/security-advisory-bulletin';
+export { SecurityAdvisoryImpactCountResponse } from './models/security-advisory-impact-count-response';
+export { SecurityAdvisoryImpactedInfoAndCount } from './models/security-advisory-impacted-info-and-count';
 export { FieldNoticeResponse } from './models/field-notice-response';
 export { FieldNotice } from './models/field-notice';
 export { FieldNoticeBulletinResponse } from './models/field-notice-bulletin-response';

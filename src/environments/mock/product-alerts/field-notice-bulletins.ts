@@ -6,10 +6,10 @@ import {
 import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
-const api = '/api/customerportal/product-alerts/v1/field-notices';
+const api = '/api/customerportal/product-alerts/v1/field-notice-bulletins';
 
 /** Default Customer ID */
-const customerId = '2431199';
+// const customerId = '2431199';
 
 /** The mock response for coverage counts */
 const mockNoticeResponse: FieldNoticeBulletin[] = [
@@ -1181,21 +1181,28 @@ const mockNoticeResponse: FieldNoticeBulletin[] = [
  * Mocks the field notice response
  * @param rows the rows to return
  * @param page the page to return
+ * @param filter IDs to filter
  * @returns mock response
  */
 function MockNotices (
 	rows?: number,
-	page?: number): FieldNoticeBulletinResponse {
+	page?: number,
+	filter?: number[]): FieldNoticeBulletinResponse {
 
-	const data = _.cloneDeep(mockNoticeResponse);
-
+	let data = _.cloneDeep(mockNoticeResponse);
+	const total = data.length;
 	let pagination: Pagination;
+	if (filter) {
+		data = _.filter(data, d => _.find(filter, f => f === d.fieldNoticeId));
+	}
+
 	if (rows && page) {
+		data = data.slice((rows * (page - 1)), (rows * page));
 		pagination = {
 			page,
 			rows,
-			pages: Math.ceil(data.length / rows),
-			total: data.length,
+			total,
+			pages: Math.ceil(total / rows),
 		};
 	}
 
@@ -1219,9 +1226,38 @@ export const FieldNoticeBulletinScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 250,
+					description: 'Field Notice Bulletins - Unreachable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
 			],
 		},
-		url: `${api}?customerId=${customerId}`,
+		url: `${api}?sort=bulletinLastUpdated:DESC&rows=10&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Field Notice Bulletins with id\'s',
+					response: {
+						body: MockNotices(null, null, [64134, 63718, 63722,
+							63352, 63744, 63564, 63251, 63745]),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?fieldNoticeId=64134&fieldNoticeId=63718&fieldNoticeId=63722` +
+			'&fieldNoticeId=63352&fieldNoticeId=63744&fieldNoticeId=63564' +
+			'&fieldNoticeId=63251&fieldNoticeId=63745',
 		usecases: ['Use Case 1'],
 	},
 ];

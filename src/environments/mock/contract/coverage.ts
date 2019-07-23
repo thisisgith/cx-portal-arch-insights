@@ -144,9 +144,19 @@ export const CoverageScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 100,
+					description: 'Not Covered',
+					response: {
+						body: { data: [] },
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
-		url: `${api}products/coverages?customerId=${customerId}&managedNeId=${managedNeId}`,
+		url: `${api}products/coverages?customerId=${customerId}` +
+			`&rows=1&page=1&managedNeId=${managedNeId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

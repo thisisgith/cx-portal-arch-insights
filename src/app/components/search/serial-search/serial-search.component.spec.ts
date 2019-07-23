@@ -1,8 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { of, throwError } from 'rxjs';
 
+import { RouterModule } from '@angular/router';
 import { SerialSearchComponent } from './serial-search.component';
 import { SerialSearchModule } from './serial-search.module';
 import { InventoryService, ContractsService, DeviceContractResponse,
@@ -26,6 +28,8 @@ describe('SerialSearchComponent', () => {
 			imports: [
 				SerialSearchModule,
 				HttpClientTestingModule,
+				RouterModule,
+				RouterTestingModule,
 			],
 		})
 		.compileComponents();
@@ -126,4 +130,25 @@ describe('SerialSearchComponent', () => {
 		expect(component.hide.emit)
 			.toHaveBeenCalledTimes(2);
 	});
+
+	it('should navigate to the assets component when' +
+	'"View Device Details" is clicked', fakeAsync(() => {
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValues(of(<Assets> AssetScenarios[0].scenarios.GET[0].response.body));
+		component.serialNumber = { query: 'FOX1306GBAD' };
+		spyOn(component.router, 'navigate')
+			.and
+			.returnValue(new Promise(() => true));
+		component.ngOnChanges();
+		fixture.detectChanges();
+		component.onViewDetails(component.serialNumber.query);
+		fixture.detectChanges();
+		expect(component.router.navigate)
+			.toHaveBeenCalledWith(
+				['solution/assets'],
+				{ queryParams: { serialNumber: 'FOX1306GBAD', select: true } },
+			);
+		flush();
+	}));
 });

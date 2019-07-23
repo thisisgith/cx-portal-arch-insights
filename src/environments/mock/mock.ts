@@ -1,5 +1,6 @@
 import {
 	ACCScenarios,
+	ACCUserInfoScenarios,
 	ActionScenarios,
 	AssetScenarios,
 	ATXScenarios,
@@ -13,12 +14,15 @@ import {
 	HardwareEOLScenarios,
 	HardwareScenarios,
 	NetworkScenarios,
+	SerialNumberScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryScenarios,
+	SecurityAdvisoryTopScenarios,
+	SecurityAdvisorySummaryScenarios,
 	SuccessPathScenarios,
 	FieldNoticeScenarios,
 	FieldNoticeBulletinScenarios,
@@ -27,11 +31,13 @@ import {
 	VulnerabilityScenarios,
 	UserScenarios,
 } from './';
+
 import { HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
+	ACCUserInfoSchema,
 	Assets,
 	ATXResponse,
 	CDCSearchResponse,
@@ -49,15 +55,21 @@ import {
 	RacetrackResponse,
 	RoleCountResponse,
 	SecurityAdvisoryBulletinResponse,
+	SecurityAdvisoryImpactCountResponse,
 	SecurityAdvisoryResponse,
+	SecurityAdvisorySummary,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
+	DeviceContractResponse,
 } from '@sdp-api';
+// } from '../';
+
 import { RMAResponse } from '@interfaces';
 
 /** Alias type for the Response Body */
 type ResponseBody = (
 	ACCResponse |
+	ACCUserInfoSchema |
 	Assets |
 	ATXResponse |
 	CDCSearchResponse |
@@ -76,9 +88,12 @@ type ResponseBody = (
 	RMAResponse |
 	RoleCountResponse |
 	SecurityAdvisoryBulletinResponse |
+	SecurityAdvisoryImpactCountResponse |
 	SecurityAdvisoryResponse |
+	SecurityAdvisorySummary |
 	SuccessPathsResponse |
-	VulnerabilityResponse
+	VulnerabilityResponse |
+	DeviceContractResponse
 );
 
 /**
@@ -124,6 +139,7 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ACCUserInfoScenarios,
 		ATXScenarios,
 		ActionScenarios,
 		AssetScenarios,
@@ -138,6 +154,7 @@ export const mockSettings: MockSettings = {
 		HardwareEOLCountScenarios,
 		HardwareEOLScenarios,
 		HardwareScenarios,
+		SerialNumberScenarios,
 		HealthStatusScenarios,
 		PolicesScenarios,
 		NetworkScenarios,
@@ -146,7 +163,9 @@ export const mockSettings: MockSettings = {
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryTopScenarios,
 		SecurityAdvisoryScenarios,
+		SecurityAdvisorySummaryScenarios,
 		SuccessPathScenarios,
 		UserScenarios,
 		VulnerabilityScenarios,

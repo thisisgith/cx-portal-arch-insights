@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
 	AssetScenarios,
+	CaseScenarios,
 	Mock,
 } from '@mock';
 import { CaseService } from '@cui-x/services';
@@ -10,6 +11,7 @@ import * as _ from 'lodash-es';
 import { DetailsHeaderComponent } from './details-header.component';
 import { DetailsHeaderModule } from './details-header.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -38,12 +40,12 @@ describe('DetailsHeaderComponent', () => {
 	};
 
 	/**
-	 * Builds our spies for our services
+	 * Build spies for our services
 	 */
 	const buildSpies = () => {
 		caseSpy = spyOn(caseService, 'read')
 			.and
-			.returnValue(of({ totalElements: 30 }));
+			.returnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
 	};
 
 	beforeEach(async(() => {
@@ -51,6 +53,7 @@ describe('DetailsHeaderComponent', () => {
 			imports: [
 				DetailsHeaderModule,
 				HttpClientTestingModule,
+				RouterTestingModule,
 			],
 		})
 		.compileComponents();
@@ -86,14 +89,14 @@ describe('DetailsHeaderComponent', () => {
 
 		fixture.whenStable()
 			.then(() => {
-				expect(component.componentData.openCases)
-					.toEqual(0);
+				expect(component.openCases)
+					.toEqual([]);
 			});
 	});
 
 	it('should have active class to cases dropddown if active', () => {
 		component.casesDropdownActive = true;
-		component.componentData.openCases = 1;
+		component.openCases = (<any> CaseScenarios[4].scenarios.GET[0].response.body).content;
 
 		fixture.detectChanges();
 
@@ -103,26 +106,24 @@ describe('DetailsHeaderComponent', () => {
 			.toHaveClass('active');
 	});
 
-	it('should not add active class to cases dropddown if not active', () => {
-		component.casesDropdownActive = false;
-		component.componentData.openCases = 1;
+	it('should toggle case list dropdown', () => {
+		component.openCases = [];
 
 		fixture.detectChanges();
 
-		const button = fixture.debugElement.nativeElement.querySelector('.open-case-toggle-btn');
+		expect(component.casesDropdownActive)
+			.toBeFalsy();
 
-		expect(button)
-			.not
-			.toHaveClass('active');
+		component.toggleActiveCases();
+
+		fixture.detectChanges();
+
+		expect(component.casesDropdownActive)
+			.toBeTruthy();
 	});
 
 	it('should not fail when no serial number is present', () => {
-		const deviceResponse = getActiveBody(AssetScenarios[0]);
-		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
-
-		_.set(asset, 'serialNumber', null);
-
-		component.asset = asset;
+		component.asset = { };
 
 		fixture.detectChanges();
 
@@ -140,8 +141,8 @@ describe('DetailsHeaderComponent', () => {
 
 		fixture.detectChanges();
 
-		expect(component.componentData.openCases)
-			.toEqual(30);
+		expect(component.openCases)
+			.toEqual((<any> CaseScenarios[4].scenarios.GET[0].response.body).content);
 	});
 
 });
