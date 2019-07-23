@@ -18,16 +18,26 @@
 	<ul>
 		<li class="sidebar__item">
 			<a
-				[routerLink]="['/admin/policies']"
+				href="/admin/policies"
 			>
+			<!--
+			Make this work after the demo
+			<a
+				[routerLink]="['admin/policies']"
+			> -->
 				<span class="icon-insights"></span>
 				<span [innerText]="'_Policies_' | i18n"></span>
 			</a>
 		</li>
 		<li class="sidebar__item selected">
 			<a
-				[routerLink]="['/admin/settings']"
+				href="/admin/settings"
 			>
+			<!--
+			Make this work after the demo
+			<a
+				[routerLink]="['admin/settings']"
+			> -->
 				<span class="icon-account"></span>
 				<span [innerText]="'_System_' | i18n"></span>
 			</a>

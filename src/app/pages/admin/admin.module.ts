@@ -26,6 +26,7 @@ const childRoutes: Routes = [
 	},
 	{
 		path: '',
+		pathMatch: 'full',
 		redirectTo: 'settings',
 	},
 ];
