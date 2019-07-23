@@ -1,1 +1,9 @@
-/* Nothing to see here! */
+:host {
+	.panel div {
+		word-wrap: break-word;
+	}
+
+	.settings-container {
+		animation: fade-in 1s;
+	}
+}
