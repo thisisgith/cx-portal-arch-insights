@@ -26,30 +26,8 @@ export class PoliciesComponent implements OnInit {
 	public loading = true;
 	public error = false;
 	public errorMessage: string;
-	public scans = [
-		{
-			enabled: true,
-			message: '2,258 devices scanned daily at 1:30am UTC',
-		},
-		{
-			enabled: true,
-			message: '105 devices are scanned weekly on Tuesday 3:00am UTC',
-		},
-		{
-			enabled: true,
-			message: '2,258 devices are scanned daily at 1:30am UTC',
-		},
-		{
-			enabled: false,
-			message: '12 devices cannot be scanned at any time',
-		},
-	];
-
-	public collections = [
-		{
-			message: 'Network runs collection every month on the 26th at 5:30am UTC',
-		},
-	];
+	public scans: PolicyResponseModel[];
+	public collections: PolicyResponseModel[];
 
 	constructor (
 		private logger: LogService,
