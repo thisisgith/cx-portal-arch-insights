@@ -899,6 +899,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.waitForAppLoading('accLoading');
 
+				// Unfortunately, waiting for the accLoading flag is not enough, as the View All
+				// modal updates it's data outside of our control...
+				cy.wait(500);
+
 				// Open the ACC View All modal
 				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 				cy.getByAutoId('accViewAllModal').should('exist');
