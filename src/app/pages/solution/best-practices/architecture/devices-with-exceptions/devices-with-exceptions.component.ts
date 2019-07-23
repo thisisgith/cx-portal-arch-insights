@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Output,EventEmitter } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -9,6 +9,7 @@ import { ArchitectureService } from '@cui-x/sdp-api';
 	styleUrls: ['./devices-with-exceptions.component.scss'],
 	templateUrl: './devices-with-exceptions.component.html',
 })
+
 export class DevicesWithExceptionsComponent implements OnInit {
 
 	constructor (
@@ -18,13 +19,24 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		this.logger.debug('DevicesWithExceptionsComponent Created!');
 	}
 
+	public AssetsExceptionDetails = [];
+	public tableOptions: CuiTableOptions;
+	public tableLimit = 4;
+	public tableOffset = 0;
+	public totalItems = 10;
+
 	ngOnInit(){
 
-		// this.architectureService.getAllCBPRules().subscribe(res =>{
-		// 	console.log(res);
-		// 	this.tableData = res.content
-		// 	// console.log(this.tableData);
-		// });
+		this.architectureService.getAllAssetsWithExceptions().subscribe(res =>{
+			console.log(res);
+			this.AssetsExceptionDetails = res.AssetsExceptionDetails;
+			this.AssetsExceptionDetails.map((asset)=>{
+				asset.ruleIdsWithExceptionsCount = asset.ruleIdsWithExceptions.split(';').length;
+				asset.ruleIdsWithExceptions = asset.ruleIdsWithExceptions.split(';');
+			})
+			console.log(this.AssetsExceptionDetails);
+		});
+
 
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
@@ -32,7 +44,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			  {
 				name: 'Asset',
 				sortable: false,
-				key : 'asset'
+				key : 'inventoryName'
 			  },
 			  {
 				name: 'Product ID',
@@ -42,115 +54,27 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			  {
 				  name: 'Product Family',
 				  sortable: false,
-				  key: 'ProductFamily',
+				  key: 'productFamily',
 			  },
 			  {
 				  name: 'Software Type',
 				  sortable: false,
-				  key: 'SoftwareType',
+				  key: 'swType',
 			  },
 			  {
 				  name: 'Software Version',
 				  sortable: false,
-				  key: 'SoftwareVersion',
+				  key: 'swVersion',
 			  },
 			  {
 				  name: 'CBP Exceptions',
 				  sortable: false,
-				  key: 'CbpExceptions',
+				  key: 'ruleIdsWithExceptionsCount',
 			  },
 			 
 			],
 		  });
 	}
 
-	tableOptions: CuiTableOptions;
-	tableLimit = 4;
-	tableOffset = 0;
-	totalItems = 10;
 	
-	tableData = [];
-	
-	// tableData = [{
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	// {
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	// {
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	// {
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	// {
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	// {
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	// {
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	// {
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	// {
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	// {
-	// 	asset : 'FCW2216LOUT',
-	// 	productId : 'SJ-AP923U',
-	// 	ProductFamily : 'Cisco catalyst 9300 switch',
-	// 	SoftwareType : 'IOS-XE',
-	// 	SoftwareVersion : '16.6.3',
-	// 	CbpExceptions  : '12',
-	// },
-	
-	// ];
 }

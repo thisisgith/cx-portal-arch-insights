@@ -1,5 +1,5 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
-
+import { Component, OnInit, ViewChild,AfterViewInit, TemplateRef } from '@angular/core';
+import { DevicesWithExceptionsComponent } from './devices-with-exceptions/devices-with-exceptions.component';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Chart } from 'angular-highcharts';
 import { readlinkSync } from 'fs';
@@ -9,6 +9,8 @@ import {
 	Event as RouterEvent,
 	NavigationEnd,
 } from '@angular/router';
+import { ArchitectureService } from '@cui-x/sdp-api';
+import { Subject, Observable } from 'rxjs';
 
 
 @Component({
@@ -16,20 +18,44 @@ import {
 	styleUrls: ['./architecture.component.scss'],
 	templateUrl: './architecture.component.html',
 })
-export class ArchitectureComponent implements OnInit {
+export class ArchitectureComponent implements OnInit,AfterViewInit {
 
 	public tabIndex = 0;
 	activeRoute: any;
+	public severityObj = {};
+	public AssetsExceptionsCount:any;
+	CBPRiskArray:any = [];
 	
-
-	constructor (private logger: LogService,) {
+	//  @ViewChild(DevicesWithExceptionsComponent,{static:true}) public DevicesException;
+	constructor (private logger: LogService,private architectureService : ArchitectureService ) {
 		this.logger.debug('ArchitectureComponent Created!');
 		
 	}
 
 	ngOnInit(): void {
-		this.buildGraph();
+		
+		this.architectureService.getMessage().subscribe(res => {
+		this.AssetsExceptionsCount = res.count;
+		})
+
+		this.architectureService.getCBPRiskArray().subscribe(res => {
+			console.log(res.CBPRisk);
+			this.CBPRiskArray = res.CBPRisk;
+			this.buildGraph();
+		})
+		
 	}
+
+	// public updateAssestsCount ($event) {
+	// 	this.AssetsExceptionsCount = $event;
+	// }
+
+
+	ngAfterViewInit(){
+		
+		// this.AssetsExceptionsCount = this.DevicesException.AssetsWithExceptionsCount;
+	}
+
 	// @ViewChild('ExceptionFacet', { static: true }) public ExceptionFacetTemplate: TemplateRef<{ }>;
 	// @ViewChild('AssetWithExceptionFacet', { static: true }) public AssetWithExceptionFacetTemplate: TemplateRef<{ }>;
 
@@ -37,62 +63,12 @@ export class ArchitectureComponent implements OnInit {
 
 	
 	public chart: Chart;
-	// public facets: Facet[];
-	
-
-	// private initializeFacets () {
-		// this.facets = [
-		// 	{
-		// 		key: 'Exceptions',
-		// 		route: '/solution/lifecycle',
-		// 		template: this.ExceptionFacetTemplate,
-		// 		title: I18n.get('_Lifecycle_'),
-		// 	},
-		// 	{
-		// 		key: 'Assets With Exceptions',
-		// 		route: '/solution/assets',
-		// 		template: this.AssetWithExceptionFacetTemplate,
-		// 		title: I18n.get('_Assets&Coverage_'),
-		// 	}
-			
-		// ];
-
-		// if (this.activeRoute) {
-		// 	this.selectFacet(_.find(this.facets, { route: this.activeRoute }));
-		// }
-	// }
-
-	// public selectFacet (facet: Facet) {
-	// 	if (facet) {
-	// 		this.facets.forEach((f: Facet) => {
-	// 			if (f !== facet) {
-	// 				f.selected = false;
-	// 			}
-	// 		});
-
-	// 		facet.selected = true;
-	// 		this.selectedFacet = facet;
-
-			// if (facet.route && this.activeRoute !== facet.route) {
-			// 	this.activeRoute = facet.route;
-			// 	this.router.navigate([facet.route]);
-			// }
-			// if (this.selectedSolution) {
-			// 	this.solutionService.sendCurrentSolution(this.selectedSolution);
-
-			// 	if (this.selectedTechnology) {
-			// 		this.solutionService.sendCurrentTechnology(this.selectedTechnology);
-			// 	}
-			// }
-	// 	}
-	// }
-
-		/**
+	/**
 	 * Builds our bar graph
 	 */
 	private buildGraph () {
-		const data = [1000,2000];
-		const categories = ['1000 <br> Medium Risk','2000 <br> High Risk'];
+		const data = this.CBPRiskArray;
+		const categories = ['Medium Risk','High Risk'];
 		// _.each(this.seriesData, d => {
 		// 	data.push({
 		// 		name: d.label,
@@ -140,15 +116,28 @@ export class ArchitectureComponent implements OnInit {
 		});
 	}
 
+	
+
 	/**
 	 * Emits the subfilter selected
 	 * @param event highcharts click event
 	 */
 	public selectSubfilter (event: any) {
-		event.stopPropagation();
+		// event.stopPropagation();
+
+		 this.severityObj = {severity : event.point.category.split(' ')[0]};
+		 console.log(this.severityObj);
+		
+		 this.architectureService.setAssetsExceptionCountSubjectObj(this.severityObj);
+		// console.log(event.point.category.split(' ')[0]);
 		// const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
 		// this.subfilter.emit(filterName);
 	}
+
+	// public getAssetsExceptionCountSubjectObj(){
+
+	// }
+	
 
 	/**
 	 * OnChanges Functionality
@@ -162,7 +151,7 @@ export class ArchitectureComponent implements OnInit {
 	// 	}
 	// }
 
-	public setTabIndex(tab) {
-			this.tabIndex = tab;
-	}
+	// public setTabIndex(tab) {
+	// 		this.tabIndex = tab;
+	// }
 }

@@ -23,126 +23,37 @@ export class CbpRuleViolationComponent implements OnInit {
 	tableLimit = 4;
 	tableOffset = 0;
 	totalItems = 10;
-	
-	// tableData = [];
-	
-	// tableData = [{
-	// 	risk : 'High',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '12345'
-	// },
-	// {
-	// 	risk : 'High',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '12346'
-	// },
-	// {
-	// 	risk : 'High',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '12347'
-	// },
-	// {
-	// 	risk : 'High',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '12345'
-	// },
-	// {
-	// 	risk : 'High',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '12345'
-	// },
-	// {
-	// 	risk : 'Low',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '12345'
-	// },
-	// {
-	// 	risk : 'Low',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '12345'
-	// },
-	// {
-	// 	risk : 'Low',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '12345'
-	// },
-	// {
-	// 	risk : 'Low',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '12346'
-	// },
-	// {
-	// 	risk : 'Low',
-	// 	technology : 'Angular',
-	// 	Exception : 'xception',
-	// 	Recommendation : 'Recommendation',
-	// 	CorrectiveAction : 'Corrective Action',
-	// 	AssetsAffected  : 'Assets Affected',
-	// 	SoftwareType : 'OS',
-	// 	RuleID : '09876'
-	// },
-	// ];
 
-	public tableData = [];
-	
+	public cbpRuleExceptions = [];
+	public severityObj = {};
 
 	ngOnInit () {
 
-		this.architectureService.getAllCBPRules().subscribe(res =>{
-			console.log(res);
-			this.tableData = res.content;
-			 console.log(this.tableData);
+		this.architectureService.getAllCBPRulesDetails().subscribe(res =>{
+			
+			this.cbpRuleExceptions = res.BPRulesDetails;
+			this.cbpRuleExceptions.map((exception) => {
+				exception.assetsAffected = exception.deviceIdsWithExceptions.split(';').length;
+				exception.bpRecommendation = exception.bpRecommendation.substr(0,30).concat("...");
+				exception.correctiveAction = exception.correctiveAction.substr(0,25)+"...";
+				exception.deviceIdsWithExceptions = exception.deviceIdsWithExceptions.split(';');
+			})
+			console.log(this.cbpRuleExceptions);
 		});
 
-    //    this.httpClient.get('/ws/architecture/v3/successUrls/getAllCbpRules').subscribe( res => {
-	// 	   console.log(res);
-	// 	//    this.tableData = res;
-	//    } )
+		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res =>{
+			this.severityObj = res.severityObj;
+			console.log(this.severityObj);
+		});
+
+		// if(this.severityObj)
+		this.architectureService.getHighSeverityExceptions().subscribe(res => {
+			console.log(res);
+		});
+
+		this.architectureService.getMediumSeverityExceptions().subscribe(res => {
+			console.log(res);
+		})
 
 		this.tableOptions = new CuiTableOptions({
 		  bordered: false,
@@ -150,22 +61,22 @@ export class CbpRuleViolationComponent implements OnInit {
 			{
 			  name: 'Risk',
 			  sortable: false,
-			  key : 'risk'
+			  key : 'bpSeverity'
 			},
 			{
 			  name: 'Technology',
 			  sortable: false,
-			  key: 'technology',
+			  key: 'bpPrimaryTechnologies',
 			},
 			{
 				name: 'Exception',
 				sortable: false,
-				key: 'exception',
+				key: 'exceptions',
 			},
 			{
 				name: 'Recommendation',
 				sortable: false,
-				key: 'recommendation',
+				key: 'bpRecommendation',
 			},
 			{
 				name: 'Corrective Action',
@@ -185,14 +96,13 @@ export class CbpRuleViolationComponent implements OnInit {
 			{
 				name: 'Rule ID',
 				sortable: false,
-				key: 'ruleID',
+				key: 'bpRuleId',
 			},
 		  ],
-		});
-
+		});		
 		
 	}
 
-
+	
 	
 }

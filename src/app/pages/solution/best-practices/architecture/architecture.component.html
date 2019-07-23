@@ -100,11 +100,10 @@
                 </ng-template> -->
 <!-- </div> -->
 
-
+<!-- <app-devices-with-exceptions></app-devices-with-exceptions> -->
 <div class="panel">
     <cui-tabs-nav>
   <!-- NOTE cuiTabLinkPre and cuiTabLinkPost content is only visible if the cui-tabs [inline] input is set to true -->
-
 
   <cui-tab-link [url]="['Exceptions']">
     <div>
@@ -112,10 +111,10 @@
       <div>Exceptions</div>
     </div>
   </cui-tab-link>
-  <cui-tab-link [url]="['DevicesWithExceptions']">
+  <cui-tab-link [url]="['AssetsWithExceptions']">
     <div>
-      <div><h1>4554</h1></div>
-      <div>Devices With Exceptions</div>
+      <div><h1>{{AssetsExceptionsCount}}</h1></div>
+      <div>Assets With Exceptions</div>
     </div>
   </cui-tab-link>
   </cui-tabs-nav>

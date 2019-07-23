@@ -7,6 +7,9 @@ import { ChartModule } from 'angular-highcharts';
 import { CuiTabsModule } from '@cisco-ngx/cui-components';
 import { CuiTabsNavModule } from '@cisco-ngx/cui-components';
 import { ArchitectureRoutingModule } from './architecture-routing.module';
+import { CbpDetailsModule } from './cbp-details/cbp-details.module';
+import { CbpDetailsHeaderModule } from './cbp-details-header/cbp-details-header.module';
+// import { Panel360Module } from '@components';
 
 @NgModule({
 	declarations: [ArchitectureComponent],
@@ -19,6 +22,9 @@ import { ArchitectureRoutingModule } from './architecture-routing.module';
 		DevicesWithExceptionsModule,
 		CuiTabsNavModule,
 		ArchitectureRoutingModule,
+		CbpDetailsModule,
+		CbpDetailsHeaderModule,
+		// Panel360Module
 	],
 })
 export class ArchitectureModule { }

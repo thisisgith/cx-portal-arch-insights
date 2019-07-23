@@ -1,0 +1,25 @@
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
+			<span>showing {{tableData.length}} of {{totalItems}} Assets</span>
+		</div>
+	</div>
+</div>
+
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
+			<cui-table [options]="tableOptions" [data]="tableData"></cui-table>
+			<div class="section">
+				<cui-pager *ngIf="tableData.length" [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
+					(onPageChanged)="onPagerUpdated($event)"></cui-pager>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #assetTmpl let-item="celldata">
+	<span>
+		<span class="icon-circle icon-small" style="color:#d8d8d8"></span>
+		{{item.hostname}}</span>
+</ng-template>

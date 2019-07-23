@@ -12,7 +12,7 @@ const routes: Routes = [
       { path: 'Exceptions',
          component: CbpRuleViolationComponent,
       },
-      { path: 'DevicesWithExceptions',
+      { path: 'AssetsWithExceptions',
          component: DevicesWithExceptionsComponent,
       },
     ],
