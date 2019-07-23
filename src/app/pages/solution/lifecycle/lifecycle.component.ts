@@ -570,6 +570,7 @@ export class LifecycleComponent implements OnDestroy {
 		.pipe(
 			map((result: ACCResponse) => {
 				this.status.loading.acc = false;
+				this.selectedStatus = '';
 				if (window.Cypress) {
 					window.accLoading = false;
 				}
@@ -657,6 +658,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
+				this.selectedCategory = '';
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
