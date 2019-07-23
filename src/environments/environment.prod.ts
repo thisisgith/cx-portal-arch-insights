@@ -8,7 +8,7 @@ const origin = 'https://d2wff6n80ugrz8.cloudfront.net';
 /**
  * Cway origin
  */
-const authOrigin = 'https://apollo-stage.cisco.com';
+const authOrigin = 'https://cway.cisco.com';
 
 /**
  * Contains configurations for production builds, will extend the default configuration

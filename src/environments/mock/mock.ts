@@ -1,5 +1,6 @@
 import {
 	ACCScenarios,
+	ACCUserInfoScenarios,
 	ActionScenarios,
 	AssetScenarios,
 	ATXScenarios,
@@ -14,33 +15,39 @@ import {
 	HardwareScenarios,
 	NetworkScenarios,
 	OSVScenarios,
+	SerialNumberScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryScenarios,
+	SecurityAdvisoryTopScenarios,
+	SecurityAdvisorySummaryScenarios,
 	SuccessPathScenarios,
 	FieldNoticeScenarios,
 	FieldNoticeBulletinScenarios,
 	HealthStatusScenarios,
 	VulnerabilityScenarios,
 	UserScenarios,
-
 } from './';
+
 import { HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
+	ACCUserInfoSchema,
 	Assets,
 	ATXResponse,
+	BasicRecommendationsResponse,
 	CDCSearchResponse,
 	CommunitiesResponse,
 	CoverageCountsResponse,
-	CoverageResponse,
-	DeviceCountResponse,
 	DeploymentStatusCountResponse,
+	DERecommendationsResponse,
+	DeviceCountResponse,
+	CoverageResponse,
 	ELearningResponse,
 	FieldNoticeBulletinResponse,
 	FieldNoticeResponse,
@@ -53,25 +60,33 @@ import {
 	RiskCountResponse,
 	RoleCountResponse,
 	SecurityAdvisoryBulletinResponse,
+	SecurityAdvisoryImpactCountResponse,
 	SecurityAdvisoryResponse,
+	SecurityAdvisorySummary,
 	SoftwareProfilesResponse,
 	SoftwareVersionsResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
+	DeviceContractResponse,
 } from '@sdp-api';
+// } from '../';
+
 import { RMAResponse } from '@interfaces';
 
 /** Alias type for the Response Body */
 type ResponseBody = (
 	ACCResponse |
+	ACCUserInfoSchema |
 	Assets |
 	ATXResponse |
+	BasicRecommendationsResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
 	CoverageCountsResponse |
 	CoverageResponse |
-	DeviceCountResponse |
 	DeploymentStatusCountResponse |
+	DERecommendationsResponse |
+	DeviceCountResponse |
 	ELearningResponse |
 	FieldNoticeBulletinResponse |
 	FieldNoticeResponse |
@@ -85,11 +100,14 @@ type ResponseBody = (
 	RMAResponse |
 	RoleCountResponse |
 	SecurityAdvisoryBulletinResponse |
+	SecurityAdvisoryImpactCountResponse |
 	SecurityAdvisoryResponse |
+	SecurityAdvisorySummary |
 	SoftwareProfilesResponse |
 	SoftwareVersionsResponse |
 	SuccessPathsResponse |
-	VulnerabilityResponse
+	VulnerabilityResponse |
+	DeviceContractResponse
 );
 
 /**
@@ -135,6 +153,7 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ACCUserInfoScenarios,
 		ATXScenarios,
 		ActionScenarios,
 		AssetScenarios,
@@ -149,6 +168,7 @@ export const mockSettings: MockSettings = {
 		HardwareEOLCountScenarios,
 		HardwareEOLScenarios,
 		HardwareScenarios,
+		SerialNumberScenarios,
 		HealthStatusScenarios,
 		NetworkScenarios,
 		OSVScenarios,
@@ -157,7 +177,9 @@ export const mockSettings: MockSettings = {
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryTopScenarios,
 		SecurityAdvisoryScenarios,
+		SecurityAdvisorySummaryScenarios,
 		SuccessPathScenarios,
 		UserScenarios,
 		VulnerabilityScenarios,

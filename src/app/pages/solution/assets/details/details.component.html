@@ -2,8 +2,10 @@
 	<cui-tab [label]="'_Summary_' | i18n | uppercase">
 		<ng-container *ngTemplateOutlet="summary"></ng-container>
 	</cui-tab>
-	<cui-tab [label]="'_Hardware_' | i18n | uppercase" disabled="true">
-		<asset-activity [asset]="asset"></asset-activity>
+	<cui-tab [label]="'_Hardware_' | i18n | uppercase">
+		<div class="half-margin-top" *ngIf="asset">
+			<details-hardware [asset]="asset"></details-hardware>
+		</div>
 	</cui-tab>
 	<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true"></cui-tab>
 	<cui-tab [label]="'_Advisories_' | i18n | uppercase">
@@ -126,10 +128,10 @@
 		<div class="col-md-12 text-bold" [innerText]="title | i18n | uppercase"></div>
 	</div>
 	<div class="row" *ngIf="!titleOnly">
-		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)"></div>
-		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)"></div>
+		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>
+		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)" attr.data-auto-id="{{ title }}-data"></div>
 		<a [href]="url" *ngIf="linkData">
-			<div class="col-md-12" [innerText]="linkData"></div>
+			<div class="col-md-12" [innerText]="linkData" attr.data-auto-id="{{ title }}-Link"></div>
 		</a>
 	</div>
 </ng-template>

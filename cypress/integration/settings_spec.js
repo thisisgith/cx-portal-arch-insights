@@ -87,6 +87,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			cy.getByAutoId(`usage-${i18n._CurrentCPUUtilization_}`).within(() => {
 				cy.get('cui-gauge').should('exist');
 				cy.get('cui-gauge').should('have.text', `${Cypress._.parseInt(hw.cpu_utilization, 10)}%`);
+				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'success');
 			});
 
 			cy.getByAutoId(`usage-${i18n._CurrentAvailableMemory_}`).within(() => {
@@ -95,6 +96,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 					(Cypress._.parseInt(hw.free_memory, 10) / Cypress._.parseInt(hw.total_memory, 10)) * 100
 				);
 				cy.get('cui-gauge').should('have.text', `${expected}%`);
+				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'warning');
 			});
 
 			cy.getByAutoId(`usage-${i18n._FreeDiskSpace_}`).within(() => {
@@ -103,6 +105,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 					(Cypress._.parseInt(hw.free_hdd_size, 10) / Cypress._.parseInt(hw.hdd_size, 10)) * 100
 				);
 				cy.get('cui-gauge').should('have.text', `${expected}%`);
+				cy.get('cui-gauge').should('have.attr', 'ng-reflect-color', 'danger');
 			});
 		});
 
@@ -131,6 +134,10 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 				cy.get('div').should('contain', os.kubeletVersion);
 			});
 		});
+
+		it('No Error Panel for successful API', () => {
+			cy.get("[role='alert']").should('not.exist');
+		});
 	});
 	context('Health-Status - Failure', () => {
 		before(() => {
@@ -141,7 +148,6 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 		});
 
 		it('Renders Status Panel', () => {
-			// TODO : Expecting page content to change when PBC-302 is resolved
 			cy.getByAutoId('settings.system.status').should('exist');
 
 			cy.getByAutoId('settings.system.status.label').should('have.text', i18n._Status_.toUpperCase());
@@ -155,6 +161,14 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 
 			cy.getByAutoId('settings.system.info').should('exist');
 			cy.getByAutoId('settings.system.info.label').should('have.text', i18n._SystemInfo_.toUpperCase());
+		});
+
+		it('Error Panel for failed API', () => {
+			cy.get("[role='alert']").should('be.visible');
+			cy.get("[role='alert']").should('have.class', 'alert--danger');
+			cy.get("[role='alert']").within(() => {
+				cy.get('div').should('contain', '500');
+			});
 		});
 	});
 });

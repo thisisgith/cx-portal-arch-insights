@@ -22,6 +22,8 @@ import {
 	RacetrackSolution,
 	RacetrackTechnology,
 	CoverageCountsResponse,
+	ProductAlertsService,
+	VulnerabilityResponse,
 } from '@sdp-api';
 import { SolutionService } from './solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -78,6 +80,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 	constructor (
 		private contractsService: ContractsService,
+		private productAlertsService: ProductAlertsService,
 		private router: Router,
 		private solutionService: SolutionService,
 		private racetrackService: RacetrackService,
@@ -105,6 +108,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const name = _.get(this.selectedSolution, 'name');
 
 		return _.get(_.find(this.solutions, { name }), 'technologies', []);
+	}
+
+	get advisoriesFacet () {
+		return _.find(this.facets, { key: 'advisories' });
 	}
 
 	/**
@@ -253,12 +260,40 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Fetches the counts for the advisories chart
+	 */
+	private fetchAdvisoryCounts () {
+		this.productAlertsService.getVulnerabilityCounts({ customerId })
+		.subscribe((counts: VulnerabilityResponse) => {
+			this.advisoriesFacet.seriesData = [
+				{
+					label: I18n.get('_SecurityAdvisories_'),
+					value: _.get(counts, 'security-advisories'),
+				},
+				{
+					label: I18n.get('_FieldNotices_'),
+					value: _.get(counts, 'field-notices'),
+				},
+				{
+					label: I18n.get('_Bugs_'),
+					value: _.get(counts, 'bugs'),
+				},
+			];
+		},
+		err => {
+			this.logger.error('solution.component : fetchAdvisoryCounts() ' +
+			`:: Error : (${err.status}) ${err.message}`);
+		});
+	}
+
+	/**
 	 * OnInit Functionality
 	 */
 	public ngOnInit () {
 		this.fetchSolutions();
 		this.initializeFacets();
 		this.fetchCoverageCount();
+		this.fetchAdvisoryCounts();
 	}
 
 	/**

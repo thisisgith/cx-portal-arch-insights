@@ -40,7 +40,7 @@ function MockACC (
 			description: 'Gain actionable insights into Cisco DNA Center use case ' +
 				'deployments and assists. Understand how to design, adopt, and leverage to ' +
 				'save time and resources within your network',
-			isFavorite: false,
+			isFavorite: true,
 			status: 'in-progress',
 			title: 'Cisco DNA Pilot Usecase Deployment',
 			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
@@ -144,6 +144,15 @@ export const ACCScenarios = [
 						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneRecommended'),
 						status: 200,
 					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoRecommended',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoRecommended'),
+						status: 200,
+					},
 					selected: true,
 				},
 				{
@@ -153,7 +162,34 @@ export const ACCScenarios = [
 						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneNonRecommended'),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoCompleted',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoCompleted'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoInProgress',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoInProgress'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoRequested',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoRequested'),
+						status: 200,
+					},
+					selected: false,
 				},
 			],
 		},
@@ -240,6 +276,22 @@ export const ACCScenarios = [
 			],
 		},
 		url: `${api}/${accId4}/bookmark`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard ACCRequestSubmit1',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${accId1}/request`,
 		usecases: ['Use Case 1'],
 	},
 	{

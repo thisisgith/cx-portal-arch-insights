@@ -5,57 +5,72 @@ import { Pipe, PipeTransform } from '@angular/core';
  * {0} param corresponds to trackingNumber
  */
 const courierMap = {
-	BLUEDART: '<a target="_blank" href="https://www.bluedart.com/">https://www.bluedart.com</a>',
+	BLUEDART: `
+	<a data-auto-id="courierID" target="_blank"
+		href="https://www.bluedart.com/">
+		https://www.bluedart.com
+	</a>
+	`,
 	CHOICE: `
-	<a target="_blank" href="https://www.Choicecourier.com">
+	<a data-auto-id="courierID"
+		target="_blank" href="https://www.Choicecourier.com">
 		https://www.Choicecourier.com
 	</a>
 	`,
 	DHL: `
-	<a target="_blank" href="https://www.dhl.com/cgi-bin/tracking.pl?AWB={0}">
+	<a data-auto-id="courierID"
+		target="_blank" href="https://www.dhl.com/cgi-bin/tracking.pl?AWB={0}">
 		{0}
 	</a>
 	`,
 	F1: `
-	<a target="_blank" href="https://www.fedex.com/Tracking?
+	<a data-auto-id="courierID"
+		target="_blank" href="https://www.fedex.com/Tracking?
 		action=track&language=english&cntry_code=<C>&initial=x&mps=y&tracknumbers={0}">
 		{0}
 	</a>
 	`,
 	FEDEX: `
-	<a target="_blank" href="https://www.fedex.com/Tracking?action=track&language=english&
+	<a data-auto-id="courierID"
+		target="_blank" href="https://www.fedex.com/Tracking?action=track&language=english&
 		cntry_code=<C>&initial=x&mps=y&tracknumbers={0}">
 		{0}
 	</a>
 	`,
 	GATI: `
-	<a target="_blank" href="https://www.gati.com/single_dkt_track.jsp?dktNo={0}">
+	<a data-auto-id="courierID"
+		target="_blank" href="https://www.gati.com/single_dkt_track.jsp?dktNo={0}">
 		{0}
 	</a>
 	`,
 	'KUEHNE NAG': `
-	<a target="_blank" href="https://knlogin.kuehne-nagel.com/lls/llsfls.do?
+	<a data-auto-id="courierID"
+		target="_blank" href="https://knlogin.kuehne-nagel.com/lls/llsfls.do?
 		event=show&subevent=search&transportOrderReference={0}">
 		{0}
 	</a>
 	`,
 	NNS: `
-	<a target="_blank" href="https://www.nns.com.cn/cisco_cn/cx/cx2013.aspx?pod={0}">
+	<a data-auto-id="courierID"
+		target="_blank" href="https://www.nns.com.cn/cisco_cn/cx/cx2013.aspx?pod={0}">
 		{0}
 	</a>
 	`,
 	TNT: `
-	<a target="_blank" href="https://www.tnt.com/webtracker/tracking.do?&searchType=CON&cons={0}">
+	<a data-auto-id="courierID"
+		target="_blank" href="https://www.tnt.com/webtracker/tracking.do?&searchType=CON&cons={0}">
 		{0}
 	</a>
 	`,
 	TNTAU: `
-	<a target="_blank" href="https://www.tntexpress.com.au/InterAction/ASPs/CnmHxAS.asp?{0}">
+	<a data-auto-id="courierID"
+		target="_blank" href="https://www.tntexpress.com.au/InterAction/ASPs/CnmHxAS.asp?{0}">
 		{0}
 	</a>
 	`,
 	UPS: `
-	<a target="_blank" href="https://wwwapps.ups.com/etracking/tracking.cgi?
+	<a data-auto-id="courierID"
+		target="_blank" href="https://wwwapps.ups.com/etracking/tracking.cgi?
 	TypeOfInquiryNumber=T&InquiryNumber1={0}">
 		{0}
 	</a>

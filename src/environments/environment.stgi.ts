@@ -1,5 +1,4 @@
 import { defaults } from './defaults';
-import { mockSettings } from './mock/mock';
 
 /**
  * Stage Internal origin
@@ -12,7 +11,6 @@ const origin = 'https://apollo-stage.cisco.com';
  */
 export const environment = {
 	...defaults,
-	...mockSettings,
 	origin,
 	auth: {
 		accountUrl: `${origin}/ws/account/v2/`,
