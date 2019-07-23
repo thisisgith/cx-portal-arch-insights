@@ -532,6 +532,7 @@ export class LifecycleComponent implements OnDestroy {
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: ACCResponse) => {
+				this.selectedStatus = '';
 				this.componentData.acc = {
 					sessions: _.union(_.filter(result.items, { status: 'recommended' }),
 						_.filter(result.items, { status: 'requested' }),
@@ -620,6 +621,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
+				this.selectedCategory = '';
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
