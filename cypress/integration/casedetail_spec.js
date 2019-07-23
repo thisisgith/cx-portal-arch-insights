@@ -126,7 +126,8 @@ describe('Case Detail Spec', () => {
 			cy.wait(3000);
 			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
 			cy.wait(3000);
-			cy.getByAutoId('NOTES (3)Tab').should('exist').click(); // TODO this number increments as notes added
+			// cy.getByAutoId('NOTES (3)Tab').should('exist').click(); // TODO this number increments as notes added
+			cy.getByAutoId('NOTES Tab').should('exist').click(); // TODO this number increments as notes added
 			cy.getByAutoId('CaseAddNote').should('exist').click(); // click Add Note button
 			cy.getByAutoId('title').should('exist');
 			cy.getByAutoId('description').should('exist');
