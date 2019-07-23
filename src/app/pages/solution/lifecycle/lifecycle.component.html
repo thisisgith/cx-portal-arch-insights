@@ -326,7 +326,7 @@
 				<div class="row">
 					<div class="col-md-11 text-blue" [innerText]="item.title"></div>
 					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
-					<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite" attr.data-auto-id="{{ autoid }}-Bookmark"></div>
+					<div class="col-md-1 alignRibbon icon-bookmark icon-x-small qtr-padding-left qtr-margin-left" *ngIf="item.status === 'recommended'" [ngClass]="getACCRibbonClass(item)" attr.data-auto-id="{{ autoid }}-Bookmark"></div>
 					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'in-progress'" attr.data-auto-id="{{ autoid }}-ProgressBar">
 						<div class="col-md-1 progressbar__fill"></div>
 					</div>

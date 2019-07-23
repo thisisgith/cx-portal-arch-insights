@@ -358,13 +358,13 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.acc.sessions[0].isFavorite)
 				.toBeFalsy();
 			expect(component.componentData.acc.sessions[0].status)
-			.toEqual('recommended');
+			.toEqual('requested');
 			expect(component.selectedACC.length)
 				.toEqual(1);
 
 			const acc5 = component.componentData.acc.sessions[1];
 			expect(acc5.status)
-				.toEqual('requested');
+				.toEqual('in-progress');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;

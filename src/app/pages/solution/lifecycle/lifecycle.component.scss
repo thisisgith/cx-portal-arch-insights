@@ -232,6 +232,11 @@ $vibblue: #017cad;
 	z-index: 2;
 }
 
+.alignRibbon {
+	position: absolute;
+	right: -9px;
+}
+
 .grid.grid--4up,
 .grid.grid--2up {
 	gap: 20px 20px;
