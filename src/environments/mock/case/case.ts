@@ -25,21 +25,21 @@ const caseDetailsResponse = {
 };
 
 /** Mock data for valid CSOne Case Details API results with no description. */
-// const caseDetailsResponseAlt = {
-// 	caseNumber: `${caseDetailNum}`,
-// 	contractId: '912512343',
-// 	createdDate: '22 Apr 2019 07:50 AM PST',
-// 	description: '',
-// 	hostName: 'SJ-BLD3-02-147',
-// 	ownerEmail: 'testUser@cisco.com',
-// 	ownerName: '',
-// 	priority: '3',
-// 	rmaNumber: '88346234, 88346235',
-// 	serialNumber: 'FOX1306GFKH',
-// 	status: 'Customer Pending',
-// 	summary: 'Router not working',
-// 	trackingNumber: '',
-// };
+const caseDetailsResponseAlt = {
+	caseNumber: `${caseDetailNum}`,
+	contractId: '912512343',
+	createdDate: '22 Apr 2019 07:50 AM PST',
+	description: '',
+	hostName: 'SJ-BLD3-02-147',
+	ownerEmail: 'testUser@cisco.com',
+	ownerName: '',
+	priority: '3',
+	rmaNumber: '88346234, 88346235',
+	serialNumber: 'FOX1306GFKH',
+	status: 'Customer Pending',
+	summary: 'Router not working',
+	trackingNumber: '',
+};
 
 /** Mock data for valid CSOne Case Notes API results */
 const caseNotesResponse = [
@@ -422,8 +422,7 @@ export const CaseScenarios = [
 					delay: 100,
 					description: 'Case Details',
 					response: {
-						// body: caseDetailsResponseAlt,
-						body: caseDetailsResponse,
+						body: caseDetailsResponseAlt,
 						status: 200,
 					},
 					selected: true,
