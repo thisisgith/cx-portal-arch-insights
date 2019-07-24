@@ -25,28 +25,27 @@ const caseDetailsResponse = {
 };
 
 /** Mock data for valid CSOne Case Details API results with no description. */
-const caseDetailsResponseAlt = {
-	caseNumber: `${caseDetailNum}`,
-	contractId: '912512343',
-	createdDate: '22 Apr 2019 07:50 AM PST',
-	description: '',
-	hostName: 'SJ-BLD3-02-147',
-	ownerEmail: 'testUser@cisco.com',
-	ownerName: '',
-	priority: '3',
-	rmaNumber: '88346234, 88346235',
-	serialNumber: 'FOX1306GFKH',
-	status: 'Customer Pending',
-	summary: 'Router not working',
-	trackingNumber: '',
-};
+// const caseDetailsResponseAlt = {
+// 	caseNumber: `${caseDetailNum}`,
+// 	contractId: '912512343',
+// 	createdDate: '22 Apr 2019 07:50 AM PST',
+// 	description: '',
+// 	hostName: 'SJ-BLD3-02-147',
+// 	ownerEmail: 'testUser@cisco.com',
+// 	ownerName: '',
+// 	priority: '3',
+// 	rmaNumber: '88346234, 88346235',
+// 	serialNumber: 'FOX1306GFKH',
+// 	status: 'Customer Pending',
+// 	summary: 'Router not working',
+// 	trackingNumber: '',
+// };
 
 /** Mock data for valid CSOne Case Notes API results */
 const caseNotesResponse = [
 	// tslint:disable:max-line-length ter-max-len
 	{
 		createdDate: '21 Jun 2019 01:16 PM EST',
-		// noteDetail: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.',
 		noteDetail: 'worked with customer to collect debug, reviewing log now',
 	},
 ];
