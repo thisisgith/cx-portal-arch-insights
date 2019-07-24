@@ -23,7 +23,7 @@ elearningItems.forEach(scenario => {
 		case 'E-Learning':
 			allELearningItems.push(scenario);
 			break;
-		case 'Certifications':
+		case 'Certification':
 		case 'Videos':
 			allCertificationsItems.push(scenario);
 			break;
@@ -73,7 +73,7 @@ describe('Learn Panel', () => {
 					case 'E-Learning':
 						elearningFound = true;
 						break;
-					case 'Certifications':
+					case 'Certification':
 					case 'Videos':
 						certificationsFound = true;
 						break;

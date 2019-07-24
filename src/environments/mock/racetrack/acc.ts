@@ -153,6 +153,15 @@ export const ACCScenarios = [
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-twoRecommended',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoRecommended'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard-oneNonRecommended',
 					response: {
 						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneNonRecommended'),

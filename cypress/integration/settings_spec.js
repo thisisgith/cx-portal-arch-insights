@@ -62,6 +62,18 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 					});
 				}
 
+				if (mainData.component_details[index].status === 'FakeStatus') {
+					cy.wrap($el).within(() => {
+						cy.get("[ng-reflect-ng-class='text-danger']").should('exist');
+					});
+				}
+
+				if (mainData.component_details[index].status.match(/^(ContainerCreation|Pending|PodInitializing)$/)) {
+					cy.wrap($el).within(() => {
+						cy.get("[ng-reflect-ng-class='text-warning']").should('exist');
+					});
+				}
+
 				if (mainData.component_details[index].status.match(/^(CrashLoopBackOff|Error)$/)) {
 					cy.wrap($el).within(() => {
 						cy.getByAutoId('errorLink').should('exist');
@@ -134,6 +146,10 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 				cy.get('div').should('contain', os.kubeletVersion);
 			});
 		});
+
+		it('No Error Panel for successful API', () => {
+			cy.get("[role='alert']").should('not.exist');
+		});
 	});
 	context('Health-Status - Failure', () => {
 		before(() => {
@@ -144,7 +160,6 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 		});
 
 		it('Renders Status Panel', () => {
-			// TODO : Expecting page content to change when PBC-302 is resolved
 			cy.getByAutoId('settings.system.status').should('exist');
 
 			cy.getByAutoId('settings.system.status.label').should('have.text', i18n._Status_.toUpperCase());
@@ -158,6 +173,14 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 
 			cy.getByAutoId('settings.system.info').should('exist');
 			cy.getByAutoId('settings.system.info.label').should('have.text', i18n._SystemInfo_.toUpperCase());
+		});
+
+		it('Error Panel for failed API', () => {
+			cy.get("[role='alert']").should('be.visible');
+			cy.get("[role='alert']").should('have.class', 'alert--danger');
+			cy.get("[role='alert']").within(() => {
+				cy.get('div').should('contain', '500');
+			});
 		});
 	});
 });

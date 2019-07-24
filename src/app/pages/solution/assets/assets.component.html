@@ -166,8 +166,8 @@
 
 <ng-template #tableAssets>
 	<div class="responsive-table" *ngIf="assetsTable && inventory.length && (!view || view == 'list')">
-		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
-				<thead>
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover" data-auto-id="AssetsTable">
+				<thead data-auto-id="AssetsTableHeader">
 					<tr>
 						<th>
 							<label class="checkbox">
@@ -193,7 +193,7 @@
 						</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody data-auto-id="AssetsTableBody">
 					<tr *ngFor="let item of inventory"
 						attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
 						(click)="onRowSelect(item)"
@@ -266,7 +266,7 @@
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_LastScan_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.lastScan || ('_Never_' | i18n)" attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" innerText="{{ item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n) }}" attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_SerialNumber_' | i18n"></div>
@@ -424,7 +424,7 @@
 </ng-template>
 
 <ng-template #horizontalBarChartFilter let-filter="filter">
-	<assets-bar-chart [seriesData]="filter.seriesData"
+	<assets-bar-chart [seriesData]="filter.seriesData" [width]="350"
 		(subfilter)="onSubfilterSelect($event, filter)">
 	</assets-bar-chart>
 </ng-template>
