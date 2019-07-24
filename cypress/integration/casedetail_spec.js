@@ -110,19 +110,31 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CloseDetails').should('exist').click();
 		});
 	});
-	context.skip('Case Detail Notes', () => {
+	context.only('Case Detail Notes', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
 
-		it('Case Details Notes test TBD', () => {
+		it('Case Details Notes Tab', () => {
 			// PBC-234
+			const validCaseID = '686350448';
+			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('caseSearchBox').should('exist').clear()
+				.type(validCaseID.concat('{enter}'));
+			cy.wait(3000);
+			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
+			cy.wait(3000);
+			cy.get('app-panel360').should('be.visible');
+			cy.getByAutoId('notesTab').should('exist').click();
+			// cy.getByAutoId('CaseAddNote').should('exist'); // .click();
 		});
 
-		it('Case Details Notes test TBD', () => {
+		it('Case Details Notes: Add a note', () => {
 			// PBC-234
+			// new Date().getTime();
+			const date = new Date(UNIX_timestamp * 1000).format('h:i:s');
 		});
 	});
 });
