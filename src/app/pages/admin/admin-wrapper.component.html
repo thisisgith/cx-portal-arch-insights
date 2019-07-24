@@ -16,30 +16,25 @@
 </header>
 <nav class="sidebar sidebar--mini sidebar--dkgray" data-auto-id="settings.sidebar">
 	<ul>
-		<li class="sidebar__item">
+			<li class="sidebar__item"
+			[ngClass]="{ selected: routerPath === 'policies' }"
+		>
 			<a
 				data-auto-id="sidebar.policies"
-				href="/admin/policies"
+				(click)="goTo('policies')"
 			>
-			<!--
-			Make this work after the demo
-			<a
-				[routerLink]="['admin/policies']"
-			> -->
 				<span class="icon-insights"></span>
 				<span [innerText]="'_Policies_' | i18n"></span>
 			</a>
 		</li>
-		<li class="sidebar__item selected">
+		<li class="sidebar__item"
+			[ngClass]="{ selected: routerPath === 'settings' }"
+		>
 			<a
 				data-auto-id="sidebar.settings"
-				href="/admin/settings"
+				(click)="goTo('settings')"
 			>
-			<!--
-			Make this work after the demo
-			<a
-				[routerLink]="['admin/settings']"
-			> -->
+
 				<span class="icon-account"></span>
 				<span [innerText]="'_System_' | i18n"></span>
 			</a>

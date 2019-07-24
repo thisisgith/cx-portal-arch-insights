@@ -7,6 +7,7 @@ import { Location } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PolicyResponseModel } from '@sdp-api';
 import { PolicesScenarios } from '@mock';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PoliciesComponent', () => {
 	let component: PoliciesComponent;
@@ -21,6 +22,7 @@ describe('PoliciesComponent', () => {
 			imports: [
 				HttpClientTestingModule,
 				PoliciesModule,
+				RouterTestingModule,
 			],
 			providers: [
 				{

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SettingsComponent } from './settings.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
@@ -16,17 +17,11 @@ import {
 	CuiSidebarModule,
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
-import { RouterTestingModule } from '@angular/router/testing';
-
-/**
- * The SDP Origin URL used for passing to the SDP-API Modules
- */
-const rootUrl = `${environment.sdpServiceOrigin}${environment.sdpServicePaths.controlpoints}`;
 
 /**
  * SDP Root url for the apis
  */
-const sdpRootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Main Settings module
@@ -46,9 +41,9 @@ const sdpRootUrl = environment.sdpServiceOrigin;
 		I18nPipeModule,
 		CuiSidebarModule,
 		CuiSpinnerModule,
-		RouterTestingModule,
+		RouterModule,
 		ControlPointsModule.forRoot({ rootUrl }),
-		UserModule.forRoot({ rootUrl: sdpRootUrl }),
+		UserModule.forRoot({ rootUrl }),
 	],
 })
 export class SettingsModule { }

@@ -5,6 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Location } from '@angular/common';
 import { IEHealthStatusResponseModel } from '@sdp-api';
 import { HealthStatusScenarios } from '@mock';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SettingsComponent', () => {
 	let component: SettingsComponent;
@@ -17,6 +18,7 @@ describe('SettingsComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				RouterTestingModule,
 				HttpClientTestingModule,
 				SettingsModule,
 			],
