@@ -10,6 +10,7 @@ import {
 import { empty, Subject } from 'rxjs';
 import { catchError, finalize, takeUntil, mergeMap } from 'rxjs/operators';
 
+import cronstrue from 'cronstrue';
 import * as _ from 'lodash-es';
 
 /**
@@ -63,6 +64,10 @@ export class PoliciesComponent implements OnInit {
 		this.scans = [];
 		this.collections = [];
 		_.forEach(this.policyData, element => {
+			const schedule = _.get(element, 'schedule');
+			const humanReadableCron = cronstrue.toString(schedule);
+			_.set(element, 'formattedSchedule', humanReadableCron);
+
 			const ptype = _.get(element, 'policyType');
 			if (ptype === 'SCAN') {
 				this.scans.push(element);

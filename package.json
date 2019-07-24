@@ -52,6 +52,7 @@
     "@angular/platform-browser-dynamic": "^8.1.2",
     "@angular/router": "^8.1.2",
     "core-js": "^2.6.9",
+    "cronstrue": "^1.81.0",
     "d3": "^5.9.7",
     "lodash-es": "4.17.11",
     "rxjs": "~6.5.2",
