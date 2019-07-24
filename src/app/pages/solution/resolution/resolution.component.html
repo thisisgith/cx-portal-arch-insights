@@ -65,8 +65,9 @@
 </ng-template>
 
 <ng-template #caseList>
-	<cui-table (onTableRowClicked)="onTableRowClicked($event)" [options]="caseListTableOptions" [data]="caseListData"
-		(onSortingChanged)="onTableSortingChanged($event)"></cui-table>
+	<cui-table data-auto-id="caseListTable" (onTableRowClicked)="onTableRowClicked($event)"
+		[options]="caseListTableOptions" [data]="caseListData" (onSortingChanged)="onTableSortingChanged($event)">
+	</cui-table>
 	<cui-pager class="half-margin" *ngIf="paginationInfo.totalElements>caseParams.size" [page]="caseParams.page"
 		[limit]="caseParams.size" [totalItems]="paginationInfo.totalElements" (onPageChanged)="onPagerUpdated($event)">
 	</cui-pager>
