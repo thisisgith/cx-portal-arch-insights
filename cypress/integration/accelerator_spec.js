@@ -896,6 +896,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
 
 				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.wait('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
 				cy.waitForAppLoading('accLoading');
@@ -914,6 +915,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
 
 				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.waitForAppLoading('accLoading');
 			});
