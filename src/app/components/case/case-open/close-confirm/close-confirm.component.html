@@ -1,0 +1,33 @@
+<div class="modal__header">
+	<a class="modal__close"
+		(click)="close()"
+		data-auto-id="CaseOpenClose">
+		<span class="icon-close icon--mid">
+		</span>
+	</a>
+</div>
+
+<h1 [innerText]="'_CancelCaseOpen_' | i18n">
+</h1>
+<div class="dbl-margin-top">
+	<span [innerText]="'_CancelCaseOpenAreYouSure_' | i18n"
+		class="text-bold">
+	</span>
+</div>
+<div class="base-margin-top">
+	<span [innerText]="'_InformationWillBeLost_' | i18n"></span>
+</div>
+<div class="flex-center-horizontal dbl-margin-top">
+	<button class="btn btn--primary btn--small half-margin-right"
+		data-auto-id="CaseOpenContinue"
+		type="button"
+		[innerText]="'_ContinueOpening_' | i18n"
+		(click)="back()">
+	</button>
+	<button class="btn btn--secondary btn--small half-margin-right"
+		data-auto-id="CaseOpenCancel"
+		type="button"
+		[innerText]="'_CancelCaseOpen_' | i18n"
+		(click)="close()">
+	</button>
+</div>

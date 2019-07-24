@@ -1,3 +1,5 @@
+export { CaseModule } from './case/case.module';
+export { CaseOpenComponent } from './case/case-open/case-open.component';
 export { HeaderComponent } from './header/header.component';
 export { HeaderModule } from './header/header.module';
 export { HeightTransitionModule } from './height-transition/height-transition.module';
