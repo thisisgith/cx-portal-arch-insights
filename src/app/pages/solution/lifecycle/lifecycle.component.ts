@@ -34,6 +34,7 @@ import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { CuiTableOptions } from '@cisco-ngx/cui-components';
 
 /**
  * Interface representing our data object
@@ -99,6 +100,8 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('accModal', { static: true }) public accTemplate: TemplateRef<{ }>;
 	@ViewChild('atxModal', { static: true }) public atxTemplate: TemplateRef<{ }>;
 	@ViewChild('successModal', { static: true }) public successPathTemplate: TemplateRef<{ }>;
+	@ViewChild('formatTemplate', { static: true }) private formatTemplate: TemplateRef<{ }>;
+	@ViewChild('bookmarkTemplate', { static: true }) private bookmarkTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -124,6 +127,8 @@ export class LifecycleComponent implements OnDestroy {
 
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
+	public view: 'list' | 'grid' = 'grid';
+	public productGuidesTable: CuiTableOptions;
 
 	public statusOptions = [
 		{
@@ -232,6 +237,64 @@ export class LifecycleComponent implements OnDestroy {
 				usecase: '',
 			},
 		};
+	}
+
+	/**
+	 * Will construct the assets table
+	 */
+	private buildTable () {
+		if (!this.productGuidesTable) {
+			this.productGuidesTable = new CuiTableOptions({
+				columns: [
+					{
+						key: 'title',
+						name: I18n.get('_Name_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sortKey: 'title',
+						value: 'title',
+						width: '40%',
+					},
+					{
+						key: 'archetype',
+						name: I18n.get('_Category_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sortKey: 'archetype',
+						value: 'archetype',
+						width: '20%',
+					},
+					{
+						name: I18n.get('_Format_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sortKey: 'type',
+						template: this.formatTemplate,
+						width: '20%',
+					},
+					{
+						name: I18n.get('_Bookmark_'),
+						sortable: false,
+						template: this.bookmarkTemplate,
+						width: '20%',
+					},
+				],
+			});
+		}
+	}
+
+	/**
+	 * Sorting function for productGuides table
+	 * @param key the key to sort
+	 * @param sortDirection sortDiretion
+	 */
+	public onSort (key: string, sortDirection: string) {
+		this.selectedSuccessPaths = _.orderBy(
+			this.selectedSuccessPaths, [key], [sortDirection]);
+
+		_.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
+			= _.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
+			=== 'asc' ? 'desc' : 'asc';
 	}
 
 	/**
@@ -374,11 +437,11 @@ export class LifecycleComponent implements OnDestroy {
 		};
 		this.contentService.updateACCBookmark(params)
 		.subscribe(() => {
+			item.isFavorite = !item.isFavorite;
 			this.status.loading.acc = false;
 			if (window.Cypress) {
 				window.accLoading = false;
 			}
-			item.isFavorite = !item.isFavorite;
 		},
 		err => {
 			this.status.loading.acc = false;
@@ -441,6 +504,17 @@ export class LifecycleComponent implements OnDestroy {
 		if (this.componentData.params.suggestedAction !== actionWithStatus.action.name) {
 			this.componentData.params.suggestedAction = actionWithStatus.action.name;
 			this.loadRacetrackInfo();
+		}
+	}
+
+	/**
+	 * Changes the view to either list or grid
+	 * @param view view to set
+	 */
+	public selectView (view: 'list' | 'grid') {
+		if (this.view !== view) {
+			this.view = view;
+			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:view', this.view);
 		}
 	}
 
@@ -532,21 +606,23 @@ export class LifecycleComponent implements OnDestroy {
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: ACCResponse) => {
-				this.status.loading.acc = false;
-				if (window.Cypress) {
-					window.accLoading = false;
-				}
-
+				this.selectedStatus = '';
 				this.componentData.acc = {
-					sessions: _.union(_.filter(result.items, { status: 'recommended' }),
-						_.filter(result.items, { status: 'requested' }),
+					sessions: _.union(_.filter(result.items, { status: 'requested' }),
 						_.filter(result.items, { status: 'in-progress' }),
+						_.filter(result.items, { status: 'recommended' }),
 						_.filter(result.items, { status: 'completed' })),
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
 
 				this.selectedACC = this.componentData.acc.sessions;
+				this.buildTable();
+
+				this.status.loading.acc = false;
+				if (window.Cypress) {
+					window.accLoading = false;
+				}
 
 				return result;
 			}),
@@ -620,6 +696,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
+				this.selectedCategory = '';
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
@@ -742,13 +819,13 @@ export class LifecycleComponent implements OnDestroy {
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: CommunitiesResponse) => {
+				if (result.items.length) {
+					this.componentData.communities = result.items;
+				}
+
 				this.status.loading.communities = false;
 				if (window.Cypress) {
 					window.communitiesLoading = false;
-				}
-
-				if (result.items.length) {
-					this.componentData.communities = result.items;
 				}
 
 				return result;

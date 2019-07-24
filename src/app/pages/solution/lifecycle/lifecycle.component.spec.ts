@@ -139,6 +139,28 @@ describe('LifecycleComponent', () => {
 			.toBeTruthy();
 	});
 
+	/**
+	 * @TODO: modify test to use UI
+	 */
+	it('should select view', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.view)
+				.toBe('grid');
+
+			component.selectView('list');
+
+			fixture.detectChanges();
+
+			expect(component.view)
+				.toBe('list');
+
+			done();
+		});
+	});
+
 	describe('ATX', () => {
 		it('should have loaded the atx items', () => {
 			buildSpies();
@@ -358,13 +380,13 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.acc.sessions[0].isFavorite)
 				.toBeFalsy();
 			expect(component.componentData.acc.sessions[0].status)
-			.toEqual('recommended');
+			.toEqual('requested');
 			expect(component.selectedACC.length)
 				.toEqual(1);
 
 			const acc5 = component.componentData.acc.sessions[1];
 			expect(acc5.status)
-				.toEqual('requested');
+				.toEqual('in-progress');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
@@ -423,6 +445,16 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(1);
+
+			component.onSort('title', 'asc');
+			fixture.detectChanges();
+			expect(component.productGuidesTable.columns[0].sortDirection)
+				.toEqual('desc');
+
+			component.onSort('title', 'desc');
+			fixture.detectChanges();
+			expect(component.productGuidesTable.columns[0].sortDirection)
+				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
