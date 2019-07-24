@@ -310,7 +310,7 @@ implements OnInit, OnDestroy, OnChanges {
 	public onViewCase (casenum?: string) {
 		this.router.navigate(
 			['solution/resolution'],
-			{ queryParams: { ...(casenum ? { casenum } : { }) } },
+			{ queryParams: { case: casenum } },
 		);
 		this.searchService.close();
 	}

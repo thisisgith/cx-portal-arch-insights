@@ -38,5 +38,9 @@
 		</button>
 	</div>
 </div>
-<app-open-cases [hidden]="!casesDropdownActive" [openCases]="openCases"
-	(close)="toggleActiveCases()"></app-open-cases>
+<div class="row">
+	<div class="col-md-12" [hidden]="!casesDropdownActive">
+		<app-open-cases [serial]="asset?.serialNumber" [openCases]="openCases"
+			(close)="toggleActiveCases()"></app-open-cases>
+	</div>
+</div>
