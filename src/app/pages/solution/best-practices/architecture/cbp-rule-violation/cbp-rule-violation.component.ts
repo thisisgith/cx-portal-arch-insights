@@ -25,9 +25,15 @@ export class CbpRuleViolationComponent implements OnInit {
 	totalItems = 10;
 
 	public cbpRuleExceptions = [];
-	public severityObj = {};
+	public severityObj : any;
+
+	AssetsExceptionsCount:any;
 
 	ngOnInit () {
+
+		// this.architectureService.getAllAssetsWithExceptions().subscribe(res =>{
+		// 	console.log(res);
+		// });
 
 		this.architectureService.getAllCBPRulesDetails().subscribe(res =>{
 			
@@ -42,19 +48,34 @@ export class CbpRuleViolationComponent implements OnInit {
 		});
 
 		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res =>{
-			this.severityObj = res.severityObj;
-			console.log(this.severityObj);
+			this.severityObj = res.severityObj.severity;
+			console.log(this.severityObj);		
+			if(this.severityObj == "Medium"){
+				this.architectureService.getMediumSeverityExceptions().subscribe(res => {
+					console.log(res);
+					this.cbpRuleExceptions = res.BPRulesDetails;
+					this.cbpRuleExceptions.map((exception) => {
+						exception.assetsAffected = exception.deviceIdsWithExceptions.split(';').length;
+						exception.bpRecommendation = exception.bpRecommendation.substr(0,30).concat("...");
+						exception.correctiveAction = exception.correctiveAction.substr(0,25)+"...";
+						exception.deviceIdsWithExceptions = exception.deviceIdsWithExceptions.split(';');
+					})
+				});
+			}else{
+				this.architectureService.getHighSeverityExceptions().subscribe(res => {
+					console.log(res);
+					this.cbpRuleExceptions = res.BPRulesDetails;
+					this.cbpRuleExceptions.map((exception) => {
+						exception.assetsAffected = exception.deviceIdsWithExceptions.split(';').length;
+						exception.bpRecommendation = exception.bpRecommendation.substr(0,30).concat("...");
+						exception.correctiveAction = exception.correctiveAction.substr(0,25)+"...";
+						exception.deviceIdsWithExceptions = exception.deviceIdsWithExceptions.split(';');
+					})
+					console.log(this.cbpRuleExceptions);
+				});
+			}
 		});
-
-		// if(this.severityObj)
-		this.architectureService.getHighSeverityExceptions().subscribe(res => {
-			console.log(res);
-		});
-
-		this.architectureService.getMediumSeverityExceptions().subscribe(res => {
-			console.log(res);
-		})
-
+		
 		this.tableOptions = new CuiTableOptions({
 		  bordered: false,
 		  columns: [

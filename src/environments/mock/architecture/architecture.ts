@@ -525,18 +525,299 @@ const api = "/cparchinsights";
 	"Info": "25"
 }
 
-const getCBPHighRiskData = {"High":"27",
-"BPRulesDetails":[
-   {"bpRuleId":"8347","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493644"},
-   {"bpRuleId":"8381","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656;23493625;23493677;23493678;23493679;23493680;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676"},
-   {"bpRuleId":"8400","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"Interface level syslog events not disabled","bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.","deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656"},
-   {"bpRuleId":"8332","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.","deviceIdsWithExceptions":"23493611"},
-   {"bpRuleId":"8338","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"interface <interface_name>\n no logging event link-status","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493631;23493632;23493619;23493611;23493612"},
-   {"bpRuleId":"8344","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"interface <interface_name>\n no logging event link-status","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493617;23493628;23493638;23493639;23493640;23493641"},{"bpRuleId":"8379","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"Interface level syslog events not disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"interface <interface_name>\n no logging event link-status","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676;23493624;23493670;23493622;23493623;23493640;23493620;23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655;23493617;23493627;23493637;23493647"},{"bpRuleId":"8417","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"Interface level syslog events not disabled","bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656;23493625;23493677;23493678;23493679;23493680;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676;23493624;23493670;23493622;23493623;23493640;23493620;23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655;23493617;23493627;23493637;23493647;23493651;23493642;23493643;23493652;23493672;23493639;23493691"},{"bpRuleId":"8360","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"Interface level syslog events not disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.","deviceIdsWithExceptions":"23493685;23493686;23493687;23493688;23493689"},{"bpRuleId":"8362","customerId":"167866829","uuid":"64836746289847","bpSeverity":"High","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"Interface level syslog events not disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"interface <interface_name>\n no logging event link-status","bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.","deviceIdsWithExceptions":"23493685;23493686;23493687;23493688;23493689;23493690;23493616;23493627;23493628;23493619"}]}
+const getCBPHighRiskData = {  
+   "High":"27",
+   "BPRulesDetails":[  
+      {  
+         "bpRuleId":"8347",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493644"
+      },
+      {  
+         "bpRuleId":"8381",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656;23493625;23493677;23493678;23493679;23493680;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676"
+      },
+      {  
+         "bpRuleId":"8400",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"Interface level syslog events not disabled",
+         "bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.",
+         "deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656"
+      },
+      {  
+         "bpRuleId":"8332",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.",
+         "deviceIdsWithExceptions":"23493611"
+      },
+      {  
+         "bpRuleId":"8338",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"interface <interface_name>\n no logging event link-status",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493631;23493632;23493619;23493611;23493612"
+      },
+      {  
+         "bpRuleId":"8344",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"interface <interface_name>\n no logging event link-status",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493617;23493628;23493638;23493639;23493640;23493641"
+      },
+      {  
+         "bpRuleId":"8379",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"Interface level syslog events not disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"interface <interface_name>\n no logging event link-status",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676;23493624;23493670;23493622;23493623;23493640;23493620;23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655;23493617;23493627;23493637;23493647"
+      },
+      {  
+         "bpRuleId":"8417",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"Interface level syslog events not disabled",
+         "bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656;23493625;23493677;23493678;23493679;23493680;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676;23493624;23493670;23493622;23493623;23493640;23493620;23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655;23493617;23493627;23493637;23493647;23493651;23493642;23493643;23493652;23493672;23493639;23493691"
+      },
+      {  
+         "bpRuleId":"8360",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"Interface level syslog events not disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.",
+         "deviceIdsWithExceptions":"23493685;23493686;23493687;23493688;23493689"
+      },
+      {  
+         "bpRuleId":"8362",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"High",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"Interface level syslog events not disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"interface <interface_name>\n no logging event link-status",
+         "bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.",
+         "deviceIdsWithExceptions":"23493685;23493686;23493687;23493688;23493689;23493690;23493616;23493627;23493628;23493619"
+      }
+   ]
+}
 
-const getCBPMediumRiskData = {"Low":"27",
-"BPRulesDetails":[{"bpRuleId":"8349","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"Interface level syslog events not disabled","bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.","deviceIdsWithExceptions":"23493649;23493618;23493648;23493647;23493640;23493646"},{"bpRuleId":"8408","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"Interface level syslog events not disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"interface <interface_name>\n no logging event link-status","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493681;23493682;23493633;23493614;23493621;23493616;23493676;23493624;23493670;23493622;23493623;23493640;23493620;23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655;23493617;23493627;23493637;23493647;23493651;23493642;23493643;23493652;23493672;23493639;23493691"},{"bpRuleId":"8329","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"Interface level syslog events not disabled","bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more","exceptions":"exception1;exception2;exception3","correctiveAction":"interface <interface_name>\n no logging event link-status","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493617;23493618"},{"bpRuleId":"8357","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493671;23493674"},{"bpRuleId":"8380","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656;23493625;23493677;23493678;23493679;23493680;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676;23493624;23493670;23493622;23493623;23493640;23493620;23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655;23493617;23493627;23493637;23493647"},{"bpRuleId":"8412","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656;23493625;23493677;23493678;23493679;23493680;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676"},{"bpRuleId":"8327","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493611;23493608;23493609;23493613;23493612"},{"bpRuleId":"8328","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.","deviceIdsWithExceptions":"23493614;23493616;23493615;23493613;23493612"},{"bpRuleId":"8342","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"Interface level syslog events not disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)","bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.","deviceIdsWithExceptions":"23493637;23493618;23493638;23493611;23493639"},{"bpRuleId":"8375","customerId":"167866829","uuid":"64836746289847","bpSeverity":"Low","bpPrimaryTechnologies":"Network Management,Wireless","bpSecondaryTechnology":"null","bpRuleTitle":"IGMP Snooping disabled","bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.","exceptions":"exception1;exception2;exception3","correctiveAction":"interface <interface_name>\n no logging event link-status","bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.","deviceIdsWithExceptions":"23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655"}]}
-/** The scenarios */
+const getCBPMediumRiskData = {  
+   "Low":"27",
+   "BPRulesDetails":[  
+      {  
+         "bpRuleId":"8349",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"Interface level syslog events not disabled",
+         "bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.",
+         "deviceIdsWithExceptions":"23493649;23493618;23493648;23493647;23493640;23493646"
+      },
+      {  
+         "bpRuleId":"8408",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"Interface level syslog events not disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"interface <interface_name>\n no logging event link-status",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493681;23493682;23493633;23493614;23493621;23493616;23493676;23493624;23493670;23493622;23493623;23493640;23493620;23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655;23493617;23493627;23493637;23493647;23493651;23493642;23493643;23493652;23493672;23493639;23493691"
+      },
+      {  
+         "bpRuleId":"8329",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"Interface level syslog events not disabled",
+         "bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"interface <interface_name>\n no logging event link-status",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493617;23493618"
+      },
+      {  
+         "bpRuleId":"8357",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493671;23493674"
+      },
+      {  
+         "bpRuleId":"8380",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656;23493625;23493677;23493678;23493679;23493680;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676;23493624;23493670;23493622;23493623;23493640;23493620;23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655;23493617;23493627;23493637;23493647"
+      },
+      {  
+         "bpRuleId":"8412",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493671;23493662;23493653;23493644;23493635;23493626;23493656;23493625;23493677;23493678;23493679;23493680;23493630;23493636;23493650;23493615;23493681;23493682;23493633;23493614;23493621;23493616;23493676"
+      },
+      {  
+         "bpRuleId":"8327",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493611;23493608;23493609;23493613;23493612"
+      },
+      {  
+         "bpRuleId":"8328",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IGMP snooping is disabled by default on the Catalyst switches running IOS (Catalyst 6500, 4000/4500, 3750, 3550, etc.) and it is recommended to use it, unless it is disabled by customer to workaround bug or as the workaround for specific host/application behavior. Disabling IGMP snooping will cause flooding of IP multicast on the L2 on all interfaces or on specific interface depending if IGMP snoo...See description for more",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.",
+         "deviceIdsWithExceptions":"23493614;23493616;23493615;23493613;23493612"
+      },
+      {  
+         "bpRuleId":"8342",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"Interface level syslog events not disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled)",
+         "bpRecommendation":"IOS switches should not be sending interface syslog for up/down events for end-user ports.  While the rule cannot tell which ports are end-user ports, it is recommended that at least one active (non-shutdown) interface on a switch should have the interface syslogs disabled.",
+         "deviceIdsWithExceptions":"23493637;23493618;23493638;23493611;23493639"
+      },
+      {  
+         "bpRuleId":"8375",
+         "customerId":"167866829",
+         "uuid":"64836746289847",
+         "bpSeverity":"Low",
+         "bpPrimaryTechnologies":"Network Management,Wireless",
+         "bpSecondaryTechnology":"null",
+         "bpRuleTitle":"IGMP Snooping disabled",
+         "bpRuleSummary":"IOS Switches have syslog notifications enabled by default on all interfaces.  But for many switches used to connect end-user ports, these notifications are unnecessarily \"noisy\" to Network Management Systems when users shut down their computers each day.",
+         "exceptions":"exception1;exception2;exception3",
+         "correctiveAction":"interface <interface_name>\n no logging event link-status",
+         "bpRecommendation":"Re-enable IGMP snooping by configuring \"ip igmp snooping\" globally (or on the specific interface where it was disabled). Find alternative workaround, if disabling IGMP snooping was used as the workaround.",
+         "deviceIdsWithExceptions":"23493628;23493629;23493619;23493683;23493684;23493685;23493686;23493687;23493688;23493689;23493690;23493654;23493645;23493655"
+      }
+   ]
+}
+
+// The Scenarios
 export const ArchitectureScenarios = [
 	// Valid Case Details
 	

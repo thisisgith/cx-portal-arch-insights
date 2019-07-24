@@ -8,7 +8,11 @@ const routes: Routes = [
   {
     path: '',
     component: ArchitectureComponent,
-    children: [
+    children: [{
+        path : '',
+        redirectTo : 'Exceptions',
+        pathMatch : 'full'
+      },
       { path: 'Exceptions',
          component: CbpRuleViolationComponent,
       },
