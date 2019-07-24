@@ -25,7 +25,7 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('General Search and close', () => { // PBC-167
+		it.skip('General Search and close', () => { // PBC-167
 			const searchVal = '688296392'; // orig value:639530286  686569178
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
@@ -90,7 +90,7 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Case Search', () => {
+		it.skip('Case Search', () => {
 			// PBC-169
 			const caseVal = '688296392'; // '686569178' '688296392' also works
 			cy.server();
