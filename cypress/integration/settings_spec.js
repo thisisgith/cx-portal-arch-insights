@@ -62,6 +62,18 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 					});
 				}
 
+				if (mainData.component_details[index].status === 'FakeStatus') {
+					cy.wrap($el).within(() => {
+						cy.get("[ng-reflect-ng-class='text-danger']").should('exist');
+					});
+				}
+
+				if (mainData.component_details[index].status.match(/^(ContainerCreation|Pending|PodInitializing)$/)) {
+					cy.wrap($el).within(() => {
+						cy.get("[ng-reflect-ng-class='text-warning']").should('exist');
+					});
+				}
+
 				if (mainData.component_details[index].status.match(/^(CrashLoopBackOff|Error)$/)) {
 					cy.wrap($el).within(() => {
 						cy.getByAutoId('errorLink').should('exist');
