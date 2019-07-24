@@ -5,7 +5,6 @@ import { HeaderComponent } from './header.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SearchModule } from '../search/search.module';
 import { HttpClientModule } from '@angular/common/http';
-import { MicroMockModule } from '@cui-x-views/mock';
 
 /**
  * Module representing the Header Component
@@ -17,7 +16,6 @@ import { MicroMockModule } from '@cui-x-views/mock';
 		CommonModule,
 		HttpClientModule,
 		I18nPipeModule,
-		MicroMockModule,
 		RouterModule,
 		SearchModule,
 	],
