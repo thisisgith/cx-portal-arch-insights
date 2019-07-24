@@ -898,6 +898,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						this.onSelectionChanged(_.map(this.inventory, item => item.data));
 						if (this.selectedAssets.length === 1) {
 							this.selectedAsset = this.selectedAssets[0];
+							_.set(this.inventory, [0, 'details', true]);
 						}
 					}
 

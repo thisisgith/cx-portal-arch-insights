@@ -9,10 +9,12 @@
 </div>
 
 <ng-template #severityTemplate let-item="celldata">
-	<span>
-		<span class="icon-circle icon-small qtr-margin-right" [ngClass]="'text-' + (getSeverityColor(item.priority))"></span>
-		<span [innerText]="'S' + (item.priority)"></span>
-	</span>
+	<span class="icon-circle icon-small qtr-margin-right" [ngClass]="'text-' + (getSeverityColor(item.priority))"></span>
+	<span [innerText]="'S' + (item.priority)"></span>
+</ng-template>
+
+<ng-template #caseIdTemplate let-item="celldata">
+	<a attr.data-auto-id="caseId-{{ item.caseNumber }}" (click)="onClickCase(item.caseNumber)" [innerText]="item.caseNumber"></a>
 </ng-template>
 
 <ng-template #statusTemplate let-item="celldata">

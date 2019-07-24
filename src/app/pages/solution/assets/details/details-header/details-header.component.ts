@@ -27,6 +27,7 @@ export class DetailsHeaderComponent implements OnChanges, OnInit {
 
 	public openCases: any[];
 	private caseParams: CaseParams = new CaseParams({
+		nocache: new Date(),
 		page: 0,
 		size: 20,
 		sort: 'lastModifiedDate,desc',
