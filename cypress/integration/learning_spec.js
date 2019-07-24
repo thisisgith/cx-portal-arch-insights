@@ -152,7 +152,7 @@ describe('Learn Panel', () => {
 	describe('PBC-15: (UI) View - Lifecycle - Product Guides - View All Card View', () => {
 		it('PBC-142/PBC-143: View All Product Guides link should open modal with all results', () => {
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
-			cy.get('#successModal').should('exist')
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist')
 				.and('contain', 'Product Guides')
 				.and('contain', '\'How-to\' resources for planning, installation and more')
 				.and('contain', `${successPathItems.length} topics available`);
@@ -165,12 +165,12 @@ describe('Learn Panel', () => {
 					.and('contain', (scenario.duration !== null ? scenario.duration : ''));
 			});
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.get('#successModal').should('not.exist');
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 		});
 
 		it('PBC-142/PBC-143: View All Product Guides modal includes content type icons', () => {
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
-			cy.get('#successModal').should('exist');
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 			successPathItems.forEach((scenario, index) => {
 				switch (scenario.type) {
 					case 'Video':
@@ -204,7 +204,7 @@ describe('Learn Panel', () => {
 				});
 			});
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.get('#successModal').should('not.exist');
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 		});
 	});
 
@@ -221,12 +221,12 @@ describe('Learn Panel', () => {
 		it('PBC-188: All Success Path View All links should cross-launch to specified URL', () => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
-			cy.get('#successModal').should('exist');
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 
 			// Cypress does not and will never support multiple tabs, so just check the link element
 			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
 			successPathItems.forEach(scenario => {
-				cy.get('#successModal').within(() => {
+				cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
 					cy.get(`a[href="${scenario.url}"]`)
 						// Note that type: 'Web Page' gets displayed as 'Web'
 						.should('contain', (scenario.type === 'Web Page' ? 'Web' : scenario.type))
@@ -236,7 +236,7 @@ describe('Learn Panel', () => {
 			});
 
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.get('#successModal').should('not.exist');
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 		});
 	});
 
@@ -287,13 +287,13 @@ describe('Learn Panel', () => {
 		before(() => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
-			cy.get('#successModal').should('exist');
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 		});
 
 		after(() => {
 			// Close the View All modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.get('#successModal').should('not.exist');
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 		});
 
 		it('View All Product Guides modal shows all archetypes by default', () => {
@@ -306,7 +306,7 @@ describe('Learn Panel', () => {
 		successPathArchetypes.forEach(archetype => {
 			it(`View All Product Guides modal can filter by archetype: ${archetype}`, () => {
 				// Filter by archetype, verify the count
-				cy.get('#successModal').within(() => {
+				cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
 					cy.getByAutoId('cui-select').click();
 					cy.get(`a[title="${archetype}"]`).click();
 
@@ -320,7 +320,7 @@ describe('Learn Panel', () => {
 
 		it('View All Product Guides modal can filter by archetype: Not selected', () => {
 			// Filter by archetype, verify the count. Note: 'Not selected' should show all items
-			cy.get('#successModal').within(() => {
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Not selected"]').click();
 
@@ -330,32 +330,8 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('View All Product Guides modal filter should be sticky', () => {
-			cy.get('#successModal').within(() => {
-				cy.getByAutoId('cui-select').click();
-				cy.get('a[title="Project Planning"]').click();
-				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
-			});
-
-			// Close and re-open the modal
-			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.get('#successModal').should('not.exist');
-
-			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
-			cy.get('#successModal').should('exist');
-
-			// Verify the filter is still in place
-			cy.get('#successModal').within(() => {
-				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
-				const filteredItems = successPathItems.filter(item => (item.archetype === 'Project Planning'));
-				cy.getByAutoId('SuccessCard').then(cards => {
-					expect(cards.length).to.eq(filteredItems.length);
-				});
-			});
-		});
-
 		it('View All Product Guides modal filter should be searchable', () => {
-			cy.get('#successModal').within(() => {
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
 				// Start typing an archetype in the filter field
 				cy.getByAutoId('cui-select').click()
 					.get('input')
@@ -373,7 +349,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('View All Product Guides modal filter should be clearable', () => {
-			cy.get('#successModal').within(() => {
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Getting Started"]').click();
 
@@ -390,6 +366,125 @@ describe('Learn Panel', () => {
 				cy.getByAutoId('SuccessCard').then(cards => {
 					expect(cards.length).to.eq(successPathItems.length);
 				});
+			});
+		});
+	});
+
+	describe('PBC-354: Verify View All filter stickiness', () => {
+		beforeEach(() => {
+			// Open the View All modal
+			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+		});
+
+		afterEach(() => {
+			// Close the View All modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+
+			// Make sure we're on the lifecycle page and the default use case
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+
+			cy.getByAutoId('TechnologyDropdown-Wireless Assurance').click();
+			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+		});
+
+		it('View All Product Guides filter should be sticky', () => {
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Project Planning"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+			});
+
+			// Close and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+
+			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+
+			// Verify the filter is still in place
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				const filteredItems = successPathItems.filter(item => (item.archetype === 'Project Planning'));
+				cy.getByAutoId('SuccessCard').then(cards => {
+					expect(cards.length).to.eq(filteredItems.length);
+				});
+			});
+		});
+
+		it('View All Product Guides filter should NOT be sitcky across use case changes', () => {
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Project Planning"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+			});
+
+			// Close the modal, change use cases, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-SD Access').click();
+			cy.wait('(SP) IBN-SD Access-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('SuccessCard').then($cards => {
+				expect($cards.length).to.eq(successPathItems.length);
+			});
+		});
+
+		it('View All Product Guides filter should NOT be sitcky across page navigation', () => {
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Project Planning"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+			});
+
+			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('SuccessCard').then($cards => {
+				expect($cards.length).to.eq(successPathItems.length);
+			});
+		});
+
+		it('View All Product Guides filter should NOT be sitcky across page reload', () => {
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Project Planning"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+			});
+
+			// Close the modal, reload the page, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+
+			cy.loadApp();
+			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('SuccessCard').then($cards => {
+				expect($cards.length).to.eq(successPathItems.length);
 			});
 		});
 	});

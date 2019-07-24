@@ -225,29 +225,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('View All ACC modal should be sticky', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
-				cy.getByAutoId('cui-select').click();
-				cy.get('a[title="Completed"]').click();
-				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
-			});
-
-			// Close and re-open the modal
-			cy.getByAutoId('ACCCloseModal').click();
-			cy.getByAutoId('accViewAllModal').should('not.exist');
-			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('accViewAllModal').should('exist');
-
-			// Check that the filter is still in place
-			cy.getByAutoId('accViewAllModal').within(() => {
-				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
-				const filteredItems = validACCItems.filter(item => (item.status === 'completed'));
-				cy.getByAutoId('ACCCard').then(cards => {
-					expect(cards.length).to.eq(filteredItems.length);
-				});
-			});
-		});
-
 		it('View All ACC modal should be searchable', () => {
 			cy.getByAutoId('accViewAllModal').within(() => {
 				// Start typing an archetype in the filter field
@@ -284,6 +261,124 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('ACCCard').then(cards => {
 					expect(cards.length).to.eq(validACCItems.length);
 				});
+			});
+		});
+	});
+
+	describe('PBC-354: Verify View All filter stickiness', () => {
+		beforeEach(() => {
+			// Open the View All modal
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+		});
+
+		afterEach(() => {
+			// Close the View All modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+
+			// Make sure we're on the lifecycle page and the default use case
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+
+			cy.getByAutoId('TechnologyDropdown-Wireless Assurance').click();
+			cy.wait('(ACC) IBN-Wireless Assurance-Onboard');
+		});
+
+		it('View All ACC filter should be sticky across modal close/re-open', () => {
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Completed"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+			});
+
+			// Close and re-open the modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+
+			// Check that the filter is still in place
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+				const filteredItems = validACCItems.filter(item => (item.status === 'completed'));
+				cy.getByAutoId('ACCCard').then(cards => {
+					expect(cards.length).to.eq(filteredItems.length);
+				});
+			});
+		});
+
+		it('View All ACC filter should NOT be sitcky across use case changes', () => {
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Completed"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+			});
+
+			// Close the modal, change use cases, and re-open the modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-SD Access').click();
+			cy.wait('(ACC) IBN-SD Access-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('ACCCard').then($cards => {
+				expect($cards.length).to.eq(validACCItems.length);
+			});
+		});
+
+		it('View All ACC filter should NOT be sitcky across page navigation', () => {
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Completed"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+			});
+
+			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Wireless Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('ACCCard').then($cards => {
+				expect($cards.length).to.eq(validACCItems.length);
+			});
+		});
+
+		it('View All ACC filter should NOT be sitcky across page reload', () => {
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Completed"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+			});
+
+			// Close the modal, reload the page, and re-open the modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+
+			cy.loadApp();
+			cy.wait('(ACC) IBN-Wireless Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('ACCCard').then($cards => {
+				expect($cards.length).to.eq(validACCItems.length);
 			});
 		});
 	});
