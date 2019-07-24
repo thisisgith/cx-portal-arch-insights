@@ -17,7 +17,7 @@ export const defaults = {
 	},
 	baseHref: '/pbc/',
 	csone: {
-		clientId: '453b7e10f08b428c90d48432312889ad',
+		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
