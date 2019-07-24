@@ -822,7 +822,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.status.loading.cgt = false;
 
 				this.componentData.cgt = {
-					sessions: _.filter(result.items, { status: 'completed' }),
+					sessions: _.filter(result.items, { status: 'requested' }),
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);

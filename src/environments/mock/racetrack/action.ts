@@ -44,7 +44,7 @@ export const ActionScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 50,
 					description: 'Update to complete the first Action',
 					response: {
-						body: MockActionUpdate(true, false, false, false, false, false),
+						body: MockActionUpdate(true, false, false, false, false, true),
 						status: 200,
 					},
 					selected: true,

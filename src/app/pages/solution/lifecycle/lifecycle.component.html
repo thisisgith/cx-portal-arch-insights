@@ -723,6 +723,35 @@
 	</div>
 </ng-template>
 
+<ng-template #cgtRequestTraining let-data="data" let-status="status">
+	<div class="panel cgtpanel--open panel--bordered"
+		*ngIf="cgtRequestTrainingClicked">
+		<div class="row base-margin-top half-margin-left half-margin-right">
+			<div class="col-md-11 text-left">
+				<div class="half-margin-left" [innerText]="data | i18n"></div>
+			</div>
+			<div class="col-md-1">
+				<a class="no-link fade-in-pop closebtn"
+					(click)="this.cgtRequestTrainingClicked = false">
+					<span class="icon-close icon-small"></span>
+				</a>
+			</div>
+		</div>
+		<div class="row base-margin-top half-margin-left half-margin-right" *ngIf="status==='requested'">
+			<div class="col-md-6 text-left">
+				<button class="btn btn--small btn--secondary disabled text-uppercase qtr-margin-bottom half-margin-left"
+					[innerText]="'_UpdateForm_' | i18n">
+				</button>
+			</div>
+			<div class="col-md-6 text-left">
+				<button class="btn btn--small btn--secondary disabled text-uppercase qtr-margin-bottom half-margin-left"
+					[innerText]="'_CancelRequest_' | i18n">
+				</button>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
 <ng-template #cgtPanel let-data="data.sessions">
 	<div class="base-margin-bottom text-dkgray-4" [innerText]="'_CGTDescription_' | i18n"></div>
 	<div class="text-left" *ngIf="data[0].status==='completed'">
@@ -730,13 +759,19 @@
 			[ngClass]="getCgtButtonClass()"
 			[innerText]="'_RequestTraining_' | i18n">
 		</button>
+		<ng-container *ngTemplateOutlet="cgtRequestTraining; context: { data:  '_CGTSessionLimitReached_', status: data[0].status }"></ng-container>
 	</div>
-	<div class="text-left" *ngIf="data[0].status==='in-progress'">
+	<div class="text-left" *ngIf="data[0].status==='requested'">
+		<button (click)="this.cgtRequestTrainingClicked = true"
+			[ngClass]="getCgtButtonClass()"
+			[innerText]="'_RequestTraining_' | i18n">
+		</button>
+		<ng-container *ngTemplateOutlet="cgtRequestTraining; context: { data:  '_CGTTrainingRequested_', status: data[0].status }"></ng-container>
+	</div>
+	<ng-container *ngIf="data[0].status==='in-progress'">
 		<button (click)="selectCgtRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
 			[innerText]="'_RequestTraining_' | i18n">
 		</button>
-	</div>
-	<div *ngIf="data[0].status==='in-progress'">
 		<div class="divider"></div>
 		<div class="base-padding-bottom">
 			<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:2">
@@ -748,7 +783,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</ng-container>
 </ng-template>
 
 <ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel" let-icon="icon">

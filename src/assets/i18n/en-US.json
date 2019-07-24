@@ -43,6 +43,7 @@
 	"_Bugs_": "Bugs",
 	"_CampusFabricALT_": "SD Access Campus Fabric Image",
 	"_Cancel_": "Cancel",
+	"_CancelRequest_": "Cancel Request",
 	"_CanConnectTo_": "Can connect to concsoweb-prd.cisco.com",
 	"_CarrierTrackingNumber_": "Carrier Tracking Number",
 	"_CaseNumber_": "Case Number",
@@ -53,8 +54,10 @@
 	"_CCNPWireless_": "CCNP Wireless",
 	"_CCOID_": "CCO ID",
 	"_Certifications_": "Certifications",
-	"_CGTDescription_": "Get 5 days of dedicated on-site training with Cisco Experts customized to your specific needs.",
+	"_CGTDescription_": "Dedicated group training tailored to your specific needs.",
 	"_CGTForReview_": "Customized Group Training (for review)",
+	"_CGTTrainingRequested_": "Your Customized Group Training request has been received. We'll be in touch within 1 business dat to discuss your request.",
+	"_CGTSessionLimitReached_": "Your session limit has been reached. Please contact your Learning Advisor to purchase additional sessions.",
 	"_Change_": "Change",
 	"_Characters_": "characters",
 	"_ChecklistDesc_": "Complete this list to advance on the track",
@@ -500,6 +503,7 @@
 	"_ShowMore_": "Show More",
 	"_Title_": "Title",
 	"_Unknown_": "Unknown",
+	"_UpdateForm_": "Update Form",
 	"_ViewOpenCases_": "View Open Cases",
 	"_YouHaveInventory_": "You have <a href=\"#\">{0}</a> of these in your inventory"
   }
