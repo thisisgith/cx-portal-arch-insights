@@ -944,6 +944,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.adjustQueryParams();
 			this.InventorySubject.next();
 		}
-	   }
+	}
 
 }

@@ -334,7 +334,7 @@
 				<div class="row">
 					<div class="col-md-11 text-blue" [innerText]="item.title"></div>
 					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
-					<div class="col-md-1 text-blue icon-bookmark icon-x-small qtr-padding-left" *ngIf="item.status === 'recommended' && item.isFavorite" attr.data-auto-id="{{ autoid }}-Bookmark"></div>
+					<div class="col-md-1 alignRibbon icon-bookmark icon-x-small qtr-padding-left qtr-margin-left" *ngIf="item.status === 'recommended'" [ngClass]="getACCRibbonClass(item)" attr.data-auto-id="{{ autoid }}-Bookmark"></div>
 					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'in-progress'" attr.data-auto-id="{{ autoid }}-ProgressBar">
 						<div class="col-md-1 progressbar__fill"></div>
 					</div>
@@ -634,48 +634,91 @@
 				</div>
 				<div class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
-					<button class="btn btn--white">
-					<span class="icon-list-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+					<button class="btn btn--small btn--gray-ghost"
+						data-auto-id="list-view-btn"
+						[ngClass]="{'selected': view ==='list' }"
+						(click)="selectView('list')">
+						<span class="icon-list-view"></span>
 					</button>
-					<button class="btn btn--square">
-					<span class="icon-grid-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+					<button class="btn btn--small btn--gray-ghost"
+						data-auto-id="list-view-btn"
+						[ngClass]="{'selected': view === 'grid' }"
+						(click)="selectView('grid')">
+						<span class="icon-grid-view"></span>
 					</button>
 					</div>
 				</div>
 			</div>
-			<div class="grid grid--4up base-padding-top">
-				<div class="card acc__card" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
-					<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
-					<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
-					<div class="card__footer">
-						<div class="card_footer_item" data-auto-id="SuccessCardFooter">
-							<div class="row">
-								<div class="col-md-3">
-									<a class="no-link fade-in-pop" data-auto-id="successlinl" target="_blank" [href]="item.url">
-										<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
-											<span class="icon-apps icon-small half-padding-right"></span>
-											<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
-										</div>
-										<div class="text-left text-muted" *ngIf="item.type === 'Video'">
-											<span class="icon-play-contained icon-small half-padding-right"></span>
-											<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-										</div>
-										<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
-											<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-											<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-										</div>
-									</a>
+			<ng-container *ngTemplateOutlet="cardProductGuides"></ng-container>
+			<ng-container *ngTemplateOutlet="listProductGuides"></ng-container>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #cardProductGuides>
+	<div class="grid grid--4up base-padding-top" *ngIf="(!view || view == 'grid')">
+		<div class="card acc__card" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
+			<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
+			<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
+			<div class="card__footer">
+				<div class="card_footer_item" data-auto-id="SuccessCardFooter">
+					<div class="row">
+						<div class="col-md-3">
+							<a class="no-link fade-in-pop" data-auto-id="successlinl" target="_blank" [href]="item.url">
+								<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
+									<span class="icon-apps icon-small half-padding-right"></span>
+									<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
 								</div>
-								<div class="col-md-6 text-muted" *ngIf="item.duration">
-									<span class="icon-clock icon-small half-padding-right"></span>
-									<span class="text-small" [innerText]="item.duration"></span>
+								<div class="text-left text-muted" *ngIf="item.type === 'Video'">
+									<span class="icon-play-contained icon-small half-padding-right"></span>
+									<span class="text-small" [innerText]="'_Video_' | i18n"></span>
 								</div>
-							</div>
+								<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
+									<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+									<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+								</div>
+							</a>
+						</div>
+						<div class="col-md-6 text-muted" *ngIf="item.duration">
+							<span class="icon-clock icon-small half-padding-right"></span>
+							<span class="text-small" [innerText]="item.duration"></span>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
+</ng-template>
+
+<ng-template #listProductGuides>
+	<div class="table-responsive" *ngIf="selectedSuccessPaths && view == 'list'">
+		<table class="table table--nostripes table--wrap table--hover table--loose">
+			<tr class="th-row">
+				<th *ngFor="let column of productGuidesTable.columns" 
+					data-auto-id="productGuidesTable-column"
+					[ngClass]="{ 'sortable': column.sortable }"
+					(click)="onSort(column.sortKey, column.sortDirection)">
+					<span [innerText]="column.name"></span>
+					<span *ngIf="column.sortable" 
+						class="qtr-margin-left" 
+						[ngClass]="{
+							'icon-chevron-down': column.sortDirection === 'asc',
+							'icon-chevron-up': column.sortDirection === 'desc'
+						}">
+					</span>
+				</th>
+			</tr>
+			<tr class="td-row" *ngFor="let item of selectedSuccessPaths">
+				<td class="text-left" *ngFor="let column of productGuidesTable.columns" [ngStyle]="{ 'width': column.width }">
+					<ng-container *ngIf="column.template">
+						<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }"></ng-container>
+					</ng-container>
+					<ng-container *ngIf="!column.template">
+						<div [innerText]="item[column.key]"></div>
+					</ng-container>
+				</td>
+			</tr>
+		</table>
 	</div>
 </ng-template>
 
@@ -822,6 +865,45 @@
 		(submitted)="accRequestSubmit($event)">
 	</acc-request-form>
 </ng-container>
+
+<ng-template #formatTemplate let-celldata="celldata">
+	<div class="row">
+		<div class="col-md-4">
+			<div *ngIf="celldata.type">
+				<a class="no-link fade-in-pop" data-auto-id="successlinl" target="_blank" [href]="celldata.url">
+					<div class="text-left text-muted" *ngIf="celldata.type === 'Web Page'">
+						<span class="icon-apps icon-small half-padding-right"></span>
+						<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="celldata.type === 'Video'">
+						<span class="icon-play-contained icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="celldata.type === 'PDF'">
+						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div *ngIf="celldata.duration" class="base-margin-left text-muted">
+				<span class="icon-clock icon-small"></span>
+				<span class="qtr-margin-left" [innerText]="celldata.duration"></span>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #bookmarkTemplate let-celldata="celldata">
+	<!-- This is hardcoded for demo, When API is ready will link to real data-->
+	<div *ngIf="celldata.type === 'Video'" class="icon-bookmark icon-medium text-indigo"></div>
+	<div *ngIf="celldata.type === 'Web Page'" class="icon-bookmark icon-medium icon-bookmark-clear"></div>
+	<div *ngIf="celldata.type === 'PDF'" class="text-success">
+		<span class=" icon-certified icon-medium"></span>
+		<span class="half-margin-left" [innerText]="'_Completed_' | i18n"></span>
+	</div>
+</ng-template>
 
 <ng-container *ngIf="selectCgtComponent">
 	<cgt-request-form (visibleComponent)="selectCgtRequestForm($event)"
