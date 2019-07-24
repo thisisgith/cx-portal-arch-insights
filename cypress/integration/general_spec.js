@@ -48,7 +48,7 @@ describe('General Spec', () => {
 			});
 		});
 
-		it('Search No Result Found', () => { // PBC-173
+		it.skip('Search No Result Found', () => { // PBC-173
 			// disable default mock and enable desired for this test
 			searchMock.disable('Generic Example');
 			searchMock.enable('Unable to find results');
@@ -283,7 +283,7 @@ describe('General Spec', () => {
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
-		it('Contract Search 93425688', () => {
+		it.skip('Contract Search 93425688', () => {
 			// PBC-172
 			const contractVal = '93425688';
 			cy.server();
@@ -307,7 +307,7 @@ describe('General Spec', () => {
 			cy.getByAutoId('relGenRes').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
-		it('Contract search not found 93425333', () => {
+		it.skip('Contract search not found 93425333', () => {
 			// PBC-172
 			const serialVal = '93425333';
 			cy.server();
