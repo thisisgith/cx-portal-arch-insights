@@ -952,7 +952,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
 
 				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
 				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
 				cy.waitForAppLoading('accLoading');
 
 				// Open the ACC View All modal
@@ -969,6 +971,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
 
 				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.waitForAppLoading('accLoading');
 			});
@@ -976,6 +979,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			it('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
 				// For all recommended items, check that the "Request 1-on-1" button opens the modal
 				// for with the cooresponding title
+				cy.getByAutoId('ACCCard').should('have.length', twoRecommendedItems.length);
 				twoRecommendedItems.forEach((acc, index) => {
 					if (acc.status === 'recommended') {
 						cy.getByAutoId('ACCCard').eq(index).within(() => {
