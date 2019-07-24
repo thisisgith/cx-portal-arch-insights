@@ -95,7 +95,7 @@ describe('SearchComponent', () => {
 		tick(1000);
 		fixture.detectChanges();
 		expect(component.generalSearch)
-			.toEqual({ query: 'FOX1306GFKH' });
+			.toEqual({ query: 'FOC1544Y16T' });
 		expect(component.searchContext)
 			.toEqual('serialno');
 	}));

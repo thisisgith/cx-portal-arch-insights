@@ -1,0 +1,28 @@
+<div class="open-cases qtr-padding-bottom">
+	<div id="caseListTable">
+		<cui-table [options]="caseTable" [data]="openCases"></cui-table>
+	</div>
+	<div class="text-center">
+		<button data-auto-id="close" class="btn btn--small btn--wide"
+		[innerText]="'_RMACaseClose_' | i18n" (click)="hide()"></button>
+	</div>
+</div>
+
+<ng-template #severityTemplate let-item="celldata">
+	<span class="icon-circle icon-small qtr-margin-right" [ngClass]="'text-' + (getSeverityColor(item.priority))"></span>
+	<span [innerText]="'S' + (item.priority)"></span>
+</ng-template>
+
+<ng-template #caseIdTemplate let-item="celldata">
+	<a attr.data-auto-id="caseId-{{ item.caseNumber }}" (click)="onClickCase(item.caseNumber)" [innerText]="item.caseNumber"></a>
+</ng-template>
+
+<ng-template #statusTemplate let-item="celldata">
+	<div class="grayBox text-center flex-center">
+		<span [innerText]="item.status"></span>
+	</div>
+</ng-template>
+
+<ng-template #updatedTemplate let-item="celldata">
+	<span [innerText]="item['lastModifiedDate'] | date:'longDate'"></span>
+</ng-template>

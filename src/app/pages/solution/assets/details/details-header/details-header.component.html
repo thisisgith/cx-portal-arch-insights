@@ -1,98 +1,46 @@
-<div class="row ">
-	<div class="col-md-8 base-margin-bottom">
-		<div class="flex" *ngIf="asset">
-			<div data-auto-id="Asset360IPAddress" class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_IPAddress_' | i18n"></div>
-				<div innerText="{{ asset.ipAddress || ('_NA_' | i18n) }}"></div>
-			</div>
-
-			<div data-auto-id="Asset360SerialNumber" class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_SerialNumber_' | i18n"></div>
-				<div innerText="{{ asset.serialNumber || ('_NA_' | i18n) }}"></div>
-			</div>
-
-			<div data-auto-id="Asset360LastScan" class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_LastScan_' | i18n"></div>
-				<div innerText="{{ (asset.lastScan | fromNow) || ('_Never_' | i18n) }}"></div>
-			</div>
+<div class="row half-padding-left base-margin-bottom" *ngIf="asset">
+	<div class="col-md-8 flex base-margin-bottom">
+		<div data-auto-id="Asset360IPAddress" class="dbl-margin-right">
+			<div class="text-bold text-uppercase" [innerText]="'_IPAddress_' | i18n"></div>
+			<div innerText="{{ asset.ipAddress || ('_NA_' | i18n) }}"></div>
+		</div>
+		<div data-auto-id="Asset360SerialNumber" class="dbl-margin-right">
+			<div class="text-bold text-uppercase" [innerText]="'_SerialNumber_' | i18n"></div>
+			<div innerText="{{ asset.serialNumber || ('_NA_' | i18n) }}"></div>
+		</div>
+		<div data-auto-id="Asset360LastScan" class="dbl-margin-right">
+			<div class="text-bold text-uppercase" [innerText]="'_LastScan_' | i18n"></div>
+			<div innerText="{{ (asset.lastScan | fromNow) || ('_Never_' | i18n) }}"></div>
 		</div>
 	</div>
-
-	<div class="col-md-6 qtr-margin-top" *ngIf="!status.loading.cases && componentData.openCases > 0">
-
-		<div class="dropdown open-case-toggle-btn"
+</div>
+<div class="row qtr-margin-top">
+	<div class="col-md-6">
+		<div *ngIf="!status?.loading?.cases && openCases?.length > 0" class="dropdown open-case-toggle-btn"
 			[ngClass]="{
 				'active': casesDropdownActive
 			}">
 			<button class="btn btn--small btn--secondary"
 				data-auto-id="ToggleActiveCases"
 				(click)="toggleActiveCases()"
-				innerText="{{ '_ViewOpenCases_' | i18n }} ({{ componentData.openCases }})">
+				innerText="{{ '_ViewOpenCases_' | i18n }} ({{ openCases.length }})">
 			</button>
 		</div>
-
-		<!-- <div *ngIf="componentData.openCases"
-			class="dropdown dropdown--center dropdown--tail open-case-toggle-btn"
-			[ngClass]="{ active: casesDropdownActive }">
-			<div data-auto-id="ToggleActiveCases" (click)="toggleActiveCases()"
-				class="text-uppercase open-case-toggle"
-				innerText="{{ '_ViewOpenCases_' | i18n }} ({{ componentData.openCases }})">
-			</div> -->
-
-			<!-- <div class="dropdown__menu half-padding">
-				<div class="dropdown-case">
-					<div class="flex align-items-center justify-content-between half-margin-bottom">
-						<div class="flex dbl-margin-right">
-							<span class="icon-circle qtr-margin-right"></span>
-							<span class="half-margin-right">S2</span>
-							<span class="flex qtr-margin-right">Case</span> <strong>667389903</strong>
-						</div>
-						<div class="label label--dkgray label--outlined">customer pending</div>
-					</div>
-					<div class="half-margin-bottom">
-						Automated diagnostic result case. A security anomaly was detected in the SMTP
-						configuration.
-					</div>
-					<div class="text-italic	half-margin-bottom">Updated by Cisco 1 day ago</div>
-				</div> -->
-
-				<!-- <div class="dropdown-case">
-					<div class="flex align-items-center justify-content-between half-margin-bottom">
-						<div class="flex dbl-margin-right">
-							<span class="icon-circle qtr-margin-right"></span>
-							<span class="half-margin-right">S3</span>
-							<span class="flex qtr-margin-right">Case</span> <strong>667389903</strong>
-						</div>
-						<div class="label label--dkgray label--outlined">cisco pending</div>
-					</div>
-					<div class="half-margin-bottom">
-						Automated diagnostic result case. A security anomaly was detected in the SMTP
-						configuration.
-					</div>
-					<div class="text-italic	half-margin-bottom">Updated by you 3 days ago</div>
-				</div> -->
-
-
-			<!-- </div> -->
-		<!-- </div> -->
-<!-- 
-		<div *ngIf="!componentData.openCases" class="text-uppercase"
-			innerText="{{ '_OpenCases_' | i18n }} ({{ componentData.openCases }})">
-		</div> -->
-
 	</div>
-	<div class="text-right" [ngClass]="{
-			'col-md-12': status.loading.cases || componentData.openCases === 0,
-			'col-md-6': !status.loading.cases && componentData.openCases > 0
-		}">
-
-		<button class="text-uppercase btn btn--secondary btn--small"
+	<div class="col-md-6 text-right">
+		<button class="btn btn--secondary btn--small"
 			[innerText]="'_Scan_' | i18n"
 			data-auto-id="Asset360ScanBtn"></button>
-		<button class="text-uppercase btn btn--secondary btn--small"
+		<button class="btn btn--secondary btn--small"
 			*ngIf="asset?.supportCovered"
 			[innerText]="'_OpenCase_' | i18n"
 			data-auto-id="Asset360OpenCaseBtn">
 		</button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12" [hidden]="!casesDropdownActive">
+		<app-open-cases [serial]="asset?.serialNumber" [openCases]="openCases"
+			(close)="toggleActiveCases()"></app-open-cases>
 	</div>
 </div>

@@ -25,10 +25,9 @@ import { LogService } from '@cisco-ngx/cui-services';
 export class DetailsHeaderComponent implements OnChanges, OnInit {
 	@Input('asset') public asset: Asset;
 
-	public componentData = {
-		openCases: 0,
-	};
+	public openCases: any[];
 	private caseParams: CaseParams = new CaseParams({
+		nocache: new Date(),
 		page: 0,
 		size: 20,
 		sort: 'lastModifiedDate,desc',
@@ -47,7 +46,7 @@ export class DetailsHeaderComponent implements OnChanges, OnInit {
 	) { }
 
 	/**
-	 * Toggles the open cases dropdown
+	 * Toggle the open cases dropdown
 	 */
 	public toggleActiveCases () {
 		this.casesDropdownActive = !this.casesDropdownActive;
@@ -62,12 +61,12 @@ export class DetailsHeaderComponent implements OnChanges, OnInit {
 			const params = _.cloneDeep(this.caseParams);
 			_.set(params, 'serialNumbers', this.asset.serialNumber);
 			this.caseService.read(params)
-			.subscribe((data: any) => {
-				this.componentData.openCases = _.get(data, 'totalElements', 0);
+			.subscribe(data => {
+				this.openCases = _.get(data, 'content', []);
 				this.status.loading.cases = false;
 			},
 			err => {
-				this.componentData.openCases = 0;
+				this.openCases = [];
 				this.status.loading.cases = false;
 				this.logger.error('details-header.component : fetchCases()' +
 					`:: Error : (${err.status}) ${err.message}`);
