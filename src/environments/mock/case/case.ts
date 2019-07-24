@@ -1,9 +1,15 @@
+import { defaults } from '../../defaults';
+// tslint:disable-next-line:completed-docs
+const clientId = defaults.csone.clientId;
+// tslint:disable-next-line:completed-docs
+const caseDetailNum = '688296392';
+
 /** Base of URL for CSOne Case API */
 const api = '/ws/cases/v3/proxy';
 
 /** Mock data for valid CSOne Case Details API results */
 const caseDetailsResponse = {
-	caseNumber: '688296392',
+	caseNumber: `${caseDetailNum}`,
 	contractId: '912512343',
 	createdDate: '22 Apr 2019 07:50 AM PST',
 	description: 'CP DIAG Diagnostic Request for Device swtg-9404',
@@ -20,7 +26,7 @@ const caseDetailsResponse = {
 
 /** Mock data for valid CSOne Case Details API results with no description. */
 const caseDetailsResponseAlt = {
-	caseNumber: '688296392',
+	caseNumber: `${caseDetailNum}`,
 	contractId: '912512343',
 	createdDate: '22 Apr 2019 07:50 AM PST',
 	description: '',
@@ -40,7 +46,8 @@ const caseNotesResponse = [
 	// tslint:disable:max-line-length ter-max-len
 	{
 		createdDate: '21 Jun 2019 01:16 PM EST',
-		noteDetail: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.',
+		// noteDetail: 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.',
+		noteDetail: 'worked with customer to collect debug, reviewing log now',
 	},
 ];
 
@@ -59,7 +66,7 @@ const caseListResponse1 = {
 		{
 			bugId: '',
 			caseAccepted: false,
-			caseNumber: '686285189',
+			caseNumber: `${caseDetailNum}`,
 			caseOrigin: 'Phone',
 			caseOwner: '',
 			caseType: 'TAC',
@@ -333,7 +340,7 @@ const caseListResponse2 = {
 const caseListResponseSingle = {
 	content: [
 		{
-			caseNumber: '688296392',
+			caseNumber: `${caseDetailNum}`,
 			contractId: '912512343',
 			createdDate: '22 Apr 2019 07:50 AM PST',
 			description: 'CP DIAG Diagnostic Request for Device swtg-9404',
@@ -369,7 +376,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details/688296392`,
+		url: `${api}/${clientId}/details/${caseDetailNum}`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case Notes
@@ -383,11 +390,11 @@ export const CaseScenarios = [
 						body: caseNotesResponse,
 						status: 200,
 					},
-					selected: false,
+					selected: true,
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/notes/688296392`,
+		url: `${api}/${clientId}/notes/${caseDetailNum}`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case Summary
@@ -401,11 +408,11 @@ export const CaseScenarios = [
 						body: caseSummaryResponse,
 						status: 200,
 					},
-					selected: false,
+					selected: true,
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O,C&pageSize=1&page=1&sortBy=caseNumber&sortOrder=ASC&caseNumbers=688296392`,
+		url: `${api}/${clientId}/details?statusTypes=O,C&pageSize=1&page=1&sortBy=caseNumber&sortOrder=ASC&caseNumbers=${caseDetailNum}`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case Details with no Description
@@ -416,10 +423,11 @@ export const CaseScenarios = [
 					delay: 100,
 					description: 'Case Details',
 					response: {
-						body: caseDetailsResponseAlt,
+						// body: caseDetailsResponseAlt,
+						body: caseDetailsResponse,
 						status: 200,
 					},
-					selected: false,
+					selected: true,
 				},
 			],
 		},
@@ -431,7 +439,7 @@ export const CaseScenarios = [
 			GET: [
 				{
 					delay: 200,
-					description: 'Case List',
+					description: 'Case List p1',
 					response: {
 						body: caseListResponse1,
 						status: 200,
@@ -440,7 +448,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=4&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
 	},
 	// Valid Case List - Page 2
 	{
@@ -448,7 +456,7 @@ export const CaseScenarios = [
 			GET: [
 				{
 					delay: 200,
-					description: 'Case List',
+					description: 'Case List p2',
 					response: {
 						body: caseListResponse2,
 						status: 200,
@@ -457,7 +465,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=4&page=2&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=2&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
 	},
 	// Valid Case List - For single case
 	{
@@ -465,7 +473,7 @@ export const CaseScenarios = [
 			GET: [
 				{
 					delay: 200,
-					description: 'Case List',
+					description: 'Case List single',
 					response: {
 						body: caseListResponseSingle,
 						status: 200,
@@ -474,7 +482,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=4&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=688296392`,
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=${caseDetailNum}`,
 	},
 	// Open cases for an asset (used by asset 360)
 	{
@@ -491,6 +499,6 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
 	},
 ];
