@@ -185,7 +185,7 @@ export class RMASearchComponent extends SpecialSearchComponent
 	public onViewCaseDetails (casenum: string) {
 		this.router.navigate(
 			['solution/resolution'],
-			{ queryParams: { casenum } },
+			{ queryParams: { case: casenum } },
 		);
 		this.searchService.close();
 	}
