@@ -65,7 +65,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
+			cy.getByAutoId('Case ID-Cell').should('exist').click();
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
 			cy.getByAutoId('caseTechnology').should('exist').should('contain', i18n._RMACaseTechnology_.toUpperCase());
@@ -92,7 +92,7 @@ describe('Case Detail Spec', () => {
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
 			cy.getByAutoId('CloseDetails').should('exist').click();
-			cy.get('app-panel360').should('not.exist');
+			cy.get('app-panel360').should('not.be.visible');
 		});
 
 		it('Case Details Verify Buttons Exist', () => {
@@ -105,8 +105,8 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
-			cy.getByAutoId('CaseAttachFile').should('exist'); // .click();
-			cy.getByAutoId('CaseAddNote').should('exist'); // .click();
+			cy.getByAutoId('CaseAttachFile').should('exist');
+			cy.getByAutoId('CaseAddNote').should('exist');
 			cy.getByAutoId('CloseDetails').should('exist').click();
 		});
 	});
@@ -117,37 +117,64 @@ describe('Case Detail Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it.only('Case Details Notes', () => {
+		it('Case Details Notes Tab, Add a Note', () => {
 			// PBC-234
 			const validCaseID = '686350448';
+			const currDatestamp = new Date().getTime();
+			// cy.log(`current date is ${currDatestamp}`);
+
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
 			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
 			cy.wait(3000);
-			// cy.getByAutoId('NOTES (3)Tab').should('exist').click(); // TODO this number increments as notes added
-			cy.getByAutoId('NOTES Tab').should('exist').click(); // TODO this number increments as notes added
-			cy.getByAutoId('CaseAddNote').should('exist').click(); // click Add Note button
-			cy.getByAutoId('title').should('exist');
-			cy.getByAutoId('description').should('exist');
-			cy.getByAutoId('AddNote').should('exist');
-			cy.getByAutoId('CancelAddNote').should('exist').click();
-
-			cy.getByAutoId('CaseAddNote').should('exist').click(); // click Add Note button
-			cy.getByAutoId('title').type('Title 1 text');
-			cy.getByAutoId('description').type('Description 1 text');
-			cy.getByAutoId('AddNote').click();
-
-			cy.getByAutoId('createdDate').should('exist');
-			cy.getByAutoId('createdBy').should('exist');
-			cy.getByAutoId('noteTitle').should('exist');
-			cy.getByAutoId('noteDescr').should('exist');
-
+			cy.get('app-panel360').should('be.visible');
+			cy.getByAutoId('notesTab').should('exist').click();
+			// Add a case note
+			cy.getByAutoId('CaseAddNote').should('exist').click();
+			cy.getByAutoId('title').should('exist').clear()
+				.type(`Title for current date of ${currDatestamp}`);
+			cy.getByAutoId('description').should('exist').clear()
+				.type(`Description for current date of ${currDatestamp}`);
+			cy.getByAutoId('AddNote').should('exist').click();
+			cy.wait(6000);
+			// Verify case note was added, look in app-case-notes for string
+			cy.get('app-case-notes div')
+				.should('contain', `Description for current date of ${currDatestamp}`);
+			cy.get('app-case-notes div')
+				.should('contain', `Title for current date of ${currDatestamp}`);
+			cy.getByAutoId('CloseDetails').click();
 		});
 
-		it('Case Details Notes test TBD', () => {
+		it('Case Details Notes: Cancel Adding a note', () => {
 			// PBC-234
+			const validCaseID = '686350448';
+			const currDatestamp = new Date().getTime();
+			// cy.log(`current date is ${currDatestamp}`);
+			cy.loadApp('/solution/resolution');
+			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('caseSearchBox').should('exist').clear()
+				.type(validCaseID.concat('{enter}'));
+			cy.wait(3000);
+			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
+			cy.wait(3000);
+			cy.get('app-panel360').should('be.visible');
+			cy.getByAutoId('notesTab').should('exist').click();
+			// Add a case note
+			cy.getByAutoId('CaseAddNote').should('exist').click();
+			cy.getByAutoId('title').should('exist').clear()
+				.type(`Title for current date of ${currDatestamp}`);
+			cy.getByAutoId('description').should('exist').clear()
+				.type(`Description for current date of ${currDatestamp}`);
+			cy.getByAutoId('CancelAddNote').should('exist').click();
+			cy.wait(8000);
+			// Verify case note was NOT added, look in app-case-notes for string
+			cy.get('app-case-notes div')
+				.should('not.contain', `Description for current date of ${currDatestamp}`);
+			cy.get('app-case-notes div')
+				.should('not.contain', `Title for current date of ${currDatestamp}`);
+			cy.getByAutoId('CloseDetails').click();
 		});
 	});
 });
