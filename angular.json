@@ -133,7 +133,7 @@
 								},
 								{
 									"replace": "src/app/components/header/headerImports.module.ts",
-									"with": "src/app/components/header/headerImports.module.prod.ts"
+									"with": "src/app/components/header/headerImports.module.prod"
 								},
 								{
 									"replace": "src/index.html",
