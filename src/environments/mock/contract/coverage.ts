@@ -8,6 +8,8 @@ const api = '/api/customerportal/contracts/v1/';
 const customerId = '2431199';
 /** Default network ID */
 const managedNeId = 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA';
+/** Default contract number */
+const contractNumber = '93425688';
 
 /** The mock response for coverage counts */
 const mockCoverageCounts: CoverageCountsResponse = {
@@ -85,6 +87,26 @@ export const CoverageScenarios = [
 	},
 	{
 		scenarios: {
+			HEAD: [
+				{
+					delay: 100,
+					description: 'HEAD Coverage 93425688',
+					response: {
+						headers: new HttpHeaders({
+							'X-API-RESULT-COUNT': '7',
+						}),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}products/coverages?customerId=${customerId}` +
+			`&coverage=covered&contractNumber=${contractNumber}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
 			GET: [
 				{
 					delay: 100,
@@ -153,10 +175,103 @@ export const CoverageScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: 100,
+					description: 'No keys',
+					response: {
+						body: {
+							data: [
+								{
+									contractEndDate: '2019-03-16T00:00:00',
+									managedNeId: 'NA,CAT1107NHD6,WS-C3750G-24T-S,NA',
+									neId: 'NA,CAT1107NHD6,WS-C3750G-24T-S,NA',
+									warrantyEndDate: '2018-01-31T00:00:00',
+								},
+							],
+						},
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: 100,
+					description: 'No dates',
+					response: {
+						body: {
+							data: [
+								{
+									contractNumber: 93425688,
+									managedNeId: 'NA,CAT1107NHD6,WS-C3750G-24T-S,NA',
+									neId: 'NA,CAT1107NHD6,WS-C3750G-24T-S,NA',
+									warrantyType: 'WARR-LTD-LIFE-HW',
+								},
+							],
+						},
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: 100,
+					description: 'Null keys',
+					response: {
+						body: {
+							data: [
+								{
+									contractEndDate: '2019-03-16T00:00:00',
+									contractNumber: null,
+									managedNeId: 'NA,CAT1107NHD6,WS-C3750G-24T-S,NA',
+									neId: 'NA,CAT1107NHD6,WS-C3750G-24T-S,NA',
+									warrantyEndDate: '2018-01-31T00:00:00',
+									warrantyType: null,
+								},
+							],
+						},
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: 100,
+					description: 'Null dates',
+					response: {
+						body: {
+							data: [
+								{
+									contractEndDate: null,
+									contractNumber: 93425688,
+									managedNeId: 'NA,CAT1107NHD6,WS-C3750G-24T-S,NA',
+									neId: 'NA,CAT1107NHD6,WS-C3750G-24T-S,NA',
+									warrantyEndDate: null,
+									warrantyType: 'WARR-LTD-LIFE-HW',
+								},
+							],
+						},
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}products/coverages?customerId=${customerId}` +
 			`&rows=1&page=1&managedNeId=${managedNeId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'GET Coverage 93425688',
+					response: {
+						body: coverageResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}products/coverages?customerId=${customerId}&contractNumber=${contractNumber}`,
 		usecases: ['Use Case 1'],
 	},
 ];

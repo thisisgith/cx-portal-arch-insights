@@ -44,6 +44,25 @@ const mockDataOther: DeviceContractResponse = {
 	],
 };
 
+/**
+ * Mock body of results
+ */
+const mockDataOtherOther: DeviceContractResponse = {
+	data: [
+		{
+		  billtoAddressLine1: 'Kit Creek Rd',
+		  contractEndDate: '2021-06-22T00:00:00Z',
+		  contractNumber: 934525333,
+		  contractStartDate: '2011-02-01T00:00:00Z',
+		  contractStatus: 'Active',
+		  customerId: '21131',
+		  cxLevel: 'CX Level 1',
+		  serviceLevel: 'Level 1',
+		  serviceProgram: 'A Different Program',
+		},
+	],
+};
+
 /** Mock Data for contract counts */
 const contractCountData: ContractDeviceCountsResponse = [
 	{
@@ -96,6 +115,23 @@ export const ContractScenarios = [
 			],
 		},
 		url: `${api}details?customerId=2431199&contractNumber=90000000`,
+		usecases: ['Example', 'More Example'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description: 'Contract Details Success Other Other',
+					response: {
+						body: mockDataOtherOther,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}details?customerId=2431199&contractNumber=93425333`,
 		usecases: ['Example', 'More Example'],
 	},
 	{
