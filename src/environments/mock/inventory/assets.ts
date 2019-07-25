@@ -959,4 +959,23 @@ export const AssetScenarios = [
 		url: `${api}?customerId=${customerId}&rows=10&page=1&contractNumber=93856991`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Serial Number ',
+					response: {
+						body: {
+							data: [mockResponse[0]],
+						},
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&serialNumber=FOC1544Y16T`,
+		usecases: ['Use Case 1'],
+	},
 ];

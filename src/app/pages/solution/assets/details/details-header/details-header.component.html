@@ -34,9 +34,14 @@
 		<button class="btn btn--secondary btn--small"
 			*ngIf="asset?.supportCovered"
 			[innerText]="'_OpenCase_' | i18n"
-			data-auto-id="Asset360OpenCaseBtn">
+			data-auto-id="Asset360OpenCaseBtn"
+			(click)="openCase()">
 		</button>
 	</div>
 </div>
-<app-open-cases [hidden]="!casesDropdownActive" [openCases]="openCases"
-	(close)="toggleActiveCases()"></app-open-cases>
+<div class="row">
+	<div class="col-md-12" [hidden]="!casesDropdownActive">
+		<app-open-cases [serial]="asset?.serialNumber" [openCases]="openCases"
+			(close)="toggleActiveCases()"></app-open-cases>
+	</div>
+</div>

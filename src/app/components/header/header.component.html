@@ -61,12 +61,12 @@
 					[routerLink]="['admin']">
 					<span class="icon-cog text-muted"></span>
 				</a>
-				<a class="half-margin-left icon--mid half-margin-right"
-					data-auto-id="HeaderSettings"
-					(click)="mocking ? openMockModal() : null">
-					<span class="icon-cog text-muted"></span>
-				</a>
-				<record-button *ngIf="mocking"></record-button>
+			</div>
+			<div class="divider--left">
+				<button class="btn btn--icon btn--small btn--gray-ghost half-margin-right half-margin-left" (click)="openMockModal()" data-auto-id="HeaderSettings">
+					<span  class="icon-plugin"></span>
+				</button>
+				<record-button></record-button>
 			</div>
 		</div>
 	</div>

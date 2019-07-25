@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { ControlPointsConfiguration as __Configuration } from '../control-points-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -13,7 +13,7 @@ import { RemoveDevicesRequestModel } from '../models/remove-devices-request-mode
   providedIn: 'root',
 })
 class ControlPointDeviceDiscoveryAPIToRemoveInventoryService extends __BaseService {
-  static readonly removeDevicesUsingPOSTPath = '/v1/remove/devices';
+  static readonly removeDevicesUsingPOSTPath = '/remove/devices';
 
   constructor(
     config: __Configuration,
@@ -30,16 +30,17 @@ class ControlPointDeviceDiscoveryAPIToRemoveInventoryService extends __BaseServi
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
     __body = removeDevicesRequestModel;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/v1/remove/devices`,
+      this.rootUrl + `/api/customerportal/controlpoint/v1/remove/devices`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(

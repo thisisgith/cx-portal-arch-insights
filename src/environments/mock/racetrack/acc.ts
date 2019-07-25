@@ -133,7 +133,12 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard-Empty',
 					response: {
-						body: { },
+						body: {
+							items: [],
+							pitstop: 'Onboard',
+							solution: 'IBN',
+							usecase: 'Wireless Assurance',
+						},
 						status: 200,
 					},
 					selected: false,
@@ -161,6 +166,16 @@ export const ACCScenarios = [
 					description: '(ACC) IBN-Wireless Assurance-Onboard-oneNonRecommended',
 					response: {
 						body: MockACC('IBN', 'Campus network assurance', 'Onboard', 'oneNonRecommended'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Wireless Assurance-Onboard-completedInProgress',
+					response: {
+						body: MockACC('IBN', 'Wireless Assurance', 'Onboard',
+							'completedInProgress'),
 						status: 200,
 					},
 					selected: false,

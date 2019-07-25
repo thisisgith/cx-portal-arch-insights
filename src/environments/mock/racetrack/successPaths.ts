@@ -93,7 +93,7 @@ export const SuccessPathScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(SP) IBN-Campus network segmenation-Onboard',
+					description: '(SP) IBN-Campus network segmentation-Onboard',
 					response: {
 						body: MockSP('IBN', 'Campus network segmentation', 'Onboard'),
 						status: 200,

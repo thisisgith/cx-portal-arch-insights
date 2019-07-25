@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { Subject, Observable, forkJoin, of } from 'rxjs';
 import { catchError, takeUntil, tap, switchMap } from 'rxjs/operators';
 
+import { CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	Asset,
@@ -29,6 +30,7 @@ import { CaseService } from '@cui-x/services';
 import { SearchService } from '@services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
+import { CaseOpenComponent } from '../../case/case-open/case-open.component';
 import { SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
@@ -98,6 +100,7 @@ implements OnInit, OnChanges, OnDestroy {
 	public loadingCase = true;
 	public customerId = '2431199';
 	public data = <SerialData> { };
+	public assetData: Asset;
 	public contractData: ContractData;
 	public expirationFromNow: string;
 	public alertsData: AlertsData;
@@ -109,6 +112,7 @@ implements OnInit, OnChanges, OnDestroy {
 	constructor (
 		private caseService: CaseService,
 		private contractService: ContractsService,
+		private cuiModalService: CuiModalService,
 		private logger: LogService,
 		private searchService: SearchService,
 		private inventoryService: InventoryService,
@@ -134,18 +138,18 @@ implements OnInit, OnChanges, OnDestroy {
 		)
 		.subscribe(response => {
 			this.loading = false;
-			const assetData: Asset = _.get(response, ['data', 0]);
-			if (!assetData) {
+			this.assetData = _.get(response, ['data', 0]);
+			if (!this.assetData) {
 				this.hide.emit(true);
 
 				return;
 			}
-			this.data.currentVersion = assetData.osVersion;
-			this.data.ipAddress = assetData.ipAddress;
-			this.data.lastScan = assetData.lastScan;
-			this.data.productId = assetData.productId;
-			this.data.productName = assetData.deviceName;
-			this.data.softwareType = assetData.osType;
+			this.data.currentVersion = this.assetData.osVersion;
+			this.data.ipAddress = this.assetData.ipAddress;
+			this.data.lastScan = this.assetData.lastScan;
+			this.data.productId = this.assetData.productId;
+			this.data.productName = this.assetData.deviceName;
+			this.data.softwareType = this.assetData.osType;
 		});
 		/** Hardware Info Refresh */
 		this.refresh$.pipe(
@@ -360,5 +364,13 @@ implements OnInit, OnChanges, OnDestroy {
 			{ queryParams: { serialNumber, select: true } },
 		);
 		this.searchService.close();
+	}
+
+	/**
+	 * Pop up the "Open a Case" component modal when the user clicks the Open a Case button
+	 * @param asset the Asset to open a case for.
+	 */
+	public openCase (asset: Asset) {
+		this.cuiModalService.showComponent(CaseOpenComponent, { asset }, 'full');
 	}
 }

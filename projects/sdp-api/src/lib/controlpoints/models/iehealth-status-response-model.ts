@@ -5,6 +5,7 @@ export interface IEHealthStatusResponseModel {
   component_details?: Array<ComponentDetails>;
   connectivityStatus?: string;
   customerId?: string;
+  dnac_details?: Array<ComponentDetails>;
   ieStatus?: string;
   ie_version?: string;
   lastUploadDate?: string;

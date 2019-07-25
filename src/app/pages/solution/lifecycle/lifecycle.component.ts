@@ -13,7 +13,6 @@ import {
 	ATX,
 	ATXResponse,
 	ATXSession,
-	Community,
 	ELearning,
 	ELearningResponse,
 	PitstopActionUpdateRequest,
@@ -67,7 +66,6 @@ interface ComponentData {
 	acc?: {
 		sessions: ACC[];
 	};
-	communities?: Community[];
 }
 
 /**
@@ -164,7 +162,6 @@ export class LifecycleComponent implements OnDestroy {
 		loading: {
 			acc: false,
 			atx: false,
-			communities: false,
 			elearning: false,
 			racetrack: false,
 			success: false,
@@ -436,11 +433,11 @@ export class LifecycleComponent implements OnDestroy {
 		};
 		this.contentService.updateACCBookmark(params)
 		.subscribe(() => {
+			item.isFavorite = !item.isFavorite;
 			this.status.loading.acc = false;
 			if (window.Cypress) {
 				window.accLoading = false;
 			}
-			item.isFavorite = !item.isFavorite;
 		},
 		err => {
 			this.status.loading.acc = false;
@@ -604,12 +601,7 @@ export class LifecycleComponent implements OnDestroy {
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: ACCResponse) => {
-				this.status.loading.acc = false;
 				this.selectedStatus = '';
-				if (window.Cypress) {
-					window.accLoading = false;
-				}
-
 				this.componentData.acc = {
 					sessions: _.union(_.filter(result.items, { status: 'requested' }),
 						_.filter(result.items, { status: 'in-progress' }),
@@ -621,6 +613,11 @@ export class LifecycleComponent implements OnDestroy {
 
 				this.selectedACC = this.componentData.acc.sessions;
 				this.buildTable();
+
+				this.status.loading.acc = false;
+				if (window.Cypress) {
+					window.accLoading = false;
+				}
 
 				return result;
 			}),

@@ -47,6 +47,7 @@ export class SettingsComponent  implements OnInit {
 	private customerId: string;
 	public data = {
 		component_details: [],
+		dnac_details: [],
 		ieStatus: '',
 		ieVersion: '',
 		memoryUsage: [
@@ -174,6 +175,11 @@ export class SettingsComponent  implements OnInit {
 		this.data.ieStatus = _.get(this, 'cpData[0].ieStatus');
 		this.data.ieVersion = _.get(this, 'cpData[0].ie_version');
 		this.prefixWithV(this.data, 'ieVersion');
+
+		this.data.dnac_details = _.get(this, 'cpData[0].dnac_details');
+		if (this.data.dnac_details && this.data.dnac_details[0]) {
+			this.prefixWithV(this.data.dnac_details[0], 'version');
+		}
 	}
 
 	/**
