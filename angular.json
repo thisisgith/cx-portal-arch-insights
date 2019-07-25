@@ -132,8 +132,8 @@
 									"with": "src/environments/environment.lt.ts"
 								},
 								{
-									"replace": "src/app/components/header/headerImports.module.ts",
-									"with": "src/app/components/header/headerImports.module.prod"
+									"replace": "src/app/components/header/header.module.ts",
+									"with": "src/app/components/header/header.module.prod"
 								},
 								{
 									"replace": "src/index.html",
