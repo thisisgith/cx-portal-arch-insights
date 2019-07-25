@@ -1221,7 +1221,7 @@ export const FieldNoticeBulletinScenarios = [
 					delay: 350,
 					description: 'Field Notice Bulletins',
 					response: {
-						body: MockNotices(),
+						body: MockNotices(10, 1),
 						status: 200,
 					},
 					selected: true,

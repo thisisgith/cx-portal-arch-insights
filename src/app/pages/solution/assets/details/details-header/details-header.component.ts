@@ -9,6 +9,8 @@ import { CaseParams, CaseService } from '@cui-x/services';
 import { Asset } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { CaseOpenComponent } from '@components';
 
 /**
  * Details Header Component
@@ -42,6 +44,7 @@ export class DetailsHeaderComponent implements OnChanges, OnInit {
 
 	constructor (
 		private caseService: CaseService,
+		private cuiModalService: CuiModalService,
 		private logger: LogService,
 	) { }
 
@@ -92,5 +95,12 @@ export class DetailsHeaderComponent implements OnChanges, OnInit {
 		if (currentAsset && !changes.asset.firstChange) {
 			this.fetchCases();
 		}
+	}
+
+/**
+	* On "Open a Case" button pop up "Open Case" component
+	*/
+	public openCase () {
+		 this.cuiModalService.showComponent(CaseOpenComponent, { asset: this.asset }, 'full');
 	}
 }

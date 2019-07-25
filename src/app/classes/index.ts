@@ -4,7 +4,7 @@ export {
 	tableColumns as advisoryColumns,
 } from './advisory';
 
-export { caseSeverities } from './case';
+export { CaseRequestType, caseSeverities } from './case';
 
 export { SETUP_STATES } from './ie';
 
