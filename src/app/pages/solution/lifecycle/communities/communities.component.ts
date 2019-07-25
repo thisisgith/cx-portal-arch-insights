@@ -1,14 +1,14 @@
 import {
 	Component,
-	OnDestroy,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { RacetrackTechnology } from '@sdp-api';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { SolutionService } from '../../solution.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { takeUntil } from 'rxjs/operators';
 
 /** Interface of each Community info */
 interface CommunityDetail {
@@ -52,7 +52,7 @@ const publicCommunities: CommunityDetail[] = [
 	selector: 'app-communities',
 	templateUrl: './communities.component.html',
 })
-export class CommunitiesComponent implements OnDestroy {
+export class CommunitiesComponent {
 	private selectedTechnology: string;
 	private solutionSubscribe: Subscription;
 	private technologySubscribe: Subscription;
@@ -60,6 +60,7 @@ export class CommunitiesComponent implements OnDestroy {
 	public privateCommunity: CommunityDetail;
 	public publicCommunityUrl: SafeUrl;
 	public privateCommunityUrl: SafeUrl;
+	private destroy$ = new Subject();
 
 	constructor (
 		private logger: LogService,
@@ -69,6 +70,9 @@ export class CommunitiesComponent implements OnDestroy {
 		this.logger.debug('CommunitiesComponent Created!');
 
 		this.technologySubscribe = this.solutionService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
 		.subscribe((technology: RacetrackTechnology) => {
 			this.selectedTechnology = technology.name;
 			this.getCommunities();
@@ -103,19 +107,6 @@ export class CommunitiesComponent implements OnDestroy {
 		if (publicCommunities) {
 			this.privateCommunity = _.find(publicCommunities,
 				{ usecase: this.selectedTechnology.toLowerCase() });
-		}
-	}
-
-	/**
-	 * Handler for clean up on component destruction
-	 */
-	public ngOnDestroy () {
-		if (this.solutionSubscribe) {
-			_.invoke(this.solutionSubscribe, 'unsubscribe');
-		}
-
-		if (this.technologySubscribe) {
-			_.invoke(this.technologySubscribe, 'unsubscribe');
 		}
 	}
 }
