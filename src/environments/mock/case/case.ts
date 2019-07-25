@@ -35,9 +35,9 @@ const caseDetailsResponseAlt = {
 	ownerName: '',
 	priority: '3',
 	rmaNumber: '88346234, 88346235',
-	serialNumber: 'FOX1306GFKH',
-	status: 'Customer Pending',
-	summary: 'Router not working',
+	serialNumber: 'FOC1544Y16T',
+	status: 'Customer Updated',
+	summary: 'Test CIN Proxy Employee Subscription - testing case update.',
 	trackingNumber: '',
 };
 
