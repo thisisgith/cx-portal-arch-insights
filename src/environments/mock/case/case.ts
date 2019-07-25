@@ -352,6 +352,13 @@ const caseListResponseSingle = {
 	totalElements: 1,
 };
 
+/** Mock data for CSOne Case Create Success */
+const caseCreatedResponse = {
+	caseNumber: '686351315',
+	created: '2019-07-22T17:57:44.929Z',
+	timestamp: 1563818265222,
+};
+
 /** The scenarios */
 export const CaseScenarios = [
 	// Valid Case Details
@@ -369,7 +376,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details/688296392`,
+		url: `${api}/07e418ac71284560944ea92f653a01c2/details/688296392`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case Notes
@@ -387,7 +394,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/notes/688296392`,
+		url: `${api}/07e418ac71284560944ea92f653a01c2/notes/688296392`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case Summary
@@ -405,7 +412,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O,C&pageSize=1&page=1&sortBy=caseNumber&sortOrder=ASC&caseNumbers=688296392`,
+		url: `${api}/07e418ac71284560944ea92f653a01c2/details?statusTypes=O,C&pageSize=1&page=1&sortBy=caseNumber&sortOrder=ASC&caseNumbers=688296392`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case Details with no Description
@@ -440,7 +447,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=4&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
+		url: `${api}/07e418ac71284560944ea92f653a01c2/details?statusTypes=O&pageSize=4&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case List - Page 2
@@ -458,7 +465,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=4&page=2&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
+		url: `${api}/07e418ac71284560944ea92f653a01c2/details?statusTypes=O&pageSize=4&page=2&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
 		usecases: ['Use Case 1'],
 	},
 	// Valid Case List - For single case
@@ -476,7 +483,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=4&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=688296392`,
+		url: `${api}/07e418ac71284560944ea92f653a01c2/details?statusTypes=O&pageSize=4&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=688296392`,
 		usecases: ['Use Case 1'],
 	},
 	// Open cases for an asset (used by asset 360)
@@ -494,7 +501,7 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
+		url: `${api}/07e418ac71284560944ea92f653a01c2/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
 		usecases: ['Use Case 1'],
 	},
 	// Case list used by problem resolution
@@ -512,7 +519,25 @@ export const CaseScenarios = [
 				},
 			],
 		},
-		url: `${api}/453b7e10f08b428c90d48432312889ad/details?statusTypes=O&pageSize=10&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
+		url: `${api}/07e418ac71284560944ea92f653a01c2/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
+		usecases: ['Use Case 1'],
+	},
+	// Create a Case
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: 200,
+					description: 'Cases Create Response',
+					response: {
+						body: caseCreatedResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/07e418ac71284560944ea92f653a01c2`,
 		usecases: ['Use Case 1'],
 	},
 ];

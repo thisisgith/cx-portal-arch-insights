@@ -1,0 +1,20 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+div.flex {
+	justify-content: space-between;
+}
+
+a > div {
+	text-align: center;
+	width: 110px;
+	height: 115px;
+	border-radius: 5px;
+}
+
+a > div:hover {
+	border: 1px solid $cisco-blue;
+}
+
+a > div.selected {
+	border: 1px solid $cisco-blue;
+}

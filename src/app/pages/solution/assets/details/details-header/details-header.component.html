@@ -34,7 +34,8 @@
 		<button class="btn btn--secondary btn--small"
 			*ngIf="asset?.supportCovered"
 			[innerText]="'_OpenCase_' | i18n"
-			data-auto-id="Asset360OpenCaseBtn">
+			data-auto-id="Asset360OpenCaseBtn"
+			(click)="openCase()">
 		</button>
 	</div>
 </div>
