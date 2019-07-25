@@ -5,8 +5,9 @@ import { ControlPointsConfiguration, ControlPointsConfigurationInterface } from 
 import { ControlPointDeviceConnectivtyAPIService } from './services/control-point-device-connectivty-api.service';
 import { ControlPointDeviceDiscoveryAPIService } from './services/control-point-device-discovery-api.service';
 import { ControlPointIEHealthStatusAPIService } from './services/control-point-iehealth-status-api.service';
-import { ControlPointIERegistrationAPIService } from './services/control-point-ieregistration-api.service';
+import { ControlPointApiControllerService } from './services/control-point-api-controller.service';
 import { ControlPointDevicePolicyAPIService } from './services/control-point-device-policy-api.service';
+import { ControlPointIERegistrationAPIService } from './services/control-point-ieregistration-api.service';
 import { ControlPointDeviceDiscoveryAPIToRemoveInventoryService } from './services/control-point-device-discovery-apito-remove-inventory.service';
 
 /**
@@ -19,8 +20,9 @@ import { ControlPointDeviceDiscoveryAPIToRemoveInventoryService } from './servic
     ControlPointDeviceConnectivtyAPIService,
     ControlPointDeviceDiscoveryAPIService,
     ControlPointIEHealthStatusAPIService,
-    ControlPointIERegistrationAPIService,
+    ControlPointApiControllerService,
     ControlPointDevicePolicyAPIService,
+    ControlPointIERegistrationAPIService,
     ControlPointDeviceDiscoveryAPIToRemoveInventoryService
   ],
 })

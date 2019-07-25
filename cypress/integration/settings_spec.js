@@ -39,7 +39,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 
 		it('Renders Status Panel Content', () => {
 			cy.getByAutoId('settings.system.status.panel').within(() => {
-				cy.get('div').should('contain', i18n._CiscoCXCollector_);
+				cy.get('div').should('contain', i18n._CXCollector_);
 				cy.get('div').should('contain', mainData.ie_version);
 				cy.get('div').should('contain', mainData.ieStatus);
 			});

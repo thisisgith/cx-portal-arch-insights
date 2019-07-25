@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { ControlPointsConfiguration as __Configuration } from '../control-points-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -12,7 +12,7 @@ import { DeviceResponseModel } from '../models/device-response-model';
   providedIn: 'root',
 })
 class ControlPointDeviceDiscoveryAPIService extends __BaseService {
-  static readonly getDevicesUsingGETPath = '/v1/devices/{customerId}';
+  static readonly getDevicesUsingGETPath = '/devices/{customerId}';
 
   constructor(
     config: __Configuration,
@@ -30,15 +30,15 @@ class ControlPointDeviceDiscoveryAPIService extends __BaseService {
     let __headers = new HttpHeaders();
     let __body: any = null;
 
+
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/v1/devices/${customerId}`,
+      this.rootUrl + `/api/customerportal/controlpoint/v1/devices/${customerId}`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
