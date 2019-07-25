@@ -1,11 +1,11 @@
 import {
-	Component,
+	Component, OnDestroy,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { RacetrackTechnology } from '@sdp-api';
-import { Subscription, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { SolutionService } from '../../solution.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
@@ -52,10 +52,8 @@ const publicCommunities: CommunityDetail[] = [
 	selector: 'app-communities',
 	templateUrl: './communities.component.html',
 })
-export class CommunitiesComponent {
+export class CommunitiesComponent implements OnDestroy {
 	private selectedTechnology: string;
-	private solutionSubscribe: Subscription;
-	private technologySubscribe: Subscription;
 	public publicCommunity: CommunityDetail;
 	public privateCommunity: CommunityDetail;
 	public publicCommunityUrl: SafeUrl;
@@ -69,7 +67,7 @@ export class CommunitiesComponent {
 	) {
 		this.logger.debug('CommunitiesComponent Created!');
 
-		this.technologySubscribe = this.solutionService.getCurrentTechnology()
+		this.solutionService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
 		)
@@ -108,5 +106,13 @@ export class CommunitiesComponent {
 			this.privateCommunity = _.find(publicCommunities,
 				{ usecase: this.selectedTechnology.toLowerCase() });
 		}
+	}
+
+	/**
+	 * Handler for clean up on component destruction
+	 */
+	 public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }
