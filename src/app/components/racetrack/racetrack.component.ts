@@ -5,6 +5,7 @@ import { d3Transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
 import { scalePow } from 'd3-scale';
 import * as _ from 'lodash-es';
+import { Subject } from 'rxjs';
 
 d3.transition = d3Transition;
 
@@ -80,6 +81,10 @@ export class RacetrackComponent implements OnInit {
 		this.length = length;
 
 		this.track.attr('transform', `translate(${trackOffsetX} ${trackOffsetY})`);
+
+		if (window.Cypress) {
+			window.racetrackEvents = new Subject();
+		}
 
 		/**
 		 * @TODO: figure out how to replace this 'any'
@@ -289,10 +294,16 @@ export class RacetrackComponent implements OnInit {
 					rotate(${carBaseRotations + rotations[i]})
 					translate(${carCenterOffsetX}, ${carCenterOffsetY})`)
 				.on('start', () => {
-					window.carMoving = true;
+					// Only fire the carMovingStart event for the FIRST transition
+					if (window.Cypress && i === 0) {
+						window.racetrackEvents.next({ id: 'carMovingStart' });
+					}
 				})
 				.on('end', () => {
-					window.carMoving = false;
+					// Only fire the carMovingEnd event for the LAST transition
+					if (window.Cypress && i === points.length - 1) {
+						window.racetrackEvents.next({ id: 'carMovingEnd' });
+					}
 				});
 		}, this.racecar);
 
@@ -320,10 +331,14 @@ export class RacetrackComponent implements OnInit {
 				.duration(progressDur)
 				.attr('stroke-dasharray', `${progressDistance} ${this.length - progressDistance}`)
 				.on('start', () => {
-					window.progressMoving = true;
+					if (window.Cypress) {
+						window.racetrackEvents.next({ id: 'progressMovingStart' });
+					}
 				})
 				.on('end', () => {
-					window.progressMoving = false;
+					if (window.Cypress) {
+						window.racetrackEvents.next({ id: 'progressMovingEnd' });
+					}
 				});
 
 			this.progressSoFar = progressDistance;

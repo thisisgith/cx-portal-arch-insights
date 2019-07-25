@@ -1,0 +1,14 @@
+.body {
+	text-align: left;
+}
+
+.mid-content {
+	max-height: 0;
+	overflow: hidden;
+	transition: all 1s;
+}
+
+.mid-content.expanded {
+	max-height: 1000px;
+	overflow: visible;
+}

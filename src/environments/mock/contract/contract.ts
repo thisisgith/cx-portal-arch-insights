@@ -124,4 +124,21 @@ export const ContractScenarios = [
 		url: `${api}device/count?customerId=2431199`,
 		usecases: ['Example'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: 'Serial Number FOC1544Y16T',
+					response: {
+						body: mockData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}details?customerId=2431199&serialNumber=FOC1544Y16T`,
+		usecases: ['Use Case 1'],
+	},
 ];

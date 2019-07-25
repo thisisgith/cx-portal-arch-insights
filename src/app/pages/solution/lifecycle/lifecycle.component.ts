@@ -473,11 +473,11 @@ export class LifecycleComponent implements OnDestroy {
 		};
 		this.contentService.updateACCBookmark(params)
 		.subscribe(() => {
+			item.isFavorite = !item.isFavorite;
 			this.status.loading.acc = false;
 			if (window.Cypress) {
 				window.accLoading = false;
 			}
-			item.isFavorite = !item.isFavorite;
 		},
 		err => {
 			this.status.loading.acc = false;
@@ -643,12 +643,7 @@ export class LifecycleComponent implements OnDestroy {
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: ACCResponse) => {
-				this.status.loading.acc = false;
 				this.selectedStatus = '';
-				if (window.Cypress) {
-					window.accLoading = false;
-				}
-
 				this.componentData.acc = {
 					sessions: _.union(_.filter(result.items, { status: 'requested' }),
 						_.filter(result.items, { status: 'in-progress' }),
@@ -660,6 +655,11 @@ export class LifecycleComponent implements OnDestroy {
 
 				this.selectedACC = this.componentData.acc.sessions;
 				this.buildTable();
+
+				this.status.loading.acc = false;
+				if (window.Cypress) {
+					window.accLoading = false;
+				}
 
 				return result;
 			}),
@@ -856,13 +856,13 @@ export class LifecycleComponent implements OnDestroy {
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: CommunitiesResponse) => {
+				if (result.items.length) {
+					this.componentData.communities = result.items;
+				}
+
 				this.status.loading.communities = false;
 				if (window.Cypress) {
 					window.communitiesLoading = false;
-				}
-
-				if (result.items.length) {
-					this.componentData.communities = result.items;
 				}
 
 				return result;

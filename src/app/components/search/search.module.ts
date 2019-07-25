@@ -6,6 +6,7 @@ import {
 } from '@cisco-ngx/cui-pipes';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { CaseModule } from '../case/case.module';
 import { CaseSearchModule } from './case-search/case-search.module';
 import { ContractSearchModule } from './contract-search/contract-search.module';
 import { GeneralSearchModule } from './general-search/general-search.module';
@@ -37,6 +38,8 @@ const rootUrl = environment.sdpServiceOrigin;
 	exports: [SearchComponent],
 	imports: [
 		CommonModule,
+
+		CaseModule,
 		CaseSearchModule,
 		ContractSearchModule,
 		GeneralSearchModule,

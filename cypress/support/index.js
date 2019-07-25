@@ -34,6 +34,7 @@ afterEach(function afterEachHook () {
 				spec: path.basename(global.window.location.pathname),
 				state: test.currentTest.state,
 				test: test.currentTest.title,
+				timestamp: new Date().toISOString(),
 				url: Cypress.env('CI_JOB_URL'),
 			};
 			cy.request({ // Need Error handling: https://github.com/cypress-io/cypress/issues/3161
