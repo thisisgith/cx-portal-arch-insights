@@ -358,6 +358,13 @@ const caseListResponseSingle = {
 	totalElements: 1,
 };
 
+/** Mock data for CSOne Case Create Success */
+const caseCreatedResponse = {
+	caseNumber: '686351315',
+	created: '2019-07-22T17:57:44.929Z',
+	timestamp: 1563818265222,
+};
+
 /** The scenarios */
 export const CaseScenarios = [
 	// Valid Case Details
@@ -447,6 +454,7 @@ export const CaseScenarios = [
 			],
 		},
 		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
+		usecases: ['Use Case 1'],
 	},
 	// Valid Case List - Page 2
 	{
@@ -464,6 +472,7 @@ export const CaseScenarios = [
 			],
 		},
 		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=2&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=`,
+		usecases: ['Use Case 1'],
 	},
 	// Valid Case List - For single case
 	{
@@ -481,6 +490,7 @@ export const CaseScenarios = [
 			],
 		},
 		url: `${api}/${clientId}/details?statusTypes=O&pageSize=10&page=1&sortBy=lastModifiedDate&sortOrder=DESC&caseNumbers=${caseDetailNum}`,
+		usecases: ['Use Case 1'],
 	},
 	// Open cases for an asset (used by asset 360)
 	{
@@ -498,5 +508,42 @@ export const CaseScenarios = [
 			],
 		},
 		url: `${api}/${clientId}/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
+		usecases: ['Use Case 1'],
+	},
+	// Case list used by problem resolution
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Cases for SN FOC1544Y16T',
+					response: {
+						body: caseListResponse1,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${clientId}/details?statusTypes=O&pageSize=20&page=1&sortBy=lastModifiedDate&sortOrder=DESC&serialNumbers=FOC1544Y16T`,
+		usecases: ['Use Case 1'],
+	},
+	// Create a Case
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: 200,
+					description: 'Cases Create Response',
+					response: {
+						body: caseCreatedResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/${clientId}`,
+		usecases: ['Use Case 1'],
 	},
 ];

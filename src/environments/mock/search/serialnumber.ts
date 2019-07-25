@@ -1,4 +1,5 @@
 import {
+	Assets,
 	HardwareResponse,
 	DeviceContractResponse,
 	VulnerabilityResponse,
@@ -20,6 +21,31 @@ const customerId = '2431199';
 /** Default SerialNumber ID */
 const serialNumber = 'FOX1333GGGG';
 // const serialNumber = 'FOX1306GFJJ';
+
+/**
+ * Mock data for SerialNumber Search API results
+ */
+export const mockAssetResponse: Assets = {
+	data: [
+		{
+			containingHwId: null,
+			contractNumber: 'UNKNOWN',
+			criticalAdvisories: null,
+			deviceName: 'Catalyst+2960S-24PS-L+Switch',
+			equipmentType: 'CHASSIS',
+			hwInstanceId: 'FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA',
+			ipAddress: '10.119.1.125',
+			lastScan: null,
+			managedNeId: 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
+			osType: 'IOS',
+			osVersion: '12.2(55)SE3',
+			productId: 'WS-C2960S-24PS-L',
+			role: null,
+			serialNumber: 'FOC1544Y16T',
+			supportCovered: true,
+		},
+	],
+};
 
 /**
  * Mock data for SerialNumber Search API results
@@ -78,9 +104,9 @@ export const mockContractResponse: DeviceContractResponse = {
 // tslint:disable-next-line:completed-docs
 export const mockVulnerabilityResponse: VulnerabilityResponse = {
 	'security-advisories': 1,
-  	// tslint:disable-next-line:object-literal-sort-keys
-  	'field-notices': 1,
-  	bugs: 10,
+		// tslint:disable-next-line:object-literal-sort-keys
+	'field-notices': 1,
+	bugs: 10,
 };
 
 /** The scenarios */
@@ -143,7 +169,7 @@ export const SerialNumberScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Asset Response for SN Search',
 					response: {
-						body: mockHWResponse,
+						body: mockAssetResponse,
 						status: 200,
 					},
 					selected: true,

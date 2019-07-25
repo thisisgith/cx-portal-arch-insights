@@ -60,3 +60,49 @@ export interface Note {
 	/** Id of note creater */
 	createdByID: string;
 }
+
+/**
+ * Subtech interface for valid CSOne case subtechs
+ */
+export interface Subtech {
+	_id: string;
+	techId: string;
+	subTechName: string;
+	problemCodes: string[];
+}
+
+/**
+ * Tech interface for valid CSOne case technologies
+ */
+export interface Tech {
+	_id: string;
+	techName: string;
+}
+
+/**
+ * Tech interface for valid CSOne case problem areas
+ */
+export interface ProblemArea {
+	customerActivity: string;
+	problemCode: string;
+	problemCodeName: string;
+}
+
+/**
+ * Interface for "Open Case" CSOne API request
+ */
+export interface CaseOpenRequest {
+	contactId: string;
+	priority: number;
+	serialNumber: string;
+	subTechId?: string;
+	techId?: string;
+	problemCode?: string;
+	customerActivity?: string;
+	contractNumber?: string;
+	productName?: string;
+	requestType: string;
+	siteId?: string;
+	summary?: string;
+	description?: string;
+}

@@ -1,0 +1,11 @@
+import { Component } from '@angular/core';
+
+/**
+ * Main Header Component
+ */
+@Component({
+	selector: 'app-header',
+	styleUrls: ['./header.component.scss'],
+	templateUrl: './header.component.prod.html',
+})
+export class HeaderComponent { }
