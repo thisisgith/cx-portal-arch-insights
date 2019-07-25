@@ -221,11 +221,11 @@
 		</button>
 	</ng-container>
 	<ng-container *ngIf="item.status === 'in-progress' || item.status === 'requested'">
-		<span class="text-success" [innerText]="'_ACCRequestSubmitted_' | i18n"></span>
+		<span class="text-success" [innerText]="'_ACCRequestSubmitted_' | i18n" attr.data-auto-id="{{ autoid }}-CSEMessage"></span>
 	</ng-container>
 	<ng-container *ngIf="item.status === 'completed'">
-		<div class="text-success icon-certified qtr-padding-right"></div>
-		<span [innerText]="'_Completed_' | i18n"></span>
+		<div class="text-success icon-certified qtr-padding-right" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
+		<span [innerText]="'_Completed_' | i18n" attr.data-auto-id="{{ autoid }}-Completed"></span>
 	</ng-container>
 </ng-template>
 
@@ -594,7 +594,7 @@
 </ng-template>
 
 <ng-template #successModal let-data="data">
-	<div id="successModal" class="modal__content no-padding">
+	<div id="successModal" class="modal__content no-padding" data-auto-id="SuccessPathsViewAllModal">
 
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top">

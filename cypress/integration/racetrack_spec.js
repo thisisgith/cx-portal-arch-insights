@@ -3,14 +3,7 @@ import RacetrackHelper from '../support/racetrackHelper';
 let racetrackHelper;
 let trackPoints;
 
-/*
-TODO: These tests are flaky and at this point, they've blocked enough people that I'm
-disabling them. The racetrack itself has not been oficcially "committed" to any feature
-drop at this point, and does not have any scheduled changes in the near future. I'll try
-to come back to this if/when I get some down time.
-- thayduk2
-*/
-describe.skip('Racetrack Content', () => {
+describe('Racetrack Content', () => {
 	before(() => {
 		cy.login();
 		cy.loadApp();
@@ -53,6 +46,9 @@ describe.skip('Racetrack Content', () => {
 				// force the click
 				cy.getByAutoId(`Racetrack-Point-${stageName}`).click({ force: true });
 
+				// Wait for the car to finish moving
+				cy.wait('carMovingEnd', { eventObj: 'racetrackEvents' });
+
 				cy.getByAutoId(`Racetrack-Point-${stageName}`).then(point => {
 					expectedRotations = racetrackHelper
 						.calculateRacecarRotations(point, trackPoints);
@@ -62,10 +58,6 @@ describe.skip('Racetrack Content', () => {
 
 					expectedCoords = racetrackHelper
 						.calculateRacecarCoords(pointCX, pointCY, expectedRotations);
-
-					// Wait for the car to finish moving
-					cy.waitForAppLoading('carMoving');
-					cy.waitForAppLoading('progressMoving');
 				});
 			});
 
@@ -88,8 +80,16 @@ describe.skip('Racetrack Content', () => {
 						.replace('rotate(', '').replace(')', ''));
 					expect(translateX).to.be.within(expectedCoords.x - 1, expectedCoords.x + 1);
 					expect(translateY).to.be.within(expectedCoords.y - 1, expectedCoords.y + 1);
-					expect(transformRotate)
-						.to.be.within(expectedRotations - 1, expectedRotations + 1);
+
+					// Sometimes, D3 doesn't actually convert the rotations to between [-179, 180]...
+					// I can't for the life of me find why, so this is a hack to handle this flake...
+					if (transformRotate > 180.0) {
+						expect(transformRotate)
+							.to.be.within(expectedRotations + 359, expectedRotations + 361);
+					} else {
+						expect(transformRotate)
+							.to.be.within(expectedRotations - 1, expectedRotations + 1);
+					}
 				});
 			});
 
