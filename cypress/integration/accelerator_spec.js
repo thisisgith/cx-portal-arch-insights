@@ -3,6 +3,7 @@ import MockService from '../support/mockService';
 const accMock = new MockService('ACCScenarios');
 const solution = 'IBN';
 const useCase = 'Wireless Assurance';
+const newUseCase = 'Campus Network Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
 let accItems = accScenario.response.body.items;
 const twoRecommendedScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard-twoRecommended`);
@@ -66,7 +67,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		cy.get('.modal__header.acc__header').should('contain', i18n._Accelerator_)
 			.and('contain', i18n._1on1Coaching_);
 		cy.getByAutoId('ACCTopicsAvailable').should(
-			'have.text', `${validACCItems.length} topics available for ${solution} > ${useCase}:`
+			'have.text', `${validACCItems.length} topics available for ${solution} > ${newUseCase}:`
 		);
 
 		cy.getByAutoId('ACCCard').then($cards => {
@@ -879,7 +880,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						expect(request.body.timezone)
 							.to.include('Eastern Time/US');
 						expect(request.body.usecase)
-							.to.include(useCase);
+							.to.include(newUseCase);
 						expect(request.body.userEmail)
 							.to.include(userInfoResponseBody.userEmail);
 						expect(request.body.userPhoneNumber)

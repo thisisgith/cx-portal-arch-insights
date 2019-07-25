@@ -8,7 +8,6 @@ import {
 	RacetrackScenarios,
 	ATXScenarios,
 	ACCScenarios,
-	CommunitiesScenarios,
 	ELearningScenarios,
 	SuccessPathScenarios,
 	ActionScenarios,
@@ -85,10 +84,6 @@ describe('LifecycleComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(SuccessPathScenarios[0])));
 
-		racetrackCommunitiesSpy = spyOn(racetrackContentService, 'getRacetrackCommunities')
-			.and
-			.returnValue(of(getActiveBody(CommunitiesScenarios[0])));
-
 		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
 			.and
 			.returnValue(of(getActiveBody(RacetrackScenarios[0])));
@@ -99,7 +94,7 @@ describe('LifecycleComponent', () => {
 
 		racetrackAccBookmarkSpy = spyOn(racetrackContentService, 'updateACCBookmark')
 			.and
-			.returnValue(of(getActiveBody(ACCScenarios[4], 'POST')));
+			.returnValue(of(getActiveBody(ACCScenarios[6], 'POST')));
 	};
 
 	/**

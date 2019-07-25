@@ -1,4 +1,5 @@
 // tslint:disable: completed-docs
+// tslint:disable: ter-max-len
 import { ACCResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
@@ -114,7 +115,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', ''),
+						body: MockACC('IBN', 'Campus network assurance', 'Onboard', ''),
 						status: 200,
 					},
 					selected: true,
@@ -123,7 +124,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard-allButRecommended',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'allButRecommended'),
+						body: MockACC('IBN', 'Campus network assurance', 'Onboard', 'allButRecommended'),
 						status: 200,
 					},
 					selected: false,
@@ -141,7 +142,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard-oneRecommended',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneRecommended'),
+						body: MockACC('IBN', 'Campus network assurance', 'Onboard', 'oneRecommended'),
 						status: 200,
 					},
 					selected: false,
@@ -150,7 +151,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard-twoRecommended',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoRecommended'),
+						body: MockACC('IBN', 'Campus network assurance', 'Onboard', 'twoRecommended'),
 						status: 200,
 					},
 					selected: true,
@@ -159,7 +160,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard-oneNonRecommended',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'oneNonRecommended'),
+						body: MockACC('IBN', 'Campus network assurance', 'Onboard', 'oneNonRecommended'),
 						status: 200,
 					},
 					selected: false,
@@ -168,7 +169,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard-twoCompleted',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoCompleted'),
+						body: MockACC('IBN', 'Campus network assurance', 'Onboard', 'twoCompleted'),
 						status: 200,
 					},
 					selected: false,
@@ -177,7 +178,7 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard-twoInProgress',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoInProgress'),
+						body: MockACC('IBN', 'Campus network assurance', 'Onboard', 'twoInProgress'),
 						status: 200,
 					},
 					selected: false,
@@ -186,15 +187,51 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-Wireless Assurance-Onboard-twoRequested',
 					response: {
-						body: MockACC('IBN', 'Wireless Assurance', 'Onboard', 'twoRequested'),
+						body: MockACC('IBN', 'Campus network assurance', 'Onboard', 'twoRequested'),
 						status: 200,
 					},
 					selected: false,
 				},
 			],
 		},
-		url: `${api}?usecase=Wireless Assurance&` +
+		url: `${api}?usecase=Campus Network Assurance&` +
 			`solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Campus network segmentation-Onboard',
+					response: {
+						body: MockACC('IBN', 'Campus network segmentation', 'Onboard', ''),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Segmentation&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Scalable Access Policy-Onboard',
+					response: {
+						body: MockACC('IBN', 'Scalable Access Policy', 'Onboard', ''),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Scalable Access Policy&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -204,14 +241,33 @@ export const ACCScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(ACC) IBN-SD Access-Onboard',
 					response: {
-						body: MockACC('IBN', 'SD Access', 'Onboard', ''),
+						body: MockACC('IBN', 'Network device onboarding', 'Onboard', ''),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Network Device Onboarding&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Campus software image-Onboard',
+					response: {
+						body: MockACC('IBN', 'Campus software image management', 'Onboard', ''),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
