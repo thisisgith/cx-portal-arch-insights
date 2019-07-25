@@ -60,7 +60,7 @@ describe('Case Detail Spec', () => {
 
 		it('Case Details Click on case from List', () => {
 			// PBC-233
-			const validCaseID = '686350448';
+			const validCaseID = '686351406';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
@@ -83,7 +83,7 @@ describe('Case Detail Spec', () => {
 
 		it('Closes 360 view when leaving the case page', () => {
 			// PBC-233
-			const validCaseID = '686350448';
+			const validCaseID = '686351406';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
@@ -92,25 +92,25 @@ describe('Case Detail Spec', () => {
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
 			cy.getByAutoId('CloseDetails').should('exist').click();
-			cy.get('app-panel360').should('not.exist');
+			cy.get('app-panel360').should('not.be.visible');
 		});
 
 		it('Case Details Verify Buttons Exist', () => {
 			// PBC-233
-			const validCaseID = '686350448';
+			const validCaseID = '686351406';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
 			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
-			cy.wait(3000);
+			cy.wait(6000);
 			cy.get('app-panel360').should('be.visible');
 			cy.getByAutoId('CaseAttachFile').should('exist');
 			cy.getByAutoId('CaseAddNote').should('exist');
 			cy.getByAutoId('CloseDetails').should('exist').click();
 		});
 	});
-	context.only('Case Detail Notes', () => {
+	context('Case Detail Notes', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -119,7 +119,7 @@ describe('Case Detail Spec', () => {
 
 		it('Case Details Notes Tab, Add a Note', () => {
 			// PBC-234
-			const validCaseID = '686350448';
+			const validCaseID = '686351406';
 			const currDatestamp = new Date().getTime();
 			// cy.log(`current date is ${currDatestamp}`);
 
@@ -138,7 +138,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('description').should('exist').clear()
 				.type(`Description for current date of ${currDatestamp}`);
 			cy.getByAutoId('AddNote').should('exist').click();
-			cy.wait(6000);
+			cy.wait(8000);
 			// Verify case note was added, look in app-case-notes for string
 			cy.get('app-case-notes div')
 				.should('contain', `Description for current date of ${currDatestamp}`);
@@ -149,7 +149,7 @@ describe('Case Detail Spec', () => {
 
 		it('Case Details Notes: Cancel Adding a note', () => {
 			// PBC-234
-			const validCaseID = '686350448';
+			const validCaseID = '686351406';
 			const currDatestamp = new Date().getTime();
 			// cy.log(`current date is ${currDatestamp}`);
 			cy.loadApp('/solution/resolution');
