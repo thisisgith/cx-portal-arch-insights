@@ -44,6 +44,25 @@ const mockDataOther: DeviceContractResponse = {
 	],
 };
 
+/**
+ * Mock body of results
+ */
+const mockDataOtherOther: DeviceContractResponse = {
+	data: [
+		{
+		  billtoAddressLine1: 'Kit Creek Rd',
+		  contractEndDate: '2021-06-22T00:00:00Z',
+		  contractNumber: 934525333,
+		  contractStartDate: '2011-02-01T00:00:00Z',
+		  contractStatus: 'Active',
+		  customerId: '21131',
+		  cxLevel: 'CX Level 1',
+		  serviceLevel: 'Level 1',
+		  serviceProgram: 'A Different Program',
+		},
+	],
+};
+
 /** Mock Data for contract counts */
 const contractCountData: ContractDeviceCountsResponse = [
 	{
@@ -103,6 +122,23 @@ export const ContractScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 800,
+					description: 'Contract Details Success Other Other',
+					response: {
+						body: mockDataOtherOther,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}details?customerId=2431199&contractNumber=93425333`,
+		usecases: ['Example', 'More Example'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
 					description: 'Contract Counts Data',
 					response: {
 						body: contractCountData,
@@ -123,5 +159,22 @@ export const ContractScenarios = [
 		},
 		url: `${api}device/count?customerId=2431199`,
 		usecases: ['Example'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: 'Serial Number FOC1544Y16T',
+					response: {
+						body: mockData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}details?customerId=2431199&serialNumber=FOC1544Y16T`,
+		usecases: ['Use Case 1'],
 	},
 ];

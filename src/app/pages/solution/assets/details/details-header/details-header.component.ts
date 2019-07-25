@@ -9,6 +9,8 @@ import { CaseParams, CaseService } from '@cui-x/services';
 import { Asset } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { CaseOpenComponent } from '@components';
 
 /**
  * Details Header Component
@@ -25,10 +27,9 @@ import { LogService } from '@cisco-ngx/cui-services';
 export class DetailsHeaderComponent implements OnChanges, OnInit {
 	@Input('asset') public asset: Asset;
 
-	public componentData = {
-		openCases: 0,
-	};
+	public openCases: any[];
 	private caseParams: CaseParams = new CaseParams({
+		nocache: new Date(),
 		page: 0,
 		size: 20,
 		sort: 'lastModifiedDate,desc',
@@ -43,11 +44,12 @@ export class DetailsHeaderComponent implements OnChanges, OnInit {
 
 	constructor (
 		private caseService: CaseService,
+		private cuiModalService: CuiModalService,
 		private logger: LogService,
 	) { }
 
 	/**
-	 * Toggles the open cases dropdown
+	 * Toggle the open cases dropdown
 	 */
 	public toggleActiveCases () {
 		this.casesDropdownActive = !this.casesDropdownActive;
@@ -62,12 +64,12 @@ export class DetailsHeaderComponent implements OnChanges, OnInit {
 			const params = _.cloneDeep(this.caseParams);
 			_.set(params, 'serialNumbers', this.asset.serialNumber);
 			this.caseService.read(params)
-			.subscribe((data: any) => {
-				this.componentData.openCases = _.get(data, 'totalElements', 0);
+			.subscribe(data => {
+				this.openCases = _.get(data, 'content', []);
 				this.status.loading.cases = false;
 			},
 			err => {
-				this.componentData.openCases = 0;
+				this.openCases = [];
 				this.status.loading.cases = false;
 				this.logger.error('details-header.component : fetchCases()' +
 					`:: Error : (${err.status}) ${err.message}`);
@@ -93,5 +95,12 @@ export class DetailsHeaderComponent implements OnChanges, OnInit {
 		if (currentAsset && !changes.asset.firstChange) {
 			this.fetchCases();
 		}
+	}
+
+/**
+	* On "Open a Case" button pop up "Open Case" component
+	*/
+	public openCase () {
+		 this.cuiModalService.showComponent(CaseOpenComponent, { asset: this.asset }, 'full');
 	}
 }

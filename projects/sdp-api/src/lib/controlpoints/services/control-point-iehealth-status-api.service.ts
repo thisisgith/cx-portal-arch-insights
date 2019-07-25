@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { ControlPointsConfiguration as __Configuration } from '../control-points-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -12,7 +12,7 @@ import { IEHealthStatusResponseModel } from '../models/iehealth-status-response-
   providedIn: 'root',
 })
 class ControlPointIEHealthStatusAPIService extends __BaseService {
-  static readonly getIEHealthStatusUsingGETPath = '/v1/ie/health-status/{customerId}';
+  static readonly getIEHealthStatusUsingGETPath = '/ie/health-status/{customerId}';
 
   constructor(
     config: __Configuration,
@@ -30,15 +30,15 @@ class ControlPointIEHealthStatusAPIService extends __BaseService {
     let __headers = new HttpHeaders();
     let __body: any = null;
 
+
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/v1/ie/health-status/${customerId}`,
+      this.rootUrl + `/api/customerportal/controlpoint/v1/ie/health-status/${customerId}`,
       __body,
       {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(

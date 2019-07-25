@@ -1,7 +1,7 @@
 import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
-import { CaseDetails, CaseService } from '@cui-x/services';
+import { CaseParams, CaseDetails, CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { Observable, Subject } from 'rxjs';
@@ -37,14 +37,13 @@ export class ResolutionComponent {
 		currentPage: 0,
 		totalElements: 0, // total number of records for user
 	};
-	public caseParams = {
-		nocache: Date.now(),
+	public caseParams: CaseParams = new CaseParams({
+		nocache: new Date(),
 		page: 0,
-		search: '',
 		size: 10,
 		sort: 'lastModifiedDate,DESC',
 		statusTypes: 'O',
-	};
+	});
 	public paginationCount = '';
 	@ViewChild('severityTmpl', { static: true }) public severityTemplate: TemplateRef<any>;
 	@ViewChild('updatedTmpl', { static: true }) public updatedTemplate: TemplateRef<any>;
@@ -56,7 +55,7 @@ export class ResolutionComponent {
 		private logger: LogService,
 		private caseService: CaseService,
 		private formBuilder: FormBuilder,
-		private route: ActivatedRoute,
+		public route: ActivatedRoute,
 	) { }
 
 	/** ngOnInit */
@@ -66,11 +65,15 @@ export class ResolutionComponent {
 			takeUntil(this.destroy$),
 		)
 		.subscribe((params: ParamMap) => {
-			const casenum = params.get('casenum');
+			const casenum = params.get('case');
 			if (casenum) {
 				this.selectedCase = {
 					caseNumber: casenum,
 				};
+			}
+			const serialnum = params.get('serial');
+			if (serialnum) {
+				_.set(this.caseParams, 'serialNumbers', serialnum);
 			}
 		});
 		this.refresh$.pipe(
@@ -82,21 +85,30 @@ export class ResolutionComponent {
 			),
 			takeUntil(this.destroy$),
 		)
-			.subscribe(cases => {
-				this.isLoading = false;
-				this.caseListData = cases.content;
+		.subscribe(cases => {
+			this.isLoading = false;
+			this.caseListData = cases.content;
 
-				const first = (this.caseParams.size * (this.paginationInfo.currentPage)) + 1;
-				let last = (this.caseParams.size * (this.paginationInfo.currentPage + 1));
-				if (last > cases.totalElements) {
-					last = cases.totalElements;
+			const first = (this.caseParams.size * (this.paginationInfo.currentPage)) + 1;
+			let last = (this.caseParams.size * (this.paginationInfo.currentPage + 1));
+			if (last > cases.totalElements) {
+				last = cases.totalElements;
+			}
+			this.paginationCount = `${first}-${last}`;
+			this.paginationInfo.totalElements = cases.totalElements ? cases.totalElements : 0;
+
+			// If case selected via query params and it's in the table, select the row
+			_.each(this.caseListData, data => {
+				if (_.get(this.selectedCase, 'caseNumber') === _.get(data, 'caseNumber')) {
+					_.set(data, 'active', true);
+				} else {
+					_.set(data, 'active', false);
 				}
-				this.paginationCount = `${first}-${last}`;
-				this.paginationInfo.totalElements = cases.totalElements ? cases.totalElements : 0;
-			}, err => {
-				this.isLoading = false;
-				this.logger.error(`resolution component : case list - ${err}`);
 			});
+		}, err => {
+			this.isLoading = false;
+			this.logger.error(`resolution component : case list - ${err}`);
+		});
 
 		this.refresh$.next();
 
@@ -110,32 +122,38 @@ export class ResolutionComponent {
 			bordered: false,
 			columns: [
 				{
+					autoIdHeader: 'Severity-Header',
 					key: 'priority',
 					name: I18n.get('_RMACaseSeverity_'),
 					sortable: true,
 					template: this.severityTemplate,
 				},
 				{
+					autoIdHeader: 'Case ID-Header',
 					key: 'caseNumber',
 					name: I18n.get('_RMACaseID_'),
 					sortable: true,
 				},
 				{
+					autoIdHeader: 'Device-Header',
 					key: 'deviceName',
 					name: I18n.get('_RMACaseDevice_'),
 					sortable: true,
 				},
 				{
+					autoIdHeader: 'Summary-Header',
 					key: 'summary',
 					name: I18n.get('_RMACaseSummary_'),
 					sortable: true,
 				},
 				{
+					autoIdHeader: 'Status-Header',
 					key: 'status',
 					name: I18n.get('_RMACaseStatus_'),
 					sortable: true,
 				},
 				{
+					autoIdHeader: 'Updated-Header',
 					key: 'lastModifiedDate',
 					name: I18n.get('_RMACaseUpdatedDate_'),
 					sortable: true,
@@ -210,16 +228,7 @@ export class ResolutionComponent {
 	}
 
 	/**
-	 * calls CSOne's API to get case details
-	 * @param caseNo to be searched for
-	 * @returns void
-	 */
-	public getCaseDetails (caseNo: string): Observable<any> {
-		return this.caseService.fetchCaseDetails(caseNo);
-	}
-
-	/**
-	 * on click of table row show case360
+	 * On click of table row show case360
 	 * @param event is a Case
 	 */
 	public onTableRowClicked (event: Case) {

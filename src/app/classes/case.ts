@@ -19,3 +19,8 @@ export const caseSeverities = {
 		{ title: I18n.get('_Info_') },
 		_.pick(severityMap.INFO, ['class', 'color'])),
 };
+
+export enum CaseRequestType {
+	Diagnose = 'Diagnose and Fix my Problem',
+	RMA = 'Replace my Product',
+}

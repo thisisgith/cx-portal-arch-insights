@@ -53,6 +53,7 @@ export class AccRequestFormComponent implements OnDestroy, OnInit {
 	public custData: ACCUserInfoSchema;
 	public maxLength = 512;
 	public loading = false;
+	public custInfoError = false;
 
 	public requestForm: FormGroup = this.fb.group({
 		acceleratorInterest: ['', [Validators.required, Validators.maxLength(this.maxLength)]],
@@ -138,7 +139,13 @@ export class AccRequestFormComponent implements OnDestroy, OnInit {
 		this.loading = true;
 		this.contentService.getACCUserInfo()
 			.pipe(
-				catchError(() => empty()),
+				catchError(err =>  {
+					this.custInfoError = true;
+					this.logger.error('acc-request-form.component : getACCUserInfo() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return empty();
+				}),
 				finalize(() => this.loading = false),
 				takeUntil(this.destroyed$),
 			)
