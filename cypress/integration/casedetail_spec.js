@@ -19,7 +19,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseSearchBox').should('exist');
 		});
 
-		it.skip('Case List Table Contents', () => {
+		it('Case List Table Contents', () => {
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
 			//  Verify auto-id's for each column header
 			cy.getByAutoId('Severity-Header').should('exist').should('contain', i18n._RMACaseSeverity_);
@@ -58,7 +58,7 @@ describe('Case Detail Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it.skip('Case Details Click on case from List', () => {
+		it('Case Details Click on case from List', () => {
 			// PBC-233
 			const validCaseID = '686350448';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
@@ -81,7 +81,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CloseDetails').should('exist').click();
 		});
 
-		it.skip('Closes 360 view when leaving the case page', () => {
+		it('Closes 360 view when leaving the case page', () => {
 			// PBC-233
 			const validCaseID = '686350448';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
@@ -95,7 +95,7 @@ describe('Case Detail Spec', () => {
 			cy.get('app-panel360').should('not.be.visible');
 		});
 
-		it.skip('Case Details Verify Buttons Exist', () => {
+		it('Case Details Verify Buttons Exist', () => {
 			// PBC-233
 			const validCaseID = '686350448';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
@@ -148,6 +148,8 @@ describe('Case Detail Spec', () => {
 		});
 
 		it('Case Details Notes: Cancel Adding a note', () => {
+			// TODO skipping until we have a userID with cases (swtg.test.1 does not)
+			// svorma1 has cases but is not the user in the pipeline
 			// PBC-234
 			const validCaseID = '686350448';
 			const currDatestamp = new Date().getTime();
