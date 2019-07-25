@@ -897,7 +897,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.status.loading.cgt = false;
 
 				this.componentData.cgt = {
-					sessions: _.filter(result.items, { status: 'requested' }),
+					sessions: _.filter(result.items, { status: 'in-progress' }),
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);

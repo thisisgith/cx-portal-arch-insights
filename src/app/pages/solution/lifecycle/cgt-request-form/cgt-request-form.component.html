@@ -12,7 +12,7 @@
             <div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
                 <div class="row half-padding-top dbl-padding-left">
                     <div class="col-md-11 half-margin-top">
-                        <div class="text-xlarge text-left text-uppercase" [innerText]="'_CGTForReview_' | i18n"></div>
+                        <div class="text-xlarge text-left" [innerText]="'_CustomizedGroupTraining_' | i18n"></div>
                         <ng-container *ngIf="loading">
                             <div class="row half-padding-left base-padding-top">
                                 <div class="alert dbl-padding-left">
@@ -116,8 +116,8 @@
                                 </div>
                             </div>
                             <div class="half-padding-top dbl-padding-left text-left">
-                                <button type="submit" [disabled]="!requestForm.valid" class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n" data-auto-id="accRequestModal-Submit"></button>
-                                <button type="button" data-auto-id="accRequestModal-Cancel" class="btn btn--small -wide btn--secondary text-uppercase text-small" (click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"></button>
+                                <button type="submit" [disabled]="!requestForm.valid" class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n"></button>
+                                <button type="button"class="btn btn--small -wide btn--secondary text-uppercase text-small" (click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"></button>
                             </div>
                         </form>
                     </div>
