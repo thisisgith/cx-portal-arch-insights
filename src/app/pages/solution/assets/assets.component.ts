@@ -23,7 +23,7 @@ import {
 	VulnerabilityResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subscription, forkJoin, fromEvent, of, Subject } from 'rxjs';
@@ -37,6 +37,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
+import { CaseOpenComponent } from '@components';
 
 /**
  * Interface representing an item of our inventory in our assets table
@@ -45,6 +46,7 @@ interface Item {
 	selected?: boolean;
 	details?: boolean;
 	data: Asset;
+	actions?: any[];
 }
 
 /** Our current customerId */
@@ -124,6 +126,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	constructor (
 		private contractsService: ContractsService,
+		private cuiModalService: CuiModalService,
 		private logger: LogService,
 		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
@@ -172,6 +175,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return _.filter([
 			_.get(asset, 'supportCovered', false) ? {
 				label: I18n.get('_OpenSupportCase_'),
+				onClick: () => this.cuiModalService.showComponent(
+					CaseOpenComponent,
+					{ asset },
+					'full',
+				),
 			} : undefined,
 			{
 				label: I18n.get('_Scan_'),
@@ -876,6 +884,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 							a.role = _.startCase(_.toLower(a.role));
 						}
 						this.inventory.push({
+							actions: this.getRowActions(a),
 							data: a,
 							details: false,
 							selected: false,

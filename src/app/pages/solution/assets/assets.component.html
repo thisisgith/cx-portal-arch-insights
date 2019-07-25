@@ -215,7 +215,7 @@
 							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
 							(click)="column.click ? $event.stopPropagation() : null">
 							<ng-container *ngIf="column.template">
-								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data }"></ng-container>
+								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, actions: item.actions }"></ng-container>
 							</ng-container>
 							<ng-container *ngIf="!column.template">
 								<span *ngIf="column.render" [innerHTML]="column.render(item.data)"
@@ -356,8 +356,8 @@
 	</span>
 </ng-template>
 
-<ng-template #actionsTemplate let-celldata="celldata">
-	<cui-dropdown [actions]="getRowActions(celldata)"
+<ng-template #actionsTemplate let-celldata="celldata" let-actions="actions">
+	<cui-dropdown [actions]="actions"
 		position="left"
 		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
