@@ -107,7 +107,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('app-panel360').should('not.exist');
 		});
 
-		it('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
+		it.skip('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
 			const getPaginationText = (pagination, type) => {
 				let pageText = pagination.total < pagination.rows
 					? `Showing ${pagination.total} of `
@@ -206,7 +206,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('[data-auto-id*="Device-"]').eq(0).click();
 		});
 
-		it('Shows support and warranty coverage', () => { // PBC-52
+		it.skip('Shows support and warranty coverage', () => { // PBC-52
 			const contractEnd = Cypress.moment(coveredRes.contractEndDate).format('YYYY MMM DD');
 			const warrantyEnd = Cypress.moment(coveredRes.warrantyEndDate).format('YYYY MMM DD');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();

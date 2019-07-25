@@ -77,14 +77,14 @@ export const SuccessPathScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(SP) IBN-Wireless Assurance-Onboard',
 					response: {
-						body: MockSP('IBN', 'Wireless Assurance', 'Onboard'),
+						body: MockSP('IBN', 'Campus network assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN` +
 			`&pitstop=Onboard&customerId=${customerId}&rows=100`,
 		usecases: ['Use Case 1'],
 	},
@@ -93,17 +93,71 @@ export const SuccessPathScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(SP) IBN-SD Access-Onboard',
+					description: '(SP) IBN-Campus network segmentation-Onboard',
 					response: {
-						body: MockSP('IBN', 'SD Access', 'Onboard'),
+						body: MockSP('IBN', 'Campus network segmentation', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard` +
+		url: `${api}?usecase=Campus Network Segmentation&solution=IBN&pitstop=Onboard` +
 			`&customerId=${customerId}&rows=100`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Scalable-Onboard',
+					response: {
+						body: MockSP('IBN', 'Scalable Accesss Policy', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Scalable Access Policy&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}&rows=100`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Network device onboarding-Onboard',
+					response: {
+						body: MockSP('IBN', 'Network device onboarding', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Network Device Onboarding&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}&rows=100`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-Campus software iamge-Onboard',
+					response: {
+						body: MockSP('IBN', 'Campus software image management', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}&rows=100`,
 		usecases: ['Use Case 1'],
 	},
 ];

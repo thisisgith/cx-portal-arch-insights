@@ -8,7 +8,6 @@ import {
 	RacetrackScenarios,
 	ATXScenarios,
 	ACCScenarios,
-	CommunitiesScenarios,
 	ELearningScenarios,
 	SuccessPathScenarios,
 	ActionScenarios,
@@ -44,7 +43,6 @@ describe('LifecycleComponent', () => {
 
 	let racetrackATXSpy;
 	let racetrackAccSpy;
-	let racetrackCommunitiesSpy;
 	let racetrackLearningSpy;
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
@@ -59,7 +57,6 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackInfoSpy, 'restore');
 		_.invoke(racetrackAccSpy, 'restore');
 		_.invoke(racetrackLearningSpy, 'restore');
-		_.invoke(racetrackCommunitiesSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
 		_.invoke(racetrackAccBookmarkSpy, 'restore');
@@ -85,10 +82,6 @@ describe('LifecycleComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(SuccessPathScenarios[0])));
 
-		racetrackCommunitiesSpy = spyOn(racetrackContentService, 'getRacetrackCommunities')
-			.and
-			.returnValue(of(getActiveBody(CommunitiesScenarios[0])));
-
 		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
 			.and
 			.returnValue(of(getActiveBody(RacetrackScenarios[0])));
@@ -99,7 +92,7 @@ describe('LifecycleComponent', () => {
 
 		racetrackAccBookmarkSpy = spyOn(racetrackContentService, 'updateACCBookmark')
 			.and
-			.returnValue(of(getActiveBody(ACCScenarios[4], 'POST')));
+			.returnValue(of(getActiveBody(ACCScenarios[6], 'POST')));
 	};
 
 	/**
@@ -204,13 +197,6 @@ describe('LifecycleComponent', () => {
 					statusText: 'Resource not found',
 				})));
 
-			racetrackCommunitiesSpy = spyOn(racetrackContentService, 'getRacetrackCommunities')
-				.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-					statusText: 'Resource not found',
-				})));
-
 			racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
 				.and
 				.returnValue(of(getActiveBody(RacetrackScenarios[0])));
@@ -229,9 +215,6 @@ describe('LifecycleComponent', () => {
 				.toBeUndefined();
 
 			expect(component.componentData.atx)
-				.toBeUndefined();
-
-			expect(component.componentData.communities)
 				.toBeUndefined();
 		});
 
@@ -577,18 +560,6 @@ describe('LifecycleComponent', () => {
 			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(2);
 		});
-	});
-
-	it('should have loaded the community items', () => {
-		buildSpies();
-		sendParams();
-
-		fixture.detectChanges();
-		fixture.whenStable()
-			.then(() => {
-				expect(component.componentData.communities.length)
-					.toEqual(2);
-			});
 	});
 
 	describe('Learn - Non-cypress', () => {

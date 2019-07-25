@@ -13,8 +13,6 @@ import {
 	ATX,
 	ATXResponse,
 	ATXSession,
-	CommunitiesResponse,
-	Community,
 	ELearning,
 	ELearningResponse,
 	PitstopActionUpdateRequest,
@@ -68,7 +66,6 @@ interface ComponentData {
 	acc?: {
 		sessions: ACC[];
 	};
-	communities?: Community[];
 }
 
 /**
@@ -165,7 +162,6 @@ export class LifecycleComponent implements OnDestroy {
 		loading: {
 			acc: false,
 			atx: false,
-			communities: false,
 			elearning: false,
 			racetrack: false,
 			success: false,
@@ -547,7 +543,6 @@ export class LifecycleComponent implements OnDestroy {
 			if (results.isAtxChanged) { source.push(this.loadATX()); }
 			if (results.isAccChanged) { source.push(this.loadACC()); }
 			if (results.isElearningChanged) { source.push(this.loadELearning()); }
-			if (results.isCommunitiesChanged) { source.push(this.loadCommunites()); }
 			if (results.isSuccessPathChanged) { source.push(this.loadSuccessPaths()); }
 			forkJoin(
 				source,
@@ -804,53 +799,12 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
-	 * Loads the communities for the given params
-	 * @returns the communities response
-	 */
-	private loadCommunites (): Observable<CommunitiesResponse> {
-		this.status.loading.communities = true;
-		if (window.Cypress) {
-			window.communitiesLoading = true;
-		}
-		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
-
-		return this.contentService.getRacetrackCommunities(
-			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
-		.pipe(
-			map((result: CommunitiesResponse) => {
-				if (result.items.length) {
-					this.componentData.communities = result.items;
-				}
-
-				this.status.loading.communities = false;
-				if (window.Cypress) {
-					window.communitiesLoading = false;
-				}
-
-				return result;
-			}),
-			catchError(err => {
-				this.status.loading.communities = false;
-				if (window.Cypress) {
-					window.communitiesLoading = false;
-				}
-				this.logger.error(`lifecycle.component : loadCommunites() :: Error : (${
-					err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
 	 * ForkJoin to load the other API Calls
 	 */
 	private loadRacetrackInfo () {
 		forkJoin(
 			this.loadACC(),
 			this.loadATX(),
-			this.loadCommunites(),
 			this.loadELearning(),
 			this.loadSuccessPaths(),
 		)
