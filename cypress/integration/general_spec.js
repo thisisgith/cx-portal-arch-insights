@@ -25,7 +25,7 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('General Search and close', () => { // PBC-167
+		it.skip('General Search and close', () => { // PBC-167
 			const searchVal = '688296392'; // orig value:639530286  686569178
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
@@ -90,7 +90,7 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Case Search', () => {
+		it.skip('Case Search', () => {
 			// PBC-169
 			const caseVal = '688296392'; // '686569178' '688296392' also works
 			cy.server();
@@ -273,6 +273,25 @@ describe('General Spec', () => {
 				cy.getByAutoId('searchResultLinkPre1').should('exist');
 				cy.getByAutoId('searchResultLinkPre2').should('exist');
 				cy.getByAutoId('searchClose').should('exist').click();
+			});
+		});
+		it('RMA 800000000 click the case link', () => {
+			// PBC-250
+			// mock set at "RMA with one replacement part"
+			const rmaVal = '800000000';
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('rma');
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(rmaVal.concat('{enter}'));
+
+			cy.wait('@rma').then(() => {
+				cy.getByAutoId('rmaStatus').should('exist').should('contain', i18n._Status_);
+				cy.getByAutoId('rmaNumber').should('exist');
+				cy.getByAutoId('caseNumber').should('exist').click({ multiple: true });
+				// TODO rather than click multiple, how to click the second caseNumber?
+				cy.wait(3000);
+				cy.get('app-panel360').should('be.visible');
+				cy.getByAutoId('CloseDetails').should('exist').click();
 			});
 		});
 	});
