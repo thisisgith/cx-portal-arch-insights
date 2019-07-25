@@ -946,7 +946,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		describe('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
+		describe.skip('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
 			before(() => {
 				// Change over to a mock with multiple "recommended" items
 				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
