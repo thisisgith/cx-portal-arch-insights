@@ -3,6 +3,8 @@ import MockService from '../support/mockService';
 const i18n = require('../../src/assets/i18n/en-US.json');
 
 const searchMock = new MockService('SearchScenarios');
+const coverageMock = new MockService('CoverageScenarios');
+const contractMock = new MockService('ContractScenrios');
 
 describe('General Spec', () => {
 	context('Basic Loading Sanity', () => {
@@ -302,8 +304,10 @@ describe('General Spec', () => {
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
-		it.skip('Contract Search 93425688', () => {
+		it('Contract Search 93425688', () => {
 			// PBC-172
+			coverageMock.enable('HEAD Coverage 93425688');
+			coverageMock.enable('GET Coverage 93425688');
 			const contractVal = '93425688';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('contract');
@@ -326,8 +330,10 @@ describe('General Spec', () => {
 			cy.getByAutoId('relGenRes').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
-		it.skip('Contract search not found 93425333', () => {
+		it('Contract search not found 93425333', () => {
 			// PBC-172
+			coverageMock.enable('HEAD Coverage 93425688');
+			contractMock.enable('Contract Details Success Other Other');
 			const serialVal = '93425333';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('contract'); // TODO might need to update route
@@ -335,7 +341,7 @@ describe('General Spec', () => {
 				.type(serialVal.concat('{enter}'));
 			cy.wait('@contract').then(() => {
 				cy.getByAutoId('serialHeader').should('not.exist');
-				cy.get('app-general-search').should('contain', '10 Results for "'.concat(serialVal).concat('"'));
+				cy.get('app-general-search').should('contain', '10 Results for "contract"');
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
 				cy.getByAutoId('cui-select').should('have.length', 2);
