@@ -1,42 +1,33 @@
+<div class="row">
+	<div class="col-md-9 flex flex-fill" *ngIf="pagination">
+		<div class="flex-center-vertical">
+			<span [innerText]="'_OsvSoftwareVersions_' | i18n" class="text-large"></span>
+			<span [innerText]="'_OsvShowingXofYSoftwareVersions_' | i18n:paginationCount:pagination.total"
+				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+			</span>
+		</div>
+	</div>
+</div>
 <div class="divider qtr-margin-top"></div>
 <ng-container *ngTemplateOutlet="tableSoftwareVersion"></ng-container>
+<div *ngIf="pagination" class="base-margin-top">
+	<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
+		(onPageChanged)="onPageChanged($event)">
+	</cui-pager>
+</div>
+
 <div *ngIf="status.isLoading">
 	<cui-spinner></cui-spinner>
 </div>
 
 <ng-template #tableSoftwareVersion>
-	<div class="responsive-table" *ngIf="!status.isLoading && softwareVersionsTable && softwareVersions.length">
-		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
-			<thead>
-				<tr>
-					<th *ngFor="let column of softwareVersionsTable.columns"
-						[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
-						<span [innerText]="column.name"></span>
-						<span *ngIf="column.sortable && column.sorting" class="qtr-margin-left" [ngClass]="{
-										'icon-chevron-down': column.sortDirection === 'asc',
-										'icon-chevron-up': column.sortDirection === 'desc'
-									}">
-						</span>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr *ngFor="let item of softwareVersions" (click)="onRowSelect(item)"
-					[ngClass]="{ 'active': item.details }" attr.data-auto-id="SoftwareVersion-{{ item.version }}">
-					<td *ngFor="let column of softwareVersionsTable.columns" [ngStyle]="{ 'width': column.width }"
-						(click)="column.click ? $event.stopPropagation() : null"
-						attr.data-auto-id="SoftwareVersionItemClickHandler-{{ item.version }}">
-						<ng-container *ngIf="column.template">
-							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data }">
-							</ng-container>
-						</ng-container>
-						<ng-container *ngIf="!column.template">
-							<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
-							<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
-						</ng-container>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+	<cui-table *ngIf="softwareVersions" [options]="softwareVersionsTable" [data]="softwareVersions"
+		(onSortingChanged)="onTableSortingChanged($event)"></cui-table>
+</ng-template>
+
+
+<ng-template #releaseDate let-item="celldata">
+	<span *ngIf="item?.postDate">
+		{{item.postDate | date}}
+	</span>
 </ng-template>

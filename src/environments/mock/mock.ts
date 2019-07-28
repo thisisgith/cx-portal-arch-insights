@@ -44,9 +44,6 @@ import {
 	CDCSearchResponse,
 	CommunitiesResponse,
 	CoverageCountsResponse,
-	DeploymentStatusCountResponse,
-	DERecommendationsResponse,
-	DeviceCountResponse,
 	CoverageResponse,
 	ELearningResponse,
 	FieldNoticeBulletinResponse,
@@ -57,7 +54,6 @@ import {
 	HardwareResponse,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
-	RiskCountResponse,
 	RoleCountResponse,
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryImpactCountResponse,
@@ -84,9 +80,6 @@ type ResponseBody = (
 	CommunitiesResponse |
 	CoverageCountsResponse |
 	CoverageResponse |
-	DeploymentStatusCountResponse |
-	DERecommendationsResponse |
-	DeviceCountResponse |
 	ELearningResponse |
 	FieldNoticeBulletinResponse |
 	FieldNoticeResponse |
@@ -96,7 +89,6 @@ type ResponseBody = (
 	HardwareResponse |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
-	RiskCountResponse |
 	RMAResponse |
 	RoleCountResponse |
 	SecurityAdvisoryBulletinResponse |

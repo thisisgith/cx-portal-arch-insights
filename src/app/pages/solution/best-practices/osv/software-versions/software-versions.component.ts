@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { OSVService, SoftwareVersionsResponse } from '@sdp-api';
+import { forkJoin, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { OSVService, SoftwareVersionsResponse, Pagination, SoftwareVersion } from '@sdp-api';
 
 /** Our current customerId */
-const customerId = '2431199';
+const customerId = '231215372';
 
 /**
  * SoftwareVersion Component
@@ -19,11 +19,20 @@ const customerId = '2431199';
 	templateUrl: './software-versions.component.html',
 })
 export class SoftwareVersionsComponent {
+	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{}>;
 	public softwareVersionsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
 	};
-	public softwareVersions: any;
+	public softwareVersions: SoftwareVersion[];
+	public pagination: Pagination;
+	public paginationCount: string;
+	public destroy$ = new Subject();
+	public softwareVersionsParams: OSVService.GetSoftwarVersionsParams = {
+		customerId,
+		pageIndex: 1,
+		pageSize: 10,
+	};
 
 	constructor (
 		private logger: LogService,
@@ -49,6 +58,9 @@ export class SoftwareVersionsComponent {
 		forkJoin(
 			this.getSoftwareVersions(),
 		)
+			.pipe(
+				takeUntil(this.destroy$),
+			)
 			.subscribe(() => {
 				this.status.isLoading = false;
 			});
@@ -59,11 +71,28 @@ export class SoftwareVersionsComponent {
 	 * @returns the total counts observable
 	 */
 	private getSoftwareVersions () {
-		return this.osvService.getSoftwareVersions({ customerId })
+		return this.osvService.getSoftwareVersions(this.softwareVersionsParams)
 			.pipe(
 				map((response: SoftwareVersionsResponse) => {
 					this.status.isLoading = false;
-					this.softwareVersions = response;
+					if (response.data) {
+						this.softwareVersions = response.data;
+					} else {
+						this.softwareVersions = <any>response;
+					}
+
+					if (response.pagination) {
+
+						this.pagination = response.pagination;
+
+						const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
+						let last = (this.pagination.rows * this.pagination.page);
+						if (last > this.pagination.total) {
+							last = this.pagination.total;
+						}
+
+						this.paginationCount = `${first}-${last}`;
+					}
 					this.buildTable();
 				}),
 			);
@@ -75,43 +104,66 @@ export class SoftwareVersionsComponent {
 	private buildTable () {
 		if (!this.softwareVersionsTable) {
 			this.softwareVersionsTable = new CuiTableOptions({
-				bordered: true,
+				bordered: false,
 				columns: [
 					{
-						key: 'version',
+						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
 						width: '10%',
 					},
 					{
-						key: 'releaseDate',
 						name: I18n.get('_OsvReleaseDate_'),
+						template: this.releaseDateTemplate,
 					},
 					{
-						key: 'assetsCount',
+						key: 'assetCount',
 						name: I18n.get('_OsvUngroupedAssetsCount_'),
 					},
 					{
-						key: 'goldenImage',
+						key: 'goldenVersion',
 						name: I18n.get('_OsvGoldenImage_'),
+						render: item => item.optimalVersion ? I18n.get('_OsvYes_')
+							: I18n.get('_OsvNo_'),
 					},
 					{
-						key: 'osType',
+						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 					},
 					{
 						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersionY'),
+						name: I18n.get('_OsvOptimalVersionY/N_'),
+						render: item => item.optimalVersion ? I18n.get('_OsvYes_')
+							: I18n.get('_OsvNo_'),
 					},
 				],
 				dynamicData: true,
 				hover: true,
 				padding: 'compressed',
 				selectable: false,
-				singleSelect: true,
+				singleSelect: false,
 				sortable: true,
-				striped: false,
+				striped: true,
 				wrapText: true,
 			});
 		}
+	}
+
+	/**
+	 * Page change handler
+	 * @param event the event emitted
+	 */
+	public onPageChanged (event: any) {
+		this.softwareVersionsParams.pageIndex = event.page;
+		this.loadData();
+	}
+
+	/**
+	 * sort each column in case table view
+	 * @param evt for table sort information
+	 */
+	public onTableSortingChanged (evt: any) {
+		this.softwareVersionsParams.sortOrder = evt.sortDirection;
+		this.softwareVersionsParams.sort = evt.key;
+		this.loadData();
 	}
 }

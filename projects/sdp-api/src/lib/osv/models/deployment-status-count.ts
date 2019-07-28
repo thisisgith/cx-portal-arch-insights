@@ -1,5 +1,5 @@
-/* tslint:disable */
 export interface DeploymentStatusCount {
-	status?: string;
-	deviceCount?: number;
+	none?: number;
+	production?: number;
+	upgrade?: number;
 }

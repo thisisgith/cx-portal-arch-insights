@@ -1,13 +1,29 @@
+<div class="row">
+	<div class="col-md-9 flex flex-fill" *ngIf="pagination">
+		<div class="flex-center-vertical">
+			<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
+			<span [innerText]="'_OsvShowingXofYAssets_' | i18n:paginationCount:pagination.total"
+				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+			</span>
+		</div>
+	</div>
+</div>
 <div class="divider qtr-margin-top"></div>
 <ng-container *ngTemplateOutlet="tableProfileGroups"></ng-container>
+<div *ngIf="pagination" class="base-margin-top">
+	<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
+		(onPageChanged)="onPageChanged($event)">
+	</cui-pager>
+</div>
 
 <ng-template #tableProfileGroups>
-	<div class="responsive-table" *ngIf="assetsSoftwareTable && assetSoftwares.length">
+	<div *ngIf="!status.isLoading && assetsTable && assets?.length">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
 			<thead>
 				<tr>
-					<th *ngFor="let column of assetsSoftwareTable.columns"
-						[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
+					<th *ngFor="let column of assetsTable.columns"
+						[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
+						(click)="sortTable(column)" attr.data-auto-id="AssetTable-{{column.key}}">
 						<span [innerText]="column.name"></span>
 						<span *ngIf="column.sortable && column.sorting" class="qtr-margin-left" [ngClass]="{
 										'icon-chevron-down': column.sortDirection === 'asc',
@@ -18,11 +34,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let item of assetSoftwares" (click)="onRowSelect(item)"
-					[ngClass]="{ 'active': item.details }" attr.data-auto-id="AssetSoftware-{{ item.hostName }}">
-					<td *ngFor="let column of assetsSoftwareTable.columns" [ngStyle]="{ 'width': column.width }"
+				<tr *ngFor="let item of assets" (click)="onRowSelect(item)" [ngClass]="{ 'active': item.details }"
+					attr.data-auto-id="Asset-{{ item.hostName }}">
+					<td *ngFor="let column of assetsTable.columns" [ngStyle]="{ 'width': column.width }"
 						(click)="column.click ? $event.stopPropagation() : null"
-						attr.data-auto-id="AssetSoftwareItemClickHandler-{{ item.hostName }}">
+						attr.data-auto-id="AssetItemClickHandler-{{ item.hostName }}">
 						<ng-container *ngIf="column.template">
 							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }">
 							</ng-container>
@@ -37,9 +53,11 @@
 		</table>
 	</div>
 </ng-template>
-
+<div *ngIf="status.isLoading">
+	<cui-spinner></cui-spinner>
+</div>
 
 <ng-template #actionsTemplate let-celldata="celldata">
-	<cui-dropdown [actions]="getRowActions(celldata)" position="left" icon="icon-more icon-medium text-muted rotate-90">
+	<cui-dropdown [actions]="rowActions" position="left" icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
 </ng-template>

@@ -7,25 +7,21 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
-import { RiskCountResponse } from '../models/risk-count-response';
-import { DeviceCountResponse } from '../models/device-count-response';
-import { DeploymentStatusCountResponse } from '../models/deployment-status-response';
 import { SoftwareProfilesResponse } from '../models/software-profiles-response';
 import { SoftwareVersionsResponse } from '../models/software-versions-response';
-import { DERecommendationsResponse } from '../models/de-recommendations-response';
 import { BasicRecommendationsResponse } from '../models/basic-recommendations-response';
+import { AssetsResponse } from '../models/assets-response';
+import { SummaryResponse } from '../models/summary-response';
 
 @Injectable({
 	providedIn: 'root',
 })
 class OSVService extends __BaseService {
-	static readonly getRiskCountPath = '/risk/count';
-	static readonly getDeviceCountPath = '/device/count';
-	static readonly getDeploymentStatusCountPath = '/deploymentstatus/count';
-	static readonly getDERecommendationsCountPath = '/derecommendations/count';
-	static readonly getSoftwareProfilesPath = '/softwareprofiles';
-	static readonly getSoftwareVersionsPath = '/softwareversions';
-	static readonly getBasicRecommendationsCountPath = '/basicrecommendations';
+	static readonly getSummaryPath = '/api/dev/customerportal/osv-ui/v1/summary';
+	static readonly getSoftwareProfilesPath = '/api/dev/customerportal/osv-ui/v1/profiles';
+	static readonly getSoftwareVersionsPath = '/api/dev/customerportal/osv-ui/v1/versions';
+	static readonly getBasicRecommendationsCountPath = '/api/dev/customerportal/osv-ui/v1/basicrecommendations';
+	static readonly getAssetsPath = '/api/dev/customerportal/osv-ui/v1/assets';
 
 	constructor (
 		config: __Configuration,
@@ -35,14 +31,14 @@ class OSVService extends __BaseService {
 	}
 
 	/**
-	 * Risk Count for Devices.
-	 * @param params The `OSVService.GetRiskCountParams` containing the following parameters:
+	 * Summary Count.
+	 * @param params The `OSVService.GetSummaryParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
 	 *
 	 * @return successful operation
 	 */
-	getRiskCountResponse (params: OSVService.GetRiskCountParams): __Observable<__StrictHttpResponse<RiskCountResponse>> {
+	getSummaryResponse (params: OSVService.GetSummaryParams): __Observable<__StrictHttpResponse<SummaryResponse>> {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
@@ -50,7 +46,7 @@ class OSVService extends __BaseService {
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `/api/customerportal/osv/v1${OSVService.getRiskCountPath}`,
+			this.rootUrl + `${OSVService.getSummaryPath}`,
 			__body,
 			{
 				headers: __headers,
@@ -61,114 +57,22 @@ class OSVService extends __BaseService {
 		return this.http.request<any>(req).pipe(
 			__filter(_r => _r instanceof HttpResponse),
 			__map((_r) => {
-				return _r as __StrictHttpResponse<RiskCountResponse>;
+				return _r as __StrictHttpResponse<SummaryResponse>;
 			})
 		);
 	}
 
 	/**
-	 * Risk Count for Devices.
-	 * @param params The `OSVService.GetRiskCountParams` containing the following parameters:
+	 * Summary Count for Devices.
+	 * @param params The `OSVService.GetSummaryParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
 	 *
 	 * @return successful operation
 	 */
-	getRiskCount (params: OSVService.GetRiskCountParams): __Observable<RiskCountResponse> {
-		return this.getRiskCountResponse(params).pipe(
-			__map(_r => _r.body as RiskCountResponse)
-		);
-	}
-
-	/**
-	 * Risk Count for Devices.
-	 * @param params The `OSVService.GetRiskCountParams` containing the following parameters:
-	 *
-	 * - `customerId`: Unique identifier of a Cisco customer.
-	 *
-	 * @return successful operation
-	 */
-	getDeviceCountResponse (params: OSVService.GetDeviceCountParams): __Observable<__StrictHttpResponse<DeviceCountResponse>> {
-		let __params = this.newParams();
-		let __headers = new HttpHeaders();
-		let __body: any = null;
-
-		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-		let req = new HttpRequest<any>(
-			'GET',
-			this.rootUrl + `/api/customerportal/osv/v1${OSVService.getDeviceCountPath}`,
-			__body,
-			{
-				headers: __headers,
-				params: __params,
-				responseType: 'json',
-			});
-
-		return this.http.request<any>(req).pipe(
-			__filter(_r => _r instanceof HttpResponse),
-			__map((_r) => {
-				return _r as __StrictHttpResponse<DeviceCountResponse>;
-			})
-		);
-	}
-
-	/**
-	 * Risk Count for Devices.
-	 * @param params The `OSVService.GetRiskCountParams` containing the following parameters:
-	 *
-	 * - `customerId`: Unique identifier of a Cisco customer.
-	 *
-	 * @return successful operation
-	 */
-	getDeviceCount (params: OSVService.GetDeviceCountParams): __Observable<DeviceCountResponse> {
-		return this.getDeviceCountResponse(params).pipe(
-			__map(_r => _r.body as DeviceCountResponse)
-		);
-	}
-
-	/**
-	 * Deployment Status Count for Devices.
-	 * @param params The `OSVService.GetDeploymentStatusCountParams` containing the following parameters:
-	 *
-	 * - `customerId`: Unique identifier of a Cisco customer.
-	 *
-	 * @return successful operation
-	 */
-	getDeploymentStatusCountResponse (params: OSVService.GetDeploymentStatusCountParams): __Observable<__StrictHttpResponse<DeploymentStatusCountResponse>> {
-		let __params = this.newParams();
-		let __headers = new HttpHeaders();
-		let __body: any = null;
-
-		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-		let req = new HttpRequest<any>(
-			'GET',
-			this.rootUrl + `/api/customerportal/osv/v1${OSVService.getDeploymentStatusCountPath}`,
-			__body,
-			{
-				headers: __headers,
-				params: __params,
-				responseType: 'json',
-			});
-
-		return this.http.request<any>(req).pipe(
-			__filter(_r => _r instanceof HttpResponse),
-			__map((_r) => {
-				return _r as __StrictHttpResponse<DeploymentStatusCountResponse>;
-			})
-		);
-	}
-
-	/**
-	 * Deployment Status Count for Devices.
-	 * @param params The `OSVService.GetDeploymentStatusCountParams` containing the following parameters:
-	 *
-	 * - `customerId`: Unique identifier of a Cisco customer.
-	 *
-	 * @return successful operation
-	 */
-	getDeploymentStatusCount (params: OSVService.GetDeploymentStatusCountParams): __Observable<DeploymentStatusCountResponse> {
-		return this.getDeploymentStatusCountResponse(params).pipe(
-			__map(_r => _r.body as DeploymentStatusCountResponse)
+	getSummary (params: OSVService.GetSummaryParams): __Observable<SummaryResponse> {
+		return this.getSummaryResponse(params).pipe(
+			__map(_r => _r.body as SummaryResponse)
 		);
 	}
 
@@ -189,7 +93,7 @@ class OSVService extends __BaseService {
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `/api/customerportal/osv/v1${OSVService.getSoftwareProfilesPath}`,
+			this.rootUrl + `${OSVService.getSoftwareProfilesPath}`,
 			__body,
 			{
 				headers: __headers,
@@ -234,9 +138,11 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.pageIndex != null) __params = __params.set('pageIndex', params.pageIndex.toString());
+		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `/api/customerportal/osv/v1${OSVService.getSoftwareVersionsPath}`,
+			this.rootUrl + `${OSVService.getSoftwareVersionsPath}`,
 			__body,
 			{
 				headers: __headers,
@@ -267,52 +173,6 @@ class OSVService extends __BaseService {
 	}
 
 	/**
-	 * DE Recommendations counts  of devices
-	 * @param params The `OSVService.GetDERecommendationsParams` containing the following parameters:
-	 *
-	 * - `customerId`: Unique identifier of a Cisco customer.
-	 *
-	 * @return successful operation
-	 */
-	getDERecommendationsResponse (params: OSVService.GetDERecommendationsParams): __Observable<__StrictHttpResponse<DERecommendationsResponse>> {
-		let __params = this.newParams();
-		let __headers = new HttpHeaders();
-		let __body: any = null;
-
-		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-		let req = new HttpRequest<any>(
-			'GET',
-			this.rootUrl + `/api/customerportal/osv/v1${OSVService.getDERecommendationsCountPath}`,
-			__body,
-			{
-				headers: __headers,
-				params: __params,
-				responseType: 'json',
-			});
-
-		return this.http.request<any>(req).pipe(
-			__filter(_r => _r instanceof HttpResponse),
-			__map((_r) => {
-				return _r as __StrictHttpResponse<DERecommendationsResponse>;
-			})
-		);
-	}
-
-	/**
-	 * DE Recommendations counts  of devices
-	 * @param params The `OSVService.GetDERecommendationsParams` containing the following parameters:
-	 *
-	 * - `customerId`: Unique identifier of a Cisco customer.
-	 *
-	 * @return successful operation
-	 */
-	getDERecommendations (params: OSVService.GetDERecommendationsParams): __Observable<DERecommendationsResponse> {
-		return this.getDERecommendationsResponse(params).pipe(
-			__map(_r => _r.body as DERecommendationsResponse)
-		);
-	}
-
-	/**
 	 * Basic Recommendations of asset
 	 * @param params The `OSVService.GetBasicRecommendationsParams` containing the following parameters:
 	 *
@@ -328,7 +188,7 @@ class OSVService extends __BaseService {
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `/api/customerportal/osv/v1${OSVService.getBasicRecommendationsCountPath}`,
+			this.rootUrl + `${OSVService.getBasicRecommendationsCountPath}`,
 			__body,
 			{
 				headers: __headers,
@@ -357,35 +217,65 @@ class OSVService extends __BaseService {
 			__map(_r => _r.body as BasicRecommendationsResponse)
 		);
 	}
+
+	/**
+	 * Basic Recommendations of asset
+	 * @param params The `OSVService.GetAssetsParams` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 *
+	 * @return successful operation
+	 */
+	getAssetsResponse (params: OSVService.GetAssetsParams): __Observable<__StrictHttpResponse<AssetsResponse>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+
+		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.pageIndex != null) __params = __params.set('pageIndex', params.pageIndex.toString());
+		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
+		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
+		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
+		if (params.filter != null) __params = __params.set('filter', params.filter.toString());
+
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${OSVService.getAssetsPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<AssetsResponse>;
+			})
+		);
+	}
+
+	/**
+	 * Basic list of assets
+	 * @param params The `OSVService.GetAssetsParams` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 *
+	 * @return successful operation
+	 */
+	getAssets (params: OSVService.GetAssetsParams): __Observable<AssetsResponse> {
+		return this.getAssetsResponse(params).pipe(
+			__map(_r => _r.body as AssetsResponse)
+		);
+	}
 }
 
 module OSVService {
 	/**
 	 * Parameters for getRiskCount
 	 */
-	export interface GetRiskCountParams {
-
-		/**
-		 * Unique identifier of a Cisco customer.
-		 */
-		customerId: string;
-	}
-
-	/**
-	 * Parameters for getDeviceCount
-	 */
-	export interface GetDeviceCountParams {
-
-		/**
-		 * Unique identifier of a Cisco customer.
-		 */
-		customerId: string;
-	}
-
-	/**
-	 * Parameters for GetDeploymentStatusCountParams
-	 */
-	export interface GetDeploymentStatusCountParams {
+	export interface GetSummaryParams {
 
 		/**
 		 * Unique identifier of a Cisco customer.
@@ -421,19 +311,24 @@ module OSVService {
 		 * Unique identifier of a Cisco customer.
 		 */
 		customerId: string;
-	}
-
-
-	/**
-	 * Parameters for GetDERecommendationsParams
-	 */
-	export interface GetDERecommendationsParams {
-
 		/**
-		 * Unique identifier of a Cisco customer.
+		 * page Number.
 		 */
-		customerId: string;
+		pageIndex?: number;
+		/**
+		 * number of records per page.
+		 */
+		pageSize?: number;
+		/**
+		 * sort by field.
+		 */
+		sort?: string;
+		/**
+		 * sortorder.
+		 */
+		sortOrder?: string;
 	}
+
 
 	/**
 	 * Parameters for GetBasicRecommendationsParams
@@ -443,6 +338,36 @@ module OSVService {
 		 * Unique identifier of a Cisco customer.
 		 */
 		customerId: string;
+	}
+	/**
+	 * Parameters for GetAssetsParams
+	 */
+	export interface GetAssetsParams {
+		/**
+		 * Unique identifier of a Cisco customer.
+		 */
+		customerId: string;
+		/**
+		 * page Number.
+		 */
+		pageIndex?: number;
+		/**
+		 * number of records per page.
+		 */
+		pageSize?: number;
+		/**
+		 * sort by field.
+		 */
+		sort?: string;
+		/**
+		 * sortorder.
+		 */
+		sortOrder?: string;
+		/**
+		 * filter.
+		 */
+		filter?: string;
+
 	}
 }
 

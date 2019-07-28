@@ -65,11 +65,32 @@ export class AssetTimelineChartComponent {
 
 		this.chart = new Chart({
 			chart: {
+				events: {
+					load: () => {
+						if (window.Cypress) {
+							// Hack to allow Cypress to click on highcharts series
+							_.each(this.chart.ref.series[0].points, point => {
+								point.graphic.element.setAttribute(
+									'data-auto-id', `${point.name}Point`,
+								);
+								// When a "normal" click event fires,
+								// turn it into a highcharts point event instead
+								point.graphic.element.addEventListener('click', () => {
+									const event = Object.assign(new MouseEvent('click'), { point });
+									point.firePointEvent('click', event);
+								});
+							});
+						}
+					},
+				},
 				styledMode: true,
 				type: 'timeline',
 				zoomType: 'x',
 			},
 			credits: {
+				enabled: false,
+			},
+			exporting: {
 				enabled: false,
 			},
 			legend: {
@@ -101,6 +122,13 @@ export class AssetTimelineChartComponent {
 						symbol: '',
 					},
 				},
+				series: {
+					point: {
+						events: {
+							click: event => this.selectSubfilter(event),
+						},
+					},
+				},
 			},
 			series: [
 				{
@@ -110,6 +138,9 @@ export class AssetTimelineChartComponent {
 			],
 			title: {
 				text: null,
+			},
+			tooltip: {
+				enabled: false,
 			},
 			xAxis: {
 				lineColor: 'blue',
@@ -141,6 +172,15 @@ export class AssetTimelineChartComponent {
 		if (!fullscreen.firstChange) {
 			this.buildGraph();
 		}
+	}
+
+	/**
+	 * Emits the subfilter selected
+	 * @param event highcharts click event
+	 */
+	public selectSubfilter (event: any) {
+		event.stopPropagation();
+
 	}
 
 }

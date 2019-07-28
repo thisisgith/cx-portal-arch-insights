@@ -1,13 +1,14 @@
 <div class="text-large text-bold" [innerText]="'_OsvBasicRecommendations_' | i18n | uppercase"></div>
 <div class="btn-group btn-group--square half-margin-right pull-right">
-	<button data-auto-id="timeline-view-btn" class="btn btn--small btn--gray-ghost"
-		[ngClass]="{ 'selected': view == 'timeline' }" (click)="view = 'timeline'">
-		<span class="icon-time"></span>
-	</button>
 	<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost"
 		[ngClass]="{ 'selected': view == 'list' }" (click)=" view = 'list'">
 		<span class="icon-list-view"></span>
 	</button>
+	<button data-auto-id="timeline-view-btn" class="btn btn--small btn--gray-ghost"
+		[ngClass]="{ 'selected': view == 'timeline' }" (click)="view = 'timeline'">
+		<span class="icon-time"></span>
+	</button>
+
 </div>
 <div class="dbl-margin-top" *ngIf="!status.isLoading && data && view =='timeline'">
 	<app-asset-timeline-chart [data]="data" [fullscreen]="fullscreen"></app-asset-timeline-chart>
@@ -16,10 +17,19 @@
 <div class="dbl-margin-top" *ngIf="!status.isLoading && data && view =='list'">
 	<cui-table [data]="data" [options]="basicRecommendationsTable"></cui-table>
 </div>
+<div class="markup pull-right dbl-margin-top" *ngIf="!status.isLoading">
+	<a class="markup-toggle link">
+		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
+	</a>
+</div>
+
 <div class="dbl-margin-top" *ngIf="status.isLoading">
 	<cui-spinner></cui-spinner>
 </div>
 
-<ng-template #recommendationDetail>
-	details comming soon!!
+
+<ng-template #actionsTemplate let-item="celldata">
+	<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
+		[innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
+		attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
 </ng-template>

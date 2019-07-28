@@ -1,10 +1,11 @@
 /* tslint:disable */
 
 export interface SoftwareVersion {
-	version: string;
-	releaseDate: string;
-	goldenImage: boolean;
+	swVersion: string;
+	postDate: string;
+	goldenVersion: boolean;
 	optimalVersion: boolean;
-	osType: string;
-	assetsCount: number;
+	swType: string;
+	assetCount: number;
+	profileAssetCount: number;
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
+import { OSVService } from '@sdp-api';
 
 /**
  * SoftwareProfileDetail Component
@@ -16,13 +17,15 @@ export class SoftwarProfileDetailComponent implements OnInit {
 	private currentBugsTemplate: TemplateRef<{}>;
 	@ViewChild('recBugs', { static: true })
 	private recBugsTemplate: TemplateRef<{}>;
-
-	constructor (private logger: LogService, ) {
+	constructor (
+		private logger: LogService,
+		private osvService: OSVService,
+	) {
 		this.logger.debug('SoftwareProfileDetailComponent Created!');
 	}
-	recommendations = [];
-	compareHeader = {};
-	barChartData = [
+	public recommendations = [];
+	public compareHeader = {};
+	public barChartData = [
 		{
 			filter: 'high',
 			label: 'H',
@@ -40,9 +43,12 @@ export class SoftwarProfileDetailComponent implements OnInit {
 			label: 'L',
 			selected: false,
 			value: 2,
-		}
-	]
+		},
+	];
 
+	/**
+	 * Initialization hook
+	 */
 	ngOnInit (): void {
 		const data = [
 			{
@@ -67,7 +73,7 @@ export class SoftwarProfileDetailComponent implements OnInit {
 				releaseVersion: '8.8.101.9',
 				releaseDate: '2018-09-09',
 				riskScore: '15%',
-			}
+			},
 		];
 		this.formatData(data);
 	}
@@ -75,7 +81,7 @@ export class SoftwarProfileDetailComponent implements OnInit {
 	/**
 	 * format data
 	 */
-	formatData (data: any) {
+	public formatData (data: any) {
 		const current = _.filter(data, { key: 'current' });
 		const recommendation1 = _.filter(data, { key: 'recommendation1' });
 		const recommendation2 = _.filter(data, { key: 'recommendation2' });

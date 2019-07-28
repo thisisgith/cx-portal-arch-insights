@@ -11,8 +11,8 @@
 	</app-panel360-header>
 	<app-software-profile-detail></app-software-profile-detail>
 </app-panel360>
-<app-panel360 *ngIf="selectedAssetSoftware" [hidden]="!selectedAssetSoftware" [fullscreen]="fullscreen">
-	<app-panel360-header (close)="selectedAssetSoftware = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
+<app-panel360 *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
+	<app-panel360-header (close)="selectedAsset = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
 		<div appPanel360Title class="row">
 			<span class="icon-laser-pointer icon-large col-2 icon-xlarge"></span>
 			<div class="col-10">
@@ -26,22 +26,6 @@
 </app-panel360>
 
 <div class="panel">
-	<div class="row">
-		<div class="col-md-3">
-			<div class="btn-group">
-				<button attr.data-auto-id="SelectSofwareProfilesView" attr.id="SelectSofwareProfilesView"
-					class="btn btn--small btn--gray-ghost " [innerText]="'_OsvSoftwareProfiles_' | i18n"
-					[ngClass]="{'selected':view == 'swProfiles' || view == 'assetsSwProfiles'}"
-					(click)="selectView('swProfiles')"></button>
-				<button attr.data-auto-id="SelectAssetsView" attr.id="SelectAssetsView"
-					class="btn btn--small btn--gray-ghost" [ngClass]="{'selected':view == 'assets'}"
-					[innerText]="'_OsvIndependentAssets_' | i18n" (click)="selectView('assets')"></button>
-				<button attr.data-auto-id="SelectSoftwareVersionsView" attr.id="SelectSoftwareVersionsView"
-					class="btn btn--small btn--gray-ghost" [innerText]="'_OsvSoftwareVersions_' | i18n"
-					[ngClass]="{'selected':view == 'swVersions'}" (click)="selectView('swVersions')"></button>
-			</div>
-		</div>
-	</div>
 	<div class="row" *ngIf="!status.isLoading">
 		<ng-container *ngFor="let filter of filters; index as i">
 			<div *ngIf="!filter.loading && filter.data.length && filter.view.indexOf(view) > -1"
@@ -75,13 +59,10 @@
 		<app-software-profiles [(selectedProfileGroup)]="selectedProfileGroup"></app-software-profiles>
 	</div>
 	<div *ngIf="view == 'assets'">
-		<app-assets [(selectedAssetSoftware)]="selectedAssetSoftware"></app-assets>
+		<app-assets [(selectedAsset)]="selectedAsset"></app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
 		<app-software-versions></app-software-versions>
-	</div>
-	<div *ngIf="view == 'assetsSwProfiles'">
-		<app-assets [(selectedAssetSoftware)]="selectedAssetSoftware"></app-assets>
 	</div>
 </div>
 
@@ -109,46 +90,33 @@
 	</div>
 </ng-template>
 
-
-
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter">
-		<div class="vertical-center" *ngIf="(view == 'swProfiles' || view == 'assetsSwProfiles')">
-			<div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-muted':view != 'swProfiles'}"
-				data-auto-id="TotalVisualFilterProfileGroups">
-				<div class="col-4 text-right">
-					<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].softwareProfiles"></span>
-				</div>
-				<div class="col-8 margin-auto">
-					<span class="text-xlarge " [innerText]="'_OsvSoftwareProfiles_' | i18n"></span>
-				</div>
+	<div class="vertical-center max-width" (click)="clearFilters()" data-auto-id="TotalVisualFilter">
+		<div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-muted':view != 'swProfiles'}"
+			data-auto-id="TotalVisualFilterSoftwareProfiles">
+			<div class="col-5 text-right">
+				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].profiles"></span>
 			</div>
-			<div class="row toggle" (click)="selectView('assetsSwProfiles')"
-				[ngClass]="{'text-muted':view != 'assetsSwProfiles'}" data-auto-id="TotalVisualFilterProfileGroups">
-				<div class="col-4 text-right">
-					<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].assetSoftwareProfile"></span>
-				</div>
-				<div class="col-8 margin-auto">
-					<span class="text-xlarge " [innerText]="'_OsvAssetsOfSoftwareProfiles_' | i18n"></span>
-				</div>
+			<div class="col-7 margin-auto">
+				<span class="text-xlarge " [innerText]="'_OsvSoftwareProfiles_' | i18n"></span>
 			</div>
 		</div>
-		<div *ngIf="view == 'assets'" class="vertical-center toggle text-center max-width"
-			(click)="selectView('assets')" data-auto-id="TotalVisualFilterUngroupedAssets">
-			<div>
+		<div class="row toggle" (click)="selectView('assets')" [ngClass]="{'text-muted':view != 'assets'}"
+			data-auto-id="TotalVisualFilterAssets">
+			<div class="col-5 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].assets"></span>
 			</div>
-			<div>
-				<span class="text-xlarge " [innerText]="'_OsvIndependentAssets_' | i18n"></span>
+			<div class="col-7 margin-auto">
+				<span class="text-xlarge " [innerText]="'_OsvAssets_' | i18n"></span>
 			</div>
 		</div>
-		<div *ngIf="view == 'swVersions'" class="toggle text-center max-width" (click)="selectView('swVersions')"
+		<div class="row toggle" (click)="selectView('swVersions')" [ngClass]="{'text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
-			<div>
-				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].softwareVersion"></span>
+			<div class="col-5 text-right">
+				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].versions"></span>
 			</div>
-			<div>
+			<div class="col-7 margin-auto">
 				<span class="text-xlarge " [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
 			</div>
 		</div>
@@ -160,12 +128,7 @@
 	</assets-pie-chart>
 </ng-template>
 
-<ng-template #riskLevelFilter let-filter="filter">
-	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
-	</assets-pie-chart>
-</ng-template>
-
-<ng-template #deRecommendationFilter let-filter="filter">
+<ng-template #assetTypeFilter let-filter="filter">
 	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
 </ng-template>

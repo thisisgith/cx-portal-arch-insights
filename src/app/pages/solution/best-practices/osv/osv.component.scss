@@ -1,6 +1,7 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
 .filter {
+	min-height: 220px;
 	&__selected {
 		border-bottom: 4px solid $primary;
 	}

@@ -3,9 +3,12 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, of } from 'rxjs';
-import { map } from 'rxjs/operators';
-import * as _ from 'lodash-es';
+import { forkJoin, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { OSVService, AssetsResponse, OSVAsset, Pagination } from '@sdp-api';
+
+/** Our current customerId */
+const customerId = '231215372';
 
 /**
  * AssetSoftware Component
@@ -16,19 +19,40 @@ import * as _ from 'lodash-es';
 	templateUrl: './assets.component.html',
 })
 export class AssetsComponent {
-	@Input() public selectedAssetSoftware;
-	@Output() public selectedAssetSoftwareChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
-	public assetsSoftwareTable: CuiTableOptions;
+	@Input() public selectedAsset;
+	@Output() public selectedAssetChange = new EventEmitter<any>();
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
 	};
-	public assetSoftwares: any;
+	public assets: OSVAsset[];
+	public pagination: Pagination;
+	public paginationCount: string;
+	public destroy$ = new Subject();
+	public assetsParams: OSVService.GetAssetsParams = {
+		customerId,
+		filter: '',
+		pageIndex: 1,
+		pageSize: 10,
+		sortOrder: 'asc',
+	};
+	public rowActions = [
+		[
+			{
+				label: I18n.get('_OsvBasicRecommendations_'),
+				onClick: () => {
+					this.logger.info('clicked');
+				},
+			},
+		],
+	];
 
 	constructor (
 		private logger: LogService,
+		private osvService: OSVService,
 	) {
-		this.logger.debug('AssetSoftwareComponent Created!');
+		this.logger.debug('AssetComponent Created!');
 	}
 
 	/**
@@ -46,64 +70,41 @@ export class AssetsComponent {
 	private loadData () {
 		this.status.isLoading = true;
 		forkJoin(
-			this.getAssetSoftwares(),
+			this.getAssets(),
 		)
+			.pipe(
+				takeUntil(this.destroy$),
+			)
 			.subscribe(() => {
 				this.status.isLoading = false;
 			});
 	}
 
 	/**
-	 * Fetches the total counts for the visual filter
-	 * @returns the total counts observable
+	 * Fetches the list of assets
+	 * @returns the assets list observable
 	 */
-	private getAssetSoftwares () {
-		return of({ })
+	private getAssets () {
+		return this.osvService.getAssets(this.assetsParams)
 			.pipe(
-				map(() => {
-					this.assetSoftwares = [
-						{
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							hostName: 'Asset 1',
-							ipaddress: '10.1.171.1',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							productFamily: 'XYZ',
-						}, {
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							hostName: 'Asset 2',
-							ipaddress: '10.1.171.1',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							productFamily: 'XYZ',
-						}, {
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							hostName: 'Asset 3',
-							ipaddress: '10.1.171.1',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							productFamily: 'XYZ',
-						}, {
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							hostName: 'Asset 4',
-							ipaddress: '10.1.171.1',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							productFamily: 'XYZ',
-						}, {
-							currentOSVersion: '3',
-							deploymentStatus: 'None',
-							hostName: 'Asset 5',
-							ipaddress: '10.1.171.1',
-							optimalVersion: '8.6.100.2',
-							osType: 'IOS-XE',
-							productFamily: 'XYZ',
-						},
-					];
+				map((response: AssetsResponse) => {
+					if (response.data) {
+						this.assets = response.data;
+					} else {
+						this.assets = <any>response;
+					}
+
+					if (response.pagination) {
+						this.pagination = response.pagination;
+
+						const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
+						let last = (this.pagination.rows * this.pagination.page);
+						if (last > this.pagination.total) {
+							last = this.pagination.total;
+						}
+
+						this.paginationCount = `${first}-${last}`;
+					}
 					this.buildTable();
 				}),
 			);
@@ -113,29 +114,32 @@ export class AssetsComponent {
 	 * Will construct the assets table
 	 */
 	private buildTable () {
-		if (!this.assetsSoftwareTable) {
-			this.assetsSoftwareTable = new CuiTableOptions({
+		if (!this.assetsTable) {
+			this.assetsTable = new CuiTableOptions({
 				bordered: true,
 				columns: [
 					{
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
+						sortable: true,
+						sorting: true,
 					},
 					{
-						key: 'ipaddress',
+						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
 					},
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
+						sortable: true,
 					},
 					{
-						key: 'osType',
+						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 					},
 					{
-						key: 'currentOSVersion',
+						key: 'swVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
 					},
 					{
@@ -143,7 +147,7 @@ export class AssetsComponent {
 						name: I18n.get('_OsvOptimalVersion_'),
 					},
 					{
-						key: 'deploymentStatus',
+						key: 'deployment',
 						name: I18n.get('_OsvDeploymentStatus_'),
 					},
 					{
@@ -169,26 +173,42 @@ export class AssetsComponent {
 	}
 
 	/**
-	 * Returns the row specific actions
-	 * @returns the built actions
-	 */
-	public getRowActions () {
-		return _.filter([
-			{
-				label: I18n.get('_OsvCompareRecommendations'),
-			},
-			{
-				label: I18n.get('_OsvRefreshRecommendations_'),
-			},
-		]);
-	}
-
-	/**
 	 * Function used to handle single row selection
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: any) {
-		this.selectedAssetSoftware = item;
-		this.selectedAssetSoftwareChange.emit(this.selectedAssetSoftware);
+		this.selectedAsset = item;
+		this.selectedAssetChange.emit(this.selectedAsset);
+	}
+
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
+	}
+
+	/**
+	 * Page change handler
+	 * @param event the event emitted
+	 */
+	public onPageChanged (event: any) {
+		this.assetsParams.pageIndex = event.page;
+		this.loadData();
+	}
+
+	/**
+	 * Sorts the table by a column
+	 * @param sortColumn The column to sort by
+	 */
+	public sortTable (sortColumn: any) {
+		if (!sortColumn.sortable) {
+			return;
+		}
+		sortColumn.sortDirection = sortColumn.sortDirection === 'asc' ? 'desc' : 'asc';
+		this.assetsParams.sortOrder = sortColumn.sortDirection;
+		this.assetsParams.sort = sortColumn.key;
+		this.loadData();
 	}
 }

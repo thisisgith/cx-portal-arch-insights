@@ -7,6 +7,7 @@ import {
 	CuiLoaderModule,
 	CuiSpinnerModule,
 	CuiTableModule,
+	CuiButtonModule,
 } from '@cisco-ngx/cui-components';
 import { AssetTimelineChartModule } from '../asset-timeline-chart/asset-timeline-chart.module';
 
@@ -25,6 +26,7 @@ import { AssetTimelineChartModule } from '../asset-timeline-chart/asset-timeline
 		AssetTimelineChartModule,
 		CuiSpinnerModule,
 		CuiTableModule,
+		CuiButtonModule,
 	],
 })
 export class AssetDetailsModule { }

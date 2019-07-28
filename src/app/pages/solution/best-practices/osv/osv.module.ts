@@ -7,7 +7,6 @@ import { Panel360Module } from '@components';
 import { AssetDetailsModule } from './asset-detail/asset-detail.module';
 import { CuiTabsModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
-import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
 import { SoftwareProfilesModule } from './software-profiles/software-profile.module';
 import { AssetsModule } from './assets/assets.module';
 import { SoftwareVersionsModule } from './software-versions/software-versions.module';
@@ -19,6 +18,7 @@ import { OSVModule } from '@sdp-api';
 import {
 	AssetTimelineChartModule,
 } from './asset-timeline-chart/asset-timeline-chart.module';
+import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules

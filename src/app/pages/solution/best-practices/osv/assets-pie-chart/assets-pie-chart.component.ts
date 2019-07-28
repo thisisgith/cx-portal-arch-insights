@@ -70,6 +70,9 @@ export class AssetsPieChartComponent implements OnInit {
 			credits: {
 				enabled: false,
 			},
+			exporting: {
+				enabled: false,
+			},
 			plotOptions: {
 				pie: {
 					cursor: 'pointer',

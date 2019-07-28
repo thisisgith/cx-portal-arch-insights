@@ -8,7 +8,7 @@ import { map, takeUntil } from 'rxjs/operators';
 import { SoftwareProfilesResponse, OSVService, Pagination } from '@sdp-api';
 
 /** Our current customerId */
-const customerId = '2431199';
+const customerId = '231215372';
 
 /**
  * ProfileGroups Component
@@ -21,7 +21,7 @@ const customerId = '2431199';
 export class SoftwareProfilesComponent {
 	@Input() public selectedProfileGroup;
 	@Output() public selectedProfileGroupChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	public profileGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,

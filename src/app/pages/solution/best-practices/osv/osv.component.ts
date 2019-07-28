@@ -5,18 +5,11 @@ import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { takeUntil, map } from 'rxjs/operators';
 import {
-	OSVService,
-	DeviceCountResponse,
-	DeviceCount,
-	RiskCountResponse,
-	RiskCount,
-	DeploymentStatusCountResponse,
-	DeploymentStatusCount,
-	DERecommendationsResponse,
+	OSVService, SummaryResponse,
 } from '@sdp-api';
 
 /** Our current customerId */
-const customerId = '2431199';
+const customerId = '231215372';
 
 /**
  * Interface representing our visual filters
@@ -24,7 +17,7 @@ const customerId = '2431199';
 interface Filter {
 	key: string;
 	selected?: boolean;
-	template?: TemplateRef<{ }>;
+	template?: TemplateRef<{}>;
 	title?: string;
 	loading: boolean;
 	data: {
@@ -45,24 +38,22 @@ interface Filter {
 	templateUrl: './osv.component.html',
 })
 export class OptimalSoftwareVersionComponent {
-	@ViewChild('riskLevelFilter', { static: true }) private riskLevelFilterTemplate:
-		TemplateRef<{ }>;
+	@ViewChild('assetTypeFilter', { static: true }) private assetTypeFilterTemplate:
+		TemplateRef<{}>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{ }>;
-	@ViewChild('deRecommendationFilter', { static: true }) private deRecommendationFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	public status = {
 		isLoading: true,
 	};
 	public selectedProfileGroup: any;
-	public selectedAssetSoftware: any;
+	public selectedAsset: any;
 	public filtered = false;
 	public filters: Filter[];
 	private destroy$ = new Subject();
-	public view: 'swProfiles' | 'assetsSwProfiles' | 'assets' | 'swVersions'
-		= 'swProfiles';
+	public view: 'swProfiles' | 'assets' | 'swVersions'
+		= 'assets';
 	constructor (private logger: LogService,
 		private osvService: OSVService) { }
 
@@ -87,7 +78,7 @@ export class OptimalSoftwareVersionComponent {
 				selected: true,
 				template: this.totalAssetsFilterTemplate,
 				data: [],
-				view: ['swProfiles', 'assets', 'swVersions', 'assetsSwProfiles'],
+				view: ['swProfiles', 'assets', 'swVersions'],
 			},
 			{
 				key: 'deploymentStatus',
@@ -96,25 +87,16 @@ export class OptimalSoftwareVersionComponent {
 				template: this.deploymentStatusFilterTemplate,
 				data: [],
 				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
-				view: ['swProfiles', 'assets'],
+				view: ['assets'],
 			},
 			{
-				key: 'riskLevel',
+				key: 'assetType',
 				loading: true,
 				selected: false,
-				template: this.riskLevelFilterTemplate,
+				template: this.assetTypeFilterTemplate,
 				data: [],
-				title: I18n.get('_OsvRiskLevel_'),
-				view: ['swProfiles'],
-			},
-			{
-				key: 'deRecommendation',
-				loading: true,
-				selected: false,
-				template: this.deRecommendationFilterTemplate,
-				data: [],
-				title: I18n.get('_OsvDERecommendation_'),
-				view: ['assetsSwProfiles'],
+				title: I18n.get('_OsvAssets_'),
+				view: ['assets'],
 			},
 		];
 		this.loadData();
@@ -126,10 +108,7 @@ export class OptimalSoftwareVersionComponent {
 	private loadData () {
 		this.status.isLoading = true;
 		forkJoin(
-			this.getTotalAssetsCounts(),
-			this.getDeploymentStatusCounts(),
-			this.getRiskLevelStatusCounts(),
-			this.getDERecommendationCounts(),
+			this.getSummary(),
 		)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -141,94 +120,51 @@ export class OptimalSoftwareVersionComponent {
 	}
 
 	/**
-	 * Fetches the DE Recommendation Counts
-	 * @returns the total counts observable of DE Recommendations
-	 */
-	private getDERecommendationCounts () {
-		const deRecommendationFilter = _.find(this.filters, { key: 'deRecommendation' });
-		return this.osvService.getDERecommendations({ customerId })
-			.pipe(
-				map((response: DERecommendationsResponse) => {
-					deRecommendationFilter.loading = false;
-					deRecommendationFilter.data = _.compact(
-						_.map(response, (value: DeploymentStatusCount) => {
-							if (value !== 0) {
-								return {
-									value: value.deviceCount,
-									filter: value.status,
-									label: _.capitalize(value.status),
-									selected: false,
-								};
-							}
-						}));
-				}),
-			);
-	}
-
-	/**
 	 * Fetches the total counts for the visual filter
 	 * @returns the total counts observable
 	 */
-	private getTotalAssetsCounts () {
+	private getSummary () {
 
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
-		return this.osvService.getDeviceCount({ customerId })
-			.pipe(
-				map((response: DeviceCountResponse) => {
-					totalAssetsFilter.loading = false;
-					totalAssetsFilter.data[0] = { };
-					_.map(response, (d: DeviceCount) => {
-						totalAssetsFilter.data[0][d.type] = d.deviceCount;
-					});
-				}),
-			);
-	}
-
-	/**
-	 * Fetches the total counts for the visual filter
-	 * @returns the total counts observable
-	 */
-	private getDeploymentStatusCounts () {
 		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
-		return this.osvService.getDeploymentStatusCount({ customerId })
+		const assetTypeFilter = _.find(this.filters, { key: 'assetType' });
+		return this.osvService.getSummary({ customerId })
 			.pipe(
-				map((response: DeploymentStatusCountResponse) => {
+				map((response: SummaryResponse) => {
+					totalAssetsFilter.loading = false;
 					deploymentStatusFilter.loading = false;
+					assetTypeFilter.loading = false;
+					totalAssetsFilter.data[0] = {
+						assets: response.assets,
+						versions: response.versions,
+						profiles: response.profiles,
+					};
 					deploymentStatusFilter.data = _.compact(
-						_.map(response, (value: DeploymentStatusCount) => {
+						_.map(response.deployment, (value: number, key: string) => {
 							if (value !== 0) {
 								return {
-									value: value.deviceCount,
-									filter: value.status,
-									label: _.capitalize(value.status),
+									value,
+									filter: key,
+									label: _.capitalize(key),
 									selected: false,
 								};
 							}
 						}));
-				}),
-			);
-	}
 
-	/**
-	 * Fetches the total counts for the visual filter
-	 * @returns the total counts observable
-	 */
-	private getRiskLevelStatusCounts () {
-		const riskLevelStatusFilter = _.find(this.filters, { key: 'riskLevel' });
-		return this.osvService.getRiskCount({ customerId })
-			.pipe(
-				map((response: RiskCountResponse) => {
-					riskLevelStatusFilter.loading = false;
-					riskLevelStatusFilter.data = _.compact(_.map(response, (value: RiskCount) => {
-						if (value !== 0) {
-							return {
-								value: value.deviceCount,
-								filter: value.risk,
-								label: _.capitalize(value.risk),
-								selected: false,
-							};
-						}
-					}));
+					assetTypeFilter.data = _.compact(
+						_.map(response.asset_profile, (value: number, key: string) => {
+							if (value !== 0) {
+								return {
+									value,
+									filter: key,
+									label: key === 'assets_profile' ?
+										I18n.get('_OsvAssetsOfSoftwareProfiles_')
+										: I18n.get('_OsvIndependentAssets_'),
+									selected: false,
+								};
+							}
+						}));
+
 				}),
 			);
 	}
@@ -245,7 +181,7 @@ export class OptimalSoftwareVersionComponent {
 	 * Changes the view to either swProfiles or assets
 	 * @param view view to set
 	 */
-	public selectView (view: 'swProfiles' | 'assetsSwProfiles' | 'assets' | 'swVersions') {
+	public selectView (view: 'swProfiles' | 'assets' | 'swVersions') {
 		if (this.view !== view) {
 			this.view = view;
 		}

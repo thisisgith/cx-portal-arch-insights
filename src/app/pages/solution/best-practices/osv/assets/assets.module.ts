@@ -1,7 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssetsComponent } from './assets.component';
-import { CuiTableModule, CuiDropdownModule } from '@cisco-ngx/cui-components';
+import {
+	CuiTableModule,
+	CuiDropdownModule,
+	CuiPagerModule,
+	CuiSpinnerModule,
+} from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
@@ -15,6 +20,9 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		CuiTableModule,
 		CuiDropdownModule,
 		I18nPipeModule,
+		CuiPagerModule,
+		CuiSpinnerModule,
+
 	],
 })
 export class AssetsModule { }

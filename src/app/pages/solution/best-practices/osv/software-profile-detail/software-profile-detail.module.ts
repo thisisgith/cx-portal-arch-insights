@@ -5,7 +5,6 @@ import { CuiTabsModule } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AssetsBarChartModule } from '../../../assets/assets-bar-chart/assets-bar-chart.module';
 
-
 /**
  * SoftwareProfileDetail Module
  */

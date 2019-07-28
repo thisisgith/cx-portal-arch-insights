@@ -18,7 +18,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
 
 /** Our current customerId */
-const customerId = '2431199';
+const customerId = '231215372';
 
 /**
  * Asset Software Details Component
@@ -29,16 +29,14 @@ const customerId = '2431199';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('recommendationDetail', { static: true })
-	private recommendationDetailTemplate: TemplateRef<{ }>;
-
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	public data: any;
 	public status = {
 		isLoading: true,
 	};
 	private destroy$ = new Subject();
-	public view: 'list' | 'timeline' = 'timeline';
+	public view: 'list' | 'timeline' = 'list';
 	public basicRecommendationsTable: CuiTableOptions;
 
 	constructor (
@@ -109,24 +107,23 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 						width: '10%',
 					},
 					{
-						key: 'status',
-						name: I18n.get('_OsvStatusOrAction_'),
-						width: '30%',
-					},
-					{
 						key: 'releaseDate',
 						name: I18n.get('_OsvReleaseDate_'),
 						render: item =>
 							datePipe.transform(item.releaseDate, 'yyyy MMM dd'),
 						width: '20%',
 					},
+					{
+						name: I18n.get('_OsvStatusOrAction_'),
+						width: '30%',
+						template: this.actionsTemplate,
+					},
 				],
-				rowWellTemplate: this.recommendationDetailTemplate,
 				dynamicData: true,
 				hover: true,
 				padding: 'compressed',
 				selectable: false,
-				singleSelect: true,
+				singleSelect: false,
 				sortable: true,
 				striped: false,
 				wrapText: true,
@@ -140,5 +137,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+	}
+
+	/**
+	 * accept recommendations
+	 * @param cellData accept recommendations for thie selected row
+	 */
+	public onActionClick (cellData: any) {
+		this.logger.debug(cellData);
 	}
 }
