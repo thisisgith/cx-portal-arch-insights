@@ -7,7 +7,7 @@ const coverageMock = new MockService('CoverageScenarios');
 const contractMock = new MockService('ContractScenrios');
 
 describe('General Spec', () => {
-	context('Basic Loading Sanity', () => {
+	context.skip('Basic Loading Sanity', () => {
 		it('Loads the app', () => {
 			cy.loadApp();
 			cy.get('h1.page-title').should('have.text', 'CX Console');
@@ -20,7 +20,7 @@ describe('General Spec', () => {
 		});
 	});
 
-	context('General Search', () => {
+	context.skip('General Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -85,7 +85,7 @@ describe('General Spec', () => {
 		});
 	});
 
-	context('Case Search', () => {
+	context.skip('Case Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -149,7 +149,7 @@ describe('General Spec', () => {
 		});
 	});
 
-	context('RMA Search', () => {
+	context.skip('RMA Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -298,7 +298,7 @@ describe('General Spec', () => {
 		});
 	});
 
-	context('Contract Search', () => {
+	context.skip('Contract Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -360,7 +360,7 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Serial Search FOX1333GGGG', () => {
+		it.only('Serial Search FOX1333GGGG', () => {
 			// PBC-170
 			const serialVal = 'FOX1333GGGG';
 			cy.server();
@@ -419,6 +419,28 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchResultLinkPre1').should('exist');
 			cy.getByAutoId('searchResultLinkPre2').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
+		});
+		it('Serial Number Intercept - Last Scan Text', () => {
+			// PBC-247
+			const serialVal = 'FOC1544Y16T'; // real SN
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial'); // TODO might need to update route
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(serialVal.concat('{enter}'));
+			cy.wait('@serial');
+			cy.getByAutoId('clockIcon').should('exist'); // PBC-247 specific
+			cy.getByAutoId('lastScanText').should('exist').should('contain', 'Based on last scan'); // PBC-247 specific
+		});
+		it('Serial Number intercept - View Device Details')
+			// PBC-248
+			const serialVal = 'FOC1544Y16T'; // real SN
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial'); // TODO might need to update route
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(serialVal.concat('{enter}'));
+			cy.wait('@serial');
+			cy.getByAutoId('viewDeviceButton').should('exist').click(); // PBC-248 specific
+			// TODO as of today Sun Jul 28, the click doesn't open the app360 panel.
 		});
 	});
 });
