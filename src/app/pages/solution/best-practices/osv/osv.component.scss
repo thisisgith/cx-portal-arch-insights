@@ -22,8 +22,38 @@
 }
 
 .vertical-center {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
+	vertical-align: middle;	
 }
 
+.profile-info{
+	z-index:9;
+	border: 1px solid #d6d6d6;
+	background-color:#ffffff;
+	left: 30px;
+	width: 800px;
+	top: -1px;
+
+	> div{
+		padding: 10px;
+	}
+
+	&:before{
+		border-color: transparent #fff #fff transparent;
+		border-style: solid;
+		border-width: 7px;
+		bottom: 7px;
+		box-shadow: 1px 1px 0px 0 rgba(0,0,0,0.1);
+		box-sizing: border-box;
+		content: "";
+		display: block;
+		height: 0;
+		position: relative;
+		transform: rotate(135deg);
+		transform-origin: center center;
+		width: 0;
+		left: -7px;
+		top: 7px;
+	  }
+  }
+   
+  

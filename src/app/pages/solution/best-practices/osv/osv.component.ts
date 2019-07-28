@@ -54,6 +54,8 @@ export class OptimalSoftwareVersionComponent {
 	private destroy$ = new Subject();
 	public view: 'swProfiles' | 'assets' | 'swVersions'
 		= 'assets';
+	public hideProfileInfo = false;
+	public showProfileInfo = false;
 	constructor (private logger: LogService,
 		private osvService: OSVService) { }
 
@@ -63,6 +65,13 @@ export class OptimalSoftwareVersionComponent {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
+		if (window.localStorage.getItem('hideProfileInfo') === 'true') {
+			this.showProfileInfo = false;
+			this.hideProfileInfo = true;
+		} else {
+			this.showProfileInfo = true;
+			this.hideProfileInfo = false;
+		}
 		this.buildFilters();
 	}
 
@@ -272,5 +281,17 @@ export class OptimalSoftwareVersionComponent {
 			});
 		});
 		totalFilter.selected = true;
+	}
+
+	/**
+	 * hide profile Info modal be default
+	 */
+	public hideInfo () {
+		if (this.hideProfileInfo) {
+			window.localStorage.setItem('hideProfileInfo', 'true');
+		} else {
+			window.localStorage.setItem('hideProfileInfo', 'false');
+
+		}
 	}
 }

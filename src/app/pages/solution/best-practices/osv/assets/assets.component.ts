@@ -6,7 +6,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, Pagination } from '@sdp-api';
-
+import * as _ from 'lodash-es';
 /** Our current customerId */
 const customerId = '231215372';
 
@@ -37,15 +37,11 @@ export class AssetsComponent {
 		pageSize: 10,
 		sortOrder: 'asc',
 	};
+
 	public rowActions = [
-		[
-			{
-				label: I18n.get('_OsvBasicRecommendations_'),
-				onClick: () => {
-					this.logger.info('clicked');
-				},
-			},
-		],
+		{
+			label: I18n.get('_OsvBasicRecommendations_'),
+		},
 	];
 
 	constructor (
@@ -211,4 +207,23 @@ export class AssetsComponent {
 		this.assetsParams.sort = sortColumn.key;
 		this.loadData();
 	}
+
+	/**
+	 * Returns the row specific actions
+	 * @param asset the asset we're building the actions for
+	 * @returns the built actions
+	 */
+	public getRowActions (asset: OSVAsset) {
+		return [
+			[
+				{
+					label: I18n.get('_OsvBasicRecommendations_'),
+					onClick: (action: any) => {
+						this.logger.debug(action);
+					},
+				},
+			],
+		];
+	}
+
 }

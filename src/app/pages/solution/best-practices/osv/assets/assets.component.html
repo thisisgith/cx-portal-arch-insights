@@ -57,7 +57,19 @@
 	<cui-spinner></cui-spinner>
 </div>
 
-<ng-template #actionsTemplate let-celldata="celldata">
-	<cui-dropdown [actions]="rowActions" position="left" icon="icon-more icon-medium text-muted rotate-90">
+<ng-template #actionsTemplate let-item="celldata">
+	<cui-dropdown [actions]="getRowActions(item)" position="left" icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
+	<!-- <div class="dropdown dropdown--animated dropdown--left dropdown--tail" tabindex="-1"
+		[ngClass]="{'active': item.active }" (click)="item.active = !item.active" (blur)="doBlur(item)">
+		<span class="icon-more icon-medium text-muted rotate-90"></span>
+		<div class="dropdown__menu">
+			<ng-container *ngFor="let action of rowActions; index as i">
+				<div *ngIf="i > 0" class="dropdown__divider"></div>
+				<a href="javascript:void(0)" (click)="onActionClick(action,item)">
+					<span>{{action.label}}</span>
+				</a>
+			</ng-container>
+		</div>
+	</div> -->
 </ng-template>

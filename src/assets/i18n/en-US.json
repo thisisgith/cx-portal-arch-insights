@@ -519,6 +519,7 @@
 	"_OsvViewAllOSVersions_": "View all OS Versions",
 	"_OsvYes_": "Y",
 	"_OsvNo_": "N",
+	"_OsvClose_":"Close",
 	"_CoveredUntil_": "Covered until {0}",
 	"_Critical_": "Critical",
 	"_CriticalBugs_": "Critical Bugs",

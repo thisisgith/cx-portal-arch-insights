@@ -92,7 +92,7 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div class="vertical-center max-width" (click)="clearFilters()" data-auto-id="TotalVisualFilter">
+	<div class="max-width absolute-center" (click)="clearFilters()" data-auto-id="TotalVisualFilter">
 		<div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-muted':view != 'swProfiles'}"
 			data-auto-id="TotalVisualFilterSoftwareProfiles">
 			<div class="col-5 text-right">
@@ -100,6 +100,12 @@
 			</div>
 			<div class="col-7 margin-auto">
 				<span class="text-xlarge " [innerText]="'_OsvSoftwareProfiles_' | i18n"></span>
+				<span class="pull-right text-info relative">
+					<i class="icon-question-circle icon-small"
+						(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;"></i>
+					<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
+				</span>
+
 			</div>
 		</div>
 		<div class="row toggle" (click)="selectView('assets')" [ngClass]="{'text-muted':view != 'assets'}"
@@ -109,6 +115,10 @@
 			</div>
 			<div class="col-7 margin-auto">
 				<span class="text-xlarge " [innerText]="'_OsvAssets_' | i18n"></span>
+				<span class="text-info  pull-right" data-balloon-length="medium" data-balloon="Asset info coming soon!!"
+					data-balloon-pos="right">
+					<i class="icon-info icon-small"></i>
+				</span>
 			</div>
 		</div>
 		<div class="row toggle" (click)="selectView('swVersions')" [ngClass]="{'text-muted':view != 'swVersions'}"
@@ -131,4 +141,71 @@
 <ng-template #assetTypeFilter let-filter="filter">
 	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
 	</assets-pie-chart>
+</ng-template>
+
+<ng-template #softwareProfileInfo>
+	<div class="absolute profile-info text-default" *ngIf="showProfileInfo">
+		<div class="row">
+			<div class="col-12 text-xlarge base-margin-bottom">
+				<div class="row">
+					<div class="col-md-10" [innerText]="'_OsvSoftwareProfiles_' | i18n"></div>
+					<div class="col-md-2">
+						<i class="icon-close pull-right qtr-margin-right"
+							(click)="$event.stopPropagation();showProfileInfo = false;"></i>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 base-margin-bottom">
+				<p>A <span class="text-bold">software profile</span> comprises of <span
+						class="text-bold">inventory</span> and <span class="text-bold">operational preferences</span>,
+					designed to process the
+					software recommendations</p>
+				<ul>
+					<li>
+						<span class="text-bold">Inventory Preferences:</span>
+						<ul>
+							<li>
+								This comprises all devices in the customer network organised via a group policy.
+							</li>
+							<li>
+								A policy group organises assets (currently bases on Software Type and Product Id).
+							</li>
+							<li>
+								It aggregates the inventory information from all the grouped assets.
+							</li>
+						</ul>
+					</li>
+					<li>
+						<span class="text-bold">Operational Preferences:</span>
+						<ul>
+							<li>
+								This comprises a set of attributes that define the preferred operational aspects for
+								software recommendation, such as Release Age and Release Popularity.
+							</li>
+							<li>
+								Based on release attributes, there are different categories such as Conservative,
+								Moderate and Aggressive.
+							</li>
+							<li>
+								Currently software profiles are set to Aggressive by default which will prefer latest
+								releases.
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
+			<div class="col-12 half-padding">
+				<div class="text-right">
+					<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();">
+						<input type="checkbox" [(ngModel)]="hideProfileInfo" (ngModelChange)="hideInfo($event)">
+						<span class="checkbox__input"></span>
+						<span class="checkbox__label">Do not show this again, by default.</span>
+					</label>
+					<button class="btn btn--gray-ghost btn--small" [innerText]="'_OsvClose_' | i18n"
+						(click)="$event.stopPropagation();showProfileInfo = false"></button>
+				</div>
+			</div>
+		</div>
+	</div>
 </ng-template>
