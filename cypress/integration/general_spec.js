@@ -424,7 +424,7 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
 
-		describe.only('Search enhancements - PBC-247 PBC-248 PBC-249', () => {
+		describe('Search enhancements - PBC-247 PBC-248 PBC-249', () => {
 			beforeEach(() => {
 				// Search for the chosen Serial Number
 				const serialVal = 'FOC1544Y16T'; // real SN
