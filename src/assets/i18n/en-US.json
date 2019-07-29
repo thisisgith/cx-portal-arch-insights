@@ -446,6 +446,8 @@
 	"_Total_": "Total",
 	"_TrackingNumber_": "Tracking Number",
 	"_TrainingWebinars_": "Training webinars led by Cisco Experts",
+	"_TrainingRequestSuccessfullySubmitted_": "Training request successfully submitted",
+	"_TrainignRequestFailed_": "Training request failed, please try again.",
 	"_TryDifferentKeyword_": "Try different keyword",
 	"_TryMoreGeneralKeywords_": "Try more general keywords",
 	"_Type_": "Type",

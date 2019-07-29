@@ -888,6 +888,9 @@
 
 <ng-container *ngIf="selectCgtComponent">
 	<cgt-request-form (visibleComponent)="selectCgtRequestForm($event)"
+		[solution]="selectedSolution.name"
+		[technology]="selectedTechnology.name"
+		[pitstop]="currentPitstop.name"
 		(submitted)="cgtRequestSubmit($event)">
 	</cgt-request-form>
 </ng-container>

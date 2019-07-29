@@ -21,6 +21,23 @@
                                 </div>
                             </div>
                         </ng-container>
+                        <ng-container *ngIf="formSubmissionSucceeded">
+                            <div class="row half-padding-left base-padding-top">
+                                <div class="alert alert--success dbl-padding-left">
+                                    <div class="alert__icon icon-check-outline"></div>
+                                    <div class="alert__message text-left" [innerText]="'_TrainingRequestSuccessfullySubmitted_' | i18n"></div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="!loading">
+                            <div class="row half-padding-left base-padding-top">
+                                <div class="alert alert--danger dbl-padding-left">
+                                    <div class="alert__icon icon-error-outline"></div>
+                                    <div class="alert__message text-left" [innerText]="'_TrainignRequestFailed_' | i18n"></div>
+                                    <span (click)="closeRequestForm()" class="alert__close icon-close"></span>
+                                </div>
+                            </div>
+                        </ng-container>
                     </div>
                     <div class="col-md-1 half-margin-top">
                         <span (click)="closeRequestForm()"

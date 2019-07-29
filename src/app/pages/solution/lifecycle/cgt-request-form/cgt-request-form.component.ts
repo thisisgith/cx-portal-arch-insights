@@ -3,6 +3,8 @@ import {
 	Output,
 	EventEmitter,
 	OnInit,
+	OnDestroy,
+	Input,
  } from '@angular/core';
 import {
 	FormGroup,
@@ -11,20 +13,13 @@ import {
 } from '@angular/forms';
 import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
-
-/**
- * Placeholder customer info until API is used
- */
-interface CustInfo {
-	companyName: string;
-	userName: string;
-	jobTitle: string;
-	userEmail: string;
-	userPhoneNumber: string;
-	ciscoContact: string;
-	ccoId: string;
-	country: string;
-}
+import {
+	ACCUserInfoSchema,
+	RacetrackContentService,
+	GroupTrainingRequestSchema,
+} from '@sdp-api';
+import { catchError, takeUntil, finalize } from 'rxjs/operators';
+import { empty, Subject } from 'rxjs';
 
 /**
  * interface representing the key/value of a select input option
@@ -42,13 +37,21 @@ interface SelectOption {
 	styleUrls: ['./cgt-request-form.component.scss'],
 	templateUrl: './cgt-request-form.component.html',
 })
-export class CgtRequestFormComponent implements OnInit {
+export class CgtRequestFormComponent implements OnDestroy, OnInit {
 
+	@Input() public solution: string;
+	@Input() public pitstop: string;
+	@Input() public technology: string;
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
-	public custData: CustInfo;
+
+	public customerId = '2431199';
+	private destroyed$: Subject<void> = new Subject<void>();
+	public custData: ACCUserInfoSchema;
 	public maxLength = 512;
 	public loading = false;
+	public formSubmissionSucceeded = false;
+	public formSubmissionFailed = false;
 
 	public requestForm: FormGroup = this.fb.group({
 		contract: ['', Validators.required],
@@ -60,8 +63,8 @@ export class CgtRequestFormComponent implements OnInit {
 	});
 
 	public timeZoneOptions: SelectOption[] = [
-		{ key: I18n.get('_PacificTime/US_'), value: I18n.get('_PacificTime/US_') },
 		{ key: I18n.get('_EasternTime/US_'), value: I18n.get('_EasternTime/US_') },
+		{ key: I18n.get('_PacificTime/US_'), value: I18n.get('_PacificTime/US_') },
 	];
 
 	public languageOptions: SelectOption[] = [
@@ -91,6 +94,7 @@ export class CgtRequestFormComponent implements OnInit {
 	constructor (
 		private logger: LogService,
 		private fb: FormBuilder,
+		private contentService: RacetrackContentService,
 	) {
 		this.logger.debug('CgtRequestFormComponent Created!');
 	}
@@ -103,26 +107,60 @@ export class CgtRequestFormComponent implements OnInit {
 	}
 
 	/**
+	 * ngOnDestroy
+	 */
+	 public ngOnDestroy () {
+		 this.destroyed$.next();
+		 this.destroyed$.complete();
+	 }
+	/**
 	 * Initialization of the ACC request form and customer info
 	 */
 	public ngOnInit () {
-		this.custData = {
-			companyName: 'Company',
-			userName: 'John Doe',
-			jobTitle: 'Title',
-			userEmail: 'johnDoe@cisco.com',
-			userPhoneNumber: '1-818-555-5555',
-			ciscoContact: 'CSE Name',
-			ccoId: '12345678',
-			country: 'USA',
-		};
+		this.loading = true;
+		this.contentService.getACCUserInfo()
+			.pipe(
+				catchError(() => empty()),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.custData = response;
+			});
 	}
 
 	/**
 	 * Submit the completed ACC request form
 	 */
 	public onSubmit () {
-		this.logger.debug('Submitted CGT response form');
-		this.submitted.emit(true);
+		const groupTrainingRequestParams: GroupTrainingRequestSchema = {
+			contract: this.requestForm.get('contract').value,
+			technologyArea: this.requestForm.get('technologyArea').value,
+			timezone: this.requestForm.get('timeZone').value,
+			preferredSlot: this.requestForm.get('meetingTime').value,
+			preferredLanguage: this.requestForm.get('language').value,
+			trainingSessionGoal: this.requestForm.get('trainingGoal').value,
+			pitstop: this.pitstop,
+			solution: this.solution,
+			usecase: this.technology,
+		};
+		const params: RacetrackContentService.CreateUsingPOSTParams = {
+			gtRequest: groupTrainingRequestParams,
+		};
+		this.contentService
+		.createUsingPOST(params)
+			.pipe(
+				catchError(() => empty()),
+				finalize(() => this.formSubmissionFailed = true),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(() => {
+				this.formSubmissionSucceeded = true;
+				this.logger.debug('Submitted CGT response form');
+				setTimeout(()=>{
+					this.formSubmissionSucceeded = false;
+					this.submitted.emit(true);
+				}, 10000);
+			});
 	}
 }
