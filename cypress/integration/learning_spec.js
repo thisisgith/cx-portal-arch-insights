@@ -1,11 +1,11 @@
 import MockService from '../support/mockService';
 
 const elearningMock = new MockService('ELearningScenarios');
-const elearningOnboardScenario = elearningMock.getScenario('GET', '(E-Learning) IBN-Wireless Assurance-Onboard');
+const elearningOnboardScenario = elearningMock.getScenario('GET', '(E-Learning) IBN-Campus Network Assurance-Onboard');
 const elearningItems = elearningOnboardScenario.response.body.items;
 
 const successPathMock = new MockService('SuccessPathScenarios');
-const successPathOnboardScenario = successPathMock.getScenario('GET', '(SP) IBN-Wireless Assurance-Onboard');
+const successPathOnboardScenario = successPathMock.getScenario('GET', '(SP) IBN-Campus Network Assurance-Onboard');
 const successPathItems = successPathOnboardScenario.response.body.items;
 
 // Strip out all possible archetypes
@@ -303,7 +303,7 @@ describe('Learn Panel', () => {
 
 			// Reload the page to force-clear any sort/filter
 			cy.loadApp();
-			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 		});
 
 		it('Product Guides View All should be able to toggle between table and card views', () => {
@@ -610,10 +610,9 @@ describe('Learn Panel', () => {
 
 			// Make sure we're on the lifecycle page and the default use case
 			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
-
-			cy.getByAutoId('TechnologyDropdown-Wireless Assurance').click();
-			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 		});
 
 		it('Product Guides View All table sort should be sticky across modal close/re-open', () => {
@@ -694,8 +693,8 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
-			cy.getByAutoId('TechnologyDropdown-SD Access').click();
-			cy.wait('(SP) IBN-SD Access-Onboard');
+			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
@@ -727,7 +726,7 @@ describe('Learn Panel', () => {
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
-			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
@@ -763,7 +762,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 
 			cy.loadApp();
-			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
@@ -890,10 +889,9 @@ describe('Learn Panel', () => {
 
 			// Make sure we're on the lifecycle page and the default use case
 			cy.getByAutoId('UseCaseDropdown').click();
-			cy.getByAutoId('Facet-Lifecycle').click();
-
 			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
-			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 		});
 
 		it('View All Product Guides filter should be sticky', () => {
@@ -933,7 +931,7 @@ describe('Learn Panel', () => {
 
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
-			cy.wait('(SP) IBN-Campus network segmentation-Onboard');
+			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
@@ -958,7 +956,7 @@ describe('Learn Panel', () => {
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
-			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
@@ -982,7 +980,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 
 			cy.loadApp();
-			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
+			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
