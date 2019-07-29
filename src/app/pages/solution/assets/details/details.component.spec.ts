@@ -191,6 +191,14 @@ describe('AssetDetailsComponent', () => {
 			.toEqual('AAA');
 	});
 
+	it('should determine close', () => {
+		fixture.detectChanges();
+
+		component.determineClose(false);
+
+		expect(component.hidden)
+			.toBeFalsy();
+	});
 	// it('should handle fullscreen', () => {
 	// 	buildSpies();
 

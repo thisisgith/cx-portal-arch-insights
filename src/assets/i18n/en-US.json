@@ -158,6 +158,7 @@
 	"_English_": "English",
 	"_EoXMilestones_": "EoX Milestones",
 	"_ErrorDetails_": "Error Details",
+	"_ErrorCustomerInfo_": "Error: Cannot load customer info",
 	"_ExpirationDate_": "Expiration Date",
 	"_ExportAll_": "Export All",
 	"_ExportAssets_": "Export ({0}) assets to ...",
