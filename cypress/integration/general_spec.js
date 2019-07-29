@@ -427,7 +427,7 @@ describe('General Spec', () => {
 			// PBC-247
 			const serialVal = 'FOC1544Y16T'; // real SN
 			cy.server();
-			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial'); // TODO might need to update route
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(serialVal.concat('{enter}'));
 			cy.wait('@serial');
@@ -439,13 +439,31 @@ describe('General Spec', () => {
 			// PBC-248
 			const serialVal = 'FOC1544Y16T'; // real SN
 			cy.server();
-			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial'); // TODO might need to update route
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
 				.type(serialVal.concat('{enter}'));
 			cy.wait('@serial');
 			cy.getByAutoId('viewDeviceButton').should('exist').click(); // PBC-248 specific
 			cy.getByAutoId('Asset360SerialNumber').should('exist'); // app360 panel opened
 			cy.getByAutoId('CloseDetails').should('exist').click();
+		});
+
+		it.only('Serial Number Intercept - Open a Case', () => {
+			// PBC-249
+			const serialVal = 'FOC1544Y16T'; // real SN
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial');
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(serialVal.concat('{enter}'));
+			cy.wait('@serial');
+			cy.getByAutoId('openCaseButton').should('exist').should('contain', 'Open a Case') // PBC-249 specific
+				.click(); // PBC-249 specific
+			cy.getByAutoId('CaseOpenNextButton').should('exist');
+			cy.getByAutoId('CaseOpenCancelButton').should('exist');
+			cy.getByAutoId('CaseOpenClose').should('exist').click(); // Click the X
+			cy.getByAutoId('CaseOpenContinue').should('exist');
+			cy.getByAutoId('CaseOpenCancel').should('exist').click(); // Cancel case open
+			cy.getByAutoId('searchClose').should('exist').click(); // Close the search results - X
 		});
 	});
 });
