@@ -288,6 +288,7 @@ describe('General Spec', () => {
 				.type(rmaVal.concat('{enter}'));
 
 			cy.wait('@rma').then(() => {
+				cy.wait(3000);
 				cy.getByAutoId('rmaStatus').should('exist').should('contain', i18n._Status_);
 				cy.getByAutoId('rmaNumber').should('exist');
 				cy.getByAutoId('caseNumber').should('exist').click({ multiple: true });
