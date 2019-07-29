@@ -360,7 +360,7 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it.only('Serial Search FOX1333GGGG', () => {
+		it('Serial Search FOX1333GGGG', () => {
 			// PBC-170
 			const serialVal = 'FOX1333GGGG';
 			cy.server();
@@ -420,6 +420,7 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchResultLinkPre2').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
+
 		it('Serial Number Intercept - Last Scan Text', () => {
 			// PBC-247
 			const serialVal = 'FOC1544Y16T'; // real SN
@@ -431,7 +432,8 @@ describe('General Spec', () => {
 			cy.getByAutoId('clockIcon').should('exist'); // PBC-247 specific
 			cy.getByAutoId('lastScanText').should('exist').should('contain', 'Based on last scan'); // PBC-247 specific
 		});
-		it('Serial Number intercept - View Device Details')
+
+		it.only('Serial Number intercept - View Device Details', () => {
 			// PBC-248
 			const serialVal = 'FOC1544Y16T'; // real SN
 			cy.server();
@@ -440,7 +442,8 @@ describe('General Spec', () => {
 				.type(serialVal.concat('{enter}'));
 			cy.wait('@serial');
 			cy.getByAutoId('viewDeviceButton').should('exist').click(); // PBC-248 specific
-			// TODO as of today Sun Jul 28, the click doesn't open the app360 panel.
+			cy.getByAutoId('Asset360SerialNumber').should('exist'); // app360 panel opened
+			cy.getByAutoId('CloseDetails').should('exist').click();
 		});
 	});
 });
