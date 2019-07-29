@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {
+	Component,
+	OnInit,
+} from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -8,7 +11,7 @@ import {
 } from '@sdp-api';
 
 import { empty, Subject } from 'rxjs';
-import { catchError, finalize, takeUntil, mergeMap } from 'rxjs/operators';
+import { catchError, finalize, takeUntil, mergeMap, tap } from 'rxjs/operators';
 
 import cronstrue from 'cronstrue';
 import * as _ from 'lodash-es';
@@ -22,6 +25,10 @@ import * as _ from 'lodash-es';
 	templateUrl: './policies.component.html',
 })
 export class PoliciesComponent implements OnInit {
+	public selectEditCollectionComponent = false;
+	public loadedPolicyId: string;
+	public customerId: string;
+
 	private destroyed$: Subject<void> = new Subject<void>();
 	public policyData: PolicyResponseModel[];
 	public loading = true;
@@ -86,12 +93,39 @@ export class PoliciesComponent implements OnInit {
 	}
 
 	/**
+	 * Select/deselect the collection form component
+	 * @param selected whether the component is visible or not
+	 * @param policyId policyId of collection to modify
+	 * @param accTitle title of selected ACC
+	 */
+	public editCollection (selected: boolean, policyId: string) {
+		if (selected) {
+			this.loadedPolicyId = policyId;
+		}
+
+		this.selectEditCollectionComponent = selected;
+	}
+
+	/**
+	 * Trigger the submitted acc success text.  Currently placeholder and will be removed
+	 * because this info will come from the API
+	 * @param submitted if the request was submitted
+	 */
+	public collectionRequestSubmit (submitted: boolean) {
+		if (submitted) {
+			this.selectEditCollectionComponent = false;
+		}
+	}
+
+	/**
 	 * Function which instanstiates the settings page to the initial view
 	 */
 	public ngOnInit () {
 		this.loading = true;
 		this.userService.getUser()
 			.pipe(
+				tap(userResponse =>
+					this.customerId = String(_.get(userResponse, 'data.customerId'))),
 				catchError(err => {
 					this.error = true;
 					this.errorMessage = err.message;

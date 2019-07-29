@@ -54,7 +54,14 @@
 						<div [innerText]="'Network runs collection ' + collection.formattedSchedule"></div>
 					</div>
 					<div class="col-1 flex-center">
-						<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
+						<a
+							(click)="editCollection(true, collection.policyId)"
+						>
+							<span
+								class="icon-pencil icon-small"
+								[ngClass]="'text-primary'"
+							></span>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -71,3 +78,11 @@
 		<cui-loader></cui-loader>
 	</div>
 </admin-wrapper>
+
+<ng-container *ngIf="selectEditCollectionComponent">
+	<collection-form (visibleComponent)="editCollection($event)"
+		[policyId]="loadedPolicyId"
+		[customerId]="customerId"
+		(submitted)="collectionRequestSubmit($event)">
+	</collection-form>
+</ng-container>

@@ -1,0 +1,20 @@
+.force-left {
+	left: 0;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.form-group {
+    display: flex;
+    align-items: left;
+}
+
+
+select {
+	width: 100px;
+	display: inline-block;
+	background-color: transparent;
+	border-width: 0px 0px 1px 0px;
+}
