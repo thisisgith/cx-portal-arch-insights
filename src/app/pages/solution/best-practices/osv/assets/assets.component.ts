@@ -3,8 +3,8 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { forkJoin, Subject, of } from 'rxjs';
+import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, Pagination } from '@sdp-api';
 import * as _ from 'lodash-es';
 /** Our current customerId */
@@ -84,24 +84,22 @@ export class AssetsComponent {
 		return this.osvService.getAssets(this.assetsParams)
 			.pipe(
 				map((response: AssetsResponse) => {
-					if (response.data) {
-						this.assets = response.data;
-					} else {
-						this.assets = <any>response;
+					this.assets = response.data;
+					this.pagination = response.pagination;
+					this.pagination.rows = this.assetsParams.pageSize;
+					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
+					let last = (this.pagination.rows * this.pagination.page);
+					if (last > this.pagination.total) {
+						last = this.pagination.total;
 					}
-
-					if (response.pagination) {
-						this.pagination = response.pagination;
-
-						const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
-						let last = (this.pagination.rows * this.pagination.page);
-						if (last > this.pagination.total) {
-							last = this.pagination.total;
-						}
-
-						this.paginationCount = `${first}-${last}`;
-					}
+					this.paginationCount = `${first}-${last}`;
 					this.buildTable();
+				}),
+				catchError(err => {
+					this.logger.error('OSV Assets : getAssets() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({});
 				}),
 			);
 	}
@@ -190,7 +188,7 @@ export class AssetsComponent {
 	 * @param event the event emitted
 	 */
 	public onPageChanged (event: any) {
-		this.assetsParams.pageIndex = event.page;
+		this.assetsParams.pageIndex = (event.page + 1);
 		this.loadData();
 	}
 

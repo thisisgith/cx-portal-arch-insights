@@ -3,8 +3,8 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { forkJoin, Subject, of } from 'rxjs';
+import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, SoftwareVersionsResponse, Pagination, SoftwareVersion } from '@sdp-api';
 
 /** Our current customerId */
@@ -75,25 +75,22 @@ export class SoftwareVersionsComponent {
 			.pipe(
 				map((response: SoftwareVersionsResponse) => {
 					this.status.isLoading = false;
-					if (response.data) {
-						this.softwareVersions = response.data;
-					} else {
-						this.softwareVersions = <any>response;
+					this.softwareVersions = response.data;
+					this.pagination = response.pagination;
+					this.pagination.rows = this.softwareVersionsParams.pageSize;
+					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
+					let last = (this.pagination.rows * this.pagination.page);
+					if (last > this.pagination.total) {
+						last = this.pagination.total;
 					}
-
-					if (response.pagination) {
-
-						this.pagination = response.pagination;
-
-						const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
-						let last = (this.pagination.rows * this.pagination.page);
-						if (last > this.pagination.total) {
-							last = this.pagination.total;
-						}
-
-						this.paginationCount = `${first}-${last}`;
-					}
+					this.paginationCount = `${first}-${last}`;
 					this.buildTable();
+				}),
+				catchError(err => {
+					this.logger.error('OSV SoftwareVersions : getVersions() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({});
 				}),
 			);
 	}

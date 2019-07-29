@@ -1,9 +1,9 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, Subject } from 'rxjs';
+import { forkJoin, Subject, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, catchError } from 'rxjs/operators';
 import {
 	OSVService, SummaryResponse,
 } from '@sdp-api';
@@ -174,6 +174,14 @@ export class OptimalSoftwareVersionComponent {
 							}
 						}));
 
+				}),
+				catchError(err => {
+					this.logger.error('OSV Summary : getSummary() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+					totalAssetsFilter.loading = false;
+					deploymentStatusFilter.loading = false;
+					assetTypeFilter.loading = false;
+					return of({});
 				}),
 			);
 	}
