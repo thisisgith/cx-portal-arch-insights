@@ -7,7 +7,7 @@
 					<div class="row half-padding-top dbl-padding-left">
 						<div class="col-md-11 half-margin-top">
 							<div class="text-xlarge text-left text-uppercase"
-								[innerText]="'_ScheduledCollectionDetails_' | i18n | uppercase"
+								[innerText]="'_ScheduledCollectionDetails_' | i18n"
 								data-auto-id="accRequestModal-Title"></div>
 							<ng-container *ngIf="loading">
 								<div class="row half-padding-left base-padding-top">
@@ -38,20 +38,35 @@
 										<option *ngFor="let timePeriod of timePeriods" [value]="timePeriod.value"
 											[innerText]="timePeriod.key"></option>
 									</select>
-									<ng-container *ngIf="timePeriodMonthly">
+									<ng-container *ngIf="timePeriod === 'monthly'">
 										<label
-											for="days"
+											class="collection-label"
+											for="dates"
 											[innerText]="'_On_' | i18n | lowercase"
 										></label>
-										<select id="attendees-select" formControlName="days"
+										<select id="attendees-select" formControlName="dates"
 											data-auto-id="accRequestModal-NumberOfAttendees-Select">
-											<option value="" disabled selected hidden>DAY</option>
-											<option *ngFor="let day of days" [value]="day.value" [innerText]="day.key">
+											<option value="" disabled selected hidden>DATE</option>
+											<option *ngFor="let date of dates" [value]="date.value" [innerText]="date.key">
 											</option>
 										</select>
 									</ng-container>
+									<ng-container *ngIf="timePeriod === 'weekly'">
+											<label
+												class="collection-label"
+												for="days"
+												[innerText]="'_On_' | i18n | lowercase"
+											></label>
+											<select id="attendees-select" formControlName="days"
+												data-auto-id="accRequestModal-NumberOfAttendees-Select">
+												<option value="" disabled selected hidden>DAY</option>
+												<option *ngFor="let day of days" [value]="day.value" [innerText]="day.key">
+												</option>
+											</select>
+										</ng-container>
 									<label
-										for="days"
+										class="collection-label"
+										for="hourmins"
 										[innerText]="'_At_' | i18n | lowercase"
 									></label>
 									<select id="attendees-select" formControlName="hourmins"
@@ -61,6 +76,7 @@
 											[innerText]="hourmin.key"></option>
 									</select>
 									<span
+										class="collection-label"
 										[innerText]="'_UTC_' | i18n"
 									></span>
 								</div>

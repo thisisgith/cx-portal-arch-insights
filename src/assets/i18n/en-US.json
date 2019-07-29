@@ -171,7 +171,7 @@
 	"_HasAtLeastReqs_": "Has at least 12 Core/32 GB/500GB",
 	"_HasVMWare_": "Has VMWare ESXi or Oracle VirtualBox",
 	"_HideErrorDetails_": "Hide Error Details",
-	"_History_": "History"
+	"_History_": "History",
 	"_HiX_": "Hi {0},",
 	"_HostName_": "Host Name",
 	"_Hostname_": "Hostname",
@@ -372,6 +372,7 @@
 	"_Schedule_": "Schedule",
 	"_Scheduled_": "Scheduled",
 	"_Schedule_": "Schedule",
+	"_ScheduledCollectionDetails_": "Schedule Collection Details",
 	"_SDAccessPlanning_": "SD Access-Planning and Deployment",
 	"_SDAccess_": "SD Access",
 	"_SearchCommunities_": "Search Communities",

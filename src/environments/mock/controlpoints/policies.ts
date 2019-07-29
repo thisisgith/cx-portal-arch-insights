@@ -72,4 +72,20 @@ export const PolicesScenarios = [
 		url: api,
 		usecases: ['Admin Settings', 'General'],
 	},
+	{
+		scenarios: {
+			PATCH: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: 'Patch CollectionPolicy',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: '/api/customerportal/controlpoint/v1/collectionPolicy',
+		usecases: ['Admin Settings', 'General'],
+	},
 ];

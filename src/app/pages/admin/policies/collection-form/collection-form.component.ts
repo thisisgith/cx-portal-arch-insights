@@ -44,35 +44,53 @@ export class EditCollectionFormComponent implements OnDestroy, OnInit {
 	@Output() public submitted = new EventEmitter<boolean>();
 
 	private destroyed$: Subject<void> = new Subject<void>();
-	public timePeriodMonthly = false;
+	public timePeriod = '';
 
 	public loading = false;
 
 	public requestForm: FormGroup = this.fb.group({
-		days: ['', Validators.required],
+		dates: [''],
+		days: [''],
 		hourmins: ['', Validators.required],
 		timePeriod: ['', Validators.required],
 	});
 
 	public timePeriods: SelectOption[] = [
 		{ key: 'Monthly', value: 'monthly' },
+		{ key: 'Weekly', value: 'weekly' },
 		{ key: 'Daily', value: 'daily' },
 	];
 
-	public days = function () {
-		const days: SelectOption[] = [];
-		for (let day = 1; day < 32; day += 1) {
+	public days = [
+		{ key: 'Sunday', value: '0' },
+		{ key: 'Monday', value: '1' },
+		{ key: 'Tuesday', value: '2' },
+		{ key: 'Wednesday', value: '3' },
+		{ key: 'Thursday', value: '4' },
+		{ key: 'Friday', value: '5' },
+		{ key: 'Saturday', value: '6' },
+	];
+
+	public dates = function () {
+		const dates: SelectOption[] = [];
+		for (let date = 1; date < 32; date += 1) {
 			let suffix = 'th';
-			if (day % 10 === 1) { suffix = 'st'; }
-			if (day % 10 === 2) { suffix = 'nd'; }
-			if (day % 10 === 3) { suffix = 'rd'; }
-			const text = `${day}${suffix}`;
-			days.push({
-				key: text, value: `${day}`,
+			if (date % 10 === 1) { suffix = 'st'; }
+			if (date % 10 === 2) { suffix = 'nd'; }
+			if (date % 10 === 3) { suffix = 'rd'; }
+
+			// All dates in teens end in th
+			if (date > 10 && date < 20) {
+				suffix = 'th';
+			}
+
+			const text = `${date}${suffix}`;
+			dates.push({
+				key: text, value: `${date}`,
 			});
 		}
 
-		return days;
+		return dates;
 	}();
 
 	public hourmins = function () {
@@ -128,15 +146,26 @@ export class EditCollectionFormComponent implements OnDestroy, OnInit {
 		this.loading = false;
 	}
 
+	/**
+	 * Called when time period is changed
+	 */
 	public timePeriodChange () {
-		this.timePeriodMonthly = this.requestForm.get('timePeriod').value === 'monthly';
-		console.log(this.requestForm.get('timePeriod').value === 'monthly')
+		this.timePeriod = this.requestForm.get('timePeriod').value;
 	}
 
-	public getSchedule (timePeriod: string, day: string, hourmin: string) {
+	/**
+	 * Creates cron expression
+	 * @param timePeriod "monthly", "weekly" or "daily"
+	 * @param day numbered day of the week "0-6"
+	 * @param date date in a month "1-31"
+	 * @param hourmin: hours and min at front of cron expression
+	 */
+	public getSchedule (timePeriod: string, day: string, date: string, hourmin: string) {
 		let schedule = `${hourmin}`;
 		if (timePeriod === 'monthly') {
-			schedule = `${schedule} ${day} * *`;
+			schedule = `${schedule} ${date} * *`;
+		} else if (timePeriod === 'weekly') {
+			schedule = `${schedule} * * ${day}`;
 		} else {
 			schedule = `${schedule} * * *`;
 		}
@@ -150,9 +179,10 @@ export class EditCollectionFormComponent implements OnDestroy, OnInit {
 	public onSubmit () {
 		const hourmin = this.requestForm.get('hourmins').value;
 		const timePeriod = this.requestForm.get('timePeriod').value;
+		const date = this.requestForm.get('dates').value;
 		const day = this.requestForm.get('days').value;
 
-		const schedule = this.getSchedule(timePeriod, day, hourmin);
+		const schedule = this.getSchedule(timePeriod, day, date, hourmin);
 
 		const params: CollectionPolicyUpdateRequestModel = {
 			schedule,
@@ -160,7 +190,6 @@ export class EditCollectionFormComponent implements OnDestroy, OnInit {
 			policyId: this.policyId,
 			policyName: 'test',
 		};
-		console.log(params);
 
 		this.collectionService
 		.updateCollectionPolicyUsingPATCH(params)
