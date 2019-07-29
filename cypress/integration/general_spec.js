@@ -7,7 +7,7 @@ const coverageMock = new MockService('CoverageScenarios');
 const contractMock = new MockService('ContractScenrios');
 
 describe('General Spec', () => {
-	context.skip('Basic Loading Sanity', () => {
+	context('Basic Loading Sanity', () => {
 		it('Loads the app', () => {
 			cy.loadApp();
 			cy.get('h1.page-title').should('have.text', 'CX Console');
@@ -20,7 +20,7 @@ describe('General Spec', () => {
 		});
 	});
 
-	context.skip('General Search', () => {
+	context('General Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -85,16 +85,17 @@ describe('General Spec', () => {
 		});
 	});
 
-	context.skip('Case Search', () => {
+	context('Case Search', () => {
+		const caseVal = '699159996';
+
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
 
-		it.skip('Case Search', () => {
+		it('Case Search', () => {
 			// PBC-169
-			const caseVal = '688296392'; // '686569178' '688296392' also works
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
@@ -111,7 +112,7 @@ describe('General Spec', () => {
 				cy.getByAutoId('caseTACEng').should('exist').should('contain', i18n._TACEngineer_);
 				cy.getByAutoId('caseTracking').should('exist').should('contain', i18n._TrackingNumber_);
 				cy.getByAutoId('caseRelRMAs').should('exist').should('contain', i18n._RelatedRMAs_);
-				cy.getByAutoId('rmaNumber').should('have.length', 3);
+				// cy.getByAutoId('rmaNumber').should('exist'); // api-roulette, not all cases have rmaNumber
 				cy.getByAutoId('viewCaseDetailsB').should('exist')
 					.should('contain', i18n._ViewCaseDetails_);
 				// .should('have.attr', 'href', '/urlDetail'); // TODO currently not linked to anything
@@ -130,14 +131,14 @@ describe('General Spec', () => {
 
 		it('Case not found', () => {
 			// PBC-169
-			const caseVal = '686568888';
+			const invalidCaseVal = '686568888';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
-				.type(caseVal.concat('{enter}'));
+				.type(invalidCaseVal.concat('{enter}'));
 			cy.wait('@case').then(() => {
 				cy.getByAutoId('caseNum').should('not.exist'); // .should('contain', i18n._Case_);
-				cy.get('app-general-search').should('contain', '10 Results for "'.concat(caseVal).concat('"'));
+				cy.get('app-general-search').should('contain', '10 Results for "'.concat(invalidCaseVal).concat('"'));
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
 				cy.getByAutoId('cui-select').should('have.length', 2);
@@ -149,7 +150,7 @@ describe('General Spec', () => {
 		});
 	});
 
-	context.skip('RMA Search', () => {
+	context('RMA Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -298,7 +299,7 @@ describe('General Spec', () => {
 		});
 	});
 
-	context.skip('Contract Search', () => {
+	context('Contract Search', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -433,7 +434,7 @@ describe('General Spec', () => {
 			cy.getByAutoId('lastScanText').should('exist').should('contain', 'Based on last scan'); // PBC-247 specific
 		});
 
-		it.only('Serial Number intercept - View Device Details', () => {
+		it('Serial Number intercept - View Device Details', () => {
 			// PBC-248
 			const serialVal = 'FOC1544Y16T'; // real SN
 			cy.server();

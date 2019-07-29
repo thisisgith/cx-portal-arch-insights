@@ -1,6 +1,8 @@
 
 const i18n = require('../../src/assets/i18n/en-US.json');
 
+const validCaseID = '699159996';
+
 describe('Case Detail Spec', () => {
 	context('Case List View', () => {
 		before(() => {
@@ -60,7 +62,6 @@ describe('Case Detail Spec', () => {
 
 		it('Case Details Click on case from List', () => {
 			// PBC-233
-			const validCaseID = '686351406';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
@@ -83,7 +84,6 @@ describe('Case Detail Spec', () => {
 
 		it('Closes 360 view when leaving the case page', () => {
 			// PBC-233
-			const validCaseID = '686351406';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
@@ -97,7 +97,6 @@ describe('Case Detail Spec', () => {
 
 		it('Case Details Verify Buttons Exist', () => {
 			// PBC-233
-			const validCaseID = '686351406';
 			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
@@ -119,7 +118,6 @@ describe('Case Detail Spec', () => {
 
 		it('Case Details Notes Tab, Add a Note', () => {
 			// PBC-234
-			const validCaseID = '686351406';
 			const currDatestamp = new Date().getTime();
 			// cy.log(`current date is ${currDatestamp}`);
 
@@ -149,7 +147,6 @@ describe('Case Detail Spec', () => {
 
 		it('Case Details Notes: Cancel Adding a note', () => {
 			// PBC-234
-			const validCaseID = '686351406';
 			const currDatestamp = new Date().getTime();
 			// cy.log(`current date is ${currDatestamp}`);
 			cy.loadApp('/solution/resolution');
