@@ -1,0 +1,27 @@
+<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom">
+	<div class="text-uppercase text-large base-padding-bottom" [innerText]="'_Communities_' | i18n" attr.data-auto-id="PanelTitle-Communities"></div>
+	<div class="half-margin-bottom">
+		<div class="half-padding-left half-margin-bottom" *ngIf="privateCommunity">
+			<span class="icon-communities qtr-padding-right qtr-padding-bottom"></span>
+			<span><a class="no-link half-padding-left" 
+					[href]="privateCommunityUrl"
+					target="_blank"
+					data-toggle="tooltip"
+					data-placement="bottom" title="{{privateCommunity.description}}" id="privatecommunitytitle"
+					attr.data-auto-id="communitytitle-{{privateCommunity.description}}"
+					[innerText]="'_Lifecycle_' | i18n"></a>
+			</span>
+		</div>
+		<div class="half-padding-left" *ngIf="publicCommunity">
+			<span class="icon-communities qtr-padding-right qtr-padding-bottom"></span>
+			<span><a class="no-link half-padding-left" 
+					[href]="publicCommunityUrl" 
+					target="_blank"
+					data-toggle="tooltip"
+					data-placement="bottom" title="{{publicCommunity.description}}" id="publiccommunitytitle"
+					attr.data-auto-id="communitytitle-{{publicCommunity.description}}"
+					[innerText]="'_Public_' | i18n"></a>
+			</span>
+		</div>
+	</div>
+</div>

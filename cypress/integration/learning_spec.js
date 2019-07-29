@@ -892,7 +892,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
 
-			cy.getByAutoId('TechnologyDropdown-Wireless Assurance').click();
+			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
 			cy.wait('(SP) IBN-Wireless Assurance-Onboard');
 		});
 
@@ -932,8 +932,8 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
-			cy.getByAutoId('TechnologyDropdown-SD Access').click();
-			cy.wait('(SP) IBN-SD Access-Onboard');
+			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+			cy.wait('(SP) IBN-Campus network segmentation-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_ProductGuide_').click();
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
