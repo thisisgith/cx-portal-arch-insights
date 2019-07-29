@@ -18,57 +18,46 @@ import { Subject, Observable } from 'rxjs';
 	styleUrls: ['./architecture.component.scss'],
 	templateUrl: './architecture.component.html',
 })
-export class ArchitectureComponent implements OnInit,AfterViewInit {
+export class ArchitectureComponent implements OnInit {
 
 	public tabIndex = 0;
 	activeRoute: any;
 	public severityObj = {};
 	public AssetsExceptionsCount:any;
-	CBPRiskArray:any = [];
+
+	public SeverityCount:any = [];
+	public severityType:any = []
+	public newarray:any = [];
 	
-	//  @ViewChild(DevicesWithExceptionsComponent,{static:true}) public DevicesException;
 	constructor (private logger: LogService,private architectureService : ArchitectureService ) {
-		this.logger.debug('ArchitectureComponent Created!');
-		
+		this.logger.debug('ArchitectureComponent Created!');	
 	}
 
 	ngOnInit(): void {
-		
-		this.architectureService.getMessage().subscribe(res => {
-		this.AssetsExceptionsCount = res.count;
-		})
 
-		this.architectureService.getCBPRiskArray().subscribe(res => {
-			console.log(res.CBPRisk);
-			this.CBPRiskArray = res.CBPRisk;
+		this.architectureService.getExceptionsCount().subscribe(res => {
+			this.severityType = Object.keys(res).filter(obj => obj!=Object.keys(res)[1]);
+			this.SeverityCount = Object.values(res).filter(obj => obj!=Object.values(res)[1]);
+			
+			this.SeverityCount.forEach((element,i) => {
+				this.newarray.push(element +'<br>'+ this.severityType[i]);
+			});
+			console.log(this.newarray);
 			this.buildGraph();
-		})
-		
+		});
+
+		this.architectureService.getAssetsExceptionsCount().subscribe(res =>{
+			this.AssetsExceptionsCount = res.AssestsExceptionCount;
+		});
 	}
 
-	// public updateAssestsCount ($event) {
-	// 	this.AssetsExceptionsCount = $event;
-	// }
-
-
-	ngAfterViewInit(){
-		
-		// this.AssetsExceptionsCount = this.DevicesException.AssetsWithExceptionsCount;
-	}
-
-	// @ViewChild('ExceptionFacet', { static: true }) public ExceptionFacetTemplate: TemplateRef<{ }>;
-	// @ViewChild('AssetWithExceptionFacet', { static: true }) public AssetWithExceptionFacetTemplate: TemplateRef<{ }>;
-
-	
-
-	
 	public chart: Chart;
 	/**
 	 * Builds our bar graph
 	 */
 	private buildGraph () {
-		const data = this.CBPRiskArray;
-		const categories = ['Medium Risk','High Risk'];
+		const data = this.SeverityCount;
+		const categories = this.newarray;
 		// _.each(this.seriesData, d => {
 		// 	data.push({
 		// 		name: d.label,
@@ -116,27 +105,17 @@ export class ArchitectureComponent implements OnInit,AfterViewInit {
 		});
 	}
 
-	
-
 	/**
 	 * Emits the subfilter selected
 	 * @param event highcharts click event
 	 */
 	public selectSubfilter (event: any) {
-		// event.stopPropagation();
-
-		 this.severityObj = {severity : event.point.category.split(' ')[0]};
+		 this.severityObj = {severity : event.point.category.split('<br>')[1]};
 		 console.log(this.severityObj);
 		
 		 this.architectureService.setAssetsExceptionCountSubjectObj(this.severityObj);
-		// console.log(event.point.category.split(' ')[0]);
-		// const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
-		// this.subfilter.emit(filterName);
+		 //event.stopPropagation();
 	}
-
-	// public getAssetsExceptionCountSubjectObj(){
-
-	// }
 	
 
 	/**

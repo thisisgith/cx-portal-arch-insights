@@ -36,8 +36,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			})
 			console.log(this.AssetsExceptionDetails);
 		});
-
-
+		
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [

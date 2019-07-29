@@ -186,6 +186,69 @@ class ArchitectureService extends __BaseService {
 
     
   }
+// Exceptions count of High and Medium Severity
+  getExceptionsCount(): __Observable<any> {
+    return this.getExceptionsCountResponse().pipe(
+      __map(_r => _r.body as ContractDeviceCountsResponse)
+    );
+  }
+
+  getExceptionsCountResponse(): __Observable<__StrictHttpResponse<any>> {
+   
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    
+    let req = new HttpRequest<any>(
+      'GET',
+      `https://api-stage.cisco.com/cparchinsights/getExceptionsCount`,
+      __body,
+      {
+        headers: __headers,
+        responseType: 'json',
+//        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<any>;
+      })
+    );
+    
+  }
+
+  // count of all exceptions
+ 
+  getAssetsExceptionsCount(): __Observable<any> {
+    return this.getAssetsExceptionsCountResponse().pipe(
+      __map(_r => _r.body as ContractDeviceCountsResponse)
+    );
+  }
+
+  getAssetsExceptionsCountResponse(): __Observable<__StrictHttpResponse<any>> {
+   
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    
+    let req = new HttpRequest<any>(
+      'GET',
+      `https://api-stage.cisco.com/cparchinsights/getAssetsExceptionsCount`,
+      __body,
+      {
+        headers: __headers,
+        responseType: 'json',
+//        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<any>;
+      })
+    );
+    
+  }
+  
 
  // All Exceptions Listing
   getAllCBPRulesDetails(): __Observable<any> {
@@ -257,7 +320,6 @@ module ArchitectureService {
     // contractNumber?: Array<string>;
   }
 
- 
 }
 
 export { ArchitectureService }

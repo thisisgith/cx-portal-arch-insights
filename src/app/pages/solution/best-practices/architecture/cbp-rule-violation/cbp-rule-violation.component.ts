@@ -12,7 +12,6 @@ import { ArchitectureService } from '@cui-x/sdp-api';
 })
 export class CbpRuleViolationComponent implements OnInit {
 	
-
 	constructor (
 		private logger: LogService, private httpClient: HttpClient,private architectureService : ArchitectureService
 	) {
@@ -29,48 +28,39 @@ export class CbpRuleViolationComponent implements OnInit {
 
 	AssetsExceptionsCount:any;
 
+	public ModifyCbpRuleExceptions(array:Array<any>){
+		if(array.length > 0){
+			array.map(obj => {
+				obj.assetsAffected = obj.deviceIdsWithExceptions.split(';').length;
+				obj.bpRecommendation = obj.bpRecommendation.substr(0,30).concat("...");
+				obj.correctiveAction = obj.correctiveAction.substr(0,25)+"...";
+				obj.deviceIdsWithExceptions = obj.deviceIdsWithExceptions.split(';');
+			})
+		}
+	}
+
 	ngOnInit () {
 
-		// this.architectureService.getAllAssetsWithExceptions().subscribe(res =>{
-		// 	console.log(res);
-		// });
-
 		this.architectureService.getAllCBPRulesDetails().subscribe(res =>{
-			
 			this.cbpRuleExceptions = res.BPRulesDetails;
-			this.cbpRuleExceptions.map((exception) => {
-				exception.assetsAffected = exception.deviceIdsWithExceptions.split(';').length;
-				exception.bpRecommendation = exception.bpRecommendation.substr(0,30).concat("...");
-				exception.correctiveAction = exception.correctiveAction.substr(0,25)+"...";
-				exception.deviceIdsWithExceptions = exception.deviceIdsWithExceptions.split(';');
-			})
+			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 			console.log(this.cbpRuleExceptions);
 		});
 
 		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res =>{
 			this.severityObj = res.severityObj.severity;
 			console.log(this.severityObj);		
-			if(this.severityObj == "Medium"){
+			if(this.severityObj == "MediumRisk"){
 				this.architectureService.getMediumSeverityExceptions().subscribe(res => {
 					console.log(res);
 					this.cbpRuleExceptions = res.BPRulesDetails;
-					this.cbpRuleExceptions.map((exception) => {
-						exception.assetsAffected = exception.deviceIdsWithExceptions.split(';').length;
-						exception.bpRecommendation = exception.bpRecommendation.substr(0,30).concat("...");
-						exception.correctiveAction = exception.correctiveAction.substr(0,25)+"...";
-						exception.deviceIdsWithExceptions = exception.deviceIdsWithExceptions.split(';');
-					})
+					this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 				});
 			}else{
 				this.architectureService.getHighSeverityExceptions().subscribe(res => {
 					console.log(res);
 					this.cbpRuleExceptions = res.BPRulesDetails;
-					this.cbpRuleExceptions.map((exception) => {
-						exception.assetsAffected = exception.deviceIdsWithExceptions.split(';').length;
-						exception.bpRecommendation = exception.bpRecommendation.substr(0,30).concat("...");
-						exception.correctiveAction = exception.correctiveAction.substr(0,25)+"...";
-						exception.deviceIdsWithExceptions = exception.deviceIdsWithExceptions.split(';');
-					})
+					this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 					console.log(this.cbpRuleExceptions);
 				});
 			}
@@ -120,10 +110,13 @@ export class CbpRuleViolationComponent implements OnInit {
 				key: 'bpRuleId',
 			},
 		  ],
+		  singleSelect : true,
 		});		
 		
-	}
+	} 
 
-	
+	onTableRowClicked(event:any){
+		console.log(event);
+	}
 	
 }
