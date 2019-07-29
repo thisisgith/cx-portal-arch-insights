@@ -448,7 +448,7 @@ describe('General Spec', () => {
 			cy.getByAutoId('CloseDetails').should('exist').click();
 		});
 
-		it.only('Serial Number Intercept - Open a Case', () => {
+		it('Serial Number Intercept - Open a Case', () => {
 			// PBC-249
 			const serialVal = 'FOC1544Y16T'; // real SN
 			cy.server();
