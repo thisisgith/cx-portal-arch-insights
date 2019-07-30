@@ -72,11 +72,13 @@ export class PoliciesComponent implements OnInit {
 		this.collections = [];
 		_.forEach(this.policyData, element => {
 			const schedule = _.get(element, 'schedule');
-			const humanReadableCron = cronstrue.toString(schedule);
-			_.set(element, 'formattedSchedule', humanReadableCron);
+			if (schedule) {
+				const humanReadableCron = cronstrue.toString(schedule);
+				_.set(element, 'formattedSchedule', `${humanReadableCron} UTC`);
+			}
 
 			const ptype = _.get(element, 'policyType');
-			if (ptype === 'SCAN') {
+			if (ptype === 'SCAN' || ptype === 'IGNORE') {
 				this.scans.push(element);
 			} else if (ptype === 'COLLECTION') {
 				this.collections.push(element);

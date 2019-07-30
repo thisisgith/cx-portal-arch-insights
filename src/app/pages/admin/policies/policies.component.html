@@ -30,11 +30,16 @@
 					<div class="col-1 flex-center">
 						<span
 						class="icon-small"
-						[ngClass]="scan.policyType ? 'icon-diagnostics text-success' : 'icon-blocked text-muted'"
+						[ngClass]="scan.policyType === 'SCAN' ? 'icon-diagnostics text-success' : 'icon-blocked text-muted'"
 						></span>
 					</div>
 					<div class="col-10">
-						<div [innerText]="scan.deviceCount + ' devices are scanned ' + scan.formattedSchedule"></div>
+						<ng-container *ngIf="scan.policyType === 'SCAN'">
+							<div [innerText]="scan.deviceCount + ' devices are scanned ' + scan.formattedSchedule"></div>
+						</ng-container>
+						<ng-container *ngIf="scan.policyType === 'IGNORE'">
+							<div [innerText]="scan.deviceCount + ' devices cannot be scanned at any time'"></div>
+						</ng-container>
 					</div>
 					<div class="col-1 flex-center">
 						<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
