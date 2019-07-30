@@ -494,7 +494,7 @@ describe('Assets', () => { // PBC-41
 			});
 		});
 
-		it('Properly closes the actions menu when clicking away', () => { // PBC-272
+		it.skip('Properly closes the actions menu when clicking away', () => { // PBC-272
 			cy.get('tr cui-dropdown').eq(0).click();
 			cy.get('tr div.dropdown__menu').eq(0).should('be.visible');
 			cy.get('tr cui-dropdown').eq(5).click(); // another asset's menu

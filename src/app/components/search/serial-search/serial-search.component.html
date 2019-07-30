@@ -191,8 +191,8 @@
 		<div class="row col-md-5">
 			<div class="col-md-1"></div>
 			<div *ngIf="data?.lastScan" class="col-md-10">
-				<span class="icon-small icon-clock text-muted qtr-margin-right"></span>
-				<span class="text-muted" [innerText]="('_BasedOnLastScan_' | i18n:(data.lastScan | fromNow))"></span>
+				<span class="icon-small icon-clock text-muted qtr-margin-right" data-auto-id="clockIcon"></span>
+				<span class="text-muted" data-auto-id="lastScanText" [innerText]="('_BasedOnLastScan_' | i18n:(data.lastScan | fromNow))"></span>
 			</div>
 		</div>
 	</div>

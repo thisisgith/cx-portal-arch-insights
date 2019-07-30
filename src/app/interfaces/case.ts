@@ -119,12 +119,14 @@ export interface CaseOpenRequest {
 	contactId: string;
 	priority: number;
 	serialNumber: string;
+	deviceName: string;
 	subTechId?: string;
 	techId?: string;
 	problemCode?: string;
 	customerActivity?: string;
 	contractNumber?: string;
 	productName?: string;
+	softwareVersion?: string;
 	requestType: string;
 	siteId?: string;
 	summary?: string;

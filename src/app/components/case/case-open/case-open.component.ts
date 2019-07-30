@@ -133,6 +133,8 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			requestType: this.caseForm.controls.requestRma.value ?
 				CaseRequestType.RMA : CaseRequestType.Diagnose,
 			serialNumber: this.asset.serialNumber,
+			deviceName: this.asset.deviceName,
+			softwareVersion: this.asset.osVersion,
 			subTechId: this.caseForm.controls.subtech.value,
 			summary: this.caseForm.controls.title.value,
 			techId: this.caseForm.controls.technology.value,
