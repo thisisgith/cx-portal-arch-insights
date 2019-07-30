@@ -47,9 +47,9 @@
 				</div>
 			</div>
 			<div class="header-toolbar">
-				<div class="half-margin-right text-small">
-					<div [innerText]="'_HiX_' | i18n: 'Jason'"></div>
-					<div innerText="{{ '_CXLevel_' | i18n }} 1"></div>
+				<div class="half-margin-right text-small" *ngIf="user">
+					<div [innerText]="'_HiX_' | i18n:name"></div>
+					<div innerText="{{ '_CXLevel_' | i18n }} {{ cxLevel }}"></div>
 				</div>
 				<img class="thumb thumb--medium thumb--bordered"
 					alt="{{ '_StockPhoto_' | i18n }}"

@@ -12,7 +12,7 @@ const api = '/api/customerportal/product-alerts/v1/security-advisories';
 const customerId = '2431199';
 
 /** The mock response for coverage counts */
-const mockAdvisoryResponse: SecurityAdvisory[] = [
+export const MockSecurityAdvisories: SecurityAdvisory[] = [
 	/* tslint:disable */
 	{
 			"customerId": "2431199",
@@ -2091,7 +2091,7 @@ function MockAdvisory (
 	rows?: number,
 	page?: number): SecurityAdvisoryResponse {
 
-	const data = _.cloneDeep(mockAdvisoryResponse);
+	const data = _.cloneDeep(MockSecurityAdvisories);
 
 	let pagination: Pagination;
 	if (rows && page) {

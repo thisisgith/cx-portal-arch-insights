@@ -7,7 +7,7 @@ export interface Asset {
   osVersion?: string;
 
   /**
-   * IP Address
+   * Device name
    */
   deviceName?: string;
 

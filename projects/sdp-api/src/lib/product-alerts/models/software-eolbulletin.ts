@@ -2,14 +2,14 @@
 export interface SoftwareEOLBulletin {
 
   /**
+   * The last-possible ship date that can be requested of Cisco and/or its contract manufacturers. Actual ship date is dependent on lead time. GMT date format YYYY-MM-DD
+   */
+  lastShipDate?: string;
+
+  /**
    * The unique identifier for software end-of-life entry in a data store
    */
   swEolInstanceId?: number;
-
-  /**
-   * The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
-   */
-  bulletinNumber?: string;
 
   /**
    * The Cisco.com Title/Headline for the bulletin
@@ -57,9 +57,9 @@ export interface SoftwareEOLBulletin {
   lastDateOfSupport?: string;
 
   /**
-   * The last-possible ship date that can be requested of Cisco and/or its contract manufacturers. Actual ship date is dependent on lead time. GMT date format YYYY-MM-DD
+   * The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
    */
-  lastShipDate?: string;
+  bulletinNumber?: string;
 
   /**
    * For equipment and software that is not covered by a service-and-support contract, this is the last date to order a new service-and-support contract or add the equipment and/or software to an existing service-and-support contract. GMT date format YYYY-MM-DD

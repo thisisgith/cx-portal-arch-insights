@@ -46,7 +46,7 @@ describe('Assets', () => { // PBC-41
 			const validate360 = asset => {
 				// Placeholder icon until PBC-335 is resolved
 				cy.get('.icon-wifi').should('be.visible');
-				cy.get('[apppanel360title]').should('have.text', asset.deviceName);
+				cy.get('[detailsPanelTitle]').should('have.text', asset.deviceName);
 				cy.getByAutoId('Asset360IPAddress')
 					.should('have.text', `IP Address${asset.ipAddress}`);
 				cy.getByAutoId('Asset360SerialNumber')
@@ -100,11 +100,11 @@ describe('Assets', () => { // PBC-41
 		// TODO: Unskip and modify to accomodate PBC-90 & 91
 		it.skip('Closes 360 view when leaving the assets page', () => { // PBC-165
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
-			cy.get('app-panel360').should('be.visible');
+			cy.get('details-panel').should('be.visible');
 			cy.getByAutoId('Facet-Lifecycle').click();
-			cy.get('app-panel360').should('not.exist');
+			cy.get('details-panel').should('not.exist');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
-			cy.get('app-panel360').should('not.exist');
+			cy.get('details-panel').should('not.exist');
 		});
 
 		it.skip('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
@@ -597,7 +597,7 @@ describe('Assets', () => { // PBC-41
 				.should('not.have.class', 'card__selected');
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
 			cy.get('[data-auto-id*="Device-"]').eq(0).click();
-			cy.get('app-panel360').should('be.visible'); // PBC-286
+			cy.get('details-panel').should('be.visible'); // PBC-286
 			cy.get('[data-auto-id*="Device-"]').eq(0).click();
 			cy.get('cui-dropdown[data-auto-id*="InventoryItem-FOC1544Y16T-dropdown"]')
 				.eq(0).click();

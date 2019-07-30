@@ -2,6 +2,7 @@ export { RoleCountResponse } from './models/role-count-response';
 export { RoleCount } from './models/role-count';
 export { Assets } from './models/assets';
 export { Asset } from './models/asset';
+export { AssetSummary } from './models/asset-summary';
 export { HardwareResponse } from './models/hardware-response';
 export { HardwareInfo } from './models/hardware-info';
 export { NetworkElementResponse } from './models/network-element-response';
