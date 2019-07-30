@@ -698,8 +698,7 @@ describe('Assets', () => { // PBC-41
 	});
 
 	context('PBC-344: Asset Cases - Asset Based Case Open', () => {
-
-		it('Provides an Asset 360 view modal', () => { 
+		it('Provides an Asset 360 view modal', () => {
 			const validate360OpenCase = asset => {
 				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
 				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
@@ -712,7 +711,5 @@ describe('Assets', () => { // PBC-41
 
 			cy.getByAutoId('CloseDetails').click();
 		});
-
-
 	});
 });
