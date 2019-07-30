@@ -704,12 +704,11 @@ describe('Assets', () => { // PBC-41
 				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
 				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
 				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility).click(); // PBC344
-				cy.getByAutoId('CaseOpenCancelButton').should('exist').click(); // cancel it
-				cy.getByAutoId('CaseOpenCancel').should('exist').click(); // confirm cancel
+				cy.getByAutoId('CaseOpenCancelButton').should('exist').click(); // Cancel modal
+				cy.getByAutoId('CaseOpenCancel').should('exist').click(); // Confirm cancel
 			};
-
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
-			validate360OpenCase(assets[0]);
+			validate360OpenCase(assets[0]); // Currently only first asset has the CaseOpen Button
 
 			cy.getByAutoId('CloseDetails').click();
 		});
