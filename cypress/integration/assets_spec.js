@@ -697,7 +697,7 @@ describe('Assets', () => { // PBC-41
 		});
 	});
 
-	context.only('PBC-344: Asset Cases - Asset Based Case Open', () => {
+	context('PBC-344: Asset Cases - Asset Based Case Open', () => {
 
 		it('Provides an Asset 360 view modal', () => { 
 			const validate360OpenCase = asset => {
