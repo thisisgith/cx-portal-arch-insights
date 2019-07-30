@@ -4,6 +4,7 @@ export { Announcement } from './announcement';
 export { Bug } from './bug';
 export {
 	Case,
+	File,
 	CaseOpenRequest,
 	Note,
 	ProblemArea,

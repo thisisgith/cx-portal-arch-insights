@@ -16,6 +16,11 @@ export const defaults = {
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/pbc/',
+	csc: {
+		fileDownloadURL: `https://largefile-stage.cloudapps.cisco.com/Web-Ui?srId=
+			{0}&fileName={1}&appId=cxportal`,
+		fileList: '/ws/csc/v3/caseFiles',
+	},
 	csone: {
 		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
