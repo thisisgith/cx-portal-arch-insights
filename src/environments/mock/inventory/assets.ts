@@ -622,7 +622,24 @@ export const mockResponse: Asset[] = [
 			"containingHwId": null,
 			"productId": "C3850-NM-4-10G",
 			"equipmentType": "MODULE"
-	}
+	},
+	{
+			"deviceName": "C3850-NM-4-10G",
+			"ipAddress": "172.25.121.6",
+			"supportCovered": true,
+			// This is a serial number for which we can open a case. It passes the CSOne
+			// entitlement checks for svorma1.
+			"serialNumber": "35641136A1621",
+			"osType": "IOS-XE",
+			"osVersion": "03.06.05E",
+			"role": null,
+			"contractNumber": "200758679",
+			"managedNeId": "NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
+			"hwInstanceId": "FOC20472BD5,C3850-NM-4-10G,NA,NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
+			"containingHwId": null,
+			"productId": "C3850-NM-4-10G",
+			"equipmentType": "MODULE"
+	},
 	/* tslint:enable */
 ];
 
