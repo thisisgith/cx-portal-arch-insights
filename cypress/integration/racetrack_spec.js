@@ -1,7 +1,15 @@
 import RacetrackHelper from '../support/racetrackHelper';
+import MockService from '../support/mockService';
 
 let racetrackHelper;
 let trackPoints;
+
+const infoMock = new MockService('RacetrackScenarios');
+const infoOnboardScenario = infoMock.getScenario('GET', '(Racetrack) IBN-Assurance-Onboard');
+const infoItems = infoOnboardScenario.response.body.solutions[0];
+// Abbrevieating Campus Network Assurance to CNA
+const CNATech = Cypress._.find(infoItems.technologies, tech => tech.name === 'Campus Network Assurance');
+const CNAPitstopActions = Cypress._.find(CNATech.pitstops, pitstop => pitstop.name === CNATech.currentPitstop).pitstopActions;
 
 describe('Racetrack Content', () => {
 	before(() => {
@@ -102,6 +110,49 @@ describe('Racetrack Content', () => {
 					expect(progressStrokeDasharray).eq(expectedStrokeDasharray);
 				});
 			});
+		});
+	});
+
+	describe('PBC-124: Lifecycle: Pitstop percentage completed', () => {
+		after(() => {
+			// Ensure we're set back to the default mock data
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard');
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('Checking a pitstop action should update the completion percentage', () => {
+			// Check to see if any items are pre-completed
+			let numCompleted = Cypress._.filter(
+				CNAPitstopActions, action => action.isComplete === true
+			).length;
+			let expectedPercent = (numCompleted / CNAPitstopActions.length) * 100.0;
+
+			// Check each item, verify the percentage is updated
+			CNAPitstopActions.forEach((action, index) => {
+				if (!action.isComplete) {
+					// Force the click through the overlapping span checkbox__input
+					cy.getByAutoId('pitstopCheckbox')
+						.eq(index)
+						.click({ force: true });
+					numCompleted += 1;
+				}
+
+				expectedPercent = (numCompleted / CNAPitstopActions.length) * 100.0;
+				cy.getByAutoId('CompletedActionsPercent')
+					.should('contain', `${expectedPercent}%`);
+			});
+		});
+
+		it('Should show "start" when 0% complete, instead of 0%', () => {
+			// Switch to a mock dataset with no completed items and refresh the data
+			infoMock.enable('(Racetrack) IBN-Assurance-Use');
+			// Unfortunately for Cypress, the racetrack panel only reloads data on page load...
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			cy.getByAutoId('CompletedActionsPercent')
+				.should('contain', 'start');
 		});
 	});
 });
