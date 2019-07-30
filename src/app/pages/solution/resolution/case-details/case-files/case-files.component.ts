@@ -64,19 +64,19 @@ export class CaseFilesComponent implements OnInit, OnChanges {
 			columns: [
 				{
 					key: 'fileName',
-					name: I18n.get('_RMAFileName_'),
+					name: I18n.get('_Name_'),
 					sortable: true,
 					template: this.fileNameTemplate,
 				},
 				{
 					key: 'fileContentType',
-					name: I18n.get('_RMAFileType_'),
+					name: I18n.get('_Type_'),
 					sortable: true,
 					template: this.fileTypeTemplate,
 				},
 				{
 					key: 'fileSize',
-					name: I18n.get('_RMAFileSize_'),
+					name: I18n.get('_Size_'),
 					sortable: true,
 					template: this.fileSizeTemplate,
 				},

@@ -7,7 +7,7 @@ const api = '/api/customerportal/product-alerts/v1/hardware-eol';
 const customerId = '2431199';
 
 /** The mock response for coverage counts */
-const mockEolResponse: HardwareEOLResponse = {
+export const MockHardwareEOLResponse: HardwareEOLResponse = {
 	/* tslint:disable */
 	"data": [
 			{
@@ -4603,7 +4603,7 @@ export const HardwareEOLScenarios = [
 					delay: 350,
 					description: 'Hardware EOL',
 					response: {
-						body: mockEolResponse,
+						body: MockHardwareEOLResponse,
 						status: 200,
 					},
 					selected: true,

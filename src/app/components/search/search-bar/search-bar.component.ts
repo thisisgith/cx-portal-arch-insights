@@ -9,8 +9,6 @@ import {
 	Output,
 	ViewChild,
 } from '@angular/core';
-
-import { LogService } from '@cisco-ngx/cui-services';
 import { SearchType, SearchEnum } from '@interfaces';
 import { SearchService } from '@services';
 import { Subject } from 'rxjs';
@@ -57,11 +55,8 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 
 	constructor (
 		private element: ElementRef,
-		private logger: LogService,
 		private service: SearchService,
-	) {
-		this.logger.debug('SearchBarComponent Created!');
-	}
+	) { }
 
 	/**
 	 * OnInit Lifecycle Hook
