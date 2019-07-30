@@ -188,9 +188,9 @@ export const ELearningScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 800,
-					description: '(E-Learning) IBN-Wireless Assurance-Onboard',
+					description: '(E-Learning) IBN-Campus Network Assurance-Onboard',
 					response: {
-						body: MockELearning('ibn', 'Campus network assurance', 'Onboard'),
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
@@ -206,9 +206,9 @@ export const ELearningScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 800,
-					description: '(E-Learning) IBN-Campus network segmentation-Onboard',
+					description: '(E-Learning) IBN-Campus Network Segmentation-Onboard',
 					response: {
-						body: MockELearning('IBN', 'Campus network segmentation', 'Onboard'),
+						body: MockELearning('IBN', 'Campus Network Segmentation', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
@@ -224,7 +224,7 @@ export const ELearningScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Scalable Access Policy-Onboard',
+					description: '(E-Learning) IBN-Scalable Access Policy-Onboard',
 					response: {
 						body: MockELearning('IBN', 'Scalable Access Policy', 'Onboard'),
 						status: 200,
@@ -242,9 +242,9 @@ export const ELearningScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Network device onboarding-Onboard',
+					description: '(E-Learning) IBN-Network Device Onboarding-Onboard',
 					response: {
-						body: MockELearning('IBN', 'Network device onboarding', 'Onboard'),
+						body: MockELearning('IBN', 'Network Device Onboarding', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
@@ -260,9 +260,9 @@ export const ELearningScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Campus software image-Onboard',
+					description: '(E-Learning) IBN-Campus Software Image Management-Onboard',
 					response: {
-						body: MockELearning('IBN', 'Campus software image management', 'Onboard'),
+						body: MockELearning('IBN', 'Campus Software Image Management', 'Onboard'),
 						status: 200,
 					},
 					selected: true,

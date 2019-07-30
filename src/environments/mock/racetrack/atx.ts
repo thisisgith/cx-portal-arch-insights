@@ -251,9 +251,9 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 100,
-					description: '(ATX) IBN-Wireless Assurance-Onboard',
+					description: '(ATX) IBN-Campus Network Assurance-Onboard',
 					response: {
-						body: MockATX('IBN', 'Campus network assurance', 'Onboard'),
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
@@ -268,9 +268,9 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 100,
-					description: '(ATX) IBN-Wireless Assurance-Implement',
+					description: '(ATX) IBN-Campus Network Assurance-Implement',
 					response: {
-						body: MockATX('IBN', 'Campus network assurance', 'Implement'),
+						body: MockATX('IBN', 'Campus Network Assurance', 'Implement'),
 						status: 200,
 					},
 					selected: true,
@@ -285,9 +285,9 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 100,
-					description: '(ATX) IBN-SD Access-Onboard',
+					description: '(ATX) IBN-Campus Network Segmentation-Onboard',
 					response: {
-						body: MockATX('IBN', 'Campus network segmentation', 'Onboard'),
+						body: MockATX('IBN', 'Campus Network Segmentation', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
@@ -302,7 +302,7 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Scalable Access Policy-Onboard',
+					description: '(ATX) IBN-Scalable Access Policy-Onboard',
 					response: {
 						body: MockATX('IBN', 'Scalable Access Policy', 'Onboard'),
 						status: 200,
@@ -320,9 +320,9 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Network device onboarding-Onboard',
+					description: '(ATX) IBN-Network Device Onboarding-Onboard',
 					response: {
-						body: MockATX('IBN', 'Network device onboarding', 'Onboard'),
+						body: MockATX('IBN', 'Network Device Onboarding', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
@@ -338,9 +338,9 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Campus software image-Onboard',
+					description: '(ATX) IBN-Campus Software Image Management-Onboard',
 					response: {
-						body: MockATX('IBN', 'Campus software image management', 'Onboard'),
+						body: MockATX('IBN', 'Campus Software Image Management', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
