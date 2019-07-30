@@ -60,15 +60,17 @@ describe('Communities Panel', () => {
 				// Verify the communities URL and tooltip
 				cy.getByAutoId(`communitytitle-${mapping.title}-Lifecycle`)
 					.should('exist')
-					.should('have.attr', 'title', mapping.title)
-					.should('have.attr', 'href', mapping.url)
-					.should('have.attr', 'target', '_blank');	// target: _blank for cross-launch
+					.and('have.attr', 'title', mapping.title)
+					.and('have.attr', 'href', mapping.url)
+					.and('have.attr', 'target', '_blank')	// target: _blank for cross-launch
+					.and('have.attr', 'data-toggle', 'tooltip');	// tooltip
 
 				cy.getByAutoId(`communitytitle-${mapping.title}-Public`)
 					.should('exist')
-					.should('have.attr', 'title', mapping.title)
-					.should('have.attr', 'href', mapping.url)
-					.should('have.attr', 'target', '_blank');	// target: _blank for cross-launch
+					.and('have.attr', 'title', mapping.title)
+					.and('have.attr', 'href', mapping.url)
+					.and('have.attr', 'target', '_blank')	// target: _blank for cross-launch
+					.and('have.attr', 'data-toggle', 'tooltip');	// tooltip
 			});
 		});
 	});
