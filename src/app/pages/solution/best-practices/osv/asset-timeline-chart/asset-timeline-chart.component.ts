@@ -10,8 +10,8 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { Chart } from 'angular-highcharts';
 import * as _ from 'lodash-es';
 import {
-	BasicRecommendationsResponse,
-	BasicRecommendation,
+	AssetRecommendationsResponse,
+	AssetRecommendations,
 } from '@sdp-api';
 import { DatePipe } from '@angular/common';
 /**
@@ -24,7 +24,7 @@ import { DatePipe } from '@angular/common';
 	templateUrl: './asset-timeline-chart.component.html',
 })
 export class AssetTimelineChartComponent {
-	@Input() public data: BasicRecommendationsResponse;
+	@Input() public data: AssetRecommendationsResponse;
 	@Input() public fullscreen;
 	public chart: Chart;
 	constructor (
@@ -48,18 +48,18 @@ export class AssetTimelineChartComponent {
 	private buildGraph () {
 		const datePipe = new DatePipe('en-US');
 		const seriesData = _.compact(
-			_.map(this.data, (value: BasicRecommendation) => {
-				const releaseDate = new Date(value.releaseDate);
+			_.map(this.data, (value: AssetRecommendations) => {
+				const releaseDate = new Date(value.postDate);
 				return {
-					description: value.versionSummary,
-					label: value.version,
-					name: value.versionSummary,
+					description: value.name,
+					label: value.swVersion,
+					name: value.name,
 					x: Date.UTC(
 						releaseDate.getFullYear(),
 						releaseDate.getMonth(),
 						releaseDate.getDate(),
 					),
-					releaseDate: datePipe.transform(new Date(value.releaseDate), 'dd MMM yyyy'),
+					releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
 				};
 			}));
 

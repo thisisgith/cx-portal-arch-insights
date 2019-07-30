@@ -1,7 +1,7 @@
 import {
 	SoftwareProfilesResponse,
 	SoftwareVersionsResponse,
-	BasicRecommendationsResponse,
+	AssetRecommendationsResponse,
 	AssetsResponse,
 	SummaryResponse,
 } from '@sdp-api';
@@ -13,42 +13,33 @@ const api = '/api/dev/customerportal/osv-ui/v1/';
 const customerId = '231215372';
 
 /** The mock response for basic recommendations */
-const mockBasicRecommendations: BasicRecommendationsResponse = [
-	{
-		releaseDate: '2013-02-18T13:16:35.000Z',
-		status: '',
-		version: '1.1',
-		versionSummary: 'Current',
-	},
-	{
-		releaseDate: '2014-02-07T13:16:35.000Z',
-		status: '',
-		version: '1.2',
-		versionSummary: 'Minumum',
-	},
-	{
-		releaseDate: '2014-11-07T13:16:35.000Z',
-		status: '',
-		version: '1.3',
-		versionSummary: 'Suggested',
-	},
-	{
-		releaseDate: '2017-11-18T13:16:35.000Z',
-		status: '',
-		version: '1.3',
-		versionSummary: 'Golden Image',
-	},
-	{
-		releaseDate: '2019-01-21T13:16:35.000Z',
-		status: '',
-		version: '1.3',
-		versionSummary: 'Latest',
-	},
+const mockBasicRecommendations: AssetRecommendationsResponse = [
+    {
+        error: null,
+        name: "suggested",
+        postDate: "2019-03-21T18:30:00.000+0000",
+        recommendationSummary: null,
+        swVersion: "16.9.3",
+    },
+    {
+        error: null,
+        name: "latest",
+        postDate: "2019-06-20T18:30:00.000+0000",
+        recommendationSummary: null,
+        swVersion: "16.11.1c",
+    },
+    {
+        error: null,
+        name: "current",
+        postDate: "2018-07-17T18:30:00.000+0000",
+        recommendationSummary: null,
+        swVersion: "16.9.1",
+    }
 ];
 
 /** The mock response for software versions */
 const mockSoftwareVersions: SoftwareVersionsResponse = {
-	data: [
+	uiSwVersionList: [
 		{
 			assetCount: 1,
 			goldenVersion: false,
@@ -168,7 +159,7 @@ const mockSoftwareProfile: SoftwareProfilesResponse = {
 };
 /** The mock response for assets */
 const mockAssets: AssetsResponse = {
-	data: [
+	uiAssetList: [
 		{
 			deployment: 'None',
 			hostName: 'AP4800.8DEC',
@@ -379,7 +370,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}basicrecommendations?customerId=${customerId}`,
+		url: `${api}assetDetails?customerId=${customerId}&id=231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R`,
+					// assetDetails?customerId=231215372&id=231215372%26id%3D231215372_NA%2CFXS2202Q11R%2CC9407R%2CNA_C9407R_FXS2202Q11R 
 		usecases: ['Use Case 1'],
 	},
 	{

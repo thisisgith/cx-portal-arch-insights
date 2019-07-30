@@ -22,7 +22,7 @@
 			</div>
 		</div>
 	</app-panel360-header>
-	<asset-details [fullscreen]="fullscreen"></asset-details>
+	<asset-details [selectedAsset]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
 </app-panel360>
 
 <div class="panel">
@@ -93,7 +93,7 @@
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
 	<div class="max-width absolute-center" (click)="clearFilters()" data-auto-id="TotalVisualFilter">
-		<div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-muted':view != 'swProfiles'}"
+		<!-- <div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-muted':view != 'swProfiles'}"
 			data-auto-id="TotalVisualFilterSoftwareProfiles">
 			<div class="col-5 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].profiles"></span>
@@ -107,7 +107,7 @@
 				</span>
 
 			</div>
-		</div>
+		</div> -->
 		<div class="row toggle" (click)="selectView('assets')" [ngClass]="{'text-muted':view != 'assets'}"
 			data-auto-id="TotalVisualFilterAssets">
 			<div class="col-5 text-right">

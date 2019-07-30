@@ -75,7 +75,7 @@ export class SoftwareVersionsComponent {
 			.pipe(
 				map((response: SoftwareVersionsResponse) => {
 					this.status.isLoading = false;
-					this.softwareVersions = response.data;
+					this.softwareVersions = response.uiSwVersionList;
 					this.pagination = response.pagination;
 					this.pagination.rows = this.softwareVersionsParams.pageSize;
 					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
@@ -114,7 +114,11 @@ export class SoftwareVersionsComponent {
 					},
 					{
 						key: 'assetCount',
-						name: I18n.get('_OsvUngroupedAssetsCount_'),
+						name: I18n.get('_OsvIndependentAssets_'),
+					},
+					{
+						key: 'profileAssetCount',
+						name: I18n.get('_OsvAssetsOfSoftwareProfiles_'),
 					},
 					{
 						key: 'goldenVersion',

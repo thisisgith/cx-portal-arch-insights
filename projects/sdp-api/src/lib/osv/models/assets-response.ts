@@ -3,6 +3,6 @@ import { OSVAsset } from './asset';
 import { Pagination } from './pagination';
 
 export type AssetsResponse = {
-	data: Array<OSVAsset>;
+	uiAssetList: Array<OSVAsset>;
 	pagination: Pagination;
 };

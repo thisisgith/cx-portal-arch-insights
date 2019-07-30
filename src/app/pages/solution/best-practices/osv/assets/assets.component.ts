@@ -84,7 +84,7 @@ export class AssetsComponent {
 		return this.osvService.getAssets(this.assetsParams)
 			.pipe(
 				map((response: AssetsResponse) => {
-					this.assets = response.data;
+					this.assets = response.uiAssetList;
 					this.pagination = response.pagination;
 					this.pagination.rows = this.assetsParams.pageSize;
 					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;

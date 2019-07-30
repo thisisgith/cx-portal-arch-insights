@@ -9,7 +9,7 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { SoftwareProfilesResponse } from '../models/software-profiles-response';
 import { SoftwareVersionsResponse } from '../models/software-versions-response';
-import { BasicRecommendationsResponse } from '../models/basic-recommendations-response';
+import {  AssetRecommendationsResponse } from '../models/asset-recommendations-response';
 import { AssetsResponse } from '../models/assets-response';
 import { SummaryResponse } from '../models/summary-response';
 
@@ -20,8 +20,9 @@ class OSVService extends __BaseService {
 	static readonly getSummaryPath = '/api/dev/customerportal/osv-ui/v1/summary';
 	static readonly getSoftwareProfilesPath = '/api/dev/customerportal/osv-ui/v1/profiles';
 	static readonly getSoftwareVersionsPath = '/api/dev/customerportal/osv-ui/v1/versions';
-	static readonly getBasicRecommendationsCountPath = '/api/dev/customerportal/osv-ui/v1/basicrecommendations';
+	static readonly getAssetDetailsPath = '/api/dev/customerportal/osv-ui/v1/assetDetails';
 	static readonly getAssetsPath = '/api/dev/customerportal/osv-ui/v1/assets';
+	static readonly updateAssetPath = '/api/dev/customerportal/osv-ui/v1/updateAsset';
 
 	constructor (
 		config: __Configuration,
@@ -174,21 +175,22 @@ class OSVService extends __BaseService {
 
 	/**
 	 * Basic Recommendations of asset
-	 * @param params The `OSVService.GetBasicRecommendationsParams` containing the following parameters:
+	 * @param params The `OSVService.GetAssetDetailsParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
 	 *
 	 * @return successful operation
 	 */
-	getBasicRecommendationsResponse (params: OSVService.GetBasicRecommendationsParams): __Observable<__StrictHttpResponse<BasicRecommendationsResponse>> {
+	getAssetDetailsResponse (params: OSVService.GetAssetDetailsParams): __Observable<__StrictHttpResponse<AssetRecommendationsResponse>> {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.id != null) __params = __params.set('id', params.id.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${OSVService.getBasicRecommendationsCountPath}`,
+			this.rootUrl + `${OSVService.getAssetDetailsPath}`,
 			__body,
 			{
 				headers: __headers,
@@ -199,22 +201,22 @@ class OSVService extends __BaseService {
 		return this.http.request<any>(req).pipe(
 			__filter(_r => _r instanceof HttpResponse),
 			__map((_r) => {
-				return _r as __StrictHttpResponse<BasicRecommendationsResponse>;
+				return _r as __StrictHttpResponse<AssetRecommendationsResponse>;
 			})
 		);
 	}
 
 	/**
 	 * Basic Recommendations of asset
-	 * @param params The `OSVService.GetBasicRecommendationsParams` containing the following parameters:
+	 * @param params The `OSVService.GetAssetDetailsParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
 	 *
 	 * @return successful operation
 	 */
-	getBasicRecommendations (params: OSVService.GetBasicRecommendationsParams): __Observable<BasicRecommendationsResponse> {
-		return this.getBasicRecommendationsResponse(params).pipe(
-			__map(_r => _r.body as BasicRecommendationsResponse)
+	getAssetDetails (params: OSVService.GetAssetDetailsParams): __Observable<AssetRecommendationsResponse> {
+		return this.getAssetDetailsResponse(params).pipe(
+			__map(_r => _r.body as AssetRecommendationsResponse)
 		);
 	}
 
@@ -267,6 +269,51 @@ class OSVService extends __BaseService {
 	getAssets (params: OSVService.GetAssetsParams): __Observable<AssetsResponse> {
 		return this.getAssetsResponse(params).pipe(
 			__map(_r => _r.body as AssetsResponse)
+		);
+	}
+
+	/**
+	 * Basic Recommendations of asset
+	 * @param params The `OSVService.GetAssetsParams` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 *
+	 * @return successful operation
+	 */
+	updateAssetResponse (assetDetails: OSVService.GetAssetsParams): __Observable<__StrictHttpResponse<any>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+		__body = assetDetails;
+		let req = new HttpRequest<any>(
+			'POST',
+			this.rootUrl + `${OSVService.updateAssetPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<any>;
+			})
+		);
+	}
+
+	/**
+	 * Update Asset Optimal Version
+	 * @param params The `OSVService.AssetDetailsPostData` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 *
+	 * @return successful operation
+	 */
+	updateAsset (params: OSVService.AssetDetailsPostData): __Observable<any> {
+		return this.updateAssetResponse(params).pipe(
+			__map(_r => _r.body as any)
 		);
 	}
 }
@@ -331,13 +378,17 @@ module OSVService {
 
 
 	/**
-	 * Parameters for GetBasicRecommendationsParams
+	 * Parameters for GetAssetDetailsParams
 	 */
-	export interface GetBasicRecommendationsParams {
+	export interface GetAssetDetailsParams {
 		/**
 		 * Unique identifier of a Cisco customer.
 		 */
 		customerId: string;
+		/**
+		 * Unique identifier of a Asset.
+		 */
+		id: string;
 	}
 	/**
 	 * Parameters for GetAssetsParams
@@ -367,6 +418,25 @@ module OSVService {
 		 * filter.
 		 */
 		filter?: string;
+
+	}
+
+	/**
+	 * Body for UpdateAsset
+	 */
+	export interface AssetDetailsPostData {
+		/**
+		 * Unique identifier of a Cisco customer.
+		 */
+		customerId: string;
+		/**
+		 * Unique identifier of a asset.
+		 */
+		id: string;
+		/**
+		 * Optimal Version Accepted by customer.
+		 */
+		optimalVersion: string;
 
 	}
 }

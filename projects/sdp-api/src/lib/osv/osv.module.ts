@@ -5,7 +5,7 @@ import { OSVConfiguration, OSVConfigurationInterface } from './osv-configuration
 import { OSVService } from './services/osv.service';
 
 /**
- * Provider for all Osv services, plus OSVConfiguration
+ * Provider for all Osv services, plus OSVConfiguration	
  */
 @NgModule({
 	declarations: [],

@@ -39,8 +39,8 @@ import {
 	ACCResponse,
 	ACCUserInfoSchema,
 	Assets,
+	AssetRecommendationsResponse,
 	ATXResponse,
-	BasicRecommendationsResponse,
 	CDCSearchResponse,
 	CommunitiesResponse,
 	CoverageCountsResponse,
@@ -75,7 +75,7 @@ type ResponseBody = (
 	ACCUserInfoSchema |
 	Assets |
 	ATXResponse |
-	BasicRecommendationsResponse |
+	AssetRecommendationsResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
 	CoverageCountsResponse |

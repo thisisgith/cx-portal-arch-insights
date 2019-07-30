@@ -10,12 +10,12 @@
 	</button>
 
 </div>
-<div class="dbl-margin-top" *ngIf="!status.isLoading && data && view =='timeline'">
+<div class="dbl-margin-top" *ngIf="assetDetails && view =='timeline'">
 	<app-asset-timeline-chart [data]="data" [fullscreen]="fullscreen"></app-asset-timeline-chart>
 </div>
 
-<div class="dbl-margin-top" *ngIf="!status.isLoading && data && view =='list'">
-	<cui-table [data]="data" [options]="basicRecommendationsTable"></cui-table>
+<div class="dbl-margin-top" *ngIf="assetDetails && view =='list'">
+	<cui-table [data]="assetDetails" [options]="assetDetailsTable"></cui-table>
 </div>
 <div class="markup pull-right dbl-margin-top" *ngIf="!status.isLoading">
 	<a class="markup-toggle link">
@@ -29,7 +29,7 @@
 
 
 <ng-template #actionsTemplate let-item="celldata">
-	<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
+	<button *ngIf="item.name != 'current'" cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
 		[innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
 		attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
 </ng-template>
