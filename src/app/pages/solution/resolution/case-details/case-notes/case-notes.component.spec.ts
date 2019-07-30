@@ -25,4 +25,11 @@ describe('CaseNotesComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
+	it('should get sorted notes on init', () => {
+		spyOn(component, 'getSortedNotes');
+		component.ngOnInit();
+		expect(component.getSortedNotes)
+			.toHaveBeenCalled();
+	});
 });
