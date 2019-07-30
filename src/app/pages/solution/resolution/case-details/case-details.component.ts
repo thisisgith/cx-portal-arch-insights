@@ -12,9 +12,11 @@ import { RMAService } from '@services';
 import { CaseDetailsService } from 'src/app/services/case-details';
 import { Subject, forkJoin, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
-import { tap, switchMap, takeUntil, catchError } from 'rxjs/operators';
+import { tap, switchMap, takeUntil, catchError, filter } from 'rxjs/operators';
 import { Case } from '@interfaces';
 import * as _ from 'lodash-es';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { CSCUploadService } from '@cui-x-views/csc';
 
 /**
  * Case Details Component
@@ -28,16 +30,21 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	@Input() public case: Case;
 	@Input() public caseDetails: CaseDetails;
 	@Output() public caseDetailsChange = new EventEmitter<CaseDetails>();
-	public caseNotes: any[] = [];
+
+	public caseNotes: any[];
+	public caseFiles: any;
 	public item: any;
 	public loading = false;
 	public tabIndex = 0;
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
+	private severity: string;
+	public numberOfFiles = 0;
 
 	constructor (
 		private caseService: CaseService, private rmaService: RMAService,
 		private caseDetailsService: CaseDetailsService, private logger: LogService,
+		private cuiModalService: CuiModalService, private cscService: CSCUploadService,
 	) { }
 
 	/**
@@ -48,18 +55,21 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 			tap(() => {
 				this.loading = true;
 				this.caseNotes = [];
+				this.numberOfFiles = 0;
 			}),
 			switchMap(() => forkJoin(
 				this.getCaseDetails(),
 				this.getCaseNotes(),
+				this.caseDetailsService.getCaseFiles(this.case.caseNumber),
 			)),
 			takeUntil(this.destroy$),
 		)
 			.subscribe(results => {
+				this.loading = false;
 				this.caseDetails = results[0];
 				this.caseDetailsChange.emit(this.caseDetails);
-				this.loading = false;
 				this.caseNotes = results[1];
+				this.populateCaseFilesList(results[2]);
 			});
 
 		this.caseDetailsService.addNote$
@@ -81,8 +91,34 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 						});
 				}
 			});
-		this.refresh();
 
+		this.cuiModalService.onSuccess
+			.pipe(
+				filter(() => this.severity === 'success',
+				),
+				tap(() => {
+					this.tabIndex = 2;
+					this.loading = true;
+				}),
+				switchMap(() => forkJoin(
+					this.getCaseNotes(),
+					this.caseDetailsService.getCaseFiles(this.case.caseNumber),
+					),
+				),
+				takeUntil(this.destroy$),
+			)
+			.subscribe(results => {
+				this.caseNotes = results[0];
+				this.populateCaseFilesList(results[1]);
+				this.loading = false;
+			});
+
+		this.cscService.getCurrentStatus()
+			.subscribe(res => {
+				this.severity = res.severity;
+			});
+
+		this.refresh();
 	}
 
 	/**
@@ -91,6 +127,22 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	public refresh () {
 		if (this.case) {
 			this.refresh$.next();
+		}
+	}
+
+	/**
+	 * Populates case files list
+	 * @param result case files list
+	 */
+	public populateCaseFilesList (result) {
+		if (_.get(result,
+			['result', 'response', 'getBrokerResponse', 'error'])) {
+			this.numberOfFiles = 0;
+			this.caseFiles = { };
+		} else {
+			this.caseFiles = _.get(result,
+				['result', 'response', 'getBrokerResponse', 'downloadInfo'], []);
+			this.numberOfFiles = _.get(this.caseFiles, 'noOfFiles');
 		}
 	}
 

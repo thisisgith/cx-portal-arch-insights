@@ -62,6 +62,30 @@ export interface Note {
 }
 
 /**
+ * File interface for files related to cases.
+ */
+export interface File {
+	/** File Size */
+	fileSize: number;
+	/** ID of File */
+	fileId: number;
+	/** Visibility */
+	visibilityFlag: string;
+	/** File Extension */
+	fileContentType: string;
+	/** File Status */
+	fileStatus: string;
+	/** File Name */
+	fileName: string;
+	/** File Category */
+	fileCategory: string;
+	/** Uploaded date */
+	fileUploadDate: string;
+	/** Download URL */
+	downloadURL: string;
+}
+
+/**
  * Subtech interface for valid CSOne case subtechs
  */
 export interface Subtech {

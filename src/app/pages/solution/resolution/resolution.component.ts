@@ -64,18 +64,18 @@ export class ResolutionComponent {
 		this.route.queryParamMap.pipe(
 			takeUntil(this.destroy$),
 		)
-		.subscribe((params: ParamMap) => {
-			const casenum = params.get('case');
-			if (casenum) {
-				this.selectedCase = {
-					caseNumber: casenum,
-				};
-			}
-			const serialnum = params.get('serial');
-			if (serialnum) {
-				_.set(this.caseParams, 'serialNumbers', serialnum);
-			}
-		});
+			.subscribe((params: ParamMap) => {
+				const casenum = params.get('case');
+				if (casenum) {
+					this.selectedCase = {
+						caseNumber: casenum,
+					};
+				}
+				const serialnum = params.get('serial');
+				if (serialnum) {
+					_.set(this.caseParams, 'serialNumbers', serialnum);
+				}
+			});
 		this.refresh$.pipe(
 			tap(() => {
 				this.isLoading = true;
@@ -85,30 +85,30 @@ export class ResolutionComponent {
 			),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(cases => {
-			this.isLoading = false;
-			this.caseListData = cases.content;
+			.subscribe(cases => {
+				this.isLoading = false;
+				this.caseListData = cases.content;
 
-			const first = (this.caseParams.size * (this.paginationInfo.currentPage)) + 1;
-			let last = (this.caseParams.size * (this.paginationInfo.currentPage + 1));
-			if (last > cases.totalElements) {
-				last = cases.totalElements;
-			}
-			this.paginationCount = `${first}-${last}`;
-			this.paginationInfo.totalElements = cases.totalElements ? cases.totalElements : 0;
-
-			// If case selected via query params and it's in the table, select the row
-			_.each(this.caseListData, data => {
-				if (_.get(this.selectedCase, 'caseNumber') === _.get(data, 'caseNumber')) {
-					_.set(data, 'active', true);
-				} else {
-					_.set(data, 'active', false);
+				const first = (this.caseParams.size * (this.paginationInfo.currentPage)) + 1;
+				let last = (this.caseParams.size * (this.paginationInfo.currentPage + 1));
+				if (last > cases.totalElements) {
+					last = cases.totalElements;
 				}
+				this.paginationCount = `${first}-${last}`;
+				this.paginationInfo.totalElements = cases.totalElements ? cases.totalElements : 0;
+
+				// If case selected via query params and it's in the table, select the row
+				_.each(this.caseListData, data => {
+					if (_.get(this.selectedCase, 'caseNumber') === _.get(data, 'caseNumber')) {
+						_.set(data, 'active', true);
+					} else {
+						_.set(data, 'active', false);
+					}
+				});
+			}, err => {
+				this.isLoading = false;
+				this.logger.error(`resolution component : case list - ${err}`);
 			});
-		}, err => {
-			this.isLoading = false;
-			this.logger.error(`resolution component : case list - ${err}`);
-		});
 
 		this.refresh$.next();
 
@@ -215,8 +215,17 @@ export class ResolutionComponent {
 		}
 
 		this.caseParams.sort = 'lastModifiedDate,DESC';
+		this.paginationInfo.currentPage = 0;
 		this.caseParams.page = 0;
 		this.refresh$.next();
+	}
+
+	/**
+	 * clear search
+	 */
+	public clearSearch () {
+		this.searchCasesForm.setValue({ caseNo: '' });
+		this.searchCaseNumber();
 	}
 
 	/**
