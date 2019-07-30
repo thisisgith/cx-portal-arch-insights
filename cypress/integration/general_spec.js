@@ -86,15 +86,16 @@ describe('General Spec', () => {
 	});
 
 	context('Case Search', () => {
+		const caseVal = '699159996';
+
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
 
-		it.skip('Case Search', () => {
+		it('Case Search', () => {
 			// PBC-169
-			const caseVal = '688296392'; // '686569178' '688296392' also works
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
@@ -111,7 +112,8 @@ describe('General Spec', () => {
 				cy.getByAutoId('caseTACEng').should('exist').should('contain', i18n._TACEngineer_);
 				cy.getByAutoId('caseTracking').should('exist').should('contain', i18n._TrackingNumber_);
 				cy.getByAutoId('caseRelRMAs').should('exist').should('contain', i18n._RelatedRMAs_);
-				cy.getByAutoId('rmaNumber').should('have.length', 3);
+				// cy.getByAutoId('rmaNumber').should('exist');
+				// api-roulette, not all cases have rmaNumber
 				cy.getByAutoId('viewCaseDetailsB').should('exist')
 					.should('contain', i18n._ViewCaseDetails_);
 				// .should('have.attr', 'href', '/urlDetail'); // TODO currently not linked to anything
@@ -130,14 +132,14 @@ describe('General Spec', () => {
 
 		it('Case not found', () => {
 			// PBC-169
-			const caseVal = '686568888';
+			const invalidCaseVal = '686568888';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
-				.type(caseVal.concat('{enter}'));
+				.type(invalidCaseVal.concat('{enter}'));
 			cy.wait('@case').then(() => {
 				cy.getByAutoId('caseNum').should('not.exist'); // .should('contain', i18n._Case_);
-				cy.get('app-general-search').should('contain', '10 Results for "'.concat(caseVal).concat('"'));
+				cy.get('app-general-search').should('contain', '10 Results for "'.concat(invalidCaseVal).concat('"'));
 				cy.getByAutoId('searchSiteSelect').should('exist');
 				cy.getByAutoId('searchTypeSelect').should('exist');
 				cy.getByAutoId('cui-select').should('have.length', 2);
@@ -287,6 +289,7 @@ describe('General Spec', () => {
 				.type(rmaVal.concat('{enter}'));
 
 			cy.wait('@rma').then(() => {
+				cy.wait(3000);
 				cy.getByAutoId('rmaStatus').should('exist').should('contain', i18n._Status_);
 				cy.getByAutoId('rmaNumber').should('exist');
 				cy.getByAutoId('caseNumber').should('exist').click({ multiple: true });
@@ -419,6 +422,43 @@ describe('General Spec', () => {
 			cy.getByAutoId('searchResultLinkPre1').should('exist');
 			cy.getByAutoId('searchResultLinkPre2').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
+		});
+
+		describe('Search enhancements - PBC-247 PBC-248 PBC-249', () => {
+			beforeEach(() => {
+				// Search for the chosen Serial Number
+				const serialVal = 'FOC1544Y16T'; // real SN
+				cy.server();
+				cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial');
+				cy.getByAutoId('searchBarInput').should('exist').clear()
+					.type(serialVal.concat('{enter}'));
+				cy.wait('@serial');
+			});
+
+			it('Serial Number Intercept - Last Scan Text', () => {
+				// PBC-247
+				cy.getByAutoId('clockIcon').should('exist'); // PBC-247 specific
+				cy.getByAutoId('lastScanText').should('exist').should('contain', 'Based on last scan'); // PBC-247 specific
+			});
+
+			it('Serial Number intercept - View Device Details', () => {
+				// PBC-248
+				cy.getByAutoId('viewDeviceButton').should('exist').click(); // PBC-248 specific
+				cy.getByAutoId('Asset360SerialNumber').should('exist'); // app360 panel opened
+				cy.getByAutoId('CloseDetails').should('exist').click();
+			});
+
+			it('Serial Number Intercept - Open a Case', () => {
+				// PBC-249
+				cy.getByAutoId('openCaseButton').should('exist').should('contain', 'Open a Case') // PBC-249 specific
+					.click(); // PBC-249 specific
+				cy.getByAutoId('CaseOpenNextButton').should('exist');
+				cy.getByAutoId('CaseOpenCancelButton').should('exist');
+				cy.getByAutoId('CaseOpenClose').should('exist').click(); // Click the X
+				cy.getByAutoId('CaseOpenContinue').should('exist');
+				cy.getByAutoId('CaseOpenCancel').should('exist').click(); // Cancel case open
+				cy.getByAutoId('searchClose').should('exist').click(); // Close the search results - X
+			});
 		});
 	});
 });
