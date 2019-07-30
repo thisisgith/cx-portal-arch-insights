@@ -126,7 +126,7 @@ describe('Racetrack Content', () => {
 			let numCompleted = Cypress._.filter(
 				CNAPitstopActions, action => action.isComplete === true
 			).length;
-			let expectedPercent = (numCompleted / CNAPitstopActions.length) * 100.0;
+			let expectedPercent = Math.floor((numCompleted / CNAPitstopActions.length) * 100);
 
 			// Check each item, verify the percentage is updated
 			CNAPitstopActions.forEach((action, index) => {
@@ -138,7 +138,7 @@ describe('Racetrack Content', () => {
 					numCompleted += 1;
 				}
 
-				expectedPercent = (numCompleted / CNAPitstopActions.length) * 100.0;
+				expectedPercent = Math.floor((numCompleted / CNAPitstopActions.length) * 100);
 				cy.getByAutoId('CompletedActionsPercent')
 					.should('contain', `${expectedPercent}%`);
 			});
