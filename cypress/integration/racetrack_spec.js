@@ -9,7 +9,9 @@ const infoOnboardScenario = infoMock.getScenario('GET', '(Racetrack) IBN-Assuran
 const infoItems = infoOnboardScenario.response.body.solutions[0];
 // Abbrevieating Campus Network Assurance to CNA
 const CNATech = Cypress._.find(infoItems.technologies, tech => tech.name === 'Campus Network Assurance');
-const CNAPitstopActions = Cypress._.find(CNATech.pitstops, pitstop => pitstop.name === CNATech.currentPitstop).pitstopActions;
+const CNAPitstopActions = Cypress._.find(
+	CNATech.pitstops, pitstop => pitstop.name === CNATech.currentPitstop
+).pitstopActions;
 
 describe('Racetrack Content', () => {
 	before(() => {
