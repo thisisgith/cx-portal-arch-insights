@@ -112,7 +112,7 @@ describe('General Spec', () => {
 				cy.getByAutoId('caseTACEng').should('exist').should('contain', i18n._TACEngineer_);
 				cy.getByAutoId('caseTracking').should('exist').should('contain', i18n._TrackingNumber_);
 				cy.getByAutoId('caseRelRMAs').should('exist').should('contain', i18n._RelatedRMAs_);
-				// cy.getByAutoId('rmaNumber').should('exist'); 
+				// cy.getByAutoId('rmaNumber').should('exist');
 				// api-roulette, not all cases have rmaNumber
 				cy.getByAutoId('viewCaseDetailsB').should('exist')
 					.should('contain', i18n._ViewCaseDetails_);
