@@ -59,7 +59,7 @@ const caseSummaryResponse = {
 	],
 };
 
-/** Mock data for valid CSOne Case List API results - Page 1 */
+/** Mock data for valid CSOne Case List API results - Page 1 (assuming size per page is 4) */
 const caseListResponse1 = {
 	content: [
 		{
@@ -275,7 +275,7 @@ const caseListResponse1 = {
 	totalElements: 5,
 };
 
-/** Mock data for valid CSOne Case List API results - Page 2 */
+/** Mock data for valid CSOne Case List API results - Page 2 (assuming size per page is 4) */
 const caseListResponse2 = {
 	content: [
 		{
@@ -356,6 +356,281 @@ const caseListResponseSingle = {
 	],
 	numberOfElements: 1,
 	totalElements: 1,
+};
+
+/** Mock data for case files data */
+const caseFilesResponse = {
+	getBrokerResponse: {
+		responseHeader: {
+			responseCode: 0,
+			responseDesc: 'success',
+		},
+		downloadInfo: {
+			noOfFiles: 12,
+			token: '7eaac568c5b4cd6569b6cfa21511ffd5',
+			keyInfo: {
+				initializationVector: '87F88BA7047FF720D12CF6F1F5A51978',
+				decryptKeyChecksum: '1490160048',
+				decryptionKey: 'EA96C18746F4EFF27CCB06B11527F2A0',
+			},
+			ebResponse: true,
+			fileDetail: [
+				{
+					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-08+at+10.36.20.jpg',
+					storageParam: [
+						{
+							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							paramKey: 'DownloadToken',
+						},
+						{
+							paramValue: '686715483/Screen Shot 2019-05-08 at 10.36.20.jpg',
+							paramKey: 'destFolderPath',
+						},
+					],
+					userInfo: {
+						userName: 'Joseph Kipping',
+						userEmail: 'jkipp@cisco.com',
+					},
+					fileInfo: {
+						fileSize: 68420,
+						fileId: 316677274,
+						visibilityFlag: 'E',
+						fileContentType: 'image/jpeg',
+						fileStatus: 'COMPLETED',
+						fileName: 'New Screen Shot 2019-05-08 at 10.36.20.jpg',
+						fileCategory: 'Web Uploaded',
+						fileUploadDate: '11 May 2019 05:00 GMT',
+					},
+					downloadHost: 'storageconnect-prd.cisco.com',
+				},
+				{
+					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-10+at+13.06.01.jpg',
+					storageParam: [
+						{
+							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							paramKey: 'DownloadToken',
+						},
+						{
+							paramValue: '686715483/Screen Shot 2019-05-10 at 13.06.01.jpg',
+							paramKey: 'destFolderPath',
+						},
+					],
+					userInfo: {
+						userName: 'Joseph Kipping',
+						userEmail: 'jkipp@cisco.com',
+					},
+					fileInfo: {
+						fileSize: 103468,
+						fileId: 316677275,
+						visibilityFlag: 'E',
+						fileContentType: 'image/jpeg',
+						fileStatus: 'COMPLETED',
+						fileName: '2019-05-10 at 13.06.01.jpg',
+						fileCategory: 'Web Uploaded',
+						fileUploadDate: '11 May 2019 05:00 GMT',
+					},
+					downloadHost: 'storageconnect-prd.cisco.com',
+				},
+				{
+					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-06+at+13.51.35.jpg',
+					storageParam: [
+						{
+							oparamValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							oparamKey: 'DownloadToken',
+						},
+						{
+							oparamValue: '686715483/Screen Shot 2019-05-06 at 13.51.35.jpg',
+							oparamKey: 'destFolderPath',
+						},
+					],
+					userInfo: {
+						userName: 'Joseph Kipping',
+						userEmail: 'jkipp@cisco.com',
+					},
+					fileInfo: {
+						fileSize: 114988,
+						fileId: 316675703,
+						visibilityFlag: 'E',
+						fileContentType: 'image/jpeg',
+						fileStatus: 'COMPLETED',
+						fileName: 'Screen Shot 2019-05-06 at 13.51.35.jpg',
+						fileCategory: 'Web Uploaded',
+						fileUploadDate: '11 May 2019 05:00 GMT',
+					},
+					downloadHost: 'storageconnect-prd.cisco.com',
+				},
+				{
+					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-08+at+10.27.43.jpg',
+					storageParam: [
+						{
+							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							paramKey: 'DownloadToken',
+						},
+						{
+							paramValue: '686715483/Screen Shot 2019-05-08 at 10.27.43.jpg',
+							paramKey: 'destFolderPath',
+						},
+					],
+					userInfo: {
+						userName: 'Joseph Kipping',
+						userEmail: 'jkipp@cisco.com',
+					},
+					fileInfo: {
+						fileSize: 414129,
+						fileId: 316675705,
+						visibilityFlag: 'E',
+						fileContentType: 'image/jpeg',
+						fileStatus: 'COMPLETED',
+						fileName: 'Screen Shot 2019-05-08 at 10.27.43.jpg',
+						fileCategory: 'Web Uploaded',
+						fileUploadDate: '11 May 2019 05:00 GMT',
+					},
+					downloadHost: 'storageconnect-prd.cisco.com',
+				},
+				{
+					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-07+at+08.30.15.jpg',
+					storageParam: [
+						{
+							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							paramKey: 'DownloadToken',
+						},
+						{
+							paramValue: '686715483/Screen Shot 2019-05-07 at 08.30.15.jpg',
+							paramKey: 'destFolderPath',
+						},
+					],
+					userInfo: {
+						userName: 'Joseph Kipping',
+						userEmail: 'jkipp@cisco.com',
+					},
+					fileInfo: {
+						fileSize: 959375,
+						fileId: 316675706,
+						visibilityFlag: 'E',
+						fileContentType: 'image/jpeg',
+						fileStatus: 'COMPLETED',
+						fileName: 'Screen Shot 2019-05-07 at 08.30.15.jpg',
+						fileCategory: 'Web Uploaded',
+						fileUploadDate: '11 May 2019 05:00 GMT',
+					},
+					downloadHost: 'storageconnect-prd.cisco.com',
+				},
+				{
+					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-05-08+at+10.03.49.jpg',
+					storageParam: [
+						{
+							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							paramKey: 'DownloadToken',
+						},
+						{
+							paramValue: '686715483/Screen Shot 2019-05-08 at 10.03.49.jpg',
+							paramKey: 'destFolderPath',
+						},
+					],
+					userInfo: {
+						userName: 'Joseph Kipping',
+						userEmail: 'jkipp@cisco.com',
+					},
+					fileInfo: {
+						fileSize: 1108522,
+						fileId: 316677276,
+						visibilityFlag: 'E',
+						fileContentType: 'image/jpeg',
+						fileStatus: 'COMPLETED',
+						fileName: 'Screen Shot 2019-05-08 at 10.03.49.jpg',
+						fileCategory: 'Web Uploaded',
+						fileUploadDate: '11 May 2019 05:00 GMT',
+					},
+					downloadHost: 'storageconnect-prd.cisco.com',
+				},
+				{
+					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/good-jkipp-cfu2.1-upload-download-1.tar',
+					storageParam: [
+						{
+							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							paramKey: 'DownloadToken',
+						},
+						{
+							paramValue: '686715483/good-jkipp-cfu2.1-upload-download-1.tar',
+							paramKey: 'destFolderPath',
+						},
+					],
+					userInfo: {
+						userName: 'Joseph Kipping',
+						userEmail: 'jkipp@cisco.com',
+					},
+					fileInfo: {
+						fileSize: 95150080,
+						fileId: 316675708,
+						visibilityFlag: 'E',
+						fileContentType: 'application/x-tar',
+						fileStatus: 'COMPLETED',
+						fileName: 'good-jkipp-cfu2.1-upload-download-1.tar',
+						fileCategory: 'Web Uploaded',
+						fileUploadDate: '11 May 2019 05:03 GMT',
+					},
+					downloadHost: 'storageconnect-prd.cisco.com',
+				},
+				{
+					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screenshot+2019-05-14+at+14.53.11.png',
+					storageParam: [
+						{
+							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							paramKey: 'DownloadToken',
+						},
+						{
+							paramValue: '686715483/Screenshot 2019-05-14 at 14.53.11.png',
+							paramKey: 'destFolderPath',
+						},
+					],
+					userInfo: {
+						userName: 'Sharanabasayya Hiremath',
+						userEmail: 'shahirem@cisco.com',
+					},
+					fileInfo: {
+						fileSize: 120860,
+						fileId: 317190745,
+						visibilityFlag: 'E',
+						fileContentType: 'image/png',
+						fileStatus: 'COMPLETED',
+						fileName: 'Screenshot 2019-05-14 at 14.53.11.png',
+						fileCategory: 'Web Uploaded',
+						fileUploadDate: '15 May 2019 06:14 GMT',
+					},
+					downloadHost: 'storageconnect-prd.cisco.com',
+				},
+				{
+					downloadURL: 'https://storageconnect-prd.cisco.com/Hi5Cloud/ContentManagement/downloadFile/bMWI9u8G5s2EsPWhIuLbr9NSLvAi/TAC._SCM._bXNhbmd3YW4%3D/686715483/Screen+Shot+2019-06-24+at+12.55.19.jpg',
+					storageParam: [
+						{
+							paramValue: 'bMWI9u8G5s2EsPWhIuLbr9NSLvAi',
+							paramKey: 'DownloadToken',
+						},
+						{
+							paramValue: '686715483/Screen Shot 2019-06-24 at 12.55.19.jpg',
+							paramKey: 'destFolderPath',
+						},
+					],
+					userInfo: {
+						userName: 'Joseph Kipping',
+						userEmail: 'jkipp@cisco.com',
+					},
+					fileInfo: {
+						fileSize: 1140911,
+						fileId: 323064730,
+						visibilityFlag: 'E',
+						fileContentType: 'image/jpeg',
+						fileStatus: 'COMPLETED',
+						fileName: 'Screen Shot 2019-06-24 at 12.55.19.jpg',
+						fileCategory: 'Web Uploaded',
+						fileUploadDate: '24 Jun 2019 20:13 GMT',
+					},
+					downloadHost: 'storageconnect-prd.cisco.com',
+				},
+			],
+		},
+		xmlns: 'http://www.cisco.com/ts/csc/FileBrokerModel',
+	},
 };
 
 /** Mock data for CSOne Case Create Success */
@@ -544,6 +819,24 @@ export const CaseScenarios = [
 			],
 		},
 		url: `${api}/${clientId}`,
+		usecases: ['Use Case 1'],
+	},
+	// cases download files
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Files for Case',
+					response: {
+						body: caseFilesResponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/453b7e10f08b428c90d48432312889ad/casefiles`,
 		usecases: ['Use Case 1'],
 	},
 ];
