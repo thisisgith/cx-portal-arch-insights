@@ -51,6 +51,8 @@ unit:
 # run our test:automation process for the commit
 automation:
   stage: test
+  only:
+    - master
   before_script:
     - npm run start:background
   script:
