@@ -22,10 +22,12 @@
 <ng-template #casesContent>
 	<div class="row align-items-center justify-content-between">
 		<div class="col-auto text-large">
-			<span [innerText]="'_RMACases_' | i18n" class="text-large"></span>
+			<span data-auto-id="rmaCasesHeader" [innerText]="'_RMACases_' | i18n" class="text-large"></span>
 			<span *ngIf="caseListData?.length==0" class="text-muted text-medium"
+				data-auto-id="rmaShowingXcasesHeader"
 				[innerText]="'_RMAShowingXCases_' | i18n:paginationInfo.totalElements"></span>
 			<span *ngIf="caseListData?.length>0" class="text-muted text-medium"
+				data-auto-id="rmaShowingXcasesHeader"
 				[innerText]="'_RMAShowingXofYCases_' | i18n:paginationCount:paginationInfo.totalElements">
 			</span>
 		</div>
@@ -33,14 +35,14 @@
 			<form [formGroup]="searchCasesForm" (ngSubmit)="searchCaseNumber()">
 				<div class="form-group input--icon">
 					<div class="form-group__text">
-						<input id="input-type-search" type="search" [placeholder]="'_RMASearchCasePlaceholder_' | i18n"
+						<input id="input-type-search" type="search" data-auto-id="caseSearchBox" [placeholder]="'_RMASearchCasePlaceholder_' | i18n"
 							formControlName="caseNo">
 						<button type="submit" class="link">
 							<span class="icon-search"></span>
 						</button>
 					</div>
 					<div *ngIf="isSearchCaseFormInvalid" class="help-block text-danger" role="alert">
-						<span [innerText]="'_RMAInvalidCaseNo_' | i18n"></span>
+						<span data-auto-id="invalidCaseNumber" [innerText]="'_RMAInvalidCaseNo_' | i18n"></span>
 					</div>
 				</div>
 			</form>
@@ -65,13 +67,15 @@
 </ng-template>
 
 <ng-template #caseList>
-	<cui-table (onTableRowClicked)="onTableRowClicked($event)" [options]="caseListTableOptions" [data]="caseListData"
-		(onSortingChanged)="onTableSortingChanged($event)"></cui-table>
+	<cui-table data-auto-id="caseListTable" (onTableRowClicked)="onTableRowClicked($event)"
+		[options]="caseListTableOptions" [data]="caseListData" (onSortingChanged)="onTableSortingChanged($event)">
+	</cui-table>
 	<cui-pager class="half-margin" *ngIf="paginationInfo.totalElements>caseParams.size" [page]="caseParams.page"
 		[limit]="caseParams.size" [totalItems]="paginationInfo.totalElements" (onPageChanged)="onPagerUpdated($event)">
 	</cui-pager>
 </ng-template>
 
-<ng-template #severityTmpl let-item="celldata"><span><span class="icon-circle icon-small"
-			[ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
+<ng-template #severityTmpl let-item="celldata"><span data-auto-id="severityValue" ><span class="icon-circle icon-small"
+			data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
+			
 <ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | date"></span></ng-template>

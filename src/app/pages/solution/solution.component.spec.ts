@@ -166,13 +166,13 @@ describe('SolutionComponent', () => {
 		fixture.detectChanges();
 
 		expect(component.selectedTechnology.name)
-			.toEqual('Wireless Assurance');
+			.toEqual('Campus Network Assurance');
 
 		component.changeTechnology(component.selectedSolution.technologies[1]);
 
 		fixture.detectChanges();
 
 		expect(component.selectedTechnology.name)
-			.toEqual('SD Access');
+			.toEqual('Campus Network Segmentation');
 	});
 });

@@ -39,7 +39,7 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 
 		it('Renders Status Panel Content', () => {
 			cy.getByAutoId('settings.system.status.panel').within(() => {
-				cy.get('div').should('contain', i18n._CiscoCXCollector_);
+				cy.get('div').should('contain', i18n._CXCollector_);
 				cy.get('div').should('contain', mainData.ie_version);
 				cy.get('div').should('contain', mainData.ieStatus);
 			});
@@ -59,6 +59,18 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 					cy.wrap($el).within(() => {
 						// TODO: Verify the Restart Link (PBC-318)
 						cy.get("[ng-reflect-ng-class='text-secondary']").should('exist');
+					});
+				}
+
+				if (mainData.component_details[index].status === 'FakeStatus') {
+					cy.wrap($el).within(() => {
+						cy.get("[ng-reflect-ng-class='text-danger']").should('exist');
+					});
+				}
+
+				if (mainData.component_details[index].status.match(/^(ContainerCreation|Pending|PodInitializing)$/)) {
+					cy.wrap($el).within(() => {
+						cy.get("[ng-reflect-ng-class='text-warning']").should('exist');
 					});
 				}
 

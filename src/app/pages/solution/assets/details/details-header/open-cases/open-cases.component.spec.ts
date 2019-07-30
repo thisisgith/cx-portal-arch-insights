@@ -36,4 +36,18 @@ describe('OpenCasesComponent', () => {
 		expect(component.close.emit)
 			.toHaveBeenCalled();
 	});
+
+	it('should navigate to the problem resolution case list', () => {
+		spyOn(component.router, 'navigate')
+			.and
+			.returnValue(new Promise(() => true));
+		component.serial = 'FOX1306GBAD';
+		component.onClickCase('688296392');
+		fixture.detectChanges();
+		expect(component.router.navigate)
+			.toHaveBeenCalledWith(
+				['solution/resolution'],
+				{ queryParams: { case: '688296392', serial: 'FOX1306GBAD' } },
+			);
+	});
 });

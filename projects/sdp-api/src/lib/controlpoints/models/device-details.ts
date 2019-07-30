@@ -5,4 +5,6 @@ export interface DeviceDetails {
   managedNeId?: string;
   productId?: string;
   serialNumber?: string;
+  softwareType?: string;
+  softwareVersion?: string;
 }

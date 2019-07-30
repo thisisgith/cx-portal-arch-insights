@@ -12,6 +12,8 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SettingsComponent, SettingsModule } from './settings';
 import { PoliciesComponent, PoliciesModule } from './policies';
 
+import { environment } from '@environment';
+
 /**
  * Child routes for Settings Module for lazy loading
  */
@@ -30,6 +32,11 @@ const childRoutes: Routes = [
 		redirectTo: 'settings',
 	},
 ];
+
+/**
+ * SDP Root url for the apis
+ */
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Main Settings module

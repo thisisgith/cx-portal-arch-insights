@@ -3,6 +3,7 @@ import MockService from '../support/mockService';
 const accMock = new MockService('ACCScenarios');
 const solution = 'IBN';
 const useCase = 'Wireless Assurance';
+const newUseCase = 'Campus Network Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
 let accItems = accScenario.response.body.items;
 const twoRecommendedScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard-twoRecommended`);
@@ -13,13 +14,10 @@ const accUserInfoScenario = accUserInfoMock.getScenario('GET', '(ACC) ACC-Reques
 const accUserInfoResponse = accUserInfoScenario.response.body;
 
 // ACC items are being sorted by the UI in the following order by status:
-// recommended, requested, in-progress, completed
-// TODO: This sorting is currently incorrect. Should be in the following order, according to PBC-238
 // requested, in-progress, recommended, completed
-// Pending PBC-279: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-279
-accItems = Cypress._.union(Cypress._.filter(accItems, { status: 'recommended' }),
-	Cypress._.filter(accItems, { status: 'requested' }),
+accItems = Cypress._.union(Cypress._.filter(accItems, { status: 'requested' }),
 	Cypress._.filter(accItems, { status: 'in-progress' }),
+	Cypress._.filter(accItems, { status: 'recommended' }),
 	Cypress._.filter(accItems, { status: 'completed' }));
 
 const validACCItems = Cypress._.filter(accItems, acc => acc.description || acc.title);
@@ -54,9 +52,24 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	it('Renders Accelerator tile', () => {
 		cy.getByAutoId('Accelerator Panel').should('exist');
 		cy.getByAutoId('PanelTitle-_Accelerator_').should('have.text', i18n._Accelerator_);
-		cy.getByAutoId('recommendedACC-Flag').should('exist');
-		cy.getByAutoId('recommendedACC-Title').should('have.text', 'Cisco DNA Center Project Planning');
-		cy.getByAutoId('recommendedACCWatchButton').should('have.text', i18n._Request1on1_);
+		cy.getByAutoId('recommendedACC-Title').should('have.text', visibleACCItems[0].title);
+
+		switch (visibleACCItems[0].status) {
+			case 'completed':
+				cy.getByAutoId('recommendedACC-Completed')
+					.should('have.text', i18n._Completed_);
+				break;
+			case 'in-progress':
+			case 'requested':
+				cy.getByAutoId('recommendedACC-CSEMessage')
+					.should('have.text', i18n._ACCRequestSubmitted_);
+				break;
+			default:	// Default: recommended
+				cy.getByAutoId('recommendedACCWatchButton')
+					.should('have.text', i18n._Request1on1_);
+				cy.getByAutoId('recommendedACC-Flag').should('exist');
+		}
+
 		cy.getByAutoId('moreACCList').should('exist');
 		// No other data-auto-id's exist at this time
 	});
@@ -66,7 +79,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		cy.get('.modal__header.acc__header').should('contain', i18n._Accelerator_)
 			.and('contain', i18n._1on1Coaching_);
 		cy.getByAutoId('ACCTopicsAvailable').should(
-			'have.text', `${validACCItems.length} topics available for ${solution} > ${useCase}:`
+			'have.text', `${validACCItems.length} topics available for ${solution} > ${newUseCase}:`
 		);
 
 		cy.getByAutoId('ACCCard').then($cards => {
@@ -137,14 +150,13 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// The section should not exist at all
 			cy.getByAutoId('Accelerator Panel').should('not.exist');
 			cy.getByAutoId('recommendedACC').should('not.exist');
+			cy.getByAutoId('recommendedACC-HoverModal').should('not.exist');
 			cy.getByAutoId('moreACCList').should('not.exist');
 		});
 
 		it('Should only display up to two items in the more list', () => {
 			// Verify only up to the first three ACC shown
-			// Note, however, the first recommended item will be displayed outside the More list
-			// TODO: Will need to be updated to account for cases where the first ACC is not
-			// recommended, but this is pending PBC-279: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-279
+			// Note, however, the first item will be displayed outside the More list
 			const accMoreItems = visibleACCItems.slice(1, 3);
 			accMoreItems.forEach(acc => {
 				cy.getByAutoId('moreACCList-item')
@@ -225,29 +237,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('View All ACC modal should be sticky', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
-				cy.getByAutoId('cui-select').click();
-				cy.get('a[title="Completed"]').click();
-				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
-			});
-
-			// Close and re-open the modal
-			cy.getByAutoId('ACCCloseModal').click();
-			cy.getByAutoId('accViewAllModal').should('not.exist');
-			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('accViewAllModal').should('exist');
-
-			// Check that the filter is still in place
-			cy.getByAutoId('accViewAllModal').within(() => {
-				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
-				const filteredItems = validACCItems.filter(item => (item.status === 'completed'));
-				cy.getByAutoId('ACCCard').then(cards => {
-					expect(cards.length).to.eq(filteredItems.length);
-				});
-			});
-		});
-
 		it('View All ACC modal should be searchable', () => {
 			cy.getByAutoId('accViewAllModal').within(() => {
 				// Start typing an archetype in the filter field
@@ -288,6 +277,124 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 	});
 
+	describe('PBC-354: Verify View All filter stickiness', () => {
+		beforeEach(() => {
+			// Open the View All modal
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+		});
+
+		afterEach(() => {
+			// Close the View All modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+
+			// Make sure we're on the lifecycle page and the default use case
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+
+			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+			cy.wait('(ACC) IBN-Wireless Assurance-Onboard');
+		});
+
+		it('View All ACC filter should be sticky across modal close/re-open', () => {
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Completed"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+			});
+
+			// Close and re-open the modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+
+			// Check that the filter is still in place
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+				const filteredItems = validACCItems.filter(item => (item.status === 'completed'));
+				cy.getByAutoId('ACCCard').then(cards => {
+					expect(cards.length).to.eq(filteredItems.length);
+				});
+			});
+		});
+
+		it('View All ACC filter should NOT be sitcky across use case changes', () => {
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Completed"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+			});
+
+			// Close the modal, change use cases, and re-open the modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+			cy.wait('(ACC) IBN-Campus network segmentation-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('ACCCard').then($cards => {
+				expect($cards.length).to.eq(validACCItems.length);
+			});
+		});
+
+		it('View All ACC filter should NOT be sitcky across page navigation', () => {
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Completed"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+			});
+
+			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Wireless Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('ACCCard').then($cards => {
+				expect($cards.length).to.eq(validACCItems.length);
+			});
+		});
+
+		it('View All ACC filter should NOT be sitcky across page reload', () => {
+			cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Completed"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
+			});
+
+			// Close the modal, reload the page, and re-open the modal
+			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('accViewAllModal').should('not.exist');
+
+			cy.loadApp();
+			cy.wait('(ACC) IBN-Wireless Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('accViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.getByAutoId('ACCCard').then($cards => {
+				expect($cards.length).to.eq(validACCItems.length);
+			});
+		});
+	});
+
 	describe('More list status indicators (PBC-96, PBC-99, PBC-300)', () => {
 		afterEach(() => {
 			// Ensure we are reset to the default mock data
@@ -314,7 +421,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('PBC-99: (UI) View - Solution Racetrack - View Scheduled ACCs', () => {
 			// Switch to data that will show us target status in the More list
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoInprogress');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoInProgress');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -328,7 +435,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('PBC-300: (UI View) Solution Racetrack - View Registered ACCs', () => {
 			// Switch to data that will show us target status in the More list
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRegistered');
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRequested');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -360,7 +467,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.waitForAppLoading('accLoading', 5000);
 		});
 
-		it('Accelerator Tile Tooltip', () => {
+		it.skip('Accelerator Tile Tooltip', () => {
 			if (firstRecommendedACC) {
 				// Recommended panel should show title, image (placeholder), and request button
 				cy.getByAutoId('recommendedACC').should('exist');
@@ -380,21 +487,77 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			}
 		});
 
-		it.skip('Should not have hover modal if there are no recommended ACC', () => {
-			// TODO: Pending PBC-279: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-279
-			// Switch the mock data to one with no recommended items
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
+		it('PBC-279: When there are no recommended ACCs, use the first requested item', () => {
 			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-allButRecommended');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.waitForAppLoading('accLoading', 5000);
 
-			cy.getByAutoId('recommendedACC').should('not.exist');
+			// Requested hover should have the CSE text, not completed text or request button
+			cy.getByAutoId('recommendedACC').should('exist').within(() => {
+				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
+				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('not.exist');
+
+				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('exist');
+			});
+		});
+
+		it('PBC-279: When there are no recommended/requested ACCs, use the first in-progress item', () => {
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-completedInProgress');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+
+			// In-progress hover should have the CSE text, not completed text or request button
+			cy.getByAutoId('recommendedACC').should('exist').within(() => {
+				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
+				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('not.exist');
+
+				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('exist');
+			});
+		});
+
+		it('PBC-279: When there are no recommended/requested/in-progress ACCs, use the first completed item', () => {
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoCompleted');
+
+			// Refresh the data by clicking the lifecycle tab, and wait for load
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading', 5000);
+
+			// Completed hover should have the completed text, not CSE text or request button
+			cy.getByAutoId('recommendedACC').should('exist').within(() => {
+				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
+				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('not.exist');
+
+				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('exist');
+				cy.getByAutoId('recommendedACC-Checkmark').should('exist');
+			});
 		});
 	});
 
 	describe('PBC-220: (UI View) - Lifecycle  - ACC - Request Form', () => {
+		before(() => {
+			// Switch to a mock dataset with multiple recommended items, so we can open the form
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading');
+		});
+
+		after(() => {
+			// Switch back to default mock data
+			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.waitForAppLoading('accLoading');
+		});
+
 		it('PBC-260: Should be able to open request form from Lifecycle page', () => {
 			cy.getByAutoId('recommendedACCWatchButton').click();
 			cy.getByAutoId('accRequestModal').should('be.visible');
@@ -404,7 +567,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('PBC-260: Should be able to open request form from View All cards', () => {
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('Request1on1Button').click();
+			cy.getByAutoId('Request1on1Button').first().click();
 			cy.getByAutoId('accRequestModal').should('be.visible');
 			cy.getByAutoId('ACCCloseRequestModal').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
@@ -739,17 +902,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		describe('Form completion/submission', () => {
-			after(() => {
-				// Reload the app to clear the pending scheduled item
-				cy.loadApp();
-				cy.waitForAppLoading();
-
-				// Wait for the ACC panel to finish loading
-				cy.waitForAppLoading('accLoading', 15000);
-			});
-
-			// TODO: PBC-259 tests to check API calls on form submission
-
 			it('PBC-260: Should be able to submit when all fields are filled correctly', () => {
 				// Open the request form modal
 				cy.getByAutoId('recommendedACCWatchButton').click();
@@ -879,7 +1031,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						expect(request.body.timezone)
 							.to.include('Eastern Time/US');
 						expect(request.body.usecase)
-							.to.include(useCase);
+							.to.include(newUseCase);
 						expect(request.body.userEmail)
 							.to.include(userInfoResponseBody.userEmail);
 						expect(request.body.userPhoneNumber)
@@ -890,13 +1042,15 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		describe('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
+		describe.skip('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
 			before(() => {
 				// Change over to a mock with multiple "recommended" items
 				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
 
 				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
 				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
 				cy.waitForAppLoading('accLoading');
 
 				// Open the ACC View All modal
@@ -913,6 +1067,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
 
 				// Refresh the data
+				cy.getByAutoId('Facet-Assets & Coverage').click();
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.waitForAppLoading('accLoading');
 			});
@@ -920,6 +1075,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			it('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
 				// For all recommended items, check that the "Request 1-on-1" button opens the modal
 				// for with the cooresponding title
+				cy.getByAutoId('ACCCard').should('have.length', twoRecommendedItems.length);
 				twoRecommendedItems.forEach((acc, index) => {
 					if (acc.status === 'recommended') {
 						cy.getByAutoId('ACCCard').eq(index).within(() => {
@@ -1044,8 +1200,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('ACC More list items should have hover modal', () => {
-			// TODO: Will need to be updated to account for cases where the first ACC is not
-			// recommended, but this is pending PBC-279: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-279
 			const accMoreItems = visibleACCItems.slice(1, 3);
 			accMoreItems.forEach((acc, index) => {
 				cy.getByAutoId('moreACCList-item').eq(index).within(() => {

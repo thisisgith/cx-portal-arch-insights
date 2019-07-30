@@ -4,14 +4,18 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
+import { CaseService } from '@cui-x/services';
+import { Router } from '@angular/router';
+
 import { ResolutionComponent } from './resolution.component';
 import { ResolutionModule } from './resolution.module';
-import { CaseService } from '@cui-x/services';
+import { CaseScenarios } from '@mock';
 
 describe('ResolutionComponent', () => {
 	let component: ResolutionComponent;
 	let fixture: ComponentFixture<ResolutionComponent>;
 	let service: CaseService;
+	let router: Router;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -28,9 +32,10 @@ describe('ResolutionComponent', () => {
 		service = TestBed.get(CaseService);
 		spyOn(service, 'read')
 			.and
-			.returnValue(of([]));
+			.returnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
 		fixture = TestBed.createComponent(ResolutionComponent);
 		component = fixture.componentInstance;
+		router = TestBed.get(Router);
 		fixture.detectChanges();
 	});
 
@@ -104,4 +109,44 @@ describe('ResolutionComponent', () => {
 		expect(component.getSeverityColor('42'))
 			.toEqual(undefined);
 	});
+
+	it('should use the case and serial queryparams', fakeAsync(() => {
+		router.navigate(
+			['.'],
+			{
+				queryParams: { case: '688296392', serial: 'FOX1306GBAD' },
+				relativeTo: component.route,
+			},
+		);
+		tick();
+		fixture.detectChanges();
+		expect(component.selectedCase)
+			.toEqual({
+				caseNumber: '688296392',
+			});
+		expect(component.caseParams.serialNumbers)
+			.toEqual('FOX1306GBAD');
+	}));
+
+	it('should close the case details 360', () => {
+		component.detailsClose();
+		expect(component.selectedCase)
+			.toBeNull();
+		expect(component.selectedDetails)
+			.toBeNull();
+	});
+
+	it('should select and deselect a case', fakeAsync(() => {
+		const rowCase = (<any> CaseScenarios[4].scenarios.GET[0].response.body).content[0];
+		component.onTableRowClicked(rowCase);
+		tick();
+		fixture.detectChanges();
+		expect(component.selectedCase)
+			.toBe(rowCase);
+		component.onTableRowClicked(rowCase);
+		tick();
+		fixture.detectChanges();
+		expect(component.selectedCase)
+			.toBeNull();
+	}));
 });

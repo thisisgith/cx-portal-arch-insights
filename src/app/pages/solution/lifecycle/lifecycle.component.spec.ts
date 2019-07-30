@@ -8,7 +8,6 @@ import {
 	RacetrackScenarios,
 	ATXScenarios,
 	ACCScenarios,
-	CommunitiesScenarios,
 	ELearningScenarios,
 	SuccessPathScenarios,
 	ActionScenarios,
@@ -44,7 +43,6 @@ describe('LifecycleComponent', () => {
 
 	let racetrackATXSpy;
 	let racetrackAccSpy;
-	let racetrackCommunitiesSpy;
 	let racetrackLearningSpy;
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
@@ -59,7 +57,6 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackInfoSpy, 'restore');
 		_.invoke(racetrackAccSpy, 'restore');
 		_.invoke(racetrackLearningSpy, 'restore');
-		_.invoke(racetrackCommunitiesSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
 		_.invoke(racetrackAccBookmarkSpy, 'restore');
@@ -85,10 +82,6 @@ describe('LifecycleComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(SuccessPathScenarios[0])));
 
-		racetrackCommunitiesSpy = spyOn(racetrackContentService, 'getRacetrackCommunities')
-			.and
-			.returnValue(of(getActiveBody(CommunitiesScenarios[0])));
-
 		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
 			.and
 			.returnValue(of(getActiveBody(RacetrackScenarios[0])));
@@ -99,7 +92,7 @@ describe('LifecycleComponent', () => {
 
 		racetrackAccBookmarkSpy = spyOn(racetrackContentService, 'updateACCBookmark')
 			.and
-			.returnValue(of(getActiveBody(ACCScenarios[4], 'POST')));
+			.returnValue(of(getActiveBody(ACCScenarios[6], 'POST')));
 	};
 
 	/**
@@ -137,6 +130,28 @@ describe('LifecycleComponent', () => {
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
+	});
+
+	/**
+	 * @TODO: modify test to use UI
+	 */
+	it('should select view', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.view)
+				.toBe('grid');
+
+			component.selectView('list');
+
+			fixture.detectChanges();
+
+			expect(component.view)
+				.toBe('list');
+
+			done();
+		});
 	});
 
 	describe('ATX', () => {
@@ -182,13 +197,6 @@ describe('LifecycleComponent', () => {
 					statusText: 'Resource not found',
 				})));
 
-			racetrackCommunitiesSpy = spyOn(racetrackContentService, 'getRacetrackCommunities')
-				.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-					statusText: 'Resource not found',
-				})));
-
 			racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
 				.and
 				.returnValue(of(getActiveBody(RacetrackScenarios[0])));
@@ -207,9 +215,6 @@ describe('LifecycleComponent', () => {
 				.toBeUndefined();
 
 			expect(component.componentData.atx)
-				.toBeUndefined();
-
-			expect(component.componentData.communities)
 				.toBeUndefined();
 		});
 
@@ -358,13 +363,13 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.acc.sessions[0].isFavorite)
 				.toBeFalsy();
 			expect(component.componentData.acc.sessions[0].status)
-			.toEqual('recommended');
+			.toEqual('requested');
 			expect(component.selectedACC.length)
 				.toEqual(1);
 
 			const acc5 = component.componentData.acc.sessions[1];
 			expect(acc5.status)
-				.toEqual('requested');
+				.toEqual('in-progress');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
@@ -423,6 +428,16 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(1);
+
+			component.onSort('title', 'asc');
+			fixture.detectChanges();
+			expect(component.productGuidesTable.columns[0].sortDirection)
+				.toEqual('desc');
+
+			component.onSort('title', 'desc');
+			fixture.detectChanges();
+			expect(component.productGuidesTable.columns[0].sortDirection)
+				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
@@ -545,18 +560,6 @@ describe('LifecycleComponent', () => {
 			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(2);
 		});
-	});
-
-	it('should have loaded the community items', () => {
-		buildSpies();
-		sendParams();
-
-		fixture.detectChanges();
-		fixture.whenStable()
-			.then(() => {
-				expect(component.componentData.communities.length)
-					.toEqual(2);
-			});
 	});
 
 	describe('Learn - Non-cypress', () => {

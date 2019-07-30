@@ -67,8 +67,9 @@
 							title: '_SupportCoverage_',
 							data: coverageData?.contractEndDate ?
 								('_CoveredUntil_' | i18n:((coverageData?.contractEndDate | date:'yyyy MMM dd'))) : null,
-							linkData: coverageData ?
-								(coverageData?.contractNumber + ' ' + coverageData?.slaDescription) : null,
+							linkData: coverageData?.contractNumber?
+								(coverageData?.contractNumber + (coverageData?.slaDescription ? ' ' + coverageData?.slaDescription : ''))
+								 : null,
 							url: '#'
 						}">
 					</ng-container>

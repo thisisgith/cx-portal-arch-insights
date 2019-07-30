@@ -178,7 +178,7 @@ const mockData: IEHealthStatusResponseModel = {
 				pod_restart_count: '1',
 			},
 			name: 'keycloak',
-			status: 'Running',
+			status: 'ContainerCreation',
 			timestamp: 'Fri Jul 05 10:50:00 GMT 2019',
 			type: 'Application',
 			version: '4.8.0',
@@ -194,7 +194,7 @@ const mockData: IEHealthStatusResponseModel = {
 				pod_restart_count: '0',
 			},
 			name: 'metrics-server',
-			status: 'Running',
+			status: 'Pending',
 			timestamp: 'Fri Jul 05 10:50:00 GMT 2019',
 			type: 'Application',
 			version: '2.8.2',
@@ -210,7 +210,7 @@ const mockData: IEHealthStatusResponseModel = {
 				pod_restart_count: '1',
 			},
 			name: 'nfs-server-provisioner',
-			status: 'Running',
+			status: 'PodInitializing',
 			timestamp: 'Fri Jul 05 10:50:00 GMT 2019',
 			type: 'Application',
 			version: '0.2.0',
@@ -298,6 +298,31 @@ const mockData: IEHealthStatusResponseModel = {
 			version: '1.1.0',
 		},
 	],
+	dnac_details: [
+		{
+			name: '172.21.137.122_DNAC',
+			status: 'Reachable',
+			timestamp: 'Mon Jul 15 21:45:00 GMT 2019',
+			type: 'DNAC Controller',
+			version: '1.2.10',
+		},
+		{
+			name: 'dnacLoad',
+			status: 'Reachable',
+			timestamp: 'Mon Jul 15 21:45:00 GMT 2019',
+			type: 'DNAC Controller',
+			version: '1.2.10',
+		},
+		{
+			additional_details: {
+				error: 'Failed to fetch DNAC communication status',
+			},
+			status: 'Unreachable',
+			timestamp: 'Mon Jul 15 21:45:00 GMT 2019',
+			type: 'DNAC Controller',
+			version: '1.2.10',
+		},
+	],
 	ie_version: '0.9.1',
 	ieStatus: 'active',
 	remote_id: 'c1678010-759e-478f-bd47-d0ef8c53c9b8',
@@ -324,6 +349,12 @@ const mockData: IEHealthStatusResponseModel = {
 };
 
 /**
+ * Mock body of results where dnac is unreachable is first result in dnac_details
+ */
+const dnacUnreachableMockData: IEHealthStatusResponseModel = JSON.parse(JSON.stringify(mockData));
+dnacUnreachableMockData.dnac_details[0] = dnacUnreachableMockData.dnac_details[2];
+
+/**
  * The scenarios
  */
 export const HealthStatusScenarios = [
@@ -335,6 +366,15 @@ export const HealthStatusScenarios = [
 					description: 'Call to get health-status',
 					response: {
 						body: [mockData],
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: 500,
+					description: 'Call to get health-status (dnac unreachable)',
+					response: {
+						body: [dnacUnreachableMockData],
 						status: 200,
 					},
 					selected: true,

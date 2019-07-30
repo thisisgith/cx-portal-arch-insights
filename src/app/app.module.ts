@@ -25,6 +25,8 @@ import {
 } from '@cisco-ngx/cui-services';
 import { HeaderModule } from '@components';
 import { NoResultsModule } from './components/search/no-results/no-results.module';
+import { CaseOpenModule } from './components/case/case-open/case-open.module';
+import { CloseConfirmModule } from './components/case/case-open/close-confirm/close-confirm.module';
 
 /**
  * Initialization function which will load our i18n files
@@ -55,6 +57,8 @@ export function loadI18n (service: AppService) {
 		HeaderModule,
 		HttpClientModule,
 		NoResultsModule,
+		CaseOpenModule,
+		CloseConfirmModule,
 	],
 	providers: [
 		AppService,

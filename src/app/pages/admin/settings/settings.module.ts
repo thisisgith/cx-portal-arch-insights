@@ -4,10 +4,10 @@ import { CommonModule } from '@angular/common';
 import { SettingsComponent } from './settings.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AdminWrapperModule } from '../admin-wrapper.module';
-import { ControlPointsModule, UserModule } from '@sdp-api';
 import { HeightTransitionModule } from '@components';
 import { AppStatusColorPipe } from './app-status-color.pipe';
 import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
+import { ControlPointsModule, UserModule } from '@sdp-api';
 
 import { environment } from '@environment';
 
