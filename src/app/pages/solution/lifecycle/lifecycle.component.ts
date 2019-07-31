@@ -128,7 +128,7 @@ export class LifecycleComponent implements OnDestroy {
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
 	public view: 'list' | 'grid' = 'grid';
-	public productGuidesTable: CuiTableOptions;
+	public successBytesTable: CuiTableOptions;
 
 	public statusOptions = [
 		{
@@ -246,8 +246,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * Will construct the assets table
 	 */
 	private buildTable () {
-		if (!this.productGuidesTable) {
-			this.productGuidesTable = new CuiTableOptions({
+		if (!this.successBytesTable) {
+			this.successBytesTable = new CuiTableOptions({
 				columns: [
 					{
 						key: 'title',
@@ -287,7 +287,7 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
-	 * Sorting function for productGuides table
+	 * Sorting function for successBytes table
 	 * @param key the key to sort
 	 * @param sortDirection sortDiretion
 	 */
@@ -295,8 +295,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.selectedSuccessPaths = _.orderBy(
 			this.selectedSuccessPaths, [key], [sortDirection]);
 
-		_.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
-			= _.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
+		_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
+			= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
 			=== 'asc' ? 'desc' : 'asc';
 	}
 
@@ -345,7 +345,7 @@ export class LifecycleComponent implements OnDestroy {
 				context: { data: this.selectedACC },
 				visible: true,
 			};
-		} else if (type === '_ProductGuide_') {
+		} else if (type === '_SuccessBytes_') {
 			this.modal = {
 				content: this.successPathTemplate,
 				context: { data: this.selectedSuccessPaths },
@@ -469,7 +469,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type the item type
 	 */
 	public selectFilter (type: string) {
-		if (type === 'productguide') {
+		if (type === 'successBytes') {
 			this.selectedSuccessPaths =
 				_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
 			if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
