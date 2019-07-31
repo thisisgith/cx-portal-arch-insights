@@ -12,8 +12,12 @@
 				<div
 					class="text-bold"
 					[innerHTML]="timestamp.title"
+					attr.data-auto-id="{{timestamp.title}}-Title"
 				></div>
-				<small [innerHTML]="timestamp.subTitle"></small>
+				<small
+					[innerHTML]="timestamp.subTitle"
+					attr.data-auto-id="{{timestamp.title}}-SubTitle"
+				></small>
 			</div>
 			<div
 				*ngIf="timestamp.isToday"
@@ -70,8 +74,12 @@
 				<div
 					class="text-bold"
 					[innerHTML]="timestamp.title"
+					attr.data-auto-id="{{timestamp.title}}-Title"
 				></div>
-				<small [innerHTML]="timestamp.subTitle"></small>
+				<small
+					[innerHTML]="timestamp.subTitle"
+					attr.data-auto-id="{{timestamp.title}}-SubTitle"
+				></small>
 			</div>
 			<div
 				*ngIf="timestamp.isToday"
