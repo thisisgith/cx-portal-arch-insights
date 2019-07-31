@@ -696,4 +696,20 @@ describe('Assets', () => { // PBC-41
 			cy.get('table').should('be.visible');
 		});
 	});
+
+	context('PBC-344: Asset Cases - Asset Based Case Open', () => {
+		it('Provides an Asset 360 view modal', () => {
+			const validate360OpenCase = asset => {
+				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
+				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
+				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility).click(); // PBC344
+				cy.getByAutoId('CaseOpenCancelButton').click(); // Cancel modal
+				cy.getByAutoId('CaseOpenCancel').click(); // Confirm cancel
+			};
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
+			validate360OpenCase(assets[0]); // Currently only first asset has the CaseOpen Button
+
+			cy.getByAutoId('CloseDetails').click();
+		});
+	});
 });
