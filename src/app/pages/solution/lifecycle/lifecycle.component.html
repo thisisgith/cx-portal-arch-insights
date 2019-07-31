@@ -672,7 +672,7 @@
 				<th *ngFor="let column of productGuidesTable.columns" 
 					attr.data-auto-id="productGuidesTable-columnHeader-{{ column.name }}"
 					[ngClass]="{ 'sortable': column.sortable }"
-					(click)="onSort(column.sortKey, column.sortDirection)">
+					(click)="column.sortable ? onSort(column.sortKey, column.sortDirection) : null">
 					<span [innerText]="column.name"></span>
 					<span *ngIf="column.sortable" 
 						class="qtr-margin-left" 
