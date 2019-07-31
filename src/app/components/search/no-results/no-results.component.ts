@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
 
-import { LogService } from '@cisco-ngx/cui-services';
-
 /**
  * Component to display when no results are found
  */
@@ -13,10 +11,4 @@ import { LogService } from '@cisco-ngx/cui-services';
 export class NoResultsComponent {
 	/** search query text */
 	@Input('query') public query: string;
-
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('NoResultsComponent Created!');
-	}
 }

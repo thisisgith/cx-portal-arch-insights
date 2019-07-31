@@ -8,9 +8,9 @@ const customerId = '2431199';
 
 /** The mock response for coverage counts */
 const mockAdvisoryCounts: VulnerabilityResponse = {
-	bugs: 686,
-	'field-notices': 2244,
-	'security-advisories': 3772,
+	bugs: 2,
+	'field-notices': 3,
+	'security-advisories': 3,
 };
 
 /** The scenarios */

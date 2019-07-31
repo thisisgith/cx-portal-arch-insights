@@ -1,9 +1,7 @@
-export { Advisory } from './advisory';
-export { AlertData } from './alertData';
-export { Announcement } from './announcement';
-export { Bug } from './bug';
+export { AdvisoryType } from './advisory';
 export {
 	Case,
+	File,
 	CaseOpenRequest,
 	Note,
 	ProblemArea,
@@ -11,8 +9,6 @@ export {
 	Tech,
 } from './case';
 export { Contract } from './contract';
-export { FieldNotice } from './fieldNotice';
-export { License } from './license';
 export {
 	LaborLine,
 	PartsLineDetail,
@@ -25,3 +21,4 @@ export { SearchContext, SearchEnum, SearchType, SearchQuery } from './search';
 export { SetupStep, SetupComponent } from './ie';
 export { TimelineDatapoint, TimelineInternalDatapoint, TodayRelation } from './timelineDatapoint';
 export { VisualFilter } from './visualFilter';
+export { User } from './user';

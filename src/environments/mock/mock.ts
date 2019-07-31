@@ -2,33 +2,38 @@ import {
 	ACCScenarios,
 	ACCUserInfoScenarios,
 	ActionScenarios,
+	AdvisorySecurityAdvisoryScenarios,
 	AssetScenarios,
 	ATXScenarios,
 	CaseScenarios,
 	CGTScenarios,
 	ContractScenarios,
 	CoverageScenarios,
+	CriticalBugScenarios,
 	ELearningScenarios,
+	EntitlementScenarios,
+	FieldNoticeAdvisoryScenarios,
+	FieldNoticeBulletinScenarios,
+	FieldNoticeCountScenarios,
+	FieldNoticeScenarios,
 	HardwareEOLBulletinScenarios,
 	HardwareEOLCountScenarios,
 	HardwareEOLScenarios,
 	HardwareScenarios,
+	HealthStatusScenarios,
 	NetworkScenarios,
-	SerialNumberScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryScenarios,
-	SecurityAdvisoryTopScenarios,
 	SecurityAdvisorySummaryScenarios,
+	SecurityAdvisoryTopScenarios,
+	SerialNumberScenarios,
 	SuccessPathScenarios,
-	FieldNoticeScenarios,
-	FieldNoticeBulletinScenarios,
-	HealthStatusScenarios,
-	VulnerabilityScenarios,
 	UserScenarios,
+	VulnerabilityScenarios,
 } from './';
 
 import { HttpHeaders } from '@angular/common/http';
@@ -43,10 +48,16 @@ import {
 	CommunitiesResponse,
 	CoverageCountsResponse,
 	CoverageResponse,
+	CriticalBugsCount,
+	CriticalBugsResponse,
+	DeviceContractResponse,
 	ELearningResponse,
+	EntitledUser,
+	FieldNoticeAdvisoryResponse,
 	FieldNoticeBulletinResponse,
 	FieldNoticeResponse,
 	GroupTrainingEntitySchema,
+	FieldNoticeUpdatedResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
@@ -54,17 +65,17 @@ import {
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
+	SecurityAdvisoriesResponse,
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryImpactCountResponse,
 	SecurityAdvisoryResponse,
 	SecurityAdvisorySummary,
+	ServiceInfoResponse,
 	SuccessPathsResponse,
 	UserQuota,
 	UserTraining,
 	VulnerabilityResponse,
-	DeviceContractResponse,
 } from '@sdp-api';
-// } from '../';
 
 import { RMAResponse } from '@interfaces';
 
@@ -78,10 +89,16 @@ type ResponseBody = (
 	CommunitiesResponse |
 	CoverageCountsResponse |
 	CoverageResponse |
+	CriticalBugsCount |
+	CriticalBugsResponse |
+	DeviceContractResponse |
 	ELearningResponse |
+	EntitledUser |
+	FieldNoticeAdvisoryResponse |
 	FieldNoticeBulletinResponse |
 	FieldNoticeResponse |
 	GroupTrainingEntitySchema |
+	FieldNoticeUpdatedResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
@@ -90,15 +107,18 @@ type ResponseBody = (
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
+	SecurityAdvisoriesResponse |
 	SecurityAdvisoryBulletinResponse |
 	SecurityAdvisoryImpactCountResponse |
 	SecurityAdvisoryResponse |
 	SecurityAdvisorySummary |
+	ServiceInfoResponse |
 	SuccessPathsResponse |
 	UserQuota |
 	UserTraining |
 	VulnerabilityResponse |
 	DeviceContractResponse
+	VulnerabilityResponse
 );
 
 /**
@@ -145,31 +165,36 @@ export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
 		ACCUserInfoScenarios,
-		ATXScenarios,
 		ActionScenarios,
+		AdvisorySecurityAdvisoryScenarios,
 		AssetScenarios,
+		ATXScenarios,
 		CaseScenarios,
 		CGTScenarios,
 		ContractScenarios,
 		CoverageScenarios,
+		CriticalBugScenarios,
 		ELearningScenarios,
+		EntitlementScenarios,
+		FieldNoticeAdvisoryScenarios,
 		FieldNoticeBulletinScenarios,
+		FieldNoticeCountScenarios,
 		FieldNoticeScenarios,
 		HardwareEOLBulletinScenarios,
 		HardwareEOLCountScenarios,
 		HardwareEOLScenarios,
 		HardwareScenarios,
-		SerialNumberScenarios,
 		HealthStatusScenarios,
 		NetworkScenarios,
-		RMAScenarios,
 		RacetrackScenarios,
+		RMAScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
-		SecurityAdvisoryTopScenarios,
 		SecurityAdvisoryScenarios,
 		SecurityAdvisorySummaryScenarios,
+		SecurityAdvisoryTopScenarios,
+		SerialNumberScenarios,
 		SuccessPathScenarios,
 		UserScenarios,
 		VulnerabilityScenarios,

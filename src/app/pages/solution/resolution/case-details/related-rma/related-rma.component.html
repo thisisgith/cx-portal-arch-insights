@@ -12,7 +12,7 @@
 	<ng-template #shipToTmpl let-item="celldata">
 		<div [innerText]="item?.shipToInfo.ackName"></div>
 		<div [innerText]="item?.shipToInfo.address1"></div>
-		<div>{{item?.shipToInfo.city}} {{item?.shipToInfo.city ? ', ' : ''}} {{item?.shipToInfo.state}}
+		<div>{{item?.shipToInfo.city}}{{item?.shipToInfo.city ? ', ' : ''}} {{item?.shipToInfo.state}}
 			{{item?.shipToInfo.postalCode}}
 		</div>
 	</ng-template>

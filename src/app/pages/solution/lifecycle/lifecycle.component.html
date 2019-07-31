@@ -618,13 +618,13 @@
 				<div class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
 					<button class="btn btn--small btn--gray-ghost"
-						data-auto-id="list-view-btn"
+						data-auto-id="table-view-btn"
 						[ngClass]="{'selected': view ==='list' }"
 						(click)="selectView('list')">
 						<span class="icon-list-view"></span>
 					</button>
 					<button class="btn btn--small btn--gray-ghost"
-						data-auto-id="list-view-btn"
+						data-auto-id="card-view-btn"
 						[ngClass]="{'selected': view === 'grid' }"
 						(click)="selectView('grid')">
 						<span class="icon-grid-view"></span>
@@ -647,7 +647,7 @@
 				<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 					<div class="row">
 						<div class="col-md-3">
-							<a class="no-link fade-in-pop" data-auto-id="successlinl" target="_blank" [href]="item.url">
+							<a class="no-link fade-in-pop" data-auto-id="successlink" target="_blank" [href]="item.url">
 								<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
 									<span class="icon-apps icon-small half-padding-right"></span>
 									<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
@@ -674,11 +674,11 @@
 </ng-template>
 
 <ng-template #listProductGuides>
-	<div class="table-responsive" *ngIf="selectedSuccessPaths && view == 'list'">
+	<div class="table-responsive" *ngIf="selectedSuccessPaths && view == 'list'" data-auto-id="SuccessPathsTable">
 		<table class="table table--nostripes table--wrap table--hover table--loose">
 			<tr class="th-row">
 				<th *ngFor="let column of productGuidesTable.columns" 
-					data-auto-id="productGuidesTable-column"
+					attr.data-auto-id="productGuidesTable-columnHeader-{{ column.name }}"
 					[ngClass]="{ 'sortable': column.sortable }"
 					(click)="onSort(column.sortKey, column.sortDirection)">
 					<span [innerText]="column.name"></span>
@@ -697,7 +697,7 @@
 						<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }"></ng-container>
 					</ng-container>
 					<ng-container *ngIf="!column.template">
-						<div [innerText]="item[column.key]"></div>
+						<div [innerText]="item[column.key]" attr.data-auto-id="SuccessPathsTable-{{ column.name }}-rowValue"></div>
 					</ng-container>
 				</td>
 			</tr>
@@ -834,7 +834,7 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div *ngIf="celldata.type">
-				<a class="no-link fade-in-pop" data-auto-id="successlinl" target="_blank" [href]="celldata.url">
+				<a class="no-link fade-in-pop" target="_blank" [href]="celldata.url" data-auto-id="SuccessPathsTable-Format-rowValue-link">
 					<div class="text-left text-muted" *ngIf="celldata.type === 'Web Page'">
 						<span class="icon-apps icon-small half-padding-right"></span>
 						<span class="text-samll" [innerText]="'_Web_' | i18n"></span>

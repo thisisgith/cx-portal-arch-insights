@@ -1,0 +1,135 @@
+<cui-tabs>
+	<cui-tab [label]="'_Summary_' | i18n | uppercase">
+		<ng-container *ngTemplateOutlet="summary"></ng-container>
+	</cui-tab>
+	<cui-tab [label]="'_Hardware_' | i18n | uppercase">
+		<div class="half-margin-top" *ngIf="asset">
+			<asset-details-hardware [asset]="asset"></asset-details-hardware>
+		</div>
+	</cui-tab>
+	<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true"></cui-tab>
+	<cui-tab [label]="'_Advisories_' | i18n | uppercase">
+		<div class="dbl-margin-top" *ngIf="asset">
+			<asset-details-advisories [asset]="asset"></asset-details-advisories>
+		</div>
+	</cui-tab>
+</cui-tabs>
+
+<ng-template #summary>
+	<div class="row base-margin-top">
+		<div class="col-md-4 flex flex-center">
+			<img alt="{{ '_StockPhoto_' | i18n }}"
+				src="assets/img/inventory/CAT-3650.png">
+		</div>
+		<div class="col-md-6" *ngIf="asset">
+			<div *ngIf="status.loading.overall">
+				<cui-loader></cui-loader>
+			</div>
+			<div *ngIf="!status.loading.overall">
+				<h4 [innerText]="assetData?.productId || asset?.productId"></h4>
+				<div data-auto-id="YouHaveInventory"
+					*ngIf="componentData.numberInInventory > 1"
+					[innerHtml]="'_YouHaveInventory_' | i18n:componentData.numberInInventory">
+				</div>
+			</div>
+		</div>
+	</div>
+		
+	<div class="row base-margin-top base-margin-left">
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">
+					<ng-container *ngTemplateOutlet="detailsData; context: {
+							title: '_ProductSeries_',
+							linkData: assetData?.productFamily
+						}">
+					</ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: {
+							title: '_ProductID_',
+							linkData: assetData?.productId || asset?.productId
+						}">
+					</ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: {
+							title: '_SoftwareVersion_',
+							linkData: assetData?.swVersion || asset?.osVersion
+						}">
+					</ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: {
+							title: '_SupportCoverage_',
+							data: assetData?.contractEndDate ?
+								('_CoveredUntil_' | i18n:((assetData?.contractEndDate | date:'yyyy MMM dd'))) : null,
+							linkData: assetData?.contractNumber?
+								(assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
+								 : null,
+							url: '#'
+						}">
+					</ng-container>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">
+					<ng-container *ngTemplateOutlet="detailsData; context: {
+							title: '_EndOfSale_',
+							data: assetData?.eoSaleDate | date:'yyyy MMM dd'
+						}">
+					</ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: {
+							title: '_EndOfSupport_',
+							data: assetData?.lastDateOfSupport | date:'yyyy MMM dd'
+						}">
+					</ng-container>
+				</div>
+				<div class="col-md-12 base-margin-top">
+					<ng-container *ngTemplateOutlet="detailsData; context: {
+							title: '_Warranty_',
+							data: assetData?.warrantyEndDate ? ('_CoveredUntil_' | i18n:((assetData?.warrantyEndDate | date:'yyyy MMM dd'))) : null,
+							linkData: assetData?.warrantyType
+						}">
+					</ng-container>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <div class="row dbl-margin-top">
+		<div class="col-md-12">
+			<ng-container *ngTemplateOutlet="detailsData; context: {
+					title: '_Location_',
+					titleOnly: true
+				}">
+			</ng-container>
+		</div>
+	</div> -->
+
+	<!-- <div class="flex map-box">
+		<div class="icon-chevron-left qtr-padding-left qtr-padding-right flex-center"></div>
+		<div class="flex-fluid flex-center map-box-content"></div>
+		<div class="icon-chevron-right qtr-padding-left qtr-padding-right flex-center"></div>
+	</div> -->
+
+</ng-template>
+
+<ng-template #detailsData
+	let-title="title" let-data="data" let-linkData="linkData" let-url="url" let-titleOnly="titleOnly">
+	<div class="row">
+		<div class="col-md-12 text-bold" [innerText]="title | i18n | uppercase"></div>
+	</div>
+	<div class="row" *ngIf="!titleOnly">
+		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>
+		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)" attr.data-auto-id="{{ title }}-data"></div>
+		<div class="col-md-12" attr.data-auto-id="{{ title }}-Link">
+			<a *ngIf="linkData && url" [href]="url" [innerText]="linkData"></a>
+			<span *ngIf="linkData && !url" [innerText]="linkData"></span>
+		</div>
+	</div>
+</ng-template>

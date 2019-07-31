@@ -21,6 +21,7 @@ import {
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
+import { UserResolve } from '@utilities';
 
 /**
  * interface representing the key/value of a select input option
@@ -38,7 +39,7 @@ interface SelectOption {
 	styleUrls: ['./acc-request-form.component.scss'],
 	templateUrl: './acc-request-form.component.html',
 })
-export class AccRequestFormComponent implements OnDestroy, OnInit {
+export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 
 	@Input() public accId: string;
 	@Input() public accTitle: string;
@@ -48,7 +49,7 @@ export class AccRequestFormComponent implements OnDestroy, OnInit {
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
-	public customerId = '2431199';
+	public customerId: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	public custData: ACCUserInfoSchema;
 	public maxLength = 512;
@@ -92,8 +93,15 @@ export class AccRequestFormComponent implements OnDestroy, OnInit {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private contentService: RacetrackContentService,
+		private userResolve: UserResolve,
 	) {
-		this.logger.debug('AccRequestFormComponent Created!');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 	}
 
 	/**
@@ -193,7 +201,7 @@ export class AccRequestFormComponent implements OnDestroy, OnInit {
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
-				this.logger.debug('Submitted ACC response form');
+				this.logger.debug('acc-request-form.component :: Submitted ACC response form');
 				this.submitted.emit(true);
 			});
 	}
