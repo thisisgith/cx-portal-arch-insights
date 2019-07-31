@@ -117,7 +117,6 @@ type ResponseBody = (
 	UserQuota |
 	UserTraining |
 	VulnerabilityResponse |
-	DeviceContractResponse
 	VulnerabilityResponse
 );
 

@@ -776,14 +776,14 @@
 		<ng-container *ngTemplateOutlet="cgtRequestTraining; context: { data:  '_CGTSessionLimitReached_' }"></ng-container>
 		<div class="divider"></div>
 		<div class="base-padding-bottom">
-			<!-- <div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:2">
+			<div class="qtr-padding-bottom" *ngFor="let item of data.sessions | slice:0:2">
 				<div class="panel small-panel">
 					<div class="row">
-						<div class="col-md-11" [innerText]="item.title"></div>
-						<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'in-progress'"></div>
+						<div class="col-md-11" [innerText]="item"></div>
+						<div class="col-md-1 text-success icon-certified qtr-padding-left"></div>
 					</div>
 				</div>
-			</div> -->
+			</div>
 		</div>
 	</div>
 	<ng-container *ngIf="data.trainingsAvailable>0">

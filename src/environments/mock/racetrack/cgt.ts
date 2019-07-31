@@ -52,9 +52,9 @@ function MockCGTRequestResponse (): GroupTrainingEntitySchema {
 // }
 
 /** Mock Data for contract counts */
-const MockUserQuotaResponse: UserQuota[] = [
+const MockUserQuotaResponse: Array<UserQuota> = [
 	{
-		closed_ilt_courses_available: 1,
+		closed_ilt_courses_available: 0,
 		closed_ilt_courses_entitled: 0,
 		closed_ilt_courses_used: 0,
 		contract_number: `${contract1}`,
@@ -80,37 +80,37 @@ const MockUserQuotaResponse: UserQuota[] = [
 ];
 
 /** Mock Data for contract counts */
-const MockCOmpletedTrainingsResponse: UserTraining[] = [
+const MockCOmpletedTrainingsResponse: Array<UserTraining> = [
 	{
-		city: '0',
-		country: '0',
+		city: 'London',
+		country: 'UK',
 		customer: '0',
 		duration: 0,
-		end_date: '2020-01-29',
-		instructors: '',
+		end_date: '2019-01-29',
+		instructors: 'John Doe',
+		start_date: '2019-01-25',
+		title: '',
+		training_type: '',
+	},
+	{
+		city: 'London',
+		country: 'UK',
+		customer: '0',
+		duration: 0,
+		end_date: '2019-02-02',
+		instructors: 'John Doe',
 		start_date: '2019-01-29',
 		title: '',
 		training_type: '',
 	},
 	{
-		city: '0',
-		country: '0',
+		city: 'RTP',
+		country: 'USA',
 		customer: '0',
 		duration: 0,
-		end_date: '2020-01-29',
-		instructors: '',
-		start_date: '2019-01-29',
-		title: '',
-		training_type: '',
-	},
-	{
-		city: '0',
-		country: '0',
-		customer: '0',
-		duration: 0,
-		end_date: '2020-01-29',
-		instructors: '',
-		start_date: '2019-01-29',
+		end_date: '2019-01-28',
+		instructors: 'JohnDoe',
+		start_date: '2019-01-24',
 		title: '',
 		training_type: '',
 	},

@@ -72,6 +72,7 @@ interface ComponentData {
 	};
 	cgt?: {
 		trainingsAvailable: number;
+		sessions: string[];
 	};
 }
 
@@ -135,6 +136,7 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedACC: ACC[];
 	public view: 'list' | 'grid' = 'grid';
 	public productGuidesTable: CuiTableOptions;
+	public completedTrainingsList: Array<UserTraining>;
 
 	public statusOptions = [
 		{
@@ -849,27 +851,51 @@ export class LifecycleComponent implements OnDestroy {
 	 * Loads the CGT for the given params
 	 * @returns the UserQuota
 	 */
-	private loadCGT (): Observable<UserQuota> {
+	private loadCGT (): Observable<Array<UserQuota>> {
 		this.status.loading.cgt = true;
+		let startDate;
+		let endDate;
+		let completedData = [];
+		let month;
+		let year;
+		const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
+			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 		return this.contentService.getTrainingQuotas()
 		.pipe(
 			map((result: UserQuota) => {
-				console.log(`*********** result = ${JSON.stringify(result)}`);
 				this.status.loading.cgt = false;
+				console.log(`***** result = ${result}`);
 				_.each(result, training => {
 					this.groupTrainingsAvailable += _.get(training, 'closed_ilt_courses_available');
 				});
-				this.componentData.cgt = {
-					trainingsAvailable: this.groupTrainingsAvailable,
-				};
-				return result;
+				// this.loadCGTCompletedTrainings().subscribe();
+				this.contentService.getCompletedTrainings()
+					.pipe(
+						catchError(err => {
+							return of({ });
+						}),
+					)
+					.subscribe(response => {
+						this.completedTrainingsList = response;
+						_.each(this.completedTrainingsList, completedTraining => {
+							startDate = new Date(_.get(completedTraining, 'start_date')).getUTCDate();
+							endDate = new Date(_.get(completedTraining, 'end_date')).getUTCDate();
+							month = monthNames[new Date(_.get(completedTraining, 'start_date')).getMonth()];
+							year = new Date(_.get(completedTraining, 'start_date')).getUTCFullYear();
+							completedData = _.union(completedData, [`${month} ${startDate}-${endDate}, ${year} with ${_.get(completedTraining, 'instructors')}, ${_.get(completedTraining, 'city')}, ${_.get(completedTraining, 'country')}`]);
+						});
+						this.componentData.cgt = {
+							trainingsAvailable: this.groupTrainingsAvailable,
+							sessions: completedData,
+						};
+						return result;
+					});
 			}),
 			catchError(err => {
 				this.status.loading.cgt = false;
 				this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
 					err.status}) ${err.message}`);
-
 				return of({ });
 			}),
 		);
