@@ -36,10 +36,10 @@
 			</div>
 			<div class="col-md-6 text-right">
 				<button data-auto-id="CaseAttachFile"
-					class="btn btn--small btn--secondary"
-					[innerText]="'_RMACaseAttachFile_' | i18n"></button>
+					class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right"
+					[innerText]="'_RMACaseAttachFile_' | i18n" (click)="toggleAddFile()"></button>
 				<button data-auto-id="CaseAddNote"
-					class="btn btn--small btn--secondary"
+					class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right"
 					[innerText]="'_RMACaseAddNote_' | i18n" (click)="toggleAddNote()"></button>
 			</div>
 		</div>
@@ -55,3 +55,4 @@
 		</div>
 	</div>
 </div>
+<cui-modal></cui-modal>

@@ -1,7 +1,5 @@
 import { Component, ViewChild, TemplateRef, OnInit } from '@angular/core';
 
-import { LogService } from '@cisco-ngx/cui-services';
-
 /**
  * Main Cases component
  */
@@ -27,12 +25,6 @@ export class CasesComponent  implements OnInit {
 	public installProblem = 'Installation';
 	public errorSubProblem = 'Error Messages, Logs, Debugs';
 	public configSubProblem  = 'Configuration Assistance';
-
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('CasesComponent Created!');
-	}
 
 	/**
 	 * Changes to the given cases page

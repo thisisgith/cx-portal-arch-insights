@@ -3,7 +3,6 @@ image: containers.cisco.com/cway/gitlab-ci:3.4.0
 stages:
   - setup
   - test
-  - build
 
 # add 'node_modules' to cache for speeding up builds
 cache:
@@ -22,7 +21,7 @@ setup:
     - rm -rf node_modules/@types/lodash
 
 building:
-  stage: build
+  stage: test
   script:
     - npm run build:ci
 
@@ -51,8 +50,7 @@ unit:
 # run our test:automation process for the commit
 automation:
   stage: test
-  only:
-    - master
+  allow_failure: true
   before_script:
     - npm run start:background
   script:

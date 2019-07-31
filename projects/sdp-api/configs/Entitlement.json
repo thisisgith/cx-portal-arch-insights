@@ -1,0 +1,26 @@
+{
+	"$schema": "../../../node_modules/@apollo/ng-swagger-gen/ng-swagger-gen-schema.json",
+	"swagger": "../../node_modules/@swagger/cx-portal/swagger/Entitlement.yaml",
+	"output": "src/lib/entitlement",
+	"outputCore": "../core",
+	"prefix": "Entitlement",
+	"ignoreUnusedModels": true,
+	"minParamsForContainer": 2,
+	"sortParams": "desc",
+	"defaultTag": "Entitlement",
+	"replaceTags": {
+		"Entitlement API Services": "Entitlement"
+	},
+	"defaultOperationIds": {
+	},
+	"modelsExportAs": {
+		"User": "EntitledUser"
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
+}

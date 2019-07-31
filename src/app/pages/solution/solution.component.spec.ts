@@ -3,11 +3,12 @@ import { Subject, of, throwError } from 'rxjs';
 import { SolutionComponent } from './solution.component';
 import { SolutionModule } from './solution.module';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, ActivatedRoute } from '@angular/router';
 import { LifecycleComponent } from './lifecycle/lifecycle.component';
 import { LifecycleModule } from './lifecycle/lifecycle.module';
 import { AssetsComponent } from './assets/assets.component';
 import { AssetsModule } from './assets/assets.module';
+import { AdvisoriesModule } from './advisories/advisories.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
 	RacetrackScenarios,
@@ -16,7 +17,7 @@ import {
 import * as _ from 'lodash-es';
 import { RacetrackService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-
+import { AdvisoriesComponent } from './advisories/advisories.component';
 /**
  * MockRouter used to help show/hide the spinner
  */
@@ -72,11 +73,13 @@ describe('SolutionComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetsModule,
+				AdvisoriesModule,
 				HttpClientTestingModule,
 				LifecycleModule,
 				RouterTestingModule.withRoutes([
 					{ path: 'solution/lifecycle', component: LifecycleComponent },
-					{ path: 'solution/lifecycle', component: AssetsComponent },
+					{ path: 'solution/assets', component: AssetsComponent },
+					{ path: 'solution/advisories', component: AdvisoriesComponent },
 				]),
 				SolutionModule,
 			],
@@ -84,6 +87,27 @@ describe('SolutionComponent', () => {
 				{
 					provide: Router,
 					useClass: MockRouter,
+				},
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						snapshot: {
+							data: {
+								user: {
+									customerId: '2431199',
+									individual: {
+										ccoId: 'fakeCco',
+										cxBUId: '2431199',
+										emailAddress: 'fakeCco@cisco.com',
+										familyName: 'Test',
+										name: 'Demo',
+										role: 'admin',
+									},
+									name: 'Test User',
+								},
+							},
+						},
+					},
 				},
 			],
 		})

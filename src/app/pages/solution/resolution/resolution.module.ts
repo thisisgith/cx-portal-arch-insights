@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ResolutionComponent } from './resolution.component';
 import { CaseDetailsModule } from './case-details/case-details.module';
-import { Panel360Module } from '@components';
+import { DetailsPanelModule } from '@components';
 import { CaseDetailsHeaderModule } from './case-details-header/case-details-header.module';
 
 import {
@@ -31,18 +31,18 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [ResolutionComponent],
 	imports: [
-		CommonModule,
-		FormsModule,
-		Panel360Module,
-		RouterModule.forChild(childRoutes),
-		ReactiveFormsModule,
-		CaseDetailsModule,
 		CaseDetailsHeaderModule,
+		CaseDetailsModule,
+		CommonModule,
 		CuiPagerModule,
+		CuiSpinnerModule,
 		CuiTableModule,
 		CuiTabsModule,
-		CuiSpinnerModule,
+		DetailsPanelModule,
+		FormsModule,
 		I18nPipeModule,
+		ReactiveFormsModule,
+		RouterModule.forChild(childRoutes),
 	],
 })
 export class ResolutionModule { }

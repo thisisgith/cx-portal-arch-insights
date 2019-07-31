@@ -12,6 +12,7 @@
 			"@interfaces": ["src/app/interfaces/index.ts"],
 			"@mock": ["src/environments/mock/index.ts"],
 			"@services": ["src/app/services/index.ts"],
+			"@utilities": ["src/app/utilities/index.ts"]
 		}
 	}
 }
