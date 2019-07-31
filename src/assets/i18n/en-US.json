@@ -346,6 +346,8 @@
 	"_ReplacementProductID_": "Replacement Product ID",
 	"_Request1on1_": "Request a 1-on-1",
 	"_Requested_": "Requested",
+	"_RequestError_": "Your request could not be submitted...",
+	"_RequestSuccess_": "Your request has been successfully submitted",
 	"_RequestRMA_": "Request RMA",
 	"_RequiresCXLevelUpgrade_": "Requires CX Level Upgrade",
 	"_Resolved_": "Resolved",

@@ -30,6 +30,22 @@
 							</div>
 						</div>
 					</ng-container>
+					<ng-container *ngIf="submitError">
+						<div class="row half-padding-left base-padding-top">
+							<div class="alert alert--danger dbl-padding-left">
+								<div class="alert__icon icon-info-outline"></div>
+								<div class="alert__message text-bold" [innerText]="'_RequestError_' | i18n"></div>
+							</div>
+						</div>
+					</ng-container>
+					<ng-container *ngIf="submitSuccess">
+						<div class="row half-padding-left base-padding-top">
+							<div class="alert alert--success dbl-padding-left">
+								<div class="alert__icon icon-info-outline"></div>
+								<div class="alert__message text-bold" [innerText]="'_RequestSuccess_' | i18n"></div>
+							</div>
+						</div>
+					</ng-container>
 				</div>
 				<div class="col-md-1 half-margin-top">
 					<span (click)="closeRequestForm()" data-auto-id="ACCCloseRequestModal"
@@ -147,7 +163,7 @@
 						</div>
 						<div class="form-group dbl-padding-left dbl-margin-right">
 							<div class="form-group__text">
-								<textarea id="input-textarea-accelerator" formControlName="acceleratorInterest" class="textarea" rows="5" data-auto-id="accRequestModal-WhyInterestedAccelerator-Input"></textarea>
+								<textarea [maxlength]="maxLength" id="input-textarea-accelerator" formControlName="acceleratorInterest" class="textarea" rows="5" data-auto-id="accRequestModal-WhyInterestedAccelerator-Input"></textarea>
 								<label class="text-uppercase text-small" for="input-textarea-accelerator" [innerText]="'_WhyInterestedAccelerator_' | i18n" data-auto-id="accRequestModal-WhyInterestedAccelerator-Heading"></label>
 							</div>
 							<div class="help-block text-muted" role="alert">
@@ -156,7 +172,7 @@
 						</div>
 						<div class="form-group dbl-padding-left dbl-margin-right">
 							<div class="form-group__text">
-								<textarea id="input-textarea-outcome" formControlName="desiredOutcome" class="textarea" rows="5" data-auto-id="accRequestModal-WhatWouldLikeToSeeOutcome-Input"></textarea>
+								<textarea [maxlength]="maxLength" id="input-textarea-outcome" formControlName="desiredOutcome" class="textarea" rows="5" data-auto-id="accRequestModal-WhatWouldLikeToSeeOutcome-Input"></textarea>
 								<label class="text-uppercase text-small" for="input-textarea-outcome" [innerText]="'_WhatWouldLikeToSeeOutcome_' | i18n" data-auto-id="accRequestModal-WhatWouldLikeToSeeOutcome-Heading"></label>
 							</div>
 							<div class="help-block text-muted" role="alert">
