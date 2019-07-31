@@ -15,9 +15,13 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	CollectionPolicyUpdateRequestModel,
+	Device,
 	ControlPointModifyCollectionPolicyAPIService,
+	ControlPointDeviceDiscoveryAPIService,
+	ControlPointDevicePolicyAPIService,
+	DeviceInfo,
 } from '@sdp-api';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { catchError, takeUntil, finalize } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
 
 import * as _ from 'lodash-es';
@@ -49,6 +53,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	private destroyed$: Subject<void> = new Subject<void>();
 	public timePeriod = '';
 	public title = '';
+	public deviceListRight: DeviceInfo[] = [];
+	public deviceListLeft: DeviceInfo[] = [];
 
 	public loading = false;
 
@@ -124,6 +130,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private collectionService: ControlPointModifyCollectionPolicyAPIService,
+		private devicePolicyService: ControlPointDevicePolicyAPIService,
+		private deviceService: ControlPointDeviceDiscoveryAPIService,
 	) {
 		this.logger.debug('AccRequestFormComponent Created!');
 	}
@@ -148,21 +156,57 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 */
 	public ngOnInit () {
 		this.loading = false;
-		console.log(this.type)
 		switch (this.type) {
 			case 'editCollection': {
-				this.title = I18n.get('_ScheduledCollectionDetails_');
+				this.editCollection();
 				break;
 			}
 			case 'newPolicy': {
-				this.title = I18n.get('_NewScheduledScan_');
+				this.newPolicy();
 				break;
 			}
 			case 'editPolicy': {
-				this.title = I18n.get('_ScheduledScanDetails_');
+				this.editPolicy();
 				break;
 			}
 		}
+	}
+
+	/**
+	 * Called from init given newPolicy
+	 */
+	public newPolicy () {
+		this.title = I18n.get('_NewScheduledScan_');
+
+		this.loading = true;
+		this.deviceService.getDevicesUsingGET(this.customerId)
+			.pipe(
+				catchError(err => {
+					// this.error = true;
+					// this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.deviceListLeft = _.get(response, 'data');
+			});
+	}
+
+	/**
+	 * Called from init given editCollection
+	 */
+	public editCollection () {
+		this.title = I18n.get('_ScheduledCollectionDetails_');
+	}
+
+	/**
+	 * Called from init given editPolicy
+	 */
+	public editPolicy () {
+		this.title = I18n.get('_ScheduledScanDetails_');
 	}
 
 	/**

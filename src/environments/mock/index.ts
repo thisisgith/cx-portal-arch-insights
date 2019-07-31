@@ -26,6 +26,7 @@ export { SuccessPathScenarios } from './racetrack/successPaths';
 export { UserScenarios } from './user/user';
 export { HealthStatusScenarios } from './controlpoints/health-status';
 export { PolicesScenarios } from './controlpoints/policies';
+export { DevicePolicesScenarios } from './controlpoints/devices';
 export { VulnerabilityScenarios } from './product-alerts/vulnerabilities';
 export { FieldNoticeScenarios } from './product-alerts/field-notice';
 export { FieldNoticeBulletinScenarios } from './product-alerts/field-notice-bulletins';
