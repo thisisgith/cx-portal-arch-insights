@@ -3,15 +3,15 @@ import { HardwareEOLBulletinResponse } from '@sdp-api';
 /** Base of URL for SDP API */
 const api = '/api/customerportal/product-alerts/v1/hardware-eol-bulletins';
 
-/** Default Customer ID */
-const customerId = '2431199';
+/** Default EoL Instance ID */
+const defaultInstanceId = '318969';
 
 /** The mock response for coverage counts */
 export const MockHardwareEOLBulletinsResponse: HardwareEOLBulletinResponse = {
 	/* tslint:disable */
 	"data": [
 			{
-					"hwEolInstanceId": 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
+					"hwEolInstanceId": defaultInstanceId,
 					"bulletinNumber": null,
 					"bulletinProductId": null,
 					"bulletinTitle": null,
@@ -2834,6 +2834,19 @@ export const MockHardwareEOLBulletinsResponse: HardwareEOLBulletinResponse = {
 	/* tslint:enable */
 };
 
+/**
+ * Returns a mock response
+ * @param hwEolInstanceId hwEolInstanceId to filter on
+ * @returns { HardwareEOLBulletinResponse[] } List of EoL bulletins
+ */
+const mockResponse = (hwEolInstanceId: string) => ({
+	data: [
+		MockHardwareEOLBulletinsResponse.data.find(
+			item => item.hwEolInstanceId === hwEolInstanceId,
+		),
+	],
+});
+
 /** The hardware eol scenarios */
 export const HardwareEOLBulletinScenarios = [
 	{
@@ -2843,14 +2856,23 @@ export const HardwareEOLBulletinScenarios = [
 					delay: 350,
 					description: 'Hardware EOL Bulletins',
 					response: {
-						body: MockHardwareEOLBulletinsResponse,
+						body: mockResponse(defaultInstanceId),
 						status: 200,
 					},
 					selected: true,
 				},
+				{
+					delay: 350,
+					description: 'Empty Hardware EOL Bulletins',
+					response: {
+						body: { data: [] },
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
-		url: `${api}?customerId=${customerId}`,
+		url: `${api}?hwEolInstanceId=${defaultInstanceId}`,
 		usecases: ['Use Case 1'],
 	},
 ];
