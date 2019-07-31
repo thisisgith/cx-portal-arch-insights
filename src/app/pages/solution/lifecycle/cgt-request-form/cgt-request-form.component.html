@@ -78,8 +78,8 @@
                             </div>
                             <div class="form-group dbl-padding-left dbl-margin-right">
                                 <div class="form-group__text">
-                                    <input id="sessions-available-readonly" type="text" readonly value="April 4, 2020">
-                                    <label class="text-uppercase text-small" for="sessions-available-readonly" [innerText]="'_XSessionsAvailableThrough' | i18n:'2'"></label>
+                                    <input id="sessions-available-readonly" type="text" readonly [value]="trainingAvailableThrough">
+                                    <label class="text-uppercase text-small" for="sessions-available-readonly" [innerText]="'_XSessionsAvailableThrough' | i18n:totalTrainingsAvailable"></label>
                                 </div>
                             </div>
                             <div class="form-group dbl-padding-left dbl-margin-right">

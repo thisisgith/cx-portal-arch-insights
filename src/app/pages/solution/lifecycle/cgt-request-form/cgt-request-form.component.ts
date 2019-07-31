@@ -42,6 +42,8 @@ interface SelectOption {
 })
 export class CgtRequestFormComponent implements OnDestroy, OnInit {
 
+	@Input() public totalTrainingsAvailable: number;
+	@Input() public trainingAvailableThrough: Date;
 	@Input() public solution: string;
 	@Input() public pitstop: string;
 	@Input() public technology: string;
@@ -130,6 +132,7 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 			.subscribe(response => {
 				this.custData = response;
 			});
+			console.log(`************** trainingAvailableThrough = ${this.trainingAvailableThrough}`);
 		this.contractsService
 		.getContractDetails({ customerId: this.customerId })
 			.pipe(

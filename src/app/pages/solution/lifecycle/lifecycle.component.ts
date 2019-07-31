@@ -31,6 +31,7 @@ import {
 
 import { SolutionService } from '../solution.service';
 import * as _ from 'lodash-es';
+import * as moment from 'moment';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -73,6 +74,7 @@ interface ComponentData {
 	cgt?: {
 		trainingsAvailable: number;
 		sessions: string[];
+		dateAvailableThrough: Date;
 	};
 }
 
@@ -138,6 +140,8 @@ export class LifecycleComponent implements OnDestroy {
 	public productGuidesTable: CuiTableOptions;
 	public completedTrainingsList: Array<UserTraining>;
 	public successBytesTable: CuiTableOptions;
+	public cgtAvailable: number;
+	public trainingAvailableThrough: Date;
 
 	public statusOptions = [
 		{
@@ -344,7 +348,11 @@ export class LifecycleComponent implements OnDestroy {
 	 * Select/deselect the CGTRequestForm component
 	 * @param selected whether the component is visible or not
 	 */
-	public selectCgtRequestForm (selected: boolean) {
+	public selectCgtRequestForm (selected: boolean, totalTrainingsAvailable: number, trainingAvailableThrough: Date) {
+		if( selected) {
+			this.cgtAvailable = totalTrainingsAvailable;
+			this.trainingAvailableThrough = trainingAvailableThrough;
+		}
 		this.selectCgtComponent = selected;
 	}
 
@@ -856,9 +864,12 @@ export class LifecycleComponent implements OnDestroy {
 		this.status.loading.cgt = true;
 		let startDate;
 		let endDate;
-		let completedData = [];
-		let month;
-		let year;
+		let trainingDuration;
+		let trainingLocation;
+		let trainingData;
+		let dateAvailable;
+		let completedTrainingData = [];
+
 		const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
 			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -866,9 +877,12 @@ export class LifecycleComponent implements OnDestroy {
 		.pipe(
 			map((result: UserQuota) => {
 				this.status.loading.cgt = false;
-				console.log(`***** result = ${result}`);
+				dateAvailable = _.get(_.head(result), 'end_date');
 				_.each(result, training => {
 					this.groupTrainingsAvailable += _.get(training, 'closed_ilt_courses_available');
+					if (new Date(_.get(training, 'end_date')) > new Date(dateAvailable)) {
+						dateAvailable = _.get(training, 'end_date');
+					}
 				});
 				// this.loadCGTCompletedTrainings().subscribe();
 				this.contentService.getCompletedTrainings()
@@ -880,15 +894,23 @@ export class LifecycleComponent implements OnDestroy {
 					.subscribe(response => {
 						this.completedTrainingsList = response;
 						_.each(this.completedTrainingsList, completedTraining => {
-							startDate = new Date(_.get(completedTraining, 'start_date')).getUTCDate();
-							endDate = new Date(_.get(completedTraining, 'end_date')).getUTCDate();
-							month = monthNames[new Date(_.get(completedTraining, 'start_date')).getMonth()];
-							year = new Date(_.get(completedTraining, 'start_date')).getUTCFullYear();
-							completedData = _.union(completedData, [`${month} ${startDate}-${endDate}, ${year} with ${_.get(completedTraining, 'instructors')}, ${_.get(completedTraining, 'city')}, ${_.get(completedTraining, 'country')}`]);
+							startDate = `${monthNames[new Date(_.get(completedTraining, 'start_date')).getMonth()]} ${new Date(_.get(completedTraining, 'start_date')).getUTCDate()}`;
+							startDate+= _.isEqual(new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(), new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ? '' : ` ${new Date(_.get(completedTraining, 'start_date')).getUTCFullYear()}`;
+							endDate = _.isEqual(monthNames[new Date(_.get(completedTraining, 'start_date')).getMonth()], monthNames[new Date(_.get(completedTraining, 'end_date')).getMonth()]) ? '' : `${monthNames[new Date(_.get(completedTraining, 'end_date')).getMonth()]} `;
+							endDate+= new Date(_.get(completedTraining, 'end_date')).getUTCDate();
+							endDate+= _.isEqual(new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(), new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ? `, ${new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()}` : ` ${new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()}`;
+							trainingDuration = `${startDate}-${endDate}`;
+							trainingLocation = `with ${_.get(completedTraining, 'instructors')}, ${_.get(completedTraining, 'city')}, ${_.get(completedTraining, 'country')}`;
+							trainingData = {
+								trainingDuration,
+								trainingLocation,
+							};
+							completedTrainingData = _.union(completedTrainingData, [trainingData]);
 						});
 						this.componentData.cgt = {
 							trainingsAvailable: this.groupTrainingsAvailable,
-							sessions: completedData,
+							sessions: completedTrainingData,
+							dateAvailableThrough: moment(dateAvailable).format('MMM DD, YYYY'),
 						};
 						return result;
 					});

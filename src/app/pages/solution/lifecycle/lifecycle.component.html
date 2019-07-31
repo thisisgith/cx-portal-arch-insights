@@ -779,15 +779,18 @@
 			<div class="qtr-padding-bottom" *ngFor="let item of data.sessions | slice:0:2">
 				<div class="panel small-panel">
 					<div class="row">
-						<div class="col-md-11" [innerText]="item"></div>
-						<div class="col-md-1 text-success icon-certified qtr-padding-left"></div>
+						<div class="col-md-11 qtr-padding-bottom">
+							<div class="text-dkgray-1 text-med" [innerText]="item.trainingDuration"></div>
+							<div class="text-dkgray-4 text-samll" [innerText]="item.trainingLocation"></div>
+						</div>
+						<div class="col-md-1 text-success icon-certified icon-small qtr-padding-left"></div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<ng-container *ngIf="data.trainingsAvailable>0">
-		<button (click)="selectCgtRequestForm(true)" class="btn btn--small btn--secondary text-uppercase"
+		<button (click)="selectCgtRequestForm(true, data.trainingsAvailable, data.dateAvailableThrough)" class="btn btn--small btn--secondary text-uppercase"
 			[innerText]="'_RequestTraining_' | i18n">
 		</button>
 	</ng-container>
@@ -871,6 +874,8 @@
 
 <ng-container *ngIf="selectCgtComponent">
 	<cgt-request-form (visibleComponent)="selectCgtRequestForm($event)"
+		[totalTrainingsAvailable]="cgtAvailable"
+		[trainingAvailableThrough]="trainingAvailableThrough"
 		[solution]="selectedSolution.name"
 		[technology]="selectedTechnology.name"
 		[pitstop]="currentPitstop.name"

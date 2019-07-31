@@ -122,7 +122,7 @@ $vibblue: #017cad;
 	height: 150px;
 	width: 400px;
 	position: absolute;
-	bottom:30px;
+	bottom:100px;
 	left: 210px;
 	z-index: 3;
 	background-color: $white;
@@ -132,7 +132,7 @@ $vibblue: #017cad;
 .cgtpanel--open::after {
 	content: "";
 	position: absolute;
-	top: 46%;
+	top: 40%;
 	left: -18px;
 	border-top: 25px solid transparent;
 	border-right: 35px solid white;
