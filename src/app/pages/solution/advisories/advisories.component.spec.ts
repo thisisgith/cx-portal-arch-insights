@@ -162,6 +162,12 @@ describe('AdvisoriesComponent', () => {
 		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(productAlertsService, 'getSecurityAdvisorySeverityCountResponse')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));

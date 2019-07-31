@@ -55,6 +55,14 @@ const routes: Routes = [
 				},
 			},
 			{
+				loadChildren: () => import('./insights/insights.module')
+					.then(m => m.InsightsModule),
+				path: 'insights',
+				resolve: {
+					user: UserResolve,
+				},
+			},
+			{
 				path: '',
 				pathMatch: 'full',
 				redirectTo: 'lifecycle',

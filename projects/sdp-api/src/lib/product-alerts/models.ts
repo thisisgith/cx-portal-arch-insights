@@ -27,3 +27,5 @@ export { SoftwareEOL } from './models/software-eol';
 export { SofwareEOLBulletinResponse } from './models/sofware-eolbulletin-response';
 export { SoftwareEOLBulletin } from './models/software-eolbulletin';
 export { SecurityAdvisorySummary } from './models/security-advisory-summary';
+export { SecurityAdvisorySeverityCountResponse } from './models/security-advisory-severity-count-response';
+export { AdvisoriesByLastUpdatedCount } from './models/advisories-by-last-updated-count';

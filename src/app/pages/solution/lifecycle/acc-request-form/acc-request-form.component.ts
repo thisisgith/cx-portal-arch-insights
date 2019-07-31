@@ -49,12 +49,15 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
+	private timeout = 5000;
 	public customerId: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	public custData: ACCUserInfoSchema;
 	public maxLength = 512;
 	public loading = false;
 	public custInfoError = false;
+	public submitSuccess = false;
+	public submitError = false;
 
 	public requestForm: FormGroup = this.fb.group({
 		acceleratorInterest: ['', [Validators.required, Validators.maxLength(this.maxLength)]],
@@ -115,8 +118,8 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 			attendeeArray.clear();
 			for (let i = 1; i < attendees; i = i + 1) {
 				const attendeeGroup = this.fb.group({
-					name: ['', Validators.required],
-					email: ['', [Validators.required, Validators.email]],
+					attendeeName: ['', Validators.required],
+					attendeeEmail: ['', [Validators.required, Validators.email]],
 				});
 				attendeeArray.push(attendeeGroup);
 			}
@@ -197,12 +200,18 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 		this.contentService
 		.requestACC(params)
 			.pipe(
-				catchError(() => empty()),
+				catchError(() => {
+					this.submitError = true;
+					return empty();
+				}),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
 				this.logger.debug('acc-request-form.component :: Submitted ACC response form');
-				this.submitted.emit(true);
+				this.submitSuccess = true;
+				setTimeout(() => {
+					this.submitted.emit(true);
+				}, this.timeout);
 			});
 	}
 }
