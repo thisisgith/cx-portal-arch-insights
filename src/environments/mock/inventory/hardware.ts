@@ -12,7 +12,7 @@ const productId = 'ASAv';
 /**
  * Mock data for Inventory API results
  */
-export const mockResponse: HardwareResponse = {
+export const MockHardwareResponse: HardwareResponse = {
 	data: [
 		{
 			customerId,
@@ -1142,7 +1142,7 @@ export const HardwareScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Hardware',
 					response: {
-						body: mockResponse,
+						body: MockHardwareResponse,
 						status: 200,
 					},
 					selected: true,
@@ -1159,7 +1159,7 @@ export const HardwareScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Hardware productId',
 					response: {
-						body: mockResponse,
+						body: MockHardwareResponse,
 						status: 200,
 					},
 					selected: true,

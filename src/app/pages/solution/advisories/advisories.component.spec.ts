@@ -1,20 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AdvisoriesComponent } from './advisories.component';
 import { AdvisoriesModule } from './advisories.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
-import { ProductAlertsService } from '@sdp-api';
+import { ProductAlertsService, DiagnosticsService } from '@sdp-api';
 import * as _ from 'lodash-es';
-import { throwError } from 'rxjs';
+import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { user } from '@mock';
 
 describe('AdvisoriesComponent', () => {
 	let component: AdvisoriesComponent;
 	let fixture: ComponentFixture<AdvisoriesComponent>;
 	let productAlertsService: ProductAlertsService;
+	let diagnosticsService: DiagnosticsService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -22,14 +24,32 @@ describe('AdvisoriesComponent', () => {
 				AdvisoriesModule,
 				HttpClientTestingModule,
 				MicroMockModule,
-				RouterTestingModule,
+				RouterTestingModule.withRoutes([
+					{ path: 'solution/advisories/security', component: AdvisoriesComponent },
+					{ path: 'solution/advisories/field-notices', component: AdvisoriesComponent },
+					{ path: 'solution/advisories/bugs', component: AdvisoriesComponent },
+				]),
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+							params: of({ advisory: 'security' }),
+						},
+					},
+				},
 			],
 		})
 		.compileComponents();
+
 		productAlertsService = TestBed.get(ProductAlertsService);
+		diagnosticsService = TestBed.get(DiagnosticsService);
 	}));
 
 	beforeEach(() => {
@@ -43,9 +63,6 @@ describe('AdvisoriesComponent', () => {
 			.toBeTruthy();
 	});
 
-	/**
-	 * @TODO: modify test to use UI
-	 */
 	it('should switch active filters', done => {
 		fixture.whenStable()
 		.then(() => {
@@ -77,9 +94,6 @@ describe('AdvisoriesComponent', () => {
 		});
 	});
 
-	/**
-	 * @TODO: modify test to use UI
-	 */
 	it('should clear the filter when selecting the same subfilter twice', done => {
 		fixture.whenStable()
 		.then(() => {
@@ -137,50 +151,119 @@ describe('AdvisoriesComponent', () => {
 		});
 	});
 
-	/**
-	 * @TODO: modify test to use UI
-	 */
 	it('should set null values on request errors', done => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(productAlertsService, 'getTopSecurityAdvisories')
+		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getVulnerabilityCounts')
+		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getSecurityAdvisorySummaryResponse')
+		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		component.ngOnInit();
+
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();
 			const securityTab = _.find(component.tabs, { key: 'security' });
 			const fieldTab = _.find(component.tabs, { key: 'field' });
-			const bugsTab = _.find(component.tabs, { key: 'bugs' });
+			const bugsTab = _.find(component.tabs, { key: 'bug' });
 
 			expect(securityTab.data.length)
 				.toBe(0);
 			expect(securityTab.loading)
 				.toBeFalsy();
 
-			expect(_.find(securityTab.filters, { key: 'total' }).seriesData.length)
+			expect(fieldTab.data.length)
 				.toBe(0);
-			expect(_.find(fieldTab.filters,
-				{ key: 'total' }).seriesData.length)
+			expect(fieldTab.loading)
+				.toBeFalsy();
+
+			expect(bugsTab.data.length)
 				.toBe(0);
-			expect(_.find(bugsTab.filters,
-				{ key: 'total' }).seriesData.length)
-				.toBe(0);
-			expect(_.find(securityTab.filters,
-				{ key: 'impact' }).seriesData.length)
-				.toBe(0);
+			expect(bugsTab.loading)
+				.toBeFalsy();
 
 			done();
 		});
 	});
 
+	it('should load security details if row selected', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			const tab = _.find(component.tabs, { key: 'security' });
+			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
+			tab.data[0].active = true;
+			component.onRowSelect(tab.data[0]);
+			fixture.detectChanges();
+
+			expect(component.selectedAdvisory)
+				.toEqual({ advisory: tab.data[0], id: tab.data[0].id, type: 'security' });
+
+			tab.data[0].active = false;
+			component.onRowSelect(tab.data[0]);
+			fixture.detectChanges();
+
+			expect(component.selectedAdvisory)
+				.toBeNull();
+
+			done();
+		});
+	});
+
+	it('should load field notice details if row selected', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			const tab = _.find(component.tabs, { key: 'field' });
+			component.selectTab(_.findIndex(component.tabs, { key: 'field' }));
+			tab.data[0].active = true;
+			component.onRowSelect(tab.data[0]);
+			fixture.detectChanges();
+
+			expect(component.selectedAdvisory)
+				.toEqual({ advisory: tab.data[0], id: tab.data[0].id, type: 'field' });
+
+			tab.data[0].active = false;
+			component.onRowSelect(tab.data[0]);
+			fixture.detectChanges();
+
+			expect(component.selectedAdvisory)
+				.toBeNull();
+
+			done();
+		});
+	});
+
+	it('should load bug details if row selected', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			const tab = _.find(component.tabs, { key: 'bug' });
+			component.selectTab(_.findIndex(component.tabs, { key: 'bug' }));
+			tab.data[0].active = true;
+			component.onRowSelect(tab.data[0]);
+			fixture.detectChanges();
+
+			expect(component.selectedAdvisory)
+				.toEqual({ advisory: tab.data[0], id: tab.data[0].id, type: 'bug' });
+
+			tab.data[0].active = false;
+			component.onRowSelect(tab.data[0]);
+			fixture.detectChanges();
+
+			expect(component.selectedAdvisory)
+				.toBeNull();
+
+			done();
+		});
+	});
 });

@@ -7,7 +7,7 @@ const api = '/api/customerportal/product-alerts/v1/security-advisory-bulletins';
 const customerId = '2431199';
 
 /** The mock response for coverage counts */
-const mockAdvisoryBulletinsResponse: SecurityAdvisoryBulletinResponse = {
+export const MockSecurityAdvisoryBulletins: SecurityAdvisoryBulletinResponse = {
 	/* tslint:disable */
 	"data": [
 		{
@@ -503,7 +503,7 @@ export const SecurityAdvisoryBulletinScenarios = [
 					delay: 350,
 					description: 'Security Advisory Bulletins',
 					response: {
-						body: mockAdvisoryBulletinsResponse,
+						body: MockSecurityAdvisoryBulletins,
 						status: 200,
 					},
 					selected: true,

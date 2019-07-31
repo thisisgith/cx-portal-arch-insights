@@ -1,6 +1,8 @@
 
 const i18n = require('../../src/assets/i18n/en-US.json');
 
+const validCaseID = '699159996';
+
 describe('Case Detail Spec', () => {
 	context('Case List View', () => {
 		before(() => {
@@ -11,7 +13,7 @@ describe('Case Detail Spec', () => {
 
 		it('Case List Assets', () => {
 			// PBC-231 - Check for expected assets on the case listing
-			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('OPEN CASESTab').should('exist');
 			cy.getByAutoId('RMAsTab').should('exist');
 			cy.getByAutoId('rmaCasesHeader').should('exist');
@@ -20,7 +22,7 @@ describe('Case Detail Spec', () => {
 		});
 
 		it('Case List Table Contents', () => {
-			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			//  Verify auto-id's for each column header
 			cy.getByAutoId('Severity-Header').should('exist').should('contain', i18n._RMACaseSeverity_);
 			cy.getByAutoId('Case ID-Header').should('exist').should('contain', i18n._RMACaseID_);
@@ -42,7 +44,7 @@ describe('Case Detail Spec', () => {
 		it('Case List Invalid Case ID', () => {
 			// PBC-231 - Check for "invalid" message.
 			const invalidSearchVal = 'abcdefghij';
-			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
@@ -58,16 +60,15 @@ describe('Case Detail Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Case Details Click on case from List', () => {
+		it.skip('Case Details Click on case from List', () => {
 			// PBC-233
-			const validCaseID = '686351406';
-			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').should('exist').click();
+			cy.getByAutoId('Case ID-Cell').click();
 			cy.wait(3000);
-			cy.get('app-panel360').should('be.visible');
+			cy.get('details-panel').should('be.visible');
 			cy.getByAutoId('caseTechnology').should('exist').should('contain', i18n._RMACaseTechnology_.toUpperCase());
 			cy.getByAutoId('caseProbType').should('exist').should('contain', i18n._RMACaseProblemType_.toUpperCase());
 			cy.getByAutoId('caseAsset').should('exist').should('contain', i18n._RMACaseAsset_.toUpperCase());
@@ -78,36 +79,34 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseTacEng').should('exist').should('contain', i18n._RMACaseTacEngineer_.toUpperCase());
 			cy.getByAutoId('caseSummaryTitle').should('exist').should('contain', i18n._RMACaseSummaryTitle_.toUpperCase());
 			cy.getByAutoId('caseDescription').should('exist').should('contain', i18n._RMACaseDescription_.toUpperCase());
-			cy.getByAutoId('CloseDetails').should('exist').click();
+			cy.getByAutoId('CloseDetails').click();
 		});
 
-		it('Closes 360 view when leaving the case page', () => {
+		it.skip('Closes 360 view when leaving the case page', () => {
 			// PBC-233
-			const validCaseID = '686351406';
-			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
+			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
-			cy.getByAutoId('CloseDetails').should('exist').click();
+			cy.getByAutoId('CloseDetails').click();
 			cy.get('app-panel360').should('not.be.visible');
 		});
 
-		it('Case Details Verify Buttons Exist', () => {
+		it.skip('Case Details Verify Buttons Exist', () => {
 			// PBC-233
-			const validCaseID = '686351406';
-			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
+			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(6000);
-			cy.get('app-panel360').should('be.visible');
+			cy.get('details-panel').should('be.visible');
 			cy.getByAutoId('CaseAttachFile').should('exist');
 			cy.getByAutoId('CaseAddNote').should('exist');
-			cy.getByAutoId('CloseDetails').should('exist').click();
+			cy.getByAutoId('CloseDetails').click();
 		});
 	});
 	context('Case Detail Notes', () => {
@@ -117,27 +116,26 @@ describe('Case Detail Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('Case Details Notes Tab, Add a Note', () => {
+		it.skip('Case Details Notes Tab, Add a Note', () => {
 			// PBC-234
-			const validCaseID = '686351406';
 			const currDatestamp = new Date().getTime();
 			// cy.log(`current date is ${currDatestamp}`);
 
-			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
+			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
-			cy.getByAutoId('notesTab').should('exist').click();
+			cy.getByAutoId('notesTab').click();
 			// Add a case note
-			cy.getByAutoId('CaseAddNote').should('exist').click();
+			cy.getByAutoId('CaseAddNote').click();
 			cy.getByAutoId('title').should('exist').clear()
 				.type(`Title for current date of ${currDatestamp}`);
 			cy.getByAutoId('description').should('exist').clear()
 				.type(`Description for current date of ${currDatestamp}`);
-			cy.getByAutoId('AddNote').should('exist').click();
+			cy.getByAutoId('AddNote').click();
 			cy.wait(8000);
 			// Verify case note was added, look in app-case-notes for string
 			cy.get('app-case-notes div')
@@ -147,27 +145,26 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CloseDetails').click();
 		});
 
-		it('Case Details Notes: Cancel Adding a note', () => {
+		it.skip('Case Details Notes: Cancel Adding a note', () => {
 			// PBC-234
-			const validCaseID = '686351406';
 			const currDatestamp = new Date().getTime();
 			// cy.log(`current date is ${currDatestamp}`);
 			cy.loadApp('/solution/resolution');
-			cy.getByAutoId('Facet-Problem Resolution').should('exist').click();
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').should('exist').click(); // case will load in app-panel360
+			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
-			cy.getByAutoId('notesTab').should('exist').click();
+			cy.getByAutoId('notesTab').click();
 			// Add a case note
-			cy.getByAutoId('CaseAddNote').should('exist').click();
+			cy.getByAutoId('CaseAddNote').click();
 			cy.getByAutoId('title').should('exist').clear()
 				.type(`Title for current date of ${currDatestamp}`);
 			cy.getByAutoId('description').should('exist').clear()
 				.type(`Description for current date of ${currDatestamp}`);
-			cy.getByAutoId('CancelAddNote').should('exist').click();
+			cy.getByAutoId('CancelAddNote').click();
 			cy.wait(8000);
 			// Verify case note was NOT added, look in app-case-notes for string
 			cy.get('app-case-notes div')

@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { AddNoteComponent } from './add-note.component';
 import { AddNoteModule } from './add-note.module';
 import { CaseService } from '@cui-x/services';
+import { ProfileService } from '@cisco-ngx/cui-auth';
 
 describe('AddNoteComponent', () => {
 	let component: AddNoteComponent;
@@ -17,8 +18,24 @@ describe('AddNoteComponent', () => {
 				AddNoteModule,
 				HttpClientTestingModule,
 			],
+			providers: [
+				{
+					provide: ProfileService,
+					useValue: {
+						getProfile () {
+							return {
+								cpr: {
+									pf_auth_firstname: 'Swtg',
+									pf_auth_lastname: 'Test',
+									pf_auth_uid: 'swtg.test.0',
+								},
+							};
+						},
+					},
+				},
+			],
 		})
-		.compileComponents();
+			.compileComponents();
 	}));
 
 	beforeEach(() => {

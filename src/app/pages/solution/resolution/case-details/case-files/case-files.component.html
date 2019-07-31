@@ -1,0 +1,36 @@
+<div *ngIf="!caseFilesData">
+	<cui-spinner></cui-spinner>
+</div>
+<div *ngIf="caseFiles?.length > 0">
+	<ng-container *ngTemplateOutlet="filesContent"></ng-container>
+</div>
+<div *ngIf="!caseFiles || caseFiles?.length == 0">
+	<ng-container *ngTemplateOutlet="noFiles"></ng-container>
+</div>
+
+<ng-template #noFiles>
+	<div class="flex-center-horizontal text-xlarge text-muted dbl-margin-top half-margin-bottom"
+		[innerText]="'_RMANoFilesLabel_' | i18n"></div>
+	<div class="flex-center-horizontal text-medium text-muted qtr-margin" [innerText]="'_RMANoFilesText_' | i18n"></div>
+</ng-template>
+
+<ng-template #filesContent>
+	<cui-table [options]="fileTableOptions" [data]="caseFiles" (onSortingChanged)="onTableSortingChanged($event)">
+	</cui-table>
+</ng-template>
+
+<ng-template #fileNameTmpl let-item="celldata">
+	<span [innerText]="item.fileInfo.fileName"></span>
+</ng-template>
+
+<ng-template #fileTypeTmpl let-item="celldata">
+	<span [ngClass]="getFileIconLabel(item?.fileInfo.fileContentType)['icon']"></span>
+	<span class="qtr-margin-left" [innerText]="getFileIconLabel(item?.fileInfo.fileContentType)['label']"></span>
+</ng-template>
+
+<ng-template #downloadTmpl let-item="celldata">
+	<a attr.data-auto-id="DownloadUrl-{{item?.fileInfo.fileName}}"
+		[href]="getDownloadURL(item?.fileInfo.fileName)"><span class="markup-label" [innerText]="'download'"></span></a>
+</ng-template>
+
+<ng-template #fileSizeTmpl let-item="celldata">{{ item.fileInfo.fileSize | fileSize }}</ng-template>

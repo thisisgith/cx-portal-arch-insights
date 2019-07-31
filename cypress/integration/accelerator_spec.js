@@ -2,8 +2,7 @@ import MockService from '../support/mockService';
 
 const accMock = new MockService('ACCScenarios');
 const solution = 'IBN';
-const useCase = 'Wireless Assurance';
-const newUseCase = 'Campus Network Assurance';
+const useCase = 'Campus Network Assurance';
 const accScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard`);
 let accItems = accScenario.response.body.items;
 const twoRecommendedScenario = accMock.getScenario('GET', `(ACC) ${solution}-${useCase}-Onboard-twoRecommended`);
@@ -79,7 +78,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		cy.get('.modal__header.acc__header').should('contain', i18n._Accelerator_)
 			.and('contain', i18n._1on1Coaching_);
 		cy.getByAutoId('ACCTopicsAvailable').should(
-			'have.text', `${validACCItems.length} topics available for ${solution} > ${newUseCase}:`
+			'have.text', `${validACCItems.length} topics available for ${solution} > ${useCase}:`
 		);
 
 		cy.getByAutoId('ACCCard').then($cards => {
@@ -130,9 +129,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	describe('PBC-33: (UI) View - Solution Based: ACC Details', () => {
 		afterEach(() => {
 			// Make sure we're set back to the default mock data
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			// Refresh the data
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -140,8 +137,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('PBC-317: Should only display the ACC section if there are ACC items', () => {
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-Empty');
 
 			// Refresh the data
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -291,10 +287,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 			// Make sure we're on the lifecycle page and the default use case
 			cy.getByAutoId('UseCaseDropdown').click();
-			cy.getByAutoId('Facet-Lifecycle').click();
-
 			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
-			cy.wait('(ACC) IBN-Wireless Assurance-Onboard');
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
 		});
 
 		it('View All ACC filter should be sticky across modal close/re-open', () => {
@@ -333,7 +328,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
-			cy.wait('(ACC) IBN-Campus network segmentation-Onboard');
+			cy.wait('(ACC) IBN-Campus Network Segmentation-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('accViewAllModal').should('exist');
@@ -358,7 +353,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
-			cy.wait('(ACC) IBN-Wireless Assurance-Onboard');
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('accViewAllModal').should('exist');
@@ -382,7 +377,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('accViewAllModal').should('not.exist');
 
 			cy.loadApp();
-			cy.wait('(ACC) IBN-Wireless Assurance-Onboard');
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('accViewAllModal').should('exist');
@@ -398,7 +393,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	describe('More list status indicators (PBC-96, PBC-99, PBC-300)', () => {
 		afterEach(() => {
 			// Ensure we are reset to the default mock data
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -407,7 +402,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('PBC-96: (UI) View - Solution Race Track - View Completed ACC', () => {
 			// Switch to data that will show us target status in the More list
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoCompleted');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoCompleted');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -421,7 +416,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('PBC-99: (UI) View - Solution Racetrack - View Scheduled ACCs', () => {
 			// Switch to data that will show us target status in the More list
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoInProgress');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoInProgress');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -435,7 +430,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		it('PBC-300: (UI View) Solution Racetrack - View Registered ACCs', () => {
 			// Switch to data that will show us target status in the More list
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRequested');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRequested');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -456,11 +451,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		afterEach(() => {
 			// Ensure we are set back to mock data with a recommended item
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneNonRecommended');
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-allButRecommended');
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -488,7 +479,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('PBC-279: When there are no recommended ACCs, use the first requested item', () => {
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-allButRecommended');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-allButRecommended');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -504,7 +495,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('PBC-279: When there are no recommended/requested ACCs, use the first in-progress item', () => {
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-completedInProgress');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-completedInProgress');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -520,7 +511,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('PBC-279: When there are no recommended/requested/in-progress ACCs, use the first completed item', () => {
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoCompleted');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoCompleted');
 
 			// Refresh the data by clicking the lifecycle tab, and wait for load
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -540,7 +531,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	describe('PBC-220: (UI View) - Lifecycle  - ACC - Request Form', () => {
 		before(() => {
 			// Switch to a mock dataset with multiple recommended items, so we can open the form
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
 
 			// Refresh the data
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -550,7 +541,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		after(() => {
 			// Switch back to default mock data
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			// Refresh the data
 			cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -939,13 +930,13 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				}).as('postRequestForm');
 
 				accUserInfoMock.disable('(ACC) ACC-Request User Info');
-				accMock.disable('(ACC) IBN-WirelessAssurance/SDAccess-Onboard ACCRequestSubmit1');
+				accMock.disable('(ACC) IBN-ACCRequestSubmit1');
 			});
 
 			after(() => {
 				// Re-enable default app-based mocks
 				accUserInfoMock.enable('(ACC) ACC-Request User Info');
-				accMock.enable('(ACC) IBN-WirelessAssurance/SDAccess-Onboard ACCRequestSubmit1');
+				accMock.enable('(ACC) IBN-ACCRequestSubmit1');
 			});
 
 			it('Opening the Request 1-on-1 form should call user info API', () => {
@@ -1031,7 +1022,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						expect(request.body.timezone)
 							.to.include('Eastern Time/US');
 						expect(request.body.usecase)
-							.to.include(newUseCase);
+							.to.include(useCase);
 						expect(request.body.userEmail)
 							.to.include(userInfoResponseBody.userEmail);
 						expect(request.body.userPhoneNumber)
@@ -1045,12 +1036,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		describe.skip('PBC-327: Request 1-on-1 form should have the ACC item\'s title', () => {
 			before(() => {
 				// Change over to a mock with multiple "recommended" items
-				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
 
 				// Refresh the data
 				cy.getByAutoId('Facet-Assets & Coverage').click();
 				cy.getByAutoId('Facet-Lifecycle').click();
-				cy.wait('(ACC) IBN-Wireless Assurance-Onboard-twoRecommended');
+				cy.wait('(ACC) IBN-Campus Network Assurance-Onboard-twoRecommended');
 				cy.waitForAppLoading('accLoading');
 
 				// Open the ACC View All modal
@@ -1064,7 +1055,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.getByAutoId('accViewAllModal').should('not.exist');
 
 				// Ensure we are using the default mock data
-				accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 				// Refresh the data
 				cy.getByAutoId('Facet-Assets & Coverage').click();
@@ -1165,11 +1156,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	describe('PBC-238: (UI) View - Lifecycle - ACC List & Hover', () => {
 		before(() => {
 			// Ensure we're set to the default mock data
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-Empty');
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneNonRecommended');
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-allButRecommended');
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			// Refresh the data
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -1178,8 +1165,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		afterEach(() => {
 			// Make sure we're set back to the default mock data
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			// Refresh the data
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -1187,8 +1173,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('Should only show the More section if there is more than 1 ACC item', () => {
-			accMock.disable('(ACC) IBN-Wireless Assurance-Onboard');
-			accMock.enable('(ACC) IBN-Wireless Assurance-Onboard-oneRecommended');
+			accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard-oneRecommended');
 
 			// Refresh the data
 			cy.getByAutoId('Facet-Lifecycle').click();

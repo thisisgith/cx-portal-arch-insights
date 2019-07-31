@@ -5,6 +5,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { CaseDetailsService } from 'src/app/services/case-details';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ProfileService } from '@cisco-ngx/cui-auth';
 
 /**
  * Add Notes Component
@@ -36,6 +37,7 @@ export class AddNoteComponent {
 
 	constructor (
 		private caseService: CaseService, private caseDetailsService: CaseDetailsService,
+		private profileService: ProfileService,
 	) { }
 
 	/**
@@ -54,9 +56,10 @@ export class AddNoteComponent {
  	*/
 	public addCaseNote () {
 		this.loading = true;
+		const userDetails = this.profileService.getProfile().cpr;
 		const body: Note = {
-			createdBy: 'Charlene Hall',
-			createdByID: 'charhall',
+			createdBy: `${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}`,
+			createdByID: userDetails.pf_auth_uid,
 			note: this.title.value,
 			noteDetail: this.description.value,
 			noteStatus: 'external',

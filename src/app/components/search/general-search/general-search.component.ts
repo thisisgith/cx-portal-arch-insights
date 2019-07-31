@@ -29,6 +29,7 @@ import { SearchService as SearchUtils } from '@services';
 import { SearchContext, SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * Indicates refresh type, either refreshing everything or fetching a new page
@@ -91,7 +92,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public selectedType: Buckets;
 	public lastFiltered: string;
 
-	private customerId = '2431199';
+	private customerId: string;
 	private readonly pageSize = 10;
 	private pageOffset = 0;
 	private refresh$ = new Subject<RefreshType>();
@@ -101,8 +102,15 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		private logger: LogService,
 		private service: SearchService,
 		private utils: SearchUtils,
+		private userResolve: UserResolve,
 	) {
-		this.logger.debug('GeneralSearchComponent Created!');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 	}
 
 	/**
@@ -398,7 +406,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		}
 		if (type && type.filter) {
 			filter = `${filter}${filter ? ',' : ''}${type.filter}`;
-			this.logger.debug(JSON.stringify(type));
+			this.logger.debug(`general-search.component :: buildFilterParam() :: ${
+				JSON.stringify(type)}`);
 		}
 
 		return { filters: filter };

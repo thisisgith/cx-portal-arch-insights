@@ -24,8 +24,10 @@ export class CaseNotesComponent implements OnInit {
 	 * sorts case notes
 	 */
 	public getSortedNotes () {
-		this.caseNotes.sort(
-			(a, b) => <any> new Date(b.createdDate) - <any> new Date(a.createdDate),
-		);
+		if (this.caseNotes && this.caseNotes.length > 0) {
+			this.caseNotes.sort(
+				(a, b) => <any> new Date(b.createdDate) - <any> new Date(a.createdDate),
+			);
+		}
 	}
 }

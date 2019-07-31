@@ -12,6 +12,7 @@ import {
 	SuccessPathScenarios,
 	ActionScenarios,
 	Mock,
+	user,
 } from '@mock';
 import { of, throwError } from 'rxjs';
 import { DebugElement } from '@angular/core';
@@ -19,6 +20,7 @@ import { By } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as _ from 'lodash-es';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -112,6 +114,18 @@ describe('LifecycleComponent', () => {
 				HttpClientTestingModule,
 				RouterTestingModule,
 				LifecycleModule,
+			],
+			providers: [
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
 			],
 		})
 		.compileComponents();

@@ -7,6 +7,8 @@ import { Case, RMAResponse, RMARecord } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { switchMap, takeUntil, catchError } from 'rxjs/operators';
 import { Observable, Subject, forkJoin, of } from 'rxjs';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { CSCUploadService, UploadFilesContent } from '@cui-x-views/csc';
 
 /**
  * Case Details Header Component
@@ -29,6 +31,8 @@ export class CaseDetailsHeaderComponent {
 	constructor (
 		private rmaService: RMAService,
 		private logger: LogService,
+		private cuiModalService: CuiModalService,
+		private cscService: CSCUploadService,
 	) { }
 
 	/**
@@ -40,13 +44,13 @@ export class CaseDetailsHeaderComponent {
 			switchMap(rmaNumbers => this.getRMADetails(rmaNumbers)),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(rmaDetails => {
-			if (rmaDetails) {
-				this.rmaRecords = _.filter(rmaDetails.map(details => _.get(
-					details, ['returns', 'RmaRecord', 0]),
-				));
-			}
-		});
+			.subscribe(rmaDetails => {
+				if (rmaDetails) {
+					this.rmaRecords = _.filter(rmaDetails.map(details => _.get(
+						details, ['returns', 'RmaRecord', 0]),
+					));
+				}
+			});
 	}
 
 	/**
@@ -81,25 +85,34 @@ export class CaseDetailsHeaderComponent {
 	}
 
 	/**
+	 * toggles add file section
+	 */
+	public toggleAddFile () {
+		const data = _.cloneDeep(this.cscService.uploadDefaults);
+		data.tacCaseNum = this.case.caseNumber; // data.tacCaseNum = '92511831';
+		this.cuiModalService.showComponent(UploadFilesContent, { caseNum: data.tacCaseNum });
+	}
+
+	/**
 	 * get RMA Details
 	 * @param rmaNumbers comma separated string of related rma numbers (often just 1)
 	 * @returns rma list
 	 */
-	public getRMADetails (rmaNumbers: string): Observable <RMAResponse []> {
+	public getRMADetails (rmaNumbers: string): Observable<RMAResponse[]> {
 		if (!rmaNumbers || !rmaNumbers.length) {
 			return of(null);
 		}
 		const rmaStrings = rmaNumbers.split(',');
 		const rmaCalls = rmaStrings.map(
 			rmaNum => this.rmaService.getByNumber(rmaNum.trim())
-			.pipe(
-				catchError(err => {
-					this.logger.error('rma.component : getRmaDetails() ' +
-						`:: Error : (${err.status}) ${err.message}`);
+				.pipe(
+					catchError(err => {
+						this.logger.error('rma.component : getRmaDetails() ' +
+							`:: Error : (${err.status}) ${err.message}`);
 
-					return of(null);
-				}),
-			),
+						return of(null);
+					}),
+				),
 		);
 
 		return forkJoin(...rmaCalls);
