@@ -26,9 +26,11 @@ import {
 	RoleScenarios,
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
+	SecurityAdvisoryLastUpdatedCountScenarios,
+	SecurityAdvisorySeverityCountScenarios,
+	SecurityAdvisoryTopScenarios,
 	SecurityAdvisoryScenarios,
 	SecurityAdvisorySummaryScenarios,
-	SecurityAdvisoryTopScenarios,
 	SerialNumberScenarios,
 	SuccessPathScenarios,
 	UserScenarios,
@@ -41,6 +43,7 @@ import * as _ from 'lodash-es';
 import {
 	ACCResponse,
 	ACCUserInfoSchema,
+	AdvisoriesByLastUpdatedCount,
 	Assets,
 	ATXResponse,
 	CDCSearchResponse,
@@ -67,6 +70,7 @@ import {
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryImpactCountResponse,
 	SecurityAdvisoryResponse,
+	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
 	SuccessPathsResponse,
@@ -79,6 +83,7 @@ import { RMAResponse } from '@interfaces';
 type ResponseBody = (
 	ACCResponse |
 	ACCUserInfoSchema |
+	AdvisoriesByLastUpdatedCount |
 	Assets |
 	ATXResponse |
 	CDCSearchResponse |
@@ -106,6 +111,7 @@ type ResponseBody = (
 	SecurityAdvisoryBulletinResponse |
 	SecurityAdvisoryImpactCountResponse |
 	SecurityAdvisoryResponse |
+	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
 	SuccessPathsResponse |
@@ -181,7 +187,10 @@ export const mockSettings: MockSettings = {
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryLastUpdatedCountScenarios,
+		SecurityAdvisoryTopScenarios,
 		SecurityAdvisoryScenarios,
+		SecurityAdvisorySeverityCountScenarios,
 		SecurityAdvisorySummaryScenarios,
 		SecurityAdvisoryTopScenarios,
 		SerialNumberScenarios,

@@ -151,6 +151,36 @@ describe('AdvisoriesComponent', () => {
 		});
 	});
 
+	it('should clear filters', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			const tab = _.find(component.tabs, { key: 'security' });
+
+			const filter = _.find(tab.filters, { key: 'impact' });
+			filter.selected = true;
+			const subfilter = _.find(filter.seriesData, { filter: 'critical' });
+			subfilter.selected = true;
+			component.selectedSubfilters = [subfilter];
+			component.clearFilters();
+			fixture.detectChanges();
+
+			expect(subfilter.selected)
+				.toBeFalsy();
+			expect(filter.selected)
+				.toBeFalsy();
+			expect(component.selectedSubfilters.length)
+				.toBe(0);
+			expect(tab.filtered)
+				.toBeFalsy();
+			done();
+		});
+	});
+
+	/**
+	 * @TODO: modify test to use UI
+	 */
 	it('should set null values on request errors', done => {
 		const error = {
 			status: 404,
@@ -160,6 +190,12 @@ describe('AdvisoriesComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(productAlertsService, 'getSecurityAdvisorySeverityCountResponse')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(productAlertsService, 'getSecurityAdvisoryLastUpdatedCount')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(diagnosticsService, 'getCriticalBugs')
@@ -238,6 +274,24 @@ describe('AdvisoriesComponent', () => {
 			expect(component.selectedAdvisory)
 				.toBeNull();
 
+			done();
+		});
+	});
+
+	it('should set a loading boolean for Cypress runs', done => {
+		expect(window.loading)
+			.toBeUndefined();
+		window.Cypress = true;
+
+		component.ngOnInit();
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(window.loading)
+				.toBe(false);
+			// cleanup
+			window.Cypress = undefined;
+			window.loading = undefined;
 			done();
 		});
 	});

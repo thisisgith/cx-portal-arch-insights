@@ -11,6 +11,9 @@ const routes: Routes = [
 		loadChildren: () => import('./pages/admin/admin.module')
 		 	.then(m => m.AdminModule),
 		path: 'admin',
+		resolve: {
+			user: UserResolve,
+		},
 	},
 	{
 		loadChildren: () => import('./pages/cases/cases.module')

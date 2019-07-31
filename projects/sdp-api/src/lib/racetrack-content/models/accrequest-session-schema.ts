@@ -3,14 +3,14 @@ import { ACCSessionAttendees } from './accsession-attendees';
 export interface ACCRequestSessionSchema {
 
   /**
-   * Preferred language for meetings/working sessions
-   */
-  preferredLanguage?: string;
-
-  /**
    * Title of the accelerator.
    */
   accTitle?: string;
+
+  /**
+   * Company name of the logged in user from profile.
+   */
+  companyName?: string;
 
   /**
    * Job title of the logged in user from profile.
@@ -49,9 +49,9 @@ export interface ACCRequestSessionSchema {
   preferredSlot?: string;
 
   /**
-   * Company name of the logged in user from profile.
+   * Preferred language for meetings/working sessions
    */
-  companyName?: string;
+  preferredLanguage?: string;
 
   /**
    * Version of the DNA-C
