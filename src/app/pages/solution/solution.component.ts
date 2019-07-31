@@ -52,7 +52,7 @@ interface Facet {
 })
 export class SolutionComponent implements OnInit, OnDestroy {
 
-	public shownTabs = 4;
+	public shownTabs = 5;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
@@ -76,6 +76,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
 	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
 	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
+	@ViewChild('insightsFacet', { static: true }) public insightsTemplate: TemplateRef<{ }>;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -184,6 +185,13 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				template: this.resolutionTemplate,
 				title: I18n.get('_ProblemResolution_'),
 			},
+			{
+				key: 'insights',
+				loading: false,
+				route: '/solution/insights',
+				template: this.insightsTemplate,
+				title: I18n.get('_Insights_'),
+			},
 		];
 
 		if (this.activeRoute) {
@@ -230,16 +238,16 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private fetchSolutions () {
 		this.status.loading = true;
 		this.racetrackService.getRacetrack({ customerId: this.customerId })
-		.subscribe((results: RacetrackResponse) => {
-			this.solutions = results.solutions;
-			this.changeSolution(_.head(this.solutions));
-			this.status.loading = false;
-		},
-		err => {
-			this.status.loading = false;
-			this.logger.error('solution.component : fetchSolutions() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-		});
+			.subscribe((results: RacetrackResponse) => {
+				this.solutions = results.solutions;
+				this.changeSolution(_.head(this.solutions));
+				this.status.loading = false;
+			},
+				err => {
+					this.status.loading = false;
+					this.logger.error('solution.component : fetchSolutions() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				});
 	}
 
 	/**
@@ -249,24 +257,24 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const assetsFacet = _.find(this.facets, { key: 'assets' });
 		assetsFacet.loading = true;
 		this.contractsService.getCoverageCounts({ customerId: this.customerId })
-		.subscribe((counts: CoverageCountsResponse) => {
-			const covered = _.get(counts, 'covered', 0);
-			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
+			.subscribe((counts: CoverageCountsResponse) => {
+				const covered = _.get(counts, 'covered', 0);
+				const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
-			const percent = ((covered / total) * 100);
-			const gaugePercent = Math.floor(percent) || 0;
-			assetsFacet.data = {
-				gaugePercent,
-				gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
-			};
+				const percent = ((covered / total) * 100);
+				const gaugePercent = Math.floor(percent) || 0;
+				assetsFacet.data = {
+					gaugePercent,
+					gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
+				};
 
-			assetsFacet.loading = false;
-		},
-		err => {
-			assetsFacet.loading = false;
-			this.logger.error('solution.component : fetchCoverageCount() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-		});
+				assetsFacet.loading = false;
+			},
+				err => {
+					assetsFacet.loading = false;
+					this.logger.error('solution.component : fetchCoverageCount() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				});
 	}
 
 	/**
@@ -275,28 +283,28 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private fetchAdvisoryCounts () {
 		this.advisoriesFacet.loading = true;
 		this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
-		.subscribe((counts: VulnerabilityResponse) => {
-			this.advisoriesFacet.seriesData = [
-				{
-					label: I18n.get('_SecurityAdvisories_'),
-					value: _.get(counts, 'security-advisories'),
-				},
-				{
-					label: I18n.get('_FieldNotices_'),
-					value: _.get(counts, 'field-notices'),
-				},
-				{
-					label: I18n.get('_Bugs_'),
-					value: _.get(counts, 'bugs'),
-				},
-			];
-			this.advisoriesFacet.loading = false;
-		},
-		err => {
-			this.advisoriesFacet.loading = false;
-			this.logger.error('solution.component : fetchAdvisoryCounts() ' +
-			`:: Error : (${err.status}) ${err.message}`);
-		});
+			.subscribe((counts: VulnerabilityResponse) => {
+				this.advisoriesFacet.seriesData = [
+					{
+						label: I18n.get('_SecurityAdvisories_'),
+						value: _.get(counts, 'security-advisories'),
+					},
+					{
+						label: I18n.get('_FieldNotices_'),
+						value: _.get(counts, 'field-notices'),
+					},
+					{
+						label: I18n.get('_Bugs_'),
+						value: _.get(counts, 'bugs'),
+					},
+				];
+				this.advisoriesFacet.loading = false;
+			},
+				err => {
+					this.advisoriesFacet.loading = false;
+					this.logger.error('solution.component : fetchAdvisoryCounts() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+				});
 	}
 
 	/**
