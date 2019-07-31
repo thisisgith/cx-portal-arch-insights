@@ -2,14 +2,14 @@
 	<div class="modal-backdrop force-left"></div>
 	<div class="modal modal--full">
 		<div class="modal__dialog">
-			<div id="accRequestModal" class="modal__content no-padding" data-auto-id="accRequestModal">
-				<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
+			<div id="policyRequestModal" class="modal__content no-padding" data-auto-id="policy-modal">
+				<div class="modal__header policy__header half-padding-left half-padding-bottom no-margin-bottom">
 					<div class="row half-padding-top dbl-padding-left">
 						<div class="col-md-11 half-margin-top">
 							<div
 								class="text-xlarge text-left"
 								[innerText]="this.title"
-								data-auto-id="accRequestModal-Title"
+								data-auto-id="policy-modal.title"
 							></div>
 							<ng-container *ngIf="loading">
 								<div class="row half-padding-left base-padding-top">
@@ -22,31 +22,31 @@
 							</ng-container>
 						</div>
 						<div class="col-md-1 half-margin-top">
-							<span (click)="closeRequestForm()" data-auto-id="ACCCloseRequestModal"
+							<span (click)="closeRequestForm()" data-auto-id="policy-modal.close"
 								class="icon-close icon-medium text-right toggle"></span>
 						</div>
 					</div>
 				</div>
-				<div class="modal__body acc__header half-padding-left half-padding-bottom no-margin-bottom">
+				<div class="modal__body policy__header half-padding-left half-padding-bottom no-margin-bottom">
 					<form class="form-inline" [formGroup]="requestForm" (ngSubmit)="onSubmit()">
 						<div class="row dbl-padding-left base-padding-top full-width">
 							<div class="col-md-6">
 								<div class="text-large text-left text-uppercase"
-									[innerText]="'_Schedule_' | i18n | uppercase" data-auto-id="accRequestModal-Title">
+									[innerText]="'_Schedule_' | i18n | uppercase" data-auto-id="policyRequestModal-Schedule">
 								</div>
 							</div>
 							<div *ngIf="type === 'editCollection'" class="col-md-6">
 								<div class="text-large text-left text-uppercase"
-									[innerText]="'_History_' | i18n | uppercase" data-auto-id="accRequestModal-Title">
+									[innerText]="'_History_' | i18n | uppercase" data-auto-id="policy-modal.history">
 								</div>
 							</div>
 						</div>
 						<div class="row dbl-padding-left base-padding-top full-width">
 							<div class="col-md-6">
 								<div class="form-inline">
-									<select id="attendees-select" formControlName="timePeriod"
+									<select id="timePeriod-select" formControlName="timePeriod"
 										(change)="timePeriodChange()"
-										data-auto-id="accRequestModal-NumberOfAttendees-Select">
+										data-auto-id="policy-modal.timePeriod-select">
 										<option value="" disabled selected hidden>PERIOD</option>
 										<option *ngFor="let timePeriod of timePeriods" [value]="timePeriod.value"
 											[innerText]="timePeriod.key"></option>
@@ -54,8 +54,8 @@
 									<ng-container *ngIf="timePeriod === 'monthly'">
 										<label class="collection-label" for="dates"
 											[innerText]="'_On_' | i18n | lowercase"></label>
-										<select id="attendees-select" formControlName="dates"
-											data-auto-id="accRequestModal-NumberOfAttendees-Select">
+										<select id="date-select" formControlName="dates"
+											data-auto-id="policy-modal.date-Select">
 											<option value="" disabled selected hidden>DATE</option>
 											<option *ngFor="let date of dates" [value]="date.value"
 												[innerText]="date.key">
@@ -65,8 +65,8 @@
 									<ng-container *ngIf="timePeriod === 'weekly'">
 										<label class="collection-label" for="days"
 											[innerText]="'_On_' | i18n | lowercase"></label>
-										<select id="attendees-select" formControlName="days"
-											data-auto-id="accRequestModal-NumberOfAttendees-Select">
+										<select id="day-select" formControlName="days"
+											data-auto-id="policy-modal.day-Select">
 											<option value="" disabled selected hidden>DAY</option>
 											<option *ngFor="let day of days" [value]="day.value" [innerText]="day.key">
 											</option>
@@ -74,8 +74,8 @@
 									</ng-container>
 									<label class="collection-label" for="hourmins"
 										[innerText]="'_At_' | i18n | lowercase"></label>
-									<select id="attendees-select" formControlName="hourmins"
-										data-auto-id="accRequestModal-NumberOfAttendees-Select">
+									<select id="hourmin-select" formControlName="hourmins"
+										data-auto-id="policy-modal.hourmin-Select">
 										<option value="" disabled selected hidden>TIME</option>
 										<option *ngFor="let hourmin of hourmins" [value]="hourmin.value"
 											[innerText]="hourmin.key"></option>
@@ -95,7 +95,7 @@
 									<button type="submit" [disabled]="!requestForm.valid"
 										class="btn btn--small btn--wide btn--secondary"
 										[innerText]="(type === 'editCollection' ? '_SaveScheduledCollection_' : '_SaveScheduledScan_') | i18n"
-										data-auto-id="accRequestModal-Submit"></button>
+										data-auto-id="policy-modal.submit"></button>
 								</div>
 							</div>
 						</div>
@@ -113,7 +113,7 @@
 	<div class="row dbl-padding-left base-padding-top full-width">
 		<div class="col-md-6">
 			<div class="text-large text-left text-uppercase"
-				[innerText]="'_ASSETS_' | i18n | uppercase" data-auto-id="accRequestModal-Title">
+				[innerText]="'_ASSETS_' | i18n | uppercase" data-auto-id="policy-modal.assets">
 			</div>
 		</div>
 	</div>
@@ -125,12 +125,12 @@
 				<button
 				class="btn btn--small btn--wide btn--secondary"
 				[innerText]="'_Add_' | i18n"
-				data-auto-id="accRequestModal-Submit"
+				data-auto-id="policy-modal.add"
 			></button>
 			<button
 				class="btn btn--small btn--wide btn--secondary"
 				[innerText]="'_Remove_' | i18n"
-				data-auto-id="accRequestModal-Submit"
+				data-auto-id="policy-modal.remove"
 			></button>
 		</div>
 		<div class="col-md-5">
@@ -164,13 +164,13 @@
 					<td>
 						<input type="checkbox">
 						<span class="checkbox__input"></span>
-						<span [innerText]='device.productId'></span>
+						<span [innerText]="device.productId"></span>
 					</td>
 					<td>
-						<span [innerText]='device.ipAddress'></span>
+						<span [innerText]="device.ipAddress"></span>
 					</td>
 					<td>
-						<span [innerText]='device.lastScan'></span>
+						<span [innerText]="device.lastScan"></span>
 					</td>
 				</tr>
 			</tbody>
