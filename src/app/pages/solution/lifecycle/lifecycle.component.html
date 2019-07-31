@@ -352,7 +352,7 @@
 
 	<div *ngIf="data.success?.length" data-auto-id="LearnPanel-SuccessPathsBlock">
 		<ng-container *ngTemplateOutlet="successBlock; context:
-				{ icon: 'transit',title: '_ProductGuide_', data: componentData.learning.success }">
+				{ icon: 'transit',title: '_SuccessBytes_', data: componentData.learning.success }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
@@ -421,7 +421,7 @@
 			<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
 		</div>
 	</div>
-	<div class="text-muted" [innerText]="'_ProductGuideSubtitle_' | i18n"></div>
+	<div class="text-muted" [innerText]="'_SuccessBytesSubtitle_' | i18n"></div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
@@ -582,8 +582,8 @@
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top">
 				<div class="col-md-11 half-margin-top base-padding-left">
-					<div class="text-xlarge text-left text-uppercase" [innerText]="'_ProductGuide_' | i18n"></div>
-					<div class="text-medium text-left qtr-margin-top" [innerText]="'_ProductGuideHowto_' | i18n"></div>
+					<div class="text-xlarge text-left text-uppercase" [innerText]="'_SuccessBytes_' | i18n"></div>
+					<div class="text-medium text-left qtr-margin-top" [innerText]="'_SuccessBytesSubtitle_' | i18n"></div>
 				</div>
 				<div class="col-md-1 half-margin-top">
 					<span (click)="closeModal()" data-auto-id="SuccessPathCloseModal"
@@ -604,7 +604,7 @@
 						[empty]="true"
 						[placeholder]="'_AllCategories_' | i18n"
 						[(ngModel)]="selectedCategory"
-						(ngModelChange)="selectFilter('productguide')">
+						(ngModelChange)="selectFilter('successBytes')">
 					</cui-select>
 				</div>
 				<div class="col-md-1 text-right">
@@ -624,13 +624,13 @@
 					</div>
 				</div>
 			</div>
-			<ng-container *ngTemplateOutlet="cardProductGuides"></ng-container>
-			<ng-container *ngTemplateOutlet="listProductGuides"></ng-container>
+			<ng-container *ngTemplateOutlet="cardSuccessBytes"></ng-container>
+			<ng-container *ngTemplateOutlet="listSuccessBytes"></ng-container>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #cardProductGuides>
+<ng-template #cardSuccessBytes>
 	<div class="grid grid--4up base-padding-top" *ngIf="(!view || view == 'grid')">
 		<div class="card acc__card" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
 			<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
@@ -665,17 +665,17 @@
 	</div>
 </ng-template>
 
-<ng-template #listProductGuides>
+<ng-template #listSuccessBytes>
 	<div class="table-responsive" *ngIf="selectedSuccessPaths && view == 'list'" data-auto-id="SuccessPathsTable">
 		<table class="table table--nostripes table--wrap table--hover table--loose">
 			<tr class="th-row">
-				<th *ngFor="let column of productGuidesTable.columns" 
-					attr.data-auto-id="productGuidesTable-columnHeader-{{ column.name }}"
+				<th *ngFor="let column of successBytesTable.columns"
+					attr.data-auto-id="successBytesTable-columnHeader-{{ column.name }}"
 					[ngClass]="{ 'sortable': column.sortable }"
 					(click)="column.sortable ? onSort(column.sortKey, column.sortDirection) : null">
 					<span [innerText]="column.name"></span>
-					<span *ngIf="column.sortable" 
-						class="qtr-margin-left" 
+					<span *ngIf="column.sortable"
+						class="qtr-margin-left"
 						[ngClass]="{
 							'icon-chevron-down': column.sortDirection === 'asc',
 							'icon-chevron-up': column.sortDirection === 'desc'
@@ -684,7 +684,7 @@
 				</th>
 			</tr>
 			<tr class="td-row" *ngFor="let item of selectedSuccessPaths">
-				<td class="text-left" *ngFor="let column of productGuidesTable.columns" [ngStyle]="{ 'width': column.width }">
+				<td class="text-left" *ngFor="let column of successBytesTable.columns" [ngStyle]="{ 'width': column.width }">
 					<ng-container *ngIf="column.template">
 						<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }"></ng-container>
 					</ng-container>
