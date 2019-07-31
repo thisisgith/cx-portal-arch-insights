@@ -18,7 +18,7 @@
 							class="btn btn--small btn--secondary base-margin-top half-margin-bottom qtr-margin-right"
 							[innerText]="'_NewScheduledScan_' | i18n | uppercase"
 							data-auto-id="settings.policies.new-scan-button"
-							(click)="onNewPolicy()">
+							(click)="startModal(true, 'newPolicy')">
 						</button>
 					</div>
 				</div>
@@ -29,8 +29,8 @@
 					data-auto-id="settings.policies.collection.panel">
 					<div class="col-1 flex-center">
 						<span
-						class="icon-small"
-						[ngClass]="scan.policyType === 'SCAN' ? 'icon-diagnostics text-success' : 'icon-blocked text-muted'"
+							class="icon-small"
+							[ngClass]="scan.policyType === 'SCAN' ? 'icon-diagnostics text-success' : 'icon-blocked text-muted'"
 						></span>
 					</div>
 					<div class="col-10">
@@ -42,7 +42,11 @@
 						</ng-container>
 					</div>
 					<div class="col-1 flex-center">
-						<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
+						<a
+							(click)="startModal(true, 'editPolicy', scan)"
+						>
+							<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
+						</a>
 					</div>
 				</div>
 
@@ -60,7 +64,7 @@
 					</div>
 					<div class="col-1 flex-center">
 						<a
-							(click)="editCollection(true, collection.policyId)"
+							(click)="startModal(true, 'editCollection', collection)"
 						>
 							<span
 								class="icon-pencil icon-small"
@@ -85,9 +89,11 @@
 </admin-wrapper>
 
 <ng-container *ngIf="selectEditCollectionComponent">
-	<collection-form (visibleComponent)="editCollection($event)"
-		[policyId]="loadedPolicyId"
+	<policy-form
+		(visibleComponent)="startModal($event)"
+		[type]="modalType"
+		[policy]="loadedPolicy"
 		[customerId]="customerId"
 		(submitted)="collectionRequestSubmit($event)">
-	</collection-form>
+	</policy-form>
 </ng-container>

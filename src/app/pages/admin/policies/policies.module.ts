@@ -9,7 +9,7 @@ import { ControlPointsModule, UserModule } from '@sdp-api';
 import { environment } from '@environment';
 import { CuiLoaderModule } from '@cisco-ngx/cui-components';
 
-import { EditCollectionFormModule } from './collection-form/collection-form.module';
+import { PolicyFormModule } from './policy-form/policy-form.module';
 
 /**
  * SDP Root url for the apis
@@ -24,7 +24,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		PoliciesComponent,
 	],
 	imports: [
-		EditCollectionFormModule,
+		PolicyFormModule,
 		AdminWrapperModule,
 		CommonModule,
 		ControlPointsModule.forRoot({ rootUrl }),

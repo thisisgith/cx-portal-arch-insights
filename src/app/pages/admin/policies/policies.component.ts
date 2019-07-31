@@ -26,7 +26,7 @@ import * as _ from 'lodash-es';
 })
 export class PoliciesComponent implements OnInit {
 	public selectEditCollectionComponent = false;
-	public loadedPolicyId: string;
+	public loadedPolicy: PolicyResponseModel;
 	public customerId: string;
 
 	private destroyed$: Subject<void> = new Subject<void>();
@@ -34,6 +34,7 @@ export class PoliciesComponent implements OnInit {
 	public loading = true;
 	public error = false;
 	public errorMessage: string;
+	public modalType: string;
 	public scans: PolicyResponseModel[];
 	public collections: PolicyResponseModel[];
 
@@ -95,14 +96,17 @@ export class PoliciesComponent implements OnInit {
 	}
 
 	/**
-	 * Select/deselect the collection form component
+	 * Select/deselect the polices / colleciton modal
 	 * @param selected whether the component is visible or not
-	 * @param policyId policyId of collection to modify
-	 * @param accTitle title of selected ACC
+	 * @param modalType what modal to pull up
+	 * @param policy? policy of collection to modify
 	 */
-	public editCollection (selected: boolean, policyId: string) {
+	public startModal (selected: boolean, modalType: string, policy?: PolicyResponseModel) {
 		if (selected) {
-			this.loadedPolicyId = policyId;
+			if (policy) {
+				this.loadedPolicy = policy;
+			}
+			this.modalType = modalType;
 		}
 
 		this.selectEditCollectionComponent = selected;
