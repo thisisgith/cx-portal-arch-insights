@@ -15,6 +15,8 @@ import { ACCUserInfoSchema } from '../models/accuser-info-schema';
 import { SuccessPathsResponse } from '../models/success-paths-response';
 import { CommunitiesResponse } from '../models/communities-response';
 import { ELearningResponse } from '../models/elearning-response';
+import { GroupTrainingEntitySchema } from '../models/group-training-entity-schema';
+import { GroupTrainingRequestSchema } from '../models/group-training-request-schema';
 @Injectable({
   providedIn: 'root',
 })
@@ -27,6 +29,7 @@ class RacetrackContentService extends __BaseService {
   static readonly getRacetrackSuccessPathsPath = '/successPaths';
   static readonly getRacetrackCommunitiesPath = '/communities';
   static readonly getRacetrackElearningPath = '/elearning';
+  static readonly createUsingPOSTPath = '/v1/grouptraining';
 
   constructor(
     config: __Configuration,
@@ -596,6 +599,45 @@ class RacetrackContentService extends __BaseService {
   getRacetrackElearning(params: RacetrackContentService.GetRacetrackElearningParams): __Observable<ELearningResponse> {
     return this.getRacetrackElearningResponse(params).pipe(
       __map(_r => _r.body as ELearningResponse)
+    );
+  }
+
+  /**
+   * @param gtRequest JSON Body for the Group Training Request
+   * @return Successfully retrieved results
+   */
+  createUsingPOSTResponse(gtRequest: GroupTrainingRequestSchema): __Observable<__StrictHttpResponse<GroupTrainingEntitySchema>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = gtRequest;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/api/customerportal/racetrack/v1/v1/grouptraining`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<GroupTrainingEntitySchema>;
+      })
+    );
+  }
+
+  /**
+   * @param gtRequest JSON Body for the Group Training Request
+   * @return Successfully retrieved results
+   */
+  createUsingPOST(gtRequest: GroupTrainingRequestSchema): __Observable<GroupTrainingEntitySchema> {
+    return this.createUsingPOSTResponse(gtRequest).pipe(
+      __map(_r => _r.body as GroupTrainingEntitySchema)
     );
   }
 }

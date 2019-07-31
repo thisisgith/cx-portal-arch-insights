@@ -17,6 +17,8 @@ import {
 	ProductAlertsPagination,
 	DiagnosticsPagination,
 	ProductAlertsService,
+	SecurityAdvisorySeverityCountResponse,
+	AdvisoriesByLastUpdatedCount,
 	SecurityAdvisoriesResponse,
 	SecurityAdvisoryInfo,
 	VulnerabilityResponse,
@@ -58,6 +60,9 @@ interface Tab {
 	route: string;
 	subject?: Subject<{ }>;
 }
+
+/** Our current customerId */
+const customerId = '2431199';
 
 /**
  * Advisories Component
@@ -398,38 +403,30 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * Gets the summary data for the advisories pie chart
 	 * @returns the summary data for the advisories pie chart
 	 */
-	private getAdvisoriesSummary () {
+	private getSeverityCount () {
 		const securityTab = _.find(this.tabs, { key: 'security' });
-		const impactFilter =
-			_.find(securityTab.filters, { key: 'impact' });
+		const impactFilter = _.find(securityTab.filters, { key: 'impact' });
 
-		impactFilter.seriesData = [];
-		impactFilter.loading = false;
+		return this.productAlertsService.getSecurityAdvisorySeverityCount(customerId)
+		.pipe(
+			map((data: SecurityAdvisorySeverityCountResponse) => {
+				impactFilter.seriesData = _.map(data, (count, severity) => ({
+					filter: severity,
+					label: I18n.get(`_${_.startCase(severity)}_`),
+					selected: false,
+					value: count,
+				}));
 
-		// TODO: Update to use latest API
-		return of({ });
+				impactFilter.loading = false;
+			}),
+			catchError(err => {
+				impactFilter.loading = false;
+				this.logger.error('advisories.component : getSeverityCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
 
-		// return this.productAlertsService.getSecurityAdvisorySummary(this.customerId)
-		// .pipe(
-		// 	map((response: SecurityAdvisorySummary) => {
-		// 		const summaries = _.get(response, 'advisorySummary');
-		// 		impactFilter.seriesData = _.map(summaries, (s: AdvisorySummaryItem) => ({
-		// 			filter: _.get(s, 'alertSeverity'),
-		// 			label: _.capitalize(_.get(s, 'alertSeverity')),
-		// 			selected: false,
-		// 			value: _.get(s, 'alertCount'),
-		// 		}));
-
-		// 		impactFilter.loading = false;
-		// 	}),
-		// 	catchError(err => {
-		// 		impactFilter.loading = false;
-		// 		this.logger.error('advisories.component : getAdvisoriesSummary() ' +
-		// 			`:: Error : (${err.status}) ${err.message}`);
-
-		// 		return of({ });
-		// 	}),
-		// );
+				return of({ });
+			}),
+		);
 	}
 
 	/**
@@ -441,36 +438,45 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const lastUpdateFilter =
 			_.find(securityTab.filters, { key: 'lastUpdate' });
 
-		// TODO: Update to use latest API
-		lastUpdateFilter.seriesData = [
-			// {
-			// 	filter: 'gt-0-lt-30-days',
-			// 	label: '< 30 Days',
-			// 	selected: false,
-			// 	value: 5,
-			// },
-			// {
-			// 	filter: 'gt-30-lt-60-days',
-			// 	label: '30 - 60 Days',
-			// 	selected: false,
-			// 	value: 6,
-			// },
-			// {
-			// 	filter: 'gt-60-lt-90-days',
-			// 	label: '60 - 90 Days',
-			// 	selected: false,
-			// 	value: 7,
-			// },
-			// {
-			// 	filter: 'gt-90-days',
-			// 	label: 'further out',
-			// 	selected: false,
-			// 	value: 8,
-			// },
-		];
-		lastUpdateFilter.loading = false;
+		return this.productAlertsService.getSecurityAdvisoryLastUpdatedCount(customerId)
+			.pipe(
+				map((data: AdvisoriesByLastUpdatedCount) => {
+					lastUpdateFilter.seriesData = [
+						{
+							filter: 'gt-0-lt-30-days',
+							label: '< 30d',
+							selected: false,
+							value: _.get(data, 'gt-0-lt-30-days'),
+						},
+						{
+							filter: 'gt-30-lt-60-days',
+							label: '30 - 60d',
+							selected: false,
+							value: _.get(data, 'gt-30-lt-60-days'),
+						},
+						{
+							filter: 'gt-60-lt-90-days',
+							label: '60 - 90d',
+							selected: false,
+							value: _.get(data, 'gt-60-lt-90-days'),
+						},
+						{
+							filter: 'gt-90-days',
+							label: _.lowerCase(I18n.get('_FurtherOut_')),
+							selected: false,
+							value: _.get(data, 'further-out'),
+						},
+					];
+					lastUpdateFilter.loading = false;
+				}),
+				catchError(err => {
+					lastUpdateFilter.loading = false;
+					this.logger.error('advisories.component : getAdvisoriesLastUpdated() ' +
+						`:: Error : (${err.status}) ${err.message}`);
 
-		return of({ });
+					return of({ });
+				}),
+			);
 	}
 
 	/**
@@ -691,8 +697,11 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	public onSubfilterSelect (subfilter: string, filter: VisualFilter, reload: boolean = true) {
 		const tab = this.selectedTab;
 		const sub = _.find(filter.seriesData, { filter: subfilter });
+
 		if (sub) {
-			sub.selected = !sub.selected;
+			const selected = !sub.selected;
+			_.each(filter.seriesData, (s: { selected: boolean }) => _.set(s, 'selected', false));
+			sub.selected = selected;
 		}
 
 		filter.selected = _.some(filter.seriesData, 'selected');
@@ -910,7 +919,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	private loadData () {
 		this.status.isLoading = true;
 		forkJoin(
-			this.getAdvisoriesSummary(),
+			this.getSeverityCount(),
 			this.getAdvisoriesLastUpdated(),
 			this.getFieldNoticesLastUpdated(),
 			this.getBugStates(),
