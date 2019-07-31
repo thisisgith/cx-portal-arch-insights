@@ -51,9 +51,10 @@ export class AssetTimelineChartComponent {
 			_.map(this.data, (value: AssetRecommendations) => {
 				const releaseDate = new Date(value.postDate);
 				return {
+					color: 'blue',
 					description: value.name,
 					label: value.swVersion,
-					name: value.name,
+					name: _.capitalize(value.name),
 					x: Date.UTC(
 						releaseDate.getFullYear(),
 						releaseDate.getMonth(),
@@ -106,9 +107,9 @@ export class AssetTimelineChartComponent {
 						/* tslint:disable:object-literal-shorthand*/
 						/* tslint:disable:no-string-literal */
 						formatter: function () {
-							return `<span style='font-weight: bold;' > ${this['point'].name}</span>
-							<br/>${this['point'].label}
-							<br/>${this['point'].releaseDate}`;
+							return `<span class="title" style='font-weight: bold;' > ${this['point'].name}</span>
+							<br/><span>${this['point'].label}</span>
+							<br/><span>${this['point'].releaseDate}</span>`;
 						},
 						style: {
 							fontWeight: 'normal',
@@ -116,9 +117,8 @@ export class AssetTimelineChartComponent {
 						},
 					},
 					marker: {
-						lineColor: 'blue',
 						lineWidth: 10,
-						radius: 0,
+						radius: 6,
 						symbol: '',
 					},
 				},
@@ -180,7 +180,7 @@ export class AssetTimelineChartComponent {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-
+		this.logger.debug(event.point.name);
 	}
 
 }
