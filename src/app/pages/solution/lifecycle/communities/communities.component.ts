@@ -21,7 +21,7 @@ interface CommunityDetail {
 const publicCommunities: CommunityDetail[] = [
 	{
 		description: 'Wireless & Mobility',
-		url: ' https://community.cisco.com/t5/wireless-and-mobility' +
+		url: 'https://community.cisco.com/t5/wireless-and-mobility' +
 		'/bd-p/5956-discussions-getting-started-wireles',
 		usecase: 'campus network assurance'	,
 	},
