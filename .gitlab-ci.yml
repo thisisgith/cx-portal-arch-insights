@@ -8,6 +8,7 @@ stages:
 cache:
   key: "PIPELINE-$CI_PIPELINE_ID"
   paths:
+    - package-lock.json
     - node_modules/ # Node modules and dependencies
 
 # disable gitlab cli analytics
@@ -17,8 +18,7 @@ before_script:
 setup:
   stage: setup
   script:
-    - npm install --audit=false
-    - rm -rf node_modules/@types/lodash
+    - npm ci --audit=false
 
 building:
   stage: test
@@ -27,10 +27,8 @@ building:
 
 # run npm audit to verify dependency security
 audit:
-  stage: setup
+  stage: test
   allow_failure: true # temporary until @compodoc fixes their vulnerability issue, since this is only used for document generation, I dont consider it breaking
-  before_script:
-    - npm install --package-lock=true --package-lock-only
   script:
     - npm audit
 
