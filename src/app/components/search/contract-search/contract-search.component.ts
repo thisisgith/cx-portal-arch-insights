@@ -19,6 +19,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@sdp-api';
 import { SearchQuery } from '@interfaces';
+import { UserResolve } from '@utilities';
 
 /**
  * Mapping of Contract statuses to status colors
@@ -60,16 +61,23 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	public statusColor: StatusColorMap;
 	public showCxInfo = false;
 
-	private customerId = '2431199';
+	private customerId: string;
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 
 	constructor (
 		private contractsService: ContractsService,
 		private logger: LogService,
+		private userResolve: UserResolve,
 	) {
 		super();
-		this.logger.debug('ContractSearchComponent Created!');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 	}
 
 	/**

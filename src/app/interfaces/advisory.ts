@@ -1,14 +1,4 @@
 /**
- * The interface representing a PSIRT Advisory
+ * The interface representing a PSIRT Advisory Type
  */
-export interface Advisory {
-	affected: number;
-	affectedDevices?: string[];
-	published: string;
-	severity: number;
-	title: string;
-	related: string;
-	current: string;
-	workarounds?: string;
-	summary: string;
-}
+export type AdvisoryType = 'bug' | 'field' | 'security';

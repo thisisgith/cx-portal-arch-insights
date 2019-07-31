@@ -295,7 +295,7 @@ describe('General Spec', () => {
 				cy.getByAutoId('caseNumber').should('exist').click({ multiple: true });
 				// TODO rather than click multiple, how to click the second caseNumber?
 				cy.wait(3000);
-				cy.get('app-panel360').should('be.visible');
+				cy.get('details-panel').should('be.visible');
 				cy.getByAutoId('CloseDetails').should('exist').click();
 			});
 		});

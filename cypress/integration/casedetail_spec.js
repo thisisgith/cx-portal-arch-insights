@@ -68,7 +68,7 @@ describe('Case Detail Spec', () => {
 			cy.wait(3000);
 			cy.getByAutoId('Case ID-Cell').click();
 			cy.wait(3000);
-			cy.get('app-panel360').should('be.visible');
+			cy.get('details-panel').should('be.visible');
 			cy.getByAutoId('caseTechnology').should('exist').should('contain', i18n._RMACaseTechnology_.toUpperCase());
 			cy.getByAutoId('caseProbType').should('exist').should('contain', i18n._RMACaseProblemType_.toUpperCase());
 			cy.getByAutoId('caseAsset').should('exist').should('contain', i18n._RMACaseAsset_.toUpperCase());
@@ -79,7 +79,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseTacEng').should('exist').should('contain', i18n._RMACaseTacEngineer_.toUpperCase());
 			cy.getByAutoId('caseSummaryTitle').should('exist').should('contain', i18n._RMACaseSummaryTitle_.toUpperCase());
 			cy.getByAutoId('caseDescription').should('exist').should('contain', i18n._RMACaseDescription_.toUpperCase());
-			cy.getByAutoId('CloseDetails').should('exist').click();
+			cy.getByAutoId('CloseDetails').click();
 		});
 
 		it.skip('Closes 360 view when leaving the case page', () => {
@@ -88,7 +88,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360
+			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
 			cy.getByAutoId('CloseDetails').click();
@@ -101,9 +101,9 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360
+			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(6000);
-			cy.get('app-panel360').should('be.visible');
+			cy.get('details-panel').should('be.visible');
 			cy.getByAutoId('CaseAttachFile').should('exist');
 			cy.getByAutoId('CaseAddNote').should('exist');
 			cy.getByAutoId('CloseDetails').click();
@@ -125,7 +125,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360
+			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
 			cy.getByAutoId('notesTab').click();
@@ -154,7 +154,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360
+			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
 			cy.getByAutoId('notesTab').click();

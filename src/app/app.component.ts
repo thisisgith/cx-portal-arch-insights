@@ -8,8 +8,11 @@ import {
 	NavigationError,
 	NavigationCancel,
 } from '@angular/router';
-
+import { environment } from '@environment';
 import { setOptions } from 'highcharts';
+import { UserResolve } from '@utilities';
+import { User } from '@interfaces';
+import * as _ from 'lodash-es';
 
 /**
  * Base application component which handles loading i18n as well as navigation
@@ -31,6 +34,7 @@ export class AppComponent {
 
 	constructor (
 		private router: Router,
+		private userResolve: UserResolve,
 	) {
 		setOptions({ lang: { thousandsSep: ',' } });
 
@@ -49,5 +53,30 @@ export class AppComponent {
 				}
 			},
 		);
+
+		this.userResolve.getUser()
+		.subscribe((user: User) => {
+			const { ccoId, emailAddress } = _.get(user, ['info', 'individual'],
+				{ ccoId: '', emailAddress: '' });
+
+			if (ccoId) {
+				_.set(window, ['cisco', 'user'], {
+					cpr: {
+						pf_auth_email: emailAddress,
+						pf_auth_uid: ccoId,
+					},
+					email: emailAddress,
+					userId: ccoId,
+					userIdLC: _.toLower(ccoId),
+				});
+
+				if (environment.production) {
+					// Metrics
+					_.set(window, 'NTPT_PGEXTRA', 'status=LoggedIn');
+					_.set(window, 'NTPT_IMGSRC_CUSTOM',
+						'//cisco-tags.cisco.com/tag/auth/ntpagetag.gif');
+				}
+			}
+		});
 	}
 }

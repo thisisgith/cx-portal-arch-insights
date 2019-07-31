@@ -8,7 +8,7 @@ const api = '/api/customerportal/inventory/v1/assets';
 const customerId = '2431199';
 
 /** Mock data for Network Elements API Results */
-export const mockResponse: Asset[] = [
+export const MockAssetsData: Asset[] = [
 	/* tslint:disable */
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -658,7 +658,7 @@ function MockAssets (
 	contractNumber?: string[],
 	supportCovered?: boolean[],
 	role?: string[]): Assets {
-	let data = _.cloneDeep(mockResponse);
+	let data = _.cloneDeep(MockAssetsData);
 
 	if (contractNumber) {
 		const filtered = [];
@@ -969,7 +969,7 @@ export const AssetScenarios = [
 						body: MockAssets(10, 1, ['93856991']),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 			],
 		},
@@ -984,11 +984,11 @@ export const AssetScenarios = [
 					description: 'Serial Number ',
 					response: {
 						body: {
-							data: [mockResponse[0]],
+							data: [MockAssetsData[0]],
 						},
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 			],
 		},

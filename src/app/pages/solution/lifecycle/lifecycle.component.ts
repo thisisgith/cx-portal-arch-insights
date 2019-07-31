@@ -32,6 +32,8 @@ import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { ActivatedRoute } from '@angular/router';
+import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 
 /**
@@ -113,7 +115,8 @@ export class LifecycleComponent implements OnDestroy {
 	public visibleContext: ATX[];
 	public atxScheduleCardOpened = false;
 	public sessionSelected: ATXSession;
-	public customerId = '2431199';
+	public customerId: string;
+	private user: User;
 	public selectedCategory = '';
 	public selectedStatus = '';
 	public selectedSuccessPaths: SuccessPath[];
@@ -198,11 +201,15 @@ export class LifecycleComponent implements OnDestroy {
 		private contentService: RacetrackContentService,
 		private racetrackService: RacetrackService,
 		private solutionService: SolutionService,
+		private route: ActivatedRoute,
 	) {
+		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(this.user, ['info', 'customerId']);
+
 		this.solutionSubscribe = this.solutionService.getCurrentSolution()
 		.subscribe((solution: RacetrackSolution) => {
 			this.selectedSolution = solution;
-			this.componentData.params.solution = solution.name;
+			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
 		this.technologySubscribe = this.solutionService.getCurrentTechnology()
@@ -212,7 +219,7 @@ export class LifecycleComponent implements OnDestroy {
 
 			this.resetComponentData();
 
-			this.componentData.params.usecase = technology.name;
+			this.componentData.params.usecase = _.get(technology, 'name');
 			this.componentData.params.solution = currentSolution;
 
 			this.getRacetrackInfo();
@@ -595,7 +602,7 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackACC(
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
@@ -644,7 +651,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.atxLoading = true;
 		}
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackATX(
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
@@ -684,7 +691,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.successPathsLoading = true;
 		}
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackSuccessPaths(
 			_.pick(this.componentData.params,
@@ -735,7 +742,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.elearningLoading = true;
 		}
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
