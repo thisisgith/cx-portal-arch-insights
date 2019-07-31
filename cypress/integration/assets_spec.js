@@ -206,7 +206,16 @@ describe('Assets', () => { // PBC-41
 			cy.get('[data-auto-id*="Device-"]').eq(0).click();
 		});
 
-		it.skip('Shows support and warranty coverage', () => { // PBC-52
+		it('Shows support and warranty coverage', () => { // PBC-52
+			const checkDataAndLink = (dataStatus, linkStatus) => {
+				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
+				cy.getByAutoId('_SupportCoverage_-data').should(dataStatus);
+				cy.getByAutoId('_SupportCoverage_-Link').should(linkStatus);
+				cy.getByAutoId('_Warranty_-data').should(dataStatus);
+				cy.getByAutoId('_Warranty_-Link').should(linkStatus);
+				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
+			};
+
 			const contractEnd = Cypress.moment(coveredRes.contractEndDate).format('YYYY MMM DD');
 			const warrantyEnd = Cypress.moment(coveredRes.warrantyEndDate).format('YYYY MMM DD');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
@@ -223,8 +232,19 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('_SupportCoverage_-N/A').should('have.text', 'N/A');
 			cy.getByAutoId('_Warranty_-N/A').should('have.text', 'N/A');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
+
+			// PBC-352
+			coverageMock.enable('No keys');
+			checkDataAndLink('be.visible', 'not.exist');
+			coverageMock.enable('No dates');
+			checkDataAndLink('not.exist', 'be.visible');
+			coverageMock.enable('Null keys');
+			checkDataAndLink('be.visible', 'not.exist');
+			coverageMock.enable('Null dates');
+			checkDataAndLink('not.exist', 'be.visible');
+
+			// Cleanup
 			coverageMock.enable('Covered');
-			// TODO: Add test for invalid API response after PBC-352 is fixed
 		});
 
 		// TODO: Unskip and modify to accomodate PBC-90 & 91
@@ -694,6 +714,22 @@ describe('Assets', () => { // PBC-41
 			cy.reload();
 			cy.waitForAppLoading();
 			cy.get('table').should('be.visible');
+		});
+	});
+
+	context('PBC-344: Asset Cases - Asset Based Case Open', () => {
+		it('Provides an Asset 360 view modal', () => {
+			const validate360OpenCase = asset => {
+				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
+				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
+				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility).click(); // PBC344
+				cy.getByAutoId('CaseOpenCancelButton').click(); // Cancel modal
+				cy.getByAutoId('CaseOpenCancel').click(); // Confirm cancel
+			};
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
+			validate360OpenCase(assets[0]); // Currently only first asset has the CaseOpen Button
+
+			cy.getByAutoId('CloseDetails').click();
 		});
 	});
 });

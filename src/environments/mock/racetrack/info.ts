@@ -983,6 +983,15 @@ export const RacetrackScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Use',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Use'),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?customerId=${customerId}`,

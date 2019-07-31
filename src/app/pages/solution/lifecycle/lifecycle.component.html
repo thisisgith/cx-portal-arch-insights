@@ -58,7 +58,7 @@
 			<h3 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h3>
 		</div>
 		<div class="col-md-5 flex-center">
-			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert"></span>
+			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert" data-auto-id="CompletedActionsPercent"></span>
 			<span><img class="finishline qtr-margin-top" alt="'_FinishLine_' | i18n" src="assets/img/solutions/finishline_side.png"> </span>
 		</div>
 	</div>
@@ -672,7 +672,7 @@
 				<th *ngFor="let column of productGuidesTable.columns" 
 					attr.data-auto-id="productGuidesTable-columnHeader-{{ column.name }}"
 					[ngClass]="{ 'sortable': column.sortable }"
-					(click)="onSort(column.sortKey, column.sortDirection)">
+					(click)="column.sortable ? onSort(column.sortKey, column.sortDirection) : null">
 					<span [innerText]="column.name"></span>
 					<span *ngIf="column.sortable" 
 						class="qtr-margin-left" 

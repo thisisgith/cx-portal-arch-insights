@@ -987,9 +987,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 							.to.include(firstRecommendedACC.title);
 						expect(request.body.additionalAttendees.length)
 							.to.eq(1);
-						expect(request.body.additionalAttendees[0].name)
+						expect(request.body.additionalAttendees[0].attendeeName)
 							.to.eq('Automation User 1');
-						expect(request.body.additionalAttendees[0].email)
+						expect(request.body.additionalAttendees[0].attendeeEmail)
 							.to.eq('automation1@cisco.com');
 						expect(request.body.businessOutcome)
 							.to.include('Automation - Test Outcome');
