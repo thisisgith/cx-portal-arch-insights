@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject, of } from 'rxjs';
-import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, merge, of } from 'rxjs';
+import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { CaseRequestType } from '@classes';
 import { CaseOpenRequest, ProblemArea, Subtech, Tech } from '@interfaces';
@@ -128,12 +128,14 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			contactId: this.profileService.getProfile().cpr.pf_auth_uid,
 			customerActivity: _.get(this.caseForm.controls.problemArea.value, 'customerActivity'),
 			description: this.caseForm.controls.description.value,
+			deviceName: this.asset.deviceName,
 			priority: this.caseForm.controls.severity.value,
 			problemCode: _.get(this.caseForm.controls.problemArea.value, 'problemCode'),
 			requestType: this.caseForm.controls.requestRma.value ?
 				CaseRequestType.RMA : CaseRequestType.Diagnose,
 			serialNumber: this.asset.serialNumber,
-			subTechId: this.caseForm.controls.subtech.value,
+			softwareVersion: this.asset.osVersion,
+			subTechId: _.get(this.caseForm.controls.subtech.value, '_id'),
 			summary: this.caseForm.controls.title.value,
 			techId: this.caseForm.controls.technology.value,
 		};
@@ -165,8 +167,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 					severity: this.caseForm.controls.severity.value,
 					severityName: _.get(_.find(this.sevOptions,
 						{ value: this.caseForm.controls.severity.value }), 'name'),
-					subtech: _.get(_.find(this.subtechOptions,
-						{ _id: this.caseForm.controls.subtech.value }), 'subTechName'),
+					subtech: _.get(this.caseForm.controls.subtech.value, 'subTechName'),
 					technology: _.get(_.find(this.techOptions,
 						{ _id: this.caseForm.controls.technology.value }), 'techName'),
 					title: this.caseForm.controls.title.value,
@@ -245,6 +246,14 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		)
 		.subscribe(result => {
 			this.loadingProblemAreas = false;
+			// If a subtech is selected, filter the problemAreas to only valid ones for that subtech
+			if (this.caseForm.controls.subtech.value) {
+				const validCodes = this.caseForm.controls.subtech.value.problemCodes;
+				result.problemArea.customerActivities =
+					_.filter(result.problemArea.customerActivities, activity =>
+						_.includes(validCodes, activity.problemCode),
+					);
+			}
 			const problemAreasGrouped = _.groupBy(
 				_.get(result, ['problemArea', 'customerActivities'], []),
 				'customerActivity',
@@ -252,8 +261,14 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			this.problemAreaOptions = Object.values(problemAreasGrouped);
 			this.problemGroups = Object.keys(problemAreasGrouped);
 		});
-		// Listen for "requestType" to change, update problem areas.
-		this.caseForm.controls.requestRma.valueChanges.pipe(
+		// Listen for "requestType" or "subTech" to change, update problem areas.
+		merge(
+			this.caseForm.controls.requestRma.valueChanges,
+			this.caseForm.controls.subtech.valueChanges.pipe(
+				map(() => this.caseForm.controls.requestRma.value),
+			),
+		)
+		.pipe(
 			tap(() => this.caseForm.controls.problemArea.setValue(null)),
 			takeUntil(this.destroy$),
 		)

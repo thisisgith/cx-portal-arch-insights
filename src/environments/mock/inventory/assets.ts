@@ -8,7 +8,7 @@ const api = '/api/customerportal/inventory/v1/assets';
 const customerId = '2431199';
 
 /** Mock data for Network Elements API Results */
-export const mockResponse: Asset[] = [
+export const MockAssetsData: Asset[] = [
 	/* tslint:disable */
 	{
 			"deviceName": "Catalyst+2960S-24PS-L+Switch",
@@ -622,7 +622,24 @@ export const mockResponse: Asset[] = [
 			"containingHwId": null,
 			"productId": "C3850-NM-4-10G",
 			"equipmentType": "MODULE"
-	}
+	},
+	{
+			"deviceName": "C3850-NM-4-10G",
+			"ipAddress": "172.25.121.6",
+			"supportCovered": true,
+			// This is a serial number for which we can open a case. It passes the CSOne
+			// entitlement checks for svorma1.
+			"serialNumber": "35641136A1621",
+			"osType": "IOS-XE",
+			"osVersion": "03.06.05E",
+			"role": null,
+			"contractNumber": "200758679",
+			"managedNeId": "NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
+			"hwInstanceId": "FOC20472BD5,C3850-NM-4-10G,NA,NA,FOC2045X0WJ,WS-C3850-48U-L,NA",
+			"containingHwId": null,
+			"productId": "C3850-NM-4-10G",
+			"equipmentType": "MODULE"
+	},
 	/* tslint:enable */
 ];
 
@@ -641,7 +658,7 @@ function MockAssets (
 	contractNumber?: string[],
 	supportCovered?: boolean[],
 	role?: string[]): Assets {
-	let data = _.cloneDeep(mockResponse);
+	let data = _.cloneDeep(MockAssetsData);
 
 	if (contractNumber) {
 		const filtered = [];
@@ -952,7 +969,7 @@ export const AssetScenarios = [
 						body: MockAssets(10, 1, ['93856991']),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 			],
 		},
@@ -967,11 +984,11 @@ export const AssetScenarios = [
 					description: 'Serial Number ',
 					response: {
 						body: {
-							data: [mockResponse[0]],
+							data: [MockAssetsData[0]],
 						},
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 			],
 		},

@@ -8,6 +8,7 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { Assets } from '../models/assets';
+import { AssetSummary } from '../models/asset-summary';
 import { HardwareResponse } from '../models/hardware-response';
 import { NetworkElementResponse } from '../models/network-element-response';
 import { SoftwareResponse } from '../models/software-response';
@@ -17,6 +18,7 @@ import { RoleCountResponse } from '../models/role-count-response';
 })
 class InventoryService extends __BaseService {
   static readonly getAssetsPath = '/assets';
+  static readonly getAssetSummaryPath = '/assets/summary';
   static readonly headHardwarePath = '/hardware';
   static readonly getHardwarePath = '/hardware';
   static readonly headNetworkElementsPath = '/network-elements';
@@ -46,6 +48,10 @@ class InventoryService extends __BaseService {
    *
    * - `page`: The page number of the response
    *
+   * - `managedNeId`:
+   *
+   * - `hwInstanceId`:
+   *
    * - `coverage`: The coverage
    *
    * - `contractNumber`: The contract numbers
@@ -62,6 +68,8 @@ class InventoryService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     if (params.page != null) __params = __params.set('page', params.page.toString());
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
     (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
@@ -96,6 +104,10 @@ class InventoryService extends __BaseService {
    *
    * - `page`: The page number of the response
    *
+   * - `managedNeId`:
+   *
+   * - `hwInstanceId`:
+   *
    * - `coverage`: The coverage
    *
    * - `contractNumber`: The contract numbers
@@ -105,6 +117,57 @@ class InventoryService extends __BaseService {
   getAssets(params: InventoryService.GetAssetsParams): __Observable<Assets> {
     return this.getAssetsResponse(params).pipe(
       __map(_r => _r.body as Assets)
+    );
+  }
+
+  /**
+   * API to get summary details for a particular device. Summary details includes device,contract & alert details.
+   * @param params The `InventoryService.GetAssetSummaryParams` containing the following parameters:
+   *
+   * - `hwInstanceId`: The unique identifier for a hardware device
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * @return successful operation
+   */
+  getAssetSummaryResponse(params: InventoryService.GetAssetSummaryParams): __Observable<__StrictHttpResponse<AssetSummary>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.hwInstanceId != null) __params = __params.set('hwInstanceId', params.hwInstanceId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/inventory/v1/assets/summary`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<AssetSummary>;
+      })
+    );
+  }
+
+  /**
+   * API to get summary details for a particular device. Summary details includes device,contract & alert details.
+   * @param params The `InventoryService.GetAssetSummaryParams` containing the following parameters:
+   *
+   * - `hwInstanceId`: The unique identifier for a hardware device
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * @return successful operation
+   */
+  getAssetSummary(params: InventoryService.GetAssetSummaryParams): __Observable<AssetSummary> {
+    return this.getAssetSummaryResponse(params).pipe(
+      __map(_r => _r.body as AssetSummary)
     );
   }
 
@@ -659,6 +722,8 @@ module InventoryService {
      * The page number of the response
      */
     page?: number;
+    managedNeId?: Array<string>;
+    hwInstanceId?: Array<string>;
 
     /**
      * The coverage
@@ -669,6 +734,22 @@ module InventoryService {
      * The contract numbers
      */
     contractNumber?: Array<string>;
+  }
+
+  /**
+   * Parameters for getAssetSummary
+   */
+  export interface GetAssetSummaryParams {
+
+    /**
+     * The unique identifier for a hardware device
+     */
+    hwInstanceId: string;
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
   }
 
   /**

@@ -42,7 +42,7 @@ class ControlPointDeviceConnectivtyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/device/connectivity/${params.customerId}/${params.serialNumber}/${params.productId}`,
+      this.rootUrl + `/controlpoint/v1/device/connectivity/${params.customerId}/${params.serialNumber}/${params.productId}`,
       __body,
       {
         headers: __headers,

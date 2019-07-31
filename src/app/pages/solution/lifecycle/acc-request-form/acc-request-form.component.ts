@@ -21,6 +21,7 @@ import {
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
+import { UserResolve } from '@utilities';
 
 /**
  * interface representing the key/value of a select input option
@@ -38,7 +39,7 @@ interface SelectOption {
 	styleUrls: ['./acc-request-form.component.scss'],
 	templateUrl: './acc-request-form.component.html',
 })
-export class AccRequestFormComponent implements OnDestroy, OnInit {
+export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 
 	@Input() public accId: string;
 	@Input() public accTitle: string;
@@ -48,12 +49,15 @@ export class AccRequestFormComponent implements OnDestroy, OnInit {
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
-	public customerId = '2431199';
+	private timeout = 5000;
+	public customerId: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	public custData: ACCUserInfoSchema;
 	public maxLength = 512;
 	public loading = false;
 	public custInfoError = false;
+	public submitSuccess = false;
+	public submitError = false;
 
 	public requestForm: FormGroup = this.fb.group({
 		acceleratorInterest: ['', [Validators.required, Validators.maxLength(this.maxLength)]],
@@ -92,8 +96,15 @@ export class AccRequestFormComponent implements OnDestroy, OnInit {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private contentService: RacetrackContentService,
+		private userResolve: UserResolve,
 	) {
-		this.logger.debug('AccRequestFormComponent Created!');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 	}
 
 	/**
@@ -107,8 +118,8 @@ export class AccRequestFormComponent implements OnDestroy, OnInit {
 			attendeeArray.clear();
 			for (let i = 1; i < attendees; i = i + 1) {
 				const attendeeGroup = this.fb.group({
-					name: ['', Validators.required],
-					email: ['', [Validators.required, Validators.email]],
+					attendeeName: ['', Validators.required],
+					attendeeEmail: ['', [Validators.required, Validators.email]],
 				});
 				attendeeArray.push(attendeeGroup);
 			}
@@ -189,12 +200,18 @@ export class AccRequestFormComponent implements OnDestroy, OnInit {
 		this.contentService
 		.requestACC(params)
 			.pipe(
-				catchError(() => empty()),
+				catchError(() => {
+					this.submitError = true;
+					return empty();
+				}),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
-				this.logger.debug('Submitted ACC response form');
-				this.submitted.emit(true);
+				this.logger.debug('acc-request-form.component :: Submitted ACC response form');
+				this.submitSuccess = true;
+				setTimeout(() => {
+					this.submitted.emit(true);
+				}, this.timeout);
 			});
 	}
 }

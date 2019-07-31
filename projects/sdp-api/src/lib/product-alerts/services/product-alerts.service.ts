@@ -10,15 +10,18 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { VulnerabilityResponse } from '../models/vulnerability-response';
 import { SecurityAdvisoryResponse } from '../models/security-advisory-response';
 import { SecurityAdvisorySummary } from '../models/security-advisory-summary';
+import { SecurityAdvisoryImpactCountResponse } from '../models/security-advisory-impact-count-response';
 import { SecurityAdvisoryBulletinResponse } from '../models/security-advisory-bulletin-response';
+import { SecurityAdvisoriesResponse } from '../models/security-advisories-response';
 import { FieldNoticeResponse } from '../models/field-notice-response';
 import { FieldNoticeBulletinResponse } from '../models/field-notice-bulletin-response';
+import { FieldNoticeUpdatedResponse } from '../models/field-notice-updated-response';
+import { FieldNoticeAdvisoryResponse } from '../models/field-notice-advisory-response';
 import { HardwareEOLResponse } from '../models/hardware-eolresponse';
 import { HardwareEOLBulletinResponse } from '../models/hardware-eolbulletin-response';
 import { HardwareEOLCountResponse } from '../models/hardware-eolcount-response';
 import { SoftwareEOLResponse } from '../models/software-eolresponse';
 import { SofwareEOLBulletinResponse } from '../models/sofware-eolbulletin-response';
-import { SecurityAdvisoryImpactCountResponse } from '../models/security-advisory-impact-count-response';
 @Injectable({
   providedIn: 'root',
 })
@@ -26,14 +29,18 @@ class ProductAlertsService extends __BaseService {
   static readonly getVulnerabilityCountsPath = '/vulnerabilities/count';
   static readonly headSecurityAdvisoriesPath = '/security-advisories';
   static readonly getSecurityAdvisoriesPath = '/security-advisories';
-  static readonly getSecurityAdvisorySummaryPath = '/security-advisories/summary';
   static readonly getSecurityAdvisoryListPath = '/security-advisories/list';
+  static readonly getSecurityAdvisorySummaryPath = '/security-advisories/summary';
+  static readonly getTopSecurityAdvisoriesPath = '/security-advisories/top';
   static readonly headSecurityAdvisoryBulletinsPath = '/security-advisory-bulletins';
   static readonly getPSIRTBulletinPath = '/security-advisory-bulletins';
+  static readonly getAdvisoriesSecurityAdvisoriesPath = '/advisories-security-advisories';
   static readonly headFieldNoticesPath = '/field-notices';
   static readonly getFieldNoticePath = '/field-notices';
   static readonly headFieldNoticeBulletinsPath = '/field-notice-bulletins';
   static readonly getFieldNoticeBulletinPath = '/field-notice-bulletins';
+  static readonly getFieldNoticesLastUpdatedCountPath = '/field-notices/last-updated/count';
+  static readonly getAdvisoriesFieldNoticesPath = '/advisories-field-notices';
   static readonly headHardwareEolPath = '/hardware-eol';
   static readonly getHardwareEoxPath = '/hardware-eol';
   static readonly headHardwareEolBulletinsPath = '/hardware-eol-bulletins';
@@ -43,7 +50,6 @@ class ProductAlertsService extends __BaseService {
   static readonly getSoftwareEoxPath = '/software-eol';
   static readonly headSoftwareEolBulletinsPath = '/software-eol-bulletins';
   static readonly getSoftwareEoxBulletinPath = '/software-eol-bulletins';
-  static readonly getTopSecurityAdvisoriesPath = '/security-advisories/top';
 
   constructor(
     config: __Configuration,
@@ -233,46 +239,6 @@ class ProductAlertsService extends __BaseService {
 
   /**
    * Generates the total number of security advisoeries and the count by severity
-   * @param customerId Unique identifier of a Cisco customer.
-   * @return OK
-   */
-  getSecurityAdvisorySummaryResponse(customerId: string): __Observable<__StrictHttpResponse<SecurityAdvisorySummary>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-    if (customerId != null) __params = __params.set('customerId', customerId.toString());
-    let req = new HttpRequest<any>(
-      'GET',
-      this.rootUrl + `/product-alerts/v1/security-advisories/summary`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json',
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<SecurityAdvisorySummary>;
-      })
-    );
-  }
-
-  /**
-   * Generates the total number of security advisoeries and the count by severity
-   * @param customerId Unique identifier of a Cisco customer.
-   * @return OK
-   */
-  getSecurityAdvisorySummary(customerId: string): __Observable<SecurityAdvisorySummary> {
-    return this.getSecurityAdvisorySummaryResponse(customerId).pipe(
-      __map(_r => _r.body as SecurityAdvisorySummary)
-    );
-  }
-
-  /**
-   * Generates the total number of security advisoeries and the count by severity
    * @param params The `ProductAlertsService.GetSecurityAdvisoryListParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
@@ -333,6 +299,111 @@ class ProductAlertsService extends __BaseService {
   }
 
   /**
+   * Generates the total number of security advisoeries and the count by severity
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return OK
+   */
+  getSecurityAdvisorySummaryResponse(customerId: string): __Observable<__StrictHttpResponse<SecurityAdvisorySummary>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/product-alerts/v1/security-advisories/summary`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<SecurityAdvisorySummary>;
+      })
+    );
+  }
+
+  /**
+   * Generates the total number of security advisoeries and the count by severity
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return OK
+   */
+  getSecurityAdvisorySummary(customerId: string): __Observable<SecurityAdvisorySummary> {
+    return this.getSecurityAdvisorySummaryResponse(customerId).pipe(
+      __map(_r => _r.body as SecurityAdvisorySummary)
+    );
+  }
+
+  /**
+   * The Security Advisories API retrieves security vulnerability information along with Common Vulnerability and Exposure (CVE) identifiers, and Common Vulnerability Scoring System (CVSS) for devices associated with customer ID. All request parameters are optional other than customerId.
+   * If no device ID is provided in the request, the response will contain security advisory information for all device IDs associated with the customer.
+   * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response.
+   * @param params The `ProductAlertsService.GetTopSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `sort`: Sorting details. Default sort severity, count, date (newest)
+   *
+   * - `rows`: No of rows in a page
+   *
+   * - `page`: Page number
+   *
+   * @return successful operation
+   */
+  getTopSecurityAdvisoriesResponse(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<SecurityAdvisoryImpactCountResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/product-alerts/v1/security-advisories/top`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<SecurityAdvisoryImpactCountResponse>;
+      })
+    );
+  }
+
+  /**
+   * The Security Advisories API retrieves security vulnerability information along with Common Vulnerability and Exposure (CVE) identifiers, and Common Vulnerability Scoring System (CVSS) for devices associated with customer ID. All request parameters are optional other than customerId.
+   * If no device ID is provided in the request, the response will contain security advisory information for all device IDs associated with the customer.
+   * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response.
+   * @param params The `ProductAlertsService.GetTopSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `sort`: Sorting details. Default sort severity, count, date (newest)
+   *
+   * - `rows`: No of rows in a page
+   *
+   * - `page`: Page number
+   *
+   * @return successful operation
+   */
+  getTopSecurityAdvisories(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<SecurityAdvisoryImpactCountResponse> {
+    return this.getTopSecurityAdvisoriesResponse(params).pipe(
+      __map(_r => _r.body as SecurityAdvisoryImpactCountResponse)
+    );
+  }
+
+  /**
    * Fetches meta information about the security-advisories API.
    * @param params The `ProductAlertsService.HeadSecurityAdvisoryBulletinsParams` containing the following parameters:
    *
@@ -385,10 +456,6 @@ class ProductAlertsService extends __BaseService {
    * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response.
    * @param params The `ProductAlertsService.GetPSIRTBulletinParams` containing the following parameters:
    *
-   * - `X-CSI-CCOID`: X-CSI-CCOID
-   *
-   * - `Authorization`:
-   *
    * - `sort`: ASC (ascending) or DESC (descending)
    *
    * - `severity`: Severity
@@ -420,8 +487,6 @@ class ProductAlertsService extends __BaseService {
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.XCSICCOID != null) __headers = __headers.set('X-CSI-CCOID', params.XCSICCOID.toString());
-    if (params.Authorization != null) __headers = __headers.set('Authorization', params.Authorization.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     (params.severity || []).forEach(val => {if (val != null) __params = __params.append('severity', val.toString())});
     (params.securityImpactRating || []).forEach(val => {if (val != null) __params = __params.append('securityImpactRating', val.toString())});
@@ -458,10 +523,6 @@ class ProductAlertsService extends __BaseService {
    * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response.
    * @param params The `ProductAlertsService.GetPSIRTBulletinParams` containing the following parameters:
    *
-   * - `X-CSI-CCOID`: X-CSI-CCOID
-   *
-   * - `Authorization`:
-   *
    * - `sort`: ASC (ascending) or DESC (descending)
    *
    * - `severity`: Severity
@@ -491,6 +552,87 @@ class ProductAlertsService extends __BaseService {
   getPSIRTBulletin(params: ProductAlertsService.GetPSIRTBulletinParams): __Observable<SecurityAdvisoryBulletinResponse> {
     return this.getPSIRTBulletinResponse(params).pipe(
       __map(_r => _r.body as SecurityAdvisoryBulletinResponse)
+    );
+  }
+
+  /**
+   * Security advisories and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `severity`: The severity
+   *
+   * - `rows`: Number of rows of data per page.
+   *
+   * - `page`: Page number of the response
+   *
+   * - `neInstanceId`: The unique, generated ID of the network element
+   *
+   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `id`:
+   *
+   * @return successful operation
+   */
+  getAdvisoriesSecurityAdvisoriesResponse(params: ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<SecurityAdvisoriesResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    (params.severity || []).forEach(val => {if (val != null) __params = __params.append('severity', val.toString())});
+    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/product-alerts/v1/advisories-security-advisories`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<SecurityAdvisoriesResponse>;
+      })
+    );
+  }
+
+  /**
+   * Security advisories and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `severity`: The severity
+   *
+   * - `rows`: Number of rows of data per page.
+   *
+   * - `page`: Page number of the response
+   *
+   * - `neInstanceId`: The unique, generated ID of the network element
+   *
+   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `id`:
+   *
+   * @return successful operation
+   */
+  getAdvisoriesSecurityAdvisories(params: ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams): __Observable<SecurityAdvisoriesResponse> {
+    return this.getAdvisoriesSecurityAdvisoriesResponse(params).pipe(
+      __map(_r => _r.body as SecurityAdvisoriesResponse)
     );
   }
 
@@ -751,6 +893,122 @@ class ProductAlertsService extends __BaseService {
   getFieldNoticeBulletin(params: ProductAlertsService.GetFieldNoticeBulletinParams): __Observable<FieldNoticeBulletinResponse> {
     return this.getFieldNoticeBulletinResponse(params).pipe(
       __map(_r => _r.body as FieldNoticeBulletinResponse)
+    );
+  }
+
+  /**
+   * Number of field notices that got updated by date range. All request parameters are optional other than customerId.
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return successful operation
+   */
+  getFieldNoticesLastUpdatedCountResponse(customerId: string): __Observable<__StrictHttpResponse<FieldNoticeUpdatedResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/product-alerts/v1/field-notices/last-updated/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<FieldNoticeUpdatedResponse>;
+      })
+    );
+  }
+
+  /**
+   * Number of field notices that got updated by date range. All request parameters are optional other than customerId.
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return successful operation
+   */
+  getFieldNoticesLastUpdatedCount(customerId: string): __Observable<FieldNoticeUpdatedResponse> {
+    return this.getFieldNoticesLastUpdatedCountResponse(customerId).pipe(
+      __map(_r => _r.body as FieldNoticeUpdatedResponse)
+    );
+  }
+
+  /**
+   * Field notices and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.GetAdvisoriesFieldNoticesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `rows`: Number of rows of data per page.
+   *
+   * - `page`: Page number of the response
+   *
+   * - `neInstanceId`: The unique, generated ID of the network element
+   *
+   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `id`:
+   *
+   * @return successful operation
+   */
+  getAdvisoriesFieldNoticesResponse(params: ProductAlertsService.GetAdvisoriesFieldNoticesParams): __Observable<__StrictHttpResponse<FieldNoticeAdvisoryResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/product-alerts/v1/advisories-field-notices`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<FieldNoticeAdvisoryResponse>;
+      })
+    );
+  }
+
+  /**
+   * Field notices and their details against all assets for a customer are returned.
+   * @param params The `ProductAlertsService.GetAdvisoriesFieldNoticesParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `rows`: Number of rows of data per page.
+   *
+   * - `page`: Page number of the response
+   *
+   * - `neInstanceId`: The unique, generated ID of the network element
+   *
+   * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `id`:
+   *
+   * @return successful operation
+   */
+  getAdvisoriesFieldNotices(params: ProductAlertsService.GetAdvisoriesFieldNoticesParams): __Observable<FieldNoticeAdvisoryResponse> {
+    return this.getAdvisoriesFieldNoticesResponse(params).pipe(
+      __map(_r => _r.body as FieldNoticeAdvisoryResponse)
     );
   }
 
@@ -1363,71 +1621,6 @@ class ProductAlertsService extends __BaseService {
       __map(_r => _r.body as SofwareEOLBulletinResponse)
     );
   }
-
-  /**
-   * The Security Advisories API retrieves security vulnerability information along with Common Vulnerability and Exposure (CVE) identifiers, and Common Vulnerability Scoring System (CVSS) for devices associated with customer ID. All request parameters are optional other than customerId.
-   * If no device ID is provided in the request, the response will contain security advisory information for all device IDs associated with the customer.
-   * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response.
-   * @param params The `ProductAlertsService.GetTopSecurityAdvisoriesParams` containing the following parameters:
-   *
-   * - `customerId`: Unique identifier of a Cisco customer.
-   *
-   * - `sort`: Sorting details. Default sort severity, count, date (newest)
-   *
-   * - `rows`: No of rows in a page
-   *
-   * - `page`: Page number
-   *
-   * @return successful operation
-   */
-  getTopSecurityAdvisoriesResponse(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<__StrictHttpResponse<SecurityAdvisoryImpactCountResponse>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
-    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
-    if (params.page != null) __params = __params.set('page', params.page.toString());
-    let req = new HttpRequest<any>(
-      'GET',
-      this.rootUrl + `/product-alerts/v1/security-advisories/top`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json',
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<SecurityAdvisoryImpactCountResponse>;
-      })
-    );
-  }
-
-  /**
-   * The Security Advisories API retrieves security vulnerability information along with Common Vulnerability and Exposure (CVE) identifiers, and Common Vulnerability Scoring System (CVSS) for devices associated with customer ID. All request parameters are optional other than customerId.
-   * If no device ID is provided in the request, the response will contain security advisory information for all device IDs associated with the customer.
-   * This API supports filtering, pagination, sorting and chunked transfer encoding. Refer to General API Feature section to see examples of how to take advantage of these features in order to optimize and manipulate the response.
-   * @param params The `ProductAlertsService.GetTopSecurityAdvisoriesParams` containing the following parameters:
-   *
-   * - `customerId`: Unique identifier of a Cisco customer.
-   *
-   * - `sort`: Sorting details. Default sort severity, count, date (newest)
-   *
-   * - `rows`: No of rows in a page
-   *
-   * - `page`: Page number
-   *
-   * @return successful operation
-   */
-  getTopSecurityAdvisories(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<SecurityAdvisoryImpactCountResponse> {
-    return this.getTopSecurityAdvisoriesResponse(params).pipe(
-      __map(_r => _r.body as SecurityAdvisoryImpactCountResponse)
-    );
-  }
 }
 
 module ProductAlertsService {
@@ -1526,6 +1719,32 @@ module ProductAlertsService {
   }
 
   /**
+   * Parameters for getTopSecurityAdvisories
+   */
+  export interface GetTopSecurityAdvisoriesParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Sorting details. Default sort severity, count, date (newest)
+     */
+    sort?: Array<string>;
+
+    /**
+     * No of rows in a page
+     */
+    rows?: number;
+
+    /**
+     * Page number
+     */
+    page?: number;
+  }
+
+  /**
    * Parameters for headSecurityAdvisoryBulletins
    */
   export interface HeadSecurityAdvisoryBulletinsParams {
@@ -1545,12 +1764,6 @@ module ProductAlertsService {
    * Parameters for getPSIRTBulletin
    */
   export interface GetPSIRTBulletinParams {
-
-    /**
-     * X-CSI-CCOID
-     */
-    XCSICCOID: string;
-    Authorization: string;
 
     /**
      * ASC (ascending) or DESC (descending)
@@ -1611,6 +1824,48 @@ module ProductAlertsService {
      * Published identifier of security advisory.
      */
     advisoryId?: Array<string>;
+  }
+
+  /**
+   * Parameters for getAdvisoriesSecurityAdvisories
+   */
+  export interface GetAdvisoriesSecurityAdvisoriesParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+     */
+    sort?: Array<string>;
+
+    /**
+     * The severity
+     */
+    severity?: Array<string>;
+
+    /**
+     * Number of rows of data per page.
+     */
+    rows?: number;
+
+    /**
+     * Page number of the response
+     */
+    page?: number;
+
+    /**
+     * The unique, generated ID of the network element
+     */
+    neInstanceId?: Array<string>;
+
+    /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    managedNeId?: Array<string>;
+    id?: Array<string>;
   }
 
   /**
@@ -1724,6 +1979,43 @@ module ProductAlertsService {
      * Date when the bulletin was first published to Cisco.com.
      */
     bulletinFirstPublished?: string;
+  }
+
+  /**
+   * Parameters for getAdvisoriesFieldNotices
+   */
+  export interface GetAdvisoriesFieldNoticesParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+     */
+    sort?: Array<string>;
+
+    /**
+     * Number of rows of data per page.
+     */
+    rows?: number;
+
+    /**
+     * Page number of the response
+     */
+    page?: number;
+
+    /**
+     * The unique, generated ID of the network element
+     */
+    neInstanceId?: Array<string>;
+
+    /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    managedNeId?: Array<string>;
+    id?: Array<string>;
   }
 
   /**
@@ -2000,32 +2292,6 @@ module ProductAlertsService {
      * The Cisco.com bulletin number for an End-of-Life bulletin.
      */
     bulletinNumber?: Array<string>;
-  }
-
-  /**
-   * Parameters for getTopSecurityAdvisories
-   */
-  export interface GetTopSecurityAdvisoriesParams {
-
-    /**
-     * Unique identifier of a Cisco customer.
-     */
-    customerId: string;
-
-    /**
-     * Sorting details. Default sort severity, count, date (newest)
-     */
-    sort?: Array<string>;
-
-    /**
-     * No of rows in a page
-     */
-    rows?: number;
-
-    /**
-     * Page number
-     */
-    page?: number;
   }
 }
 

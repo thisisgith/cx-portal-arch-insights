@@ -1,25 +1,25 @@
 <!-- App Details 360 slide-out -->
-<app-panel360 *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
-	<app-panel360-header (close)="onPanelClose()"
+<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelClose()"
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false">
-		<details-header [asset]="selectedAsset"></details-header>
-		<div appPanel360Title class="text-xlarge">
+		<asset-details-header [asset]="selectedAsset"></asset-details-header>
+		<div detailsPanelTitle class="text-xlarge">
 			<span class="icon-wifi"></span>
 			<span class="qtr-margin-left" [innerText]="selectedAsset?.deviceName"></span>
 		</div>
-	</app-panel360-header>
+	</details-panel-header>
 	<asset-details [asset]="selectedAsset"></asset-details>
-</app-panel360>
+</details-panel>
 
 <div class="panel">
 	<cui-tabs inline="true">
 		<cui-tab [label]="'_Assets_' | i18n | uppercase">
-			<!-- TODO: we should probably move this assets content to its own "assets-pager" component or similar when we add other tabs-->
 			<div class="divider no-margin-top qtr-margin-bottom"></div>
 			<ng-container *ngTemplateOutlet="assetsContent"></ng-container>
 		</cui-tab>
-		<cui-tab [label]="'_Licensing_' | i18n | uppercase" disabled="true"></cui-tab>
+		<!-- TODO: Disabled until we add an actual licensing tab (currently in mockups but no actual design) -->
+		<!-- <cui-tab [label]="'_Licensing_' | i18n | uppercase" disabled="true"></cui-tab> -->
 		<ng-template cuiTabPost>
 			<div class="text-right">
 				<div *ngIf="!status.isLoading"
@@ -94,8 +94,9 @@
 					</div>
 				</div>
 				<div class="col-md-3">
-					<div class="flex flex-fluid">
-						<div class="flex-fill form-group input--compressed input--icon half-margin-right">
+					<div class="flex flex-fluid flex-right">
+						<!-- TODO: Implement Search when API supports it -->
+						<!-- <div class="flex-fill form-group input--compressed input--icon half-margin-right">
 							<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
 								<div class="form-group__text disabled">
 									<input id="searchInput"
@@ -112,16 +113,16 @@
 									</button>
 								</div>
 							</form>
-						</div>
+						</div> -->
 						<div class="btn-group btn-group--square half-margin-right">
-							<button class="btn btn--small btn--gray-ghost disabled">
-									<span class="icon-location"></span>
-							</button>
+							<!-- <button class="btn btn--small btn--gray-ghost disabled">
+								<span class="icon-location"></span>
+							</button> -->
 							<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'list' }" (click)="selectView('list')">
-									<span class="icon-list-view"></span>
+								<span class="icon-list-view"></span>
 							</button>
 							<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'grid' }" (click)="selectView('grid')">
-									<span class="icon-grid-view"></span>
+								<span class="icon-grid-view"></span>
 							</button>
 						</div>
 						<cui-dropdown [actions]="dropdownActions"
@@ -215,7 +216,7 @@
 							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
 							(click)="column.click ? $event.stopPropagation() : null">
 							<ng-container *ngIf="column.template">
-								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data }"></ng-container>
+								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, actions: item.actions }"></ng-container>
 							</ng-container>
 							<ng-container *ngIf="!column.template">
 								<span *ngIf="column.render" [innerHTML]="column.render(item.data)"
@@ -351,13 +352,13 @@
 	<span class="icon-4-way-nav qtr-margin-right"
 		attr.data-auto-id="DeviceIcon-{{celldata.serialNumber}}">
 	</span>
-	<span [innerText]="celldata.deviceName"
+	<span [innerText]="celldata.deviceName | truncate:true:50"
 		attr.data-auto-id="Device-{{celldata.serialNumber}}">
 	</span>
 </ng-template>
 
-<ng-template #actionsTemplate let-celldata="celldata">
-	<cui-dropdown [actions]="getRowActions(celldata)"
+<ng-template #actionsTemplate let-celldata="celldata" let-actions="actions">
+	<cui-dropdown [actions]="actions"
 		position="left"
 		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
@@ -412,19 +413,19 @@
 </ng-template>
 
 <ng-template #bubbleChartFilter let-filter="filter">
-	<assets-bubble-chart [seriesData]="filter.seriesData"
+	<bubble-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
-	</assets-bubble-chart>
+	</bubble-chart>
 </ng-template>
 
 <ng-template #pieChartFilter let-filter="filter">
-	<assets-pie-chart [seriesData]="filter.seriesData"
+	<pie-chart [seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
-	</assets-pie-chart>
+	</pie-chart>
 </ng-template>
 
-<ng-template #horizontalBarChartFilter let-filter="filter">
-	<assets-bar-chart [seriesData]="filter.seriesData" [width]="350"
+<ng-template #barChartFilter let-filter="filter">
+	<bar-chart [seriesData]="filter.seriesData" [width]="350"
 		(subfilter)="onSubfilterSelect($event, filter)">
-	</assets-bar-chart>
+	</bar-chart>
 </ng-template>

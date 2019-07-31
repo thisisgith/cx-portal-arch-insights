@@ -1,14 +1,13 @@
-<app-panel360 [hidden]="!selectedCase" [fullscreen]="fullscreen">
-	<app-panel360-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
-		<div appPanel360Title class="text-xlarge" [innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
-		<app-case-details-header [case]="selectedCase"
-			[caseDetails]="selectedDetails">
+<details-panel [hidden]="!selectedCase" [fullscreen]="fullscreen">
+	<details-panel-header (close)="detailsClose()" [(fullscreen)]="fullscreen">
+		<div detailsPanelTitle class="text-xlarge" [innerText]="'_RMACaseNumberTitle_' | i18n:selectedCase?.caseNumber"></div>
+		<app-case-details-header [case]="selectedCase" [caseDetails]="selectedDetails">
 		</app-case-details-header>
-	</app-panel360-header>
+	</details-panel-header>
 	<app-case-details [case]="selectedCase"
 		[(caseDetails)]="selectedDetails">
 	</app-case-details>
-</app-panel360>
+</details-panel>
 
 <div class="panel">
 	<cui-tabs inline="true">

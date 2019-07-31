@@ -273,7 +273,7 @@ class RacetrackContentService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc/${params.accId}/request`,
+      this.rootUrl + `/racetrack/v1/acc/${params.accId}/request`,
       __body,
       {
         headers: __headers,
@@ -315,7 +315,7 @@ class RacetrackContentService extends __BaseService {
     __headers = __headers.append("Content-Type", "application/json");
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc/request/user-info`,
+      this.rootUrl + `/racetrack/v1/acc/request/user-info`,
       __body,
       {
         headers: __headers,

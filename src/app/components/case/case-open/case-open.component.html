@@ -70,7 +70,7 @@
 										<cui-select *ngIf="!loadingSubtech; else loadingTemplate;"
 											[items]="subtechOptions"
 											optionsKey="subTechName"
-											optionsValue="_id"
+											modelAsObject="true"
 											formControlName="subtech">
 										</cui-select>
 									</dd>

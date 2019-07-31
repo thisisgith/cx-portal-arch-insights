@@ -81,7 +81,7 @@
 	<div class="row no-gutters flex-fill">
 		<div *ngFor="let facet of facets; index as i"
 			attr.data-auto-id="Facet-{{ facet.title }}"
-			(click)="selectFacet(facet)"
+			(click)="selectFacet(facet, true)"
 			class="panel panel--bordered-right row"
 			[ngClass]="{
 				'panel--bordered-left': i === 0,
@@ -118,7 +118,7 @@
 
 <ng-template #assetsFacet let-facet="facet">
 	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugeLabel || 0 }}"
+		value="{{ facet?.data?.gaugeLabel || '0%' }}"
 		color="primary">
 	</cui-gauge>
 </ng-template>
@@ -132,12 +132,21 @@
 
 <ng-template #advisoriesFact let-facet="facet">
 	<div class="full-width">
-		<assets-bar-chart [seriesData]="advisoriesFacet?.seriesData"></assets-bar-chart>
+		<bar-chart *ngIf="advisoriesFacet?.seriesData && !advisoriesFacet?.loading" [seriesData]="advisoriesFacet?.seriesData"></bar-chart>
+		<div class="dbl-margin-top base-margin-bottom" *ngIf="advisoriesFacet?.loading">
+			<cui-spinner></cui-spinner>
+		</div>
 	</div>
-	
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
+	<cui-gauge percentage="75"
+		value="75%"
+		color="primary">
+	</cui-gauge>
+</ng-template>
+
+<ng-template #insightsFacet let-facet="facet">
 	<cui-gauge percentage="75"
 		value="75%"
 		color="primary">

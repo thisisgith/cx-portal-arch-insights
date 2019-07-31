@@ -35,7 +35,7 @@ class ControlPointDeviceDiscoveryAPIToRemoveInventoryService extends __BaseServi
     __body = removeDevicesRequestModel;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/remove/devices`,
+      this.rootUrl + `/controlpoint/v1/remove/devices`,
       __body,
       {
         headers: __headers,

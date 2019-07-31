@@ -13,13 +13,13 @@ import {
 import { InventoryModule, ContractsModule, ProductAlertsModule } from '@sdp-api';
 import { environment } from '@environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
-import { AssetsBarChartModule } from './assets-bar-chart/assets-bar-chart.module';
-import { AssetsBubbleChartModule } from './assets-bubble-chart/assets-bubble-chart.module';
-import { AssetDetailsModule } from './details/details.module';
-import { DetailsHeaderModule } from './details/details-header/details-header.module';
-import { Panel360Module } from '@components';
-import { DetailsHardwareModule } from './details/details-hardware/details-hardware.module';
+import {
+	AssetDetailsModule,
+	DetailsPanelModule,
+	BarChartModule,
+	PieChartModule,
+	BubbleChartModule,
+} from '@components';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -42,10 +42,9 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [AssetsComponent],
 	imports: [
-		AssetsBarChartModule,
-		AssetsBubbleChartModule,
 		AssetDetailsModule,
-		AssetsPieChartModule,
+		BarChartModule,
+		BubbleChartModule,
 		CommonModule,
 		ContractsModule.forRoot({ rootUrl }),
 		CuiDropdownModule,
@@ -53,13 +52,12 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		CuiTableModule,
 		CuiTabsModule,
-		DetailsHeaderModule,
-		DetailsHardwareModule,
+		DetailsPanelModule,
 		FormsModule,
 		FromNowPipeModule,
 		I18nPipeModule,
 		InventoryModule.forRoot({ rootUrl }),
-		Panel360Module,
+		PieChartModule,
 		ProductAlertsModule.forRoot({ rootUrl }),
 		ReactiveFormsModule,
 		RouterModule.forChild(childRoutes),

@@ -75,9 +75,9 @@ export const SuccessPathScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(SP) IBN-Wireless Assurance-Onboard',
+					description: '(SP) IBN-Campus Network Assurance-Onboard',
 					response: {
-						body: MockSP('IBN', 'Campus network assurance', 'Onboard'),
+						body: MockSP('IBN', 'Campus Network Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
@@ -93,9 +93,9 @@ export const SuccessPathScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(SP) IBN-Campus network segmentation-Onboard',
+					description: '(SP) IBN-Campus Network Segmentation-Onboard',
 					response: {
-						body: MockSP('IBN', 'Campus network segmentation', 'Onboard'),
+						body: MockSP('IBN', 'Campus Network Segmentation', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
@@ -111,7 +111,7 @@ export const SuccessPathScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Scalable-Onboard',
+					description: '(SP) IBN-Scalable Access Policy-Onboard',
 					response: {
 						body: MockSP('IBN', 'Scalable Accesss Policy', 'Onboard'),
 						status: 200,
@@ -129,9 +129,9 @@ export const SuccessPathScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Network device onboarding-Onboard',
+					description: '(SP) IBN-Network Device Onboarding-Onboard',
 					response: {
-						body: MockSP('IBN', 'Network device onboarding', 'Onboard'),
+						body: MockSP('IBN', 'Network Device Onboarding', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
@@ -147,9 +147,9 @@ export const SuccessPathScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Campus software iamge-Onboard',
+					description: '(SP) IBN-Campus Software Image Management-Onboard',
 					response: {
-						body: MockSP('IBN', 'Campus software image management', 'Onboard'),
+						body: MockSP('IBN', 'Campus Software Image Management', 'Onboard'),
 						status: 200,
 					},
 					selected: true,

@@ -37,7 +37,7 @@ class ControlPointIERegistrationAPIService extends __BaseService {
     __body = ieRegistrationRequestModel;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/register/ie`,
+      this.rootUrl + `/controlpoint/v1/register/ie`,
       __body,
       {
         headers: __headers,
@@ -75,7 +75,7 @@ class ControlPointIERegistrationAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/registration/ie/${customerId}`,
+      this.rootUrl + `/controlpoint/v1/registration/ie/${customerId}`,
       __body,
       {
         headers: __headers,
