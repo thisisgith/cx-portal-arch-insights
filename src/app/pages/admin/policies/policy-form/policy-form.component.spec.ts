@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { EditCollectionFormComponent } from './collection-form.component';
-import { EditCollectionFormModule } from './collection-form.module';
+import { PolicyFormComponent } from './policy-form.component';
+import { PolicyFormModule } from './policy-form.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -24,9 +24,9 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-describe('EditCollectionFormComponent', () => {
-	let component: EditCollectionFormComponent;
-	let fixture: ComponentFixture<EditCollectionFormComponent>;
+describe('PolicyFormComponent', () => {
+	let component: PolicyFormComponent;
+	let fixture: ComponentFixture<PolicyFormComponent>;
 	let contentService: RacetrackContentService;
 
 	let accUserInfoSpy;
@@ -47,7 +47,7 @@ describe('EditCollectionFormComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				AccRequestFormModule,
+				PolicyFormModule,
 				FormsModule,
 				HttpClientTestingModule,
 				ReactiveFormsModule,
@@ -59,7 +59,7 @@ describe('EditCollectionFormComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(EditCollectionFormComponent);
+		fixture = TestBed.createComponent(PolicyFormComponent);
 		component = fixture.componentInstance;
 		restoreSpies();
 		fixture.detectChanges();

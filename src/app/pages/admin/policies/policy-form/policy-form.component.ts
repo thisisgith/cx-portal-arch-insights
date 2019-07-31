@@ -20,6 +20,8 @@ import {
 import { catchError, takeUntil } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
 
+import * as _ from 'lodash-es';
+
 /**
  * interface representing the key/value of a select input option
  */
@@ -32,19 +34,21 @@ interface SelectOption {
  * Component for the ACC Request form
  */
 @Component({
-	selector: 'collection-form',
-	styleUrls: ['./collection-form.component.scss'],
-	templateUrl: './collection-form.component.html',
+	selector: 'policy-form',
+	styleUrls: ['./policy-form.component.scss'],
+	templateUrl: './policy-form.component.html',
 })
-export class EditCollectionFormComponent implements OnDestroy, OnInit {
+export class PolicyFormComponent implements OnDestroy, OnInit {
 
-	@Input() public policyId: string;
+	@Input() public policy: string;
+	@Input() public type: string;
 	@Input() public customerId: string;
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	public timePeriod = '';
+	public title = '';
 
 	public loading = false;
 
@@ -144,6 +148,21 @@ export class EditCollectionFormComponent implements OnDestroy, OnInit {
 	 */
 	public ngOnInit () {
 		this.loading = false;
+		console.log(this.type)
+		switch (this.type) {
+			case 'editCollection': {
+				this.title = I18n.get('_ScheduledCollectionDetails_');
+				break;
+			}
+			case 'newPolicy': {
+				this.title = I18n.get('_NewScheduledScan_');
+				break;
+			}
+			case 'editPolicy': {
+				this.title = I18n.get('_ScheduledScanDetails_');
+				break;
+			}
+		}
 	}
 
 	/**
@@ -159,6 +178,8 @@ export class EditCollectionFormComponent implements OnDestroy, OnInit {
 	 * @param day numbered day of the week "0-6"
 	 * @param date date in a month "1-31"
 	 * @param hourmin: hours and min at front of cron expression
+	 *
+	 * @returns cron expression string
 	 */
 	public getSchedule (timePeriod: string, day: string, date: string, hourmin: string) {
 		let schedule = `${hourmin}`;
@@ -187,7 +208,7 @@ export class EditCollectionFormComponent implements OnDestroy, OnInit {
 		const params: CollectionPolicyUpdateRequestModel = {
 			schedule,
 			customerId: this.customerId,
-			policyId: this.policyId,
+			policyId: _.get(this.policy, 'policyID'),
 			policyName: 'test',
 		};
 

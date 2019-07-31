@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditCollectionFormComponent } from './collection-form.component';
+import { PolicyFormComponent } from './policy-form.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 /**
- * Module representing edit collection form for Policies page
+ * Module representing form for Policies page
  */
 @NgModule({
-	declarations: [EditCollectionFormComponent],
-	exports: [EditCollectionFormComponent],
+	declarations: [PolicyFormComponent],
+	exports: [PolicyFormComponent],
 	imports: [
 		CommonModule,
 		FormsModule,
@@ -17,4 +17,4 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 		ReactiveFormsModule,
 	],
 })
-export class EditCollectionFormModule { }
+export class PolicyFormModule { }
