@@ -29,9 +29,9 @@ const customerId = '231215372';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
-	@Input() selectedAsset:OSVAsset;
+	@Input() public selectedAsset: OSVAsset;
 	public assetDetails: AssetRecommendationsResponse;
 	public status = {
 		isLoading: true,
@@ -41,8 +41,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public assetDetailsTable: CuiTableOptions;
 	public assetDetailsParams: OSVService.GetAssetDetailsParams = {
 		customerId,
-		id: "231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R"
-	}
+		id: '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
+	};
 
 	constructor (
 		private logger: LogService,
@@ -78,7 +78,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Refreshes the component
 	 */
 	public refresh () {
-		if(this.selectedAsset){
+		if (this.selectedAsset) {
 			this.clear();
 			// this.assetDetailsParams.id = this.selectedAsset.id;
 			this.fetchAssetDetails();
@@ -88,25 +88,25 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	/**
 	 * Fetch Asset details for the selected Asset
 	 */
-	public fetchAssetDetails(){
+	public fetchAssetDetails () {
 		this.status.isLoading = true;
 		this.osvService.getAssetDetails(this.assetDetailsParams)
-		.pipe(
-			map((response: AssetRecommendationsResponse) => {
-				this.sortData(response);
-				this.assetDetails = response;
-				this.buildTable();
-			}),
-			takeUntil(this.destroy$),
-			catchError(err => {
-				this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-				return of({});
-			}),
-		)
-		.subscribe(() => {
-			this.status.isLoading = false;			
-		});
+			.pipe(
+				map((response: AssetRecommendationsResponse) => {
+					this.sortData(response);
+					this.assetDetails = response;
+					this.buildTable();
+				}),
+				takeUntil(this.destroy$),
+				catchError(err => {
+					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+					return of({ });
+				}),
+			)
+			.subscribe(() => {
+				this.status.isLoading = false;
+			});
 	}
 
 	/**
@@ -169,14 +169,15 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public onActionClick (item: AssetRecommendations) {
 		const body = {
 			customerId,
-			id:this.selectedAsset.id,
-			optimalVersion:item.swVersion,
-		}
+			id: this.selectedAsset.id,
+			optimalVersion: item.swVersion,
+		};
 		this.status.isLoading = true;
-		this.osvService.updateAsset(body).subscribe(()=>{
+		this.osvService.updateAsset(body)
+		.subscribe(() => {
 			this.status.isLoading = false;
 			this.logger.debug('Updated');
-		},()=>{
+		}, () => {
 			this.status.isLoading = false;
 			this.logger.debug('Error in updating');
 		});
@@ -187,6 +188,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @param data AssetDetails
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
-		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>  <any> new Date(b.postDate) - <any> new Date(a.postDate));
+		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
+			<any> new Date(b.postDate) - <any> new Date(a.postDate));
 	}
 }

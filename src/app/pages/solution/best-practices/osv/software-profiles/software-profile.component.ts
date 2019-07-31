@@ -21,7 +21,7 @@ const customerId = '231215372';
 export class SoftwareProfilesComponent {
 	@Input() public selectedProfileGroup;
 	@Output() public selectedProfileGroupChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	public profileGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,

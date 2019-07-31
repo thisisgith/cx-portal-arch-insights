@@ -21,7 +21,7 @@
 </div>
 
 <ng-template #tableSoftwareVersion>
-	<cui-table *ngIf="softwareVersions" [options]="softwareVersionsTable" [data]="softwareVersions"
+	<cui-table *ngIf="!status.isLoading &&  softwareVersions" [options]="softwareVersionsTable" [data]="softwareVersions"
 		(onSortingChanged)="onTableSortingChanged($event)"></cui-table>
 </ng-template>
 

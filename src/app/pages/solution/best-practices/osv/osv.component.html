@@ -151,7 +151,7 @@
 					<div class="col-md-10" [innerText]="'_OsvSoftwareProfiles_' | i18n"></div>
 					<div class="col-md-2">
 						<i class="icon-close pull-right qtr-margin-right"
-							(click)="$event.stopPropagation();showProfileInfo = false;"></i>
+							(click)="$event.stopPropagation();showProfileInfo = false;" data-auto-id="ToggleSoftwareProfileInfoVisibilty"></i>
 					</div>
 				</div>
 			</div>
@@ -197,13 +197,13 @@
 			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
 			<div class="col-12 half-padding">
 				<div class="text-right">
-					<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();">
-						<input type="checkbox" [(ngModel)]="hideProfileInfo" (ngModelChange)="hideInfo($event)">
+					<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();" data-auto-id="DonotShowProfileInfoAgain">
+						<input type="checkbox" [(ngModel)]="hideProfileInfo" (ngModelChange)="hideInfo($event)" data-auto-id="DonotShowProfileInfoAgainCheckbox">
 						<span class="checkbox__input"></span>
 						<span class="checkbox__label">Do not show this again, by default.</span>
 					</label>
 					<button class="btn btn--gray-ghost btn--small" [innerText]="'_OsvClose_' | i18n"
-						(click)="$event.stopPropagation();showProfileInfo = false"></button>
+						(click)="$event.stopPropagation();showProfileInfo = false" data-auto-id="CloseSoftwareProfileInfoDialog"></button>
 				</div>
 			</div>
 		</div>

@@ -6,7 +6,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, Pagination } from '@sdp-api';
-import * as _ from 'lodash-es';
+
 /** Our current customerId */
 const customerId = '231215372';
 
@@ -21,7 +21,7 @@ const customerId = '231215372';
 export class AssetsComponent {
 	@Input() public selectedAsset;
 	@Output() public selectedAssetChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -99,7 +99,7 @@ export class AssetsComponent {
 					this.logger.error('OSV Assets : getAssets() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -148,11 +148,11 @@ export class AssetsComponent {
 						key: 'recommendations',
 						name: I18n.get('_OsvRecommendations_'),
 					},
-					{
-						click: true,
-						sortable: false,
-						template: this.actionsTemplate,
-					},
+					// {
+					// 	click: true,
+					// 	sortable: false,
+					// 	template: this.actionsTemplate,
+					// },
 				],
 				dynamicData: true,
 				hover: true,
@@ -215,6 +215,7 @@ export class AssetsComponent {
 		return [
 			[
 				{
+					asset,
 					label: I18n.get('_OsvBasicRecommendations_'),
 					onClick: (action: any) => {
 						this.logger.debug(action);

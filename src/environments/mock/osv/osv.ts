@@ -12,33 +12,41 @@ const api = '/api/dev/customerportal/osv-ui/v1/';
 /** Default Customer ID */
 const customerId = '231215372';
 
+/** Default Asset Id */
+const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
+
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
-    {
-        error: null,
-        name: "suggested",
-        postDate: "2019-03-21T18:30:00.000+0000",
-        recommendationSummary: null,
-        swVersion: "16.9.3",
-    },
-    {
-        error: null,
-        name: "latest",
-        postDate: "2019-06-20T18:30:00.000+0000",
-        recommendationSummary: null,
-        swVersion: "16.11.1c",
-    },
-    {
-        error: null,
-        name: "current",
-        postDate: "2018-07-17T18:30:00.000+0000",
-        recommendationSummary: null,
-        swVersion: "16.9.1",
-    }
+	{
+		error: null,
+		name: 'suggested',
+		postDate: '2019-03-21T18:30:00.000+0000',
+		recommendationSummary: null,
+		swVersion: '16.9.3',
+	},
+	{
+		error: null,
+		name: 'latest',
+		postDate: '2019-06-20T18:30:00.000+0000',
+		recommendationSummary: null,
+		swVersion: '16.11.1c',
+	},
+	{
+		error: null,
+		name: 'current',
+		postDate: '2018-07-17T18:30:00.000+0000',
+		recommendationSummary: null,
+		swVersion: '16.9.1',
+	},
 ];
 
 /** The mock response for software versions */
 const mockSoftwareVersions: SoftwareVersionsResponse = {
+	pagination: {
+		page: 1,
+		rows: 10,
+		total: 10,
+	},
 	uiSwVersionList: [
 		{
 			assetCount: 1,
@@ -95,11 +103,6 @@ const mockSoftwareVersions: SoftwareVersionsResponse = {
 			swVersion: '12.2(44)SE6',
 		},
 	],
-	pagination: {
-		page: 1,
-		rows: 10,
-		total: 10,
-	},
 };
 
 /** The mock response for software profiles */
@@ -159,6 +162,11 @@ const mockSoftwareProfile: SoftwareProfilesResponse = {
 };
 /** The mock response for assets */
 const mockAssets: AssetsResponse = {
+	pagination: {
+		page: 1,
+		rows: 10,
+		total: 10,
+	},
 	uiAssetList: [
 		{
 			deployment: 'None',
@@ -281,11 +289,6 @@ const mockAssets: AssetsResponse = {
 			swVersion: '16.8.1a',
 		},
 	],
-	pagination: {
-		page: 1,
-		rows: 10,
-		total: 10,
-	},
 };
 
 /** The mock response for summary */
@@ -370,8 +373,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assetDetails?customerId=${customerId}&id=231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R`,
-					// assetDetails?customerId=231215372&id=231215372%26id%3D231215372_NA%2CFXS2202Q11R%2CC9407R%2CNA_C9407R_FXS2202Q11R 
+		url: `${api}assetDetails?customerId=${customerId}&id=${assetId}`,
 		usecases: ['Use Case 1'],
 	},
 	{

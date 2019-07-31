@@ -17,7 +17,7 @@ const customerId = '231215372';
 interface Filter {
 	key: string;
 	selected?: boolean;
-	template?: TemplateRef<{}>;
+	template?: TemplateRef<{ }>;
 	title?: string;
 	loading: boolean;
 	data: {
@@ -39,11 +39,11 @@ interface Filter {
 })
 export class OptimalSoftwareVersionComponent {
 	@ViewChild('assetTypeFilter', { static: true }) private assetTypeFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -90,21 +90,21 @@ export class OptimalSoftwareVersionComponent {
 				view: ['swProfiles', 'assets', 'swVersions'],
 			},
 			{
-				key: 'deploymentStatus',
-				loading: true,
-				selected: false,
-				template: this.deploymentStatusFilterTemplate,
-				data: [],
-				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
-				view: ['assets'],
-			},
-			{
 				key: 'assetType',
 				loading: true,
 				selected: false,
 				template: this.assetTypeFilterTemplate,
 				data: [],
 				title: I18n.get('_OsvAssets_'),
+				view: ['assets'],
+			},
+			{
+				key: 'deploymentStatus',
+				loading: true,
+				selected: false,
+				template: this.deploymentStatusFilterTemplate,
+				data: [],
+				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
 				view: ['assets'],
 			},
 		];
@@ -181,7 +181,7 @@ export class OptimalSoftwareVersionComponent {
 					totalAssetsFilter.loading = false;
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
-					return of({});
+					return of({ });
 				}),
 			);
 	}

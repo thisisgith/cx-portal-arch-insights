@@ -2,6 +2,7 @@
 
 .filter {
 	min-height: 220px;
+
 	&__selected {
 		border-bottom: 4px solid $primary;
 	}
@@ -22,27 +23,27 @@
 }
 
 .vertical-center {
-	vertical-align: middle;	
+	vertical-align: middle;
 }
 
-.profile-info{
-	z-index:9;
+.profile-info {
+	z-index: 9;
 	border: 1px solid #d6d6d6;
-	background-color:#ffffff;
+	background-color: #fff;
 	left: 30px;
 	width: 800px;
 	top: -1px;
 
-	> div{
+	> div {
 		padding: 10px;
 	}
 
-	&:before{
+	&::before {
 		border-color: transparent #fff #fff transparent;
 		border-style: solid;
 		border-width: 7px;
 		bottom: 7px;
-		box-shadow: 1px 1px 0px 0 rgba(0,0,0,0.1);
+		box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
 		box-sizing: border-box;
 		content: "";
 		display: block;
@@ -53,7 +54,5 @@
 		width: 0;
 		left: -7px;
 		top: 7px;
-	  }
-  }
-   
-  
+	}
+}

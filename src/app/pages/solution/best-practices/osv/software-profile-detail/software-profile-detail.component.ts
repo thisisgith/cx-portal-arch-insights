@@ -14,9 +14,9 @@ import { OSVService } from '@sdp-api';
 })
 export class SoftwarProfileDetailComponent implements OnInit {
 	@ViewChild('currentBugs', { static: true })
-	private currentBugsTemplate: TemplateRef<{}>;
+	private currentBugsTemplate: TemplateRef<{ }>;
 	@ViewChild('recBugs', { static: true })
-	private recBugsTemplate: TemplateRef<{}>;
+	private recBugsTemplate: TemplateRef<{ }>;
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -24,7 +24,7 @@ export class SoftwarProfileDetailComponent implements OnInit {
 		this.logger.debug('SoftwareProfileDetailComponent Created!');
 	}
 	public recommendations = [];
-	public compareHeader = {};
+	public compareHeader = { };
 	public barChartData = [
 		{
 			filter: 'high',
@@ -49,7 +49,7 @@ export class SoftwarProfileDetailComponent implements OnInit {
 	/**
 	 * Initialization hook
 	 */
-	ngOnInit (): void {
+	public ngOnInit (): void {
 		const data = [
 			{
 				key: 'current',
@@ -79,7 +79,8 @@ export class SoftwarProfileDetailComponent implements OnInit {
 	}
 
 	/**
-	 * format data
+	 * format recommendations data
+	 * @param data recommendations data
 	 */
 	public formatData (data: any) {
 		const current = _.filter(data, { key: 'current' });
