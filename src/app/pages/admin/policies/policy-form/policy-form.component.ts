@@ -15,7 +15,6 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	CollectionPolicyUpdateRequestModel,
-	Device,
 	ControlPointModifyCollectionPolicyAPIService,
 	ControlPointDeviceDiscoveryAPIService,
 	ControlPointDevicePolicyAPIService,
@@ -44,7 +43,7 @@ interface SelectOption {
 })
 export class PolicyFormComponent implements OnDestroy, OnInit {
 
-	@Input() public policy: string;
+	@Input() public policy: {};
 	@Input() public type: string;
 	@Input() public customerId: string;
 	@Output() public visibleComponent = new EventEmitter<boolean>();
@@ -55,6 +54,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public title = '';
 	public deviceListRight: DeviceInfo[] = [];
 	public deviceListLeft: DeviceInfo[] = [];
+	public error = false;
+	public errorMessage: string;
 
 	public loading = false;
 
@@ -64,6 +65,10 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		hourmins: ['', Validators.required],
 		timePeriod: ['', Validators.required],
 	});
+
+	public monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+		'July', 'August', 'September', 'October', 'November', 'December',
+	];
 
 	public timePeriods: SelectOption[] = [
 		{ key: 'Monthly', value: 'monthly' },
@@ -182,8 +187,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		this.deviceService.getDevicesUsingGET(this.customerId)
 			.pipe(
 				catchError(err => {
-					// this.error = true;
-					// this.errorMessage = err.message;
+					this.error = true;
+					this.errorMessage = err.message;
 
 					return empty();
 				}),
@@ -200,6 +205,12 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 */
 	public editCollection () {
 		this.title = I18n.get('_ScheduledCollectionDetails_');
+
+		const date = new Date(_.get(this.policy, 'createdDate'));
+		const formattedTime =
+`${this.monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+
+		_.set(this.policy, 'createdDate', formattedTime);
 	}
 
 	/**

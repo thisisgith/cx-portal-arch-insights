@@ -39,15 +39,15 @@ const mockData: DeviceDetailsByPage = {
 			softwareVersion: '03.06.05E',
 			role: 'ACCESS',
 			reachabilityStatus: 'Reachable',
-		}
+		},
 	],
 	pagination: {
 		pageNumber: 1,
 		totalPages: 2,
 		rowPerPage: 25,
 		totalRows: 26,
-	}
-}
+	},
+};
 
 /**
  * The scenarios
