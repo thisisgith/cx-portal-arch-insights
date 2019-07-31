@@ -4,6 +4,7 @@ export { ActionScenarios } from './racetrack/action';
 export { AssetScenarios } from './inventory/assets';
 export { ATXScenarios } from './racetrack/atx';
 export { CaseScenarios } from './case/case';
+export { CGTScenarios } from './racetrack/cgt';
 export { ContractScenarios } from './contract/contract';
 export { CoverageScenarios } from './contract/coverage';
 export { ELearningScenarios } from './racetrack/elearning';

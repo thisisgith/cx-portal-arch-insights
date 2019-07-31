@@ -12,14 +12,17 @@ import {
 	Validators,
 } from '@angular/forms';
 import { LogService } from '@cisco-ngx/cui-services';
+import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	ACCUserInfoSchema,
 	RacetrackContentService,
 	GroupTrainingRequestSchema,
+	ContractsService,
+	DeviceContractResponse,
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
-import { empty, Subject } from 'rxjs';
+import { empty, Subject, of } from 'rxjs';
 
 /**
  * interface representing the key/value of a select input option
@@ -46,8 +49,11 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 	@Output() public submitted = new EventEmitter<boolean>();
 
 	public customerId = '2431199';
+	public contracts = [];
 	private destroyed$: Subject<void> = new Subject<void>();
 	public custData: ACCUserInfoSchema;
+	public contractDetails: DeviceContractResponse;
+	public contractOptions: SelectOption[];
 	public maxLength = 512;
 	public loading = false;
 	public formSubmissionSucceeded = false;
@@ -71,10 +77,6 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 		{ key: I18n.get('_English_'), value: I18n.get('_English_') },
 	];
 
-	public contractOptions: SelectOption[] = [
-		{ key: '123456789', value: '123456789' },
-	];
-
 	public technologyOptions: SelectOption[] = [
 		{ key: I18n.get('_Cloud_'), value: I18n.get('_Cloud_') },
 		{ key: I18n.get('_Collaboration_'), value: I18n.get('_Collaboration_') },
@@ -95,6 +97,7 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private contentService: RacetrackContentService,
+		private contractsService: ContractsService,
 	) {
 		this.logger.debug('CgtRequestFormComponent Created!');
 	}
@@ -127,6 +130,20 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 			.subscribe(response => {
 				this.custData = response;
 			});
+		this.contractsService
+		.getContractDetails({ customerId: this.customerId })
+			.pipe(
+				catchError(() => empty()),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.contractDetails = response;
+				_.each(_.get(this.contractDetails, 'data'), contract => {
+					this.contracts = _.union(this.contracts, [{ key: _.get(contract, 'contractNumber'), value: _.get(contract, 'contractNumber') }]);
+				});
+				this.contractOptions = this.contracts;
+			});
 	}
 
 	/**
@@ -144,23 +161,23 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 			solution: this.solution,
 			usecase: this.technology,
 		};
-		const params: RacetrackContentService.CreateUsingPOSTParams = {
-			gtRequest: groupTrainingRequestParams,
-		};
 		this.contentService
-		.createUsingPOST(params)
+		.requestGroupTraining(groupTrainingRequestParams)
 			.pipe(
-				catchError(() => empty()),
-				finalize(() => this.formSubmissionFailed = true),
+				catchError(err => {
+					this.formSubmissionFailed = true;
+	
+					return of({ });
+				}),
 				takeUntil(this.destroyed$),
 			)
-			.subscribe(() => {
+			.subscribe(response => {
 				this.formSubmissionSucceeded = true;
 				this.logger.debug('Submitted CGT response form');
 				setTimeout(()=>{
 					this.formSubmissionSucceeded = false;
 					this.submitted.emit(true);
-				}, 10000);
+				}, 5000);
 			});
 	}
 }

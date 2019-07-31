@@ -25,6 +25,8 @@ import {
 	RacetrackTechnology,
 	SuccessPath,
 	SuccessPathsResponse,
+	UserQuota,
+	UserTraining,
 } from '@sdp-api';
 
 import { SolutionService } from '../solution.service';
@@ -67,7 +69,7 @@ interface ComponentData {
 		sessions: ACC[];
 	};
 	cgt?: {
-		sessions: ACC[];
+		trainingsAvailable: number;
 	};
 }
 
@@ -119,6 +121,7 @@ export class LifecycleComponent implements OnDestroy {
 	public customerId = '2431199';
 	public selectedCategory = '';
 	public selectedStatus = '';
+	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public categoryOptions: [];
 	// id of ACC in request form
@@ -837,28 +840,22 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Loads the CGT for the given params
-	 * @returns the accResponse
+	 * @returns the UserQuota
 	 */
-	private loadCGT (): Observable<ACCResponse> {
+	private loadCGT (): Observable<UserQuota> {
 		this.status.loading.cgt = true;
 
-		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
-
-		return this.contentService.getRacetrackACC(
-			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+		return this.contentService.getTrainingQuotas()
 		.pipe(
-			map((result: ACCResponse) => {
+			map((result: UserQuota) => {
+				console.log(`*********** result = ${JSON.stringify(result)}`);
 				this.status.loading.cgt = false;
-
+				_.each(result, training => {
+					this.groupTrainingsAvailable += _.get(training, 'closed_ilt_courses_available');
+				});
 				this.componentData.cgt = {
-					sessions: _.filter(result.items, { status: 'in-progress' }),
+					trainingsAvailable: this.groupTrainingsAvailable,
 				};
-				_.remove(this.componentData.acc.sessions, (session: ACC) =>
-					!session.title && !session.description);
-				console.log(`********** cgt data = ${JSON.stringify(this.componentData.cgt)}`);
-				console.log(`********** cgt data = ${this.componentData.cgt.sessions[0].status}`);
-
 				return result;
 			}),
 			catchError(err => {
