@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Output, Input, EventEmitter } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Output, Input, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -6,6 +6,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, Pagination } from '@sdp-api';
+import * as _ from 'lodash-es';
 
 /** Our current customerId */
 const customerId = '231215372';
@@ -18,10 +19,13 @@ const customerId = '231215372';
 	styleUrls: ['./assets.component.scss'],
 	templateUrl: './assets.component.html',
 })
-export class AssetsComponent {
+export class AssetsComponent implements OnInit, OnChanges {
 	@Input() public selectedAsset;
+	@Input() public filters;
+	@Input() public fullscreen;
+	@Output() fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -58,6 +62,16 @@ export class AssetsComponent {
 	 */
 	public ngOnInit () {
 		this.loadData();
+	}
+
+	/**
+	 * On Changes lifecycle hook
+	 */
+	public ngOnChanges (changes:SimpleChanges) {
+		const currentFilter = _.get(changes, ['filters', 'currentValue']);
+		if (currentFilter && !changes.filters.firstChange) {
+			this.loadData();
+		}
 	}
 
 	/**
@@ -99,7 +113,7 @@ export class AssetsComponent {
 					this.logger.error('OSV Assets : getAssets() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}
@@ -171,6 +185,8 @@ export class AssetsComponent {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: any) {
+		this.fullscreen = false;
+		this.fullscreenChange.emit(this.fullscreen);
 		this.selectedAsset = item;
 		this.selectedAssetChange.emit(this.selectedAsset);
 	}

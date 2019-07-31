@@ -18,7 +18,7 @@ import { DatePipe } from '@angular/common';
  * AssetTimelineChart Component
  */
 @Component({
-	encapsulation: ViewEncapsulation.None,
+	encapsulation:ViewEncapsulation.None,
 	selector: 'app-asset-timeline-chart',
 	styleUrls: ['./asset-timeline-chart.component.scss'],
 	templateUrl: './asset-timeline-chart.component.html',
@@ -84,9 +84,10 @@ export class AssetTimelineChartComponent {
 						}
 					},
 				},
-				styledMode: true,
+				styledMode: false,
 				type: 'timeline',
 				zoomType: 'x',
+				width: this.fullscreen ? 1600 : 800,
 			},
 			credits: {
 				enabled: false,
@@ -100,24 +101,25 @@ export class AssetTimelineChartComponent {
 			plotOptions: {
 				timeline: {
 					dataLabels: {
-						borderWidth: 0,
-						connectorColor: 'blue',
+						borderWidth:0,
+						connectorColor: '#049fd9',
 						distance: 50,
 						enabled: true,
 						/* tslint:disable:object-literal-shorthand*/
 						/* tslint:disable:no-string-literal */
 						formatter: function () {
-							return `<span class="title" style='font-weight: bold;' > ${this['point'].name}</span>
-							<br/><span>${this['point'].label}</span>
-							<br/><span>${this['point'].releaseDate}</span>`;
+							return `<span style="cursor:pointer;"><span class="title" style='cursor:pointer;font-weight: bold;' > ${this['point'].name}</span>
+							<br/><span style='cursor:pointer;font-weight: normal;'>${this['point'].label}</span>
+							<br/><span style='cursor:pointer;font-weight: normal;'>${this['point'].releaseDate}</span></span>`;
 						},
 						style: {
 							fontWeight: 'normal',
-							textOutline: 'none',
 						},
 					},
 					marker: {
-						lineWidth: 10,
+						fillColor:'#049fd9',
+						lineColor:'#049fd9',
+						lineWidth: 1,
 						radius: 6,
 						symbol: '',
 					},
@@ -143,11 +145,11 @@ export class AssetTimelineChartComponent {
 				enabled: false,
 			},
 			xAxis: {
-				lineColor: 'blue',
+				lineColor:'#dfdfdf',
 				lineWidth: 1,
 				reversed: true,
-				tickColor: 'blue',
-				tickInterval: 365 * 24 * 3600 * 1000,
+				tickColor: '#dfdfdf',
+				tickInterval: (365 * 24 * 3600 * 1000)/2,
 				tickLength: 10,
 				type: 'datetime',
 				visible: true,

@@ -47,6 +47,7 @@ export class OptimalSoftwareVersionComponent {
 	public status = {
 		isLoading: true,
 	};
+	public fullScreen = false;
 	public selectedProfileGroup: any;
 	public selectedAsset: any;
 	public filtered = false;
@@ -56,6 +57,7 @@ export class OptimalSoftwareVersionComponent {
 		= 'assets';
 	public hideProfileInfo = false;
 	public showProfileInfo = false;
+	public appliedFilters= {};
 	constructor (private logger: LogService,
 		private osvService: OSVService) { }
 
@@ -254,6 +256,10 @@ export class OptimalSoftwareVersionComponent {
 			sub.selected = !sub.selected;
 		}
 		filter.selected = _.some(filter.data, 'selected');
+		if (filter.key ===  'deploymentStatus') {
+			this.appliedFilters['deploymentStatus'] = _.map(_.filter(filter.data, 'selected'), 'filter');			
+		}
+		this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		const totalFilter = _.find(this.filters, { key: 'totalAssets' });
 		if (filter.selected) {
 			totalFilter.selected = false;

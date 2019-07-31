@@ -59,7 +59,7 @@
 		<app-software-profiles [(selectedProfileGroup)]="selectedProfileGroup"></app-software-profiles>
 	</div>
 	<div *ngIf="view == 'assets'">
-		<app-assets [(selectedAsset)]="selectedAsset"></app-assets>
+		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters" [(selectedAsset)]="selectedAsset"></app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
 		<app-software-versions></app-software-versions>

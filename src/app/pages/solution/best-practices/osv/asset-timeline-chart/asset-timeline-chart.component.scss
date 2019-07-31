@@ -1,19 +1,6 @@
-@import '~highcharts/css/highcharts.css';
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
-.highcharts-color-0,
-.highcharts-color-1,
-.highcharts-color-2,
-.highcharts-color-3,
-.highcharts-color-4,
-.highcharts-color-5, 
-.highcharts-color-6,
-.highcharts-color-7,
-.highcharts-color-8,
-.highcharts-color-9 {
-	fill: $primary;
+.highcharts-timeline-series .highcharts-graph {
 	stroke: $primary;
-}
-.highcharts-yaxis-grid .highcharts-grid-line {
-	stroke: #fff;
+	stroke-width: 2;
 }
