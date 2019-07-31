@@ -184,8 +184,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							value: 'title',
 						},
 						{
-							name:
-								`${I18n.get('_ImpactedAsset_')} \
+							name: `${I18n.get('_ImpactedAsset_')}
 								(${I18n.get('_PotentiallyImpacted_')})`,
 							sortable: false,
 							template: this.impactedCountTemplate,
