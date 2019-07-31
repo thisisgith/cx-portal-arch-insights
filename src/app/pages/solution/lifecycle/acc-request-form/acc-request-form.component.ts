@@ -115,8 +115,8 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 			attendeeArray.clear();
 			for (let i = 1; i < attendees; i = i + 1) {
 				const attendeeGroup = this.fb.group({
-					name: ['', Validators.required],
-					email: ['', [Validators.required, Validators.email]],
+					attendeeName: ['', Validators.required],
+					attendeeEmail: ['', [Validators.required, Validators.email]],
 				});
 				attendeeArray.push(attendeeGroup);
 			}
