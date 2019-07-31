@@ -1147,9 +1147,19 @@ export const HardwareScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: 'Empty Hardware',
+					response: {
+						body: { data: [] },
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&equipmentType=MODULE&containingHwId=` +
+		'FOC1922S6JU,WS-C2960X-24PS-L,NA,FOC1922S6JU,WS-C2960X-24PS-L,NA,NA',
 		usecases: ['Use Case 1'],
 	},
 	{
