@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
-import { LogService } from '@cisco-ngx/cui-services';
 import {
 	ControlPointIEHealthStatusAPIService,
 	IEHealthStatusResponseModel,
@@ -93,12 +91,9 @@ export class SettingsComponent  implements OnInit {
 	public loading = false;
 
 	constructor (
-		private logger: LogService,
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
 		private userService: UserService,
-	) {
-		this.logger.debug('SettingsComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Sets health status info given customerId.

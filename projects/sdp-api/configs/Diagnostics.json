@@ -1,0 +1,26 @@
+{
+	"$schema": "../../../node_modules/@apollo/ng-swagger-gen/ng-swagger-gen-schema.json",
+	"swagger": "../../node_modules/@swagger/cx-portal/swagger/Diagnostics.yaml",
+	"output": "src/lib/diagnostics",
+	"outputCore": "../core",
+	"prefix": "Diagnostics",
+	"ignoreUnusedModels": true,
+	"minParamsForContainer": 2,
+	"sortParams": "desc",
+	"defaultTag": "Diagnostics",
+	"replaceTags": {
+		"Diagnostics API Services": "Diagnostics"
+	},
+	"defaultOperationIds": {
+	},
+	"modelsExportAs": {
+		"Pagination": "DiagnosticsPagination"
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
+}

@@ -75,7 +75,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 		this.caseDetailsService.addNote$
 			.subscribe((refresh: boolean) => {
 				if (refresh) {
-					this.logger.debug(`${refresh}`);
+					this.logger.debug(`case-details.component :: ${refresh}`);
 					this.loading = true;
 					this.tabIndex = 1;
 					this.getCaseNotes()

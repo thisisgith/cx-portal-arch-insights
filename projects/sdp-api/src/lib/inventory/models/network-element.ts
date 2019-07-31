@@ -2,14 +2,14 @@
 export interface NetworkElement {
 
   /**
+   * Product family the device belongs to
+   */
+  productFamily?: string;
+
+  /**
    * Unique identifier of a Cisco customer
    */
   customerId: string;
-
-  /**
-   * The unique identifier for a Cisco Collector (CSPC) appliance
-   */
-  collectorId?: string;
 
   /**
    * The unique, generated ID of the network element
@@ -91,9 +91,9 @@ export interface NetworkElement {
   inventoryCollectionDate?: string;
 
   /**
-   * Product family the device belongs to
+   * The unique identifier for a Cisco Collector (CSPC) appliance
    */
-  productFamily?: string;
+  collectorId?: string;
 
   /**
    * Refers to the validated product ID of the device. GMT date format YYYY-MM-DDTHH:MM:SS (Time is displayed in 24 hour format)

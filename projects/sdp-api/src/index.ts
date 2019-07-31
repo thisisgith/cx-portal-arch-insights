@@ -25,22 +25,22 @@ export * from './lib/contracts/models';
 export * from './lib/contracts/services';
 export * from './lib/contracts/contracts.module';
 
-export * from './lib/search/models';
 export * from './lib/controlpoints/models';
 export * from './lib/controlpoints/services';
 export * from './lib/controlpoints/control-points.module';
 
-export {
-  Buckets,
-  CDC,
-  CDCSearchResponse,
-  CommunitySearchResponse,
-  Facets,
-  GlobalSearchResponse,
-} from './lib/search/models';
+export * from './lib/search/models';
 export * from './lib/search/services';
 export * from './lib/search/search.module';
 
-export * from './lib/controlpoints/models';
-export * from './lib/controlpoints/services';
-export * from './lib/controlpoints/control-points.module';
+export * from './lib/diagnostics/models';
+export * from './lib/diagnostics/services';
+export * from './lib/diagnostics/diagnostics.module';
+
+export * from './lib/network-data-gateway/models';
+export * from './lib/network-data-gateway/services';
+export * from './lib/network-data-gateway/network-data-gateway.module';
+
+export * from './lib/entitlement/models';
+export * from './lib/entitlement/services';
+export * from './lib/entitlement/entitlement.module';

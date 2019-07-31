@@ -2,14 +2,14 @@
 export interface HardwareEOLBulletin {
 
   /**
+   * End of Bu Engineering Support Tac Date
+   */
+  eoBuEngineeringSupportTacDate?: string;
+
+  /**
    * The unique identifier for hardware end-of-life entry in a data store
    */
   hwEolInstanceId?: string;
-
-  /**
-   * The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
-   */
-  bulletinNumber?: string;
 
   /**
    * Cisco product published at the time of EOL announcement
@@ -72,9 +72,9 @@ export interface HardwareEOLBulletin {
   eoSwMaintenanceReleasesDate?: string;
 
   /**
-   * End of Bu Engineering Support Tac Date
+   * The Cisco.com bulletin number for an End-of-Life bulletin and Field Notices
    */
-  eoBuEngineeringSupportTacDate?: string;
+  bulletinNumber?: string;
 
   /**
    * The last date to extend or renew a service contract for the product. GMT date format YYYY-MM-DD

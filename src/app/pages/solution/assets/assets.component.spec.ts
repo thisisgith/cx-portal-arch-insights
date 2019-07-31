@@ -9,7 +9,9 @@ import { environment } from '@environment';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
 import { InventoryService, ProductAlertsService, ContractsService } from '@sdp-api';
-import { throwError } from 'rxjs';
+import { throwError, of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { user } from '@mock';
 
 describe('AssetsComponent', () => {
 	let component: AssetsComponent;
@@ -29,6 +31,17 @@ describe('AssetsComponent', () => {
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
 			],
 		})
 		.compileComponents();
