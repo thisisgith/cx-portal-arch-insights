@@ -98,6 +98,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		id: string;
 	};
 	public activeTab: number;
+	public selectedSubfilters: VisualFilter['seriesData'];
 	@ViewChild('impactTemplate', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('impactedCountTemplate', { static: true })
 		private impactedCountTemplate: TemplateRef<{ }>;
@@ -679,13 +680,11 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * @param key the key to match to the filter
 	 * @returns the array of filters
 	 */
-	public getSelectedSubFilters (key: string) {
+	public getAllSelectedSubFilters () {
 		const tab = this.selectedTab;
-		const filter = _.find(tab.filters, { key });
 
-		if (filter) {
-			return _.filter(filter.seriesData, 'selected');
-		}
+		return _.reduce(tab.filters, (memo, filter) =>
+			filter.seriesData ? _.concat(memo, _.filter(filter.seriesData, 'selected')) : memo, []);
 	}
 
 	/**
@@ -706,6 +705,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 
 		filter.selected = _.some(filter.seriesData, 'selected');
 
+		this.selectedSubfilters = this.getAllSelectedSubFilters();
 		if (filter.key !== 'impact' && filter.key !== 'lastUpdate') {
 			tab.params[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
 			tab.params.page = 1;
@@ -979,5 +979,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				f.selected = false;
 			});
 		});
+
+		this.selectedSubfilters = [];
+		this.selectedTab.filtered = false;
 	}
 }
