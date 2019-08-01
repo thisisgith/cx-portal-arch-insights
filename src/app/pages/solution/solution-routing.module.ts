@@ -10,11 +10,6 @@ const routes: Routes = [
 	{
 		children: [
 			{
-				loadChildren: () => import('./best-practices/best-practices.module')
-					.then(m => m.BestPracticesModule),
-				path: 'bp',
-			},
-			{
 				loadChildren: () => import('./lifecycle/lifecycle.module')
 					.then(m => m.LifecycleModule),
 				path: 'lifecycle',

@@ -1,0 +1,33 @@
+<div class="row">
+	<div class="col-md-9 flex flex-fill" *ngIf="pagination">
+		<div class="flex-center-vertical">
+			<span [innerText]="'_OsvSoftwareVersions_' | i18n" class="text-large"></span>
+			<span [innerText]="'_OsvShowingXofYSoftwareVersions_' | i18n:paginationCount:pagination.total"
+				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+			</span>
+		</div>
+	</div>
+</div>
+<div class="divider qtr-margin-top"></div>
+<ng-container *ngTemplateOutlet="tableSoftwareVersion"></ng-container>
+<div *ngIf="pagination" class="base-margin-top">
+	<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
+		(onPageChanged)="onPageChanged($event)">
+	</cui-pager>
+</div>
+
+<div *ngIf="status.isLoading">
+	<cui-spinner></cui-spinner>
+</div>
+
+<ng-template #tableSoftwareVersion>
+	<cui-table *ngIf="!status.isLoading &&  softwareVersions" [options]="softwareVersionsTable" [data]="softwareVersions"
+		(onSortingChanged)="onTableSortingChanged($event)"></cui-table>
+</ng-template>
+
+
+<ng-template #releaseDate let-item="celldata">
+	<span *ngIf="item?.postDate">
+		{{item.postDate | date}}
+	</span>
+</ng-template>

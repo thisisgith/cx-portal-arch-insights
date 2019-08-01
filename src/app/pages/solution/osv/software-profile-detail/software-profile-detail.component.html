@@ -1,0 +1,93 @@
+<cui-tabs>
+	<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
+		<ng-container *ngTemplateOutlet="compareRecommendations"></ng-container>
+	</cui-tab>
+	<cui-tab [label]="'_OsvSmartRecommendations' | i18n | uppercase" disabled="true">
+
+	</cui-tab>
+	<cui-tab [label]="'_OsvAssetsX_' | i18n:'0' | uppercase" disabled="true"></cui-tab>
+	<cui-tab [label]="'_OsvCurrentVersions_' | i18n:'0' | uppercase">
+
+	</cui-tab>
+</cui-tabs>
+
+<ng-template #compareRecommendations>
+	<div class="row recommendations">
+		<div class="col-md-1 text-bold"></div>
+		<div class="col-md-2 text-bold">
+			{{compareHeader.current}}
+		</div>
+		<div class="col-md-3 text-bold">
+			{{compareHeader.rec1}}
+		</div>
+		<div class="col-md-3 text-bold">
+			{{compareHeader.rec2}}
+		</div>
+		<div class="col-md-3 text-bold">
+			{{compareHeader.rec3}}
+		</div>
+	</div>
+	<div class="row recommendations" *ngFor="let rec of recommendations">
+		<div class="col-md-1 text-bold">
+			<div class="vertical-center">
+				{{rec.label}}
+			</div>
+		</div>
+		<div class="col-md-2" [ngClass]="{'no-padding':rec.currentTemplate}">
+			<ng-container *ngIf="rec.currentTemplate">
+				<ng-container *ngTemplateOutlet="rec.currentTemplate; context: { celldata: rec }"></ng-container>
+			</ng-container>
+			<ng-container *ngIf="!rec.currentTemplate">
+				<span [innerText]="rec.current" attr.data-auto-id="{ {rec.key }}-{{ rec.current }}"></span>
+			</ng-container>
+		</div>
+		<div class="col-md-3" [ngClass]="{'no-padding':rec.recTemplate}">
+			<ng-container *ngIf="rec.recTemplate">
+				<ng-container *ngTemplateOutlet="rec.recTemplate; context: { celldata: rec }"></ng-container>
+			</ng-container>
+			<ng-container *ngIf="!rec.recTemplate">
+				<span [innerText]="rec.rec1" attr.data-auto-id="{ {rec.key }}-{{ rec.current }}"></span>
+			</ng-container>
+		</div>
+		<div class="col-md-3" [ngClass]="{'no-padding':rec.recTemplate}">
+			<ng-container *ngIf="rec.recTemplate">
+				<ng-container *ngTemplateOutlet="rec.recTemplate; context: { celldata: rec }"></ng-container>
+			</ng-container>
+			<ng-container *ngIf="!rec.recTemplate">
+				<span [innerText]="rec.rec2" attr.data-auto-id="{ {rec.key }}-{{ rec.current }}"></span>
+			</ng-container>
+		</div>
+		<div class="col-md-3" [ngClass]="{'no-padding':rec.recTemplate}">
+			<ng-container *ngIf="rec.recTemplate">
+				<ng-container *ngTemplateOutlet="rec.recTemplate; context: { celldata: rec }"></ng-container>
+			</ng-container>
+			<ng-container *ngIf="!rec.recTemplate">
+				<span [innerText]="rec.rec3" attr.data-auto-id="{ {rec.key }}-{{ rec.current }}"></span>
+			</ng-container>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #currentBugs>
+	<div class="text-small border-bottom">Current Exposed to</div>
+	<div class="border-bottom no-padding-left no-padding-right">15</div>
+	<div class="text-center icon-bug icon--small"></div>
+</ng-template>
+
+<ng-template #recBugs>
+	<div class="row border-bottom">
+		<div class="col-md-4 text-small border-right">Fixed</div>
+		<div class="col-md-8 text-small">Will be exposed to</div>
+	</div>
+	<div class="row border-bottom">
+		<div class="col-md-4 text-small border-right">13/15v</div>
+		<div class="col-md-8 text-small">1</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4 text-small border-right"></div>
+		<div class="col-md-8 text-small">
+			<bar-chart [seriesData]="barChartData" [width]="100">
+			</bar-chart>
+		</div>
+	</div>
+</ng-template>

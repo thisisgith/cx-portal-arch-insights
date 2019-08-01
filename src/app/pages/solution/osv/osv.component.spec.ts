@@ -1,17 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OsvComponent } from './osv.component';
-import { OsvModule } from './osv.module';
+import { OptimalSoftwareVersionComponent } from './osv.component';
+import { OptimalSoftwareVersionModule } from './osv.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('OsvComponent', () => {
-	let component: OsvComponent;
-	let fixture: ComponentFixture<OsvComponent>;
+describe('OptimalSoftwareVersionComponent', () => {
+	let component: OptimalSoftwareVersionComponent;
+	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				OsvModule,
+				OptimalSoftwareVersionModule,
 				HttpClientTestingModule,
 			],
 		})
@@ -19,7 +19,7 @@ describe('OsvComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(OsvComponent);
+		fixture = TestBed.createComponent(OptimalSoftwareVersionComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

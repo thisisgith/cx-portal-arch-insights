@@ -1,27 +1,25 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { BestPracticesComponent } from './best-practices.component';
-import { BestPracticesModule } from './best-practices.module';
+import { AssetDetailsComponent } from './asset-detail.component';
+import { AssetDetailsModule } from './asset-detail.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('AdvisoriesComponent', () => {
-	let component: BestPracticesComponent;
-	let fixture: ComponentFixture<BestPracticesComponent>;
+describe('AssetDetailsComponent', () => {
+	let component: AssetDetailsComponent;
+	let fixture: ComponentFixture<AssetDetailsComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				BestPracticesModule,
+				AssetDetailsModule,
 				HttpClientTestingModule,
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(BestPracticesComponent);
+		fixture = TestBed.createComponent(AssetDetailsComponent);
 		component = fixture.componentInstance;
-		fixture.detectChanges();
 	});
 
 	it('should create', () => {
