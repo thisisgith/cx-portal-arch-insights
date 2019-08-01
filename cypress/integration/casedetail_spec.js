@@ -182,5 +182,9 @@ describe('Case Detail Spec', () => {
 				.and('have.attr', 'href');
 			cy.getByAutoId('CloseDetails').click();
 		});
+
+		it('PBC-345 Case Detail Attachments - Upload', () => {
+
+		});
 	});
 });
