@@ -774,6 +774,13 @@
 			[innerText]="'_RequestTraining_' | i18n">
 		</button>
 		<ng-container *ngTemplateOutlet="cgtRequestTraining; context: { data:  '_CGTSessionLimitReached_' }"></ng-container>
+	</div>
+	<div class="text-left" *ngIf="data.trainingsAvailable>0">
+		<button (click)="selectCgtRequestForm(true, data.trainingsAvailable, data.dateAvailableThrough)" class="btn btn--small btn--secondary text-uppercase"
+			[innerText]="'_RequestTraining_' | i18n">
+		</button>
+	</div>
+	<div *ngIf="data.sessions.length>0">
 		<div class="divider"></div>
 		<div class="base-padding-bottom">
 			<div class="qtr-padding-bottom" *ngFor="let item of data.sessions | slice:0:2">
@@ -789,11 +796,6 @@
 			</div>
 		</div>
 	</div>
-	<ng-container *ngIf="data.trainingsAvailable>0">
-		<button (click)="selectCgtRequestForm(true, data.trainingsAvailable, data.dateAvailableThrough)" class="btn btn--small btn--secondary text-uppercase"
-			[innerText]="'_RequestTraining_' | i18n">
-		</button>
-	</ng-container>
 </ng-template>
 
 <ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel" let-icon="icon">
