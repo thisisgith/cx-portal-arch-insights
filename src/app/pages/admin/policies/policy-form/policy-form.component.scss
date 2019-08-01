@@ -19,6 +19,20 @@
 	text-align: left;
 }
 
+.device-table {
+	text-align: left;
+}
+
+.selected {
+	// got color from mockup
+	background: rgba(229, 247, 251, 1);
+}
+
+.shift-button {
+	text-align: center;
+	width: 200px;
+}
+
 select {
 	width: 75px;
 	display: inline-block;

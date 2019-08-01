@@ -19,6 +19,8 @@ import {
 	ControlPointDeviceDiscoveryAPIService,
 	ControlPointDevicePolicyAPIService,
 	DeviceInfo,
+	DevicePolicyRequestModel,
+	DevicePolicyUpdateRequestModel,
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
@@ -34,6 +36,13 @@ interface SelectOption {
 }
 
 /**
+ * interface that represents row in device list tables
+ */
+interface DeviceListRow extends DeviceInfo {
+	selected: boolean;
+}
+
+/**
  * Component for the ACC Request form
  */
 @Component({
@@ -43,7 +52,7 @@ interface SelectOption {
 })
 export class PolicyFormComponent implements OnDestroy, OnInit {
 
-	@Input() public policy: {};
+	@Input() public policy: { };
 	@Input() public type: string;
 	@Input() public customerId: string;
 	@Output() public visibleComponent = new EventEmitter<boolean>();
@@ -52,10 +61,15 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	private destroyed$: Subject<void> = new Subject<void>();
 	public timePeriod = '';
 	public title = '';
-	public deviceListRight: DeviceInfo[] = [];
-	public deviceListLeft: DeviceInfo[] = [];
+	public deviceListRight: DeviceListRow[] = [];
+	public deviceListLeft: DeviceListRow[] = [];
+	public selectedRowsRight = { };
+	public selectedRowsLeft = { };
 	public error = false;
 	public errorMessage: string;
+
+	public getParams: Function;
+	public submitCall: Function;
 
 	public loading = false;
 
@@ -135,8 +149,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private collectionService: ControlPointModifyCollectionPolicyAPIService,
-		private devicePolicyService: ControlPointDevicePolicyAPIService,
 		private deviceService: ControlPointDeviceDiscoveryAPIService,
+		private devicePolicyService: ControlPointDevicePolicyAPIService,
 	) {
 		this.logger.debug('AccRequestFormComponent Created!');
 	}
@@ -160,7 +174,6 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * Initialization of the Collection Form  and customer info
 	 */
 	public ngOnInit () {
-		this.loading = false;
 		switch (this.type) {
 			case 'editCollection': {
 				this.editCollection();
@@ -178,12 +191,39 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
+	 * Called from init given editCollection
+	 */
+	public editCollection () {
+		this.title = I18n.get('_ScheduledCollectionDetails_');
+
+		const date = new Date(_.get(this.policy, 'createdDate'));
+		const formattedTime =
+`${this.monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+
+		_.set(this.policy, 'createdDate', formattedTime);
+
+		this.getParams = function (schedule: string) {
+			return {
+				schedule,
+				customerId: this.customerId,
+				policyId: _.get(this.policy, 'policyID'),
+				policyName: 'test',
+			};
+		};
+
+		this.submitCall = function (params: CollectionPolicyUpdateRequestModel) {
+			return this.collectionService.updateCollectionPolicyUsingPATCH(params);
+		};
+	}
+
+	/**
 	 * Called from init given newPolicy
 	 */
 	public newPolicy () {
 		this.title = I18n.get('_NewScheduledScan_');
 
 		this.loading = true;
+
 		this.deviceService.getDevicesUsingGET(this.customerId)
 			.pipe(
 				catchError(err => {
@@ -196,21 +236,51 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(response => {
-				this.deviceListLeft = _.get(response, 'data');
+				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
 			});
-	}
 
-	/**
-	 * Called from init given editCollection
-	 */
-	public editCollection () {
-		this.title = I18n.get('_ScheduledCollectionDetails_');
+		const params: ControlPointDevicePolicyAPIService
+		.GetDevicesForPolicyCreationUsingGETParams = {
+			customerId: this.customerId,
+			pageNumber: '1',
+			rowsPerPage: '9999',
+		};
 
-		const date = new Date(_.get(this.policy, 'createdDate'));
-		const formattedTime =
-`${this.monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+		this.devicePolicyService.getDevicesForPolicyCreationUsingGET(params)
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
 
-		_.set(this.policy, 'createdDate', formattedTime);
+					return empty();
+				}),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
+			});
+
+		this.getParams = function (schedule: string) {
+			const devices = _.map(this.deviceListRight, item => {
+				const copy = this.jsonCopy(item);
+				delete copy.selected;
+
+				return copy;
+			});
+
+			const params: DevicePolicyRequestModel = {
+				devices,
+				schedule,
+				customerId: this.customerId,
+			};
+
+			return params;
+		};
+
+		this.submitCall = function (params: DevicePolicyRequestModel) {
+			return this.devicePolicyService.createDevicePolicyUsingPOST(params);
+		};
 	}
 
 	/**
@@ -218,6 +288,64 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 */
 	public editPolicy () {
 		this.title = I18n.get('_ScheduledScanDetails_');
+
+		this.deviceService.getDevicesUsingGET(this.customerId)
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
+			});
+
+		const params: ControlPointDevicePolicyAPIService
+			.GetDevicesForGivenPolicyUsingGETParams = {
+				customerId: this.customerId,
+				pageNumber: '1',
+				policyId: _.get(this.policy, 'policyId'),
+				rowsPerPage: '9999',
+			};
+
+		this.devicePolicyService.getDevicesForGivenPolicyUsingGET(params)
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loading = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
+			});
+
+		this.getParams = function (schedule: string) {
+			const devices = _.map(this.deviceListRight, item => {
+				const copy = this.jsonCopy(item);
+				delete copy.selected;
+
+				return copy;
+			});
+
+			return {
+				devices,
+				schedule,
+				customerId: this.customerId,
+				policyId: _.get(this.policy, 'policyID'),
+			};
+		};
+
+		this.submitCall = function (params: DevicePolicyUpdateRequestModel) {
+			return this.devicePolicyService.updateCollectionPolicyUsingPATCH(params);
+		};
 	}
 
 	/**
@@ -225,6 +353,67 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 */
 	public timePeriodChange () {
 		this.timePeriod = this.requestForm.get('timePeriod').value;
+	}
+
+	/**
+	 * Toggles is device row is selected
+	 * @param device device row
+	 */
+	public toggleDeviceSelected (device: DeviceListRow) {
+		device.selected = !device.selected;
+	}
+
+	/**
+	 * DOES NOT WORK YET
+	 *
+	 * Toggles is device row is selected
+	 * @param device device row
+	 */
+	public toggleAllDevicesSelected (checked: boolean, devices: DeviceListRow[]) {
+		for (let devNum = 0; devNum < devices.length; devNum += 1) {
+			devices[devNum].selected = checked;
+		}
+	}
+
+	/**
+	 * Copies object using json stringify and json parse
+	 * @param obj dict object
+	 * @returns copied object
+	 */
+	private jsonCopy (obj: any) {
+		return JSON.parse(JSON.stringify(obj));
+	}
+
+	/**
+	 * Code for add button
+	 * Moves selected list items from left list to right list
+	 */
+	public add () {
+		for (let devNum = this.deviceListLeft.length - 1; devNum >= 0; devNum -= 1) {
+			if (this.deviceListLeft[devNum].selected) {
+				const deviceCopy = this.jsonCopy(this.deviceListLeft[devNum]);
+				deviceCopy.selected = false;
+
+				this.deviceListRight.push(deviceCopy);
+				this.deviceListLeft.splice(devNum, 1);
+			}
+		}
+	}
+
+	/**
+	 * Code for remove button
+	 * Moves selected list items from right list to left list
+	 */
+	public remove () {
+		for (let devNum = this.deviceListRight.length - 1; devNum >= 0; devNum -= 1) {
+			if (this.deviceListRight[devNum].selected) {
+				const deviceCopy = this.jsonCopy(this.deviceListRight[devNum]);
+				deviceCopy.selected = false;
+
+				this.deviceListLeft.push(deviceCopy);
+				this.deviceListRight.splice(devNum, 1);
+			}
+		}
 	}
 
 	/**
@@ -260,21 +449,15 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		const schedule = this.getSchedule(timePeriod, day, date, hourmin);
 
-		const params: CollectionPolicyUpdateRequestModel = {
-			schedule,
-			customerId: this.customerId,
-			policyId: _.get(this.policy, 'policyID'),
-			policyName: 'test',
-		};
+		const params = this.getParams(schedule);
 
-		this.collectionService
-		.updateCollectionPolicyUsingPATCH(params)
+		this.submitCall(params)
 			.pipe(
 				catchError(() => empty()),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
-				this.logger.debug('Submitted Update Collection Policy Form');
+				this.logger.debug('Submitted Policy Form');
 				this.submitted.emit(true);
 			});
 	}

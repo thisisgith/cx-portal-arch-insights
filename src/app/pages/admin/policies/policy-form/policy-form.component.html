@@ -11,24 +11,37 @@
 								[innerText]="this.title"
 								data-auto-id="policy-modal.title"
 							></div>
-							<ng-container *ngIf="loading">
-								<div class="row half-padding-left base-padding-top">
-									<div class="alert dbl-padding-left">
-										<div class="alert__icon icon-info-outline"></div>
-										<div class="alert__message text-info"
-											[innerText]="'_LoadingCustomerInfo_' | i18n"></div>
-									</div>
-								</div>
-							</ng-container>
 						</div>
 						<div class="col-md-1 half-margin-top">
 							<span (click)="closeRequestForm()" data-auto-id="policy-modal.close"
 								class="icon-close icon-medium text-right toggle"></span>
 						</div>
 					</div>
+					<ng-container
+						*ngIf="loading || error">
+						<ng-container *ngIf="loading">
+							<div class="row dbl-padding-left base-padding-top">
+								<div class="alert dbl-padding-left">
+									<div class="alert__icon icon-info-outline"></div>
+									<div class="alert__message text-info"
+										[innerText]="'_LoadingCustomerInfo_' | i18n"></div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-container *ngIf="error">
+							<div class="row dbl-padding-left base-padding-top">
+								<div class="alert alert--danger" role="alert">
+									<div class="alert__icon icon-error-outline"></div>
+									<div class="alert__message" [innerText]="errorMessage"></div>
+								</div>
+							</div>
+						</ng-container>
+					</ng-container>
 				</div>
 				<div class="modal__body policy__header half-padding-left half-padding-bottom no-margin-bottom">
-					<form class="form-inline" [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+					<form class="form-inline no-margin-bottom"
+						[formGroup]="requestForm"
+						(ngSubmit)="onSubmit()">
 						<div class="row dbl-padding-left base-padding-top full-width">
 							<div class="col-md-6">
 								<div class="text-large text-left text-uppercase"
@@ -87,16 +100,19 @@
 								<span [innerText]="'Created: ' + policy.createdDate"></span>
 							</div>
 						</div>
-						<div class="row dbl-padding-left base-padding-top full-width">
+						<div class="row dbl-padding-left dbl-padding-right base-padding-top full-width">
 							<div class="col-md-8">
+								<ng-container *ngIf="type !== 'editCollection'">
+									<div class="half-padding-top  text-large text-left text-uppercase"
+										[innerText]="'_ASSETS_' | i18n | uppercase" data-auto-id="policy-modal.assets">
+									</div>
+								</ng-container>
 							</div>
-							<div class="col-md-4">
-								<div class="half-padding-top dbl-padding-left text-left">
-									<button type="submit" [disabled]="!requestForm.valid"
-										class="btn btn--small btn--wide btn--secondary"
-										[innerText]="(type === 'editCollection' ? '_SaveScheduledCollection_' : '_SaveScheduledScan_') | i18n"
-										data-auto-id="policy-modal.submit"></button>
-								</div>
+							<div class="col-md-4 text-right">
+								<button type="submit" [disabled]="!requestForm.valid"
+									class="btn btn--small btn--wide btn--secondary"
+									[innerText]="(type === 'editCollection' ? '_SaveScheduledCollection_' : '_SaveScheduledScan_') | i18n"
+									data-auto-id="policy-modal.submit"></button>
 							</div>
 						</div>
 					</form>
@@ -110,28 +126,23 @@
 </div>
 
 <ng-template #modulesTables>
-	<div class="row dbl-padding-left base-padding-top full-width">
-		<div class="col-md-6">
-			<div class="text-large text-left text-uppercase"
-				[innerText]="'_ASSETS_' | i18n | uppercase" data-auto-id="policy-modal.assets">
-			</div>
-		</div>
-	</div>
 	<div class="row half-padding-top dbl-padding-left dbl-padding-right">
 		<div class="col-md-5">
 			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListLeft}"></ng-container>
 		</div>
 		<div class="col-md-2">
-				<button
-				class="btn btn--small btn--wide btn--secondary"
+			<button
+				class="btn btn--small btn--wide btn--secondary shift-button"
 				[innerText]="'_Add_' | i18n"
 				data-auto-id="policy-modal.add"
-			></button>
+				(click)='add()'
+			><i class="icon-chevron-right"></i></button>
 			<button
-				class="btn btn--small btn--wide btn--secondary"
+				class="btn btn--small btn--wide btn--secondary shift-button no-margin-left"
 				[innerText]="'_Remove_' | i18n"
 				data-auto-id="policy-modal.remove"
-			></button>
+				(click)='remove()'
+			><i class="icon-chevron-left"></i></button>
 		</div>
 		<div class="col-md-5">
 			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListRight}"></ng-container>
@@ -140,40 +151,58 @@
 </ng-template>
 
 <ng-template #deviceTableTemplate let-devices="devices">
-	<div class="responsive-table">
-		<table class="table table--bordered table--selectable">
-			<thead>
-				<tr>
-					<th>
-						<input type="checkbox">
-						<span class="checkbox__input"></span>
-						<span [innerText]="'_Device_' | i18n"></span>
-					</th>
-					<th>
-						<span [innerText]="'_IPAddress_' | i18n"></span>
-					</th>
-					<th>
-						<span [innerText]="'_LastScan_' | i18n"></span>
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr
-					*ngFor="let device of devices"
-				>
-					<td>
-						<input type="checkbox">
-						<span class="checkbox__input"></span>
-						<span [innerText]="device.productId"></span>
-					</td>
-					<td>
-						<span [innerText]="device.ipAddress"></span>
-					</td>
-					<td>
-						<span [innerText]="device.lastScan"></span>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+	<div
+		class="row panel panel--bordered flex base-margin-right"
+	>
+		<div class="col-md-1 device-table">
+			<input class="text-xlarge"
+				type="checkbox"
+				(click)="toggleAllDevicesSelected(devices)"
+			>
+			<span class="checkbox__input"></span>
+		</div>
+		<div class="col-md-3 device-table text-bold">
+			<span [innerText]="'_Device_' | i18n"></span>
+		</div>
+		<div class="col-md-3 device-table text-bold">
+			<span [innerText]="'_IPAddress_' | i18n"></span>
+		</div>
+		<div class="col-md-3 device-table text-bold">
+			<span [innerText]="'_LastScan_' | i18n"></span>
+		</div>
+	</div>
+	<div
+		*ngFor="let device of devices; index as i"
+		class="
+			row
+			panel
+			panel--bordered-top
+			panel--bordered-left
+			panel--bordered-right
+			flex
+			base-margin-right"
+		[ngClass]="{
+			'panel--bordered-bottom': i === (devices.length - 1)
+		}"
+		[ngClass]="{'selected': device.selected}"
+		data-auto-id="device-row"
+		(click)="toggleDeviceSelected(device)">
+		<div class="col-md-1 device-table">
+			<input
+				class="text-xlarge"
+				type="checkbox"
+				[checked]="device.selected"
+			>
+			<span class="checkbox__input"></span>
+		</div>
+		<div class="col-md-3 device-table">
+			<span [innerText]="device.productId"></span>
+		</div>
+		<div class="col-md-3 device-table">
+			<span [innerText]="device.ipAddress"></span>
+		</div>
+		<div class="col-md-3 device-table">
+			<span [innerText]="device.lastScan"></span>
+		</div>
 	</div>
 </ng-template>

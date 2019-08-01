@@ -105,4 +105,38 @@ export const DevicePolicesScenarios = [
 		url: '/api/customerportal/controlpoint/v1/policy',
 		usecases: ['Admin Settings', 'General'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: 'Get Devices given CustomerID',
+					response: {
+						body: mockData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: '/api/customerportal/controlpoint/v1/policy/devices/92736491',
+		usecases: ['Admin Settings', 'General'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: 'Get Devices given CustomerID and Policy',
+					response: {
+						body: mockData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: '/api/customerportal/controlpoint/v1/policy/devices/92736491/b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
+		usecases: ['Admin Settings', 'General'],
+	},
 ];
