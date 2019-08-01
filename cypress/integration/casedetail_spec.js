@@ -129,7 +129,6 @@ describe('Case Detail Spec', () => {
 
 
 		it('PBC-234 Case Details Notes Tab, Add a Note', () => {
-
 			const currDatestamp = new Date().getTime();
 			// cy.log(`current date is ${currDatestamp}`);
 
