@@ -28,7 +28,7 @@ export const MockAdvisorySecurityAdvisories: SecurityAdvisoryInfo[] = [
 	},
 	{
 		"id": 89,
-		"severity": "Critical",
+		"severity": "Medium",
 		"title": "Voice Vulnerabilities in Cisco IOS and Cisco Unified Communications Manager",
 		"summary": "Multiple voice-related vulnerabilities are identified in Cisco IOS software, one of which is also shared with Cisco Unified Communications Manager. These vulnerabilities pertain to the following protocols or features: Session Initiation Protocol (SIP) Media Gateway Control Protocol (MGCP) Signaling protocols H.323, H.254 Real-time Transport Protocol (RTP) Facsimile reception Cisco has made free software available to address these vulnerabilities for affected customers. Fixed Cisco IOS software listed in the Software Versions and Fixes section contains fixes for all vulnerabilities mentioned in this advisory. There are no workarounds available to mitigate the effects of any of the vulnerabilities apart from disabling the protocol or feature itself. This advisory is posted at http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20070808-IOS-voice. Note:The August 08, 2007 publication includes four Security Advisories and one Security Response. The advisories all affect IOS, one additionally affects Cisco Unified Communications Manager as well. Each advisory lists the releases that correct the vulnerability described in the advisory, and the advisories also detail the releases that correct the vulnerabilities in all four advisories. Individual publication links are listed below: Cisco IOS Information Leakage Using IPv6 Routing Header http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20070808-IOS-IPv6-leak Cisco IOS Next Hop Resolution Protocol Vulnerability http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20070808-nhrp Cisco IOS Secure Copy Authorization Bypass Vulnerability http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20070808-scp Voice Vulnerabilities in Cisco IOS and Cisco Unified Communications Manager http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20070808-IOS-voice Cisco Unified MeetingPlace XSS Vulnerability http://tools.cisco.com/security/center/content/CiscoSecurityResponse/cisco-sr-20070808-mp",
 		"assetsImpacted": 0,
@@ -49,6 +49,41 @@ export const MockAdvisorySecurityAdvisories: SecurityAdvisoryInfo[] = [
 		"lastUpdated": "2017-09-27T16:00:00",
 		"version": 1,
 		"url": "https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20170927-vpls"
+	},
+	{
+		"id": 387,
+		"severity": "Low",
+		"title": "Multiple Vulnerabilities in Cisco IOS XE Software for 1000 Series Aggregation Services Routers",
+		"summary": "Cisco IOS XE Software for 1000 Series Aggregation Services Routers (ASR) contains the following denial of service (DoS) vulnerabilities: Cisco IOS XE Software IPv6 Multicast Traffic Denial of Service Vulnerability Cisco IOS XE Software MVPNv6 Traffic Denial of Service Vulnerability Cisco IOS XE Software L2TP Traffic Denial of Service Vulnerability Cisco IOS XE Software Bridge Domain Interface Denial of Service Vulnerability Cisco IOS XE Software SIP Traffic Denial of Service Vulnerability These vulnerabilities are independent of each other; a release that is affected by one of the vulnerabilities may not be affected by the others. Successful exploitation of any of these vulnerabilities could allow an unauthenticated remote attacker to trigger a reload of the Embedded Services Processors (ESP) card or the Route Processor (RP) card, causing an interruption of services. Repeated exploitation couldresult in a sustained DoS condition. Note:Cisco IOS Software and Cisco IOS-XR Software are not affected by these vulnerabilities. Cisco has released software updates that address these vulnerabilities.",
+		"assetsImpacted": 0,
+		"assetsPotentiallyImpacted": 0,
+		"publishedOn": "2013-04-15T16:00:00",
+		"lastUpdated": null,
+		"version": 1.3,
+		"url": "http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20130410-asr1000"
+	},
+	{
+		"id": 48,
+		"title": "IOS HTTP Server Command Injection Vulnerability",
+		"summary": "A vulnerability exists in the IOS HTTP server in which HTML code inserted into dynamically generated output, such as the output from a show buffers command, will be passed to the browser requesting the page. This HTML code could be interpreted by the client browser and potentially execute malicious commands against the device or other possible cross-site scripting attacks. Successful exploitation of this vulnerability requires that a user browse a page containing dynamic content in which HTML commands have been injected. Cisco will be making free software available to address this vulnerability for affected customers. There are workarounds available to mitigate the effects of the vulnerability. This advisory is posted at http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20051201-http.",
+		"assetsImpacted": 1,
+		"assetsPotentiallyImpacted": 2,
+		"publishedOn": "2005-12-01T21:00:00",
+		"lastUpdated": null,
+		"version": 2.0,
+		"url": "http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20051201-http"
+	},
+	{
+		"id": 520,
+		"severity": "Info",
+		"title": "GNU Bash Environment Variable Command Injection Vulnerability",
+		"summary": "On September 24, 2014, a vulnerability in the Bash shell was publicly announced. The vulnerability is related to the way in which shell functions are passed though environment variables. The vulnerability may allow an attacker to inject commands into a Bash shell, depending on how the shell is invoked. The Bash shell may be invoked by a number of processes including, but not limited to, telnet, SSH, DHCP, and scripts hosted on web servers. All versions of GNU Bash starting with version 1.14 are affected by this vulnerability and the specific impact is determined by the characteristics of the process using the Bash shell. In the worst case, an unauthenticated remote attacker would be able to execute commands on an affected server. However, in most cases involving Cisco products, authentication is required before exploitation could be attempted. A number of Cisco products ship with or use an affected version of the Bash shell. The Bash shell is a third-party software component that is part of the GNU software project and used by a number of software vendors. As of this version of the Security Advisory, there have been a number of vulnerabilities recently discovered in the Bash shell, and the investigation is ongoing. For vulnerable products, Cisco has included information on the product versions that will contain the fixed software, and the date these versions are expected to be published on the cisco.com download page. This advisory will be updated as additional information becomes available. Cisco may release free software updates that address this vulnerability if a product is determined to be affected by this vulnerability.",
+		"assetsImpacted": 0,
+		"assetsPotentiallyImpacted": 3,
+		"publishedOn": "2014-09-26T01:00:00",
+		"lastUpdated": null,
+		"version": 1.29,
+		"url": "http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20140926-bash"
 	},
 	/* tslint:enable */
 ];
