@@ -246,44 +246,42 @@ export class LifecycleComponent implements OnDestroy {
 	 * Will construct the assets table
 	 */
 	private buildTable () {
-		if (!this.successBytesTable) {
-			this.successBytesTable = new CuiTableOptions({
-				columns: [
-					{
-						key: 'title',
-						name: I18n.get('_Name_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sortKey: 'title',
-						value: 'title',
-						width: '40%',
-					},
-					{
-						key: 'archetype',
-						name: I18n.get('_Category_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sortKey: 'archetype',
-						value: 'archetype',
-						width: '20%',
-					},
-					{
-						name: I18n.get('_Format_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sortKey: 'type',
-						template: this.formatTemplate,
-						width: '20%',
-					},
-					{
-						name: I18n.get('_Bookmark_'),
-						sortable: false,
-						template: this.bookmarkTemplate,
-						width: '20%',
-					},
-				],
-			});
-		}
+		this.successBytesTable = new CuiTableOptions({
+			columns: [
+				{
+					key: 'title',
+					name: I18n.get('_Name_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'title',
+					value: 'title',
+					width: '40%',
+				},
+				{
+					key: 'archetype',
+					name: I18n.get('_Category_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'archetype',
+					value: 'archetype',
+					width: '20%',
+				},
+				{
+					name: I18n.get('_Format_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'type',
+					template: this.formatTemplate,
+					width: '20%',
+				},
+				{
+					name: I18n.get('_Bookmark_'),
+					sortable: false,
+					template: this.bookmarkTemplate,
+					width: '20%',
+				},
+			],
+		});
 	}
 
 	/**
