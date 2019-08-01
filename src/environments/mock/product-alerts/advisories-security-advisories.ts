@@ -92,14 +92,20 @@ export const MockAdvisorySecurityAdvisories: SecurityAdvisoryInfo[] = [
  * Mocks the field notice response
  * @param rows the rows to return
  * @param page the page to return
- * @param filter IDs to filter
+ * @param copy the number of times to duplicate the data (for testing multiple pages)
  * @returns mock response
  */
 function MockData (
 	rows?: number,
 	page?: number,
+	copy?: number,
 	): SecurityAdvisoriesResponse {
 	let data = _.cloneDeep(MockAdvisorySecurityAdvisories);
+	if (copy > 0) {
+		for (let i = 0; i < copy; i += 1) {
+			data = _.concat(data, ...data);
+		}
+	}
 	const total = data.length;
 	let pagination: Pagination;
 
@@ -142,9 +148,52 @@ export const AdvisorySecurityAdvisoryScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: 250,
+					description: 'Advisory Security Advisories - Page 1',
+					response: {
+						body: MockData(10, 1, 3),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 250,
+					description: 'Advisory Security Advisories - Page 2',
+					response: {
+						body: MockData(10, 2, 3),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=2`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 250,
+					description: 'Advisory Security Advisories - Page 3',
+					response: {
+						body: MockData(10, 3, 3),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
 ];

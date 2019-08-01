@@ -75,5 +75,47 @@ describe('Advisories', () => { // PBC-306
 				});
 			});
 		});
+
+		it('Advisory list gracefully hadnles lack of response from API', () => {
+			advisoryMock.enable('Advisory Security Advisories - Unreachable');
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Advisories').click();
+
+			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
+
+			advisoryMock.enable('Advisory Security Advisories');
+		});
+
+		it('Uses proper pagination for advisories list', () => {
+			advisoryMock.enable('Advisory Security Advisories - Page 1');
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Advisories').click();
+
+			cy.getByAutoId('CUIPager-Page2').click()
+				.wait('Advisory Security Advisories - Page 2')
+				.then(xhr => {
+					const params = new URLSearchParams(new URL(xhr.url).search);
+					const pagination = xhr.response.body.Pagination;
+					expect(params.get('page')).to.eq('2');
+					expect(params.get('rows')).to.eq('10');
+					cy.get('[data-auto-id*="CUIPager-Page"]')
+						.should('have.length', Cypress._.ceil(pagination.total / pagination.rows));
+				});
+			cy.getByAutoId('CUIPager-NextPage').click();
+			cy.wait('Advisory Security Advisories - Page 3').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.get('page')).to.eq('3');
+				expect(params.get('rows')).to.eq('10');
+			});
+			cy.getByAutoId('CUIPager-PrevPage').click();
+			cy.wait('Advisory Security Advisories - Page 2').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.get('page')).to.eq('2');
+				expect(params.get('rows')).to.eq('10');
+			});
+
+			cy.getByAutoId('CUIPager-Page1').click();
+			advisoryMock.disable('Advisory Security Advisories - Page 1');
+		});
 	});
 });
