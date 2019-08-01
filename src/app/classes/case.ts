@@ -24,14 +24,14 @@ export const caseSeverities = {
  * The file extension to icon and label map for case files
  */
 export const caseFileIcons = {
-	'image/png': { icon: 'icon-file-image-o', label: 'Image (png)' },
-	'image/jpeg': { icon: 'icon-file-image-o', label: 'Image (jpeg)' },
 	'application/pdf': { icon: 'icon-file-pdf-o', label: 'PDF' },
-	'text/plain': { icon: 'icon-file-text-o', label: 'Plain Text' },
-	'text/csv': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
-	'application/xls': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
 	'application/x-tar': { icon: 'icon-file-archive-o', label: 'Archive' },
+	'application/xls': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
 	default: { icon: 'icon-file', label: 'File' },
+	'image/jpeg': { icon: 'icon-file-image-o', label: 'Image (jpeg)' },
+	'image/png': { icon: 'icon-file-image-o', label: 'Image (png)' },
+	'text/csv': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
+	'text/plain': { icon: 'icon-file-text-o', label: 'Plain Text' },
 };
 export enum CaseRequestType {
 	Diagnose = 'Diagnose and Fix my Problem',
