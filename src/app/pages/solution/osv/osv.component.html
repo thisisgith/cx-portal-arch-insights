@@ -13,12 +13,11 @@
 </details-panel>
 <details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
 	<details-panel-header (close)="selectedAsset = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
-		<div appPanel360Title class="row">
-			<span class="icon-laser-pointer icon-large col-2 icon-xlarge"></span>
-			<div class="col-10">
-				<div class="qtr-margin-left text-xlarge half-margin-bottom"
-					[innerText]="'_OsvOptimalSoftwareVersions_' | i18n "></div>
-				<div class="qtr-margin-left text-large" [innerText]="selectedAssetSoftware?.hostName"></div>
+		<div detailsPanelTitle>
+			<div class="qtr-margin-left text-xlarge half-margin-bottom" [innerText]="selectedAsset?.hostName"></div>
+			<div class="qtr-margin-left text-medium">
+				<span [innerText]="'_OsvIP_' | i18n"></span>
+				<span class="qtr-margin-left" [innerText]="selectedAsset?.ipAddress"></span>
 			</div>
 		</div>
 	</details-panel-header>
@@ -59,7 +58,8 @@
 		<app-software-profiles [(selectedProfileGroup)]="selectedProfileGroup"></app-software-profiles>
 	</div>
 	<div *ngIf="view == 'assets'">
-		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters" [(selectedAsset)]="selectedAsset"></app-assets>
+		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters" [(selectedAsset)]="selectedAsset">
+		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
 		<app-software-versions></app-software-versions>
@@ -151,7 +151,8 @@
 					<div class="col-md-10" [innerText]="'_OsvSoftwareProfiles_' | i18n"></div>
 					<div class="col-md-2">
 						<i class="icon-close pull-right qtr-margin-right"
-							(click)="$event.stopPropagation();showProfileInfo = false;" data-auto-id="ToggleSoftwareProfileInfoVisibilty"></i>
+							(click)="$event.stopPropagation();showProfileInfo = false;"
+							data-auto-id="ToggleSoftwareProfileInfoVisibilty"></i>
 					</div>
 				</div>
 			</div>
@@ -197,13 +198,16 @@
 			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
 			<div class="col-12 half-padding">
 				<div class="text-right">
-					<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();" data-auto-id="DonotShowProfileInfoAgain">
-						<input type="checkbox" [(ngModel)]="hideProfileInfo" (ngModelChange)="hideInfo($event)" data-auto-id="DonotShowProfileInfoAgainCheckbox">
+					<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();"
+						data-auto-id="DonotShowProfileInfoAgain">
+						<input type="checkbox" [(ngModel)]="hideProfileInfo" (ngModelChange)="hideInfo($event)"
+							data-auto-id="DonotShowProfileInfoAgainCheckbox">
 						<span class="checkbox__input"></span>
 						<span class="checkbox__label">Do not show this again, by default.</span>
 					</label>
 					<button class="btn btn--gray-ghost btn--small" [innerText]="'_OsvClose_' | i18n"
-						(click)="$event.stopPropagation();showProfileInfo = false" data-auto-id="CloseSoftwareProfileInfoDialog"></button>
+						(click)="$event.stopPropagation();showProfileInfo = false"
+						data-auto-id="CloseSoftwareProfileInfoDialog"></button>
 				</div>
 			</div>
 		</div>

@@ -1,5 +1,6 @@
 /* tslint:disable */
 export interface AssetRecommendations {
+	accepted?: boolean;
 	error: string; 
 	name: string;
 	postDate: string;

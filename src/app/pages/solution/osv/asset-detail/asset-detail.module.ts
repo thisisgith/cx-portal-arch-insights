@@ -27,6 +27,7 @@ import { AssetTimelineChartModule } from '../asset-timeline-chart/asset-timeline
 		CuiSpinnerModule,
 		CuiTableModule,
 		CuiButtonModule,
+		CuiButtonModule,
 	],
 })
 export class AssetDetailsModule { }

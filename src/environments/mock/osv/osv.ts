@@ -18,6 +18,7 @@ const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
 	{
+		accepted: true,
 		error: null,
 		name: 'suggested',
 		postDate: '2019-03-21T18:30:00.000+0000',

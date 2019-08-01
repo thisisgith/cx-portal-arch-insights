@@ -5,6 +5,8 @@ import {
 	ViewEncapsulation,
 	SimpleChanges,
 	OnInit,
+	Output,
+	EventEmitter,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -27,6 +29,7 @@ import { DatePipe } from '@angular/common';
 export class AssetTimelineChartComponent implements OnInit {
 	@Input() public data: AssetRecommendationsResponse;
 	@Input() public fullscreen;
+	@Output() public selectedPoint = new EventEmitter<any>();
 	public chart: Chart;
 	constructor (
 		private logger: LogService,
@@ -52,9 +55,10 @@ export class AssetTimelineChartComponent implements OnInit {
 			_.map(this.data, (value: AssetRecommendations) => {
 				const releaseDate = new Date(value.postDate);
 				return {
-					color: 'blue',
+					accepted: value.accepted,
 					description: value.name,
 					label: value.swVersion,
+					swVersion: value.swVersion,
 					name: _.capitalize(value.name),
 					x: Date.UTC(
 						releaseDate.getFullYear(),
@@ -88,7 +92,7 @@ export class AssetTimelineChartComponent implements OnInit {
 				styledMode: false,
 				type: 'timeline',
 				zoomType: 'x',
-				width: this.fullscreen ? 1600 : 800,
+				// width: this.fullscreen ? 1600 : 800,
 			},
 			credits: {
 				enabled: false,
@@ -109,14 +113,19 @@ export class AssetTimelineChartComponent implements OnInit {
 						/* tslint:disable:object-literal-shorthand*/
 						/* tslint:disable:no-string-literal */
 						formatter: function () {
-							return `<span style="cursor:pointer;">
+							let format = '';
+							format += `<span style="cursor:pointer;">
 							<span style='cursor:pointer;font-weight: bold;' >
 							${this['point'].name}</span>
 							<br/><span style='cursor:pointer;font-weight: normal;'>
 							${this['point'].label}</span>
 							<br/><span style='cursor:pointer;font-weight: normal;'>
-							${this['point'].releaseDate}</span>
+							${this['point'].releaseDate}</span><br/>
 							</span>`;
+							if (this['point'].accepted) {
+								format += '<span style="color:green">Accepted</span>';
+							}
+							return format;
 						},
 						style: {
 							fontWeight: 'normal',
@@ -178,7 +187,9 @@ export class AssetTimelineChartComponent implements OnInit {
 		const fullscreen = _.get(changes, 'fullscreen',
 			{ currentValue: null, firstChange: false });
 		if (!fullscreen.firstChange) {
-			this.buildGraph();
+			setTimeout(() => {
+				this.buildGraph();
+			}, 500);
 		}
 	}
 
@@ -189,6 +200,8 @@ export class AssetTimelineChartComponent implements OnInit {
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
 		this.logger.debug(event.point.name);
+		event.point.selected = true;
+		this.selectedPoint.emit(event.point);
 	}
 
 }

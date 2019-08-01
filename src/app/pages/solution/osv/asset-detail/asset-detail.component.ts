@@ -43,6 +43,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		customerId,
 		id: '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
 	};
+	public selectedRecommendation = {
+		name: 'None',
+	};
 
 	constructor (
 		private logger: LogService,
@@ -174,13 +177,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		};
 		this.status.isLoading = true;
 		this.osvService.updateAsset(body)
-		.subscribe(() => {
-			this.status.isLoading = false;
-			this.logger.debug('Updated');
-		}, () => {
-			this.status.isLoading = false;
-			this.logger.debug('Error in updating');
-		});
+			.subscribe(() => {
+				this.status.isLoading = false;
+				this.logger.debug('Updated');
+			}, () => {
+				this.status.isLoading = false;
+				this.logger.debug('Error in updating');
+			});
 	}
 
 	/**
@@ -190,5 +193,15 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
 			<any> new Date(b.postDate) - <any> new Date(a.postDate));
+	}
+
+	/**
+	 * Selected Recommendations from timeline view
+	 * @param point one of the recommendations on timeline view
+	 */
+	public selectedPoint (point) {
+		if (!point.accepted && point.name !== 'Current') {
+			this.selectedRecommendation = point;
+		}
 	}
 }

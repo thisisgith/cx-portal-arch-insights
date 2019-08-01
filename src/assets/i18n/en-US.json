@@ -536,7 +536,7 @@
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:",
 	"_YourImpactedDevices_": "Your Impacted Devices",
 	"_YourProducts_": "Your products, documentation & Learning Library resources",
-	"_OsvBasicRecommendations_": "Basic Recommendations",
+	"_OsvBasicRecommendations_": "Recommendations",
 	"_OsvSoftwareProfiles_": "Software Profiles",
 	"_OsvAssetsOfSoftwareProfiles_": "Assets of Software Profiles",
 	"_OsvIndependentAssets_": "Independent Assets",
@@ -585,5 +585,9 @@
 	"_OsvViewAllOSVersions_": "View all OS Versions",
 	"_OsvYes_": "Y",
 	"_OsvNo_": "N",
-	"_OsvClose_":"Close"
+	"_OsvClose_":"Close",
+	"_OsvSelectedRecommendation_":"Selected Recommendation:",
+	"_OsvClickToSelectRecommendation_":"To select, click on a recommendation.",
+	"_OsvIP_":"IP:",
+	"_OsvNoRecommendations_":"No Recommendations"
 }
