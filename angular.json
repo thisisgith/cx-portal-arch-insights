@@ -66,10 +66,6 @@
 								{
 									"replace": "src/app/components/header/header.component.ts",
 									"with": "src/app/components/header/header.component.prod"
-								},
-								{
-									"replace": "src/index.html",
-									"with": "src/index.prod.html"
 								}
 							],
 							"buildOptimizer": true,
@@ -102,10 +98,6 @@
 								{
 									"replace": "src/app/components/header/header.component.ts",
 									"with": "src/app/components/header/header.component.prod"
-								},
-								{
-									"replace": "src/index.html",
-									"with": "src/index.prod.html"
 								}
 							],
 							"buildOptimizer": true,

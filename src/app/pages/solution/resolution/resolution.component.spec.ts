@@ -11,10 +11,12 @@ import { ResolutionComponent } from './resolution.component';
 import { ResolutionModule } from './resolution.module';
 import { CaseScenarios } from '@mock';
 
+import * as _ from 'lodash-es';
+
 describe('ResolutionComponent', () => {
+	let service: CaseService;
 	let component: ResolutionComponent;
 	let fixture: ComponentFixture<ResolutionComponent>;
-	let service: CaseService;
 	let router: Router;
 
 	beforeEach(async(() => {
@@ -46,7 +48,7 @@ describe('ResolutionComponent', () => {
 
 	it('should call case list on init', () => {
 		expect(service.read)
-			.toHaveBeenCalled();
+			.toHaveBeenCalledTimes(9);
 	});
 
 	it('should refresh on sort', () => {
@@ -55,16 +57,16 @@ describe('ResolutionComponent', () => {
 			value: 'Value1',
 		});
 		expect(service.read)
-			.toHaveBeenCalledTimes(2);
+			.toHaveBeenCalledTimes(10);
 	});
 
 	it('should refresh on page change', () => {
 		component.onPagerUpdated({ page: 2 });
 		expect(service.read)
-			.toHaveBeenCalledTimes(2);
+			.toHaveBeenCalledTimes(10);
 	});
 
-	it('should show invalid input on bad casenum', fakeAsync(() => {
+	it('should show invalid input on bad casenum', () => {
 		const input = fixture.debugElement.query(By.css('#input-type-search'));
 		const form = fixture.debugElement.query(By.css('form'));
 		const el = input.nativeElement;
@@ -72,14 +74,13 @@ describe('ResolutionComponent', () => {
 		el.dispatchEvent(new Event('input'));
 		form.nativeElement
 			.dispatchEvent(new Event('submit'));
-		tick();
 		fixture.detectChanges();
-		// Expect only the 1 initial search on page load
+		// Expect only the 9 initial searches on page load
 		expect(service.read)
-			.toHaveBeenCalledTimes(1);
+			.toHaveBeenCalledTimes(9);
 		expect(component.isSearchCaseFormInvalid)
 			.toBeTruthy();
-	}));
+	});
 
 	it('should submit valid casenum search', () => {
 		const input = fixture.debugElement.query(By.css('input'));
@@ -92,7 +93,7 @@ describe('ResolutionComponent', () => {
 		fixture.detectChanges();
 		// Expect it to refresh again
 		expect(service.read)
-			.toHaveBeenCalledTimes(2);
+			.toHaveBeenCalledTimes(10);
 		expect(component.isSearchCaseFormInvalid)
 			.toBeFalsy();
 	});
@@ -112,7 +113,7 @@ describe('ResolutionComponent', () => {
 
 	it('should use the case and serial queryparams', fakeAsync(() => {
 		router.navigate(
-			['.'],
+			[],
 			{
 				queryParams: { case: '688296392', serial: 'FOX1306GBAD' },
 				relativeTo: component.route,
@@ -148,5 +149,105 @@ describe('ResolutionComponent', () => {
 		fixture.detectChanges();
 		expect(component.selectedCase)
 			.toBeNull();
+	}));
+
+	it('should switch active filters', fakeAsync(() => {
+		const totalFilter = _.find(component.filters, { key: 'total' });
+		const statusFilter = _.find(component.filters, { key: 'status' });
+
+		expect(component.selectedFilters)
+			.toContain(totalFilter);
+
+		component.onSubfilterSelect('New', statusFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(component.selectedFilters)
+			.toContain(statusFilter);
+	}));
+
+	it('should select status subfilters', fakeAsync(() => {
+		const statusFilter = _.find(component.filters, { key: 'status' });
+		component.onSubfilterSelect('New', statusFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(component.selectedFilters)
+			.toContain(statusFilter);
+
+		let subfilter = _.find(statusFilter.seriesData, { filter: 'New' });
+
+		expect(subfilter.selected)
+			.toBeTruthy();
+
+		const ciscoFilter = _.find(component.filters, { key: 'status' });
+		component.onSubfilterSelect('Cisco Pending', ciscoFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(component.selectedFilters)
+			.toContain(ciscoFilter);
+
+		subfilter = _.find(ciscoFilter.seriesData, { filter: 'Cisco Pending' });
+
+		expect(subfilter.selected)
+			.toBeTruthy();
+	}));
+
+	it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
+		const statusFilter = _.find(component.filters, { key: 'status' });
+		component.onSubfilterSelect('New', statusFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(component.selectedFilters)
+			.toContain(statusFilter);
+
+		let subfilter = _.find(statusFilter.seriesData, { filter: 'New' });
+
+		expect(subfilter.selected)
+			.toBeTruthy();
+
+		component.onSubfilterSelect('New', statusFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		subfilter = _.find(statusFilter.seriesData, { filter: 'New' });
+
+		expect(subfilter.selected)
+			.toBeFalsy();
+	}));
+
+	it('should clear all status subfilters', fakeAsync(() => {
+		const statusFilter = _.find(component.filters, { key: 'status' });
+		component.onSubfilterSelect('New', statusFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(component.selectedFilters)
+			.toContain(statusFilter);
+
+		const ciscoFilter = _.find(component.filters, { key: 'status' });
+		component.onSubfilterSelect('Cisco Pending', ciscoFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		const severityFilter = _.find(component.filters, { key: 'severity' });
+		component.onSubfilterSelect('1', severityFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		component.clearFilters();
+		const totalFilter = _.find(component.filters, { key: 'total' });
+		expect(component.selectedFilters)
+			.toContain(totalFilter);
 	}));
 });
