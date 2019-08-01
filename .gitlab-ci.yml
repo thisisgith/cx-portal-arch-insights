@@ -38,6 +38,7 @@ lint:
   script:
     - npm run lint
     - npm run lint:cypress
+    - npm run lint:sdp
 
 # run our test:ci process for the commit
 unit:

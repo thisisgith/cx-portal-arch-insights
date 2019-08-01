@@ -360,6 +360,14 @@ export const ACCScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ACC) IBN-WirelessAssurance/SDAccess-Onboard ACCRequestSubmit1 Error',
+					response: {
+						status: 500,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}/${accId1}/request`,

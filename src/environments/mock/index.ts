@@ -24,6 +24,8 @@ export * from './product-alerts/hardware-eol-counts';
 export * from './product-alerts/hardware-eol';
 export * from './product-alerts/security-advisory-bulletins';
 export * from './product-alerts/security-advisory-top';
+export * from './product-alerts/security-advisory-last-updated-count';
+export * from './product-alerts/security-advisory-severity-count';
 export * from './product-alerts/security-advisory';
 export * from './product-alerts/summary';
 export * from './product-alerts/vulnerabilities';

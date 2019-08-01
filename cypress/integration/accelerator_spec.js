@@ -655,7 +655,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				});
 			});
 
-			it('PBC-260: Interested field has max length of 512 characters', () => {
+			it.skip('PBC-260: Interested field has max length of 512 characters', () => {
 				// Field with between 1-512 chars should be valid
 				cy.getByAutoId('accRequestModal-WhyInterestedAccelerator-Input')
 					.clear()
@@ -674,7 +674,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					.should('have.class', 'ng-invalid');
 			});
 
-			it('PBC-260: Outcome field has max length of 512 characters', () => {
+			it.skip('PBC-260: Outcome field has max length of 512 characters', () => {
 				// Field with between 1-512 chars should be valid
 				cy.getByAutoId('accRequestModal-WhatWouldLikeToSeeOutcome-Input')
 					.clear()
@@ -892,7 +892,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		describe('Form completion/submission', () => {
+		describe.skip('Form completion/submission', () => {
 			it('PBC-260: Should be able to submit when all fields are filled correctly', () => {
 				// Open the request form modal
 				cy.getByAutoId('recommendedACCWatchButton').click();
@@ -914,7 +914,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		describe('PBC-259: API Integration', () => {
+		describe.skip('PBC-259: API Integration', () => {
 			beforeEach(() => {
 				// Setup Cypress mocks and disable app-based mocks so we can verify calls/responses
 				cy.server();

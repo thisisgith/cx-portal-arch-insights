@@ -11,6 +11,8 @@ import { VulnerabilityResponse } from '../models/vulnerability-response';
 import { SecurityAdvisoryResponse } from '../models/security-advisory-response';
 import { SecurityAdvisorySummary } from '../models/security-advisory-summary';
 import { SecurityAdvisoryImpactCountResponse } from '../models/security-advisory-impact-count-response';
+import { SecurityAdvisorySeverityCountResponse } from '../models/security-advisory-severity-count-response';
+import { AdvisoriesByLastUpdatedCount } from '../models/advisories-by-last-updated-count';
 import { SecurityAdvisoryBulletinResponse } from '../models/security-advisory-bulletin-response';
 import { SecurityAdvisoriesResponse } from '../models/security-advisories-response';
 import { FieldNoticeResponse } from '../models/field-notice-response';
@@ -32,6 +34,8 @@ class ProductAlertsService extends __BaseService {
   static readonly getSecurityAdvisoryListPath = '/security-advisories/list';
   static readonly getSecurityAdvisorySummaryPath = '/security-advisories/summary';
   static readonly getTopSecurityAdvisoriesPath = '/security-advisories/top';
+  static readonly getSecurityAdvisorySeverityCountPath = '/security-advisories/severity/count';
+  static readonly getSecurityAdvisoryLastUpdatedCountPath = '/security-advisories/last-updated/count';
   static readonly headSecurityAdvisoryBulletinsPath = '/security-advisory-bulletins';
   static readonly getPSIRTBulletinPath = '/security-advisory-bulletins';
   static readonly getAdvisoriesSecurityAdvisoriesPath = '/advisories-security-advisories';
@@ -238,7 +242,7 @@ class ProductAlertsService extends __BaseService {
   }
 
   /**
-   * Generates the total number of security advisoeries and the count by severity
+   * Generates the total number of security advisories and the count by severity
    * @param params The `ProductAlertsService.GetSecurityAdvisoryListParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
@@ -279,7 +283,7 @@ class ProductAlertsService extends __BaseService {
   }
 
   /**
-   * Generates the total number of security advisoeries and the count by severity
+   * Generates the total number of security advisories and the count by severity
    * @param params The `ProductAlertsService.GetSecurityAdvisoryListParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
@@ -299,7 +303,7 @@ class ProductAlertsService extends __BaseService {
   }
 
   /**
-   * Generates the total number of security advisoeries and the count by severity
+   * Generates the total number of security advisories and the count by severity
    * @param customerId Unique identifier of a Cisco customer.
    * @return OK
    */
@@ -328,7 +332,7 @@ class ProductAlertsService extends __BaseService {
   }
 
   /**
-   * Generates the total number of security advisoeries and the count by severity
+   * Generates the total number of security advisories and the count by severity
    * @param customerId Unique identifier of a Cisco customer.
    * @return OK
    */
@@ -400,6 +404,86 @@ class ProductAlertsService extends __BaseService {
   getTopSecurityAdvisories(params: ProductAlertsService.GetTopSecurityAdvisoriesParams): __Observable<SecurityAdvisoryImpactCountResponse> {
     return this.getTopSecurityAdvisoriesResponse(params).pipe(
       __map(_r => _r.body as SecurityAdvisoryImpactCountResponse)
+    );
+  }
+
+  /**
+   * The Security Advisories Severity Count API retrieves count of security advisories falling into each severity category.
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return OK
+   */
+  getSecurityAdvisorySeverityCountResponse(customerId: string): __Observable<__StrictHttpResponse<SecurityAdvisorySeverityCountResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/severity/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<SecurityAdvisorySeverityCountResponse>;
+      })
+    );
+  }
+
+  /**
+   * The Security Advisories Severity Count API retrieves count of security advisories falling into each severity category.
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return OK
+   */
+  getSecurityAdvisorySeverityCount(customerId: string): __Observable<SecurityAdvisorySeverityCountResponse> {
+    return this.getSecurityAdvisorySeverityCountResponse(customerId).pipe(
+      __map(_r => _r.body as SecurityAdvisorySeverityCountResponse)
+    );
+  }
+
+  /**
+   * The Security Advisories Last Updated Count API retrieves count of security advisories falling into each date range by their Last Updated Date.
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return OK
+   */
+  getSecurityAdvisoryLastUpdatedCountResponse(customerId: string): __Observable<__StrictHttpResponse<AdvisoriesByLastUpdatedCount>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (customerId != null) __params = __params.set('customerId', customerId.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/last-updated/count`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<AdvisoriesByLastUpdatedCount>;
+      })
+    );
+  }
+
+  /**
+   * The Security Advisories Last Updated Count API retrieves count of security advisories falling into each date range by their Last Updated Date.
+   * @param customerId Unique identifier of a Cisco customer.
+   * @return OK
+   */
+  getSecurityAdvisoryLastUpdatedCount(customerId: string): __Observable<AdvisoriesByLastUpdatedCount> {
+    return this.getSecurityAdvisoryLastUpdatedCountResponse(customerId).pipe(
+      __map(_r => _r.body as AdvisoriesByLastUpdatedCount)
     );
   }
 

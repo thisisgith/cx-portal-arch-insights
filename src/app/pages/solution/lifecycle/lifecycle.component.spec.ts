@@ -401,7 +401,7 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
-	describe('Product Guides', () => {
+	describe('Success Bytes', () => {
 		it('should have loaded the successPaths items', () => {
 			buildSpies();
 			sendParams();
@@ -415,13 +415,13 @@ describe('LifecycleComponent', () => {
 				});
 		});
 
-		it('should show the Product Guides view-all modal', () => {
+		it('should show the Success Bytes view-all modal', () => {
 			buildSpies();
 			sendParams();
 
 			fixture.detectChanges();
 
-			component.showModal('_ProductGuide_');
+			component.showModal('_SuccessBytes_');
 			fixture.detectChanges();
 
 			expect(component.modal.visible)
@@ -432,25 +432,25 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			component.selectedCategory = 'Project Planning';
-			component.selectFilter('productguide');
+			component.selectFilter('successBytes');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(2);
 
 			component.selectedCategory = 'Getting Started';
-			component.selectFilter('productguide');
+			component.selectFilter('successBytes');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(1);
 
 			component.onSort('title', 'asc');
 			fixture.detectChanges();
-			expect(component.productGuidesTable.columns[0].sortDirection)
+			expect(component.successBytesTable.columns[0].sortDirection)
 				.toEqual('desc');
 
 			component.onSort('title', 'desc');
 			fixture.detectChanges();
-			expect(component.productGuidesTable.columns[0].sortDirection)
+			expect(component.successBytesTable.columns[0].sortDirection)
 				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));

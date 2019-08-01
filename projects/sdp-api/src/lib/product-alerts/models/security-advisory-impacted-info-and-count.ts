@@ -34,7 +34,7 @@ export interface SecurityAdvisoryImpactedInfoAndCount {
   /**
    * The URL to the security advisory
    */
-  advisortyURL?: string;
+  advisoryURL?: string;
 
   /**
    * The number of impacted network elements
