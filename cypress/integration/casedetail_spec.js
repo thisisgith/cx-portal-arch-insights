@@ -182,5 +182,19 @@ describe('Case Detail Spec', () => {
 				.and('have.attr', 'href');
 			cy.getByAutoId('CloseDetails').click();
 		});
+
+		it.only('PBC-345 Case Detail Attachments - Upload - Cancel and X buttons', () => {
+			cy.getByAutoId('CaseAttachFile').click();
+			cy.getByAutoId('CSC-UploadFilesDialogTitle').should('exist');
+			cy.getByAutoId('CSC-UploadFilesDialogSubmit').should('exist');
+
+			cy.getByAutoId('CSC-UploadFilesDialogCancel').click();
+
+			cy.getByAutoId('CaseAttachFile').click();
+			cy.getByAutoId('CSC-UploadFilesDialogClose').click();
+		});
+
+		it.only('PBC-345 Case Detail Attachments - Upload - Attach a file', () => {
+		});
 	});
 });
