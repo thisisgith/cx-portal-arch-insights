@@ -60,12 +60,12 @@ describe('Case Detail Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it.skip('Case Details Click on case from List', () => {
+		it('Case Details Click on case from List', () => {
 			// PBC-233
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
-			cy.wait(3000);
+			cy.wait(4000);
 			cy.getByAutoId('Case ID-Cell').click();
 			cy.wait(3000);
 			cy.get('details-panel').should('be.visible');
@@ -82,25 +82,25 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CloseDetails').click();
 		});
 
-		it.skip('Closes 360 view when leaving the case page', () => {
+		it('Closes 360 view when leaving the case page', () => {
 			// PBC-233
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
-			cy.wait(3000);
+			cy.wait(4000);
 			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(3000);
-			cy.get('app-panel360').should('be.visible');
+			cy.get('details-panel').should('be.visible');
 			cy.getByAutoId('CloseDetails').click();
-			cy.get('app-panel360').should('not.be.visible');
+			cy.get('details-panel').should('not.be.visible');
 		});
 
-		it.skip('Case Details Verify Buttons Exist', () => {
+		it('Case Details Verify Buttons Exist', () => {
 			// PBC-233
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
-			cy.wait(3000);
+			cy.wait(4000);
 			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(6000);
 			cy.get('details-panel').should('be.visible');
@@ -109,7 +109,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CloseDetails').click();
 		});
 	});
-	context.only('Case Detail Notes and Files', () => {
+	context('Case Detail Notes and Files', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
@@ -120,10 +120,11 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
-			cy.wait(3000);
+			cy.wait(6000);
 			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(3000);
-			cy.get('app-panel360').should('be.visible');
+			// cy.get('app-panel360').should('be.visible');
+			cy.get('details-panel').should('be.visible');
 		});
 
 
@@ -171,7 +172,15 @@ describe('Case Detail Spec', () => {
 		});
 
 		it('PBC-232 Case Detail Attachments - List & Download', () => {
-
+			// Verify elements of the files tab
+			cy.getByAutoId('filesTab').click();
+			cy.wait(4000);
+			cy.getByAutoId('Name-Header').should('exist');
+			cy.getByAutoId('Type-Header').should('exist');
+			cy.getByAutoId('Size-Header').should('exist');
+			cy.getByAutoId('DownloadUrl').should('have.length.gte', 0)
+				.and('have.attr', 'href');
+			cy.getByAutoId('CloseDetails').click();
 		});
 	});
 });
