@@ -788,4 +788,78 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('CloseDetails').click();
 		});
 	});
+
+	context('PBC-90: Asset List -> Case List View', () => {
+		// Verify the Case List 360 view
+		it('Opens Case List 360 view when clicking asset cards', () => { // PBC-90
+			assetMock.enable('(Assets) Missing data - Grid View');
+			cy.getByAutoId('grid-view-btn')
+				.click();
+			const serial = assetCards[0].serialNumber;
+			cy.getByAutoId(`Device-${serial}`)
+				.click();
+			cy.getByAutoId('Asset360SerialNumber')
+				.should('have.text', `Serial Number${serial}`);
+			cy.getByAutoId('Asset360IPAddress')
+				.should('have.text', 'IP AddressN/A');
+			cy.getByAutoId('CloseDetails')
+				.click();
+			cy.getByAutoId('list-view-btn')
+				.click();
+			cy.getByAutoId(`Device-${serial}`)
+				.click();
+			cy.getByAutoId('ToggleActiveCases')
+				.should('be.visible');
+			cy.getByAutoId('Asset360OpenCaseBtn')
+				.should('be.visible');
+			// Check for Summary,Hardware and Advisories Tabs are enabled
+			cy.getByAutoId('SUMMARYTab')
+				.should('be.visible');
+			cy.getByAutoId('HARDWARETab')
+				.should('be.visible');
+			cy.getByAutoId('SOFTWARETab')
+				.should('not.be.visible');
+			cy.getByAutoId('ADVISORIESTab')
+				.should('be.visible');
+			cy.getByAutoId('ToggleActiveCases')
+				.click();
+			// Verify the Table headers
+			cy.getByAutoId('Severity-Header')
+				.should('exist')
+				.should('contain', 'Severity');
+			cy.getByAutoId('Case ID-Header')
+				.should('exist')
+				.should('contain', 'Case ID');
+			cy.getByAutoId('Summary-Header')
+				.should('exist')
+				.should('contain', 'Summary');
+			cy.getByAutoId('Status-Header')
+				.should('exist')
+				.should('contain', 'Status');
+			cy.getByAutoId('Updated-Header')
+				.should('exist')
+				.should('contain', 'Updated');
+			expect(cy.getByAutoId('Summary-Cell')
+				.should('exist')
+				.its('length')
+				.should('be.gt', 0));
+			cy.getByAutoId('close')
+				.click();
+		});
+
+		it('Open Cases button is hidden if asset does not have any open cases', () => { // PBC-90
+			assetMock.enable('ACCESS Assets Page 1 - Grid');
+			cy.getByAutoId('list-view-btn')
+				.click();
+			const serial = assetCards[1].serialNumber;
+			cy.getByAutoId(`Device-${serial}`)
+				.click();
+			cy.getByAutoId('ToggleActiveCases')
+				.should('not.be.visible');
+			cy.getByAutoId('Asset360OpenCaseBtn')
+				.should('not.be.visible');
+			cy.getByAutoId('CloseDetails')
+				.click();
+		});
+	});
 });
