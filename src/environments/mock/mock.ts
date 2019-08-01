@@ -21,6 +21,7 @@ import {
 	HardwareScenarios,
 	HealthStatusScenarios,
 	NetworkScenarios,
+	OSVScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
@@ -45,6 +46,7 @@ import {
 	ACCUserInfoSchema,
 	AdvisoriesByLastUpdatedCount,
 	Assets,
+	AssetRecommendationsResponse,
 	ATXResponse,
 	CDCSearchResponse,
 	CommunitiesResponse,
@@ -73,6 +75,8 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
+	SoftwareProfilesResponse,
+	SoftwareVersionsResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -86,6 +90,7 @@ type ResponseBody = (
 	AdvisoriesByLastUpdatedCount |
 	Assets |
 	ATXResponse |
+	AssetRecommendationsResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
 	CoverageCountsResponse |
@@ -114,6 +119,8 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
+	SoftwareProfilesResponse |
+	SoftwareVersionsResponse |
 	SuccessPathsResponse |
 	VulnerabilityResponse
 );
@@ -182,6 +189,8 @@ export const mockSettings: MockSettings = {
 		HardwareScenarios,
 		HealthStatusScenarios,
 		NetworkScenarios,
+		OSVScenarios,
+		RMAScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
 		RoleScenarios,

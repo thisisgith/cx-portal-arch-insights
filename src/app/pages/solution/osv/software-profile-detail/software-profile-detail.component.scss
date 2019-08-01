@@ -1,0 +1,21 @@
+/** Empty component SCSS file */
+.recommendations {
+	> div {
+		border: 1px solid #dfdfdf;
+		padding: 10px 5px;
+	}
+
+	.border-bottom {
+		border-bottom: 1px solid #dfdfdf;
+	}
+
+	.border-right {
+		border-right: 1px solid #dfdfdf;
+	}
+
+	.vertical-center {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+}

@@ -111,7 +111,7 @@ describe('SolutionComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 
 		racetrackService = TestBed.get(RacetrackService);
 	}));

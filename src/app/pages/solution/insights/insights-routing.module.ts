@@ -10,7 +10,7 @@ const routes: Routes = [
 		children: [
 			{
 				loadChildren: () => import('../osv/osv.module')
-					.then(m => m.OsvModule),
+					.then(m => m.OptimalSoftwareVersionModule),
 				path: 'osv',
 			}, {
 				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')

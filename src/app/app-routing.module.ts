@@ -9,7 +9,7 @@ import { UserResolve } from './utilities/user-resolve';
 const routes: Routes = [
 	{
 		loadChildren: () => import('./pages/admin/admin.module')
-		 	.then(m => m.AdminModule),
+			.then(m => m.AdminModule),
 		path: 'admin',
 	},
 	{
