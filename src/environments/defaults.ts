@@ -24,6 +24,9 @@ export const defaults = {
 	csone: {
 		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
+	microservice_urls: {
+		cases: '/ws/casesdlinton/v3',
+	},
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [
