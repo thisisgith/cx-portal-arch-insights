@@ -13,6 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {
 	RacetrackScenarios,
 	Mock,
+	user,
 } from '@mock';
 import * as _ from 'lodash-es';
 import { RacetrackService } from '@sdp-api';
@@ -93,18 +94,7 @@ describe('SolutionComponent', () => {
 					useValue: {
 						snapshot: {
 							data: {
-								user: {
-									customerId: '2431199',
-									individual: {
-										ccoId: 'fakeCco',
-										cxBUId: '2431199',
-										emailAddress: 'fakeCco@cisco.com',
-										familyName: 'Test',
-										name: 'Demo',
-										role: 'admin',
-									},
-									name: 'Test User',
-								},
+								user,
 							},
 						},
 					},

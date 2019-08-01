@@ -18,6 +18,7 @@ import * as _ from 'lodash-es';
 })
 export class PieChartComponent implements OnInit {
 
+	@Input() public loading;
 	@Input() public seriesData;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
@@ -36,6 +37,7 @@ export class PieChartComponent implements OnInit {
 	 */
 	private buildGraph () {
 		const data = _.map(this.seriesData, d => ({
+			color: d.color,
 			name: d.label,
 			y: d.value,
 		}));
@@ -75,6 +77,7 @@ export class PieChartComponent implements OnInit {
 					cursor: 'pointer',
 					dataLabels: {
 						allowOverlap: false,
+						distance: 15,
 						enabled: true,
 					},
 					innerSize: 60,
@@ -90,7 +93,9 @@ export class PieChartComponent implements OnInit {
 			series: [{
 				data,
 				colorByPoint: true,
+				enableMouseTracking: !this.loading,
 				name: '',
+				opacity: this.loading ? 0.5 : 1,
 				type: undefined,
 			}],
 			title: {
