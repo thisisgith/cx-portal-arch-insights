@@ -231,7 +231,7 @@
 				<h5 [innerText]="data.title"></h5>
 			</div>
 			<div class="col-md-1">
-				<a class="no-link fade-in-pop closebtn"
+				<a class="no-link closebtn"
 					(click)="this.atxScheduleCardOpened = false"
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
@@ -243,7 +243,7 @@
 		</div>
 		<div class="half-margin-top base-margin-left base-margin-bottom text-left">
 			<a data-auto-id="viewOnDemand"
-				class="no-link fade-in-pop"
+				class="no-link"
 				[href]="data.viewOnDemandUrl">
 				<div class="flex">
 					<div class="btn--square">
@@ -379,7 +379,7 @@
 		</div>
 		<div class="col-md-3 text-right text-indigo"
 			*ngIf="data">
-			<a class="no-link fade-in-pop"
+			<a class="no-link"
 				target="_blank"
 				attr.data-auto-id="{{ title }}-ViewAll"
 				href="https://pilot-digital-learning.cisco.com/cx#/"
@@ -392,7 +392,7 @@
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<div id="recommended-elearning-item" class=" panel small-panel">
-				<a class="no-link fade-in-pop" target="_blank" [href]="item.url">
+				<a class="no-link" target="_blank" [href]="item.url">
 					<span class="text-blue" [innerText]="item.title"></span>
 				</a>
 				<ng-container *ngTemplateOutlet="recommendedDescription; context: {
@@ -460,13 +460,13 @@
 					<div class="card__footer">
 						<div class="card_footer_item">
 							<div class="text-left">
-								<a data-auto-id="viewOnDemand" class="no-link fade-in-pop" [href]="item.viewOnDemandUrl">
+								<a data-auto-id="viewOnDemand" class="no-link" [href]="item.viewOnDemandUrl">
 									<span class="icon-play-contained icon-small half-padding-right"></span>
 									<span [innerText]="'_WatchNow_' | i18n"></span>
 								</a>
 							</div>
 							<div class="text-left">
-								<a data-auto-id="recommendedATXScheduleButton" class="no-link fade-in-pop"
+								<a data-auto-id="recommendedATXScheduleButton" class="no-link"
 									(click)="atxScheduleCardOpened = true; componentData.atx.interested = item">
 									<span class="icon-calendar icon-small half-padding-right"></span>
 									<span [innerText]="'_ViewSessions_' | i18n"></span>
@@ -639,7 +639,7 @@
 				<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 					<div class="row">
 						<div class="col-md-3">
-							<a class="no-link fade-in-pop" data-auto-id="successlink" target="_blank" [href]="item.url">
+							<a class="no-link" data-auto-id="successlink" target="_blank" [href]="item.url">
 								<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
 									<span class="icon-apps icon-small half-padding-right"></span>
 									<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
@@ -781,7 +781,7 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div *ngIf="celldata.type">
-				<a class="no-link fade-in-pop" target="_blank" [href]="celldata.url" data-auto-id="SuccessPathsTable-Format-rowValue-link">
+				<a class="no-link" target="_blank" [href]="celldata.url" data-auto-id="SuccessPathsTable-Format-rowValue-link">
 					<div class="text-left text-muted" *ngIf="celldata.type === 'Web Page'">
 						<span class="icon-apps icon-small half-padding-right"></span>
 						<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
