@@ -48,4 +48,3 @@ export * from './lib/entitlement/entitlement.module';
 export * from './lib/osv/models';
 export * from './lib/osv/services';
 export * from './lib/osv/osv.module';
-
