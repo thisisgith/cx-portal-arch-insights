@@ -6,8 +6,10 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiSpinnerModule, CuiSelectModule, CuiRatingModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
 import { LifecycleComponent } from './lifecycle.component';
-import { RacetrackModule, RacetrackContentModule } from '@cui-x/sdp-api';
+import { RacetrackModule, RacetrackContentModule } from '@sdp-api';
 import { environment } from '@environment';
+import { AccRequestFormModule } from './acc-request-form/acc-request-form.module';
+import { CommunitiesModule } from './communities/communities.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -30,6 +32,7 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [LifecycleComponent],
 	imports: [
+		AccRequestFormModule,
 		CommonModule,
 		CuiRatingModule,
 		CuiSelectModule,
@@ -37,6 +40,7 @@ const childRoutes: Routes = [
 		FormsModule,
 		I18nPipeModule,
 		RacetrackComponentModule,
+		CommunitiesModule,
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
 		RouterModule.forChild(childRoutes),

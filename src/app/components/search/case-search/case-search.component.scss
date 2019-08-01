@@ -1,19 +1,13 @@
-.severityRectangle {
-	vertical-align: text-top;
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.innerSpecialPanel {
+	background-color: $off-white;
 }
 
-.statusRed {
-	fill: #e2231a;
+h3 {
+	font-weight: $base-font-weight;
 }
 
-.statusOrange {
-	fill: #fbab18;
-}
-
-.statusYellow {
-	fill: #fc0;
-}
-
-.statusBlue {
-	fill: #64bbe3;
+dt {
+	font-weight: $base-font-weight;
 }

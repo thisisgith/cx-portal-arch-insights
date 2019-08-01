@@ -27,7 +27,7 @@ export interface SuccessPath {
   url?: string;
 
   /**
-   * Getting Started How-to
+   * Solution Type
    */
   archetype?: string;
 }

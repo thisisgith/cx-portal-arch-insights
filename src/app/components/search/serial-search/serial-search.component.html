@@ -1,124 +1,217 @@
 <div *ngIf="loading" class="row no-gutters">
 	<div class="col-md-12">
-		<div class="panel panel--loose">
+		<div class="innerSpecialPanel panel panel--loose">
 			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingSerialNumbers_' | i18n"></h4>
 			<cui-spinner></cui-spinner>
 		</div>
 	</div>
 </div>
 <div *ngIf="!loading && data">
-	<h4 [innerText]="'_SerialNumberHeader_' | i18n:serialNumber.query"></h4>
-	<h5 class="base-margin-top" [innerText]="data.productName"></h5>
-
-	<div class="dbl-margin-top">
-		<div>
-			<dl class="dl--inline">
-				<dt>
-					<span class="subheading text-uppercase left-header" [innerText]="'_CXLevel_' | i18n"></span>
-				</dt>
-				<dd>
-					<span *ngIf="contractData.cxLevel; else loadingContract" [innerText]="contractData.cxLevel"></span>
-				</dd>
-				<dt>
-					<span class="subheading text-uppercase left-header" [innerText]="'_ContractNumber_' | i18n"></span>
-				</dt>
-				<dd>
-					<a data-auto-id="contractNumber" href="#" *ngIf="contractData.contractNum; else loadingContract" [innerText]="contractData.contractNum"></a>
-				</dd>
-				<dt>
-					<span class="subheading text-uppercase left-header" [innerText]="'_ExpirationDate_' | i18n"></span>
-				</dt>
-				<dd>
-					<span *ngIf="contractData.expirationDate; else loadingContract" [innerText]="contractData.expirationDate"></span>
-				</dd>
-			</dl>
+	<h3 data-auto-id="serialHeader" [innerText]="'_SerialNumberHeader_' | i18n:serialNumber.query"></h3>
+	<div class="row">
+		<div class="row no-gutters col-md-7 base-margin-top">
+			<div class="col-md-5">
+				<dl class="dl--inline-medium">
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialProd"
+							[innerText]="'_Product_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="data?.productName; else unavailable"
+							[innerText]="data.productName"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialCoverage"
+							[innerText]="'_SupportCoverage_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="contractData?.cxLevel; else loadingContractTemplate"
+							[innerText]="contractData.cxLevel"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialContract"
+							[innerText]="'_Contract_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="contractData?.contractNum; else loadingContractTemplate"
+							data-auto-id="serialConNum"
+							[innerText]="contractData.contractNum"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialExpDate"
+							[innerText]="'_ExpirationDate_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="contractData?.expirationDate; else loadingContractTemplate"
+							[innerText]="(contractData.expirationDate | date:'dd-MMM-y') +
+							' (' + (contractData.expirationDate | fromNow) + ')'"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialSWTypeOS"
+							[innerText]="'_SoftwareTypeOS_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="data?.softwareType; else unavailable"
+							[innerText]="data.softwareType"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialCurrentVer"
+							[innerText]="'_CurrentVersion_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="data?.currentVersion; else unavailable"
+							[innerText]="data.currentVersion"></span>
+					</dd>
+				</dl>
+			</div>
+			<div class="col-md-1"></div>
+			<div class="col-md-5">
+				<dl class="dl--inline-medium">
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							[innerText]="'_LatestVersion_' | i18n"></span>
+					</dt>
+					<dd>
+						<!-- TODO: Add template for loadingSoftware once API is set up -->
+						<span *ngIf="data?.latestVersion else unavailable"
+							[innerText]="data.latestVersion"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialOpenCases"
+							[innerText]="'_OpenCases_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="caseData; else loadingCaseTemplate"
+							[innerText]="caseData.openCases"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialOpenRMAs"
+							[innerText]="'_OpenRMAs_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="caseData; else loadingCaseTemplate"
+							[innerText]="caseData.openRmas"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialFieldNotice"
+							[innerText]="'_RelatedFieldNotices_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="alertsData?.fieldNotices !== null; else loadingAlertsTemplate"
+							[innerText]="alertsData.fieldNotices"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialSecAdv"
+							[innerText]="'_RelatedSecurityAdvisories_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="alertsData?.securityAdvisories !== null; else loadingAlertsTemplate"
+							[innerText]="alertsData.securityAdvisories"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="serialBugs"
+							[innerText]="'_RelatedBugs_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="alertsData?.bugs !== null; else loadingAlertsTemplate"
+							[innerText]="alertsData.bugs"></span>
+					</dd>
+				</dl>
+			</div>
 		</div>
-		<div class="base-margin-top">
-			<dl class="dl--inline">
-				<dt>
-					<span class="subheading text-uppercase left-header" [innerText]="'_SoftwareTypeOS_' | i18n"></span>
-				</dt>
-				<dd>
-					<a data-auto-id="softwareTypeOS" href="#" *ngIf="data.softwareType; else unavailable" [innerText]="data.softwareType"></a>
-				</dd>
-				<dt>
-					<span class="subheading text-uppercase left-header" [innerText]="'_CurrentVersion_' | i18n"></span>
-				</dt>
-				<dd>
-					<a data-auto-id="currentVersion" href="#" *ngIf="data.currentVersion; else unavailable" [innerText]="data.currentVersion"></a>
-				</dd>
-				<dt>
-					<span class="subheading text-uppercase left-header" [innerText]="'_LatestVersion_' | i18n"></span>
-				</dt>
-				<dd>
-					<a data-auto-id="latestVersion" href="#" *ngIf="data.latestVersion; else unavailable" [innerText]="data.latestVersion"></a>
-				</dd>
-			</dl>
+		<div class="row col-md-5">
+			<div class="col-md-1"></div>
+			<div class="col-md-10">
+				<div class="panel panel--bordered">
+					<div class="half-margin-top half-margin-left half-margin-right">
+						<!-- TODO: Add product photo here -->
+						<dl class="dl--inline-medium">
+							<dt>
+								<span class="subheading text-small text-uppercase"
+									data-auto-id="serialProdID"
+									[innerText]="'_ProductID_' | i18n"></span>
+							</dt>
+							<dd>
+								<span *ngIf="data?.productId; else unavailable"
+									[innerText]="data.productId"></span>
+							</dd>
+							<dt>
+								<span class="subheading text-small text-uppercase"
+									data-auto-id="serialProdSeries"
+									[innerText]="'_ProductSeries_' | i18n"></span>
+							</dt>
+							<dd>
+								<span *ngIf="data?.productSeries; else loadingHardwareTemplate"
+									[innerText]="data.productSeries"></span>
+							</dd>
+							<dt>
+								<span class="subheading text-small text-uppercase"
+									data-auto-id="serialIP"
+									[innerText]="'_IPAddress_' | i18n"></span>
+							</dt>
+							<dd>
+								<span *ngIf="data?.ipAddress; else unavailable"
+									[innerText]="data.ipAddress"></span>
+							</dd>
+							<dt>
+								<span class="subheading text-small text-uppercase"
+									data-auto-id="serialHost"
+									[innerText]="'_HostName_' | i18n"></span>
+							</dt>
+							<dd>
+								<span *ngIf="data?.hostName; else loadingHardwareTemplate"
+									[innerText]="data.hostName"></span>
+							</dd>
+						</dl>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="base-margin-top">
-		<dl class="dl--inline">
-			<dt>
-				<span class="subheading text-uppercase left-header" [innerText]="'_OpenCases_' | i18n"></span>
-			</dt>
-			<dd>
-				<a data-auto-id="openCases" href="#" *ngIf="data.openCase; else unavailable" [innerText]="data.openCase"></a>
-			</dd>
-			<dt>
-				<span class="subheading text-uppercase left-header" [innerText]="'_OpenRMAs_' | i18n"></span>
-			</dt>
-			<dd>
-				<span *ngIf="data.openRmas; else unavailable" [innerText]="data.openRmas"></span>
-			</dd>
-		</dl>
-	</div>
-	<div class="base-margin-top">
-		<dl class="dl--inline">
-			<dt>
-				<span class="subheading text-uppercase left-header" [innerText]="'_RelatedFieldNotices_' | i18n"></span>
-			</dt>
-			<dd>
-				<a data-auto-id="relatedFieldNotices" href="#" *ngIf="data.advisoryCounts?.fn; else unavailable" [innerText]="data.advisoryCounts.fn"></a>
-			</dd>
-			<dt>
-				<span class="subheading text-uppercase left-header" [innerText]="'_RelatedSecurityAdvisories_' | i18n"></span>
-			</dt>
-			<dd>
-				<a data-auto-id="relatedSecurityAdvisories" href="#" *ngIf="data.advisoryCounts?.sa; else unavailable" [innerText]="data.advisoryCounts.sa"></a>
-			</dd>
-			<dt>
-				<span class="subheading text-uppercase left-header" [innerText]="'_RelatedBugs_' | i18n"></span>
-			</dt>
-			<dd>
-				<a data-auto-id="relatedBugs" href="#" *ngIf="data.advisoryCounts?.bugs; else unavailable" [innerText]="data.advisoryCounts.bugs"></a>
-			</dd>
-		</dl>
-		<div class="half-margin-top text-muted" [innerText]="'_BasedOnLastScanRunXDaysAgo_' | i18n:'7'"><span></span></div>
-	</div>
-	<div class="base-margin-top">
-		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
-		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true" [innerText]="'_OpenACase_' | i18n"></button>
+	<div class="row qtr-margin-top">
+		<div class="col-md-7">
+				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="viewDeviceButton"
+					(click)="onViewDetails(serialNumber.query)" [innerText]="'_ViewDeviceDetails_' | i18n"></button>
+				<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="openCaseButton"
+					*ngIf="assetData?.supportCovered"
+					[innerText]="'_OpenACase_' | i18n"
+					(click)="openCase(assetData)"></button>
+		</div>
+		<div class="row col-md-5">
+			<div class="col-md-1"></div>
+			<div *ngIf="data?.lastScan" class="col-md-10">
+				<span class="icon-small icon-clock text-muted qtr-margin-right" data-auto-id="clockIcon"></span>
+				<span class="text-muted" data-auto-id="lastScanText" [innerText]="('_BasedOnLastScan_' | i18n:(data.lastScan | fromNow))"></span>
+			</div>
+		</div>
 	</div>
 </div>
 
-<ng-template #sidebar>
-	<div class="dbl-padding-top" *ngIf="!loading">
-		<!-- TODO: Add Product image -->
-		<div class="subheading text-uppercase" [innerText]="'_ProductID_' | i18n"></div>
-		<div><span [innerText]="data.productId"></span></div>
-		<div class="subheading text-uppercase half-margin-top" [innerText]="'_ProductSeries_' | i18n"></div>
-		<div><span [innerText]="data.productSeries"></span></div>
-		<div class="subheading text-uppercase half-margin-top" [innerText]="'_IPAddress_' | i18n"></div>
-		<div><span [innerText]="data.ipAddress"></span></div>
-		<div class="subheading text-uppercase half-margin-top" [innerText]="'_HostName_' | i18n"></div>
-		<div><span [innerText]="data.hostName"></span></div>
-</div>
+<ng-template #loadingHardwareTemplate>
+	<span *ngIf="loadingHardware; else unavailable" class="base-margin"></span>
 </ng-template>
 
-<ng-template #loadingContract>
-	<cui-loader color="muted"
-		*ngIf="loadingContractData; else unavailable">
-	</cui-loader>
+<ng-template #loadingContractTemplate>
+	<span *ngIf="loadingContract; else unavailable" class="base-margin"></span>
+</ng-template>
+
+<ng-template #loadingAlertsTemplate>
+	<span *ngIf="loadingAlerts; else unavailable" class="base-margin"></span>
+</ng-template>
+
+<ng-template #loadingCaseTemplate>
+	<span *ngIf="loadingCase; else unavailable" class="base-margin"></span>
 </ng-template>
 
 <ng-template #unavailable>

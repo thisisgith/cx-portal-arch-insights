@@ -8,12 +8,11 @@ import { LogService } from '@cisco-ngx/cui-services';
 
 import {
 	ACC,
+	ACCBookmarkSchema,
 	ACCResponse,
 	ATX,
 	ATXResponse,
 	ATXSession,
-	CommunitiesResponse,
-	Community,
 	ELearning,
 	ELearningResponse,
 	PitstopActionUpdateRequest,
@@ -26,12 +25,16 @@ import {
 	RacetrackTechnology,
 	SuccessPath,
 	SuccessPathsResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 
 import { SolutionService } from '../solution.service';
 import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { I18n } from '@cisco-ngx/cui-utils';
+import { ActivatedRoute } from '@angular/router';
+import { User } from '@interfaces';
+import { CuiTableOptions } from '@cisco-ngx/cui-components';
 
 /**
  * Interface representing our data object
@@ -64,9 +67,7 @@ interface ComponentData {
 	};
 	acc?: {
 		sessions: ACC[];
-		recommended: ACC;
 	};
-	communities?: Community[];
 }
 
 /**
@@ -98,8 +99,15 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('accModal', { static: true }) public accTemplate: TemplateRef<{ }>;
 	@ViewChild('atxModal', { static: true }) public atxTemplate: TemplateRef<{ }>;
 	@ViewChild('successModal', { static: true }) public successPathTemplate: TemplateRef<{ }>;
+	@ViewChild('formatTemplate', { static: true }) private formatTemplate: TemplateRef<{ }>;
+	@ViewChild('bookmarkTemplate', { static: true }) private bookmarkTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
+		content: null,
+		context: null,
+		visible: false,
+	};
+	public requestModal = {
 		content: null,
 		context: null,
 		visible: false,
@@ -107,18 +115,56 @@ export class LifecycleComponent implements OnDestroy {
 	public visibleContext: ATX[];
 	public atxScheduleCardOpened = false;
 	public sessionSelected: ATXSession;
-	public customerId = '2431199';
+	public customerId: string;
+	private user: User;
 	public selectedCategory = '';
+	public selectedStatus = '';
 	public selectedSuccessPaths: SuccessPath[];
 	public categoryOptions: [];
+	// id of ACC in request form
+	public accTitleRequestForm: string;
+	public accIdRequestForm: string;
 
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
+	public selectedACC: ACC[];
+	public view: 'list' | 'grid' = 'grid';
+	public successBytesTable: CuiTableOptions;
+
+	public statusOptions = [
+		{
+			name: I18n.get('_AllTitles_'),
+			value: 'allTitles',
+		},
+		{
+			name: I18n.get('_Recommended_'),
+			value: 'recommended',
+		},
+		{
+			name: I18n.get('_Requested_'),
+			value: 'requested',
+		},
+		{
+			name: I18n.get('_InProgress_'),
+			value: 'in-progress',
+		},
+		{
+			name: I18n.get('_Completed_'),
+			value: 'completed',
+		},
+		{
+			name: I18n.get('_Bookmarked_'),
+			value: 'isBookmarked',
+		},
+		{
+			name: I18n.get('_NotBookmarked_'),
+			value: 'hasNotBookmarked',
+		},
+	];
 
 	public status = {
 		loading: {
 			acc: false,
 			atx: false,
-			communities: false,
 			elearning: false,
 			racetrack: false,
 			success: false,
@@ -140,6 +186,8 @@ export class LifecycleComponent implements OnDestroy {
 	private solutionSubscribe: Subscription;
 	private technologySubscribe: Subscription;
 
+	public selectAccComponent = false;
+
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
 	}
@@ -153,11 +201,15 @@ export class LifecycleComponent implements OnDestroy {
 		private contentService: RacetrackContentService,
 		private racetrackService: RacetrackService,
 		private solutionService: SolutionService,
+		private route: ActivatedRoute,
 	) {
+		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(this.user, ['info', 'customerId']);
+
 		this.solutionSubscribe = this.solutionService.getCurrentSolution()
 		.subscribe((solution: RacetrackSolution) => {
 			this.selectedSolution = solution;
-			this.componentData.params.solution = solution.name;
+			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
 		this.technologySubscribe = this.solutionService.getCurrentTechnology()
@@ -167,7 +219,7 @@ export class LifecycleComponent implements OnDestroy {
 
 			this.resetComponentData();
 
-			this.componentData.params.usecase = technology.name;
+			this.componentData.params.usecase = _.get(technology, 'name');
 			this.componentData.params.solution = currentSolution;
 
 			this.getRacetrackInfo();
@@ -191,6 +243,92 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Will construct the assets table
+	 */
+	private buildTable () {
+		if (!this.successBytesTable) {
+			this.successBytesTable = new CuiTableOptions({
+				columns: [
+					{
+						key: 'title',
+						name: I18n.get('_Name_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sortKey: 'title',
+						value: 'title',
+						width: '40%',
+					},
+					{
+						key: 'archetype',
+						name: I18n.get('_Category_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sortKey: 'archetype',
+						value: 'archetype',
+						width: '20%',
+					},
+					{
+						name: I18n.get('_Format_'),
+						sortable: true,
+						sortDirection: 'asc',
+						sortKey: 'type',
+						template: this.formatTemplate,
+						width: '20%',
+					},
+					{
+						name: I18n.get('_Bookmark_'),
+						sortable: false,
+						template: this.bookmarkTemplate,
+						width: '20%',
+					},
+				],
+			});
+		}
+	}
+
+	/**
+	 * Sorting function for successBytes table
+	 * @param key the key to sort
+	 * @param sortDirection sortDiretion
+	 */
+	public onSort (key: string, sortDirection: string) {
+		this.selectedSuccessPaths = _.orderBy(
+			this.selectedSuccessPaths, [key], [sortDirection]);
+
+		_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
+			= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
+			=== 'asc' ? 'desc' : 'asc';
+	}
+
+	/**
+	 * Select/deselect the ACCRequestForm component
+	 * @param selected whether the component is visible or not
+	 * @param accId accId of selected ACC
+	 * @param accTitle title of selected ACC
+	 */
+	public selectAccRequestForm (selected: boolean, accId: string, accTitle: string) {
+		if (selected) {
+			this.accIdRequestForm = accId;
+			this.accTitleRequestForm = accTitle;
+		}
+
+		this.selectAccComponent = selected;
+	}
+
+	/**
+	 * Trigger the submitted acc success text.  Currently placeholder and will be removed
+	 * because this info will come from the API
+	 * @param submitted if the request was submitted
+	 */
+	public accRequestSubmit (submitted: boolean) {
+		if (submitted) {
+			this.selectAccComponent = false;
+			this.loadACC()
+				.subscribe();
+		}
+	}
+
+	/**
 	 * Determines which modal to display
 	 * @param type the modal template to display
 	 */
@@ -204,10 +342,10 @@ export class LifecycleComponent implements OnDestroy {
 		} else if (type === 'acc') {
 			this.modal = {
 				content: this.accTemplate,
-				context: { data: this.componentData.acc.sessions },
+				context: { data: this.selectedACC },
 				visible: true,
 			};
-		} else if (type === '_ProductGuide_') {
+		} else if (type === '_SuccessBytes_') {
 			this.modal = {
 				content: this.successPathTemplate,
 				context: { data: this.selectedSuccessPaths },
@@ -253,6 +391,71 @@ export class LifecycleComponent implements OnDestroy {
 
 		return ribbon;
 	}
+
+	/**
+	 * Determines which modal to display
+	 * @param acc ACC item
+	 * @returns ribbon
+	 */
+	 public getACCRibbonClass (acc: ACC) {
+		let ribbon = 'ribbon__clear';
+		if (!acc) {
+			return ribbon;
+		}
+		if (acc.status === 'completed') {
+			ribbon = 'ribbon__green';
+		}
+
+		if (acc.isFavorite) {
+			ribbon = 'ribbon__blue';
+		}
+
+		return ribbon;
+	}
+
+	/**
+	 * Determines which modal to display
+	 * @param item ACC item
+	 * @returns ribbon
+	 */
+	 public setFavorite (item: ACC) {
+		if (item.status === 'completed') {
+			return;
+		}
+
+		this.status.loading.acc = true;
+		if (window.Cypress) {
+			window.accLoading = true;
+		}
+		const bookmarkParam: ACCBookmarkSchema = {
+			customerId: this.customerId,
+			isFavorite: !item.isFavorite,
+			pitstop: this.componentData.params.pitstop,
+			solution: this.componentData.params.solution,
+			usecase: this.componentData.params.usecase,
+		};
+		const params: RacetrackContentService.UpdateACCBookmarkParams = {
+			accId: item.accId,
+			bookmark: bookmarkParam,
+		};
+		this.contentService.updateACCBookmark(params)
+		.subscribe(() => {
+			item.isFavorite = !item.isFavorite;
+			this.status.loading.acc = false;
+			if (window.Cypress) {
+				window.accLoading = false;
+			}
+		},
+		err => {
+			this.status.loading.acc = false;
+			if (window.Cypress) {
+				window.accLoading = false;
+			}
+			this.logger.error(`lifecycle.component : setFavorite() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
+	 }
+
 	/**
 	 * Selects the session
 	 * @param session the session we've clicked on
@@ -263,12 +466,30 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Selects the category
+	 * @param type the item type
 	 */
-	public selectFilter () {
-		this.selectedSuccessPaths =
-			_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
-		if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
-			this.selectedSuccessPaths = this.componentData.learning.success;
+	public selectFilter (type: string) {
+		if (type === 'successBytes') {
+			this.selectedSuccessPaths =
+				_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
+			if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
+				this.selectedSuccessPaths = this.componentData.learning.success;
+			}
+		}
+		if (type === 'acc') {
+			if (this.selectedStatus === 'isBookmarked') {
+				this.selectedACC =
+				_.filter(this.componentData.acc.sessions, { isFavorite: true });
+			} else if (this.selectedStatus === 'hasNotBookmarked') {
+				this.selectedACC =
+				_.filter(this.componentData.acc.sessions, { isFavorite: false });
+			} else {
+				this.selectedACC =
+					_.filter(this.componentData.acc.sessions, { status: this.selectedStatus });
+			}
+			if (this.selectedStatus === 'allTitles' || !this.selectedStatus) {
+				this.selectedACC = this.componentData.acc.sessions;
+			}
 		}
 	}
 
@@ -286,6 +507,17 @@ export class LifecycleComponent implements OnDestroy {
 		if (this.componentData.params.suggestedAction !== actionWithStatus.action.name) {
 			this.componentData.params.suggestedAction = actionWithStatus.action.name;
 			this.loadRacetrackInfo();
+		}
+	}
+
+	/**
+	 * Changes the view to either list or grid
+	 * @param view view to set
+	 */
+	public selectView (view: 'list' | 'grid') {
+		if (this.view !== view) {
+			this.view = view;
+			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:view', this.view);
 		}
 	}
 
@@ -318,7 +550,6 @@ export class LifecycleComponent implements OnDestroy {
 			if (results.isAtxChanged) { source.push(this.loadATX()); }
 			if (results.isAccChanged) { source.push(this.loadACC()); }
 			if (results.isElearningChanged) { source.push(this.loadELearning()); }
-			if (results.isCommunitiesChanged) { source.push(this.loadCommunites()); }
 			if (results.isSuccessPathChanged) { source.push(this.loadSuccessPaths()); }
 			forkJoin(
 				source,
@@ -366,25 +597,42 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadACC (): Observable<ACCResponse> {
 		this.status.loading.acc = true;
+		if (window.Cypress) {
+			window.accLoading = true;
+		}
 
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackACC(
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: ACCResponse) => {
-				this.status.loading.acc = false;
-
+				this.selectedStatus = '';
 				this.componentData.acc = {
-					recommended: result.items[0],
-					sessions: result.items,
+					sessions: _.union(_.filter(result.items, { status: 'requested' }),
+						_.filter(result.items, { status: 'in-progress' }),
+						_.filter(result.items, { status: 'recommended' }),
+						_.filter(result.items, { status: 'completed' })),
 				};
+				_.remove(this.componentData.acc.sessions, (session: ACC) =>
+					!session.title && !session.description);
+
+				this.selectedACC = this.componentData.acc.sessions;
+				this.buildTable();
+
+				this.status.loading.acc = false;
+				if (window.Cypress) {
+					window.accLoading = false;
+				}
 
 				return result;
 			}),
 			catchError(err => {
 				this.status.loading.acc = false;
+				if (window.Cypress) {
+					window.accLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadACC() :: Error : (${
 					err.status}) ${err.message}`);
 
@@ -399,8 +647,11 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadATX (): Observable<ATXResponse> {
 		this.status.loading.atx = true;
+		if (window.Cypress) {
+			window.atxLoading = true;
+		}
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackATX(
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
@@ -411,11 +662,17 @@ export class LifecycleComponent implements OnDestroy {
 					sessions: result.items,
 				};
 				this.status.loading.atx = false;
+				if (window.Cypress) {
+					window.atxLoading = false;
+				}
 
 				return result;
 			}),
 			catchError(err => {
 				this.status.loading.atx = false;
+				if (window.Cypress) {
+					window.atxLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadATX() :: Error : (${
 				err.status}) ${err.message}`);
 
@@ -434,13 +691,14 @@ export class LifecycleComponent implements OnDestroy {
 			window.successPathsLoading = true;
 		}
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackSuccessPaths(
 			_.pick(this.componentData.params,
 				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
+				this.selectedCategory = '';
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
@@ -484,7 +742,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.elearningLoading = true;
 		}
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
@@ -499,7 +757,7 @@ export class LifecycleComponent implements OnDestroy {
 
 					_.each(result.items, (item: ELearning) => {
 						switch (item.type) {
-							case 'E-Course': {
+							case 'E-Learning': {
 								const learningItem: ELearningModel = {
 									...item,
 									fixedRating: parseFloat(item.rating),
@@ -507,7 +765,7 @@ export class LifecycleComponent implements OnDestroy {
 								this.componentData.learning.elearning.push(learningItem);
 								break;
 							}
-							case 'Cisco Training on Demand Courses':
+							case 'Certification':
 							case 'Videos': {
 								this.componentData.learning.certifications.push(item);
 								break;
@@ -548,44 +806,12 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
-	 * Loads the communities for the given params
-	 * @returns the communities response
-	 */
-	private loadCommunites (): Observable<CommunitiesResponse> {
-		this.status.loading.communities = true;
-		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
-
-		return this.contentService.getRacetrackCommunities(
-			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
-		.pipe(
-			map((result: CommunitiesResponse) => {
-				this.status.loading.communities = false;
-
-				if (result.items.length) {
-					this.componentData.communities = result.items;
-				}
-
-				return result;
-			}),
-			catchError(err => {
-				this.status.loading.communities = false;
-				this.logger.error(`lifecycle.component : loadCommunites() :: Error : (${
-					err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
 	 * ForkJoin to load the other API Calls
 	 */
 	private loadRacetrackInfo () {
 		forkJoin(
 			this.loadACC(),
 			this.loadATX(),
-			this.loadCommunites(),
 			this.loadELearning(),
 			this.loadSuccessPaths(),
 		)

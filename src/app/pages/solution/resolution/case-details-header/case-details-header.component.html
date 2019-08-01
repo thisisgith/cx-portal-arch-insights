@@ -1,0 +1,58 @@
+<div class="case-details-container">
+	<cui-spinner *ngIf="loading"></cui-spinner>
+	<div *ngIf="!loading" class="base-margin-top">
+		<div class="row flex maxWidth">
+			<div class="col-md-5">
+				<div class="text-bold font-size" [innerText]="'_RMACaseSeverity_' | i18n | uppercase"></div>
+				<div>
+					<span class="dot" [ngClass]="getSeverityColor(caseDetails?.priority)"></span>
+					<span class="text-bold qtr-padding-left"
+						[innerText]="caseDetails?.priority? ('S'+ caseDetails.priority): ''"></span>
+					<span class="qtr-padding-left" [innerText]="caseDetails?.requestType"></span>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div>
+					<span class="text-bold font-size" [innerText]="'_RMACaseStatus_' | i18n | uppercase"></span>
+				</div>
+				<div [innerText]="caseDetails?.status"></div>
+			</div>
+			<div class="col-md-2">
+				<div class="text-bold font-size" [innerText]="'_RMACaseCreated_' | i18n | uppercase"></div>
+				<div [innerText]="caseDetails?.createdDate | date"></div>
+			</div>
+			<div class="col-md-2">
+				<div class="text-bold font-size" [innerText]="'_RMACaseLastUpdated_' | i18n | uppercase"></div>
+				<div [innerText]="caseDetails?.lastUpdateDate | date"></div>
+			</div>
+		</div>
+
+		<div class="row base-padding-top">
+			<div class="col-md-6">
+				<div *ngIf="rmaRecords?.length >= 1" class="dropdown">
+					<button data-auto-id="relatedRMA" class="btn btn--small btn--secondary" (click)="toggleRMAList()"
+						[innerText]="'Related RMAs (' + rmaRecords?.length + ')'"></button>
+				</div>
+			</div>
+			<div class="col-md-6 text-right">
+				<button data-auto-id="CaseAttachFile"
+					class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right"
+					[innerText]="'_RMACaseAttachFile_' | i18n" (click)="toggleAddFile()"></button>
+				<button data-auto-id="CaseAddNote"
+					class="btn btn--small btn--secondary dbl-padding-left dbl-padding-right"
+					[innerText]="'_RMACaseAddNote_' | i18n" (click)="toggleAddNote()"></button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12" *ngIf="isAddNoteClicked">
+				<app-add-note [case]="case" (close)="toggleAddNote()"></app-add-note>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12" *ngIf="isRMAClicked">
+				<app-related-rma [rmaRecords]="rmaRecords" (close)="toggleRMAList()"></app-related-rma>
+			</div>
+		</div>
+	</div>
+</div>
+<cui-modal></cui-modal>

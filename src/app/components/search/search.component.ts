@@ -1,9 +1,14 @@
 import {
 	ChangeDetectorRef,
 	Component,
+	OnInit,
+	OnDestroy,
 	ViewChild,
 } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { SearchContext, SearchType, SearchEnum, SearchQuery } from '@interfaces';
+import { SearchService } from '@services';
 
 import { I18n } from '@cisco-ngx/cui-utils';
 
@@ -17,7 +22,7 @@ import { SpecialSearchComponent } from './special-search/special-search.componen
 	styleUrls: ['./search.component.scss'],
 	templateUrl: './search.component.html',
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit, OnDestroy {
 	@ViewChild(SpecialSearchComponent, { static: false }) set content
 		(component: SpecialSearchComponent) {
 			this.specialSearch = component;
@@ -31,20 +36,46 @@ export class SearchComponent {
 	public generalSearch: SearchQuery;
 	public searchContext: string;
 	public generalSearchHeader: string;
-	public hideSpecialSearch = false;
+	public hideSpecialSearch = true;
 	public hideGeneralSearch = false;
 
 	public status = {
 		hidden: true,
 	};
 
-	constructor (private cdr: ChangeDetectorRef) { }
+	private destroy$ = new Subject();
+
+	constructor (
+		private cdr: ChangeDetectorRef,
+		private searchService: SearchService,
+	) { }
+
+	/**
+	 * OnInit lifecycle hook
+	 */
+	public ngOnInit () {
+		this.searchService.close$.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(() => {
+			this.onClose();
+		});
+	}
+
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
+	}
 
 	/**
 	 * Fires when the user makes a new search (hits enter or selects from typeahead)
 	 * @param search the search text and type
 	 */
 	public onSearchChange (search: { text: string, type: SearchType, generalSearch: string }) {
+		this.hideSpecialSearch = true;
 		this.status.hidden = false;
 		this.selectedSearch = { query: search.text };
 		this.searchType = search.type;

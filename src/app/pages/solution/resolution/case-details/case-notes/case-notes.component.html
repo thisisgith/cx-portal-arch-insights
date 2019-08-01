@@ -1,0 +1,26 @@
+<div *ngIf="caseNotes?.length > 0">
+	<div *ngFor="let item of caseNotes">
+		<div class="timeline timeline--block">
+			<div class="timeline__list">
+				<div class="timeline__item no-margin">
+					<div class="timeline__icon"></div>
+					<div class="timeline__time">
+						<div class="timeline-date" [innerText]="item.createdDate | date"></div>
+						<div class="timeline-name" [innerText]="item.createdBy"></div>
+					</div>
+					<div class="timeline__content timeline-content-background half-padding">
+						<div class="small-font-size text-bold" [innerText]="item.note"></div>
+						<div class="small-font-size" [innerText]="item.noteDetail"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div *ngIf="!caseNotes || !(caseNotes?.length > 0)">
+	<div class="flex-center-horizontal text-xlarge text-muted dbl-margin-top half-margin-bottom"
+		[innerText]="'_RMACaseNoNotes_' | i18n"></div>
+	<div class="flex-center-horizontal text-medium text-muted qtr-margin" [innerText]="'_RMACaseNoNotesText_' | i18n">
+	</div>
+</div>

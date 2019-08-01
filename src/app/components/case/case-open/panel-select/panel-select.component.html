@@ -1,0 +1,16 @@
+<div class="flex">
+	<a *ngFor="let option of options; index as i;"
+		(click)="select(option)"
+		data-auto-id="DummyId"
+		[attr.data-auto-id]="'PanelSelectOption' + i">
+		<div class="panel panel--bordered base-padding"
+			[ngClass]="{ 'selected': option.selected }">
+			<div class="half-margin-bottom">
+				<span [innerText]="option.name"></span>
+			</div>
+			<div>
+				<span class="text-small text-muted" [innerText]="option.subtitle | uppercase"></span>
+			</div>
+		</div>
+	</a>
+</div>

@@ -25,6 +25,10 @@
 	overflow-y: auto;
 }
 
+.modal__close {
+	z-index: 1;
+}
+
 .modal-backdrop {
 	top: 55px;
 }
@@ -43,4 +47,8 @@
 .ciscoCommunityBtn {
 	overflow: hidden !important;
 	max-width: 220px !important;
+}
+
+.innerSpecialPanel {
+	background-color: $off-white;
 }

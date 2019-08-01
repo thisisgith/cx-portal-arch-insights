@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { ContractsConfiguration as __Configuration } from '../contracts-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -16,12 +16,12 @@ import { CoverageCountsResponse } from '../models/coverage-counts-response';
   providedIn: 'root',
 })
 class ContractsService extends __BaseService {
-  static readonly headContractsProductsCoveragesPath = '/api/customerportal/contracts/v1/products/coverages';
-  static readonly getDevicesAndCoveragePath = '/api/customerportal/contracts/v1/products/coverages';
-  static readonly getTopCoverageExpirationPath = '/api/customerportal/contracts/v1/products/coverages/top';
-  static readonly getContractDetailsPath = '/api/customerportal/contracts/v1/details';
-  static readonly getContractCountsPath = '/api/customerportal/contracts/v1/device/count';
-  static readonly getCoverageCountsPath = '/api/customerportal/contracts/v1/coverages/count';
+  static readonly headProductsCoveragesPath = '/products/coverages';
+  static readonly getDevicesAndCoveragePath = '/products/coverages';
+  static readonly getTopCoverageExpirationPath = '/products/coverages/top';
+  static readonly getContractDetailsPath = '/details';
+  static readonly getContractCountsPath = '/device/count';
+  static readonly getCoverageCountsPath = '/coverages/count';
 
   constructor(
     config: __Configuration,
@@ -32,7 +32,7 @@ class ContractsService extends __BaseService {
 
   /**
    * Returns the total number of products that have coverage information along with query metadata (e.g. rows/page).
-   * @param params The `ContractsService.HeadContractsProductsCoveragesParams` containing the following parameters:
+   * @param params The `ContractsService.HeadProductsCoveragesParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
@@ -40,10 +40,11 @@ class ContractsService extends __BaseService {
    *
    * - `contractNumber`: The contract number
    */
-  headContractsProductsCoveragesResponse(params: ContractsService.HeadContractsProductsCoveragesParams): __Observable<__StrictHttpResponse<null>> {
+  headProductsCoveragesResponse(params: ContractsService.HeadProductsCoveragesParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.coverage != null) __params = __params.set('coverage', params.coverage.toString());
     if (params.contractNumber != null) __params = __params.set('contractNumber', params.contractNumber.toString());
@@ -55,7 +56,6 @@ class ContractsService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -68,7 +68,7 @@ class ContractsService extends __BaseService {
 
   /**
    * Returns the total number of products that have coverage information along with query metadata (e.g. rows/page).
-   * @param params The `ContractsService.HeadContractsProductsCoveragesParams` containing the following parameters:
+   * @param params The `ContractsService.HeadProductsCoveragesParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
@@ -76,8 +76,8 @@ class ContractsService extends __BaseService {
    *
    * - `contractNumber`: The contract number
    */
-  headContractsProductsCoverages(params: ContractsService.HeadContractsProductsCoveragesParams): __Observable<null> {
-    return this.headContractsProductsCoveragesResponse(params).pipe(
+  headProductsCoverages(params: ContractsService.HeadProductsCoveragesParams): __Observable<null> {
+    return this.headProductsCoveragesResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -95,6 +95,8 @@ class ContractsService extends __BaseService {
    *
    * - `page`: Page number
    *
+   * - `managedNeId`: The managed network id
+   *
    * - `inventoryName`: The name of inventory given by customers.
    *
    * - `fields`: Filter fields
@@ -111,10 +113,12 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     if (params.inventoryName != null) __params = __params.set('inventoryName', params.inventoryName.toString());
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     if (params.coverageExpiry != null) __params = __params.set('coverageExpiry', params.coverageExpiry.toString());
@@ -128,7 +132,6 @@ class ContractsService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -151,6 +154,8 @@ class ContractsService extends __BaseService {
    * - `rows`: No of rows in a page
    *
    * - `page`: Page number
+   *
+   * - `managedNeId`: The managed network id
    *
    * - `inventoryName`: The name of inventory given by customers.
    *
@@ -193,6 +198,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -207,7 +213,6 @@ class ContractsService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -264,6 +269,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.inventoryName != null) __params = __params.set('inventoryName', params.inventoryName.toString());
@@ -277,7 +283,6 @@ class ContractsService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -325,6 +330,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
@@ -335,7 +341,6 @@ class ContractsService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -376,6 +381,7 @@ class ContractsService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     let req = new HttpRequest<any>(
@@ -386,7 +392,6 @@ class ContractsService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -417,9 +422,9 @@ class ContractsService extends __BaseService {
 module ContractsService {
 
   /**
-   * Parameters for headContractsProductsCoverages
+   * Parameters for headProductsCoverages
    */
-  export interface HeadContractsProductsCoveragesParams {
+  export interface HeadProductsCoveragesParams {
 
     /**
      * Unique identifier of a Cisco customer.
@@ -461,6 +466,11 @@ module ContractsService {
      * Page number
      */
     page?: number;
+
+    /**
+     * The managed network id
+     */
+    managedNeId?: Array<string>;
 
     /**
      * The name of inventory given by customers.

@@ -1,11 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-	RouterModule,
-	Routes,
-} from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AssetsComponent } from './assets.component';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { I18nPipeModule, FromNowPipeModule, TruncatePipeModule } from '@cisco-ngx/cui-pipes';
 import {
 	CuiTableModule,
 	CuiTabsModule,
@@ -13,12 +10,16 @@ import {
 	CuiSpinnerModule,
 	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
-import { InventoryModule, ContractsModule, ProductAlertsModule } from '@cui-x/sdp-api';
+import { InventoryModule, ContractsModule, ProductAlertsModule } from '@sdp-api';
 import { environment } from '@environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
-import { AssetsBarChartModule } from './assets-bar-chart/assets-bar-chart.module';
-import { AssetsBubbleChartModule } from './assets-bubble-chart/assets-bubble-chart.module';
+import {
+	AssetDetailsModule,
+	DetailsPanelModule,
+	BarChartModule,
+	PieChartModule,
+	BubbleChartModule,
+} from '@components';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -41,9 +42,9 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [AssetsComponent],
 	imports: [
-		AssetsBarChartModule,
-		AssetsBubbleChartModule,
-		AssetsPieChartModule,
+		AssetDetailsModule,
+		BarChartModule,
+		BubbleChartModule,
 		CommonModule,
 		ContractsModule.forRoot({ rootUrl }),
 		CuiDropdownModule,
@@ -51,12 +52,16 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		CuiTableModule,
 		CuiTabsModule,
+		DetailsPanelModule,
 		FormsModule,
+		FromNowPipeModule,
 		I18nPipeModule,
 		InventoryModule.forRoot({ rootUrl }),
+		PieChartModule,
 		ProductAlertsModule.forRoot({ rootUrl }),
 		ReactiveFormsModule,
 		RouterModule.forChild(childRoutes),
+		TruncatePipeModule,
 	],
 })
 export class AssetsModule { }

@@ -1,5 +1,4 @@
 <div class="page-container">
-	<asset-details [asset]="selectedAsset"></asset-details>
 	<div class="panel no-padding-left no-padding-right no-padding-bottom base-padding-top panel--bordered-bottom">
 		<div class="row base-margin-left half-margin-bottom">
 			<div class="col-md-11">
@@ -33,7 +32,7 @@
 <ng-template #breadcrumbs>
 	<div class="flex flex-fluid flex-center-vertical">
 		<div class="icon-home icon--mid"></div>
-		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"></div>
+		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right" *ngIf="selectedSolution"></div>
 		<div *ngIf="selectedSolution">
 			<div class="text-muted" [innerText]="'_Solution_' | i18n"></div>
 			<div class="dropdown dropdown--tail"
@@ -55,7 +54,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"></div>
+		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right" *ngIf="selectedTechnology"></div>
 		<div *ngIf="selectedTechnology">
 			<div class="text-muted" [innerText]="'_UseCase_' | i18n"></div>
 			<div class="dropdown dropdown--tail"
@@ -79,11 +78,11 @@
 </ng-template>
 
 <ng-template #facetPanel>
-	<div class="row no-gutters flex-fill flex-center">
+	<div class="row no-gutters flex-fill">
 		<div *ngFor="let facet of facets; index as i"
 			attr.data-auto-id="Facet-{{ facet.title }}"
-			(click)="selectFacet(facet)"
-			class="panel panel--bordered-right flex-center row"
+			(click)="selectFacet(facet, true)"
+			class="panel panel--bordered-right row"
 			[ngClass]="{
 				'panel--bordered-left': i === 0,
 				'facet--selected': facet.selected,
@@ -92,11 +91,14 @@
 			}">
 			<div class="col-md-12 flex-center">
 				<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
+				<div class="half-margin-left text-small facetLabel" *ngIf="facet.label">
+					<span [innerText]="facet.label"></span>
+				</div>
 			</div>
-			<!-- TODO reenable the lightbulbs if we have some data to work with -->
+			<!-- TODO: reenable the lightbulbs if we have some data to work with -->
 			<!-- <div class="col-md-2"></div> -->
-			<div class="col-md-12 flex flex-center">
-				<span [innerText]="facet.title"></span>
+			<div class="col-md-12 flex-center base-padding-top">
+				<span [ngClass]="{ 'text-primary': facet.selected }" [innerText]="facet.title | uppercase"></span>
 			</div>
 			<!-- <div class="col-md-2 flex flex-center">
 				<button class="btn btn--icon btn--small" disabled>
@@ -116,7 +118,7 @@
 
 <ng-template #assetsFacet let-facet="facet">
 	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugePercent || 0 }}%"
+		value="{{ facet?.data?.gaugeLabel || '0%' }}"
 		color="primary">
 	</cui-gauge>
 </ng-template>
@@ -129,10 +131,12 @@
 </ng-template>
 
 <ng-template #advisoriesFact let-facet="facet">
-	<cui-gauge percentage="75"
-		value="75%"
-		color="primary">
-	</cui-gauge>
+	<div class="full-width">
+		<bar-chart *ngIf="advisoriesFacet?.seriesData && !advisoriesFacet?.loading" [seriesData]="advisoriesFacet?.seriesData"></bar-chart>
+		<div class="dbl-margin-top base-margin-bottom" *ngIf="advisoriesFacet?.loading">
+			<cui-spinner></cui-spinner>
+		</div>
+	</div>
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
@@ -142,9 +146,11 @@
 	</cui-gauge>
 </ng-template>
 
-<ng-template #bestPracticesFacet let-facet="facet">
-	<cui-gauge percentage="25"
-		value="25%"
-		color="secondary">
+<ng-template #insightsFacet let-facet="facet">
+	<cui-gauge percentage="75"
+		value="75%"
+		color="primary">
 	</cui-gauge>
 </ng-template>
+
+<cui-modal></cui-modal>

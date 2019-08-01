@@ -19,3 +19,21 @@ export const caseSeverities = {
 		{ title: I18n.get('_Info_') },
 		_.pick(severityMap.INFO, ['class', 'color'])),
 };
+
+/**
+ * The file extension to icon and label map for case files
+ */
+export const caseFileIcons = {
+	'image/png': { icon: 'icon-file-image-o', label: 'Image (png)' },
+	'image/jpeg': { icon: 'icon-file-image-o', label: 'Image (jpeg)' },
+	'application/pdf': { icon: 'icon-file-pdf-o', label: 'PDF' },
+	'text/plain': { icon: 'icon-file-text-o', label: 'Plain Text' },
+	'text/csv': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
+	'application/xls': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
+	'application/x-tar': { icon: 'icon-file-archive-o', label: 'Archive' },
+	default: { icon: 'icon-file', label: 'File' },
+};
+export enum CaseRequestType {
+	Diagnose = 'Diagnose and Fix my Problem',
+	RMA = 'Replace my Product',
+}

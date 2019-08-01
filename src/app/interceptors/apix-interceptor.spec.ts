@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { RMAService, APIxService } from '@services';
-import { InventoryModule, InventoryService } from '@cui-x/sdp-api';
+import { InventoryModule, InventoryService } from '@sdp-api';
 import { APIxInterceptor } from './apix-interceptor';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from '@environment';

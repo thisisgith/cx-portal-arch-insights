@@ -1,16 +1,33 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges,
-	Output, EventEmitter, ViewChild, TemplateRef, forwardRef } from '@angular/core';
-import { FromNowPipe } from '@cisco-ngx/cui-pipes';
+	Output, EventEmitter, forwardRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { CaseService } from '@cui-x/services';
-import { InventoryService, HardwareResponse } from '@cui-x/sdp-api';
+import { InventoryService, HardwareResponse } from '@sdp-api';
 import { Case, Note, SearchContext, SearchQuery } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Subject, of, Observable } from 'rxjs';
 import { tap, takeUntil, switchMap, catchError } from 'rxjs/operators';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
-import { environment } from '@environment';
+import { SearchService } from '@services';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
+
+/**
+ * Mapping of Case statuses to status icons
+ * TODO: Get definitive list of possible statuses/icons
+ */
+enum StatusIconMap {
+	'CISCO PENDING' = 'icon-time text-warning-alt',
+	'CLOSE PENDING' = 'icon-time text-success',
+	CLOSED = 'icon-check-outline text-muted',
+	'CUSTOMER PENDING' = 'icon-time text-primary',
+	'CUSTOMER REQUESTED CLOSURE' = 'icon-time text-muted',
+	'CUSTOMER UPDATED' = 'icon-check-outline text-primary',
+	'RELEASE PENDING' = 'icon-time text-turquoise',
+	'SERVICE ORDER PENDING' = 'icon-time text-warning',
+	'UNKNOWN' = 'icon-circle text-muted',
+}
 
 /**
  * Component representing case number search results on the search modal.
@@ -26,8 +43,6 @@ import * as _ from 'lodash-es';
 })
 export class CaseSearchComponent extends SpecialSearchComponent
 implements OnInit, OnDestroy, OnChanges {
-	@ViewChild('sidebar', { static: true, read: TemplateRef })
-	public sidebarContent: TemplateRef<any>;
 	@Input('caseNumber') public caseNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	/** Emitter to show or hide general search */
@@ -37,19 +52,15 @@ implements OnInit, OnDestroy, OnChanges {
 		context?: SearchContext,
 	}>();
 
-	/** Maximum length of a note to display before truncating. */
-	public NOTE_TRUNCATE_LENGTH = 256;
 	/** Mock fields for the call to the SDP InventoryService API. */
-	private customerId = '2431199';
+	private customerId: string;
+	private destroyed$: Subject<void> = new Subject<void>();
 	private serialNumber = 'FOX1306GFKH';
 	/** Whether each of the API requests are still loading (used for displaying HTML). */
-	public detailsLoading = true;
-	public hardwareLoading = true;
-	public notesLoading = true;
-	public summaryLoading = true;
-
-	/** URL base for linking to MyCase */
-	private myCaseUrl = environment.myCase;
+	public loading = true;
+	public loadingHardware = true;
+	public loadingNotes = true;
+	public loadingSummary = true;
 
 	/** Observable used to begin searches. */
 	private refresh$ = new Subject();
@@ -60,18 +71,25 @@ implements OnInit, OnDestroy, OnChanges {
 
 	/** Case-related fields for displaying in HTML. */
 	public case = <Case> { };
+	public statusIcon: string;
 	public lastNote: Note;
-	public lastUpdated: string;
-	public truncateLastNote: boolean;
-	public showTruncateToggle: boolean;
 
 	constructor (
 		private logger: LogService,
 		private caseService: CaseService,
 		private inventoryService: InventoryService,
-	) {
+		private router: Router,
+		private searchService: SearchService,
+		private userResolve: UserResolve,
+		) {
 		super();
-		this.logger.debug('caseSearchComponent Created!');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 	}
 
 	/**
@@ -83,7 +101,7 @@ implements OnInit, OnDestroy, OnChanges {
 		this.refresh$.pipe(
 			tap(() => {
 				this.toggleGeneralSearch.emit({ hide: true });
-				this.detailsLoading = this.hardwareLoading = true;
+				this.loading = this.loadingHardware = true;
 				this.hide.emit(false);
 			}),
 			switchMap(() => this.getCaseDetails(this.caseNumber.query)),
@@ -92,7 +110,7 @@ implements OnInit, OnDestroy, OnChanges {
 		.subscribe(caseDetails => {
 			if (caseDetails && caseDetails.caseNumber) {
 				this.setCaseDetails(caseDetails);
-				this.detailsLoading = false;
+				this.loading = false;
 				this.toggleGeneralSearch.emit({
 					context: SearchContext.serialno,
 					hide: false,
@@ -105,23 +123,23 @@ implements OnInit, OnDestroy, OnChanges {
 		});
 		// Case Notes
 		this.refresh$.pipe(
-			tap(() => this.notesLoading = true),
+			tap(() => this.loadingNotes = true),
 			switchMap(() => this.getCaseNotes(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(noteList => {
 			this.setCaseNotes(noteList);
-			this.notesLoading = false;
+			this.loadingNotes = false;
 		});
 		// Case Summary
 		this.refresh$.pipe(
-			tap(() => this.summaryLoading = true),
+			tap(() => this.loadingSummary = true),
 			switchMap(() => this.getCaseSummary(this.caseNumber.query)),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(caseSummary => {
 			this.case.tacEngineer = _.get(caseSummary, ['content', 0, 'caseOwner']);
-			this.summaryLoading = false;
+			this.loadingSummary = false;
 		});
 		// Hardware - Tied to serial number from Case Details
 		this.serialNumber$.pipe(
@@ -130,7 +148,7 @@ implements OnInit, OnDestroy, OnChanges {
 		)
 		.subscribe(hardware => {
 			this.case.hostName = _.get(hardware, ['data', 0, 'hostname']);
-			this.hardwareLoading = false;
+			this.loadingHardware = false;
 		});
 
 		// Begin pipes
@@ -177,9 +195,9 @@ implements OnInit, OnDestroy, OnChanges {
 	 */
 	public setCaseDetails (caseDetails: any) {
 		this.case.contract = caseDetails.contractId;
+		this.case.opened = caseDetails.createdDate;
 		this.case.description = caseDetails.description;
 		this.case.number = caseDetails.caseNumber;
-		this.case.opened = caseDetails.createdDate;
 		if (caseDetails.ownerName) {
 			this.case.owner = caseDetails.ownerName;
 			if (caseDetails.ownerEmail) {
@@ -199,6 +217,9 @@ implements OnInit, OnDestroy, OnChanges {
 		}
 		this.case.severity = caseDetails.priority;
 		this.case.status = caseDetails.status;
+		const statusKey = _.get(this.case, 'status', 'UNKNOWN')
+			.toUpperCase();
+		this.statusIcon = _.get(StatusIconMap, statusKey);
 		this.case.summary = caseDetails.summary;
 		if (!this.case.description && this.case.summary) {
 			const splitSummary = this.case.summary.split(' ');
@@ -206,8 +227,8 @@ implements OnInit, OnDestroy, OnChanges {
 				this.case.description = this.case.summary;
 			} else {
 				this.case.description = splitSummary
-				.slice(0, 10)
-				.join(' ');
+					.slice(0, 10)
+					.join(' ');
 			}
 		}
 		this.case.trackingNumber = caseDetails.trackingNumber;
@@ -236,7 +257,7 @@ implements OnInit, OnDestroy, OnChanges {
 		if (_.has(noteList, '[0]')) {
 			this.case.noteList = noteList;
 			let lastDate = 0;
-			this.case.noteList.forEach(note => {
+			_.forEach(this.case.noteList, note => {
 				const date = Date.parse(note.createdDate);
 				if (!isNaN(date) && date > lastDate) {
 					lastDate = date;
@@ -244,12 +265,6 @@ implements OnInit, OnDestroy, OnChanges {
 				}
 			});
 		}
-		if (this.lastNote) {
-			this.truncateLastNote = this.lastNote.noteDetail.length > this.NOTE_TRUNCATE_LENGTH;
-			const fromNowPipe = new FromNowPipe();
-			this.lastUpdated = fromNowPipe.transform(this.lastNote.createdDate);
-		}
-		this.showTruncateToggle = this.truncateLastNote;
 	}
 
 	/**
@@ -294,5 +309,18 @@ implements OnInit, OnDestroy, OnChanges {
 				return of(null);
 			}),
 		);
+	}
+
+	/**
+	 * Navigate to case list view and close modal
+	 * Occurs when user clicks "View all Cases" button
+	 * @param casenum optional casenumber to navigate to, otherwise just goes to list
+	 */
+	public onViewCase (casenum?: string) {
+		this.router.navigate(
+			['solution/resolution'],
+			{ queryParams: { case: casenum } },
+		);
+		this.searchService.close();
 	}
 }

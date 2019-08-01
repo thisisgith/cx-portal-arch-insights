@@ -1,9 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { RouterModule } from '@angular/router';
+import { I18nPipeModule, FromNowPipeModule, TruncatePipeModule } from '@cisco-ngx/cui-pipes';
 import { CaseSearchComponent } from './case-search.component';
 
-import { CuiLoaderModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import {
+	CuiLoaderModule,
+	CuiSpinnerModule,
+} from '@cisco-ngx/cui-components';
 
 /**
  * Module for the case number results section of the search modal
@@ -15,9 +19,12 @@ import { CuiLoaderModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 	],
 	imports: [
 		CommonModule,
+		RouterModule,
 		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
+		FromNowPipeModule,
+		TruncatePipeModule,
 	],
 })
 export class CaseSearchModule { }

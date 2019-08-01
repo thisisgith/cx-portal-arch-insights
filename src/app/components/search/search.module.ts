@@ -6,6 +6,7 @@ import {
 } from '@cisco-ngx/cui-pipes';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { CaseModule } from '../case/case.module';
 import { CaseSearchModule } from './case-search/case-search.module';
 import { ContractSearchModule } from './contract-search/contract-search.module';
 import { GeneralSearchModule } from './general-search/general-search.module';
@@ -15,10 +16,11 @@ import { SerialSearchModule } from './serial-search/serial-search.module';
 import { SpecialSearchModule } from './special-search/special-search.module';
 import { RMASearchModule } from './rma-search/rma-search.module';
 import {
+	ProductAlertsModule,
 	SearchModule as SearchServiceModule,
 	ContractsModule,
 	InventoryModule,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { environment } from '@environment';
 
 /**
@@ -36,6 +38,8 @@ const rootUrl = environment.sdpServiceOrigin;
 	exports: [SearchComponent],
 	imports: [
 		CommonModule,
+
+		CaseModule,
 		CaseSearchModule,
 		ContractSearchModule,
 		GeneralSearchModule,
@@ -50,6 +54,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		RMASearchModule,
 		ContractsModule.forRoot({ rootUrl }),
 		InventoryModule.forRoot({ rootUrl }),
+		ProductAlertsModule.forRoot({ rootUrl }),
 		SearchServiceModule.forRoot({ rootUrl }),
 		InventoryModule.forRoot({ rootUrl }),
 	],

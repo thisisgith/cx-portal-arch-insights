@@ -7,9 +7,19 @@ export interface Asset {
   deviceName?: string;
 
   /**
-   * IP Address
+   * Device name
    */
   ipAddress?: string;
+
+  /**
+   * When the serial number was last scanned
+   */
+  lastScan?: string;
+
+  /**
+   * Critical advisories
+   */
+  criticalAdvisories?: number;
   supportCovered?: boolean;
 
   /**
@@ -36,4 +46,9 @@ export interface Asset {
    * Contract Number
    */
   contractNumber?: string;
+  managedNeId?: string;
+  hwInstanceId?: string;
+  containingHwId?: string;
+  productId?: string;
+  equipmentType?: string;
 }

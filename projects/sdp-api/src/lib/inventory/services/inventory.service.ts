@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { BaseService as __BaseService } from '../../core/base-service';
 import { InventoryConfiguration as __Configuration } from '../inventory-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
@@ -8,6 +8,7 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { Assets } from '../models/assets';
+import { AssetSummary } from '../models/asset-summary';
 import { HardwareResponse } from '../models/hardware-response';
 import { NetworkElementResponse } from '../models/network-element-response';
 import { SoftwareResponse } from '../models/software-response';
@@ -16,14 +17,15 @@ import { RoleCountResponse } from '../models/role-count-response';
   providedIn: 'root',
 })
 class InventoryService extends __BaseService {
-  static readonly getAssetsPath = '/api/customerportal/inventory/v1/assets';
-  static readonly headHardwarePath = '/api/customerportal/inventory/v1/hardware';
-  static readonly getHardwarePath = '/api/customerportal/inventory/v1/hardware';
-  static readonly headNetworkElementsPath = '/api/customerportal/inventory/v1/network-elements';
-  static readonly getNetworkElementsPath = '/api/customerportal/inventory/v1/network-elements';
-  static readonly headSoftwarePath = '/api/customerportal/inventory/v1/software';
-  static readonly getSoftwarePath = '/api/customerportal/inventory/v1/software';
-  static readonly getRoleCountPath = '/api/customerportal/inventory/v1/role/device/count';
+  static readonly getAssetsPath = '/assets';
+  static readonly getAssetSummaryPath = '/assets/summary';
+  static readonly headHardwarePath = '/hardware';
+  static readonly getHardwarePath = '/hardware';
+  static readonly headNetworkElementsPath = '/network-elements';
+  static readonly getNetworkElementsPath = '/network-elements';
+  static readonly headSoftwarePath = '/software';
+  static readonly getSoftwarePath = '/software';
+  static readonly getRoleCountPath = '/role/device/count';
 
   constructor(
     config: __Configuration,
@@ -38,11 +40,17 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `serialNumber`: The serial number of the device
+   *
    * - `rows`: Number of rows of data per page
    *
    * - `role`: The device role
    *
    * - `page`: The page number of the response
+   *
+   * - `managedNeId`:
+   *
+   * - `hwInstanceId`:
    *
    * - `coverage`: The coverage
    *
@@ -54,10 +62,14 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.serialNumber != null) __params = __params.set('serialNumber', params.serialNumber.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     if (params.page != null) __params = __params.set('page', params.page.toString());
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
     (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
@@ -68,7 +80,6 @@ class InventoryService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -85,11 +96,17 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `serialNumber`: The serial number of the device
+   *
    * - `rows`: Number of rows of data per page
    *
    * - `role`: The device role
    *
    * - `page`: The page number of the response
+   *
+   * - `managedNeId`:
+   *
+   * - `hwInstanceId`:
    *
    * - `coverage`: The coverage
    *
@@ -104,6 +121,57 @@ class InventoryService extends __BaseService {
   }
 
   /**
+   * API to get summary details for a particular device. Summary details includes device,contract & alert details.
+   * @param params The `InventoryService.GetAssetSummaryParams` containing the following parameters:
+   *
+   * - `hwInstanceId`: The unique identifier for a hardware device
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * @return successful operation
+   */
+  getAssetSummaryResponse(params: InventoryService.GetAssetSummaryParams): __Observable<__StrictHttpResponse<AssetSummary>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.hwInstanceId != null) __params = __params.set('hwInstanceId', params.hwInstanceId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/inventory/v1/assets/summary`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<AssetSummary>;
+      })
+    );
+  }
+
+  /**
+   * API to get summary details for a particular device. Summary details includes device,contract & alert details.
+   * @param params The `InventoryService.GetAssetSummaryParams` containing the following parameters:
+   *
+   * - `hwInstanceId`: The unique identifier for a hardware device
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * @return successful operation
+   */
+  getAssetSummary(params: InventoryService.GetAssetSummaryParams): __Observable<AssetSummary> {
+    return this.getAssetSummaryResponse(params).pipe(
+      __map(_r => _r.body as AssetSummary)
+    );
+  }
+
+  /**
    * Returns the number of total number of hardware entries for the identified customer along with query metadata (e.g. rows/page)
    * @param customerId Unique identifier of a Cisco customer.
    */
@@ -111,6 +179,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
@@ -120,7 +189,6 @@ class InventoryService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -175,6 +243,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
@@ -194,7 +263,6 @@ class InventoryService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -249,6 +317,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
@@ -258,7 +327,6 @@ class InventoryService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -323,6 +391,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sysName || []).forEach(val => {if (val != null) __params = __params.append('sysName', val.toString())});
     (params.swVersion || []).forEach(val => {if (val != null) __params = __params.append('swVersion', val.toString())});
@@ -347,7 +416,6 @@ class InventoryService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -420,6 +488,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
@@ -432,7 +501,6 @@ class InventoryService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -499,6 +567,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.swVersion || []).forEach(val => {if (val != null) __params = __params.append('swVersion', val.toString())});
     (params.swType || []).forEach(val => {if (val != null) __params = __params.append('swType', val.toString())});
@@ -520,7 +589,6 @@ class InventoryService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -585,6 +653,7 @@ class InventoryService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     let req = new HttpRequest<any>(
@@ -595,7 +664,6 @@ class InventoryService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -636,6 +704,11 @@ module InventoryService {
     customerId: string;
 
     /**
+     * The serial number of the device
+     */
+    serialNumber?: string;
+
+    /**
      * Number of rows of data per page
      */
     rows?: number;
@@ -649,6 +722,8 @@ module InventoryService {
      * The page number of the response
      */
     page?: number;
+    managedNeId?: Array<string>;
+    hwInstanceId?: Array<string>;
 
     /**
      * The coverage
@@ -659,6 +734,22 @@ module InventoryService {
      * The contract numbers
      */
     contractNumber?: Array<string>;
+  }
+
+  /**
+   * Parameters for getAssetSummary
+   */
+  export interface GetAssetSummaryParams {
+
+    /**
+     * The unique identifier for a hardware device
+     */
+    hwInstanceId: string;
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
   }
 
   /**

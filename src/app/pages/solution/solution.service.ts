@@ -3,8 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import {
 	RacetrackSolution,
 	RacetrackTechnology,
-	Asset,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 
 /**
  * Service which represents our senders and listeners for UseCases Solutions and selected Hardware
@@ -16,7 +15,6 @@ export class SolutionService {
 
 	private currentTechnology = new Subject<RacetrackTechnology>();
 	private currentSolution = new Subject<RacetrackSolution>();
-	private currentAsset = new Subject<Asset>();
 
 	/**
 	 * Returns the currently selected use case
@@ -35,14 +33,6 @@ export class SolutionService {
 	}
 
 	/**
-	 * Returns the currently selected asset
-	 * @returns the observable representing the asset
-	 */
-	public getCurrentAsset (): Observable<Asset> {
-		return this.currentAsset.asObservable();
-	}
-
-	/**
 	 * Sends out an update for the currently selected solution
 	 * @param solution the solution to send
 	 */
@@ -56,13 +46,5 @@ export class SolutionService {
 	 */
 	public sendCurrentTechnology (technology: RacetrackTechnology) {
 		this.currentTechnology.next(technology);
-	}
-
-	/**
-	 * Sends out an update for the currently selected asset
-	 * @param asset the asset to send
-	 */
-	public sendCurrentAsset (asset: Asset) {
-		this.currentAsset.next(asset);
 	}
 }

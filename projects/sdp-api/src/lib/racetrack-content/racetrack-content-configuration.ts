@@ -1,5 +1,6 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
+import { BaseConfiguration as __BaseConfiguration } from '../core/base-service';
 
 /**
  * Global configuration for RacetrackContent services
@@ -7,8 +8,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class RacetrackContentConfiguration {
-  rootUrl: string = 'https://sdp.cisco.com/api';
+export class RacetrackContentConfiguration extends __BaseConfiguration {
 }
 
 export interface RacetrackContentConfigurationInterface {

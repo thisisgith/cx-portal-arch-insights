@@ -1,0 +1,40 @@
+<details-panel *ngIf="advisoryId && customerId" [hidden]="!advisoryId && !advisory" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelClose()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false">
+		<ng-container *ngIf="type && details">
+			<security-details-header *ngIf="type === 'security'"
+				[details]="details">
+			</security-details-header>
+			<field-notice-details-header *ngIf="type === 'field'"
+				[details]="details">
+			</field-notice-details-header>
+			<bug-details-header *ngIf="type === 'bug'"
+				[details]="details">
+			</bug-details-header>
+		</ng-container>
+		<div detailsPanelTitle *ngIf="title" class="text-xlarge">
+			<span class="qtr-margin-left" [innerText]="title"></span>
+		</div>
+	</details-panel-header>
+	<ng-container *ngIf="type">
+		<security-details *ngIf="type === 'security'"
+			[id]="advisoryId"
+			[advisory]="advisory"
+			[customerId]="customerId"
+			(details)="onDetailsLoad($event)">
+		</security-details>
+		<field-notice-details *ngIf="type === 'field'"
+			[id]="advisoryId"
+			[advisory]="advisory"
+			[customerId]="customerId"
+			(details)="onDetailsLoad($event)">
+		</field-notice-details>
+		<bug-details *ngIf="type === 'bug'"
+			[id]="advisoryId"
+			[advisory]="advisory"
+			[customerId]="customerId"
+			(details)="onDetailsLoad($event)">
+		</bug-details>
+	</ng-container>
+</details-panel>

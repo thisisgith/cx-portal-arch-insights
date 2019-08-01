@@ -5,6 +5,7 @@ import { d3Transition } from 'd3-transition';
 import { easeLinear } from 'd3-ease';
 import { scalePow } from 'd3-scale';
 import * as _ from 'lodash-es';
+import { Subject } from 'rxjs';
 
 d3.transition = d3Transition;
 
@@ -80,6 +81,10 @@ export class RacetrackComponent implements OnInit {
 		this.length = length;
 
 		this.track.attr('transform', `translate(${trackOffsetX} ${trackOffsetY})`);
+
+		if (window.Cypress) {
+			window.racetrackEvents = new Subject();
+		}
 
 		/**
 		 * @TODO: figure out how to replace this 'any'
@@ -270,7 +275,12 @@ export class RacetrackComponent implements OnInit {
 			// each segment of transition gets its own duration from a parabolic function
 				// (slower at beginning and end, faster in the middle)
 			const parabolicDuration = Math.pow(Math.abs((i / (points.length - 15)) - 0.5), 3);
-			const dur = scaleDuration(parabolicDuration);
+			let dur;
+			if (window.Cypress) {
+				dur = 5; // speed up animation for cypress runs
+			} else {
+				dur = scaleDuration(parabolicDuration);
+			}
 
 			return chain.transition()
 				.duration(dur)
@@ -284,10 +294,16 @@ export class RacetrackComponent implements OnInit {
 					rotate(${carBaseRotations + rotations[i]})
 					translate(${carCenterOffsetX}, ${carCenterOffsetY})`)
 				.on('start', () => {
-					window.carMoving = true;
+					// Only fire the carMovingStart event for the FIRST transition
+					if (window.Cypress && i === 0) {
+						window.racetrackEvents.next({ id: 'carMovingStart' });
+					}
 				})
 				.on('end', () => {
-					window.carMoving = false;
+					// Only fire the carMovingEnd event for the LAST transition
+					if (window.Cypress && i === points.length - 1) {
+						window.racetrackEvents.next({ id: 'carMovingEnd' });
+					}
 				});
 		}, this.racecar);
 
@@ -303,15 +319,26 @@ export class RacetrackComponent implements OnInit {
 			this.progress.attr('stroke-dasharray',
 				`${progressSoFar} ${this.length - (progressSoFar)}`);
 
+			let progressDur;
+			if (window.Cypress) {
+				progressDur = 5; // speed up animation for cypress runs
+			} else {
+				progressDur = 2000;
+			}
+
 			this.progress.transition()
 				.delay(500)
-				.duration(2000)
+				.duration(progressDur)
 				.attr('stroke-dasharray', `${progressDistance} ${this.length - progressDistance}`)
 				.on('start', () => {
-					window.progressMoving = true;
+					if (window.Cypress) {
+						window.racetrackEvents.next({ id: 'progressMovingStart' });
+					}
 				})
 				.on('end', () => {
-					window.progressMoving = false;
+					if (window.Cypress) {
+						window.racetrackEvents.next({ id: 'progressMovingEnd' });
+					}
 				});
 
 			this.progressSoFar = progressDistance;

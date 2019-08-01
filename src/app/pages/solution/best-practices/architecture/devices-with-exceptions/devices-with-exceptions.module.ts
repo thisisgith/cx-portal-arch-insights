@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DevicesWithExceptionsComponent } from './devices-with-exceptions.component';
 import { CuiTableModule, CuiPagerModule } from '@cisco-ngx/cui-components';
-import { ArchitectureModule } from '@cui-x/sdp-api';
+import { ArchitectureModule } from '@sdp-api';
 import { environment } from '@environment';
 
 

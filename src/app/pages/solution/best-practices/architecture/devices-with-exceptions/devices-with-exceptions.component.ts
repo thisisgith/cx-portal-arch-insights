@@ -2,7 +2,7 @@ import { Component, OnInit,Output,EventEmitter } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureService } from '@cui-x/sdp-api';
+import { ArchitectureService } from '@sdp-api';
 
 @Component({
 	selector: 'app-devices-with-exceptions',

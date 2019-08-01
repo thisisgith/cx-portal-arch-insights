@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { NetworkElementResponse, NetworkElement } from '@cui-x/sdp-api';
+import { NetworkElementResponse, NetworkElement } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
@@ -9,7 +9,7 @@ const api = '/api/customerportal/inventory/v1/network-elements';
 const customerId = '2431199';
 
 /** Mock data for Network Elements API Results */
-export const mockResponse: NetworkElement[] = [
+export const MockNetworkElements: NetworkElement[] = [
 	{
 		customerId: '2431199',
 		hostName: '1971THE2-swi-LIMDR_P7_1_SD_DR',
@@ -594,7 +594,7 @@ export const mockResponse: NetworkElement[] = [
  * @returns the network element response
  */
 function MockNetwork (rows: number, page: number): NetworkElementResponse {
-	const data = _.cloneDeep(mockResponse)
+	const data = _.cloneDeep(MockNetworkElements)
 		.slice((rows * (page - 1)), (rows * page));
 
 	return {
@@ -602,8 +602,8 @@ function MockNetwork (rows: number, page: number): NetworkElementResponse {
 		Pagination: {
 			page,
 			rows,
-			pages: Math.ceil(mockResponse.length / rows),
-			total: mockResponse.length,
+			pages: Math.ceil(MockNetworkElements.length / rows),
+			total: MockNetworkElements.length,
 		},
 	};
 }
@@ -618,7 +618,7 @@ export const NetworkScenarios = [
 					description: 'Network Elements Count',
 					response: {
 						headers: new HttpHeaders({
-							'X-API-RESULT-COUNT': mockResponse.length.toString(),
+							'X-API-RESULT-COUNT': MockNetworkElements.length.toString(),
 						}),
 						status: 200,
 					},

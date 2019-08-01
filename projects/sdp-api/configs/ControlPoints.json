@@ -1,0 +1,25 @@
+{
+	"$schema": "../../../node_modules/@apollo/ng-swagger-gen/ng-swagger-gen-schema.json",
+	"swagger": "../../node_modules/@swagger/cx-portal/swagger/ControlPoints.yaml",
+	"output": "src/lib/controlpoints",
+	"outputCore": "../core",
+	"prefix": "ControlPoints",
+	"ignoreUnusedModels": true,
+	"minParamsForContainer": 2,
+	"sortParams": "desc",
+	"defaultTag": "ControlPoints",
+  "replaceTags": {
+    "Control Points Api Documentation": "ControlPoints"
+	},
+	"defaultOperationIds": {
+	},
+	"modelsExportAs": {
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
+}

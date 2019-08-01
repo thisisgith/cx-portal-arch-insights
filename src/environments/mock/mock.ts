@@ -1,55 +1,120 @@
 import {
 	ACCScenarios,
+	ACCUserInfoScenarios,
 	ActionScenarios,
+	AdvisorySecurityAdvisoryScenarios,
 	AssetScenarios,
 	ATXScenarios,
-	CommunitiesScenarios,
 	CaseScenarios,
 	ContractScenarios,
 	CoverageScenarios,
+	CriticalBugScenarios,
 	ELearningScenarios,
+	EntitlementScenarios,
+	FieldNoticeAdvisoryScenarios,
+	FieldNoticeBulletinScenarios,
+	FieldNoticeCountScenarios,
+	FieldNoticeScenarios,
+	HardwareEOLBulletinScenarios,
+	HardwareEOLCountScenarios,
+	HardwareEOLScenarios,
 	HardwareScenarios,
+	HealthStatusScenarios,
 	NetworkScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
+	SecurityAdvisoryBulletinScenarios,
+	SecurityAdvisoryLastUpdatedCountScenarios,
+	SecurityAdvisorySeverityCountScenarios,
+	SecurityAdvisoryTopScenarios,
+	SecurityAdvisoryScenarios,
+	SecurityAdvisorySummaryScenarios,
+	SerialNumberScenarios,
 	SuccessPathScenarios,
+	UserScenarios,
 	VulnerabilityScenarios,
 	ArchitectureScenarios,
 } from './';
+
 import { HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
 import {
 	ACCResponse,
+	ACCUserInfoSchema,
+	AdvisoriesByLastUpdatedCount,
 	Assets,
 	ATXResponse,
 	CDCSearchResponse,
 	CommunitiesResponse,
+	CoverageCountsResponse,
+	CoverageResponse,
+	CriticalBugsCount,
+	CriticalBugsResponse,
+	DeviceContractResponse,
 	ELearningResponse,
+	EntitledUser,
+	FieldNoticeAdvisoryResponse,
+	FieldNoticeBulletinResponse,
+	FieldNoticeResponse,
+	FieldNoticeUpdatedResponse,
+	HardwareEOLBulletinResponse,
+	HardwareEOLCountResponse,
+	HardwareEOLResponse,
 	HardwareResponse,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
+	SecurityAdvisoriesResponse,
+	SecurityAdvisoryBulletinResponse,
+	SecurityAdvisoryImpactCountResponse,
+	SecurityAdvisoryResponse,
+	SecurityAdvisorySeverityCountResponse,
+	SecurityAdvisorySummary,
+	ServiceInfoResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
+
 import { RMAResponse } from '@interfaces';
 
 /** Alias type for the Response Body */
 type ResponseBody = (
 	ACCResponse |
+	ACCUserInfoSchema |
+	AdvisoriesByLastUpdatedCount |
 	Assets |
 	ATXResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
+	CoverageCountsResponse |
+	CoverageResponse |
+	CriticalBugsCount |
+	CriticalBugsResponse |
+	DeviceContractResponse |
 	ELearningResponse |
+	EntitledUser |
+	FieldNoticeAdvisoryResponse |
+	FieldNoticeBulletinResponse |
+	FieldNoticeResponse |
+	FieldNoticeUpdatedResponse |
+	HardwareEOLBulletinResponse |
+	HardwareEOLCountResponse |
+	HardwareEOLResponse |
 	HardwareResponse |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
+	SecurityAdvisoriesResponse |
+	SecurityAdvisoryBulletinResponse |
+	SecurityAdvisoryImpactCountResponse |
+	SecurityAdvisoryResponse |
+	SecurityAdvisorySeverityCountResponse |
+	SecurityAdvisorySummary |
+	ServiceInfoResponse |
 	SuccessPathsResponse |
 	VulnerabilityResponse
 );
@@ -97,21 +162,41 @@ interface MockSettings {
 export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
+		ACCUserInfoScenarios,
 		ActionScenarios,
+		AdvisorySecurityAdvisoryScenarios,
 		AssetScenarios,
 		ATXScenarios,
 		CaseScenarios,
-		CommunitiesScenarios,
 		ContractScenarios,
 		CoverageScenarios,
+		CriticalBugScenarios,
 		ELearningScenarios,
+		EntitlementScenarios,
+		FieldNoticeAdvisoryScenarios,
+		FieldNoticeBulletinScenarios,
+		FieldNoticeCountScenarios,
+		FieldNoticeScenarios,
+		HardwareEOLBulletinScenarios,
+		HardwareEOLCountScenarios,
+		HardwareEOLScenarios,
 		HardwareScenarios,
+		HealthStatusScenarios,
 		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
 		RoleScenarios,
 		SearchScenarios,
+		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryLastUpdatedCountScenarios,
+		SecurityAdvisoryTopScenarios,
+		SecurityAdvisoryScenarios,
+		SecurityAdvisorySeverityCountScenarios,
+		SecurityAdvisorySummaryScenarios,
+		SecurityAdvisoryTopScenarios,
+		SerialNumberScenarios,
 		SuccessPathScenarios,
+		UserScenarios,
 		VulnerabilityScenarios,
 		ArchitectureScenarios,
 	]),

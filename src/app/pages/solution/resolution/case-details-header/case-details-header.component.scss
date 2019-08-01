@@ -1,0 +1,28 @@
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
+
+.dot {
+	height: 12px;
+	width: 12px;
+	border-radius: 50%;
+	display: inline-block;
+}
+
+.warning-alt {
+	background-color: $status-yellow;
+}
+
+.danger {
+	background-color: $status-red;
+}
+
+.warning {
+	background-color: $status-orange;
+}
+
+.info {
+	background-color: $cisco-blue;
+}
+
+.font-size {
+	font-size: $small-font-size;
+}

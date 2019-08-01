@@ -1,1 +1,52 @@
-/* Empty SCSS Component File */
+/* SCSS Component File */
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.base-list {
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+}
+
+.warning-alt {
+	color: $status-yellow;
+}
+
+.danger {
+	color: $accent-red;
+}
+
+.warning {
+	color: $status-orange;
+}
+
+.info {
+	color: $cisco-blue;
+}
+
+.close {
+	font-size: 1.2rem;
+	position: absolute;
+	display: inline-flex;
+	height: 40px;
+	width: 40px;
+	align-items: center;
+	justify-content: center;
+	right: 0;
+	padding: 0;
+	margin: 0;
+	bottom: 0;
+}
+
+.search {
+	font-size: 1.6rem;
+	position: absolute;
+	display: inline-flex;
+	height: 40px;
+	width: 40px;
+	align-items: center;
+	justify-content: center;
+	right: 10;
+	padding: 0;
+	margin: 0;
+	bottom: 0;
+}

@@ -1,126 +1,145 @@
-<div *ngIf="detailsLoading" class="row no-gutters">
+<div *ngIf="loading" class="row no-gutters">
 	<div class="col-md-12">
-		<div class="panel panel--loose">
+		<div class="innerSpecialPanel panel panel--loose">
 			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingCases_' | i18n"></h4>
 			<cui-spinner></cui-spinner>
 		</div>
 	</div>
 </div>
-<div *ngIf="!detailsLoading">
-	<h4 class="text-dkgray-1" [innerText]="'_Case_' | i18n:caseNumber.query"></h4>
-	<div class="section">
-		<h5 *ngIf="case.description" class="text-dkgray-1 qtr-margin-top half-margin-bottom" [innerText]="case.description"></h5>
-		<h6>
-			<span [innerText]="('_Status_' | i18n) + ': '"></span>
-			<span *ngIf="case.status; else unavailable" class="text-dkgray-1" [innerText]="case.status"></span>
-		</h6>
+<div *ngIf="!loading">
+	<div class="half-margin-bottom">
+		<dl class="dl--inline">
+			<dt class="flex-center-inline-vertical">
+				<span class="qtr-margin-right icon-small" [ngClass]="statusIcon"></span>
+				<span class="text-muted" data-auto-id="caseStatus" [innerText]="('_Status_' | i18n) + ':'"></span>
+				<span class="qtr-margin-left text-muted" *ngIf="case?.status; else unavailable"
+					[innerText]="case.status"></span>
+			</dt>
+		</dl>
 	</div>
-	<div class="section qtr-margin-top">
-		<div class="row">
-			<div class="col-md-auto no-gutters">
-					<h5 class="text-dkgray-1 half-margin-bottom" [innerText]="'_LatestUpdate_' | i18n"></h5>
+	<h3 data-auto-id="caseNum" [innerText]="'_Case_' | i18n:caseNumber.query"></h3>
+	<div *ngIf="case?.description; else unavailable" [innerText]="case.description"></div>
+	<div class="row">
+		<div class="row no-gutters col-md-6">
+			<div class="col-md-7 base-margin-top base-margin-right">
+				<dl class="dl--inline-medium">
+					<dt>
+						<span class="subheading text-small text-uppercase" 
+							data-auto-id="caseSeverity" [innerText]="'_Severity_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="case?.severity; else unavailable"
+							[innerText]="case.severity"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="caseCreated" [innerText]="'_Created_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="case?.opened; else unavailable"
+							[innerText]="case.opened | date:'dd-MMM-y hh:mm aa O'"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="caseContract" [innerText]="'_Contract_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="case?.contract; else unavailable"
+							[innerText]="case.contract"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="caseOwner" [innerText]="'_CaseOwner_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="case?.owner; else unavailable"
+							[innerText]="case.owner"></span>
+					</dd>
+				</dl>
 			</div>
-			<div *ngIf="!notesLoading && lastUpdated" class="col-md-auto no-gutters flex-center-vertical half-margin-bottom">
-					<span [innerText]="'(' + lastUpdated + ')'"></span>
+			<div class="col-md-4 base-margin-top">
+				<dl class="dl--inline-medium">
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="caseDevice" [innerText]="'_Device_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="case?.hostName; else loadingHardwareTemplate"
+							[innerText]="case.hostName"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="caseTACEng" [innerText]="'_TACEngineer_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="case?.tacEngineer; else loadingSummaryTemplate"
+							[innerText]="case.tacEngineer"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+						data-auto-id="caseTracking" [innerText]="'_TrackingNumber_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="case?.trackingNumber; else unavailable"
+							[innerText]="case.trackingNumber"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+						data-auto-id="caseRelRMAs" [innerText]="'_RelatedRMAs_' | i18n"></span>
+					</dt>
+				</dl>
+				<dl class="dl--inline-medium">
+					<dt *ngIf="case?.relatedRmas; then listRmas else unavailable"></dt>
+					<ng-template #listRmas>
+						<dd class="no-margin no-padding" *ngFor="let rmaNumber of case.relatedRmas">
+							<a data-auto-id="rmaNumber"
+								target="_blank"
+								href="https://ibpm.cisco.com/rma/home/?&OrderNumber={{rmaNumber}}"
+								[innerText]="rmaNumber">
+							</a>
+						</dd>
+					</ng-template>
+				</dl>
+			</div>
+			<div class="base-margin-top">
+				<button class="btn btn--small btn--secondary text-uppercase"
+				[innerText]="'_ViewCaseDetails_' | i18n"
+				data-auto-id="viewCaseDetailsB"
+				(click)="onViewCase(caseNumber.query)"></button>
+				<button class="btn btn--small btn--secondary text-uppercase"
+				[innerText]="'_ViewAllOpenCases_' | i18n"
+				data-auto-id="viewAllOpenCasesB"
+				(click)="onViewCase()"></button>
 			</div>
 		</div>
-		<div *ngIf="!notesLoading; else loadingDots">
-			<div *ngIf="lastNote && lastNote.noteDetail; else unavailable">
-				<div *ngIf="truncateLastNote" [innerHTML]="(lastNote.noteDetail | slice:0:NOTE_TRUNCATE_LENGTH) + '...'"></div>
-				<div *ngIf="!truncateLastNote" [innerHTML]="lastNote.noteDetail"></div>
-				<div *ngIf="showTruncateToggle" class="dropdown dropdown--tail qtr-margin-top half-margin-bottom"
-					[ngClass]="{'active': !truncateLastNote}">
-					<a *ngIf="truncateLastNote" data-auto-id="seeMore"
-						(click)="truncateLastNote = !truncateLastNote" [innerText]="'_SeeMore_' | i18n">
-					</a>
-					<a *ngIf="!truncateLastNote" data-auto-id="seeLess"
-						(click)="truncateLastNote = !truncateLastNote" [innerText]="'_SeeLess_' | i18n">
-					</a>
+		<div class="row col-md-6 flex-right">
+			<div class="col-md-11">
+				<div class="panel panel--loose panel--bordered">
+					<div class="half-margin-bottom">
+						<span data-auto-id="latestUpdate" [innerText]="'_LatestUpdate_' | i18n"></span>
+						<span class="half-margin-left" *ngIf="lastNote?.createdDate"
+							[innerText]="'(' + (lastNote.createdDate | fromNow) + ')'"></span>
+					</div>
+					<div class="text-dkgray-4" *ngIf="lastNote?.noteDetail; else loadingNotesTemplate"
+						[innerText]="lastNote.noteDetail | truncate:false:500"></div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="section">
-		<a data-auto-id="viewCaseDetails"
-			target="_blank"
-			class="btn btn--small btn--gray-ghost"
-			[innerText]="'_ViewCaseDetails_' | i18n"
-			href="{{myCaseUrl + '/' + case.number}}">
-		</a>
-		&nbsp;&nbsp;
-		<a data-auto-id="viewAllOpenCases"
-			target="_blank"
-			[innerText]="'_ViewAllOpenCases_' | i18n"
-			href="{{myCaseUrl + '/case'}}">
-		</a>
 	</div>
 </div>
-<ng-template #sidebar>
-	<div *ngIf="!detailsLoading">
-		<div class="base-margin-top base-margin-bottom">
-			<div class="subheading text-uppercase" [innerText]="'_Severity_' | i18n"></div>
-			<div *ngIf="case.severity; else unavailable">
-				<svg class="severityRectangle" [ngSwitch]="case.severity" width="15" height="15">
-					<rect *ngSwitchCase="'1'" class="statusRed" rx="3" ry="3" width="15" height="15" />
-					<rect *ngSwitchCase="'2'" class="statusOrange" rx="3" ry="3" width="15" height="15" />
-					<rect *ngSwitchCase="'3'" class="statusYellow" rx="3" ry="3" width="15" height="15" />
-					<rect *ngSwitchCase="'4'" class="statusBlue" rx="3" ry="3" width="15" height="15" />
-				</svg>
-				<span [ngSwitch]="case.severity">
-					<span class="half-margin-left" *ngSwitchCase="'1'" [innerText]="'_1NetworkDown_' | i18n"></span>
-					<span class="half-margin-left" *ngSwitchCase="'2'" [innerText]="'_2SeverelyDegraded_' | i18n"></span>
-					<span class="half-margin-left" *ngSwitchCase="'3'" [innerText]="'_3NetworkImpaired_' | i18n"></span>
-					<span class="half-margin-left" *ngSwitchCase="'4'" [innerText]="'_4AskAQuestion_' | i18n"></span>
-				</span>
-			</div>
-		</div>
-		<div class="base-margin-top base-margin-bottom">
-			<div class="subheading text-uppercase" [innerText]="'_Opened_' | i18n"></div>
-			<div *ngIf="case.opened; else unavailable" [innerText]="case.opened | date:'dd-MMM-y hh:mm aa O'"></div>
-		</div>
-		<div class="base-margin-top base-margin-bottom">
-				<div class="subheading text-uppercase" [innerText]="'_Contract_' | i18n"></div>
-				<div *ngIf="case.contract; else unavailable" [innerText]="case.contract"></div>
-		</div>
-		<div class="base-margin-top base-margin-bottom">
-			<div class="subheading text-uppercase" [innerText]="'_CaseOwner_' | i18n"></div>
-			<div *ngIf="case.owner; else unavailable" [innerText]="case.owner"></div>
-		</div>
-		<div class="base-margin-top base-margin-bottom">
-			<div class="subheading text-uppercase" [innerText]="'_HostName_' | i18n"></div>
-			<div *ngIf="!hardwareLoading; else loadingDots">
-				<div *ngIf="case.hostName; else unavailable" [innerText]="case.hostName"></div>
-			</div>
-		</div>
-		<div class="base-margin-top base-margin-bottom">
-			<div class="subheading text-uppercase" [innerText]="'_TACEngineer_' | i18n"></div>
-			<div *ngIf="!summaryLoading; else loadingDots">
-				<div *ngIf="case.tacEngineer; else unavailable" [innerText]="case.tacEngineer"></div>
-			</div>
-		</div>
-		<div class="base-margin-top base-margin-bottom">
-			<div class="subheading text-uppercase" [innerText]="'_TrackingNumber_' | i18n"></div>
-			<!-- TODO in the future: Link to carrier's website -->
-			<div *ngIf="case.trackingNumber; else unavailable" [innerText]="case.trackingNumber"></div>
-		</div>
-		<div class="base-margin-top base-margin-bottom">
-			<div class="subheading text-uppercase" [innerText]="'_RelatedRMAs_' | i18n"></div>
-			<div *ngIf="case.relatedRmas; then listRmas else unavailable" ></div>
-			<ng-template #listRmas>
-				<div *ngFor="let rmaNumber of case.relatedRmas">
-					<a data-auto-id="rmaNumber"
-						target="_blank"
-						href="https://ibpm.cisco.com/rma/home/?&OrderNumber={{rmaNumber}}"
-						[innerText]="rmaNumber">
-					</a>
-				</div>
-			</ng-template>
-		</div>
-	</div>
+
+<ng-template #loadingNotesTemplate>
+	<span *ngIf="loadingNotes; else unavailable" class="base-margin"></span>
 </ng-template>
-<ng-template #loadingDots>
-	<cui-loader color="muted"></cui-loader>
+
+<ng-template #loadingSummaryTemplate>
+	<span *ngIf="loadingSummary; else unavailable" class="base-margin"></span>
 </ng-template>
+
+<ng-template #loadingHardwareTemplate>
+	<span *ngIf="loadingHardware; else unavailable" class="base-margin"></span>
+</ng-template>
+
 <ng-template #unavailable>
-		<span class="text-muted" [innerText]="'_Unavailable_' | i18n"></span>
+	<span class="text-muted" [innerText]="'_Unavailable_' | i18n"></span>
 </ng-template>

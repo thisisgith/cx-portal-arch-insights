@@ -1,73 +1,132 @@
 <div *ngIf="loading" class="row no-gutters">
 	<div class="col-md-12">
-		<div class="panel panel--loose">
+		<div class="innerSpecialPanel panel panel--loose">
 			<h4 class="text-uppercase text-muted base-margin-bottom" [innerText]="'_SearchingRMAs_' | i18n"></h4>
 			<cui-spinner></cui-spinner>
 		</div>
 	</div>
 </div>
-<div *ngIf="!loading" class="row no-gutters">
-	<div class="col-12">
-		<h4 class="text-normal base-margin-bottom" [innerText]="'_RMATitle_' | i18n:rmaTableData.number"></h4>
+<div *ngIf="!loading">
+	<div class="half-margin-bottom">
+		<dl class="dl--inline">
+			<dt class="flex-center-inline-vertical">
+				<span class="qtr-margin-right icon-small icon-circle" [ngClass]="statusColor"></span>
+				<span class="text-muted" data-auto-id="rmaStatus" [innerText]="('_Status_' | i18n) + ':'"></span>
+				<span class="qtr-margin-left text-muted" *ngIf="rmaTableData?.status; else unavailable"
+					[innerText]="rmaTableData.status"></span>
+			</dt>
+		</dl>
 	</div>
-	<div class="col-md-9">
-		<table class="table table--nostripes rma-table">
-			<tbody>
-				<tr>
-					<th class="text-uppercase" [innerText]="'_Status_' | i18n"></th>
-					<td [innerText]="rmaTableData.status || '_NA_' | i18n"></td>
-				</tr>
-				<tr>
-					<th class="text-uppercase" [innerText]="'_CaseNumber_' | i18n"></th>
-					<!--TODO: Link to case details page -->
-					<td [innerText]="rmaTableData.caseId || '_NA_' | i18n"></td>
-				</tr>
-				<tr>
-					<th class="text-uppercase" [innerText]="'_CarrierTrackingNumber_' | i18n"></th>
-					<!--TODO: Link to external postal service tracking -->
-					<td [innerText]="rmaTableData.trackingNumber || '_NA_' | i18n"></td>
-				</tr>
-				<tr>
-					<th class="text-uppercase" [innerText]="'_ContractNumber_' | i18n"></th>
-					<!--TODO: Link to contract details page -->
-					<td [innerText]="rmaTableData.contractNumber || '_NA_' | i18n"></td>
-				</tr>
-				<tr>
-					<th class="text-uppercase" [innerText]="'_ReplacementProduct_' | i18n"></th>
-					<td *ngIf="rmaTableData.products.length <= 1" [innerText]="rmaTableData.products[0]?.partsDescription || '_NA_' | i18n"></td>
-					<td *ngIf="rmaTableData.products.length > 1" [innerText]="'_Multiple_' | i18n"></td>
-				</tr>
-				<tr *ngIf="rmaTableData.products.length <= 1">
-					<th class="text-uppercase" [innerText]="'_ReplacementProductID_' | i18n"></th>
-					<td [innerText]="rmaTableData.products[0]?.shippedPartNo || '_NA_' | i18n"></td>
-				</tr>
-				<tr *ngIf="rmaTableData.products.length > 1">
-					<th></th>
-					<td>
-						<table class="table table--fixed rma-product-table">
-							<thead>
-								<tr>
-									<td class="text-bold" [innerText]="'_ProductName_' | i18n"></td>
-									<td class="text-bold" [innerText]="'_ProductID_' | i18n"></td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr *ngFor="let product of rmaTableData.products">
-									<td [innerText]="product.shippedPartNo || '_NA_' | i18n"></td>
-									<td [innerText]="product.partsDescription || '_NA_' | i18n"></td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<a
-			class="btn btn--gray-ghost btn--small qtr-margin-top base-margin-bottom"
-			[href]="rmaLink"
-			[innerText]="'_ViewRMADetails_' | i18n"
-			target="_blank"
-			data-auto-id="RMAViewDetailsButton">
-		</a>
+	<h3 data-auto-id="rmaNumber" [innerText]="'_RMA_' | i18n:rmaNumber.query"></h3>
+	<div *ngIf="rmaTableData.products.length <= 1">
+		<div class="row half-margin-top">
+			<div class="col-md-3 dbl-margin-right">
+				<dl class="dl--inline-medium">
+					<ng-container *ngTemplateOutlet="caseNumber"></ng-container>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="rmaTrackingNumber"
+							[innerText]="'_CarrierTrackingNumber_' | i18n"></span>
+					</dt>
+					<dd>
+						<a  *ngIf="rmaTableData?.courier; else unavailable"
+							data-auto-id="rmaCourierLink"
+							[innerHTML]="rmaTableData.courier | courierLink:rmaTableData.trackingNumber"></a>
+					</dd>
+					<ng-container *ngTemplateOutlet="contract"></ng-container>
+				</dl>
+			</div>
+			<div class="col-md-3">
+				<dl class="dl--inline-medium">
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							data-auto-id="rmaProduct" [innerText]="'_Product_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="rmaTableData?.products[0]?.partsDescription; else unavailable"
+						[innerText]="rmaTableData.products[0].partsDescription"></span>
+					</dd>
+					<dt>
+						<span class="subheading text-small text-uppercase"
+						data-auto-id="rmaProdID" [innerText]="'_ProductID_' | i18n"></span>
+					</dt>
+					<dd>
+						<span *ngIf="rmaTableData?.products[0]?.shippedPartNo; else unavailable"
+							[innerText]="rmaTableData.products[0].shippedPartNo"></span>
+					</dd>
+				</dl>
+			</div>	
+		</div>
+		<ng-container *ngTemplateOutlet="detailsButton"></ng-container>
+	</div>
+	<div *ngIf="rmaTableData.products.length > 1">
+		<div class="row half-margin-top no-padding">
+			<div class="col-md-3 dbl-margin-right">
+				<dl class="dl--inline-medium">
+					<dt>
+						<span class="subheading text-small text-uppercase"
+							[innerText]="'_Product_' | i18n"></span>
+					</dt>
+					<dd>
+						<span [innerText]="'_Multiple_' | i18n"></span>
+					</dd>
+					<ng-container *ngTemplateOutlet="caseNumber"></ng-container>
+				</dl>
+			</div>
+			<div class="col-md-3">
+				<dl class="dl--inline-medium">
+					<ng-container *ngTemplateOutlet="contract"></ng-container>
+				</dl>
+			</div>
+		</div>
+		<div class="row no-margin">
+			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProductNames" [innerText]="'_ProductName_' | i18n"></div>
+			<div class="col-md-4 text-bold no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProductIDs" [innerText]="'_ProductID_' | i18n"></div>
+		</div>
+		<div class="divider no-margin"></div>
+		<div *ngFor="let product of rmaTableData.products">
+			<div class="row no-margin">
+					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProdDescr" [innerText]="product.partsDescription | i18n"></div>
+					<div class="col-md-4 no-padding-left half-padding-top half-padding-bottom" data-auto-id="rmaProdID" [innerText]="product.shippedPartNo | i18n"></div>
+			</div>
+			<div class="divider no-margin"></div>
+		</div>
+		<div class="base-margin"></div>
+		<ng-container *ngTemplateOutlet="detailsButton"></ng-container>
 	</div>
 </div>
+
+<ng-template #caseNumber>
+	<dt>
+		<span class="subheading text-small text-uppercase"
+		data-auto-id="caseNumber" [innerText]="'_CaseNumber_' | i18n"></span>
+	</dt>
+	<dd>
+		<a data-auto-id="caseNumber"
+		*ngIf="rmaTableData?.caseId; else unavailable"
+			[innerText]="rmaTableData.caseId"
+			(click)="onViewCaseDetails(rmaTableData.caseId)"></a>
+	</dd>
+</ng-template>
+
+<ng-template #contract>
+	<dt>
+		<span class="subheading text-small text-uppercase"
+		data-auto-id="contractNumber" [innerText]="'_Contract_' | i18n"></span>
+	</dt>
+	<dd>
+		<!--TODO: Link to contract details page -->
+		<span *ngIf="rmaTableData.contractNumber; else unavailable"
+			[innerText]="rmaTableData.contractNumber"></span>
+	</dd>
+</ng-template>
+
+<ng-template #detailsButton>
+	<div class="qtr-margin-top">
+			<button class="btn btn--small btn--secondary text-uppercase" data-auto-id="rmaViewDetButton" [innerText]="'_ViewRMADetails_' | i18n"></button>
+	</div>
+</ng-template>
+
+<ng-template #unavailable>
+	<span class="text-muted" data-auto-id="rmaUnavail" [innerText]="'_Unavailable_' | i18n"></span>
+</ng-template>

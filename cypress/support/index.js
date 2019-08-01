@@ -17,8 +17,49 @@
 import './commands';
 
 require('@apollo/cypress-util');
+const path = require('path');
+
+/**
+ * Mocha's root scope afterEach hook
+ * Note: Cannot use arrow function here without breaking the scope of `this`.
+ */
+afterEach(function afterEachHook () {
+	// If this is a CI run, report failed tests
+	if (Cypress.env('CI')) {
+		const test = this;
+		if (test.currentTest.state === 'failed') {
+			const report = {
+				error: test.currentTest.err.message,
+				parent: test.currentTest.parent.title,
+				spec: path.basename(global.window.location.pathname),
+				state: test.currentTest.state,
+				test: test.currentTest.title,
+				timestamp: new Date().toISOString(),
+				url: Cypress.env('CI_JOB_URL'),
+			};
+			cy.request({ // Need Error handling: https://github.com/cypress-io/cypress/issues/3161
+				method: 'POST',
+				url: Cypress.env('REPORT_URL'),
+				body: report,
+				failOnStatusCode: false,
+				log: false,
+			});
+		}
+	}
+});
 
 // Whitelist ObSSOCookie from getting cleared before each test
 Cypress.Cookies.defaults({
 	whitelist: ['ObSSOCookie'],
+});
+
+// Use the data-auto-id in the selector playground if available
+Cypress.SelectorPlayground.defaults({
+	onElement: $el => {
+		const customId = $el.attr('data-auto-id');
+
+		if (customId) {
+			return `[data-auto-id="${customId}"]`;
+		}
+	},
 });

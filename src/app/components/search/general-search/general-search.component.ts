@@ -24,11 +24,12 @@ import {
 	Buckets,
 	Facets,
 	ELearning,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 import { SearchService as SearchUtils } from '@services';
 import { SearchContext, SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * Indicates refresh type, either refreshing everything or fetching a new page
@@ -36,11 +37,17 @@ import * as _ from 'lodash-es';
 type RefreshType = 'query' | 'filters' | 'newPage';
 
 /**
+ * Possible types of "related" results
+ */
+type RelatedResultType = 'acc' | 'atx' | 'learning' | 'community';
+
+/**
  * Interface representing related ACC/ATX/eLearning/Community results
  */
 interface RelatedResult {
 	url: string;
 	title: string;
+	type: RelatedResultType;
 	description: string;
 }
 
@@ -64,7 +71,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public searchToken: string;
 
-	/** The actual search results used in the template
+	/**
+	 * The actual search results used in the template
 	 * Important properties picked out of the CDCSearchResponse
 	 */
 	public searchResults: {
@@ -82,8 +90,9 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public loadingRelated = false;
 	public selectedSite: Buckets;
 	public selectedType: Buckets;
+	public lastFiltered: string;
 
-	private customerId = '2431199';
+	private customerId: string;
 	private readonly pageSize = 10;
 	private pageOffset = 0;
 	private refresh$ = new Subject<RefreshType>();
@@ -93,8 +102,15 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		private logger: LogService,
 		private service: SearchService,
 		private utils: SearchUtils,
+		private userResolve: UserResolve,
 	) {
-		this.logger.debug('GeneralSearchComponent Created!');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 	}
 
 	/**
@@ -157,10 +173,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			}
 			this.results.emit(this.searchResults);
 			this.totalCount = _.get(result, 'totalHits', 0);
-			// Only change filter options when the query changes
-			if (refreshType === 'query') {
-				this.populateFilters(result);
-			}
+			this.populateFilters(result);
 		});
 		/** Refresh "related" results subsection subscription */
 		this.refresh$.pipe(
@@ -203,6 +216,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public onSiteSelected (site: Buckets) {
 		this.pageOffset = 0;
 		this.selectedSite = site;
+		if (this.selectedSite.label.includes(I18n.get('_AllCategories_'))) {
+			this.lastFiltered = null;
+		} else {
+			this.lastFiltered = 'site';
+		}
 		this.refresh$.next('filters');
 	}
 
@@ -213,6 +231,11 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public onTypeSelected (type: Buckets) {
 		this.pageOffset = 0;
 		this.selectedType = type;
+		if (this.selectedType.label.includes(I18n.get('_AllTypes_'))) {
+			this.lastFiltered = null;
+		} else {
+			this.lastFiltered = 'type';
+		}
 		this.refresh$.next('filters');
 	}
 
@@ -279,6 +302,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: atx['Session Description'],
 						title: atx['Session Name'],
+						type: 'atx',
 						url: atx['Attendee Link'],
 					});
 				}
@@ -288,6 +312,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: acc['Short Description'],
 						title: acc.Title,
+						type: 'acc',
 						url: null,
 					});
 				}
@@ -297,6 +322,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: learning.description,
 						title: learning.title,
+						type: 'learning',
 						url: learning.url,
 					});
 				}
@@ -306,6 +332,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 					results.push({
 						description: community.fields.teaser[0],
 						title: community.fields.title[0],
+						type: 'community',
 						url: community.fields.url[0],
 					});
 				}
@@ -334,7 +361,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			facets.find((o: Facets) => o.label === 'Site Subcategory'),
 			'buckets',
 		);
-		if (siteBuckets) {
+		if (this.lastFiltered !== 'site' && siteBuckets) {
 			this.siteOptions = siteBuckets.map((bucket: Buckets) => ({
 				...bucket,
 				label: `${bucket.label} (${bucket.count})`,
@@ -347,7 +374,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				this.selectedSite = this.siteOptions[0];
 			}
 		}
-		if (typeBuckets) {
+		if (this.lastFiltered !== 'type' && typeBuckets) {
 			this.typeOptions = typeBuckets.map((bucket: Buckets) => ({
 				...bucket,
 				label: `${bucket.label} (${bucket.count})`,
@@ -360,6 +387,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 				this.selectedType = this.typeOptions[0];
 			}
 		}
+		this.lastFiltered = null;
 	}
 
 	/**
@@ -378,6 +406,8 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		}
 		if (type && type.filter) {
 			filter = `${filter}${filter ? ',' : ''}${type.filter}`;
+			this.logger.debug(`general-search.component :: buildFilterParam() :: ${
+				JSON.stringify(type)}`);
 		}
 
 		return { filters: filter };

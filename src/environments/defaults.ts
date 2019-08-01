@@ -16,8 +16,13 @@ export const defaults = {
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/pbc/',
+	csc: {
+		fileDownloadURL: `https://largefile-stage.cloudapps.cisco.com/Web-Ui?srId=
+			{0}&fileName={1}&appId=cxportal`,
+		fileList: '/ws/csc/v3/caseFiles',
+	},
 	csone: {
-		clientId: '453b7e10f08b428c90d48432312889ad',
+		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
@@ -39,6 +44,7 @@ export const defaults = {
 	sdpServiceOrigin: 'https://api-stage.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/v1/contracts',
+		controlpoints: '/api/customerportal/controlpoint',
 		customerportal: '/api/customerportal',
 		inventory: '/api/v1/inventory',
 	},

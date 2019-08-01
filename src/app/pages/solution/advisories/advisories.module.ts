@@ -1,10 +1,31 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
 import { AdvisoriesComponent } from './advisories.component';
+import {
+	DetailsPanelModule,
+	PieChartModule,
+	ColumnChartModule,
+	AdvisoryDetailsModule,
+} from '@components';
+import { RouterModule, Routes } from '@angular/router';
+import {
+	CuiTableModule,
+	CuiTabsModule,
+	CuiPagerModule,
+	CuiSpinnerModule,
+} from '@cisco-ngx/cui-components';
+import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductAlertsModule, DiagnosticsModule } from '@sdp-api';
+import { environment } from '@environment';
 
 /**
- * Child routes for Assets Module for lazy loading
+ * The SDP Origin URL used for passing to the SDP-API Modules
+ */
+const rootUrl = environment.sdpServiceOrigin;
+
+/**
+ * Child routes for Advisories Module for lazy loading
  */
 const childRoutes: Routes = [
 	{
@@ -19,7 +40,21 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [AdvisoriesComponent],
 	imports: [
+		AdvisoryDetailsModule,
+		ColumnChartModule,
 		CommonModule,
+		CuiPagerModule,
+		CuiSpinnerModule,
+		CuiTableModule,
+		CuiTabsModule,
+		DetailsPanelModule,
+		DiagnosticsModule.forRoot({ rootUrl }),
+		FormsModule,
+		FromNowPipeModule,
+		I18nPipeModule,
+		PieChartModule,
+		ProductAlertsModule.forRoot({ rootUrl }),
+		ReactiveFormsModule,
 		RouterModule.forChild(childRoutes),
 	],
 })

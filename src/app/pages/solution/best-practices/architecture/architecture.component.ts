@@ -9,7 +9,7 @@ import {
 	Event as RouterEvent,
 	NavigationEnd,
 } from '@angular/router';
-import { ArchitectureService } from '@cui-x/sdp-api';
+import { ArchitectureService } from '@sdp-api';
 import { Subject, Observable } from 'rxjs';
 
 

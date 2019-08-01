@@ -1,9 +1,9 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
-import { BaseService as __BaseService } from '../base-service';
+import { BaseService as __BaseService } from '../../core/base-service';
 import { SearchConfiguration as __Configuration } from '../search-configuration';
-import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-response';
+import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
@@ -18,9 +18,9 @@ import { GlobalSearchResponse } from '../models/global-search-response';
   providedIn: 'root',
 })
 class SearchService extends __BaseService {
-  static readonly directCDCSearchPath = '/api/customerportal/search/v1/cdcSearch';
-  static readonly directCommunitySearchPath = '/api/customerportal/search/v1/communitySearch';
-  static readonly allSearchPath = '/api/customerportal/search/v1/globalSearch';
+  static readonly directCDCSearchPath = '/cdcSearch';
+  static readonly directCommunitySearchPath = '/communitySearch';
+  static readonly allSearchPath = '/globalSearch';
 
   constructor(
     config: __Configuration,
@@ -42,6 +42,8 @@ class SearchService extends __BaseService {
    *
    * - `filters`: Filter CDC results
    *
+   * - `customerId`: Unique identifier of a Cisco customer
+   *
    * - `context`: Hint to do a special lookup before search
    *
    * @return Successfully retrieved results
@@ -50,16 +52,17 @@ class SearchService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __headers.append('Content-Type', 'application/x-www-form-urlencoded');
     let __formData = new HttpParams();
+
+    __headers = __headers.append("Content-Type", "application/x-www-form-urlencoded");
    if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData = __formData.append('searchTokens', params.searchTokens as string);}
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
    if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
    if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
-   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters.replace(/\\/g, '') as string);}
-   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', params.context as string);}
+   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
    if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData = __formData.append('customerId', params.customerId as string);}
-   __body = __formData;
+   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', params.context as string);}
+    __body = __formData
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/api/customerportal/search/v1/cdcSearch`,
@@ -67,7 +70,7 @@ class SearchService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
       });
 
     return this.http.request<any>(req).pipe(
@@ -77,6 +80,7 @@ class SearchService extends __BaseService {
       })
     );
   }
+
   /**
    * @param params The `SearchService.DirectCDCSearchParams` containing the following parameters:
    *
@@ -89,6 +93,8 @@ class SearchService extends __BaseService {
    * - `limit`: Pagination: number of expected results
    *
    * - `filters`: Filter CDC results
+   *
+   * - `customerId`: Unique identifier of a Cisco customer
    *
    * - `context`: Hint to do a special lookup before search
    *
@@ -119,14 +125,15 @@ class SearchService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __headers.append('Content-Type', 'application/x-www-form-urlencoded');
     let __formData = new HttpParams();
+
+    __headers = __headers.append("Content-Type", "application/x-www-form-urlencoded");
    if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData = __formData.append('searchTokens', params.searchTokens as string);}
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
    if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
    if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
-   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters.replace(/\\/g, '') as string);}
-   __body = __formData;
+   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
+    __body = __formData
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/api/customerportal/search/v1/communitySearch`,
@@ -134,7 +141,7 @@ class SearchService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
       });
 
     return this.http.request<any>(req).pipe(
@@ -144,6 +151,7 @@ class SearchService extends __BaseService {
       })
     );
   }
+
   /**
    * @param params The `SearchService.DirectCommunitySearchParams` containing the following parameters:
    *
@@ -184,6 +192,8 @@ class SearchService extends __BaseService {
    *
    * - `filters`: Filter CDC results
    *
+   * - `customerId`: Unique identifier of a Cisco customer
+   *
    * - `context`: Hint to do a special lookup before search
    *
    * @return Successfully retrieved results
@@ -192,8 +202,9 @@ class SearchService extends __BaseService {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __headers.append('Content-Type', 'application/x-www-form-urlencoded');
     let __formData = new HttpParams();
+
+    __headers = __headers.append("Content-Type", "application/x-www-form-urlencoded");
    if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData = __formData.append('searchTokens', params.searchTokens as string);}
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
    if(params.useCase !== null && typeof params.useCase !== "undefined") { __formData = __formData.append('useCase', params.useCase as string);}
@@ -201,10 +212,10 @@ class SearchService extends __BaseService {
    if(params.pitStop !== null && typeof params.pitStop !== "undefined") { __formData = __formData.append('pitStop', params.pitStop as string);}
    if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
    if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
-   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters.replace(/\\/g, '') as string);}
-   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', params.context as string);}
+   if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
    if(params.customerId !== null && typeof params.customerId !== "undefined") { __formData = __formData.append('customerId', params.customerId as string);}
-   __body = __formData;
+   if(params.context !== null && typeof params.context !== "undefined") { __formData = __formData.append('context', params.context as string);}
+    __body = __formData
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/api/customerportal/search/v1/globalSearch`,
@@ -212,7 +223,7 @@ class SearchService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
+        responseType: 'json',
       });
 
     return this.http.request<any>(req).pipe(
@@ -222,6 +233,7 @@ class SearchService extends __BaseService {
       })
     );
   }
+
   /**
    * @param params The `SearchService.AllSearchParams` containing the following parameters:
    *
@@ -240,6 +252,8 @@ class SearchService extends __BaseService {
    * - `limit`: CDC Pagination: number of expected results
    *
    * - `filters`: Filter CDC results
+   *
+   * - `customerId`: Unique identifier of a Cisco customer
    *
    * - `context`: Hint to do a special lookup before search
    *
@@ -285,14 +299,14 @@ module SearchService {
     filters?: string;
 
     /**
-     * Hint to do a special lookup before search
-     */
-    context?: string;
-
-    /**
      * Unique identifier of a Cisco customer
      */
     customerId?: string;
+
+    /**
+     * Hint to do a special lookup before search
+     */
+    context?: 'serialno' | 'contract';
   }
 
   /**
@@ -372,14 +386,14 @@ module SearchService {
     filters?: string;
 
     /**
-     * Hint to do a special lookup before search
-     */
-    context?: string;
-
-    /**
      * Unique identifier of a Cisco customer
      */
     customerId?: string;
+
+    /**
+     * Hint to do a special lookup before search
+     */
+    context?: 'serialno' | 'contract';
   }
 }
 

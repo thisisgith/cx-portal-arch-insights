@@ -8,13 +8,14 @@ import {
 	EventEmitter,
 	forwardRef,
 } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { Observable, Subject, of } from 'rxjs';
 import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
 
-import { RMAService } from '@services';
+import { RMAService, SearchService } from '@services';
 import { RMARecord, RMAResponse, PartsLineDetail, SearchContext, SearchQuery } from '@interfaces';
 import * as _ from 'lodash-es';
 import { environment } from '@environment';
@@ -26,10 +27,20 @@ import { SpecialSearchComponent } from '../special-search/special-search.compone
 interface RmaTableData {
 	caseId?: string;
 	contractNumber?: string;
+	courier?: string;
 	number?: string;
 	products?: PartsLineDetail[];
 	status?: string;
 	trackingNumber?: string;
+}
+
+/**
+ * Mapping of RMA statuses to status icon colors
+ * TODO: Get definitive list of possible statuses/colors
+ */
+enum StatusColorMap {
+	'IN-PROGRESS' = 'text-success',
+	UNKNOWN = 'text-muted',
 }
 
 /**
@@ -58,6 +69,7 @@ export class RMASearchComponent extends SpecialSearchComponent
 	public loading = true;
 	public rma: RMARecord;
 	public rmaTableData: RmaTableData;
+	public statusColor: StatusColorMap;
 	public caseLink: string;
 	public rmaLink: string;
 	public trackingLink: string;
@@ -66,6 +78,8 @@ export class RMASearchComponent extends SpecialSearchComponent
 	private destroy$ = new Subject();
 
 	constructor (
+		private router: Router,
+		private searchService: SearchService,
 		private service: RMAService,
 		private logger: LogService,
 	) {
@@ -99,6 +113,11 @@ export class RMASearchComponent extends SpecialSearchComponent
 			this.rmaTableData = {
 				caseId: _.get(this.rma, 'caseId'),
 				contractNumber: _.get(this.rma, 'contractId'),
+				courier: _.get(
+					this.rma,
+					['replacementParts', 'trackingInfo', 'courier'],
+					_.get(this.rma, ['replacementParts', 'trackingInfo', 'courierList']),
+				),
 				number: `${this.rma.rmaNo}`,
 				products: _.get(this.rma, 'replacementParts.partsLineDetails', []),
 				status: _.get(this.rma, 'status'),
@@ -107,7 +126,9 @@ export class RMASearchComponent extends SpecialSearchComponent
 					'replacementParts.trackingInfo.trackingNumber',
 				),
 			};
-
+			const statusKey = _.get(this.rmaTableData, 'status', 'UNKNOWN')
+				.toUpperCase();
+			this.statusColor = _.get(StatusColorMap, statusKey);
 			this.rmaLink = `${environment.rmaToolUrl}?&OrderNumber=${this.rma.rmaNo}`;
 			if (
 				this.rmaTableData.products.length === 1
@@ -155,5 +176,17 @@ export class RMASearchComponent extends SpecialSearchComponent
 
 				return of(null);
 			}));
+	}
+
+	/**
+	 * Navigate to a single case details
+	 * @param casenum case number to view details for
+	 */
+	public onViewCaseDetails (casenum: string) {
+		this.router.navigate(
+			['solution/resolution'],
+			{ queryParams: { case: casenum } },
+		);
+		this.searchService.close();
 	}
 }

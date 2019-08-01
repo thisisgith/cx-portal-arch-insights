@@ -2,7 +2,7 @@
 
 import {
 	ATXResponse,
-} from '@cui-x/sdp-api';
+} from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/racetrack/v1/atx';
@@ -251,16 +251,16 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 100,
-					description: '(ATX) IBN-Wireless Assurance-Onboard',
+					description: '(ATX) IBN-Campus Network Assurance-Onboard',
 					response: {
-						body: MockATX('IBN', 'Wireless Assurance', 'Onboard'),
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=Wireless Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -268,16 +268,16 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 100,
-					description: '(ATX) IBN-Wireless Assurance-Implement',
+					description: '(ATX) IBN-Campus Network Assurance-Implement',
 					response: {
-						body: MockATX('IBN', 'Wireless Assurance', 'Implement'),
+						body: MockATX('IBN', 'Campus Network Assurance', 'Implement'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=Wireless Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -285,16 +285,70 @@ export const ATXScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 100,
-					description: '(ATX) IBN-SD Access-Onboard',
+					description: '(ATX) IBN-Campus Network Segmentation-Onboard',
 					response: {
-						body: MockATX('IBN', 'SD Access', 'Onboard'),
+						body: MockATX('IBN', 'Campus Network Segmentation', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Segmentation&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Scalable Access Policy-Onboard',
+					response: {
+						body: MockATX('IBN', 'Scalable Access Policy', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Scalable Access Policy&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Network Device Onboarding-Onboard',
+					response: {
+						body: MockATX('IBN', 'Network Device Onboarding', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Network Device Onboarding&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Campus Software Image Management-Onboard',
+					response: {
+						body: MockATX('IBN', 'Campus Software Image Management', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

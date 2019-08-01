@@ -1,28 +1,26 @@
-<h4 [innerText]="'_NoResultsFound_' | i18n"
-	class="base-margin-bottom">
-</h4>
+<h3 data-auto-id="noResultsFound" [innerText]="'_NoResultsFound_' | i18n"></h3>
 <h5 [innerText]="'_WeDidNotFindResults_' | i18n:query"
-	class="dbl-margin-bottom">
+	class="half-margin-top base-margin-bottom">
 </h5>
-<dl class="base-margin-bottom">
-	<dt>
-		<span [innerText]="'_Suggestions_' | i18n"
+<dl class="half-margin-top base-margin-bottom">
+	<dt class="half-margin-bottom">
+		<span data-auto-id="nrfSuggestions" [innerText]="'_Suggestions_' | i18n"
 			class="text-bold">
 		</span>
 	</dt>
-	<dd><span [innerText]="'_CheckYourSpelling_' | i18n"></span></dd>
-	<dd><span [innerText]="'_TryDifferentKeyword_' | i18n"></span></dd>
-	<dd><span [innerText]="'_TryMoreGeneralKeywords_' | i18n"></span></dd>
+	<dd><span data-auto-id="nrfSpelling" [innerText]="'_CheckYourSpelling_' | i18n"></span></dd>
+	<dd><span data-auto-id="nrfTryDiff" [innerText]="'_TryDifferentKeyword_' | i18n"></span></dd>
+	<dd><span data-auto-id="nrfTryGen" [innerText]="'_TryMoreGeneralKeywords_' | i18n"></span></dd>
 </dl>
-<dl class="base-margin-bottom">
-	<dt>
-		<span [innerText]="'_DidYouKnowSearch_' | i18n"
+<dl class="half-margin-top">
+	<dt class="half-margin-bottom">
+		<span data-auto-id="nrfDYKnow" [innerText]="'_DidYouKnowSearch_' | i18n"
 			class="text-bold">
 		</span>
 	</dt>
-	<dd><span [innerText]="'_SerialNumber_' | i18n"></span></dd>
-	<dd><span [innerText]="'_CaseNumber_' | i18n"></span></dd>
-	<dd><span [innerText]="'_ContractNumber_' | i18n"></span></dd>
-	<dd><span [innerText]="'_RMANumber_' | i18n"></span></dd>
-	<dd><span [innerText]="'_InformationAboutThatItem_' | i18n"></span></dd>
+	<dd><span data-auto-id="nrfDYNSerial" [innerText]="'_SerialNumber_' | i18n"></span></dd>
+	<dd><span data-auto-id="nrfDYNCaseNum" [innerText]="'_CaseNumber_' | i18n"></span></dd>
+	<dd><span data-auto-id="nrfDYNConNum" [innerText]="'_ContractNumber_' | i18n"></span></dd>
+	<dd><span data-auto-id="nrfDYNrmaNum" [innerText]="'_RMANumber_' | i18n"></span></dd>
+	<dd><span data-auto-id="nrfDYNInfo" [innerText]="'_InformationAboutThatItem_' | i18n"></span></dd>
 </dl>

@@ -4,6 +4,10 @@ export {
 	tableColumns as advisoryColumns,
 } from './advisory';
 
-export { caseSeverities } from './case';
+export { caseSeverities, caseFileIcons, CaseRequestType } from './case';
+
+export { SETUP_STATES } from './ie';
 
 export { severityMap, severityLevelMap } from './severities';
+
+export { KEY_CODES } from './utils';

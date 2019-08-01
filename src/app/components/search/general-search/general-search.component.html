@@ -7,14 +7,14 @@
 	</div>
 </div>
 <div *ngIf="!loading && searchResults?.length">
-	<h5 *ngIf="header"
+	<h6 *ngIf="header"
 		[innerText]="header"
+		class="base-margin-top half-margin-bottom">
+	</h6>
+	<h5 data-auto-id="searchHeader" [innerText]="'_XResults_' | i18n:totalCount:searchToken"
 		class="base-margin-bottom">
 	</h5>
-	<h5 [innerText]="'_XResults_' | i18n:totalCount:searchToken"
-		class="base-margin-bottom">
-	</h5>
-	<span [innerText]="'_FilterBy_' | i18n"></span>
+	<span data-auto-id="filterBy" [innerText]="'_FilterBy_' | i18n"></span>
 	<div class="row">
 		<div class="col-md-4">
 			<cui-select
@@ -38,26 +38,26 @@
 		</div>
 	</div>
 	<!-- CDC Search Results, first 3 -->
-	<div *ngFor="let result of searchResults | slice:0:3"
+	<div *ngFor="let result of searchResults | slice:0:3; index as idx"
 		class="base-margin-top">
-		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result }"></ng-container>
+		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result, idx: idx, place: 'Pre' }"></ng-container>
 	</div>
 	<!-- Related ATX, ACC, Learning results -->
-	<div class="base-margin-top"
+	<div class="half-margin-top"
 		*ngIf="relatedResults?.length">
 		<div class="flex flex-center-vertical">
-			<span class="half-margin-right"
-				[innerText]="'_RelatedGeneralResults_' | i18n">
-			</span>
+			<h6 class="half-margin-right"
+				data-auto-id="relGenRes" [innerText]="'_RelatedGeneralResults_' | i18n">
+			</h6>
 			<div class="divider flex-fluid"></div>
 		</div>
 		<ng-container *ngTemplateOutlet="relatedTemplate"></ng-container>
 		<div class="divider"></div>
 	</div>
 	<!-- Remaining CDC results -->
-	<div *ngFor="let result of searchResults | slice:3"
+	<div *ngFor="let result of searchResults | slice:3; index as idx"
 		class="base-margin-top">
-		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result }"></ng-container>
+		<ng-container *ngTemplateOutlet="resultTemplate; context: { result: result, idx: idx, place: 'Post' }"></ng-container>
 	</div>
 	<div class="base-margin-top"
 		*ngIf="searchResults?.length && searchResults.length < totalCount">
@@ -79,10 +79,10 @@
 </app-no-results>
 
 <!-- Template for regular CDC result -->
-<ng-template #resultTemplate let-result="result">
+<ng-template #resultTemplate let-result="result" let-index="idx" let-place="place">
 	<div>
 		<a [href]="result.displayUrl"
-			data-auto-id="searchResultLink"
+			[attr.data-auto-id]="'searchResultLink' + place + index"
 			target="_blank">
 			<h5 [innerHTML]="result.title | keyHighlight"></h5>
 		</a>
@@ -90,13 +90,13 @@
 	<div>
 		<span [innerHTML]="result.description | truncate:false:300 | keyHighlight"></span>
 	</div>
-	<span class="text-darkgreen"
-		[innerText]="result.displayUrl">
-	</span>
+	<a class="text-dkgray-4" target="_blank" [href]="result.displayUrl"
+		[innerText]="result.displayUrl | truncate:false:100">
+	</a>
 	<div *ngIf="result.pdfUrl">
-		<a target="_blank"
-			[innerText]="'_PDFSize_' | i18n:result.pdfSize"
-			[href]="result.pdfUrl">
+		<a class="text-dkgray-4" target="_blank" [href]="result.pdfUrl">
+			<span class="icon-file-pdf-o icon-xsmall qtr-margin-right"></span>
+			<span [innerText]="'_PDFSize_' | i18n:result.pdfSize"></span>
 		</a>
 	</div>
 </ng-template>
@@ -110,12 +110,12 @@
 	</ng-container>
 	<ng-container *ngIf="!loadingRelated">
 		<div *ngFor="let item of relatedResults"
-			class="half-margin-bottom">
+			class="half-padding-top half-margin-bottom">
 			<div>
 				<a [href]="item.url"
-					data-auto-id="relatedResultLink"
+					[attr.data-auto-id]="'relatedResultLink' + item.type"
 					target="_blank">
-					<h6 [innerHTML]="item.title | keyHighlight"></h6>
+					<h5 [innerHTML]="item.title | keyHighlight"></h5>
 				</a>
 			</div>
 			<span [innerHTML]="item.description | truncate:false:100 | keyHighlight"></span>

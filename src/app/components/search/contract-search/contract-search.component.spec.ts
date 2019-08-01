@@ -2,8 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
 
-import { ContractsService } from '@cui-x/sdp-api';
-import { ContractScenarios } from '@mock';
+import { ContractsService } from '@sdp-api';
+import { ContractScenarios, CoverageScenarios } from '@mock';
 import { ContractSearchComponent } from './contract-search.component';
 import { ContractSearchModule } from './contract-search.module';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -38,15 +38,23 @@ describe('ContractSearchComponent', () => {
 	});
 
 	it('should refresh on query change', () => {
-		const response = _.get(ContractScenarios[0], ['scenarios', 'GET[0]', 'response', 'body']);
 		spyOn(service, 'getContractDetails')
 			.and
-			.returnValue(of(response));
+			.returnValue(of(
+				_.get(ContractScenarios, [0, 'scenarios', 'GET', 0, 'response', 'body']),
+			));
 		component.contractNumber = { query: '230000001' };
+		spyOn(service, 'headProductsCoveragesResponse')
+			.and
+			.returnValue(of(
+				_.get(CoverageScenarios, [0, 'scenarios', 'HEAD', 0, 'response']),
+			));
 		component.ngOnChanges();
 		fixture.detectChanges();
 		expect(service.getContractDetails)
 			.toHaveBeenCalled();
+		expect(component.coverageCount)
+			.toBe(7);
 	});
 
 	it('should set null values on request errors', () => {
@@ -57,7 +65,7 @@ describe('ContractSearchComponent', () => {
 		spyOn(service, 'getContractDetails')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(service, 'headContractsProductsCoveragesResponse')
+		spyOn(service, 'headProductsCoveragesResponse')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnChanges();

@@ -1,3 +1,220 @@
-<p>
-	advisories works!
-</p>
+<advisory-details *ngIf="selectedAdvisory"
+	[advisoryId]="selectedAdvisory.id"
+	[advisory]="selectedAdvisory.advisory"
+	[type]="selectedAdvisory.type"
+	(close)="onPanelClose()">
+</advisory-details>
+
+<div class="panel">
+	<cui-tabs inline="true"
+		*ngIf="tabs.length"
+		[activeTabIndex]="activeIndex"
+		(activeTabIndexChange)="selectTab($event)">
+
+		<cui-tab *ngFor="let tab of tabs"
+			[label]="tab.label | uppercase"
+			[disabled]="tab.disabled">
+			<div class="divider no-margin-top qtr-margin-bottom"></div>
+			<ng-container *ngTemplateOutlet="visualFilters; context: { tab: tab }"></ng-container>
+			<ng-container *ngTemplateOutlet="titleBar; context: { tab: tab }"></ng-container>
+			<div class="divider qtr-margin-top no-margin-bottom"></div>
+			<ng-container *ngTemplateOutlet="tab.template; context: { tab: tab }"></ng-container>
+		</cui-tab>
+
+		<ng-template cuiTabPost>
+			<div class="text-right" *ngIf="selectedTab.filters?.length">
+				<div *ngIf="!status.isLoading"
+					(click)="status.filterCollapse = !status.filterCollapse"
+					data-auto-id="VisualFilterCollapse">
+					<span class="icon-filter icon-medium text-muted qtr-margin-right toggle"></span>
+					<span class="text-large text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
+					<span class="qtr-padding-left icon-small text-muted toggle"
+						[ngClass]="{
+							'icon-chevron-up': !status.filterCollapse,
+							'icon-chevron-down': status.filterCollapse
+						}">
+					</span>
+				</div>
+			</div>
+		</ng-template>
+	</cui-tabs>
+</div>
+
+<ng-template #visualFilters let-tab="tab">
+	<div class="flex flex-fill flex-fluid"
+		*ngIf="!status.filterCollapse && !status.isLoading">
+		<ng-container *ngFor="let filter of tab.filters; index as i">
+			<div *ngIf="!filter.loading && filter.seriesData.length"
+				attr.id="SelectVisualFilter-{{ filter.key }}"
+				attr.data-auto-id="SelectVisualFilter-{{ filter.key }}"
+				[ngClass]="{
+					'filter__selected': filter.selected,
+					'filter__not-selected': !filter.selected
+				}"
+				class="panel flex-center flex-fill filter">
+				<div class="base-margin-bottom">
+					<div *ngIf="filter.template">
+						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
+					</div>
+				</div>
+				<div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
+			</div>
+			<div *ngIf="filter.loading" class="base-margin-bottom">
+				<cui-spinner></cui-spinner>
+			</div>
+		</ng-container>
+	</div>
+	<div class="divider no-margin-top qtr-margin-bottom"
+		*ngIf="!status.filterCollapse && !status.isLoading && tab.filters?.length">
+	</div>
+	<ng-container *ngIf="tab.filtered">
+		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+		<div class="divider qtr-margin-top"></div>
+	</ng-container>
+</ng-template>
+
+<ng-template #titleBar let-tab="tab">
+	<div class="row">
+		<div class="col-md-9 flex flex-fill">
+			<div class="flex-center-vertical">
+				<span [innerText]="tab.label" class="text-large"></span>
+				<span *ngIf="tab?.pagination && tab.pagination.total > 0" [innerText]="'_ShowingXofYZ_' | i18n:tab.pagination.countStr:tab.pagination.total:(tab.label | lowercase)"
+					class="qtr-margin-left text-small text-muted"
+					attr.data-auto-id="Showing-{{ tab.label }}-Count">
+				</span>
+			</div>
+		</div>
+		<!-- TODO: Implement Search when API Supports it-->
+		<!-- <div class="col-md-3">
+			<div class="flex flex-fluid">
+				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
+					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
+						<div class="form-group__text disabled">
+							<input id="searchInput"
+								type="search"
+								#searchInput
+								[minlength]="searchOptions.min"
+								[maxlength]="searchOptions.max"
+								[pattern]="searchOptions.pattern"
+								formControlName="search"
+								placeholder="{{ '_Search_' | i18n }} {{ tab?.label | lowercase }}"
+								ngDefaultControl>
+							<button type="button" class="link">
+								<span class="icon-search"></span>
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div> -->
+	</div>
+</ng-template>
+
+<ng-template #filterBar let-tab="tab">
+	<div class="row">
+		<div class="col-md-1 flex flex-center-vertical">
+			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
+		</div>
+		<div class="col-md-10">
+			<ng-container *ngFor="let subfilter of selectedSubfilters">
+				<span class="label label--dkgray text-large"
+					(click)="onSubfilterSelect(subfilter.filter, filter)"
+					attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
+					<span [innerText]="subfilter.label"></span>
+					<span class="icon-close"></span>
+				</span>
+			</ng-container>
+		</div>
+		<div class="col-md-1 text-center text-right">
+			<a (click)="clearFilters()"
+				class="text-lowercase"
+				[innerText]="'_ClearAll_' | i18n"
+				data-auto-id="FilterBarClearAllFilters">
+			</a>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #content let-tab="tab">
+	<div *ngIf="!tab.disabled">
+		<cui-table *ngIf="tab?.data?.length && tab?.options"
+			[options]="tab.options"
+			[data]="tab.data"
+			(onTableRowClicked)="onRowSelect($event)">
+		</cui-table>
+		<cui-pager 
+			*ngIf="tab.data.length && tab?.pagination?.total > 0"
+			class="base-padding"
+			[page]="tab.pagination.page - 1"
+			[limit]="tab.pagination.rows"
+			[totalItems]="tab.pagination.total || 0"
+			(onPageChanged)="onPageChanged($event, tab)">
+		</cui-pager>
+	</div>
+	<div *ngIf="tab.loading" class="base-margin-top">
+		<cui-spinner></cui-spinner>
+	</div>
+	<div *ngIf="!tab.data.length && !tab.loading">
+		<div class="text-center dbl-margin-top dbl-margin-bottom">
+			<div>
+				<span class="text-muted text-xlarge"
+					[innerText]="'_NoResultsFound_' | i18n"
+					data-auto-id="NoResultsFoundTxt" >
+				</span>
+			</div>
+			<div>
+				<a (click)="clearFilters()"
+					class="text-lowercase"
+					data-auto-id="NoResultsClearAll"
+					[innerText]="'_ClearAll_' | i18n">
+				</a>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<!-- Templates for our Visual Filters -->
+<ng-template #totalFilter let-filter="filter">
+	<div class="text-huge flex-center dbl-padding-left dbl-padding-right"
+		(click)="clearFilters()"
+		data-auto-id="TotalVisualFilter"
+		[innerText]="filter.seriesData[0].value || 0">
+	</div>
+</ng-template>
+
+<ng-template #pieChartFilter let-filter="filter">
+	<pie-chart *ngIf="filter?.seriesData?.length"
+		[seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</pie-chart>
+</ng-template>
+
+<ng-template #columnChartFilter let-filter="filter">
+	<column-chart *ngIf="filter?.seriesData?.length"
+		[seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event, filter)">
+	</column-chart>
+</ng-template>
+
+<!-- Templates for Security Advisories Content-->
+<ng-template #impactTemplate let-celldata="celldata">
+	<div class="text-nowrap">
+		<span
+			class="label label--circle label--tiny qtr-margin-right"
+			[ngClass]="{
+				'Critical': 'label--danger',
+				'High': 'label--warning',
+				'Medium': 'label--warning-alt',
+				'Low': 'label--success',
+				'Info': 'label--indigo'
+			}[celldata?.severity]">
+		</span>
+		<span [innerText]="celldata?.severity || ('_NA_' | i18n)"></span>
+	</div>
+</ng-template>
+
+<ng-template #impactedCountTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span innerText="{{ celldata?.assetsImpacted || 0 }} {{ (celldata?.assetsPotentiallyImpacted || 0) > 0 ? '(+' + celldata.assetsPotentiallyImpacted + ')' : '' }}"></span>
+	</div>
+</ng-template>

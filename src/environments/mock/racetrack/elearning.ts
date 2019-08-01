@@ -1,4 +1,4 @@
-import { ELearningResponse } from '@cui-x/sdp-api';
+import { ELearningResponse } from '@sdp-api';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/racetrack/v1/elearning';
@@ -16,7 +16,7 @@ const onboardItems = [
 		ranking: 0,
 		rating: '4.5000',
 		title: 'Catalyst 9800 Wireless Lan Controller Overview',
-		type: 'E-Course',
+		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53991',
 	},
 	{
@@ -25,7 +25,7 @@ const onboardItems = [
 		ranking: 1,
 		rating: '4.5000',
 		title: 'Configuring and Using Wireless Analytics in SDA',
-		type: 'E-Course',
+		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
@@ -34,7 +34,7 @@ const onboardItems = [
 		ranking: 2,
 		rating: '3.000',
 		title: 'Implementing Cisco IP Routing (ROUTE) v2.0',
-		type: 'E-Course',
+		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53691',
 	},
 	{
@@ -43,7 +43,7 @@ const onboardItems = [
 		ranking: 3,
 		rating: '2.7000',
 		title: 'Implementing Cisco IP Switched Networks (SWITCH) v2.0',
-		type: 'E-Course',
+		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53671',
 	},
 	{
@@ -52,7 +52,7 @@ const onboardItems = [
 		ranking: 4,
 		rating: '4.1000',
 		title: 'CCNA Wireless',
-		type: 'Cisco Training on Demand Courses',
+		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
@@ -61,7 +61,7 @@ const onboardItems = [
 		ranking: 4,
 		rating: '4.1000',
 		title: 'Cisco Training on Demand Courses 2',
-		type: 'Cisco Training on Demand Courses',
+		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
@@ -70,7 +70,7 @@ const onboardItems = [
 		ranking: 4,
 		rating: '4.1000',
 		title: 'Cisco Training on Demand Courses 3',
-		type: 'Cisco Training on Demand Courses',
+		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
@@ -79,7 +79,7 @@ const onboardItems = [
 		ranking: 4,
 		rating: '4.1000',
 		title: 'Cisco Training on Demand Courses 4',
-		type: 'Cisco Training on Demand Courses',
+		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
 	},
 	{
@@ -188,16 +188,16 @@ export const ELearningScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 800,
-					description: '(E-Learning) IBN-Wireless Assurance-Onboard',
+					description: '(E-Learning) IBN-Campus Network Assurance-Onboard',
 					response: {
-						body: MockELearning('ibn', 'Wireless Assurance', 'Onboard'),
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=Wireless Assurance&solution=IBN` +
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN` +
 			`&pitstop=Onboard&customerId=${customerId}&rows=100`,
 		usecases: ['Use Case 1'],
 	},
@@ -206,17 +206,71 @@ export const ELearningScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 800,
-					description: '(E-Learning) IBN-SD Access-Onboard',
+					description: '(E-Learning) IBN-Campus Network Segmentation-Onboard',
 					response: {
-						body: MockELearning('IBN', 'SD Access', 'Onboard'),
+						body: MockELearning('IBN', 'Campus Network Segmentation', 'Onboard'),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?usecase=SD Access&solution=IBN&pitstop=Onboard` +
+		url: `${api}?usecase=Campus Network Segmentation&solution=IBN&pitstop=Onboard` +
 			`&customerId=${customerId}&rows=100`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(E-Learning) IBN-Scalable Access Policy-Onboard',
+					response: {
+						body: MockELearning('IBN', 'Scalable Access Policy', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Scalable Access Policy&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}&rows=100`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(E-Learning) IBN-Network Device Onboarding-Onboard',
+					response: {
+						body: MockELearning('IBN', 'Network Device Onboarding', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Network Device Onboarding&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}&rows=100`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(E-Learning) IBN-Campus Software Image Management-Onboard',
+					response: {
+						body: MockELearning('IBN', 'Campus Software Image Management', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}&rows=100`,
 		usecases: ['Use Case 1'],
 	},
 ];

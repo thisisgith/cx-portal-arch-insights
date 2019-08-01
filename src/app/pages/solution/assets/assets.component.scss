@@ -18,6 +18,24 @@
 	outline-offset: 2px;
 }
 
+.responsive-table {
+	min-height: 100px;
+}
+
+.curved-corners {
+	border-radius: 5px;
+}
+
+.card-content {
+	justify-content: space-between;
+	display: flex;
+	flex-direction: column;
+}
+
+.card__selected {
+	border: 2px solid $primary;
+}
+
 .filter {
 	&__selected {
 		border-bottom: 4px solid $primary;

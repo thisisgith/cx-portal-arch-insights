@@ -40,7 +40,7 @@ function MockRMA (options: { devices: number } = { devices: 1 }): RMAResponse {
 					state: '',
 					stateProv: '',
 				},
-				caseId: '625774679',
+				caseId: '686569635',
 				contractId: '92156435',
 				customerRefInfo: {
 					customerPONumber: '',
@@ -84,7 +84,7 @@ function MockRMA (options: { devices: number } = { devices: 1 }): RMAResponse {
 				replacementParts: {
 					partsLineDetails: [],
 					trackingInfo: {
-						courierList: '',
+						courierList: 'UPS',
 						shipDate: '',
 						trackingNumber: '23652346',
 					},
@@ -189,7 +189,7 @@ export const RMAScenarios = [
 						body: MockRMA({ devices: 0 }),
 						status: 200,
 					},
-					selected: true,
+					selected: false,
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 500,

@@ -1,0 +1,67 @@
+<header class="header header--compressed">
+		<div class="header-bar container">
+			<div class="header-bar__logo">
+				<span class="icon-cisco"></span>
+			</div>
+			<div class="header-bar__main">
+				<div class="header-heading">
+					<h1 class="page-title text-indigo half-margin-top dbl-margin-right"
+						[innerText]="'_ApplicationName_' | i18n">
+					</h1>
+					<div class="header-utilities dbl-margin-left">
+						<div class="row flex maxWidth">
+							<div class="col-md-3 flex-center">
+								<span class="icon-communities half-margin-right text-muted icon--mid"></span>
+								<span [innerText]="'_Communities_' | i18n"></span>
+
+								<span class="base-margin-left icon-help-alt half-margin-right text-muted icon--mid"></span>
+								<span [innerText]="'_QuickHelp_' | i18n"></span>
+							</div>
+
+							<div class="col-md-7 flex-fill half-margin-top">
+								<app-search></app-search>
+							</div>
+
+							<div class="col-md-1">
+								<div class="text-small qtr-margin-top text-center"
+									[innerText]="'_CiscoTeam_' | i18n">
+								</div>
+								<div class="flex-center">
+									<img class="thumb thumb--tiny thumb--bordered qtr-margin-right"
+										alt="{{ '_StockPhoto_' | i18n }}"
+										src="assets/img/header/user-photo-thumb-1.png">
+									<img class="thumb thumb--tiny thumb--bordered qtr-margin-right"
+										alt="{{ '_StockPhoto_' | i18n }}"
+										src="assets/img/header/user-photo-thumb-1.png">
+								</div>
+							</div>
+
+							<div class="col-md-1 half-margin-top">
+								<div class="text-small" [innerText]="'_MyLearning_' | i18n"></div>
+								<div class="progressbar qtr-margin-top" data-percentage="33">
+									<div class="progressbar__fill"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="header-toolbar">
+				<div class="half-margin-right text-small" *ngIf="user">
+					<div [innerText]="'_HiX_' | i18n:name"></div>
+					<div innerText="{{ '_CXLevel_' | i18n }} {{ cxLevel }}"></div>
+				</div>
+				<img class="thumb thumb--medium thumb--bordered"
+					alt="{{ '_StockPhoto_' | i18n }}"
+					src="assets/img/header/user-photo-thumb-1.png">
+				<div class="divider--left base-margin-left">
+					<a class="half-margin-left icon--mid half-margin-right"
+						data-auto-id="Admin"
+						[title]="'_Admin_' | i18n"
+						[routerLink]="['admin']">
+						<span class="icon-cog text-muted"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>

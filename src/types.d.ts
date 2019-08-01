@@ -21,6 +21,8 @@ interface Window {
 	loading: boolean;
 	elearningLoading: boolean;
 	successPathsLoading: boolean;
-	carMoving: boolean;
-	progressMoving: boolean;
+	atxLoading: boolean;
+	accLoading: boolean;
+	communitiesLoading: boolean;
+	racetrackEvents: any;
 }

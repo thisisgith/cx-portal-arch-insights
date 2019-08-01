@@ -6,8 +6,6 @@ import {
 	OnDestroy,
 	Input,
 	Output,
-	TemplateRef,
-	ViewChild,
 	forwardRef,
 } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
@@ -19,8 +17,26 @@ import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { SpecialSearchComponent } from '../special-search/special-search.component';
-import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@cui-x/sdp-api';
+import { DeviceContractResponse, ContractsService, DeviceContractInfo } from '@sdp-api';
 import { SearchQuery } from '@interfaces';
+import { UserResolve } from '@utilities';
+
+/**
+ * Mapping of Contract statuses to status colors
+ * TODO: Get definitive list of possible statuses/colors
+ */
+enum StatusColorMap {
+	ACTIVE = 'text-success',
+	ENTERED = 'text-turquoise',
+	EXPIRED = 'text-muted',
+	INACTIVE = 'text-muted',
+	OVERDUE = 'text-warning',
+	'QA HOLD' = 'text-warning-alt',
+	SERVICE = 'text-info',
+	SIGNED = 'text-info',
+	TERMINATED = 'text-danger',
+	UNKNOWN = 'text-muted',
+}
 
 /**
  * Component to fetch/display contract search results
@@ -36,25 +52,32 @@ import { SearchQuery } from '@interfaces';
 })
 export class ContractSearchComponent extends SpecialSearchComponent
 	implements OnInit, OnChanges, OnDestroy {
-	@ViewChild('sidebar', { static: true, read: TemplateRef })
-		public sidebarContent: TemplateRef<any>;
 	@Input('contractNumber') public contractNumber: SearchQuery;
 	@Output('hide') public hide = new EventEmitter<boolean>();
 	public loading = true;
 	public loadingCoverages = true;
 	public contractData: DeviceContractInfo;
 	public coverageCount: number;
+	public statusColor: StatusColorMap;
+	public showCxInfo = false;
 
-	private customerId = '2431199';
+	private customerId: string;
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 
 	constructor (
 		private contractsService: ContractsService,
 		private logger: LogService,
+		private userResolve: UserResolve,
 	) {
 		super();
-		this.logger.debug('ContractSearchComponent Created!');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 	}
 
 	/**
@@ -73,7 +96,11 @@ export class ContractSearchComponent extends SpecialSearchComponent
 		.subscribe(result => {
 			this.loading = false;
 			this.contractData = result ? result.data[0] : null;
-			if (!this.contractData) {
+			if (this.contractData) {
+				const statusKey = _.get(this.contractData, 'contractStatus', 'UNKNOWN')
+					.toUpperCase();
+				this.statusColor = _.get(StatusColorMap, statusKey);
+			} else {
 				this.hide.emit(true);
 			}
 		});
@@ -145,7 +172,7 @@ export class ContractSearchComponent extends SpecialSearchComponent
 	 */
 	private getCoverages (contractNumber: string, customerId: string):
 	Observable<HttpResponse<null>> {
-		return this.contractsService.headContractsProductsCoveragesResponse(
+		return this.contractsService.headProductsCoveragesResponse(
 			{
 				contractNumber,
 				customerId,

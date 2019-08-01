@@ -47,20 +47,26 @@
 			</div>
 		</div>
 		<div class="header-toolbar">
-			<div class="half-margin-right text-small">
-				<div [innerText]="'_HiX_' | i18n: 'Jason'"></div>
-				<div innerText="{{ '_CXLevel_' | i18n }} 1"></div>
+			<div class="half-margin-right text-small" *ngIf="user">
+				<div [innerText]="'_HiX_' | i18n:name"></div>
+				<div innerText="{{ '_CXLevel_' | i18n }} {{ cxLevel }}"></div>
 			</div>
 			<img class="thumb thumb--medium thumb--bordered"
 				alt="{{ '_StockPhoto_' | i18n }}"
 				src="assets/img/header/user-photo-thumb-1.png">
 			<div class="divider--left base-margin-left">
 				<a class="half-margin-left icon--mid half-margin-right"
-					data-auto-id="HeaderSettings"
-					(click)="mocking ? openMockModal() : null">
+					data-auto-id="Admin"
+					[title]="'_Admin_' | i18n"
+					[routerLink]="['admin']">
 					<span class="icon-cog text-muted"></span>
 				</a>
-				<record-button *ngIf="mocking"></record-button>
+			</div>
+			<div class="divider--left">
+				<button class="btn btn--icon btn--small btn--gray-ghost half-margin-right half-margin-left" (click)="openMockModal()" data-auto-id="HeaderSettings">
+					<span  class="icon-plugin"></span>
+				</button>
+				<record-button></record-button>
 			</div>
 		</div>
 	</div>
