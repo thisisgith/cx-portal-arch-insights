@@ -109,18 +109,14 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CloseDetails').click();
 		});
 	});
-	context('Case Detail Notes', () => {
+	context.only('Case Detail Notes and Files', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
-
-		it.skip('Case Details Notes Tab, Add a Note', () => {
-			// PBC-234
-			const currDatestamp = new Date().getTime();
-			// cy.log(`current date is ${currDatestamp}`);
-
+		beforeEach(() => {
+			cy.loadApp('/solution/resolution');
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox').should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
@@ -128,6 +124,14 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
 			cy.wait(3000);
 			cy.get('app-panel360').should('be.visible');
+		});
+
+
+		it('PBC-234 Case Details Notes Tab, Add a Note', () => {
+
+			const currDatestamp = new Date().getTime();
+			// cy.log(`current date is ${currDatestamp}`);
+
 			cy.getByAutoId('notesTab').click();
 			// Add a case note
 			cy.getByAutoId('CaseAddNote').click();
@@ -145,18 +149,10 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CloseDetails').click();
 		});
 
-		it.skip('Case Details Notes: Cancel Adding a note', () => {
-			// PBC-234
+		it('PBC-234 Case Details Notes: Cancel Adding a note', () => {
 			const currDatestamp = new Date().getTime();
 			// cy.log(`current date is ${currDatestamp}`);
-			cy.loadApp('/solution/resolution');
-			cy.getByAutoId('Facet-Problem Resolution').click();
-			cy.getByAutoId('caseSearchBox').should('exist').clear()
-				.type(validCaseID.concat('{enter}'));
-			cy.wait(3000);
-			cy.getByAutoId('Case ID-Cell').click(); // case will load in app-panel360 details-panel
-			cy.wait(3000);
-			cy.get('app-panel360').should('be.visible');
+
 			cy.getByAutoId('notesTab').click();
 			// Add a case note
 			cy.getByAutoId('CaseAddNote').click();
@@ -172,6 +168,10 @@ describe('Case Detail Spec', () => {
 			cy.get('app-case-notes div')
 				.should('not.contain', `Title for current date of ${currDatestamp}`);
 			cy.getByAutoId('CloseDetails').click();
+		});
+
+		it('PBC-232 Case Detail Attachments - List & Download', () => {
+
 		});
 	});
 });
