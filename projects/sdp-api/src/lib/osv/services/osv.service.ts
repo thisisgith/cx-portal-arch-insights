@@ -238,7 +238,8 @@ class OSVService extends __BaseService {
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
-		if (params.filter != null && params.filter.length > 0) __params = __params.set('filter', JSON.stringify(params.filter));
+		if (params.filter != null) __params = 
+		__params.set('filter', params.filter.length >0 ?JSON.stringify(params.filter) : params.filter.toString());
 
 		let req = new HttpRequest<any>(
 			'GET',

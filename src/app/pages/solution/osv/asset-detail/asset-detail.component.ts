@@ -83,7 +83,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public refresh () {
 		if (this.selectedAsset) {
 			this.clear();
-			// this.assetDetailsParams.id = this.selectedAsset.id;
+			this.assetDetailsParams.id = this.selectedAsset.id;
 			this.fetchAssetDetails();
 		}
 	}

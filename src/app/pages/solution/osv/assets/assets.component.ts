@@ -36,6 +36,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<any>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('recommendationsTemplate', { static: true }) private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -150,6 +151,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
+						sortable:false,
 					},
 					{
 						key: 'productFamily',
@@ -159,22 +161,27 @@ export class AssetsComponent implements OnInit, OnChanges {
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
+						sortable:false,
 					},
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
+						sortable:false,
 					},
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						sortable:false,
 					},
 					{
 						key: 'deployment',
 						name: I18n.get('_OsvDeploymentStatus_'),
+						sortable:false,
 					},
 					{
-						key: 'recommendations',
 						name: I18n.get('_OsvRecommendations_'),
+						template:this.recommendationsTemplate,
+						sortable:false,
 					},
 					// {
 					// 	click: true,
@@ -230,7 +237,11 @@ export class AssetsComponent implements OnInit, OnChanges {
 		if (!sortColumn.sortable) {
 			return;
 		}
-		sortColumn.sortDirection = sortColumn.sortDirection === 'asc' ? 'desc' : 'asc';
+		if(sortColumn.sortDirection === 'asc'){
+			sortColumn.sortDirection = 'desc';
+		} else {
+			sortColumn.sortDirection = 'asc';	
+		}
 		this.assetsParams.sortOrder = sortColumn.sortDirection;
 		this.assetsParams.sort = sortColumn.key;
 		this.loadData();
