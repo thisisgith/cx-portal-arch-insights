@@ -45,6 +45,8 @@ describe('LifecycleComponent', () => {
 
 	let racetrackATXSpy;
 	let racetrackAccSpy;
+	let racetrackCgtCompletedTrainigsSpy;
+	let racetrackCgtUserQuotaSpy;
 	let racetrackLearningSpy;
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
@@ -58,6 +60,8 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackATXSpy, 'restore');
 		_.invoke(racetrackInfoSpy, 'restore');
 		_.invoke(racetrackAccSpy, 'restore');
+		_.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
+		_.invoke(racetrackCgtUserQuotaSpy, 'restore');
 		_.invoke(racetrackLearningSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
@@ -197,6 +201,21 @@ describe('LifecycleComponent', () => {
 					statusText: 'Resource not found',
 				})));
 
+			racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService,
+				'getCompletedTrainings')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
+			racetrackCgtUserQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
 			racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
 				.and
 				.returnValue(throwError(new HttpErrorResponse({
@@ -229,6 +248,9 @@ describe('LifecycleComponent', () => {
 				.toBeUndefined();
 
 			expect(component.componentData.atx)
+				.toBeUndefined();
+
+			expect(component.componentData.cgt)
 				.toBeUndefined();
 		});
 
@@ -495,6 +517,40 @@ describe('LifecycleComponent', () => {
 				.then(() => {
 					expect(component.componentData.learning.certifications.length)
 						.toEqual(8);
+				});
+		});
+	});
+
+	describe('CGT', () => {
+		it('should have loaded the CGT', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.cgt.sessions.length)
+						.toEqual(3);
+					expect(component.componentData.cgt.dateAvailableThrough)
+						.toEqual('Mar 29, 2020');
+					expect(component.componentData.cgt.trainingsAvailable)
+						.toEqual(1);
+					de = fixture.debugElement.query(By.css('.btn--secondary'));
+					expect(de)
+						.toBeTruthy();
+					el = de.nativeElement;
+
+					el.click();
+
+					fixture.detectChanges();
+					expect(component.selectCgtRequestForm)
+						.toHaveBeenCalled();
+					de = fixture.debugElement.query(By.css('.icon-certified'));
+					expect(de)
+						.toBeTruthy();
+					expect(de)
+						.toHaveBeenCalledTimes(2);
 				});
 		});
 	});

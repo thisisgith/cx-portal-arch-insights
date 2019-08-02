@@ -6,6 +6,7 @@ import {
 	AssetScenarios,
 	ATXScenarios,
 	CaseScenarios,
+	CGTScenarios,
 	ContractScenarios,
 	CoverageScenarios,
 	CriticalBugScenarios,
@@ -58,6 +59,7 @@ import {
 	FieldNoticeAdvisoryResponse,
 	FieldNoticeBulletinResponse,
 	FieldNoticeResponse,
+	GroupTrainingEntitySchema,
 	FieldNoticeUpdatedResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
@@ -74,6 +76,8 @@ import {
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
 	SuccessPathsResponse,
+	UserQuota,
+	UserTraining,
 	VulnerabilityResponse,
 } from '@sdp-api';
 
@@ -98,6 +102,7 @@ type ResponseBody = (
 	FieldNoticeAdvisoryResponse |
 	FieldNoticeBulletinResponse |
 	FieldNoticeResponse |
+	GroupTrainingEntitySchema |
 	FieldNoticeUpdatedResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
@@ -115,6 +120,9 @@ type ResponseBody = (
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
 	SuccessPathsResponse |
+	UserQuota |
+	UserTraining |
+	VulnerabilityResponse |
 	VulnerabilityResponse
 );
 
@@ -167,6 +175,7 @@ export const mockSettings: MockSettings = {
 		AssetScenarios,
 		ATXScenarios,
 		CaseScenarios,
+		CGTScenarios,
 		ContractScenarios,
 		CoverageScenarios,
 		CriticalBugScenarios,
