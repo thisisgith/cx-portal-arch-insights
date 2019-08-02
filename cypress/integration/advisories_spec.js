@@ -9,6 +9,9 @@ const fieldNoticeMock = new MockService('FieldNoticeAdvisoryScenarios');
 const fnScenario = fieldNoticeMock.getScenario('GET', 'Field Notice Advisories');
 const fieldNotices = fnScenario.response.body.data;
 const fnCountMock = new MockService('FieldNoticeCountScenarios');
+const bugMock = new MockService('CriticalBugScenarios');
+const bugScenario = bugMock.getScenario('GET', 'Critical Bugs');
+const bugs = bugScenario.response.body.data;
 
 const impactMap = severity => {
 	switch (severity) {
@@ -258,6 +261,9 @@ describe('Advisories', () => { // PBC-306
 				// TODO: Implement after PBC-433 is fixed
 			});
 
+			it('Clears all applied filters with a "Clear All" link', () => {
+			});
+
 			it('Hides visual filters when APIs are unavailable', () => {
 				fnCountMock.enable('Field Notice Counts - Unreachable');
 				cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
@@ -273,6 +279,114 @@ describe('Advisories', () => { // PBC-306
 				cy.getByAutoId('FIELD NOTICESTab').click();
 				cy.waitForAppLoading();
 				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('be.visible');
+			});
+		});
+	});
+
+	context('Critical Bugs', () => { // PBC-310 / PBC-316
+		before(() => cy.getByAutoId('CRITICAL BUGSTab').click());
+
+		it('Bugs are properly displayed in list format', () => {
+			cy.get('app-advisories tbody tr').each((row, index) => {
+				const bug = bugs[index];
+				cy.wrap(row).within(() => {
+					cy.getByAutoId('ID-Cell').should('have.text', bug.id);
+					cy.getByAutoId('Title-Cell').should('have.text', bug.title);
+					cy.getByAutoId('Impacted Assets-Cell')
+						.should('have.text', bug.assetsImpacted.toString());
+					cy.getByAutoId('State-Cell')
+						.should('have.text', Cypress._.startCase(bug.state));
+					let date;
+					if (bug.lastUpdated) {
+						date = Cypress.moment(bug.lastUpdated).format('YYYY MMM DD');
+					} else {
+						date = 'Never';
+					}
+					cy.getByAutoId('Last Updated-Cell').should('have.text', date);
+				});
+			});
+		});
+
+		it('Bug list gracefully handles lack of response from API', () => {
+			bugMock.enable('Critical Bugs - Unreachable');
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Advisories').click();
+			cy.getByAutoId('CRITICAL BUGSTab').click();
+
+			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
+
+			bugMock.enable('Critical Bugs');
+		});
+
+		it('Uses proper pagination for bug list', () => {
+			bugMock.enable('Critical Bugs - Page 1');
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Advisories').click();
+			cy.getByAutoId('CRITICAL BUGSTab').click();
+
+			cy.getByAutoId('CUIPager-Page2').click()
+				.wait('Critical Bugs - Page 2')
+				.then(xhr => {
+					const params = new URLSearchParams(new URL(xhr.url).search);
+					const pagination = xhr.response.body.Pagination;
+					expect(params.get('page')).to.eq('2');
+					expect(params.get('rows')).to.eq('10');
+					cy.get('[data-auto-id*="CUIPager-Page"]')
+						.should('have.length', Cypress._.ceil(pagination.total / pagination.rows));
+				});
+			cy.getByAutoId('CUIPager-NextPage').click();
+			cy.wait('Critical Bugs - Page 3').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.get('page')).to.eq('3');
+				expect(params.get('rows')).to.eq('10');
+			});
+			cy.getByAutoId('CUIPager-PrevPage').click();
+			cy.wait('Critical Bugs - Page 2').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.get('page')).to.eq('2');
+				expect(params.get('rows')).to.eq('10');
+			});
+
+			cy.getByAutoId('CUIPager-Page1').click();
+			bugMock.enable('Critical Bugs');
+		});
+
+		context('Filtering', () => { // PBC-310
+			it('Supports filtering on bug state', () => {
+				cy.getByAutoId('ResolvedPoint').click({ force: true });
+				cy.wait('Critical Bugs (Resolved)').then(xhr => {
+					const params = new URLSearchParams(new URL(xhr.url).search);
+					expect(params.get('state')).to.eq('resolved');
+					cy.getByAutoId('FilterTag-resolved').should('be.visible');
+					cy.getByAutoId('State-Cell').each($cell => {
+						cy.wrap($cell).should('have.text', 'Resolved');
+					});
+					cy.getByAutoId('ResolvedPoint').click({ force: true });
+				});
+			});
+
+			// TODO: Skipped for PBC-433
+			it.skip('Clears applied filters one at a time', () => { // PBC-433
+			});
+
+			// TODO: Skipped for PBC-434
+			it.skip('Clears all applied filters with a "Clear All" link', () => { // PBC-434
+			});
+
+			it('Hides visual filters when APIs are unavailable', () => {
+				bugMock.enable('Critical Bug State Counts - Unreachable');
+				cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
+				cy.getByAutoId('Facet-Advisories').click();
+				cy.getByAutoId('CRITICAL BUGSTab').click();
+
+				cy.getByAutoId('SelectVisualFilter-state').should('not.be.visible');
+				cy.getByAutoId('SelectVisualFilter-total').should('be.visible');
+
+				bugMock.enable('Critical Bug State Counts');
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.getByAutoId('Facet-Advisories').click();
+				cy.getByAutoId('CRITICAL BUGSTab').click();
+				cy.getByAutoId('SelectVisualFilter-state').should('be.visible');
 			});
 		});
 	});

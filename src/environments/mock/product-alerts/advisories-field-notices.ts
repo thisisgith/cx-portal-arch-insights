@@ -21,7 +21,7 @@ export const MockFieldNoticeAdvisories: FieldNoticeAdvisory[] = [
 		"assetsPotentiallyImpacted": 5,
 		"publishedOn": "2016-11-11T00:00:00",
 		"lastUpdated": "2018-12-07T00:00:00",
-		"version": null,
+		"version": 1.2,
 		"url": "https://ibpm.cisco.com/gssc/fn/login?pyActivity=Work-.Open&Action=FieldNoticePreview&HarnessPurpose=Review&InsHandle=CISCO-SERVICES-GSLO-FN-WORK RV01061&pyShowFullPortal=false"
 	},
 	{

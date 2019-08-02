@@ -55,6 +55,7 @@ export const CriticalBugData: CriticalBug[] = [
  * @param page the page to return
  * @param state states to filter
  * @param id ids to filter
+ * @param copy the number of times to duplicate the data (for testing multiple pages)
  * @returns mock response
  */
 function MockData (
@@ -62,8 +63,14 @@ function MockData (
 	page?: number,
 	state?: string[],
 	id?: string[],
+	copy?: number,
 ): CriticalBugsResponse {
 	let data = _.cloneDeep(CriticalBugData);
+	if (copy > 0) {
+		for (let i = 0; i < copy; i += 1) {
+			data = _.concat(data, ...data);
+		}
+	}
 	const total = data.length;
 	let pagination: Pagination;
 
@@ -106,6 +113,15 @@ export const CriticalBugScenarios = [
 						status: 200,
 					},
 					selected: true,
+				},
+				{
+					delay: 0,
+					description: 'Critical Bug State Counts - Unreachable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
 				},
 			],
 		},
@@ -158,9 +174,61 @@ export const CriticalBugScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 0,
+					description: 'Critical Bugs - Unreachable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
+				{
+					delay: 200,
+					description: 'Critical Bugs - Page 1',
+					response: {
+						body: MockData(10, 1, null, null, 4),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Critical Bugs - Page 2',
+					response: {
+						body: MockData(10, 2, null, null, 4),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=2`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Critical Bugs - Page 3',
+					response: {
+						body: MockData(10, 3, null, null, 4),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
 	{
