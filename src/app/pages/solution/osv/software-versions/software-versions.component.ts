@@ -108,44 +108,44 @@ export class SoftwareVersionsComponent {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						sortable:true,
-						sorting:true,
-						sortDirection:'desc',
+						sortable: true,
+						sorting: true,
+						sortDirection: 'desc',
 						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvReleaseDate_'),
 						template: this.releaseDateTemplate,
-						sortable:false,
+						sortable: false,
 					},
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvIndependentAssets_'),
-						sortable:false,
+						sortable: false,
 					},
 					{
 						key: 'profileAssetCount',
 						name: I18n.get('_OsvAssetsOfSoftwareProfiles_'),
-						sortable:false,
+						sortable: false,
 					},
 					{
 						key: 'goldenVersion',
 						name: I18n.get('_OsvGoldenImage_'),
 						render: item => item.optimalVersion ? I18n.get('_OsvYes_')
 							: I18n.get('_OsvNo_'),
-						sortable:false,
+						sortable: false,
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
-						sortable:false,
+						sortable: false,
 					},
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersionY/N_'),
 						render: item => item.optimalVersion ? I18n.get('_OsvYes_')
 							: I18n.get('_OsvNo_'),
-						sortable:false,	
+						sortable: false,
 					},
 				],
 				dynamicData: true,

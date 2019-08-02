@@ -125,13 +125,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					{
 						key: 'name',
 						name: I18n.get('_OsvVersionSummary_'),
-						sortable:false, 
+						sortable: false,
 						width: '30%',
 					},
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						sortable:false, 
+						sortable: false,
 						width: '10%',
 					},
 					{
@@ -139,12 +139,12 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 						name: I18n.get('_OsvReleaseDate_'),
 						render: item =>
 							datePipe.transform(item.postDate, 'yyyy MMM dd'),
-						sortable:false,
+						sortable: false,
 						width: '20%',
 					},
 					{
 						name: I18n.get('_OsvStatusOrAction_'),
-						sortable:false, 
+						sortable: false,
 						width: '30%',
 						template: this.actionsTemplate,
 					},

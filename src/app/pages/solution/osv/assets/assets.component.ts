@@ -36,7 +36,8 @@ export class AssetsComponent implements OnInit, OnChanges {
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<any>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
-	@ViewChild('recommendationsTemplate', { static: true }) private recommendationsTemplate: TemplateRef<{ }>;
+	@ViewChild('recommendationsTemplate', { static: true })
+	private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -50,8 +51,8 @@ export class AssetsComponent implements OnInit, OnChanges {
 		filter: '',
 		pageIndex: 1,
 		pageSize: 10,
-		sort:'hostName',
-		sortOrder: 'desc',		
+		sort: 'hostName',
+		sortOrder: 'desc',
 	};
 
 	public rowActions = [
@@ -144,14 +145,14 @@ export class AssetsComponent implements OnInit, OnChanges {
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
-						sortDirection:'desc',
+						sortDirection: 'desc',
 						sortable: true,
 						sorting: true,
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
-						sortable:false,
+						sortable: false,
 					},
 					{
 						key: 'productFamily',
@@ -161,27 +162,27 @@ export class AssetsComponent implements OnInit, OnChanges {
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
-						sortable:false,
+						sortable: false,
 					},
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
-						sortable:false,
+						sortable: false,
 					},
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
-						sortable:false,
+						sortable: false,
 					},
 					{
 						key: 'deployment',
 						name: I18n.get('_OsvDeploymentStatus_'),
-						sortable:false,
+						sortable: false,
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
-						template:this.recommendationsTemplate,
-						sortable:false,
+						sortable: false,
+						template: this.recommendationsTemplate,
 					},
 					// {
 					// 	click: true,
@@ -237,12 +238,12 @@ export class AssetsComponent implements OnInit, OnChanges {
 		if (!sortColumn.sortable) {
 			return;
 		}
-		if(sortColumn.sortDirection === 'asc'){
+		if (sortColumn.sortDirection === 'asc') {
 			sortColumn.sortDirection = 'desc';
 		} else {
-			sortColumn.sortDirection = 'asc';	
+			sortColumn.sortDirection = 'asc';
 		}
-		this.assetsTable.columns.forEach(column =>{
+		this.assetsTable.columns.forEach(column => {
 			column.sorting = false;
 		});
 		sortColumn.sorting = true;
