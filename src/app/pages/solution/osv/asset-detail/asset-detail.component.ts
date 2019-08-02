@@ -7,6 +7,8 @@ import {
 	OnDestroy,
 	ViewChild,
 	TemplateRef,
+	Output,
+	EventEmitter,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -33,6 +35,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
+	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	public assetDetails: AssetRecommendationsResponse;
 	public status = {
 		isLoading: true,
@@ -98,7 +101,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
 					this.sortData(response);
-					this.setAcceptedVersion(response,this.selectedAsset);
+					this.setAcceptedVersion(response, this.selectedAsset);
 					this.assetDetails = response;
 					this.buildTable();
 				}),
@@ -181,12 +184,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			id: this.selectedAsset.id,
 			optimalVersion: item.swVersion,
 		};
-		this.status.isLoading = true;
 		this.osvService.updateAsset(body)
-			.subscribe(response => {
-				this.status.isLoading = false;
-				this.setAcceptedVersion(this.assetDetails,response);
+			.subscribe((response: OSVAsset) => {
+				this.setAcceptedVersion(this.assetDetails, response);
 				this.assetDetails = _.cloneDeep(this.assetDetails);
+				this.selectedRecommendation = { name: 'None' };
+				this.selectedAssetChange.emit(response);
+				this.status.isLoading = false;
 				this.logger.debug('Updated');
 			}, () => {
 				this.status.isLoading = false;
@@ -207,11 +211,11 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Set AcceptedVersion
 	 * @param data AssetDetails
 	 */
-	public setAcceptedVersion (data: AssetRecommendationsResponse,selectedAsset) {
-		_.forEach(data,(recommendation:AssetRecommendations) => {
-			if(recommendation.swVersion == this.selectedAsset.optimalVersion){
+	public setAcceptedVersion (data: AssetRecommendationsResponse, selectedAsset: OSVAsset) {
+		_.forEach(data, (recommendation: AssetRecommendations) => {
+			if (recommendation.swVersion == selectedAsset.optimalVersion) {
 				recommendation.accepted = true;
-			} else{
+			} else {
 				recommendation.accepted = false;
 			}
 		});

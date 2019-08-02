@@ -286,7 +286,7 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 		__body = assetDetails;
 		let req = new HttpRequest<any>(
-			'POST',
+			'PUT',
 			this.rootUrl + `${OSVService.updateAssetPath}`,
 			__body,
 			{

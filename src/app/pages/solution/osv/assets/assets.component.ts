@@ -34,7 +34,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 	@Input() public filters;
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
-	@Output() public selectedAssetChange = new EventEmitter<any>();
+	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	@ViewChild('recommendationsTemplate', { static: true })
 	private recommendationsTemplate: TemplateRef<{}>;
@@ -83,9 +83,16 @@ export class AssetsComponent implements OnInit, OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
+		const selectedAsset = _.get(changes, ['selectedAsset', 'currentValue']);
 		if (currentFilter && !changes.filters.firstChange) {
 			this.setFilter(currentFilter);
 			this.loadData();
+		}
+		if (selectedAsset && !changes.selectedAsset.firstChange) {
+			const selected = _.filter(this.assets, { id: selectedAsset.id });
+			if (selected && selected.length > 0) {
+				selected[0].optimalVersion = selectedAsset.optimalVersion;
+			}
 		}
 	}
 
@@ -102,7 +109,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 		}
 		if (assetType.length == 1) {
 			filter += filter.length > 0 ? ';' : '';
-			filter += assetType.indexOf('assets_profile') > -1 ? 'yes' : 'no';
+			filter += assetType.indexOf('assets_profile') > -1 ? 'independent:no' : 'independent:yes';
 		}
 		this.assetsParams.filter = filter
 	}
@@ -168,6 +175,11 @@ export class AssetsComponent implements OnInit, OnChanges {
 						sorting: true,
 					},
 					{
+						key: 'optimalVersion',
+						name: I18n.get('_OsvOptimalVersion_'),
+						sortable: false,
+					},
+					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
 						sortable: false,
@@ -187,11 +199,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
 					},
-					{
-						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
-						sortable: false,
-					},
+
 					{
 						key: 'deployment',
 						name: I18n.get('_OsvDeploymentStatus_'),

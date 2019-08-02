@@ -1,7 +1,7 @@
 <div class="row dbl-margin-top">
 	<div class="col-md-8">
 		<div class="text-large text-bold" [innerText]="'_OsvBasicRecommendations_' | i18n | uppercase"></div>
-		<div class="text-medium qtr-margin-top" *ngIf="view =='timeline' && assetDetails.length > 0"
+		<div class="text-medium qtr-margin-top" *ngIf="view =='timeline' && assetDetails && assetDetails?.length > 0"
 			[innerText]="'_OsvClickToSelectRecommendation_' | i18n"></div>
 	</div>
 	<div class="col-md-4 pull-right">
@@ -20,7 +20,7 @@
 </div>
 
 
-<div class="dbl-margin-top" *ngIf="assetDetails && assetDetails.length > 0  && view == 'timeline'">
+<div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails.length > 0  && view == 'timeline'">
 	<span class="text-large" [innerText]="'_OsvSelectedRecommendation_' | i18n"></span>
 	<span class="qtr-margin-left text-large">{{selectedRecommendation?.name | titlecase}}</span>
 	<button *ngIf="selectedRecommendation?.name != 'None'" class="qtr-margin-left" cuiButton [color]="'primary'"
@@ -29,24 +29,28 @@
 		attr.data-auto-id="AcceptVersion-{{selectedRecommendation}}"></button>
 </div>
 
+<!-- spinner -->
 <div class="dbl-margin-top" *ngIf="status.isLoading">
 	<cui-spinner></cui-spinner>
 </div>
 
-<div class="dbl-margin-top" *ngIf="assetDetails && assetDetails.length > 0 && view =='timeline'">
+<!-- timeline view -->
+<div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails.length > 0 && view =='timeline'">
 	<app-asset-timeline-chart (selectedPoint)="selectedPoint($event)" [data]="assetDetails" [fullscreen]="fullscreen">
 	</app-asset-timeline-chart>
 </div>
 
+<!-- no recommendations found -->
 <div *ngIf="!status.isLoading && assetDetails && assetDetails.length == 0">
 	<div class="flex-center-horizontal text-xlarge text-muted dbl-margin-top half-margin-bottom"
 		[innerText]="'_OsvNoRecommendations_' | i18n"></div>
 </div>
 
-
-<div class="dbl-margin-top" *ngIf="assetDetails && assetDetails.length > 0  && view =='list'">
+<!-- asset-details table view -->
+<div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails.length > 0  && view =='list'">
 	<cui-table [data]="assetDetails" [options]="assetDetailsTable"></cui-table>
 </div>
+<!-- view all os version link -->
 <div class="markup pull-right dbl-margin-top" *ngIf="!status.isLoading && assetDetails.length > 0">
 	<a class="markup-toggle link">
 		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>

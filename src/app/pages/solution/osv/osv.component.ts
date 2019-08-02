@@ -5,7 +5,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 import {
-	OSVService, SummaryResponse,
+	OSVService, SummaryResponse, OSVAsset,
 } from '@sdp-api';
 
 /** Our current customerId */
@@ -17,7 +17,7 @@ const customerId = '231215372';
 interface Filter {
 	key: string;
 	selected?: boolean;
-	template?: TemplateRef<{ }>;
+	template?: TemplateRef<{}>;
 	title?: string;
 	loading: boolean;
 	data: {
@@ -39,17 +39,17 @@ interface Filter {
 })
 export class OptimalSoftwareVersionComponent {
 	@ViewChild('assetTypeFilter', { static: true }) private assetTypeFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	public status = {
 		isLoading: true,
 	};
 	public fullScreen = false;
 	public selectedProfileGroup: any;
-	public selectedAsset: any;
+	public selectedAsset: OSVAsset;
 	public filtered = false;
 	public filters: Filter[];
 	private destroy$ = new Subject();
@@ -186,7 +186,7 @@ export class OptimalSoftwareVersionComponent {
 					totalAssetsFilter.loading = false;
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
-					return of({ });
+					return of({});
 				}),
 			);
 	}
@@ -259,13 +259,13 @@ export class OptimalSoftwareVersionComponent {
 			sub.selected = !sub.selected;
 		}
 		filter.selected = _.some(filter.data, 'selected');
-		if (filter.key ===  'deploymentStatus') {
+		if (filter.key === 'deploymentStatus') {
 			this.appliedFilters.deploymentStatus =
-			_.map(_.filter(filter.data, 'selected'), 'filter');
+				_.map(_.filter(filter.data, 'selected'), 'filter');
 		}
-		if (filter.key ===  'assetType') {
+		if (filter.key === 'assetType') {
 			this.appliedFilters.assetType =
-			_.map(_.filter(filter.data, 'selected'), 'filter');
+				_.map(_.filter(filter.data, 'selected'), 'filter');
 		}
 		this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		const totalFilter = _.find(this.filters, { key: 'totalAssets' });
@@ -303,6 +303,10 @@ export class OptimalSoftwareVersionComponent {
 			});
 		});
 		totalFilter.selected = true;
+		this.appliedFilters = {
+			deploymentStatus: [],
+			assetType: '',
+		};
 	}
 
 	/**
