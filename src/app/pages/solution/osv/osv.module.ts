@@ -6,12 +6,8 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AssetDetailsModule } from './asset-detail/asset-detail.module';
 import { CuiTabsModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
-import { SoftwareProfilesModule } from './software-profiles/software-profile.module';
 import { AssetsModule } from './assets/assets.module';
 import { SoftwareVersionsModule } from './software-versions/software-versions.module';
-import {
-	SoftwareProfileDetailModule,
-} from './software-profile-detail/software-profile-detail.module';
 import { environment } from '@environment';
 import { OSVModule } from '@sdp-api';
 import {
@@ -50,10 +46,8 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		FormsModule,
 		AssetsPieChartModule,
-		SoftwareProfilesModule,
 		AssetsModule,
 		SoftwareVersionsModule,
-		SoftwareProfileDetailModule,
 		OSVModule.forRoot({ rootUrl }),
 		AssetTimelineChartModule,
 	],

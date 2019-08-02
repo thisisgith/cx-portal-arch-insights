@@ -391,7 +391,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}&pageIndex=1&pageSize=10&sortOrder=asc&filter=`,
+		url: `${api}assets?customerId=${customerId}&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc`,
 		usecases: ['Use Case 1'],
 	},
 

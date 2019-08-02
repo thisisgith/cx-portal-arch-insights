@@ -1,16 +1,3 @@
-<details-panel *ngIf="selectedProfileGroup" [hidden]="!selectedProfileGroup" [fullscreen]="fullscreen">
-	<details-panel-header (close)="selectedProfileGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
-		<div appPanel360Title class="row">
-			<span class="icon-laser-pointer icon-large col-2 icon-xlarge"></span>
-			<div class="col-10">
-				<div class="qtr-margin-left text-xlarge half-margin-bottom"
-					[innerText]="'_OsvOptimalSoftwareVersions_' | i18n "></div>
-				<div class="qtr-margin-left text-large" [innerText]="selectedProfileGroup?.softwareProfile"></div>
-			</div>
-		</div>
-	</details-panel-header>
-	<app-software-profile-detail></app-software-profile-detail>
-</details-panel>
 <details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
 	<details-panel-header (close)="selectedAsset = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
 		<div detailsPanelTitle>
@@ -55,7 +42,7 @@
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading"></div>
 	<div *ngIf="view == 'swProfiles'">
-		<app-software-profiles [(selectedProfileGroup)]="selectedProfileGroup"></app-software-profiles>
+		<!-- <app-software-profiles [(selectedProfileGroup)]="selectedProfileGroup"></app-software-profiles> -->
 	</div>
 	<div *ngIf="view == 'assets'">
 		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters" [(selectedAsset)]="selectedAsset">

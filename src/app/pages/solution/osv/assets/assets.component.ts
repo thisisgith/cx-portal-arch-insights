@@ -49,7 +49,8 @@ export class AssetsComponent implements OnInit, OnChanges {
 		filter: '',
 		pageIndex: 1,
 		pageSize: 10,
-		sortOrder: 'asc',
+		sort:'hostName',
+		sortOrder: 'desc',		
 	};
 
 	public rowActions = [
@@ -81,6 +82,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
 		if (currentFilter && !changes.filters.firstChange) {
+			this.assetsParams.filter = currentFilter;
 			this.loadData();
 		}
 	}
@@ -141,6 +143,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
+						sortDirection:'desc',
 						sortable: true,
 						sorting: true,
 					},
