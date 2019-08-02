@@ -9,6 +9,7 @@ import { CuiTabsNavModule } from '@cisco-ngx/cui-components';
 import { ArchitectureRoutingModule } from './architecture-routing.module';
 import { CbpDetailsModule } from './cbp-details/cbp-details.module';
 import { CbpDetailsHeaderModule } from './cbp-details-header/cbp-details-header.module';
+import { BarChartModule } from '@components';
 // import { Panel360Module } from '@components';
 
 @NgModule({
@@ -24,6 +25,7 @@ import { CbpDetailsHeaderModule } from './cbp-details-header/cbp-details-header.
 		ArchitectureRoutingModule,
 		CbpDetailsModule,
 		CbpDetailsHeaderModule,
+		BarChartModule
 		// Panel360Module
 	],
 })
