@@ -32,7 +32,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			this.AssetsExceptionDetails = res.AssetsExceptionDetails;
 			this.AssetsExceptionDetails.map((asset)=>{
 				asset.ruleIdsWithExceptionsCount = asset.ruleIdsWithExceptions.split(';').length;
-				asset.ruleIdsWithExceptions = asset.ruleIdsWithExceptions.split(';');
+				// asset.ruleIdsWithExceptions = asset.ruleIdsWithExceptions.split(';');
 			})
 			console.log(this.AssetsExceptionDetails);
 		});

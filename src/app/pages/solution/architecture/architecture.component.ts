@@ -28,30 +28,50 @@ export class ArchitectureComponent implements OnInit {
 	public SeverityCount:any = [];
 	public severityType:any = []
 	public newarray:any = [];
+
+	// public visualLabels:any = [
+	// 	{label: "Configuration Best Practices Exceptions", active:true, count:null, route:"Exceptions"},
+	// 	{label:"Assets With Exceptions", active:false, count:null,route:"AssetsWithExceptions"},
+	// ];
 	
 	constructor (private logger: LogService,private architectureService : ArchitectureService ) {
 		this.logger.debug('ArchitectureComponent Created!');	
+		
 	}
 
-	ngOnInit(): void {
+	// subfilter(event:any){
+	// 	console.log(event.filter);
+	// }
 
+	ngOnInit(): void {
+		
 		this.architectureService.getExceptionsCount().subscribe(res => {
+		
 			this.severityType = Object.keys(res).filter(obj => obj!=Object.keys(res)[1]);
 			this.SeverityCount = Object.values(res).filter(obj => obj!=Object.values(res)[1]);
 			
 			this.SeverityCount.forEach((element,i) => {
 				this.newarray.push(element +'<br>'+ this.severityType[i]);
 			});
-			console.log(this.newarray);
+			// console.log(this.newarray);
 			this.buildGraph();
 		});
 
 		this.architectureService.getAssetsExceptionsCount().subscribe(res =>{
 			this.AssetsExceptionsCount = res.AssestsExceptionCount;
+			// this.visualLabels[1].count = res.AssestsExceptionCount;
 		});
 	}
 
-	public chart: Chart;
+	// selectVisualLabel(i:any){
+	// 	this.visualLabels.forEach(element => {
+	// 		element.active=!element.active;
+	// 	});
+	// }
+
+
+
+	 public chart: Chart;
 	/**
 	 * Builds our bar graph
 	 */

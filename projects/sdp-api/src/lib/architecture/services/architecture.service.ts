@@ -50,7 +50,7 @@ class ArchitectureService extends __BaseService {
     // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      'https://api-stage.cisco.com/cparchinsights/getAllAssetsWithExceptions',
+      'https://api-stage.cisco.com/cparchinsights/getAllAssetsWithExceptions', 
       __body,
       {
         headers: __headers,
@@ -105,7 +105,7 @@ class ArchitectureService extends __BaseService {
     
     let req = new HttpRequest<any>(
       'GET',
-      `https://api-stage.cisco.com/cparchinsights/getAllAssetsWithExceptions`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/exceptionassets`,
       __body,
       {
         headers: __headers,
@@ -137,7 +137,7 @@ class ArchitectureService extends __BaseService {
     
     let req = new HttpRequest<any>(
       'GET',
-      `https://api-stage.cisco.com/cparchinsights/getAllCBPRulesDetails?severity=High`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules?severity=High`,
       __body,
       {
         headers: __headers,
@@ -169,7 +169,7 @@ class ArchitectureService extends __BaseService {
     
     let req = new HttpRequest<any>(
       'GET',
-      `https://api-stage.cisco.com/cparchinsights/getAllCBPRulesDetails?severity=Medium`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules?severity=Medium`,
       __body,
       {
         headers: __headers,
@@ -200,7 +200,7 @@ class ArchitectureService extends __BaseService {
     
     let req = new HttpRequest<any>(
       'GET',
-      `https://api-stage.cisco.com/cparchinsights/getExceptionsCount`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprulescount`,
       __body,
       {
         headers: __headers,
@@ -232,7 +232,7 @@ class ArchitectureService extends __BaseService {
     
     let req = new HttpRequest<any>(
       'GET',
-      `https://api-stage.cisco.com/cparchinsights/getAssetsExceptionsCount`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/assetsexceptioncount`,
       __body,
       {
         headers: __headers,
@@ -276,7 +276,7 @@ class ArchitectureService extends __BaseService {
     
     let req = new HttpRequest<any>(
       'GET',
-      `https://api-stage.cisco.com/cparchinsights/getAllCBPRulesDetails`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules`,
       __body,
       {
         headers: __headers,

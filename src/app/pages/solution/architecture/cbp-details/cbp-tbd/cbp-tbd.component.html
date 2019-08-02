@@ -23,12 +23,12 @@
 				</thead>
 				<tbody>
 					<tr *ngFor="let item of tableData" [ngClass]="{'table--wrap':item.selected}">
-						<td><span class="icon-circle icon-small" style="color: #d8d8d8"></span>{{item['bpSeverity']}}</td>
+						<td><span class="icon-circle icon-small" ></span>{{item['bpSeverity']}}</td>
 						<td>{{item['bpPrimaryTechnologies']}}</td>
 						<td>{{item['exceptions']}}</td>
 						<td>{{item['bpRecommendation']}} </td>
 						<td>{{item['correctiveAction']}}</td>
-						<td (click)="item.selected = !item.selected ">
+						<td data-auto-id="ruleselected" (click)="item.selected = !item.selected ">
 							<span [ngClass]="{'icon-chevron-right':!item.selected,
 							'icon-chevron-down':item.selected}" class="icon-small"></span>
 						</td>
