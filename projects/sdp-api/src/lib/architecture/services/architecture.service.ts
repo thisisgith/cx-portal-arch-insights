@@ -50,7 +50,7 @@ class ArchitectureService extends __BaseService {
     // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      'https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/exceptionassets',
+      'https://api-stage.cisco.com/cparchinsights/getAllAssetsWithExceptions', 
       __body,
       {
         headers: __headers,
