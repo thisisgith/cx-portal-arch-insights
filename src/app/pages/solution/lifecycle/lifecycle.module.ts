@@ -9,6 +9,7 @@ import { LifecycleComponent } from './lifecycle.component';
 import { RacetrackModule, RacetrackContentModule } from '@sdp-api';
 import { environment } from '@environment';
 import { AccRequestFormModule } from './acc-request-form/acc-request-form.module';
+import { CgtRequestFormModule } from './cgt-request-form/cgt-request-form.module';
 import { CommunitiesModule } from './communities/communities.module';
 
 /**
@@ -33,6 +34,7 @@ const childRoutes: Routes = [
 	declarations: [LifecycleComponent],
 	imports: [
 		AccRequestFormModule,
+		CgtRequestFormModule,
 		CommonModule,
 		CuiRatingModule,
 		CuiSelectModule,
