@@ -98,6 +98,7 @@
 		"codelyzer": "~4.5.0",
 		"csc-upload": "^1.0.2",
 		"cypress": "3.4.0",
+		"cypress-file-upload": "^3.3.3",
 		"eslint-plugin-cypress": "^2.6.0",
 		"highcharts": "^7.1.1",
 		"istanbul-api": "^2.1.7",
