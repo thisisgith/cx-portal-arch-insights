@@ -186,7 +186,8 @@ export class AssetTimelineChartComponent implements OnInit {
 	public ngOnChanges (changes: SimpleChanges) {
 		const fullscreen = _.get(changes, 'fullscreen',
 			{ currentValue: null, firstChange: false });
-		if (!fullscreen.firstChange) {
+		const assetDetails = _.get(changes, 'fullscreen');
+		if (!fullscreen.firstChange || !assetDetails.firstChange) {
 			setTimeout(() => {
 				this.buildGraph();
 			}, 500);

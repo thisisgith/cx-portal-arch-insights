@@ -55,7 +55,8 @@
 
 
 <ng-template #actionsTemplate let-item="celldata">
-	<button *ngIf="item.name != 'current'" cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false"
+	<button *ngIf="item.name != 'current' && !item.accepted" cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false"
 		[animated]="true" [innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
 		attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
+	<span *ngIf="item.name != 'current' && item.accepted">{{'_OsvAccepted_' | i18n}}</span>	
 </ng-template>

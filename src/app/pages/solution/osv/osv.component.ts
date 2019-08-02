@@ -59,6 +59,7 @@ export class OptimalSoftwareVersionComponent {
 	public showProfileInfo = false;
 	public appliedFilters = {
 		deploymentStatus: [],
+		assetType: '',
 	};
 	constructor (private logger: LogService,
 		private osvService: OSVService) { }
@@ -260,6 +261,10 @@ export class OptimalSoftwareVersionComponent {
 		filter.selected = _.some(filter.data, 'selected');
 		if (filter.key ===  'deploymentStatus') {
 			this.appliedFilters.deploymentStatus =
+			_.map(_.filter(filter.data, 'selected'), 'filter');
+		}
+		if (filter.key ===  'assetType') {
+			this.appliedFilters.assetType =
 			_.map(_.filter(filter.data, 'selected'), 'filter');
 		}
 		this.appliedFilters = _.cloneDeep(this.appliedFilters);

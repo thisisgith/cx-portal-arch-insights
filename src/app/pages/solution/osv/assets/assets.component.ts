@@ -35,9 +35,9 @@ export class AssetsComponent implements OnInit, OnChanges {
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<any>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	@ViewChild('recommendationsTemplate', { static: true })
-	private recommendationsTemplate: TemplateRef<{ }>;
+	private recommendationsTemplate: TemplateRef<{}>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -84,9 +84,27 @@ export class AssetsComponent implements OnInit, OnChanges {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
 		if (currentFilter && !changes.filters.firstChange) {
-			this.assetsParams.filter = currentFilter;
+			this.setFilter(currentFilter);
 			this.loadData();
 		}
+	}
+
+	/**
+	 * set the filters are part of query params
+	 * @param currentFilter current filters selected by customer
+	 */
+	public setFilter (currentFilter) {
+		const deploymentStatus = _.get(currentFilter, 'deploymentStatus', []);
+		const assetType = _.get(currentFilter, 'assetType', []);
+		let filter = '';
+		if (deploymentStatus.length > 0) {
+			filter += `deployment:${deploymentStatus.toString()}`
+		}
+		if (assetType.length == 1) {
+			filter += filter.length > 0 ? ';' : '';
+			filter += assetType.indexOf('assets_profile') > -1 ? 'yes' : 'no';
+		}
+		this.assetsParams.filter = filter
 	}
 
 	/**
@@ -128,7 +146,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 					this.logger.error('OSV Assets : getAssets() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}

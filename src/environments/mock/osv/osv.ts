@@ -357,8 +357,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}
-		&pageIndex=1&pageSize=10&sort=swVersions&sortOrder=desc`,
+		url: `${api}versions?customerId=${customerId}&pageIndex=1&pageSize=10&sort=swVersions&sortOrder=desc`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -392,8 +391,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}
-		&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc`,
+		url: `${api}assets?customerId=${customerId}&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc`,
 		usecases: ['Use Case 1'],
 	},
 

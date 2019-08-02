@@ -16,6 +16,7 @@ import { Subject, of } from 'rxjs';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
+import { filter } from 'minimatch';
 
 /** Our current customerId */
 const customerId = '231215372';
@@ -29,7 +30,7 @@ const customerId = '231215372';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	public assetDetails: AssetRecommendationsResponse;
@@ -97,6 +98,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
 					this.sortData(response);
+					this.setAcceptedVersion(response,this.selectedAsset);
 					this.assetDetails = response;
 					this.buildTable();
 				}),
@@ -104,7 +106,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				catchError(err => {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
-					return of({ });
+					return of({});
 				}),
 			)
 			.subscribe(() => {
@@ -181,8 +183,10 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		};
 		this.status.isLoading = true;
 		this.osvService.updateAsset(body)
-			.subscribe(() => {
+			.subscribe(response => {
 				this.status.isLoading = false;
+				this.setAcceptedVersion(this.assetDetails,response);
+				this.assetDetails = _.cloneDeep(this.assetDetails);
 				this.logger.debug('Updated');
 			}, () => {
 				this.status.isLoading = false;
@@ -196,7 +200,21 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any> new Date(b.postDate) - <any> new Date(a.postDate));
+			<any>new Date(b.postDate) - <any>new Date(a.postDate));
+	}
+
+	/**
+	 * Set AcceptedVersion
+	 * @param data AssetDetails
+	 */
+	public setAcceptedVersion (data: AssetRecommendationsResponse,selectedAsset) {
+		_.forEach(data,(recommendation:AssetRecommendations) => {
+			if(recommendation.swVersion == this.selectedAsset.optimalVersion){
+				recommendation.accepted = true;
+			} else{
+				recommendation.accepted = false;
+			}
+		});
 	}
 
 	/**
