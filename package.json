@@ -36,6 +36,7 @@
 		"test": "ng test --source-map=true --code-coverage",
 		"test:ci": "npm run test -- --watch=false --browsers=ChromeHeadless",
 		"test:automation": "npm run cypress:smokeTestTimeout && cypress run --config screenshotOnRunFailure=false,video=false",
+		"test:automation:advisories": "npm run test:automation -- --spec=cypress/integration/advisories_spec.js",
 		"test:automation:assets": "npm run test:automation -- --spec=cypress/integration/assets_spec.js",
 		"test:automation:general": "npm run test:automation -- --spec=cypress/integration/general_spec.js",
 		"cypress:smokeTestTimeout": "sed -i.bak 's/smokeTestTimeout: 10000/smokeTestTimeout: 60000/' node_modules/cypress/lib/tasks/verify.js",

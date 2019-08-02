@@ -28,6 +28,15 @@ export const SecurityAdvisoryLastUpdatedCountScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 0,
+					description: 'Security Advisory Count - Unreachable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?customerId=${customerId}`,

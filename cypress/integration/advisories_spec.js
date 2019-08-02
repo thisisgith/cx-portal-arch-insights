@@ -4,6 +4,7 @@ import MockService from '../support/mockService';
 const advisoryMock = new MockService('AdvisorySecurityAdvisoryScenarios');
 const advisoryScenario = advisoryMock.getScenario('GET', 'Advisory Security Advisories');
 const advisories = advisoryScenario.response.body.data;
+const advisoryCountMock = new MockService('SecurityAdvisoryLastUpdatedCountScenarios');
 
 const impactMap = severity => {
 	switch (severity) {
@@ -116,6 +117,60 @@ describe('Advisories', () => { // PBC-306
 
 			cy.getByAutoId('CUIPager-Page1').click();
 			advisoryMock.disable('Advisory Security Advisories - Page 1');
+		});
+
+		context('Filtering', () => { // PBC-308
+			it.skip('Supports filtering on advisory Impact and/or Last Updated time', () => {
+				// TODO: Implement after CSCvq61853 is resolved
+			});
+
+			// TODO: Skipped for PBC-433
+			it.skip('Clears applied filters one at a time', () => { // PBC-433
+				cy.getByAutoId('MediumPoint').click({ force: true });
+				cy.getByAutoId('< 30dPoint').click({ force: true });
+				cy.get('[data-auto-id="FilterTag-medium"] > span.icon-close').click();
+				cy.getByAutoId('FilterTag-medium').should('not.exist');
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
+				cy.get('[data-auto-id="FilterTag-gt-0-lt-30-days"] > span.icon-close').click();
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
+			});
+
+			it('Clears all applied filters with a "Clear All" link', () => {
+				cy.getByAutoId('MediumPoint').click({ force: true });
+				cy.getByAutoId('< 30dPoint').click({ force: true });
+				cy.getByAutoId('FilterTag-medium').should('be.visible');
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
+				// PBC-366
+				cy.getByAutoId('FilterBarClearAllFilters').click().should('not.exist');
+				cy.getByAutoId('FilterTag-medium').should('not.exist');
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
+			});
+
+			it('Visual filters can be collapsed/expanded', () => {
+				cy.getByAutoId('MediumPoint').click({ force: true });
+				cy.getByAutoId('VisualFilterCollapse').click();
+				cy.getByAutoId('FilterTag-medium').should('be.visible');
+				cy.getByAutoId('TotalVisualFilter').should('not.be.visible');
+				cy.getByAutoId('VisualFilterCollapse').click();
+				cy.getByAutoId('TotalVisualFilter').should('be.visible');
+
+				cy.getByAutoId('FilterBarClearAllFilters').click();
+			});
+
+			it('Hides visual filters when APIs are unavailable', () => {
+				advisoryCountMock.enable('Security Advisory Count - Unreachable');
+				cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
+				cy.getByAutoId('Facet-Advisories').click();
+
+				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('not.be.visible');
+				cy.getByAutoId('SelectVisualFilter-impact').should('be.visible');
+
+				advisoryCountMock.enable('Mock Last Updated Count');
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.getByAutoId('Facet-Advisories').click();
+				cy.waitForAppLoading();
+				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('be.visible');
+			});
 		});
 	});
 });
