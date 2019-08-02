@@ -25,12 +25,9 @@ import {
 	RacetrackTechnology,
 	SuccessPath,
 	SuccessPathsResponse,
-<<<<<<< HEAD
 	UserQuota,
 	UserTraining,
-=======
 	RacetrackResponse,
->>>>>>> develop
 } from '@sdp-api';
 
 import { SolutionService } from '../solution.service';
