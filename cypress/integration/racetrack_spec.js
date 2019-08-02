@@ -117,7 +117,7 @@ describe('Racetrack Content', () => {
 		});
 	});
 
-	describe.only('PBC-123: Lifecycle: Pitstop Action checkbox', () => {
+	describe('PBC-123: Lifecycle: Pitstop Action checkbox', () => {
 		const allCheckableScenario = infoMock.getScenario('GET', '(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
 		const allCheckableSolutions = allCheckableScenario.response.body.solutions[0];
 		const allCheckableTech = Cypress._.find(allCheckableSolutions.technologies, tech => tech.name === 'Campus Network Assurance');
