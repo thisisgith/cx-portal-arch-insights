@@ -262,6 +262,10 @@ describe('Advisories', () => { // PBC-306
 			});
 
 			it('Clears all applied filters with a "Clear All" link', () => {
+				cy.getByAutoId('< 30 DaysPoint').click({ force: true });
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
+				cy.getByAutoId('FilterBarClearAllFilters').click().should('not.exist');
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
 			});
 
 			it('Hides visual filters when APIs are unavailable', () => {
