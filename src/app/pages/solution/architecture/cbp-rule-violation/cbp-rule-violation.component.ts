@@ -31,26 +31,31 @@ export class CbpRuleViolationComponent implements OnInit {
 	AssetsExceptionsCount:any;
 
 	public ModifyCbpRuleExceptions(array:Array<any>){
-		if(array.length > 0){
+		// if(array.length != 0){
 			array.map(obj => {
-				obj.assetsAffected = obj.deviceIdsWithExceptions.split(';').length;
+				// obj.assetsAffected = obj.deviceIdsWithExceptions.split(';').length;
 				obj.bpRecommendation = obj.bpRecommendation.substr(0,30).concat("...");
 				obj.correctiveAction = obj.correctiveAction.substr(0,25)+"...";
-				obj.deviceIdsWithExceptions = obj.deviceIdsWithExceptions.split(';');
+				// obj.deviceIdsWithExceptions = obj.deviceIdsWithExceptions.split(';');
 			})
-		}
+		// }
 	}
 
 	ngOnInit () {
 
 		this.architectureService.getAllCBPRulesDetails().subscribe(res =>{
 			this.cbpRuleExceptions = res.BPRulesDetails;
+			console.log(this.cbpRuleExceptions);
 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 			console.log(this.cbpRuleExceptions);
 		});
 
 		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res =>{
-			this.severityObj = res.severityObj.severity;
+			console.log(res);
+			if(res.severityObj){
+				this.severityObj = res.severityObj.severity;
+			}
+			
 			console.log(this.severityObj);		
 			if(this.severityObj == "MediumRisk"){
 				this.architectureService.getMediumSeverityExceptions().subscribe(res => {
