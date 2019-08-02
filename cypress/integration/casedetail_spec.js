@@ -121,7 +121,6 @@ describe('Case Detail Spec', () => {
 
 
 		it('PBC-234 Case Details Notes Tab, Add a Note', () => {
-
 			const currDatestamp = new Date().getTime();
 			// cy.log(`current date is ${currDatestamp}`);
 
@@ -184,12 +183,11 @@ describe('Case Detail Spec', () => {
 		});
 
 		it('PBC-345 Case Detail Attachments - Upload - Attach a file', () => {
-
 			const pdfFile = './sampleFiles/20kFile.pdf';
-			const zipFile = './sampleFiles/20kFile.zip';
-			const csvFile = './sampleFiles/20kFile.csv';
-			const xlsxFile = './sampleFiles/20kFile.xlsx';
-			const txtFile = './sampleFiles/20kFile.txt';
+			// const zipFile = './sampleFiles/20kFile.zip';
+			// const csvFile = './sampleFiles/20kFile.csv';
+			// const xlsxFile = './sampleFiles/20kFile.xlsx';
+			// const txtFile = './sampleFiles/20kFile.txt';
 
 			cy.getByAutoId('CaseAttachFile').click();
 
