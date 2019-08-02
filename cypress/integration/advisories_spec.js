@@ -5,6 +5,10 @@ const advisoryMock = new MockService('AdvisorySecurityAdvisoryScenarios');
 const advisoryScenario = advisoryMock.getScenario('GET', 'Advisory Security Advisories');
 const advisories = advisoryScenario.response.body.data;
 const advisoryCountMock = new MockService('SecurityAdvisoryLastUpdatedCountScenarios');
+const fieldNoticeMock = new MockService('FieldNoticeAdvisoryScenarios');
+const fnScenario = fieldNoticeMock.getScenario('GET', 'Field Notice Advisories');
+const fieldNotices = fnScenario.response.body.data;
+const fnCountMock = new MockService('FieldNoticeCountScenarios');
 
 const impactMap = severity => {
 	switch (severity) {
@@ -77,7 +81,7 @@ describe('Advisories', () => { // PBC-306
 			});
 		});
 
-		it('Advisory list gracefully hadnles lack of response from API', () => {
+		it('Advisory list gracefully handles lack of response from API', () => {
 			advisoryMock.enable('Advisory Security Advisories - Unreachable');
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Advisories').click();
@@ -168,6 +172,105 @@ describe('Advisories', () => { // PBC-306
 				advisoryCountMock.enable('Mock Last Updated Count');
 				cy.getByAutoId('Facet-Lifecycle').click();
 				cy.getByAutoId('Facet-Advisories').click();
+				cy.waitForAppLoading();
+				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('be.visible');
+			});
+		});
+	});
+
+	context('Field Notices', () => { // PBC-309 / PBC-315
+		before(() => cy.getByAutoId('FIELD NOTICESTab').click());
+
+		it('Field Notices are properly displayed in list format', () => {
+			cy.get('app-advisories tbody tr').each((row, index) => {
+				const fieldNotice = fieldNotices[index];
+				cy.wrap(row).within(() => {
+					cy.getByAutoId('ID-Cell')
+						.should('have.text', fieldNotice.id.toString());
+					cy.getByAutoId('Title-Cell').should('have.text', fieldNotice.title);
+					cy.getByAutoId('Vulnerable Assets-Cell')
+						.should('have.text', fieldNotice.assetsImpacted.toString());
+					cy.getByAutoId('Potentially Vulnerable Assets-Cell')
+						.should('have.text', fieldNotice.assetsPotentiallyImpacted.toString());
+					let date;
+					if (fieldNotice.lastUpdated) {
+						date = Cypress.moment(fieldNotice.lastUpdated).format('YYYY MMM DD');
+					} else {
+						date = 'Never';
+					}
+					cy.getByAutoId('Last Updated-Cell').should('have.text', date);
+					const version = fieldNotice.version ? fieldNotice.version.toString() : '';
+					cy.getByAutoId('Version-Cell').should('have.text', version); // PBC-363
+				});
+			});
+		});
+
+		it('Field Notice list gracefully handles lack of response from API', () => {
+			fieldNoticeMock.enable('Field Notice Advisories - Unreachable');
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Advisories').click();
+			cy.getByAutoId('FIELD NOTICESTab').click();
+
+			cy.getByAutoId('NoResultsFoundTxt').should('have.text', 'No Results Found');
+
+			fieldNoticeMock.enable('Field Notice Advisories');
+		});
+
+		it('Uses proper pagination for Field Notices list', () => {
+			fieldNoticeMock.enable('Field Notice Advisories - Page 1');
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Advisories').click();
+			cy.getByAutoId('FIELD NOTICESTab').click();
+
+			cy.getByAutoId('CUIPager-Page2').click()
+				.wait('Field Notice Advisories - Page 2')
+				.then(xhr => {
+					const params = new URLSearchParams(new URL(xhr.url).search);
+					const pagination = xhr.response.body.Pagination;
+					expect(params.get('page')).to.eq('2');
+					expect(params.get('rows')).to.eq('10');
+					cy.get('[data-auto-id*="CUIPager-Page"]')
+						.should('have.length', Cypress._.ceil(pagination.total / pagination.rows));
+				});
+			cy.getByAutoId('CUIPager-NextPage').click();
+			cy.wait('Field Notice Advisories - Page 3').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.get('page')).to.eq('3');
+				expect(params.get('rows')).to.eq('10');
+			});
+			cy.getByAutoId('CUIPager-PrevPage').click();
+			cy.wait('Field Notice Advisories - Page 2').then(xhr => {
+				const params = new URLSearchParams(new URL(xhr.url).search);
+				expect(params.get('page')).to.eq('2');
+				expect(params.get('rows')).to.eq('10');
+			});
+
+			cy.getByAutoId('CUIPager-Page1').click();
+			fieldNoticeMock.disable('Field Notice Advisories - Page 1');
+		});
+
+		context('Filtering', () => { // PBC-309
+			it.skip('Supports filtering on Field Notice Last Updated time', () => {
+				// TODO: Implement after CSCvq61901 is fixed
+			});
+
+			it.skip('Clears applied filters one at a time', () => {
+				// TODO: Implement after PBC-433 is fixed
+			});
+
+			it('Hides visual filters when APIs are unavailable', () => {
+				fnCountMock.enable('Field Notice Counts - Unreachable');
+				cy.getByAutoId('Facet-Lifecycle').click(); // refresh table
+				cy.getByAutoId('Facet-Advisories').click();
+				cy.getByAutoId('FIELD NOTICESTab').click();
+
+				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('not.be.visible');
+				cy.getByAutoId('TotalVisualFilter').should('be.visible');
+
+				fnCountMock.enable('Field Notice Update Counts');
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.getByAutoId('Facet-Advisories').click();
+				cy.getByAutoId('FIELD NOTICESTab').click();
 				cy.waitForAppLoading();
 				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('be.visible');
 			});

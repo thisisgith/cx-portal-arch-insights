@@ -34,6 +34,15 @@ export const FieldNoticeCountScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 0,
+					description: 'Field Notice Counts - Unreachable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: true,
+				},
 			],
 		},
 		url: `${api}/last-updated/count?customerId=${customerId}`,
