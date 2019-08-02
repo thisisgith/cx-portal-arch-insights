@@ -4,6 +4,9 @@ import { DevicesWithExceptionsComponent } from './devices-with-exceptions.compon
 import { CuiTableModule, CuiPagerModule } from '@cisco-ngx/cui-components';
 import { ArchitectureModule } from '@sdp-api';
 import { environment } from '@environment';
+import { DetailsPanelModule } from '@components';
+import { CbpDetailsModule } from '../cbp-details/cbp-details.module';
+import { CbpDetailsHeaderModule } from '../cbp-details-header/cbp-details-header.module';
 
 
 /**
@@ -15,9 +18,12 @@ const rootUrl = environment.sdpServiceOrigin;
 	declarations: [DevicesWithExceptionsComponent],
 	exports : [DevicesWithExceptionsComponent],
 	imports: [
+		CbpDetailsModule,
+		CbpDetailsHeaderModule,
 		CommonModule,
 		CuiTableModule,
 		CuiPagerModule,
+		DetailsPanelModule,
 		ArchitectureModule.forRoot({ rootUrl }),
 	],
 })

@@ -1,18 +1,26 @@
-<div class="row base-margin-top">
-	<div class="col-md-12">
-		<div class="container">
-			<span>showing {{tableData.length}} of {{totalItems}} Assets</span>
-		</div>
-	</div>
-</div>
+<cbp-summary [cbpDetails]='cbpDetails'></cbp-summary>
 
-<div class="row base-margin-top">
+<div class="row">
 	<div class="col-md-12">
 		<div class="container">
-			<cui-table [options]="tableOptions" [data]="tableData"></cui-table>
-			<div class="section">
-				<cui-pager *ngIf="tableData.length" [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
-					(onPageChanged)="onPagerUpdated($event)"></cui-pager>
+			<div class="base-margin-top">
+				<span class="text-bold text-uppercase">
+					{{ ('_AssetsImpacted_' | i18n) + '(' +  totalItems +') '}}
+				</span>
+				<a (click)="export()"> Export/DownLoad</a>
+			</div>
+			<!-- <div class="base-margin-top">
+				<span [innerText]="'Assets' | i18n" class="text-large"></span>
+				<span class="qtr-margin-left text-small text-muted">showing
+				{{ (tableIndex + 1) +' - ' +  (tableIndex + tableData.length ) }}
+				of {{totalItems}} </span>
+			</div> -->
+			<div class="base-margin-top">
+				<cui-table [options]=" tableOptions" [data]="tableData"></cui-table>
+				<div class="section">
+					<cui-pager *ngIf="tableData.length" [page]="tableOffset" [limit]="tableLimit"
+						[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -20,6 +28,6 @@
 
 <ng-template #assetTmpl let-item="celldata">
 	<span>
-		<span class="icon-circle icon-small" style="color:#d8d8d8"></span>
-		{{item.hostname}}</span>
+		<a (click)="openAsset360View(item)"> {{item.hostname}}</a>
+	</span>
 </ng-template>

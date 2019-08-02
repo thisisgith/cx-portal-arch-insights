@@ -1,31 +1,26 @@
-<div class="row base-margin-top">
+<!-- <div class="row base-margin-top">
     <div class="col-md-12">
         <div class="container base-margin-top">
             <div class="text-bold" [innerText]="('_Exception_' | i18n)+':'"></div>
-            <div>IOS Switches have syslog notifications enabled by default on all interfaces. But for many switches used
-                to connect end-user ports,these notifications are unnecessarily "noisy" to Network Management Systems
-                when users shut down their
-                computers each day.</div>
+            <div>{{cbpDetails?.bpRuleSummary}}</div>
+        </div>
+    </div>
+</div> -->
+
+<div class="row base-margin-top">
+    <div class="col-md-12">
+        <div class="container">
+            <div class="text-bold text-uppercase" [innerText]="('_Recommendation_' | i18n)"></div>
+            <div>{{cbpDetails?.bpRecommendation}}</div>
         </div>
     </div>
 </div>
 
-<div class="row base-margin-top">
+<div class="row base-margin-top ">
     <div class="col-md-12">
-        <div class="container base-margin-top">
-            <div class="text-bold" [innerText]="('_Recommendation_' | i18n)+':'"></div>
-            <div>IOS switches should not be sending interface syslog for up/down events for end-user ports. While the
-                rule cannot tell which ports are end-user ports, it is recommended that at least one active
-                (non-shutdown) interface on a switch should have the interface syslogs disabled.</div>
-        </div>
-    </div>
-</div>
-
-<div class="row base-margin-top">
-    <div class="col-md-12">
-        <div class="container base-margin-top">
-            <div class="text-bold" [innerText]="('_Exception_' | i18n)+':'"></div>
-            <div> interface &lt;interface_name &gt; \n no logging event link-status.</div>
+        <div class="container">
+            <div class="text-bold text-uppercase" [innerText]="('_Exception_' | i18n)"></div>
+            <div> {{cbpDetails?.correctiveAction}}</div>
         </div>
     </div>
 </div>

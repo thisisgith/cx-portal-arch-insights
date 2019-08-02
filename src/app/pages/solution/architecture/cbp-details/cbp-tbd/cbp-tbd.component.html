@@ -1,7 +1,10 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
-		<div class="container">
-			<span>showing {{tableData.length}} of {{totalItems}} Exceptions</span>
+		<div class="container" *ngIf="tableData.length">
+			<span [innerText]="'Exceptions' | i18n" class="text-large"></span>
+			<span class="qtr-margin-left text-small text-muted">showing
+				{{ (tableIndex + 1) +' - ' +  (tableIndex + tableData.length ) }}
+				of {{totalItems}} exceptions</span>
 		</div>
 	</div>
 </div>
@@ -14,25 +17,37 @@
 				<thead>
 					<tr>
 						<th>Risk</th>
-						<th>Technology</th>
+						<th>Rule Name</th>
 						<th>Exception</th>
-						<th>Recommendation</th>
-						<th>Corrective Action</th>
+						<th></th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let item of tableData" [ngClass]="{'table--wrap':item.selected}">
-						<td><span class="icon-circle icon-small" style="color: #d8d8d8"></span>{{item['bpSeverity']}}</td>
-						<td>{{item['bpPrimaryTechnologies']}}</td>
-						<td>{{item['exceptions']}}</td>
-						<td>{{item['bpRecommendation']}} </td>
-						<td>{{item['correctiveAction']}}</td>
-						<td (click)="item.selected = !item.selected ">
-							<span [ngClass]="{'icon-chevron-right':!item.selected,
-							'icon-chevron-down':item.selected}" class="icon-small"></span>
-						</td>
-					</tr>
+					<ng-container *ngFor="let item of tableData">
+						<tr>
+							<td>
+								<ng-container *ngTemplateOutlet=" riskTmpl;context: { itemSeverity : item.bpSeverity }">
+								</ng-container>
+							</td>
+							<td> <a>{{item['bpRuleTitle']}}</a> </td>
+							<td>{{item['bpRuleSummary']}}</td>
+							<td>
+								<a (click)="expandRow(item) ">
+									<span *ngIf="!item.active"> Show Recommendation and Corrective Action</span>
+									<span *ngIf="item.active"> Hide Recommendation and Corrective Action</span>
+								</a>
+							</td>
+							<td (click)="expandRow(item) ">
+								<span [ngClass]="{'icon-chevron-down':!item.active,
+								'icon-chevron-up':item.active}" style="cursor: pointer" class="icon-small"></span>
+							</td>
+						</tr>
+
+						<ng-container *ngTemplateOutlet=" dynamicRow;context: { item : item }">
+						</ng-container>
+
+					</ng-container>
 				</tbody>
 			</table>
 			<div class="section">
@@ -43,9 +58,47 @@
 	</div>
 </div>
 
-<ng-template #riskTmpl let-item="celldata">
-	<span>
-		<span class="icon-circle icon-small" style="color: #d8d8d8"></span>
-		{{item.bpSeverity}}
+<ng-template #riskTmpl let-severity="itemSeverity">
+	<span class="label label--circle label--tiny qtr-margin-right" [ngClass]="{
+					'Critical': 'label--danger',
+					'High': 'label--warning',
+					'Medium': 'label--warning-alt',
+					'Low': 'label--success',
+					'Info': 'label--info'
+			}[severity]">
 	</span>
+	<span>{{severity}}</span>
+</ng-template>
+
+<ng-template #dynamicRow let-item="item">
+	<tr class="table--wrap" *ngIf="item.active">
+		<td colspan="5">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="container">
+						<div class="text-bold text-uppercase" [innerText]="('_Exception_' | i18n)">
+						</div>
+						<div>{{item['bpRuleSummary']}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="row base-margin-top">
+				<div class="col-md-12">
+					<div class="container">
+						<div class="text-bold text-uppercase" [innerText]="('_Recommendation_' | i18n)"></div>
+						<div>{{item['bpRecommendation']}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="row base-margin-top base-margin-down">
+				<div class="col-md-12">
+					<div class="container">
+						<div class="text-bold text-uppercase" [innerText]="('_CorrectiveAction_' | i18n)">
+						</div>
+						<div> {{item['correctiveAction']}}</div>
+					</div>
+				</div>
+			</div>
+		</td>
+	</tr>
 </ng-template>

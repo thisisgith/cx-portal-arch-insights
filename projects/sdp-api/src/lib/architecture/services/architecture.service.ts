@@ -14,11 +14,11 @@ import { ContractDeviceCountsResponse } from '../models/contract-device-counts-r
 })
 class ArchitectureService extends __BaseService {
 
-  
+
   static readonly getContractCountsPath = '/api/customerportal/contracts/v1/device/count';
 
   static readonly getAllCBPRules = '/cparchinsights/getAllCBPRules';
- 
+
   private AssetsExceptionsCount = new Subject<any>();
 
   private CBPRiskCount = new Subject<any>();
@@ -56,7 +56,7 @@ class ArchitectureService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-//        withCredentials: true,
+        //        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -86,7 +86,7 @@ class ArchitectureService extends __BaseService {
   getAllAssetsWithExceptions(): __Observable<any> {
     return this.getAllAssetsWithExceptionsResponse().pipe(
       __map(_r => {
-        
+
         this.AssetsExceptionsCount.next({ count: _r.body.TotalCounts });
         return _r.body as ContractDeviceCountsResponse;
       })
@@ -99,10 +99,10 @@ class ArchitectureService extends __BaseService {
   }
 
   getAllAssetsWithExceptionsResponse(): __Observable<__StrictHttpResponse<any>> {
-   
+
     let __headers = new HttpHeaders();
     let __body: any = null;
-    
+
     let req = new HttpRequest<any>(
       'GET',
       `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/exceptionassets`,
@@ -110,7 +110,7 @@ class ArchitectureService extends __BaseService {
       {
         headers: __headers,
         responseType: 'json',
-//        withCredentials: true,
+        //        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -120,7 +120,7 @@ class ArchitectureService extends __BaseService {
       })
     );
 
-    
+
   }
 
   //high Severity exceptions
@@ -131,10 +131,10 @@ class ArchitectureService extends __BaseService {
   }
 
   getHighSeverityExceptionsResponse(): __Observable<__StrictHttpResponse<any>> {
-   
+
     let __headers = new HttpHeaders();
     let __body: any = null;
-    
+
     let req = new HttpRequest<any>(
       'GET',
       `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules?severity=High`,
@@ -142,7 +142,7 @@ class ArchitectureService extends __BaseService {
       {
         headers: __headers,
         responseType: 'json',
-//        withCredentials: true,
+        //        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -152,7 +152,7 @@ class ArchitectureService extends __BaseService {
       })
     );
 
-    
+
   }
 
   //medium Severity exceptions
@@ -163,10 +163,10 @@ class ArchitectureService extends __BaseService {
   }
 
   getMediumSeverityExceptionsResponse(): __Observable<__StrictHttpResponse<any>> {
-   
+
     let __headers = new HttpHeaders();
     let __body: any = null;
-    
+
     let req = new HttpRequest<any>(
       'GET',
       `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules?severity=Medium`,
@@ -174,7 +174,7 @@ class ArchitectureService extends __BaseService {
       {
         headers: __headers,
         responseType: 'json',
-//        withCredentials: true,
+        //        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -184,9 +184,9 @@ class ArchitectureService extends __BaseService {
       })
     );
 
-    
+
   }
-// Exceptions count of High and Medium Severity
+  // Exceptions count of High and Medium Severity
   getExceptionsCount(): __Observable<any> {
     return this.getExceptionsCountResponse().pipe(
       __map(_r => _r.body as ContractDeviceCountsResponse)
@@ -194,10 +194,10 @@ class ArchitectureService extends __BaseService {
   }
 
   getExceptionsCountResponse(): __Observable<__StrictHttpResponse<any>> {
-   
+
     let __headers = new HttpHeaders();
     let __body: any = null;
-    
+
     let req = new HttpRequest<any>(
       'GET',
       `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprulescount`,
@@ -205,7 +205,7 @@ class ArchitectureService extends __BaseService {
       {
         headers: __headers,
         responseType: 'json',
-//        withCredentials: true,
+        //        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -214,11 +214,11 @@ class ArchitectureService extends __BaseService {
         return _r as __StrictHttpResponse<any>;
       })
     );
-    
+
   }
 
   // count of all exceptions
- 
+
   getAssetsExceptionsCount(): __Observable<any> {
     return this.getAssetsExceptionsCountResponse().pipe(
       __map(_r => _r.body as ContractDeviceCountsResponse)
@@ -226,10 +226,10 @@ class ArchitectureService extends __BaseService {
   }
 
   getAssetsExceptionsCountResponse(): __Observable<__StrictHttpResponse<any>> {
-   
+
     let __headers = new HttpHeaders();
     let __body: any = null;
-    
+
     let req = new HttpRequest<any>(
       'GET',
       `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/assetsexceptioncount`,
@@ -237,7 +237,7 @@ class ArchitectureService extends __BaseService {
       {
         headers: __headers,
         responseType: 'json',
-//        withCredentials: true,
+        //        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -246,11 +246,11 @@ class ArchitectureService extends __BaseService {
         return _r as __StrictHttpResponse<any>;
       })
     );
-    
-  }
-  
 
- // All Exceptions Listing
+  }
+
+
+  // All Exceptions Listing
   getAllCBPRulesDetails(): __Observable<any> {
     return this.getAllCBPRulesDetailsResponse().pipe(
       __map(_r => {
@@ -259,21 +259,21 @@ class ArchitectureService extends __BaseService {
         arr.push(parseInt(_r.body.High));
         arr.push(parseInt(_r.body.Medium));
         console.log(arr);
-        this.CBPRiskCount.next({ CBPRisk : arr });
+        this.CBPRiskCount.next({ CBPRisk: arr });
         return _r.body as ContractDeviceCountsResponse;
       })
     );
   }
 
-  getCBPRiskArray():Observable<any>{
+  getCBPRiskArray(): Observable<any> {
     return this.CBPRiskCount.asObservable();
   }
 
   getAllCBPRulesDetailsResponse(): __Observable<__StrictHttpResponse<any>> {
-   
+
     let __headers = new HttpHeaders();
     let __body: any = null;
-    
+
     let req = new HttpRequest<any>(
       'GET',
       `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules`,
@@ -281,7 +281,7 @@ class ArchitectureService extends __BaseService {
       {
         headers: __headers,
         responseType: 'json',
-//        withCredentials: true,
+        //        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -292,12 +292,91 @@ class ArchitectureService extends __BaseService {
     );
   }
 
-  public setAssetsExceptionCountSubjectObj(obj:any){
+  public setAssetsExceptionCountSubjectObj(obj: any) {
     this.AssetsExceptionsCount.next({ severityObj: obj });
   }
   public getAssetsExceptionCountSubjectObj(): Observable<any> {
-		return this.AssetsExceptionsCount.asObservable();
-	}
+    return this.AssetsExceptionsCount.asObservable();
+  }
+
+  /**
+   * This function is used to get the asset details
+   * @param body This parameter containes array of assets 
+   * @returns only body part of the HTTp response
+   */
+  getAllCBPDeviceAffected(body: any): __Observable<any> {
+    return this.getAllCBPDeviceAffectedResponse(body).pipe(
+      __map(_r => _r.body)
+    );
+  }
+
+  /**
+   * This Function is used to get the asset detail by adding headers, params and body while sending the request
+   * @param body This Parameter contains array of Assets
+   * @returns Entire HTTP response is returned 
+   */
+  getAllCBPDeviceAffectedResponse(body: any): __Observable<__StrictHttpResponse<any>> {
+
+    let __headers = new HttpHeaders();
+    let __body: any = body;
+
+
+    let req = new HttpRequest<any>(
+      'POST',
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/affecteddevicedetails`,
+      __body,
+      {
+        headers: __headers,
+        responseType: 'json',
+        //        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<any>;
+      })
+    );
+  }
+
+  /**
+   * This function is used to get the Exceptions details
+   * @param body This Parameter contains array of Exceptions
+   * @returns only body part of the HTTp response
+   */
+  getAllCBPExceptionDetails(body: any): __Observable<any> {
+    return this.getAllCBPExceptionDetailsResponse(body).pipe(
+      __map(_r => _r.body)
+    );
+  }
+
+  /**
+   * This Function is used to get the Exceptions detail by adding headers, params and body while sending the request
+   * @param body This Parameter contains array of Exceptions
+   * @returns Entire HTTP response is returned 
+   */
+  getAllCBPExceptionDetailsResponse(body: any): __Observable<__StrictHttpResponse<any>> {
+
+    let __headers = new HttpHeaders();
+    let __body: any = body;
+
+    let req = new HttpRequest<any>(
+      'POST',
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbpexceptiondetails`,
+      __body,
+      {
+        headers: __headers,
+        responseType: 'json',
+        //        withCredentials: true,
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<any>;
+      })
+    );
+  }
 
 }
 
@@ -313,7 +392,7 @@ module ArchitectureService {
     //  */
     // customerId: string;
 
-    severityObj : Object;
+    severityObj: Object;
     // /**
     //  * The number of the service contract. Example:- 2689444; 91488861, 92246411
     //  */

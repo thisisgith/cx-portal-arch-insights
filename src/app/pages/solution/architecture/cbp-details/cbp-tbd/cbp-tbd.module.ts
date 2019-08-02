@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CbpTbdComponent } from './cbp-tbd.component';
 
 import { CuiTableModule, CuiPagerModule } from '@cisco-ngx/cui-components';
+import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
  * CBP TBD Table Module
@@ -15,6 +16,7 @@ import { CuiTableModule, CuiPagerModule } from '@cisco-ngx/cui-components';
 		CommonModule,
 		CuiTableModule,
 		CuiPagerModule,
+		I18nPipeModule,
 	],
 })
 export class CbpTbdModule { }

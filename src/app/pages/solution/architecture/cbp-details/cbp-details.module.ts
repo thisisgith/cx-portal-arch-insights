@@ -10,7 +10,9 @@ import { CbpTabComponent } from './cbp-tabs/cbp-tab/cbp-tab.component';
 import { CbpAweTabComponent } from './cbp-tabs/cbp-awe-tab/cbp-awe-tab.component';
 import { CbpDeviceAffectedModule } from './cbp-device-affected/cbp-device-affected.module';
 
-/** Module representing the CBP Tabs for  Components */
+/** Module representing the CBP Tabs,summary ,CBP-TDB table
+ *  and CBP-Device-affected table for  Components 
+ * */
 @NgModule({
 	declarations: [CbpTabComponent, CbpAweTabComponent],
 	imports: [
@@ -23,7 +25,9 @@ import { CbpDeviceAffectedModule } from './cbp-device-affected/cbp-device-affect
 		CuiPagerModule,
 		I18nPipeModule,
 	],
-
-	exports: [CbpAweTabComponent, CbpTabComponent],
+	exports: [
+		CbpDeviceAffectedModule,
+		CbpTbdModule,
+	],
 })
 export class CbpDetailsModule { }

@@ -24,6 +24,8 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public tableLimit = 4;
 	public tableOffset = 0;
 	public totalItems = 10;
+	public fullscreen = false;
+	public exceptions:any = null;
 
 	ngOnInit(){
 
@@ -72,8 +74,23 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			  },
 			 
 			],
+			singleSelect:true,
 		  });
 	}
 
+	/**
+	 * This Function is used to set the exceptions object null,
+	 * in order to close the Fly-out View
+	 */
+	public onPanelClose () {
+		this.exceptions = null;
+	}
 	
+	/**
+	 * This Function is used to open and set data to Fly-out View
+	 * @param event Event Contains the row data which need the passed to Fly-Out view
+	 */
+	onTableRowClicked(event:any){		
+		this.exceptions = event;
+	}
 }

@@ -23,8 +23,10 @@ export class CbpRuleViolationComponent implements OnInit {
 	tableOffset = 0;
 	totalItems = 10;
 
+	public fullscreen = false;
 	public cbpRuleExceptions = [];
 	public severityObj : any;
+	public assetsImpacted:any = null;
 
 	AssetsExceptionsCount:any;
 
@@ -115,8 +117,22 @@ export class CbpRuleViolationComponent implements OnInit {
 		
 	} 
 
-	onTableRowClicked(event:any){
-		console.log(event);
+	/**
+	 * This Function is used to open and set data to Fly-out View
+	 * @param event Event Contains the row data which need the passed to Fly-Out view
+	 */
+	onTableRowClicked(event:any){		
+		this.assetsImpacted = event;
 	}
+
+	/**
+	 * This Function is used to set the assetsImpacted object null,
+	 * in order to close the Fly-out View
+	 */
+	public onPanelClose () {
+		this.assetsImpacted = null;
+	
+	}
+
 	
 }
