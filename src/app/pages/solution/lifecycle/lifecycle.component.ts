@@ -25,8 +25,12 @@ import {
 	RacetrackTechnology,
 	SuccessPath,
 	SuccessPathsResponse,
+<<<<<<< HEAD
 	UserQuota,
 	UserTraining,
+=======
+	RacetrackResponse,
+>>>>>>> develop
 } from '@sdp-api';
 
 import { SolutionService } from '../solution.service';
@@ -134,6 +138,8 @@ export class LifecycleComponent implements OnDestroy {
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
 
+	// Current uncompleted pitstop
+	public currentWorkingPitstop: string;
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
 	public view: 'list' | 'grid' = 'grid';
@@ -238,7 +244,8 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.usecase = _.get(technology, 'name');
 			this.componentData.params.solution = currentSolution;
 
-			this.getRacetrackInfo();
+			this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
+			this.getRacetrackInfo(this.currentWorkingPitstop);
 		});
 	}
 
@@ -262,44 +269,42 @@ export class LifecycleComponent implements OnDestroy {
 	 * Will construct the assets table
 	 */
 	private buildTable () {
-		if (!this.successBytesTable) {
-			this.successBytesTable = new CuiTableOptions({
-				columns: [
-					{
-						key: 'title',
-						name: I18n.get('_Name_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sortKey: 'title',
-						value: 'title',
-						width: '40%',
-					},
-					{
-						key: 'archetype',
-						name: I18n.get('_Category_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sortKey: 'archetype',
-						value: 'archetype',
-						width: '20%',
-					},
-					{
-						name: I18n.get('_Format_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sortKey: 'type',
-						template: this.formatTemplate,
-						width: '20%',
-					},
-					{
-						name: I18n.get('_Bookmark_'),
-						sortable: false,
-						template: this.bookmarkTemplate,
-						width: '20%',
-					},
-				],
-			});
-		}
+		this.successBytesTable = new CuiTableOptions({
+			columns: [
+				{
+					key: 'title',
+					name: I18n.get('_Name_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'title',
+					value: 'title',
+					width: '40%',
+				},
+				{
+					key: 'archetype',
+					name: I18n.get('_Category_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'archetype',
+					value: 'archetype',
+					width: '20%',
+				},
+				{
+					name: I18n.get('_Format_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'type',
+					template: this.formatTemplate,
+					width: '20%',
+				},
+				{
+					name: I18n.get('_Bookmark_'),
+					sortable: false,
+					template: this.bookmarkTemplate,
+					width: '20%',
+				},
+			],
+		});
 	}
 
 	/**
@@ -600,11 +605,45 @@ export class LifecycleComponent implements OnDestroy {
 				source,
 			)
 			.subscribe();
+
+			if (this.componentData.racetrack.actionsCompPercent === '100%') {
+				this.completePitstop();
+			}
 		},
 		err => {
 			this.status.loading.racetrack = false;
 			this.logger.error(`lifecycle.component : completeAction() :: Error  : (${
 				err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * Get updated racetrack info once all pitstops actions are complete
+	 */
+	private completePitstop () {
+		const params: RacetrackService.GetRacetrackParams = {
+			customerId: this.customerId,
+		};
+
+		// The selected technologies currentPitstop parameter updates once all actions are complete
+		// refresh the racetrack info to get those new changes
+		this.racetrackService.getRacetrack(params)
+		.subscribe((results: RacetrackResponse) => {
+			const responseSolution: RacetrackSolution = _.find(
+				_.get(results, 'solutions', []), (solution: RacetrackSolution) =>
+				solution.name.toLowerCase() === this.selectedSolution.name.toLowerCase());
+
+			const responseTechnology: RacetrackTechnology = _.find(
+				_.get(responseSolution, 'technologies', []), (tech: RacetrackTechnology) =>
+				tech.name.toLowerCase() === this.selectedTechnology.name.toLowerCase());
+
+			if (responseTechnology) {
+				this.solutionService.sendCurrentTechnology(responseTechnology);
+			}
+		},
+		err => {
+			this.logger.error('lifecycle.component : completePitstop() ' +
+				`:: Error : (${err.status}) ${err.message}`);
 		});
 	}
 
@@ -969,12 +1008,11 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Fetches the racetrack info for the given params, if successful
 	 * will then call loadRacetrackInfo for the other api calls
+	 * @param stage selected pitstop
 	 */
-	private getRacetrackInfo () {
+	private getRacetrackInfo (stage: string) {
 		if (this.componentData.params.solution && this.componentData.params.usecase) {
 			this.status.loading.racetrack = true;
-
-			const stage = _.get(this.selectedTechnology, 'currentPitstop', 'Onboard');
 
 			const pitstop = _.find(
 				_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>

@@ -21,6 +21,7 @@ describe('RacetrackComponent', () => {
 		component = fixture.componentInstance;
 
 		component.stage = 'onboard';
+		component.currentStage = 'onboard';
 
 		fixture.detectChanges();
 	});
@@ -61,17 +62,9 @@ describe('RacetrackComponent', () => {
 				.toBeLessThan(component.stages.indexOf(next));
 		});
 
-		it('should move forward', () => {
-			const current = component.current;
-			component.zoomToPrevious();
-			const prev = component.current;
-
-			expect(component.stages.indexOf(current))
-				.toBeGreaterThan(component.stages.indexOf(prev));
-		});
-
 		it('should move to an arbitrary stage', () => {
 			const stageName = 'adopt';
+			component.currentStage = 'adopt';
 			component.zoomToStage(stageName);
 			expect(component.current)
 				.toEqual(stageName);
