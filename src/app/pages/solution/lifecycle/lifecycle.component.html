@@ -26,6 +26,14 @@
 							data: componentData.learning
 						}">
 					</ng-container>
+					<ng-container *ngTemplateOutlet="panel; context: {
+						template: cgtPanel,
+						icon: 'communities',
+						title: '_CustomizedGroupTraining_',
+						loading: status.loading.cgt,
+						data: componentData.cgt
+					}">
+				</ng-container>
 				</div>
 				<div class="col-md-4">
 					<ng-container *ngTemplateOutlet="panel; context: {
@@ -747,13 +755,67 @@
 	</div>
 </ng-template>
 
-<ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel">
+<ng-template #cgtRequestTraining let-data="data">
+	<div class="panel cgtpanel--open panel--bordered"
+		*ngIf="cgtRequestTrainingClicked">
+		<div class="row base-margin-top half-margin-left half-margin-right">
+			<div class="col-md-11 text-left">
+				<div class="half-margin-left" [innerText]="data | i18n"></div>
+			</div>
+			<div class="col-md-1">
+				<a class="no-link fade-in-pop closebtn"
+					(click)="this.cgtRequestTrainingClicked = false"
+					attr.data-auto-id="Close-CgtTrainingComplete-Popup">
+					<span class="icon-close icon-small"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #cgtPanel let-data="data">
+	<div class="base-margin-bottom text-dkgray-4" [innerText]="'_CGTDescription_' | i18n"></div>
+	<div class="text-left" *ngIf="data.trainingsAvailable===0">
+		<button (click)="this.cgtRequestTrainingClicked = true"
+			[ngClass]="this.cgtRequestTrainingClicked ? 'btn btn--small btn--gray-ghost disabled text-uppercase' : 'btn btn--small btn--secondary text-uppercase'"
+			[innerText]="'_RequestTraining_' | i18n"
+			attr.data-auto-id="Request-CgtCompleted">
+		</button>
+		<ng-container *ngTemplateOutlet="cgtRequestTraining; context: { data:  '_CGTSessionLimitReached_' }"></ng-container>
+	</div>
+	<div class="text-left" *ngIf="data.trainingsAvailable>0">
+		<button (click)="selectCgtRequestForm(true, data.trainingsAvailable, data.dateAvailableThrough)"
+			class="btn btn--small btn--secondary text-uppercase"
+			[innerText]="'_RequestTraining_' | i18n"
+			attr.data-auto-id="Request-CgtTraining">
+		</button>
+	</div>
+	<div *ngIf="data.sessions.length>0">
+		<div class="divider"></div>
+		<div class="base-padding-bottom">
+			<div class="qtr-padding-bottom" *ngFor="let item of data.sessions | slice:0:2">
+				<div class="panel small-panel">
+					<div class="row">
+						<div class="col-md-11 qtr-padding-bottom">
+							<div class="text-dkgray-1 text-med" [innerText]="item.trainingDuration"></div>
+							<div class="text-dkgray-4 text-samll" [innerText]="item.trainingLocation"></div>
+						</div>
+						<div class="col-md-1 text-success icon-certified icon-small qtr-padding-left"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel" let-icon="icon">
 	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom" attr.data-auto-id="{{ title | i18n }} Panel" *ngIf="viewAll!=='acc' || data?.sessions?.length>0">
 		<div class="row half-padding-bottom">
-			<div class="col-md-6 flex-center-vertical">
+			<div class="col-md-9 flex-center-vertical">
+				<span class="icon-{{ icon }} icon-small qtr-padding-right qtr-padding-bottom" *ngIf="icon"></span>
 				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
 			</div>
-			<div class="col-md-6 text-right toggle" *ngIf="viewAll">
+			<div class="col-md-3 text-right toggle" *ngIf="viewAll">
 				<div *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">
@@ -821,3 +883,14 @@
 		<span class="half-margin-left" [innerText]="'_Completed_' | i18n"></span>
 	</div>
 </ng-template>
+
+<ng-container *ngIf="selectCgtComponent">
+	<cgt-request-form (visibleComponent)="selectCgtRequestForm($event)"
+		[totalTrainingsAvailable]="cgtAvailable"
+		[trainingAvailableThrough]="trainingAvailableThrough"
+		[solution]="selectedSolution.name"
+		[technology]="selectedTechnology.name"
+		[pitstop]="currentPitstop.name"
+		(submitted)="cgtRequestSubmit($event)">
+	</cgt-request-form>
+</ng-container>
