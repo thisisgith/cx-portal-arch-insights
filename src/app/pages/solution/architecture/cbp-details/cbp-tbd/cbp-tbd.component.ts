@@ -39,12 +39,13 @@ export class CbpTbdComponent implements OnChanges {
 	public ngOnChanges () {
 		if (this.cbpDetails) {
 			const ruleIdsWithExceptions = this.cbpDetails.ruleIdsWithExceptions.split(';');
-			this.architectureService.getAllCBPExceptionDetails(ruleIdsWithExceptions).subscribe((res: any[]) => {
-				this.tempData = res;
-				this.totalItems = this.tempData.length;
-				this.tableOffset = 0;
-				this.getData();
-			});
+			this.architectureService.getAllCBPExceptionDetails(ruleIdsWithExceptions)
+				.subscribe((res: any[]) => {
+					this.tempData = res;
+					this.totalItems = this.tempData.length;
+					this.tableOffset = 0;
+					this.getData();
+				});
 		}
 	}
 	/**
@@ -68,10 +69,11 @@ export class CbpTbdComponent implements OnChanges {
 	 */
 	public expandRow (selectedItem: any) {
 		selectedItem.active = !selectedItem.active;
-		this.tableData = this.tableData.map((item) => {
-			if (item != selectedItem) {
+		this.tableData = this.tableData.map(item => {
+			if (item !== selectedItem) {
 				item.active = false;
 			}
+
 			return item;
 		});
 	}

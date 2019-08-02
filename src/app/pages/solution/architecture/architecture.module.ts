@@ -25,7 +25,7 @@ import { BarChartModule } from '@components';
 		ArchitectureRoutingModule,
 		CbpDetailsModule,
 		CbpDetailsHeaderModule,
-		BarChartModule
+		BarChartModule,
 		// Panel360Module
 	],
 })

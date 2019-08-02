@@ -1,4 +1,4 @@
-import { Component, OnInit,Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -14,7 +14,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 
 	constructor (
 		private logger: LogService,
-		private architectureService : ArchitectureService
+		private architectureService: ArchitectureService,
 	) {
 		this.logger.debug('DevicesWithExceptionsComponent Created!');
 	}
@@ -25,32 +25,32 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public tableOffset = 0;
 	public totalItems = 10;
 	public fullscreen = false;
-	public exceptions:any = null;
+	public exceptions: any = null;
 
-	ngOnInit(){
+	public ngOnInit () {
 
-		this.architectureService.getAllAssetsWithExceptions().subscribe(res =>{
+		this.architectureService.getAllAssetsWithExceptions().subscribe(res => {
 			console.log(res);
 			this.AssetsExceptionDetails = res.AssetsExceptionDetails;
-			this.AssetsExceptionDetails.map((asset)=>{
+			this.AssetsExceptionDetails.map((asset) => {
 				asset.ruleIdsWithExceptionsCount = asset.ruleIdsWithExceptions.split(';').length;
 				// asset.ruleIdsWithExceptions = asset.ruleIdsWithExceptions.split(';');
-			})
+			});
 			console.log(this.AssetsExceptionDetails);
 		});
-		
+
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
 			  {
-				name: 'Asset',
-				sortable: false,
-				key : 'inventoryName'
+					name: 'Asset',
+					sortable: false,
+					key : 'inventoryName',
 			  },
 			  {
-				name: 'Product ID',
-				sortable: false,
-				key: 'productId',
+					name: 'Product ID',
+					sortable: false,
+					key: 'productId',
 			  },
 			  {
 				  name: 'Product Family',
@@ -72,9 +72,9 @@ export class DevicesWithExceptionsComponent implements OnInit {
 				  sortable: false,
 				  key: 'ruleIdsWithExceptionsCount',
 			  },
-			 
+
 			],
-			singleSelect:true,
+			singleSelect: true,
 		  });
 	}
 
@@ -85,12 +85,12 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public onPanelClose () {
 		this.exceptions = null;
 	}
-	
+
 	/**
 	 * This Function is used to open and set data to Fly-out View
 	 * @param event Event Contains the row data which need the passed to Fly-Out view
 	 */
-	onTableRowClicked(event:any){		
+	public onTableRowClicked (event: any) {
 		this.exceptions = event;
 	}
 }

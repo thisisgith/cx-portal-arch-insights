@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild,AfterViewInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, TemplateRef } from '@angular/core';
 import { DevicesWithExceptionsComponent } from './devices-with-exceptions/devices-with-exceptions.component';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Chart } from 'angular-highcharts';
@@ -12,7 +12,6 @@ import {
 import { ArchitectureService } from '@sdp-api';
 import { Subject, Observable } from 'rxjs';
 
-
 @Component({
 	selector: 'app-architecture',
 	styleUrls: ['./architecture.component.scss'],
@@ -20,48 +19,24 @@ import { Subject, Observable } from 'rxjs';
 })
 export class ArchitectureComponent implements OnInit {
 
-	public tabIndex = 0;
-	activeRoute: any;
-	public severityObj = {};
-	public AssetsExceptionsCount:any;
-
-	public SeverityCount:any = [];
-	public severityType:any = []
-	public newarray:any = [];
-
 	// public visualLabels:any = [
 	// 	{label: "Configuration Best Practices Exceptions", active:true, count:null, route:"Exceptions"},
 	// 	{label:"Assets With Exceptions", active:false, count:null,route:"AssetsWithExceptions"},
 	// ];
-	
-	constructor (private logger: LogService,private architectureService : ArchitectureService ) {
-		this.logger.debug('ArchitectureComponent Created!');	
-		
+
+	constructor (private logger: LogService, private architectureService: ArchitectureService) {
+		this.logger.debug('ArchitectureComponent Created!');
+
 	}
 
-	// subfilter(event:any){
-	// 	console.log(event.filter);
-	// }
+	public tabIndex = 0;
+	public activeRoute: any;
+	public severityObj = { };
+	public AssetsExceptionsCount: any;
 
-	ngOnInit(): void {
-		
-		this.architectureService.getExceptionsCount().subscribe(res => {
-		
-			this.severityType = Object.keys(res).filter(obj => obj!=Object.keys(res)[1]);
-			this.SeverityCount = Object.values(res).filter(obj => obj!=Object.values(res)[1]);
-			
-			this.SeverityCount.forEach((element,i) => {
-				this.newarray.push(element +'<br>'+ this.severityType[i]);
-			});
-			// console.log(this.newarray);
-			this.buildGraph();
-		});
-
-		this.architectureService.getAssetsExceptionsCount().subscribe(res =>{
-			this.AssetsExceptionsCount = res.AssestsExceptionCount;
-			// this.visualLabels[1].count = res.AssestsExceptionCount;
-		});
-	}
+	public SeverityCount: any = [];
+	public severityType: any = [];
+	public newarray: any = [];
 
 	// selectVisualLabel(i:any){
 	// 	this.visualLabels.forEach(element => {
@@ -69,9 +44,31 @@ export class ArchitectureComponent implements OnInit {
 	// 	});
 	// }
 
-
-
 	 public chart: Chart;
+
+	// subfilter(event:any){
+	// 	console.log(event.filter);
+	// }
+
+	public ngOnInit (): void {
+
+		this.architectureService.getExceptionsCount().subscribe(res => {
+
+			this.severityType = Object.keys(res).filter(obj => obj != Object.keys(res)[1]);
+			this.SeverityCount = Object.values(res).filter(obj => obj != Object.values(res)[1]);
+
+			this.SeverityCount.forEach((element, i) => {
+				this.newarray.push(element + '<br>' + this.severityType[i]);
+			});
+			// console.log(this.newarray);
+			this.buildGraph();
+		});
+
+		this.architectureService.getAssetsExceptionsCount().subscribe(res => {
+			this.AssetsExceptionsCount = res.AssestsExceptionCount;
+			// this.visualLabels[1].count = res.AssestsExceptionCount;
+		});
+	}
 	/**
 	 * Builds our bar graph
 	 */
@@ -130,13 +127,12 @@ export class ArchitectureComponent implements OnInit {
 	 * @param event highcharts click event
 	 */
 	public selectSubfilter (event: any) {
-		 this.severityObj = {severity : event.point.category.split('<br>')[1]};
+		 this.severityObj = { severity : event.point.category.split('<br>')[1] };
 		 console.log(this.severityObj);
-		
+
 		 this.architectureService.setAssetsExceptionCountSubjectObj(this.severityObj);
-		 //event.stopPropagation();
+		 // event.stopPropagation();
 	}
-	
 
 	/**
 	 * OnChanges Functionality

@@ -8,7 +8,6 @@ import { DetailsPanelModule } from '@components';
 import { CbpDetailsModule } from '../cbp-details/cbp-details.module';
 import { CbpDetailsHeaderModule } from '../cbp-details-header/cbp-details-header.module';
 
-
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */

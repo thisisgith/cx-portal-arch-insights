@@ -7,7 +7,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 /** Module representing the CBP Header Component */
 @NgModule({
 	declarations: [CbpHeaderComponent, CbpAweHeaderComponent],
-	exports: [CbpHeaderComponent, CbpAweHeaderComponent],
+	exports: [CbpAweHeaderComponent, CbpHeaderComponent],
 	imports: [
 		CommonModule,
 		I18nPipeModule,

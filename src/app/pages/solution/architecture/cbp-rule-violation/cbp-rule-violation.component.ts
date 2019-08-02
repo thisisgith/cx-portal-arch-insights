@@ -11,59 +11,59 @@ import { ArchitectureService } from '@sdp-api';
 	templateUrl: './cbp-rule-violation.component.html',
 })
 export class CbpRuleViolationComponent implements OnInit {
-	
+
 	constructor (
-		private logger: LogService, private httpClient: HttpClient,private architectureService : ArchitectureService
+		private logger: LogService, private httpClient: HttpClient, private architectureService: ArchitectureService,
 	) {
 		this.logger.debug('CbpRuleViolationComponent Created!');
 	}
 
-	tableOptions: CuiTableOptions;
-	tableLimit = 4;
-	tableOffset = 0;
-	totalItems = 10;
+	public tableOptions: CuiTableOptions;
+	public tableLimit = 4;
+	public tableOffset = 0;
+	public totalItems = 10;
 
 	public fullscreen = false;
 	public cbpRuleExceptions = [];
-	public severityObj : any;
-	public assetsImpacted:any = null;
+	public severityObj: any;
+	public assetsImpacted: any = null;
 
-	AssetsExceptionsCount:any;
+	public AssetsExceptionsCount: any;
 
-	public ModifyCbpRuleExceptions(array:Array<any>){
+	public ModifyCbpRuleExceptions (array: Array<any>) {
 		// if(array.length != 0){
-			array.map(obj => {
+		array.map(obj => {
 				// obj.assetsAffected = obj.deviceIdsWithExceptions.split(';').length;
-				obj.bpRecommendation = obj.bpRecommendation.substr(0,30).concat("...");
-				obj.correctiveAction = obj.correctiveAction.substr(0,25)+"...";
+			obj.bpRecommendation = obj.bpRecommendation.substr(0, 30).concat('...');
+			obj.correctiveAction = obj.correctiveAction.substr(0, 25) + '...';
 				// obj.deviceIdsWithExceptions = obj.deviceIdsWithExceptions.split(';');
-			})
+		});
 		// }
 	}
 
-	ngOnInit () {
+	public ngOnInit () {
 
-		this.architectureService.getAllCBPRulesDetails().subscribe(res =>{
+		this.architectureService.getAllCBPRulesDetails().subscribe(res => {
 			this.cbpRuleExceptions = res.BPRulesDetails;
 			console.log(this.cbpRuleExceptions);
 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 			console.log(this.cbpRuleExceptions);
 		});
 
-		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res =>{
+		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res => {
 			console.log(res);
-			if(res.severityObj){
+			if (res.severityObj) {
 				this.severityObj = res.severityObj.severity;
 			}
-			
-			console.log(this.severityObj);		
-			if(this.severityObj == "MediumRisk"){
+
+			console.log(this.severityObj);
+			if (this.severityObj == 'MediumRisk') {
 				this.architectureService.getMediumSeverityExceptions().subscribe(res => {
 					console.log(res);
 					this.cbpRuleExceptions = res.BPRulesDetails;
 					this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 				});
-			}else{
+			} else {
 				this.architectureService.getHighSeverityExceptions().subscribe(res => {
 					console.log(res);
 					this.cbpRuleExceptions = res.BPRulesDetails;
@@ -72,14 +72,14 @@ export class CbpRuleViolationComponent implements OnInit {
 				});
 			}
 		});
-		
+
 		this.tableOptions = new CuiTableOptions({
 		  bordered: false,
 		  columns: [
 			{
 			  name: 'Risk',
 			  sortable: false,
-			  key : 'bpSeverity'
+			  key : 'bpSeverity',
 			},
 			{
 			  name: 'Technology',
@@ -118,15 +118,15 @@ export class CbpRuleViolationComponent implements OnInit {
 			},
 		  ],
 		  singleSelect : true,
-		});		
-		
-	} 
+		});
+
+	}
 
 	/**
 	 * This Function is used to open and set data to Fly-out View
 	 * @param event Event Contains the row data which need the passed to Fly-Out view
 	 */
-	onTableRowClicked(event:any){		
+	public onTableRowClicked (event: any) {
 		this.assetsImpacted = event;
 	}
 
@@ -136,8 +136,7 @@ export class CbpRuleViolationComponent implements OnInit {
 	 */
 	public onPanelClose () {
 		this.assetsImpacted = null;
-	
+
 	}
 
-	
 }

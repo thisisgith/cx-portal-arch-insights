@@ -77,7 +77,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	}
 
 	/**
-	 * Used to detect the changes in input object and 
+	 * Used to detect the changes in input object and
 	 * call the getdata function for Updating the Table
 	 */
 	public ngOnChanges () {
@@ -86,10 +86,11 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 			this.architectureService.getAllCBPDeviceAffected(deviceIdsWithExceptions)
 				.subscribe((res: any[]) => {
 					this.tempData = res;
-					this.tempData = this.tempData.map((item) => {
+					this.tempData = this.tempData.map(item => {
 						const d: Date = new Date(item.configCollectionDate);
 						const strDate = `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
 						item.configCollectionDate = strDate;
+
 						return item;
 					});
 					this.totalItems = this.tempData.length;
@@ -121,13 +122,11 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	 * @param item - The Item to which Asset 360 needs to shown
 	 */
 	public openAsset360View (item: any) {
-		console.log(item);
 	}
 
 	/**
 	 * Used for exporting the table data
 	 */
 	public export () {
-		console.log('Exported');
 	}
 }

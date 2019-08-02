@@ -11,8 +11,8 @@ import { CbpAweTabComponent } from './cbp-tabs/cbp-awe-tab/cbp-awe-tab.component
 import { CbpDeviceAffectedModule } from './cbp-device-affected/cbp-device-affected.module';
 
 /** Module representing the CBP Tabs,summary ,CBP-TDB table
- *  and CBP-Device-affected table for  Components 
- * */
+ * and CBP-Device-affected table for  Components
+ */
 @NgModule({
 	declarations: [CbpTabComponent, CbpAweTabComponent],
 	imports: [
