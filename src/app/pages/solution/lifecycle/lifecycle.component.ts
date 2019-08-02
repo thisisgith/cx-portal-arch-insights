@@ -74,7 +74,7 @@ interface ComponentData {
 	cgt?: {
 		trainingsAvailable: number;
 		sessions: string[];
-		dateAvailableThrough: Date;
+		dateAvailableThrough: string;
 	};
 }
 
@@ -138,10 +138,10 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedACC: ACC[];
 	public view: 'list' | 'grid' = 'grid';
 	public productGuidesTable: CuiTableOptions;
-	public completedTrainingsList: Array<UserTraining>;
+	public completedTrainingsList: UserTraining[] | { };
 	public successBytesTable: CuiTableOptions;
 	public cgtAvailable: number;
-	public trainingAvailableThrough: Date;
+	public trainingAvailableThrough: string;
 
 	public statusOptions = [
 		{
@@ -178,10 +178,10 @@ export class LifecycleComponent implements OnDestroy {
 		loading: {
 			acc: false,
 			atx: false,
+			cgt: false,
 			elearning: false,
 			racetrack: false,
 			success: false,
-			cgt: false,
 		},
 	};
 
@@ -347,9 +347,12 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Select/deselect the CGTRequestForm component
 	 * @param selected whether the component is visible or not
+	 * @param totalTrainingsAvailable number of trainings available for the user
+	 * @param trainingAvailableThrough end date to complete trainings
 	 */
-	public selectCgtRequestForm (selected: boolean, totalTrainingsAvailable: number, trainingAvailableThrough: Date) {
-		if( selected) {
+	public selectCgtRequestForm (selected: boolean,
+		totalTrainingsAvailable: number, trainingAvailableThrough: string) {
+		if (selected) {
 			this.cgtAvailable = totalTrainingsAvailable;
 			this.trainingAvailableThrough = trainingAvailableThrough;
 		}
@@ -367,15 +370,6 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadCGT()
 				.subscribe();
 		}
-	}
-
-	/**
-	 * Get button class for CGT request training
-	 */
-	public getCgtButtonClass () {
-		let buttonClass = 'btn btn--small btn--secondary text-uppercase';
-		buttonClass = this.cgtRequestTrainingClicked ? 'btn btn--small btn--gray-ghost disabled text-uppercase' : 'btn btn--small btn--secondary text-uppercase';
-		return buttonClass;
 	}
 
 	/**
@@ -860,7 +854,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Loads the CGT for the given params
 	 * @returns the UserQuota
 	 */
-	private loadCGT (): Observable<Array<UserQuota>> {
+	private loadCGT (): Observable<UserQuota[]> | Observable<void | { }> {
 		this.status.loading.cgt = true;
 		let startDate;
 		let endDate;
@@ -870,12 +864,12 @@ export class LifecycleComponent implements OnDestroy {
 		let dateAvailable;
 		let completedTrainingData = [];
 
-		const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "June",
-			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
+			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 		return this.contentService.getTrainingQuotas()
 		.pipe(
-			map((result: UserQuota) => {
+			map((result: UserQuota[]) => {
 				this.status.loading.cgt = false;
 				dateAvailable = _.get(_.head(result), 'end_date');
 				_.each(result, training => {
@@ -884,23 +878,54 @@ export class LifecycleComponent implements OnDestroy {
 						dateAvailable = _.get(training, 'end_date');
 					}
 				});
-				// this.loadCGTCompletedTrainings().subscribe();
 				this.contentService.getCompletedTrainings()
 					.pipe(
 						catchError(err => {
+							this.logger.error(`lifecycle.component : loadCGT() :
+							 getCompletedTrainings() :: Error : (${err.status}) ${err.message}`);
+
 							return of({ });
 						}),
 					)
 					.subscribe(response => {
 						this.completedTrainingsList = response;
 						_.each(this.completedTrainingsList, completedTraining => {
-							startDate = `${monthNames[new Date(_.get(completedTraining, 'start_date')).getMonth()]} ${new Date(_.get(completedTraining, 'start_date')).getUTCDate()}`;
-							startDate+= _.isEqual(new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(), new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ? '' : ` ${new Date(_.get(completedTraining, 'start_date')).getUTCFullYear()}`;
-							endDate = _.isEqual(monthNames[new Date(_.get(completedTraining, 'start_date')).getMonth()], monthNames[new Date(_.get(completedTraining, 'end_date')).getMonth()]) ? '' : `${monthNames[new Date(_.get(completedTraining, 'end_date')).getMonth()]} `;
-							endDate+= new Date(_.get(completedTraining, 'end_date')).getUTCDate();
-							endDate+= _.isEqual(new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(), new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ? `, ${new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()}` : ` ${new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()}`;
+							startDate = `${
+								monthNames[new Date(_.get(completedTraining, 'start_date'))
+								.getMonth()]
+							} ${new Date(_.get(completedTraining, 'start_date')).getUTCDate()}`;
+							startDate += _.isEqual(
+								new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(),
+								new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ?
+								'' : ` ${
+									new Date(_.get(completedTraining, 'start_date'))
+									.getUTCFullYear()
+								}`;
+							endDate = _.isEqual(
+								monthNames[new Date(_.get(completedTraining, 'start_date'))
+								.getMonth()],
+								monthNames[new Date(_.get(completedTraining, 'end_date'))
+								.getMonth()]) ? '' : `${
+									monthNames[new Date(_.get(completedTraining, 'end_date'))
+									.getMonth()]
+								} `;
+							endDate += new Date(_.get(completedTraining, 'end_date')).getUTCDate();
+							endDate += _.isEqual(
+								new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(),
+								new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ?
+								`, ${
+									new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()
+								}` : ` ${
+									new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()
+								}`;
 							trainingDuration = `${startDate}-${endDate}`;
-							trainingLocation = `with ${_.get(completedTraining, 'instructors')}, ${_.get(completedTraining, 'city')}, ${_.get(completedTraining, 'country')}`;
+							trainingLocation = `with ${
+								_.get(completedTraining, 'instructors')
+							}, ${
+								_.get(completedTraining, 'city')
+							}, ${
+								_.get(completedTraining, 'country')
+							}`;
 							trainingData = {
 								trainingDuration,
 								trainingLocation,
@@ -908,10 +933,12 @@ export class LifecycleComponent implements OnDestroy {
 							completedTrainingData = _.union(completedTrainingData, [trainingData]);
 						});
 						this.componentData.cgt = {
-							trainingsAvailable: this.groupTrainingsAvailable,
+							dateAvailableThrough: moment(dateAvailable)
+								.format('MMM DD, YYYY'),
 							sessions: completedTrainingData,
-							dateAvailableThrough: moment(dateAvailable).format('MMM DD, YYYY'),
+							trainingsAvailable: this.groupTrainingsAvailable,
 						};
+
 						return result;
 					});
 			}),
@@ -919,6 +946,7 @@ export class LifecycleComponent implements OnDestroy {
 				this.status.loading.cgt = false;
 				this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
 					err.status}) ${err.message}`);
+
 				return of({ });
 			}),
 		);

@@ -26,10 +26,10 @@ function MockActionUpdate (
 	return {
 		isAccChanged,
 		isAtxChanged,
+		isCgtChanged,
 		isCommunitiesChanged,
 		isElearningChanged,
 		isSuccessPathChanged,
-		isCgtChanged
 	};
 }
 

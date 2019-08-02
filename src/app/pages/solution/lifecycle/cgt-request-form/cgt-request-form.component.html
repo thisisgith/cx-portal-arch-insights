@@ -1,144 +1,189 @@
 <div class="modal-container">
-        <div class="modal-backdrop force-left"></div>
-        <div class="modal modal--large">
-            <div class="modal__dialog">
-                    <ng-container *ngTemplateOutlet="cgtRequestModal"></ng-container>
-            </div>
-        </div>
-    </div>
-    
-    <ng-template #cgtRequestModal>
-        <div id="cgtRequestModal" class="modal__content no-padding">
-            <div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
-                <div class="row half-padding-top dbl-padding-left">
-                    <div class="col-md-11 half-margin-top">
-                        <div class="text-xlarge text-left" [innerText]="'_CustomizedGroupTraining_' | i18n"></div>
-                        <ng-container *ngIf="loading">
-                            <div class="row half-padding-left base-padding-top">
-                                <div class="alert dbl-padding-left">
-                                    <div class="alert__icon icon-info-outline"></div>
-                                    <div class="alert__message text-info" [innerText]="'_LoadingCustomerInfo_' | i18n"></div>
-                                </div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="formSubmissionSucceeded">
-                            <div class="row half-padding-left base-padding-top">
-                                <div class="alert alert--success dbl-padding-left">
-                                    <div class="alert__icon icon-check-outline"></div>
-                                    <div class="alert__message text-left" [innerText]="'_TrainingRequestSuccessfullySubmitted_' | i18n"></div>
-                                </div>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngIf="formSubmissionFailed">
-                            <div class="row half-padding-left base-padding-top">
-                                <div class="alert alert--danger dbl-padding-left">
-                                    <div class="alert__icon icon-error-outline"></div>
-                                    <div class="alert__message text-left" [innerText]="'_TrainignRequestFailed_' | i18n"></div>
-                                    <span (click)="closeRequestForm()" class="alert__close icon-close"></span>
-                                </div>
-                            </div>
-                        </ng-container>
-                    </div>
-                    <div class="col-md-1 half-margin-top">
-                        <span (click)="closeRequestForm()"
-                            class="icon-close icon-medium text-right toggle"></span>
-                    </div>
-                </div>
-                <div class="dbl-padding-left">
-                    <div class="divider"></div>
-                </div>
-                <div class="row dbl-padding-left base-padding-top full-width">
-                    <div class="col-md-4 text-left">
-                        <div class="text-uppercase text-small text-muted" [innerText]="'_CompanyName_' | i18n"></div>
-                        <div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.companyName"></div>
-                        <div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CustomerUserName_' | i18n"></div>
-                        <div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ccoId"></div>
-                        <div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_JobTitle_' | i18n"></div>
-                        <div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.jobTitle"></div>
-                        <div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Email_' | i18n"></div>
-                        <div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userEmail"></div>
-                        <div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Phone_' | i18n"></div>
-                        <div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userPhoneNumber"></div>
-                        <div class="text-uppercase text-small text-muted dbl-padding-top"  [innerText]="'_CiscoContact_' | i18n"></div>
-                        <div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ciscoContact"></div>
-                        <div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CCOID_' | i18n"></div>
-                        <div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ccoId"></div>
-                        <div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Country_' | i18n"></div>
-                        <div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.country"></div>
-                    </div>
-                    <div class="col-md-8">
-                        <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
-                            <div class="form-group dbl-padding-left dbl-margin-right">
-                                <div class="form-group__text select">
-                                    <select id="contract-select" formControlName="contract">
-                                        <option *ngFor="let option of contractOptions" [value]="option.value" [innerText]="option.key"></option>
-                                    </select>
-                                    <label class="text-uppercase text-small" for="contract-select" [innerText]="'_ApplicableContract_' | i18n"></label>
-                                </div>
-                            </div>
-                            <div class="form-group dbl-padding-left dbl-margin-right">
-                                <div class="form-group__text">
-                                    <input id="sessions-available-readonly" type="text" readonly [value]="trainingAvailableThrough">
-                                    <label class="text-uppercase text-small" for="sessions-available-readonly" [innerText]="'_XSessionsAvailableThrough' | i18n:totalTrainingsAvailable"></label>
-                                </div>
-                            </div>
-                            <div class="form-group dbl-padding-left dbl-margin-right">
-                                <div class="form-group__text select">
-                                    <select id="technology-select" formControlName="technologyArea">
-                                        <option *ngFor="let option of technologyOptions" [value]="option.value" [innerText]="option.key"></option>
-                                    </select>
-                                    <label class="text-uppercase text-small" for="trchnology-select" [innerText]="'_TechnologyArea_' | i18n"></label>
-                                </div>
-                            </div>
-                            <div class="form-group dbl-padding-left dbl-margin-right no-margin-top half-padding-top">
-                                <div class="form-group__text select">
-                                    <select id="time-zone-select" formControlName="timeZone">
-                                        <option *ngFor="let option of timeZoneOptions" [value]="option.value" [innerText]="option.key"></option>
-                                    </select>
-                                    <label class="text-uppercase text-small" for="time-zone-select" [innerText]="'_TimeZone_' | i18n"></label>
-                                </div>
-                            </div>
-                            <div class="text-left dbl-padding-left half-padding-top half-padding-bottom">
-                                <div class="text-uppercase text-small qtr-padding-bottom" [innerText]="'_PreferredTimeMeeting_' | i18n"></div>
-                                <div class="form-group form-group--inline">
-                                    <label class="radio">
-                                        <input type="radio" formControlName="meetingTime" [value]="'_Morning_' | i18n" required>
-                                        <span class="radio__input"></span>
-                                        <span class="radio__label hidden-xs" [innerText]="'_Morning_' | i18n"></span>
-                                    </label>
-                                </div>
-                                <div class="form-group form-group--inline dbl-padding-left">
-                                    <label class="radio">
-                                        <input type="radio" formControlName="meetingTime" [value]="'_Afternoon_' | i18n" required>
-                                        <span class="radio__input"></span>
-                                        <span class="radio__label hidden-xs" [innerText]="'_Afternoon_' | i18n"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group dbl-padding-left dbl-margin-right">
-                                <div class="form-group__text select">
-                                    <select id="language-select" formControlName="language">
-                                        <option *ngFor="let option of languageOptions" [value]="option.value" [innerText]="option.key"></option>
-                                    </select>
-                                    <label class="text-uppercase text-small" for="language-select" [innerText]="'_LanguagePreference_' | i18n"></label>
-                                </div>
-                            </div>
-                            <div class="form-group dbl-padding-left dbl-margin-right">
-                                <div class="form-group__text">
-                                    <textarea id="input-textarea-outcome" formControlName="trainingGoal" class="textarea" rows="5"></textarea>
-                                    <label class="text-uppercase text-small" for="input-textarea-outcome" [innerText]="'_WhatIsYourGoalForThisTraining_' | i18n"></label>
-                                </div>
-                                <div class="help-block text-muted" role="alert">
-                                    <span>{{requestForm.get('trainingGoal').value.length}}/{{maxLength}} {{'_Characters_' | i18n}}</span>
-                                </div>
-                            </div>
-                            <div class="half-padding-top dbl-padding-left text-left">
-                                <button type="submit" [disabled]="!requestForm.valid" class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n"></button>
-                                <button type="button"class="btn btn--small -wide btn--secondary text-uppercase text-small" (click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </ng-template>
+	<div class="modal-backdrop force-left"></div>
+	<div class="modal modal--large">
+		<div class="modal__dialog">
+			<ng-container *ngTemplateOutlet="cgtRequestModal"></ng-container>
+		</div>
+	</div>
+</div>
+
+<ng-template #cgtRequestModal>
+	<div id="cgtRequestModal" class="modal__content no-padding">
+		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
+			<div class="row half-padding-top dbl-padding-left">
+				<div class="col-md-11 half-margin-top">
+					<div class="text-xlarge text-left" [innerText]="'_CustomizedGroupTraining_' | i18n"></div>
+					<ng-container *ngIf="loading">
+						<div class="row half-padding-left base-padding-top">
+							<div class="alert dbl-padding-left">
+								<div class="alert__icon icon-info-outline"></div>
+								<div class="alert__message text-info" [innerText]="'_LoadingCustomerInfo_' | i18n">
+								</div>
+							</div>
+						</div>
+					</ng-container>
+					<ng-container *ngIf="formSubmissionSucceeded">
+						<div class="row half-padding-left base-padding-top">
+							<div class="alert alert--success dbl-padding-left">
+								<div class="alert__icon icon-check-outline"></div>
+								<div class="alert__message text-bold" [innerText]="'_RequestSuccess_' | i18n"></div>
+							</div>
+						</div>
+					</ng-container>
+					<ng-container *ngIf="formSubmissionFailed">
+						<div class="row half-padding-left base-padding-top">
+							<div class="alert alert--danger dbl-padding-left">
+								<div class="alert__icon icon-error-outline"></div>
+								<div class="alert__message text-left" [innerText]="'_RequestError_' | i18n"></div>
+							</div>
+						</div>
+					</ng-container>
+					<ng-container *ngIf="getUserInfoFailed">
+						<div class="row half-padding-left base-padding-top">
+							<div class="alert alert--danger dbl-padding-left">
+								<div class="alert__icon icon-error-outline"></div>
+								<div class="alert__message text-left" [innerText]="'_ErrorCustomerInfo_' | i18n"></div>
+							</div>
+						</div>
+					</ng-container>
+					<ng-container *ngIf="getContractsFailed">
+						<div class="row half-padding-left base-padding-top">
+							<div class="alert alert--danger dbl-padding-left">
+								<div class="alert__icon icon-error-outline"></div>
+								<div class="alert__message text-left" [innerText]="'_ErrorGettingContracts_' | i18n">
+								</div>
+							</div>
+						</div>
+					</ng-container>
+				</div>
+				<div class="col-md-1 half-margin-top">
+					<span (click)="closeRequestForm()"
+						class="icon-close icon-medium text-right toggle"
+						attr.data-auto-id="Close-CgtForm"></span>
+				</div>
+			</div>
+			<div class="dbl-padding-left">
+				<div class="divider"></div>
+			</div>
+			<div class="row dbl-padding-left base-padding-top full-width">
+				<div class="col-md-4 text-left">
+					<div class="text-uppercase text-small text-muted" [innerText]="'_CompanyName_' | i18n"></div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.companyName"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top"
+						[innerText]="'_CustomerUserName_' | i18n"></div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ccoId"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_JobTitle_' | i18n">
+					</div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.jobTitle"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Email_' | i18n">
+					</div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userEmail"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Phone_' | i18n">
+					</div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userPhoneNumber"></div>
+					<div class="text-uppercase text-small text-muted dbl-padding-top"
+						[innerText]="'_CiscoContact_' | i18n"></div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ciscoContact"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CCOID_' | i18n">
+					</div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ccoId"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Country_' | i18n">
+					</div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.country"></div>
+				</div>
+				<div class="col-md-8">
+					<form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text select">
+								<select id="contract-select" formControlName="contract">
+									<option *ngFor="let option of contractOptions" [value]="option.value"
+										[innerText]="option.key"></option>
+								</select>
+								<label class="text-uppercase text-small" for="contract-select"
+									[innerText]="'_ApplicableContract_' | i18n"></label>
+							</div>
+						</div>
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text">
+								<input id="sessions-available-readonly" type="text" readonly
+									[value]="trainingAvailableThrough">
+								<label class="text-uppercase text-small" for="sessions-available-readonly"
+									[innerText]="'_XSessionsAvailableThrough' | i18n:totalTrainingsAvailable"></label>
+							</div>
+						</div>
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text select">
+								<select id="technology-select" formControlName="technologyArea">
+									<option *ngFor="let option of technologyOptions" [value]="option.value"
+										[innerText]="option.key"></option>
+								</select>
+								<label class="text-uppercase text-small" for="trchnology-select"
+									[innerText]="'_TechnologyArea_' | i18n"></label>
+							</div>
+						</div>
+						<div class="form-group dbl-padding-left dbl-margin-right no-margin-top half-padding-top">
+							<div class="form-group__text select">
+								<select id="time-zone-select" formControlName="timeZone">
+									<option *ngFor="let option of timeZoneOptions" [value]="option.value"
+										[innerText]="option.key"></option>
+								</select>
+								<label class="text-uppercase text-small" for="time-zone-select"
+									[innerText]="'_TimeZone_' | i18n"></label>
+							</div>
+						</div>
+						<div class="text-left dbl-padding-left half-padding-top half-padding-bottom">
+							<div class="text-uppercase text-small qtr-padding-bottom"
+								[innerText]="'_PreferredTimeMeeting_' | i18n"></div>
+							<div class="form-group form-group--inline">
+								<label class="radio">
+									<input type="radio" formControlName="meetingTime" [value]="'_Morning_' | i18n"
+										required>
+									<span class="radio__input"></span>
+									<span class="radio__label hidden-xs" [innerText]="'_Morning_' | i18n"></span>
+								</label>
+							</div>
+							<div class="form-group form-group--inline dbl-padding-left">
+								<label class="radio">
+									<input type="radio" formControlName="meetingTime" [value]="'_Afternoon_' | i18n"
+										required>
+									<span class="radio__input"></span>
+									<span class="radio__label hidden-xs" [innerText]="'_Afternoon_' | i18n"></span>
+								</label>
+							</div>
+						</div>
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text select">
+								<select id="language-select" formControlName="language">
+									<option *ngFor="let option of languageOptions" [value]="option.value"
+										[innerText]="option.key"></option>
+								</select>
+								<label class="text-uppercase text-small" for="language-select"
+									[innerText]="'_LanguagePreference_' | i18n"></label>
+							</div>
+						</div>
+						<div class="form-group dbl-padding-left dbl-margin-right">
+							<div class="form-group__text">
+								<textarea [maxlength]="maxLength" id="input-textarea-outcome"
+									formControlName="trainingGoal" class="textarea" rows="5"></textarea>
+								<label class="text-uppercase text-small" for="input-textarea-outcome"
+									[innerText]="'_WhatIsYourGoalForThisTraining_' | i18n"></label>
+							</div>
+							<div class="help-block text-muted" role="alert">
+								<span>{{requestForm.get('trainingGoal').value.length}}/{{maxLength}}
+									{{'_Characters_' | i18n}}</span>
+							</div>
+						</div>
+						<div class="half-padding-top dbl-padding-left text-left">
+							<button type="submit"
+								[disabled]="!requestForm.valid || getUserInfoFailed || getContractsFailed"
+								class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n"></button>
+							<button type="button" class="btn btn--small -wide btn--secondary text-uppercase text-small"
+								(click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"
+								attr.data-auto-id="Submit-CgtForm"></button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>

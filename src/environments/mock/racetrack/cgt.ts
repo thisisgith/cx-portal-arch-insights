@@ -1,20 +1,20 @@
-import { GroupTrainingEntitySchema } from '@sdp-api';
-import { UserQuota } from '@sdp-api';
-import { UserTraining } from '@sdp-api';
+import { GroupTrainingEntitySchema, UserQuota, UserTraining } from '@sdp-api';
 
 /**
  * Base of URL for SDP API
  */
 const api = '/api/customerportal/racetrack/v1/grouptraining';
 
-/** Default contractNumbers */
+/** Default contract ID */
 const contract1 = '111111';
+/** Default contract ID */
 const contract2 = '222222';
+/** Default contract ID */
 const contract3 = '333333';
 
 /**
- * Mock
- * @returns mock response for cgtRequest
+ * Mock response for groupTraining POST
+ * @returns response
  */
 function MockCGTRequestResponse (): GroupTrainingEntitySchema {
 	return {
@@ -37,87 +37,82 @@ function MockCGTRequestResponse (): GroupTrainingEntitySchema {
 }
 
 /**
- * Mock
- * @returns mock response for user-quota
+ * Mock response for getUserQuotas
+ * @returns response
  */
-//  function MockUserQuotaResponse (): UserQuota {
-// 	return {
-// 		closed_ilt_courses_available: 0,
-// 		closed_ilt_courses_entitled: 0,
-// 		closed_ilt_courses_used: 0,
-// 		contract_number: `${contract1}`,
-// 		end_date: '2020-01-29',
-// 		start_date: '2019-01-29',
-// 	};
-// }
-
-/** Mock Data for contract counts */
-const MockUserQuotaResponse: Array<UserQuota> = [
-	{
-		closed_ilt_courses_available: 0,
-		closed_ilt_courses_entitled: 0,
-		closed_ilt_courses_used: 0,
-		contract_number: `${contract1}`,
-		end_date: '2020-01-29',
-		start_date: '2019-01-29',
-	},
-	{
-		closed_ilt_courses_available: 0,
-		closed_ilt_courses_entitled: 0,
-		closed_ilt_courses_used: 0,
-		contract_number: `${contract2}`,
-		end_date: '2020-02-28',
-		start_date: '2019-02-28',
-	},
-	{
-		closed_ilt_courses_available: 0,
-		closed_ilt_courses_entitled: 0,
-		closed_ilt_courses_used: 0,
-		contract_number: `${contract3}`,
-		end_date: '2020-03-29',
-		start_date: '2019-03-29',
-	},
-];
-
-/** Mock Data for contract counts */
-const MockCOmpletedTrainingsResponse: Array<UserTraining> = [
-	{
-		city: 'London',
-		country: 'UK',
-		customer: '0',
-		duration: 0,
-		end_date: '2019-02-02',
-		instructors: 'John Doe',
-		start_date: '2019-01-29',
-		title: '',
-		training_type: '',
-	},
-	{
-		city: 'London',
-		country: 'UK',
-		customer: '0',
-		duration: 0,
-		end_date: '2019-01-02',
-		instructors: 'John Doe',
-		start_date: '2018-12-29',
-		title: '',
-		training_type: '',
-	},
-	{
-		city: 'RTP',
-		country: 'USA',
-		customer: '0',
-		duration: 0,
-		end_date: '2019-01-28',
-		instructors: 'JohnDoe',
-		start_date: '2019-01-24',
-		title: '',
-		training_type: '',
-	},
-];
+function MockUserQuotaResponse (): UserQuota[] {
+	return [
+		{
+			closed_ilt_courses_available: 1,
+			closed_ilt_courses_entitled: 0,
+			closed_ilt_courses_used: 0,
+			contract_number: `${contract1}`,
+			end_date: '2020-01-29',
+			start_date: '2019-01-29',
+		},
+		{
+			closed_ilt_courses_available: 0,
+			closed_ilt_courses_entitled: 0,
+			closed_ilt_courses_used: 0,
+			contract_number: `${contract2}`,
+			end_date: '2020-02-28',
+			start_date: '2019-02-28',
+		},
+		{
+			closed_ilt_courses_available: 0,
+			closed_ilt_courses_entitled: 0,
+			closed_ilt_courses_used: 0,
+			contract_number: `${contract3}`,
+			end_date: '2020-03-29',
+			start_date: '2019-03-29',
+		},
+	];
+}
 
 /**
- * CGT scenarios
+ * Mock response for getCompletedTrainings
+ * @returns response
+ */
+function MockCompletedTrainingsResponse (): UserTraining[] {
+	return [
+		{
+			city: 'London',
+			country: 'UK',
+			customer: '0',
+			duration: 0,
+			end_date: '2019-02-02',
+			instructors: 'John Doe',
+			start_date: '2019-01-29',
+			title: '',
+			training_type: '',
+		},
+		{
+			city: 'London',
+			country: 'UK',
+			customer: '0',
+			duration: 0,
+			end_date: '2019-01-02',
+			instructors: 'John Doe',
+			start_date: '2018-12-29',
+			title: '',
+			training_type: '',
+		},
+		{
+			city: 'RTP',
+			country: 'USA',
+			customer: '0',
+			duration: 0,
+			end_date: '2019-01-28',
+			instructors: 'JohnDoe',
+			start_date: '2019-01-24',
+			title: '',
+			training_type: '',
+		},
+	];
+}
+
+/**
+ * ACC User info scenarios
  */
 export const CGTScenarios = [
 	{
@@ -125,7 +120,7 @@ export const CGTScenarios = [
 			POST: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(CGT) CGT-RequestGroupTraining',
+					description: '(CGT) CGT-Request Training',
 					response: {
 						body: MockCGTRequestResponse(),
 						status: 200,
@@ -142,9 +137,9 @@ export const CGTScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(CGT) GetUserQuota',
+					description: '(CGT) CGT-GetUserQuota',
 					response: {
-						body: MockUserQuotaResponse,
+						body: MockUserQuotaResponse(),
 						status: 200,
 					},
 					selected: true,
@@ -159,9 +154,9 @@ export const CGTScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(CGT) GetCompletedTrainingsUserQuota',
+					description: '(CGT) CGT-GetCompletedTrainings',
 					response: {
-						body: MockCOmpletedTrainingsResponse,
+						body: MockCompletedTrainingsResponse(),
 						status: 200,
 					},
 					selected: true,

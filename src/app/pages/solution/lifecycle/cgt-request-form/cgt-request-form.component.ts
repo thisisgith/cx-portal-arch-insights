@@ -22,7 +22,7 @@ import {
 	DeviceContractResponse,
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
-import { empty, Subject, of } from 'rxjs';
+import { empty, Subject } from 'rxjs';
 
 /**
  * interface representing the key/value of a select input option
@@ -58,16 +58,18 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 	public contractOptions: SelectOption[];
 	public maxLength = 512;
 	public loading = false;
+	public getUserInfoFailed = false;
+	public getContractsFailed = false;
 	public formSubmissionSucceeded = false;
 	public formSubmissionFailed = false;
 
 	public requestForm: FormGroup = this.fb.group({
 		contract: ['', Validators.required],
-		technologyArea: ['', Validators.required],
-		trainingGoal: ['', [Validators.required, Validators.maxLength(this.maxLength)]],
 		language: ['', Validators.required],
 		meetingTime: ['', Validators.required],
+		technologyArea: ['', Validators.required],
 		timeZone: ['', Validators.required],
+		trainingGoal: ['', [Validators.required, Validators.maxLength(this.maxLength)]],
 	});
 
 	public timeZoneOptions: SelectOption[] = [
@@ -89,9 +91,12 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 		{ key: I18n.get('_OpticalNetworking_'), value: I18n.get('_OpticalNetworking_') },
 		{ key: I18n.get('_RoutingAndSwitching_'), value: I18n.get('_RoutingAndSwitching_') },
 		{ key: I18n.get('_Security_'), value: I18n.get('_Security_') },
-		{ key: I18n.get('_ServiceProviderMobility_'), value: I18n.get('_ServiceProviderMobility_') },
-		{ key: I18n.get('_ServiceProviderVideo_'), value: I18n.get('_ServiceProviderVideo_') },
-		{ key: I18n.get('_SoftwareDefinedNetworking_'), value: I18n.get('_SoftwareDefinedNetworking_') },
+		{ key: I18n.get('_ServiceProviderMobility_'),
+			value: I18n.get('_ServiceProviderMobility_') },
+		{ key: I18n.get('_ServiceProviderVideo_'),
+			value: I18n.get('_ServiceProviderVideo_') },
+		{ key: I18n.get('_SoftwareDefinedNetworking_'),
+			value: I18n.get('_SoftwareDefinedNetworking_') },
 		{ key: I18n.get('_Other_'), value: I18n.get('_Other_') },
 	];
 
@@ -125,25 +130,38 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 		this.loading = true;
 		this.contentService.getACCUserInfo()
 			.pipe(
-				catchError(() => empty()),
+				catchError(err => {
+					this.getUserInfoFailed = true;
+					this.logger.error('cgt-request-from.component : getACCUserInfo() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return empty();
+				}),
 				finalize(() => this.loading = false),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(response => {
 				this.custData = response;
 			});
-			console.log(`************** trainingAvailableThrough = ${this.trainingAvailableThrough}`);
 		this.contractsService
 		.getContractDetails({ customerId: this.customerId })
 			.pipe(
-				catchError(() => empty()),
+				catchError(err => {
+					this.getContractsFailed = true;
+					this.logger.error('cgt-request-from.component : getContractDetails() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return empty();
+				}),
 				finalize(() => this.loading = false),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(response => {
 				this.contractDetails = response;
 				_.each(_.get(this.contractDetails, 'data'), contract => {
-					this.contracts = _.union(this.contracts, [{ key: _.get(contract, 'contractNumber'), value: _.get(contract, 'contractNumber') }]);
+					this.contracts = _.union(this.contracts,
+						[{ key: _.get(contract, 'contractNumber'),
+							value: _.get(contract, 'contractNumber') }]);
 				});
 				this.contractOptions = this.contracts;
 			});
@@ -155,13 +173,13 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 	public onSubmit () {
 		const groupTrainingRequestParams: GroupTrainingRequestSchema = {
 			contract: this.requestForm.get('contract').value,
+			pitstop: this.pitstop,
+			preferredLanguage: this.requestForm.get('language').value,
+			preferredSlot: this.requestForm.get('meetingTime').value,
+			solution: this.solution,
 			technologyArea: this.requestForm.get('technologyArea').value,
 			timezone: this.requestForm.get('timeZone').value,
-			preferredSlot: this.requestForm.get('meetingTime').value,
-			preferredLanguage: this.requestForm.get('language').value,
 			trainingSessionGoal: this.requestForm.get('trainingGoal').value,
-			pitstop: this.pitstop,
-			solution: this.solution,
 			usecase: this.technology,
 		};
 		this.contentService
@@ -169,15 +187,17 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 			.pipe(
 				catchError(err => {
 					this.formSubmissionFailed = true;
-	
-					return of({ });
+					this.logger.error('cgt-request-from.component : requestGroupTraining() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return empty();
 				}),
 				takeUntil(this.destroyed$),
 			)
-			.subscribe(response => {
+			.subscribe(() => {
 				this.formSubmissionSucceeded = true;
 				this.logger.debug('Submitted CGT response form');
-				setTimeout(()=>{
+				setTimeout(() => {
 					this.formSubmissionSucceeded = false;
 					this.submitted.emit(true);
 				}, 5000);
