@@ -242,6 +242,10 @@ export class AssetsComponent implements OnInit, OnChanges {
 		} else {
 			sortColumn.sortDirection = 'asc';	
 		}
+		this.assetsTable.columns.forEach(column =>{
+			column.sorting = false;
+		});
+		sortColumn.sorting = true;
 		this.assetsParams.sortOrder = sortColumn.sortDirection;
 		this.assetsParams.sort = sortColumn.key;
 		this.loadData();
