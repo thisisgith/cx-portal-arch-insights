@@ -49,7 +49,7 @@ export class AssetTimelineChartComponent implements OnInit {
 	/**
 	 * Builds our bubble graph
 	 */
-	private buildGraph () {
+	public buildGraph () {
 		const datePipe = new DatePipe('en-US');
 		const seriesData = _.compact(
 			_.map(this.data, (value: AssetRecommendations) => {
@@ -199,8 +199,7 @@ export class AssetTimelineChartComponent implements OnInit {
 	 * @param event highcharts click event
 	 */
 	public selectSubfilter (event: any) {
-		event.stopPropagation();
-		this.logger.debug(event.point.name);
+		event.stopPropagation();		
 		event.point.selected = true;
 		this.selectedPoint.emit(event.point);
 	}

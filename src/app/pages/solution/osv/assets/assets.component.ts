@@ -105,7 +105,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 		const assetType = _.get(currentFilter, 'assetType', []);
 		let filter = '';
 		if (deploymentStatus.length > 0) {
-			filter += `deployment:${deploymentStatus.toString()}`
+			filter += `deployment:"${deploymentStatus.toString()}"`
 		}
 		if (assetType.length == 1) {
 			filter += filter.length > 0 ? ';' : '';

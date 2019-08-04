@@ -188,6 +188,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			.subscribe((response: OSVAsset) => {
 				this.setAcceptedVersion(this.assetDetails, response);
 				this.assetDetails = _.cloneDeep(this.assetDetails);
+				console.log(this.assetDetails);
 				this.selectedRecommendation = { name: 'None' };
 				this.selectedAssetChange.emit(response);
 				this.status.isLoading = false;

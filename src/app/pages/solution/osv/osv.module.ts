@@ -14,7 +14,7 @@ import {
 	AssetTimelineChartModule,
 } from './asset-timeline-chart/asset-timeline-chart.module';
 import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
-import { DetailsPanelModule } from '@components';
+import { DetailsPanelModule, PieChartModule } from '@components';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -50,6 +50,7 @@ const childRoutes: Routes = [
 		SoftwareVersionsModule,
 		OSVModule.forRoot({ rootUrl }),
 		AssetTimelineChartModule,
+		PieChartModule,
 	],
 })
 export class OptimalSoftwareVersionModule { }

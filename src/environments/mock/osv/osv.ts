@@ -17,8 +17,7 @@ const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
 
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
-	{
-		accepted: true,
+	{		
 		error: null,
 		name: 'suggested',
 		postDate: '2019-03-21T18:30:00.000+0000',
@@ -174,7 +173,7 @@ const mockAssets: AssetsResponse = {
 			hostName: 'AP4800.8DEC',
 			id: '231215372_NA,FCW2238N7LG,AIR-AP4800-B-K9,NA_AIR-AP4800-B-K9_FCW2238N7LG',
 			ipAddress: '10.13.5.117',
-			optimalVersion: null,
+			optimalVersion: '16.11.1c',
 			productFamily: 'Cisco Aironet 4800 Series',
 			recommAcceptedDate: null,
 			recommendations: null,
