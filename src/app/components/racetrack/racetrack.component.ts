@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	Input,
+	SimpleChanges,
+	Output,
+	EventEmitter,
+} from '@angular/core';
 
 import * as d3 from 'd3-selection';
 import { d3Transition } from 'd3-transition';
@@ -60,6 +67,8 @@ export class RacetrackComponent implements OnInit {
 	public current: string;
 
 	@Input('stage') public stage: string;
+	@Input('currentStage') public currentStage: string;
+	@Output() public onStageChange = new EventEmitter<string>();
 
 	/**
 	 * Initializes racetrack variables and begins first animation
@@ -134,20 +143,22 @@ export class RacetrackComponent implements OnInit {
 				this.stageMap[key] *= (points.length / 100);
 			});
 
+		// commented out pitstops are disabled at this time.
+		// may be re-enabled in the future
 		this.stages = [
-			'need',
-			'evaluate',
-			'select',
-			'purchase',
+			// 'need',
+			// 'evaluate',
+			// 'select',
+			// 'purchase',
 			'onboard',
 			'implement',
 			'use',
 			'engage',
 			'adopt',
 			'optimize',
-			'renew',
-			'recommend',
-			'advocate',
+			// 'renew',
+			// 'recommend',
+			// 'advocate',
 		];
 
 		this.current = 'purchase';
@@ -175,7 +186,10 @@ export class RacetrackComponent implements OnInit {
 					this.track.attr('transform'))
 				.attr('data-auto-id', name => `Racetrack-Point-${name}`)
 				.raise()
-				.on('click', d => this.zoomToStage(d, true));
+				.on('click', d =>  {
+					this.onStageChange.emit(d);
+					this.zoomToStage(d, true);
+				});
 
 		// uncomment to see dots at each half-percent of the racetrack, click a dot to log its %
 		// d3.select(track.node().parentNode).append('g').selectAll('circle')
@@ -267,45 +281,48 @@ export class RacetrackComponent implements OnInit {
 			.range([8, 150])
 			.exponent(2.5);
 
-		points.reduce((chain, pt, i) => {
-			// skip half of the points to speed up animation, reduce calculations
-			// However, make sure we don't skip the last point
-			if (i % 2 && i !== points.length - 1) { return chain; }
+		if (endpoint.toLowerCase() === this.currentStage.toLocaleLowerCase()) {
+			points.reduce((chain, pt, i) => {
+				// skip half of the points to speed up animation, reduce calculations
+				// However, make sure we don't skip the last point
+				if (i % 2 && i !== points.length - 1) { return chain; }
 
-			// each segment of transition gets its own duration from a parabolic function
-				// (slower at beginning and end, faster in the middle)
-			const parabolicDuration = Math.pow(Math.abs((i / (points.length - 15)) - 0.5), 3);
-			let dur;
-			if (window.Cypress) {
-				dur = 5; // speed up animation for cypress runs
-			} else {
-				dur = scaleDuration(parabolicDuration);
-			}
+				// each segment of transition gets its own duration from a parabolic function
+					// (slower at beginning and end, faster in the middle)
+				const parabolicDuration = Math.pow(Math.abs((i / (points.length - 15)) - 0.5), 3);
+				let dur;
+				if (window.Cypress) {
+					dur = 5; // speed up animation for cypress runs
+				} else {
+					dur = scaleDuration(parabolicDuration);
+				}
 
-			return chain.transition()
-				.duration(dur)
-				.ease(easeLinear)
-				// this.track.attr('transform') puts car on track
-				// first 'translate' puts car at point on track
-				// rotate sets angle of car, 17 (carBaseRotations) is magic number to get car svg
-				// horizontal second 'translate' is to put center of car over the endpoint
-				.attr('transform', () => `${this.track.attr('transform')}
-					translate(${[pt.x, pt.y]})
-					rotate(${carBaseRotations + rotations[i]})
-					translate(${carCenterOffsetX}, ${carCenterOffsetY})`)
-				.on('start', () => {
-					// Only fire the carMovingStart event for the FIRST transition
-					if (window.Cypress && i === 0) {
-						window.racetrackEvents.next({ id: 'carMovingStart' });
-					}
-				})
-				.on('end', () => {
-					// Only fire the carMovingEnd event for the LAST transition
-					if (window.Cypress && i === points.length - 1) {
-						window.racetrackEvents.next({ id: 'carMovingEnd' });
-					}
-				});
-		}, this.racecar);
+				return chain.transition()
+					.duration(dur)
+					.ease(easeLinear)
+					// this.track.attr('transform') puts car on track
+					// first 'translate' puts car at point on track
+					// rotate sets angle of car,
+					// 17 (carBaseRotations) is magic number to get car svg
+					// horizontal second 'translate' is to put center of car over the endpoint
+					.attr('transform', () => `${this.track.attr('transform')}
+						translate(${[pt.x, pt.y]})
+						rotate(${carBaseRotations + rotations[i]})
+						translate(${carCenterOffsetX}, ${carCenterOffsetY})`)
+					.on('start', () => {
+						// Only fire the carMovingStart event for the FIRST transition
+						if (window.Cypress && i === 0) {
+							window.racetrackEvents.next({ id: 'carMovingStart' });
+						}
+					})
+					.on('end', () => {
+						// Only fire the carMovingEnd event for the LAST transition
+						if (window.Cypress && i === points.length - 1) {
+							window.racetrackEvents.next({ id: 'carMovingEnd' });
+						}
+					});
+			}, this.racecar);
+		}
 
 		this.current = endpoint;
 
@@ -356,6 +373,7 @@ export class RacetrackComponent implements OnInit {
 
 		if (next === this.stages.length) { next = 0; }
 
+		this.onStageChange.emit(this.stages[next]);
 		this.zoomToStage(this.stages[next], trackProgress);
 	}
 
@@ -370,6 +388,7 @@ export class RacetrackComponent implements OnInit {
 
 		if (prev === -1) { prev = this.stages.length - 1; }
 
+		this.onStageChange.emit(this.stages[prev]);
 		this.zoomToStage(this.stages[prev], trackProgress);
 	}
 
