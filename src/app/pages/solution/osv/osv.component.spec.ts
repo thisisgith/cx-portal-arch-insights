@@ -31,7 +31,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({}),
+						queryParams: of({ }),
 						snapshot: {
 							data: {
 								user,
@@ -101,7 +101,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const deploymentStatusFilter = _.find(component.filters, { key: 'deploymentStatus' });
+				const deploymentStatusFilter = _.find(component.filters,
+					{ key: 'deploymentStatus' });
 				component.onSubfilterSelect('none', deploymentStatusFilter);
 
 				fixture.detectChanges();
@@ -122,7 +123,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const deploymentStatusFilter = _.find(component.filters, { key: 'deploymentStatus' });
+				const deploymentStatusFilter = _.find(component.filters,
+					{ key: 'deploymentStatus' });
 				component.onSubfilterSelect('none', deploymentStatusFilter);
 
 				fixture.detectChanges();
@@ -152,7 +154,8 @@ describe('OptimalSoftwareVersionComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const deploymentStatusFilter = _.find(component.filters, { key: 'deploymentStatus' });
+				const deploymentStatusFilter = _.find(component.filters,
+					{ key: 'deploymentStatus' });
 				component.onSubfilterSelect('none', deploymentStatusFilter);
 
 				fixture.detectChanges();
@@ -176,17 +179,18 @@ describe('OptimalSoftwareVersionComponent', () => {
 	});
 
 	it('should turn of loading indicator once we have result from getSummary', done => {
-		spyOn(osvService,'getSummary')
+		spyOn(osvService, 'getSummary')
 			.and
 			.returnValue(of());
-		expect(component.status.isLoading).toBe(true);
+		expect(component.status.isLoading)
+			.toBe(true);
 		component.ngOnInit();
 		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.status.isLoading).toBe(false);
-			done();
-		});
-		
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.status.isLoading)
+					.toBe(false);
+				done();
+			});
 	});
 });

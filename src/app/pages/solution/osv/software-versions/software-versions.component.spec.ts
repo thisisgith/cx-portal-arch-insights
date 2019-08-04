@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
 
 import { SoftwareVersionsComponent } from './software-versions.component';
 import { SoftwareVersionsModule } from './software-versions.module';
@@ -40,7 +40,6 @@ describe('SoftwareVersionsComponent', () => {
 		expect(osvService.getSoftwareVersions)
 			.toHaveBeenCalled();
 	}));
-
 
 	it('should refresh on sort', () => {
 		component.onTableSortingChanged({

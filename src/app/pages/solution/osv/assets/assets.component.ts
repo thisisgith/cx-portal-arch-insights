@@ -35,9 +35,9 @@ export class AssetsComponent implements OnInit, OnChanges {
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
-	private recommendationsTemplate: TemplateRef<{}>;
+	private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -105,13 +105,14 @@ export class AssetsComponent implements OnInit, OnChanges {
 		const assetType = _.get(currentFilter, 'assetType', []);
 		let filter = '';
 		if (deploymentStatus.length > 0) {
-			filter += `deployment:"${deploymentStatus.toString()}"`
+			filter += `deployment:"${deploymentStatus.toString()}"`;
 		}
-		if (assetType.length == 1) {
+		if (assetType.length === 1) {
 			filter += filter.length > 0 ? ';' : '';
-			filter += assetType.indexOf('assets_profile') > -1 ? 'independent:no' : 'independent:yes';
+			filter += assetType.indexOf('assets_profile') > -1
+				? 'independent:no' : 'independent:yes';
 		}
-		this.assetsParams.filter = filter
+		this.assetsParams.filter = filter;
 	}
 
 	/**
@@ -153,7 +154,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 					this.logger.error('OSV Assets : getAssets() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}

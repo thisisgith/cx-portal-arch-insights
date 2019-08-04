@@ -4,9 +4,7 @@ import { AssetsComponent } from './assets.component';
 import { AssetsModule } from './assets.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OSVService, AssetsResponse } from '@sdp-api';
-import { throwError, of } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import * as _ from 'lodash-es';
+import {  of } from 'rxjs';
 import { OSVScenarios } from '@mock';
 
 describe('AssetsComponent', () => {
@@ -28,7 +26,7 @@ describe('AssetsComponent', () => {
 	beforeEach(() => {
 		spyOn(osvService, 'getAssets')
 			.and
-			.returnValue(of(<AssetsResponse>OSVScenarios[4].scenarios.GET[0].response.body));
+			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
 		fixture = TestBed.createComponent(AssetsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -61,7 +59,7 @@ describe('AssetsComponent', () => {
 	});
 
 	it('should select a case on row click', fakeAsync(() => {
-		const rowCase = (<any>OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
+		const rowCase = (<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
 		component.onRowSelect(rowCase);
 		tick();
 		fixture.detectChanges();
@@ -72,11 +70,14 @@ describe('AssetsComponent', () => {
 	it('should refersh on filters change ', fakeAsync(() => {
 		component.ngOnChanges({
 			filters: {
-				currentValue: { 'deploymentStatus': ["none", "upgrade"], "assetType": ["assets_profile"] },
+				currentValue: {
+					deploymentStatus: ['none', 'upgrade'],
+					assetType: ['assets_profile'],
+				},
 				firstChange: false,
 				isFirstChange: () => false,
 				previousValue: null,
-			}
+			},
 		});
 		tick();
 		fixture.detectChanges();

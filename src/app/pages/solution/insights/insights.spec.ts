@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { OptimalSoftwareVersionComponent } from '../osv/osv.component';
 import { RiskMitigationComponent } from '../risk-mitigation/risk-mitigation.component';
-import {  OptimalSoftwareVersionModule } from '../osv/osv.module';
+import { OptimalSoftwareVersionModule } from '../osv/osv.module';
 import { RiskMitigationModule } from '../risk-mitigation/risk-mitigation.module';
 
 describe('InsightsComponent', () => {
@@ -21,7 +21,10 @@ describe('InsightsComponent', () => {
 				RiskMitigationModule,
 				HttpClientTestingModule,
 				RouterTestingModule.withRoutes([
-					{ path: 'solution/best-practices/osv', component: OptimalSoftwareVersionComponent },
+					{
+						path: 'solution/best-practices/osv',
+						component: OptimalSoftwareVersionComponent,
+					},
 					{
 						path: 'solution/best-practices/risk-mitigation',
 						component: RiskMitigationComponent,

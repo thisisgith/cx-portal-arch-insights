@@ -15,9 +15,14 @@ const customerId = '231215372';
 /** Default Asset Id */
 const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
 
+/** softwareVersion Params */
+const svParams = '&pageIndex=1&pageSize=10&sort=swVersions&sortOrder=desc';
+
+/** AssetList params */
+const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc&filter=';
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
-	{		
+	{
 		error: null,
 		name: 'suggested',
 		postDate: '2019-03-21T18:30:00.000+0000',
@@ -356,7 +361,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}versions?customerId=${customerId}&pageIndex=1&pageSize=10&sort=swVersions&sortOrder=desc`,
+		url: `${api}versions?customerId=${customerId}${svParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -390,7 +395,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assets?customerId=${customerId}&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc`,
+		url: `${api}assets?customerId=${customerId}${assetParams}`,
 		usecases: ['Use Case 1'],
 	},
 

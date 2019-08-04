@@ -199,7 +199,7 @@ export class AssetTimelineChartComponent implements OnInit {
 	 * @param event highcharts click event
 	 */
 	public selectSubfilter (event: any) {
-		event.stopPropagation();		
+		event.stopPropagation();
 		event.point.selected = true;
 		this.selectedPoint.emit(event.point);
 	}
