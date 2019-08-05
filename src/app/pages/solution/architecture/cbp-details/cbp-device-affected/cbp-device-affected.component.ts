@@ -24,12 +24,15 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	@Input('cbpDetails') public cbpDetails: IException;
 	@ViewChild('assetTmpl', { static: true }) public assetTemplate: TemplateRef<any>;
 	public tableOptions: CuiTableOptions;
-	public tableLimit = 5;
-	public tableOffset = 0;
 	public tableIndex = 0;
 	public totalItems = 0;
+	public isLoading:boolean = true;
 	public tableData: IAsset[] = [];
-	public tempData: IAsset[] = [];
+	public params : any = {
+		page : 0,
+		pageSize : 8,
+		body :[],
+	};
 
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 	}
@@ -83,20 +86,11 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public ngOnChanges () {
 		if (this.cbpDetails) {
 			const deviceIdsWithExceptions = this.cbpDetails.deviceIdsWithExceptions.split(';');
-			this.architectureService.getAllCBPDeviceAffected(deviceIdsWithExceptions)
-				.subscribe((res: IAsset[]) => {
-					this.tempData = res;
-					this.tempData = this.tempData.map(item => {
-						const d: Date = new Date(item.configCollectionDate);
-						const strDate = `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
-						item.configCollectionDate = strDate;
-
-						return item;
-					});
-					this.totalItems = this.tempData.length;
-					this.tableOffset = 0;
-					this.getData();
-				});
+			this.totalItems = deviceIdsWithExceptions.length;
+			this.params.body = deviceIdsWithExceptions;
+			this.params.page = 0 ;
+			this.isLoading = true;
+			this.getData();
 		}
 	}
 
@@ -105,16 +99,29 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	 * @param pageInfo - The Object that contains pageNumber Index
 	 */
 	public onPagerUpdated (pageInfo: any) {
-		this.tableOffset = pageInfo.page;
+		this.params.page = pageInfo.page;
+		this.isLoading = true;
 		this.getData();
 	}
+
 	/**
 	 * used for setting the data for table
 	 */
 	public getData () {
 
-		this.tableIndex = this.tableOffset * this.tableLimit;
-		this.tableData = this.tempData.slice(this.tableIndex, this.tableIndex + this.tableLimit);
+		this.tableIndex = this.params.page * this.params.pageSize;
+		this.architectureService.getAllCBPDeviceAffected(this.params)
+				.subscribe((res: IAsset[]) => {
+					this.tableData = res;
+					this.tableData = this.tableData.map(item => {
+						const d: Date = new Date(item.configCollectionDate);
+						const strDate = `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
+						item.configCollectionDate = strDate;
+
+						return item;
+					});
+					this.isLoading = false;
+				});
 	}
 
 	/**

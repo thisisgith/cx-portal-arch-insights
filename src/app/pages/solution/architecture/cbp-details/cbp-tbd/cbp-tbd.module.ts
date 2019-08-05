@@ -3,7 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { CbpTbdComponent } from './cbp-tbd.component';
 
-import { CuiTableModule, CuiPagerModule } from '@cisco-ngx/cui-components';
+import {
+	CuiTableModule,
+	CuiPagerModule,
+	CuiLoaderModule,
+} from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
@@ -14,8 +18,9 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 	exports: [CbpTbdComponent],
 	imports: [
 		CommonModule,
-		CuiTableModule,
+		CuiLoaderModule,
 		CuiPagerModule,
+		CuiTableModule,
 		I18nPipeModule,
 	],
 })

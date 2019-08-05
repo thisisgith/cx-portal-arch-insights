@@ -23,12 +23,15 @@ export class CbpTbdComponent implements OnChanges {
 	@Input('cbpDetails') public cbpDetails: IAsset;
 	@ViewChild('riskTmpl', { static: true }) public riskTemplate: TemplateRef<any>;
 	public tableOptions: CuiTableOptions;
-	public tableLimit = 8;
-	public tableOffset = 0;
 	public totalItems = 0;
 	public tableIndex = 0;
 	public tableData: IException[] = [];
-	public tempData: IException[] = [];
+	public isLoading:boolean = true;
+	public params : any ={
+		page : 0,
+		pageSize : 8,
+		body :[],
+	};
 
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 	}
@@ -38,14 +41,12 @@ export class CbpTbdComponent implements OnChanges {
 	 */
 	public ngOnChanges () {
 		if (this.cbpDetails) {
-			const ruleIdsWithExceptions = this.cbpDetails.ruleIdsWithExceptions.split(';');
-			this.architectureService.getAllCBPExceptionDetails(ruleIdsWithExceptions)
-				.subscribe((res: IException[]) => {
-					this.tempData = res;
-					this.totalItems = this.tempData.length;
-					this.tableOffset = 0;
-					this.getData();
-				});
+			const ruleIdsWithExceptions :string[] = this.cbpDetails.ruleIdsWithExceptions.split(';');
+			this.totalItems = ruleIdsWithExceptions.length;
+			this.params.body = ruleIdsWithExceptions;
+			this.params.page = 0 ;
+			this.isLoading = true;
+			this.getData();
 		}
 	}
 	/**
@@ -53,15 +54,20 @@ export class CbpTbdComponent implements OnChanges {
 	 * @param pageInfo - The Object that contains pageNumber Index
 	 */
 	public onPagerUpdated (pageInfo: any) {
-		this.tableOffset = pageInfo.page;
+		this.params.page =  pageInfo.page;
+		this.isLoading = true;
 		this.getData();
 	}
 	/**
 	 * used for setting the data for table
 	 */
 	public getData () {
-		this.tableIndex = this.tableOffset * this.tableLimit;
-		this.tableData = this.tempData.slice(this.tableIndex, this.tableIndex + this.tableLimit);
+		this.tableIndex = this.params.page * this.params.pageSize;
+		this.architectureService.getAllCBPExceptionDetails(this.params)
+				.subscribe((res: IException[]) => {
+					this.tableData = res;
+					this.isLoading = false;
+				});
 	}
 	/**
 	 * used for expanding one table row at a time.

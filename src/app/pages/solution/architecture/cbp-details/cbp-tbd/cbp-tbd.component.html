@@ -13,7 +13,7 @@
 	<div class="col-md-12">
 		<div class="container">
 			<!-- <cui-table [options]="tableOptions" [data]="tableData"></cui-table> -->
-			<table class="table table--fixed">
+			<table class="table table--fixed"  *ngIf="!isLoading">
 				<thead>
 					<tr>
 						<th>Risk</th>
@@ -50,9 +50,12 @@
 					</ng-container>
 				</tbody>
 			</table>
-			<div class="section">
-				<cui-pager *ngIf="tableData.length" [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
-					(onPageChanged)="onPagerUpdated($event)"></cui-pager>
+			<div class="section" *ngIf="!isLoading">
+				<cui-pager *ngIf="tableData.length" [page]="params.page" [limit]="params.pageSize"
+					[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+			</div>
+			<div class="container base-margin-top" *ngIf="isLoading">
+				<cui-loader label="Loading" color="muted"></cui-loader>
 			</div>
 		</div>
 	</div>
