@@ -304,8 +304,8 @@ class ArchitectureService extends __BaseService {
    * @param body This parameter containes array of assets 
    * @returns only body part of the HTTp response
    */
-  getAllCBPDeviceAffected(body: any): __Observable<any> {
-    return this.getAllCBPDeviceAffectedResponse(body).pipe(
+  getAllCBPDeviceAffected(params: ArchitectureService.getAllCBPDeviceAffectedParams): __Observable<any> {
+    return this.getAllCBPDeviceAffectedResponse(params).pipe(
       __map(_r => _r.body)
     );
   }
@@ -315,18 +315,22 @@ class ArchitectureService extends __BaseService {
    * @param body This Parameter contains array of Assets
    * @returns Entire HTTP response is returned 
    */
-  getAllCBPDeviceAffectedResponse(body: any): __Observable<__StrictHttpResponse<any>> {
+  getAllCBPDeviceAffectedResponse(params: ArchitectureService.getAllCBPDeviceAffectedParams): __Observable<__StrictHttpResponse<any>> {
 
+    let __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = body;
+    let __body: any = params.body;
 
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 
     let req = new HttpRequest<any>(
       'POST',
-      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/affecteddevicedetails`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/assets/exceptions/devicedetails`,
       __body,
       {
         headers: __headers,
+        params : __params,
         responseType: 'json',
         //        withCredentials: true,
       });
@@ -344,8 +348,8 @@ class ArchitectureService extends __BaseService {
    * @param body This Parameter contains array of Exceptions
    * @returns only body part of the HTTp response
    */
-  getAllCBPExceptionDetails(body: any): __Observable<any> {
-    return this.getAllCBPExceptionDetailsResponse(body).pipe(
+  getAllCBPExceptionDetails(params: ArchitectureService.getAllCBPExceptionDetailsParams): __Observable<any> {
+    return this.getAllCBPExceptionDetailsResponse(params).pipe(
       __map(_r => _r.body)
     );
   }
@@ -355,17 +359,22 @@ class ArchitectureService extends __BaseService {
    * @param body This Parameter contains array of Exceptions
    * @returns Entire HTTP response is returned 
    */
-  getAllCBPExceptionDetailsResponse(body: any): __Observable<__StrictHttpResponse<any>> {
+  getAllCBPExceptionDetailsResponse(params: ArchitectureService.getAllCBPExceptionDetailsParams): __Observable<__StrictHttpResponse<any>> {
 
+    let __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = body;
+    let __body: any = params.body;
+
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 
     let req = new HttpRequest<any>(
       'POST',
-      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbpexceptiondetails`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules/exceptiondetails`,
       __body,
       {
         headers: __headers,
+        params : __params,
         responseType: 'json',
         //        withCredentials: true,
       });
@@ -397,6 +406,48 @@ module ArchitectureService {
     //  * The number of the service contract. Example:- 2689444; 91488861, 92246411
     //  */
     // contractNumber?: Array<string>;
+  }
+
+  /**
+   * Parameters for getAllCBPDeviceAffected
+   */
+  export interface getAllCBPDeviceAffectedParams {
+
+    /**
+     * Page which is requested.
+     */
+    page: number;
+
+    /**
+     * Number of records in a page
+     */
+    pageSize: number;
+
+    /**
+     * The Id's of the Assets Affected . Example:- 2689444; 91488861, 92246411
+     */
+     body :Array<string>;
+  }
+
+  /**
+   * Parameters for getAllCBPExceptionDetails
+   */
+  export interface getAllCBPExceptionDetailsParams {
+
+    /**
+     * Page which is requested.
+     */
+    page: number;
+
+    /**
+     * Number of records in a page
+     */
+    pageSize: number;
+
+    /**
+     * The Id's of the Devices with Exceptions . Example:- 2689444; 91488861, 92246411
+     */
+     body :Array<string>;
   }
 
 }
