@@ -1209,7 +1209,7 @@ export const HardwareScenarios = [
 					delay: 0,
 					description: 'Hardware productId - Unreachable',
 					response: {
-						body: { },
+						body: { data: [] },
 						status: 503,
 					},
 					selected: false,
