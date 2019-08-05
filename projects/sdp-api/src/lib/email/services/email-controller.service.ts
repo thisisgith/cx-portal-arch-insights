@@ -125,7 +125,7 @@ class EmailControllerService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/email/v1/send`,
+      this.rootUrl + `/api/customerportal/email/v1/send`,
       __body,
       {
         headers: __headers,

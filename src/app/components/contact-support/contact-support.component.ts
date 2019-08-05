@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CuiModalService, CuiModalContent, CuiInputOptions } from '@cisco-ngx/cui-components';
 import { ProfileService } from '@cisco-ngx/cui-auth';
-import { ContactSupportService } from 'src/app/services/contact-support';
-import { EmailRequest } from 'src/app/interfaces/portalSupport';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
+import { EmailControllerService, EmailRequest } from '@sdp-api';
 
 /**
  * Component for portal support
@@ -35,43 +34,43 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	public items: any[] = [
 		{
 			name: I18n.get("_SupportCXPortal_"),
-			value: 1,
+			value: I18n.get("_SupportCXPortal_"),
 		},
 		{
 			name: I18n.get("_SupportCXCollector_"),
-			value: 2,
+			value: I18n.get("_SupportCXCollector_"),
 		},
 		{
 			name: I18n.get("_SupportInquiries_"),
-			value: 3,
+			value: I18n.get("_SupportInquiries_"),
 		},
 		{
 			name: I18n.get("_SupportUpgrades_"),
-			value: 4,
+			value: I18n.get("_SupportUpgrades_"),
 		},
 		{
 			name: I18n.get("_SupportCiscoComm_"),
-			value: 5,
+			value: I18n.get("_SupportCiscoComm_"),
 		},
 		{
 			name: I18n.get("_SupportCiscoLearning_"),
-			value: 6,
+			value: I18n.get("_SupportCiscoLearning_"),
 		},
 		{
 			name: I18n.get("_SupportAskExpert_"),
-			value: 7,
+			value: I18n.get("_SupportAskExpert_"),
 		},
 		{
 			name: I18n.get("_SupportRequestAccelerator_"),
-			value: 8,
+			value: I18n.get("_SupportRequestAccelerator_"),
 		},
 		{
 			name: I18n.get("_SupportRequestExpert_"),
-			value: 9,
+			value: I18n.get("_SupportRequestExpert_"),
 		},
 		{
 			name: I18n.get("_SupportOther_"),
-			value: 10,
+			value: I18n.get("_SupportOther_"),
 		},
 	];
 
@@ -79,14 +78,14 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 
 	constructor (
 		public cuiModalService: CuiModalService, private profileService: ProfileService,
-		public contactSupportService: ContactSupportService,
+		public emailControllerService: EmailControllerService,
 	) { }
 
 	/**
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-			//"_SupportPortalTopicList_": ["CX Portal Support", "CX Collector Support"]
+		//"_SupportPortalTopicList_": ["CX Portal Support", "CX Collector Support"]
 		// const topicList = I18n.get("_SupportPortalTopicList_")
 		// _.forEach(topicList, topic => {
 		// 	this.items.push({ name: topic, value: topic })
@@ -111,15 +110,21 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 		if (this.supportForm.valid) {
 			let requestBody: EmailRequest = {
 				body: this.supportForm.controls['description'].value,
-				from: '*-noreply@cisco.com',
-				replyTo: 'ayadunat@cisco.com',
+				from: 'cxportal-noreply@cisco.com',
+				htmlBody: false,
 				subject: this.supportForm.controls['title'].value,
 				to: 'ayadunat@cisco.com'
 			}
-			this.contactSupportService.sendEmail(requestBody)
+
+			let req: EmailControllerService.SendEmailUsingPOSTParams = {
+				emailRequest: requestBody,
+				XMasheryHandshake: null
+			}
+
+			this.emailControllerService.sendEmailUsingPOST(req)
 				.subscribe(res => {
-					this.toggle = true;
 					console.log(res);
+					this.toggle = true;
 				})
 		}
 		this.success = false;
