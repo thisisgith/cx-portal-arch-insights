@@ -31,7 +31,7 @@ describe('AssetTimelineChartComponent', () => {
 	});
 
 	it('should build graph on OnInit only if data is not null', () => {
-		spyOn(component,'buildGraph');
+		spyOn(component, 'buildGraph');
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.chart)

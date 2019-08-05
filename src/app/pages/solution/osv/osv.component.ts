@@ -296,7 +296,7 @@ export class OptimalSoftwareVersionComponent {
 	}
 
 	/**
-	 * hide profile Info modal be default
+	 * hide/show profile Info modal on ngModal change
 	 */
 	public hideInfo () {
 		if (this.hideProfileInfo) {

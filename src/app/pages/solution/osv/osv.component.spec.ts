@@ -83,6 +83,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 				fixture.detectChanges();
 				const totalFilter = _.find(component.filters, { key: 'totalAssets' });
 				const deploymentStatus = _.find(component.filters, { key: 'deploymentStatus' });
+				const assetType = _.find(component.filters, { key: 'assetType' });
 
 				expect(_.find(component.filters, 'selected'))
 					.toEqual(totalFilter);
@@ -93,6 +94,13 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 				expect(_.filter(component.filters, 'selected'))
 					.toContain(deploymentStatus);
+
+				component.onSubfilterSelect('assets_profile', assetType);
+
+				fixture.detectChanges();
+
+				expect(_.filter(component.filters, 'selected'))
+					.toContain(assetType);
 
 				done();
 			});
@@ -217,5 +225,16 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.toBe(true);
 		expect(component.showProfileInfo)
 			.toBe(false);
+	});
+
+	it('should set the hideinfo in localstorage', () => {
+		component.hideProfileInfo = true;
+		component.hideInfo();
+		expect(window.localStorage.getItem('hideProfileInfo'))
+			.toEqual('true');
+		component.hideProfileInfo = false;
+		component.hideInfo();
+		expect(window.localStorage.getItem('hideProfileInfo'))
+			.toEqual('false');
 	});
 });

@@ -443,7 +443,6 @@ const mockAssets1: AssetsResponse = {
 	],
 };
 
-
 /** The mock response for summary */
 const mockSummaryResponse: SummaryResponse = {
 	asset_profile: {
@@ -580,5 +579,4 @@ export const OSVScenarios = [
 		url: `${api}versions?customerId=${customerId}${svParams}`,
 		usecases: ['Use Case 1'],
 	},
-
 ];

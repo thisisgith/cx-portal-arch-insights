@@ -40,7 +40,7 @@ describe('SoftwareVersionsComponent', () => {
 	it('should call getVersions list on init', () => {
 		spyOn(osvService, 'getSoftwareVersions')
 			.and
-			.returnValue(of(<any>OSVScenarios[2].scenarios.GET[0].response.body));
+			.returnValue(of(<any> OSVScenarios[2].scenarios.GET[0].response.body));
 		expect(component.status.isLoading)
 			.toBe(true);
 		component.ngOnInit();
@@ -86,7 +86,7 @@ describe('SoftwareVersionsComponent', () => {
 		expect(osvService.getSoftwareVersions)
 			.toHaveBeenCalled();
 		expect(component.softwareVersionsParams.sort)
-			.toBe('Key1')	
+			.toBe('Key1');
 		expect(component.softwareVersionsParams.pageIndex)
 			.toBe(1);
 	});
@@ -119,7 +119,7 @@ describe('SoftwareVersionsComponent', () => {
 	it('should show pagination info if getVersion call is success', () => {
 		spyOn(osvService, 'getSoftwareVersions')
 			.and
-			.returnValue(of(<any>OSVScenarios[2].scenarios.GET[0].response.body));
+			.returnValue(of(<any> OSVScenarios[2].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
@@ -129,13 +129,13 @@ describe('SoftwareVersionsComponent', () => {
 		expect(component.softwareVersionsTable)
 			.toBeDefined();
 		expect(component.pagination.total)
-			.toEqual(6);	
+			.toEqual(6);
 	});
 
 	it('should show pagination info if getVersion call is success', () => {
 		spyOn(osvService, 'getSoftwareVersions')
 			.and
-			.returnValue(of(<any>OSVScenarios[6].scenarios.GET[0].response.body));
+			.returnValue(of(<any> OSVScenarios[6].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
@@ -145,6 +145,6 @@ describe('SoftwareVersionsComponent', () => {
 		expect(component.softwareVersionsTable)
 			.toBeDefined();
 		expect(component.pagination.total)
-			.toEqual(100);	
+			.toEqual(100);
 	});
 });

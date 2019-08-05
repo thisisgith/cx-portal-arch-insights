@@ -238,7 +238,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: any) {
-		this.assets.forEach((asset:any) => {
+		this.assets.forEach((asset: any) => {
 			if (asset !== item) {
 				asset.rowSelected = false;
 			}

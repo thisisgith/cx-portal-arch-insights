@@ -38,7 +38,7 @@ describe('AssetsComponent', () => {
 	it('should call case list on init', () => {
 		spyOn(osvService, 'getAssets')
 			.and
-			.returnValue(of(<AssetsResponse>OSVScenarios[4].scenarios.GET[0].response.body));
+			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
 		expect(component.status.isLoading)
 			.toBe(true);
 		component.ngOnInit();
@@ -73,14 +73,14 @@ describe('AssetsComponent', () => {
 	it('should refresh on sort', () => {
 		spyOn(osvService, 'getAssets')
 			.and
-			.returnValue(of(<AssetsResponse>OSVScenarios[4].scenarios.GET[0].response.body));
+			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		component.sortTable({
 			key: 'Key1',
 			value: 'Value1',
 			sortable: true,
-			sortDirection: 'asc'
+			sortDirection: 'asc',
 		});
 
 		fixture.detectChanges();
@@ -96,7 +96,7 @@ describe('AssetsComponent', () => {
 			key: 'Key1',
 			value: 'Value1',
 			sortable: true,
-			sortDirection: 'desc'
+			sortDirection: 'desc',
 		});
 		fixture.detectChanges();
 		expect(component.assetsParams.sortOrder)
@@ -106,13 +106,13 @@ describe('AssetsComponent', () => {
 	it('should not call getAssets if the column is not sortable', () => {
 		spyOn(osvService, 'getAssets')
 			.and
-			.returnValue(of(<AssetsResponse>OSVScenarios[4].scenarios.GET[0].response.body));
+			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		component.sortTable({
 			key: 'Key1',
 			value: 'Value1',
 			sortable: false,
-			sortDirection: 'asc'
+			sortDirection: 'asc',
 		});
 		expect(osvService.getAssets)
 			.toHaveBeenCalledTimes(0);
@@ -121,7 +121,7 @@ describe('AssetsComponent', () => {
 	it('should refresh on page change', () => {
 		spyOn(osvService, 'getAssets')
 			.and
-			.returnValue(of(<AssetsResponse>OSVScenarios[4].scenarios.GET[0].response.body));
+			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
 		component.onPageChanged({ page: 2 });
 		fixture.detectChanges();
 		expect(component.assetsParams.pageIndex)
@@ -131,8 +131,8 @@ describe('AssetsComponent', () => {
 	});
 
 	it('should select/deselect a case on row click', () => {
-		component.assets = (<any>OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList;
-		const rowCase = (<any>OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
+		component.assets = (<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList;
+		const rowCase = (<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
 		component.onRowSelect(rowCase);
 		fixture.detectChanges();
 		expect(component.selectedAsset)
@@ -158,12 +158,65 @@ describe('AssetsComponent', () => {
 		fixture.detectChanges();
 		expect(component.assetsParams.filter)
 			.toBe('deployment:none,upgrade;independent:no');
+		component.ngOnChanges({
+			filters: {
+				currentValue: {
+					deploymentStatus: ['none', 'upgrade'],
+					assetType: ['assets_profile', 'assets_without_profile'],
+				},
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+		tick();
+		fixture.detectChanges();
+		expect(component.assetsParams.filter)
+			.toBe('deployment:none,upgrade');
+	}));
+
+	it('should not set filter if first change', fakeAsync(() => {
+		component.ngOnChanges({
+			filters: {
+				currentValue: {
+					deploymentStatus: ['none', 'upgrade'],
+					assetType: ['assets_profile'],
+				},
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		tick();
+		fixture.detectChanges();
+		expect(component.assetsParams.filter)
+			.toBe('');
+	}));
+
+	it('should only update selectedAsset if not first change', fakeAsync(() => {
+		component.assets = (<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body)
+						.uiAssetList;
+		const updatedAsset = 	(<AssetsResponse> OSVScenarios[5].scenarios.GET[0].response.body)
+						.uiAssetList[0];
+		updatedAsset.optimalVersion = '1.1.1';
+		component.ngOnChanges({
+			selectedAsset: {
+				currentValue: updatedAsset,
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+		tick();
+		fixture.detectChanges();
+		expect(updatedAsset.optimalVersion)
+			.toBe('1.1.1');
 	}));
 
 	it('should show pagination info if getAssets call is success', () => {
 		spyOn(osvService, 'getAssets')
 			.and
-			.returnValue(of(<any>OSVScenarios[5].scenarios.GET[0].response.body));
+			.returnValue(of(<any> OSVScenarios[5].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getAssets)
@@ -177,7 +230,7 @@ describe('AssetsComponent', () => {
 	it('should show pagination info if getAssets call is success', () => {
 		spyOn(osvService, 'getAssets')
 			.and
-			.returnValue(of(<any>OSVScenarios[4].scenarios.GET[0].response.body));
+			.returnValue(of(<any> OSVScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getAssets)

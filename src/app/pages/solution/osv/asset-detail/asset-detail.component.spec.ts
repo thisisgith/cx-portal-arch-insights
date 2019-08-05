@@ -39,13 +39,13 @@ describe('AssetDetailsComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should not call fetchAssetsDetails if there is no selected asset',() => {
+	it('should not call fetchAssetsDetails if there is no selected asset', () => {
 		spyOn(osvService , 'getAssetDetails');
 		component.selectedAsset = undefined;
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getAssetDetails)
-			.toHaveBeenCalledTimes(0);			
+			.toHaveBeenCalledTimes(0);
 	});
 
 	it('should set null values on request errors', fakeAsync(() => {
@@ -66,7 +66,7 @@ describe('AssetDetailsComponent', () => {
 		expect(component.status.isLoading)
 			.toBe(false);
 		expect(component.assetDetailsTable)
-			.toBeUndefined();	
+			.toBeUndefined();
 	}));
 
 	it('should return asset recommendations on success', fakeAsync(() => {
