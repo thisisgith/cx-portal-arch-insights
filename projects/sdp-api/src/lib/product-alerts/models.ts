@@ -6,8 +6,10 @@ export { SecurityAdvisoryInfo } from './models/security-advisory-info';
 export { SecurityAdvisory } from './models/security-advisory';
 export { SecurityAdvisoryBulletinResponse } from './models/security-advisory-bulletin-response';
 export { SecurityAdvisoryBulletin } from './models/security-advisory-bulletin';
-export { SecurityAdvisoryImpactCountResponse } from './models/security-advisory-impact-count-response';
-export { SecurityAdvisoryImpactedInfoAndCount } from './models/security-advisory-impacted-info-and-count';
+export { SecurityAdvisoryImpactCountResponse }
+	from './models/security-advisory-impact-count-response';
+export { SecurityAdvisoryImpactedInfoAndCount }
+	from './models/security-advisory-impacted-info-and-count';
 export { FieldNoticeResponse } from './models/field-notice-response';
 export { FieldNotice } from './models/field-notice';
 export { FieldNoticeBulletinResponse } from './models/field-notice-bulletin-response';
@@ -26,5 +28,6 @@ export { SoftwareEOL } from './models/software-eol';
 export { SoftwareEOLBulletinResponse } from './models/software-eolbulletin-response';
 export { SoftwareEOLBulletin } from './models/software-eolbulletin';
 export { SecurityAdvisorySummary } from './models/security-advisory-summary';
-export { SecurityAdvisorySeverityCountResponse } from './models/security-advisory-severity-count-response';
+export { SecurityAdvisorySeverityCountResponse }
+	from './models/security-advisory-severity-count-response';
 export { AdvisoriesByLastUpdatedCount } from './models/advisories-by-last-updated-count';
