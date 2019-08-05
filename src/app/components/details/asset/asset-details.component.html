@@ -62,9 +62,9 @@
 				<div class="col-md-12 base-margin-top">
 					<ng-container *ngTemplateOutlet="supportData; context: {
 								title: '_SupportCoverage_',
-								expirationDate: coverageData?.contractEndDate,
-								linkData: coverageData?.contractNumber?
-								(coverageData?.contractNumber + (coverageData?.slaDescription ? ' ' + coverageData?.slaDescription : ''))
+								expirationDate: assetData?.lastDateOfSupport,
+								linkData: assetData?.contractNumber ?
+								(assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
 								 : null,
 								url: '#',
 								supportType: 'support'
@@ -92,8 +92,8 @@
 				<div class="col-md-12 base-margin-top">
 					<ng-container *ngTemplateOutlet="supportData; context: {
 							title: '_Warranty_',
-							expirationDate: coverageData?.warrantyEndDate,
-							linkData: coverageData?.warrantyType,
+							expirationDate: assetData?.warrantyEndDate,
+							linkData: assetData?.warrantyType,
 							url: '#',
 							supportType: 'warranty'
 						}">
@@ -128,8 +128,8 @@
 	</div>
 	<div class="row">
 		<div *ngIf="expirationDate" class="col-md-12" >
-			<div *ngIf="expirationDate >= today" class="text-default" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
-			<div *ngIf="!(expirationDate >= today)" [ngClass]="{
+			<div *ngIf="(expirationDate | date) >= (today | date)" class="text-default" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
+			<div *ngIf="!((expirationDate | date) >= (today | date))" [ngClass]="{
 					'text-danger': (supportType === 'support'),
 					'text-warning': (supportType === 'warranty')
 				}"
