@@ -36,23 +36,68 @@
 <!-- <div class="panel">
     <bar-chart [seriesData]="newarray" (subfilter)="subfilter($event)"></bar-chart>
 </div> -->
-<!-- <div class="panel">
+<div class="panel">
     <div class="row">
         <div class="col-md-2 text-center">
-            <div *ngFor="let label of visualLabels; let i=index" [routerLink]="label.route"  [ngClass]="{'visualSelected':label.active == true}" (click)="selectVisualLabel(i)" >
+            <div *ngFor="let label of visualLabels; let i=index" [ngClass]="{'visualSelected':label.active == true}" (click)="selectVisualLabel(i)" >
                    <h1>{{label.count}}</h1>
                    <div>{{label.label}}</div> 
             </div>
-         
         </div>
-        <div class="col-md-10">
-           
+        <div class="col-md-10" *ngIf="visualLabels[0].active">
+            <div class="row">
+                <div class="col-md-3">
+                        <ng-container *ngFor="let filter of filters; index as i">
+                                <div *ngIf="!filter.loading && filter.seriesData.length"
+                                    attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
+                                    attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}"
+                                    [ngClass]="{
+                                        'filter__selected': filter.selected,
+                                        'filter__not-selected': !filter.selected
+                                    }"
+                                    class="panel flex-center flex-fill filter">
+                                    <div class="base-margin-bottom">
+                                        <div *ngIf="filter.template">
+                                            <ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
+                                        </div>
+                                    </div>
+                                    <div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
+                                </div>
+                                <div *ngIf="filter.loading" class="base-margin-bottom">
+                                    <cui-spinner></cui-spinner>
+                                </div>
+                            </ng-container>
+                </div>
+                    
+            </div>
+            
+        </div>
+        <div class="text-center col-md-10" *ngIf="visualLabels[1].active">
+            <ng-container>
+                <p>No Visual Filters to display</p>
+            </ng-container>
         </div>
     </div>
-</div> -->
+    <div *ngIf="visualLabels[0].active">
+        <app-cbp-rule-violation></app-cbp-rule-violation>
+    </div>
+    <div *ngIf="visualLabels[1].active">
+        <app-devices-with-exceptions></app-devices-with-exceptions>
+    </div>
+</div>
+
+<ng-template #exceptionsFilter let-filter="filter">
+	<div>
+        <bar-chart [seriesData]="filter.seriesData" [width]="300"
+            (subfilter)="onSubfilterSelect($event, filter)">
+        </bar-chart>
+    </div>
+</ng-template>
 
 
-<div class="panel">
+
+
+<!-- <div class="panel">
     <cui-tabs-nav>
 
         <cui-tab-link [url]="['Exceptions']">
@@ -70,5 +115,5 @@
             </div>
         </cui-tab-link>
     </cui-tabs-nav>
-</div>
+</div> -->
 <router-outlet></router-outlet>

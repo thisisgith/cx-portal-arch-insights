@@ -9,20 +9,6 @@ const routes: Routes = [
   {
     path: '',
     component: ArchitectureComponent,
-    children: [{
-      path: '',
-      redirectTo: 'Exceptions',
-      pathMatch: 'full',
-    },
-    {
-      path: 'Exceptions',
-      component: CbpRuleViolationComponent,
-    },
-    {
-      path: 'AssetsWithExceptions',
-      component: DevicesWithExceptionsComponent,
-    },
-    ],
   },
 ];
 

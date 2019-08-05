@@ -1,7 +1,8 @@
 <div class="panel">
 		<cui-table [options]="tableOptions" [data]="AssetsExceptionDetails"></cui-table>
-		<!-- <div class="section">
-			<cui-pager [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
-		  </div> -->
+		<div class="section" *ngIf="totalItems">
+			<cui-pager [page]="params.page"
+			[limit]="params.pageSize" [totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+		</div>
 	</div>
 

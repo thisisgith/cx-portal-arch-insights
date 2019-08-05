@@ -4,7 +4,7 @@ import { ArchitectureComponent } from './architecture.component';
 import { CbpRuleViolationModule } from './cbp-rule-violation/cbp-rule-violation.module';
 import { DevicesWithExceptionsModule } from './devices-with-exceptions/devices-with-exceptions.module';
 import { ChartModule } from 'angular-highcharts';
-import { CuiTabsModule } from '@cisco-ngx/cui-components';
+import { CuiTabsModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { CuiTabsNavModule } from '@cisco-ngx/cui-components';
 import { ArchitectureRoutingModule } from './architecture-routing.module';
 import { CbpDetailsModule } from './cbp-details/cbp-details.module';
@@ -25,7 +25,8 @@ import { BarChartModule } from '@components';
 		ArchitectureRoutingModule,
 		CbpDetailsModule,
 		CbpDetailsHeaderModule,
-		BarChartModule
+		BarChartModule,
+		CuiSpinnerModule
 		// Panel360Module
 	],
 })

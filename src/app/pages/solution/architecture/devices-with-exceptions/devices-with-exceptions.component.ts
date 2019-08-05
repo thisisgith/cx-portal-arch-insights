@@ -21,14 +21,24 @@ export class DevicesWithExceptionsComponent implements OnInit {
 
 	public AssetsExceptionDetails = [];
 	public tableOptions: CuiTableOptions;
-	public tableLimit = 4;
-	public tableOffset = 0;
-	public totalItems = 10;
+	
+	public totalItems:any;
 
-	ngOnInit(){
+	public params ={
+		page:0,
+		pageSize:10,
+	}
 
-		this.architectureService.getAllAssetsWithExceptions().subscribe(res =>{
-			console.log(res);
+	onPagerUpdated(event){
+		console.log(event);
+		this.params.page = event.page;
+		this.params.pageSize = event.limit;
+		this.getAllAssetsWithExceptions();
+	}
+
+	public getAllAssetsWithExceptions(){
+		this.architectureService.getAllAssetsWithExceptions(this.params).subscribe(res =>{
+			this.totalItems = res.TotalCounts;
 			this.AssetsExceptionDetails = res.AssetsExceptionDetails;
 			this.AssetsExceptionDetails.map((asset)=>{
 				asset.ruleIdsWithExceptionsCount = asset.ruleIdsWithExceptions.split(';').length;
@@ -36,6 +46,11 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			})
 			console.log(this.AssetsExceptionDetails);
 		});
+	}
+
+	ngOnInit(){
+
+		this.getAllAssetsWithExceptions();
 		
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,

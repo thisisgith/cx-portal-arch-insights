@@ -19,9 +19,8 @@ export class CbpRuleViolationComponent implements OnInit {
 	}
 
 	tableOptions: CuiTableOptions;
-	tableLimit = 4;
-	tableOffset = 0;
-	totalItems = 10;
+	
+	totalItems :any;
 
 	public cbpRuleExceptions = [];
 	public severityObj : any;
@@ -39,37 +38,76 @@ export class CbpRuleViolationComponent implements OnInit {
 		// }
 	}
 
-	ngOnInit () {
+	public params = {
+		page: 0,
+		pageSize :10,
+	}
 
-		this.architectureService.getAllCBPRulesDetails().subscribe(res =>{
+	public paramsType = {
+		page : 0,
+		pageSize: 10,
+		severity:""
+	}
+
+	severityType :any;
+
+	onPagerUpdated(event){
+		this.params.page = event.page;
+		this.params.pageSize = event.limit;
+		this.getAllCBPRulesDetails();
+	}
+
+	getAllCBPRulesDetails(){
+		this.architectureService.getAllCBPRulesDetails(this.params).subscribe(res =>{
+			this.totalItems = res.TotalCounts;
 			this.cbpRuleExceptions = res.BPRulesDetails;
 			console.log(this.cbpRuleExceptions);
 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 			console.log(this.cbpRuleExceptions);
 		});
+	}
 
-		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res =>{
+	getCBPRuleDetailsWithSeverity(){
+		this.architectureService.getCBPSeverityResponse(this.paramsType).subscribe(res => {
 			console.log(res);
-			if(res.severityObj){
-				this.severityObj = res.severityObj.severity;
-			}
-			
-			console.log(this.severityObj);		
-			if(this.severityObj == "MediumRisk"){
-				this.architectureService.getMediumSeverityExceptions().subscribe(res => {
-					console.log(res);
-					this.cbpRuleExceptions = res.BPRulesDetails;
-					this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-				});
-			}else{
-				this.architectureService.getHighSeverityExceptions().subscribe(res => {
-					console.log(res);
-					this.cbpRuleExceptions = res.BPRulesDetails;
-					this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-					console.log(this.cbpRuleExceptions);
-				});
-			}
-		});
+			this.cbpRuleExceptions = res.body.BPRulesDetails;
+			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
+			console.log(this.cbpRuleExceptions);
+		})
+	}
+
+	ngOnInit () {
+
+
+		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res => {
+			console.log(res.severityType.split('R'));
+			this.paramsType.severity = res.severityType.split('R')[0];
+			this.getCBPRuleDetailsWithSeverity();
+		})
+
+		this.getAllCBPRulesDetails();
+
+
+		// this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res =>{
+		// 	console.log(res);
+		// 	if(res.severityObj){
+		// 		this.severityObj = res.severityObj.severity;
+		// 	}
+		// 	if(this.severityObj == "MediumRisk"){
+		// 		this.architectureService.getMediumSeverityExceptions().subscribe(res => {
+		// 			console.log(res);
+		// 			this.cbpRuleExceptions = res.BPRulesDetails;
+		// 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
+		// 		});
+		// 	}else{
+		// 		this.architectureService.getHighSeverityExceptions().subscribe(res => {
+		// 			console.log(res);
+		// 			this.cbpRuleExceptions = res.BPRulesDetails;
+		// 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
+		// 			console.log(this.cbpRuleExceptions);
+		// 		});
+		// 	}
+		// });
 		
 		this.tableOptions = new CuiTableOptions({
 		  bordered: false,

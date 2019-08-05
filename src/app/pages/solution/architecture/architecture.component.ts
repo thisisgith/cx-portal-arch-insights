@@ -10,7 +10,11 @@ import {
 	NavigationEnd,
 } from '@angular/router';
 import { ArchitectureService } from '@sdp-api';
-import { Subject, Observable } from 'rxjs';
+import { Subject, Observable,Subscription, forkJoin, fromEvent, of } from 'rxjs';
+
+import { VisualFilter } from '@interfaces';
+import { map, catchError } from 'rxjs/operators';
+import * as _ from 'lodash-es';
 
 
 @Component({
@@ -26,13 +30,13 @@ export class ArchitectureComponent implements OnInit {
 	public AssetsExceptionsCount:any;
 
 	public SeverityCount:any = [];
-	public severityType:any = []
+	public severityType:any = [];
 	public newarray:any = [];
 
-	// public visualLabels:any = [
-	// 	{label: "Configuration Best Practices Exceptions", active:true, count:null, route:"Exceptions"},
-	// 	{label:"Assets With Exceptions", active:false, count:null,route:"AssetsWithExceptions"},
-	// ];
+	public visualLabels:any = [
+		{label: "Configuration Best Practices Exceptions", active:true, count:null, route:"Exceptions"},
+		{label:"Assets With Exceptions", active:false, count:null,route:"AssetsWithExceptions"},
+	];
 	
 	constructor (private logger: LogService,private architectureService : ArchitectureService ) {
 		this.logger.debug('ArchitectureComponent Created!');	
@@ -46,7 +50,8 @@ export class ArchitectureComponent implements OnInit {
 	ngOnInit(): void {
 		
 		this.architectureService.getExceptionsCount().subscribe(res => {
-		
+			console.log(res);
+			this.visualLabels[0].count = res.CBPRulesCount;
 			this.severityType = Object.keys(res).filter(obj => obj!=Object.keys(res)[1]);
 			this.SeverityCount = Object.values(res).filter(obj => obj!=Object.values(res)[1]);
 			
@@ -54,103 +59,163 @@ export class ArchitectureComponent implements OnInit {
 				this.newarray.push(element +'<br>'+ this.severityType[i]);
 			});
 			// console.log(this.newarray);
-			this.buildGraph();
+			// this.buildGraph();
 		});
 
 		this.architectureService.getAssetsExceptionsCount().subscribe(res =>{
-			this.AssetsExceptionsCount = res.AssestsExceptionCount;
-			// this.visualLabels[1].count = res.AssestsExceptionCount;
+			console.log(res);
+			// this.AssetsExceptionsCount = res.AssestsExceptionCount;
+			 this.visualLabels[1].count = res.AssetsExceptionCount;
+		});
+
+		this.buildFilters();
+	}
+
+	selectVisualLabel(i:any){
+		this.visualLabels.forEach(element => {
+			element.active=!element.active;
 		});
 	}
 
-	// selectVisualLabel(i:any){
-	// 	this.visualLabels.forEach(element => {
-	// 		element.active=!element.active;
-	// 	});
-	// }
-
-
-
-	 public chart: Chart;
-	/**
-	 * Builds our bar graph
-	 */
-	private buildGraph () {
-		const data = this.SeverityCount;
-		const categories = this.newarray;
-		// _.each(this.seriesData, d => {
-		// 	data.push({
-		// 		name: d.label,
-		// 		y: d.y,
-		// 	});
-
-		// 	categories.push(d.label);
-		// });
-
-		this.chart = new Chart({
-			chart: {
-				height: 100,
-				type: 'bar',
-				width: 300,
-			},
-			credits: {
-				enabled: false,
-			},
-			plotOptions: {
-				series: {
-					point: {
-						events: {
-							click: event => this.selectSubfilter(event),
-						},
-					},
-				},
-			},
-			series: [
-				{
-					data,
-					name: '',
-					showInLegend: false,
-					type: undefined,
-				},
-			],
-			title: {
-				text: null,
-			},
-			xAxis: {
-				categories,
-			},
-			yAxis: {
-				visible: false,
-			},
-		});
-	}
-
-	/**
-	 * Emits the subfilter selected
-	 * @param event highcharts click event
-	 */
-	public selectSubfilter (event: any) {
-		 this.severityObj = {severity : event.point.category.split('<br>')[1]};
-		 console.log(this.severityObj);
-		
-		 this.architectureService.setAssetsExceptionCountSubjectObj(this.severityObj);
-		 //event.stopPropagation();
-	}
+	public filters: VisualFilter[];
 	
+	public status = {
+		inventoryLoading: true,
+		isLoading: true,
+	};
+
+	@ViewChild('exceptionsFilter', { static: true })
+		private exceptionsFilterTemplate: TemplateRef<{ }>;
+	/**
+	 * Initializes our visual filters
+	 * @param tab the tab we're building the filters for
+	 */
+	private buildFilters () {
+		this.filters = [
+			{
+				key: 'Exceptions',
+				loading: true,
+				selected: true,
+				seriesData: [],
+				template: this.exceptionsFilterTemplate,
+				title: "",
+			}
+			
+		];
+		this.loadData();
+	}
 
 	/**
-	 * OnChanges Functionality
-	 * @param changes The changes found
+	 * Adds a subfilter to the given filer
+	 * @param subfilter the subfilter selected
+	 * @param filter the filter we selected the subfilter on
+	 * @param reload if we're reloading our assets
 	 */
-	// public ngOnChanges (changes: SimpleChanges) {
-	// 	const seriesInfo = _.get(changes, 'seriesData',
-	// 		{ currentValue: null, firstChange: false });
-	// 	if (seriesInfo.currentValue && !seriesInfo.firstChange) {
-	// 		this.buildGraph();
-	// 	}
-	// }
+	public onSubfilterSelect (subfilter: string, filter: VisualFilter) {
+		console.log(subfilter);
+		let severity = subfilter
+		console.log(filter);
+		const sub = _.find(filter.seriesData, { filter: subfilter });
+		if (sub) {
+			sub.selected = !sub.selected;
+		}
 
-	// public setTabIndex(tab) {
-	// 		this.tabIndex = tab;
-	// }
+		this.architectureService.setAssetsExceptionCountSubjectObj(severity);
+
+		filter.selected = _.some(filter.seriesData, 'selected');
+		console.log(filter.selected);
+	}
+
+
+	/**
+	 * Fetches the exception counts for the visual filter
+	 * @returns the edvisory counts
+	 */
+	private getExceptionsCount () {
+		const exceptionFilter = _.find(this.filters, { key: 'Exceptions' });
+
+		return this.architectureService.getExceptionsCount()
+		.pipe(
+			map((data: any) => {
+				const series = [];
+
+				const HighRisk = _.get(data, 'HighRisk');
+
+				if (HighRisk && HighRisk > 0) {
+					series.push({
+						filter: 'HighRisk',
+						label: 'HighRisk',
+						selected: false,
+						value: HighRisk,
+					});
+				}
+
+				const MediumRisk = _.get(data, 'MediumRisk');
+
+				if (MediumRisk && MediumRisk > 0) {
+					series.push({
+						filter: 'MediumRisk',
+						label: 'MediumRisk',
+						selected: false,
+						value: MediumRisk,
+					});
+				}
+
+				const LowRisk = _.get(data, 'LowRisk');
+
+				if (LowRisk && LowRisk > 0) {
+					series.push({
+						filter: 'LowRisk',
+						label: 'LowRisk',
+						selected: false,
+						value: LowRisk,
+					});
+				}
+
+				exceptionFilter.seriesData = series;
+				exceptionFilter.loading = false;
+			}),
+			catchError(err => {
+				exceptionFilter.loading = false;
+				this.logger.error('architecture.component : getExceptionsCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+
+	/**
+	 * Function used to load all of the data
+	 */
+	private loadData () {
+		this.status.isLoading = true;
+		forkJoin(
+			 this.getExceptionsCount(),
+			
+		)
+		.pipe(
+			map(() => {
+				// if (this.assetParams.contractNumber) {
+				// 	this.selectSubFilters(this.assetParams.contractNumber, 'contractNumber');
+				// }
+
+				// TODO: Add handler for EOX <- when api supports it
+				// TODO: Add handler for advisories <- when API supports it
+
+				// return this.InventorySubject.next();
+			}),
+		)
+		.subscribe(() => {
+			this.status.isLoading = false;
+
+			if (window.Cypress) {
+				window.loading = false;
+			}
+
+			this.logger.debug('architecture.component : loadData() :: Finished Loading');
+		});
+	}
+
 }
