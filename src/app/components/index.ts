@@ -7,6 +7,9 @@ export { ColumnChartModule } from './charts/column-chart/column-chart.module';
 export { DetailsPanelModule } from './details/panel/details-panel.module';
 export { CaseModule } from './case/case.module';
 export { CaseOpenComponent } from './case/case-open/case-open.component';
+export {
+  CaseOpenAdvisoriesComponent,
+} from './case/case-open/case-open-advisories/case-open-advisories.component';
 export { HeaderComponent } from './header/header.component';
 export { HeaderModule } from './header/header.module';
 export { HeightTransitionModule } from './height-transition/height-transition.module';
