@@ -28,6 +28,9 @@ const hwEOLResponse = hwEOLScenario.response.body.data[0];
 const assetSummaryMock = new MockService('AssetSummaryScenarios');
 const assetSummaryScenario = assetSummaryMock.getScenario('GET', 'Asset Summary');
 const assetSummary = assetSummaryScenario.response.body;
+const bugMock = new MockService('CriticalBugScenarios');
+const bugScenario = bugMock.getScenario('GET', 'Critical Bugs for FOC1544Y16T');
+const bugResponse = bugScenario.response.body;
 
 Cypress.moment.locale('en', {
 	// change moment's default formatting to match the app's format
@@ -190,7 +193,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('details-panel').should('not.exist');
 		});
 
-		it.skip('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
+		it('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
 			const getPaginationText = (pagination, type) => {
 				let pageText = pagination.total < pagination.rows
 					? `Showing ${pagination.total} of `
@@ -204,9 +207,9 @@ describe('Assets', () => { // PBC-41
 					case 'Critical':
 						return 'label--danger';
 					case 'High':
-						return 'label--warning';
-					case 'Medium':
 						return 'label--warning-alt';
+					case 'Medium':
+						return 'label--warning';
 					case 'Low':
 					default:
 						return 'label--success';
@@ -215,13 +218,14 @@ describe('Assets', () => { // PBC-41
 
 			cy.server();
 			cy.route('**/product-alerts/v1/security-advisory-bulletins?*').as('security');
+			cy.route('**/product-alerts/v1/field-notice-bulletins?*').as('fn');
 			cy.get('tbody tr').eq(0).click();
 			let securityXHR;
 			let fnXHR;
-			cy.wait('Field Notice Bulletins').then(xhr => {
+			cy.wait('@fn', { timeout: 30000 }).then(xhr => {
 				fnXHR = xhr;
 			});
-			cy.wait('@security').then(xhr => {
+			cy.wait('@security', { timeout: 30000 }).then(xhr => {
 				securityXHR = xhr;
 			});
 			cy.getByAutoId('ADVISORIESTab').click();
@@ -233,7 +237,7 @@ describe('Assets', () => { // PBC-41
 					);
 					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 					Cypress._.each(securityXHR.response.body.data, (advisory, index) => {
-						cy.get('details-advisories tbody tr').eq(index).within(() => {
+						cy.get('asset-details tbody tr').eq(index).within(() => {
 							cy.getByAutoId('ImpactIcon')
 								.should('have.class', getImpactIcon(advisory.severity));
 							cy.getByAutoId('ImpactText').should('have.text', advisory.severity);
@@ -247,7 +251,7 @@ describe('Assets', () => { // PBC-41
 					});
 					if (securityXHR.response.body.Pagination.total > securityXHR.response.body.data.length) {
 						cy.getByAutoId('LoadMoreButton').click();
-						cy.get('details-advisories tbody tr').should('have.length.greaterThan', 10);
+						cy.get('asset-details tbody tr').should('have.length.greaterThan', 10);
 					} else {
 						cy.getByAutoId('LoadMoreButton').should('not.be.visible');
 					}
@@ -256,14 +260,13 @@ describe('Assets', () => { // PBC-41
 
 			cy.wrap(fnXHR).then(() => {
 				if (fnXHR.response.body.data.length) {
-					cy.getByAutoId('AdvisoryTab-field').click();
 					const pageText = getPaginationText(
 						fnXHR.response.body.Pagination, 'Field Notices'
 					);
 					cy.getByAutoId('AdvisoryTab-field').click();
 					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 					Cypress._.each(fnXHR.response.body.data, (advisory, index) => {
-						cy.get('details-advisories tbody tr').eq(index).within(() => {
+						cy.get('asset-details tbody tr').eq(index).within(() => {
 							cy.getByAutoId('FieldNoticeId')
 								.should('have.text', `FN ${advisory.fieldNoticeId}`)
 								.and('have.attr', 'href', advisory.URL)
@@ -280,12 +283,30 @@ describe('Assets', () => { // PBC-41
 					});
 					if (fnXHR.response.body.Pagination.total > fnXHR.response.body.data.length) {
 						cy.getByAutoId('LoadMoreButton').click();
-						cy.get('details-advisories tbody tr').should('have.length.greaterThan', 10);
+						cy.get('asset-details tbody tr').should('have.length.greaterThan', 10);
 					} else {
 						cy.getByAutoId('LoadMoreButton').should('not.be.visible');
 					}
 				}
 			});
+
+			cy.getByAutoId('AdvisoryTab-bug').click();
+			const pageText = getPaginationText(
+				bugResponse.Pagination, 'Critical Bugs'
+			);
+			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+			Cypress._.each(bugResponse.data, (bug, index) => {
+				cy.get('asset-details tbody tr').eq(index).within(() => {
+					cy.getByAutoId('ID-Cell').should('have.text', bug.id);
+					cy.getByAutoId('Title-Cell').should('have.text', bug.title);
+					cy.getByAutoId('Status-Cell').should('have.text', startCase(bug.state));
+					cy.getByAutoId('Last Updated-Cell').should(
+						'have.text',
+						Cypress.moment(bug.lastUpdated).format(dateFormat)
+					);
+				});
+			});
+
 			cy.get('[data-auto-id*="Device-"]').eq(0).click();
 		});
 
