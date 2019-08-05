@@ -1,4 +1,3 @@
-/* tslint:disable */
 export { VulnerabilityResponse } from './models/vulnerability-response';
 export { ErrorResponse as ProductAlertsErrorResponse } from './models/error-response';
 export { SecurityAdvisoryResponse } from './models/security-advisory-response';
@@ -24,7 +23,7 @@ export { HardwareEOLBulletin } from './models/hardware-eolbulletin';
 export { HardwareEOLCountResponse } from './models/hardware-eolcount-response';
 export { SoftwareEOLResponse } from './models/software-eolresponse';
 export { SoftwareEOL } from './models/software-eol';
-export { SofwareEOLBulletinResponse } from './models/sofware-eolbulletin-response';
+export { SoftwareEOLBulletinResponse } from './models/software-eolbulletin-response';
 export { SoftwareEOLBulletin } from './models/software-eolbulletin';
 export { SecurityAdvisorySummary } from './models/security-advisory-summary';
 export { SecurityAdvisorySeverityCountResponse } from './models/security-advisory-severity-count-response';

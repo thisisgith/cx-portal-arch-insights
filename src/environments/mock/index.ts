@@ -4,6 +4,7 @@ export * from './contract/contract';
 export * from './contract/coverage';
 
 export * from './controlpoints/health-status';
+export * from './controlpoints/license';
 
 export * from './diagnostics/critical-bugs';
 
@@ -22,6 +23,8 @@ export * from './product-alerts/field-notice';
 export * from './product-alerts/hardware-eol-bulletins';
 export * from './product-alerts/hardware-eol-counts';
 export * from './product-alerts/hardware-eol';
+export * from './product-alerts/software-eol-bulletins';
+export * from './product-alerts/software-eol';
 export * from './product-alerts/security-advisory-bulletins';
 export * from './product-alerts/security-advisory-top';
 export * from './product-alerts/security-advisory-last-updated-count';

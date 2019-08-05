@@ -7,6 +7,8 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
+import { CSDFResponseModel } from '../models/csdfresponse-model';
+import { LicenseDataResponseModel } from '../models/license-data-response-model';
 import { DefaultResponseModel } from '../models/default-response-model';
 import { IERegistrationRequestModel } from '../models/ieregistration-request-model';
 import { IERegistrationResponseModel } from '../models/ieregistration-response-model';
@@ -14,6 +16,8 @@ import { IERegistrationResponseModel } from '../models/ieregistration-response-m
   providedIn: 'root',
 })
 class ControlPointIERegistrationAPIService extends __BaseService {
+  static readonly getDnacStatusUsingGETPath = '/dnac/status/{customerId}';
+  static readonly getLicenseDataPath = '/license/{customerId}/{hostName}';
   static readonly createIERegistrationUsingPOSTPath = '/register/ie';
   static readonly getIERegistrationUsingGETPath = '/registration/ie/{customerId}';
 
@@ -22,6 +26,93 @@ class ControlPointIERegistrationAPIService extends __BaseService {
     http: HttpClient
   ) {
     super(config, http);
+  }
+
+  /**
+   * @param customerId customerId
+   * @return OK
+   */
+  getDnacStatusUsingGETResponse(customerId: string): __Observable<__StrictHttpResponse<CSDFResponseModel>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/controlpoint/v1/dnac/status/${customerId}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<CSDFResponseModel>;
+      })
+    );
+  }
+
+  /**
+   * @param customerId customerId
+   * @return OK
+   */
+  getDnacStatusUsingGET(customerId: string): __Observable<CSDFResponseModel> {
+    return this.getDnacStatusUsingGETResponse(customerId).pipe(
+      __map(_r => _r.body as CSDFResponseModel)
+    );
+  }
+
+  /**
+   * @param params The `ControlPointIERegistrationAPIService.GetLicenseDataParams` containing the following parameters:
+   *
+   * - `hostName`: hostName
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getLicenseDataResponse(params: ControlPointIERegistrationAPIService.GetLicenseDataParams): __Observable<__StrictHttpResponse<LicenseDataResponseModel>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/controlpoint/v1/license/${params.customerId}/${params.hostName}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<LicenseDataResponseModel>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `ControlPointIERegistrationAPIService.GetLicenseDataParams` containing the following parameters:
+   *
+   * - `hostName`: hostName
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getLicenseData(params: ControlPointIERegistrationAPIService.GetLicenseDataParams): __Observable<LicenseDataResponseModel> {
+    return this.getLicenseDataResponse(params).pipe(
+      __map(_r => _r.body as LicenseDataResponseModel)
+    );
   }
 
   /**
@@ -103,6 +194,22 @@ class ControlPointIERegistrationAPIService extends __BaseService {
 }
 
 module ControlPointIERegistrationAPIService {
+
+  /**
+   * Parameters for getLicenseData
+   */
+  export interface GetLicenseDataParams {
+
+    /**
+     * hostName
+     */
+    hostName: string;
+
+    /**
+     * customerId
+     */
+    customerId: string;
+  }
 }
 
 export { ControlPointIERegistrationAPIService }

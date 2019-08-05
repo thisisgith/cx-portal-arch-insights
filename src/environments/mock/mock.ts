@@ -20,6 +20,7 @@ import {
 	HardwareEOLScenarios,
 	HardwareScenarios,
 	HealthStatusScenarios,
+	LicenseScenarios,
 	NetworkScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
@@ -32,6 +33,8 @@ import {
 	SecurityAdvisoryScenarios,
 	SecurityAdvisorySummaryScenarios,
 	SerialNumberScenarios,
+	SoftwareEOLBulletinScenarios,
+	SoftwareEOLScenarios,
 	SuccessPathScenarios,
 	UserScenarios,
 	VulnerabilityScenarios,
@@ -63,6 +66,7 @@ import {
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
+	LicenseDataResponseModel,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
@@ -73,6 +77,8 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
+	SoftwareEOLResponse,
+	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -103,6 +109,7 @@ type ResponseBody = (
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
 	HardwareResponse |
+	LicenseDataResponseModel |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
@@ -114,6 +121,8 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
+	SoftwareEOLResponse |
+	SoftwareEOLBulletinResponse |
 	SuccessPathsResponse |
 	VulnerabilityResponse
 );
@@ -181,6 +190,7 @@ export const mockSettings: MockSettings = {
 		HardwareEOLScenarios,
 		HardwareScenarios,
 		HealthStatusScenarios,
+		LicenseScenarios,
 		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
@@ -194,6 +204,8 @@ export const mockSettings: MockSettings = {
 		SecurityAdvisorySummaryScenarios,
 		SecurityAdvisoryTopScenarios,
 		SerialNumberScenarios,
+		SoftwareEOLScenarios,
+		SoftwareEOLBulletinScenarios,
 		SuccessPathScenarios,
 		UserScenarios,
 		VulnerabilityScenarios,
