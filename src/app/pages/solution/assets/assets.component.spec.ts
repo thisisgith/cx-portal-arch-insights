@@ -245,6 +245,20 @@ describe('AssetsComponent', () => {
 		});
 	});
 
+	it('should close panel', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			component.onPanelClose();
+
+			expect(component.selectedAsset)
+				.toBeFalsy();
+
+			done();
+		});
+	});
+
 	it('should set a loading boolean for Cypress runs', () => {
 		expect(window.loading)
 			.toBeUndefined();
