@@ -9,7 +9,7 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureService } from '@sdp-api';
+import { ArchitectureService , IException, IAsset } from '@sdp-api';
 
 /**
  * CBP Device Affected Table Component
@@ -21,15 +21,15 @@ import { ArchitectureService } from '@sdp-api';
 })
 export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 
-	@Input('cbpDetails') public cbpDetails: any;
+	@Input('cbpDetails') public cbpDetails: IException;
 	@ViewChild('assetTmpl', { static: true }) public assetTemplate: TemplateRef<any>;
 	public tableOptions: CuiTableOptions;
 	public tableLimit = 5;
 	public tableOffset = 0;
 	public tableIndex = 0;
 	public totalItems = 0;
-	public tableData: any[] = [];
-	public tempData: any[] = [];
+	public tableData: IAsset[] = [];
+	public tempData: IAsset[] = [];
 
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 	}
@@ -84,7 +84,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 		if (this.cbpDetails) {
 			const deviceIdsWithExceptions = this.cbpDetails.deviceIdsWithExceptions.split(';');
 			this.architectureService.getAllCBPDeviceAffected(deviceIdsWithExceptions)
-				.subscribe((res: any[]) => {
+				.subscribe((res: IAsset[]) => {
 					this.tempData = res;
 					this.tempData = this.tempData.map(item => {
 						const d: Date = new Date(item.configCollectionDate);

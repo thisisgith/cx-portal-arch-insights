@@ -8,7 +8,7 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureService } from '@sdp-api';
+import { ArchitectureService , IException, IAsset} from '@sdp-api';
 
 /**
  * CBP TBD table Component
@@ -20,15 +20,15 @@ import { ArchitectureService } from '@sdp-api';
 })
 export class CbpTbdComponent implements OnChanges {
 
-	@Input('cbpDetails') public cbpDetails: any;
+	@Input('cbpDetails') public cbpDetails: IAsset;
 	@ViewChild('riskTmpl', { static: true }) public riskTemplate: TemplateRef<any>;
 	public tableOptions: CuiTableOptions;
 	public tableLimit = 8;
 	public tableOffset = 0;
 	public totalItems = 0;
 	public tableIndex = 0;
-	public tableData: any[] = [];
-	public tempData: any[] = [];
+	public tableData: IException[] = [];
+	public tempData: IException[] = [];
 
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 	}
@@ -40,7 +40,7 @@ export class CbpTbdComponent implements OnChanges {
 		if (this.cbpDetails) {
 			const ruleIdsWithExceptions = this.cbpDetails.ruleIdsWithExceptions.split(';');
 			this.architectureService.getAllCBPExceptionDetails(ruleIdsWithExceptions)
-				.subscribe((res: any[]) => {
+				.subscribe((res: IException[]) => {
 					this.tempData = res;
 					this.totalItems = this.tempData.length;
 					this.tableOffset = 0;

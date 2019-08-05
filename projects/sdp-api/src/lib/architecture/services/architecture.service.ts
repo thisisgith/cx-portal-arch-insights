@@ -323,7 +323,7 @@ class ArchitectureService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/affecteddevicedetails`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/assets/exceptions/devicedetails`,
       __body,
       {
         headers: __headers,
@@ -362,7 +362,7 @@ class ArchitectureService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbpexceptiondetails`,
+      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules/exceptiondetails`,
       __body,
       {
         headers: __headers,
