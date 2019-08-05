@@ -1,4 +1,5 @@
 import { HardwareResponse } from '@sdp-api';
+import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/inventory/v1/hardware';
@@ -7,7 +8,7 @@ const api = '/api/customerportal/inventory/v1/hardware';
 const customerId = '2431199';
 
 /** Default Product ID */
-const productId = 'ASAv';
+const productId = 'WS-C2960S-24PS-L';
 
 /**
  * Mock data for Inventory API results
@@ -1133,6 +1134,36 @@ export const MockHardwareResponse: HardwareResponse = {
 	],
 };
 
+/**
+ * Function to generate the mock Assets Response
+ * @param rows the rows to return
+ * @param page the page to return
+ * @param contractNumber the contractNumber to filter on
+ * @param supportCovered the values to filter coverage
+ * @param role the roles to filter on
+ * @returns the assets response
+ */
+function MockHardware (
+	rows: number,
+	page: number) {
+	let data = _.cloneDeep(MockHardwareResponse.data);
+
+	const total = data.length;
+	const pages = Math.ceil(data.length / rows);
+
+	data = data.slice((rows * (page - 1)), (rows * page));
+
+	return {
+		data,
+		Pagination: {
+			page,
+			pages,
+			rows,
+			total,
+		},
+	};
+}
+
 /** The scenarios */
 export const HardwareScenarios = [
 	{
@@ -1169,14 +1200,14 @@ export const HardwareScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Hardware productId',
 					response: {
-						body: MockHardwareResponse,
+						body: MockHardware(1, 1),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&productId=${productId}`,
+		url: `${api}?customerId=${customerId}&rows=1&productId=${productId}&page=1`,
 		usecases: ['Use Case 1'],
 	},
 ];

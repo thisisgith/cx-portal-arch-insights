@@ -25,11 +25,16 @@ const hwResponse = hwScenario.response.body.data;
 const hwEOLMock = new MockService('HardwareEOLBulletinScenarios');
 const hwEOLScenario = hwEOLMock.getScenario('GET', 'Hardware EOL Bulletins');
 const hwEOLResponse = hwEOLScenario.response.body.data[0];
+const assetSummaryMock = new MockService('AssetSummaryScenarios');
+const assetSummaryScenario = assetSummaryMock.getScenario('GET', 'Asset Summary');
+const assetSummary = assetSummaryScenario.response.body;
 
 Cypress.moment.locale('en', {
-	// change moment's default '8d' format to '8 days' to match the app's format
-	relativeTime: { dd: '%d days' },
+	// change moment's default formatting to match the app's format
+	relativeTime: { dd: '%d days', M: 'a month', MM: '%d months' },
 });
+
+const dateFormat = 'YYYY MMM DD';
 
 describe('Assets', () => { // PBC-41
 	before(() => {
@@ -40,8 +45,7 @@ describe('Assets', () => { // PBC-41
 	});
 
 	context('PBC-151: Asset 360 view', () => {
-		// TODO: Unskip and modify to accomodate PBC-90 & 91
-		it.skip('Provides an Asset 360 view modal', () => { // PBC-152
+		it('Provides an Asset 360 view modal', () => { // PBC-152
 			/* TODO: Full screen view has been removed until a future sprint
 			// const { halfWidthInPx, widthInPx } = util.getViewportSize();
 			cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
@@ -69,6 +73,29 @@ describe('Assets', () => { // PBC-41
 				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
 				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-339
 				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
+
+				// PBC-153
+				cy.get('asset-details img').should( // TODO: Placeholder until PBC-438 is fixed
+					'have.attr',
+					'src',
+					'assets/img/inventory/CAT-3650.png',
+				);
+				cy.getByAutoId('ProductId').should('have.text', asset.productId);
+				cy.getByAutoId('YouHaveInventory').should(
+					'have.text', `You have ${hwResponse.length} of these in your inventory`
+				);
+				cy.getByAutoId('_ProductSeries_-Link')
+					.should('have.text', hwResponse[6].productFamily);
+				cy.getByAutoId('_ProductID_-Link').should('have.text', asset.productId);
+				cy.getByAutoId('_SoftwareVersion_-Link').should('have.text', asset.osVersion);
+				cy.getByAutoId('_EndOfSale_-data').should(
+					'have.text',
+					Cypress.moment(assetSummary.eoSaleDate).format(dateFormat)
+				);
+				cy.getByAutoId('_EndOfSupport_-data').should(
+					'have.text',
+					Cypress.moment(assetSummary.lastDateOfSupport).format(dateFormat)
+				);
 			};
 
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
@@ -215,7 +242,7 @@ describe('Assets', () => { // PBC-41
 							cy.getByAutoId('AdvisoryLastUpdated')
 								.should('have.text',
 									Cypress.moment(advisory.bulletinFirstPublished)
-										.format('YYYY MMM DD'));
+										.format(dateFormat));
 						});
 					});
 					if (securityXHR.response.body.Pagination.total > securityXHR.response.body.data.length) {
@@ -248,7 +275,7 @@ describe('Assets', () => { // PBC-41
 							cy.getByAutoId('AdvisoryLastUpdated')
 								.should('have.text',
 									Cypress.moment(advisory.bulletinLastUpdated)
-										.format('YYYY MMM DD'));
+										.format(dateFormat));
 						});
 					});
 					if (fnXHR.response.body.Pagination.total > fnXHR.response.body.data.length) {
@@ -272,8 +299,8 @@ describe('Assets', () => { // PBC-41
 				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			};
 
-			const contractEnd = Cypress.moment(coveredRes.contractEndDate).format('YYYY MMM DD');
-			const warrantyEnd = Cypress.moment(coveredRes.warrantyEndDate).format('YYYY MMM DD');
+			const contractEnd = Cypress.moment(coveredRes.contractEndDate).format(dateFormat);
+			const warrantyEnd = Cypress.moment(coveredRes.warrantyEndDate).format(dateFormat);
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.getByAutoId('_SupportCoverage_-data')
 				.should('have.text', `Covered until ${contractEnd}`);
