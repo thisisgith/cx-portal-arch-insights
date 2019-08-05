@@ -16,7 +16,7 @@ const customerId = '231215372';
 const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
 
 /** softwareVersion Params */
-const svParams = '&pageIndex=1&pageSize=10&sort=swVersion&sortOrder=desc';
+const svParams = '&pageIndex=1&pageSize=10&sort=swVersion&sortOrder=desc&filter=';
 /** AssetList params */
 const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc';
 /** The mock response for basic recommendations */
@@ -304,7 +304,7 @@ const mockSummaryResponse: SummaryResponse = {
 	assets: 964,
 	deployment: {
 		none: 963,
-		upgrade: 1,
+		upgrade: 400,
 	},
 	profiles: 441,
 	versions: 50,

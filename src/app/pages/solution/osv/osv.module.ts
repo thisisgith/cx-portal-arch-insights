@@ -13,6 +13,7 @@ import { OSVModule } from '@sdp-api';
 import {
 	AssetTimelineChartModule,
 } from './asset-timeline-chart/asset-timeline-chart.module';
+
 import { DetailsPanelModule, PieChartModule } from '@components';
 
 /**

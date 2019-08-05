@@ -31,12 +31,11 @@ describe('AssetTimelineChartComponent', () => {
 	});
 
 	it('should build graph on OnInit', () => {
-		spyOn(component, 'buildGraph');
 		component.data = <any> OSVScenarios[3].scenarios.GET[0].response.body;
 		component.ngOnInit();
 		fixture.detectChanges();
-		expect(component.buildGraph)
-			.toHaveBeenCalledTimes(1);
+		expect(component.chart)
+			.toBeDefined();
 	});
 
 	it(' build graph should be called if the assetRecommendations change', fakeAsync(() => {
@@ -54,10 +53,6 @@ describe('AssetTimelineChartComponent', () => {
 		fixture.detectChanges();
 		expect(component.buildGraph)
 			.toHaveBeenCalledTimes(1);
-	}));
-
-	it(' build graph should be called if the fullScreen parameter changes', fakeAsync(() => {
-		spyOn(component, 'buildGraph');
 		component.ngOnChanges({
 			fullscreen: {
 				currentValue: true,
@@ -69,7 +64,7 @@ describe('AssetTimelineChartComponent', () => {
 		tick(500);
 		fixture.detectChanges();
 		expect(component.buildGraph)
-			.toHaveBeenCalledTimes(1);
+			.toHaveBeenCalledTimes(2);
 	}));
 
 	it('should select emit a selectectPoint event on accept', () => {
@@ -85,6 +80,5 @@ describe('AssetTimelineChartComponent', () => {
 		const formattedData = component.formatGraphData();
 		expect(_.get(formattedData, ['0', 'x']))
 			.toBeDefined();
-
 	});
 });

@@ -44,7 +44,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public assetDetailsTable: CuiTableOptions;
 	public assetDetailsParams: OSVService.GetAssetDetailsParams = {
 		customerId,
-		id: '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
+		id: '',
 	};
 	public selectedRecommendation = {
 		name: 'None',
@@ -58,7 +58,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	/**
 	 * Resets data fields
 	 */
-	private clear () {
+	public clear () {
 		this.assetDetails = null;
 	}
 
@@ -108,6 +108,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				catchError(err => {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
+
 					return of({ });
 				}),
 			)
@@ -149,8 +150,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					{
 						name: I18n.get('_OsvStatusOrAction_'),
 						sortable: false,
-						width: '30%',
 						template: this.actionsTemplate,
+						width: '30%',
 					},
 				],
 				dynamicData: true,
@@ -183,6 +184,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			id: this.selectedAsset.id,
 			optimalVersion: item.swVersion,
 		};
+		this.status.isLoading = true;
 		this.osvService.updateAsset(body)
 			.subscribe((response: OSVAsset) => {
 				this.setAcceptedVersion(this.assetDetails, response);

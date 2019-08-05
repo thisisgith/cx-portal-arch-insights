@@ -105,7 +105,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 		const assetType = _.get(currentFilter, 'assetType', []);
 		let filter = '';
 		if (deploymentStatus.length > 0) {
-			filter += `deployment:"${deploymentStatus.toString()}"`;
+			filter += `deployment:${deploymentStatus.toString()}`;
 		}
 		if (assetType.length === 1) {
 			filter += filter.length > 0 ? ';' : '';
@@ -176,14 +176,9 @@ export class AssetsComponent implements OnInit, OnChanges {
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
-						sortDirection: 'desc',
 						sortable: true,
+						sortDirection: 'desc',
 						sorting: true,
-					},
-					{
-						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
-						sortable: false,
 					},
 					{
 						key: 'ipAddress',
@@ -205,7 +200,11 @@ export class AssetsComponent implements OnInit, OnChanges {
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
 					},
-
+					{
+						key: 'optimalVersion',
+						name: I18n.get('_OsvOptimalVersion_'),
+						sortable: false,
+					},
 					{
 						key: 'deployment',
 						name: I18n.get('_OsvDeploymentStatus_'),

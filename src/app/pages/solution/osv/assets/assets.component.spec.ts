@@ -82,6 +82,6 @@ describe('AssetsComponent', () => {
 		tick();
 		fixture.detectChanges();
 		expect(component.assetsParams.filter)
-			.toBe('deployment:"none,upgrade";independent:no');
+			.toBe('deployment:none,upgrade;independent:no');
 	}));
 });

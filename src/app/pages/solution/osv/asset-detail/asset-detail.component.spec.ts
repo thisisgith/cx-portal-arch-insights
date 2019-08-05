@@ -7,6 +7,7 @@ import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OSVScenarios } from '@mock';
 import * as _ from 'lodash-es';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AssetDetailsComponent', () => {
 	let component: AssetDetailsComponent;
@@ -19,6 +20,7 @@ describe('AssetDetailsComponent', () => {
 			imports: [
 				AssetDetailsModule,
 				HttpClientTestingModule,
+				RouterTestingModule,
 			],
 		})
 			.compileComponents();
@@ -93,7 +95,7 @@ describe('AssetDetailsComponent', () => {
 			.toBe('list');
 	});
 
-	it(' refresh if the selecteAsset is changed', fakeAsync(() => {
+	it('refresh if the selecteAsset is changed', fakeAsync(() => {
 		spyOn(component, 'refresh');
 		component.ngOnChanges({
 			selecteAsset: {
@@ -108,4 +110,36 @@ describe('AssetDetailsComponent', () => {
 		expect(component.refresh)
 			.toHaveBeenCalled();
 	}));
+
+	it('should reset the assetDetails on clear', () => {
+		spyOn(osvService, 'getAssetDetails')
+			.and
+			.returnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
+		component.selectedAsset = <any> OSVScenarios[4].scenarios.GET[0].response.body;
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.assetDetails)
+			.toBeDefined();
+		component.clear();
+		expect(component.assetDetails)
+			.toBeNull();
+
+	});
+
+	it('should call updateAsset on Accept', () => {
+		spyOn(component.selectedAssetChange, 'emit');
+		spyOn(component, 'setAcceptedVersion');
+		spyOn(osvService, 'updateAsset')
+			.and
+			.returnValue(of((<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[1]));
+		const params = (<any> OSVScenarios[3].scenarios.GET[0].response.body)[0];
+		component.onActionClick(params);
+		fixture.detectChanges();
+		expect(osvService.updateAsset)
+			.toHaveBeenCalled();
+		expect(component.setAcceptedVersion)
+			.toHaveBeenCalled();
+		expect(component.selectedAssetChange.emit)
+			.toHaveBeenCalled();
+	});
 });

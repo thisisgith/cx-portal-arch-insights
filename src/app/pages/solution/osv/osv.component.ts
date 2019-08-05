@@ -58,8 +58,8 @@ export class OptimalSoftwareVersionComponent {
 	public hideProfileInfo = false;
 	public showProfileInfo = false;
 	public appliedFilters = {
-		deploymentStatus: [],
 		assetType: '',
+		deploymentStatus: [],
 	};
 	constructor (private logger: LogService,
 		private osvService: OSVService) { }
@@ -87,28 +87,28 @@ export class OptimalSoftwareVersionComponent {
 	private buildFilters () {
 		this.filters = [
 			{
+				data: [],
 				key: 'totalAssets',
 				loading: true,
 				selected: true,
 				template: this.totalAssetsFilterTemplate,
-				data: [],
 				view: ['swProfiles', 'assets', 'swVersions'],
 			},
 			{
+				data: [],
 				key: 'assetType',
 				loading: true,
 				selected: false,
 				template: this.assetTypeFilterTemplate,
-				data: [],
 				title: I18n.get('_OsvAssets_'),
 				view: ['assets'],
 			},
 			{
+				data: [],
 				key: 'deploymentStatus',
 				loading: true,
 				selected: false,
 				template: this.deploymentStatusFilterTemplate,
-				data: [],
 				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
 				view: ['assets'],
 			},
@@ -142,6 +142,7 @@ export class OptimalSoftwareVersionComponent {
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
 		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
 		const assetTypeFilter = _.find(this.filters, { key: 'assetType' });
+
 		return this.osvService.getSummary({ customerId })
 			.pipe(
 				map((response: SummaryResponse) => {
@@ -150,8 +151,8 @@ export class OptimalSoftwareVersionComponent {
 					assetTypeFilter.loading = false;
 					totalAssetsFilter.data[0] = {
 						assets: response.assets,
-						versions: response.versions,
 						profiles: response.profiles,
+						versions: response.versions,
 					};
 					deploymentStatusFilter.data = _.compact(
 						_.map(response.deployment, (value: number, key: string) => {
@@ -186,6 +187,7 @@ export class OptimalSoftwareVersionComponent {
 					totalAssetsFilter.loading = false;
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
+
 					return of({ });
 				}),
 			);
@@ -288,8 +290,8 @@ export class OptimalSoftwareVersionComponent {
 		});
 		totalFilter.selected = true;
 		this.appliedFilters = {
-			deploymentStatus: [],
 			assetType: '',
+			deploymentStatus: [],
 		};
 	}
 

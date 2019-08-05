@@ -86,6 +86,13 @@ export class AssetTimelineChartComponent implements OnInit {
 				enabled: false,
 			},
 			plotOptions: {
+				series: {
+					point: {
+						events: {
+							click: event => this.selectSubfilter(event),
+						},
+					},
+				},
 				timeline: {
 					dataLabels: {
 						borderWidth: 0,
@@ -107,6 +114,7 @@ export class AssetTimelineChartComponent implements OnInit {
 							if (this['point'].accepted) {
 								format += '<span style="color:green">Accepted</span>';
 							}
+
 							return format;
 						},
 						style: {
@@ -119,13 +127,6 @@ export class AssetTimelineChartComponent implements OnInit {
 						lineWidth: 1,
 						radius: 6,
 						symbol: '',
-					},
-				},
-				series: {
-					point: {
-						events: {
-							click: event => this.selectSubfilter(event),
-						},
 					},
 				},
 			},
@@ -167,21 +168,23 @@ export class AssetTimelineChartComponent implements OnInit {
 	 */
 	public formatGraphData () {
 		const datePipe = new DatePipe('en-US');
+
 		return _.compact(
 			_.map(this.data, (value: AssetRecommendations) => {
 				const releaseDate = new Date(value.postDate);
+
 				return {
 					accepted: value.accepted,
 					description: value.name,
 					label: value.swVersion,
-					swVersion: value.swVersion,
 					name: _.capitalize(value.name),
+					releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
+					swVersion: value.swVersion,
 					x: Date.UTC(
 						releaseDate.getFullYear(),
 						releaseDate.getMonth(),
 						releaseDate.getDate(),
 					),
-					releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
 				};
 			}));
 	}
