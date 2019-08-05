@@ -93,11 +93,14 @@ describe('AdvisoryDetailsComponent', () => {
 			},
 		});
 
-		expect(component.advisoryId)
+		fixture.whenStable()
+		.then(() => {
+			expect(component.advisoryId)
 			.toEqual(_.toString(nextAdvisory.id));
 
-		expect(component.title)
-			.toEqual('Security Advisory');
+			expect(component.title)
+				.toEqual('Security Advisory');
+		});
 	});
 
 	it('should load a bug', () => {
@@ -195,11 +198,14 @@ describe('AdvisoryDetailsComponent', () => {
 			},
 		});
 
-		expect(component.advisoryId)
-			.toEqual(_.toString(nextAdvisory.id));
+		fixture.whenStable()
+		.then(() => {
+			expect(component.advisoryId)
+				.toEqual(_.toString(nextAdvisory.id));
 
-		expect(component.title)
-			.toEqual(`Field Notice FN ${nextAdvisory.id}`);
+			expect(component.title)
+				.toEqual(`Field Notice FN ${nextAdvisory.id}`);
+		});
 	});
 
 	it('should handle passing without an id', () => {

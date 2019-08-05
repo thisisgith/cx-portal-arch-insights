@@ -13,15 +13,9 @@
 		padding-left: 0 !important;
 	}
 
-	.table th {
-		background-color: $white !important;
-		border-top: none !important;
-		border-left: none !important;
-		border-right: none !important;
-		border-bottom: 3px solid $light-gray-3 !important;
-	}
 	.table {
 		table-layout: fixed;
+
 		th {
 			background-color: $white !important;
 			border-top: none !important;
@@ -29,6 +23,7 @@
 			border-right: none !important;
 			border-bottom: 3px solid $light-gray-3 !important;
 		}
+
 		tr {
 			border-top: none !important;
 			border-left: none !important;

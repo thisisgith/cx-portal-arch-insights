@@ -231,6 +231,20 @@ describe('AssetsComponent', () => {
 		});
 	});
 
+	it('should clear selected filters', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			component.clearSelectedFilters();
+
+			expect(_.some(component.filters, 'selected'))
+				.toBeFalsy();
+
+			done();
+		});
+	});
+
 	it('should set a loading boolean for Cypress runs', () => {
 		expect(window.loading)
 			.toBeUndefined();

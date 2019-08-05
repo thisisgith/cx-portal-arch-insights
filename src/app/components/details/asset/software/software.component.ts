@@ -40,34 +40,6 @@ interface EolTimelineProperty {
 	propertyName: string;
 }
 
-/** properties in the SoftwareEolBulletin object to use in the timeline */
-const eolTimelineProperties: EolTimelineProperty[] = [
-	{
-		label: '_EndOfLifeAnnounced_',
-		propertyName: 'eoLifeExternalAnnouncementDate',
-	},
-	{
-		label: '_EndOfSale_',
-		propertyName: 'eoSaleDate',
-	},
-	{
-		label: '_LastShip_',
-		propertyName: 'lastShipDate',
-	},
-	{
-		label: '_EndOfSoftwareMaintenance_',
-		propertyName: 'eoSwMaintenanceReleasesDate',
-	},
-	{
-		label: '_EndOfVulnerabilitySecuritySupport_',
-		propertyName: 'eoVulnerabilitySecuritySupport',
-	},
-	{
-		label: '_LastDateOfSupport_',
-		propertyName: 'lastDateOfSupport',
-	},
-];
-
 /**
  * Software details component
  */
@@ -80,7 +52,12 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 
 	@Input('asset') public asset: Asset;
 	@ViewChild('licensesTable', { static: true }) private licensesTableTemplate: TemplateRef<{ }>;
+	@ViewChild('statusTemplate', { static: true }) private licenseStatusTemplate: TemplateRef<{ }>;
+	@ViewChild('typeTemplate', { static: true }) private licenseTypeTemplate: TemplateRef<{ }>;
 	@ViewChild('nameTemplate', { static: true }) private licenseNameTemplate: TemplateRef<{ }>;
+	@ViewChild('countTemplate', { static: true })
+		private licenseUsageCountTemplate: TemplateRef<{ }>;
+	@ViewChild('expiryTemplate', { static: true }) private licenseExpiryTemplate: TemplateRef<{ }>;
 
 	public status = {
 		loading: {
@@ -98,6 +75,34 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	public eolBulletinData: SoftwareEOLBulletin;
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
+
+	/** properties in the SoftwareEolBulletin object to use in the timeline */
+	private eolTimelineProperties: EolTimelineProperty[] = [
+		{
+			label: '_EndOfLifeAnnounced_',
+			propertyName: 'eoLifeExternalAnnouncementDate',
+		},
+		{
+			label: '_EndOfSale_',
+			propertyName: 'eoSaleDate',
+		},
+		{
+			label: '_LastShip_',
+			propertyName: 'lastShipDate',
+		},
+		{
+			label: '_EndOfSoftwareMaintenance_',
+			propertyName: 'eoSwMaintenanceReleasesDate',
+		},
+		{
+			label: '_EndOfVulnerabilitySecuritySupport_',
+			propertyName: 'eoVulnerabilitySecuritySupport',
+		},
+		{
+			label: '_LastDateOfSupport_',
+			propertyName: 'lastDateOfSupport',
+		},
+	];
 
 	constructor (
 		private logger: LogService,
@@ -241,29 +246,26 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 					{
 						key: 'licenseType',
 						name: `${I18n.get('_Type_')}`,
-						render: item =>
-							item.licenseType ? item.licenseType : I18n.get('_NA_'),
 						sortable: false,
+						template: this.licenseTypeTemplate,
 					},
 					{
 						key: 'licenseExpiry',
 						name: I18n.get('_Expires_'),
-						render: item =>
-							item.licenseExpiry ? item.licenseExpiry : I18n.get('_NA_'),
 						sortable: false,
+						template: this.licenseExpiryTemplate,
 					},
 					{
 						key: 'usageCount',
 						name: I18n.get('_Count_'),
 						sortable: false,
-						value: 'usageCount',
+						template: this.licenseUsageCountTemplate,
 					},
 					{
 						key: 'status',
 						name: I18n.get('_Status_'),
-						render: item =>
-							item.status ? item.status : I18n.get('_NA_'),
 						sortable: false,
+						template: this.licenseStatusTemplate,
 					},
 				],
 				padding: 'compressed',
@@ -313,20 +315,17 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	 */
 	private setTimelineData () {
 		this.timelineData = [];
-		if (eolTimelineProperties) {
-			eolTimelineProperties.forEach(property => {
-				const propertyName = _.get(property, 'propertyName', '');
-				const label = _.get(property, 'label', '');
-				const value: string = _.get(this.eolBulletinData, property.propertyName, '');
-
-				if (propertyName && value) {
-					this.timelineData.push({
-						date: new Date(value),
-						subTitle: new Date(value).toDateString(),
-						title: I18n.get(label),
-					});
-				}
-			});
-		}
+		this.eolTimelineProperties.forEach(property => {
+			const propertyName = _.get(property, 'propertyName', '');
+			const label = _.get(property, 'label', '');
+			const value: string = _.get(this.eolBulletinData, propertyName, '');
+			if (value) {
+				this.timelineData.push({
+					date: new Date(value),
+					subTitle: new Date(value).toDateString(),
+					title: I18n.get(label),
+				});
+			}
+		});
 	}
 }

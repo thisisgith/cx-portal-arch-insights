@@ -3,9 +3,6 @@ import { SoftwareEOLBulletinResponse } from '@sdp-api';
 /** Base of URL for SDP API */
 const api = '/api/customerportal/product-alerts/v1/software-eol-bulletins';
 
-/** Default Customer ID */
-const customerId = '2431199';
-
 /** The mock response for coverage counts */
 export const MockSoftwareEOLBulletinsResponse: SoftwareEOLBulletinResponse = {
 	/* tslint:disable */
