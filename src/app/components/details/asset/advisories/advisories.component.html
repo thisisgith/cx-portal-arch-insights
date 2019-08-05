@@ -1,5 +1,6 @@
 <advisory-details *ngIf="selectedAdvisory"
 	[advisoryId]="selectedAdvisory.id"
+	[selectedAsset]="asset"
 	[type]="selectedAdvisory.type"
 	(close)="onPanelClose()">
 </advisory-details>

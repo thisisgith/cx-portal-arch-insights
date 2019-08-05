@@ -1,86 +1,63 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject, merge, of } from 'rxjs';
-import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
-import { caseSeverities, CaseRequestType } from '@classes';
-import { CaseOpenRequest, ProblemArea, Subtech, Tech } from '@interfaces';
 import { CaseService } from '@cui-x/services';
-import { ProfileService } from '@cisco-ngx/cui-auth';
-import { I18n } from '@cisco-ngx/cui-utils';
+import { Asset, CriticalBug, FieldNoticeBulletin, SecurityAdvisoryBulletin } from '@sdp-api';
 import { CuiModalContent, CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
-import { Asset } from '@sdp-api';
-import { SelectOption } from './panel-select/panel-select.component';
-import { CaseOpenData } from './caseOpenData';
-import { CloseConfirmComponent } from './close-confirm/close-confirm.component';
+import { ProfileService } from '@cisco-ngx/cui-auth';
+import { I18n } from '@cisco-ngx/cui-utils';
+import { CaseRequestType, caseSeverities } from '@classes';
+import { AdvisoryType, CaseOpenRequest, ProblemArea, Subtech, Tech } from '@interfaces';
+import { CloseConfirmComponent } from '../close-confirm/close-confirm.component';
+import { CaseNoteBuilder } from './case-note-builder';
+import { Observable, Subject, of } from 'rxjs';
+import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { CaseOpenData } from '../caseOpenData';
 
 import * as _ from 'lodash-es';
 
 /**
- * Component for opening a new case in CSOne for a device
+ * Component for opening a case against a Cisco Security Advisory/Field Notice/Bug
  */
 @Component({
-	selector: 'app-case-open',
-	styleUrls: ['./case-open.component.scss'],
-	templateUrl: './case-open.component.html',
+	selector: 'app-case-open-advisories',
+	styleUrls: ['./case-open-advisories.component.scss'],
+	templateUrl: './case-open-advisories.component.html',
 })
-export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
-	@Input() public asset: Asset;
-	public data: { };
-	public expand = false;
+export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnDestroy {
+	@Input() public advisory: SecurityAdvisoryBulletin | FieldNoticeBulletin | CriticalBug;
+	@Input() public selectedAsset: Asset;
+	@Input() public otherAssets: Asset[];
+	@Input() public type: AdvisoryType;
+	public allAssets: Asset[];
 	public loadingTech = false;
 	public loadingSubtech = false;
 	public loadingProblemAreas = false;
-	public submitted = false;
-	public submitting = false;
-	public sevOptions: SelectOption<number>[] = [
-		{
-			name: caseSeverities[1].getCreateName(),
-			subtitle: I18n.get('_SeverityX_', 1),
-			value: 1,
-		},
-		{
-			name: caseSeverities[2].getCreateName(),
-			subtitle: I18n.get('_SeverityX_', 2),
-			value: 2,
-		},
-		{
-			name: caseSeverities[3].getCreateName(),
-			subtitle: I18n.get('_SeverityX_', 3),
-			value: 3,
-		},
-		{
-			name: caseSeverities[4].getCreateName(),
-			subtitle: I18n.get('_SeverityX_', 4),
-			value: 4,
-		},
-	];
-	public descriptionMaxLength = 32000;
-	public titleMaxLength = 255;
 	public techOptions: Tech[];
 	public subtechOptions: Subtech[];
 	public problemAreaOptions: ProblemArea[];
 	public problemGroups: string[];
-	public caseForm = new FormGroup({
-		description: new FormControl('', [Validators.required,
-			Validators.maxLength(this.descriptionMaxLength)]),
-		problemArea: new FormControl(null, Validators.required),
-		requestRma: new FormControl(false),
-		severity: new FormControl(4, Validators.required),
-		subtech: new FormControl(null, Validators.required),
-		technology: new FormControl(null, Validators.required),
-		title: new FormControl('', [Validators.required,
-			Validators.maxLength(this.titleMaxLength)]),
-	});
-
-	/** 2 values to pass to "submitted" component post-request */
 	public errors: string[];
 	public caseOpenData: CaseOpenData;
 
+	public data: { }; // Input data
+	public caseForm = new FormGroup({
+		description: new FormControl('', [Validators.required, Validators.maxLength(32000)]),
+		problemArea: new FormControl(null, Validators.required),
+		severity: new FormControl(3, Validators.required),
+		subtech: new FormControl(null, Validators.required),
+		technology: new FormControl(null, Validators.required),
+		title: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+	});
+	public severityName = caseSeverities[3].getCreateName();
+	public submitting = false;
+	public submitted = false;
+
+	private noteBuilder = new CaseNoteBuilder();
+	private note: string;
+
 	private destroy$ = new Subject();
-	private refreshProblemArea$ = new Subject<CaseRequestType>();
-	private refreshSubtech$ = new Subject<string>();
 
 	constructor (
 		private caseService: CaseService,
@@ -88,22 +65,42 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		private logger: LogService,
 		private profileService: ProfileService,
 	) {
-		this.logger.debug('CaseOpenComponent Created!');
+		this.logger.debug('CaseOpenAdvisoriesComponent Created!');
 	}
 
 	/**
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.asset = _.get(this.data, 'asset');
+		this.advisory = _.get(this.data, 'advisory');
+		this.selectedAsset = _.get(this.data, 'selectedAsset');
+		this.otherAssets = _.get(this.data, 'otherAssets', []);
+		this.type = _.get(this.data, 'type');
+		this.allAssets = this.otherAssets;
+		if (this.selectedAsset) {
+			this.allAssets.unshift(this.selectedAsset);
+		}
+		this.allAssets = _.uniqBy(this.allAssets, 'serialNumber');
+		if (this.type !== 'bug') {
+			this.caseForm.controls.title.setValue(
+				_.get(this.advisory, 'bulletinTitle'),
+			);
+		} else {
+			this.caseForm.controls.title.setValue(
+				_.get(this.advisory, 'title'),
+			);
+		}
+		this.note = this.noteBuilder.buildNote(this.type, this.advisory);
+		this.caseForm.controls.description.setValue(
+			this.note,
+		);
 		this.fetchTechList();
 		this.subscribeSubtech();
 		this.subscribeProblemArea();
-		this.refreshProblemArea$.next(CaseRequestType.Diagnose);
 	}
 
 	/**
-	 * OnDestroy lifecycle hook
+	 * OnDestroy Lifecycle Hook
 	 */
 	public ngOnDestroy () {
 		this.destroy$.next();
@@ -132,13 +129,21 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			contactId: this.profileService.getProfile().cpr.pf_auth_uid,
 			customerActivity: _.get(this.caseForm.controls.problemArea.value, 'customerActivity'),
 			description: this.caseForm.controls.description.value,
-			deviceName: this.asset.deviceName,
+			deviceName: this.allAssets[0].deviceName,
+			noteDetails: {
+				note1: {
+					note: 'Additional Event Details',
+					noteDetail: this.note,
+					noteStatus: 'E',
+					noteType: 'Problem Description',
+				},
+			},
 			priority: this.caseForm.controls.severity.value,
 			problemCode: _.get(this.caseForm.controls.problemArea.value, 'problemCode'),
-			requestType: this.caseForm.controls.requestRma.value ?
-				CaseRequestType.RMA : CaseRequestType.Diagnose,
-			serialNumber: this.asset.serialNumber,
-			softwareVersion: this.asset.osVersion,
+			requestType: CaseRequestType.Diagnose,
+			serialNumber: this.allAssets[0].serialNumber,
+			// serialNumber: '35641136A1621',
+			softwareVersion: this.allAssets[0].osVersion,
 			subTechId: _.get(this.caseForm.controls.subtech.value, '_id'),
 			summary: this.caseForm.controls.title.value,
 			techId: this.caseForm.controls.technology.value,
@@ -167,10 +172,9 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 					description: this.caseForm.controls.description.value,
 					problemArea:
 						_.get(this.caseForm.controls.problemArea.value, 'problemCodeName'),
-					requestRma: this.caseForm.controls.requestRma.value,
+					requestRma: false,
 					severity: this.caseForm.controls.severity.value,
-					severityName: _.get(_.find(this.sevOptions,
-						{ value: this.caseForm.controls.severity.value }), 'name'),
+					severityName: caseSeverities[3].getCreateName(),
 					subtech: _.get(this.caseForm.controls.subtech.value, 'subTechName'),
 					technology: _.get(_.find(this.techOptions,
 						{ _id: this.caseForm.controls.technology.value }), 'techName'),
@@ -182,7 +186,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	}
 
 	/**
-	 * Fetch select options for tech/problem area from APIs
+	 * Fetch list of CSOne Techs
 	 */
 	private fetchTechList () {
 		this.loadingTech = true;
@@ -218,11 +222,31 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	}
 
 	/**
+	 * API request to get problem areas
+	 * @param requestType fetch "diagnose" or "rma" problem areas
+	 * @returns Observable with result
+	 */
+	private fetchProblemAreas () {
+		return this.caseService.fetchProblemArea(CaseRequestType.Diagnose)
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Fetch Problem Area :: Error ${err}`);
+
+					return of(null);
+				}),
+				takeUntil(this.destroy$),
+			);
+	}
+
+	/**
 	 * Subscribe and listen for tech to change, refresh subtech options
 	 */
 	private subscribeSubtech () {
-		this.refreshSubtech$.pipe(
-			tap(() => this.loadingSubtech = true),
+		this.caseForm.controls.technology.valueChanges.pipe(
+			tap(() => {
+				this.loadingSubtech = true;
+				this.caseForm.controls.subtech.setValue(null);
+			}),
 			switchMap(techId => this.fetchSubtechList(techId)),
 			takeUntil(this.destroy$),
 		)
@@ -230,22 +254,18 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			this.loadingSubtech = false;
 			this.subtechOptions = result.subTechList;
 		});
-		this.caseForm.controls.technology.valueChanges.pipe(
-			tap(() => this.caseForm.controls.subtech.setValue(null)),
-			takeUntil(this.destroy$),
-		)
-		.subscribe((techId: string) => {
-			this.refreshSubtech$.next(techId);
-		});
 	}
 
 	/**
-	 * Listen for "Request RMA" change and update problem area options
+	 * Subscribe and listen for subtech to change, refresh problemArea options
 	 */
 	private subscribeProblemArea () {
-		this.refreshProblemArea$.pipe(
-			tap(() => this.loadingProblemAreas = true),
-			switchMap(type => this.fetchProblemAreas(type)),
+		this.caseForm.controls.subtech.valueChanges.pipe(
+			tap(() => {
+				this.loadingProblemAreas = true;
+				this.caseForm.controls.problemArea.setValue(null);
+			}),
+			switchMap(() => this.fetchProblemAreas()),
 			takeUntil(this.destroy$),
 		)
 		.subscribe(result => {
@@ -265,36 +285,5 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			this.problemAreaOptions = Object.values(problemAreasGrouped);
 			this.problemGroups = Object.keys(problemAreasGrouped);
 		});
-		// Listen for "requestType" or "subTech" to change, update problem areas.
-		merge(
-			this.caseForm.controls.requestRma.valueChanges,
-			this.caseForm.controls.subtech.valueChanges.pipe(
-				map(() => this.caseForm.controls.requestRma.value),
-			),
-		)
-		.pipe(
-			tap(() => this.caseForm.controls.problemArea.setValue(null)),
-			takeUntil(this.destroy$),
-		)
-		.subscribe((rma: boolean) => {
-			this.refreshProblemArea$.next(rma ? CaseRequestType.RMA : CaseRequestType.Diagnose);
-		});
-	}
-
-	/**
-	 * API request to get problem areas
-	 * @param requestType fetch "diagnose" or "rma" problem areas
-	 * @returns Observable with result
-	 */
-	private fetchProblemAreas (requestType: CaseRequestType) {
-		return this.caseService.fetchProblemArea(requestType)
-			.pipe(
-				catchError(err => {
-					this.logger.error(`Fetch Problem Area :: Error ${err}`);
-
-					return of(null);
-				}),
-				takeUntil(this.destroy$),
-			);
 	}
 }
