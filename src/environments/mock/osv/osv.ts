@@ -16,9 +16,9 @@ const customerId = '231215372';
 const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
 
 /** softwareVersion Params */
-const svParams = '&pageIndex=1&pageSize=10&sort=swVersion&sortOrder=desc&filter=';
+const svParams = '&pageIndex=1&pageSize=10&sort=swVersion&sortOrder=desc';
 /** AssetList params */
-const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc';
+const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc&filter=';
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
 	{
