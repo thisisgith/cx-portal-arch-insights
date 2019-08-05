@@ -2,6 +2,7 @@ export { AdvisoryDetailsModule } from './details/advisory/advisory-details.modul
 export { AssetDetailsModule } from './details/asset/asset-details.module';
 export { BarChartModule } from './charts/bar-chart/bar-chart.module';
 export { BubbleChartModule } from './charts/bubble-chart/bubble-chart.module';
+export { CharCountModule } from './char-count/char-count.module';
 export { ColumnChartModule } from './charts/column-chart/column-chart.module';
 export { DetailsPanelModule } from './details/panel/details-panel.module';
 export { CaseModule } from './case/case.module';

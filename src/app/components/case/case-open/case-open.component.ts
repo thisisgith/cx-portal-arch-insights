@@ -56,18 +56,22 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			value: 4,
 		},
 	];
+	public descriptionMaxLength = 32000;
+	public titleMaxLength = 255;
 	public techOptions: Tech[];
 	public subtechOptions: Subtech[];
 	public problemAreaOptions: ProblemArea[];
 	public problemGroups: string[];
 	public caseForm = new FormGroup({
-		description: new FormControl('', [Validators.required, Validators.maxLength(32000)]),
+		description: new FormControl('', [Validators.required,
+			Validators.maxLength(this.descriptionMaxLength)]),
 		problemArea: new FormControl(null, Validators.required),
 		requestRma: new FormControl(false),
 		severity: new FormControl(4, Validators.required),
 		subtech: new FormControl(null, Validators.required),
 		technology: new FormControl(null, Validators.required),
-		title: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+		title: new FormControl('', [Validators.required,
+			Validators.maxLength(this.titleMaxLength)]),
 	});
 
 	/** 2 values to pass to "submitted" component post-request */

@@ -4,6 +4,7 @@ import { AddNoteComponent } from './add-note.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import { CharCountModule } from '@components';
 
 /**
  * Add Case Notes Module
@@ -17,6 +18,7 @@ import { CuiSpinnerModule } from '@cisco-ngx/cui-components';
 		ReactiveFormsModule,
 		I18nPipeModule,
 		CuiSpinnerModule,
+		CharCountModule,
 	],
 })
 export class AddNoteModule { }
