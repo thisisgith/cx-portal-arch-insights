@@ -24,8 +24,16 @@
 				</div>
 
 				<div
-					*ngFor="let scan of scans"
-					class="panel panel--bordered flex base-margin-right"
+					*ngFor="let scan of scans; let i = index"
+					class="panel
+						panel--bordered-left
+						panel--bordered-right
+						panel--bordered-top
+						flex
+						base-margin-right"
+					[ngClass]="{
+						'panel--bordered-bottom': i === (scans.length - 1)
+					}"
 					data-auto-id="settings.policies.collection.panel">
 					<div class="col-1 flex-center">
 						<span
