@@ -56,6 +56,8 @@ describe('AssetDetailsComponent', () => {
 			.toBe(null);
 		expect(component.status.isLoading)
 			.toBe(false);
+		expect(component.assetDetailsTable)
+			.toBeUndefined();	
 	}));
 
 	it('should return asset recommendations on success', fakeAsync(() => {

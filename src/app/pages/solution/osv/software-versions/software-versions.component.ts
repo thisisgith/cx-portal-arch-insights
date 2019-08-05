@@ -101,7 +101,7 @@ export class SoftwareVersionsComponent {
 	/**
 	 * Will construct the assets table
 	 */
-	private buildTable () {
+	public buildTable () {
 		if (!this.softwareVersionsTable) {
 			this.softwareVersionsTable = new CuiTableOptions({
 				bordered: false,
@@ -177,6 +177,7 @@ export class SoftwareVersionsComponent {
 	public onTableSortingChanged (evt: any) {
 		this.softwareVersionsParams.sortOrder = evt.sortDirection;
 		this.softwareVersionsParams.sort = evt.key;
+		this.softwareVersionsParams.pageIndex = 1;
 		this.loadData();
 	}
 }

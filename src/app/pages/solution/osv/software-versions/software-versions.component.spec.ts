@@ -4,9 +4,10 @@ import { SoftwareVersionsComponent } from './software-versions.component';
 import { SoftwareVersionsModule } from './software-versions.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OSVService } from '@sdp-api';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { OSVScenarios } from '@mock';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('SoftwareVersionsComponent', () => {
 	let component: SoftwareVersionsComponent;
@@ -39,11 +40,38 @@ describe('SoftwareVersionsComponent', () => {
 	it('should call getVersions list on init', () => {
 		spyOn(osvService, 'getSoftwareVersions')
 			.and
-			.returnValue(of());
+			.returnValue(of(<any>OSVScenarios[2].scenarios.GET[0].response.body));
+		expect(component.status.isLoading)
+			.toBe(true);
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
 			.toHaveBeenCalled();
+		expect(component.softwareVersionsTable)
+			.toBeDefined();
+		expect(component.status.isLoading)
+			.toBe(false);
+	});
+
+	it('should handle getVersions error', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(component, 'buildTable');
+		spyOn(osvService, 'getSoftwareVersions')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		expect(component.status.isLoading)
+			.toBe(true);
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(osvService.getSoftwareVersions)
+			.toHaveBeenCalled();
+		expect(component.softwareVersionsTable)
+			.toBeUndefined();
+		expect(component.status.isLoading)
+			.toBe(false);
 	});
 
 	it('should refresh on sort', () => {
@@ -57,6 +85,10 @@ describe('SoftwareVersionsComponent', () => {
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
 			.toHaveBeenCalled();
+		expect(component.softwareVersionsParams.sort)
+			.toBe('Key1')	
+		expect(component.softwareVersionsParams.pageIndex)
+			.toBe(1);
 	});
 
 	it('should refresh on page change', () => {
@@ -67,6 +99,8 @@ describe('SoftwareVersionsComponent', () => {
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
 			.toHaveBeenCalled();
+		expect(component.softwareVersionsParams.pageIndex)
+			.toBe(3);
 	});
 
 	it('should call the getVersion with require params', () => {
@@ -85,13 +119,30 @@ describe('SoftwareVersionsComponent', () => {
 	it('should show pagination info if getVersion call is success', () => {
 		spyOn(osvService, 'getSoftwareVersions')
 			.and
-			.returnValue(of(<any> OSVScenarios[2].scenarios.GET[0].response.body));
+			.returnValue(of(<any>OSVScenarios[2].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(osvService.getSoftwareVersions)
+			.toHaveBeenCalled();
+		expect(component.paginationCount)
+			.toBe('1-6');
+		expect(component.softwareVersionsTable)
+			.toBeDefined();
+		expect(component.pagination.total)
+			.toEqual(10);	
+	});
+
+	it('should show pagination info if getVersion call is success', () => {
+		spyOn(osvService, 'getSoftwareVersions')
+			.and
+			.returnValue(of(<any>OSVScenarios[6].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
 			.toHaveBeenCalled();
 		expect(component.paginationCount)
 			.toBe('1-10');
-
+		expect(component.softwareVersionsTable)
+			.toBeDefined();
 	});
 });

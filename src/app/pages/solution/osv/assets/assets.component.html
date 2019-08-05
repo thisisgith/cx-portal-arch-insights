@@ -34,7 +34,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let item of assets" (click)="onRowSelect(item)" [ngClass]="{ 'active': item.details }"
+				<tr *ngFor="let item of assets" (click)="onRowSelect(item)" [ngClass]="{ 'active': item.rowSelected }"
 					attr.data-auto-id="Asset-{{ item.hostName }}">
 					<td *ngFor="let column of assetsTable.columns" [ngStyle]="{ 'width': column.width }"
 						(click)="column.click ? $event.stopPropagation() : null"

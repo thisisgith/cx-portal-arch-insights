@@ -167,7 +167,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 	/**
 	 * Will construct the assets table
 	 */
-	private buildTable () {
+	public buildTable () {
 		if (!this.assetsTable) {
 			this.assetsTable = new CuiTableOptions({
 				bordered: true,
@@ -238,9 +238,15 @@ export class AssetsComponent implements OnInit, OnChanges {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: any) {
+		this.assets.forEach((asset:any) => {
+			if (asset !== item) {
+				asset.rowSelected = false;
+			}
+		});
+		item.rowSelected = !item.rowSelected;
 		this.fullscreen = false;
 		this.fullscreenChange.emit(this.fullscreen);
-		this.selectedAsset = item;
+		this.selectedAsset = item.rowSelected ? item : null;
 		this.selectedAssetChange.emit(this.selectedAsset);
 	}
 
@@ -283,24 +289,4 @@ export class AssetsComponent implements OnInit, OnChanges {
 		this.assetsParams.pageIndex = 1;
 		this.loadData();
 	}
-
-	/**
-	 * Returns the row specific actions
-	 * @param asset the asset we're building the actions for
-	 * @returns the built actions
-	 */
-	public getRowActions (asset: OSVAsset) {
-		return [
-			[
-				{
-					asset,
-					label: I18n.get('_OsvBasicRecommendations_'),
-					onClick: (action: any) => {
-						this.logger.debug(action);
-					},
-				},
-			],
-		];
-	}
-
 }

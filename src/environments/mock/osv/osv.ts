@@ -49,6 +49,71 @@ const mockSoftwareVersions: SoftwareVersionsResponse = {
 	pagination: {
 		page: 1,
 		rows: 10,
+		total: 6,
+	},
+	uiSwVersionList: [
+		{
+			assetCount: 1,
+			goldenVersion: false,
+			optimalVersion: false,
+			postDate: null,
+			profileAssetCount: 0,
+			swType: 'IOS-XE',
+			swVersion: '03.02.02.SE',
+		},
+		{
+			assetCount: 1,
+			goldenVersion: false,
+			optimalVersion: false,
+			postDate: null,
+			profileAssetCount: 0,
+			swType: 'IOS-XE',
+			swVersion: '03.02.03.SE',
+		},
+		{
+			assetCount: 1,
+			goldenVersion: false,
+			optimalVersion: false,
+			postDate: null,
+			profileAssetCount: 0,
+			swType: 'IOS-XE',
+			swVersion: '03.06.05E',
+		},
+		{
+			assetCount: 1,
+			goldenVersion: false,
+			optimalVersion: false,
+			postDate: null,
+			profileAssetCount: 0,
+			swType: 'Switch Firmware',
+			swVersion: '1.2.0.97',
+		},
+		{
+			assetCount: 1,
+			goldenVersion: false,
+			optimalVersion: false,
+			postDate: '2008-01-10T18:30:00.000+0000',
+			profileAssetCount: 0,
+			swType: 'IOS',
+			swVersion: '12.1(22)EA11',
+		},
+		{
+			assetCount: 1,
+			goldenVersion: false,
+			optimalVersion: false,
+			postDate: '2009-03-16T18:30:00.000+0000',
+			profileAssetCount: 0,
+			swType: 'IOS',
+			swVersion: '12.2(44)SE6',
+		},
+	],
+};
+
+/** The mock response for software versions */
+const mockSoftwareVersions1: SoftwareVersionsResponse = {
+	pagination: {
+		page: 1,
+		rows: 10,
 		total: 10,
 	},
 	uiSwVersionList: [
@@ -295,6 +360,90 @@ const mockAssets: AssetsResponse = {
 	],
 };
 
+/** The mock response for assets */
+const mockAssets1: AssetsResponse = {
+	pagination: {
+		page: 1,
+		rows: 10,
+		total: 6,
+	},
+	uiAssetList: [
+		{
+			deployment: 'None',
+			hostName: 'AP4800.8DEC',
+			id: '231215372_NA,FCW2238N7LG,AIR-AP4800-B-K9,NA_AIR-AP4800-B-K9_FCW2238N7LG',
+			ipAddress: '10.13.5.117',
+			optimalVersion: '16.11.1c',
+			productFamily: 'Cisco Aironet 4800 Series',
+			recommAcceptedDate: null,
+			recommendations: null,
+			swType: 'IOS',
+			swVersion: '16.10.1.130',
+		},
+		{
+			deployment: 'None',
+			hostName: 'Pod5-AP4800',
+			id: '231215372_NA,FCW2235NF4L,AIR-AP4800-B-K9,NA_AIR-AP4800-B-K9_FCW2235NF4L',
+			ipAddress: '192.168.59.100',
+			optimalVersion: null,
+			productFamily: 'Cisco Aironet 4800 Series',
+			recommAcceptedDate: null,
+			recommendations: null,
+			swType: 'IOS',
+			swVersion: '8.8.111.0',
+		},
+		{
+			deployment: 'None',
+			hostName: 'Pod5-AP3800',
+			id: '231215372_NA,FCW2236N7JZ,AIR-AP3802I-B-K9,NA_AIR-AP3802I-B-K9_FCW2236N7JZ',
+			ipAddress: '192.168.58.100',
+			optimalVersion: null,
+			productFamily: 'Cisco Aironet 3800 Series Access Points',
+			recommAcceptedDate: null,
+			recommendations: null,
+			swType: 'IOS',
+			swVersion: '8.8.111.0',
+		},
+		{
+			deployment: 'None',
+			hostName: 'AP4800.8DAC',
+			id: '231215372_NA,FCW2238N7JF,AIR-AP4800-B-K9,NA_AIR-AP4800-B-K9_FCW2238N7JF',
+			ipAddress: '10.13.5.114',
+			optimalVersion: null,
+			productFamily: 'Cisco Aironet 4800 Series',
+			recommAcceptedDate: null,
+			recommendations: null,
+			swType: 'IOS',
+			swVersion: '8.8.120.6',
+		},
+		{
+			deployment: 'None',
+			id: '231215372_NA,FCW2238N7CN,AIR-AP4800-B-K9,NA_AIR-AP4800-B-K9_FCW2238N7CN',
+			hostName: 'AP4800.90A4',
+			ipAddress: '10.13.5.119',
+			optimalVersion: null,
+			productFamily: 'Cisco Aironet 4800 Series',
+			recommAcceptedDate: null,
+			recommendations: null,
+			swType: 'IOS',
+			swVersion: '8.8.120.6',
+		},
+		{
+			deployment: 'None',
+			id: '231215372_NA,KWC214106R7,AIR-AP1800S-B-K9,NA_AIR-AP1800S-B-K9_KWC214106R7',
+			hostName: 'Sensor-0860',
+			ipAddress: '10.13.5.115',
+			optimalVersion: null,
+			productFamily: null,
+			recommAcceptedDate: null,
+			recommendations: null,
+			swType: '8.8.1.10',
+			swVersion: '8.8.1.10',
+		},
+	],
+};
+
+
 /** The mock response for summary */
 const mockSummaryResponse: SummaryResponse = {
 	asset_profile: {
@@ -395,6 +544,40 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}assets?customerId=${customerId}${assetParams}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Basic Assets List',
+					response: {
+						body: mockAssets1,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}assets?customerId=${customerId}${assetParams}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Software Versions',
+					response: {
+						body: mockSoftwareVersions1,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}versions?customerId=${customerId}${svParams}`,
 		usecases: ['Use Case 1'],
 	},
 
