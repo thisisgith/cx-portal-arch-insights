@@ -1,0 +1,23 @@
+{
+	"$schema": "../../../node_modules/@apollo/ng-swagger-gen/ng-swagger-gen-schema.json",
+	"swagger": "../../node_modules/@swagger/cx-portal/swagger/Email.yaml",
+	"output": "src/lib/email",
+	"outputCore": "../core",
+	"prefix": "Email",
+	"ignoreUnusedModels": true,
+	"minParamsForContainer": 2,
+	"sortParams": "desc",
+	"defaultTag": "Email",
+	"replaceTags": {},
+	"defaultOperationIds": {},
+	"modelsExportAs": {
+		"ErrorResponse": "EmailErrorResponse"
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
+}

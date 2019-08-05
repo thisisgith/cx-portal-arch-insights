@@ -321,11 +321,12 @@ implements OnInit, OnChanges, OnDestroy {
 			}),
 		);
 	}
-/**
-	* Fetch Case/RMA counts for the given serial number
-	* @param serialNumber sn to search on
-	* @returns Observable with array of case followed by RMA counts
-	*/
+
+	/**
+	 * Fetch Case/RMA counts for the given serial number
+	 * @param serialNumber sn to search on
+	 * @returns Observable with array of case followed by RMA counts
+	 */
 	private getCaseData (serialNumber: string) {
 	 const params = {
 		 nocache: Date.now(),

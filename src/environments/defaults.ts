@@ -25,6 +25,9 @@ export const defaults = {
 		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
 	emailSupport: 'https://cpp-api.sdp11-idev.csco.cloud/email/v1/send',
+	microservice_urls: {
+		cases: '/ws/casesdlinton/v3',
+	},
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [

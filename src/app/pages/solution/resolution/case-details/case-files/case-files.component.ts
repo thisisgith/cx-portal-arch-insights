@@ -60,7 +60,6 @@ export class CaseFilesComponent implements OnInit, OnChanges {
 	public buildTable () {
 		this.fileTableOptions = new CuiTableOptions({
 			bordered: true,
-			striped: false,
 			columns: [
 				{
 					key: 'fileName',
@@ -84,6 +83,7 @@ export class CaseFilesComponent implements OnInit, OnChanges {
 					template: this.downloadTemplate,
 				},
 			],
+			striped: false,
 		});
 	}
 
@@ -96,6 +96,7 @@ export class CaseFilesComponent implements OnInit, OnChanges {
 		if (caseFileIcons[fileContentType]) {
 			return caseFileIcons[fileContentType];
 		}
+
 		return caseFileIcons.default;
 	}
 

@@ -72,6 +72,19 @@ export default class MockService {
 	}
 
 	/**
+	 * Enables all mock scenarios
+	 */
+	static enableAll () {
+		cy.window({ log: false }).then(win => {
+			Cypress.log({
+				name: 'Mock On',
+				message: '*',
+			});
+			cy.wrap(win.mockService.enableAll());
+		});
+	}
+
+	/**
 	 * Disables a specified mock scenario
 	 * @param {Array | String} scenarios Scenario description(s)
 	 */
@@ -91,6 +104,19 @@ export default class MockService {
 			Cypress._.each(scenarioList, scenario => {
 				win.mockService.disable(scenario);
 			});
+		});
+	}
+
+	/**
+	 * Disables all mock scenarios
+	 */
+	static disableAll () {
+		cy.window({ log: false }).then(win => {
+			Cypress.log({
+				name: 'Mock Off',
+				message: '*',
+			});
+			cy.wrap(win.mockService.disableAll());
 		});
 	}
 
