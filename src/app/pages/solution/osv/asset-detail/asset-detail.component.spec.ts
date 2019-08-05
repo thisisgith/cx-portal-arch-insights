@@ -47,20 +47,46 @@ describe('AssetDetailsComponent', () => {
 		spyOn(osvService, 'getAssetDetails')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.selectedAsset = <any> OSVScenarios[4].scenarios.GET[0].response.body;
+		expect(component.status.isLoading)
+			.toBe(true);
 		component.ngOnInit();
 		tick();
 		expect(component.assetDetails)
 			.toBe(null);
+		expect(component.status.isLoading)
+			.toBe(false);
 	}));
 
 	it('should return asset recommendations on success', fakeAsync(() => {
+		spyOn(component, 'buildTable');
+		spyOn(component, 'sortData');
 		spyOn(osvService, 'getAssetDetails')
 			.and
 			.returnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
-		component.selectedAsset = <any> OSVScenarios[4].scenarios.GET[0].response.body;
+		component.selectedAsset = (<any> OSVScenarios[4].scenarios.GET[0].response.body)
+									.uiAssetList[0];
 		component.ngOnInit();
 		tick();
 		expect(component.assetDetails)
+			.toBeDefined();
+		expect(component.buildTable)
+			.toHaveBeenCalled();
+		expect(component.assetDetailsParams.id.length)
+			.toBeGreaterThan(0);
+		expect(component.sortData)
+			.toHaveBeenCalled();
+	}));
+
+	it('should build Table on success', fakeAsync(() => {
+		spyOn(osvService, 'getAssetDetails')
+			.and
+			.returnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
+		component.selectedAsset = (<any> OSVScenarios[4].scenarios.GET[0].response.body)
+									.uiAssetList[0];
+		component.ngOnInit();
+		tick();
+		expect(component.assetDetailsTable)
 			.toBeDefined();
 	}));
 
