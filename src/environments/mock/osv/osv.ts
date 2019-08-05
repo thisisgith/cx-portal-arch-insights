@@ -350,7 +350,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 2000,
+					delay: 200,
 					description: 'Software Versions',
 					response: {
 						body: mockSoftwareVersions,
@@ -367,7 +367,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 2000,
+					delay: 200,
 					description: 'Basic Recommendations Status Counts',
 					response: {
 						body: mockBasicRecommendations,
@@ -384,7 +384,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 2000,
+					delay: 200,
 					description: 'Basic Assets List',
 					response: {
 						body: mockAssets,
