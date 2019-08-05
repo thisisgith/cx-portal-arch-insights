@@ -210,22 +210,6 @@ export class OptimalSoftwareVersionComponent {
 	}
 
 	/**
-	 * Selects all the sub filters based on a list of parameters
-	 * @param params the array list of params
-	 * @param key the key to search for in the filters
-	 */
-	private selectSubFilters (params: string[], key: string) {
-		const filter = _.find(this.filters, { key });
-		if (filter) {
-			_.each(filter.data, d => {
-				if (params.indexOf(d.filter) > -1) {
-					this.onSubfilterSelect(d.filter, filter, false);
-				}
-			});
-		}
-	}
-
-	/**
 	 * Returns the current selected visual filters
 	 * @returns the selected visual filters
 	 */

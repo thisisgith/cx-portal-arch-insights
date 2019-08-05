@@ -23,7 +23,7 @@ describe('AssetDetailsComponent', () => {
 		})
 			.compileComponents();
 		osvService = TestBed.get(OSVService);
-		selectedAsset = (<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
+		selectedAsset = (<any>OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
 	}));
 
 	beforeEach(() => {
@@ -54,7 +54,8 @@ describe('AssetDetailsComponent', () => {
 	it('should return asset recommendations on success', fakeAsync(() => {
 		spyOn(osvService, 'getAssetDetails')
 			.and
-			.returnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
+			.returnValue(of(<any>OSVScenarios[3].scenarios.GET[0].response.body));
+		component.selectedAsset = <any>OSVScenarios[4].scenarios.GET[0].response.body;
 		component.ngOnInit();
 		tick();
 		expect(component.assetDetails)
@@ -62,7 +63,7 @@ describe('AssetDetailsComponent', () => {
 	}));
 
 	it('sort data based on recommendation dates', () => {
-		const data = _.cloneDeep(<any> OSVScenarios[3].scenarios.GET[0].response.body);
+		const data = _.cloneDeep(<any>OSVScenarios[3].scenarios.GET[0].response.body);
 		component.sortData(data);
 		expect(data[0].name)
 			.toEqual('latest');
@@ -72,25 +73,39 @@ describe('AssetDetailsComponent', () => {
 			.toEqual('current');
 	});
 
-	it('should accept recommendation on accept button click', fakeAsync(() => {
-		spyOn(osvService, 'updateAsset')
+	it('should build table only if we get recommendations', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(component, 'buildTable');
+		spyOn(osvService, 'getAssetDetails')
 			.and
-			.returnValue(of((<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0]));
-		component.assetDetails = _.cloneDeep(<any> OSVScenarios[3].scenarios.GET[0].response.body);
-		component.onActionClick(component.assetDetails[1]);
-		tick();
-		expect(component.assetDetails[0].accepted)
-			.toEqual(true);
-		expect(component.assetDetails[1].accepted)
-			.toEqual(false);
-	}));
-
-	it('should select point if not already accepted or current version', () => {
-		component.selectedPoint({ accepted: true, name: 'Latest' });
-		expect(component.selectedRecommendation.name)
-			.toEqual('None');
-		component.selectedPoint({ accepted: false, name: 'Latest' });
-		expect(component.selectedRecommendation.name)
-			.toEqual('Latest');
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.fetchAssetDetails();
+		fixture.detectChanges();
+		expect(component.buildTable)
+			.toHaveBeenCalledTimes(0);
 	});
+
+	it('table to be default view', () => {
+		expect(component.view)
+			.toBe('list');
+	});
+
+	it(' refresh if the selecteAsset is changed', fakeAsync(() => {
+		spyOn(component, 'refresh');
+		component.ngOnChanges({
+			selecteAsset: {
+				currentValue: true,
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+		tick();
+		fixture.detectChanges();
+		expect(component.refresh)
+			.toHaveBeenCalled();
+	}));
 });

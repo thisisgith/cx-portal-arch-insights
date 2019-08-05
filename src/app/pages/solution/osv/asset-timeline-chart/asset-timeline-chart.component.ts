@@ -50,25 +50,7 @@ export class AssetTimelineChartComponent implements OnInit {
 	 * Builds our bubble graph
 	 */
 	public buildGraph () {
-		const datePipe = new DatePipe('en-US');
-		const seriesData = _.compact(
-			_.map(this.data, (value: AssetRecommendations) => {
-				const releaseDate = new Date(value.postDate);
-				return {
-					accepted: value.accepted,
-					description: value.name,
-					label: value.swVersion,
-					swVersion: value.swVersion,
-					name: _.capitalize(value.name),
-					x: Date.UTC(
-						releaseDate.getFullYear(),
-						releaseDate.getMonth(),
-						releaseDate.getDate(),
-					),
-					releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
-				};
-			}));
-
+		const seriesData = this.formatGraphData();
 		this.chart = new Chart({
 			chart: {
 				events: {
@@ -179,6 +161,27 @@ export class AssetTimelineChartComponent implements OnInit {
 		});
 	}
 
+	public formatGraphData () {
+		const datePipe = new DatePipe('en-US');
+		return _.compact(
+			_.map(this.data, (value: AssetRecommendations) => {
+				const releaseDate = new Date(value.postDate);
+				return {
+					accepted: value.accepted,
+					description: value.name,
+					label: value.swVersion,
+					swVersion: value.swVersion,
+					name: _.capitalize(value.name),
+					x: Date.UTC(
+						releaseDate.getFullYear(),
+						releaseDate.getMonth(),
+						releaseDate.getDate(),
+					),
+					releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
+				};
+			}));
+	}
+
 	/**
 	 * OnChanges Functionality
 	 * @param changes change found
@@ -200,7 +203,7 @@ export class AssetTimelineChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-		event.point.selected = true;
+		_.set(event, 'point.selected', true);
 		this.selectedPoint.emit(event.point);
 	}
 

@@ -8,19 +8,19 @@
 			</div>
 		</div>
 	</details-panel-header>
-	<asset-details  [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
+	<asset-details [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
 </details-panel>
 
 <div class="panel">
-	<div class="row" *ngIf="!status.isLoading">
+	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading">
 		<ng-container *ngFor="let filter of filters; index as i">
 			<div *ngIf="!filter.loading && filter.data.length && filter.view.indexOf(view) > -1"
 				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
-				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" class="panel col-md-3 filter" [ngClass]="{
+				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" class="panel flex-center filter" [ngClass]="{
 					'filter__selected': filter.selected,
 					'filter__not-selected': !filter.selected
 				}">
-				<div class="base-margin-bottom relative max-height">
+				<div class="base-margin-bottom">
 					<div *ngIf="filter.template">
 						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
 					</div>
@@ -79,7 +79,7 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div class="max-width absolute-center" (click)="clearFilters()" data-auto-id="TotalVisualFilter">
+	<div  (click)="clearFilters()" data-auto-id="TotalVisualFilter">
 		<!-- <div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-muted':view != 'swProfiles'}"
 			data-auto-id="TotalVisualFilterSoftwareProfiles">
 			<div class="col-5 text-right">
@@ -121,13 +121,16 @@
 </ng-template>
 
 <ng-template #deploymentStatusFilter let-filter="filter">
-	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
-	</assets-pie-chart>
+	<div>
+		<pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
+		</pie-chart>
+	</div>
+
 </ng-template>
 
 <ng-template #assetTypeFilter let-filter="filter">
-	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
-	</assets-pie-chart>
+	<pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
+	</pie-chart>
 </ng-template>
 
 <ng-template #softwareProfileInfo>

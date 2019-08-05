@@ -13,7 +13,6 @@ import { OSVModule } from '@sdp-api';
 import {
 	AssetTimelineChartModule,
 } from './asset-timeline-chart/asset-timeline-chart.module';
-import { AssetsPieChartModule } from './assets-pie-chart/assets-pie-chart.module';
 import { DetailsPanelModule, PieChartModule } from '@components';
 
 /**
@@ -44,8 +43,7 @@ const childRoutes: Routes = [
 		CuiTabsModule,
 		AssetDetailsModule,
 		CuiSpinnerModule,
-		FormsModule,
-		AssetsPieChartModule,
+		FormsModule,		
 		AssetsModule,
 		SoftwareVersionsModule,
 		OSVModule.forRoot({ rootUrl }),

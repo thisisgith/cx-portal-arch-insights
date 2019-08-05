@@ -4,6 +4,7 @@ import { AssetTimelineChartComponent } from './asset-timeline-chart.component';
 import { AssetTimelineChartModule } from './asset-timeline-chart.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OSVScenarios } from '@mock';
+import * as _ from 'lodash-es';
 
 describe('AssetTimelineChartComponent', () => {
 	let component: AssetTimelineChartComponent;
@@ -31,7 +32,7 @@ describe('AssetTimelineChartComponent', () => {
 
 	it('should build graph on OnInit', () => {
 		spyOn(component, 'buildGraph');
-		component.data = <any> OSVScenarios[3].scenarios.GET[0].response.body;
+		component.data = <any>OSVScenarios[3].scenarios.GET[0].response.body;
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.buildGraph)
@@ -40,7 +41,7 @@ describe('AssetTimelineChartComponent', () => {
 
 	it(' build graph should be called if the assetRecommendations change', fakeAsync(() => {
 		spyOn(component, 'buildGraph');
-		const assetRecommendations = <any> OSVScenarios[3].scenarios.GET[0].response.body;
+		const assetRecommendations = <any>OSVScenarios[3].scenarios.GET[0].response.body;
 		component.ngOnChanges({
 			assetDetails: {
 				currentValue: assetRecommendations,
@@ -70,4 +71,20 @@ describe('AssetTimelineChartComponent', () => {
 		expect(component.buildGraph)
 			.toHaveBeenCalledTimes(1);
 	}));
+
+	it('should select emit a selectectPoint event on accept', () => {
+		spyOn(component.selectedPoint, 'emit');
+		component.selectSubfilter(new Event('MouseEvent'));
+		fixture.detectChanges();
+		expect(component.selectedPoint.emit)
+			.toHaveBeenCalled();
+	});
+
+	it('format graph data for timeline', () => {
+		component.data = _.cloneDeep(<any>OSVScenarios[3].scenarios.GET[0].response.body);
+		const formattedData = component.formatGraphData();
+		expect(_.get(formattedData, ['0', 'x']))
+			.toBeDefined();
+
+	});
 });

@@ -31,7 +31,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({ }),
+						queryParams: of({}),
 						snapshot: {
 							data: {
 								user,
@@ -47,6 +47,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 	}));
 
 	beforeEach(() => {
+		window.localStorage.clear();
 		fixture = TestBed.createComponent(OptimalSoftwareVersionComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -192,5 +193,29 @@ describe('OptimalSoftwareVersionComponent', () => {
 					.toBe(false);
 				done();
 			});
+	});
+
+	it('seleceView should change the view ', () => {
+		expect(component.view)
+			.toEqual('assets');
+		component.selectView('swVersions');
+		expect(component.view)
+			.toEqual('swVersions');
+	});
+
+	it('should showUp the sw profile info dialog if not found in localstorage', () => {
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.hideProfileInfo)
+			.toBe(false);
+		expect(component.showProfileInfo)
+			.toBe(true);
+		window.localStorage.setItem('hideProfileInfo', 'true');
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.hideProfileInfo)
+			.toBe(true);
+		expect(component.showProfileInfo)
+			.toBe(false);
 	});
 });
