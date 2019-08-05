@@ -129,7 +129,7 @@ describe('SoftwareVersionsComponent', () => {
 		expect(component.softwareVersionsTable)
 			.toBeDefined();
 		expect(component.pagination.total)
-			.toEqual(10);	
+			.toEqual(6);	
 	});
 
 	it('should show pagination info if getVersion call is success', () => {
@@ -144,5 +144,7 @@ describe('SoftwareVersionsComponent', () => {
 			.toBe('1-10');
 		expect(component.softwareVersionsTable)
 			.toBeDefined();
+		expect(component.pagination.total)
+			.toEqual(100);	
 	});
 });

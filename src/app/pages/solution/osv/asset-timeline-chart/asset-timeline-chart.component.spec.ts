@@ -30,6 +30,16 @@ describe('AssetTimelineChartComponent', () => {
 			.toBeTruthy();
 	});
 
+	it('should build graph on OnInit only if data is not null', () => {
+		spyOn(component,'buildGraph');
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.chart)
+			.toBeUndefined();
+		expect(component.buildGraph)
+			.toHaveBeenCalledTimes(0);
+	});
+
 	it('should build graph on OnInit', () => {
 		component.data = <any> OSVScenarios[3].scenarios.GET[0].response.body;
 		component.ngOnInit();

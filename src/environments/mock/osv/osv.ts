@@ -114,7 +114,7 @@ const mockSoftwareVersions1: SoftwareVersionsResponse = {
 	pagination: {
 		page: 1,
 		rows: 10,
-		total: 10,
+		total: 100,
 	},
 	uiSwVersionList: [
 		{
