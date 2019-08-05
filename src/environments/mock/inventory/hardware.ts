@@ -1205,6 +1205,15 @@ export const HardwareScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 0,
+					description: 'Hardware productId - Unreachable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=1&productId=${productId}&page=1`,

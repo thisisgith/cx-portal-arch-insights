@@ -330,18 +330,23 @@ describe('Assets', () => { // PBC-41
 			coverageMock.enable('Covered');
 		});
 
-		// TODO: Unskip and modify to accomodate PBC-90 & 91
-		// (The second tbody tr selection is now trying to incorrectly
-		// grab from the open cases dropdown instead of the assets table)
-		it.skip('Gracefully handles API failures', () => {
+		it('Gracefully handles API failures', () => {
 			fnBulletinMock.enable('Field Notice Bulletins - Unreachable'); // PBC-342
+			assetSummaryMock.enable('Asset Summary - Unreachable');
+			hwMock.enable('Hardware productId - Unreachable');
+
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
+			cy.getByAutoId('_ProductSeries_-N/A').should('have.text', 'N/A');
+			cy.getByAutoId('_EndOfSale_-N/A').should('have.text', 'N/A');
+			cy.getByAutoId('_EndOfSupport_-N/A').should('have.text', 'N/A');
 			cy.getByAutoId('ADVISORIESTab').click();
 			cy.getByAutoId('AdvisoryTab-field').click();
 			cy.getByAutoId('AdvisoriesNoResultsFound').should('have.text', 'No Results Found');
 
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			fnBulletinMock.disable('Field Notice Bulletins - Unreachable');
+			assetSummaryMock.enable('Asset Summary');
+			hwMock.enable('Hardware productId');
 		});
 	});
 

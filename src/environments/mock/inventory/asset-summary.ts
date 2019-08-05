@@ -51,6 +51,15 @@ export const AssetSummaryScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: 0,
+					description: 'Asset Summary - Unreachable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?hwInstanceId=${hwInstanceId}&customerId=${customerId}`,
