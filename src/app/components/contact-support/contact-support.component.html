@@ -1,59 +1,81 @@
-<a class="modal__close" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
-<div *ngIf="!toggle" class="dbl-padding-left dbl-padding-right">
+<a class="modal__close" data-auto-id="portalSupportHide" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+<ng-container *ngIf="!toggle; else messageSentTemplate" class="dbl-padding-left dbl-padding-right">
 	<div class="modal-header">
-		<h1 class="modal-title">Contact Support</h1>
+		<h1 class="modal-title" [innerText]="'_SupportContact_' | i18n"></h1>
 	</div>
 	<div class="modal-body dbl-padding-left dbl-padding-right dbl-padding-top">
 		<form [formGroup]="supportForm" novalidate>
 			<div class="col-md-12">
 				<div class="form-group">
 					<div class="form-group__text">
-						<label for="support-title" class="text-bold qtr-padding-bottom">Topic</label>
-						<cui-select formControlName="title" #title id="support-title" [required]="false" [empty]="true"
+						<label for="support-title" class="text-bold qtr-padding-bottom"
+							[innerText]="'_SupportTopic_' | i18n"></label>
+						<cui-select formControlName="title" #title id="support-title" [required]="true" [empty]="true"
 							[items]="items" placeholder="Select" [compressed]="false" (ngModelChange)="onSelection()"
 							optionsKey="name" optionsValue="value"></cui-select>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-12 base-padding-top">
+			<div class="col-md-12 base-padding-top" [ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
 				<div class="form-group">
 					<div class="form-group__text">
-						<textarea formControlName="description" #description id="support-description" class="textarea"
+						<!-- <textarea formControlName="description" #description id="support-description" class="textarea"
 							rows="10" data-auto-id="description"></textarea>
 						<label for="support-description" class="text-bold qtr-padding-bottom">How can we
-							help?</label>
+							help?</label> -->
+						<label for="support-description" class="text-bold qtr-padding-bottom"
+							[innerText]="'_SupportDescription_' | i18n"></label>
+						<cui-input #description id="support-description" formControlName="description" type="textarea"
+							[(model)]="text" [options]="textOptions" [label]=""></cui-input>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-12 text-center dbl-padding-top">
-				<button data-auto-id="submit" class="btn btn--primary" [innerText]="'Submit'" (click)="submitMessage()">
+			<div class="col-md-12 text-center dbl-padding-top" [ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
+				<button data-auto-id="submit" class="btn btn--primary"
+					[innerText]="'_SupportSubmit_' | i18n | uppercase" (click)="submitMessage()">
 				</button>
 			</div>
 		</form>
 	</div>
-</div>
-<div *ngIf="toggle" class="dbl-padding-left dbl-padding-right">
-	<div class="modal-header">
-		<h1 class="modal-title">Message Sent</h1>
+</ng-container>
+<ng-template #messageSentTemplate>
+	<ng-container *ngIf="success; else errorTemplate">
+		<div class="dbl-padding-left dbl-padding-right">
+			<div class="modal-header">
+				<h1 class="modal-title" [innerText]="'_SupportMessageSentTitle_' | i18n"></h1>
+			</div>
+			<div class="modal-body text-left dbl-padding-left dbl-padding-right">
+				<p [innerText]="'_SupportMessageSent_' | i18n"></p>
+				<p [innerText]="'_SupportResponse_' | i18n:userMailId"></p>
+				<div class="text-bold" [innerText]="'_SupportTopic_' | i18n"></div>
+				<div [innerText]="items[title?.value - 1].name"></div>
+				<div class="text-bold half-padding-top" [innerText]="'_SupportMessage_' | i18n"></div>
+				<div [innerText]="description.value"></div>
+				<div class="col-md-12 text-center dbl-padding-top">
+					<button data-auto-id="done" class="btn btn--primary"
+						[innerText]="'_SupportDone_' | i18n | uppercase" (click)="cuiModalService.hide()">
+					</button>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+</ng-template>
+<ng-template #errorTemplate>
+	<div class="dbl-padding-left dbl-padding-right">
+		<div class="modal-header">
+			<h1 class="modal-title" [innerText]="'_SupportContact_' | i18n"></h1>
+		</div>
+		<div class="modal-body text-left dbl-padding-left dbl-padding-right">
+			<p [innerText]="'_SupportTechnicalError_' | i18n"></p>
+			<p [innerText]="'_SupportContactNumber_' | i18n"></p>
+			<a [innerHTML]="'Worldwide phone numbers'" target="_blank" [href]="'//www.cisco.com/c/en/us/support/web/tsd-cisco-worldwide-contacts.html'"
+				data-auto-id="phoneNumbers">
+			</a>
+			<div class="col-md-12 text-center dbl-padding-top">
+				<button data-auto-id="done" class="btn btn--primary" [innerText]="'_SupportDone_' | i18n | uppercase"
+					(click)="cuiModalService.hide()">
+				</button>
+			</div>
+		</div>
 	</div>
-	<div class="modal-body text-left dbl-padding">
-		<p>
-			Your message has been sent to our support team.
-		</p>
-		<p>
-			You should receive a response at name@company.com within 1 business day.
-		</p>
-		<div class="text-bold">
-			Topic
-		</div>
-		<div [innerText]="items[title?.value - 1].name"></div>
-		<div class="text-bold half-padding-top">
-			Message
-		</div>
-		<div [innerText]="description.value"></div>
-		<div class="col-md-12 text-center dbl-padding-top">
-			<button data-auto-id="done" class="btn btn--primary" [innerText]="'Done'" (click)="submitMessage()">
-			</button>
-		</div>
-	</div>
-</div>
+</ng-template>
