@@ -112,6 +112,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 			filter += assetType.indexOf('assets_profile') > -1
 				? 'independent:no' : 'independent:yes';
 		}
+		this.assetsParams.pageIndex = 1;
 		this.assetsParams.filter = filter;
 	}
 
@@ -151,6 +152,10 @@ export class AssetsComponent implements OnInit, OnChanges {
 					this.buildTable();
 				}),
 				catchError(err => {
+					this.assets = [];
+					this.pagination = {
+						total: 0,
+					};
 					this.logger.error('OSV Assets : getAssets() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -276,6 +281,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 		sortColumn.sorting = true;
 		this.assetsParams.sortOrder = sortColumn.sortDirection;
 		this.assetsParams.sort = sortColumn.key;
+		this.assetsParams.pageIndex = 1;
 		this.loadData();
 	}
 

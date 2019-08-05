@@ -87,6 +87,7 @@ export class SoftwareVersionsComponent {
 					}
 					this.paginationCount = `${first}-${last}`;
 					this.buildTable();
+
 				}),
 				catchError(err => {
 					this.logger.error('OSV SoftwareVersions : getVersions() ' +

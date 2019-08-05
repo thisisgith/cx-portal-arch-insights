@@ -37,8 +37,8 @@
 		<cui-spinner></cui-spinner>
 	</div>
 	<ng-container *ngIf="filtered">
+		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
-		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading"></div>
 	<div *ngIf="view == 'swProfiles'">
@@ -54,7 +54,7 @@
 </div>
 
 <ng-template #filterBar>
-	<div class="row">
+	<div class="row qtr-margin-top qtr-margin-bottom">
 		<div class="col-md-1 flex flex-center-vertical">
 			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
 		</div>

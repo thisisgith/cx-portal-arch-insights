@@ -1,5 +1,5 @@
-<div class="row">
-	<div class="col-md-9 flex flex-fill" *ngIf="pagination">
+<div class="row qtr-margin-top">
+	<div class="col-md-9 flex flex-fill" *ngIf="pagination && assets?.length > 0">
 		<div class="flex-center-vertical">
 			<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
 			<span [innerText]="'_OsvShowingXofYAssets_' | i18n:paginationCount:pagination.total"
@@ -10,7 +10,7 @@
 </div>
 <div class="divider qtr-margin-top"></div>
 <ng-container *ngTemplateOutlet="tableProfileGroups"></ng-container>
-<div *ngIf="pagination" class="base-margin-top">
+<div *ngIf="pagination && assets?.length > 0" class="base-margin-top">
 	<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
 		(onPageChanged)="onPageChanged($event)">
 	</cui-pager>

@@ -23,7 +23,7 @@ describe('AssetDetailsComponent', () => {
 		})
 			.compileComponents();
 		osvService = TestBed.get(OSVService);
-		selectedAsset = (<any>OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
+		selectedAsset = (<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
 	}));
 
 	beforeEach(() => {
@@ -54,8 +54,8 @@ describe('AssetDetailsComponent', () => {
 	it('should return asset recommendations on success', fakeAsync(() => {
 		spyOn(osvService, 'getAssetDetails')
 			.and
-			.returnValue(of(<any>OSVScenarios[3].scenarios.GET[0].response.body));
-		component.selectedAsset = <any>OSVScenarios[4].scenarios.GET[0].response.body;
+			.returnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
+		component.selectedAsset = <any> OSVScenarios[4].scenarios.GET[0].response.body;
 		component.ngOnInit();
 		tick();
 		expect(component.assetDetails)
@@ -63,7 +63,7 @@ describe('AssetDetailsComponent', () => {
 	}));
 
 	it('sort data based on recommendation dates', () => {
-		const data = _.cloneDeep(<any>OSVScenarios[3].scenarios.GET[0].response.body);
+		const data = _.cloneDeep(<any> OSVScenarios[3].scenarios.GET[0].response.body);
 		component.sortData(data);
 		expect(data[0].name)
 			.toEqual('latest');

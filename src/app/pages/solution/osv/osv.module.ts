@@ -43,7 +43,7 @@ const childRoutes: Routes = [
 		CuiTabsModule,
 		AssetDetailsModule,
 		CuiSpinnerModule,
-		FormsModule,		
+		FormsModule,
 		AssetsModule,
 		SoftwareVersionsModule,
 		OSVModule.forRoot({ rootUrl }),

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SoftwareVersionsComponent } from './software-versions.component';
 import { SoftwareVersionsModule } from './software-versions.module';
@@ -25,7 +25,7 @@ describe('SoftwareVersionsComponent', () => {
 		osvService = TestBed.get(OSVService);
 	}));
 
-	beforeEach(() => {		
+	beforeEach(() => {
 		fixture = TestBed.createComponent(SoftwareVersionsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -91,7 +91,7 @@ describe('SoftwareVersionsComponent', () => {
 		expect(osvService.getSoftwareVersions)
 			.toHaveBeenCalled();
 		expect(component.paginationCount)
-			.toBe('1-10');	
+			.toBe('1-10');
 
 	});
 });

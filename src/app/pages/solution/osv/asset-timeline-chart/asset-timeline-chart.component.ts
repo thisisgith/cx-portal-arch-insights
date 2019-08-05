@@ -161,6 +161,10 @@ export class AssetTimelineChartComponent implements OnInit {
 		});
 	}
 
+	/**
+	 * format data for timeline graph
+	 * @returns formatted data
+	 */
 	public formatGraphData () {
 		const datePipe = new DatePipe('en-US');
 		return _.compact(

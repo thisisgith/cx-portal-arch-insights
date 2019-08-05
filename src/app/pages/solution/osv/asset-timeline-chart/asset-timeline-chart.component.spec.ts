@@ -32,7 +32,7 @@ describe('AssetTimelineChartComponent', () => {
 
 	it('should build graph on OnInit', () => {
 		spyOn(component, 'buildGraph');
-		component.data = <any>OSVScenarios[3].scenarios.GET[0].response.body;
+		component.data = <any> OSVScenarios[3].scenarios.GET[0].response.body;
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.buildGraph)
@@ -41,7 +41,7 @@ describe('AssetTimelineChartComponent', () => {
 
 	it(' build graph should be called if the assetRecommendations change', fakeAsync(() => {
 		spyOn(component, 'buildGraph');
-		const assetRecommendations = <any>OSVScenarios[3].scenarios.GET[0].response.body;
+		const assetRecommendations = <any> OSVScenarios[3].scenarios.GET[0].response.body;
 		component.ngOnChanges({
 			assetDetails: {
 				currentValue: assetRecommendations,
@@ -81,7 +81,7 @@ describe('AssetTimelineChartComponent', () => {
 	});
 
 	it('format graph data for timeline', () => {
-		component.data = _.cloneDeep(<any>OSVScenarios[3].scenarios.GET[0].response.body);
+		component.data = _.cloneDeep(<any> OSVScenarios[3].scenarios.GET[0].response.body);
 		const formattedData = component.formatGraphData();
 		expect(_.get(formattedData, ['0', 'x']))
 			.toBeDefined();

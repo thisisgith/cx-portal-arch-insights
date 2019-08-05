@@ -141,6 +141,8 @@ class OSVService extends __BaseService {
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		if (params.pageIndex != null) __params = __params.set('pageIndex', params.pageIndex.toString());
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
+		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
+		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareVersionsPath}`,
@@ -238,7 +240,7 @@ class OSVService extends __BaseService {
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
 		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
-		if (params.filter != null) __params = __params.set('filter', params.filter.toString() );
+		if (params.filter != null && params.filter.length > 0) __params = __params.set('filter', params.filter.toString() );
 
 		let req = new HttpRequest<any>(
 			'GET',
