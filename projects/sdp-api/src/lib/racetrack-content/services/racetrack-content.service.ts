@@ -619,7 +619,7 @@ class RacetrackContentService extends __BaseService {
     __body = gtRequest;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/request`,
+      this.rootUrl + `/racetrack/v1/grouptraining/request`,
       __body,
       {
         headers: __headers,
@@ -655,7 +655,7 @@ class RacetrackContentService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/user/quotas`,
+      this.rootUrl + `/racetrack/v1/grouptraining/user/quotas`,
       __body,
       {
         headers: __headers,
@@ -690,7 +690,7 @@ class RacetrackContentService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/user/trainings/completed`,
+      this.rootUrl + `/racetrack/v1/grouptraining/user/trainings/completed`,
       __body,
       {
         headers: __headers,

@@ -420,7 +420,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/severity/count`,
+      this.rootUrl + `/product-alerts/v1/security-advisories/severity/count`,
       __body,
       {
         headers: __headers,
@@ -460,7 +460,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/last-updated/count`,
+      this.rootUrl + `/product-alerts/v1/security-advisories/last-updated/count`,
       __body,
       {
         headers: __headers,
