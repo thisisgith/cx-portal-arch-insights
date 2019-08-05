@@ -55,17 +55,20 @@ export class BarChartComponent implements OnInit {
 							// Hack to allow Cypress to click on highcharts series
 							_.each(this.chart.ref.series, chartSeries => {
 								_.each(chartSeries.points, point => {
-									point.graphic.element.setAttribute(
-										'data-auto-id', `${point.name}Point`,
-									);
-									// When a "normal" click event fires,
-									// turn it into a highcharts point event instead
-									point.graphic.element.addEventListener('click', () => {
-										const event = Object.assign(
-											new MouseEvent('click'), { point },
-										);
-										point.firePointEvent('click', event);
-									});
+									if (point.graphic) {
+										point.graphic.element
+											.setAttribute('data-auto-id', `${point.name}Point`);
+										point.graphic.element
+											.setAttribute('data-auto-value', point.y);
+										// When a "normal" click event fires,
+										// turn it into a highcharts point event instead
+										point.graphic.element.addEventListener('click', () => {
+											const event = Object.assign(
+												new MouseEvent('click'), { point },
+											);
+											point.firePointEvent('click', event);
+										});
+									}
 								});
 							});
 						}

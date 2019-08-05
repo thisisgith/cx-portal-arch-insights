@@ -12,6 +12,9 @@ const fnCountMock = new MockService('FieldNoticeCountScenarios');
 const bugMock = new MockService('CriticalBugScenarios');
 const bugScenario = bugMock.getScenario('GET', 'Critical Bugs');
 const bugs = bugScenario.response.body.data;
+const vulnMock = new MockService('VulnerabilityScenarios');
+const vulnScenario = vulnMock.getScenario('GET', 'Advisory Counts');
+const vulnResponse = vulnScenario.response.body;
 
 const impactMap = severity => {
 	switch (severity) {
@@ -53,6 +56,39 @@ describe('Advisories', () => { // PBC-306
 		MockService.enableAll();
 		cy.loadApp('/solution/advisories');
 		cy.waitForAppLoading();
+	});
+
+	it('Displays a gauge that shows advisory counts', () => { // PBC-307
+		cy.getByAutoId('Facet-Advisories').within(() => {
+			cy.getByAutoId('Security AdvisoriesPoint').should(
+				'have.attr', 'data-auto-value', vulnResponse['security-advisories'].toString()
+			);
+			cy.getByAutoId('Field NoticesPoint').should(
+				'have.attr', 'data-auto-value', vulnResponse['field-notices'].toString()
+			);
+			cy.getByAutoId('BugsPoint').should(
+				'have.attr', 'data-auto-value', vulnResponse.bugs.toString()
+			);
+		});
+	});
+
+	it('Gracefully handles invalid API responses', () => {
+		vulnMock.enable('Advisory Counts - Unreachable');
+		cy.loadApp('/solution/advisories');
+		cy.waitForAppLoading();
+		cy.getByAutoId('Facet-Advisories').within(() => {
+			cy.get('bar-chart').should('not.be.visible');
+		});
+
+		vulnMock.enable('Advisory Counts - Missing keys');
+		cy.loadApp('/solution/advisories');
+		cy.waitForAppLoading();
+		cy.getByAutoId('Facet-Advisories').within(() => {
+			cy.getByAutoId('BugsPoint').should('be.visible');
+			cy.getByAutoId('Field NoticesPoint').should('not.exist');
+		});
+
+		vulnMock.enable('Advisory Counts');
 	});
 
 	context('Security Advisories', () => { // PBC-308 / PBC-314
