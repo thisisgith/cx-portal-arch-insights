@@ -61,9 +61,6 @@ interface Tab {
 	subject?: Subject<{ }>;
 }
 
-/** Our current customerId */
-const customerId = '2431199';
-
 /**
  * Advisories Component
  */
@@ -408,7 +405,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const securityTab = _.find(this.tabs, { key: 'security' });
 		const impactFilter = _.find(securityTab.filters, { key: 'impact' });
 
-		return this.productAlertsService.getSecurityAdvisorySeverityCount(customerId)
+		return this.productAlertsService.getSecurityAdvisorySeverityCount(this.customerId)
 		.pipe(
 			map((data: SecurityAdvisorySeverityCountResponse) => {
 				impactFilter.seriesData = _.map(data, (count, severity) => ({
@@ -439,7 +436,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const lastUpdateFilter =
 			_.find(securityTab.filters, { key: 'lastUpdate' });
 
-		return this.productAlertsService.getSecurityAdvisoryLastUpdatedCount(customerId)
+		return this.productAlertsService.getSecurityAdvisoryLastUpdatedCount(this.customerId)
 			.pipe(
 				map((data: AdvisoriesByLastUpdatedCount) => {
 					lastUpdateFilter.seriesData = [

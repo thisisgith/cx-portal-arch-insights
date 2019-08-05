@@ -19,6 +19,12 @@ const caseMock = new MockService('CaseScenarios');
 const caseScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
 const caseResponse = caseScenario.response.body;
 const fnBulletinMock = new MockService('FieldNoticeBulletinScenarios');
+const hwMock = new MockService('HardwareScenarios');
+const hwScenario = hwMock.getScenario('GET', 'Hardware');
+const hwResponse = hwScenario.response.body.data;
+const hwEOLMock = new MockService('HardwareEOLBulletinScenarios');
+const hwEOLScenario = hwEOLMock.getScenario('GET', 'Hardware EOL Bulletins');
+const hwEOLResponse = hwEOLScenario.response.body.data[0];
 
 Cypress.moment.locale('en', {
 	// change moment's default '8d' format to '8 days' to match the app's format
@@ -78,6 +84,56 @@ describe('Assets', () => { // PBC-41
 			validate360(assets[2]);
 
 			cy.getByAutoId('CloseDetails').click();
+		});
+
+		it('Displays hardware info', () => { // PBC-154, PBC-359
+			const formatDate = date => Cypress.moment(date).format('ddd MMM DD YYYY');
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			cy.getByAutoId('HARDWARETab').click();
+			cy.get('asset-details-hardware tbody tr').each((row, index) => {
+				cy.wrap(row).within(() => {
+					const data = hwResponse[index];
+					cy.getByAutoId('Type-Cell').should('have.text', data.equipmentType);
+					const pid = data.productId ? data.productId : 'N/A';
+					cy.getByAutoId('Product Family / ID-Cell').should(
+						'have.text', `${data.productFamily} / ${pid}`
+					);
+					cy.getByAutoId('Slot-Cell').should('have.text', 'N/A');
+					const serial = data.serialNumber ? data.serialNumber : 'N/A';
+					cy.getByAutoId('Serial Number-Cell').should('have.text', serial);
+				});
+			});
+			cy.getByAutoId('End of Life Announced-SubTitle')
+				.should('have.text', formatDate(hwEOLResponse.eoLifeExternalAnnouncementDate));
+			cy.getByAutoId('End of Sale-SubTitle')
+				.should('have.text', formatDate(hwEOLResponse.eoSaleDate));
+			cy.getByAutoId('Last Ship-SubTitle')
+				.should('have.text', formatDate(hwEOLResponse.lastShipDate));
+			cy.getByAutoId('End of Routine Failure Analysis-SubTitle')
+				.should('have.text', formatDate(hwEOLResponse.eoRoutineFailureAnalysisDate));
+			cy.getByAutoId('End of New Service Attach-SubTitle')
+				.should('have.text', formatDate(hwEOLResponse.eoNewServiceAttachmentDate));
+			cy.getByAutoId('End of Service Contract Renewal-SubTitle')
+				.should('have.text', formatDate(hwEOLResponse.eoServiceContractRenewalDate));
+			cy.getByAutoId('Last Date of Support-SubTitle')
+				.should('have.text', formatDate(hwEOLResponse.lastDateOfSupport));
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+
+			cy.wrap(hwEOLMock.enable('Empty Hardware EOL Bulletins'));
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			cy.getByAutoId('HARDWARETab').click();
+			cy.get('pbc-timeline').should('not.exist');
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+
+			cy.wrap(hwMock.enable('Empty Hardware'));
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			cy.getByAutoId('HARDWARETab').click();
+			cy.getByAutoId('NoHardwareInformationText')
+				.should('have.text', 'No Hardware Information');
+
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			hwEOLMock.enable('Hardware EOL Bulletins');
+			hwMock.enable('Hardware');
 		});
 
 		// TODO: Unskip and modify to accomodate PBC-90 & 91

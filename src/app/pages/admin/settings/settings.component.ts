@@ -4,11 +4,13 @@ import {
 	IEHealthStatusResponseModel,
 	UserService,
 } from '@sdp-api';
+import { User } from '@interfaces';
+import { ActivatedRoute } from '@angular/router';
 import { AppStatusColorPipe } from './app-status-color.pipe';
 import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 
 import { empty, Subject } from 'rxjs';
-import { catchError, finalize, takeUntil, mergeMap } from 'rxjs/operators';
+import { catchError, finalize, takeUntil } from 'rxjs/operators';
 
 import { I18n } from '@cisco-ngx/cui-utils';
 
@@ -90,10 +92,16 @@ export class SettingsComponent  implements OnInit {
 	public errorMessage = '';
 	public loading = false;
 
+	private user: User;
+
 	constructor (
 		private controlPointIEHealthStatusAPIService: ControlPointIEHealthStatusAPIService,
+		private route: ActivatedRoute,
 		private userService: UserService,
-	) { }
+	) {
+		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(this.user, ['info', 'customerId']);
+	}
 
 	/**
 	 * Sets health status info given customerId.
@@ -190,21 +198,7 @@ export class SettingsComponent  implements OnInit {
 	 */
 	public ngOnInit () {
 		this.loading = true;
-		this.userService.getUser()
-			.pipe(
-				catchError(err => {
-					this.error = true;
-					this.errorMessage = err.message;
-
-					return empty();
-				}),
-				finalize(() => this.loading = false),
-				takeUntil(this.destroyed$),
-			)
-			.pipe(
-				mergeMap(userResponse =>
-					this.getIEHealthStatusData(String(_.get(userResponse, 'data.customerId')))),
-			)
+		this.getIEHealthStatusData(this.customerId)
 			.subscribe(response => {
 				this.cpData = response;
 				this.handleData();

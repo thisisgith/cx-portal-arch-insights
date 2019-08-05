@@ -25,4 +25,9 @@ export interface PitstopActionUpdateResponse {
    * When set to true it indicates that new success content is available to the customer / user
    */
   isSuccessPathChanged: boolean;
+
+  /**
+   * When set to true it indicates that new CGT content is available to the customer / user
+   */
+  isCgtChanged: boolean;
 }
