@@ -97,7 +97,7 @@
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
 				<div class="col-md-2">
-					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name}" data-auto-id="pitstopCheckboxLabel">
+					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed}" data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.action.isComplete"
 							(change)="completeAction(action.action)" [checked]="action.action.isComplete">
 						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"></span>
