@@ -29,7 +29,7 @@
 </ng-template>
 
 <ng-template #countTemplate let-celldata="celldata">
-	<span [innerText]="celldata.usageCount || '_NA_' | i18n"></span>
+	<span [innerText]="celldata.usageCount >= 0 ? celldata.usageCount : '_NA_' | i18n"></span>
 </ng-template>
 
 <ng-template #statusTemplate let-celldata="celldata">
