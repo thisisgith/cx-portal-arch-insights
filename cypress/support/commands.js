@@ -1,4 +1,8 @@
 /**
+ * For dropzone drag drop file upload, from https://www.npmjs.com/package/cypress-file-upload
+ */
+import 'cypress-file-upload';
+/**
 * Launches the app under test
 */
 Cypress.Commands.add('loadApp', (path = '/') => {

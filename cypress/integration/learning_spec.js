@@ -645,9 +645,7 @@ describe('Learn Panel', () => {
 				});
 		});
 
-		// TODO: Fails due to PBC-374, as we have no good way to predict the previous sorting behavior
-		// http://swtg-jira-lnx.cisco.com:8080/browse/PBC-374
-		it.skip('Success Bytes View All table sort should be sticky across table/card view', () => {
+		it('Success Bytes View All table sort should be sticky across table/card view', () => {
 			const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['title'], ['asc']);
 
 			// Sort the data
