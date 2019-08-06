@@ -1,15 +1,15 @@
 <div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom">
 	<div class="text-uppercase text-large base-padding-bottom" [innerText]="'_Communities_' | i18n" attr.data-auto-id="PanelTitle-Communities"></div>
 	<div class="half-margin-bottom">
-		<div class="half-padding-left half-margin-bottom" *ngIf="privateCommunity">
+		<div class="half-padding-left half-margin-bottom" *ngIf="curatedCommunity">
 			<span class="icon-communities qtr-padding-right qtr-padding-bottom"></span>
 			<span><a class="no-link half-padding-left" 
-					[href]="privateCommunityUrl"
+					[href]="curatedCommunityUrl"
 					target="_blank"
 					data-toggle="tooltip"
-					data-placement="bottom" title="{{privateCommunity.description}}" id="privatecommunitytitle"
-					attr.data-auto-id="communitytitle-{{privateCommunity.description}}-Lifecycle"
-					[innerText]="'_Lifecycle_' | i18n"></a>
+					data-placement="bottom" title="{{curatedCommunity.description}}" id="curatedcommunitytitle"
+					attr.data-auto-id="communitytitle-{{curatedCommunity.description}}-Lifecycle"
+					[innerText]="'_Curated_' | i18n"></a>
 			</span>
 		</div>
 		<div class="half-padding-left" *ngIf="publicCommunity">
