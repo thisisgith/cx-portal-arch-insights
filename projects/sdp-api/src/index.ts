@@ -59,3 +59,7 @@ export * from './lib/network-data-gateway/network-data-gateway.module';
 export * from './lib/entitlement/models';
 export * from './lib/entitlement/services';
 export * from './lib/entitlement/entitlement.module';
+
+export * from './lib/email/models';
+export * from './lib/email/services';
+export * from './lib/email/email.module';
