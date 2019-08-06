@@ -54,7 +54,7 @@ interface Facet {
 })
 export class SolutionComponent implements OnInit, OnDestroy {
 
-	public shownTabs = 4;
+	public shownTabs = 5;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
@@ -80,6 +80,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
 	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
 	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
+	@ViewChild('insightsFacet', { static: true }) public insightsTemplate: TemplateRef<{ }>;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -188,6 +189,13 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				route: '/solution/resolution',
 				template: this.resolutionTemplate,
 				title: I18n.get('_ProblemResolution_'),
+			},
+			{
+				key: 'insights',
+				loading: false,
+				route: '/solution/insights',
+				template: this.insightsTemplate,
+				title: I18n.get('_Insights_'),
 			},
 		];
 
