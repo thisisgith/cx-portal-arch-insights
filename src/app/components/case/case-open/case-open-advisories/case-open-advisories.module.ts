@@ -9,6 +9,7 @@ import { CaseOpenAdvisoriesComponent } from './case-open-advisories.component';
 import { CollapsibleModule } from '../../../collapsible/collapsible.module';
 import { CaseSubmittedModule } from '../case-submitted/case-submitted.module';
 import { CloseConfirmModule } from '../close-confirm/close-confirm.module';
+import { CharCountModule } from '../../../char-count/char-count.module';
 
 /**
  * Module for opening a case against a Cisco Security Advisory/Field Notice/Bug
@@ -28,6 +29,7 @@ import { CloseConfirmModule } from '../close-confirm/close-confirm.module';
 		CaseSubmittedModule,
 		CloseConfirmModule,
 		CollapsibleModule,
+		CharCountModule,
 	],
 })
 export class CaseOpenAdvisoriesModule { }

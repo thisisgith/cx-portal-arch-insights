@@ -197,4 +197,21 @@ export const CriticalBugScenarios = [
 		url: `${api}?customerId=${customerId}&state=resolved&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Critical Bugs for Asset',
+					response: {
+						body: MockData(10, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&serialNumber=35641136A1621`,
+		usecases: ['Use Case 1'],
+	},
 ];
