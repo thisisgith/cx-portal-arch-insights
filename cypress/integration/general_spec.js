@@ -286,7 +286,7 @@ describe('General Spec', () => {
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('rma');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
-				.type(rmaVal.concat('{enter}'));
+				.type(rmaVal.concat('{ enter }'));
 
 			cy.wait('@rma').then(() => {
 				cy.wait(3000);

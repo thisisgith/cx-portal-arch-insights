@@ -1,0 +1,64 @@
+{
+    "solutions": [
+        {
+            "description": "Campus Network Assurance Solution",
+            "name": "Campus Network Assurance",
+            "technologies": [
+                {
+                    "currentPitstop": "Onboard",
+                    "description": "Campus Network Assurance Solution",
+                    "name": "Campus Network Assurance",
+                    "pitstops": [
+                        {
+                            "description": "The first pitstop",
+                            "isComplete": false,
+                            "name": "Onboard",
+                            "pitstopActions": [
+                                {
+                                    "description": "DNAC discover network devices",
+                                    "isComplete": false,
+                                    "isCompleteAuto": false,
+                                    "isCompleteManual": false,
+                                    "isManaualOverride": false,
+                                    "manualCheckAllowed": false,
+                                    "name": "Not Manual Checkable Item 1",
+                                    "updateMethod": "NA"
+                                },
+                                {
+                                    "description": "- Explore Cisco DNA Center feature, - Plan the deployment of your appliance",
+                                    "isComplete": false,
+                                    "isCompleteAuto": false,
+                                    "isCompleteManual": false,
+                                    "isManaualOverride": false,
+                                    "manualCheckAllowed": false,
+                                    "name": "Not Manual Checkable Item 2",
+                                    "updateMethod": "MANUAL"
+                                },
+                                {
+                                    "description": "Map WLCs",
+                                    "isComplete": false,
+                                    "isCompleteAuto": false,
+                                    "isCompleteManual": false,
+                                    "isManaualOverride": false,
+                                    "manualCheckAllowed": false,
+                                    "name": "Not Manual Checkable Item 3",
+                                    "updateMethod": "NA"
+                                },
+                                {
+                                    "description": "Map APs",
+                                    "isComplete": false,
+                                    "isCompleteAuto": false,
+                                    "isCompleteManual": false,
+                                    "isManaualOverride": false,
+                                    "manualCheckAllowed": false,
+                                    "name": "Not Manual Checkable Item 4",
+                                    "updateMethod": "NA"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

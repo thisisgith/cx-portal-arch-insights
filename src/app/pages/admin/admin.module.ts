@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { ControlPointsModule } from '@sdp-api';
 import { SettingsComponent, SettingsModule } from './settings';
+// import { PoliciesComponent, PoliciesModule } from './policies';
 
 import { environment } from '@environment';
 
@@ -22,8 +23,13 @@ const childRoutes: Routes = [
 		component: SettingsComponent,
 		path: 'settings',
 	},
+	// {
+	// 	component: PoliciesComponent,
+	// 	path: 'policies',
+	// },
 	{
 		path: '',
+		pathMatch: 'full',
 		redirectTo: 'settings',
 	},
 ];
@@ -41,11 +47,13 @@ const rootUrl = environment.sdpServiceOrigin;
 		CommonModule,
 		RouterModule.forChild(childRoutes),
 		I18nPipeModule,
+		ControlPointsModule,
 		CuiSidebarModule,
 		CuiSpinnerModule,
 		CuiGaugeModule,
 		CuiLabelsModule,
 		SettingsModule,
+		// PoliciesModule,
 		ControlPointsModule.forRoot({ rootUrl }),
 	],
 })

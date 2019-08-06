@@ -8,6 +8,7 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { PolicyResponseModel } from '../models/policy-response-model';
+import { PoliciesGroupByDayInAMonthModel } from '../models/policies-group-by-day-in-amonth-model';
 import { DevicePolicyResponseModel } from '../models/device-policy-response-model';
 import { DevicePolicyRequestModel } from '../models/device-policy-request-model';
 import { DevicePolicyUpdateRequestModel } from '../models/device-policy-update-request-model';
@@ -19,6 +20,7 @@ import { DefaultResponseModel } from '../models/default-response-model';
 })
 class ControlPointDevicePolicyAPIService extends __BaseService {
   static readonly getAllPolicyUsingGETPath = '/policies/{customerId}';
+  static readonly getAllPolicyForGivenMonthUsingGETPath = '/policies/{customerId}/{month}/{year}';
   static readonly createDevicePolicyUsingPOSTPath = '/policy';
   static readonly updateDevicePolicyUsingPATCHPath = '/policy';
   static readonly getDevicesForPolicyCreationUsingGETPath = '/policy/devices/{customerId}';
@@ -26,7 +28,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   static readonly getDevicesForGivenPolicyUsingGETPath = '/policy/devices/{customerId}/{policyId}';
   static readonly getDevicesForGivenPolicyUsingGET1Path = '/policy/devices/{customerId}/{policyId}/{pageNumber}/{rowsPerPage}';
   static readonly getPolicyStatusUsingGETPath = '/policy/status/{policyId}';
-  static readonly deletePolicyUsingDELETEPath = '/policy/{policyId}';
+  static readonly deletePolicyUsingDELETEPath = '/policy/{customerId}/{policyId}';
 
   constructor(
     config: __Configuration,
@@ -70,6 +72,60 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   getAllPolicyUsingGET(customerId: string): __Observable<Array<PolicyResponseModel>> {
     return this.getAllPolicyUsingGETResponse(customerId).pipe(
       __map(_r => _r.body as Array<PolicyResponseModel>)
+    );
+  }
+
+  /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetAllPolicyForGivenMonthUsingGETParams` containing the following parameters:
+   *
+   * - `year`: year
+   *
+   * - `month`: month
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getAllPolicyForGivenMonthUsingGETResponse(params: ControlPointDevicePolicyAPIService.GetAllPolicyForGivenMonthUsingGETParams): __Observable<__StrictHttpResponse<Array<PoliciesGroupByDayInAMonthModel>>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/controlpoint/v1/policies/${params.customerId}/${params.month}/${params.year}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<Array<PoliciesGroupByDayInAMonthModel>>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetAllPolicyForGivenMonthUsingGETParams` containing the following parameters:
+   *
+   * - `year`: year
+   *
+   * - `month`: month
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getAllPolicyForGivenMonthUsingGET(params: ControlPointDevicePolicyAPIService.GetAllPolicyForGivenMonthUsingGETParams): __Observable<Array<PoliciesGroupByDayInAMonthModel>> {
+    return this.getAllPolicyForGivenMonthUsingGETResponse(params).pipe(
+      __map(_r => _r.body as Array<PoliciesGroupByDayInAMonthModel>)
     );
   }
 
@@ -416,18 +472,24 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   }
 
   /**
-   * @param policyId policyId
+   * @param params The `ControlPointDevicePolicyAPIService.DeletePolicyUsingDELETEParams` containing the following parameters:
+   *
+   * - `policyId`: policyId
+   *
+   * - `customerId`: customerId
+   *
    * @return OK
    */
-  deletePolicyUsingDELETEResponse(policyId: string): __Observable<__StrictHttpResponse<DefaultResponseModel>> {
+  deletePolicyUsingDELETEResponse(params: ControlPointDevicePolicyAPIService.DeletePolicyUsingDELETEParams): __Observable<__StrictHttpResponse<DefaultResponseModel>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
 
+
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/${policyId}`,
+      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/${params.customerId}/${params.policyId}`,
       __body,
       {
         headers: __headers,
@@ -444,17 +506,43 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   }
 
   /**
-   * @param policyId policyId
+   * @param params The `ControlPointDevicePolicyAPIService.DeletePolicyUsingDELETEParams` containing the following parameters:
+   *
+   * - `policyId`: policyId
+   *
+   * - `customerId`: customerId
+   *
    * @return OK
    */
-  deletePolicyUsingDELETE(policyId: string): __Observable<DefaultResponseModel> {
-    return this.deletePolicyUsingDELETEResponse(policyId).pipe(
+  deletePolicyUsingDELETE(params: ControlPointDevicePolicyAPIService.DeletePolicyUsingDELETEParams): __Observable<DefaultResponseModel> {
+    return this.deletePolicyUsingDELETEResponse(params).pipe(
       __map(_r => _r.body as DefaultResponseModel)
     );
   }
 }
 
 module ControlPointDevicePolicyAPIService {
+
+  /**
+   * Parameters for getAllPolicyForGivenMonthUsingGET
+   */
+  export interface GetAllPolicyForGivenMonthUsingGETParams {
+
+    /**
+     * year
+     */
+    year: string;
+
+    /**
+     * month
+     */
+    month: string;
+
+    /**
+     * customerId
+     */
+    customerId: string;
+  }
 
   /**
    * Parameters for getDevicesForPolicyCreationUsingGET
@@ -543,6 +631,22 @@ module ControlPointDevicePolicyAPIService {
      * pageNumber
      */
     pageNumber: string;
+
+    /**
+     * customerId
+     */
+    customerId: string;
+  }
+
+  /**
+   * Parameters for deletePolicyUsingDELETE
+   */
+  export interface DeletePolicyUsingDELETEParams {
+
+    /**
+     * policyId
+     */
+    policyId: string;
 
     /**
      * customerId

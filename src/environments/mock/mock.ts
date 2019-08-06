@@ -6,9 +6,12 @@ import {
 	AssetScenarios,
 	ATXScenarios,
 	CaseScenarios,
+	CGTScenarios,
 	ContractScenarios,
 	CoverageScenarios,
+	CreateRegistrationScenarios,
 	CriticalBugScenarios,
+	DNACStatusScenarios,
 	ELearningScenarios,
 	EntitlementScenarios,
 	FieldNoticeAdvisoryScenarios,
@@ -33,7 +36,6 @@ import {
 	SecurityAdvisorySummaryScenarios,
 	SerialNumberScenarios,
 	SuccessPathScenarios,
-	UserScenarios,
 	VulnerabilityScenarios,
 } from './';
 
@@ -52,17 +54,20 @@ import {
 	CoverageResponse,
 	CriticalBugsCount,
 	CriticalBugsResponse,
+	CSDFResponseModel,
 	DeviceContractResponse,
 	ELearningResponse,
 	EntitledUser,
 	FieldNoticeAdvisoryResponse,
 	FieldNoticeBulletinResponse,
 	FieldNoticeResponse,
+	GroupTrainingEntitySchema,
 	FieldNoticeUpdatedResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
+	IERegistrationResponseModel,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
@@ -74,6 +79,8 @@ import {
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
 	SuccessPathsResponse,
+	UserQuota,
+	UserTraining,
 	VulnerabilityResponse,
 } from '@sdp-api';
 
@@ -92,17 +99,20 @@ type ResponseBody = (
 	CoverageResponse |
 	CriticalBugsCount |
 	CriticalBugsResponse |
+	CSDFResponseModel |
 	DeviceContractResponse |
 	ELearningResponse |
 	EntitledUser |
 	FieldNoticeAdvisoryResponse |
 	FieldNoticeBulletinResponse |
 	FieldNoticeResponse |
+	GroupTrainingEntitySchema |
 	FieldNoticeUpdatedResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
 	HardwareResponse |
+	IERegistrationResponseModel |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
@@ -115,6 +125,9 @@ type ResponseBody = (
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
 	SuccessPathsResponse |
+	UserQuota |
+	UserTraining |
+	VulnerabilityResponse |
 	VulnerabilityResponse
 );
 
@@ -167,9 +180,12 @@ export const mockSettings: MockSettings = {
 		AssetScenarios,
 		ATXScenarios,
 		CaseScenarios,
+		CGTScenarios,
 		ContractScenarios,
 		CoverageScenarios,
+		CreateRegistrationScenarios,
 		CriticalBugScenarios,
+		DNACStatusScenarios,
 		ELearningScenarios,
 		EntitlementScenarios,
 		FieldNoticeAdvisoryScenarios,
@@ -195,7 +211,6 @@ export const mockSettings: MockSettings = {
 		SecurityAdvisoryTopScenarios,
 		SerialNumberScenarios,
 		SuccessPathScenarios,
-		UserScenarios,
 		VulnerabilityScenarios,
 	]),
 };

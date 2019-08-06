@@ -16,3 +16,5 @@ export { ELearningResponse } from './models/elearning-response';
 export { ELearning } from './models/elearning';
 export { GroupTrainingEntitySchema } from './models/group-training-entity-schema';
 export { GroupTrainingRequestSchema } from './models/group-training-request-schema';
+export { UserQuota } from './models/user-quota';
+export { UserTraining } from './models/user-training';

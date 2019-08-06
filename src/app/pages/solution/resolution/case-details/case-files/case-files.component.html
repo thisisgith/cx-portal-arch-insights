@@ -29,7 +29,7 @@
 </ng-template>
 
 <ng-template #downloadTmpl let-item="celldata">
-	<a attr.data-auto-id="DownloadUrl-{{item?.fileInfo.fileName}}"
+	<a data-auto-id="DownloadUrl"
 		[href]="getDownloadURL(item?.fileInfo.fileName)"><span class="markup-label" [innerText]="'download'"></span></a>
 </ng-template>
 

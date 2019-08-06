@@ -25,12 +25,15 @@ import {
 	RacetrackTechnology,
 	SuccessPath,
 	SuccessPathsResponse,
+	UserQuota,
+	UserTraining,
 	RacetrackResponse,
 } from '@sdp-api';
 
 import { SolutionService } from '../solution.service';
 import * as _ from 'lodash-es';
-import { Observable, of, forkJoin, Subscription } from 'rxjs';
+import * as moment from 'moment';
+import { Observable, of, forkJoin, Subscription, ReplaySubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
@@ -68,6 +71,11 @@ interface ComponentData {
 	};
 	acc?: {
 		sessions: ACC[];
+	};
+	cgt?: {
+		trainingsAvailable: number;
+		sessions: string[];
+		dateAvailableThrough: string;
 	};
 }
 
@@ -120,6 +128,7 @@ export class LifecycleComponent implements OnDestroy {
 	private user: User;
 	public selectedCategory = '';
 	public selectedStatus = '';
+	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public categoryOptions: [];
 	// id of ACC in request form
@@ -131,7 +140,12 @@ export class LifecycleComponent implements OnDestroy {
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
 	public view: 'list' | 'grid' = 'grid';
+	public productGuidesTable: CuiTableOptions;
+	public completedTrainingsList: UserTraining[] | { };
 	public successBytesTable: CuiTableOptions;
+	public cgtAvailable: number;
+	public trainingAvailableThrough: string;
+	private stage = new ReplaySubject<string>();
 
 	public statusOptions = [
 		{
@@ -168,6 +182,7 @@ export class LifecycleComponent implements OnDestroy {
 		loading: {
 			acc: false,
 			atx: false,
+			cgt: false,
 			elearning: false,
 			racetrack: false,
 			success: false,
@@ -190,6 +205,8 @@ export class LifecycleComponent implements OnDestroy {
 	private technologySubscribe: Subscription;
 
 	public selectAccComponent = false;
+	public selectCgtComponent = false;
+	public cgtRequestTrainingClicked = false;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -326,6 +343,34 @@ export class LifecycleComponent implements OnDestroy {
 		if (submitted) {
 			this.selectAccComponent = false;
 			this.loadACC()
+				.subscribe();
+		}
+	}
+
+	/**
+	 * Select/deselect the CGTRequestForm component
+	 * @param selected whether the component is visible or not
+	 * @param totalTrainingsAvailable number of trainings available for the user
+	 * @param trainingAvailableThrough end date to complete trainings
+	 */
+	public selectCgtRequestForm (selected: boolean,
+		totalTrainingsAvailable: number, trainingAvailableThrough: string) {
+		if (selected) {
+			this.cgtAvailable = totalTrainingsAvailable;
+			this.trainingAvailableThrough = trainingAvailableThrough;
+		}
+		this.selectCgtComponent = selected;
+	}
+
+	/**
+	 * Trigger the submitted acc success text.  Currently placeholder and will be removed
+	 * because this info will come from the API
+	 * @param submitted if the request was submitted
+	 */
+	public cgtRequestSubmit (submitted: boolean) {
+		if (submitted) {
+			this.selectCgtComponent = false;
+			this.loadCGT()
 				.subscribe();
 		}
 	}
@@ -553,6 +598,7 @@ export class LifecycleComponent implements OnDestroy {
 			if (results.isAccChanged) { source.push(this.loadACC()); }
 			if (results.isElearningChanged) { source.push(this.loadELearning()); }
 			if (results.isSuccessPathChanged) { source.push(this.loadSuccessPaths()); }
+			if (results.isCgtChanged) { source.push(this.loadCGT()); }
 			forkJoin(
 				source,
 			)
@@ -655,7 +701,6 @@ export class LifecycleComponent implements OnDestroy {
 					!session.title && !session.description);
 
 				this.selectedACC = this.componentData.acc.sessions;
-				this.buildTable();
 
 				this.status.loading.acc = false;
 				if (window.Cypress) {
@@ -748,6 +793,7 @@ export class LifecycleComponent implements OnDestroy {
 						}));
 				}
 
+				this.buildTable();
 				this.status.loading.success = false;
 				if (window.Cypress) {
 					window.successPathsLoading = false;
@@ -842,6 +888,108 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Loads the CGT for the given params
+	 * @returns the UserQuota
+	 */
+	private loadCGT (): Observable<UserQuota[]> | Observable<void | { }> {
+		this.status.loading.cgt = true;
+		let startDate;
+		let endDate;
+		let trainingDuration;
+		let trainingLocation;
+		let trainingData;
+		let dateAvailable;
+		let completedTrainingData = [];
+
+		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
+			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+		return this.contentService.getTrainingQuotas()
+		.pipe(
+			map((result: UserQuota[]) => {
+				this.status.loading.cgt = false;
+				dateAvailable = _.get(_.head(result), 'end_date');
+				_.each(result, training => {
+					this.groupTrainingsAvailable += _.get(training, 'closed_ilt_courses_available');
+					if (new Date(_.get(training, 'end_date')) > new Date(dateAvailable)) {
+						dateAvailable = _.get(training, 'end_date');
+					}
+				});
+				this.contentService.getCompletedTrainings()
+					.pipe(
+						catchError(err => {
+							this.logger.error(`lifecycle.component : loadCGT() :
+							 getCompletedTrainings() :: Error : (${err.status}) ${err.message}`);
+
+							return of({ });
+						}),
+					)
+					.subscribe(response => {
+						this.completedTrainingsList = response;
+						_.each(this.completedTrainingsList, completedTraining => {
+							startDate = `${
+								monthNames[new Date(_.get(completedTraining, 'start_date'))
+								.getMonth()]
+							} ${new Date(_.get(completedTraining, 'start_date')).getUTCDate()}`;
+							startDate += _.isEqual(
+								new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(),
+								new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ?
+								'' : ` ${
+									new Date(_.get(completedTraining, 'start_date'))
+									.getUTCFullYear()
+								}`;
+							endDate = _.isEqual(
+								monthNames[new Date(_.get(completedTraining, 'start_date'))
+								.getMonth()],
+								monthNames[new Date(_.get(completedTraining, 'end_date'))
+								.getMonth()]) ? '' : `${
+									monthNames[new Date(_.get(completedTraining, 'end_date'))
+									.getMonth()]
+								} `;
+							endDate += new Date(_.get(completedTraining, 'end_date')).getUTCDate();
+							endDate += _.isEqual(
+								new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(),
+								new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ?
+								`, ${
+									new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()
+								}` : ` ${
+									new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()
+								}`;
+							trainingDuration = `${startDate}-${endDate}`;
+							trainingLocation = `with ${
+								_.get(completedTraining, 'instructors')
+							}, ${
+								_.get(completedTraining, 'city')
+							}, ${
+								_.get(completedTraining, 'country')
+							}`;
+							trainingData = {
+								trainingDuration,
+								trainingLocation,
+							};
+							completedTrainingData = _.union(completedTrainingData, [trainingData]);
+						});
+						this.componentData.cgt = {
+							dateAvailableThrough: moment(dateAvailable)
+								.format('MMM DD, YYYY'),
+							sessions: completedTrainingData,
+							trainingsAvailable: this.groupTrainingsAvailable,
+						};
+
+						return result;
+					});
+			}),
+			catchError(err => {
+				this.status.loading.cgt = false;
+				this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
+					err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
 	 * ForkJoin to load the other API Calls
 	 */
 	private loadRacetrackInfo () {
@@ -850,6 +998,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadATX(),
 			this.loadELearning(),
 			this.loadSuccessPaths(),
+			this.loadCGT(),
 		)
 		.subscribe();
 	}
@@ -888,12 +1037,21 @@ export class LifecycleComponent implements OnDestroy {
 			}
 
 			this.componentData.params.pitstop = stage;
+			this.stage.next(stage);
 			// UI not handling pagination for now, temporarily set to a large number
 			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
 
 			this.status.loading.racetrack = false;
 		}
+	}
+
+	/**
+	 * Returns the current pitStop
+	 * @returns the observable representing the customerId
+	 */
+	 public getCurrentPitstop (): Observable<string>  {
+		return this.stage.asObservable();
 	}
 
 	/**

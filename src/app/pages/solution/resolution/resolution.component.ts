@@ -33,8 +33,13 @@ interface FilterData {
  */
 const statusList: string[] = [
 	'Cisco Pending',
+	'Close Pending',
 	'Customer Pending',
+	'Customer Requested Closure',
+	'Customer Updated',
 	'New',
+	'Release Pending',
+	'Service Order Pending',
 ];
 
 /**
@@ -86,6 +91,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 	public isLoading = true;
+	public totalCases: number;
 	public paginationInfo = {
 		currentPage: 0,
 		totalElements: 0, // total number of records for user
@@ -329,6 +335,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	private buildFilters () {
 		this.filters = [
 			{
+				displayed: true,
 				key: 'total',
 				loading: true,
 				selected: true,
@@ -337,6 +344,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_Total_'),
 			},
 			{
+				displayed: false,
 				key: 'status',
 				loading: true,
 				seriesData: [],
@@ -344,6 +352,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_Status_'),
 			},
 			{
+				displayed: false,
 				key: 'severity',
 				loading: true,
 				seriesData: [],
@@ -401,10 +410,17 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		return this.caseService.read(params)
 		.pipe(
 			map(result => {
+				this.totalCases = result.totalElements || 0;
 				const totalFilter = _.find(this.filters, { key: 'total' });
-				totalFilter.seriesData = [{ value: result.totalElements }];
+				totalFilter.seriesData = [{ value: this.totalCases }];
 				totalFilter.loading = false;
-				localStorage.setItem('caseTotalFilterData', totalFilter.seriesData[0].value);
+				localStorage.setItem('caseTotalFilterData', String(this.totalCases));
+				if (this.totalCases) {
+					_.forEach(this.filters, filter => {
+						filter.displayed = true;
+					});
+				}
+
 			}),
 			catchError(err => {
 				this.logger.error('resolution.component : buildTotalFilter() ' +

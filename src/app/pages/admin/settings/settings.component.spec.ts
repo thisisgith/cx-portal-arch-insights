@@ -21,6 +21,7 @@ describe('SettingsComponent', () => {
 				HttpClientTestingModule,
 				RouterTestingModule,
 				SettingsModule,
+				RouterTestingModule,
 			],
 			providers: [
 				{

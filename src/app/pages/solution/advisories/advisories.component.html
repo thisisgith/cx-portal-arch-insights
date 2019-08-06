@@ -142,7 +142,7 @@
 			[data]="tab.data"
 			(onTableRowClicked)="onRowSelect($event)">
 		</cui-table>
-		<cui-pager 
+		<cui-pager
 			*ngIf="tab.data.length && tab?.pagination?.total > 0"
 			class="base-padding"
 			[page]="tab.pagination.page - 1"
