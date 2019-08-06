@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { I18n } from '@cisco-ngx/cui-utils';
+import { Subject } from 'rxjs';
+
+import * as _ from 'lodash-es';
 
 /**
  * Admin Component
@@ -11,26 +14,16 @@ import { I18n } from '@cisco-ngx/cui-utils';
 	templateUrl: './admin-wrapper.component.html',
 })
 export class AdminWrapperComponent {
-	public sidebarOptions = {
-		color: 'dkgray',
-		compressed: false,
-		items: [
-			{
-				icon: 'icon-account',
-				onClick: () => {
-					// TODO
-				},
-				shortTitle: I18n.get('_Settings_'),
-				title: I18n.get('_Settings_'),
-			},
-		],
-		mini: true,
-		oneDrawerOpen: false,
-		title: 'cui-sidebar',
-	};
+	public routerPath;
+	private destroyed$: Subject<void> = new Subject<void>();
+
 	constructor (
 		private location: Location,
-	) { }
+		private route: ActivatedRoute,
+		private router: Router,
+	) {
+		this.routerPath = _.get(this, 'route.snapshot.routeConfig.path', 'settings');
+	}
 
 	/**
 	 * Goes back to the previous page

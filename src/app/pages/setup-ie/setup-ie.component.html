@@ -1,0 +1,10 @@
+<ie-setup-status-bar [state]="steps[currentStep]?.state"></ie-setup-status-bar>
+<div [hidden]="loading" class="dbl-margin-top">
+	<div class="base-padding base-margin-bottom slide-container">
+		<div #componentContainer></div>
+	</div>
+</div>
+<div *ngIf="loading">
+	<cui-spinner color="info" class="absolute-center"></cui-spinner>
+</div>
+<cui-modal></cui-modal>

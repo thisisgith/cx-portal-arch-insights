@@ -1,0 +1,36 @@
+<div class="visual-container panel panel--bordered-right flex-center">
+	<div class="icons flex-center">
+		<div
+			class="setup-step"
+			*ngFor="let step of steps; index as i"
+			[title]="step.label"
+		>
+			<img
+				*ngIf="!step.isVisited() && !step.isActive()"
+				alt="Step Inactive"
+				class="setup-step__icon"
+				type="image/svg+xml"
+				[src]="step.iconInactiveSrc"
+				(load)="step.loaded = true"
+			>
+			<div class="setup-step__spacer" [hidden]="step.loaded"></div>
+			<div
+				*ngIf="i !== (steps.length - 1)"
+				class="setup-step__connector"
+				[ngClass]="{ 'visited': step.isVisited() }"
+			></div>
+			<img
+				*ngIf="step.isVisited() || step.isActive()"
+				alt="Step Active"
+				class="setup-step__icon"
+				type="image/svg+xml"
+				[src]="step.iconActiveSrc"
+				(load)="step.loaded = true"
+			>
+			<ng-container *ngIf="step.isActive()">
+				<div class="setup-step__label" [innerText]="step.label"></div>
+				<div class="setup-step__outline"></div>
+			</ng-container>
+		</div>
+	</div>
+</div>
