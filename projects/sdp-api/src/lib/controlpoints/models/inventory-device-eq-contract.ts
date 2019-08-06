@@ -1,14 +1,14 @@
 /* tslint:disable */
 import { Equipment } from './equipment';
 export interface InventoryDeviceEqContract {
+  generatedAt?: string;
   Equipment?: Equipment;
-  collectorId?: string;
   contractNumber?: string;
   contractStatus?: string;
   coverageStatus?: string;
   createdDate?: string;
   genPartyId?: string;
-  generatedAt?: string;
+  collectorId?: string;
   managedNeId?: string;
   partyId?: string;
   reachabilityFailureReason?: string;

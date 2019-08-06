@@ -184,3 +184,259 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 		});
 	});
 });
+
+describe('Control Point (Setup Wizard)', () => { // PBC-190
+	before(() => {
+		cy.login();
+	});
+
+	/**
+	* Sets the local storage and loads application
+	* @param {string} value The json formatted string to populate in storage
+	*/
+	function loadWizard (value) {
+		cy.window().then(win => {
+			win.localStorage.setItem('cxportal.cisco.com::IE_SETUP_STATE', value);
+		});
+		cy.loadApp('/setup-ie');
+		cy.waitForAppLoading();
+		cy.contains('button', 'Continue').click();
+	}
+
+	/**
+	* Verifies the off/on state of the icons on the setup wizard
+	* @param {bool} a The 1st icon state.
+	* @param {bool} b The 2nd icon state.
+	* @param {bool} c The 3rd icon state.
+	* @param {bool} d The 4th icon state.
+	*/
+	function verifySidebar (a, b, c, d) {
+		cy.get('ie-setup-status-bar').within(() => {
+			cy.get('.setup-step').should('have.length', 4);
+		});
+		cy.get(`[title="${i18n._PreRequisites_.toUpperCase()}"]`).within(() => {
+			cy.get('.setup-step__icon').should('have.attr', 'src').and('include', a ? '-on.svg' : '-off.svg');
+		});
+		cy.get(`[title="${i18n._VirtualMachine_.toUpperCase()}"]`).within(() => {
+			cy.get('.setup-step__icon').should('have.attr', 'src').and('include', b ? '-on.svg' : '-off.svg');
+		});
+		cy.get(`[title="${i18n._CiscoCXCollector_.toUpperCase()}"]`).within(() => {
+			cy.get('.setup-step__icon').should('have.attr', 'src').and('include', c ? '-on.svg' : '-off.svg');
+		});
+		cy.get(`[title="${i18n._CiscoDNACollector_.toUpperCase()}"]`).within(() => {
+			cy.get('.setup-step__icon').should('have.attr', 'src').and('include', d ? '-on.svg' : '-off.svg');
+		});
+	}
+
+	context('Setup Wizard : compKey=0', () => {
+		before(() => {
+			cy.loadApp('/setup-ie');
+			cy.waitForAppLoading();
+			cy.contains('button', 'Start Over').click();
+		});
+
+		it('Sidebar Panel', () => {
+			verifySidebar(true, false, false, false);
+		});
+
+		it('Pre-Requisites Panel', () => {
+			// The First Step Contents
+			cy.contains(`STEP 1: ${i18n._Prerequisites_.toUpperCase()}`).should('exist');
+			cy.contains(i18n._ConnectDevicesToCX_).should('exist');
+			cy.contains(i18n._InstallCiscoIE_).should('exist');
+			cy.contains(i18n._YoullNeedAnEnvironment_).should('exist');
+			cy.contains(i18n._ConnectDevicesToCX_).should('exist');
+			cy.contains(i18n._HasVMWare_).should('exist');
+			cy.contains(i18n._HasAtLeastReqs_).should('exist');
+			cy.contains(i18n._CanConnectTo_).should('exist');
+
+			cy.contains(i18n._GetStarted_.toUpperCase()).click();
+			cy.location('search').should('contain', 'compKey=1');
+		});
+	});
+
+	context('Setup Wizard : compKey=1', () => {
+		before(() => {
+			loadWizard('{"compKey":1}');
+		});
+
+		it('Sidebar Panel', () => {
+			verifySidebar(true, false, false, false);
+		});
+
+		it('Environment Panel', () => {
+			cy.contains(`STEP 1: ${i18n._Prerequisites_.toUpperCase()}`).should('exist');
+			cy.contains(i18n._MyEnvironment_).should('exist');
+			cy.contains(i18n._ViewSetupInstructions_).should('exist');
+
+			cy.contains('button', i18n._VMWareVSphereESXi_).click();
+			cy.location('search').should('contain', 'compKey=2');
+			cy.location('search').should('contain', 'ovaSelection=vsphere');
+			cy.go('back');
+			cy.waitForAppLoading();
+
+			cy.contains('button', i18n._VMWareVCenter_).click();
+			cy.location('search').should('contain', 'compKey=2');
+			cy.location('search').should('contain', 'ovaSelection=vcenter');
+			cy.go('back');
+			cy.waitForAppLoading();
+
+			cy.contains('button', i18n._OracleVirtualBox_).click();
+			cy.location('search').should('contain', 'compKey=2');
+			cy.location('search').should('contain', 'ovaSelection=vbox');
+		});
+	});
+
+	context('Setup Wizard : compKey=2 ovaSelection=vsphere', () => {
+		before(() => {
+			loadWizard('{"ovaSelection":"vsphere","compKey":2}');
+		});
+
+		it('Sidebar Panel', () => {
+			verifySidebar(true, false, false, false);
+		});
+
+		it('Download OVA Panel', () => {
+			cy.contains(`STEP 1: ${i18n._Prerequisites_.toUpperCase()}`).should('exist');
+			cy.contains(i18n._DownloadOVAImage_).should('exist');
+			cy.contains('a', 'Cisco End User License Agreement').should('have.attr', 'href').and('eq', 'https://www.cisco.com');
+
+			cy.getByAutoId('setup.ova.eula').should('have.attr', 'ng-reflect-model', 'false');
+			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('have.attr', 'disabled');
+			cy.getByAutoId('setup.ova.eula').click({ force: true });
+			cy.getByAutoId('setup.ova.eula').should('have.attr', 'ng-reflect-model', 'true');
+			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('not.have.attr', 'disabled');
+		});
+	});
+
+	context('Setup Wizard : compKey=3 ovaSelection=vsphere', () => {
+		before(() => {
+			loadWizard('{"ovaSelection":"vsphere","compKey":3,"deployStepsSet":"ova:0"}');
+		});
+
+		it('Sidebar Panel', () => {
+			verifySidebar(true, true, false, false);
+		});
+
+		it('Virtual Machine Panel', () => {
+			cy.contains(`STEP 2: ${i18n._VirtualMachine_.toUpperCase()}`).should('exist');
+			cy.contains(i18n._DeployOVA_).should('exist');
+
+			cy.location('search').should('contain', 'deployStepsSet=ova:0');
+			cy.contains(i18n._SetupInstruction_1A_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=ova:1');
+			cy.contains(i18n._SetupInstruction_2A_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=ova:2');
+			cy.contains(i18n._SetupInstruction_3A_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=ova:3');
+			cy.contains(i18n._SetupInstruction_4A_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=ova:4');
+			cy.contains(i18n._SetupInstruction_5A_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=ova:5');
+			cy.contains(i18n._SetupInstruction_6A_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=ova:6');
+			cy.contains(i18n._SetupInstruction_7A_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'compKey=4');
+		});
+	});
+
+	context('Setup Wizard : compKey=3 ovaSelection=vcenter', () => {
+		before(() => {
+			loadWizard('{"ovaSelection":"vcenter","compKey":3,"deployStepsSet":"vcenter:0"}');
+		});
+
+		it('Sidebar Panel', () => {
+			verifySidebar(true, true, false, false);
+		});
+
+		it('Virtual Machine Panel', () => {
+			cy.contains(`STEP 2: ${i18n._VirtualMachine_.toUpperCase()}`).should('exist');
+			cy.contains(i18n._DeployOVA_).should('exist');
+
+			cy.location('search').should('contain', 'deployStepsSet=vcenter:0');
+			cy.contains(i18n._SetupInstruction_1B_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vcenter:1');
+			cy.contains(i18n._SetupInstruction_2B_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vcenter:2');
+			cy.contains(i18n._SetupInstruction_3B_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vcenter:3');
+			cy.contains(i18n._SetupInstruction_4B_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vcenter:4');
+			cy.contains(i18n._SetupInstruction_5B_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vcenter:5');
+			cy.contains(i18n._SetupInstruction_6B_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vcenter:6');
+			cy.contains(i18n._SetupInstruction_7B_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vcenter:7');
+			cy.contains(i18n._SetupInstruction_8B_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vcenter:8');
+			cy.contains(i18n._SetupInstruction_9B_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'compKey=4');
+		});
+	});
+
+	context('Setup Wizard : compKey=3 ovaSelection=vbox', () => {
+		before(() => {
+			loadWizard('{"ovaSelection":"vbox","compKey":3,"deployStepsSet":"vbox:0"}');
+		});
+
+		it('Sidebar Panel', () => {
+			verifySidebar(true, true, false, false);
+		});
+
+		it('Virtual Machine Panel', () => {
+			cy.contains(`STEP 2: ${i18n._VirtualMachine_.toUpperCase()}`).should('exist');
+			cy.contains(i18n._DeployVBox_).should('exist');
+
+			cy.location('search').should('contain', 'deployStepsSet=vbox:0');
+			cy.contains(i18n._SetupInstruction_1C_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vbox:1');
+			cy.contains(i18n._SetupInstruction_2C_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vbox:2');
+			cy.contains(i18n._SetupInstruction_3C_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'deployStepsSet=vbox:3');
+			cy.contains(i18n._SetupInstruction_4C_).should('exist');
+			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
+
+			cy.location('search').should('contain', 'compKey=4');
+		});
+	});
+});
