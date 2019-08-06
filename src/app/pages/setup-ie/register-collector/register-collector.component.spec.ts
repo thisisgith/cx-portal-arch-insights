@@ -28,7 +28,7 @@ describe('RegisterCollectorComponent', () => {
 	const blob = new Blob;
 
 	describe('with queryParams', () => {
-		beforeEach(async(() => {
+		beforeEach((() => {
 			TestBed.configureTestingModule({
 				imports: [
 					HttpClientTestingModule,
@@ -65,7 +65,7 @@ describe('RegisterCollectorComponent', () => {
 	});
 
 	describe('without queryParams', () => {
-		beforeEach(async(() => {
+		beforeEach((() => {
 			TestBed.configureTestingModule({
 				imports: [
 					HttpClientTestingModule,

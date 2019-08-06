@@ -1,21 +1,85 @@
-
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../mixins.scss';
 
-.maxWidth {
-	width: 100%;
+.header-bar__logo {
+	span.icon-cisco {
+		color: $primary!important;
+	}
 }
 
-.divider--left {
-	border-color: $light-gray-3;
-	border-style: none none none solid;
-	border-width: 0 0 0 2px;
+.v-separator {
+	height: 35px;
+	border-right: 2px solid $light-gray-disabled;
 }
 
-.icon--mid {
-	font-size: 24px;
+.cx-header-links {
+	cursor: pointer;
+	user-select: none;
+	text-decoration: unset!important;
+
+	&:hover {
+		.cx-header-label {
+			color: $primary!important;
+		}
+		.cx-user-label {
+			color: $primary!important;
+		}
+	}
+
+	&:focus {
+		.cx-header-label {
+			color: $primary!important;
+		}
+		.cx-user-label {
+			color: $primary!important;
+		}
+	}
+
+	&--active {
+		.cx-header-label {
+			color: $primary!important;
+		}
+		.cx-user-label {
+			color: $primary!important;
+		}
+	}
 }
 
-.thumb--tiny {
-	height: 24px;
-	width: 24px;
+.cx-header-icon {
+	margin-right: $base-spacing * 0.25 !important;
+	line-height: 24px!important;
+	font-size: 24px!important;
+	color: $med-gray-4;
+	&--small {
+		color: $med-gray-4;
+		margin-right: $base-spacing * 0.25 !important;
+		line-height: 18px!important;
+		font-size: 18px!important;
+	}
+}
+
+.cx-header-arrow {
+	display: inline-block;
+	transition: transform .2s ease-in-out;
+	color: $light-gray-compliant;
+}
+
+.cx-header-label {
+	color: $light-gray-compliant;
+	font-size: $small-font-size;
+	margin-right: 4px;
+}
+
+.cx-search-button {
+	cursor: pointer;
+}
+
+.cx-user-icon {
+	height: 28px;
+	width: 28px;
+	border: 1px solid $light-gray-3;
+	@include lg {
+		height: 24px;
+		width: 24px;
+	}
 }
