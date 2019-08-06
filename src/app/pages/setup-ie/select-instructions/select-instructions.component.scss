@@ -1,0 +1,15 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+:host {
+	button.btn.btn--wide {
+		border-radius: 4px;
+		margin-left: 0;
+		width: 300px;
+		margin-top: 6px;
+		padding: 15px;
+		text-align: left;
+		white-space: normal;
+		line-height: $base-spacing;
+		height: unset;
+	}
+}

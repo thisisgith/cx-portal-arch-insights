@@ -1,0 +1,16 @@
+<ng-container *ngIf="noDNAC">
+	<div class="base-margin flex-center-vertical">
+		<div>
+			<h1
+				[innerText]="'_AssetInventoryNotConnected_' | i18n"
+			></h1>
+			<h3
+				[innerText]="'_ContinueDNACSetupText_' | i18n"
+			></h3>
+		</div>
+		<button
+			class="btn btn--secondary btn--wide flex-right"
+			[innerText]="'_ContinueSetup_' | i18n | uppercase"
+			[routerLink]="['/setup-ie']"
+		></button> </div>
+</ng-container>

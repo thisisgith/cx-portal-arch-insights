@@ -18,7 +18,10 @@ export * from './case/case';
 export * from './contract/contract';
 export * from './contract/coverage';
 
+export * from './controlpoints/create-registration';
+export * from './controlpoints/dnac-status';
 export * from './controlpoints/health-status';
+export * from './controlpoints/policies';
 
 export * from './diagnostics/critical-bugs';
 
@@ -59,4 +62,3 @@ export * from './search/search';
 export * from './search/serialnumber';
 
 export * from './user/entitlement';
-export * from './user/user';

@@ -1,0 +1,13 @@
+:host {
+	img,
+	video { max-height: 500px; }
+
+	.end-tutorial-link-container {
+		position: fixed;
+		left: 0;
+		bottom: 0;
+		height: 60px;
+		width: 300px;
+		text-align: center;
+	}
+}
