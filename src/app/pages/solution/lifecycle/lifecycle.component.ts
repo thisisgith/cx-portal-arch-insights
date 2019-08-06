@@ -33,7 +33,7 @@ import {
 import { SolutionService } from '../solution.service';
 import * as _ from 'lodash-es';
 import * as moment from 'moment';
-import { Observable, of, forkJoin, Subscription } from 'rxjs';
+import { Observable, of, forkJoin, Subscription, ReplaySubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
@@ -145,6 +145,7 @@ export class LifecycleComponent implements OnDestroy {
 	public successBytesTable: CuiTableOptions;
 	public cgtAvailable: number;
 	public trainingAvailableThrough: string;
+	private stage = new ReplaySubject<string>();
 
 	public statusOptions = [
 		{
@@ -700,7 +701,6 @@ export class LifecycleComponent implements OnDestroy {
 					!session.title && !session.description);
 
 				this.selectedACC = this.componentData.acc.sessions;
-				this.buildTable();
 
 				this.status.loading.acc = false;
 				if (window.Cypress) {
@@ -793,6 +793,7 @@ export class LifecycleComponent implements OnDestroy {
 						}));
 				}
 
+				this.buildTable();
 				this.status.loading.success = false;
 				if (window.Cypress) {
 					window.successPathsLoading = false;
@@ -1036,12 +1037,21 @@ export class LifecycleComponent implements OnDestroy {
 			}
 
 			this.componentData.params.pitstop = stage;
+			this.stage.next(stage);
 			// UI not handling pagination for now, temporarily set to a large number
 			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
 
 			this.status.loading.racetrack = false;
 		}
+	}
+
+	/**
+	 * Returns the current pitStop
+	 * @returns the observable representing the customerId
+	 */
+	 public getCurrentPitstop (): Observable<string>  {
+		return this.stage.asObservable();
 	}
 
 	/**

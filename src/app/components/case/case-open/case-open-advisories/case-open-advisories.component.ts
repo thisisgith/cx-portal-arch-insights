@@ -30,6 +30,12 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 	@Input() public selectedAsset: Asset;
 	@Input() public otherAssets: Asset[];
 	@Input() public type: AdvisoryType;
+	public titles = {
+		bug: '_CriticalBug_',
+		field: '_CiscoFieldNotice_',
+		security: '_CiscoSecurityAdvisory_',
+	};
+	public typeTitle: string;
 	public allAssets: Asset[];
 	public loadingTech = false;
 	public loadingSubtech = false;
@@ -40,15 +46,19 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 	public problemGroups: string[];
 	public errors: string[];
 	public caseOpenData: CaseOpenData;
+	public titleMaxLength = 255;
+	public descriptionMaxLength = 32000;
 
 	public data: { }; // Input data
 	public caseForm = new FormGroup({
-		description: new FormControl('', [Validators.required, Validators.maxLength(32000)]),
+		description: new FormControl('',
+			[Validators.required, Validators.maxLength(this.descriptionMaxLength)]),
 		problemArea: new FormControl(null, Validators.required),
 		severity: new FormControl(3, Validators.required),
 		subtech: new FormControl(null, Validators.required),
 		technology: new FormControl(null, Validators.required),
-		title: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+		title: new FormControl('',
+			[Validators.required, Validators.maxLength(this.titleMaxLength)]),
 	});
 	public severityName = caseSeverities[3].getCreateName();
 	public submitting = false;
@@ -94,6 +104,7 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 		this.caseForm.controls.description.setValue(
 			this.note,
 		);
+		this.typeTitle = I18n.get(this.titles[this.type]);
 		this.fetchTechList();
 		this.subscribeSubtech();
 		this.subscribeProblemArea();

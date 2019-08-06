@@ -1,4 +1,5 @@
 export { AdvisoryDetailsModule } from './details/advisory/advisory-details.module';
+export { AlertModule } from './alert/alert.module';
 export { AssetDetailsModule } from './details/asset/asset-details.module';
 export { BarChartModule } from './charts/bar-chart/bar-chart.module';
 export { BubbleChartModule } from './charts/bubble-chart/bubble-chart.module';
