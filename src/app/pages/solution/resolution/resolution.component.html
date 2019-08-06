@@ -42,7 +42,8 @@
 					'filter__selected': filter.selected,
 					'filter__not-selected': !filter.selected
 				}"
-				class="panel flex-center filter no-padding half-padding-bottom">
+				class="panel flex-center filter no-padding half-padding-bottom"
+				*ngIf="filter.displayed">
 				<div>
 					<div *ngIf="filter.template">
 						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
@@ -76,10 +77,12 @@
 			<form [formGroup]="searchCasesForm" (ngSubmit)="searchCaseNumber()">
 				<div class="form-group input--icon">
 					<div class="form-group__text">
-						<input id="input-type-search" type="search" data-auto-id="caseSearchBox" [placeholder]="'_RMASearchCasePlaceholder_' | i18n"
-							formControlName="caseNo">
-						<button type="submit" class="link">
-							<span class="icon-search"></span>
+						<input id="input-type-search" type="text" data-auto-id="caseSearchBox"
+							[placeholder]="'_RMASearchCasePlaceholder_' | i18n" formControlName="caseNo">
+						<span class="icon-close has-label close" data-auto-id="closeButton"
+							(click)="clearSearch()"></span>
+						<button type="submit" class="link caseinput search">
+							<span class="icon-search"></span>	
 						</button>
 					</div>
 					<div *ngIf="isSearchCaseFormInvalid" class="help-block text-danger" role="alert">
@@ -150,7 +153,7 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalFilter let-filter="filter">
-	<div class="text-huge flex-center dbl-padding-left dbl-padding-right"
+	<div class="text-huge flex-center dbl-padding"
 		[ngClass]="{
 			'text-muted': filter.loading,
 			'text-default': !filter.loading

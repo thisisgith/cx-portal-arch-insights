@@ -1,0 +1,21 @@
+<div class="text-center">
+	<h6
+		class="dbl-xl-margin-top text-primary base-margin-bottom"
+		[innerText]="('_StepXColonY_' | i18n:'1':('_Prerequisites_' | i18n)) | uppercase"
+	></h6>
+	<h2 [innerText]="'_MyEnvironment_' | i18n"
+		class="xl-margin-bottom">
+	</h2>
+	<div class="base-margin-bottom">
+		<h4 [innerText]="'_ViewSetupInstructions_' | i18n"></h4>
+	</div>
+	<div class="flex flex-wrap flex-center-horizontal half-margin-bottom">
+		<button
+			data-auto-id="select-btn"
+			*ngFor="let btn of buttons; let i = index"
+			class="btn btn--wide btn--secondary half-margin-right"
+			[innerText]="btn.title + ' ' + btn.version"
+			(click)="onSelect(btn.key)">
+		</button>
+	</div>
+</div>

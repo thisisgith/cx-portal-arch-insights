@@ -34,7 +34,8 @@ function MockACC (
 			isFavorite: false,
 			status: 'recommended',
 			title: 'Cisco DNA Center Project Planning',
-			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
+				'images/acc_access-overview-demo.png',
 		},
 		{
 			accId: `${accId2}`,
@@ -44,7 +45,8 @@ function MockACC (
 			isFavorite: true,
 			status: 'in-progress',
 			title: 'Cisco DNA Pilot Usecase Deployment',
-			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
+				'images/acc_sda-segregation-strategy.png',
 		},
 		{
 			accId: `${accId3}`,
@@ -54,7 +56,8 @@ function MockACC (
 			isFavorite: false,
 			status: 'in-progress',
 			title: 'Cisco DNA Center Use Cases',
-			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
+				'images/acc_deployment-best-practices.png',
 		},
 		{
 			accId: `${accId4}`,
@@ -64,7 +67,8 @@ function MockACC (
 			isFavorite: false,
 			status: 'completed',
 			title: 'Cisco DNA Center Wireless Assurance Feature Planning',
-			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
+				'images/acc_access-infra-readiness.png',
 		},
 		{
 			accId: `${accId6}`,
@@ -74,7 +78,8 @@ function MockACC (
 			isFavorite: false,
 			status: 'requested',
 			title: 'Cisco Software-Defined Access Transition Planning',
-			url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/' +
+				'acc_policy-enforcement-sda.png',
 		},
 		{ },
 	];

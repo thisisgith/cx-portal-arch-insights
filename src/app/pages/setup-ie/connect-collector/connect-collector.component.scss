@@ -1,0 +1,25 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+@mixin box {
+	background: $white;
+	border: 1px solid $light-gray-3;
+	height: $base-button-height;
+	border-radius: $base-border-radius;
+}
+
+:host {
+	.secure-banner {
+		@include box;
+
+		&__icon {
+			@include box;
+
+			width: $base-button-height;
+		}
+	}
+
+	.form-container {
+		width: 50vw;
+		margin: auto;
+	}
+}
