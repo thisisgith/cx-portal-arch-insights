@@ -29,6 +29,21 @@ export * from './lib/controlpoints/models';
 export * from './lib/controlpoints/services';
 export * from './lib/controlpoints/control-points.module';
 
+export {
+  Acc,
+  AtxFuture,
+  Buckets,
+  CDC,
+  CDCSearchResponse,
+  CommunitySearchResponse,
+  Facets,
+  GlobalSearchResponse,
+} from './lib/search/models';
+export * from './lib/search/models';
+export * from './lib/controlpoints/models';
+export * from './lib/controlpoints/services';
+export * from './lib/controlpoints/control-points.module';
+
 export * from './lib/search/models';
 export * from './lib/search/services';
 export * from './lib/search/search.module';

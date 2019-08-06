@@ -1,0 +1,65 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+:host {
+	.visual-container {
+		position: fixed;
+		left: 0;
+		top: 55px;
+		bottom: 0;
+		width: 300px;
+
+		.icons {
+			margin: auto;
+			width: 79px;
+			flex-wrap: wrap;
+			height: 560px;
+		}
+
+		.setup-step {
+			position: relative;
+			margin-right: -40px;
+
+			&__icon,
+			&__spacer {
+				height: 80px;
+				width: 80px;
+				animation: fade-in 1s;
+			}
+
+			&__label {
+				position: absolute;
+				width: 100px;
+				text-align: right;
+				left: -116px;
+				color: $cisco-blue;
+				top: 20px;
+			}
+
+			&__outline {
+				height: 100px;
+				width: 100px;
+				position: absolute;
+				border: 2px solid $cisco-blue;
+				border-radius: 50px;
+				right: -10px;
+				bottom: -6px;
+				background: $white;
+				z-index: -1;
+			}
+
+			&__connector {
+				height: 63px;
+				position: absolute;
+				width: 2px;
+				top: 78px;
+				left: 40px;
+				z-index: -2;
+				background: #dae6ed;
+
+				&.visited {
+					background: $cisco-blue;
+				}
+			}
+		}
+	}
+}

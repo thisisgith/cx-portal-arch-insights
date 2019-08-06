@@ -1,0 +1,25 @@
+<a
+	data-auto-id="close-modal-btn"
+	class="modal__close"
+	(click)="cuiModalService.hide()"
+>
+	<span class="icon-close"></span>
+</a>
+<div class="modal__header">
+	<h1 [innerText]="'_ContinueQuestion_' | i18n"></h1>
+</div>
+<div class="modal__body">
+	<div [innerText]="'_SetupWizardContinueMsg_' | i18n"></div>
+</div>
+<div class="modal__footer flex-center-horizontal">
+	<button class="btn"
+		data-auto-id="start-over-btn"
+		[innerHTML]="'_StartOver_' | i18n"
+		(click)="startOver()">
+	</button>
+	<button class="btn btn--primary"
+		data-auto-id="continue-btn"
+		[innerHTML]="'_Continue_' | i18n"
+		(click)="continue()">
+	</button>
+</div>

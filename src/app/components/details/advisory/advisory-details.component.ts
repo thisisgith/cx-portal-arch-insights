@@ -13,6 +13,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { Data as SecurityData } from './security/security-details.component';
 import { Data as FieldNoticeData } from './field-notice/field-notice-details.component';
 import {
+	Asset,
 	CriticalBug,
 	FieldNoticeAdvisory,
 	SecurityAdvisoryInfo,
@@ -36,6 +37,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 
 	@Input('advisory') public advisory: CriticalBug | FieldNoticeAdvisory | SecurityAdvisoryInfo;
 	@Input('advisoryId') public advisoryId: string;
+	@Input('selectedAsset') public selectedAsset?: Asset;
 	@Input('type') public type: AdvisoryType;
 	@Output('close') public close = new EventEmitter<boolean>();
 

@@ -1,0 +1,87 @@
+<div *ngIf="!loading" class="text-center">
+	<h6 class="text-primary base-margin-bottom"
+		[innerText]="'_StepXColonY_' | i18n:'6':('_CiscoDNACollector_' | i18n)| uppercase"></h6>
+	<h1 [innerText]="'_ConnectCiscoDNACenterToCXPortal_' | i18n" class="dbl-margin-bottom">
+	</h1>
+	<div class="form-container dbl-margin-bottom">
+		<div class="secure-banner flex-center-vertical dbl-margin-bottom">
+			<span class="secure-banner__icon flex-center">
+				<span class="icon-lock"></span>
+			</span>
+			<span class="base-margin-left" [innerText]="'_IE_CiscoDoesNotStoreTheseCreds_' | i18n"></span>
+		</div>
+		<div class="text-left">
+			<form class="dbl-margin-bottom" [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+				<div class="dbl-margin-bottom">
+					<h4 [innerText]="'_ConnectDNACToCXPortal_' | i18n"></h4>
+					<span class="text-large" [innerText]="'_SignIntoCiscoDNAC_' | i18n"></span>
+				</div>
+				<div class="row dbl-margin-bottom">
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="form-group__text">
+								<input
+								id="input-ip-address"
+								type="text"
+								formControlName="ipAddress">
+								<label for="input-layout-default" [innerText]="'_IPAddress_' | i18n">
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row base-margin-top">
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="form-group__text">
+								<input
+								id="input-username"
+								type="text"
+								formControlName="username">
+								<label for="input-layout-default" [innerText]="'_Username_' | i18n">
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="form-group__text">
+								<input
+								id="input-password"
+								type="password"
+								formControlName="password">
+								<label for="input-layout-default" [innerText]="'_Password_' | i18n">
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="dbl-margin-bottom"> -->
+				<!-- 	<a href="javascript:;" class="base-margin-top" (click)="addAnotherDeployment()"> -->
+				<!-- 		<span class="icon-add-outline"></span> -->
+				<!-- 		<span class="base-margin-left" [innerText]="'_IE_AddAnotherDeployment_' | i18n"></span> -->
+				<!-- 	</a> -->
+				<!-- </div> -->
+				<alert
+					[title]="'_CiscoDNACenterCannotBeReached_' | i18n | uppercase"
+					[(visible)]="error"
+				>
+					<span [innerText]="'_DNACErrorInfo_' | i18n"></span>
+				</alert>
+				<div class="dbl-margin-top flex-center-vertical">
+					<button
+						class="btn btn--wide btn--secondary qtr-margin-right"
+						type="submit"
+						[disabled]="accountForm.invalid"
+						[innerText]="'_IE_StartUsingCXPortal_' | i18n | uppercase">
+					</button>
+					<span [innerText]="'_PressEnter_' | i18n" class="text-large">
+					</span>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div *ngIf="loading">
+	<cui-spinner color="info" class="absolute-center"></cui-spinner>
+</div>
