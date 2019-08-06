@@ -228,7 +228,7 @@ export class RacetrackComponent implements OnInit {
 			.on('click', () => this.zoomToNext());
 
 		racecar.style('cursor', 'pointer')
-			.on('click', () => this.zoomToNext());
+			.on('click', () => this.zoomToCurrent());
 
 		// customer has already purchased, starts at onboarding
 		this.zoomToStage(this.stage, true);
@@ -370,6 +370,20 @@ export class RacetrackComponent implements OnInit {
 	 */
 	public zoomToNext (trackProgress = false) {
 		let next = this.stages.indexOf(this.current) + 1;
+
+		if (next === this.stages.length) { next = 0; }
+
+		this.onStageChange.emit(this.stages[next]);
+		this.zoomToStage(this.stages[next], trackProgress);
+	}
+
+	/**
+	 * Does a victory lap, then moves to current pitstop
+	 * @param trackProgress Should progress bar follo car
+	 * @memberof RacetrackComponent
+	 */
+	public zoomToCurrent (trackProgress = false) {
+		let next = this.stages.indexOf(this.currentStage.toLowerCase());
 
 		if (next === this.stages.length) { next = 0; }
 
