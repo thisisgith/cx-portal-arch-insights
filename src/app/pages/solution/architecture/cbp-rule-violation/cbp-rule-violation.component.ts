@@ -100,5 +100,5 @@ export class CbpRuleViolationComponent implements OnInit {
 		});
 	}
 
-	public onTableRowClicked(event:any){ }
+	public onTableRowClicked(event:any){ console.log(event) }
 }
