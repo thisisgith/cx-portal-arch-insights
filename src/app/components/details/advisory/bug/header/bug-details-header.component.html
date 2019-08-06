@@ -11,9 +11,10 @@
 							'High': 'label--warning-alt',
 							'Medium': 'label--warning',
 							'Low': 'label--success'
-						}[details?.severity]">
+						}[details?.severity]"
+						data-auto-id="BugDetailsSeverityIcon">
 					</span>
-					<span [innerText]="details?.severity || ('_NA_' | i18n)" class="text-capitalize"></span>
+					<span [innerText]="details?.severity || ('_NA_' | i18n)" class="text-capitalize" data-auto-id="BugDetailsSeverityText"></span>
 				</div>
 			</div>
 

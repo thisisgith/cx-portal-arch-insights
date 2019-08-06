@@ -21,8 +21,10 @@ const secBulletinScenario = secBulletinMock.getScenario(
 );
 const secBulletin = secBulletinScenario.response.body.data[0];
 
+const dateFormat = 'MMM DD, YYYY';
+
 const impactMap = severity => {
-	switch (severity) {
+	switch (Cypress._.startCase(severity)) {
 		case 'Critical':
 			return 'label--danger';
 		case 'High':
@@ -229,7 +231,7 @@ describe('Advisories', () => { // PBC-306
 				cy.getByAutoId('SecurityDetailsImpactText')
 					.should('have.text', secBulletin.severity);
 				const publishedDate = Cypress.moment(secBulletin.bulletinFirstPublished)
-					.format('MMM DD, YYYY');
+					.format(dateFormat);
 				cy.getByAutoId('SecurityAdvisoryPublished')
 					.should('have.text', `Published${publishedDate}`);
 				cy.getByAutoId('SecurityAdvisoryLastUpdated')
@@ -438,6 +440,30 @@ describe('Advisories', () => { // PBC-306
 
 			cy.getByAutoId('CUIPager-Page1').click();
 			bugMock.enable('Critical Bugs');
+		});
+
+		context('Details / 360', () => { // PBC-313
+			it('Properly displays advisory details', () => {
+				const bug = bugs[0];
+				cy.get('app-advisories tbody [data-auto-id="ID-Cell"]').eq(0).click();
+				cy.getByAutoId('DetailsPanelTitle').should('have.text', `Bug ${bug.id}`);
+				cy.getByAutoId('BugDetailsSeverityIcon')
+					.should('have.class', impactMap(bug.severity));
+				cy.getByAutoId('BugDetailsSeverityText').should('have.text', bug.severity);
+				const publishedDate = Cypress.moment(bug.publishedOn).format(dateFormat);
+				cy.getByAutoId('CriticalBugPublished')
+					.should('have.text', `Published${publishedDate}`);
+				const updatedDate = Cypress.moment(bug.lastUpdated).format(dateFormat);
+				cy.getByAutoId('CriticalBugLastUpdated')
+					.should('have.text', `Last Updated${updatedDate}`);
+				cy.getByAutoId('CriticalBugStatus')
+					.should('have.text', `Status${bug.state}`);
+				cy.getByAutoId('CriticalBugImpactedAssets')
+					.should('have.text', `Impacted Assets (${bug.assetsImpacted})`);
+				cy.getByAutoId('BugDetailsTitleText').should('have.text', bug.title);
+				cy.getByAutoId('BugDetailsDescriptionText').should('have.text', bug.description);
+				cy.get('app-advisories tbody [data-auto-id="ID-Cell"]').eq(0).click();
+			});
 		});
 
 		context('Filtering', () => { // PBC-310
