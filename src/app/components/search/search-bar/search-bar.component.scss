@@ -1,13 +1,6 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import '../../../../mixins.scss';
 
-$search-bar-max: 378px;
-$search-bar-lg-collapsed: 152px;
-$search-bar-lg-expanded: 425px;
-$search-bar-md-expanded: 321px;
-$search-bar-sm-expanded: 425px;
-
-
 .dropdown__menu {
 	max-height: 170px;
 	max-width: none;
