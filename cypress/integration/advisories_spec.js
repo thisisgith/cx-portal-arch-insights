@@ -15,6 +15,11 @@ const bugs = bugScenario.response.body.data;
 const vulnMock = new MockService('VulnerabilityScenarios');
 const vulnScenario = vulnMock.getScenario('GET', 'Advisory Counts');
 const vulnResponse = vulnScenario.response.body;
+const secBulletinMock = new MockService('SecurityAdvisoryBulletinScenarios');
+const secBulletinScenario = secBulletinMock.getScenario(
+	'GET', 'Security Advisory Details for ID 485'
+);
+const secBulletin = secBulletinScenario.response.body.data[0];
 
 const impactMap = severity => {
 	switch (severity) {
@@ -213,6 +218,50 @@ describe('Advisories', () => { // PBC-306
 				cy.getByAutoId('Facet-Advisories').click();
 				cy.waitForAppLoading();
 				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('be.visible');
+			});
+		});
+
+		context('Details / 360', () => { // PBC-311
+			it('Properly displays advisory details', () => {
+				cy.get('app-advisories tbody tr').eq(0).click();
+				cy.getByAutoId('SecurityDetailsImpactIcon')
+					.should('have.class', impactMap(secBulletin.severity));
+				cy.getByAutoId('SecurityDetailsImpactText')
+					.should('have.text', secBulletin.severity);
+				const publishedDate = Cypress.moment(secBulletin.bulletinFirstPublished)
+					.format('MMM DD, YYYY');
+				cy.getByAutoId('SecurityAdvisoryPublished')
+					.should('have.text', `Published${publishedDate}`);
+				cy.getByAutoId('SecurityAdvisoryLastUpdated')
+					.should('have.text', 'Last UpdatedNever'); // TODO: CSCvq80067
+				cy.getByAutoId('SecurityAdvisoryVersion')
+					.should('have.text', `Version${secBulletin.bulletinVersion}`);
+				cy.getByAutoId('SecurityDetailsTitleText')
+					.should('have.text', secBulletin.bulletinTitle);
+				cy.getByAutoId('SecurityDetailsSummaryText')
+					.should('have.text', secBulletin.summaryText);
+				cy.get('app-advisories tbody tr').eq(0).click();
+			});
+
+			it('Gracefully handles invalid/empty API responses', () => {
+				const validate360 = () => {
+					cy.getByAutoId('SecurityDetailsImpactText').should('have.text', 'N/A');
+					cy.getByAutoId('SecurityAdvisoryVersion').should('have.text', 'VersionN/A');
+					cy.getByAutoId('SecurityDetailsTitleText').should('have.text', 'N/A');
+					cy.getByAutoId('SecurityDetailsSummaryText').should('have.text', 'N/A');
+				};
+
+				secBulletinMock.enable('Security Advisory Details for ID 485 - Unreachable');
+				cy.get('app-advisories tbody tr').eq(0).click();
+				validate360();
+				cy.get('app-advisories tbody tr').eq(0).click();
+
+				secBulletinMock.enable('Security Advisory Details for ID 485 - Missing keys');
+				cy.get('app-advisories tbody tr').eq(0).click();
+				validate360();
+				cy.get('app-advisories tbody tr').eq(0).click();
+
+				secBulletinMock.enable('Security Advisory Details for ID 485');
 			});
 		});
 	});

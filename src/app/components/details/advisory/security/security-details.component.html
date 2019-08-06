@@ -25,6 +25,6 @@
 <ng-template #detailText let-title="title" let-text="text">
 	<div class="base-margin-bottom">
 		<div [innerText]="title" class="text-uppercase text-bold qtr-margin-bottom"></div>
-		<div [innerText]="text || ('_NA_' | i18n)"></div>
+		<div [innerText]="text || ('_NA_' | i18n)" attr.data-auto-id="SecurityDetails{{title}}Text"></div>
 	</div>
 </ng-template>
