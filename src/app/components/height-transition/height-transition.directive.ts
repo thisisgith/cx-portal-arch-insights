@@ -28,10 +28,11 @@ export class HeightTransitionDirective implements OnChanges, OnInit {
 	public ngOnInit () {
 		if (this.heightTransitionExpanded) {
 			this.renderer.setStyle(this.el.nativeElement, 'height', 'auto');
+			this.renderer.setStyle(this.el.nativeElement, 'opacity', '1');
 		} else {
 			this.renderer.setStyle(this.el.nativeElement, 'height', '0px');
+			this.renderer.setStyle(this.el.nativeElement, 'opacity', '0');
 		}
-		this.renderer.setStyle(this.el.nativeElement, 'opacity', '0');
 	}
 
 	/**
@@ -45,7 +46,6 @@ export class HeightTransitionDirective implements OnChanges, OnInit {
 			this.renderer.setStyle(this.el.nativeElement, 'opacity', '1');
 			const unlisten = this.renderer.listen(this.el.nativeElement, 'transitionend', () => {
 				unlisten();
-				this.renderer.removeStyle(this.el.nativeElement, 'height');
 			});
 		} else {
 			const transition = this.el.nativeElement.style.transition;

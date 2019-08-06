@@ -17,7 +17,17 @@ export const environment = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
-	baseHref: '/pbc/',
+	baseHref: '/',
+	ieSetup: {
+		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
+		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-' +
+			'cf-insight_engine-release/ie/Insight_Engine_1.0/ubuntu/65/CXC_1.0_Build-65-1.ova',
+		mockRegistration: false,
+		pingURL: '/ie-commonapi/services/version',
+		telemetryGuideUrl: 'https://www-author3.cisco.com/c/en/us/td/docs/cloud-systems-' +
+			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
+			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
+	},
 	production: true,
 	csc: {
 		fileDownloadURL: `https://largefile.cloudapps.cisco.com/Web-Ui?srId=

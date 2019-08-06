@@ -3,4 +3,28 @@ $cui-resource-path: "../node_modules/cisco-ui/dist";
 
 @import '~cisco-ui/src/scss/cui-standard.scss';
 
+/* XL Margins */
+
+.xl-margin-bottom { margin-bottom: 3 * $base-spacing !important; }
+
+.xl-margin-top { margin-top: 3 * $base-spacing !important; }
+
+.xl-margin-left { margin-left: 3 * $base-spacing !important; }
+
+.xl-margin-right { margin-right: 3 * $base-spacing !important; }
+
+/* Double XL Margins */
+
+.dbl-xl-margin-bottom { margin-bottom: 6 * $base-spacing !important; }
+
+.dbl-xl-margin-top { margin-top: 6 * $base-spacing !important; }
+
+.dbl-xl-margin-left { margin-left: 6 * $base-spacing !important; }
+
+.dbl-xl-margin-right { margin-right: 6 * $base-spacing !important; }
+
+/* Helpers */
+
 .flex-right { margin-left: auto; }
+
+.no-link-hover:hover { text-decoration: none !important; }
