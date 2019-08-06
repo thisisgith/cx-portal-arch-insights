@@ -44,12 +44,10 @@ export class ArchitectureComponent implements OnInit {
 	// 	});
 	// }
 
-
 	// subfilter(event:any){
 	// 	console.log(event.filter);
 	// }
-
-	public ngOnInit():void{
+	public ngOnInit(): void{
 
 		this.architectureService.getExceptionsCount().subscribe(res => {
 			this.visualLabels[0].count = res.CBPRulesCount;
@@ -89,7 +87,7 @@ export class ArchitectureComponent implements OnInit {
 				seriesData: [],
 				template: this.exceptionsFilterTemplate,
 				title: "",
-			}
+			},
 		];
 		this.loadData();
 	}
@@ -168,7 +166,6 @@ export class ArchitectureComponent implements OnInit {
 				}),
 			);
 	}
-
 
 	/**
 	 * Function used to load all of the data
