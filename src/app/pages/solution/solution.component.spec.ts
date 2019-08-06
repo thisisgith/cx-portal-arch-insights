@@ -19,6 +19,7 @@ import * as _ from 'lodash-es';
 import { RacetrackService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AdvisoriesComponent } from './advisories/advisories.component';
+
 /**
  * MockRouter used to help show/hide the spinner
  */
@@ -188,5 +189,12 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedTechnology.name)
 			.toEqual('Campus Network Segmentation');
+	});
+
+	it('should always call getCaseAndRMACount', () => {
+		spyOn(component, 'getCaseAndRMACount');
+		component.ngOnInit();
+		expect(component.getCaseAndRMACount)
+			.toHaveBeenCalled();
 	});
 });

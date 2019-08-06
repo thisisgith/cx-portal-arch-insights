@@ -129,8 +129,29 @@
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
-	<cui-gauge percentage="75" value="75%" color="primary">
-	</cui-gauge>
+	<div *ngIf="(casesCount == 0 && RMACount == 0); else caseCountContent">
+		<ng-container *ngTemplateOutlet="noCaseContent"></ng-container>
+	</div>
+	<ng-template #noCaseContent>
+		<div class="text-muted text-large base-padding-left base-padding-right dbl-padding-top qtr-padding-bottom" [innerText]="'_NoOpenCases_' | i18n"></div>
+		<div class="text-muted text-large base-padding-left base-padding-right base-padding-bottom" [innerText]="'_NoOpenRMAs_' | i18n"></div>
+	</ng-template>
+	<ng-template #caseCountContent>
+		<div class="row no-margin base-padding-left base-padding-right">
+			<div class="col-5">
+				<div class="text-muted text-xlarge" [innerText]="'_OpenCases_' | i18n"></div>
+			</div>
+			<div class="col-7 no-padding-left">
+				<div class="text-huge opacity-50">{{casesCount}}</div>
+			</div>
+			<div class="col-5 base-padding-top">
+				<div class="text-primary text-xlarge" [innerText]="'_OpenRMAs_' | i18n"></div>
+			</div>
+			<div class="col-7 no-padding-left base-padding-top">
+				<div class="text-huge opacity-50">{{RMACount}}</div>
+			</div>
+		</div>
+	</ng-template>
 </ng-template>
 
 <ng-template #insightsFacet let-facet="facet">
