@@ -9,7 +9,7 @@
 		"deploy": "npx ngdeploy dev --vn --source='src'",
 		"deploy:auto": "npx ngdeploy qa -vn --source='src' --gzip --ng-build=\"--aot\"",
 		"deploy:qa": "npx ngdeploy qa -vn --source='src' --gzip --ng-build=\"--aot\"",
-		"deploy:stgi": "npx ngdeploy stgi -vn --no-validate --source='src' --gzip --ng-build=\"-c stageInternal --aot\"",
+		"deploy:stgi": "npx ngdeploy apollo-stage -vn --no-validate --source='src' --gzip --ng-build=\"-c apollo-stage --aot\"",
 		"deploy:stage": "npx ngdeploy stage -vn --source='src' --gzip --ng-build=\"--aot\"",
 		"deploy:prod": "npx ngdeploy prod -vn --source='src' --gzip --ng-build=\"--aot\"",
 		"deploy:tie": "npx ngdeploy tie -vn --source='src' --gzip --ng-build=\"-c tie --aot\"",
