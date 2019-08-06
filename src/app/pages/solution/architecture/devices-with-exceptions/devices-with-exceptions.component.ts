@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureService } from '@sdp-api';
+import { ArchitectureService , IAsset} from '@sdp-api';
 
 @Component({
 	selector: 'app-devices-with-exceptions',
@@ -19,6 +19,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		this.logger.debug('DevicesWithExceptionsComponent Created!');
 	}
 
+	public assetObject:IAsset = null;
 	public AssetsExceptionDetails = [];
 	public tableOptions: CuiTableOptions;
 	public totalItems:any;
@@ -56,5 +57,21 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			],
 			singleSelect: true,
 		  });
+	}
+
+	/**
+	 * This method is used to set the exception object in order to open Fly-out View
+	 * @param event - It contains the selected asset object
+	 */
+	public onTableRowClicked (event: IAsset) {
+		this.assetObject = event;
+	}
+
+	/**
+	 * This method is used to set the null to exception object 
+	 * in order to Close Fly-out View
+	 */
+	public onPanelClose () {
+		this.assetObject = null;
 	}
 }
