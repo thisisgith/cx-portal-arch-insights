@@ -9,7 +9,9 @@ import {
 	CGTScenarios,
 	ContractScenarios,
 	CoverageScenarios,
+	CreateRegistrationScenarios,
 	CriticalBugScenarios,
+	DNACStatusScenarios,
 	ELearningScenarios,
 	EntitlementScenarios,
 	FieldNoticeAdvisoryScenarios,
@@ -34,7 +36,6 @@ import {
 	SecurityAdvisorySummaryScenarios,
 	SerialNumberScenarios,
 	SuccessPathScenarios,
-	UserScenarios,
 	VulnerabilityScenarios,
 } from './';
 
@@ -53,6 +54,7 @@ import {
 	CoverageResponse,
 	CriticalBugsCount,
 	CriticalBugsResponse,
+	CSDFResponseModel,
 	DeviceContractResponse,
 	ELearningResponse,
 	EntitledUser,
@@ -65,6 +67,7 @@ import {
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
+	IERegistrationResponseModel,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
@@ -96,6 +99,7 @@ type ResponseBody = (
 	CoverageResponse |
 	CriticalBugsCount |
 	CriticalBugsResponse |
+	CSDFResponseModel |
 	DeviceContractResponse |
 	ELearningResponse |
 	EntitledUser |
@@ -108,6 +112,7 @@ type ResponseBody = (
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
 	HardwareResponse |
+	IERegistrationResponseModel |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
@@ -178,7 +183,9 @@ export const mockSettings: MockSettings = {
 		CGTScenarios,
 		ContractScenarios,
 		CoverageScenarios,
+		CreateRegistrationScenarios,
 		CriticalBugScenarios,
+		DNACStatusScenarios,
 		ELearningScenarios,
 		EntitlementScenarios,
 		FieldNoticeAdvisoryScenarios,
@@ -204,7 +211,6 @@ export const mockSettings: MockSettings = {
 		SecurityAdvisoryTopScenarios,
 		SerialNumberScenarios,
 		SuccessPathScenarios,
-		UserScenarios,
 		VulnerabilityScenarios,
 	]),
 };

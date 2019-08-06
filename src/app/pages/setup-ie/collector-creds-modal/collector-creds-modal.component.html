@@ -1,0 +1,54 @@
+<a
+	data-auto-id="close-modal"
+	class="modal__close"
+	(click)="cuiModalService.hide()"
+>
+	<span class="icon-close"></span>
+</a>
+<div class="modal__header">
+	<h1 [innerText]="'_EnterCXCollectorCredentials_' | i18n"></h1>
+</div>
+<div class="modal__body">
+	<alert
+		[title]="'_AnErrorOccurred_' | i18n"
+		[visible]="error"
+	></alert>
+	<div [innerText]="'_SessionExpiredReEnterCreds_' | i18n"></div>
+	<form [formGroup]="credsForm">
+		<div class="row base-margin-top">
+			<div class="col-md-6">
+				<div class="form-group">
+					<div class="form-group__text disabled">
+						<input
+							id="input-username"
+							type="text"
+							formControlName="userId">
+						<label for="input-username" [innerText]="'_Username_' | i18n">
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<div class="form-group__text">
+						<input
+							id="input-password"
+							type="password"
+							formControlName="password">
+						<label for="input-password" [innerText]="'_Password_' | i18n">
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal__footer flex-center-horizontal">
+	<button class="btn btn--primary"
+		data-auto-id="continue-btn"
+		[innerHTML]="'_Continue_' | i18n"
+		(click)="continue()"
+		[disabled]=""
+	>
+	</button>
+</div>
