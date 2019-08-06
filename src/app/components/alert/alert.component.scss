@@ -1,0 +1,27 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+:host {
+	.alert-container {
+		@media screen and (max-width: 900px) {
+			border-left: unset;
+		}
+
+		@media screen and (min-width: 900px) {
+			border-left: 4px solid $danger;
+		}
+
+		display: flex;
+
+		.icon-close {
+			cursor: pointer;
+		}
+
+		&__icon {
+			width: 60px;
+		}
+	}
+
+	.untouchable {
+		pointer-events: none;
+	}
+}

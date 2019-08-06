@@ -131,4 +131,12 @@ export interface CaseOpenRequest {
 	siteId?: string;
 	summary?: string;
 	description?: string;
+	noteDetails?: {
+		[key: string]: {
+			note: string;
+			noteDetail: string;
+			noteStatus: 'E' | 'I';
+			noteType: string;
+		},
+	};
 }

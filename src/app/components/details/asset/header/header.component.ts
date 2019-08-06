@@ -14,6 +14,7 @@ import {
 	Connectivity,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
+import { CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { of, forkJoin, Subject } from 'rxjs';
 import {
@@ -21,6 +22,7 @@ import {
 	catchError,
 	takeUntil,
 } from 'rxjs/operators';
+import { CaseOpenComponent } from '../../../case/case-open/case-open.component';
 import { UserResolve } from '@utilities';
 
 /**
@@ -59,6 +61,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 
 	constructor (
 		private caseService: CaseService,
+		private cuiModalService: CuiModalService,
 		private logger: LogService,
 		private networkService: NetworkDataGatewayService,
 		private userResolve: UserResolve,
@@ -199,4 +202,12 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			this.refresh();
 		}
 	}
+
+/**
+	* On "Open a Case" button pop up "Open Case" component
+	*/
+	public openCase () {
+		 this.cuiModalService.showComponent(CaseOpenComponent, { asset: this.asset }, 'full');
+	}
+
 }

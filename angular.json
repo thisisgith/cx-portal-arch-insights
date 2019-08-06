@@ -13,7 +13,7 @@
 							"aot": true,
 							"budgets": [
 								{
-									"maximumError": "5mb",
+									"maximumError": "10mb",
 									"maximumWarning": "2mb",
 									"type": "initial"
 								}
@@ -49,7 +49,7 @@
 							"aot": true,
 							"budgets": [
 								{
-									"maximumError": "5mb",
+									"maximumError": "10mb",
 									"maximumWarning": "2mb",
 									"type": "initial"
 								}

@@ -576,10 +576,15 @@ export class AssetDetailsAdvisoriesComponent
 			if (type === 'bug') {
 				this.selectedAdvisory = { id: _.get(row, 'id'), type: 'bug' };
 			} else if (type === 'field') {
-				this.selectedAdvisory = { id: _.get(row, 'fieldNoticeId'), type: 'field' };
+				this.selectedAdvisory = {
+					id: _.get(row, 'fieldNoticeId'),
+					type: 'field',
+				};
 			} else if (type === 'security') {
 				this.selectedAdvisory = {
-					id: _.get(row, 'securityAdvisoryInstanceId'), type: 'security' };
+					id: _.get(row, 'securityAdvisoryInstanceId'),
+					type: 'security',
+				};
 			}
 		} else {
 			this.selectedAdvisory = null;
