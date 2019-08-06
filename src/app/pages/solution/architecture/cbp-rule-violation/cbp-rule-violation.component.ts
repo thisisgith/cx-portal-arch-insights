@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { HttpClient } from '@angular/common/http';
+
 import { ArchitectureService } from '@sdp-api';
 
 @Component({
@@ -11,132 +11,94 @@ import { ArchitectureService } from '@sdp-api';
 	templateUrl: './cbp-rule-violation.component.html',
 })
 export class CbpRuleViolationComponent implements OnInit {
-
-	constructor (
-		private logger: LogService, private httpClient: HttpClient, private architectureService: ArchitectureService,
-	) {
+	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 		this.logger.debug('CbpRuleViolationComponent Created!');
 	}
 
 	public tableOptions: CuiTableOptions;
-	public tableLimit = 4;
-	public tableOffset = 0;
-	public totalItems = 10;
-
-	public fullscreen = false;
+	public totalItems: any;
 	public cbpRuleExceptions = [];
 	public severityObj: any;
-	public assetsImpacted: any = null;
+	public AssetsExceptionsCount:any;
+	public params = { page: 0, pageSize : 10 };
+	public severityType: any;
+	public paramsType = { page : 0, pageSize: 10, severity: null };
 
-	public AssetsExceptionsCount: any;
-
-	public ModifyCbpRuleExceptions (array: Array<any>) {
-		// if(array.length != 0){
+	public ModifyCbpRuleExceptions(array:Array<any>){
 		array.map(obj => {
-				// obj.assetsAffected = obj.deviceIdsWithExceptions.split(';').length;
-			obj.bpRecommendation = obj.bpRecommendation.substr(0, 30).concat('...');
-			obj.correctiveAction = obj.correctiveAction.substr(0, 25) + '...';
+			obj.bpRecommendation = obj.bpRecommendation.substr(0, 30)
+			.concat('...');
+			obj.correctiveAction = obj.correctiveAction.substr(0, 25)
+			.concat('...');
 				// obj.deviceIdsWithExceptions = obj.deviceIdsWithExceptions.split(';');
 		});
 		// }
 	}
 
+	public onPagerUpdated(event){
+		this.params.page = event.page;
+		this.params.pageSize = event.limit;
+		this.getAllCBPRulesDetails();
+	}
+
+	public getAllCBPRulesDetails(){
+		this.architectureService.getAllCBPRulesDetails(this.params).subscribe(res => {
+			this.totalItems = res.TotalCounts;
+			this.cbpRuleExceptions = res.BPRulesDetails;
+			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
+		});
+	}
+
+	getCBPRuleDetailsWithSeverity(){
+		this.architectureService.getCBPSeverityResponse(this.paramsType).subscribe(res => {
+			this.cbpRuleExceptions = res.body.BPRulesDetails;
+			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
+		});
+	}
+
 	public ngOnInit () {
 
-		this.architectureService.getAllCBPRulesDetails().subscribe(res => {
-			this.cbpRuleExceptions = res.BPRulesDetails;
-			console.log(this.cbpRuleExceptions);
-			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-			console.log(this.cbpRuleExceptions);
-		});
-
 		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res => {
-			console.log(res);
-			if (res.severityObj) {
-				this.severityObj = res.severityObj.severity;
-			}
-
-			console.log(this.severityObj);
-			if (this.severityObj == 'MediumRisk') {
-				this.architectureService.getMediumSeverityExceptions().subscribe(res => {
-					console.log(res);
-					this.cbpRuleExceptions = res.BPRulesDetails;
-					this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-				});
-			} else {
-				this.architectureService.getHighSeverityExceptions().subscribe(res => {
-					console.log(res);
-					this.cbpRuleExceptions = res.BPRulesDetails;
-					this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-					console.log(this.cbpRuleExceptions);
-				});
-			}
+			this.paramsType.severity = res.severityType.split('R')[0];
+			this.getCBPRuleDetailsWithSeverity();
 		});
 
+		this.getAllCBPRulesDetails();
+		// this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res =>{
+		// 	console.log(res);
+		// 	if(res.severityObj){
+		// 		this.severityObj = res.severityObj.severity;
+		// 	}
+		// 	if(this.severityObj == "MediumRisk"){
+		// 		this.architectureService.getMediumSeverityExceptions().subscribe(res => {
+		// 			console.log(res);
+		// 			this.cbpRuleExceptions = res.BPRulesDetails;
+		// 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
+		// 		});
+		// 	}else{
+		// 		this.architectureService.getHighSeverityExceptions().subscribe(res => {
+		// 			console.log(res);
+		// 			this.cbpRuleExceptions = res.BPRulesDetails;
+		// 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
+		// 			console.log(this.cbpRuleExceptions);
+		// 		});
+		// 	}
+		// });
 		this.tableOptions = new CuiTableOptions({
 		  bordered: false,
 		  columns: [
-			{
-			  name: 'Risk',
-			  sortable: false,
-			  key : 'bpSeverity',
-			},
-			{
-			  name: 'Technology',
-			  sortable: false,
-			  key: 'bpPrimaryTechnologies',
-			},
-			{
-				name: 'Exception',
-				sortable: false,
-				key: 'exceptions',
-			},
-			{
-				name: 'Recommendation',
-				sortable: false,
-				key: 'bpRecommendation',
-			},
-			{
-				name: 'Corrective Action',
-				sortable: false,
-				key: 'correctiveAction',
-			},
-			{
-				name: 'Assets Affected',
-				sortable: false,
-				key: 'assetsAffected',
-			},
-			{
-				name: 'Software Type',
-				sortable: false,
-				key: 'softwareType',
-			},
-			{
-				name: 'Rule ID',
-				sortable: false,
-				key: 'bpRuleId',
-			},
+			{ name: 'Risk', sortable: false, key : 'bpSeverity' },
+			{ name: 'Technology', sortable: false, key: 'bpPrimaryTechnologies' },
+			{ name: 'Exception', sortable: false, key: 'exceptions' },
+			{ name: 'Recommendation', sortable: false, key: 'bpRecommendation' },
+			{ name: 'Corrective Action', sortable: false, key: 'correctiveAction' },
+			{ name: 'Assets Affected', sortable: false, key: 'assetsAffected' },
+			{ name: 'Software Type', sortable: false, key: 'softwareType' },
+			{ name: 'Rule ID', sortable: false, key: 'bpRuleId'},
 		  ],
 		  singleSelect : true,
 		});
-
 	}
 
-	/**
-	 * This Function is used to open and set data to Fly-out View
-	 * @param event Event Contains the row data which need the passed to Fly-Out view
-	 */
-	public onTableRowClicked (event: any) {
-		this.assetsImpacted = event;
-	}
-
-	/**
-	 * This Function is used to set the assetsImpacted object null,
-	 * in order to close the Fly-out View
-	 */
-	public onPanelClose () {
-		this.assetsImpacted = null;
-
-	}
-
+	public onTableRowClicked(event:any){ }
 }

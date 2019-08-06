@@ -15,7 +15,9 @@
 </details-panel>
 
 <div class="panel">
-	<cui-table [options]="tableOptions" [data]="AssetsExceptionDetails" (onTableRowClicked)="onTableRowClicked($event)"></cui-table>
-	<div class="section">
+		<cui-table [options]="tableOptions" [data]="AssetsExceptionDetails"></cui-table>
+		<div class="section" *ngIf="totalItems">
+			<cui-pager [page]="params.page"
+			[limit]="params.pageSize" [totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+		</div>
 	</div>
-</div>

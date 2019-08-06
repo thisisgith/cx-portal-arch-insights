@@ -8,7 +8,6 @@
 		[ngClass]="{ 'selected': view == 'timeline' }" (click)="view = 'timeline'">
 		<span class="icon-time"></span>
 	</button>
-
 </div>
 <div class="dbl-margin-top" *ngIf="assetDetails && view =='timeline'">
 	<app-asset-timeline-chart [data]="assetDetails" [fullscreen]="fullscreen"></app-asset-timeline-chart>

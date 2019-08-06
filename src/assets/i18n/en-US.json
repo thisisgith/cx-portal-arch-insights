@@ -169,6 +169,7 @@
 	"_EoXMilestones_": "EoX Milestones",
 	"_ErrorCustomerInfo_": "Error: Cannot load customer info",
 	"_ErrorDetails_": "Error Details",
+	"_Exceptions_":"Exceptions",
 	"_ExpirationDate_": "Expiration Date",
 	"_ExpiredOn_": "Expired On",
 	"_ExportAll_": "Export All",
@@ -536,7 +537,6 @@
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:",
 	"_YourImpactedDevices_": "Your Impacted Devices",
 	"_YourProducts_": "Your products, documentation & Learning Library resources",
-	"_Exceptions_" : "Exceptions",
 	"_AssetsWithExceptions_" : "Assets With Exception",
 	"_OsvBasicRecommendations_": "Basic Recommendations",
 	"_OsvSoftwareProfiles_": "Software Profiles",
@@ -587,5 +587,5 @@
 	"_OsvViewAllOSVersions_": "View all OS Versions",
 	"_OsvYes_": "Y",
 	"_OsvNo_": "N",
-	"_OsvClose_":"Close"
+	"_OsvClose_":"Close"	
 }

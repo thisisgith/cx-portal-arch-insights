@@ -1,29 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ArchitectureComponent } from './architecture.component';
-import { CbpRuleViolationComponent } from './cbp-rule-violation/cbp-rule-violation.component';
-import { DevicesWithExceptionsComponent }
-from './devices-with-exceptions/devices-with-exceptions.component';
 
 const routes: Routes = [
-	{
-		path: '',
-		component: ArchitectureComponent,
-		children: [{
-			path: '',
-			redirectTo: 'Exceptions',
-			pathMatch: 'full',
-		},
-			{
-				path: 'Exceptions',
-				component: CbpRuleViolationComponent,
-			},
-			{
-				path: 'AssetsWithExceptions',
-				component: DevicesWithExceptionsComponent,
-			},
-		],
-	},
+  {  path: '', component: ArchitectureComponent },
 ];
 
 @NgModule({
