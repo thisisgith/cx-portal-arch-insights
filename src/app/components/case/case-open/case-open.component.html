@@ -50,7 +50,7 @@
 							</dd>
 						</dl>
 						<div>
-							<div class="mid-content" [ngClass]="{ 'expanded': expand }">
+							<div heightTransition [heightTransitionExpanded]="expand">
 								<dl>
 									<dt [innerText]="'_Severity_' | i18n"></dt>
 									<dd>
