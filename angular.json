@@ -109,7 +109,7 @@
 							"sourceMap": false,
 							"vendorChunk": false
 						},
-						"cxcloud-qa": {
+						"cxportal-qa": {
 							"aot": true,
 							"budgets": [
 								{
@@ -145,7 +145,7 @@
 							"sourceMap": false,
 							"vendorChunk": false
 						},
-						"cxcloud-lt": {
+						"cxportal-lt": {
 							"aot": true,
 							"budgets": [
 								{
