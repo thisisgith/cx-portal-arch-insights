@@ -576,5 +576,8 @@
 	"_SupportRequestExpert_": "Request an Expert",
 	"_SupportOther_": "Other",
 	"_UpdateForm_": "Update Form",
-	"_YouHaveInventory_": "You have <a href=\"#\">{0}</a> of these in your inventory"
+	"_YouHaveInventory_": "You have <a href=\"#\">{0}</a> of these in your inventory",
+
+	"_SupportPortalTopicList_": ["CX Portal Support", "CX Collector Support", "Product or Service Inquiries", "Product or Service Upgrades", "Cisco Communities",
+		"Cisco Learning", "Register for Ask the Expert", "Request an Accelerator", "Request an Expert", "Other"]
 }

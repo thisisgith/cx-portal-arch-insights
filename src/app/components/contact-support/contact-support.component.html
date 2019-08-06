@@ -1,9 +1,13 @@
-<a class="modal__close" data-auto-id="portalSupportHide" (click)="cuiModalService.hide()"><span class="icon-close"></span></a>
+<a class="modal__close" data-auto-id="portalSupportHide" (click)="cuiModalService.hide()"><span
+		class="icon-close"></span></a>
 <ng-container *ngIf="!toggle; else messageSentTemplate" class="dbl-padding-left dbl-padding-right">
 	<div class="modal-header">
 		<h1 class="modal-title" [innerText]="'_SupportContact_' | i18n"></h1>
 	</div>
-	<div class="modal-body dbl-padding-left dbl-padding-right dbl-padding-top">
+	<div *ngIf="loading" class="dbl-margin-top dbl-margin-bottom">
+			<cui-spinner color="default" ></cui-spinner>
+		</div>
+	<div *ngIf="!loading" class="modal-body dbl-padding-left dbl-padding-right dbl-padding-top">
 		<form [formGroup]="supportForm" novalidate>
 			<div class="col-md-12">
 				<div class="form-group">
@@ -11,18 +15,15 @@
 						<label for="support-title" class="text-bold qtr-padding-bottom"
 							[innerText]="'_SupportTopic_' | i18n"></label>
 						<cui-select formControlName="title" #title id="support-title" [required]="true" [empty]="true"
-							[items]="items" placeholder="Select" [compressed]="false" (ngModelChange)="onSelection()"
-							optionsKey="name" optionsValue="value"></cui-select>
+							[items]="items" placeholder="Select" [compressed]="false" optionsKey="name"
+							optionsValue="value"></cui-select>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-12 base-padding-top" [ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
+			<div class="col-md-12 base-padding-top"
+				[ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
 				<div class="form-group">
 					<div class="form-group__text">
-						<!-- <textarea formControlName="description" #description id="support-description" class="textarea"
-							rows="10" data-auto-id="description"></textarea>
-						<label for="support-description" class="text-bold qtr-padding-bottom">How can we
-							help?</label> -->
 						<label for="support-description" class="text-bold qtr-padding-bottom"
 							[innerText]="'_SupportDescription_' | i18n"></label>
 						<cui-input #description id="support-description" formControlName="description" type="textarea"
@@ -30,7 +31,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-12 text-center dbl-padding-top" [ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
+			<div class="col-md-12 text-center dbl-padding-top"
+				[ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
 				<button data-auto-id="submit" class="btn btn--primary"
 					[innerText]="'_SupportSubmit_' | i18n | uppercase" (click)="submitMessage()">
 				</button>
@@ -68,7 +70,8 @@
 		<div class="modal-body text-left dbl-padding-left dbl-padding-right">
 			<p [innerText]="'_SupportTechnicalError_' | i18n"></p>
 			<p [innerText]="'_SupportContactNumber_' | i18n"></p>
-			<a [innerHTML]="'Worldwide phone numbers'" target="_blank" [href]="'//www.cisco.com/c/en/us/support/web/tsd-cisco-worldwide-contacts.html'"
+			<a [innerHTML]="'Worldwide phone numbers'" target="_blank"
+				[href]="'//www.cisco.com/c/en/us/support/web/tsd-cisco-worldwide-contacts.html'"
 				data-auto-id="phoneNumbers">
 			</a>
 			<div class="col-md-12 text-center dbl-padding-top">
