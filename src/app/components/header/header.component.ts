@@ -42,7 +42,7 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	// 	name: 'Open a Support Case',
 	// 	routerLink: '/cases',
 	// }];
-	// TODO: Portal Help is feedback
+	// TODO: Portal Support is feedback
 	public portalHelpLinks = [{
 		name: 'Portal Support',
 	}];

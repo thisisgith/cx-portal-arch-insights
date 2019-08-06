@@ -116,7 +116,7 @@
 			<span class="v-separator"></span>
 			<span #mock class="cx-header-links" [ngClass]="{ 'cx-header-links--active': mock.active }" (click)="toggleDropdown(mockDropdown, mock)" title="Mock - DevTest Only">
 				<div>
-					<span class="cx-header-icon--small icon-terminalalt"></span>
+					<span class="cx-header-icon--small icon-terminalalt" [ngClass]="{ 'text-primary': mock.active }"></span>
 					<span></span>
 					<span class="cx-header-arrow" [ngClass]="{ 'rotate-180': mock.active }">&#9662;</span>
 				</div>
