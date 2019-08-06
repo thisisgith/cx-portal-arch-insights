@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subject, merge, of } from 'rxjs';
 import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
-import { CaseRequestType } from '@classes';
+import { caseSeverities, CaseRequestType } from '@classes';
 import { CaseOpenRequest, ProblemArea, Subtech, Tech } from '@interfaces';
 import { CaseService } from '@cui-x/services';
 import { ProfileService } from '@cisco-ngx/cui-auth';
@@ -36,38 +36,42 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	public submitting = false;
 	public sevOptions: SelectOption<number>[] = [
 		{
-			name: I18n.get('_OpenCaseNetworkDown_'),
+			name: caseSeverities[1].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 1),
 			value: 1,
 		},
 		{
-			name: I18n.get('_OpenCaseSeverelyDegraded_'),
+			name: caseSeverities[2].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 2),
 			value: 2,
 		},
 		{
-			name: I18n.get('_OpenCaseNetworkImpaired_'),
+			name: caseSeverities[3].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 3),
 			value: 3,
 		},
 		{
-			name: I18n.get('_OpenCaseAskaQuestion_'),
+			name: caseSeverities[4].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 4),
 			value: 4,
 		},
 	];
+	public descriptionMaxLength = 32000;
+	public titleMaxLength = 255;
 	public techOptions: Tech[];
 	public subtechOptions: Subtech[];
 	public problemAreaOptions: ProblemArea[];
 	public problemGroups: string[];
 	public caseForm = new FormGroup({
-		description: new FormControl('', [Validators.required, Validators.maxLength(32000)]),
+		description: new FormControl('', [Validators.required,
+			Validators.maxLength(this.descriptionMaxLength)]),
 		problemArea: new FormControl(null, Validators.required),
 		requestRma: new FormControl(false),
 		severity: new FormControl(4, Validators.required),
 		subtech: new FormControl(null, Validators.required),
 		technology: new FormControl(null, Validators.required),
-		title: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+		title: new FormControl('', [Validators.required,
+			Validators.maxLength(this.titleMaxLength)]),
 	});
 
 	/** 2 values to pass to "submitted" component post-request */

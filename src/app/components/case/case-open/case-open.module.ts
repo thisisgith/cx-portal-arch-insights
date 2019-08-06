@@ -7,6 +7,7 @@ import { CaseOpenComponent } from './case-open.component';
 import { CaseSubmittedModule } from './case-submitted/case-submitted.module';
 import { PanelSelectModule } from './panel-select/panel-select.module';
 import { CloseConfirmModule } from './close-confirm/close-confirm.module';
+import { CharCountModule } from '../../char-count/char-count.module';
 
 /**
  * Module for case open functionality
@@ -28,6 +29,7 @@ import { CloseConfirmModule } from './close-confirm/close-confirm.module';
 		CaseSubmittedModule,
 		CloseConfirmModule,
 		PanelSelectModule,
+		CharCountModule,
 	],
 })
 export class CaseOpenModule { }

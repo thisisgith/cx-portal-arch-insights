@@ -94,13 +94,13 @@
 			<span class="text-uppercase" [innerText]="'_MyCheckList_' | i18n"></span>
 		</div>
 		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
-		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select">
+		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
 				<div class="col-md-2">
-					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name}">
+					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name}" data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.action.isComplete"
 							(change)="completeAction(action.action)" [checked]="action.action.isComplete">
-						<span class="checkbox__input"></span>
+						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"></span>
 					</label>
 				</div>
 				<div class="col-md-10">
@@ -114,7 +114,7 @@
 								[innerText]="action?.action?.name">
 							</span>
 							<span *ngIf="action.action.isCompleteAuto" class="qtr-padding-top">
-								<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png">
+								<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png" data-auto-id="pitstopCheckboxAutoIcon">
 							</span>
 						</div>
 					</a>
@@ -314,7 +314,7 @@
 				title: data.sessions[0].title,
 				description: data.sessions[0].description,
 				item: data.sessions[0],
-				src: 'assets/img/solutions/acc.png',
+				src: data.sessions[0].url,
 				autoid: 'recommendedACC'
 			}">
 		</ng-container>

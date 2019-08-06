@@ -9,12 +9,12 @@ const customerId = '2431199';
 const userApi = '/api/customerportal/entitlement/v1/user';
 
 /** api for service-info */
-const serviceApi = `/api/customerportal/entitlement/v1/party/service-info/${customerId}`;
+const serviceApi1 = `/api/customerportal/entitlement/v1/party/service-info/${customerId}`;
 
 /**
  * Mock body of user results
  */
-const mockUser: EntitledUser = {
+const mockUser1: EntitledUser = {
 	customerId,
 	individual: {
 		ccoId: 'fakeCco',
@@ -26,6 +26,15 @@ const mockUser: EntitledUser = {
 	},
 	name: 'Test User',
 };
+
+/**
+ * Mock user 2
+ */
+const mockUser2 = Object.assign({ }, mockUser1);
+mockUser2.customerId = '92736491';
+
+/** api for service-info 2 */
+const serviceApi2 = `/api/customerportal/entitlement/v1/party/service-info/${mockUser2.customerId}`;
 
 /**
  * Mock body of service results
@@ -40,7 +49,7 @@ const mockServiceInfo: ServiceInfoResponse = [
 
 /** Our Default User */
 export const user: User = {
-	info: mockUser,
+	info: mockUser1,
 	service: _.head(mockServiceInfo),
 };
 
@@ -53,9 +62,18 @@ export const EntitlementScenarios = [
 			GET: [
 				{
 					delay: 100,
-					description: 'Entitlement Call',
+					description: 'Entitlement Call User 1',
 					response: {
-						body: mockUser,
+						body: mockUser1,
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: 100,
+					description: 'Entitlement Call User 2',
+					response: {
+						body: mockUser2,
 						status: 200,
 					},
 					selected: true,
@@ -63,14 +81,14 @@ export const EntitlementScenarios = [
 			],
 		},
 		url: userApi,
-		usecases: ['Use Case 1'],
+		usecases: ['Admin Settings', 'Use Case 1'],
 	},
 	{
 		scenarios: {
 			GET: [
 				{
 					delay: 100,
-					description: 'Entitlement Service info Call',
+					description: 'Entitlement Service info Call for User 1',
 					response: {
 						body: mockServiceInfo,
 						status: 200,
@@ -79,7 +97,24 @@ export const EntitlementScenarios = [
 				},
 			],
 		},
-		url: serviceApi,
+		url: serviceApi1,
 		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Entitlement Service info Call for User 2',
+					response: {
+						body: mockServiceInfo,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: serviceApi2,
+		usecases: ['Admin Settings'],
 	},
 ];
