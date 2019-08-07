@@ -9,11 +9,7 @@ import { AppStatusColorPipe } from './app-status-color.pipe';
 import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 import { ControlPointsModule, UserModule } from '@sdp-api';
 
-<<<<<<< HEAD
-import { environment } from '@environment';
-=======
 import { MicroMockModule } from '@cui-x-views/mock';
->>>>>>> 92e09be7f115c3dec14207ae17f93df3a59ad0ca
 
 import {
 	CuiGaugeModule,
@@ -51,11 +47,6 @@ if ((<any> environment).mock) {
 }
 
 /**
- * SDP Root url for the apis
- */
-const rootUrl = environment.sdpServiceOrigin;
-
-/**
  * Main Settings module
  */
 @NgModule({
@@ -65,21 +56,5 @@ const rootUrl = environment.sdpServiceOrigin;
 		ResourceGaugeColorPipe,
 		SettingsComponent,
 	],
-<<<<<<< HEAD
-	imports: [
-		AdminWrapperModule,
-		CommonModule,
-		CuiGaugeModule,
-		CuiLoaderModule,
-		HeightTransitionModule,
-		I18nPipeModule,
-		CuiSidebarModule,
-		CuiSpinnerModule,
-		RouterModule,
-		ControlPointsModule.forRoot({ rootUrl }),
-		UserModule.forRoot({ rootUrl }),
-	],
-=======
->>>>>>> 92e09be7f115c3dec14207ae17f93df3a59ad0ca
 })
 export class SettingsModule { }

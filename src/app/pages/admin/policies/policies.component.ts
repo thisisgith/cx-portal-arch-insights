@@ -2,6 +2,7 @@ import {
 	Component,
 	OnInit,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -11,7 +12,8 @@ import {
 } from '@sdp-api';
 
 import { empty, Subject } from 'rxjs';
-import { catchError, finalize, takeUntil, mergeMap, tap } from 'rxjs/operators';
+import { catchError, finalize, takeUntil } from 'rxjs/operators';
+import { User } from '@interfaces';
 
 import cronstrue from 'cronstrue';
 import * as _ from 'lodash-es';
@@ -38,11 +40,16 @@ export class PoliciesComponent implements OnInit {
 	public scans: PolicyResponseModel[];
 	public collections: PolicyResponseModel[];
 
+	private user: User;
+
 	constructor (
 		private logger: LogService,
 		private controlPointDevicePolicyAPIService: ControlPointDevicePolicyAPIService,
+		private route: ActivatedRoute,
 		private userService: UserService,
 	) {
+		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(this.user, ['info', 'customerId']);
 		this.logger.debug('PoliciesComponent Created!');
 	}
 
@@ -128,23 +135,7 @@ export class PoliciesComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		this.loading = true;
-		this.userService.getUser()
-			.pipe(
-				tap(userResponse =>
-					this.customerId = String(_.get(userResponse, 'data.customerId'))),
-				catchError(err => {
-					this.error = true;
-					this.errorMessage = err.message;
-
-					return empty();
-				}),
-				finalize(() => this.loading = false),
-				takeUntil(this.destroyed$),
-			)
-			.pipe(
-				mergeMap(userResponse =>
-					this.getPoliciesData(String(_.get(userResponse, 'data.customerId')))),
-			)
+		this.getPoliciesData(this.customerId)
 			.subscribe(response => {
 				this.policyData = response;
 				this.handleData();
