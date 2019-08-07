@@ -737,7 +737,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/bookmarks`,
+      this.rootUrl + `/racetrack/v1/bookmarks`,
       __body,
       {
         headers: __headers,

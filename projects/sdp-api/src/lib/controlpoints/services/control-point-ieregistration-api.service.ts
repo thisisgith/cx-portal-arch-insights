@@ -38,7 +38,7 @@ class ControlPointIERegistrationAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/dnac/status/${customerId}`,
+      this.rootUrl + `/controlpoint/v1/dnac/status/${customerId}`,
       __body,
       {
         headers: __headers,
