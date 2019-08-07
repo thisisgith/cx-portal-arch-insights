@@ -1,6 +1,6 @@
 import { PolicyResponseModel } from '@sdp-api';
 /** base API for controlpoints info */
-const api = '/api/customerportal/controlpoint/v1/policies/92736491';
+const api = '/api/customerportal/controlpoint/v1/policies/2431199';
 
 /**
  * Mock body of results

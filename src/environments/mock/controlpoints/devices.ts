@@ -1,6 +1,6 @@
 import { DeviceDetailsByPage } from '@sdp-api';
 /** base API for controlpoints info */
-const api = '/api/customerportal/controlpoint/v1/devices/92736491';
+const api = '/api/customerportal/controlpoint/v1/devices/2431199';
 
 /**
  * Mock body of results
@@ -58,7 +58,7 @@ export const DevicePoliciesScenarios = [
 			GET: [
 				{
 					delay: 500,
-					description: 'Call to get device list given customerId (92736491)',
+					description: 'Call to get device list given customerId (2431199)',
 					response: {
 						body: mockData,
 						status: 200,
@@ -67,7 +67,7 @@ export const DevicePoliciesScenarios = [
 				},
 				{
 					delay: 500,
-					description: 'Failure - Call to get device list given customerId (92736491)',
+					description: 'Failure - Call to get device list given customerId (2431199)',
 					response: {
 						body: '',
 						status: 500,
@@ -119,7 +119,7 @@ export const DevicePoliciesScenarios = [
 				},
 			],
 		},
-		url: '/api/customerportal/controlpoint/v1/policy/devices/92736491',
+		url: '/api/customerportal/controlpoint/v1/policy/devices/2431199',
 		usecases: ['Admin Settings', 'General'],
 	},
 	{
@@ -136,7 +136,7 @@ export const DevicePoliciesScenarios = [
 				},
 			],
 		},
-		url: '/api/customerportal/controlpoint/v1/policy/devices/92736491/b5a7a0bd-26a8-' +
+		url: '/api/customerportal/controlpoint/v1/policy/devices/2431199/b5a7a0bd-26a8-' +
 			'4c29-b8ec-7c3c2c40d3f4',
 		usecases: ['Admin Settings', 'General'],
 	},
