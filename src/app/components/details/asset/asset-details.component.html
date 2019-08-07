@@ -20,12 +20,16 @@
 </cui-tabs>
 
 <ng-template #summary>
-	<div class="row base-margin-top">
-		<div class="col-md-4 flex flex-center">
-			<img alt="{{ '_StockPhoto_' | i18n }}"
-				src="assets/img/inventory/CAT-3650.png">
+	<div class="row base-margin">
+		<div *ngIf="false" class="col-md-4 flex flex-center">
+			<img attr.data-auto-id="DeviceImg-{{ asset?.serialNumber }}" [src]="" alt=""/>
 		</div>
-		<div class="col-md-6" *ngIf="asset">
+		<!-- TODO: Adjust this based on when we actually have a product photo to use -->
+		<div *ngIf="asset"
+			[ngClass]="{
+				'col-md-6': false,
+				'col-md-12': true
+			}">
 			<div *ngIf="status.loading.overall">
 				<cui-loader></cui-loader>
 			</div>

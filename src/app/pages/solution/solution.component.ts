@@ -54,7 +54,6 @@ interface Facet {
 })
 export class SolutionComponent implements OnInit, OnDestroy {
 
-	public shownTabs = 5;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
