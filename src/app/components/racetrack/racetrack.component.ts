@@ -48,6 +48,27 @@ export const trackOffsetX = -22.61;
 export const trackOffsetY = -287.23;
 
 /**
+ * commented out pitstops are disabled at this time.
+ * may be re-enabled in the future
+ * stages - list of possible racetrack stages
+ */
+export const stages = [
+	// 'need',
+	// 'evaluate',
+	// 'select',
+	// 'purchase',
+	'onboard',
+	'implement',
+	'use',
+	'engage',
+	'adopt',
+	'optimize',
+	// 'renew',
+	// 'recommend',
+	// 'advocate',
+];
+
+/**
  * RacetrackComponent
  */
 @Component({
@@ -143,29 +164,11 @@ export class RacetrackComponent implements OnInit {
 				this.stageMap[key] *= (points.length / 100);
 			});
 
-		// commented out pitstops are disabled at this time.
-		// may be re-enabled in the future
-		this.stages = [
-			// 'need',
-			// 'evaluate',
-			// 'select',
-			// 'purchase',
-			'onboard',
-			'implement',
-			'use',
-			'engage',
-			'adopt',
-			'optimize',
-			// 'renew',
-			// 'recommend',
-			// 'advocate',
-		];
-
 		this.current = 'purchase';
 
 		d3.select(this.track.node().parentNode)
 			.selectAll('.stage')
-			.data(this.stages)
+			.data(stages)
 			.enter()
 			.append('circle')
 				.classed('stage', true)
@@ -369,12 +372,12 @@ export class RacetrackComponent implements OnInit {
 	 * @memberof RacetrackComponent
 	 */
 	public zoomToNext (trackProgress = false) {
-		let next = this.stages.indexOf(this.current) + 1;
+		let next = stages.indexOf(this.current) + 1;
 
-		if (next === this.stages.length) { next = 0; }
+		if (next === stages.length) { next = 0; }
 
-		this.onStageChange.emit(this.stages[next]);
-		this.zoomToStage(this.stages[next], trackProgress);
+		this.onStageChange.emit(stages[next]);
+		this.zoomToStage(stages[next], trackProgress);
 	}
 
 	/**
@@ -398,12 +401,12 @@ export class RacetrackComponent implements OnInit {
 	 * @memberof RacetrackComponent
 	 */
 	public zoomToPrevious (trackProgress = false) {
-		let prev = this.stages.indexOf(this.current) - 1;
+		let prev = stages.indexOf(this.current) - 1;
 
-		if (prev === -1) { prev = this.stages.length - 1; }
+		if (prev === -1) { prev = stages.length - 1; }
 
-		this.onStageChange.emit(this.stages[prev]);
-		this.zoomToStage(this.stages[prev], trackProgress);
+		this.onStageChange.emit(stages[prev]);
+		this.zoomToStage(stages[prev], trackProgress);
 	}
 
 	/**

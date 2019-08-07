@@ -106,7 +106,7 @@
 				<div class="col-md-10">
 					<a data-auto-id="actionlink"
 						class="no-link"
-						[ngClass]="{'disabled': action?.action?.isComplete || currentWorkingPitstop !== currentPitstop.name, 'selected': action?.selected}"
+						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
 						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
 						<div>
@@ -186,7 +186,10 @@
 			<span [innerText]="item.duration"></span>
 		</div>
 		<div class="base-padding-top half-padding-left" *ngIf="(autoid==='recommendedACC' || autoid==='moreACCList') && item.status==='recommended'">
-			<button data-auto-id="Request1on1ACCButton" (click)="selectAccRequestForm(true, item.accId, item.title)" class="btn btn--small btn--secondary text-uppercase"
+			<button data-auto-id="Request1on1ACCButton"
+				(click)="selectAccRequestForm(true, item.accId, item.title)"
+				class="btn btn--small btn--secondary text-uppercase"
+				[ngClass]="{ 'disabled': notCurrentPitstop }"
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
 		</div>
@@ -224,7 +227,10 @@
 	</div>
 	<div class="text-large base-padding-bottom" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-Title"></div>
 	<ng-container *ngIf="item.status === 'recommended'">
-		<button data-auto-id="recommendedACCWatchButton" (click)="selectAccRequestForm(true, item.accId, item.title)" class="btn btn--small btn--secondary text-uppercase"
+		<button data-auto-id="recommendedACCWatchButton"
+			(click)="selectAccRequestForm(true, item.accId, item.title)"
+			class="btn btn--small btn--secondary text-uppercase"
+			[ngClass]="{ 'disabled': notCurrentPitstop }"
 			[innerText]="'_Request1on1_' | i18n">
 		</button>
 	</ng-container>
@@ -572,7 +578,10 @@
 					<div class="card__footer">
 						<div class="card_footer_item" data-auto-id="ACCCardFooter">
 							<div class="text-left text-info"  *ngIf="item.status === 'recommended'">
-								<button data-auto-id="Request1on1Button" (click)="selectAccRequestForm(true, item.accId, item.title)" class="btn btn--small btn--secondary text-uppercase"
+								<button data-auto-id="Request1on1Button"
+									(click)="selectAccRequestForm(true, item.accId, item.title)"
+									class="btn btn--small btn--secondary text-uppercase"
+									[ngClass]="{ 'disabled': notCurrentPitstop }"
 									[innerText]="'_Request1on1_' | i18n">
 								</button>
 							</div>
