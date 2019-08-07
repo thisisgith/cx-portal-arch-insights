@@ -253,7 +253,7 @@ describe('AppComponent', () => {
 		});
 
 		it('should load the i18n files', () => {
-			const title = 'CX Console';
+			const title = 'CX Customer Portal';
 			fixture.detectChanges();
 
 			fixture.whenStable()

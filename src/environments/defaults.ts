@@ -63,4 +63,11 @@ export const defaults = {
 	},
 	supportEmailLink: 'mailto:help@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',
+	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
+	learningLink: 'https://pilot-digital-learning.cisco.com/cx/#/',
+	cuiColors: {
+		vibrantBlue: '#017cad',
+	},
+	logoutUrl: 'https://www.cisco.com/autho/logout.html',
+	manageProfileUrl: 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do',
 };
