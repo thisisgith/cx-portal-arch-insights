@@ -72,6 +72,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	}
 
 	/**
+	 * Gets current date for date comparisons in html
+	 */
+	get today () {
+		return new Date();
+	}
+
+	/**
 	 * Resets data fields
 	 */
 	private clear () {

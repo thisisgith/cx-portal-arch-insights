@@ -33,7 +33,8 @@ export interface Data {
 	notice?: FieldNotice;
 	bulletin?: FieldNoticeBulletin;
 	advisory?: FieldNoticeAdvisory;
-	affected?: Asset[];
+	impacted?: Asset[];
+	potentiallyImpacted?: Asset[];
 }
 
 /**
@@ -41,6 +42,7 @@ export interface Data {
  */
 @Component({
 	selector: 'field-notice-details',
+	styleUrls: ['./field-notice-details.component.scss'],
 	templateUrl: './field-notice-details.component.html',
 })
 export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
@@ -59,6 +61,8 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 
 	public data: Data = { };
 	public isLoading = false;
+	public upVoteSelected = false;
+	public downVoteSelected = false;
 
 	constructor (
 		private logger: LogService,
@@ -99,6 +103,12 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 	 * @returns the observable
 	 */
 	private getAssets (fieldNotices: FieldNotice[]) {
+		const vulFieldNotices = _.filter(fieldNotices, x => x.vulnerabilityStatus === 'VUL', []);
+		const vulHwIds = _.flatMap(vulFieldNotices, x => _.get(x, 'hwInstanceId'));
+		const potvulFieldNotices =
+			_.filter(fieldNotices, x => x.vulnerabilityStatus === 'POTVUL', []);
+		const potvulHwIds = _.flatMap(potvulFieldNotices, x => _.get(x, 'hwInstanceId'));
+
 		this.params.assets = {
 			customerId: this.customerId,
 			hwInstanceId: _.map(fieldNotices, 'hwInstanceId'),
@@ -107,7 +117,14 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 		return this.inventoryService.getAssets(this.params.assets)
 		.pipe(
 			map((response: Assets) => {
-				_.set(this.data, 'affected', _.get(response, 'data', []));
+				const data = _.get(response, 'data', []);
+				const vulData =
+					_.filter(data, x => _.includes(vulHwIds, _.get(x, 'hwInstanceId')));
+				_.set(this.data, 'impacted', vulData);
+
+				const potvulData =
+					_.filter(data, x => _.includes(potvulHwIds, _.get(x, 'hwInstanceId')));
+				_.set(this.data, 'potentiallyImpacted', potvulData);
 			}),
 			catchError(err => {
 				this.logger.error('field-notice-details.component : getAssets() ' +
@@ -214,6 +231,26 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 		const currentId = _.get(changes, ['id', 'currentValue']);
 		if (currentId && !changes.id.firstChange) {
 			this.refresh();
+		}
+	}
+
+	/**
+	 * Handles the clicking of vote buttons
+	 * @param event click event
+	 */
+	public voteClicked (event: Event) {
+		const btnId = _.get(event, 'toElement.id');
+		if (btnId === 'upVoteBtn') {
+			this.upVoteSelected = !this.upVoteSelected;
+			if (this.downVoteSelected) {
+				this.downVoteSelected = false;
+			}
+		}
+		if (btnId === 'downVoteBtn') {
+			this.downVoteSelected = !this.downVoteSelected;
+			if (this.upVoteSelected) {
+				this.upVoteSelected = false;
+			}
 		}
 	}
 }

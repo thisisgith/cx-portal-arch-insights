@@ -8,6 +8,7 @@ import {
 	RacetrackScenarios,
 	ATXScenarios,
 	ACCScenarios,
+	BookmarkScenarios,
 	ELearningScenarios,
 	SuccessPathScenarios,
 	ActionScenarios,
@@ -45,6 +46,7 @@ describe('LifecycleComponent', () => {
 
 	let racetrackATXSpy;
 	let racetrackAccSpy;
+	let racetrackBookmarkSpy;
 	let racetrackCgtCompletedTrainigsSpy;
 	let racetrackCgtUserQuotaSpy;
 	let racetrackLearningSpy;
@@ -60,6 +62,7 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackATXSpy, 'restore');
 		_.invoke(racetrackInfoSpy, 'restore');
 		_.invoke(racetrackAccSpy, 'restore');
+		_.invoke(racetrackBookmarkSpy, 'restore');
 		_.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
 		_.invoke(racetrackCgtUserQuotaSpy, 'restore');
 		_.invoke(racetrackLearningSpy, 'restore');
@@ -79,6 +82,10 @@ describe('LifecycleComponent', () => {
 		racetrackAccSpy = spyOn(racetrackContentService, 'getRacetrackACC')
 			.and
 			.returnValue(of(getActiveBody(ACCScenarios[0])));
+
+		racetrackBookmarkSpy = spyOn(racetrackContentService, 'updateBookmark')
+			.and
+			.returnValue(of(getActiveBody(BookmarkScenarios[0], 'POST')));
 
 		racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
 			.and
@@ -451,6 +458,22 @@ describe('LifecycleComponent', () => {
 
 			de = fixture.debugElement.query(By.css('#successModal'));
 			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__blue'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			expect(de)
+				.toBeTruthy();
+
+			const sb1 = component.componentData.learning.success[1];
+			expect(component.componentData.learning.success[1].bookmark)
+				.toBeFalsy();
+			component.updateBookmark('SB', sb1);
+			fixture.detectChanges();
+			expect(component.componentData.learning.success[1].bookmark)
 				.toBeTruthy();
 
 			component.selectedCategory = 'Project Planning';
