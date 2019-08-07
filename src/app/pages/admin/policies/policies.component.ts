@@ -81,8 +81,12 @@ export class PoliciesComponent implements OnInit {
 		_.forEach(this.policyData, element => {
 			const schedule = _.get(element, 'schedule');
 			if (schedule) {
-				const humanReadableCron = cronstrue.toString(schedule);
-				_.set(element, 'formattedSchedule', `${_.toLower(humanReadableCron)} UTC`);
+				try {
+					const humanReadableCron = cronstrue.toString(schedule);
+					_.set(element, 'formattedSchedule', `${_.toLower(humanReadableCron)} UTC`);
+				} catch (e) {
+					// TODO
+				}
 			}
 
 			const ptype = _.get(element, 'policyType');
@@ -127,6 +131,12 @@ export class PoliciesComponent implements OnInit {
 	public collectionRequestSubmit (submitted: boolean) {
 		if (submitted) {
 			this.selectEditCollectionComponent = false;
+			this.loading = true;
+			this.getPoliciesData(this.customerId)
+				.subscribe(response => {
+					this.policyData = response;
+					this.handleData();
+				});
 		}
 	}
 
