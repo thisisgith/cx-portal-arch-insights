@@ -229,7 +229,7 @@ describe('Case Detail Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it('PBC-83 Cases - Number of Open Cases', () => {
+		it.only('PBC-83 Cases - Number of Open Cases', () => {
 			cy.getByAutoId('openCases').should('exist');
 			cy.getByAutoId('openRMAs').should('exist');
 			cy.getByAutoId('Facet-Problem Resolution').click();
@@ -237,11 +237,20 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('VisualFilterCollapse').click(); // To collapse
 			cy.getByAutoId('VisualFilterCollapse').click(); // To expand
 			cy.getByAutoId('TotalVisualFilter').should('exist');
+			// TODO confirm value same as openCases above .should('contain.value', > 0);
+			// TODO RMAs tab is currently(8/6/2019) disabled, planned for a future release
+		});
+		it('PBC-86 Cases - Filter by Status', () => {
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('CasesSelectVisualFilter-status').should('exist');
 			cy.getByAutoId('statusFilter').should('exist');
+			// search pie-chart for 'pending' 'updated' 'new'
+		});
+		it('PBC-87 Cases - Filter by Severity', () => {
+			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('CasesSelectVisualFilter-severity').should('exist');
 			cy.getByAutoId('severityFilter').should('exist');
-			// TODO RMAs tab is currently(8/6/2019) disabled, planned for a future release
+			// search class=highcharts-series-group for S1 S3 S4 and S2
 		});
 	});
 });
