@@ -83,12 +83,10 @@
 		<div *ngFor="let facet of facets; index as i"
 			attr.data-auto-id="Facet-{{ facet.title }}"
 			(click)="selectFacet(facet, true)"
-			class="panel panel--bordered-right row"
+			class="panel panel--bordered-right row flex-fluid"
 			[ngClass]="{
 				'panel--bordered-left': i === 0,
-				'facet--selected': facet.selected,
-				'col-md-2': shownTabs === 5,
-				'col-md-3': shownTabs === 4
+				'facet--selected': facet.selected
 			}">
 			<div class="col-md-12 flex-center">
 				<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
@@ -96,16 +94,9 @@
 					<span [innerText]="facet.label"></span>
 				</div>
 			</div>
-			<!-- TODO: reenable the lightbulbs if we have some data to work with -->
-			<!-- <div class="col-md-2"></div> -->
 			<div class="col-md-12 flex-center base-padding-top">
 				<span [ngClass]="{ 'text-primary': facet.selected }" [innerText]="facet.title | uppercase"></span>
 			</div>
-			<!-- <div class="col-md-2 flex flex-center">
-				<button class="btn btn--icon btn--small" disabled>
-					<span class="icon-lightbulb"></span>
-				</button>
-			</div> -->
 		</div>
 	</div>
 </ng-template>

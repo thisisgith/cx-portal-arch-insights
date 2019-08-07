@@ -1,8 +1,10 @@
 import {
 	ChangeDetectorRef,
 	Component,
-	OnInit,
+	EventEmitter,
 	OnDestroy,
+	OnInit,
+	Output,
 	ViewChild,
 } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -12,6 +14,7 @@ import { SearchService } from '@services';
 
 import { I18n } from '@cisco-ngx/cui-utils';
 
+import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SpecialSearchComponent } from './special-search/special-search.component';
 
 /**
@@ -23,12 +26,16 @@ import { SpecialSearchComponent } from './special-search/special-search.componen
 	templateUrl: './search.component.html',
 })
 export class SearchComponent implements OnInit, OnDestroy {
-	@ViewChild(SpecialSearchComponent, { static: false }) set content
-		(component: SpecialSearchComponent) {
-			this.specialSearch = component;
-			this.cdr.detectChanges();
-		}
-	public specialSearch: SpecialSearchComponent;
+	@ViewChild(
+		SpecialSearchComponent,
+		{ static: false },
+	) set content (component: SpecialSearchComponent) {
+		this.specialSearch = component;
+		this.cdr.detectChanges();
+	} public specialSearch: SpecialSearchComponent;
+
+	@ViewChild(SearchBarComponent, { static: false }) public searchBarComponent: SearchBarComponent;
+	@Output('searchFocus') public searchFocus = new EventEmitter<boolean>();
 
 	public searchText = '';
 	public selectedSearch: SearchQuery;
@@ -146,6 +153,17 @@ export class SearchComponent implements OnInit, OnDestroy {
 	 */
 	public onClose () {
 		this.status.hidden = true;
+		this.searchFocus.emit(false);
 		this.searchText = '';
+	}
+
+	/**
+	 * Determines whether to emit the searchFocus event or not
+	 * @param focus True if focus, false if blur
+	 */
+	public onSearchFocus (focus: boolean) {
+		if (this.status.hidden) {
+			this.searchFocus.emit(focus);
+		}
 	}
 }

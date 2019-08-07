@@ -59,6 +59,13 @@ interface Tab {
 		ProductAlertsService.GetAdvisoriesFieldNoticesParams;
 	route: string;
 	subject?: Subject<{ }>;
+	selectedSubfilters?: SelectedSubfilter[];
+}
+
+/** Interface for selected subfilters */
+interface SelectedSubfilter {
+	subfilter: VisualFilter['seriesData'];
+	filter: string;
 }
 
 /**
@@ -95,7 +102,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		id: string;
 	};
 	public activeTab: number;
-	public selectedSubfilters: VisualFilter['seriesData'];
 	@ViewChild('impactTemplate', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('impactedCountTemplate', { static: true })
 		private impactedCountTemplate: TemplateRef<{ }>;
@@ -222,6 +228,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				},
 				route: 'security',
 				selected: this.routeParam === 'security',
+				selectedSubfilters: [],
 				subject: new Subject(),
 				template: this.contentTemplate,
 			},
@@ -306,6 +313,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				},
 				route: 'field-notices',
 				selected: this.routeParam === 'field-notices',
+				selectedSubfilters: [],
 				subject: new Subject(),
 				template: this.contentTemplate,
 			},
@@ -384,6 +392,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				},
 				route: 'bugs',
 				selected: this.routeParam === 'bugs',
+				selectedSubfilters: [],
 				subject: new Subject(),
 				template: this.contentTemplate,
 			},
@@ -680,8 +689,16 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	public getAllSelectedSubFilters () {
 		const tab = this.selectedTab;
 
-		return _.reduce(tab.filters, (memo, filter) =>
-			filter.seriesData ? _.concat(memo, _.filter(filter.seriesData, 'selected')) : memo, []);
+		return _.reduce(tab.filters, (memo, filter) => {
+			if (filter.seriesData) {
+				const selected = _.map(_.filter(filter.seriesData, 'selected'),
+				f => ({ filter, subfilter: f }));
+
+				return _.concat(memo, selected);
+			}
+
+			return memo;
+		}, []);
 	}
 
 	/**
@@ -702,7 +719,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 
 		filter.selected = _.some(filter.seriesData, 'selected');
 
-		this.selectedSubfilters = this.getAllSelectedSubFilters();
+		tab.selectedSubfilters = this.getAllSelectedSubFilters();
+
 		if (filter.key !== 'impact' && filter.key !== 'lastUpdate') {
 			tab.params[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
 			tab.params.page = 1;
@@ -764,6 +782,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				tab.loading = false;
 			}),
 			catchError(err => {
+				tab.pagination = null;
 				tab.loading = false;
 				this.logger.error('advisories.component : fetchFieldNotices() ' +
 					`:: Error : (${err.status}) ${err.message}`);
@@ -791,6 +810,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				tab.loading = false;
 			}),
 			catchError(err => {
+				tab.pagination = null;
 				tab.loading = false;
 				this.logger.error('advisories.component : fetchBugs() ' +
 					`:: Error : (${err.status}) ${err.message}`);
@@ -818,6 +838,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					tab.loading = false;
 				}),
 				catchError(err => {
+					tab.pagination = null;
 					this.logger.error('advisories.component : fetchSecurityAdvisories() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					tab.loading = false;
@@ -970,14 +991,21 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * Clears all filters for the currently selected tab
 	 */
 	public clearFilters () {
-		_.each(this.selectedTab.filters, (filter: VisualFilter) => {
+		const tab = this.selectedTab;
+		_.each(tab.filters, (filter: VisualFilter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {
 				f.selected = false;
 			});
 		});
 
-		this.selectedSubfilters = [];
-		this.selectedTab.filtered = false;
+		tab.params = {
+			customerId: this.customerId,
+			page: 1,
+			rows: 10,
+		};
+		tab.selectedSubfilters = [];
+		tab.filtered = false;
+		tab.subject.next();
 	}
 }
