@@ -8,6 +8,7 @@ import {
 	ACCUserInfoScenarios,
 	ContractScenarios,
 	Mock,
+	CGTScenarios,
 } from '@mock';
 import * as _ from 'lodash-es';
 import { of } from 'rxjs';
@@ -36,6 +37,7 @@ describe('AccRequestFormComponent', () => {
 
 	let getAccUserInfoSpy;
 	let getContractDetailsSpy;
+	let requestTrainingSpy;
 
 	/**
 	 * Restore spies
@@ -43,6 +45,7 @@ describe('AccRequestFormComponent', () => {
 	const restoreSpies = () => {
 		_.invoke(getAccUserInfoSpy, 'restore');
 		_.invoke(getContractDetailsSpy, 'restore');
+		_.invoke(requestTrainingSpy, 'restore');
 	};
 
 	const buildSpies = () => {
@@ -53,6 +56,10 @@ describe('AccRequestFormComponent', () => {
 		getContractDetailsSpy = spyOn(contractsService, 'getContractDetails')
 			.and
 			.returnValue(of(getActiveBody(ContractScenarios[5])));
+
+		requestTrainingSpy = spyOn(contentService, 'requestGroupTraining')
+			.and
+			.returnValue(of(getActiveBody(CGTScenarios[0], 'POST')));
 	};
 
 	beforeEach(async(() => {

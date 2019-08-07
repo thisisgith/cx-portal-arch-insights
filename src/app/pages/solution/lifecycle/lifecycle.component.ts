@@ -26,7 +26,7 @@ import {
 	RacetrackTechnology,
 	SuccessPath,
 	SuccessPathsResponse,
-	UserQuota,
+	ContractQuota,
 	UserTraining,
 	RacetrackResponse,
 } from '@sdp-api';
@@ -130,6 +130,7 @@ export class LifecycleComponent implements OnDestroy {
 	private user: User;
 	public selectedCategory = '';
 	public selectedStatus = '';
+	public totalAllowedGroupTrainings = 10;
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public categoryOptions: [];
@@ -946,9 +947,9 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Loads the CGT for the given params
-	 * @returns the UserQuota
+	 * @returns the ContractQuota
 	 */
-	private loadCGT (): Observable<UserQuota[]> | Observable<void | { }> {
+	private loadCGT (): Observable<ContractQuota[]> | Observable<void | { }> {
 		this.status.loading.cgt = true;
 		let startDate;
 		let endDate;
@@ -957,22 +958,28 @@ export class LifecycleComponent implements OnDestroy {
 		let trainingData;
 		let dateAvailable;
 		let completedTrainingData = [];
+		let trainigsUsed = 0;
+		let trainigsInProcess = 0;
 
 		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
 			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-		return this.contentService.getTrainingQuotas()
+		return this.contentService.getTrainingQuotas(
+			_.pick(this.componentData.params, ['customerId']))
 		.pipe(
-			map((result: UserQuota[]) => {
+			map((result: ContractQuota[]) => {
 				this.status.loading.cgt = false;
-				dateAvailable = _.get(_.head(result), 'end_date');
+				dateAvailable = _.get(_.head(result), 'contract_end_date');
 				_.each(result, training => {
-					this.groupTrainingsAvailable += _.get(training, 'closed_ilt_courses_available');
-					if (new Date(_.get(training, 'end_date')) > new Date(dateAvailable)) {
-						dateAvailable = _.get(training, 'end_date');
+					trainigsUsed += _.get(training, 'closed_ilt_courses_used');
+					trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
+					if (new Date(_.get(training, 'contract_end_date')) > new Date(dateAvailable)) {
+						dateAvailable = _.get(training, 'contract_end_date');
 					}
 				});
-				this.contentService.getCompletedTrainings()
+				this.groupTrainingsAvailable = this.totalAllowedGroupTrainings - (trainigsUsed + trainigsInProcess);
+				this.contentService.getCompletedTrainings(
+					_.pick(this.componentData.params, ['customerId']))
 					.pipe(
 						catchError(err => {
 							this.logger.error(`lifecycle.component : loadCGT() :
