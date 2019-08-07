@@ -1,3 +1,4 @@
+<no-dnac-header></no-dnac-header>
 <div class="page-container">
 	<div class="panel no-padding-left no-padding-right no-padding-bottom base-padding-top panel--bordered-bottom">
 		<div class="row base-margin-left half-margin-bottom">
@@ -81,7 +82,7 @@
 	<div class="row no-gutters flex-fill">
 		<div *ngFor="let facet of facets; index as i"
 			attr.data-auto-id="Facet-{{ facet.title }}"
-			(click)="selectFacet(facet)"
+			(click)="selectFacet(facet, true)"
 			class="panel panel--bordered-right row"
 			[ngClass]="{
 				'panel--bordered-left': i === 0,
@@ -118,7 +119,7 @@
 
 <ng-template #assetsFacet let-facet="facet">
 	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugeLabel || 0 }}"
+		value="{{ facet?.data?.gaugeLabel || '0%' }}"
 		color="primary">
 	</cui-gauge>
 </ng-template>
@@ -132,12 +133,40 @@
 
 <ng-template #advisoriesFact let-facet="facet">
 	<div class="full-width">
-		<assets-bar-chart [seriesData]="advisoriesFacet?.seriesData"></assets-bar-chart>
+		<bar-chart *ngIf="advisoriesFacet?.seriesData && !advisoriesFacet?.loading" [seriesData]="advisoriesFacet?.seriesData"></bar-chart>
+		<div class="dbl-margin-top base-margin-bottom" *ngIf="advisoriesFacet?.loading">
+			<cui-spinner></cui-spinner>
+		</div>
 	</div>
-	
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
+	<div *ngIf="(casesCount == 0 && RMACount == 0); else caseCountContent">
+		<ng-container *ngTemplateOutlet="noCaseContent"></ng-container>
+	</div>
+	<ng-template #noCaseContent>
+		<div class="text-muted text-large base-padding-left base-padding-right dbl-padding-top qtr-padding-bottom" [innerText]="'_NoOpenCases_' | i18n"></div>
+		<div class="text-muted text-large base-padding-left base-padding-right base-padding-bottom" [innerText]="'_NoOpenRMAs_' | i18n"></div>
+	</ng-template>
+	<ng-template #caseCountContent>
+		<div class="row no-margin base-padding-left base-padding-right">
+			<div class="col-5">
+				<div class="text-muted text-xlarge" [innerText]="'_OpenCases_' | i18n"></div>
+			</div>
+			<div class="col-7 no-padding-left">
+				<div class="text-huge opacity-50">{{casesCount}}</div>
+			</div>
+			<div class="col-5 base-padding-top">
+				<div class="text-primary text-xlarge" [innerText]="'_OpenRMAs_' | i18n"></div>
+			</div>
+			<div class="col-7 no-padding-left base-padding-top">
+				<div class="text-huge opacity-50">{{RMACount}}</div>
+			</div>
+		</div>
+	</ng-template>
+</ng-template>
+
+<ng-template #insightsFacet let-facet="facet">
 	<cui-gauge percentage="75"
 		value="75%"
 		color="primary">

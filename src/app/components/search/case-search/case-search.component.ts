@@ -11,6 +11,7 @@ import { SpecialSearchComponent } from '../special-search/special-search.compone
 import { SearchService } from '@services';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * Mapping of Case statuses to status icons
@@ -52,7 +53,8 @@ implements OnInit, OnDestroy, OnChanges {
 	}>();
 
 	/** Mock fields for the call to the SDP InventoryService API. */
-	private customerId = '2431199';
+	private customerId: string;
+	private destroyed$: Subject<void> = new Subject<void>();
 	private serialNumber = 'FOX1306GFKH';
 	/** Whether each of the API requests are still loading (used for displaying HTML). */
 	public loading = true;
@@ -78,9 +80,16 @@ implements OnInit, OnDestroy, OnChanges {
 		private inventoryService: InventoryService,
 		private router: Router,
 		private searchService: SearchService,
-	) {
+		private userResolve: UserResolve,
+		) {
 		super();
-		this.logger.debug('caseSearchComponent Created!');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 	}
 
 	/**

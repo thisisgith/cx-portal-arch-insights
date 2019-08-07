@@ -20,7 +20,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-03-03T00:00:00+0000",
 		revisedDate: "2019-03-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 5,
 	},
 	{
@@ -30,7 +30,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-08-02T00:00:00+0000",
 		revisedDate: "2018-08-02T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 3,
 	},
 	{
@@ -40,7 +40,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-02-18T00:00:00+0000",
 		revisedDate: "2019-02-18T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 3,
 	},
 	{
@@ -50,7 +50,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-10-14T00:00:00+0000",
 		revisedDate: "2019-10-14T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -60,7 +60,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-04-19T00:00:00+0000",
 		revisedDate: "2019-04-19T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 0,
 	},
 	{
@@ -70,7 +70,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-09-21T00:00:00+0000",
 		revisedDate: "2019-09-21T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -80,7 +80,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -90,7 +90,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -100,7 +100,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -110,7 +110,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -120,7 +120,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -130,7 +130,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-03-03T00:00:00+0000",
 		revisedDate: "2019-03-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 5,
 	},
 	{
@@ -140,7 +140,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-08-02T00:00:00+0000",
 		revisedDate: "2018-08-02T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 3,
 	},
 	{
@@ -150,7 +150,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-02-18T00:00:00+0000",
 		revisedDate: "2019-02-18T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 3,
 	},
 	{
@@ -160,7 +160,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-10-14T00:00:00+0000",
 		revisedDate: "2019-10-14T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -170,7 +170,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-04-19T00:00:00+0000",
 		revisedDate: "2019-04-19T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 0,
 	},
 	{
@@ -180,7 +180,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-09-21T00:00:00+0000",
 		revisedDate: "2019-09-21T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -190,7 +190,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -200,7 +200,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -210,7 +210,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -220,7 +220,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -230,7 +230,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -240,7 +240,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-03-03T00:00:00+0000",
 		revisedDate: "2019-03-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 5,
 	},
 	{
@@ -250,7 +250,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-08-02T00:00:00+0000",
 		revisedDate: "2018-08-02T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 3,
 	},
 	{
@@ -260,7 +260,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-02-18T00:00:00+0000",
 		revisedDate: "2019-02-18T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 3,
 	},
 	{
@@ -270,7 +270,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-10-14T00:00:00+0000",
 		revisedDate: "2019-10-14T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -280,7 +280,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-04-19T00:00:00+0000",
 		revisedDate: "2019-04-19T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 0,
 	},
 	{
@@ -290,7 +290,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-09-21T00:00:00+0000",
 		revisedDate: "2019-09-21T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -300,7 +300,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -310,7 +310,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -320,7 +320,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -330,7 +330,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -340,7 +340,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -350,7 +350,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-03-03T00:00:00+0000",
 		revisedDate: "2019-03-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 5,
 	},
 	{
@@ -360,7 +360,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-08-02T00:00:00+0000",
 		revisedDate: "2018-08-02T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 3,
 	},
 	{
@@ -370,7 +370,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-02-18T00:00:00+0000",
 		revisedDate: "2019-02-18T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 3,
 	},
 	{
@@ -380,7 +380,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-10-14T00:00:00+0000",
 		revisedDate: "2019-10-14T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -390,7 +390,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-04-19T00:00:00+0000",
 		revisedDate: "2019-04-19T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 0,
 	},
 	{
@@ -400,7 +400,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2019-09-21T00:00:00+0000",
 		revisedDate: "2019-09-21T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	{
@@ -410,7 +410,7 @@ const mockAdvisoryResponse: SecurityAdvisoryImpactedInfoAndCount[] = [
 		publishedDate: "2018-05-03T00:00:00+0000",
 		revisedDate: "2018-05-03T00:00:00+0000",
 		summary: "",
-		advisortyURL: "",
+		advisoryURL: "",
 		impactedEntityCount: 1,
 	},
 	/* tslint:enable */

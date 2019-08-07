@@ -23,7 +23,7 @@ import {
 	VulnerabilityResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subscription, forkJoin, fromEvent, of, Subject } from 'rxjs';
@@ -37,6 +37,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
+import { CaseOpenComponent } from '@components';
 
 /**
  * Interface representing an item of our inventory in our assets table
@@ -45,10 +46,8 @@ interface Item {
 	selected?: boolean;
 	details?: boolean;
 	data: Asset;
+	actions?: any[];
 }
-
-/** Our current customerId */
-const customerId = '2431199';
 
 /**
  * Assets Component
@@ -64,8 +63,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private bubbleChartFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('pieChartFilter', { static: true })
 		private pieChartFilterTemplate: TemplateRef<{ }>;
-	@ViewChild('horizontalBarChartFilter', { static: true })
-		private horizontalBarChartFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('barChartFilter', { static: true })
+		private barChartFilterTemplate: TemplateRef<{ }>;
 
 	@ViewChild('deviceTemplate', { static: true }) private deviceTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
@@ -87,14 +86,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public filters: VisualFilter[];
 	public visibleTemplate: TemplateRef<{ }>;
 	public filterCollapse = false;
-	public assetParams: InventoryService.GetAssetsParams = {
-		customerId,
-		page: 1,
-		rows: 10,
-	};
-	public contractCountParams: ContractsService.GetContractCountsParams = {
-		customerId,
-	};
+	private customerId: string;
+	public assetParams: InventoryService.GetAssetsParams;
+	public contractCountParams: ContractsService.GetContractCountsParams;
 	public pagination: Pagination;
 	public paginationCount: string;
 	public status = {
@@ -124,13 +118,27 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	constructor (
 		private contractsService: ContractsService,
+		private cuiModalService: CuiModalService,
 		private logger: LogService,
 		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private fromNow: FromNowPipe,
-	) { }
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+
+		this.assetParams = {
+			customerId: this.customerId,
+			page: 1,
+			rows: 10,
+		};
+
+		this.contractCountParams = {
+			customerId: this.customerId,
+		};
+	}
 
 	/**
 	 * Returns the number of selected rows
@@ -172,6 +180,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return _.filter([
 			_.get(asset, 'supportCovered', false) ? {
 				label: I18n.get('_OpenSupportCase_'),
+				onClick: () => this.cuiModalService.showComponent(
+					CaseOpenComponent,
+					{ asset },
+					'full',
+				),
 			} : undefined,
 			{
 				label: I18n.get('_Scan_'),
@@ -470,14 +483,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				key: 'advisories',
 				loading: true,
 				seriesData: [],
-				template: this.horizontalBarChartFilterTemplate,
+				template: this.barChartFilterTemplate,
 				title: I18n.get('_Advisories_'),
 			},
 			{
 				key: 'eox',
 				loading: true,
 				seriesData: [],
-				template: this.horizontalBarChartFilterTemplate,
+				template: this.barChartFilterTemplate,
 				title: I18n.get('_HardwareEOX_'),
 			},
 			{
@@ -497,7 +510,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public doSearch (query: string) {
 		if (query) {
-			this.logger.debug(`Searching for ${query}`);
+			this.logger.debug(`assets.component :: doSearch() :: Searching for ${query}`);
 			// this.filter(query);
 		}
 	}
@@ -549,7 +562,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getCoverageCounts () {
 		const coverageFilter = _.find(this.filters, { key: 'coverage' });
 
-		return this.contractsService.getCoverageCounts({ customerId })
+		return this.contractsService.getCoverageCounts({ customerId: this.customerId })
 		.pipe(
 			map((data: CoverageCountsResponse) => {
 				coverageFilter.seriesData = _.compact(_.map(data, (value: number, key: string) => {
@@ -581,7 +594,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getAdvisoryCount () {
 		const advisoryFilter = _.find(this.filters, { key: 'advisories' });
 
-		return this.productAlertsService.getVulnerabilityCounts({ customerId })
+		return this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
 		.pipe(
 			map((data: VulnerabilityResponse) => {
 				const series = [];
@@ -639,7 +652,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getRoleCounts () {
 		const roleFilter = _.find(this.filters, { key: 'role' });
 
-		return this.inventoryService.getRoleCount({ customerId })
+		return this.inventoryService.getRoleCount({ customerId: this.customerId })
 		.pipe(
 			map((data: RoleCountResponse) => {
 				roleFilter.seriesData = _.map(data, (d: RoleCount) => ({
@@ -782,15 +795,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private getHardwareEOXCounts () {
 		const eoxFilter = _.find(this.filters, { key: 'eox' });
 
-		return this.productAlertsService.getHardwareEolTopCount(customerId)
+		return this.productAlertsService.getHardwareEolTopCount(this.customerId)
 		.pipe(
 			map((data: HardwareEOLCountResponse) => {
-				// eoxFilter.seriesData = _.map(data, d => ({
-				// 	filter: d.range,
-				// 	label: `${d.range} ${I18n.get('_Days_')}`,
-				// 	selected: false,
-				// 	value: d.deviceCount,
-				// }));
 				const series = [];
 
 				const sub30 = _.get(data, 'gt-0-lt-30-days', 0);
@@ -876,6 +883,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 							a.role = _.startCase(_.toLower(a.role));
 						}
 						this.inventory.push({
+							actions: this.getRowActions(a),
 							data: a,
 							details: false,
 							selected: false,

@@ -10,41 +10,41 @@ const mockData: DeviceDetailsByPage = {
 		{
 			hostName: 'C3850',
 			ipAddress: '172.25.121.6',
-			serialNumber: 'FOC2045X0WJ',
-			productId: 'WS-C3850-48U-L',
 			managedNeId: 'NA,FOC2045X0WJ,WS-C3850-48U-L,NA',
+			productId: 'WS-C3850-48U-L',
+			reachabilityStatus: 'Reachable',
+			role: 'ACCESS',
+			serialNumber: 'FOC2045X0WJ',
 			softwareType: 'IOS-XE',
 			softwareVersion: '03.06.05E',
-			role: 'ACCESS',
-			reachabilityStatus: 'Reachable',
 		},
 		{
 			hostName: 'C3850',
 			ipAddress: '172.25.121.6',
-			serialNumber: 'FOC2045X0WJ',
-			productId: 'WS-C3850-48U-L',
 			managedNeId: 'NA,FOC2045X0WJ,WS-C3850-48U-L,NA',
+			productId: 'WS-C3850-48U-L',
+			reachabilityStatus: 'Reachable',
+			role: 'ACCESS',
+			serialNumber: 'FOC2045X0WJ',
 			softwareType: 'IOS-XE',
 			softwareVersion: '03.06.05E',
-			role: 'ACCESS',
-			reachabilityStatus: 'Reachable',
 		},
 		{
 			hostName: 'C3850',
 			ipAddress: '172.25.121.6',
-			serialNumber: 'FOC2045X0WJ',
-			productId: 'WS-C3850-48U-L',
 			managedNeId: 'NA,FOC2045X0WJ,WS-C3850-48U-L,NA',
+			productId: 'WS-C3850-48U-L',
+			reachabilityStatus: 'Reachable',
+			role: 'ACCESS',
+			serialNumber: 'FOC2045X0WJ',
 			softwareType: 'IOS-XE',
 			softwareVersion: '03.06.05E',
-			role: 'ACCESS',
-			reachabilityStatus: 'Reachable',
 		},
 	],
 	pagination: {
 		pageNumber: 1,
-		totalPages: 2,
 		rowPerPage: 25,
+		totalPages: 2,
 		totalRows: 26,
 	},
 };
@@ -52,7 +52,7 @@ const mockData: DeviceDetailsByPage = {
 /**
  * The scenarios
  */
-export const DevicePolicesScenarios = [
+export const DevicePoliciesScenarios = [
 	{
 		scenarios: {
 			GET: [
@@ -136,7 +136,8 @@ export const DevicePolicesScenarios = [
 				},
 			],
 		},
-		url: '/api/customerportal/controlpoint/v1/policy/devices/92736491/b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
+		url: '/api/customerportal/controlpoint/v1/policy/devices/92736491/b5a7a0bd-26a8-' +
+			'4c29-b8ec-7c3c2c40d3f4',
 		usecases: ['Admin Settings', 'General'],
 	},
 ];

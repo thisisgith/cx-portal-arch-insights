@@ -1,7 +1,9 @@
 export { AdditionalDetails } from './models/additional-details';
 export { CSDFResponseModel } from './models/csdfresponse-model';
 export { CollectionPolicyResponseModel } from './models/collection-policy-response-model';
-export { CollectionPolicyUpdateRequestModel } from './models/collection-policy-update-request-model';
+export {
+	CollectionPolicyUpdateRequestModel,
+} from './models/collection-policy-update-request-model';
 export { ComponentDetails } from './models/component-details';
 export { DefaultResponseModel } from './models/default-response-model';
 export { Device } from './models/device';

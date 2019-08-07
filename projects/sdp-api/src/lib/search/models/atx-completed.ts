@@ -1,7 +1,7 @@
 /* tslint:disable */
 export interface AtxCompleted {
-  hdp_last_update_by?: string;
   attended?: string;
+  cco_id?: string;
   createdDate?: string;
   customer_party_key?: string;
   cxpi_customer_flag?: string;
@@ -12,7 +12,7 @@ export interface AtxCompleted {
   event_start_date?: string;
   hdp_created_by?: string;
   hdp_created_dtm?: string;
-  cco_id?: string;
+  hdp_last_update_by?: string;
   hdp_last_update_dtm?: string;
   join_time?: string;
   leave_time?: string;

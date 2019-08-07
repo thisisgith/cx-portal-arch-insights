@@ -34,6 +34,7 @@ import { CaseOpenComponent } from '../../case/case-open/case-open.component';
 import { SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * Interface representing all serial number data to go in the template
@@ -98,7 +99,7 @@ implements OnInit, OnChanges, OnDestroy {
 	public loadingHardware = true;
 	public loadingAlerts = true;
 	public loadingCase = true;
-	public customerId = '2431199';
+	public customerId: string;
 	public data = <SerialData> { };
 	public assetData: Asset;
 	public contractData: ContractData;
@@ -118,9 +119,16 @@ implements OnInit, OnChanges, OnDestroy {
 		private inventoryService: InventoryService,
 		private alertsService: ProductAlertsService,
 		public router: Router,
+		private userResolve: UserResolve,
 	) {
 		super();
-		this.logger.debug('SerialSearchComponent Created!');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+		});
 	}
 
 	/**
@@ -313,11 +321,12 @@ implements OnInit, OnChanges, OnDestroy {
 			}),
 		);
 	}
-/**
-	* Fetch Case/RMA counts for the given serial number
-	* @param serialNumber sn to search on
-	* @returns Observable with array of case followed by RMA counts
-	*/
+
+	/**
+	 * Fetch Case/RMA counts for the given serial number
+	 * @param serialNumber sn to search on
+	 * @returns Observable with array of case followed by RMA counts
+	 */
 	private getCaseData (serialNumber: string) {
 	 const params = {
 		 nocache: Date.now(),

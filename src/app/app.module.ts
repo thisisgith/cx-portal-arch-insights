@@ -1,7 +1,7 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -25,8 +25,15 @@ import {
 } from '@cisco-ngx/cui-services';
 import { HeaderModule } from '@components';
 import { NoResultsModule } from './components/search/no-results/no-results.module';
+import { EntitlementModule } from '@sdp-api';
 import { CaseOpenModule } from './components/case/case-open/case-open.module';
 import { CloseConfirmModule } from './components/case/case-open/close-confirm/close-confirm.module';
+import { CollapsibleModule } from './components/collapsible/collapsible.module';
+
+/**
+ * The SDP Origin URL used for passing to the SDP-API Modules
+ */
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Initialization function which will load our i18n files
@@ -46,19 +53,21 @@ export function loadI18n (service: AppService) {
 	declarations: [AppComponent],
 	imports: [
 		AppRoutingModule,
-		BrowserModule,
 		BrowserAnimationsModule,
+		BrowserModule,
 		ClientSSOModule,
 		CommonModule,
 		CuiModalModule,
 		CuiSpinnerModule,
 		CuiToastModule,
+		EntitlementModule.forRoot({ rootUrl }),
 		FormsModule,
 		HeaderModule,
 		HttpClientModule,
 		NoResultsModule,
 		CaseOpenModule,
 		CloseConfirmModule,
+		CollapsibleModule,
 	],
 	providers: [
 		AppService,

@@ -1,0 +1,44 @@
+<div
+	class="alert-wrapper"
+	heightTransition
+	[heightTransitionExpanded]="visible"
+	[ngClass]="{ 'untouchable': !visible }"
+>
+	<div
+		class="alert-container
+			base-margin-top
+			base-margin-bottom
+			panel
+			panel--raised"
+	>
+		<div class="alert-container__icon text-center">
+			<span
+				class="text-xlarge icon-warning text-danger"
+			></span>
+		</div>
+		<div class="alert-container__content">
+			<div 
+				class="half-margin-bottom
+					alert-container__title
+					qtr-padding-top
+					text-bold
+					text-large
+					text-danger"
+				[innerText]="title"
+			>
+			</div>
+			<div>
+				<ng-content></ng-content>
+			</div>
+			<div *ngIf="showHelpLink" class="base-margin-bottom text-small">
+				<span [innerText]="'_NeedHelpQuestion_' | i18n" class="qtr-margin-right"></span>
+				<a [href]="supportEmailLink" [innerText]="'_ContactSupport_' | i18n"></a>
+			</div>
+		</div>
+		<div
+			data-auto-id="hide-alert-btn"
+			class="icon-close flex-right text-xlarge"
+			(click)="hideAlert()"
+		></div>
+	</div>
+</div>

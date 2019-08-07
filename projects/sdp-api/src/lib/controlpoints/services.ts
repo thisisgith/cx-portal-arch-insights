@@ -1,3 +1,4 @@
+/* tslint:disable */
 export { ControlPointModifyCollectionPolicyAPIService } from './services/control-point-modify-collection-policy-api.service';
 export { ControlPointDeviceConnectivtyAPIService } from './services/control-point-device-connectivty-api.service';
 export { ControlPointDeviceDiscoveryAPIService } from './services/control-point-device-discovery-api.service';

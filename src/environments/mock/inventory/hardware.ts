@@ -12,7 +12,7 @@ const productId = 'ASAv';
 /**
  * Mock data for Inventory API results
  */
-export const mockResponse: HardwareResponse = {
+export const MockHardwareResponse: HardwareResponse = {
 	data: [
 		{
 			customerId,
@@ -1142,14 +1142,24 @@ export const HardwareScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Hardware',
 					response: {
-						body: mockResponse,
+						body: MockHardwareResponse,
 						status: 200,
 					},
 					selected: true,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 500,
+					description: 'Empty Hardware',
+					response: {
+						body: { data: [] },
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&equipmentType=MODULE&containingHwId=` +
+		'FOC1922S6JU,WS-C2960X-24PS-L,NA,FOC1922S6JU,WS-C2960X-24PS-L,NA,NA',
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1159,7 +1169,7 @@ export const HardwareScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 500,
 					description: 'Hardware productId',
 					response: {
-						body: mockResponse,
+						body: MockHardwareResponse,
 						status: 200,
 					},
 					selected: true,

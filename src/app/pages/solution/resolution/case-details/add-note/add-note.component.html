@@ -1,4 +1,4 @@
-<div class="absolute add-notes  base-padding-bottom">
+<div class="absolute add-notes base-padding-bottom">
 	<cui-spinner *ngIf="loading"></cui-spinner>
 	<form class="base-margin-top" [formGroup]="notesForm" novalidate>
 		<div class="col-md-12">
@@ -8,9 +8,7 @@
 						data-auto-id="title"></textarea>
 					<label for="add-note-title">{{'_RMACaseSummaryTitle_'| i18n}}</label>
 				</div>
-				<div class="help-block text-muted" role="alert">
-					<span>{{title.value.length}}/{{titleMaxLength}} {{'_Characters_' | i18n}}</span>
-				</div>
+				<div char-count [value]="title.value.length" [max]="titleMaxLength"></div>
 			</div>
 		</div>
 		<div class="col-md-12">
@@ -20,9 +18,7 @@
 						rows="5" data-auto-id="description"></textarea>
 					<label for="add-note-description">{{'_RMACaseDescription_'| i18n}}</label>
 				</div>
-				<div class="help-block text-muted" role="alert">
-					<span>{{description.value.length}}/{{descriptionMaxLength}} {{'_Characters_' | i18n}}</span>
-				</div>
+				<div char-count [value]="description.value.length" [max]="descriptionMaxLength"></div>
 			</div>
 		</div>
 		<div class="col-md-12">

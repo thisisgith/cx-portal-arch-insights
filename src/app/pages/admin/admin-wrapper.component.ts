@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subject } from 'rxjs';
 
+import * as _ from 'lodash-es';
+
 /**
  * Admin Component
  */
@@ -20,7 +22,7 @@ export class AdminWrapperComponent {
 		private route: ActivatedRoute,
 		private router: Router,
 	) {
-		this.routerPath = this.route.snapshot.routeConfig.path;
+		this.routerPath = _.get(this, 'route.snapshot.routeConfig.path', 'settings');
 	}
 
 	/**

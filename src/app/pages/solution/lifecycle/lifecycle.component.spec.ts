@@ -12,6 +12,7 @@ import {
 	SuccessPathScenarios,
 	ActionScenarios,
 	Mock,
+	user,
 } from '@mock';
 import { of, throwError } from 'rxjs';
 import { DebugElement } from '@angular/core';
@@ -19,6 +20,7 @@ import { By } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as _ from 'lodash-es';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -43,6 +45,8 @@ describe('LifecycleComponent', () => {
 
 	let racetrackATXSpy;
 	let racetrackAccSpy;
+	let racetrackCgtCompletedTrainigsSpy;
+	let racetrackCgtUserQuotaSpy;
 	let racetrackLearningSpy;
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
@@ -56,6 +60,8 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackATXSpy, 'restore');
 		_.invoke(racetrackInfoSpy, 'restore');
 		_.invoke(racetrackAccSpy, 'restore');
+		_.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
+		_.invoke(racetrackCgtUserQuotaSpy, 'restore');
 		_.invoke(racetrackLearningSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
@@ -112,6 +118,18 @@ describe('LifecycleComponent', () => {
 				HttpClientTestingModule,
 				RouterTestingModule,
 				LifecycleModule,
+			],
+			providers: [
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
 			],
 		})
 		.compileComponents();
@@ -183,6 +201,21 @@ describe('LifecycleComponent', () => {
 					statusText: 'Resource not found',
 				})));
 
+			racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService,
+				'getCompletedTrainings')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
+			racetrackCgtUserQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
 			racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
 				.and
 				.returnValue(throwError(new HttpErrorResponse({
@@ -215,6 +248,9 @@ describe('LifecycleComponent', () => {
 				.toBeUndefined();
 
 			expect(component.componentData.atx)
+				.toBeUndefined();
+
+			expect(component.componentData.cgt)
 				.toBeUndefined();
 		});
 
@@ -387,7 +423,7 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
-	describe('Product Guides', () => {
+	describe('Success Bytes', () => {
 		it('should have loaded the successPaths items', () => {
 			buildSpies();
 			sendParams();
@@ -401,13 +437,13 @@ describe('LifecycleComponent', () => {
 				});
 		});
 
-		it('should show the Product Guides view-all modal', () => {
+		it('should show the Success Bytes view-all modal', () => {
 			buildSpies();
 			sendParams();
 
 			fixture.detectChanges();
 
-			component.showModal('_ProductGuide_');
+			component.showModal('_SuccessBytes_');
 			fixture.detectChanges();
 
 			expect(component.modal.visible)
@@ -418,25 +454,25 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			component.selectedCategory = 'Project Planning';
-			component.selectFilter('productguide');
+			component.selectFilter('successBytes');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(2);
 
 			component.selectedCategory = 'Getting Started';
-			component.selectFilter('productguide');
+			component.selectFilter('successBytes');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(1);
 
 			component.onSort('title', 'asc');
 			fixture.detectChanges();
-			expect(component.productGuidesTable.columns[0].sortDirection)
+			expect(component.successBytesTable.columns[0].sortDirection)
 				.toEqual('desc');
 
 			component.onSort('title', 'desc');
 			fixture.detectChanges();
-			expect(component.productGuidesTable.columns[0].sortDirection)
+			expect(component.successBytesTable.columns[0].sortDirection)
 				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
@@ -481,6 +517,40 @@ describe('LifecycleComponent', () => {
 				.then(() => {
 					expect(component.componentData.learning.certifications.length)
 						.toEqual(8);
+				});
+		});
+	});
+
+	describe('CGT', () => {
+		it('should have loaded the CGT', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.cgt.sessions.length)
+						.toEqual(3);
+					expect(component.componentData.cgt.dateAvailableThrough)
+						.toEqual('Mar 29, 2020');
+					expect(component.componentData.cgt.trainingsAvailable)
+						.toEqual(1);
+					de = fixture.debugElement.query(By.css('.btn--secondary'));
+					expect(de)
+						.toBeTruthy();
+					el = de.nativeElement;
+
+					el.click();
+
+					fixture.detectChanges();
+					expect(component.selectCgtRequestForm)
+						.toHaveBeenCalled();
+					de = fixture.debugElement.query(By.css('.icon-certified'));
+					expect(de)
+						.toBeTruthy();
+					expect(de)
+						.toHaveBeenCalledTimes(2);
 				});
 		});
 	});

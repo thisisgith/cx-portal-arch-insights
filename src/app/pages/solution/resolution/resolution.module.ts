@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { ResolutionComponent } from './resolution.component';
 import { CaseDetailsModule } from './case-details/case-details.module';
-import { Panel360Module } from '@components';
 import { CaseDetailsHeaderModule } from './case-details-header/case-details-header.module';
+import { PieChartModule } from '@components';
 
 import {
 	CuiTableModule,
@@ -14,6 +14,7 @@ import {
 	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { DetailsPanelModule } from 'src/app/components/details/panel/details-panel.module';
 
 /**
  * Child routes for Resolution Module for lazy loading
@@ -31,18 +32,24 @@ const childRoutes: Routes = [
 @NgModule({
 	declarations: [ResolutionComponent],
 	imports: [
+		PieChartModule,
 		CommonModule,
 		FormsModule,
-		Panel360Module,
 		RouterModule.forChild(childRoutes),
 		ReactiveFormsModule,
 		CaseDetailsModule,
 		CaseDetailsHeaderModule,
+		CaseDetailsModule,
+		CommonModule,
 		CuiPagerModule,
+		CuiSpinnerModule,
 		CuiTableModule,
 		CuiTabsModule,
-		CuiSpinnerModule,
+		DetailsPanelModule,
+		FormsModule,
 		I18nPipeModule,
+		ReactiveFormsModule,
+		RouterModule.forChild(childRoutes),
 	],
 })
 export class ResolutionModule { }

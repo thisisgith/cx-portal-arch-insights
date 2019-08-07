@@ -2,34 +2,43 @@ import {
 	ACCScenarios,
 	ACCUserInfoScenarios,
 	ActionScenarios,
+	AdvisorySecurityAdvisoryScenarios,
 	AssetScenarios,
 	ATXScenarios,
 	CaseScenarios,
+	CGTScenarios,
 	ContractScenarios,
 	CoverageScenarios,
+	CreateRegistrationScenarios,
+	CriticalBugScenarios,
+	DevicePoliciesScenarios,
+	DNACStatusScenarios,
 	ELearningScenarios,
+	EntitlementScenarios,
+	FieldNoticeAdvisoryScenarios,
+	FieldNoticeBulletinScenarios,
+	FieldNoticeCountScenarios,
+	FieldNoticeScenarios,
 	HardwareEOLBulletinScenarios,
 	HardwareEOLCountScenarios,
 	HardwareEOLScenarios,
 	HardwareScenarios,
+	HealthStatusScenarios,
 	NetworkScenarios,
-	SerialNumberScenarios,
+	PolicesScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
+	SecurityAdvisoryLastUpdatedCountScenarios,
 	SecurityAdvisoryScenarios,
-	SecurityAdvisoryTopScenarios,
+	SecurityAdvisorySeverityCountScenarios,
 	SecurityAdvisorySummaryScenarios,
+	SecurityAdvisoryTopScenarios,
+	SerialNumberScenarios,
 	SuccessPathScenarios,
-	FieldNoticeScenarios,
-	FieldNoticeBulletinScenarios,
-	HealthStatusScenarios,
-	PolicesScenarios,
-	DevicePolicesScenarios,
 	VulnerabilityScenarios,
-	UserScenarios,
 } from './';
 
 import { HttpHeaders } from '@angular/common/http';
@@ -38,31 +47,44 @@ import * as _ from 'lodash-es';
 import {
 	ACCResponse,
 	ACCUserInfoSchema,
+	AdvisoriesByLastUpdatedCount,
 	Assets,
 	ATXResponse,
 	CDCSearchResponse,
 	CommunitiesResponse,
 	CoverageCountsResponse,
 	CoverageResponse,
+	CriticalBugsCount,
+	CriticalBugsResponse,
+	CSDFResponseModel,
+	DeviceContractResponse,
 	ELearningResponse,
+	EntitledUser,
+	FieldNoticeAdvisoryResponse,
 	FieldNoticeBulletinResponse,
 	FieldNoticeResponse,
+	GroupTrainingEntitySchema,
+	FieldNoticeUpdatedResponse,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
+	IERegistrationResponseModel,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
+	SecurityAdvisoriesResponse,
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryImpactCountResponse,
 	SecurityAdvisoryResponse,
+	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
+	ServiceInfoResponse,
 	SuccessPathsResponse,
+	UserQuota,
+	UserTraining,
 	VulnerabilityResponse,
-	DeviceContractResponse,
 } from '@sdp-api';
-// } from '../';
 
 import { RMAResponse } from '@interfaces';
 
@@ -70,30 +92,45 @@ import { RMAResponse } from '@interfaces';
 type ResponseBody = (
 	ACCResponse |
 	ACCUserInfoSchema |
+	AdvisoriesByLastUpdatedCount |
 	Assets |
 	ATXResponse |
 	CDCSearchResponse |
 	CommunitiesResponse |
 	CoverageCountsResponse |
 	CoverageResponse |
+	CriticalBugsCount |
+	CriticalBugsResponse |
+	CSDFResponseModel |
+	DeviceContractResponse |
 	ELearningResponse |
+	EntitledUser |
+	FieldNoticeAdvisoryResponse |
 	FieldNoticeBulletinResponse |
 	FieldNoticeResponse |
+	GroupTrainingEntitySchema |
+	FieldNoticeUpdatedResponse |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
 	HardwareResponse |
+	IERegistrationResponseModel |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
+	SecurityAdvisoriesResponse |
 	SecurityAdvisoryBulletinResponse |
 	SecurityAdvisoryImpactCountResponse |
 	SecurityAdvisoryResponse |
+	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
+	ServiceInfoResponse |
 	SuccessPathsResponse |
+	UserQuota |
+	UserTraining |
 	VulnerabilityResponse |
-	DeviceContractResponse
+	VulnerabilityResponse
 );
 
 /**
@@ -140,34 +177,44 @@ export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
 		ACCUserInfoScenarios,
-		ATXScenarios,
 		ActionScenarios,
+		AdvisorySecurityAdvisoryScenarios,
 		AssetScenarios,
+		ATXScenarios,
 		CaseScenarios,
+		CGTScenarios,
 		ContractScenarios,
 		CoverageScenarios,
+		CreateRegistrationScenarios,
+		CriticalBugScenarios,
+		DNACStatusScenarios,
 		ELearningScenarios,
+		EntitlementScenarios,
+		FieldNoticeAdvisoryScenarios,
 		FieldNoticeBulletinScenarios,
+		FieldNoticeCountScenarios,
 		FieldNoticeScenarios,
 		HardwareEOLBulletinScenarios,
 		HardwareEOLCountScenarios,
 		HardwareEOLScenarios,
 		HardwareScenarios,
-		SerialNumberScenarios,
 		HealthStatusScenarios,
 		PolicesScenarios,
-		DevicePolicesScenarios,
+		DevicePoliciesScenarios,
 		NetworkScenarios,
-		RMAScenarios,
 		RacetrackScenarios,
+		RMAScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
+		SecurityAdvisoryLastUpdatedCountScenarios,
 		SecurityAdvisoryTopScenarios,
 		SecurityAdvisoryScenarios,
+		SecurityAdvisorySeverityCountScenarios,
 		SecurityAdvisorySummaryScenarios,
+		SecurityAdvisoryTopScenarios,
+		SerialNumberScenarios,
 		SuccessPathScenarios,
-		UserScenarios,
 		VulnerabilityScenarios,
 	]),
 };

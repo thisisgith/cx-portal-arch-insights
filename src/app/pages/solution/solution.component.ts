@@ -10,10 +10,11 @@ import {
 	Router,
 	Event as RouterEvent,
 	NavigationEnd,
+	ActivatedRoute,
 } from '@angular/router';
 
 import * as _ from 'lodash-es';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, of } from 'rxjs';
 import {
 	Asset,
 	ContractsService,
@@ -25,8 +26,10 @@ import {
 	ProductAlertsService,
 	VulnerabilityResponse,
 } from '@sdp-api';
+import { CaseService } from '@cui-x/services';
 import { SolutionService } from './solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
+import { catchError } from 'rxjs/operators';
 
 /**
  * Interface representing a facet
@@ -35,14 +38,12 @@ interface Facet {
 	data?: any;
 	key: string;
 	label?: string;
+	loading: boolean;
 	route: string;
 	selected?: boolean;
 	template: TemplateRef<{ }>;
 	title: string;
 }
-
-/** Current CustomerID Implementation */
-const customerId = '2431199';
 
 /**
  * Solution Page
@@ -53,10 +54,11 @@ const customerId = '2431199';
 })
 export class SolutionComponent implements OnInit, OnDestroy {
 
-	public shownTabs = 4;
+	public shownTabs = 5;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
+	private customerId: string;
 
 	public status = {
 		dropdowns: {
@@ -70,12 +72,15 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public selectedAsset: Asset;
 	private eventsSubscribe: Subscription;
 	public solutions: RacetrackSolution[];
+	public casesCount;
+	public RMACount;
 
 	@ViewChild('advisoriesFact', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
 	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
 	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
 	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
+	@ViewChild('insightsFacet', { static: true }) public insightsTemplate: TemplateRef<{ }>;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -84,16 +89,21 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private solutionService: SolutionService,
 		private racetrackService: RacetrackService,
 		private logger: LogService,
+		private caseService: CaseService,
+		private route: ActivatedRoute,
 	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+
 		this.eventsSubscribe = this.router.events.subscribe(
 			(event: RouterEvent): void => {
 				if (event instanceof NavigationEnd && event.url) {
-					const route = _.split(
+					const routePath = _.split(
 						(_.isArray(event.url) ? event.url[0] : event.url), '?')[0];
 
-					if (route.includes('solution')) {
-						this.activeRoute = route;
-						const routeFacet = _.find(this.facets, { route });
+					if (routePath.includes('solution')) {
+						this.activeRoute = routePath;
+						const routeFacet = this.getFacetFromRoute(this.activeRoute);
 						if (routeFacet) {
 							this.selectFacet(routeFacet);
 						}
@@ -116,8 +126,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	/**
 	 * Change the selected fact
 	 * @param facet the facet we've clicked on
+	 * @param navigate whether to adjust the route params
 	 */
-	public selectFacet (facet: Facet) {
+	public selectFacet (facet: Facet, navigate = false) {
 		if (facet) {
 			this.facets.forEach((f: Facet) => {
 				if (f !== facet) {
@@ -130,7 +141,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 			if (facet.route && this.activeRoute !== facet.route) {
 				this.activeRoute = facet.route;
-				this.router.navigate([facet.route]);
+				if (navigate) {
+					this.router.navigate([facet.route]);
+				}
 			}
 			if (this.selectedSolution) {
 				this.solutionService.sendCurrentSolution(this.selectedSolution);
@@ -150,6 +163,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			{
 				key: 'lifecycle',
 				label: I18n.get('_AdoptionProgress_'),
+				loading: false,
 				route: '/solution/lifecycle',
 				template: this.lifecycleTemplate,
 				title: I18n.get('_Lifecycle_'),
@@ -157,33 +171,46 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			{
 				key: 'assets',
 				label: I18n.get('_SupportCoverage_'),
+				loading: true,
 				route: '/solution/assets',
 				template: this.assetsTemplate,
 				title: I18n.get('_Assets&Coverage_'),
 			},
-			// {
-			// 	key: 'security',
-			// 	route: '/solution/security',
-			// 	template: this.securityTemplate,
-			// 	title: I18n.get('_Security_'),
-			// },
 			{
 				key: 'advisories',
+				loading: true,
 				route: '/solution/advisories',
 				template: this.advisoriesTemplate,
 				title: I18n.get('_Advisories_'),
 			},
 			{
 				key: 'resolution',
+				loading: false,
 				route: '/solution/resolution',
 				template: this.resolutionTemplate,
 				title: I18n.get('_ProblemResolution_'),
 			},
+			{
+				key: 'insights',
+				loading: false,
+				route: '/solution/insights',
+				template: this.insightsTemplate,
+				title: I18n.get('_Insights_'),
+			},
 		];
 
 		if (this.activeRoute) {
-			this.selectFacet(_.find(this.facets, { route: this.activeRoute }));
+			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
 		}
+	}
+
+	/**
+	 * Returns the selected facet based on the route
+	 * @param route the route string
+	 * @returns the facet
+	 */
+	private getFacetFromRoute (route: string) {
+		return _.find(this.facets, (facet: Facet) => route.includes(facet.route));
 	}
 
 	/**
@@ -215,7 +242,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	private fetchSolutions () {
 		this.status.loading = true;
-		this.racetrackService.getRacetrack({ customerId })
+		this.racetrackService.getRacetrack({ customerId: this.customerId })
 		.subscribe((results: RacetrackResponse) => {
 			this.solutions = results.solutions;
 			this.changeSolution(_.head(this.solutions));
@@ -232,12 +259,12 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Function used to fetch and build the assets & coverage facet
 	 */
 	private fetchCoverageCount () {
-		this.contractsService.getCoverageCounts({ customerId })
+		const assetsFacet = _.find(this.facets, { key: 'assets' });
+		assetsFacet.loading = true;
+		this.contractsService.getCoverageCounts({ customerId: this.customerId })
 		.subscribe((counts: CoverageCountsResponse) => {
 			const covered = _.get(counts, 'covered', 0);
 			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
-
-			const assetsFacet = _.find(this.facets, { key: 'assets' });
 
 			const percent = ((covered / total) * 100);
 			const gaugePercent = Math.floor(percent) || 0;
@@ -245,8 +272,11 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				gaugePercent,
 				gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
 			};
+
+			assetsFacet.loading = false;
 		},
 		err => {
+			assetsFacet.loading = false;
 			this.logger.error('solution.component : fetchCoverageCount() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 		});
@@ -256,7 +286,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Fetches the counts for the advisories chart
 	 */
 	private fetchAdvisoryCounts () {
-		this.productAlertsService.getVulnerabilityCounts({ customerId })
+		this.advisoriesFacet.loading = true;
+		this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
 		.subscribe((counts: VulnerabilityResponse) => {
 			this.advisoriesFacet.seriesData = [
 				{
@@ -272,10 +303,54 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					value: _.get(counts, 'bugs'),
 				},
 			];
+			this.advisoriesFacet.loading = false;
 		},
 		err => {
+			this.advisoriesFacet.loading = false;
 			this.logger.error('solution.component : fetchAdvisoryCounts() ' +
 			`:: Error : (${err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * Fetch Case/RMA counts for the given serial number
+	 * @returns Observable with array of case followed by RMA counts
+	 */
+	public getCaseAndRMACount () {
+		const params = {
+			nocache: Date.now(),
+			page: 0,
+			size: 1,
+			sort: 'caseNumber,ASC',
+			statusTypes: 'O',
+		};
+
+		return forkJoin(
+			// Case Count
+			this.caseService.read(params)
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Case Data :: Case Count :: Error ${err}`);
+					return of(null);
+				}),
+			),
+			// RMA count
+			this.caseService.read({
+				...params,
+				hasRMAs: 'T',
+			})
+			.pipe(
+				catchError(err => {
+					this.logger.error(`RMA Data :: RMA Count :: Error ${err}`);
+					this.casesCount = 0;
+					this.RMACount = 0;
+					return of(null);
+				}),
+			),
+		)
+		.subscribe(counts => {
+			this.casesCount = _.get(counts, [0, 'totalElements'], 0);
+			this.RMACount = _.get(counts, [1, 'totalElements'], 0);
 		});
 	}
 
@@ -287,6 +362,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.initializeFacets();
 		this.fetchCoverageCount();
 		this.fetchAdvisoryCounts();
+		this.getCaseAndRMACount();
 	}
 
 	/**

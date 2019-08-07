@@ -25,13 +25,19 @@ import {
 	RacetrackTechnology,
 	SuccessPath,
 	SuccessPathsResponse,
+	UserQuota,
+	UserTraining,
+	RacetrackResponse,
 } from '@sdp-api';
 
 import { SolutionService } from '../solution.service';
 import * as _ from 'lodash-es';
-import { Observable, of, forkJoin, Subscription } from 'rxjs';
+import * as moment from 'moment';
+import { Observable, of, forkJoin, Subscription, ReplaySubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { ActivatedRoute } from '@angular/router';
+import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 
 /**
@@ -65,6 +71,11 @@ interface ComponentData {
 	};
 	acc?: {
 		sessions: ACC[];
+	};
+	cgt?: {
+		trainingsAvailable: number;
+		sessions: string[];
+		dateAvailableThrough: string;
 	};
 }
 
@@ -113,19 +124,28 @@ export class LifecycleComponent implements OnDestroy {
 	public visibleContext: ATX[];
 	public atxScheduleCardOpened = false;
 	public sessionSelected: ATXSession;
-	public customerId = '2431199';
+	public customerId: string;
+	private user: User;
 	public selectedCategory = '';
 	public selectedStatus = '';
+	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public categoryOptions: [];
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
 
+	// Current uncompleted pitstop
+	public currentWorkingPitstop: string;
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
 	public view: 'list' | 'grid' = 'grid';
 	public productGuidesTable: CuiTableOptions;
+	public completedTrainingsList: UserTraining[] | { };
+	public successBytesTable: CuiTableOptions;
+	public cgtAvailable: number;
+	public trainingAvailableThrough: string;
+	private stage = new ReplaySubject<string>();
 
 	public statusOptions = [
 		{
@@ -162,6 +182,7 @@ export class LifecycleComponent implements OnDestroy {
 		loading: {
 			acc: false,
 			atx: false,
+			cgt: false,
 			elearning: false,
 			racetrack: false,
 			success: false,
@@ -184,6 +205,8 @@ export class LifecycleComponent implements OnDestroy {
 	private technologySubscribe: Subscription;
 
 	public selectAccComponent = false;
+	public selectCgtComponent = false;
+	public cgtRequestTrainingClicked = false;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -198,11 +221,15 @@ export class LifecycleComponent implements OnDestroy {
 		private contentService: RacetrackContentService,
 		private racetrackService: RacetrackService,
 		private solutionService: SolutionService,
+		private route: ActivatedRoute,
 	) {
+		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(this.user, ['info', 'customerId']);
+
 		this.solutionSubscribe = this.solutionService.getCurrentSolution()
 		.subscribe((solution: RacetrackSolution) => {
 			this.selectedSolution = solution;
-			this.componentData.params.solution = solution.name;
+			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
 		this.technologySubscribe = this.solutionService.getCurrentTechnology()
@@ -212,10 +239,11 @@ export class LifecycleComponent implements OnDestroy {
 
 			this.resetComponentData();
 
-			this.componentData.params.usecase = technology.name;
+			this.componentData.params.usecase = _.get(technology, 'name');
 			this.componentData.params.solution = currentSolution;
 
-			this.getRacetrackInfo();
+			this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
+			this.getRacetrackInfo(this.currentWorkingPitstop);
 		});
 	}
 
@@ -239,48 +267,46 @@ export class LifecycleComponent implements OnDestroy {
 	 * Will construct the assets table
 	 */
 	private buildTable () {
-		if (!this.productGuidesTable) {
-			this.productGuidesTable = new CuiTableOptions({
-				columns: [
-					{
-						key: 'title',
-						name: I18n.get('_Name_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sortKey: 'title',
-						value: 'title',
-						width: '40%',
-					},
-					{
-						key: 'archetype',
-						name: I18n.get('_Category_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sortKey: 'archetype',
-						value: 'archetype',
-						width: '20%',
-					},
-					{
-						name: I18n.get('_Format_'),
-						sortable: true,
-						sortDirection: 'asc',
-						sortKey: 'type',
-						template: this.formatTemplate,
-						width: '20%',
-					},
-					{
-						name: I18n.get('_Bookmark_'),
-						sortable: false,
-						template: this.bookmarkTemplate,
-						width: '20%',
-					},
-				],
-			});
-		}
+		this.successBytesTable = new CuiTableOptions({
+			columns: [
+				{
+					key: 'title',
+					name: I18n.get('_Name_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'title',
+					value: 'title',
+					width: '40%',
+				},
+				{
+					key: 'archetype',
+					name: I18n.get('_Category_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'archetype',
+					value: 'archetype',
+					width: '20%',
+				},
+				{
+					name: I18n.get('_Format_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'type',
+					template: this.formatTemplate,
+					width: '20%',
+				},
+				{
+					name: I18n.get('_Bookmark_'),
+					sortable: false,
+					template: this.bookmarkTemplate,
+					width: '20%',
+				},
+			],
+		});
 	}
 
 	/**
-	 * Sorting function for productGuides table
+	 * Sorting function for successBytes table
 	 * @param key the key to sort
 	 * @param sortDirection sortDiretion
 	 */
@@ -288,8 +314,8 @@ export class LifecycleComponent implements OnDestroy {
 		this.selectedSuccessPaths = _.orderBy(
 			this.selectedSuccessPaths, [key], [sortDirection]);
 
-		_.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
-			= _.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
+		_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
+			= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
 			=== 'asc' ? 'desc' : 'asc';
 	}
 
@@ -322,6 +348,34 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Select/deselect the CGTRequestForm component
+	 * @param selected whether the component is visible or not
+	 * @param totalTrainingsAvailable number of trainings available for the user
+	 * @param trainingAvailableThrough end date to complete trainings
+	 */
+	public selectCgtRequestForm (selected: boolean,
+		totalTrainingsAvailable: number, trainingAvailableThrough: string) {
+		if (selected) {
+			this.cgtAvailable = totalTrainingsAvailable;
+			this.trainingAvailableThrough = trainingAvailableThrough;
+		}
+		this.selectCgtComponent = selected;
+	}
+
+	/**
+	 * Trigger the submitted acc success text.  Currently placeholder and will be removed
+	 * because this info will come from the API
+	 * @param submitted if the request was submitted
+	 */
+	public cgtRequestSubmit (submitted: boolean) {
+		if (submitted) {
+			this.selectCgtComponent = false;
+			this.loadCGT()
+				.subscribe();
+		}
+	}
+
+	/**
 	 * Determines which modal to display
 	 * @param type the modal template to display
 	 */
@@ -338,7 +392,7 @@ export class LifecycleComponent implements OnDestroy {
 				context: { data: this.selectedACC },
 				visible: true,
 			};
-		} else if (type === '_ProductGuide_') {
+		} else if (type === '_SuccessBytes_') {
 			this.modal = {
 				content: this.successPathTemplate,
 				context: { data: this.selectedSuccessPaths },
@@ -462,7 +516,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type the item type
 	 */
 	public selectFilter (type: string) {
-		if (type === 'productguide') {
+		if (type === 'successBytes') {
 			this.selectedSuccessPaths =
 				_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
 			if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
@@ -544,15 +598,50 @@ export class LifecycleComponent implements OnDestroy {
 			if (results.isAccChanged) { source.push(this.loadACC()); }
 			if (results.isElearningChanged) { source.push(this.loadELearning()); }
 			if (results.isSuccessPathChanged) { source.push(this.loadSuccessPaths()); }
+			if (results.isCgtChanged) { source.push(this.loadCGT()); }
 			forkJoin(
 				source,
 			)
 			.subscribe();
+
+			if (this.componentData.racetrack.actionsCompPercent === '100%') {
+				this.completePitstop();
+			}
 		},
 		err => {
 			this.status.loading.racetrack = false;
 			this.logger.error(`lifecycle.component : completeAction() :: Error  : (${
 				err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * Get updated racetrack info once all pitstops actions are complete
+	 */
+	private completePitstop () {
+		const params: RacetrackService.GetRacetrackParams = {
+			customerId: this.customerId,
+		};
+
+		// The selected technologies currentPitstop parameter updates once all actions are complete
+		// refresh the racetrack info to get those new changes
+		this.racetrackService.getRacetrack(params)
+		.subscribe((results: RacetrackResponse) => {
+			const responseSolution: RacetrackSolution = _.find(
+				_.get(results, 'solutions', []), (solution: RacetrackSolution) =>
+				solution.name.toLowerCase() === this.selectedSolution.name.toLowerCase());
+
+			const responseTechnology: RacetrackTechnology = _.find(
+				_.get(responseSolution, 'technologies', []), (tech: RacetrackTechnology) =>
+				tech.name.toLowerCase() === this.selectedTechnology.name.toLowerCase());
+
+			if (responseTechnology) {
+				this.solutionService.sendCurrentTechnology(responseTechnology);
+			}
+		},
+		err => {
+			this.logger.error('lifecycle.component : completePitstop() ' +
+				`:: Error : (${err.status}) ${err.message}`);
 		});
 	}
 
@@ -595,7 +684,7 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackACC(
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
@@ -612,7 +701,6 @@ export class LifecycleComponent implements OnDestroy {
 					!session.title && !session.description);
 
 				this.selectedACC = this.componentData.acc.sessions;
-				this.buildTable();
 
 				this.status.loading.acc = false;
 				if (window.Cypress) {
@@ -644,7 +732,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.atxLoading = true;
 		}
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackATX(
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
@@ -684,7 +772,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.successPathsLoading = true;
 		}
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackSuccessPaths(
 			_.pick(this.componentData.params,
@@ -705,6 +793,7 @@ export class LifecycleComponent implements OnDestroy {
 						}));
 				}
 
+				this.buildTable();
 				this.status.loading.success = false;
 				if (window.Cypress) {
 					window.successPathsLoading = false;
@@ -735,7 +824,7 @@ export class LifecycleComponent implements OnDestroy {
 			window.elearningLoading = true;
 		}
 		// Temporarily not pick up optional query param suggestedAction
-		this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
+		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
@@ -799,6 +888,108 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Loads the CGT for the given params
+	 * @returns the UserQuota
+	 */
+	private loadCGT (): Observable<UserQuota[]> | Observable<void | { }> {
+		this.status.loading.cgt = true;
+		let startDate;
+		let endDate;
+		let trainingDuration;
+		let trainingLocation;
+		let trainingData;
+		let dateAvailable;
+		let completedTrainingData = [];
+
+		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
+			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+		return this.contentService.getTrainingQuotas()
+		.pipe(
+			map((result: UserQuota[]) => {
+				this.status.loading.cgt = false;
+				dateAvailable = _.get(_.head(result), 'end_date');
+				_.each(result, training => {
+					this.groupTrainingsAvailable += _.get(training, 'closed_ilt_courses_available');
+					if (new Date(_.get(training, 'end_date')) > new Date(dateAvailable)) {
+						dateAvailable = _.get(training, 'end_date');
+					}
+				});
+				this.contentService.getCompletedTrainings()
+					.pipe(
+						catchError(err => {
+							this.logger.error(`lifecycle.component : loadCGT() :
+							 getCompletedTrainings() :: Error : (${err.status}) ${err.message}`);
+
+							return of({ });
+						}),
+					)
+					.subscribe(response => {
+						this.completedTrainingsList = response;
+						_.each(this.completedTrainingsList, completedTraining => {
+							startDate = `${
+								monthNames[new Date(_.get(completedTraining, 'start_date'))
+								.getMonth()]
+							} ${new Date(_.get(completedTraining, 'start_date')).getUTCDate()}`;
+							startDate += _.isEqual(
+								new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(),
+								new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ?
+								'' : ` ${
+									new Date(_.get(completedTraining, 'start_date'))
+									.getUTCFullYear()
+								}`;
+							endDate = _.isEqual(
+								monthNames[new Date(_.get(completedTraining, 'start_date'))
+								.getMonth()],
+								monthNames[new Date(_.get(completedTraining, 'end_date'))
+								.getMonth()]) ? '' : `${
+									monthNames[new Date(_.get(completedTraining, 'end_date'))
+									.getMonth()]
+								} `;
+							endDate += new Date(_.get(completedTraining, 'end_date')).getUTCDate();
+							endDate += _.isEqual(
+								new Date(_.get(completedTraining, 'start_date')).getUTCFullYear(),
+								new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()) ?
+								`, ${
+									new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()
+								}` : ` ${
+									new Date(_.get(completedTraining, 'end_date')).getUTCFullYear()
+								}`;
+							trainingDuration = `${startDate}-${endDate}`;
+							trainingLocation = `with ${
+								_.get(completedTraining, 'instructors')
+							}, ${
+								_.get(completedTraining, 'city')
+							}, ${
+								_.get(completedTraining, 'country')
+							}`;
+							trainingData = {
+								trainingDuration,
+								trainingLocation,
+							};
+							completedTrainingData = _.union(completedTrainingData, [trainingData]);
+						});
+						this.componentData.cgt = {
+							dateAvailableThrough: moment(dateAvailable)
+								.format('MMM DD, YYYY'),
+							sessions: completedTrainingData,
+							trainingsAvailable: this.groupTrainingsAvailable,
+						};
+
+						return result;
+					});
+			}),
+			catchError(err => {
+				this.status.loading.cgt = false;
+				this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
+					err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
 	 * ForkJoin to load the other API Calls
 	 */
 	private loadRacetrackInfo () {
@@ -807,6 +998,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadATX(),
 			this.loadELearning(),
 			this.loadSuccessPaths(),
+			this.loadCGT(),
 		)
 		.subscribe();
 	}
@@ -814,12 +1006,11 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Fetches the racetrack info for the given params, if successful
 	 * will then call loadRacetrackInfo for the other api calls
+	 * @param stage selected pitstop
 	 */
-	private getRacetrackInfo () {
+	private getRacetrackInfo (stage: string) {
 		if (this.componentData.params.solution && this.componentData.params.usecase) {
 			this.status.loading.racetrack = true;
-
-			const stage = _.get(this.selectedTechnology, 'currentPitstop', 'Onboard');
 
 			const pitstop = _.find(
 				_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
@@ -846,12 +1037,21 @@ export class LifecycleComponent implements OnDestroy {
 			}
 
 			this.componentData.params.pitstop = stage;
+			this.stage.next(stage);
 			// UI not handling pagination for now, temporarily set to a large number
 			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
 
 			this.status.loading.racetrack = false;
 		}
+	}
+
+	/**
+	 * Returns the current pitStop
+	 * @returns the observable representing the customerId
+	 */
+	 public getCurrentPitstop (): Observable<string>  {
+		return this.stage.asObservable();
 	}
 
 	/**

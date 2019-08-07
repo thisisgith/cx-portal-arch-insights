@@ -1,0 +1,52 @@
+<div class="text-center">
+	<h1 [innerText]="'_ConnectDevicesToCXPortal_' | i18n"
+		class="xl-margin-bottom">
+	</h1>
+	<ng-container *ngIf="!clickedGuideLink">
+		<div class="dbl-margin-bottom">
+			<h4 [innerText]="'_DetectDNACFailureMsg_' | i18n"></h4>
+			<span class="text-large" [innerText]="'_CiscoDNACIsRequired_' | i18n"></span>
+		</div>
+		<div class="dbl-margin-bottom">
+			<div class="flex flex-wrap flex-center-horizontal half-margin-bottom">
+				<button
+					data-auto-id="go-home-btn"
+					class="btn btn--wide btn--secondary half-margin-right"
+					[innerText]="'_DNACNotSetup_' | i18n"
+					(click)="goHome()"
+				>
+				</button>
+				<button class="btn btn--wide btn--secondary half-margin-right"
+					data-auto-id="telemetry-btn"
+					[innerText]="'_DNACNoTelemetry_' | i18n"
+					(click)="clickedGuideLink = true"
+					>
+				</button>
+			</div>
+		</div>
+	</ng-container>
+	<ng-container *ngIf="clickedGuideLink">
+		<div class="dbl-margin-bottom">
+			<h4 [innerText]="'_ConfigureTelemetryOnDNAC_' | i18n"></h4>
+			<span class="text-large" [innerText]="'_ConfigureTelemetryOnDNACMsg_' | i18n"></span>
+		</div>
+		<div class="dbl-margin-bottom flex-center">
+			<span><img alt="Book Icon" src="assets/img/setup-ie/icons/book.svg"></span>
+			<a
+				class="base-margin-left"
+				[href]="telemetryGuideUrl"
+				[innerText]="'_DNACTelemetryGuideMsg_' | i18n"
+				target="__blank"
+			></a>
+		</div>
+		<button
+			data-auto-id="telemetry-configured-btn"
+			class="btn btn--secondary qtr-margin-right"
+			[innerText]="'_TelemetryIsNowConfigured_' | i18n | uppercase"
+			(click)="restartWizard()">
+		</button>
+		<span [innerText]="'_PressEnter_' | i18n"
+			class="text-large">
+		</span>
+	</ng-container>
+</div>

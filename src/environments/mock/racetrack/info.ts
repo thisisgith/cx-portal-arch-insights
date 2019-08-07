@@ -11,11 +11,16 @@ const customerId = '2431199';
  * @param solution the solution
  * @param usecase the use case
  * @param pitstop the pitstop
+ * @param mockFileName the name of the corresponding json file to pull mock data from
  * @returns the response
  */
 function MockRacetrack (
-	solution: string, usecase: string, pitstop?: string): RacetrackResponse {
+	solution: string, usecase: string, pitstop: string, mockFileName: string): RacetrackResponse {
 	const currentPitstop = pitstop;
+
+	if (mockFileName !== '') {
+		return require(`./infoMockData/${mockFileName}.json`);
+	}
 
 	return {
 		solutions: [
@@ -969,7 +974,7 @@ export const RacetrackScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(Racetrack) IBN-Assurance-Onboard',
 					response: {
-						body: MockRacetrack('ibn', 'assurance', 'Onboard'),
+						body: MockRacetrack('ibn', 'assurance', 'Onboard', ''),
 						status: 200,
 					},
 					selected: true,
@@ -978,10 +983,55 @@ export const RacetrackScenarios = [
 					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(Racetrack) IBN-Assurance-Implement',
 					response: {
-						body: MockRacetrack('ibn', 'assurance', 'Implement'),
+						body: MockRacetrack('ibn', 'assurance', 'Implement', ''),
 						status: 200,
 					},
 					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Use',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Use', ''),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Onboard-allManualCheckable',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allManualCheckable'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Onboard-allCompleted',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allCompleted'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Onboard-allNotManualCheckable',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allNotManualCheckable'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Onboard-allAutoCompleted',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allAutoCompleted'),
+						status: 200,
+					},
+					selected: true,
 				},
 			],
 		},

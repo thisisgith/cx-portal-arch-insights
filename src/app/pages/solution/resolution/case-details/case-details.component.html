@@ -1,17 +1,21 @@
 <div class="panel">
-	<cui-tabs inline="true" [activeTabIndex]="tabIndex">
+	<cui-tabs inline="true" [(activeTabIndex)]="tabIndex">
 		<cui-tab autoId="summaryTab" [label]="'_RMACaseSummary_' | i18n | uppercase">
 			<div class="divider no-margin-top"></div>
 			<cui-spinner *ngIf="loading"></cui-spinner>
-			<app-case-summary *ngIf="!loading" [caseDetails]="caseDetails"></app-case-summary>
+			<app-case-summary *ngIf="!loading && case" [caseDetails]="caseDetails"></app-case-summary>
 		</cui-tab>
-		<cui-tab autoId="notesTab" [label]="'_RMACaseNotes_'| i18n:(caseNotes?.length > 0 ? '(' +caseNotes?.length + ')' : '') | uppercase">
+		<cui-tab
+			autoId="notesTab" [label]="'_RMACaseNotes_'| i18n:(caseNotes?.length > 0 ? '(' +caseNotes?.length + ')' : '') | uppercase">
 			<div class="divider no-margin-top"></div>
 			<cui-spinner *ngIf="loading"></cui-spinner>
-			<app-case-notes *ngIf="!loading" [caseNotes]="caseNotes"></app-case-notes>
+			<app-case-notes *ngIf="!loading && case" [caseNotes]="caseNotes"></app-case-notes>
 		</cui-tab>
-		<cui-tab autoId="filesTab" [label]="'_RMACaseFiles_'| i18n | uppercase">
+
+		<cui-tab autoId="filesTab" [label]="'_RMACaseFiles_'| i18n:(!numberOfFiles ? '' : '(' + numberOfFiles + ')') | uppercase">
 			<div class="divider no-margin-top"></div>
+			<cui-spinner *ngIf="loading"></cui-spinner>
+			<app-case-files *ngIf="!loading && case" [case]="case" [caseFilesData]="caseFiles"></app-case-files>
 		</cui-tab>
 	</cui-tabs>
 </div>

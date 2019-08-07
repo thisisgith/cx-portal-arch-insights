@@ -5,7 +5,7 @@ import { InventoryModule, InventoryService } from '@sdp-api';
 import { APIxInterceptor } from './apix-interceptor';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from '@environment';
-import { RMAScenarios, HardwareScenarios } from '@mock';
+import { RMAScenarios, HardwareScenarios, user } from '@mock';
 import { AsyncSubject } from 'rxjs';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -17,10 +17,9 @@ describe('APIxIntercetptor', () => {
 		environment.rmaServicePaths.returns
 	}/rma_numbers/${testRmaNumber}`;
 
-	const customerId = '2431199';
 	const sdpUrl = `${
 		environment.sdpServiceOrigin
-	}/api/customerportal/inventory/v1/hardware?customerId=${customerId}`;
+	}/api/customerportal/inventory/v1/hardware?customerId=${user.info.customerId}`;
 	let apixService: APIxService;
 
 	beforeEach(() => {
@@ -82,7 +81,7 @@ describe('APIxIntercetptor', () => {
 			(inventoryService: InventoryService, httpMock: HttpTestingController) => {
 				const successfulResponse = HardwareScenarios[0].scenarios.GET[0].response.body;
 
-				inventoryService.getHardware({ customerId })
+				inventoryService.getHardware({ customerId: user.info.customerId })
 					.subscribe();
 
 				const req = httpMock.expectOne(sdpUrl);

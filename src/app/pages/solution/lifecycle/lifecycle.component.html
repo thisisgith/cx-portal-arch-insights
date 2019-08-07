@@ -26,6 +26,14 @@
 							data: componentData.learning
 						}">
 					</ng-container>
+					<ng-container *ngTemplateOutlet="panel; context: {
+						template: cgtPanel,
+						icon: 'communities',
+						title: '_CustomizedGroupTraining_',
+						loading: status.loading.cgt,
+						data: componentData.cgt
+					}">
+				</ng-container>
 				</div>
 				<div class="col-md-4">
 					<ng-container *ngTemplateOutlet="panel; context: {
@@ -58,18 +66,24 @@
 			<h3 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h3>
 		</div>
 		<div class="col-md-5 flex-center">
-			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert"></span>
+			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert" data-auto-id="CompletedActionsPercent"></span>
 			<span><img class="finishline qtr-margin-top" alt="'_FinishLine_' | i18n" src="assets/img/solutions/finishline_side.png"> </span>
 		</div>
 	</div>
 	<div class="half-padding-top half-padding-left">
-		<app-racetrack [stage]="componentData.racetrack.stage"></app-racetrack>
+		<app-racetrack [stage]="componentData.racetrack.stage"
+			[currentStage]="currentWorkingPitstop"
+			(onStageChange)="getRacetrackInfo($event)">
+		</app-racetrack>
 		<div class="half-padding-left">
 			<span *ngIf="currentPitstop" [innerHTML]="'_DuringXStage_' | i18n:currentPitstop.name"></span>
 			<span [ngSwitch]="componentData?.racetrack?.stage">
 				<span *ngSwitchCase="'onboard'" [innerHTML]="'_OnboardDescription_' | i18n"></span>
 				<span *ngSwitchCase="'implement'" [innerHTML]="'_ImplementDescription_' | i18n"></span>
 				<span *ngSwitchCase="'adopt'" [innerHTML]="'_AdoptDescription_' | i18n"></span>
+				<span *ngSwitchCase="'engage'" [innerHTML]="'_EngageDescription_' | i18n"></span>
+				<span *ngSwitchCase="'use'" [innerHTML]="'_UseDescription_' | i18n"></span>
+				<span *ngSwitchCase="'optimize'" [innerHTML]="'_OptimizeDescription_' | i18n"></span>
 			</span>
 		</div>
 	</div>
@@ -80,19 +94,19 @@
 			<span class="text-uppercase" [innerText]="'_MyCheckList_' | i18n"></span>
 		</div>
 		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
-		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select">
+		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
 				<div class="col-md-2">
-					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete}">
+					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name}" data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.action.isComplete"
 							(change)="completeAction(action.action)" [checked]="action.action.isComplete">
-						<span class="checkbox__input"></span>
+						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"></span>
 					</label>
 				</div>
 				<div class="col-md-10">
 					<a data-auto-id="actionlink"
 						class="no-link"
-						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
+						[ngClass]="{'disabled': action?.action?.isComplete || currentWorkingPitstop !== currentPitstop.name, 'selected': action?.selected}"
 						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
 						<div>
@@ -100,7 +114,7 @@
 								[innerText]="action?.action?.name">
 							</span>
 							<span *ngIf="action.action.isCompleteAuto" class="qtr-padding-top">
-								<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png">
+								<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png" data-auto-id="pitstopCheckboxAutoIcon">
 							</span>
 						</div>
 					</a>
@@ -222,7 +236,7 @@
 				<h5 [innerText]="data.title"></h5>
 			</div>
 			<div class="col-md-1">
-				<a class="no-link fade-in-pop closebtn"
+				<a class="no-link closebtn"
 					(click)="this.atxScheduleCardOpened = false"
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
@@ -234,7 +248,7 @@
 		</div>
 		<div class="half-margin-top base-margin-left base-margin-bottom text-left">
 			<a data-auto-id="viewOnDemand"
-				class="no-link fade-in-pop"
+				class="no-link"
 				[href]="data.viewOnDemandUrl">
 				<div class="flex">
 					<div class="btn--square">
@@ -291,7 +305,7 @@
 				title: data.sessions[0].title,
 				description: data.sessions[0].description,
 				item: data.sessions[0],
-				src: 'assets/img/solutions/acc.png',
+				src: data.sessions[0].url,
 				autoid: 'recommendedACC'
 			}">
 		</ng-container>
@@ -343,7 +357,7 @@
 
 	<div *ngIf="data.success?.length" data-auto-id="LearnPanel-SuccessPathsBlock">
 		<ng-container *ngTemplateOutlet="successBlock; context:
-				{ icon: 'transit',title: '_ProductGuide_', data: componentData.learning.success }">
+				{ icon: 'transit',title: '_SuccessBytes_', data: componentData.learning.success }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
@@ -370,7 +384,7 @@
 		</div>
 		<div class="col-md-3 text-right text-indigo"
 			*ngIf="data">
-			<a class="no-link fade-in-pop"
+			<a class="no-link"
 				target="_blank"
 				attr.data-auto-id="{{ title }}-ViewAll"
 				href="https://pilot-digital-learning.cisco.com/cx#/"
@@ -383,7 +397,7 @@
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<div id="recommended-elearning-item" class=" panel small-panel">
-				<a class="no-link fade-in-pop" target="_blank" [href]="item.url">
+				<a class="no-link" target="_blank" [href]="item.url">
 					<span class="text-blue" [innerText]="item.title"></span>
 				</a>
 				<ng-container *ngTemplateOutlet="recommendedDescription; context: {
@@ -412,7 +426,7 @@
 			<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
 		</div>
 	</div>
-	<div class="text-muted" [innerText]="'_ProductGuideSubtitle_' | i18n"></div>
+	<div class="text-muted" [innerText]="'_SuccessBytesSubtitle_' | i18n"></div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
@@ -451,13 +465,13 @@
 					<div class="card__footer">
 						<div class="card_footer_item">
 							<div class="text-left">
-								<a data-auto-id="viewOnDemand" class="no-link fade-in-pop" [href]="item.viewOnDemandUrl">
+								<a data-auto-id="viewOnDemand" class="no-link" [href]="item.viewOnDemandUrl">
 									<span class="icon-play-contained icon-small half-padding-right"></span>
 									<span [innerText]="'_WatchNow_' | i18n"></span>
 								</a>
 							</div>
 							<div class="text-left">
-								<a data-auto-id="recommendedATXScheduleButton" class="no-link fade-in-pop"
+								<a data-auto-id="recommendedATXScheduleButton" class="no-link"
 									(click)="atxScheduleCardOpened = true; componentData.atx.interested = item">
 									<span class="icon-calendar icon-small half-padding-right"></span>
 									<span [innerText]="'_ViewSessions_' | i18n"></span>
@@ -573,8 +587,8 @@
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top">
 				<div class="col-md-11 half-margin-top base-padding-left">
-					<div class="text-xlarge text-left text-uppercase" [innerText]="'_ProductGuide_' | i18n"></div>
-					<div class="text-medium text-left qtr-margin-top" [innerText]="'_ProductGuideHowto_' | i18n"></div>
+					<div class="text-xlarge text-left text-uppercase" [innerText]="'_SuccessBytes_' | i18n"></div>
+					<div class="text-medium text-left qtr-margin-top" [innerText]="'_SuccessBytesSubtitle_' | i18n"></div>
 				</div>
 				<div class="col-md-1 half-margin-top">
 					<span (click)="closeModal()" data-auto-id="SuccessPathCloseModal"
@@ -595,19 +609,19 @@
 						[empty]="true"
 						[placeholder]="'_AllCategories_' | i18n"
 						[(ngModel)]="selectedCategory"
-						(ngModelChange)="selectFilter('productguide')">
+						(ngModelChange)="selectFilter('successBytes')">
 					</cui-select>
 				</div>
 				<div class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
 					<button class="btn btn--small btn--gray-ghost"
-						data-auto-id="list-view-btn"
+						data-auto-id="table-view-btn"
 						[ngClass]="{'selected': view ==='list' }"
 						(click)="selectView('list')">
 						<span class="icon-list-view"></span>
 					</button>
 					<button class="btn btn--small btn--gray-ghost"
-						data-auto-id="list-view-btn"
+						data-auto-id="card-view-btn"
 						[ngClass]="{'selected': view === 'grid' }"
 						(click)="selectView('grid')">
 						<span class="icon-grid-view"></span>
@@ -615,13 +629,13 @@
 					</div>
 				</div>
 			</div>
-			<ng-container *ngTemplateOutlet="cardProductGuides"></ng-container>
-			<ng-container *ngTemplateOutlet="listProductGuides"></ng-container>
+			<ng-container *ngTemplateOutlet="cardSuccessBytes"></ng-container>
+			<ng-container *ngTemplateOutlet="listSuccessBytes"></ng-container>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #cardProductGuides>
+<ng-template #cardSuccessBytes>
 	<div class="grid grid--4up base-padding-top" *ngIf="(!view || view == 'grid')">
 		<div class="card acc__card" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
 			<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
@@ -630,7 +644,7 @@
 				<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 					<div class="row">
 						<div class="col-md-3">
-							<a class="no-link fade-in-pop" data-auto-id="successlinl" target="_blank" [href]="item.url">
+							<a class="no-link" data-auto-id="successlink" target="_blank" [href]="item.url">
 								<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
 									<span class="icon-apps icon-small half-padding-right"></span>
 									<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
@@ -656,17 +670,17 @@
 	</div>
 </ng-template>
 
-<ng-template #listProductGuides>
-	<div class="table-responsive" *ngIf="selectedSuccessPaths && view == 'list'">
+<ng-template #listSuccessBytes>
+	<div class="table-responsive" *ngIf="selectedSuccessPaths && view == 'list'" data-auto-id="SuccessPathsTable">
 		<table class="table table--nostripes table--wrap table--hover table--loose">
 			<tr class="th-row">
-				<th *ngFor="let column of productGuidesTable.columns" 
-					data-auto-id="productGuidesTable-column"
+				<th *ngFor="let column of successBytesTable.columns"
+					attr.data-auto-id="successBytesTable-columnHeader-{{ column.name }}"
 					[ngClass]="{ 'sortable': column.sortable }"
-					(click)="onSort(column.sortKey, column.sortDirection)">
+					(click)="column.sortable ? onSort(column.sortKey, column.sortDirection) : null">
 					<span [innerText]="column.name"></span>
-					<span *ngIf="column.sortable" 
-						class="qtr-margin-left" 
+					<span *ngIf="column.sortable"
+						class="qtr-margin-left"
 						[ngClass]="{
 							'icon-chevron-down': column.sortDirection === 'asc',
 							'icon-chevron-up': column.sortDirection === 'desc'
@@ -675,12 +689,12 @@
 				</th>
 			</tr>
 			<tr class="td-row" *ngFor="let item of selectedSuccessPaths">
-				<td class="text-left" *ngFor="let column of productGuidesTable.columns" [ngStyle]="{ 'width': column.width }">
+				<td class="text-left" *ngFor="let column of successBytesTable.columns" [ngStyle]="{ 'width': column.width }">
 					<ng-container *ngIf="column.template">
 						<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }"></ng-container>
 					</ng-container>
 					<ng-container *ngIf="!column.template">
-						<div [innerText]="item[column.key]"></div>
+						<div [innerText]="item[column.key]" attr.data-auto-id="SuccessPathsTable-{{ column.name }}-rowValue"></div>
 					</ng-container>
 				</td>
 			</tr>
@@ -732,13 +746,67 @@
 	</div>
 </ng-template>
 
-<ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel">
+<ng-template #cgtRequestTraining let-data="data">
+	<div class="panel cgtpanel--open panel--bordered"
+		*ngIf="cgtRequestTrainingClicked">
+		<div class="row base-margin-top half-margin-left half-margin-right">
+			<div class="col-md-11 text-left">
+				<div class="half-margin-left" [innerText]="data | i18n"></div>
+			</div>
+			<div class="col-md-1">
+				<a class="no-link fade-in-pop closebtn"
+					(click)="this.cgtRequestTrainingClicked = false"
+					attr.data-auto-id="Close-CgtTrainingComplete-Popup">
+					<span class="icon-close icon-small"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #cgtPanel let-data="data">
+	<div class="base-margin-bottom text-dkgray-4" [innerText]="'_CGTDescription_' | i18n"></div>
+	<div class="text-left" *ngIf="data.trainingsAvailable===0">
+		<button (click)="this.cgtRequestTrainingClicked = true"
+			[ngClass]="this.cgtRequestTrainingClicked ? 'btn btn--small btn--gray-ghost disabled text-uppercase' : 'btn btn--small btn--secondary text-uppercase'"
+			[innerText]="'_RequestTraining_' | i18n"
+			attr.data-auto-id="Request-CgtCompleted">
+		</button>
+		<ng-container *ngTemplateOutlet="cgtRequestTraining; context: { data:  '_CGTSessionLimitReached_' }"></ng-container>
+	</div>
+	<div class="text-left" *ngIf="data.trainingsAvailable>0">
+		<button (click)="selectCgtRequestForm(true, data.trainingsAvailable, data.dateAvailableThrough)"
+			class="btn btn--small btn--secondary text-uppercase"
+			[innerText]="'_RequestTraining_' | i18n"
+			attr.data-auto-id="Request-CgtTraining">
+		</button>
+	</div>
+	<div *ngIf="data.sessions.length>0">
+		<div class="divider"></div>
+		<div class="base-padding-bottom">
+			<div class="qtr-padding-bottom" *ngFor="let item of data.sessions | slice:0:2">
+				<div class="panel small-panel">
+					<div class="row">
+						<div class="col-md-11 qtr-padding-bottom">
+							<div class="text-dkgray-1 text-med" [innerText]="item.trainingDuration"></div>
+							<div class="text-dkgray-4 text-samll" [innerText]="item.trainingLocation"></div>
+						</div>
+						<div class="col-md-1 text-success icon-certified icon-small qtr-padding-left"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel" let-icon="icon">
 	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom" attr.data-auto-id="{{ title | i18n }} Panel" *ngIf="viewAll!=='acc' || data?.sessions?.length>0">
 		<div class="row half-padding-bottom">
-			<div class="col-md-6 flex-center-vertical">
+			<div class="col-md-9 flex-center-vertical">
+				<span class="icon-{{ icon }} icon-small qtr-padding-right qtr-padding-bottom" *ngIf="icon"></span>
 				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
 			</div>
-			<div class="col-md-6 text-right toggle" *ngIf="viewAll">
+			<div class="col-md-3 text-right toggle" *ngIf="viewAll">
 				<div *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">
@@ -772,7 +840,7 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div *ngIf="celldata.type">
-				<a class="no-link fade-in-pop" data-auto-id="successlinl" target="_blank" [href]="celldata.url">
+				<a class="no-link" target="_blank" [href]="celldata.url" data-auto-id="SuccessPathsTable-Format-rowValue-link">
 					<div class="text-left text-muted" *ngIf="celldata.type === 'Web Page'">
 						<span class="icon-apps icon-small half-padding-right"></span>
 						<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
@@ -806,3 +874,14 @@
 		<span class="half-margin-left" [innerText]="'_Completed_' | i18n"></span>
 	</div>
 </ng-template>
+
+<ng-container *ngIf="selectCgtComponent">
+	<cgt-request-form (visibleComponent)="selectCgtRequestForm($event)"
+		[totalTrainingsAvailable]="cgtAvailable"
+		[trainingAvailableThrough]="trainingAvailableThrough"
+		[solution]="selectedSolution.name"
+		[technology]="selectedTechnology.name"
+		[pitstop]="currentPitstop.name"
+		(submitted)="cgtRequestSubmit($event)">
+	</cgt-request-form>
+</ng-container>

@@ -1,22 +1,14 @@
-<!-- App Details 360 slide-out -->
-<!-- <app-panel360 *ngIf="selectedAsset"
-	[hidden]="!selectedAsset"
-	[fullscreen]="fullscreen"> -->
-	<!-- <app-panel360-header (close)="onPanelClose()"
-		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false"> -->
-		<!-- <details-header [asset]="selectedAsset"></details-header> -->
-		<!-- <div appPanel360Title class="text-xlarge">
-			<span class="icon-wifi"></span>
-			<span class="qtr-margin-left" [innerText]="selectedAsset?.deviceName"></span>
-		</div> -->
-	<!-- </app-panel360-header> -->
-	<!-- <asset-details [asset]="selectedAsset"></asset-details> -->
-<!-- </app-panel360> -->
+<advisory-details *ngIf="selectedAdvisory"
+	[advisoryId]="selectedAdvisory.id"
+	[advisory]="selectedAdvisory.advisory"
+	[type]="selectedAdvisory.type"
+	(close)="onPanelClose()">
+</advisory-details>
 
 <div class="panel">
 	<cui-tabs inline="true"
 		*ngIf="tabs.length"
+		[activeTabIndex]="activeIndex"
 		(activeTabIndexChange)="selectTab($event)">
 
 		<cui-tab *ngFor="let tab of tabs"
@@ -86,13 +78,14 @@
 		<div class="col-md-9 flex flex-fill">
 			<div class="flex-center-vertical">
 				<span [innerText]="tab.label" class="text-large"></span>
-				<span *ngIf="tab.pagination" [innerText]="'_ShowingXofYZ_' | i18n:tab.pagination.countStr:tab.pagination.total:(tab.label | lowercase)"
+				<span *ngIf="tab?.pagination && tab.pagination.total > 0" [innerText]="'_ShowingXofYZ_' | i18n:tab.pagination.countStr:tab.pagination.total:(tab.label | lowercase)"
 					class="qtr-margin-left text-small text-muted"
 					attr.data-auto-id="Showing-{{ tab.label }}-Count">
 				</span>
 			</div>
 		</div>
-		<div class="col-md-3">
+		<!-- TODO: Implement Search when API Supports it-->
+		<!-- <div class="col-md-3">
 			<div class="flex flex-fluid">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
@@ -113,7 +106,7 @@
 					</form>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </ng-template>
 
@@ -123,15 +116,13 @@
 			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
 		</div>
 		<div class="col-md-10">
-			<ng-container *ngFor="let filter of selectedFilters">
-				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
-					<span class="label label--dkgray text-large"
-						(click)="onSubfilterSelect(subfilter.filter, filter)"
-						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
-						<span [innerText]="subfilter.label"></span>
-						<span class="icon-close"></span>
-					</span>
-				</ng-container>
+			<ng-container *ngFor="let subfilter of selectedSubfilters">
+				<span class="label label--dkgray text-large"
+					(click)="onSubfilterSelect(subfilter.filter, filter)"
+					attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
+					<span [innerText]="subfilter.label"></span>
+					<span class="icon-close"></span>
+				</span>
 			</ng-container>
 		</div>
 		<div class="col-md-1 text-center text-right">
@@ -146,9 +137,13 @@
 
 <ng-template #content let-tab="tab">
 	<div *ngIf="!tab.disabled">
-		<cui-table *ngIf="tab.data.length" [options]="tab.options" [data]="tab.data"></cui-table>
-		<cui-pager 
-			*ngIf="tab.data.length && tab.pagination"
+		<cui-table *ngIf="tab?.data?.length && tab?.options"
+			[options]="tab.options"
+			[data]="tab.data"
+			(onTableRowClicked)="onRowSelect($event)">
+		</cui-table>
+		<cui-pager
+			*ngIf="tab.data.length && tab?.pagination?.total > 0"
 			class="base-padding"
 			[page]="tab.pagination.page - 1"
 			[limit]="tab.pagination.rows"
@@ -156,8 +151,8 @@
 			(onPageChanged)="onPageChanged($event, tab)">
 		</cui-pager>
 	</div>
-	<div *ngIf="tab.loading">
-			<cui-spinner></cui-spinner>
+	<div *ngIf="tab.loading" class="base-margin-top">
+		<cui-spinner></cui-spinner>
 	</div>
 	<div *ngIf="!tab.data.length && !tab.loading">
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
@@ -188,15 +183,17 @@
 </ng-template>
 
 <ng-template #pieChartFilter let-filter="filter">
-	<assets-pie-chart [seriesData]="filter.seriesData"
+	<pie-chart *ngIf="filter?.seriesData?.length"
+		[seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
-	</assets-pie-chart>
+	</pie-chart>
 </ng-template>
 
-<ng-template #verticalBarChartFilter let-filter="filter">
-	<advisories-bar-chart [seriesData]="filter.seriesData"
+<ng-template #columnChartFilter let-filter="filter">
+	<column-chart *ngIf="filter?.seriesData?.length"
+		[seriesData]="filter.seriesData"
 		(subfilter)="onSubfilterSelect($event, filter)">
-	</advisories-bar-chart>
+	</column-chart>
 </ng-template>
 
 <!-- Templates for Security Advisories Content-->
@@ -205,20 +202,19 @@
 		<span
 			class="label label--circle label--tiny qtr-margin-right"
 			[ngClass]="{
-				'label--indigo': celldata.severity == 'Info',
-				'label--success': celldata.severity == 'Low',
-				'label--warning': celldata.severity == 'Medium',
-				'label--warning-alt': celldata.severity == 'High',
-				'label--danger': celldata.severity == 'Critical'
-			}"
-		></span>
-		<span [innerText]="celldata?.severity"></span>
+				'Critical': 'label--danger',
+				'High': 'label--warning',
+				'Medium': 'label--warning-alt',
+				'Low': 'label--success',
+				'Info': 'label--indigo'
+			}[celldata?.severity]">
+		</span>
+		<span [innerText]="celldata?.severity || ('_NA_' | i18n)"></span>
 	</div>
 </ng-template>
 
 <ng-template #impactedCountTemplate let-celldata="celldata">
 	<div class="flex flex-fill flex-center">
-		<span [innerText]="celldata?.impactedEntityCount">
-		</span>
+		<span innerText="{{ celldata?.assetsImpacted || 0 }} {{ (celldata?.assetsPotentiallyImpacted || 0) > 0 ? '(+' + celldata.assetsPotentiallyImpacted + ')' : '' }}"></span>
 	</div>
 </ng-template>

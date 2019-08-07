@@ -1,12 +1,12 @@
 /* tslint:disable */
 export interface AtxFuture {
-  "TKL Session Staff"?: string;
   "Attendee Link"?: string;
+  Date?: string;
   "Panelist Link"?: string;
   "Pit Stop"?: string;
   "Session Description"?: string;
   "Session Name"?: string;
-  Date?: string;
+  "TKL Session Staff"?: string;
   "Technology Area"?: string;
   "Use Case"?: string;
   createdDate?: string;

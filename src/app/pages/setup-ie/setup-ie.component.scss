@@ -1,0 +1,9 @@
+:host {
+	.slide-container {
+		height: calc(100vh - 115px);
+		left: 300px;
+		overflow: auto;
+		position: relative;
+		width: calc(100vw - 300px);
+	}
+}

@@ -1,0 +1,126 @@
+<div class="modal__header">
+	<a class="modal__close"
+		(click)="close()"
+		data-auto-id="CaseOpenClose">
+		<span class="icon-close icon--mid"></span>
+	</a>
+</div>
+
+<!-- Submit Case form -->
+<div class="body">
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<ng-container *ngIf="!submitted; else submittedTemplate">
+				<ng-container *ngIf="!submitting; else submittingTemplate">
+					<h2 class="dbl-margin-bottom" [innerText]="'_OpenACase_' | i18n"></h2>
+					<form [formGroup]="caseForm">
+						<dl class="base-margin-bottom">
+							<dt class="base-margin-bottom" [innerText]="'_CaseInitiatedFrom_' | i18n:typeTitle"></dt>
+							<dt [innerText]="'_AssetAssociated_' | i18n"></dt>
+							<dd>
+								<div><span [innerText]="allAssets[0]?.serialNumber"></span></div>
+								<div><span [innerText]="allAssets[0]?.productId"></span></div>
+								<div><span [innerText]="allAssets[0]?.deviceName"></span></div>
+							</dd>
+							<dt [innerText]="'_CaseTitle_' | i18n"></dt>
+							<dd>
+								<div class="form-group">
+									<div class="form-group__text">
+										<input type="text" formControlName="title" [maxlength]="titleMaxLength"/>
+									</div>
+									<div char-count
+										[value]="caseForm.controls.title.value.length"
+										[max]="titleMaxLength"
+										displayAt="60">
+									</div>
+								</div>
+							</dd>
+							<dt [innerText]="'_DescribeTheProblem_' | i18n"></dt>
+							<dd>
+								<div class="form-group">
+									<div class="form-group__text">
+										<textarea class="textarea" rows="5" formControlName="description" [maxlength]="descriptionMaxLength"></textarea>
+									</div>
+									<div char-count
+										[value]="caseForm.controls.description.value.length"
+										[max]="descriptionMaxLength"
+										displayAt="31000">
+									</div>
+								</div>
+							</dd>
+						</dl>
+						<app-collapsible [text]="'_ViewPreselected_' | i18n">
+							<dl>
+								<dt [innerText]="'_Severity_' | i18n"></dt>
+								<dd [innerText]="caseForm.controls.severity.value + ': ' + severityName"></dd>
+							</dl>
+						</app-collapsible>
+						<!-- TODO: in the future we want to pre-fill tech/subtech/problem area based on the
+						information coming from the advisory. For now, we don't know where to get that information
+						so basically duplicating the selects from the case open assets modal -->
+						<dt [innerText]="'_Technology_' | i18n"></dt>
+						<dd>
+							<cui-select *ngIf="!loadingTech; else loadingTemplate;"
+								[items]="techOptions"
+								optionsKey="techName"
+								optionsValue="_id"
+								formControlName="technology">
+							</cui-select>
+						</dd>
+						<dt [innerText]="'_SubTech_' | i18n"></dt>
+						<dd>
+							<cui-select *ngIf="!loadingSubtech; else loadingTemplate;"
+								[items]="subtechOptions"
+								optionsKey="subTechName"
+								modelAsObject="true"
+								formControlName="subtech">
+							</cui-select>
+						</dd>
+						<dt [innerText]="'_ProblemArea_' | i18n"></dt>
+						<dd>
+							<cui-select *ngIf="!loadingProblemAreas; else loadingTemplate;"
+								[items]="problemAreaOptions"
+								[groupNames]="problemGroups"
+								optionsKey="problemCodeName"
+								modelAsObject="true"
+								formControlName="problemArea">
+							</cui-select>
+						</dd>
+					</form>
+
+					<button class="btn btn--primary btn--small half-margin-right"
+						data-auto-id="CaseOpenSubmitButton"
+						[ngClass]="{ 'disabled': caseForm.invalid }"
+						type="button"
+						[innerText]="'_Submit_' | i18n"
+						(click)="submit()">
+					</button>
+					<button class="btn btn--secondary btn--small"
+						data-auto-id="CaseOpenCancelButton"
+						type="button"
+						[innerText]="'_Cancel_' | i18n"
+						(click)="close()">
+					</button>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+</div>
+
+<ng-template #submittingTemplate>
+	<cui-spinner color="default" [label]="'_OpeningCase_' | i18n"></cui-spinner>
+</ng-template>
+
+<!-- Page that displays after a case submit success/fail -->
+<ng-template #submittedTemplate>
+	<app-case-submitted [errors]="errors"
+		[asset]="allAssets[0]"
+		[caseData]="caseOpenData">
+	</app-case-submitted>
+</ng-template>
+
+<ng-template #loadingTemplate>
+	<cui-loader color="muted"></cui-loader>
+</ng-template>

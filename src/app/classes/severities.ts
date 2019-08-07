@@ -11,12 +11,12 @@ export const severityMap = {
 	},
 	INFO: {
 		class: 'info',
-		color: '#017cad',
+		color: '#64bbe3',
 		title: I18n.get('_Info_'),
 	},
 	SUCCESS: {
 		class: 'success',
-		color: '#6ebe4a',
+		color: '#6cc04a',
 		title: I18n.get('_Success_'),
 	},
 	WARNING: {

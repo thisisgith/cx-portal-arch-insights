@@ -1,7 +1,19 @@
 import RacetrackHelper from '../support/racetrackHelper';
+import MockService from '../support/mockService';
 
 let racetrackHelper;
 let trackPoints;
+
+const infoMock = new MockService('RacetrackScenarios');
+const infoOnboardScenario = infoMock.getScenario('GET', '(Racetrack) IBN-Assurance-Onboard');
+const infoItems = infoOnboardScenario.response.body.solutions[0];
+// Abbrevieating Campus Network Assurance to CNA
+const CNATech = Cypress._.find(infoItems.technologies, tech => tech.name === 'Campus Network Assurance');
+const CNAPitstopActions = Cypress._.find(
+	CNATech.pitstops, pitstop => pitstop.name === CNATech.currentPitstop
+).pitstopActions;
+
+const actionMock = new MockService('ActionScenarios');
 
 describe('Racetrack Content', () => {
 	before(() => {
@@ -102,6 +114,217 @@ describe('Racetrack Content', () => {
 					expect(progressStrokeDasharray).eq(expectedStrokeDasharray);
 				});
 			});
+		});
+	});
+
+	describe('PBC-123: Lifecycle: Pitstop Action checkbox', () => {
+		const allCheckableScenario = infoMock.getScenario('GET', '(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
+		const allCheckableSolutions = allCheckableScenario.response.body.solutions[0];
+		const allCheckableTech = Cypress._.find(allCheckableSolutions.technologies, tech => tech.name === 'Campus Network Assurance');
+		const allCheckableActions = Cypress._.find(
+			allCheckableTech.pitstops, pitstop => pitstop.name === allCheckableTech.currentPitstop
+		).pitstopActions;
+
+		beforeEach(() => {
+			// Setup our own mock so we can intercept PATCH calls for checking items
+			cy.server();
+			cy.route({
+				method: 'PATCH',
+				url: '**/api/customerportal/pitstop/v1/action/status?*',
+				status: 200,
+				response: {
+					isAccChanged: false,
+					isAtxChanged: false,
+					isCommunitiesChanged: false,
+					isElearningChanged: false,
+					isSuccessPathChanged: false,
+				},
+			}).as('patchActionStatus');
+			actionMock.disable('Update to complete the first Action');
+		});
+
+		afterEach(() => {
+			// To uncheck items, we have to nuke the mock and refresh the page completely...
+			cy.clearLocalStorage('MockDB');
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('Checking a pitstop action should call SDP API', () => {
+			// Switch mocks and refresh the page
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			allCheckableActions.forEach((action, index) => {
+				cy.getByAutoId('pitstopCheckboxSpan')
+					.eq(index)
+					.click();
+				cy.wait('@patchActionStatus');
+			});
+		});
+
+		it('SDP API responses for checked item should control data refreshes', () => {
+			// Switch mocks and refresh the checkboxes
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			// Set up mocks for patch and all Lifecycle GETs
+			cy.route({
+				method: 'PATCH',
+				url: '**/api/customerportal/pitstop/v1/action/status?*',
+				status: 200,
+				response: {
+					isAccChanged: true,
+					isAtxChanged: true,
+					isCommunitiesChanged: true,
+					isElearningChanged: true,
+					isSuccessPathChanged: true,
+				},
+			}).as('patchActionStatus');
+			cy.route({
+				method: 'GET',
+				url: '**/api/customerportal/racetrack/v1/acc*',
+			}).as('getACC');
+			cy.route({
+				method: 'GET',
+				url: '**/api/customerportal/racetrack/v1/atx*',
+			}).as('getATX');
+			// cy.route({
+			// 	method: 'GET',
+			// 	url: '**/api/customerportal/racetrack/v1/communities*',
+			// }).as('getCommunities');	// TODO: There is no communities API yet
+			cy.route({
+				method: 'GET',
+				url: '**/api/customerportal/racetrack/v1/elearning*',
+			}).as('getELearning');
+			cy.route({
+				method: 'GET',
+				url: '**/api/customerportal/racetrack/v1/successPaths*',
+			}).as('getSuccessPaths');
+			infoMock.disable('(ACC) IBN-Campus Network Assurance-Onboard');
+			infoMock.disable('(ATX) IBN-Campus Network Assurance-Onboard');
+			// infoMock.disable('COMMUNITIES API MOCK');	// TODO: There is no communities API yet
+			infoMock.disable('(E-Learning) IBN-Campus Network Assurance-Onboard');
+			infoMock.disable('(SP) IBN-Campus Network Assurance-Onboard');
+
+			// Click a checkbox and wait for the PATCH call to complete
+			cy.getByAutoId('pitstopCheckboxSpan')
+				.first()
+				.click();
+			cy.wait('@patchActionStatus');
+
+			// Verify all of the other Lifecycle APIs were called to refresh the data
+			cy.wait('@getACC');
+			cy.wait('@getATX');
+			// cy.wait('@getCommunities');	// TODO: There is no communities API yet
+			cy.wait('@getELearning');
+			cy.wait('@getSuccessPaths');
+		});
+
+		it('Pitstop actions should be checkable in any order', () => {
+			// Switch mocks and refresh the checkboxes
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			// Randomize the order of the pitstop actions
+			const actionsShuffled = Cypress._.shuffle(allCheckableActions);
+			actionsShuffled.forEach(action => {
+				cy.getByAutoId('pitstopAction')
+					.contains(action.name) // cy.contains will return the action link <a>
+					.parentsUntil('[data-auto-id="pitstopAction"]')	// Back us up to the parent pitstopAction
+					.within(() => {
+						cy.getByAutoId('pitstopCheckboxSpan')
+							.click();
+						cy.wait('@patchActionStatus');
+					});
+			});
+		});
+
+		it('Pitstop actions that are checked should not be un-checkable', () => {
+			// Switch mocks and refresh the checkboxes
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allCompleted');
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			cy.getByAutoId('pitstopCheckboxLabel').each($checkbox => {
+				cy.wrap($checkbox).should('have.class', 'disabled');
+			});
+		});
+
+		// TODO: Skipped due to PBC-395: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-395
+		// We are not currently disabling checkboxes for items with manualCheckAllowed: false...
+		it.skip('Pitstop actions should not be checkable if manualCheckAllowed is false', () => {
+			// Switch mocks and refresh the checkboxes
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allNotManualCheckable');
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			cy.getByAutoId('pitstopCheckboxLabel').each($checkbox => {
+				cy.wrap($checkbox).should('have.class', 'disabled');
+			});
+		});
+
+		it('Pitstop actions should be auto-checked if isCompleteAuto is true', () => {
+			// Switch mocks and refresh the checkboxes
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allAutoCompleted');
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			cy.getByAutoId('pitstopCheckboxLabel').each($checkbox => {
+				cy.wrap($checkbox).should('have.class', 'disabled');
+			});
+
+			// Addtionally, all auto-completed items should have an auto icon
+			cy.getByAutoId('actionlink').each($checkboxLink => {
+				cy.wrap($checkboxLink).within(() => {
+					cy.getByAutoId('pitstopCheckboxAutoIcon').should('exist');
+				});
+			});
+		});
+	});
+
+	describe('PBC-124: Lifecycle: Pitstop percentage completed', () => {
+		after(() => {
+			// Ensure we're set back to the default mock data
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard');
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('Checking a pitstop action should update the completion percentage', () => {
+			// Check to see if any items are pre-completed
+			let numCompleted = Cypress._.filter(
+				CNAPitstopActions, action => action.isComplete === true
+			).length;
+			let expectedPercent = Math.floor((numCompleted / CNAPitstopActions.length) * 100);
+
+			// Check each item, verify the percentage is updated
+			CNAPitstopActions.forEach((action, index) => {
+				if (!action.isComplete) {
+					cy.getByAutoId('pitstopCheckboxSpan')
+						.eq(index)
+						.click();
+					numCompleted += 1;
+				}
+
+				expectedPercent = Math.floor((numCompleted / CNAPitstopActions.length) * 100);
+				cy.getByAutoId('CompletedActionsPercent')
+					.should('contain', `${expectedPercent}%`);
+			});
+		});
+
+		it('Should show "start" when 0% complete, instead of 0%', () => {
+			// Switch to a mock dataset with no completed items and refresh the data
+			infoMock.enable('(Racetrack) IBN-Assurance-Use');
+			// Unfortunately for Cypress, the racetrack panel only reloads data on page load...
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			cy.getByAutoId('CompletedActionsPercent')
+				.should('contain', 'start');
 		});
 	});
 });

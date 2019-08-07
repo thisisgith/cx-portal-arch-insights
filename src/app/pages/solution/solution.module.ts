@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { SolutionComponent } from './solution.component';
-import { CuiGaugeModule, CuiModalModule } from '@cisco-ngx/cui-components';
+import { CuiGaugeModule, CuiSpinnerModule, CuiModalModule } from '@cisco-ngx/cui-components';
 import { SolutionRoutingModule } from './solution-routing.module';
 import {
 	ContractsModule,
@@ -11,8 +11,9 @@ import {
 	InventoryModule,
 } from '@sdp-api';
 import { environment } from '@environment';
-import { AssetsBarChartModule } from './assets/assets-bar-chart/assets-bar-chart.module';
-import { CaseModule } from '@components';
+import { BarChartModule, CaseModule } from '@components';
+import { NoDNACHeaderModule } from './no-dnac-header/no-dnac-header.module';
+
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -25,16 +26,18 @@ const rootUrl = environment.sdpServiceOrigin;
 	declarations: [SolutionComponent],
 	exports: [SolutionComponent],
 	imports: [
+		BarChartModule,
 		CommonModule,
 		CaseModule,
 		ContractsModule.forRoot({ rootUrl }),
 		CuiGaugeModule,
 		CuiModalModule,
 		I18nPipeModule,
+		CuiSpinnerModule,
 		InventoryModule.forRoot({ rootUrl }),
+		NoDNACHeaderModule,
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
-		AssetsBarChartModule,
 		SolutionRoutingModule,
 	],
 })

@@ -15,6 +15,10 @@ import { ACCUserInfoSchema } from '../models/accuser-info-schema';
 import { SuccessPathsResponse } from '../models/success-paths-response';
 import { CommunitiesResponse } from '../models/communities-response';
 import { ELearningResponse } from '../models/elearning-response';
+import { GroupTrainingEntitySchema } from '../models/group-training-entity-schema';
+import { GroupTrainingRequestSchema } from '../models/group-training-request-schema';
+import { UserQuota } from '../models/user-quota';
+import { UserTraining } from '../models/user-training';
 @Injectable({
   providedIn: 'root',
 })
@@ -27,6 +31,9 @@ class RacetrackContentService extends __BaseService {
   static readonly getRacetrackSuccessPathsPath = '/successPaths';
   static readonly getRacetrackCommunitiesPath = '/communities';
   static readonly getRacetrackElearningPath = '/elearning';
+  static readonly requestGroupTrainingPath = '/grouptraining/request';
+  static readonly getTrainingQuotasPath = '/grouptraining/user/quotas';
+  static readonly getCompletedTrainingsPath = '/grouptraining/user/trainings/completed';
 
   constructor(
     config: __Configuration,
@@ -596,6 +603,115 @@ class RacetrackContentService extends __BaseService {
   getRacetrackElearning(params: RacetrackContentService.GetRacetrackElearningParams): __Observable<ELearningResponse> {
     return this.getRacetrackElearningResponse(params).pipe(
       __map(_r => _r.body as ELearningResponse)
+    );
+  }
+
+  /**
+   * @param gtRequest JSON Body for the Group Training Request
+   * @return Successfully retrieved results
+   */
+  requestGroupTrainingResponse(gtRequest: GroupTrainingRequestSchema): __Observable<__StrictHttpResponse<GroupTrainingEntitySchema>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = gtRequest;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/request`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<GroupTrainingEntitySchema>;
+      })
+    );
+  }
+
+  /**
+   * @param gtRequest JSON Body for the Group Training Request
+   * @return Successfully retrieved results
+   */
+  requestGroupTraining(gtRequest: GroupTrainingRequestSchema): __Observable<GroupTrainingEntitySchema> {
+    return this.requestGroupTrainingResponse(gtRequest).pipe(
+      __map(_r => _r.body as GroupTrainingEntitySchema)
+    );
+  }
+
+  /**
+   * @return Successfully retrieved results
+   */
+  getTrainingQuotasResponse(): __Observable<__StrictHttpResponse<Array<UserQuota>>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/user/quotas`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<Array<UserQuota>>;
+      })
+    );
+  }
+
+  /**
+   * @return Successfully retrieved results
+   */
+  getTrainingQuotas(): __Observable<Array<UserQuota>> {
+    return this.getTrainingQuotasResponse().pipe(
+      __map(_r => _r.body as Array<UserQuota>)
+    );
+  }
+
+  /**
+   * @return Successfully retrieved results
+   */
+  getCompletedTrainingsResponse(): __Observable<__StrictHttpResponse<Array<UserTraining>>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/user/trainings/completed`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<Array<UserTraining>>;
+      })
+    );
+  }
+
+  /**
+   * @return Successfully retrieved results
+   */
+  getCompletedTrainings(): __Observable<Array<UserTraining>> {
+    return this.getCompletedTrainingsResponse().pipe(
+      __map(_r => _r.body as Array<UserTraining>)
     );
   }
 }

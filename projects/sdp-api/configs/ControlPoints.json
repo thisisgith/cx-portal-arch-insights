@@ -7,15 +7,19 @@
   "ignoreUnusedModels": true,
   "minParamsForContainer": 2,
   "sortParams": "desc",
-  "defaultTag": "ConstrolPoints",
+  "defaultTag": "ControlPoints",
   "replaceTags": {
-    "Contract API Services": "ControlPoints"
-  },
-  "removeStaleFiles": true,
-  "modelIndex": true,
-  "serviceIndex": true,
-  "apiModule": true,
-  "enumModule": true,
-  "generateExamples": true,
-  "camelCase": false
+    "Control Points Api Documentation": "ControlPoints"
+	},
+	"defaultOperationIds": {
+	},
+	"modelsExportAs": {
+	},
+	"removeStaleFiles": true,
+	"modelIndex": true,
+	"serviceIndex": true,
+	"apiModule": true,
+	"enumModule": true,
+	"generateExamples": true,
+	"camelCase": false
 }

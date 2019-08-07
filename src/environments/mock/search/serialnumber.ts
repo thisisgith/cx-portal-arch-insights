@@ -53,8 +53,8 @@ export const mockAssetResponse: Assets = {
 export const mockHWResponse: HardwareResponse = {
 	data: [
 		{
-			customerId: 'Cisco Test',
 			containingHwId: '10.10.10.10',
+			customerId: 'Cisco Test',
 			equipmentType: 'POWERSUPPLY',
 			hostname: 'C4506-E',
 			hwInstanceId: 'SON07130AEZ,PWR-C45-1300ACV,NA,NA,FOX1333GGGG,WS-C4506-E,NA',
@@ -77,13 +77,13 @@ export const mockHWResponse: HardwareResponse = {
 export const mockContractResponse: DeviceContractResponse = {
 	data: [
 		{
-			billtoGuName: null,
 			billtoAddressLine1: '116 INVERNESS DRIVE EAST SUITE 375',
 			billtoAddressLine2: 'C/O CASTLE PINES CAPITAL',
 			billtoAddressLine3: null,
 			billtoAddressLine4: null,
 			billtoCity: 'ENGLEWOOD',
 			billtoCountry: 'US',
+			billtoGuName: null,
 			billtoPostalCode: '80112',
 			billtoProvince: 'CO',
 			billtoSiteId: null,

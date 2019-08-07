@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject, of } from 'rxjs';
-import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, merge, of } from 'rxjs';
+import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
-import { CaseRequestType } from '@classes';
+import { caseSeverities, CaseRequestType } from '@classes';
 import { CaseOpenRequest, ProblemArea, Subtech, Tech } from '@interfaces';
 import { CaseService } from '@cui-x/services';
 import { ProfileService } from '@cisco-ngx/cui-auth';
@@ -36,38 +36,42 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	public submitting = false;
 	public sevOptions: SelectOption<number>[] = [
 		{
-			name: I18n.get('_OpenCaseNetworkDown_'),
+			name: caseSeverities[1].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 1),
 			value: 1,
 		},
 		{
-			name: I18n.get('_OpenCaseSeverelyDegraded_'),
+			name: caseSeverities[2].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 2),
 			value: 2,
 		},
 		{
-			name: I18n.get('_OpenCaseNetworkImpaired_'),
+			name: caseSeverities[3].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 3),
 			value: 3,
 		},
 		{
-			name: I18n.get('_OpenCaseAskaQuestion_'),
+			name: caseSeverities[4].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 4),
 			value: 4,
 		},
 	];
+	public descriptionMaxLength = 32000;
+	public titleMaxLength = 255;
 	public techOptions: Tech[];
 	public subtechOptions: Subtech[];
 	public problemAreaOptions: ProblemArea[];
 	public problemGroups: string[];
 	public caseForm = new FormGroup({
-		description: new FormControl('', [Validators.required, Validators.maxLength(32000)]),
+		description: new FormControl('', [Validators.required,
+			Validators.maxLength(this.descriptionMaxLength)]),
 		problemArea: new FormControl(null, Validators.required),
 		requestRma: new FormControl(false),
 		severity: new FormControl(4, Validators.required),
 		subtech: new FormControl(null, Validators.required),
 		technology: new FormControl(null, Validators.required),
-		title: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+		title: new FormControl('', [Validators.required,
+			Validators.maxLength(this.titleMaxLength)]),
 	});
 
 	/** 2 values to pass to "submitted" component post-request */
@@ -128,12 +132,14 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			contactId: this.profileService.getProfile().cpr.pf_auth_uid,
 			customerActivity: _.get(this.caseForm.controls.problemArea.value, 'customerActivity'),
 			description: this.caseForm.controls.description.value,
+			deviceName: this.asset.deviceName,
 			priority: this.caseForm.controls.severity.value,
 			problemCode: _.get(this.caseForm.controls.problemArea.value, 'problemCode'),
 			requestType: this.caseForm.controls.requestRma.value ?
 				CaseRequestType.RMA : CaseRequestType.Diagnose,
 			serialNumber: this.asset.serialNumber,
-			subTechId: this.caseForm.controls.subtech.value,
+			softwareVersion: this.asset.osVersion,
+			subTechId: _.get(this.caseForm.controls.subtech.value, '_id'),
 			summary: this.caseForm.controls.title.value,
 			techId: this.caseForm.controls.technology.value,
 		};
@@ -165,8 +171,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 					severity: this.caseForm.controls.severity.value,
 					severityName: _.get(_.find(this.sevOptions,
 						{ value: this.caseForm.controls.severity.value }), 'name'),
-					subtech: _.get(_.find(this.subtechOptions,
-						{ _id: this.caseForm.controls.subtech.value }), 'subTechName'),
+					subtech: _.get(this.caseForm.controls.subtech.value, 'subTechName'),
 					technology: _.get(_.find(this.techOptions,
 						{ _id: this.caseForm.controls.technology.value }), 'techName'),
 					title: this.caseForm.controls.title.value,
@@ -245,6 +250,14 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		)
 		.subscribe(result => {
 			this.loadingProblemAreas = false;
+			// If a subtech is selected, filter the problemAreas to only valid ones for that subtech
+			if (this.caseForm.controls.subtech.value) {
+				const validCodes = this.caseForm.controls.subtech.value.problemCodes;
+				result.problemArea.customerActivities =
+					_.filter(result.problemArea.customerActivities, activity =>
+						_.includes(validCodes, activity.problemCode),
+					);
+			}
 			const problemAreasGrouped = _.groupBy(
 				_.get(result, ['problemArea', 'customerActivities'], []),
 				'customerActivity',
@@ -252,8 +265,14 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			this.problemAreaOptions = Object.values(problemAreasGrouped);
 			this.problemGroups = Object.keys(problemAreasGrouped);
 		});
-		// Listen for "requestType" to change, update problem areas.
-		this.caseForm.controls.requestRma.valueChanges.pipe(
+		// Listen for "requestType" or "subTech" to change, update problem areas.
+		merge(
+			this.caseForm.controls.requestRma.valueChanges,
+			this.caseForm.controls.subtech.valueChanges.pipe(
+				map(() => this.caseForm.controls.requestRma.value),
+			),
+		)
+		.pipe(
 			tap(() => this.caseForm.controls.problemArea.setValue(null)),
 			takeUntil(this.destroy$),
 		)
