@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CuiModalService, CuiModalContent, CuiInputOptions } from '@cisco-ngx/cui-components';
 import { ProfileService } from '@cisco-ngx/cui-auth';
@@ -8,6 +8,9 @@ import { EmailControllerService, EmailRequest } from '@sdp-api';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, empty } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
+import { environment } from '@environment';
+import { Router } from '@angular/router';
+import {Location } from '@angular/common';
 
 /**
  * Component for portal support
@@ -36,6 +39,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 		rows: 10,
 	});
 	public items: any[] = [];
+	@ViewChild('emailTemplate', { static: true }) private emailTemplate: TemplateRef<{ }>;
 	// public items: any[] = [
 	// 	{
 	// 		name: I18n.get('_SupportCXPortal_'),
@@ -82,7 +86,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	constructor (
 		public cuiModalService: CuiModalService, private profileService: ProfileService,
 		public emailControllerService: EmailControllerService,
-		private logger: LogService,
+		private logger: LogService, private router: Router, private location: Location,
 	) { }
 
 	/**
@@ -106,11 +110,39 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	public submitMessage () {
 		if (this.supportForm.valid) {
 			this.loading = true;
+			//console.log("email" + this.emailTemplate.elementRef.nativeElement);
+			const userDetails = this.profileService.getProfile().cpr;
 			const requestBody: EmailRequest = {
-				body: this.supportForm.controls.description.value,
+				body: 
+`${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname} sent the following request:
+
+Cisco ID
+${userDetails.pf_auth_uid}
+				
+Name
+${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}
+				
+Email
+${userDetails.pf_auth_email}
+				
+Phone
+${userDetails.pf_auth_email}
+				
+---------------------------------------------------
+				
+Topic
+${this.supportForm.controls.title.value}
+				
+Description
+${this.supportForm.controls.description.value}
+				
+---------------------------------------------------
+				
+URL of page user was on when they clicked for support
+${window.location.href}`,
 				from: 'cxportal-noreply@cisco.com',
 				htmlBody: false,
-				subject: this.supportForm.controls.title.value,
+				subject: 'Support Request from the CX Portal',
 				to: 'ayadunat@cisco.com', // cx-portal-support@cisco.com in prod
 			};
 			return this.emailControllerService.sendEmail(requestBody)
