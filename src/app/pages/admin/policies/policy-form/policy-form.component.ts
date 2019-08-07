@@ -349,6 +349,31 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
+	 * Deletes policy
+	 */
+	public deletePolicy () {
+		const params = {
+			customerId: this.customerId,
+			policyId: _.get(this.policy, 'policyId'),
+		};
+
+		this.devicePolicyService.deletePolicyUsingDELETE(params)
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(() => {
+				this.logger.debug('Deleted Policy');
+				this.submitted.emit(true);
+			});
+	}
+
+	/**
 	 * Called when time period is changed
 	 */
 	public timePeriodChange () {

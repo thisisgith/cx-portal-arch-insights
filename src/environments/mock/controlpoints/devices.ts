@@ -124,6 +124,23 @@ export const DevicePoliciesScenarios = [
 	},
 	{
 		scenarios: {
+			DELETE: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: 'Delete Policy given CustomerID and Policy',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: '/api/customerportal/controlpoint/v1/policy/2431199/' +
+			'b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
+		usecases: ['Admin Settings', 'General'],
+	},
+	{
+		scenarios: {
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,

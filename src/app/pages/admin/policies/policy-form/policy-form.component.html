@@ -5,12 +5,19 @@
 			<div id="policyRequestModal" class="modal__content no-padding" data-auto-id="policy-modal">
 				<div class="modal__header policy__header half-padding-left half-padding-bottom no-margin-bottom">
 					<div class="row half-padding-top dbl-padding-left">
-						<div class="col-md-11 half-margin-top">
-							<div
-								class="text-xlarge text-left"
+						<div class="col-md-11 half-margin-top text-left">
+							<span
+								class="text-xlarge"
 								[innerText]="this.title"
 								data-auto-id="policy-modal.title"
-							></div>
+							></span>
+							<span
+								*ngIf="type === 'editPolicy'"
+								class="icon-trash icon-small qtr-margin-bottom half-padding-left"
+								[ngClass]="'text-primary'"
+								(click)="deletePolicy()"
+								data-auto-id="policy-modal.trash"
+							></span>
 						</div>
 						<div class="col-md-1 half-margin-top">
 							<span (click)="closeRequestForm()" data-auto-id="policy-modal.close"
@@ -202,7 +209,7 @@
 			<span [innerText]="device.ipAddress"></span>
 		</div>
 		<div class="col-md-3 device-table">
-			<span [innerText]="device.lastScan"></span>
+			<span [innerText]="device.lastScan ? device.lastScan : ''"></span>
 		</div>
 	</div>
 </ng-template>
