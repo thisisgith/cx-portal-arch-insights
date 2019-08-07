@@ -27,6 +27,7 @@ export * from './controlpoints/policies';
 export * from './diagnostics/critical-bugs';
 
 export * from './inventory/assets';
+export * from './inventory/asset-summary';
 export * from './inventory/hardware';
 export * from './inventory/network-elements';
 export * from './inventory/roles';
