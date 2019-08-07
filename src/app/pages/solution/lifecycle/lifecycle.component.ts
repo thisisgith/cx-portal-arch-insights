@@ -904,7 +904,14 @@ export class LifecycleComponent implements OnDestroy {
 								this.componentData.learning.elearning.push(learningItem);
 								break;
 							}
-							case 'Certification':
+							case 'Certification': {
+								const learningItem: ELearningModel = {
+									...item,
+									fixedRating: parseFloat(item.rating),
+								};
+								this.componentData.learning.certifications.push(learningItem);
+								break;
+							}
 							case 'Videos': {
 								this.componentData.learning.certifications.push(item);
 								break;
