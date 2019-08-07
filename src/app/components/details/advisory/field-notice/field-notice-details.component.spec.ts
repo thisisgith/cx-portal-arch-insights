@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FieldNoticeDetailsComponent } from './field-notice-details.component';
 import { FieldNoticeDetailsModule } from './field-notice-details.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -14,6 +14,7 @@ import {
 } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
+import { By } from '@angular/platform-browser';
 
 describe('FieldNoticeDetailsComponent', () => {
 	let component: FieldNoticeDetailsComponent;
@@ -169,4 +170,37 @@ describe('FieldNoticeDetailsComponent', () => {
 		expect(component.data.advisory)
 			.toEqual(MockFieldNoticeAdvisories[1]);
 	});
+
+	it('should handle vote button clicks', fakeAsync(() => {
+		const upVoteBtn = fixture.debugElement.query(
+			By.css('[data-auto-id="upVoteBtn"]'),
+		);
+		const downVoteBtn = fixture.debugElement.query(
+			By.css('[data-auto-id="downVoteBtn"]'),
+		);
+
+		upVoteBtn.nativeElement.click();
+		tick();
+		fixture.detectChanges();
+		expect(component.upVoteSelected)
+			.toEqual(true);
+		expect(component.downVoteSelected)
+			.toEqual(false);
+
+		downVoteBtn.nativeElement.click();
+		tick();
+		fixture.detectChanges();
+		expect(component.upVoteSelected)
+			.toEqual(false);
+		expect(component.downVoteSelected)
+			.toEqual(true);
+
+		downVoteBtn.nativeElement.click();
+		tick();
+		fixture.detectChanges();
+		expect(component.upVoteSelected)
+			.toEqual(false);
+		expect(component.downVoteSelected)
+			.toEqual(false);
+	}));
 });
