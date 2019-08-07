@@ -16,6 +16,8 @@ import {
 	catchError,
 	mergeMap,
 	takeUntil,
+	tap,
+	switchMap,
 } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -99,6 +101,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	public eolData: HardwareEOL;
 	public eolBulletinData: HardwareEOLBulletin;
 	private destroyed$: Subject<void> = new Subject<void>();
+	private refresh$: Subject<void>;
 	private customerId: string;
 
 	constructor (
@@ -106,15 +109,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
 		private userResolve: UserResolve,
-	) {
-		this.userResolve.getCustomerId()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((id: string) => {
-			this.customerId = id;
-		});
-	}
+	) { }
 
 	public hardwareModules: HardwareInfo[];
 	public hardwareModulesTable: CuiTableOptions;
@@ -204,75 +199,84 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	/**
 	 * Refreshes the eox data
 	 */
-	private refresh () {
-		this.hardwareModules = null;
-		this.hardwareModulesTable = null;
-		this.eolData = null;
-		this.eolBulletinData = null;
-		this.timelineData = null;
+	private buildRefreshSubject () {
+		this.refresh$ = new Subject();
 
-		const obsBatch = [];
-		const managedNeId = _.get(this.asset, 'managedNeId');
-		const hwInstanceId = _.get(this.asset, 'hwInstanceId');
+		this.refresh$
+		.pipe(
+			tap(() => {
+				this.hardwareModules = null;
+				this.hardwareModulesTable = null;
+				this.eolData = null;
+				this.eolBulletinData = null;
+				this.timelineData = null;
+			}),
+			switchMap(() => {
+				const obsBatch = [];
+				const managedNeId = _.get(this.asset, 'managedNeId');
+				const hwInstanceId = _.get(this.asset, 'hwInstanceId');
 
-		if (managedNeId) {
-			this.hardwareEOLParams = {
-				customerId: this.customerId,
-				managedNeId: [managedNeId],
-			};
+				if (managedNeId) {
+					this.hardwareEOLParams = {
+						customerId: this.customerId,
+						managedNeId: [managedNeId],
+					};
 
-			obsBatch.push(this.fetchEOLData());
-		}
+					obsBatch.push(this.fetchEOLData());
+				}
 
-		if (hwInstanceId) {
-			this.moduleParams = {
-				containingHwId: [hwInstanceId],
-				customerId: this.customerId,
-				equipmentType: ['MODULE'],
-			};
+				if (hwInstanceId) {
+					this.moduleParams = {
+						containingHwId: [hwInstanceId],
+						customerId: this.customerId,
+						equipmentType: ['MODULE'],
+					};
 
-			this.hardwareModulesTable = new CuiTableOptions({
-				bordered: false,
-				columns: [
-					{
-						key: 'productId',
-						name: I18n.get('_Type_'),
-						render: item =>
-							item.equipmentType ? item.equipmentType : I18n.get('_NA_'),
-						sortable: false,
-					},
-					{
-						key: 'productFamily',
-						name: `${I18n.get('_ProductFamily_')} / ${I18n.get('_ID_')}`,
-						render: item =>
-							`${item.productFamily ? item.productFamily : I18n.get('_NA_')} / ${
-								item.productId ? item.productId : I18n.get('_NA_')}`,
-						sortable: false,
-					},
-					{
-						key: 'slot',
-						name: I18n.get('_Slot_'),
-						render: item =>
-							item.slot ? item.slot : I18n.get('_NA_'),
-						sortable: false,
-					},
-					{
-						key: 'serialNumber',
-						name: I18n.get('_SerialNumber_'),
-						render: item =>
-							item.serialNumber ? item.serialNumber : I18n.get('_NA_'),
-						sortable: false,
-					},
-				],
-				padding: 'compressed',
-				striped: false,
-				wrapText: true,
-			});
+					this.hardwareModulesTable = new CuiTableOptions({
+						bordered: false,
+						columns: [
+							{
+								key: 'productId',
+								name: I18n.get('_Type_'),
+								render: item =>
+									item.equipmentType ? item.equipmentType : I18n.get('_NA_'),
+								sortable: false,
+							},
+							{
+								key: 'productFamily',
+								name: `${I18n.get('_ProductFamily_')} / ${I18n.get('_ID_')}`,
+								render: item =>
+									`${item.productFamily ? item.productFamily : I18n.get('_NA_')} `
+									+ `/ ${item.productId ? item.productId : I18n.get('_NA_')}`,
+								sortable: false,
+							},
+							{
+								key: 'slot',
+								name: I18n.get('_Slot_'),
+								render: item =>
+									item.slot ? item.slot : I18n.get('_NA_'),
+								sortable: false,
+							},
+							{
+								key: 'serialNumber',
+								name: I18n.get('_SerialNumber_'),
+								render: item =>
+									item.serialNumber ? item.serialNumber : I18n.get('_NA_'),
+								sortable: false,
+							},
+						],
+						padding: 'compressed',
+						striped: false,
+						wrapText: true,
+					});
 
-			obsBatch.push(this.fetchModuleData());
-		}
+					obsBatch.push(this.fetchModuleData());
+				}
 
-		forkJoin(obsBatch)
+				return forkJoin(obsBatch);
+			}),
+			takeUntil(this.destroyed$),
+		)
 		.subscribe(() => {
 			this.status.loading.overall = false;
 
@@ -284,7 +288,15 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	 * Initializes the component
 	 */
 	public ngOnInit (): void {
-		this.refresh();
+		this.buildRefreshSubject();
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+			this.refresh$.next();
+		});
 	}
 
 	/**
@@ -302,7 +314,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['asset', 'currentValue']);
 		if (currentAsset && !changes.asset.firstChange) {
-			this.refresh();
+			this.refresh$.next();
 		}
 	}
 

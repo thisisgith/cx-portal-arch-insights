@@ -74,7 +74,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	private licenseParams: ControlPointIERegistrationAPIService.GetLicenseDataParams;
 	public eolData: SoftwareEOL;
 	public eolBulletinData: SoftwareEOLBulletin;
-	private refreshSubject$: Subject<void>;
+	private refresh$: Subject<void>;
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
 
@@ -203,9 +203,9 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	 * Refreshes the eox data
 	 */
 	private buildRefreshSubject () {
-		this.refreshSubject$ = new Subject();
+		this.refresh$ = new Subject();
 
-		this.refreshSubject$
+		this.refresh$
 		.pipe(
 			tap(() => {
 				this.status.loading.overall = true;
@@ -299,7 +299,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 		)
 		.subscribe((id: string) => {
 			this.customerId = id;
-			this.refreshSubject$.next();
+			this.refresh$.next();
 		});
 	}
 
@@ -318,7 +318,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['asset', 'currentValue']);
 		if (currentAsset && !changes.asset.firstChange) {
-			this.refreshSubject$.next();
+			this.refresh$.next();
 		}
 	}
 
