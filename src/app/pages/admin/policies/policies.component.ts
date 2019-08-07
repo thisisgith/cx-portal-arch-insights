@@ -82,7 +82,7 @@ export class PoliciesComponent implements OnInit {
 			const schedule = _.get(element, 'schedule');
 			if (schedule) {
 				const humanReadableCron = cronstrue.toString(schedule);
-				_.set(element, 'formattedSchedule', `${humanReadableCron} UTC`);
+				_.set(element, 'formattedSchedule', `${_.toLower(humanReadableCron)} UTC`);
 			}
 
 			const ptype = _.get(element, 'policyType');

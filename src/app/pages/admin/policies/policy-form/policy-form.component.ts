@@ -136,7 +136,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 					}
 					times.push({
 						key: `${hour}:${minute}${amPm}`,
-						value: `${minute} ${militaryHour}`,
+						value: `${Number(minute)} ${Number(militaryHour)}`,
 					});
 				}
 			}
@@ -206,7 +206,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			return {
 				schedule,
 				customerId: this.customerId,
-				policyId: _.get(this.policy, 'policyID'),
+				policyId: _.get(this.policy, 'policyId'),
 				policyName: 'test',
 			};
 		};
