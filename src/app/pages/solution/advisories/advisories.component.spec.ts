@@ -162,7 +162,7 @@ describe('AdvisoriesComponent', () => {
 			filter.selected = true;
 			const subfilter = _.find(filter.seriesData, { filter: 'critical' });
 			subfilter.selected = true;
-			component.selectedSubfilters = [subfilter];
+			tab.selectedSubfilters = [subfilter];
 			component.clearFilters();
 			fixture.detectChanges();
 
@@ -170,7 +170,7 @@ describe('AdvisoriesComponent', () => {
 				.toBeFalsy();
 			expect(filter.selected)
 				.toBeFalsy();
-			expect(component.selectedSubfilters.length)
+			expect(tab.selectedSubfilters.length)
 				.toBe(0);
 			expect(tab.filtered)
 				.toBeFalsy();

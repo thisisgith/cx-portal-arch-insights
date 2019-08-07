@@ -301,6 +301,7 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 				takeWhile(status => {
 					if ((<any> status).status === 'Registration Failed') {
 						this.error = registrationErrorMap[RegistrationError.REGISTRATION];
+						this.errorDetails = (<any> status).stages;
 
 						return false;
 					}

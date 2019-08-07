@@ -97,7 +97,7 @@ describe('AdvisoryDetailsComponent', () => {
 			.toEqual(_.toString(nextAdvisory.id));
 
 		expect(component.title)
-			.toEqual('Security Advisory');
+			.toEqual('Security Advisory' || 'SecurityAdvisory');
 	});
 
 	it('should load a bug', () => {
@@ -199,7 +199,7 @@ describe('AdvisoryDetailsComponent', () => {
 			.toEqual(_.toString(nextAdvisory.id));
 
 		expect(component.title)
-			.toEqual(`Field Notice FN ${nextAdvisory.id}`);
+			.toEqual(`Field Notice FN ${nextAdvisory.id}` || `FieldNotice FN ${nextAdvisory.id}`);
 	});
 
 	it('should handle passing without an id', () => {
