@@ -13,6 +13,7 @@ import {
 	ATX,
 	ATXResponse,
 	ATXSession,
+	BookmarkRequestSchema,
 	ELearning,
 	ELearningResponse,
 	PitstopActionUpdateRequest,
@@ -690,6 +691,44 @@ export class LifecycleComponent implements OnDestroy {
 
 		 return 'start';
 	}
+
+	/**
+	 * Updates the bookmark of the item
+	 * @param type string
+	 * @param item SuccessPath
+	 */
+	 public updateBookmark (type: string, item: SuccessPath) {
+		let bookmark;
+		let id;
+		let lifecycleCategory;
+		this.status.loading.success = true;
+		if (_.isEqual(type, 'SB')) {
+			bookmark = !_.get(item, 'bookmark');
+			id = _.get(item, 'successByteId');
+			lifecycleCategory = 'SB';
+		}
+		const bookmarkParams: BookmarkRequestSchema = {
+			id,
+			bookmark,
+			lifecycleCategory,
+			pitstop: this.componentData.params.pitstop,
+			solution: this.componentData.params.solution,
+			usecase: this.componentData.params.usecase,
+		};
+		const params: RacetrackContentService.UpdateBookmarkParams = {
+			bookmarkRequestSchema: bookmarkParams,
+		};
+		this.contentService.updateBookmark(params)
+		.subscribe(() => {
+			item.bookmark = !item.bookmark;
+			this.status.loading.success = false;
+		},
+		err => {
+			this.status.loading.success = false;
+			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
+	 }
 
 	/**
 	 * Loads the ACC for the given params

@@ -654,6 +654,10 @@
 <ng-template #cardSuccessBytes>
 	<div class="grid grid--4up base-padding-top" *ngIf="(!view || view == 'grid')">
 		<div class="card acc__card" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
+			<div class="icon-bookmark icon-medium"
+			(click)="updateBookmark('SB', item)"
+			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'"
+			data-auto-id="SBCardRibbon"></div>
 			<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
 			<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
 			<div class="card__footer">
@@ -882,13 +886,12 @@
 </ng-template>
 
 <ng-template #bookmarkTemplate let-celldata="celldata">
-	<!-- This is hardcoded for demo, When API is ready will link to real data-->
-	<div *ngIf="celldata.type === 'Video'" class="icon-bookmark icon-medium text-indigo"></div>
-	<div *ngIf="celldata.type === 'Web Page'" class="icon-bookmark icon-medium icon-bookmark-clear"></div>
-	<div *ngIf="celldata.type === 'PDF'" class="text-success">
-		<span class=" icon-certified icon-medium"></span>
-		<span class="half-margin-left" [innerText]="'_Completed_' | i18n"></span>
-	</div>
+	<div *ngIf="celldata.bookmark" class="icon-bookmark icon-medium text-indigo"
+		(click)="updateBookmark('SB', celldata)"
+		data-auto-id="SBListRibbon"></div>
+	<div *ngIf="!celldata.bookmark" class="icon-bookmark icon-medium icon-bookmark-clear"
+		(click)="updateBookmark('SB', celldata)"
+		data-auto-id="SBListRibbon"></div>
 </ng-template>
 
 <ng-container *ngIf="selectCgtComponent">
