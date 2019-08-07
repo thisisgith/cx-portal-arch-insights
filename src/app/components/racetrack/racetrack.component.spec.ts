@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { RacetrackComponent } from './racetrack.component';
+import { RacetrackComponent, stages } from './racetrack.component';
 import { RacetrackComponentModule } from './racetrack.module';
 
 describe('RacetrackComponent', () => {
@@ -58,8 +58,8 @@ describe('RacetrackComponent', () => {
 			component.zoomToNext();
 			const next = component.current;
 
-			expect(component.stages.indexOf(current))
-				.toBeLessThan(component.stages.indexOf(next));
+			expect(stages.indexOf(current))
+				.toBeLessThan(stages.indexOf(next));
 		});
 
 		it('should move to an arbitrary stage', () => {
@@ -80,7 +80,7 @@ describe('RacetrackComponent', () => {
 	});
 
 	it('should reset if at the end', () => {
-		const stageName = component.stages[component.stages.length - 1];
+		const stageName = stages[stages.length - 1];
 		component.zoomToStage(stageName);
 
 		expect(component.current)
@@ -91,11 +91,11 @@ describe('RacetrackComponent', () => {
 		fixture.detectChanges();
 
 		expect(component.current)
-			.toEqual(component.stages[0]);
+			.toEqual(stages[0]);
 	});
 
 	it('should go back if at the beginning', () => {
-		const stageName = component.stages[0];
+		const stageName = stages[0];
 
 		component.zoomToStage(stageName);
 
@@ -107,6 +107,6 @@ describe('RacetrackComponent', () => {
 		fixture.detectChanges();
 
 		expect(component.current)
-			.toEqual(component.stages[component.stages.length - 1]);
+			.toEqual(stages[stages.length - 1]);
 	});
 });

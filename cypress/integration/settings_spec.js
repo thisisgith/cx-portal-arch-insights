@@ -157,22 +157,16 @@ describe('Control Point (Admin Settings)', () => { // PBC-207
 			cy.loadApp('/admin/settings');
 			cy.waitForAppLoading();
 			healthMock.enable('Health-Status - Failure');
+			cy.loadApp('/admin/settings');
+			cy.waitForAppLoading();
 		});
 
 		it('Renders Status Panel', () => {
-			cy.getByAutoId('settings.system.status').should('exist');
-
-			cy.getByAutoId('settings.system.status.label').should('have.text', i18n._Status_.toUpperCase());
-			cy.getByAutoId('settings.system.status.panel').should('exist');
-
-			cy.getByAutoId('settings.system.app.label').should('have.text', i18n._Applications_.toUpperCase());
-			cy.getByAutoId('settings.system.app.panel').should('not.exist');
-
-			cy.getByAutoId('settings.system.usage').should('exist');
-			cy.getByAutoId('settings.system.usage.label').should('have.text', i18n._ResourceUsage_.toUpperCase());
-
-			cy.getByAutoId('settings.system.info').should('exist');
-			cy.getByAutoId('settings.system.info.label').should('have.text', i18n._SystemInfo_.toUpperCase());
+			cy.getByAutoId('settings.sidebar').should('exist');
+			cy.getByAutoId('settings.sidebar').within(() => {
+				cy.get('a').should('contain', i18n._System_);
+			});
+			cy.contains('No Results Found').should('exist');
 		});
 
 		it('Error Panel for failed API', () => {
@@ -299,12 +293,22 @@ describe('Control Point (Setup Wizard)', () => { // PBC-190
 		it('Download OVA Panel', () => {
 			cy.contains(`STEP 1: ${i18n._Prerequisites_.toUpperCase()}`).should('exist');
 			cy.contains(i18n._DownloadOVAImage_).should('exist');
-			cy.contains('a', 'Cisco End User License Agreement').should('have.attr', 'href').and('eq', 'https://www.cisco.com');
+			cy.contains('a', 'Cisco End User License Agreement').should('have.attr', 'href')
+				.and('eq', 'http://www.cisco.com/c/en/us/products/end-user-license-agreement.html');
 
-			cy.getByAutoId('setup.ova.eula').should('have.attr', 'ng-reflect-model', 'false');
 			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('have.attr', 'disabled');
-			cy.getByAutoId('setup.ova.eula').click({ force: true });
-			cy.getByAutoId('setup.ova.eula').should('have.attr', 'ng-reflect-model', 'true');
+			cy.getByAutoId('business-fn-civ').click({ force: true });
+
+			cy.getByAutoId('setup.ova.eula1').should('have.attr', 'ng-reflect-model', 'false');
+			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('have.attr', 'disabled');
+			cy.getByAutoId('setup.ova.eula1').click({ force: true });
+			cy.getByAutoId('setup.ova.eula1').should('have.attr', 'ng-reflect-model', 'true');
+
+			cy.getByAutoId('setup.ova.eula2').should('have.attr', 'ng-reflect-model', 'false');
+			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('have.attr', 'disabled');
+			cy.getByAutoId('setup.ova.eula2').click({ force: true });
+			cy.getByAutoId('setup.ova.eula2').should('have.attr', 'ng-reflect-model', 'true');
+
 			cy.contains('button', i18n._DownloadImage_.toUpperCase()).should('not.have.attr', 'disabled');
 		});
 	});

@@ -19,6 +19,8 @@ import { GroupTrainingEntitySchema } from '../models/group-training-entity-schem
 import { GroupTrainingRequestSchema } from '../models/group-training-request-schema';
 import { UserQuota } from '../models/user-quota';
 import { UserTraining } from '../models/user-training';
+import { BookmarkResponseSchema } from '../models/bookmark-response-schema';
+import { BookmarkRequestSchema } from '../models/bookmark-request-schema';
 @Injectable({
   providedIn: 'root',
 })
@@ -34,6 +36,7 @@ class RacetrackContentService extends __BaseService {
   static readonly requestGroupTrainingPath = '/grouptraining/request';
   static readonly getTrainingQuotasPath = '/grouptraining/user/quotas';
   static readonly getCompletedTrainingsPath = '/grouptraining/user/trainings/completed';
+  static readonly updateBookmarkPath = '/bookmarks';
 
   constructor(
     config: __Configuration,
@@ -352,19 +355,19 @@ class RacetrackContentService extends __BaseService {
    * Provides product documentation ,videos,tutorial, pdf
    * @param params The `RacetrackContentService.GetRacetrackSuccessPathsParams` containing the following parameters:
    *
-   * - `usecase`: Usecase value ( assurance | sd-access | automation )
-   *
-   * - `solution`: solution value ( ibn )
-   *
-   * - `pitstop`: Pitstop value (onboard | implement | use | engage)
-   *
    * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `usecase`: Usecase value ( assurance | sd-access | automation )
    *
    * - `suggestedAction`: suggestedAction for every Pitstop
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
+   * - `solution`: solution value ( ibn )
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `pitstop`: Pitstop value (onboard | implement | use | engage)
    *
    * - `page`: Page number of the response
    *
@@ -377,13 +380,13 @@ class RacetrackContentService extends __BaseService {
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
-    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
-    if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.usecase != null) __params = __params.set('usecase', params.usecase.toString());
     if (params.suggestedAction != null) __params = __params.set('suggestedAction', params.suggestedAction.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.solution != null) __params = __params.set('solution', params.solution.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.pitstop != null) __params = __params.set('pitstop', params.pitstop.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
@@ -408,19 +411,19 @@ class RacetrackContentService extends __BaseService {
    * Provides product documentation ,videos,tutorial, pdf
    * @param params The `RacetrackContentService.GetRacetrackSuccessPathsParams` containing the following parameters:
    *
-   * - `usecase`: Usecase value ( assurance | sd-access | automation )
-   *
-   * - `solution`: solution value ( ibn )
-   *
-   * - `pitstop`: Pitstop value (onboard | implement | use | engage)
-   *
    * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `usecase`: Usecase value ( assurance | sd-access | automation )
    *
    * - `suggestedAction`: suggestedAction for every Pitstop
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
+   * - `solution`: solution value ( ibn )
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `pitstop`: Pitstop value (onboard | implement | use | engage)
    *
    * - `page`: Page number of the response
    *
@@ -714,6 +717,56 @@ class RacetrackContentService extends __BaseService {
       __map(_r => _r.body as Array<UserTraining>)
     );
   }
+
+  /**
+   * @param params The `RacetrackContentService.UpdateBookmarkParams` containing the following parameters:
+   *
+   * - `bookmarkRequestSchema`: JSON Body to Bookmark
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
+   * @return Successfully updated
+   */
+  updateBookmarkResponse(params: RacetrackContentService.UpdateBookmarkParams): __Observable<__StrictHttpResponse<BookmarkResponseSchema>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = params.bookmarkRequestSchema;
+    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/api/customerportal/racetrack/v1/bookmarks`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<BookmarkResponseSchema>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `RacetrackContentService.UpdateBookmarkParams` containing the following parameters:
+   *
+   * - `bookmarkRequestSchema`: JSON Body to Bookmark
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
+   * @return Successfully updated
+   */
+  updateBookmark(params: RacetrackContentService.UpdateBookmarkParams): __Observable<BookmarkResponseSchema> {
+    return this.updateBookmarkResponse(params).pipe(
+      __map(_r => _r.body as BookmarkResponseSchema)
+    );
+  }
 }
 
 module RacetrackContentService {
@@ -858,24 +911,14 @@ module RacetrackContentService {
   export interface GetRacetrackSuccessPathsParams {
 
     /**
-     * Usecase value ( assurance | sd-access | automation )
-     */
-    usecase: string;
-
-    /**
-     * solution value ( ibn )
-     */
-    solution: string;
-
-    /**
-     * Pitstop value (onboard | implement | use | engage)
-     */
-    pitstop: string;
-
-    /**
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * Usecase value ( assurance | sd-access | automation )
+     */
+    usecase?: string;
 
     /**
      * suggestedAction for every Pitstop
@@ -888,9 +931,19 @@ module RacetrackContentService {
     sort?: Array<string>;
 
     /**
+     * solution value ( ibn )
+     */
+    solution?: string;
+
+    /**
      * Number of rows of data per page.
      */
     rows?: number;
+
+    /**
+     * Pitstop value (onboard | implement | use | engage)
+     */
+    pitstop?: string;
 
     /**
      * Page number of the response
@@ -1003,6 +1056,22 @@ module RacetrackContentService {
      * Requested fields in the response.
      */
     fields?: Array<string>;
+  }
+
+  /**
+   * Parameters for updateBookmark
+   */
+  export interface UpdateBookmarkParams {
+
+    /**
+     * JSON Body to Bookmark
+     */
+    bookmarkRequestSchema: BookmarkRequestSchema;
+
+    /**
+     * Mashery user credential header
+     */
+    XMasheryHandshake?: string;
   }
 }
 

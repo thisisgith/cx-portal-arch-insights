@@ -13,6 +13,7 @@ import {
 	ATX,
 	ATXResponse,
 	ATXSession,
+	BookmarkRequestSchema,
 	ELearning,
 	ELearningResponse,
 	PitstopActionUpdateRequest,
@@ -31,9 +32,10 @@ import {
 } from '@sdp-api';
 
 import { SolutionService } from '../solution.service';
+import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
 import * as _ from 'lodash-es';
 import * as moment from 'moment';
-import { Observable, of, forkJoin, Subscription } from 'rxjs';
+import { Observable, of, forkJoin, Subscription, ReplaySubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
@@ -137,6 +139,8 @@ export class LifecycleComponent implements OnDestroy {
 
 	// Current uncompleted pitstop
 	public currentWorkingPitstop: string;
+	// You can schedule/view content in the n+1 pitstop aka the "viewing pitstop"
+	public currentViewingPitstop: string;
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
 	public view: 'list' | 'grid' = 'grid';
@@ -145,6 +149,7 @@ export class LifecycleComponent implements OnDestroy {
 	public successBytesTable: CuiTableOptions;
 	public cgtAvailable: number;
 	public trainingAvailableThrough: string;
+	private stage = new ReplaySubject<string>();
 
 	public statusOptions = [
 		{
@@ -242,8 +247,23 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.solution = currentSolution;
 
 			this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
+
+			let viewingIndex = racetrackComponent.stages
+				.indexOf(this.currentWorkingPitstop.toLowerCase()) + 1;
+			if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
+			this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
+
 			this.getRacetrackInfo(this.currentWorkingPitstop);
 		});
+	}
+
+	/**
+	 * Returns if currentWorkingPitstop or currentViewingPitstop is the currently
+	 * selected pitstop
+	 */
+	public get notCurrentPitstop () {
+		return this.currentWorkingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase()
+			&& this.currentViewingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase();
 	}
 
 	/**
@@ -673,6 +693,44 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Updates the bookmark of the item
+	 * @param type string
+	 * @param item SuccessPath
+	 */
+	 public updateBookmark (type: string, item: SuccessPath) {
+		let bookmark;
+		let id;
+		let lifecycleCategory;
+		this.status.loading.success = true;
+		if (_.isEqual(type, 'SB')) {
+			bookmark = !_.get(item, 'bookmark');
+			id = _.get(item, 'successByteId');
+			lifecycleCategory = 'SB';
+		}
+		const bookmarkParams: BookmarkRequestSchema = {
+			id,
+			bookmark,
+			lifecycleCategory,
+			pitstop: this.componentData.params.pitstop,
+			solution: this.componentData.params.solution,
+			usecase: this.componentData.params.usecase,
+		};
+		const params: RacetrackContentService.UpdateBookmarkParams = {
+			bookmarkRequestSchema: bookmarkParams,
+		};
+		this.contentService.updateBookmark(params)
+		.subscribe(() => {
+			item.bookmark = !item.bookmark;
+			this.status.loading.success = false;
+		},
+		err => {
+			this.status.loading.success = false;
+			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
+	 }
+
+	/**
 	 * Loads the ACC for the given params
 	 * @returns the accResponse
 	 */
@@ -700,7 +758,6 @@ export class LifecycleComponent implements OnDestroy {
 					!session.title && !session.description);
 
 				this.selectedACC = this.componentData.acc.sessions;
-				this.buildTable();
 
 				this.status.loading.acc = false;
 				if (window.Cypress) {
@@ -793,6 +850,7 @@ export class LifecycleComponent implements OnDestroy {
 						}));
 				}
 
+				this.buildTable();
 				this.status.loading.success = false;
 				if (window.Cypress) {
 					window.successPathsLoading = false;
@@ -1036,12 +1094,21 @@ export class LifecycleComponent implements OnDestroy {
 			}
 
 			this.componentData.params.pitstop = stage;
+			this.stage.next(pitstop.name);
 			// UI not handling pagination for now, temporarily set to a large number
 			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
 
 			this.status.loading.racetrack = false;
 		}
+	}
+
+	/**
+	 * Returns the current pitStop
+	 * @returns the observable representing the pitstop
+	 */
+	 public getCurrentPitstop (): Observable<string>  {
+		return this.stage.asObservable();
 	}
 
 	/**
