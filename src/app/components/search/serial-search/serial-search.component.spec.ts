@@ -137,18 +137,17 @@ describe('SerialSearchComponent', () => {
 			.and
 			.returnValues(of(<Assets> AssetScenarios[0].scenarios.GET[0].response.body));
 		component.serialNumber = { query: 'FOX1306GBAD' };
-		spyOn(component.router, 'navigate')
-			.and
-			.returnValue(new Promise(() => true));
+		const navSpy = spyOn(component.router, 'navigate');
 		component.ngOnChanges();
 		fixture.detectChanges();
 		component.onViewDetails(component.serialNumber.query);
 		fixture.detectChanges();
-		expect(component.router.navigate)
-			.toHaveBeenCalledWith(
-				['solution/assets'],
-				{ queryParams: { serialNumber: 'FOX1306GBAD', select: true } },
-			);
 		flush();
+		expect(navSpy.calls.mostRecent().args)
+			.toEqual([
+					['solution/assets'],
+					{ queryParams: { serialNumber: 'FOX1306GBAD', select: true } },
+			]);
+
 	}));
 });
