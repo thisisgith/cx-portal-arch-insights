@@ -1055,7 +1055,7 @@ export class LifecycleComponent implements OnDestroy {
 			}
 
 			this.componentData.params.pitstop = stage;
-			this.stage.next(stage);
+			this.stage.next(pitstop.name);
 			// UI not handling pagination for now, temporarily set to a large number
 			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
@@ -1066,7 +1066,7 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Returns the current pitStop
-	 * @returns the observable representing the customerId
+	 * @returns the observable representing the pitstop
 	 */
 	 public getCurrentPitstop (): Observable<string>  {
 		return this.stage.asObservable();
