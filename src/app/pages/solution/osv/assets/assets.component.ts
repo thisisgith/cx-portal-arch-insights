@@ -176,7 +176,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
-						sortable: true,
+						sortable: false,
 						sortDirection: 'desc',
 						sorting: true,
 					},
@@ -188,7 +188,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
-						sortable: true,
+						sortable: false,
 					},
 					{
 						key: 'swType',

@@ -109,7 +109,7 @@ export class SoftwareVersionsComponent {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						sortable: true,
+						sortable: false,
 						sortDirection: 'desc',
 						sorting: true,
 						width: '10%',

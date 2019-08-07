@@ -154,6 +154,7 @@ export class OptimalSoftwareVersionComponent {
 						profiles: response.profiles,
 						versions: response.versions,
 					};
+					response.asset_profile.assets_profile = 0;
 					deploymentStatusFilter.data = _.compact(
 						_.map(response.deployment, (value: number, key: string) => {
 							if (value !== 0) {
@@ -166,7 +167,7 @@ export class OptimalSoftwareVersionComponent {
 							}
 						}));
 
-					assetTypeFilter.data = _.compact(
+					assetTypeFilter.data = _.compact(						
 						_.map(response.asset_profile, (value: number, key: string) => {
 							if (value !== 0) {
 								return {
