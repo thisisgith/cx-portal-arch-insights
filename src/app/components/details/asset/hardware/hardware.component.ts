@@ -85,6 +85,10 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 
 	@Input('asset') public asset: Asset;
 	@ViewChild('modulesTable', { static: true }) private modulesTableTemplate: TemplateRef<{ }>;
+	@ViewChild('idTemplate', { static: true }) private idTemplate: TemplateRef<{ }>;
+	@ViewChild('familyTemplate', { static: true }) private familyTemplate: TemplateRef<{ }>;
+	@ViewChild('slotTemplate', { static: true }) private slotTemplate: TemplateRef<{ }>;
+	@ViewChild('serialTemplate', { static: true }) private serialTemplate: TemplateRef<{ }>;
 
 	public status = {
 		loading: {
@@ -238,31 +242,26 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 							{
 								key: 'productId',
 								name: I18n.get('_Type_'),
-								render: item =>
-									item.equipmentType ? item.equipmentType : I18n.get('_NA_'),
 								sortable: false,
+								template: this.idTemplate,
 							},
 							{
 								key: 'productFamily',
 								name: `${I18n.get('_ProductFamily_')} / ${I18n.get('_ID_')}`,
-								render: item =>
-									`${item.productFamily ? item.productFamily : I18n.get('_NA_')} `
-									+ `/ ${item.productId ? item.productId : I18n.get('_NA_')}`,
 								sortable: false,
+								template: this.familyTemplate,
 							},
 							{
 								key: 'slot',
 								name: I18n.get('_Slot_'),
-								render: item =>
-									item.slot ? item.slot : I18n.get('_NA_'),
 								sortable: false,
+								template: this.slotTemplate,
 							},
 							{
 								key: 'serialNumber',
 								name: I18n.get('_SerialNumber_'),
-								render: item =>
-									item.serialNumber ? item.serialNumber : I18n.get('_NA_'),
 								sortable: false,
+								template: this.serialTemplate,
 							},
 						],
 						padding: 'compressed',
@@ -323,20 +322,17 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	 */
 	private setTimelineData () {
 		this.timelineData = [];
-		if (eolTimelineProperties) {
-			eolTimelineProperties.forEach(property => {
-				const propertyName = _.get(property, 'propertyName', '');
-				const label = _.get(property, 'label', '');
-				const value: string = _.get(this.eolBulletinData, property.propertyName, '');
-
-				if (propertyName && value) {
-					this.timelineData.push({
-						date: new Date(value),
-						subTitle: new Date(value).toDateString(),
-						title: I18n.get(label),
-					});
-				}
-			});
-		}
+		eolTimelineProperties.forEach(property => {
+			const propertyName = _.get(property, 'propertyName', '');
+			const label = _.get(property, 'label', '');
+			const value: string = _.get(this.eolBulletinData, propertyName, '');
+			if (value) {
+				this.timelineData.push({
+					date: new Date(value),
+					subTitle: new Date(value).toDateString(),
+					title: I18n.get(label),
+				});
+			}
+		});
 	}
 }

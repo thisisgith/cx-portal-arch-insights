@@ -7,6 +7,7 @@ import {
 } from '@mock';
 import { AssetDetailsHardwareComponent } from './hardware.component';
 import { AssetDetailsHardwareModule } from './hardware.module';
+import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
@@ -14,6 +15,7 @@ import { InventoryService, ProductAlertsService } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { UserResolve } from '@utilities';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -32,6 +34,7 @@ describe('AssetDetailsHardwareComponent', () => {
 	let fixture: ComponentFixture<AssetDetailsHardwareComponent>;
 	let productAlertsService: ProductAlertsService;
 	let inventoryService: InventoryService;
+	let userResolve: UserResolve;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -39,6 +42,7 @@ describe('AssetDetailsHardwareComponent', () => {
 				AssetDetailsHardwareModule,
 				HttpClientTestingModule,
 				MicroMockModule,
+				RouterTestingModule,
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
@@ -48,6 +52,10 @@ describe('AssetDetailsHardwareComponent', () => {
 
 		inventoryService = TestBed.get(InventoryService);
 		productAlertsService = TestBed.get(ProductAlertsService);
+		userResolve = TestBed.get(UserResolve);
+		spyOn(userResolve, 'getCustomerId')
+			.and
+			.returnValue(of('1234'));
 	}));
 
 	beforeEach(() => {
@@ -62,7 +70,8 @@ describe('AssetDetailsHardwareComponent', () => {
 	});
 
 	it('should handle failing api calls', done => {
-		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		const asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.asset = asset;
 
 		const error = {
 			status: 404,
@@ -71,7 +80,7 @@ describe('AssetDetailsHardwareComponent', () => {
 		spyOn(productAlertsService, 'getHardwareEoxBulletin')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getHardwareEox')
+		const hardwareSpy = spyOn(productAlertsService, 'getHardwareEox')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(inventoryService, 'getHardware')
@@ -96,11 +105,33 @@ describe('AssetDetailsHardwareComponent', () => {
 
 			done();
 		});
+		const mockEOLData = _.filter(MockHardwareEOLResponse.data,
+			{ managedNeId: asset.managedNeId });
+		hardwareSpy.and.returnValue(of({ data: mockEOLData }));
+		component.ngOnInit();
+
+		fixture.whenStable()
+		.then(() => {
+			expect(component.status.loading.eol)
+				.toBeFalsy();
+
+			expect(component.status.loading.eolBulletin)
+				.toBeFalsy();
+
+			expect(component.status.loading.modules)
+				.toBeFalsy();
+
+			expect(component.status.loading.overall)
+				.toBeFalsy();
+
+			done();
+		});
 	});
 
 	it('should fetch the hardware information', done => {
 		const asset = getActiveBody(AssetScenarios[0]).data[0];
 		component.asset = asset;
+
 		const mockEOLData = _.filter(MockHardwareEOLResponse.data,
 			{ managedNeId: asset.managedNeId });
 		const mockEOLBulletinData = _.filter(MockHardwareEOLBulletinsResponse.data,
@@ -137,6 +168,45 @@ describe('AssetDetailsHardwareComponent', () => {
 			expect(component.status.loading.overall)
 				.toBeFalsy();
 
+			done();
+		});
+	});
+
+	it('should fetch timeline data', done => {
+		const asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.asset = asset;
+
+		const mockEOLData = _.filter(MockHardwareEOLResponse.data,
+			{ managedNeId: asset.managedNeId });
+		const mockEOLBulletinData = _.filter(MockHardwareEOLBulletinsResponse.data,
+			{ hwEolInstanceId: _.head(mockEOLData).hwEolInstanceId });
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(productAlertsService, 'getHardwareEoxBulletin')
+			.and
+			.returnValue(of({ data: mockEOLBulletinData }));
+		spyOn(productAlertsService, 'getHardwareEox')
+			.and
+			.returnValue(of({ data: mockEOLData }));
+		spyOn(inventoryService, 'getHardware')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		component.ngOnInit();
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.status.loading.eol)
+				.toBeFalsy();
+
+			expect(component.status.loading.eolBulletin)
+				.toBeFalsy();
+
+			expect(component.timelineData.length)
+				.toBeTruthy();
 			done();
 		});
 	});

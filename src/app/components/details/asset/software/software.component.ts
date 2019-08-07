@@ -41,6 +41,34 @@ interface EolTimelineProperty {
 	propertyName: string;
 }
 
+/** properties in the SoftwareEolBulletin object to use in the timeline */
+const eolTimelineProperties: EolTimelineProperty[] = [
+	{
+		label: '_EndOfLifeAnnounced_',
+		propertyName: 'eoLifeExternalAnnouncementDate',
+	},
+	{
+		label: '_EndOfSale_',
+		propertyName: 'eoSaleDate',
+	},
+	{
+		label: '_LastShip_',
+		propertyName: 'lastShipDate',
+	},
+	{
+		label: '_EndOfSoftwareMaintenance_',
+		propertyName: 'eoSwMaintenanceReleasesDate',
+	},
+	{
+		label: '_EndOfVulnerabilitySecuritySupport_',
+		propertyName: 'eoVulnerabilitySecuritySupport',
+	},
+	{
+		label: '_LastDateOfSupport_',
+		propertyName: 'lastDateOfSupport',
+	},
+];
+
 /**
  * Software details component
  */
@@ -77,34 +105,6 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	private refresh$: Subject<void>;
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
-
-	/** properties in the SoftwareEolBulletin object to use in the timeline */
-	private eolTimelineProperties: EolTimelineProperty[] = [
-		{
-			label: '_EndOfLifeAnnounced_',
-			propertyName: 'eoLifeExternalAnnouncementDate',
-		},
-		{
-			label: '_EndOfSale_',
-			propertyName: 'eoSaleDate',
-		},
-		{
-			label: '_LastShip_',
-			propertyName: 'lastShipDate',
-		},
-		{
-			label: '_EndOfSoftwareMaintenance_',
-			propertyName: 'eoSwMaintenanceReleasesDate',
-		},
-		{
-			label: '_EndOfVulnerabilitySecuritySupport_',
-			propertyName: 'eoVulnerabilitySecuritySupport',
-		},
-		{
-			label: '_LastDateOfSupport_',
-			propertyName: 'lastDateOfSupport',
-		},
-	];
 
 	constructor (
 		private logger: LogService,
@@ -327,7 +327,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	 */
 	private setTimelineData () {
 		this.timelineData = [];
-		this.eolTimelineProperties.forEach(property => {
+		eolTimelineProperties.forEach(property => {
 			const propertyName = _.get(property, 'propertyName', '');
 			const label = _.get(property, 'label', '');
 			const value: string = _.get(this.eolBulletinData, propertyName, '');
