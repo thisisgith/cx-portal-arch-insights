@@ -6,5 +6,8 @@ export { ScanStatus } from './models/scan-status';
 export { TransactionRequest } from './models/transaction-request';
 export { TransactionRequestResponse } from './models/transaction-request-response';
 export { TransactionRequestBody } from './models/transaction-request-body';
+export { TransactionStatusBody } from './models/transaction-status-body';
+export { TransactionStatuses } from './models/transaction-statuses';
 export { TransactionStatus } from './models/transaction-status';
 export { TransactionStatusResponse } from './models/transaction-status-response';
+export { Transaction } from './models/transaction';
