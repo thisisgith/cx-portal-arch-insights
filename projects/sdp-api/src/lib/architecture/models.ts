@@ -1,3 +1,3 @@
-export { IException} from './models/exception'
-export { IAsset} from './models/asset'
+export { IException } from './models/exception';
+export { IAsset } from './models/asset';
 

@@ -3,13 +3,13 @@
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<cbp-header [cbpDetails]="exceptionObject"></cbp-header>
 		<div detailsPanelTitle class="text-xlarge">
-			<span class="icon-left-arrow"  (click)="onPanelClose()"></span>
-			<span class="icon-right-arrow" style="color :#c8c9cb"></span>
+			<span class="icon-left-arrow"  data-auto-id="PanelClose" (click)="onPanelClose()"></span>
+			<span class="icon-right-arrow"></span>
 
 			<span [innerText]="' ' + exceptionObject?.bpRuleTitle"></span>			
 		</div>
 	</details-panel-header>
-	<cbp-device-affected [cbpDetails]='exceptionObject'></cbp-device-affected>
+	<cbp-device-affected [cbpDetails]="exceptionObject"></cbp-device-affected>
 </details-panel>
 
 <div class="panel">

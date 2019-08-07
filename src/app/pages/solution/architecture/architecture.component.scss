@@ -1,15 +1,18 @@
 .high-risk {
-    font-size: 28px;
+  font-size: 28px;
 }
 .m-t-10 {
-    margin-top:20px;
+  margin-top: 20px;
 }
 .RiskChart .highcharts-axis-labels .highcharts-xaxis-labels {
-        fill: red !important;
+  fill: red !important;
 }
 
 .tab-exceptions {
-    width:200px;
+  width: 200px;
 }
 
-.visualSelected { color:rgb(124, 181, 236);border-bottom:4px solid rgb(124, 181, 236); }
+.visualSelected {
+  color: rgb(124, 181, 236);
+  border-bottom: 4px solid rgb(124, 181, 236);
+}

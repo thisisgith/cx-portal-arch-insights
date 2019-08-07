@@ -1,6 +1,6 @@
 <cui-tabs [(activeTabIndex)]="tabIndex">
 	<cui-tab [label]="'_Summary_' | i18n | uppercase" disabled="true">
-		<cbp-summary [cbpDetails]='cbpDetails'></cbp-summary>
+		<cbp-summary [cbpDetails]="cbpDetails"></cbp-summary>
 	</cui-tab>
 	<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true">
 
@@ -9,6 +9,6 @@
 
 	</cui-tab>
 	<cui-tab [label]="'TBD(CBP...)'">
-		<cbp-tbd [cbpDetails]='cbpDetails'></cbp-tbd>
+		<cbp-tbd [cbpDetails]="cbpDetails"></cbp-tbd>
 	</cui-tab>
 </cui-tabs>

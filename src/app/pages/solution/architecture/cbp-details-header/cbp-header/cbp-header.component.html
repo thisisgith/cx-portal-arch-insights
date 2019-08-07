@@ -6,12 +6,11 @@
 				<div class="text-bold text-uppercase" [innerText]="'_Risk_' | i18n"></div>
 				<div>
 					<span class="label label--circle label--tiny qtr-margin-right" [ngClass]="{
-							'Critical': 'label--danger',
-							'High': 'label--warning',
-							'Medium': 'label--warning-alt',
-							'Low': 'label--success',
-							'Info': 'label--info'
-					}[cbpDetails?.bpSeverity]"></span>
+											'High': 'label--danger',
+											'Medium': 'label--warning',
+											'Low': 'label--warning-alt',
+											'Info': 'label--info'
+										}[cbpDetails?.bpSeverity]"></span>
 					{{ cbpDetails?.bpSeverity || ('_NA_' | i18n) }}
 				</div>
 			</div>
