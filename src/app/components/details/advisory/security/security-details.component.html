@@ -1,26 +1,64 @@
-<div class="half-margin-left base-margin-top">
-	<ng-container *ngTemplateOutlet="detailText; context: {
-			title: ('_Title_' | i18n),
-			text: data?.bulletin?.bulletinTitle
-		}">
-	</ng-container>
-	<ng-container *ngTemplateOutlet="detailText; context: {
-			title: ('_Summary_' | i18n),
-			text: data?.bulletin?.summaryText
-		}">
-	</ng-container>
-	<!-- Commenting out until fields exist -->
-	<!-- <ng-container *ngTemplateOutlet="detailText; context: {
-			title: ('_Workaround_' | i18n) + ' / ' + ('_Solution_' | i18n),
-			text: data?.bulletin?.workaround || ('_NoWorkarounds_' | i18n)
-		}">
-	</ng-container>
-	<ng-container *ngTemplateOutlet="detailText; context: {
-			title: ('_AdditionalResources_' | i18n),
-			text: data?.bulletin?.additional
-		}">
-	</ng-container> -->
-</div>
+<cui-tabs>
+	<cui-tab [label]="'_Summary_' | i18n | uppercase">
+		<ng-container *ngTemplateOutlet="summary"></ng-container>
+	</cui-tab>
+	<cui-tab [label]="'_ImpactedAssets_' | i18n | uppercase">
+		<div class="half-margin-top">
+			<advisories-impacted-assets [details]="details"></advisories-impacted-assets>
+		</div>
+	</cui-tab>
+</cui-tabs>
+
+<ng-template #summary>
+	<div class="half-margin-left base-margin-top">
+		<ng-container *ngTemplateOutlet="detailText; context: {
+				title: ('_Title_' | i18n),
+				text: data?.bulletin?.bulletinTitle
+			}">
+		</ng-container>
+		<ng-container *ngTemplateOutlet="detailText; context: {
+				title: ('_Summary_' | i18n),
+				text: data?.bulletin?.summaryText
+			}">
+		</ng-container>
+		<ng-container *ngTemplateOutlet="detailText; context: {
+				title: ('_Workaround_' | i18n) + ' / ' + ('_Solution_' | i18n),
+				text: data?.bulletin?.workaround || ('_NoWorkarounds_' | i18n)
+			}">
+		</ng-container>
+		<ng-container *ngTemplateOutlet="detailText; context: {
+				title: ('_AdditionalResources_' | i18n),
+				text: data?.bulletin?.additional
+			}">
+		</ng-container>
+	</div>
+
+	<div class="bottom-flex-box">
+		<div class="was-this-helpful text-bold text-small" [innerText]="'_WasThisHelpful_' | i18n"></div>
+		<div for="input-size-default">
+			<a><span id="upVoteBtn" class="icon-like"
+				[ngClass]="{
+					'btn-not-selected': !upVoteSelected
+				}"
+				data-auto-id="upVoteBtn"
+				(click)="voteClicked($event)"
+				></span></a>
+			<a><span id="downVoteBtn" class="icon-like rotate-180 qtr-margin-left"
+				[ngClass]="{
+					'btn-not-selected': !downVoteSelected
+				}"
+				data-auto-id="downVoteBtn"
+				(click)="voteClicked($event)"
+				></span></a>
+		</div>
+		<div class="form-group input--compressed base-margin-top half-margin-left half-margin-right">
+				<div class="form-group__text">
+					<input type="text" id="input-size-default" [placeholder]="'_TellUsWhatYouThink_' | i18n" />
+				</div>​
+		</div>
+		<button class="btn btn--small base-margin-right" type="text" [innerText]="'_Submit_' | i18n"></button>
+	</div>
+</ng-template>
 
 <ng-template #detailText let-title="title" let-text="text">
 	<div class="base-margin-bottom">

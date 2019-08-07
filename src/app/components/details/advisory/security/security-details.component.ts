@@ -32,7 +32,8 @@ export interface Data {
 	advisory?: SecurityAdvisoryInfo;
 	notice?: SecurityAdvisory;
 	bulletin?: SecurityAdvisoryBulletin;
-	affected?: Asset[];
+	impacted?: Asset[];
+	potentiallyImpacted?: Asset[];
 }
 
 /**
@@ -40,6 +41,7 @@ export interface Data {
  */
 @Component({
 	selector: 'security-details',
+	styleUrls: ['./security-details.component.scss'],
 	templateUrl: './security-details.component.html',
 })
 export class SecurityDetailsComponent implements OnInit, OnChanges {
@@ -57,6 +59,8 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 
 	public data: Data = { };
 	public isLoading = false;
+	public upVoteSelected: boolean;
+	public downVoteSelected: boolean;
 
 	constructor (
 		private logger: LogService,
@@ -111,19 +115,32 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 
 	/**
 	 * Fetches the assets affected by the security advisory
-	 * @param securityAdvisories the security advisories to look over
+	 * @param advisories the advisories to look over
 	 * @returns the observable
 	 */
-	private getAssets (securityAdvisories: SecurityAdvisory[]) {
+	private getAssets (advisories: SecurityAdvisory[]) {
+		const vulAdvisories = _.filter(advisories, x => x.vulnerabilityStatus === 'VUL', []);
+		const vulHwIds = _.flatMap(vulAdvisories, x => _.get(x, 'hwInstanceId'));
+		const potvulAdvisories =
+			_.filter(advisories, x => x.vulnerabilityStatus === 'POTVUL', []);
+		const potvulHwIds = _.flatMap(potvulAdvisories, x => _.get(x, 'hwInstanceId'));
+
 		this.params.assets = {
 			customerId: this.customerId,
-			hwInstanceId: _.map(securityAdvisories, 'hwInstanceId'),
+			hwInstanceId: _.map(advisories, 'hwInstanceId'),
 		};
 
 		return this.inventoryService.getAssets(this.params.assets)
 		.pipe(
 			map((response: Assets) => {
-				_.set(this.data, 'affected', _.get(response, 'data', []));
+				const data = _.get(response, 'data', []);
+				const vulData =
+					_.filter(data, x => _.includes(vulHwIds, _.get(x, 'hwInstanceId')));
+				_.set(this.data, 'impacted', vulData);
+
+				const potvulData =
+					_.filter(data, x => _.includes(potvulHwIds, _.get(x, 'hwInstanceId')));
+				_.set(this.data, 'potentiallyImpacted', potvulData);
 			}),
 			catchError(err => {
 				this.logger.error('security-details.component : getAssets() ' +
@@ -173,6 +190,8 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	 */
 	public ngOnInit () {
 		this.refresh();
+		this.downVoteSelected = false;
+		this.upVoteSelected = false;
 	}
 
 	/**
@@ -183,6 +202,26 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 		const currentId = _.get(changes, ['id', 'currentValue']);
 		if (currentId && !changes.id.firstChange) {
 			this.refresh();
+		}
+	}
+
+	/**
+	 * Handles the clicking of vote buttons
+	 * @param event click event
+	 */
+	public voteClicked (event: Event) {
+		const btnId = _.get(event, 'toElement.id');
+		if (btnId === 'upVoteBtn') {
+			this.upVoteSelected = !this.upVoteSelected;
+			if (this.downVoteSelected) {
+				this.downVoteSelected = false;
+			}
+		}
+		if (btnId === 'downVoteBtn') {
+			this.downVoteSelected = !this.downVoteSelected;
+			if (this.upVoteSelected) {
+				this.upVoteSelected = false;
+			}
 		}
 	}
 }
