@@ -359,7 +359,10 @@
 <ng-template #learnPanel let-data="data">
 	<div *ngIf="data.elearning?.length" data-auto-id="LearnPanel-ELearningBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
-			{ icon: 'clipboard-md', title: '_ELearning_', data: componentData.learning.elearning }">
+			{ icon: 'clipboard-md',
+				title: '_ELearning_',
+				data: componentData.learning.elearning,
+				link: 'https://pilot-digital-learning.cisco.com/cx/#/?type=e-learning' }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
@@ -373,19 +376,15 @@
 
 	<div *ngIf="data.certifications?.length" data-auto-id="LearnPanel-CertificationsBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
-			{ icon: 'certified', title: '_Certifications_', data: componentData.learning.certifications }">
-		</ng-container>
-		<div class="divider"></div>
-	</div>
-
-	<div *ngIf="data.training?.length" data-auto-id="LearnPanel-RemoteLearningLabsBlock">
-		<ng-container *ngTemplateOutlet="learningBlock; context:
-			{ icon: 'audio-broadcast',title: '_RemoteLearningLabs_', data: componentData.learning.training }">
+			{ icon: 'certified',
+				title: '_Certifications_',
+				data: componentData.learning.certifications,
+				link: 'https://pilot-digital-learning.cisco.com/cx/#/?type=certification'} ">
 		</ng-container>
 	</div>
 </ng-template>
 
-<ng-template #learningBlock let-title="title" let-data="data" let-icon="icon">
+<ng-template #learningBlock let-title="title" let-data="data" let-icon="icon" let-link="link">
 	<div class="row">
 		<div class="col-md-9">
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
@@ -396,8 +395,7 @@
 			<a class="no-link"
 				target="_blank"
 				attr.data-auto-id="{{ title }}-ViewAll"
-				href="https://pilot-digital-learning.cisco.com/cx#/"
-				[ngClass]="{'disabled': title !== '_ELearning_'}">
+				href="{{ link }}">
 				<span [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
 			</a>
