@@ -31,6 +31,7 @@ import {
 } from '@sdp-api';
 
 import { SolutionService } from '../solution.service';
+import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
 import * as _ from 'lodash-es';
 import * as moment from 'moment';
 import { Observable, of, forkJoin, Subscription, ReplaySubject } from 'rxjs';
@@ -137,6 +138,8 @@ export class LifecycleComponent implements OnDestroy {
 
 	// Current uncompleted pitstop
 	public currentWorkingPitstop: string;
+	// You can schedule/view content in the n+1 pitstop aka the "viewing pitstop"
+	public currentViewingPitstop: string;
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
 	public view: 'list' | 'grid' = 'grid';
@@ -243,8 +246,23 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.solution = currentSolution;
 
 			this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
+
+			let viewingIndex = racetrackComponent.stages
+				.indexOf(this.currentWorkingPitstop.toLowerCase()) + 1;
+			if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
+			this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
+
 			this.getRacetrackInfo(this.currentWorkingPitstop);
 		});
+	}
+
+	/**
+	 * Returns if currentWorkingPitstop or currentViewingPitstop is the currently
+	 * selected pitstop
+	 */
+	public get notCurrentPitstop () {
+		return this.currentWorkingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase()
+			&& this.currentViewingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase();
 	}
 
 	/**
