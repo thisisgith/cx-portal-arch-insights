@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { MicroMockService } from '@cui-x-views/mock';
 import { EntitlementService } from '@sdp-api';
 import { UserResolve } from '@utilities';
+import { user } from '@mock';
 
 import { HeaderComponent } from './header.component';
 import { HeaderModule } from './header.module';
@@ -56,35 +57,21 @@ describe('HeaderComponent', () => {
 		const localUserResolve = TestBed.get(UserResolve);
 		const spy = spyOn(localUserResolve, 'getUser')
 			.and
-			.returnValue(of({
-				info: {
-					individual: {
-						ccoId: 'tuser',
-						cxBUId: '',
-						emailAddress: 'testuser@email.com',
-						familyName: 'User',
-						name: 'Test',
-						role: '',
-					},
-				},
-				service: {
-					cxLevel: 2,
-				},
-			}));
+			.returnValue(of(user));
 
 		const localComponent = TestBed.createComponent(HeaderComponent);
 		expect(spy)
 			.toHaveBeenCalled();
 		expect(localComponent.componentInstance.name)
-			.toBe('Test');
+			.toBe('Demo');
 		expect(localComponent.componentInstance.fullName)
-			.toBe('Test User');
+			.toBe('Demo Test');
 		expect(localComponent.componentInstance.initials)
-			.toBe('TU');
+			.toBe('DT');
 		expect(localComponent.componentInstance.email)
-			.toBe('testuser@email.com');
+			.toBe('fakeCco@cisco.com');
 		expect(localComponent.componentInstance.cxLevel)
-			.toBe(2);
+			.toBe(3);
 	});
 
 	it('should update innerHtml on window resize', () => {
