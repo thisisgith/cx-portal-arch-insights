@@ -198,7 +198,7 @@
   "_DownloadOVAImage_": "Download the OVA image",
   "_Download_": "Download",
   "_Duplicate_": "Duplicate",
-  "_DuringXStage_": "During <b>{0}</b>, ",
+  "_DuringXStage_": "During <span class='text-bold text-primary'>{0}</span>, ",
   "_EasternTime/US_": "Eastern Time/US",
   "_EditAssetTags_": "Edit Tags on ({0}) Assets",
   "_Edit_": "Edit",
