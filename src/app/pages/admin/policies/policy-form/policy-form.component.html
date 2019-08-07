@@ -135,7 +135,7 @@
 <ng-template #modulesTables>
 	<div class="row half-padding-top dbl-padding-left dbl-padding-right">
 		<div class="col-md-5">
-			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListLeft}"></ng-container>
+			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListLeft, allDevicesSelected: allDevicesSelectedLeft}"></ng-container>
 		</div>
 		<div class="col-md-2">
 			<button
@@ -152,19 +152,20 @@
 			><i class="icon-chevron-left"></i></button>
 		</div>
 		<div class="col-md-5">
-			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListRight}"></ng-container>
+			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListRight, allDevicesSelected: allDevicesSelectedRight}"></ng-container>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #deviceTableTemplate let-devices="devices">
+<ng-template #deviceTableTemplate let-devices="devices" let-allDevicesSelected="allDevicesSelected">
 	<div
 		class="row panel panel--bordered flex base-margin-right"
 	>
 		<div class="col-md-1 device-table">
 			<input class="text-xlarge"
 				type="checkbox"
-				(click)="toggleAllDevicesSelected(devices)"
+				(change)="allDevicesSelected = toggleAllDevicesSelected(allDevicesSelected, devices)"
+				[checked]="allDevicesSelected"
 			>
 			<span class="checkbox__input"></span>
 		</div>

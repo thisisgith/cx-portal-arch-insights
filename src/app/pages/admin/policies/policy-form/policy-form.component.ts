@@ -63,6 +63,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public title = '';
 	public deviceListRight: DeviceListRow[] = [];
 	public deviceListLeft: DeviceListRow[] = [];
+	public allDevicesSelectedRight = false;
+	public allDevicesSelectedLeft = false;
 	public selectedRowsRight = { };
 	public selectedRowsLeft = { };
 	public error = false;
@@ -392,12 +394,19 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * DOES NOT WORK YET
 	 *
 	 * Toggles is device row is selected
-	 * @param device device row
+	 * @param allDevicesSelected checkbox event
+	 * @param devices device row
+	 *
+	 * @returns if device header is selected or not
 	 */
-	public toggleAllDevicesSelected (checked: boolean, devices: DeviceListRow[]) {
+	public toggleAllDevicesSelected (allDevicesSelected: boolean, devices: DeviceListRow[]) {
+		const checked = !allDevicesSelected;
+
 		for (let devNum = 0; devNum < devices.length; devNum += 1) {
 			devices[devNum].selected = checked;
 		}
+
+		return checked;
 	}
 
 	/**
