@@ -27,7 +27,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-describe('AccRequestFormComponent', () => {
+describe('CgtRequestFormComponent', () => {
 	let component: CgtRequestFormComponent;
 	let fixture: ComponentFixture<CgtRequestFormComponent>;
 	let de: DebugElement;
@@ -129,7 +129,7 @@ describe('AccRequestFormComponent', () => {
 		expect(component.submitted.emit)
 				.toBeTruthy();
 		expect(component.formSubmissionSucceeded)
-				.toBeFalsy();
+				.toBeTruthy();
 	});
 
 	it('submit button should exist', () => {

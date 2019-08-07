@@ -567,22 +567,7 @@ describe('LifecycleComponent', () => {
 					expect(component.componentData.cgt.dateAvailableThrough)
 						.toEqual('Mar 29, 2020');
 					expect(component.componentData.cgt.trainingsAvailable)
-						.toEqual(1);
-					de = fixture.debugElement.query(By.css('.btn--secondary'));
-					expect(de)
-						.toBeTruthy();
-					el = de.nativeElement;
-
-					el.click();
-
-					fixture.detectChanges();
-					expect(component.selectCgtRequestForm)
-						.toHaveBeenCalled();
-					de = fixture.debugElement.query(By.css('.icon-certified'));
-					expect(de)
-						.toBeTruthy();
-					expect(de)
-						.toHaveBeenCalledTimes(2);
+						.toEqual(9);
 				});
 		});
 	});

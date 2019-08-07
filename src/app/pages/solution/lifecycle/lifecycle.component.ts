@@ -977,7 +977,8 @@ export class LifecycleComponent implements OnDestroy {
 						dateAvailable = _.get(training, 'contract_end_date');
 					}
 				});
-				this.groupTrainingsAvailable = this.totalAllowedGroupTrainings - (trainigsUsed + trainigsInProcess);
+				this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
+					(trainigsUsed + trainigsInProcess);
 				this.contentService.getCompletedTrainings(
 					_.pick(this.componentData.params, ['customerId']))
 					.pipe(
