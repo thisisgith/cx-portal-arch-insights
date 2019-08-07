@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { SecurityDetailsComponent } from './security-details.component';
 import { SecurityDetailsModule } from './security-details.module';
@@ -15,6 +15,8 @@ import {
 	MockSecurityAdvisories,
 } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
+import { By } from '@angular/platform-browser';
 
 describe('SecurityDetailsComponent', () => {
 	let component: SecurityDetailsComponent;
@@ -28,6 +30,7 @@ describe('SecurityDetailsComponent', () => {
 				HttpClientTestingModule,
 				SecurityDetailsModule,
 				MicroMockModule,
+				RouterTestingModule,
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
@@ -170,4 +173,37 @@ describe('SecurityDetailsComponent', () => {
 		expect(component.data.advisory)
 			.toEqual(MockAdvisorySecurityAdvisories[1]);
 	});
+
+	it('should handle vote button clicks', fakeAsync(() => {
+		const upVoteBtn = fixture.debugElement.query(
+			By.css('[data-auto-id="upVoteBtn"]'),
+		);
+		const downVoteBtn = fixture.debugElement.query(
+			By.css('[data-auto-id="downVoteBtn"]'),
+		);
+
+		upVoteBtn.nativeElement.click();
+		tick();
+		fixture.detectChanges();
+		expect(component.upVoteSelected)
+			.toEqual(true);
+		expect(component.downVoteSelected)
+			.toEqual(false);
+
+		downVoteBtn.nativeElement.click();
+		tick();
+		fixture.detectChanges();
+		expect(component.upVoteSelected)
+			.toEqual(false);
+		expect(component.downVoteSelected)
+			.toEqual(true);
+
+		downVoteBtn.nativeElement.click();
+		tick();
+		fixture.detectChanges();
+		expect(component.upVoteSelected)
+			.toEqual(false);
+		expect(component.downVoteSelected)
+			.toEqual(false);
+	}));
 });
