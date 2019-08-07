@@ -197,7 +197,7 @@
 							</div>
 						</div>
 						<div class="half-padding-top dbl-padding-left text-left">
-							<button type="submit" [disabled]="!requestForm.valid || custInfoError" class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n" data-auto-id="accRequestModal-Submit"></button>
+							<button type="submit" [disabled]="!requestForm.valid || custInfoError || submitSuccess" class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n" data-auto-id="accRequestModal-Submit"></button>
 							<button type="button" data-auto-id="accRequestModal-Cancel" class="btn btn--small -wide btn--secondary text-uppercase text-small" (click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"></button>
 						</div>
 					</form>
