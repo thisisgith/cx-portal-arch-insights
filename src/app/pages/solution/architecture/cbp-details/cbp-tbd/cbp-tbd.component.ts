@@ -67,7 +67,13 @@ export class CbpTbdComponent implements OnChanges {
 				.subscribe((res: IException[]) => {
 					this.tableData = res;
 					this.isLoading = false;
-				});
+				},
+					err => {
+						this.logger.error('CBP-TDB Fly-Out View' +
+							'  : getData() ' +
+							`:: Error : (${err.status}) ${err.message}`);
+						this.isLoading = false;
+					});
 	}
 	/**
 	 * used for expanding one table row at a time.

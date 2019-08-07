@@ -1,21 +1,21 @@
-<!-- App Details 360 slide-out -->
-<details-panel [hidden]="!exceptions" [fullscreen]="fullscreen">
+<!-- Fly-Out View Slide-out -->
+<details-panel [hidden]="!assetObject" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
-		<cbp-awe-header [cbpDetails]="exceptions"></cbp-awe-header>
+		<cbp-awe-header [cbpDetails]="assetObject"></cbp-awe-header>
 		<div detailsPanelTitle class="text-xlarge">
 
 			<span class="icon-left-arrow" (click)="onPanelClose()"></span>
 			<span class="icon-right-arrow" style="color :#c8c9cb"></span>
 			<span> Config Best Practices Exceptions for </span>
-			<a> {{ '< Assets : ' +exceptions?.productId+'>'}}</a>
+			<a> {{ '< Assets : ' +assetObject?.productId+'>'}}</a>
 		</div>
 	</details-panel-header>
-	<!-- <cbp-awe-tab [cbpDetails]="exceptions"></cbp-awe-tab> -->
-	<cbp-tbd [cbpDetails]='exceptions'></cbp-tbd>
+	<!-- <cbp-awe-tab [cbpDetails]="assetObject"></cbp-awe-tab> -->
+	<cbp-tbd [cbpDetails]='assetObject'></cbp-tbd>
 </details-panel>
 
 <div class="panel">
-		<cui-table [options]="tableOptions" [data]="AssetsExceptionDetails"></cui-table>
+		<cui-table [options]="tableOptions" [data]="AssetsExceptionDetails" (onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 		<div class="section" *ngIf="totalItems">
 			<cui-pager [page]="params.page"
 			[limit]="params.pageSize" [totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>

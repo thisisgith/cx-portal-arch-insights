@@ -10,6 +10,7 @@ import {
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { ArchitectureService , IException, IAsset } from '@sdp-api';
+import { DatePipe } from '@angular/common';
 
 /**
  * CBP Device Affected Table Component
@@ -41,6 +42,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	 * Used to Intialize Table options
 	 */
 	public ngOnInit () {
+		const datePipe = new DatePipe('en-US');
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
@@ -67,6 +69,8 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 				{
 					key: 'configCollectionDate',
 					name: 'Config Collection Date',
+					render: item =>
+						datePipe.transform(item.configCollectionDate, 'yyyy-MM-dd'),
 					sortable: false,
 				},
 				{
@@ -113,15 +117,14 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 		this.architectureService.getAllCBPDeviceAffected(this.params)
 				.subscribe((res: IAsset[]) => {
 					this.tableData = res;
-					this.tableData = this.tableData.map(item => {
-						const d: Date = new Date(item.configCollectionDate);
-						const strDate = `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
-						item.configCollectionDate = strDate;
-
-						return item;
-					});
 					this.isLoading = false;
-				});
+				},
+					err => {
+						this.logger.error('CBP-Device-Affected Fly-Out View' +
+							'  : getData() ' +
+							`:: Error : (${err.status}) ${err.message}`);
+						this.isLoading = false;
+					});
 	}
 
 	/**

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 
-import { ArchitectureService } from '@sdp-api';
+import { ArchitectureService , IException } from '@sdp-api';
 
 @Component({
 	selector: 'app-cbp-rule-violation',
@@ -23,6 +23,7 @@ export class CbpRuleViolationComponent implements OnInit {
 	public params = { page: 0, pageSize : 10 };
 	public severityType: any;
 	public paramsType = { page : 0, pageSize: 10, severity: null };
+	public exceptionObject:IException = null;
 
 	public ModifyCbpRuleExceptions(array:Array<any>){
 		array.map(obj => {
@@ -100,5 +101,19 @@ export class CbpRuleViolationComponent implements OnInit {
 		});
 	}
 
-	public onTableRowClicked(event:any){ }
+	/**
+ 	 * This method is used to set the exception object in order to open Fly-out View
+ 	 * @param event - It contains the selected Exception
+ 	 */
+	public onTableRowClicked (event: IException) {
+		this.exceptionObject = event;
+	}
+
+	/**
+	 * This method is used to set the null to exception object 
+	 * in order to Close Fly-out View
+	 */
+	public onPanelClose () {
+		this.exceptionObject = null ;
+	}
 }
