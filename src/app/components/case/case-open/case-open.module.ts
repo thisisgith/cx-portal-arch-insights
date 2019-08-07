@@ -8,6 +8,7 @@ import { CaseSubmittedModule } from './case-submitted/case-submitted.module';
 import { PanelSelectModule } from './panel-select/panel-select.module';
 import { CloseConfirmModule } from './close-confirm/close-confirm.module';
 import { CharCountModule } from '../../char-count/char-count.module';
+import { HeightTransitionModule } from '../../height-transition/height-transition.module';
 
 /**
  * Module for case open functionality
@@ -30,6 +31,7 @@ import { CharCountModule } from '../../char-count/char-count.module';
 		CloseConfirmModule,
 		PanelSelectModule,
 		CharCountModule,
+		HeightTransitionModule,
 	],
 })
 export class CaseOpenModule { }

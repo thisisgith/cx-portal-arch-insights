@@ -30,6 +30,7 @@ export class HeightTransitionDirective implements OnChanges, OnInit {
 			this.renderer.setStyle(this.el.nativeElement, 'height', 'auto');
 			this.renderer.setStyle(this.el.nativeElement, 'opacity', '1');
 		} else {
+			this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'none');
 			this.renderer.setStyle(this.el.nativeElement, 'height', '0px');
 			this.renderer.setStyle(this.el.nativeElement, 'opacity', '0');
 		}
@@ -44,6 +45,7 @@ export class HeightTransitionDirective implements OnChanges, OnInit {
 		if (this.heightTransitionExpanded) {
 			this.renderer.setStyle(this.el.nativeElement, 'height', `${elemHeight}px`);
 			this.renderer.setStyle(this.el.nativeElement, 'opacity', '1');
+			this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'auto');
 			const unlisten = this.renderer.listen(this.el.nativeElement, 'transitionend', () => {
 				unlisten();
 			});
@@ -56,6 +58,7 @@ export class HeightTransitionDirective implements OnChanges, OnInit {
 				requestAnimationFrame(() => {
 					this.renderer.setStyle(this.el.nativeElement, 'height', '0px');
 					this.renderer.setStyle(this.el.nativeElement, 'opacity', '0');
+					this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'none');
 				});
 			});
 		}
