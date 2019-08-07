@@ -344,7 +344,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		};
 
 		this.submitCall = function (params: DevicePolicyUpdateRequestModel) {
-			return this.devicePolicyService.updateCollectionPolicyUsingPATCH(params);
+			return this.devicePolicyService.updateDevicePolicyUsingPATCH(params);
 		};
 	}
 
