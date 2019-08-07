@@ -791,7 +791,7 @@ describe('Assets', () => { // PBC-41
 
 	context('PBC-90: Asset List -> Case List View', () => {
 		// Verify the Case List 360 view
-		it.only('Opens Case List 360 view when clicking asset cards', () => { // PBC-90
+		it('Opens Case List 360 view when clicking asset cards', () => { // PBC-90
 			assetMock.enable('(Assets) Missing data - Grid View');
 			cy.getByAutoId('grid-view-btn').click();
 			const serial = assetCards[0].serialNumber;
