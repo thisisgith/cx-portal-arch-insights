@@ -230,25 +230,28 @@ describe('Case Detail Spec', () => {
 		});
 
 		it.only('PBC-83 Cases - Number of Open Cases', () => {
-			cy.getByAutoId('openCases').should('exist');
-			cy.getByAutoId('openRMAs').should('exist');
+			cy.getByAutoId('openCases').should('exist').should('contain', i18n._OpenCases_);
+			cy.getByAutoId('openRMAs').should('exist').should('contain', i18n._OpenRMAs_);
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			// Look in Visual Filters of Open Cases
-			cy.getByAutoId('VisualFilterCollapse').click(); // To collapse
+			cy.getByAutoId('VisualFilterCollapse')
+				.should('contain', i18n._VisualFilters_)
+				.click(); // To collapse
 			cy.getByAutoId('VisualFilterCollapse').click(); // To expand
 			cy.getByAutoId('TotalVisualFilter').should('exist');
 			// TODO confirm value same as openCases above .should('contain.value', > 0);
+			cy.get("[class='text-huge opacity-50']").should('exist').should('have.length', 2);
 			// TODO RMAs tab is currently(8/6/2019) disabled, planned for a future release
 		});
 		it('PBC-86 Cases - Filter by Status', () => {
 			cy.getByAutoId('Facet-Problem Resolution').click();
-			cy.getByAutoId('CasesSelectVisualFilter-status').should('exist');
+			cy.getByAutoId('CasesSelectVisualFilter-status', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('statusFilter').should('exist');
 			// search pie-chart for 'pending' 'updated' 'new'
 		});
 		it('PBC-87 Cases - Filter by Severity', () => {
 			cy.getByAutoId('Facet-Problem Resolution').click();
-			cy.getByAutoId('CasesSelectVisualFilter-severity').should('exist');
+			cy.getByAutoId('CasesSelectVisualFilter-severity', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('severityFilter').should('exist');
 			// search class=highcharts-series-group for S1 S3 S4 and S2
 		});
