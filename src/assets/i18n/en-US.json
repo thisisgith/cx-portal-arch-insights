@@ -579,5 +579,14 @@
 	"_YouHaveInventory_": "You have <a href=\"#\">{0}</a> of these in your inventory",
 
 	"_SupportPortalTopicList_": ["CX Portal Support", "CX Collector Support", "Product or Service Inquiries", "Product or Service Upgrades", "Cisco Communities",
-		"Cisco Learning", "Register for Ask the Expert", "Request an Accelerator", "Request an Expert", "Other"]
+		"Cisco Learning", "Register for Ask the Expert", "Request an Accelerator", "Request an Expert", "Other"],
+		"_SupportSentBy_": "sent the following request:",
+		"_SupportCiscoID_": "Cisco ID",
+		"_SupportName_": "Name",
+		"_SupportEmail_": "Email",
+		"_SupportPhone_": "Phone",
+		"_SupportEmailTopic_": "Topic",
+		"_SupportEmailDescription_": "Description",
+		"_SupportOriginURL_": "URL of page user was on when they clicked for support"
+
 }

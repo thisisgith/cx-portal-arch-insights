@@ -10,7 +10,7 @@ import { Subject, empty } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import { environment } from '@environment';
 import { Router } from '@angular/router';
-import {Location } from '@angular/common';
+import { Location } from '@angular/common';
 
 /**
  * Component for portal support
@@ -39,7 +39,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 		rows: 10,
 	});
 	public items: any[] = [];
-	@ViewChild('emailTemplate', { static: true }) private emailTemplate: TemplateRef<{ }>;
+	@ViewChild('emailTemplate', { static: true }) private emailTemplate: TemplateRef<{}>;
 	// public items: any[] = [
 	// 	{
 	// 		name: I18n.get('_SupportCXPortal_'),
@@ -101,6 +101,33 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			description: this.description,
 			title: this.title,
 		});
+		const userDetails = this.profileService.getProfile().cpr;
+		console.log(`${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname} ${I18n.get('_SupportSentBy_')}
+
+		${I18n.get('_SupportCiscoID_')}
+		${userDetails.pf_auth_uid}
+						
+		${I18n.get('_SupportName_')}
+		${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}
+						
+		${I18n.get('_SupportEmail_')}
+		${userDetails.pf_auth_email}
+						
+		${I18n.get('_SupportPhone_')}
+		${userDetails.pf_auth_email}
+						
+		---------------------------------------------------
+						
+		${I18n.get('_SupportEmailTopic_')}
+		${this.supportForm.controls.title.value}
+						
+		${I18n.get('_SupportEmailDescription_')}
+		${this.supportForm.controls.description.value}
+						
+		---------------------------------------------------
+						
+		${I18n.get('_SupportOriginURL_')}
+		${window.location.href}`)
 	}
 
 	/**
@@ -112,34 +139,10 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			this.loading = true;
 			//console.log("email" + this.emailTemplate.elementRef.nativeElement);
 			const userDetails = this.profileService.getProfile().cpr;
+			const accountDetails = this.profileService.getAccount();
+			const cprDetails = this.profileService.getCpr();
 			const requestBody: EmailRequest = {
-				body: 
-`${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname} sent the following request:
-
-Cisco ID
-${userDetails.pf_auth_uid}
-				
-Name
-${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}
-				
-Email
-${userDetails.pf_auth_email}
-				
-Phone
-${userDetails.pf_auth_email}
-				
----------------------------------------------------
-				
-Topic
-${this.supportForm.controls.title.value}
-				
-Description
-${this.supportForm.controls.description.value}
-				
----------------------------------------------------
-				
-URL of page user was on when they clicked for support
-${window.location.href}`,
+				body: this.createEmailTemplate(),
 				from: 'cxportal-noreply@cisco.com',
 				htmlBody: false,
 				subject: 'Support Request from the CX Portal',
@@ -167,5 +170,35 @@ ${window.location.href}`,
 					this.loading = false;
 				});
 		}
+	}
+
+	public createEmailTemplate () {
+		const userDetails = this.profileService.getProfile();
+		return `${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname} ${I18n.get('_SupportSentBy_')}
+
+${I18n.get('_SupportCiscoID_')}
+${userDetails.pf_auth_uid}
+				
+${I18n.get('_SupportName_')}
+${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}
+				
+${I18n.get('_SupportEmail_')}
+${userDetails.pf_auth_email}
+				
+${I18n.get('_SupportPhone_')}
+${userDetails.pf_auth_email}
+				
+---------------------------------------------------
+				
+${I18n.get('_SupportEmailTopic_')}
+${this.supportForm.controls.title.value}
+				
+${I18n.get('_SupportEmailDescription_')}
+${this.supportForm.controls.description.value}
+				
+---------------------------------------------------
+				
+${I18n.get('_SupportOriginURL_')}
+${window.location.href}`
 	}
 }
