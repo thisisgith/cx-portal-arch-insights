@@ -12,17 +12,19 @@
 	top: 54px;
 	user-select: text;
 	z-index: 999999;
+
 	#parent > * {
 		padding-left: $base-spacing-qtr;
 	}
 }
 
 .cx-dropdown-close {
-	color: $base-muted-color!important;
-	text-decoration: none!important;
+	color: $base-muted-color !important;
+	text-decoration: none !important;
 	position: absolute;
 	right: 10px;
+
 	:hover {
-		color: $primary!important;
+		color: $primary !important;
 	}
 }

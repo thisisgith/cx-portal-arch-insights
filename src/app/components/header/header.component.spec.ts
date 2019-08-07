@@ -14,8 +14,6 @@ describe('HeaderComponent', () => {
 	let component: HeaderComponent;
 	let fixture: ComponentFixture<HeaderComponent>;
 	let mockService: MicroMockService;
-	let entitlementService: EntitlementService;
-	let userResolve: UserResolve;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -34,8 +32,6 @@ describe('HeaderComponent', () => {
 		fixture = TestBed.createComponent(HeaderComponent);
 		component = fixture.componentInstance;
 		mockService = TestBed.get(MicroMockService);
-		entitlementService = TestBed.get(EntitlementService);
-		userResolve = TestBed.get(UserResolve);
 		fixture.detectChanges();
 	});
 

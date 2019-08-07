@@ -24,7 +24,7 @@
 			</div>
 		</div>
 		<div class="header-toolbar">
-			<div *ngIf="!searchExpanded" class="hidden-lg hidden-xl half-margin-right cx-search-button" (click)="expandSearch()" (focus)="expandSearch()" tabindex="0">
+			<div *ngIf="!searchExpanded" class="hidden-lg hidden-xl half-margin-right cx-search-button" (click)="expandSearch()" (focus)="expandSearch()" tabindex="0" data-auto-id="HeaderSearchExpandButton">
 				<span class="cx-header-icon--small icon-search"></span>
 			</div>
 			<!-- TODO: Quick Help is not part of the August release -->
@@ -43,10 +43,10 @@
 			</span>
 			<span class="v-separator" *ngIf="searchBreakpointShow(445, true)"></span> -->
 			<!-- User Profile -->
-			<span #userProfile class="cx-header-links" [ngClass]="{ 'cx-header-links--active': userProfile.active }" (click)="toggleDropdown(userProfileDropdown, userProfile)" [title]="'_UserProfile_' | i18n" [hidden]="!searchBreakpointShow(445, true)">
+			<span #userProfile class="cx-header-links" [ngClass]="{ 'cx-header-links--active': userProfile.active }" (click)="toggleDropdown(userProfileDropdown, userProfile)" [title]="'_UserProfile_' | i18n" [hidden]="!searchBreakpointShow(445, true)" data-auto-id="HeaderUserProfileButton">
 				<div>
 					<div class="flex-center">
-						<img class="cx-user-icon thumb thumb--bordered"  [src]="userImage" (error)="updateProfileImage()">
+						<img class="cx-user-icon thumb thumb--bordered" [src]="userImage" alt="{{ '_UserProfile_' | i18n }}" (error)="updateProfileImage()">
 						<span class="cx-header-arrow qtr-margin-left hidden-lg hidden-xl hidden-xxl" [ngClass]="{ 'rotate-180': userProfile.active }">&#9662;</span>
 					</div>
 					<div class="hidden-md hidden-sm hidden-xs">
@@ -55,7 +55,7 @@
 					</div>
 				</div>
 				<div class="pull-right">
-					<header-dropdown #userProfileDropdown (click)="$event.stopPropagation();" (toggle)="userProfile.active = $event;">
+					<header-dropdown #userProfileDropdown (click)="$event.stopPropagation();" (toggle)="userProfile.active = $event;" data-auto-id="HeaderUserProfileDropdown">
 						<ng-container *ngTemplateOutlet="userProfileDropdownTemplate"></ng-container>
 					</header-dropdown>
 				</div>
@@ -69,22 +69,22 @@
 					<span class="cx-header-icon icon-cog"></span>
 				</div>
 			</span>
-			<span #portalHelp class="cx-header-links hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': portalHelp.active }" (click)="toggleDropdown(portalHelpDropdown, portalHelp)" [title]="'_PortalHelp_' | i18n">
+			<span #portalHelp class="cx-header-links hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': portalHelp.active }" (click)="toggleDropdown(portalHelpDropdown, portalHelp)" [title]="'_PortalHelp_' | i18n" data-auto-id="HeaderPortalHelpButton">
 				<div>
 					<span class="cx-header-icon icon-help-alt" [ngClass]="{ 'text-primary': portalHelp.active }"></span>
 					<span></span>
 					<span class="cx-header-arrow" [ngClass]="{ 'rotate-180': portalHelp.active }">&#9662;</span>
 				</div>
 				<div class="pull-right">
-					<header-dropdown #portalHelpDropdown (click)="$event.stopPropagation();" (toggle)="portalHelp.active = $event;">
+					<header-dropdown #portalHelpDropdown (click)="$event.stopPropagation();" (toggle)="portalHelp.active = $event;" data-auto-id="HeaderPortalHelpDropdown">
 						<ng-container *ngTemplateOutlet="portalHelpDropdownTemplate"></ng-container>
 					</header-dropdown>
 				</div>
 			</span>
-			<span #menuButton *ngIf="searchBreakpointShow(445)" class="cx-header-links qtr-margin-left hidden-md hidden-lg hidden-xl" (click)="toggleDropdown(menuButtonDropdown, menuButton)">
+			<span #menuButton *ngIf="searchBreakpointShow(445)" class="cx-header-links qtr-margin-left hidden-md hidden-lg hidden-xl" (click)="toggleDropdown(menuButtonDropdown, menuButton)" data-auto-id="HeaderMenuButton">
 				<span class="cx-header-icon icon-more rotate-90" [ngClass]="{ 'text-primary': menuButton.active }"></span>
 				<div class="pull-right">
-					<header-dropdown #menuButtonDropdown (click)="$event.stopPropagation();" (toggle)="menuButton.active = $event; menuButton.swap = null;">
+					<header-dropdown #menuButtonDropdown (click)="$event.stopPropagation();" (toggle)="menuButton.active = $event; menuButton.swap = null;" data-auto-id="HeaderMenuDropdown">
 						<div [hidden]="menuButton.swap">
 							<div class="hidden-xl hidden-lg hidden-md hidden-sm">
 								<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="'_Communities_' | i18n" [href]="communityLink" target="_blank" data-auto-id="MenuCommunityLink" [title]="'_Communities_' | i18n"></a>
@@ -103,7 +103,7 @@
 								<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="'_Admin_' | i18n" [routerLink]="['admin']"></a>
 							</div>
 							<div>
-								<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="'_PortalHelp_' | i18n" (click)="menuButton.swap = portalHelpDropdownTemplate"></a>
+								<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="'_PortalHelp_' | i18n" (click)="menuButton.swap = portalHelpDropdownTemplate" data-auto-id="MenuPortalHelpLink"></a>
 							</div>
 						</div>
 						<div *ngIf="menuButton.swap">
@@ -114,15 +114,15 @@
 			</span>
 			<!-- Mock should only be in dev builds -->
 			<span class="v-separator"></span>
-			<span #mock class="cx-header-links" [ngClass]="{ 'cx-header-links--active': mock.active }" (click)="toggleDropdown(mockDropdown, mock)" title="Mock - DevTest Only">
+			<span #mock class="cx-header-links" [ngClass]="{ 'cx-header-links--active': mock.active }" (click)="toggleDropdown(mockDropdown, mock)" title="Mock - DevTest Only" data-auto-id="HeaderMockButton">
 				<div>
 					<span class="cx-header-icon--small icon-terminalalt" [ngClass]="{ 'text-primary': mock.active }"></span>
 					<span></span>
 					<span class="cx-header-arrow" [ngClass]="{ 'rotate-180': mock.active }">&#9662;</span>
 				</div>
 				<div class="pull-right">
-					<header-dropdown #mockDropdown (click)="$event.stopPropagation();" (toggle)="mock.active = $event">
-						<div class="text-muted text-small text-uppercase" [innerHTML]="'Mock Settings'"></div>
+					<header-dropdown #mockDropdown (click)="$event.stopPropagation();" (toggle)="mock.active = $event" data-auto-id="HeaderMockDropdown">
+						<div class="text-muted text-small text-uppercase" [innerText]="'Mock Settings'"></div>
 						<div>
 							<a class="qtr-margin-top qtr-margin-bottom text-small" (click)="openMockModal()" data-auto-id="HeaderSettings">Use Cases</a>
 							<div>
@@ -149,10 +149,10 @@
 
 <ng-template #userProfileDropdownTemplate>
 	<div class="flex-center-vertical">
-		<img class="thumb thumb--bordered thumb--medium" [src]="userImage" (error)="updateProfileImage()">
+		<img class="thumb thumb--bordered thumb--medium" [src]="userImage" alt="{{ '_UserProfile_' | i18n }}" (error)="updateProfileImage()" data-auto-id="HeaderUserProfileDropdownImage">
 		<span class="half-margin-left">
-			<div [innerHtml]="fullName"></div>
-			<div class="text-xsmall" [innerHtml]="email"></div>
+			<div [innerText]="fullName" data-auto-id="HeaderUserFullName"></div>
+			<div class="text-xsmall" [innerText]="email" data-auto-id="HeaderUserEmail"></div>
 		</span>
 	</div>
 	<div *ngFor="let link of profileLinks" class="qtr-margin-top qtr-margin-bottom text-small">
@@ -163,7 +163,7 @@
 <ng-template #portalHelpDropdownTemplate>
 	<ng-container *ngFor="let link of portalHelpLinks">
 		<!-- TODO: This is the feedback link to cx-portal-support@cisco.com -->
-		<div class="text-muted text-small text-uppercase" [innerHTML]="'_PortalHelp_' | i18n"></div>
+		<div class="text-muted text-small text-uppercase" [innerText]="'_PortalHelp_' | i18n"></div>
 		<div>
 			<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="link.name"></a>
 		</div>

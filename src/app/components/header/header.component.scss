@@ -3,7 +3,7 @@
 
 .header-bar__logo {
 	span.icon-cisco {
-		color: $primary!important;
+		color: $primary !important;
 	}
 }
 
@@ -12,62 +12,66 @@
 	border-right: 2px solid $light-gray-disabled;
 }
 
+.cx-header-label {
+	color: $light-gray-compliant;
+	font-size: $small-font-size;
+	margin-right: 4px;
+}
+
 .cx-header-links {
 	cursor: pointer;
 	user-select: none;
-	text-decoration: unset!important;
+	text-decoration: unset !important;
+
+	&--active {
+		.cx-header-label {
+			color: $primary !important;
+		}
+
+		.cx-user-label {
+			color: $primary !important;
+		}
+	}
 
 	&:hover {
 		.cx-header-label {
-			color: $primary!important;
+			color: $primary !important;
 		}
+
 		.cx-user-label {
-			color: $primary!important;
+			color: $primary !important;
 		}
 	}
 
 	&:focus {
 		.cx-header-label {
-			color: $primary!important;
+			color: $primary !important;
 		}
-		.cx-user-label {
-			color: $primary!important;
-		}
-	}
 
-	&--active {
-		.cx-header-label {
-			color: $primary!important;
-		}
 		.cx-user-label {
-			color: $primary!important;
+			color: $primary !important;
 		}
 	}
 }
 
 .cx-header-icon {
 	margin-right: $base-spacing * 0.25 !important;
-	line-height: 24px!important;
-	font-size: 24px!important;
+	line-height: 24px !important;
+	font-size: 24px !important;
 	color: $med-gray-4;
+
 	&--small {
 		color: $med-gray-4;
 		margin-right: $base-spacing * 0.25 !important;
-		line-height: 18px!important;
-		font-size: 18px!important;
+		line-height: 18px !important;
+		font-size: 18px !important;
 	}
 }
 
 .cx-header-arrow {
 	display: inline-block;
-	transition: transform .2s ease-in-out;
+	transition: transform 0.2s ease-in-out;
 	color: $light-gray-compliant;
-}
-
-.cx-header-label {
-	color: $light-gray-compliant;
-	font-size: $small-font-size;
-	margin-right: 4px;
 }
 
 .cx-search-button {
@@ -78,6 +82,7 @@
 	height: 28px;
 	width: 28px;
 	border: 1px solid $light-gray-3;
+
 	@include lg {
 		height: 24px;
 		width: 24px;
