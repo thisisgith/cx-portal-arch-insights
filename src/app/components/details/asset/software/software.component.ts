@@ -10,12 +10,14 @@ import {
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
-import { forkJoin, of, Subject } from 'rxjs';
+import { of, Subject, forkJoin } from 'rxjs';
 import {
 	map,
 	catchError,
 	mergeMap,
 	takeUntil,
+	tap,
+	switchMap,
 } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -25,7 +27,6 @@ import {
 	SoftwareEOLBulletinResponse,
 	SoftwareEOLResponse,
 	SoftwareEOL,
-	InventoryService,
 	SoftwareInfo,
 	ControlPointIERegistrationAPIService,
 	LicenseDataResponseModel,
@@ -73,6 +74,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	private licenseParams: ControlPointIERegistrationAPIService.GetLicenseDataParams;
 	public eolData: SoftwareEOL;
 	public eolBulletinData: SoftwareEOLBulletin;
+	private refreshSubject$: Subject<void>;
 	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
 
@@ -107,18 +109,9 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	constructor (
 		private logger: LogService,
 		private controlPointService: ControlPointIERegistrationAPIService,
-		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
 		private userResolve: UserResolve,
-	) {
-		this.userResolve.getCustomerId()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((id: string) => {
-			this.customerId = id;
-		});
-	}
+	) { }
 
 	public softwareLicenses: SoftwareInfo[];
 	public softwareLicensesTable: CuiTableOptions;
@@ -209,74 +202,85 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	/**
 	 * Refreshes the eox data
 	 */
-	private refresh () {
-		this.softwareLicenses = null;
-		this.softwareLicensesTable = null;
-		this.eolData = null;
-		this.eolBulletinData = null;
-		this.timelineData = null;
-		const obsBatch = [];
-		const managedNeId = _.get(this.asset, 'managedNeId');
-		const hostName = _.get(this.asset, 'deviceName');
+	private buildRefreshSubject () {
+		this.refreshSubject$ = new Subject();
 
-		if (managedNeId) {
-			this.softwareEolParams = {
-				customerId: this.customerId,
-				managedNeId: [managedNeId],
-			};
+		this.refreshSubject$
+		.pipe(
+			tap(() => {
+				this.status.loading.overall = true;
+				this.softwareLicenses = null;
+				this.softwareLicensesTable = null;
+				this.eolData = null;
+				this.eolBulletinData = null;
+				this.timelineData = null;
+			}),
+			switchMap(() => {
+				const obsBatch = [];
+				const managedNeId = _.get(this.asset, 'managedNeId');
+				const hostName = _.get(this.asset, 'deviceName');
 
-			obsBatch.push(this.fetchEOLData());
-		}
+				if (managedNeId) {
+					this.softwareEolParams = {
+						customerId: this.customerId,
+						managedNeId: [managedNeId],
+					};
 
-		if (hostName) {
-			this.licenseParams = {
-				hostName,
-				customerId: this.customerId,
-			};
+					obsBatch.push(this.fetchEOLData());
+				}
 
-			this.softwareLicensesTable = new CuiTableOptions({
-				bordered: true,
-				columns: [
-					{
-						key: 'licenseName',
-						name: I18n.get('_Name_'),
-						sortable: true,
-						template: this.licenseNameTemplate,
-					},
-					{
-						key: 'licenseType',
-						name: `${I18n.get('_Type_')}`,
-						sortable: false,
-						template: this.licenseTypeTemplate,
-					},
-					{
-						key: 'licenseExpiry',
-						name: I18n.get('_Expires_'),
-						sortable: false,
-						template: this.licenseExpiryTemplate,
-					},
-					{
-						key: 'usageCount',
-						name: I18n.get('_Count_'),
-						sortable: false,
-						template: this.licenseUsageCountTemplate,
-					},
-					{
-						key: 'status',
-						name: I18n.get('_Status_'),
-						sortable: false,
-						template: this.licenseStatusTemplate,
-					},
-				],
-				padding: 'compressed',
-				striped: false,
-				wrapText: true,
-			});
+				if (hostName) {
+					this.licenseParams = {
+						hostName,
+						customerId: this.customerId,
+					};
 
-			obsBatch.push(this.fetchLicenseData());
-		}
+					this.softwareLicensesTable = new CuiTableOptions({
+						bordered: true,
+						columns: [
+							{
+								key: 'licenseName',
+								name: I18n.get('_Name_'),
+								sortable: true,
+								template: this.licenseNameTemplate,
+							},
+							{
+								key: 'licenseType',
+								name: `${I18n.get('_Type_')}`,
+								sortable: false,
+								template: this.licenseTypeTemplate,
+							},
+							{
+								key: 'licenseExpiry',
+								name: I18n.get('_Expires_'),
+								sortable: false,
+								template: this.licenseExpiryTemplate,
+							},
+							{
+								key: 'usageCount',
+								name: I18n.get('_Count_'),
+								sortable: false,
+								template: this.licenseUsageCountTemplate,
+							},
+							{
+								key: 'status',
+								name: I18n.get('_Status_'),
+								sortable: false,
+								template: this.licenseStatusTemplate,
+							},
+						],
+						padding: 'compressed',
+						striped: false,
+						wrapText: true,
+					});
 
-		forkJoin(obsBatch)
+					obsBatch.push(this.fetchLicenseData());
+				}
+
+				return forkJoin(obsBatch);
+			}),
+			takeUntil(this.destroyed$),
+		)
 		.subscribe(() => {
 			this.status.loading.overall = false;
 
@@ -288,7 +292,15 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	 * Initializes the component
 	 */
 	public ngOnInit (): void {
-		this.refresh();
+		this.buildRefreshSubject();
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroyed$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+			this.refreshSubject$.next();
+		});
 	}
 
 	/**
@@ -306,7 +318,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['asset', 'currentValue']);
 		if (currentAsset && !changes.asset.firstChange) {
-			this.refresh();
+			this.refreshSubject$.next();
 		}
 	}
 
