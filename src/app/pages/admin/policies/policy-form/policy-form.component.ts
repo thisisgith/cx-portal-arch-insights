@@ -226,7 +226,14 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 		this.loading = true;
 
-		this.deviceService.getDevicesUsingGET(this.customerId)
+		const params: ControlPointDevicePolicyAPIService
+		.GetDevicesForPolicyCreationUsingGETParams = {
+			customerId: this.customerId,
+			pageNumber: '1',
+			rowsPerPage: '9999',
+		};
+
+		this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params)
 			.pipe(
 				catchError(err => {
 					this.error = true;
@@ -239,28 +246,6 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			)
 			.subscribe(response => {
 				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
-			});
-
-		const params: ControlPointDevicePolicyAPIService
-		.GetDevicesForPolicyCreationUsingGETParams = {
-			customerId: this.customerId,
-			pageNumber: '1',
-			rowsPerPage: '9999',
-		};
-
-		this.devicePolicyService.getDevicesForPolicyCreationUsingGET(params)
-			.pipe(
-				catchError(err => {
-					this.error = true;
-					this.errorMessage = err.message;
-
-					return empty();
-				}),
-				finalize(() => this.loading = false),
-				takeUntil(this.destroyed$),
-			)
-			.subscribe(response => {
-				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
 			});
 
 		this.getParams = function (schedule: string) {
@@ -291,7 +276,16 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public editPolicy () {
 		this.title = I18n.get('_ScheduledScanDetails_');
 
-		this.deviceService.getDevicesUsingGET(this.customerId)
+		this.loading = true;
+
+		const params: ControlPointDevicePolicyAPIService
+		.GetDevicesForPolicyCreationUsingGETParams = {
+			customerId: this.customerId,
+			pageNumber: '1',
+			rowsPerPage: '9999',
+		};
+
+		this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params)
 			.pipe(
 				catchError(err => {
 					this.error = true;
@@ -306,7 +300,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
 			});
 
-		const params: ControlPointDevicePolicyAPIService
+		const currentPolicyParams: ControlPointDevicePolicyAPIService
 			.GetDevicesForGivenPolicyUsingGETParams = {
 				customerId: this.customerId,
 				pageNumber: '1',
@@ -314,7 +308,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				rowsPerPage: '9999',
 			};
 
-		this.devicePolicyService.getDevicesForGivenPolicyUsingGET(params)
+		this.devicePolicyService.getDevicesForGivenPolicyUsingGET1(currentPolicyParams)
 			.pipe(
 				catchError(err => {
 					this.error = true;
@@ -341,7 +335,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				devices,
 				schedule,
 				customerId: this.customerId,
-				policyId: _.get(this.policy, 'policyID'),
+				policyId: _.get(this.policy, 'policyId'),
 			};
 		};
 
