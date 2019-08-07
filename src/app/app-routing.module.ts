@@ -23,7 +23,7 @@ const routes: Routes = [
 		pathMatch: 'full',
 	},
 	{
-		// canActivate: [ClientSSOGuard],
+		canActivate: [ClientSSOGuard],
 		loadChildren: () => import('./pages/setup-ie/setup-ie.module')
 		 	.then(m => m.SetupIeModule),
 		path: 'setup-ie',
