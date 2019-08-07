@@ -507,6 +507,7 @@
 	"_RunScanAssets_": "Run Scan on ({0}) Assets",
 	"_SaveCase_": "Save Case",
 	"_SaveScheduledCollection_": "Save Scheduled Colleciton",
+	"_SaveScheduledScan_": "Save Scheduled Scan",
 	"_Scan_": "Scan",
 	"_ScanAndCollectionSchedule_": "Scan & Collection Schedule",
 	"_Schedule_": "Schedule",
