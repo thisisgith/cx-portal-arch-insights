@@ -124,7 +124,6 @@ describe('Case Detail Spec', () => {
 
 		it('PBC-234 Case Details Notes Tab, Add a Note', () => {
 			const currDatestamp = new Date().getTime();
-			// cy.log(`current date is ${currDatestamp}`);
 
 			cy.getByAutoId('notesTab').click();
 			// Add a case note
@@ -144,7 +143,6 @@ describe('Case Detail Spec', () => {
 
 		it('PBC-234 Case Details Notes: Cancel Adding a note', () => {
 			const currDatestamp = new Date().getTime();
-			// cy.log(`current date is ${currDatestamp}`);
 
 			cy.getByAutoId('notesTab').click();
 			// Add a case note
