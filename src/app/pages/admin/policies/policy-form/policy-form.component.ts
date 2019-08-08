@@ -506,7 +506,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
-	 * Creates cron expression using quartz format
+	 * Creates cron expression
 	 * @param timePeriod "monthly", "weekly" or "daily"
 	 * @param day numbered day of the week "0-6"
 	 * @param date date in a month "1-31"
@@ -517,9 +517,9 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public getSchedule (timePeriod: string, day: string, date: string, hourmin: string) {
 		let schedule = `${hourmin}`;
 		if (timePeriod === 'monthly') {
-			schedule = `${schedule} ${date} * ?`;
+			schedule = `${schedule} ${date} * *`;
 		} else if (timePeriod === 'weekly') {
-			schedule = `${schedule} ? * ${day}`;
+			schedule = `${schedule} * * ${day}`;
 		} else {
 			schedule = `${schedule} * * *`;
 		}
