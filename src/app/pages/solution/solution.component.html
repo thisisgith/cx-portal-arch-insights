@@ -1,3 +1,4 @@
+<no-dnac-header></no-dnac-header>
 <div class="page-container">
 	<div class="panel no-padding-left no-padding-right no-padding-bottom base-padding-top panel--bordered-bottom">
 		<div class="row base-margin-left half-margin-bottom">
@@ -82,12 +83,10 @@
 		<div *ngFor="let facet of facets; index as i"
 			attr.data-auto-id="Facet-{{ facet.title }}"
 			(click)="selectFacet(facet, true)"
-			class="panel panel--bordered-right row"
+			class="panel panel--bordered-right row flex-fluid"
 			[ngClass]="{
 				'panel--bordered-left': i === 0,
-				'facet--selected': facet.selected,
-				'col-md-2': shownTabs === 5,
-				'col-md-3': shownTabs === 4
+				'facet--selected': facet.selected
 			}">
 			<div class="col-md-12 flex-center">
 				<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
@@ -95,16 +94,9 @@
 					<span [innerText]="facet.label"></span>
 				</div>
 			</div>
-			<!-- TODO: reenable the lightbulbs if we have some data to work with -->
-			<!-- <div class="col-md-2"></div> -->
 			<div class="col-md-12 flex-center base-padding-top">
 				<span [ngClass]="{ 'text-primary': facet.selected }" [innerText]="facet.title | uppercase"></span>
 			</div>
-			<!-- <div class="col-md-2 flex flex-center">
-				<button class="btn btn--icon btn--small" disabled>
-					<span class="icon-lightbulb"></span>
-				</button>
-			</div> -->
 		</div>
 	</div>
 </ng-template>
@@ -140,10 +132,29 @@
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
-	<cui-gauge percentage="75"
-		value="75%"
-		color="primary">
-	</cui-gauge>
+	<div *ngIf="(casesCount == 0 && RMACount == 0); else caseCountContent">
+		<ng-container *ngTemplateOutlet="noCaseContent"></ng-container>
+	</div>
+	<ng-template #noCaseContent>
+		<div class="text-muted text-large base-padding-left base-padding-right dbl-padding-top qtr-padding-bottom" [innerText]="'_NoOpenCases_' | i18n"></div>
+		<div class="text-muted text-large base-padding-left base-padding-right base-padding-bottom" [innerText]="'_NoOpenRMAs_' | i18n"></div>
+	</ng-template>
+	<ng-template #caseCountContent>
+		<div class="row no-margin base-padding-left base-padding-right">
+			<div class="col-5">
+				<div data-auto-id="openCases" class="text-muted text-xlarge" [innerText]="'_OpenCases_' | i18n"></div>
+			</div>
+			<div class="col-7 no-padding-left">
+				<div class="text-huge opacity-50">{{casesCount}}</div>
+			</div>
+			<div class="col-5 base-padding-top">
+				<div data-auto-id="openRMAs" class="text-primary text-xlarge" [innerText]="'_OpenRMAs_' | i18n"></div>
+			</div>
+			<div class="col-7 no-padding-left base-padding-top">
+				<div class="text-huge opacity-50">{{RMACount}}</div>
+			</div>
+		</div>
+	</ng-template>
 </ng-template>
 
 <ng-template #insightsFacet let-facet="facet">

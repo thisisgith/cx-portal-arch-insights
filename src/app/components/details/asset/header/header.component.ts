@@ -10,17 +10,21 @@ import {
 	Asset,
 	NetworkDataGatewayService,
 	TransactionRequest,
+	Transaction,
 	TransactionRequestResponse,
-	Connectivity,
+	TransactionStatusResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
+import { CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { of, forkJoin, Subject } from 'rxjs';
 import {
 	map,
 	catchError,
 	takeUntil,
+	mergeMap,
 } from 'rxjs/operators';
+import { CaseOpenComponent } from '../../../case/case-open/case-open.component';
 import { UserResolve } from '@utilities';
 
 /**
@@ -51,7 +55,10 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			eligibility: false,
 			overall: false,
 		},
-		scanEligible: false,
+		scan: {
+			eligible: true, // TODO: Update this based on eligibility when working
+			inProgress: false,
+		},
 	};
 	public casesDropdownActive = false;
 	private destroyed$: Subject<void> = new Subject<void>();
@@ -59,6 +66,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 
 	constructor (
 		private caseService: CaseService,
+		private cuiModalService: CuiModalService,
 		private logger: LogService,
 		private networkService: NetworkDataGatewayService,
 		private userResolve: UserResolve,
@@ -106,42 +114,52 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 	}
 
 	/**
+	 * TODO: Add back eligibility check when it is actually working
 	 * Gets the eligibility of the device for scanning
 	 * @returns the observable
 	 */
-	private getEligibility () {
-		const params: NetworkDataGatewayService.GetEligibilityParams = {
-			customerId: this.customerId,
-			productId: this.asset.productId,
-			serialNumber: this.asset.serialNumber,
-		};
+	// private getEligibility () {
+	// 	const params: NetworkDataGatewayService.GetEligibilityParams = {
+	// 		customerId: this.customerId,
+	// 		productId: this.asset.productId,
+	// 		serialNumber: this.asset.serialNumber,
+	// 	};
 
-		return this.networkService.getEligibility(params)
-		.pipe(
-			map((response: Connectivity) => {
-				this.status.scanEligible = _.get(response, 'connected', false) &&
-					_.get(response, 'eligible', false);
-			}),
-			catchError(err => {
-				this.status.loading.eligibility = false;
-				this.logger.error('details-header.component : getEligibility()' +
-					`:: Error : (${err.status}) ${err.message}`);
+	// 	return this.networkService.getEligibility(params)
+	// 	.pipe(
+	// 		map((response: Connectivity) => {
+	// 			this.status.scan.eligible = _.get(response, 'connected', false) &&
+	// 				_.get(response, 'eligible', false);
+	// 		}),
+	// 		catchError(err => {
+	// 			this.status.loading.eligibility = false;
+	// 			this.logger.error('details-header.component : getEligibility()' +
+	// 				`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			}),
-		);
-	}
+	// 			return of({ });
+	// 		}),
+	// 	);
+	// }
 
 	/**
 	 * Initiates a scan
 	 */
 	public initiateScan () {
 		const request: TransactionRequest = {
+			// TODO: Temporary for Testing
+			// customerId: '231215372',
 			customerId: this.customerId,
 			neCount: 1,
 			requestBody: {
 				deviceOptions: 'LIST',
 				devices: [{
+					// TODO: Temporary for Testing
+					// hostname: '6807',
+					// ipAddress: '10.13.1.1',
+					// productId: 'C6807-XL',
+					// serialNumber: 'SMC1803008B',
+					hostname: this.asset.deviceName,
+					ipAddress: this.asset.ipAddress,
 					productId: this.asset.productId,
 					serialNumber: this.asset.serialNumber,
 				}],
@@ -150,20 +168,60 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			transactionType: 'SCAN',
 		};
 
-		this.networkService.postDeviceTransactions(request)
+		if (!_.get(this.status, ['scan', 'inProgress'], false)) {
+			this.networkService.postDeviceTransactions(request)
+			.pipe(
+				mergeMap((response: TransactionRequestResponse) => {
+					const transaction: Transaction = _.head(response);
+
+					if (_.get(transaction, 'transactionId')) {
+						_.set(this.status, ['scan', 'inProgress'], true);
+
+						return this.scanPolling(transaction);
+					}
+
+					return of();
+				}),
+				catchError(err => {
+					this.logger.error('header.component : initiateScan() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			)
+			.subscribe();
+		}
+	}
+
+	/**
+	 * Initiate Polling
+	 * @param transaction the transaction
+	 * @returns the observable
+	 */
+	private scanPolling (transaction: Transaction) {
+		return this.networkService.getScanStatusByTransaction({
+			// TODO: Temporary for Testing
+			// customerId: '231215372',
+			customerId: this.customerId,
+			transactionId: transaction.transactionId,
+		})
 		.pipe(
-			map((response: TransactionRequestResponse) => {
-				this.logger.debug('header.component :: initiateScan() ::' +
-					`Scan Request Response ${JSON.stringify(response)}`);
+			mergeMap((response: TransactionStatusResponse) => {
+				if (response.status === 'SUCCESS') {
+					_.set(this.status, ['scan', 'inProgress'], false);
+
+					return of();
+				}
+
+				return this.scanPolling(transaction);
 			}),
 			catchError(err => {
-				this.logger.error('header.component : initiateScan() ' +
+				this.logger.error('header.component : initiatePolling() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
-		)
-		.subscribe();
+		);
 	}
 
 	/**
@@ -174,7 +232,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			this.status.loading.overall = true;
 			forkJoin(
 				this.fetchCases(),
-				this.getEligibility(),
+				// this.getEligibility(),
 			)
 			.subscribe(() => {
 				this.status.loading.overall = false;
@@ -199,4 +257,12 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			this.refresh();
 		}
 	}
+
+/**
+	* On "Open a Case" button pop up "Open Case" component
+	*/
+	public openCase () {
+		 this.cuiModalService.showComponent(CaseOpenComponent, { asset: this.asset }, 'full');
+	}
+
 }

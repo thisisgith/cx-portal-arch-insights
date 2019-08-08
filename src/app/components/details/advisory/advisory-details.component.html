@@ -4,13 +4,16 @@
 		[fullscreenToggle]="false">
 		<ng-container *ngIf="type && details">
 			<security-details-header *ngIf="type === 'security'"
-				[details]="details">
+				[details]="details"
+				[selectedAsset]="selectedAsset">
 			</security-details-header>
 			<field-notice-details-header *ngIf="type === 'field'"
-				[details]="details">
+				[details]="details"
+				[selectedAsset]="selectedAsset">
 			</field-notice-details-header>
 			<bug-details-header *ngIf="type === 'bug'"
-				[details]="details">
+				[details]="details"
+				[selectedAsset]="selectedAsset">
 			</bug-details-header>
 		</ng-container>
 		<div detailsPanelTitle *ngIf="title" class="text-xlarge">

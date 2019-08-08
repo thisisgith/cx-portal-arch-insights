@@ -1,4 +1,6 @@
 export { ScanResultsResponse } from './models/scan-results-response';
+export { BugImpactedAssetsResponse } from './models/bug-impacted-assets-response';
+export { ImpactedAsset } from './models/impacted-asset';
 export { AlertCounts } from './models/alert-counts';
 export { CriticalBugsCount } from './models/critical-bugs-count';
 export { CriticalBugsResponse } from './models/critical-bugs-response';

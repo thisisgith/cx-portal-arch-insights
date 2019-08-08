@@ -1,7 +1,7 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -29,6 +29,7 @@ import { EntitlementModule } from '@sdp-api';
 import { CaseOpenModule } from './components/case/case-open/case-open.module';
 import { CloseConfirmModule } from './components/case/case-open/close-confirm/close-confirm.module';
 import { ContactSupportModule } from './components/contact-support/contact-support.module';
+import { CollapsibleModule } from './components/collapsible/collapsible.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -68,6 +69,7 @@ export function loadI18n (service: AppService) {
 		CaseOpenModule,
 		CloseConfirmModule,
 		ContactSupportModule,
+		CollapsibleModule,
 	],
 	providers: [
 		AppService,

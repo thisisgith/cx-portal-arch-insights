@@ -1,0 +1,150 @@
+swagger: '2.0'
+info:
+  description: Control Points Api Documentation
+  version: '1.0'
+  title: Control Points Api Documentation
+  termsOfService: 'urn:tos'
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+host: cpp-api.sdp12-istg.csco.cloud
+basePath: /controlpoint/
+tags:
+  - name: control-point-api-controller
+    description: Control Point API Controller
+paths:
+  /v1/download/ie/status:
+    post:
+      tags:
+        - ControlPoint IE Registration API
+      summary: This endpoint is used to update the IE download status.
+      operationId: createIERegistrationUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ieRegistrationRequestModel
+          description: ieRegistrationRequestModel
+          required: true
+          schema:
+            $ref: '#/definitions/IERegistrationRequestModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DefaultResponseModel'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/v1/ie/status/{customerId}':
+    get:
+      tags:
+        - ControlPoint IE Registration API
+      summary: This endpoint is used to get the IE installation status.
+      operationId: getIERegistrationStatusUsingGET
+      produces:
+        - application/json
+      parameters:
+        - name: customerId
+          in: path
+          description: customerId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/IEStatusResponseModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  /v1/registration/ie/status:
+    post:
+      tags:
+        - ControlPoint IE Registration API
+      summary: This endpoint is used to update the IE installation status. This will be invoked after as part of IE registration.
+      operationId: updateIERegistrationUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: ieRegistrationUpdateRequestModel
+          description: ieRegistrationUpdateRequestModel
+          required: true
+          schema:
+            $ref: '#/definitions/IERegistrationUpdateRequestModel'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DefaultResponseModel'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+definitions:
+  DefaultResponseModel:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          type: string
+      message:
+        type: string
+      status:
+        type: integer
+        format: int32
+    title: DefaultResponseModel
+  IERegistrationRequestModel:
+    type: object
+    properties:
+      customerId:
+        type: string
+    title: IERegistrationRequestModel
+  IERegistrationUpdateRequestModel:
+    type: object
+    properties:
+      applianceId:
+        type: string
+      customerId:
+        type: string
+      registrationStatus:
+        type: string
+      remoteNodeId:
+        type: string
+    title: IERegistrationUpdateRequestModel
+  IEStatusResponseModel:
+    type: object
+    properties:
+      applianceId:
+        type: string
+      connectivityStatus:
+        type: string
+      downloadStatus:
+        type: string
+      registrationStatus:
+        type: string
+    title: IEStatusResponseModel

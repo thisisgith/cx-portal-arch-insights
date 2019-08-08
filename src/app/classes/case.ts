@@ -8,16 +8,24 @@ import * as _ from 'lodash-es';
 export const caseSeverities = {
 	1: _.assignIn(
 		{ title:  I18n.get('_Critical_') },
-		_.pick(severityMap.DANGER, ['class', 'color'])),
+		_.pick(severityMap.DANGER, ['class', 'color']),
+		{ getCreateName () { return I18n.get('_OpenCaseNetworkDown_'); } },
+	),
 	2: _.assignIn(
 		{ title: I18n.get('_Degraded_') },
-		_.pick(severityMap.WARNING, ['class', 'color'])),
+		_.pick(severityMap.WARNING, ['class', 'color']),
+		{ getCreateName () { return I18n.get('_OpenCaseSeverelyDegraded_'); } },
+	),
 	3: _.assignIn(
 		{ title: I18n.get('_Impaired_') },
-		_.pick(severityMap['WARNING-ALT'], ['class', 'color'])),
+		_.pick(severityMap['WARNING-ALT'], ['class', 'color']),
+		{ getCreateName () { return I18n.get('_OpenCaseNetworkImpaired_'); } },
+	),
 	4: _.assignIn(
 		{ title: I18n.get('_Info_') },
-		_.pick(severityMap.INFO, ['class', 'color'])),
+		_.pick(severityMap.INFO, ['class', 'color']),
+		{ getCreateName () { return I18n.get('_OpenCaseAskaQuestion_'); } },
+	),
 };
 
 /**

@@ -1,0 +1,166 @@
+<alert
+	[title]="'_AnErrorOccurredDuringDownload_' | i18n | uppercase"
+	[(visible)]="error"
+></alert>
+<div class="text-center">
+	<h6
+		class="xl-margin-top text-primary base-margin-bottom"
+		[innerText]="('_StepXColonY_' | i18n:'1':('_Prerequisites_' | i18n)) | uppercase"
+	></h6>
+	<h2 [innerText]="'_DownloadOVAImage_' | i18n"
+		class="xl-margin-bottom">
+	</h2>
+	<cui-loader *ngIf="loading && !error" [label]="'_Loading_' | i18n"></cui-loader>
+	<ng-container *ngIf="!clickedDownload">
+		<div class="eula-container text-left base-margin-bottom">
+			<h4
+				class="half-margin-bottom"
+				[innerText]="'_StrongEncryptionEligibility_' | i18n"
+			></h4>
+			<a 
+				data-auto-id="show-instructions-toggle"
+				class="half-margin-bottom no-link-hover"
+				(click)="showInstructions = !showInstructions"
+			>
+				<span [innerText]="'_InstructionsAndConditions_' | i18n"></span>
+				<span class="half-margin-left" [ngClass]="{
+					'icon-chevron-down': !showInstructions,
+					'icon-chevron-up': showInstructions
+				}"></span>
+			</a>
+			<div
+				class="inst-and-cond-container"
+				heightTransition
+				[heightTransitionExpanded]="showInstructions"
+			>
+				<div class="base-margin-bottom" [innerHTML]="EULAInstructionsHTML"></div>
+			</div>
+			<div
+				class="half-margin-bottom"
+				[innerText]="'_BusinessDivisionsFunction_' | i18n"></div>
+			<div class="base-margin-bottom">
+				<div class="form-group">
+					<label class="radio">
+						<input
+							data-auto-id="business-fn-civ"
+							type="radio"
+							name="businessFn"
+							[(ngModel)]="businessFn"
+							value="civ"
+						>
+						<span class="radio__input"></span>
+						<span
+							class="radio__label"
+							[innerText]="'_CommercialOrCivilianEntity_' | i18n"
+						></span>
+					</label>
+				</div>
+				<div class="form-group">
+					<label class="radio">
+						<input
+							data-auto-id="business-fn-gov"
+							type="radio"
+							name="businessFn"
+							[(ngModel)]="businessFn"
+							value="gov"
+						>
+						<span class="radio__input"></span>
+						<span
+							class="radio__label"
+							[innerText]="'_GovernmentEntity_' | i18n"
+						></span>
+					</label>
+				</div>
+				<div
+					class="half-margin-top"
+					heightTransition
+					[heightTransitionExpanded]="businessFn === 'gov'"
+				>
+					<div [innerText]="'_EULACountries_' | i18n"></div>
+					<div class="form-group form-group--inline">
+						<label class="radio">
+							<input
+								data-auto-id="countries-yes"
+								type="radio"
+								name="inCountry"
+								[(ngModel)]="inCountry"
+								value="yes"
+							>
+							<span class="radio__input"></span>
+							<span
+								class="radio__label"
+								[innerText]="'_Yes_' | i18n"
+							></span>
+						</label>
+					</div>
+					<div class="form-group form-group--inline">
+						<label class="radio">
+							<input
+								data-auto-id="countries-no"
+								type="radio"
+								name="inCountry"
+								[(ngModel)]="inCountry"
+								value="no"
+							>
+							<span class="radio__input"></span>
+							<span
+								class="radio__label"
+								[innerText]="'_No_' | i18n"
+							></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="flex-center-horizontal dbl-margin-bottom">
+				<label class="checkbox half-margin-right">
+					<input type="checkbox" data-auto-id="setup.ova.eula1"
+					   [(ngModel)]="acceptedSE">
+					<span class="checkbox__input"></span>
+				</label>
+				<span
+					data-auto-id="i-agree-checkbox"
+					class="checkbox__label"
+					[innerHtml]="'_StrongEncryptionAgreement_' | i18n">
+				</span>
+			</div>
+		</div>
+		<div class="eula-container text-left">
+			<h4
+				class="half-margin-bottom"
+				[innerText]="'_EndUserLicenseAgreement_' | i18n"
+			></h4>
+			<div class="flex-center-horizontal dbl-margin-bottom">
+				<label class="checkbox half-margin-right">
+					<input
+						type="checkbox"
+						data-auto-id="setup.ova.eula2"
+						[(ngModel)]="acceptedEULA">
+					<span class="checkbox__input"></span>
+				</label>
+				<span
+					data-auto-id="i-agree-checkbox"
+					class="checkbox__label"
+					[innerHtml]="'_IAgreeEULA_' | i18n">
+				</span>
+			</div>
+		</div>
+		<button
+			*ngIf="!loading && !error"
+			data-auto-id="download-image-btn"
+			class="btn btn--wide btn--secondary qtr-margin-right"
+			[disabled]="isDisabled"
+			[innerText]="'_DownloadImage_' | i18n | uppercase"
+			(click)="onDownload()">
+		</button>
+	</ng-container>
+	<ng-container *ngIf="clickedDownload">
+		<div class="base-margin-bottom">When the download completes, click "Continue."</div>
+		<button
+			data-auto-id="continue-btn"
+			class="btn btn--wide btn--secondary qtr-margin-right"
+			[innerText]="'_Continue_' | i18n | uppercase"
+			[disabled]="loading || error"
+			(click)="continue()">
+		</button>
+	</ng-container>
+</div>

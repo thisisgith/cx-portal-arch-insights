@@ -49,6 +49,12 @@ interface Item {
 	actions?: any[];
 }
 
+/** Interface for selected subfilters */
+interface SelectedSubfilter {
+	subfilter: VisualFilter['seriesData'];
+	filter: string;
+}
+
 /**
  * Assets Component
  */
@@ -115,6 +121,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public selectOnLoad = false;
 	public selectedAsset: Asset;
 	public fullscreen = false;
+	public selectedSubfilters: SelectedSubfilter[];
 
 	constructor (
 		private contractsService: ContractsService,
@@ -197,12 +204,17 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param key the key to match to the filter
 	 * @returns the array of filters
 	 */
-	public getSelectedSubFilters (key: string) {
-		const filter = _.find(this.filters, { key });
+	public getAllSelectedSubFilters () {
+		return _.reduce(this.filters, (memo, filter) => {
+			if (filter.seriesData) {
+				const selected = _.map(_.filter(filter.seriesData, 'selected'),
+				f => ({ filter, subfilter: f }));
 
-		if (filter) {
-			return _.filter(filter.seriesData, 'selected');
-		}
+				return _.concat(memo, selected);
+			}
+
+			return memo;
+		}, []);
 	}
 
 	/**
@@ -215,6 +227,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				sd.selected = false;
 			});
 		});
+
+		this.selectedSubfilters = [];
+		this.InventorySubject.next();
 	}
 
 	/**
@@ -311,11 +326,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onSubfilterSelect (subfilter: string, filter: VisualFilter, reload: boolean = true) {
 		const sub = _.find(filter.seriesData, { filter: subfilter });
+
 		if (sub) {
-			sub.selected = !sub.selected;
+			const selected = !sub.selected;
+			_.each(filter.seriesData, (s: { selected: boolean }) => _.set(s, 'selected', false));
+			sub.selected = selected;
 		}
 
 		filter.selected = _.some(filter.seriesData, 'selected');
+
+		this.selectedSubfilters = this.getAllSelectedSubFilters();
 
 		if (filter.key !== 'advisories' && filter.key !== 'eox') {
 			this.assetParams[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
@@ -913,6 +933,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					this.status.inventoryLoading = false;
 				}),
 				catchError(err => {
+					this.pagination = null;
+					this.paginationCount = null;
 					this.logger.error('assets.component : fetchInventory() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					this.status.inventoryLoading = false;

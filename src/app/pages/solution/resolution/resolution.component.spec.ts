@@ -48,22 +48,28 @@ describe('ResolutionComponent', () => {
 
 	it('should call case list on init', () => {
 		expect(service.read)
-			.toHaveBeenCalledTimes(9);
+			.toHaveBeenCalled();
 	});
 
 	it('should refresh on sort', () => {
+		spyOn(component, 'getCaseList')
+			.and
+			.callThrough();
 		component.onTableSortingChanged({
 			key: 'Key1',
 			value: 'Value1',
 		});
-		expect(service.read)
-			.toHaveBeenCalledTimes(10);
+		expect(component.getCaseList)
+			.toHaveBeenCalledTimes(1);
 	});
 
 	it('should refresh on page change', () => {
+		spyOn(component, 'getCaseList')
+			.and
+			.callThrough();
 		component.onPagerUpdated({ page: 2 });
-		expect(service.read)
-			.toHaveBeenCalledTimes(10);
+		expect(component.getCaseList)
+			.toHaveBeenCalled();
 	});
 
 	it('should show invalid input on bad casenum', () => {
@@ -75,9 +81,6 @@ describe('ResolutionComponent', () => {
 		form.nativeElement
 			.dispatchEvent(new Event('submit'));
 		fixture.detectChanges();
-		// Expect only the 9 initial searches on page load
-		expect(service.read)
-			.toHaveBeenCalledTimes(9);
 		expect(component.isSearchCaseFormInvalid)
 			.toBeTruthy();
 	});
@@ -91,9 +94,6 @@ describe('ResolutionComponent', () => {
 		form.nativeElement
 			.dispatchEvent(new Event('submit'));
 		fixture.detectChanges();
-		// Expect it to refresh again
-		expect(service.read)
-			.toHaveBeenCalledTimes(10);
 		expect(component.isSearchCaseFormInvalid)
 			.toBeFalsy();
 	});

@@ -1,0 +1,11 @@
+<a class="collapse-link half-margin-bottom"
+	data-auto-id="ExpandContent"
+	(click)="collapsed = !collapsed;">
+	<span class="qtr-margin-right" [innerText]="text"></span>
+	<span class="icon icon-right-arrow-contained"
+		[ngClass]="{ 'arrowUp': collapsed, 'arrowDown': !collapsed }">
+	</span>
+</a>
+<div heightTransition [heightTransitionExpanded]="!collapsed">
+	<ng-content></ng-content>
+</div>

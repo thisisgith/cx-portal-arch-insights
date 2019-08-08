@@ -1,0 +1,48 @@
+<div class="text-center">
+	<h6
+		*ngIf="stepNum && stepLabel"
+		class="text-primary base-margin-bottom"
+		[innerText]="'_StepXColonY_' | i18n:stepNum:stepLabel | uppercase"
+	></h6>
+	<div class="dbl-margin-bottom">
+		<h2 [innerText]="title"></h2>
+	</div>
+
+	<ng-container *ngFor="let slide of slides">
+		<div *ngIf="currentSlide === slide"
+			[@fadeIn]>
+			<span [innerText]="slide.content"
+				class="text-large">
+			</span>
+
+			<div class="half-margin-top base-margin-bottom">
+				<video *ngIf="slide.type === 'video'" autoplay loop>
+					<source [src]="slide.src" type="video/mp4">
+				</video>
+				<img alt="Instructional Image" *ngIf="slide.type === 'image'" [src]="slide.src">
+			</div>
+
+			<div class="flex-center">
+				<button
+					data-auto-id="next-slide-btn"
+					class="btn btn--secondary qtr-margin-right"
+					[innerText]="slide.buttonText | uppercase"
+					(click)="onNextSlide()">
+				</button>
+
+				<span [innerText]="'_PressEnter_' | i18n"
+					class="text-large">
+				</span>
+			</div>
+		</div>
+	</ng-container>
+</div>
+<div class="end-tutorial-link-container">
+	<a data-auto-id="skip-tutorial-link" (click)="endTutorial()">
+		<span
+			class="half-margin-right"
+			[innerText]="'_SkipXTutorial_' | i18n : tutorialType"
+			></span>
+		<span class="icon-chevron-right"></span>
+	</a>
+</div>
