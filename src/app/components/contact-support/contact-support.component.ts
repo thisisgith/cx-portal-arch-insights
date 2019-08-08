@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CuiModalService, CuiModalContent, CuiInputOptions } from '@cisco-ngx/cui-components';
 import { ProfileService } from '@cisco-ngx/cui-auth';
@@ -39,49 +39,6 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 		rows: 10,
 	});
 	public items: any[] = [];
-	@ViewChild('emailTemplate', { static: true }) private emailTemplate: TemplateRef<{}>;
-	// public items: any[] = [
-	// 	{
-	// 		name: I18n.get('_SupportCXPortal_'),
-	// 		value: I18n.get('_SupportCXPortal_'),
-	// 	},
-	// 	{
-	// 		name: I18n.get('_SupportCXCollector_'),
-	// 		value: I18n.get('_SupportCXCollector_'),
-	// 	},
-	// 	{
-	// 		name: I18n.get('_SupportInquiries_'),
-	// 		value: I18n.get('_SupportInquiries_'),
-	// 	},
-	// 	{
-	// 		name: I18n.get('_SupportUpgrades_'),
-	// 		value: I18n.get('_SupportUpgrades_'),
-	// 	},
-	// 	{
-	// 		name: I18n.get('_SupportCiscoComm_'),
-	// 		value: I18n.get('_SupportCiscoComm_'),
-	// 	},
-	// 	{
-	// 		name: I18n.get('_SupportCiscoLearning_'),
-	// 		value: I18n.get('_SupportCiscoLearning_'),
-	// 	},
-	// 	{
-	// 		name: I18n.get('_SupportAskExpert_'),
-	// 		value: I18n.get('_SupportAskExpert_'),
-	// 	},
-	// 	{
-	// 		name: I18n.get('_SupportRequestAccelerator_'),
-	// 		value: I18n.get('_SupportRequestAccelerator_'),
-	// 	},
-	// 	{
-	// 		name: I18n.get('_SupportRequestExpert_'),
-	// 		value: I18n.get('_SupportRequestExpert_'),
-	// 	},
-	// 	{
-	// 		name: I18n.get('_SupportOther_'),
-	// 		value: I18n.get('_SupportOther_'),
-	// 	},
-	// ];
 
 	constructor (
 		public cuiModalService: CuiModalService, private profileService: ProfileService,
@@ -93,41 +50,22 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		const topicList = I18n.get('_SupportPortalTopicList_');
-		_.forEach(topicList, topic => {
-			this.items.push({ name: topic, value: topic });
-		});
 		this.supportForm = new FormGroup({
 			description: this.description,
 			title: this.title,
 		});
-		const userDetails = this.profileService.getProfile().cpr;
-		console.log(`${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname} ${I18n.get('_SupportSentBy_')}
+		this.getTopicList();
+	}
 
-		${I18n.get('_SupportCiscoID_')}
-		${userDetails.pf_auth_uid}
-						
-		${I18n.get('_SupportName_')}
-		${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}
-						
-		${I18n.get('_SupportEmail_')}
-		${userDetails.pf_auth_email}
-						
-		${I18n.get('_SupportPhone_')}
-		${userDetails.pf_auth_email}
-						
-		---------------------------------------------------
-						
-		${I18n.get('_SupportEmailTopic_')}
-		${this.supportForm.controls.title.value}
-						
-		${I18n.get('_SupportEmailDescription_')}
-		${this.supportForm.controls.description.value}
-						
-		---------------------------------------------------
-						
-		${I18n.get('_SupportOriginURL_')}
-		${window.location.href}`)
+	/**
+	 * gets topic list
+	 * @returns topic list
+	 */
+	public getTopicList () {
+		const topicList = I18n.get('_SupportPortalTopicList_');
+		_.forEach(topicList, topic => {
+			this.items.push({ name: topic, value: topic });
+		});
 	}
 
 	/**
@@ -137,16 +75,12 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	public submitMessage () {
 		if (this.supportForm.valid) {
 			this.loading = true;
-			//console.log("email" + this.emailTemplate.elementRef.nativeElement);
-			const userDetails = this.profileService.getProfile().cpr;
-			const accountDetails = this.profileService.getAccount();
-			const cprDetails = this.profileService.getCpr();
 			const requestBody: EmailRequest = {
 				body: this.createEmailTemplate(),
-				from: 'cxportal-noreply@cisco.com',
+				from: environment.emailFromID,
 				htmlBody: false,
-				subject: 'Support Request from the CX Portal',
-				to: 'ayadunat@cisco.com', // cx-portal-support@cisco.com in prod
+				subject: I18n.get('_SupportEmailSubject_'),
+				to: environment.emailToID,
 			};
 			return this.emailControllerService.sendEmail(requestBody)
 				.pipe(
@@ -172,33 +106,25 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 		}
 	}
 
+	/**
+	 * creates email template
+	 * @returns email template
+	 */
 	public createEmailTemplate () {
-		const userDetails = this.profileService.getProfile();
-		return `${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname} ${I18n.get('_SupportSentBy_')}
-
-${I18n.get('_SupportCiscoID_')}
-${userDetails.pf_auth_uid}
-				
-${I18n.get('_SupportName_')}
-${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}
-				
-${I18n.get('_SupportEmail_')}
-${userDetails.pf_auth_email}
-				
-${I18n.get('_SupportPhone_')}
-${userDetails.pf_auth_email}
-				
----------------------------------------------------
-				
-${I18n.get('_SupportEmailTopic_')}
-${this.supportForm.controls.title.value}
-				
-${I18n.get('_SupportEmailDescription_')}
-${this.supportForm.controls.description.value}
-				
----------------------------------------------------
-				
-${I18n.get('_SupportOriginURL_')}
-${window.location.href}`
+		const userDetails = this.profileService.getProfile().cpr;
+		return `${userDetails.pf_auth_firstname}` +
+			` ${userDetails.pf_auth_lastname}` + ` ${I18n.get('_SupportSentBy_')}\n\n` +
+			`${I18n.get('_SupportCiscoID_')}\n` + `${userDetails.pf_auth_uid}\n\n` +
+			`${I18n.get('_SupportName_')}\n` +
+			`${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}\n\n` +
+			`${I18n.get('_SupportEmail_')}\n` + `${userDetails.pf_auth_email}\n\n` +
+			`${I18n.get('_SupportPhone_')}\n` + `${userDetails.pf_auth_email}\n\n` +
+			`${I18n.get('_SupportMessageSection_')}\n\n` +
+			`${I18n.get('_SupportEmailTopic_')}\n` +
+			`${this.supportForm.controls.title.value}\n\n` +
+			`${I18n.get('_SupportEmailDescription_')}\n` +
+			`${this.supportForm.controls.description.value}\n\n` +
+			`${I18n.get('_SupportMessageSection_')}\n\n` +
+			`${I18n.get('_SupportOriginURL_')}\n` + `${window.location.href}`;
 	}
 }

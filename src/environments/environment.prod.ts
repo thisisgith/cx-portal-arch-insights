@@ -22,6 +22,7 @@ export const environment = {
 		tokenUrl: `${authOrigin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/pbc/',
+	emailToID: 'cx-portal-support@cisco.com',
 	production: true,
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
