@@ -18,14 +18,14 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('OPEN CASESTab', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('RMAsTab').should('exist');
 			cy.getByAutoId('rmaCasesHeader').should('exist');
-			cy.getByAutoId('rmaShowingXcasesHeader', { timeout: 10000 }).should('exist');
+			cy.getByAutoId('rmaShowingXcasesHeader', { timeout: 15000 }).should('exist');
 			cy.getByAutoId('caseSearchBox').should('exist');
 		});
 
 		it('PBC-231 Case List Table Contents', () => {
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			//  Verify auto-id's for each column header
-			cy.getByAutoId('Severity-Header', { timeout: 10000 })
+			cy.getByAutoId('Severity-Header', { timeout: 15000 })
 				.should('exist').should('contain', i18n._RMACaseSeverity_);
 			cy.getByAutoId('Case ID-Header').should('exist').should('contain', i18n._RMACaseID_);
 			cy.getByAutoId('Device-Header').should('exist').should('contain', i18n._RMACaseDevice_);
@@ -67,9 +67,11 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('caseSearchBox', { timeout: 10000 }).should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
-			cy.getByAutoId('Case ID-Cell', { timeout: 10000 }).click();
+			cy.getByAutoId('Case ID-Cell', { timeout: 15000 }).click();
 			cy.get('details-panel').should('be.visible');
-			cy.getByAutoId('caseTechnology').should('exist').should('contain', i18n._RMACaseTechnology_.toUpperCase());
+			cy.getByAutoId('caseTechnology', { timeout: 15000 })
+				.should('exist')
+				.should('contain', i18n._RMACaseTechnology_.toUpperCase());
 			cy.getByAutoId('caseProbType').should('exist').should('contain', i18n._RMACaseProblemType_.toUpperCase());
 			cy.getByAutoId('caseAsset').should('exist').should('contain', i18n._RMACaseAsset_.toUpperCase());
 			cy.getByAutoId('caseSW').should('exist').should('contain', i18n._RMACaseSoftwareVersion_.toUpperCase());
@@ -99,8 +101,8 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('caseSearchBox', { timeout: 6000 }).should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.getByAutoId('Case ID-Cell', { timeout: 6000 }).click(); // case will load in app-panel360 details-panel
-			cy.get('details-panel', { timeout: 10000 }).should('be.visible');
-			cy.getByAutoId('CaseAttachFile', { timeout: 10000 }).should('exist');
+			cy.get('details-panel', { timeout: 15000 }).should('be.visible');
+			cy.getByAutoId('CaseAttachFile', { timeout: 15000 }).should('exist');
 			cy.getByAutoId('CaseAddNote').should('exist');
 			cy.getByAutoId('CloseDetails').click();
 		});
@@ -114,9 +116,9 @@ describe('Case Detail Spec', () => {
 		beforeEach(() => {
 			cy.loadApp('/solution/resolution');
 			cy.getByAutoId('Facet-Problem Resolution', { timeout: 10000 }).click();
-			cy.getByAutoId('caseSearchBox', { timeout: 6000 }).should('exist').clear()
+			cy.getByAutoId('caseSearchBox', { timeout: 10000 }).should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
-			cy.getByAutoId('Case ID-Cell', { timeout: 6000 }).click(); // case will load in app-panel360 details-panel
+			cy.getByAutoId('Case ID-Cell', { timeout: 10000 }).click(); // case will load in app-panel360 details-panel
 			cy.get('details-panel').should('be.visible');
 		});
 
