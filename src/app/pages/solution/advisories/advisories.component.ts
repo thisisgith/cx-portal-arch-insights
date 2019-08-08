@@ -182,8 +182,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					columns: [
 						{
 							name: I18n.get('_Impact_'),
-							sortable: false,
-							sortDirection: 'asc',
+							sortable: true,
+							sortDirection: null,
+							sorting: false,
 							template: this.impactTemplate,
 						},
 						{
@@ -261,8 +262,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						{
 							key: 'id',
 							name: I18n.get('_ID_'),
-							sortable: false,
-							sortDirection: 'asc',
+							sortable: true,
+							sortDirection: null,
+							sorting: false,
 							value: 'id',
 						},
 						{
@@ -346,8 +348,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						{
 							key: 'id',
 							name: I18n.get('_ID_'),
-							sortable: false,
-							sortDirection: 'asc',
+							sortable: true,
+							sortDirection: null,
+							sorting: false,
 							value: 'id',
 						},
 						{
@@ -434,6 +437,16 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				return of({ });
 			}),
 		);
+	}
+
+	/**
+	 * Sets the params for sorting
+	 * @param column column to set sorting
+	 */
+	public onColumnSort (column) {
+		const tab = this.selectedTab;
+		_.set(tab, ['params', 'sort'], [column.sortDirection]);
+		tab.subject.next();
 	}
 
 	/**

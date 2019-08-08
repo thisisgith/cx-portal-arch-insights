@@ -16,7 +16,7 @@ const coverageElements = totalCountScenario.response.body;
 // const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
 // const advisoryCounts = advisoryScenario.response.body;
 const caseMock = new MockService('CaseScenarios');
-const caseScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
+const caseScenario = caseMock.getScenario('GET', 'Case Details');
 const caseResponse = caseScenario.response.body;
 const fnBulletinMock = new MockService('FieldNoticeBulletinScenarios');
 const hwMock = new MockService('HardwareScenarios');
@@ -839,6 +839,67 @@ describe('Assets', () => { // PBC-41
 			validate360OpenCase(assets[0]); // Currently only first asset has the CaseOpen Button
 
 			cy.getByAutoId('CloseDetails').click();
+		});
+	});
+
+	context('PBC-90: Asset List -> Case List View', () => {
+		// Verify the Case List 360 view
+		it('Opens Case List 360 view when clicking asset cards', () => { // PBC-90
+			assetMock.enable('(Assets) Missing data - Grid View');
+			cy.getByAutoId('grid-view-btn').click();
+			const serial = assetCards[0].serialNumber;
+			cy.getByAutoId(`Device-${serial}`).click();
+			cy.getByAutoId('Asset360SerialNumber')
+				.should('have.text', `Serial Number${serial}`);
+			cy.getByAutoId('Asset360IPAddress')
+				.should('have.text', 'IP AddressN/A');
+			cy.getByAutoId('CloseDetails').click();
+			cy.getByAutoId('list-view-btn').click();
+			cy.getByAutoId(`Device-${serial}`).click();
+			cy.getByAutoId('ToggleActiveCases')
+				.should('be.visible');
+			cy.getByAutoId('Asset360OpenCaseBtn')
+				.should('be.visible');
+			// Check for Summary,Hardware and Advisories Tabs are enabled
+			cy.getByAutoId('SUMMARYTab')
+				.should('be.visible');
+			cy.getByAutoId('HARDWARETab')
+				.should('be.visible');
+			cy.getByAutoId('SOFTWARETab')
+				.should('not.be.visible');
+			cy.getByAutoId('ADVISORIESTab')
+				.should('be.visible');
+			cy.getByAutoId('ToggleActiveCases').click();
+			// Verify the data in Case List
+			const caseDetailNumber = caseResponse.caseNumber;
+			cy.getByAutoId(`caseId-${caseDetailNumber}`).eq(0)
+				.contains(/^[0-9]/)
+				.should('have.text', caseResponse.caseNumber);
+			cy.getByAutoId('Summary-Cell').eq(0)
+				.should('have.text', caseResponse.summary);
+			cy.get('div.grayBox.text-center.flex-center').eq(0)
+				.should('have.text', caseResponse.status);
+			// Verify the Table headers
+			cy.getByAutoId('Severity-Header')
+				.should('exist')
+				.should('contain', 'Severity');
+			cy.getByAutoId('Case ID-Header')
+				.should('exist')
+				.should('contain', 'Case ID');
+			cy.getByAutoId('Summary-Header')
+				.should('exist')
+				.should('contain', 'Summary');
+			cy.getByAutoId('Status-Header')
+				.should('exist')
+				.should('contain', 'Status');
+			cy.getByAutoId('Updated-Header')
+				.should('exist')
+				.should('contain', 'Updated');
+			expect(cy.getByAutoId('Summary-Cell')
+				.should('exist')
+				.its('length')
+				.should('be.gt', 0));
+			cy.getByAutoId('close').click();
 		});
 	});
 });

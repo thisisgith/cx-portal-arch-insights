@@ -63,7 +63,7 @@
 <ng-template #racetrack>
 	<div class="row base-padding-left">
 		<div class="col-md-7">
-			<h3 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h3>
+			<h3 class="text-primary" *ngIf="currentWorkingPitstop" [innerText]="currentWorkingPitstop"></h3>
 		</div>
 		<div class="col-md-5 flex-center">
 			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert" data-auto-id="CompletedActionsPercent"></span>
@@ -396,14 +396,14 @@
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
 			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
 		</div>
-		<div class="col-md-3 text-right text-indigo"
+		<div class="col-md-3 text-right"
 			*ngIf="data">
-			<a class="no-link"
+			<a class="no-link show"
 				target="_blank"
 				attr.data-auto-id="{{ title }}-ViewAll"
 				href="{{ link }}">
-				<span [innerText]="'_ViewAll_' | i18n"></span>
-				<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
+				<span class="text-indigo text-right text-med" [innerText]="'_ViewAll_' | i18n"></span>
+				<span class="icon-play text-indigo qtr-padding-bottom qtr-padding-left"></span>
 			</a>
 		</div>
 	</div>
