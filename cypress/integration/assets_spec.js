@@ -902,4 +902,58 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('close').click();
 		});
 	});
+
+	context('PBC-91: Asset List -> Case Detail View', () => {
+		// Verify the Case Detail 360 view
+		it('Opens Case Detail 360 view ', () => { // PBC-91
+			// TODO: Add auto-ids
+			const serial = assetCards[0].serialNumber;
+			cy.getByAutoId(`Device-${serial}`).click();
+			cy.getByAutoId('ToggleActiveCases').click();
+			const caseDetailNumber = caseResponse.caseNumber;
+			cy.getByAutoId(`caseId-${caseDetailNumber}`).eq(0).click();
+			// Verify the Case Details Data
+			cy.getByAutoId('asset-details-toggle-fullscreen-icon')
+				.should('be.visible').click();
+			cy.get('ng-component details-panel').should('have.class', 'fullscreen');
+			cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
+			cy.get('ng-component details-panel').should('not.have.class', 'fullscreen');
+			cy.getByAutoId('CloseDetails').should('be.visible');
+			cy.get('[data-auto-id="relatedRMA"]', { timeout: 20000 }).should('be.visible');
+			cy.getByAutoId('CaseAttachFile').should('be.visible');
+			cy.getByAutoId('CaseAddNote').should('be.visible');
+			cy.getByAutoId('summaryTab').should('be.visible');
+			cy.getByAutoId('notesTab').should('be.visible');
+			cy.getByAutoId('filesTab').should('be.visible');
+			cy.getByAutoId('caseTechnology').should('contain', 'TECHNOLOGY');
+
+			// Related RMAs dropdown
+			cy.getByAutoId('relatedRMA').click();
+			cy.getByAutoId('Name-Header').should('have.text', 'Name');
+			cy.getByAutoId('Status-Header').eq(0).should('have.text', 'Status');
+			cy.getByAutoId('Ship To-Header').should('have.text', 'Ship To');
+			cy.getByAutoId('Contract Number-Header').should('have.text', 'Contract Number');
+			cy.getByAutoId('Created-Header').should('have.text', 'Created');
+			// TODO: Verify the RMA dropdown data from Mock API
+			cy.getByAutoId('close').click();
+			cy.getByAutoId('caseProbType').should('contain', 'PROBLEM TYPE');
+			cy.getByAutoId('caseAsset').should('contain', 'ASSET');
+			cy.getByAutoId('caseSW').should('contain', 'SOFTWARE VERSION');
+			cy.getByAutoId('caseContract').should('contain', 'CONTRACT');
+			cy.getByAutoId('caseTracking').should('contain', 'TRACKING NUMBER');
+			cy.getByAutoId('caseOwnerEmail').should('contain', 'CASE OWNER');
+			cy.getByAutoId('caseTacEng').should('contain', 'TAC ENGINEER');
+			cy.getByAutoId('caseSummaryTitle').should('contain', 'TITLE');
+			cy.getByAutoId('caseDescription').should('contain', 'DESCRIPTION');
+			cy.get('div.text-xlarge').eq(2)
+				.should('have.text', `Case ${caseResponse.caseNumber}`);
+			cy.get('div:nth-child(3) > div:nth-child(1) > div:nth-child(2)').should('have.text', caseResponse.contractId);
+			cy.getByAutoId('mailTacEngineer').should('have.text', caseResponse.ownerEmail);
+			cy.get('div:nth-child(5) > div > div:nth-child(2)').eq(1).should('have.text', caseResponse.summary);
+			cy.get('div.col-md-3 > div:nth-child(2)')
+				.should('have.text', caseResponse.status);
+			cy.getByAutoId('CloseDetails').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+		});
+	});
 });
