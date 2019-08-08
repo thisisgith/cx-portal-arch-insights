@@ -8,7 +8,7 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureService , IException, IAsset} from '@sdp-api';
+import { ArchitectureService, IException, IAsset } from '@sdp-api';
 
 /**
  * CBP TBD table Component
@@ -26,11 +26,11 @@ export class CbpTbdComponent implements OnChanges {
 	public totalItems = 0;
 	public tableIndex = 0;
 	public tableData: IException[] = [];
-	public isLoading:boolean = true;
-	public params : any ={
+	public isLoading = true;
+	public params: any = {
 		page : 0,
 		pageSize : 8,
-		body :[],
+		body : [],
 	};
 
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
@@ -41,7 +41,8 @@ export class CbpTbdComponent implements OnChanges {
 	 */
 	public ngOnChanges () {
 		if (this.cbpDetails) {
-			const ruleIdsWithExceptions :string[] = this.cbpDetails.ruleIdsWithExceptions.split(';');
+			const ruleIdsWithExceptions: string[] = this.cbpDetails
+				.ruleIdsWithExceptions.split(';');
 			this.totalItems = ruleIdsWithExceptions.length;
 			this.params.body = ruleIdsWithExceptions;
 			this.params.page = 0 ;
@@ -73,13 +74,15 @@ export class CbpTbdComponent implements OnChanges {
 							'  : getData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 						this.isLoading = false;
+						this.tableData = [];
+						this.totalItems = 0;
 					});
 	}
 	/**
 	 * used for expanding one table row at a time.
 	 * @param selectedItem - Item which is selected and to be expanded
 	 */
-	public expandRow (selectedItem: any) {
+	public expandRow (selectedItem: IException) {
 		selectedItem.active = !selectedItem.active;
 		this.tableData = this.tableData.map(item => {
 			if (item !== selectedItem) {

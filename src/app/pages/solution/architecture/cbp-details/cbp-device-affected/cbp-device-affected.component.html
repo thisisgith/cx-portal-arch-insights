@@ -1,4 +1,4 @@
-<cbp-summary [cbpDetails]='cbpDetails'></cbp-summary>
+<cbp-summary [cbpDetails]="cbpDetails"></cbp-summary>
 
 <div class="row">
 	<div class="col-md-12">
@@ -7,7 +7,8 @@
 				<span class="text-bold text-uppercase">
 					{{ ('_AssetsImpacted_' | i18n) + '(' +  totalItems +') '}}
 				</span>
-				<a (click)="export()"> Export/DownLoad</a>
+				<!-- <a data-auto-id="ExportDownloadPageData" (click)="export()"> Export/DownLoad</a> -->
+				<a> Export/DownLoad</a>
 			</div>
 			<!-- <div class="base-margin-top">
 				<span [innerText]="'Assets' | i18n" class="text-large"></span>
@@ -15,9 +16,9 @@
 				{{ (tableIndex + 1) +' - ' +  (tableIndex + tableData.length ) }}
 				of {{totalItems}} </span>
 			</div> -->
-			<div class="base-margin-top" *ngIf="!isLoading">
-				<cui-table [options]=" tableOptions" [data]="tableData"></cui-table>
-				<div class="section">
+			<div class="base-margin-top" >
+				<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="tableData"></cui-table>
+				<div class="section" *ngIf="!isLoading && totalItems > 0">
 					<cui-pager [page]="params.page" [limit]="params.pageSize"
 						[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
 				</div>
@@ -31,6 +32,7 @@
 
 <ng-template #assetTmpl let-item="celldata">
 	<span>
-		<a (click)="openAsset360View(item)"> {{item.hostname}}</a>
+		<!-- <a data-auto-id="openAsset360View"  (click)="openAsset360View(item)"> {{item.hostname}}</a> -->
+		<a> {{item.hostname}}</a>
 	</span>
 </ng-template>

@@ -3,15 +3,14 @@
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<cbp-awe-header [cbpDetails]="assetObject"></cbp-awe-header>
 		<div detailsPanelTitle class="text-xlarge">
-
-			<span class="icon-left-arrow" (click)="onPanelClose()"></span>
-			<span class="icon-right-arrow" style="color :#c8c9cb"></span>
+			<span class="icon-left-arrow" data-auto-id="PanelClose" (click)="onPanelClose()"></span>
+			<span class="icon-right-arrow"></span>
 			<span> Config Best Practices Exceptions for </span>
-			<a> {{ '< Assets : ' +assetObject?.productId+'>'}}</a>
+			<a> {{ assetObject?.productId}}</a>
 		</div>
 	</details-panel-header>
 	<!-- <cbp-awe-tab [cbpDetails]="assetObject"></cbp-awe-tab> -->
-	<cbp-tbd [cbpDetails]='assetObject'></cbp-tbd>
+	<cbp-tbd [cbpDetails]="assetObject"></cbp-tbd>
 </details-panel>
 
 <div class="panel">

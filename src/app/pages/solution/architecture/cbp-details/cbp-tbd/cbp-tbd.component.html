@@ -13,44 +13,42 @@
 	<div class="col-md-12">
 		<div class="container">
 			<!-- <cui-table [options]="tableOptions" [data]="tableData"></cui-table> -->
-			<table class="table table--fixed"  *ngIf="!isLoading">
+			<table class="table" *ngIf="!isLoading">
 				<thead>
 					<tr>
 						<th>Risk</th>
 						<th>Rule Name</th>
 						<th>Exception</th>
-						<th></th>
-						<th></th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody *ngIf="totalItems > 0">
 					<ng-container *ngFor="let item of tableData">
 						<tr>
 							<td>
 								<ng-container *ngTemplateOutlet=" riskTmpl;context: { itemSeverity : item.bpSeverity }">
 								</ng-container>
 							</td>
-							<td> <a>{{item['bpRuleTitle']}}</a> </td>
-							<td>{{item['bpRuleSummary']}}</td>
 							<td>
-								<a (click)="expandRow(item) ">
-									<span *ngIf="!item.active"> Show Recommendation and Corrective Action</span>
-									<span *ngIf="item.active"> Hide Recommendation and Corrective Action</span>
+								<a>{{(item['bpRuleTitle']).substr(0, 25).concat('...')}}</a>
+							</td>
+							<td>
+								<span>{{(item['bpRuleSummary']).substr(0, 25).concat('... ')}}</span>
+								<a data-auto-id="expandAndContractRowLink" (click)="expandRow(item) ">
+									<span *ngIf="!item.active"> Show Recommendation and Corrective Action </span>
+									<span *ngIf="item.active"> Hide Recommendation and Corrective Action </span>
+									<span [ngClass]="{
+										'icon-chevron-down':!item.active,
+										'icon-chevron-up':item.active
+									}" class="icon-small hand-pointer"></span>
 								</a>
 							</td>
-							<td (click)="expandRow(item) ">
-								<span [ngClass]="{'icon-chevron-down':!item.active,
-								'icon-chevron-up':item.active}" style="cursor: pointer" class="icon-small"></span>
-							</td>
 						</tr>
-
 						<ng-container *ngTemplateOutlet=" dynamicRow;context: { item : item }">
 						</ng-container>
-
 					</ng-container>
 				</tbody>
 			</table>
-			<div class="section" *ngIf="!isLoading">
+			<div class="section" *ngIf="!isLoading && totalItems > 0">
 				<cui-pager *ngIf="tableData.length" [page]="params.page" [limit]="params.pageSize"
 					[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
 			</div>
@@ -63,11 +61,9 @@
 
 <ng-template #riskTmpl let-severity="itemSeverity">
 	<span class="label label--circle label--tiny qtr-margin-right" [ngClass]="{
-					'Critical': 'label--danger',
-					'High': 'label--warning',
-					'Medium': 'label--warning-alt',
-					'Low': 'label--success',
-					'Info': 'label--info'
+					'High': 'label--danger',
+					'Medium': 'label--warning',
+					'Low': 'label--warning-alt'
 			}[severity]">
 	</span>
 	<span>{{severity}}</span>
@@ -75,7 +71,7 @@
 
 <ng-template #dynamicRow let-item="item">
 	<tr class="table--wrap" *ngIf="item.active">
-		<td colspan="5">
+		<td colspan="3">
 			<div class="row">
 				<div class="col-md-12">
 					<div class="container">

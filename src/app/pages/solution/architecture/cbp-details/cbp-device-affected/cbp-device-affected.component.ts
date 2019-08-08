@@ -27,12 +27,12 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public tableOptions: CuiTableOptions;
 	public tableIndex = 0;
 	public totalItems = 0;
-	public isLoading:boolean = true;
+	public isLoading = true;
 	public tableData: IAsset[] = [];
-	public params : any = {
+	public params: any = {
 		page : 0,
 		pageSize : 8,
-		body :[],
+		body : [],
 	};
 
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
@@ -124,19 +124,21 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 							'  : getData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 						this.isLoading = false;
+						this.tableData = [];
+						this.totalItems = 0;
 					});
 	}
 
-	/**
-	 * Used for Opening the Asset 360 View the data for table
-	 * @param item - The Item to which Asset 360 needs to shown
-	 */
-	public openAsset360View (item: any) {
-	}
+	// /**
+	//  * Used for Opening the Asset 360 View the data for table
+	//  * @param item - The Item to which Asset 360 needs to shown
+	//  */
+	// public openAsset360View (item: any) {
+	// }
 
-	/**
-	 * Used for exporting the table data
-	 */
-	public export () {
-	}
+	// /**
+	//  * Used for exporting the table data
+	//  */
+	// public export () {
+	// }
 }

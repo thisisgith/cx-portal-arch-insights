@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
+import { IException } from '@sdp-api';
 
 /**
  * CBP Rules Header Component
@@ -12,7 +13,7 @@ import { LogService } from '@cisco-ngx/cui-services';
 })
 export class CbpHeaderComponent {
 
-	@Input('cbpDetails') public cbpDetails: any = null;
+	@Input('cbpDetails') public cbpDetails: IException = null;
 	constructor (private logger: LogService) {
 
 	}
