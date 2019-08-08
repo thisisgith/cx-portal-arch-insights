@@ -18,6 +18,7 @@ const onboardItems = [
 		title: 'Catalyst 9800 Wireless Lan Controller Overview',
 		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53991',
+		percentageCompleted: '25',
 	},
 	{
 		description: 'Interconnecting Cisco Networking Devices, Part 2 (ICND2) v3.0',
@@ -27,6 +28,7 @@ const onboardItems = [
 		title: 'Configuring and Using Wireless Analytics in SDA',
 		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentageCompleted: '50',
 	},
 	{
 		description: 'Implementing Cisco IP Routing (ROUTE) v2.0',
@@ -36,6 +38,7 @@ const onboardItems = [
 		title: 'Implementing Cisco IP Routing (ROUTE) v2.0',
 		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53691',
+		percentageCompleted: '75',
 	},
 	{
 		description: 'Implementing Cisco IP Switched Networks (SWITCH) v2.0',
@@ -45,6 +48,7 @@ const onboardItems = [
 		title: 'Implementing Cisco IP Switched Networks (SWITCH) v2.0',
 		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53671',
+		percentageCompleted: '100',
 	},
 	{
 		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
@@ -54,6 +58,7 @@ const onboardItems = [
 		title: 'CCNA Wireless',
 		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentageCompleted: '25',
 	},
 	{
 		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
@@ -63,6 +68,7 @@ const onboardItems = [
 		title: 'Cisco Training on Demand Courses 2',
 		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentageCompleted: '50',
 	},
 	{
 		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
@@ -72,6 +78,7 @@ const onboardItems = [
 		title: 'Cisco Training on Demand Courses 3',
 		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentageCompleted: '75',
 	},
 	{
 		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
@@ -81,6 +88,7 @@ const onboardItems = [
 		title: 'Cisco Training on Demand Courses 4',
 		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentageCompleted: '100',
 	},
 	{
 		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
@@ -90,6 +98,7 @@ const onboardItems = [
 		title: 'CCNP Wireless',
 		type: 'Videos',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+		percentageCompleted: '25',
 	},
 	{
 		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
@@ -99,6 +108,7 @@ const onboardItems = [
 		title: 'Videos 2',
 		type: 'Videos',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+		percentageCompleted: '50',
 	},
 	{
 		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
@@ -108,6 +118,7 @@ const onboardItems = [
 		title: 'Videos 3',
 		type: 'Videos',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+		percentageCompleted: '75',
 	},
 	{
 		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
@@ -117,6 +128,7 @@ const onboardItems = [
 		title: 'Videos 4',
 		type: 'Videos',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+		percentageCompleted: '100',
 	},
 	{
 		title: 'Designing Cisco Wireless Enterprise Networks',

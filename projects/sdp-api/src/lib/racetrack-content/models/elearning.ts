@@ -36,4 +36,9 @@ export interface ELearning {
    * CX Level
    */
   cxlevel?: number;
+
+  /**
+   * Percentage Completed
+   */
+  percentageCompleted?: number;
 }
