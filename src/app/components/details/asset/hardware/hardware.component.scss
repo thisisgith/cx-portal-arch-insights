@@ -1,15 +1,28 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
-::ng-deep .pbc-timeline {
-	margin: 0 !important;
-}
+:host ::ng-deep {
+	.pbc-timeline {
+		margin: 0 !important;
+	}
 
-::ng-deep .cui-drawer {
-	margin: 0 !important;
-}
+	.cui-drawer {
+		margin: 0 !important;
+	}
 
-::ng-deep .panel {
-	padding-left: 0 !important;
+	.panel {
+		padding-left: 0 !important;
+	}
+
+	table {
+		table-layout: fixed;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	small {
+		font-size: x-small;
+		font-style: italic;
+	}
 }
 
 %tr-shared {
@@ -27,14 +40,4 @@ tr.td-row td {
 	@extend %tr-shared;
 
 	border-bottom-width: 1px;
-}
-
-table {
-	border-collapse: collapse;
-	width: 100%;
-}
-
-::ng-deep small {
-	font-size: x-small;
-	font-style: italic;
 }
