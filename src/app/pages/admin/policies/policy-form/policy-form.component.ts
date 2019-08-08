@@ -30,9 +30,12 @@ import * as _ from 'lodash-es';
 /**
  * interface representing the key/value of a select input option
  */
-interface SelectOption {
-	key: string;
-	value: string;
+interface SelectOptions {
+	selected: string;
+	options: {
+		key: string;
+		value: string;
+	}[];
 }
 
 /**
@@ -86,24 +89,33 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		'July', 'August', 'September', 'October', 'November', 'December',
 	];
 
-	public timePeriods: SelectOption[] = [
-		{ key: 'Monthly', value: 'monthly' },
-		{ key: 'Weekly', value: 'weekly' },
-		{ key: 'Daily', value: 'daily' },
-	];
+	public dayNames = ['Sunday', 'Monday', 'Tuesday',
+		'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-	public days = [
-		{ key: 'Sunday', value: '0' },
-		{ key: 'Monday', value: '1' },
-		{ key: 'Tuesday', value: '2' },
-		{ key: 'Wednesday', value: '3' },
-		{ key: 'Thursday', value: '4' },
-		{ key: 'Friday', value: '5' },
-		{ key: 'Saturday', value: '6' },
-	];
+	public timePeriods: SelectOptions = {
+		options: [
+			{ key: 'Monthly', value: 'monthly' },
+			{ key: 'Weekly', value: 'weekly' },
+			{ key: 'Daily', value: 'daily' },
+		],
+		selected: '',
+	};
+
+	public days: SelectOptions = {
+		options: [
+			{ key: 'Sunday', value: '0' },
+			{ key: 'Monday', value: '1' },
+			{ key: 'Tuesday', value: '2' },
+			{ key: 'Wednesday', value: '3' },
+			{ key: 'Thursday', value: '4' },
+			{ key: 'Friday', value: '5' },
+			{ key: 'Saturday', value: '6'  },
+		],
+		selected: '',
+	};
 
 	public dates = function () {
-		const dates: SelectOption[] = [];
+		const dates = [];
 		for (let date = 1; date < 32; date += 1) {
 			let suffix = 'th';
 			if (date % 10 === 1) { suffix = 'st'; }
@@ -121,11 +133,14 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			});
 		}
 
-		return dates;
+		return {
+			options: dates,
+			selected: '',
+		};
 	}();
 
 	public hourmins = function () {
-		const times: SelectOption[] = [];
+		const times = [];
 		const amPms = ['am', 'pm'];
 		const minutes = ['00', '30'];
 		const hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -144,7 +159,10 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			}
 		}
 
-		return times;
+		return {
+			options: times,
+			selected: '',
+		};
 	}();
 
 	constructor (
@@ -203,6 +221,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 `${this.monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 
 		_.set(this.policy, 'createdDate', formattedTime);
+
+		this.setSelectors();
 
 		this.getParams = function (schedule: string) {
 			return {
@@ -284,6 +304,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			pageNumber: '1',
 			rowsPerPage: '9999',
 		};
+
+		this.setSelectors();
 
 		this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params)
 			.pipe(
@@ -385,8 +407,6 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
-	 * DOES NOT WORK YET
-	 *
 	 * Toggles is device row is selected
 	 * @param allDevicesSelected checkbox event
 	 * @param devices device row
@@ -445,7 +465,44 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
-	 * Creates cron expression
+	 * Autopopulates selectors for time when editing a policy
+	 */
+	public setSelectors () {
+		const re = /((\d\d)\:(\d\d)) (am|pm)\,* (on day (\d+)|only on (\w+)){0,1}/g;
+
+		const matches = re.exec(_.get(this.policy, 'formattedSchedule'));
+
+		const min = Number(matches[3]);
+		const hour = Number(matches[2]);
+		const amPm = matches[4];
+		const date = matches[6];
+		const dayOfWeek = matches[7];
+
+		const milHour = amPm === 'pm' ? hour + 12 : hour;
+
+		if (!date && !dayOfWeek) {
+			this.timePeriods.selected = 'daily';
+
+		} else if (date) {
+			this.timePeriods.selected = 'monthly';
+
+			this.dates.selected = date;
+		} else {
+			this.timePeriods.selected = 'weekly';
+
+			const dayOfWeekNum = this.days.options.findIndex(element =>
+				element.key.toLowerCase() === dayOfWeek.toLowerCase());
+
+			this.days.selected = String(dayOfWeekNum);
+		}
+
+		this.hourmins.selected = `${min} ${milHour}`;
+
+		this.timePeriod = this.timePeriods.selected;
+	}
+
+	/**
+	 * Creates cron expression using quartz format
 	 * @param timePeriod "monthly", "weekly" or "daily"
 	 * @param day numbered day of the week "0-6"
 	 * @param date date in a month "1-31"
@@ -456,9 +513,9 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public getSchedule (timePeriod: string, day: string, date: string, hourmin: string) {
 		let schedule = `${hourmin}`;
 		if (timePeriod === 'monthly') {
-			schedule = `${schedule} ${date} * *`;
+			schedule = `${schedule} ${date} * ?`;
 		} else if (timePeriod === 'weekly') {
-			schedule = `${schedule} * * ${day}`;
+			schedule = `${schedule} ? * ${day}`;
 		} else {
 			schedule = `${schedule} * * *`;
 		}

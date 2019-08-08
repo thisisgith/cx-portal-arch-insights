@@ -66,18 +66,23 @@
 								<div class="form-inline">
 									<select id="timePeriod-select" formControlName="timePeriod"
 										(change)="timePeriodChange()"
+										[value]="timePeriods?.selected"
 										data-auto-id="policy-modal.timePeriod-select">
 										<option value="" disabled selected hidden>PERIOD</option>
-										<option *ngFor="let timePeriod of timePeriods" [value]="timePeriod.value"
+										<option *ngFor="let timePeriod of timePeriods.options"
+											[value]="timePeriod.value"
 											[innerText]="timePeriod.key"></option>
 									</select>
 									<ng-container *ngIf="timePeriod === 'monthly'">
 										<label class="collection-label" for="dates"
-											[innerText]="'_On_' | i18n | lowercase"></label>
+											[innerText]="'_OnThe_' | i18n | lowercase"></label>
 										<select id="date-select" formControlName="dates"
+											(change)="timePeriodChange()"
+											[value]="dates?.selected"
 											data-auto-id="policy-modal.date-Select">
 											<option value="" disabled selected hidden>DATE</option>
-											<option *ngFor="let date of dates" [value]="date.value"
+											<option *ngFor="let date of dates.options"
+												[value]="date.value"
 												[innerText]="date.key">
 											</option>
 										</select>
@@ -86,18 +91,24 @@
 										<label class="collection-label" for="days"
 											[innerText]="'_On_' | i18n | lowercase"></label>
 										<select id="day-select" formControlName="days"
+											[value]="days?.selected"
 											data-auto-id="policy-modal.day-Select">
 											<option value="" disabled selected hidden>DAY</option>
-											<option *ngFor="let day of days" [value]="day.value" [innerText]="day.key">
+											<option *ngFor="let day of days.options"
+												(change)="timePeriodChange()"
+												[value]="day.value"
+												[innerText]="day.key">
 											</option>
 										</select>
 									</ng-container>
 									<label class="collection-label" for="hourmins"
 										[innerText]="'_At_' | i18n | lowercase"></label>
 									<select id="hourmin-select" formControlName="hourmins"
+										[value]="hourmins?.selected"
 										data-auto-id="policy-modal.hourmin-Select">
 										<option value="" disabled selected hidden>TIME</option>
-										<option *ngFor="let hourmin of hourmins" [value]="hourmin.value"
+										<option *ngFor="let hourmin of hourmins.options"
+											[value]="hourmin.value"
 											[innerText]="hourmin.key"></option>
 									</select>
 									<span class="collection-label" [innerText]="'_UTC_' | i18n"></span>
