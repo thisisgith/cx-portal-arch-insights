@@ -6,7 +6,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Location } from '@angular/common';
 import { IEHealthStatusResponseModel } from '@sdp-api';
 import { HealthStatusScenarios } from '@mock';
-import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SettingsComponent', () => {
 	let component: SettingsComponent;
