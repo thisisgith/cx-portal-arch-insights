@@ -182,8 +182,11 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 			trainingSessionGoal: this.requestForm.get('trainingGoal').value,
 			usecase: this.technology,
 		};
+		const params: RacetrackContentService.RequestGroupTrainingParams = {
+			gtRequest: groupTrainingRequestParams,
+		};
 		this.contentService
-		.requestGroupTraining(groupTrainingRequestParams)
+		.requestGroupTraining(params)
 			.pipe(
 				catchError(err => {
 					this.formSubmissionFailed = true;

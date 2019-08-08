@@ -5,6 +5,10 @@ import { ProductAlertsModule, InventoryModule } from '@sdp-api';
 import { environment } from '@environment';
 import { FieldNoticeDetailsHeaderModule } from './header/field-notice-details-header.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { CuiTabsModule } from '@cisco-ngx/cui-components';
+import {
+	FieldNoticeImpactedAssetsModule,
+} from './impacted-assets/field-notice-impacted-assets.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -22,8 +26,10 @@ const rootUrl = environment.sdpServiceOrigin;
 	],
 	imports: [
 		CommonModule,
+		CuiTabsModule,
 		I18nPipeModule,
 		FieldNoticeDetailsHeaderModule,
+		FieldNoticeImpactedAssetsModule,
 		InventoryModule.forRoot({ rootUrl }),
 		ProductAlertsModule.forRoot({ rootUrl }),
 	],

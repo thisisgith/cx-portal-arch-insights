@@ -16,17 +16,21 @@
 </cui-tabs>
 
 <ng-template #summary>
-	<div class="row base-margin-top">
-		<div class="col-md-4 flex flex-center">
-			<img alt="{{ '_StockPhoto_' | i18n }}"
-				src="assets/img/inventory/CAT-3650.png">
+	<div class="row base-margin">
+		<div *ngIf="false" class="col-md-4 flex flex-center">
+			<img attr.data-auto-id="DeviceImg-{{ asset?.serialNumber }}" [src]="" alt=""/>
 		</div>
-		<div class="col-md-6" *ngIf="asset">
+		<!-- TODO: Adjust this based on when we actually have a product photo to use -->
+		<div *ngIf="asset"
+			[ngClass]="{
+				'col-md-6': false,
+				'col-md-12': true
+			}">
 			<div *ngIf="status.loading.overall">
 				<cui-loader></cui-loader>
 			</div>
 			<div *ngIf="!status.loading.overall">
-				<h4 [innerText]="assetData?.productId || asset?.productId"></h4>
+				<h4 [innerText]="assetData?.productId || asset?.productId" data-auto-id="ProductId"></h4>
 				<div data-auto-id="YouHaveInventory"
 					*ngIf="componentData.numberInInventory > 1"
 					[innerHtml]="'_YouHaveInventory_' | i18n:componentData.numberInInventory">
@@ -62,9 +66,9 @@
 				<div class="col-md-12 base-margin-top">
 					<ng-container *ngTemplateOutlet="supportData; context: {
 								title: '_SupportCoverage_',
-								expirationDate: coverageData?.contractEndDate,
-								linkData: coverageData?.contractNumber?
-								(coverageData?.contractNumber + (coverageData?.slaDescription ? ' ' + coverageData?.slaDescription : ''))
+								expirationDate: assetData?.lastDateOfSupport,
+								linkData: assetData?.contractNumber ?
+								(assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
 								 : null,
 								url: '#',
 								supportType: 'support'
@@ -92,8 +96,8 @@
 				<div class="col-md-12 base-margin-top">
 					<ng-container *ngTemplateOutlet="supportData; context: {
 							title: '_Warranty_',
-							expirationDate: coverageData?.warrantyEndDate,
-							linkData: coverageData?.warrantyType,
+							expirationDate: assetData?.warrantyEndDate,
+							linkData: assetData?.warrantyType,
 							url: '#',
 							supportType: 'warranty'
 						}">
@@ -128,8 +132,8 @@
 	</div>
 	<div class="row">
 		<div *ngIf="expirationDate" class="col-md-12" >
-			<div *ngIf="expirationDate >= today" class="text-default" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
-			<div *ngIf="!(expirationDate >= today)" [ngClass]="{
+			<div *ngIf="(expirationDate | date) >= (today | date)" class="text-default" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
+			<div *ngIf="!((expirationDate | date) >= (today | date))" [ngClass]="{
 					'text-danger': (supportType === 'support'),
 					'text-warning': (supportType === 'warranty')
 				}"

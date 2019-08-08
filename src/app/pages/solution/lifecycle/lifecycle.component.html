@@ -63,7 +63,7 @@
 <ng-template #racetrack>
 	<div class="row base-padding-left">
 		<div class="col-md-7">
-			<h3 class="text-primary" *ngIf="currentPitstop" [innerText]="currentPitstop.name"></h3>
+			<h3 class="text-primary" *ngIf="currentWorkingPitstop" [innerText]="currentWorkingPitstop"></h3>
 		</div>
 		<div class="col-md-5 flex-center">
 			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert" data-auto-id="CompletedActionsPercent"></span>
@@ -97,7 +97,7 @@
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
 				<div class="col-md-2">
-					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name}" data-auto-id="pitstopCheckboxLabel">
+					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed}" data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.action.isComplete"
 							(change)="completeAction(action.action)" [checked]="action.action.isComplete">
 						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"></span>
@@ -106,7 +106,7 @@
 				<div class="col-md-10">
 					<a data-auto-id="actionlink"
 						class="no-link"
-						[ngClass]="{'disabled': action?.action?.isComplete || currentWorkingPitstop !== currentPitstop.name, 'selected': action?.selected}"
+						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
 						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
 						<div>
@@ -186,7 +186,10 @@
 			<span [innerText]="item.duration"></span>
 		</div>
 		<div class="base-padding-top half-padding-left" *ngIf="(autoid==='recommendedACC' || autoid==='moreACCList') && item.status==='recommended'">
-			<button data-auto-id="Request1on1ACCButton" (click)="selectAccRequestForm(true, item.accId, item.title)" class="btn btn--small btn--secondary text-uppercase"
+			<button data-auto-id="Request1on1ACCButton"
+				(click)="selectAccRequestForm(true, item.accId, item.title)"
+				class="btn btn--small btn--secondary text-uppercase"
+				[ngClass]="{ 'disabled': notCurrentPitstop }"
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
 		</div>
@@ -224,7 +227,10 @@
 	</div>
 	<div class="text-large base-padding-bottom" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-Title"></div>
 	<ng-container *ngIf="item.status === 'recommended'">
-		<button data-auto-id="recommendedACCWatchButton" (click)="selectAccRequestForm(true, item.accId, item.title)" class="btn btn--small btn--secondary text-uppercase"
+		<button data-auto-id="recommendedACCWatchButton"
+			(click)="selectAccRequestForm(true, item.accId, item.title)"
+			class="btn btn--small btn--secondary text-uppercase"
+			[ngClass]="{ 'disabled': notCurrentPitstop }"
 			[innerText]="'_Request1on1_' | i18n">
 		</button>
 	</ng-container>
@@ -359,7 +365,10 @@
 <ng-template #learnPanel let-data="data">
 	<div *ngIf="data.elearning?.length" data-auto-id="LearnPanel-ELearningBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
-			{ icon: 'clipboard-md', title: '_ELearning_', data: componentData.learning.elearning }">
+			{ icon: 'clipboard-md',
+				title: '_ELearning_',
+				data: componentData.learning.elearning,
+				link: 'https://pilot-digital-learning.cisco.com/cx/#/?type=e-learning' }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
@@ -373,19 +382,15 @@
 
 	<div *ngIf="data.certifications?.length" data-auto-id="LearnPanel-CertificationsBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
-			{ icon: 'certified', title: '_Certifications_', data: componentData.learning.certifications }">
-		</ng-container>
-		<div class="divider"></div>
-	</div>
-
-	<div *ngIf="data.training?.length" data-auto-id="LearnPanel-RemoteLearningLabsBlock">
-		<ng-container *ngTemplateOutlet="learningBlock; context:
-			{ icon: 'audio-broadcast',title: '_RemoteLearningLabs_', data: componentData.learning.training }">
+			{ icon: 'certified',
+				title: '_Certifications_',
+				data: componentData.learning.certifications,
+				link: 'https://pilot-digital-learning.cisco.com/cx/#/?type=certification'} ">
 		</ng-container>
 	</div>
 </ng-template>
 
-<ng-template #learningBlock let-title="title" let-data="data" let-icon="icon">
+<ng-template #learningBlock let-title="title" let-data="data" let-icon="icon" let-link="link">
 	<div class="row">
 		<div class="col-md-9">
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
@@ -396,8 +401,7 @@
 			<a class="no-link"
 				target="_blank"
 				attr.data-auto-id="{{ title }}-ViewAll"
-				href="https://pilot-digital-learning.cisco.com/cx#/"
-				[ngClass]="{'disabled': title !== '_ELearning_'}">
+				href="{{ link }}">
 				<span [innerText]="'_ViewAll_' | i18n"></span>
 				<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
 			</a>
@@ -572,7 +576,10 @@
 					<div class="card__footer">
 						<div class="card_footer_item" data-auto-id="ACCCardFooter">
 							<div class="text-left text-info"  *ngIf="item.status === 'recommended'">
-								<button data-auto-id="Request1on1Button" (click)="selectAccRequestForm(true, item.accId, item.title)" class="btn btn--small btn--secondary text-uppercase"
+								<button data-auto-id="Request1on1Button"
+									(click)="selectAccRequestForm(true, item.accId, item.title)"
+									class="btn btn--small btn--secondary text-uppercase"
+									[ngClass]="{ 'disabled': notCurrentPitstop }"
 									[innerText]="'_Request1on1_' | i18n">
 								</button>
 							</div>
@@ -647,6 +654,10 @@
 <ng-template #cardSuccessBytes>
 	<div class="grid grid--4up base-padding-top" *ngIf="(!view || view == 'grid')">
 		<div class="card acc__card" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
+			<div class="icon-bookmark icon-medium"
+			(click)="updateBookmark('SB', item)"
+			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'"
+			data-auto-id="SBCardRibbon"></div>
 			<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
 			<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
 			<div class="card__footer">
@@ -763,7 +774,7 @@
 				<div class="half-margin-left" [innerText]="data | i18n"></div>
 			</div>
 			<div class="col-md-1">
-				<a class="no-link fade-in-pop closebtn"
+				<a class="no-link closebtn"
 					(click)="this.cgtRequestTrainingClicked = false"
 					attr.data-auto-id="Close-CgtTrainingComplete-Popup">
 					<span class="icon-close icon-small"></span>
@@ -875,13 +886,12 @@
 </ng-template>
 
 <ng-template #bookmarkTemplate let-celldata="celldata">
-	<!-- This is hardcoded for demo, When API is ready will link to real data-->
-	<div *ngIf="celldata.type === 'Video'" class="icon-bookmark icon-medium text-indigo"></div>
-	<div *ngIf="celldata.type === 'Web Page'" class="icon-bookmark icon-medium icon-bookmark-clear"></div>
-	<div *ngIf="celldata.type === 'PDF'" class="text-success">
-		<span class=" icon-certified icon-medium"></span>
-		<span class="half-margin-left" [innerText]="'_Completed_' | i18n"></span>
-	</div>
+	<div *ngIf="celldata.bookmark" class="icon-bookmark icon-medium text-indigo"
+		(click)="updateBookmark('SB', celldata)"
+		data-auto-id="SBListRibbon"></div>
+	<div *ngIf="!celldata.bookmark" class="icon-bookmark icon-medium icon-bookmark-clear"
+		(click)="updateBookmark('SB', celldata)"
+		data-auto-id="SBListRibbon"></div>
 </ng-template>
 
 <ng-container *ngIf="selectCgtComponent">

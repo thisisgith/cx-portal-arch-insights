@@ -1,6 +1,6 @@
 import { IEHealthStatusResponseModel } from '@sdp-api';
 /** base API for controlpoints info */
-const api = '/api/customerportal/controlpoint/v1/ie/health-status/92736491';
+const api = '/api/customerportal/controlpoint/v1/ie/health-status/2431199';
 
 /**
  * Mock body of results

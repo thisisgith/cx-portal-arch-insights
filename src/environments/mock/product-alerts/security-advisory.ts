@@ -2081,6 +2081,27 @@ export const MockSecurityAdvisories: SecurityAdvisory[] = [
 	/* tslint:enable */
 ];
 
+/* tslint:disable */
+const mockAdvisoryAsset: SecurityAdvisory[] = [
+	{
+			"customerId": "2431199",
+			"managedNeId": "NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA",
+			"neInstanceId": "NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA",
+			"hwInstanceId": "NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA,C2960S-UNIVERSALK9-M,12.2(55)SE3,99",
+			"productId": "WS-C2960S-24PS-L",
+			"productFamily": "Cisco Catalyst 2960-S Series Switches",
+			"equipmentType": "CHASSIS",
+			"swType": "C2960S-UNIVERSALK9-M",
+			"swVersion": "12.2(55)SE3",
+			"advisoryId": 646,
+			"bulletinName": null,
+			"vulnerabilityStatus": "VUL",
+			"vulnerabilityReason": "Match on SW Type, SW Version, Feature ('Potential Smart Install Client'), Image",
+			"publicReleaseIndicator": "Y"
+	}
+];
+/* tslint: enable */
+
 /**
  * Mocks the security advisory response
  * @param rows the rows to return
@@ -2088,10 +2109,11 @@ export const MockSecurityAdvisories: SecurityAdvisory[] = [
  * @returns mock response
  */
 function MockAdvisory (
+	saData: SecurityAdvisory[],
 	rows?: number,
-	page?: number): SecurityAdvisoryResponse {
+	page?: number,): SecurityAdvisoryResponse {
 
-	const data = _.cloneDeep(MockSecurityAdvisories);
+	const data = _.cloneDeep(saData);
 
 	let pagination: Pagination;
 	if (rows && page) {
@@ -2118,7 +2140,7 @@ export const SecurityAdvisoryScenarios = [
 					delay: 350,
 					description: 'Security Advisories',
 					response: {
-						body: MockAdvisory(),
+						body: MockAdvisory(MockSecurityAdvisories),
 						status: 200,
 					},
 					selected: true,
@@ -2126,6 +2148,24 @@ export const SecurityAdvisoryScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Security Advisories for Asset',
+					response: {
+						body: MockAdvisory(mockAdvisoryAsset),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		/* tslint:disable */
+		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&managedNeId=NA,FOC2045X0WJ,WS-C3850-48U-L,NA`,
 		usecases: ['Use Case 1'],
 	},
 ];

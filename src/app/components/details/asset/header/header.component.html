@@ -28,11 +28,17 @@
 		</div>
 	</div>
 	<div class="col-md-6 text-right">
-		<button class="btn btn--secondary btn--small"
-			[innerText]="'_Scan_' | i18n"
-			*ngIf="status.scanEligible"
+		<button class="btn btn--small"
+			[ngClass]="{
+				'btn--secondary': !status?.scan?.inProgress,
+				'btn--primary': status?.scan?.inProgress
+			}"
+			*ngIf="status.scan?.eligible"
 			(click)="initiateScan()"
-			data-auto-id="Asset360ScanBtn"></button>
+			data-auto-id="Asset360ScanBtn">
+			<span *ngIf="status.scan.inProgress" class="icon-animation spin qtr-margin-right"></span>
+			<span [innerText]="(status.scan.inProgress ? '_Scanning_' : '_Scan_') | i18n"></span>
+		</button>
 		<button class="btn btn--secondary btn--small"
 			*ngIf="asset?.supportCovered"
 			[innerText]="'_OpenCase_' | i18n"

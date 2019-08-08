@@ -2805,4 +2805,22 @@ export const FieldNoticeScenarios = [
 			'vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&rows=10&page=3',
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Field Notices for FOC1544Y16T',
+					response: {
+						body: MockNotices(10, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL` +
+			'&vulnerabilityStatus=VUL&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
+		usecases: ['Use Case 1'],
+	},
 ];
