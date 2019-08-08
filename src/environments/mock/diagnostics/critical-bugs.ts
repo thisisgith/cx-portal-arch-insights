@@ -168,6 +168,23 @@ export const CriticalBugScenarios = [
 			GET: [
 				{
 					delay: 200,
+					description: 'Critical Bugs for FOC1544Y16T',
+					response: {
+						body: MockData(10, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=2431199&serialNumber=FOC1544Y16T`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
 					description: 'Critical Bugs (New)',
 					response: {
 						body: MockData(10, 1, ['new']),

@@ -40,6 +40,8 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
    * - `serialNumber`: The serial number of the device
    *
    * - `rows`: Number of rows of data per page
@@ -64,6 +66,7 @@ class InventoryService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     if (params.serialNumber != null) __params = __params.set('serialNumber', params.serialNumber.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
@@ -95,6 +98,8 @@ class InventoryService extends __BaseService {
    * @param params The `InventoryService.GetAssetsParams` containing the following parameters:
    *
    * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `serialNumber`: The serial number of the device
    *
@@ -702,6 +707,11 @@ module InventoryService {
      * Unique identifier of a Cisco customer.
      */
     customerId: string;
+
+    /**
+     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+     */
+    sort?: Array<string>;
 
     /**
      * The serial number of the device

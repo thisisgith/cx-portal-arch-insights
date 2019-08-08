@@ -2,14 +2,14 @@
 export interface SecurityAdvisoryBulletin {
 
   /**
-   * Announcement Type Name
-   */
-  announcementTypeName?: string;
-
-  /**
    * Internally generated ID for a security advisory
    */
   securityAdvisoryInstanceId?: number;
+
+  /**
+   * Document Id
+   */
+  documentId?: number;
 
   /**
    * The Cisco.com Title/Headline for the bulletin
@@ -57,9 +57,9 @@ export interface SecurityAdvisoryBulletin {
   mappingStateName?: string;
 
   /**
-   * Document Id
+   * Announcement Type Name
    */
-  documentId?: number;
+  announcementTypeName?: string;
 
   /**
    * Alert Status Code

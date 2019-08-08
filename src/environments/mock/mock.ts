@@ -80,7 +80,7 @@ import {
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
 	SuccessPathsResponse,
-	UserQuota,
+	ContractQuota,
 	UserTraining,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -95,6 +95,7 @@ type ResponseBody = (
 	Assets |
 	ATXResponse |
 	CDCSearchResponse |
+	ContractQuota[] |
 	CommunitiesResponse |
 	CoverageCountsResponse |
 	CoverageResponse |
@@ -126,8 +127,7 @@ type ResponseBody = (
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
 	SuccessPathsResponse |
-	UserQuota |
-	UserTraining |
+	UserTraining[] |
 	VulnerabilityResponse |
 	VulnerabilityResponse
 );

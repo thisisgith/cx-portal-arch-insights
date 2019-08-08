@@ -8,6 +8,7 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { ScanResultsResponse } from '../models/scan-results-response';
+import { BugImpactedAssetsResponse } from '../models/bug-impacted-assets-response';
 import { CriticalBugsCount } from '../models/critical-bugs-count';
 import { CriticalBugsResponse } from '../models/critical-bugs-response';
 @Injectable({
@@ -16,6 +17,7 @@ import { CriticalBugsResponse } from '../models/critical-bugs-response';
 class DiagnosticsService extends __BaseService {
   static readonly headScanResultsPath = '/scan-results';
   static readonly getScanResultsPath = '/scan-results';
+  static readonly getCriticalBugsAssetsPath = '/critical-bugs/assets';
   static readonly getCriticalBugsStateCountPath = '/critical-bugs/state/count';
   static readonly getCriticalBugsPath = '/critical-bugs';
 
@@ -185,6 +187,72 @@ class DiagnosticsService extends __BaseService {
   }
 
   /**
+   * Impacted assets of a bug
+   * @param params The `DiagnosticsService.GetCriticalBugsAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `cdetId`: The CDET id
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `rows`: Number of rows of data per page
+   *
+   * - `page`: The page number of the response
+   *
+   * @return successful operation
+   */
+  getCriticalBugsAssetsResponse(params: DiagnosticsService.GetCriticalBugsAssetsParams): __Observable<__StrictHttpResponse<BugImpactedAssetsResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.cdetId || []).forEach(val => {if (val != null) __params = __params.append('cdetId', val.toString())});
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/diagnostics/v1/critical-bugs/assets`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<BugImpactedAssetsResponse>;
+      })
+    );
+  }
+
+  /**
+   * Impacted assets of a bug
+   * @param params The `DiagnosticsService.GetCriticalBugsAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `cdetId`: The CDET id
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `rows`: Number of rows of data per page
+   *
+   * - `page`: The page number of the response
+   *
+   * @return successful operation
+   */
+  getCriticalBugsAssets(params: DiagnosticsService.GetCriticalBugsAssetsParams): __Observable<BugImpactedAssetsResponse> {
+    return this.getCriticalBugsAssetsResponse(params).pipe(
+      __map(_r => _r.body as BugImpactedAssetsResponse)
+    );
+  }
+
+  /**
    * Provides number of critical bugs in each state
    * @param customerId Unique identifier of a Cisco customer.
    * @return successful operation
@@ -232,6 +300,8 @@ class DiagnosticsService extends __BaseService {
    *
    * - `state`: State of the bugs
    *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
    * - `rows`: Number of rows of data per page
@@ -249,6 +319,7 @@ class DiagnosticsService extends __BaseService {
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     (params.state || []).forEach(val => {if (val != null) __params = __params.append('state', val.toString())});
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
@@ -278,6 +349,8 @@ class DiagnosticsService extends __BaseService {
    * - `customerId`: Unique identifier of a Cisco customer.
    *
    * - `state`: State of the bugs
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
@@ -391,6 +464,37 @@ module DiagnosticsService {
   }
 
   /**
+   * Parameters for getCriticalBugsAssets
+   */
+  export interface GetCriticalBugsAssetsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * The CDET id
+     */
+    cdetId: Array<string>;
+
+    /**
+     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+     */
+    sort?: Array<string>;
+
+    /**
+     * Number of rows of data per page
+     */
+    rows?: number;
+
+    /**
+     * The page number of the response
+     */
+    page?: number;
+  }
+
+  /**
    * Parameters for getCriticalBugs
    */
   export interface GetCriticalBugsParams {
@@ -404,6 +508,11 @@ module DiagnosticsService {
      * State of the bugs
      */
     state?: Array<'new' | 'resolved' | 'verified' | 'duplicate' | 'closed'>;
+
+    /**
+     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+     */
+    sort?: Array<string>;
 
     /**
      * A serial number is a unique number used for identification

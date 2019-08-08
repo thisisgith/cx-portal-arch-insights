@@ -17,6 +17,7 @@ function MockACCUserInfoResponse (): ACCUserInfoSchema {
 		country: 'USA',
 		jobTitle: 'NETWORK SPECIALIST',
 		userEmail: 'johndoe@csco.com',
+		userFullName: 'John Doe',
 		userPhoneNumber: '1-888-555-5555',
 	};
 }

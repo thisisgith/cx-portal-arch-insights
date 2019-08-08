@@ -202,6 +202,7 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 			.pipe(
 				catchError(() => {
 					this.submitError = true;
+
 					return empty();
 				}),
 				takeUntil(this.destroyed$),

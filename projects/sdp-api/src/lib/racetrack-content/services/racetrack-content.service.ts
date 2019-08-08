@@ -17,7 +17,7 @@ import { CommunitiesResponse } from '../models/communities-response';
 import { ELearningResponse } from '../models/elearning-response';
 import { GroupTrainingEntitySchema } from '../models/group-training-entity-schema';
 import { GroupTrainingRequestSchema } from '../models/group-training-request-schema';
-import { UserQuota } from '../models/user-quota';
+import { ContractQuota } from '../models/contract-quota';
 import { UserTraining } from '../models/user-training';
 import { BookmarkResponseSchema } from '../models/bookmark-response-schema';
 import { BookmarkRequestSchema } from '../models/bookmark-request-schema';
@@ -34,8 +34,8 @@ class RacetrackContentService extends __BaseService {
   static readonly getRacetrackCommunitiesPath = '/communities';
   static readonly getRacetrackElearningPath = '/elearning';
   static readonly requestGroupTrainingPath = '/grouptraining/request';
-  static readonly getTrainingQuotasPath = '/grouptraining/user/quotas';
-  static readonly getCompletedTrainingsPath = '/grouptraining/user/trainings/completed';
+  static readonly getTrainingQuotasPath = '/grouptraining/customer/quotas';
+  static readonly getCompletedTrainingsPath = '/grouptraining/customer/trainings/completed';
   static readonly updateBookmarkPath = '/bookmarks';
 
   constructor(
@@ -610,16 +610,22 @@ class RacetrackContentService extends __BaseService {
   }
 
   /**
-   * @param gtRequest JSON Body for the Group Training Request
+   * @param params The `RacetrackContentService.RequestGroupTrainingParams` containing the following parameters:
+   *
+   * - `gtRequest`: JSON Body for the Group Training Request
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
    * @return Successfully retrieved results
    */
-  requestGroupTrainingResponse(gtRequest: GroupTrainingRequestSchema): __Observable<__StrictHttpResponse<GroupTrainingEntitySchema>> {
+  requestGroupTrainingResponse(params: RacetrackContentService.RequestGroupTrainingParams): __Observable<__StrictHttpResponse<GroupTrainingEntitySchema>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
     __headers = __headers.append("Content-Type", "application/json");
-    __body = gtRequest;
+    __body = params.gtRequest;
+    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/racetrack/v1/grouptraining/request`,
@@ -639,26 +645,39 @@ class RacetrackContentService extends __BaseService {
   }
 
   /**
-   * @param gtRequest JSON Body for the Group Training Request
+   * @param params The `RacetrackContentService.RequestGroupTrainingParams` containing the following parameters:
+   *
+   * - `gtRequest`: JSON Body for the Group Training Request
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
    * @return Successfully retrieved results
    */
-  requestGroupTraining(gtRequest: GroupTrainingRequestSchema): __Observable<GroupTrainingEntitySchema> {
-    return this.requestGroupTrainingResponse(gtRequest).pipe(
+  requestGroupTraining(params: RacetrackContentService.RequestGroupTrainingParams): __Observable<GroupTrainingEntitySchema> {
+    return this.requestGroupTrainingResponse(params).pipe(
       __map(_r => _r.body as GroupTrainingEntitySchema)
     );
   }
 
   /**
+   * @param params The `RacetrackContentService.GetTrainingQuotasParams` containing the following parameters:
+   *
+   * - `customerId`: Customer Id
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
    * @return Successfully retrieved results
    */
-  getTrainingQuotasResponse(): __Observable<__StrictHttpResponse<Array<UserQuota>>> {
+  getTrainingQuotasResponse(params: RacetrackContentService.GetTrainingQuotasParams): __Observable<__StrictHttpResponse<Array<ContractQuota>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/racetrack/v1/grouptraining/user/quotas`,
+      this.rootUrl + `/racetrack/v1/grouptraining/customer/quotas`,
       __body,
       {
         headers: __headers,
@@ -669,31 +688,45 @@ class RacetrackContentService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<Array<UserQuota>>;
+        return _r as __StrictHttpResponse<Array<ContractQuota>>;
       })
     );
   }
 
   /**
+   * @param params The `RacetrackContentService.GetTrainingQuotasParams` containing the following parameters:
+   *
+   * - `customerId`: Customer Id
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
    * @return Successfully retrieved results
    */
-  getTrainingQuotas(): __Observable<Array<UserQuota>> {
-    return this.getTrainingQuotasResponse().pipe(
-      __map(_r => _r.body as Array<UserQuota>)
+  getTrainingQuotas(params: RacetrackContentService.GetTrainingQuotasParams): __Observable<Array<ContractQuota>> {
+    return this.getTrainingQuotasResponse(params).pipe(
+      __map(_r => _r.body as Array<ContractQuota>)
     );
   }
 
   /**
+   * @param params The `RacetrackContentService.GetCompletedTrainingsParams` containing the following parameters:
+   *
+   * - `customerId`: Customer Id
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
    * @return Successfully retrieved results
    */
-  getCompletedTrainingsResponse(): __Observable<__StrictHttpResponse<Array<UserTraining>>> {
+  getCompletedTrainingsResponse(params: RacetrackContentService.GetCompletedTrainingsParams): __Observable<__StrictHttpResponse<Array<UserTraining>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/racetrack/v1/grouptraining/user/trainings/completed`,
+      this.rootUrl + `/racetrack/v1/grouptraining/customer/trainings/completed`,
       __body,
       {
         headers: __headers,
@@ -710,10 +743,16 @@ class RacetrackContentService extends __BaseService {
   }
 
   /**
+   * @param params The `RacetrackContentService.GetCompletedTrainingsParams` containing the following parameters:
+   *
+   * - `customerId`: Customer Id
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
    * @return Successfully retrieved results
    */
-  getCompletedTrainings(): __Observable<Array<UserTraining>> {
-    return this.getCompletedTrainingsResponse().pipe(
+  getCompletedTrainings(params: RacetrackContentService.GetCompletedTrainingsParams): __Observable<Array<UserTraining>> {
+    return this.getCompletedTrainingsResponse(params).pipe(
       __map(_r => _r.body as Array<UserTraining>)
     );
   }
@@ -1056,6 +1095,54 @@ module RacetrackContentService {
      * Requested fields in the response.
      */
     fields?: Array<string>;
+  }
+
+  /**
+   * Parameters for requestGroupTraining
+   */
+  export interface RequestGroupTrainingParams {
+
+    /**
+     * JSON Body for the Group Training Request
+     */
+    gtRequest: GroupTrainingRequestSchema;
+
+    /**
+     * Mashery user credential header
+     */
+    XMasheryHandshake?: string;
+  }
+
+  /**
+   * Parameters for getTrainingQuotas
+   */
+  export interface GetTrainingQuotasParams {
+
+    /**
+     * Customer Id
+     */
+    customerId?: string;
+
+    /**
+     * Mashery user credential header
+     */
+    XMasheryHandshake?: string;
+  }
+
+  /**
+   * Parameters for getCompletedTrainings
+   */
+  export interface GetCompletedTrainingsParams {
+
+    /**
+     * Customer Id
+     */
+    customerId?: string;
+
+    /**
+     * Mashery user credential header
+     */
+    XMasheryHandshake?: string;
   }
 
   /**
