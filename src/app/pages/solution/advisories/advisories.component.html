@@ -140,7 +140,8 @@
 		<cui-table *ngIf="tab?.data?.length && tab?.options"
 			[options]="tab.options"
 			[data]="tab.data"
-			(onTableRowClicked)="onRowSelect($event)">
+			(onTableRowClicked)="onRowSelect($event)"
+			(onSortingChanged)="onColumnSort($event)">
 		</cui-table>
 		<cui-pager
 			*ngIf="tab.data.length && tab?.pagination?.total > 0"

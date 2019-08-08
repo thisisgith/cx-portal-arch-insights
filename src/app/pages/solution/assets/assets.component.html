@@ -182,7 +182,8 @@
 							</label>
 						</th>
 						<th attr.data-auto-id="InventoryHeader-{{ column.name }}" *ngFor="let column of assetsTable.columns"
-							[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
+							[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
+							(click)="onColumnSort(column)">
 							<span [innerText]="column.name"></span>
 							<span *ngIf="column.sortable && column.sorting"
 								class="qtr-margin-left"
