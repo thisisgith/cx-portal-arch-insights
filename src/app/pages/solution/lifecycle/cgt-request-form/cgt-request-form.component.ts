@@ -111,7 +111,7 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 
 	/**
 	 * Gets the endDate of a contract based on the selected contract
-	 * @param contract contract number
+	 * @param contractNumber contract number
 	 */
 	public getContractEndDateAndSessions (contractNumber: number) {
 		_.each(this.usedTrainingData, contract => {
@@ -119,17 +119,18 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 				this.contractEndDate = moment(_.get(contract, 'end_date'))
 					.format('MMM DD, YYYY');
 				if (this.maxSessionsAllowed - _.get(contract, 'used_sessions') > 0) {
-					this.sessionsAvailable = this.maxSessionsAllowed - _.get(contract, 'used_sessions');
+					this.sessionsAvailable =
+						this.maxSessionsAllowed - _.get(contract, 'used_sessions');
 					this.noSessionsAvailable = false;
 				} else {
 					this.sessionsAvailable = 0;
 					this.noSessionsAvailable = true;
 				}
+
 				return false;
 			}
 		});
 	}
-
 
 	/**
 	 * Closes the ACC Request Form component

@@ -148,6 +148,7 @@ export class LifecycleComponent implements OnDestroy {
 	public completedTrainingsList: UserTraining[] | { };
 	public successBytesTable: CuiTableOptions;
 	public usedTrainingsList: string[];
+	public usedTrainings: string[];
 	public trainingAvailableThrough: string;
 	private stage = new ReplaySubject<string>();
 
@@ -369,7 +370,7 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Select/deselect the CGTRequestForm component
 	 * @param selected whether the component is visible or not
-	 * @param usedTrainigData list of trainings used by the user this year
+	 * @param usedTrainingData list of trainings used by the user this year
 	 */
 	public selectCgtRequestForm (selected: boolean,
 		usedTrainingData: string[]) {
@@ -706,8 +707,8 @@ export class LifecycleComponent implements OnDestroy {
 			lifecycleCategory = 'SB';
 		}
 		const bookmarkParams: BookmarkRequestSchema = {
-			id,
 			bookmark,
+			id,
 			lifecycleCategory,
 			pitstop: this.componentData.params.pitstop,
 			solution: this.componentData.params.solution,
@@ -956,7 +957,6 @@ export class LifecycleComponent implements OnDestroy {
 		let completedTrainingData = [];
 		let trainigsCompleted = 0;
 		let trainigsInProcess = 0;
-		let usedTrainings = [];
 
 		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
 			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -968,15 +968,16 @@ export class LifecycleComponent implements OnDestroy {
 				this.status.loading.cgt = false;
 				this.totalAllowedGroupTrainings = _.size(result) * 2;
 				_.each(result, training => {
-					if (new Date(_.get(training, 'contract_end_date')).getFullYear() === new Date().getFullYear()) {
-						usedTrainings = _.union(usedTrainings, [{
+					if (new Date(_.get(training, 'contract_end_date')).getFullYear() ===
+						new Date().getFullYear()) {
+						this.usedTrainings = _.union(this.usedTrainings, [{
 							contract_number: _.get(training, 'tsa_contract_no'),
 							end_date: _.get(training, 'contract_end_date'),
 							used_sessions: _.get(training, 'closed_ilt_courses_inprocess'),
 						}]);
 						trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
 					} else {
-						usedTrainings = _.union(usedTrainings, [{
+						this.usedTrainings = _.union(this.usedTrainings, [{
 							contract_number: _.get(training, 'tsa_contract_no'),
 							end_date: _.get(training, 'contract_end_date'),
 							used_sessions: 0,
@@ -996,13 +997,15 @@ export class LifecycleComponent implements OnDestroy {
 					.subscribe(response => {
 						this.completedTrainingsList = response;
 						_.each(this.completedTrainingsList, completedTraining => {
-							if (new Date(_.get(completedTraining, 'end_date')).getFullYear() === new Date().getFullYear()) {
-								_.each(usedTrainings, training => {
-									if (_.get(completedTraining, 'contract_number') === _.get(training, 'contract_number')) {
-										training.used_sessions++;
+							if (new Date(_.get(completedTraining, 'end_date')).getFullYear() ===
+								new Date().getFullYear()) {
+								_.each(this.usedTrainings, training => {
+									if (_.get(completedTraining, 'contract_number') ===
+										_.get(training, 'contract_number')) {
+										training.used_sessions = training.used_sessions + 1;
 									}
 								});
-								trainigsCompleted++;
+								trainigsCompleted = trainigsCompleted + 1;
 							}
 							startDate = `${
 								monthNames[new Date(_.get(completedTraining, 'start_date'))
@@ -1051,7 +1054,7 @@ export class LifecycleComponent implements OnDestroy {
 						this.componentData.cgt = {
 							sessions: completedTrainingData,
 							trainingsAvailable: this.groupTrainingsAvailable,
-							usedTrainings: usedTrainings,
+							usedTrainings: this.usedTrainings,
 						};
 
 						return result;

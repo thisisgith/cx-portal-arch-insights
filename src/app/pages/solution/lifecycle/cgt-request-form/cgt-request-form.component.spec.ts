@@ -3,10 +3,9 @@ import { CgtRequestFormComponent } from './cgt-request-form.component';
 import { CgtRequestFormModule } from './cgt-request-form.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {  RacetrackContentService, ContractsService } from '@sdp-api';
+import {  RacetrackContentService } from '@sdp-api';
 import {
 	ACCUserInfoScenarios,
-	ContractScenarios,
 	Mock,
 	CGTScenarios,
 } from '@mock';
@@ -33,10 +32,8 @@ describe('CgtRequestFormComponent', () => {
 	let de: DebugElement;
 	let el: HTMLElement;
 	let contentService: RacetrackContentService;
-	let contractsService: ContractsService;
 
 	let getAccUserInfoSpy;
-	let getContractDetailsSpy;
 	let requestTrainingSpy;
 
 	/**
@@ -44,7 +41,6 @@ describe('CgtRequestFormComponent', () => {
 	 */
 	const restoreSpies = () => {
 		_.invoke(getAccUserInfoSpy, 'restore');
-		_.invoke(getContractDetailsSpy, 'restore');
 		_.invoke(requestTrainingSpy, 'restore');
 	};
 
@@ -52,10 +48,6 @@ describe('CgtRequestFormComponent', () => {
 		getAccUserInfoSpy = spyOn(contentService, 'getACCUserInfo')
 			.and
 			.returnValue(of(getActiveBody(ACCUserInfoScenarios[0])));
-
-		getContractDetailsSpy = spyOn(contractsService, 'getContractDetails')
-			.and
-			.returnValue(of(getActiveBody(ContractScenarios[5])));
 
 		requestTrainingSpy = spyOn(contentService, 'requestGroupTraining')
 			.and
@@ -74,7 +66,6 @@ describe('CgtRequestFormComponent', () => {
 		.compileComponents();
 
 		contentService = TestBed.get(RacetrackContentService);
-		contractsService = TestBed.get(ContractsService);
 	}));
 
 	beforeEach(() => {
@@ -94,14 +85,6 @@ describe('CgtRequestFormComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.custData)
-			.toBeTruthy();
-	});
-
-	it('should have loaded contracts', () => {
-		buildSpies();
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.contractDetails)
 			.toBeTruthy();
 	});
 
