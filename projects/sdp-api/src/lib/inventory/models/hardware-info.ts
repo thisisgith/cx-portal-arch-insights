@@ -2,14 +2,14 @@
 export interface HardwareInfo {
 
   /**
-   * The name of a group of products derived from a common product platform
-   */
-  productFamily?: string;
-
-  /**
    * Unique identifier of a Cisco customer
    */
   customerId: string;
+
+  /**
+   * The unique, generated ID of the managed network element
+   */
+  managedNeId: string;
 
   /**
    * Hostnames are human-readable nicknames that correspond to the address of a device connected to a network
@@ -42,9 +42,9 @@ export interface HardwareInfo {
   productId?: string;
 
   /**
-   * The unique, generated ID of the managed network element
+   * The name of a group of products derived from a common product platform
    */
-  managedNeId: string;
+  productFamily?: string;
 
   /**
    * A single term that defines the physical nature of the product. This value is derived based on the following order of preference:- PCE, SNAS. Examples:- Firewall, Access Point

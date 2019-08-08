@@ -71,13 +71,13 @@
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.companyName"></div>
 					<div class="text-uppercase text-small text-muted qtr-padding-top"
 						[innerText]="'_CustomerUserName_' | i18n"></div>
-					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ccoId"></div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userFullName"></div>
 					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_JobTitle_' | i18n">
 					</div>
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.jobTitle"></div>
 					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Email_' | i18n">
 					</div>
-					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userEmail"></div>
+					<div *ngIf="!loading" [innerText]="custData?.userEmail"></div>
 					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Phone_' | i18n">
 					</div>
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userPhoneNumber"></div>
@@ -86,7 +86,7 @@
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ciscoContact"></div>
 					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CCOID_' | i18n">
 					</div>
-					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ccoId"></div>
+					<div *ngIf="!loading" [innerText]="custData?.ccoId"></div>
 					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Country_' | i18n">
 					</div>
 					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.country"></div>

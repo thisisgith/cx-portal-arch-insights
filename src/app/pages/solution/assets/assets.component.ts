@@ -121,6 +121,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public selectOnLoad = false;
 	public selectedAsset: Asset;
 	public fullscreen = false;
+	private sorting: 'asc' | 'desc';
 	public selectedSubfilters: SelectedSubfilter[];
 
 	constructor (
@@ -702,9 +703,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				bordered: true,
 				columns: [
 					{
+						key: 'deviceName',
 						name: I18n.get('_Device_'),
-						sortable: false,
-						sortDirection: 'asc',
+						sortable: true,
+						sortDirection: null,
+						sorting: false,
 						template: this.deviceTemplate,
 					},
 					{
@@ -951,6 +954,21 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onSelectionChanged (selectedItems: Asset[]) {
 		this.selectedAssets = selectedItems;
+	}
+
+	/**
+	 * Sets the params for sorting
+	 * @param column column to set sorting
+	 */
+	public onColumnSort (column) {
+		if (column.sortable && column.key === 'deviceName') {
+			if (_.get(column, 'sortDirection')) {
+				this.assetParams.sort = [column.sortDirection];
+			} else {
+				_.unset(this.assetParams, 'sort');
+			}
+			this.InventorySubject.next();
+		}
 	}
 
 	/**
