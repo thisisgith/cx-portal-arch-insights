@@ -14,6 +14,7 @@ import {
 	ActionScenarios,
 	Mock,
 	user,
+	CGTScenarios,
 } from '@mock';
 import { of, throwError } from 'rxjs';
 import { DebugElement } from '@angular/core';
@@ -48,7 +49,7 @@ describe('LifecycleComponent', () => {
 	let racetrackAccSpy;
 	let racetrackBookmarkSpy;
 	let racetrackCgtCompletedTrainigsSpy;
-	let racetrackCgtUserQuotaSpy;
+	let racetrackCgtCustomerQuotaSpy;
 	let racetrackLearningSpy;
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
@@ -64,7 +65,7 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackAccSpy, 'restore');
 		_.invoke(racetrackBookmarkSpy, 'restore');
 		_.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
-		_.invoke(racetrackCgtUserQuotaSpy, 'restore');
+		_.invoke(racetrackCgtCustomerQuotaSpy, 'restore');
 		_.invoke(racetrackLearningSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
@@ -86,6 +87,14 @@ describe('LifecycleComponent', () => {
 		racetrackBookmarkSpy = spyOn(racetrackContentService, 'updateBookmark')
 			.and
 			.returnValue(of(getActiveBody(BookmarkScenarios[0], 'POST')));
+
+		racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService, 'getCompletedTrainings')
+			.and
+			.returnValue(of(getActiveBody(CGTScenarios[2])));
+
+		racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
+			.and
+			.returnValue(of(getActiveBody(CGTScenarios[1])));
 
 		racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
 			.and
@@ -216,7 +225,7 @@ describe('LifecycleComponent', () => {
 					statusText: 'Resource not found',
 				})));
 
-			racetrackCgtUserQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
+			racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
 				.and
 				.returnValue(throwError(new HttpErrorResponse({
 					status: 404,
@@ -558,22 +567,7 @@ describe('LifecycleComponent', () => {
 					expect(component.componentData.cgt.dateAvailableThrough)
 						.toEqual('Mar 29, 2020');
 					expect(component.componentData.cgt.trainingsAvailable)
-						.toEqual(1);
-					de = fixture.debugElement.query(By.css('.btn--secondary'));
-					expect(de)
-						.toBeTruthy();
-					el = de.nativeElement;
-
-					el.click();
-
-					fixture.detectChanges();
-					expect(component.selectCgtRequestForm)
-						.toHaveBeenCalled();
-					de = fixture.debugElement.query(By.css('.icon-certified'));
-					expect(de)
-						.toBeTruthy();
-					expect(de)
-						.toHaveBeenCalledTimes(2);
+						.toEqual(9);
 				});
 		});
 	});

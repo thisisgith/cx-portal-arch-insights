@@ -30,7 +30,7 @@
 				<cui-loader></cui-loader>
 			</div>
 			<div *ngIf="!status.loading.overall">
-				<h4 [innerText]="assetData?.productId || asset?.productId"></h4>
+				<h4 [innerText]="assetData?.productId || asset?.productId" data-auto-id="ProductId"></h4>
 				<div data-auto-id="YouHaveInventory"
 					*ngIf="componentData.numberInInventory > 1"
 					[innerHtml]="'_YouHaveInventory_' | i18n:componentData.numberInInventory">
