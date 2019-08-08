@@ -276,17 +276,15 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				return copy;
 			});
 
-			const params: DevicePolicyRequestModel = {
+			return {
 				devices,
 				schedule,
 				customerId: this.customerId,
 			};
-
-			return params;
 		};
 
-		this.submitCall = function (params: DevicePolicyRequestModel) {
-			return this.devicePolicyService.createDevicePolicyUsingPOST(params);
+		this.submitCall = function (parameters: DevicePolicyRequestModel) {
+			return this.devicePolicyService.createDevicePolicyUsingPOST(parameters);
 		};
 	}
 
@@ -361,8 +359,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			};
 		};
 
-		this.submitCall = function (params: DevicePolicyUpdateRequestModel) {
-			return this.devicePolicyService.updateDevicePolicyUsingPATCH(params);
+		this.submitCall = function (parameters: DevicePolicyUpdateRequestModel) {
+			return this.devicePolicyService.updateDevicePolicyUsingPATCH(parameters);
 		};
 	}
 
