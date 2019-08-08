@@ -497,6 +497,12 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		this.hourmins.selected = `${min} ${milHour}`;
 
 		this.timePeriod = this.timePeriods.selected;
+		this.requestForm.setValue({
+			dates: this.dates.selected,
+			days: this.days.selected,
+			hourmins: this.hourmins.selected,
+			timePeriod: this.timePeriod,
+		});
 	}
 
 	/**
