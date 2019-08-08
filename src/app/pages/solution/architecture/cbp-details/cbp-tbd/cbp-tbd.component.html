@@ -53,7 +53,11 @@
 					[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
 			</div>
 			<div class="container base-margin-top" *ngIf="isLoading">
-				<cui-loader label="Loading" color="muted"></cui-loader>
+				<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
+					<div class="wrapper">
+						<div class="wheel"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

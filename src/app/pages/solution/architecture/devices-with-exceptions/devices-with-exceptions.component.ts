@@ -23,10 +23,12 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public AssetsExceptionDetails = [];
 	public tableOptions: CuiTableOptions;
 	public totalItems:any;
+	public isLoading = true;
 
 	public params = { page: 0, pageSize: 10 };
 
 	public onPagerUpdated(event){
+		this.isLoading = true;
 		this.params.page = event.page;
 		this.params.pageSize = event.limit;
 		this.getAllAssetsWithExceptions();
@@ -34,6 +36,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 
 	public getAllAssetsWithExceptions(){
 		this.architectureService.getAllAssetsWithExceptions(this.params).subscribe(res => {
+			this.isLoading = false;
 			this.totalItems = res.TotalCounts;
 			this.AssetsExceptionDetails = res.AssetsExceptionDetails;
 			this.AssetsExceptionDetails.map(asset => {
@@ -49,10 +52,12 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			bordered: false,
 			columns: [
 			  { name: 'Asset', sortable: false, key : 'inventoryName' },
+			  { name: 'IP Address', sortable: false, key : 'ipAddress' },
 			  { name: 'Product ID', sortable: false, key: 'productId' },
 			  { name: 'Product Family', sortable: false, key: 'productFamily' },
 			  { name: 'Software Type', sortable: false, key: 'swType' },
 			  { name: 'Software Version', sortable: false, key: 'swVersion' },
+			  { name: 'Config Collection date', sortable: false, key: 'configCollectionDate' },
 			  { name: 'CBP Exceptions', sortable: false, key: 'ruleIdsWithExceptionsCount' },
 			],
 			singleSelect: true,

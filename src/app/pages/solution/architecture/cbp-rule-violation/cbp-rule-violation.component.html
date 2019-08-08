@@ -3,19 +3,36 @@
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<cbp-header [cbpDetails]="exceptionObject"></cbp-header>
 		<div detailsPanelTitle class="text-xlarge">
-			<span class="icon-left-arrow"  data-auto-id="PanelClose" (click)="onPanelClose()"></span>
+			<span class="icon-left-arrow" data-auto-id="PanelClose" (click)="onPanelClose()"></span>
 			<span class="icon-right-arrow"></span>
 
-			<span [innerText]="' ' + exceptionObject?.bpRuleTitle"></span>			
+			<span [innerText]="' ' + exceptionObject?.bpRuleTitle"></span>
 		</div>
 	</details-panel-header>
 	<cbp-device-affected [cbpDetails]="exceptionObject"></cbp-device-affected>
 </details-panel>
 
 <div class="panel">
-	<cui-table [options]="tableOptions" [data]="cbpRuleExceptions" (onTableRowClicked)="onTableRowClicked($event)"></cui-table>
+	<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="cbpRuleExceptions"
+		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 	<div class="section" *ngIf="totalItems">
-			<cui-pager [page]="params.page"
-			[limit]="params.pageSize" [totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+		<cui-pager *ngIf="!isLoading" [page]="params.page" [limit]="params.pageSize" [totalItems]="totalItems"
+			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
+	</div>
+	<div class="base-margin-top" *ngIf="isLoading">
+		<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
+			<div class="wrapper">
+				<div class="wheel"></div>
+			</div>
 		</div>
+	</div>
 </div>
+<ng-template #riskTemplate let-item="celldata">
+	<span class="label label--circle label--tiny qtr-margin-right" [ngClass]="{
+			'High': 'label--danger',
+			'Medium': 'label--warning',
+			'Low': 'label--warning-alt'
+	}[item.bpSeverity]">
+	</span>
+	<span>{{item.bpSeverity}}</span>
+</ng-template>

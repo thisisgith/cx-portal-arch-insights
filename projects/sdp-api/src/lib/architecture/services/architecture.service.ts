@@ -45,10 +45,12 @@ class ArchitectureService extends __BaseService {
   getCBPSeverityResponse(params: any): __Observable<__StrictHttpResponse<any>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = null;
-    if (params.severity != null) __params = __params.set('severity', params.severity.toString());
+    let __body: any = null;    
+    
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
+    if (params.severity != null) __params = __params.set('severity', params.severity.toString());
+    
     // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
@@ -92,12 +94,7 @@ class ArchitectureService extends __BaseService {
         this.AssetsExceptionsCount.next({ count: _r.body.TotalCounts });
         return _r.body;
       })
-
     );
-  }
-
-  getMessage(): Observable<any> {
-    return this.AssetsExceptionsCount.asObservable();
   }
 
   getAllAssetsWithExceptionsResponse(params:any): __Observable<__StrictHttpResponse<any>> {
@@ -117,7 +114,6 @@ class ArchitectureService extends __BaseService {
         headers: __headers,
         params: __params,
         responseType: 'json',
-        //        withCredentials: true,
       });
 
     return this.http.request<any>(req).pipe(
@@ -126,72 +122,6 @@ class ArchitectureService extends __BaseService {
         return _r as __StrictHttpResponse<any>;
       })
     );
-
-
-  }
-
-  //high Severity exceptions
-  getHighSeverityExceptions(): __Observable<any> {
-    return this.getHighSeverityExceptionsResponse().pipe(
-      __map(_r => _r.body as ContractDeviceCountsResponse)
-    );
-  }
-
-  getHighSeverityExceptionsResponse(): __Observable<__StrictHttpResponse<any>> {
-
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-    let req = new HttpRequest<any>(
-      'GET',
-      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules?severity=High`,
-      __body,
-      {
-        headers: __headers,
-        responseType: 'json',
-        //        withCredentials: true,
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<any>;
-      })
-    );
-
-
-  }
-
-  //medium Severity exceptions
-  getMediumSeverityExceptions(): __Observable<any> {
-    return this.getMediumSeverityExceptionsResponse().pipe(
-      __map(_r => _r.body as ContractDeviceCountsResponse)
-    );
-  }
-
-  getMediumSeverityExceptionsResponse(): __Observable<__StrictHttpResponse<any>> {
-
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-    let req = new HttpRequest<any>(
-      'GET',
-      `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules?severity=Medium`,
-      __body,
-      {
-        headers: __headers,
-        responseType: 'json',
-        //        withCredentials: true,
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<any>;
-      })
-    );
-
-
   }
   // Exceptions count of High and Medium Severity
   getExceptionsCount(): __Observable<any> {

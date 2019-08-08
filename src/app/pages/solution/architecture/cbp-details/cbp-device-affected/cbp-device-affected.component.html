@@ -16,15 +16,19 @@
 				{{ (tableIndex + 1) +' - ' +  (tableIndex + tableData.length ) }}
 				of {{totalItems}} </span>
 			</div> -->
-			<div class="base-margin-top" >
+			<div class="base-margin-top">
 				<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="tableData"></cui-table>
 				<div class="section" *ngIf="!isLoading && totalItems > 0">
-					<cui-pager [page]="params.page" [limit]="params.pageSize"
-						[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+					<cui-pager [page]="params.page" [limit]="params.pageSize" [totalItems]="totalItems"
+						(onPageChanged)="onPagerUpdated($event)"></cui-pager>
 				</div>
 			</div>
 			<div class="base-margin-top" *ngIf="isLoading">
-				<cui-loader label="Loading" color="muted"></cui-loader>
+				<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
+					<div class="wrapper">
+						<div class="wheel"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

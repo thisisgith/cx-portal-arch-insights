@@ -1,104 +1,105 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges, ViewChild, TemplateRef } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 
-import { ArchitectureService , IException } from '@sdp-api';
+import { ArchitectureService,IException } from '@sdp-api';
+import * as _ from 'lodash-es';
 
 @Component({
 	selector: 'app-cbp-rule-violation',
 	styleUrls: ['./cbp-rule-violation.component.scss'],
 	templateUrl: './cbp-rule-violation.component.html',
 })
-export class CbpRuleViolationComponent implements OnInit {
+export class CbpRuleViolationComponent implements OnInit, OnChanges {
+	@Input() public filters;
+	public tableOptions: CuiTableOptions;
+	public totalItems: any;
+	public cbpRuleExceptions = [];
+	public isLoading = true;
+	public severityObj: any;
+	public AssetsExceptionsCount: any;
+	public params = { page: 0, pageSize: 10 };
+	public severityType: any = [];
+	public paramsType = {
+		page: 0,
+		pageSize: 10,
+		severity: '',
+	};
+	public exceptionObject:IException = null;
+	@ViewChild('riskTemplate', { static: true })
+	private riskTemplate: TemplateRef<{ }>;
+
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 		this.logger.debug('CbpRuleViolationComponent Created!');
 	}
 
-	public tableOptions: CuiTableOptions;
-	public totalItems: any;
-	public cbpRuleExceptions = [];
-	public severityObj: any;
-	public AssetsExceptionsCount:any;
-	public params = { page: 0, pageSize : 10 };
-	public severityType: any;
-	public paramsType = { page : 0, pageSize: 10, severity: null };
-	public exceptionObject:IException = null;
+	public ngOnInit() {
+		this.getData();
+		this.getAllCBPRulesDetails();
+		this.buildTable();
+	}
 
-	public ModifyCbpRuleExceptions(array:Array<any>){
+	public ngOnChanges(changes: SimpleChanges) {
+		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
+		if (selectedFilter && !changes.filters.firstChange) {
+			this.paramsType.severity = selectedFilter.Exceptions ? selectedFilter.Exceptions.toString() : '';
+			this.getData();
+		}
+	}
+
+	public buildTable() {
+		this.tableOptions = new CuiTableOptions({
+			bordered: false,
+			columns: [
+				{ name: 'Rule Title', sortable: false, key: 'bpRuleTitle' },
+				{ name: 'Risk', sortable: false, template: this.riskTemplate },
+				{ name: 'Software Type', sortable: false, key: 'swType' },
+				{ name: 'Exception', sortable: false, key: 'exceptions' },
+				{ name: 'Recommendation', sortable: false, key: 'Recommendation' },
+				{ name: 'Corrective Action', sortable: false, key: 'correctiveActionSummary' },
+				{ name: 'Assets Affected', sortable: false, key: 'assetsAffected' },
+			],
+			singleSelect: true,
+		});
+	}
+
+	public ModifyCbpRuleExceptions(array: Array<any>) {
 		array.map(obj => {
-			obj.bpRecommendation = obj.bpRecommendation.substr(0, 30)
-			.concat('...');
-			obj.correctiveAction = obj.correctiveAction.substr(0, 25)
-			.concat('...');
-				// obj.deviceIdsWithExceptions = obj.deviceIdsWithExceptions.split(';');
+			obj.Recommendation = obj.bpRecommendation.substr(0, 30)
+				.concat('...');
+			obj.correctiveActionSummary = obj.correctiveAction.substr(0, 25)
+				.concat('...');
+			obj.assetsAffected = obj.deviceIdsWithExceptions.length !=0
+			? obj.deviceIdsWithExceptions.split(';').length : '0';
 		});
 		// }
 	}
 
-	public onPagerUpdated(event){
+	public onPagerUpdated(event) {
+		this.isLoading = true;
 		this.params.page = event.page;
 		this.params.pageSize = event.limit;
 		this.getAllCBPRulesDetails();
 	}
 
-	public getAllCBPRulesDetails(){
+	public getAllCBPRulesDetails() {
 		this.architectureService.getAllCBPRulesDetails(this.params).subscribe(res => {
+			this.isLoading = false;
 			this.totalItems = res.TotalCounts;
 			this.cbpRuleExceptions = res.BPRulesDetails;
 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 		});
 	}
 
-	getCBPRuleDetailsWithSeverity(){
-		this.architectureService.getCBPSeverityResponse(this.paramsType).subscribe(res => {
-			this.cbpRuleExceptions = res.body.BPRulesDetails;
-			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-		});
-	}
-
-	public ngOnInit () {
-
-		this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res => {
-			this.paramsType.severity = res.severityType.split('R')[0];
-			this.getCBPRuleDetailsWithSeverity();
-		});
-
-		this.getAllCBPRulesDetails();
-		// this.architectureService.getAssetsExceptionCountSubjectObj().subscribe(res =>{
-		// 	console.log(res);
-		// 	if(res.severityObj){
-		// 		this.severityObj = res.severityObj.severity;
-		// 	}
-		// 	if(this.severityObj == "MediumRisk"){
-		// 		this.architectureService.getMediumSeverityExceptions().subscribe(res => {
-		// 			console.log(res);
-		// 			this.cbpRuleExceptions = res.BPRulesDetails;
-		// 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-		// 		});
-		// 	}else{
-		// 		this.architectureService.getHighSeverityExceptions().subscribe(res => {
-		// 			console.log(res);
-		// 			this.cbpRuleExceptions = res.BPRulesDetails;
-		// 			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-		// 			console.log(this.cbpRuleExceptions);
-		// 		});
-		// 	}
-		// });
-		this.tableOptions = new CuiTableOptions({
-		  bordered: false,
-		  columns: [
-			{ name: 'Risk', sortable: false, key : 'bpSeverity' },
-			{ name: 'Technology', sortable: false, key: 'bpPrimaryTechnologies' },
-			{ name: 'Exception', sortable: false, key: 'exceptions' },
-			{ name: 'Recommendation', sortable: false, key: 'bpRecommendation' },
-			{ name: 'Corrective Action', sortable: false, key: 'correctiveAction' },
-			{ name: 'Assets Affected', sortable: false, key: 'assetsAffected' },
-			{ name: 'Software Type', sortable: false, key: 'softwareType' },
-			{ name: 'Rule ID', sortable: false, key: 'bpRuleId'},
-		  ],
-		  singleSelect : true,
-		});
+	public getData() {
+		this.architectureService.
+			getCBPSeverityList(this.paramsType)
+			.subscribe(data => {
+				this.isLoading = false;
+				this.cbpRuleExceptions = data.BPRulesDetails;
+				this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
+			});
 	}
 
 	/**

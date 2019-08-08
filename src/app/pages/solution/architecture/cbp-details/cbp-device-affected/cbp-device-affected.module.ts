@@ -6,7 +6,6 @@ import { CbpDeviceAffectedComponent } from './cbp-device-affected.component';
 import {
 	CuiTableModule,
 	CuiPagerModule,
-	CuiLoaderModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CbpSummaryModule } from '../cbp-summary/cbp-summary.module';
@@ -18,7 +17,6 @@ import { CbpSummaryModule } from '../cbp-summary/cbp-summary.module';
 	imports: [
 		CbpSummaryModule,
 		CommonModule,
-		CuiLoaderModule,
 		CuiTableModule,
 		CuiPagerModule,
 		I18nPipeModule,

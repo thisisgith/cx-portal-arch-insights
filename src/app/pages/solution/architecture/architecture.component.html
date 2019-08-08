@@ -1,119 +1,110 @@
-<!-- <div class="panel"> -->
-<!-- <div class="row">
-        <div class="col-md-2" [chart]="chart" class="RiskChart" (click)="setTabIndex(0)"></div> 
-        <h1 class="col-md-2" (click)="setTabIndex(1)">557</h1>
-    </div> -->
-<!-- <cui-tabs [inline]="inline"
-        [alignment]="alignment"
-        [bordered]="bordered"
-        [tall]="tall"
-        [vertical]="vertical"
-        [(activeTabIndex)]="tabIndex">  -->
-<!-- NOTE cuiTabPre and cuiTabPost content is only visible if the cui-tabs [inline] input is set to true -->
+<div class="panel half-margin-bottom">
 
-<!-- <cui-tab label="Exceptions">
-                <app-cbp-rule-violation></app-cbp-rule-violation>    
-            </cui-tab>
-            
-            <cui-tab label="Devices With Exceptions">
-                    <span> 
-                            <app-devices-with-exceptions></app-devices-with-exceptions>
-                    </span>
-            </cui-tab> -->
-<!-- </cui-tabs> -->
-<!-- <div class="row">
-        <div class="col-md-3">
-               
-        </div>
-    </div> -->
-
-
-<!-- </div> -->
-
-
-
-<!-- <app-devices-with-exceptions></app-devices-with-exceptions> -->
-<!-- <div class="panel">
-    <bar-chart [seriesData]="newarray" (subfilter)="subfilter($event)"></bar-chart>
-</div> -->
-<div class="panel">
     <div class="row">
         <div class="col-md-2 text-center">
-            <div *ngFor="let label of visualLabels; let i=index" [ngClass]="{'visualSelected':label.active == true}" (click)="selectVisualLabel(i)" >
-                   <h1>{{label.count}}</h1>
-                   <div>{{label.label}}</div> 
+            <div *ngFor="let label of visualLabels; let i=index" [ngClass]="{'visualSelected':label.active == true}"
+                (click)="selectVisualLabel(i)">
+                <h1 class="half-margin-top half-margin-bottom">{{label.count}}</h1>
+                <div class="half-margin-bottom half-margin-top">{{label.label}}</div>
             </div>
         </div>
-        <div class="col-md-10" *ngIf="visualLabels[0].active">
+        <div class="col-md-9" *ngIf="visualLabels[0].active">
             <div class="row">
                 <div class="col-md-3">
+                    <div class="flex flex-fill flex-fluid">
+                        <!-- <div class="flex-center">
+                                <span class="icon-chevron-left icon-medium text-muted toggle"></span>
+                                </div> -->
                         <ng-container *ngFor="let filter of filters; index as i">
-                                <div *ngIf="!filter.loading && filter.seriesData.length"
-                                    attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
-                                    attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}"
-                                    [ngClass]="{
-                                        'filter__selected': filter.selected,
-                                        'filter__not-selected': !filter.selected
-                                    }"
-                                    class="panel flex-center flex-fill filter">
-                                    <div class="base-margin-bottom">
-                                        <div *ngIf="filter.template">
-                                            <ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
-                                        </div>
+                            <div attr.id="SyslogsSelectVisualFilter-{{ filter.key }}" attr.data-auto-id="AssetsSelectVisualFilter-{{
+                                filter.key
+                                }}" [ngClass]="{
+                                filter__selected: filter.selected,
+                                'filter__not-selected': !filter.selected
+                                }" class="panel flex-center flex-fill filter">
+                                <div class="base-margin-bottom">
+                                    <div *ngIf="filter.template">
+                                        <ng-container *ngTemplateOutlet="
+                                filter.template;
+                                context: { filter: filter }
+                                "></ng-container>
                                     </div>
-                                    <div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
                                 </div>
-                                <div *ngIf="filter.loading" class="base-margin-bottom">
-                                    <cui-spinner></cui-spinner>
-                                </div>
-                            </ng-container>
+                                <div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
+                            </div>
+                            <div *ngIf="filter.loading" class="base-margin-bottom">
+                                <!-- <cui-spinner></cui-spinner> -->
+                            </div>
+                        </ng-container>
+                        <!-- <div class="flex-center">
+                                <span class="icon-chevron-right icon-medium text-muted toggle"></span>
+                                </div> -->
+                    </div>
                 </div>
-                    
             </div>
-            
+
         </div>
-        <div class="text-center col-md-10" *ngIf="visualLabels[1].active">
+        <div class="text-center col-md-9" *ngIf="visualLabels[1].active">
             <ng-container>
                 <p>No Visual Filters to display</p>
             </ng-container>
         </div>
     </div>
-    <div *ngIf="visualLabels[0].active">
-        <app-cbp-rule-violation></app-cbp-rule-violation>
-    </div>
-    <div *ngIf="visualLabels[1].active">
-        <app-devices-with-exceptions></app-devices-with-exceptions>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div *ngIf="visualLabels[0].active">
+             <ng-container *ngTemplateOutlet="filterBar"></ng-container>
+            <app-cbp-rule-violation [filters]="selectedFilter"></app-cbp-rule-violation>
+        </div>
+        <div *ngIf="visualLabels[1].active">
+            <app-devices-with-exceptions></app-devices-with-exceptions>
+        </div>
     </div>
 </div>
 
-<ng-template #exceptionsFilter let-filter="filter">
-	<div>
-        <bar-chart [seriesData]="filter.seriesData" [width]="300"
-            (subfilter)="onSubfilterSelect($event, filter)">
-        </bar-chart>
+
+<ng-template  #exceptionsFilter let-filter="filter">
+
+    <bar-chart *ngIf="!status.isLoading" [seriesData]="filter.seriesData" [width]="350" (subfilter)="onSubfilterSelect($event, filter)">
+    </bar-chart>
+    <div class="base-margin-top" *ngIf="status.isLoading">
+		<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
+			<div class="wrapper">
+				<div class="wheel"></div>
+			</div>
+		</div>
+	</div>
+
+</ng-template>
+
+<ng-template #filterBar>
+    <div class="divider"></div>
+    <div class="row">
+        <div class="col-md-1 flex flex-center-vertical">
+            <span class="text-bold text-uppercase half-padding-right" [innerText]="'Filtered'"></span>
+        </div>
+        <div class="col-md-10">
+            <ng-container *ngFor="let filter of selectedFilters">
+                <ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
+                    <span class="label label--dkgray text-large" (click)="onSubfilterSelect(subfilter.filter, filter)"
+                        attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
+                        <span [innerText]="subfilter.label"></span>
+                        <span class="icon-close"></span>
+                    </span>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="col-md-1 text-center text-right">
+            <a (click)="clearFilters()" class="text-lowercase" [innerText]="'ClearAll'"
+                data-auto-id="FilterBarClearAllFilters">
+            </a>
+        </div>
+       
     </div>
+    <div class="divider no-margin-top qtr-margin-top"></div>
 </ng-template>
 
 
-
-
-<!-- <div class="panel">
-    <cui-tabs-nav>
-
-        <cui-tab-link [url]="['Exceptions']">
-            <div>
-                <div [chart]="chart" class="RiskChart"></div>
-                <div>Exceptions</div>
-            </div>
-        </cui-tab-link>
-        <cui-tab-link [url]="['AssetsWithExceptions']">
-            <div>
-                <div>
-                    <h1>{{AssetsExceptionsCount}}</h1>
-                </div>
-                <div>Assets With Exceptions</div>
-            </div>
-        </cui-tab-link>
-    </cui-tabs-nav>
-</div> -->
 <router-outlet></router-outlet>
