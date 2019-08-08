@@ -48,7 +48,7 @@ import {
 	ACCUserInfoSchema,
 	AdvisoriesByLastUpdatedCount,
 	Assets,
-	ATXResponse,
+	ATXResponseModel,
 	CDCSearchResponse,
 	CommunitiesResponse,
 	CoverageCountsResponse,
@@ -93,7 +93,7 @@ type ResponseBody = (
 	ACCUserInfoSchema |
 	AdvisoriesByLastUpdatedCount |
 	Assets |
-	ATXResponse |
+	ATXResponseModel |
 	CDCSearchResponse |
 	ContractQuota[] |
 	CommunitiesResponse |
