@@ -38,7 +38,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 
 	public ngOnChanges(changes: SimpleChanges) {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
-		if(selectedFilter && !changes.filters.firstChange) {
+		if (selectedFilter && !changes.filters.firstChange) {
 			this.paramsType.severity = selectedFilter.Exceptions ? selectedFilter.Exceptions.toString() : '';
 			this.getData();
 		}
