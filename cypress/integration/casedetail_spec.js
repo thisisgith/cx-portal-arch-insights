@@ -3,6 +3,7 @@ const i18n = require('../../src/assets/i18n/en-US.json');
 
 const validCaseID = '699159996';
 
+
 describe('Case Detail Spec', () => {
 	context('Case List View', () => {
 		before(() => {
@@ -159,7 +160,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CloseDetails').click();
 		});
 
-		// TODO skipped because csone api is returning empty file list.
+		// TODO skipped because csone api is returning empty file list for this case.
 		it.skip('PBC-232 Case Detail Attachments - List & Download', () => {
 			// Verify elements of the files tab
 			cy.getByAutoId('filesTab', { timeout: 10000 }).click();
@@ -229,7 +230,7 @@ describe('Case Detail Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it.only('PBC-83 Cases - Number of Open Cases', () => {
+		it('PBC-83 Cases - Number of Open Cases', () => {
 			cy.getByAutoId('openCases').should('exist').should('contain', i18n._OpenCases_);
 			cy.getByAutoId('openRMAs').should('exist').should('contain', i18n._OpenRMAs_);
 			cy.getByAutoId('Facet-Problem Resolution').click();
@@ -239,21 +240,25 @@ describe('Case Detail Spec', () => {
 				.click(); // To collapse
 			cy.getByAutoId('VisualFilterCollapse').click(); // To expand
 			cy.getByAutoId('TotalVisualFilter').should('exist');
-			// TODO confirm value same as openCases above .should('contain.value', > 0);
 			cy.get("[class='text-huge opacity-50']").should('exist').should('have.length', 2);
 			// TODO RMAs tab is currently(8/6/2019) disabled, planned for a future release
 		});
 		it('PBC-86 Cases - Filter by Status', () => {
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('CasesSelectVisualFilter-status', { timeout: 10000 }).should('exist');
-			cy.getByAutoId('statusFilter').should('exist');
-			// search pie-chart for 'pending' 'updated' 'new'
+			cy.getByAutoId('statusFilter').within(() => {
+				cy.get('tspan').contains('Pending');
+				cy.get('tspan').contains('Updated');
+				cy.get('tspan').contains('New');
+			});
 		});
 		it('PBC-87 Cases - Filter by Severity', () => {
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('CasesSelectVisualFilter-severity', { timeout: 10000 }).should('exist');
-			cy.getByAutoId('severityFilter').should('exist');
-			// search class=highcharts-series-group for S1 S3 S4 and S2
+			cy.getByAutoId('severityFilter').within(() => {
+				cy.get('tspan').contains('S3'); // The majority is P3
+				// FilterTag testing covered in assets_spec
+			});
 		});
 	});
 });
