@@ -1,0 +1,21 @@
+.was-this-helpful {
+	margin-bottom: -15px;
+	flex-basis: 100%;
+}
+
+.bottom-flex-box {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.input--compressed {
+	flex-grow: 1;
+}
+
+.btn-not-selected {
+	color: gray;
+}

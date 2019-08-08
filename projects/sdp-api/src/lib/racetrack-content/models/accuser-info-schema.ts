@@ -22,6 +22,11 @@ export interface ACCUserInfoSchema {
   userPhoneNumber?: string;
 
   /**
+   * Full name of the logged in user from profile.
+   */
+  userFullName?: string;
+
+  /**
    * Cisco Contact name or email for the logged in user.
    */
   ciscoContact?: string;

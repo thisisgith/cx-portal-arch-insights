@@ -17,7 +17,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('OPEN CASESTab', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('RMAsTab').should('exist');
 			cy.getByAutoId('rmaCasesHeader').should('exist');
-			cy.getByAutoId('rmaShowingXcasesHeader').should('exist');
+			cy.getByAutoId('rmaShowingXcasesHeader', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('caseSearchBox').should('exist');
 		});
 
@@ -99,7 +99,7 @@ describe('Case Detail Spec', () => {
 				.type(validCaseID.concat('{enter}'));
 			cy.getByAutoId('Case ID-Cell', { timeout: 6000 }).click(); // case will load in app-panel360 details-panel
 			cy.get('details-panel', { timeout: 10000 }).should('be.visible');
-			cy.getByAutoId('CaseAttachFile').should('exist');
+			cy.getByAutoId('CaseAttachFile', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('CaseAddNote').should('exist');
 			cy.getByAutoId('CloseDetails').click();
 		});
@@ -112,13 +112,12 @@ describe('Case Detail Spec', () => {
 		});
 		beforeEach(() => {
 			cy.loadApp('/solution/resolution');
-			cy.getByAutoId('Facet-Problem Resolution').click();
+			cy.getByAutoId('Facet-Problem Resolution', { timeout: 10000 }).click();
 			cy.getByAutoId('caseSearchBox', { timeout: 6000 }).should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
 			cy.getByAutoId('Case ID-Cell', { timeout: 6000 }).click(); // case will load in app-panel360 details-panel
 			cy.get('details-panel').should('be.visible');
 		});
-
 
 		it('PBC-234 Case Details Notes Tab, Add a Note', () => {
 			const currDatestamp = new Date().getTime();
@@ -133,9 +132,9 @@ describe('Case Detail Spec', () => {
 				.type(`Description for current date of ${currDatestamp}`);
 			cy.getByAutoId('AddNote', { timeout: 10000 }).click();
 			// Verify case note was added, look in app-case-notes for string
-			cy.get('app-case-notes div')
+			cy.get('app-case-notes div', { timeout: 10000 })
 				.should('contain', `Description for current date of ${currDatestamp}`);
-			cy.get('app-case-notes div')
+			cy.get('app-case-notes div', { timeout: 10000 })
 				.should('contain', `Title for current date of ${currDatestamp}`);
 			cy.getByAutoId('CloseDetails').click();
 		});
@@ -153,17 +152,18 @@ describe('Case Detail Spec', () => {
 				.type(`Description for current date of ${currDatestamp}`);
 			cy.getByAutoId('CancelAddNote', { timeout: 10000 }).click();
 			// Verify case note was NOT added, look in app-case-notes for string
-			cy.get('app-case-notes div')
+			cy.get('app-case-notes div', { timeout: 10000 })
 				.should('not.contain', `Description for current date of ${currDatestamp}`);
-			cy.get('app-case-notes div')
+			cy.get('app-case-notes div', { timeout: 10000 })
 				.should('not.contain', `Title for current date of ${currDatestamp}`);
 			cy.getByAutoId('CloseDetails').click();
 		});
 
-		it('PBC-232 Case Detail Attachments - List & Download', () => {
+		// TODO skipped because csone api is returning empty file list.
+		it.skip('PBC-232 Case Detail Attachments - List & Download', () => {
 			// Verify elements of the files tab
 			cy.getByAutoId('filesTab', { timeout: 10000 }).click();
-			cy.getByAutoId('Name-Header').should('exist');
+			cy.getByAutoId('Name-Header', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('Type-Header').should('exist');
 			cy.getByAutoId('Size-Header').should('exist');
 			cy.getByAutoId('DownloadUrl').should('have.length.gte', 0)
@@ -172,7 +172,7 @@ describe('Case Detail Spec', () => {
 		});
 
 		it('PBC-345 Case Detail Attachments - Upload - Cancel and X buttons', () => {
-			cy.getByAutoId('CaseAttachFile').click();
+			cy.getByAutoId('CaseAttachFile', { timeout: 10000 }).click();
 			cy.getByAutoId('CSC-UploadFilesDialogTitle').should('exist');
 			cy.getByAutoId('CSC-UploadFilesDialogSubmit').should('exist');
 
@@ -189,7 +189,7 @@ describe('Case Detail Spec', () => {
 			// const xlsxFile = './sampleFiles/20kFile.xlsx';
 			// const txtFile = './sampleFiles/20kFile.txt';
 
-			cy.getByAutoId('CaseAttachFile').click();
+			cy.getByAutoId('CaseAttachFile', { timeout: 10000 }).click();
 
 			cy.fixture(pdfFile).then(fileContent => {
 				cy.get('h4').upload( // TODO cui-dropzone would be better using force:true or something better than h4
@@ -220,6 +220,28 @@ describe('Case Detail Spec', () => {
 			cy.get('[class="modal__content"]').should('contain.text', 'Upload Details');
 			cy.get('[ng-reflect-value="100%"]', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('CSC-UploadFilesDialogClose').click();
+		});
+	});
+	context('Case - Opened RMAs and Cases', () => {
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('PBC-83 Cases - Number of Open Cases', () => {
+			cy.getByAutoId('openCases').should('exist');
+			cy.getByAutoId('openRMAs').should('exist');
+			cy.getByAutoId('Facet-Problem Resolution').click();
+			// Look in Visual Filters of Open Cases
+			cy.getByAutoId('VisualFilterCollapse').click(); // To collapse
+			cy.getByAutoId('VisualFilterCollapse').click(); // To expand
+			cy.getByAutoId('TotalVisualFilter').should('exist');
+			cy.getByAutoId('CasesSelectVisualFilter-status').should('exist');
+			cy.getByAutoId('statusFilter').should('exist');
+			cy.getByAutoId('CasesSelectVisualFilter-severity').should('exist');
+			cy.getByAutoId('severityFilter').should('exist');
+			// TODO RMAs tab is currently(8/6/2019) disabled, planned for a future release
 		});
 	});
 });

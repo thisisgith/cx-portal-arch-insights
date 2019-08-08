@@ -17,8 +17,8 @@ import { EmailRequest } from '../models/email-request';
   providedIn: 'root',
 })
 class EmailControllerService extends __BaseService {
-  static readonly fetchByFiltersUsingGETPath = '/v1/list';
-  static readonly sendEmailUsingPOSTPath = '/v1/send';
+  static readonly getEmailsByFilterPath = '/list';
+  static readonly sendEmailPath = '/send';
 
   constructor(
     config: __Configuration,
@@ -28,9 +28,7 @@ class EmailControllerService extends __BaseService {
   }
 
   /**
-   * @param params The `EmailControllerService.FetchByFiltersUsingGETParams` containing the following parameters:
-   *
-   * - `X-Mashery-Handshake`: Mashery user credential header
+   * @param params The `EmailControllerService.GetEmailsByFilterParams` containing the following parameters:
    *
    * - `to`: To
    *
@@ -48,12 +46,11 @@ class EmailControllerService extends __BaseService {
    *
    * @return Successfully retrieved results
    */
-  fetchByFiltersUsingGETResponse(params: EmailControllerService.FetchByFiltersUsingGETParams): __Observable<__StrictHttpResponse<Array<EmailEntitySchema>>> {
+  getEmailsByFilterResponse(params: EmailControllerService.GetEmailsByFilterParams): __Observable<__StrictHttpResponse<Array<EmailEntitySchema>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     if (params.to != null) __params = __params.set('to', params.to.toString());
     if (params.status != null) __params = __params.set('status', params.status.toString());
     if (params.sender != null) __params = __params.set('sender', params.sender.toString());
@@ -63,7 +60,7 @@ class EmailControllerService extends __BaseService {
     if (params.emailId != null) __params = __params.set('emailId', params.emailId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/email/v1/list`,
+      this.rootUrl + `/api/customerportal/email/v1/list`,
       __body,
       {
         headers: __headers,
@@ -80,9 +77,7 @@ class EmailControllerService extends __BaseService {
   }
 
   /**
-   * @param params The `EmailControllerService.FetchByFiltersUsingGETParams` containing the following parameters:
-   *
-   * - `X-Mashery-Handshake`: Mashery user credential header
+   * @param params The `EmailControllerService.GetEmailsByFilterParams` containing the following parameters:
    *
    * - `to`: To
    *
@@ -100,32 +95,26 @@ class EmailControllerService extends __BaseService {
    *
    * @return Successfully retrieved results
    */
-  fetchByFiltersUsingGET(params: EmailControllerService.FetchByFiltersUsingGETParams): __Observable<Array<EmailEntitySchema>> {
-    return this.fetchByFiltersUsingGETResponse(params).pipe(
+  getEmailsByFilter(params: EmailControllerService.GetEmailsByFilterParams): __Observable<Array<EmailEntitySchema>> {
+    return this.getEmailsByFilterResponse(params).pipe(
       __map(_r => _r.body as Array<EmailEntitySchema>)
     );
   }
 
   /**
-   * @param params The `EmailControllerService.SendEmailUsingPOSTParams` containing the following parameters:
-   *
-   * - `emailRequest`: JSON Body for the Group Training Request
-   *
-   * - `X-Mashery-Handshake`: Mashery user credential header
-   *
+   * @param emailRequest JSON Body for the Group Training Request
    * @return Successfully sent email
    */
-  sendEmailUsingPOSTResponse(params: EmailControllerService.SendEmailUsingPOSTParams): __Observable<__StrictHttpResponse<string>> {
+  sendEmailResponse(emailRequest: EmailRequest): __Observable<__StrictHttpResponse<string>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
     __headers = __headers.append("Content-Type", "application/json");
-    __body = params.emailRequest;
-    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
+    __body = emailRequest;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/email/v1/send`,
+      this.rootUrl + `/api/customerportal/email/v1/send`,
       __body,
       {
         headers: __headers,
@@ -142,16 +131,11 @@ class EmailControllerService extends __BaseService {
   }
 
   /**
-   * @param params The `EmailControllerService.SendEmailUsingPOSTParams` containing the following parameters:
-   *
-   * - `emailRequest`: JSON Body for the Group Training Request
-   *
-   * - `X-Mashery-Handshake`: Mashery user credential header
-   *
+   * @param emailRequest JSON Body for the Group Training Request
    * @return Successfully sent email
    */
-  sendEmailUsingPOST(params: EmailControllerService.SendEmailUsingPOSTParams): __Observable<string> {
-    return this.sendEmailUsingPOSTResponse(params).pipe(
+  sendEmail(emailRequest: EmailRequest): __Observable<string> {
+    return this.sendEmailResponse(emailRequest).pipe(
       __map(_r => _r.body as string)
     );
   }
@@ -160,14 +144,9 @@ class EmailControllerService extends __BaseService {
 module EmailControllerService {
 
   /**
-   * Parameters for fetchByFiltersUsingGET
+   * Parameters for getEmailsByFilter
    */
-  export interface FetchByFiltersUsingGETParams {
-
-    /**
-     * Mashery user credential header
-     */
-    XMasheryHandshake: string;
+  export interface GetEmailsByFilterParams {
 
     /**
      * To
@@ -203,22 +182,6 @@ module EmailControllerService {
      * Email Id
      */
     emailId?: string;
-  }
-
-  /**
-   * Parameters for sendEmailUsingPOST
-   */
-  export interface SendEmailUsingPOSTParams {
-
-    /**
-     * JSON Body for the Group Training Request
-     */
-    emailRequest: EmailRequest;
-
-    /**
-     * Mashery user credential header
-     */
-    XMasheryHandshake: string;
   }
 }
 

@@ -3,6 +3,7 @@ export { ACCUserInfoScenarios } from './racetrack/accUserInfo';
 export { ActionScenarios } from './racetrack/action';
 export { AssetScenarios } from './inventory/assets';
 export { ATXScenarios } from './racetrack/atx';
+export { BookmarkScenarios } from './racetrack/bookmarks';
 export { CaseScenarios } from './case/case';
 export { CGTScenarios } from './racetrack/cgt';
 export { ContractScenarios } from './contract/contract';
@@ -18,11 +19,15 @@ export * from './case/case';
 export * from './contract/contract';
 export * from './contract/coverage';
 
+export * from './controlpoints/create-registration';
+export * from './controlpoints/dnac-status';
 export * from './controlpoints/health-status';
+export * from './controlpoints/policies';
 
 export * from './diagnostics/critical-bugs';
 
 export * from './inventory/assets';
+export * from './inventory/asset-summary';
 export * from './inventory/hardware';
 export * from './inventory/network-elements';
 export * from './inventory/roles';
@@ -49,6 +54,8 @@ export * from './racetrack/acc';
 export * from './racetrack/accUserInfo';
 export * from './racetrack/action';
 export * from './racetrack/atx';
+export * from './racetrack/bookmarks';
+export * from './racetrack/cgt';
 export * from './racetrack/elearning';
 export * from './racetrack/info';
 export * from './racetrack/successPaths';
@@ -59,4 +66,3 @@ export * from './search/search';
 export * from './search/serialnumber';
 
 export * from './user/entitlement';
-export * from './user/user';

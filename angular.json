@@ -13,7 +13,7 @@
 							"aot": true,
 							"budgets": [
 								{
-									"maximumError": "5mb",
+									"maximumError": "10mb",
 									"maximumWarning": "2mb",
 									"type": "initial"
 								}
@@ -32,6 +32,10 @@
 									"with": "src/app/components/header/header.component.prod"
 								},
 								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
 									"replace": "src/index.html",
 									"with": "src/index.prod.html"
 								}
@@ -45,11 +49,11 @@
 							"sourceMap": false,
 							"vendorChunk": false
 						},
-						"stageInternal": {
+						"apollo-stage": {
 							"aot": true,
 							"budgets": [
 								{
-									"maximumError": "5mb",
+									"maximumError": "10mb",
 									"maximumWarning": "2mb",
 									"type": "initial"
 								}
@@ -57,7 +61,7 @@
 							"fileReplacements": [
 								{
 									"replace": "src/environments/environment.ts",
-									"with": "src/environments/environment.stgi.ts"
+									"with": "src/environments/environment.apollo-stage.ts"
 								},
 								{
 									"replace": "src/app/components/header/header.module.ts",
@@ -66,6 +70,10 @@
 								{
 									"replace": "src/app/components/header/header.component.ts",
 									"with": "src/app/components/header/header.component.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
 								}
 							],
 							"buildOptimizer": true,
@@ -98,6 +106,90 @@
 								{
 									"replace": "src/app/components/header/header.component.ts",
 									"with": "src/app/components/header/header.component.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
+								}
+							],
+							"buildOptimizer": true,
+							"extractCss": true,
+							"extractLicenses": true,
+							"namedChunks": false,
+							"optimization": true,
+							"outputHashing": "all",
+							"sourceMap": false,
+							"vendorChunk": false
+						},
+						"cxportal-qa": {
+							"aot": true,
+							"budgets": [
+								{
+									"maximumError": "5mb",
+									"maximumWarning": "2mb",
+									"type": "initial"
+								}
+							],
+							"fileReplacements": [
+								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.cxcloud-qa.ts"
+								},
+								{
+									"replace": "src/app/components/header/header.module.ts",
+									"with": "src/app/components/header/header.module.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.ts",
+									"with": "src/app/components/header/header.component.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.cxcloud-qa.html"
+								}
+							],
+							"buildOptimizer": true,
+							"extractCss": true,
+							"extractLicenses": true,
+							"namedChunks": false,
+							"optimization": true,
+							"outputHashing": "all",
+							"sourceMap": false,
+							"vendorChunk": false
+						},
+						"cxportal-lt": {
+							"aot": true,
+							"budgets": [
+								{
+									"maximumError": "5mb",
+									"maximumWarning": "2mb",
+									"type": "initial"
+								}
+							],
+							"fileReplacements": [
+								{
+									"replace": "src/environments/environment.ts",
+									"with": "src/environments/environment.cxcloud-lt.ts"
+								},
+								{
+									"replace": "src/app/components/header/header.module.ts",
+									"with": "src/app/components/header/header.module.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.ts",
+									"with": "src/app/components/header/header.component.prod"
+								},
+								{
+									"replace": "src/app/components/header/header.component.html",
+									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.cxcloud-lt.html"
 								}
 							],
 							"buildOptimizer": true,

@@ -29,6 +29,21 @@ export * from './lib/controlpoints/models';
 export * from './lib/controlpoints/services';
 export * from './lib/controlpoints/control-points.module';
 
+export {
+  Acc,
+  AtxFuture,
+  Buckets,
+  CDC,
+  CDCSearchResponse,
+  CommunitySearchResponse,
+  Facets,
+  GlobalSearchResponse,
+} from './lib/search/models';
+export * from './lib/search/models';
+export * from './lib/controlpoints/models';
+export * from './lib/controlpoints/services';
+export * from './lib/controlpoints/control-points.module';
+
 export * from './lib/search/models';
 export * from './lib/search/services';
 export * from './lib/search/search.module';
@@ -48,3 +63,7 @@ export * from './lib/entitlement/entitlement.module';
 export * from './lib/osv/models';
 export * from './lib/osv/services';
 export * from './lib/osv/osv.module';
+
+export * from './lib/email/models';
+export * from './lib/email/services';
+export * from './lib/email/email.module';

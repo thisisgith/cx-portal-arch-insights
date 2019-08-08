@@ -1,0 +1,30 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.cx-header-dropdown {
+	animation: fade-in 0.3s;
+	border-top: 2px solid $primary;
+	cursor: auto;
+	max-width: 250px;
+	min-width: 245px;
+	position: absolute;
+	transform: translateX(-100%);
+	right: auto;
+	top: 54px;
+	user-select: text;
+	z-index: 999999;
+
+	#parent > * {
+		padding-left: $base-spacing-qtr;
+	}
+}
+
+.cx-dropdown-close {
+	color: $base-muted-color !important;
+	text-decoration: none !important;
+	position: absolute;
+	right: 10px;
+
+	:hover {
+		color: $primary !important;
+	}
+}

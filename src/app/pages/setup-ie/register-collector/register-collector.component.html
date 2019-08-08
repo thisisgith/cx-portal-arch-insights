@@ -1,0 +1,188 @@
+<div class="text-center">
+	<h6 class="text-primary base-margin-bottom"
+		[innerText]="'_StepXColonY_' | i18n:'5':('_CiscoDNACollector_' | i18n)| uppercase"></h6>
+	<h1 [innerText]="'_ConnectCXCollectorToCXPortal_' | i18n" class="dbl-margin-bottom">
+	</h1>
+	<div class="form-container dbl-margin-bottom">
+		<div class="secure-banner flex-center-vertical dbl-margin-bottom">
+			<span class="secure-banner__icon flex-center">
+				<span class="icon-lock"></span>
+			</span>
+			<span class="base-margin-left" [innerText]="'_IE_CiscoDoesNotStoreTheseCreds_' | i18n"></span>
+		</div>
+		<div class="text-left">
+			<form class="dbl-margin-bottom" [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+				<div class="dbl-margin-bottom">
+					<h4 [innerText]="'_IE_SetUpInsightEngineAccess_' | i18n"></h4>
+					<span class="text-large" [innerText]="'_IE_SetAPasswordForIEDeployment_' | i18n"></span>
+				</div>
+				<div class="row base-margin-top">
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="form-group__text">
+								<input
+								id="input-password"
+								type="password"
+								formControlName="password">
+								<label for="input-layout-default" [innerText]="'_Password_' | i18n">
+								</label>
+							</div>
+						</div>
+						<ng-container *ngIf="pwControl.dirty && pwErrors">
+							<ul class="qtr-margin-top">
+								<li
+									*ngIf="pwErrors.needsLength"
+									[innerText]="'_MustBeNumChars_' | i18n:'8'"></li>
+								<li
+									*ngIf="pwErrors.needsUppercase"
+									[innerText]="'_MissingUppercase_' | i18n"></li>
+								<li
+									*ngIf="pwErrors.needsLowercase"
+									[innerText]="'_MissingLowercase_' | i18n"></li>
+								<li
+									*ngIf="pwErrors.needsSpecialChar"
+									[innerText]="'_MissingSpecialChar_' | i18n"></li>
+								<li
+									*ngIf="pwErrors.needsNumber"
+									[innerText]="'_MissingNumerical_' | i18n"></li>
+							</ul>
+						</ng-container>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="form-group__text">
+								<input
+									id="input-password-conf"
+									type="password"
+									formControlName="passwordConf">
+								<label for="input-layout-default" [innerText]="'_ConfirmPassword_' | i18n">
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="base-margin-top dbl-margin-bottom">
+					<a
+						data-auto-id="show-proxy-form-link"
+						class="no-link-hover"
+						(click)="showProxyForm = !showProxyForm"
+					>
+						<span [innerText]="'_UseProxyServer_' | i18n"></span>
+						<span *ngIf="!showProxyForm"
+							class="half-margin-left icon-chevron-down"
+						></span>
+						<span *ngIf="showProxyForm"
+							class="half-margin-left icon-chevron-up"
+						></span>
+					</a>
+					<div heightTransition [heightTransitionExpanded]="showProxyForm">
+						<div class="row base-margin-top">
+							<div class="col-md-6">
+								<div class="form-group">
+									<div class="form-group__text">
+										<input
+											id="input-proxy-host"
+											type="text"
+											formControlName="proxyHost">
+										<label
+											for="input-proxy-host"
+											[innerText]="'_ProxyHost_' | i18n"
+											>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<div class="form-group__text">
+										<input
+											id="input-proxy-port"
+											type="text"
+											formControlName="proxyPort">
+										<label
+											for="input-proxy-port"
+											[innerText]="'_ProxyPort_' | i18n"
+											>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row base-margin-top">
+							<div class="col-md-6">
+								<div class="form-group">
+									<div class="form-group__text">
+										<input
+											id="input-proxy-user"
+											type="text"
+											formControlName="proxyUser">
+										<label
+											for="input-proxy-user"
+											[innerText]="'_ProxyUser_' | i18n"
+											>
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<div class="form-group__text">
+										<input
+											id="input-proxy-password"
+											type="password"
+											formControlName="proxyPassword">
+										<label
+											for="input-proxy-password"
+											[innerText]="'_ProxyPassword_' | i18n"
+											>
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="dbl-margin-bottom">
+					<h4 [innerText]="'_IE_DeployForVirtualAccount_' | i18n"></h4>
+					<span class="text-large" [innerText]="'_IE_ThereCanOnlyBeOneSmartAccount_' | i18n"></span>
+				</div>
+				<div class="row dbl-margin-bottom">
+					<div class="col-md-6">
+						<!-- <div class="form-group dbl-margin-right"> -->
+							<!-- <div class="form-group__text select"> -->
+								<cui-select [label]="'_VirtualAccount_' | i18n" [items]="virtualAccounts"></cui-select>
+								<!-- <select class="form-control" id="virtaul-account-selector"> -->
+								<!-- 	<option *ngFor="let virtualAccount of virtualAccounts" -->
+								<!-- 		[innerText]="virtualAccount"> -->
+								<!-- 	</option> -->
+								<!-- </select> -->
+								<!-- <label for="input-layout-default" [innerText]="'_VirtualAccount_' | i18n"> -->
+								<!-- </label> -->
+							<!-- </div> -->
+						<!-- </div> -->
+					</div>
+				</div>
+				<alert
+					[title]="error"
+					[(visible)]="error"
+				>
+					<div *ngIf="errorDetails" [innerText]="errorDetails"></div>
+				</alert>
+				<ng-container *ngIf="loading">
+					<cui-loader [label]="'_Loading_' | i18n"></cui-loader>
+				</ng-container>
+				<button
+					data-auto-id="submit-btn"
+					class="btn btn--wide btn--secondary qtr-margin-right"
+					type="button"
+					[disabled]="accountForm.invalid || loading || error"
+					[innerText]="'_Continue_' | i18n | uppercase"
+					(click)="onSubmit()"
+				>
+				</button>
+				<span [innerText]="'_PressEnter_' | i18n" class="text-large">
+				</span>
+			</form>
+		</div>
+	</div>
+</div>
