@@ -95,7 +95,8 @@
 					<form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
 						<div class="form-group dbl-padding-left dbl-margin-right">
 							<div class="form-group__text select">
-								<select id="contract-select" formControlName="contract">
+								<select id="contract-select" formControlName="contract"
+									(change)="getContractEndDate(requestForm.get('contract').value)">
 									<option *ngFor="let option of contractOptions" [value]="option.value"
 										[innerText]="option.key"></option>
 								</select>
@@ -106,9 +107,9 @@
 						<div class="form-group dbl-padding-left dbl-margin-right">
 							<div class="form-group__text">
 								<input id="sessions-available-readonly" type="text" readonly
-									[value]="trainingAvailableThrough">
+									[value]="contractEndDate">
 								<label class="text-uppercase text-small" for="sessions-available-readonly"
-									[innerText]="'_XSessionsAvailableThrough' | i18n:totalTrainingsAvailable"></label>
+									[innerText]="'_XSessionsAvailableThrough' | i18n:2"></label>
 							</div>
 						</div>
 						<div class="form-group dbl-padding-left dbl-margin-right">

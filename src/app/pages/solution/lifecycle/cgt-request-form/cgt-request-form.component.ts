@@ -13,6 +13,7 @@ import {
 } from '@angular/forms';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
+import * as moment from 'moment';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	ACCUserInfoSchema,
@@ -42,8 +43,6 @@ interface SelectOption {
 })
 export class CgtRequestFormComponent implements OnDestroy, OnInit {
 
-	@Input() public totalTrainingsAvailable: number;
-	@Input() public trainingAvailableThrough: Date;
 	@Input() public solution: string;
 	@Input() public pitstop: string;
 	@Input() public technology: string;
@@ -56,6 +55,7 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 	public custData: ACCUserInfoSchema;
 	public contractDetails: DeviceContractResponse;
 	public contractOptions: SelectOption[];
+	public contractEndDate = '';
 	public maxLength = 512;
 	public loading = false;
 	public getUserInfoFailed = false;
@@ -110,6 +110,21 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
+	 * Gets the endDate of a contract based on the selected contract
+	 * @param contract contract number
+	 */
+	public getContractEndDate (contractNumber: number) {
+		_.each(this.contracts, contract => {
+			if (Number(_.get(contract, 'contract')) === Number(contractNumber)) {
+				this.contractEndDate = moment(_.get(contract, 'endDate'))
+					.format('MMM DD, YYYY');
+				return false;
+			}
+		});
+	}
+
+
+	/**
 	 * Closes the ACC Request Form component
 	 */
 	public closeRequestForm () {
@@ -159,11 +174,13 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 			.subscribe(response => {
 				this.contractDetails = response;
 				_.each(_.get(this.contractDetails, 'data'), contract => {
-					this.contracts = _.union(this.contracts,
+					this.contractOptions = _.union(this.contractOptions,
 						[{ key: _.get(contract, 'contractNumber'),
 							value: _.get(contract, 'contractNumber') }]);
+					this.contracts = _.union(this.contracts,
+						[{ contract: _.get(contract, 'contractNumber'),
+							endDate: _.get(contract, 'contractEndDate') }])
 				});
-				this.contractOptions = this.contracts;
 			});
 	}
 

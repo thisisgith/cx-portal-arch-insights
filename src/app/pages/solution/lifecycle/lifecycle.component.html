@@ -795,7 +795,7 @@
 		<ng-container *ngTemplateOutlet="cgtRequestTraining; context: { data:  '_CGTSessionLimitReached_' }"></ng-container>
 	</div>
 	<div class="text-left" *ngIf="data.trainingsAvailable>0">
-		<button (click)="selectCgtRequestForm(true, data.trainingsAvailable, data.dateAvailableThrough)"
+		<button (click)="selectCgtRequestForm(true)"
 			class="btn btn--small btn--secondary text-uppercase"
 			[innerText]="'_RequestTraining_' | i18n"
 			attr.data-auto-id="Request-CgtTraining">
@@ -896,8 +896,6 @@
 
 <ng-container *ngIf="selectCgtComponent">
 	<cgt-request-form (visibleComponent)="selectCgtRequestForm($event)"
-		[totalTrainingsAvailable]="cgtAvailable"
-		[trainingAvailableThrough]="trainingAvailableThrough"
 		[solution]="selectedSolution.name"
 		[technology]="selectedTechnology.name"
 		[pitstop]="currentPitstop.name"
