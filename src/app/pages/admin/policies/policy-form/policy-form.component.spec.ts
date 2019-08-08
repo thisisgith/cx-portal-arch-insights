@@ -5,10 +5,7 @@ import { PolicyFormModule } from './policy-form.module';
 
 import { Location } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PolicyResponseModel } from '@sdp-api';
-import { PolicesScenarios } from '@mock';
 import { RouterTestingModule } from '@angular/router/testing';
-
 
 describe('PolicyFormComponent', () => {
 	let component: PolicyFormComponent;
