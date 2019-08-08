@@ -9,8 +9,6 @@ import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, empty } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import { environment } from '@environment';
-import { Router } from '@angular/router';
-import { Location } from '@angular/common';
 
 /**
  * Component for portal support
@@ -43,7 +41,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	constructor (
 		public cuiModalService: CuiModalService, private profileService: ProfileService,
 		public emailControllerService: EmailControllerService,
-		private logger: LogService, private router: Router, private location: Location,
+		private logger: LogService,
 	) { }
 
 	/**
