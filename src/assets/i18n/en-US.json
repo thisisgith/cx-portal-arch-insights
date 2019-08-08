@@ -255,12 +255,9 @@
 	"_NoOpenRMAs_": "No Open RMAs",
 	"_NoPhotoAvailable_": "No Photo Available",
 	"_NoResultsFound_": "No Results Found",
-<<<<<<< HEAD
 	"_NoSessionsAvailable_": "No Sessions available for the contract {0}, please select another contract.",
-=======
 	"_NoResultsFoundForX_": "Your search of '{0}' returned no results, please try adjusting your query to try again.",
 	"_NoSoftwareInformation_": "No Software Information",
->>>>>>> develop
 	"_NotBookmarked_": "Not bookmarked",
 	"_NotCovered_": "Not Covered",
 	"_NoWorkarounds_": "There are no workarounds that address this vulnerability",
