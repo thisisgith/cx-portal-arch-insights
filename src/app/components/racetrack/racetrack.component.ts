@@ -386,12 +386,12 @@ export class RacetrackComponent implements OnInit {
 	 * @memberof RacetrackComponent
 	 */
 	public zoomToCurrent (trackProgress = false) {
-		let next = this.stages.indexOf(this.currentStage.toLowerCase());
+		let next = stages.indexOf(this.currentStage.toLowerCase());
 
-		if (next === this.stages.length) { next = 0; }
+		if (next === stages.length) { next = 0; }
 
-		this.onStageChange.emit(this.stages[next]);
-		this.zoomToStage(this.stages[next], trackProgress);
+		this.onStageChange.emit(stages[next]);
+		this.zoomToStage(stages[next], trackProgress);
 	}
 
 	/**
