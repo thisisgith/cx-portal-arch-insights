@@ -118,9 +118,14 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private router: Router,
 	) {
-		this.route.queryParamMap.subscribe(params => {
-			this.routeParam = params.get('tab') || 'security';
-		});
+		const queryParamMap = this.route.queryParamMap;
+		if (queryParamMap) {
+			queryParamMap.subscribe(params => {
+				this.routeParam = params.get('tab') || 'security';
+			});
+		} else {
+			this.routeParam = 'security';
+		}
 
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
