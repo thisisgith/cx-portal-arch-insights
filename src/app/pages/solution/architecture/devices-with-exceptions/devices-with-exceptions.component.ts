@@ -48,10 +48,12 @@ export class DevicesWithExceptionsComponent implements OnInit {
 			bordered: false,
 			columns: [
 			  { name: 'Asset', sortable: false, key : 'inventoryName' },
+			  { name: 'IP Address', sortable: false, key : 'ipAddress' },
 			  { name: 'Product ID', sortable: false, key: 'productId' },
 			  { name: 'Product Family', sortable: false, key: 'productFamily' },
 			  { name: 'Software Type', sortable: false, key: 'swType' },
 			  { name: 'Software Version', sortable: false, key: 'swVersion' },
+			  { name: 'Config Collection date', sortable: false, key: 'configCollectionDate' },
 			  { name: 'CBP Exceptions', sortable: false, key: 'ruleIdsWithExceptionsCount' },
 			],
 		  });
