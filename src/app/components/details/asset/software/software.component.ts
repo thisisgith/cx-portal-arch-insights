@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
-import { forkJoin, of, Subject } from 'rxjs';
+import { of, Subject, forkJoin } from 'rxjs';
 import {
 	map,
 	catchError,
@@ -22,26 +22,26 @@ import {
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	Asset,
-	HardwareEOLBulletin,
+	SoftwareEOLBulletin,
 	ProductAlertsService,
-	HardwareEOLBulletinResponse,
-	HardwareEOLResponse,
-	HardwareEOL,
-	InventoryService,
-	HardwareInfo,
-	HardwareResponse,
+	SoftwareEOLBulletinResponse,
+	SoftwareEOLResponse,
+	SoftwareEOL,
+	SoftwareInfo,
+	ControlPointIERegistrationAPIService,
+	LicenseDataResponseModel,
 } from '@sdp-api';
 import { TimelineDatapoint } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { UserResolve } from '@utilities';
 
-/** Interface for displaying a property of the HardwareEOLBulletin object */
+/** Interface for displaying a property of the SoftwareEOLBulletin object */
 interface EolTimelineProperty {
 	label: string;
 	propertyName: string;
 }
 
-/** properties in the HardwareEolBulletin object to use in the timeline */
+/** properties in the SoftwareEolBulletin object to use in the timeline */
 const eolTimelineProperties: EolTimelineProperty[] = [
 	{
 		label: '_EndOfLifeAnnounced_',
@@ -56,16 +56,12 @@ const eolTimelineProperties: EolTimelineProperty[] = [
 		propertyName: 'lastShipDate',
 	},
 	{
-		label: '_EndOfRoutineFailureAnalysis_',
-		propertyName: 'eoRoutineFailureAnalysisDate',
+		label: '_EndOfSoftwareMaintenance_',
+		propertyName: 'eoSwMaintenanceReleasesDate',
 	},
 	{
-		label: '_EndOfNewServiceAttach_',
-		propertyName: 'eoNewServiceAttachmentDate',
-	},
-	{
-		label: '_EndOfServiceContractRenewal_',
-		propertyName: 'eoServiceContractRenewalDate',
+		label: '_EndOfVulnerabilitySecuritySupport_',
+		propertyName: 'eoVulnerabilitySecuritySupport',
 	},
 	{
 		label: '_LastDateOfSupport_',
@@ -74,49 +70,51 @@ const eolTimelineProperties: EolTimelineProperty[] = [
 ];
 
 /**
- * Hardware details component
+ * Software details component
  */
 @Component({
-	selector: 'asset-details-hardware',
-	styleUrls: ['./hardware.component.scss'],
-	templateUrl: './hardware.component.html',
+	selector: 'asset-details-software',
+	styleUrls: ['./software.component.scss'],
+	templateUrl: './software.component.html',
 })
-export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestroy {
+export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input('asset') public asset: Asset;
-	@ViewChild('modulesTable', { static: true }) private modulesTableTemplate: TemplateRef<{ }>;
-	@ViewChild('idTemplate', { static: true }) private idTemplate: TemplateRef<{ }>;
-	@ViewChild('familyTemplate', { static: true }) private familyTemplate: TemplateRef<{ }>;
-	@ViewChild('slotTemplate', { static: true }) private slotTemplate: TemplateRef<{ }>;
-	@ViewChild('serialTemplate', { static: true }) private serialTemplate: TemplateRef<{ }>;
+	@ViewChild('licensesTable', { static: true }) private licensesTableTemplate: TemplateRef<{ }>;
+	@ViewChild('statusTemplate', { static: true }) private licenseStatusTemplate: TemplateRef<{ }>;
+	@ViewChild('typeTemplate', { static: true }) private licenseTypeTemplate: TemplateRef<{ }>;
+	@ViewChild('nameTemplate', { static: true }) private licenseNameTemplate: TemplateRef<{ }>;
+	@ViewChild('countTemplate', { static: true })
+		private licenseUsageCountTemplate: TemplateRef<{ }>;
+	@ViewChild('expiryTemplate', { static: true }) private licenseExpiryTemplate: TemplateRef<{ }>;
 
 	public status = {
 		loading: {
 			eol: false,
 			eolBulletin: false,
-			modules: false,
+			licenses: false,
 			overall: false,
 		},
 	};
 
-	private hardwareBulletinParams: ProductAlertsService.GetHardwareEoxBulletinParams;
-	private hardwareEOLParams: ProductAlertsService.GetHardwareEoxParams;
-	private moduleParams: InventoryService.GetHardwareParams;
-	public eolData: HardwareEOL;
-	public eolBulletinData: HardwareEOLBulletin;
-	private destroyed$: Subject<void> = new Subject<void>();
+	private softwareBulletinParams: ProductAlertsService.GetSoftwareEoxBulletinParams;
+	private softwareEolParams: ProductAlertsService.GetSoftwareEoxParams;
+	private licenseParams: ControlPointIERegistrationAPIService.GetLicenseDataParams;
+	public eolData: SoftwareEOL;
+	public eolBulletinData: SoftwareEOLBulletin;
 	private refresh$: Subject<void>;
+	private destroyed$: Subject<void> = new Subject<void>();
 	private customerId: string;
 
 	constructor (
 		private logger: LogService,
-		private inventoryService: InventoryService,
+		private controlPointService: ControlPointIERegistrationAPIService,
 		private productAlertsService: ProductAlertsService,
 		private userResolve: UserResolve,
 	) { }
 
-	public hardwareModules: HardwareInfo[];
-	public hardwareModulesTable: CuiTableOptions;
+	public softwareLicenses: SoftwareInfo[];
+	public softwareLicensesTable: CuiTableOptions;
 	public timelineData: TimelineDatapoint[] = [];
 
 	/**
@@ -126,9 +124,9 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	private fetchEOLBulletinData () {
 		this.status.loading.eolBulletin = true;
 
-		return this.productAlertsService.getHardwareEoxBulletin(this.hardwareBulletinParams)
+		return this.productAlertsService.getSoftwareEoxBulletin(this.softwareBulletinParams)
 		.pipe(
-			map((response: HardwareEOLBulletinResponse) => {
+			map((response: SoftwareEOLBulletinResponse) => {
 				this.eolBulletinData = _.head(_.get(response, 'data', []));
 
 				this.status.loading.eolBulletin = false;
@@ -137,7 +135,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 			}),
 			catchError(err => {
 				this.status.loading.eolBulletin = false;
-				this.logger.error('hardware.component : fetchEOLBulletinData() ' +
+				this.logger.error('software.component : fetchEOLBulletinData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -152,17 +150,17 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	private fetchEOLData () {
 		this.status.loading.eol = true;
 
-		return this.productAlertsService.getHardwareEox(this.hardwareEOLParams)
+		return this.productAlertsService.getSoftwareEox(this.softwareEolParams)
 		.pipe(
-			mergeMap((response: HardwareEOLResponse) => {
+			mergeMap((response: SoftwareEOLResponse) => {
 				this.eolData = _.head(_.get(response, 'data', []));
 
 				this.status.loading.eol = false;
 
-				const instanceId = _.get(this, ['eolData', 'hwEolInstanceId']);
+				const instanceId = _.get(this, ['eolData', 'swEolInstanceId']);
 				if (instanceId) {
-					this.hardwareBulletinParams = {
-						hwEolInstanceId: [instanceId],
+					this.softwareBulletinParams = {
+						swEolInstanceId: [instanceId],
 					};
 
 					return this.fetchEOLBulletinData();
@@ -170,7 +168,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 			}),
 			catchError(err => {
 				this.status.loading.eol = false;
-				this.logger.error('hardware.component : fetchEOLData() ' +
+				this.logger.error('software.component : fetchEOLData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -179,20 +177,21 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	}
 
 	/**
-	 * Fetches the module data for the selected asset
-	 * @returns module data
+	 * Fetches the license data for the selected asset
+	 * @returns license data
 	 */
-	private fetchModuleData () {
-		this.status.loading.modules = true;
+	private fetchLicenseData () {
+		this.status.loading.licenses = true;
 
-		return this.inventoryService.getHardware(this.moduleParams)
+		return this.controlPointService.getLicenseData(this.licenseParams)
 		.pipe(
-			map((response: HardwareResponse) => {
-				this.hardwareModules = _.get(response, 'data', []);
+			map((response: LicenseDataResponseModel) => {
+				this.softwareLicenses = _.get(response, 'license', []);
+				this.status.loading.licenses = false;
 			}),
 			catchError(err => {
-				this.status.loading.modules = false;
-				this.logger.error('hardware.component : fetchModuleData() ' +
+				this.status.loading.licenses = false;
+				this.logger.error('software.component : fetchLicenseData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -209,8 +208,9 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 		this.refresh$
 		.pipe(
 			tap(() => {
-				this.hardwareModules = null;
-				this.hardwareModulesTable = null;
+				this.status.loading.overall = true;
+				this.softwareLicenses = null;
+				this.softwareLicensesTable = null;
 				this.eolData = null;
 				this.eolBulletinData = null;
 				this.timelineData = null;
@@ -218,10 +218,10 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 			switchMap(() => {
 				const obsBatch = [];
 				const managedNeId = _.get(this.asset, 'managedNeId');
-				const hwInstanceId = _.get(this.asset, 'hwInstanceId');
+				const hostName = _.get(this.asset, 'deviceName');
 
 				if (managedNeId) {
-					this.hardwareEOLParams = {
+					this.softwareEolParams = {
 						customerId: this.customerId,
 						managedNeId: [managedNeId],
 					};
@@ -229,39 +229,44 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 					obsBatch.push(this.fetchEOLData());
 				}
 
-				if (hwInstanceId) {
-					this.moduleParams = {
-						containingHwId: [hwInstanceId],
+				if (hostName) {
+					this.licenseParams = {
+						hostName,
 						customerId: this.customerId,
-						equipmentType: ['MODULE'],
 					};
 
-					this.hardwareModulesTable = new CuiTableOptions({
-						bordered: false,
+					this.softwareLicensesTable = new CuiTableOptions({
+						bordered: true,
 						columns: [
 							{
-								key: 'productId',
-								name: I18n.get('_Type_'),
-								sortable: false,
-								template: this.idTemplate,
+								key: 'licenseName',
+								name: I18n.get('_Name_'),
+								sortable: true,
+								template: this.licenseNameTemplate,
 							},
 							{
-								key: 'productFamily',
-								name: `${I18n.get('_ProductFamily_')} / ${I18n.get('_ID_')}`,
+								key: 'licenseType',
+								name: `${I18n.get('_Type_')}`,
 								sortable: false,
-								template: this.familyTemplate,
+								template: this.licenseTypeTemplate,
 							},
 							{
-								key: 'slot',
-								name: I18n.get('_Slot_'),
+								key: 'licenseExpiry',
+								name: I18n.get('_Expires_'),
 								sortable: false,
-								template: this.slotTemplate,
+								template: this.licenseExpiryTemplate,
 							},
 							{
-								key: 'serialNumber',
-								name: I18n.get('_SerialNumber_'),
+								key: 'usageCount',
+								name: I18n.get('_Count_'),
 								sortable: false,
-								template: this.serialTemplate,
+								template: this.licenseUsageCountTemplate,
+							},
+							{
+								key: 'status',
+								name: I18n.get('_Status_'),
+								sortable: false,
+								template: this.licenseStatusTemplate,
 							},
 						],
 						padding: 'compressed',
@@ -269,7 +274,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 						wrapText: true,
 					});
 
-					obsBatch.push(this.fetchModuleData());
+					obsBatch.push(this.fetchLicenseData());
 				}
 
 				return forkJoin(obsBatch);
@@ -279,7 +284,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 		.subscribe(() => {
 			this.status.loading.overall = false;
 
-			this.logger.debug('hardware.component : loadData() :: Finished Refresh');
+			this.logger.debug('Software.component : loadData() :: Finished Refresh');
 		});
 	}
 
