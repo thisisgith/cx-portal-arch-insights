@@ -19,7 +19,6 @@ import {
 	ACCUserInfoSchema,
 	RacetrackContentService,
 	GroupTrainingRequestSchema,
-	ContractsService,
 	DeviceContractResponse,
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
@@ -43,6 +42,7 @@ interface SelectOption {
 })
 export class CgtRequestFormComponent implements OnDestroy, OnInit {
 
+	@Input() public usedTrainingData: string[];
 	@Input() public solution: string;
 	@Input() public pitstop: string;
 	@Input() public technology: string;
@@ -50,18 +50,19 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 	@Output() public submitted = new EventEmitter<boolean>();
 
 	public customerId = '2431199';
-	public contracts = [];
 	private destroyed$: Subject<void> = new Subject<void>();
 	public custData: ACCUserInfoSchema;
 	public contractDetails: DeviceContractResponse;
 	public contractOptions: SelectOption[];
 	public contractEndDate = '';
+	public sessionsAvailable: number;
+	public maxSessionsAllowed = 2;
 	public maxLength = 512;
 	public loading = false;
 	public getUserInfoFailed = false;
-	public getContractsFailed = false;
 	public formSubmissionSucceeded = false;
 	public formSubmissionFailed = false;
+	public noSessionsAvailable = false;
 
 	public requestForm: FormGroup = this.fb.group({
 		contract: ['', Validators.required],
@@ -104,7 +105,6 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private contentService: RacetrackContentService,
-		private contractsService: ContractsService,
 	) {
 		this.logger.debug('CgtRequestFormComponent Created!');
 	}
@@ -113,11 +113,18 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 	 * Gets the endDate of a contract based on the selected contract
 	 * @param contract contract number
 	 */
-	public getContractEndDate (contractNumber: number) {
-		_.each(this.contracts, contract => {
-			if (Number(_.get(contract, 'contract')) === Number(contractNumber)) {
-				this.contractEndDate = moment(_.get(contract, 'endDate'))
+	public getContractEndDateAndSessions (contractNumber: number) {
+		_.each(this.usedTrainingData, contract => {
+			if (Number(_.get(contract, 'contract_number')) === Number(contractNumber)) {
+				this.contractEndDate = moment(_.get(contract, 'end_date'))
 					.format('MMM DD, YYYY');
+				if (this.maxSessionsAllowed - _.get(contract, 'used_sessions') > 0) {
+					this.sessionsAvailable = this.maxSessionsAllowed - _.get(contract, 'used_sessions');
+					this.noSessionsAvailable = false;
+				} else {
+					this.sessionsAvailable = 0;
+					this.noSessionsAvailable = true;
+				}
 				return false;
 			}
 		});
@@ -143,6 +150,11 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 	 */
 	public ngOnInit () {
 		this.loading = true;
+		_.each(this.usedTrainingData, contract => {
+			this.contractOptions = _.union(this.contractOptions,
+				[{ key: _.get(contract, 'contract_number'),
+					value: _.get(contract, 'contract_number') }]);
+		});
 		this.contentService.getACCUserInfo()
 			.pipe(
 				catchError(err => {
@@ -157,30 +169,6 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 			)
 			.subscribe(response => {
 				this.custData = response;
-			});
-		this.contractsService
-		.getContractDetails({ customerId: this.customerId })
-			.pipe(
-				catchError(err => {
-					this.getContractsFailed = true;
-					this.logger.error('cgt-request-from.component : getContractDetails() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-
-					return empty();
-				}),
-				finalize(() => this.loading = false),
-				takeUntil(this.destroyed$),
-			)
-			.subscribe(response => {
-				this.contractDetails = response;
-				_.each(_.get(this.contractDetails, 'data'), contract => {
-					this.contractOptions = _.union(this.contractOptions,
-						[{ key: _.get(contract, 'contractNumber'),
-							value: _.get(contract, 'contractNumber') }]);
-					this.contracts = _.union(this.contracts,
-						[{ contract: _.get(contract, 'contractNumber'),
-							endDate: _.get(contract, 'contractEndDate') }])
-				});
 			});
 	}
 

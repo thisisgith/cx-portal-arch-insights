@@ -76,6 +76,7 @@ interface ComponentData {
 	cgt?: {
 		trainingsAvailable: number;
 		sessions: string[];
+		usedTrainings: string[];
 	};
 }
 
@@ -128,8 +129,7 @@ export class LifecycleComponent implements OnDestroy {
 	private user: User;
 	public selectedCategory = '';
 	public selectedStatus = '';
-	// This is the temporary limit for a custumer for CGT
-	public totalAllowedGroupTrainings = 10;
+	public totalAllowedGroupTrainings: number;
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public categoryOptions: [];
@@ -147,7 +147,7 @@ export class LifecycleComponent implements OnDestroy {
 	public productGuidesTable: CuiTableOptions;
 	public completedTrainingsList: UserTraining[] | { };
 	public successBytesTable: CuiTableOptions;
-	public cgtAvailable: number;
+	public usedTrainingsList: string[];
 	public trainingAvailableThrough: string;
 	private stage = new ReplaySubject<string>();
 
@@ -369,8 +369,13 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Select/deselect the CGTRequestForm component
 	 * @param selected whether the component is visible or not
+	 * @param usedTrainigData list of trainings used by the user this year
 	 */
-	public selectCgtRequestForm (selected: boolean) {
+	public selectCgtRequestForm (selected: boolean,
+		usedTrainingData: string[]) {
+		if (selected) {
+			this.usedTrainingsList = usedTrainingData;
+		}
 		this.selectCgtComponent = selected;
 	}
 
@@ -951,6 +956,7 @@ export class LifecycleComponent implements OnDestroy {
 		let completedTrainingData = [];
 		let trainigsCompleted = 0;
 		let trainigsInProcess = 0;
+		let usedTrainings = [];
 
 		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
 			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -960,12 +966,21 @@ export class LifecycleComponent implements OnDestroy {
 		.pipe(
 			map((result: ContractQuota[]) => {
 				this.status.loading.cgt = false;
+				this.totalAllowedGroupTrainings = _.size(result) * 2;
 				_.each(result, training => {
-					// This is temporary, we will have to check the trainings per contract in future
-					// Incrementing the number of inProcess trainings only if
-					// the training's end date is this calendar year
-					if (new Date(_.get(training, 'contract_end_date')).getFullYear === new Date().getFullYear) {
+					if (new Date(_.get(training, 'contract_end_date')).getFullYear() === new Date().getFullYear()) {
+						usedTrainings = _.union(usedTrainings, [{
+							contract_number: _.get(training, 'tsa_contract_no'),
+							end_date: _.get(training, 'contract_end_date'),
+							used_sessions: _.get(training, 'closed_ilt_courses_inprocess'),
+						}]);
 						trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
+					} else {
+						usedTrainings = _.union(usedTrainings, [{
+							contract_number: _.get(training, 'tsa_contract_no'),
+							end_date: _.get(training, 'contract_end_date'),
+							used_sessions: 0,
+						}]);
 					}
 				});
 				this.contentService.getCompletedTrainings(
@@ -981,10 +996,12 @@ export class LifecycleComponent implements OnDestroy {
 					.subscribe(response => {
 						this.completedTrainingsList = response;
 						_.each(this.completedTrainingsList, completedTraining => {
-							// This is temporary, we will have to check the trainings per contract in future
-							// Incrementing the number of completed trainings only if
-							// the training's end date is this calendar year
-							if (new Date(_.get(completedTraining, 'end_date')).getFullYear === new Date().getFullYear) {
+							if (new Date(_.get(completedTraining, 'end_date')).getFullYear() === new Date().getFullYear()) {
+								_.each(usedTrainings, training => {
+									if (_.get(completedTraining, 'contract_number') === _.get(training, 'contract_number')) {
+										training.used_sessions++;
+									}
+								});
 								trainigsCompleted++;
 							}
 							startDate = `${
@@ -1029,14 +1046,12 @@ export class LifecycleComponent implements OnDestroy {
 							};
 							completedTrainingData = _.union(completedTrainingData, [trainingData]);
 						});
-						// This is temporary, we will have to check the trainings per contract in future
-						// For now, the total number of trainings per user irrespective of the contract
-						// is hardcoded to 10, this has to be changed to a dynamic number in future
 						this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
 							(trainigsCompleted + trainigsInProcess);
 						this.componentData.cgt = {
 							sessions: completedTrainingData,
 							trainingsAvailable: this.groupTrainingsAvailable,
+							usedTrainings: usedTrainings,
 						};
 
 						return result;
