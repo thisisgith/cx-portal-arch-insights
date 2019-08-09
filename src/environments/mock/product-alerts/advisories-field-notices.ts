@@ -21,7 +21,7 @@ export const MockFieldNoticeAdvisories: FieldNoticeAdvisory[] = [
 		"assetsPotentiallyImpacted": 5,
 		"publishedOn": "2016-11-11T00:00:00",
 		"lastUpdated": "2018-12-07T00:00:00",
-		"version": null,
+		"version": 1.2,
 		"url": "https://ibpm.cisco.com/gssc/fn/login?pyActivity=Work-.Open&Action=FieldNoticePreview&HarnessPurpose=Review&InsHandle=CISCO-SERVICES-GSLO-FN-WORK RV01061&pyShowFullPortal=false"
 	},
 	{
@@ -51,14 +51,20 @@ export const MockFieldNoticeAdvisories: FieldNoticeAdvisory[] = [
  * Mocks the field notice response
  * @param rows the rows to return
  * @param page the page to return
- * @param filter IDs to filter
+ * @param copy the number of times to duplicate the data (for testing multiple pages)
  * @returns mock response
  */
 function MockData (
 	rows?: number,
 	page?: number,
+	copy?: number,
 	): FieldNoticeAdvisoryResponse {
 	let data = _.cloneDeep(MockFieldNoticeAdvisories);
+	if (copy > 0) {
+		for (let i = 0; i < copy; i += 1) {
+			data = _.concat(data, ...data);
+		}
+	}
 	const total = data.length;
 	let pagination: Pagination;
 
@@ -101,9 +107,52 @@ export const FieldNoticeAdvisoryScenarios = [
 					},
 					selected: false,
 				},
+				{
+					delay: 250,
+					description: 'Field Notice Advisories - Page 1',
+					response: {
+						body: MockData(10, 1, 3),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 250,
+					description: 'Field Notice Advisories - Page 2',
+					response: {
+						body: MockData(10, 2, 3),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=2`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 250,
+					description: 'Field Notice Advisories - Page 3',
+					response: {
+						body: MockData(10, 3, 3),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
 ];
