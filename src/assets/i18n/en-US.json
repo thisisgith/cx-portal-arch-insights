@@ -219,7 +219,7 @@
 	"_Lifecycle_": "Lifecycle",
 	"_LoadingCustomerInfo_": "Loading customer info...",
 	"_LoadMore_": "Load More",
-	"_Location_": "Location",
+	"_InstalledLocation_": "Installed Location",
 	"_Low_": "Low",
 	"_Medium_": "Medium",
 	"_MissingLowercase_": "Missing Lowercase Character",
@@ -510,6 +510,6 @@
 	"_XResults_": "{0} Results for \"{1}\"",
 	"_XSelected_": "{0} Selected",
 	"_XSessionsAvailableThrough": "{0} Sessions available through",
-	"_YouHaveInventory_": "You have {0} of these in your inventory",
+	"_YouHaveInventory_": "you have {0} of these in your inventory",
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:"
 }

@@ -70,4 +70,8 @@ export const defaults = {
 	},
 	logoutUrl: 'https://www.cisco.com/autho/logout.html',
 	manageProfileUrl: 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do',
+	mapboxHost: 'https://api.mapbox.com',
+	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
+	mapboxToken:
+	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 };
