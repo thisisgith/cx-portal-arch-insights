@@ -18,6 +18,7 @@ import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, OsvPagination } from '@sdp-api';
 import * as _ from 'lodash-es';
+import { ActivatedRoute } from '@angular/router';
 
 /** Our current customerId */
 const customerId = '231215372';
@@ -48,15 +49,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	public pagination: OsvPagination;
 	public paginationCount: string;
 	public destroy$ = new Subject();
-	public assetsParams: OSVService.GetAssetsParams = {
-		customerId,
-		filter: '',
-		pageIndex: 1,
-		pageSize: 10,
-		sort: 'hostName',
-		sortOrder: 'desc',
-	};
-
+	public assetsParams: OSVService.GetAssetsParams;
+	public customerId: string;
+	public sorting: 'asc' | 'desc';
 	public rowActions = [
 		{
 			label: I18n.get('_OsvBasicRecommendations_'),
@@ -66,8 +61,18 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
+		private route: ActivatedRoute,
 	) {
-		this.logger.debug('AssetComponent Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+		this.assetsParams = {
+			customerId,
+			filter: '',
+			pageIndex: 1,
+			pageSize: 10,
+			sort: 'hostName',
+			sortOrder: 'desc',
+		};
 	}
 
 	/**

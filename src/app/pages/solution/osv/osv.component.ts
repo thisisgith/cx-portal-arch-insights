@@ -7,6 +7,7 @@ import { takeUntil, map, catchError } from 'rxjs/operators';
 import {
 	OSVService, SummaryResponse, OSVAsset,
 } from '@sdp-api';
+import { ActivatedRoute } from '@angular/router';
 
 /** Our current customerId */
 const customerId = '231215372';
@@ -47,6 +48,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public status = {
 		isLoading: true,
 	};
+	public customerId: string;
 	public fullScreen = false;
 	public selectedProfileGroup: any;
 	public selectedAsset: OSVAsset;
@@ -61,8 +63,14 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		assetType: '',
 		deploymentStatus: [],
 	};
-	constructor (private logger: LogService,
-		private osvService: OSVService) { }
+	constructor (
+		private logger: LogService,
+		private osvService: OSVService,
+		private route: ActivatedRoute,
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+	}
 
 	/**
 	 * Used to select which tab we want to view the data for
