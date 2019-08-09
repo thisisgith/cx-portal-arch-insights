@@ -1,7 +1,7 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
 		<div class="container" *ngIf="tableData.length">
-			<span [innerText]="'Exceptions' | i18n" class="text-large"></span>
+			<span [innerText]="'_CbpExceptions_' | i18n" class="text-large"></span>
 			<span class="qtr-margin-left text-small text-muted">showing
 				{{ (tableIndex + 1) +' - ' +  (tableIndex + tableData.length ) }}
 				of {{totalItems}} exceptions</span>
@@ -29,7 +29,7 @@
 								</ng-container>
 							</td>
 							<td>
-								<a>{{(item['bpRuleTitle']).substr(0, 25).concat('...')}}</a>
+								<span>{{(item['bpRuleTitle']).substr(0, 25).concat('...')}}</span>
 							</td>
 							<td>
 								<span>{{(item['exceptions']).substr(0, 25).concat('... ')}}</span>
