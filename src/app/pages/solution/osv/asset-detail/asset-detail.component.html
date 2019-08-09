@@ -60,7 +60,7 @@
 
 
 <ng-template #actionsTemplate let-item="celldata">
-	<button *ngIf="selectedAsset.swVersion != item.swVersion && !item.accepted" cuiButton [color]="'gray-ghost'"
+	<button *ngIf="selectedAsset.swVersion != item.swVersion && !item.accepted && !item.error" cuiButton [color]="'gray-ghost'"
 		[small]="true" [wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
 		attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
 	<div *ngIf="selectedAsset.swVersion != item.swVersion && item.accepted">

@@ -169,6 +169,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 						profiles: response.profiles,
 						versions: response.versions,
 					};
+					response.asset_profile.assets_profile = 0;
 					deploymentStatusFilter.data = _.compact(
 						_.map(response.deployment, (value: number, key: string) => {
 							if (value !== 0) {

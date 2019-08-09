@@ -74,7 +74,6 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				},
 				styledMode: false,
 				type: 'timeline',
-				zoomType: 'x',
 				// width: this.fullscreen ? 1600 : 800,
 			},
 			credits: {
@@ -105,17 +104,17 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						formatter: function () {
 							let format = '';
 							format += `<span style="cursor:pointer;">
-							<span style='cursor:pointer;font-weight: bold;' >
+							<span style='cursor:pointer;font-weight: bold;font-size:14px' >
 							${this['point'].name}</span>
-							<br/><span style='cursor:pointer;font-weight: normal;'>
+							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
 							${this['point'].label}</span>
-							<br/><span style='cursor:pointer;font-weight: normal;'>
+							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
 							${this['point'].releaseDate}</span><br/>
 							</span>`;
 							if (this['point'].accepted) {
-								format += '<span style="color:green">Accepted</span>';
+								format += '<span style=";font-size:12px;font-weight:bold';
+								format += 'color:#6ebe4a">Accepted</span>';
 							}
-
 							return format;
 						},
 						style: {
@@ -173,20 +172,21 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 		return _.compact(
 			_.map(this.data, (value: AssetRecommendations) => {
 				const releaseDate = new Date(value.postDate);
-
-				return {
-					accepted: value.accepted,
-					description: value.name,
-					label: value.swVersion,
-					name: _.capitalize(value.name),
-					releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
-					swVersion: value.swVersion,
-					x: Date.UTC(
-						releaseDate.getFullYear(),
-						releaseDate.getMonth(),
-						releaseDate.getDate(),
-					),
-				};
+				if (!value.error) {
+					return {
+						accepted: value.accepted,
+						description: value.name,
+						label: value.swVersion,
+						name: _.capitalize(value.name),
+						releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
+						swVersion: value.swVersion,
+						x: Date.UTC(
+							releaseDate.getFullYear(),
+							releaseDate.getMonth(),
+							releaseDate.getDate(),
+						),
+					};
+				}
 			}));
 	}
 

@@ -6,7 +6,8 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, SoftwareVersionsResponse, OsvPagination, SoftwareVersion } from '@sdp-api';
-
+import * as _ from 'lodash-es';
+import { ActivatedRoute } from '@angular/router';
 /** Our current customerId */
 const customerId = '231215372';
 
@@ -28,19 +29,23 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	public pagination: OsvPagination;
 	public paginationCount: string;
 	public destroy$ = new Subject();
-	public softwareVersionsParams: OSVService.GetSoftwarVersionsParams = {
-		customerId,
-		pageIndex: 1,
-		pageSize: 10,
-		sort: 'swVersion',
-		sortOrder: 'desc',
-	};
+	public softwareVersionsParams: OSVService.GetSoftwarVersionsParams;
+	public customerId: string;
 
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
+		private route: ActivatedRoute,
 	) {
-		this.logger.debug('SoftwareVersionsComponent Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+		this.softwareVersionsParams = {
+			customerId,
+			pageIndex: 1,
+			pageSize: 10,
+			sort: 'swVersion',
+			sortOrder: 'desc',
+		};
 	}
 
 	/**
@@ -109,15 +114,15 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						sortable: true,
+						sortable: false,
 						sortDirection: 'desc',
 						sorting: true,
 						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvReleaseDate_'),
-						template: this.releaseDateTemplate,
 						sortable: false,
+						template: this.releaseDateTemplate,
 					},
 					{
 						key: 'assetCount',

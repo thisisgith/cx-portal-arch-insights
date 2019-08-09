@@ -22,7 +22,7 @@ const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc&filte
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
 	{
-		error: null,
+		error: 'some error',
 		name: 'suggested',
 		postDate: '2019-03-21T18:30:00.000+0000',
 		recommendationSummary: null,

@@ -18,6 +18,7 @@ import { Subject, of } from 'rxjs';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 /** Our current customerId */
 const customerId = '231215372';
@@ -42,18 +43,24 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	private destroy$ = new Subject();
 	public view: 'list' | 'timeline' = 'list';
 	public assetDetailsTable: CuiTableOptions;
-	public assetDetailsParams: OSVService.GetAssetDetailsParams = {
-		customerId,
-		id: '',
-	};
+	public assetDetailsParams: OSVService.GetAssetDetailsParams;
 	public selectedRecommendation = {
 		name: 'None',
 	};
+	public customerId: string;
 
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
-	) { }
+		private route: ActivatedRoute,
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+		this.assetDetailsParams = {
+			customerId,
+			id: '',
+		};
+	 }
 
 	/**
 	 * Resets data fields
@@ -87,6 +94,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		if (this.selectedAsset && !this.selectedAsset.statusUpdated) {
 			this.clear();
 			this.assetDetailsParams.id = this.selectedAsset.id;
+			this.assetDetailsParams.id = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
 			this.fetchAssetDetails();
 		}
 	}
@@ -136,7 +144,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						render: item => !item.error ?
+						render: item => _.isNull(item.error) ?
 							item.swVersion : 'N/A',
 						sortable: false,
 
@@ -145,7 +153,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					{
 						key: 'postDate',
 						name: I18n.get('_OsvReleaseDate_'),
-						render: item => !item.error ?
+						render: item => _.isNull(item.error) ?
 							datePipe.transform(item.postDate, 'yyyy MMM dd') : 'N/A',
 						sortable: false,
 						width: '20%',
