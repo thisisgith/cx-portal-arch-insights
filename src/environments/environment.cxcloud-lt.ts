@@ -3,7 +3,7 @@ import { defaults } from './defaults';
 /**
  * Cway origin
  */
-const origin = 'https://cway.cisco.com';
+const origin = 'https://apollo-stage.cisco.com';
 
 /**
  * Contains configurations for production builds, will extend the default configuration
@@ -48,12 +48,12 @@ export const environment = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm.cisco.com/rma/home',
-	sdpServiceClientId: 'ejw4cbpvp3s8cyh4ry8qcnff',
+	sdpServiceClientId: 'j45ptjdbwakr4zxs3cnjsvbw',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
 	 */
-	sdpServiceOrigin: 'https://api-test.cisco.com/api/lt/customerportal',
+	sdpServiceOrigin: 'https://api-stage.cisco.com/api/lt/customerportal',
 	sdpServicePaths: {
 		contracts: '/api/lt/v1/contracts',
 		controlpoints: '/api/lt/customerportal/controlpoint',
