@@ -38,6 +38,7 @@ Cypress.moment.locale('en', {
 });
 
 const dateFormat = 'YYYY MMM DD';
+const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('Assets', () => { // PBC-41
 	before(() => {
@@ -936,15 +937,15 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('Created-Header').should('have.text', 'Created');
 			// TODO: Verify the RMA dropdown data from Mock API
 			cy.getByAutoId('close').click();
-			cy.getByAutoId('caseProbType').should('contain', 'PROBLEM TYPE');
-			cy.getByAutoId('caseAsset').should('contain', 'ASSET');
-			cy.getByAutoId('caseSW').should('contain', 'SOFTWARE VERSION');
-			cy.getByAutoId('caseContract').should('contain', 'CONTRACT');
-			cy.getByAutoId('caseTracking').should('contain', 'TRACKING NUMBER');
-			cy.getByAutoId('caseOwnerEmail').should('contain', 'CASE OWNER');
-			cy.getByAutoId('caseTacEng').should('contain', 'TAC ENGINEER');
-			cy.getByAutoId('caseSummaryTitle').should('contain', 'TITLE');
-			cy.getByAutoId('caseDescription').should('contain', 'DESCRIPTION');
+			cy.getByAutoId('caseProbType').should('contain', i18n._RMACaseProblemType_.toUpperCase());
+			cy.getByAutoId('caseAsset').should('contain', i18n._RMACaseAsset_.toUpperCase());
+			cy.getByAutoId('caseSW').should('contain', i18n._RMACaseSoftwareVersion_.toUpperCase());
+			cy.getByAutoId('caseContract').should('contain', i18n._Contract_.toUpperCase());
+			cy.getByAutoId('caseTracking').should('contain', i18n._RMACaseTrackingNumber_.toUpperCase());
+			cy.getByAutoId('caseOwnerEmail').should('contain', i18n._RMACaseOwnerEmail_.toUpperCase());
+			cy.getByAutoId('caseTacEng').should('contain', i18n._TACEngineer_.toUpperCase());
+			cy.getByAutoId('caseSummaryTitle').should('contain', i18n._RMACaseSummaryTitle_.toUpperCase());
+			cy.getByAutoId('caseDescription').should('contain', i18n._RMACaseDescription_.toUpperCase());
 			cy.get('div.text-xlarge').eq(2)
 				.should('have.text', `Case ${caseResponse.caseNumber}`);
 			cy.get('div:nth-child(3) > div:nth-child(1) > div:nth-child(2)').should('have.text', caseResponse.contractId);
