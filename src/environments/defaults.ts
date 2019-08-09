@@ -35,15 +35,13 @@ export const defaults = {
 			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
-	microservice_urls: {
-		cases: '/ws/casesdlinton/v3',
-	},
 	myCase: 'https://mycase2.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [
 		'https://xresps-stage.cloudapps.cisco.com/esps/search/suggest/cdcpr01zad',
 	],
-	production: false, rmaServiceClientId: 'yvgjnzruyuh9a7tdnbj8ka3n',
+	production: false,
+	rmaServiceClientId: 'yvgjnzruyuh9a7tdnbj8ka3n',
 	rmaServiceOrigin: 'https://api-stage.cisco.com',
 	rmaServicePaths: {
 		returns: '/return/v1.0/returns',
