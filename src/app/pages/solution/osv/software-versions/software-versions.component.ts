@@ -19,7 +19,7 @@ const customerId = '231215372';
 	templateUrl: './software-versions.component.html',
 })
 export class SoftwareVersionsComponent implements OnInit, OnDestroy {
-	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{}>;
+	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
 	public softwareVersionsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -93,7 +93,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV SoftwareVersions : getVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}

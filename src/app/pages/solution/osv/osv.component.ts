@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, SimpleChanges, OnInit, OnChanges, OnDestroy } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -17,7 +17,7 @@ const customerId = '231215372';
 interface Filter {
 	key: string;
 	selected?: boolean;
-	template?: TemplateRef<{}>;
+	template?: TemplateRef<{ }>;
 	title?: string;
 	loading: boolean;
 	data: {
@@ -39,11 +39,11 @@ interface Filter {
 })
 export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	@ViewChild('assetTypeFilter', { static: true }) private assetTypeFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -82,9 +82,8 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 
 	/**
 	 * refresh the deploymentstatus pie chart
-	 * @param event updated asset
 	 */
-	public onAssetStatusUpdate(event){
+	public onAssetStatusUpdate () {
 		this.loadData();
 	}
 
@@ -196,7 +195,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -247,7 +246,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * @param filter the filter we selected the subfilter on
 	 * @param reload if we're reloading our assets
 	 */
-	public onSubfilterSelect (subfilter: string, filter: Filter, reload: boolean = true) {
+	public onSubfilterSelect (subfilter: string, filter: Filter) {
 		const sub = _.find(filter.data, { filter: subfilter });
 		if (sub) {
 			sub.selected = !sub.selected;
@@ -277,9 +276,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 
 			totalFilter.selected = !total;
 			this.filtered = total;
-			if (reload) {
-				// todo reload
-			}
 		}
 	}
 
@@ -311,7 +307,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			window.localStorage.setItem('hideProfileInfo', 'true');
 		} else {
 			window.localStorage.setItem('hideProfileInfo', 'false');
-
 		}
 	}
 }

@@ -37,9 +37,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@Output() public assetStatusUpdated = new EventEmitter<OSVAsset>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
-	private recommendationsTemplate: TemplateRef<{}>;
+	private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -94,7 +94,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			const selected = _.filter(this.assets, { id: selectedAsset.id });
 			if (selected && selected.length > 0) {
 				selected[0].optimalVersion = selectedAsset.optimalVersion;
-				if (selected[0].deployment != selectedAsset.deployment) {
+				if (selected[0].deployment !== selectedAsset.deployment) {
 					selected[0].deployment = selectedAsset.deployment;
 					this.assetStatusUpdated.emit(selectedAsset);
 				}
@@ -165,7 +165,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					this.logger.error('OSV Assets : getAssets() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}

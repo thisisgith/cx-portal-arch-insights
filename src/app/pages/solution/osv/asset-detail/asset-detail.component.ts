@@ -31,7 +31,7 @@ const customerId = '231215372';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
@@ -109,7 +109,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -193,7 +193,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				this.setAcceptedVersion(this.assetDetails, response);
 				this.assetDetails = _.cloneDeep(this.assetDetails);
 				this.selectedRecommendation = { name: 'None' };
-				this.selectedAsset.recommAcceptedDate = response.recommAcceptedDate;				
+				this.selectedAsset.recommAcceptedDate = response.recommAcceptedDate;
 				response.statusUpdated = true;
 				this.selectedAssetChange.emit(response);
 				this.status.isLoading = false;
@@ -210,7 +210,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any>new Date(b.postDate) - <any>new Date(a.postDate));
+			<any> new Date(b.postDate) - <any> new Date(a.postDate));
 	}
 
 	/**
