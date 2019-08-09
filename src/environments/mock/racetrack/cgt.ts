@@ -1,10 +1,12 @@
-import { GroupTrainingEntitySchema, UserQuota, UserTraining } from '@sdp-api';
+import { GroupTrainingEntitySchema, ContractQuota, UserTraining } from '@sdp-api';
 
 /**
  * Base of URL for SDP API
  */
 const api = '/api/customerportal/racetrack/v1/grouptraining';
 
+/** Default contract ID */
+const customerId = '2431199';
 /** Default contract ID */
 const contract1 = '111111';
 /** Default contract ID */
@@ -37,34 +39,37 @@ function MockCGTRequestResponse (): GroupTrainingEntitySchema {
 }
 
 /**
- * Mock response for getUserQuotas
+ * Mock response for getCustomerQuotas
  * @returns response
  */
-function MockUserQuotaResponse (): UserQuota[] {
+function MockCustomerQuotaResponse (): ContractQuota[] {
 	return [
 		{
-			closed_ilt_courses_available: 1,
-			closed_ilt_courses_entitled: 0,
+			closed_ilt_courses_inprocess: 1,
 			closed_ilt_courses_used: 0,
-			contract_number: `${contract1}`,
-			end_date: '2020-01-29',
-			start_date: '2019-01-29',
+			tsa_contract_no: `${contract1}`,
+			contract_end_date: '2020-01-29',
+			contract_start_date: '2019-01-29',
+			customer_admin: 'John Doe, Jane Doe',
+			learning_advisor: 'jdoe',
 		},
 		{
-			closed_ilt_courses_available: 0,
-			closed_ilt_courses_entitled: 0,
+			closed_ilt_courses_inprocess: 0,
 			closed_ilt_courses_used: 0,
-			contract_number: `${contract2}`,
-			end_date: '2020-02-28',
-			start_date: '2019-02-28',
+			tsa_contract_no: `${contract2}`,
+			contract_end_date: '2020-02-28',
+			contract_start_date: '2019-02-28',
+			customer_admin: 'John Doe, Jane Doe',
+			learning_advisor: 'jdoe',
 		},
 		{
-			closed_ilt_courses_available: 0,
-			closed_ilt_courses_entitled: 0,
+			closed_ilt_courses_inprocess: 0,
 			closed_ilt_courses_used: 0,
-			contract_number: `${contract3}`,
-			end_date: '2020-03-29',
-			start_date: '2019-03-29',
+			tsa_contract_no: `${contract3}`,
+			contract_end_date: '2020-03-29',
+			contract_start_date: '2019-03-29',
+			customer_admin: 'John Doe, Jane Doe',
+			learning_advisor: 'jdoe',
 		},
 	];
 }
@@ -137,16 +142,16 @@ export const CGTScenarios = [
 			GET: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(CGT) CGT-GetUserQuota',
+					description: '(CGT) CGT-GetCustomerQuota',
 					response: {
-						body: MockUserQuotaResponse(),
+						body: MockCustomerQuotaResponse(),
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}/user/quotas`,
+		url: `${api}/customer/quotas?customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -163,7 +168,7 @@ export const CGTScenarios = [
 				},
 			],
 		},
-		url: `${api}/user/trainings/completed`,
+		url: `${api}/customer/trainings/completed?customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

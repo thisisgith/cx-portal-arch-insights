@@ -23,7 +23,7 @@ import { HardwareEOLResponse } from '../models/hardware-eolresponse';
 import { HardwareEOLBulletinResponse } from '../models/hardware-eolbulletin-response';
 import { HardwareEOLCountResponse } from '../models/hardware-eolcount-response';
 import { SoftwareEOLResponse } from '../models/software-eolresponse';
-import { SofwareEOLBulletinResponse } from '../models/sofware-eolbulletin-response';
+import { SoftwareEOLBulletinResponse } from '../models/software-eolbulletin-response';
 @Injectable({
   providedIn: 'root',
 })
@@ -1624,7 +1624,7 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEoxBulletinResponse(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<__StrictHttpResponse<SofwareEOLBulletinResponse>> {
+  getSoftwareEoxBulletinResponse(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<__StrictHttpResponse<SoftwareEOLBulletinResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -1657,7 +1657,7 @@ class ProductAlertsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SofwareEOLBulletinResponse>;
+        return _r as __StrictHttpResponse<SoftwareEOLBulletinResponse>;
       })
     );
   }
@@ -1700,9 +1700,9 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEoxBulletin(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<SofwareEOLBulletinResponse> {
+  getSoftwareEoxBulletin(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<SoftwareEOLBulletinResponse> {
     return this.getSoftwareEoxBulletinResponse(params).pipe(
-      __map(_r => _r.body as SofwareEOLBulletinResponse)
+      __map(_r => _r.body as SoftwareEOLBulletinResponse)
     );
   }
 }

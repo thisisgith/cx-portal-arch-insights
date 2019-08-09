@@ -18,6 +18,7 @@ import * as _ from 'lodash-es';
 })
 export class BarChartComponent implements OnInit {
 
+	@Input() public loading;
 	@Input() public seriesData;
 	@Input() public width;
 	@Output() public subfilter = new EventEmitter<string>();
@@ -90,7 +91,10 @@ export class BarChartComponent implements OnInit {
 			series: [
 				{
 					data,
+					enableMouseTracking: !this.loading,
+					minPointLength: 3,
 					name: '',
+					opacity: this.loading ? 0.5 : 1,
 					showInLegend: false,
 					type: undefined,
 				},

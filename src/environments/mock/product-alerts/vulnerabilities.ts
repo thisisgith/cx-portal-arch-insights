@@ -10,7 +10,7 @@ const customerId = '2431199';
 const mockAdvisoryCounts: VulnerabilityResponse = {
 	bugs: 2,
 	'field-notices': 3,
-	'security-advisories': 3,
+	'security-advisories': 6,
 };
 
 /** The scenarios */

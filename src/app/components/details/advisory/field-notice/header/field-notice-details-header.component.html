@@ -1,44 +1,35 @@
-<div class="row base-margin-bottom">
-	<div class="col-md-12">
-		<div class="flex" *ngIf="details">
-			<div data-auto-id="FieldNoticePublished" class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_Published_' | i18n"></div>
-				<div [innerText]="details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy' || ('_NA_' | i18n)"></div>
-			</div>
 
-			<div data-auto-id="FieldNoticeLastUpdated" class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_LastUpdated_' | i18n"></div>
-				<div [innerText]="(details?.bulletin?.bulletinLastUpdated | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
-			</div>
+<div class="flex row col-md-12 base-margin-bottom" *ngIf="details">
 
-			<div data-auto-id="FieldNoticeVersion" class="dbl-margin-right">
-					<div class="text-bold text-uppercase" [innerText]="'_Version_' | i18n"></div>
-					<div [innerText]="details?.bulletin?.version || ('_NA_' | i18n)" class="text-capitalize"></div>
-				</div>
+		<div data-auto-id="FieldNoticePublished" class="dbl-margin-right">
+			<div class="text-bold text-uppercase" [innerText]="'_Published_' | i18n"></div>
+			<div [innerText]="details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy' || ('_NA_' | i18n)"></div>
 		</div>
-	</div>
+
+		<div data-auto-id="FieldNoticeLastUpdated" class="dbl-margin-right">
+			<div class="text-bold text-uppercase" [innerText]="'_LastUpdated_' | i18n"></div>
+			<div [innerText]="(details?.bulletin?.bulletinLastUpdated | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
+		</div>
+
+		<div data-auto-id="FieldNoticeVersion" class="dbl-margin-right">
+			<div class="text-bold text-uppercase" [innerText]="'_Version_' | i18n"></div>
+			<div [innerText]="details?.bulletin?.version || ('_NA_' | i18n)" class="text-capitalize"></div>
+		</div>
+
 </div>
 
-<div class="row">
-	<div class="col-md-8">
-		<a class="btn btn--secondary btn--small"
-			*ngIf="details?.bulletin?.URL"
-			[href]="details.bulletin.URL"
-			target="_blank"
-			[innerText]="'_ViewNotice_' | i18n"
-			data-auto-id="FieldNoticeDetailLink">
-		</a>
-		<button class="text-capitalize btn btn--secondary btn--small disabled"
-			*ngIf="details?.advisory?.assetsImpacted > 0"
-			innerText="{{ '_ImpactedAssets_' | i18n }} ({{ details?.advisory?.assetsImpacted }})"
-			data-auto-id="CriticalBugImpactedAssets">
-		</button>
-	</div>
-	<div class="col-md-4 text-right">
-		<button class="text-capitalize btn btn--secondary btn--small"
-			[innerText]="'_OpenCase_' | i18n"
-			data-auto-id="CriticalBugOpenCaseLink"
-			(click)="onOpenCase()">
-		</button>
-	</div>
+<div class="flex row col-md-12 flex-container qtr-margin-bottom" *ngIf="details">
+	<a class="text-capitalize btn btn--secondary btn--small"
+		[innerText]="'_ViewNotice_' | i18n"
+		data-auto-id="FieldNoticeViewNoticeLink"
+		href="{{ details?.advisory?.url }}"
+		[ngClass]="{'disabled': !details?.advisory?.url}">
+	</a>
+	
+	<!-- TODO: Implement when we know how to open a case against a field notice -->
+	<button class="text-capitalize btn btn--secondary btn--small"
+		[innerText]="'_OpenCase_' | i18n"
+		data-auto-id="FieldNoticeOpenCaseLink">
+	</button>
 </div>
+		

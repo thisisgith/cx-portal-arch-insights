@@ -1,44 +1,51 @@
-<div class="row">
-	<div class="col-md-8 base-margin-bottom">
-		<div class="flex" *ngIf="details">
-			<div data-auto-id="SecurityAdvisoryImpact" class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_Impact_' | i18n"></div>
-				<div>
-					<span *ngIf="details?.bulletin?.severity"
-						class="label label--circle label--tiny qtr-margin-right"
-						[ngClass]="{
-							'Critical': 'label--danger',
-							'High': 'label--warning-alt',
-							'Medium': 'label--warning',
-							'Low': 'label--success'
-						}[details?.bulletin?.severity]">
-					</span>
-					<span [innerText]="details?.bulletin?.severity || ('_NA_' | i18n)"></span>
-				</div>
-			</div>
 
-			<div data-auto-id="SecurityAdvisoryPublished" class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_Published_' | i18n"></div>
-				<div [innerText]="details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy' || ('_NA_' | i18n)"></div>
-			</div>
-
-			<div data-auto-id="SecurityAdvisoryLastUpdated" class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_LastUpdated_' | i18n"></div>
-				<div [innerText]="(details?.bulletin?.signatureReleaseDate | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
-			</div>
-
-			<div data-auto-id="SecurityAdvisoryVersion" class="dbl-margin-right">
-					<div class="text-bold text-uppercase" [innerText]="'_Version_' | i18n"></div>
-					<div [innerText]="details?.bulletin?.bulletinVersion || ('_NA_' | i18n)"></div>
-				</div>
+<div class="row col-md-12 base-margin-bottom flex" *ngIf="details">
+	<div data-auto-id="SecurityAdvisoryImpact" class="dbl-margin-right">
+		<div class="text-bold text-uppercase" [innerText]="'_Impact_' | i18n"></div>
+		<div>
+			<span *ngIf="details?.bulletin?.severity"
+				class="label label--circle label--tiny qtr-margin-right"
+				[ngClass]="{
+					'Critical': 'label--danger',
+					'High': 'label--warning-alt',
+					'Medium': 'label--warning',
+					'Low': 'label--success'
+				}[details?.bulletin?.severity]">
+			</span>
+			<span [innerText]="details?.bulletin?.severity || ('_NA_' | i18n)"></span>
 		</div>
 	</div>
 
-	<div class="col-md-4 text-right">
-		<button class="btn btn--secondary btn--small"
-			[innerText]="'_OpenCase_' | i18n"
-			data-auto-id="SecurityAdvisoryOpenCaseBtn"
-			(click)="onOpenCase()">
-		</button>
+	<div data-auto-id="SecurityAdvisoryPublished" class="dbl-margin-right">
+		<div class="text-bold text-uppercase" [innerText]="'_Published_' | i18n"></div>
+		<div [innerText]="details?.bulletin?.bulletinFirstPublished | date:'MMM dd, yyyy' || ('_NA_' | i18n)"></div>
 	</div>
+
+	<div data-auto-id="SecurityAdvisoryLastUpdated" class="dbl-margin-right">
+		<div class="text-bold text-uppercase" [innerText]="'_LastUpdated_' | i18n"></div>
+		<div [innerText]="(details?.bulletin?.signatureReleaseDate | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
+	</div>
+
+	<div data-auto-id="SecurityAdvisoryVersion" class="dbl-margin-right">
+			<div class="text-bold text-uppercase" [innerText]="'_Version_' | i18n"></div>
+			<div [innerText]="details?.bulletin?.bulletinVersion || ('_NA_' | i18n)"></div>
+		</div>
 </div>
+
+<div class="row col-md-12 qtr-margin-bottom flex flex-container" *ngIf="details">
+	<a class="text-capitalize btn btn--secondary btn--small"
+		[innerText]="'_ViewAdvisory_' | i18n"
+		data-auto-id="SecurityAdvisoryViewNoticeLink"
+		href="{{ details?.advisory?.url }}"
+		[ngClass]="{'disabled': !details?.advisory?.url}">
+	</a>
+	
+	
+	<button class="btn btn--secondary btn--small"
+		[innerText]="'_OpenCase_' | i18n"
+		data-auto-id="SecurityAdvisoryOpenCaseBtn"
+		(click)="onOpenCase()">
+	</button>
+</div>
+
+

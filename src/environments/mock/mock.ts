@@ -5,6 +5,7 @@ import {
 	AdvisorySecurityAdvisoryScenarios,
 	AssetScenarios,
 	ATXScenarios,
+	BookmarkScenarios,
 	CaseScenarios,
 	CGTScenarios,
 	ContractScenarios,
@@ -24,6 +25,7 @@ import {
 	HardwareEOLScenarios,
 	HardwareScenarios,
 	HealthStatusScenarios,
+	LicenseScenarios,
 	NetworkScenarios,
 	PolicesScenarios,
 	RacetrackScenarios,
@@ -37,6 +39,8 @@ import {
 	SecurityAdvisorySummaryScenarios,
 	SecurityAdvisoryTopScenarios,
 	SerialNumberScenarios,
+	SoftwareEOLBulletinScenarios,
+	SoftwareEOLScenarios,
 	SuccessPathScenarios,
 	VulnerabilityScenarios,
 } from './';
@@ -69,6 +73,7 @@ import {
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
+	LicenseDataResponseModel,
 	IERegistrationResponseModel,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
@@ -80,8 +85,10 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
+	SoftwareEOLResponse,
+	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
-	UserQuota,
+	ContractQuota,
 	UserTraining,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -96,6 +103,7 @@ type ResponseBody = (
 	Assets |
 	ATXResponse |
 	CDCSearchResponse |
+	ContractQuota[] |
 	CommunitiesResponse |
 	CoverageCountsResponse |
 	CoverageResponse |
@@ -114,6 +122,7 @@ type ResponseBody = (
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
 	HardwareResponse |
+	LicenseDataResponseModel |
 	IERegistrationResponseModel |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
@@ -126,9 +135,10 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
+	SoftwareEOLResponse |
+	SoftwareEOLBulletinResponse |
 	SuccessPathsResponse |
-	UserQuota |
-	UserTraining |
+	UserTraining[] |
 	VulnerabilityResponse |
 	VulnerabilityResponse
 );
@@ -181,6 +191,7 @@ export const mockSettings: MockSettings = {
 		AdvisorySecurityAdvisoryScenarios,
 		AssetScenarios,
 		ATXScenarios,
+		BookmarkScenarios,
 		CaseScenarios,
 		CGTScenarios,
 		ContractScenarios,
@@ -201,6 +212,7 @@ export const mockSettings: MockSettings = {
 		HealthStatusScenarios,
 		PolicesScenarios,
 		DevicePoliciesScenarios,
+		LicenseScenarios,
 		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
@@ -214,6 +226,8 @@ export const mockSettings: MockSettings = {
 		SecurityAdvisorySummaryScenarios,
 		SecurityAdvisoryTopScenarios,
 		SerialNumberScenarios,
+		SoftwareEOLScenarios,
+		SoftwareEOLBulletinScenarios,
 		SuccessPathScenarios,
 		VulnerabilityScenarios,
 	]),
