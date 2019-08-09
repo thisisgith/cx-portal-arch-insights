@@ -34,7 +34,7 @@
 	}
 }
 
-::ng-deep .cui {
+:host ::ng-deep .cui {
 	.table th {
 		background-color: $white !important;
 		border-top: none !important;
@@ -63,4 +63,3 @@
 	border: 3px solid $light-gray-3;
 	border-radius: 5px;
 }
-

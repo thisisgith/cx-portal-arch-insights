@@ -24,7 +24,7 @@
 			<div class="col-md-7 base-margin-top base-margin-right">
 				<dl class="dl--inline-medium">
 					<dt>
-						<span class="subheading text-small text-uppercase" 
+						<span class="subheading text-small text-uppercase"
 							data-auto-id="caseSeverity" [innerText]="'_Severity_' | i18n"></span>
 					</dt>
 					<dd>
@@ -94,7 +94,8 @@
 						<dd class="no-margin no-padding" *ngFor="let rmaNumber of case.relatedRmas">
 							<a data-auto-id="rmaNumber"
 								target="_blank"
-								href="https://ibpm.cisco.com/rma/home/?&OrderNumber={{rmaNumber}}"
+								rel="noopener noreferrer"
+								href="{{rmaToolUrl}}/?&OrderNumber={{rmaNumber}}"
 								[innerText]="rmaNumber">
 							</a>
 						</dd>

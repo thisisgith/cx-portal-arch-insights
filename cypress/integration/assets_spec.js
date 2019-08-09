@@ -38,6 +38,7 @@ Cypress.moment.locale('en', {
 });
 
 const dateFormat = 'YYYY MMM DD';
+const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('Assets', () => { // PBC-41
 	before(() => {
@@ -900,6 +901,60 @@ describe('Assets', () => { // PBC-41
 				.its('length')
 				.should('be.gt', 0));
 			cy.getByAutoId('close').click();
+		});
+	});
+
+	context('PBC-91: Asset List -> Case Detail View', () => {
+		// Verify the Case Detail 360 view
+		it('Opens Case Detail 360 view ', () => { // PBC-91
+			// TODO: Add auto-ids
+			const serial = assetCards[0].serialNumber;
+			cy.getByAutoId(`Device-${serial}`).click();
+			cy.getByAutoId('ToggleActiveCases').click();
+			const caseDetailNumber = caseResponse.caseNumber;
+			cy.getByAutoId(`caseId-${caseDetailNumber}`).eq(0).click();
+			// Verify the Case Details Data
+			cy.getByAutoId('asset-details-toggle-fullscreen-icon')
+				.should('be.visible').click();
+			cy.get('ng-component details-panel').should('have.class', 'fullscreen');
+			cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
+			cy.get('ng-component details-panel').should('not.have.class', 'fullscreen');
+			cy.getByAutoId('CloseDetails').should('be.visible');
+			cy.get('[data-auto-id="relatedRMA"]', { timeout: 20000 }).should('be.visible');
+			cy.getByAutoId('CaseAttachFile').should('be.visible');
+			cy.getByAutoId('CaseAddNote').should('be.visible');
+			cy.getByAutoId('summaryTab').should('be.visible');
+			cy.getByAutoId('notesTab').should('be.visible');
+			cy.getByAutoId('filesTab').should('be.visible');
+			cy.getByAutoId('caseTechnology').should('contain', i18n._RMACaseTechnology_.toUpperCase());
+
+			// Related RMAs dropdown
+			cy.getByAutoId('relatedRMA').click();
+			cy.getByAutoId('Name-Header').should('contain', i18n._Name_);
+			cy.getByAutoId('Status-Header').eq(0).should('contain', i18n._Status_);
+			cy.getByAutoId('Ship To-Header').should('contain', i18n._ShipTo_);
+			cy.getByAutoId('Contract Number-Header').should('contain', i18n._ContractNumber_);
+			cy.getByAutoId('Created-Header').should('contain', i18n._Created_);
+			// TODO: Verify the RMA dropdown data from Mock API
+			cy.getByAutoId('close').click();
+			cy.getByAutoId('caseProbType').should('contain', i18n._RMACaseProblemType_.toUpperCase());
+			cy.getByAutoId('caseAsset').should('contain', i18n._RMACaseAsset_.toUpperCase());
+			cy.getByAutoId('caseSW').should('contain', i18n._RMACaseSoftwareVersion_.toUpperCase());
+			cy.getByAutoId('caseContract').should('contain', i18n._Contract_.toUpperCase());
+			cy.getByAutoId('caseTracking').should('contain', i18n._RMACaseTrackingNumber_.toUpperCase());
+			cy.getByAutoId('caseOwnerEmail').should('contain', i18n._RMACaseOwnerEmail_.toUpperCase());
+			cy.getByAutoId('caseTacEng').should('contain', i18n._TACEngineer_.toUpperCase());
+			cy.getByAutoId('caseSummaryTitle').should('contain', i18n._RMACaseSummaryTitle_.toUpperCase());
+			cy.getByAutoId('caseDescription').should('contain', i18n._RMACaseDescription_.toUpperCase());
+			cy.get('div.text-xlarge').eq(2)
+				.should('have.text', `Case ${caseResponse.caseNumber}`);
+			cy.get('div:nth-child(3) > div:nth-child(1) > div:nth-child(2)').should('have.text', caseResponse.contractId);
+			cy.getByAutoId('mailTacEngineer').should('have.text', caseResponse.ownerEmail);
+			cy.get('div:nth-child(5) > div > div:nth-child(2)').eq(1).should('have.text', caseResponse.summary);
+			cy.get('div.col-md-3 > div:nth-child(2)')
+				.should('have.text', caseResponse.status);
+			cy.getByAutoId('CloseDetails').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
 		});
 	});
 });

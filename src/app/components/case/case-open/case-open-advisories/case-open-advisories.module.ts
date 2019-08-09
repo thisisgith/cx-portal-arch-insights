@@ -10,6 +10,7 @@ import { CollapsibleModule } from '../../../collapsible/collapsible.module';
 import { CaseSubmittedModule } from '../case-submitted/case-submitted.module';
 import { CloseConfirmModule } from '../close-confirm/close-confirm.module';
 import { CharCountModule } from '../../../char-count/char-count.module';
+import { TechFormModule } from '../tech-form/tech-form.module';
 
 /**
  * Module for opening a case against a Cisco Security Advisory/Field Notice/Bug
@@ -30,6 +31,7 @@ import { CharCountModule } from '../../../char-count/char-count.module';
 		CloseConfirmModule,
 		CollapsibleModule,
 		CharCountModule,
+		TechFormModule,
 	],
 })
 export class CaseOpenAdvisoriesModule { }

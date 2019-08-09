@@ -9,8 +9,12 @@
 			<asset-details-hardware [asset]="asset"></asset-details-hardware>
 		</div>
 	</cui-tab>
-	<cui-tab [label]="'_Software_' | i18n" disabled="true"></cui-tab>
-	<cui-tab [label]="'_Advisories_' | i18n">
+	<cui-tab [label]="'_Software_' | i18n | uppercase">
+		<div class="dbl-margin-top qtr-margin-left qtr-margin-right" *ngIf="asset">
+			<asset-details-software [asset]="asset"></asset-details-software>
+		</div>
+	</cui-tab>
+	<cui-tab [label]="'_Advisories_' | i18n | uppercase">
 		<div class="dbl-margin-top qtr-margin-left qtr-margin-right" *ngIf="asset">
 			<asset-details-advisories [asset]="asset"></asset-details-advisories>
 		</div>

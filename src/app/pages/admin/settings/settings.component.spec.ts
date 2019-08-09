@@ -18,6 +18,7 @@ describe('SettingsComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
+				RouterTestingModule,
 				HttpClientTestingModule,
 				RouterTestingModule,
 				SettingsModule,

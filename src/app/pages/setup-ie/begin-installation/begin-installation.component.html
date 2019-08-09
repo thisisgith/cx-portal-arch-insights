@@ -22,7 +22,12 @@
 				src="assets/img/setup-ie/icons/icon-chip.svg">
 			<span class="text-large flex-fluid">
 				<span [innerText]="'_HasVMWare_' | i18n"></span>
-				<span class="half-margin-left icon-info-outline text-info"></span>
+				<span	tabindex="0"
+				[attr.data-balloon]="'_VMWareTooltip_' | i18n"
+				data-balloon-break
+				data-balloon-pos="right">
+					<span class="half-margin-left icon-info-outline text-info"></span>
+				</span>
 			</span>
 		</div>
 		<div class="flex-center-vertical text-left col-md-3">

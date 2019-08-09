@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ResolutionComponent } from './resolution.component';
 import { CaseDetailsModule } from './case-details/case-details.module';
 import { CaseDetailsHeaderModule } from './case-details-header/case-details-header.module';
-import { PieChartModule } from '@components';
+import { PieChartModule, BarChartModule } from '@components';
 
 import {
 	CuiTableModule,
@@ -33,6 +33,7 @@ const childRoutes: Routes = [
 	declarations: [ResolutionComponent],
 	imports: [
 		PieChartModule,
+		BarChartModule,
 		CommonModule,
 		FormsModule,
 		RouterModule.forChild(childRoutes),
