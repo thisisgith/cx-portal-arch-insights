@@ -20,7 +20,8 @@
 </div>
 
 
-<div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view == 'timeline'">
+<div class="dbl-margin-top"
+	*ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view == 'timeline'">
 	<span class="text-large" [innerText]="'_OsvSelectedRecommendation_' | i18n"></span>
 	<span class="qtr-margin-left text-large">{{selectedRecommendation?.name | titlecase}}</span>
 	<button *ngIf="selectedRecommendation?.name != 'None'" class="qtr-margin-left" cuiButton [color]="'primary'"
@@ -59,8 +60,14 @@
 
 
 <ng-template #actionsTemplate let-item="celldata">
-	<button *ngIf="item.name != 'current' && !item.accepted" cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false"
-		[animated]="true" [innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
+	<button *ngIf="selectedAsset.swVersion != item.swVersion && !item.accepted" cuiButton [color]="'gray-ghost'"
+		[small]="true" [wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
 		attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
-	<span *ngIf="item.name != 'current' && item.accepted">{{'_OsvAccepted_' | i18n}}</span>	
+	<div *ngIf="selectedAsset.swVersion != item.swVersion && item.accepted">
+		<span class="text-success">{{'_OsvAccepted_' | i18n}}</span>
+		<span *ngIf="selectedAsset?.recommAcceptedDate"
+			class="qtr-padding-left qtr-padding-right text-large text-muted">|</span>
+		<span class="text-small"
+			*ngIf="selectedAsset?.recommAcceptedDate">{{selectedAsset?.recommAcceptedDate | date}}</span>
+	</div>
 </ng-template>

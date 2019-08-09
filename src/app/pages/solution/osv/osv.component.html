@@ -16,7 +16,8 @@
 		<ng-container *ngFor="let filter of filters; index as i">
 			<div *ngIf="!filter.loading && filter.data.length && filter.view.indexOf(view) > -1"
 				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
-				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" class="panel flex-center filter" [ngClass]="{
+				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" class="panel flex-center filter"
+				[ngClass]="{
 					'filter__selected': filter.selected,
 					'filter__not-selected': !filter.selected
 				}">
@@ -45,7 +46,7 @@
 		<!-- <app-software-profiles [(selectedProfileGroup)]="selectedProfileGroup"></app-software-profiles> -->
 	</div>
 	<div *ngIf="view == 'assets'">
-		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters" [(selectedAsset)]="selectedAsset">
+		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters" (assetStatusUpdated)="onAssetStatusUpdate($event)" [(selectedAsset)]="selectedAsset">
 		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
@@ -79,8 +80,8 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div  (click)="clearFilters()" data-auto-id="TotalVisualFilter">
-		<!-- <div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-muted':view != 'swProfiles'}"
+	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter">
+		<!-- <div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-primary':view == 'swProfiles','text-muted':view != 'swProfiles'}"
 			data-auto-id="TotalVisualFilterSoftwareProfiles">
 			<div class="col-5 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].profiles"></span>
@@ -95,7 +96,8 @@
 
 			</div>
 		</div> -->
-		<div class="row toggle" (click)="selectView('assets')" [ngClass]="{'text-muted':view != 'assets'}"
+		<div class="row toggle" (click)="selectView('assets')"
+			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			data-auto-id="TotalVisualFilterAssets">
 			<div class="col-5 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].assets"></span>
@@ -108,7 +110,7 @@
 				</span> -->
 			</div>
 		</div>
-		<div class="row toggle" (click)="selectView('swVersions')" [ngClass]="{'text-muted':view != 'swVersions'}"
+		<div class="row toggle" (click)="selectView('swVersions')" [ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
 			<div class="col-5 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].versions"></span>

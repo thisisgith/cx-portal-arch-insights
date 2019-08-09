@@ -7,6 +7,7 @@ import {
 	OnInit,
 	Output,
 	EventEmitter,
+	OnChanges,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -26,7 +27,7 @@ import { DatePipe } from '@angular/common';
 	styleUrls: ['./asset-timeline-chart.component.scss'],
 	template: '<div [chart]="chart"></div>',
 })
-export class AssetTimelineChartComponent implements OnInit {
+export class AssetTimelineChartComponent implements OnInit, OnChanges {
 	@Input() public data: AssetRecommendationsResponse;
 	@Input() public fullscreen;
 	@Output() public selectedPoint = new EventEmitter<any>();

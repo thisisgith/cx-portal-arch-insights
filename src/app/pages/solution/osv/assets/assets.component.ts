@@ -8,6 +8,7 @@ import {
 	OnInit,
 	OnChanges,
 	SimpleChanges,
+	OnDestroy,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
@@ -29,15 +30,16 @@ const customerId = '231215372';
 	styleUrls: ['./assets.component.scss'],
 	templateUrl: './assets.component.html',
 })
-export class AssetsComponent implements OnInit, OnChanges {
+export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public selectedAsset;
 	@Input() public filters;
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@Output() public assetStatusUpdated = new EventEmitter<OSVAsset>();
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	@ViewChild('recommendationsTemplate', { static: true })
-	private recommendationsTemplate: TemplateRef<{ }>;
+	private recommendationsTemplate: TemplateRef<{}>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -92,6 +94,10 @@ export class AssetsComponent implements OnInit, OnChanges {
 			const selected = _.filter(this.assets, { id: selectedAsset.id });
 			if (selected && selected.length > 0) {
 				selected[0].optimalVersion = selectedAsset.optimalVersion;
+				if (selected[0].deployment != selectedAsset.deployment) {
+					selected[0].deployment = selectedAsset.deployment;
+					this.assetStatusUpdated.emit(selectedAsset);
+				}
 			}
 		}
 	}
@@ -159,7 +165,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 					this.logger.error('OSV Assets : getAssets() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}
@@ -176,7 +182,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
-						sortable: false,
+						sortable: true,
 						sortDirection: 'desc',
 						sorting: true,
 					},
@@ -188,7 +194,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
-						sortable: false,
+						sortable: true,
 					},
 					{
 						key: 'swType',

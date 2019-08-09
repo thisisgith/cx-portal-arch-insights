@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, SimpleChanges, OnInit, OnChanges, OnDestroy } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -17,7 +17,7 @@ const customerId = '231215372';
 interface Filter {
 	key: string;
 	selected?: boolean;
-	template?: TemplateRef<{ }>;
+	template?: TemplateRef<{}>;
 	title?: string;
 	loading: boolean;
 	data: {
@@ -37,13 +37,13 @@ interface Filter {
 	styleUrls: ['./osv.component.scss'],
 	templateUrl: './osv.component.html',
 })
-export class OptimalSoftwareVersionComponent {
+export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	@ViewChild('assetTypeFilter', { static: true }) private assetTypeFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	public status = {
 		isLoading: true,
 	};
@@ -78,6 +78,14 @@ export class OptimalSoftwareVersionComponent {
 			this.hideProfileInfo = false;
 		}
 		this.buildFilters();
+	}
+
+	/**
+	 * refresh the deploymentstatus pie chart
+	 * @param event updated asset
+	 */
+	public onAssetStatusUpdate(event){
+		this.loadData();
 	}
 
 	/**
@@ -154,7 +162,6 @@ export class OptimalSoftwareVersionComponent {
 						profiles: response.profiles,
 						versions: response.versions,
 					};
-					response.asset_profile.assets_profile = 0;
 					deploymentStatusFilter.data = _.compact(
 						_.map(response.deployment, (value: number, key: string) => {
 							if (value !== 0) {
@@ -167,7 +174,7 @@ export class OptimalSoftwareVersionComponent {
 							}
 						}));
 
-					assetTypeFilter.data = _.compact(						
+					assetTypeFilter.data = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
 							if (value !== 0) {
 								return {
@@ -189,7 +196,7 @@ export class OptimalSoftwareVersionComponent {
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}

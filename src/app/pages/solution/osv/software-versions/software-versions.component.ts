@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -18,8 +18,8 @@ const customerId = '231215372';
 	styleUrls: ['./software-versions.component.scss'],
 	templateUrl: './software-versions.component.html',
 })
-export class SoftwareVersionsComponent {
-	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
+export class SoftwareVersionsComponent implements OnInit, OnDestroy {
+	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{}>;
 	public softwareVersionsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -93,7 +93,7 @@ export class SoftwareVersionsComponent {
 					this.logger.error('OSV SoftwareVersions : getVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}
@@ -109,7 +109,7 @@ export class SoftwareVersionsComponent {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						sortable: false,
+						sortable: true,
 						sortDirection: 'desc',
 						sorting: true,
 						width: '10%',
@@ -179,5 +179,13 @@ export class SoftwareVersionsComponent {
 		this.softwareVersionsParams.sort = evt.key;
 		this.softwareVersionsParams.pageIndex = 1;
 		this.loadData();
+	}
+
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

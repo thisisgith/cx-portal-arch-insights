@@ -12,4 +12,5 @@ export interface OSVAsset {
 	recommAcceptedDate: string;
 	swType: string;
 	swVersion: string;
+	statusUpdated?: boolean;
 }

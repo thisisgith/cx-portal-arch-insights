@@ -31,7 +31,7 @@ const customerId = '231215372';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
@@ -84,7 +84,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Refreshes the component
 	 */
 	public refresh () {
-		if (this.selectedAsset) {
+		if (this.selectedAsset && !this.selectedAsset.statusUpdated) {
 			this.clear();
 			this.assetDetailsParams.id = this.selectedAsset.id;
 			this.fetchAssetDetails();
@@ -109,7 +109,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			)
 			.subscribe(() => {
@@ -136,14 +136,17 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
+						render: item => !item.error ?
+							item.swVersion : 'N/A',
 						sortable: false,
+
 						width: '10%',
 					},
 					{
 						key: 'postDate',
 						name: I18n.get('_OsvReleaseDate_'),
-						render: item =>
-							datePipe.transform(item.postDate, 'yyyy MMM dd'),
+						render: item => !item.error ?
+							datePipe.transform(item.postDate, 'yyyy MMM dd') : 'N/A',
 						sortable: false,
 						width: '20%',
 					},
@@ -190,6 +193,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				this.setAcceptedVersion(this.assetDetails, response);
 				this.assetDetails = _.cloneDeep(this.assetDetails);
 				this.selectedRecommendation = { name: 'None' };
+				this.selectedAsset.recommAcceptedDate = response.recommAcceptedDate;				
+				response.statusUpdated = true;
 				this.selectedAssetChange.emit(response);
 				this.status.isLoading = false;
 				this.logger.debug('Updated');
@@ -205,7 +210,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any> new Date(b.postDate) - <any> new Date(a.postDate));
+			<any>new Date(b.postDate) - <any>new Date(a.postDate));
 	}
 
 	/**
@@ -228,7 +233,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @param point one of the recommendations on timeline view
 	 */
 	public selectedPoint (point) {
-		if (!point.accepted && point.name !== 'Current') {
+		if (!point.accepted && point.label !== this.selectedAsset.swVersion) {
 			this.selectedRecommendation = point;
 		}
 	}
