@@ -115,17 +115,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		private diagnosticsService: DiagnosticsService,
 		private logger: LogService,
 		private productAlertsService: ProductAlertsService,
-		private route: ActivatedRoute,
-		private router: Router,
+		public route: ActivatedRoute,
+		public router: Router,
 	) {
-		const queryParamMap = this.route.queryParamMap;
-		if (queryParamMap) {
-			queryParamMap.subscribe(params => {
-				this.routeParam = params.get('tab') || 'security';
-			});
-		} else {
-			this.routeParam = 'security';
-		}
+		this.routeParam = _.get(this.route, ['snapshot', 'params', 'advisory'], 'security');
 
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -137,10 +130,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	private adjustQueryParams () {
 		const queryParams =
 			_.omit(_.cloneDeep(this.selectedTab.params), ['customerId', 'rows', 'page']);
-		queryParams.tab = this.selectedTab.key;
-		this.router.navigate([], {
+		this.router.navigate([`/solution/advisories/${this.routeParam}`], {
 			queryParams,
-			relativeTo: this.route,
 		});
 	}
 
@@ -334,7 +325,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					rows: 10,
 				},
 				route: 'field-notices',
-				selected: this.routeParam === 'field',
+				selected: this.routeParam === 'field-notices',
 				selectedSubfilters: [],
 				subject: new Subject(),
 				template: this.contentTemplate,
@@ -414,7 +405,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					rows: 10,
 				},
 				route: 'bugs',
-				selected: this.routeParam === 'bug',
+				selected: this.routeParam === 'bugs',
 				selectedSubfilters: [],
 				subject: new Subject(),
 				template: this.contentTemplate,
@@ -793,7 +784,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 
 		this.activeIndex = event;
 		this.tabs[event].selected = true;
-		this.router.navigate([`/solution/advisories/${this.tabs[event].route}`]);
+		this.routeParam = this.tabs[event].route;
 		this.adjustQueryParams();
 	}
 
@@ -1041,12 +1032,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		});
 
 		this.route.queryParams.subscribe(params => {
-			if (params.tab) {
-				const tab = _.find(this.tabs, { key: params.tab });
-				if (tab) {
-					tab.selected = true;
-				}
-			}
 
 			switch (this.selectedTab.key) {
 				case 'security': {
