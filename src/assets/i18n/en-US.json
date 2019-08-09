@@ -501,6 +501,7 @@
 	"_VMWareVCenter_": "VMWare vSphere/vCenter Web Client ESXi",
 	"_VMWareVCenter": "VMWare vCenter",
 	"_VMWareVSphereESXi_": "VMWare vSphere/vCenter Thick Client ESXi",
+	"_VMWareTooltip_": "Supported Versions:\n\nVMWare ESXi Thick Client: 5.5, 6.0\nVMWare ESXi Web Client: 6.0\nOracle VirtualBox: 5.2.30",
 	"_VSphere_": "vSphere",
 	"_VulnerableAssets_": "Vulnerable Assets",
 	"_Warranty_": "Warranty",
