@@ -16,7 +16,7 @@
 			<table class="table" *ngIf="!isLoading">
 				<thead>
 					<tr>
-						<th>Risk</th>
+						<th>Severity</th>
 						<th>Rule Name</th>
 						<th>Exception</th>
 					</tr>
@@ -32,7 +32,7 @@
 								<a>{{(item['bpRuleTitle']).substr(0, 25).concat('...')}}</a>
 							</td>
 							<td>
-								<span>{{(item['bpRuleSummary']).substr(0, 25).concat('... ')}}</span>
+								<span>{{(item['exceptions']).substr(0, 25).concat('... ')}}</span>
 								<a data-auto-id="expandAndContractRowLink" (click)="expandRow(item) ">
 									<span *ngIf="!item.active"> Show Recommendation and Corrective Action </span>
 									<span *ngIf="item.active"> Hide Recommendation and Corrective Action </span>
@@ -64,10 +64,10 @@
 </div>
 
 <ng-template #riskTmpl let-severity="itemSeverity">
-	<span class="label label--circle label--tiny qtr-margin-right" [ngClass]="{
-					'High': 'label--danger',
-					'Medium': 'label--warning',
-					'Low': 'label--warning-alt'
+	<span class="qtr-margin-right icon-circle" [ngClass]="{
+		'High': 'text-danger',
+		'Medium': 'text-warning',
+		'Low': 'text-warning-alt'
 			}[severity]">
 	</span>
 	<span>{{severity}}</span>
@@ -81,7 +81,7 @@
 					<div class="container">
 						<div class="text-bold text-uppercase" [innerText]="('_Exception_' | i18n)">
 						</div>
-						<div>{{item['bpRuleSummary']}}</div>
+						<div>{{item['exceptions']}}</div>
 					</div>
 				</div>
 			</div>

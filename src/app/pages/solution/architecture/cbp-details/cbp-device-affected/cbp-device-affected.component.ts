@@ -47,7 +47,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 			bordered: false,
 			columns: [
 				{
-					name: 'Asset',
+					name: 'Host Name',
 					sortable: false,
 					template: this.assetTemplate,
 				},

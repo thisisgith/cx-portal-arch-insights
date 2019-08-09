@@ -3,8 +3,8 @@
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<cbp-header [cbpDetails]="exceptionObject"></cbp-header>
 		<div detailsPanelTitle class="text-xlarge">
-			<span class="icon-left-arrow" data-auto-id="PanelClose" (click)="onPanelClose()"></span>
-			<span class="icon-right-arrow"></span>
+			<span class="icon-left-arrow"  data-auto-id="PanelClose" (click)="onPanelClose()"></span>
+			<span class="icon-right-arrow" disabled></span>
 
 			<span [innerText]="' ' + exceptionObject?.bpRuleTitle"></span>
 		</div>
@@ -28,10 +28,10 @@
 	</div>
 </div>
 <ng-template #riskTemplate let-item="celldata">
-	<span class="label label--circle label--tiny qtr-margin-right" [ngClass]="{
-			'High': 'label--danger',
-			'Medium': 'label--warning',
-			'Low': 'label--warning-alt'
+	<span class="qtr-margin-right icon-circle" [ngClass]="{
+			'High': 'text-danger',
+			'Medium': 'text-warning',
+			'Low': 'text-warning-alt'
 	}[item.bpSeverity]">
 	</span>
 	<span>{{item.bpSeverity}}</span>
