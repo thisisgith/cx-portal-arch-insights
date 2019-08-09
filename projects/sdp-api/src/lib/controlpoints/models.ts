@@ -23,6 +23,8 @@ export { IEHealthStatusResponseModel } from './models/iehealth-status-response-m
 export { IERegistrationRequestModel } from './models/ieregistration-request-model';
 export { IERegistrationResponseModel } from './models/ieregistration-response-model';
 export { InventoryDeviceEqContract } from './models/inventory-device-eq-contract';
+export { LicenseData } from './models/license-data';
+export { LicenseDataResponseModel } from './models/license-data-response-model';
 export { OSDetails } from './models/osdetails';
 export { Pagination } from './models/pagination';
 export { PoliciesGroupByDayInAMonthModel } from './models/policies-group-by-day-in-amonth-model';

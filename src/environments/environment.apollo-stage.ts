@@ -23,8 +23,8 @@ export const environment = {
 	baseHref: '/pbc-control-points/',
 	ieSetup: {
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
-		downloadOvaLink: 'http://10.127.102.210/release/ie-1.0/full/64bit/ova-ubuntu/55/' +
-			'CXC_1.0_Build-55.ova',
+		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
+			'_engine-release/ie/Insight_Engine_1.0/ubuntu/95/CXC_1.0_Build-95.ova',
 		hasDNAC: true,
 		mockRegistration: true,
 		pingURL: '/ie-commonapi/services/version',

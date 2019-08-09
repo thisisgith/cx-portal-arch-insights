@@ -9,6 +9,7 @@ import { PanelSelectModule } from './panel-select/panel-select.module';
 import { CloseConfirmModule } from './close-confirm/close-confirm.module';
 import { CharCountModule } from '../../char-count/char-count.module';
 import { HeightTransitionModule } from '../../height-transition/height-transition.module';
+import { TechFormModule } from './tech-form/tech-form.module';
 
 /**
  * Module for case open functionality
@@ -32,6 +33,7 @@ import { HeightTransitionModule } from '../../height-transition/height-transitio
 		PanelSelectModule,
 		CharCountModule,
 		HeightTransitionModule,
+		TechFormModule,
 	],
 })
 export class CaseOpenModule { }
