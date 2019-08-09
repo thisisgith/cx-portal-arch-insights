@@ -12,7 +12,6 @@ const fnCountMock = new MockService('FieldNoticeCountScenarios');
 const bugMock = new MockService('CriticalBugScenarios');
 const bugScenario = bugMock.getScenario('GET', 'Critical Bugs');
 const bugs = bugScenario.response.body.data;
-<<<<<<< HEAD
 const vulnMock = new MockService('VulnerabilityScenarios');
 const vulnScenario = vulnMock.getScenario('GET', 'Advisory Counts');
 const vulnResponse = vulnScenario.response.body;
@@ -23,8 +22,6 @@ const secBulletinScenario = secBulletinMock.getScenario(
 const secBulletin = secBulletinScenario.response.body.data[0];
 
 const dateFormat = 'MMM DD, YYYY';
-=======
->>>>>>> develop
 
 const impactMap = severity => {
 	switch (Cypress._.startCase(severity)) {
