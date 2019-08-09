@@ -1,0 +1,35 @@
+<form [formGroup]="form">
+	<dl>
+		<dt [innerText]="'_Technology_' | i18n"></dt>
+		<dd>
+			<cui-select *ngIf="!loadingTech; else loadingTemplate;"
+				[items]="techOptions"
+				optionsKey="techName"
+				modelAsObject="true"
+				formControlName="technology">
+			</cui-select>
+		</dd>
+		<dt [innerText]="'_SubTech_' | i18n"></dt>
+		<dd>
+			<cui-select *ngIf="!loadingSubtech; else loadingTemplate;"
+				[items]="subtechOptions"
+				optionsKey="subTechName"
+				modelAsObject="true"
+				formControlName="subtech">
+			</cui-select>
+		</dd>
+		<dt [innerText]="'_ProblemArea_' | i18n"></dt>
+		<dd>
+			<cui-select *ngIf="!loadingProblemAreas; else loadingTemplate;" [items]="problemAreaOptions"
+				[groupNames]="problemGroups"
+				optionsKey="problemCodeName"
+				modelAsObject="true"
+				formControlName="problemArea">
+			</cui-select>
+		</dd>
+	</dl>
+</form>
+
+<ng-template #loadingTemplate>
+	<cui-loader color="muted"></cui-loader>
+</ng-template>
