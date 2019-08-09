@@ -1,6 +1,6 @@
 import { PolicyResponseModel } from '@sdp-api';
 /** base API for controlpoints info */
-const api = '/api/customerportal/controlpoint/v1/policies/92736491';
+const api = '/api/customerportal/controlpoint/v1/policies/2431199';
 
 /**
  * Mock body of results
@@ -16,27 +16,34 @@ const mockData: PolicyResponseModel[] = [
 	{
 		deviceCount: 5,
 		formattedSchedule: 'at 10:00 at Tuesday day',
-		policyId: '6ded3658-1a21-47d9-ad7b-7a459b3a5e51',
+		policyId: 'b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
 		policyType: 'SCAN',
 		schedule: '0 0 10 ? * TUE',
 	},
 	{
 		deviceCount: 5,
 		formattedSchedule: 'at 10:15 every day between Monday and Wednesday',
-		policyId: 'ce458106-9c1b-44b0-a86b-89a23e99bf7e',
+		policyId: 'b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
 		policyType: 'SCAN',
 		schedule: '0 15 10 ? * MON-WED',
 	},
 	{
 		deviceCount: 5,
 		formattedSchedule: 'at 07:00',
-		policyId: '66fb15c7-65fb-485b-8889-35730c357bd5',
+		policyId: 'b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
 		policyType: 'SCAN',
 		schedule: '0 0 7 * * *',
 	},
 	{
+		deviceCount: 12,
+		formattedSchedule: 'at 07:00',
+		policyId: 'b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
+		policyType: 'IGNORE',
+	},
+	{
+		createdDate: '2019-07-24T06:59:44.537',
 		formattedSchedule: 'at 10:00 at 26 day',
-		policyId: 'ab8ee334-d7b9-4288-abd9-808373f4d21a',
+		policyId: 'b5a7a0bd-26a8-4c29-b8ec-7c3c2c40d3f4',
 		policyType: 'COLLECTION',
 		schedule: '0 0 10 26 * *',
 	},
