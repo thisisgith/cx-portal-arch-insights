@@ -22,6 +22,7 @@ export const environment = {
 	},
 	baseHref: '/pbc-control-points/',
 	ieSetup: {
+		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/95/CXC_1.0_Build-95.ova',
