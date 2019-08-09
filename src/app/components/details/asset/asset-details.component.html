@@ -7,7 +7,11 @@
 			<asset-details-hardware [asset]="asset"></asset-details-hardware>
 		</div>
 	</cui-tab>
-	<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true"></cui-tab>
+	<cui-tab [label]="'_Software_' | i18n | uppercase">
+		<div class="dbl-margin-top" *ngIf="asset">
+			<asset-details-software [asset]="asset"></asset-details-software>
+		</div>
+	</cui-tab>
 	<cui-tab [label]="'_Advisories_' | i18n | uppercase">
 		<div class="dbl-margin-top" *ngIf="asset">
 			<asset-details-advisories [asset]="asset"></asset-details-advisories>

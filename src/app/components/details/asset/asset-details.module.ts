@@ -10,6 +10,7 @@ import { AssetDetailsAdvisoriesModule } from './advisories/advisories.module';
 import { AssetDetailsHardwareModule } from './hardware/hardware.module';
 import { InventoryModule } from '@sdp-api';
 import { environment } from '@environment';
+import { AssetDetailsSoftwareModule } from './software/software.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -29,6 +30,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		AssetDetailsAdvisoriesModule,
 		AssetDetailsHardwareModule,
 		AssetDetailsHeaderModule,
+		AssetDetailsSoftwareModule,
 		CommonModule,
 		CuiLoaderModule,
 		CuiTabsModule,

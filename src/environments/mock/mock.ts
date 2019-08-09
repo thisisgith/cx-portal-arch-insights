@@ -24,6 +24,7 @@ import {
 	HardwareEOLScenarios,
 	HardwareScenarios,
 	HealthStatusScenarios,
+	LicenseScenarios,
 	NetworkScenarios,
 	OSVScenarios,
 	RacetrackScenarios,
@@ -37,6 +38,8 @@ import {
 	SecurityAdvisoryScenarios,
 	SecurityAdvisorySummaryScenarios,
 	SerialNumberScenarios,
+	SoftwareEOLBulletinScenarios,
+	SoftwareEOLScenarios,
 	SuccessPathScenarios,
 	VulnerabilityScenarios,
 } from './';
@@ -70,6 +73,7 @@ import {
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
+	LicenseDataResponseModel,
 	IERegistrationResponseModel,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
@@ -83,6 +87,8 @@ import {
 	ServiceInfoResponse,
 	SoftwareProfilesResponse,
 	SoftwareVersionsResponse,
+	SoftwareEOLResponse,
+	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
 	ContractQuota,
 	UserTraining,
@@ -119,6 +125,7 @@ type ResponseBody = (
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
 	HardwareResponse |
+	LicenseDataResponseModel |
 	IERegistrationResponseModel |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
@@ -133,6 +140,8 @@ type ResponseBody = (
 	ServiceInfoResponse |
 	SoftwareProfilesResponse |
 	SoftwareVersionsResponse |
+	SoftwareEOLResponse |
+	SoftwareEOLBulletinResponse |
 	SuccessPathsResponse |
 	UserTraining[] |
 	VulnerabilityResponse |
@@ -206,6 +215,7 @@ export const mockSettings: MockSettings = {
 		HardwareEOLScenarios,
 		HardwareScenarios,
 		HealthStatusScenarios,
+		LicenseScenarios,
 		NetworkScenarios,
 		OSVScenarios,
 		RMAScenarios,
@@ -221,6 +231,8 @@ export const mockSettings: MockSettings = {
 		SecurityAdvisorySummaryScenarios,
 		SecurityAdvisoryTopScenarios,
 		SerialNumberScenarios,
+		SoftwareEOLScenarios,
+		SoftwareEOLBulletinScenarios,
 		SuccessPathScenarios,
 		VulnerabilityScenarios,
 	]),
