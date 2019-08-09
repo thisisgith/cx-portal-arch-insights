@@ -1,5 +1,4 @@
-<div class="panel half-margin-bottom">
-
+<div class="panel">
     <div class="row">
         <div class="col-md-2 text-center">
             <div *ngFor="let label of visualLabels; let i=index" [ngClass]="{'visualSelected':label.active == true}"
@@ -51,16 +50,22 @@
         </div>
     </div>
 </div>
+<div class="divider"></div>
+<div class="row" *ngIf="visualLabels[0].active">
+    <div class="col-md-12">
+        <ng-container *ngTemplateOutlet="filterBar"></ng-container>
+    </div>
+</div>
+<div class="divider"></div>
 
 <div class="row">
-    <div class="col-md-12">
-        <div *ngIf="visualLabels[0].active">
-             <ng-container *ngTemplateOutlet="filterBar"></ng-container>
-            <app-cbp-rule-violation [filters]="selectedFilter"></app-cbp-rule-violation>
+        <div class="col-12">
+                <app-cbp-rule-violation [filters]="selectedFilter"></app-cbp-rule-violation>
         </div>
-        <div *ngIf="visualLabels[1].active">
-            <app-devices-with-exceptions></app-devices-with-exceptions>
-        </div>
+</div>
+<div class="row" *ngIf="visualLabels[1].active">
+    <div class="col-12">
+        <app-devices-with-exceptions></app-devices-with-exceptions>
     </div>
 </div>
 
@@ -80,7 +85,6 @@
 </ng-template>
 
 <ng-template #filterBar>
-    <div class="divider"></div>
     <div class="row">
         <div class="col-md-1 flex flex-center-vertical">
             <span class="text-bold text-uppercase half-padding-right" [innerText]="'Filtered'"></span>
@@ -101,10 +105,5 @@
                 data-auto-id="FilterBarClearAllFilters">
             </a>
         </div>
-       
     </div>
-    <div class="divider no-margin-top qtr-margin-top"></div>
 </ng-template>
-
-
-<router-outlet></router-outlet>

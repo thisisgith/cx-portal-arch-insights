@@ -3,7 +3,7 @@ import { Component, OnInit, Input, SimpleChanges, OnChanges, ViewChild, Template
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 
-import { ArchitectureService,IException } from '@sdp-api';
+import { ArchitectureService, IException } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 @Component({
@@ -19,13 +19,13 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public isLoading = true;
 	public severityObj: any;
 	public AssetsExceptionsCount: any;
-	public params = { page: 0, pageSize: 10 };
 	public severityType: any = [];
 	public paramsType = {
 		page: 0,
 		pageSize: 10,
 		severity: '',
 	};
+	public tableIndex = 0;
 	public exceptionObject:IException = null;
 	@ViewChild('riskTemplate', { static: true })
 	private riskTemplate: TemplateRef<{ }>;
@@ -35,8 +35,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	}
 
 	public ngOnInit() {
-		this.getData();
-		this.getAllCBPRulesDetails();
+		this.getCBPRulesData();
 		this.buildTable();
 	}
 
@@ -44,7 +43,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
 		if (selectedFilter && !changes.filters.firstChange) {
 			this.paramsType.severity = selectedFilter.Exceptions ? selectedFilter.Exceptions.toString() : '';
-			this.getData();
+			this.getCBPRulesData();
 		}
 	}
 
@@ -53,7 +52,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			bordered: false,
 			columns: [
 				{ name: 'Rule Title', sortable: false, key: 'bpRuleTitle' },
-				{ name: 'Risk', sortable: false, template: this.riskTemplate },
+				{ name: 'Severity', sortable: false, template: this.riskTemplate },
 				{ name: 'Software Type', sortable: false, key: 'swType' },
 				{ name: 'Exception', sortable: false, key: 'exceptions' },
 				{ name: 'Recommendation', sortable: false, key: 'Recommendation' },
@@ -78,25 +77,18 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 
 	public onPagerUpdated(event) {
 		this.isLoading = true;
-		this.params.page = event.page;
-		this.params.pageSize = event.limit;
-		this.getAllCBPRulesDetails();
+		this.paramsType.page = event.page;
+		this.paramsType.pageSize = event.limit;
+		this.getCBPRulesData();
 	}
 
-	public getAllCBPRulesDetails() {
-		this.architectureService.getAllCBPRulesDetails(this.params).subscribe(res => {
-			this.isLoading = false;
-			this.totalItems = res.TotalCounts;
-			this.cbpRuleExceptions = res.BPRulesDetails;
-			this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-		});
-	}
-
-	public getData() {
+	public getCBPRulesData() {
+		this.tableIndex = this.paramsType.page * this.paramsType.pageSize;
 		this.architectureService.
 			getCBPSeverityList(this.paramsType)
 			.subscribe(data => {
 				this.isLoading = false;
+				this.totalItems = data.TotalCounts;
 				this.cbpRuleExceptions = data.BPRulesDetails;
 				this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 			});

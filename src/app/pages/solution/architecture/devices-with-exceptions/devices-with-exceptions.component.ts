@@ -51,7 +51,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
-			  { name: 'Asset', sortable: false, key : 'inventoryName' },
+			  { name: 'Host Name', sortable: false, key : 'inventoryName' },
 			  { name: 'IP Address', sortable: false, key : 'ipAddress' },
 			  { name: 'Product ID', sortable: false, key: 'productId' },
 			  { name: 'Product Family', sortable: false, key: 'productFamily' },
