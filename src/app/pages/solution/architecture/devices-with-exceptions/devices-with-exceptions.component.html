@@ -12,7 +12,16 @@
 	<!-- <cbp-awe-tab [cbpDetails]="assetObject"></cbp-awe-tab> -->
 	<cbp-tbd [cbpDetails]="assetObject"></cbp-tbd>
 </details-panel>
-
+<div class="row base-margin-top">
+		<div class="col-md-12">
+			<div class="container" *ngIf="AssetsExceptionDetails.length > 0">
+				<span [innerText]="'_Exceptions_' | i18n" class="text-large"></span>
+				<span class="qtr-margin-left text-small text-muted">showing
+					{{ (tableIndex + 1) +' - ' +  (tableIndex + AssetsExceptionDetails.length ) }}
+					of {{totalItems}} exceptions</span>
+			</div>
+		</div>
+</div>
 <div class="panel">
 		<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="AssetsExceptionDetails" (onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 		<div class="section" *ngIf="totalItems">
@@ -25,6 +34,6 @@
 						<div class="wheel"></div>
 					</div>
 				</div>
-			</div>
+		</div>
 </div>
 

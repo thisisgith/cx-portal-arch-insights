@@ -1,4 +1,5 @@
 <div class="panel">
+
     <div class="row">
         <div class="col-md-2 text-center">
             <div *ngFor="let label of visualLabels; let i=index" [ngClass]="{'visualSelected':label.active == true}"
@@ -50,25 +51,19 @@
         </div>
     </div>
 </div>
-<div class="divider"></div>
-<div class="row" *ngIf="visualLabels[0].active">
-    <div class="col-md-12">
-        <ng-container *ngTemplateOutlet="filterBar"></ng-container>
-    </div>
-</div>
-<div class="divider"></div>
-
+<div class="divider half-margin-top"></div>
 <div class="row">
-        <div class="col-12">
-                <app-cbp-rule-violation [filters]="selectedFilter"></app-cbp-rule-violation>
+    <div class="col-md-12">
+        <div *ngIf="visualLabels[0].active">
+            <ng-container *ngTemplateOutlet="filterBar"></ng-container>
+            <div class="divider full-margin-top"></div>
+            <app-cbp-rule-violation [filters]="selectedFilter"></app-cbp-rule-violation>
         </div>
-</div>
-<div class="row" *ngIf="visualLabels[1].active">
-    <div class="col-12">
-        <app-devices-with-exceptions></app-devices-with-exceptions>
+        <div *ngIf="visualLabels[1].active">
+            <app-devices-with-exceptions></app-devices-with-exceptions>
+        </div>
     </div>
 </div>
-
 
 <ng-template  #exceptionsFilter let-filter="filter">
 

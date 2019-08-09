@@ -7,6 +7,7 @@ import { environment } from '@environment';
 import { DetailsPanelModule } from '@components';
 import { CbpDetailsModule } from '../cbp-details/cbp-details.module';
 import { CbpDetailsHeaderModule } from '../cbp-details-header/cbp-details-header.module';
+import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -23,6 +24,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		CuiTableModule,
 		CuiPagerModule,
 		DetailsPanelModule,
+		I18nPipeModule,
 		ArchitectureModule.forRoot({ rootUrl }),
 	],
 })

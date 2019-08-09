@@ -22,8 +22,9 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public assetObject:IAsset = null;
 	public AssetsExceptionDetails = [];
 	public tableOptions: CuiTableOptions;
-	public totalItems:any;
+	public totalItems = 0;
 	public isLoading = true;
+	public tableIndex = 0;
 
 	public params = { page: 0, pageSize: 10 };
 
@@ -35,6 +36,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	}
 
 	public getAllAssetsWithExceptions(){
+		this.tableIndex = this.params.page * this.params.pageSize;
 		this.architectureService.getAllAssetsWithExceptions(this.params).subscribe(res => {
 			this.isLoading = false;
 			this.totalItems = res.TotalCounts;

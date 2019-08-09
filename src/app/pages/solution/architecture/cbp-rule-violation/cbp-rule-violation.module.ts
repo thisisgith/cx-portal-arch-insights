@@ -5,6 +5,7 @@ import { CuiTableModule, CuiPagerModule, CuiLoaderModule } from '@cisco-ngx/cui-
 import { DetailsPanelModule } from '@components';
 import { CbpDetailsModule } from '../cbp-details/cbp-details.module';
 import { CbpDetailsHeaderModule } from '../cbp-details-header/cbp-details-header.module';
+import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 @NgModule({
 	declarations: [CbpRuleViolationComponent],
@@ -17,7 +18,7 @@ import { CbpDetailsHeaderModule } from '../cbp-details-header/cbp-details-header
 		CbpDetailsModule,
 		CbpDetailsHeaderModule,
 		CuiLoaderModule,
-
+		I18nPipeModule,
 	],
 })
 export class CbpRuleViolationModule { }

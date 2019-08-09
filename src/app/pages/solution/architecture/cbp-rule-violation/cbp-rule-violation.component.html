@@ -12,17 +12,19 @@
 	<cbp-device-affected [cbpDetails]="exceptionObject"></cbp-device-affected>
 </details-panel>
 
+<div class="row base-margin-top">
+		<div class="col-md-12">
+			<div class="container" *ngIf="cbpRuleExceptions.length > 0">
+				<span [innerText]="'_Exceptions_' | i18n" class="text-large"></span>
+				<span class="qtr-margin-left text-small text-muted">showing
+					{{ (tableIndex + 1) +' - ' +  (tableIndex + cbpRuleExceptions.length ) }}
+					of {{totalItems}} exceptions</span>
+			</div>
+		</div>
+</div>
+<div class="divider no-qtr-margin"></div>
+
 <div class="panel">
-		<!-- <div class="row base-margin-top">
-				<div class="col-md-12">
-					<div class="container" *ngIf="cbpRuleExceptions.length">
-						<span [innerText]="'Exceptions' | i18n" class="text-large"></span>
-						<span class="qtr-margin-left text-small text-muted">showing
-							{{ (tableIndex + 1) +' - ' +  (tableIndex + cbpRuleExceptions.length ) }}
-							of {{totalItems}} exceptions</span>
-					</div>
-				</div>
-		</div> -->
 	<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="cbpRuleExceptions"
 		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 	<div class="section" *ngIf="totalItems">
