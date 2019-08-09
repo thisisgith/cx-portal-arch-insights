@@ -223,6 +223,28 @@ describe('ResolutionComponent', () => {
 			.toBeFalsy();
 	}));
 
+	it('should select the RMAs filter properly', fakeAsync(() => {
+		const rmaFilter = _.find(component.filters, { key: 'rma' });
+		component.onSubfilterSelect('F', rmaFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(component.selectedFilters)
+			.toContain(rmaFilter);
+
+		component.onSubfilterSelect('T', rmaFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(_.get(_.find(rmaFilter.seriesData, { filter: 'T' }), 'selected'))
+			.toBeTruthy();
+
+		expect(_.get(_.find(rmaFilter.seriesData, { filter: 'F' }), 'selected'))
+			.toBeFalsy();
+	}));
+
 	it('should clear all status subfilters', fakeAsync(() => {
 		const statusFilter = _.find(component.filters, { key: 'status' });
 		component.onSubfilterSelect('New', statusFilter);
@@ -250,4 +272,5 @@ describe('ResolutionComponent', () => {
 		expect(component.selectedFilters)
 			.toContain(totalFilter);
 	}));
+
 });
