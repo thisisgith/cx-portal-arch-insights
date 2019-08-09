@@ -926,15 +926,15 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('summaryTab').should('be.visible');
 			cy.getByAutoId('notesTab').should('be.visible');
 			cy.getByAutoId('filesTab').should('be.visible');
-			cy.getByAutoId('caseTechnology').should('contain', 'TECHNOLOGY');
+			cy.getByAutoId('caseTechnology').should('contain', i18n._RMACaseTechnology_.toUpperCase());
 
 			// Related RMAs dropdown
 			cy.getByAutoId('relatedRMA').click();
-			cy.getByAutoId('Name-Header').should('have.text', 'Name');
-			cy.getByAutoId('Status-Header').eq(0).should('have.text', 'Status');
-			cy.getByAutoId('Ship To-Header').should('have.text', 'Ship To');
-			cy.getByAutoId('Contract Number-Header').should('have.text', 'Contract Number');
-			cy.getByAutoId('Created-Header').should('have.text', 'Created');
+			cy.getByAutoId('Name-Header').should('contain', i18n._Name_);
+			cy.getByAutoId('Status-Header').eq(0).should('contain', i18n._Status_);
+			cy.getByAutoId('Ship To-Header').should('contain', i18n._ShipTo_);
+			cy.getByAutoId('Contract Number-Header').should('contain', i18n._ContractNumber_);
+			cy.getByAutoId('Created-Header').should('contain', i18n._Created_);
 			// TODO: Verify the RMA dropdown data from Mock API
 			cy.getByAutoId('close').click();
 			cy.getByAutoId('caseProbType').should('contain', i18n._RMACaseProblemType_.toUpperCase());
