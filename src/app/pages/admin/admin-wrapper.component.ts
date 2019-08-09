@@ -34,13 +34,4 @@ export class AdminWrapperComponent {
 		// location in a service to accomplish this.
 		this.location.back();
 	}
-
-	/**
-	 * Go to a route
-	 * @param path string
-	 */
-	public goTo (path: string) {
-		this.router.navigate(['admin', path]);
-	}
-
 }
