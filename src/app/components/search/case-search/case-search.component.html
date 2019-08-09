@@ -94,6 +94,7 @@
 						<dd class="no-margin no-padding" *ngFor="let rmaNumber of case.relatedRmas">
 							<a data-auto-id="rmaNumber"
 								target="_blank"
+								rel="noopener noreferrer"
 								href="{{rmaToolUrl}}/?&OrderNumber={{rmaNumber}}"
 								[innerText]="rmaNumber">
 							</a>
