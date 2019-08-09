@@ -1,5 +1,6 @@
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
@@ -94,32 +95,6 @@ describe('CaseOpenAdvisoriesComponent', () => {
 			.toHaveBeenCalledWith(CloseConfirmComponent, { });
 	}));
 
-	it('should refresh subtech options on tech change', fakeAsync(() => {
-		setData('security');
-		spyOn(caseService, 'fetchSubTechList')
-			.and
-			.returnValue(
-				of({ subTechList: [] }),
-			);
-		component.caseForm.controls.technology.setValue('New Tech Value!');
-		tick();
-		expect(caseService.fetchSubTechList)
-			.toHaveBeenCalled();
-	}));
-
-	it('should refresh problemArea options on Subtech change', fakeAsync(() => {
-		setData('security');
-		spyOn(caseService, 'fetchProblemArea')
-			.and
-			.returnValue(
-				of({ problemArea: { customerActivities: [] } }),
-			);
-		component.caseForm.controls.subtech.setValue('New Subtech Value!');
-		tick();
-		expect(caseService.fetchProblemArea)
-			.toHaveBeenCalled();
-	}));
-
 	it('should submit', fakeAsync(() => {
 		setData('security');
 		spyOn(caseService, 'createCase')
@@ -127,9 +102,9 @@ describe('CaseOpenAdvisoriesComponent', () => {
 			.returnValue(of(CaseScenarios[9].scenarios.POST[0].response.body));
 		component.caseForm.controls.description.setValue('a');
 		component.caseForm.controls.title.setValue('a');
-		component.caseForm.controls.technology.setValue('10');
-		component.caseForm.controls.subtech.setValue('11');
-		component.caseForm.controls.problemArea.setValue({
+		(<FormGroup> component.caseForm.controls.techInfo).controls.technology.setValue('10');
+		(<FormGroup> component.caseForm.controls.techInfo).controls.subtech.setValue('11');
+		(<FormGroup> component.caseForm.controls.techInfo).controls.problemArea.setValue({
 			customerActivity: 'Operate',
 			problemCode: 'PASSWORD_RECOV',
 			problemCodeName: 'Password Recovery',
