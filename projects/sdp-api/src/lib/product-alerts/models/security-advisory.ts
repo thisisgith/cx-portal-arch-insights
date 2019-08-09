@@ -2,14 +2,14 @@
 export interface SecurityAdvisory {
 
   /**
-   * This refers to the OS running on the managed network element. For example:- IOS, IOS-XE, NxOS
-   */
-  swType?: string;
-
-  /**
    * Unique identifier of a Cisco customer
    */
   customerId?: string;
+
+  /**
+   * The unique, generated ID of the network resource id
+   */
+  managedNeId?: string;
 
   /**
    * The unique, generated ID of the network element
@@ -37,9 +37,9 @@ export interface SecurityAdvisory {
   equipmentType?: string;
 
   /**
-   * The unique, generated ID of the network resource id
+   * This refers to the OS running on the managed network element. For example:- IOS, IOS-XE, NxOS
    */
-  managedNeId?: string;
+  swType?: string;
 
   /**
    * The version of the softwareType running on the managed NE

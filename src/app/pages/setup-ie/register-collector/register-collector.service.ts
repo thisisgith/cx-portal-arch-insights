@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SetupIEStateService } from '../setup-ie-state.service';
+import * as _ from 'lodash-es';
 
 /**
  * Parameters for the getAuthToken public method
@@ -66,10 +67,18 @@ export class RegisterCollectorService {
 	 * @returns Observable
 	 */
 	public installAndRegisterDNAC (params: InstallAndRegisterDNACParams) {
+		const state = this.state.getState() || { };
+		const token = state.collectorToken;
+
 		return this.http.post(
 			`https://${this.collectorIP}${this.baseUrl}installAndRegisterDNAC`,
 			params,
-			{ responseType: 'text' },
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				responseType: 'text',
+			},
 		);
 	}
 
@@ -81,8 +90,8 @@ export class RegisterCollectorService {
 	 */
 	public registerOnline (body: RegisterParams, file: Blob) {
 		const formData = new FormData();
-		formData.append('otherDetails', JSON.stringify(body));
-		formData.append('file', file);
+		formData.append('otherDetails', JSON.stringify(_.omitBy(body, _.isNil)));
+		formData.append('file', file, 'register.zip');
 
 		return this.http.post(
 			`https://${this.collectorIP}${this.baseUrl}registerOnline`,

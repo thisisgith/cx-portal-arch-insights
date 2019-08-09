@@ -85,7 +85,7 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 	 *
 	 */
 	public async ngAfterViewInit () {
-		if (this.savedState) {
+		if (!_.isEmpty(this.savedState)) {
 			this.promptToReuseCache();
 			this.cdr.detectChanges();
 		}

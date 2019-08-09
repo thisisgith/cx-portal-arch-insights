@@ -199,7 +199,6 @@ describe('General Spec', () => {
 				win.mockService.enable('RMA with four replacement parts'); // enable the desired
 				cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
 			});
-			// cy.log("one");
 			const rmaVal = '800000000';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('rma');

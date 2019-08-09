@@ -27,8 +27,10 @@ const TYPEAHEAD_LIMIT = 7;
 	templateUrl: './search-bar.component.html',
 })
 export class SearchBarComponent implements OnInit, OnDestroy {
-	@ViewChild('searchInput', { static: true, read: ElementRef }) public searchInput:
-		ElementRef<any>;
+	@ViewChild('searchInput', {
+		read: ElementRef,
+		static: true,
+	}) public searchInput: ElementRef<any>;
 	@Input('searchText') public searchText: string;
 	@Output('searchTextChange') public searchTextChange = new EventEmitter<string>();
 	@Output('searchChange') public searchChange = new EventEmitter<{
@@ -36,6 +38,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 		type: SearchType;
 		generalSearch: string;
 	}>();
+	@Output('searchFocus') public searchFocus = new EventEmitter<boolean>();
 
 	public typeaheadItems: {
 		name: string;
@@ -45,11 +48,10 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 		max: 500,
 		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
 	};
-	private focused = false;
-
 	/** -1 means no keyboard item is hovered */
 	public keyHoverIndex = -1;
 
+	private focused = false;
 	private destroy$ = new Subject();
 	private search$ = new Subject<string>();
 
@@ -105,6 +107,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 	 */
 	public onFocus () {
 		this.focused = true;
+		this.searchFocus.emit(true);
 		if (this.searchText) {
 			this.search$.next(this.searchText);
 		}
@@ -115,6 +118,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 	 */
 	public onBlur () {
 		this.focused = false;
+		this.searchFocus.emit(false);
 		if (this.searchText) {
 			this.search$.next();
 		}

@@ -12,6 +12,10 @@ export interface GroupTrainingEntitySchema {
    */
   created?: number;
   customerId?: string;
+
+  /**
+   * Pitstop
+   */
   pitstop?: string;
 
   /**
@@ -23,6 +27,10 @@ export interface GroupTrainingEntitySchema {
    * Preferred Time for Working Sessions
    */
   preferredSlot?: string;
+
+  /**
+   * Solution
+   */
   solution?: string;
 
   /**
@@ -54,5 +62,9 @@ export interface GroupTrainingEntitySchema {
    * Updated Timestamp Epoch
    */
   updated?: number;
+
+  /**
+   * Usecase
+   */
   usecase?: string;
 }

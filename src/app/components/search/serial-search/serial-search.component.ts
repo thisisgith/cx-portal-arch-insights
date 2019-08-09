@@ -367,8 +367,9 @@ implements OnInit, OnChanges, OnDestroy {
 	 * Occurs when user clicks "View Device Details" button
 	 * @param serialNumber serial number of the device to view
 	 */
-	 public onViewDetails (serialNumber?: string) {
-		this.router.navigate(
+	 public async onViewDetails (serialNumber?: string) {
+		await this.router.navigate(['solution'], { skipLocationChange: true });
+		await this.router.navigate(
 			['solution/assets'],
 			{ queryParams: { serialNumber, select: true } },
 		);

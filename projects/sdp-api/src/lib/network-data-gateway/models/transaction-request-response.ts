@@ -1,6 +1,4 @@
 /* tslint:disable */
-export interface TransactionRequestResponse {
-  partyId?: string;
-  transactionId?: string;
-  remoteNodeId?: string;
-}
+import { Transaction } from './transaction';
+
+export type TransactionRequestResponse = Array<Transaction>;

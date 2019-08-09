@@ -181,8 +181,9 @@
 								</span>
 							</label>
 						</th>
-						<th *ngFor="let column of assetsTable.columns"
-							[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
+						<th attr.data-auto-id="InventoryHeader-{{ column.name }}" *ngFor="let column of assetsTable.columns"
+							[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
+							(click)="onColumnSort(column)">
 							<span [innerText]="column.name"></span>
 							<span *ngIf="column.sortable && column.sorting"
 								class="qtr-margin-left"
@@ -370,15 +371,13 @@
 			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
 		</div>
 		<div class="col-md-10">
-			<ng-container *ngFor="let filter of selectedFilters">
-				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
-					<span class="label label--dkgray text-large"
-						(click)="onSubfilterSelect(subfilter.filter, filter)"
-						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
-						<span [innerText]="subfilter.label"></span>
-						<span class="icon-close"></span>
-					</span>
-				</ng-container>
+			<ng-container *ngFor="let selectedSubfilter of selectedSubfilters">
+				<span class="label label--dkgray text-large"
+					(click)="onSubfilterSelect(selectedSubfilter.subfilter.filter, selectedSubfilter.filter)"
+					attr.data-auto-id="FilterTag-{{ selectedSubfilter.subfilter.filter }}">
+					<span [innerText]="selectedSubfilter.subfilter.label"></span>
+					<span class="icon-close"></span>
+				</span>
 			</ng-container>
 		</div>
 		<div class="col-md-1 text-center text-right">

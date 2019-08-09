@@ -2,6 +2,16 @@
 export interface SuccessPath {
 
   /**
+   * Archetype
+   */
+  archetype?: string;
+
+  /**
+   * Boolean value to know if the success byte is bookmarked or not
+   */
+  bookmark?: boolean;
+
+  /**
    * Getting started with installation
    */
   title?: string;
@@ -25,9 +35,5 @@ export interface SuccessPath {
    * http://ciscolearning.com
    */
   url?: string;
-
-  /**
-   * Solution Type
-   */
-  archetype?: string;
+  successByteId?: string;
 }

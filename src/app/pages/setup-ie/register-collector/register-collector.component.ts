@@ -297,10 +297,15 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		return timer(0, 5000)
 			.pipe(
 				finalize(() => this.loading = false),
-				exhaustMap(() => this.registerService.getStatus()),
+				exhaustMap(() => this.registerService.getStatus()
+					.pipe(
+						catchError(() => this.getAuthToken()),
+					),
+				),
 				takeWhile(status => {
 					if ((<any> status).status === 'Registration Failed') {
 						this.error = registrationErrorMap[RegistrationError.REGISTRATION];
+						this.errorDetails = (<any> status).stages;
 
 						return false;
 					}
@@ -312,7 +317,6 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 
 					return true;
 				}),
-				catchError(() => this.getAuthToken()),
 				takeUntil(this.destroyed$),
 			);
 	}
