@@ -233,6 +233,14 @@
 			[ngClass]="{ 'disabled': notCurrentPitstop }"
 			[innerText]="'_Request1on1_' | i18n">
 		</button>
+	</ng-container>
+	<ng-container *ngIf="item.status === 'in-progress' || item.status === 'requested'">
+		<span class="text-success" [innerText]="'_ACCRequestSubmitted_' | i18n" attr.data-auto-id="{{ autoid }}-CSEMessage"></span>
+	</ng-container>
+	<ng-container *ngIf="item.status === 'completed'">
+		<div class="text-success icon-certified qtr-padding-right" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
+		<span [innerText]="'_Completed_' | i18n" attr.data-auto-id="{{ autoid }}-Completed"></span>
+	</ng-container>
 </ng-template>
 
 <ng-template #recommendedATXSchedule let-data="data">
