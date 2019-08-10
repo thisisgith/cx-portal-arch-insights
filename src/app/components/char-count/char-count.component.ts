@@ -16,6 +16,7 @@ export class CharCountComponent {
 	/** Optional value, minimum length at which to display the message */
 	/** By default, always shows */
 	@Input() public displayAt?: number;
+   @Input() public showCharactersLabel?: boolean;
 
 	constructor (
 		private logger: LogService,
