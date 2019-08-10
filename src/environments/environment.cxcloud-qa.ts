@@ -26,6 +26,17 @@ export const environment = {
 	csone: {
 		clientId: '262556217fbe45ecbbe27af70e443e78',
 	},
+	ieSetup: {
+		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
+		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
+		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
+			'_engine-release/ie/Insight_Engine_1.0/ubuntu/95/CXC_1.0_Build-95.ova',
+		mockRegistration: false,
+		pingURL: '/ie-commonapi/services/version',
+		telemetryGuideUrl: 'https://www-author3.cisco.com/c/en/us/td/docs/cloud-systems-' +
+			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
+			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
+	},
 	mock: [],
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	noAuthEndpoints: [

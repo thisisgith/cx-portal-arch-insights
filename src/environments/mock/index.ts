@@ -24,6 +24,7 @@ export * from './controlpoints/dnac-status';
 export * from './controlpoints/health-status';
 export * from './controlpoints/license';
 export * from './controlpoints/policies';
+export * from './controlpoints/devices';
 
 export * from './diagnostics/critical-bugs';
 

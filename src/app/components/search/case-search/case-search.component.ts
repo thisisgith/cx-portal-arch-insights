@@ -9,6 +9,7 @@ import { Subject, of, Observable } from 'rxjs';
 import { tap, takeUntil, switchMap, catchError } from 'rxjs/operators';
 import { SpecialSearchComponent } from '../special-search/special-search.component';
 import { SearchService } from '@services';
+import { environment } from '@environment';
 
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
@@ -73,6 +74,8 @@ implements OnInit, OnDestroy, OnChanges {
 	public case = <Case> { };
 	public statusIcon: string;
 	public lastNote: Note;
+
+	public rmaToolUrl = environment.rmaToolUrl;
 
 	constructor (
 		private logger: LogService,
