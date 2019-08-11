@@ -1,4 +1,4 @@
-import { Component, HostListener, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, HostListener, Inject, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { empty, from, Subject } from 'rxjs';
@@ -16,6 +16,7 @@ import {
 } from '../collector-creds-modal/collector-creds-modal.component';
 import { SetupIEService } from '../setup-ie.service';
 import { NoDNACComponent } from '../no-dnac/no-dnac.component';
+import { UtilsService } from '@services';
 
 /**
  * Component for creating Intelligence Engine Account
@@ -47,6 +48,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
+		@Inject('ENVIRONMENT') private env,
 		private cuiModalService: CuiModalService,
 		private logger: LogService,
 		private route: ActivatedRoute,
@@ -54,6 +56,7 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 		private registerService: RegisterCollectorService,
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
+		private utils: UtilsService,
 	) {
 		this.logger.debug('ConnectDNACenterComponent Created!');
 	}
@@ -133,6 +136,11 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
+				// finished last step so hide the setup banner on the home page
+				this.utils.setLocalStorage(
+					this.env.ieSetup.CX_Coll_Reg_LS_KEY,
+					{ registered: true },
+				);
 				this.onStepComplete.emit();
 			});
 	}

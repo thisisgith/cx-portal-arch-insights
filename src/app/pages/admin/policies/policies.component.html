@@ -1,0 +1,109 @@
+<admin-wrapper>
+	<div *ngIf="error">
+		<div class="alert alert--danger" role="alert">
+			<div class="alert__icon icon-error-outline"></div>
+			<div class="alert__message" [innerText]="errorMessage"></div>
+		</div>
+	</div>
+	<div *ngIf="!loading" class="container settings-container">
+		<div class="row">
+			<div class="col-lg-7" data-auto-id="settings.policies.scans">
+				<div class="row flex base-margin-right">
+					<div class="col-9">
+						<h5 class="base-margin-top half-margin-bottom" data-auto-id="settings.polices.scans.label"
+							[innerText]="'_DiagnosticScans_' | i18n | uppercase"></h5>
+					</div>
+					<div class="col-3 text-right no-padding-right">
+						<button
+							class="btn btn--small btn--secondary base-margin-top half-margin-bottom qtr-margin-right"
+							[innerText]="'_NewScheduledScan_' | i18n | uppercase"
+							data-auto-id="settings.policies.new-scan-button"
+							(click)="startModal(true, 'newPolicy')">
+						</button>
+					</div>
+				</div>
+
+				<div
+					*ngFor="let scan of scans; let i = index"
+					class="panel
+						panel--bordered-left
+						panel--bordered-right
+						panel--bordered-top
+						flex
+						base-margin-right"
+					[ngClass]="{
+						'panel--bordered-bottom': i === (scans.length - 1)
+					}"
+					data-auto-id="settings.policies.collection.panel">
+					<div class="col-1 flex-center">
+						<span
+							class="icon-small"
+							[ngClass]="scan.policyType === 'SCAN' ? 'icon-diagnostics text-success' : 'icon-blocked text-muted'"
+						></span>
+					</div>
+					<div class="col-10">
+						<ng-container *ngIf="scan.policyType === 'SCAN'">
+							<div [innerText]="scan.deviceCount + ' devices are scanned ' + scan.formattedSchedule"></div>
+						</ng-container>
+						<ng-container *ngIf="scan.policyType === 'IGNORE'">
+							<div [innerText]="scan.deviceCount + ' devices cannot be scanned at any time'"></div>
+						</ng-container>
+					</div>
+					<div class="col-1 flex-center">
+						<a
+							data-auto-id="settings.policies.collection.edit-scan"
+							(click)="startModal(true, 'editPolicy', scan)"
+						>
+							<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
+						</a>
+					</div>
+				</div>
+
+				<h5 class="base-margin-top half-margin-bottom" data-auto-id="settings.policies.collection.label"
+					[innerText]="'_Collection_' | i18n | uppercase"></h5>
+				<div
+					*ngFor="let collection of collections"
+					class="panel panel--bordered flex base-margin-right"
+					data-auto-id="settings.policies.collection.panel">
+					<div class="col-1 flex-center">
+						<span class="icon-compliance icon-small text-primary"></span>
+					</div>
+					<div class="col-10">
+						<div [innerText]="'Network runs collection ' + collection.formattedSchedule"></div>
+					</div>
+					<div class="col-1 flex-center">
+						<a
+							data-auto-id="settings.policies.collection.edit-link"
+							(click)="startModal(true, 'editCollection', collection)"
+						>
+							<span
+								class="icon-pencil icon-small"
+								[ngClass]="'text-primary'"
+							></span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-5" data-auto-id="settings.collection.schedule">
+				<h5 class="base-margin-top base-margin-bottom" data-auto-id="settings.system.usage.label"
+					[innerText]="'_ScanAndCollectionSchedule_' | i18n | uppercase"></h5>
+				<div>
+					Calendar
+				</div>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="loading" class="absolute-center">
+		<cui-loader></cui-loader>
+	</div>
+</admin-wrapper>
+
+<ng-container *ngIf="selectEditCollectionComponent">
+	<policy-form
+		(visibleComponent)="startModal($event)"
+		[type]="modalType"
+		[policy]="loadedPolicy"
+		[customerId]="customerId"
+		(submitted)="collectionRequestSubmit($event)">
+	</policy-form>
+</ng-container>
