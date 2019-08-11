@@ -24,7 +24,7 @@ export const environment = {
 		fileList: '/ws/csc/v3/caseFiles',
 	},
 	csone: {
-		clientId: '262556217fbe45ecbbe27af70e443e78',
+		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
 	ieSetup: {
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
@@ -38,13 +38,13 @@ export const environment = {
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
 	mock: [],
-	myCase: 'https://mycase.cloudapps.cisco.com',
+	myCase: 'https://mycase2.cloudapps.cisco.com',
 	noAuthEndpoints: [
 		'https://xresps.cloudapps.cisco.com/esps/search/suggest/cdcpr01zad',
 	],
 	production: true,
-	rmaServiceClientId: 'mj2za65kd42razfxfrvvcgne',
-	rmaServiceOrigin: 'https://api-test.cisco.com/api/lt/customerportal',
+	rmaServiceClientId: 'yvgjnzruyuh9a7tdnbj8ka3n',
+	rmaServiceOrigin: 'https://api-stage.cisco.com/api/lt/customerportal',
 	rmaServicePaths: {
 		returns: '/return/v1.0/returns',
 	},
