@@ -10,9 +10,10 @@ import {
 	CGTScenarios,
 } from '@mock';
 import * as _ from 'lodash-es';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -78,6 +79,22 @@ describe('CgtRequestFormComponent', () => {
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
+	});
+
+	it('should gracefully handle failures for all other api calls', () => {
+		getAccUserInfoSpy = spyOn(contentService, 'getACCUserInfo')
+			.and
+			.returnValue(throwError(new HttpErrorResponse({
+				status: 404,
+				statusText: 'Resource not found',
+			})));
+
+		requestTrainingSpy = spyOn(contentService, 'requestGroupTraining')
+			.and
+			.returnValue(throwError(new HttpErrorResponse({
+				status: 404,
+				statusText: 'Resource not found',
+			})));
 	});
 
 	it('should have loaded customer info', () => {

@@ -1051,6 +1051,7 @@ export class LifecycleComponent implements OnDestroy {
 						});
 						this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
 							(trainigsCompleted + trainigsInProcess);
+						this.groupTrainingsAvailable = this.groupTrainingsAvailable > 0 ? this.groupTrainingsAvailable : 0;
 						this.componentData.cgt = {
 							sessions: completedTrainingData,
 							trainingsAvailable: this.groupTrainingsAvailable,
