@@ -6,7 +6,9 @@ import { environment } from '@environment';
 
 describe('GeoCodeService', () => {
 	const address = '123 Main Street, North Carolina';
-	const url = `${environment.mapboxHost}${environment.mapboxForwardGeocodePath}/${address}.json?limit=1&access_token=${environment.mapboxToken}`;
+	const url = `${
+		environment.mapboxHost}${environment.mapboxForwardGeocodePath
+	}/${address}.json?limit=1&access_token=${environment.mapboxToken}`;
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [HttpClientTestingModule],
@@ -26,7 +28,8 @@ describe('GeoCodeService', () => {
 		inject(
 			[GeoCodeService, HttpTestingController],
 			(service: GeoCodeService, httpMock: HttpTestingController) => {
-				service.forwardLookup(address).subscribe();
+				service.forwardLookup(address)
+					.subscribe();
 				const req = httpMock.expectOne(url);
 				expect(req.request.method)
 					.toEqual('GET');
@@ -38,16 +41,19 @@ describe('GeoCodeService', () => {
 		inject(
 			[GeoCodeService, HttpTestingController],
 			(service: GeoCodeService, httpMock: HttpTestingController) => {
-				service.forwardLookup(address).subscribe();
+				service.forwardLookup(address)
+					.subscribe();
 				const req = httpMock.expectOne(url);
 				expect(req.request.method)
 					.toEqual('GET');
 
 				req.flush('success');
 
-				service.forwardLookup(address).subscribe(res => {
-					expect(<any> res).toBe('success');
-				});
+				service.forwardLookup(address)
+					.subscribe(res => {
+						expect(<any> res)
+							.toBe('success');
+					});
 
 				httpMock.expectNone(url);
 			}),
