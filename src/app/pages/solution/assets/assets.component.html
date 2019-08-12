@@ -6,7 +6,7 @@
 		<asset-details-header [asset]="selectedAsset"></asset-details-header>
 		<div detailsPanelTitle class="text-xlarge">
 			<span class="icon-wifi"></span>
-			<span class="qtr-margin-left" [innerText]="selectedAsset?.deviceName"></span>
+			<span class="half-margin-left cx-text-soft-black" [innerText]="selectedAsset?.deviceName"></span>
 		</div>
 	</details-panel-header>
 	<asset-details [asset]="selectedAsset"></asset-details>
@@ -182,7 +182,8 @@
 							</label>
 						</th>
 						<th attr.data-auto-id="InventoryHeader-{{ column.name }}" *ngFor="let column of assetsTable.columns"
-							[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }">
+							[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
+							(click)="onColumnSort(column)">
 							<span [innerText]="column.name"></span>
 							<span *ngIf="column.sortable && column.sorting"
 								class="qtr-margin-left"

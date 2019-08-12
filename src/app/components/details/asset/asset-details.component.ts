@@ -31,6 +31,7 @@ import { UserResolve } from '@utilities';
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'asset-details',
+	styleUrls: ['./asset-details.component.scss'],
 	templateUrl: './asset-details.component.html',
 })
 

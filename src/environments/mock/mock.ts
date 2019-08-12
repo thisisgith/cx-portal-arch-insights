@@ -12,6 +12,7 @@ import {
 	CoverageScenarios,
 	CreateRegistrationScenarios,
 	CriticalBugScenarios,
+	DevicePoliciesScenarios,
 	DNACStatusScenarios,
 	ELearningScenarios,
 	EntitlementScenarios,
@@ -24,18 +25,22 @@ import {
 	HardwareEOLScenarios,
 	HardwareScenarios,
 	HealthStatusScenarios,
+	LicenseScenarios,
 	NetworkScenarios,
+	PolicesScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryLastUpdatedCountScenarios,
-	SecurityAdvisorySeverityCountScenarios,
-	SecurityAdvisoryTopScenarios,
 	SecurityAdvisoryScenarios,
+	SecurityAdvisorySeverityCountScenarios,
 	SecurityAdvisorySummaryScenarios,
+	SecurityAdvisoryTopScenarios,
 	SerialNumberScenarios,
+	SoftwareEOLBulletinScenarios,
+	SoftwareEOLScenarios,
 	SuccessPathScenarios,
 	VulnerabilityScenarios,
 } from './';
@@ -68,6 +73,7 @@ import {
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
+	LicenseDataResponseModel,
 	IERegistrationResponseModel,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
@@ -79,6 +85,8 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
+	SoftwareEOLResponse,
+	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
 	ContractQuota,
 	UserTraining,
@@ -114,6 +122,7 @@ type ResponseBody = (
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
 	HardwareResponse |
+	LicenseDataResponseModel |
 	IERegistrationResponseModel |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
@@ -126,6 +135,8 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
+	SoftwareEOLResponse |
+	SoftwareEOLBulletinResponse |
 	SuccessPathsResponse |
 	UserTraining[] |
 	VulnerabilityResponse |
@@ -199,6 +210,9 @@ export const mockSettings: MockSettings = {
 		HardwareEOLScenarios,
 		HardwareScenarios,
 		HealthStatusScenarios,
+		PolicesScenarios,
+		DevicePoliciesScenarios,
+		LicenseScenarios,
 		NetworkScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
@@ -212,6 +226,8 @@ export const mockSettings: MockSettings = {
 		SecurityAdvisorySummaryScenarios,
 		SecurityAdvisoryTopScenarios,
 		SerialNumberScenarios,
+		SoftwareEOLScenarios,
+		SoftwareEOLBulletinScenarios,
 		SuccessPathScenarios,
 		VulnerabilityScenarios,
 	]),

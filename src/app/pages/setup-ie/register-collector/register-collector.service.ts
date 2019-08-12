@@ -67,10 +67,18 @@ export class RegisterCollectorService {
 	 * @returns Observable
 	 */
 	public installAndRegisterDNAC (params: InstallAndRegisterDNACParams) {
+		const state = this.state.getState() || { };
+		const token = state.collectorToken;
+
 		return this.http.post(
 			`https://${this.collectorIP}${this.baseUrl}installAndRegisterDNAC`,
 			params,
-			{ responseType: 'text' },
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				responseType: 'text',
+			},
 		);
 	}
 

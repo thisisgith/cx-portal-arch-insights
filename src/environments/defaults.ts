@@ -26,6 +26,7 @@ export const defaults = {
 		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
 	ieSetup: {
+		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-' +
 			'cf-insight_engine-release/ie/Insight_Engine_1.0/ubuntu/65/CXC_1.0_Build-65-1.ova',
@@ -35,20 +36,18 @@ export const defaults = {
 			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
-	microservice_urls: {
-		cases: '/ws/casesdlinton/v3',
-	},
 	myCase: 'https://mycase2.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [
 		'https://xresps-stage.cloudapps.cisco.com/esps/search/suggest/cdcpr01zad',
 	],
-	production: false, rmaServiceClientId: 'yvgjnzruyuh9a7tdnbj8ka3n',
+	production: false,
+	rmaServiceClientId: 'yvgjnzruyuh9a7tdnbj8ka3n',
 	rmaServiceOrigin: 'https://api-stage.cisco.com',
 	rmaServicePaths: {
 		returns: '/return/v1.0/returns',
 	},
-	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa1/home',
+	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa3/home',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
@@ -70,4 +69,8 @@ export const defaults = {
 	},
 	logoutUrl: 'https://www.cisco.com/autho/logout.html',
 	manageProfileUrl: 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do',
+	mapboxHost: 'https://api.mapbox.com',
+	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
+	mapboxToken:
+	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 };
