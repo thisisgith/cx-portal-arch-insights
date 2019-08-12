@@ -835,7 +835,7 @@ describe('Learn Panel', () => {
 		it('Should be able to bookmark a Success Bytes item', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
 				successPathItems.forEach((item, index) => {
-					if (!item.bookmark && item.status !== 'completed') {
+					if (!item.bookmark) {
 						cy.getByAutoId('SBCardRibbon')
 							.eq(index)
 							.should('have.class', 'ribbon__clear')
@@ -854,7 +854,7 @@ describe('Learn Panel', () => {
 		it('Should be able to UN-bookmark a Success Bytes item', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
 				successPathItems.forEach((item, index) => {
-					if (item.bookmark && item.status !== 'completed') {
+					if (item.bookmark) {
 						cy.getByAutoId('SBCardRibbon')
 							.eq(index)
 							.should('have.class', 'ribbon__blue')
