@@ -171,9 +171,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		private collectionService: ControlPointModifyCollectionPolicyAPIService,
 		private deviceService: ControlPointDeviceDiscoveryAPIService,
 		private devicePolicyService: ControlPointDevicePolicyAPIService,
-	) {
-		this.logger.debug('AccRequestFormComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Closes the Collection Form component

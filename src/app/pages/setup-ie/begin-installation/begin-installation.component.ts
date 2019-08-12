@@ -1,7 +1,4 @@
 import { Component, HostListener, EventEmitter, Output } from '@angular/core';
-
-import { LogService } from '@cisco-ngx/cui-services';
-
 import { SetupStep } from '@interfaces';
 import { KEY_CODES } from '@classes';
 
@@ -15,12 +12,6 @@ import { KEY_CODES } from '@classes';
 })
 export class BeginInstallationComponent implements SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<void>();
-
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('BeginInstallationComponent Created!');
-	}
 
 	/**
 	 * Fired when "Begin Installation" is clicked

@@ -782,6 +782,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `fields`: Requested fields in the response.
    *
+   * - `fieldNoticeId`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+   *
    * @return successful operation
    */
   getFieldNoticeResponse(params: ProductAlertsService.GetFieldNoticeParams): __Observable<__StrictHttpResponse<FieldNoticeResponse>> {
@@ -798,6 +800,7 @@ class ProductAlertsService extends __BaseService {
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/api/customerportal/product-alerts/v1/field-notices`,
@@ -839,6 +842,8 @@ class ProductAlertsService extends __BaseService {
    * - `managedNeId`: CDX should indicate the physical|logical hierarchy of the product (chassis to card, server to client, etc
    *
    * - `fields`: Requested fields in the response.
+   *
+   * - `fieldNoticeId`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
    *
    * @return successful operation
    */
@@ -2001,6 +2006,11 @@ module ProductAlertsService {
      * Requested fields in the response.
      */
     fields?: Array<string>;
+
+    /**
+     * The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+     */
+    fieldNoticeId?: Array<number>;
   }
 
   /**

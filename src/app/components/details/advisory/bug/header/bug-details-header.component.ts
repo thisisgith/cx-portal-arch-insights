@@ -2,8 +2,9 @@ import {
 	Component,
 	Input,
 } from '@angular/core';
-import { Asset, CriticalBug } from '@sdp-api';
+import { Asset } from '@sdp-api';
 import { CuiModalService } from '@cisco-ngx/cui-components';
+import { Data as BugData } from '../bug-details.component';
 import {
 	CaseOpenAdvisoriesComponent,
 } from '../../../../case/case-open/case-open-advisories/case-open-advisories.component';
@@ -19,7 +20,7 @@ export class BugDetailsHeaderComponent {
 
 	constructor (private cuiModalService: CuiModalService) { }
 
-	@Input('details') public details: CriticalBug;
+	@Input('details') public details: BugData;
 	@Input('selectedAsset') public selectedAsset: Asset;
 
 	/**
@@ -27,7 +28,7 @@ export class BugDetailsHeaderComponent {
 	 */
 	public onOpenCase () {
 		this.cuiModalService.showComponent(CaseOpenAdvisoriesComponent, {
-			advisory: this.details,
+			advisory: this.details.advisory,
 			selectedAsset: this.selectedAsset,
 			type: 'bug',
 		}, 'full');

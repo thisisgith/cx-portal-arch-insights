@@ -573,7 +573,7 @@ describe('LifecycleComponent', () => {
 
 	describe('PitstopActions', () => {
 
-		it('should show 25% in the prograss label', () => {
+		it('should show 25% in the progress label', () => {
 			buildSpies();
 			sendParams();
 			fixture.detectChanges();

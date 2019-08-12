@@ -105,9 +105,8 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private contentService: RacetrackContentService,
-	) {
-		this.logger.debug('CgtRequestFormComponent Created!');
-	}
+	) { }
+
 
 	/**
 	 * Gets the endDate of a contract based on the selected contract

@@ -21,6 +21,9 @@ import {
 	ProductAlertsService,
 	HardwareEOLCountResponse,
 	VulnerabilityResponse,
+	TransactionRequest,
+	NetworkDataGatewayService,
+	ScanRequestResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -33,6 +36,7 @@ import {
 	catchError,
 	distinctUntilChanged,
 	switchMap,
+	mergeMap,
 } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
@@ -51,8 +55,8 @@ interface Item {
 
 /** Interface for selected subfilters */
 interface SelectedSubfilter {
-	subfilter: VisualFilter['seriesData'];
 	filter: string;
+	subfilter: VisualFilter['seriesData'];
 }
 
 /**
@@ -87,6 +91,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	public alert: any = { };
 	public bulkDropdown = false;
 	public selectedAssets: Asset[] = [];
 	public filters: VisualFilter[];
@@ -121,7 +126,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public selectOnLoad = false;
 	public selectedAsset: Asset;
 	public fullscreen = false;
-	private sorting: 'asc' | 'desc';
 	public selectedSubfilters: SelectedSubfilter[];
 
 	constructor (
@@ -133,6 +137,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private route: ActivatedRoute,
 		private router: Router,
 		private fromNow: FromNowPipe,
+		private networkService: NetworkDataGatewayService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -181,23 +186,102 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	/**
 	 * Returns the row specific actions
-	 * @param asset the asset we're building the actions for
+	 * @param item the row we're building our actions for
 	 * @returns the built actions
 	 */
-	public getRowActions (asset: Asset) {
+	public getRowActions (item: Item) {
 		return _.filter([
-			_.get(asset, 'supportCovered', false) ? {
+			_.get(item, ['data', 'supportCovered'], false) ? {
 				label: I18n.get('_OpenSupportCase_'),
 				onClick: () => this.cuiModalService.showComponent(
 					CaseOpenComponent,
-					{ asset },
+					{ asset: item.data },
 					'full',
 				),
 			} : undefined,
 			{
 				label: I18n.get('_Scan_'),
+				onClick: () => this.checkScan(item),
 			},
 		]);
+	}
+
+	/**
+	 * Performs a check on the current scan status
+	 * @param item the row of the asset to scsan
+	 */
+	public checkScan (item: Item) {
+		const getScanStatusParams: NetworkDataGatewayService.GetScanStatusBySerialParams = {
+			customerId: this.customerId,
+			productId: _.get(item, ['data', 'productId']),
+			serialNumber: _.get(item, ['data', 'serialNumber']),
+		};
+		const deviceName = _.get(item, ['data', 'deviceName']);
+
+		this.networkService.getScanStatusBySerial(getScanStatusParams)
+		.pipe(
+			mergeMap((response: ScanRequestResponse) => {
+				const inProgress = _.find(response, { status: 'IN_PROGRESS' });
+				const received = _.find(response, { status: 'RECEIVED' });
+
+				if (!inProgress && !received) {
+					return this.initiateScan(item);
+				}
+
+				this.alert.show(I18n.get('_ScanAlreadyInProgress_', deviceName), 'info');
+
+				return of();
+			}),
+			catchError(err => {
+				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
+				this.logger.error('assets.component : checkScan() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of();
+			}),
+		)
+		.subscribe();
+	}
+
+	/**
+	 * Initiates a scan on a device
+	 * @param item the row to scan
+	 * @returns the observable
+	 */
+	public initiateScan (item: Item) {
+		const deviceName = _.get(item, ['data', 'deviceName']);
+		const request: TransactionRequest = {
+			customerId: this.customerId,
+			neCount: 1,
+			requestBody: {
+				deviceOptions: 'LIST',
+				devices: [{
+					hostname: deviceName,
+					ipAddress: _.get(item, ['data', 'ipAddress']),
+					productId: _.get(item, ['data', 'productId']),
+					serialNumber: _.get(item, ['data', 'serialNumber']),
+				}],
+			},
+			requestType: 'PEC',
+			transactionType: 'SCAN',
+		};
+
+		return this.networkService.postDeviceTransactions(request)
+		.pipe(
+			map(() => {
+				this.alert.show(I18n.get('_ScanInitiated_', deviceName), 'info');
+				this.onRowSelect(item);
+
+				return of();
+			}),
+			catchError(err => {
+				this.alert.show(I18n.get('_UnableToInitiateScan_', deviceName), 'danger');
+				this.logger.error('header.component : initiateScan() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
 	}
 
 	/**
@@ -905,12 +989,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						if (a.role) {
 							a.role = _.startCase(_.toLower(a.role));
 						}
-						this.inventory.push({
-							actions: this.getRowActions(a),
+						const row = {
 							data: a,
 							details: false,
 							selected: false,
-						});
+						};
+
+						_.set(row, 'actions', this.getRowActions(row));
+						this.inventory.push(row);
 					});
 					this.pagination = results.Pagination;
 

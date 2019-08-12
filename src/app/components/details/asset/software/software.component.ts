@@ -80,6 +80,7 @@ const eolTimelineProperties: EolTimelineProperty[] = [
 export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestroy {
 
 	@Input('asset') public asset: Asset;
+	@Input('customerId') public customerId: string;
 	@ViewChild('licensesTable', { static: true }) private licensesTableTemplate: TemplateRef<{ }>;
 	@ViewChild('statusTemplate', { static: true }) private licenseStatusTemplate: TemplateRef<{ }>;
 	@ViewChild('typeTemplate', { static: true }) private licenseTypeTemplate: TemplateRef<{ }>;
@@ -104,7 +105,11 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	public eolBulletinData: SoftwareEOLBulletin;
 	private refresh$: Subject<void>;
 	private destroyed$: Subject<void> = new Subject<void>();
-	private customerId: string;
+	public operatingSystem: {
+		type?: string;
+		version?: string;
+		recommended?: string;
+	};
 
 	constructor (
 		private logger: LogService,
@@ -165,6 +170,8 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 
 					return this.fetchEOLBulletinData();
 				}
+
+				return of({ });
 			}),
 			catchError(err => {
 				this.status.loading.eol = false;
@@ -214,11 +221,19 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 				this.eolData = null;
 				this.eolBulletinData = null;
 				this.timelineData = null;
+				this.operatingSystem = null;
 			}),
 			switchMap(() => {
 				const obsBatch = [];
 				const managedNeId = _.get(this.asset, 'managedNeId');
 				const hostName = _.get(this.asset, 'deviceName');
+
+				if (_.get(this.asset, 'osVersion')) {
+					this.operatingSystem = {
+						type: _.get(this.asset, 'osType'),
+						version: _.get(this.asset, 'osVersion'),
+					};
+				}
 
 				if (managedNeId) {
 					this.softwareEolParams = {
