@@ -1,8 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { LogService } from '@cisco-ngx/cui-services';
-
 /**
  * An option
  */
@@ -29,12 +27,6 @@ export interface SelectOption<T> {
 export class PanelSelectComponent implements ControlValueAccessor {
 	@Input() public options: SelectOption<any>[];
 	public onChange: any;
-
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('PanelSelectComponent Created!');
-	}
 
 	/**
 	 * Fires when a user clicks an option

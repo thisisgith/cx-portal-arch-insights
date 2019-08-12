@@ -18,6 +18,7 @@ import { Asset } from '@sdp-api';
 	templateUrl: './field-notice-details-header.component.html',
 })
 export class FieldNoticeDetailsHeaderComponent {
+
 	constructor (private cuiModalService: CuiModalService) { }
 
 	@Input('details') public details: FieldNoticeData;

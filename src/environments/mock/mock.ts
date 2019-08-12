@@ -12,6 +12,7 @@ import {
 	CoverageScenarios,
 	CreateRegistrationScenarios,
 	CriticalBugScenarios,
+	CriticalBugAssetsScenarios,
 	DevicePoliciesScenarios,
 	DNACStatusScenarios,
 	ELearningScenarios,
@@ -53,9 +54,11 @@ import {
 	ACCUserInfoSchema,
 	AdvisoriesByLastUpdatedCount,
 	Assets,
+	BugImpactedAssetsResponse,
 	ATXResponseModel,
 	CDCSearchResponse,
 	CommunitiesResponse,
+	ContractQuota,
 	CoverageCountsResponse,
 	CoverageResponse,
 	CriticalBugsCount,
@@ -67,14 +70,14 @@ import {
 	FieldNoticeAdvisoryResponse,
 	FieldNoticeBulletinResponse,
 	FieldNoticeResponse,
-	GroupTrainingEntitySchema,
 	FieldNoticeUpdatedResponse,
+	GroupTrainingEntitySchema,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
-	LicenseDataResponseModel,
 	IERegistrationResponseModel,
+	LicenseDataResponseModel,
 	PitstopActionUpdateResponse,
 	RacetrackResponse,
 	RoleCountResponse,
@@ -85,10 +88,9 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
-	SoftwareEOLResponse,
 	SoftwareEOLBulletinResponse,
+	SoftwareEOLResponse,
 	SuccessPathsResponse,
-	ContractQuota,
 	UserTraining,
 	VulnerabilityResponse,
 } from '@sdp-api';
@@ -101,10 +103,11 @@ type ResponseBody = (
 	ACCUserInfoSchema |
 	AdvisoriesByLastUpdatedCount |
 	Assets |
+	BugImpactedAssetsResponse |
 	ATXResponseModel |
 	CDCSearchResponse |
-	ContractQuota[] |
 	CommunitiesResponse |
+	ContractQuota[] |
 	CoverageCountsResponse |
 	CoverageResponse |
 	CriticalBugsCount |
@@ -116,14 +119,14 @@ type ResponseBody = (
 	FieldNoticeAdvisoryResponse |
 	FieldNoticeBulletinResponse |
 	FieldNoticeResponse |
-	GroupTrainingEntitySchema |
 	FieldNoticeUpdatedResponse |
+	GroupTrainingEntitySchema |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
 	HardwareResponse |
-	LicenseDataResponseModel |
 	IERegistrationResponseModel |
+	LicenseDataResponseModel |
 	PitstopActionUpdateResponse |
 	RacetrackResponse |
 	RMAResponse |
@@ -135,11 +138,10 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
-	SoftwareEOLResponse |
 	SoftwareEOLBulletinResponse |
+	SoftwareEOLResponse |
 	SuccessPathsResponse |
 	UserTraining[] |
-	VulnerabilityResponse |
 	VulnerabilityResponse
 );
 
@@ -197,7 +199,9 @@ export const mockSettings: MockSettings = {
 		ContractScenarios,
 		CoverageScenarios,
 		CreateRegistrationScenarios,
+		CriticalBugAssetsScenarios,
 		CriticalBugScenarios,
+		DevicePoliciesScenarios,
 		DNACStatusScenarios,
 		ELearningScenarios,
 		EntitlementScenarios,
@@ -210,24 +214,23 @@ export const mockSettings: MockSettings = {
 		HardwareEOLScenarios,
 		HardwareScenarios,
 		HealthStatusScenarios,
-		PolicesScenarios,
-		DevicePoliciesScenarios,
 		LicenseScenarios,
 		NetworkScenarios,
+		PolicesScenarios,
 		RacetrackScenarios,
 		RMAScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
 		SecurityAdvisoryLastUpdatedCountScenarios,
-		SecurityAdvisoryTopScenarios,
 		SecurityAdvisoryScenarios,
 		SecurityAdvisorySeverityCountScenarios,
 		SecurityAdvisorySummaryScenarios,
 		SecurityAdvisoryTopScenarios,
+		SecurityAdvisoryTopScenarios,
 		SerialNumberScenarios,
-		SoftwareEOLScenarios,
 		SoftwareEOLBulletinScenarios,
+		SoftwareEOLScenarios,
 		SuccessPathScenarios,
 		VulnerabilityScenarios,
 	]),

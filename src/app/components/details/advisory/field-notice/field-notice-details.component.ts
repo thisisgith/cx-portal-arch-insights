@@ -15,9 +15,6 @@ import {
 	FieldNoticeBulletinResponse,
 	ProductAlertsService,
 	FieldNoticeAdvisory,
-	InventoryService,
-	Assets,
-	Asset,
 	FieldNoticeAdvisoryResponse,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -27,14 +24,14 @@ import {
 	catchError,
 } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
+import { AssetIds } from '../impacted-assets/impacted-assets.component';
 
 /** Data Interface */
 export interface Data {
 	notice?: FieldNotice;
 	bulletin?: FieldNoticeBulletin;
 	advisory?: FieldNoticeAdvisory;
-	impacted?: Asset[];
-	potentiallyImpacted?: Asset[];
+	assetIds?: AssetIds;
 }
 
 /**
@@ -56,9 +53,10 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 		advisory?: ProductAlertsService.GetAdvisoriesFieldNoticesParams;
 		notice: ProductAlertsService.GetFieldNoticeParams;
 		bulletin: ProductAlertsService.GetFieldNoticeBulletinParams;
-		assets?: InventoryService.GetAssetsParams;
 	};
 
+	public impactedCount = 0;
+	public activeTab = 0;
 	public data: Data = { };
 	public isLoading = false;
 	public upVoteSelected = false;
@@ -66,7 +64,6 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 
 	constructor (
 		private logger: LogService,
-		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
 	) { }
 
@@ -78,56 +75,26 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 		return this.productAlertsService.getFieldNotice(this.params.notice)
 		.pipe(
 			mergeMap((response: FieldNoticeResponse) => {
-				const affected = _.filter(response.data,
-					{ fieldNoticeId: _.toSafeInteger(this.id) }) || [];
+				const data = _.get(response, 'data', []);
+				_.set(this.data, 'notice', _.head(data));
 
-				_.set(this.data, 'notice', _.head(affected));
+				const vulFieldNotices = _.filter(data, { vulnerabilityStatus: 'VUL' }) || [];
+				const vulIds = _.compact(_.map(vulFieldNotices, 'managedNeId')) || [];
 
-				return forkJoin(
-					this.getFieldNoticeBulletin(),
-					this.getAssets(affected),
-				);
+				if (vulIds.length) {
+					_.set(this.data, ['assetIds', 'impacted'], vulIds);
+				}
+				const potVulFieldNotices = _.filter(data, { vulnerabilityStatus: 'POTVUL' }) || [];
+				const potVulIds = _.compact(_.map(potVulFieldNotices, 'managedNeId')) || [];
+
+				if (potVulIds.length) {
+					_.set(this.data, ['assetIds', 'potentiallyImpacted'], potVulIds);
+				}
+
+				return this.getFieldNoticeBulletin();
 			}),
 			catchError(err => {
 				this.logger.error('field-notice-details.component : getFieldNotice() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
-	 * Fetches the assets affected by the field notice
-	 * @param fieldNotices the field notices to look over
-	 * @returns the observable
-	 */
-	private getAssets (fieldNotices: FieldNotice[]) {
-		const vulFieldNotices = _.filter(fieldNotices, x => x.vulnerabilityStatus === 'VUL', []);
-		const vulHwIds = _.flatMap(vulFieldNotices, x => _.get(x, 'hwInstanceId'));
-		const potvulFieldNotices =
-			_.filter(fieldNotices, x => x.vulnerabilityStatus === 'POTVUL', []);
-		const potvulHwIds = _.flatMap(potvulFieldNotices, x => _.get(x, 'hwInstanceId'));
-
-		this.params.assets = {
-			customerId: this.customerId,
-			hwInstanceId: _.map(fieldNotices, 'hwInstanceId'),
-		};
-
-		return this.inventoryService.getAssets(this.params.assets)
-		.pipe(
-			map((response: Assets) => {
-				const data = _.get(response, 'data', []);
-				const vulData =
-					_.filter(data, x => _.includes(vulHwIds, _.get(x, 'hwInstanceId')));
-				_.set(this.data, 'impacted', vulData);
-
-				const potvulData =
-					_.filter(data, x => _.includes(potvulHwIds, _.get(x, 'hwInstanceId')));
-				_.set(this.data, 'potentiallyImpacted', potvulData);
-			}),
-			catchError(err => {
-				this.logger.error('field-notice-details.component : getAssets() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -179,6 +146,9 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 	 */
 	public refresh () {
 		const advisoryId = _.get(this.advisory, 'id');
+		this.data = { };
+		this.activeTab = 0;
+		this.impactedCount = 0;
 		if (this.id || advisoryId) {
 			if (!this.id) {
 				this.id = advisoryId;
@@ -191,6 +161,8 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 				},
 				notice: {
 					customerId: this.customerId,
+					fieldNoticeId: [_.toSafeInteger(this.id)],
+					vulnerabilityStatus: ['POTVUL', 'VUL'],
 				},
 			};
 			obsBatch.push(this.getFieldNotice());
@@ -231,26 +203,6 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 		const currentId = _.get(changes, ['id', 'currentValue']);
 		if (currentId && !changes.id.firstChange) {
 			this.refresh();
-		}
-	}
-
-	/**
-	 * Handles the clicking of vote buttons
-	 * @param event click event
-	 */
-	public voteClicked (event: Event) {
-		const btnId = _.get(event, 'toElement.id');
-		if (btnId === 'upVoteBtn') {
-			this.upVoteSelected = !this.upVoteSelected;
-			if (this.downVoteSelected) {
-				this.downVoteSelected = false;
-			}
-		}
-		if (btnId === 'downVoteBtn') {
-			this.downVoteSelected = !this.downVoteSelected;
-			if (this.upVoteSelected) {
-				this.upVoteSelected = false;
-			}
 		}
 	}
 }

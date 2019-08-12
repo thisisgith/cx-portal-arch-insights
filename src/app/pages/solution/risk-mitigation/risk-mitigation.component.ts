@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 
-import { LogService } from '@cisco-ngx/cui-services';
-
 /**
  * RiskMitigation Component
  */
@@ -11,10 +9,4 @@ import { LogService } from '@cisco-ngx/cui-services';
 	templateUrl: './risk-mitigation.component.html',
 })
 export class RiskMitigationComponent {
-
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('RiskMitigationComponent Created!');
-	}
 }

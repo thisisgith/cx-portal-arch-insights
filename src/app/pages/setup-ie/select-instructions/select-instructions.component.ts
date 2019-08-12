@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-
-import { LogService } from '@cisco-ngx/cui-services';
+import { Router } from '@angular/router';
 
 import { SetupComponent, SetupStep } from '@interfaces';
 
@@ -25,12 +23,8 @@ export class SelectInstructionsComponent implements SetupStep {
 	public buttons = getButtonList();
 
 	constructor (
-		private logger: LogService,
-		private route: ActivatedRoute,
 		private router: Router,
-	) {
-		this.logger.debug('SelectInstructionsComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Called when an option is selected
