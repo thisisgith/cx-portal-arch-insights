@@ -57,6 +57,9 @@ describe('Learn Panel', () => {
 		// Wait for both E-Learning and Success Paths to finish loading
 		cy.waitForAppLoading('elearningLoading', 15000);
 		cy.waitForAppLoading('successPathsLoading', 15000);
+
+		// Close the setup wizard so it doesn't block other elements
+		cy.getByAutoId('setup-wizard-header-close-btn').click();
 	});
 
 	describe('PBC-125 Learning Content', () => {
@@ -150,8 +153,17 @@ describe('Learn Panel', () => {
 	});
 
 	describe('PBC-15: (UI) View - Lifecycle - Success Bytes - View All Card View', () => {
-		it('PBC-142/PBC-143: View All Success Bytes link should open modal with all results', () => {
+		beforeEach(() => {
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+		});
+
+		afterEach(() => {
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+		});
+
+		it('PBC-142/PBC-143: View All Success Bytes link should open modal with all results', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist')
 				.and('contain', 'Success Bytes')
 				.and('contain', 'Resources to fine-tune your tech')
@@ -164,13 +176,9 @@ describe('Learn Panel', () => {
 					// The UI will only display a duration if it is not null
 					.and('contain', (scenario.duration !== null ? scenario.duration : ''));
 			});
-			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 		});
 
 		it('PBC-142/PBC-143: View All Success Bytes modal includes content type icons', () => {
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 			successPathItems.forEach((scenario, index) => {
 				switch (scenario.type) {
 					case 'Video':
@@ -203,8 +211,20 @@ describe('Learn Panel', () => {
 					}
 				});
 			});
-			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+		});
+
+		it('PBC-199: View All Success Bytes modal should include bookmark ribbons', () => {
+			successPathItems.forEach((scenario, index) => {
+				cy.getByAutoId('SuccessCard').eq(index).within(() => {
+					if (scenario.bookmark) {
+						cy.getByAutoId('SBCardRibbon')
+							.should('have.class', 'ribbon__blue');
+					} else {
+						cy.getByAutoId('SBCardRibbon')
+							.should('have.class', 'ribbon__clear');
+					}
+				});
+			});
 		});
 	});
 
@@ -253,7 +273,7 @@ describe('Learn Panel', () => {
 		it('PBC-210: E-Learning View All should cross-launch to digital-learning', () => {
 			// Cypress does not and will never support multiple tabs, so just check the link element
 			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
-			cy.getByAutoId('_ELearning_-ViewAll').should('have.attr', 'href', 'https://pilot-digital-learning.cisco.com/cx#/')
+			cy.getByAutoId('_ELearning_-ViewAll').should('have.attr', 'href', 'https://pilot-digital-learning.cisco.com/cx/#/?type=e-learning')
 				.and('have.attr', 'target', '_blank');	// target: _blank indicates we'll open in a new tab
 		});
 	});
@@ -304,6 +324,9 @@ describe('Learn Panel', () => {
 			// Reload the page to force-clear any sort/filter
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
+
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Success Bytes View All should be able to toggle between table and card views', () => {
@@ -762,6 +785,9 @@ describe('Learn Panel', () => {
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
+
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 
@@ -783,6 +809,65 @@ describe('Learn Panel', () => {
 						});
 					});
 				});
+		});
+	});
+
+	describe('PBC-199: (UI) View - Lifecycle - Product Guides - Status Ribbons', () => {
+		before(() => {
+			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+		});
+
+		after(() => {
+			cy.getByAutoId('SuccessPathCloseModal').click();
+
+			// Reload the page to force-reset any changed bookmarks
+			// This is required since the mock bookmark APIs don't actually bookmark the ACC items
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			// Wait for the ACC panel to finish loading
+			cy.waitForAppLoading('successPathsLoading', 15000);
+
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
+		});
+
+		it('Should be able to bookmark a Success Bytes item', () => {
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				successPathItems.forEach((item, index) => {
+					if (!item.bookmark && item.status !== 'completed') {
+						cy.getByAutoId('SBCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__clear')
+							.click();
+						// Wait for the Bookmark mock to be called
+						cy.wait('(SB) IBN-Bookmark');
+						cy.waitForAppLoading('successPathsLoading', 5000);
+						cy.getByAutoId('SBCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__blue');
+					}
+				});
+			});
+		});
+
+		it('Should be able to UN-bookmark a Success Bytes item', () => {
+			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				successPathItems.forEach((item, index) => {
+					if (item.bookmark && item.status !== 'completed') {
+						cy.getByAutoId('SBCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__blue')
+							.click();
+						// Wait for the Bookmark mock to be called
+						cy.wait('(SB) IBN-Bookmark');
+						cy.waitForAppLoading('successPathsLoading', 5000);
+						cy.getByAutoId('SBCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__clear');
+					}
+				});
+			});
 		});
 	});
 
@@ -979,6 +1064,9 @@ describe('Learn Panel', () => {
 
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
+
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
