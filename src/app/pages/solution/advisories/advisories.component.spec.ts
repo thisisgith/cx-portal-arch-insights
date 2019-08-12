@@ -17,7 +17,6 @@ describe('AdvisoriesComponent', () => {
 	let fixture: ComponentFixture<AdvisoriesComponent>;
 	let productAlertsService: ProductAlertsService;
 	let diagnosticsService: DiagnosticsService;
-	// let activatedRoute: ActivatedRoute;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -51,7 +50,6 @@ describe('AdvisoriesComponent', () => {
 
 		productAlertsService = TestBed.get(ProductAlertsService);
 		diagnosticsService = TestBed.get(DiagnosticsService);
-		// activatedRoute = TestBed.get(ActivatedRoute);
 	}));
 
 	beforeEach(() => {
