@@ -115,13 +115,24 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		private diagnosticsService: DiagnosticsService,
 		private logger: LogService,
 		private productAlertsService: ProductAlertsService,
-		private route: ActivatedRoute,
-		private router: Router,
+		public route: ActivatedRoute,
+		public router: Router,
 	) {
 		this.routeParam = _.get(this.route, ['snapshot', 'params', 'advisory'], 'security');
 
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+	}
+
+	/**
+	 * Will adjust the browsers query params to preserve the current state
+	 */
+	private adjustQueryParams () {
+		const queryParams =
+			_.omit(_.cloneDeep(this.selectedTab.params), ['customerId', 'rows', 'page']);
+		this.router.navigate([`/solution/advisories/${this.routeParam}`], {
+			queryParams,
+		});
 	}
 
 	/**
@@ -759,10 +770,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 
 		tab.selectedSubfilters = this.getAllSelectedSubFilters();
 
-		if (filter.key !== 'impact' && filter.key !== 'lastUpdate') {
-			tab.params[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
-			tab.params.page = 1;
-		}
+		tab.params[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+		tab.params.page = 1;
 
 		const totalFilter = _.find(tab.filters, { key: 'total' });
 		if (filter.selected) {
@@ -782,6 +791,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		}
 
 		if (reload) {
+			this.adjustQueryParams();
 			tab.subject.next();
 		}
 	}
@@ -799,7 +809,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 
 		this.activeIndex = event;
 		this.tabs[event].selected = true;
-		this.router.navigate([`/solution/advisories/${this.tabs[event].route}`]);
+		this.routeParam = this.tabs[event].route;
+		this.adjustQueryParams();
 	}
 
 	/**
@@ -982,7 +993,35 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			this.getTotals(),
 		)
 		.pipe(
-			map(() => _.map(this.tabs, tab => tab.subject.next())),
+			map(() => _.map(this.tabs, tab => {
+
+				if (this.selectedTab.key === 'security') {
+					if (this.selectedTab.impact) {
+						this.onSubfilterSelect(this.selectedTab.impact,
+												_.find(this.selectedTab.filters,
+												{ key: 'impact' }));
+					}
+					if (this.selectedTab.lastUpdate) {
+						this.onSubfilterSelect(this.selectedTab.lastUpdate,
+												_.find(this.selectedTab.filters,
+												{ key: 'lastUpdate' }));
+					}
+				}
+
+				if (this.selectedTab.key === 'field' && this.selectedTab.lastUpdate) {
+					this.onSubfilterSelect(this.selectedTab.lastUpdate,
+											_.find(this.selectedTab.filters,
+											{ key: 'lastUpdate' }));
+				}
+
+				if (this.selectedTab.key === 'bug' && this.selectedTab.state) {
+					this.onSubfilterSelect(this.selectedTab.state,
+											_.find(this.selectedTab.filters,
+											{ key: 'state' }));
+				}
+
+				tab.subject.next();
+			})),
 		)
 		.subscribe(() => {
 			this.status.isLoading = false;
@@ -1016,6 +1055,32 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		this.searchForm = new FormGroup({
 			search: this.search,
 		});
+
+		this.route.queryParams.subscribe(params => {
+
+			switch (this.selectedTab.key) {
+				case 'security': {
+					if (params.impact) {
+						this.selectedTab.impact = params.impact;
+					}
+					if (params.lastUpdate) {
+						this.selectedTab.lastUpdate = params.lastUpdate;
+					}
+					break;
+				}
+				case 'field': {
+					if (params.lastUpdate) {
+						this.selectedTab.lastUpdate = params.lastUpdate;
+					}
+					break;
+				}
+				case 'bug': {
+					if (params.state) {
+						this.selectedTab.state = params.state;
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -1044,6 +1109,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		};
 		tab.selectedSubfilters = [];
 		tab.filtered = false;
+		this.adjustQueryParams();
 		tab.subject.next();
 	}
 }
