@@ -2,7 +2,7 @@
 	<details-panel-header (close)="onPanelClose()"
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false">
-		<ng-container *ngIf="type && details">
+		<ng-container *ngIf="details">
 			<security-details-header *ngIf="type === 'security'"
 				[details]="details"
 				[selectedAsset]="selectedAsset">
@@ -17,26 +17,30 @@
 			</bug-details-header>
 		</ng-container>
 		<div detailsPanelTitle *ngIf="title" class="text-xlarge">
-			<span class="qtr-margin-left" [innerText]="title"></span>
+			<span class="qtr-margin-left" [innerText]="title" data-auto-id="DetailsPanelTitle"></span>
 		</div>
 	</details-panel-header>
+	<cui-alert [options]="alert"></cui-alert>
 	<ng-container *ngIf="type">
 		<security-details *ngIf="type === 'security'"
 			[id]="advisoryId"
 			[advisory]="advisory"
 			[customerId]="customerId"
+			(alert)="handleAlert($event)"
 			(details)="onDetailsLoad($event)">
 		</security-details>
 		<field-notice-details *ngIf="type === 'field'"
 			[id]="advisoryId"
 			[advisory]="advisory"
 			[customerId]="customerId"
+			(alert)="handleAlert($event)"
 			(details)="onDetailsLoad($event)">
 		</field-notice-details>
 		<bug-details *ngIf="type === 'bug'"
 			[id]="advisoryId"
 			[advisory]="advisory"
 			[customerId]="customerId"
+			(alert)="handleAlert($event)"
 			(details)="onDetailsLoad($event)">
 		</bug-details>
 	</ng-container>

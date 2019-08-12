@@ -1,55 +1,53 @@
-<div class="row base-margin-bottom">
+<div class="row base-margin-bottom" *ngIf="details">
 	<div class="col-md-12">
-		<div class="flex" *ngIf="details">
+		<div class="flex">
 			<div data-auto-id="CriticalBugSeverity" class="dbl-margin-right">
 				<div class="text-bold text-uppercase" [innerText]="'_Severity_' | i18n"></div>
 				<div>
-					<span *ngIf="details?.severity"
+					<span *ngIf="details?.advisory?.severity"
 						class="label label--circle label--tiny qtr-margin-right"
 						[ngClass]="{
 							'Critical': 'label--danger',
 							'High': 'label--warning-alt',
 							'Medium': 'label--warning',
-							'Low': 'label--success'
-						}[details?.severity]">
+							'Low': 'label--info',
+							'Info': 'label--info'
+						}[details?.advisory?.severity]"
+						data-auto-id="BugDetailsSeverityIcon">
 					</span>
-					<span [innerText]="details?.severity || ('_NA_' | i18n)" class="text-capitalize"></span>
+					<span [innerText]="details?.advisory?.severity || ('_NA_' | i18n)" class="text-capitalize" data-auto-id="BugDetailsSeverityText"></span>
 				</div>
 			</div>
 
 			<div data-auto-id="CriticalBugPublished" class="dbl-margin-right">
 				<div class="text-bold text-uppercase" [innerText]="'_Published_' | i18n"></div>
-				<div [innerText]="details?.publishedOn | date:'MMM dd, yyyy' || ('_NA_' | i18n)"></div>
+				<div [innerText]="(details?.advisory?.publishedOn | date:'MMM dd, yyyy') || ('_NA_' | i18n)"></div>
 			</div>
 
 			<div data-auto-id="CriticalBugLastUpdated" class="dbl-margin-right">
 				<div class="text-bold text-uppercase" [innerText]="'_LastUpdated_' | i18n"></div>
-				<div [innerText]="(details?.lastUpdated | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
+				<div [innerText]="(details?.advisory?.lastUpdated | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
 			</div>
 
 			<div data-auto-id="CriticalBugStatus" class="dbl-margin-right">
 					<div class="text-bold text-uppercase" [innerText]="'_Status_' | i18n"></div>
-					<div [innerText]="details?.state || ('_NA_' | i18n)" class="text-capitalize"></div>
+					<div [innerText]="details?.advisory?.state || ('_NA_' | i18n)" class="text-capitalize"></div>
 				</div>
 		</div>
 	</div>
 </div>
 
-<div class="row">
+<div class="row" *ngIf="details">
 	<div class="col-md-8">
 		<!-- TODO: Uncomment when bug url exists -->
 		<!-- <a class="btn btn--secondary btn--small"
 			*ngIf="details?.url"
 			[href]="details.url"
 			target="_blank"
+			rel="noopener noreferrer"
 			[innerText]="'_ViewBugDetail_' | i18n"
 			data-auto-id="CriticalBugViewDetailLink">
 		</a> -->
-		<button class="text-capitalize btn btn--secondary btn--small disabled"
-			*ngIf="details?.assetsImpacted > 0"
-			innerText="{{ '_ImpactedAssets_' | i18n }} ({{ details?.assetsImpacted }})"
-			data-auto-id="CriticalBugImpactedAssets">
-		</button>
 	</div>
 	<div class="col-md-4 text-right">
 		<button class="text-capitalize btn btn--secondary btn--small"

@@ -14,7 +14,7 @@ import { PolicyFormModule } from './policy-form/policy-form.module';
 /**
  * SDP Root url for the apis
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Main Policies module

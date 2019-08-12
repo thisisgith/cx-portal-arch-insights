@@ -1,27 +1,20 @@
 import {
 	Component,
 	Input,
-	OnChanges,
-	OnInit,
-	SimpleChanges,
 	OnDestroy,
+	EventEmitter,
+	Output,
 } from '@angular/core';
 import {
-	InventoryService,
 	Asset,
-	HardwareResponse,
-	AssetSummary,
 } from '@sdp-api';
 
-import * as _ from 'lodash-es';
-import { LogService } from '@cisco-ngx/cui-services';
-import { forkJoin, of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import {
-	map,
-	catchError,
 	takeUntil,
 } from 'rxjs/operators';
 import { UserResolve } from '@utilities';
+import { Alert } from '@interfaces';
 
 /**
  * Asset Details Component
@@ -31,35 +24,22 @@ import { UserResolve } from '@utilities';
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'asset-details',
+	styleUrls: ['./asset-details.component.scss'],
 	templateUrl: './asset-details.component.html',
 })
 
-export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
+export class AssetDetailsComponent implements OnDestroy {
 
 	@Input('asset') public asset: Asset;
+	@Output('close') public close = new EventEmitter<boolean>();
 
-	public assetData: AssetSummary;
-	private assetSummaryParams: InventoryService.GetAssetSummaryParams;
-	private hardwareParams: InventoryService.GetHardwareParams;
-
-	public status = {
-		loading: {
-			asset: false,
-			hardware: false,
-			overall: false,
-		},
-	};
-	public componentData = {
-		numberInInventory: 0,
-	};
+	public alert: any = { };
 	public hidden = true;
 	public fullscreen = false;
-	private customerId: string;
+	public customerId: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
-		private logger: LogService,
-		private inventoryService: InventoryService,
 		private userResolve: UserResolve,
 	) {
 		this.userResolve.getCustomerId()
@@ -72,81 +52,27 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	}
 
 	/**
-	 * Gets current date for date comparisons in html
-	 */
-	get today () {
-		return new Date();
-	}
-
-	/**
-	 * Resets data fields
+	 * Clears the variables
 	 */
 	private clear () {
-		this.componentData.numberInInventory = 0;
-		this.assetData = null;
+		this.asset = null;
 	}
 
 	/**
-	 * Fetches the summary data for the asset
-	 * @returns the asset info
+	 * Handles displaying an alert from its child components
+	 * @param alert the alert to display
 	 */
-	private fetchAssetData () {
-		this.status.loading.asset = true;
-
-		return this.inventoryService.getAssetSummary(this.assetSummaryParams)
-		.pipe(
-			map((response: AssetSummary) => {
-				this.assetData = response;
-			}),
-			catchError(err => {
-				this.status.loading.asset = false;
-				this.logger.error('details.component : fetchAssetData()' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
+	public handleAlert (alert: Alert) {
+		this.alert.show(alert.message, alert.severity);
 	}
 
 	/**
-	 * Fetch the hardware data for the selected asset
-	 * @returns the hardware data
+	 * determine if close from child data
+	 * @param $event gets the boolean value
 	 */
-	private fetchHardwareData () {
-		this.status.loading.hardware = true;
-
-		return this.inventoryService.getHardware(this.hardwareParams)
-		.pipe(
-			map((response: HardwareResponse) => {
-				this.componentData.numberInInventory = _.get(response, ['Pagination', 'total'], 1);
-				this.status.loading.hardware = false;
-			}),
-			catchError(err => {
-				this.status.loading.hardware = false;
-				this.logger.error('details.component : fetchHardwareData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
-	 * Checks if our currently selected asset has changed
-	 * @param changes the changes detected
-	 */
-	public ngOnChanges (changes: SimpleChanges) {
-		const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		if (currentAsset && !changes.asset.firstChange) {
-			this.refresh();
-		}
-	}
-
-	/**
-	 * Initializer
-	 */
-	public ngOnInit () {
-		this.refresh();
+	public onPanelClose () {
+		this.clear();
+		this.close.emit(true);
 	}
 
 	/**
@@ -155,50 +81,5 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
-	}
-
-	/**
-	 * Refreshes the component
-	 */
-	public refresh () {
-		if (this.asset) {
-			this.clear();
-			this.status.loading.overall = true;
-
-			const productId = _.get(this.asset, 'productId');
-			const hwInstanceId = _.get(this.asset, 'hwInstanceId');
-
-			const obsBatch = [];
-
-			if (productId) {
-				this.hardwareParams = {
-					customerId: this.customerId,
-					page: 1,
-					productId: [productId],
-					rows: 1,
-				};
-
-				obsBatch.push(this.fetchHardwareData());
-			}
-
-			if (hwInstanceId) {
-				this.assetSummaryParams = {
-					hwInstanceId,
-					customerId: this.customerId,
-				};
-
-				obsBatch.push(
-					this.fetchAssetData(),
-				);
-			}
-
-			this.hidden = false;
-			forkJoin(obsBatch)
-			.subscribe(() => {
-				this.status.loading.overall = false;
-
-				this.logger.debug('details.component : loadData() :: Finished Refresh');
-			});
-		}
 	}
 }

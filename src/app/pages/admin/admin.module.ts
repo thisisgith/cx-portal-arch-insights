@@ -41,7 +41,7 @@ const childRoutes: Routes = [
 /**
  * SDP Root url for the apis
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Main Settings module

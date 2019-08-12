@@ -82,3 +82,8 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+/**
+ * Mapbox polyfill: https://github.com/Wykks/ngx-mapbox-gl/issues/136#issuecomment-496224634
+ */
+(<any> window).global = window;

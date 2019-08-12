@@ -1,7 +1,5 @@
 import { Component, Input } from '@angular/core';
 
-import { LogService } from '@cisco-ngx/cui-services';
-
 /**
  * Small component for displaying "x / y characters" char count on inputs
  */
@@ -17,10 +15,4 @@ export class CharCountComponent {
 	/** By default, always shows */
 	@Input() public displayAt?: number;
 	@Input() public showCharactersLabel?: boolean;
-
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('CharCountComponent Created!');
-	}
 }

@@ -32,11 +32,23 @@ export class APIxInterceptor implements HttpInterceptor {
 		private apixService: APIxService,
 		private logger: LogService,
 	) {
-		if (environment.sdpServiceOrigin === environment.rmaServiceOrigin) {
-			this.originRegex = new RegExp(`^${environment.sdpServiceOrigin}`);
+		const sdpServiceOrigin = environment.sdpServiceOrigin &&
+			_.get(
+				environment.sdpServiceOrigin.match(/(https:\/\/.*?)\//),
+				'[1]',
+				_.get(environment.sdpServiceOrigin.match(/(https:\/\/.*?)$/), '[1]'),
+			);
+		const rmaServiceOrigin = environment.rmaServiceOrigin &&
+			_.get(
+				environment.rmaServiceOrigin.match(/(https:\/\/.*?)\//),
+				'[1]',
+				_.get(environment.rmaServiceOrigin.match(/(https:\/\/.*?)$/), '[1]'),
+			);
+		if (sdpServiceOrigin === rmaServiceOrigin) {
+			this.originRegex = new RegExp(`^${sdpServiceOrigin}`);
 		} else {
 			this.originRegex =
-				new RegExp(`^${environment.sdpServiceOrigin}|^${environment.rmaServiceOrigin}`);
+				new RegExp(`^${sdpServiceOrigin}|^${rmaServiceOrigin}`);
 		}
 		this.sdpRegex = new RegExp(`^${
 			_.values(environment.sdpServicePaths)

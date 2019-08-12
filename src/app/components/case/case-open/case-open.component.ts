@@ -75,9 +75,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		public cuiModalService: CuiModalService,
 		private logger: LogService,
 		private profileService: ProfileService,
-	) {
-		this.logger.debug('CaseOpenComponent Created!');
-	}
+	) { }
 
 	/**
 	 * OnInit lifecycle hook

@@ -18,11 +18,17 @@ import {
 } from 'rxjs/operators';
 import { of } from 'rxjs';
 
+/** Data Interface */
+export interface Data {
+	advisory?: CriticalBug;
+}
+
 /**
  * Bug Details Component
  */
 @Component({
 	selector: 'bug-details',
+	styleUrls: ['./bug-details.component.scss'],
 	templateUrl: './bug-details.component.html',
 })
 export class BugDetailsComponent implements OnInit, OnChanges {
@@ -30,11 +36,13 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 	@Input('id') public id: string;
 	@Input('advisory') public advisory: CriticalBug;
 	@Input('customerId') public customerId: string;
-	@Output('details') public details = new EventEmitter<CriticalBug>();
+	@Output('details') public details = new EventEmitter<Data>();
 
 	private params: DiagnosticsService.GetCriticalBugsParams;
 
-	public data: CriticalBug = { };
+	public data: Data = { };
+	public activeTab = 0;
+	public impactedCount = 0;
 	public isLoading = false;
 
 	constructor (
@@ -48,9 +56,9 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 	 */
 	private getBug () {
 		if (this.advisory) {
-			this.data = this.advisory;
+			_.set(this.data, 'advisory', this.advisory);
 
-			return of(this.data);
+			return of({ });
 		}
 
 		return this.diagnosticsService.getCriticalBugs(this.params)
@@ -71,6 +79,9 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 	 * Refresh Function
 	 */
 	public refresh () {
+		this.data = { };
+		this.impactedCount = 0;
+		this.activeTab = 0;
 		if (this.id) {
 			this.isLoading = true;
 			this.params = {

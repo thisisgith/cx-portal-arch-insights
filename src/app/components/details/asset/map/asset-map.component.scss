@@ -1,0 +1,27 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.cx-asset-map {
+	height: 100%;
+	width: 100%;
+	min-height: 250px;
+}
+
+.cx-asset-map-marker {
+	border: 10px solid rgba(255, 255, 255, 0.7);
+	border-radius: 50%;
+	box-shadow: 0 0 7px rgba(0, 0, 0, 0.5);
+	pointer-events: none;
+
+	button {
+		background-color: $base-muted-color;
+	}
+}
+
+.cx-asset-map-popup {
+	// inline-table fixes blurry text in Chrome
+	display: inline-table;
+	font-family: "CiscoSans", "Arial", sans-serif !important;
+	font-weight: $base-font-weight !important;
+	font-size: $base-font-size !important;
+	line-height: $base-line-height !important;
+}

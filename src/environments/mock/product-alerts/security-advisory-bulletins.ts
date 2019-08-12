@@ -1,4 +1,5 @@
 import { SecurityAdvisoryBulletinResponse } from '@sdp-api';
+import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/product-alerts/v1/security-advisory-bulletins';
@@ -511,6 +512,44 @@ export const SecurityAdvisoryBulletinScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 250,
+					description: 'Security Advisory Details for ID 485',
+					response: {
+						body: { data: [MockSecurityAdvisoryBulletins.data[1]] },
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: 0,
+					description: 'Security Advisory Details for ID 485 - Unreachable',
+					response: {
+						body: { data: [] },
+						status: 503,
+					},
+					selected: false,
+				},
+				{
+					delay: 250,
+					description: 'Security Advisory Details for ID 485 - Missing keys',
+					response: {
+						body: { data: [_.pick(
+							MockSecurityAdvisoryBulletins.data[1],
+							['securityAdvisoryInstanceId', 'bulletinFirstPublished'],
+						)] },
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?securityAdvisoryInstanceId=485`,
 		usecases: ['Use Case 1'],
 	},
 ];
