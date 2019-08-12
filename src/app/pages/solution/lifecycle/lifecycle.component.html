@@ -418,8 +418,8 @@
 							<span class="text-blue" [innerText]="item.title"></span>
 						</a>
 					</div>
-					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.percentageCompleted === '100'"></div> 
-					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom learning-progress-col" [attr.data-percentage]="item.percentageCompleted" *ngIf="item.percentageCompleted != '100'">
+					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.percentageCompleted === 100"></div> 
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom learning-progress-col" [attr.data-percentage]="item.percentageCompleted" *ngIf="item.percentageCompleted && item.percentageCompleted != 100">
 						<div class="progressbar__fill learning-progressfill-col"></div>
 					</div>
 					<ng-container *ngTemplateOutlet="recommendedDescription; context: {
