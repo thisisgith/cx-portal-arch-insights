@@ -1,3 +1,5 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
 :host {
 	bottom: 0;
 	width: 50vw;
@@ -5,7 +7,8 @@
 	z-index: 1000;
 	height: calc(100vh - 55px);
 	right: 0;
-	transition: width 0.5s, transform 0.5s;
+	transition: width 0.25s, transform 0.25s;
+	box-shadow: $base-box-shadow;
 
 	.panel--no-padding {
 		padding: 0;
