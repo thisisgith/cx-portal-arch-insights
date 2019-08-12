@@ -19,50 +19,37 @@ import {
 	CriticalBug,
 	CriticalBugsResponse,
 	DiagnosticsService,
-	FieldNotice,
-	FieldNoticeBulletin,
-	FieldNoticeBulletinResponse,
-	FieldNoticeResponse,
-	ProductAlertsPagination as Pagination,
+	FieldNoticeAdvisory,
+	ProductAlertsPagination,
+	DiagnosticsPagination,
 	ProductAlertsService,
-	SecurityAdvisory,
-	SecurityAdvisoryBulletin,
-	SecurityAdvisoryBulletinResponse,
-	SecurityAdvisoryResponse,
+	SecurityAdvisoryInfo,
+	SecurityAdvisoriesResponse,
+	FieldNoticeAdvisoryResponse,
 } from '@sdp-api';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { forkJoin, of, Subject } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import {
 	map,
-	mergeMap,
 	catchError,
-	takeUntil,
+	switchMap,
 } from 'rxjs/operators';
-import { UserResolve } from '@utilities';
 import { AdvisoryType } from '@interfaces';
 
 /** Interface representing an advisory tab */
 interface Tab {
-	data?: {
-		notice?: FieldNotice[] | SecurityAdvisory[];
-		bulletin?: FieldNoticeBulletin[] | SecurityAdvisoryBulletin[] | CriticalBug[];
-		pagination?: Pagination;
-	};
-	params?: {
-		notice:
-			ProductAlertsService.GetFieldNoticeParams |
-			ProductAlertsService.GetSecurityAdvisoriesParams;
-		bulletin:
-			ProductAlertsService.GetFieldNoticeBulletinParams |
-			ProductAlertsService.GetPSIRTBulletinParams;
-	} |
+	data?: SecurityAdvisoryInfo[] | FieldNoticeAdvisory[] | CriticalBug[];
+	pagination?: ProductAlertsPagination | DiagnosticsPagination;
+	params?: ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams |
+	ProductAlertsService.GetAdvisoriesFieldNoticesParams |
 	DiagnosticsService.GetCriticalBugsParams;
 	loading: boolean;
 	moreLoading: boolean;
 	disabled?: boolean;
 	key: string;
 	selected: boolean;
+	subject?: Subject<{ }>;
 	table?: CuiTableOptions;
 	title: string;
 }
@@ -79,8 +66,10 @@ export class AssetDetailsAdvisoriesComponent
 	implements OnInit, OnChanges, OnDestroy {
 
 	@Input('asset') public asset: Asset;
+	@Input('customerId') public customerId: string;
 	@ViewChild('impact', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('fieldNoticeID', { static: true }) private fieldNoticeIDTemplate: TemplateRef<{ }>;
+	@ViewChild('bugID', { static: true }) private bugIDTemplate: TemplateRef<{ }>;
 
 	public tabs: Tab[];
 	public isLoading = true;
@@ -88,23 +77,13 @@ export class AssetDetailsAdvisoriesComponent
 		type: AdvisoryType;
 		id: string;
 	};
-	private customerId: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
 		private logger: LogService,
 		private diagnosticsService: DiagnosticsService,
 		private productAlertsService: ProductAlertsService,
-		private userResolve: UserResolve,
-	) {
-		this.userResolve.getCustomerId()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((id: string) => {
-			this.customerId = id;
-		});
-	}
+	) { }
 
 	get selectedTab (): Tab {
 		return _.find(this.tabs, 'selected');
@@ -125,63 +104,22 @@ export class AssetDetailsAdvisoriesComponent
 
 	/**
 	 * Retrieves the security advisories
-	 * @returns the data
-	 */
-	private getSecurityAdvisories () {
-		const advisoryTab = _.find(this.tabs, { key: 'security' });
-		advisoryTab.loading = true;
-
-		return this.productAlertsService.getSecurityAdvisories(advisoryTab.params.notice)
-		.pipe(
-			mergeMap((response: SecurityAdvisoryResponse) => {
-				const data = _.get(response, 'data', []);
-				_.set(advisoryTab, ['data', 'notice'], data);
-
-				advisoryTab.params.bulletin.securityAdvisoryInstanceId =
-					_.map(data, 'advisoryId');
-
-				if (data.length) {
-					return this.getSecurityAdvisoryBulletins();
-				}
-
-				return of({ });
-			}),
-			catchError(err => {
-				advisoryTab.loading = false;
-				this.logger.error('details-advisories.component : getSecurityAdvisories() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
-	 * Retrieves the security advisory bulletins
 	 * @param append appends the values
 	 * @returns the data
 	 */
-	private getSecurityAdvisoryBulletins (append = false) {
-		const advisoryTab = _.find(this.tabs, { key: 'security' });
+	private getSecurityAdvisories (append = false) {
+		const tab = _.find(this.tabs, { key: 'security' });
+		tab.loading = true;
 
-		return this.productAlertsService.getPSIRTBulletin(advisoryTab.params.bulletin)
+		return this.productAlertsService.getAdvisoriesSecurityAdvisories(tab.params)
 		.pipe(
-			map((response: SecurityAdvisoryBulletinResponse) => {
-				const data = _.get(response, 'data', []);
-				if (!append) {
-					_.set(advisoryTab, ['data', 'bulletin'], data);
-				} else {
-					_.set(advisoryTab, ['data', 'bulletin'],
-						_.concat(_.get(advisoryTab, ['data', 'bulletin'], []), data));
-				}
-
-				_.set(advisoryTab, ['data', 'pagination'], _.get(response, 'Pagination', { }));
-
-				advisoryTab.loading = false;
+			map((response: SecurityAdvisoriesResponse) => {
+				this.setTabData(tab, append, response);
+				tab.loading = false;
 			}),
 			catchError(err => {
-				advisoryTab.loading = false;
-				this.logger.error('details-advisories.component : getSecurityAdvisoryBulletins() ' +
+				tab.loading = false;
+				this.logger.error('asset-details:advisories.component : getSecurityAdvisories() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -191,75 +129,22 @@ export class AssetDetailsAdvisoriesComponent
 
 	/**
 	 * Retrieves the field notices
-	 * @returns the data
-	 */
-	private getFieldNotices () {
-		const fieldTab = _.find(this.tabs, { key: 'field' });
-		fieldTab.loading = true;
-
-		return this.productAlertsService.getFieldNotice(fieldTab.params.notice)
-		.pipe(
-			mergeMap((response: FieldNoticeResponse) => {
-				const data = _.get(response, 'data', []);
-				_.set(fieldTab, ['data', 'notice'], data);
-
-				fieldTab.params.bulletin.fieldNoticeId =
-					_.map(data, 'fieldNoticeId');
-
-				if (data.length) {
-					return this.getFieldNoticeBulletins();
-				}
-
-				return of({ });
-			}),
-			catchError(err => {
-				fieldTab.loading = false;
-				this.logger.error('details-advisories.component : getFieldNotices() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
-	 * Retrieves the field notice bulletins
 	 * @param append appends the values
 	 * @returns the data
 	 */
-	private getFieldNoticeBulletins (append = false) {
-		const fieldTab = _.find(this.tabs, { key: 'field' });
+	private getFieldNotices (append = false) {
+		const tab = _.find(this.tabs, { key: 'field' });
+		tab.loading = true;
 
-		return this.productAlertsService.getFieldNoticeBulletin(fieldTab.params.bulletin)
+		return this.productAlertsService.getAdvisoriesFieldNotices(tab.params)
 		.pipe(
-			map((response: FieldNoticeBulletinResponse) => {
-				const data = _.get(response, 'data', []);
-
-				const bulletins = _.map(data,
-					(bulletin: SecurityAdvisoryBulletin) => {
-						const newBulletin = _.cloneDeep(bulletin);
-
-						newBulletin.bulletinTitle = _.trim(
-							_.replace(newBulletin.bulletinTitle, /FN[0-9]{1,5}[ \t]+-/, ''));
-
-						return newBulletin;
-					});
-
-				if (!append) {
-					_.set(fieldTab, ['data', 'bulletin'], bulletins);
-				} else {
-					_.set(fieldTab, ['data', 'bulletin'],
-						_.concat(_.get(fieldTab, ['data', 'bulletin'], []), bulletins));
-				}
-
-				_.set(fieldTab, ['data', 'pagination'], _.get(response, 'Pagination', { }));
-
-				fieldTab.loading = false;
+			map((response: FieldNoticeAdvisoryResponse) => {
+				this.setTabData(tab, append, response);
+				tab.loading = false;
 			}),
 			catchError(err => {
-				fieldTab.loading = false;
-
-				this.logger.error('details-advisories.component : getFieldNoticeBulletins() ' +
+				tab.loading = false;
+				this.logger.error('asset-details:advisories.component : getFieldNotices() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -273,28 +158,19 @@ export class AssetDetailsAdvisoriesComponent
 	 * @returns the data
 	 */
 	private getBugs (append = false) {
-		const bugTab = _.find(this.tabs, { key: 'bug' });
+		const tab = _.find(this.tabs, { key: 'bug' });
+		tab.loading = true;
 
-		return this.diagnosticsService.getCriticalBugs(bugTab.params)
+		return this.diagnosticsService.getCriticalBugs(tab.params)
 		.pipe(
 			map((response: CriticalBugsResponse) => {
-				const data = _.get(response, 'data', []);
-
-				if (!append) {
-					_.set(bugTab, ['data', 'bulletin'], data);
-				} else {
-					_.set(bugTab, ['data', 'bulletin'],
-						_.concat(_.get(bugTab, ['data', 'bulletin'], []), data));
-				}
-
-				_.set(bugTab, ['data', 'pagination'], _.get(response, 'Pagination', { }));
-
-				bugTab.loading = false;
+				this.setTabData(tab, append, response);
+				tab.loading = false;
 			}),
 			catchError(err => {
-				bugTab.loading = false;
+				tab.loading = false;
 
-				this.logger.error('details-advisories.component : getBugs() ' +
+				this.logger.error('asset-details:advisories.component : getBugs() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -303,31 +179,40 @@ export class AssetDetailsAdvisoriesComponent
 	}
 
 	/**
+	 * Sets the data on the tab
+	 * @param tab the tab to use
+	 * @param append to append the data
+	 * @param response the response to parse
+	 */
+	private setTabData (tab: Tab,
+		append: boolean,
+		response: CriticalBugsResponse | FieldNoticeAdvisoryResponse | SecurityAdvisoriesResponse) {
+		const data = _.get(response, 'data', []);
+		if (!append) {
+			_.set(tab, 'data', data);
+		} else {
+			_.set(tab, 'data',
+				_.concat(_.get(tab, 'data', []), data));
+		}
+		_.set(tab, 'pagination', _.get(response, 'Pagination', { }));
+	}
+
+	/**
 	 * Initializes our data sets
 	 */
 	private initializeData () {
 		this.isLoading = true;
 
-		const obs = _.compact(_.map(this.tabs, (tab: Tab) => {
-			if (_.get(tab.params, ['notice', 'managedNeId'])) {
-				return (tab.key === 'security') ?
-					this.getSecurityAdvisories() : this.getFieldNotices();
-			}
-			if (_.get(tab.params, 'serialNumber')) {
-				return this.getBugs();
-			}
-		}));
-
-		forkJoin(obs)
-		.subscribe(
-		null,
-		null,
-		() => {
-			this.isLoading = false;
-
-			_.each(this.tabs, (tab: Tab) => {
+		_.map(this.tabs, (tab: Tab) => {
+			if (_.get(tab, ['params', 'serialNumber']) && tab.key === 'bug') {
+				tab.subject.next();
+			} else if (_.get(tab, ['params', 'managedNeId'])) {
+				tab.subject.next();
+			} else if (_.get(tab, ['params', 'neInstanceId'])) {
+				tab.subject.next();
+			} else {
 				tab.loading = false;
-			});
+			}
 		});
 	}
 
@@ -338,22 +223,16 @@ export class AssetDetailsAdvisoriesComponent
 		const tab = this.selectedTab;
 		tab.moreLoading = true;
 
-		let page = _.get(tab.params, ['bulletin', 'page']);
-		if (page) {
-			_.set(tab.params, ['bulletin', 'page'], page += 1);
-		} else {
-			page = _.get(tab.params, 'page');
-			_.set(tab.params, 'page', page += 1);
-		}
+		_.set(tab.params, 'page', _.get(tab.params, 'page') + 1);
 
 		let obs;
 
 		if (tab.key === 'security') {
-			obs = this.getSecurityAdvisoryBulletins(true);
+			obs = this.getSecurityAdvisories(true);
 		}
 
 		if (tab.key === 'field') {
-			obs = this.getFieldNoticeBulletins(true);
+			obs = this.getFieldNotices(true);
 		}
 
 		if (tab.key === 'bug') {
@@ -373,49 +252,47 @@ export class AssetDetailsAdvisoriesComponent
 
 		this.tabs = [
 			{
-				data: { },
+				data: [],
 				key: 'security',
 				loading: true,
 				moreLoading: false,
 				params: {
-					bulletin: {
-						page: 1,
-						rows: 10,
-						sort: ['bulletinFirstPublished:DESC'],
-					},
-					notice: {
-						customerId: this.customerId,
-						managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
-						vulnerabilityStatus: ['POTVUL', 'VUL'],
-					},
+					customerId: this.customerId,
+					managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
+					page: 1,
+					rows: 10,
+					sort: ['severity:ASC'],
 				},
 				selected: true,
+				subject: new Subject(),
 				table: new CuiTableOptions({
 					bordered: false,
 					columns: [
 						{
+							key: 'severity',
 							name: I18n.get('_Impact_'),
-							sortable: false,
+							sortable: true,
+							sortDirection: 'asc',
+							sorting: true,
 							template: this.impactTemplate,
 							width: '100px',
 						},
 						{
 							autoId: 'AdvisoryTitle',
-							key: 'bulletinTitle',
+							key: 'title',
 							name: I18n.get('_Title_'),
-							sortable: false,
-							value: 'bulletinTitle',
+							sortable: true,
+							value: 'title',
 						},
 						{
 							autoId: 'AdvisoryLastUpdated',
+							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.bulletinFirstPublished ?
+							render: item => item.lastUpdated ?
 								datePipe.transform(
-									new Date(item.bulletinFirstPublished), 'yyyy MMM dd') :
+									new Date(item.lastUpdated), 'yyyy MMM dd') :
 									I18n.get('_Never_'),
 							sortable: false,
-							sortDirection: 'desc',
-							sorting: true,
 							width: '125px',
 						},
 					],
@@ -427,47 +304,45 @@ export class AssetDetailsAdvisoriesComponent
 				title: I18n.get('_SecurityAdvisories_'),
 			},
 			{
-				data: { },
+				data: [],
 				key: 'field',
 				loading: true,
 				moreLoading: false,
 				params: {
-					bulletin: {
-						page: 1,
-						rows: 10,
-						sort: ['bulletinLastUpdated:DESC'],
-					},
-					notice: {
-						customerId: this.customerId,
-						managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
-						vulnerabilityStatus: ['POTVUL', 'VUL'],
-					},
+					customerId: this.customerId,
+					managedNeId: this.asset.managedNeId ? [this.asset.managedNeId] : null,
+					page: 1,
+					rows: 10,
+					sort: ['lastUpdated:DESC'],
 				},
 				selected: false,
+				subject: new Subject(),
 				table: new CuiTableOptions({
 					bordered: false,
 					columns: [
 						{
+							key: 'id',
 							name: I18n.get('_ID_'),
-							sortable: false,
+							sortable: true,
 							template: this.fieldNoticeIDTemplate,
 							width: '100px',
 						},
 						{
 							autoId: 'AdvisoryTitle',
-							key: 'bulletinTitle',
+							key: 'title',
 							name: I18n.get('_Title_'),
-							sortable: false,
-							value: 'bulletinTitle',
+							sortable: true,
+							value: 'title',
 						},
 						{
 							autoId: 'AdvisoryLastUpdated',
+							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.bulletinLastUpdated ?
+							render: item => item.lastUpdated ?
 								datePipe.transform(
-									new Date(item.bulletinLastUpdated), 'yyyy MMM dd') :
+									new Date(item.lastUpdated), 'yyyy MMM dd') :
 									I18n.get('_Never_'),
-							sortable: false,
+							sortable: true,
 							sortDirection: 'desc',
 							sorting: true,
 							width: '125px',
@@ -481,29 +356,32 @@ export class AssetDetailsAdvisoriesComponent
 				title: I18n.get('_FieldNotices_'),
 			},
 			{
-				data: { },
+				data: [],
 				key: 'bug',
 				loading: true,
 				moreLoading: false,
 				params: {
 					customerId: this.customerId,
+					page: 1,
+					rows: 10,
 					serialNumber: this.asset.serialNumber ? [this.asset.serialNumber] : null,
 				},
 				selected: false,
+				subject: new Subject(),
 				table: new CuiTableOptions({
 					bordered: false,
 					columns: [
 						{
 							key: 'id',
 							name: I18n.get('_ID_'),
-							sortable: false,
-							value: 'id',
+							sortable: true,
+							template: this.bugIDTemplate,
 							width: '100px',
 						},
 						{
 							key: 'title',
 							name: I18n.get('_Title_'),
-							sortable: false,
+							sortable: true,
 							value: 'title',
 						},
 						{
@@ -534,7 +412,44 @@ export class AssetDetailsAdvisoriesComponent
 			},
 		];
 
+		this.buildSecuritySubject();
+		this.buildFieldNoticesSubject();
+		this.buildBugsSubject();
+
 		this.selectTab(_.find(this.tabs, 'selected'));
+	}
+
+	/**
+	 * Builds our security subject for cancellable http requests
+	 */
+	private buildSecuritySubject () {
+		const tab = _.find(this.tabs, { key: 'security' });
+		tab.subject.pipe(
+			switchMap(() => this.getSecurityAdvisories()),
+		)
+		.subscribe();
+	}
+
+	/**
+	 * Builds our security subject for cancellable http requests
+	 */
+	private buildFieldNoticesSubject () {
+		const tab = _.find(this.tabs, { key: 'field' });
+		tab.subject.pipe(
+			switchMap(() => this.getFieldNotices()),
+		)
+		.subscribe();
+	}
+
+	/**
+	 * Builds our security subject for cancellable http requests
+	 */
+	private buildBugsSubject () {
+		const tab = _.find(this.tabs, { key: 'bug' });
+		tab.subject.pipe(
+			switchMap(() => this.getBugs()),
+		)
+		.subscribe();
 	}
 
 	/**
@@ -548,7 +463,7 @@ export class AssetDetailsAdvisoriesComponent
 	 * Refreshes and loads the date
 	 */
 	private refresh () {
-		if (this.asset) {
+		if (this.asset && this.customerId) {
 			this.clear();
 			this.initializeTabs();
 			this.initializeData();
@@ -570,21 +485,16 @@ export class AssetDetailsAdvisoriesComponent
 	 * Row selection handler
 	 * @param row the clicked row
 	 */
-	public onRowSelect (row: SecurityAdvisoryBulletin | FieldNoticeBulletin | CriticalBug) {
-		if (_.get(row, 'active', false)) {
+	public onRowSelect (row: SecurityAdvisoryInfo | FieldNoticeAdvisory | CriticalBug) {
+		const id = _.get(row, 'id');
+		if (_.get(row, 'active', false) && id) {
 			const type = this.selectedTab.key;
 			if (type === 'bug') {
-				this.selectedAdvisory = { id: _.get(row, 'id'), type: 'bug' };
+				this.selectedAdvisory = { id, type: 'bug' };
 			} else if (type === 'field') {
-				this.selectedAdvisory = {
-					id: _.get(row, 'fieldNoticeId'),
-					type: 'field',
-				};
+				this.selectedAdvisory = { id, type: 'field' };
 			} else if (type === 'security') {
-				this.selectedAdvisory = {
-					id: _.get(row, 'securityAdvisoryInstanceId'),
-					type: 'security',
-				};
+				this.selectedAdvisory = { id, type: 'security' };
 			}
 		} else {
 			this.selectedAdvisory = null;
@@ -592,11 +502,25 @@ export class AssetDetailsAdvisoriesComponent
 	}
 
 	/**
+	 * Column Sort Handler
+	 * @param options the selected column
+	 */
+	public onColumnSort (options: CuiTableColumnOption) {
+		const tab = this.selectedTab;
+
+		_.set(tab, ['params', 'sort'], [`${options.key}:${options.sortDirection.toUpperCase()}`]);
+		_.set(tab, ['params', 'page'], 1);
+		_.set(tab, ['params', 'rows'], 10);
+
+		tab.subject.next();
+	}
+
+	/**
 	 * Called on 360 details panel close button click
 	 */
 	public onPanelClose () {
 		this.selectedAdvisory = null;
-		_.each(_.get(this.selectedTab, ['data', 'bulletin'], []), row => {
+		_.each(_.get(this.selectedTab, ['data', 'info'], []), row => {
 			row.active = false;
 		});
 	}

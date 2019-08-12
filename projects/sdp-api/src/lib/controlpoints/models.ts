@@ -1,3 +1,4 @@
+/* tslint:disable */
 export { AdditionalDetails } from './models/additional-details';
 export { CSDFResponseModel } from './models/csdfresponse-model';
 export { CollectionPolicyResponseModel } from './models/collection-policy-response-model';

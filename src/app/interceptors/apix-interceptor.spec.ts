@@ -18,8 +18,8 @@ describe('APIxIntercetptor', () => {
 	}/rma_numbers/${testRmaNumber}`;
 
 	const sdpUrl = `${
-		environment.sdpServiceOrigin
-	}/inventory/v1/hardware?customerId=${user.info.customerId}`;
+		environment.sdpServiceOrigin + environment.sdpServiceBasePath
+	}/customerportal/inventory/v1/hardware?customerId=${user.info.customerId}`;
 	let apixService: APIxService;
 
 	beforeEach(() => {

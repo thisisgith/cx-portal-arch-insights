@@ -1,8 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+	async,
+	ComponentFixture,
+	TestBed,
+	tick,
+	fakeAsync,
+	discardPeriodicTasks,
+} from '@angular/core/testing';
 import {
 	AssetScenarios,
 	CaseScenarios,
 	Mock,
+	user,
 	MockAssetsData,
 } from '@mock';
 import { CaseService } from '@cui-x/services';
@@ -13,6 +21,7 @@ import { AssetDetailsHeaderComponent } from './header.component';
 import { AssetDetailsHeaderModule } from './header.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NetworkDataGatewayService } from '@sdp-api';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -30,6 +39,7 @@ describe('AssetDetailsHeaderComponent', () => {
 	let component: AssetDetailsHeaderComponent;
 	let fixture: ComponentFixture<AssetDetailsHeaderComponent>;
 	let caseService: CaseService;
+	let networkService: NetworkDataGatewayService;
 
 	let caseSpy;
 
@@ -59,6 +69,7 @@ describe('AssetDetailsHeaderComponent', () => {
 		})
 		.compileComponents();
 
+		networkService = TestBed.get(NetworkDataGatewayService);
 		caseService = TestBed.get(CaseService);
 	}));
 
@@ -181,5 +192,155 @@ describe('AssetDetailsHeaderComponent', () => {
 		expect(component.asset.serialNumber)
 			.toEqual('FOC1922S6JU');
 	});
+
+	it('should handle failure checking status on a device', done => {
+		component.asset = MockAssetsData[0];
+		component.customerId = user.info.customerId;
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(networkService, 'getScanStatusBySerial')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		fixture.detectChanges();
+
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.status.loading.overall)
+				.toBeFalsy();
+
+			done();
+		});
+	});
+
+	it('should initiate a scan request', fakeAsync(() => {
+		component.asset = MockAssetsData[0];
+		component.customerId = user.info.customerId;
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(networkService, 'getScanStatusBySerial')
+			.and
+			.returnValue(of([]));
+
+		spyOn(networkService, 'postDeviceTransactions')
+			.and
+			.returnValue(of([{
+				transactionId: 'fake',
+			}]));
+
+		spyOn(networkService, 'getScanStatusByTransaction')
+			.and
+			.returnValue(of({
+				status: 'SUCCESS',
+			}));
+
+		component.initiateScan();
+
+		tick(3000);
+
+		expect(component.status.scan.inProgress)
+			.toBeFalsy();
+
+		discardPeriodicTasks();
+	}));
+
+	it('should handle a failing initiation scan request without an id', () => {
+		component.asset = MockAssetsData[0];
+		component.customerId = user.info.customerId;
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(networkService, 'getScanStatusBySerial')
+			.and
+			.returnValue(of([]));
+
+		spyOn(networkService, 'postDeviceTransactions')
+			.and
+			.returnValue(of([]));
+
+		component.initiateScan();
+
+		fixture.detectChanges();
+
+		expect(component.status.scan.inProgress)
+			.toBeFalsy();
+	});
+
+	it('should handle a failing initiation scan request', () => {
+		component.asset = MockAssetsData[0];
+		component.customerId = user.info.customerId;
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(networkService, 'getScanStatusBySerial')
+			.and
+			.returnValue(of([]));
+
+		spyOn(networkService, 'postDeviceTransactions')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		component.initiateScan();
+
+		fixture.detectChanges();
+
+		expect(component.status.scan.inProgress)
+			.toBeFalsy();
+	});
+
+	it('should check for a scan request on load', fakeAsync(() => {
+		component.asset = MockAssetsData[0];
+		component.customerId = user.info.customerId;
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(networkService, 'getScanStatusBySerial')
+			.and
+			.returnValue(of([
+				{
+					status: 'IN_PROGRESS',
+					transactionId: 'fake',
+				},
+			]));
+		spyOn(networkService, 'getScanStatusByTransaction')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		tick(3000);
+
+		expect(component.status.scan.inProgress)
+			.toBeFalsy();
+
+		discardPeriodicTasks();
+	}));
 
 });

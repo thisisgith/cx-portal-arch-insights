@@ -53,7 +53,6 @@ export class DownloadImageComponent implements OnDestroy, SetupStep {
 		private route: ActivatedRoute,
 		private utils: UtilsService,
 	) {
-		this.logger.debug('DownloadImageComponent Created!');
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 	}

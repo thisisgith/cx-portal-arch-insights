@@ -1,3 +1,4 @@
+/* tslint:disable */
 export { VulnerabilityResponse } from './models/vulnerability-response';
 export { ErrorResponse as ProductAlertsErrorResponse } from './models/error-response';
 export { SecurityAdvisoryResponse } from './models/security-advisory-response';

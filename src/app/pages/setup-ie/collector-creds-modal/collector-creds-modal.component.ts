@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-import { LogService } from '@cisco-ngx/cui-services';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 
 import { RegisterCollectorService } from '../register-collector/register-collector.service';
@@ -27,12 +25,9 @@ export class CollectorCredsModalComponent {
 
 	constructor (
 		public cuiModalService: CuiModalService,
-		private logger: LogService,
 		private registerService: RegisterCollectorService,
 		private state: SetupIEStateService,
-	) {
-		this.logger.debug('CollectorCredsModalComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Close the modal and delete all components

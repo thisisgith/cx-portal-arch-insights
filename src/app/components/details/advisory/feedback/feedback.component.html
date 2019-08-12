@@ -1,0 +1,42 @@
+<div class="was-this-helpful text-bold text-small"
+	[innerText]="'_WasThisHelpful_' | i18n">
+</div>
+<form class="flex flex-fill flex-center-vertical"
+	[formGroup]="feedbackForm"
+	*ngIf="feedbackForm" novalidate>
+	<div>
+		<a><span id="upVoteBtn" 
+			class="icon-like"
+			[ngClass]="{
+				'btn-not-selected': !upVoteSelected
+			}"
+			data-auto-id="upVoteBtn"
+			(click)="voteClicked($event)">
+		</span></a>
+		<a><span id="downVoteBtn" 
+			class="icon-like rotate-180 qtr-margin-left"
+			[ngClass]="{
+				'btn-not-selected': !downVoteSelected
+			}"
+			data-auto-id="downVoteBtn"
+			(click)="voteClicked($event)">
+		</span></a>
+	</div>
+	<div class="flex-fill form-group input--compressed base-margin-top half-margin-left half-margin-right">
+		<div class="form-group__text">
+			<input #feedback
+				type="text"
+				formControlName="description"
+				class="form-control"
+				id="feedback-description"
+				[placeholder]="'_TellUsWhatYouThink_' | i18n" />
+		</div>​
+	</div>
+	<button class="btn btn--small base-margin-right"
+		type="submit"
+		data-auto-id="SubmitFeedback"
+		[disabled]="(!feedbackForm.valid || !feedbackForm.dirty || isSubmitting)"
+		(click)="submitFeedback()"
+		[innerText]="'_Submit_' | i18n">
+	</button>
+</form>
