@@ -34,7 +34,7 @@ import { environment } from '../../../environments/environment';
 /**
  * SDP Root url for the apis
  */
-const sdpRootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Module representing Intelligence Engine setup pages/slides
@@ -64,7 +64,7 @@ const sdpRootUrl = environment.sdpServiceOrigin;
 		CommonModule,
 		ConnectCollectorModule,
 		ConnectDNACenterModule,
-		ControlPointsModule.forRoot({ rootUrl: sdpRootUrl }),
+		ControlPointsModule.forRoot({ rootUrl }),
 		CuiModalModule,
 		CuiSpinnerModule,
 		DeployStepsModule,

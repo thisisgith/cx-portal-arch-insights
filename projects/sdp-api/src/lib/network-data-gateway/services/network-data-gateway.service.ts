@@ -16,7 +16,7 @@ import { TransactionStatuses } from '../models/transaction-statuses';
 import { TransactionStatus } from '../models/transaction-status';
 import { Connectivity } from '../models/connectivity';
 import { TransactionStatusResponse } from '../models/transaction-status-response';
-import { ScanStatus } from '../models/scan-status';
+import { ScanRequestResponse } from '../models/scan-request-response';
 @Injectable({
   providedIn: 'root',
 })
@@ -51,7 +51,7 @@ class NetworkDataGatewayService extends __BaseService {
     __body = transactionRequest;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/ndgw/v1/device/transactions/scan`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/transactions/scan`,
       __body,
       {
         headers: __headers,
@@ -89,7 +89,7 @@ class NetworkDataGatewayService extends __BaseService {
     __body = transactionRequest;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/ndgw/v1/device/transactions`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/transactions`,
       __body,
       {
         headers: __headers,
@@ -133,7 +133,7 @@ class NetworkDataGatewayService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/ndgw/v1/device/transactions/${params.customerId}/${params.remoteNodeId}`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/transactions/${params.customerId}/${params.remoteNodeId}`,
       __body,
       {
         headers: __headers,
@@ -176,7 +176,7 @@ class NetworkDataGatewayService extends __BaseService {
     __body = statusInfo;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/ndgw/v1/device/transactions/status`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/transactions/status`,
       __body,
       {
         headers: __headers,
@@ -214,7 +214,7 @@ class NetworkDataGatewayService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/ndgw/v1/device/transactions/status/${customerId}`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/transactions/status/${customerId}`,
       __body,
       {
         headers: __headers,
@@ -258,7 +258,7 @@ class NetworkDataGatewayService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/ndgw/v1/device/transactions/status/${params.customerId}/${params.transactionId}`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/transactions/status/${params.customerId}/${params.transactionId}`,
       __body,
       {
         headers: __headers,
@@ -310,7 +310,7 @@ class NetworkDataGatewayService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/ndgw/v1/device/connectivity/status/${params.customerId}/${params.serialNumber}/${params.productId}`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/connectivity/status/${params.customerId}/${params.serialNumber}/${params.productId}`,
       __body,
       {
         headers: __headers,
@@ -361,7 +361,7 @@ class NetworkDataGatewayService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/ndgw/v1/device/connectivity/status/${params.serialNumber}/${params.productId}`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/connectivity/status/${params.serialNumber}/${params.productId}`,
       __body,
       {
         headers: __headers,
@@ -410,7 +410,7 @@ class NetworkDataGatewayService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/ndgw/v1/device/scan-request/status/${params.customerId}/${params.transactionId}`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/scan-request/status/${params.customerId}/${params.transactionId}`,
       __body,
       {
         headers: __headers,
@@ -452,7 +452,7 @@ class NetworkDataGatewayService extends __BaseService {
    *
    * @return successful operation
    */
-  getScanStatusBySerialResponse(params: NetworkDataGatewayService.GetScanStatusBySerialParams): __Observable<__StrictHttpResponse<ScanStatus>> {
+  getScanStatusBySerialResponse(params: NetworkDataGatewayService.GetScanStatusBySerialParams): __Observable<__StrictHttpResponse<ScanRequestResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -462,7 +462,7 @@ class NetworkDataGatewayService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/ndgw/v1/device/scan-request/status/${params.customerId}/${params.serialNumber}/${params.productId}`,
+      this.rootUrl + `/customerportal/ndgw/v1/device/scan-request/status/${params.customerId}/${params.serialNumber}/${params.productId}`,
       __body,
       {
         headers: __headers,
@@ -473,7 +473,7 @@ class NetworkDataGatewayService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<ScanStatus>;
+        return _r as __StrictHttpResponse<ScanRequestResponse>;
       })
     );
   }
@@ -489,9 +489,9 @@ class NetworkDataGatewayService extends __BaseService {
    *
    * @return successful operation
    */
-  getScanStatusBySerial(params: NetworkDataGatewayService.GetScanStatusBySerialParams): __Observable<ScanStatus> {
+  getScanStatusBySerial(params: NetworkDataGatewayService.GetScanStatusBySerialParams): __Observable<ScanRequestResponse> {
     return this.getScanStatusBySerialResponse(params).pipe(
-      __map(_r => _r.body as ScanStatus)
+      __map(_r => _r.body as ScanRequestResponse)
     );
   }
 }

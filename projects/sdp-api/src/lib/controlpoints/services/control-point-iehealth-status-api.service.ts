@@ -33,7 +33,7 @@ class ControlPointIEHealthStatusAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/controlpoint/v1/ie/health-status/${customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/ie/health-status/${customerId}`,
       __body,
       {
         headers: __headers,

@@ -48,12 +48,13 @@ export const environment = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm.cisco.com/rma/home',
+	sdpServiceBasePath: '/api/stg',
 	sdpServiceClientId: 'ejw4cbpvp3s8cyh4ry8qcnff',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
 	 */
-	sdpServiceOrigin: 'https://api-test.cisco.com/api/stg/customerportal',
+	sdpServiceOrigin: 'https://api-test.cisco.com',
 	sdpServicePaths: {
 		contracts: '/api/stg/v1/contracts',
 		controlpoints: '/api/stg/customerportal/controlpoint',

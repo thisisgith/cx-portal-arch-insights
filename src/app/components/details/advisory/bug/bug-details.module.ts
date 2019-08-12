@@ -9,7 +9,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Module representing our Bug Details Component

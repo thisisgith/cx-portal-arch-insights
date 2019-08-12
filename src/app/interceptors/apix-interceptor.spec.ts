@@ -26,7 +26,9 @@ describe('APIxIntercetptor', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
-				InventoryModule.forRoot({ rootUrl: environment.sdpServiceOrigin }),
+				InventoryModule.forRoot({
+					rootUrl: environment.sdpServiceOrigin + environment.sdpServiceBasePath,
+				}),
 			],
 			providers: [
 				RMAService,

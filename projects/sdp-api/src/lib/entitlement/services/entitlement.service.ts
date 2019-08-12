@@ -37,7 +37,7 @@ class EntitlementService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/entitlement/v1/user`,
+      this.rootUrl + `/customerportal/entitlement/v1/user`,
       __body,
       {
         headers: __headers,
@@ -76,7 +76,7 @@ class EntitlementService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/entitlement/v1/user/party/affiliation/${customerId}`,
+      this.rootUrl + `/customerportal/entitlement/v1/user/party/affiliation/${customerId}`,
       __body,
       {
         headers: __headers,
@@ -116,7 +116,7 @@ class EntitlementService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/entitlement/v1/party/service-info/${customerId}`,
+      this.rootUrl + `/customerportal/entitlement/v1/party/service-info/${customerId}`,
       __body,
       {
         headers: __headers,
@@ -162,7 +162,7 @@ class EntitlementService extends __BaseService {
     if (params.productId != null) __params = __params.set('productId', params.productId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/entitlement/v1/party/service-info/product/${params.serialNumber}`,
+      this.rootUrl + `/customerportal/entitlement/v1/party/service-info/product/${params.serialNumber}`,
       __body,
       {
         headers: __headers,

@@ -17,7 +17,7 @@ import { IERegistrationResponseModel } from '../models/ieregistration-response-m
 })
 class ControlPointIERegistrationAPIService extends __BaseService {
   static readonly getDnacStatusUsingGETPath = '/dnac/status/{customerId}';
-  static readonly getLicenseDataPath = '/license/{customerId}/{hostName}';
+  static readonly getLicenseDataPath = '/license/{customerId}';
   static readonly createIERegistrationUsingPOSTPath = '/register/ie';
   static readonly getIERegistrationUsingGETPath = '/registration/ie/{customerId}';
 
@@ -40,7 +40,7 @@ class ControlPointIERegistrationAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/controlpoint/v1/dnac/status/${customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/dnac/status/${customerId}`,
       __body,
       {
         headers: __headers,
@@ -84,7 +84,7 @@ class ControlPointIERegistrationAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/controlpoint/v1/license/${params.customerId}/${params.hostName}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/license/${params.customerId}`,
       __body,
       {
         headers: __headers,
@@ -128,7 +128,7 @@ class ControlPointIERegistrationAPIService extends __BaseService {
     __body = ieRegistrationRequestModel;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/controlpoint/v1/register/ie`,
+      this.rootUrl + `/customerportal/controlpoint/v1/register/ie`,
       __body,
       {
         headers: __headers,
@@ -166,7 +166,7 @@ class ControlPointIERegistrationAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/controlpoint/v1/registration/ie/${customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/registration/ie/${customerId}`,
       __body,
       {
         headers: __headers,

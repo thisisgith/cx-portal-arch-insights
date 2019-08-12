@@ -65,7 +65,7 @@ class SearchService extends __BaseService {
     __body = __formData
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/search/v1/cdcSearch`,
+      this.rootUrl + `/customerportal/search/v1/cdcSearch`,
       __body,
       {
         headers: __headers,
@@ -136,7 +136,7 @@ class SearchService extends __BaseService {
     __body = __formData
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/search/v1/communitySearch`,
+      this.rootUrl + `/customerportal/search/v1/communitySearch`,
       __body,
       {
         headers: __headers,
@@ -218,7 +218,7 @@ class SearchService extends __BaseService {
     __body = __formData
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/search/v1/globalSearch`,
+      this.rootUrl + `/customerportal/search/v1/globalSearch`,
       __body,
       {
         headers: __headers,

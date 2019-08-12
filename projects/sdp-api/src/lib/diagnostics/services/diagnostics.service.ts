@@ -51,7 +51,7 @@ class DiagnosticsService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/diagnostics/v1/scan-results`,
+      this.rootUrl + `/customerportal/diagnostics/v1/scan-results`,
       __body,
       {
         headers: __headers,
@@ -134,7 +134,7 @@ class DiagnosticsService extends __BaseService {
     (params.alertId || []).forEach(val => {if (val != null) __params = __params.append('alertId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/diagnostics/v1/scan-results`,
+      this.rootUrl + `/customerportal/diagnostics/v1/scan-results`,
       __body,
       {
         headers: __headers,
@@ -214,7 +214,7 @@ class DiagnosticsService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/diagnostics/v1/critical-bugs/assets`,
+      this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs/assets`,
       __body,
       {
         headers: __headers,
@@ -265,7 +265,7 @@ class DiagnosticsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/diagnostics/v1/critical-bugs/state/count`,
+      this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs/state/count`,
       __body,
       {
         headers: __headers,
@@ -326,7 +326,7 @@ class DiagnosticsService extends __BaseService {
     if (params.id != null) __params = __params.set('id', params.id.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/diagnostics/v1/critical-bugs`,
+      this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs`,
       __body,
       {
         headers: __headers,

@@ -5,5 +5,4 @@ export interface PolicyResponseModel {
   policyId?: string;
   policyType?: string;
   schedule?: string;
-  createdDate?: string;
 }

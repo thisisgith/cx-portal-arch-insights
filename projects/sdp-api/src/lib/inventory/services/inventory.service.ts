@@ -77,7 +77,7 @@ class InventoryService extends __BaseService {
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/inventory/v1/assets`,
+      this.rootUrl + `/customerportal/inventory/v1/assets`,
       __body,
       {
         headers: __headers,
@@ -144,7 +144,7 @@ class InventoryService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/inventory/v1/assets/summary`,
+      this.rootUrl + `/customerportal/inventory/v1/assets/summary`,
       __body,
       {
         headers: __headers,
@@ -188,7 +188,7 @@ class InventoryService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/inventory/v1/hardware`,
+      this.rootUrl + `/customerportal/inventory/v1/hardware`,
       __body,
       {
         headers: __headers,
@@ -262,7 +262,7 @@ class InventoryService extends __BaseService {
     (params.containingHwId || []).forEach(val => {if (val != null) __params = __params.append('containingHwId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/inventory/v1/hardware`,
+      this.rootUrl + `/customerportal/inventory/v1/hardware`,
       __body,
       {
         headers: __headers,
@@ -326,7 +326,7 @@ class InventoryService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/inventory/v1/network-elements`,
+      this.rootUrl + `/customerportal/inventory/v1/network-elements`,
       __body,
       {
         headers: __headers,
@@ -415,7 +415,7 @@ class InventoryService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/inventory/v1/network-elements`,
+      this.rootUrl + `/customerportal/inventory/v1/network-elements`,
       __body,
       {
         headers: __headers,
@@ -500,7 +500,7 @@ class InventoryService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/inventory/v1/software`,
+      this.rootUrl + `/customerportal/inventory/v1/software`,
       __body,
       {
         headers: __headers,
@@ -588,7 +588,7 @@ class InventoryService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/inventory/v1/software`,
+      this.rootUrl + `/customerportal/inventory/v1/software`,
       __body,
       {
         headers: __headers,
@@ -663,7 +663,7 @@ class InventoryService extends __BaseService {
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/inventory/v1/role/device/count`,
+      this.rootUrl + `/customerportal/inventory/v1/role/device/count`,
       __body,
       {
         headers: __headers,
