@@ -15,7 +15,6 @@
 			<div class="divider no-margin"></div>
 			<ng-container *ngTemplateOutlet="casesContent"></ng-container>
 		</cui-tab>
-		<cui-tab [label]="'_RMAS_' | i18n " disabled="true"></cui-tab>
 		<ng-template cuiTabPost>
 			<div class="text-right">
 				<div (click)="filterCollapse = !filterCollapse"
@@ -168,4 +167,10 @@
 	<pie-chart id="pie" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
 		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
 	</pie-chart>
+</ng-template>
+
+<ng-template #barChartFilter let-filter="filter">
+	<bar-chart id="bar" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
+		[width]="250" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
+	</bar-chart>
 </ng-template>

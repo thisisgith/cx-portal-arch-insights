@@ -66,6 +66,17 @@ _.map(Object.entries(caseSeverities), severityMap => ({
 }));
 
 /**
+ * Array of default data for the severity filter
+ */
+const defaultRmaFilterData: FilterData[] =
+_.map(['F', 'T'], filter => ({
+	filter,
+	label: filter === 'F' ? 'No RMAs' : 'With RMAs',
+	selected: false,
+	value: 1,
+}));
+
+/**
  * Resolution Component
  */
 @Component({
@@ -75,6 +86,7 @@ _.map(Object.entries(caseSeverities), severityMap => ({
 export class ResolutionComponent implements OnInit, OnDestroy {
 	@ViewChild('totalFilter', { static: true }) private totalFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('pieChartFilter', { static: true }) private pieChartFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('barChartFilter', { static: true }) private barChartFilterTemplate: TemplateRef<{ }>;
 
 	@ViewChild('severityTmpl', { static: true }) public severityTemplate: TemplateRef<any>;
 	@ViewChild('updatedTmpl', { static: true }) public updatedTemplate: TemplateRef<any>;
@@ -92,6 +104,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	private destroy$ = new Subject();
 	public isLoading = true;
 	public totalCases: number;
+	public rmaCases: number;
 	public paginationInfo = {
 		currentPage: 0,
 		totalElements: 0, // total number of records for user
@@ -190,6 +203,10 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 
 			if (params.filter) {
 				_.set(this.caseParams.filter = _.castArray(params.filter));
+			}
+
+			if (params.hasRMAs) {
+				_.set(this.caseParams, 'hasRMAs', params.hasRMAs);
 			}
 
 			if (params.page) {
@@ -359,6 +376,14 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 				template: this.pieChartFilterTemplate,
 				title: I18n.get('_Severity_'),
 			},
+			{
+				displayed: false,
+				key: 'rma',
+				loading: true,
+				seriesData: [],
+				template: this.barChartFilterTemplate,
+				title: I18n.get('_RMAs_'),
+			},
 		];
 
 		// Create transparent default filters
@@ -373,12 +398,17 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		severityFilter.seriesData = JSON.parse(localStorage.getItem('caseSeverityFilterData')) ||
 									defaultSeverityFilterData;
 
+		const rmaFilter = _.find(this.filters, { key: 'rma' });
+		rmaFilter.seriesData = JSON.parse(localStorage.getItem('caseRmaFilterData')) ||
+									defaultRmaFilterData;
+
 		this.isLoading = true;
 
 		forkJoin(
 			this.buildTotalFilter(),
 			this.buildStatusFilter(),
 			this.buildSeverityFilter(),
+			this.buildRMAFilter(),
 		)
 		.subscribe(() => {
 			if (window.Cypress) {
@@ -423,6 +453,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 
 			}),
 			catchError(err => {
+				this.totalCases = 0;
 				this.logger.error('resolution.component : buildTotalFilter() ' +
 									`:: Error : (${err.status}) ${err.message}`);
 
@@ -450,7 +481,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			)),
 		)
 		.pipe(
-			map(responses => this.setSeriesData('status', defaultStatusFilterData, responses)),
+			map(responses => this.setSeriesData('status',
+				defaultStatusFilterData, responses)),
 			catchError(err => {
 				this.logger.error('resolution.component : buildStatusFilter() ' +
 									`:: Error : (${err.status}) ${err.message}`);
@@ -491,6 +523,47 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Fetch Case/RMA counts and displays them in the given filter
+	 * @returns null observable
+	 */
+	 public buildRMAFilter () {
+		const params: CaseParams = {
+			nocache: Date.now(),
+			page: 0,
+			size: 1,
+			sort: 'caseNumber,ASC',
+			statusTypes: 'O',
+		};
+
+		return forkJoin(
+			_.map(defaultRmaFilterData, rmaFilter => this.caseService.read(
+				{ ...params, hasRMAs: rmaFilter.filter },
+			)),
+		)
+		.pipe(
+			map(responses => {
+				const filter = _.find(this.filters, { key: 'rma' });
+				filter.seriesData = _.map(responses, (response, index) => ({
+					...defaultRmaFilterData[index],
+					value: response.totalElements,
+				}));
+				if (this.caseParams.hasRMAs) {
+					this.onSubfilterSelect(this.caseParams.hasRMAs, filter, false);
+				}
+				filter.loading = false;
+				localStorage.setItem('caseRmaFilterData',
+					JSON.stringify(_.reject(filter.seriesData, 'selected')));
+			}),
+			catchError(err => {
+				this.logger.error('resolution.component : buildRmaFilter() ' +
+									`:: Error : (${err.status}) ${err.message}`);
+
+				return of(null);
+			}),
+		);
+	}
+
+	/**
 	 * Sets the series data for the filter matching the given key
 	 * with the given information from the response
 	 * @param key Name of the filter to set data for
@@ -499,8 +572,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 */
 	private setSeriesData (key: string, defaultData, responses) {
 		const filter = _.find(this.filters, { key });
-		const caseParamsFilter = _.find(this.caseParams.filter,
-			param => _.includes(param, key));
+		const caseParamsFilter = _.find(this.caseParams.filter, param => _.includes(param, key));
 		filter.seriesData = _.map(responses, (response, index) => ({
 			...defaultData[index],
 			value: response.totalElements,
@@ -545,7 +617,8 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 private async adjustQueryParams () {
 		// Must remove all query params first or they'll only update once
 		await this.router.navigate([], { queryParams: null, relativeTo: this.route });
-		const queryParams = _.pick(this.caseParams, ['filter', 'coverage', 'search', 'sort']);
+		const queryParams = _.pick(this.caseParams,
+			['filter', 'coverage', 'search', 'sort', 'hasRMAs']);
 		await this.router.navigate([], { queryParams, relativeTo: this.route });
 		this.refresh$.next();
 	}
@@ -570,7 +643,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Adds a subfilter to the given filer
+	 * Adds a subfilter to the given filter
 	 * @param subfilter the subfilter selected
 	 * @param filter the filter we selected the subfilter on
 	 * @param reload if we're reloading the cases
@@ -590,21 +663,33 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			subFilter => subFilter.filter,
 		);
 		// To appease how the case service handles filters
-		if (key === 'status') {
-			values = `O-${values}`;
-		}
-
-		const existingFilterIndex = _.findIndex(this.caseParams.filter,
-			filterKeyVal => _.includes(filterKeyVal, `${key}:`));
-
-		if (existingFilterIndex !== -1) {
-			if (values.length > 0 && values !== 'O-') {
-				(<string[]> this.caseParams.filter)[existingFilterIndex] = `${key}:${values}`;
-			} else {
-				(<string[]> this.caseParams.filter).splice(existingFilterIndex, 1);
+		if (key === 'rma') {
+			this.caseParams.hasRMAs = <'F' | 'T'> subfilter;
+			_.forEach(filter.seriesData, seriesData => {
+				if (seriesData.filter !== subfilter) {
+					seriesData.selected = false;
+				}
+			});
+			if (!sub.selected) {
+				delete(this.caseParams.hasRMAs);
 			}
 		} else {
-			(<string[]> this.caseParams.filter).push(`${key}:${values}`);
+			if (key === 'status') {
+				values = `O-${values}`;
+			}
+
+			const existingFilterIndex = _.findIndex(this.caseParams.filter,
+				filterKeyVal => _.includes(filterKeyVal, `${key}:`));
+
+			if (existingFilterIndex !== -1) {
+				if (values.length > 0 && values !== 'O-') {
+					(<string[]> this.caseParams.filter)[existingFilterIndex] = `${key}:${values}`;
+				} else {
+					(<string[]> this.caseParams.filter).splice(existingFilterIndex, 1);
+				}
+			} else {
+				(<string[]> this.caseParams.filter).push(`${key}:${values}`);
+			}
 		}
 		this.caseParams.page = 0;
 

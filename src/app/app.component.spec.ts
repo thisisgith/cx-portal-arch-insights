@@ -16,6 +16,9 @@ import { AppService } from './app.service';
 import { AppTestModule } from './app-test.module.spec';
 import { User } from '@interfaces';
 import { user } from '@mock';
+import { HttpErrorResponse } from '@angular/common/http';
+import { of } from 'rxjs';
+import { EntitlementService, ServiceInfo } from '@sdp-api';
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -117,6 +120,7 @@ describe('AppComponent', () => {
 
 	describe('UserResolve', () => {
 		let userResolve: UserResolve;
+		let entitlementService: EntitlementService;
 
 		beforeEach(async(() => {
 			TestBed.configureTestingModule({
@@ -131,6 +135,7 @@ describe('AppComponent', () => {
 			.compileComponents();
 
 			userResolve = TestBed.get(UserResolve);
+			entitlementService = TestBed.get(EntitlementService);
 		}));
 
 		beforeEach(() => {
@@ -153,6 +158,49 @@ describe('AppComponent', () => {
 
 				userResolve.resolve()
 				.subscribe();
+			});
+		});
+
+		it('should resolve to a cached user', done => {
+			fixture.whenStable()
+			.then(() => {
+				userResolve.getUser()
+				.subscribe((u: User) => {
+					expect(u)
+						.toEqual(user);
+				});
+
+				userResolve.resolve()
+				.subscribe(() => {
+					userResolve.resolve()
+					.subscribe((u: User) => {
+						expect(u)
+							.toEqual(user);
+
+						done();
+					});
+				});
+			});
+		});
+
+		it('should fail gracefully when resolving', done => {
+			const error = {
+				status: 404,
+				statusText: 'Resource not found',
+			};
+			spyOn(entitlementService, 'getUser')
+				.and
+				.returnValue(of(new HttpErrorResponse(error)));
+
+			fixture.whenStable()
+			.then(() => {
+				userResolve.resolve()
+				.subscribe((u: { info: User, service: ServiceInfo }) => {
+					expect(u.info)
+						.toBeFalsy();
+				});
+
+				done();
 			});
 		});
 

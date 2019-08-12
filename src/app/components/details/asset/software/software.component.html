@@ -1,0 +1,45 @@
+<cui-drawer projection="true" [expanded]="true" *ngIf="softwareLicenses?.length">
+	<div class="cui-drawer-label text-large" [innerText]="'_Licenses_' | i18n | uppercase"></div>
+	<div class="cui-drawer-content">
+		<ng-container *ngTemplateOutlet="licensesTable; context: { licenses: softwareLicenses, options: softwareLicensesTable }"></ng-container>
+	</div>
+</cui-drawer>
+<cui-drawer projection="true" [expanded]="true" *ngIf="timelineData?.length">
+	<div class="cui-drawer-label text-large" [innerText]="'_EOX_' | i18n | uppercase"></div>
+	<div class="cui-drawer-content">
+		<pbc-timeline class="no-margin" [data]="timelineData" [todayButtonText]="'_ViewMigrationOptions_' | i18n"></pbc-timeline>
+	</div>
+</cui-drawer>
+
+<div class="flex-center" *ngIf="!timelineData?.length">
+	<span class="text-muted text-xlarge"
+		[innerText]="'_NoSoftwareInformation_' | i18n"
+		data-auto-id="NoSoftwareInformationText" >
+	</span>
+</div>
+
+<ng-template #licensesTable let-licenses="licenses" let-options="options">
+	<cui-table [options]="options"
+		[data]="licenses">
+	</cui-table>
+</ng-template>
+
+<ng-template #nameTemplate let-celldata="celldata">
+	<a attr.data-auto-id="LicenseName-{{celldata.licenseName}}" href="#" [innerText]="celldata.licenseName || '_NA_' | i18n"></a>
+</ng-template>
+
+<ng-template #countTemplate let-celldata="celldata">
+	<span [innerText]="celldata.usageCount >= 0 ? celldata.usageCount : '_NA_' | i18n"></span>
+</ng-template>
+
+<ng-template #statusTemplate let-celldata="celldata">
+	<span [innerText]="celldata.status || '_NA_' | i18n"></span>
+</ng-template>
+
+<ng-template #typeTemplate let-celldata="celldata">
+	<span [innerText]="celldata.licenseType || '_NA_' | i18n"></span>
+</ng-template>
+
+<ng-template #expiryTemplate let-celldata="celldata">
+	<span [innerText]="celldata.licenseExpiry || '_NA_' | i18n"></span>
+</ng-template>

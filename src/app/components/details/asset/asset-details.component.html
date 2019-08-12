@@ -1,22 +1,28 @@
 <cui-tabs>
-	<cui-tab [label]="'_Summary_' | i18n | uppercase">
-		<ng-container *ngTemplateOutlet="summary"></ng-container>
+	<cui-tab [label]="'_Summary_' | i18n">
+		<div class="qtr-margin-left qtr-margin-right">
+			<ng-container *ngTemplateOutlet="summary"></ng-container>
+		</div>
 	</cui-tab>
-	<cui-tab [label]="'_Hardware_' | i18n | uppercase">
-		<div class="half-margin-top" *ngIf="asset">
+	<cui-tab [label]="'_Hardware_' | i18n">
+		<div class="half-margin-top qtr-margin-left qtr-margin-right" *ngIf="asset">
 			<asset-details-hardware [asset]="asset"></asset-details-hardware>
 		</div>
 	</cui-tab>
-	<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true"></cui-tab>
+	<cui-tab [label]="'_Software_' | i18n | uppercase">
+		<div class="dbl-margin-top qtr-margin-left qtr-margin-right" *ngIf="asset">
+			<asset-details-software [asset]="asset"></asset-details-software>
+		</div>
+	</cui-tab>
 	<cui-tab [label]="'_Advisories_' | i18n | uppercase">
-		<div class="dbl-margin-top" *ngIf="asset">
+		<div class="dbl-margin-top qtr-margin-left qtr-margin-right" *ngIf="asset">
 			<asset-details-advisories [asset]="asset"></asset-details-advisories>
 		</div>
 	</cui-tab>
 </cui-tabs>
 
 <ng-template #summary>
-	<div class="row base-margin">
+	<div class="row base-margin-top">
 		<div *ngIf="false" class="col-md-4 flex flex-center">
 			<img attr.data-auto-id="DeviceImg-{{ asset?.serialNumber }}" [src]="" alt=""/>
 		</div>
@@ -30,16 +36,17 @@
 				<cui-loader></cui-loader>
 			</div>
 			<div *ngIf="!status.loading.overall">
-				<h4 [innerText]="assetData?.productId || asset?.productId" data-auto-id="ProductId"></h4>
+				<div class="text-large cx-text-soft-black" [innerText]="assetData?.productId || asset?.productId" data-auto-id="ProductId"></div>
 				<div data-auto-id="YouHaveInventory"
+					class="text-small qtr-margin-top"
 					*ngIf="componentData.numberInInventory > 1"
 					[innerHtml]="'_YouHaveInventory_' | i18n:componentData.numberInInventory">
 				</div>
 			</div>
 		</div>
 	</div>
-		
-	<div class="row base-margin-top base-margin-left">
+
+	<div class="row base-margin-top">
 		<div class="col-md-6">
 			<div class="row">
 				<div class="col-md-12">
@@ -65,16 +72,16 @@
 				</div>
 				<div class="col-md-12 base-margin-top">
 					<ng-container *ngTemplateOutlet="supportData; context: {
-								title: '_SupportCoverage_',
-								expirationDate: assetData?.lastDateOfSupport,
-								linkData: assetData?.contractNumber ?
-								(assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
-								 : null,
-								url: '#',
-								supportType: 'support'
-							}">
-						</ng-container>
-					</div>
+							title: '_SupportCoverage_',
+							expirationDate: assetData?.lastDateOfSupport,
+							linkData: assetData?.contractNumber ?
+							(assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
+								: null,
+							url: '#',
+							supportType: 'support'
+						}">
+					</ng-container>
+				</div>
 			</div>
 		</div>
 		<div class="col-md-6">
@@ -106,29 +113,19 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- <div class="row dbl-margin-top">
-		<div class="col-md-12">
-			<ng-container *ngTemplateOutlet="detailsData; context: {
-					title: '_Location_',
-					titleOnly: true
-				}">
-			</ng-container>
+	<div class="row">
+		<div class="col-md-12 base-margin-top">
+			<span class="text-uppercase text-bold text-small" [innerText]="'_InstalledLocation_' | i18n"></span>
 		</div>
-	</div> -->
-
-	<!-- <div class="flex map-box">
-		<div class="icon-chevron-left qtr-padding-left qtr-padding-right flex-center"></div>
-		<div class="flex-fluid flex-center map-box-content"></div>
-		<div class="icon-chevron-right qtr-padding-left qtr-padding-right flex-center"></div>
-	</div> -->
-
+		<div class="col-md-12 qtr-margin-top">
+			<asset-map *ngIf="assetData?.installAddress1" [assetSummary]="assetData"></asset-map>
+		</div>
+	</div>
 </ng-template>
 
-<ng-template #supportData
-	let-title="title" let-expirationDate="expirationDate" let-linkData="linkData" let-url="url" let-supportType="supportType">
+<ng-template #supportData let-title="title" let-expirationDate="expirationDate" let-linkData="linkData" let-url="url" let-supportType="supportType">
 	<div class="row">
-		<div class="col-md-12 text-bold" [innerText]="title | i18n | uppercase" attr.data-auto-id="{{ title }}"></div>
+		<div class="col-md-12 text-bold text-small text-uppercase" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
 	<div class="row">
 		<div *ngIf="expirationDate" class="col-md-12" >
@@ -150,10 +147,9 @@
 
 </ng-template>
 
-<ng-template #detailsData
-	let-title="title" let-data="data" let-linkData="linkData" let-url="url" let-titleOnly="titleOnly">
+<ng-template #detailsData let-title="title" let-data="data" let-linkData="linkData" let-url="url" let-titleOnly="titleOnly">
 	<div class="row">
-		<div class="col-md-12 text-bold" [innerText]="title | i18n | uppercase" attr.data-auto-id="{{ title }}"></div>
+		<div class="col-md-12 text-bold text-small text-uppercase" [innerText]="title | i18n" attr.data-auto-id="{{ title }}"></div>
 	</div>
 	<div class="row" *ngIf="!titleOnly">
 		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>

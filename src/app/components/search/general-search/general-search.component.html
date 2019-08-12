@@ -83,18 +83,25 @@
 	<div>
 		<a [href]="result.displayUrl"
 			[attr.data-auto-id]="'searchResultLink' + place + index"
-			target="_blank">
+			target="_blank"
+			rel="noopener noreferrer">
 			<h5 [innerHTML]="result.title | keyHighlight"></h5>
 		</a>
 	</div>
 	<div>
 		<span [innerHTML]="result.description | truncate:false:300 | keyHighlight"></span>
 	</div>
-	<a class="text-dkgray-4" target="_blank" [href]="result.displayUrl"
+	<a class="text-dkgray-4"
+		target="_blank"
+		rel="noopener noreferrer"
+		[href]="result.displayUrl"
 		[innerText]="result.displayUrl | truncate:false:100">
 	</a>
 	<div *ngIf="result.pdfUrl">
-		<a class="text-dkgray-4" target="_blank" [href]="result.pdfUrl">
+		<a class="text-dkgray-4"
+			target="_blank"
+			rel="noopener noreferrer"
+			[href]="result.pdfUrl">
 			<span class="icon-file-pdf-o icon-xsmall qtr-margin-right"></span>
 			<span [innerText]="'_PDFSize_' | i18n:result.pdfSize"></span>
 		</a>
@@ -114,7 +121,8 @@
 			<div>
 				<a [href]="item.url"
 					[attr.data-auto-id]="'relatedResultLink' + item.type"
-					target="_blank">
+					target="_blank"
+					rel="noopener noreferrer">
 					<h5 [innerHTML]="item.title | keyHighlight"></h5>
 				</a>
 			</div>

@@ -18,6 +18,7 @@ import * as _ from 'lodash-es';
 })
 export class BarChartComponent implements OnInit {
 
+	@Input() public loading;
 	@Input() public seriesData;
 	@Input() public width;
 	@Output() public subfilter = new EventEmitter<string>();
@@ -55,17 +56,20 @@ export class BarChartComponent implements OnInit {
 							// Hack to allow Cypress to click on highcharts series
 							_.each(this.chart.ref.series, chartSeries => {
 								_.each(chartSeries.points, point => {
-									point.graphic.element.setAttribute(
-										'data-auto-id', `${point.name}Point`,
-									);
-									// When a "normal" click event fires,
-									// turn it into a highcharts point event instead
-									point.graphic.element.addEventListener('click', () => {
-										const event = Object.assign(
-											new MouseEvent('click'), { point },
-										);
-										point.firePointEvent('click', event);
-									});
+									if (point.graphic) {
+										point.graphic.element
+											.setAttribute('data-auto-id', `${point.name}Point`);
+										point.graphic.element
+											.setAttribute('data-auto-value', point.y);
+										// When a "normal" click event fires,
+										// turn it into a highcharts point event instead
+										point.graphic.element.addEventListener('click', () => {
+											const event = Object.assign(
+												new MouseEvent('click'), { point },
+											);
+											point.firePointEvent('click', event);
+										});
+									}
 								});
 							});
 						}
@@ -90,7 +94,10 @@ export class BarChartComponent implements OnInit {
 			series: [
 				{
 					data,
+					enableMouseTracking: !this.loading,
+					minPointLength: 3,
 					name: '',
+					opacity: this.loading ? 0.5 : 1,
 					showInLegend: false,
 					type: undefined,
 				},

@@ -14,8 +14,10 @@ import { UtilsService } from '@services';
 })
 export class NoDNACHeaderComponent {
 	public noDNAC = this.utils.getLocalStorage(this.env.ieSetup.DNAC_LS_KEY);
+	public hasCXCollector = this.utils.getLocalStorage(this.env.ieSetup.CX_Coll_Reg_LS_KEY);
+	public forceHidden = false;
 	@HostBinding('class.invisible') get isInvisible () {
-		return !this.noDNAC;
+		return (!this.noDNAC && this.hasCXCollector) || this.forceHidden;
 	}
 	constructor (
 		@Inject('ENVIRONMENT') private env,

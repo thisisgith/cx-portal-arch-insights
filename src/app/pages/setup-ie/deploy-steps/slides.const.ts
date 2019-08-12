@@ -92,14 +92,6 @@ const vboxSlides: Slide[] = [
 		stepNum: 2,
 		type: 'video',
 	},
-	{
-		buttonText: I18n.get('_IveDoneThis_'),
-		content: I18n.get('_SetupInstruction_4C_'),
-		src: 'assets/img/setup-ie/FinalVirtualBox/4C_Open.mp4',
-		stepLabel: I18n.get('_VirtualMachine_'),
-		stepNum: 2,
-		type: 'video',
-	},
 ];
 
 /**
@@ -166,14 +158,6 @@ const vCenterSlides: Slide[] = [
 		buttonText: I18n.get('_IveDoneThis_'),
 		content: I18n.get('_SetupInstruction_8B_'),
 		src: 'assets/img/setup-ie/FinalWebClient/8B_Wait.mp4',
-		stepLabel: I18n.get('_VirtualMachine_'),
-		stepNum: 2,
-		type: 'video',
-	},
-	{
-		buttonText: I18n.get('_IveDoneThis_'),
-		content: I18n.get('_SetupInstruction_9B_'),
-		src: 'assets/img/setup-ie/FinalWebClient/9B_OpenConsole.mp4',
 		stepLabel: I18n.get('_VirtualMachine_'),
 		stepNum: 2,
 		type: 'video',
