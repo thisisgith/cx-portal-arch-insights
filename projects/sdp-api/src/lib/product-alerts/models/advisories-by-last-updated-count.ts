@@ -1,8 +1,7 @@
 /* tslint:disable */
-import { LastUpdatedCount } from './last-updated-count';
 export interface AdvisoriesByLastUpdatedCount {
-  "gt-0-lt-30-days"?: LastUpdatedCount;
-  "gt-30-lt-60-days"?: LastUpdatedCount;
-  "gt-60-lt-90-days"?: LastUpdatedCount;
-  "further-out"?: LastUpdatedCount;
+  "gt-0-lt-30-days"?: number;
+  "gt-30-lt-60-days"?: number;
+  "gt-60-lt-90-days"?: number;
+  "further-out"?: number;
 }

@@ -98,8 +98,11 @@ describe('AdvisoryDetailsComponent', () => {
 			expect(component.advisoryId)
 			.toEqual(_.toString(nextAdvisory.id));
 
-			expect(component.title)
-			.toEqual('Security Advisory' || 'SecurityAdvisory');
+			expect(
+				component.title === 'Security Advisory'
+				|| component.title === 'SecurityAdvisory',
+			)
+			.toBe(true);
 		});
 	});
 
@@ -203,8 +206,11 @@ describe('AdvisoryDetailsComponent', () => {
 			expect(component.advisoryId)
 				.toEqual(_.toString(nextAdvisory.id));
 
-			expect(component.title)
-			.toEqual(`Field Notice FN ${nextAdvisory.id}` || `FieldNotice FN ${nextAdvisory.id}`);
+			expect(
+				component.title === `Field Notice FN ${nextAdvisory.id}`
+				|| component.title === `FieldNotice FN ${nextAdvisory.id}`,
+			)
+			.toBe(true);
 		});
 	});
 
