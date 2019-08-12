@@ -3,9 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { empty, from, Subject } from 'rxjs';
 import { catchError, finalize, mergeMap, takeUntil } from 'rxjs/operators';
-
-import { LogService } from '@cisco-ngx/cui-services';
-
 import { SetupComponent, SetupStep } from '@interfaces';
 import { KEY_CODES, SETUP_STATES } from '@classes';
 import { SetupIEStateService } from '../setup-ie-state.service';
@@ -50,16 +47,13 @@ export class ConnectDNACenterComponent implements OnInit, SetupStep {
 	constructor (
 		@Inject('ENVIRONMENT') private env,
 		private cuiModalService: CuiModalService,
-		private logger: LogService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private registerService: RegisterCollectorService,
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
 		private utils: UtilsService,
-	) {
-		this.logger.debug('ConnectDNACenterComponent Created!');
-	}
+	) { }
 
 	/**
 	 * NgOnInit

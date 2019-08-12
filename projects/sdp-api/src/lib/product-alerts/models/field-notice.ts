@@ -2,14 +2,14 @@
 export interface FieldNotice {
 
   /**
+   * The name of a group of products derived from a common product platform
+   */
+  productFamily?: string;
+
+  /**
    * Unique identifier of a Cisco customer
    */
   customerId?: string;
-
-  /**
-   * The unique, generated ID of the network resource id
-   */
-  managedNeId?: string;
 
   /**
    * The unique, generated ID of the network element
@@ -37,9 +37,9 @@ export interface FieldNotice {
   serialNumber?: string;
 
   /**
-   * The name of a group of products derived from a common product platform
+   * The unique, generated ID of the network resource id
    */
-  productFamily?: string;
+  managedNeId?: string;
 
   /**
    * A broad classification of Cisco product that categorizes its function.Examples :- OTHER, CHASIS, MODULE, POWERSUPPLY, FAN, IPPHONE

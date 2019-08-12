@@ -138,7 +138,6 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
 	) {
-		this.logger.debug('ConnectCXCollectorComponent Created!');
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 	}

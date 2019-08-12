@@ -1,18 +1,10 @@
-<!-- App Details 360 slide-out -->
-<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onPanelClose()"
-		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false">
-		<asset-details-header [asset]="selectedAsset"></asset-details-header>
-		<div detailsPanelTitle class="text-xlarge">
-			<span class="icon-wifi"></span>
-			<span class="half-margin-left cx-text-soft-black" [innerText]="selectedAsset?.deviceName"></span>
-		</div>
-	</details-panel-header>
-	<asset-details [asset]="selectedAsset"></asset-details>
-</details-panel>
+<asset-details *ngIf="selectedAsset"
+	[asset]="selectedAsset"
+	(close)="onPanelClose()">
+</asset-details>
 
 <div class="panel">
+	<cui-alert [options]="alert"></cui-alert>
 	<cui-tabs inline="true">
 		<cui-tab [label]="'_Assets_' | i18n | uppercase">
 			<div class="divider no-margin-top qtr-margin-bottom"></div>
@@ -22,7 +14,7 @@
 		<!-- <cui-tab [label]="'_Licensing_' | i18n | uppercase" disabled="true"></cui-tab> -->
 		<ng-template cuiTabPost>
 			<div class="text-right">
-				<div *ngIf="!status.isLoading"
+				<div *ngIf="!status.isLoading && pagination"
 					(click)="filterCollapse = !filterCollapse"
 					data-auto-id="VisualFilterCollapse">
 					<span class="icon-filter icon-medium text-muted qtr-margin-right toggle"></span>
@@ -39,13 +31,9 @@
 	</cui-tabs>
 </div>
 
-<!-- Templates for our Tabs -->
 <ng-template #assetsContent>
 	<div class="flex flex-fill flex-fluid"
 		*ngIf="!filterCollapse && !status.isLoading">
-		<!-- <div class="flex-center">
-			<span class="icon-chevron-left icon-medium text-muted toggle"></span>
-		</div> -->
 		<ng-container *ngFor="let filter of filters; index as i">
 			<div *ngIf="!filter.loading && filter.seriesData.length"
 				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
@@ -66,18 +54,15 @@
 				<cui-spinner></cui-spinner>
 			</div>
 		</ng-container>
-		<!-- <div class="flex-center">
-			<span class="icon-chevron-right icon-medium text-muted toggle"></span>
-		</div> -->
 	</div>
-	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!filterCollapse && !status.isLoading"></div>
+	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!filterCollapse && !status.isLoading && pagination"></div>
 	<ng-container *ngIf="filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div>
 		<div>
-			<div class="row">
+			<div class="row" *ngIf="!status.isLoading && pagination">
 				<div class="col-md-9 flex flex-fill">
 					<div class="flex-center-vertical">
 						<span [innerText]="'_Assets_' | i18n" class="text-large" *ngIf="!status.isLoading"></span>
@@ -95,8 +80,7 @@
 				</div>
 				<div class="col-md-3">
 					<div class="flex flex-fluid flex-right">
-						<!-- TODO: Implement Search when API supports it -->
-						<!-- <div class="flex-fill form-group input--compressed input--icon half-margin-right">
+						<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 							<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
 								<div class="form-group__text disabled">
 									<input id="searchInput"
@@ -113,7 +97,7 @@
 									</button>
 								</div>
 							</form>
-						</div> -->
+						</div>
 						<div class="btn-group btn-group--square half-margin-right">
 							<!-- <button class="btn btn--small btn--gray-ghost disabled">
 								<span class="icon-location"></span>
@@ -132,7 +116,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="divider qtr-margin-top"></div>
+			<div class="divider qtr-margin-top" *ngIf="!status.isLoading && pagination"></div>
 			<ng-container *ngTemplateOutlet="tableAssets"></ng-container>
 			<div *ngIf="pagination" class="base-margin-top">
 				<cui-pager [page]="pagination.page - 1"
@@ -153,7 +137,7 @@
 						data-auto-id="NoResultsFoundTxt" >
 					</span>
 				</div>
-				<div>
+				<div *ngIf="pagination">
 					<a (click)="clearFilters()"
 						class="text-lowercase"
 						data-auto-id="NoResultsClearAll"
@@ -316,7 +300,7 @@
 				<cui-dropdown
 					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
 					(click)="$event.stopPropagation()"
-					[actions]="getRowActions(item.data)"
+					[actions]="getRowActions(item)"
 					icon="icon-more icon-small text-muted rotate-90">
 				</cui-dropdown>
 			</div>
@@ -350,8 +334,11 @@
 
 <ng-template #deviceTemplate let-celldata="celldata">
 	<!-- TODO: Need specific icons for different device types -->
-	<span class="icon-4-way-nav qtr-margin-right"
-		attr.data-auto-id="DeviceIcon-{{celldata.serialNumber}}">
+	<span class="qtr-margin-right">
+		<img alt="Asset Icon"
+			class="icon-asset"
+			attr.data-auto-id="DeviceIcon-{{celldata.serialNumber}}"
+			src="assets/img/assets/device-router-outline.svg">
 	</span>
 	<span [innerText]="celldata.deviceName | truncate:true:50"
 		attr.data-auto-id="Device-{{celldata.serialNumber}}">

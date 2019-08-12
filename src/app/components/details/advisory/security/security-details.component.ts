@@ -15,9 +15,6 @@ import {
 	SecurityAdvisoryBulletin,
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryInfo,
-	InventoryService,
-	Assets,
-	Asset,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -25,15 +22,16 @@ import {
 	mergeMap,
 	catchError,
 } from 'rxjs/operators';
-import { of, forkJoin } from 'rxjs';
+import { of } from 'rxjs';
+import { AssetIds } from '../impacted-assets/impacted-assets.component';
+import { Alert } from '@interfaces';
 
 /** Data Interface */
 export interface Data {
 	advisory?: SecurityAdvisoryInfo;
 	notice?: SecurityAdvisory;
 	bulletin?: SecurityAdvisoryBulletin;
-	impacted?: Asset[];
-	potentiallyImpacted?: Asset[];
+	assetIds?: AssetIds;
 }
 
 /**
@@ -50,21 +48,20 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	@Input('advisory') public advisory: SecurityAdvisoryInfo;
 	@Input('customerId') public customerId: string;
 	@Output('details') public details = new EventEmitter<Data>();
+	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 
 	private params: {
 		notice: ProductAlertsService.GetSecurityAdvisoriesParams;
 		bulletin: ProductAlertsService.GetPSIRTBulletinParams;
-		assets?: InventoryService.GetAssetsParams;
 	};
 
+	public impactedCount = 0;
+	public activeTab = 0;
 	public data: Data = { };
 	public isLoading = false;
-	public upVoteSelected: boolean;
-	public downVoteSelected: boolean;
 
 	constructor (
 		private logger: LogService,
-		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
 	) { }
 
@@ -76,14 +73,23 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 		return this.productAlertsService.getSecurityAdvisories(this.params.notice)
 		.pipe(
 			mergeMap((response: SecurityAdvisoryResponse) => {
-				const affected = _.filter(response.data,
-						{ advisoryId: _.toSafeInteger(this.id) }) || [];
-				_.set(this.data, 'notice', _.head(affected));
+				const data = _.get(response, 'data', []);
+				_.set(this.data, 'notice', _.head(data));
 
-				return forkJoin(
-					this.getSecurityAdvisoryBulletin(),
-					this.getAssets(affected),
-				);
+				const vulAdvisories = _.filter(data, { vulnerabilityStatus: 'VUL' }) || [];
+				const vulIds = _.compact(_.map(vulAdvisories, 'managedNeId')) || [];
+
+				if (vulIds.length) {
+					_.set(this.data, ['assetIds', 'impacted'], vulIds);
+				}
+				const potVulAdvisories = _.filter(data, { vulnerabilityStatus: 'POTVUL' }) || [];
+				const potVulIds = _.compact(_.map(potVulAdvisories, 'managedNeId')) || [];
+
+				if (potVulIds.length) {
+					_.set(this.data, ['assetIds', 'potentiallyImpacted'], potVulIds);
+				}
+
+				return this.getSecurityAdvisoryBulletin();
 			}),
 			catchError(err => {
 				this.logger.error('security-details.component : getSecurityAdvisory() ' +
@@ -114,48 +120,13 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	}
 
 	/**
-	 * Fetches the assets affected by the security advisory
-	 * @param advisories the advisories to look over
-	 * @returns the observable
-	 */
-	private getAssets (advisories: SecurityAdvisory[]) {
-		const vulAdvisories = _.filter(advisories, x => x.vulnerabilityStatus === 'VUL', []);
-		const vulHwIds = _.flatMap(vulAdvisories, x => _.get(x, 'hwInstanceId'));
-		const potvulAdvisories =
-			_.filter(advisories, x => x.vulnerabilityStatus === 'POTVUL', []);
-		const potvulHwIds = _.flatMap(potvulAdvisories, x => _.get(x, 'hwInstanceId'));
-
-		this.params.assets = {
-			customerId: this.customerId,
-			hwInstanceId: _.map(advisories, 'hwInstanceId'),
-		};
-
-		return this.inventoryService.getAssets(this.params.assets)
-		.pipe(
-			map((response: Assets) => {
-				const data = _.get(response, 'data', []);
-				const vulData =
-					_.filter(data, x => _.includes(vulHwIds, _.get(x, 'hwInstanceId')));
-				_.set(this.data, 'impacted', vulData);
-
-				const potvulData =
-					_.filter(data, x => _.includes(potvulHwIds, _.get(x, 'hwInstanceId')));
-				_.set(this.data, 'potentiallyImpacted', potvulData);
-			}),
-			catchError(err => {
-				this.logger.error('security-details.component : getAssets() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
 	 * Refresh Function
 	 */
 	public refresh () {
 		const advisoryId = _.get(this.advisory, 'id');
+		this.data = { };
+		this.activeTab = 0;
+		this.impactedCount = 0;
 		if (this.id || advisoryId) {
 			if (!this.id) {
 				this.id = advisoryId;
@@ -190,8 +161,6 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	 */
 	public ngOnInit () {
 		this.refresh();
-		this.downVoteSelected = false;
-		this.upVoteSelected = false;
 	}
 
 	/**
@@ -202,26 +171,6 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 		const currentId = _.get(changes, ['id', 'currentValue']);
 		if (currentId && !changes.id.firstChange) {
 			this.refresh();
-		}
-	}
-
-	/**
-	 * Handles the clicking of vote buttons
-	 * @param event click event
-	 */
-	public voteClicked (event: Event) {
-		const btnId = _.get(event, 'toElement.id');
-		if (btnId === 'upVoteBtn') {
-			this.upVoteSelected = !this.upVoteSelected;
-			if (this.downVoteSelected) {
-				this.downVoteSelected = false;
-			}
-		}
-		if (btnId === 'downVoteBtn') {
-			this.downVoteSelected = !this.downVoteSelected;
-			if (this.upVoteSelected) {
-				this.upVoteSelected = false;
-			}
 		}
 	}
 }

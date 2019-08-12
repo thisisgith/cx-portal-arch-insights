@@ -4,8 +4,6 @@ import { SETUP_STATES } from '@classes';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 
-import { LogService } from '@cisco-ngx/cui-services';
-
 /**
  * Reference for a step to display in the status bar
  */
@@ -66,9 +64,6 @@ export class IESetupWizardStatusBar {
 		},
 	];
 	constructor (
-		private logger: LogService,
 		private sanitizer: DomSanitizer,
-	) {
-		this.logger.debug('BeginInstallationComponent Created!');
-	}
+	) {	}
 }
