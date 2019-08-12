@@ -343,80 +343,44 @@ describe('AdvisoriesComponent', () => {
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(['/solution/advisories/field-notices'], { queryParams: { } });
 
+			// test security tab
+			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
+			fixture.detectChanges();
+
+			expect(component.router.navigate)
+				.toHaveBeenCalledWith(['/solution/advisories/security'], { queryParams: { } });
+
 			done();
 		});
 	});
 
-	// it('should add the selected filters to the route', done => {
-	// 	spyOn(component.router, 'navigate');
-	// 	fixture.whenStable()
-	// 	.then(() => {
-	// 		fixture.detectChanges();
+	it('should add the selected filters to the route', done => {
+		spyOn(component.router, 'navigate');
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
 
-	// 		component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
+			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
 
-	// 		const tab = component.selectedTab;
-	// 		const impactFilter = _.find(tab.filters, { key: 'impact' });
-	// 		impactFilter.seriesData = [
-	// 			{
-	// 				filter: 'info',
-	// 				label: 'Info',
-	// 				selected: false,
-	// 				value: 4,
-	// 			},
-	// 		];
-	// 		component.onSubfilterSelect('info', impactFilter);
-	// 	});
-	// });
+			const tab = component.selectedTab;
+			const impactFilter = _.find(tab.filters, { key: 'impact' });
+			impactFilter.seriesData = [
+				{
+					filter: 'info',
+					label: 'Info',
+					selected: false,
+					value: 4,
+				},
+			];
+			component.onSubfilterSelect('info', impactFilter);
+			fixture.detectChanges();
 
-	// it('should select a coverage subfilter', done => {
-	// 	spyOn(component.router, 'navigate');
-	// 	fixture.whenStable()
-	// 	.then(() => {
-	//       fixture.detectChanges();
-	//       const coverageFilter = _.find(component.filters, { key: 'coverage' });
-	//       component.onSubfilterSelect('covered', coverageFilter);
-	
-	//       fixture.detectChanges();
-	
-	//       expect(_.filter(component.filters, 'selected'))
-	//         .toContain(coverageFilter);
-	
-	//       const subfilter = _.find(coverageFilter.seriesData, { filter: 'covered' });
-	
-	//       expect(subfilter.selected)
-	//         .toBeTruthy();
-	
-	//       expect(component.router.navigate)
-	//         .toHaveBeenCalledWith([], {
-	//           queryParams: {
-	//             coverage: ['covered'],
-	//           },
-	//           relativeTo: component.route,
-	//         },
-	//       );
-	
-	//       done();
-	//     });
-	//   });
+			expect(component.router.navigate)
+				.toHaveBeenCalledWith(
+					['/solution/advisories/security'],
+					{ queryParams: { impact: ['info'] } });
+
+			done();
+		});
+	});
 });
-
-
-
-
-// Expected spy navigate to have been called with [ [  ], 
-// Object({ queryParams: Object({ tab: [ 'security' ] }), 
-// relativeTo: 
-// Object({ queryParams: Observable({ _isScalar: false, _subscribe: Function }), snapshot: Object({ data: Object({ user: Object({ info: Object({ customerId: '2431199', individual: Object({ ccoId: 'fakeCco', cxBUId: '2431199', emailAddress: 'fakeCco@cisco.com', familyName: 'Test', name: 'Demo', role: 'admin' }), name: 'Test User' }), service: Object({ cxLevel: 3, solution: 'IBN', useCase: 'Wireless Assurance' }) }) }), params: Observable({ _isScalar: false, _subscribe: Function }) }) }) }) ] but actual calls were 
-// [ [ '/solution/advisories/security' ] ], [ [  ], Object({ queryParams: Object({ tab: 'security' }), relativeTo: 
-// Object({ queryParams: Observable({ _isScalar: false, _subscribe: Function }), snapshot: Object({ data: Object({ user: Object({ info: Object({ customerId: '2431199', individual: Object, name: 'Test User' }), service: Object({ cxLevel: 3, solution: 'IBN', useCase: 'Wireless Assurance' }) }) }), params: Observable({ _isScalar: false, _subscribe: Function }) }) }) }) ].
-
-
-
-
-// Error: Expected spy navigate to have been called with [ [ '/solution/advisories/security' ], 
-// Object({ queryParams: Object({ tab: [ 'security' ] }), 
-// relativeTo: Object({ queryParams: Observable({ _isScalar: false, _subscribe: Function }), snapshot: Object({ data: Object({ user: Object({ info: Object({ customerId: '2431199', individual: Object({ ccoId: 'fakeCco', cxBUId: '2431199', emailAddress: 'fakeCco@cisco.com', familyName: 'Test', name: 'Demo', role: 'admin' }), name: 'Test User' }), service: Object({ cxLevel: 3, solution: 'IBN', useCase: 'Wireless Assurance' }) }) }), params: Observable({ _isScalar: false, _subscribe: Function }) }) }) }) ] 
-// but actual calls were 
-// [ [ '/solution/advisories/security' ] ], [ [  ], 
-// Object({ queryParams: Object({ tab: 'security' }), relativeTo: Object({ queryParams: Observable({ _isScalar: false, _subscribe: Function }), snapshot: Object({ data: Object({ user: Object({ info: Object({ customerId: '2431199', individual: Object, name: 'Test User' }), service: Object({ cxLevel: 3, solution: 'IBN', useCase: 'Wireless Assurance' }) }) }), params: Observable({ _isScalar: false, _subscribe: Function }) }) }) }) ].
