@@ -37,7 +37,7 @@ describe('GeoCodeService', () => {
 	);
 
 	it(
-		'should return a cached geocode one exists',
+		'should return a cached geocode if one exists',
 		inject(
 			[GeoCodeService, HttpTestingController],
 			(service: GeoCodeService, httpMock: HttpTestingController) => {
