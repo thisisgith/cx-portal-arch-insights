@@ -519,15 +519,15 @@
 					</cui-select>
 				</div>
 				<div *ngIf="type==='PG'" class="col-md-2">
-						<cui-select id="category-filter"
-							data-auto-id="category-filter"
-							[items]="pgCategoryOptions"
-							[empty]="true"
-							[placeholder]="'_FilterBy_' | i18n"
-							[(ngModel)]="selectedFilterForPG"
-							(ngModelChange)="selectFilter('PG')">
-						</cui-select>
-					</div>
+					<cui-select id="pg-category-filter"
+						data-auto-id="pg-category-filter"
+						[items]="pgCategoryOptions"
+						[empty]="true"
+						[placeholder]="'_FilterBy_' | i18n"
+						[(ngModel)]="selectedFilterForPG"
+						(ngModelChange)="selectFilter('PG')">
+					</cui-select>
+				</div>
 				<div class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
 					<button class="btn btn--small btn--gray-ghost"

@@ -395,6 +395,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Sorting function for successBytes table
 	 * @param key the key to sort
 	 * @param sortDirection sortDiretion
+	 * @param type the type of modal calling the sort
 	 */
 	public onSort (key: string, sortDirection: string, type: string) {
 		if (type === 'SB') {
@@ -503,7 +504,6 @@ export class LifecycleComponent implements OnDestroy {
 				visible: true,
 			};
 		} else if (type === '_ProductGuides_') {
-			console.log(this.selectedProductGuides);
 			this.modal = {
 				content: this.viewAllModalTemplate,
 				context: {
@@ -640,7 +640,7 @@ export class LifecycleComponent implements OnDestroy {
 		}
 
 		if (type === 'PG') {
-			this.selectedProductGuides = 
+			this.selectedProductGuides =
 				_.filter(this.componentData.learning.productGuides,
 					{ archetype: this.selectedFilterForPG });
 			if (this.selectedFilterForPG === 'Not selected' || !this.selectedFilterForPG) {
@@ -740,7 +740,7 @@ export class LifecycleComponent implements OnDestroy {
 			if (results.isAtxChanged) { source.push(this.loadATX()); }
 			if (results.isAccChanged) { source.push(this.loadACC()); }
 			if (results.isElearningChanged) { source.push(this.loadELearning()); }
-			if (results.isSuccessPathChanged) { 
+			if (results.isSuccessPathChanged) {
 				source.push(this.loadSuccessPaths());
 				source.push(this.loadProductGuides());
 			}
@@ -994,11 +994,11 @@ export class LifecycleComponent implements OnDestroy {
 				}
 				this.logger.error(`lifecycle.component : loadProductGuides() :: Error : (${
 					err.status}) ${err.message}`);
+
 				return of({ });
 			}),
 		);
 	}
-
 
 	/**
 	 * Loads the success paths from the api
