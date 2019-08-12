@@ -67,33 +67,10 @@
 											</label>
 										</div>
 									</dd>
-									<dt [innerText]="'_Technology_' | i18n"></dt>
-									<dd>
-										<cui-select *ngIf="!loadingTech; else loadingTemplate;" [items]="techOptions"
-											optionsKey="techName"
-											optionsValue="_id"
-											formControlName="technology">
-										</cui-select>
-									</dd>
-									<dt [innerText]="'_SubTech_' | i18n"></dt>
-									<dd>
-										<cui-select *ngIf="!loadingSubtech; else loadingTemplate;"
-											[items]="subtechOptions"
-											optionsKey="subTechName"
-											modelAsObject="true"
-											formControlName="subtech">
-										</cui-select>
-									</dd>
-									<dt [innerText]="'_ProblemArea_' | i18n"></dt>
-									<dd>
-										<cui-select *ngIf="!loadingProblemAreas; else loadingTemplate;" [items]="problemAreaOptions"
-											[groupNames]="problemGroups"
-											optionsKey="problemCodeName"
-											modelAsObject="true"
-											formControlName="problemArea">
-										</cui-select>
-									</dd>
 								</dl>
+								<tech-form [requestRma]="caseForm.controls.requestRma.value"
+									(formReady)="onFormReady($event)">
+								</tech-form>
 							</div>
 						</div>
 						<div class="flex dbl-margin-top">
@@ -140,8 +117,4 @@
 
 <ng-template #submittingTemplate>
 	<cui-spinner color="default" [label]="'_OpeningCase_' | i18n"></cui-spinner>
-</ng-template>
-
-<ng-template #loadingTemplate>
-	<cui-loader color="muted"></cui-loader>
 </ng-template>

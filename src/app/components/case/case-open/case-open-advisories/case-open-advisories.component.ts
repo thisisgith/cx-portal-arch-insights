@@ -11,8 +11,8 @@ import { CaseRequestType, caseSeverities } from '@classes';
 import { AdvisoryType, CaseOpenRequest, ProblemArea, Subtech, Tech } from '@interfaces';
 import { CloseConfirmComponent } from '../close-confirm/close-confirm.component';
 import { CaseNoteBuilder } from './case-note-builder';
-import { Observable, Subject, of } from 'rxjs';
-import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 import { CaseOpenData } from '../caseOpenData';
 
 import * as _ from 'lodash-es';
@@ -53,10 +53,7 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 	public caseForm = new FormGroup({
 		description: new FormControl('',
 			[Validators.required, Validators.maxLength(this.descriptionMaxLength)]),
-		problemArea: new FormControl(null, Validators.required),
 		severity: new FormControl(3, Validators.required),
-		subtech: new FormControl(null, Validators.required),
-		technology: new FormControl(null, Validators.required),
 		title: new FormControl('',
 			[Validators.required, Validators.maxLength(this.titleMaxLength)]),
 	});
@@ -105,9 +102,6 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 			this.note,
 		);
 		this.typeTitle = I18n.get(this.titles[this.type]);
-		this.fetchTechList();
-		this.subscribeSubtech();
-		this.subscribeProblemArea();
 	}
 
 	/**
@@ -131,6 +125,14 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 	}
 
 	/**
+	 * Register the tech/subtech/pc sub form group when it is ready
+	 * @param form the sub-group
+	 */
+	public onFormReady (form: FormGroup) {
+		this.caseForm.addControl('techInfo', form);
+	}
+
+	/**
 	 * Send API request to open case
 	 * When user clicks "Submit" button
 	 */
@@ -138,7 +140,10 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 		this.submitting = true;
 		const caseDetails: CaseOpenRequest = {
 			contactId: this.profileService.getProfile().cpr.pf_auth_uid,
-			customerActivity: _.get(this.caseForm.controls.problemArea.value, 'customerActivity'),
+			customerActivity: _.get(
+				(<FormGroup> this.caseForm.controls.techInfo).controls.problemArea.value,
+				'customerActivity',
+			),
 			description: this.caseForm.controls.description.value,
 			deviceName: this.allAssets[0].deviceName,
 			noteDetails: {
@@ -150,14 +155,22 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 				},
 			},
 			priority: this.caseForm.controls.severity.value,
-			problemCode: _.get(this.caseForm.controls.problemArea.value, 'problemCode'),
+			problemCode: _.get(
+				(<FormGroup> this.caseForm.controls.techInfo).controls.problemArea.value,
+				'problemCode',
+			),
 			requestType: CaseRequestType.Diagnose,
 			serialNumber: this.allAssets[0].serialNumber,
-			// serialNumber: '35641136A1621',
 			softwareVersion: this.allAssets[0].osVersion,
-			subTechId: _.get(this.caseForm.controls.subtech.value, '_id'),
+			subTechId: _.get(
+				(<FormGroup> this.caseForm.controls.techInfo).controls.subtech.value,
+				'_id',
+			),
 			summary: this.caseForm.controls.title.value,
-			techId: this.caseForm.controls.technology.value,
+			techId: _.get(
+				(<FormGroup> this.caseForm.controls.techInfo).controls.technology.value,
+				'_id',
+			),
 		};
 		this.caseService.createCase(caseDetails)
 		.pipe(
@@ -179,122 +192,33 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 				this.caseOpenData = {
 					caseNum: result.caseNumber,
 					customerActivity:
-						_.get(this.caseForm.controls.problemArea.value, 'customerActivity'),
+						_.get(
+							(<FormGroup> this.caseForm.controls.techInfo)
+								.controls.problemArea.value,
+							'customerActivity',
+						),
 					description: this.caseForm.controls.description.value,
 					problemArea:
-						_.get(this.caseForm.controls.problemArea.value, 'problemCodeName'),
+						_.get(
+							(<FormGroup> this.caseForm.controls.techInfo)
+								.controls.problemArea.value,
+							'problemCodeName',
+						),
 					requestRma: false,
 					severity: this.caseForm.controls.severity.value,
 					severityName: caseSeverities[3].getCreateName(),
-					subtech: _.get(this.caseForm.controls.subtech.value, 'subTechName'),
-					technology: _.get(_.find(this.techOptions,
-						{ _id: this.caseForm.controls.technology.value }), 'techName'),
+					subtech: _.get(
+						(<FormGroup> this.caseForm.controls.techInfo).controls.subtech.value,
+						'subTechName',
+					),
+					technology: _.get(
+						(<FormGroup> this.caseForm.controls.techInfo).controls.technology,
+						'techName',
+					),
 					title: this.caseForm.controls.title.value,
 				};
 			}
 			this.submitted = true;
-		});
-	}
-
-	/**
-	 * Fetch list of CSOne Techs
-	 */
-	private fetchTechList () {
-		this.loadingTech = true;
-		this.caseService.fetchTechList()
-			.pipe(
-				catchError(err => {
-					this.logger.error(`Fetch Tech :: Error ${err}`);
-
-					return of(null);
-				}),
-				takeUntil(this.destroy$),
-			)
-			.subscribe(result => {
-				this.loadingTech = false;
-				this.techOptions = _.get(result, 'techList');
-			});
-	}
-
-	/**
-	 * Fetch subtech options for a particular tech
-	 * @param techId tech id to fetch subtechs for
-	 * @returns Observable with results
-	 */
-	private fetchSubtechList (techId: string): Observable<{ subTechList: Subtech[] }> {
-		return this.caseService.fetchSubTechList(techId)
-			.pipe(
-				catchError(err => {
-					this.logger.error(`Fetch Subtech :: Error ${err}`);
-
-					return of(null);
-				}),
-			);
-	}
-
-	/**
-	 * API request to get problem areas
-	 * @param requestType fetch "diagnose" or "rma" problem areas
-	 * @returns Observable with result
-	 */
-	private fetchProblemAreas () {
-		return this.caseService.fetchProblemArea(CaseRequestType.Diagnose)
-			.pipe(
-				catchError(err => {
-					this.logger.error(`Fetch Problem Area :: Error ${err}`);
-
-					return of(null);
-				}),
-				takeUntil(this.destroy$),
-			);
-	}
-
-	/**
-	 * Subscribe and listen for tech to change, refresh subtech options
-	 */
-	private subscribeSubtech () {
-		this.caseForm.controls.technology.valueChanges.pipe(
-			tap(() => {
-				this.loadingSubtech = true;
-				this.caseForm.controls.subtech.setValue(null);
-			}),
-			switchMap(techId => this.fetchSubtechList(techId)),
-			takeUntil(this.destroy$),
-		)
-		.subscribe(result => {
-			this.loadingSubtech = false;
-			this.subtechOptions = result.subTechList;
-		});
-	}
-
-	/**
-	 * Subscribe and listen for subtech to change, refresh problemArea options
-	 */
-	private subscribeProblemArea () {
-		this.caseForm.controls.subtech.valueChanges.pipe(
-			tap(() => {
-				this.loadingProblemAreas = true;
-				this.caseForm.controls.problemArea.setValue(null);
-			}),
-			switchMap(() => this.fetchProblemAreas()),
-			takeUntil(this.destroy$),
-		)
-		.subscribe(result => {
-			this.loadingProblemAreas = false;
-			// If a subtech is selected, filter the problemAreas to only valid ones for that subtech
-			if (this.caseForm.controls.subtech.value) {
-				const validCodes = this.caseForm.controls.subtech.value.problemCodes;
-				result.problemArea.customerActivities =
-					_.filter(result.problemArea.customerActivities, activity =>
-						_.includes(validCodes, activity.problemCode),
-					);
-			}
-			const problemAreasGrouped = _.groupBy(
-				_.get(result, ['problemArea', 'customerActivities'], []),
-				'customerActivity',
-			);
-			this.problemAreaOptions = Object.values(problemAreasGrouped);
-			this.problemGroups = Object.keys(problemAreasGrouped);
 		});
 	}
 }

@@ -12,9 +12,19 @@ const fnCountMock = new MockService('FieldNoticeCountScenarios');
 const bugMock = new MockService('CriticalBugScenarios');
 const bugScenario = bugMock.getScenario('GET', 'Critical Bugs');
 const bugs = bugScenario.response.body.data;
+const vulnMock = new MockService('VulnerabilityScenarios');
+const vulnScenario = vulnMock.getScenario('GET', 'Advisory Counts');
+const vulnResponse = vulnScenario.response.body;
+const secBulletinMock = new MockService('SecurityAdvisoryBulletinScenarios');
+const secBulletinScenario = secBulletinMock.getScenario(
+	'GET', 'Security Advisory Details for ID 485'
+);
+const secBulletin = secBulletinScenario.response.body.data[0];
+
+const dateFormat = 'MMM DD, YYYY';
 
 const impactMap = severity => {
-	switch (severity) {
+	switch (Cypress._.startCase(severity)) {
 		case 'Critical':
 			return 'label--danger';
 		case 'High':
@@ -53,6 +63,39 @@ describe('Advisories', () => { // PBC-306
 		MockService.enableAll();
 		cy.loadApp('/solution/advisories');
 		cy.waitForAppLoading();
+	});
+
+	it('Displays a gauge that shows advisory counts', () => { // PBC-307
+		cy.getByAutoId('Facet-Advisories').within(() => {
+			cy.getByAutoId('Security AdvisoriesPoint').should(
+				'have.attr', 'data-auto-value', vulnResponse['security-advisories'].toString()
+			);
+			cy.getByAutoId('Field NoticesPoint').should(
+				'have.attr', 'data-auto-value', vulnResponse['field-notices'].toString()
+			);
+			cy.getByAutoId('BugsPoint').should(
+				'have.attr', 'data-auto-value', vulnResponse.bugs.toString()
+			);
+		});
+	});
+
+	it('Gracefully handles invalid API responses', () => {
+		vulnMock.enable('Advisory Counts - Unreachable');
+		cy.loadApp('/solution/advisories');
+		cy.waitForAppLoading();
+		cy.getByAutoId('Facet-Advisories').within(() => {
+			cy.get('bar-chart').should('not.be.visible');
+		});
+
+		vulnMock.enable('Advisory Counts - Missing keys');
+		cy.loadApp('/solution/advisories');
+		cy.waitForAppLoading();
+		cy.getByAutoId('Facet-Advisories').within(() => {
+			cy.getByAutoId('BugsPoint').should('be.visible');
+			cy.getByAutoId('Field NoticesPoint').should('not.exist');
+		});
+
+		vulnMock.enable('Advisory Counts');
 	});
 
 	context('Security Advisories', () => { // PBC-308 / PBC-314
@@ -177,6 +220,50 @@ describe('Advisories', () => { // PBC-306
 				cy.getByAutoId('Facet-Advisories').click();
 				cy.waitForAppLoading();
 				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('be.visible');
+			});
+		});
+
+		context('Details / 360', () => { // PBC-311
+			it('Properly displays advisory details', () => {
+				cy.get('app-advisories tbody tr').eq(0).click();
+				cy.getByAutoId('SecurityDetailsImpactIcon')
+					.should('have.class', impactMap(secBulletin.severity));
+				cy.getByAutoId('SecurityDetailsImpactText')
+					.should('have.text', secBulletin.severity);
+				const publishedDate = Cypress.moment(secBulletin.bulletinFirstPublished)
+					.format(dateFormat);
+				cy.getByAutoId('SecurityAdvisoryPublished')
+					.should('have.text', `Published${publishedDate}`);
+				cy.getByAutoId('SecurityAdvisoryLastUpdated')
+					.should('have.text', 'Last UpdatedNever'); // TODO: CSCvq80067
+				cy.getByAutoId('SecurityAdvisoryVersion')
+					.should('have.text', `Version${secBulletin.bulletinVersion}`);
+				cy.getByAutoId('SecurityDetailsTitleText')
+					.should('have.text', secBulletin.bulletinTitle);
+				cy.getByAutoId('SecurityDetailsSummaryText')
+					.should('have.text', secBulletin.summaryText);
+				cy.get('app-advisories tbody tr').eq(0).click();
+			});
+
+			it('Gracefully handles invalid/empty API responses', () => {
+				const validate360 = () => {
+					cy.getByAutoId('SecurityDetailsImpactText').should('have.text', 'N/A');
+					cy.getByAutoId('SecurityAdvisoryVersion').should('have.text', 'VersionN/A');
+					cy.getByAutoId('SecurityDetailsTitleText').should('have.text', 'N/A');
+					cy.getByAutoId('SecurityDetailsSummaryText').should('have.text', 'N/A');
+				};
+
+				secBulletinMock.enable('Security Advisory Details for ID 485 - Unreachable');
+				cy.get('app-advisories tbody tr').eq(0).click();
+				validate360();
+				cy.get('app-advisories tbody tr').eq(0).click();
+
+				secBulletinMock.enable('Security Advisory Details for ID 485 - Missing keys');
+				cy.get('app-advisories tbody tr').eq(0).click();
+				validate360();
+				cy.get('app-advisories tbody tr').eq(0).click();
+
+				secBulletinMock.enable('Security Advisory Details for ID 485');
 			});
 		});
 	});
@@ -353,6 +440,30 @@ describe('Advisories', () => { // PBC-306
 
 			cy.getByAutoId('CUIPager-Page1').click();
 			bugMock.enable('Critical Bugs');
+		});
+
+		context('Details / 360', () => { // PBC-313
+			it('Properly displays advisory details', () => {
+				const bug = bugs[0];
+				cy.get('app-advisories tbody [data-auto-id="ID-Cell"]').eq(0).click();
+				cy.getByAutoId('DetailsPanelTitle').should('have.text', `Bug ${bug.id}`);
+				cy.getByAutoId('BugDetailsSeverityIcon')
+					.should('have.class', impactMap(bug.severity));
+				cy.getByAutoId('BugDetailsSeverityText').should('have.text', bug.severity);
+				const publishedDate = Cypress.moment(bug.publishedOn).format(dateFormat);
+				cy.getByAutoId('CriticalBugPublished')
+					.should('have.text', `Published${publishedDate}`);
+				const updatedDate = Cypress.moment(bug.lastUpdated).format(dateFormat);
+				cy.getByAutoId('CriticalBugLastUpdated')
+					.should('have.text', `Last Updated${updatedDate}`);
+				cy.getByAutoId('CriticalBugStatus')
+					.should('have.text', `Status${bug.state}`);
+				cy.getByAutoId('CriticalBugImpactedAssets')
+					.should('have.text', `Impacted Assets (${bug.assetsImpacted})`);
+				cy.getByAutoId('BugDetailsTitleText').should('have.text', bug.title);
+				cy.getByAutoId('BugDetailsDescriptionText').should('have.text', bug.description);
+				cy.get('app-advisories tbody [data-auto-id="ID-Cell"]').eq(0).click();
+			});
 		});
 
 		context('Filtering', () => { // PBC-310
