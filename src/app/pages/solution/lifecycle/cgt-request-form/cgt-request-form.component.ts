@@ -105,9 +105,7 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 		private fb: FormBuilder,
 		private contentService: RacetrackContentService,
 		private contractsService: ContractsService,
-	) {
-		this.logger.debug('CgtRequestFormComponent Created!');
-	}
+	) {	}
 
 	/**
 	 * Closes the ACC Request Form component

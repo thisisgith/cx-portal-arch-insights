@@ -5,8 +5,6 @@ import { interval, of, Subject } from 'rxjs';
 import { catchError, exhaustMap, map, takeUntil, takeWhile } from 'rxjs/operators';
 import { SetupIEStateService } from '../setup-ie-state.service';
 
-import { LogService } from '@cisco-ngx/cui-services';
-
 import { SetupStep } from '@interfaces';
 
 import { SetupIEService } from '../setup-ie.service';
@@ -65,13 +63,10 @@ export class ConnectCollectorComponent implements OnDestroy, SetupStep {
 
 	constructor (
 		@Inject('ENVIRONMENT') private env,
-		private logger: LogService,
 		private router: Router,
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
-	) {
-		this.logger.debug('CreateAccountComponent Created!');
-	}
+	) { }
 
 	/**
 	 * NgOnDestroy

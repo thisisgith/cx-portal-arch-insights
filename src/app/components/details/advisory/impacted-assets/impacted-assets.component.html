@@ -1,0 +1,59 @@
+<div *ngIf="impacted?.length || potentiallyImpacted?.length">
+	<ng-container *ngIf="impacted?.length">
+		<ng-container *ngTemplateOutlet="deviceTable; context: { devices: impacted, options: assetsTable, title: '_Impacted_' }"></ng-container>
+	</ng-container>
+
+	<ng-container *ngIf="potentiallyImpacted?.length">
+		<ng-container *ngTemplateOutlet="deviceTable; context: { devices: potentiallyImpacted, options: assetsTable, title: '_PotentiallyImpacted_' }"></ng-container>
+	</ng-container>
+</div>
+
+<div *ngIf="!(impacted?.length || potentiallyImpacted?.length) && !isLoading"
+	class="flex-center">
+	<span class="text-xlarge" [innerText]="'_NoImpactedAssetsFound_' | i18n"></span>
+</div>
+
+<div *ngIf="isLoading" class="flex-center">
+	<cui-spinner></cui-spinner>
+</div>
+	
+<ng-template #deviceTable let-title="title" let-devices="devices" let-options="options">
+	<div class="row text-bold text-small text-dkgray-4 qtr-margin-left dbl-margin-top"
+		innerText="{{ title | i18n | uppercase }} ({{ devices.length }})"></div> 
+	<div class="impactedTable">
+		<cui-table class="qtr-margin-top"
+			[options]="options"
+			[data]="devices"
+			(onSortingChanged)="onColumnSort($event)">
+		</cui-table>
+	</div>
+</ng-template>
+
+<ng-template #deviceColumn let-celldata="celldata">
+	<!-- TODO: Need specific icons for different device types -->
+	<span class="qtr-margin-right">
+		<img alt="Asset Icon"
+			class="icon-asset"
+			attr.data-auto-id="DeviceIcon-{{ celldata?.deviceName || cellData?.hostName }}"
+			src="assets/img/assets/device-router-outline.svg">
+	</span>
+	<!-- <a [innerText]="celldata?.deviceName || cellData?.hostName || ('_NA_' | i18n)"
+		(click)="selectedAsset = celldata">
+	</a> -->
+	<span [innerText]="celldata?.deviceName || cellData?.hostName || ('_NA_' | i18n)"></span>
+</ng-template>
+
+<ng-template #versionColumn let-celldata="celldata">
+	<!-- TODO: update when there is a way to tell if the software is outdated -->
+	<div [ngClass]="{ 'text-danger': celldata.outdated }">
+		<span [innerText]="celldata?.osVersion || celldata?.softwareVersion || ('_NA_' | i18n)"></span>
+		<!-- <span *ngIf="celldata.outdated" class="icon-arrow-down-tail"></span> -->
+	</div>
+</ng-template>
+
+<ng-template #recommendedVersionColumn let-celldata="celldata">
+	<!-- TODO: update once it's possible to retrieve the recommended version -->
+	<span [innerText]="'_NA_' | i18n"></span>
+	<!-- <a><span *ngIf="celldata.recommendedVersion" [innerText]="celldata.recommendedVersion"></span></a> -->
+</ng-template>
+	

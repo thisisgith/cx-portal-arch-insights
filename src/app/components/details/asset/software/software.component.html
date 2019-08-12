@@ -4,14 +4,20 @@
 		<ng-container *ngTemplateOutlet="licensesTable; context: { licenses: softwareLicenses, options: softwareLicensesTable }"></ng-container>
 	</div>
 </cui-drawer>
+<cui-drawer projection="true" [expanded]="true" *ngIf="operatingSystem">
+	<div class="cui-drawer-label text-large" [innerText]="'_OperatingSystem_' | i18n | uppercase"></div>
+	<div class="cui-drawer-content">
+		<ng-container *ngTemplateOutlet="operatingSystemInfo; context: { data: operatingSystem }"></ng-container>
+	</div>
+</cui-drawer>
 <cui-drawer projection="true" [expanded]="true" *ngIf="timelineData?.length">
 	<div class="cui-drawer-label text-large" [innerText]="'_EOX_' | i18n | uppercase"></div>
 	<div class="cui-drawer-content">
-		<pbc-timeline class="no-margin" [data]="timelineData" [todayButtonText]="'_ViewMigrationOptions_' | i18n"></pbc-timeline>
+		<pbc-timeline class="no-margin" [data]="timelineData"></pbc-timeline>
 	</div>
 </cui-drawer>
 
-<div class="flex-center" *ngIf="!timelineData?.length">
+<div class="flex-center" *ngIf="!timelineData?.length && !operatingSystem && !softwareLicenses?.length">
 	<span class="text-muted text-xlarge"
 		[innerText]="'_NoSoftwareInformation_' | i18n"
 		data-auto-id="NoSoftwareInformationText" >
@@ -22,6 +28,27 @@
 	<cui-table [options]="options"
 		[data]="licenses">
 	</cui-table>
+</ng-template>
+
+<ng-template #operatingSystemInfo let-data="data">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="text-bold" [innerText]="'_Type_' | i18n | uppercase" data-auto-id="OSType"></div>
+			<div [innerText]="data.type || ('_NA_' | i18n)"></div>
+
+			<div class="text-bold half-margin-top" [innerText]="'_Version_' | i18n | uppercase" data-auto-id="OSVersion"></div>
+			<div [innerText]="data.version || ('_NA_' | i18n)"></div>
+		</div>
+		<div class="col-md-6" *ngIf="data.recommended">
+			<div class="alert">
+				<div class="alert__icon icon-info-outline"></div>
+				<div class="alert__message">
+					<div class="text-bold" [innerText]="'_RecommendedSoftwareVersion_' | i18n"></div>
+					<div [innerText]="data.recommended"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 </ng-template>
 
 <ng-template #nameTemplate let-celldata="celldata">

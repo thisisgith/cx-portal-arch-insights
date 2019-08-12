@@ -5,7 +5,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { user, CriticalBugData } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
-import { CriticalBug } from '@sdp-api';
 
 describe('BugDetailsComponent', () => {
 	let component: BugDetailsComponent;
@@ -45,7 +44,9 @@ describe('BugDetailsComponent', () => {
 		fixture.whenStable()
 		.then(() => {
 			expect(component.data)
-				.toEqual(CriticalBugData[0]);
+				.toEqual({
+					advisory: CriticalBugData[0],
+				});
 
 			done();
 		});
@@ -57,12 +58,12 @@ describe('BugDetailsComponent', () => {
 		component.customerId = user.info.customerId;
 
 		component.details
-		.subscribe((details: CriticalBug) => {
+		.subscribe((details => {
 			expect(details)
-				.toEqual(component.advisory);
+				.toEqual(component.data);
 
 			done();
-		});
+		}));
 
 		component.ngOnInit();
 		fixture.detectChanges();
@@ -73,13 +74,13 @@ describe('BugDetailsComponent', () => {
 		component.customerId = user.info.customerId;
 
 		component.details
-		.subscribe((details: CriticalBug) => {
+		.subscribe((details => {
 			fixture.detectChanges();
 			expect(details)
 				.toEqual(component.data);
 
 			done();
-		});
+		}));
 
 		component.ngOnInit();
 		fixture.detectChanges();
@@ -103,7 +104,9 @@ describe('BugDetailsComponent', () => {
 		fixture.detectChanges();
 
 		expect(component.data)
-			.toEqual(CriticalBugData[0]);
+			.toEqual({
+				advisory: CriticalBugData[0],
+			});
 
 		component.advisory = CriticalBugData[1];
 		component.id = CriticalBugData[1].id;
@@ -118,6 +121,8 @@ describe('BugDetailsComponent', () => {
 
 		fixture.detectChanges();
 		expect(component.data)
-			.toEqual(CriticalBugData[1]);
+			.toEqual({
+				advisory: CriticalBugData[1],
+			});
 	});
 });

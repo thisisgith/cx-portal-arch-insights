@@ -23,7 +23,7 @@ import { environment } from '@environment';
 /**
  * SDP Root url for the apis
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Module Imports

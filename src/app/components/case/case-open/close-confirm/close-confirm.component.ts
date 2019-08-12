@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-
-import { LogService } from '@cisco-ngx/cui-services';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 
 /**
@@ -14,10 +12,7 @@ export class CloseConfirmComponent {
 
 	constructor (
 		private cuiModalService: CuiModalService,
-		private logger: LogService,
-	) {
-		this.logger.debug('CloseConfirmComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Close the modal and delete all components

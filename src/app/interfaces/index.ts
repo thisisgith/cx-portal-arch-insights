@@ -22,4 +22,5 @@ export { SearchContext, SearchEnum, SearchType, SearchQuery } from './search';
 export { TimelineDatapoint, TimelineInternalDatapoint, TodayRelation } from './timelineDatapoint';
 export { VisualFilter } from './visualFilter';
 export { User } from './user';
+export { Alert } from './alert';
 export { GeoCodeResponse, GeoCodeParams, GeoCodeFeature } from './geocode';
