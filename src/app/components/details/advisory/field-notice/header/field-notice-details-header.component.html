@@ -20,6 +20,7 @@
 		[innerText]="'_ViewNotice_' | i18n"
 		data-auto-id="FieldNoticeViewNoticeLink"
 		[href]="details?.advisory?.url"
+		target="_blank"
 		[ngClass]="{'disabled': !details?.advisory?.url}">
 	</a>
 	
