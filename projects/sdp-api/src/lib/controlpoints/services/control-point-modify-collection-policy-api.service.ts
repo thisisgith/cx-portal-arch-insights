@@ -35,7 +35,7 @@ class ControlPointModifyCollectionPolicyAPIService extends __BaseService {
     __body = collectionPolicyUpdateRequestModel;
     let req = new HttpRequest<any>(
       'PATCH',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/collectionPolicy`,
+      this.rootUrl + `/customerportal/controlpoint/v1/collectionPolicy`,
       __body,
       {
         headers: __headers,
