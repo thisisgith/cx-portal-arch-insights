@@ -696,18 +696,25 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Updates the bookmark of the item
 	 * @param type string
-	 * @param item SuccessPath
+	 * @param item SuccessPath | ATX
 	 */
-	 public updateBookmark (type: string, item: SuccessPath) {
+	 public updateBookmark (type: string, item: SuccessPath | ATX) {
 		let bookmark;
 		let id;
 		let lifecycleCategory;
-		this.status.loading.success = true;
+		let loadingComponent;
 		if (_.isEqual(type, 'SB')) {
 			bookmark = !_.get(item, 'bookmark');
 			id = _.get(item, 'successByteId');
 			lifecycleCategory = 'SB';
+			loadingComponent = this.status.loading.success;
+		}else if (_.isEqual(type, 'ATX')) {
+			bookmark = !_.get(item, 'bookmark');
+			id = _.get(item, 'atxId');
+			lifecycleCategory = 'ATX';
+			loadingComponent = this.status.loading.atx;
 		}
+		loadingComponent = true;
 		const bookmarkParams: BookmarkRequestSchema = {
 			id,
 			bookmark,
@@ -722,10 +729,10 @@ export class LifecycleComponent implements OnDestroy {
 		this.contentService.updateBookmark(params)
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
-			this.status.loading.success = false;
+			loadingComponent = false;
 		},
 		err => {
-			this.status.loading.success = false;
+			loadingComponent = false;
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});

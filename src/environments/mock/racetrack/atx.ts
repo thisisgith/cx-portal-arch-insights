@@ -19,6 +19,7 @@ const onboardItems = [
 		moderator: 'Romeo Mazzaluna',
 		panelistLink: '',
 		registrationUrl: '',
+		imageUrl: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		sessions: [
 			{
 				date: '2019-03-13',
@@ -36,6 +37,7 @@ const onboardItems = [
 		moderator: 'Romeo Mazzaluna',
 		panelistLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=eadbe1210193b00b085825344d53f4631',
 		registrationUrl: '',
+		imageUrl: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		sessions: [
 			{
 				date: '2019-06-24',
@@ -53,6 +55,7 @@ const onboardItems = [
 		moderator: 'Romeo Mazzaluna',
 		panelistLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e14e84f767a1ee65dbf94bcbfb3a0845a',
 		registrationUrl: '',
+		imageUrl: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		sessions: [
 			{
 				date: '2019-07-31',
@@ -70,6 +73,7 @@ const onboardItems = [
 		moderator: 'Romeo Mazzaluna',
 		panelistLink: '',
 		registrationUrl: '',
+		imageUrl: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		sessions: [
 			{
 				date: '2019-02-27',
@@ -86,6 +90,7 @@ const onboardItems = [
 		moderator: 'Romeo Mazzaluna',
 		panelistLink: '',
 		registrationUrl: '',
+		imageUrl: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		sessions: [
 			{
 				date: '2019-04-15',
@@ -103,6 +108,7 @@ const onboardItems = [
 		moderator: 'Romeo Mazzaluna',
 		panelistLink: '',
 		registrationUrl: '',
+		imageUrl: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		sessions: [
 			{
 				date: '2019-04-29',
@@ -120,6 +126,7 @@ const onboardItems = [
 		moderator: 'Romeo Mazzaluna',
 		panelistLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e32413dc94292e5a4850148d35f92e9cf',
 		registrationUrl: '',
+		imageUrl: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		sessions: [
 			{
 				date: '2019-06-19',
@@ -137,6 +144,7 @@ const onboardItems = [
 		moderator: 'Romeo Mazzaluna',
 		panelistLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ef149fc7c21237c4d583e592ccdde042c',
 		registrationUrl: '',
+		imageUrl: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		sessions: [
 			{
 				date: '2019-06-26',
@@ -154,6 +162,7 @@ const onboardItems = [
 		moderator: 'Romeo Mazzaluna',
 		panelistLink: '',
 		registrationUrl: '',
+		imageUrl: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		sessions: [
 			{
 				date: '2018-12-06',

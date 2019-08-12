@@ -17,12 +17,13 @@ $vibblue: #017cad;
 	}
 
 	&__card {
+		height: 500px;
 		&__background {
-			background: $light-gray-5;
+			background: $white;
 		}
 
 		&__body {
-			height: 150px;
+			height: 100px;
 			overflow: auto;
 		}
 	}

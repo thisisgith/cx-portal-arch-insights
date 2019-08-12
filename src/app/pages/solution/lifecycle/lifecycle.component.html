@@ -448,7 +448,7 @@
 	</div>
 </ng-template>
 
-<ng-template #atxModal let-data="data">
+<!-- <ng-template #atxModal let-data="data">
 	<div id="atxModal" class="modal__content no-padding">
 
 		<div class="modal__header atx__header half-padding-left half-padding-bottom no-margin-bottom">
@@ -504,6 +504,109 @@
 					</ng-container>
 				</div>
 			</div>
+		</div>
+	</div>
+</ng-template> -->
+
+<ng-template #atxModal let-data="data">
+	<div id="atxModal" class="modal__content no-padding" data-auto-id="atxViewAllModal">
+
+		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
+			<div class="row half-padding-top">
+				<div class="col-md-11 half-margin-top base-padding-left">
+					<div class="text-xlarge text-left" [innerText]="'_AskTheExpert_' | i18n"></div>
+					<div class="text-medium text-left qtr-margin-top" [innerText]="'_AvailableLive_' | i18n"></div>
+				</div>
+				<div class="col-md-1 half-margin-top">
+					<span (click)="closeModal()" data-auto-id="ATXCloseModal"
+						class="icon-close icon-medium text-right"></span>
+				</div>
+			</div>
+		</div>
+		<div class="divider base-margin-left base-margin-right"></div>
+		<div class="modal__body base-padding">
+			<div class="row half-margin-left half-margin-right">
+				<div class="col-md-9 text-large text-bold text-left"
+					[innerText]="'_TopicsAvailable_' | i18n:data.length"
+					data-auto-id="ATXTopicsAvailable">
+				</div>
+				<div class="col-md-2">
+					<cui-select id="acc-filter"
+						data-auto-id="acc-filter"
+						[placeholder]="'_FilterBy_' | i18n"
+						[items]="statusOptions"
+						[empty]="true"
+						[(ngModel)]="selectedStatus"
+						(ngModelChange)="selectFilter('acc')">
+					</cui-select>
+				</div>
+				<div class="col-md-1 text-right">
+					<div class="btn-group btn-group--square">
+						<button class="btn btn--white">
+							<span class="icon-list-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+						</button>
+						<button class="btn btn--square">
+							<span class="icon-grid-view icon-medium qtr-padding-left qtr-padding-top toggle"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<ng-container *ngTemplateOutlet="cardATX"></ng-container>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #cardATX>
+		<!-- <div class="grid grid--4up base-padding-top" *ngIf="(!view || view == 'grid')"> -->
+	<div class="grid grid--4up base-padding-top">
+		<div class="card atx__card"
+			*ngFor="let item of componentData.atx.sessions"
+			[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
+			data-auto-id="ATXCard">
+			<div class="text-left" [ngClass]="item.status === 'recommended' ? 'text-info' : 'text-clear'" data-auto-id="ATXCardHeader">
+				<span class="icon-flagged qtr-padding-right qtr-padding-bottom" data-auto-id="ATXCard-Flag"></span>
+				<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
+			</div>
+			<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageUrl" attr.data-auto-id="{{ autoid }}-Image">
+			<div class="icon-bookmark icon-medium"
+				(click)="updateBookmark('ATX', item)"
+				[ngClass]="getRibbonClass(item)"
+				data-auto-id="ATXCardRibbon">
+			</div>
+			<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
+			<div class="card__header text-left text-bold"
+				[ngClass]="item.status === 'recommended' ? 'text-info' : null"
+				*ngIf="item && item.title"
+				[innerText]="item.title"
+				data-auto-id="ATXCardTitle">
+			</div>
+			<div class="card__body atx__card__body text-left" *ngIf="item && item.description" [innerText]="item.description"></div>
+			<div class="card__footer">
+				<div class="card_footer_item"  data-auto-id="ATXCardFooter">
+					<div class="text-left">
+						<a data-auto-id="viewOnDemand" class="no-link" [href]="item.recordingURL">
+							<span class="icon-play-contained icon-small half-padding-right"></span>
+							<span [innerText]="'_WatchNow_' | i18n"></span>
+						</a>
+					</div>
+					<div class="text-left">
+						<a data-auto-id="recommendedATXScheduleButton" class="no-link"
+							(click)="atxScheduleCardOpened = true; componentData.atx.interested = item">
+							<span class="icon-calendar icon-small half-padding-right"></span>
+							<span [innerText]="'_ViewSessions_' | i18n"></span>
+						</a>
+					</div>
+					<div class="divider divider--compressed"></div>
+					<div class="text-right">
+						<span class="icon-clock icon-small half-padding-right"></span>
+						<span [innerText]="item.duration"></span>
+					</div>
+				</div>
+			</div>
+			<ng-container *ngIf="item == componentData.atx.interested && atxScheduleCardOpened">
+				<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }">
+				</ng-container>
+			</ng-container>
 		</div>
 	</div>
 </ng-template>
