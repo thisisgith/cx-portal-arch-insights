@@ -20,6 +20,15 @@
 				</div>
 				<div class="col-md-4">
 					<ng-container *ngTemplateOutlet="panel; context: {
+						template: successBytesPanel,
+						title: '_SuccessBytes_',
+						loading: (status.loading.success || status.loading.productGuides),
+						data: componentData.learning,
+						viewAllLabel: '_ViewAll_',
+						viewAll: '_SuccessBytes_'
+					}">
+					</ng-container>
+					<ng-container *ngTemplateOutlet="panel; context: {
 							template: learnPanel,
 							title: '_Learn_',
 							loading: (status.loading.elearning && !status.loading.success),
@@ -33,7 +42,7 @@
 						loading: status.loading.cgt,
 						data: componentData.cgt
 					}">
-				</ng-container>
+					</ng-container>
 				</div>
 				<div class="col-md-4">
 					<ng-container *ngTemplateOutlet="panel; context: {
@@ -363,6 +372,24 @@
 	</div>
 </ng-template>
 
+<ng-template #successBytesPanel let-data="data">
+	<div class="text-muted" [innerText]="'_SuccessBytesSubtitle_' | i18n"></div>
+	<div *ngIf="data.success?.length" data-auto-id="SuccessBytesPanel-SuccessPathsBlock">
+		<ng-container *ngTemplateOutlet="successBlock; context: {
+				title: '_SuccessBytes_',
+				data: componentData.learning.success,
+				hideTitle: true }">
+		</ng-container>
+		<div class="divider"></div>
+	</div>
+	<div *ngIf="data.productGuides?.length" data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
+		<ng-container *ngTemplateOutlet="successBlock; context: {
+				title: '_ProductGuides_',
+				data: componentData.learning.productGuides }">
+		</ng-container>
+	</div>
+</ng-template>
+	
 <ng-template #learnPanel let-data="data">
 	<div *ngIf="data.elearning?.length" data-auto-id="LearnPanel-ELearningBlock">
 		<ng-container *ngTemplateOutlet="learningBlock; context:
@@ -370,13 +397,6 @@
 				title: '_ELearning_',
 				data: componentData.learning.elearning,
 				link: 'https://pilot-digital-learning.cisco.com/cx/#/?type=e-learning' }">
-		</ng-container>
-		<div class="divider"></div>
-	</div>
-
-	<div *ngIf="data.success?.length" data-auto-id="LearnPanel-SuccessPathsBlock">
-		<ng-container *ngTemplateOutlet="successBlock; context:
-				{ icon: 'transit',title: '_SuccessBytes_', data: componentData.learning.success }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
@@ -427,8 +447,8 @@
 	</div>
 </ng-template>
 
-<ng-template #successBlock let-title="title" let-data="data" let-icon="icon">
-	<div class="row">
+<ng-template #successBlock let-title="title" let-data="data" let-icon="icon" let-hideTitle="hideTitle">
+	<div class="row" *ngIf="!hideTitle">
 		<div class="col-md-9">
 			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
 			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
@@ -441,7 +461,6 @@
 			<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
 		</div>
 	</div>
-	<div class="text-muted" [innerText]="'_SuccessBytesSubtitle_' | i18n"></div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
@@ -499,6 +518,16 @@
 						(ngModelChange)="selectFilter('SB')">
 					</cui-select>
 				</div>
+				<div *ngIf="type==='PG'" class="col-md-2">
+						<cui-select id="category-filter"
+							data-auto-id="category-filter"
+							[items]="pgCategoryOptions"
+							[empty]="true"
+							[placeholder]="'_FilterBy_' | i18n"
+							[(ngModel)]="selectedFilterForPG"
+							(ngModelChange)="selectFilter('PG')">
+						</cui-select>
+					</div>
 				<div class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
 					<button class="btn btn--small btn--gray-ghost"
@@ -533,6 +562,9 @@
 		<ng-container *ngIf="type === 'SB'">
 			<ng-container *ngTemplateOutlet="cardSB"></ng-container>
 		</ng-container>
+		<ng-container *ngIf="type === 'PG'">
+			<ng-container *ngTemplateOutlet="cardPG"></ng-container>
+		</ng-container>
 	</div>
 </ng-template>
 
@@ -547,6 +579,9 @@
 		</ng-container>
 		<ng-container *ngIf="type === 'SB'">
 			<ng-container *ngTemplateOutlet="listSB"></ng-container>
+		</ng-container>
+		<ng-container *ngIf="type === 'PG'">
+			<ng-container *ngTemplateOutlet="listPG"></ng-container>
 		</ng-container>
 		</table>
 	</div>
@@ -665,7 +700,7 @@
 		<th *ngFor="let column of successBytesTable.columns"
 			attr.data-auto-id="successBytesTable-columnHeader-{{ column.name }}"
 			[ngClass]="{ 'sortable': column.sortable }"
-			(click)="column.sortable ? onSort(column.sortKey, column.sortDirection) : null">
+			(click)="column.sortable ? onSort(column.sortKey, column.sortDirection, 'SB') : null">
 			<span [innerText]="column.name"></span>
 			<span *ngIf="column.sortable" class="qtr-margin-left" [ngClass]="{
 							'icon-chevron-down': column.sortDirection === 'asc',
@@ -687,6 +722,68 @@
 	</tr>
 </ng-template>
 
+<ng-template #cardPG>
+	<div class="card acc__card" *ngFor="let item of selectedProductGuides" data-auto-id="ProductGuidesCard">
+		<div class="icon-bookmark icon-medium" (click)="updateBookmark('SB', item)"
+			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'" data-auto-id="PGCardRibbon"></div>
+		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
+		<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
+		<div class="card__footer">
+			<div class="card_footer_item" data-auto-id="ProductGuidesCardFooter">
+				<div class="row">
+					<div class="col-md-3">
+						<a class="no-link" data-auto-id="productlink" target="_blank" [href]="item.url">
+							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
+								<span class="icon-apps icon-small half-padding-right"></span>
+								<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
+							</div>
+							<div class="text-left text-muted" *ngIf="item.type === 'Video'">
+								<span class="icon-play-contained icon-small half-padding-right"></span>
+								<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+							</div>
+							<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
+								<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+								<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+							</div>
+						</a>
+					</div>
+					<div class="col-md-6 text-muted" *ngIf="item.duration">
+						<span class="icon-clock icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="item.duration"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #listPG>
+	<tr class="th-row">
+		<th *ngFor="let column of productGuidesTable.columns"
+			attr.data-auto-id="productGuidesTable-columnHeader-{{ column.name }}"
+			[ngClass]="{ 'sortable': column.sortable }"
+			(click)="column.sortable ? onSort(column.sortKey, column.sortDirection, 'PG') : null">
+			<span [innerText]="column.name"></span>
+			<span *ngIf="column.sortable" class="qtr-margin-left" [ngClass]="{
+							'icon-chevron-down': column.sortDirection === 'asc',
+							'icon-chevron-up': column.sortDirection === 'desc'
+						}">
+			</span>
+		</th>
+	</tr>
+	<tr class="td-row" *ngFor="let item of selectedProductGuides">
+		<td class="text-left" *ngFor="let column of productGuidesTable.columns" [ngStyle]="{ 'width': column.width }">
+			<ng-container *ngIf="column.template">
+				<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }"></ng-container>
+			</ng-container>
+			<ng-container *ngIf="!column.template">
+				<div [innerText]="item[column.key]" attr.data-auto-id="ProductGuidesTable-{{ column.name }}-rowValue">
+				</div>
+			</ng-container>
+		</td>
+	</tr>
+</ng-template>
+	
 <ng-template #coaching let-results="results">
 	<div id="coachingModal" class="modal__content no-padding">
 		<div class="modal__header webinar-title-background no-margin">
