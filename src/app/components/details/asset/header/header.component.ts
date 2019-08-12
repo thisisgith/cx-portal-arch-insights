@@ -4,6 +4,9 @@ import {
 	OnInit,
 	OnChanges,
 	SimpleChanges,
+	OnDestroy,
+	EventEmitter,
+	Output,
 } from '@angular/core';
 import { CaseParams, CaseService } from '@cui-x/services';
 import {
@@ -13,6 +16,7 @@ import {
 	Transaction,
 	TransactionRequestResponse,
 	TransactionStatusResponse,
+	ScanRequestResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
@@ -23,9 +27,11 @@ import {
 	catchError,
 	takeUntil,
 	mergeMap,
+	delay,
 } from 'rxjs/operators';
 import { CaseOpenComponent } from '../../../case/case-open/case-open.component';
-import { UserResolve } from '@utilities';
+import { Alert } from '@interfaces';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Asset Details Header Component
@@ -39,8 +45,11 @@ import { UserResolve } from '@utilities';
 	styleUrls: ['./header.component.scss'],
 	templateUrl: './header.component.html',
 })
-export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
+export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy {
+
 	@Input('asset') public asset: Asset;
+	@Input('customerId') public customerId: string;
+	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 
 	public openCases: any[];
 	private caseParams: CaseParams = new CaseParams({
@@ -62,23 +71,13 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 	};
 	public casesDropdownActive = false;
 	private destroyed$: Subject<void> = new Subject<void>();
-	private customerId: string;
 
 	constructor (
 		private caseService: CaseService,
 		private cuiModalService: CuiModalService,
 		private logger: LogService,
 		private networkService: NetworkDataGatewayService,
-		private userResolve: UserResolve,
-	) {
-		this.userResolve.getCustomerId()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((id: string) => {
-			this.customerId = id;
-		});
-	}
+	) { }
 
 	/**
 	 * Toggle the open cases dropdown
@@ -98,6 +97,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 
 		return this.caseService.read(params)
 		.pipe(
+			takeUntil(this.destroyed$),
 			map(data => {
 				this.openCases = _.get(data, 'content', []);
 				this.status.loading.cases = false;
@@ -105,7 +105,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			catchError(err => {
 				this.openCases = [];
 				this.status.loading.cases = false;
-				this.logger.error('header.component : fetchCases()' +
+				this.logger.error('asset-details:header.component : fetchCases()' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -142,22 +142,66 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 	// }
 
 	/**
+	 * Checks for a current scan status on an asset
+	 */
+	private checkScanStatus () {
+		const getScanStatusParams: NetworkDataGatewayService.GetScanStatusBySerialParams = {
+			customerId: this.customerId,
+			productId: this.asset.productId,
+			serialNumber: this.asset.serialNumber,
+		};
+
+		return this.networkService.getScanStatusBySerial(getScanStatusParams)
+		.pipe(
+			takeUntil(this.destroyed$),
+			mergeMap((response: ScanRequestResponse) => {
+				const inProgress = _.find(response, { status: 'IN_PROGRESS' });
+				const received = _.find(response, { status: 'RECEIVED' });
+
+				if (inProgress && inProgress.transactionId) {
+					_.set(this.status, ['scan', 'inProgress'], true);
+
+					this.alertMessage.emit({
+						message: I18n.get('_ScanningCurrentlyInProgress_'), severity: 'info' });
+
+					return this.scanPolling({
+						customerId: this.customerId,
+						transactionId: inProgress.transactionId,
+					});
+				}
+				if (received && received.transactionId) {
+					_.set(this.status, ['scan', 'inProgress'], true);
+
+					this.alertMessage.emit({
+						message: I18n.get('_ScanningCurrentlyInProgress_'), severity: 'info' });
+
+					return this.scanPolling({
+						customerId: this.customerId,
+						transactionId: received.transactionId,
+					});
+				}
+
+				return of({ });
+			}),
+			catchError(err => {
+				this.logger.error('asset-details:header.component : checkScanStatus() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
 	 * Initiates a scan
 	 */
 	public initiateScan () {
 		const request: TransactionRequest = {
-			// TODO: Temporary for Testing
-			// customerId: '231215372',
 			customerId: this.customerId,
 			neCount: 1,
 			requestBody: {
 				deviceOptions: 'LIST',
 				devices: [{
-					// TODO: Temporary for Testing
-					// hostname: '6807',
-					// ipAddress: '10.13.1.1',
-					// productId: 'C6807-XL',
-					// serialNumber: 'SMC1803008B',
 					hostname: this.asset.deviceName,
 					ipAddress: this.asset.ipAddress,
 					productId: this.asset.productId,
@@ -171,6 +215,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 		if (!_.get(this.status, ['scan', 'inProgress'], false)) {
 			this.networkService.postDeviceTransactions(request)
 			.pipe(
+				takeUntil(this.destroyed$),
 				mergeMap((response: TransactionRequestResponse) => {
 					const transaction: Transaction = _.head(response);
 
@@ -180,10 +225,15 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 						return this.scanPolling(transaction);
 					}
 
-					return of();
+					return of({ });
 				}),
 				catchError(err => {
-					this.logger.error('header.component : initiateScan() ' +
+					this.alertMessage.emit({
+						message: I18n.get('_UnableToInitiateScan_', this.asset.deviceName),
+						severity: 'danger',
+					});
+
+					this.logger.error('asset-details:header.component : initiateScan() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
 					return of({ });
@@ -200,23 +250,35 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 	 */
 	private scanPolling (transaction: Transaction) {
 		return this.networkService.getScanStatusByTransaction({
-			// TODO: Temporary for Testing
-			// customerId: '231215372',
 			customerId: this.customerId,
 			transactionId: transaction.transactionId,
 		})
 		.pipe(
+			delay(3000),
+			takeUntil(this.destroyed$),
 			mergeMap((response: TransactionStatusResponse) => {
 				if (response.status === 'SUCCESS') {
+					this.alertMessage.emit({
+						message: I18n.get('_ScanningHasCompleted_'),
+						severity: 'success',
+					});
+
 					_.set(this.status, ['scan', 'inProgress'], false);
 
-					return of();
+					return of({ });
 				}
 
 				return this.scanPolling(transaction);
 			}),
 			catchError(err => {
-				this.logger.error('header.component : initiatePolling() ' +
+				this.alertMessage.emit({
+					message: I18n.get('_UnableToInitiateScan_', this.asset.deviceName),
+					severity: 'danger',
+				});
+
+				_.set(this.status, ['scan', 'inProgress'], false);
+
+				this.logger.error('asset-details:header.component : initiatePolling() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -232,6 +294,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			this.status.loading.overall = true;
 			forkJoin(
 				this.fetchCases(),
+				this.checkScanStatus(),
 				// this.getEligibility(),
 			)
 			.subscribe(() => {
@@ -245,6 +308,14 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 	 */
 	public ngOnInit () {
 		this.refresh();
+	}
+
+	/**
+	 * Destroys the component
+	 */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
 	}
 
 	/**
@@ -264,5 +335,4 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 	public openCase () {
 		 this.cuiModalService.showComponent(CaseOpenComponent, { asset: this.asset }, 'full');
 	}
-
 }

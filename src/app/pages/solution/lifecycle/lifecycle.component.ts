@@ -10,9 +10,9 @@ import {
 	ACC,
 	ACCBookmarkSchema,
 	ACCResponse,
-	ATX,
-	ATXResponse,
-	ATXSession,
+	AtxSchema,
+	ATXResponseModel,
+	AtxSessionSchema,
 	BookmarkRequestSchema,
 	ELearning,
 	ELearningResponse,
@@ -60,9 +60,9 @@ interface ComponentData {
 		suggestedAction?: string;
 	};
 	atx?: {
-		sessions?: ATX[];
-		recommended?: ATX;
-		interested?: ATX;
+		sessions?: AtxSchema[];
+		recommended?: AtxSchema;
+		interested?: AtxSchema;
 	};
 	learning?: {
 		certifications?: ELearning[];
@@ -123,9 +123,9 @@ export class LifecycleComponent implements OnDestroy {
 		context: null,
 		visible: false,
 	};
-	public visibleContext: ATX[];
+	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
-	public sessionSelected: ATXSession;
+	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	private user: User;
 	public selectedCategory = '';
@@ -438,7 +438,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param atx ATX item
 	 * @returns ribbon
 	 */
-	public getRibbonClass (atx: ATX) {
+	public getRibbonClass (atx: AtxSchema) {
 		let ribbon = 'ribbon__clear';
 		switch (_.get(atx, 'status')) {
 			case 'completed': {
@@ -527,7 +527,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Selects the session
 	 * @param session the session we've clicked on
 	 */
-	public selectSession (session: ATXSession) {
+	public selectSession (session: AtxSessionSchema) {
 		this.sessionSelected = (_.isEqual(this.sessionSelected, session)) ? null : session;
 	}
 
@@ -791,7 +791,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Loads the ATX data
 	 * @returns the ATXResponse
 	 */
-	private loadATX (): Observable<ATXResponse> {
+	private loadATX (): Observable<ATXResponseModel> {
 		this.status.loading.atx = true;
 		if (window.Cypress) {
 			window.atxLoading = true;
@@ -802,7 +802,7 @@ export class LifecycleComponent implements OnDestroy {
 		return this.contentService.getRacetrackATX(
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
-			map((result: ATXResponse) => {
+			map((result: ATXResponseModel) => {
 				this.componentData.atx = {
 					recommended: _.head(result.items),
 					sessions: result.items,
@@ -912,7 +912,14 @@ export class LifecycleComponent implements OnDestroy {
 								this.componentData.learning.elearning.push(learningItem);
 								break;
 							}
-							case 'Certification':
+							case 'Certification': {
+								const learningItem: ELearningModel = {
+									...item,
+									fixedRating: parseFloat(item.rating),
+								};
+								this.componentData.learning.certifications.push(learningItem);
+								break;
+							}
 							case 'Videos': {
 								this.componentData.learning.certifications.push(item);
 								break;

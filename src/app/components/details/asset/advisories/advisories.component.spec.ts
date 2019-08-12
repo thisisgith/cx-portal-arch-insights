@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
 	AssetScenarios,
-	SecurityAdvisoryScenarios,
-	SecurityAdvisoryBulletinScenarios,
-	FieldNoticeScenarios,
-	FieldNoticeBulletinScenarios,
+	AdvisorySecurityAdvisoryScenarios,
+	FieldNoticeAdvisoryScenarios,
 	Mock,
+	user,
 	CriticalBugData,
 } from '@mock';
 import { AssetDetailsAdvisoriesComponent } from './advisories.component';
@@ -72,10 +71,12 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			statusText: 'Resource not found',
 		};
 		component.asset = getActiveBody(AssetScenarios[0]).data[0];
-		spyOn(productAlertsService, 'getSecurityAdvisories')
+		component.customerId = user.info.customerId;
+
+		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getFieldNotice')
+		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(diagnosticsService, 'getCriticalBugs')
@@ -93,55 +94,11 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			const bugTab = _.find(component.tabs, { key: 'bug' });
 
 			expect(advisoryTab.data)
-				.toEqual({ });
+				.toEqual([]);
 			expect(fieldTab.data)
-				.toEqual({ });
+				.toEqual([]);
 			expect(bugTab.data)
-				.toEqual({ });
-
-			done();
-		});
-	});
-
-	it('should handle error scenarios for bulletin calls', done => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		component.asset = getActiveBody(AssetScenarios[0]).data[0];
-
-		spyOn(productAlertsService, 'getSecurityAdvisories')
-			.and
-			.returnValue(of(getActiveBody(SecurityAdvisoryScenarios[0])));
-		spyOn(productAlertsService, 'getFieldNotice')
-			.and
-			.returnValue(of(getActiveBody(FieldNoticeScenarios[0])));
-
-		spyOn(productAlertsService, 'getPSIRTBulletin')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getFieldNoticeBulletin')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		component.ngOnInit();
-
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-
-			const advisoryTab = _.find(component.tabs, { key: 'security' });
-			const fieldTab = _.find(component.tabs, { key: 'field' });
-
-			expect(advisoryTab.data.notice.length)
-				.toEqual(getActiveBody(SecurityAdvisoryScenarios[0]).data.length);
-			expect(fieldTab.data.notice.length)
-				.toEqual(getActiveBody(FieldNoticeScenarios[0]).data.length);
-
-			expect(advisoryTab.data.bulletin)
-				.toBeUndefined();
-			expect(fieldTab.data.bulletin)
-				.toBeUndefined();
+				.toEqual([]);
 
 			done();
 		});
@@ -149,20 +106,14 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 
 	it('should attach results to the tabs data', done => {
 		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.customerId = user.info.customerId;
 
-		spyOn(productAlertsService, 'getSecurityAdvisories')
+		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
 			.and
-			.returnValue(of(getActiveBody(SecurityAdvisoryScenarios[0])));
-		spyOn(productAlertsService, 'getFieldNotice')
+			.returnValue(of(getActiveBody(AdvisorySecurityAdvisoryScenarios[0])));
+		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
 			.and
-			.returnValue(of(getActiveBody(FieldNoticeScenarios[0])));
-
-		spyOn(productAlertsService, 'getPSIRTBulletin')
-			.and
-			.returnValue(of(getActiveBody(SecurityAdvisoryBulletinScenarios[0])));
-		spyOn(productAlertsService, 'getFieldNoticeBulletin')
-			.and
-			.returnValue(of(getActiveBody(FieldNoticeBulletinScenarios[0])));
+			.returnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
 
 		component.ngOnInit();
 
@@ -173,15 +124,10 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			const advisoryTab = _.find(component.tabs, { key: 'security' });
 			const fieldTab = _.find(component.tabs, { key: 'field' });
 
-			expect(advisoryTab.data.notice.length)
-				.toEqual(getActiveBody(SecurityAdvisoryScenarios[0]).data.length);
-			expect(fieldTab.data.notice.length)
-				.toEqual(getActiveBody(FieldNoticeScenarios[0]).data.length);
-
-			expect(advisoryTab.data.bulletin.length)
-			.toEqual(getActiveBody(SecurityAdvisoryBulletinScenarios[0]).data.length);
-			expect(fieldTab.data.bulletin.length)
-			.toEqual(getActiveBody(FieldNoticeBulletinScenarios[0]).data.length);
+			expect(advisoryTab.data.length)
+				.toEqual(getActiveBody(AdvisorySecurityAdvisoryScenarios[0]).data.length);
+			expect(fieldTab.data.length)
+				.toEqual(getActiveBody(FieldNoticeAdvisoryScenarios[0]).data.length);
 
 			done();
 		});
@@ -189,20 +135,15 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 
 	it('should set the selectedAdvisory when selecting a row', done => {
 		component.asset = getActiveBody(AssetScenarios[0]).data[0];
+		component.customerId = user.info.customerId;
 
-		spyOn(productAlertsService, 'getSecurityAdvisories')
+		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
 			.and
-			.returnValue(of(getActiveBody(SecurityAdvisoryScenarios[0])));
-		spyOn(productAlertsService, 'getFieldNotice')
+			.returnValue(of(getActiveBody(AdvisorySecurityAdvisoryScenarios[0])));
+		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
 			.and
-			.returnValue(of(getActiveBody(FieldNoticeScenarios[0])));
+			.returnValue(of(getActiveBody(FieldNoticeAdvisoryScenarios[0])));
 
-		spyOn(productAlertsService, 'getPSIRTBulletin')
-			.and
-			.returnValue(of(getActiveBody(SecurityAdvisoryBulletinScenarios[0])));
-		spyOn(productAlertsService, 'getFieldNoticeBulletin')
-			.and
-			.returnValue(of(getActiveBody(FieldNoticeBulletinScenarios[0])));
 		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(of({ data: CriticalBugData }));
@@ -218,33 +159,34 @@ describe('AssetDetailsAdvisoriesComponent', () => {
 			const bugsTab = _.find(component.tabs, { key: 'bug' });
 
 			component.selectTab(bugsTab);
-			_.set(bugsTab.data.bulletin[0], 'active', true);
-			component.onRowSelect(bugsTab.data.bulletin[0]);
+			_.set(bugsTab.data[0], 'active', true);
+			component.onRowSelect(bugsTab.data[0]);
 			fixture.detectChanges();
-			expect(component.selectedAdvisory)
-				.toEqual({ id: bugsTab.data.bulletin[0].id, type: 'bug' });
 
-			_.set(bugsTab.data.bulletin[0], 'active', false);
-			component.onRowSelect(bugsTab.data.bulletin[0]);
+			expect(component.selectedAdvisory)
+				.toEqual({ id: bugsTab.data[0].id, type: 'bug' });
+
+			_.set(bugsTab.data[0], 'active', false);
+			component.onRowSelect(bugsTab.data[0]);
 			fixture.detectChanges();
 
 			expect(component.selectedAdvisory)
 				.toBeNull();
 
 			component.selectTab(fieldTab);
-			_.set(fieldTab.data.bulletin[0], 'active', true);
-			component.onRowSelect(fieldTab.data.bulletin[0]);
+			_.set(fieldTab.data[0], 'active', true);
+			component.onRowSelect(fieldTab.data[0]);
 			fixture.detectChanges();
 			expect(component.selectedAdvisory)
-				.toEqual({ id: fieldTab.data.bulletin[0].fieldNoticeId, type: 'field' });
+				.toEqual({ id: fieldTab.data[0].id, type: 'field' });
 
 			component.selectTab(securityTab);
-			_.set(securityTab.data.bulletin[0], 'active', true);
-			component.onRowSelect(securityTab.data.bulletin[0]);
+			_.set(securityTab.data[0], 'active', true);
+			component.onRowSelect(securityTab.data[0]);
 			fixture.detectChanges();
 			expect(component.selectedAdvisory)
 				.toEqual({
-					id: securityTab.data.bulletin[0].securityAdvisoryInstanceId,
+					id: securityTab.data[0].id,
 					type: 'security' });
 
 			done();

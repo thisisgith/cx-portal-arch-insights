@@ -71,9 +71,7 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 		public cuiModalService: CuiModalService,
 		private logger: LogService,
 		private profileService: ProfileService,
-	) {
-		this.logger.debug('CaseOpenAdvisoriesComponent Created!');
-	}
+	) { }
 
 	/**
 	 * OnInit lifecycle hook
