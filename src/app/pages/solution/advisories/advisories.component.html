@@ -14,15 +14,19 @@
 		<cui-tab *ngFor="let tab of tabs"
 			[label]="tab.label | uppercase"
 			[disabled]="tab.disabled">
-			<div class="divider no-margin-top qtr-margin-bottom"></div>
-			<ng-container *ngTemplateOutlet="visualFilters; context: { tab: tab }"></ng-container>
-			<ng-container *ngTemplateOutlet="titleBar; context: { tab: tab }"></ng-container>
-			<div class="divider qtr-margin-top no-margin-bottom"></div>
+			<ng-container *ngIf="!selectedTab.loading && selectedTab.filters.length">
+				<div class="divider no-margin-top qtr-margin-bottom"></div>
+				<ng-container *ngTemplateOutlet="visualFilters; context: { tab: tab }"></ng-container>
+			</ng-container>
+			<ng-container *ngIf="!selectedTab.loading && selectedTab.pagination">
+				<ng-container *ngTemplateOutlet="titleBar; context: { tab: tab }"></ng-container>
+				<div class="divider qtr-margin-top no-margin-bottom"></div>
+			</ng-container>
 			<ng-container *ngTemplateOutlet="tab.template; context: { tab: tab }"></ng-container>
 		</cui-tab>
 
 		<ng-template cuiTabPost>
-			<div class="text-right" *ngIf="selectedTab.filters?.length">
+			<div class="text-right" *ngIf="selectedTab.filters?.length && selectedTab.pagination">
 				<div *ngIf="!status.isLoading"
 					(click)="status.filterCollapse = !status.filterCollapse"
 					data-auto-id="VisualFilterCollapse">
@@ -65,7 +69,7 @@
 		</ng-container>
 	</div>
 	<div class="divider no-margin-top qtr-margin-bottom"
-		*ngIf="!status.filterCollapse && !status.isLoading && tab.filters?.length">
+		*ngIf="!status.filterCollapse && !status.isLoading && tab.pagination && tab.filters?.length">
 	</div>
 	<ng-container *ngIf="tab.filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
@@ -84,8 +88,7 @@
 				</span>
 			</div>
 		</div>
-		<!-- TODO: Implement Search when API Supports it-->
-		<!-- <div class="col-md-3">
+		<div class="col-md-3">
 			<div class="flex flex-fluid">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
@@ -106,7 +109,7 @@
 					</form>
 				</div>
 			</div>
-		</div> -->
+		</div>
 	</div>
 </ng-template>
 
@@ -163,7 +166,7 @@
 					data-auto-id="NoResultsFoundTxt" >
 				</span>
 			</div>
-			<div>
+			<div *ngIf="tab.pagination">
 				<a (click)="clearFilters()"
 					class="text-lowercase"
 					data-auto-id="NoResultsClearAll"
@@ -206,8 +209,8 @@
 				'Critical': 'label--danger',
 				'High': 'label--warning',
 				'Medium': 'label--warning-alt',
-				'Low': 'label--success',
-				'Info': 'label--indigo'
+				'Low': 'label--info',
+				'Info': 'label--info'
 			}[celldata?.severity]"
 			data-auto-id="ImpactIcon">
 		</span>

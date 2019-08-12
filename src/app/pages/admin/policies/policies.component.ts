@@ -4,11 +4,9 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { LogService } from '@cisco-ngx/cui-services';
 import {
 	ControlPointDevicePolicyAPIService,
 	PolicyResponseModel,
-	UserService,
 } from '@sdp-api';
 
 import { empty, Subject } from 'rxjs';
@@ -43,14 +41,11 @@ export class PoliciesComponent implements OnInit {
 	private user: User;
 
 	constructor (
-		private logger: LogService,
 		private controlPointDevicePolicyAPIService: ControlPointDevicePolicyAPIService,
 		private route: ActivatedRoute,
-		private userService: UserService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
-		this.logger.debug('PoliciesComponent Created!');
 	}
 
 	/**

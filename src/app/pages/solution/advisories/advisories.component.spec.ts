@@ -320,4 +320,65 @@ describe('AdvisoriesComponent', () => {
 			done();
 		});
 	});
+
+	it('should change the route based on the selected tab', done => {
+		spyOn(component.router, 'navigate');
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			// test bugs tab
+			component.selectTab(_.findIndex(component.tabs, { key: 'bug' }));
+			fixture.detectChanges();
+
+			expect(component.router.navigate)
+				.toHaveBeenCalledWith(['/solution/advisories/bugs'], { queryParams: { } });
+
+			// test field notices tab
+			component.selectTab(_.findIndex(component.tabs, { key: 'field' }));
+			fixture.detectChanges();
+
+			expect(component.router.navigate)
+				.toHaveBeenCalledWith(['/solution/advisories/field-notices'], { queryParams: { } });
+
+			// test security tab
+			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
+			fixture.detectChanges();
+
+			expect(component.router.navigate)
+				.toHaveBeenCalledWith(['/solution/advisories/security'], { queryParams: { } });
+
+			done();
+		});
+	});
+
+	it('should add the selected filters to the route', done => {
+		spyOn(component.router, 'navigate');
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
+
+			const tab = component.selectedTab;
+			const impactFilter = _.find(tab.filters, { key: 'impact' });
+			impactFilter.seriesData = [
+				{
+					filter: 'info',
+					label: 'Info',
+					selected: false,
+					value: 4,
+				},
+			];
+			component.onSubfilterSelect('info', impactFilter);
+			fixture.detectChanges();
+
+			expect(component.router.navigate)
+				.toHaveBeenCalledWith(
+					['/solution/advisories/security'],
+					{ queryParams: { impact: ['info'] } });
+
+			done();
+		});
+	});
 });

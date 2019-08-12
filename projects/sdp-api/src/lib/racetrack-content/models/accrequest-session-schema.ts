@@ -3,14 +3,14 @@ import { ACCSessionAttendees } from './accsession-attendees';
 export interface ACCRequestSessionSchema {
 
   /**
+   * Prefered time for meetings/working sessions (morning | afternoon)
+   */
+  preferredSlot?: string;
+
+  /**
    * Title of the accelerator.
    */
   accTitle?: string;
-
-  /**
-   * Company name of the logged in user from profile.
-   */
-  companyName?: string;
 
   /**
    * Job title of the logged in user from profile.
@@ -26,6 +26,11 @@ export interface ACCRequestSessionSchema {
    * Phone number of the logged in user from profile.
    */
   userPhoneNumber?: string;
+
+  /**
+   * Full Name of the logged in user from profile.
+   */
+  userFullName?: string;
 
   /**
    * Cisco Contact name or email for the logged in user.
@@ -44,9 +49,9 @@ export interface ACCRequestSessionSchema {
   timezone?: string;
 
   /**
-   * Prefered time for meetings/working sessions (morning | afternoon)
+   * Company name of the logged in user from profile.
    */
-  preferredSlot?: string;
+  companyName?: string;
 
   /**
    * Preferred language for meetings/working sessions

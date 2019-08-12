@@ -71,14 +71,13 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public selectedAsset: Asset;
 	private eventsSubscribe: Subscription;
 	public solutions: RacetrackSolution[];
-	public casesCount;
-	public RMACount;
+	public casesCount: number;
+	public RMACount: number;
 
-	@ViewChild('advisoriesFact', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
+	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
 	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
 	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
-	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
 	@ViewChild('insightsFacet', { static: true }) public insightsTemplate: TemplateRef<{ }>;
 
 	constructor (
@@ -116,10 +115,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const name = _.get(this.selectedSolution, 'name');
 
 		return _.get(_.find(this.solutions, { name }), 'technologies', []);
-	}
-
-	get advisoriesFacet () {
-		return _.find(this.facets, { key: 'advisories' });
 	}
 
 	/**
@@ -184,7 +179,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			},
 			{
 				key: 'resolution',
-				loading: false,
+				loading: true,
 				route: '/solution/resolution',
 				template: this.resolutionTemplate,
 				title: I18n.get('_ProblemResolution_'),
@@ -285,27 +280,49 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Fetches the counts for the advisories chart
 	 */
 	private fetchAdvisoryCounts () {
-		this.advisoriesFacet.loading = true;
+		const advisoryFacet = _.find(this.facets, { key: 'advisories' });
+
+		advisoryFacet.loading = true;
 		this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
 		.subscribe((counts: VulnerabilityResponse) => {
-			this.advisoriesFacet.seriesData = [
-				{
-					label: I18n.get('_SecurityAdvisories_'),
-					value: _.get(counts, 'security-advisories'),
-				},
-				{
-					label: I18n.get('_FieldNotices_'),
-					value: _.get(counts, 'field-notices'),
-				},
-				{
-					label: I18n.get('_Bugs_'),
-					value: _.get(counts, 'bugs'),
-				},
-			];
-			this.advisoriesFacet.loading = false;
+			const seriesData = [];
+
+			const advisories = _.get(counts, 'security-advisories', 0);
+			const fieldNotices = _.get(counts, 'field-notices', 0);
+			const bugs = _.get(counts, 'bugs', 0);
+
+			if (advisories) {
+				seriesData.push(
+					{
+						label: I18n.get('_SecurityAdvisories_'),
+						value: advisories,
+					},
+				);
+			}
+
+			if (fieldNotices) {
+				seriesData.push(
+					{
+						label: I18n.get('_FieldNotices_'),
+						value: fieldNotices,
+					},
+				);
+			}
+
+			if (bugs) {
+				seriesData.push(
+					{
+						label: I18n.get('_Bugs_'),
+						value: bugs,
+					},
+				);
+			}
+
+			advisoryFacet.seriesData = seriesData;
+			advisoryFacet.loading = false;
 		},
 		err => {
-			this.advisoriesFacet.loading = false;
+			advisoryFacet.loading = false;
 			this.logger.error('solution.component : fetchAdvisoryCounts() ' +
 			`:: Error : (${err.status}) ${err.message}`);
 		});
@@ -316,6 +333,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * @returns Observable with array of case followed by RMA counts
 	 */
 	public getCaseAndRMACount () {
+		const resolutionFacet = _.find(this.facets, { key: 'resolution' });
 		const params = {
 			nocache: Date.now(),
 			page: 0,
@@ -343,11 +361,14 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.logger.error(`RMA Data :: RMA Count :: Error ${err}`);
 					this.casesCount = 0;
 					this.RMACount = 0;
+
 					return of(null);
 				}),
 			),
 		)
 		.subscribe(counts => {
+			resolutionFacet.loading = false;
+
 			this.casesCount = _.get(counts, [0, 'totalElements'], 0);
 			this.RMACount = _.get(counts, [1, 'totalElements'], 0);
 		});

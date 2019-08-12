@@ -12,6 +12,7 @@ import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { Data as SecurityData } from './security/security-details.component';
 import { Data as FieldNoticeData } from './field-notice/field-notice-details.component';
+import { Data as BugData } from './bug/bug-details.component';
 import {
 	Asset,
 	CriticalBug,
@@ -21,7 +22,7 @@ import {
 import { UserResolve } from '@utilities';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { AdvisoryType } from '@interfaces';
+import { AdvisoryType, Alert } from '@interfaces';
 
 /**
  * Advisory Details Component
@@ -41,10 +42,11 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	@Input('type') public type: AdvisoryType;
 	@Output('close') public close = new EventEmitter<boolean>();
 
+	public alert: any = { };
 	public loading = true;
 	public title: string;
 	public customerId: string;
-	public details: CriticalBug | FieldNoticeData | SecurityData;
+	public details: BugData | FieldNoticeData | SecurityData;
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	public hidden = true;
@@ -86,7 +88,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Will handle passing data to our header component
 	 * @param data the loaded data
 	 */
-	public onDetailsLoad (data: CriticalBug | FieldNoticeData | SecurityData) {
+	public onDetailsLoad (data: BugData | FieldNoticeData | SecurityData) {
 		this.details = data;
 		this.loading = false;
 	}
@@ -96,6 +98,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public refresh () {
 		this.loading = true;
+		this.details = { };
 		if ((this.advisoryId || this.advisory) && this.type) {
 			if (!this.advisoryId) {
 				this.advisoryId = _.toString(_.get(this.advisory, 'id'));
@@ -124,6 +127,14 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			|| (currentAdvisory && !changes.advisory.firstChange)) {
 			this.refresh();
 		}
+	}
+
+	/**
+	 * Handles displaying an alert from its child components
+	 * @param alert the alert to display
+	 */
+	public handleAlert (alert: Alert) {
+		this.alert.show(alert.message, alert.severity);
 	}
 
 	/**
