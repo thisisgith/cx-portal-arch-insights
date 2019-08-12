@@ -176,7 +176,7 @@
 						</div>
 						<div class="half-padding-top dbl-padding-left text-left">
 							<button type="submit"
-								[disabled]="!requestForm.valid || getUserInfoFailed || getContractsFailed || noSessionsAvailable"
+								[disabled]="!requestForm.valid || getUserInfoFailed || getContractsFailed || noSessionsAvailable || formSubmissionSucceeded"
 								class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n"></button>
 							<button type="button" class="btn btn--small -wide btn--secondary text-uppercase text-small"
 								(click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"

@@ -151,4 +151,55 @@ describe('CgtRequestFormComponent', () => {
 		expect(component.visibleComponent.emit)
 				.toBeTruthy();
 	});
+
+	it('should get the number of sessions and date available', () => {
+		let usedTrainingData = [];
+		usedTrainingData = [
+			{
+			  contract_number: '111111',
+			  end_date: '2019-10-29',
+			  used_sessions: 4
+			},
+			{
+			  contract_number: '222222',
+			  end_date: '2020-02-28',
+			  used_sessions: 0
+			},
+			{
+			  contract_number: '333333',
+			  end_date: '2020-03-29',
+			  used_sessions: 1
+			},
+		  ];
+		  component.usedTrainingData = usedTrainingData;
+		const select = fixture.debugElement.query(By.css('#contract-select'));
+
+		const contract = component.requestForm.get('contract');
+		expect(contract.valid)
+			.toBeFalsy();
+
+		contract.setValue(222222);
+		fixture.detectChanges();
+		expect(contract.valid)
+			.toBeTruthy();
+		expect(contract.hasError('required'))
+			.toBeFalsy();
+
+		component.getContractEndDateAndSessions(222222);
+		expect(component.noSessionsAvailable).toBeFalsy();
+		expect(component.contractEndDate).toEqual('Feb 28, 2020');
+		expect(component.sessionsAvailable).toEqual(2);
+
+		contract.setValue(111111);
+		fixture.detectChanges();
+		expect(contract.valid)
+			.toBeTruthy();
+		expect(contract.hasError('required'))
+			.toBeFalsy();
+
+		component.getContractEndDateAndSessions(111111);
+		expect(component.noSessionsAvailable).toBeTruthy();
+		expect(component.contractEndDate).toEqual('Oct 29, 2019');
+		expect(component.sessionsAvailable).toEqual(0);
+	});
 });
