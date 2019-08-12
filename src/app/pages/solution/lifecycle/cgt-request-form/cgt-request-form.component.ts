@@ -107,7 +107,6 @@ export class CgtRequestFormComponent implements OnDestroy, OnInit {
 		private contentService: RacetrackContentService,
 	) { }
 
-
 	/**
 	 * Gets the endDate of a contract based on the selected contract
 	 * @param contractNumber contract number
