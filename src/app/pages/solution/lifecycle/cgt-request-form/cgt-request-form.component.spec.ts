@@ -158,21 +158,20 @@ describe('CgtRequestFormComponent', () => {
 			{
 			  contract_number: '111111',
 			  end_date: '2019-10-29',
-			  used_sessions: 4
+			  used_sessions: 4,
 			},
 			{
 			  contract_number: '222222',
 			  end_date: '2020-02-28',
-			  used_sessions: 0
+			  used_sessions: 0,
 			},
 			{
 			  contract_number: '333333',
 			  end_date: '2020-03-29',
-			  used_sessions: 1
+			  used_sessions: 1,
 			},
 		  ];
 		  component.usedTrainingData = usedTrainingData;
-		const select = fixture.debugElement.query(By.css('#contract-select'));
 
 		const contract = component.requestForm.get('contract');
 		expect(contract.valid)
@@ -186,9 +185,12 @@ describe('CgtRequestFormComponent', () => {
 			.toBeFalsy();
 
 		component.getContractEndDateAndSessions(222222);
-		expect(component.noSessionsAvailable).toBeFalsy();
-		expect(component.contractEndDate).toEqual('Feb 28, 2020');
-		expect(component.sessionsAvailable).toEqual(2);
+		expect(component.noSessionsAvailable)
+			.toBeFalsy();
+		expect(component.contractEndDate)
+			.toEqual('Feb 28, 2020');
+		expect(component.sessionsAvailable)
+			.toEqual(2);
 
 		contract.setValue(111111);
 		fixture.detectChanges();
@@ -198,8 +200,11 @@ describe('CgtRequestFormComponent', () => {
 			.toBeFalsy();
 
 		component.getContractEndDateAndSessions(111111);
-		expect(component.noSessionsAvailable).toBeTruthy();
-		expect(component.contractEndDate).toEqual('Oct 29, 2019');
-		expect(component.sessionsAvailable).toEqual(0);
+		expect(component.noSessionsAvailable)
+			.toBeTruthy();
+		expect(component.contractEndDate)
+			.toEqual('Oct 29, 2019');
+		expect(component.sessionsAvailable)
+			.toEqual(0);
 	});
 });
