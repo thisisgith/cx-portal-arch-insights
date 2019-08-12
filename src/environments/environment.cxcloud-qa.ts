@@ -48,8 +48,8 @@ export const environment = {
 	rmaServicePaths: {
 		returns: '/return/v1.0/returns',
 	},
-	rmaToolUrl: 'https://ibpm.cisco.com/rma/home',
-	sdpServiceBasePath: '/api/qa',
+	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa3/home',
+	sdpServiceBasePath: '/api',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
