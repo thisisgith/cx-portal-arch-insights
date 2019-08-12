@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 $cui-resource-path: "../node_modules/cisco-ui/dist";
 
+@import "~mapbox-gl/dist/mapbox-gl.css";
 @import '~cisco-ui/src/scss/cui-standard.scss';
 
 /* XL Margins */
@@ -28,3 +29,7 @@ $cui-resource-path: "../node_modules/cisco-ui/dist";
 .flex-right { margin-left: auto; }
 
 .no-link-hover:hover { text-decoration: none !important; }
+
+.cx-text-soft-black {
+	color: $soft-black;
+}

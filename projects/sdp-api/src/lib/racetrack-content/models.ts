@@ -1,7 +1,7 @@
 export { ErrorResponse as RacetrackContentErrorResponse } from './models/error-response';
-export { ATXResponse } from './models/atxresponse';
-export { ATX } from './models/atx';
-export { ATXSession } from './models/atxsession';
+export { ATXResponseModel } from './models/atxresponse-model';
+export { AtxSchema } from './models/atx-schema';
+export { AtxSessionSchema } from './models/atx-session-schema';
 export { ACCResponse } from './models/accresponse';
 export { ACC } from './models/acc';
 export { ACCBookmarkSchema } from './models/accbookmark-schema';

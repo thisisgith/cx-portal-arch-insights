@@ -131,7 +131,7 @@
 				template: recommendedATX,
 				title: data.recommended.title,
 				description: data.recommended.description,
-				src: 'assets/img/solutions/atx.png',
+				src: data.recommended.imageURL,
 				autoid: 'recommendedATX'
 			}">
 		</ng-container>
@@ -214,7 +214,7 @@
 		(click)="atxScheduleCardOpened = true"
 		[innerText]="'_ViewSessions_' | i18n">
 	</button>
-	<a class="no-link" [href]="componentData.atx?.recommended?.viewOnDemandUrl">
+	<a class="no-link" target="_blank" [href]="componentData.atx?.recommended?.recordingURL">
 		<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 			[innerText]="'_WatchNow_' | i18n"></button>
 	</a>
@@ -264,7 +264,8 @@
 		<div class="half-margin-top base-margin-left base-margin-bottom text-left">
 			<a data-auto-id="viewOnDemand"
 				class="no-link"
-				[href]="data.viewOnDemandUrl">
+				target="_blank"
+				[href]="data.recordingURL">
 				<div class="flex">
 					<div class="btn--square">
 						<span class="icon-play icon-small"></span>
@@ -287,7 +288,7 @@
 						[ngClass]="{ 'active': sessionSelected?.date === session.date && sessionSelected?.time === session.time }">
 						<td class="text-xsmall" [innerText]="session.date"></td>
 						<td class="text-xsmall" [innerText]="session.time"></td>
-						<td class="text-xsmall" [innerText]="data.moderator"></td>
+						<td class="text-xsmall" [innerText]="session.presenterName"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -296,7 +297,7 @@
 			<div class="col-md-8">
 				<a data-auto-id="AtxScheduleCardRegisterButton"
 					class="pull-left"
-					[href]="data.registrationUrl">
+					[href]="sessionSelected?.registrationURL">
 					<button class="btn base-margin-top base-margin-left"
 						[innerText]="'_Register_' | i18n">
 					</button>
