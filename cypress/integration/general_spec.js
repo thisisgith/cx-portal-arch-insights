@@ -153,7 +153,7 @@ describe('General Spec', () => {
 			});
 		});
 
-		it.only('PBC-483 Case Related RMA link', () => {
+		it('PBC-483 Case Related RMA link', () => {
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
