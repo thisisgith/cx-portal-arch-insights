@@ -565,10 +565,8 @@ describe('LifecycleComponent', () => {
 				.then(() => {
 					expect(component.componentData.cgt.sessions.length)
 						.toEqual(3);
-					expect(component.componentData.cgt.dateAvailableThrough)
-						.toEqual('Mar 29, 2020');
 					expect(component.componentData.cgt.trainingsAvailable)
-						.toEqual(9);
+						.toEqual(1);
 				});
 		});
 	});

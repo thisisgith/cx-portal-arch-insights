@@ -45,11 +45,11 @@ function MockCGTRequestResponse (): GroupTrainingEntitySchema {
 function MockCustomerQuotaResponse (): ContractQuota[] {
 	return [
 		{
-			closed_ilt_courses_inprocess: 1,
+			closed_ilt_courses_inprocess: 2,
 			closed_ilt_courses_used: 0,
 			tsa_contract_no: `${contract1}`,
-			contract_end_date: '2020-01-29',
-			contract_start_date: '2019-01-29',
+			contract_end_date: '2019-10-29',
+			contract_start_date: '2018-10-29',
 			customer_admin: 'John Doe, Jane Doe',
 			learning_advisor: 'jdoe',
 		},
@@ -90,6 +90,7 @@ function MockCompletedTrainingsResponse (): UserTraining[] {
 			start_date: '2019-01-29',
 			title: '',
 			training_type: '',
+			contract_number: `${contract1}`,
 		},
 		{
 			city: 'London',
@@ -101,6 +102,7 @@ function MockCompletedTrainingsResponse (): UserTraining[] {
 			start_date: '2018-12-29',
 			title: '',
 			training_type: '',
+			contract_number: `${contract3}`,
 		},
 		{
 			city: 'RTP',
@@ -112,6 +114,7 @@ function MockCompletedTrainingsResponse (): UserTraining[] {
 			start_date: '2019-01-24',
 			title: '',
 			training_type: '',
+			contract_number: `${contract1}`,
 		},
 	];
 }
