@@ -33,7 +33,7 @@ class ControlPointDeviceDiscoveryAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/devices/${customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/devices/${customerId}`,
       __body,
       {
         headers: __headers,

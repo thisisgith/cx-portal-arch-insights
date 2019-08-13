@@ -17,7 +17,7 @@ export const environment = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
-	baseHref: '/',
+	baseHref: '',
 	csc: {
 		fileDownloadURL: `https://largefile.cloudapps.cisco.com/Web-Ui?srId=
 			{0}&fileName={1}&appId=cxportal`,
@@ -26,17 +26,6 @@ export const environment = {
 	csone: {
 		clientId: '262556217fbe45ecbbe27af70e443e78',
 	},
-	ieSetup: {
-		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
-		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
-		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
-			'_engine-release/ie/Insight_Engine_1.0/ubuntu/95/CXC_1.0_Build-95.ova',
-		mockRegistration: false,
-		pingURL: '/ie-commonapi/services/version',
-		telemetryGuideUrl: 'https://www-author3.cisco.com/c/en/us/td/docs/cloud-systems-' +
-			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
-			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
-	},
 	mock: [],
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	noAuthEndpoints: [
@@ -44,11 +33,12 @@ export const environment = {
 	],
 	production: true,
 	rmaServiceClientId: 'mj2za65kd42razfxfrvvcgne',
+	rmaServiceOrigin: 'https://api-test.cisco.com',
 	rmaServicePaths: {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm.cisco.com/rma/home',
-	sdpServiceBasePath: '/api/stg',
+	sdpServiceBasePath: '/api/lt',
 	sdpServiceClientId: 'ejw4cbpvp3s8cyh4ry8qcnff',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
@@ -56,11 +46,10 @@ export const environment = {
 	 */
 	sdpServiceOrigin: 'https://api-test.cisco.com',
 	sdpServicePaths: {
-		contracts: '/api/stg/v1/contracts',
-		controlpoints: '/api/stg/customerportal/controlpoint',
-		customerportal: '/api/stg/customerportal',
-		inventory: '/api/stg/v1/inventory',
+		contracts: '/api/lt/v1/contracts',
+		controlpoints: '/api/lt/customerportal/controlpoint',
+		customerportal: '/api/lt/customerportal',
+		inventory: '/api/lt/v1/inventory',
 	},
-	// ClientSSOInterceptor: No auth token for the typeahead url
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
 };

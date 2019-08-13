@@ -15,7 +15,7 @@ import { CommunitiesModule } from './communities/communities.module';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Child routes for Lifecycle Module for lazy loading

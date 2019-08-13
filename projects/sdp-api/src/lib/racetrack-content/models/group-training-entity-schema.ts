@@ -1,11 +1,11 @@
 /* tslint:disable */
 export interface GroupTrainingEntitySchema {
-  ccoId?: string;
 
   /**
-   * Applicable Contract
+   * Solution
    */
-  contract?: string;
+  solution?: string;
+  ccoId?: string;
 
   /**
    * Created Timestamp Epoch
@@ -29,9 +29,9 @@ export interface GroupTrainingEntitySchema {
   preferredSlot?: string;
 
   /**
-   * Solution
+   * Applicable Contract
    */
-  solution?: string;
+  contract?: string;
 
   /**
    * Request Status

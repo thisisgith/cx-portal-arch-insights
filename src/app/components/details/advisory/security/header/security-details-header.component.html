@@ -39,6 +39,7 @@
 		[innerText]="'_ViewAdvisory_' | i18n"
 		data-auto-id="SecurityAdvisoryViewNoticeLink"
 		[href]="details?.advisory?.url"
+		target="_blank"
 		[ngClass]="{'disabled': !details?.advisory?.url}">
 	</a>
 	
