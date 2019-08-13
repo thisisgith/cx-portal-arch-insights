@@ -2,8 +2,6 @@ import {
 	Component, OnDestroy,
 } from '@angular/core';
 import * as _ from 'lodash-es';
-
-import { LogService } from '@cisco-ngx/cui-services';
 import { RacetrackTechnology } from '@sdp-api';
 import { Subject } from 'rxjs';
 import { SolutionService } from '../../solution.service';
@@ -66,13 +64,10 @@ export class CommunitiesComponent implements OnDestroy {
 	private destroy$ = new Subject();
 
 	constructor (
-		private logger: LogService,
 		private solutionService: SolutionService,
 		private lifecycle: LifecycleComponent,
 		private sanitizer: DomSanitizer,
 	) {
-		this.logger.debug('CommunitiesComponent Created!');
-
 		this.solutionService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),

@@ -2,14 +2,14 @@
 export interface CoverageInfo {
 
   /**
+   * First address line of the installed-at site
+   */
+  installAddress1?: string;
+
+  /**
    * The unique, generated ID of the managed network element
    */
   managedNeId: string;
-
-  /**
-   * CDX should provide a way to uniquely identify IB records, regardless of non-unique or invalid vendor-supplied identity strings
-   */
-  neId: string;
 
   /**
    * The unique identifier for hardware entry in a datastore
@@ -92,9 +92,9 @@ export interface CoverageInfo {
   warrantyEndDate?: string;
 
   /**
-   * First address line of the installed-at site
+   * CDX should provide a way to uniquely identify IB records, regardless of non-unique or invalid vendor-supplied identity strings
    */
-  installAddress1?: string;
+  neId: string;
 
   /**
    * Second address line of the installed-at site

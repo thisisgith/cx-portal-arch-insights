@@ -16,6 +16,7 @@ export const defaults = {
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/pbc/',
+	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
 	controlPointsOrigin: 'https://cpp-api.sdp12-istg.csco.cloud/controlpoint',
 	csc: {
 		fileDownloadURL: `https://largefile-stage.cloudapps.cisco.com/Web-Ui?srId=
@@ -24,6 +25,9 @@ export const defaults = {
 	},
 	csone: {
 		clientId: '07e418ac71284560944ea92f653a01c2',
+	},
+	cuiColors: {
+		vibrantBlue: '#017cad',
 	},
 	ieSetup: {
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
@@ -36,6 +40,13 @@ export const defaults = {
 			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
+	learningLink: 'https://pilot-digital-learning.cisco.com/cx/#/',
+	logoutUrl: 'https://www.cisco.com/autho/logout.html',
+	manageProfileUrl: 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do',
+	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
+	mapboxHost: 'https://api.mapbox.com',
+	mapboxToken:
+	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
 	myCase: 'https://mycase2.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [
@@ -48,6 +59,7 @@ export const defaults = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa3/home',
+	sdpServiceBasePath: '/api',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
@@ -62,11 +74,4 @@ export const defaults = {
 	},
 	supportEmailLink: 'mailto:help@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',
-	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
-	learningLink: 'https://pilot-digital-learning.cisco.com/cx/#/',
-	cuiColors: {
-		vibrantBlue: '#017cad',
-	},
-	logoutUrl: 'https://www.cisco.com/autho/logout.html',
-	manageProfileUrl: 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do',
 };

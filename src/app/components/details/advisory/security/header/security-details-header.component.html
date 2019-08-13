@@ -9,7 +9,8 @@
 					'Critical': 'label--danger',
 					'High': 'label--warning-alt',
 					'Medium': 'label--warning',
-					'Low': 'label--success'
+					'Low': 'label--info',
+					'Info': 'label--info'
 				}[details?.bulletin?.severity]"
 				data-auto-id="SecurityDetailsImpactIcon">
 			</span>
@@ -37,10 +38,9 @@
 	<a class="text-capitalize btn btn--secondary btn--small"
 		[innerText]="'_ViewAdvisory_' | i18n"
 		data-auto-id="SecurityAdvisoryViewNoticeLink"
-		href="{{ details?.advisory?.url }}"
+		[href]="details?.advisory?.url"
 		[ngClass]="{'disabled': !details?.advisory?.url}">
 	</a>
-	
 	
 	<button class="btn btn--secondary btn--small"
 		[innerText]="'_OpenCase_' | i18n"

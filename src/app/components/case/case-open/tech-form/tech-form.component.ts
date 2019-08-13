@@ -48,7 +48,6 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 		private caseService: CaseService,
 		private logger: LogService,
 	) {
-		this.logger.debug('TechFormComponent Created!');
 		this.form = new FormGroup({
 			problemArea: new FormControl(null, Validators.required),
 			subtech: new FormControl(null, Validators.required),

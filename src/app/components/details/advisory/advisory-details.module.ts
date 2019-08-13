@@ -5,6 +5,7 @@ import { SecurityDetailsModule } from './security/security-details.module';
 import { BugDetailsModule } from './bug/bug-details.module';
 import { FieldNoticeDetailsModule } from './field-notice/field-notice-details.module';
 import { DetailsPanelModule } from '../panel/details-panel.module';
+import { CuiAlertModule } from '@cisco-ngx/cui-components';
 
 /**
  * Module representing our Advisory Details Component
@@ -15,6 +16,7 @@ import { DetailsPanelModule } from '../panel/details-panel.module';
 	imports: [
 		BugDetailsModule,
 		CommonModule,
+		CuiAlertModule,
 		DetailsPanelModule,
 		FieldNoticeDetailsModule,
 		SecurityDetailsModule,

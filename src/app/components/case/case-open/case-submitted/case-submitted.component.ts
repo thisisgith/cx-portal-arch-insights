@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { CuiModalService } from '@cisco-ngx/cui-components';
-import { LogService } from '@cisco-ngx/cui-services';
 
 import { Asset } from '@sdp-api';
 import { CaseOpenData } from '../caseOpenData';
@@ -24,11 +23,8 @@ export class CaseSubmittedComponent {
 
 	constructor (
 		public cuiModalService: CuiModalService,
-		private logger: LogService,
 		private router: Router,
-	) {
-		this.logger.debug('CaseSubmittedComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Close modal
