@@ -252,7 +252,7 @@
 			</div>
 			<div class="col-md-1">
 				<a class="no-link closebtn"
-					(click)="this.atxScheduleCardOpened = false"
+					(click)="this.atxScheduleCardOpened = false; selectSession()"
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
 				</a>
@@ -285,9 +285,9 @@
 					<tr attr.data-auto-id="SelectSession-{{ session.title }}"
 						*ngFor="let session of data.sessions"
 						(click)="selectSession(session)"
-						[ngClass]="{ 'active': sessionSelected?.date === session.date && sessionSelected?.time === session.time }">
-						<td class="text-xsmall" [innerText]="session.date"></td>
-						<td class="text-xsmall" [innerText]="session.time"></td>
+						[ngClass]="{ 'active': sessionSelected?.sessionStartDate === session.sessionStartDate }">
+						<td class="text-xsmall" innerText="{{session.sessionStartDate | date:'longDate'}}"></td>
+						<td class="text-xsmall" innerText="{{session.sessionStartDate | date:'shortTime'}}"></td>
 						<td class="text-xsmall" [innerText]="session.presenterName"></td>
 					</tr>
 				</tbody>
@@ -449,7 +449,7 @@
 	</div>
 </ng-template>
 
-<!-- <ng-template #atxModal let-data="data">
+<ng-template #atxModal let-data="data">
 	<div id="atxModal" class="modal__content no-padding">
 
 		<div class="modal__header atx__header half-padding-left half-padding-bottom no-margin-bottom">
@@ -507,9 +507,9 @@
 			</div>
 		</div>
 	</div>
-</ng-template> -->
+</ng-template>
 
-<ng-template #atxModal let-data="data">
+<!-- <ng-template #atxModal let-data="data">
 	<div id="atxModal" class="modal__content no-padding" data-auto-id="atxViewAllModal">
 
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
@@ -555,53 +555,60 @@
 			<ng-container *ngTemplateOutlet="cardATX"></ng-container>
 		</div>
 	</div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #cardATX>
-		<!-- <div class="grid grid--4up base-padding-top" *ngIf="(!view || view == 'grid')"> -->
+<!-- <ng-template #cardATX>
+		<div class="grid grid--4up base-padding-top" *ngIf="(!view || view == 'grid')">
 	<div class="grid grid--4up base-padding-top">
 		<div class="card atx__card"
 			*ngFor="let item of componentData.atx.sessions"
 			[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 			data-auto-id="ATXCard">
-			<div class="text-left" [ngClass]="item.status === 'recommended' ? 'text-info' : 'text-clear'" data-auto-id="ATXCardHeader">
+			<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL" attr.data-auto-id="{{ autoid }}-Image">
+			<div class="text-left base-padding-left" [ngClass]="item.status === 'Recommended' ? 'text-dkgray-4' : 'text-clear'" data-auto-id="ATXCardHeader">
 				<span class="icon-flagged qtr-padding-right qtr-padding-bottom" data-auto-id="ATXCard-Flag"></span>
 				<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 			</div>
-			<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageUrl" attr.data-auto-id="{{ autoid }}-Image">
 			<div class="icon-bookmark icon-medium"
 				(click)="updateBookmark('ATX', item)"
-				[ngClass]="getRibbonClass(item)"
+				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'"
 				data-auto-id="ATXCardRibbon">
 			</div>
-			<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
-			<div class="card__header text-left text-bold"
-				[ngClass]="item.status === 'recommended' ? 'text-info' : null"
+			<div class="card__header atx__card__header text-left text-bold"
 				*ngIf="item && item.title"
 				[innerText]="item.title"
 				data-auto-id="ATXCardTitle">
 			</div>
 			<div class="card__body atx__card__body text-left" *ngIf="item && item.description" [innerText]="item.description"></div>
-			<div class="card__footer">
+			<div class="card__footer atx__card__footer">
 				<div class="card_footer_item"  data-auto-id="ATXCardFooter">
-					<div class="text-left">
-						<a data-auto-id="viewOnDemand" class="no-link" [href]="item.recordingURL">
-							<span class="icon-play-contained icon-small half-padding-right"></span>
-							<span [innerText]="'_WatchNow_' | i18n"></span>
-						</a>
-					</div>
-					<div class="text-left">
-						<a data-auto-id="recommendedATXScheduleButton" class="no-link"
-							(click)="atxScheduleCardOpened = true; componentData.atx.interested = item">
-							<span class="icon-calendar icon-small half-padding-right"></span>
-							<span [innerText]="'_ViewSessions_' | i18n"></span>
-						</a>
+					<div class="text-left" *ngFor="let session of item.sessions">
+						<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'Completed'"></span>
+						<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'In Progress'"></span>
+						<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'Requested'"></span>
+						<span class="text-info icon-calendar half-padding-right" *ngIf="item.status === 'Scheduled' && session.scheduled"></span>
+						<span [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'Completed'"></span>
+						<span [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'In Progress'"></span>
+						<span [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'Requested'"></span>
+						<span innerText="{{session.sessionStartDate | date:'longDate'}}" *ngIf="item.status === 'Scheduled' && session.scheduled"></span>
 					</div>
 					<div class="divider divider--compressed"></div>
-					<div class="text-right">
-						<span class="icon-clock icon-small half-padding-right"></span>
-						<span [innerText]="item.duration"></span>
-					</div>
+					<div class="row">
+						<div class="col-md-6 text-left">
+							<button data-auto-id="recommendedATXScheduleButton"
+								class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
+								(click)="atxScheduleCardOpened = true; componentData.atx.interested = item"
+								[innerText]="'_ViewSessions_' | i18n">
+							</button>
+						</div>
+						<div class="col-md-6 text-left">
+							<a class="no-link" target="_blank" [href]="item.recordingURL">
+								<button data-auto-id="recommendedATXWatchButton"
+									class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+									[innerText]="'_WatchNow_' | i18n"></button>
+							</a>
+						</div>
+					</div>					
 				</div>
 			</div>
 			<ng-container *ngIf="item == componentData.atx.interested && atxScheduleCardOpened">
@@ -610,7 +617,7 @@
 			</ng-container>
 		</div>
 	</div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #accModal let-data="data">
 	<div id="accModal" class="modal__content no-padding" data-auto-id="accViewAllModal">

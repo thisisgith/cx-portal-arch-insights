@@ -17,15 +17,32 @@ $vibblue: #017cad;
 	}
 
 	&__card {
-		height: 500px;
+		padding: 0;
+		height: 525px;
 		&__background {
 			background: $white;
 		}
 
+		&__header {
+			padding-right: 30px;
+			padding-left: 20px;
+		}
+
 		&__body {
+			padding-right: 30px;
+			padding-left: 20px;
 			height: 100px;
 			overflow: auto;
 		}
+
+		&__footer {
+			padding-right: 30px;
+			padding-left: 20px;
+		}
+	}
+
+	&__card:hover {
+		border-left: 2px solid $vibblue !important;
 	}
 }
 

@@ -698,11 +698,14 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type string
 	 * @param item SuccessPath | ATX
 	 */
-	 public updateBookmark (type: string, item: SuccessPath | ATX) {
+	 public updateBookmark (type: string, item: SuccessPath | AtxSchema) {
 		let bookmark;
 		let id;
 		let lifecycleCategory;
 		let loadingComponent;
+		if (_.isEqual(type, 'ATX') && _.get(item, 'status') === 'completed') {
+			return;
+		}
 		if (_.isEqual(type, 'SB')) {
 			bookmark = !_.get(item, 'bookmark');
 			id = _.get(item, 'successByteId');
