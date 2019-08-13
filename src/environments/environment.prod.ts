@@ -15,7 +15,9 @@ export const environment = {
 		accountUrl: `${origin}/ws/account/v2/`,
 		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
-		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
+		tokenUrl: `${
+			origin
+		}/ws/oauth/v3/token/cway/e4f602992449cdb1d4aea2df5849f7d6ebd4280c1c8e1398fcfec534422533b8`,
 	},
 	baseHref: '/',
 	csc: {
