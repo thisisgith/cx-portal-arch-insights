@@ -55,6 +55,7 @@ export class DeployStepsComponent implements SetupStep, OnChanges, OnDestroy, On
 	public tutorialType;
 	public stepLabel: string;
 	public stepNum: number;
+	public inCypress: boolean;
 
 	constructor (
 		private route: ActivatedRoute,
@@ -84,6 +85,7 @@ export class DeployStepsComponent implements SetupStep, OnChanges, OnDestroy, On
 		const savedState = this.stateService.getState();
 		const [slideSet, slideIndex] =
 			this.extractDeploySteps(this.route.snapshot.queryParams.deployStepsSet);
+		this.inCypress = (window.Cypress !== undefined);
 		await this.router.navigate([], {
 			queryParams: {
 				deployStepsSet: `${slideSet || this.slideSet}:${slideIndex || this.slideIndex}`,
