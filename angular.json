@@ -49,6 +49,8 @@
 							"sourceMap": false,
 							"vendorChunk": false,
 							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
 								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
 							]
 						},
@@ -92,6 +94,8 @@
 							"sourceMap": false,
 							"vendorChunk": false,
 							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
 								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
 							]
 						},
@@ -131,6 +135,8 @@
 							"sourceMap": false,
 							"vendorChunk": false,
 							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
 								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
 							]
 						},
@@ -174,6 +180,8 @@
 							"sourceMap": false,
 							"vendorChunk": false,
 							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
 								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
 							]
 						},
@@ -217,6 +225,8 @@
 							"sourceMap": false,
 							"vendorChunk": false,
 							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
 								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
 							]
 						}
