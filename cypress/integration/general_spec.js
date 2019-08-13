@@ -25,6 +25,7 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it.skip('General Search and close', () => { // PBC-167
@@ -87,11 +88,13 @@ describe('General Spec', () => {
 
 	context('Case Search', () => {
 		const caseVal = '699159996';
+		const anotherCaseVal = '699160599';
 
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Case Search', () => {
@@ -149,6 +152,19 @@ describe('General Spec', () => {
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
 		});
+
+		it.only('PBC-483 Case Related RMA link', () => {
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(anotherCaseVal.concat('{enter}'));
+			cy.wait('@case').then(() => {
+				cy.getByAutoId('rmaNumber', { timeout: 10000 })
+					.should('have.attr', 'href');
+				cy.getByAutoId('rmaNumber')
+					.should('have.attr', 'target', '_blank');
+			});
+		});
 	});
 
 	context('RMA Search', () => {
@@ -156,6 +172,7 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('RMA 800000000 one replacement parts', () => {
@@ -305,6 +322,7 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 		it('Contract Search 93425688', () => {
 			// PBC-172
@@ -360,6 +378,7 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Serial Search FOX1333GGGG', () => {
