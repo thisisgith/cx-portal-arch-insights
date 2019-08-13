@@ -1,0 +1,75 @@
+<h5
+	class="base-margin-top base-margin-bottom"
+	data-auto-id="settings.system.usage.label"
+	[innerText]="'_ScanAndCollectionSchedule_' | i18n | uppercase"
+></h5>
+<div class ="flex-center calendar-nav">
+	<div
+		data-auto-id="prev-month-btn"
+		class="nav-left text-large"
+		(click)="prevMonth()"
+	>
+		<span class="icon-chevron-left"></span>
+	</div>
+	<h4>{{ currentMonthName }}, {{ currentYear }}</h4>
+	<div
+		data-auto-id="next-month-btn"
+		(click)="nextMonth()"
+		class="nav-right text-large text-right"
+	>
+		<span class="icon-chevron-right"></span>
+	</div>
+</div>
+<div class="calendar-header text-center text-xsmall text-muted">
+	<div [innerText]="'_Sun_' | i18n"></div>
+	<div [innerText]="'_Mon_' | i18n"></div>
+	<div [innerText]="'_Tue_' | i18n"></div>
+	<div [innerText]="'_Wed_' | i18n"></div>
+	<div [innerText]="'_Thu_' | i18n"></div>
+	<div [innerText]="'_Fri_' | i18n"></div>
+	<div [innerText]="'_Sat_' | i18n"></div>
+</div>
+<div class="calendar-grid" *ngIf="!loading">
+	<div
+		class="calendar-cell"
+		*ngFor="let cell of cells"
+	>
+		<ng-container
+			*ngIf="!cell.isBlankCell"
+		>
+			<div
+				*ngIf="cell.hasIgnore || cell.hasCollection || cell.hasScan"
+				tooltip
+				[tooltipComponent]="calendarCellTooltip"
+				[tooltipData]="cell"
+				tooltipDelay="500"
+			>
+				<div class="icon-container text-xsmall">
+					<div *ngIf="cell.hasIgnore" class="icon-circle text-muted"></div>
+					<div *ngIf="cell.hasCollection" class="icon-circle text-primary"></div>
+					<div *ngIf="cell.hasScan" class="icon-circle text-success"></div>
+				</div>
+				<div
+					[ngClass]="{ 'today-highlight': cell.isToday }"
+					[innerText]="cell.dayOfMonth"
+				></div>
+			</div>
+			<div
+				*ngIf="!cell.hasIgnore && !cell.hasCollection && !cell.hasScan"
+			>
+				<div class="icon-container text-xsmall">
+				</div>
+				<div
+					[ngClass]="{ 'today-highlight': cell.isToday }"
+					[innerText]="cell.dayOfMonth"
+				></div>
+			</div>
+		</ng-container>
+	</div>
+</div>
+<div class="dbl-margin-top">
+	<cui-loader
+		*ngIf="loading"
+		[label]="'_Loading_' | i18n"
+	></cui-loader>
+</div>
