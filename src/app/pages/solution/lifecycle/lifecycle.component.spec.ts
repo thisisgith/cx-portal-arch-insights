@@ -308,7 +308,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#atxModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
 
@@ -335,7 +335,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('#atxModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
 		});
@@ -368,7 +368,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#accModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
 
@@ -398,8 +398,8 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			component.selectedStatus = 'isBookmarked';
-			component.selectFilter('acc');
+			component.selectedFilterForACC = 'isBookmarked';
+			component.selectFilter('ACC');
 			fixture.detectChanges();
 			expect(component.selectedACC.length)
 				.toEqual(2);
@@ -409,8 +409,8 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.acc.sessions[3].isFavorite)
 				.toBeFalsy();
 
-			component.selectedStatus = 'recommended';
-			component.selectFilter('acc');
+			component.selectedFilterForACC = 'recommended';
+			component.selectFilter('ACC');
 			fixture.detectChanges();
 
 			expect(component.componentData.acc.sessions[0].isFavorite)
@@ -434,7 +434,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('#accModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
 		});
@@ -466,7 +466,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#successModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
 
@@ -486,14 +486,14 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.learning.success[1].bookmark)
 				.toBeTruthy();
 
-			component.selectedCategory = 'Project Planning';
-			component.selectFilter('successBytes');
+			component.selectedFilterForSB = 'Project Planning';
+			component.selectFilter('SB');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(2);
 
-			component.selectedCategory = 'Getting Started';
-			component.selectFilter('successBytes');
+			component.selectedFilterForSB = 'Getting Started';
+			component.selectFilter('SB');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(1);
@@ -518,7 +518,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('#successModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
 		});

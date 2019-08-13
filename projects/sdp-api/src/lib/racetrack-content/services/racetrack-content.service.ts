@@ -88,7 +88,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/atx`,
+      this.rootUrl + `/customerportal/racetrack/v1/atx`,
       __body,
       {
         headers: __headers,
@@ -176,7 +176,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc`,
+      this.rootUrl + `/customerportal/racetrack/v1/acc`,
       __body,
       {
         headers: __headers,
@@ -240,7 +240,7 @@ class RacetrackContentService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc/${params.accId}/bookmark`,
+      this.rootUrl + `/customerportal/racetrack/v1/acc/${params.accId}/bookmark`,
       __body,
       {
         headers: __headers,
@@ -288,7 +288,7 @@ class RacetrackContentService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc/${params.accId}/request`,
+      this.rootUrl + `/customerportal/racetrack/v1/acc/${params.accId}/request`,
       __body,
       {
         headers: __headers,
@@ -330,7 +330,7 @@ class RacetrackContentService extends __BaseService {
     __headers = __headers.append("Content-Type", "application/json");
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc/request/user-info`,
+      this.rootUrl + `/customerportal/racetrack/v1/acc/request/user-info`,
       __body,
       {
         headers: __headers,
@@ -396,7 +396,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/successPaths`,
+      this.rootUrl + `/customerportal/racetrack/v1/successPaths`,
       __body,
       {
         headers: __headers,
@@ -482,7 +482,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/communities`,
+      this.rootUrl + `/customerportal/racetrack/v1/communities`,
       __body,
       {
         headers: __headers,
@@ -568,7 +568,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/elearning`,
+      this.rootUrl + `/customerportal/racetrack/v1/elearning`,
       __body,
       {
         headers: __headers,
@@ -633,7 +633,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/request`,
+      this.rootUrl + `/customerportal/racetrack/v1/grouptraining/request`,
       __body,
       {
         headers: __headers,
@@ -682,7 +682,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/customer/quotas`,
+      this.rootUrl + `/customerportal/racetrack/v1/grouptraining/customer/quotas`,
       __body,
       {
         headers: __headers,
@@ -731,7 +731,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/customer/trainings/completed`,
+      this.rootUrl + `/customerportal/racetrack/v1/grouptraining/customer/trainings/completed`,
       __body,
       {
         headers: __headers,
@@ -781,7 +781,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/bookmarks`,
+      this.rootUrl + `/customerportal/racetrack/v1/bookmarks`,
       __body,
       {
         headers: __headers,

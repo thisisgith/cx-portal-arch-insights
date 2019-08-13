@@ -35,8 +35,8 @@ import { SolutionService } from '../solution.service';
 import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
 import * as _ from 'lodash-es';
 import * as moment from 'moment';
-import { Observable, of, forkJoin, Subscription, ReplaySubject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, of, forkJoin, ReplaySubject, Subject } from 'rxjs';
+import { map, catchError, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
@@ -107,9 +107,7 @@ export interface PitstopActionWithStatus {
 	templateUrl: './lifecycle.component.html',
 })
 export class LifecycleComponent implements OnDestroy {
-	@ViewChild('accModal', { static: true }) public accTemplate: TemplateRef<{ }>;
-	@ViewChild('atxModal', { static: true }) public atxTemplate: TemplateRef<{ }>;
-	@ViewChild('successModal', { static: true }) public successPathTemplate: TemplateRef<{ }>;
+	@ViewChild('viewAllModal', { static: true }) public viewAllModalTemplate: TemplateRef<{ }>;
 	@ViewChild('formatTemplate', { static: true }) private formatTemplate: TemplateRef<{ }>;
 	@ViewChild('bookmarkTemplate', { static: true }) private bookmarkTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
@@ -128,12 +126,12 @@ export class LifecycleComponent implements OnDestroy {
 	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	private user: User;
-	public selectedCategory = '';
-	public selectedStatus = '';
+	public selectedFilterForSB = '';
+	public selectedFilterForATX = '';
+	public selectedFilterForACC = '';
 	public totalAllowedGroupTrainings = 10;
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
-	public categoryOptions: [];
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
@@ -144,14 +142,20 @@ export class LifecycleComponent implements OnDestroy {
 	public currentViewingPitstop: string;
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
+	public selectedATX: AtxSchema[];
 	public view: 'list' | 'grid' = 'grid';
 	public productGuidesTable: CuiTableOptions;
 	public completedTrainingsList: UserTraining[] | { };
 	public successBytesTable: CuiTableOptions;
 	public cgtAvailable: number;
 	public trainingAvailableThrough: string;
-	private stage = new ReplaySubject<string>();
 
+	private stage = new ReplaySubject<string>();
+	private destroy$ = new Subject();
+	private selectedSolution: RacetrackSolution;
+	private selectedTechnology: RacetrackTechnology;
+
+	public categoryOptions: [];
 	public statusOptions = [
 		{
 			name: I18n.get('_AllTitles_'),
@@ -204,11 +208,6 @@ export class LifecycleComponent implements OnDestroy {
 		},
 	};
 
-	private selectedSolution: RacetrackSolution;
-	private selectedTechnology: RacetrackTechnology;
-	private solutionSubscribe: Subscription;
-	private technologySubscribe: Subscription;
-
 	public selectAccComponent = false;
 	public selectCgtComponent = false;
 	public cgtRequestTrainingClicked = false;
@@ -231,13 +230,19 @@ export class LifecycleComponent implements OnDestroy {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 
-		this.solutionSubscribe = this.solutionService.getCurrentSolution()
+		this.solutionService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
 		.subscribe((solution: RacetrackSolution) => {
 			this.selectedSolution = solution;
 			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
-		this.technologySubscribe = this.solutionService.getCurrentTechnology()
+		this.solutionService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
 		.subscribe((technology: RacetrackTechnology) => {
 			this.selectedTechnology = technology;
 			const currentSolution = this.componentData.params.solution;
@@ -265,6 +270,56 @@ export class LifecycleComponent implements OnDestroy {
 	public get notCurrentPitstop () {
 		return this.currentWorkingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase()
 			&& this.currentViewingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase();
+	}
+
+	/**
+	 * Get the localized section title
+	 * @returns Title string based on type
+	 * @param type string
+	 */
+	public getTitle (type: string) {
+		let title = '';
+		switch (type) {
+			case 'ACC': {
+				title = I18n.get('_Accelerator_');
+				break;
+			}
+			case 'ATX': {
+				title = I18n.get('_AskTheExpert_');
+				break;
+			}
+			case 'SB': {
+				title = I18n.get('_SuccessBytes_');
+				break;
+			}
+		}
+
+		return title;
+	}
+
+	/**
+	 * Get the localized section title
+	 * @returns Subtitle string based on type
+	 * @param type string
+	 */
+	public getSubtitle (type: string) {
+		let title = '';
+		switch (type) {
+			case 'ACC': {
+				title = I18n.get('_1on1Coaching_');
+				break;
+			}
+			case 'ATX': {
+				title = I18n.get('_AvailableLive_');
+				break;
+			}
+			case 'SB': {
+				title = I18n.get('_SuccessBytesSubtitle_');
+				break;
+			}
+		}
+
+		return title;
 	}
 
 	/**
@@ -400,22 +455,33 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type the modal template to display
 	 */
 	public showModal (type: string) {
+		// reset the view to card view
+		this.view = 'grid';
 		if (type === 'atx') {
 			this.modal = {
-				content: this.atxTemplate,
-				context: { data: this.componentData.atx.sessions },
+				content: this.viewAllModalTemplate,
+				context: {
+					data: this.selectedATX,
+					type: 'ATX',
+				},
 				visible: true,
 			};
 		} else if (type === 'acc') {
 			this.modal = {
-				content: this.accTemplate,
-				context: { data: this.selectedACC },
+				content: this.viewAllModalTemplate,
+				context: {
+					data: this.selectedACC,
+					type: 'ACC',
+				},
 				visible: true,
 			};
 		} else if (type === '_SuccessBytes_') {
 			this.modal = {
-				content: this.successPathTemplate,
-				context: { data: this.selectedSuccessPaths },
+				content: this.viewAllModalTemplate,
+				context: {
+					data: this.selectedSuccessPaths,
+					type: 'SB',
+				},
 				visible: true,
 			};
 		}
@@ -536,26 +602,46 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type the item type
 	 */
 	public selectFilter (type: string) {
-		if (type === 'successBytes') {
+		if (type === 'SB') {
 			this.selectedSuccessPaths =
-				_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
-			if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
+				_.filter(this.componentData.learning.success,
+					{ archetype: this.selectedFilterForSB });
+			if (this.selectedFilterForSB === 'Not selected' || !this.selectedFilterForSB) {
 				this.selectedSuccessPaths = this.componentData.learning.success;
 			}
 		}
-		if (type === 'acc') {
-			if (this.selectedStatus === 'isBookmarked') {
+
+		if (type === 'ACC') {
+			if (this.selectedFilterForACC === 'isBookmarked') {
 				this.selectedACC =
 				_.filter(this.componentData.acc.sessions, { isFavorite: true });
-			} else if (this.selectedStatus === 'hasNotBookmarked') {
+			} else if (this.selectedFilterForACC === 'hasNotBookmarked') {
 				this.selectedACC =
 				_.filter(this.componentData.acc.sessions, { isFavorite: false });
 			} else {
 				this.selectedACC =
-					_.filter(this.componentData.acc.sessions, { status: this.selectedStatus });
+					_.filter(this.componentData.acc.sessions,
+						{ status: this.selectedFilterForACC });
 			}
-			if (this.selectedStatus === 'allTitles' || !this.selectedStatus) {
+			if (this.selectedFilterForACC === 'allTitles' || !this.selectedFilterForACC) {
 				this.selectedACC = this.componentData.acc.sessions;
+			}
+		}
+
+		if (type === 'ATX') {
+			if (this.selectedFilterForATX === 'isBookmarked') {
+				this.selectedATX =
+				_.filter(this.componentData.atx.sessions, { bookmark: true });
+			} else if (this.selectedFilterForATX === 'hasNotBookmarked') {
+				this.selectedATX =
+				_.filter(this.componentData.atx.sessions, { bookmark: false });
+			} else {
+				this.selectedATX =
+					_.filter(this.componentData.atx.sessions,
+						{ status: this.selectedFilterForATX });
+			}
+			if (this.selectedFilterForATX === 'allTitles' || !this.selectedFilterForATX) {
+				this.selectedATX = this.componentData.atx.sessions;
 			}
 		}
 	}
@@ -758,7 +844,7 @@ export class LifecycleComponent implements OnDestroy {
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: ACCResponse) => {
-				this.selectedStatus = '';
+				this.selectedFilterForACC = '';
 				this.componentData.acc = {
 					sessions: _.union(_.filter(result.items, { status: 'requested' }),
 						_.filter(result.items, { status: 'in-progress' }),
@@ -810,6 +896,8 @@ export class LifecycleComponent implements OnDestroy {
 					recommended: _.head(result.items),
 					sessions: result.items,
 				};
+				this.selectedATX = this.componentData.atx.sessions;
+
 				this.status.loading.atx = false;
 				if (window.Cypress) {
 					window.atxLoading = false;
@@ -847,7 +935,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
-				this.selectedCategory = '';
+				this.selectedFilterForSB = '';
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
@@ -1140,12 +1228,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Handler for clean up on component destruction
 	 */
 	public ngOnDestroy () {
-		if (this.solutionSubscribe) {
-			_.invoke(this.solutionSubscribe, 'unsubscribe');
-		}
-
-		if (this.technologySubscribe) {
-			_.invoke(this.technologySubscribe, 'unsubscribe');
-		}
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

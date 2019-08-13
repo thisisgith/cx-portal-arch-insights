@@ -49,7 +49,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policies/${customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policies/${customerId}`,
       __body,
       {
         headers: __headers,
@@ -96,7 +96,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policies/${params.customerId}/${params.month}/${params.year}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policies/${params.customerId}/${params.month}/${params.year}`,
       __body,
       {
         headers: __headers,
@@ -142,7 +142,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
     __body = devicePolicyRequestModel;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy`,
       __body,
       {
         headers: __headers,
@@ -181,7 +181,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
     __body = devicePolicyUpdateRequestModel;
     let req = new HttpRequest<any>(
       'PATCH',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy`,
       __body,
       {
         headers: __headers,
@@ -228,7 +228,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/devices/${params.customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/devices/${params.customerId}`,
       __body,
       {
         headers: __headers,
@@ -282,7 +282,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
       __body,
       {
         headers: __headers,
@@ -339,7 +339,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.policyId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.policyId}`,
       __body,
       {
         headers: __headers,
@@ -398,7 +398,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.policyId}/${params.pageNumber}/${params.rowsPerPage}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.policyId}/${params.pageNumber}/${params.rowsPerPage}`,
       __body,
       {
         headers: __headers,
@@ -445,7 +445,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/status/${policyId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/status/${policyId}`,
       __body,
       {
         headers: __headers,
@@ -489,7 +489,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/${params.customerId}/${params.policyId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/${params.customerId}/${params.policyId}`,
       __body,
       {
         headers: __headers,

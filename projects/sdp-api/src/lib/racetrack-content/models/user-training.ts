@@ -7,6 +7,11 @@ export interface UserTraining {
   city?: string;
 
   /**
+   * The contract number against which this training was conducted
+   */
+  contract_number?: string;
+
+  /**
    * Country where training was conducted
    */
   country?: string;

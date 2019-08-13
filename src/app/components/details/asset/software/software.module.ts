@@ -15,7 +15,7 @@ import { environment } from '@environment';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /** Module representing the Software Details Component */
 @NgModule({

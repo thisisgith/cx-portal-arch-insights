@@ -14,7 +14,7 @@ import { AdvisoryFeedbackModule } from '../feedback/feedback.module';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Module representing our Advisory Details Component
