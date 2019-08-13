@@ -19,7 +19,7 @@ export const environment = {
 	},
 	baseHref: '',
 	csc: {
-		fileDownloadURL: `https://largefile.cloudapps.cisco.com/Web-Ui?srId=
+		fileDownloadURL: `https://largefile-stage.cloudapps.cisco.com/Web-Ui?srId=
 			{0}&fileName={1}&appId=cxportal`,
 		fileList: '/ws/csc/v3/caseFiles',
 	},
