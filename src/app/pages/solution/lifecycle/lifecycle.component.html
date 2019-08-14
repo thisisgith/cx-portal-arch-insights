@@ -588,8 +588,8 @@
 				</div>
 				<div class="text-left" *ngIf="item.status === 'scheduled'">
 					<div  *ngFor="let session of item.sessions">
-						<span class="text-info icon-calendar half-padding-right" *ngIf="item.status === 'scheduled' && session.scheduled"></span>
-						<span innerText="{{session.sessionStartDate | date:'medium'}}" *ngIf="item.status === 'scheduled' && session.scheduled"></span>
+						<span class="text-info icon-calendar half-padding-right" *ngIf="session.scheduled"></span>
+						<span innerText="{{session.sessionStartDate | date:'medium'}}" *ngIf="session.scheduled"></span>
 					</div>
 				</div>
 				<div class="divider divider--compressed"></div>
@@ -608,7 +608,7 @@
 								[innerText]="'_WatchNow_' | i18n"></button>
 						</a>
 					</div>
-				</div>					
+				</div>
 			</div>
 		</div>
 		<ng-container *ngIf="item == componentData.atx.interested && atxScheduleCardOpened">
