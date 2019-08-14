@@ -57,7 +57,7 @@
 		"@angular/platform-browser": "^8.2.1",
 		"@angular/platform-browser-dynamic": "^8.2.1",
 		"@angular/router": "^8.2.1",
-		"@cx-portal/metrics": "^1.0.1",
+		"@cx-portal/metrics": "^1.0.2",
 		"core-js": "^2.6.9",
 		"cronstrue": "^1.82.0",
 		"d3": "^5.9.7",
