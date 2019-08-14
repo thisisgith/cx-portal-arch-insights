@@ -146,6 +146,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			customerId: this.customerId,
 			page: 1,
 			rows: 10,
+			sort: ['deviceName:ASC'],
 		};
 
 		this.contractCountParams = {
@@ -367,7 +368,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 		item.details = !item.details;
-		this.selectedAsset = item.details ? item.data : null;
+		this.selectedAsset = null;
+		if (item.details) {
+			this.selectedAsset = item.data;
+		}
 	}
 
 	/**
@@ -790,56 +794,59 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						key: 'deviceName',
 						name: I18n.get('_Device_'),
 						sortable: true,
-						sortDirection: null,
-						sorting: false,
+						sortDirection: 'asc',
+						sorting: true,
 						template: this.deviceTemplate,
 					},
 					{
 						key: 'serialNumber',
 						name: I18n.get('_SerialNumber_'),
-						sortable: false,
+						sortable: true,
 						value: 'serialNumber',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_IPAddress_'),
-						sortable: false,
+						sortable: true,
 						value: 'ipAddress',
 					},
 					{
+						key: 'criticalAdvisories',
 						name: I18n.get('_CriticalAdvisories_'),
-						sortable: false,
+						sortable: true,
 						template: this.criticalAdvisoriesTemplate,
 					},
 					{
+						key: 'supportCovered',
 						name: I18n.get('_SupportCoverage_'),
-						sortable: false,
+						sortable: true,
 						template: this.supportCoverageTemplate,
 					},
 					{
 						key: 'osType',
 						name: I18n.get('_SoftwareType_'),
-						sortable: false,
+						sortable: true,
 						value: 'osType',
 					},
 					{
 						key: 'osVersion',
 						name: I18n.get('_SoftwareVersion_'),
-						sortable: false,
+						sortable: true,
 						value: 'osVersion',
 					},
 					{
+						key: 'lastScan',
 						name: I18n.get('_LastScan_'),
 						render: item => item.lastScan ?
 							this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
-						sortable: false,
+						sortable: true,
 						width: '100px',
 					},
 					{
 						key: 'role',
 						name: I18n.get('_Role_'),
 						render: item => _.startCase(_.toLower(item.role)),
-						sortable: false,
+						sortable: true,
 						value: 'role',
 						width: '100px',
 					},
@@ -1047,12 +1054,13 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param column column to set sorting
 	 */
 	public onColumnSort (column) {
-		if (column.sortable && column.key === 'deviceName') {
-			if (_.get(column, 'sortDirection')) {
-				this.assetParams.sort = [column.sortDirection];
-			} else {
-				_.unset(this.assetParams, 'sort');
-			}
+		if (column.sortable) {
+			_.each(this.assetsTable.columns, c => {
+				c.sorting = false;
+			});
+			column.sorting = true;
+			column.sortDirection = column.sortDirection === 'asc' ? 'desc' : 'asc';
+			this.assetParams.sort = [`${column.key}:${column.sortDirection.toUpperCase()}`];
 			this.InventorySubject.next();
 		}
 	}
@@ -1080,5 +1088,4 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.InventorySubject.next();
 		}
 	}
-
 }

@@ -77,4 +77,41 @@ describe('AssetDetailsComponent', () => {
 			done();
 		});
 	});
+
+	it('should change assets', done => {
+		component.asset = MockAssetsData[0];
+
+		component.ngOnChanges({
+			asset: {
+				currentValue: MockAssetsData[0],
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+
+		fixture.detectChanges();
+
+		expect(component.asset.deviceName)
+			.toEqual(MockAssetsData[0].deviceName);
+
+		component.asset = MockAssetsData[1];
+
+		component.ngOnChanges({
+			asset: {
+				currentValue: MockAssetsData[1],
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: MockAssetsData[0],
+			},
+		});
+
+		fixture.whenStable()
+		.then(() => {
+			expect(component.asset.deviceName)
+				.toEqual(MockAssetsData[1].deviceName);
+
+			done();
+		});
+	});
 });

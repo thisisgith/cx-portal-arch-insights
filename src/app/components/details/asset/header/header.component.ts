@@ -290,6 +290,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 	 * Refreshes the data
 	 */
 	public refresh () {
+		_.set(this.status, ['scan', 'inProgress'], false);
 		if (_.get(this.asset, 'serialNumber')) {
 			this.status.loading.overall = true;
 			forkJoin(
@@ -325,6 +326,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['asset', 'currentValue']);
 		if (currentAsset && !changes.asset.firstChange) {
+			this.ngOnDestroy();
 			this.refresh();
 		}
 	}
