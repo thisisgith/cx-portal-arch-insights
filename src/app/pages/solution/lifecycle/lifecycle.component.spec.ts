@@ -734,10 +734,10 @@ describe('LifecycleComponent', () => {
 			component.getRacetrackInfo('implement');
 			component.atxScheduleCardOpened = true;
 			component.sessionSelected = {
-				sessionStartDate: 1565127052000,
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
-			}
+				sessionStartDate: 1565127052000,
+			};
 			fixture.detectChanges();
 			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
 			expect(de)
@@ -747,10 +747,10 @@ describe('LifecycleComponent', () => {
 			component.getRacetrackInfo('Onboard');
 			component.atxScheduleCardOpened = true;
 			component.sessionSelected = {
-				sessionStartDate: 1565127052000,
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
-			}
+				sessionStartDate: 1565127052000,
+			};
 			fixture.detectChanges();
 			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
 			expect(de)
