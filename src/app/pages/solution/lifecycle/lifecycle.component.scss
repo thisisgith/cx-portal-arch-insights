@@ -346,6 +346,8 @@ $vibblue: #017cad;
 
 ::ng-deep #category-filter input,
 ::ng-deep #acc-filter input,
+::ng-deep #atx-filter input,
+::ng-deep #atx-filter input:focus,
 ::ng-deep #acc-filter input:focus,
 ::ng-deep #category-filter input:focus {
 	border: 0 !important;

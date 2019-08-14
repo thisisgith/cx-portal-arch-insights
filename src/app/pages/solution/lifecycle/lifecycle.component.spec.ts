@@ -174,15 +174,35 @@ describe('LifecycleComponent', () => {
 		.then(() => {
 			fixture.detectChanges();
 
-			expect(component.view)
+			component.selectView('list', 'SB');
+			fixture.detectChanges();
+			expect(component.sbview)
+				.toBe('list');
+
+			component.selectView('grid', 'SB');
+			fixture.detectChanges();
+			expect(component.sbview)
 				.toBe('grid');
 
-			component.selectView('list');
-
+			component.selectView('list', 'ACC');
 			fixture.detectChanges();
-
-			expect(component.view)
+			expect(component.accview)
 				.toBe('list');
+
+			component.selectView('grid', 'ACC');
+			fixture.detectChanges();
+			expect(component.accview)
+				.toBe('grid');
+
+			component.selectView('list', 'ATX');
+			fixture.detectChanges();
+			expect(component.atxview)
+				.toBe('list');
+
+			component.selectView('grid', 'ATX');
+			fixture.detectChanges();
+			expect(component.atxview)
+				.toBe('grid');
 
 			done();
 		});
@@ -198,7 +218,7 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.atx.sessions.length)
-						.toEqual(2);
+						.toEqual(4);
 				});
 		});
 
@@ -325,6 +345,42 @@ describe('LifecycleComponent', () => {
 			// expect(de)
 			// 	.toBeTruthy();
 
+			expect(component.getTitle('ATX'))
+				.toEqual('Ask The Expert');
+
+			expect(component.getSubtitle('ATX'))
+				.toEqual('Interactive webinars available live or on-demand');
+
+			component.selectedFilterForATX = 'isBookmarked';
+			component.selectFilter('ATX');
+			fixture.detectChanges();
+			expect(component.selectedATX.length)
+				.toEqual(1);
+
+			const atx1 = component.componentData.atx.sessions[2];
+			expect(component.componentData.atx.sessions[2].bookmark)
+				.toBeFalsy();
+			component.updateBookmark('ATX', atx1);
+			fixture.detectChanges();
+			expect(component.componentData.atx.sessions[2].bookmark)
+				.toBeTruthy();
+
+			component.onSort('title', 'asc', 'ATX');
+			fixture.detectChanges();
+			expect(component.atxTable.columns[1].sortDirection)
+				.toEqual('desc');
+
+			component.onSort('title', 'desc', 'ATX');
+			fixture.detectChanges();
+			expect(component.atxTable.columns[1].sortDirection)
+				.toEqual('asc');
+
+			component.selectedFilterForATX = 'allTitles';
+			component.selectFilter('ATX');
+			fixture.detectChanges();
+			expect(component.selectedATX.length)
+				.toEqual(4);
+
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
 
@@ -372,9 +428,15 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__green'));
-			expect(de)
-				.toBeTruthy();
+			// de = fixture.debugElement.query(By.css('.ribbon__green'));
+			// expect(de)
+			// 	.toBeTruthy();
+
+			expect(component.getTitle('ACC'))
+			 .toEqual('Accelerator');
+
+			expect(component.getSubtitle('ACC'))
+			 .toEqual('1-on-1 Coaching to put you in the fast lane');
 
 			de = fixture.debugElement.query(By.css('.ribbon__clear'));
 			expect(de)
@@ -423,6 +485,22 @@ describe('LifecycleComponent', () => {
 			const acc5 = component.componentData.acc.sessions[1];
 			expect(acc5.status)
 				.toEqual('in-progress');
+
+			component.onSort('title', 'asc', 'ACC');
+			fixture.detectChanges();
+			expect(component.accTable.columns[1].sortDirection)
+				.toEqual('desc');
+
+			component.onSort('title', 'desc', 'ACC');
+			fixture.detectChanges();
+			expect(component.accTable.columns[1].sortDirection)
+				.toEqual('asc');
+
+			component.selectedFilterForACC = 'allTitles';
+			component.selectFilter('ACC');
+			fixture.detectChanges();
+			expect(component.selectedACC.length)
+				.toEqual(5);
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
@@ -478,6 +556,12 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
+			expect(component.getTitle('SB'))
+				.toEqual('Success Bytes');
+
+			expect(component.getSubtitle('SB'))
+				.toEqual('Resources to fine-tune your tech');
+
 			const sb1 = component.componentData.learning.success[1];
 			expect(component.componentData.learning.success[1].bookmark)
 				.toBeFalsy();
@@ -498,12 +582,18 @@ describe('LifecycleComponent', () => {
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(1);
 
-			component.onSort('title', 'asc');
+			component.selectedFilterForSB = 'Not selected';
+			component.selectFilter('SB');
+			fixture.detectChanges();
+			expect(component.selectedSuccessPaths.length)
+				.toEqual(5);
+
+			component.onSort('title', 'asc', 'SB');
 			fixture.detectChanges();
 			expect(component.successBytesTable.columns[0].sortDirection)
 				.toEqual('desc');
 
-			component.onSort('title', 'desc');
+			component.onSort('title', 'desc', 'SB');
 			fixture.detectChanges();
 			expect(component.successBytesTable.columns[0].sortDirection)
 				.toEqual('asc');

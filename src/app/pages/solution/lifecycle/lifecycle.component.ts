@@ -109,6 +109,8 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('viewAllModal', { static: true }) public viewAllModalTemplate: TemplateRef<{ }>;
 	@ViewChild('formatTemplate', { static: true }) private formatTemplate: TemplateRef<{ }>;
 	@ViewChild('bookmarkTemplate', { static: true }) private bookmarkTemplate: TemplateRef<{ }>;
+	@ViewChild('statusTemplate', { static: true }) private statusTemplate: TemplateRef<{ }>;
+	@ViewChild('actionTemplate', { static: true }) private actionTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -143,12 +145,16 @@ export class LifecycleComponent implements OnDestroy {
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
 	public selectedATX: AtxSchema[];
-	public view: 'list' | 'grid' = 'grid';
-	public productGuidesTable: CuiTableOptions;
+	public accview: 'list' | 'grid' = 'grid';
+	public atxview: 'list' | 'grid' = 'grid';
+	public sbview: 'list' | 'grid' = 'grid';
 	public completedTrainingsList: UserTraining[] | { };
 	public successBytesTable: CuiTableOptions;
 	public usedTrainingsList: string[];
 	public usedTrainings: string[];
+	public atxTable: CuiTableOptions;
+	public accTable: CuiTableOptions;
+	public cgtAvailable: number;
 	public trainingAvailableThrough: string;
 
 	private stage = new ReplaySubject<string>();
@@ -169,6 +175,10 @@ export class LifecycleComponent implements OnDestroy {
 		{
 			name: I18n.get('_Requested_'),
 			value: 'requested',
+		},
+		{
+			name: I18n.get('_Scheduled_'),
+			value: 'scheduled',
 		},
 		{
 			name: I18n.get('_InProgress_'),
@@ -230,6 +240,29 @@ export class LifecycleComponent implements OnDestroy {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
+
+		const currentSBView = window.sessionStorage.getItem('cxportal.cisco.com:lifecycle:sbview');
+		if (!currentSBView) {
+			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:sbview', this.sbview);
+		} else {
+			this.sbview = <'list' | 'grid'> currentSBView;
+		}
+
+		const currentATXView = window.sessionStorage.getItem(
+			'cxportal.cisco.com:lifecycle:atxview');
+		if (!currentATXView) {
+			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:atxview', this.atxview);
+		} else {
+			this.atxview = <'list' | 'grid'> currentATXView;
+		}
+
+		const currentACCView = window.sessionStorage.getItem(
+			'cxportal.cisco.com:lifecycle:accview');
+		if (!currentACCView) {
+			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:accview', this.accview);
+		} else {
+			this.accview = <'list' | 'grid'> currentACCView;
+		}
 
 		this.solutionService.getCurrentSolution()
 		.pipe(
@@ -346,7 +379,7 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Will construct the assets table
 	 */
-	private buildTable () {
+	private buildSBTable () {
 		this.successBytesTable = new CuiTableOptions({
 			columns: [
 				{
@@ -386,17 +419,120 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Will construct the ACC table
+	 */
+	private buildAccTable () {
+		this.accTable = new CuiTableOptions({
+			columns: [
+				{
+					name: I18n.get('_Bookmark_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'isFavorite',
+					template: this.bookmarkTemplate,
+					width: '10%',
+				},
+				{
+					key: 'title',
+					name: I18n.get('_Name_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'title',
+					value: 'title',
+					width: '40%',
+				},
+				{
+					key: 'status',
+					name: I18n.get('_Status_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'status',
+					template: this.statusTemplate,
+					width: '20%',
+				},
+				{
+					name: I18n.get('_Action_'),
+					sortable: false,
+					template: this.actionTemplate,
+					width: '30%',
+				},
+			],
+		});
+	}
+
+	/**
+	 * Will construct the ATX table
+	 */
+	private buildAtxTable () {
+		this.atxTable = new CuiTableOptions({
+			columns: [
+				{
+					name: I18n.get('_Bookmark_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'bookmark',
+					template: this.bookmarkTemplate,
+					width: '10%',
+				},
+				{
+					key: 'title',
+					name: I18n.get('_Name_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'title',
+					value: 'title',
+					width: '40%',
+				},
+				{
+					key: 'status',
+					name: I18n.get('_Status_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'status',
+					template: this.statusTemplate,
+					width: '20%',
+				},
+				{
+					name: I18n.get('_Action_'),
+					sortable: false,
+					template: this.actionTemplate,
+					width: '30%',
+				},
+			],
+		});
+	}
+
+	/**
 	 * Sorting function for successBytes table
 	 * @param key the key to sort
 	 * @param sortDirection sortDiretion
+	 * @param type lifecycle item type
 	 */
-	public onSort (key: string, sortDirection: string) {
-		this.selectedSuccessPaths = _.orderBy(
-			this.selectedSuccessPaths, [key], [sortDirection]);
+	public onSort (key: string, sortDirection: string, type: string) {
+		if (type === 'SB') {
+			this.selectedSuccessPaths = _.orderBy(
+				this.selectedSuccessPaths, [key], [sortDirection]);
 
-		_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-			= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-			=== 'asc' ? 'desc' : 'asc';
+			_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
+				= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
+					=== 'asc' ? 'desc' : 'asc';
+		}
+		if (type === 'ATX') {
+			this.selectedATX = _.orderBy(
+				this.selectedATX, [key], [sortDirection]);
+
+			_.find(this.atxTable.columns, { sortKey: key }).sortDirection
+				= _.find(this.atxTable.columns, { sortKey: key }).sortDirection
+					=== 'asc' ? 'desc' : 'asc';
+		}
+		if (type === 'ACC') {
+			this.selectedACC = _.orderBy(
+				this.selectedACC, [key], [sortDirection]);
+
+			_.find(this.accTable.columns, { sortKey: key }).sortDirection
+				= _.find(this.accTable.columns, { sortKey: key }).sortDirection
+					=== 'asc' ? 'desc' : 'asc';
+		}
 	}
 
 	/**
@@ -459,7 +595,7 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public showModal (type: string) {
 		// reset the view to card view
-		this.view = 'grid';
+		// this.view = 'grid';
 		if (type === 'atx') {
 			this.modal = {
 				content: this.viewAllModalTemplate,
@@ -669,11 +805,36 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Changes the view to either list or grid
 	 * @param view view to set
+	 * @param type lifecycle item type
 	 */
-	public selectView (view: 'list' | 'grid') {
-		if (this.view !== view) {
-			this.view = view;
-			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:view', this.view);
+	public selectView (view: 'list' | 'grid', type: string) {
+		switch (type) {
+			case 'SB': {
+				if (this.sbview !== view) {
+					this.sbview = view;
+					window.sessionStorage.setItem(
+						'cxportal.cisco.com:lifecycle:sbview', this.sbview);
+				}
+				break;
+			}
+			case 'ATX': {
+				if (this.atxview !== view) {
+					this.atxview = view;
+					window.sessionStorage.setItem(
+						'cxportal.cisco.com:lifecycle:atxview', this.atxview);
+				}
+				break;
+			}
+			case 'ACC': {
+				if (this.accview !== view) {
+					this.accview = view;
+					window.sessionStorage.setItem(
+						'cxportal.cisco.com:lifecycle:accview', this.accview);
+				}
+				break;
+			}
+			default:
+				break;
 		}
 	}
 
@@ -787,16 +948,19 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type string
 	 * @param item SuccessPath
 	 */
-	 public updateBookmark (type: string, item: SuccessPath) {
+	 public updateBookmark (type: string, item: SuccessPath | AtxSchema) {
 		let bookmark;
 		let id;
 		let lifecycleCategory;
 		this.status.loading.success = true;
 		if (_.isEqual(type, 'SB')) {
-			bookmark = !_.get(item, 'bookmark');
 			id = _.get(item, 'successByteId');
-			lifecycleCategory = 'SB';
+		} else if (_.isEqual(type, 'ATX')) {
+			id = _.get(item, 'atxId');
 		}
+
+		bookmark = !_.get(item, 'bookmark');
+		lifecycleCategory = type;
 		const bookmarkParams: BookmarkRequestSchema = {
 			bookmark,
 			id,
@@ -848,6 +1012,7 @@ export class LifecycleComponent implements OnDestroy {
 					!session.title && !session.description);
 
 				this.selectedACC = this.componentData.acc.sessions;
+				this.buildAccTable();
 
 				this.status.loading.acc = false;
 				if (window.Cypress) {
@@ -885,11 +1050,13 @@ export class LifecycleComponent implements OnDestroy {
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: ATXResponseModel) => {
+				this.selectedFilterForATX = '';
 				this.componentData.atx = {
 					recommended: _.head(result.items),
 					sessions: result.items,
 				};
 				this.selectedATX = this.componentData.atx.sessions;
+				this.buildAtxTable();
 
 				this.status.loading.atx = false;
 				if (window.Cypress) {
@@ -942,7 +1109,7 @@ export class LifecycleComponent implements OnDestroy {
 						}));
 				}
 
-				this.buildTable();
+				this.buildSBTable();
 				this.status.loading.success = false;
 				if (window.Cypress) {
 					window.successPathsLoading = false;
@@ -980,7 +1147,6 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: ELearningResponse) => {
-
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'certifications'], []);
 					_.set(this.componentData, ['learning', 'elearning'], []);
