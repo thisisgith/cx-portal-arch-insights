@@ -812,7 +812,7 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -829,7 +829,7 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -846,7 +846,7 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=3`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -863,7 +863,7 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=4`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=4`,
 		usecases: ['Use Case 1'],
 	},
 	{
