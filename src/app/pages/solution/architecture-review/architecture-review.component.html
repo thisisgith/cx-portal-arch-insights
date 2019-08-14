@@ -68,9 +68,9 @@
 </div>
 
 <ng-template #exceptionsFilter let-filter="filter">
-    <bar-chart *ngIf="!status.isLoading" [seriesData]="filter.seriesData" [width]="350"
+    <pie-chart *ngIf="!status.isLoading" [seriesData]="filter.seriesData"
         (subfilter)="onSubfilterSelect($event, filter)">
-    </bar-chart>
+    </pie-chart>
     <div class="base-margin-top" *ngIf="status.isLoading">
         <div class="loading-spinner flex-center" aria-label="Loading, please wait...">
             <div class="wrapper">
