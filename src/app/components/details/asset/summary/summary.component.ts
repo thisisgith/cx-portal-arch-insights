@@ -58,10 +58,14 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 	) { }
 
 	/**
-	 * Gets current date for date comparisons in html
+	 * Determines whether a date has passed
+	 * @param dateString expiration date as a string
+	 * @returns true if the date is in the past, false otherwise
 	 */
-	get today () {
-		return new Date();
+	public isExpired (dateString: string) {
+		const date = new Date(dateString);
+
+		return date.getTime() < new Date().getTime();
 	}
 
 	/**
