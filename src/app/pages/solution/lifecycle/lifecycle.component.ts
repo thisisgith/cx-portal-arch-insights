@@ -299,7 +299,7 @@ export class LifecycleComponent implements OnDestroy {
 				break;
 			}
 			case 'PG': {
-				title = I18n.get('_ProductGuides');
+				title = I18n.get('_ProductGuides_');
 				break;
 			}
 		}
