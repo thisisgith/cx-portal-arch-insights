@@ -184,6 +184,68 @@ describe('AssetDetailsSummaryComponent', () => {
 			.toEqual('AAA');
 	});
 
+	it('should correctly determine whether a date is expired', () => {
+
+		const futureDate = new Date();
+		futureDate.setDate(futureDate.getDate() + 100);
+
+		const summarySpy = spyOn(inventoryService, 'getAssetSummary')
+			.and
+			.returnValue(of({
+				lastDateOfSupport: futureDate.toISOString(),
+				warrantyEndDate: futureDate.toISOString(),
+			}));
+
+		const deviceResponse = getActiveBody(AssetScenarios[0]);
+		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
+		componentFromWrapper.assetDetailsComponent.asset = asset;
+
+		componentFromWrapper.assetDetailsComponent.refresh();
+
+		wrapperComponentFixture.detectChanges();
+		expect(summarySpy)
+			.toHaveBeenCalled();
+
+		fixture.detectChanges();
+
+		fixture.whenStable()
+			.then(() => {
+				expect(component.isExpired(component.assetData.lastDateOfSupport))
+					.toEqual(false);
+				expect(component.isExpired(component.assetData.warrantyEndDate))
+					.toEqual(false);
+
+				// expect(component.componentData.numberInInventory)
+				// 	.toEqual(0);
+			});
+
+		summarySpy.and.returnValue(of({
+			lastDateOfSupport: '2010-08-13T17:58:32.995Z',
+			warrantyEndDate: '2010-08-13T17:58:32.995Z',
+		}));
+
+		const deviceResponse2 = getActiveBody(AssetScenarios[1]);
+		const asset2 = _.cloneDeep(_.head(_.get(deviceResponse2, 'data')));
+		componentFromWrapper.assetDetailsComponent.asset = asset2;
+
+		componentFromWrapper.assetDetailsComponent.refresh();
+
+		wrapperComponentFixture.detectChanges();
+		expect(summarySpy)
+			.toHaveBeenCalled();
+
+		fixture.detectChanges();
+
+		fixture.whenStable()
+			.then(() => {
+				expect(component.isExpired(component.assetData.lastDateOfSupport))
+					.toEqual(true);
+				expect(component.isExpired(component.assetData.warrantyEndDate))
+					.toEqual(true);
+			});
+
+	});
+
 	// it('should handle fullscreen', () => {
 	// 	buildSpies();
 
