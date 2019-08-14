@@ -534,7 +534,35 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.learning.elearning.length)
-						.toEqual(4);
+						.toEqual(5);
+				});
+		});
+		it('should have displayed progress bar', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.elearning[0].percentageCompleted)
+						.toBeUndefined();
+					expect(component.componentData.learning.elearning[1].percentageCompleted)
+						.toEqual(25);
+					expect(component.componentData.learning.elearning[2].percentageCompleted)
+						.toEqual(50);
+					expect(component.componentData.learning.elearning[3].percentageCompleted)
+						.toEqual(75);
+					expect(component.componentData.learning.elearning[4].percentageCompleted)
+						.toEqual(100);
+
+					de = fixture.debugElement.query(By.css('.learning-progress-col'));
+					expect(de)
+						.toBeTruthy();
+
+					de = fixture.debugElement.query(By.css('.learning-progressfill-col'));
+					expect(de)
+						.toBeTruthy();
 				});
 		});
 	});
@@ -550,6 +578,39 @@ describe('LifecycleComponent', () => {
 				.then(() => {
 					expect(component.componentData.learning.certifications.length)
 						.toEqual(8);
+				});
+		});
+		it('should have displayed progress bar', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.certifications[0].percentageCompleted)
+						.toEqual(25);
+					expect(component.componentData.learning.certifications[1].percentageCompleted)
+						.toEqual(50);
+					expect(component.componentData.learning.certifications[2].percentageCompleted)
+						.toEqual(75);
+					expect(component.componentData.learning.certifications[3].percentageCompleted)
+						.toEqual(100);
+					expect(component.componentData.learning.certifications[4].percentageCompleted)
+						.toEqual(25);
+					expect(component.componentData.learning.certifications[5].percentageCompleted)
+						.toEqual(50);
+					expect(component.componentData.learning.certifications[6].percentageCompleted)
+						.toEqual(75);
+					expect(component.componentData.learning.certifications[7].percentageCompleted)
+						.toEqual(100);
+					de = fixture.debugElement.query(By.css('.learning-progress-col'));
+					expect(de)
+						.toBeTruthy();
+
+					de = fixture.debugElement.query(By.css('.learning-progressfill-col'));
+					expect(de)
+						.toBeTruthy();
 				});
 		});
 	});

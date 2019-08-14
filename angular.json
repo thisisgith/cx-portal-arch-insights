@@ -283,7 +283,8 @@
 						],
 						"tsConfig": "src/tsconfig.spec.json",
 						"codeCoverageExclude": [
-							"./src/app/**/*-routing.module.ts"
+							"./src/app/**/*-routing.module.ts",
+							"./src/environments/**/*.ts"
 						]
 					}
 				}

@@ -12,25 +12,27 @@
 </details-panel>
 
 <ng-template #assetDetails>
-	<cui-alert [options]="alert"></cui-alert>
-	<cui-tabs *ngIf="asset && customerId">
+	<div class="half-margin-bottom">
+		<cui-alert [options]="alert"></cui-alert>
+	</div>
+	<cui-tabs id="assetDetailTabs" *ngIf="asset && customerId">
 		<cui-tab [label]="'_Summary_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right" *ngIf="asset">
+			<div class="half-margin-top qtr-margin-left qtr-margin-right">
 				<asset-details-summary [asset]="asset" [customerId]="customerId"></asset-details-summary>
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Hardware_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right" *ngIf="asset">
+			<div class="half-margin-top qtr-margin-left qtr-margin-right">
 				<asset-details-hardware [asset]="asset" [customerId]="customerId"></asset-details-hardware>
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Software_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right" *ngIf="asset">
+			<div class="half-margin-top qtr-margin-left qtr-margin-right">
 				<asset-details-software [asset]="asset" [customerId]="customerId"></asset-details-software>
 			</div>
 		</cui-tab>
 		<cui-tab [label]="'_Advisories_' | i18n | uppercase">
-			<div class="half-margin-top qtr-margin-left qtr-margin-right" *ngIf="asset">
+			<div class="half-margin-top qtr-margin-left qtr-margin-right">
 				<asset-details-advisories [asset]="asset" [customerId]="customerId"></asset-details-advisories>
 			</div>
 		</cui-tab>
