@@ -214,7 +214,7 @@
 		(click)="atxScheduleCardOpened = true"
 		[innerText]="'_ViewSessions_' | i18n">
 	</button>
-	<a class="no-link" target="_blank" [href]="componentData.atx?.recommended?.recordingURL">
+	<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="componentData.atx?.recommended?.recordingURL">
 		<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 			[innerText]="'_WatchNow_' | i18n"></button>
 	</a>
@@ -265,6 +265,7 @@
 			<a data-auto-id="viewOnDemand"
 				class="no-link"
 				target="_blank"
+				rel="noopener noreferrer"
 				[href]="data.recordingURL">
 				<div class="flex">
 					<div class="btn--square">
@@ -412,7 +413,10 @@
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<div id="recommended-elearning-item" class=" panel small-panel">
-				<a class="no-link" target="_blank" [href]="item.url">
+				<a class="no-link"
+					target="_blank"
+					rel="noopener noreferrer"
+					[href]="item.url">
 					<span class="text-blue" [innerText]="item.title"></span>
 				</a>
 				<ng-container *ngTemplateOutlet="recommendedDescription; context: {
@@ -635,7 +639,7 @@
 			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 				<div class="row">
 					<div class="col-md-3">
-						<a class="no-link" data-auto-id="successlink" target="_blank" [href]="item.url">
+						<a class="no-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
 							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
 								<span class="icon-apps icon-small half-padding-right"></span>
 								<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
@@ -825,7 +829,11 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div *ngIf="celldata.type">
-				<a class="no-link" target="_blank" [href]="celldata.url" data-auto-id="SuccessPathsTable-Format-rowValue-link">
+				<a class="no-link"
+					target="_blank"
+					rel="noopener noreferrer"
+					[href]="celldata.url"
+					data-auto-id="SuccessPathsTable-Format-rowValue-link">
 					<div class="text-left text-muted" *ngIf="celldata.type === 'Web Page'">
 						<span class="icon-apps icon-small half-padding-right"></span>
 						<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
