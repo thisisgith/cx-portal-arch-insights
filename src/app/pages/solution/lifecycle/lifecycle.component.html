@@ -377,15 +377,13 @@
 	<div *ngIf="data.success?.length" data-auto-id="SuccessBytesPanel-SuccessPathsBlock">
 		<ng-container *ngTemplateOutlet="successBlock; context: {
 				title: '_SuccessBytes_',
-				data: componentData.learning.success,
-				hideTitle: true }">
+				data: componentData.learning.success }">
 		</ng-container>
 		<div class="divider"></div>
 	</div>
 	<div *ngIf="data.productGuides?.length" data-auto-id="SuccessBytesPanel-ProductGuidesBlock">
-		<ng-container *ngTemplateOutlet="successBlock; context: {
-				title: '_ProductGuides_',
-				data: componentData.learning.productGuides }">
+		<ng-container *ngTemplateOutlet="productGuidesBlock; context: {
+				title: '_ProductGuides_' }">
 		</ng-container>
 	</div>
 </ng-template>
@@ -447,23 +445,22 @@
 	</div>
 </ng-template>
 
-<ng-template #successBlock let-title="title" let-data="data" let-icon="icon" let-hideTitle="hideTitle">
-	<div class="row" *ngIf="!hideTitle">
-		<div class="col-md-9">
-			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
-			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
-		</div>
-		<div class="col-md-3 text-right text-indigo toggle"
-			*ngIf="data"
-			(click)="showModal(title)"
-			attr.data-auto-id="ShowModalPanel-{{ title }}">
-			<span [innerText]="'_ViewAll_' | i18n"></span>
-			<span class="icon-play qtr-padding-bottom qtr-padding-left"></span>
-		</div>
-	</div>
+<ng-template #successBlock let-title="title" let-data="data">
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #productGuidesBlock let-title="title">
+	<div class="row">
+		<div class="col-md-9 base-padding-bottom">
+			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
+			<span class="text-uppercase text-large text-indigo toggle"
+				[innerText]="title | i18n"
+				(click)="showModal(title)"
+				attr.data-auto-id="ShowModalPanel-{{ title }}"></span>
 		</div>
 	</div>
 </ng-template>
