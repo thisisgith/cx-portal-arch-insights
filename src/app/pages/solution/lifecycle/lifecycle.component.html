@@ -296,13 +296,16 @@
 		</div>
 		<div class="row">
 			<div class="col-md-8">
-				<a data-auto-id="AtxScheduleCardRegisterButton"
+				<a id="AtxScheduleCardRegisterButton" data-auto-id="AtxScheduleCardRegisterButton"
 					class="pull-left"
-					[href]="sessionSelected?.registrationURL">
+					[href]="sessionSelected?.registrationURL" *ngIf="!notCurrentPitstop">
 					<button class="btn base-margin-top base-margin-left"
 						[innerText]="'_Register_' | i18n">
 					</button>
 				</a>
+				<button class="btn base-margin-top base-margin-left disabled"
+					[innerText]="'_Register_' | i18n" *ngIf="notCurrentPitstop">
+				</button>
 			</div>
 			<div class="col-md">
 				<div class="row flex-center-vertical dbl-margin-top base-margin-right pull-right">
@@ -313,6 +316,7 @@
 		</div>
 	</div>
 </ng-template>
+
 
 <ng-template #accPanel let-data="data">
 	<div class="base-margin-bottom text-dkgray-4" [innerText]="'_1on1Coaching_' | i18n"></div>
