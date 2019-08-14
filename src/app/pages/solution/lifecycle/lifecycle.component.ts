@@ -501,32 +501,6 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Determines which modal to display
-	 * @param atx ATX item
-	 * @returns ribbon
-	 */
-	public getRibbonClass (atx: AtxSchema) {
-		let ribbon = 'ribbon__clear';
-		switch (_.get(atx, 'status')) {
-			case 'completed': {
-				ribbon = 'ribbon__green';
-				break;
-			}
-			case 'scheduled':
-			case 'inProgress': {
-				ribbon = 'ribbon__blue';
-				break;
-			}
-			default: {
-				ribbon = 'ribbon__clear';
-				break;
-			}
-		}
-
-		return ribbon;
-	}
-
-	/**
-	 * Determines which modal to display
 	 * @param acc ACC item
 	 * @returns ribbon
 	 */
@@ -846,10 +820,7 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: ACCResponse) => {
 				this.selectedFilterForACC = '';
 				this.componentData.acc = {
-					sessions: _.union(_.filter(result.items, { status: 'requested' }),
-						_.filter(result.items, { status: 'in-progress' }),
-						_.filter(result.items, { status: 'recommended' }),
-						_.filter(result.items, { status: 'completed' })),
+					sessions: result.items,
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
