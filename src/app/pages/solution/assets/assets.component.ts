@@ -436,14 +436,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			totalFilter.selected = false;
 			this.filtered = true;
 		} else {
-			const total = _.reduce(this.filters, (memo, f) => {
-				if (!memo) {
-					return _.some(f.seriesData, 'selected');
-				}
-
-				return memo;
-			}, false);
-
+			const total = this.selectedSubfilters.length > 0;
 			totalFilter.selected = !total;
 			this.filtered = total;
 		}
