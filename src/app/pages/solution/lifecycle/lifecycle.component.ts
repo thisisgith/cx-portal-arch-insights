@@ -760,7 +760,6 @@ export class LifecycleComponent implements OnDestroy {
 		let bookmark;
 		let id;
 		let lifecycleCategory;
-		let loadingComponent;
 		if (_.isEqual(type, 'ATX') && _.get(item, 'status') === 'completed') {
 			return;
 		}
@@ -768,14 +767,13 @@ export class LifecycleComponent implements OnDestroy {
 			bookmark = !_.get(item, 'bookmark');
 			id = _.get(item, 'successByteId');
 			lifecycleCategory = 'SB';
-			loadingComponent = this.status.loading.success;
-		}else if (_.isEqual(type, 'ATX')) {
+			this.status.loading.success = true;
+		} else if (_.isEqual(type, 'ATX')) {
 			bookmark = !_.get(item, 'bookmark');
 			id = _.get(item, 'atxId');
 			lifecycleCategory = 'ATX';
-			loadingComponent = this.status.loading.atx;
+			this.status.loading.atx = true;
 		}
-		loadingComponent = true;
 		const bookmarkParams: BookmarkRequestSchema = {
 			bookmark,
 			id,
@@ -790,10 +788,18 @@ export class LifecycleComponent implements OnDestroy {
 		this.contentService.updateBookmark(params)
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
-			loadingComponent = false;
+			if (_.isEqual(type, 'SB')) {
+				this.status.loading.success = false;
+			} else if (_.isEqual(type, 'ATX')) {
+				this.status.loading.atx = false;
+			}
 		},
 		err => {
-			loadingComponent = false;
+			if (_.isEqual(type, 'SB')) {
+				this.status.loading.success = false;
+			} else if (_.isEqual(type, 'ATX')) {
+				this.status.loading.atx = false;
+			}
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
