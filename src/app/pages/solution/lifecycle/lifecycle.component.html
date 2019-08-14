@@ -446,7 +446,7 @@
 </ng-template>
 
 <ng-template #successBlock let-title="title" let-data="data">
-	<div class="base-padding-bottom half-padding-top half-padding-left">
+	<div class="half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
 		</div>
@@ -454,14 +454,11 @@
 </ng-template>
 
 <ng-template #productGuidesBlock let-title="title">
-	<div class="row">
-		<div class="col-md-9 base-padding-bottom">
-			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
-			<span class="text-uppercase text-large text-indigo toggle"
-				[innerText]="title | i18n"
-				(click)="showModal(title)"
-				attr.data-auto-id="ShowModalPanel-{{ title }}"></span>
-		</div>
+	<div class="base-padding-bottom half-padding-left">
+		<span class="text-blue toggle"
+			[innerText]="title | i18n"
+			(click)="showModal(title)"
+			attr.data-auto-id="ShowModalPanel-{{ title }}"></span>
 	</div>
 </ng-template>
 
