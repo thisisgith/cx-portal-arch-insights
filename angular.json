@@ -206,10 +206,7 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false,
-							"scripts": [
-								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
-							]
+							"vendorChunk": false
 						}
 					},
 					"options": {
