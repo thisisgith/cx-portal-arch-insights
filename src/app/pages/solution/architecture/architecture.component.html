@@ -1,8 +1,8 @@
 <div class="panel">
-
     <div class="row">
         <div class="col-md-2 text-center">
-            <div *ngFor="let label of visualLabels; let i=index" [ngClass]="{'visualSelected':label.active == true}"
+            <div *ngFor="let label of visualLabels; let i=index"
+                [ngClass]="{'visualSelected':label.active == true}"
                 (click)="selectVisualLabel(i)">
                 <h1 class="half-margin-top half-margin-bottom">{{label.count}}</h1>
                 <div class="half-margin-bottom half-margin-top">{{label.label}}</div>
@@ -16,9 +16,11 @@
                                 <span class="icon-chevron-left icon-medium text-muted toggle"></span>
                                 </div> -->
                         <ng-container *ngFor="let filter of filters; index as i">
-                            <div attr.id="SyslogsSelectVisualFilter-{{ filter.key }}" attr.data-auto-id="AssetsSelectVisualFilter-{{
+                            <div attr.id="SyslogsSelectVisualFilter-{{ filter.key }}" 
+                                attr.data-auto-id="AssetsSelectVisualFilter-{{
                                 filter.key
-                                }}" [ngClass]="{
+                                }}"
+                                [ngClass]="{
                                 filter__selected: filter.selected,
                                 'filter__not-selected': !filter.selected
                                 }" class="panel flex-center flex-fill filter">
@@ -30,7 +32,8 @@
                                 "></ng-container>
                                     </div>
                                 </div>
-                                <div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
+                                <div class="filter__title text-muted text-large" 
+                                [innerText]="filter.title"></div>
                             </div>
                             <div *ngIf="filter.loading" class="base-margin-bottom">
                                 <!-- <cui-spinner></cui-spinner> -->
@@ -42,7 +45,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="text-center col-md-9" *ngIf="visualLabels[1].active">
             <ng-container>
@@ -65,29 +67,30 @@
     </div>
 </div>
 
-<ng-template  #exceptionsFilter let-filter="filter">
-
-    <bar-chart *ngIf="!status.isLoading" [seriesData]="filter.seriesData" [width]="350" (subfilter)="onSubfilterSelect($event, filter)">
+<ng-template #exceptionsFilter let-filter="filter">
+    <bar-chart *ngIf="!status.isLoading" [seriesData]="filter.seriesData" [width]="350"
+        (subfilter)="onSubfilterSelect($event, filter)">
     </bar-chart>
     <div class="base-margin-top" *ngIf="status.isLoading">
-		<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
-			<div class="wrapper">
-				<div class="wheel"></div>
-			</div>
-		</div>
-	</div>
-
+        <div class="loading-spinner flex-center" aria-label="Loading, please wait...">
+            <div class="wrapper">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #filterBar>
     <div class="row">
         <div class="col-md-1 flex flex-center-vertical">
-            <span class="text-bold text-uppercase half-padding-right" [innerText]="'Filtered'"></span>
+            <span class="text-bold text-uppercase half-padding-right" 
+            [innerText]="'Filtered'"></span>
         </div>
         <div class="col-md-10">
             <ng-container *ngFor="let filter of selectedFilters">
                 <ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
-                    <span class="label label--dkgray text-large" (click)="onSubfilterSelect(subfilter.filter, filter)"
+                    <span class="label label--dkgray text-large" 
+                        (click)="onSubfilterSelect(subfilter.filter, filter)"
                         attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
                         <span [innerText]="subfilter.label"></span>
                         <span class="icon-close"></span>

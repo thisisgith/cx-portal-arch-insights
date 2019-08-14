@@ -3,17 +3,17 @@
 		<div class="flex" *ngIf="cbpDetails">
 
 			<div class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_IPAddress_' | i18n"></div>
+				<div class="text-bold text-uppercase" [innerText]="'_ArchitectureIPAddress_' | i18n"></div>
 				<div innerText="{{ cbpDetails?.ipAddress || ('_NA_' | i18n) }}"></div>
 			</div>
 
 			<div class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_SerialNumber_' | i18n"></div>
+				<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSerialNumber_' | i18n"></div>
 				<div innerText="{{ cbpDetails?.sysName || ('_NA_' | i18n) }}"></div>
 			</div>
 
 			<div class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_SoftwareType_' | i18n"></div>
+				<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSoftwareType_' | i18n"></div>
 				<div innerText="{{ cbpDetails?.swType || ('_NA_' | i18n) }}"></div>
 			</div>
 		</div>

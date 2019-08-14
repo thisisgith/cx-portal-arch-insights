@@ -24,8 +24,9 @@ export class CbpTbdComponent implements OnChanges {
 	@ViewChild('riskTmpl', { static: true }) public riskTemplate: TemplateRef<any>;
 	public tableOptions: CuiTableOptions;
 	public totalItems = 0;
-	public tableIndex = 0;
-	public tableData: IException[] = [];
+	public tableStartIndex = 0;
+	public tableEndIndex = 0;
+	public exceptionDatas: IException[] = [];
 	public isLoading = true;
 	public params: any = {
 		page : 0,
@@ -63,18 +64,22 @@ export class CbpTbdComponent implements OnChanges {
 	 * used for setting the data for table
 	 */
 	public getData () {
-		this.tableIndex = this.params.page * this.params.pageSize;
+		this.tableStartIndex = this.params.page * this.params.pageSize;
+		let x = (this.tableStartIndex + this.exceptionDatas.length);
+		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
+
 		this.architectureService.getAllCBPExceptionDetails(this.params)
 				.subscribe((res: IException[]) => {
-					this.tableData = res;
+					this.exceptionDatas = res;
 					this.isLoading = false;
+					this.tableEndIndex = (this.tableStartIndex + this.exceptionDatas.length);
 				},
 					err => {
 						this.logger.error('CBP-TDB Fly-Out View' +
 							'  : getData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 						this.isLoading = false;
-						this.tableData = [];
+						this.exceptionDatas = [];
 						this.totalItems = 0;
 					});
 	}
@@ -84,7 +89,7 @@ export class CbpTbdComponent implements OnChanges {
 	 */
 	public expandRow (selectedItem: IException) {
 		selectedItem.active = !selectedItem.active;
-		this.tableData = this.tableData.map(item => {
+		this.exceptionDatas = this.exceptionDatas.map(item => {
 			if (item !== selectedItem) {
 				item.active = false;
 			}

@@ -60,6 +60,10 @@ export class ArchitectureComponent implements OnInit {
 	// 	});
 	// }
 
+	/**
+	 * Used to call the getExceptionsCount,getAssetsExceptionsCount
+	 *  and buildFilters function for Updating the Table
+	 */
 	public ngOnInit(): void {
 		this.architectureService.getExceptionsCount().subscribe(res => {
 			this.visualLabels[0].count = res.CBPRulesCount;
@@ -72,6 +76,9 @@ export class ArchitectureComponent implements OnInit {
 		this.buildFilters();
 	}
 
+	/**
+	 * Used to toggle the active element in visual labels
+	 */
 	public selectVisualLabel() {
 		this.visualLabels.forEach(element => {
 			element.active = !element.active;
@@ -80,7 +87,6 @@ export class ArchitectureComponent implements OnInit {
 
 	/**
 	 * Initializes our visual filters
-	 * @param tab the tab we're building the filters for
 	 */
 	private buildFilters () {
 		this.filters = [
@@ -96,6 +102,10 @@ export class ArchitectureComponent implements OnInit {
 		this.loadData();
 	}
 
+	/**
+	 * Used to set the Severity in order access in other components
+	 * @param severity Value of severity
+	 */
 	public setSeverityListValues(severity: any) {
 		this.architectureService.setAssetsExceptionCountSubjectObj(severity);
 	}
@@ -104,7 +114,6 @@ export class ArchitectureComponent implements OnInit {
 	 * Adds a subfilter to the given filer
 	 * @param subfilter the subfilter selected
 	 * @param filter the filter we selected the subfilter on
-	 * @param reload if we're reloading our assets
 	 */
 	public onSubfilterSelect(subfilter: string, filter: VisualFilter) {
 		const sub = _.find(filter.seriesData, { filter: subfilter });
@@ -138,10 +147,18 @@ export class ArchitectureComponent implements OnInit {
 
 	}
 
+	/**
+	 * Getter for selected filter
+	 */
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
 	}
 
+	/**
+	 * This function returns the selected filter from 
+	 * array of objects
+	 * @param key - it contains selected object
+	 */
 	public getSelectedSubFilters(key: string) {
 		const filter = _.find(this.filters, { key });
 		if (filter) {

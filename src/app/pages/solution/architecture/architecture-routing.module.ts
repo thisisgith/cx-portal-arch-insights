@@ -6,6 +6,7 @@ const routes: Routes = [
   {  path: '', component: ArchitectureComponent },
 ];
 
+/** Module to represent the Architecture Routing */
 @NgModule({
 	exports: [RouterModule],
 	imports: [RouterModule.forChild(routes)],

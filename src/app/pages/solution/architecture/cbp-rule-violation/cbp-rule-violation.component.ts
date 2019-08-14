@@ -1,11 +1,15 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges,
+	OnChanges, ViewChild, TemplateRef } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-
+import { I18n } from '@cisco-ngx/cui-utils';
 import { ArchitectureService, IException } from '@sdp-api';
 import * as _ from 'lodash-es';
 
+/**
+ * CBP Rule Component
+ */
 @Component({
 	selector: 'app-cbp-rule-violation',
 	styleUrls: ['./cbp-rule-violation.component.scss'],
@@ -25,8 +29,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		pageSize: 10,
 		severity: '',
 	};
-	public tableIndex = 0;
-	public exceptionObject:IException = null;
+	public tableStartIndex = 0;
+	public tableEndIndex = 0;
+	public exceptionObject: IException = null;
 	@ViewChild('riskTemplate', { static: true })
 	private riskTemplate: TemplateRef<{ }>;
 
@@ -34,63 +39,122 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		this.logger.debug('CbpRuleViolationComponent Created!');
 	}
 
-	public ngOnInit() {
+	/**
+	 * Used to call the getCBPRulesData and buildTable function for Updating the Table
+	 */
+	public ngOnInit () {
 		this.getCBPRulesData();
 		this.buildTable();
 	}
 
+	/**
+	 * Used to detect the changes in input object and
+	 * call the getCBPRulesData function for Updating the Table
+	 */
 	public ngOnChanges(changes: SimpleChanges) {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
 		if (selectedFilter && !changes.filters.firstChange) {
-			this.paramsType.severity = selectedFilter.Exceptions ? selectedFilter.Exceptions.toString() : '';
+			this.paramsType.severity =
+			selectedFilter.Exceptions ? selectedFilter.Exceptions.toString() : '';
+			this.tableStartIndex = 0;
+			this.paramsType.page = 0;
 			this.getCBPRulesData();
 		}
 	}
 
-	public buildTable() {
+	/**
+	 * used to Intialize Table options
+	 */
+	public buildTable () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
-				{ name: 'Rule Title', sortable: false, key: 'bpRuleTitle' },
-				{ name: 'Severity', sortable: false, template: this.riskTemplate },
-				{ name: 'Software Type', sortable: false, key: 'swType' },
-				{ name: 'Exception', sortable: false, key: 'exceptions' },
-				{ name: 'Recommendation', sortable: false, key: 'Recommendation' },
-				{ name: 'Corrective Action', sortable: false, key: 'correctiveActionSummary' },
-				{ name: 'Assets Affected', sortable: false, key: 'assetsAffected' },
+				{
+					name: I18n.get('_ArchitectureRuleTitle_'),
+					sortable: false,
+					key: 'bpRuleTitle',
+				},
+				{
+					name: I18n.get('_ArchitectureSeverity_'),
+					sortable: false,
+					template: this.riskTemplate,
+				},
+				// { name: 'Software Type', sortable: false, key: 'swType' },
+				{
+					name: I18n.get('_ArchitectureException_'),
+					sortable: false,
+					key: 'exceptions',
+				},
+				{
+					name: I18n.get('_ArchitectureRecommendation_'),
+					sortable: false,
+					key: 'Recommendation',
+				},
+				{
+					name: I18n.get('_ArchitectureCorrectiveAction_'),
+					sortable: false,
+					key: 'correctiveActionSummary',
+				},
+				{
+					name: I18n.get('_ArchitectureAssetsAffected_'),
+					sortable: false,
+					key: 'assetsAffected',
+				},
 			],
 			singleSelect: true,
 		});
 	}
 
-	public ModifyCbpRuleExceptions(array: Array<any>) {
+	/**
+ 	 * Used for shinking the  Recommendation, correctiveActionSummary 
+	 * assetsAffected field
+ 	 * @param array - The Array Objects to be modified
+ 	 */
+	public ModifyCbpRuleExceptions (array: Array<any>) {
 		array.map(obj => {
 			obj.Recommendation = obj.bpRecommendation.substr(0, 30)
 				.concat('...');
 			obj.correctiveActionSummary = obj.correctiveAction.substr(0, 25)
 				.concat('...');
-			obj.assetsAffected = obj.deviceIdsWithExceptions.length !=0
-			? obj.deviceIdsWithExceptions.split(';').length : '0';
+			obj.assetsAffected = obj.deviceIdsWithExceptions.length != 0
+				? obj.deviceIdsWithExceptions.split(';').length : '0';
 		});
 		// }
 	}
 
-	public onPagerUpdated(event) {
+	/**
+ 	 * Used for getting pageNumber Index and call the getdata function
+ 	 * @param event - The Object that contains pageNumber Index
+ 	 */
+	public onPagerUpdated (event) {
 		this.isLoading = true;
 		this.paramsType.page = event.page;
 		this.paramsType.pageSize = event.limit;
 		this.getCBPRulesData();
 	}
 
-	public getCBPRulesData() {
-		this.tableIndex = this.paramsType.page * this.paramsType.pageSize;
+	/**
+	 * used for setting the data for table
+	 */
+	public getCBPRulesData () {
+		this.tableStartIndex = this.paramsType.page * this.paramsType.pageSize;
+		let x = (this.tableStartIndex + this.cbpRuleExceptions.length);
+		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
 		this.architectureService.
 			getCBPSeverityList(this.paramsType)
 			.subscribe(data => {
 				this.isLoading = false;
 				this.totalItems = data.TotalCounts;
 				this.cbpRuleExceptions = data.BPRulesDetails;
+				this.tableEndIndex = (this.tableStartIndex + this.cbpRuleExceptions.length);
 				this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
+			}, err => {
+				this.logger.error('CBP Rule Component View' +
+					'  : getCBPRulesData() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				this.isLoading = false;
+				this.cbpRuleExceptions = [];
+				this.totalItems = 0;
 			});
 	}
 
@@ -103,10 +167,10 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	}
 
 	/**
-	 * This method is used to set the null to exception object 
+	 * This method is used to set the null to exception object
 	 * in order to Close Fly-out View
 	 */
 	public onPanelClose () {
-		this.exceptionObject = null ;
+		this.exceptionObject = null;
 	}
 }

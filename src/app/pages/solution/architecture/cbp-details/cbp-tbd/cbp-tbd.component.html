@@ -1,9 +1,9 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
-		<div class="container" *ngIf="tableData.length">
-			<span [innerText]="'_CbpExceptions_' | i18n" class="text-large"></span>
+		<div class="container" *ngIf="exceptionDatas.length">
+			<span [innerText]="'_ArchitectureCBPExceptions_' | i18n" class="text-large"></span>
 			<span class="qtr-margin-left text-small text-muted">showing
-				{{ (tableIndex + 1) +' - ' +  (tableIndex + tableData.length ) }}
+				{{ (tableStartIndex + 1) +' - ' +  tableEndIndex  }}
 				of {{totalItems}} exceptions</span>
 		</div>
 	</div>
@@ -12,17 +12,17 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
 		<div class="container">
-			<!-- <cui-table [options]="tableOptions" [data]="tableData"></cui-table> -->
+			<!-- <cui-table [options]="tableOptions" [data]="exceptionDatas"></cui-table> -->
 			<table class="table" *ngIf="!isLoading">
 				<thead>
 					<tr>
-						<th>Severity</th>
-						<th>Rule Name</th>
-						<th>Exception</th>
+						<th>{{('_ArchitectureSeverity_' | i18n)}}</th>
+						<th>{{('_ArchitectureRuleName_' | i18n)}}</th>
+						<th>{{('_ArchitectureException_' | i18n)}}</th>
 					</tr>
 				</thead>
 				<tbody *ngIf="totalItems > 0">
-					<ng-container *ngFor="let item of tableData">
+					<ng-container *ngFor="let item of exceptionDatas">
 						<tr>
 							<td>
 								<ng-container *ngTemplateOutlet=" riskTmpl;context: { itemSeverity : item.bpSeverity }">
@@ -49,7 +49,7 @@
 				</tbody>
 			</table>
 			<div class="section" *ngIf="!isLoading && totalItems > 0">
-				<cui-pager *ngIf="tableData.length" [page]="params.page" [limit]="params.pageSize"
+				<cui-pager *ngIf="exceptionDatas.length" [page]="params.page" [limit]="params.pageSize"
 					[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
 			</div>
 			<div class="container base-margin-top" *ngIf="isLoading">

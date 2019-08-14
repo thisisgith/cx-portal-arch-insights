@@ -3,7 +3,7 @@
 	<div class="col-md-8 base-margin-bottom">
 		<div class="flex" *ngIf="cbpDetails">
 			<div class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_Severity_' | i18n"></div>
+				<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSeverity_' | i18n"></div>
 				<div><span class="qtr-margin-right icon-circle" [ngClass]="{
 										'High': 'text-danger',
 										'Medium': 'text-warning',
@@ -14,14 +14,14 @@
 			</div>
 
 			<div class="dbl-margin-right">
-				<div class="text-bold text-uppercase" [innerText]="'_SoftwareType_' | i18n"></div>
+				<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSoftwareType_' | i18n"></div>
 				<div innerText="{{ cbpDetails?.softwareType }}"></div>
 			</div>
 		</div>
 	</div>
 	<div class="col-md-12 base-margin-bottom">
 		<div class="dbl-margin-right">
-			<div class="text-bold text-uppercase" [innerText]="('_Summary_' | i18n)+':'"></div>
+			<div class="text-bold text-uppercase" [innerText]="('_ArchitectureSummary_' | i18n)+':'"></div>
 			<div>{{cbpDetails?.bpRuleSummary}}</div>
 		</div>
 	</div>

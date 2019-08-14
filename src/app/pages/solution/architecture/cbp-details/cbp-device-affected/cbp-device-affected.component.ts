@@ -6,7 +6,7 @@ import {
 	OnChanges,
 	OnInit,
 } from '@angular/core';
-
+import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { ArchitectureService , IException, IAsset } from '@sdp-api';
@@ -25,10 +25,11 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	@Input('cbpDetails') public cbpDetails: IException;
 	@ViewChild('assetTmpl', { static: true }) public assetTemplate: TemplateRef<any>;
 	public tableOptions: CuiTableOptions;
-	public tableIndex = 0;
+	public tableStartIndex = 0;
+	public tableEndIndex = 0;
 	public totalItems = 0;
 	public isLoading = true;
-	public tableData: IAsset[] = [];
+	public assetDatas: IAsset[] = [];
 	public params: any = {
 		page : 0,
 		pageSize : 8,
@@ -47,35 +48,35 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 			bordered: false,
 			columns: [
 				{
-					name: 'Host Name',
+					name: I18n.get('_ArchitectureHostName_'),
 					sortable: false,
 					template: this.assetTemplate,
 				},
 				{
 					key: 'productId',
-					name: 'Product ID',
+					name: I18n.get('_ArchitectureProductId_'),
 					sortable: false,
 				},
 				{
 					key: 'productFamily',
-					name: 'Product Family',
+					name:  I18n.get('_ArchitectureProductFamily_'),
 					sortable: false,
 				},
 				{
 					key: 'swVersion',
-					name: 'Software Version',
+					name:  I18n.get('_ArchitectureSoftwareVersion_'),
 					sortable: false,
 				},
 				{
 					key: 'configCollectionDate',
-					name: 'Config Collection Date',
+					name: I18n.get('_ArchitectureConfigCollectionDate_'),
 					render: item =>
 						datePipe.transform(item.configCollectionDate, 'yyyy-MM-dd'),
 					sortable: false,
 				},
 				{
 					key: 'ipAddress',
-					name: 'Ip Address',
+					name: I18n.get('_ArchitectureIPAddress_'),
 					sortable: false,
 				},
 			],
@@ -113,18 +114,22 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	 */
 	public getData () {
 
-		this.tableIndex = this.params.page * this.params.pageSize;
+		this.tableStartIndex = this.params.page * this.params.pageSize;
+		let x = (this.tableStartIndex + this.assetDatas.length);
+		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
+
 		this.architectureService.getAllCBPDeviceAffected(this.params)
 				.subscribe((res: IAsset[]) => {
-					this.tableData = res;
+					this.assetDatas = res;
 					this.isLoading = false;
+					this.tableEndIndex = (this.tableStartIndex + this.assetDatas.length);
 				},
 					err => {
 						this.logger.error('CBP-Device-Affected Fly-Out View' +
 							'  : getData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 						this.isLoading = false;
-						this.tableData = [];
+						this.assetDatas = [];
 						this.totalItems = 0;
 					});
 	}

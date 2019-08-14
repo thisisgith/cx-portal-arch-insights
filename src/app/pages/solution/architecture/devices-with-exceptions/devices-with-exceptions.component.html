@@ -16,9 +16,9 @@
 <div class="row">
 		<div class="col-md-12">
 			<div class="container" *ngIf="AssetsExceptionDetails.length > 0">
-				<span [innerText]="'_Assets_' | i18n" class="text-large"></span>
+				<span [innerText]="'_ArchitectureAssets_' | i18n" class="text-large"></span>
 				<span class="qtr-margin-left text-small text-muted">showing
-					{{ (tableIndex + 1) +' - ' +  (tableIndex + AssetsExceptionDetails.length ) }}
+					{{ (tableStartIndex + 1) +' - ' + tableEndIndex }}
 					of {{totalItems}} exceptions</span>
 			</div>
 		</div>

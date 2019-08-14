@@ -12,6 +12,7 @@ import { CbpDetailsHeaderModule } from './cbp-details-header/cbp-details-header.
 import { BarChartModule } from '@components';
 // import { Panel360Module } from '@components';
 
+/** Module to represent the Architecture Component */
 @NgModule({
 	declarations: [ArchitectureComponent],
 	exports: [ArchitectureComponent],

@@ -1,0 +1,14 @@
+<cui-tabs [(activeTabIndex)]="tabIndex">
+	<cui-tab [label]="'_ArchitectureSDAProductCompatibility_' | i18n | uppercase" disabled="true">
+
+	</cui-tab>
+	<cui-tab [label]="'_ArchitectureL3AccessSwitching_' | i18n | uppercase" disabled="true">
+
+	</cui-tab>
+	<cui-tab [label]="'_ArchitectureSwitchRedundancy_' | i18n | uppercase" disabled="true">
+
+	</cui-tab>
+	<cui-tab [label]="'_ArchitectureSwitchInterfaceMTU_'  | i18n | uppercase">
+		<devices-simtu [deviceDetails]="deviceDetails"></devices-simtu>
+	</cui-tab>
+</cui-tabs>

@@ -1,0 +1,31 @@
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
+			<div *ngIf="!isLoading && totalItems > 0">
+				<span [innerText]="'_ArchitectureAssets_' | i18n" class="text-large"></span>
+				<span class="qtr-margin-left text-small text-muted">showing
+				{{ (tableStartIndex + 1) +' - ' +  tableEndIndex }}
+				of {{totalItems}} </span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
+			<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="tableData"></cui-table>
+			<div class="section">
+				<cui-pager [page]="params.page" [limit]="params.pageSize" [totalItems]="totalItems"
+						(onPageChanged)="onPagerUpdated($event)"></cui-pager>
+			</div>
+			<div class="base-margin-top" *ngIf="isLoading">
+				<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
+					<div class="wrapper">
+						<div class="wheel"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

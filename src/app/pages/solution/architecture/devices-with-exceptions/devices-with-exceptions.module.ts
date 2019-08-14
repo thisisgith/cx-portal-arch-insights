@@ -14,6 +14,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
  */
 const rootUrl = environment.sdpServiceOrigin;
 
+/** Module representing the Devices With Exceptions Component */
 @NgModule({
 	declarations: [DevicesWithExceptionsComponent],
 	exports : [DevicesWithExceptionsComponent],
