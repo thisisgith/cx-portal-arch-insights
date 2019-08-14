@@ -4,6 +4,7 @@ import {
 	OnDestroy,
 	EventEmitter,
 	Output,
+	SimpleChanges,
 } from '@angular/core';
 import {
 	Asset,
@@ -15,6 +16,7 @@ import {
 } from 'rxjs/operators';
 import { UserResolve } from '@utilities';
 import { Alert } from '@interfaces';
+import * as _ from 'lodash-es';
 
 /**
  * Asset Details Component
@@ -27,7 +29,6 @@ import { Alert } from '@interfaces';
 	styleUrls: ['./asset-details.component.scss'],
 	templateUrl: './asset-details.component.html',
 })
-
 export class AssetDetailsComponent implements OnDestroy {
 
 	@Input('asset') public asset: Asset;
@@ -81,5 +82,16 @@ export class AssetDetailsComponent implements OnDestroy {
 	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
+	}
+
+	/**
+	 * Checks if our currently selected asset has changed
+	 * @param changes the changes detected
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+		if (currentAsset && !changes.asset.firstChange) {
+			_.invoke(this.alert, 'hide');
+		}
 	}
 }

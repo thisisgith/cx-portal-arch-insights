@@ -8,10 +8,30 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
-import { InventoryService, ProductAlertsService, ContractsService } from '@sdp-api';
+import {
+	InventoryService,
+	ProductAlertsService,
+	ContractsService,
+} from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { user } from '@mock';
+import {
+	user,
+	Mock,
+	AssetScenarios,
+} from '@mock';
+
+/**
+ * Will fetch the currently active response body from the mock object
+ * @param mock the mock object
+ * @param type the scenario type
+ * @returns the body response
+ */
+function getActiveBody (mock: Mock, type: string = 'GET') {
+	const active = _.find(mock.scenarios[type], 'selected') || _.head(mock.scenarios[type]);
+
+	return active.response.body;
+}
 
 describe('AssetsComponent', () => {
 	let component: AssetsComponent;
@@ -86,6 +106,10 @@ describe('AssetsComponent', () => {
 		spyOn(contractsService, 'getCoverageCounts')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(productAlertsService, 'getHardwareEolTopCount')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
 		component.ngOnInit();
 		fixture.whenStable()
 		.then(() => {
@@ -273,5 +297,69 @@ describe('AssetsComponent', () => {
 		// cleanup
 		window.Cypress = undefined;
 		window.loading = undefined;
+	});
+
+	it('should create our pagination after results load', done => {
+		const assets = getActiveBody(AssetScenarios[5]);
+
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(of(assets));
+
+		fixture.whenStable()
+		.then(() => {
+			const pagination = assets.Pagination;
+			const first = (pagination.rows * (pagination.page - 1)) + 1;
+			const last = (pagination.rows * pagination.page);
+
+			expect(component.paginationCount)
+				.toEqual(`${first}-${last}`);
+			done();
+		});
+	});
+
+	it('should set the coverage filter if param selected', done => {
+		_.set(component.assetParams, 'coverage', ['covered']);
+
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const coverageFilter = _.find(component.filters, { key: 'coverage' });
+
+			expect(_.filter(component.filters, 'selected'))
+				.toContain(coverageFilter);
+
+			done();
+		});
+	});
+
+	it('should set the role filter if param selected', done => {
+		_.set(component.assetParams, 'role', ['ACCESS']);
+
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const roleFilter = _.find(component.filters, { key: 'role' });
+
+			expect(_.filter(component.filters, 'selected'))
+				.toContain(roleFilter);
+
+			done();
+		});
+	});
+
+	it('should set the contract filter if param selected', done => {
+		_.set(component.assetParams, 'contractNumber', ['UNKNOWN']);
+
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const contractFilter = _.find(component.filters, { key: 'contractNumber' });
+
+			expect(_.filter(component.filters, 'selected'))
+				.toContain(contractFilter);
+
+			done();
+		});
 	});
 });

@@ -196,6 +196,8 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 
 					return this.fetchEOLBulletinData();
 				}
+
+				return of({ });
 			}),
 			catchError(err => {
 				this.status.loading.eol = false;
