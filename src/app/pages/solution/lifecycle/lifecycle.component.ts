@@ -34,7 +34,6 @@ import {
 import { SolutionService } from '../solution.service';
 import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
 import * as _ from 'lodash-es';
-import * as moment from 'moment';
 import { Observable, of, forkJoin, ReplaySubject, Subject } from 'rxjs';
 import { map, catchError, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -77,7 +76,7 @@ interface ComponentData {
 	cgt?: {
 		trainingsAvailable: number;
 		sessions: string[];
-		dateAvailableThrough: string;
+		usedTrainings: string[];
 	};
 }
 
@@ -126,10 +125,10 @@ export class LifecycleComponent implements OnDestroy {
 	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	private user: User;
+	public totalAllowedGroupTrainings: number;
 	public selectedFilterForSB = '';
 	public selectedFilterForATX = '';
 	public selectedFilterForACC = '';
-	public totalAllowedGroupTrainings = 10;
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	// id of ACC in request form
@@ -147,7 +146,8 @@ export class LifecycleComponent implements OnDestroy {
 	public productGuidesTable: CuiTableOptions;
 	public completedTrainingsList: UserTraining[] | { };
 	public successBytesTable: CuiTableOptions;
-	public cgtAvailable: number;
+	public usedTrainingsList: string[];
+	public usedTrainings: string[];
 	public trainingAvailableThrough: string;
 
 	private stage = new ReplaySubject<string>();
@@ -425,14 +425,12 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Select/deselect the CGTRequestForm component
 	 * @param selected whether the component is visible or not
-	 * @param totalTrainingsAvailable number of trainings available for the user
-	 * @param trainingAvailableThrough end date to complete trainings
+	 * @param usedTrainingData list of trainings used by the user this year
 	 */
 	public selectCgtRequestForm (selected: boolean,
-		totalTrainingsAvailable: number, trainingAvailableThrough: string) {
+		usedTrainingData: string[]) {
 		if (selected) {
-			this.cgtAvailable = totalTrainingsAvailable;
-			this.trainingAvailableThrough = trainingAvailableThrough;
+			this.usedTrainingsList = usedTrainingData;
 		}
 		this.selectCgtComponent = selected;
 	}
@@ -779,8 +777,8 @@ export class LifecycleComponent implements OnDestroy {
 		}
 		loadingComponent = true;
 		const bookmarkParams: BookmarkRequestSchema = {
-			id,
 			bookmark,
+			id,
 			lifecycleCategory,
 			pitstop: this.componentData.params.pitstop,
 			solution: this.componentData.params.solution,
@@ -1032,9 +1030,8 @@ export class LifecycleComponent implements OnDestroy {
 		let trainingDuration;
 		let trainingLocation;
 		let trainingData;
-		let dateAvailable;
 		let completedTrainingData = [];
-		let trainigsUsed = 0;
+		let trainigsCompleted = 0;
 		let trainigsInProcess = 0;
 
 		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
@@ -1045,16 +1042,24 @@ export class LifecycleComponent implements OnDestroy {
 		.pipe(
 			map((result: ContractQuota[]) => {
 				this.status.loading.cgt = false;
-				dateAvailable = _.get(_.head(result), 'contract_end_date');
+				this.totalAllowedGroupTrainings = _.size(result) * 2;
 				_.each(result, training => {
-					trainigsUsed += _.get(training, 'closed_ilt_courses_used');
-					trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
-					if (new Date(_.get(training, 'contract_end_date')) > new Date(dateAvailable)) {
-						dateAvailable = _.get(training, 'contract_end_date');
+					if (new Date(_.get(training, 'contract_end_date')).getFullYear() ===
+						new Date().getFullYear()) {
+						this.usedTrainings = _.union(this.usedTrainings, [{
+							contract_number: _.get(training, 'tsa_contract_no'),
+							end_date: _.get(training, 'contract_end_date'),
+							used_sessions: _.get(training, 'closed_ilt_courses_inprocess'),
+						}]);
+						trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
+					} else {
+						this.usedTrainings = _.union(this.usedTrainings, [{
+							contract_number: _.get(training, 'tsa_contract_no'),
+							end_date: _.get(training, 'contract_end_date'),
+							used_sessions: 0,
+						}]);
 					}
 				});
-				this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
-					(trainigsUsed + trainigsInProcess);
 				this.contentService.getCompletedTrainings(
 					_.pick(this.componentData.params, ['customerId']))
 					.pipe(
@@ -1068,6 +1073,16 @@ export class LifecycleComponent implements OnDestroy {
 					.subscribe(response => {
 						this.completedTrainingsList = response;
 						_.each(this.completedTrainingsList, completedTraining => {
+							if (new Date(_.get(completedTraining, 'end_date')).getFullYear() ===
+								new Date().getFullYear()) {
+								_.each(this.usedTrainings, training => {
+									if (_.get(completedTraining, 'contract_number') ===
+										_.get(training, 'contract_number')) {
+										training.used_sessions = training.used_sessions + 1;
+									}
+								});
+								trainigsCompleted = trainigsCompleted + 1;
+							}
 							startDate = `${
 								monthNames[new Date(_.get(completedTraining, 'start_date'))
 								.getMonth()]
@@ -1110,11 +1125,14 @@ export class LifecycleComponent implements OnDestroy {
 							};
 							completedTrainingData = _.union(completedTrainingData, [trainingData]);
 						});
+						this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
+							(trainigsCompleted + trainigsInProcess);
+						this.groupTrainingsAvailable = this.groupTrainingsAvailable > 0 ?
+							this.groupTrainingsAvailable : 0;
 						this.componentData.cgt = {
-							dateAvailableThrough: moment(dateAvailable)
-								.format('MMM DD, YYYY'),
 							sessions: completedTrainingData,
 							trainingsAvailable: this.groupTrainingsAvailable,
+							usedTrainings: this.usedTrainings,
 						};
 
 						return result;

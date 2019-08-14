@@ -47,7 +47,12 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						},
 						"apollo-stage": {
 							"aot": true,
@@ -74,6 +79,10 @@
 								{
 									"replace": "src/app/components/header/header.component.html",
 									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.apollo-stage.html"
 								}
 							],
 							"buildOptimizer": true,
@@ -83,7 +92,12 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						},
 						"tie": {
 							"aot": true,
@@ -119,7 +133,12 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						},
 						"cxportal-qa": {
 							"aot": true,
@@ -159,7 +178,12 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						},
 						"cxportal-lt": {
 							"aot": true,
@@ -199,7 +223,12 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/jquery/dist/jquery.min.js",
+								"node_modules/@cx-portal/metrics/ctm.js",
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						}
 					},
 					"options": {
