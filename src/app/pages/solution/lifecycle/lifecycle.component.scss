@@ -117,7 +117,7 @@ $vibblue: #017cad;
 
 .panel--open {
 	box-shadow: $base-box-shadow;
-	height: 430px;
+	height: 325px;
 	width: 500px;
 	position: absolute;
 	bottom: 10px;
@@ -138,10 +138,10 @@ $vibblue: #017cad;
 
 .cardpanel--open {
 	box-shadow: $base-box-shadow;
-	height: 430px;
+	height: 325px;
 	width: 500px;
 	position: absolute;
-	bottom: -100px;
+	bottom: -50px;
 	left: 175px;
 	z-index: 3;
 	background-color: $white;
@@ -173,7 +173,7 @@ $vibblue: #017cad;
 .panel--open::after {
 	content: "";
 	position: absolute;
-	top: 60%;
+	top: 45%;
 	left: -15px;
 	z-index: -1;
 	border-top: 30px solid transparent;

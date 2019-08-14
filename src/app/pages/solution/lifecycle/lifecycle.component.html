@@ -247,7 +247,7 @@
 	<div class="panel panel--bordered"
 		*ngIf="atxScheduleCardOpened"
 		[ngClass]="componentData.atx.interested ? 'panel cardpanel--open' : 'panel panel--open'">
-		<div class="row base-margin-top half-margin-left half-margin-right">
+		<div class="row half-margin-top half-margin-left half-margin-right">
 			<div id="atxtitle" class="col-md-11 text-left">
 				<h5 [innerText]="data.title"></h5>
 			</div>
@@ -259,26 +259,8 @@
 				</a>
 			</div>
 		</div>
-		<div id="atxdescription" class="base-margin-left base-margin-right half-margin-top text-left">
-			<span class="text-small" [innerText]="data.description"></span>
-		</div>
-		<div class="half-margin-top base-margin-left base-margin-bottom text-left">
-			<a data-auto-id="viewOnDemand"
-				class="no-link"
-				target="_blank"
-				rel="noopener noreferrer"
-				[href]="data.recordingURL">
-				<div class="flex">
-					<div class="btn--square">
-						<span class="icon-play icon-small"></span>
-					</div>
-					<div class="half-margin-left flex-fluid">
-						<span class="text-small" [innerText]="'_WatchNow_' | i18n"></span>
-					</div>
-				</div>
-			</a>
-		</div>
-		<div class="row half-margin-left base-margin-top half-margin-bottom base-margin-left">
+		<div class="divider divider--compressed"></div>
+		<div class="row half-margin-left half-margin-top half-margin-bottom base-margin-left">
 			<div class="col-md-8">
 				<h6 class="text-left"
 					[innerText]="'_ChooseSession_' | i18n">
@@ -316,13 +298,13 @@
 				class="pull-left half-padding-left"
 				*ngIf="sessionSelected && !sessionSelected.scheduled"
 				[href]="sessionSelected?.registrationURL">
-				<button class="btn btn--primary base-margin-top base-margin-left"
+				<button class="btn btn--primary base-margin-top half-margin-left"
 					[disabled]="!sessionSelected?.registrationURL"
 					[innerText]="'_Register_' | i18n">
 				</button>
 			</a>
 			<div class="pull-left half-padding-left">
-				<button class="btn btn--primary disabled base-margin-top base-margin-left"
+				<button class="btn btn--primary disabled base-margin-top half-margin-left"
 					*ngIf="!sessionSelected || sessionSelected.scheduled"
 					[innerText]="'_Register_' | i18n">
 				</button>
