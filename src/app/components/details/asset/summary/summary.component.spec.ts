@@ -214,9 +214,6 @@ describe('AssetDetailsSummaryComponent', () => {
 					.toEqual(false);
 				expect(component.isExpired(component.assetData.warrantyEndDate))
 					.toEqual(false);
-
-				// expect(component.componentData.numberInInventory)
-				// 	.toEqual(0);
 			});
 
 		summarySpy.and.returnValue(of({
