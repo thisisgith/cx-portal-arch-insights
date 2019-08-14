@@ -1191,7 +1191,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * will then call loadRacetrackInfo for the other api calls
 	 * @param stage selected pitstop
 	 */
-	private getRacetrackInfo (stage: string) {
+	public getRacetrackInfo (stage: string) {
 		if (this.componentData.params.solution && this.componentData.params.usecase) {
 			this.status.loading.racetrack = true;
 

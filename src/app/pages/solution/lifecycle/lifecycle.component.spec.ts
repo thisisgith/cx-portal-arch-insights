@@ -707,6 +707,39 @@ describe('LifecycleComponent', () => {
 			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(2);
 		});
+
+		it('should disable ATX Registration if not current or current+1 pitstop', () => {
+			buildSpies();
+			sendParams();
+			// verify that the current pitstop for this solution and use case is "Onboard"
+			const currentPitStop = component.currentPitstop.name;
+			expect(currentPitStop)
+				.toEqual('Onboard');
+
+			// change pitstop to "use" (current+2) and check if button is disabled
+			component.getRacetrackInfo('use');
+			component.atxScheduleCardOpened = true;
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+				.toBeFalsy();
+
+			// change pitstop to "implement" (current+1) and check if button is enabled
+			component.getRacetrackInfo('implement');
+			component.atxScheduleCardOpened = true;
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+				.toBeTruthy();
+
+			// change pitstop to "Onboard" (current) and check if button is enabled
+			component.getRacetrackInfo('Onboard');
+			component.atxScheduleCardOpened = true;
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+				.toBeTruthy();
+		});
 	});
 
 	describe('Learn - Non-cypress', () => {
