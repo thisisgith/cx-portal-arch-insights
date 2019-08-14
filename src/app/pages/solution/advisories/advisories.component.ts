@@ -778,14 +778,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			totalFilter.selected = false;
 			tab.filtered = true;
 		} else {
-			const total = _.reduce(tab.filters, (memo, f) => {
-				if (!memo) {
-					return _.some(f.seriesData, 'selected');
-				}
-
-				return memo;
-			}, false);
-
+			const total = tab.selectedSubfilters.length > 0;
 			totalFilter.selected = !total;
 			tab.filtered = total;
 		}
@@ -1111,6 +1104,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		};
 		tab.selectedSubfilters = [];
 		tab.filtered = false;
+		const totalFilter = _.find(tab.filters, { key: 'total' });
+		totalFilter.selected = true;
 		this.adjustQueryParams();
 		tab.subject.next();
 	}

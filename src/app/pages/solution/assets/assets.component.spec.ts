@@ -269,6 +269,37 @@ describe('AssetsComponent', () => {
 		});
 	});
 
+	it('should clear filters', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const totalFilter = _.find(component.filters, { key: 'total' });
+			totalFilter.selected = false;
+			const coverageFilter = _.find(component.filters, { key: 'coverage' });
+			coverageFilter.selected = true;
+			coverageFilter.seriesData = [
+				{
+					filter: 'covered',
+					label: 'Covered',
+					selected: false,
+					value: 1,
+				},
+			];
+			component.clearFilters();
+
+			_.each(_.omitBy(component.filters, { key: 'total' }), filter => {
+				expect(filter.selected)
+					.toBeFalsy();
+				expect(_.some(filter.seriesData, 'selected'))
+					.toBeFalsy();
+			});
+
+			expect(totalFilter.selected)
+				.toBeTruthy();
+			done();
+		});
+	});
+
 	it('should close panel', done => {
 		fixture.whenStable()
 		.then(() => {
