@@ -193,6 +193,7 @@ export class CaseDetailsComponent implements OnInit, OnDestroy {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentCase = _.get(changes, ['case', 'currentValue']);
 		if (currentCase && !changes.case.firstChange) {
+			this.tabIndex = 0; // move to summary tab
 			this.refresh();
 		}
 	}
