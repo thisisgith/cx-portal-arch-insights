@@ -1,12 +1,12 @@
 /* tslint:disable */
 export interface Elearning {
+  rating?: string;
   createdDate?: string;
-  description?: string;
   duration?: string;
   id?: string;
   level?: string;
   order?: string;
-  rating?: string;
+  description?: string;
   title?: string;
   type?: string;
   updatedDate?: string;

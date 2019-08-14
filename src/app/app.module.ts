@@ -34,7 +34,7 @@ import { CollapsibleModule } from './components/collapsible/collapsible.module';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Initialization function which will load our i18n files

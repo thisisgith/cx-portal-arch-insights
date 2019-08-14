@@ -59,34 +59,9 @@
 						<!-- TODO: in the future we want to pre-fill tech/subtech/problem area based on the
 						information coming from the advisory. For now, we don't know where to get that information
 						so basically duplicating the selects from the case open assets modal -->
-						<dt [innerText]="'_Technology_' | i18n"></dt>
-						<dd>
-							<cui-select *ngIf="!loadingTech; else loadingTemplate;"
-								[items]="techOptions"
-								optionsKey="techName"
-								optionsValue="_id"
-								formControlName="technology">
-							</cui-select>
-						</dd>
-						<dt [innerText]="'_SubTech_' | i18n"></dt>
-						<dd>
-							<cui-select *ngIf="!loadingSubtech; else loadingTemplate;"
-								[items]="subtechOptions"
-								optionsKey="subTechName"
-								modelAsObject="true"
-								formControlName="subtech">
-							</cui-select>
-						</dd>
-						<dt [innerText]="'_ProblemArea_' | i18n"></dt>
-						<dd>
-							<cui-select *ngIf="!loadingProblemAreas; else loadingTemplate;"
-								[items]="problemAreaOptions"
-								[groupNames]="problemGroups"
-								optionsKey="problemCodeName"
-								modelAsObject="true"
-								formControlName="problemArea">
-							</cui-select>
-						</dd>
+						<tech-form [requestRma]="false"
+							(formReady)="onFormReady($event)">
+						</tech-form>
 					</form>
 
 					<button class="btn btn--primary btn--small half-margin-right"

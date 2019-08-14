@@ -16,7 +16,7 @@
 			</span>
 
 			<div class="half-margin-top base-margin-bottom">
-				<video *ngIf="slide.type === 'video'" autoplay loop>
+				<video *ngIf="slide.type === 'video' && !inCypress" autoplay loop>
 					<source [src]="slide.src" type="video/mp4">
 				</video>
 				<img alt="Instructional Image" *ngIf="slide.type === 'image'" [src]="slide.src">

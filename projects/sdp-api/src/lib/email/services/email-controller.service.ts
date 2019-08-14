@@ -60,7 +60,7 @@ class EmailControllerService extends __BaseService {
     if (params.emailId != null) __params = __params.set('emailId', params.emailId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/email/v1/list`,
+      this.rootUrl + `/customerportal/email/v1/list`,
       __body,
       {
         headers: __headers,
@@ -114,7 +114,7 @@ class EmailControllerService extends __BaseService {
     __body = emailRequest;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/email/v1/send`,
+      this.rootUrl + `/customerportal/email/v1/send`,
       __body,
       {
         headers: __headers,

@@ -198,7 +198,7 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.atx.sessions.length)
-						.toEqual(9);
+						.toEqual(2);
 				});
 		});
 
@@ -308,21 +308,22 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#atxModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__green'));
-			expect(de)
-				.toBeTruthy();
+			// Temporarily commented out the following, since ribbon will be redo
+			// de = fixture.debugElement.query(By.css('.ribbon__green'));
+			// expect(de)
+			// 	.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__clear'));
-			expect(de)
-				.toBeTruthy();
+			// de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			// expect(de)
+			// 	.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__blue'));
-			expect(de)
-				.toBeTruthy();
+			// de = fixture.debugElement.query(By.css('.ribbon__blue'));
+			// expect(de)
+			// 	.toBeTruthy();
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
@@ -334,7 +335,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('#atxModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
 		});
@@ -367,7 +368,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#accModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
 
@@ -397,8 +398,8 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			component.selectedStatus = 'isBookmarked';
-			component.selectFilter('acc');
+			component.selectedFilterForACC = 'isBookmarked';
+			component.selectFilter('ACC');
 			fixture.detectChanges();
 			expect(component.selectedACC.length)
 				.toEqual(2);
@@ -408,8 +409,8 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.acc.sessions[3].isFavorite)
 				.toBeFalsy();
 
-			component.selectedStatus = 'recommended';
-			component.selectFilter('acc');
+			component.selectedFilterForACC = 'recommended';
+			component.selectFilter('ACC');
 			fixture.detectChanges();
 
 			expect(component.componentData.acc.sessions[0].isFavorite)
@@ -433,7 +434,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('#accModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
 		});
@@ -465,7 +466,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#successModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
 
@@ -485,14 +486,14 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.learning.success[1].bookmark)
 				.toBeTruthy();
 
-			component.selectedCategory = 'Project Planning';
-			component.selectFilter('successBytes');
+			component.selectedFilterForSB = 'Project Planning';
+			component.selectFilter('SB');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(2);
 
-			component.selectedCategory = 'Getting Started';
-			component.selectFilter('successBytes');
+			component.selectedFilterForSB = 'Getting Started';
+			component.selectFilter('SB');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(1);
@@ -517,7 +518,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('#successModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
 		});
@@ -564,17 +565,15 @@ describe('LifecycleComponent', () => {
 				.then(() => {
 					expect(component.componentData.cgt.sessions.length)
 						.toEqual(3);
-					expect(component.componentData.cgt.dateAvailableThrough)
-						.toEqual('Mar 29, 2020');
 					expect(component.componentData.cgt.trainingsAvailable)
-						.toEqual(9);
+						.toEqual(1);
 				});
 		});
 	});
 
 	describe('PitstopActions', () => {
 
-		it('should show 25% in the prograss label', () => {
+		it('should show 25% in the progress label', () => {
 			buildSpies();
 			sendParams();
 			fixture.detectChanges();

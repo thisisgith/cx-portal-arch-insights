@@ -7,7 +7,6 @@ import { animate, trigger, state, style, transition } from '@angular/animations'
 import * as _ from 'lodash-es';
 
 import { I18n } from '@cisco-ngx/cui-utils';
-import { LogService } from '@cisco-ngx/cui-services';
 import { KEY_CODES } from '@classes';
 import { SetupStep } from '@interfaces';
 import { SetupIEStateService } from '../setup-ie-state.service';
@@ -56,15 +55,13 @@ export class DeployStepsComponent implements SetupStep, OnChanges, OnDestroy, On
 	public tutorialType;
 	public stepLabel: string;
 	public stepNum: number;
+	public inCypress: boolean;
 
 	constructor (
-		private logger: LogService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private stateService: SetupIEStateService,
-	) {
-		this.logger.debug('DeployStepsComponent Created!');
-	}
+	) { }
 
 	/**
 	 * Sets the tutorial type
@@ -88,6 +85,7 @@ export class DeployStepsComponent implements SetupStep, OnChanges, OnDestroy, On
 		const savedState = this.stateService.getState();
 		const [slideSet, slideIndex] =
 			this.extractDeploySteps(this.route.snapshot.queryParams.deployStepsSet);
+		this.inCypress = (window.Cypress !== undefined);
 		await this.router.navigate([], {
 			queryParams: {
 				deployStepsSet: `${slideSet || this.slideSet}:${slideIndex || this.slideIndex}`,

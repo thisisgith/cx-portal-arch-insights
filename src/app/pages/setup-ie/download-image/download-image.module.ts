@@ -14,7 +14,7 @@ import { ControlPointsModule } from '@sdp-api';
 /**
  * SDP Root url for the apis
  */
-const sdpRootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * DownloadImageModule imports
@@ -26,7 +26,7 @@ const imports = [
 	FormsModule,
 	HeightTransitionModule,
 	I18nPipeModule,
-	ControlPointsModule.forRoot({ rootUrl: sdpRootUrl }),
+	ControlPointsModule.forRoot({ rootUrl }),
 ];
 
 if ((<any> environment).mock) {

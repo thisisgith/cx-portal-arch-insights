@@ -2,9 +2,9 @@
 export interface Asset {
 
   /**
-   * OS Version
+   * Role
    */
-  osVersion?: string;
+  role?: string;
 
   /**
    * Device name
@@ -33,20 +33,21 @@ export interface Asset {
   osType?: string;
 
   /**
+   * OS Version
+   */
+  osVersion?: string;
+
+  /**
    * IP Address
    */
   ipAddress?: string;
-
-  /**
-   * Role
-   */
-  role?: string;
 
   /**
    * Contract Number
    */
   contractNumber?: string;
   managedNeId?: string;
+  neId?: string;
   hwInstanceId?: string;
   containingHwId?: string;
   productId?: string;

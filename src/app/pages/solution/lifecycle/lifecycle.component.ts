@@ -10,9 +10,9 @@ import {
 	ACC,
 	ACCBookmarkSchema,
 	ACCResponse,
-	ATX,
-	ATXResponse,
-	ATXSession,
+	AtxSchema,
+	ATXResponseModel,
+	AtxSessionSchema,
 	BookmarkRequestSchema,
 	ELearning,
 	ELearningResponse,
@@ -34,9 +34,8 @@ import {
 import { SolutionService } from '../solution.service';
 import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
 import * as _ from 'lodash-es';
-import * as moment from 'moment';
-import { Observable, of, forkJoin, Subscription, ReplaySubject } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, of, forkJoin, ReplaySubject, Subject } from 'rxjs';
+import { map, catchError, takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
@@ -60,9 +59,9 @@ interface ComponentData {
 		suggestedAction?: string;
 	};
 	atx?: {
-		sessions?: ATX[];
-		recommended?: ATX;
-		interested?: ATX;
+		sessions?: AtxSchema[];
+		recommended?: AtxSchema;
+		interested?: AtxSchema;
 	};
 	learning?: {
 		certifications?: ELearning[];
@@ -77,7 +76,7 @@ interface ComponentData {
 	cgt?: {
 		trainingsAvailable: number;
 		sessions: string[];
-		dateAvailableThrough: string;
+		usedTrainings: string[];
 	};
 }
 
@@ -107,9 +106,7 @@ export interface PitstopActionWithStatus {
 	templateUrl: './lifecycle.component.html',
 })
 export class LifecycleComponent implements OnDestroy {
-	@ViewChild('accModal', { static: true }) public accTemplate: TemplateRef<{ }>;
-	@ViewChild('atxModal', { static: true }) public atxTemplate: TemplateRef<{ }>;
-	@ViewChild('successModal', { static: true }) public successPathTemplate: TemplateRef<{ }>;
+	@ViewChild('viewAllModal', { static: true }) public viewAllModalTemplate: TemplateRef<{ }>;
 	@ViewChild('formatTemplate', { static: true }) private formatTemplate: TemplateRef<{ }>;
 	@ViewChild('bookmarkTemplate', { static: true }) private bookmarkTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
@@ -123,17 +120,17 @@ export class LifecycleComponent implements OnDestroy {
 		context: null,
 		visible: false,
 	};
-	public visibleContext: ATX[];
+	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
-	public sessionSelected: ATXSession;
+	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	private user: User;
-	public selectedCategory = '';
-	public selectedStatus = '';
-	public totalAllowedGroupTrainings = 10;
+	public totalAllowedGroupTrainings: number;
+	public selectedFilterForSB = '';
+	public selectedFilterForATX = '';
+	public selectedFilterForACC = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
-	public categoryOptions: [];
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
@@ -144,14 +141,21 @@ export class LifecycleComponent implements OnDestroy {
 	public currentViewingPitstop: string;
 	public currentPitActionsWithStatus: PitstopActionWithStatus[];
 	public selectedACC: ACC[];
+	public selectedATX: AtxSchema[];
 	public view: 'list' | 'grid' = 'grid';
 	public productGuidesTable: CuiTableOptions;
 	public completedTrainingsList: UserTraining[] | { };
 	public successBytesTable: CuiTableOptions;
-	public cgtAvailable: number;
+	public usedTrainingsList: string[];
+	public usedTrainings: string[];
 	public trainingAvailableThrough: string;
-	private stage = new ReplaySubject<string>();
 
+	private stage = new ReplaySubject<string>();
+	private destroy$ = new Subject();
+	private selectedSolution: RacetrackSolution;
+	private selectedTechnology: RacetrackTechnology;
+
+	public categoryOptions: [];
 	public statusOptions = [
 		{
 			name: I18n.get('_AllTitles_'),
@@ -204,11 +208,6 @@ export class LifecycleComponent implements OnDestroy {
 		},
 	};
 
-	private selectedSolution: RacetrackSolution;
-	private selectedTechnology: RacetrackTechnology;
-	private solutionSubscribe: Subscription;
-	private technologySubscribe: Subscription;
-
 	public selectAccComponent = false;
 	public selectCgtComponent = false;
 	public cgtRequestTrainingClicked = false;
@@ -231,13 +230,19 @@ export class LifecycleComponent implements OnDestroy {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 
-		this.solutionSubscribe = this.solutionService.getCurrentSolution()
+		this.solutionService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
 		.subscribe((solution: RacetrackSolution) => {
 			this.selectedSolution = solution;
 			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
-		this.technologySubscribe = this.solutionService.getCurrentTechnology()
+		this.solutionService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
 		.subscribe((technology: RacetrackTechnology) => {
 			this.selectedTechnology = technology;
 			const currentSolution = this.componentData.params.solution;
@@ -265,6 +270,56 @@ export class LifecycleComponent implements OnDestroy {
 	public get notCurrentPitstop () {
 		return this.currentWorkingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase()
 			&& this.currentViewingPitstop.toLowerCase() !== this.currentPitstop.name.toLowerCase();
+	}
+
+	/**
+	 * Get the localized section title
+	 * @returns Title string based on type
+	 * @param type string
+	 */
+	public getTitle (type: string) {
+		let title = '';
+		switch (type) {
+			case 'ACC': {
+				title = I18n.get('_Accelerator_');
+				break;
+			}
+			case 'ATX': {
+				title = I18n.get('_AskTheExpert_');
+				break;
+			}
+			case 'SB': {
+				title = I18n.get('_SuccessBytes_');
+				break;
+			}
+		}
+
+		return title;
+	}
+
+	/**
+	 * Get the localized section title
+	 * @returns Subtitle string based on type
+	 * @param type string
+	 */
+	public getSubtitle (type: string) {
+		let title = '';
+		switch (type) {
+			case 'ACC': {
+				title = I18n.get('_1on1Coaching_');
+				break;
+			}
+			case 'ATX': {
+				title = I18n.get('_AvailableLive_');
+				break;
+			}
+			case 'SB': {
+				title = I18n.get('_SuccessBytesSubtitle_');
+				break;
+			}
+		}
+
+		return title;
 	}
 
 	/**
@@ -370,14 +425,12 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Select/deselect the CGTRequestForm component
 	 * @param selected whether the component is visible or not
-	 * @param totalTrainingsAvailable number of trainings available for the user
-	 * @param trainingAvailableThrough end date to complete trainings
+	 * @param usedTrainingData list of trainings used by the user this year
 	 */
 	public selectCgtRequestForm (selected: boolean,
-		totalTrainingsAvailable: number, trainingAvailableThrough: string) {
+		usedTrainingData: string[]) {
 		if (selected) {
-			this.cgtAvailable = totalTrainingsAvailable;
-			this.trainingAvailableThrough = trainingAvailableThrough;
+			this.usedTrainingsList = usedTrainingData;
 		}
 		this.selectCgtComponent = selected;
 	}
@@ -400,22 +453,33 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type the modal template to display
 	 */
 	public showModal (type: string) {
+		// reset the view to card view
+		this.view = 'grid';
 		if (type === 'atx') {
 			this.modal = {
-				content: this.atxTemplate,
-				context: { data: this.componentData.atx.sessions },
+				content: this.viewAllModalTemplate,
+				context: {
+					data: this.selectedATX,
+					type: 'ATX',
+				},
 				visible: true,
 			};
 		} else if (type === 'acc') {
 			this.modal = {
-				content: this.accTemplate,
-				context: { data: this.selectedACC },
+				content: this.viewAllModalTemplate,
+				context: {
+					data: this.selectedACC,
+					type: 'ACC',
+				},
 				visible: true,
 			};
 		} else if (type === '_SuccessBytes_') {
 			this.modal = {
-				content: this.successPathTemplate,
-				context: { data: this.selectedSuccessPaths },
+				content: this.viewAllModalTemplate,
+				context: {
+					data: this.selectedSuccessPaths,
+					type: 'SB',
+				},
 				visible: true,
 			};
 		}
@@ -438,7 +502,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param atx ATX item
 	 * @returns ribbon
 	 */
-	public getRibbonClass (atx: ATX) {
+	public getRibbonClass (atx: AtxSchema) {
 		let ribbon = 'ribbon__clear';
 		switch (_.get(atx, 'status')) {
 			case 'completed': {
@@ -527,7 +591,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Selects the session
 	 * @param session the session we've clicked on
 	 */
-	public selectSession (session: ATXSession) {
+	public selectSession (session: AtxSessionSchema) {
 		this.sessionSelected = (_.isEqual(this.sessionSelected, session)) ? null : session;
 	}
 
@@ -536,26 +600,46 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param type the item type
 	 */
 	public selectFilter (type: string) {
-		if (type === 'successBytes') {
+		if (type === 'SB') {
 			this.selectedSuccessPaths =
-				_.filter(this.componentData.learning.success, { archetype: this.selectedCategory });
-			if (this.selectedCategory === 'Not selected' || !this.selectedCategory) {
+				_.filter(this.componentData.learning.success,
+					{ archetype: this.selectedFilterForSB });
+			if (this.selectedFilterForSB === 'Not selected' || !this.selectedFilterForSB) {
 				this.selectedSuccessPaths = this.componentData.learning.success;
 			}
 		}
-		if (type === 'acc') {
-			if (this.selectedStatus === 'isBookmarked') {
+
+		if (type === 'ACC') {
+			if (this.selectedFilterForACC === 'isBookmarked') {
 				this.selectedACC =
 				_.filter(this.componentData.acc.sessions, { isFavorite: true });
-			} else if (this.selectedStatus === 'hasNotBookmarked') {
+			} else if (this.selectedFilterForACC === 'hasNotBookmarked') {
 				this.selectedACC =
 				_.filter(this.componentData.acc.sessions, { isFavorite: false });
 			} else {
 				this.selectedACC =
-					_.filter(this.componentData.acc.sessions, { status: this.selectedStatus });
+					_.filter(this.componentData.acc.sessions,
+						{ status: this.selectedFilterForACC });
 			}
-			if (this.selectedStatus === 'allTitles' || !this.selectedStatus) {
+			if (this.selectedFilterForACC === 'allTitles' || !this.selectedFilterForACC) {
 				this.selectedACC = this.componentData.acc.sessions;
+			}
+		}
+
+		if (type === 'ATX') {
+			if (this.selectedFilterForATX === 'isBookmarked') {
+				this.selectedATX =
+				_.filter(this.componentData.atx.sessions, { bookmark: true });
+			} else if (this.selectedFilterForATX === 'hasNotBookmarked') {
+				this.selectedATX =
+				_.filter(this.componentData.atx.sessions, { bookmark: false });
+			} else {
+				this.selectedATX =
+					_.filter(this.componentData.atx.sessions,
+						{ status: this.selectedFilterForATX });
+			}
+			if (this.selectedFilterForATX === 'allTitles' || !this.selectedFilterForATX) {
+				this.selectedATX = this.componentData.atx.sessions;
 			}
 		}
 	}
@@ -709,8 +793,8 @@ export class LifecycleComponent implements OnDestroy {
 			lifecycleCategory = 'SB';
 		}
 		const bookmarkParams: BookmarkRequestSchema = {
-			id,
 			bookmark,
+			id,
 			lifecycleCategory,
 			pitstop: this.componentData.params.pitstop,
 			solution: this.componentData.params.solution,
@@ -748,7 +832,7 @@ export class LifecycleComponent implements OnDestroy {
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
 			map((result: ACCResponse) => {
-				this.selectedStatus = '';
+				this.selectedFilterForACC = '';
 				this.componentData.acc = {
 					sessions: _.union(_.filter(result.items, { status: 'requested' }),
 						_.filter(result.items, { status: 'in-progress' }),
@@ -784,7 +868,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Loads the ATX data
 	 * @returns the ATXResponse
 	 */
-	private loadATX (): Observable<ATXResponse> {
+	private loadATX (): Observable<ATXResponseModel> {
 		this.status.loading.atx = true;
 		if (window.Cypress) {
 			window.atxLoading = true;
@@ -795,11 +879,13 @@ export class LifecycleComponent implements OnDestroy {
 		return this.contentService.getRacetrackATX(
 			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
 		.pipe(
-			map((result: ATXResponse) => {
+			map((result: ATXResponseModel) => {
 				this.componentData.atx = {
 					recommended: _.head(result.items),
 					sessions: result.items,
 				};
+				this.selectedATX = this.componentData.atx.sessions;
+
 				this.status.loading.atx = false;
 				if (window.Cypress) {
 					window.atxLoading = false;
@@ -837,7 +923,7 @@ export class LifecycleComponent implements OnDestroy {
 				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
-				this.selectedCategory = '';
+				this.selectedFilterForSB = '';
 				if (result.items.length) {
 					_.set(this.componentData, ['learning', 'success'], result.items);
 					const resultItems = _.uniq(_.map(result.items, 'archetype'));
@@ -905,7 +991,14 @@ export class LifecycleComponent implements OnDestroy {
 								this.componentData.learning.elearning.push(learningItem);
 								break;
 							}
-							case 'Certification':
+							case 'Certification': {
+								const learningItem: ELearningModel = {
+									...item,
+									fixedRating: parseFloat(item.rating),
+								};
+								this.componentData.learning.certifications.push(learningItem);
+								break;
+							}
 							case 'Videos': {
 								this.componentData.learning.certifications.push(item);
 								break;
@@ -956,9 +1049,8 @@ export class LifecycleComponent implements OnDestroy {
 		let trainingDuration;
 		let trainingLocation;
 		let trainingData;
-		let dateAvailable;
 		let completedTrainingData = [];
-		let trainigsUsed = 0;
+		let trainigsCompleted = 0;
 		let trainigsInProcess = 0;
 
 		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
@@ -969,16 +1061,24 @@ export class LifecycleComponent implements OnDestroy {
 		.pipe(
 			map((result: ContractQuota[]) => {
 				this.status.loading.cgt = false;
-				dateAvailable = _.get(_.head(result), 'contract_end_date');
+				this.totalAllowedGroupTrainings = _.size(result) * 2;
 				_.each(result, training => {
-					trainigsUsed += _.get(training, 'closed_ilt_courses_used');
-					trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
-					if (new Date(_.get(training, 'contract_end_date')) > new Date(dateAvailable)) {
-						dateAvailable = _.get(training, 'contract_end_date');
+					if (new Date(_.get(training, 'contract_end_date')).getFullYear() ===
+						new Date().getFullYear()) {
+						this.usedTrainings = _.union(this.usedTrainings, [{
+							contract_number: _.get(training, 'tsa_contract_no'),
+							end_date: _.get(training, 'contract_end_date'),
+							used_sessions: _.get(training, 'closed_ilt_courses_inprocess'),
+						}]);
+						trainigsInProcess += _.get(training, 'closed_ilt_courses_inprocess');
+					} else {
+						this.usedTrainings = _.union(this.usedTrainings, [{
+							contract_number: _.get(training, 'tsa_contract_no'),
+							end_date: _.get(training, 'contract_end_date'),
+							used_sessions: 0,
+						}]);
 					}
 				});
-				this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
-					(trainigsUsed + trainigsInProcess);
 				this.contentService.getCompletedTrainings(
 					_.pick(this.componentData.params, ['customerId']))
 					.pipe(
@@ -992,6 +1092,16 @@ export class LifecycleComponent implements OnDestroy {
 					.subscribe(response => {
 						this.completedTrainingsList = response;
 						_.each(this.completedTrainingsList, completedTraining => {
+							if (new Date(_.get(completedTraining, 'end_date')).getFullYear() ===
+								new Date().getFullYear()) {
+								_.each(this.usedTrainings, training => {
+									if (_.get(completedTraining, 'contract_number') ===
+										_.get(training, 'contract_number')) {
+										training.used_sessions = training.used_sessions + 1;
+									}
+								});
+								trainigsCompleted = trainigsCompleted + 1;
+							}
 							startDate = `${
 								monthNames[new Date(_.get(completedTraining, 'start_date'))
 								.getMonth()]
@@ -1034,11 +1144,14 @@ export class LifecycleComponent implements OnDestroy {
 							};
 							completedTrainingData = _.union(completedTrainingData, [trainingData]);
 						});
+						this.groupTrainingsAvailable = this.totalAllowedGroupTrainings -
+							(trainigsCompleted + trainigsInProcess);
+						this.groupTrainingsAvailable = this.groupTrainingsAvailable > 0 ?
+							this.groupTrainingsAvailable : 0;
 						this.componentData.cgt = {
-							dateAvailableThrough: moment(dateAvailable)
-								.format('MMM DD, YYYY'),
 							sessions: completedTrainingData,
 							trainingsAvailable: this.groupTrainingsAvailable,
+							usedTrainings: this.usedTrainings,
 						};
 
 						return result;
@@ -1123,12 +1236,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Handler for clean up on component destruction
 	 */
 	public ngOnDestroy () {
-		if (this.solutionSubscribe) {
-			_.invoke(this.solutionSubscribe, 'unsubscribe');
-		}
-
-		if (this.technologySubscribe) {
-			_.invoke(this.technologySubscribe, 'unsubscribe');
-		}
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

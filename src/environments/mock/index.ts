@@ -1,19 +1,3 @@
-export { ACCScenarios } from './racetrack/acc';
-export { ACCUserInfoScenarios } from './racetrack/accUserInfo';
-export { ActionScenarios } from './racetrack/action';
-export { AssetScenarios } from './inventory/assets';
-export { ATXScenarios } from './racetrack/atx';
-export { BookmarkScenarios } from './racetrack/bookmarks';
-export { CaseScenarios } from './case/case';
-export { CGTScenarios } from './racetrack/cgt';
-export { ContractScenarios } from './contract/contract';
-export { CoverageScenarios } from './contract/coverage';
-export { ELearningScenarios } from './racetrack/elearning';
-export { HardwareEOLBulletinScenarios } from './product-alerts/hardware-eol-bulletins';
-export { HardwareEOLCountScenarios } from './product-alerts/hardware-eol-counts';
-export { HardwareEOLScenarios } from './product-alerts/hardware-eol';
-export { HardwareScenarios } from './inventory/hardware';
-export { SerialNumberScenarios } from './search/serialnumber';
 export * from './case/case';
 
 export * from './contract/contract';
@@ -22,9 +6,12 @@ export * from './contract/coverage';
 export * from './controlpoints/create-registration';
 export * from './controlpoints/dnac-status';
 export * from './controlpoints/health-status';
+export * from './controlpoints/license';
 export * from './controlpoints/policies';
+export * from './controlpoints/devices';
 
 export * from './diagnostics/critical-bugs';
+export * from './diagnostics/critical-bugs-assets';
 
 export * from './inventory/assets';
 export * from './inventory/asset-summary';
@@ -43,10 +30,12 @@ export * from './product-alerts/hardware-eol-bulletins';
 export * from './product-alerts/hardware-eol-counts';
 export * from './product-alerts/hardware-eol';
 export * from './product-alerts/security-advisory-bulletins';
-export * from './product-alerts/security-advisory-top';
 export * from './product-alerts/security-advisory-last-updated-count';
 export * from './product-alerts/security-advisory-severity-count';
+export * from './product-alerts/security-advisory-top';
 export * from './product-alerts/security-advisory';
+export * from './product-alerts/software-eol-bulletins';
+export * from './product-alerts/software-eol';
 export * from './product-alerts/summary';
 export * from './product-alerts/vulnerabilities';
 

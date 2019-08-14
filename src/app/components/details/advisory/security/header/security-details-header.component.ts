@@ -15,6 +15,7 @@ import { Data as SecurityData } from '../security-details.component';
  */
 @Component({
 	selector: 'security-details-header',
+	styleUrls: ['./security-details-header.component.scss'],
 	templateUrl: './security-details-header.component.html',
 })
 export class SecurityDetailsHeaderComponent {

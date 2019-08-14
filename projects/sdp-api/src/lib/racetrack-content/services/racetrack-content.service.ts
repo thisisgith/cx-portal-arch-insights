@@ -7,7 +7,7 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
-import { ATXResponse } from '../models/atxresponse';
+import { ATXResponseModel } from '../models/atxresponse-model';
 import { ACCResponse } from '../models/accresponse';
 import { ACCBookmarkSchema } from '../models/accbookmark-schema';
 import { ACCRequestSessionSchema } from '../models/accrequest-session-schema';
@@ -49,7 +49,7 @@ class RacetrackContentService extends __BaseService {
    * Provides details of Future Webinars which the user can register for. Also, it provides the on-demand for the sessions held in the past
    * @param params The `RacetrackContentService.GetRacetrackATXParams` containing the following parameters:
    *
-   * - `usecase`: Usecase value ( assurance | sd-access | automation )
+   * - `usecase`: Usecase value
    *
    * - `solution`: solution value ( ibn )
    *
@@ -67,9 +67,11 @@ class RacetrackContentService extends __BaseService {
    *
    * - `fields`: Requested fields in the response.
    *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
    * @return successful operation
    */
-  getRacetrackATXResponse(params: RacetrackContentService.GetRacetrackATXParams): __Observable<__StrictHttpResponse<ATXResponse>> {
+  getRacetrackATXResponse(params: RacetrackContentService.GetRacetrackATXParams): __Observable<__StrictHttpResponse<ATXResponseModel>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -83,9 +85,10 @@ class RacetrackContentService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/atx`,
+      this.rootUrl + `/customerportal/racetrack/v1/atx`,
       __body,
       {
         headers: __headers,
@@ -96,7 +99,7 @@ class RacetrackContentService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<ATXResponse>;
+        return _r as __StrictHttpResponse<ATXResponseModel>;
       })
     );
   }
@@ -105,7 +108,7 @@ class RacetrackContentService extends __BaseService {
    * Provides details of Future Webinars which the user can register for. Also, it provides the on-demand for the sessions held in the past
    * @param params The `RacetrackContentService.GetRacetrackATXParams` containing the following parameters:
    *
-   * - `usecase`: Usecase value ( assurance | sd-access | automation )
+   * - `usecase`: Usecase value
    *
    * - `solution`: solution value ( ibn )
    *
@@ -123,11 +126,13 @@ class RacetrackContentService extends __BaseService {
    *
    * - `fields`: Requested fields in the response.
    *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   *
    * @return successful operation
    */
-  getRacetrackATX(params: RacetrackContentService.GetRacetrackATXParams): __Observable<ATXResponse> {
+  getRacetrackATX(params: RacetrackContentService.GetRacetrackATXParams): __Observable<ATXResponseModel> {
     return this.getRacetrackATXResponse(params).pipe(
-      __map(_r => _r.body as ATXResponse)
+      __map(_r => _r.body as ATXResponseModel)
     );
   }
 
@@ -171,7 +176,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc`,
+      this.rootUrl + `/customerportal/racetrack/v1/acc`,
       __body,
       {
         headers: __headers,
@@ -235,7 +240,7 @@ class RacetrackContentService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc/${params.accId}/bookmark`,
+      this.rootUrl + `/customerportal/racetrack/v1/acc/${params.accId}/bookmark`,
       __body,
       {
         headers: __headers,
@@ -283,7 +288,7 @@ class RacetrackContentService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc/${params.accId}/request`,
+      this.rootUrl + `/customerportal/racetrack/v1/acc/${params.accId}/request`,
       __body,
       {
         headers: __headers,
@@ -325,7 +330,7 @@ class RacetrackContentService extends __BaseService {
     __headers = __headers.append("Content-Type", "application/json");
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/acc/request/user-info`,
+      this.rootUrl + `/customerportal/racetrack/v1/acc/request/user-info`,
       __body,
       {
         headers: __headers,
@@ -391,7 +396,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/successPaths`,
+      this.rootUrl + `/customerportal/racetrack/v1/successPaths`,
       __body,
       {
         headers: __headers,
@@ -477,7 +482,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/communities`,
+      this.rootUrl + `/customerportal/racetrack/v1/communities`,
       __body,
       {
         headers: __headers,
@@ -563,7 +568,7 @@ class RacetrackContentService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/elearning`,
+      this.rootUrl + `/customerportal/racetrack/v1/elearning`,
       __body,
       {
         headers: __headers,
@@ -628,7 +633,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/request`,
+      this.rootUrl + `/customerportal/racetrack/v1/grouptraining/request`,
       __body,
       {
         headers: __headers,
@@ -677,7 +682,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/customer/quotas`,
+      this.rootUrl + `/customerportal/racetrack/v1/grouptraining/customer/quotas`,
       __body,
       {
         headers: __headers,
@@ -726,7 +731,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/racetrack/v1/grouptraining/customer/trainings/completed`,
+      this.rootUrl + `/customerportal/racetrack/v1/grouptraining/customer/trainings/completed`,
       __body,
       {
         headers: __headers,
@@ -776,7 +781,7 @@ class RacetrackContentService extends __BaseService {
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/racetrack/v1/bookmarks`,
+      this.rootUrl + `/customerportal/racetrack/v1/bookmarks`,
       __body,
       {
         headers: __headers,
@@ -816,7 +821,7 @@ module RacetrackContentService {
   export interface GetRacetrackATXParams {
 
     /**
-     * Usecase value ( assurance | sd-access | automation )
+     * Usecase value
      */
     usecase: string;
 
@@ -859,6 +864,11 @@ module RacetrackContentService {
      * Requested fields in the response.
      */
     fields?: Array<string>;
+
+    /**
+     * Mashery user credential header
+     */
+    XMasheryHandshake?: string;
   }
 
   /**

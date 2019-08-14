@@ -18,15 +18,17 @@ describe('APIxIntercetptor', () => {
 	}/rma_numbers/${testRmaNumber}`;
 
 	const sdpUrl = `${
-		environment.sdpServiceOrigin
-	}/api/customerportal/inventory/v1/hardware?customerId=${user.info.customerId}`;
+		environment.sdpServiceOrigin + environment.sdpServiceBasePath
+	}/customerportal/inventory/v1/hardware?customerId=${user.info.customerId}`;
 	let apixService: APIxService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
-				InventoryModule.forRoot({ rootUrl: environment.sdpServiceOrigin }),
+				InventoryModule.forRoot({
+					rootUrl: environment.sdpServiceOrigin + environment.sdpServiceBasePath,
+				}),
 			],
 			providers: [
 				RMAService,

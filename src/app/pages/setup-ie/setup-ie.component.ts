@@ -15,9 +15,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { LogService } from '@cisco-ngx/cui-services';
-
 import { SetupComponent, SetupStep } from '@interfaces';
 import { SETUP_STATES } from '@classes';
 import { BeginInstallationComponent } from './begin-installation/begin-installation.component';
@@ -71,21 +68,18 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 		private cuiModalService: CuiModalService,
 		private resolver: ComponentFactoryResolver,
 		private router: Router,
-		private logger: LogService,
 		private route: ActivatedRoute,
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
 		private utils: UtilsService,
-	) {
-		this.logger.debug('SetupIeComponent Created!');
-	}
+	) { }
 
 	/**
 	 * AfterViewInit {
 	 *
 	 */
 	public async ngAfterViewInit () {
-		if (this.savedState) {
+		if (!_.isEmpty(this.savedState)) {
 			this.promptToReuseCache();
 			this.cdr.detectChanges();
 		}

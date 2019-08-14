@@ -226,7 +226,6 @@ describe('Control Point (Setup Wizard)', () => { // PBC-190
 		before(() => {
 			cy.loadApp('/setup-ie');
 			cy.waitForAppLoading();
-			cy.contains('button', 'Start Over').click();
 		});
 
 		it('Sidebar Panel', () => {
@@ -403,10 +402,6 @@ describe('Control Point (Setup Wizard)', () => { // PBC-190
 			cy.contains(i18n._SetupInstruction_8B_).should('exist');
 			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
 
-			cy.location('search').should('contain', 'deployStepsSet=vcenter:8');
-			cy.contains(i18n._SetupInstruction_9B_).should('exist');
-			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
-
 			cy.location('search').should('contain', 'compKey=4');
 		});
 	});
@@ -434,10 +429,6 @@ describe('Control Point (Setup Wizard)', () => { // PBC-190
 
 			cy.location('search').should('contain', 'deployStepsSet=vbox:2');
 			cy.contains(i18n._SetupInstruction_3C_).should('exist');
-			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
-
-			cy.location('search').should('contain', 'deployStepsSet=vbox:3');
-			cy.contains(i18n._SetupInstruction_4C_).should('exist');
 			cy.contains(i18n._IveDoneThis_.toUpperCase()).click();
 
 			cy.location('search').should('contain', 'compKey=4');

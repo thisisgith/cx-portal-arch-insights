@@ -138,7 +138,6 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
 	) {
-		this.logger.debug('ConnectCXCollectorComponent Created!');
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
 	}
@@ -297,7 +296,11 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		return timer(0, 5000)
 			.pipe(
 				finalize(() => this.loading = false),
-				exhaustMap(() => this.registerService.getStatus()),
+				exhaustMap(() => this.registerService.getStatus()
+					.pipe(
+						catchError(() => this.getAuthToken()),
+					),
+				),
 				takeWhile(status => {
 					if ((<any> status).status === 'Registration Failed') {
 						this.error = registrationErrorMap[RegistrationError.REGISTRATION];
@@ -313,7 +316,6 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 
 					return true;
 				}),
-				catchError(() => this.getAuthToken()),
 				takeUntil(this.destroyed$),
 			);
 	}

@@ -23,7 +23,7 @@ import { HardwareEOLResponse } from '../models/hardware-eolresponse';
 import { HardwareEOLBulletinResponse } from '../models/hardware-eolbulletin-response';
 import { HardwareEOLCountResponse } from '../models/hardware-eolcount-response';
 import { SoftwareEOLResponse } from '../models/software-eolresponse';
-import { SofwareEOLBulletinResponse } from '../models/sofware-eolbulletin-response';
+import { SoftwareEOLBulletinResponse } from '../models/software-eolbulletin-response';
 @Injectable({
   providedIn: 'root',
 })
@@ -81,7 +81,7 @@ class ProductAlertsService extends __BaseService {
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/vulnerabilities/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/vulnerabilities/count`,
       __body,
       {
         headers: __headers,
@@ -125,7 +125,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories`,
       __body,
       {
         headers: __headers,
@@ -193,7 +193,7 @@ class ProductAlertsService extends __BaseService {
     (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories`,
       __body,
       {
         headers: __headers,
@@ -266,7 +266,7 @@ class ProductAlertsService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/list`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/list`,
       __body,
       {
         headers: __headers,
@@ -315,7 +315,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/summary`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/summary`,
       __body,
       {
         headers: __headers,
@@ -369,7 +369,7 @@ class ProductAlertsService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/top`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/top`,
       __body,
       {
         headers: __headers,
@@ -420,7 +420,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/severity/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/severity/count`,
       __body,
       {
         headers: __headers,
@@ -460,7 +460,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/last-updated/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/last-updated/count`,
       __body,
       {
         headers: __headers,
@@ -504,7 +504,7 @@ class ProductAlertsService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisory-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisory-bulletins`,
       __body,
       {
         headers: __headers,
@@ -585,7 +585,7 @@ class ProductAlertsService extends __BaseService {
     (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisory-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisory-bulletins`,
       __body,
       {
         headers: __headers,
@@ -676,7 +676,7 @@ class ProductAlertsService extends __BaseService {
     (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/advisories-security-advisories`,
+      this.rootUrl + `/customerportal/product-alerts/v1/advisories-security-advisories`,
       __body,
       {
         headers: __headers,
@@ -732,7 +732,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notices`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notices`,
       __body,
       {
         headers: __headers,
@@ -782,6 +782,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `fields`: Requested fields in the response.
    *
+   * - `fieldNoticeId`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+   *
    * @return successful operation
    */
   getFieldNoticeResponse(params: ProductAlertsService.GetFieldNoticeParams): __Observable<__StrictHttpResponse<FieldNoticeResponse>> {
@@ -798,9 +800,10 @@ class ProductAlertsService extends __BaseService {
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notices`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notices`,
       __body,
       {
         headers: __headers,
@@ -840,6 +843,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `fields`: Requested fields in the response.
    *
+   * - `fieldNoticeId`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+   *
    * @return successful operation
    */
   getFieldNotice(params: ProductAlertsService.GetFieldNoticeParams): __Observable<FieldNoticeResponse> {
@@ -865,7 +870,7 @@ class ProductAlertsService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notice-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notice-bulletins`,
       __body,
       {
         headers: __headers,
@@ -934,7 +939,7 @@ class ProductAlertsService extends __BaseService {
     if (params.bulletinFirstPublished != null) __params = __params.set('bulletinFirstPublished', params.bulletinFirstPublished.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notice-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notice-bulletins`,
       __body,
       {
         headers: __headers,
@@ -993,7 +998,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notices/last-updated/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notices/last-updated/count`,
       __body,
       {
         headers: __headers,
@@ -1054,7 +1059,7 @@ class ProductAlertsService extends __BaseService {
     (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/advisories-field-notices`,
+      this.rootUrl + `/customerportal/product-alerts/v1/advisories-field-notices`,
       __body,
       {
         headers: __headers,
@@ -1108,7 +1113,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol`,
       __body,
       {
         headers: __headers,
@@ -1170,7 +1175,7 @@ class ProductAlertsService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol`,
       __body,
       {
         headers: __headers,
@@ -1231,7 +1236,7 @@ class ProductAlertsService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol-bulletins`,
       __body,
       {
         headers: __headers,
@@ -1321,7 +1326,7 @@ class ProductAlertsService extends __BaseService {
     (params.bulletinNumber || []).forEach(val => {if (val != null) __params = __params.append('bulletinNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol-bulletins`,
       __body,
       {
         headers: __headers,
@@ -1394,7 +1399,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol/top/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol/top/count`,
       __body,
       {
         headers: __headers,
@@ -1433,7 +1438,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol`,
+      this.rootUrl + `/customerportal/product-alerts/v1/software-eol`,
       __body,
       {
         headers: __headers,
@@ -1495,7 +1500,7 @@ class ProductAlertsService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol`,
+      this.rootUrl + `/customerportal/product-alerts/v1/software-eol`,
       __body,
       {
         headers: __headers,
@@ -1556,7 +1561,7 @@ class ProductAlertsService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/software-eol-bulletins`,
       __body,
       {
         headers: __headers,
@@ -1624,7 +1629,7 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEoxBulletinResponse(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<__StrictHttpResponse<SofwareEOLBulletinResponse>> {
+  getSoftwareEoxBulletinResponse(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<__StrictHttpResponse<SoftwareEOLBulletinResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -1646,7 +1651,7 @@ class ProductAlertsService extends __BaseService {
     (params.bulletinNumber || []).forEach(val => {if (val != null) __params = __params.append('bulletinNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/software-eol-bulletins`,
       __body,
       {
         headers: __headers,
@@ -1657,7 +1662,7 @@ class ProductAlertsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SofwareEOLBulletinResponse>;
+        return _r as __StrictHttpResponse<SoftwareEOLBulletinResponse>;
       })
     );
   }
@@ -1700,9 +1705,9 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEoxBulletin(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<SofwareEOLBulletinResponse> {
+  getSoftwareEoxBulletin(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<SoftwareEOLBulletinResponse> {
     return this.getSoftwareEoxBulletinResponse(params).pipe(
-      __map(_r => _r.body as SofwareEOLBulletinResponse)
+      __map(_r => _r.body as SoftwareEOLBulletinResponse)
     );
   }
 }
@@ -2001,6 +2006,11 @@ module ProductAlertsService {
      * Requested fields in the response.
      */
     fields?: Array<string>;
+
+    /**
+     * The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+     */
+    fieldNoticeId?: Array<number>;
   }
 
   /**
