@@ -9,8 +9,6 @@ import { AppStatusColorPipe } from './app-status-color.pipe';
 import { ResourceGaugeColorPipe } from './resource-gauge-color.pipe';
 import { ControlPointsModule, UserModule } from '@sdp-api';
 
-import { MicroMockModule } from '@cui-x-views/mock';
-
 import {
 	CuiGaugeModule,
 	CuiLoaderModule,
@@ -41,10 +39,6 @@ const imports = [
 	RouterModule,
 	UserModule.forRoot({ rootUrl }),
 ];
-
-if ((<any> environment).mock) {
-	imports.push(MicroMockModule);
-}
 
 /**
  * Main Settings module

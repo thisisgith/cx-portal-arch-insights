@@ -104,8 +104,8 @@
 	</div>
 	<div class="row">
 		<div *ngIf="expirationDate" class="col-md-12" >
-			<div *ngIf="(expirationDate | date) >= (today | date)" class="text-default" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
-			<div *ngIf="!((expirationDate | date) >= (today | date))" [ngClass]="{
+			<div *ngIf="!isExpired(expirationDate)" class="text-default" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
+			<div *ngIf="isExpired(expirationDate)" [ngClass]="{
 					'text-danger': (supportType === 'support'),
 					'text-warning': (supportType === 'warranty')
 				}"

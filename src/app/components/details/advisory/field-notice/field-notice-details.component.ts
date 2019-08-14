@@ -25,6 +25,7 @@ import {
 } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
 import { AssetIds } from '../impacted-assets/impacted-assets.component';
+import { Alert } from '@interfaces';
 
 /** Data Interface */
 export interface Data {
@@ -48,6 +49,7 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 	@Input('advisory') public advisory: FieldNoticeAdvisory;
 	@Input('customerId') public customerId: string;
 	@Output('details') public details = new EventEmitter<Data>();
+	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 
 	private params: {
 		advisory?: ProductAlertsService.GetAdvisoriesFieldNoticesParams;

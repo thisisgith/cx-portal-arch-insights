@@ -540,7 +540,35 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.learning.elearning.length)
-						.toEqual(4);
+						.toEqual(5);
+				});
+		});
+		it('should have displayed progress bar', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.elearning[0].percentageCompleted)
+						.toBeUndefined();
+					expect(component.componentData.learning.elearning[1].percentageCompleted)
+						.toEqual(25);
+					expect(component.componentData.learning.elearning[2].percentageCompleted)
+						.toEqual(50);
+					expect(component.componentData.learning.elearning[3].percentageCompleted)
+						.toEqual(75);
+					expect(component.componentData.learning.elearning[4].percentageCompleted)
+						.toEqual(100);
+
+					de = fixture.debugElement.query(By.css('.learning-progress-col'));
+					expect(de)
+						.toBeTruthy();
+
+					de = fixture.debugElement.query(By.css('.learning-progressfill-col'));
+					expect(de)
+						.toBeTruthy();
 				});
 		});
 	});
@@ -556,6 +584,39 @@ describe('LifecycleComponent', () => {
 				.then(() => {
 					expect(component.componentData.learning.certifications.length)
 						.toEqual(8);
+				});
+		});
+		it('should have displayed progress bar', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.certifications[0].percentageCompleted)
+						.toEqual(25);
+					expect(component.componentData.learning.certifications[1].percentageCompleted)
+						.toEqual(50);
+					expect(component.componentData.learning.certifications[2].percentageCompleted)
+						.toEqual(75);
+					expect(component.componentData.learning.certifications[3].percentageCompleted)
+						.toEqual(100);
+					expect(component.componentData.learning.certifications[4].percentageCompleted)
+						.toEqual(25);
+					expect(component.componentData.learning.certifications[5].percentageCompleted)
+						.toEqual(50);
+					expect(component.componentData.learning.certifications[6].percentageCompleted)
+						.toEqual(75);
+					expect(component.componentData.learning.certifications[7].percentageCompleted)
+						.toEqual(100);
+					de = fixture.debugElement.query(By.css('.learning-progress-col'));
+					expect(de)
+						.toBeTruthy();
+
+					de = fixture.debugElement.query(By.css('.learning-progressfill-col'));
+					expect(de)
+						.toBeTruthy();
 				});
 		});
 	});
@@ -651,6 +712,39 @@ describe('LifecycleComponent', () => {
 			// ATX should be refreshed since isAtxChanged is true from updateAction
 			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(2);
+		});
+
+		it('should disable ATX Registration if not current or current+1 pitstop', () => {
+			buildSpies();
+			sendParams();
+			// verify that the current pitstop for this solution and use case is "Onboard"
+			const currentPitStop = component.currentPitstop.name;
+			expect(currentPitStop)
+				.toEqual('Onboard');
+
+			// change pitstop to "use" (current+2) and check if button is disabled
+			component.getRacetrackInfo('use');
+			component.atxScheduleCardOpened = true;
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+				.toBeFalsy();
+
+			// change pitstop to "implement" (current+1) and check if button is enabled
+			component.getRacetrackInfo('implement');
+			component.atxScheduleCardOpened = true;
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+				.toBeTruthy();
+
+			// change pitstop to "Onboard" (current) and check if button is enabled
+			component.getRacetrackInfo('Onboard');
+			component.atxScheduleCardOpened = true;
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+				.toBeTruthy();
 		});
 	});
 

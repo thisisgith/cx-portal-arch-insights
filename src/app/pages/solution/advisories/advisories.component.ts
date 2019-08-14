@@ -778,14 +778,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			totalFilter.selected = false;
 			tab.filtered = true;
 		} else {
-			const total = _.reduce(tab.filters, (memo, f) => {
-				if (!memo) {
-					return _.some(f.seriesData, 'selected');
-				}
-
-				return memo;
-			}, false);
-
+			const total = tab.selectedSubfilters.length > 0;
 			totalFilter.selected = !total;
 			tab.filtered = total;
 		}
@@ -827,7 +820,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((response: FieldNoticeAdvisoryResponse) => {
 				tab.data = _.get(response, 'data', []);
-				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
+				tab.pagination = this.buildPagination(_.get(response, 'Pagination'));
 				tab.loading = false;
 			}),
 			catchError(err => {
@@ -854,7 +847,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((response: CriticalBugsResponse) => {
 				tab.data = _.get(response, 'data', []);
-				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
+				tab.pagination = this.buildPagination(_.get(response, 'Pagination'));
 
 				tab.loading = false;
 			}),
@@ -882,7 +875,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: SecurityAdvisoriesResponse) => {
 					tab.data = _.get(response, 'data', []);
-					tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
+					tab.pagination = this.buildPagination(_.get(response, 'Pagination'));
 
 					tab.loading = false;
 				}),
@@ -904,21 +897,23 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 */
 	private buildPagination (
 		pagination: ProductAlertsPagination | DiagnosticsPagination) {
-		const rows = _.get(pagination, 'rows', 10);
-		const page = _.get(pagination, 'page', 1);
-		const total = _.get(pagination, 'total', 0);
-		const first = (rows * (page - 1)) + 1;
-		let last = (rows * page);
-		if (last > total) {
-			last = total;
-		}
+		if (pagination) {
+			const rows = _.get(pagination, 'rows', 10);
+			const page = _.get(pagination, 'page', 1);
+			const total = _.get(pagination, 'total', 0);
+			const first = (rows * (page - 1)) + 1;
+			let last = (rows * page);
+			if (last > total) {
+				last = total;
+			}
 
-		return {
-			page,
-			rows,
-			total,
-			countStr: `${first}-${last}`,
-		};
+			return {
+				page,
+				rows,
+				total,
+				countStr: `${first}-${last}`,
+			};
+		}
 	}
 
 	/**
@@ -1109,6 +1104,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		};
 		tab.selectedSubfilters = [];
 		tab.filtered = false;
+		const totalFilter = _.find(tab.filters, { key: 'total' });
+		totalFilter.selected = true;
 		this.adjustQueryParams();
 		tab.subject.next();
 	}

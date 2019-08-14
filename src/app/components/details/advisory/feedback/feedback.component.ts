@@ -14,6 +14,8 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { AdvisoryType, Alert } from '@interfaces';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { map, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 /**
  * Security Details Component
@@ -67,23 +69,28 @@ export class AdvisoryFeedbackComponent implements OnInit {
 		}
 
 		this.feedbackService.postAdvisoryFeedback(feedback)
-		.subscribe(() => {
-			this.alertMessage.emit({
-				message: I18n.get('_SubmittedFeedbackForAdvisory_', this.id),
-				severity: 'success',
-			});
-			this.isSubmitting = false;
-		},
-		(err => {
-			this.alertMessage.emit({
-				message: I18n.get('_FailedToSubmitFeedbackForAdvisory_', this.id),
-				severity: 'danger',
-			});
-			this.logger.error('advisory-details:feedback.component : submitFeedback() ' +
-			`:: Error : (${err.status}) ${err.message}`);
-			this.isSubmitting = false;
-		}),
-		);
+		.pipe(
+			map(() => {
+				this.alertMessage.emit({
+					message: I18n.get('_SubmittedFeedbackForAdvisory_', this.id),
+					severity: 'success',
+				});
+				this.feedbackDescription.setValue('');
+				this.isSubmitting = false;
+			}),
+			catchError(err => {
+				this.alertMessage.emit({
+					message: I18n.get('_FailedToSubmitFeedbackForAdvisory_', this.id),
+					severity: 'danger',
+				});
+				this.logger.error('advisory-details:feedback.component : submitFeedback() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+				this.isSubmitting = false;
+
+				return of({ });
+			}),
+		)
+		.subscribe();
 	}
 
 	/**
