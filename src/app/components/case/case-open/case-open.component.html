@@ -87,7 +87,7 @@
 							<button *ngIf="expand"
 								class="btn btn--primary btn--small half-margin-right"
 								data-auto-id="CaseOpenSubmitButton"
-								[ngClass]="{ 'disabled': caseForm.invalid }"
+								[ngClass]="{ 'disabled': caseForm.invalid || contractLoading }"
 								type="button"
 								[innerText]="'_Submit_' | i18n"
 								(click)="submit()">
