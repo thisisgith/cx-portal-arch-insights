@@ -59,7 +59,7 @@ describe('ContactSupportComponent', () => {
 		spyOn(service, 'sendEmail')
 			.and
 			.returnValue(of(
-				'Email Sent'
+				'Email Sent',
 			));
 		const title = component.supportForm.controls.title;
 		expect(title.valid)
@@ -74,6 +74,13 @@ describe('ContactSupportComponent', () => {
 		fixture.detectChanges();
 		component.submitMessage();
 		expect(service.sendEmail)
+			.toHaveBeenCalled();
+	});
+
+	it('should fetch list of portal support topics on init', () => {
+		spyOn(component, 'getTopicList');
+		component.ngOnInit();
+		expect(component.getTopicList)
 			.toHaveBeenCalled();
 	});
 });
