@@ -593,7 +593,7 @@
 
 <ng-template #cardATX>
 	<div class="card atx__card"
-		*ngFor="let item of componentData.atx.sessions"
+		*ngFor="let item of selectedATX"
 		[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 		data-auto-id="ATXCard">
 		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL" attr.data-auto-id="{{ autoid }}-Image">

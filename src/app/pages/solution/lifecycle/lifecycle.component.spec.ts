@@ -357,12 +357,6 @@ describe('LifecycleComponent', () => {
 			expect(component.getSubtitle('ATX'))
 				.toEqual('Interactive webinars available live or on-demand');
 
-			component.selectedFilterForATX = 'isBookmarked';
-			component.selectFilter('ATX');
-			fixture.detectChanges();
-			expect(component.selectedATX.length)
-				.toEqual(1);
-
 			const atx1 = component.componentData.atx.sessions[2];
 			expect(component.componentData.atx.sessions[2].bookmark)
 				.toBeFalsy();
@@ -380,6 +374,12 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 			expect(component.atxTable.columns[1].sortDirection)
 				.toEqual('asc');
+
+			component.selectedFilterForATX = 'isBookmarked';
+			component.selectFilter('ATX');
+			fixture.detectChanges();
+			expect(component.selectedATX.length)
+				.toEqual(1);
 
 			component.selectedFilterForATX = 'allTitles';
 			component.selectFilter('ATX');
@@ -433,10 +433,6 @@ describe('LifecycleComponent', () => {
 			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
-
-			// de = fixture.debugElement.query(By.css('.ribbon__green'));
-			// expect(de)
-			// 	.toBeTruthy();
 
 			expect(component.getTitle('ACC'))
 			 .toEqual('Accelerator');

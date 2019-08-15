@@ -1369,7 +1369,7 @@ export class LifecycleComponent implements OnDestroy {
 						}));
 			}
 
-			this.componentData.params.pitstop = stage;
+			this.componentData.params.pitstop = pitstop.name;
 			this.stage.next(pitstop.name);
 			// UI not handling pagination for now, temporarily set to a large number
 			this.componentData.params.rows = 100;
