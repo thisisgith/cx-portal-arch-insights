@@ -128,7 +128,7 @@ const onboardItems = [
 		status: 'in-progress',
 		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
 		duration: 3600,
-		bookmark: true,
+		bookmark: false,
 		sessions: [
 			{
 				sessionId: 'DNA3-08/08/19-1',
