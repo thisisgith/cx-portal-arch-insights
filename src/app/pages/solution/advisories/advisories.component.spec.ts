@@ -157,23 +157,29 @@ describe('AdvisoriesComponent', () => {
 			fixture.detectChanges();
 
 			const tab = _.find(component.tabs, { key: 'security' });
-
-			const filter = _.find(tab.filters, { key: 'impact' });
-			filter.selected = true;
-			const subfilter = _.find(filter.seriesData, { filter: 'critical' });
-			subfilter.selected = true;
-			tab.selectedSubfilters = [subfilter];
+			const totalFilter = _.find(tab.filters, { key: 'total' });
+			totalFilter.selected = false;
+			const impactFilter = _.find(tab.filters, { key: 'impact' });
+			impactFilter.selected = true;
+			const impactSubfilter = _.find(impactFilter.seriesData, { filter: 'critical' });
+			impactSubfilter.selected = true;
+			tab.selectedSubfilters = [impactSubfilter];
 			component.clearFilters();
 			fixture.detectChanges();
-
-			expect(subfilter.selected)
-				.toBeFalsy();
-			expect(filter.selected)
-				.toBeFalsy();
 			expect(tab.selectedSubfilters.length)
 				.toBe(0);
 			expect(tab.filtered)
 				.toBeFalsy();
+
+			_.each(_.omitBy(tab.filters, { key: 'total' }), filter => {
+				expect(filter.selected)
+					.toBeFalsy();
+				expect(_.some(filter.seriesData, 'selected'))
+					.toBeFalsy();
+			});
+
+			expect(totalFilter.selected)
+				.toBeTruthy();
 			done();
 		});
 	});

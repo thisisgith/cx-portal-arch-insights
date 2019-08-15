@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { CuiLoaderModule } from '@cisco-ngx/cui-components';
 import { DownloadImageComponent } from './download-image.component';
 import { environment } from '../../../../environments/environment';
-import { MicroMockModule } from '@cui-x-views/mock';
 import { AlertModule, HeightTransitionModule } from '@components';
 
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
@@ -28,10 +27,6 @@ const imports = [
 	I18nPipeModule,
 	ControlPointsModule.forRoot({ rootUrl }),
 ];
-
-if ((<any> environment).mock) {
-	imports.unshift(MicroMockModule);
-}
 
 /**
  * Module for OVA download prompt page

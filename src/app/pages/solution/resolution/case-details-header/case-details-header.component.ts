@@ -129,6 +129,8 @@ export class CaseDetailsHeaderComponent {
 		if (changes.caseDetails) {
 			if (changes.caseDetails.currentValue) {
 				this.loading = false;
+				this.isAddNoteClicked = false;
+				this.isRMAClicked = false;
 			} else {
 				this.loading = true;
 			}

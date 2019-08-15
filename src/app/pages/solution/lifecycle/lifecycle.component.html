@@ -214,7 +214,7 @@
 		(click)="atxScheduleCardOpened = true"
 		[innerText]="'_ViewSessions_' | i18n">
 	</button>
-	<a class="no-link" target="_blank" [href]="componentData.atx?.recommended?.recordingURL">
+	<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="componentData.atx?.recommended?.recordingURL">
 		<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 			[innerText]="'_WatchNow_' | i18n"></button>
 	</a>
@@ -265,6 +265,7 @@
 			<a data-auto-id="viewOnDemand"
 				class="no-link"
 				target="_blank"
+				rel="noopener noreferrer"
 				[href]="data.recordingURL">
 				<div class="flex">
 					<div class="btn--square">
@@ -295,13 +296,16 @@
 		</div>
 		<div class="row">
 			<div class="col-md-8">
-				<a data-auto-id="AtxScheduleCardRegisterButton"
+				<a id="AtxScheduleCardRegisterButton" data-auto-id="AtxScheduleCardRegisterButton"
 					class="pull-left"
-					[href]="sessionSelected?.registrationURL">
+					[href]="sessionSelected?.registrationURL" *ngIf="!notCurrentPitstop">
 					<button class="btn base-margin-top base-margin-left"
 						[innerText]="'_Register_' | i18n">
 					</button>
 				</a>
+				<button class="btn base-margin-top base-margin-left disabled"
+					[innerText]="'_Register_' | i18n" *ngIf="notCurrentPitstop">
+				</button>
 			</div>
 			<div class="col-md">
 				<div class="row flex-center-vertical dbl-margin-top base-margin-right pull-right">
@@ -312,6 +316,7 @@
 		</div>
 	</div>
 </ng-template>
+
 
 <ng-template #accPanel let-data="data">
 	<div class="base-margin-bottom text-dkgray-4" [innerText]="'_1on1Coaching_' | i18n"></div>
@@ -412,16 +417,24 @@
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
 			<div id="recommended-elearning-item" class=" panel small-panel">
-				<a class="no-link" target="_blank" [href]="item.url">
-					<span class="text-blue" [innerText]="item.title"></span>
-				</a>
-				<ng-container *ngTemplateOutlet="recommendedDescription; context: {
-					title: item.title,
-					description: item.description,
-					item: item,
-					autoid: 'recommendedElearning'
-				}">
-				</ng-container>
+				<div class="row">
+					<div class="col-md-11">
+						<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="item.url">
+							<span class="text-blue" [innerText]="item.title"></span>
+						</a>
+					</div>
+					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.percentageCompleted === 100"></div> 
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom learning-progress-col" [attr.data-percentage]="item.percentageCompleted" *ngIf="item.percentageCompleted && item.percentageCompleted != 100">
+						<div class="progressbar__fill learning-progressfill-col"></div>
+					</div>
+					<ng-container *ngTemplateOutlet="recommendedDescription; context: {
+						title: item.title,
+						description: item.description,
+						item: item,
+						autoid: 'recommendedElearning'
+					}">
+					</ng-container>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -635,7 +648,7 @@
 			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 				<div class="row">
 					<div class="col-md-3">
-						<a class="no-link" data-auto-id="successlink" target="_blank" [href]="item.url">
+						<a class="no-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
 							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
 								<span class="icon-apps icon-small half-padding-right"></span>
 								<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
@@ -825,7 +838,11 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div *ngIf="celldata.type">
-				<a class="no-link" target="_blank" [href]="celldata.url" data-auto-id="SuccessPathsTable-Format-rowValue-link">
+				<a class="no-link"
+					target="_blank"
+					rel="noopener noreferrer"
+					[href]="celldata.url"
+					data-auto-id="SuccessPathsTable-Format-rowValue-link">
 					<div class="text-left text-muted" *ngIf="celldata.type === 'Web Page'">
 						<span class="icon-apps icon-small half-padding-right"></span>
 						<span class="text-samll" [innerText]="'_Web_' | i18n"></span>

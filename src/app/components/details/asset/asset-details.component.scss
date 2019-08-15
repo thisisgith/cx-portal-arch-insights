@@ -2,7 +2,7 @@
 @import '../../../../mixins.scss';
 
 ::ng-deep {
-	.tabs {
+	#assetDetailTabs &.tabs {
 		box-shadow: 0 -2px 0 $light-gray-3 inset !important;
 
 		> li {

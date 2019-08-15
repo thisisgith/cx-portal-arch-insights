@@ -2,7 +2,9 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { CaseService } from '@cui-x/services';
-import { Asset, CriticalBug, FieldNoticeBulletin, SecurityAdvisoryBulletin } from '@sdp-api';
+import { Asset, CriticalBug, FieldNoticeBulletin,
+	SecurityAdvisoryBulletin, ContractsService,
+	DeviceContractResponse } from '@sdp-api';
 import { CuiModalContent, CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ProfileService } from '@cisco-ngx/cui-auth';
@@ -11,11 +13,12 @@ import { CaseRequestType, caseSeverities } from '@classes';
 import { AdvisoryType, CaseOpenRequest, ProblemArea, Subtech, Tech } from '@interfaces';
 import { CloseConfirmComponent } from '../close-confirm/close-confirm.component';
 import { CaseNoteBuilder } from './case-note-builder';
-import { Subject, of } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { Subject, of, Observable } from 'rxjs';
+import { catchError, takeUntil, flatMap } from 'rxjs/operators';
 import { CaseOpenData } from '../caseOpenData';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * Component for opening a case against a Cisco Security Advisory/Field Notice/Bug
@@ -58,6 +61,9 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 			[Validators.required, Validators.maxLength(this.titleMaxLength)]),
 	});
 	public severityName = caseSeverities[3].getCreateName();
+	public customerId: string;
+	public contractNumber: string;
+	public contractLoading = true;
 	public submitting = false;
 	public submitted = false;
 
@@ -68,10 +74,13 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 
 	constructor (
 		private caseService: CaseService,
+		private contractsService: ContractsService,
 		public cuiModalService: CuiModalService,
 		private logger: LogService,
 		private profileService: ProfileService,
-	) { }
+		private userResolve: UserResolve,
+	) {
+	}
 
 	/**
 	 * OnInit lifecycle hook
@@ -100,6 +109,20 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 			this.note,
 		);
 		this.typeTitle = I18n.get(this.titles[this.type]);
+
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+			flatMap((id: string) => {
+				this.customerId = id;
+
+				return this.getContractData(this.customerId, this.selectedAsset.serialNumber);
+			}),
+		)
+		.subscribe(response => {
+			this.contractNumber = _.get(response, ['data', 0, 'contractNumber'], null);
+			this.contractLoading = false;
+		});
 	}
 
 	/**
@@ -138,6 +161,7 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 		this.submitting = true;
 		const caseDetails: CaseOpenRequest = {
 			contactId: this.profileService.getProfile().cpr.pf_auth_uid,
+			contractNumber: this.contractNumber,
 			customerActivity: _.get(
 				(<FormGroup> this.caseForm.controls.techInfo).controls.problemArea.value,
 				'customerActivity',
@@ -218,5 +242,25 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 			}
 			this.submitted = true;
 		});
+	}
+
+	/**
+	 * Fetch device contract data
+	 * @param customerId id of customer whose device we're searching
+	 * @param serialNumber serial number of the device we're fetching
+	 * @returns Observable with device data
+	 */
+	private getContractData (customerId: string, serialNumber: string):
+		Observable<DeviceContractResponse> {
+		const params = { customerId, serialNumber: [serialNumber] };
+
+		return this.contractsService.getContractDetails(params)
+		.pipe(
+			catchError(err => {
+				this.logger.error(`Device Contract Data :: ${serialNumber} :: Error ${err}`);
+
+				return of(null);
+			}),
+		);
 	}
 }

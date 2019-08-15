@@ -134,6 +134,7 @@ export class LifecycleComponent implements OnDestroy {
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
+	private destroyed$: Subject<void> = new Subject<void>();
 
 	// Current uncompleted pitstop
 	public currentWorkingPitstop: string;
@@ -244,8 +245,10 @@ export class LifecycleComponent implements OnDestroy {
 			takeUntil(this.destroy$),
 		)
 		.subscribe((technology: RacetrackTechnology) => {
-			this.selectedTechnology = technology;
 			const currentSolution = this.componentData.params.solution;
+
+			const newTech = (currentSolution && technology !== this.selectedTechnology);
+			this.selectedTechnology = technology;
 
 			this.resetComponentData();
 
@@ -259,7 +262,9 @@ export class LifecycleComponent implements OnDestroy {
 			if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
 			this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
 
-			this.getRacetrackInfo(this.currentWorkingPitstop);
+			if (newTech) {
+				this.getRacetrackInfo(this.currentWorkingPitstop);
+			}
 		});
 	}
 
@@ -1186,7 +1191,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * will then call loadRacetrackInfo for the other api calls
 	 * @param stage selected pitstop
 	 */
-	private getRacetrackInfo (stage: string) {
+	public getRacetrackInfo (stage: string) {
 		if (this.componentData.params.solution && this.componentData.params.usecase) {
 			this.status.loading.racetrack = true;
 

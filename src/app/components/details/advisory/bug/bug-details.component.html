@@ -34,7 +34,8 @@
 			<advisory-feedback class="flex-fill"
 				type="bug"
 				[id]="id"
-				[customerId]="customerId">
+				[customerId]="customerId"
+				(alert)="alertMessage.emit($event)">
 			</advisory-feedback>
 		</div>
 	</div>

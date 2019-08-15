@@ -84,6 +84,7 @@ export class BarChartComponent implements OnInit {
 			},
 			plotOptions: {
 				series: {
+					cursor: 'pointer',
 					point: {
 						events: {
 							click: event => this.selectSubfilter(event),
