@@ -5,3 +5,4 @@ export { ControlPointDeviceDiscoveryAPIService } from './services/control-point-
 export { ControlPointIERegistrationAPIService } from './services/control-point-ieregistration-api.service';
 export { ControlPointIEHealthStatusAPIService } from './services/control-point-iehealth-status-api.service';
 export { ControlPointDevicePolicyAPIService } from './services/control-point-device-policy-api.service';
+export { ControlPointLicenseAPIService } from './services/control-point-license-api.service';

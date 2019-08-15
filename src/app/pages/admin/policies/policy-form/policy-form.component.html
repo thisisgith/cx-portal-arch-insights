@@ -25,9 +25,9 @@
 						</div>
 					</div>
 					<ng-container
-						*ngIf="loading || error">
-						<ng-container *ngIf="loading">
-							<div class="row dbl-padding-left base-padding-top">
+						*ngIf="loadingListLeft || loadingListRight || error">
+						<ng-container *ngIf="loadingListLeft || loadingListRight">
+							<div class="row dbl-padding-left dbl-padding-right base-padding-top">
 								<div class="alert dbl-padding-left">
 									<div class="alert__icon icon-info-outline"></div>
 									<div class="alert__message text-info"
@@ -36,7 +36,7 @@
 							</div>
 						</ng-container>
 						<ng-container *ngIf="error">
-							<div class="row dbl-padding-left base-padding-top">
+							<div class="row dbl-padding-left dbl-padding-right base-padding-top">
 								<div class="alert alert--danger" role="alert">
 									<div class="alert__icon icon-error-outline"></div>
 									<div class="alert__message" [innerText]="errorMessage"></div>
@@ -76,54 +76,56 @@
 											[value]="timePeriod.value"
 											[innerText]="timePeriod.key"></option>
 									</select>
-									<ng-container *ngIf="timePeriod === 'monthly'">
-										<label class="collection-label" for="dates"
-											[innerText]="'_OnThe_' | i18n | lowercase"></label>
-										<select id="date-select" formControlName="dates"
-											(change)="timePeriodChange()"
-											[value]="dates?.selected"
-											data-auto-id="policy-modal.date-Select">
-											<option
-												disabled selected hidden
-												value=""
-												[innerText]="'_Date_' | i18n | uppercase"></option>
-											<option *ngFor="let date of dates.options"
-												[value]="date.value"
-												[innerText]="date.key">
-											</option>
-										</select>
-									</ng-container>
-									<ng-container *ngIf="timePeriod === 'weekly'">
-										<label class="collection-label" for="days"
-											[innerText]="'_On_' | i18n | lowercase"></label>
-										<select id="day-select" formControlName="days"
-											[value]="days?.selected"
-											data-auto-id="policy-modal.day-Select">
-											<option
-												disabled selected hidden
-												value=""
-												[innerText]="'_Day_' | i18n | uppercase"></option>
-											<option *ngFor="let day of days.options"
+									<ng-container *ngIf="timePeriod !== 'never'">
+										<ng-container *ngIf="timePeriod === 'monthly'">
+											<label class="collection-label" for="dates"
+												[innerText]="'_OnThe_' | i18n | lowercase"></label>
+											<select id="date-select" formControlName="dates"
 												(change)="timePeriodChange()"
-												[value]="day.value"
-												[innerText]="day.key">
-											</option>
-										</select>
-									</ng-container>
-									<label class="collection-label" for="hourmins"
+												[value]="dates?.selected"
+												data-auto-id="policy-modal.date-Select">
+												<option
+													disabled selected hidden
+													value=""
+													[innerText]="'_Date_' | i18n | uppercase"></option>
+												<option *ngFor="let date of dates.options"
+													[value]="date.value"
+													[innerText]="date.key">
+												</option>
+											</select>
+										</ng-container>
+										<ng-container *ngIf="timePeriod === 'weekly'">
+											<label class="collection-label" for="days"
+												[innerText]="'_On_' | i18n | lowercase"></label>
+											<select id="day-select" formControlName="days"
+												[value]="days?.selected"
+												data-auto-id="policy-modal.day-Select">
+												<option
+													disabled selected hidden
+													value=""
+													[innerText]="'_Day_' | i18n | uppercase"></option>
+												<option *ngFor="let day of days.options"
+													(change)="timePeriodChange()"
+													[value]="day.value"
+													[innerText]="day.key">
+												</option>
+											</select>
+										</ng-container>
+										<label class="collection-label" for="hourmins"
 										[innerText]="'_At_' | i18n | lowercase"></label>
-									<select id="hourmin-select" formControlName="hourmins"
-										[value]="hourmins?.selected"
-										data-auto-id="policy-modal.hourmin-Select">
-										<option
-											disabled selected hidden
-											value=""
-											[innerText]="'_Time_' | i18n | uppercase"></option>
-										<option *ngFor="let hourmin of hourmins.options"
-											[value]="hourmin.value"
-											[innerText]="hourmin.key"></option>
-									</select>
-									<span class="collection-label" [innerText]="'_UTC_' | i18n"></span>
+										<select id="hourmin-select" formControlName="hourmins"
+											[value]="hourmins?.selected"
+											data-auto-id="policy-modal.hourmin-Select">
+											<option
+												disabled selected hidden
+												value=""
+												[innerText]="'_Time_' | i18n | uppercase"></option>
+											<option *ngFor="let hourmin of hourmins.options"
+												[value]="hourmin.value"
+												[innerText]="hourmin.key"></option>
+										</select>
+										<span class="collection-label" [innerText]="'_UTC_' | i18n"></span>
+									</ng-container>
 								</div>
 							</div>
 							<div *ngIf="type === 'editCollection'" class="col-md-6">
@@ -158,7 +160,7 @@
 <ng-template #modulesTables>
 	<div class="row half-padding-top dbl-padding-left dbl-padding-right">
 		<div class="col-md-5">
-			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListLeft, allDevicesSelected: allDevicesSelectedLeft}"></ng-container>
+			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListLeft, allDevicesSelected: allDevicesSelectedLeft, loadingList: loadingListLeft}"></ng-container>
 		</div>
 		<div class="col-md-2">
 			<button
@@ -175,12 +177,15 @@
 			><i class="icon-chevron-left"></i></button>
 		</div>
 		<div class="col-md-5">
-			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListRight, allDevicesSelected: allDevicesSelectedRight}"></ng-container>
+			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListRight, allDevicesSelected: allDevicesSelectedRight, loadingList: loadingListRight}"></ng-container>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #deviceTableTemplate let-devices="devices" let-allDevicesSelected="allDevicesSelected">
+<ng-template #deviceTableTemplate
+	let-devices="devices"
+	let-allDevicesSelected="allDevicesSelected"
+	let-loadingList="loadingList">
 	<div
 		class="row panel panel--bordered flex base-margin-right"
 	>
@@ -200,6 +205,33 @@
 		</div>
 		<div class="col-md-3 device-table text-bold">
 			<span [innerText]="'_LastScan_' | i18n"></span>
+		</div>
+	</div>
+	<div class="
+			row
+			panel
+			panel--bordered-top
+			panel--bordered-left
+			panel--bordered-right
+			panel--bordered-bottom
+			flex
+			base-margin-right"
+		*ngIf="loadingList">
+		<div class="col-md-12">
+			<cui-loader class="absolute-center"></cui-loader>
+		</div>
+	</div>
+	<div class="
+			row
+			panel
+			panel--bordered-top
+			panel--bordered-left
+			panel--bordered-right
+			panel--bordered-bottom
+			flex
+			base-margin-right"
+		*ngIf="devices.length === 0 && !loadingList">
+		<div class="col-md-12" [innerText]="'_NoDevicesInList_' | i18n">
 		</div>
 	</div>
 	<div
@@ -233,7 +265,7 @@
 			<span [innerText]="device.ipAddress"></span>
 		</div>
 		<div class="col-md-3 device-table">
-			<span [innerText]="device.lastScan ? device.lastScan : ''"></span>
+			<span [innerText]="device.lastScan ? (device.lastScan | fromNow) : ''"></span>
 		</div>
 	</div>
 </ng-template>

@@ -1,13 +1,13 @@
 /* tslint:disable */
 export interface Equipment {
-  productDescription?: string;
   containingHwId?: string;
+  customerId?: string;
   equipmentType?: string;
   hostname?: string;
   hwInstanceId?: string;
   managedNeId?: string;
   managementAddress?: string;
-  customerId?: string;
+  productDescription?: string;
   productFamily?: string;
   productId?: string;
   productName?: string;
