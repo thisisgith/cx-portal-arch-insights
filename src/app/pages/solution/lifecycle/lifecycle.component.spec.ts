@@ -102,7 +102,15 @@ describe('LifecycleComponent', () => {
 
 		racetrackSPSpy = spyOn(racetrackContentService, 'getRacetrackSuccessPaths')
 			.and
-			.returnValue(of(getActiveBody(SuccessPathScenarios[0])));
+			.callFake(args => {
+				// Product Guides call will never have solution or pitstop.
+				// Success Bytes call will always have solution and pitstop.
+				if (!args.solution && !args.pitstop) {
+					return of(getActiveBody(SuccessPathScenarios[5]));
+				}
+
+				return of(getActiveBody(SuccessPathScenarios[0]));
+			});
 
 		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
 			.and
@@ -504,14 +512,98 @@ describe('LifecycleComponent', () => {
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(1);
 
-			component.onSort('title', 'asc');
+			component.onSort('title', 'asc', 'SB');
 			fixture.detectChanges();
 			expect(component.successBytesTable.columns[0].sortDirection)
 				.toEqual('desc');
 
-			component.onSort('title', 'desc');
+			component.onSort('title', 'desc', 'SB');
 			fixture.detectChanges();
 			expect(component.successBytesTable.columns[0].sortDirection)
+				.toEqual('asc');
+
+			de = fixture.debugElement.query(By.css('.icon-close'));
+			el = de.nativeElement;
+
+			el.click();
+
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeFalsy();
+
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
+			expect(de)
+				.toBeFalsy();
+		});
+	});
+
+	describe('Product Guides', () => {
+		it('should have loaded the successPaths items for product guides', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.productGuides.length)
+						.toEqual(10);
+				});
+		});
+
+		it('should show the Product Guides view-all modal', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('_ProductGuides_');
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__blue'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			expect(de)
+				.toBeTruthy();
+
+			const sb1 = component.componentData.learning.productGuides[1];
+			expect(component.componentData.learning.productGuides[1].bookmark)
+				.toBeFalsy();
+			component.updateBookmark('SB', sb1);
+			fixture.detectChanges();
+			expect(component.componentData.learning.productGuides[1].bookmark)
+				.toBeTruthy();
+
+			component.selectedFilterForPG = 'Project Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(3);
+
+			component.selectedFilterForPG = 'Getting Started';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(7);
+
+			component.onSort('title', 'asc', 'PG');
+			fixture.detectChanges();
+			expect(component.productGuidesTable.columns[0].sortDirection)
+				.toEqual('desc');
+
+			component.onSort('title', 'desc', 'PG');
+			fixture.detectChanges();
+			expect(component.productGuidesTable.columns[0].sortDirection)
 				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
@@ -768,6 +860,7 @@ describe('LifecycleComponent', () => {
 			window.Cypress = undefined;
 			window.elearningLoading = undefined;
 			window.successPathsLoading = undefined;
+			window.productGuidesLoading = undefined;
 		});
 
 		it('Should not set loading flags when loading without Cypress', () => {
@@ -795,6 +888,7 @@ describe('LifecycleComponent', () => {
 			window.Cypress = undefined;
 			window.elearningLoading = undefined;
 			window.successPathsLoading = undefined;
+			window.productGuidesLoading = undefined;
 		});
 
 		it('Should set loading flags when loading with Cypress', () => {
@@ -808,6 +902,8 @@ describe('LifecycleComponent', () => {
 			expect(window.elearningLoading)
 				.toBe(false);
 			expect(window.successPathsLoading)
+				.toBe(false);
+			expect(window.productGuidesLoading)
 				.toBe(false);
 		});
 	});

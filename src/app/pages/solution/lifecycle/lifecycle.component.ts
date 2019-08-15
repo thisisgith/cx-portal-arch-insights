@@ -69,6 +69,8 @@ interface ComponentData {
 		training?: ELearning[];
 		success?: SuccessPath[];
 		archetype?: string[];
+		productGuides?: SuccessPath[];
+		pgArchetype?: string[];
 	};
 	acc?: {
 		sessions: ACC[];
@@ -129,8 +131,10 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForSB = '';
 	public selectedFilterForATX = '';
 	public selectedFilterForACC = '';
+	public selectedFilterForPG = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
+	public selectedProductGuides: SuccessPath[];
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
@@ -157,6 +161,7 @@ export class LifecycleComponent implements OnDestroy {
 	private selectedTechnology: RacetrackTechnology;
 
 	public categoryOptions: [];
+	public pgCategoryOptions: [];
 	public statusOptions = [
 		{
 			name: I18n.get('_AllTitles_'),
@@ -194,6 +199,7 @@ export class LifecycleComponent implements OnDestroy {
 			atx: false,
 			cgt: false,
 			elearning: false,
+			productGuides: false,
 			racetrack: false,
 			success: false,
 		},
@@ -297,6 +303,10 @@ export class LifecycleComponent implements OnDestroy {
 				title = I18n.get('_SuccessBytes_');
 				break;
 			}
+			case 'PG': {
+				title = I18n.get('_ProductGuides_');
+				break;
+			}
 		}
 
 		return title;
@@ -345,9 +355,10 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Will construct the assets table
+	 * @returns The assets table
 	 */
-	private buildTable () {
-		this.successBytesTable = new CuiTableOptions({
+	private buildTable (): CuiTableOptions {
+		return new CuiTableOptions({
 			columns: [
 				{
 					key: 'title',
@@ -389,14 +400,24 @@ export class LifecycleComponent implements OnDestroy {
 	 * Sorting function for successBytes table
 	 * @param key the key to sort
 	 * @param sortDirection sortDiretion
+	 * @param type the type of modal calling the sort
 	 */
-	public onSort (key: string, sortDirection: string) {
-		this.selectedSuccessPaths = _.orderBy(
-			this.selectedSuccessPaths, [key], [sortDirection]);
+	public onSort (key: string, sortDirection: string, type: string) {
+		if (type === 'SB') {
+			this.selectedSuccessPaths = _.orderBy(
+				this.selectedSuccessPaths, [key], [sortDirection]);
 
-		_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-			= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-			=== 'asc' ? 'desc' : 'asc';
+			const reverseDirection = (sortDirection === 'asc' ? 'desc' : 'asc');
+			_.find(this.successBytesTable.columns, { sortKey: key })
+				.sortDirection = reverseDirection;
+		} else if (type === 'PG') {
+			this.selectedProductGuides = _.orderBy(
+				this.selectedProductGuides, [key], [sortDirection]);
+
+			const reverseDirection = (sortDirection === 'asc' ? 'desc' : 'asc');
+			_.find(this.productGuidesTable.columns, { sortKey: key })
+				.sortDirection = reverseDirection;
+		}
 	}
 
 	/**
@@ -484,6 +505,15 @@ export class LifecycleComponent implements OnDestroy {
 				context: {
 					data: this.selectedSuccessPaths,
 					type: 'SB',
+				},
+				visible: true,
+			};
+		} else if (type === '_ProductGuides_') {
+			this.modal = {
+				content: this.viewAllModalTemplate,
+				context: {
+					data: this.selectedProductGuides,
+					type: 'PG',
 				},
 				visible: true,
 			};
@@ -588,6 +618,15 @@ export class LifecycleComponent implements OnDestroy {
 			}
 		}
 
+		if (type === 'PG') {
+			this.selectedProductGuides =
+				_.filter(this.componentData.learning.productGuides,
+					{ archetype: this.selectedFilterForPG });
+			if (this.selectedFilterForPG === 'Not selected' || !this.selectedFilterForPG) {
+				this.selectedProductGuides = this.componentData.learning.productGuides;
+			}
+		}
+
 		if (type === 'ACC') {
 			if (this.selectedFilterForACC === 'isBookmarked') {
 				this.selectedACC =
@@ -680,7 +719,10 @@ export class LifecycleComponent implements OnDestroy {
 			if (results.isAtxChanged) { source.push(this.loadATX()); }
 			if (results.isAccChanged) { source.push(this.loadACC()); }
 			if (results.isElearningChanged) { source.push(this.loadELearning()); }
-			if (results.isSuccessPathChanged) { source.push(this.loadSuccessPaths()); }
+			if (results.isSuccessPathChanged) {
+				source.push(this.loadSuccessPaths());
+				source.push(this.loadProductGuides());
+			}
 			if (results.isCgtChanged) { source.push(this.loadCGT()); }
 			forkJoin(
 				source,
@@ -899,6 +941,58 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Loads success paths from the api for Product Documentation and Videos.
+	 * @returns The success paths for product documentation and videos.
+	 */
+	private loadProductGuides (): Observable<SuccessPathsResponse> {
+		this.status.loading.productGuides = true;
+		if (window.Cypress) {
+			window.productGuidesLoading = true;
+		}
+
+		return this.contentService.getRacetrackSuccessPaths(
+			_.pick(this.componentData.params,
+				['customerId']))
+		.pipe(
+			map((result: SuccessPathsResponse) => {
+				this.selectedFilterForPG = '';
+				if (result.items.length) {
+					_.set(this.componentData, ['learning', 'productGuides'],
+						result.items);
+					const resultItems = _.uniq(_.map(result.items, 'archetype'));
+					_.set(this.componentData, ['learning', 'pgArchetype'],
+						resultItems);
+					this.componentData.learning.pgArchetype.unshift('Not selected');
+					this.selectedProductGuides = this.componentData.learning.productGuides;
+					this.pgCategoryOptions = _.map(this.componentData.learning.pgArchetype,
+						item => ({
+							name: item,
+							value: item,
+						}));
+				}
+
+				this.productGuidesTable = this.buildTable();
+				this.status.loading.productGuides = false;
+				if (window.Cypress) {
+					window.productGuidesLoading = false;
+				}
+
+				return result;
+			}),
+			catchError(err => {
+				this.status.loading.productGuides = false;
+				if (window.Cypress) {
+					window.productGuidesLoading = false;
+				}
+				this.logger.error(`lifecycle.component : loadProductGuides() :: Error : (${
+					err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
 	 * Loads the success paths from the api
 	 * @returns the success paths
 	 */
@@ -929,7 +1023,7 @@ export class LifecycleComponent implements OnDestroy {
 						}));
 				}
 
-				this.buildTable();
+				this.successBytesTable = this.buildTable();
 				this.status.loading.success = false;
 				if (window.Cypress) {
 					window.successPathsLoading = false;
@@ -1168,6 +1262,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.loadATX(),
 			this.loadELearning(),
 			this.loadSuccessPaths(),
+			this.loadProductGuides(),
 			this.loadCGT(),
 		)
 		.subscribe();

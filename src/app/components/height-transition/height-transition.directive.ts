@@ -47,6 +47,7 @@ export class HeightTransitionDirective implements OnChanges, OnInit {
 			this.renderer.setStyle(this.el.nativeElement, 'opacity', '1');
 			this.renderer.setStyle(this.el.nativeElement, 'pointer-events', 'auto');
 			const unlisten = this.renderer.listen(this.el.nativeElement, 'transitionend', () => {
+				this.renderer.setStyle(this.el.nativeElement, 'height', 'auto');
 				unlisten();
 			});
 		} else {

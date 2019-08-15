@@ -14,7 +14,7 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import {
 	ProductAlertsService,
-	ControlPointIERegistrationAPIService,
+	ControlPointLicenseAPIService,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { throwError, of } from 'rxjs';
@@ -37,7 +37,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 	let component: AssetDetailsSoftwareComponent;
 	let fixture: ComponentFixture<AssetDetailsSoftwareComponent>;
 	let productAlertsService: ProductAlertsService;
-	let controlPointService: ControlPointIERegistrationAPIService;
+	let controlPointService: ControlPointLicenseAPIService;
 	let userResolve;
 
 	beforeEach(async(() => {
@@ -54,7 +54,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 		})
 		.compileComponents();
 
-		controlPointService = TestBed.get(ControlPointIERegistrationAPIService);
+		controlPointService = TestBed.get(ControlPointLicenseAPIService);
 		productAlertsService = TestBed.get(ProductAlertsService);
 		userResolve = TestBed.get(UserResolve);
 		spyOn(userResolve, 'getCustomerId')
@@ -87,7 +87,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 		const softwareSpy = spyOn(productAlertsService, 'getSoftwareEox')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		const licenseSpy = spyOn(controlPointService, 'getLicenseData')
+		const licenseSpy = spyOn(controlPointService, 'getLicenseUsingGET')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
@@ -191,7 +191,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
 			.and
 			.returnValue(of({ data: [] }));
-		spyOn(controlPointService, 'getLicenseData')
+		spyOn(controlPointService, 'getLicenseUsingGET')
 			.and
 			.returnValue(of({ }));
 		component.ngOnInit();
@@ -228,7 +228,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 		spyOn(productAlertsService, 'getSoftwareEoxBulletin')
 			.and
 			.returnValue(of(mockEOLBulletinData));
-		spyOn(controlPointService, 'getLicenseData')
+		spyOn(controlPointService, 'getLicenseUsingGET')
 			.and
 			.returnValue(of({ }));
 		component.ngOnInit();
@@ -262,7 +262,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 		spyOn(productAlertsService, 'getSoftwareEox')
 			.and
 			.returnValue(of({ data: mockEOLData }));
-		spyOn(controlPointService, 'getLicenseData')
+		spyOn(controlPointService, 'getLicenseUsingGET')
 			.and
 			.returnValue(of({ }));
 
