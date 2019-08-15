@@ -28,8 +28,8 @@ import {
 	SoftwareEOLResponse,
 	SoftwareEOL,
 	SoftwareInfo,
-	ControlPointIERegistrationAPIService,
 	LicenseDataResponseModel,
+	ControlPointLicenseAPIService,
 } from '@sdp-api';
 import { TimelineDatapoint } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -100,7 +100,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 
 	private softwareBulletinParams: ProductAlertsService.GetSoftwareEoxBulletinParams;
 	private softwareEolParams: ProductAlertsService.GetSoftwareEoxParams;
-	private licenseParams: ControlPointIERegistrationAPIService.GetLicenseDataParams;
+	private licenseParams: ControlPointLicenseAPIService.GetLicenseUsingGETParams;
 	public eolData: SoftwareEOL;
 	public eolBulletinData: SoftwareEOLBulletin;
 	private refresh$: Subject<void>;
@@ -113,7 +113,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 
 	constructor (
 		private logger: LogService,
-		private controlPointService: ControlPointIERegistrationAPIService,
+		private controlPointService: ControlPointLicenseAPIService,
 		private productAlertsService: ProductAlertsService,
 		private userResolve: UserResolve,
 	) { }
@@ -190,7 +190,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 	private fetchLicenseData () {
 		this.status.loading.licenses = true;
 
-		return this.controlPointService.getLicenseData(this.licenseParams)
+		return this.controlPointService.getLicenseUsingGET(this.licenseParams)
 		.pipe(
 			map((response: LicenseDataResponseModel) => {
 				this.softwareLicenses = _.get(response, 'license', []);
