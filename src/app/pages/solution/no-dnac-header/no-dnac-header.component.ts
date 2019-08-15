@@ -1,5 +1,6 @@
 import { Component, HostBinding, Inject } from '@angular/core';
 import { UtilsService } from '@services';
+import { get } from 'lodash-es';
 
 /**
  * Panel for displaying sub-header content
@@ -22,5 +23,9 @@ export class NoDNACHeaderComponent {
 	constructor (
 		@Inject('ENVIRONMENT') private env,
 		private utils: UtilsService,
-	) { }
+	) {
+		if (window.Cypress) {
+			this.forceHidden = get(window, 'Cypress.hideDNACHeader', false);
+		}
+	 }
 }

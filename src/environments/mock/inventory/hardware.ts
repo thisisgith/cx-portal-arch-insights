@@ -1190,7 +1190,7 @@ export const HardwareScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&equipmentType=MODULE&containingHwId=` +
-		'FOC1922S6JU,WS-C2960X-24PS-L,NA,FOC1922S6JU,WS-C2960X-24PS-L,NA,NA',
+		'FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA',
 		usecases: ['Use Case 1'],
 	},
 	{

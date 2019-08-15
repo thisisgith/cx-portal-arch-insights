@@ -17,7 +17,9 @@ const coverageElements = totalCountScenario.response.body;
 // const advisoryCounts = advisoryScenario.response.body;
 const caseMock = new MockService('CaseScenarios');
 const caseScenario = caseMock.getScenario('GET', 'Case Details');
+const caseListScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
 const caseResponse = caseScenario.response.body;
+const caseListResponse = caseListScenario.response.body;
 const fnBulletinMock = new MockService('FieldNoticeBulletinScenarios');
 const hwMock = new MockService('HardwareScenarios');
 const hwScenario = hwMock.getScenario('GET', 'Hardware');
@@ -42,9 +44,14 @@ const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('Assets', () => { // PBC-41
 	before(() => {
-		cy.window().then(win => win.sessionStorage.clear());
+		cy.window().then(win => { // Must be done before app loads
+			win.sessionStorage.clear();
+		});
 		cy.login();
 		cy.loadApp('/solution/assets');
+		cy.window().then(win => { // Must be done after app loads
+			win.Cypress.hideDNACHeader = true;
+		});
 		cy.waitForAppLoading();
 	});
 
@@ -59,7 +66,7 @@ describe('Assets', () => { // PBC-41
 			*/
 			const validate360 = asset => {
 				// Placeholder icon until PBC-335 is resolved
-				cy.get('.icon-wifi').should('be.visible');
+				cy.get('.icon-asset').should('be.visible');
 				cy.get('[detailsPanelTitle]').should('have.text', asset.deviceName);
 				cy.getByAutoId('Asset360IPAddress')
 					.should('have.text', `IP Address${asset.ipAddress}`);
@@ -79,34 +86,30 @@ describe('Assets', () => { // PBC-41
 				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
 
 				// PBC-153
-				cy.get('asset-details img').should( // TODO: Placeholder until PBC-438 is fixed
-					'have.attr',
-					'src',
-					'assets/img/inventory/CAT-3650.png',
-				);
+				// TODO: Check device image after PBC-438 is fixed
 				cy.getByAutoId('ProductId').should('have.text', asset.productId);
 				cy.getByAutoId('YouHaveInventory').should(
 					'have.text', `You have ${hwResponse.length} of these in your inventory`
 				);
-				cy.getByAutoId('_ProductSeries_-Link')
-					.should('have.text', hwResponse[6].productFamily);
 				cy.getByAutoId('_ProductID_-Link').should('have.text', asset.productId);
 				cy.getByAutoId('_SoftwareVersion_-Link').should('have.text', asset.osVersion);
-				cy.getByAutoId('_EndOfSale_-data').should(
-					'have.text',
-					Cypress.moment(assetSummary.eoSaleDate).format(dateFormat)
-				);
-				cy.getByAutoId('_EndOfSupport_-data').should(
-					'have.text',
-					Cypress.moment(assetSummary.lastDateOfSupport).format(dateFormat)
-				);
 			};
 
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			validate360(assets[0]);
+			cy.getByAutoId('_ProductSeries_-Link')
+				.should('have.text', assetSummary.productFamily);
+			cy.getByAutoId('_EndOfSale_-data').should(
+				'have.text',
+				Cypress.moment(assetSummary.eoSaleDate).format(dateFormat)
+			);
+			cy.getByAutoId('_EndOfSupport_-data').should(
+				'have.text',
+				Cypress.moment(assetSummary.lastDateOfSupport).format(dateFormat)
+			);
 			// TODO: More tests for view open cases dropdown when it's implemented
 			cy.getByAutoId('ToggleActiveCases').should('be.visible')
-				.and('have.text', `View Open Cases (${caseResponse.content.length})`);
+				.and('have.text', `View Open Cases (${caseListResponse.content.length})`);
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(3).click(); // switch to new asset without closing modal
 			validate360(assets[3]);
 			cy.getByAutoId('ToggleActiveCases').should('not.be.visible'); // PBC-338
@@ -117,9 +120,10 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('CloseDetails').click();
 		});
 
-		it('Displays hardware info', () => { // PBC-154, PBC-359
+		// TODO: Disabled for PBC-547
+		it.skip('Displays hardware info', () => { // PBC-154, PBC-359, PBC-547
 			const formatDate = date => Cypress.moment(date).format('ddd MMM DD YYYY');
-			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.getByAutoId('HARDWARETab').click();
 			cy.get('asset-details-hardware tbody tr').each((row, index) => {
 				cy.wrap(row).within(() => {
@@ -148,21 +152,21 @@ describe('Assets', () => { // PBC-41
 				.should('have.text', formatDate(hwEOLResponse.eoServiceContractRenewalDate));
 			cy.getByAutoId('Last Date of Support-SubTitle')
 				.should('have.text', formatDate(hwEOLResponse.lastDateOfSupport));
-			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 
 			cy.wrap(hwEOLMock.enable('Empty Hardware EOL Bulletins'));
-			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.getByAutoId('HARDWARETab').click();
 			cy.get('pbc-timeline').should('not.exist');
-			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 
 			cy.wrap(hwMock.enable('Empty Hardware'));
-			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.getByAutoId('HARDWARETab').click();
 			cy.getByAutoId('NoHardwareInformationText')
 				.should('have.text', 'No Hardware Information');
 
-			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(1).click();
+			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			hwEOLMock.enable('Hardware EOL Bulletins');
 			hwMock.enable('Hardware');
 		});
@@ -195,14 +199,15 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
-			const getPaginationText = (pagination, type) => {
-				let pageText = pagination.total < pagination.rows
-					? `Showing ${pagination.total} of `
-					: `Showing ${pagination.rows} of `;
-				pageText += `${pagination.total} ${type}`;
+			// TODO: Disabled for PBC-548
+			// const getPaginationText = (pagination, type) => {
+			// 	let pageText = pagination.total < pagination.rows
+			// 		? `Showing ${pagination.total} of `
+			// 		: `Showing ${pagination.rows} of `;
+			// 	pageText += `${pagination.total} ${type}`;
 
-				return pageText;
-			};
+			// 	return pageText;
+			// };
 			const getImpactIcon = severity => {
 				switch (severity) {
 					case 'Critical':
@@ -218,8 +223,8 @@ describe('Assets', () => { // PBC-41
 			};
 
 			cy.server();
-			cy.route('**/product-alerts/v1/security-advisory-bulletins?*').as('security');
-			cy.route('**/product-alerts/v1/field-notice-bulletins?*').as('fn');
+			cy.route('**/product-alerts/v1/advisories-security-advisories?*').as('security');
+			cy.route('**/product-alerts/v1/advisories-field-notices?*').as('fn');
 			cy.get('tbody tr').eq(0).click();
 			let securityXHR;
 			let fnXHR;
@@ -233,10 +238,11 @@ describe('Assets', () => { // PBC-41
 
 			cy.wrap(securityXHR).then(() => {
 				if (securityXHR.response.body.data.length) {
-					const pageText = getPaginationText(
-						securityXHR.response.body.Pagination, 'Security Advisories'
-					);
-					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+					// TODO: Disabled for PBC-548
+					// const pageText = getPaginationText(
+					// 	securityXHR.response.body.Pagination, 'Security Advisories'
+					// );
+					// cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 					Cypress._.each(securityXHR.response.body.data, (advisory, index) => {
 						cy.get('asset-details tbody tr').eq(index).within(() => {
 							cy.getByAutoId('ImpactIcon')
@@ -261,11 +267,12 @@ describe('Assets', () => { // PBC-41
 
 			cy.wrap(fnXHR).then(() => {
 				if (fnXHR.response.body.data.length) {
-					const pageText = getPaginationText(
-						fnXHR.response.body.Pagination, 'Field Notices'
-					);
+					// TODO: Disabled for PBC-548
+					// const pageText = getPaginationText(
+					// 	fnXHR.response.body.Pagination, 'Field Notices'
+					// );
 					cy.getByAutoId('AdvisoryTab-field').click();
-					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+					// cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 					Cypress._.each(fnXHR.response.body.data, (advisory, index) => {
 						cy.get('asset-details tbody tr').eq(index).within(() => {
 							cy.getByAutoId('FieldNoticeId')
@@ -292,10 +299,11 @@ describe('Assets', () => { // PBC-41
 			});
 
 			cy.getByAutoId('AdvisoryTab-bug').click();
-			const pageText = getPaginationText(
-				bugResponse.Pagination, 'Critical Bugs'
-			);
-			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+			// TODO: Disabled for PBC-548
+			// const pageText = getPaginationText(
+			// 	bugResponse.Pagination, 'Critical Bugs'
+			// );
+			// cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 			Cypress._.each(bugResponse.data, (bug, index) => {
 				cy.get('asset-details tbody tr').eq(index).within(() => {
 					cy.getByAutoId('ID-Cell').should('have.text', bug.id);
