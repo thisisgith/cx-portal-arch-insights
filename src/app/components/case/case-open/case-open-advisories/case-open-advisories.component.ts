@@ -105,8 +105,9 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 			);
 		}
 		this.note = this.noteBuilder.buildNote(this.type, this.advisory);
+		/** Add 5 newlines to start of description to give user space for input */
 		this.caseForm.controls.description.setValue(
-			this.note,
+			`\n\n\n\n\n${this.note}`,
 		);
 		this.typeTitle = I18n.get(this.titles[this.type]);
 
