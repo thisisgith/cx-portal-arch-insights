@@ -700,8 +700,9 @@
 </ng-template>
 
 <ng-template #cardACC>
-	<div class="card acc__card" *ngFor="let item of selectedACC"
+	<div class="card atx__card" *ngFor="let item of selectedACC"
 		[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null" data-auto-id="ACCCard">
+		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.url" attr.data-auto-id="{{ autoid }}-Image">
 		<div class="text-left" [ngClass]="item.status === 'recommended' ? 'text-info' : 'text-clear'"
 			data-auto-id="ACCCardHeader">
 			<span class="icon-flagged qtr-padding-right qtr-padding-bottom" data-auto-id="ACCCard-Flag"></span>
@@ -711,12 +712,12 @@
 			data-auto-id="ACCCardRibbon">
 		</div>
 		<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
-		<div class="card__header text-left text-bold" [ngClass]="item.status === 'recommended' ? 'text-info' : null"
+		<div class="atx__card__header text-left text-bold" [ngClass]="item.status === 'recommended' ? 'text-info' : null"
 			*ngIf="item && item.title" [innerText]="item.title" data-auto-id="ACCCardTitle">
 		</div>
-		<div class="card__body atx-card__body text-left" *ngIf="item && item.description"
+		<div class="atx__card__body atx-card__body text-left" *ngIf="item && item.description"
 			[innerText]="item.description"></div>
-		<div class="card__footer">
+		<div class="atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
 				<div class="text-left text-info" *ngIf="item.status === 'recommended'">
 					<button data-auto-id="Request1on1Button"
