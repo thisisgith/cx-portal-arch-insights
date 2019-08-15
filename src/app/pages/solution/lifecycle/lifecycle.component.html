@@ -531,30 +531,76 @@
 						(ngModelChange)="selectFilter('PG')">
 					</cui-select>
 				</div>
-				<div class="col-md-1 text-right">
+				<div *ngIf="type==='ACC'" class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
-					<button class="btn btn--small btn--gray-ghost"
-						data-auto-id="table-view-btn"
-						[ngClass]="{'selected': view ==='list' }"
-						(click)="selectView('list')">
-						<span class="icon-list-view"></span>
-					</button>
-					<button class="btn btn--small btn--gray-ghost"
-						data-auto-id="card-view-btn"
-						[ngClass]="{'selected': view === 'grid' }"
-						(click)="selectView('grid')">
-						<span class="icon-grid-view"></span>
-					</button>
+						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+							[ngClass]="{'selected': accview ==='list' }" (click)="selectView('list', type)">
+							<span class="icon-list-view"></span>
+						</button>
+						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+							[ngClass]="{'selected': accview === 'grid' }" (click)="selectView('grid', type)">
+							<span class="icon-grid-view"></span>
+						</button>
+					</div>
+				</div>
+				<div *ngIf="type==='ATX'" class="col-md-1 text-right">
+					<div class="btn-group btn-group--square">
+						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+							[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type)">
+							<span class="icon-list-view"></span>
+						</button>
+						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+							[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type)">
+							<span class="icon-grid-view"></span>
+						</button>
+					</div>
+				</div>
+				<div *ngIf="type==='SB'" class="col-md-1 text-right">
+					<div class="btn-group btn-group--square">
+						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+							[ngClass]="{'selected': sbview ==='list' }" (click)="selectView('list', type)">
+							<span class="icon-list-view"></span>
+						</button>
+						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+							[ngClass]="{'selected': sbview === 'grid' }" (click)="selectView('grid', type)">
+							<span class="icon-grid-view"></span>
+						</button>
+					</div>
+				</div>
+				<div *ngIf="type==='PG'" class="col-md-1 text-right">
+					<div class="btn-group btn-group--square">
+						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+							[ngClass]="{'selected': pgview ==='list' }" (click)="selectView('list', type)">
+							<span class="icon-list-view"></span>
+						</button>
+						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+							[ngClass]="{'selected': pgview === 'grid' }" (click)="selectView('grid', type)">
+							<span class="icon-grid-view"></span>
+						</button>
 					</div>
 				</div>
 			</div>
-			<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type }"></ng-container>
-			<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type }"></ng-container>
+			<div *ngIf="type === 'SB'">
+				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+			</div>
+			<div *ngIf="type === 'ACC'">
+				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+			</div>
+			<div *ngIf="type === 'ATX'">
+				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+			</div>
+			<div *ngIf="type === 'PG'">
+				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+			</div>
 		</div>
 	</div>
 </ng-template>
 
-<ng-template #cardViewTemplate let-type="type">
+<ng-template #cardViewTemplate let-type="type" let-view="view">
 	<div class="grid grid--4up base-padding-top" *ngIf="(!view || view === 'grid')">
 		<ng-container *ngIf="type === 'ATX'">
 			<ng-container *ngTemplateOutlet="cardATX"></ng-container>
@@ -571,20 +617,20 @@
 	</div>
 </ng-template>
 
-<ng-template #listViewTemplate let-type="type">
-	<div class="table-responsive" *ngIf="view === 'list'" data-auto-id="SuccessPathsTable">
+<ng-template #listViewTemplate let-type="type" let-view="view">
+	<div class="table-responsive" *ngIf="view === 'list'">
 		<table class="table table--nostripes table--wrap table--hover table--loose">
 		<ng-container *ngIf="type === 'ATX'">
-			<ng-container *ngTemplateOutlet="listATX"></ng-container>
+			<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: atxTable.columns, data: selectedATX }"></ng-container>
 		</ng-container>
 		<ng-container *ngIf="type === 'ACC'">
-			<ng-container *ngTemplateOutlet="listACC"></ng-container>
+			<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: accTable.columns, data: selectedACC }"></ng-container>
 		</ng-container>
 		<ng-container *ngIf="type === 'SB'">
-			<ng-container *ngTemplateOutlet="listSB"></ng-container>
+			<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: successBytesTable.columns, data: selectedSuccessPaths }"></ng-container>
 		</ng-container>
 		<ng-container *ngIf="type === 'PG'">
-			<ng-container *ngTemplateOutlet="listPG"></ng-container>
+			<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: productGuidesTable.columns, data: selectedProductGuides }"></ng-container>
 		</ng-container>
 		</table>
 	</div>
@@ -592,7 +638,7 @@
 
 <ng-template #cardATX>
 	<div class="card atx__card"
-		*ngFor="let item of componentData.atx.sessions"
+		*ngFor="let item of selectedATX"
 		[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 		data-auto-id="ATXCard">
 		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL" attr.data-auto-id="{{ autoid }}-Image">
@@ -726,12 +772,12 @@
 	</div>
 </ng-template>
 
-<ng-template #listSB>
+<ng-template #listView let-data="data" let-columns="columns" let-type="type">
 	<tr class="th-row">
-		<th *ngFor="let column of successBytesTable.columns"
-			attr.data-auto-id="successBytesTable-columnHeader-{{ column.name }}"
+		<th *ngFor="let column of columns"
+			attr.data-auto-id="Table-columnHeader-{{ column.name }}"
 			[ngClass]="{ 'sortable': column.sortable }"
-			(click)="column.sortable ? onSort(column.sortKey, column.sortDirection, 'SB') : null">
+			(click)="column.sortable ? onSort(column.sortKey, column.sortDirection, type) : null">
 			<span [innerText]="column.name"></span>
 			<span *ngIf="column.sortable" class="qtr-margin-left" [ngClass]="{
 							'icon-chevron-down': column.sortDirection === 'asc',
@@ -740,13 +786,16 @@
 			</span>
 		</th>
 	</tr>
-	<tr class="td-row" *ngFor="let item of selectedSuccessPaths">
-		<td class="text-left" *ngFor="let column of successBytesTable.columns" [ngStyle]="{ 'width': column.width }">
+	<tr class="td-row" *ngFor="let item of data">
+		<td class="text-left" *ngFor="let column of columns" [ngStyle]="{ 'width': column.width }">
 			<ng-container *ngIf="column.template">
-				<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }"></ng-container>
+				<ng-container *ngTemplateOutlet="column.template; context: { celldata: item, type: type }"></ng-container>
+				<ng-container *ngIf="atxScheduleCardOpened">
+					<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }"></ng-container>
+				</ng-container>
 			</ng-container>
 			<ng-container *ngIf="!column.template">
-				<div [innerText]="item[column.key]" attr.data-auto-id="SuccessPathsTable-{{ column.name }}-rowValue">
+				<div [innerText]="item[column.key]" attr.data-auto-id="Table-{{ column.name }}-rowValue">
 				</div>
 			</ng-container>
 		</td>
@@ -786,33 +835,6 @@
 			</div>
 		</div>
 	</div>
-</ng-template>
-
-<ng-template #listPG>
-	<tr class="th-row">
-		<th *ngFor="let column of productGuidesTable.columns"
-			attr.data-auto-id="productGuidesTable-columnHeader-{{ column.name }}"
-			[ngClass]="{ 'sortable': column.sortable }"
-			(click)="column.sortable ? onSort(column.sortKey, column.sortDirection, 'PG') : null">
-			<span [innerText]="column.name"></span>
-			<span *ngIf="column.sortable" class="qtr-margin-left" [ngClass]="{
-							'icon-chevron-down': column.sortDirection === 'asc',
-							'icon-chevron-up': column.sortDirection === 'desc'
-						}">
-			</span>
-		</th>
-	</tr>
-	<tr class="td-row" *ngFor="let item of selectedProductGuides">
-		<td class="text-left" *ngFor="let column of productGuidesTable.columns" [ngStyle]="{ 'width': column.width }">
-			<ng-container *ngIf="column.template">
-				<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }"></ng-container>
-			</ng-container>
-			<ng-container *ngIf="!column.template">
-				<div [innerText]="item[column.key]" attr.data-auto-id="ProductGuidesTable-{{ column.name }}-rowValue">
-				</div>
-			</ng-container>
-		</td>
-	</tr>
 </ng-template>
 	
 <ng-template #coaching let-results="results">
@@ -951,7 +973,7 @@
 
 <ng-template #formatTemplate let-celldata="celldata">
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-5">
 			<div *ngIf="celldata.type">
 				<a class="no-link"
 					target="_blank"
@@ -970,10 +992,14 @@
 						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
 						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
 					</div>
+					<div class="text-left text-muted" *ngIf="celldata.type === 'Spreadsheet'">
+						<span class="icon-document icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Spreadsheet_' | i18n"></span>
+					</div>
 				</a>
 			</div>
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-7">
 			<div *ngIf="celldata.duration" class="base-margin-left text-muted">
 				<span class="icon-clock icon-small"></span>
 				<span class="qtr-margin-left" [innerText]="celldata.duration"></span>
@@ -982,13 +1008,65 @@
 	</div>
 </ng-template>
 
-<ng-template #bookmarkTemplate let-celldata="celldata">
-	<div *ngIf="celldata.bookmark" class="icon-bookmark icon-medium text-indigo"
-		(click)="updateBookmark('SB', celldata)"
-		data-auto-id="SBListRibbon"></div>
-	<div *ngIf="!celldata.bookmark" class="icon-bookmark icon-medium icon-bookmark-clear"
-		(click)="updateBookmark('SB', celldata)"
-		data-auto-id="SBListRibbon"></div>
+<ng-template #bookmarkTemplate let-celldata="celldata" let-type="type">
+	<div *ngIf="type === 'ACC'">
+		<div *ngIf="celldata.isFavorite" class="icon-bookmark icon-medium text-indigo"
+			(click)="setFavorite(celldata)" data-auto-id="SBListRibbon"></div>
+		<div *ngIf="!celldata.isFavorite" class="icon-bookmark icon-medium icon-bookmark-clear"
+			(click)="setFavorite( celldata)" data-auto-id="SBListRibbon"></div>
+	</div>
+	<div *ngIf="type === 'ATX' || type === 'SB' || type === 'PG'">
+		<div *ngIf="celldata.bookmark" class="icon-bookmark icon-medium text-indigo"
+			(click)="updateBookmark(type, celldata)" data-auto-id="SBListRibbon"></div>
+		<div *ngIf="!celldata.bookmark" class="icon-bookmark icon-medium icon-bookmark-clear"
+			(click)="updateBookmark(type, celldata)" data-auto-id="SBListRibbon"></div>
+	</div>
+</ng-template>
+
+<ng-template #statusTemplate let-celldata="celldata">
+	<div *ngIf="celldata.status ==='scheduled'">
+		<div *ngFor="let session of celldata.sessions">
+			<div *ngIf="session.scheduled">
+				<span class="text-info icon-calendar icon-small"></span>
+				<span class="qtr-margin-left"
+					innerText="{{ session.sessionStartDate | date:'medium'}}"></span>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="celldata.status === 'requested'">
+		<span class="text-info icon-check-outline icon-small"></span>
+		<span class="qtr-margin-left" [innerText]="'_Requested_' | i18n"></span>
+	</div>
+	<div *ngIf="celldata.status ==='in-progress'">
+		<span class="text-info icon-clock icon-small"></span>
+		<span class="qtr-margin-left" [innerText]="'_InProgress_' | i18n"></span>
+	</div>
+	<div *ngIf="celldata.status ==='completed'">
+		<span class="text-success icon-certified icon-small"></span>
+		<span class="qtr-margin-left" [innerText]="'_Completed_' | i18n"></span>
+	</div>
+</ng-template>
+
+<ng-template #actionTemplate let-celldata="celldata" let-type="type">
+	<div *ngIf="type === 'ATX'">
+	<button data-auto-id="ViewSessionButton"
+		class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
+		(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata"
+		[innerText]="'_ViewSessions_' | i18n">
+	</button>
+	<a class="no-link" target="_blank" [href]="celldata.recordingURL">
+		<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+			[innerText]="'_WatchNow_' | i18n"></button>
+	</a>
+	</div>
+	<div *ngIf="type === 'ACC' && celldata.status === 'recommended'">
+		<button data-auto-id="Request1on1ACCButton"
+			(click)="selectAccRequestForm(true, celldata.accId, celldata.title)"
+			class="btn btn--small btn--secondary text-uppercase"
+			[ngClass]="{ 'disabled': notCurrentPitstop }"
+			[innerText]="'_Request1on1_' | i18n">
+		</button>
+	</div>
 </ng-template>
 
 <ng-container *ngIf="selectCgtComponent">

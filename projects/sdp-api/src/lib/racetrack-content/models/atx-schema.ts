@@ -13,6 +13,11 @@ export interface AtxSchema {
   bookmark?: boolean;
 
   /**
+   * Description of the ATX
+   */
+  description?: string;
+
+  /**
    * Duration of the session in seconds
    */
   duration?: number;
@@ -35,7 +40,7 @@ export interface AtxSchema {
   /**
    * Status of the ATX
    */
-  status?: 'Completed' | 'Recommended' | 'Scheduled' | 'In Progress';
+  status?: 'completed' | 'recommended' | 'scheduled' | 'requested' | 'in-progress';
 
   /**
    * Title of the ATX
