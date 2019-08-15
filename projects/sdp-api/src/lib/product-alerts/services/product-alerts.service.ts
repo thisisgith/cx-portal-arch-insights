@@ -645,11 +645,19 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `url`: URL of the Security Advisory
+   *
+   * - `title`: Security Advisory title
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `severity`: The severity
    *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: Page number of the response
    *
@@ -657,7 +665,13 @@ class ProductAlertsService extends __BaseService {
    *
    * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`:
+   *
+   * - `fields`: Requested fields in the response. Id field is by default
    *
    * @return successful operation
    */
@@ -667,13 +681,20 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.url != null) __params = __params.set('url', params.url.toString());
+    if (params.title != null) __params = __params.set('title', params.title.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     (params.severity || []).forEach(val => {if (val != null) __params = __params.append('severity', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
+    if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
     (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/advisories-security-advisories`,
@@ -698,11 +719,19 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `url`: URL of the Security Advisory
+   *
+   * - `title`: Security Advisory title
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `severity`: The severity
    *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: Page number of the response
    *
@@ -710,7 +739,13 @@ class ProductAlertsService extends __BaseService {
    *
    * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`:
+   *
+   * - `fields`: Requested fields in the response. Id field is by default
    *
    * @return successful operation
    */
@@ -1031,9 +1066,15 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `url`: URL of the Security Advisory
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
+   * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: Page number of the response
    *
@@ -1041,7 +1082,13 @@ class ProductAlertsService extends __BaseService {
    *
    * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`:
+   *
+   * - `fields`: Requested fields in the response.
    *
    * @return successful operation
    */
@@ -1051,12 +1098,18 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.url != null) __params = __params.set('url', params.url.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
+    if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
     (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/advisories-field-notices`,
@@ -1081,9 +1134,15 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `url`: URL of the Security Advisory
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
+   * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: Page number of the response
    *
@@ -1091,7 +1150,13 @@ class ProductAlertsService extends __BaseService {
    *
    * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`:
+   *
+   * - `fields`: Requested fields in the response.
    *
    * @return successful operation
    */
@@ -1926,6 +1991,16 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * URL of the Security Advisory
+     */
+    url?: string;
+
+    /**
+     * Security Advisory title
+     */
+    title?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
@@ -1936,9 +2011,19 @@ module ProductAlertsService {
     severity?: Array<string>;
 
     /**
+     * Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
      * Number of rows of data per page.
      */
     rows?: number;
+
+    /**
+     * The date on which the Advisory was published
+     */
+    publishedOn?: string;
 
     /**
      * Page number of the response
@@ -1954,7 +2039,22 @@ module ProductAlertsService {
      * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
      */
     managedNeId?: Array<string>;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+     */
+    lastUpdatedDateRange?: Array<string>;
+
+    /**
+     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     */
+    lastUpdated?: string;
     id?: Array<string>;
+
+    /**
+     * Requested fields in the response. Id field is by default
+     */
+    fields?: Array<string>;
   }
 
   /**
@@ -2086,14 +2186,29 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * URL of the Security Advisory
+     */
+    url?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
 
     /**
+     * Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
      * Number of rows of data per page.
      */
     rows?: number;
+
+    /**
+     * The date on which the Advisory was published
+     */
+    publishedOn?: string;
 
     /**
      * Page number of the response
@@ -2109,7 +2224,22 @@ module ProductAlertsService {
      * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
      */
     managedNeId?: Array<string>;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+     */
+    lastUpdatedDateRange?: Array<string>;
+
+    /**
+     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     */
+    lastUpdated?: string;
     id?: Array<string>;
+
+    /**
+     * Requested fields in the response.
+     */
+    fields?: Array<string>;
   }
 
   /**
