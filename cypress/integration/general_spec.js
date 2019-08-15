@@ -495,8 +495,10 @@ describe('General Spec', () => {
 			cy.getByAutoId('portalHelp').click(); // open the Contact Support modal
 			cy.getByAutoId('supportTopic').should('exist');
 			cy.getByAutoId('cui-select').should('exist');
-
+			// TODO  select text and move on to Description below
 			cy.getByAutoId('supportDescription').should('exist');
+			// TODO  enter text and click submit
+			// TODO verify confirm screen after submitting feedback
 		});
 
 	})]
