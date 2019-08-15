@@ -49,8 +49,6 @@
 							"sourceMap": false,
 							"vendorChunk": false,
 							"scripts": [
-								"node_modules/jquery/dist/jquery.min.js",
-								"node_modules/@cx-portal/metrics/ctm.js",
 								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
 							]
 						},
@@ -92,12 +90,7 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false,
-							"scripts": [
-								"node_modules/jquery/dist/jquery.min.js",
-								"node_modules/@cx-portal/metrics/ctm.js",
-								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
-							]
+							"vendorChunk": false
 						},
 						"tie": {
 							"aot": true,
@@ -133,12 +126,7 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false,
-							"scripts": [
-								"node_modules/jquery/dist/jquery.min.js",
-								"node_modules/@cx-portal/metrics/ctm.js",
-								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
-							]
+							"vendorChunk": false
 						},
 						"cxportal-qa": {
 							"aot": true,
@@ -178,12 +166,7 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false,
-							"scripts": [
-								"node_modules/jquery/dist/jquery.min.js",
-								"node_modules/@cx-portal/metrics/ctm.js",
-								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
-							]
+							"vendorChunk": false
 						},
 						"cxportal-lt": {
 							"aot": true,
@@ -223,12 +206,7 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false,
-							"scripts": [
-								"node_modules/jquery/dist/jquery.min.js",
-								"node_modules/@cx-portal/metrics/ctm.js",
-								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
-							]
+							"vendorChunk": false
 						}
 					},
 					"options": {

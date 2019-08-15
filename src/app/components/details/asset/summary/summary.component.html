@@ -48,14 +48,14 @@
 			</div>
 			<div class="col-md-12 base-margin-top">
 				<ng-container *ngTemplateOutlet="supportData; context: {
-						title: '_SupportCoverage_',
-						expirationDate: assetData?.lastDateOfSupport,
-						linkData: assetData?.contractNumber ?
-						(assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
-							: null,
-						url: '#',
-						supportType: 'support'
-					}">
+					title: '_SupportCoverage_',
+					expirationDate: assetData?.lastDateOfSupport,
+					linkData: assetData?.contractNumber && assetData?.contractNumber !== 'UNKNOWN' ?
+					(assetData?.contractNumber + (assetData?.slaDescription ? ' ' + assetData?.slaDescription : ''))
+					: null,
+					url: '',
+					supportType: 'support'
+				}">
 				</ng-container>
 			</div>
 		</div>
@@ -81,7 +81,7 @@
 						title: '_Warranty_',
 						expirationDate: assetData?.warrantyEndDate,
 						linkData: assetData?.warrantyType,
-						url: '#',
+						url: '',
 						supportType: 'warranty'
 					}">
 				</ng-container>
@@ -115,9 +115,10 @@
 			</div>
 		</div>
 		<div *ngIf="!expirationDate" class="col-md-12" [innerText]="'_NotCovered_' | i18n" attr.data-auto-id="{{ title }}-NotCovered"></div>
-		<a [href]="url" *ngIf="linkData">
-			<div class="col-md-12" [innerText]="linkData" attr.data-auto-id="{{ title }}-Link"></div>
-		</a>
+		<div class="col-md-12" attr.data-auto-id="{{ title }}-Link">
+			<a *ngIf="linkData && url" [href]="url" [innerText]="linkData"></a>
+			<span *ngIf="linkData && !url" [innerText]="linkData"></span>
+		</div>
 	</div>
 </ng-template>
 
