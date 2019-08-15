@@ -20,6 +20,7 @@ export const environment = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
+	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	baseHref: '/pbc/',
 	ieSetup: {
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
