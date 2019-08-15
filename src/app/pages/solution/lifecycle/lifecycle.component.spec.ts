@@ -198,7 +198,7 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.atx.sessions.length)
-						.toEqual(2);
+						.toEqual(4);
 				});
 		});
 
@@ -312,18 +312,24 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			// Temporarily commented out the following, since ribbon will be redo
-			// de = fixture.debugElement.query(By.css('.ribbon__green'));
-			// expect(de)
-			// 	.toBeTruthy();
+			expect(component.componentData.atx.sessions[0].bookmark)
+				.toBeTruthy();
 
-			// de = fixture.debugElement.query(By.css('.ribbon__clear'));
-			// expect(de)
-			// 	.toBeTruthy();
+			de = fixture.debugElement.query(By.css('.ribbon__blue'));
 
-			// de = fixture.debugElement.query(By.css('.ribbon__blue'));
-			// expect(de)
-			// 	.toBeTruthy();
+			expect(de)
+				.toBeTruthy();
+
+			component.updateBookmark('ATX', component.componentData.atx.sessions[0]);
+			fixture.detectChanges();
+
+			expect(component.componentData.atx.sessions[0].bookmark)
+				.toBeFalsy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+
+			expect(de)
+				.toBeTruthy();
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
@@ -727,6 +733,11 @@ describe('LifecycleComponent', () => {
 			// change pitstop to "implement" (current+1) and check if button is enabled
 			component.getRacetrackInfo('implement');
 			component.atxScheduleCardOpened = true;
+			component.sessionSelected = {
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
+				sessionStartDate: 1565127052000,
+			};
 			fixture.detectChanges();
 			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
 			expect(de)
@@ -735,6 +746,11 @@ describe('LifecycleComponent', () => {
 			// change pitstop to "Onboard" (current) and check if button is enabled
 			component.getRacetrackInfo('Onboard');
 			component.atxScheduleCardOpened = true;
+			component.sessionSelected = {
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
+				sessionStartDate: 1565127052000,
+			};
 			fixture.detectChanges();
 			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
 			expect(de)
