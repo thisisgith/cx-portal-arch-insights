@@ -196,4 +196,22 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		url: `${api}?customerId=${customerId}&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Advisory Security Advisories for Asset',
+					response: {
+						body: MockData(10, 1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		/* tslint:disable */
+		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1&managedNeId=NA,FOC2045X0WJ,WS-C3850-48U-L,NA`,
+		usecases: ['Use Case 1'],
+	},
 ];
