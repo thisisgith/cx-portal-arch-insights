@@ -17,6 +17,7 @@ import {
 	catchError,
 } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { Alert } from '@interfaces';
 
 /** Data Interface */
 export interface Data {
@@ -37,6 +38,7 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 	@Input('advisory') public advisory: CriticalBug;
 	@Input('customerId') public customerId: string;
 	@Output('details') public details = new EventEmitter<Data>();
+	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 
 	private params: DiagnosticsService.GetCriticalBugsParams;
 

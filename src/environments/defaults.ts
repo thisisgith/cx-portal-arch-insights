@@ -32,8 +32,8 @@ export const defaults = {
 	ieSetup: {
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
-		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-' +
-			'cf-insight_engine-release/ie/Insight_Engine_1.0/ubuntu/65/CXC_1.0_Build-65-1.ova',
+		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
+			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
 		mockRegistration: true,
 		pingURL: '/ie-commonapi/services/version',
 		telemetryGuideUrl: 'https://www-author3.cisco.com/c/en/us/td/docs/cloud-systems-' +

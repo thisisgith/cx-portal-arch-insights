@@ -134,6 +134,7 @@ export class LifecycleComponent implements OnDestroy {
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
+	private destroyed$: Subject<void> = new Subject<void>();
 
 	// Current uncompleted pitstop
 	public currentWorkingPitstop: string;
@@ -244,8 +245,10 @@ export class LifecycleComponent implements OnDestroy {
 			takeUntil(this.destroy$),
 		)
 		.subscribe((technology: RacetrackTechnology) => {
-			this.selectedTechnology = technology;
 			const currentSolution = this.componentData.params.solution;
+
+			const newTech = (currentSolution && technology !== this.selectedTechnology);
+			this.selectedTechnology = technology;
 
 			this.resetComponentData();
 
@@ -259,7 +262,9 @@ export class LifecycleComponent implements OnDestroy {
 			if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
 			this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
 
-			this.getRacetrackInfo(this.currentWorkingPitstop);
+			if (newTech) {
+				this.getRacetrackInfo(this.currentWorkingPitstop);
+			}
 		});
 	}
 
@@ -495,32 +500,6 @@ export class LifecycleComponent implements OnDestroy {
 			visible: false,
 		};
 		this.atxScheduleCardOpened = false;
-	}
-
-	/**
-	 * Determines which modal to display
-	 * @param atx ATX item
-	 * @returns ribbon
-	 */
-	public getRibbonClass (atx: AtxSchema) {
-		let ribbon = 'ribbon__clear';
-		switch (_.get(atx, 'status')) {
-			case 'completed': {
-				ribbon = 'ribbon__green';
-				break;
-			}
-			case 'scheduled':
-			case 'inProgress': {
-				ribbon = 'ribbon__blue';
-				break;
-			}
-			default: {
-				ribbon = 'ribbon__clear';
-				break;
-			}
-		}
-
-		return ribbon;
 	}
 
 	/**
@@ -780,17 +759,25 @@ export class LifecycleComponent implements OnDestroy {
 	/**
 	 * Updates the bookmark of the item
 	 * @param type string
-	 * @param item SuccessPath
+	 * @param item SuccessPath | ATX
 	 */
-	 public updateBookmark (type: string, item: SuccessPath) {
+	 public updateBookmark (type: string, item: SuccessPath | AtxSchema) {
 		let bookmark;
 		let id;
 		let lifecycleCategory;
-		this.status.loading.success = true;
+		if (_.isEqual(type, 'ATX') && _.get(item, 'status') === 'completed') {
+			return;
+		}
 		if (_.isEqual(type, 'SB')) {
 			bookmark = !_.get(item, 'bookmark');
 			id = _.get(item, 'successByteId');
 			lifecycleCategory = 'SB';
+			this.status.loading.success = true;
+		} else if (_.isEqual(type, 'ATX')) {
+			bookmark = !_.get(item, 'bookmark');
+			id = _.get(item, 'atxId');
+			lifecycleCategory = 'ATX';
+			this.status.loading.atx = true;
 		}
 		const bookmarkParams: BookmarkRequestSchema = {
 			bookmark,
@@ -806,10 +793,18 @@ export class LifecycleComponent implements OnDestroy {
 		this.contentService.updateBookmark(params)
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
-			this.status.loading.success = false;
+			if (_.isEqual(type, 'SB')) {
+				this.status.loading.success = false;
+			} else if (_.isEqual(type, 'ATX')) {
+				this.status.loading.atx = false;
+			}
 		},
 		err => {
-			this.status.loading.success = false;
+			if (_.isEqual(type, 'SB')) {
+				this.status.loading.success = false;
+			} else if (_.isEqual(type, 'ATX')) {
+				this.status.loading.atx = false;
+			}
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
@@ -834,10 +829,7 @@ export class LifecycleComponent implements OnDestroy {
 			map((result: ACCResponse) => {
 				this.selectedFilterForACC = '';
 				this.componentData.acc = {
-					sessions: _.union(_.filter(result.items, { status: 'requested' }),
-						_.filter(result.items, { status: 'in-progress' }),
-						_.filter(result.items, { status: 'recommended' }),
-						_.filter(result.items, { status: 'completed' })),
+					sessions: result.items,
 				};
 				_.remove(this.componentData.acc.sessions, (session: ACC) =>
 					!session.title && !session.description);
@@ -1195,7 +1187,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * will then call loadRacetrackInfo for the other api calls
 	 * @param stage selected pitstop
 	 */
-	private getRacetrackInfo (stage: string) {
+	public getRacetrackInfo (stage: string) {
 		if (this.componentData.params.solution && this.componentData.params.usecase) {
 			this.status.loading.racetrack = true;
 

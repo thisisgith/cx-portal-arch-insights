@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subject, of } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { Subject, of, Observable } from 'rxjs';
+import { catchError, takeUntil, flatMap } from 'rxjs/operators';
 
 import { caseSeverities, CaseRequestType } from '@classes';
 import { CaseOpenRequest } from '@interfaces';
@@ -10,12 +10,13 @@ import { ProfileService } from '@cisco-ngx/cui-auth';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiModalContent, CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
-import { Asset } from '@sdp-api';
+import { Asset, DeviceContractResponse, ContractsService } from '@sdp-api';
 import { SelectOption } from './panel-select/panel-select.component';
 import { CaseOpenData } from './caseOpenData';
 import { CloseConfirmComponent } from './close-confirm/close-confirm.component';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * Component for opening a new case in CSOne for a device
@@ -63,6 +64,9 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		title: new FormControl('', [Validators.required,
 			Validators.maxLength(this.titleMaxLength)]),
 	});
+	public customerId: string;
+	public contractNumber: string;
+	public contractLoading = true;
 
 	/** 2 values to pass to "submitted" component post-request */
 	public errors: string[];
@@ -75,13 +79,29 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		public cuiModalService: CuiModalService,
 		private logger: LogService,
 		private profileService: ProfileService,
-	) { }
+		private contractsService: ContractsService,
+		private userResolve: UserResolve,
+	) {
+	}
 
 	/**
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
 		this.asset = _.get(this.data, 'asset');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+			flatMap((id: string) => {
+				this.customerId = id;
+
+				return this.getContractData(this.customerId, this.asset.serialNumber);
+			}),
+		)
+		.subscribe(response => {
+			this.contractNumber = _.get(response, ['data', 0, 'contractNumber'], null);
+			this.contractLoading = false;
+		});
 	}
 
 	/**
@@ -120,6 +140,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		this.submitting = true;
 		const caseDetails: CaseOpenRequest = {
 			contactId: this.profileService.getProfile().cpr.pf_auth_uid,
+			contractNumber: this.contractNumber,
 			customerActivity: _.get(
 				// Have to explicitly cast it to a FormGroup
 				(<FormGroup> this.caseForm.controls.techInfo).controls.problemArea.value,
@@ -195,5 +216,25 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			}
 			this.submitted = true;
 		});
+	}
+
+	/**
+	 * Fetch device contract data
+	 * @param customerId id of customer whose device we're searching
+	 * @param serialNumber serial number of the device we're fetching
+	 * @returns Observable with device data
+	 */
+	private getContractData (customerId: string, serialNumber: string):
+		Observable<DeviceContractResponse> {
+		const params = { customerId, serialNumber: [serialNumber] };
+
+		return this.contractsService.getContractDetails(params)
+		.pipe(
+			catchError(err => {
+				this.logger.error(`Device Contract Data :: ${serialNumber} :: Error ${err}`);
+
+				return of(null);
+			}),
+		);
 	}
 }

@@ -125,6 +125,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		const currentAdvisory = _.get(changes, ['advisory', 'currentValue']);
 		if ((currentAdvisoryId && !changes.advisoryId.firstChange)
 			|| (currentAdvisory && !changes.advisory.firstChange)) {
+			_.invoke(this.alert, 'hide');
 			this.refresh();
 		}
 	}
