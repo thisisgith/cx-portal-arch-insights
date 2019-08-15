@@ -1011,7 +1011,8 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC` +
+		'&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
 		usecases: ['Use Case 1'],
 	},
 ];
