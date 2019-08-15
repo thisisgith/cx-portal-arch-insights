@@ -279,6 +279,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CasesSelectVisualFilter-rma', { timeout: 20000 }).should('exist');
 			cy.getByAutoId('No RMAsPoint', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('With RMAsPoint', { timeout: 10000 }).should('exist');
+			// No RMA filter will result in a list with 1500 entries, will take too long to load, comment out for now.
 			/* cy.getByAutoId('No RMAsPoint').click();
 			cy.getByAutoId('FilterTag-F', { timeout: 15000 }).within(() => {
 				cy.get('span').contains('No RMAs');
