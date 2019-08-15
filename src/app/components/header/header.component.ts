@@ -17,6 +17,8 @@ import { User } from '@interfaces';
 import { UserResolve } from '@utilities';
 import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { ContactSupportComponent } from '../contact-support/contact-support.component';
 
 /**
  * Main Header Component
@@ -63,6 +65,7 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	constructor (
 		private mockService: MicroMockService,
 		private userResolve: UserResolve,
+		private cuiModalService: CuiModalService,
 	) {
 		this.updateProfileImage();
 		this.userResolve.getUser()
@@ -114,6 +117,13 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
+	}
+
+	/**
+	 * Open contact support modal
+	 */
+	public openPortalSupport () {
+		this.cuiModalService.showComponent(ContactSupportComponent, { });
 	}
 
 	/**

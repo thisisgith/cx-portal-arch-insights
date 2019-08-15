@@ -28,6 +28,7 @@ import { NoResultsModule } from './components/search/no-results/no-results.modul
 import { EntitlementModule } from '@sdp-api';
 import { CaseOpenModule } from './components/case/case-open/case-open.module';
 import { CloseConfirmModule } from './components/case/case-open/close-confirm/close-confirm.module';
+import { ContactSupportModule } from './components/contact-support/contact-support.module';
 import { CollapsibleModule } from './components/collapsible/collapsible.module';
 
 /**
@@ -67,6 +68,7 @@ export function loadI18n (service: AppService) {
 		NoResultsModule,
 		CaseOpenModule,
 		CloseConfirmModule,
+		ContactSupportModule,
 		CollapsibleModule,
 	],
 	providers: [
