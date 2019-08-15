@@ -7,7 +7,6 @@ import { mockSettings } from './mock/mock';
 export const environment = {
 	...defaults,
 	...mockSettings,
-	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call

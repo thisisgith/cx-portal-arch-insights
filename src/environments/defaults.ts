@@ -27,6 +27,7 @@ export const defaults = {
 		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
 	emailFromID: 'cxportal-noreply@cisco.com',
+	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	cuiColors: {
 		vibrantBlue: '#017cad',
 	},
