@@ -402,16 +402,22 @@ export class LifecycleComponent implements OnDestroy {
 			this.selectedSuccessPaths = _.orderBy(
 				this.selectedSuccessPaths, [key], [sortDirection]);
 
-			_.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.successBytesTable.columns, { sortKey: key }).sortDirection
-				=== 'asc' ? 'desc' : 'asc';
+			const reverseDirection = (sortDirection === 'asc' ? 'desc' : 'asc');
+			this.successBytesTable.columns.forEach(element => {
+				if (element.sortKey === key) {
+					element.sortDirection = reverseDirection;
+				}
+			});
 		} else if (type === 'PG') {
 			this.selectedProductGuides = _.orderBy(
 				this.selectedProductGuides, [key], [sortDirection]);
 
-			_.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
-				= _.find(this.productGuidesTable.columns, { sortKey: key }).sortDirection
-				=== 'asc' ? 'desc' : 'asc';
+			const reverseDirection = (sortDirection === 'asc' ? 'desc' : 'asc');
+			this.productGuidesTable.columns.forEach(element => {
+				if (element.sortKey === key) {
+					element.sortDirection = reverseDirection;
+				}
+			});
 		}
 	}
 
