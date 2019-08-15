@@ -52,7 +52,7 @@
 					<div class="col-1 flex-center">
 						<a
 							data-auto-id="settings.policies.collection.edit-scan"
-							(click)="startModal(true, 'editPolicy', scan)"
+							(click)="startModal(true, scan.policyType === 'SCAN' ? 'editPolicy' : 'editIgnorePolicy', scan)"
 						>
 							<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
 						</a>

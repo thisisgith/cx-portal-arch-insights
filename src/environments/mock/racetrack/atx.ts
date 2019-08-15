@@ -213,7 +213,7 @@ function MockATX (solution: string, usecase: string, pitstop: string): ATXRespon
 		items: [],
 	};
 
-	if (pitstop.toLowerCase() === 'Adopt') {
+	if (pitstop.toLowerCase() === 'implement') {
 		response.items = implementItems;
 	} else {
 		response.items = onboardItems;
