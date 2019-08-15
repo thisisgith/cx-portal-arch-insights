@@ -2,14 +2,14 @@
 export interface Asset {
 
   /**
-   * Role
-   */
-  role?: string;
-
-  /**
    * Device name
    */
   deviceName?: string;
+
+  /**
+   * IP Address
+   */
+  ipAddress?: string;
 
   /**
    * When the serial number was last scanned
@@ -38,9 +38,9 @@ export interface Asset {
   osVersion?: string;
 
   /**
-   * IP Address
+   * Role
    */
-  ipAddress?: string;
+  role?: string;
 
   /**
    * Contract Number
@@ -52,4 +52,6 @@ export interface Asset {
   containingHwId?: string;
   productId?: string;
   equipmentType?: string;
+  productName?: string;
+  reachabilityStatus?: string;
 }

@@ -157,6 +157,108 @@ describe('AssetsComponent', () => {
 	/**
 	 * @TODO: modify test to use UI
 	 */
+	it('should set query params for Hardware EOX filter', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			spyOn(Date.prototype, 'getUTCFullYear').and
+				.callFake(() => 2013);
+			spyOn(Date.prototype, 'getUTCMonth').and
+				.callFake(() => 9);
+			spyOn(Date.prototype, 'getUTCDay').and
+				.callFake(() => 23);
+			const currentTime = new Date(2013, 9, 23).getTime();
+			const eoxFilter = _.find(component.filters, { key: 'eox' });
+			const dayInMillis = 24 * 60 * 60 * 1000;
+
+			component.onSubfilterSelect('gt-0-lt-30-days', eoxFilter);
+
+			fixture.detectChanges();
+			const lastDateOfSupport30 = _.map(
+				_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0]
+					.split(','),
+				t => _.toSafeInteger(t));
+
+			expect(lastDateOfSupport30.length)
+				.toBe(2);
+			expect(currentTime - lastDateOfSupport30[0])
+				.toBe(dayInMillis * 30);
+			expect(currentTime - lastDateOfSupport30[1])
+				.toBe(0);
+
+			component.onSubfilterSelect('gt-30-lt-60-days', eoxFilter);
+
+			fixture.detectChanges();
+			const lastDateOfSupport3060 = _.map(
+				_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0]
+					.split(','),
+				t => _.toSafeInteger(t));
+
+			expect(lastDateOfSupport3060.length)
+				.toBe(2);
+			expect(currentTime - lastDateOfSupport3060[0])
+				.toBe(dayInMillis * 60);
+			expect(currentTime - lastDateOfSupport3060[1])
+				.toBe(dayInMillis * 30);
+
+			component.onSubfilterSelect('gt-60-lt-90-days', eoxFilter);
+
+			fixture.detectChanges();
+			const lastDateOfSupport6090 = _.map(
+				_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0]
+					.split(','),
+				t => _.toSafeInteger(t));
+
+			expect(lastDateOfSupport6090.length)
+				.toBe(2);
+			expect(currentTime - lastDateOfSupport6090[0])
+				.toBe(dayInMillis * 90);
+			expect(currentTime - lastDateOfSupport6090[1])
+				.toBe(dayInMillis * 60);
+
+			done();
+		});
+	});
+
+	/**
+	 * @TODO: modify test to use UI
+	 */
+	it('should set query params for Advisories filter', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const advisoriesFilter = _.find(component.filters, { key: 'advisories' });
+
+			component.onSubfilterSelect('bugs', advisoriesFilter);
+			expect(_.get(component, ['assetParams', 'hasBugs']))
+				.toBeTruthy();
+			expect(_.get(component, ['assetParams', 'hasFieldNotices']))
+				.toBeFalsy();
+			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
+				.toBeFalsy();
+
+			component.onSubfilterSelect('field-notices', advisoriesFilter);
+			expect(_.get(component, ['assetParams', 'hasBugs']))
+				.toBeFalsy();
+			expect(_.get(component, ['assetParams', 'hasFieldNotices']))
+				.toBeTruthy();
+			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
+				.toBeFalsy();
+
+			component.onSubfilterSelect('security-advisories', advisoriesFilter);
+			expect(_.get(component, ['assetParams', 'hasBugs']))
+				.toBeFalsy();
+			expect(_.get(component, ['assetParams', 'hasFieldNotices']))
+				.toBeFalsy();
+			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
+				.toBeTruthy();
+			done();
+		});
+	});
+
+	/**
+	 * @TODO: modify test to use UI
+	 */
 	it('should select a coverage subfilter', done => {
 		fixture.whenStable()
 		.then(() => {
@@ -310,6 +412,70 @@ describe('AssetsComponent', () => {
 			expect(component.selectedAsset)
 				.toBeFalsy();
 
+			done();
+		});
+	});
+
+	it('should handle unsortable column', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			component.filtered = false;
+			expect(component.assetsTable)
+				.toBeTruthy();
+			const deviceNameCol = _.find(component.assetsTable.columns, { key: 'deviceName' });
+			deviceNameCol.sortable = false;
+			deviceNameCol.sortDirection = 'asc';
+			const serialNumberCol = _.find(component.assetsTable.columns, { key: 'serialNumber' });
+			serialNumberCol.sorting = true;
+			serialNumberCol.sortDirection = 'desc';
+
+			fixture.detectChanges();
+
+			component.onColumnSort(deviceNameCol);
+			expect(component.filtered)
+				.toBeFalsy();
+			expect(deviceNameCol.sorting)
+				.toBeFalsy();
+			expect(deviceNameCol.sortDirection)
+				.toBe('asc');
+			expect(serialNumberCol.sorting)
+				.toBeTruthy();
+			expect(serialNumberCol.sortDirection)
+				.toBe('desc');
+			expect(_.get(component, ['params', 'sort']))
+				.toBeFalsy();
+			done();
+		});
+	});
+
+	it('should handle sortable column', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			component.filtered = false;
+			const deviceNameCol = _.find(component.assetsTable.columns, { key: 'deviceName' });
+			deviceNameCol.sorting = true;
+			const serialNumberCol = _.find(component.assetsTable.columns, { key: 'serialNumber' });
+			serialNumberCol.sorting = false;
+			serialNumberCol.sortDirection = 'desc';
+
+			fixture.detectChanges();
+
+			component.onColumnSort(serialNumberCol);
+
+			expect(component.filtered)
+				.toBeTruthy();
+			expect(deviceNameCol.sorting)
+				.toBeFalsy();
+			expect(deviceNameCol.sortDirection)
+				.toBe('desc');
+			expect(serialNumberCol.sorting)
+				.toBeTruthy();
+			expect(serialNumberCol.sortDirection)
+				.toBe('asc');
+			expect(_.get(component, ['assetParams', 'sort']))
+				.toEqual(['serialNumber:ASC']);
 			done();
 		});
 	});
