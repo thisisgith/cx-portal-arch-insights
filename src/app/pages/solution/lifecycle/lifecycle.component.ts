@@ -1044,6 +1044,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadCGT (): Observable<ContractQuota[]> | Observable<void | { }> {
 		this.status.loading.cgt = true;
+		if (window.Cypress) {
+			window.cgtLoading = true;
+		}
 		let startDate;
 		let endDate;
 		let trainingDuration;
@@ -1061,6 +1064,9 @@ export class LifecycleComponent implements OnDestroy {
 		.pipe(
 			map((result: ContractQuota[]) => {
 				this.status.loading.cgt = false;
+				if (window.Cypress) {
+					window.cgtLoading = false;
+				}
 				this.totalAllowedGroupTrainings = _.size(result) * 2;
 				_.each(result, training => {
 					if (new Date(_.get(training, 'contract_end_date')).getFullYear() ===
@@ -1159,6 +1165,9 @@ export class LifecycleComponent implements OnDestroy {
 			}),
 			catchError(err => {
 				this.status.loading.cgt = false;
+				if (window.Cypress) {
+					window.cgtLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
 					err.status}) ${err.message}`);
 

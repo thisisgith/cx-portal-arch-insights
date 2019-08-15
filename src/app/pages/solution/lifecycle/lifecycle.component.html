@@ -733,7 +733,8 @@
 
 <ng-template #cgtRequestTraining let-data="data">
 	<div class="panel cgtpanel--open panel--bordered"
-		*ngIf="cgtRequestTrainingClicked">
+		*ngIf="cgtRequestTrainingClicked"
+		data-auto-id="cgtTrainingLimitPopup">
 		<div class="row base-margin-top half-margin-left half-margin-right">
 			<div class="col-md-11 text-left">
 				<div class="half-margin-left" [innerText]="data | i18n"></div>
@@ -741,7 +742,7 @@
 			<div class="col-md-1">
 				<a class="no-link closebtn"
 					(click)="this.cgtRequestTrainingClicked = false"
-					attr.data-auto-id="Close-CgtTrainingComplete-Popup">
+					data-auto-id="Close-CgtTrainingComplete-Popup">
 					<span class="icon-close icon-small"></span>
 				</a>
 			</div>
@@ -755,7 +756,7 @@
 		<button (click)="this.cgtRequestTrainingClicked = true"
 			[ngClass]="this.cgtRequestTrainingClicked ? 'btn btn--small btn--gray-ghost disabled text-uppercase' : 'btn btn--small btn--secondary text-uppercase'"
 			[innerText]="'_RequestTraining_' | i18n"
-			attr.data-auto-id="Request-CgtCompleted">
+			data-auto-id="Request-CgtCompleted">
 		</button>
 		<ng-container *ngTemplateOutlet="cgtRequestTraining; context: { data:  '_CGTSessionLimitReached_' }"></ng-container>
 	</div>
@@ -763,10 +764,10 @@
 		<button (click)="selectCgtRequestForm(true, data.usedTrainings)"
 			class="btn btn--small btn--secondary text-uppercase"
 			[innerText]="'_RequestTraining_' | i18n"
-			attr.data-auto-id="Request-CgtTraining">
+			data-auto-id="Request-CgtTraining">
 		</button>
 	</div>
-	<div *ngIf="data.sessions.length>0">
+	<div *ngIf="data.sessions.length>0" data-auto-id="CGTCompletedList">
 		<div class="divider"></div>
 		<div class="base-padding-bottom">
 			<div class="qtr-padding-bottom" *ngFor="let item of data.sessions | slice:0:2">

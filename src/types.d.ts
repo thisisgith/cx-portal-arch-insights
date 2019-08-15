@@ -24,5 +24,6 @@ interface Window {
 	atxLoading: boolean;
 	accLoading: boolean;
 	communitiesLoading: boolean;
+	cgtLoading: boolean;
 	racetrackEvents: any;
 }
