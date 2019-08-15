@@ -128,7 +128,7 @@ const onboardItems = [
 		status: 'in-progress',
 		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
 		duration: 3600,
-		bookmark: false,
+		bookmark: true,
 		sessions: [
 			{
 				sessionId: 'DNA3-08/08/19-1',
@@ -257,7 +257,24 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=implement&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Use',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Use'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=use&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
