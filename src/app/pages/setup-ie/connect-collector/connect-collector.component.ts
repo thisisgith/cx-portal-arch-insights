@@ -98,7 +98,7 @@ export class ConnectCollectorComponent implements OnDestroy, SetupStep {
 	 * Opens the given IP Address in a new tab
 	 */
 	private openIpAddressInNewTab () {
-		window.open(this.ipAddressLink, '_blank');
+		window.open(`${this.ipAddressLink}/verified`, '_blank');
 	}
 
 	/**

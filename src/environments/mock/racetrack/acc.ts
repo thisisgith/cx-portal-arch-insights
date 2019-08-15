@@ -27,15 +27,15 @@ function MockACC (
 	solution: string, usecase: string, pitstop: string, mockFileName: string): ACCResponse {
 	let items = [
 		{
-			accId: `${accId1}`,
-			description: 'Discover the standard steps required to engineer and commission ' +
-				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
-				'basic deployment requirements and schedules',
+			accId: `${accId6}`,
+			description: 'Experience this live coaching engagement on general Assurance ' +
+				'concepts and features such as network, device, client, and application ' +
+				'analytics. Help your team hit the ground running',
 			isFavorite: false,
-			status: 'recommended',
-			title: 'Cisco DNA Center Project Planning',
-			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
-				'images/acc_access-overview-demo.png',
+			status: 'requested',
+			title: 'Cisco Software-Defined Access Transition Planning',
+			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/' +
+				'acc_policy-enforcement-sda.png',
 		},
 		{
 			accId: `${accId2}`,
@@ -60,6 +60,17 @@ function MockACC (
 				'images/acc_deployment-best-practices.png',
 		},
 		{
+			accId: `${accId1}`,
+			description: 'Discover the standard steps required to engineer and commission ' +
+				'your appliance from an experienced Cisco DNA Center project manager. Understand ' +
+				'basic deployment requirements and schedules',
+			isFavorite: false,
+			status: 'recommended',
+			title: 'Cisco DNA Center Project Planning',
+			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
+				'images/acc_access-overview-demo.png',
+		},
+		{
 			accId: `${accId4}`,
 			description: 'Experience this live coaching engagement on general Assurance ' +
 				'concepts and features such as network, device, client, and application ' +
@@ -69,17 +80,6 @@ function MockACC (
 			title: 'Cisco DNA Center Wireless Assurance Feature Planning',
 			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
 				'images/acc_access-infra-readiness.png',
-		},
-		{
-			accId: `${accId6}`,
-			description: 'Experience this live coaching engagement on general Assurance ' +
-				'concepts and features such as network, device, client, and application ' +
-				'analytics. Help your team hit the ground running',
-			isFavorite: false,
-			status: 'requested',
-			title: 'Cisco Software-Defined Access Transition Planning',
-			url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/' +
-				'acc_policy-enforcement-sda.png',
 		},
 		{ },
 	];
