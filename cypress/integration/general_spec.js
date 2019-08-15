@@ -295,14 +295,14 @@ describe('General Spec', () => {
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
 		});
-		it('RMA 800000000 click the case link', () => {
+		it.only('RMA 800000000 click the case link', () => {
 			// PBC-250
 			// mock set at "RMA with one replacement part"
 			const rmaVal = '800000000';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('rma');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
-				.type(rmaVal.concat('{ enter }'));
+				.type(rmaVal.concat('{enter}'));
 
 			cy.wait('@rma').then(() => {
 				cy.wait(3000);
@@ -479,4 +479,25 @@ describe('General Spec', () => {
 			});
 		});
 	});
+
+	context('Portal Support', () => {
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			cy.waitForAppLoading();
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
+		});
+
+		it('PBC-369 Portal Support', () => {
+			cy.getByAutoId('HeaderPortalHelpButton').click();
+			cy.getByAutoId('HeaderDropdownClose').click(); // close it
+			cy.getByAutoId('HeaderPortalHelpButton').click(); // open it again
+			cy.getByAutoId('portalHelp').click(); // open the Contact Support modal
+			cy.getByAutoId('supportTopic').should('exist');
+			cy.getByAutoId('cui-select').should('exist');
+
+			cy.getByAutoId('supportDescription').should('exist');
+		});
+
+	})]
 });
