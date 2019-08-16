@@ -137,6 +137,8 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForPG = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
+	public eventCoordinates = 0;
+	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
 	// id of ACC in request form
 	public accTitleRequestForm: string;
@@ -738,6 +740,7 @@ export class LifecycleComponent implements OnDestroy {
 			visible: false,
 		};
 		this.atxScheduleCardOpened = false;
+		this.eventCoordinates = 0;
 	}
 
 	/**
@@ -1092,6 +1095,37 @@ export class LifecycleComponent implements OnDestroy {
 				err.status}) ${err.message}`);
 		});
 	 }
+
+	/**
+	 * Get the mouse click coordinates
+	 * @param event event
+	 */
+	public getCoordinates (event: MouseEvent) {
+		this.eventCoordinates = event.clientX;
+	}
+
+	/**
+	 * Get the panel styles based on button coordinates
+	 * @param viewAtxSessions HTMLElement
+	 * @returns panel string
+	 */
+	public getPanel (viewAtxSessions: HTMLElement) {
+		let panel;
+		const _div = viewAtxSessions;
+		this.innerWidth = window.innerWidth;
+		if ((this.eventCoordinates + 500) > this.innerWidth) {
+			_div.style.right = '330px';
+			_div.style.bottom = '-50px';
+			panel = 'panel cardpanel--openright';
+		} else {
+			_div.style.left = '175px';
+			_div.style.bottom = this.componentData.atx.interested ? '-50px' : '10px';
+			panel = this.componentData.atx.interested ?
+				'panel cardpanel--open' : 'panel panel--open';
+		}
+
+		return panel;
+	}
 
 	/**
 	 * Loads the ACC for the given params

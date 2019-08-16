@@ -298,6 +298,28 @@ describe('LifecycleComponent', () => {
 				.toBeUndefined();
 		});
 
+		it('should call getPanel function upon clicking viewSessions', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#recommendedATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			el = de.nativeElement;
+
+			spyOn(component, 'getPanel');
+			el.click();
+			fixture.detectChanges();
+
+			expect(component.getPanel)
+				.toHaveBeenCalled();
+
+		});
+
 		it('should have a selected session', () => {
 			buildSpies();
 			sendParams();
@@ -305,6 +327,23 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 
 			const recommended = component.componentData.atx.recommended;
+
+			de = fixture.debugElement.query(By.css('#recommendedATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			component.eventCoordinates = 0;
+			(<any> window).innerWidth = 1200;
+			let viewAtxSessions: HTMLElement;
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panel)
+				.toEqual('panel panel--open');
 
 			expect(component.sessionSelected)
 				.toBeUndefined();
@@ -359,6 +398,34 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
+			de = fixture.debugElement.query(By.css('#ATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			component.eventCoordinates = 200;
+			(<any> window).innerWidth = 1200;
+			let viewAtxSessions: HTMLElement;
+			component.componentData.atx.interested = { };
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panel)
+				.toEqual('panel cardpanel--open');
+
+			component.eventCoordinates = 1000;
+			(<any> window).innerWidth = 1200;
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panelRight = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panelRight)
+				.toEqual('panel cardpanel--openright');
 			expect(component.getTitle('ATX'))
 				.toEqual('Ask The Expert');
 
