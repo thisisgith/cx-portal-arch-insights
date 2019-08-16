@@ -76,9 +76,14 @@ function MockCustomerQuotaResponse (): ContractQuota[] {
 
 /**
  * Mock response for getCompletedTrainings
+ * @param mockFileName the name of the corresponding json file to pull mock data from
  * @returns response
  */
-function MockCompletedTrainingsResponse (): UserTraining[] {
+function MockCompletedTrainingsResponse (mockFileName?: string): UserTraining[] {
+	if (mockFileName && mockFileName !== '') {
+		return require(`./cgtMockData/${mockFileName}.json`);
+	}
+
 	return [
 		{
 			city: 'London',
@@ -168,6 +173,33 @@ export const CGTScenarios = [
 						status: 200,
 					},
 					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(CGT) CGT-GetCompletedTrainings-Empty',
+					response: {
+						body: [],
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(CGT) CGT-GetCompletedTrainings-fourCompleted',
+					response: {
+						body: MockCompletedTrainingsResponse('fourCompleted'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(CGT) CGT-GetCompletedTrainings-twoCompletedThisYear',
+					response: {
+						body: MockCompletedTrainingsResponse('twoCompletedThisYear'),
+						status: 200,
+					},
+					selected: false,
 				},
 			],
 		},
