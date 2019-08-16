@@ -257,7 +257,24 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=implement&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Use',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Use'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=use&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
