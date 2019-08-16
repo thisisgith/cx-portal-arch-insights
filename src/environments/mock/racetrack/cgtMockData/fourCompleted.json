@@ -1,0 +1,50 @@
+[
+    {
+        "city": "London",
+        "country": "UK",
+        "customer": "0",
+        "duration": 0,
+        "end_date": "2019-02-02",
+        "instructors": "John Doe",
+        "start_date": "2019-01-29",
+        "title": "",
+        "training_type": "",
+        "contract_number": "111111"
+    },
+    {
+        "city": "London",
+        "country": "UK",
+        "customer": "0",
+        "duration": 0,
+        "end_date": "2019-02-04",
+        "instructors": "John Doe",
+        "start_date": "2019-02-02",
+        "title": "",
+        "training_type": "",
+        "contract_number": "111111"
+    },
+    {
+        "city": "London",
+        "country": "UK",
+        "customer": "0",
+        "duration": 0,
+        "end_date": "2019-02-06",
+        "instructors": "John Doe",
+        "start_date": "2019-02-04",
+        "title": "",
+        "training_type": "",
+        "contract_number": "111111"
+    },
+    {
+        "city": "London",
+        "country": "UK",
+        "customer": "0",
+        "duration": 0,
+        "end_date": "2019-02-08",
+        "instructors": "John Doe",
+        "start_date": "2019-02-06",
+        "title": "",
+        "training_type": "",
+        "contract_number": "111111"
+    }
+]
