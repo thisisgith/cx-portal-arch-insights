@@ -16,7 +16,7 @@ const customerId = '231215372';
 /**
  * Interface representing our visual filters
  */
-interface OSVFilter extends VisualFilter {
+interface Filter extends VisualFilter {
 	view?: string[];
 }
 
@@ -43,7 +43,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public selectedProfileGroup: any;
 	public selectedAsset: OSVAsset;
 	public filtered = false;
-	public filters: OSVFilter[];
+	public filters: Filter[];
 	private destroy$ = new Subject();
 	public view: 'swProfiles' | 'assets' | 'swVersions'
 		= 'assets';
@@ -155,12 +155,11 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					totalAssetsFilter.loading = false;
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
-					totalAssetsFilter.seriesData[0] = {
+					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
 						versions: response.versions,
-					};
-					response.asset_profile.assets_profile = 0;
+					}];
 					deploymentStatusFilter.seriesData = _.compact(
 						_.map(response.deployment, (value: number, key: string) => {
 							if (value !== 0) {
@@ -246,7 +245,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * @param filter the filter we selected the subfilter on
 	 * @param reload if we're reloading our assets
 	 */
-	public onSubfilterSelect (subfilter: string, filter: OSVFilter) {
+	public onSubfilterSelect (subfilter: string, filter: Filter) {
 		const sub = _.find(filter.seriesData, { filter: subfilter });
 		if (sub) {
 			sub.selected = !sub.selected;
@@ -268,7 +267,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		} else {
 			const total = _.reduce(this.filters, (memo, f) => {
 				if (!memo) {
-					return _.some(f.data, 'selected');
+					return _.some(f.seriesData, 'selected');
 				}
 
 				return memo;
@@ -286,7 +285,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		const totalFilter = _.find(this.filters, { key: 'totalAssets' });
 		this.filtered = false;
 
-		_.each(this.filters, (filter: OSVFilter) => {
+		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {
 				f.selected = false;
@@ -300,7 +299,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * hide/show profile Info modal on ngModal change
+	 * hide / show profile Info modal on ngModal change
 	 */
 	public hideInfo () {
 		if (this.hideProfileInfo) {
