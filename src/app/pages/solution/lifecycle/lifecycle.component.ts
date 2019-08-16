@@ -1364,6 +1364,7 @@ export class LifecycleComponent implements OnDestroy {
 		let completedTrainingData = [];
 		let trainigsCompleted = 0;
 		let trainigsInProcess = 0;
+		this.usedTrainings = [];
 
 		const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
 			'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

@@ -144,7 +144,8 @@
 			[options]="tab.options"
 			[data]="tab.data"
 			(onTableRowClicked)="onRowSelect($event)"
-			(onSortingChanged)="onColumnSort($event)">
+			(onSortingChanged)="onColumnSort($event)"
+		>
 		</cui-table>
 		<cui-pager
 			*ngIf="tab.data.length && tab?.pagination?.total > 0"
@@ -166,7 +167,7 @@
 					data-auto-id="NoResultsFoundTxt" >
 				</span>
 			</div>
-			<div *ngIf="tab.pagination">
+			<div>
 				<a (click)="clearFilters()"
 					class="text-lowercase"
 					data-auto-id="NoResultsClearAll"
@@ -224,5 +225,48 @@
 			innerText="{{ celldata?.assetsImpacted || 0 }} {{ (celldata?.assetsPotentiallyImpacted || 0) > 0 ? '(+' + celldata.assetsPotentiallyImpacted + ')' : '' }}"
 			data-auto-id="ImpactedCountText">
 		</span>
+	</div>
+</ng-template>
+
+<ng-template #impactedAssetsTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span
+			[innerText]="celldata?.assetsImpacted >= 0 ? celldata?.assetsImpacted : ('_NA_' | i18n)"
+			data-auto-id="ImpactedAssetsText"
+		></span>
+	</div>
+</ng-template>
+
+<ng-template #potentiallyImpactedAssetsTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span
+			[innerText]="celldata?.assetsPotentiallyImpacted >= 0 ? celldata?.assetsPotentiallyImpacted : ('_NA_' | i18n)"
+			data-auto-id="PotentiallyImpactedAssetsText"
+		></span>
+	</div>
+</ng-template>
+
+<ng-template #versionTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span [innerText]="celldata?.version || ('_NA_' | i18n)" data-auto-id="VersionText"></span>
+	</div>
+</ng-template>
+
+<ng-template #titleTemplate let-celldata="celldata">
+	<span [innerText]="celldata?.title || ('_NA_' | i18n)" data-auto-id="TitleText"></span>
+</ng-template>
+
+<ng-template #stateTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span [innerText]="(celldata?.state | titlecase) || ('_NA_' | i18n)" data-auto-id="StateText"></span>
+	</div>
+</ng-template>
+
+<ng-template #lastUpdatedTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span 
+			[innerText]="celldata?.lastUpdated ? (celldata?.lastUpdated | date:'yyyy MMM dd') : ('_Never_' | i18n)"
+			data-auto-id="LastUpdatedText"
+		></span>
 	</div>
 </ng-template>
