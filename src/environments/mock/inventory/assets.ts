@@ -23,6 +23,7 @@ export const MockAssetsData: Asset[] = [
 			"hwInstanceId": "FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
+			"productName": "Catalyst+2960S-24PS-L+Switch",
 			"equipmentType": "CHASSIS",
 			"lastScan": "2019-07-09T09:27:32.483",
 	},
@@ -812,7 +813,7 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -829,7 +830,7 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=2`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=2`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -846,7 +847,7 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=3`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -863,7 +864,7 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=4`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=4`,
 		usecases: ['Use Case 1'],
 	},
 	{

@@ -47,7 +47,10 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						},
 						"apollo-stage": {
 							"aot": true,
@@ -74,6 +77,10 @@
 								{
 									"replace": "src/app/components/header/header.component.html",
 									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.apollo-stage.html"
 								}
 							],
 							"buildOptimizer": true,
@@ -110,6 +117,10 @@
 								{
 									"replace": "src/app/components/header/header.component.html",
 									"with": "src/app/components/header/header.component.prod.html"
+								},
+								{
+									"replace": "src/index.html",
+									"with": "src/index.tie.html"
 								}
 							],
 							"buildOptimizer": true,
@@ -119,7 +130,10 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						},
 						"cxportal-qa": {
 							"aot": true,
@@ -264,7 +278,8 @@
 						],
 						"tsConfig": "src/tsconfig.spec.json",
 						"codeCoverageExclude": [
-							"./src/app/**/*-routing.module.ts"
+							"./src/app/**/*-routing.module.ts",
+							"./src/environments/**/*.ts"
 						]
 					}
 				}

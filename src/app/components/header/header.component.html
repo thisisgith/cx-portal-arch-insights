@@ -165,7 +165,7 @@
 		<!-- TODO: This is the feedback link to cx-portal-support@cisco.com -->
 		<div class="text-muted text-small text-uppercase" [innerText]="'_PortalHelp_' | i18n"></div>
 		<div>
-			<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="link.name"></a>
+			<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="link.name" data-auto-id="portalHelp" (click)="openPortalSupport()"></a>
 		</div>
 	</ng-container>
 </ng-template>

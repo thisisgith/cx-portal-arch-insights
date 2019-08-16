@@ -12,10 +12,18 @@ const api = '/api/customerportal/product-alerts/v1/field-notices';
  * Mock body of results
  */
 const mockCounts: FieldNoticeUpdatedResponse = {
-	'further-out': 1,
-	'gt-0-lt-30-days': 1,
-	'gt-30-lt-60-days': 1,
-	'gt-60-lt-90-days': 0,
+	'further-out': {
+		numericValue: 5,
+	},
+	'gt-0-lt-30-days': {
+		numericValue: 1,
+	},
+	'gt-30-lt-60-days': {
+		numericValue: 4,
+	},
+	'gt-60-lt-90-days': {
+		numericValue: 4,
+	},
 };
 
 /**

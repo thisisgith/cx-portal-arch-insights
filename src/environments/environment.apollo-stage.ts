@@ -20,12 +20,13 @@ export const environment = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
+	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	baseHref: '/pbc/',
 	ieSetup: {
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
-			'_engine-release/ie/Insight_Engine_1.0/ubuntu/95/CXC_1.0_Build-95.ova',
+			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
 		hasDNAC: true,
 		mockRegistration: true,
 		pingURL: '/ie-commonapi/services/version',

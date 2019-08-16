@@ -21,6 +21,8 @@ export { HardwareDetails } from './models/hardware-details';
 export { IEHealthStatusResponseModel } from './models/iehealth-status-response-model';
 export { IERegistrationRequestModel } from './models/ieregistration-request-model';
 export { IERegistrationResponseModel } from './models/ieregistration-response-model';
+export { IgnorePolicyRequestModel } from './models/ignore-policy-request-model';
+export { IgnorePolicyUpdateRequestModel } from './models/ignore-policy-update-request-model';
 export { InventoryDeviceEqContract } from './models/inventory-device-eq-contract';
 export { LicenseData } from './models/license-data';
 export { LicenseDataResponseModel } from './models/license-data-response-model';

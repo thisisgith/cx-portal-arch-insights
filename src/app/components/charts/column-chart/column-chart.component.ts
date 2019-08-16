@@ -79,6 +79,7 @@ export class ColumnChartComponent implements OnInit {
 			},
 			plotOptions: {
 				series: {
+					cursor: 'pointer',
 					point: {
 						events: {
 							click: event => this.selectSubfilter(event),
