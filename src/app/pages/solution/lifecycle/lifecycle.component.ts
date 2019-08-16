@@ -113,6 +113,7 @@ export class LifecycleComponent implements OnDestroy {
 	@ViewChild('bookmarkTemplate', { static: true }) private bookmarkTemplate: TemplateRef<{ }>;
 	@ViewChild('statusTemplate', { static: true }) private statusTemplate: TemplateRef<{ }>;
 	@ViewChild('actionTemplate', { static: true }) private actionTemplate: TemplateRef<{ }>;
+	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
 	public modalContent: TemplateRef<{ }>;
 	public modal = {
 		content: null,
@@ -408,13 +409,21 @@ export class LifecycleComponent implements OnDestroy {
 		this.successBytesTable = new CuiTableOptions({
 			columns: [
 				{
+					name: I18n.get('_Bookmark_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'bookmark',
+					template: this.bookmarkTemplate,
+					width: '10%',
+				},
+				{
 					key: 'title',
 					name: I18n.get('_Name_'),
 					sortable: true,
 					sortDirection: 'asc',
 					sortKey: 'title',
 					value: 'title',
-					width: '40%',
+					width: '35%',
 				},
 				{
 					key: 'archetype',
@@ -434,10 +443,10 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Bookmark_'),
+					name: I18n.get('_Action_'),
 					sortable: false,
-					template: this.bookmarkTemplate,
-					width: '20%',
+					template: this.actionTemplate,
+					width: '15%',
 				},
 			],
 		});
@@ -451,13 +460,21 @@ export class LifecycleComponent implements OnDestroy {
 		this.productGuidesTable = new CuiTableOptions({
 			columns: [
 				{
+					name: I18n.get('_Bookmark_'),
+					sortable: true,
+					sortDirection: 'asc',
+					sortKey: 'bookmark',
+					template: this.bookmarkTemplate,
+					width: '10%',
+				},
+				{
 					key: 'title',
 					name: I18n.get('_Name_'),
 					sortable: true,
 					sortDirection: 'asc',
 					sortKey: 'title',
 					value: 'title',
-					width: '40%',
+					width: '35%',
 				},
 				{
 					key: 'archetype',
@@ -477,10 +494,10 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Bookmark_'),
+					name: I18n.get('_Action_'),
 					sortable: false,
-					template: this.bookmarkTemplate,
-					width: '20%',
+					template: this.actionTemplate,
+					width: '15%',
 				},
 			],
 		});
@@ -506,7 +523,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortable: true,
 					sortDirection: 'asc',
 					sortKey: 'title',
-					value: 'title',
+					template: this.titleTemplate,
 					width: '40%',
 				},
 				{
@@ -548,7 +565,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortable: true,
 					sortDirection: 'asc',
 					sortKey: 'title',
-					value: 'title',
+					template: this.titleTemplate,
 					width: '40%',
 				},
 				{

@@ -746,7 +746,7 @@
 		<div class="card__footer">
 			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 				<div class="row">
-					<div class="col-md-3">
+					<div class="col-md-4">
 						<a class="no-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
 							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
 								<span class="icon-apps icon-small half-padding-right"></span>
@@ -759,6 +759,10 @@
 							<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
 								<span class="icon-file-pdf-o icon-small half-padding-right"></span>
 								<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+							</div>
+							<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'">
+								<span class="icon-document icon-small half-padding-right"></span>
+								<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
 							</div>
 						</a>
 					</div>
@@ -992,9 +996,9 @@
 						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
 						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
 					</div>
-					<div class="text-left text-muted" *ngIf="celldata.type === 'Spreadsheet'">
+					<div class="text-left text-muted" *ngIf="celldata.type === 'Data Sheet'">
 						<span class="icon-document icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Spreadsheet_' | i18n"></span>
+						<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
 					</div>
 				</a>
 			</div>
@@ -1049,15 +1053,14 @@
 
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div *ngIf="type === 'ATX'">
-	<button data-auto-id="ViewSessionButton"
-		class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-		(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata"
-		[innerText]="'_ViewSessions_' | i18n">
-	</button>
-	<a class="no-link" target="_blank" [href]="celldata.recordingURL">
-		<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
-			[innerText]="'_WatchNow_' | i18n"></button>
-	</a>
+		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
+			(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata"
+			[innerText]="'_ViewSessions_' | i18n">
+		</button>
+		<a class="no-link" target="_blank" [href]="celldata.recordingURL">
+			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+				[innerText]="'_WatchNow_' | i18n"></button>
+		</a>
 	</div>
 	<div *ngIf="type === 'ACC' && celldata.status === 'recommended'">
 		<button data-auto-id="Request1on1ACCButton"
@@ -1066,6 +1069,33 @@
 			[ngClass]="{ 'disabled': notCurrentPitstop }"
 			[innerText]="'_Request1on1_' | i18n">
 		</button>
+	</div>
+	<div *ngIf="type === 'SB' || type==='PG'">
+		<a class="no-link" target="_blank" [href]="celldata.url">
+			<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+				[innerText]="'_Launch_' | i18n"></button>
+		</a>
+	</div>
+</ng-template>
+
+<ng-template #titleTemplate let-celldata="celldata" let-type="type">
+	<div class="row" *ngIf="type==='ATX'">
+		<div class="col-md-2">
+			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="celldata.imageURL"
+				attr.data-auto-id="{{ type }}-Image">
+		</div>
+		<div class="col-md-10">
+			<div class="half-margin-top" [innerText]="celldata.title"></div>
+		</div>
+	</div>
+	<div class="row" *ngIf="type==='ACC'">
+		<div class="col-md-2">
+			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="celldata.url"
+				attr.data-auto-id="{{ type }}-Image">
+		</div>
+		<div class="col-md-10">
+			<div class="half-margin-top" [innerText]="celldata.title"></div>
+		</div>
 	</div>
 </ng-template>
 
