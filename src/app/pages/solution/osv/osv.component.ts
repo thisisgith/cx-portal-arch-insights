@@ -30,11 +30,11 @@ interface OSVFilter extends VisualFilter {
 })
 export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	@ViewChild('assetTypeFilter', { static: true }) private assetTypeFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -195,7 +195,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
