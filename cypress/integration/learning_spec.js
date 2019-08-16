@@ -1156,6 +1156,9 @@ describe('Learn Panel', () => {
 					cy.getByAutoId('ProductGuidesCard').eq(index).within(() => {
 						cy.getByAutoId('ProductGuidesCard-Archetype').should('have.text', item.archetype);
 						cy.getByAutoId('ProductGuidesCard-Title').should('have.text', item.title);
+						cy.getByAutoId('productlink')
+							.should('have.attr', 'href', item.url)
+							.and('have.attr', 'target', '_blank');
 						// Handle duration text and clock icon
 						cy.getByAutoId('ProductGuidesCard-Duration').should('contain', item.duration);
 						cy.getByAutoId('ProductGuidesCard-Duration')
@@ -1269,6 +1272,9 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
 							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
+							cy.getByAutoId('ViewAllTable-Format-rowValue-link')
+								.should('have.attr', 'href', item.url)
+								.and('have.attr', 'target', '_blank');
 							// Handle duration text and clock icon
 							cy.getByAutoId('ViewAllTable-Format-rowValue-duration').should('contain', item.duration);
 							cy.getByAutoId('ViewAllTable-Format-rowValue-clock').should('exist');
@@ -1684,6 +1690,259 @@ describe('Learn Panel', () => {
 							});
 						});
 					});
+			});
+		});
+
+		describe('Filter Stickiness', () => {
+			beforeEach(() => {
+				// Open the View All modal
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+			});
+
+			afterEach(() => {
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Make sure we're on the lifecycle page and the default use case
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+			});
+
+			it('All product guides modal filter should be sticky across modal close/re-open', () => {
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Close and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the filter is still in place
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+					const filteredItems = allProductGuidesItems.filter(item => (item.archetype === 'Project Planning'));
+					cy.getByAutoId('ProductGuidesCard').then(cards => {
+						expect(cards.length).to.eq(filteredItems.length);
+					});
+				});
+			});
+
+			it('All product guides modal filter should NOT be sticky across use case changes', () => {
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Close the modal, change use cases, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+				cy.wait('Product Documenation & Videos response for all');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the filter was cleared and all items are displayed
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+				cy.getByAutoId('ProductGuidesCard').then($cards => {
+					expect($cards.length).to.eq(allProductGuidesItems.length);
+				});
+			});
+
+			it('All product guides modal filter should NOT be sticky across page navigation', () => {
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the filter was cleared and all items are displayed
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+				cy.getByAutoId('ProductGuidesCard').then($cards => {
+					expect($cards.length).to.eq(allProductGuidesItems.length);
+				});
+			});
+
+			it('All product guides modal filter should NOT be sticky across page reload', () => {
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Close the modal, reload the page, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				cy.getByAutoId('setup-wizard-header-close-btn').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the filter was cleared and all items are displayed
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+				cy.getByAutoId('ProductGuidesCard').then($cards => {
+					expect($cards.length).to.eq(allProductGuidesItems.length);
+				});
+			});
+
+			it('All product guides modal filter should be sticky across table/card view', () => {
+				// Apply the filter
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Switch to table view, verify the filter is still in place
+				cy.getByAutoId('table-view-btn').click();
+				const filteredItems = allProductGuidesItems.filter(item => (item.archetype === 'Project Planning'));
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						cy.get('tr').then(rows => {
+							// Note that the first tr is the column headers
+							expect(rows.length - 1).to.eq(filteredItems.length);
+						});
+					});
+
+				// Switch back to card view, verify the filter is still in place
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+					cy.getByAutoId('ProductGuidesCard').then(cards => {
+						expect(cards.length).to.eq(filteredItems.length);
+					});
+				});
+			});
+		});
+
+		describe('Table vs. Card View Stickiness', () => {
+			beforeEach(() => {
+				// Open the modal and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('ProductGuidesCard').should('be.visible');
+			});
+
+			afterEach(() => {
+				// Switch to back to card view and close the modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Make sure we're on the lifecycle page and the default use case
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+			});
+
+			it('All product guides modal table vs. card view should be sticky across modal close/re-open', () => {
+				// Switch to table view
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+
+				// Close and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify we're still in table view
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			it('All product guides modal table vs. card view should be sticky across usecase change', () => {
+				// Switch to table view
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+
+				// Close the modal, switch use cases, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify we're still in table view
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			it('All product guides modal table vs. card view should be sticky across page navigation', () => {
+				// Switch to table view
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+
+				// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify we're still in table view
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			it('All product guides modal table vs. card view should be sticky across page reload', () => {
+				// Switch to table view
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+
+				// Close the modal, reload the page, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				cy.getByAutoId('setup-wizard-header-close-btn').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify we're still in table view
+				cy.getByAutoId('ViewAllTable').should('be.visible');
 			});
 		});
 	});
