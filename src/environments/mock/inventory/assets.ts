@@ -23,6 +23,7 @@ export const MockAssetsData: Asset[] = [
 			"hwInstanceId": "FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA",
 			"containingHwId": null,
 			"productId": "WS-C2960S-24PS-L",
+			"productName": "Catalyst+2960S-24PS-L+Switch",
 			"equipmentType": "CHASSIS",
 			"lastScan": "2019-07-09T09:27:32.483",
 	},
