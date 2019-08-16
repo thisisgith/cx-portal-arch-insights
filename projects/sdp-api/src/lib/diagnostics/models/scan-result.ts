@@ -5,14 +5,14 @@ import { AlertCounts } from './alert-counts';
 export interface ScanResult {
 
   /**
-   * Start TimeStamp
-   */
-  startTimeStamp?: string;
-
-  /**
    * This is the party identifier assigned by the profiling system
    */
   customerId?: string;
+
+  /**
+   * A serial number is a unique number used for identification.
+   */
+  serialNumber?: string;
 
   /**
    * Result Id
@@ -35,9 +35,9 @@ export interface ScanResult {
   errorMessage?: string;
 
   /**
-   * A serial number is a unique number used for identification.
+   * Start TimeStamp
    */
-  serialNumber?: string;
+  startTimeStamp?: string;
 
   /**
    * End TimeStamp

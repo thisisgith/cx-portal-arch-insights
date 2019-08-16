@@ -4,14 +4,14 @@ import { Remediation } from './remediation';
 export interface Alert {
 
   /**
-   * name
-   */
-  name?: string;
-
-  /**
    * alertId
    */
   alertId?: string;
+
+  /**
+   * resultId
+   */
+  resultId?: string;
 
   /**
    * issueId
@@ -34,9 +34,9 @@ export interface Alert {
   externalText?: string;
 
   /**
-   * resultId
+   * name
    */
-  resultId?: string;
+  name?: string;
 
   /**
    * severity

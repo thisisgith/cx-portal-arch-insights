@@ -139,8 +139,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private logger: LogService,
 		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
-		private route: ActivatedRoute,
-		private router: Router,
+		public route: ActivatedRoute,
+		public router: Router,
 		private fromNow: FromNowPipe,
 		private networkService: NetworkDataGatewayService,
 	) {
@@ -416,6 +416,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			sort: ['deviceName:ASC'],
 		};
 
+		this.search.setValue('');
 		this.allAssetsSelected = false;
 		totalFilter.selected = true;
 		this.adjustQueryParams();
@@ -522,13 +523,30 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.assetParams.role = _.castArray(params.role);
 			}
 
+			if (params.hasBugs) {
+				this.assetParams.hasBugs = params.hasBugs;
+			}
+
 			if (params.serialNumber) {
 				this.assetParams.serialNumber = _.castArray(params.serialNumber);
 			}
 
-			if (params.select) {
-				this.selectOnLoad = true;
+			if (params.hasFieldNotices) {
+				this.assetParams.hasFieldNotices = params.hasFieldNotices;
 			}
+
+			if (params.hasSecurityAdvisories) {
+				this.assetParams.hasSecurityAdvisories = params.hasSecurityAdvisories;
+			}
+
+			if (params.lastDateOfSupportRange) {
+				this.assetParams.lastDateOfSupportRange =
+					_.castArray(params.lastDateOfSupportRange);
+			}
+
+			this.filtered = !_.isEmpty(
+				_.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page']),
+			);
 
 			this.fetchInventory();
 		});
@@ -657,7 +675,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public doSearch (query: string) {
 		if (query) {
 			this.logger.debug(`assets.component :: doSearch() :: Searching for ${query}`);
-			// this.filter(query);
+			_.set(this.assetParams, 'search', query);
+			this.filtered = true;
+			this.adjustQueryParams();
+			this.InventorySubject.next();
 		}
 	}
 
@@ -905,6 +926,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 		this.searchForm = new FormGroup({
 			search: this.search,
+		});
+
+		this.searchForm.valueChanges.subscribe(query => {
+			if (!query.search) {
+				_.unset(this.assetParams, 'search');
+				this.adjustQueryParams();
+				this.InventorySubject.next();
+			}
 		});
 	}
 
