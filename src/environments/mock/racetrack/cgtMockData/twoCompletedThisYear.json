@@ -1,0 +1,26 @@
+[
+    {
+        "city": "London",
+        "country": "UK",
+        "customer": "0",
+        "duration": 0,
+        "end_date": "2019-01-02",
+        "instructors": "John Doe",
+        "start_date": "2019-01-01",
+        "title": "",
+        "training_type": "",
+        "contract_number": "222222"
+    },
+    {
+        "city": "London",
+        "country": "UK",
+        "customer": "0",
+        "duration": 0,
+        "end_date": "2019-02-02",
+        "instructors": "John Doe",
+        "start_date": "2019-02-01",
+        "title": "",
+        "training_type": "",
+        "contract_number": "222222"
+    }
+]

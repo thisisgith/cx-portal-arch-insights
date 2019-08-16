@@ -180,10 +180,11 @@ const adoptItems = [
  * @param solution the solution we're at
  * @param usecase the use case
  * @param pitstop the pitstop
+ * @param mockFileName the name of the corresponding json file to pull mock data from
  * @returns response
  */
 function MockELearning (
-	solution: string, usecase: string, pitstop: string): ELearningResponse {
+	solution: string, usecase: string, pitstop: string, mockFileName?: string): ELearningResponse {
 	const response = {
 		pitstop,
 		solution,
@@ -195,6 +196,10 @@ function MockELearning (
 		response.items = adoptItems;
 	} else {
 		response.items = onboardItems;
+	}
+
+	if (mockFileName && mockFileName !== '') {
+		response.items = require(`./elearningMockData/${mockFileName}.json`);
 	}
 
 	return response;
@@ -215,6 +220,60 @@ export const ELearningScenarios = [
 						status: 200,
 					},
 					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description: '(E-Learning) IBN-Campus Network Assurance-Onboard-noProgress',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'noProgress'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description:
+						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress25Percent',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'progress25Percent'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description:
+						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress50Percent',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'progress50Percent'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description:
+						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress75Percent',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'progress75Percent'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description:
+						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress100Percent',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'progress100Percent'),
+						status: 200,
+					},
+					selected: false,
 				},
 			],
 		},
