@@ -181,7 +181,7 @@
 		<div class="icon-bookmark icon-medium"
 			*ngIf="autoid==='recommendedACC' || autoid==='moreACCList'"
 			(click)="setFavorite(item)"
-			[ngClass]="getACCRibbonClass(item)"
+			[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__clear'"
 			data-auto-id="ACCCardRibbon">
 		</div>
 		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
@@ -354,7 +354,10 @@
 				<div class="row">
 					<div class="col-md-11 text-blue" [innerText]="item.title"></div>
 					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.status === 'completed'" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
-					<div class="col-md-1 alignRibbon icon-bookmark icon-x-small qtr-padding-left qtr-margin-left" *ngIf="item.status === 'recommended'" [ngClass]="getACCRibbonClass(item)" attr.data-auto-id="{{ autoid }}-Bookmark"></div>
+					<div class="col-md-1 alignRibbon icon-bookmark icon-x-small qtr-padding-left qtr-margin-left"
+						*ngIf="item.status === 'recommended'"
+						[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__clear'"
+						attr.data-auto-id="{{ autoid }}-Bookmark"></div>
 					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom" data-percentage="33" *ngIf="item.status === 'in-progress'" attr.data-auto-id="{{ autoid }}-ProgressBar">
 						<div class="col-md-1 progressbar__fill"></div>
 					</div>
@@ -666,14 +669,14 @@
 					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
 					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
 					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
-					<span [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
-					<span [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
-					<span [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
+					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
+					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
+					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
 				</div>
 				<div class="text-left" *ngIf="item.status === 'scheduled'">
 					<div  *ngFor="let session of item.sessions">
 						<span class="text-info icon-calendar half-padding-right" *ngIf="session.scheduled"></span>
-						<span innerText="{{session.sessionStartDate | date:'medium'}}" *ngIf="session.scheduled"></span>
+						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" *ngIf="session.scheduled"></span>
 					</div>
 				</div>
 				<div class="divider divider--compressed"></div>
@@ -706,35 +709,43 @@
 	<div class="card atx__card" *ngFor="let item of selectedACC"
 		[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null" data-auto-id="ACCCard">
 		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.url" attr.data-auto-id="{{ autoid }}-Image">
-		<div class="text-left" [ngClass]="item.status === 'recommended' ? 'text-info' : 'text-clear'"
+		<div class="text-left base-padding-left" [ngClass]="item.status === 'recommended' ? 'text-dkgray-4' : 'text-clear'"
 			data-auto-id="ACCCardHeader">
 			<span class="icon-flagged qtr-padding-right qtr-padding-bottom" data-auto-id="ACCCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<div class="icon-bookmark icon-medium" (click)="setFavorite(item)" [ngClass]="getACCRibbonClass(item)"
+		<div class="icon-bookmark icon-medium"
+			(click)="setFavorite(item)"
+			[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__clear'"
 			data-auto-id="ACCCardRibbon">
 		</div>
-		<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
-		<div class="atx__card__header text-left text-bold" [ngClass]="item.status === 'recommended' ? 'text-info' : null"
+		<div class="card__header atx__card__header text-left text-bold"
 			*ngIf="item && item.title" [innerText]="item.title" data-auto-id="ACCCardTitle">
 		</div>
-		<div class="atx__card__body atx-card__body text-left" *ngIf="item && item.description"
+		<div class="card__body atx__card__body text-left" *ngIf="item && item.description"
 			[innerText]="item.description"></div>
-		<div class="atx__card__footer">
+		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
-				<div class="text-left text-info" *ngIf="item.status === 'recommended'">
-					<button data-auto-id="Request1on1Button"
-						(click)="selectAccRequestForm(true, item.accId, item.title)"
-						class="btn btn--small btn--secondary text-uppercase"
-						[ngClass]="{ 'disabled': notCurrentPitstop }" [innerText]="'_Request1on1_' | i18n">
-					</button>
+				<div class="text-left">
+					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
+					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
+					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
+					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
+					<span class="text-medium" [innerText]="'_SessionInProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
+					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
 				</div>
-				<div class="text-left text-success"
-					*ngIf="item.status === 'in-progress' || item.status === 'requested'">
-					<span [innerText]="'_CSETouch_' | i18n"></span>
-				</div>
-				<div class="text-left text-olive" *ngIf="item.status === 'completed'">
-					<span [innerText]="'_Completed_' | i18n"></span>
+				<div class="divider divider--compressed"></div>
+				<div class="row">
+					<div class="col-md-6 text-left">
+						<div class="text-left text-info" *ngIf="item.status === 'recommended'">
+							<button data-auto-id="Request1on1Button"
+								(click)="selectAccRequestForm(true, item.accId, item.title)"
+								class="btn btn--small btn--secondary text-uppercase"
+								[ngClass]="{ 'disabled': notCurrentPitstop }" [innerText]="'_Request1on1_' | i18n">
+							</button>
+						</div>
+						<div class="text-left text-info base-padding-bottom half-padding-top" *ngIf="item.status !== 'recommended'"></div>
+					</div>
 				</div>
 			</div>
 		</div>

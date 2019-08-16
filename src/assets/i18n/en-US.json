@@ -533,6 +533,7 @@
 	"_SerialNumberHeader_": "Serial Number {0}",
 	"_ServiceProviderMobility_": "Service Provider Mobility",
 	"_ServiceProviderVideo_": "Service Provider Video",
+	"_SessionInProgress_": "Session in progress",
 	"_SessionExpiredReEnterCreds_": "Your session has expired. Please re-enter your credentials.",
 	"_SetUpCXCollector_": "Set up Cisco CX Collector on the VM",
 	"_SetUpInsightEngine_": "Set up CX Collector on the VM",
