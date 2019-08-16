@@ -10,6 +10,9 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { ArchitectureService, IException, IAsset } from '@sdp-api';
 
+ /** Our current customerId */
+const customerId = '231215372';
+
 /**
  * CBP TBD table Component
  */
@@ -29,6 +32,7 @@ export class CbpTbdComponent implements OnChanges {
 	public exceptionDatas: IException[] = [];
 	public isLoading = true;
 	public params: any = {
+ 		customerId,
 		page : 0,
 		pageSize : 8,
 		body : [],

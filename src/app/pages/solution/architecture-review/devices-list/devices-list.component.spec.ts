@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DevicesListComponent } from './devices-list.component';
 import { DevicesListModule } from './devices-list.module';
 
-describe('DevicesWithExceptionsComponent', () => {
+describe('DevicesListComponent', () => {
 	let component: DevicesListComponent;
 	let fixture: ComponentFixture<DevicesListComponent>;
 

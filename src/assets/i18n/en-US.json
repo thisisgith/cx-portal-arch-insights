@@ -624,5 +624,12 @@
 "_ArchitectureSwitchRedundancy_": "Switch Redundancy",
 "_ArchitectureVersion_": "Version",
 "_ArchitectureReview_": "Architecture Review",
-"_ArchitectureConfigurationBestPractices_": "Configuration Best Practices"
+"_ArchitectureConfigurationBestPractices_": "Configuration Best Practices",
+"_ArchitectureDNAC_" : "DNAC",
+"_ArchitectureDevices_" : "Devices",
+"_ArchitectureEndPoints_" : "End Points",
+"_ArchitectureFabrics_" : "Fabrics",
+"_ArchitectureCPUUsage_" : "CPU Usage",
+"_ArchitectureFileSystemUsage_" : "File System Usage",
+"_ArchitectureMemoryUsage_" : "Memory Usage"
 }

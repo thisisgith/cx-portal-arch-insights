@@ -12,6 +12,9 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { ArchitectureService , IException, IAsset } from '@sdp-api';
 import { DatePipe } from '@angular/common';
 
+ /** Our current customerId */
+ const customerId = '231215372';
+
 /**
  * CBP Device Affected Table Component
  */
@@ -31,6 +34,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public isLoading = true;
 	public assetDatas: IAsset[] = [];
 	public params: any = {
+		customerId,
 		page : 0,
 		pageSize : 8,
 		body : [],

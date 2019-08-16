@@ -59,10 +59,10 @@
         <div *ngIf="visualLabels[1].active">
             <ng-container *ngTemplateOutlet="filterBar"></ng-container>
             <div class="divider full-margin-top"></div>
-            <app-dnac-list [filters]="selectedFilter"></app-dnac-list>
+            <app-devices-list [filters]="selectedFilter"></app-devices-list>
         </div>
         <div *ngIf="visualLabels[0].active">
-            <app-devices-list></app-devices-list>
+            <app-dnac-list></app-dnac-list>
         </div>
     </div>
 </div>

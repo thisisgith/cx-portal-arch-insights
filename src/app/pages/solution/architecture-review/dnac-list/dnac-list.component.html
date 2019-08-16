@@ -1,33 +1,33 @@
-<!-- App Details 360 slide-out -->
-<details-panel [hidden]="!exceptionObject" [fullscreen]="fullscreen">
+<!-- Fly-Out View Slide-out -->
+<details-panel [hidden]="!assetObject" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
-		<dnac-details-header [dnacDetails]="exceptionObject"></dnac-details-header>
+		<devices-details-header [deviceDetails]="assetObject"></devices-details-header>
 		<div detailsPanelTitle class="text-xlarge">
 			<span class="icon-left-arrow" data-auto-id="PanelClose" (click)="onPanelClose()"></span>
 			<span class="icon-right-arrow" disabled></span>
-			<span [innerText]="' ' + exceptionObject?.bpRuleTitle"></span>
+			<span> Architecture Insights for </span>
+			<a> {{ assetObject?.productId}}</a>
 		</div>
 	</details-panel-header>
-	<dnac-details [dnacDetails]="exceptionObject"></dnac-details>
+	<devices-tab [deviceDetails]="assetObject" [tabIndex]='0'></devices-tab>
 </details-panel>
-
-<div class="row base-margin-top">
+<div class="divider no-margin-top"></div>
+<div class="row">
 	<div class="col-md-12">
-		<div class="container" *ngIf="cbpRuleExceptions.length > 0">
-			<span [innerText]="'_ArchitectureException_' | i18n" class="text-large"></span>
+		<div class="container" *ngIf="AssetsExceptionDetails.length > 0">
+			<span [innerText]="'_ArchitectureAssets_' | i18n" class="text-large"></span>
 			<span class="qtr-margin-left text-small text-muted">showing
-				{{ (tableStartIndex + 1) +' - ' +  tableEndIndex }}
+				{{ (tableStartIndex + 1) +' - ' + tableEndIndex }}
 				of {{totalItems}} exceptions</span>
 		</div>
 	</div>
 </div>
-<div class="divider no-qtr-margin"></div>
-
+<div class="divider"></div>
 <div class="panel">
-	<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="cbpRuleExceptions"
+	<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="AssetsExceptionDetails"
 		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 	<div class="section" *ngIf="totalItems">
-		<cui-pager *ngIf="!isLoading" [page]="paramsType.page" [limit]="paramsType.pageSize" [totalItems]="totalItems"
+		<cui-pager *ngIf="!isLoading" [page]="params.page" [limit]="params.pageSize" [totalItems]="totalItems"
 			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
 	</div>
 	<div class="base-margin-top" *ngIf="isLoading">
@@ -38,12 +38,3 @@
 		</div>
 	</div>
 </div>
-<ng-template #riskTemplate let-item="celldata">
-	<span class="qtr-margin-right icon-circle" [ngClass]="{
-			'High': 'text-danger',
-			'Medium': 'text-warning',
-			'Low': 'text-warning-alt'
-	}[item.bpSeverity]">
-	</span>
-	<span>{{item.bpSeverity}}</span>
-</ng-template>

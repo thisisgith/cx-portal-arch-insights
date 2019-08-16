@@ -1,125 +1,40 @@
-import { Component, OnInit, Input, SimpleChanges,
-	 OnChanges, ViewChild, TemplateRef } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { I18n } from '@cisco-ngx/cui-utils';
-import { ArchitectureService, IException } from '@sdp-api';
-import * as _ from 'lodash-es';
+import { ArchitectureService, IAsset } from '@sdp-api';
+
+ /** Our current customerId */
+const customerId = '231215372';
 
 /**
- * CBP Rule Component
+ * Devices With Exceptions Component
  */
+
 @Component({
 	selector: 'app-dnac-list',
 	styleUrls: ['./dnac-list.component.scss'],
 	templateUrl: './dnac-list.component.html',
 })
-export class DnacListComponent implements OnInit, OnChanges {
-	@Input() public filters;
+
+export class DnacListComponent implements OnInit {
+
+	constructor (
+		private logger: LogService,
+		private architectureService: ArchitectureService,
+	) {
+		this.logger.debug('DevicesListComponent Created!');
+	}
+
+	public assetObject: IAsset = null;
+	public AssetsExceptionDetails = [];
 	public tableOptions: CuiTableOptions;
-	public totalItems: any;
-	public cbpRuleExceptions = [];
+	public totalItems = 0;
 	public isLoading = true;
-	public severityObj: any;
-	public AssetsExceptionsCount: any;
-	public severityType: any = [];
-	public paramsType = {
-		page: 0,
-		pageSize: 10,
-		severity: '',
-	};
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
-	public exceptionObject: IException = null;
-	@ViewChild('riskTemplate', { static: true })
-	private riskTemplate: TemplateRef<{ }>;
 
-	constructor(private logger: LogService, private architectureService: ArchitectureService) {
-		this.logger.debug('CbpRuleViolationComponent Created!');
-	}
-
-	/**
-	 * Used to call the getCBPRulesData and buildTable function for Updating the Table
-	 */
-	public ngOnInit () {
-		this.getCBPRulesData();
-		this.buildTable();
-	}
-
-	/**
-	 * Used to detect the changes in input object and
-	 * call the getCBPRulesData function for Updating the Table
-	 */
-	public ngOnChanges(changes: SimpleChanges) {
-		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
-		if (selectedFilter && !changes.filters.firstChange) {
-			this.paramsType.severity = selectedFilter.Exceptions ? selectedFilter.Exceptions.toString() : '';
-			this.tableStartIndex = 0;
-			this.paramsType.page = 0;
-			this.getCBPRulesData();
-		}
-	}
-
-	/**
-	 * used to Intialize Table options
-	 */
-	public buildTable() {
-		this.tableOptions = new CuiTableOptions({
-			bordered: false,
-			columns: [
-				{
-					name: I18n.get('_ArchitectureRuleTitle_'),
-					sortable: false,
-					key: 'bpRuleTitle',
-				},
-				{
-					name: I18n.get('_ArchitectureSeverity_'),
-					sortable: false,
-					template: this.riskTemplate,
-				},
-				// { name: 'Software Type', sortable: false, key: 'swType' },
-				{
-					name: I18n.get('_ArchitectureException_'),
-					sortable: false,
-					key: 'exceptions',
-				},
-				{
-					name: I18n.get('_ArchitectureRecommendation_'),
-					sortable: false,
-					key: 'Recommendation',
-				},
-				{
-					name: I18n.get('_ArchitectureCorrectiveAction_'),
-					sortable: false,
-					key: 'correctiveActionSummary',
-				},
-				{
-					name: I18n.get('_ArchitectureAssetsAffected_'),
-					sortable: false,
-					key: 'assetsAffected',
-				},
-			],
-			singleSelect: true,
-		});
-	}
-
-	/**
- 	 * Used for shinking the  Recommendation, correctiveActionSummary 
-	 * assetsAffected field
- 	 * @param array - The Array Objects to be modified
- 	 */
-	public ModifyCbpRuleExceptions (array: Array<any>) {
-		array.map(obj => {
-			obj.Recommendation = obj.bpRecommendation.substr(0, 30)
-				.concat('...');
-			obj.correctiveActionSummary = obj.correctiveAction.substr(0, 25)
-				.concat('...');
-			obj.assetsAffected = obj.deviceIdsWithExceptions.length != 0
-				? obj.deviceIdsWithExceptions.split(';').length : '0';
-		});
-		// }
-	}
+	public params = { customerId, page: 0, pageSize: 10 };
 
 	/**
  	 * Used for getting pageNumber Index and call the getdata function
@@ -127,49 +42,104 @@ export class DnacListComponent implements OnInit, OnChanges {
  	 */
 	public onPagerUpdated (event) {
 		this.isLoading = true;
-		this.paramsType.page = event.page;
-		this.paramsType.pageSize = event.limit;
-		this.getCBPRulesData();
+		this.params.page = event.page;
+		this.params.pageSize = event.limit;
+		this.getAllAssetsWithExceptions();
 	}
 
 	/**
 	 * used for setting the data for table
 	 */
-	public getCBPRulesData () {
-		this.tableStartIndex = this.paramsType.page * this.paramsType.pageSize;
-		let x = (this.tableStartIndex + this.cbpRuleExceptions.length);
+	public getAllAssetsWithExceptions() {
+		this.tableStartIndex = this.params.page * this.params.pageSize;
+		let x = (this.tableStartIndex + this.AssetsExceptionDetails.length);
 		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
-		this.architectureService.
-			getCBPSeverityList(this.paramsType)
-			.subscribe(data => {
-				this.isLoading = false;
-				this.totalItems = data.TotalCounts;
-				this.cbpRuleExceptions = data.BPRulesDetails;
-				this.tableEndIndex = (this.tableStartIndex + this.cbpRuleExceptions.length);
-				this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
-			}, err => {
-				this.logger.error('CBP Rule Component View' +
-					'  : getCBPRulesData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-				this.isLoading = false;
-				this.cbpRuleExceptions = [];
-				this.totalItems = 0;
-			});
+
+		this.architectureService.getAllAssetsWithExceptions(this.params).subscribe(res => {
+			this.isLoading = false;
+			this.totalItems = res.TotalCounts;
+			this.AssetsExceptionDetails = res.AssetsExceptionDetails;
+			this.tableEndIndex = (this.tableStartIndex + this.AssetsExceptionDetails.length);
+			this.AssetsExceptionDetails.map(asset => {
+				asset.ruleIdsWithExceptionsCount = asset.ruleIdsWithExceptions.split(';').length;
+			},
+				err => {
+					this.logger.error('Devices With Exceptions View' +
+						'  : getAllAssetsWithExceptions() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+					this.isLoading = false;
+					this.AssetsExceptionDetails = [];
+					this.totalItems = 0;
+				});
+		});
 	}
 
 	/**
- 	 * This method is used to set the exception object in order to open Fly-out View
- 	 * @param event - It contains the selected Exception
- 	 */
-	public onTableRowClicked(event: IException) {
-		this.exceptionObject = event;
+	 * used to Intialize Table options
+	 */
+	ngOnInit() {
+
+		this.getAllAssetsWithExceptions();
+		this.buildTable();
+	}
+
+	/**
+	 * This method is used to set the exception object in order to open Fly-out View
+	 * @param event - It contains the selected asset object
+	 */
+	public onTableRowClicked(event: IAsset) {
+		this.assetObject = event;
 	}
 
 	/**
 	 * This method is used to set the null to exception object 
 	 * in order to Close Fly-out View
 	 */
-	public onPanelClose() {
-		this.exceptionObject = null;
+	public onPanelClose () {
+		this.assetObject = null;
+	}
+
+	public buildTable () {
+		this.tableOptions = new CuiTableOptions({
+			bordered: false,
+			columns: [
+				{
+					name: I18n.get('_ArchitectureDNAC_'),
+					sortable: false,
+					key: 'inventoryName',
+				},
+				{
+					name: I18n.get('_ArchitectureDevices_'),
+					sortable: false,
+					key: 'ipAddress',
+				},
+				{
+					name: I18n.get('_ArchitectureEndPoints_'),
+					sortable: false,
+					key: 'productId',
+				},
+				{
+					name: I18n.get('_ArchitectureFabrics_'),
+					sortable: false,
+					key: 'productFamily',
+				},
+				{
+					name: I18n.get('_ArchitectureCPUUsage_'),
+					sortable: false,
+					key: 'swType',
+				},
+				{
+					name: I18n.get('_ArchitectureFileSystemUsage_'),
+					sortable: false,
+					key: 'swVersion',
+				},
+				{
+					name: I18n.get('_ArchitectureMemoryUsage_'),
+					sortable: false,
+					key: 'configCollectionDate',
+				},
+			],
+			singleSelect: true,
+		});
 	}
 }

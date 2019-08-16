@@ -4,6 +4,9 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { ArchitectureService, IAsset } from '@sdp-api';
 
+/** Our current customerId */
+const customerId = '231215372';
+
 /**
  * Devices With Exceptions Component
  */
@@ -15,7 +18,7 @@ import { ArchitectureService, IAsset } from '@sdp-api';
 
 export class DevicesWithExceptionsComponent implements OnInit {
 
-	constructor(
+	constructor (
 		private logger: LogService,
 		private architectureService: ArchitectureService,
 	) {
@@ -30,7 +33,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
 
-	public params = { page: 0, pageSize: 10 };
+	public params = { customerId, page: 0, pageSize: 10 };
 
 	/**
  	 * Used for getting pageNumber Index and call the getdata function
@@ -82,42 +85,42 @@ export class DevicesWithExceptionsComponent implements OnInit {
 				{
 					name: I18n.get('_ArchitectureHostName_'),
 					sortable: false,
-					key: 'inventoryName'
+					key: 'inventoryName',
 				},
 				{
 					name: I18n.get('_ArchitectureIPAddress_'),
 					sortable: false,
-					key: 'ipAddress'
+					key: 'ipAddress',
 				},
 				{
 					name: I18n.get('_ArchitectureProductId_'),
 					sortable: false,
-					key: 'productId'
+					key: 'productId',
 				},
 				{
 					name: I18n.get('_ArchitectureProductFamily_'),
 					sortable: false,
-					key: 'productFamily'
+					key: 'productFamily',
 				},
 				{
 					name: I18n.get('_ArchitectureSoftwareType_'),
 					sortable: false,
-					key: 'swType'
+					key: 'swType',
 				},
 				{
 					name: I18n.get('_ArchitectureSoftwareVersion_'),
 					sortable: false,
-					key: 'swVersion'
+					key: 'swVersion',
 				},
 				{
 					name: I18n.get('_ArchitectureConfigCollectionDate_'),
 					sortable: false,
-					key: 'configCollectionDate'
+					key: 'configCollectionDate',
 				},
 				{
 					name: I18n.get('_ArchitectureCBPExceptions_'),
 					sortable: false,
-					key: 'ruleIdsWithExceptionsCount'
+					key: 'ruleIdsWithExceptionsCount',
 				},
 			],
 			singleSelect: true,

@@ -7,6 +7,9 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { ArchitectureService, IException } from '@sdp-api';
 import * as _ from 'lodash-es';
 
+ /** Our current customerId */
+const customerId = '231215372';
+
 /**
  * CBP Rule Component
  */
@@ -25,6 +28,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public AssetsExceptionsCount: any;
 	public severityType: any = [];
 	public paramsType = {
+		customerId,
 		page: 0,
 		pageSize: 10,
 		severity: '',

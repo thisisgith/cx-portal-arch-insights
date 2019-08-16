@@ -50,6 +50,7 @@ class ArchitectureService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
     if (params.severity != null) __params = __params.set('severity', params.severity.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     
     // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
@@ -104,6 +105,7 @@ class ArchitectureService extends __BaseService {
 
     if (params.page != null) __params = __params.set('page', params.page);
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize);
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     
     let req = new HttpRequest<any>(
       'GET',
@@ -190,12 +192,6 @@ class ArchitectureService extends __BaseService {
   getAllCBPRulesDetails(params:any): __Observable<any> {
     return this.getAllCBPRulesDetailsResponse(params).pipe(
       __map(_r => {
-        console.log(_r.body);
-        let arr = [];
-        arr.push(parseInt(_r.body.High));
-        arr.push(parseInt(_r.body.Medium));
-        console.log(arr);
-        this.CBPRiskCount.next({ CBPRisk: arr });
         return _r.body as ContractDeviceCountsResponse;
       })
     );
@@ -211,6 +207,8 @@ class ArchitectureService extends __BaseService {
     let __body: any = null;
     if (params.page != null) __params = __params.set('page', params.page);
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize);
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+
     let req = new HttpRequest<any>(
       'GET',
       `https://cp-archinsights-api.sdp11-idev.csco.cloud/archinsights/v1/cbprules`,
@@ -261,6 +259,7 @@ class ArchitectureService extends __BaseService {
 
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
+    //if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 
     let req = new HttpRequest<any>(
       'POST',
@@ -305,6 +304,7 @@ class ArchitectureService extends __BaseService {
 
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
+    //if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 
     let req = new HttpRequest<any>(
       'POST',
