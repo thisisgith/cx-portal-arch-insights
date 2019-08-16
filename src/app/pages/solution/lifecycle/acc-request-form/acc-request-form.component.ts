@@ -55,9 +55,17 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 	public custData: ACCUserInfoSchema;
 	public maxLength = 512;
 	public loading = false;
-	public custInfoError = false;
-	public submitSuccess = false;
-	public submitError = false;
+	public status = {
+		submitting: false,
+		success: false,
+		submitError: false,
+		infoError: false,
+	};
+
+	public get invalidSubmit () {
+		return !this.requestForm.valid || this.status.infoError ||
+			this.status.submitting || this.status.success;
+	}
 
 	public requestForm: FormGroup = this.fb.group({
 		acceleratorInterest: ['', [Validators.required, Validators.maxLength(this.maxLength)]],
@@ -151,7 +159,7 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 		this.contentService.getACCUserInfo()
 			.pipe(
 				catchError(err =>  {
-					this.custInfoError = true;
+					this.status.infoError = true;
 					this.logger.error('acc-request-form.component : getACCUserInfo() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -169,6 +177,7 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 	 * Submit the completed ACC request form
 	 */
 	public onSubmit () {
+		this.status.submitting = true;
 		const requestSessionParams: ACCRequestSessionSchema = {
 			accTitle: this.accTitle,
 			additionalAttendees: this.requestForm.get('additionalAttendees').value,
@@ -201,15 +210,16 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 		.requestACC(params)
 			.pipe(
 				catchError(() => {
-					this.submitError = true;
-
+					this.status.submitError = true;
+					this.status.submitting = false;
 					return empty();
 				}),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
 				this.logger.debug('acc-request-form.component :: Submitted ACC response form');
-				this.submitSuccess = true;
+				this.status.success = true;
+				this.status.submitting = false;
 				setTimeout(() => {
 					this.submitted.emit(true);
 				}, this.timeout);
