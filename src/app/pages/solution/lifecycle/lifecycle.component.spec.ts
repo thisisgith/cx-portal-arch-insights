@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, tick, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
@@ -621,6 +621,28 @@ describe('LifecycleComponent', () => {
 			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
+		});
+
+		it('should load success bytes hover panel', () => {
+			buildSpies();
+			sendParams();
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#hover-panel-successbytes'));
+			expect(de)
+				.toBeTruthy();
+		});
+
+		it('should setbookmark on clicking the icon in hover panel', () => {
+			buildSpies();
+			sendParams();
+			spyOn(component, 'updateBookmark');
+			fixture.detectChanges();
+			
+			de = fixture.debugElement.query(By.css('#hover-panel-successbytes .icon-bookmark'));
+			de.nativeElement.click();
+			expect(component.updateBookmark)
+				.toHaveBeenCalledTimes(1);
 		});
 	});
 
