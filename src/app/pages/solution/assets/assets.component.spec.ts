@@ -420,6 +420,56 @@ describe('AssetsComponent', () => {
 		});
 	});
 
+	it('should search', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.assetParams.search)
+				.toBeFalsy();
+			component.doSearch('query');
+			fixture.detectChanges();
+
+			expect(component.assetParams.search)
+			.toBeTruthy();
+
+			done();
+		});
+	});
+
+	it('should not search', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.assetParams.search)
+				.toBeFalsy();
+			component.doSearch('');
+			fixture.detectChanges();
+
+			expect(component.assetParams.search)
+				.toBeFalsy();
+
+			done();
+		});
+	});
+
+	it('should unset search param if search input is empty for refresh', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			_.set(component, ['assetParams', 'search'], 'search');
+			component.searchForm.setValue({ search: '' });
+
+			fixture.detectChanges();
+
+			expect(_.get(component.assetParams, 'search'))
+				.toBeFalsy();
+			done();
+		});
+	});
+
 	it('should handle unsortable column', done => {
 		fixture.whenStable()
 		.then(() => {
@@ -453,6 +503,21 @@ describe('AssetsComponent', () => {
 		});
 	});
 
+	it('should not refresh when valid search query', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			_.set(component, ['assetParams', 'search'], 'search');
+			component.searchForm.setValue({ search: 'search' });
+
+			fixture.detectChanges();
+
+			expect(_.get(component.assetParams, 'search'))
+				.toBe('search');
+			done();
+		});
+	});
 	it('should handle sortable column', done => {
 		fixture.whenStable()
 		.then(() => {
@@ -498,6 +563,65 @@ describe('AssetsComponent', () => {
 		// cleanup
 		window.Cypress = undefined;
 		window.loading = undefined;
+	});
+
+	it('should set query params on page load', done => {
+		const queryParams = {
+			contractNumber: '1234',
+			coverage: 'covered',
+			hasBugs: true,
+			hasFieldNotices: true,
+			hasSecurityAdvisories: true,
+			lastDateOfSupportRange: '1565624197000,1597246597000',
+			role: 'access',
+		};
+		TestBed.resetTestingModule();
+		TestBed.configureTestingModule({
+			imports: [
+				AssetsModule,
+				HttpClientTestingModule,
+				MicroMockModule,
+				RouterTestingModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of(queryParams),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
+			],
+		})
+		.compileComponents();
+		fixture = TestBed.createComponent(AssetsComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(_.get(component.assetParams, 'contractNumber'))
+				.toEqual(['1234']);
+			expect(_.get(component.assetParams, 'coverage'))
+				.toEqual(['covered']);
+			expect(_.get(component.assetParams, 'role'))
+				.toEqual(['access']);
+			expect(_.get(component.assetParams, 'hasBugs'))
+				.toBe(true);
+			expect(_.get(component.assetParams, 'hasFieldNotices'))
+				.toBe(true);
+			expect(_.get(component.assetParams, 'hasSecurityAdvisories'))
+				.toBe(true);
+			expect(_.get(component.assetParams, 'lastDateOfSupportRange'))
+				.toEqual(['1565624197000,1597246597000']);
+			done();
+		});
 	});
 
 	it('should create our pagination after results load', done => {

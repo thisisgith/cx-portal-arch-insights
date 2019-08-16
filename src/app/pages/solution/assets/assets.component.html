@@ -83,8 +83,9 @@
 					<div class="flex flex-fluid flex-right">
 						<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 							<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
-								<div class="form-group__text disabled">
+								<div class="form-group__text">
 									<input id="searchInput"
+										attr.data-auto-id="SearchInput"
 										type="search"
 										#searchInput
 										[minlength]="searchOptions.min"
