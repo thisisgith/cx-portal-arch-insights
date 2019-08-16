@@ -14,7 +14,7 @@
 <div class="panel">
 	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading">
 		<ng-container *ngFor="let filter of filters; index as i">
-			<div *ngIf="!filter.loading && filter.data.length && filter.view.indexOf(view) > -1"
+			<div *ngIf="!filter.loading && filter.seriesData.length && filter.view.indexOf(view) > -1"
 				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
 				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" class="panel flex-center filter"
 				[ngClass]="{
@@ -84,7 +84,7 @@
 		<!-- <div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-primary':view == 'swProfiles','text-muted':view != 'swProfiles'}"
 			data-auto-id="TotalVisualFilterSoftwareProfiles">
 			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].profiles"></span>
+				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
 			</div>
 			<div class="col-7 margin-auto">
 				<span class="text-xlarge " [innerText]="'_OsvSoftwareProfiles_' | i18n"></span>
@@ -100,7 +100,7 @@
 			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			data-auto-id="TotalVisualFilterAssets">
 			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].assets"></span>
+				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
 			</div>
 			<div class="col-7 margin-auto">
 				<span class="text-xlarge " [innerText]="'_OsvAssets_' | i18n"></span>
@@ -113,7 +113,7 @@
 		<div class="row toggle" (click)="selectView('swVersions')" [ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
 			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].versions"></span>
+				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
 			</div>
 			<div class="col-7 margin-auto">
 				<span class="text-xlarge " [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
@@ -124,13 +124,13 @@
 
 <ng-template #deploymentStatusFilter let-filter="filter">
 	<div>
-		<pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
+		<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
 		</pie-chart>
 	</div>
 
 </ng-template>
 
 <ng-template #assetTypeFilter let-filter="filter">
-	<pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
+	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
 	</pie-chart>
 </ng-template>

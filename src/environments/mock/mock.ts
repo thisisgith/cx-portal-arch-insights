@@ -106,7 +106,7 @@ type ResponseBody = (
 	ACCResponse |
 	ACCUserInfoSchema |
 	AdvisoriesByLastUpdatedCount |
-	Assets |	
+	Assets |
 	AssetRecommendationsResponse |
 	BugImpactedAssetsResponse |
 	ATXResponseModel |

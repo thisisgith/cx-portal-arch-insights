@@ -17,12 +17,12 @@ import { SummaryResponse } from '../models/summary-response';
 	providedIn: 'root',
 })
 class OSVService extends __BaseService {
-	static readonly getSummaryPath = '/api/dev/customerportal/osv-ui/v1/summary';
-	static readonly getSoftwareProfilesPath = '/api/dev/customerportal/osv-ui/v1/profiles';
-	static readonly getSoftwareVersionsPath = '/api/dev/customerportal/osv-ui/v1/versions';
-	static readonly getAssetDetailsPath = '/api/dev/customerportal/osv-ui/v1/assetDetails';
-	static readonly getAssetsPath = '/api/dev/customerportal/osv-ui/v1/assets';
-	static readonly updateAssetPath = '/api/dev/customerportal/osv-ui/v1/updateAsset';
+	static readonly getSummaryPath = '/api/customerportal/osv-ui/v1/summary';
+	static readonly getSoftwareProfilesPath = '/api/customerportal/osv-ui/v1/profiles';
+	static readonly getSoftwareVersionsPath = '/api/customerportal/osv-ui/v1/versions';
+	static readonly getAssetDetailsPath = '/api/customerportal/osv-ui/v1/assetDetails';
+	static readonly getAssetsPath = '/api/customerportal/osv-ui/v1/assets';
+	static readonly updateAssetPath = '/api/customerportal/osv-ui/v1/updateAsset';
 
 	constructor (
 		config: __Configuration,

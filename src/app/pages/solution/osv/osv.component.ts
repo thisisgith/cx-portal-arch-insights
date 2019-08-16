@@ -8,6 +8,7 @@ import {
 	OSVService, SummaryResponse, OSVAsset,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
+import { VisualFilter } from '@interfaces';
 
 /** Our current customerId */
 const customerId = '231215372';
@@ -15,18 +16,7 @@ const customerId = '231215372';
 /**
  * Interface representing our visual filters
  */
-interface Filter {
-	key: string;
-	selected?: boolean;
-	template?: TemplateRef<{ }>;
-	title?: string;
-	loading: boolean;
-	data: {
-		filter: string,
-		label: string,
-		selected: boolean,
-		value: number,
-	}[];
+interface Filter extends VisualFilter {
 	view?: string[];
 }
 
@@ -102,27 +92,28 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	private buildFilters () {
 		this.filters = [
 			{
-				data: [],
 				key: 'totalAssets',
 				loading: true,
 				selected: true,
+				seriesData: [],
 				template: this.totalAssetsFilterTemplate,
+				title: '',
 				view: ['swProfiles', 'assets', 'swVersions'],
 			},
 			{
-				data: [],
 				key: 'assetType',
 				loading: true,
 				selected: false,
+				seriesData: [],
 				template: this.assetTypeFilterTemplate,
 				title: I18n.get('_OsvAssets_'),
 				view: ['assets'],
 			},
 			{
-				data: [],
 				key: 'deploymentStatus',
 				loading: true,
 				selected: false,
+				seriesData: [],
 				template: this.deploymentStatusFilterTemplate,
 				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
 				view: ['assets'],
@@ -164,13 +155,12 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					totalAssetsFilter.loading = false;
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
-					totalAssetsFilter.data[0] = {
+					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
 						versions: response.versions,
-					};
-					response.asset_profile.assets_profile = 0;
-					deploymentStatusFilter.data = _.compact(
+					}];
+					deploymentStatusFilter.seriesData = _.compact(
 						_.map(response.deployment, (value: number, key: string) => {
 							if (value !== 0) {
 								return {
@@ -182,7 +172,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 							}
 						}));
 
-					assetTypeFilter.data = _.compact(
+					assetTypeFilter.seriesData = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
 							if (value !== 0) {
 								return {
@@ -245,7 +235,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		const filter = _.find(this.filters, { key });
 		if (filter) {
 
-			return _.filter(filter.data, 'selected');
+			return _.filter(filter.seriesData, 'selected');
 		}
 	}
 
@@ -256,18 +246,18 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * @param reload if we're reloading our assets
 	 */
 	public onSubfilterSelect (subfilter: string, filter: Filter) {
-		const sub = _.find(filter.data, { filter: subfilter });
+		const sub = _.find(filter.seriesData, { filter: subfilter });
 		if (sub) {
 			sub.selected = !sub.selected;
 		}
-		filter.selected = _.some(filter.data, 'selected');
+		filter.selected = _.some(filter.seriesData, 'selected');
 		if (filter.key === 'deploymentStatus') {
 			this.appliedFilters.deploymentStatus =
-				_.map(_.filter(filter.data, 'selected'), 'filter');
+				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
 		}
 		if (filter.key === 'assetType') {
 			this.appliedFilters.assetType =
-				_.map(_.filter(filter.data, 'selected'), 'filter');
+				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
 		}
 		this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		const totalFilter = _.find(this.filters, { key: 'totalAssets' });
@@ -277,7 +267,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		} else {
 			const total = _.reduce(this.filters, (memo, f) => {
 				if (!memo) {
-					return _.some(f.data, 'selected');
+					return _.some(f.seriesData, 'selected');
 				}
 
 				return memo;
@@ -297,7 +287,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
-			_.each(filter.data, f => {
+			_.each(filter.seriesData, f => {
 				f.selected = false;
 			});
 		});
@@ -309,7 +299,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * hide/show profile Info modal on ngModal change
+	 * hide / show profile Info modal on ngModal change
 	 */
 	public hideInfo () {
 		if (this.hideProfileInfo) {

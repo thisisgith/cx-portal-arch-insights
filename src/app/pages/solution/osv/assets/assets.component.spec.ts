@@ -7,6 +7,8 @@ import { OSVService, AssetsResponse } from '@sdp-api';
 import { of, throwError } from 'rxjs';
 import { OSVScenarios } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MicroMockModule } from '@cui-x-views/mock';
 
 describe('AssetsComponent', () => {
 	let component: AssetsComponent;
@@ -18,6 +20,8 @@ describe('AssetsComponent', () => {
 			imports: [
 				AssetsModule,
 				HttpClientTestingModule,
+				RouterTestingModule,
+				MicroMockModule,
 			],
 		})
 			.compileComponents();
@@ -39,8 +43,6 @@ describe('AssetsComponent', () => {
 		spyOn(osvService, 'getAssets')
 			.and
 			.returnValue(of(<AssetsResponse> OSVScenarios[4].scenarios.GET[0].response.body));
-		expect(component.status.isLoading)
-			.toBe(true);
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getAssets)

@@ -13,7 +13,7 @@ import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
-describe('OptimalSoftwareVersionComponent', () => {
+fdescribe('OptimalSoftwareVersionComponent', () => {
 	let component: OptimalSoftwareVersionComponent;
 	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
 
@@ -71,7 +71,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 
-				expect(_.find(component.filters, { key: 'totalAssets' }).data.length)
+				expect(_.find(component.filters, { key: 'totalAssets' }).seriesData.length)
 					.toBe(0);
 				done();
 			});
@@ -119,7 +119,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 				expect(_.filter(component.filters, 'selected'))
 					.toContain(deploymentStatusFilter);
 
-				const subfilter = _.find(deploymentStatusFilter.data, { filter: 'none' });
+				const subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();
@@ -141,7 +141,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 				expect(_.filter(component.filters, 'selected'))
 					.toContain(deploymentStatusFilter);
 
-				let subfilter = _.find(deploymentStatusFilter.data, { filter: 'none' });
+				let subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();
@@ -150,7 +150,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 				fixture.detectChanges();
 
-				subfilter = _.find(deploymentStatusFilter.data, { filter: 'none' });
+				subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
 
 				expect(subfilter.selected)
 					.toBeFalsy();
@@ -172,7 +172,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 				expect(_.filter(component.filters, 'selected'))
 					.toContain(deploymentStatusFilter);
 
-				const subfilter = _.find(deploymentStatusFilter.data, { filter: 'none' });
+				const subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();

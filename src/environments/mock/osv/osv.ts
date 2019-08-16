@@ -7,7 +7,7 @@ import {
 } from '@sdp-api';
 
 /** Base of URL for SDP API */
-const api = '/api/dev/customerportal/osv-ui/v1/';
+const api = '/api/customerportal/osv-ui/v1/';
 
 /** Default Customer ID */
 const customerId = '231215372';
