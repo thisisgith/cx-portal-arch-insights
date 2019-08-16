@@ -12,6 +12,7 @@ import {
 	Mock,
 	user,
 	MockAssetsData,
+	MockNetworkElements,
 } from '@mock';
 import { CaseService } from '@cui-x/services';
 import { of, throwError } from 'rxjs';
@@ -22,6 +23,7 @@ import { AssetDetailsHeaderModule } from './header.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NetworkDataGatewayService } from '@sdp-api';
+import { CuiModalService } from '@cisco-ngx/cui-components';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -40,7 +42,7 @@ describe('AssetDetailsHeaderComponent', () => {
 	let fixture: ComponentFixture<AssetDetailsHeaderComponent>;
 	let caseService: CaseService;
 	let networkService: NetworkDataGatewayService;
-
+	let cuiModalService: CuiModalService;
 	let caseSpy;
 
 	/**
@@ -71,6 +73,7 @@ describe('AssetDetailsHeaderComponent', () => {
 
 		networkService = TestBed.get(NetworkDataGatewayService);
 		caseService = TestBed.get(CaseService);
+		cuiModalService = TestBed.get(CuiModalService);
 	}));
 
 	beforeEach(() => {
@@ -195,6 +198,7 @@ describe('AssetDetailsHeaderComponent', () => {
 
 	it('should handle failure checking status on a device', done => {
 		component.asset = MockAssetsData[0];
+		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
 		const error = {
@@ -223,6 +227,7 @@ describe('AssetDetailsHeaderComponent', () => {
 
 	it('should initiate a scan request', fakeAsync(() => {
 		component.asset = MockAssetsData[0];
+		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
 		const error = {
@@ -260,6 +265,7 @@ describe('AssetDetailsHeaderComponent', () => {
 
 	it('should handle a failing initiation scan request without an id', () => {
 		component.asset = MockAssetsData[0];
+		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
 		const error = {
@@ -287,6 +293,7 @@ describe('AssetDetailsHeaderComponent', () => {
 
 	it('should handle a failing initiation scan request', () => {
 		component.asset = MockAssetsData[0];
+		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
 		const error = {
@@ -312,8 +319,9 @@ describe('AssetDetailsHeaderComponent', () => {
 			.toBeFalsy();
 	});
 
-	it('should check for a scan request on load', fakeAsync(() => {
+	it('should check for a scan request on load - poll on inProgress', fakeAsync(() => {
 		component.asset = MockAssetsData[0];
+		component.element = MockNetworkElements[0];
 		component.customerId = user.info.customerId;
 
 		const error = {
@@ -335,6 +343,8 @@ describe('AssetDetailsHeaderComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
+		component.refresh();
+
 		tick(3000);
 
 		expect(component.status.scan.inProgress)
@@ -343,4 +353,107 @@ describe('AssetDetailsHeaderComponent', () => {
 		discardPeriodicTasks();
 	}));
 
+	it('should check for a scan request on load - poll on received', fakeAsync(() => {
+		component.asset = MockAssetsData[0];
+		component.element = MockNetworkElements[0];
+		component.customerId = user.info.customerId;
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(networkService, 'getScanStatusBySerial')
+			.and
+			.returnValue(of([
+				{
+					status: 'RECEIVED',
+					transactionId: 'fake',
+				},
+			]));
+		spyOn(networkService, 'getScanStatusByTransaction')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		component.refresh();
+
+		tick(3000);
+
+		expect(component.status.scan.inProgress)
+			.toBeFalsy();
+
+		discardPeriodicTasks();
+	}));
+
+	it('should check for a scan request on load - nothing on failure', fakeAsync(() => {
+		component.asset = MockAssetsData[0];
+		component.element = MockNetworkElements[0];
+		component.customerId = user.info.customerId;
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(networkService, 'getScanStatusBySerial')
+			.and
+			.returnValue(of([
+				{
+					status: 'FAILURE',
+					transactionId: 'fake',
+				},
+			]));
+
+		component.refresh();
+
+		expect(component.status.scan.inProgress)
+			.toBeFalsy();
+	}));
+
+	it('should try and open a case and scan if not success', () => {
+		component.asset = MockAssetsData[0];
+		component.element = MockNetworkElements[0];
+		component.customerId = user.info.customerId;
+
+		spyOn(cuiModalService, 'showComponent')
+		.and
+		.returnValue(
+			of({ scanStatus: 'SUCCESS' })
+			.toPromise());
+
+		component.openCase();
+
+		expect(component.status.scan.inProgress)
+			.toBeFalsy();
+	});
+
+	it('should try and open a case and scan if not success', () => {
+		component.asset = MockAssetsData[0];
+		component.element = MockNetworkElements[0];
+		component.customerId = user.info.customerId;
+
+		spyOn(networkService, 'getScanStatusBySerial')
+		.and
+		.returnValue(of([
+			{
+				status: 'SUCCESS',
+				transactionId: 'fake',
+			},
+		]));
+
+		spyOn(cuiModalService, 'showComponent')
+		.and
+		.returnValue(
+			of({ scanStatus: 'IN_PROGRESS' })
+			.toPromise());
+
+		component.openCase();
+
+		expect(component.status.scan.inProgress)
+			.toBeFalsy();
+	});
 });

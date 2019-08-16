@@ -9,7 +9,7 @@ import {
 	user,
 	CriticalBugData,
 	CriticalBugAssetsScenarios,
-	MockAssetsData,
+	MockNetworkElements,
 	Mock,
 } from '@mock';
 import * as _ from 'lodash-es';
@@ -101,8 +101,9 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			],
 		};
 
-		const data = _.filter(MockAssetsData, { managedNeId: 'NA,FOC1844X089,WS-C3850-24S,NA' });
-		spyOn(inventoryService, 'getAssets')
+		const data = _.filter(MockNetworkElements,
+			{ managedNeId: 'NA,FOC1844X089,WS-C3850-24S,NA' });
+		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(of({ data }));
 
@@ -136,7 +137,7 @@ describe('AdvisoryImpactedAssetsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(inventoryService, 'getAssets')
+		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
