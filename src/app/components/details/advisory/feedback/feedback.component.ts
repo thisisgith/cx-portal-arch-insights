@@ -63,7 +63,7 @@ export class AdvisoryFeedbackComponent implements OnInit {
 		if (this.type === 'bug') {
 			feedback.cdetId = this.id;
 		} else if (this.type === 'field') {
-			feedback.fieldNoticeId = this.id;
+			feedback.fnId = this.id;
 		} else if (this.type === 'security') {
 			feedback.psirtId = this.id;
 		}

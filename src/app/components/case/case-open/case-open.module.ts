@@ -10,6 +10,13 @@ import { CloseConfirmModule } from './close-confirm/close-confirm.module';
 import { CharCountModule } from '../../char-count/char-count.module';
 import { HeightTransitionModule } from '../../height-transition/height-transition.module';
 import { TechFormModule } from './tech-form/tech-form.module';
+import { environment } from '@environment';
+import { NetworkDataGatewayModule } from '@sdp-api';
+
+/**
+ * The SDP Origin URL used for passing to the SDP-API Modules
+ */
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Module for case open functionality
@@ -20,19 +27,18 @@ import { TechFormModule } from './tech-form/tech-form.module';
 		CaseOpenComponent,
 	],
 	imports: [
+		CaseSubmittedModule,
+		CharCountModule,
+		CloseConfirmModule,
 		CommonModule,
-		ReactiveFormsModule,
-
 		CuiLoaderModule,
 		CuiSelectModule,
 		CuiSpinnerModule,
-		I18nPipeModule,
-
-		CaseSubmittedModule,
-		CloseConfirmModule,
-		PanelSelectModule,
-		CharCountModule,
 		HeightTransitionModule,
+		I18nPipeModule,
+		NetworkDataGatewayModule.forRoot({ rootUrl }),
+		PanelSelectModule,
+		ReactiveFormsModule,
 		TechFormModule,
 	],
 })

@@ -13,7 +13,6 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 	exports: [CloseConfirmComponent],
 	imports: [
 		CommonModule,
-
 		I18nPipeModule,
 	],
 })

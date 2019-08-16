@@ -12,6 +12,7 @@ import {
 	InventoryService,
 	ProductAlertsService,
 	ContractsService,
+	NetworkElement,
 } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -92,6 +93,9 @@ describe('AssetsComponent', () => {
 			statusText: 'Resource not found',
 		};
 		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(inventoryService, 'getRoleCount')
@@ -499,9 +503,18 @@ describe('AssetsComponent', () => {
 	it('should create our pagination after results load', done => {
 		const assets = getActiveBody(AssetScenarios[5]);
 
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+
 		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValue(of(assets));
+
+		spyOn(inventoryService, 'getNetworkElements')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		fixture.whenStable()
 		.then(() => {
@@ -555,6 +568,57 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(contractFilter);
+
+			done();
+		});
+	});
+
+	it('should set the appropriate device icon based on type', done => {
+		const WLC: NetworkElement = {
+			customerId: user.info.customerId,
+			isManagedNE: true,
+			managementAddress: 'address',
+			neInstanceId: 'id',
+			productFamily: 'Wireless Controller',
+			productType: 'Wireless',
+		};
+		const AP = {
+			customerId: user.info.customerId,
+			isManagedNE: true,
+			managementAddress: 'address',
+			neInstanceId: 'id',
+			productFamily: 'Access Point Controller',
+			productType: 'Wireless',
+		};
+		const Switch = {
+			customerId: user.info.customerId,
+			isManagedNE: true,
+			managementAddress: 'address',
+			neInstanceId: 'id',
+			productFamily: 'Some Switch Family',
+			productType: 'Switches',
+		};
+		const Router = {
+			customerId: user.info.customerId,
+			isManagedNE: true,
+			managementAddress: 'address',
+			neInstanceId: 'id',
+			productFamily: 'Some Router Family',
+			productType: 'Routers',
+		};
+		fixture.whenStable()
+		.then(() => {
+			expect(component.getProductIcon(WLC))
+				.toEqual('wlc-outline');
+
+			expect(component.getProductIcon(AP))
+				.toEqual('accesspoint-outline');
+
+			expect(component.getProductIcon(Switch))
+				.toEqual('switch-outline');
+
+			expect(component.getProductIcon(Router))
+				.toEqual('router-outline');
 
 			done();
 		});
