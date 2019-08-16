@@ -671,7 +671,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `id`:
    *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
    * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `advisoryId`:
    *
    * @return successful operation
    */
@@ -694,7 +698,9 @@ class ProductAlertsService extends __BaseService {
     (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
     if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
     (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/advisories-security-advisories`,
@@ -745,7 +751,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `id`:
    *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
    * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `advisoryId`:
    *
    * @return successful operation
    */
@@ -1088,7 +1098,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `id`:
    *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
    * - `fields`: Requested fields in the response.
+   *
+   * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
    *
    * @return successful operation
    */
@@ -1109,7 +1123,9 @@ class ProductAlertsService extends __BaseService {
     (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
     if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
     (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/product-alerts/v1/advisories-field-notices`,
@@ -1156,7 +1172,11 @@ class ProductAlertsService extends __BaseService {
    *
    * - `id`:
    *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
    * - `fields`: Requested fields in the response.
+   *
+   * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
    *
    * @return successful operation
    */
@@ -2052,9 +2072,15 @@ module ProductAlertsService {
     id?: Array<string>;
 
     /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    hwInstanceId?: Array<string>;
+
+    /**
      * Requested fields in the response. Id field is by default
      */
     fields?: Array<string>;
+    advisoryId?: Array<string>;
   }
 
   /**
@@ -2237,9 +2263,19 @@ module ProductAlertsService {
     id?: Array<string>;
 
     /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    hwInstanceId?: Array<string>;
+
+    /**
      * Requested fields in the response.
      */
     fields?: Array<string>;
+
+    /**
+     * The Cisco.com bulletin number for Field Notices
+     */
+    fieldNoticeId?: Array<number>;
   }
 
   /**

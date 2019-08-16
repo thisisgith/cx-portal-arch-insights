@@ -29,10 +29,6 @@ export * from './lib/controlpoints/models';
 export * from './lib/controlpoints/services';
 export * from './lib/controlpoints/control-points.module';
 
-export * from './lib/controlpoints/models';
-export * from './lib/controlpoints/services';
-export * from './lib/controlpoints/control-points.module';
-
 export * from './lib/search/models';
 export * from './lib/search/services';
 export * from './lib/search/search.module';
