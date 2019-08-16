@@ -237,10 +237,8 @@ describe('Case Detail Spec', () => {
 			cy.loadApp();
 			cy.waitForAppLoading();
 			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').
-				then(setupwizardclosebtn => {
-					return setupwizardclosebtn.click();
-				});
+			cy.getByAutoId('setup-wizard-header-close-btn')
+				.then(setupwizardclosebtn => setupwizardclosebtn.click());
 		});
 
 		it('PBC-83 Cases - Number of Open Cases', () => {
