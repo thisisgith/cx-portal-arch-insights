@@ -255,7 +255,8 @@
 <ng-template #recommendedATXSchedule let-data="data">
 	<div class="panel panel--bordered"
 		*ngIf="atxScheduleCardOpened"
-		[ngClass]="componentData.atx.interested ? 'panel cardpanel--open' : 'panel panel--open'">
+		[ngClass]="componentData.atx.interested ? 'panel cardpanel--open' : 'panel panel--open'"
+		data-auto-id="atxScheduleCard">
 		<div class="row half-margin-top half-margin-left half-margin-right">
 			<div id="atxtitle" class="col-md-11 text-left">
 				<h5 [innerText]="data.title"></h5>
@@ -285,7 +286,7 @@
 		<div class="session-table responsive-table half-margin-left">
 			<table class="table table--bordered table--selectable">
 				<tbody>
-					<tr attr.data-auto-id="SelectSession-{{ session.title }}"
+					<tr attr.data-auto-id="SelectSession-{{ session.sessionId }}"
 						*ngFor="let session of data.sessions"
 						(click)="selectSession(session)"
 						[ngClass]="{ 'active': sessionSelected?.sessionStartDate === session.sessionStartDate }">
@@ -303,19 +304,21 @@
 			</table>
 		</div>
 		<div>
-			<a id="AtxScheduleCardRegisterButton" data-auto-id="AtxScheduleCardRegisterButton"
+			<a id="AtxScheduleCardRegisterButton"
 				class="pull-left half-padding-left"
 				*ngIf="sessionSelected && !sessionSelected.scheduled && !notCurrentPitstop"
 				[href]="sessionSelected?.registrationURL">
 				<button class="btn btn--primary base-margin-top half-margin-left"
 					[disabled]="!sessionSelected?.registrationURL"
-					[innerText]="'_Register_' | i18n">
+					[innerText]="'_Register_' | i18n"
+					data-auto-id="AtxScheduleCardRegisterButton">
 				</button>
 			</a>
 			<div class="pull-left half-padding-left">
 				<button class="btn btn--primary disabled base-margin-top half-margin-left"
 					*ngIf="!sessionSelected || sessionSelected.scheduled || notCurrentPitstop"
-					[innerText]="'_Register_' | i18n">
+					[innerText]="'_Register_' | i18n"
+					data-auto-id="AtxScheduleCardRegisterButton">
 				</button>
 			</div>
 		</div>
@@ -430,15 +433,15 @@
 	</div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<div id="recommended-elearning-item" class=" panel small-panel">
+			<div id="recommended-elearning-item" class=" panel small-panel" data-auto-id="recommendedElearningItem">
 				<div class="row">
 					<div class="col-md-11">
 						<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="item.url">
 							<span class="text-blue" [innerText]="item.title"></span>
 						</a>
 					</div>
-					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.percentageCompleted === 100"></div> 
-					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom learning-progress-col" [attr.data-percentage]="item.percentageCompleted" *ngIf="item.percentageCompleted && item.percentageCompleted != 100">
+					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.percentageCompleted === 100" data-auto-id="recommendedElearningItem-completedIcon"></div> 
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom learning-progress-col" [attr.data-percentage]="item.percentageCompleted" *ngIf="item.percentageCompleted && item.percentageCompleted != 100" data-auto-id="recommendedElearningItem-progressBar">
 						<div class="progressbar__fill learning-progressfill-col"></div>
 					</div>
 					<ng-container *ngTemplateOutlet="recommendedDescription; context: {
@@ -747,7 +750,7 @@
 		<div class="card__footer">
 			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
 				<div class="row">
-					<div class="col-md-3">
+					<div class="col-md-4">
 						<a class="no-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
 							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
 								<span class="icon-apps icon-small half-padding-right"></span>
@@ -760,6 +763,10 @@
 							<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
 								<span class="icon-file-pdf-o icon-small half-padding-right"></span>
 								<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+							</div>
+							<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'">
+								<span class="icon-document icon-small half-padding-right"></span>
+								<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
 							</div>
 						</a>
 					</div>
@@ -993,9 +1000,9 @@
 						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
 						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
 					</div>
-					<div class="text-left text-muted" *ngIf="celldata.type === 'Spreadsheet'">
+					<div class="text-left text-muted" *ngIf="celldata.type === 'Data Sheet'">
 						<span class="icon-document icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Spreadsheet_' | i18n"></span>
+						<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
 					</div>
 				</a>
 			</div>
@@ -1050,15 +1057,14 @@
 
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div *ngIf="type === 'ATX'">
-	<button data-auto-id="ViewSessionButton"
-		class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-		(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata"
-		[innerText]="'_ViewSessions_' | i18n">
-	</button>
-	<a class="no-link" target="_blank" [href]="celldata.recordingURL">
-		<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
-			[innerText]="'_WatchNow_' | i18n"></button>
-	</a>
+		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
+			(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata"
+			[innerText]="'_ViewSessions_' | i18n">
+		</button>
+		<a class="no-link" target="_blank" [href]="celldata.recordingURL">
+			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+				[innerText]="'_WatchNow_' | i18n"></button>
+		</a>
 	</div>
 	<div *ngIf="type === 'ACC' && celldata.status === 'recommended'">
 		<button data-auto-id="Request1on1ACCButton"
@@ -1067,6 +1073,33 @@
 			[ngClass]="{ 'disabled': notCurrentPitstop }"
 			[innerText]="'_Request1on1_' | i18n">
 		</button>
+	</div>
+	<div *ngIf="type === 'SB' || type==='PG'">
+		<a class="no-link" target="_blank" [href]="celldata.url">
+			<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+				[innerText]="'_Launch_' | i18n"></button>
+		</a>
+	</div>
+</ng-template>
+
+<ng-template #titleTemplate let-celldata="celldata" let-type="type">
+	<div class="row" *ngIf="type==='ATX'">
+		<div class="col-md-2">
+			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="celldata.imageURL"
+				attr.data-auto-id="{{ type }}-Image">
+		</div>
+		<div class="col-md-10">
+			<div class="half-margin-top" [innerText]="celldata.title"></div>
+		</div>
+	</div>
+	<div class="row" *ngIf="type==='ACC'">
+		<div class="col-md-2">
+			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="celldata.url"
+				attr.data-auto-id="{{ type }}-Image">
+		</div>
+		<div class="col-md-10">
+			<div class="half-margin-top" [innerText]="celldata.title"></div>
+		</div>
 	</div>
 </ng-template>
 
