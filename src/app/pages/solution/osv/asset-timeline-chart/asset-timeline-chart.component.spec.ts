@@ -15,7 +15,7 @@ describe('AssetTimelineChartComponent', () => {
 			imports: [
 				AssetTimelineChartModule,
 				HttpClientTestingModule,
-				MicroMockModule,				
+				MicroMockModule,
 			],
 		})
 			.compileComponents();
