@@ -94,7 +94,7 @@
 		"@cui-x/services": "^1.0.2",
 		"@cui-x/utilities": "^1.0.0",
 		"@cypress/webpack-preprocessor": "^4.0.4",
-		"@swagger/cx-portal": "^2.0.2",
+		"@swagger/cx-portal": "^2.0.4",
 		"@types/jasmine": "^3.4.0",
 		"@types/jasminewd2": "~2.0.3",
 		"@types/mapbox-gl": "^0.51.10",

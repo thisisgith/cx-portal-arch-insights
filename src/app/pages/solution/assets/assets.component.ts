@@ -26,7 +26,7 @@ import {
 	ScanRequestResponse,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
-import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiModalService, CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subscription, forkJoin, fromEvent, of, Subject } from 'rxjs';
@@ -368,10 +368,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 		item.details = !item.details;
-		this.selectedAsset = null;
-		if (item.details) {
-			this.selectedAsset = item.data;
-		}
+		this.selectedAsset = item.details ? item.data : null;
 	}
 
 	/**
@@ -401,6 +398,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			});
 		});
 
+		_.each(this.assetsTable.columns, (c: CuiTableColumnOption) => {
+			c.sortDirection = 'desc';
+			c.sorting = false;
+		});
+
+		this.assetParams = {
+			customerId: this.customerId,
+			page: 1,
+			rows: this.view === 'list' ? 10 : 12,
+			sort: ['deviceName:ASC'],
+		};
+
 		this.allAssetsSelected = false;
 		totalFilter.selected = true;
 		this.adjustQueryParams();
@@ -425,10 +434,31 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		filter.selected = _.some(filter.seriesData, 'selected');
 
 		this.selectedSubfilters = this.getAllSelectedSubFilters();
-
+		const params = this.assetParams;
+		let val;
+		let key;
 		if (filter.key !== 'advisories' && filter.key !== 'eox') {
-			this.assetParams[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+			val =  _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+			key = filter.key;
+		} else if (filter.key === 'eox') {
+			val = this.getLastUpdatedRange(subfilter);
+			key = 'lastDateOfSupportRange';
+		} else if (filter.key === 'advisories') {
+			_.each(params, (_v, k) => {
+				if (/has*/.test(k)) {
+					_.unset(params, [k]);
+				}
+			});
+			key = _.camelCase(`has ${subfilter}`);
+			val = true;
 		}
+
+		if (filter.selected) {
+			_.set(params, [key], val);
+		} else {
+			_.unset(params, [key]);
+		}
+
 		this.assetParams.page = 1;
 
 		const totalFilter = _.find(this.filters, { key: 'total' });
@@ -436,7 +466,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			totalFilter.selected = false;
 			this.filtered = true;
 		} else {
-			const total = this.selectedSubfilters.length > 0;
+			const total = _.reduce(this.filters, (memo, f) => {
+				if (!memo) {
+					return _.some(f.seriesData, 'selected');
+				}
+
+				return memo;
+			}, false);
+
 			totalFilter.selected = !total;
 			this.filtered = total;
 		}
@@ -465,6 +502,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 
 		this.assetParams.rows = this.view === 'list' ? 10 : 12;
+		this.buildTable();
 		this.route.queryParams.subscribe(params => {
 			if (params.contractNumber) {
 				this.assetParams.contractNumber = _.castArray(params.contractNumber);
@@ -787,8 +825,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						key: 'deviceName',
 						name: I18n.get('_Device_'),
 						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
 						template: this.deviceTemplate,
 					},
 					{
@@ -845,7 +881,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						click: true,
-						sortable: false,
+						sortable: true,
 						template: this.actionsTemplate,
 					},
 				],
@@ -856,6 +892,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				singleSelect: true,
 				sortable: true,
 				striped: false,
+				tableSort: false,
 				wrapText: true,
 			});
 		}
@@ -973,6 +1010,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	private fetchInventory () {
 		this.status.inventoryLoading = true;
 		this.inventory = [];
+		this.pagination = null;
 
 		const assetParams = _.omit(_.cloneDeep(this.assetParams), ['advisories']);
 
@@ -999,7 +1037,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						this.inventory.push(row);
 					});
 					this.pagination = results.Pagination;
-
 					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
 					let last = (this.pagination.rows * this.pagination.page);
 					if (last > this.pagination.total) {
@@ -1007,8 +1044,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					}
 
 					this.paginationCount = `${first}-${last}`;
-
-					this.buildTable();
 
 					if (this.selectOnLoad) {
 						this.onAllSelect(true);
@@ -1048,14 +1083,48 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onColumnSort (column) {
 		if (column.sortable) {
+			this.filtered = true;
 			_.each(this.assetsTable.columns, c => {
 				c.sorting = false;
+				c.sortDirection = 'desc';
 			});
 			column.sorting = true;
 			column.sortDirection = column.sortDirection === 'asc' ? 'desc' : 'asc';
 			this.assetParams.sort = [`${column.key}:${column.sortDirection.toUpperCase()}`];
+			this.adjustQueryParams();
 			this.InventorySubject.next();
 		}
+
+	}
+
+	/**
+	 * Given a filter key for lastUpdated, returns the date range
+	 * in the format of [<fromDateInMillis>, <toDateInMillis>).
+	 * @param subfilter date range subfilter
+	 * @returns The date range
+	 */
+	private getLastUpdatedRange (subfilter: string) {
+		const current = new Date();
+		const year = current.getUTCFullYear();
+		const month = current.getUTCMonth();
+		const day = current.getUTCDay();
+		const start = new Date(year, month, day);
+		const end = new Date(year, month, day);
+		switch (subfilter) {
+			case 'gt-0-lt-30-days':
+				start.setDate(start.getDate() - 30);
+				break;
+			case 'gt-30-lt-60-days':
+				start.setDate(start.getDate() - 60);
+				end.setDate(end.getDate() - 30);
+				break;
+			case 'gt-60-lt-90-days':
+				start.setDate(start.getDate() - 90);
+				end.setDate(end.getDate() - 60);
+				break;
+		}
+
+		return [`${start.getTime()}, ${end.getTime()}`];
 	}
 
 	/**
@@ -1081,4 +1150,5 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.InventorySubject.next();
 		}
 	}
+
 }
