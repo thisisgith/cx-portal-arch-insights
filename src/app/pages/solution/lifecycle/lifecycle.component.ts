@@ -745,27 +745,6 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Determines which modal to display
-	 * @param acc ACC item
-	 * @returns ribbon
-	 */
-	 public getACCRibbonClass (acc: ACC) {
-		let ribbon = 'ribbon__clear';
-		if (!acc) {
-			return ribbon;
-		}
-		if (acc.status === 'completed') {
-			ribbon = 'ribbon__green';
-		}
-
-		if (acc.isFavorite) {
-			ribbon = 'ribbon__blue';
-		}
-
-		return ribbon;
-	}
-
-	/**
-	 * Determines which modal to display
 	 * @param item ACC item
 	 * @returns ribbon
 	 */
