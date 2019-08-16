@@ -92,7 +92,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/configure-the-appliance?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Getting Started',
-				bookmark: false,
+				bookmark: true,
 				successByteId: 'SB2',
 			},
 			{
@@ -102,7 +102,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Video',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/dna-center-appliance?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Getting Started',
-				bookmark: false,
+				bookmark: true,
 				successByteId: 'SB3',
 			},
 			{
@@ -112,7 +112,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/ibn-firsttime-setup?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Getting Started',
-				bookmark: false,
+				bookmark: true,
 				successByteId: 'SB4',
 			},
 			{
@@ -298,6 +298,6 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}`,
-		usercases: ['Use Case 1'],
+		usecases: ['Use Case 1'],
 	},
 ];

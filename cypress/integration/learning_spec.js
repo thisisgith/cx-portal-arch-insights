@@ -8,8 +8,16 @@ const successPathMock = new MockService('SuccessPathScenarios');
 const successPathOnboardScenario = successPathMock.getScenario('GET', '(SP) IBN-Campus Network Assurance-Onboard');
 const successPathItems = successPathOnboardScenario.response.body.items;
 
+const allProductGuidesScenario = successPathMock.getScenario('GET', 'Product Documenation & Videos response for all');
+const allProductGuidesItems = allProductGuidesScenario.response.body.items;
+
 // Strip out all possible archetypes
 const successPathArchetypes = Cypress._.chain(successPathItems)
+	.map('archetype')
+	.uniq()
+	.value();
+
+const allProductGuidesArchetypes = Cypress._.chain(allProductGuidesItems)
 	.map('archetype')
 	.uniq()
 	.value();
@@ -47,6 +55,8 @@ const visibleRemoteItems = allRemoteItems.slice(0, 3);
 const invisibleRemoteItems = allRemoteItems.slice(3);
 const visibleSuccessPathItems = successPathItems.slice(0, 3);
 const invisibleSuccessPathItems = successPathItems.slice(3);
+
+const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('Learn Panel', () => {
 	before(() => {
@@ -332,15 +342,15 @@ describe('Learn Panel', () => {
 		it('Success Bytes View All should be able to toggle between table and card views', () => {
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('SuccessCard').should('be.visible');
-			cy.getByAutoId('SuccessPathsTable').should('not.be.visible');
+			cy.getByAutoId('ViewAllTable').should('not.be.visible');
 
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('SuccessCard').should('not.be.visible');
-			cy.getByAutoId('SuccessPathsTable').should('be.visible');
+			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
 
 		it('Success Bytes View All table should have expected columns', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					cy.get('th').then($columnHeaders => {
@@ -355,7 +365,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('Success Bytes View All table should not sort by default', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					successPathItems.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
@@ -393,7 +403,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('Success Bytes View All table should be sortable by Name', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
 					const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['title'], ['asc']);
@@ -421,7 +431,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('Success Bytes View All table should be sortable by Category', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('successBytesTable-columnHeader-Category').click();
 					const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['archetype'], ['asc']);
@@ -449,7 +459,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('Success Bytes View All table should be sortable by Format', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('successBytesTable-columnHeader-Format').click();
 					const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['type'], ['asc']);
@@ -528,7 +538,7 @@ describe('Learn Panel', () => {
 					cy.get(`a[title="${archetype}"]`).click();
 
 					const filteredItems = successPathItems.filter(item => (item.archetype === archetype));
-					cy.getByAutoId('SuccessPathsTable')
+					cy.getByAutoId('ViewAllTable')
 						.should('be.visible')
 						.within(() => {
 							cy.get('tr').then(rows => {
@@ -546,7 +556,7 @@ describe('Learn Panel', () => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Not selected"]').click();
 
-				cy.getByAutoId('SuccessPathsTable')
+				cy.getByAutoId('ViewAllTable')
 					.should('be.visible')
 					.within(() => {
 						cy.get('tr').then(rows => {
@@ -564,7 +574,7 @@ describe('Learn Panel', () => {
 				cy.get('a[title="Project Planning"]').click();
 
 				const filteredItems = successPathItems.filter(item => (item.archetype === 'Project Planning'));
-				cy.getByAutoId('SuccessPathsTable')
+				cy.getByAutoId('ViewAllTable')
 					.should('be.visible')
 					.within(() => {
 						cy.get('tr').then(rows => {
@@ -641,7 +651,7 @@ describe('Learn Panel', () => {
 		it('Success Bytes View All table sort should be sticky across modal close/re-open', () => {
 			const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['title'], ['asc']);
 
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
 				});
@@ -654,7 +664,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 
 			// Verify the still in table view and sort is still in place
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					sortedItemsAsc.forEach((item, index) => {
@@ -672,7 +682,7 @@ describe('Learn Panel', () => {
 			const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['title'], ['asc']);
 
 			// Sort the data
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
 				});
@@ -689,7 +699,7 @@ describe('Learn Panel', () => {
 
 			// Switch back to table view, verify sort is still in place
 			cy.getByAutoId('table-view-btn').click();
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					sortedItemsAsc.forEach((item, index) => {
@@ -704,7 +714,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('Success Bytes View All table sort should NOT be sticky across use case changes', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
 				});
@@ -721,7 +731,7 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 
 			// Verify still in table view and sort was reset to default
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					successPathItems.forEach((item, index) => {
@@ -736,7 +746,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('Success Bytes View All table sort should NOT be sticky across page navigation', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
 				});
@@ -753,12 +763,12 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 
 			// Verify we were reverted to card view (not sticky), and switch to table view
-			cy.getByAutoId('SuccessPathsTable').should('not.be.visible');
+			cy.getByAutoId('ViewAllTable').should('not.be.visible');
 			cy.getByAutoId('SuccessCard').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 
 			// Verify the sort was reset to default
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					successPathItems.forEach((item, index) => {
@@ -773,7 +783,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('Success Bytes View All table sort should NOT be sticky across page reload', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
 				});
@@ -792,12 +802,12 @@ describe('Learn Panel', () => {
 			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 
 			// Verify we were reverted to card view (not sticky), and switch to table view
-			cy.getByAutoId('SuccessPathsTable').should('not.be.visible');
+			cy.getByAutoId('ViewAllTable').should('not.be.visible');
 			cy.getByAutoId('SuccessCard').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 
 			// Verify the sort was reset to default
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					successPathItems.forEach((item, index) => {
@@ -1089,7 +1099,7 @@ describe('Learn Panel', () => {
 			// Switch to table view, verify the filter is still in place
 			cy.getByAutoId('table-view-btn').click();
 			const filteredItems = successPathItems.filter(item => (item.archetype === 'Project Planning'));
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					cy.get('tr').then(rows => {
@@ -1105,6 +1115,575 @@ describe('Learn Panel', () => {
 				cy.getByAutoId('SuccessCard').then(cards => {
 					expect(cards.length).to.eq(filteredItems.length);
 				});
+			});
+		});
+	});
+
+	describe('PBC-459: (UI) View - Lifecycle - All Product Documentation and Videos', () => {
+		it('Success Bytes section should include link to all docs', () => {
+			cy.getByAutoId('Success Bytes Panel').within(() => {
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').should('be.visible');
+			});
+			cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible').within(() => {
+				cy.getByAutoId('ViewAllModal-Title').should('have.text', i18n._ProductGuides_);
+				cy.getByAutoId('SuccessPathCloseModal').click();
+			});
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+
+		describe('Card View', () => {
+			before(() => {
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+			});
+
+			after(() => {
+				// Close the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the data to reset any bookmark changes
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				cy.getByAutoId('setup-wizard-header-close-btn').click();
+			});
+
+			it('All product guides modal card view should contain all items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					cy.getByAutoId('ProductGuidesCard').eq(index).within(() => {
+						cy.getByAutoId('ProductGuidesCard-Archetype').should('have.text', item.archetype);
+						cy.getByAutoId('ProductGuidesCard-Title').should('have.text', item.title);
+						// Handle duration text and clock icon
+						cy.getByAutoId('ProductGuidesCard-Duration').should('contain', item.duration);
+						cy.getByAutoId('ProductGuidesCard-Duration')
+							.get('.icon-clock')
+							.should('exist');
+						// Handle content type
+						switch (item.type) {
+							case 'Video':
+								cy.get('span[class="icon-play-contained icon-small half-padding-right"]')
+									.should('exist');
+								break;
+							case 'Web Page':
+								cy.get('span[class="icon-apps icon-small half-padding-right"]')
+									.should('exist');
+								break;
+							case 'PDF':
+								cy.get('span[class="icon-file-pdf-o icon-small half-padding-right"]')
+									.should('exist');
+								break;
+							default:
+								Cypress.log({
+									name: 'LOG',
+									message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type}`,
+								});
+						}
+						// Handle bookmark ribbon
+						if (item.bookmark) {
+							cy.getByAutoId('ProductGuidesCard-Ribbon').should('have.class', 'ribbon__blue');
+						} else {
+							cy.getByAutoId('ProductGuidesCard-Ribbon').should('have.class', 'ribbon__clear');
+						}
+					});
+				});
+			});
+
+			it('All product guides modal card view can bookmark items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					if (!item.bookmark) {
+						cy.getByAutoId('ProductGuidesCard')
+							.eq(index)
+							.within(() => {
+								cy.getByAutoId('ProductGuidesCard-Ribbon')
+									.click();
+								cy.wait('(SB) IBN-Bookmark');
+								cy.getByAutoId('ProductGuidesCard-Ribbon')
+									.should('have.class', 'ribbon__blue');
+							});
+					}
+				});
+			});
+
+			it('All product guides modal card view can un-bookmark items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					if (item.bookmark) {
+						cy.getByAutoId('ProductGuidesCard')
+							.eq(index)
+							.within(() => {
+								cy.getByAutoId('ProductGuidesCard-Ribbon')
+									.click();
+								cy.wait('(SB) IBN-Bookmark');
+								cy.getByAutoId('ProductGuidesCard-Ribbon')
+									.should('have.class', 'ribbon__clear');
+							});
+					}
+				});
+			});
+		});
+
+		describe('Table View', () => {
+			before(() => {
+				// Open the modal and switch to table view
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			after(() => {
+				// Switch to back to card view and close the modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the data to reset any bookmark changes
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				cy.getByAutoId('setup-wizard-header-close-btn').click();
+			});
+
+			it('All product guides modal table view should have expected columns', () => {
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						cy.get('th').then($columnHeaders => {
+							// Should be 4 columns (Name, Category, Format, Bookmark)
+							expect($columnHeaders.length).to.eq(4);
+						});
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').should('exist');
+						cy.getByAutoId('ViewAllTable-columnHeader-Category').should('exist');
+						cy.getByAutoId('ViewAllTable-columnHeader-Format').should('exist');
+						cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').should('exist');
+					});
+			});
+
+			it('All product guides modal table view should contain all items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					cy.getByAutoId('ViewAllTable').within(() => {
+						// Increase index by 1, since the first tr has the column headers
+						cy.get('tr').eq(index + 1).within(() => {
+							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
+							// Handle duration text and clock icon
+							cy.getByAutoId('ViewAllTable-Format-rowValue-duration').should('contain', item.duration);
+							cy.getByAutoId('ViewAllTable-Format-rowValue-clock').should('exist');
+							// Handle content type
+							switch (item.type) {
+								case 'Video':
+									cy.get('span[class="icon-play-contained icon-small half-padding-right"]')
+										.should('exist');
+									break;
+								case 'Web Page':
+									cy.get('span[class="icon-apps icon-small half-padding-right"]')
+										.should('exist');
+									break;
+								case 'PDF':
+									cy.get('span[class="icon-file-pdf-o icon-small half-padding-right"]')
+										.should('exist');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type}`,
+									});
+							}
+							// Handle bookmark ribbon
+							if (item.bookmark) {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+							} else {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+							}
+						});
+					});
+				});
+			});
+
+			it('All product guides modal table view should be sortable by Name', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+						const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['title'], ['asc']);
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							});
+						});
+
+						// Reverse the sort and re-verify order
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+						const sortedItemsDesc = Cypress._.orderBy(allProductGuidesItems, ['title'], ['desc']);
+						sortedItemsDesc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table view should be sortable by Category', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Category').click();
+						const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['archetype'], ['asc']);
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
+							});
+						});
+
+						// Reverse the sort and re-verify order
+						cy.getByAutoId('ViewAllTable-columnHeader-Category').click();
+						const sortedItemsDesc = Cypress._.orderBy(allProductGuidesItems, ['archetype'], ['desc']);
+						sortedItemsDesc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table view should be sortable by Format', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Format').click();
+						const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['type'], ['asc']);
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Format-rowValue-link')
+									.within(() => {
+										switch (item.type) {
+											case 'Video':
+												// Video should have play icon
+												cy.get('span').should('have.class', 'icon-play-contained');
+												break;
+											case 'Web Page':
+												// Web Page should have grid icon
+												cy.get('span').should('have.class', 'icon-apps');
+												break;
+											case 'PDF':
+												// PDF should have PDF icon
+												cy.get('span').should('have.class', 'icon-file-pdf-o');
+												break;
+											default:
+												Cypress.log({
+													name: 'LOG',
+													message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+												});
+												cy.get('span').should('have.class', 'icon-apps');
+										}
+									});
+							});
+						});
+
+						// Reverse the sort and re-verify order
+						cy.getByAutoId('ViewAllTable-columnHeader-Format').click();
+						const sortedItemsDesc = Cypress._.orderBy(allProductGuidesItems, ['type'], ['desc']);
+						sortedItemsDesc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Format-rowValue-link')
+									.within(() => {
+										switch (item.type) {
+											case 'Video':
+												// Video should have play icon
+												cy.get('span').should('have.class', 'icon-play-contained');
+												break;
+											case 'Web Page':
+												// Web Page should have grid icon
+												cy.get('span').should('have.class', 'icon-apps');
+												break;
+											case 'PDF':
+												// PDF should have PDF icon
+												cy.get('span').should('have.class', 'icon-file-pdf-o');
+												break;
+											default:
+												Cypress.log({
+													name: 'LOG',
+													message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+												});
+												cy.get('span').should('have.class', 'icon-apps');
+										}
+									});
+							});
+						});
+					});
+			});
+
+			allProductGuidesArchetypes.forEach(archetype => {
+				it(`All product guides modal table view can filter by archetype: ${archetype}`, () => {
+					// Filter by archetype, verify the count
+					cy.getByAutoId('cui-select').click();
+					cy.get(`a[title="${archetype}"]`).click();
+
+					const filteredItems = allProductGuidesItems.filter(
+						item => (item.archetype === archetype)
+					);
+					cy.getByAutoId('ViewAllTable')
+						.should('be.visible')
+						.within(() => {
+							cy.get('tr').then(rows => {
+								// Note that the first tr is the column headers
+								expect(rows.length - 1).to.eq(filteredItems.length);
+							});
+						});
+				});
+			});
+
+			it('All product guides modal table view can filter by archetype: Not selected', () => {
+				// Filter by archetype, verify the count. Note: 'Not selected' should show all items
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Not selected"]').click();
+
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						cy.get('tr').then(rows => {
+							// Note that the first tr is the column headers
+							expect(rows.length - 1).to.eq(allProductGuidesItems.length);
+						});
+					});
+			});
+
+			it('All product guides modal table view can bookmark items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					if (!item.bookmark) {
+						cy.getByAutoId('ViewAllTable').within(() => {
+							// Increase index by 1, since the first tr has the column headers
+							cy.get('tr').eq(index + 1).within(() => {
+								cy.getByAutoId('SBListRibbon')
+									.click();
+								cy.wait('(SB) IBN-Bookmark');
+								cy.getByAutoId('SBListRibbon')
+									.should('have.class', 'text-indigo');
+							});
+						});
+					}
+				});
+			});
+
+			it('All product guides modal table view can un-bookmark items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					if (item.bookmark) {
+						cy.getByAutoId('ViewAllTable').within(() => {
+							// Increase index by 1, since the first tr has the column headers
+							cy.get('tr').eq(index + 1).within(() => {
+								cy.getByAutoId('SBListRibbon')
+									.click();
+								cy.wait('(SB) IBN-Bookmark');
+								cy.getByAutoId('SBListRibbon')
+									.should('have.class', 'icon-bookmark-clear');
+							});
+						});
+					}
+				});
+			});
+		});
+
+		describe('Sorting Stickiness', () => {
+			beforeEach(() => {
+				// Open the modal and switch to table view
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			afterEach(() => {
+				// Switch to back to card view and close the modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Make sure we're on the lifecycle page and the default use case
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+			});
+
+			it('All product guides modal table sort should be sticky across modal close/re-open', () => {
+				const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['title'], ['asc']);
+
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Close and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the still in table view and sort is still in place
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal sort should be sticky across table/card view', () => {
+				const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['title'], ['asc']);
+
+				// Sort the data
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Switch to card view, verify the sort is still in place
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('ViewAllModal').within(() => {
+					sortedItemsAsc.forEach((item, index) => {
+						cy.getByAutoId('ProductGuidesCard-Title')
+							.eq(index)
+							.should('have.text', item.title);
+					});
+				});
+
+				// Switch back to table view, verify sort is still in place
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table sort should NOT be sticky across use case changes', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Close the modal, switch use cases, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify still in table view and sort was reset to default
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						allProductGuidesItems.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table sort should NOT be sticky across page navigation', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the sort was reset to default
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						allProductGuidesItems.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table sort should NOT be sticky across page reload', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Close the modal, reload the page, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				cy.getByAutoId('setup-wizard-header-close-btn').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the sort was reset to default
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						allProductGuidesItems.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
 			});
 		});
 	});
