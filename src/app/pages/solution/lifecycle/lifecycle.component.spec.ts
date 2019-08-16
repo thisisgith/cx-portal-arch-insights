@@ -633,7 +633,7 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 		});
 
-		it('should setbookmark on clicking the icon in hover panel', () => {
+		it('should set bookmark on clicking the icon in hover panel', () => {
 			buildSpies();
 			sendParams();
 			spyOn(component, 'updateBookmark');
