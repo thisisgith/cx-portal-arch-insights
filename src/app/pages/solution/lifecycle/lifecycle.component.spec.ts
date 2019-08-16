@@ -664,12 +664,12 @@ describe('LifecycleComponent', () => {
 
 			component.onSort('title', 'asc', 'SB');
 			fixture.detectChanges();
-			expect(component.successBytesTable.columns[0].sortDirection)
+			expect(component.successBytesTable.columns[1].sortDirection)
 				.toEqual('desc');
 
 			component.onSort('title', 'desc', 'SB');
 			fixture.detectChanges();
-			expect(component.successBytesTable.columns[0].sortDirection)
+			expect(component.successBytesTable.columns[1].sortDirection)
 				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
@@ -727,7 +727,7 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			expect(component.getTitle('PG'))
-				.toEqual('Product Documetation and Videos');
+				.toEqual('Product Documentation and Videos');
 
 			expect(component.getSubtitle('PG'))
 				.toEqual('\"How-to\" resources for planning, installation and more');
@@ -754,12 +754,12 @@ describe('LifecycleComponent', () => {
 
 			component.onSort('title', 'asc', 'PG');
 			fixture.detectChanges();
-			expect(component.productGuidesTable.columns[0].sortDirection)
+			expect(component.productGuidesTable.columns[1].sortDirection)
 				.toEqual('desc');
 
 			component.onSort('title', 'desc', 'PG');
 			fixture.detectChanges();
-			expect(component.productGuidesTable.columns[0].sortDirection)
+			expect(component.productGuidesTable.columns[1].sortDirection)
 				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
