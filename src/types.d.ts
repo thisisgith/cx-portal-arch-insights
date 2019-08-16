@@ -25,5 +25,6 @@ interface Window {
 	accLoading: boolean;
 	communitiesLoading: boolean;
 	cgtLoading: boolean;
+	productGuidesLoading: boolean;
 	racetrackEvents: any;
 }

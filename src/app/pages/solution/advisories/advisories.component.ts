@@ -25,14 +25,13 @@ import {
 } from '@sdp-api';
 import { of, forkJoin, Subject } from 'rxjs';
 import * as _ from 'lodash-es';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { FormGroup, FormControl } from '@angular/forms';
 import {
 	map,
 	catchError,
 	switchMap,
 } from 'rxjs/operators';
-import { DatePipe } from '@angular/common';
 import { VisualFilter, AdvisoryType } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -94,7 +93,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	public tabs: Tab[] = [];
 	private routeParam: string;
 	private customerId: string;
-
 	public fullscreen = false;
 	public selectedAdvisory: {
 		advisory: CriticalBug | FieldNoticeAdvisory | SecurityAdvisoryInfo;
@@ -105,9 +103,18 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	@ViewChild('impactTemplate', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('impactedCountTemplate', { static: true })
 		private impactedCountTemplate: TemplateRef<{ }>;
+	@ViewChild('impactedAssetsTemplate', { static: true })
+		private impactedAssetsTemplate: TemplateRef<{ }>;
+	@ViewChild('potentiallyImpactedAssetsTemplate', { static: true })
+		private potentiallyImpactedAssetsTemplate: TemplateRef<{ }>;
 	@ViewChild('content', { static: true }) private contentTemplate: TemplateRef<{ }>;
 	@ViewChild('totalFilter', { static: true }) private totalFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('pieChartFilter', { static: true }) private pieChartFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('stateTemplate', { static: true }) private stateTemplate: TemplateRef<{ }>;
+	@ViewChild('lastUpdatedTemplate', { static: true })
+		private lastUpdatedTemplate: TemplateRef<{ }>;
 	@ViewChild('columnChartFilter', { static: true })
 		private columnChartFilterTemplate: TemplateRef<{ }>;
 
@@ -155,7 +162,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * Initializes the tabs
 	 */
 	private buildTabs () {
-		const datePipe = new DatePipe('en-us');
 		this.tabs = [
 			{
 				data: [],
@@ -169,7 +175,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						title: I18n.get('_Total_'),
 					},
 					{
-						key: 'impact',
+						key: 'severity',
 						loading: true,
 						selected: false,
 						seriesData: [],
@@ -192,39 +198,35 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					bordered: true,
 					columns: [
 						{
+							key: 'severity',
 							name: I18n.get('_Impact_'),
 							sortable: true,
-							sortDirection: null,
-							sorting: false,
 							template: this.impactTemplate,
 						},
 						{
 							key: 'title',
 							name: I18n.get('_Title_'),
-							sortable: false,
-							value: 'title',
+							sortable: true,
+							template: this.titleTemplate,
 						},
 						{
+							key: 'assetsImpacted',
 							name: `${I18n.get('_ImpactedAsset_')}
 								(${I18n.get('_PotentiallyImpacted_')})`,
-							sortable: false,
+							sortable: true,
 							template: this.impactedCountTemplate,
 						},
 						{
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-									I18n.get('_Never_'),
-							sortable: false,
-							value: 'lastUpdated',
+							sortable: true,
+							template: this.lastUpdatedTemplate,
 						},
 						{
 							key: 'version',
 							name: I18n.get('_Version_'),
-							sortable: false,
-							value: 'version',
+							sortable: true,
+							template: this.versionTemplate,
 						},
 					],
 					dynamicData: true,
@@ -274,49 +276,43 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							key: 'id',
 							name: I18n.get('_ID_'),
 							sortable: true,
-							sortDirection: null,
-							sorting: false,
-							value: 'id',
 						},
 						{
 							key: 'title',
 							name: I18n.get('_Title_'),
-							sortable: false,
-							value: 'title',
+							sortable: true,
 						},
 						{
 							key: 'assetsImpacted',
 							name: I18n.get('_VulnerableAssets_'),
-							sortable: false,
-							value: 'assetsImpacted',
+							sortable: true,
+							template: this.impactedAssetsTemplate,
 						},
 						{
 							key: 'assetsPotentiallyImpacted',
 							name: I18n.get('_PotentiallyVulnerableAssets_'),
-							sortable: false,
-							value: 'assetsPotentiallyImpacted',
+							sortable: true,
+							template: this.potentiallyImpactedAssetsTemplate,
 						},
 						{
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-								I18n.get('_Never_'),
-							sortable: false,
-							value: 'lastUpdated',
+							sortable: true,
+							template: this.lastUpdatedTemplate,
 						},
 						{
 							key: 'version',
 							name: I18n.get('_Version_'),
-							sortable: false,
-							value: 'version',
+							sortable: true,
+							template: this.versionTemplate,
 						},
 					],
 					dynamicData: true,
+					multipleSort: true,
 					padding: 'loose',
 					singleSelect: true,
 					striped: false,
+					tableSort: false,
 					wrapText: true,
 				}),
 				params: {
@@ -360,43 +356,39 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 							key: 'id',
 							name: I18n.get('_ID_'),
 							sortable: true,
-							sortDirection: null,
-							sorting: false,
 							value: 'id',
 						},
 						{
 							key: 'title',
 							name: I18n.get('_Title_'),
-							sortable: false,
+							sortable: true,
 							value: 'title',
 						},
 						{
 							key: 'assetsImpacted',
 							name: I18n.get('_ImpactedAssets_'),
-							sortable: false,
+							sortable: true,
 							value: 'assetsImpacted',
 						},
 						{
 							key: 'state',
 							name: I18n.get('_State_'),
-							render: item =>
-								item.state ? _.capitalize(item.state) : I18n.get('_NA_'),
-							sortable: false,
+							sortable: true,
+							template: this.stateTemplate,
 						},
 						{
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-								I18n.get('_Never_'),
-							sortable: false,
+							sortable: true,
+							template: this.lastUpdatedTemplate,
 						},
 					],
 					dynamicData: true,
+					multipleSort: true,
 					padding: 'loose',
 					singleSelect: true,
 					striped: false,
+					tableSort: false,
 					wrapText: true,
 				}),
 				params: {
@@ -426,7 +418,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 */
 	private getSeverityCount () {
 		const securityTab = _.find(this.tabs, { key: 'security' });
-		const impactFilter = _.find(securityTab.filters, { key: 'impact' });
+		const impactFilter = _.find(securityTab.filters, { key: 'severity' });
 
 		return this.productAlertsService.getSecurityAdvisorySeverityCount(this.customerId)
 		.pipe(
@@ -459,9 +451,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * @param column column to set sorting
 	 */
 	public onColumnSort (column) {
-		const tab = this.selectedTab;
-		_.set(tab, ['params', 'sort'], [column.sortDirection]);
-		tab.subject.next();
+		if (column.sortable) {
+			const tab = this.selectedTab;
+			tab.filtered = true;
+			tab.params.sort = [`${column.key}:${column.sortDirection.toUpperCase()}`];
+			this.adjustQueryParams();
+			tab.subject.next();
+		}
 	}
 
 	/**
@@ -770,15 +766,28 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 
 		tab.selectedSubfilters = this.getAllSelectedSubFilters();
 
-		tab.params[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
-		tab.params.page = 1;
+		const selectedSubfilters = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+		if (filter.key !== 'lastUpdate') {
+			_.set(tab, ['params', filter.key], selectedSubfilters);
+			tab.params.page = 1;
+		} else if (filter.key === 'lastUpdate') {
+			_.set(tab, ['params', 'lastUpdatedDateRange'], this.getLastUpdatedRange(subfilter));
+			tab.params.page = 1;
+		}
 
 		const totalFilter = _.find(tab.filters, { key: 'total' });
 		if (filter.selected) {
 			totalFilter.selected = false;
 			tab.filtered = true;
 		} else {
-			const total = tab.selectedSubfilters.length > 0;
+			const total = _.reduce(tab.filters, (memo, f) => {
+				if (!memo) {
+					return _.some(f.seriesData, 'selected');
+				}
+
+				return memo;
+			}, false);
+
 			totalFilter.selected = !total;
 			tab.filtered = total;
 		}
@@ -820,7 +829,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((response: FieldNoticeAdvisoryResponse) => {
 				tab.data = _.get(response, 'data', []);
-				tab.pagination = this.buildPagination(_.get(response, 'Pagination'));
+				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 				tab.loading = false;
 			}),
 			catchError(err => {
@@ -847,7 +856,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		.pipe(
 			map((response: CriticalBugsResponse) => {
 				tab.data = _.get(response, 'data', []);
-				tab.pagination = this.buildPagination(_.get(response, 'Pagination'));
+				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 
 				tab.loading = false;
 			}),
@@ -875,7 +884,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: SecurityAdvisoriesResponse) => {
 					tab.data = _.get(response, 'data', []);
-					tab.pagination = this.buildPagination(_.get(response, 'Pagination'));
+					_.each(tab.data, d => d.severity = _.startCase(d.severity));
+					tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 
 					tab.loading = false;
 				}),
@@ -897,23 +907,21 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 */
 	private buildPagination (
 		pagination: ProductAlertsPagination | DiagnosticsPagination) {
-		if (pagination) {
-			const rows = _.get(pagination, 'rows', 10);
-			const page = _.get(pagination, 'page', 1);
-			const total = _.get(pagination, 'total', 0);
-			const first = (rows * (page - 1)) + 1;
-			let last = (rows * page);
-			if (last > total) {
-				last = total;
-			}
-
-			return {
-				page,
-				rows,
-				total,
-				countStr: `${first}-${last}`,
-			};
+		const rows = _.get(pagination, 'rows', 10);
+		const page = _.get(pagination, 'page', 1);
+		const total = _.get(pagination, 'total', 0);
+		const first = (rows * (page - 1)) + 1;
+		let last = (rows * page);
+		if (last > total) {
+			last = total;
 		}
+
+		return {
+			page,
+			rows,
+			total,
+			countStr: `${first}-${last}`,
+		};
 	}
 
 	/**
@@ -991,7 +999,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			map(() => _.map(this.tabs, tab => {
 
 				if (this.selectedTab.key === 'security') {
-					if (this.selectedTab.impact) {
+					if (this.selectedTab.params.severity) {
 						this.onSubfilterSelect(this.selectedTab.impact,
 												_.find(this.selectedTab.filters,
 												{ key: 'impact' }));
@@ -1041,6 +1049,41 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	/**
+	 * Given a filter key for lastUpdated, returns the date range
+	 * in the format of [<fromDateInMillis>, <toDateInMillis>).
+	 * @param subfilter date range subfilter
+	 * @returns The date range
+	 */
+	private getLastUpdatedRange (subfilter: string) {
+		const current = new Date();
+		const year = current.getUTCFullYear();
+		const month = current.getUTCMonth();
+		const day = current.getUTCDay();
+		const start = new Date(year, month, day);
+		const end = new Date(year, month, day);
+		switch (subfilter) {
+			case 'gt-0-lt-30-days':
+				start.setDate(start.getDate() - 30);
+				break;
+			case 'gt-30-lt-60-days':
+				start.setDate(start.getDate() - 60);
+				end.setDate(end.getDate() - 30);
+				break;
+			case 'gt-60-lt-90-days':
+				start.setDate(start.getDate() - 90);
+				end.setDate(end.getDate() - 60);
+				break;
+			case 'gt-90-days':
+				end.setDate(end.getDate() - 90);
+
+				return [`,${end.getTime()
+					.toString()}`];
+		}
+
+		return [`${start.getTime()}, ${end.getTime()}`];
+	}
+
 	/** Initializer Function */
 	public ngOnInit () {
 		if (window.Cypress) {
@@ -1052,26 +1095,32 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		});
 
 		this.route.queryParams.subscribe(params => {
-
+			const tab = this.selectedTab;
 			switch (this.selectedTab.key) {
 				case 'security': {
-					if (params.impact) {
-						this.selectedTab.impact = params.impact;
+					if (params.severity) {
+						_.set(tab, ['params', 'severity'], _.castArray(params.severity));
+						tab.filtered = true;
 					}
-					if (params.lastUpdate) {
-						this.selectedTab.lastUpdate = params.lastUpdate;
+					if (params.lastUpdatedDateRange) {
+						_.set(tab, ['params', 'lastUpdatedDateRange'],
+							_.castArray(params.lastUpdatedDateRange));
+						tab.filtered = true;
 					}
 					break;
 				}
 				case 'field': {
-					if (params.lastUpdate) {
-						this.selectedTab.lastUpdate = params.lastUpdate;
+					if (params.lastUpdatedDateRange) {
+						_.set(tab, ['params', 'lastUpdatedDateRange'],
+							_.castArray(params.lastUpdatedDateRange));
+						tab.filtered = true;
 					}
 					break;
 				}
 				case 'bug': {
 					if (params.state) {
-						this.selectedTab.state = params.state;
+						_.set(tab, ['params', 'state'], _.castArray(params.state));
+						tab.filtered = true;
 					}
 				}
 			}
@@ -1096,6 +1145,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				f.selected = false;
 			});
 		});
+		_.each(tab.options.columns, (c: CuiTableColumnOption) => {
+			c.sortDirection = 'desc';
+			c.sorting = false;
+		});
 
 		tab.params = {
 			customerId: this.customerId,
@@ -1103,9 +1156,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			rows: 10,
 		};
 		tab.selectedSubfilters = [];
-		tab.filtered = false;
 		const totalFilter = _.find(tab.filters, { key: 'total' });
 		totalFilter.selected = true;
+		tab.filtered = false;
 		this.adjustQueryParams();
 		tab.subject.next();
 	}

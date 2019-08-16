@@ -544,9 +544,9 @@ class RacetrackContentService extends __BaseService {
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
-   * - `rows`: Number of rows of data per page.
+   * - `rows`: Number of rows of data per page. Default value is 10 and the maximum rows allowed per page is 100.
    *
-   * - `page`: Page number of the response
+   * - `page`: Page number of the response. Default value is 1.
    *
    * - `fields`: Requested fields in the response.
    *
@@ -600,9 +600,9 @@ class RacetrackContentService extends __BaseService {
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
-   * - `rows`: Number of rows of data per page.
+   * - `rows`: Number of rows of data per page. Default value is 10 and the maximum rows allowed per page is 100.
    *
-   * - `page`: Page number of the response
+   * - `page`: Page number of the response. Default value is 1.
    *
    * - `fields`: Requested fields in the response.
    *
@@ -1092,12 +1092,12 @@ module RacetrackContentService {
     sort?: Array<string>;
 
     /**
-     * Number of rows of data per page.
+     * Number of rows of data per page. Default value is 10 and the maximum rows allowed per page is 100.
      */
     rows?: number;
 
     /**
-     * Page number of the response
+     * Page number of the response. Default value is 1.
      */
     page?: number;
 

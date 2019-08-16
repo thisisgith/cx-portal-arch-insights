@@ -16,11 +16,12 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import {
 	CollectionPolicyUpdateRequestModel,
 	ControlPointModifyCollectionPolicyAPIService,
-	ControlPointDeviceDiscoveryAPIService,
 	ControlPointDevicePolicyAPIService,
 	DeviceInfo,
 	DevicePolicyRequestModel,
 	DevicePolicyUpdateRequestModel,
+	IgnorePolicyUpdateRequestModel,
+	IgnorePolicyRequestModel,
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
@@ -43,6 +44,17 @@ interface SelectOptions {
  */
 interface DeviceListRow extends DeviceInfo {
 	selected: boolean;
+}
+
+/**
+ * stores possible types for modal
+ */
+enum ModalTypes {
+	editCollection = 'editCollection',
+	editPolicy = 'editPolicy',
+	editIgnorePolicy = 'editIgnorePolicy',
+	newPolicy = 'newPolicy',
+	newIgnorePolicy = 'newIgnorePolicy',
 }
 
 /**
@@ -70,6 +82,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public allDevicesSelectedLeft = false;
 	public selectedRowsRight = { };
 	public selectedRowsLeft = { };
+	public loadingListLeft = false;
+	public loadingListRight = false;
 	public error = false;
 	public errorMessage: string;
 
@@ -81,7 +95,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public requestForm: FormGroup = this.fb.group({
 		dates: [''],
 		days: [''],
-		hourmins: ['', Validators.required],
+		hourmins: [''],
 		timePeriod: ['', Validators.required],
 	});
 
@@ -97,6 +111,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			{ key: 'Monthly', value: 'monthly' },
 			{ key: 'Weekly', value: 'weekly' },
 			{ key: 'Daily', value: 'daily' },
+			{ key: 'Never', value: 'never' },
 		],
 		selected: '',
 	};
@@ -169,7 +184,6 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		private logger: LogService,
 		private fb: FormBuilder,
 		private collectionService: ControlPointModifyCollectionPolicyAPIService,
-		private deviceService: ControlPointDeviceDiscoveryAPIService,
 		private devicePolicyService: ControlPointDevicePolicyAPIService,
 	) { }
 
@@ -193,16 +207,25 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 */
 	public ngOnInit () {
 		switch (this.type) {
-			case 'editCollection': {
+			case ModalTypes.editCollection: {
+				this.timePeriods.options.pop();
+				this.setSelectors();
+
 				this.editCollection();
 				break;
 			}
-			case 'newPolicy': {
+			case ModalTypes.newPolicy: {
 				this.newPolicy();
 				break;
 			}
-			case 'editPolicy': {
+			case ModalTypes.editPolicy: {
+				this.setSelectors();
+
 				this.editPolicy();
+				break;
+			}
+			case ModalTypes.editIgnorePolicy: {
+				this.editIgnorePolicy();
 				break;
 			}
 		}
@@ -214,24 +237,25 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public editCollection () {
 		this.title = I18n.get('_ScheduledCollectionDetails_');
 
-		const date = new Date(_.get(this.policy, 'createdDate'));
+		const dateTime = new Date(_.get(this.policy, 'createdDate'));
 		const formattedTime =
-`${this.monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+`${this.monthNames[dateTime.getMonth()]} ${dateTime.getDate()}, ${dateTime.getFullYear()}`;
 
 		_.set(this.policy, 'createdDate', formattedTime);
 
-		this.setSelectors();
+		this.submitCall = function () {
+			const hourmin = this.requestForm.get('hourmins').value;
+			const timePeriod = this.requestForm.get('timePeriod').value;
+			const date = this.requestForm.get('dates').value;
+			const day = this.requestForm.get('days').value;
 
-		this.getParams = function (schedule: string) {
-			return {
-				schedule,
+			const params: CollectionPolicyUpdateRequestModel = {
 				customerId: this.customerId,
 				policyId: _.get(this.policy, 'policyId'),
-				policyName: 'test',
+				policyName: 'placeholder',
+				schedule: this.getSchedule(timePeriod, day, date, hourmin),
 			};
-		};
 
-		this.submitCall = function (params: CollectionPolicyUpdateRequestModel) {
 			return this.collectionService.updateCollectionPolicyUsingPATCH(params);
 		};
 	}
@@ -240,9 +264,11 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * Called from init given newPolicy
 	 */
 	public newPolicy () {
+		this.type = ModalTypes.newPolicy;
 		this.title = I18n.get('_NewScheduledScan_');
 
-		this.loading = true;
+		this.loadingListLeft = true;
+		this.loadingListRight = false;
 
 		const params: ControlPointDevicePolicyAPIService
 		.GetDevicesForPolicyCreationUsingGETParams = {
@@ -259,14 +285,14 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 					return empty();
 				}),
-				finalize(() => this.loading = false),
+				finalize(() => this.loadingListLeft = false),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(response => {
 				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
 			});
 
-		this.getParams = function (schedule: string) {
+		this.submitCall = function () {
 			const devices = _.map(this.deviceListRight, item => {
 				const copy = this.jsonCopy(item);
 				delete copy.selected;
@@ -274,25 +300,30 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				return copy;
 			});
 
-			return {
-				devices,
-				schedule,
-				customerId: this.customerId,
-			};
-		};
+			const hourmin = this.requestForm.get('hourmins').value;
+			const timePeriod = this.requestForm.get('timePeriod').value;
+			const date = this.requestForm.get('dates').value;
+			const day = this.requestForm.get('days').value;
 
-		this.submitCall = function (parameters: DevicePolicyRequestModel) {
+			const parameters: DevicePolicyRequestModel = {
+				devices,
+				customerId: this.customerId,
+				schedule: this.getSchedule(timePeriod, day, date, hourmin),
+			};
+
 			return this.devicePolicyService.createDevicePolicyUsingPOST(parameters);
 		};
 	}
 
 	/**
-	 * Called from init given editPolicy
+	 * Called from init given newIgnorePolicy
 	 */
-	public editPolicy () {
-		this.title = I18n.get('_ScheduledScanDetails_');
+	public newIgnorePolicy () {
+		this.type = ModalTypes.newIgnorePolicy;
+		this.title = I18n.get('_NewScheduledScan_');
 
-		this.loading = true;
+		this.loadingListLeft = true;
+		this.loadingListRight = false;
 
 		const params: ControlPointDevicePolicyAPIService
 		.GetDevicesForPolicyCreationUsingGETParams = {
@@ -301,7 +332,54 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			rowsPerPage: '9999',
 		};
 
-		this.setSelectors();
+		this.devicePolicyService.getDevicesForIgnorePolicyCreationUsingGET(params)
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loadingListLeft = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
+			});
+
+		this.submitCall = function () {
+			const devices = _.map(this.deviceListRight, item => {
+				const copy = this.jsonCopy(item);
+				delete copy.selected;
+
+				return copy;
+			});
+
+			const parameters: IgnorePolicyRequestModel = {
+				devices,
+				customerId: this.customerId,
+			};
+
+			return this.devicePolicyService.createIgnoreScanPolicyUsingPOST(parameters);
+		};
+	}
+
+	/**
+	 * Called from init given editPolicy
+	 */
+	public editPolicy () {
+		this.type = ModalTypes.editPolicy;
+		this.title = I18n.get('_ScheduledScanDetails_');
+
+		this.loadingListLeft = true;
+		this.loadingListRight = true;
+
+		const params: ControlPointDevicePolicyAPIService
+		.GetDevicesForPolicyCreationUsingGETParams = {
+			customerId: this.customerId,
+			pageNumber: '1',
+			rowsPerPage: '9999',
+		};
 
 		this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params)
 			.pipe(
@@ -311,7 +389,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 					return empty();
 				}),
-				finalize(() => this.loading = false),
+				finalize(() => this.loadingListLeft = false),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(response => {
@@ -334,14 +412,14 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 					return empty();
 				}),
-				finalize(() => this.loading = false),
+				finalize(() => this.loadingListRight = false),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(response => {
 				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
 			});
 
-		this.getParams = function (schedule: string) {
+		this.submitCall = function () {
 			const devices = _.map(this.deviceListRight, item => {
 				const copy = this.jsonCopy(item);
 				delete copy.selected;
@@ -349,16 +427,103 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				return copy;
 			});
 
-			return {
+			const hourmin = this.requestForm.get('hourmins').value;
+			const timePeriod = this.requestForm.get('timePeriod').value;
+			const date = this.requestForm.get('dates').value;
+			const day = this.requestForm.get('days').value;
+
+			const parameters: DevicePolicyUpdateRequestModel = {
 				devices,
-				schedule,
+				customerId: this.customerId,
+				policyId: _.get(this.policy, 'policyId'),
+				schedule: this.getSchedule(timePeriod, day, date, hourmin),
+			};
+
+			return this.devicePolicyService.updateDevicePolicyUsingPATCH(parameters);
+		};
+	}
+
+	/**
+	 * Called from init given editIgnorePolicy
+	 */
+	public editIgnorePolicy () {
+		this.type = ModalTypes.editIgnorePolicy;
+		this.title = I18n.get('_ScheduledScanDetails_');
+
+		this.loadingListLeft = true;
+		this.loadingListRight = true;
+
+		this.timePeriods.selected = 'never';
+		this.timePeriod = this.timePeriods.selected;
+
+		this.requestForm.setValue({
+			dates: this.dates.selected,
+			days: this.days.selected,
+			hourmins: this.hourmins.selected,
+			timePeriod: 'never',
+		});
+
+		const params: ControlPointDevicePolicyAPIService
+		.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams = {
+			customerId: this.customerId,
+			pageNumber: '1',
+			policyId: _.get(this.policy, 'policyId'),
+			rowsPerPage: '9999',
+		};
+
+		this.devicePolicyService.getEligibleDevicesForGivenIgnorePolicyUsingGET(params)
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loadingListLeft = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
+			});
+
+		const currentPolicyParams: ControlPointDevicePolicyAPIService
+			.GetDevicesForGivenIgnorePolicyUsingGETParams = {
+				customerId: this.customerId,
+				pageNumber: '1',
+				policyId: _.get(this.policy, 'policyId'),
+				rowsPerPage: '9999',
+			};
+
+		this.devicePolicyService.getDevicesForGivenIgnorePolicyUsingGET(currentPolicyParams)
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loadingListRight = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
+			});
+
+		this.submitCall = function () {
+			const devices = _.map(this.deviceListRight, item => {
+				const copy = this.jsonCopy(item);
+				delete copy.selected;
+
+				return copy;
+			});
+
+			const parameters: IgnorePolicyUpdateRequestModel = {
+				devices,
 				customerId: this.customerId,
 				policyId: _.get(this.policy, 'policyId'),
 			};
-		};
 
-		this.submitCall = function (parameters: DevicePolicyUpdateRequestModel) {
-			return this.devicePolicyService.updateDevicePolicyUsingPATCH(parameters);
+			return this.devicePolicyService.updateIgnoreScanPolicyUsingPATCH(parameters);
 		};
 	}
 
@@ -392,6 +557,61 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 */
 	public timePeriodChange () {
 		this.timePeriod = this.requestForm.get('timePeriod').value;
+
+		// toggle between newIgnorePolicy and newPolicy when never is changed
+		if (this.timePeriod === 'never' && this.type === ModalTypes.newPolicy) {
+			this.newIgnorePolicy();
+		} else if (this.timePeriod !== 'never' && this.type === ModalTypes.newIgnorePolicy) {
+			this.newPolicy();
+		}
+
+		// toggle between editIgnorePolicy and editPolicy when never is changed
+		if (this.timePeriod === 'never' && this.type === ModalTypes.editPolicy) {
+			this.editIgnorePolicy();
+		} else if (this.timePeriod !== 'never' && this.type === ModalTypes.editIgnorePolicy) {
+			this.editPolicy();
+		}
+
+		if (this.timePeriod === 'never') {
+			this.requestForm.get('dates')
+				.clearValidators();
+			this.requestForm.get('days')
+				.clearValidators();
+			this.requestForm.get('hourmins')
+				.clearValidators();
+
+		} else if (this.timePeriod === 'monthly') {
+			this.requestForm.get('dates')
+				.setValidators(Validators.required);
+			this.requestForm.get('days')
+				.clearValidators();
+			this.requestForm.get('hourmins')
+				.setValidators(Validators.required);
+
+		} else if (this.timePeriod === 'weekly') {
+			this.requestForm.get('dates')
+				.clearValidators();
+			this.requestForm.get('days')
+				.setValidators(Validators.required);
+			this.requestForm.get('hourmins')
+				.setValidators(Validators.required);
+
+		} else if (this.timePeriod === 'daily') {
+			this.requestForm.get('dates')
+				.clearValidators();
+			this.requestForm.get('days')
+				.clearValidators();
+			this.requestForm.get('hourmins')
+				.setValidators(Validators.required);
+
+		}
+
+		this.requestForm.get('days')
+			.updateValueAndValidity();
+		this.requestForm.get('dates')
+			.updateValueAndValidity();
+		this.requestForm.get('hourmins')
+			.updateValueAndValidity();
 	}
 
 	/**
@@ -504,43 +724,46 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
-	 * Creates cron expression
+	 * Creates 6 field cron expression
 	 * @param timePeriod "monthly", "weekly" or "daily"
 	 * @param day numbered day of the week "0-6"
 	 * @param date date in a month "1-31"
 	 * @param hourmin: hours and min at front of cron expression
 	 *
-	 * @returns cron expression string
+	 * @returns cron expression string or false
 	 */
 	public getSchedule (timePeriod: string, day: string, date: string, hourmin: string) {
-		let schedule = `${hourmin}`;
-		if (timePeriod === 'monthly') {
-			schedule = `${schedule} ${date} * *`;
-		} else if (timePeriod === 'weekly') {
-			schedule = `${schedule} * * ${day}`;
-		} else {
-			schedule = `${schedule} * * *`;
+		let schedule: String = '';
+		switch (timePeriod) {
+			case 'monthly' : {
+				schedule = `0 ${hourmin} ${date} * *`;
+				break;
+			}
+			case 'weekly' : {
+				schedule = `0 ${hourmin} * * ${day}`;
+				break;
+			}
+			case 'daily' : {
+				schedule = `0 ${hourmin} * * *`;
+				break;
+			}
 		}
 
-		return schedule;
+		return schedule ? schedule : false;
 	}
 
 	/**
 	 * Submit the completed Collection Form
 	 */
 	public onSubmit () {
-		const hourmin = this.requestForm.get('hourmins').value;
-		const timePeriod = this.requestForm.get('timePeriod').value;
-		const date = this.requestForm.get('dates').value;
-		const day = this.requestForm.get('days').value;
-
-		const schedule = this.getSchedule(timePeriod, day, date, hourmin);
-
-		const params = this.getParams(schedule);
-
-		this.submitCall(params)
+		this.submitCall()
 			.pipe(
-				catchError(() => empty()),
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
