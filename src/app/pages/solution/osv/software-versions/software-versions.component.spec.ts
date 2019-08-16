@@ -8,6 +8,7 @@ import { of, throwError } from 'rxjs';
 import { OSVScenarios } from '@mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MicroMockModule } from '@cui-x-views/mock';
 
 describe('SoftwareVersionsComponent', () => {
 	let component: SoftwareVersionsComponent;
@@ -20,6 +21,7 @@ describe('SoftwareVersionsComponent', () => {
 				SoftwareVersionsModule,
 				HttpClientTestingModule,
 				RouterTestingModule,
+				MicroMockModule,
 			],
 		})
 			.compileComponents();
@@ -41,8 +43,6 @@ describe('SoftwareVersionsComponent', () => {
 		spyOn(osvService, 'getSoftwareVersions')
 			.and
 			.returnValue(of(<any> OSVScenarios[2].scenarios.GET[0].response.body));
-		expect(component.status.isLoading)
-			.toBe(true);
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)
@@ -62,8 +62,6 @@ describe('SoftwareVersionsComponent', () => {
 		spyOn(osvService, 'getSoftwareVersions')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		expect(component.status.isLoading)
-			.toBe(true);
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(osvService.getSoftwareVersions)

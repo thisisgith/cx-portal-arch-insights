@@ -5,6 +5,7 @@ import { AssetTimelineChartModule } from './asset-timeline-chart.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OSVScenarios } from '@mock';
 import * as _ from 'lodash-es';
+import { MicroMockModule } from '@cui-x-views/mock';
 
 describe('AssetTimelineChartComponent', () => {
 	let component: AssetTimelineChartComponent;
@@ -14,6 +15,7 @@ describe('AssetTimelineChartComponent', () => {
 			imports: [
 				AssetTimelineChartModule,
 				HttpClientTestingModule,
+				MicroMockModule,				
 			],
 		})
 			.compileComponents();
