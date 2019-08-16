@@ -55,7 +55,7 @@ function MockSP (
 				duration: null,
 				successByteId: `${successByteId3}`,
 				title: 'Cisco DNA Assurance Overview',
-				type: 'Spreadsheet',
+				type: 'Data Sheet',
 				url: 'https://www.cisco.com/c/en/us/td/docs/cloud-systems-management/network-automation-and-management/dna-center-assurance/1-2-10/b_cisco_dna_assurance_1_2_10_ug/b_cisco_dna_assurance_1_2_10_ug_chapter_01.html',
 			},
 			{
