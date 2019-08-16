@@ -18,7 +18,7 @@ describe('Case Detail Spec', () => {
 			// PBC-231 - Check for expected assets on the case listing
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('OPEN CASESTab', { timeout: 10000 }).should('exist');
-			//cy.getByAutoId('RMAsTab').should('exist');
+			// cy.getByAutoId('RMAsTab').should('exist');
 			cy.getByAutoId('rmaCasesHeader').should('exist');
 			cy.getByAutoId('rmaShowingXcasesHeader', { timeout: 15000 }).should('exist');
 			cy.getByAutoId('caseSearchBox').should('exist');
@@ -232,15 +232,14 @@ describe('Case Detail Spec', () => {
 		});
 	});
 	context('Case - Opened RMAs and Cases', () => {
-		let setupwizardclosebtn;
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
 			// Close the setup wizard so it doesn't block other elements
 			cy.getByAutoId('setup-wizard-header-close-btn').
-				then($setupwizardclosebtn => {
-					return $setupwizardclosebtn.click();
+				then(setupwizardclosebtn => {
+					return setupwizardclosebtn.click();
 				});
 		});
 
@@ -279,7 +278,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('CasesSelectVisualFilter-rma', { timeout: 20000 }).should('exist');
 			cy.getByAutoId('No RMAsPoint', { timeout: 10000 }).should('exist');
 			cy.getByAutoId('With RMAsPoint', { timeout: 10000 }).should('exist');
-			// No RMA filter will result in a list with 1500 entries, will take too long to load, comment out for now.
+			// "No RMA" filter fails intermittently, comment out until end server is stable.
 			/* cy.getByAutoId('No RMAsPoint').click();
 			cy.getByAutoId('FilterTag-F', { timeout: 15000 }).within(() => {
 				cy.get('span').contains('No RMAs');
@@ -287,7 +286,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('With RMAsPoint').click();
 			cy.getByAutoId('FilterTag-T', { timeout: 15000 }).within(() => {
 				cy.get('span').contains('With RMAs');
-			});	
+			});
 			cy.getByAutoId('rmaCasesHeader').should('exist');
 		});
 	});
