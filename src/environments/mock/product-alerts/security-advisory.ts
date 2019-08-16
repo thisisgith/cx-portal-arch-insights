@@ -2168,4 +2168,22 @@ export const SecurityAdvisoryScenarios = [
 		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&managedNeId=NA,FOC2045X0WJ,WS-C3850-48U-L,NA`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Security Advisories for advisory ID 485',
+					response: {
+						body: MockAdvisory([MockSecurityAdvisories[3]]),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		/* tslint:disable */
+		url: `${api}?customerId=${customerId}&vulnerabilityStatus=POTVUL&vulnerabilityStatus=VUL&advisoryId=485`,
+		usecases: ['Use Case 1'],
+	},
 ];
