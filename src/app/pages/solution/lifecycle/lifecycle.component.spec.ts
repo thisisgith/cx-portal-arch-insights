@@ -334,6 +334,7 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			component.eventCoordinates = 0;
+			(<any> window).innerWidth = 1200;
 			let viewAtxSessions: HTMLElement;
 			viewAtxSessions = document.createElement('viewAtxSessions');
 
@@ -403,6 +404,7 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			component.eventCoordinates = 200;
+			(<any> window).innerWidth = 1200;
 			let viewAtxSessions: HTMLElement;
 			component.componentData.atx.interested = { };
 			viewAtxSessions = document.createElement('viewAtxSessions');
@@ -415,6 +417,7 @@ describe('LifecycleComponent', () => {
 				.toEqual('panel cardpanel--open');
 
 			component.eventCoordinates = 1000;
+			(<any> window).innerWidth = 1200;
 			viewAtxSessions = document.createElement('viewAtxSessions');
 
 			const panelRight = component.getPanel(viewAtxSessions);

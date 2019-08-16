@@ -138,6 +138,7 @@ export class LifecycleComponent implements OnDestroy {
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
 	public eventCoordinates = 0;
+	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
 	// id of ACC in request form
 	public accTitleRequestForm: string;
@@ -1111,7 +1112,8 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		if ((this.eventCoordinates + 500) > window.innerWidth) {
+		this.innerWidth = window.innerWidth;
+		if ((this.eventCoordinates + 500) > this.innerWidth) {
 			_div.style.right = '330px';
 			_div.style.bottom = '-50px';
 			panel = 'panel cardpanel--openright';
