@@ -8,6 +8,7 @@ import {
 	OSVService, SummaryResponse, OSVAsset,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
+import { VisualFilter } from '@interfaces';
 
 /** Our current customerId */
 const customerId = '231215372';
@@ -15,18 +16,7 @@ const customerId = '231215372';
 /**
  * Interface representing our visual filters
  */
-interface Filter {
-	key: string;
-	selected?: boolean;
-	template?: TemplateRef<{ }>;
-	title?: string;
-	loading: boolean;
-	data: {
-		filter: string,
-		label: string,
-		selected: boolean,
-		value: number,
-	}[];
+interface OSVFilter extends VisualFilter {
 	view?: string[];
 }
 
@@ -40,11 +30,11 @@ interface Filter {
 })
 export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	@ViewChild('assetTypeFilter', { static: true }) private assetTypeFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{ }>;
+		TemplateRef<{}>;
 	public status = {
 		isLoading: true,
 	};
@@ -53,7 +43,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public selectedProfileGroup: any;
 	public selectedAsset: OSVAsset;
 	public filtered = false;
-	public filters: Filter[];
+	public filters: OSVFilter[];
 	private destroy$ = new Subject();
 	public view: 'swProfiles' | 'assets' | 'swVersions'
 		= 'assets';
@@ -102,27 +92,28 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	private buildFilters () {
 		this.filters = [
 			{
-				data: [],
 				key: 'totalAssets',
 				loading: true,
 				selected: true,
+				seriesData: [],
 				template: this.totalAssetsFilterTemplate,
+				title: '',
 				view: ['swProfiles', 'assets', 'swVersions'],
 			},
 			{
-				data: [],
 				key: 'assetType',
 				loading: true,
 				selected: false,
+				seriesData: [],
 				template: this.assetTypeFilterTemplate,
 				title: I18n.get('_OsvAssets_'),
 				view: ['assets'],
 			},
 			{
-				data: [],
 				key: 'deploymentStatus',
 				loading: true,
 				selected: false,
+				seriesData: [],
 				template: this.deploymentStatusFilterTemplate,
 				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
 				view: ['assets'],
@@ -164,13 +155,13 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					totalAssetsFilter.loading = false;
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
-					totalAssetsFilter.data[0] = {
+					totalAssetsFilter.seriesData[0] = {
 						assets: response.assets,
 						profiles: response.profiles,
 						versions: response.versions,
 					};
 					response.asset_profile.assets_profile = 0;
-					deploymentStatusFilter.data = _.compact(
+					deploymentStatusFilter.seriesData = _.compact(
 						_.map(response.deployment, (value: number, key: string) => {
 							if (value !== 0) {
 								return {
@@ -182,7 +173,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 							}
 						}));
 
-					assetTypeFilter.data = _.compact(
+					assetTypeFilter.seriesData = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
 							if (value !== 0) {
 								return {
@@ -204,7 +195,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}
@@ -245,7 +236,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		const filter = _.find(this.filters, { key });
 		if (filter) {
 
-			return _.filter(filter.data, 'selected');
+			return _.filter(filter.seriesData, 'selected');
 		}
 	}
 
@@ -255,19 +246,19 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * @param filter the filter we selected the subfilter on
 	 * @param reload if we're reloading our assets
 	 */
-	public onSubfilterSelect (subfilter: string, filter: Filter) {
-		const sub = _.find(filter.data, { filter: subfilter });
+	public onSubfilterSelect (subfilter: string, filter: OSVFilter) {
+		const sub = _.find(filter.seriesData, { filter: subfilter });
 		if (sub) {
 			sub.selected = !sub.selected;
 		}
-		filter.selected = _.some(filter.data, 'selected');
+		filter.selected = _.some(filter.seriesData, 'selected');
 		if (filter.key === 'deploymentStatus') {
 			this.appliedFilters.deploymentStatus =
-				_.map(_.filter(filter.data, 'selected'), 'filter');
+				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
 		}
 		if (filter.key === 'assetType') {
 			this.appliedFilters.assetType =
-				_.map(_.filter(filter.data, 'selected'), 'filter');
+				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
 		}
 		this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		const totalFilter = _.find(this.filters, { key: 'totalAssets' });
@@ -295,9 +286,9 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		const totalFilter = _.find(this.filters, { key: 'totalAssets' });
 		this.filtered = false;
 
-		_.each(this.filters, (filter: Filter) => {
+		_.each(this.filters, (filter: OSVFilter) => {
 			filter.selected = false;
-			_.each(filter.data, f => {
+			_.each(filter.seriesData, f => {
 				f.selected = false;
 			});
 		});
