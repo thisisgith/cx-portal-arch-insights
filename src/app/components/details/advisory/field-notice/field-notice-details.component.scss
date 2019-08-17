@@ -1,8 +1,9 @@
 .bottom-flex-box {
 	position: absolute;
 	bottom: 0;
-	width: 100%;
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
+	left: 10px;
+	right: 0;
 }

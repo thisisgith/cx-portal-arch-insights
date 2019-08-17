@@ -3,7 +3,7 @@ export interface FeedbackRequest {
   rating?: string;
   customerId?: string;
   feedbackMsg?: string;
-  fieldNoticeId?: string;
+  fnId?: string;
   psirtId?: string;
   cdetId?: string;
 }

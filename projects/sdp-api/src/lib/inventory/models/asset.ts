@@ -2,14 +2,14 @@
 export interface Asset {
 
   /**
+   * Contract Number
+   */
+  contractNumber?: string;
+
+  /**
    * Device name
    */
   deviceName?: string;
-
-  /**
-   * IP Address
-   */
-  ipAddress?: string;
 
   /**
    * When the serial number was last scanned
@@ -19,7 +19,7 @@ export interface Asset {
   /**
    * Critical advisories
    */
-  criticalAdvisories?: number;
+  criticalAdvisories?: string;
   supportCovered?: boolean;
 
   /**
@@ -43,15 +43,15 @@ export interface Asset {
   role?: string;
 
   /**
-   * Contract Number
+   * IP Address
    */
-  contractNumber?: string;
+  ipAddress?: string;
   managedNeId?: string;
   neId?: string;
   hwInstanceId?: string;
   containingHwId?: string;
   productId?: string;
-  equipmentType?: string;
   productName?: string;
+  equipmentType?: string;
   reachabilityStatus?: string;
 }
