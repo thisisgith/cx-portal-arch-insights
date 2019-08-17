@@ -20,9 +20,6 @@ import { OSVService, AssetsResponse, OSVAsset, OsvPagination } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
 
-/** Our current customerId */
-const customerId = '231215372';
-
 /**
  * AssetSoftware Component
  */
@@ -66,7 +63,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.assetsParams = {
-			customerId,
+			customerId: this.customerId,
 			filter: '',
 			pageIndex: 1,
 			pageSize: 10,

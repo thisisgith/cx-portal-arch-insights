@@ -10,7 +10,7 @@ import {
 const api = '/api/customerportal/osv-ui/v1/';
 
 /** Default Customer ID */
-const customerId = '231215372';
+const customerId = '2431199';
 
 /** Default Asset Id */
 const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';

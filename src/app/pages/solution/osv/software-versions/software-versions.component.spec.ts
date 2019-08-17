@@ -5,10 +5,12 @@ import { SoftwareVersionsModule } from './software-versions.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OSVService } from '@sdp-api';
 import { of, throwError } from 'rxjs';
-import { OSVScenarios } from '@mock';
+import { OSVScenarios, user } from '@mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MicroMockModule } from '@cui-x-views/mock';
+import { ActivatedRoute } from '@angular/router';
+import { environment } from '@environment';
 
 describe('SoftwareVersionsComponent', () => {
 	let component: SoftwareVersionsComponent;
@@ -22,6 +24,20 @@ describe('SoftwareVersionsComponent', () => {
 				HttpClientTestingModule,
 				RouterTestingModule,
 				MicroMockModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
 			],
 		})
 			.compileComponents();

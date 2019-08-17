@@ -8,8 +8,6 @@ import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, SoftwareVersionsResponse, OsvPagination, SoftwareVersion } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
-/** Our current customerId */
-const customerId = '231215372';
 
 /**
  * SoftwareVersion Component
@@ -40,7 +38,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.softwareVersionsParams = {
-			customerId,
+			customerId: this.customerId,
 			pageIndex: 1,
 			pageSize: 10,
 			sort: 'swVersion',

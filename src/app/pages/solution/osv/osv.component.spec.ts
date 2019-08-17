@@ -210,31 +210,4 @@ describe('OptimalSoftwareVersionComponent', () => {
 		expect(component.view)
 			.toEqual('swVersions');
 	});
-
-	it('should showUp the sw profile info dialog if not found in localstorage', () => {
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.hideProfileInfo)
-			.toBe(false);
-		expect(component.showProfileInfo)
-			.toBe(true);
-		window.localStorage.setItem('hideProfileInfo', 'true');
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.hideProfileInfo)
-			.toBe(true);
-		expect(component.showProfileInfo)
-			.toBe(false);
-	});
-
-	it('should set the hideinfo in localstorage', () => {
-		component.hideProfileInfo = true;
-		component.hideInfo();
-		expect(window.localStorage.getItem('hideProfileInfo'))
-			.toEqual('true');
-		component.hideProfileInfo = false;
-		component.hideInfo();
-		expect(window.localStorage.getItem('hideProfileInfo'))
-			.toEqual('false');
-	});
 });

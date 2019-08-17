@@ -42,9 +42,6 @@
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading"></div>
-	<div *ngIf="view == 'swProfiles'">
-		<!-- <app-software-profiles [(selectedProfileGroup)]="selectedProfileGroup"></app-software-profiles> -->
-	</div>
 	<div *ngIf="view == 'assets'">
 		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters" (assetStatusUpdated)="onAssetStatusUpdate($event)" [(selectedAsset)]="selectedAsset">
 		</app-assets>
@@ -81,21 +78,6 @@
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
 	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter">
-		<!-- <div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-primary':view == 'swProfiles','text-muted':view != 'swProfiles'}"
-			data-auto-id="TotalVisualFilterSoftwareProfiles">
-			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
-			</div>
-			<div class="col-7 margin-auto">
-				<span class="text-xlarge " [innerText]="'_OsvSoftwareProfiles_' | i18n"></span>
-				<span class="pull-right text-info relative">
-					<i class="icon-question-circle icon-small"
-						(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;"></i>
-					<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
-				</span>
-
-			</div>
-		</div> -->
 		<div class="row toggle" (click)="selectView('assets')"
 			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			data-auto-id="TotalVisualFilterAssets">
@@ -104,10 +86,6 @@
 			</div>
 			<div class="col-7 margin-auto">
 				<span class="text-xlarge " [innerText]="'_OsvAssets_' | i18n"></span>
-				<!-- <span class="text-info  pull-right" data-balloon-length="medium" data-balloon="Asset info coming soon!!"
-					data-balloon-pos="right">
-					<i class="icon-info icon-small"></i>
-				</span> -->
 			</div>
 		</div>
 		<div class="row toggle" (click)="selectView('swVersions')" [ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"

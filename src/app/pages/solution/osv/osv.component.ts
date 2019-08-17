@@ -10,9 +10,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
 
-/** Our current customerId */
-const customerId = '231215372';
-
 /**
  * Interface representing our visual filters
  */
@@ -47,8 +44,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	private destroy$ = new Subject();
 	public view: 'swProfiles' | 'assets' | 'swVersions'
 		= 'assets';
-	public hideProfileInfo = false;
-	public showProfileInfo = false;
 	public appliedFilters = {
 		assetType: '',
 		deploymentStatus: [],
@@ -68,13 +63,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		if (window.localStorage.getItem('hideProfileInfo') === 'true') {
-			this.showProfileInfo = false;
-			this.hideProfileInfo = true;
-		} else {
-			this.showProfileInfo = true;
-			this.hideProfileInfo = false;
-		}
 		this.buildFilters();
 	}
 
@@ -149,7 +137,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
 		const assetTypeFilter = _.find(this.filters, { key: 'assetType' });
 
-		return this.osvService.getSummary({ customerId })
+		return this.osvService.getSummary({ customerId: this.customerId })
 			.pipe(
 				map((response: SummaryResponse) => {
 					totalAssetsFilter.loading = false;
@@ -237,6 +225,8 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 
 			return _.filter(filter.seriesData, 'selected');
 		}
+
+		return [];
 	}
 
 	/**
@@ -296,16 +286,5 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			assetType: '',
 			deploymentStatus: [],
 		};
-	}
-
-	/**
-	 * hide / show profile Info modal on ngModal change
-	 */
-	public hideInfo () {
-		if (this.hideProfileInfo) {
-			window.localStorage.setItem('hideProfileInfo', 'true');
-		} else {
-			window.localStorage.setItem('hideProfileInfo', 'false');
-		}
 	}
 }

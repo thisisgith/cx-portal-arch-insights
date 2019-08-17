@@ -20,9 +20,6 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
-/** Our current customerId */
-const customerId = '231215372';
-
 /**
  * Asset Software Details Component
  */
@@ -57,7 +54,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.assetDetailsParams = {
-			customerId,
+			customerId: this.customerId,
 			id: '',
 		};
 	 }
@@ -190,7 +187,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public onActionClick (item: AssetRecommendations) {
 		const body = {
-			customerId,
+			customerId: this.customerId,
 			id: this.selectedAsset.id,
 			optimalVersion: item.swVersion,
 		};
