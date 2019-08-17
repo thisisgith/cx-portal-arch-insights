@@ -44,5 +44,5 @@ export interface ELearning {
   /**
    * Percentage completion of a given course
    */
-  percentageCompleted?: number;
+  percentagecompleted?: number;
 }

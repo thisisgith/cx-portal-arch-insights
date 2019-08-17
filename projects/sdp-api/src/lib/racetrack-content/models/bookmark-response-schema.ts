@@ -2,14 +2,14 @@
 export interface BookmarkResponseSchema {
 
   /**
-   * Unique Identifier of the selecected product guide/atx/acc
-   */
-  id?: string;
-
-  /**
    * is Favorite
    */
   bookmark?: boolean;
+
+  /**
+   * Unique Identifier for bookmark request
+   */
+  bookmarkRequestId?: string;
   ccoId?: string;
 
   /**
@@ -19,9 +19,9 @@ export interface BookmarkResponseSchema {
   customerId?: string;
 
   /**
-   * Unique Identifier for bookmark request
+   * Unique Identifier of the selecected product guide/atx/acc
    */
-  bookmarkRequestId?: string;
+  id?: string;
 
   /**
    * Category of the lifecycle
