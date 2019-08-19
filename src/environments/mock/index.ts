@@ -50,6 +50,8 @@ export * from './racetrack/elearning';
 export * from './racetrack/info';
 export * from './racetrack/successPaths';
 
+export * from './riskMitigation/riskMitigation';
+
 export * from './rma/rma';
 
 export * from './search/search';
