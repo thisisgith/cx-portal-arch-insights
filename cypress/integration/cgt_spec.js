@@ -504,8 +504,7 @@ describe('Customized Group Training (CGT)', () => {
 					cy.getByAutoId('cgtRequestModal').should('not.exist');
 				});
 
-				// TODO: Cuurently failing due to PBC-536: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-536
-				it.skip('Submitting the Request form should call the POST /request API with user input', () => {
+				it('Submitting the Request form should call the POST /request API with user input', () => {
 					// Open the request form modal
 					cy.getByAutoId('Request-CgtTraining').click();
 					cy.getByAutoId('cgtRequestModal').should('be.visible');
