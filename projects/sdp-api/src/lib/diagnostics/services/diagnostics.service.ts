@@ -322,6 +322,8 @@ class DiagnosticsService extends __BaseService {
    *
    * - `fields`: Requested fields in the response. Id field is by default
    *
+   * - `cdetsId`: ID of the Bug
+   *
    * @return successful operation
    */
   getCriticalBugsResponse(params: DiagnosticsService.GetCriticalBugsParams): __Observable<__StrictHttpResponse<CriticalBugsResponse>> {
@@ -340,8 +342,9 @@ class DiagnosticsService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
     if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
-    if (params.id != null) __params = __params.set('id', params.id.toString());
+    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.cdetsId || []).forEach(val => {if (val != null) __params = __params.append('cdetsId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs`,
@@ -389,6 +392,8 @@ class DiagnosticsService extends __BaseService {
    * - `id`: ID of the Bug
    *
    * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `cdetsId`: ID of the Bug
    *
    * @return successful operation
    */
@@ -587,12 +592,17 @@ module DiagnosticsService {
     /**
      * ID of the Bug
      */
-    id?: string;
+    id?: Array<string>;
 
     /**
      * Requested fields in the response. Id field is by default
      */
     fields?: Array<string>;
+
+    /**
+     * ID of the Bug
+     */
+    cdetsId?: Array<string>;
   }
 }
 

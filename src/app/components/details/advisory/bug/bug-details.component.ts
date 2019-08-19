@@ -66,7 +66,9 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 		return this.diagnosticsService.getCriticalBugs(this.params)
 		.pipe(
 			map((response: CriticalBugsResponse) => {
-				this.data = _.head(_.get(response, 'data', []));
+				this.data = {
+					advisory: _.head(_.get(response, 'data', [])),
+				};
 			}),
 			catchError(err => {
 				this.logger.error('bug-details.component : getBug() ' +
@@ -87,8 +89,8 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 		if (this.id) {
 			this.isLoading = true;
 			this.params = {
+				cdetsId: [this.id],
 				customerId: this.customerId,
-				id: this.id,
 				page: 1,
 				rows: 1,
 			};

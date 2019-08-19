@@ -1,6 +1,7 @@
 import { Component, HostBinding, Inject } from '@angular/core';
 import { UtilsService } from '@services';
-import { get } from 'lodash-es';
+import * as _ from 'lodash-es';
+import { environment } from '@environment';
 
 /**
  * Panel for displaying sub-header content
@@ -14,6 +15,7 @@ import { get } from 'lodash-es';
 	templateUrl: './no-dnac-header.component.html',
 })
 export class NoDNACHeaderComponent {
+	public production = _.get(environment, 'production', false);
 	public noDNAC = this.utils.getLocalStorage(this.env.ieSetup.DNAC_LS_KEY);
 	public hasCXCollector = this.utils.getLocalStorage(this.env.ieSetup.CX_Coll_Reg_LS_KEY);
 	public forceHidden = false;
@@ -25,7 +27,7 @@ export class NoDNACHeaderComponent {
 		private utils: UtilsService,
 	) {
 		if (window.Cypress) {
-			this.forceHidden = get(window, 'Cypress.hideDNACHeader', false);
+			this.forceHidden = _.get(window, 'Cypress.hideDNACHeader', false);
 		}
 	 }
 }

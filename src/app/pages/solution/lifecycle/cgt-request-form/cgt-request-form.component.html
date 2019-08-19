@@ -8,16 +8,16 @@
 </div>
 
 <ng-template #cgtRequestModal>
-	<div id="cgtRequestModal" class="modal__content no-padding">
+	<div id="cgtRequestModal" class="modal__content no-padding" data-auto-id="cgtRequestModal">
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top dbl-padding-left">
 				<div class="col-md-11 half-margin-top">
-					<div class="text-xlarge text-left" [innerText]="'_CustomizedGroupTraining_' | i18n"></div>
+					<div class="text-xlarge text-left" [innerText]="'_CustomizedGroupTraining_' | i18n" data-auto-id="cgtRequestModal-Title"></div>
 					<ng-container *ngIf="loading">
 						<div class="row half-padding-left base-padding-top">
 							<div class="alert dbl-padding-left">
 								<div class="alert__icon icon-info-outline"></div>
-								<div class="alert__message text-info" [innerText]="'_LoadingCustomerInfo_' | i18n">
+								<div class="alert__message text-info" [innerText]="'_LoadingCustomerInfo_' | i18n" data-auto-id="cgtRequestModal-LoadingCustomerInfoBanner">
 								</div>
 							</div>
 						</div>
@@ -26,7 +26,7 @@
 						<div class="row half-padding-left base-padding-top">
 							<div class="alert alert--success dbl-padding-left">
 								<div class="alert__icon icon-check-outline"></div>
-								<div class="alert__message text-bold" [innerText]="'_RequestSuccess_' | i18n"></div>
+								<div class="alert__message text-bold" [innerText]="'_RequestSuccess_' | i18n" data-auto-id="cgtRequestModal-SubmitSuccessBanner"></div>
 							</div>
 						</div>
 					</ng-container>
@@ -34,7 +34,7 @@
 						<div class="row half-padding-left base-padding-top">
 							<div class="alert alert--danger dbl-padding-left">
 								<div class="alert__icon icon-error-outline"></div>
-								<div class="alert__message text-left" [innerText]="'_RequestError_' | i18n"></div>
+								<div class="alert__message text-left" [innerText]="'_RequestError_' | i18n" data-auto-id="cgtRequestModal-SubmitErrorBanner"></div>
 							</div>
 						</div>
 					</ng-container>
@@ -42,7 +42,7 @@
 						<div class="row half-padding-left base-padding-top">
 							<div class="alert alert--danger dbl-padding-left">
 								<div class="alert__icon icon-error-outline"></div>
-								<div class="alert__message text-left" [innerText]="'_ErrorCustomerInfo_' | i18n"></div>
+								<div class="alert__message text-left" [innerText]="'_ErrorCustomerInfo_' | i18n" data-auto-id="cgtRequestModal-UserInfoErrorBanner"></div>
 							</div>
 						</div>
 					</ng-container>
@@ -50,7 +50,7 @@
 						<div class="row half-padding-left base-padding-top">
 							<div class="alert alert--danger dbl-padding-left">
 								<div class="alert__icon icon-error-outline"></div>
-								<div class="alert__message text-left" [innerText]="'_NoSessionsAvailable_' | i18n:requestForm.get('contract').value">
+								<div class="alert__message text-left" [innerText]="'_NoSessionsAvailable_' | i18n:requestForm.get('contract').value" data-auto-id="cgtRequestModal-NoSessionsAvailableBanner">
 								</div>
 							</div>
 						</div>
@@ -59,7 +59,7 @@
 				<div class="col-md-1 half-margin-top">
 					<span (click)="closeRequestForm()"
 						class="icon-close icon-medium text-right toggle"
-						attr.data-auto-id="Close-CgtForm"></span>
+						data-auto-id="Close-CgtForm"></span>
 				</div>
 			</div>
 			<div class="dbl-padding-left">
@@ -67,41 +67,43 @@
 			</div>
 			<div class="row dbl-padding-left base-padding-top full-width">
 				<div class="col-md-4 text-left">
-					<div class="text-uppercase text-small text-muted" [innerText]="'_CompanyName_' | i18n"></div>
-					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.companyName"></div>
+					<div class="text-uppercase text-small text-muted" [innerText]="'_CompanyName_' | i18n" data-auto-id="cgtRequestModal-CompanyName-Heading"></div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.companyName" data-auto-id="cgtRequestModal-CompanyName-Value"></div>
 					<div class="text-uppercase text-small text-muted qtr-padding-top"
-						[innerText]="'_CustomerUserName_' | i18n"></div>
-					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userFullName"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_JobTitle_' | i18n">
+						[innerText]="'_CustomerUserName_' | i18n" data-auto-id="cgtRequestModal-CustomerUserName-Heading"></div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userFullName" data-auto-id="cgtRequestModal-CustomerUserName-Value"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_JobTitle_' | i18n" data-auto-id="cgtRequestModal-JobTitle-Heading">
 					</div>
-					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.jobTitle"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Email_' | i18n">
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.jobTitle" data-auto-id="cgtRequestModal-JobTitle-Value"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Email_' | i18n" data-auto-id="cgtRequestModal-Email-Heading">
 					</div>
-					<div *ngIf="!loading" [innerText]="custData?.userEmail"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Phone_' | i18n">
+					<div *ngIf="!loading" [innerText]="custData?.userEmail" data-auto-id="cgtRequestModal-Email-Value"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Phone_' | i18n" data-auto-id="cgtRequestModal-Phone-Heading">
 					</div>
-					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userPhoneNumber"></div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.userPhoneNumber" data-auto-id="cgtRequestModal-Phone-Value"></div>
 					<div class="text-uppercase text-small text-muted dbl-padding-top"
-						[innerText]="'_CiscoContact_' | i18n"></div>
-					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ciscoContact"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CCOID_' | i18n">
+						[innerText]="'_CiscoContact_' | i18n" data-auto-id="cgtRequestModal-CiscoContact-Heading"></div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.ciscoContact" data-auto-id="cgtRequestModal-CiscoContact-Value"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_CCOID_' | i18n" data-auto-id="cgtRequestModal-CCOID-Heading">
 					</div>
-					<div *ngIf="!loading" [innerText]="custData?.ccoId"></div>
-					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Country_' | i18n">
+					<div *ngIf="!loading" [innerText]="custData?.ccoId" data-auto-id="cgtRequestModal-CCOID-Value"></div>
+					<div class="text-uppercase text-small text-muted qtr-padding-top" [innerText]="'_Country_' | i18n" data-auto-id="cgtRequestModal-Country-Heading">
 					</div>
-					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.country"></div>
+					<div *ngIf="!loading" class="text-capitalize" [innerText]="custData?.country" data-auto-id="cgtRequestModal-Country-Value"></div>
 				</div>
 				<div class="col-md-8">
 					<form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
 						<div class="form-group dbl-padding-left dbl-margin-right">
 							<div class="form-group__text select">
 								<select id="contract-select" formControlName="contract"
-									(change)="getContractEndDateAndSessions(requestForm.get('contract').value)">
+									(change)="getContractEndDateAndSessions(requestForm.get('contract').value)"
+									data-auto-id="cgtRequestModal-ApplicableContract-Select">
 									<option *ngFor="let option of contractOptions" [value]="option.value"
 										[innerText]="option.key"></option>
 								</select>
 								<label class="text-uppercase text-small" for="contract-select"
-									[innerText]="'_ApplicableContract_' | i18n"></label>
+									[innerText]="'_ApplicableContract_' | i18n"
+									data-auto-id="cgtRequestModal-ApplicableContract-Heading"></label>
 							</div>
 						</div>
 						<div class="form-group dbl-padding-left dbl-margin-right">
@@ -109,37 +111,43 @@
 								<input id="sessions-available-readonly" type="text" readonly
 									[value]="contractEndDate">
 								<label class="text-uppercase text-small" for="sessions-available-readonly"
-									[innerText]="'_XSessionsAvailableThrough' | i18n:sessionsAvailable"></label>
+									[innerText]="'_XSessionsAvailableThrough' | i18n:sessionsAvailable"
+									data-auto-id="cgtRequestModal-SessionsAvailableThrough-Heading"></label>
 							</div>
 						</div>
 						<div class="form-group dbl-padding-left dbl-margin-right">
 							<div class="form-group__text select">
-								<select id="technology-select" formControlName="technologyArea">
+								<select id="technology-select" formControlName="technologyArea"
+									data-auto-id="cgtRequestModal-TechnologyArea-Select">
 									<option *ngFor="let option of technologyOptions" [value]="option.value"
 										[innerText]="option.key"></option>
 								</select>
 								<label class="text-uppercase text-small" for="trchnology-select"
-									[innerText]="'_TechnologyArea_' | i18n"></label>
+									[innerText]="'_TechnologyArea_' | i18n"
+									data-auto-id="cgtRequestModal-TechnologyArea-Heading"></label>
 							</div>
 						</div>
 						<div class="form-group dbl-padding-left dbl-margin-right no-margin-top half-padding-top">
 							<div class="form-group__text select">
-								<select id="time-zone-select" formControlName="timeZone">
+								<select id="time-zone-select" formControlName="timeZone"
+									data-auto-id="cgtRequestModal-TimeZone-Select">
 									<option *ngFor="let option of timeZoneOptions" [value]="option.value"
 										[innerText]="option.key"></option>
 								</select>
 								<label class="text-uppercase text-small" for="time-zone-select"
-									[innerText]="'_TimeZone_' | i18n"></label>
+									[innerText]="'_TimeZone_' | i18n"
+									data-auto-id="cgtRequestModal-TimeZone-Heading"></label>
 							</div>
 						</div>
 						<div class="text-left dbl-padding-left half-padding-top half-padding-bottom">
 							<div class="text-uppercase text-small qtr-padding-bottom"
-								[innerText]="'_PreferredTimeMeeting_' | i18n"></div>
+								[innerText]="'_PreferredTimeMeeting_' | i18n"
+								data-auto-id="cgtRequestModal-PreferredTimeMeeting-Heading"></div>
 							<div class="form-group form-group--inline">
 								<label class="radio">
 									<input type="radio" formControlName="meetingTime" [value]="'_Morning_' | i18n"
 										required>
-									<span class="radio__input"></span>
+									<span class="radio__input" data-auto-id="cgtRequestModal-PreferredTimeMeeting-Morning"></span>
 									<span class="radio__label hidden-xs" [innerText]="'_Morning_' | i18n"></span>
 								</label>
 							</div>
@@ -147,27 +155,31 @@
 								<label class="radio">
 									<input type="radio" formControlName="meetingTime" [value]="'_Afternoon_' | i18n"
 										required>
-									<span class="radio__input"></span>
+									<span class="radio__input" data-auto-id="cgtRequestModal-PreferredTimeMeeting-Afternoon"></span>
 									<span class="radio__label hidden-xs" [innerText]="'_Afternoon_' | i18n"></span>
 								</label>
 							</div>
 						</div>
 						<div class="form-group dbl-padding-left dbl-margin-right">
 							<div class="form-group__text select">
-								<select id="language-select" formControlName="language">
+								<select id="language-select" formControlName="language"
+									data-auto-id="cgtRequestModal-LanguagePreference-Select">
 									<option *ngFor="let option of languageOptions" [value]="option.value"
 										[innerText]="option.key"></option>
 								</select>
 								<label class="text-uppercase text-small" for="language-select"
-									[innerText]="'_LanguagePreference_' | i18n"></label>
+									[innerText]="'_LanguagePreference_' | i18n"
+									data-auto-id="cgtRequestModal-LanguagePreference-Heading"></label>
 							</div>
 						</div>
 						<div class="form-group dbl-padding-left dbl-margin-right">
 							<div class="form-group__text">
 								<textarea [maxlength]="maxLength" id="input-textarea-outcome"
-									formControlName="trainingGoal" class="textarea" rows="5"></textarea>
+									formControlName="trainingGoal" class="textarea" rows="5"
+									data-auto-id="cgtRequestModal-TrainingGoal-Input"></textarea>
 								<label class="text-uppercase text-small" for="input-textarea-outcome"
-									[innerText]="'_WhatIsYourGoalForThisTraining_' | i18n"></label>
+									[innerText]="'_WhatIsYourGoalForThisTraining_' | i18n"
+									data-auto-id="cgtRequestModal-TrainingGoal-Heading"></label>
 							</div>
 							<div class="help-block text-muted" role="alert">
 								<span>{{requestForm.get('trainingGoal').value.length}}/{{maxLength}}
@@ -177,10 +189,13 @@
 						<div class="half-padding-top dbl-padding-left text-left">
 							<button type="submit"
 								[disabled]="!requestForm.valid || getUserInfoFailed || getContractsFailed || noSessionsAvailable || formSubmissionSucceeded"
-								class="btn btn--small btn--wide btn--primary" [innerText]="'_Submit_' | i18n"></button>
+								class="btn btn--small btn--wide btn--primary"
+								[innerText]="'_Submit_' | i18n"
+								data-auto-id="cgtRequestModal-Submit"></button>
 							<button type="button" class="btn btn--small -wide btn--secondary text-uppercase text-small"
-								(click)="closeRequestForm()" [innerText]="'_Cancel_' | i18n"
-								attr.data-auto-id="Submit-CgtForm"></button>
+								(click)="closeRequestForm()"
+								[innerText]="'_Cancel_' | i18n"
+								data-auto-id="cgtRequestModal-Cancel"></button>
 						</div>
 					</form>
 				</div>

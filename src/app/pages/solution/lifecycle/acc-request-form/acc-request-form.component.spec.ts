@@ -10,7 +10,8 @@ import {
 	Mock,
 } from '@mock';
 import * as _ from 'lodash-es';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -30,18 +31,28 @@ describe('AccRequestFormComponent', () => {
 	let contentService: RacetrackContentService;
 
 	let accUserInfoSpy;
+	let requestAccSpy;
 
 	/**
 	 * Restore spies
 	 */
 	const restoreSpies = () => {
 		_.invoke(accUserInfoSpy, 'restore');
+		_.invoke(requestAccSpy, 'restore');
 	};
 
 	const buildSpies = () => {
 		accUserInfoSpy = spyOn(contentService, 'getACCUserInfo')
 			.and
 			.returnValue(of(getActiveBody(ACCUserInfoScenarios[0])));
+	};
+
+	const buildUserInfoFailureSpy = () => {
+		requestAccSpy = spyOn(contentService, 'getACCUserInfo')
+			.and
+			.returnValue(throwError(new HttpErrorResponse({
+				status: 500,
+			})));
 	};
 
 	beforeEach(async(() => {
@@ -75,6 +86,110 @@ describe('AccRequestFormComponent', () => {
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.custData)
+			.toBeTruthy();
+	});
+
+	it('should clear additionalAttendees when going from multiple to 1', () => {
+		const select = fixture.debugElement.query(By.css('#attendees-select'));
+
+		const attendees = component.requestForm.controls.attendees;
+
+		const additionalAttendees = component.requestForm.controls.additionalAttendees;
+		expect(attendees.valid)
+			.toBeFalsy();
+
+		attendees.setValue('2');
+		fixture.detectChanges();
+		expect(select.nativeElement.value)
+			.toEqual('2');
+		attendees.setValue('1');
+		fixture.detectChanges();
+		expect(select.nativeElement.value)
+			.toEqual('1');
+		expect(additionalAttendees.hasError('required'))
+			.toBeFalsy();
+
+	});
+
+	it('should have invalid form when userInfo call fails', () => {
+		buildUserInfoFailureSpy();
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.custData)
+			.toBeFalsy();
+		expect(component.status.infoError)
+			.toBeTruthy();
+		expect(component.requestForm.valid)
+			.toBeFalsy();
+
+		const attendees = component.requestForm.controls.attendees;
+		expect(attendees.valid)
+			.toBeFalsy();
+		attendees.setValue('1');
+		fixture.detectChanges();
+		expect(attendees.valid)
+			.toBeTruthy();
+
+		const accInterest = component.requestForm.controls.acceleratorInterest;
+		expect(accInterest.valid)
+			.toBeFalsy();
+		accInterest.setValue('test');
+		fixture.detectChanges();
+		expect(accInterest.valid)
+			.toBeTruthy();
+
+		const desiredOutcome = component.requestForm.controls.desiredOutcome;
+		expect(desiredOutcome.valid)
+			.toBeFalsy();
+		desiredOutcome.setValue('test');
+		fixture.detectChanges();
+		expect(desiredOutcome.valid)
+			.toBeTruthy();
+
+		const dnacVersion = component.requestForm.controls.dnacVersion;
+		expect(dnacVersion.valid)
+			.toBeFalsy();
+		dnacVersion.setValue('1.20');
+		fixture.detectChanges();
+		expect(dnacVersion.valid)
+			.toBeTruthy();
+
+		const environment = component.requestForm.controls.environment;
+		expect(environment.valid)
+			.toBeFalsy();
+		environment.setValue('test');
+		fixture.detectChanges();
+		expect(environment.valid)
+			.toBeTruthy();
+
+		const language = component.requestForm.controls.language;
+		expect(language.valid)
+			.toBeFalsy();
+		language.setValue('English');
+		fixture.detectChanges();
+		expect(language.valid)
+			.toBeTruthy();
+
+		const meetingTime = component.requestForm.controls.meetingTime;
+		expect(meetingTime.valid)
+			.toBeFalsy();
+		meetingTime.setValue('Afternoon');
+		fixture.detectChanges();
+		expect(meetingTime.valid)
+			.toBeTruthy();
+
+		const timeZone = component.requestForm.controls.timeZone;
+		expect(timeZone.valid)
+			.toBeFalsy();
+		timeZone.setValue('EasternTime/US');
+		fixture.detectChanges();
+		expect(timeZone.valid)
+			.toBeTruthy();
+
+		fixture.detectChanges();
+		expect(component.status.infoError)
+			.toBeTruthy();
+		expect(component.invalidSubmit)
 			.toBeTruthy();
 	});
 
