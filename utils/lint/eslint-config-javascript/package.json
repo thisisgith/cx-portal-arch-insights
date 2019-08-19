@@ -1,0 +1,11 @@
+{
+  "name": "@cx/eslint-config-javascript",
+  "version": "1.0.0",
+  "description": "Javascript Linter",
+  "keywords": [
+    "eslint",
+    "lint"
+  ],
+  "author": "Josh Slaughter",
+  "license": "ISC"
+}
