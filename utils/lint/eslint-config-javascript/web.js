@@ -1,1 +1,1 @@
-module.exports = require('@apollo/linting/js/web');
+module.exports = require('../js/web');

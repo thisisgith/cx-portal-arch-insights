@@ -1,3 +1,3 @@
 module.exports = {
-	extends: '@apollo/linting/style',
+	extends: './utils/lint/style',
 };
