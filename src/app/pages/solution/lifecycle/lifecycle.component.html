@@ -264,7 +264,7 @@
 			</div>
 			<div class="col-md-1">
 				<a class="no-link closebtn"
-					(click)="this.atxScheduleCardOpened = false; selectSession(); eventCoordinates = 0"
+					(click)="this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0"
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
 				</a>
@@ -553,11 +553,11 @@
 				<div *ngIf="type==='ATX'" class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
 						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type)">
+							[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
 							<span class="icon-list-view"></span>
 						</button>
 						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type)">
+							[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
 							<span class="icon-grid-view"></span>
 						</button>
 					</div>
@@ -1071,7 +1071,7 @@
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div *ngIf="type === 'ATX'">
 		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-			(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata"
+			(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata; getCoordinates($event)"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
 		<a class="no-link" target="_blank" [href]="celldata.recordingURL">

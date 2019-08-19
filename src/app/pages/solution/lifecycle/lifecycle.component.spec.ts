@@ -23,6 +23,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as _ from 'lodash-es';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { ControlComponent } from 'ngx-mapbox-gl';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -333,7 +334,7 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			component.eventCoordinates = 0;
+			component.eventXCoordinates = 0;
 			(<any> window).innerWidth = 1200;
 			let viewAtxSessions: HTMLElement;
 			viewAtxSessions = document.createElement('viewAtxSessions');
@@ -403,7 +404,8 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			component.eventCoordinates = 200;
+			component.eventXCoordinates = 200;
+			component.atxview = 'grid';
 			(<any> window).innerWidth = 1200;
 			let viewAtxSessions: HTMLElement;
 			component.componentData.atx.interested = { };
@@ -416,8 +418,10 @@ describe('LifecycleComponent', () => {
 			expect(panel)
 				.toEqual('panel cardpanel--open');
 
-			component.eventCoordinates = 1000;
+			component.atxview = 'grid';
+			component.eventXCoordinates = 1000;
 			(<any> window).innerWidth = 1200;
+			component.componentData.atx.interested = { };
 			viewAtxSessions = document.createElement('viewAtxSessions');
 
 			const panelRight = component.getPanel(viewAtxSessions);
@@ -426,6 +430,20 @@ describe('LifecycleComponent', () => {
 
 			expect(panelRight)
 				.toEqual('panel cardpanel--openright');
+
+			component.atxview = 'list';
+			component.eventXCoordinates = 1000;
+			(<any> window).innerWidth = 1200;
+			component.componentData.atx.interested = { };
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const listpanel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(listpanel)
+				.toEqual('panel listpanel--open');
+
 			expect(component.getTitle('ATX'))
 				.toEqual('Ask The Expert');
 
