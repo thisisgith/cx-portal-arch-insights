@@ -92,7 +92,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/configure-the-appliance?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Getting Started',
-				bookmark: true,
+				bookmark: false,
 				successByteId: 'SB2',
 			},
 			{
@@ -102,7 +102,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Video',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/dna-center-appliance?utm_campaign=IBN&utm_content=Video&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Getting Started',
-				bookmark: true,
+				bookmark: false,
 				successByteId: 'SB3',
 			},
 			{
@@ -112,7 +112,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/ibn-firsttime-setup?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Getting Started',
-				bookmark: true,
+				bookmark: false,
 				successByteId: 'SB4',
 			},
 			{
@@ -162,7 +162,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/appliance-features?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Project Planning',
-				bookmark: false,
+				bookmark: true,
 				successByteId: 'SB9',
 			},
 			{
@@ -172,7 +172,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/plan-the-deployment?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Project Planning',
-				bookmark: false,
+				bookmark: true,
 				successByteId: 'SB10',
 			},
 			{
@@ -182,7 +182,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/new-changed-assurance?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Project Planning',
-				bookmark: false,
+				bookmark: true,
 				successByteId: 'SB11',
 			},
 		],
