@@ -137,6 +137,8 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForPG = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
+	public eventCoordinates = 0;
+	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
 	// id of ACC in request form
 	public accTitleRequestForm: string;
@@ -738,27 +740,7 @@ export class LifecycleComponent implements OnDestroy {
 			visible: false,
 		};
 		this.atxScheduleCardOpened = false;
-	}
-
-	/**
-	 * Determines which modal to display
-	 * @param acc ACC item
-	 * @returns ribbon
-	 */
-	 public getACCRibbonClass (acc: ACC) {
-		let ribbon = 'ribbon__clear';
-		if (!acc) {
-			return ribbon;
-		}
-		if (acc.status === 'completed') {
-			ribbon = 'ribbon__green';
-		}
-
-		if (acc.isFavorite) {
-			ribbon = 'ribbon__blue';
-		}
-
-		return ribbon;
+		this.eventCoordinates = 0;
 	}
 
 	/**
@@ -810,6 +792,39 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public selectSession (session: AtxSessionSchema) {
 		this.sessionSelected = (_.isEqual(this.sessionSelected, session)) ? null : session;
+	}
+
+	/**
+	 * Selects the session
+	 * @param atx the session we've clicked on
+	 */
+	 public cancelATXSession (atx: AtxSchema) {
+		const ssId = _.find(atx.sessions, { scheduled: true }).sessionId;
+		this.status.loading.atx = true;
+		if (window.Cypress) {
+			window.atxLoading = true;
+		}
+		const params: RacetrackContentService.CancelSessionATXParams = {
+			atxId: atx.atxId,
+			sessionId: ssId,
+		};
+		this.contentService.cancelSessionATX(params)
+		.subscribe(() => {
+			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
+			atx.status = 'recommended';
+			this.status.loading.atx = false;
+			if (window.Cypress) {
+				window.atxLoading = false;
+			}
+		},
+		err => {
+			this.status.loading.acc = false;
+			if (window.Cypress) {
+				window.accLoading = false;
+			}
+			this.logger.error(`lifecycle.component : cancelATXSession() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
 	}
 
 	/**
@@ -1092,6 +1107,37 @@ export class LifecycleComponent implements OnDestroy {
 				err.status}) ${err.message}`);
 		});
 	 }
+
+	/**
+	 * Get the mouse click coordinates
+	 * @param event event
+	 */
+	public getCoordinates (event: MouseEvent) {
+		this.eventCoordinates = event.clientX;
+	}
+
+	/**
+	 * Get the panel styles based on button coordinates
+	 * @param viewAtxSessions HTMLElement
+	 * @returns panel string
+	 */
+	public getPanel (viewAtxSessions: HTMLElement) {
+		let panel;
+		const _div = viewAtxSessions;
+		this.innerWidth = window.innerWidth;
+		if ((this.eventCoordinates + 500) > this.innerWidth) {
+			_div.style.right = '330px';
+			_div.style.bottom = '-50px';
+			panel = 'panel cardpanel--openright';
+		} else {
+			_div.style.left = '175px';
+			_div.style.bottom = this.componentData.atx.interested ? '-50px' : '10px';
+			panel = this.componentData.atx.interested ?
+				'panel cardpanel--open' : 'panel panel--open';
+		}
+
+		return panel;
+	}
 
 	/**
 	 * Loads the ACC for the given params

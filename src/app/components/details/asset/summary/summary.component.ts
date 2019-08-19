@@ -113,7 +113,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			}),
 			catchError(err => {
 				this.status.loading.hardware = false;
-				this.logger.error('details.component : fetchHardwareData() ' +
+				this.logger.error('asset-details : summary.component : fetchHardwareData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -186,8 +186,6 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 			forkJoin(obsBatch)
 			.subscribe(() => {
 				this.status.loading.overall = false;
-
-				this.logger.debug('details.component : loadData() :: Finished Refresh');
 			});
 		}
 	}

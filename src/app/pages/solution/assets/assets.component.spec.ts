@@ -12,6 +12,7 @@ import {
 	InventoryService,
 	ProductAlertsService,
 	ContractsService,
+	NetworkElement,
 } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -92,6 +93,9 @@ describe('AssetsComponent', () => {
 			statusText: 'Resource not found',
 		};
 		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(inventoryService, 'getNetworkElements')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		spyOn(inventoryService, 'getRoleCount')
@@ -416,6 +420,56 @@ describe('AssetsComponent', () => {
 		});
 	});
 
+	it('should search', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.assetParams.search)
+				.toBeFalsy();
+			component.doSearch('query');
+			fixture.detectChanges();
+
+			expect(component.assetParams.search)
+			.toBeTruthy();
+
+			done();
+		});
+	});
+
+	it('should not search', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(component.assetParams.search)
+				.toBeFalsy();
+			component.doSearch('');
+			fixture.detectChanges();
+
+			expect(component.assetParams.search)
+				.toBeFalsy();
+
+			done();
+		});
+	});
+
+	it('should unset search param if search input is empty for refresh', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			_.set(component, ['assetParams', 'search'], 'search');
+			component.searchForm.setValue({ search: '' });
+
+			fixture.detectChanges();
+
+			expect(_.get(component.assetParams, 'search'))
+				.toBeFalsy();
+			done();
+		});
+	});
+
 	it('should handle unsortable column', done => {
 		fixture.whenStable()
 		.then(() => {
@@ -449,6 +503,21 @@ describe('AssetsComponent', () => {
 		});
 	});
 
+	it('should not refresh when valid search query', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			_.set(component, ['assetParams', 'search'], 'search');
+			component.searchForm.setValue({ search: 'search' });
+
+			fixture.detectChanges();
+
+			expect(_.get(component.assetParams, 'search'))
+				.toBe('search');
+			done();
+		});
+	});
 	it('should handle sortable column', done => {
 		fixture.whenStable()
 		.then(() => {
@@ -496,12 +565,80 @@ describe('AssetsComponent', () => {
 		window.loading = undefined;
 	});
 
+	it('should set query params on page load', done => {
+		const queryParams = {
+			contractNumber: '1234',
+			coverage: 'covered',
+			hasBugs: true,
+			hasFieldNotices: true,
+			hasSecurityAdvisories: true,
+			lastDateOfSupportRange: '1565624197000,1597246597000',
+			role: 'access',
+		};
+		TestBed.resetTestingModule();
+		TestBed.configureTestingModule({
+			imports: [
+				AssetsModule,
+				HttpClientTestingModule,
+				MicroMockModule,
+				RouterTestingModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of(queryParams),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
+			],
+		})
+		.compileComponents();
+		fixture = TestBed.createComponent(AssetsComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			expect(_.get(component.assetParams, 'contractNumber'))
+				.toEqual(['1234']);
+			expect(_.get(component.assetParams, 'coverage'))
+				.toEqual(['covered']);
+			expect(_.get(component.assetParams, 'role'))
+				.toEqual(['access']);
+			expect(_.get(component.assetParams, 'hasBugs'))
+				.toBe(true);
+			expect(_.get(component.assetParams, 'hasFieldNotices'))
+				.toBe(true);
+			expect(_.get(component.assetParams, 'hasSecurityAdvisories'))
+				.toBe(true);
+			expect(_.get(component.assetParams, 'lastDateOfSupportRange'))
+				.toEqual(['1565624197000,1597246597000']);
+			done();
+		});
+	});
+
 	it('should create our pagination after results load', done => {
 		const assets = getActiveBody(AssetScenarios[5]);
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
 
 		spyOn(inventoryService, 'getAssets')
 			.and
 			.returnValue(of(assets));
+
+		spyOn(inventoryService, 'getNetworkElements')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		fixture.whenStable()
 		.then(() => {
@@ -555,6 +692,57 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(contractFilter);
+
+			done();
+		});
+	});
+
+	it('should set the appropriate device icon based on type', done => {
+		const WLC: NetworkElement = {
+			customerId: user.info.customerId,
+			isManagedNE: true,
+			managementAddress: 'address',
+			neInstanceId: 'id',
+			productFamily: 'Wireless Controller',
+			productType: 'Wireless',
+		};
+		const AP = {
+			customerId: user.info.customerId,
+			isManagedNE: true,
+			managementAddress: 'address',
+			neInstanceId: 'id',
+			productFamily: 'Access Point Controller',
+			productType: 'Wireless',
+		};
+		const Switch = {
+			customerId: user.info.customerId,
+			isManagedNE: true,
+			managementAddress: 'address',
+			neInstanceId: 'id',
+			productFamily: 'Some Switch Family',
+			productType: 'Switches',
+		};
+		const Router = {
+			customerId: user.info.customerId,
+			isManagedNE: true,
+			managementAddress: 'address',
+			neInstanceId: 'id',
+			productFamily: 'Some Router Family',
+			productType: 'Routers',
+		};
+		fixture.whenStable()
+		.then(() => {
+			expect(component.getProductIcon(WLC))
+				.toEqual('wlc-outline');
+
+			expect(component.getProductIcon(AP))
+				.toEqual('accesspoint-outline');
+
+			expect(component.getProductIcon(Switch))
+				.toEqual('switch-outline');
+
+			expect(component.getProductIcon(Router))
+				.toEqual('router-outline');
 
 			done();
 		});

@@ -468,35 +468,30 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
 							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
-							cy.getByAutoId('ViewAllTable-Format-rowValue-link')
-								.should('have.attr', 'href', item.url)
-								.should('have.attr', 'target', '_blank')
-								.within(() => {
-									switch (item.type) {
-										case 'Video':
-											// Video should have play icon
-											cy.get('span').should('have.class', 'icon-play-contained');
-											break;
-										case 'Web Page':
-											// Web Page should have grid icon
-											cy.get('span').should('have.class', 'icon-apps');
-											break;
-										case 'PDF':
-											// PDF should have PDF icon
-											cy.get('span').should('have.class', 'icon-file-pdf-o');
-											break;
-										case 'Data Sheet':
-											// Data Sheet should have document icon
-											cy.get('span').should('have.class', 'icon-document');
-											break;
-										default:
-											Cypress.log({
-												name: 'LOG',
-												message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
-											});
-											cy.get('span').should('have.class', 'icon-apps');
-									}
-								});
+							switch (item.type) {
+								case 'Video':
+									// Video should have play icon
+									cy.get('span').should('have.class', 'icon-play-contained');
+									break;
+								case 'Web Page':
+									// Web Page should have grid icon
+									cy.get('span').should('have.class', 'icon-apps');
+									break;
+								case 'PDF':
+									// PDF should have PDF icon
+									cy.get('span').should('have.class', 'icon-file-pdf-o');
+									break;
+								case 'Data Sheet':
+									// Data Sheet should have document icon
+									cy.get('span').should('have.class', 'icon-document');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+									});
+									cy.get('span').should('have.class', 'icon-apps');
+							}
 						});
 					});
 				});
@@ -568,33 +563,30 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('ViewAllTable-Format-rowValue-link')
-								.within(() => {
-									switch (item.type) {
-										case 'Video':
-											// Video should have play icon
-											cy.get('span').should('have.class', 'icon-play-contained');
-											break;
-										case 'Web Page':
-											// Web Page should have grid icon
-											cy.get('span').should('have.class', 'icon-apps');
-											break;
-										case 'PDF':
-											// PDF should have PDF icon
-											cy.get('span').should('have.class', 'icon-file-pdf-o');
-											break;
-										case 'Data Sheet':
-											// Data Sheet should have document icon
-											cy.get('span').should('have.class', 'icon-document');
-											break;
-										default:
-											Cypress.log({
-												name: 'LOG',
-												message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
-											});
-											cy.get('span').should('have.class', 'icon-apps');
-									}
-								});
+							switch (item.type) {
+								case 'Video':
+									// Video should have play icon
+									cy.get('span').should('have.class', 'icon-play-contained');
+									break;
+								case 'Web Page':
+									// Web Page should have grid icon
+									cy.get('span').should('have.class', 'icon-apps');
+									break;
+								case 'PDF':
+									// PDF should have PDF icon
+									cy.get('span').should('have.class', 'icon-file-pdf-o');
+									break;
+								case 'Data Sheet':
+									// Data Sheet should have document icon
+									cy.get('span').should('have.class', 'icon-document');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+									});
+									cy.get('span').should('have.class', 'icon-apps');
+							}
 						});
 					});
 
@@ -606,33 +598,30 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('ViewAllTable-Format-rowValue-link')
-								.within(() => {
-									switch (item.type) {
-										case 'Video':
-											// Video should have play icon
-											cy.get('span').should('have.class', 'icon-play-contained');
-											break;
-										case 'Web Page':
-											// Web Page should have grid icon
-											cy.get('span').should('have.class', 'icon-apps');
-											break;
-										case 'PDF':
-											// PDF should have PDF icon
-											cy.get('span').should('have.class', 'icon-file-pdf-o');
-											break;
-										case 'Data Sheet':
-											// Data Sheet should have document icon
-											cy.get('span').should('have.class', 'icon-document');
-											break;
-										default:
-											Cypress.log({
-												name: 'LOG',
-												message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
-											});
-											cy.get('span').should('have.class', 'icon-apps');
-									}
-								});
+							switch (item.type) {
+								case 'Video':
+									// Video should have play icon
+									cy.get('span').should('have.class', 'icon-play-contained');
+									break;
+								case 'Web Page':
+									// Web Page should have grid icon
+									cy.get('span').should('have.class', 'icon-apps');
+									break;
+								case 'PDF':
+									// PDF should have PDF icon
+									cy.get('span').should('have.class', 'icon-file-pdf-o');
+									break;
+								case 'Data Sheet':
+									// Data Sheet should have document icon
+									cy.get('span').should('have.class', 'icon-document');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+									});
+									cy.get('span').should('have.class', 'icon-apps');
+							}
 						});
 					});
 				});
@@ -731,8 +720,6 @@ describe('Learn Panel', () => {
 		});
 	});
 
-	// TODO: Broken due to the generic changes to the View All modal
-	// table vs. card view is currently not sticky at all...
 	describe('PBC-198: Success Bytes View All table sorting stickiness', () => {
 		beforeEach(() => {
 			// Open the View All modal
@@ -1380,9 +1367,6 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
 							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
-							cy.getByAutoId('ViewAllTable-Format-rowValue-link')
-								.should('have.attr', 'href', item.url)
-								.and('have.attr', 'target', '_blank');
 							// Handle duration text and clock icon
 							cy.getByAutoId('ViewAllTable-Format-rowValue-duration').should('contain', item.duration);
 							cy.getByAutoId('ViewAllTable-Format-rowValue-clock').should('exist');
@@ -1488,33 +1472,30 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Format-rowValue-link')
-									.within(() => {
-										switch (item.type) {
-											case 'Video':
-												// Video should have play icon
-												cy.get('span').should('have.class', 'icon-play-contained');
-												break;
-											case 'Web Page':
-												// Web Page should have grid icon
-												cy.get('span').should('have.class', 'icon-apps');
-												break;
-											case 'PDF':
-												// PDF should have PDF icon
-												cy.get('span').should('have.class', 'icon-file-pdf-o');
-												break;
-											case 'Data Sheet':
-												// Data Sheet should have document icon
-												cy.get('span').should('have.class', 'icon-document');
-												break;
-											default:
-												Cypress.log({
-													name: 'LOG',
-													message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
-												});
-												cy.get('span').should('have.class', 'icon-apps');
-										}
-									});
+								switch (item.type) {
+									case 'Video':
+										// Video should have play icon
+										cy.get('span').should('have.class', 'icon-play-contained');
+										break;
+									case 'Web Page':
+										// Web Page should have grid icon
+										cy.get('span').should('have.class', 'icon-apps');
+										break;
+									case 'PDF':
+										// PDF should have PDF icon
+										cy.get('span').should('have.class', 'icon-file-pdf-o');
+										break;
+									case 'Data Sheet':
+										// Data Sheet should have document icon
+										cy.get('span').should('have.class', 'icon-document');
+										break;
+									default:
+										Cypress.log({
+											name: 'LOG',
+											message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+										});
+										cy.get('span').should('have.class', 'icon-apps');
+								}
 							});
 						});
 
@@ -1526,33 +1507,30 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Format-rowValue-link')
-									.within(() => {
-										switch (item.type) {
-											case 'Video':
-												// Video should have play icon
-												cy.get('span').should('have.class', 'icon-play-contained');
-												break;
-											case 'Web Page':
-												// Web Page should have grid icon
-												cy.get('span').should('have.class', 'icon-apps');
-												break;
-											case 'PDF':
-												// PDF should have PDF icon
-												cy.get('span').should('have.class', 'icon-file-pdf-o');
-												break;
-											case 'Data Sheet':
-												// Data Sheet should have document icon
-												cy.get('span').should('have.class', 'icon-document');
-												break;
-											default:
-												Cypress.log({
-													name: 'LOG',
-													message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
-												});
-												cy.get('span').should('have.class', 'icon-apps');
-										}
-									});
+								switch (item.type) {
+									case 'Video':
+										// Video should have play icon
+										cy.get('span').should('have.class', 'icon-play-contained');
+										break;
+									case 'Web Page':
+										// Web Page should have grid icon
+										cy.get('span').should('have.class', 'icon-apps');
+										break;
+									case 'PDF':
+										// PDF should have PDF icon
+										cy.get('span').should('have.class', 'icon-file-pdf-o');
+										break;
+									case 'Data Sheet':
+										// Data Sheet should have document icon
+										cy.get('span').should('have.class', 'icon-document');
+										break;
+									default:
+										Cypress.log({
+											name: 'LOG',
+											message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+										});
+										cy.get('span').should('have.class', 'icon-apps');
+								}
 							});
 						});
 					});

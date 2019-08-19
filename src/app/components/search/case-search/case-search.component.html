@@ -121,7 +121,7 @@
 						<span class="half-margin-left" *ngIf="lastNote?.createdDate"
 							[innerText]="'(' + (lastNote.createdDate | fromNow) + ')'"></span>
 					</div>
-					<div class="text-dkgray-4" *ngIf="lastNote?.noteDetail; else loadingNotesTemplate"
+					<div class="wrap text-dkgray-4" *ngIf="lastNote?.noteDetail; else loadingNotesTemplate"
 						[innerText]="lastNote.noteDetail | truncate:false:500"></div>
 				</div>
 			</div>

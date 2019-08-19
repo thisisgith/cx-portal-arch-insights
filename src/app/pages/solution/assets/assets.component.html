@@ -1,5 +1,6 @@
 <asset-details *ngIf="selectedAsset"
 	[asset]="selectedAsset"
+	[serialNumber]="selectedAsset.serialNumber"
 	(close)="onPanelClose()">
 </asset-details>
 
@@ -82,8 +83,9 @@
 					<div class="flex flex-fluid flex-right">
 						<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 							<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
-								<div class="form-group__text disabled">
+								<div class="form-group__text">
 									<input id="searchInput"
+										attr.data-auto-id="SearchInput"
 										type="search"
 										#searchInput
 										[minlength]="searchOptions.min"
@@ -201,7 +203,7 @@
 							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
 							(click)="column.click ? $event.stopPropagation() : null">
 							<ng-container *ngIf="column.template">
-								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, actions: item.actions }"></ng-container>
+								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, element: item.element, actions: item.actions }"></ng-container>
 							</ng-container>
 							<ng-container *ngIf="!column.template">
 								<span *ngIf="column.render" [innerHTML]="column.render(item.data)"
@@ -303,7 +305,7 @@
 					<span class="badge badge--tiny badge--success icon-check"></span>
 				</span>
 			</div>
-			<div>
+			<div *ngIf="getRowActions(item).length">
 				<cui-dropdown
 					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
 					(click)="$event.stopPropagation()"
@@ -336,16 +338,21 @@
 </ng-template>
 
 <ng-template #criticalAdvisories let-celldata="celldata">
-	<!-- TODO -->
+	<div *ngIf="celldata?.criticalAdvisories !== '0'"
+		class="flex flex-fill flex-center">
+		<span class="label label--circle label--danger"
+			[innerText]="celldata.criticalAdvisories"
+			data-auto-id="CriticalAdvisoriesIcon">
+		</span>
+	</div>
 </ng-template>
 
-<ng-template #deviceTemplate let-celldata="celldata">
-	<!-- TODO: Need specific icons for different device types -->
-	<span class="qtr-margin-right">
-		<img alt="Asset Icon"
+<ng-template #deviceTemplate let-celldata="celldata" let-element="element">
+	<span class="qtr-margin-right" *ngIf="element && getProductIcon(element)">
+		<img alt="{{ '_AssetIcon_' | i18n }}"
 			class="icon-asset"
-			attr.data-auto-id="DeviceIcon-{{celldata.serialNumber}}"
-			src="assets/img/assets/device-router-outline.svg">
+			attr.data-auto-id="DeviceIcon-{{ celldata?.deviceName }}"
+			src="assets/img/assets/device-{{ getProductIcon(element) }}.svg">
 	</span>
 	<span [innerText]="celldata.deviceName | truncate:true:50"
 		attr.data-auto-id="Device-{{celldata.serialNumber}}">
@@ -353,7 +360,8 @@
 </ng-template>
 
 <ng-template #actionsTemplate let-celldata="celldata" let-actions="actions">
-	<cui-dropdown [actions]="actions"
+	<cui-dropdown *ngIf="actions.length"
+		[actions]="actions"
 		position="left"
 		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>

@@ -1,0 +1,11 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.tooltip-container {
+	position: fixed;
+	z-index: 10000;
+	background: $white;
+	box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
+	padding: $base-spacing * 0.5;
+	overflow: auto;
+	border: 1px solid $dark-gray-3;
+}

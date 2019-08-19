@@ -89,12 +89,12 @@
 		</div>
 	</div>
 </div>
-<div class="row">
+<div class="row" *ngIf="assetData?.installAddress1">
 	<div class="col-md-12 base-margin-top">
 		<span class="text-uppercase text-bold text-small" [innerText]="'_InstalledLocation_' | i18n"></span>
 	</div>
 	<div class="col-md-12 qtr-margin-top">
-		<asset-map *ngIf="assetData?.installAddress1" [assetSummary]="assetData"></asset-map>
+		<asset-map [assetSummary]="assetData"></asset-map>
 	</div>
 </div>
 

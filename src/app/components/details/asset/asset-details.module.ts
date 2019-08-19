@@ -9,6 +9,13 @@ import { AssetDetailsHardwareModule } from './hardware/hardware.module';
 import { AssetDetailsSoftwareModule } from './software/software.module';
 import { AssetDetailsSummaryModule } from './summary/summary.module';
 import { DetailsPanelModule } from '../panel/details-panel.module';
+import { environment } from '@environment';
+import { InventoryModule } from '@sdp-api';
+
+/**
+ * The SDP Origin URL used for passing to the SDP-API Modules
+ */
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /** Module representing the Asset Details Component */
 @NgModule({
@@ -30,6 +37,7 @@ import { DetailsPanelModule } from '../panel/details-panel.module';
 		CuiTabsModule,
 		DetailsPanelModule,
 		I18nPipeModule,
+		InventoryModule.forRoot({ rootUrl }),
 	],
 })
 export class AssetDetailsModule { }
