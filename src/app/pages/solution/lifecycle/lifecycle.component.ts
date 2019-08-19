@@ -425,6 +425,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortable: true,
 					sortDirection: 'asc',
 					sortKey: 'title',
+					template: this.titleTemplate,
 					value: 'title',
 					width: '35%',
 				},
@@ -476,6 +477,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortable: true,
 					sortDirection: 'asc',
 					sortKey: 'title',
+					template: this.titleTemplate,
 					value: 'title',
 					width: '35%',
 				},
@@ -794,6 +796,39 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public selectSession (session: AtxSessionSchema) {
 		this.sessionSelected = (_.isEqual(this.sessionSelected, session)) ? null : session;
+	}
+
+	/**
+	 * Selects the session
+	 * @param atx the session we've clicked on
+	 */
+	 public cancelATXSession (atx: AtxSchema) {
+		const ssId = _.find(atx.sessions, { scheduled: true }).sessionId;
+		this.status.loading.atx = true;
+		if (window.Cypress) {
+			window.atxLoading = true;
+		}
+		const params: RacetrackContentService.CancelSessionATXParams = {
+			atxId: atx.atxId,
+			sessionId: ssId,
+		};
+		this.contentService.cancelSessionATX(params)
+		.subscribe(() => {
+			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
+			atx.status = 'recommended';
+			this.status.loading.atx = false;
+			if (window.Cypress) {
+				window.atxLoading = false;
+			}
+		},
+		err => {
+			this.status.loading.acc = false;
+			if (window.Cypress) {
+				window.accLoading = false;
+			}
+			this.logger.error(`lifecycle.component : cancelATXSession() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
 	}
 
 	/**

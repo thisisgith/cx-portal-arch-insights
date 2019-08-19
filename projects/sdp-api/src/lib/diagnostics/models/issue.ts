@@ -2,14 +2,14 @@
 export interface Issue {
 
   /**
-   * ignoreReason
-   */
-  ignoreReason?: string;
-
-  /**
    * issueId
    */
   issueId?: string;
+
+  /**
+   * deviceId
+   */
+  deviceId?: string;
 
   /**
    * problemId
@@ -32,9 +32,9 @@ export interface Issue {
   ignored?: string;
 
   /**
-   * deviceId
+   * ignoreReason
    */
-  deviceId?: string;
+  ignoreReason?: string;
 
   /**
    * ignoredBy
