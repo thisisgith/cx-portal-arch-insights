@@ -3,14 +3,14 @@ import { ACCSessionAttendees } from './accsession-attendees';
 export interface ACCRequestSessionSchema {
 
   /**
-   * Prefered time for meetings/working sessions (morning | afternoon)
-   */
-  preferredSlot?: string;
-
-  /**
    * Title of the accelerator.
    */
   accTitle?: string;
+
+  /**
+   * Company name of the logged in user from profile.
+   */
+  companyName?: string;
 
   /**
    * Job title of the logged in user from profile.
@@ -49,9 +49,9 @@ export interface ACCRequestSessionSchema {
   timezone?: string;
 
   /**
-   * Company name of the logged in user from profile.
+   * Prefered time for meetings/working sessions (morning | afternoon)
    */
-  companyName?: string;
+  preferredSlot?: string;
 
   /**
    * Preferred language for meetings/working sessions
