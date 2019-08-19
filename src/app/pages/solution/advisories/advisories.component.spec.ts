@@ -342,7 +342,7 @@ describe('AdvisoriesComponent', () => {
 			expect(currentTime - lastUpdatedDate6090[1])
 				.toBe(dayInMillis * 60);
 
-			component.onSubfilterSelect('gt-90-days', lastUpdatedFilter);
+			component.onSubfilterSelect('further-out', lastUpdatedFilter);
 
 			fixture.detectChanges();
 			const lastUpdatedDate90 = _.map(
