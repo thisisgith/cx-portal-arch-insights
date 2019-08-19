@@ -51,4 +51,5 @@ export interface RiskAsset {
   containingHwId?: string;
   productId?: string;
   equipmentType?: string;
+  crashCount?: number;
 }

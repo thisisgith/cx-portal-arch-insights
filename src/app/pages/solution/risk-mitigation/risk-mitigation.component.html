@@ -3,14 +3,14 @@
 		<div class="col-3 margin-bottom">
 				<div class="row">
 					<div class="col-10 filter__selected">
-						<div class="base-margin-bottom qtr-margin-top cursor"
+						<div data-auto-id="highCrashCount" class="base-margin-bottom qtr-margin-top cursor"
 						(click)="getHighCrashesDeviceData()" [ngClass]="{'text-primary': onlyCrashes}">
 						<div class="text-huge flex-center dbl-padding-left dbl-padding-right">
 							{{highCrashDeviceCount}}
 						</div>
 						<div class="text-large flex-center"  [innerText]="'_RMHighCrashRiskAssets_'  | i18n"></div>
 					</div>
-					<div class="half-margin-bottom qtr-margin-top cursor"
+					<div data-auto-id="lastDayData" class="half-margin-bottom qtr-margin-top cursor"
 						 (click)="getAllCrashesData()" [ngClass]="{'text-primary': !onlyCrashes}">
 						<div class="text-huge flex-center dbl-padding-left dbl-padding-right">
 							{{last24hrsData}}
@@ -160,7 +160,7 @@
 		<div class="text-xlarge">
 			<span class="qtr-margin-left" [innerText]="'_RMCrashHistoryFor_' | i18n"></span>
 			<span class="qtr-margin-left">
-				<a (click)="reDirectToAsset360()">&lt;{{selectedAsset.neName}}&gt;</a>
+				<a data-auto-id="selectedName" (click)="reDirectToAsset360()">&lt;{{selectedAsset.neName}}&gt;</a>
 			</span>
 		</div>
 		<app-crash-history [asset]="selectedAsset"></app-crash-history>
@@ -187,22 +187,4 @@
 <ng-template #riskScore let-item="celldata">
 	<span>{{item.riskScore}}&#37;</span>
 </ng-template>
-
-
-
-<!--  Todo: Dependencies from other components -->
-<!-- <details-panel *ngIf="showFpDetails" [hidden]="!showFpDetails" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onFPDPanelClose()"
-						  [(fullscreen)]="fullscreen"
-						  [fullscreenToggle]="false">
-		<app-fingerprint-header></app-fingerprint-header>
-		<div detailsPanelTitle class="text-xlarge">
-			<a data-auto-id="chevronLeft" href="javascript:void(0);" disabled="true"><span class="icon-chevron-left"></span></a>
-			<a data-auto-id="chevronRight" href="javascript:void(0);" disabled="true"><span class="icon-chevron-right"></span></a>
-			<span class="qtr-margin-left" [innerText]="'_FingerPrintDetailsFor_' | i18n"></span>
-			<a href="javascript:void(0);"><span class="qtr-margin-left" [innerText]="'<Assets:WS-C2960-48TT-S>'"></span></a>
-		</div>
-	</details-panel-header>
-	<app-fingerprint-body></app-fingerprint-body>
-</details-panel> -->
 
