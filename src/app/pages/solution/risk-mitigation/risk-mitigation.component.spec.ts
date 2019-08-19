@@ -307,5 +307,57 @@ fdescribe('RiskMitigationComponent', () => {
 			.toBeDefined();
 	});
 
+	it('should show asset details', () => {
+		expect(component.showAsset360)
+			.toBeFalsy();
+		component.reDirectToAsset360();
+		expect(component.showAsset360)
+			.toBe(true);
+	});
+
+	it('on table sorting change', () => {
+		component.filters[0].seriesData = [
+			{
+				filter: 'Time: Last 24h',
+				label: '24h',
+				selected: true,
+				value: 0,
+			},
+			{
+				filter: 'Time: Last 7d',
+				label: '7d',
+				selected: false,
+				value: 0,
+			},
+			{
+				filter: 'Time: Last 30d',
+				label: '30d',
+				selected: false,
+				value: 2,
+			},
+			{
+				filter: 'Time: Last 90d',
+				label: '90d',
+				selected: false,
+				value: 9,
+			},
+		];
+		component.customerId = 12345;
+		spyOn(riskMitigationService, 'getSearchedData')
+			.and
+			.returnValue(of(<any>{}));
+		fixture.detectChanges();	
+		component.onTableSortingChanged({
+			key: 'Key1',
+			value: 'Value1',
+			sortable: true,
+			sortDirection: 'asc',
+		});
+		expect(riskMitigationService.getSearchedData)
+			.toHaveBeenCalled();
+		expect(riskMitigationService.getSearchedData)
+			.toHaveBeenCalled();
+	});
+
 
 });
