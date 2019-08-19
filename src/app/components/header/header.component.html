@@ -78,13 +78,13 @@
 				</div>
 			</span>
 			<!-- Settings and Help -->
-			<span class="v-separator hidden-sm hidden-xs"></span>
-			<span class="cx-header-links qtr-margin-right hidden-sm hidden-xs">
+			<span class="v-separator hidden-md hidden-sm hidden-xs"></span>
+			<span class="cx-header-links qtr-margin-right hidden-md hidden-sm hidden-xs">
 				<div data-auto-id="Admin" [title]="'_Admin_' | i18n" [routerLink]="['admin']">
 					<span class="cx-header-icon icon-cog"></span>
 				</div>
 			</span>
-			<span #portalHelp class="cx-header-links hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': portalHelp.active }" (click)="toggleDropdown(portalHelpDropdown, portalHelp)" [title]="'_PortalHelp_' | i18n" data-auto-id="HeaderPortalHelpButton">
+			<span #portalHelp class="cx-header-links hidden-md hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': portalHelp.active }" (click)="toggleDropdown(portalHelpDropdown, portalHelp)" [title]="'_PortalHelp_' | i18n" data-auto-id="HeaderPortalHelpButton">
 				<div>
 					<span class="cx-header-icon icon-help-alt" [ngClass]="{ 'text-primary': portalHelp.active }"></span>
 					<span></span>
@@ -96,7 +96,7 @@
 					</header-dropdown>
 				</div>
 			</span>
-			<span #menuButton *ngIf="searchBreakpointShow(445)" class="cx-header-links qtr-margin-left hidden-md hidden-lg hidden-xl" (click)="toggleDropdown(menuButtonDropdown, menuButton)" data-auto-id="HeaderMenuButton">
+			<span #menuButton *ngIf="searchBreakpointShow(445)" class="cx-header-links qtr-margin-left hidden-lg hidden-xl" (click)="toggleDropdown(menuButtonDropdown, menuButton)" data-auto-id="HeaderMenuButton">
 				<span class="cx-header-icon icon-more rotate-90" [ngClass]="{ 'text-primary': menuButton.active }"></span>
 				<div class="pull-right">
 					<header-dropdown #menuButtonDropdown (click)="$event.stopPropagation();" (toggle)="menuButton.active = $event; menuButton.swap = null;" data-auto-id="HeaderMenuDropdown">
@@ -113,6 +113,9 @@
 							</div> -->
 							<div *ngIf="!searchBreakpointShow(445, true)">
 								<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="'_UserProfile_' | i18n" data-auto-id="MenuUserProfileLink" [title]="'_UserProfile_' | i18n" (click)="menuButton.swap = userProfileDropdownTemplate"></a>
+							</div>
+							<div>
+								<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="'_CiscoTeam_' | i18n" data-auto-id="MenuCiscoTeamLink" [title]="'_CiscoTeam_' | i18n" (click)="menuButton.swap = ciscoTeamDropdownTemplate"></a>
 							</div>
 							<div>
 								<a class="qtr-margin-top qtr-margin-bottom text-small" [innerText]="'_Admin_' | i18n" [routerLink]="['admin']"></a>
