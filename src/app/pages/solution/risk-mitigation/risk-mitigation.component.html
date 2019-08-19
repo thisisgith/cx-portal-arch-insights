@@ -163,7 +163,25 @@
 				<a data-auto-id="selectedName" (click)="reDirectToAsset360()">&lt;{{selectedAsset.neName}}&gt;</a>
 			</span>
 		</div>
-		<app-crash-history [asset]="selectedAsset"></app-crash-history>
+		<div class="divider"></div>
+		<div class="row">
+				<div class="col-4">
+					<div class="row">
+						<div class="col-12"  [innerText]="'_IPAddress_' | i18n | uppercase"></div>
+						<div class="col-md-12"  [innerText]="selectedAsset?.ipAddress"></div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="row">
+						<div class="col-md-12"  [innerText]="'_SerialNumber_' | i18n | uppercase"></div>
+						<div class="col-md-12"  [innerText]="selectedAsset?.serialNumber"></div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="col-md-12"  [innerText]="'_NumberOfCrashes_' | i18n | uppercase"></div>
+					<div class="col-md-12"  [innerText]="selectedAsset?.crashCount"></div>
+				</div>
+			</div>
 	</div>
 	</details-panel-header>
 	<cui-table [options]="crashHistoryGridOptions"

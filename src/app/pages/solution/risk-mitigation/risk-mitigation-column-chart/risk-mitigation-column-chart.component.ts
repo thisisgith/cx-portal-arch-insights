@@ -37,7 +37,7 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 	/**
 	 * Builds our bar graph
 	 */
-	private buildGraph () {
+	public buildGraph () {
 		const data = [];
 		const categories = [];
 		_.each(this.seriesData, d => {

@@ -1,5 +1,5 @@
 /* tslint:disable */
-import {CrashCount, HighCrashRiskDeviceCount} from '@sdp-api';
+import {CrashCount, HighCrashRiskDeviceCount, RiskAssets} from '@sdp-api';
 
 /** Base of URL for SDP API */
 

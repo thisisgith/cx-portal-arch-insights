@@ -21,7 +21,6 @@ import {
 } from './risk-mitigation-column-chart/risk-mitigation-column-chart.module';
 import { RMModule } from '@sdp-api';
 import { environment } from '@environment';
-import { CrashHistoryModule } from './crash-history/crash-history.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -58,7 +57,6 @@ const childRoutes: Routes = [
 		CuiIconModule,
 		CuiDropdownModule,
 		CuiProgressbarModule,
-		CrashHistoryModule,
 		AssetDetailsModule,
 		AssetDetailsHeaderModule,
 		CuiSpinnerModule,

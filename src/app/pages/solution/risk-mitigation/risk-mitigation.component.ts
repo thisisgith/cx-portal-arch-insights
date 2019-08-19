@@ -35,6 +35,7 @@ export class RiskMitigationComponent {
 				takeUntil(this.destroy$),
 				)
 				.subscribe((id: string) => {
+					// tslint:disable-next-line: radix
 					this.customerId = parseInt(id);
 				});
 	}
@@ -102,7 +103,7 @@ export class RiskMitigationComponent {
 	/**
 	 * Load data of risk details
 	 */
-	private loadData () {
+	public loadData () {
 		this.highCrashRiskParams = {
 			customerId: this.customerId,
 			page: 1,
@@ -154,7 +155,7 @@ export class RiskMitigationComponent {
 			customerId: this.customerId,
 		};
 		this.onlyCrashes = false;
-		// tslint:disable-next-line: newline-before-return
+
 		return this.riskmitigationservice.getAllCrashesData(params)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -317,14 +318,23 @@ export class RiskMitigationComponent {
 	public getFilterDetailsForSearchQuery (searchText: String) {
 		let time;
 		const filter =  _.find(this.filters[0].seriesData, { selected: true });
-		if (filter.label === '24h') {
-			time = '1';
-		} else if (filter.label === '7d') {
-			time = '7';
-		} else if (filter.label === '30d') {
-			time = '30';
-		} else if (filter.label === '90d') {
-			time = '90';
+		switch (filter.label){
+			case '24h': {
+				time = '1';
+				break;
+			}
+			case '7d': {
+				time = '7';
+				break;
+			}
+			case '30d': {
+				time = '30';
+				break;
+			}
+			case '90d': {
+				time = '90';
+				break;
+			}
 		}
 
 		return {
@@ -548,9 +558,7 @@ export class RiskMitigationComponent {
 	 */
 	public getAdvisoryCount (data) {
 		const advisoryFilter = _.find(this.filters, { key: 'advisories' });
-		if (data) {
-			advisoryFilter.seriesData = data;
-		}
+		advisoryFilter.seriesData = (data) ? data : '';
 	}
 
 	/**
@@ -581,9 +589,7 @@ export class RiskMitigationComponent {
 	public onSubfilterSelect (subfilter: string, filter: Filter) {
 		this.resetFilters();
 		const sub = _.find(filter.seriesData, { filter: subfilter });
-		if (sub) {
-			sub.selected = !sub.selected;
-		}
+		sub.selected = (sub) ? !sub.selected : '';
 		filter.selected = _.some(filter.seriesData, 'selected');
 		switch (sub.filter) {
 			case 'Time: Last 24h': {
@@ -644,9 +650,7 @@ export class RiskMitigationComponent {
 	 */
 	public getSelectedSubFilters (key: string) {
 		const filter = _.find(this.filters, { key });
-		if (filter) {
-			return _.filter(filter.seriesData, 'selected');
-		}
+		return _.filter(filter.seriesData, 'selected');
 	}
 
 }

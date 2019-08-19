@@ -73,6 +73,18 @@ describe('RiskMitigationComponent', () => {
 		spyOn(riskMitigationService, 'getAllCrashesData')
 		.and
 		.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(riskMitigationService, 'getDeviceDetails')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(riskMitigationService, 'getHighCrashRiskDeviceCountData')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(riskMitigationService, 'getSearchedData')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(riskMitigationService, 'getCrashHistoryForDevice')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
 		fixture.whenStable()
 		.then(() => {
@@ -207,5 +219,52 @@ describe('RiskMitigationComponent', () => {
 		expect(component.onlyCrashes)
 		.toBeFalsy();
 	});
+
+	it('update pager on page update', () => {
+		const pageinfo = {
+			page: 1,
+		};
+		component.onPagerUpdated (pageinfo);
+		expect(component.crashedAssetsGridDetails.tableOffset)
+		.toBe(1);
+	});
+
+	it('check on high crash grid loaded', () => {
+		component.ngOnInit();
+		const param = {
+			customerId: 324123,
+			limit: 10,
+			page: 2,
+			size: 10,
+		};
+		component.onHcrPagerUpdated(param);
+		expect(component.highCrashRiskAssetsGridDetails.tableOffset)
+		.toBe(3);
+		expect(component.highCrashRiskAssetsGridDetails.tableLimit)
+		.toBe(10);
+	});
+
+	it('should return selected key of filter', () => {
+		component.ngOnInit();
+		const key = 'advisories';
+		const result = [
+			{
+			  filter: 'Time: Last 90d',
+			  label: '90d',
+			  selected: true,
+			  value: 9,
+			},
+		  ];
+		const filter = component.getSelectedSubFilters(key);
+		expect(filter)
+		.toBe(result);
+	});
+
+	it('should test high crash data params', () => {
+		component.loadData();
+		expect(component.highCrashRiskParams)
+		.toBeDefined();
+	});
+
 
 });
