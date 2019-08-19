@@ -121,7 +121,7 @@ export class RiskMitigationComponent {
 	/**
 	 * Fetches the all the crashes data
 	 */
-	private getHighCrashesDeviceData () {
+	public getHighCrashesDeviceData () {
 		this.onlyCrashes = true;
 		let params: any = RiskMitigationService.GetAssetsParams;
 		params = {
