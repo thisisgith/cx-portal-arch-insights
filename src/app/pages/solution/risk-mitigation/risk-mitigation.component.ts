@@ -6,7 +6,6 @@ import * as _ from 'lodash-es';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
-import { UserResolve } from '@utilities';
 import {
 	RiskMitigationService,
 	HighCrashRiskPagination,
@@ -14,6 +13,7 @@ import {
 	RiskAsset,
 	HighCrashRiskDevices,
 } from '@sdp-api';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Risk mitigation component
@@ -29,14 +29,10 @@ export class RiskMitigationComponent {
 	constructor (
 		private riskmitigationservice: RiskMitigationService,
 		private logger: LogService,
-		private userResolve: UserResolve) {
-		this.userResolve.getCustomerId()
-					.pipe(
-					takeUntil(this.destroy$),
-					)
-					.subscribe((id: string) => {
-						this.customerId = parseInt(id);
-					});
+		private route: ActivatedRoute,
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 
 	get selectedFilters () {
