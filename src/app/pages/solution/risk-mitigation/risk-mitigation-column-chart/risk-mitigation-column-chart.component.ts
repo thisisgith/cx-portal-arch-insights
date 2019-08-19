@@ -147,7 +147,7 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
 			this.buildGraph();
 		}
-		if (_.get(changes,['resetChart', 'currentValue'])) {
+		if (_.get(changes, ['resetChart', 'currentValue'])) {
 			this.buildGraph();
 			changes.resetChart.previousValue = false;
 		}

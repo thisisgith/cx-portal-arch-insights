@@ -14,7 +14,6 @@ import {
 	RiskAsset,
 	HighCrashRiskDevices,
 } from '@sdp-api';
-import { ActivatedRoute } from '@angular/router';
 
 /**
  * Risk mitigation component

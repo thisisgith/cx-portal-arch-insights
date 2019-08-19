@@ -77,7 +77,7 @@ describe('RiskMitigationComponent', () => {
 		const advisoryFilter = _.find(component.filters, { key: 'advisories' });
 		expect(advisoryFilter)
 			.toBeDefined();
-	})
+	});
 
 	it('should fetch all data', () => {
 		spyOn(riskMitigationService, 'getAllCrashesData')
@@ -344,7 +344,7 @@ describe('RiskMitigationComponent', () => {
 		component.customerId = 12345;
 		spyOn(riskMitigationService, 'getSearchedData')
 			.and
-			.returnValue(of(<any>{ }));
+			.returnValue(of(<any> { }));
 		fixture.detectChanges();
 		component.onTableSortingChanged({
 			key: 'Key1',
