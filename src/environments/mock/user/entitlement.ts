@@ -14,7 +14,7 @@ const serviceApi1 = `/api/customerportal/entitlement/v1/party/service-info/${cus
 /**
  * Mock body of user results
  */
-const mockUser1: EntitledUser | any = {
+const mockUser1: EntitledUser = {
 	customerId,
 	individual: {
 		ccoId: 'fakeCco',
