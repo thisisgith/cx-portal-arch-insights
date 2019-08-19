@@ -24,9 +24,11 @@ import {
 	TransactionRequest,
 	NetworkDataGatewayService,
 	ScanRequestResponse,
+	NetworkElementResponse,
+	NetworkElement,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
-import { CuiModalService, CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiModalService, CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Subscription, forkJoin, fromEvent, of, Subject } from 'rxjs';
@@ -42,15 +44,17 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
 import { CaseOpenComponent } from '@components';
+import { getProductTypeImage } from '@classes';
 
 /**
  * Interface representing an item of our inventory in our assets table
  */
 interface Item {
-	selected?: boolean;
-	details?: boolean;
-	data: Asset;
 	actions?: any[];
+	data: Asset;
+	details?: boolean;
+	element?: NetworkElement;
+	selected?: boolean;
 }
 
 /** Interface for selected subfilters */
@@ -127,6 +131,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public selectedAsset: Asset;
 	public fullscreen = false;
 	public selectedSubfilters: SelectedSubfilter[];
+	public getProductIcon = getProductTypeImage;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -134,8 +139,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private logger: LogService,
 		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
-		private route: ActivatedRoute,
-		private router: Router,
+		public route: ActivatedRoute,
+		public router: Router,
 		private fromNow: FromNowPipe,
 		private networkService: NetworkDataGatewayService,
 	) {
@@ -200,10 +205,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					'full',
 				),
 			} : undefined,
-			{
-				label: I18n.get('_Scan_'),
-				onClick: () => this.checkScan(item),
-			},
+			_.get(item, ['element', 'isManagedNE'], false) ?
+				{
+					label: I18n.get('_Scan_'),
+					onClick: () => this.checkScan(item),
+				} : undefined,
 		]);
 	}
 
@@ -368,10 +374,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 		item.details = !item.details;
-		this.selectedAsset = null;
-		if (item.details) {
-			this.selectedAsset = item.data;
-		}
+		this.selectedAsset = item.details ? item.data : null;
 	}
 
 	/**
@@ -401,6 +404,19 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			});
 		});
 
+		_.each(this.assetsTable.columns, (c: CuiTableColumnOption) => {
+			c.sortDirection = 'desc';
+			c.sorting = false;
+		});
+
+		this.assetParams = {
+			customerId: this.customerId,
+			page: 1,
+			rows: this.view === 'list' ? 10 : 12,
+			sort: ['deviceName:ASC'],
+		};
+
+		this.search.setValue('');
 		this.allAssetsSelected = false;
 		totalFilter.selected = true;
 		this.adjustQueryParams();
@@ -425,10 +441,31 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		filter.selected = _.some(filter.seriesData, 'selected');
 
 		this.selectedSubfilters = this.getAllSelectedSubFilters();
-
+		const params = this.assetParams;
+		let val;
+		let key;
 		if (filter.key !== 'advisories' && filter.key !== 'eox') {
-			this.assetParams[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+			val =  _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+			key = filter.key;
+		} else if (filter.key === 'eox') {
+			val = this.getLastUpdatedRange(subfilter);
+			key = 'lastDateOfSupportRange';
+		} else if (filter.key === 'advisories') {
+			_.each(params, (_v, k) => {
+				if (/has*/.test(k)) {
+					_.unset(params, [k]);
+				}
+			});
+			key = _.camelCase(`has ${subfilter}`);
+			val = true;
 		}
+
+		if (filter.selected) {
+			_.set(params, [key], val);
+		} else {
+			_.unset(params, [key]);
+		}
+
 		this.assetParams.page = 1;
 
 		const totalFilter = _.find(this.filters, { key: 'total' });
@@ -436,7 +473,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			totalFilter.selected = false;
 			this.filtered = true;
 		} else {
-			const total = this.selectedSubfilters.length > 0;
+			const total = _.reduce(this.filters, (memo, f) => {
+				if (!memo) {
+					return _.some(f.seriesData, 'selected');
+				}
+
+				return memo;
+			}, false);
+
 			totalFilter.selected = !total;
 			this.filtered = total;
 		}
@@ -465,6 +509,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 
 		this.assetParams.rows = this.view === 'list' ? 10 : 12;
+		this.buildTable();
 		this.route.queryParams.subscribe(params => {
 			if (params.contractNumber) {
 				this.assetParams.contractNumber = _.castArray(params.contractNumber);
@@ -478,13 +523,30 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.assetParams.role = _.castArray(params.role);
 			}
 
-			if (params.serialNumber) {
-				this.assetParams.serialNumber = params.serialNumber;
+			if (params.hasBugs) {
+				this.assetParams.hasBugs = params.hasBugs;
 			}
 
-			if (params.select) {
-				this.selectOnLoad = true;
+			if (params.serialNumber) {
+				this.assetParams.serialNumber = _.castArray(params.serialNumber);
 			}
+
+			if (params.hasFieldNotices) {
+				this.assetParams.hasFieldNotices = params.hasFieldNotices;
+			}
+
+			if (params.hasSecurityAdvisories) {
+				this.assetParams.hasSecurityAdvisories = params.hasSecurityAdvisories;
+			}
+
+			if (params.lastDateOfSupportRange) {
+				this.assetParams.lastDateOfSupportRange =
+					_.castArray(params.lastDateOfSupportRange);
+			}
+
+			this.filtered = !_.isEmpty(
+				_.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page']),
+			);
 
 			this.fetchInventory();
 		});
@@ -613,7 +675,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public doSearch (query: string) {
 		if (query) {
 			this.logger.debug(`assets.component :: doSearch() :: Searching for ${query}`);
-			// this.filter(query);
+			_.set(this.assetParams, 'search', query);
+			this.filtered = true;
+			this.adjustQueryParams();
+			this.InventorySubject.next();
 		}
 	}
 
@@ -787,8 +852,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						key: 'deviceName',
 						name: I18n.get('_Device_'),
 						sortable: true,
-						sortDirection: 'asc',
-						sorting: true,
 						template: this.deviceTemplate,
 					},
 					{
@@ -812,7 +875,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					{
 						key: 'supportCovered',
 						name: I18n.get('_SupportCoverage_'),
-						sortable: true,
+						sortable: false,
 						template: this.supportCoverageTemplate,
 					},
 					{
@@ -832,7 +895,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						name: I18n.get('_LastScan_'),
 						render: item => item.lastScan ?
 							this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
-						sortable: true,
+						sortable: false,
 						width: '100px',
 					},
 					{
@@ -845,7 +908,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						click: true,
-						sortable: false,
+						sortable: true,
 						template: this.actionsTemplate,
 					},
 				],
@@ -856,12 +919,21 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				singleSelect: true,
 				sortable: true,
 				striped: false,
+				tableSort: false,
 				wrapText: true,
 			});
 		}
 
 		this.searchForm = new FormGroup({
 			search: this.search,
+		});
+
+		this.searchForm.valueChanges.subscribe(query => {
+			if (!query.search) {
+				_.unset(this.assetParams, 'search');
+				this.adjustQueryParams();
+				this.InventorySubject.next();
+			}
 		});
 	}
 
@@ -967,12 +1039,87 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Fetches the network elements
+	 * @param assets the assets to lookup
+	 * @returns the observable
+	 */
+	private fetchNetworkElements (assets: Assets) {
+		const params: InventoryService.GetNetworkElementsParams = {
+			customerId: this.customerId,
+			page: 1,
+			rows: 10,
+			serialNumber: _.map(assets.data, 'serialNumber'),
+		};
+
+		return this.inventoryService.getNetworkElements(params)
+		.pipe(
+			map((response: NetworkElementResponse) => response),
+			catchError(err => {
+				this.pagination = null;
+				this.paginationCount = null;
+				this.logger.error('assets.component : fetchNetworkElements() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				this.status.inventoryLoading = false;
+
+				return of({ data: [] });
+			}),
+		)
+		.pipe(
+			map((response: NetworkElementResponse) => {
+				assets.data.forEach((a: Asset) => {
+					const element = _.find(
+						_.get(response, 'data', []), { serialNumber: a.serialNumber });
+
+					if (a.role) {
+						a.role = _.startCase(_.toLower(a.role));
+					}
+					const row = {
+						data: a,
+						details: false,
+						selected: false,
+					};
+
+					if (element) {
+						_.set(row, 'element', element);
+					}
+
+					_.set(row, 'actions', this.getRowActions(row));
+					this.inventory.push(row);
+				});
+				this.pagination = assets.Pagination;
+
+				const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
+				let last = (this.pagination.rows * this.pagination.page);
+				if (last > this.pagination.total) {
+					last = this.pagination.total;
+				}
+
+				this.paginationCount = `${first}-${last}`;
+
+				this.buildTable();
+
+				if (this.selectOnLoad) {
+					this.onAllSelect(true);
+					this.onSelectionChanged(_.map(this.inventory, item => item.data));
+					if (this.selectedAssets.length === 1) {
+						this.selectedAsset = this.selectedAssets[0];
+						_.set(this.inventory, [0, 'details', true]);
+					}
+				}
+
+				this.status.inventoryLoading = false;
+			}),
+		);
+	}
+
+	/**
 	 * Fetches the users inventory
 	 * @returns the inventory
 	 */
 	private fetchInventory () {
 		this.status.inventoryLoading = true;
 		this.inventory = [];
+		this.pagination = null;
 
 		const assetParams = _.omit(_.cloneDeep(this.assetParams), ['advisories']);
 
@@ -983,54 +1130,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		});
 
 		return this.inventoryService.getAssets(assetParams)
-			.pipe(
-				map((results: Assets) => {
-					results.data.forEach((a: Asset) => {
-						if (a.role) {
-							a.role = _.startCase(_.toLower(a.role));
-						}
-						const row = {
-							data: a,
-							details: false,
-							selected: false,
-						};
+		.pipe(
+			mergeMap((results: Assets) => this.fetchNetworkElements(results)),
+			catchError(err => {
+				this.pagination = null;
+				this.paginationCount = null;
+				this.logger.error('assets.component : fetchInventory() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				this.status.inventoryLoading = false;
 
-						_.set(row, 'actions', this.getRowActions(row));
-						this.inventory.push(row);
-					});
-					this.pagination = results.Pagination;
-
-					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
-					let last = (this.pagination.rows * this.pagination.page);
-					if (last > this.pagination.total) {
-						last = this.pagination.total;
-					}
-
-					this.paginationCount = `${first}-${last}`;
-
-					this.buildTable();
-
-					if (this.selectOnLoad) {
-						this.onAllSelect(true);
-						this.onSelectionChanged(_.map(this.inventory, item => item.data));
-						if (this.selectedAssets.length === 1) {
-							this.selectedAsset = this.selectedAssets[0];
-							_.set(this.inventory, [0, 'details', true]);
-						}
-					}
-
-					this.status.inventoryLoading = false;
-				}),
-				catchError(err => {
-					this.pagination = null;
-					this.paginationCount = null;
-					this.logger.error('assets.component : fetchInventory() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-					this.status.inventoryLoading = false;
-
-					return of({ });
-				}),
-			);
+				return of({ });
+			}),
+		);
 	}
 
 	/**
@@ -1048,14 +1159,48 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onColumnSort (column) {
 		if (column.sortable) {
+			this.filtered = true;
 			_.each(this.assetsTable.columns, c => {
 				c.sorting = false;
+				c.sortDirection = 'desc';
 			});
 			column.sorting = true;
 			column.sortDirection = column.sortDirection === 'asc' ? 'desc' : 'asc';
 			this.assetParams.sort = [`${column.key}:${column.sortDirection.toUpperCase()}`];
+			this.adjustQueryParams();
 			this.InventorySubject.next();
 		}
+
+	}
+
+	/**
+	 * Given a filter key for lastUpdated, returns the date range
+	 * in the format of [<fromDateInMillis>, <toDateInMillis>).
+	 * @param subfilter date range subfilter
+	 * @returns The date range
+	 */
+	private getLastUpdatedRange (subfilter: string) {
+		const current = new Date();
+		const year = current.getUTCFullYear();
+		const month = current.getUTCMonth();
+		const day = current.getUTCDay();
+		const start = new Date(year, month, day);
+		const end = new Date(year, month, day);
+		switch (subfilter) {
+			case 'gt-0-lt-30-days':
+				start.setDate(start.getDate() - 30);
+				break;
+			case 'gt-30-lt-60-days':
+				start.setDate(start.getDate() - 60);
+				end.setDate(end.getDate() - 30);
+				break;
+			case 'gt-60-lt-90-days':
+				start.setDate(start.getDate() - 90);
+				end.setDate(end.getDate() - 60);
+				break;
+		}
+
+		return [`${start.getTime()}, ${end.getTime()}`];
 	}
 
 	/**
@@ -1081,4 +1226,5 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.InventorySubject.next();
 		}
 	}
+
 }

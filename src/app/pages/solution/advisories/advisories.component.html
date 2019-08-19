@@ -91,22 +91,7 @@
 		<div class="col-md-3">
 			<div class="flex flex-fluid">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
-						<div class="form-group__text disabled">
-							<input id="searchInput"
-								type="search"
-								#searchInput
-								[minlength]="searchOptions.min"
-								[maxlength]="searchOptions.max"
-								[pattern]="searchOptions.pattern"
-								formControlName="search"
-								placeholder="{{ '_Search_' | i18n }} {{ tab?.label | lowercase }}"
-								ngDefaultControl>
-							<button type="button" class="link">
-								<span class="icon-search"></span>
-							</button>
-						</div>
-					</form>
+					<ng-container *ngTemplateOutlet="tab.searchTemplate; context: { tab: tab }"></ng-container>
 				</div>
 			</div>
 		</div>
@@ -144,7 +129,8 @@
 			[options]="tab.options"
 			[data]="tab.data"
 			(onTableRowClicked)="onRowSelect($event)"
-			(onSortingChanged)="onColumnSort($event)">
+			(onSortingChanged)="onColumnSort($event)"
+		>
 		</cui-table>
 		<cui-pager
 			*ngIf="tab.data.length && tab?.pagination?.total > 0"
@@ -166,7 +152,7 @@
 					data-auto-id="NoResultsFoundTxt" >
 				</span>
 			</div>
-			<div *ngIf="tab.pagination">
+			<div *ngIf="tab.filtered">
 				<a (click)="clearFilters()"
 					class="text-lowercase"
 					data-auto-id="NoResultsClearAll"
@@ -224,5 +210,108 @@
 			innerText="{{ celldata?.assetsImpacted || 0 }} {{ (celldata?.assetsPotentiallyImpacted || 0) > 0 ? '(+' + celldata.assetsPotentiallyImpacted + ')' : '' }}"
 			data-auto-id="ImpactedCountText">
 		</span>
+	</div>
+</ng-template>
+
+<ng-template #securitySearchTemplate let-tab="tab">
+	<form *ngIf="tab.searchForm" [formGroup]="tab.searchForm" novalidate>
+		<div class="form-group__text">
+			<input id="searchInput-Security"
+				attr.data-auto-id="SearchInput-Security"
+				type="search"
+				#securitySearchInput
+				[minlength]="searchOptions.min"
+				[maxlength]="searchOptions.max"
+				[pattern]="searchOptions.pattern"
+				formControlName="search"
+				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				ngDefaultControl>
+			<button type="button" class="link">
+				<span class="icon-search"></span>
+			</button>
+		</div>
+	</form>
+</ng-template>
+
+<ng-template #fieldSearchTemplate let-tab="tab">
+	<form *ngIf="tab.searchForm" [formGroup]="tab.searchForm" novalidate>
+		<div class="form-group__text">
+			<input id="searchInput-Field"
+				attr.data-auto-id="SearchInput-Field"
+				type="search"
+				#fieldSearchInput
+				[minlength]="searchOptions.min"
+				[maxlength]="searchOptions.max"
+				[pattern]="searchOptions.pattern"
+				formControlName="search"
+				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				ngDefaultControl>
+			<button type="button" class="link">
+				<span class="icon-search"></span>
+			</button>
+		</div>
+	</form>
+</ng-template>
+
+<ng-template #bugsSearchTemplate let-tab="tab">
+	<form *ngIf="tab.searchForm" [formGroup]="tab.searchForm" novalidate>
+		<div class="form-group__text">
+			<input id="searchInput-Bugs"
+				attr.data-auto-id="SearchInput-Bugs"
+				type="search"
+				#bugsSearchInput
+				[minlength]="searchOptions.min"
+				[maxlength]="searchOptions.max"
+				[pattern]="searchOptions.pattern"
+				formControlName="search"
+				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				ngDefaultControl>
+			<button type="button" class="link">
+				<span class="icon-search"></span>
+			</button>
+		</div>
+	</form>
+</ng-template>
+
+<ng-template #impactedAssetsTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span
+			[innerText]="celldata?.assetsImpacted >= 0 ? celldata?.assetsImpacted : ('_NA_' | i18n)"
+			data-auto-id="ImpactedAssetsText"
+		></span>
+	</div>
+</ng-template>
+
+<ng-template #potentiallyImpactedAssetsTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span
+			[innerText]="celldata?.assetsPotentiallyImpacted >= 0 ? celldata?.assetsPotentiallyImpacted : ('_NA_' | i18n)"
+			data-auto-id="PotentiallyImpactedAssetsText"
+		></span>
+	</div>
+</ng-template>
+
+<ng-template #versionTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span [innerText]="celldata?.version || ('_NA_' | i18n)" data-auto-id="VersionText"></span>
+	</div>
+</ng-template>
+
+<ng-template #titleTemplate let-celldata="celldata">
+	<span [innerText]="celldata?.title || ('_NA_' | i18n)" data-auto-id="TitleText"></span>
+</ng-template>
+
+<ng-template #stateTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span [innerText]="(celldata?.state | titlecase) || ('_NA_' | i18n)" data-auto-id="StateText"></span>
+	</div>
+</ng-template>
+
+<ng-template #lastUpdatedTemplate let-celldata="celldata">
+	<div class="flex flex-fill flex-center">
+		<span 
+			[innerText]="celldata?.lastUpdated ? (celldata?.lastUpdated | date:'yyyy MMM dd') : ('_Never_' | i18n)"
+			data-auto-id="LastUpdatedText"
+		></span>
 	</div>
 </ng-template>

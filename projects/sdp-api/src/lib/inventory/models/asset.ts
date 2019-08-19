@@ -2,9 +2,9 @@
 export interface Asset {
 
   /**
-   * Role
+   * Contract Number
    */
-  role?: string;
+  contractNumber?: string;
 
   /**
    * Device name
@@ -19,7 +19,7 @@ export interface Asset {
   /**
    * Critical advisories
    */
-  criticalAdvisories?: number;
+  criticalAdvisories?: string;
   supportCovered?: boolean;
 
   /**
@@ -38,18 +38,20 @@ export interface Asset {
   osVersion?: string;
 
   /**
+   * Role
+   */
+  role?: string;
+
+  /**
    * IP Address
    */
   ipAddress?: string;
-
-  /**
-   * Contract Number
-   */
-  contractNumber?: string;
   managedNeId?: string;
   neId?: string;
   hwInstanceId?: string;
   containingHwId?: string;
   productId?: string;
+  productName?: string;
   equipmentType?: string;
+  reachabilityStatus?: string;
 }

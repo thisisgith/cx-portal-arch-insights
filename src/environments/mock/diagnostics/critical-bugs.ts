@@ -305,7 +305,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&serialNumber=35641136A1621`,
+		url: `${api}?customerId=${customerId}&serialNumber=35641136A1621&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 ];

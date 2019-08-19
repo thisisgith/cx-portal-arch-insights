@@ -5,10 +5,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { user, CriticalBugData } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
+import { DiagnosticsService } from '@sdp-api';
+import { of } from 'rxjs';
 
 describe('BugDetailsComponent', () => {
 	let component: BugDetailsComponent;
 	let fixture: ComponentFixture<BugDetailsComponent>;
+	let diagnosticsService: DiagnosticsService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -22,6 +25,8 @@ describe('BugDetailsComponent', () => {
 			],
 		})
 		.compileComponents();
+
+		diagnosticsService = TestBed.get(DiagnosticsService);
 	}));
 
 	beforeEach(() => {
@@ -69,21 +74,19 @@ describe('BugDetailsComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should load the bug if only id passed', done => {
+	it('should load the bug if only id passed', () => {
+		spyOn(diagnosticsService, 'getCriticalBugs')
+			.and
+			.returnValue(of({ data: [CriticalBugData[0]] }));
+
 		component.id = CriticalBugData[0].id;
 		component.customerId = user.info.customerId;
 
-		component.details
-		.subscribe((details => {
-			fixture.detectChanges();
-			expect(details)
-				.toEqual(component.data);
-
-			done();
-		}));
-
 		component.ngOnInit();
 		fixture.detectChanges();
+
+		expect(component.data)
+			.toEqual({ advisory: CriticalBugData[0] });
 	});
 
 	it('should handle changing bugs', () => {

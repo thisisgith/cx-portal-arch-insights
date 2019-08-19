@@ -7,13 +7,13 @@
 	</div>
 	<div *ngIf="!loading" class="container settings-container">
 		<div class="row">
-			<div class="col-lg-7" data-auto-id="settings.policies.scans">
+			<div class="col-lg-8" data-auto-id="settings.policies.scans">
 				<div class="row flex base-margin-right">
-					<div class="col-9">
+					<div class="col-7">
 						<h5 class="base-margin-top half-margin-bottom" data-auto-id="settings.polices.scans.label"
 							[innerText]="'_DiagnosticScans_' | i18n | uppercase"></h5>
 					</div>
-					<div class="col-3 text-right no-padding-right">
+					<div class="col-5 text-right no-padding-right">
 						<button
 							class="btn btn--small btn--secondary base-margin-top half-margin-bottom qtr-margin-right"
 							[innerText]="'_NewScheduledScan_' | i18n | uppercase"
@@ -52,7 +52,7 @@
 					<div class="col-1 flex-center">
 						<a
 							data-auto-id="settings.policies.collection.edit-scan"
-							(click)="startModal(true, 'editPolicy', scan)"
+							(click)="startModal(true, scan.policyType === 'SCAN' ? 'editPolicy' : 'editIgnorePolicy', scan)"
 						>
 							<span class="icon-pencil icon-small" [ngClass]="'text-primary'"></span>
 						</a>
@@ -84,12 +84,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-5" data-auto-id="settings.collection.schedule">
-				<h5 class="base-margin-top base-margin-bottom" data-auto-id="settings.system.usage.label"
-					[innerText]="'_ScanAndCollectionSchedule_' | i18n | uppercase"></h5>
-				<div>
-					Calendar
-				</div>
+			<div class="col-lg-4" data-auto-id="settings.collection.schedule">
+				<policy-calendar></policy-calendar>
 			</div>
 		</div>
 	</div>

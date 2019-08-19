@@ -298,17 +298,31 @@ class DiagnosticsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `title`: Security Advisory title
+   *
    * - `state`: State of the bugs
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: The page number of the response
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`: ID of the Bug
+   *
+   * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `cdetsId`: ID of the Bug
    *
    * @return successful operation
    */
@@ -318,12 +332,19 @@ class DiagnosticsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.title != null) __params = __params.set('title', params.title.toString());
     (params.state || []).forEach(val => {if (val != null) __params = __params.append('state', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
-    if (params.id != null) __params = __params.set('id', params.id.toString());
+    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
+    if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
+    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.cdetsId || []).forEach(val => {if (val != null) __params = __params.append('cdetsId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs`,
@@ -348,17 +369,31 @@ class DiagnosticsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `title`: Security Advisory title
+   *
    * - `state`: State of the bugs
    *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: The page number of the response
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`: ID of the Bug
+   *
+   * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `cdetsId`: ID of the Bug
    *
    * @return successful operation
    */
@@ -505,6 +540,11 @@ module DiagnosticsService {
     customerId: string;
 
     /**
+     * Security Advisory title
+     */
+    title?: string;
+
+    /**
      * State of the bugs
      */
     state?: Array<'new' | 'resolved' | 'verified' | 'duplicate' | 'closed'>;
@@ -520,9 +560,19 @@ module DiagnosticsService {
     serialNumber?: Array<string>;
 
     /**
+     * Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
      * Number of rows of data per page
      */
     rows?: number;
+
+    /**
+     * The date on which the Advisory was published
+     */
+    publishedOn?: string;
 
     /**
      * The page number of the response
@@ -530,9 +580,29 @@ module DiagnosticsService {
     page?: number;
 
     /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+     */
+    lastUpdatedDateRange?: Array<string>;
+
+    /**
+     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     */
+    lastUpdated?: string;
+
+    /**
      * ID of the Bug
      */
-    id?: string;
+    id?: Array<string>;
+
+    /**
+     * Requested fields in the response. Id field is by default
+     */
+    fields?: Array<string>;
+
+    /**
+     * ID of the Bug
+     */
+    cdetsId?: Array<string>;
   }
 }
 

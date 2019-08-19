@@ -97,16 +97,17 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 		this.allAssets = _.uniqBy(this.allAssets, 'serialNumber');
 		if (this.type !== 'bug') {
 			this.caseForm.controls.title.setValue(
-				_.get(this.advisory, 'bulletinTitle'),
+				_.get(this.advisory, 'bulletinTitle', ''),
 			);
 		} else {
 			this.caseForm.controls.title.setValue(
-				_.get(this.advisory, 'title'),
+				_.get(this.advisory, 'title', ''),
 			);
 		}
 		this.note = this.noteBuilder.buildNote(this.type, this.advisory);
+		/** Add 5 newlines to start of description to give user space for input */
 		this.caseForm.controls.description.setValue(
-			this.note,
+			`\n\n\n\n\n${this.note}`,
 		);
 		this.typeTitle = I18n.get(this.titles[this.type]);
 

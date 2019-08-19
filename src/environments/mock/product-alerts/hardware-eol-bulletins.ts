@@ -32,12 +32,12 @@ export const MockHardwareEOLBulletinsResponse: HardwareEOLBulletinResponse = {
 					"eoSoftwareLicenseAvailabilityDate": null,
 					"eoVulnerabilitySecuritySupport": "2019-10-30T00:00:00",
 					"milestoneInfo": [],
-					"migrationPid": null,
-					"migrationProductSeries": null,
-					"migrationProductModel": null,
-					"migrationPromotionText": null,
-					"migrationProductPageUrl": null,
-					"migrationProductDataUrl": null,
+					"migrationPid": "WS-C3960S-24PS-L",
+					"migrationProductSeries": "Catalyst 3960 Series",
+					"migrationProductModel": "3960",
+					"migrationPromotionText": "weee",
+					"migrationProductPageUrl": "http://localhost:1234",
+					"migrationProductDataUrl": "http://localhost:6245",
 					"internalAnnouncementDate": null
 			},
 			{

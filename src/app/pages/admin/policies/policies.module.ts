@@ -10,6 +10,12 @@ import { environment } from '@environment';
 import { CuiLoaderModule } from '@cisco-ngx/cui-components';
 
 import { PolicyFormModule } from './policy-form/policy-form.module';
+import { PolicyCalendarComponent } from './policy-calendar/policy-calendar.component';
+import {
+	CalendarCellTooltipComponent,
+} from './policy-calendar/calendar-cell-tooltip/calendar-cell-tooltip.component';
+
+import { TooltipModule } from '@components';
 
 /**
  * SDP Root url for the apis
@@ -21,17 +27,21 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
  */
 @NgModule({
 	declarations: [
+		CalendarCellTooltipComponent,
 		PoliciesComponent,
+		PolicyCalendarComponent,
 	],
+	entryComponents: [CalendarCellTooltipComponent],
 	imports: [
-		PolicyFormModule,
 		AdminWrapperModule,
 		CommonModule,
 		ControlPointsModule.forRoot({ rootUrl }),
-		UserModule.forRoot({ rootUrl }),
 		CuiLoaderModule,
 		I18nPipeModule,
+		PolicyFormModule,
 		RouterModule,
+		TooltipModule,
+		UserModule.forRoot({ rootUrl }),
 	],
 })
 export class PoliciesModule { }

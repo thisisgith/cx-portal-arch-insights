@@ -5,12 +5,15 @@ let racetrackHelper;
 let trackPoints;
 
 const infoMock = new MockService('RacetrackScenarios');
-const infoOnboardScenario = infoMock.getScenario('GET', '(Racetrack) IBN-Assurance-Onboard');
-const infoItems = infoOnboardScenario.response.body.solutions[0];
+const allManualCheckableScenario = infoMock.getScenario('GET',
+	'(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
+const allManualCheckableItems = allManualCheckableScenario.response.body.solutions[0];
 // Abbrevieating Campus Network Assurance to CNA
-const CNATech = Cypress._.find(infoItems.technologies, tech => tech.name === 'Campus Network Assurance');
-const CNAPitstopActions = Cypress._.find(
-	CNATech.pitstops, pitstop => pitstop.name === CNATech.currentPitstop
+const allManualCheckableCNATech = Cypress._.find(allManualCheckableItems.technologies,
+	tech => tech.name === 'Campus Network Assurance');
+const allManualCheckableCNAPitstopActions = Cypress._.find(
+	allManualCheckableCNATech.pitstops,
+	pitstop => pitstop.name === allManualCheckableCNATech.currentPitstop
 ).pitstopActions;
 
 const actionMock = new MockService('ActionScenarios');
@@ -48,7 +51,7 @@ describe('Racetrack Content', () => {
 		'advocate',
 	];
 	stages.forEach(stageName => {
-		context(`"${stageName}" Stage`, () => {
+		context.skip(`"${stageName}" Stage`, () => {
 			let expectedCoords;
 			let expectedRotations;
 
@@ -254,9 +257,7 @@ describe('Racetrack Content', () => {
 			});
 		});
 
-		// TODO: Skipped due to PBC-395: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-395
-		// We are not currently disabling checkboxes for items with manualCheckAllowed: false...
-		it.skip('Pitstop actions should not be checkable if manualCheckAllowed is false', () => {
+		it('Pitstop actions should not be checkable if manualCheckAllowed is false', () => {
 			// Switch mocks and refresh the checkboxes
 			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allNotManualCheckable');
 			cy.loadApp();
@@ -295,14 +296,21 @@ describe('Racetrack Content', () => {
 		});
 
 		it('Checking a pitstop action should update the completion percentage', () => {
+			// Switch mocks and refresh the checkboxes
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard-allManualCheckable');
+			cy.loadApp();
+			cy.waitForAppLoading();
+
 			// Check to see if any items are pre-completed
 			let numCompleted = Cypress._.filter(
-				CNAPitstopActions, action => action.isComplete === true
+				allManualCheckableCNAPitstopActions, action => action.isComplete === true
 			).length;
-			let expectedPercent = Math.floor((numCompleted / CNAPitstopActions.length) * 100);
+			let expectedPercent = Math.floor(
+				(numCompleted / allManualCheckableCNAPitstopActions.length) * 100
+			);
 
 			// Check each item, verify the percentage is updated
-			CNAPitstopActions.forEach((action, index) => {
+			allManualCheckableCNAPitstopActions.forEach((action, index) => {
 				if (!action.isComplete) {
 					cy.getByAutoId('pitstopCheckboxSpan')
 						.eq(index)
@@ -310,7 +318,9 @@ describe('Racetrack Content', () => {
 					numCompleted += 1;
 				}
 
-				expectedPercent = Math.floor((numCompleted / CNAPitstopActions.length) * 100);
+				expectedPercent = Math.floor(
+					(numCompleted / allManualCheckableCNAPitstopActions.length) * 100
+				);
 				cy.getByAutoId('CompletedActionsPercent')
 					.should('contain', `${expectedPercent}%`);
 			});
