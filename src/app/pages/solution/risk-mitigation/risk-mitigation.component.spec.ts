@@ -14,7 +14,7 @@ import { RiskMitigationService, HighCrashRiskDeviceCount } from '@sdp-api';
 import * as _ from 'lodash-es';
 
 
-fdescribe('RiskMitigationComponent', () => {
+describe('RiskMitigationComponent', () => {
 	let component: RiskMitigationComponent;
 	let fixture: ComponentFixture<RiskMitigationComponent>;
 	let riskMitigationService: RiskMitigationService;
@@ -346,7 +346,7 @@ fdescribe('RiskMitigationComponent', () => {
 		spyOn(riskMitigationService, 'getSearchedData')
 			.and
 			.returnValue(of(<any>{}));
-		fixture.detectChanges();	
+		fixture.detectChanges();
 		component.onTableSortingChanged({
 			key: 'Key1',
 			value: 'Value1',
@@ -368,38 +368,122 @@ fdescribe('RiskMitigationComponent', () => {
 	});
 
 	it('should set the selectedAsset', () => {
-		component.onRowClicked({active:true});
+		component.onRowClicked({ active: true });
 		expect(component.selectedAsset)
 			.toBeDefined();
 		expect(component.showAsset360)
 			.toBeFalsy();
-		component.onRowClicked({active:false});
+		component.onRowClicked({ active: false });
 		expect(component.selectedAsset)
-			.toBeUndefined();	
+			.toBeUndefined();
 	});
 
-	it('should unset the selectedAsset on panel close',() => {
+	it('should unset the selectedAsset on panel close', () => {
 		component.onPanelClose();
 		expect(component.selectedAsset)
-		.toBeUndefined();
+			.toBeUndefined();
 		expect(component.showAsset360)
 			.toBeFalsy();
 	});
 
-	it('should set the selectedFingerPrint data',() => {
-		const asset = {test:'test'};
+	it('should set the selectedFingerPrint data', () => {
+		const asset = { test: 'test' };
 		component.connectToFpDetails(asset);
 		expect(component.selectedFingerPrintdata)
 			.toBeDefined();
 		expect(component.showFpDetails)
-			.toBeTruthy();	
+			.toBeTruthy();
 	});
 
-	it('should hide the fingerprint details on panel close',() => {
+	it('should hide the fingerprint details on panel close', () => {
 		component.onFPDPanelClose();
 		expect(component.showFpDetails)
 			.toBeFalsy();
-	})
+	});
+
+	it('get filter details for search query', () => {
+		component.filters[0].seriesData = [
+			{
+				filter: 'Time: Last 24h',
+				label: '24h',
+				selected: false,
+				value: 0,
+			},
+			{
+				filter: 'Time: Last 7d',
+				label: '7d',
+				selected: true,
+				value: 0,
+			},
+			{
+				filter: 'Time: Last 30d',
+				label: '30d',
+				selected: false,
+				value: 2,
+			},
+			{
+				filter: 'Time: Last 90d',
+				label: '90d',
+				selected: false,
+				value: 9,
+			},
+		];
+		fixture.detectChanges();
+		expect(component.getFilterDetailsForSearchQuery('').time)
+			.toEqual('7');
+		component.filters[0].seriesData[1].selected = false;
+		component.filters[0].seriesData[2].selected = true;
+		fixture.detectChanges();
+		expect(component.getFilterDetailsForSearchQuery('').time)
+			.toEqual('30');
+		component.filters[0].seriesData[2].selected = false;
+		component.filters[0].seriesData[3].selected = true;
+		fixture.detectChanges();
+		expect(component.getFilterDetailsForSearchQuery('').time)
+			.toEqual('90');
+	});
+
+	it('should get fitered results on subfilter select', () => {
+		spyOn(component, 'resetFilters');
+		spyOn(component, 'getDeviceDetails');
+		const advisoryFilter = _.find(component.filters, { key: 'advisories' });
+		component.filters[0].seriesData = [
+			{
+				filter: 'Time: Last 24h',
+				label: '24h',
+				selected: false,
+				value: 0,
+			},
+			{
+				filter: 'Time: Last 7d',
+				label: '7d',
+				selected: true,
+				value: 0,
+			},
+			{
+				filter: 'Time: Last 30d',
+				label: '30d',
+				selected: false,
+				value: 2,
+			},
+			{
+				filter: 'Time: Last 90d',
+				label: '90d',
+				selected: false,
+				value: 9,
+			},
+		];
+		fixture.detectChanges();
+		component.onSubfilterSelect('Time: Last 90d', advisoryFilter);
+		expect(component.getDeviceDetails)
+			.toHaveBeenCalledWith('90');
+		component.onSubfilterSelect('Time: Last 7d', advisoryFilter);
+		expect(component.getDeviceDetails)
+			.toHaveBeenCalledWith('7');
+		component.onSubfilterSelect('Time: Last 30d', advisoryFilter);
+		expect(component.getDeviceDetails)
+			.toHaveBeenCalledWith('30');
+	});
 
 
 

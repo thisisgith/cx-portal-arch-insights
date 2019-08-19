@@ -211,7 +211,7 @@ export class RiskMitigationComponent {
 	 * @param timePeriod time period
 	 * @returns the total crashes observable
 	 */
-	private getDeviceDetails (timePeriod: string) {
+	public getDeviceDetails (timePeriod: string) {
 		let params: any = RiskMitigationService.GetAssetsParams;
 		this.crashedAssetsGridDetails.tableData = [];
 		params = (timePeriod) ? timePeriod : null;
