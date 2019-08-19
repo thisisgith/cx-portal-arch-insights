@@ -84,7 +84,7 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 				series: {
 					point: {
 						events: {
-							click: (event) => {
+							click: event => {
 								this.selectSubfilter(event);
 								if (previousPoint) {
 									previousPoint.point.update({ color: '#58585b' });

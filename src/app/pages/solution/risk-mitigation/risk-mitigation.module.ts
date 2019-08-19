@@ -24,16 +24,6 @@ import { environment } from '@environment';
 import { CrashHistoryModule } from './crash-history/crash-history.module';
 
 /**
- *To do dependency on other module
-
- import { FingerprintDetailsModule }
- from '../fingerprint-details/fingerprint-details.module';
-import { FingerprintHeaderModule } from '../fingerprint-details/fingerprint-header/fingerprint-header.module';
-import { FingerprintBodyModule } from '../fingerprint-details/fingerprint-body/fingerprint-body.module';
- *
- */
-
-/**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
 const rootUrl = environment.sdpServiceOrigin;
@@ -61,7 +51,7 @@ const childRoutes: Routes = [
 		CuiTabsModule,
 		RiskMitigationColumnChartModule,
 		I18nPipeModule,
-		RMModule.forRoot({rootUrl}),
+		RMModule.forRoot({ rootUrl }),
 		CuiTableModule,
 		CuiPagerModule,
 		CuiSearchModule,
@@ -72,9 +62,6 @@ const childRoutes: Routes = [
 		AssetDetailsModule,
 		AssetDetailsHeaderModule,
 		CuiSpinnerModule,
-		// FingerprintHeaderModule,
-		// FingerprintBodyModule,
-		// FingerprintDetailsModule,
 	],
 })
 export class RiskMitigationModule { }

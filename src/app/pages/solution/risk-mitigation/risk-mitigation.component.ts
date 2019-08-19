@@ -235,10 +235,11 @@ export class RiskMitigationComponent {
 				)
 				.subscribe();
 	}
+
 	/**
-	 * Get all the crash device Details
-	 * @params not required
-	 * @returns all the cashed devices with pagination
+	 * get the finger print device details
+	 * @param param service params
+	 * @returns observable of crash devices
 	 */
 	private getFingerPrintDeviceDetails (param: HighCrashRiskPagination) {
 		return this.riskmitigationservice.getFingerPrintDeviceDetailsData(param)
@@ -259,10 +260,9 @@ export class RiskMitigationComponent {
 	}
 	/**
 	 * Fetches the device crashed history
-	 * @param device will have the device details
 	 * @returns the total crash history of particular device
 	 */
-	private getCrashedDeviceHistory (device) {
+	private getCrashedDeviceHistory () {
 		this.crashHistoryGridDetails.tableData = [];
 		let params: any = RiskMitigationService.GetAssetsParams;
 		params = {
