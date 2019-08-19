@@ -14,6 +14,7 @@ import {
 	RiskAsset,
 	HighCrashRiskDevices,
 } from '@sdp-api';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Risk mitigation component
@@ -29,15 +30,10 @@ export class RiskMitigationComponent {
 	constructor (
 		private riskmitigationservice: RiskMitigationService,
 		private logger: LogService,
-		private userResolve: UserResolve) {
-		this.userResolve.getCustomerId()
-				.pipe(
-				takeUntil(this.destroy$),
-				)
-				.subscribe((id: string) => {
-					// tslint:disable-next-line: radix
-					this.customerId = parseInt(id);
-				});
+		private route : ActivatedRoute) {
+			const user = _.get(this.route, ['snapshot', 'data', 'user']);
+			this.customerId = _.get(user, ['info', 'customerId']);
+	
 	}
 
 	get selectedFilters () {
@@ -115,7 +111,9 @@ export class RiskMitigationComponent {
 			this.getHighCrashesDeviceData(),
 			this.getFingerPrintDeviceDetails(this.highCrashRiskParams),
 		)
-		.subscribe();
+		.subscribe(() => {
+			this.status.isLoading = false;
+		});
 		this.onlyCrashes = true;
 	}
 	// tslint:disable-next-line: valid-jsdoc
