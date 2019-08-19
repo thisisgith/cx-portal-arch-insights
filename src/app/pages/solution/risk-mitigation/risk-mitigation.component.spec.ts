@@ -359,5 +359,48 @@ fdescribe('RiskMitigationComponent', () => {
 			.toHaveBeenCalled();
 	});
 
+	it('should unset the selectedAsset', () => {
+		component.onPanelClose();
+		expect(component.selectedAsset)
+			.toBeUndefined();
+		expect(component.showAsset360)
+			.toBeFalsy();
+	});
+
+	it('should set the selectedAsset', () => {
+		component.onRowClicked({active:true});
+		expect(component.selectedAsset)
+			.toBeDefined();
+		expect(component.showAsset360)
+			.toBeFalsy();
+		component.onRowClicked({active:false});
+		expect(component.selectedAsset)
+			.toBeUndefined();	
+	});
+
+	it('should unset the selectedAsset on panel close',() => {
+		component.onPanelClose();
+		expect(component.selectedAsset)
+		.toBeUndefined();
+		expect(component.showAsset360)
+			.toBeFalsy();
+	});
+
+	it('should set the selectedFingerPrint data',() => {
+		const asset = {test:'test'};
+		component.connectToFpDetails(asset);
+		expect(component.selectedFingerPrintdata)
+			.toBeDefined();
+		expect(component.showFpDetails)
+			.toBeTruthy();	
+	});
+
+	it('should hide the fingerprint details on panel close',() => {
+		component.onFPDPanelClose();
+		expect(component.showFpDetails)
+			.toBeFalsy();
+	})
+
+
 
 });
