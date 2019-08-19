@@ -30,10 +30,14 @@ export class RiskMitigationComponent {
 	constructor (
 		private riskmitigationservice: RiskMitigationService,
 		private logger: LogService,
-		private route : ActivatedRoute) {
-			const user = _.get(this.route, ['snapshot', 'data', 'user']);
-			this.customerId = _.get(user, ['info', 'customerId']);
-	
+		private userResolve: UserResolve) {
+		this.userResolve.getCustomerId()
+					.pipe(
+					takeUntil(this.destroy$),
+					)
+					.subscribe((id: string) => {
+						this.customerId = parseInt(id);
+					});
 	}
 
 	get selectedFilters () {
@@ -278,13 +282,13 @@ export class RiskMitigationComponent {
 									this.crashHistoryGridDetails.tableData  = [];
 									this.logger.error('Crash Assets : getCrashedDeviceHistory() ' +
 										`:: Error : (${err.status}) ${err.message}`);
+
 									return of({ });
 								}),
 							)
 							.subscribe();
 	}
 
-	// tslint:disable-next-line: valid-jsdoc
 	/**
 	 * Function to update pagination
 	 * @param pageInfo will have the page info
@@ -316,7 +320,7 @@ export class RiskMitigationComponent {
 	public getFilterDetailsForSearchQuery (searchText: String) {
 		let time;
 		const filter =  _.find(this.filters[0].seriesData, { selected: true });
-		switch (filter.label){
+		switch (filter.label) {
 			case '24h': {
 				time = '1';
 				break;
@@ -648,7 +652,10 @@ export class RiskMitigationComponent {
 	 */
 	public getSelectedSubFilters (key: string) {
 		const filter = _.find(this.filters, { key });
-		return _.filter(filter.seriesData, 'selected');
+		if (filter) {
+			return _.filter(filter.seriesData, 'selected');
+		}
+
 	}
 
 }

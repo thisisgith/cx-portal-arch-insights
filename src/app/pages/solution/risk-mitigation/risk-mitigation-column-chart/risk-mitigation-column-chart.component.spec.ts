@@ -27,7 +27,7 @@ describe('RiskMitigationColumnChartComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({}),
+						queryParams: of({ }),
 						snapshot: {
 							data: {
 								user,
@@ -104,14 +104,14 @@ describe('RiskMitigationColumnChartComponent', () => {
 	it(' build graph should be called if the seriesData change', fakeAsync(() => {
 		spyOn(component, 'buildGraph');
 		component.ngOnChanges({
-			seriesData: {
-				currentValue: [{'test':'test'}],
+			resetChart: {
+				currentValue: undefined,
 				firstChange: false,
 				isFirstChange: () => false,
 				previousValue: null,
 			},
-			resetChart: {
-				currentValue: undefined,
+			seriesData: {
+				currentValue: [{ test : 'test' }],
 				firstChange: false,
 				isFirstChange: () => false,
 				previousValue: null,
@@ -126,16 +126,16 @@ describe('RiskMitigationColumnChartComponent', () => {
 	it(' build graph should be called if the resetChart change', fakeAsync(() => {
 		spyOn(component, 'buildGraph');
 		component.ngOnChanges({
-			seriesData: {
-				currentValue: [{'test':'test'}],
-				firstChange: true,
-				isFirstChange: () => true,
-				previousValue: null,
-			},
 			resetChart: {
 				currentValue: true,
 				firstChange: false,
 				isFirstChange: () => false,
+				previousValue: null,
+			},
+			seriesData: {
+				currentValue: [{ test: 'test' }],
+				firstChange: true,
+				isFirstChange: () => true,
 				previousValue: null,
 			},
 		});
@@ -148,16 +148,16 @@ describe('RiskMitigationColumnChartComponent', () => {
 	it('should not build graph if not firstChange', fakeAsync(() => {
 		spyOn(component, 'buildGraph');
 		component.ngOnChanges({
-			seriesData: {
-				currentValue: [{'test':'test'}],
-				firstChange: true,
-				isFirstChange: () => true,
-				previousValue: null,
-			},
 			resetChart: {
 				currentValue: undefined,
 				firstChange: false,
 				isFirstChange: () => false,
+				previousValue: null,
+			},
+			seriesData: {
+				currentValue: [{ test: 'test' }],
+				firstChange: true,
+				isFirstChange: () => true,
 				previousValue: null,
 			},
 		});
@@ -166,6 +166,4 @@ describe('RiskMitigationColumnChartComponent', () => {
 		expect(component.buildGraph)
 			.toHaveBeenCalledTimes(0);
 	}));
-
-
 });

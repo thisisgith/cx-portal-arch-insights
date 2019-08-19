@@ -13,7 +13,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RiskMitigationService, HighCrashRiskDeviceCount } from '@sdp-api';
 import * as _ from 'lodash-es';
 
-
 describe('RiskMitigationComponent', () => {
 	let component: RiskMitigationComponent;
 	let fixture: ComponentFixture<RiskMitigationComponent>;
@@ -32,7 +31,7 @@ describe('RiskMitigationComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({}),
+						queryParams: of({ }),
 						snapshot: {
 							data: {
 								user,
@@ -90,7 +89,7 @@ describe('RiskMitigationComponent', () => {
 				RISKScenarios[1].scenarios.GET[0].response.body));
 		spyOn(riskMitigationService, 'getFingerPrintDeviceDetailsData')
 			.and
-			.returnValue(of(<any>{ devices: [], count: 100 }));
+			.returnValue(of(<any> { devices: [], count: 100 }));
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.status.isLoading)
@@ -345,13 +344,13 @@ describe('RiskMitigationComponent', () => {
 		component.customerId = 12345;
 		spyOn(riskMitigationService, 'getSearchedData')
 			.and
-			.returnValue(of(<any>{}));
+			.returnValue(of(<any>{ }));
 		fixture.detectChanges();
 		component.onTableSortingChanged({
 			key: 'Key1',
-			value: 'Value1',
 			sortable: true,
 			sortDirection: 'asc',
+			value: 'Value1',
 		});
 		expect(riskMitigationService.getSearchedData)
 			.toHaveBeenCalled();
@@ -484,7 +483,5 @@ describe('RiskMitigationComponent', () => {
 		expect(component.getDeviceDetails)
 			.toHaveBeenCalledWith('30');
 	});
-
-
 
 });
