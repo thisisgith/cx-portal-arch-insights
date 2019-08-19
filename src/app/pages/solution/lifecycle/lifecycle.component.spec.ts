@@ -24,7 +24,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as _ from 'lodash-es';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { ControlComponent } from 'ngx-mapbox-gl';
 
 /**
  * Will fetch the currently active response body from the mock object

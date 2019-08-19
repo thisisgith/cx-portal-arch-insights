@@ -148,7 +148,7 @@
 	<ng-container *ngIf="data.sessions.length">
 		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions, autoid: 'moreATXList' }"></ng-container>
 	</ng-container>
-	<ng-container *ngIf="componentData?.atx?.recommended">
+	<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
 		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.recommended }"></ng-container>
 	</ng-container>
 </ng-template>
@@ -220,7 +220,7 @@
 	<div class="text-large base-padding-bottom text-capitalize" [innerText]="title" attr.data-auto-id="{{ autoid }}-Title"></div>
 	<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 		class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-		(click)="atxScheduleCardOpened = true; componentData.atx.interested=''"
+		(click)="recommendedAtxScheduleCardOpened = true; componentData.atx.interested=''"
 		[innerText]="'_ViewSessions_' | i18n">
 	</button>
 	<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="componentData.atx?.recommended?.recordingURL">
@@ -254,7 +254,7 @@
 
 <ng-template #recommendedATXSchedule let-data="data">
 	<div class="panel panel--bordered"
-		*ngIf="atxScheduleCardOpened"
+		*ngIf="atxScheduleCardOpened || recommendedAtxScheduleCardOpened"
 		#viewAtxSessions
 		id="viewAtxPanel"
 		[ngClass]="getPanel(viewAtxSessions)" data-auto-id="atxScheduleCard">
@@ -264,7 +264,7 @@
 			</div>
 			<div class="col-md-1">
 				<a class="no-link closebtn"
-					(click)="this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0"
+					(click)="this.atxScheduleCardOpened = false; recommendedAtxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0"
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
 				</a>
@@ -685,7 +685,7 @@
 					<div class="col-md-6 text-left">
 						<button id="ATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 							class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-							(click)="atxScheduleCardOpened = true; componentData.atx.interested = item; getCoordinates($event)"
+							(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = item; getCoordinates($event)"
 							[innerText]="'_ViewSessions_' | i18n">
 						</button>
 					</div>
@@ -1071,7 +1071,7 @@
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div *ngIf="type === 'ATX'">
 		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-			(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata; getCoordinates($event)"
+			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
 		<!-- Hong this is for testing purpose, will remove after link with popup panel-->
