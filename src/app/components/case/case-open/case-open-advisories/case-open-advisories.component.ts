@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, AfterViewInit, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { CaseService } from '@cui-x/services';
@@ -16,6 +16,7 @@ import { CaseNoteBuilder } from './case-note-builder';
 import { Subject, of, Observable } from 'rxjs';
 import { catchError, takeUntil, flatMap } from 'rxjs/operators';
 import { CaseOpenData } from '../caseOpenData';
+import { TechFormComponent } from '../tech-form/tech-form.component';
 
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
@@ -28,11 +29,13 @@ import { UserResolve } from '@utilities';
 	styleUrls: ['./case-open-advisories.component.scss'],
 	templateUrl: './case-open-advisories.component.html',
 })
-export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnDestroy {
+export class CaseOpenAdvisoriesComponent
+	implements CuiModalContent, AfterViewInit, OnInit, OnDestroy {
 	@Input() public advisory: SecurityAdvisoryBulletin | FieldNoticeBulletin | CriticalBug;
 	@Input() public selectedAsset: Asset;
 	@Input() public otherAssets: Asset[];
 	@Input() public type: AdvisoryType;
+	@ViewChild('techForm', { static: false }) public techForm: TechFormComponent;
 	public titles = {
 		bug: '_CriticalBug_',
 		field: '_CiscoFieldNotice_',
@@ -124,6 +127,13 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 			this.contractNumber = _.get(response, ['data', 0, 'contractNumber'], null);
 			this.contractLoading = false;
 		});
+	}
+
+	/**
+	 * AfterViewInit lifecycle hook. Load inital suggestions for tech
+	 */
+	public  ngAfterViewInit () {
+		this.techForm.refreshPredictions();
 	}
 
 	/**
@@ -235,7 +245,7 @@ export class CaseOpenAdvisoriesComponent implements CuiModalContent, OnInit, OnD
 						'subTechName',
 					),
 					technology: _.get(
-						(<FormGroup> this.caseForm.controls.techInfo).controls.technology,
+						(<FormGroup> this.caseForm.controls.techInfo).controls.technology.value,
 						'techName',
 					),
 					title: this.caseForm.controls.title.value,
