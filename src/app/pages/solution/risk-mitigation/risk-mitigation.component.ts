@@ -369,7 +369,7 @@ export class RiskMitigationComponent {
 		this.showAsset360 = false;
 		if (asset.active) {
 			this.selectedAsset = asset;
-			this.getCrashedDeviceHistory(this.selectedAsset);
+			this.getCrashedDeviceHistory();
 		} else { this.selectedAsset = undefined; }
 	}
 	/**
