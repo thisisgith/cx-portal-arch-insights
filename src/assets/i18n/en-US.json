@@ -562,7 +562,7 @@
   "_SetupInstruction_3C_": "Wait for deployment to complete. This may take several minutes.",
   "_SetupInstruction_4A_": "Confirm the name for the deployed template. Then click \"Next.\"",
   "_SetupInstruction_4B_": "Enter a name for the virtual machine. Then click \"Next.\"",
-  "_SetupInstruction_4C_": "Open the console by selecting the virtual machine you just deployed in the left panel, then clicking \"Show.\"",
+  "_SetupInstruction_4C_": "Open the console by selecting the virtual machine you just deployed in the left panel, then clicking \"Start.\"",
   "_SetupInstruction_5A_": "Confirm “Thin Provision” is selected. Then click \"Next.\"",
   "_SetupInstruction_5B_": "Confirm \"Standard\" storage is selected. Then click \"Next.\"",
   "_SetupInstruction_6A_": "Check the box for \"Power on after deployment.\" Then click \"Finish.\"",
