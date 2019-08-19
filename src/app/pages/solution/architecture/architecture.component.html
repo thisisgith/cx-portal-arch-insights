@@ -1,22 +1,20 @@
 <div class="panel">
     <div class="row">
-        <div class="col-md-2 text-center">
+        <div class="col-md-2 text-center" (click)=clearFilters()>
             <div *ngFor="let label of visualLabels; let i=index"
                 [ngClass]="{'visualSelected':label.active == true}"
-                (click)="selectVisualLabel(i)">
+                (click)="selectVisualLabel($event)">
                 <h1 class="half-margin-top half-margin-bottom">{{label.count}}</h1>
                 <div class="half-margin-bottom half-margin-top">{{label.label}}</div>
             </div>
         </div>
-        <div class="col-md-9" *ngIf="visualLabels[0].active">
+        <div class="col-md-10" *ngIf="visualLabels[0].active">
             <div class="row">
                 <div class="col-md-3">
                     <div class="flex flex-fill flex-fluid">
-                        <!-- <div class="flex-center">
-                                <span class="icon-chevron-left icon-medium text-muted toggle"></span>
-                                </div> -->
+                    
                         <ng-container *ngFor="let filter of filters; index as i">
-                            <div attr.id="SyslogsSelectVisualFilter-{{ filter.key }}" 
+                            <div attr.id="ArchitectureSelectVisualFilter-{{ filter.key }}" 
                                 attr.data-auto-id="AssetsSelectVisualFilter-{{
                                 filter.key
                                 }}"
@@ -36,19 +34,17 @@
                                 [innerText]="filter.title"></div>
                             </div>
                             <div *ngIf="filter.loading" class="base-margin-bottom">
-                                <!-- <cui-spinner></cui-spinner> -->
+                               
                             </div>
                         </ng-container>
-                        <!-- <div class="flex-center">
-                                <span class="icon-chevron-right icon-medium text-muted toggle"></span>
-                                </div> -->
+                       
                     </div>
                 </div>
-            </div>
+           
         </div>
-        <div class="text-center col-md-9" *ngIf="visualLabels[1].active">
+        <div class="text-center col-md-10" *ngIf="visualLabels[1].active">
             <ng-container>
-                <p>No Visual Filters to display</p>
+                <p [innerText]="'_ArchitectureNoVisualFiltersToShow_' | i18n" class="text-large"></p>
             </ng-container>
         </div>
     </div>
@@ -72,11 +68,7 @@
         (subfilter)="onSubfilterSelect($event, filter)">
     </bar-chart>
     <div class="base-margin-top" *ngIf="status.isLoading">
-        <div class="loading-spinner flex-center" aria-label="Loading, please wait...">
-            <div class="wrapper">
-                <div class="wheel"></div>
-            </div>
-        </div>
+        <cui-spinner></cui-spinner>
     </div>
 </ng-template>
 

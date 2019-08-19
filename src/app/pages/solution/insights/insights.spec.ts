@@ -4,9 +4,9 @@ import { InsightsComponent } from './insights.component';
 import { InsightsModule } from './insights.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { OsvComponent } from '../osv/osv.component';
+// import { OsvComponent } from '../osv/osv.component';
 import { RiskMitigationComponent } from '../risk-mitigation/risk-mitigation.component';
-import { OsvModule } from '../osv/osv.module';
+// import { OsvModule } from '../osv/osv.module';
 import { RiskMitigationModule } from '../risk-mitigation/risk-mitigation.module';
 
 describe('InsightsComponent', () => {
@@ -17,11 +17,11 @@ describe('InsightsComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [
 				InsightsModule,
-				OsvModule,
+				// OsvModule,
 				RiskMitigationModule,
 				HttpClientTestingModule,
 				RouterTestingModule.withRoutes([
-					{ path: 'solution/best-practices/osv', component: OsvComponent },
+					// { path: 'solution/best-practices/osv', component: OsvComponent },
 					{
 						path: 'solution/best-practices/risk-mitigation',
 						component: RiskMitigationComponent,

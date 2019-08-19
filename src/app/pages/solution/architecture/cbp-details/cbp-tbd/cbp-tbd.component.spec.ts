@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CbpTbdComponent } from './cbp-tbd.component';
 import { CbpTbdModule } from './cbp-tbd.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('CbpTbdComponent', () => {
 	let component: CbpTbdComponent;
@@ -9,7 +10,9 @@ describe('CbpTbdComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CbpTbdModule],
+			imports: [CbpTbdModule,
+				HttpClientTestingModule,
+			],
 		})
 		.compileComponents();
 	}));

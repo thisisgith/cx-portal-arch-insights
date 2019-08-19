@@ -7,18 +7,6 @@ import { map, catchError } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
 
-/**
-	* Interface repersents graph Model data
- */
-
-interface Filter {
-	key: string;
-	selected?: boolean;
-	template?: TemplateRef<{ }>;
-	title: string;
-	loading: boolean;
-	seriesData: { filter: string; label: string; selected: boolean; value: number; }[];
-}
 
 @Component({
 	selector: 'app-architecture-review',
@@ -61,15 +49,15 @@ export class ArchitectureReviewComponent implements OnInit {
 	 *  and buildFilters function for Updating the Table
 	 */
 	public ngOnInit (): void {
-		this.architectureService.getExceptionsCount()
-		.subscribe(res => {
-			this.visualLabels[0].count = res.CBPRulesCount;
-		});
+		// this.architectureService.getExceptionsCount()
+		// .subscribe(res => {
+		// 	this.visualLabels[0].count = res.CBPRulesCount;
+		// });
 
-		this.architectureService.getAssetsExceptionsCount()
-		.subscribe(res => {
-			this.visualLabels[1].count = res.AssetsExceptionCount;
-		});
+		// this.architectureService.getAssetsExceptionsCount()
+		// .subscribe(res => {
+		// 	this.visualLabels[1].count = res.AssetsExceptionCount;
+		// });
 
 		this.buildFilters();
 	}
@@ -97,16 +85,9 @@ export class ArchitectureReviewComponent implements OnInit {
 				title: I18n.get('_Exceptions_'),
 			},
 		];
-		this.loadData();
+		// this.loadData();
 	}
 
-	/**
-	 * Used to set the Severity in order access in other components
-	 * @param severity Value of severity
-	 */
-	public setSeverityListValues (severity: any) {
-		this.architectureService.setAssetsExceptionCountSubjectObj(severity);
-	}
 
 	/**
 	 * Adds a subfilter to the given filer
@@ -170,7 +151,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	public clearFilters () {
 		// const totalFilter = _.find(this.filters, { key: 'total' });
 		this.filtered = false;
-		_.each(this.filters, (filter: Filter) => {
+		_.each(this.filters, (filter: VisualFilter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {
 				f.selected = false;
@@ -184,81 +165,81 @@ export class ArchitectureReviewComponent implements OnInit {
 	 * Fetches the exception counts for the visual filter
 	 * @returns the edvisory counts
 	 */
-	private getExceptionsCount () {
-		const exceptionFilter = _.find(this.filters, { key: 'Exceptions' });
+	// private getExceptionsCount () {
+	// 	const exceptionFilter = _.find(this.filters, { key: 'Exceptions' });
 
-		return this.architectureService.getExceptionsCount()
-			.pipe(
-				map((data: any) => {
-					const series = [];
+	// 	return this.architectureService.getExceptionsCount()
+	// 		.pipe(
+	// 			map((data: any) => {
+	// 				const series = [];
 
-					const High = _.get(data, 'HighRisk');
+	// 				const High = _.get(data, 'HighRisk');
 
-					if (High && High > 0) {
-						series.push({
-							filter: 'High',
-							label: 'High',
-							selected: false,
-							value: High,
-						});
-					}
+	// 				if (High && High > 0) {
+	// 					series.push({
+	// 						filter: 'High',
+	// 						label: 'Compliant',
+	// 						selected: false,
+	// 						value: High,
+	// 					});
+	// 				}
 
-					const Medium = _.get(data, 'MediumRisk');
+	// 				const Medium = _.get(data, 'MediumRisk');
 
-					if (Medium && Medium > 0) {
-						series.push({
-							filter: 'Medium',
-							label: 'Medium',
-							selected: false,
-							value: Medium,
-						});
-					}
+	// 				if (Medium && Medium > 0) {
+	// 					series.push({
+	// 						filter: 'Medium',
+	// 						label: 'Non-Compliant',
+	// 						selected: false,
+	// 						value: Medium,
+	// 					});
+	// 				}
 
-					const Low = _.get(data, 'LowRisk');
+	// 				// const Low = _.get(data, 'LowRisk');
 
-					if (Low && Low > 0) {
-						series.push({
-							filter: 'Low',
-							label: 'Low',
-							selected: false,
-							value: Low,
-						});
-					}
+	// 				// if (Low && Low > 0) {
+	// 				// 	series.push({
+	// 				// 		filter: 'Low',
+	// 				// 		label: 'Low',
+	// 				// 		selected: false,
+	// 				// 		value: Low,
+	// 				// 	});
+	// 				// }
 
-					exceptionFilter.seriesData = series;
-					exceptionFilter.loading = false;
-				}),
-				catchError(err => {
-					exceptionFilter.loading = false;
-					this.logger.error('architecture.component : getExceptionsCount() ' +
-						`:: Error : (${err.status}) ${err.message}`);
+	// 				exceptionFilter.seriesData = series;
+	// 				exceptionFilter.loading = false;
+	// 			}),
+	// 			catchError(err => {
+	// 				exceptionFilter.loading = false;
+	// 				this.logger.error('architecture.component : getExceptionsCount() ' +
+	// 					`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
-				}),
-			);
-	}
+	// 				return of({ });
+	// 			}),
+	// 		);
+	// }
 
 	/**
 	 * Function used to load all of the data
 	 */
-	private loadData () {
-		this.status.isLoading = true;
-		forkJoin(
-			this.getExceptionsCount(),
+	// private loadData () {
+	// 	this.status.isLoading = true;
+	// 	forkJoin(
+	// 		this.getExceptionsCount(),
 
-		)
-			.pipe(
-				map(() => { }),
-			)
-			.subscribe(() => {
-				this.status.isLoading = false;
+	// 	)
+	// 		.pipe(
+	// 			map(() => { }),
+	// 		)
+	// 		.subscribe(() => {
+	// 			this.status.isLoading = false;
 
-				if (window.Cypress) {
-					window.loading = false;
-				}
+	// 			if (window.Cypress) {
+	// 				window.loading = false;
+	// 			}
 
-				this.logger.debug('architecture.component : loadData() :: Finished Loading');
-			});
-	}
+	// 			this.logger.debug('architecture.component : loadData() :: Finished Loading');
+	// 		});
+	// }
 
 }

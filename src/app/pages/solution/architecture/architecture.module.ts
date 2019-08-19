@@ -8,8 +8,9 @@ import { CuiTabsModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { CuiTabsNavModule } from '@cisco-ngx/cui-components';
 import { ArchitectureRoutingModule } from './architecture-routing.module';
 import { CbpDetailsModule } from './cbp-details/cbp-details.module';
-import { CbpDetailsHeaderModule } from './cbp-details-header/cbp-details-header.module';
+
 import { BarChartModule } from '@components';
+import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 // import { Panel360Module } from '@components';
 
 /** Module to represent the Architecture Component */
@@ -25,9 +26,9 @@ import { BarChartModule } from '@components';
 		CuiTabsNavModule,
 		ArchitectureRoutingModule,
 		CbpDetailsModule,
-		CbpDetailsHeaderModule,
 		BarChartModule,
-		CuiSpinnerModule
+		CuiSpinnerModule,
+		I18nPipeModule,
 		// Panel360Module
 	],
 })

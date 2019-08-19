@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CbpAweHeaderComponent } from './cbp-awe-header.component';
-import { CbpAweHeaderModule } from './cbp-awe-header.module';
+ import { CbpAweHeaderModule } from './cbp-awe-header.module';
 
 describe('CbpAweHeaderComponent', () => {
 	let component: CbpAweHeaderComponent;
@@ -9,7 +9,7 @@ describe('CbpAweHeaderComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CbpAweHeaderModule],
+			 imports: [CbpAweHeaderModule],
 		})
 		.compileComponents();
 	}));

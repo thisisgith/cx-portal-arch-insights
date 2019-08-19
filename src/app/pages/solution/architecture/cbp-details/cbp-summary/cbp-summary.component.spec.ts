@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CbpSummaryComponent } from './cbp-summary.component';
 import { CbpSummaryModule } from './cbp-summary.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('CbpSummaryComponent', () => {
 	let component: CbpSummaryComponent;
@@ -9,7 +10,8 @@ describe('CbpSummaryComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CbpSummaryModule],
+			imports: [CbpSummaryModule,
+				HttpClientTestingModule],
 		})
 		.compileComponents();
 	}));

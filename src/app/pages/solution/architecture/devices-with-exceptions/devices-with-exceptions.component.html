@@ -1,7 +1,28 @@
 <!-- Fly-Out View Slide-out -->
 <details-panel [hidden]="!assetObject" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
-		<cbp-awe-header [cbpDetails]="assetObject"></cbp-awe-header>
+		<div class="row ">
+			<div class="col-md-8 base-margin-bottom">
+				<div class="flex" *ngIf="assetObject">
+		
+					<div class="dbl-margin-right">
+						<div class="text-bold text-uppercase" [innerText]="'_ArchitectureIPAddress_' | i18n"></div>
+						<div innerText="{{ assetObject?.ipAddress || ('_NA_' | i18n) }}"></div>
+					</div>
+		
+					<div class="dbl-margin-right">
+						<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSerialNumber_' | i18n"></div>
+						<div innerText="{{ assetObject?.sysName || ('_NA_' | i18n) }}"></div>
+					</div>
+		
+					<div class="dbl-margin-right">
+						<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSoftwareType_' | i18n"></div>
+						<div innerText="{{ assetObject?.swType || ('_NA_' | i18n) }}"></div>
+					</div>
+				</div>
+			</div>
+		
+		</div>
 		<div detailsPanelTitle class="text-xlarge">
 			<span class="icon-left-arrow" data-auto-id="PanelClose" (click)="onPanelClose()"></span>
 			<span class="icon-right-arrow" disabled></span>
@@ -9,7 +30,7 @@
 			<a> {{ assetObject?.productId}}</a>
 		</div>
 	</details-panel-header>
-	<!-- <cbp-awe-tab [cbpDetails]="assetObject"></cbp-awe-tab> -->
+	
 	<cbp-tbd [cbpDetails]="assetObject"></cbp-tbd>
 </details-panel>
 <div class="divider no-margin-top"></div>

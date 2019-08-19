@@ -8,7 +8,7 @@ import { ArchitectureService, IException } from '@sdp-api';
 import * as _ from 'lodash-es';
 
  /** Our current customerId */
-const customerId = '231215372';
+const customerId = '7293498';
 
 /**
  * CBP Rule Component
@@ -24,9 +24,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public totalItems: any;
 	public cbpRuleExceptions = [];
 	public isLoading = true;
-	public severityObj: any;
-	public AssetsExceptionsCount: any;
-	public severityType: any = [];
+
 	public paramsType = {
 		customerId,
 		page: 0,
@@ -74,9 +72,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			bordered: false,
 			columns: [
 				{
+					key: 'bpRuleTitle',
 					name: I18n.get('_ArchitectureRuleTitle_'),
 					sortable: false,
-					key: 'bpRuleTitle',
 				},
 				{
 					name: I18n.get('_ArchitectureSeverity_'),
@@ -85,24 +83,24 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 				},
 				// { name: 'Software Type', sortable: false, key: 'swType' },
 				{
+					key: 'exceptions',
 					name: I18n.get('_ArchitectureException_'),
 					sortable: false,
-					key: 'exceptions',
 				},
 				{
+					key: 'Recommendation',
 					name: I18n.get('_ArchitectureRecommendation_'),
 					sortable: false,
-					key: 'Recommendation',
 				},
 				{
+					key: 'correctiveActionSummary',
 					name: I18n.get('_ArchitectureCorrectiveAction_'),
 					sortable: false,
-					key: 'correctiveActionSummary',
 				},
 				{
+					key: 'assetsAffected',
 					name: I18n.get('_ArchitectureAssetsAffected_'),
 					sortable: false,
-					key: 'assetsAffected',
 				},
 			],
 			singleSelect: true,

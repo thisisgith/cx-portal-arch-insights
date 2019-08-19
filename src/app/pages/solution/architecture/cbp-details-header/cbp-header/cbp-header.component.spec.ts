@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CbpHeaderComponent } from './cbp-header.component';
-import { CbpHeaderModule } from './cbp-header.module';
+ import { CbpHeaderModule } from './cbp-header.module';
 
 describe('CbpHeaderComponent', () => {
 	let component: CbpHeaderComponent;

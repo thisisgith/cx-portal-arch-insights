@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CbpTabComponent } from './cbp-tab.component';
-import { CbpTabModule } from './cbp-tab.module';
+// import { CbpTabModule } from './cbp-tab.module';
 
 describe('CbpTabComponent', () => {
 	let component: CbpTabComponent;
@@ -9,7 +9,7 @@ describe('CbpTabComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CbpTabModule],
+			// imports: [CbpTabModule],
 		})
 		.compileComponents();
 	}));

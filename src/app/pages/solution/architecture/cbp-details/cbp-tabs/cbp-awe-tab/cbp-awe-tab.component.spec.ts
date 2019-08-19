@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CbpAweTabComponent } from './cbp-awe-tab.component';
-import { CbpAweTabModule } from './cbp-awe-tab.module';
+// import { CbpAweTabModule } from './cbp-awe-tab.module';
 
 describe('CbpAweTabComponent', () => {
 	let component: CbpAweTabComponent;
@@ -9,7 +9,7 @@ describe('CbpAweTabComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CbpAweTabModule],
+			// imports: [CbpAweTabModule],
 		})
 		.compileComponents();
 	}));

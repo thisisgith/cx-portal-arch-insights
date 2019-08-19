@@ -5,7 +5,7 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { ArchitectureService, IAsset } from '@sdp-api';
 
 /** Our current customerId */
-const customerId = '231215372';
+const customerId = '7293498';
 
 /**
  * Devices With Exceptions Component
@@ -36,49 +36,14 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public params = { customerId, page: 0, pageSize: 10 };
 
 	/**
- 	 * Used for getting pageNumber Index and call the getdata function
- 	 * @param event - The Object that contains pageNumber Index
- 	 */
-	public onPagerUpdated(event) {
-		this.isLoading = true;
-		this.params.page = event.page;
-		this.params.pageSize = event.limit;
-		this.getAllAssetsWithExceptions();
-	}
-
-	/**
-	 * used for setting the data for table
-	 */
-	public getAllAssetsWithExceptions() {
-		this.tableStartIndex = this.params.page * this.params.pageSize;
-		let x = (this.tableStartIndex + this.AssetsExceptionDetails.length);
-		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
-
-		this.architectureService.getAllAssetsWithExceptions(this.params).subscribe(res => {
-			this.isLoading = false;
-			this.totalItems = res.TotalCounts;
-			this.AssetsExceptionDetails = res.AssetsExceptionDetails;
-			this.tableEndIndex = (this.tableStartIndex + this.AssetsExceptionDetails.length);
-			this.AssetsExceptionDetails.map(asset => {
-				asset.ruleIdsWithExceptionsCount = asset.ruleIdsWithExceptions.split(';').length;
-			},
-				err => {
-					this.logger.error('Devices With Exceptions View' +
-						'  : getAllAssetsWithExceptions() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-					this.isLoading = false;
-					this.AssetsExceptionDetails = [];
-					this.totalItems = 0;
-				});
-		});
-	}
-
-	/**
 	 * used to Intialize Table options
 	 */
 	ngOnInit() {
-
 		this.getAllAssetsWithExceptions();
+		this.buildTable();
+	}
+
+	public buildTable(){
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
@@ -124,6 +89,44 @@ export class DevicesWithExceptionsComponent implements OnInit {
 				},
 			],
 			singleSelect: true,
+		});
+	}
+
+	/**
+ 	 * Used for getting pageNumber Index and call the getdata function
+ 	 * @param event - The Object that contains pageNumber Index
+ 	 */
+	public onPagerUpdated(event) {
+		this.isLoading = true;
+		this.params.page = event.page;
+		this.params.pageSize = event.limit;
+		this.getAllAssetsWithExceptions();
+	}
+
+	/**
+	 * used for setting the data for table
+	 */
+	public getAllAssetsWithExceptions () {
+		this.tableStartIndex = this.params.page * this.params.pageSize;
+		let x = (this.tableStartIndex + this.AssetsExceptionDetails.length);
+		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
+
+		this.architectureService.getAllAssetsWithExceptions(this.params).subscribe(res => {
+			this.isLoading = false;
+			this.totalItems = res.TotalCounts;
+			this.AssetsExceptionDetails = res.AssetsExceptionDetails;
+			this.tableEndIndex = (this.tableStartIndex + this.AssetsExceptionDetails.length);
+			this.AssetsExceptionDetails.map(asset => {
+				asset.ruleIdsWithExceptionsCount = asset.ruleIdsWithExceptions.split(';').length;
+			},
+				err => {
+					this.logger.error('Devices With Exceptions View' +
+						'  : getAllAssetsWithExceptions() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+					this.isLoading = false;
+					this.AssetsExceptionDetails = [];
+					this.totalItems = 0;
+				});
 		});
 	}
 

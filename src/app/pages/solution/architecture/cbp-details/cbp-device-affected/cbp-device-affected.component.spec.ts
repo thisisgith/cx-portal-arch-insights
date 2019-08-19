@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CbpDeviceAffectedComponent } from './cbp-device-affected.component';
 import { CbpDeviceAffectedModule } from './cbp-device-affected.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('CbpDeviceAffectedComponent', () => {
 	let component: CbpDeviceAffectedComponent;
@@ -9,7 +10,8 @@ describe('CbpDeviceAffectedComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CbpDeviceAffectedModule],
+			imports: [CbpDeviceAffectedModule,
+				HttpClientTestingModule],
 		})
 		.compileComponents();
 	}));

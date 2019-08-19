@@ -1,23 +1,14 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ArchitectureService } from '@sdp-api';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, of, Subscription, Subject } from 'rxjs';
 import { VisualFilter } from '@interfaces';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
+import { I18n } from '@cisco-ngx/cui-utils';
 
-/**
-* Interface repersents graph Model data
-*/
-
-interface Filter {
-	key: string;
-	selected?: boolean;
-	template?: TemplateRef<{}>;
-	title: string;
-	loading: boolean;
-	seriesData: { filter: string; label: string; selected: boolean; value: number; }[];
-}
+ /** Our current customerId */
+const customerId = '7293498';
 
 @Component({
 	selector: 'app-architecture',
@@ -27,59 +18,58 @@ interface Filter {
 
 export class ArchitectureComponent implements OnInit {
 
-	public tabIndex = 0;
-	public activeRoute: any;
-	public severityObj = {};
-	public AssetsExceptionsCount: any;
 	public filtered = false;
-	public SeverityCount: any = [];
-	public severityType: any = [];
-	public newarray: any = [];
+
 	public selectedFilter = {
 		severity: '',
 	};
 	public filters: VisualFilter[];
-	public severityList: any = [];
 
 	public status = { inventoryLoading: true, isLoading: true };
+	public params = { customerId };
+
+	private destroy$ = new Subject();
 
 	@ViewChild('exceptionsFilter', { static: true })
 	private exceptionsFilterTemplate: TemplateRef<{ }>;
 
 	public visualLabels: any = [
-		{ label: 'Configuration Best Practices Exceptions', active: true, count: null },
-		{ label: 'Assets With Exceptions', active: false, count: null },
+		{ label: I18n.get('_ArchitectureConfigurationBestPractices_'), active: true, count: null },
+		{ label: I18n.get('_AssetsWithExceptions_'), active: false, count: null },
 	];
 
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 		this.logger.debug('ArchitectureComponent Created!');
 	}
-	// selectVisualLabel(i:any){
-	// 	this.visualLabels.forEach(element => {
-	// 		element.active=!element.active;
-	// 	});
-	// }
 
 	/**
 	 * Used to call the getExceptionsCount,getAssetsExceptionsCount
 	 *  and buildFilters function for Updating the Table
 	 */
-	public ngOnInit(): void {
-		this.architectureService.getExceptionsCount().subscribe(res => {
+	public ngOnInit (): void {
+		 this.architectureService.getExceptionsCount(this.params)
+		 .pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
 			this.visualLabels[0].count = res.CBPRulesCount;
 		});
 
-		this.architectureService.getAssetsExceptionsCount().subscribe(res => {
+		this.architectureService.getAssetsExceptionsCount(this.params)
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
 			this.visualLabels[1].count = res.AssetsExceptionCount;
 		});
 
 		this.buildFilters();
 	}
 
-	/**
+	/*
 	 * Used to toggle the active element in visual labels
 	 */
-	public selectVisualLabel() {
+	public selectVisualLabel (event:any) {
 		this.visualLabels.forEach(element => {
 			element.active = !element.active;
 		});
@@ -91,23 +81,15 @@ export class ArchitectureComponent implements OnInit {
 	private buildFilters () {
 		this.filters = [
 			{
-				key: 'Exceptions',
+				key: 'exceptions',
 				loading: true,
 				selected: true,
 				seriesData: [],
 				template: this.exceptionsFilterTemplate,
-				title: "Exceptions",
+				title: I18n.get('_Exceptions_'),
 			},
 		];
 		this.loadData();
-	}
-
-	/**
-	 * Used to set the Severity in order access in other components
-	 * @param severity Value of severity
-	 */
-	public setSeverityListValues(severity: any) {
-		this.architectureService.setAssetsExceptionCountSubjectObj(severity);
 	}
 
 	/**
@@ -123,27 +105,10 @@ export class ArchitectureComponent implements OnInit {
 
 		filter.selected = _.some(filter.seriesData, 'selected');
 
-		if (filter.key == 'Exceptions') {
+		if (filter.key === 'exceptions') {
 			this.selectedFilter[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
 		}
 		this.selectedFilter = _.cloneDeep(this.selectedFilter);
-
-		// const totalFilter = _.find(this.filters, { key: 'total' });
-		// if (filter.selected) {
-		// 	totalFilter.selected = false;
-		// 	this.filtered = true;
-		// } else {
-		// 	const total = _.reduce(this.filters, (memo, f) => {
-		// 		if (!memo) {
-		// 			return _.some(f.seriesData, 'selected');
-		// 		}
-
-		// 		return memo;
-		// 	}, false);
-
-		// 	totalFilter.selected = !total;
-		// 	this.filtered = total;
-		// }
 
 	}
 
@@ -171,7 +136,7 @@ export class ArchitectureComponent implements OnInit {
 	public clearFilters () {
 		// const totalFilter = _.find(this.filters, { key: 'total' });
 		this.filtered = false;
-		_.each(this.filters, (filter: Filter) => {
+		_.each(this.filters, (filter: VisualFilter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {
 				f.selected = false;
@@ -186,10 +151,11 @@ export class ArchitectureComponent implements OnInit {
 	 * @returns the edvisory counts
 	 */
 	private getExceptionsCount () {
-		const exceptionFilter = _.find(this.filters, { key: 'Exceptions' });
+		const exceptionFilter = _.find(this.filters, { key: 'exceptions' });
 
-		return this.architectureService.getExceptionsCount()
+		return this.architectureService.getExceptionsCount(this.params)
 			.pipe(
+				takeUntil(this.destroy$),
 				map((data: any) => {
 					const series = [];
 
@@ -198,7 +164,7 @@ export class ArchitectureComponent implements OnInit {
 					if (High && High > 0) {
 						series.push({
 							filter: 'High',
-							label: 'High',
+							label: I18n.get('_ArchitectureHigh_'),
 							selected: false,
 							value: High,
 						});
@@ -209,7 +175,7 @@ export class ArchitectureComponent implements OnInit {
 					if (Medium && Medium > 0) {
 						series.push({
 							filter: 'Medium',
-							label: 'Medium',
+							label: I18n.get('_ArchitectureMedium_'),
 							selected: false,
 							value: Medium,
 						});
@@ -220,7 +186,7 @@ export class ArchitectureComponent implements OnInit {
 					if (Low && Low > 0) {
 						series.push({
 							filter: 'Low',
-							label: 'Low',
+							label: I18n.get('_ArchitectureLow_'),
 							selected: false,
 							value: Low,
 						});
@@ -246,17 +212,13 @@ export class ArchitectureComponent implements OnInit {
 		this.status.isLoading = true;
 		forkJoin(
 			this.getExceptionsCount(),
-
 		)
 			.pipe(
+				takeUntil(this.destroy$),
 				map(() => { }),
 			)
 			.subscribe(() => {
 				this.status.isLoading = false;
-
-				if (window.Cypress) {
-					window.loading = false;
-				}
 
 				this.logger.debug('architecture.component : loadData() :: Finished Loading');
 			});

@@ -631,5 +631,10 @@
 "_ArchitectureFabrics_" : "Fabrics",
 "_ArchitectureCPUUsage_" : "CPU Usage",
 "_ArchitectureFileSystemUsage_" : "File System Usage",
-"_ArchitectureMemoryUsage_" : "Memory Usage"
+"_ArchitectureMemoryUsage_" : "Memory Usage",
+"_ArchitectureNoVisualFiltersToShow_" : "No Visual Filters to display",
+"_ArchitectureHigh_" : "High",
+"_ArchitectureMedium_" : "Medium",
+"_ArchitectureLow_" : "Low"
+
 }
