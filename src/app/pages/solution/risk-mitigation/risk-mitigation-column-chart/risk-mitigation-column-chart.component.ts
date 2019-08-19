@@ -132,7 +132,7 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
+		const filterName = _.get(_.find(this.seriesData, { label: _.get(event, ['point', 'name']) }), 'filter');
 		this.subfilter.emit(filterName);
 	}
 
@@ -146,7 +146,7 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
 			this.buildGraph();
 		}
-		if (changes.resetChart.currentValue) {
+		if (_.get(changes,['resetChart','currentValue'])) {
 			this.buildGraph();
 			changes.resetChart.previousValue = false;
 		}
