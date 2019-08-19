@@ -108,18 +108,23 @@ export class CaseNoteBuilder {
 		type: AdvisoryType, advisory: SecurityAdvisoryBulletin | FieldNoticeBulletin | CriticalBug,
 	) {
 		let fields: Fields;
+		let title: string;
 		const outText: string[] = [];
 		switch (type) {
 			case 'security':
+				title = I18n.get('_SecurityAdvisory_');
 				fields = this.securityAdvisoryFields;
 				break;
 			case 'field':
+				title = I18n.get('_FieldNotice_');
 				fields = this.fieldNoticeFields;
 				break;
 			case 'bug':
+				title = I18n.get('_CriticalBug_');
 				fields = this.bugFields;
 				break;
 		}
+		outText.push(`${I18n.get('_Event_')}: ${title}`);
 		fields.forEach(f => {
 			outText.push(`${f.displayName}: ${_.get(advisory, f.key, '')}`);
 		});

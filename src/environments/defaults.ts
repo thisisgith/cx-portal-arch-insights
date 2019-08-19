@@ -24,7 +24,8 @@ export const defaults = {
 		fileList: '/ws/csc/v3/caseFiles',
 	},
 	csone: {
-		clientId: '07e418ac71284560944ea92f653a01c2',
+		classifyAppId: 'CXPortal',
+		clientId: '07e418ac71284560944ea92f653a01c2', // TODO: Change this back
 	},
 	emailFromID: 'cxportal-noreply@cisco.com',
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
