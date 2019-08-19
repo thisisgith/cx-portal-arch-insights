@@ -97,7 +97,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	public alert: any = { };
 	public bulkDropdown = false;
-	public selectedAssets: Asset[] = [];
+	public selectedAssets: Item[] = [];
 	public filters: VisualFilter[];
 	public visibleTemplate: TemplateRef<{ }>;
 	public filterCollapse = false;
@@ -128,7 +128,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	public view: 'list' | 'grid' = 'list';
 	public selectOnLoad = false;
-	public selectedAsset: Asset;
+	public selectedAsset: Item;
 	public fullscreen = false;
 	public selectedSubfilters: SelectedSubfilter[];
 	public getProductIcon = getProductTypeImage;
@@ -374,7 +374,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 		item.details = !item.details;
-		this.selectedAsset = item.details ? item.data : null;
+		this.selectedAsset = item.details ? item : null;
 	}
 
 	/**
@@ -544,8 +544,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					_.castArray(params.lastDateOfSupportRange);
 			}
 
+			if (params.sort) {
+				this.assetParams.sort = _.castArray(params.sort);
+			}
+
 			this.filtered = !_.isEmpty(
-				_.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page']),
+				_.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page', 'sort']),
 			);
 
 			this.fetchInventory();
@@ -852,6 +856,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 						key: 'deviceName',
 						name: I18n.get('_Device_'),
 						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
 						template: this.deviceTemplate,
 					},
 					{
@@ -1073,6 +1079,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					if (a.role) {
 						a.role = _.startCase(_.toLower(a.role));
 					}
+					a.criticalAdvisories = _.toSafeInteger(_.get(a, 'criticalAdvisories', 0));
+
 					const row = {
 						data: a,
 						details: false,
@@ -1100,7 +1108,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 				if (this.selectOnLoad) {
 					this.onAllSelect(true);
-					this.onSelectionChanged(_.map(this.inventory, item => item.data));
+					this.onSelectionChanged(_.map(this.inventory, item => item));
 					if (this.selectedAssets.length === 1) {
 						this.selectedAsset = this.selectedAssets[0];
 						_.set(this.inventory, [0, 'details', true]);
@@ -1149,7 +1157,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * @param selectedItems array of selected table elements
 	 *
 	 */
-	public onSelectionChanged (selectedItems: Asset[]) {
+	public onSelectionChanged (selectedItems: Item[]) {
 		this.selectedAssets = selectedItems;
 	}
 
@@ -1162,7 +1170,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.filtered = true;
 			_.each(this.assetsTable.columns, c => {
 				c.sorting = false;
-				c.sortDirection = 'desc';
 			});
 			column.sorting = true;
 			column.sortDirection = column.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -1170,7 +1177,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.adjustQueryParams();
 			this.InventorySubject.next();
 		}
-
 	}
 
 	/**
