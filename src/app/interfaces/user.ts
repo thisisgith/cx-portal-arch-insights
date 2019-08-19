@@ -4,6 +4,6 @@ import { EntitledUser, ServiceInfo } from '@sdp-api';
  * Interface representing our User
  */
 export interface User {
-	info: EntitledUser;
+	info: EntitledUser | any;
 	service: ServiceInfo;
 }
