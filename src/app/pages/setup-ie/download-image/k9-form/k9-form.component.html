@@ -1,0 +1,180 @@
+<h6
+	class="base-margin-bottom"
+	[innerText]="'_AcceptanceOfTheseTermsIsRequired_' | i18n"
+></h6>
+<h4
+	class="half-margin-bottom"
+	[innerText]="'_StrongEncryptionEligibility_' | i18n"
+></h4>
+<div class="eula-container text-left base-margin-bottom">
+	<div class="inst-and-cond-container
+		panel
+		panel--compressed
+		panel--bordered
+		qtr-margin-bottom"
+	>
+		<div [innerHTML]="k9Data.k9FormText"></div>
+	</div>
+	<div class="panel
+		panel--ltgray
+		panel--compressed
+		panel--bordered
+		disabled"
+	>
+		<form [formGroup]="k9Form">
+			<div class="row base-margin-top">
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="form-group__text">
+							<input type="text" formControlName="firstName">
+							<label [innerText]="'_FirstName_' | i18n"></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="form-group__text">
+							<input type="text" formControlName="lastName">
+							<label [innerText]="'_LastName_' | i18n"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row base-margin-top">
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="form-group__text">
+							<input type="text" formControlName="email">
+							<label [innerText]="'_Email_' | i18n"></label>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="form-group__text">
+							<input type="text" formControlName="ccoid">
+							<label [innerText]="'_CCOUserId_' | i18n"></label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="panel panel--bordered">
+		<div class="half-margin-bottom text-bold text-small flex-center-vertical">
+			<span [innerText]="'_BusinessDivisionsFunction_' | i18n"></span>
+			<span class="icon-asterisk text-danger text-tiny qtr-margin-left"></span>
+		</div>
+		<div class="base-margin-bottom">
+			<div class="form-group">
+				<label class="radio">
+					<input
+						data-auto-id="business-fn-civ"
+						type="radio"
+						name="businessFn"
+						[(ngModel)]="businessFn"
+						value="civ"
+					>
+					<span class="radio__input"></span>
+					<span
+						class="radio__label"
+						[innerText]="k9Data.commOrCivText"
+					></span>
+				</label>
+			</div>
+			<div class="form-group">
+				<label class="radio">
+					<input
+						data-auto-id="business-fn-gov"
+						type="radio"
+						name="businessFn"
+						[(ngModel)]="businessFn"
+						value="gov"
+					>
+					<span class="radio__input"></span>
+					<span
+						class="radio__label"
+						[innerText]="k9Data.govOrMilText"
+					></span>
+				</label>
+			</div>
+			<div class="half-margin-top">
+				<div [innerHTML]="k9Data.countriesText"></div>
+				<div class="form-group form-group--inline">
+					<label
+						class="radio"
+						[ngClass]="{ 'disabled': businessFn !== 'gov' }"
+					>
+						<input
+							data-auto-id="countries-yes"
+							type="radio"
+							name="inCountry"
+							[(ngModel)]="inCountry"
+							value="Yes"
+						>
+						<span class="radio__input"></span>
+						<span
+							class="radio__label"
+							[innerText]="k9Data.yesText"
+						></span>
+					</label>
+				</div>
+				<div class="form-group form-group--inline">
+					<label
+						class="radio"
+						[ngClass]="{ 'disabled': businessFn !== 'gov' }"
+					>
+						<input
+							data-auto-id="countries-no"
+							type="radio"
+							name="inCountry"
+							[(ngModel)]="inCountry"
+							value="No"
+						>
+						<span class="radio__input"></span>
+						<span
+							class="radio__label"
+							[innerText]="k9Data.noText"
+						></span>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="panel panel--bordered panel--ltgray">
+		<div class="half-margin-bottom text-bold text-small flex-center-vertical">
+			<span [innerText]="'_Confirmation_' | i18n"></span>
+			<span class="icon-asterisk text-danger text-tiny qtr-margin-left"></span>
+		</div>
+		<div class="flex-center-horizontal dbl-margin-bottom">
+			<label class="checkbox half-margin-right">
+				<input type="checkbox" data-auto-id="setup.ova.eula1"
+				   [(ngModel)]="acceptedSE">
+				<span class="checkbox__input"></span>
+			</label>
+			<span
+				data-auto-id="i-agree-checkbox"
+				class="checkbox__label"
+				[innerText]="k9Data.acceptK9CheckboxText">
+			</span>
+		</div>
+	</div>
+</div>
+<div class="flex-center-horizontal">
+	<!-- REMOVING DECLINE FUNCTIONALITY FOR NOW -->
+	<button
+		data-auto-id="decline-k9"
+		[innerText]="'_Decline_' | i18n"
+		class="btn btn--default"
+		(click)="decline()"
+	>
+	</button>
+	<button
+		data-auto-id="accept-k9"
+		[innerText]="'_Accept_' | i18n"
+		class="btn btn--primary"
+		[disabled]="isDisabled"
+		(click)="accept()"
+	>
+	</button>
+</div>

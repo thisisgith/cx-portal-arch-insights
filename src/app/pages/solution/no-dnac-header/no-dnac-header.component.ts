@@ -38,7 +38,7 @@ export class NoDNACHeaderComponent {
 	}
 
 	@HostBinding('class.invisible') get isInvisible () {
-		return (!this.noDNAC && this.hasCXCollector) || this.forceHidden || !this.production;
+		return (!this.noDNAC && this.hasCXCollector) || this.forceHidden;
 	}
 	constructor (
 		@Inject('ENVIRONMENT') private env,
