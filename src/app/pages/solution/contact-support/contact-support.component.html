@@ -1,0 +1,76 @@
+<ng-template #content>
+	<a class="modal__close" (click)="cuiModalService.hide()" data-auto-id="CloseContactSupportModal"><span
+			class="icon-close"></span></a>
+	<div class="modal__header">
+		<h2 class="modal-heading">{{modelHeading}}</h2>
+	</div>
+	<div class="modal__body">
+		<form [formGroup]="supportForm" novalidate>
+			<div class="col-md-12">
+				<div class="form-group">
+					<div class="form-group__text">
+						<label for="support-title" class="text-bold qtr-padding-bottom"
+							[innerText]="'_SupportTopic_' | i18n"></label>
+						<cui-select formControlName="title" #title id="support-title" [required]="true" [empty]="true"
+							[items]="items" placeholder="Select" [compressed]="false" optionsKey="name"
+							optionsValue="value" [(ngModel)]="items[8]" disabled="true"></cui-select>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 base-padding-top">
+				<div class="form-group">
+					<div class="form-group__text">
+						<label for="support-description" class="text-bold qtr-padding-bottom"
+							[innerText]="'_SupportDescription_' | i18n"></label>
+						<cui-input #description id="support-description" rows="5"  formControlName="description" type="textarea"
+						[placeholder]="'_ContactUsMessageDetailsPlaceholder_' | i18n" [options]="textareaOptions"></cui-input>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 text-center dbl-padding-top">
+				<button data-auto-id="submit" class="btn btn--primary"
+					[innerText]="'_SupportSubmit_' | i18n | uppercase" (click)="submitMessage()" [disabled]="!(supportForm.valid)">
+				</button>
+			</div>
+		</form>
+		<!-- <div class="topic-container" [hidden]="responseAvailable">
+			<div class="container base-margin-top">
+				<cui-select disabled label="Topic*" [required]="false" [empty]="true" [items]="items" [placeholder]="_SubjectNotSelected_" [compressed]="false" [(ngModel)]="topic" (ngModelChange)="onSelection()" optionsKey="name" optionsValue="value"></cui-select>
+				<div class="has-margin"></div>
+				<cui-input [placeholder]="'_ContactUsMessageDetailsPlaceholder_' | i18n" type="textarea" cols="30" [(model)]="topicDetails" rows="5" [options]="textareaOptions"
+					label="How can we help?"></cui-input>
+			</div>
+		</div> -->
+		<div class="absolute-center" [hidden]="!showLoader">
+			<cui-spinner label="Sending..."></cui-spinner>
+		</div>
+		<div class="response-container container" [hidden]="!responseAvailable">
+			<div class="row">
+				<div class="align-self-center col-md-10">
+					<p>{{emailMessage}}</p>
+					<div class="row justify-content-md-center response-details-container">
+						<div class="col-md-12 response-details">
+							<b>{{'_EmailTopic_' | i18n}}</b>
+						</div>
+						<div class="col-md-12 response-details">
+							<span>{{topic?.name}}</span>
+						</div>
+						<div class="col-md-12 response-details has-margin">
+							<b>{{'_EmailMessage_' | i18n}}</b>
+						</div>
+						<div class="col-md-12 response-details">
+							<span class="topicDetails">{{topicDetails}}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal__footer">
+		<!-- <button class="btn" *ngIf="!this.responseAvailable" data-auto-id="ContactSupportModalSubmit"
+			[disabled]="!(topic && topicDetails && topicDetails.length < 5001)"
+			(click)="submitSupportTopic(topic?.name, topicDetails)">{{'_SubmitForContactSupport_' | i18n}}</button> -->
+		<button class="btn" *ngIf="this.responseAvailable" (click)="cuiModalService.hide();resetModalProps()"
+			data-auto-id="ContactSupportModalDone">{{'_DoneForContactSupport_' | i18n}}</button>
+	</div>
+</ng-template>
