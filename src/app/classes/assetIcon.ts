@@ -24,9 +24,7 @@ export function getProductTypeImage (asset: (Asset | NetworkElement)) {
 				return 'wlc-outline';
 			}
 
-			if (family.includes('access point')) {
-				return 'accesspoint-outline';
-			}
+			return 'accesspoint-outline';
 		}
 	}
 }

@@ -127,6 +127,7 @@ export class LifecycleComponent implements OnDestroy {
 	};
 	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
+	public recommendedAtxScheduleCardOpened = false;
 	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	private user: User;
@@ -743,6 +744,7 @@ export class LifecycleComponent implements OnDestroy {
 			visible: false,
 		};
 		this.atxScheduleCardOpened = false;
+		this.recommendedAtxScheduleCardOpened = false;
 		this.eventXCoordinates = 0;
 		this.eventYCoordinates = 0;
 	}
@@ -1146,7 +1148,7 @@ export class LifecycleComponent implements OnDestroy {
 				}
 				case 'list': {
 					_div.style.right = '30%';
-					_div.style.top = this.eventYCoordinates - (210) + 'px';
+					_div.style.top = `${this.eventYCoordinates - 210}px`;
 					panel = 'panel listpanel--open';
 				}
 			}

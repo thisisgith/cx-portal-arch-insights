@@ -148,7 +148,7 @@
 	<ng-container *ngIf="data.sessions.length">
 		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions, autoid: 'moreATXList' }"></ng-container>
 	</ng-container>
-	<ng-container *ngIf="componentData?.atx?.recommended">
+	<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
 		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.recommended }"></ng-container>
 	</ng-container>
 </ng-template>
@@ -220,7 +220,7 @@
 	<div class="text-large base-padding-bottom text-capitalize" [innerText]="title" attr.data-auto-id="{{ autoid }}-Title"></div>
 	<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 		class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-		(click)="atxScheduleCardOpened = true; componentData.atx.interested=''"
+		(click)="recommendedAtxScheduleCardOpened = true; componentData.atx.interested=''"
 		[innerText]="'_ViewSessions_' | i18n">
 	</button>
 	<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="componentData.atx?.recommended?.recordingURL">
@@ -254,7 +254,7 @@
 
 <ng-template #recommendedATXSchedule let-data="data">
 	<div class="panel panel--bordered"
-		*ngIf="atxScheduleCardOpened"
+		*ngIf="atxScheduleCardOpened || recommendedAtxScheduleCardOpened"
 		#viewAtxSessions
 		id="viewAtxPanel"
 		[ngClass]="getPanel(viewAtxSessions)" data-auto-id="atxScheduleCard">
@@ -264,7 +264,7 @@
 			</div>
 			<div class="col-md-1">
 				<a class="no-link closebtn"
-					(click)="this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0"
+					(click)="this.atxScheduleCardOpened = false; recommendedAtxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0"
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
 				</a>
@@ -483,8 +483,8 @@
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top">
 				<div class="col-md-11 half-margin-top base-padding-left">
-					<div class="text-xlarge text-left text-uppercase" [innerText]="getTitle(type)"></div>
-					<div class="text-medium text-left qtr-margin-top" [innerText]="getSubtitle(type)"></div>
+					<div class="text-xlarge text-left text-uppercase" [innerText]="getTitle(type)" data-auto-id="ViewAllModal-Title"></div>
+					<div class="text-medium text-left qtr-margin-top" [innerText]="getSubtitle(type)" data-auto-id="ViewAllModal-Subtitle"></div>
 				</div>
 				<div class="col-md-1 half-margin-top">
 					<span (click)="closeModal()" data-auto-id="SuccessPathCloseModal"
@@ -625,7 +625,7 @@
 </ng-template>
 
 <ng-template #listViewTemplate let-type="type" let-view="view">
-	<div class="table-responsive" *ngIf="view === 'list'">
+	<div class="table-responsive" *ngIf="view === 'list'" data-auto-id="ViewAllTable">
 		<table class="table table--nostripes table--wrap table--hover table--loose">
 		<ng-container *ngIf="type === 'ATX'">
 			<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: atxTable.columns, data: selectedATX }"></ng-container>
@@ -685,7 +685,7 @@
 					<div class="col-md-6 text-left">
 						<button id="ATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 							class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-							(click)="atxScheduleCardOpened = true; componentData.atx.interested = item; getCoordinates($event)"
+							(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = item; getCoordinates($event)"
 							[innerText]="'_ViewSessions_' | i18n">
 						</button>
 					</div>
@@ -758,38 +758,42 @@
 		<div class="icon-bookmark icon-medium" (click)="updateBookmark('SB', item)"
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'" data-auto-id="SBCardRibbon"></div>
 		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
-		<div class="card__body success__card__body text-left text-bold text-large">
-			<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
-				[href]="item.url" [innerText]="item.title"></a>
-		</div>
-		<div class="card__footer">
-			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
-				<div class="row">
-					<div class="col-md-4">
-						<a class="no-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
-							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
-								<span class="icon-apps icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Web_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'Video'">
-								<span class="icon-play-contained icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
-								<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'">
-								<span class="icon-document icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
-							</div>
-						</a>
+		<div class="card__body success__card__body">
+			<div class="success__card__title text-left text-bold text-large">
+				<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
+					[href]="item.url" [innerText]="item.title"></a>
+			</div>
+			<div class="success__card__icons">
+				<div class="type">
+					<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
+						<span class="icon-apps icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Web_' | i18n"></span>
 					</div>
-					<div class="col-md-6 text-muted" *ngIf="item.duration">
-						<span class="icon-clock icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="item.duration"></span>
+					<div class="text-left text-muted" *ngIf="item.type === 'Video'">
+						<span class="icon-play-contained icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
+						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'">
+						<span class="icon-document icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
 					</div>
 				</div>
+				<div class="duration text-muted" *ngIf="item.duration">
+					<span class="icon-clock icon-small half-padding-right"></span>
+					<span class="text-small" [innerText]="item.duration"></span>
+				</div>
+			</div>
+		</div>
+		<div class="card__footer success__card__launch">
+			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
+				<a class="no-link" target="_blank" [href]="item.url">
+					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
+						[innerText]="'_Launch_' | i18n"></button>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -798,7 +802,7 @@
 <ng-template #listView let-data="data" let-columns="columns" let-type="type">
 	<tr class="th-row">
 		<th *ngFor="let column of columns"
-			attr.data-auto-id="Table-columnHeader-{{ column.name }}"
+			attr.data-auto-id="ViewAllTable-columnHeader-{{ column.name }}"
 			[ngClass]="{ 'sortable': column.sortable }"
 			(click)="column.sortable ? onSort(column.sortKey, column.sortDirection, type) : null">
 			<span [innerText]="column.name"></span>
@@ -818,7 +822,7 @@
 				</ng-container>
 			</ng-container>
 			<ng-container *ngIf="!column.template">
-				<div [innerText]="item[column.key]" attr.data-auto-id="Table-{{ column.name }}-rowValue">
+				<div [innerText]="item[column.key]" attr.data-auto-id="ViewAllTable-{{ column.name }}-rowValue">
 				</div>
 			</ng-container>
 		</td>
@@ -827,37 +831,45 @@
 
 <ng-template #cardPG>
 	<div class="card acc__card" *ngFor="let item of selectedProductGuides" data-auto-id="ProductGuidesCard">
-		<div class="icon-bookmark icon-medium" (click)="updateBookmark('SB', item)"
-			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'" data-auto-id="PGCardRibbon"></div>
-		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
-		<div class="card__body success__card__body text-left text-bold text-large">
-			<a class="no-link" data-auto-id="producttitle" target="_blank" rel="noopener noreferrer"
-				[href]="item.url" [innerText]="item.title"></a>
-		</div>
-		<div class="card__footer">
-			<div class="card_footer_item" data-auto-id="ProductGuidesCardFooter">
-				<div class="row">
-					<div class="col-md-3">
-						<a class="no-link" data-auto-id="productlink" target="_blank" [href]="item.url">
-							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
-								<span class="icon-apps icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Web_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'Video'">
-								<span class="icon-play-contained icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
-								<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-							</div>
-						</a>
+		<div class="icon-bookmark icon-medium" (click)="updateBookmark('PG', item)"
+			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'" data-auto-id="ProductGuidesCard-Ribbon"></div>
+		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype" data-auto-id="ProductGuidesCard-Archetype"></div>
+		<div class="card__body success__card__body">
+			<div class="success__card__title text-left text-bold text-large">
+				<a class="no-link" target="_blank" rel="noopener noreferrer"
+					[href]="item.url" [innerText]="item.title" data-auto-id="ProductGuidesCard-Title"></a>
+			</div>
+			<div class="success__card__icons">
+				<div class="type">
+					<div class="text-left text-muted" *ngIf="item.type === 'Web Page'" data-auto-id="ProductGuidesCard-WebIcon">
+						<span class="icon-apps icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Web_' | i18n"></span>
 					</div>
-					<div class="col-md-6 text-muted" *ngIf="item.duration">
-						<span class="icon-clock icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="item.duration"></span>
+					<div class="text-left text-muted" *ngIf="item.type === 'Video'" data-auto-id="ProductGuidesCard-VideoIcon">
+						<span class="icon-play-contained icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="item.type === 'PDF'" data-auto-id="ProductGuidesCard-PDFIcon">
+						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'" data-auto-id="ProductGuidesCard-DataSheetIcon">
+						<span class="icon-document icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
 					</div>
 				</div>
+				<div class="duration text-muted" *ngIf="item.duration" data-auto-id="ProductGuidesCard-Duration">
+					<span class="icon-clock icon-small half-padding-right"></span>
+					<span class="text-small" [innerText]="item.duration"></span>
+				</div>
+			</div>
+		</div>
+		<div class="card__footer success__card__launch">
+			<div class="card_footer_item" data-auto-id="ProductGuidesCardFooter">
+				<a class="no-link" target="_blank" [href]="item.url">
+					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
+						[innerText]="'_Launch_' | i18n"></button>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -1022,8 +1034,8 @@
 		</div>
 		<div class="col-md-7">
 			<div *ngIf="celldata.duration" class="base-margin-left text-muted">
-				<span class="icon-clock icon-small"></span>
-				<span class="qtr-margin-left" [innerText]="celldata.duration"></span>
+				<span class="icon-clock icon-small" data-auto-id="ViewAllTable-Format-rowValue-clock"></span>
+				<span class="qtr-margin-left" [innerText]="celldata.duration" data-auto-id="ViewAllTable-Format-rowValue-duration"></span>
 			</div>
 		</div>
 	</div>
@@ -1071,7 +1083,7 @@
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div *ngIf="type === 'ATX'">
 		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-			(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata; getCoordinates($event)"
+			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
 		<!-- Hong this is for testing purpose, will remove after link with popup panel-->
@@ -1121,8 +1133,8 @@
 		</div>
 	</div>
 	<div *ngIf="type==='SB' || type==='PG'">
-		<a class="no-link" target="_blank" rel="noopener noreferrer" data-auto-id="successlink"
-			[innerText]="celldata.title" [href]="celldata.url" attr.data-auto-id="{{ type }}-rowValue"></a>
+		<a class="no-link" target="_blank" rel="noopener noreferrer"
+			[innerText]="celldata.title" [href]="celldata.url" attr.data-auto-id="{{ type }}-Name-rowValue"></a>
 	</div>
 </ng-template>
 

@@ -36,11 +36,11 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 
 	@Input('serialNumber') public serialNumber: string;
 	@Input('asset') public asset: Asset;
+	@Input('element') public element: NetworkElement;
 	@Output('close') public close = new EventEmitter<boolean>();
 
 	public alert: any = { };
 	public isLoading = false;
-	public element: NetworkElement;
 	public hidden = true;
 	public fullscreen = false;
 	public customerId: string;
@@ -129,6 +129,9 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 	 * @returns the observable
 	 */
 	private fetchNetworkElement (asset: Asset) {
+		if (this.element) {
+			return of(this.element);
+		}
 
 		return this.inventoryService.getNetworkElements({
 			customerId: this.customerId,

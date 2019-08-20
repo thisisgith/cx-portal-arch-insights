@@ -24,7 +24,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as _ from 'lodash-es';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { ControlComponent } from 'ngx-mapbox-gl';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -1012,7 +1011,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "use" (current+2) and check if button is disabled
 			component.getRacetrackInfo('use');
-			component.atxScheduleCardOpened = true;
+			component.recommendedAtxScheduleCardOpened = true;
 			fixture.detectChanges();
 			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
 			expect(de)
@@ -1020,7 +1019,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "implement" (current+1) and check if button is enabled
 			component.getRacetrackInfo('implement');
-			component.atxScheduleCardOpened = true;
+			component.recommendedAtxScheduleCardOpened = true;
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
@@ -1033,7 +1032,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "Onboard" (current) and check if button is enabled
 			component.getRacetrackInfo('Onboard');
-			component.atxScheduleCardOpened = true;
+			component.recommendedAtxScheduleCardOpened = true;
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
