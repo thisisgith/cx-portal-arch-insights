@@ -422,11 +422,12 @@ describe('AssetsComponent', () => {
 
 			expect(component.assetParams.search)
 				.toBeFalsy();
-			component.doSearch('query');
+			component.searchForm.controls.search.setValue('query');
+			component.doSearch();
 			fixture.detectChanges();
 
 			expect(component.assetParams.search)
-			.toBeTruthy();
+				.toBeTruthy();
 
 			done();
 		});
@@ -439,7 +440,8 @@ describe('AssetsComponent', () => {
 
 			expect(component.assetParams.search)
 				.toBeFalsy();
-			component.doSearch('');
+			component.searchForm.controls.search.setValue('');
+			component.doSearch();
 			fixture.detectChanges();
 
 			expect(component.assetParams.search)
@@ -455,8 +457,10 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 
 			_.set(component, ['assetParams', 'search'], 'search');
-			component.searchForm.setValue({ search: '' });
+			component.filtered = true;
+			component.searchForm.controls.search.setValue('');
 
+			component.doSearch();
 			fixture.detectChanges();
 
 			expect(_.get(component.assetParams, 'search'))

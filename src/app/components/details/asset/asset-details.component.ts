@@ -158,6 +158,16 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 	private refresh () {
 		this.isLoading = true;
 
+		// If our serial number and our asset/element don't match,
+		// we need to unset them so we can refetch them
+		const serial = this.serialNumber ? this.serialNumber : _.get(this.asset, 'serialNumber');
+		if (serial && this.element && _.get(this.element, 'serialNumber') !== serial) {
+			this.element = null;
+		}
+		if (serial && this.asset && _.get(this.asset, 'serialNumber') !== serial) {
+			this.asset = null;
+		}
+
 		this.fetchAsset()
 		.pipe(
 			mergeMap((asset: Asset) => this.fetchNetworkElement(asset)),
@@ -184,6 +194,10 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 
 		if ((currentAsset && !changes.asset.firstChange) ||
 			(currentSerial && !changes.serialNumber.firstChange)) {
+
+			if (currentAsset && !currentSerial) {
+				this.serialNumber = _.get(currentAsset, 'serialNumber');
+			}
 			_.invoke(this.alert, 'hide');
 			this.refresh();
 		}
