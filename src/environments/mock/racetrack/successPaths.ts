@@ -162,7 +162,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/appliance-features?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Project Planning',
-				bookmark: false,
+				bookmark: true,
 				successByteId: 'SB9',
 			},
 			{
@@ -172,7 +172,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/plan-the-deployment?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Project Planning',
-				bookmark: false,
+				bookmark: true,
 				successByteId: 'SB10',
 			},
 			{
@@ -182,7 +182,7 @@ function MockProductDocumentationVideos (): SuccessPathsResponse {
 				type: 'Web Page',
 				url: 'http://cisco.lookbookhq.com/ibn-customer-portal/new-changed-assurance?utm_campaign=IBN&utm_content=Guide&utm_source=Customer-Portal&utm_medium=IBN-Customer-Portal-Page&pfhide=true',
 				archetype: 'Project Planning',
-				bookmark: false,
+				bookmark: true,
 				successByteId: 'SB11',
 			},
 		],
@@ -298,6 +298,6 @@ export const SuccessPathScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}`,
-		usercases: ['Use Case 1'],
+		usecases: ['Use Case 1'],
 	},
 ];
