@@ -18,8 +18,8 @@
 												'High': 'text-danger',
 												'Medium': 'text-warning',
 												'Low': 'text-warning-alt'
-											}[exceptionObject?.bpSeverity]"></span>
-						{{ exceptionObject?.bpSeverity }}
+											}[exceptionObject?.severity]"></span>
+						{{ exceptionObject?.severity }}
 						</div>
 					</div>
 		
@@ -68,7 +68,7 @@
 			'High': 'text-danger',
 			'Medium': 'text-warning',
 			'Low': 'text-warning-alt'
-	}[item.bpSeverity]">
+	}[item.severity]">
 	</span>
-	<span>{{item.bpSeverity}}</span>
+	<span>{{item.severity}}</span>
 </ng-template>

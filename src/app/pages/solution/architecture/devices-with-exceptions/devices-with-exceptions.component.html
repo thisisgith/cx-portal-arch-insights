@@ -12,7 +12,7 @@
 		
 					<div class="dbl-margin-right">
 						<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSerialNumber_' | i18n"></div>
-						<div innerText="{{ assetObject?.sysName }}"></div>
+						<div innerText="{{ assetObject?.serialNumber }}"></div>
 					</div>
 		
 					<div class="dbl-margin-right">
@@ -27,12 +27,27 @@
 			<!-- <span class="icon-left-arrow" data-auto-id="PanelClose" (click)="onPanelClose()"></span>
 			<span class="icon-right-arrow" disabled></span> -->
 			<span [innerText]="'_ArchitectureConfigBestPracticesFor_' | i18n"> </span>
-			<a> {{ assetObject?.productId}}</a>
+			<a (click)="openAsset360View(assetObject)"> {{ assetObject?.productId}}</a>
 		</div>
 	</details-panel-header>
 	
 	<cbp-tbd [cbpDetails]="assetObject"></cbp-tbd>
 </details-panel>
+
+<!-- Fly-Out View Slide-out on Selection of Title -->
+<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset"[fullscreen]="fullscreen">
+    <details-panel-header (close)="onFlyOutPanelClose()"
+                          [(fullscreen)]="fullscreen"
+                          [fullscreenToggle]="false">
+        <asset-details-header [asset]="selectedAsset"></asset-details-header>
+        <div detailsPanelTitle class="text-xlarge">
+            <span class="icon-wifi"></span>
+            <span class="qtr-margin-left" [innerText]="selectedAsset?.neName"></span>
+        </div>
+    </details-panel-header>
+    <asset-details [asset]="selectedAsset"></asset-details>
+</details-panel>
+
 <div class="divider no-margin-top"></div>
 <div class="row">
 		<div class="col-md-12">

@@ -10,6 +10,7 @@ describe('CbpDeviceAffectedComponent', () => {
 	let component: CbpDeviceAffectedComponent;
 	let fixture: ComponentFixture<CbpDeviceAffectedComponent>;
 	let service: ArchitectureService;
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [CbpDeviceAffectedModule,
@@ -33,9 +34,4 @@ describe('CbpDeviceAffectedComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should call getAllCBPDeviceAffected', () => {
-		component.getData();
-		expect(service.getAllCBPDeviceAffected)
-			.toHaveBeenCalled();
-	});
 });

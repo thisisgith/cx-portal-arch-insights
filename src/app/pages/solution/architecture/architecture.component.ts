@@ -46,13 +46,13 @@ export class ArchitectureComponent implements OnInit {
 	 * Used to call the getExceptionsCount,getAssetsExceptionsCount
 	 *  and buildFilters function for Updating the Table
 	 */
-	public ngOnInit (): void {
+	public ngOnInit(): void {
 		this.architectureService.getExceptionsCount(this.params)
 			.pipe(
 				takeUntil(this.destroy$),
 			)
 			.subscribe(res => {
-				this.visualLabels[0].count = res.CBPRulesCount;
+				this.visualLabels[0].count = res.TotalCounts;
 			});
 
 		this.architectureService.getAssetsExceptionsCount(this.params)
@@ -60,7 +60,7 @@ export class ArchitectureComponent implements OnInit {
 				takeUntil(this.destroy$),
 			)
 			.subscribe(res => {
-				this.visualLabels[1].count = res.AssetsExceptionCount;
+				this.visualLabels[1].count = res.TotalCounts;
 			});
 
 		this.buildFilters();
@@ -69,7 +69,7 @@ export class ArchitectureComponent implements OnInit {
 	/*
 	 * Used to toggle the active element in visual labels
 	 */
-	public selectVisualLabel (label: any) {
+	public selectVisualLabel(label: any) {
 		label.active = true;
 		this.visualLabels.forEach(element => {
 			if (element !== label) {
@@ -81,7 +81,7 @@ export class ArchitectureComponent implements OnInit {
 	/**
 	 * Initializes our visual filters
 	 */
-	private buildFilters () {
+	private buildFilters() {
 		this.filters = [
 			{
 				key: 'exceptions',
@@ -109,11 +109,12 @@ export class ArchitectureComponent implements OnInit {
 		filter.selected = _.some(filter.seriesData, 'selected');
 
 		if (filter.key === 'exceptions') {
+			
 			this.selectedFilter[filter.key] =
 				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
+			
 		}
 		this.selectedFilter = _.cloneDeep(this.selectedFilter);
-
 	}
 
 	/**
@@ -165,7 +166,7 @@ export class ArchitectureComponent implements OnInit {
 				map((data: any) => {
 					const series = [];
 
-					const High = _.get(data, 'HighRisk');
+					const High = _.get(data, 'High');
 
 					if (High && High > 0) {
 						series.push({
@@ -176,7 +177,7 @@ export class ArchitectureComponent implements OnInit {
 						});
 					}
 
-					const Medium = _.get(data, 'MediumRisk');
+					const Medium = _.get(data, 'Medium');
 
 					if (Medium && Medium > 0) {
 						series.push({
@@ -187,7 +188,7 @@ export class ArchitectureComponent implements OnInit {
 						});
 					}
 
-					const Low = _.get(data, 'LowRisk');
+					const Low = _.get(data, 'Low');
 
 					if (Low && Low > 0) {
 						series.push({

@@ -34,10 +34,10 @@ export class CbpTbdComponent implements OnChanges {
 	public exceptionDatas: IException[] = [];
 	public isLoading = true;
 	public params: any = {
-		 customerId,
-		 body : [],
+ 		customerId,
 		page : 0,
 		pageSize : 8,
+		body : [],
 	};
 	public destroy$ = new Subject();
 
@@ -50,7 +50,7 @@ export class CbpTbdComponent implements OnChanges {
 	public ngOnChanges () {
 		if (this.cbpDetails) {
 			const ruleIdsWithExceptions: string[] = this.cbpDetails
-				.ruleIdsWithExceptions.split(';');
+				.ruleIdWithExceptions.split(';');
 			this.totalItems = ruleIdsWithExceptions.length;
 			this.params.body = ruleIdsWithExceptions;
 			this.params.page = 0 ;

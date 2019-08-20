@@ -55,12 +55,11 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	 * Used to detect the changes in input object and
 	 * call the getCBPRulesData function for Updating the Table
 	 */
-
 	public ngOnChanges (changes: SimpleChanges) {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
 		if (selectedFilter && !changes.filters.firstChange) {
 			this.paramsType.severity =
-			selectedFilter.Exceptions ? selectedFilter.Exceptions.toString() : '';
+			selectedFilter.exceptions ? selectedFilter.exceptions.toString() : '';
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
 			this.getCBPRulesData();
@@ -91,7 +90,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 				{
-					key: 'Recommendation',
+					key: 'recommendations',
 					name: I18n.get('_ArchitectureRecommendation_'),
 					sortable: false,
 				},
@@ -117,12 +116,12 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
  	*/
 	public ModifyCbpRuleExceptions (array) {
 		array.map(obj => {
-			obj.Recommendation = obj.bpRecommendation.substr(0, 30)
+			obj.recommendations = obj.recommendations.substr(0, 30)
 				.concat('...');
-			obj.correctiveActionSummary = obj.correctiveAction.substr(0, 25)
+			obj.correctiveActionSummary = obj.correctiveActions.substr(0, 25)
 				.concat('...');
-			obj.assetsAffected = obj.deviceIdsWithExceptions.length !== 0
-				? obj.deviceIdsWithExceptions.split(';').length : '0';
+			obj.assetsAffected = obj.deviceIpsWithExceptions.length !== 0
+				? obj.deviceIpsWithExceptions.split(';').length : '0';
 		});
 		// }
 	}

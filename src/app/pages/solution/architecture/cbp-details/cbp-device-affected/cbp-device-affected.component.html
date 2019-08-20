@@ -1,4 +1,29 @@
-<cbp-summary [cbpDetails]="cbpDetails"></cbp-summary>
+<div class="row base-margin-top">
+    <div class="col-md-12">
+        <div class="container base-margin-top">
+            <div class="text-bold text-uppercase" [innerText]="('_ArchitectureException_' | i18n)"></div>
+            <div>{{cbpDetails?.exceptions}}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row base-margin-top">
+    <div class="col-md-12">
+        <div class="container">
+            <div class="text-bold text-uppercase" [innerText]="('_ArchitectureRecommendation_' | i18n)"></div>
+            <div>{{cbpDetails?.recommendations}}</div>
+        </div>
+    </div>
+</div>
+
+<div class="row base-margin-top ">
+    <div class="col-md-12">
+        <div class="container">
+            <div class="text-bold text-uppercase" [innerText]="('_ArchitectureCorrectiveAction_' | i18n)"></div>
+            <div> {{cbpDetails?.correctiveActions}}</div>
+        </div>
+    </div>
+</div>
 
 <div class="row">
 	<div class="col-md-12">
@@ -36,7 +61,20 @@
 
 <ng-template #assetTmpl let-item="celldata">
 	<span>
-		<!-- <a data-auto-id="openAsset360View"  (click)="openAsset360View(item)"> {{item.hostname}}</a> -->
-		<a> {{item.hostname}}</a>
+		<a data-auto-id="openAsset360View" (click)="openAsset360View(item)"> {{item.hostName}}</a>
 	</span>
 </ng-template>
+
+<!-- Fly-Out View Slide-out on Selection of Title -->
+<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset"[fullscreen]="fullscreen">
+    <details-panel-header (close)="onFlyOutPanelClose()"
+                          [(fullscreen)]="fullscreen"
+                          [fullscreenToggle]="false">
+        <asset-details-header [asset]="selectedAsset"></asset-details-header>
+        <div detailsPanelTitle class="text-xlarge">
+            <span class="icon-wifi"></span>
+            <span class="qtr-margin-left" [innerText]="selectedAsset?.neName"></span>
+        </div>
+    </details-panel-header>
+    <asset-details [asset]="selectedAsset"></asset-details>
+</details-panel>

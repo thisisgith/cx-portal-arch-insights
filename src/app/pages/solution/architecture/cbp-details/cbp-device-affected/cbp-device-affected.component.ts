@@ -35,6 +35,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public totalItems = 0;
 	public isLoading = true;
 	public assetDatas: IAsset[] = [];
+	public selectedAsset: IAsset = null;
 	public params: any = {
 		customerId,
 		page : 0,
@@ -70,15 +71,15 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 				{
-					key: 'swVersion',
+					key: 'softwareVersion',
 					name:  I18n.get('_ArchitectureSoftwareVersion_'),
 					sortable: false,
 				},
 				{
-					key: 'configCollectionDate',
+					key: 'lastUpdateDate',
 					name: I18n.get('_ArchitectureConfigCollectionDate_'),
 					render: item =>
-						datePipe.transform(item.configCollectionDate, 'yyyy-MM-dd'),
+						datePipe.transform(item.lastUpdateDate, 'yyyy-MM-dd'),
 					sortable: false,
 				},
 				{
@@ -97,7 +98,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	 */
 	public ngOnChanges () {
 		if (this.cbpDetails) {
-			const deviceIdsWithExceptions = this.cbpDetails.deviceIdsWithExceptions.split(';');
+			const deviceIdsWithExceptions = this.cbpDetails.deviceIpsWithExceptions.split(';');
 			this.totalItems = deviceIdsWithExceptions.length;
 			this.params.body = deviceIdsWithExceptions;
 			this.params.page = 0 ;
@@ -144,12 +145,21 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 					});
 	}
 
-	// /**
-	//  * Used for Opening the Asset 360 View the data for table
-	//  * @param item - The Item to which Asset 360 needs to shown
-	//  */
-	// public openAsset360View (item: any) {
-	// }
+	/**
+	 * Used for Opening the Asset 360 View the data for table
+	 * @param item - The Item to which Asset 360 needs to shown
+	 */
+	public openAsset360View (item: IAsset) {
+		this.selectedAsset = item;
+	}
+
+	/**
+	 * This method is used to set the null to asset object
+	 * in order to Close Fly-out View
+	 */
+	public onPanelClose () {
+		this.selectedAsset = null;
+	}
 
 	// /**
 	//  * Used for exporting the table data

@@ -57,7 +57,7 @@ class ArchitectureService extends __BaseService {
     // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      'https://cp-archinsights-api.sdp12-istg.csco.cloud/archinsights/v1/cbprules', 
+      'https://api-stage.cisco.com/api/customerportal/archinsights/v1/cbprules', 
       __body,
       {
         headers: __headers,
@@ -111,7 +111,7 @@ class ArchitectureService extends __BaseService {
     
     let req = new HttpRequest<any>(
       'GET',
-      `https://cp-archinsights-api.sdp12-istg.csco.cloud/archinsights/v1/assets/exceptions`,
+      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/assets/exceptions`,
       __body,
       
       {
@@ -142,10 +142,11 @@ class ArchitectureService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      `https://cp-archinsights-api.sdp12-istg.csco.cloud/archinsights/v1/cbprules/count`,
+      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/cbprules/count`,
       __body,
       {
         headers: __headers,
+        params : __params,
         responseType: 'json',
         //        withCredentials: true,
       });
@@ -175,10 +176,11 @@ class ArchitectureService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      `https://cp-archinsights-api.sdp12-istg.csco.cloud/archinsights/v1/assets/exceptions/count`,
+      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/assets/exceptions/count`,
       __body,
       {
         headers: __headers,
+        params : __params,
         responseType: 'json',
         //        withCredentials: true,
       });
@@ -220,7 +222,7 @@ class ArchitectureService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      `https://cp-archinsights-api.sdp12-istg.csco.cloud/archinsights/v1/assets/exceptions/devicedetails`,
+      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/assets/exceptions/devicedetails`,
       __body,
       {
         headers: __headers,
@@ -265,7 +267,7 @@ class ArchitectureService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      `https://cp-archinsights-api.sdp12-istg.csco.cloud/archinsights/v1/cbprules/exceptiondetails`,
+      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/cbprules/exceptiondetails`,
       __body,
       {
         headers: __headers,

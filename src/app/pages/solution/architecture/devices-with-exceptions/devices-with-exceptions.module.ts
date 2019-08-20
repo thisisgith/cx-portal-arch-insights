@@ -6,9 +6,9 @@ import { ArchitectureModule } from '@sdp-api';
 import { environment } from '@environment';
 import { DetailsPanelModule } from '@components';
 import { CbpDetailsModule } from '../cbp-details/cbp-details.module';
-// import { CbpDetailsHeaderModule } from '../cbp-details-header/cbp-details-header.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { CbpAweHeaderModule } from '../cbp-details-header/cbp-awe-header/cbp-awe-header.module';
+import { AssetDetailsModule } from '../../../../components/details/asset/asset-details.module';
+import { AssetDetailsHeaderModule } from '../../../../components/details/asset/header/header.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -21,8 +21,8 @@ const rootUrl = environment.sdpServiceOrigin;
 	exports : [DevicesWithExceptionsComponent],
 	imports: [
 		CbpDetailsModule,
-		CbpAweHeaderModule,
-		// CbpDetailsHeaderModule,
+		AssetDetailsModule,
+		AssetDetailsHeaderModule,
 		CommonModule,
 		CuiTableModule,
 		CuiPagerModule,
