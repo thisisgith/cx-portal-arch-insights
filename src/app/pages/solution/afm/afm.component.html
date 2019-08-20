@@ -35,8 +35,8 @@
         <span *ngSwitchCase="'6'">
             <span class="qtr-margin-right icon-circle text-success"></span>
             <span [innerText]="'_AfmP6Info_'|i18n"></span>
-		</span>
-		<span *ngSwitchCase="'7'">
+        </span>
+        <span *ngSwitchCase="'7'">
             <span class="qtr-margin-right icon-circle"></span>
             <span [innerText]="'_AfmP7Low_'|i18n"></span>
         </span>
@@ -77,7 +77,7 @@
 <ng-template #visualFilters let-tab="tab">
     <div class="row col-md-12">
         <div class="col-md-3 panel panel--bordered-right"
-			[ngClass]="{'filter__selected' : (searchParams.headerFilterType !== 'CHATS' && searchParams.headerFilterType !== 'SEARCH')}">
+            [ngClass]="{'filter__selected' : (searchParams.headerFilterType !== 'CHATS' && searchParams.headerFilterType !== 'SEARCH')}">
             <div class="col-md-12 flex cursor" [ngClass]="{'text-primary' : searchParams.headerFilterType === 'ALARM'}"
                 (click)="allAlarmFilter()">
                 <div class="text-huge col-md-4 text-right" data-auto-id="TotalVisualFilter"
@@ -92,7 +92,8 @@
                 </div>
                 <div class="text-large col-md-8 base-margin-top" [innerText]="'_AfmTacCases_'|i18n"> </div>
             </div>
-            <div class="col-md-12 flex cursor" [ngClass]="{'text-primary': searchParams.headerFilterType === 'IGNORE_EVENT'}"
+            <div class="col-md-12 flex cursor"
+                [ngClass]="{'text-primary': searchParams.headerFilterType === 'IGNORE_EVENT'}"
                 (click)="ignoreAlarmFilters()">
                 <div class="text-huge col-md-4 text-right" data-auto-id="TotalVisualFilter"
                     [innerText]="headerCount?.totalIgnoreEventCount">
@@ -101,20 +102,22 @@
             </div>
         </div>
         <div class="col-md-3">
-			<div class="flex flex-fill flex-fluid" [ngClass]="{'filter__selected' : searchParams.headerFilterType == 'CHATS'}">
+            <div class="flex flex-fill flex-fluid"
+                [ngClass]="{'filter__selected' : searchParams.headerFilterType == 'CHATS'}">
                 <!-- <div class="flex-center">
     				<span class="icon-chevron-left icon-medium text-muted toggle"></span>
 				</div> -->
                 <ng-container *ngFor="let filter of filters; index as i">
-					<div attr.id="AfmSelectVisualFilter-{{ filter.key }}"
-						attr.data-auto-id="AfmSelectVisualFilter-{{ filter.key }}"
-                     	[ngClass]="{ filter__selected: filter.selected,'filter__not-selected': !filter.selected }"
-                     	class="panel flex-center flex-fill filter">
+                    <div attr.id="AfmSelectVisualFilter-{{ filter.key }}"
+                        attr.data-auto-id="AfmSelectVisualFilter-{{ filter.key }}"
+                        [ngClass]="{ filter__selected: filter.selected,'filter__not-selected': !filter.selected }"
+                        class="panel flex-center flex-fill filter">
                         <div class="dbl-margin-top">
                             <div *ngIf="filter.template">
                                 <ng-container *ngTemplateOutlet="
                                     filter.template;
-                                    context: { filter: filter } "></ng-container>
+									context: { filter: filter } ">
+                                </ng-container>
                             </div>
                         </div>
                     </div>
@@ -175,12 +178,8 @@
                         <span [innerText]="'_AfmAlarms_'| i18n" class="text-large"></span>
                         <span [innerText]="'_AfmShowingXofYAlarms_' | i18n:paginationCount:pagination?.total"
                             class="qtr-margin-left text-medium text-muted" data-auto-id="ShowingAlarmCount">
-						</span>
-						<!-- <span *ngIf="paginationCount" [innerText]="'_AfmShowingXofYAlarmsAccrossZAlarms_' | i18n:paginationCount:pagination.total:totalAlarmCount"
-							class="qtr-margin-left text-medium" data-auto-id="ShowingAlarmCount">
-						</span> -->
-
-                        <span> &nbsp; &nbsp; | &nbsp; &nbsp; </span>
+                        </span>
+                        <span class="base-margin-right base-margin-left">|</span>
                         <span [ngSwitch]="afmConnectionStatus?.status">
                             <span *ngSwitchCase="'Success'">
                                 <span class="icon-check-outline icon-medium text-success"> </span>
@@ -212,8 +211,8 @@
                                 <div class="form-group__text">
                                     <input id="afmSearchInput" type="search" [(ngModel)]="afmSearchInput"
                                         name="afmSearchInput" [minlength]="searchOptions?.min" autocomplete="off"
-                                        [maxlength]="searchOptions?.max" [pattern]="searchOptions?.pattern"
-                                        formControlName="search" placeholder="{{ '_AfmSearch_' | i18n }}">
+                                        [maxlength]="searchOptions?.max" formControlName="search"
+                                        placeholder="{{ '_AfmSearch_' | i18n }}">
                                     <button type="button" class="link">
                                         <span class="icon-search"></span>
                                     </button>

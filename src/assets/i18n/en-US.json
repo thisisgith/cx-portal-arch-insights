@@ -751,7 +751,7 @@
     "_AfmExportAll_": "Export All",
     "_AfmTotalAlarms_": "Total Alarms",
     "_AfmTacCases_": "Tac Cases",
-    "_AfmSyslogEvents360_": "Syslog Events 360",
+    "_AfmSyslogEvent360_": "Syslog Event 360",
     "_AfmShwoingOnline_": "Connected",
     "_AfmSyslog_": "Syslog: ",
     "_AfmIgnoreEvent_": "Ignore Event",
@@ -764,5 +764,10 @@
     "_AfmTimeRange_": "Time Range",
 	"_AfmIgnoredAlarms_": "Ignored Alarms",
 	"_AfmNoResults_": "No Results Found",
-	"_AfmShwoingOfflineXError_": "Offline ({0})"
+	"_AfmShwoingOfflineXError_": "Offline ({0})",
+	"_AfmCaseIdX_": "Case ID : {0}",
+	"_Afm24Hr_": "24hr",
+	"_Afm7Days_": "7Days",
+	"_Afm30Days_": "30Days",
+	"_Afm90Days_": "90Days"
 }

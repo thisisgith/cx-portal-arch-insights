@@ -13,7 +13,7 @@ const getIgnoreEventData = [
 		eventInfo: '',
 		eventList: '',
 		pagination: '',
-		status: 'success',
+		status: 'Success',
 		statusCode: 'OK',
 		statusMessage: 'Ignored',
 	},
@@ -22,236 +22,225 @@ const getIgnoreEventData = [
 /**
  * Alarm data
  */
-const getAfmAlarmsData = [
-	{
-		connectionStatus: '',
-		data: '',
-		eventInfo: '',
-		eventList: [
-			{
-				alarmCreated: '2019-08-19T14:10:30.000+0000',
-				alarmId: 1218,
-				customerId: '231215372',
-				faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
-				id: 0,
-				raiseSr: false,
-				serialNumber: 'RR777',
-				severity: '1',
-				status: 'Success',
-				syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
-				tacCaseNo: '88888',
-			},
-		],
-		pagination: [
-			{
-				ignoredEventCount: 0,
-				page: 1,
-				pages: 1,
-				rows: 9,
-				total: 9,
-				totalTacCases: 0,
-			},
-		],
-		status: 'success',
-		statusCode: 'OK',
-		statusMessage: '',
-	},
-];
+const getAfmAlarmsData = {
+	aggregationsCount: '',
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [
+		{
+			alarmCreated: '2019-08-19T14:10:30.000+0000',
+			alarmId: 1218,
+			customerId: '231215372',
+			faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
+			id: 0,
+			raiseSr: false,
+			serialNumber: 'RR777',
+			severity: '1',
+			status: 'Success',
+			syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
+			tacCaseNo: '88888',
+		},
+	],
+	pagination: [
+		{
+			ignoredEventCount: 0,
+			page: 1,
+			pages: 1,
+			rows: 9,
+			total: 9,
+			totalTacCases: 0,
+		},
+	],
+	status: 'Success',
+	statusCode: 'OK',
+	statusMessage: '',
+};
 
 /**
  * Alarm with no status data
  */
-const getAfmAlarmsNoStatusData = [
-	{
-		connectionStatus: '',
-		data: '',
-		eventInfo: '',
-		eventList: [
-			{
-				alarmCreated: '2019-08-19T14:10:30.000+0000',
-				alarmId: 1218,
-				customerId: '231215372',
-				faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
-				id: 0,
-				raiseSr: false,
-				serialNumber: 'RR777',
-				severity: '1',
-				status: 'Success',
-				syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
-				tacCaseNo: '88888',
-			},
-		],
-		pagination: [
-			{
-				ignoredEventCount: 0,
-				page: 1,
-				pages: 1,
-				rows: 9,
-				total: 9,
-				totalTacCases: 0,
-			},
-		],
-		status: 'success',
-		statusCode: 'OK',
-		statusMessage: '',
-	},
-];
+const getAfmAlarmsNoStatusData = {
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [
+		{
+			alarmCreated: '2019-08-19T14:10:30.000+0000',
+			alarmId: 1218,
+			customerId: '231215372',
+			faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
+			id: 0,
+			raiseSr: false,
+			serialNumber: 'RR777',
+			severity: '1',
+			status: 'Success',
+			syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
+			tacCaseNo: '88888',
+		},
+	],
+	pagination: [
+		{
+			ignoredEventCount: 0,
+			page: 1,
+			pages: 1,
+			rows: 9,
+			total: 9,
+			totalTacCases: 0,
+		},
+	],
+	status: '',
+	statusCode: 'OK',
+	statusMessage: '',
+};
 
 /**
  * Time range data
  */
-const getTimeRangeData = [
-	{
-		connectionStatus: '',
-		data: '',
-		eventInfo: '',
-		eventList: [
-			{
-				alarmCreated: '2019-08-19T14:10:30.000+0000',
-				alarmId: 1218,
-				customerId: '231215372',
-				faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
-				id: 0,
-				raiseSr: false,
-				serialNumber: 'RR777',
-				severity: '1',
-				status: 'Success',
-				syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
-				tacCaseNo: '88888',
-			},
-		],
-		pagination: [
-			{
-				ignoredEventCount: 0,
-				page: 1,
-				pages: 1,
-				rows: 9,
-				total: 9,
-				totalTacCases: 0,
-			},
-		],
-		status: 'success',
-		statusCode: 'OK',
-		statusMessage: '',
-	},
-];
+const getTimeRangeData = {
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [
+		{
+			alarmCreated: '2019-08-19T14:10:30.000+0000',
+			alarmId: 1218,
+			customerId: '231215372',
+			faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
+			id: 0,
+			raiseSr: false,
+			serialNumber: 'RR777',
+			severity: '1',
+			status: 'Success',
+			syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
+			tacCaseNo: '88888',
+		},
+	],
+	pagination: [
+		{
+			ignoredEventCount: 0,
+			page: 1,
+			pages: 1,
+			rows: 9,
+			total: 9,
+			totalTacCases: 0,
+		},
+	],
+	status: 'Success',
+	statusCode: 'OK',
+	statusMessage: '',
+};
 
 /**
  * Tac case data
  */
-const getTacCaseData = [
-	{
-		connectionStatus: '',
-		data: '',
-		eventInfo: '',
-		eventList: [
-			{
-				alarmCreated: '2019-08-19T14:10:30.000+0000',
-				alarmId: 1218,
-				customerId: '231215372',
-				faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
-				id: 0,
-				raiseSr: false,
-				serialNumber: 'RR777',
-				severity: '1',
-				status: 'Success',
-				syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
-				tacCaseNo: '88888',
-			},
-		],
-		pagination: [
-			{
-				ignoredEventCount: 0,
-				page: 1,
-				pages: 1,
-				rows: 9,
-				total: 9,
-				totalTacCases: 0,
-			},
-		],
-		status: 'success',
-		statusCode: 'OK',
-		statusMessage: '',
-	},
-];
+const getTacCaseData = {
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [
+		{
+			alarmCreated: '2019-08-19T14:10:30.000+0000',
+			alarmId: 1218,
+			customerId: '231215372',
+			faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
+			id: 0,
+			raiseSr: false,
+			serialNumber: 'RR777',
+			severity: '1',
+			status: 'Success',
+			syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
+			tacCaseNo: '88888',
+		},
+	],
+	pagination: [
+		{
+			ignoredEventCount: 0,
+			page: 1,
+			pages: 1,
+			rows: 9,
+			total: 9,
+			totalTacCases: 0,
+		},
+	],
+	status: 'Success',
+	statusCode: 'OK',
+	statusMessage: '',
+};
 
 /**
  * Tac case data
  */
-const getAfmEventData = [
-	{
-		connectionStatus: '',
-		data: '',
-		eventInfo: '',
-		eventList: [
-			{
-				alarmCreated: '2019-08-19T14:10:30.000+0000',
-				alarmId: 1218,
-				customerId: '231215372',
-				faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
-				id: 0,
-				raiseSr: false,
-				serialNumber: 'RR777',
-				severity: '1',
-				status: 'Success',
-				syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
-				tacCaseNo: '88888',
-			},
-		],
-		pagination: [
-			{
-				ignoredEventCount: 0,
-				page: 1,
-				pages: 1,
-				rows: 9,
-				total: 9,
-				totalTacCases: 0,
-			},
-		],
-		status: 'success',
-		statusCode: 'OK',
-		statusMessage: '',
-	},
-];
+const getAfmEventData = {
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [
+		{
+			alarmCreated: '2019-08-19T14:10:30.000+0000',
+			alarmId: 1218,
+			customerId: '231215372',
+			faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
+			id: 0,
+			raiseSr: false,
+			serialNumber: 'RR777',
+			severity: '1',
+			status: 'Success',
+			syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
+			tacCaseNo: '88888',
+		},
+	],
+	pagination: [
+		{
+			ignoredEventCount: 0,
+			page: 1,
+			pages: 1,
+			rows: 9,
+			total: 9,
+			totalTacCases: 0,
+		},
+	],
+	status: 'Success',
+	statusCode: 'OK',
+	statusMessage: '',
+};
 
 /**
  * Search filter Info data
  */
-const getSearchInfoData = [
-	{
-		connectionStatus: '',
-		data: '',
-		eventInfo: '',
-		eventList: [
-			{
-				alarmCreated: '2019-08-19T14:10:30.000+0000',
-				alarmId: 1218,
-				customerId: '231215372',
-				faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
-				id: 0,
-				raiseSr: false,
-				serialNumber: 'RR777',
-				severity: '1',
-				status: 'Success',
-				syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
-				tacCaseNo: '88888',
-			},
-		],
-		pagination: [
-			{
-				ignoredEventCount: 0,
-				page: 1,
-				pages: 1,
-				rows: 9,
-				total: 9,
-				totalTacCases: 0,
-			},
-		],
-		status: 'success',
-		statusCode: 'OK',
-		statusMessage: '',
-	},
-];
+const getSearchInfoData = {
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: [
+		{
+			alarmCreated: '2019-08-19T14:10:30.000+0000',
+			alarmId: 1218,
+			customerId: '231215372',
+			faultIC: '%HAS-ATAKEN-7-SESSMGR_ERROR',
+			id: 0,
+			raiseSr: false,
+			serialNumber: 'RR777',
+			severity: '1',
+			status: 'Success',
+			syslogMsg: '%HAS-ATAKEN-7-SESSMGR_ERROR : Ravi syslog Naren',
+			tacCaseNo: '88888',
+		},
+	],
+	pagination: [
+		{
+			ignoredEventCount: 0,
+			page: 1,
+			pages: 1,
+			rows: 9,
+			total: 9,
+			totalTacCases: 0,
+		},
+	],
+	status: 'Success',
+	statusCode: 'OK',
+	statusMessage: '',
+};
 
 /**
  * Afm service scenarios
@@ -271,7 +260,7 @@ export const AfmScenarios = [
 				},
 			],
 		},
-		url: this.api,
+		url: api,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -288,7 +277,7 @@ export const AfmScenarios = [
 				},
 			],
 		},
-		url: this.api,
+		url: api,
 		usecases: ['Use Case 2'],
 	},
 	{
@@ -305,7 +294,7 @@ export const AfmScenarios = [
 				},
 			],
 		},
-		url: this.api,
+		url: api,
 		usecases: ['Use Case 3'],
 	},
 	{
@@ -322,7 +311,7 @@ export const AfmScenarios = [
 				},
 			],
 		},
-		url: this.api,
+		url: api,
 		usecases: ['Use Case 4'],
 	},
 	{
@@ -339,7 +328,7 @@ export const AfmScenarios = [
 				},
 			],
 		},
-		url: this.api,
+		url: api,
 		usecases: ['Use Case 5'],
 	},
 	{
@@ -356,7 +345,7 @@ export const AfmScenarios = [
 				},
 			],
 		},
-		url: this.api,
+		url: api,
 		usecases: ['Use Case 6'],
 	},
 	{
@@ -373,7 +362,7 @@ export const AfmScenarios = [
 				},
 			],
 		},
-		url: this.api,
+		url: api,
 		usecases: ['Use Case 7'],
 	},
 ];

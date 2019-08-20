@@ -1,4 +1,4 @@
-import { Component,	TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -13,8 +13,9 @@ import {
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
+import { UserResolve } from '@utilities';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -35,7 +36,7 @@ export class AfmComponent {
 	public filters: AfmFilter[];
 	public ignoreStatus: string;
 	private alarmInfo: Alarm;
-	private searchParams: AfmSearchParams;
+	public searchParams: AfmSearchParams;
 	public pagination: AfmPagination;
 	public afmSearchInput = '';
 	public afmConnectionStatus: AfmConnectivity;
@@ -53,27 +54,28 @@ export class AfmComponent {
 	public paginationCount;
 	public aggregationCount: Map<string, number> = new Map();
 	public statusErrorMessage = '';
+	private destroy$ = new Subject();
 
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
 		min: 0,
-	// pattern: /^[a-zA-Z0-9%]*$/,
 	};
 
 	private AFM_CONSTANT = {
-		ALARM : 'ALARM',
+		ALARM: 'ALARM',
 		CHATS: 'CHATS',
 		DAY1: 'Day1',
 		DAYS30: 'Days30',
 		DAYS7: 'Days7',
 		DAYS90: 'Days90',
+		EXCEPTION: 'Exception',
 		FAIL: 'FAIL',
-		IGNORE_EVENT : 'IGNORE_EVENT',
-		SEARCH : 'SEARCH',
+		IGNORE_EVENT: 'IGNORE_EVENT',
+		SEARCH: 'SEARCH',
 		SUCCESS: 'SUCCESS',
-		TAC : 'TAC',
-	} ;
+		TAC: 'TAC',
+	};
 
 	public headerCount = {
 		totalAlarmCount: 0,
@@ -82,26 +84,30 @@ export class AfmComponent {
 	};
 
 	@ViewChild('timeRangeFilter', { static: true }) private timeRangeFilterTemplate:
-	TemplateRef<{ }>;
+		TemplateRef<{ }>;
 	@ViewChild('faultICTemplate', { static: true }) private faultICTemplate: TemplateRef<{ }>;
 	@ViewChild('syslogTemplate', { static: true }) private syslogTemplate: TemplateRef<{ }>;
 	@ViewChild('severityColors', { static: true }) public severityColorsTemplate: TemplateRef<{ }>;
 	@ViewChild('dateFilterPipe', { static: true }) public dateFilterTemplate: TemplateRef<{ }>;
 
-	constructor (private logger: LogService, private afmService: AfmService,
-		private route: ActivatedRoute) {
+	constructor (private logger: LogService,
+		private afmService: AfmService,
+		private userResolve: UserResolve) {
 		this.logger.debug('AFM Component Created!');
 		this.searchParams = new Object();
 		this.searchParams.pageNumber = 1;
 		this.searchParams.pageSize = this.tableLimit;
 		this.searchParams.firstTimeLoading = true;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.ALARM;
-		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		const customerId = _.get(user, ['info', 'customerId']);
-		if (!customerId) {
-			this.searchParams.customerId = '231215372';
-		} else {
-			this.searchParams.customerId = customerId;
+		this.userResolve.getCustomerId()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((id: string) => {
+				this.searchParams.customerId = id;
+			});
+		if (!this.searchParams.customerId) {
+			this.searchParams.customerId = '7293498';
 		}
 	}
 
@@ -116,7 +122,7 @@ export class AfmComponent {
 		},
 	];
 
-	private	getSortKey = sortKey => {
+	private getSortKey = sortKey => {
 		switch (sortKey) {
 			case 'Syslog Event':
 				return 'syslogMsg.keyword';
@@ -220,14 +226,6 @@ export class AfmComponent {
 	}
 
 	/**
-	 *
-	 * clearing filter
-	 */
-	public clearFilters () {
-		this.allAlarmFilter();
-	}
-
-	/**
 	 * Retriving the Alarm data from server
 	 * @param searchParams AfmSearchParams
 	 * @memberof AfmComponent
@@ -235,10 +233,11 @@ export class AfmComponent {
 	private getAfmAlarmData (searchParams: AfmSearchParams) {
 		this.loading = true;
 		this.afmService.getAfmAlarms(searchParams)
-			.subscribe(
-				response => {
-					this.prepareGridData(response);
-				});
+			.pipe(takeUntil(this.destroy$))
+			.subscribe(response => {
+				this.prepareGridData(response);
+			},
+			);
 	}
 
 	/**
@@ -248,10 +247,11 @@ export class AfmComponent {
 	 */
 	private getAfmEventData (alarmData: AfmSearchParams) {
 		this.afmService.getAfmEvents(alarmData)
-		.subscribe(response => {
-			this.tablePanelData = response.eventInfo;
-			this.ignoreStatus = null;
-		});
+			.pipe(takeUntil(this.destroy$))
+			.subscribe(response => {
+				this.tablePanelData = response.eventInfo;
+				this.ignoreStatus = null;
+			});
 	}
 
 	/**
@@ -262,6 +262,7 @@ export class AfmComponent {
 	private getAfmTacCaseData (searchParams: AfmSearchParams) {
 		this.loading = true;
 		this.afmService.getTacCases(searchParams)
+			.pipe(takeUntil(this.destroy$))
 			.subscribe(
 				response => {
 					this.prepareGridData(response);
@@ -276,6 +277,7 @@ export class AfmComponent {
 	private getAfmSearchFilterInfo (searchParams: AfmSearchParams) {
 		this.loading = true;
 		this.afmService.getAfmSearchFilterInfo(searchParams)
+			.pipe(takeUntil(this.destroy$))
 			.subscribe(
 				response => {
 					this.prepareGridData(response);
@@ -303,19 +305,19 @@ export class AfmComponent {
 	 */
 	private loadFilterdData () {
 		switch (this.searchParams.headerFilterType) {
-			case this.AFM_CONSTANT.TAC :
+			case this.AFM_CONSTANT.TAC:
 				this.getAfmTacCaseData(this.searchParams);
 				break;
-			case this.AFM_CONSTANT.SEARCH :
+			case this.AFM_CONSTANT.SEARCH:
 				this.getAfmSearchFilterInfo(this.searchParams);
 				break;
-			case this.AFM_CONSTANT.ALARM :
+			case this.AFM_CONSTANT.ALARM:
 				this.getAfmAlarmData(this.searchParams);
 				break;
-			case this.AFM_CONSTANT.IGNORE_EVENT :
+			case this.AFM_CONSTANT.IGNORE_EVENT:
 				this.getAfmAlarmData(this.searchParams);
 				break;
-			case this.AFM_CONSTANT.CHATS :
+			case this.AFM_CONSTANT.CHATS:
 				this.afmTimeRangeFilter(this.searchParams);
 				break;
 			default:
@@ -353,7 +355,7 @@ export class AfmComponent {
 		} else {
 			this.resetValuesWhileFilter();
 			if (searchWord.toLowerCase()
-			.startsWith('p')) {
+				.startsWith('p')) {
 				this.searchParams.searchTerm = searchWord.substring(1, 2);
 			} else {
 				this.searchParams.searchTerm = searchWord;
@@ -446,25 +448,25 @@ export class AfmComponent {
 		return (timeRangeFilter.seriesData = [
 			{
 				filter: '1',
-				label: '24hr',
+				label: I18n.get('_Afm24Hr_'),
 				selected: false,
 				value: this.aggregationCount[this.AFM_CONSTANT.DAY1],
 			},
 			{
 				filter: '7',
-				label: '7days',
+				label: I18n.get('_Afm7Days_'),
 				selected: false,
 				value: this.aggregationCount[this.AFM_CONSTANT.DAYS7],
 			},
 			{
 				filter: '30',
-				label: '30days',
+				label: I18n.get('_Afm30Days_'),
 				selected: false,
 				value: this.aggregationCount[this.AFM_CONSTANT.DAYS30],
 			},
 			{
 				filter: '90',
-				label: '90days',
+				label: I18n.get('_Afm90Days_'),
 				selected: false,
 				value: this.aggregationCount[this.AFM_CONSTANT.DAYS90],
 			},
@@ -499,16 +501,11 @@ export class AfmComponent {
 	private afmTimeRangeFilter (searchParams: AfmSearchParams) {
 		this.loading = true;
 		this.afmService.getTimeRangeFilteredEvents(searchParams)
+			.pipe(takeUntil(this.destroy$))
 			.subscribe(
 				response => {
 					this.prepareGridData(response);
 				});
-	}
-
-	/** Function used to destroy the component */
-	public ngOnDestroy () {
-		this.destroyed$.next();
-		this.destroyed$.complete();
 	}
 
 	/**
@@ -555,7 +552,7 @@ export class AfmComponent {
 	 * @memberof AfmComponent
 	 */
 	private prepareGridData (response: AfmResponse) {
-		if (response && response.status !== null) {
+		if (response && response.status && response.status !== null) {
 			if (response.status.toUpperCase() === this.AFM_CONSTANT.SUCCESS) {
 				this.tableData = response.eventList;
 				this.pagination = response.pagination;
@@ -571,7 +568,7 @@ export class AfmComponent {
 					};
 					this.searchParams.firstTimeLoading = false;
 					if (response.connectionStatus !== null) {
-						this.afmConnectionStatus =  response.connectionStatus ;
+						this.afmConnectionStatus = response.connectionStatus;
 					}
 					this.aggregationCount = response.aggregationsCount;
 					this.buildFilters();
@@ -586,6 +583,12 @@ export class AfmComponent {
 			this.tableData = Array<Alarm>();
 		}
 		this.loading = false;
+	}
+
+	/** Function used to destroy the component */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
 	}
 
 }

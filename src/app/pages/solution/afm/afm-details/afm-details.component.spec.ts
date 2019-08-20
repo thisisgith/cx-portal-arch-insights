@@ -27,7 +27,7 @@ describe('AfmDetailsComponent', () => {
 			{
 				provide: ActivatedRoute,
 				useValue: {
-					queryParams: of({}),
+					queryParams: of({ }),
 					snapshot: {
 						data: {
 							user,

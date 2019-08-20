@@ -20,26 +20,26 @@ import { BaseService } from '../../core/base-service';
 export class AfmService extends BaseService {
 
 	// public afmRootUrl = 'https://cpp-api.sdp11-idev.csco.cloud/afm';
-	public afmRootUrl = 'http://localhost:8088';
+	// public afmRootUrl = 'http://localhost:8088';
 
-	private alarmsPath = `${this.afmRootUrl}/v1/fault/alarms`;
-	private tacCasesPath = `${this.afmRootUrl}/v1/fault/taccases`;
-	private searchPath = `${this.afmRootUrl}/v1/fault/search`;
-	private afmConnectivityPath = `${this.afmRootUrl}/v1/fault/connectivity`;
-	private eventPath = `${this.afmRootUrl}/v1/fault/event`;
-	private ignoreEventPath = `${this.afmRootUrl}/v1/fault/ignoreevent`;
-	private revertIgnoreEventPath = `${this.afmRootUrl}/v1/fault/revertignoreevent`;
-	private timeRangePath = `${this.afmRootUrl}/v1/fault/timerangefilter`;
+	// private alarmsPath = `${this.afmRootUrl}/v1/fault/alarms`;
+	// private tacCasesPath = `${this.afmRootUrl}/v1/fault/taccases`;
+	// private searchPath = `${this.afmRootUrl}/v1/fault/search`;
+	// private afmConnectivityPath = `${this.afmRootUrl}/v1/fault/connectivity`;
+	// private eventPath = `${this.afmRootUrl}/v1/fault/event`;
+	// private ignoreEventPath = `${this.afmRootUrl}/v1/fault/ignoreevent`;
+	// private revertIgnoreEventPath = `${this.afmRootUrl}/v1/fault/revertignoreevent`;
+	// private timeRangePath = `${this.afmRootUrl}/v1/fault/timerangefilter`;
 
-	// private alarmsPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/alarms`;
-	// private tacCasesPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/taccases`;
-	// private searchPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/search`;
-	// private afmConnectivityPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/connectivity`;
-	// private eventPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/event`;
-	// private ignoreEventPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/ignoreevent`;
-	// private revertIgnoreEventPath =
-	// `${this.rootUrl}/api/customerportal/afm/v1/fault/revertignoreevent`;
-	// private timeRangePath = `${this.rootUrl}/api/customerportal/afm/v1/fault/timerangefilter`;
+	private alarmsPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/alarms`;
+	private tacCasesPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/taccases`;
+	private searchPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/search`;
+	private afmConnectivityPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/connectivity`;
+	private eventPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/event`;
+	private ignoreEventPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/ignoreevent`;
+	private revertIgnoreEventPath =
+	`${this.rootUrl}/api/customerportal/afm/v1/fault/revertignoreevent`;
+	private timeRangePath = `${this.rootUrl}/api/customerportal/afm/v1/fault/timerangefilter`;
 
 	constructor (config: AfmConfiguration, http: HttpClient) {
 		super(config, http);

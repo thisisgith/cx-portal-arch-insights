@@ -81,14 +81,6 @@ describe('AfmComponent', () => {
 			.toEqual(mockAlarm);
 	});
 
-	it('should clear all filters', () => {
-		spyOn(component, 'allAlarmFilter');
-		component.clearFilters();
-		fixture.detectChanges();
-		expect(component.allAlarmFilter)
-			.toHaveBeenCalled();
-	});
-
 	it('should call on pager update', () => {
 		const pageData = {
 			limit: 10,
@@ -126,30 +118,35 @@ describe('AfmComponent', () => {
 			name: 'Syslog Event',
 			sortDirection: 'Abc',
 		};
+		component.searchParams.headerFilterType = 'TAC';
 		component.onTableSortingChanged(eventSyslog);
 		fixture.detectChanges();
 		const eventFault = {
 			name: 'Fault IC',
 			sortDirection: 'Abc',
 		};
+		component.searchParams.headerFilterType = 'SEARCH';
 		component.onTableSortingChanged(eventFault);
 		fixture.detectChanges();
 		const eventSerial = {
 			name: 'Serial Number',
 			sortDirection: 'Abc',
 		};
+		component.searchParams.headerFilterType = 'IGNORE_EVENT';
 		component.onTableSortingChanged(eventSerial);
 		fixture.detectChanges();
 		const eventSeverity = {
 			name: 'Event Severity',
 			sortDirection: 'Abc',
 		};
+		component.searchParams.headerFilterType = 'CHATS';
 		component.onTableSortingChanged(eventSeverity);
 		fixture.detectChanges();
 		const eventCase = {
 			name: 'Case ID',
 			sortDirection: 'Abc',
 		};
+		component.searchParams.headerFilterType = 'ALARM';
 		component.onTableSortingChanged(eventCase);
 		fixture.detectChanges();
 		const eventTime = {
@@ -168,6 +165,7 @@ describe('AfmComponent', () => {
 			name: 'Default',
 			sortDirection: 'Abc',
 		};
+		component.searchParams.headerFilterType = 'Default';
 		component.onTableSortingChanged(eventDefault);
 		expect(component.loading)
 			.toBeTruthy();
@@ -180,8 +178,6 @@ describe('AfmComponent', () => {
 		const subfilter = 12;
 		afmFilter.seriesData = [];
 		component.onTimeRangefilterSelect(subfilter, afmFilter);
-		expect(component.loading)
-			.toBeTruthy();
 		expect(afmService.getTimeRangeFilteredEvents)
 			.toHaveBeenCalled();
 	});
@@ -233,8 +229,6 @@ describe('AfmComponent', () => {
 			mockAfmSearchParams.searchTerm = '';
 			fixture.detectChanges();
 			component.allAlarmFilter();
-			expect(component.loading)
-				.toBeTruthy();
 			expect(afmService.getAfmAlarms)
 				.toHaveBeenCalled();
 		});
@@ -250,7 +244,7 @@ describe('AfmComponent', () => {
 			fixture.detectChanges();
 			component.allAlarmFilter();
 			expect(component.loading)
-				.toBeTruthy();
+				.toBeFalsy();
 			expect(afmService.getAfmAlarms)
 				.toHaveBeenCalled();
 		});
