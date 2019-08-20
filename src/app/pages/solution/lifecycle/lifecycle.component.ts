@@ -140,6 +140,7 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedSuccessPaths: SuccessPath[];
 	public eventXCoordinates = 0;
 	public eventYCoordinates = 0;
+	public eventClickedElement: HTMLElement;
 	public scrollY = 0;
 	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
@@ -1130,6 +1131,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getCoordinates (event: MouseEvent) {
 		this.eventXCoordinates = event.clientX;
 		this.eventYCoordinates = event.clientY;
+		this.eventClickedElement = <HTMLElement> event.target;
 	}
 
 	/**
@@ -1156,8 +1158,11 @@ export class LifecycleComponent implements OnDestroy {
 					break;
 				}
 				case 'list': {
-					_div.style.right = '30%';
-					_div.style.top = `${this.eventYCoordinates + this.scrollY - 210}px`;
+					const rect = this.eventClickedElement.getBoundingClientRect();
+					const ht = this.eventClickedElement.scrollHeight;
+
+					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
+					_div.style.top = `${(rect.top + (ht / 2)) + this.scrollY - 210}px`;
 					panel = 'panel listpanel--open';
 				}
 			}

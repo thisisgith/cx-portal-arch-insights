@@ -509,6 +509,12 @@ tr.td-row td {
 .learning-progressfill-col {
 	margin-left: 0 !important;
 }
+
+.atx-scheduler-one-line {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+}
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {
 // 	color:$vibblue !important;
