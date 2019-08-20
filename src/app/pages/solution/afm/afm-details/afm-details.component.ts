@@ -14,7 +14,6 @@ import { Alarm, AfmSearchParams, AfmService } from '@sdp-api';
 export class AfmDetailsComponent {
 
 	private searchParams: AfmSearchParams;
-	private ignoreToggled = false;
 	public ignoreStatus: string;
 
 	@Input('alarm') public alarm: Alarm;
@@ -44,17 +43,15 @@ export class AfmDetailsComponent {
 	public toggleEvent (alarmData: Alarm) {
 		this.searchParams.customerId = alarmData.customerId;
 		this.searchParams.faultIC = alarmData.faultIC;
-		if (!this.ignoreToggled) {
+		if (alarmData.status !== 'Ignored') {
 			this.afmService.ignoreEvent(this.searchParams)
 				.subscribe(response => {
 					this.ignoreStatus = response.statusMessage;
-					this.ignoreToggled = true;
 				});
 		} else {
 			this.afmService.revertIgnoreEvent(this.searchParams)
 				.subscribe(response => {
 					this.ignoreStatus = response.statusMessage;
-					this.ignoreToggled = false;
 				});
 		}
 	}

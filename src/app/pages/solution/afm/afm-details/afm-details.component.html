@@ -1,12 +1,13 @@
-<div>
-	<span class="text-small" [innerText]="'_AfmSyslogEvent360_' | i18n"></span>
-</div>
 <div class="base-margin-bottom">
-	<span class="text-large text-bold" [innerText]="'_AfmSyslog_'|i18n"></span>
-	<span class="text-large text-bold">{{alarm?.syslogMsg}}</span>
+	<span class="text-xlarge" [innerText]="'_AfmEvent360_' | i18n"></span>
 </div>
 
+
 <div class="row">
+	<div class="col-md-12 base-margin-bottom">
+		<div class="text-bold" [innerText]="'_AfmSyslog_'|i18n"></div>
+		<div innerText="{{ alarm?.syslogMsg || ('_NA_' | i18n) }}"></div>
+	</div>
 	<div class="col-md-12 base-margin-bottom">
 		<div class="text-bold" [innerText]="'_AfmFaultIcName_' | i18n"></div>
 		<div innerText="{{ alarm?.faultIC || ('_NA_' | i18n) }}"></div>
@@ -16,7 +17,8 @@
 			<div class="half-margin-left">
 				<div class="text-bold" [innerText]="'_AfmAssetName_' | i18n"></div>
 				<div class="cursor" [ngClass]="{'text-primary' : alarm.hostName}"
-					innerText="{{ alarm?.hostName || ('_NA_' | i18n) }}" (click)="connectToAssetDetails(alarm)" data-auto-id="HostName">
+					innerText="{{ alarm?.hostName || ('_NA_' | i18n) }}" (click)="connectToAssetDetails(alarm)"
+					data-auto-id="HostName">
 				</div>
 			</div>
 			<div class="base-margin-left">
@@ -72,7 +74,8 @@
 	<div class="flex col-md-12">
 		<div class="col-md-4">
 			<label class="switch">
-				<input type="checkbox" class="ng-valid ng-dirty ng-touched" (change)="toggleEvent(alarm)">
+				<input type="checkbox" [checked]="alarm?.status === 'Ignored'" class="ng-valid ng-dirty ng-touched"
+					(change)="toggleEvent(alarm)">
 				<span class="switch__input"></span>
 				<span class="switch__label" [innerText]="'_AfmIgnoreEvent_'|i18n"></span>
 			</label>

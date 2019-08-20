@@ -81,11 +81,11 @@ describe('AfmDetailsComponent', () => {
 	it('should ignored the event and revert the ignored event', () => {
 		spyOn(mockAfmService, 'ignoreEvent')
 			.and
-			.returnValue(of(<any>AfmScenarios[0].scenarios.POST[0].response.body));
+			.returnValue(of(<any> AfmScenarios[0].scenarios.POST[0].response.body));
 
 		spyOn(mockAfmService, 'revertIgnoreEvent')
 			.and
-			.returnValue(of(<any>AfmScenarios[0].scenarios.POST[0].response.body));
+			.returnValue(of(<any> AfmScenarios[0].scenarios.POST[0].response.body));
 		mockAlarm.customerId = '1234';
 		mockAlarm.faultIC = '%Fault';
 

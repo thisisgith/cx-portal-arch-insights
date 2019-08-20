@@ -374,6 +374,7 @@ export class AfmComponent {
 
 	/**
 	 * Keys down function
+	 * Keycode 13 is for enter
 	 * @param event contains eventdata
 	 */
 	public keyDownAfmSearchFilter (event) {
