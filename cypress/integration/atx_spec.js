@@ -417,6 +417,38 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					});
 			});
 		});
+
+		it('ATX View All table view should allow scheduling', () => {
+			// Verify a View Seesions button is available for all rows, and clicking it opens the
+			// atxScheduleCard with all the item's sessions
+			atxItems.forEach((item, index) => {
+				cy.get('tr').eq(index + 1).within(() => {
+					cy.getByAutoId('ViewSessionButton')
+						.should('be.visible')
+						.click();
+				});
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible').within(() => {
+						cy.get('tr').then($rows => {
+							expect($rows.length).to.eq(item.sessions.length);
+						});
+						cy.getByAutoId('AtxScheduleCardClose').click();
+						cy.getByAutoId('atxScheduleCard').should('not.be.visible');
+					});
+			});
+		});
+
+		it('ATX View All table view should allow Watch Now cross-launch', () => {
+			atxItems.forEach((item, index) => {
+				cy.get('tr').eq(index + 1).within(() => {
+					cy.getByAutoId('WatchnowButton')
+						.should('be.visible')
+						.parent()
+						.should('have.attr', 'href', item.recordingURL)
+						.and('have.attr', 'target', '_blank');
+				});
+			});
+		});
 	});
 
 	describe('PBC-452: ATX View All table sorting stickiness', () => {
