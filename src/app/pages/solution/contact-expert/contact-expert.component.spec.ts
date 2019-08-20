@@ -66,8 +66,6 @@ describe('ContactExpertComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.submitMessage();
 		fixture.detectChanges();
-		expect(component.modelHeading)
-			.toEqual('CSErrorTitle');
 		expect(component.showLoader)
 			.toBe(false);
 	});
