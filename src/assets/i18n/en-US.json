@@ -635,6 +635,7 @@
 "_ArchitectureNoVisualFiltersToShow_" : "No Visual Filters to display",
 "_ArchitectureHigh_" : "High",
 "_ArchitectureMedium_" : "Medium",
-"_ArchitectureLow_" : "Low"
+"_ArchitectureLow_" : "Low",
+"_ArchitectureConfigBestPracticesFor_" :"Config Best Practices Exceptions for"
 
 }

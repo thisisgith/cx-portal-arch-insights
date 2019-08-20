@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { ArchitectureService, IAsset } from '@sdp-api';
+import { ArchitectureService, IAsset, assetExceptionList } from '@sdp-api';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 /** Our current customerId */
 const customerId = '7293498';
@@ -26,66 +28,67 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	}
 
 	public assetObject: IAsset = null;
-	public AssetsExceptionDetails = [];
+	public assetsExceptionDetails: assetExceptionList[] = [];
 	public tableOptions: CuiTableOptions;
 	public totalItems = 0;
 	public isLoading = true;
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
-
+	private destroy$ = new Subject();
 	public params = { customerId, page: 0, pageSize: 10 };
 
 	/**
 	 * used to Intialize Table options
 	 */
-	ngOnInit() {
+	public ngOnInit () {
 		this.getAllAssetsWithExceptions();
 		this.buildTable();
 	}
 
-	public buildTable(){
+	public buildTable () {
+
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
 				{
+					key: 'inventoryName',
 					name: I18n.get('_ArchitectureHostName_'),
 					sortable: false,
-					key: 'inventoryName',
 				},
 				{
+					key: 'ipAddress',
 					name: I18n.get('_ArchitectureIPAddress_'),
 					sortable: false,
-					key: 'ipAddress',
 				},
 				{
+					key: 'productId',
 					name: I18n.get('_ArchitectureProductId_'),
 					sortable: false,
-					key: 'productId',
 				},
 				{
+					key: 'productFamily',
 					name: I18n.get('_ArchitectureProductFamily_'),
 					sortable: false,
-					key: 'productFamily',
 				},
 				{
+					key: 'swType',
 					name: I18n.get('_ArchitectureSoftwareType_'),
 					sortable: false,
-					key: 'swType',
 				},
 				{
+					key: 'swVersion',
 					name: I18n.get('_ArchitectureSoftwareVersion_'),
 					sortable: false,
-					key: 'swVersion',
 				},
 				{
+					key: 'configCollectionDate',
 					name: I18n.get('_ArchitectureConfigCollectionDate_'),
 					sortable: false,
-					key: 'configCollectionDate',
 				},
 				{
+					key: 'ruleIdsWithExceptionsCount',
 					name: I18n.get('_ArchitectureCBPExceptions_'),
 					sortable: false,
-					key: 'ruleIdsWithExceptionsCount',
 				},
 			],
 			singleSelect: true,
@@ -93,10 +96,10 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	}
 
 	/**
- 	 * Used for getting pageNumber Index and call the getdata function
- 	 * @param event - The Object that contains pageNumber Index
- 	 */
-	public onPagerUpdated(event) {
+ 	* Used for getting pageNumber Index and call the getdata function
+ 	* @param event - The Object that contains pageNumber Index
+ 	*/
+	public onPagerUpdated (event) {
 		this.isLoading = true;
 		this.params.page = event.page;
 		this.params.pageSize = event.limit;
@@ -108,15 +111,19 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	 */
 	public getAllAssetsWithExceptions () {
 		this.tableStartIndex = this.params.page * this.params.pageSize;
-		let x = (this.tableStartIndex + this.AssetsExceptionDetails.length);
-		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
+		const endIndex = (this.tableStartIndex + this.assetsExceptionDetails.length);
+		this.tableEndIndex = (endIndex) > this.totalItems ? this.totalItems : endIndex;
 
-		this.architectureService.getAllAssetsWithExceptions(this.params).subscribe(res => {
+		this.architectureService.getAllAssetsWithExceptions(this.params)
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
 			this.isLoading = false;
 			this.totalItems = res.TotalCounts;
-			this.AssetsExceptionDetails = res.AssetsExceptionDetails;
-			this.tableEndIndex = (this.tableStartIndex + this.AssetsExceptionDetails.length);
-			this.AssetsExceptionDetails.map(asset => {
+			this.assetsExceptionDetails = res.AssetsExceptionDetails;
+			this.tableEndIndex = (this.tableStartIndex + this.assetsExceptionDetails.length);
+			this.assetsExceptionDetails.map(asset => {
 				asset.ruleIdsWithExceptionsCount = asset.ruleIdsWithExceptions.split(';').length;
 			},
 				err => {
@@ -124,7 +131,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 						'  : getAllAssetsWithExceptions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					this.isLoading = false;
-					this.AssetsExceptionDetails = [];
+					this.assetsExceptionDetails = [];
 					this.totalItems = 0;
 				});
 		});
@@ -134,15 +141,15 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	 * This method is used to set the exception object in order to open Fly-out View
 	 * @param event - It contains the selected asset object
 	 */
-	public onTableRowClicked(event: IAsset) {
+	public onTableRowClicked (event: IAsset) {
 		this.assetObject = event;
 	}
 
 	/**
-	 * This method is used to set the null to exception object 
+	 * This method is used to set the null to exception object
 	 * in order to Close Fly-out View
 	 */
-	public onPanelClose() {
+	public onPanelClose () {
 		this.assetObject = null;
 	}
 }

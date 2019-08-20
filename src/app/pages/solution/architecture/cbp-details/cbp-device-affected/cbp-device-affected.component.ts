@@ -11,9 +11,11 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { ArchitectureService , IException, IAsset } from '@sdp-api';
 import { DatePipe } from '@angular/common';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
  /** Our current customerId */
- const customerId = '231215372';
+ const customerId = '7293498';
 
 /**
  * CBP Device Affected Table Component
@@ -39,6 +41,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 		pageSize : 8,
 		body : [],
 	};
+	public destroy$ = new Subject();
 
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 	}
@@ -119,10 +122,13 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public getData () {
 
 		this.tableStartIndex = this.params.page * this.params.pageSize;
-		let x = (this.tableStartIndex + this.assetDatas.length);
-		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
+		const endIndex = (this.tableStartIndex + this.assetDatas.length);
+		this.tableEndIndex = (endIndex) > this.totalItems ? this.totalItems : endIndex;
 
 		this.architectureService.getAllCBPDeviceAffected(this.params)
+		.pipe(
+			takeUntil(this.destroy$),
+		)
 				.subscribe((res: IAsset[]) => {
 					this.assetDatas = res;
 					this.isLoading = false;

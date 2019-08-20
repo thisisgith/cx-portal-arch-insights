@@ -9,9 +9,11 @@ import {
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { ArchitectureService, IException, IAsset } from '@sdp-api';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
  /** Our current customerId */
-const customerId = '231215372';
+const customerId = '7293498';
 
 /**
  * CBP TBD table Component
@@ -37,6 +39,7 @@ export class CbpTbdComponent implements OnChanges {
 		pageSize : 8,
 		body : [],
 	};
+	public destroy$ = new Subject();
 
 	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 	}
@@ -69,10 +72,13 @@ export class CbpTbdComponent implements OnChanges {
 	 */
 	public getData () {
 		this.tableStartIndex = this.params.page * this.params.pageSize;
-		let x = (this.tableStartIndex + this.exceptionDatas.length);
-		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
+		const endIndex = (this.tableStartIndex + this.exceptionDatas.length);
+		this.tableEndIndex = (endIndex) > this.totalItems ? this.totalItems : endIndex;
 
 		this.architectureService.getAllCBPExceptionDetails(this.params)
+		.pipe(
+			takeUntil(this.destroy$),
+		)
 				.subscribe((res: IException[]) => {
 					this.exceptionDatas = res;
 					this.isLoading = false;

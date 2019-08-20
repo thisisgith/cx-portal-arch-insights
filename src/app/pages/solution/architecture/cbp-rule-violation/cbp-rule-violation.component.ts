@@ -5,6 +5,8 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ArchitectureService, IException } from '@sdp-api';
+import { cbpRuleException } from '@sdp-api';
+
 import * as _ from 'lodash-es';
 
  /** Our current customerId */
@@ -21,8 +23,8 @@ const customerId = '7293498';
 export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	@Input() public filters;
 	public tableOptions: CuiTableOptions;
-	public totalItems: any;
-	public cbpRuleExceptions = [];
+	public totalItems = 0;
+	public cbpRuleExceptions: cbpRuleException[] = [];
 	public isLoading = true;
 
 	public paramsType = {
@@ -53,7 +55,8 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	 * Used to detect the changes in input object and
 	 * call the getCBPRulesData function for Updating the Table
 	 */
-	public ngOnChanges(changes: SimpleChanges) {
+
+	public ngOnChanges (changes: SimpleChanges) {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
 		if (selectedFilter && !changes.filters.firstChange) {
 			this.paramsType.severity =
@@ -108,26 +111,26 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	}
 
 	/**
- 	 * Used for shinking the  Recommendation, correctiveActionSummary 
-	 * assetsAffected field
- 	 * @param array - The Array Objects to be modified
- 	 */
-	public ModifyCbpRuleExceptions (array: Array<any>) {
+ 	* Used for shinking the  Recommendation, correctiveActionSummary
+		* assetsAffected field
+ 	* @param array - The Array Objects to be modified
+ 	*/
+	public ModifyCbpRuleExceptions (array) {
 		array.map(obj => {
 			obj.Recommendation = obj.bpRecommendation.substr(0, 30)
 				.concat('...');
 			obj.correctiveActionSummary = obj.correctiveAction.substr(0, 25)
 				.concat('...');
-			obj.assetsAffected = obj.deviceIdsWithExceptions.length != 0
+			obj.assetsAffected = obj.deviceIdsWithExceptions.length !== 0
 				? obj.deviceIdsWithExceptions.split(';').length : '0';
 		});
 		// }
 	}
 
 	/**
- 	 * Used for getting pageNumber Index and call the getdata function
- 	 * @param event - The Object that contains pageNumber Index
- 	 */
+ 	* Used for getting pageNumber Index and call the getdata function
+ 	* @param event - The Object that contains pageNumber Index
+ 	*/
 	public onPagerUpdated (event) {
 		this.isLoading = true;
 		this.paramsType.page = event.page;
@@ -140,8 +143,8 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	 */
 	public getCBPRulesData () {
 		this.tableStartIndex = this.paramsType.page * this.paramsType.pageSize;
-		let x = (this.tableStartIndex + this.cbpRuleExceptions.length);
-		this.tableEndIndex = (x) > this.totalItems ? this.totalItems : x;
+		const endIndex = (this.tableStartIndex + this.cbpRuleExceptions.length);
+		this.tableEndIndex = (endIndex) > this.totalItems ? this.totalItems : endIndex;
 		this.architectureService.
 			getCBPSeverityList(this.paramsType)
 			.subscribe(data => {
@@ -161,9 +164,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	}
 
 	/**
- 	 * This method is used to set the exception object in order to open Fly-out View
- 	 * @param event - It contains the selected Exception
- 	 */
+ 	* This method is used to set the exception object in order to open Fly-out View
+ 	* @param event - It contains the selected Exception
+ 	*/
 	public onTableRowClicked (event: IException) {
 		this.exceptionObject = event;
 	}

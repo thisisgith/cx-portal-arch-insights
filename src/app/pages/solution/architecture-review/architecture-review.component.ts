@@ -7,7 +7,6 @@ import { map, catchError } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
 
-
 @Component({
 	selector: 'app-architecture-review',
 	styleUrls: ['./architecture-review.component.scss'],

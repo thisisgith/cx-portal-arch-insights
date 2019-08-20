@@ -8,6 +8,8 @@ import { Observable as __Observable } from 'rxjs';
 import { Observable, Subject } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 import { ContractDeviceCountsResponse } from '../models/contract-device-counts-response';
+import { IException } from '../models/exception';
+import { IAsset } from '../models/asset';
 
 @Injectable({
   providedIn: 'root',
@@ -214,7 +216,7 @@ class ArchitectureService extends __BaseService {
 
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
-    //if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 
     let req = new HttpRequest<any>(
       'POST',
@@ -259,7 +261,7 @@ class ArchitectureService extends __BaseService {
 
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
-    //if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 
     let req = new HttpRequest<any>(
       'POST',
@@ -312,6 +314,11 @@ module ArchitectureService {
     page: number;
 
     /**
+     * unique identifier of a cisco customer
+     */
+    customerId: string;
+
+    /**
      * Number of records in a page
      */
     pageSize: number;
@@ -337,10 +344,16 @@ module ArchitectureService {
      */
     pageSize: number;
 
+     /**
+     * unique identifier of a cisco customer
+     */
+    customerId: string;
+
     /**
      * The Id's of the Devices with Exceptions . Example:- 2689444; 91488861, 92246411
      */
      body :Array<string>;
+
   }
 
 }

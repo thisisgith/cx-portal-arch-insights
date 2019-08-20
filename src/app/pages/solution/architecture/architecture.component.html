@@ -3,7 +3,7 @@
         <div class="col-md-2 text-center" (click)=clearFilters()>
             <div *ngFor="let label of visualLabels; let i=index"
                 [ngClass]="{'visualSelected':label.active == true}"
-                (click)="selectVisualLabel($event)">
+                (click)="selectVisualLabel(label)">
                 <h1 class="half-margin-top half-margin-bottom">{{label.count}}</h1>
                 <div class="half-margin-bottom half-margin-top">{{label.label}}</div>
             </div>

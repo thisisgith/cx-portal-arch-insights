@@ -36,5 +36,6 @@ export interface assetExceptionList{
     sysDescr ?: string,
     sysLocation ?: string,
     sysName ?: string,
-    sysObjectId ?: string
+    sysObjectId ?: string,
+    ruleIdsWithExceptionsCount ?: number
   }

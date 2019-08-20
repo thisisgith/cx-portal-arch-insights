@@ -1,12 +1,40 @@
 <!-- App Details 360 slide-out -->
 <details-panel [hidden]="!exceptionObject" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
-		<cbp-header [cbpDetails]="exceptionObject"></cbp-header>
+		<!-- <cbp-header [cbpDetails]="exceptionObject"></cbp-header> -->
 		<div detailsPanelTitle class="text-xlarge">
-			<span class="icon-left-arrow"  data-auto-id="PanelClose" (click)="onPanelClose()"></span>
-			<span class="icon-right-arrow" disabled></span>
+			<!-- <span class="icon-left-arrow"  data-auto-id="PanelClose" (click)="onPanelClose()"></span>
+			<span class="icon-right-arrow" disabled></span> -->
 
-			<span [innerText]="' ' + exceptionObject?.bpRuleTitle"></span>
+			<span [innerText]="exceptionObject?.bpRuleTitle"></span>
+		</div> 
+		<div class="row ">
+
+			<div class="col-md-8 base-margin-bottom">
+				<div class="flex" *ngIf="exceptionObject">
+					<div class="dbl-margin-right">
+						<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSeverity_' | i18n"></div>
+						<div><span class="qtr-margin-right icon-circle" [ngClass]="{
+												'High': 'text-danger',
+												'Medium': 'text-warning',
+												'Low': 'text-warning-alt'
+											}[exceptionObject?.bpSeverity]"></span>
+						{{ exceptionObject?.bpSeverity }}
+						</div>
+					</div>
+		
+					<div class="dbl-margin-right">
+						<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSoftwareType_' | i18n"></div>
+						<div innerText="{{ exceptionObject?.softwareType }}"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 base-margin-bottom">
+				<div class="dbl-margin-right">
+					<div class="text-bold text-uppercase" [innerText]="('_ArchitectureSummary_' | i18n)+':'"></div>
+					<div>{{exceptionObject?.bpRuleSummary}}</div>
+				</div>
+			</div>
 		</div>
 	</details-panel-header>
 	<cbp-device-affected [cbpDetails]="exceptionObject"></cbp-device-affected>
@@ -27,16 +55,12 @@
 <div class="panel">
 	<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="cbpRuleExceptions"
 		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
-	<div class="section" *ngIf="totalItems">
+	<div class="section" *ngIf="totalItems > 0">
 		<cui-pager *ngIf="!isLoading" [page]="paramsType.page" [limit]="paramsType.pageSize" [totalItems]="totalItems"
 			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
 	</div>
 	<div class="base-margin-top" *ngIf="isLoading">
-		<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
-			<div class="wrapper">
-				<div class="wheel"></div>
-			</div>
-		</div>
+		<cui-spinner></cui-spinner>
 	</div>
 </div>
 <ng-template #riskTemplate let-item="celldata">

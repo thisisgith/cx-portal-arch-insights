@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DevicesWithExceptionsComponent } from './devices-with-exceptions.component';
-import { CuiTableModule, CuiPagerModule } from '@cisco-ngx/cui-components';
+import { CuiTableModule, CuiPagerModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { ArchitectureModule } from '@sdp-api';
 import { environment } from '@environment';
 import { DetailsPanelModule } from '@components';
@@ -28,6 +28,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		CuiPagerModule,
 		DetailsPanelModule,
 		I18nPipeModule,
+		CuiSpinnerModule,
 		ArchitectureModule.forRoot({ rootUrl }),
 	],
 })
