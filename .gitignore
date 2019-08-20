@@ -1,8 +1,5 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# pulled packages from npm
-.htmlhintrc
-
 # compiled output
 /dist
 /dist_lib
