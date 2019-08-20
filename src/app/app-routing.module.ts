@@ -10,7 +10,7 @@ const routes: Routes = [
 	{
 		canActivate: [ClientSSOGuard],
 		loadChildren: () => import('./pages/admin/admin.module')
-		 	.then(m => m.AdminModule),
+			.then(m => m.AdminModule),
 		path: 'admin',
 		resolve: {
 			user: UserResolve,
