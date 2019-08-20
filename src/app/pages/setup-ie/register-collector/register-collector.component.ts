@@ -81,6 +81,33 @@ function passwordValidator (control: FormControl) {
 }
 
 /**
+ * Validator for proxy host criteria
+ * @param control - FormControl
+ * @returns validity
+ */
+function proxyHostValidator (control: FormControl) {
+	const currentValue = control.value;
+	if (!currentValue) { return null; }
+	const errors: {
+		invalidCharacters?: { value: string },
+	} = { };
+
+	const hostNameRegex = new RegExp('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)'
+		+ '*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$');
+	const ipRegex = new RegExp('^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}'
+		+ '([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$');
+
+	if (!hostNameRegex.test(currentValue) && !ipRegex.test(currentValue)) {
+		errors.invalidCharacters = { value: currentValue };
+	}
+	if (Object.entries((errors || { })).length) {
+		return errors;
+	}
+
+	return null;
+}
+
+/**
  * Component for creating Intelligence Engine Account
  */
 @Component({
@@ -109,9 +136,14 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 			Validators.required,
 			this.confirmValidator.bind(this),
 		]),
-		proxyHost: new FormControl(null),
+		proxyHost: new FormControl(null,
+			proxyHostValidator,
+		),
 		proxyPassword: new FormControl(null),
-		proxyPort: new FormControl(null),
+		proxyPort: new FormControl(null, [
+			Validators.min(1),
+			Validators.max(65535),
+		]),
 		proxyUser: new FormControl(null),
 		// virtualAccount: new FormControl(null, [Validators.required]),
 	});

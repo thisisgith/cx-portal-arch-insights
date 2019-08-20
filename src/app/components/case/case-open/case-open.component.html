@@ -55,9 +55,18 @@
 									<dl>
 										<dt [innerText]="'_Severity_' | i18n"></dt>
 										<dd>
-											<app-panel-select formControlName="severity"
-												[options]="sevOptions">
-											</app-panel-select>
+											<panel-select formControlName="severity">
+												<ng-container *ngFor="let option of sevOptions">
+													<panel-select-option [value]="option.value">
+														<div class="half-margin-bottom">
+															<span [innerText]="option.name"></span>
+														</div>
+														<div>
+															<span class="text-small text-muted" [innerText]="option.subtitle | uppercase"></span>
+														</div>
+													</panel-select-option>
+												</ng-container>
+											</panel-select>
 											<div class="form-group base-margin-top">
 												<label class="checkbox">
 													<input type="checkbox" formControlName="requestRma"/>
@@ -69,7 +78,9 @@
 											</div>
 										</dd>
 									</dl>
-									<tech-form [requestRma]="caseForm.controls.requestRma.value"
+									<tech-form #techForm [requestRma]="caseForm.controls.requestRma.value"
+										[suggestionTitle]="caseForm.controls.title.value"
+										[suggestionDescription]="caseForm.controls.description.value"
 										(formReady)="onFormReady($event)">
 									</tech-form>
 								</div>
@@ -84,7 +95,7 @@
 							[ngClass]="{ 'disabled': caseForm.controls.title.invalid || caseForm.controls.description.invalid || contractLoading }"
 							type="button"
 							[innerText]="'_Next_' | i18n"
-							(click)="expand = true">
+							(click)="onNext()">
 						</button>
 						<!-- Button after it's expanded, to submit the form -->
 						<button *ngIf="expand"

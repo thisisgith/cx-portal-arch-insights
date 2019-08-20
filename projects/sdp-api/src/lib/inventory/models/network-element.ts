@@ -2,14 +2,14 @@
 export interface NetworkElement {
 
   /**
+   * The name of the software feature set running on the device. This data is primarily available for IOS
+   */
+  featureSet?: string;
+
+  /**
    * Unique identifier of a Cisco customer
    */
   customerId: string;
-
-  /**
-   * The unique identifier for a Cisco Collector (CSPC) appliance
-   */
-  collectorId?: string;
 
   /**
    * The unique, generated ID of the network element
@@ -81,9 +81,9 @@ export interface NetworkElement {
   sysName?: string;
 
   /**
-   * The name of the software feature set running on the device. This data is primarily available for IOS
+   * The unique identifier for a Cisco Collector (CSPC) appliance
    */
-  featureSet?: string;
+  collectorId?: string;
 
   /**
    * The time when the collector last successfully collected inventory from the device. GMT date format YYYY-MM-DDTHH:MM:SS (Time is displayed in 24 hour format)
@@ -133,12 +133,12 @@ export interface NetworkElement {
   /**
    * The date timestamp of the last reset of the device as reported by the show version command
    */
-  lastReset?: string;
+  timeOfLastReset?: string;
 
   /**
    * The reason for the last system reset as reported in the show version output
    */
-  resetReason?: string;
+  lastResetReason?: string;
 
   /**
    * The SNMP sysContact of the network element which is populated in most devices using a configuration command
@@ -191,27 +191,8 @@ export interface NetworkElement {
   isManagedNE: boolean;
 
   /**
-   * The user field1 value populated in the collector seedfile
-   */
-  userField1?: string;
-
-  /**
-   * The user field2 value populated in the collector seedfile
-   */
-  userField2?: string;
-
-  /**
-   * The user field3 value populated in the collector seedfile
-   */
-  userField3?: string;
-
-  /**
-   * The user field4 value populated in the collector seedfile
-   */
-  userField4?: string;
-
-  /**
    * A media access control address (MAC address) is a unique identifier assigned to network interfaces for communications on the physical network segment
    */
   macAddress?: string;
+  installedMemory?: number;
 }

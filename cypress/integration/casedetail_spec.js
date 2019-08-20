@@ -10,13 +10,15 @@ describe('Case Detail Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('PBC-231 Case List Assets', () => {
 			// PBC-231 - Check for expected assets on the case listing
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('OPEN CASESTab', { timeout: 10000 }).should('exist');
-			cy.getByAutoId('RMAsTab').should('exist');
+			// cy.getByAutoId('RMAsTab').should('exist');
 			cy.getByAutoId('rmaCasesHeader').should('exist');
 			cy.getByAutoId('rmaShowingXcasesHeader', { timeout: 15000 }).should('exist');
 			cy.getByAutoId('caseSearchBox').should('exist');
@@ -60,6 +62,8 @@ describe('Case Detail Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('PBC-233 Case Details Click on case from List', () => {
@@ -112,9 +116,13 @@ describe('Case Detail Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 		beforeEach(() => {
 			cy.loadApp('/solution/resolution');
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 			cy.getByAutoId('Facet-Problem Resolution', { timeout: 10000 }).click();
 			cy.getByAutoId('caseSearchBox', { timeout: 10000 }).should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
@@ -228,11 +236,14 @@ describe('Case Detail Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn')
+				.then(setupwizardclosebtn => setupwizardclosebtn.click());
 		});
 
 		it('PBC-83 Cases - Number of Open Cases', () => {
 			cy.getByAutoId('openCases').should('exist').should('contain', i18n._OpenCases_);
-			cy.getByAutoId('openRMAs').should('exist').should('contain', i18n._OpenRMAs_);
+			cy.getByAutoId('openRMAs').should('exist').should('contain', i18n._WithRMAs_);
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			// Look in Visual Filters of Open Cases
 			cy.getByAutoId('VisualFilterCollapse')
@@ -259,6 +270,22 @@ describe('Case Detail Spec', () => {
 				cy.get('tspan').contains('S3'); // The majority is P3
 				// FilterTag testing covered in assets_spec
 			});
+		});
+		it('PBC-85 Cases - Filter by RMA', () => {
+			cy.getByAutoId('Facet-Problem Resolution').click();
+			cy.getByAutoId('CasesSelectVisualFilter-rma', { timeout: 20000 }).should('exist');
+			cy.getByAutoId('No RMAsPoint', { timeout: 10000 }).should('exist');
+			cy.getByAutoId('With RMAsPoint', { timeout: 10000 }).should('exist');
+			// "No RMA" filter fails intermittently, comment out until end server is stable.
+			/* cy.getByAutoId('No RMAsPoint').click();
+			cy.getByAutoId('FilterTag-F', { timeout: 15000 }).within(() => {
+				cy.get('span').contains('No RMAs');
+			}); */
+			cy.getByAutoId('With RMAsPoint').click();
+			cy.getByAutoId('FilterTag-T', { timeout: 15000 }).within(() => {
+				cy.get('span').contains('With RMAs');
+			});
+			cy.getByAutoId('rmaCasesHeader').should('exist');
 		});
 	});
 });

@@ -2,21 +2,24 @@ import {
 	Component,
 	Input,
 	OnDestroy,
+	OnInit,
 	EventEmitter,
 	Output,
 	SimpleChanges,
 } from '@angular/core';
 import {
-	Asset,
+	Asset, NetworkElement, InventoryService, Assets, NetworkElementResponse,
 } from '@sdp-api';
 
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import {
-	takeUntil,
+	takeUntil, catchError, map, mergeMap,
 } from 'rxjs/operators';
 import { UserResolve } from '@utilities';
 import { Alert } from '@interfaces';
 import * as _ from 'lodash-es';
+import { LogService } from '@cisco-ngx/cui-services';
+import { getProductTypeImage } from '@classes';
 
 /**
  * Asset Details Component
@@ -29,18 +32,24 @@ import * as _ from 'lodash-es';
 	styleUrls: ['./asset-details.component.scss'],
 	templateUrl: './asset-details.component.html',
 })
-export class AssetDetailsComponent implements OnDestroy {
+export class AssetDetailsComponent implements OnInit, OnDestroy {
 
+	@Input('serialNumber') public serialNumber: string;
 	@Input('asset') public asset: Asset;
+	@Input('element') public element: NetworkElement;
 	@Output('close') public close = new EventEmitter<boolean>();
 
 	public alert: any = { };
+	public isLoading = false;
 	public hidden = true;
 	public fullscreen = false;
 	public customerId: string;
+	public getProductIcon = getProductTypeImage;
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
+		private inventoryService: InventoryService,
+		private logger: LogService,
 		private userResolve: UserResolve,
 	) {
 		this.userResolve.getCustomerId()
@@ -85,13 +94,98 @@ export class AssetDetailsComponent implements OnDestroy {
 	}
 
 	/**
+	 * Fetches the asset
+	 * @returns the observable
+	 */
+	private fetchAsset () {
+		if (this.asset) {
+			return of(this.asset);
+		}
+
+		return this.inventoryService.getAssets({
+			customerId: this.customerId,
+			page: 1,
+			rows: 1,
+			serialNumber: [this.serialNumber],
+		})
+		.pipe(
+			map((response: Assets) => {
+				const asset: Asset = _.head(response.data);
+
+				this.asset = asset ? asset : null;
+			}),
+			catchError(err => {
+				this.logger.error('asset-details.component : fetchAsset()' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Fetches the network element
+	 * @param asset the asset to use for lookup
+	 * @returns the observable
+	 */
+	private fetchNetworkElement (asset: Asset) {
+		if (this.element) {
+			return of(this.element);
+		}
+
+		return this.inventoryService.getNetworkElements({
+			customerId: this.customerId,
+			serialNumber: [asset.serialNumber],
+		})
+		.pipe(
+			map((response: NetworkElementResponse) => {
+				const networkElement: NetworkElement = _.head(response.data);
+
+				this.element = networkElement ? networkElement : null;
+			}),
+			catchError(err => {
+				this.logger.error('asset-details.component : fetchNetworkElement()' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Refreshes our data
+	 */
+	private refresh () {
+		this.isLoading = true;
+
+		this.fetchAsset()
+		.pipe(
+			mergeMap((asset: Asset) => this.fetchNetworkElement(asset)),
+		)
+		.subscribe(() => {
+			this.isLoading = false;
+		});
+	}
+
+	/**
+	 * Initializer
+	 */
+	public ngOnInit () {
+		this.refresh();
+	}
+
+	/**
 	 * Checks if our currently selected asset has changed
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		if (currentAsset && !changes.asset.firstChange) {
+		const currentSerial = _.get(changes, ['serialNumber', 'currentValue']);
+
+		if ((currentAsset && !changes.asset.firstChange) ||
+			(currentSerial && !changes.serialNumber.firstChange)) {
 			_.invoke(this.alert, 'hide');
+			this.refresh();
 		}
 	}
 }

@@ -15,6 +15,7 @@ import {
 	Mock,
 	user,
 	CGTScenarios,
+	CancelATXScenarios,
 } from '@mock';
 import { of, throwError } from 'rxjs';
 import { DebugElement } from '@angular/core';
@@ -55,6 +56,7 @@ describe('LifecycleComponent', () => {
 	let racetrackSPSpy;
 	let racetrackActionSpy;
 	let racetrackAccBookmarkSpy;
+	let racetrackCancelAtxSessionSpy;
 
 	/**
 	 * Restore spies
@@ -70,6 +72,7 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
 		_.invoke(racetrackAccBookmarkSpy, 'restore');
+		_.invoke(racetrackCancelAtxSessionSpy, 'restore');
 	};
 
 	/**
@@ -87,6 +90,10 @@ describe('LifecycleComponent', () => {
 		racetrackBookmarkSpy = spyOn(racetrackContentService, 'updateBookmark')
 			.and
 			.returnValue(of(getActiveBody(BookmarkScenarios[0], 'POST')));
+
+		racetrackCancelAtxSessionSpy = spyOn(racetrackContentService, 'cancelSessionATX')
+			.and
+			.returnValue(of(getActiveBody(CancelATXScenarios[0], 'DELETE')));
 
 		racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService, 'getCompletedTrainings')
 			.and
@@ -298,6 +305,28 @@ describe('LifecycleComponent', () => {
 				.toBeUndefined();
 		});
 
+		it('should call getPanel function upon clicking viewSessions', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#recommendedATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			el = de.nativeElement;
+
+			spyOn(component, 'getPanel');
+			el.click();
+			fixture.detectChanges();
+
+			expect(component.getPanel)
+				.toHaveBeenCalled();
+
+		});
+
 		it('should have a selected session', () => {
 			buildSpies();
 			sendParams();
@@ -305,6 +334,23 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 
 			const recommended = component.componentData.atx.recommended;
+
+			de = fixture.debugElement.query(By.css('#recommendedATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			component.eventCoordinates = 0;
+			(<any> window).innerWidth = 1200;
+			let viewAtxSessions: HTMLElement;
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panel)
+				.toEqual('panel panel--open');
 
 			expect(component.sessionSelected)
 				.toBeUndefined();
@@ -322,6 +368,18 @@ describe('LifecycleComponent', () => {
 
 			expect(component.sessionSelected)
 				.toBeNull();
+
+			const atx1 = component.componentData.atx.sessions[0];
+			expect(atx1.status)
+				.toEqual('scheduled');
+			expect(atx1.sessions[1].scheduled)
+				.toBeTruthy();
+			component.cancelATXSession(atx1);
+			fixture.detectChanges();
+			expect(atx1.status)
+				.toEqual('recommended');
+			expect(atx1.sessions[1].scheduled)
+				.toBeFalsy();
 		});
 
 		it('should show the atx view-all modal', () => {
@@ -359,6 +417,34 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
+			de = fixture.debugElement.query(By.css('#ATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			component.eventCoordinates = 200;
+			(<any> window).innerWidth = 1200;
+			let viewAtxSessions: HTMLElement;
+			component.componentData.atx.interested = { };
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panel)
+				.toEqual('panel cardpanel--open');
+
+			component.eventCoordinates = 1000;
+			(<any> window).innerWidth = 1200;
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panelRight = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panelRight)
+				.toEqual('panel cardpanel--openright');
 			expect(component.getTitle('ATX'))
 				.toEqual('Ask The Expert');
 
@@ -600,12 +686,12 @@ describe('LifecycleComponent', () => {
 
 			component.onSort('title', 'asc', 'SB');
 			fixture.detectChanges();
-			expect(component.successBytesTable.columns[0].sortDirection)
+			expect(component.successBytesTable.columns[1].sortDirection)
 				.toEqual('desc');
 
 			component.onSort('title', 'desc', 'SB');
 			fixture.detectChanges();
-			expect(component.successBytesTable.columns[0].sortDirection)
+			expect(component.successBytesTable.columns[1].sortDirection)
 				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
@@ -663,7 +749,7 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			expect(component.getTitle('PG'))
-				.toEqual('Product Documetation and Videos');
+				.toEqual('Product Documentation and Videos');
 
 			expect(component.getSubtitle('PG'))
 				.toEqual('\"How-to\" resources for planning, installation and more');
@@ -690,12 +776,12 @@ describe('LifecycleComponent', () => {
 
 			component.onSort('title', 'asc', 'PG');
 			fixture.detectChanges();
-			expect(component.productGuidesTable.columns[0].sortDirection)
+			expect(component.productGuidesTable.columns[1].sortDirection)
 				.toEqual('desc');
 
 			component.onSort('title', 'desc', 'PG');
 			fixture.detectChanges();
-			expect(component.productGuidesTable.columns[0].sortDirection)
+			expect(component.productGuidesTable.columns[1].sortDirection)
 				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
@@ -735,15 +821,15 @@ describe('LifecycleComponent', () => {
 
 			fixture.whenStable()
 				.then(() => {
-					expect(component.componentData.learning.elearning[0].percentageCompleted)
+					expect(component.componentData.learning.elearning[0].percentagecompleted)
 						.toBeUndefined();
-					expect(component.componentData.learning.elearning[1].percentageCompleted)
+					expect(component.componentData.learning.elearning[1].percentagecompleted)
 						.toEqual(25);
-					expect(component.componentData.learning.elearning[2].percentageCompleted)
+					expect(component.componentData.learning.elearning[2].percentagecompleted)
 						.toEqual(50);
-					expect(component.componentData.learning.elearning[3].percentageCompleted)
+					expect(component.componentData.learning.elearning[3].percentagecompleted)
 						.toEqual(75);
-					expect(component.componentData.learning.elearning[4].percentageCompleted)
+					expect(component.componentData.learning.elearning[4].percentagecompleted)
 						.toEqual(100);
 
 					de = fixture.debugElement.query(By.css('.learning-progress-col'));
@@ -778,21 +864,21 @@ describe('LifecycleComponent', () => {
 
 			fixture.whenStable()
 				.then(() => {
-					expect(component.componentData.learning.certifications[0].percentageCompleted)
+					expect(component.componentData.learning.certifications[0].percentagecompleted)
 						.toEqual(25);
-					expect(component.componentData.learning.certifications[1].percentageCompleted)
+					expect(component.componentData.learning.certifications[1].percentagecompleted)
 						.toEqual(50);
-					expect(component.componentData.learning.certifications[2].percentageCompleted)
+					expect(component.componentData.learning.certifications[2].percentagecompleted)
 						.toEqual(75);
-					expect(component.componentData.learning.certifications[3].percentageCompleted)
+					expect(component.componentData.learning.certifications[3].percentagecompleted)
 						.toEqual(100);
-					expect(component.componentData.learning.certifications[4].percentageCompleted)
+					expect(component.componentData.learning.certifications[4].percentagecompleted)
 						.toEqual(25);
-					expect(component.componentData.learning.certifications[5].percentageCompleted)
+					expect(component.componentData.learning.certifications[5].percentagecompleted)
 						.toEqual(50);
-					expect(component.componentData.learning.certifications[6].percentageCompleted)
+					expect(component.componentData.learning.certifications[6].percentagecompleted)
 						.toEqual(75);
-					expect(component.componentData.learning.certifications[7].percentageCompleted)
+					expect(component.componentData.learning.certifications[7].percentagecompleted)
 						.toEqual(100);
 					de = fixture.debugElement.query(By.css('.learning-progress-col'));
 					expect(de)

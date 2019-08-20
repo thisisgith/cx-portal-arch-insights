@@ -1,0 +1,51 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+:host {
+	.calendar-cell {
+		cursor: default;
+		margin: 2px;
+		text-align: center;
+		transition: background 0.4s;
+
+		.icon-container {
+			height: 20px;
+		}
+
+		.today-highlight {
+			background: $cisco-blue;
+			color: $white;
+			font-weight: bold;
+			border-radius: 4px;
+		}
+
+		&:hover {
+			background: $light-gray-3;
+		}
+	}
+
+	.calendar-grid {
+		display: grid;
+		grid-template-columns: repeat(7, 14.29%);
+		grid-template-rows: repeat(6, 16.67%);
+		width: 100%;
+		height: 300px;
+	}
+
+	.calendar-header {
+		display: grid;
+		grid-template-columns: repeat(7, 14.29%);
+		width: 100%;
+	}
+
+	.calendar-nav {
+		margin-left: $base-spacing;
+		margin-right: $base-spacing;
+		margin-bottom: $base-spacing;
+
+		.nav-left,
+		.nav-right {
+			flex-grow: 1;
+			cursor: pointer;
+		}
+	}
+}

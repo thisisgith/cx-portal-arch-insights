@@ -11,3 +11,5 @@ export { SETUP_STATES } from './ie';
 export { severityMap, severityLevelMap } from './severities';
 
 export { KEY_CODES } from './utils';
+
+export { getProductTypeImage } from './assetIcon';

@@ -1,0 +1,16 @@
+<div
+	#tooltipContainer
+	class="tooltip-container"
+	[ngStyle]="{
+		'top': (positionY - OFFSET) + 'px',
+		'left': (positionX) + 'px',
+		'max-height': maxHeight ? maxHeight + 'px' : undefined,
+		'max-width': maxWidth ? maxWidth + 'px' : undefined
+	}">
+	<ng-container *ngIf="template">
+		<ng-container *ngTemplateOutlet="template"></ng-container>
+	</ng-container>
+	<ng-container *ngIf="component">
+		<ng-template tooltip-host></ng-template>
+	</ng-container>
+</div>

@@ -29,10 +29,6 @@ export * from './lib/controlpoints/models';
 export * from './lib/controlpoints/services';
 export * from './lib/controlpoints/control-points.module';
 
-export * from './lib/controlpoints/models';
-export * from './lib/controlpoints/services';
-export * from './lib/controlpoints/control-points.module';
-
 export * from './lib/search/models';
 export * from './lib/search/services';
 export * from './lib/search/search.module';
@@ -48,6 +44,10 @@ export * from './lib/network-data-gateway/network-data-gateway.module';
 export * from './lib/entitlement/models';
 export * from './lib/entitlement/services';
 export * from './lib/entitlement/entitlement.module';
+
+export * from './lib/osv/models';
+export * from './lib/osv/services';
+export * from './lib/osv/osv.module';
 
 export * from './lib/email/models';
 export * from './lib/email/services';

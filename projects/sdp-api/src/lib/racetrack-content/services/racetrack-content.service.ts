@@ -26,6 +26,7 @@ import { BookmarkRequestSchema } from '../models/bookmark-request-schema';
 })
 class RacetrackContentService extends __BaseService {
   static readonly getRacetrackATXPath = '/atx';
+  static readonly cancelSessionATXPath = '/atx/registration/{atxId}/{sessionId}';
   static readonly getRacetrackACCPath = '/acc';
   static readonly updateACCBookmarkPath = '/acc/{accId}/bookmark';
   static readonly requestACCPath = '/acc/{accId}/request';
@@ -133,6 +134,57 @@ class RacetrackContentService extends __BaseService {
   getRacetrackATX(params: RacetrackContentService.GetRacetrackATXParams): __Observable<ATXResponseModel> {
     return this.getRacetrackATXResponse(params).pipe(
       __map(_r => _r.body as ATXResponseModel)
+    );
+  }
+
+  /**
+   * @param params The `RacetrackContentService.CancelSessionATXParams` containing the following parameters:
+   *
+   * - `sessionId`: Id of the selected session to cancel
+   *
+   * - `atxId`: Id of the selected ATX
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   */
+  cancelSessionATXResponse(params: RacetrackContentService.CancelSessionATXParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+
+
+    if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
+    let req = new HttpRequest<any>(
+      'DELETE',
+      this.rootUrl + `/customerportal/racetrack/v1/atx/registration/${params.atxId}/${params.sessionId}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `RacetrackContentService.CancelSessionATXParams` containing the following parameters:
+   *
+   * - `sessionId`: Id of the selected session to cancel
+   *
+   * - `atxId`: Id of the selected ATX
+   *
+   * - `X-Mashery-Handshake`: Mashery user credential header
+   */
+  cancelSessionATX(params: RacetrackContentService.CancelSessionATXParams): __Observable<null> {
+    return this.cancelSessionATXResponse(params).pipe(
+      __map(_r => _r.body as null)
     );
   }
 
@@ -864,6 +916,27 @@ module RacetrackContentService {
      * Requested fields in the response.
      */
     fields?: Array<string>;
+
+    /**
+     * Mashery user credential header
+     */
+    XMasheryHandshake?: string;
+  }
+
+  /**
+   * Parameters for cancelSessionATX
+   */
+  export interface CancelSessionATXParams {
+
+    /**
+     * Id of the selected session to cancel
+     */
+    sessionId: string;
+
+    /**
+     * Id of the selected ATX
+     */
+    atxId: string;
 
     /**
      * Mashery user credential header

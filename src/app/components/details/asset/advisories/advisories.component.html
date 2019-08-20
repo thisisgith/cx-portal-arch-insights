@@ -20,7 +20,7 @@
 	</div>
 </div>
 <div class="base-margin-top" *ngIf="selectedTab">
-	<span *ngIf="selectedTab?.data?.pagination"
+	<span *ngIf="selectedTab?.data?.length && selectedTab?.pagination"
 		[innerText]="'_ShowingXofYZ_' | i18n:selectedTab?.data?.length:selectedTab?.pagination?.total:selectedTab?.title"
 		data-auto-id="AdvisoryTab-ShowingTxt">
 	</span>

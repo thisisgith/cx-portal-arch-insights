@@ -91,22 +91,7 @@
 		<div class="col-md-3">
 			<div class="flex flex-fluid">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
-						<div class="form-group__text disabled">
-							<input id="searchInput"
-								type="search"
-								#searchInput
-								[minlength]="searchOptions.min"
-								[maxlength]="searchOptions.max"
-								[pattern]="searchOptions.pattern"
-								formControlName="search"
-								placeholder="{{ '_Search_' | i18n }} {{ tab?.label | lowercase }}"
-								ngDefaultControl>
-							<button type="button" class="link">
-								<span class="icon-search"></span>
-							</button>
-						</div>
-					</form>
+					<ng-container *ngTemplateOutlet="tab.searchTemplate; context: { tab: tab }"></ng-container>
 				</div>
 			</div>
 		</div>
@@ -167,7 +152,7 @@
 					data-auto-id="NoResultsFoundTxt" >
 				</span>
 			</div>
-			<div>
+			<div *ngIf="tab.filtered">
 				<a (click)="clearFilters()"
 					class="text-lowercase"
 					data-auto-id="NoResultsClearAll"
@@ -226,6 +211,66 @@
 			data-auto-id="ImpactedCountText">
 		</span>
 	</div>
+</ng-template>
+
+<ng-template #securitySearchTemplate let-tab="tab">
+	<form *ngIf="tab.searchForm" [formGroup]="tab.searchForm" novalidate>
+		<div class="form-group__text">
+			<input id="searchInput-Security"
+				attr.data-auto-id="SearchInput-Security"
+				type="search"
+				#securitySearchInput
+				[minlength]="searchOptions.min"
+				[maxlength]="searchOptions.max"
+				[pattern]="searchOptions.pattern"
+				formControlName="search"
+				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				ngDefaultControl>
+			<button type="button" class="link">
+				<span class="icon-search"></span>
+			</button>
+		</div>
+	</form>
+</ng-template>
+
+<ng-template #fieldSearchTemplate let-tab="tab">
+	<form *ngIf="tab.searchForm" [formGroup]="tab.searchForm" novalidate>
+		<div class="form-group__text">
+			<input id="searchInput-Field"
+				attr.data-auto-id="SearchInput-Field"
+				type="search"
+				#fieldSearchInput
+				[minlength]="searchOptions.min"
+				[maxlength]="searchOptions.max"
+				[pattern]="searchOptions.pattern"
+				formControlName="search"
+				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				ngDefaultControl>
+			<button type="button" class="link">
+				<span class="icon-search"></span>
+			</button>
+		</div>
+	</form>
+</ng-template>
+
+<ng-template #bugsSearchTemplate let-tab="tab">
+	<form *ngIf="tab.searchForm" [formGroup]="tab.searchForm" novalidate>
+		<div class="form-group__text">
+			<input id="searchInput-Bugs"
+				attr.data-auto-id="SearchInput-Bugs"
+				type="search"
+				#bugsSearchInput
+				[minlength]="searchOptions.min"
+				[maxlength]="searchOptions.max"
+				[pattern]="searchOptions.pattern"
+				formControlName="search"
+				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				ngDefaultControl>
+			<button type="button" class="link">
+				<span class="icon-search"></span>
+			</button>
+		</div>
+	</form>
 </ng-template>
 
 <ng-template #impactedAssetsTemplate let-celldata="celldata">
