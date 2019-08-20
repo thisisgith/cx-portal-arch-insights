@@ -47,4 +47,9 @@ describe('ArchitectureComponent', () => {
 		expect(service.getAssetsExceptionsCount)
 			.toHaveBeenCalled();
 	});
+
+	it('should select the tab on click', () => {
+		expect(component.selectVisualLabel('Configuration Best Practices || Assets With Exception'))
+			.toHaveBeenCalled();
+	});
 });

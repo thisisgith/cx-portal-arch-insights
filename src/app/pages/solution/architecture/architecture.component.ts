@@ -38,7 +38,7 @@ export class ArchitectureComponent implements OnInit {
 		{ label: I18n.get('_AssetsWithExceptions_'), active: false, count: null },
 	];
 
-	constructor(private logger: LogService, private architectureService: ArchitectureService) {
+	constructor (private logger: LogService, private architectureService: ArchitectureService) {
 		this.logger.debug('ArchitectureComponent Created!');
 	}
 
