@@ -1,0 +1,74 @@
+<div class="row dbl-margin-top">
+	<div class="col-md-8">
+		<div class="text-large text-bold" [innerText]="'_OsvBasicRecommendations_' | i18n | uppercase"></div>
+		<div class="text-medium qtr-margin-top" *ngIf="view =='timeline' && assetDetails && assetDetails?.length > 0"
+			[innerText]="'_OsvClickToSelectRecommendation_' | i18n"></div>
+	</div>
+	<div class="col-md-4 pull-right">
+		<div class="btn-group btn-group--square half-margin-right pull-right">
+			<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost"
+				[ngClass]="{ 'selected': view == 'list' }" (click)=" view = 'list'">
+				<span class="icon-list-view"></span>
+			</button>
+			<button data-auto-id="timeline-view-btn" class="btn btn--small btn--gray-ghost"
+				[ngClass]="{ 'selected': view == 'timeline' }" (click)="view = 'timeline'">
+				<span class="icon-time"></span>
+			</button>
+		</div>
+
+	</div>
+</div>
+
+
+<div class="dbl-margin-top"
+	*ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view == 'timeline'">
+	<span class="text-large" [innerText]="'_OsvSelectedRecommendation_' | i18n"></span>
+	<span class="qtr-margin-left text-large">{{selectedRecommendation?.name | titlecase}}</span>
+	<button *ngIf="selectedRecommendation?.name != 'None'" class="qtr-margin-left" cuiButton [color]="'primary'"
+		[small]="true" [wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n"
+		(click)="onActionClick(selectedRecommendation)"
+		attr.data-auto-id="AcceptVersion-{{selectedRecommendation}}"></button>
+</div>
+
+<!-- spinner -->
+<div class="dbl-margin-top" *ngIf="status.isLoading">
+	<cui-spinner></cui-spinner>
+</div>
+
+<!-- timeline view -->
+<div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0 && view =='timeline'">
+	<app-asset-timeline-chart (selectedPoint)="selectedPoint($event)" [data]="assetDetails" [fullscreen]="fullscreen">
+	</app-asset-timeline-chart>
+</div>
+
+<!-- no recommendations found -->
+<div *ngIf="!status.isLoading && assetDetails && assetDetails?.length == 0">
+	<div class="flex-center-horizontal text-xlarge text-muted dbl-margin-top half-margin-bottom"
+		[innerText]="'_OsvNoRecommendations_' | i18n"></div>
+</div>
+
+<!-- asset-details table view -->
+<div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view =='list'">
+	<cui-table [data]="assetDetails" [options]="assetDetailsTable"></cui-table>
+</div>
+<!-- view all os version link -->
+<div class="markup pull-right dbl-margin-top" *ngIf="!status.isLoading && assetDetails?.length > 0">
+	<a class="markup-toggle link">
+		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
+		<span class="icon-popout icon-small qtr-margin-left"></span>
+	</a>
+</div>
+
+
+<ng-template #actionsTemplate let-item="celldata">
+	<button *ngIf="selectedAsset.swVersion != item.swVersion && !item.accepted && !item.error" cuiButton [color]="'gray-ghost'"
+		[small]="true" [wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
+		attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
+	<div *ngIf="selectedAsset.swVersion != item.swVersion && item.accepted">
+		<span class="text-success">{{'_OsvAccepted_' | i18n}}</span>
+		<span *ngIf="selectedAsset?.recommAcceptedDate"
+			class="qtr-padding-left qtr-padding-right text-large text-muted">|</span>
+		<span class="text-small"
+			*ngIf="selectedAsset?.recommAcceptedDate">{{selectedAsset?.recommAcceptedDate | date}}</span>
+	</div>
+</ng-template>
