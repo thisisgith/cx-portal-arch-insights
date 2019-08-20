@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-import { ContactSupportComponent } from './contact-support.component';
-import { ContactSupportModule } from './contact-support.module';
+import { ContactExpertComponent } from './contact-expert.component';
+import { ContactExpertModule } from './contact-expert.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 
-describe('ContactSupportComponent', () => {
-	let component: ContactSupportComponent;
-	let fixture: ComponentFixture<ContactSupportComponent>;
+describe('ContactExpertComponent', () => {
+	let component: ContactExpertComponent;
+	let fixture: ComponentFixture<ContactExpertComponent>;
 	let osvService: OSVService;
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [
-				ContactSupportModule,
+				ContactExpertModule,
 				HttpClientTestingModule,
 			],
 		})
@@ -22,7 +22,7 @@ describe('ContactSupportComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(ContactSupportComponent);
+		fixture = TestBed.createComponent(ContactExpertComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

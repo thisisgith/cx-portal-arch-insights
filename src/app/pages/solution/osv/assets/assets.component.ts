@@ -12,14 +12,14 @@ import {
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, OsvPagination } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
-import { ContactSupportComponent } from '../../contact-support/contact-support.component';
+import { ContactExpertComponent } from '../../contact-expert/contact-expert.component';
 
 /**
  * AssetSoftware Component
@@ -38,8 +38,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Output() public assetStatusUpdated = new EventEmitter<OSVAsset>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
-	@ViewChild(ContactSupportComponent, { static: true }) public contactSupportComponent:
-		ContactSupportComponent;
+
 	private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
@@ -62,6 +61,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
+		private cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -305,6 +305,6 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 * Open contact support modal
 	 */
 	public openContactSupport () {
-		this.contactSupportComponent.openModal();
+		this.cuiModalService.showComponent(ContactExpertComponent, { });
 	}
 }

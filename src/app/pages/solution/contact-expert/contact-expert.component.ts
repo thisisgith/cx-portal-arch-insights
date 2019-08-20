@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiModalService, CuiInputOptions } from '@cisco-ngx/cui-components';
 import { OSVService, ContactSupportResponse } from '@sdp-api';
@@ -9,14 +9,14 @@ import * as _ from 'lodash-es';
 import { Subject, empty } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 /**
- * ContactSupport Component
+ * ContactExpert Component
  */
 @Component({
-	selector: 'app-contact-support',
-	styleUrls: ['./contact-support.component.scss'],
-	templateUrl: './contact-support.component.html',
+	selector: 'app-contact-expert',
+	styleUrls: ['./contact-expert.component.scss'],
+	templateUrl: './contact-expert.component.html',
 })
-export class ContactSupportComponent {
+export class ContactExpertComponent implements OnInit, OnDestroy {
 
 	constructor (
 		private logger: LogService,
@@ -24,12 +24,12 @@ export class ContactSupportComponent {
 		public osvService: OSVService,
 		public profileService: ProfileService,
 	) {
-		this.logger.debug('ContactSupportComponent Created!');
+		this.logger.debug('ContactExpertComponent Created!');
 	}
 
 	@ViewChild('content', { static: false }) public contactSupportTemp: TemplateRef<any>;
 	public supportForm: FormGroup;
-	public title: FormControl = new FormControl('', Validators.required);
+	public title: FormControl = new FormControl({ value: '', disabled: true }, Validators.required);
 	public description: FormControl = new FormControl('', Validators.required);
 
 	public emailMessage = '';
@@ -54,6 +54,7 @@ export class ContactSupportComponent {
 	 * ccRecipient assigned with logged person email address
 	 */
 	public ngOnInit () {
+		this.modelHeading = I18n.get('_CSTitle_');
 		this.supportForm = new FormGroup({
 			description: this.description,
 			title: this.title,
@@ -72,6 +73,7 @@ export class ContactSupportComponent {
 		_.forEach(topicList, topicVal => {
 			this.items.push({ name: topicVal, value: topicVal });
 		});
+		this.supportForm.patchValue({ title: _.get(this.items, [8]) });
 	}
 
 	/**
@@ -113,12 +115,11 @@ export class ContactSupportComponent {
 	}
 
 	/**
-	 * open the Contact a Designated Expert modal
+	 * OnDestroy lifecycle hook
 	 */
-	public openModal () {
-		this.supportForm.reset({ title: this.items[8] });
-		this.responseAvailable = false;
-		this.modelHeading = I18n.get('_CSTitle_');
-		this.cuiModalService.show(this.contactSupportTemp);
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
+
 }

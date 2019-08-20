@@ -1,4 +1,3 @@
-<ng-template #content>
 	<a class="modal__close" (click)="cuiModalService.hide()" data-auto-id="CloseContactSupportModal"><span
 			class="icon-close"></span></a>
 	<div class="modal__header">
@@ -13,7 +12,7 @@
 							[innerText]="'_SupportTopic_' | i18n"></label>
 						<cui-select formControlName="title" #title id="support-title" [required]="true" [empty]="true"
 							[items]="items" placeholder="Select" [compressed]="false" optionsKey="name"
-							optionsValue="value"  disabled="true"></cui-select>
+							optionsValue="value" ></cui-select>
 					</div>
 				</div>
 			</div>
@@ -62,4 +61,3 @@
 			<button class="btn" *ngIf="this.responseAvailable" (click)="cuiModalService.hide();"
 			data-auto-id="ContactSupportModalDone">{{'_SupportDone_' | i18n}}</button>
 	</div>
-</ng-template>
