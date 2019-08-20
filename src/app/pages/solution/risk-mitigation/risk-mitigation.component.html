@@ -130,7 +130,7 @@
 	(onTableRowClicked)="connectToFpDetails($event)"
 	class="table--wrap"></cui-table>
 	<div class="section">
-		<cui-pager *ngIf="highCrashRiskAssetsGridDetails.tableData" [page]="highCrashRiskAssetsGridDetails.tableOffset"
+		<cui-pager *ngIf="highCrashRiskAssetsGridDetails.tableData.length" [page]="highCrashRiskAssetsGridDetails.tableOffset"
 		[limit]="highCrashRiskAssetsGridDetails.tableLimit"
 		[totalItems]="highCrashRiskAssetsGridDetails.totalItems"
 		(onPageChanged)="onHcrPagerUpdated($event);"></cui-pager>

@@ -303,8 +303,6 @@ export class RiskMitigationComponent {
 		this.highCrashRiskParams.size = this.highCrashRiskAssetsGridDetails.tableLimit;
 		this.highCrashRiskParams.page = this.highCrashRiskAssetsGridDetails.tableOffset;
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
-		this.highCrashRiskAssetsGridDetails.totalItems =
-		this.highCrashRiskAssetsGridDetails.totalItems + 10;
 	}
 
 	// tslint:disable-next-line: valid-jsdoc
