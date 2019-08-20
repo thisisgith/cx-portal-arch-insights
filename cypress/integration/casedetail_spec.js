@@ -54,20 +54,23 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('invalidCaseNumber').should('exist').should('contain', i18n._RMAInvalidCaseNo_);
 			cy.getByAutoId('caseSearchBox').should('exist').clear();
 		});
-		it.only('PBC-537 Last Updated and Duration Open Visual Filters', () => {
+		it('PBC-537 Last Updated and Duration Open Visual Filters', () => {
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
-			cy.getByAutoId('CasesSelectVisualFilter-lastUpdated').should('exist');
+			cy.getByAutoId('CasesSelectVisualFilter-lastUpdated').should('exist')
+				.should('contain', 'Last Updated');
 			cy.getByAutoId('lastUpdatedFilter').should('exist')
 				.should('contain', '≤ 24 hrs')
 				.should('contain', '> 1 day')
 				.should('contain', '> 1 week');
-			cy.getByAutoId('CasesSelectVisualFilter-durationOpen').should('exist');
+			cy.getByAutoId('CasesSelectVisualFilter-durationOpen').should('exist')
+				.should('contain', 'Duration Open');
 			cy.getByAutoId('durationOpenFilter').should('exist')
 				.should('contain', '≤ 24 hrs')
 				.should('contain', '> 1 day')
-				.should('contain', '> 1 week');
+				.should('contain', '> 1 week')
+				.should('contain', '> 2 weeks');
 		});
 	});
 	context('Case Detail View', () => {
