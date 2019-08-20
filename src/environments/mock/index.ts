@@ -22,6 +22,8 @@ export * from './inventory/roles';
 
 export { Mock } from './mock';
 
+export * from './ndgw/device';
+
 export * from './product-alerts/advisories-field-notices';
 export * from './product-alerts/advisories-security-advisories';
 export * from './product-alerts/field-notice-bulletins';
