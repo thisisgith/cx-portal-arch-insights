@@ -173,10 +173,10 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						// Should be 4 columns (Bookmark, Name, Status, Action)
 						expect($columnHeaders.length).to.eq(4);
 					});
-					cy.getByAutoId('Table-columnHeader-Bookmark').should('exist');
-					cy.getByAutoId('Table-columnHeader-Name').should('exist');
-					cy.getByAutoId('Table-columnHeader-Status').should('exist');
-					cy.getByAutoId('Table-columnHeader-Action').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Status').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Action').should('exist');
 				});
 		});
 
@@ -252,7 +252,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		it('ATX View All table should be sortable by Bookmark', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('Table-columnHeader-Bookmark').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').click();
 					const sortedItemsAsc = Cypress._.orderBy(atxItems, ['bookmark'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
@@ -268,7 +268,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					});
 
 					// Reverse the sort and re-verify order
-					cy.getByAutoId('Table-columnHeader-Bookmark').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').click();
 					const sortedItemsDesc = Cypress._.orderBy(atxItems, ['bookmark'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
@@ -288,7 +288,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		it('ATX View All table should be sortable by Name', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('Table-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 					const sortedItemsAsc = Cypress._.orderBy(atxItems, ['title'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
@@ -300,7 +300,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					});
 
 					// Reverse the sort and re-verify order
-					cy.getByAutoId('Table-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 					const sortedItemsDesc = Cypress._.orderBy(atxItems, ['title'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
@@ -316,7 +316,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		it('ATX View All table should be sortable by Status', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('Table-columnHeader-Status').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Status').click();
 					const sortedItemsAsc = Cypress._.orderBy(atxItems, ['status'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
@@ -347,7 +347,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					});
 
 					// Reverse the sort and re-verify order
-					cy.getByAutoId('Table-columnHeader-Status').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Status').click();
 					const sortedItemsDesc = Cypress._.orderBy(atxItems, ['status'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
@@ -448,7 +448,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('Table-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Close and re-open the modal
@@ -479,7 +479,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Sort the data
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('Table-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Switch to card view, verify the sort is still in place
@@ -511,7 +511,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		it('ATX View All table sort should NOT be sticky across use case changes', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('Table-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Close the modal, switch use cases, and re-open the modal
@@ -543,7 +543,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		it('ATX View All table sort should NOT be sticky across page navigation', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('Table-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
@@ -575,7 +575,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		it('ATX View All table sort should NOT be sticky across page reload', () => {
 			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('Table-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Close the modal, reload the page, and re-open the modal
