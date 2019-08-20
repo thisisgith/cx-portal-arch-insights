@@ -5,6 +5,7 @@ import { DevicesWithExceptionsModule } from './devices-with-exceptions.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 import { ArchitectureService } from '@sdp-api';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('DevicesWithExceptionsComponent', () => {
 	let component: DevicesWithExceptionsComponent;
@@ -14,7 +15,8 @@ describe('DevicesWithExceptionsComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [DevicesWithExceptionsModule,
-				HttpClientTestingModule],
+				HttpClientTestingModule,
+				RouterTestingModule],
 		})
 		.compileComponents();
 	}));
@@ -36,7 +38,7 @@ describe('DevicesWithExceptionsComponent', () => {
 
 	it('should call getAllAssetsWithExceptions on init', () => {
 		component.getAllAssetsWithExceptions();
-		expect(service.getCBPSeverityList)
+		expect(service.getAllAssetsWithExceptions)
 			.toHaveBeenCalled();
 	});
 });

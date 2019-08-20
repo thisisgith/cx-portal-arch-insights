@@ -6,6 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureService } from '@sdp-api';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CuiTableModule } from '@cisco-ngx/cui-components';
 
 describe('CbpRuleViolationComponent', () => {
 	let component: CbpRuleViolationComponent;
@@ -16,7 +17,8 @@ describe('CbpRuleViolationComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [CbpRuleViolationModule,
 				HttpClientTestingModule,
-				RouterTestingModule],
+				RouterTestingModule,
+				CuiTableModule],
 		})
 		.compileComponents();
 	}));
@@ -42,8 +44,4 @@ describe('CbpRuleViolationComponent', () => {
 			.toHaveBeenCalled();
 	});
 
-	// it('should call build table on init', () => {
-	// 	expect(component.buildTable)
-	// 		.toHaveBeenCalled();
-	// });
 });
