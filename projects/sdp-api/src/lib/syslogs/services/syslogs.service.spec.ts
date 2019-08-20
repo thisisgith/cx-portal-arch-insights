@@ -7,6 +7,7 @@ describe('SyslogsService', () => {
 
 	it('should be created', () => {
 		const service: SyslogsService = TestBed.get(SyslogsService);
+		// tslint:disable-next-line: newline-per-chained-call
 		expect(service).toBeTruthy();
 	});
 });

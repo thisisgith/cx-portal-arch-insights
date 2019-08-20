@@ -1,0 +1,16 @@
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
+#searchForm {
+  width: 100%;
+}
+.view-change-icons {
+  text-align: right;
+}
+#syslog-message-table .cui .table {
+  table-layout: fixed !important;
+}
+.syslog-column {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 400px !important;
+}

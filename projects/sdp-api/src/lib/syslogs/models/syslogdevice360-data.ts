@@ -7,7 +7,10 @@ export interface SyslogDevice360Data {
 	Messageobject?: DeviceMessageDescObject[ ];
 }
 
-export interface SyslogDevice360Outer { 
+/**
+ * Syslog device360 outer
+ */
+export interface SyslogDevice360Outer {
 	SyslogSeverity?: number;
 	showMessage?: boolean;
 	DeviceHost?: number;
@@ -19,4 +22,3 @@ export interface SyslogDevice360Outer {
 	MessageDescObject?: DeviceMessageDescObject[ ];
 
 }
-

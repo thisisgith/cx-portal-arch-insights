@@ -1,7 +1,7 @@
-import { NgModule, ModuleWithProviders } from "@angular/core";
-import { CommonModule } from "@angular/common";
-import { SyslogsConfiguration } from "./syslogs-configuration";
-import { SyslogsService } from "./services/syslogs.service";
+import { NgModule, ModuleWithProviders } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { SyslogsConfiguration } from './syslogs-configuration';
+import { SyslogsService } from './services/syslogs.service';
 
 /**
  * Ng module
@@ -9,7 +9,7 @@ import { SyslogsService } from "./services/syslogs.service";
 @NgModule({
 	declarations: [],
 	imports: [CommonModule],
-	providers: [SyslogsConfiguration, SyslogsService]
+	providers: [SyslogsConfiguration, SyslogsService],
 })
 export class SyslogsDataModule {
 	// tslint:disable-next-line: completed-docs
@@ -19,9 +19,9 @@ export class SyslogsDataModule {
 			providers: [
 				{
 					provide: SyslogsConfiguration,
-					useValue: { rootUrl: customParams.rootUrl }
-				}
-			]
+					useValue: { rootUrl: customParams.rootUrl },
+				},
+			],
 		};
 	}
 }
