@@ -111,7 +111,6 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			`${I18n.get('_SupportName_')}\n` +
 			`${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}\n\n` +
 			`${I18n.get('_SupportEmail_')}\n` + `${userDetails.pf_auth_email}\n\n` +
-			`${I18n.get('_SupportPhone_')}\n` + `${userDetails.pf_auth_email}\n\n` +
 			`${I18n.get('_SupportMessageSection_')}\n\n` +
 			`${I18n.get('_SupportEmailTopic_')}\n` +
 			`${this.supportForm.controls.title.value}\n\n` +
