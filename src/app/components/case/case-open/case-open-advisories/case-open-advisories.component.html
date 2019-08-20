@@ -60,7 +60,10 @@
 							<!-- TODO: in the future we want to pre-fill tech/subtech/problem area based on the
 							information coming from the advisory. For now, we don't know where to get that information
 							so basically duplicating the selects from the case open assets modal -->
-							<tech-form [requestRma]="false"
+							<tech-form #techForm
+								[requestRma]="false"
+								[suggestionTitle]="caseForm.controls.title.value"
+								[suggestionDescription]="caseForm.controls.description.value"
 								(formReady)="onFormReady($event)">
 							</tech-form>
 						</form>

@@ -758,35 +758,42 @@
 		<div class="icon-bookmark icon-medium" (click)="updateBookmark('SB', item)"
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'" data-auto-id="SBCardRibbon"></div>
 		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
-		<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
-		<div class="card__footer">
-			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
-				<div class="row">
-					<div class="col-md-4">
-						<a class="no-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
-							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
-								<span class="icon-apps icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Web_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'Video'">
-								<span class="icon-play-contained icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
-								<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'">
-								<span class="icon-document icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
-							</div>
-						</a>
+		<div class="card__body success__card__body">
+			<div class="success__card__title text-left text-bold text-large">
+				<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
+					[href]="item.url" [innerText]="item.title"></a>
+			</div>
+			<div class="success__card__icons">
+				<div class="type">
+					<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
+						<span class="icon-apps icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Web_' | i18n"></span>
 					</div>
-					<div class="col-md-6 text-muted" *ngIf="item.duration">
-						<span class="icon-clock icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="item.duration"></span>
+					<div class="text-left text-muted" *ngIf="item.type === 'Video'">
+						<span class="icon-play-contained icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
+						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'">
+						<span class="icon-document icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
 					</div>
 				</div>
+				<div class="duration text-muted" *ngIf="item.duration">
+					<span class="icon-clock icon-small half-padding-right"></span>
+					<span class="text-small" [innerText]="item.duration"></span>
+				</div>
+			</div>
+		</div>
+		<div class="card__footer success__card__launch">
+			<div class="card_footer_item" data-auto-id="SuccessCardFooter">
+				<a class="no-link" target="_blank" [href]="item.url">
+					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
+						[innerText]="'_Launch_' | i18n"></button>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -824,34 +831,45 @@
 
 <ng-template #cardPG>
 	<div class="card acc__card" *ngFor="let item of selectedProductGuides" data-auto-id="ProductGuidesCard">
-		<div class="icon-bookmark icon-medium" (click)="updateBookmark('SB', item)"
+		<div class="icon-bookmark icon-medium" (click)="updateBookmark('PG', item)"
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'" data-auto-id="PGCardRibbon"></div>
 		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
-		<div class="card__body success__card__body text-left text-bold text-large" [innerText]="item.title"></div>
-		<div class="card__footer">
-			<div class="card_footer_item" data-auto-id="ProductGuidesCardFooter">
-				<div class="row">
-					<div class="col-md-3">
-						<a class="no-link" data-auto-id="productlink" target="_blank" [href]="item.url">
-							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
-								<span class="icon-apps icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Web_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'Video'">
-								<span class="icon-play-contained icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
-								<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-							</div>
-						</a>
+		<div class="card__body success__card__body">
+			<div class="success__card__title text-left text-bold text-large">
+				<a class="no-link" data-auto-id="producttitle" target="_blank" rel="noopener noreferrer"
+					[href]="item.url" [innerText]="item.title"></a>
+			</div>
+			<div class="success__card__icons">
+				<div class="type">
+					<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
+						<span class="icon-apps icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Web_' | i18n"></span>
 					</div>
-					<div class="col-md-6 text-muted" *ngIf="item.duration">
-						<span class="icon-clock icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="item.duration"></span>
+					<div class="text-left text-muted" *ngIf="item.type === 'Video'">
+						<span class="icon-play-contained icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
+						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+					</div>
+					<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'">
+						<span class="icon-document icon-small half-padding-right"></span>
+						<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
 					</div>
 				</div>
+				<div class="duration text-muted" *ngIf="item.duration">
+					<span class="icon-clock icon-small half-padding-right"></span>
+					<span class="text-small" [innerText]="item.duration"></span>
+				</div>
+			</div>
+		</div>
+		<div class="card__footer success__card__launch">
+			<div class="card_footer_item" data-auto-id="ProductGuidesCardFooter">
+				<a class="no-link" target="_blank" [href]="item.url">
+					<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase"
+						[innerText]="'_Launch_' | i18n"></button>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -1113,6 +1131,10 @@
 		<div class="col-md-10">
 			<div class="half-margin-top" [innerText]="celldata.title"></div>
 		</div>
+	</div>
+	<div *ngIf="type==='SB' || type==='PG'">
+		<a class="no-link" target="_blank" rel="noopener noreferrer" data-auto-id="successlink"
+			[innerText]="celldata.title" [href]="celldata.url" attr.data-auto-id="{{ type }}-rowValue"></a>
 	</div>
 </ng-template>
 

@@ -1,1 +1,27 @@
-/** Empty component SCSS file */
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.filter {
+	min-height: 220px;
+
+	&__selected {
+		border-bottom: 4px solid $primary;
+	}
+
+	&__not-selected {
+		border-bottom: 4px solid $white;
+	}
+
+	&__title {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+	}
+}
+
+.margin-auto {
+	margin: auto;
+}
+
+.vertical-center {
+	vertical-align: middle;
+}
