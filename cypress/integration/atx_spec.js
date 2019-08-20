@@ -153,6 +153,10 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('ATXCard').should('be.visible');
 			cy.getByAutoId('SuccessPathCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.be.visible');
+
+			// Refresh the page to force-reset bookmarks
+			cy.loadApp();
+			cy.waitForAppLoading('atxLoading', 15000);
 		});
 
 		it('ATX View All should be able to toggle between table and card views', () => {
@@ -446,6 +450,30 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						.parent()
 						.should('have.attr', 'href', item.recordingURL)
 						.and('have.attr', 'target', '_blank');
+				});
+			});
+		});
+
+		it('ATX View All table view should allow bookmarking/unbookmarking items', () => {
+			atxItems.forEach((item, index) => {
+				cy.get('tr').eq(index + 1).within(() => {
+					if (item.status !== 'completed') {
+						if (item.bookmark) {
+							cy.getByAutoId('SBListRibbon')
+								.should('have.class', 'text-indigo')
+								.click();
+							cy.wait('(SB) IBN-Bookmark');
+							cy.getByAutoId('SBListRibbon')
+								.should('have.class', 'icon-bookmark-clear');
+						} else {
+							cy.getByAutoId('SBListRibbon')
+								.should('have.class', 'icon-bookmark-clear')
+								.click();
+							cy.wait('(SB) IBN-Bookmark');
+							cy.getByAutoId('SBListRibbon')
+								.should('have.class', 'text-indigo');
+						}
+					}
 				});
 			});
 		});
