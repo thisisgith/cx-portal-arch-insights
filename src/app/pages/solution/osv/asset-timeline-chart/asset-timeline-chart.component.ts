@@ -201,7 +201,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 		if (!fullscreen.firstChange || !assetDetails.firstChange) {
 			setTimeout(() => {
 				this.buildGraph();
-			}, 500);
+			}, 250);
 		}
 	}
 
