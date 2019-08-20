@@ -61,7 +61,8 @@ export class ContactExpertComponent implements OnInit, OnDestroy {
 		});
 		this.responseAvailable = false;
 		this.getTopicList();
-		this.ccRecipient = this.profileService.getProfile().cpr.pf_auth_email;
+		const profile = this.profileService.getProfile();
+		this.ccRecipient = _.get(profile, ['cpr', 'pf_auth_email']);
 	}
 
 	/**

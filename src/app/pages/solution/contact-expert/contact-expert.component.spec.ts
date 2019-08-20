@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 
-describe('ContactExpertComponent', () => {
+fdescribe('ContactExpertComponent', () => {
 	let component: ContactExpertComponent;
 	let fixture: ComponentFixture<ContactExpertComponent>;
 	let osvService: OSVService;
@@ -39,7 +39,7 @@ describe('ContactExpertComponent', () => {
 		component.submitMessage();
 		fixture.detectChanges();
 		expect(component.modelHeading)
-			.toEqual('test message');
+			.toEqual('Message Sent');
 		expect(component.showLoader)
 			.toBe(false);
 	});
@@ -51,7 +51,7 @@ describe('ContactExpertComponent', () => {
 		component.submitMessage();
 		fixture.detectChanges();
 		expect(component.modelHeading)
-			.toEqual('test message');
+			.toEqual('Failed to Send');
 		expect(component.showLoader)
 			.toBe(false);
 	});
@@ -67,7 +67,7 @@ describe('ContactExpertComponent', () => {
 		component.submitMessage();
 		fixture.detectChanges();
 		expect(component.modelHeading)
-			.toEqual('Failed to Send');
+			.toEqual('CSErrorTitle');
 		expect(component.showLoader)
 			.toBe(false);
 	});
