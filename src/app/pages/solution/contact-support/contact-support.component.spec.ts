@@ -35,7 +35,7 @@ describe('ContactSupportComponent', () => {
 	it('should turn off loading indicator once we send support email', () => {
 		spyOn(osvService, 'contactSupport')
 			.and
-			.returnValue(of({ status: true, message: 'test message', messageDetails: '' }));
+			.returnValue(of({ status: true, message: 'Message Sent', messageDetails: '' }));
 		component.submitMessage();
 		fixture.detectChanges();
 		expect(component.modelHeading)
@@ -44,10 +44,10 @@ describe('ContactSupportComponent', () => {
 			.toBe(false);
 	});
 
-	it('should turn off loading indicator once we send support email error scenario', () => {
+	it('Error scenario when email sending fails, if the status is false', () => {
 		spyOn(osvService, 'contactSupport')
 			.and
-			.returnValue(of({ status: false, message: 'test message', messageDetails: '' }));
+			.returnValue(of({ status: false, message: 'Failed to Send', messageDetails: '' }));
 		component.submitMessage();
 		fixture.detectChanges();
 		expect(component.modelHeading)
@@ -56,7 +56,7 @@ describe('ContactSupportComponent', () => {
 			.toBe(false);
 	});
 
-	it('should proper error message once we support email fails', () => {
+	it('Should display custom error when api is not available due to network failure', () => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',

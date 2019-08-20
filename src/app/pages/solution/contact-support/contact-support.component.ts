@@ -81,7 +81,7 @@ export class ContactSupportComponent {
 		this.emailParams = {
 			body: this.supportForm.controls.description.value,
 			cc: this.ccRecipient,
-			subject: this.supportForm.controls.title.value,
+			subject: this.items[8].name,
 		};
 		this.showLoader = true;
 		this.osvService.contactSupport(this.emailParams)
