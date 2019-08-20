@@ -1095,24 +1095,24 @@
 </ng-template>
 
 <ng-template #statusTemplate let-celldata="celldata">
-	<div *ngIf="celldata.status ==='scheduled'">
+	<div *ngIf="celldata.status ==='scheduled'" data-auto-id="Table-Status-Scheduled">
 		<div *ngFor="let session of celldata.sessions">
 			<div *ngIf="session.scheduled">
 				<span class="text-info icon-calendar icon-small"></span>
 				<span class="qtr-margin-left"
-					innerText="{{ session.sessionStartDate | date:'medium'}}"></span>
+					innerText="{{ session.sessionStartDate | date:'medium'}}" data-auto-id="scheduledDate"></span>
 			</div>
 		</div>
 	</div>
-	<div *ngIf="celldata.status === 'requested'">
+	<div *ngIf="celldata.status === 'requested'" data-auto-id="Table-Status-Requested">
 		<span class="text-info icon-check-outline icon-small"></span>
 		<span class="qtr-margin-left" [innerText]="'_Requested_' | i18n"></span>
 	</div>
-	<div *ngIf="celldata.status ==='in-progress'">
+	<div *ngIf="celldata.status ==='in-progress'" data-auto-id="Table-Status-InProgress">
 		<span class="text-info icon-clock icon-small"></span>
 		<span class="qtr-margin-left" [innerText]="'_InProgress_' | i18n"></span>
 	</div>
-	<div *ngIf="celldata.status ==='completed'">
+	<div *ngIf="celldata.status ==='completed'" data-auto-id="Table-Status-Completed">
 		<span class="text-success icon-certified icon-small"></span>
 		<span class="qtr-margin-left" [innerText]="'_Completed_' | i18n"></span>
 	</div>
@@ -1158,7 +1158,7 @@
 				attr.data-auto-id="{{ type }}-Image">
 		</div>
 		<div class="col-md-10">
-			<div class="half-margin-top" [innerText]="celldata.title"></div>
+			<div class="half-margin-top" [innerText]="celldata.title" attr.data-auto-id="{{ type }}-Title"></div>
 		</div>
 	</div>
 	<div class="row" *ngIf="type==='ACC'">

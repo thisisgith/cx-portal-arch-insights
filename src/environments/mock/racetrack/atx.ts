@@ -68,7 +68,7 @@ const onboardItems = [
 	},
 	{
 		atxId: 'ATX2',
-		title: 'Cisco DNA Center Project Plan Best Practices',
+		title: 'Cisco DNA Center Project Plan Best Practices 1',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-Center-Project-Plan-Best-Practices.png',
 		status: 'completed',
@@ -122,7 +122,7 @@ const onboardItems = [
 	},
 	{
 		atxId: 'DNA3',
-		title: 'Cisco DNA Center Project Plan Best Practices',
+		title: 'Cisco DNA Center Project Plan Best Practices 2',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Center-Wireless-Assurance.png',
 		status: 'in-progress',
@@ -141,7 +141,7 @@ const onboardItems = [
 	},
 	{
 		atxId: 'DNA4',
-		title: 'Cisco DNA Center Project Plan Best Practices',
+		title: 'Cisco DNA Center Project Plan Best Practices 3',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Center-Feature-Overview.png',
 		status: 'requested',
@@ -173,6 +173,7 @@ const implementItems = [
 		bookmark: true,
 		sessions: [
 			{
+				sessionId: 'Session1',
 				sessionStartDate: 1565127052000,
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
@@ -190,6 +191,7 @@ const implementItems = [
 		bookmark: true,
 		sessions: [
 			{
+				sessionId: 'Session2',
 				sessionStartDate: 1565127052000,
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
@@ -257,7 +259,7 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=implement&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -274,7 +276,7 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=use&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Use&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
