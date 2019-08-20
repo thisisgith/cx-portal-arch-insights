@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 
-fdescribe('ContactExpertComponent', () => {
+describe('ContactExpertComponent', () => {
 	let component: ContactExpertComponent;
 	let fixture: ComponentFixture<ContactExpertComponent>;
 	let osvService: OSVService;

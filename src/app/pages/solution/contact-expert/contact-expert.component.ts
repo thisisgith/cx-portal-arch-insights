@@ -30,7 +30,8 @@ export class ContactExpertComponent implements OnInit, OnDestroy {
 	@ViewChild('content', { static: false }) public contactSupportTemp: TemplateRef<any>;
 	public supportForm: FormGroup;
 	public title: FormControl = new FormControl({ value: '', disabled: true }, Validators.required);
-	public description: FormControl = new FormControl('', Validators.required);
+	public description: FormControl = new FormControl('',
+			[Validators.required, Validators.maxLength(5000)]);
 
 	public emailMessage = '';
 	public ccRecipient = '';
