@@ -1011,7 +1011,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "use" (current+2) and check if button is disabled
 			component.getRacetrackInfo('use');
-			component.recommendedAtxScheduleCardOpened =true;
+			component.recommendedAtxScheduleCardOpened = true;
 			fixture.detectChanges();
 			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
 			expect(de)
