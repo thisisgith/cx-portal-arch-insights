@@ -148,7 +148,7 @@
 	<ng-container *ngIf="data.sessions.length">
 		<ng-container *ngTemplateOutlet="more; context: { data: data.sessions, autoid: 'moreATXList' }"></ng-container>
 	</ng-container>
-	<ng-container *ngIf="componentData?.atx?.recommended">
+	<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
 		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.recommended }"></ng-container>
 	</ng-container>
 </ng-template>
@@ -220,7 +220,7 @@
 	<div class="text-large base-padding-bottom text-capitalize" [innerText]="title" attr.data-auto-id="{{ autoid }}-Title"></div>
 	<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 		class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-		(click)="atxScheduleCardOpened = true; componentData.atx.interested=''"
+		(click)="recommendedAtxScheduleCardOpened = true; componentData.atx.interested=''"
 		[innerText]="'_ViewSessions_' | i18n">
 	</button>
 	<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="componentData.atx?.recommended?.recordingURL">
@@ -254,7 +254,7 @@
 
 <ng-template #recommendedATXSchedule let-data="data">
 	<div class="panel panel--bordered"
-		*ngIf="atxScheduleCardOpened"
+		*ngIf="atxScheduleCardOpened || recommendedAtxScheduleCardOpened"
 		#viewAtxSessions
 		id="viewAtxPanel"
 		[ngClass]="getPanel(viewAtxSessions)" data-auto-id="atxScheduleCard">
@@ -264,7 +264,7 @@
 			</div>
 			<div class="col-md-1">
 				<a class="no-link closebtn"
-					(click)="this.atxScheduleCardOpened = false; selectSession(); eventCoordinates = 0"
+					(click)="this.atxScheduleCardOpened = false; recommendedAtxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0"
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
 				</a>
@@ -553,11 +553,11 @@
 				<div *ngIf="type==='ATX'" class="col-md-1 text-right">
 					<div class="btn-group btn-group--square">
 						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type)">
+							[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
 							<span class="icon-list-view"></span>
 						</button>
 						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type)">
+							[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
 							<span class="icon-grid-view"></span>
 						</button>
 					</div>
@@ -685,7 +685,7 @@
 					<div class="col-md-6 text-left">
 						<button id="ATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 							class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-							(click)="atxScheduleCardOpened = true; componentData.atx.interested = item; getCoordinates($event)"
+							(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = item; getCoordinates($event)"
 							[innerText]="'_ViewSessions_' | i18n">
 						</button>
 					</div>
@@ -817,9 +817,6 @@
 		<td class="text-left" *ngFor="let column of columns" [ngStyle]="{ 'width': column.width }">
 			<ng-container *ngIf="column.template">
 				<ng-container *ngTemplateOutlet="column.template; context: { celldata: item, type: type }"></ng-container>
-				<ng-container *ngIf="atxScheduleCardOpened">
-					<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }"></ng-container>
-				</ng-container>
 			</ng-container>
 			<ng-container *ngIf="!column.template">
 				<div [innerText]="item[column.key]" attr.data-auto-id="ViewAllTable-{{ column.name }}-rowValue">
@@ -827,6 +824,9 @@
 			</ng-container>
 		</td>
 	</tr>
+	<ng-container *ngIf="atxScheduleCardOpened">
+			<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }"></ng-container>
+	</ng-container>
 </ng-template>
 
 <ng-template #cardPG>
@@ -1083,7 +1083,7 @@
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div *ngIf="type === 'ATX'">
 		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-			(click)="atxScheduleCardOpened = true; componentData.atx.interested = celldata"
+			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
 		<!-- Hong this is for testing purpose, will remove after link with popup panel-->
