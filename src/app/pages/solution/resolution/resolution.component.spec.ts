@@ -223,9 +223,53 @@ describe('ResolutionComponent', () => {
 			.toBeFalsy();
 	}));
 
+	it('should select the lastUpdated filter properly', fakeAsync(() => {
+		const lastUpdatedFilter = _.find(component.filters, { key: 'lastUpdated' });
+		component.onSubfilterSelect('≤ 24 hrs', lastUpdatedFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(component.selectedFilters)
+			.toContain(lastUpdatedFilter);
+
+		component.onSubfilterSelect('> 1 day', lastUpdatedFilter);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(_.get(_.find(lastUpdatedFilter.seriesData, { label: '> 1 day' }), 'selected'))
+			.toBeTruthy();
+
+		expect(_.get(_.find(lastUpdatedFilter.seriesData, { label: '≤ 24 hrs' }), 'selected'))
+			.toBeFalsy();
+	}));
+
+	it('should select the durationOpen filter properly', fakeAsync(() => {
+		const durationOpen = _.find(component.filters, { key: 'durationOpen' });
+		component.onSubfilterSelect('≤ 24 hrs', durationOpen);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(component.selectedFilters)
+			.toContain(durationOpen);
+
+		component.onSubfilterSelect('> 1 day', durationOpen);
+
+		tick();
+		fixture.detectChanges();
+
+		expect(_.get(_.find(durationOpen.seriesData, { label: '> 1 day' }), 'selected'))
+			.toBeTruthy();
+
+		expect(_.get(_.find(durationOpen.seriesData, { label: '≤ 24 hrs' }), 'selected'))
+			.toBeFalsy();
+	}));
+
 	it('should select the RMAs filter properly', fakeAsync(() => {
 		const rmaFilter = _.find(component.filters, { key: 'rma' });
-		component.onSubfilterSelect('F', rmaFilter);
+		component.onSubfilterSelect('No RMAs', rmaFilter);
 
 		tick();
 		fixture.detectChanges();
@@ -233,7 +277,7 @@ describe('ResolutionComponent', () => {
 		expect(component.selectedFilters)
 			.toContain(rmaFilter);
 
-		component.onSubfilterSelect('T', rmaFilter);
+		component.onSubfilterSelect('With RMAs', rmaFilter);
 
 		tick();
 		fixture.detectChanges();
@@ -262,7 +306,7 @@ describe('ResolutionComponent', () => {
 		fixture.detectChanges();
 
 		const severityFilter = _.find(component.filters, { key: 'severity' });
-		component.onSubfilterSelect('1', severityFilter);
+		component.onSubfilterSelect('S1', severityFilter);
 
 		tick();
 		fixture.detectChanges();
