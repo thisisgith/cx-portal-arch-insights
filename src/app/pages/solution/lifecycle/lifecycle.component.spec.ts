@@ -1011,7 +1011,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "use" (current+2) and check if button is disabled
 			component.getRacetrackInfo('use');
-			component.atxScheduleCardOpened = true;
+			component.recommendedAtxScheduleCardOpened =true;
 			fixture.detectChanges();
 			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
 			expect(de)
@@ -1019,7 +1019,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "implement" (current+1) and check if button is enabled
 			component.getRacetrackInfo('implement');
-			component.atxScheduleCardOpened = true;
+			component.recommendedAtxScheduleCardOpened = true;
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
@@ -1032,7 +1032,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "Onboard" (current) and check if button is enabled
 			component.getRacetrackInfo('Onboard');
-			component.atxScheduleCardOpened = true;
+			component.recommendedAtxScheduleCardOpened = true;
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
