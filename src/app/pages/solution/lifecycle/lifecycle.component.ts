@@ -141,7 +141,6 @@ export class LifecycleComponent implements OnDestroy {
 	public eventXCoordinates = 0;
 	public eventYCoordinates = 0;
 	public scrollY = 0;
-	public modalHeight = 0;
 	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
 	// id of ACC in request form
@@ -1122,7 +1121,6 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public getScrollCoordinates (scrollModal: HTMLElement) {
 		this.scrollY = scrollModal.scrollTop;
-		this.modalHeight = scrollModal.offsetHeight;
 	}
 
 	/**
