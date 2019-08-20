@@ -45,13 +45,13 @@
 							{{'_SupportTopic_' | i18n}}
 						</div>
 						<div class="col-md-12">
-							<span>{{topic?.name}}</span>
+							<span>{{items[8].name}}</span>
 						</div>
 						<div class="col-md-12 base-margin-top text-bold">
-							{{'"_SupportMessage_' | i18n}}
+							{{'_SupportMessage_' | i18n}}
 						</div>
 						<div class="col-md-12">
-							<span class="text-break">{{topicDetails}}</span>
+							<span class="text-break">{{emailMessage}}</span>
 						</div>
 					</div>
 				</div>
@@ -59,7 +59,7 @@
 		</div>
 	</div>
 	<div class="modal__footer">
-			<button class="btn" *ngIf="this.responseAvailable" (click)="cuiModalService.hide();resetModalProps()"
+			<button class="btn" *ngIf="this.responseAvailable" (click)="cuiModalService.hide();"
 			data-auto-id="ContactSupportModalDone">{{'_SupportDone_' | i18n}}</button>
 	</div>
 </ng-template>

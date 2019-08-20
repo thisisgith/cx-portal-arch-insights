@@ -36,7 +36,7 @@ describe('ContactSupportComponent', () => {
 		spyOn(osvService, 'contactSupport')
 			.and
 			.returnValue(of({ status: true, message: 'test message', messageDetails: '' }));
-		component.submitMessage('topictest', 'some dummy data');
+		component.submitMessage();
 		fixture.detectChanges();
 		expect(component.modelHeading)
 			.toEqual('test message');
@@ -48,7 +48,7 @@ describe('ContactSupportComponent', () => {
 		spyOn(osvService, 'contactSupport')
 			.and
 			.returnValue(of({ status: false, message: 'test message', messageDetails: '' }));
-		component.submitMessage('topictest', 'some dummy data');
+		component.submitMessage();
 		fixture.detectChanges();
 		expect(component.modelHeading)
 			.toEqual('test message');
@@ -64,7 +64,7 @@ describe('ContactSupportComponent', () => {
 		spyOn(osvService, 'contactSupport')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		component.submitMessage('topictest', 'some dummy data');
+		component.submitMessage();
 		fixture.detectChanges();
 		expect(component.modelHeading)
 			.toEqual('Failed to Send');
