@@ -369,7 +369,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration/ATX1/Session1`,
+		url: `${api}/registration?sessionId=Session1&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -385,7 +385,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration/ATX1/Session2`,
+		url: `${api}/registration?sessionId=Session2&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 ];
