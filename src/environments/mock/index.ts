@@ -56,3 +56,5 @@ export * from './search/search';
 export * from './search/serialnumber';
 
 export * from './user/entitlement';
+
+export * from '../mock/afm/afm';

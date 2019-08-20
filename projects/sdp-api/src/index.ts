@@ -52,3 +52,7 @@ export * from './lib/email/email.module';
 export * from './lib/feedback/models';
 export * from './lib/feedback/services';
 export * from './lib/feedback/feedback.module';
+
+export * from './lib/afm/models';
+export * from './lib/afm/services';
+export * from './lib/afm/afm.module';

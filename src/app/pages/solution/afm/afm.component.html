@@ -1,0 +1,271 @@
+<div class="panel">
+    <ng-container *ngTemplateOutlet="visualFilters; context: { tab: tab }"></ng-container>
+    <div class="divider qtr-margin-top"></div>
+    <ng-container *ngTemplateOutlet="searchFilters; context: { tab: tab }"></ng-container>
+    <div class="divider qtr-margin-top"></div>
+    <ng-container *ngTemplateOutlet="syslogContent; context: { tab: tab }"></ng-container>
+</div>
+
+<ng-template #dateFilterPipe let-item="celldata">
+    <span [innerText]="item.alarmCreated | date:'MMM dd, yyyy HH:mm:ss'"></span>
+</ng-template>
+
+<ng-template #severityColors let-item="celldata">
+    <div [ngSwitch]="item.severity">
+        <span *ngSwitchCase="'1'">
+            <span class="qtr-margin-right icon-circle text-danger"></span>
+            <span [innerText]="'_AfmP1Emergency_'|i18n"></span>
+        </span>
+        <span *ngSwitchCase="'2'">
+            <span class="qtr-margin-right icon-circle text-warning"></span>
+            <span [innerText]="'_AfmP2Critical_'|i18n"></span>
+        </span>
+        <span *ngSwitchCase="'3'">
+            <span class="qtr-margin-right icon-circle text-warning-alt"></span>
+            <span [innerText]="'_AfmP3Major_'|i18n"></span>
+        </span>
+        <span *ngSwitchCase="'4'">
+            <span class="qtr-margin-right icon-circle text-secondary"></span>
+            <span [innerText]="'_AfmP4Minor_'|i18n"></span>
+        </span>
+        <span *ngSwitchCase="'5'">
+            <span class="qtr-margin-right icon-circle text-muted"></span>
+            <span [innerText]="'_AfmP5Warning_'|i18n"></span>
+        </span>
+        <span *ngSwitchCase="'6'">
+            <span class="qtr-margin-right icon-circle text-success"></span>
+            <span [innerText]="'_AfmP6Info_'|i18n"></span>
+		</span>
+		<span *ngSwitchCase="'7'">
+            <span class="qtr-margin-right icon-circle"></span>
+            <span [innerText]="'_AfmP7Low_'|i18n"></span>
+        </span>
+        <span *ngSwitchDefault>
+            <!-- <span class="qtr-margin-right icon-circle "></span>
+            <span [innerText]="'_AfmP7Low_'|i18n"></span> -->
+        </span>
+    </div>
+</ng-template>
+
+<ng-template #syslogTemplate let-celldata="celldata">
+    <div class="syslog" title="{{celldata?.syslogMsg}}">{{celldata?.syslogMsg}}</div>
+</ng-template>
+
+<ng-template #faultICTemplate let-celldata="celldata">
+    <div class="faultIc" title="{{celldata?.faultIC}}">{{celldata?.faultIC}}</div>
+</ng-template>
+
+<ng-template #syslogContent>
+    <div *ngIf="loading" class="base-margin-bottom">
+        <cui-spinner></cui-spinner>
+    </div>
+    <div class=" responsive-table" *ngIf="!loading">
+        <cui-table [options]="tableOptions" [data]="tableData" [limit]="tableLimit" [offset]="tableOffset"
+            (onSortingChanged)="onTableSortingChanged($event)" (onTableRowClicked)="connectToAlarmDetails($event)">
+        </cui-table>
+        <div class="section">
+            <cui-pager *ngIf="tableData.length" [page]="tableOffset" [limit]="tableLimit"
+                [totalItems]="pagination.total" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+        </div>
+        <div *ngIf="tableData.length == 0">
+            <div class="text-muted text-xlarge flex-center" [innerText]="'_AfmNoResults_'|i18n"></div>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template #visualFilters let-tab="tab">
+    <div class="row col-md-12">
+        <div class="col-md-3 panel panel--bordered-right"
+			[ngClass]="{'filter__selected' : (searchParams.headerFilterType !== 'CHATS' && searchParams.headerFilterType !== 'SEARCH')}">
+            <div class="col-md-12 flex cursor" [ngClass]="{'text-primary' : searchParams.headerFilterType === 'ALARM'}"
+                (click)="allAlarmFilter()">
+                <div class="text-huge col-md-4 text-right" data-auto-id="TotalVisualFilter"
+                    [innerText]="headerCount?.totalAlarmCount">
+                </div>
+                <div class="text-large col-md-8 base-margin-top" [innerText]="'_AfmTotalAlarms_'|i18n"> </div>
+            </div>
+            <div class="col-md-12 flex cursor" [ngClass]="{'text-primary': searchParams.headerFilterType === 'TAC'}"
+                (click)="tacCaseFilters()">
+                <div class="text-huge col-md-4 text-right" data-auto-id="TotalVisualFilter"
+                    [innerText]="headerCount?.totalTacCaseCount">
+                </div>
+                <div class="text-large col-md-8 base-margin-top" [innerText]="'_AfmTacCases_'|i18n"> </div>
+            </div>
+            <div class="col-md-12 flex cursor" [ngClass]="{'text-primary': searchParams.headerFilterType === 'IGNORE_EVENT'}"
+                (click)="ignoreAlarmFilters()">
+                <div class="text-huge col-md-4 text-right" data-auto-id="TotalVisualFilter"
+                    [innerText]="headerCount?.totalIgnoreEventCount">
+                </div>
+                <div class="text-large col-md-8 base-margin-top" [innerText]="'_AfmIgnoredAlarms_'|i18n"> </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+			<div class="flex flex-fill flex-fluid" [ngClass]="{'filter__selected' : searchParams.headerFilterType == 'CHATS'}">
+                <!-- <div class="flex-center">
+    				<span class="icon-chevron-left icon-medium text-muted toggle"></span>
+				</div> -->
+                <ng-container *ngFor="let filter of filters; index as i">
+					<div attr.id="AfmSelectVisualFilter-{{ filter.key }}"
+						attr.data-auto-id="AfmSelectVisualFilter-{{ filter.key }}"
+                     	[ngClass]="{ filter__selected: filter.selected,'filter__not-selected': !filter.selected }"
+                     	class="panel flex-center flex-fill filter">
+                        <div class="dbl-margin-top">
+                            <div *ngIf="filter.template">
+                                <ng-container *ngTemplateOutlet="
+                                    filter.template;
+                                    context: { filter: filter } "></ng-container>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-muted text-large col-md-12 flex-center" [innerText]="filter.title"></div>
+
+                    <div *ngIf="filter.loading" class="base-margin-bottom">
+                        <!-- <cui-spinner></cui-spinner> -->
+                    </div>
+                </ng-container>
+                <!-- <div class="flex-center">
+    				<span class="icon-chevron-right icon-medium text-muted toggle"></span>
+				</div> -->
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #timeRangeFilter let-filter="filter">
+    <column-chart *ngIf="filter?.seriesData?.length" [seriesData]="filter.seriesData"
+        (subfilter)="onTimeRangefilterSelect($event, filter)">
+    </column-chart>
+</ng-template>
+
+<ng-template #filterBar>
+    <div class="row">
+        <div class="col-md-1 flex flex-center-vertical">
+            <span class="text-bold text-uppercase half-padding-right" [innerText]="'_AfmFiltered_'| i18n"></span>
+        </div>
+        <div class="col-md-10">
+            <ng-container *ngFor="let filter of selectedFilters">
+                <ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
+                    <span class="label label--dkgray text-large" (click)="onSubfilterSelect(subfilter.filter, filter)"
+                        attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
+                        <span [innerText]="subfilter.label"></span>
+                        <span class="icon-close"></span>
+                    </span>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="col-md-1 text-center text-right">
+            <a (click)="clearFilters()" class="text-lowercase" [innerText]="'_AfmClearAll_'| i18n"
+                data-auto-id="FilterBarClearAllFilters">
+            </a>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #searchFilters let-tab="tab">
+    <!-- <ng-container *ngIf="filtered">
+        <ng-container *ngTemplateOutlet="filterBar"></ng-container>
+        <div class="divider qtr-margin-top"></div>
+    </ng-container> -->
+    <div>
+        <div>
+            <div class="row">
+                <div class="col-md-9 flex flex-fill">
+                    <div class="flex-center-vertical">
+                        <span [innerText]="'_AfmAlarms_'| i18n" class="text-large"></span>
+                        <span [innerText]="'_AfmShowingXofYAlarms_' | i18n:paginationCount:pagination?.total"
+                            class="qtr-margin-left text-medium text-muted" data-auto-id="ShowingAlarmCount">
+						</span>
+						<!-- <span *ngIf="paginationCount" [innerText]="'_AfmShowingXofYAlarmsAccrossZAlarms_' | i18n:paginationCount:pagination.total:totalAlarmCount"
+							class="qtr-margin-left text-medium" data-auto-id="ShowingAlarmCount">
+						</span> -->
+
+                        <span> &nbsp; &nbsp; | &nbsp; &nbsp; </span>
+                        <span [ngSwitch]="afmConnectionStatus?.status">
+                            <span *ngSwitchCase="'Success'">
+                                <span class="icon-check-outline icon-medium text-success"> </span>
+                                <span [innerText]="'_AfmShwoingOnline_' | i18n" class="qtr-margin-left text-large">
+                                </span>
+                            </span>
+
+                            <span *ngSwitchCase="'Fail'">
+                                <span class="icon-info-outline icon-medium text-muted"> </span>
+                                <span class="qtr-margin-left text-medium text-muted"
+                                    [innerText]="'_AfmShwoingOfflineXminutes_' | i18n:afmConnectionStatus?.timeInMins">
+                                </span>
+                            </span>
+                            <span *ngSwitchCase="'Error'">
+                                <span class="icon-info-outline icon-medium text-muted"> </span>
+                                <span class="qtr-margin-left text-medium text-danger"
+                                    [innerText]="'_AfmShwoingOfflineXError_' | i18n:afmConnectionStatus?.statusMessage">
+                                </span>
+                            </span>
+                        </span>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="flex flex-fluid flex-right">
+                        <div class="flex-fill form-group input--compressed input--icon half-margin-right">
+                            <form [formGroup]="searchForm" novalidate id="searchForm"
+                                (keydown)="keyDownAfmSearchFilter($event)">
+                                <div class="form-group__text">
+                                    <input id="afmSearchInput" type="search" [(ngModel)]="afmSearchInput"
+                                        name="afmSearchInput" [minlength]="searchOptions?.min" autocomplete="off"
+                                        [maxlength]="searchOptions?.max" [pattern]="searchOptions?.pattern"
+                                        formControlName="search" placeholder="{{ '_AfmSearch_' | i18n }}">
+                                    <button type="button" class="link">
+                                        <span class="icon-search"></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <cui-dropdown [actions]="dropdownActions" position="left"
+                            icon="icon-more icon-medium text-muted rotate-90">
+                        </cui-dropdown>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<details-panel *ngIf="showAlarmDetails" [hidden]="!showAlarmDetails" [fullscreen]="fullscreen">
+    <details-panel-header (close)="onAlarmPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
+        <div detailsPanelTitle>
+            <afm-details [alarm]="tablePanelData" (selectedAsset)="connectToAssetDetails($event)"></afm-details>
+        </div>
+    </details-panel-header>
+    <div>
+        <cui-tabs>
+            <cui-tab [label]="'_AfmRemediation_'| i18n | uppercase">
+                <div class="text-bold base-margin-top" [innerText]="'_AfmDescription_' | i18n | uppercase"></div>
+                <div innerText="{{ tablePanelData?.description || ('_NA_' | i18n) }}"></div>
+                <div class="text-bold base-margin-top" [innerText]="'_AfmImpact_' | i18n | uppercase"></div>
+                <div innerText="{{ tablePanelData?.impact || ('_NA_' | i18n) }}"></div>
+                <div class="text-bold base-margin-top" [innerText]="'_AfmRecommendation_' | i18n | uppercase"></div>
+                <div innerText="{{ tablePanelData?.remediation || ('_NA_' | i18n) }}"></div>
+            </cui-tab>
+            <cui-tab [label]="'_AfmCliOutput_'| i18n | uppercase">
+                <div *ngFor="let cli of tablePanelData?.cliOutput">
+                    <div class="base-margin-top">---------------------------------</div>
+                    <div class="base-margin-left" innerText="{{cli.command}}"></div>
+                    <div>---------------------------------</div>
+                    <div innerText="{{cli.commandResponse}}"></div>
+                </div>
+            </cui-tab>
+        </cui-tabs>
+    </div>
+</details-panel>
+
+<!-- App Details slide-out -->
+<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
+    <details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
+        <asset-details-header [asset]="selectedAsset"></asset-details-header>
+        <div detailsPanelTitle class="text-xlarge">
+            <span class="icon-wifi"></span>
+            <span class="qtr-margin-left" [innerText]="tablePanelData?.hostName"></span>
+        </div>
+    </details-panel-header>
+    <asset-details [asset]="selectedAsset"></asset-details>
+</details-panel>

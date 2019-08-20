@@ -1,0 +1,89 @@
+<div>
+	<span class="text-small" [innerText]="'_AfmSyslogEvents360_' | i18n"></span>
+</div>
+<div class="base-margin-bottom">
+	<span class="text-large text-bold" [innerText]="'_AfmSyslog_'|i18n"></span>
+	<span class="text-large text-bold">{{alarm?.syslogMsg}}</span>
+</div>
+
+<div class="row">
+	<div class="col-md-12 base-margin-bottom">
+		<div class="text-bold" [innerText]="'_AfmFaultIcName_' | i18n"></div>
+		<div innerText="{{ alarm?.faultIC || ('_NA_' | i18n) }}"></div>
+	</div>
+	<div class="base-margin-bottom">
+		<div class="flex" *ngIf="alarm">
+			<div class="half-margin-left">
+				<div class="text-bold" [innerText]="'_AfmAssetName_' | i18n"></div>
+				<div class="cursor" [ngClass]="{'text-primary' : alarm.hostName}"
+					innerText="{{ alarm?.hostName || ('_NA_' | i18n) }}"
+					(click)="connectToAssetDetails(alarm)">
+				</div>
+			</div>
+			<div class="base-margin-left">
+				<div class="text-bold" [innerText]="'_AfmSerialNumber_' | i18n"></div>
+				<div innerText="{{ alarm?.serialNumber || ('_NA_' | i18n) }}"></div>
+			</div>
+			<div class="base-margin-left">
+				<div class="text-bold" [innerText]="'_AfmSeverity_' | i18n"></div>
+				<div [ngSwitch]="alarm?.severity">
+					<span *ngSwitchCase="'1'">
+						<span class="qtr-margin-right icon-circle text-danger"></span>
+						<span [innerText]="'_AfmP1Emergency_'|i18n"></span>
+					</span>
+					<span *ngSwitchCase="'2'">
+						<span class="qtr-margin-right icon-circle text-warning"></span>
+						<span [innerText]="'_AfmP2Critical_'|i18n"></span>
+					</span>
+					<span *ngSwitchCase="'3'">
+						<span class="qtr-margin-right icon-circle text-warning-alt"></span>
+						<span [innerText]="'_AfmP3Major_'|i18n"></span>
+					</span>
+					<span *ngSwitchCase="'4'">
+						<span class="qtr-margin-right icon-circle text-secondary"></span>
+						<span [innerText]="'_AfmP4Minor_'|i18n"></span>
+					</span>
+					<span *ngSwitchCase="'5'">
+						<span class="qtr-margin-right icon-circle text-muted"></span>
+						<span [innerText]="'_AfmP5Warning_'|i18n"></span>
+					</span>
+					<span *ngSwitchCase="'6'">
+						<span class="qtr-margin-right icon-circle text-success"></span>
+						<span [innerText]="'_AfmP6Info_'|i18n"></span>
+					</span>
+					<span *ngSwitchDefault>
+						<span class="qtr-margin-right icon-circle "></span>
+						<span [innerText]="'_AfmP7Low_'|i18n"></span>
+					</span>
+				</div>
+			</div>
+			<div class="base-margin-left">
+				<div class="text-bold" [innerText]="'_AfmRaiseCase_' | i18n"></div>
+				<div innerText="{{alarm.raiseSr}}"></div>
+			</div>
+			<div class="base-margin-left">
+				<div class="text-bold" [innerText]="'_AfmTimeCreated_' | i18n"></div>
+				<div>
+					<span [innerText]="alarm?.alarmCreated | date:'MMM dd, yyyy HH:mm:ss'"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="flex col-md-12">
+		<div class="col-md-4">
+			<label class="switch">
+				<input type="checkbox" class="ng-valid ng-dirty ng-touched" (change)="toggleEvent(alarm)">
+				<span class="switch__input"></span>
+				<span class="switch__label" [innerText]="'_AfmIgnoreEvent_'|i18n"></span>
+			</label>
+		</div>
+		<div class="col-md-8 text-right" *ngIf="alarm?.tacCaseNo">
+			<button class="btn btn--small btn--gray-ghost text-uppercase qtr-margin-bottom disabled"
+				innerText="Case ID: {{alarm?.tacCaseNo}}"></button>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<span innerText='{{ignoreStatus}}'></span>
+	</div>
+</div>

@@ -18,6 +18,11 @@ const routes: Routes = [
 				path: 'risk-mitigation',
 			},
 			{
+				loadChildren: () => import('../afm/afm.module')
+					.then(m => m.FaultManagementModule),
+				path: 'fault-management',
+			},
+			{
 				path: '',
 				pathMatch: 'full',
 				redirectTo: 'osv',
