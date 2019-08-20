@@ -86,7 +86,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 	@Input('asset') public asset: Asset;
 	@Input('customerId') public customerId: string;
 	@ViewChild('migrationModel', { static: true }) private migrationModelTemplate: TemplateRef<{ }>;
-	@ViewChild('idTemplate', { static: true }) private idTemplate: TemplateRef<{ }>;
+	@ViewChild('typeTemplate', { static: true }) private typeTemplate: TemplateRef<{ }>;
 	@ViewChild('familyTemplate', { static: true }) private familyTemplate: TemplateRef<{ }>;
 	@ViewChild('serialTemplate', { static: true }) private serialTemplate: TemplateRef<{ }>;
 
@@ -273,10 +273,10 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 						bordered: false,
 						columns: [
 							{
-								key: 'productId',
+								key: 'productType',
 								name: I18n.get('_Type_'),
 								sortable: false,
-								template: this.idTemplate,
+								template: this.typeTemplate,
 							},
 							{
 								key: 'productFamily',

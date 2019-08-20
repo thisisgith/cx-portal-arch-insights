@@ -66,7 +66,7 @@ describe('Learn Panel', () => {
 		cy.waitForAppLoading('successPathsLoading', 15000);
 
 		// Close the setup wizard so it doesn't block other elements
-		cy.getByAutoId('setup-wizard-header-close-btn').click();
+		// cy.getByAutoId('setup-wizard-header-close-btn').click();
 	});
 
 	describe('PBC-125 Learning Content', () => {
@@ -236,7 +236,9 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('PBC-188: All Success Path View All links should cross-launch to specified URL', () => {
+		// TODO: Needs to be re-worked due to changes for PBC-567
+		// Links are now only on title, not content type icon
+		it.skip('PBC-188: All Success Path View All links should cross-launch to specified URL', () => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
@@ -431,7 +433,7 @@ describe('Learn Panel', () => {
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
 			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
+			// cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Success Bytes View All should be able to toggle between table and card views', () => {
@@ -466,7 +468,7 @@ describe('Learn Panel', () => {
 					successPathItems.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
-							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
 							switch (item.type) {
 								case 'Video':
@@ -507,7 +509,7 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 
@@ -519,7 +521,7 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
@@ -694,7 +696,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 							});
 						});
 
@@ -712,7 +714,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 							});
 						});
 					});
@@ -770,7 +772,7 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
@@ -805,7 +807,7 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
@@ -837,7 +839,7 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
@@ -869,7 +871,7 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
@@ -889,7 +891,7 @@ describe('Learn Panel', () => {
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
 			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
+			// cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
@@ -903,7 +905,7 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
@@ -927,7 +929,7 @@ describe('Learn Panel', () => {
 			cy.waitForAppLoading('successPathsLoading', 15000);
 
 			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
+			// cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Should be able to bookmark a Success Bytes item', () => {
@@ -1165,7 +1167,7 @@ describe('Learn Panel', () => {
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
 			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
+			// cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
@@ -1237,10 +1239,12 @@ describe('Learn Panel', () => {
 				cy.wait('Product Documenation & Videos response for all');
 
 				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
 			});
 
-			it('All product guides modal card view should contain all items', () => {
+			// TODO: Needs to be re-worked due to changes for PBC-567
+			// Links are now only on title, not content type icon
+			it.skip('All product guides modal card view should contain all items', () => {
 				allProductGuidesItems.forEach((item, index) => {
 					cy.getByAutoId('ProductGuidesCard').eq(index).within(() => {
 						cy.getByAutoId('ProductGuidesCard-Archetype').should('have.text', item.archetype);
@@ -1341,7 +1345,7 @@ describe('Learn Panel', () => {
 				cy.wait('Product Documenation & Videos response for all');
 
 				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
 			});
 
 			it('All product guides modal table view should have expected columns', () => {
@@ -1365,7 +1369,7 @@ describe('Learn Panel', () => {
 					cy.getByAutoId('ViewAllTable').within(() => {
 						// Increase index by 1, since the first tr has the column headers
 						cy.get('tr').eq(index + 1).within(() => {
-							cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
 							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
 							// Handle duration text and clock icon
 							cy.getByAutoId('ViewAllTable-Format-rowValue-duration').should('contain', item.duration);
@@ -1416,7 +1420,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
 							});
 						});
 
@@ -1428,7 +1432,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
 							});
 						});
 					});
@@ -1653,7 +1657,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
 							});
 						});
 					});
@@ -1688,7 +1692,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
 							});
 						});
 					});
@@ -1719,7 +1723,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
 							});
 						});
 					});
@@ -1751,7 +1755,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
 							});
 						});
 					});
@@ -1771,7 +1775,7 @@ describe('Learn Panel', () => {
 				cy.wait('Product Documenation & Videos response for all');
 
 				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
@@ -1785,7 +1789,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('ViewAllTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
 							});
 						});
 					});
@@ -1901,7 +1905,7 @@ describe('Learn Panel', () => {
 				cy.wait('Product Documenation & Videos response for all');
 
 				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
@@ -2035,7 +2039,7 @@ describe('Learn Panel', () => {
 				cy.wait('Product Documenation & Videos response for all');
 
 				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
