@@ -140,6 +140,8 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedSuccessPaths: SuccessPath[];
 	public eventXCoordinates = 0;
 	public eventYCoordinates = 0;
+	public scrollY = 0;
+	public modalHeight = 0;
 	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
 	// id of ACC in request form
@@ -1115,6 +1117,15 @@ export class LifecycleComponent implements OnDestroy {
 	 }
 
 	/**
+	 * Gets the scroll coordinates for viewAll Modal
+	 * @param scrollModal HTMLElement
+	 */
+	public getScrollCoordinates (scrollModal: HTMLElement) {
+		this.scrollY = scrollModal.scrollTop;
+		this.modalHeight = scrollModal.offsetHeight;
+	}
+
+	/**
 	 * Get the mouse click coordinates
 	 * @param event event
 	 */
@@ -1148,7 +1159,7 @@ export class LifecycleComponent implements OnDestroy {
 				}
 				case 'list': {
 					_div.style.right = '30%';
-					_div.style.top = `${this.eventYCoordinates - 210}px`;
+					_div.style.top = `${this.eventYCoordinates + this.scrollY - 210}px`;
 					panel = 'panel listpanel--open';
 				}
 			}
