@@ -1082,26 +1082,22 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				if (tab.key === 'security') {
 					if (tab.impact) {
 						this.onSubfilterSelect(tab.impact,
-												_.find(tab.filters,
-												{ key: 'impact' }));
+							_.find(tab.filters, { key: 'impact' }));
 					}
 					if (tab.lastUpdate) {
 						this.onSubfilterSelect(tab.lastUpdate,
-												_.find(tab.filters,
-												{ key: 'lastUpdate' }));
+							_.find(tab.filters, { key: 'lastUpdate' }));
 					}
 				}
 
 				if (tab.key === 'field' && tab.lastUpdate) {
 					this.onSubfilterSelect(tab.lastUpdate,
-											_.find(tab.filters,
-											{ key: 'lastUpdate' }));
+						_.find(tab.filters, { key: 'lastUpdate' }));
 				}
 
 				if (tab.key === 'bug' && tab.state) {
 					this.onSubfilterSelect(tab.state,
-											_.find(tab.filters,
-											{ key: 'state' }));
+						_.find(tab.filters, { key: 'state' }));
 				}
 
 				if (tab.search.value) {
@@ -1159,7 +1155,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				start.setDate(start.getDate() - 90);
 				end.setDate(end.getDate() - 60);
 				break;
-			case 'gt-90-days':
+			case 'further-out':
 				end.setDate(end.getDate() - 90);
 
 				return [`,${end.getTime()

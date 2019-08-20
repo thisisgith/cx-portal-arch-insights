@@ -52,7 +52,7 @@
 </ng-template>
 
 <ng-template #nameTemplate let-celldata="celldata">
-	<a attr.data-auto-id="LicenseName-{{celldata.licenseName}}" href="#" [innerText]="celldata.licenseName || '_NA_' | i18n"></a>
+	<span attr.data-auto-id="LicenseName-{{celldata.licenseName}}" [innerText]="celldata.licenseName || '_NA_' | i18n"></span>
 </ng-template>
 
 <ng-template #countTemplate let-celldata="celldata">

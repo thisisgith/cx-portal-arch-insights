@@ -39,7 +39,7 @@ export * from './product-alerts/software-eol-bulletins';
 export * from './product-alerts/software-eol';
 export * from './product-alerts/summary';
 export * from './product-alerts/vulnerabilities';
-
+export * from  './osv/osv';
 export * from './racetrack/acc';
 export * from './racetrack/accUserInfo';
 export * from './racetrack/action';

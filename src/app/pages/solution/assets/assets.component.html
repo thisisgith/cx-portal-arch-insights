@@ -1,6 +1,7 @@
-<asset-details *ngIf="selectedAsset"
-	[asset]="selectedAsset"
-	[serialNumber]="selectedAsset.serialNumber"
+<asset-details *ngIf="selectedAsset && selectedAsset.data"
+	[asset]="selectedAsset.data"
+	[element]="selectedAsset.element"
+	[serialNumber]="selectedAsset.data.serialNumber"
 	(close)="onPanelClose()">
 </asset-details>
 
@@ -11,8 +12,6 @@
 			<div class="divider no-margin-top qtr-margin-bottom"></div>
 			<ng-container *ngTemplateOutlet="assetsContent"></ng-container>
 		</cui-tab>
-		<!-- TODO: Disabled until we add an actual licensing tab (currently in mockups but no actual design) -->
-		<!-- <cui-tab [label]="'_Licensing_' | i18n | uppercase" disabled="true"></cui-tab> -->
 		<ng-template cuiTabPost>
 			<div class="text-right">
 				<div *ngIf="!status.isLoading && pagination"
@@ -67,7 +66,7 @@
 				<div class="col-md-9 flex flex-fill">
 					<div class="flex-center-vertical">
 						<span [innerText]="'_Assets_' | i18n" class="text-large" *ngIf="!status.isLoading"></span>
-						<span *ngIf="!status.isLoading && pagination" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
+						<span *ngIf="!status.isLoading && pagination && pagination.total" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
 							class="qtr-margin-left text-small text-muted"
 							data-auto-id="ShowingAssetsCount">
 						</span>
@@ -101,9 +100,6 @@
 							</form>
 						</div>
 						<div class="btn-group btn-group--square half-margin-right">
-							<!-- <button class="btn btn--small btn--gray-ghost disabled">
-								<span class="icon-location"></span>
-							</button> -->
 							<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'list' }" (click)="selectView('list')">
 								<span class="icon-list-view"></span>
 							</button>
@@ -120,7 +116,7 @@
 			</div>
 			<div class="divider qtr-margin-top" *ngIf="!status.isLoading && pagination"></div>
 			<ng-container *ngTemplateOutlet="tableAssets"></ng-container>
-			<div *ngIf="pagination" class="base-margin-top">
+			<div *ngIf="pagination && pagination.total" class="base-margin-top">
 				<cui-pager [page]="pagination.page - 1"
 					[limit]="pagination.rows"
 					[totalItems]="pagination.total || 0"
@@ -234,13 +230,12 @@
 				<a
 					attr.data-auto-id="Device-{{ item.data?.serialNumber }}"
 					class="text-large text-center"
-					[innerText]="item.data.deviceName | truncate:true:35"
+					[innerText]="item.data.deviceName | truncate:true:20"
 					(click)="onRowSelect(item); $event.stopPropagation();"
 				></a>
 			</div>
-			<div class="flex-center">
-				<span
-					*ngIf="item.data?.productName"
+			<div class="flex-center text-center">
+				<span *ngIf="item.data?.productName"
 					[innerText]="item.data?.productName"
 					attr.data-auto-id="ProductName-{{ item.data?.serialNumber }}">
 				</span>
@@ -338,7 +333,7 @@
 </ng-template>
 
 <ng-template #criticalAdvisories let-celldata="celldata">
-	<div *ngIf="celldata?.criticalAdvisories !== '0'"
+	<div *ngIf="celldata.criticalAdvisories"
 		class="flex flex-fill flex-center">
 		<span class="label label--circle label--danger"
 			[innerText]="celldata.criticalAdvisories"

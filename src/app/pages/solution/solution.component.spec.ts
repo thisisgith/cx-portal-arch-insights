@@ -108,7 +108,7 @@ describe('SolutionComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 
 		contractsService = TestBed.get(ContractsService);
 		productAlertsService = TestBed.get(ProductAlertsService);

@@ -3,7 +3,6 @@ import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
-
 /** Default Customer ID */
 const customerId = '2431199';
 
