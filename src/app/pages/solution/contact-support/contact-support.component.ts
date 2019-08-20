@@ -35,11 +35,10 @@ export class ContactSupportComponent {
 	public emailMessage = '';
 	public ccRecipient = '';
 	public showLoader = false;
-	public modelHeading = I18n.get('_ContactUsInitialTitle_');
+	public modelHeading = I18n.get('_CSTitle_');
 	public emailParams: OSVService.ContactSupportParams;
 	public emailResponse: ContactSupportResponse;
 	public responseAvailable = false;
-	public emailStatus = false;
 	private destroy$ = new Subject();
 	public textareaOptions: CuiInputOptions = new CuiInputOptions({
 		autofocus: true,
@@ -77,15 +76,12 @@ export class ContactSupportComponent {
 
 	/**
 	 * Contact a Designated Expert on done buttom
-	 * @param topicParam subject of email
-	 * @param topicDetailsParam body of email
 	 */
-
-	public submitSupportTopic (topicParam: string, topicDetailsParam: string) {
+	public submitMessage () {
 		this.emailParams = {
-			body: topicDetailsParam,
+			body: this.supportForm.controls.description.value,
 			cc: this.ccRecipient,
-			subject: topicParam,
+			subject: this.supportForm.controls.title.value,
 		};
 		this.showLoader = true;
 		this.osvService.contactSupport(this.emailParams)
@@ -93,8 +89,8 @@ export class ContactSupportComponent {
 				catchError(err => {
 					this.showLoader = false;
 					this.responseAvailable = true;
-					this.emailMessage = I18n.get('_ContactUsEmailFailedMessage_');
-					this.modelHeading = I18n.get('_ContactUsFailedTitle_');
+					this.emailMessage = I18n.get('_CSErrorMessage_');
+					this.modelHeading = I18n.get('_CSErrorTitle_');
 					this.logger.error(err);
 
 					return empty();
@@ -104,13 +100,11 @@ export class ContactSupportComponent {
 			.subscribe((response: ContactSupportResponse) => {
 				if (response.status) {
 					this.showLoader = false;
-					this.emailStatus = true;
 					this.responseAvailable = true;
 					this.modelHeading = response.message;
 					this.emailMessage = response.messageDetails;
 				} else {
 					this.showLoader = false;
-					this.emailStatus = false;
 					this.responseAvailable = true;
 					this.modelHeading = response.message;
 					this.emailMessage = response.messageDetails;
@@ -122,9 +116,9 @@ export class ContactSupportComponent {
 	 * open the Contact a Designated Expert modal
 	 */
 	public openModal () {
-		this.supportForm.reset();
-		this.responseAvailable = false;		
-		this.modelHeading = I18n.get('_ContactUsInitialTitle_');
+		this.supportForm.reset({ title: this.items[8] });
+		this.responseAvailable = false;
+		this.modelHeading = I18n.get('_CSTitle_');
 		this.cuiModalService.show(this.contactSupportTemp);
 	}
 }

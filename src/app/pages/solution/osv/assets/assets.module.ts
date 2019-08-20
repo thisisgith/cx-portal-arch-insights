@@ -6,8 +6,10 @@ import {
 	CuiDropdownModule,
 	CuiPagerModule,
 	CuiSpinnerModule,
+	CuiModalModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { ContactSupportModule } from '../../contact-support/contact-support.module';
 
 /**
  * AssetModule
@@ -22,7 +24,8 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		I18nPipeModule,
 		CuiPagerModule,
 		CuiSpinnerModule,
-
+		ContactSupportModule,
+		CuiModalModule,
 	],
 })
 export class AssetsModule { }

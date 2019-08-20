@@ -19,6 +19,7 @@ import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, OsvPagination } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
+import { ContactSupportComponent } from '../../contact-support/contact-support.component';
 
 /**
  * AssetSoftware Component
@@ -37,6 +38,8 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Output() public assetStatusUpdated = new EventEmitter<OSVAsset>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
+	@ViewChild(ContactSupportComponent, { static: true }) public contactSupportComponent:
+		ContactSupportComponent;
 	private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
@@ -296,5 +299,12 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		this.assetsParams.sort = sortColumn.key;
 		this.assetsParams.pageIndex = 1;
 		this.loadData();
+	}
+
+	/**
+	 * Open contact support modal
+	 */
+	public openContactSupport () {
+		this.contactSupportComponent.openModal();
 	}
 }
