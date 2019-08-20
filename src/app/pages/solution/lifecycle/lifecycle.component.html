@@ -62,7 +62,7 @@
 
 <div class="modal-container" *ngIf="modal.visible">
 	<div class="modal-backdrop" [ngClass]="{ hide: !modal.visible }"></div>
-	<div class="modal modal--full" [ngClass]="{ hide: !modal.visible }">
+	<div class="modal modal--full" [ngClass]="{ hide: !modal.visible }" #scrollModal (scroll)="getScrollCoordinates(scrollModal)">
 		<div class="modal__dialog">
 			<ng-container *ngTemplateOutlet="modal.content; context: modal.context"></ng-container>
 		</div>
@@ -463,10 +463,48 @@
 
 <ng-template #successBlock let-title="title" let-data="data">
 	<div class="half-padding-top half-padding-left">
-		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
+		<div id="successbytes-item" class="panel small-panel qtr-padding-bottom" attr.data-auto-id="{{ autoid }}-item" *ngFor="let item of data | slice:0:3">
 			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
+			<ng-container *ngTemplateOutlet="succesBytesHoverBlock; context: {
+				item: item,
+				autoid: 'successbytes'
+			}">
+			</ng-container>
 		</div>
 	</div>
+</ng-template>
+
+<ng-template #succesBytesHoverBlock let-item="item" let-autoid="autoid">
+		<div id="hover-panel-successbytes" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
+				<div class="icon-bookmark icon-medium"
+					(click)="updateBookmark('SB', item)"
+					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'"
+					data-auto-id="SBCardRibbon">
+				</div>
+				<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+				<div class="divider divider--compressed"></div>
+				<div class="half-margin-left" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+				<div>
+						<a class="no-link successbytes-type-link text-left" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
+							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
+								<span class="icon-apps icon-small half-padding-right"></span>
+								<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
+							</div>
+							<div class="text-left text-muted" *ngIf="item.type === 'Video'">
+								<span class="icon-play-contained icon-small half-padding-right"></span>
+								<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+							</div>
+							<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
+								<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+								<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+							</div>
+						</a>
+				</div>
+				<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
+					<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+					<span [innerText]="item.duration"></span>
+				</div>
+			</div>
 </ng-template>
 
 <ng-template #productGuidesBlock let-title="title">

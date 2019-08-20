@@ -410,18 +410,18 @@
 
 <ng-template #bubbleChartFilter let-filter="filter">
 	<bubble-chart [seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
+		(subfilter)="onSubfilterSelect($event.filter, filter)">
 	</bubble-chart>
 </ng-template>
 
 <ng-template #pieChartFilter let-filter="filter">
 	<pie-chart [seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
+		(subfilter)="onSubfilterSelect($event.filter, filter)">
 	</pie-chart>
 </ng-template>
 
 <ng-template #barChartFilter let-filter="filter">
 	<bar-chart [seriesData]="filter.seriesData" [width]="350"
-		(subfilter)="onSubfilterSelect($event, filter)">
+		(subfilter)="onSubfilterSelect($event.filter, filter)">
 	</bar-chart>
 </ng-template>
