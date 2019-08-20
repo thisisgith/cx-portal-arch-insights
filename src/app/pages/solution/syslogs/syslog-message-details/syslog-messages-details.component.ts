@@ -1,12 +1,14 @@
 import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService,
+import {
+	SyslogsService,
 	DeviceDetailsdata,
 	ProductId,
 	SoftwareList,
 	ProductFamily,
-	Syslog360GridData } from '@sdp-api';
+	Syslog360GridData,
+} from '@sdp-api';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -31,7 +33,7 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 		timePeriod: '',
 	};
 	public customerId;
- 	public tabledata1: DeviceDetailsdata[] = [];
+	public tabledata1: DeviceDetailsdata[] = [];
 	public tableOffset = 0;
 	public productIdItems: ProductId[];
 	public softwareItems: SoftwareList[];
@@ -61,7 +63,7 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 		this.logger.debug('SyslogsdevicedetailsComponent Created!');
 		this.userResolve.getCustomerId()
 			.pipe(
-			takeUntil(this.destroy$),
+				takeUntil(this.destroy$),
 			)
 			.subscribe((id: string) => {
 				this.customerId = id;
@@ -90,11 +92,11 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 	 * Used to load the table grid
 	 * Cui table values
 	 */
-	public tableInitialization ( ) {
+	public tableInitialization () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
 			dynamicData: false,
-		// tslint:disable-next-line: object-literal-sort-keys
+			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'DeviceHost',
@@ -140,12 +142,12 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 
 	public onSelection () {
 		this.syslogsService
-		.get360FilterGridData(
-			this.selectdrowpdown, this.asset)
+			.get360FilterGridData(
+				this.selectdrowpdown, this.asset)
 			.pipe(takeUntil(this.destroy$))
-		.subscribe(data => {
-			this.tabledata1 = data.responseData;
-		});
+			.subscribe(data => {
+				this.tabledata1 = data.responseData;
+			});
 		catchError(err => {
 			this.logger.error('syslog-messages-details.component : get360FilterGridData() ' +
 				`:: Error : (${err.status}) ${err.message}`);
@@ -162,16 +164,19 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 	public loadSyslog360data (tablerowdata) {
 		if (this.asset) {
 			this.syslogsService.get360GridData(tablerowdata, this.customerId)
-		.pipe(takeUntil(this.destroy$))
-		.subscribe(data => {
-			this.tabledata1 = data.responseData;
-		});
-			catchError(err => {
-				this.logger.error('syslog-messages-details.component : get360GridData() ' +
-				`:: Error : (${err.status}) ${err.message}`);
+				.pipe(
+					takeUntil(this.destroy$),
+					catchError(err => {
+						this.logger.error('syslog-messages-details.component : get360GridData() ' +
+							`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
-			});
+						return of({ });
+					}),
+				)
+				.subscribe((data: Syslog360GridData) => {
+					this.tabledata1 = data.responseData;
+				});
+
 		}
 	}
 
@@ -183,15 +188,15 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 	public loadSyslog360filter (tablerowdata) {
 		if (this.asset) {
 			this.syslogsService.get360FilterData(tablerowdata)
-		.pipe(takeUntil(this.destroy$))
-		.subscribe(data => {
-			this.productFamily = data.responseData[2].ProductFamily;
-			this.productIdItems = data.responseData[0].ProductId;
-			this.softwareItems = data.responseData[1].SoftwareType;
-		});
+				.pipe(takeUntil(this.destroy$))
+				.subscribe(data => {
+					this.productFamily = data.responseData[2].ProductFamily;
+					this.productIdItems = data.responseData[0].ProductId;
+					this.softwareItems = data.responseData[1].SoftwareType;
+				});
 			catchError(err => {
 				this.logger.error('syslog-messages-details.component : get360FilterData() ' +
-				`:: Error : (${err.status}) ${err.message}`);
+					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			});
@@ -209,7 +214,7 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 	 * on destroy
 	 */
 
-	public ngOnDestroy ( ) {
+	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
 	}
