@@ -34,10 +34,10 @@ export class CbpTbdComponent implements OnChanges {
 	public exceptionDatas: IException[] = [];
 	public isLoading = true;
 	public params: any = {
- 		customerId,
+		 customerId,
+		 body : [],
 		page : 0,
 		pageSize : 8,
-		body : [],
 	};
 	public destroy$ = new Subject();
 
