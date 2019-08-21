@@ -7,8 +7,6 @@ import {
 	OnDestroy,
 	ViewChild,
 	TemplateRef,
-	Output,
-	EventEmitter,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -29,10 +27,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
-	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	public assetDetails: AssetRecommendationsResponse;
 	public status = {
 		isLoading: true,
@@ -41,9 +38,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public view: 'list' | 'timeline' = 'list';
 	public assetDetailsTable: CuiTableOptions;
 	public assetDetailsParams: OSVService.GetAssetDetailsParams;
-	public selectedRecommendation = {
-		name: 'None',
-	};
 	public customerId: string;
 
 	constructor (
@@ -55,9 +49,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.assetDetailsParams = {
 			customerId: this.customerId,
-			id: '',
+			id: '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
 		};
-	 }
+	}
 
 	/**
 	 * Resets data fields
@@ -90,7 +84,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public refresh () {
 		if (this.selectedAsset && !this.selectedAsset.statusUpdated) {
 			this.clear();
-			this.assetDetailsParams.id = this.selectedAsset.id;
+			// this.assetDetailsParams.id = this.selectedAsset.id;
 			this.fetchAssetDetails();
 		}
 	}
@@ -104,7 +98,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
 					this.sortData(response);
-					this.setAcceptedVersion(response, this.selectedAsset);
+					this.addVersionInfo(response);
 					this.assetDetails = response;
 					this.buildTable();
 				}),
@@ -138,13 +132,10 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 						width: '30%',
 					},
 					{
-						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						render: item => _.isNull(item.error) ?
-							item.swVersion : 'N/A',
 						sortable: false,
-
-						width: '10%',
+						template: this.versionTemplate,
+						width: '40%',
 					},
 					{
 						key: 'postDate',
@@ -152,12 +143,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 						render: item => _.isNull(item.error) ?
 							datePipe.transform(item.postDate, 'yyyy MMM dd') : 'N/A',
 						sortable: false,
-						width: '20%',
-					},
-					{
-						name: I18n.get('_OsvStatusOrAction_'),
-						sortable: false,
-						template: this.actionsTemplate,
 						width: '30%',
 					},
 				],
@@ -182,33 +167,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	}
 
 	/**
-	 * accept recommendations
-	 * @param item accept recommendations for this selected item
-	 */
-	public onActionClick (item: AssetRecommendations) {
-		const body = {
-			customerId: this.customerId,
-			id: this.selectedAsset.id,
-			optimalVersion: item.swVersion,
-		};
-		this.status.isLoading = true;
-		this.osvService.updateAsset(body)
-			.subscribe((response: OSVAsset) => {
-				this.setAcceptedVersion(this.assetDetails, response);
-				this.assetDetails = _.cloneDeep(this.assetDetails);
-				this.selectedRecommendation = { name: 'None' };
-				this.selectedAsset.recommAcceptedDate = response.recommAcceptedDate;
-				response.statusUpdated = true;
-				this.selectedAssetChange.emit(response);
-				this.status.isLoading = false;
-				this.logger.debug('Updated');
-			}, () => {
-				this.status.isLoading = false;
-				this.logger.debug('Error in updating');
-			});
-	}
-
-	/**
 	 * Sort Asset Recommendations by postDate
 	 * @param data AssetDetails
 	 */
@@ -218,27 +176,33 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	}
 
 	/**
-	 * Set AcceptedVersion
-	 * @param data AssetDetails
-	 * @param selectedAsset selectedAsset
+	 * add tooltip info for recommended versions
+	 * @param data the asset recommendations
 	 */
-	public setAcceptedVersion (data: AssetRecommendationsResponse, selectedAsset: OSVAsset) {
-		_.forEach(data, (recommendation: AssetRecommendations) => {
-			if (recommendation.swVersion === selectedAsset.optimalVersion) {
-				recommendation.accepted = true;
-			} else {
-				recommendation.accepted = false;
+	public addVersionInfo (data: AssetRecommendationsResponse) {
+		_.map(data, (detail: AssetRecommendations) => {
+			switch (detail.name) {
+				case 'latest':
+					detail.info = I18n.get('_OsvLatestInfo_');
+					break;
+				case 'current':
+					detail.info = I18n.get('_OsvCurrentInfo_');
+					break;
+				case 'suggested':
+					detail.info = I18n.get('_OsvSuggestedInfo_');
+					break;
+				case 'minimum':
+					detail.info = I18n.get('_OsvMinimumInfo_');
+					break;
+				case 'golden':
+					detail.info = I18n.get('_OsvGoldenInfo_');
+					break;
+				case 'recommended':
+					detail.info = I18n.get('_OsvRecommendedInfo_');
+					break;
+				default:
+					break;
 			}
 		});
-	}
-
-	/**
-	 * Selected Recommendations from timeline view
-	 * @param point one of the recommendations on timeline view
-	 */
-	public selectedPoint (point) {
-		if (!point.accepted && point.label !== this.selectedAsset.swVersion) {
-			this.selectedRecommendation = point;
-		}
 	}
 }
