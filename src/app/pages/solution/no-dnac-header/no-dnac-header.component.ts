@@ -43,7 +43,11 @@ export class NoDNACHeaderComponent {
 	constructor (
 		@Inject('ENVIRONMENT') private env,
 		private utils: UtilsService,
-	) { }
+	) {
+		if (window.Cypress) {
+			this.forceHidden = _.get(window, 'Cypress.hideDNACHeader', false);
+		}
+	 }
 
 	/**
 	 * On window resize, refresh button

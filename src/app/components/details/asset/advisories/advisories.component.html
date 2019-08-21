@@ -36,7 +36,7 @@
 
 <ng-template #displayTable let-data="data" let-pagination="pagination" let-options="options" let-loading="loading" let-moreLoading="moreLoading">
 	<div *ngIf="!loading && options && data && data?.length > 0">
-		<div class="advisoryTable">
+		<div class="advisoryTable" data-auto-id="AssetDetailsAdvisoryTable">
 			<cui-table [options]="options"
 				[data]="data"
 				(onTableRowClicked)="onRowSelect($event)"
@@ -93,7 +93,7 @@
 </ng-template>
 
 <ng-template #bugID let-celldata="celldata">
-	<span *ngIf="!celldata.url" [innerText]="celldata.id"></span>
+	<span *ngIf="!celldata.url" [innerText]="celldata.id" data-auto-id="BugID"></span>
 	<a *ngIf="celldata.url"
 		[innerText]="celldata.id"
 		target="_blank"
