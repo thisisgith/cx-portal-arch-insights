@@ -223,6 +223,10 @@ export class LifecycleComponent implements OnDestroy {
 		},
 	};
 
+	// Map of all scheduled ATX's
+	// key: atx id, value: scheduled atx session
+	public scheduledAtxMap = { };
+
 	public componentData: ComponentData = {
 		params: {
 			customerId: '',
@@ -752,10 +756,31 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Determines which modal to display
-	 * @param item ACC item
+	 * @param acc ACC item
 	 * @returns ribbon
 	 */
-	 public setFavorite (item: ACC) {
+	public getACCRibbonClass (acc: ACC) {
+		let ribbon = 'ribbon__white';
+		if (!acc) {
+			return ribbon;
+		}
+		if (acc.status.toLowerCase() === 'completed') {
+			ribbon = 'ribbon__green';
+		}
+
+		if (acc.isFavorite) {
+			ribbon = 'ribbon__blue';
+		}
+
+		return ribbon;
+	}
+
+	 /**
+	  * Determines which modal to display
+	  * @param item ACC item
+	  * @returns ribbon
+	  */
+	 public setACCBookmark (item: ACC) {
 		if (item.status === 'completed') {
 			return;
 		}
@@ -788,7 +813,7 @@ export class LifecycleComponent implements OnDestroy {
 			if (window.Cypress) {
 				window.accLoading = false;
 			}
-			this.logger.error(`lifecycle.component : setFavorite() :: Error  : (${
+			this.logger.error(`lifecycle.component : setACCBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
 	 }
@@ -1063,27 +1088,26 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Updates the bookmark of the item
-	 * @param type string
-	 * @param item SuccessPath | ATX
+	 * @param item bookmark item object
+	 * @param lifecycleCategory string of the category type
 	 */
-	 public updateBookmark (type: string, item: SuccessPath | AtxSchema) {
+	 public updateBookmark (item: AtxSchema | SuccessPath, lifecycleCategory: 'ATX' | 'SB') {
 		let bookmark;
 		let id;
-		let lifecycleCategory;
-		if (_.isEqual(type, 'ATX') && _.get(item, 'status') === 'completed') {
-			return;
+
+		switch (lifecycleCategory) {
+			case 'ATX':
+				this.status.loading.atx = true;
+				bookmark = !_.get(item, 'bookmark');
+				id = _.get(item, 'atxId');
+				break;
+			case 'SB':
+				this.status.loading.success = true;
+				bookmark = !_.get(item, 'bookmark');
+				id = _.get(item, 'successBytesId');
+				break;
 		}
-		if (_.isEqual(type, 'SB')) {
-			bookmark = !_.get(item, 'bookmark');
-			id = _.get(item, 'successByteId');
-			lifecycleCategory = 'SB';
-			this.status.loading.success = true;
-		} else if (_.isEqual(type, 'ATX')) {
-			bookmark = !_.get(item, 'bookmark');
-			id = _.get(item, 'atxId');
-			lifecycleCategory = 'ATX';
-			this.status.loading.atx = true;
-		}
+
 		const bookmarkParams: BookmarkRequestSchema = {
 			bookmark,
 			id,
@@ -1095,24 +1119,32 @@ export class LifecycleComponent implements OnDestroy {
 		const params: RacetrackContentService.UpdateBookmarkParams = {
 			bookmarkRequestSchema: bookmarkParams,
 		};
+
 		this.contentService.updateBookmark(params)
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
-			if (_.isEqual(type, 'SB')) {
-				this.status.loading.success = false;
-			} else if (_.isEqual(type, 'ATX')) {
-				this.status.loading.atx = false;
+			switch (lifecycleCategory) {
+				case 'SB':
+					this.status.loading.success = false;
+					break;
+				case 'ATX':
+					this.status.loading.atx = false;
+					break;
 			}
 		},
 		err => {
-			if (_.isEqual(type, 'SB')) {
-				this.status.loading.success = false;
-			} else if (_.isEqual(type, 'ATX')) {
-				this.status.loading.atx = false;
+			switch (lifecycleCategory) {
+				case 'SB':
+					this.status.loading.success = false;
+					break;
+				case 'ATX':
+					this.status.loading.atx = false;
+					break;
 			}
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
+
 	 }
 
 	/**
@@ -1239,6 +1271,15 @@ export class LifecycleComponent implements OnDestroy {
 					sessions: result.items,
 				};
 				this.selectedATX = this.componentData.atx.sessions;
+
+				_.each(this.selectedATX, (atx: AtxSchema) => {
+					_.each(atx.sessions, (session: AtxSessionSchema) => {
+						if (session.scheduled) {
+							this.scheduledAtxMap[atx.atxId] = session;
+						}
+					});
+				});
+
 				this.buildAtxTable();
 
 				this.status.loading.atx = false;
