@@ -29,11 +29,8 @@
 	<div class="col-md-12">
 		<div class="container">
 			<div class="base-margin-top">
-				<span class="text-bold text-uppercase">
-					{{ ('_ArchitectureAssetsImpacted_' | i18n) + '(' +  totalItems +') '}}
+				<span class="text-bold text-uppercase" [innerText]= "('_ArchitectureAssetsImpacted_' | i18n) + '(' +  totalItems +') '">
 				</span>
-				<!-- <a data-auto-id="ExportDownloadPageData" (click)="export()"> Export/DownLoad</a> -->
-				<!-- <a> Export/DownLoad</a> -->
 			</div>
 			<div class="base-margin-top" *ngIf="!isLoading && totalItems > 0">
 				<span [innerText]="'_ArchitectureAssets_' | i18n" class="text-large"></span>

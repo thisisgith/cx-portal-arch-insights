@@ -16,9 +16,9 @@
 			<table class="table" *ngIf="!isLoading">
 				<thead>
 					<tr>
-						<th>{{('_ArchitectureSeverity_' | i18n)}}</th>
-						<th>{{('_ArchitectureRuleName_' | i18n)}}</th>
-						<th>{{('_ArchitectureException_' | i18n)}}</th>
+						<th [innerHTML]="('_ArchitectureSeverity_' | i18n)"></th>
+						<th [innerHTML]="('_ArchitectureRuleName_' | i18n)"></th>
+						<th [innerHTML]="('_ArchitectureException_' | i18n)"></th>
 					</tr>
 				</thead>
 				<tbody *ngIf="totalItems > 0">
@@ -34,8 +34,8 @@
 							<td>
 								<span>{{(item['exceptions']).substr(0, 25).concat('... ')}}</span>
 								<a data-auto-id="expandAndContractRowLink" (click)="expandRow(item) ">
-									<span *ngIf="!item.active"> Show Recommendation and Corrective Action </span>
-									<span *ngIf="item.active"> Hide Recommendation and Corrective Action </span>
+									<span *ngIf="!item.active" [innerHTML]="('_ArchitectureShowRecommendationAndCorrectiveAction_' | i18n)"></span>
+									<span *ngIf="item.active" [innerHTML]="('_ArchitectureHideRecommendationAndCorrectiveAction_' | i18n)"></span>
 									<span [ngClass]="{
 										'icon-chevron-down':!item.active,
 										'icon-chevron-up':item.active
