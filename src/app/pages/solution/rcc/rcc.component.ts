@@ -77,9 +77,19 @@ export class RccComponent implements OnInit, OnDestroy {
 	public isSlider = false;
 	public customerId = '7293498';
 	public testData = [];
-	public policyViolationInfo = { };
+	public policyViolationInfo = {
+		policycategory: '',
+		policygroupid: '',
+		policyname: '',
+		ruletitle: '',
+	};
 	public selectedViolationModal = false;
-	public selectedAssetData = [];
+	public selectedAssetData = {
+		deviceName: '',
+		ipaddress: '',
+		lastScan: '',
+		serialNumber: '',
+	};
 	public selectedAssetModal = false;
 	public rowData = { };
 	public filterObj = [];

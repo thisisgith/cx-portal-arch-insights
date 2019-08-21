@@ -38,9 +38,13 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public policyRuleData: any = { };
 	public customerId = '7293498';
 	public impactedAssetsCount: any;
-	public selectionObj: any = { };
+	public selectionObj = {
+		osName : '',
+		productFamily : '',
+		productModel : ''
+	};
 	public destroy$ = new Subject();
-	public queryParamMapObj: any = { };
+	public queryParamMapObj = { };
 	constructor (
 		private rccTrackService: RccService,
 		private rccUtilService: RccUtilService,
@@ -61,7 +65,11 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		};
 		if (this.policyViolationInfo ===
 			null || Object.keys(this.policyViolationInfo).length === 0) { return; }
-		this.selectionObj = { };
+		this.selectionObj = {
+			osName : '',
+			productFamily : '',
+			productModel : ''
+		};
 		this.impactedAssetsCount = this.policyViolationInfo.impassets;
 		forkJoin(
 			this.rccTrackService
