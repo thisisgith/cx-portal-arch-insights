@@ -749,7 +749,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 350,
 					description: 'Covered Assets - Grid View',
 					response: {
 						body: MockAssets(12, 1, null , [true]),
@@ -877,7 +877,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 350,
 					description: 'Assets Page 1 - Grid View',
 					response: {
 						body: MockAssets(12, 1),
@@ -919,7 +919,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 350,
 					description: 'Assets Page 2 - Grid View',
 					response: {
 						body: MockAssets(12, 2),
@@ -936,7 +936,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 350,
 					description: 'Assets Page 3 - Grid View',
 					response: {
 						body: MockAssets(12, 3),
@@ -953,7 +953,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 350,
 					description: 'Assets Page 4 - Grid View',
 					response: {
 						body: MockAssets(12, 4),

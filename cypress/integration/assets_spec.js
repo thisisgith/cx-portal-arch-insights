@@ -70,8 +70,6 @@ describe('Assets', () => { // PBC-41
 			cy.get('asset-details').should('have.css', 'width', halfWidthInPx); // shrink to half width
 			*/
 			const validate360 = asset => {
-				// Placeholder icon until PBC-335 is resolved
-				cy.get('.icon-asset').should('be.visible');
 				cy.get('[detailsPanelTitle]').should('have.text', asset.deviceName);
 				cy.getByAutoId('Asset360IPAddress')
 					.should('have.text', `IP Address${asset.ipAddress}`);
@@ -88,13 +86,12 @@ describe('Assets', () => { // PBC-41
 				}
 				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
 				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-339
-				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
 
 				// PBC-153
 				// TODO: Check device image after PBC-438 is fixed
 				cy.getByAutoId('ProductId').should('have.text', asset.productId);
 				cy.getByAutoId('YouHaveInventory').should(
-					'have.text', `You have ${hwResponse.length} of these in your inventory`
+					'have.text', `you have ${hwResponse.length} of these in your inventory`
 				);
 				cy.getByAutoId('_ProductID_-Link').should('have.text', asset.productId);
 				cy.getByAutoId('_SoftwareVersion_-Link').should('have.text', asset.osVersion);
@@ -102,6 +99,8 @@ describe('Assets', () => { // PBC-41
 
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			validate360(assets[0]);
+			cy.get('.icon-asset').should('be.visible');
+			cy.getByAutoId('Asset360ScanBtn').should('be.visible');
 			cy.getByAutoId('_ProductSeries_-Link')
 				.should('have.text', assetSummary.productFamily);
 			cy.getByAutoId('_EndOfSale_-data').should(
@@ -125,20 +124,18 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('CloseDetails').click();
 		});
 
-		// TODO: Disabled for PBC-547
-		it.skip('Displays hardware info', () => { // PBC-154, PBC-359, PBC-547
+		it('Displays hardware info', () => { // PBC-154, PBC-359, PBC-547
 			const formatDate = date => Cypress.moment(date).format('ddd MMM DD YYYY');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.getByAutoId('HARDWARETab').click();
-			cy.get('asset-details-hardware tbody tr').each((row, index) => {
+			cy.get('[data-auto-id="HardwareModulesDrawer"] tbody tr').each((row, index) => {
 				cy.wrap(row).within(() => {
 					const data = hwResponse[index];
-					cy.getByAutoId('Type-Cell').should('have.text', data.equipmentType);
+					cy.getByAutoId('Type-Cell').should('have.text', data.productType);
 					const pid = data.productId ? data.productId : 'N/A';
 					cy.getByAutoId('Product Family / ID-Cell').should(
 						'have.text', `${data.productFamily} / ${pid}`
 					);
-					cy.getByAutoId('Slot-Cell').should('have.text', 'N/A');
 					const serial = data.serialNumber ? data.serialNumber : 'N/A';
 					cy.getByAutoId('Serial Number-Cell').should('have.text', serial);
 				});
@@ -390,6 +387,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '0%');
 			coverageMock.enable('Coverage 500 Failure');
 			cy.loadApp('/solution/assets');
+			cy.waitForAppLoading();
 			cy.getByAutoId('Facet-Assets & Coverage').should('contain', '0'); // PBC-227
 
 			coverageMock.enable('Coverage');
@@ -411,11 +409,17 @@ describe('Assets', () => { // PBC-41
 		it('Pre-selects the gauge when reloading a page with filters applied', () => { // PBC-271
 			cy.getByAutoId('CoveredPoint').click({ force: true });
 			cy.reload();
+			cy.waitForAppLoading();
 			cy.getByAutoId('Facet-Assets & Coverage').should('have.class', 'facet--selected');
 			cy.getByAutoId('AssetsSelectVisualFilter-coverage')
 				.should('have.class', 'filter__selected');
 
+			// TODO: Workaround for PBC-593
+			cy.server();
+			cy.route('**/ws/oauth/v3/token/cisco/*').as('token').wait('@token');
 			cy.getByAutoId('FilterBarClearAllFilters').click();
+			// End workaround
+			cy.waitForAppLoading('inventoryLoading');
 		});
 	});
 
@@ -467,6 +471,7 @@ describe('Assets', () => { // PBC-41
 			// PBC-258
 			const singleDeviceContract = '93856991';
 			cy.getByAutoId(`${singleDeviceContract}Point`).click({ force: true });
+			cy.waitForAppLoading('inventoryLoading');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').should('have.length', 1);
 			cy.get('td[data-auto-id*="InventoryItemSelect"]').click();
 			cy.getByAutoId('TotalSelectedCount').should('have.text', '1 Selected');
@@ -483,7 +488,7 @@ describe('Assets', () => { // PBC-41
 			assetMock.enable('Assets Page 1');
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.getByAutoId('Facet-Assets & Coverage').click();
-			cy.waitForAppLoading();
+			cy.waitForAppLoading('inventoryLoading');
 		});
 
 		it('Uses proper pagination for asset list', () => {
@@ -582,7 +587,7 @@ describe('Assets', () => { // PBC-41
 
 		it('Provides an actions menu for each asset', () => { // PBC-255
 			const coveredAsset = assets[0].serialNumber;
-			const uncoveredAsset = assets[1].serialNumber;
+			const uncoveredAsset = assets[7].serialNumber;
 			cy.getByAutoId(`InventoryItem-${coveredAsset}`).within(() => {
 				cy.get('cui-dropdown').within($dropdown => {
 					cy.wrap($dropdown).click();
@@ -682,8 +687,11 @@ describe('Assets', () => { // PBC-41
 				}
 				cy.getByAutoId(`InventoryItem-${serial}`).within(() => {
 					// PBC-304
+					const name = Cypress._.truncate(asset.deviceName, {
+						length: 20, separator: ' ', omission: '',
+					});
 					cy.getByAutoId(`Device-${serial}`)
-						.should('have.text', Cypress._.truncate(asset.deviceName, { length: 38 }));
+						.should('have.text', `${name}...`);
 					// Device image is a static placeholder for now
 					cy.getByAutoId(`DeviceImg-${serial}`).should('have.text', 'No Photo Available');
 					cy.getByAutoId(`IPAddress-${serial}`).should('have.text', asset.ipAddress);
@@ -792,7 +800,7 @@ describe('Assets', () => { // PBC-41
 
 		it('Provides an actions menu for each card', () => { // PBC-280
 			const coveredAsset = assets[0].serialNumber;
-			const uncoveredAsset = assets[1].serialNumber;
+			const uncoveredAsset = assets[7].serialNumber;
 			cy.getByAutoId(`InventoryItem-${coveredAsset}`).within(() => {
 				cy.get('cui-dropdown').within($dropdown => {
 					cy.wrap($dropdown).click();
@@ -898,6 +906,7 @@ describe('Assets', () => { // PBC-41
 				.its('length')
 				.should('be.gt', 0));
 			cy.getByAutoId('close').click();
+			cy.getByAutoId(`Device-${serial}`).click();
 		});
 	});
 

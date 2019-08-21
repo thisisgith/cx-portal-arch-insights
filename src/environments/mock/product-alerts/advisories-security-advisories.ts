@@ -235,9 +235,9 @@ export const AdvisorySecurityAdvisoryScenarios = [
 			GET: [
 				{
 					delay: 350,
-					description: 'Security Advisories for FOC1544Y16T',
+					description: 'Security Advisories for FOC1544Y16T - Page 2',
 					response: {
-						body: MockData(10, 1, 1),
+						body: MockData(10, 2, 1),
 						status: 200,
 					},
 					selected: true,
