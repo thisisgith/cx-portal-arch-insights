@@ -1,1 +1,1 @@
-export { ArchitectureService } from './services/Architecture.service';
+export { ArchitectureService } from './services/architecture.service';
