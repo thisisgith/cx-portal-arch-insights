@@ -1100,7 +1100,7 @@ export class LifecycleComponent implements OnDestroy {
 			case 'SB':
 				this.status.loading.success = true;
 				bookmark = !_.get(item, 'bookmark');
-				id = _.get(item, 'successBytesId');
+				id = _.get(item, 'successByteId');
 				break;
 		}
 

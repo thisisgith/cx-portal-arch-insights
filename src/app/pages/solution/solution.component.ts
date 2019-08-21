@@ -4,6 +4,9 @@ import {
 	TemplateRef,
 	ViewChild,
 	OnDestroy,
+	HostListener,
+	ElementRef,
+	ChangeDetectorRef,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -14,8 +17,7 @@ import {
 } from '@angular/router';
 
 import * as _ from 'lodash-es';
-import { Subject, Subscription, forkJoin, of } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { Subscription, forkJoin, of, Subject } from 'rxjs';
 import {
 	Asset,
 	ContractsService,
@@ -28,7 +30,9 @@ import {
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
-import { RacetrackInfoService } from '@services';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
+import { UtilsService, RacetrackInfoService } from '@services';
 
 /**
  * Interface representing a facet
@@ -73,6 +77,11 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public casesCount: number;
 	public RMACount: number;
 
+	public quickTourSteps: Step[];
+	public buttonDims: any;
+	public observableButton: Subscription;
+	public quickTourActive: boolean;
+	private quickTourFirstTime: boolean;
 	private destroy$ = new Subject();
 
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
@@ -80,6 +89,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
 	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
 	@ViewChild('insightsFacet', { static: true }) public insightsTemplate: TemplateRef<{ }>;
+	@ViewChild('content', { static: true }) private contentContainer: ElementRef;
 
 	constructor (
 		private contractsService: ContractsService,
@@ -89,17 +99,17 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private logger: LogService,
 		private caseService: CaseService,
 		private route: ActivatedRoute,
+		private utils: UtilsService,
+		private cdr: ChangeDetectorRef,
 		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-
 		this.eventsSubscribe = this.router.events.subscribe(
 			(event: RouterEvent): void => {
 				if (event instanceof NavigationEnd && event.url) {
 					const routePath = _.split(
 						(_.isArray(event.url) ? event.url[0] : event.url), '?')[0];
-
 					if (routePath.includes('solution')) {
 						this.activeRoute = routePath;
 						const routeFacet = this.getFacetFromRoute(this.activeRoute);
@@ -107,9 +117,18 @@ export class SolutionComponent implements OnInit, OnDestroy {
 							this.selectFacet(routeFacet);
 						}
 					}
+					if (routePath.includes('lifecycle') || routePath === '/') {
+						this.quickTourFirstTime = _.get(
+							this.utils.getLocalStorage('quickTourFirstTime'),
+							'firstTime');
+						this.quickTourActive = this.quickTourFirstTime ||
+							_.isNil(this.quickTourFirstTime);
+						this.utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
+					}
 				}
 			},
 		);
+
 	}
 
 	get technologies (): RacetrackTechnology[] {
@@ -133,7 +152,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 			facet.selected = true;
 			this.selectedFacet = facet;
-
+			this.quickTourActive = facet.key === 'lifecycle' && (this.quickTourFirstTime ||
+			_.isNil(this.quickTourFirstTime));
 			if (facet.route && this.activeRoute !== facet.route) {
 				this.activeRoute = facet.route;
 				if (navigate) {
@@ -234,112 +254,126 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 	/**
 	 * Will retrieve the solutions and associated use cases and build out the dropdowns
+	 * @returns the solutions
 	 */
 	private fetchSolutions () {
 		this.status.loading = true;
-		this.racetrackInfoService.getRacetrack()
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(result => {
-			this.solutions = result.solutions;
-			this.status.loading = false;
-		});
 
-		this.racetrackInfoService.getCurrentSolution()
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(result => {
-			this.selectedSolution = result;
-		});
+		return forkJoin(
+			this.racetrackInfoService.getRacetrack()
+			.pipe(
+				map(result => {
+					this.solutions = result.solutions;
+					this.status.loading = false;
+				}),
+				takeUntil(this.destroy$),
+			),
 
-		this.racetrackInfoService.getCurrentTechnology()
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(result => {
-			this.selectedTechnology = result;
-		});
+			this.racetrackInfoService.getCurrentSolution()
+			.pipe(
+				map(result => this.selectedSolution = result),
+				takeUntil(this.destroy$),
+			),
+
+			this.racetrackInfoService.getCurrentTechnology()
+			.pipe(
+				map(result => this.selectedTechnology = result),
+				takeUntil(this.destroy$),
+			),
+		);
 	}
 
 	/**
 	 * Function used to fetch and build the assets & coverage facet
+	 * @returns the coverage count
 	 */
 	private fetchCoverageCount () {
 		const assetsFacet = _.find(this.facets, { key: 'assets' });
 		assetsFacet.loading = true;
-		this.contractsService.getCoverageCounts({ customerId: this.customerId })
-		.subscribe((counts: CoverageCountsResponse) => {
-			const covered = _.get(counts, 'covered', 0);
-			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
-			const percent = ((covered / total) * 100);
-			const gaugePercent = Math.floor(percent) || 0;
-			assetsFacet.data = {
-				gaugePercent,
-				gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
-			};
+		return this.contractsService.getCoverageCounts({ customerId: this.customerId })
+		.pipe(
+			map((counts: CoverageCountsResponse) => {
+				const covered = _.get(counts, 'covered', 0);
+				const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
-			assetsFacet.loading = false;
-		},
-		err => {
-			assetsFacet.loading = false;
-			this.logger.error('solution.component : fetchCoverageCount() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-		});
+				const percent = ((covered / total) * 100);
+				const gaugePercent = Math.floor(percent) || 0;
+				assetsFacet.data = {
+					gaugePercent,
+					gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
+				};
+
+				assetsFacet.loading = false;
+			}),
+			catchError(err => {
+				assetsFacet.loading = false;
+				this.logger.error('solution.component : fetchCoverageCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+			takeUntil(this.destroy$),
+		);
 	}
 
 	/**
 	 * Fetches the counts for the advisories chart
+	 * @returns the advisory counts
 	 */
 	private fetchAdvisoryCounts () {
 		const advisoryFacet = _.find(this.facets, { key: 'advisories' });
 
 		advisoryFacet.loading = true;
-		this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
-		.subscribe((counts: VulnerabilityResponse) => {
-			const seriesData = [];
 
-			const advisories = _.get(counts, 'security-advisories', 0);
-			const fieldNotices = _.get(counts, 'field-notices', 0);
-			const bugs = _.get(counts, 'bugs', 0);
+		return this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
+		.pipe(
+			map((counts: VulnerabilityResponse) => {
+				const seriesData = [];
 
-			if (advisories) {
-				seriesData.push(
-					{
-						label: I18n.get('_SecurityAdvisories_'),
-						value: advisories,
-					},
-				);
-			}
+				const advisories = _.get(counts, 'security-advisories', 0);
+				const fieldNotices = _.get(counts, 'field-notices', 0);
+				const bugs = _.get(counts, 'bugs', 0);
 
-			if (fieldNotices) {
-				seriesData.push(
-					{
-						label: I18n.get('_FieldNotices_'),
-						value: fieldNotices,
-					},
-				);
-			}
+				if (advisories) {
+					seriesData.push(
+						{
+							label: I18n.get('_SecurityAdvisories_'),
+							value: advisories,
+						},
+					);
+				}
 
-			if (bugs) {
-				seriesData.push(
-					{
-						label: I18n.get('_Bugs_'),
-						value: bugs,
-					},
-				);
-			}
+				if (fieldNotices) {
+					seriesData.push(
+						{
+							label: I18n.get('_FieldNotices_'),
+							value: fieldNotices,
+						},
+					);
+				}
 
-			advisoryFacet.seriesData = seriesData;
-			advisoryFacet.loading = false;
-		},
-		err => {
-			advisoryFacet.loading = false;
-			this.logger.error('solution.component : fetchAdvisoryCounts() ' +
-			`:: Error : (${err.status}) ${err.message}`);
-		});
+				if (bugs) {
+					seriesData.push(
+						{
+							label: I18n.get('_Bugs_'),
+							value: bugs,
+						},
+					);
+				}
+
+				advisoryFacet.seriesData = seriesData;
+				advisoryFacet.loading = false;
+			}),
+			catchError(err => {
+				advisoryFacet.loading = false;
+				this.logger.error('solution.component : fetchAdvisoryCounts() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+			takeUntil(this.destroy$),
+		);
 	}
 
 	/**
@@ -365,6 +399,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 					return of(null);
 				}),
+				takeUntil(this.destroy$),
 			),
 			// RMA count
 			this.caseService.read({
@@ -379,25 +414,144 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 					return of(null);
 				}),
+				takeUntil(this.destroy$),
 			),
 		)
-		.subscribe(counts => {
-			resolutionFacet.loading = false;
+		.pipe(
+			map(counts => {
+				resolutionFacet.loading = false;
+				this.casesCount = _.get(counts, [0, 'totalElements'], 0);
+				this.RMACount = _.get(counts, [1, 'totalElements'], 0);
+			}),
+			catchError(err => {
+				this.logger.error(`RMA Data :: Case and RMA Count :: Error ${err}`);
 
-			this.casesCount = _.get(counts, [0, 'totalElements'], 0);
-			this.RMACount = _.get(counts, [1, 'totalElements'], 0);
-		});
+				return of(null);
+			}),
+			takeUntil(this.destroy$),
+		);
+	}
+
+	/**
+	 * Initialize the Quick Tour
+	 */
+	private initializeQuickTour () {
+		this.quickTourSteps = [
+			{
+				arrows: 3,
+				data: {
+					active: false,
+				},
+				description: I18n.get('_QuickTourStep2Description_'),
+				relative: true,
+				stepIndex: 1,
+				stepPos: 'bottom',
+				title: I18n.get('_QuickTourStep2Title_'),
+			},
+			{
+				arrows: 1,
+				data: { },
+				description: I18n.get('_QuickTourStep3Description_'),
+				maxWidth: 300,
+				relative: false,
+				stepIndex: 2,
+				stepPos: 'bottom',
+				title: I18n.get('_QuickTourStep3Title_'),
+			},
+			{
+				arrows: 1,
+				data: {
+					active: false,
+				},
+				description: I18n.get('_QuickTourStep1Description_'),
+				maxWidth: 400,
+				relative: false,
+				stepIndex: 0,
+				stepPos: 'right',
+				title: I18n.get('_QuickTourStep1Title_'),
+			},
+		];
+	}
+
+	/**
+	 * Refreshes the data for the Quick Tour Step attached
+	 * to the No DNAC Header 'continue' button
+	 * @param info Data for the button
+	 */
+	public refreshButtonInfo (info) {
+		if (this.quickTourSteps) {
+			const step = _.find(this.quickTourSteps, { stepIndex: 2 });
+			step.data = info;
+		}
+	}
+
+	/**
+	 * On window resize, refresh button
+	 * @param event resize event
+	 */
+	@HostListener('window:resize')
+	public refreshQuickTour () {
+		this.calculateStep1();
+		this.calculateStep2();
+	}
+
+	/**
+	 * Calculates the position and dimensions of the second Quick Tour Step
+	 */
+	private calculateStep1 () {
+		const step = _.find(this.quickTourSteps, { stepIndex: 0 });
+		const offsetLeft = this.contentContainer.nativeElement.offsetLeft;
+		const offsetTop = this.contentContainer.nativeElement.offsetTop;
+		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
+		const colRatio = 2 / 12;
+		const arrowOffset = 20;
+		step.data.left = offsetLeft + offsetWidth * colRatio - arrowOffset;
+		step.data.top = offsetTop + 150;
+		step.data.active = true;
+		step.width = offsetWidth * colRatio * 2;
+	}
+
+	/**
+	 * Calculates the position and dimensions of the second Quick Tour Step
+	 */
+	private calculateStep2 () {
+		const step = _.find(this.quickTourSteps, { stepIndex: 1 });
+		const offsetLeft = this.contentContainer.nativeElement.offsetLeft;
+		const offsetTop = this.contentContainer.nativeElement.offsetTop;
+		const offsetWidth = this.contentContainer.nativeElement.offsetWidth;
+		const offsetHeight = this.contentContainer.nativeElement.offsetHeight;
+		const colRatio = 10 / 12 / 3;
+		const center = colRatio * 1.5;
+		step.data.left = offsetLeft + offsetWidth * (center + 1 / 6);
+		step.data.top = offsetTop + offsetHeight * 0.4;
+		step.data.active = true;
+		step.width = offsetWidth * colRatio * 2;
 	}
 
 	/**
 	 * OnInit Functionality
 	 */
 	public ngOnInit () {
-		this.fetchSolutions();
+		this.initializeQuickTour();
 		this.initializeFacets();
-		this.fetchCoverageCount();
-		this.fetchAdvisoryCounts();
-		this.getCaseAndRMACount();
+		forkJoin(
+			this.fetchSolutions(),
+			this.fetchCoverageCount(),
+			this.fetchAdvisoryCounts(),
+			this.getCaseAndRMACount(),
+		)
+		.pipe(
+			tap(() => this.refreshQuickTour()),
+			catchError(err => {
+				this.status.loading = false;
+				this.logger.error('solution.component : ngOnInit() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of(null);
+			}),
+			takeUntil(this.destroy$),
+		)
+		.subscribe();
 	}
 
 	/**
@@ -408,5 +562,13 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			_.invoke(this.eventsSubscribe, 'unsubscribe');
 		}
 		this.destroy$.next();
+		this.destroy$.complete();
+	}
+
+	/**
+	 * Detects changes to the view after init
+	 */
+	public async ngAfterViewInit () {
+		this.cdr.detectChanges();
 	}
 }
