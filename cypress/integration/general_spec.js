@@ -480,21 +480,24 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
-		it('PBC-369 Portal Support', () => {
+		it.only('PBC-369 Portal Support', () => {
+			const DescriptionText = 'Sample Description Text for Portal Support';
 			cy.getByAutoId('HeaderPortalHelpButton').click();
 			cy.getByAutoId('HeaderDropdownClose').click(); // close it
 			cy.getByAutoId('HeaderPortalHelpButton').click(); // open it again
 			cy.getByAutoId('portalHelp').click(); // open the Contact Support modal
 			cy.getByAutoId('supportTopic').should('exist');
-			cy.getByAutoId('cui-select').should('exist');
-			// TODO  select text and move on to Description below
+			cy.getByAutoId('cui-select').click();
+			cy.get('a[title="CX Collector Support"]').click(); // select any value
 			cy.getByAutoId('supportDescription').should('exist');
-			// TODO  enter text and click submit
-			// TODO verify confirm screen after submitting feedback
+			cy.get('textarea').click()
+				.type(DescriptionText);
+			cy.getByAutoId('submit').click();
+			// Info: localhost blocked by CORS policy
+			cy.getByAutoId('portalSupportHide').should('exist');
+			cy.getByAutoId('done').should('exist').click();
 		});
-
-	})]
+	});
 });
