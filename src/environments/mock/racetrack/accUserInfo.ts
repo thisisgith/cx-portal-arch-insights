@@ -16,7 +16,7 @@ function MockACCUserInfoResponse (): ACCUserInfoSchema {
 		companyName: 'Cisco Systems',
 		country: 'USA',
 		jobTitle: 'NETWORK SPECIALIST',
-		userEmail: 'johndoe@csco.com',
+		userEmail: 'johndoe@cisco.com',
 		userFullName: 'John Doe',
 		userPhoneNumber: '1-888-555-5555',
 	};
