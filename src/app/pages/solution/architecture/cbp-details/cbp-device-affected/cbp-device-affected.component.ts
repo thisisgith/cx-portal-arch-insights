@@ -31,6 +31,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 
 	/** Our current customerId */
 	public customerId: string;
+	public fullscreen: any ;
 	public tableOptions: CuiTableOptions;
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
@@ -168,10 +169,4 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public onPanelClose () {
 		this.selectedAsset = null;
 	}
-
-	// /**
-	//  * Used for exporting the table data
-	//  */
-	// public export () {
-	// }
 }

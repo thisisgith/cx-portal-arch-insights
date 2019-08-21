@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { environment } from '@environment';
 import { CbpRuleViolationComponent } from './cbp-rule-violation.component';
 import { CbpRuleViolationModule } from './cbp-rule-violation.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -7,6 +7,8 @@ import { ArchitectureService } from '@sdp-api';
 import { of, throwError } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { user } from '@mock';
 
 describe('CbpRuleViolationComponent', () => {
 	let component: CbpRuleViolationComponent;
@@ -15,9 +17,24 @@ describe('CbpRuleViolationComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CbpRuleViolationModule,
+			imports: [
+				CbpRuleViolationModule,
 				HttpClientTestingModule,
-				RouterTestingModule],
+				RouterTestingModule,
+			], providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
+			],
 		})
 		.compileComponents();
 	}));

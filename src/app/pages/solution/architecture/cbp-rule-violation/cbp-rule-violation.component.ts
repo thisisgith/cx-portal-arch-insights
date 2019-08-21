@@ -5,11 +5,8 @@ import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ArchitectureService, IException, cbpRuleException } from '@sdp-api';
-
+import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
-
- /** Our current customerId */
-const customerId = '7293498';
 
 /**
  * CBP Rule Component
@@ -21,27 +18,34 @@ const customerId = '7293498';
 })
 export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	@Input() public filters;
+	public customerId: string;
 	public tableOptions: CuiTableOptions;
 	public totalItems = 0;
 	public cbpRuleExceptions: cbpRuleException[] = [];
 	public isLoading = true;
 	public fullscreen: any ;
-
-	public paramsType = {
-		customerId,
-		page: 0,
-		pageSize: 10,
-		severity: '',
-	};
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
 	public exceptionObject: IException = null;
 	@ViewChild('riskTemplate', { static: true })
 	private riskTemplate: TemplateRef<{ }>;
 
-	constructor (private logger: LogService, private architectureService: ArchitectureService) {
+	constructor (
+		private logger: LogService,
+		private architectureService: ArchitectureService,
+		private route: ActivatedRoute,
+	) {
 		this.logger.debug('CbpRuleViolationComponent Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
+
+	public paramsType = {
+		customerId: this.customerId,
+		page: 0,
+		pageSize: 10,
+		severity: '',
+	};
 
 	/**
 	 * Used to call the getCBPRulesData and buildTable function for Updating the Table

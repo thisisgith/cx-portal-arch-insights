@@ -64,7 +64,7 @@
 
 <!-- Fly-Out View Slide-out on Selection of Title -->
 <details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onFlyOutPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
+	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<asset-details-header [asset]="selectedAsset"></asset-details-header>
 		<div detailsPanelTitle class="text-xlarge">
 			<span class="icon-wifi"></span>
