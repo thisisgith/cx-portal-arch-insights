@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@environment';
 import { of, throwError } from 'rxjs';
-import { user, RISKScenarios } from '@mock';
+import { user, RiskScenarios } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RiskMitigationService, HighCrashRiskDeviceCount } from '@sdp-api';
@@ -82,11 +82,11 @@ describe('RiskMitigationComponent', () => {
 	it('should fetch all data', () => {
 		spyOn(riskMitigationService, 'getAllCrashesData')
 			.and
-			.returnValue(of(RISKScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(RiskScenarios[0].scenarios.GET[0].response.body));
 		spyOn(riskMitigationService, 'getHighCrashRiskDeviceCountData')
 			.and
 			.returnValue(of(<HighCrashRiskDeviceCount>
-				RISKScenarios[1].scenarios.GET[0].response.body));
+				RiskScenarios[1].scenarios.GET[0].response.body));
 		spyOn(riskMitigationService, 'getFingerPrintDeviceDetailsData')
 			.and
 			.returnValue(of(<any> { devices: [], count: 100 }));
@@ -138,7 +138,7 @@ describe('RiskMitigationComponent', () => {
 	it('Should get the last few days crash data', done => {
 		spyOn(riskMitigationService, 'getAllCrashesData')
 			.and
-			.returnValue(of(RISKScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(RiskScenarios[0].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -153,7 +153,7 @@ describe('RiskMitigationComponent', () => {
 		spyOn(riskMitigationService, 'getHighCrashRiskDeviceCountData')
 			.and
 			.returnValue(of(<HighCrashRiskDeviceCount>
-				RISKScenarios[1].scenarios.GET[0].response.body));
+				RiskScenarios[1].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -167,7 +167,7 @@ describe('RiskMitigationComponent', () => {
 	it('Should get the device details', done => {
 		spyOn(riskMitigationService, 'getDeviceDetails')
 			.and
-			.returnValue(of(RISKScenarios[2].scenarios.GET[0].response.body));
+			.returnValue(of(RiskScenarios[2].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -181,7 +181,7 @@ describe('RiskMitigationComponent', () => {
 	it('Should get history of crashed device', done => {
 		spyOn(riskMitigationService, 'getCrashHistoryForDevice')
 			.and
-			.returnValue(of(RISKScenarios[3].scenarios.GET[0].response.body));
+			.returnValue(of(RiskScenarios[3].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -195,7 +195,7 @@ describe('RiskMitigationComponent', () => {
 	it('Should return the searched response', done => {
 		spyOn(riskMitigationService, 'getSearchedData')
 			.and
-			.returnValue(of(RISKScenarios[2].scenarios.GET[0].response.body));
+			.returnValue(of(RiskScenarios[2].scenarios.GET[0].response.body));
 		component.ngOnInit();
 		fixture.whenStable()
 			.then(() => {
@@ -309,7 +309,7 @@ describe('RiskMitigationComponent', () => {
 	it('should show asset details', () => {
 		expect(component.showAsset360)
 			.toBeFalsy();
-		component.reDirectToAsset360();
+		component.redirectToAsset360();
 		expect(component.showAsset360)
 			.toBe(true);
 	});
