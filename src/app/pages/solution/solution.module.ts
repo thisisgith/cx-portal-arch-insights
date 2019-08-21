@@ -11,7 +11,7 @@ import {
 	InventoryModule,
 } from '@sdp-api';
 import { environment } from '@environment';
-import { BarChartModule, CaseModule } from '@components';
+import { BarChartModule, CaseModule, QuickTourModule } from '@components';
 import { NoDNACHeaderModule } from './no-dnac-header/no-dnac-header.module';
 
 /**
@@ -36,6 +36,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CuiSpinnerModule,
 		InventoryModule.forRoot({ rootUrl }),
 		NoDNACHeaderModule,
+		QuickTourModule,
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
 		SolutionRoutingModule,
