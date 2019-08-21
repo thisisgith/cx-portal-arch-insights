@@ -36,6 +36,8 @@ class SearchService extends __BaseService {
    *
    * - `webSessionId`: Web Session Id
    *
+   * - `pitStop`: User's current pit stop
+   *
    * - `offset`: Pagination: offset
    *
    * - `limit`: Pagination: number of expected results
@@ -57,6 +59,7 @@ class SearchService extends __BaseService {
     __headers = __headers.append("Content-Type", "application/x-www-form-urlencoded");
    if(params.searchTokens !== null && typeof params.searchTokens !== "undefined") { __formData = __formData.append('searchTokens', params.searchTokens as string);}
    if(params.webSessionId !== null && typeof params.webSessionId !== "undefined") { __formData = __formData.append('webSessionId', params.webSessionId as string);}
+   if(params.pitStop !== null && typeof params.pitStop !== "undefined") { __formData = __formData.append('pitStop', params.pitStop as string);}
    if(params.offset !== null && typeof params.offset !== "undefined") { __formData = __formData.append('offset', params.offset as string);}
    if(params.limit !== null && typeof params.limit !== "undefined") { __formData = __formData.append('limit', params.limit as string);}
    if(params.filters !== null && typeof params.filters !== "undefined") { __formData = __formData.append('filters', params.filters as string);}
@@ -87,6 +90,8 @@ class SearchService extends __BaseService {
    * - `searchTokens`: Tokens for search
    *
    * - `webSessionId`: Web Session Id
+   *
+   * - `pitStop`: User's current pit stop
    *
    * - `offset`: Pagination: offset
    *
@@ -282,6 +287,11 @@ module SearchService {
      * Web Session Id
      */
     webSessionId?: string;
+
+    /**
+     * User's current pit stop
+     */
+    pitStop?: string;
 
     /**
      * Pagination: offset
