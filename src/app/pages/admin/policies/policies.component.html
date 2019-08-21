@@ -94,7 +94,7 @@
 	</div>
 </admin-wrapper>
 
-<ng-container *ngIf="selectEditCollectionComponent">
+<ng-container *ngIf="modalVisible">
 	<policy-form
 		(visibleComponent)="startModal($event)"
 		[type]="modalType"

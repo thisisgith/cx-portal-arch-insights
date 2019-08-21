@@ -3,13 +3,16 @@ import { CommonModule } from '@angular/common';
 import { PolicyFormComponent } from './policy-form.component';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CuiLoaderModule } from '@cisco-ngx/cui-components';
+import { CuiLoaderModule, CuiPagerModule } from '@cisco-ngx/cui-components';
+import { DeviceListModule } from './device-list.module';
 
 /**
  * Module representing form for Policies page
  */
 @NgModule({
-	declarations: [PolicyFormComponent],
+	declarations: [
+		PolicyFormComponent,
+	],
 	exports: [PolicyFormComponent],
 	imports: [
 		CommonModule,
@@ -18,6 +21,8 @@ import { CuiLoaderModule } from '@cisco-ngx/cui-components';
 		FromNowPipeModule,
 		ReactiveFormsModule,
 		CuiLoaderModule,
+		CuiPagerModule,
+		DeviceListModule,
 	],
 })
 export class PolicyFormModule { }
