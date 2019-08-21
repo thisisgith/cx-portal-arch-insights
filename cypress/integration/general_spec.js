@@ -482,7 +482,7 @@ describe('General Spec', () => {
 			cy.waitForAppLoading();
 		});
 
-		it.only('PBC-369 Portal Support', () => {
+		it('PBC-369 Portal Support', () => {
 			const DescriptionText = 'Sample Description Text for Portal Support';
 			cy.getByAutoId('HeaderPortalHelpButton').click();
 			cy.getByAutoId('HeaderDropdownClose').click(); // close it
