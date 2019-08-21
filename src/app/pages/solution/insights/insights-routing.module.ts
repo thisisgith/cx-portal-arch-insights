@@ -24,8 +24,8 @@ const routes: Routes = [
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
+				loadChildren: () => import('../afm/afm.module')
+					.then(m => m.FaultManagementModule),
 				path: 'fault-management',
 				resolve: {
 					user: UserResolve,
