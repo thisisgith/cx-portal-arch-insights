@@ -31,7 +31,7 @@
 		<div [innerText]="'_RccProductFamily_' | i18n"></div>
 		<cui-select data-auto-id="filterSelect" [items]="policyRuleData.deviceFilterDetails.productFamily"
 			placeholder="{{'_RccProductFamilyPlaceHolder_' | i18n }}" [compressed]="true" [empty]="true"
-			[(ngModel)]="selectionObj?.productFamily" (ngModelChange)="onSelection($event)" optionsKey="name"
+			[(ngModel)]="selectionObj.productFamily" (ngModelChange)="onSelection($event)" optionsKey="name"
 			optionsValue="name">
 		</cui-select>
 	</div>
@@ -40,7 +40,7 @@
 		<div [innerText]="'_RccProductModel_' | i18n"></div>
 		<cui-select data-auto-id="policyRuleSearch" [items]="policyRuleData.deviceFilterDetails.productModel"
 			placeholder="{{'_RccProductModelPlaceHolder_'| i18n }}" [compressed]="true" [empty]="true"
-			[(ngModel)]="selectionObj?.productModel" (ngModelChange)="onSelection($event)" optionsKey="name"
+			[(ngModel)]="selectionObj.productModel" (ngModelChange)="onSelection($event)" optionsKey="name"
 			optionsValue="name">
 		</cui-select>
 	</div>
@@ -48,7 +48,7 @@
 		<div [innerText]="'_RccOSName_' | i18n"></div>
 		<cui-select data-auto-id="policyRule" [items]="policyRuleData.deviceFilterDetails.osName"
 			placeholder="{{'_RccOSNamePlaceHolder_'| i18n }}" [compressed]="true" [empty]="true"
-			[(ngModel)]="selectionObj?.osName" (ngModelChange)="onSelection($event)" optionsKey="name"
+			[(ngModel)]="selectionObj.osName" (ngModelChange)="onSelection($event)" optionsKey="name"
 			optionsValue="name">
 		</cui-select>
 	</div>
