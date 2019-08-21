@@ -44,7 +44,7 @@
 	<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	<div class="divider qtr-margin-top"></div>
 </ng-container>
-<div class="col-md-12 margintop15">
+<div class="col-md-12 margintoptable">
 	<div class="col-md-9 margintop21">
 		<span [innerText]="'_RccShowing' | i18n"></span>
 		<span> {{ tableConfig.totalItems }} </span>
@@ -62,7 +62,7 @@
 							[minlength]="searchOptions?.min" [maxlength]="searchOptions?.max"
 							[pattern]="searchOptions?.pattern" formControlName="search"
 							placeholder="{{ '_RccSearch_' | i18n }}">
-						<button data-auto-id="searchButton" type="button" class="link" (click)="clearSearch()">
+						<button data-auto-id="searchButton" type="button" class="link">
 							<span class="icon-search"></span>
 						</button>
 					</div>
@@ -142,7 +142,7 @@
 		[fullscreenToggle]="true">
 		<div detailsPanelTitle>
 			<span class="text-xlarge" [innerText]="'_Rule Name_' | i18n "></span>
-			<span class="text-xlarge"> : {{policyViolationInfo.ruletitle}}</span>
+			<span class="text-xlarge"> : {{policyViolationInfo?.ruletitle}}</span>
 		</div>
 		<div class="row ">
 			<div class="col-md-8 base-margin-bottom">
@@ -150,17 +150,17 @@
 					<div data-auto-id="RccPolicyGroup" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold" innerText="{{ '_Poliy Group_' | i18n }}">
 						</div>
-						<div innerText="{{ policyViolationInfo.policygroupid || ('_NA_' | i18n) }}"></div>
+						<div innerText="{{ policyViolationInfo?.policygroupid || ('_NA_' | i18n) }}"></div>
 					</div>
 					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold" innerText="{{ '_Poliy Category_' | i18n }}">
 						</div>
-						<div innerText="{{ policyViolationInfo.policycategory || ('_NA_' | i18n) }}"></div>
+						<div innerText="{{ policyViolationInfo?.policycategory || ('_NA_' | i18n) }}"></div>
 					</div>
 					<div data-auto-id="RccPoliyName" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold" innerText="{{ '_Poliy Name_' | i18n }}">
 						</div>
-						<div innerText="{{ policyViolationInfo.policyname  || ('_NA_' | i18n)  }}">
+						<div innerText="{{ policyViolationInfo?.policyname  || ('_NA_' | i18n)  }}">
 						</div>
 					</div>
 				</div>
@@ -178,7 +178,7 @@
 		<div detailsPanelTitle>
 			<span class="text-xlarge" [innerText]="'_Violations_' | i18n "></span>
 			<span>:</span>
-			<span class="text-xlarge selected">{{selectedAssetData.deviceName}}</span>
+			<span class="text-xlarge selected">{{selectedAssetData?.deviceName}}</span>
 		</div>
 		<div class="row ">
 			<div class="col-md-8 base-margin-bottom">
@@ -186,18 +186,18 @@
 					<div data-auto-id="RccIPAddress" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetIpAddress_' | i18n }}">
 						</div>
-						<div innerText="{{ selectedAssetData.ipaddress || ('_NA_' | i18n) }}"></div>
+						<div innerText="{{ selectedAssetData?.ipaddress || ('_NA_' | i18n) }}"></div>
 					</div>
 					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold"
 							innerText="{{ '_RccAssetSerialNumber_' | i18n }}">
 						</div>
-						<div innerText="{{ selectedAssetData.serialNumber || ('_NA_' | i18n) }}"></div>
+						<div innerText="{{ selectedAssetData?.serialNumber || ('_NA_' | i18n) }}"></div>
 					</div>
 					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetLastScan_' | i18n }}">
 						</div>
-						<div innerText="{{ (selectedAssetData.lastScan| date:mediumDate ) || ('_Never_' | i18n) }}">
+						<div innerText="{{ (selectedAssetData?.lastScan| date:mediumDate ) || ('_Never_' | i18n) }}">
 						</div>
 					</div>
 				</div>

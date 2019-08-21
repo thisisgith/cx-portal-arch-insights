@@ -64,7 +64,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public policyViolationsGridData: RccGridDataSample[];
 	public tableAssetData: RccAssetGridData;
 	public tableAssetDataSample: RccAssetGridDataSample[];
-
+	public fullscreen : any;
 	public policyGroup = null;
 	public severity = null;
 	public criteria = '';
@@ -79,7 +79,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public testData = [];
 	public policyViolationInfo = { };
 	public selectedViolationModal = false;
-	public selectedAssetData = [];
+	public selectedAssetData :any;
 	public selectedAssetModal = false;
 	public rowData = { };
 	public filterObj = [];
@@ -270,7 +270,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param rowData object
 	 * @returns opens slider
 	 */
-	public onAssetRowClicked (rowData: any) {
+	public onAssetRowClicked (rowData:any) {
 		this.rowData = rowData;
 		this.selectedAssetData = rowData;
 		this.selectedAssetModal = !this.selectedAssetModal;

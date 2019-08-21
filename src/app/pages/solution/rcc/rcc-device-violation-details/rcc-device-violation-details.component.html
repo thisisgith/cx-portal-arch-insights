@@ -2,7 +2,7 @@
 	<div class="col-8 base-margin-bottom">
 		<div data-auto-id="" class="dbl-margin-right">
 			<div class="text-small text-uppercase text-bold" innerText="{{ '_Policy Description_' | i18n }}"></div>
-			<div innerText="{{ policyRuleData.policy.desc || ('_NA_' | i18n) }}"></div>
+			<div innerText="{{ policyRuleData.policy?.desc || ('_NA_' | i18n) }}"></div>
 		</div>
 	</div>
 </div>
@@ -10,7 +10,7 @@
 	<div class="col-8 base-margin-bottom">
 		<div data-auto-id="" class="dbl-margin-right">
 			<div class="text-small text-uppercase text-bold" innerText="{{ '_Rule Description_' | i18n }}"></div>
-			<div innerText="{{ policyRuleData.rule.desc || ('_NA_' | i18n) }}"></div>
+			<div innerText="{{ policyRuleData?.rule.desc || ('_NA_' | i18n) }}"></div>
 		</div>
 	</div>
 </div>
@@ -31,7 +31,7 @@
 		<div [innerText]="'_RccProductFamily_' | i18n"></div>
 		<cui-select data-auto-id="filterSelect" [items]="policyRuleData.deviceFilterDetails.productFamily"
 			placeholder="{{'_RccProductFamilyPlaceHolder_' | i18n }}" [compressed]="true" [empty]="true"
-			[(ngModel)]="selectionObj.productFamily" (ngModelChange)="onSelection($event)" optionsKey="name"
+			[(ngModel)]="selectionObj?.productFamily" (ngModelChange)="onSelection($event)" optionsKey="name"
 			optionsValue="name">
 		</cui-select>
 	</div>
@@ -40,7 +40,7 @@
 		<div [innerText]="'_RccProductModel_' | i18n"></div>
 		<cui-select data-auto-id="policyRuleSearch" [items]="policyRuleData.deviceFilterDetails.productModel"
 			placeholder="{{'_RccProductModelPlaceHolder_'| i18n }}" [compressed]="true" [empty]="true"
-			[(ngModel)]="selectionObj.productModel" (ngModelChange)="onSelection($event)" optionsKey="name"
+			[(ngModel)]="selectionObj?.productModel" (ngModelChange)="onSelection($event)" optionsKey="name"
 			optionsValue="name">
 		</cui-select>
 	</div>
@@ -48,7 +48,7 @@
 		<div [innerText]="'_RccOSName_' | i18n"></div>
 		<cui-select data-auto-id="policyRule" [items]="policyRuleData.deviceFilterDetails.osName"
 			placeholder="{{'_RccOSNamePlaceHolder_'| i18n }}" [compressed]="true" [empty]="true"
-			[(ngModel)]="selectionObj.osName" (ngModelChange)="onSelection($event)" optionsKey="name"
+			[(ngModel)]="selectionObj?.osName" (ngModelChange)="onSelection($event)" optionsKey="name"
 			optionsValue="name">
 		</cui-select>
 	</div>
