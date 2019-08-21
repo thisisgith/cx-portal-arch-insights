@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject, of, throwError } from 'rxjs';
 import { SolutionComponent } from './solution.component';
 import { SolutionModule } from './solution.module';
@@ -22,6 +22,7 @@ import { RacetrackService, ProductAlertsService, ContractsService } from '@sdp-a
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AdvisoriesComponent } from './advisories/advisories.component';
 import { CaseService } from '@cui-x/services';
+import { RacetrackInfoService } from '@services';
 
 /**
  * MockRouter used to help show/hide the spinner
@@ -56,6 +57,7 @@ describe('SolutionComponent', () => {
 	let fixture: ComponentFixture<SolutionComponent>;
 	let router: Router;
 	let racetrackInfoSpy;
+	let racetrackInfoService: RacetrackInfoService;
 	let racetrackService: RacetrackService;
 	let caseService: CaseService;
 	let productAlertsService: ProductAlertsService;
@@ -114,6 +116,7 @@ describe('SolutionComponent', () => {
 		productAlertsService = TestBed.get(ProductAlertsService);
 		caseService = TestBed.get(CaseService);
 		racetrackService = TestBed.get(RacetrackService);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 	}));
 
 	beforeEach(() => {
@@ -173,19 +176,30 @@ describe('SolutionComponent', () => {
 			.toEqual(assetsFacet);
 	});
 
-	it('should change the active solution', () => {
+	it('should change the active solution', fakeAsync(() => {
 		buildSpies();
-
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		tick();
 		fixture.detectChanges();
 
 		expect(component.selectedSolution.name)
 			.toEqual('IBN');
 
 		component.changeSolution(component.solutions[1]);
-	});
+	}));
 
-	it('should change the active technology', () => {
+	it('should change the active technology', fakeAsync(() => {
 		buildSpies();
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
 
 		fixture.detectChanges();
 
@@ -198,7 +212,7 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedTechnology.name)
 			.toEqual('Campus Network Segmentation');
-	});
+	}));
 
 	it('should always call getCaseAndRMACount', () => {
 		spyOn(component, 'getCaseAndRMACount');

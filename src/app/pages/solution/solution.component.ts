@@ -14,12 +14,12 @@ import {
 } from '@angular/router';
 
 import * as _ from 'lodash-es';
-import { Subscription, forkJoin, of } from 'rxjs';
+import { Subject, Subscription, forkJoin, of } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 import {
 	Asset,
 	ContractsService,
 	RacetrackService,
-	RacetrackResponse,
 	RacetrackSolution,
 	RacetrackTechnology,
 	CoverageCountsResponse,
@@ -27,9 +27,8 @@ import {
 	VulnerabilityResponse,
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
-import { SolutionService } from './solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
-import { catchError } from 'rxjs/operators';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Interface representing a facet
@@ -74,6 +73,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public casesCount: number;
 	public RMACount: number;
 
+	private destroy$ = new Subject();
+
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
 	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
@@ -84,11 +85,11 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private contractsService: ContractsService,
 		private productAlertsService: ProductAlertsService,
 		private router: Router,
-		private solutionService: SolutionService,
 		private racetrackService: RacetrackService,
 		private logger: LogService,
 		private caseService: CaseService,
 		private route: ActivatedRoute,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -140,10 +141,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				}
 			}
 			if (this.selectedSolution) {
-				this.solutionService.sendCurrentSolution(this.selectedSolution);
+				this.racetrackInfoService.sendCurrentSolution(this.selectedSolution);
 
 				if (this.selectedTechnology) {
-					this.solutionService.sendCurrentTechnology(this.selectedTechnology);
+					this.racetrackInfoService.sendCurrentTechnology(this.selectedTechnology);
 				}
 			}
 		}
@@ -213,7 +214,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public changeTechnology (technology: RacetrackTechnology) {
 		this.selectedTechnology = technology;
-		this.solutionService.sendCurrentTechnology(technology);
+		this.racetrackInfoService.sendCurrentTechnology(technology);
 	}
 
 	/**
@@ -222,7 +223,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public changeSolution (solution: RacetrackSolution) {
 		this.selectedSolution = solution;
-		this.solutionService.sendCurrentSolution(solution);
+		this.racetrackInfoService.sendCurrentSolution(solution);
 
 		const topTechnology = _.head(_.get(this.selectedSolution, 'technologies', []));
 
@@ -236,16 +237,29 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	private fetchSolutions () {
 		this.status.loading = true;
-		this.racetrackService.getRacetrack({ customerId: this.customerId })
-		.subscribe((results: RacetrackResponse) => {
-			this.solutions = results.solutions;
-			this.changeSolution(_.head(this.solutions));
+		this.racetrackInfoService.getRacetrack()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(result => {
+			this.solutions = result.solutions;
 			this.status.loading = false;
-		},
-		err => {
-			this.status.loading = false;
-			this.logger.error('solution.component : fetchSolutions() ' +
-				`:: Error : (${err.status}) ${err.message}`);
+		});
+
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(result => {
+			this.selectedSolution = result;
+		});
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(result => {
+			this.selectedTechnology = result;
 		});
 	}
 
@@ -348,6 +362,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			.pipe(
 				catchError(err => {
 					this.logger.error(`Case Data :: Case Count :: Error ${err}`);
+
 					return of(null);
 				}),
 			),
@@ -392,5 +407,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		if (this.eventsSubscribe) {
 			_.invoke(this.eventsSubscribe, 'unsubscribe');
 		}
+		this.destroy$.next();
 	}
 }

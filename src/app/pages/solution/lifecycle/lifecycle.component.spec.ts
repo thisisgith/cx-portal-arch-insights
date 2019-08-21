@@ -1,9 +1,9 @@
+import * as enUSJson from 'src/assets/i18n/en-US.json';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
 import { RacetrackService, RacetrackContentService } from '@sdp-api';
-import { SolutionService } from '../solution.service';
 import {
 	RacetrackScenarios,
 	ATXScenarios,
@@ -24,6 +24,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as _ from 'lodash-es';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { RacetrackInfoService } from '@services';
+import { AppService } from 'src/app/app.service';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -44,7 +47,7 @@ describe('LifecycleComponent', () => {
 	let el: HTMLElement;
 	let racetrackService: RacetrackService;
 	let racetrackContentService: RacetrackContentService;
-	let solutionService: SolutionService;
+	let racetrackInfoService: RacetrackInfoService;
 
 	let racetrackATXSpy;
 	let racetrackAccSpy;
@@ -138,9 +141,9 @@ describe('LifecycleComponent', () => {
 	const sendParams = () => {
 		const racetrack = getActiveBody(RacetrackScenarios[0]);
 
-		solutionService.sendCurrentSolution(racetrack.solutions[0]);
+		racetrackInfoService.sendCurrentSolution(racetrack.solutions[0]);
 
-		solutionService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
+		racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
 	};
 
 	beforeEach(async(() => {
@@ -151,6 +154,7 @@ describe('LifecycleComponent', () => {
 				LifecycleModule,
 			],
 			providers: [
+				AppService,
 				{
 					provide: ActivatedRoute,
 					useValue: {
@@ -165,12 +169,13 @@ describe('LifecycleComponent', () => {
 		})
 		.compileComponents();
 
-		solutionService = TestBed.get(SolutionService);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		racetrackService = TestBed.get(RacetrackService);
 		racetrackContentService = TestBed.get(RacetrackContentService);
 	}));
 
 	beforeEach(() => {
+		I18n.injectDictionary(enUSJson);
 		fixture = TestBed.createComponent(LifecycleComponent);
 		component = fixture.componentInstance;
 		restoreSpies();

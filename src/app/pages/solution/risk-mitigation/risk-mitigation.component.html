@@ -27,8 +27,8 @@
 					>
 						<div
 							class="text-huge flex-center dbl-padding-left dbl-padding-right"
+							[innerHTML]="last24hrsData"
 						>
-							{{ last24hrsData }}
 						</div>
 						<div
 							class="text-large flex-center"
@@ -80,7 +80,6 @@
 	<!-- filter tab -->
 	<ng-container>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
-		<!-- <div class="divider qtr-margin-top"></div> -->
 	</ng-container>
 	<div class="row space-between">
 		<div class="col-2">
@@ -132,7 +131,7 @@
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 					>
 						<span [innerText]="'_RMTimeLast_' | i18n"></span>
-						<span>{{ subfilter.label }}</span>
+						<span [innerHTML]="subfilter.label"></span>
 						<span
 							class="icon-close"
 							(click)="clearFilters()" data-auto-id="FilterBarClearAllFiltersIcon"
@@ -234,8 +233,9 @@
 				<span class="qtr-margin-left">
 					<a
 						data-auto-id="selectedName"
-						(click)="reDirectToAsset360()"
-						>&lt;{{ selectedAsset.neName }}&gt;</a
+						(click)="redirectToAsset360()"
+						[innerHTML]="selectedAsset.neName"
+						></a
 					>
 				</span>
 			</div>
@@ -285,19 +285,9 @@
 	></cui-table>
 </details-panel>
 <ng-template #cardColors let-item="celldata">
-	<span *ngIf="item.globalRiskRank === 'LOW'">
-		<span class="qtr-margin-right icon-circle text-success"></span>
-		<span>{{ item.globalRiskRank }}</span>
-	</span>
-	<span *ngIf="item.globalRiskRank === 'MED'">
-		<span class="qtr-margin-right icon-circle text-warning"></span>
-		<span>{{ item.globalRiskRank }}</span>
-	</span>
-	<span *ngIf="item.globalRiskRank === 'HIGH'">
-		<span class="qtr-margin-right icon-circle text-danger"></span>
-		<span>{{ item.globalRiskRank }}</span>
-	</span>
+<span [ngClass]="{ 'text-success': item.globalRiskRank === 'LOW', 'text-warning': item.globalRiskRank === 'MED', 'text-danger': item.globalRiskRank === 'HIGH' }"> </span>
+<span [innerText]="item.globalRiskRank"></span>
 </ng-template>
 <ng-template #riskScore let-item="celldata">
-	<span>{{ item.riskScore }}&#37;</span>
+	<span [innerHTML]="item.riskScore"></span>
 </ng-template>

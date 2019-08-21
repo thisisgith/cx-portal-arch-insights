@@ -2,13 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CommunitiesComponent } from './communities.component';
 import { CommunitiesModule } from './communities.module';
-import { SolutionService } from '../../solution.service';
 import { LifecycleComponent } from '../lifecycle.component';
 import * as _ from 'lodash-es';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Mock, RacetrackScenarios } from '@mock';
 import { RacetrackService } from '@sdp-api';
 import { of } from 'rxjs';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -25,7 +25,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 describe('CommunitiesComponent', () => {
 	let component: CommunitiesComponent;
 	let fixture: ComponentFixture<CommunitiesComponent>;
-	let solutionService: SolutionService;
+	let racetrackInfoService: RacetrackInfoService;
 	let racetrackService: RacetrackService;
 	let racetrackInfoSpy;
 
@@ -51,9 +51,9 @@ describe('CommunitiesComponent', () => {
 	const sendParams = () => {
 		const racetrack = getActiveBody(RacetrackScenarios[0]);
 
-		solutionService.sendCurrentSolution(racetrack.solutions[0]);
+		racetrackInfoService.sendCurrentSolution(racetrack.solutions[0]);
 
-		solutionService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
+		racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
 	};
 
 	beforeEach(async(() => {
@@ -72,7 +72,7 @@ describe('CommunitiesComponent', () => {
 		})
 		.compileComponents();
 
-		solutionService = TestBed.get(SolutionService);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		racetrackService = TestBed.get(RacetrackService);
 	}));
 
@@ -110,7 +110,7 @@ describe('CommunitiesComponent', () => {
 
 		it('should update the url when UseCase changes to 2nd one', () => {
 			const racetrack = getActiveBody(RacetrackScenarios[0]);
-			solutionService.sendCurrentTechnology(racetrack.solutions[0].technologies[1]);
+			racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[1]);
 			fixture.detectChanges();
 
 			fixture.whenStable()
@@ -128,7 +128,7 @@ describe('CommunitiesComponent', () => {
 
 		it('should update the url when UseCase changes to 3rd one', () => {
 			const racetrack = getActiveBody(RacetrackScenarios[0]);
-			solutionService.sendCurrentTechnology(racetrack.solutions[0].technologies[2]);
+			racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[2]);
 			fixture.detectChanges();
 
 			fixture.whenStable()
@@ -146,7 +146,7 @@ describe('CommunitiesComponent', () => {
 
 		it('should update the url when UseCase changes to 4th one', () => {
 			const racetrack = getActiveBody(RacetrackScenarios[0]);
-			solutionService.sendCurrentTechnology(racetrack.solutions[0].technologies[3]);
+			racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[3]);
 			fixture.detectChanges();
 
 			fixture.whenStable()
@@ -164,7 +164,7 @@ describe('CommunitiesComponent', () => {
 
 		it('should update the url when UseCase changes to 5th one', () => {
 			const racetrack = getActiveBody(RacetrackScenarios[0]);
-			solutionService.sendCurrentTechnology(racetrack.solutions[0].technologies[4]);
+			racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[4]);
 			fixture.detectChanges();
 
 			fixture.whenStable()

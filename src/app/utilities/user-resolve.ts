@@ -72,7 +72,7 @@ export class UserResolve implements Resolve<any> {
 	 * Function used to resolve a user
 	 * @returns the user
 	 */
-	public resolve (): Observable<User | { }> {
+	public resolve (): Observable<User> {
 		if (this.cachedUser) {
 			return of(this.cachedUser);
 		}
@@ -88,7 +88,7 @@ export class UserResolve implements Resolve<any> {
 				this.logger.error('user-resolve : loadUser() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
+				return of(null);
 			}),
 		);
 	}
@@ -99,7 +99,7 @@ export class UserResolve implements Resolve<any> {
 	 * @returns the user
 	 */
 	private getServiceInfo (user: EntitledUser):
-		Observable<User | { }> {
+		Observable<User> {
 		return this.entitlementService.getServiceInfo(_.get(user, 'customerId'))
 		.pipe(
 			map((response: ServiceInfoResponse) => {
@@ -121,7 +121,7 @@ export class UserResolve implements Resolve<any> {
 				this.logger.error('user-resolve : getServiceInfo() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
+				return of(null);
 			}),
 		);
 	}
