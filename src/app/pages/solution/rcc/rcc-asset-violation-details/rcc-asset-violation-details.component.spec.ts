@@ -10,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 
-fdescribe('RccAssetViolationDetailsComponent', () => {
+describe('RccAssetViolationDetailsComponent', () => {
 	let component: RccAssetViolationDetailsComponent;
 	let fixture: ComponentFixture<RccAssetViolationDetailsComponent>;
 	let rccAssetDetailsService: RccAssetDetailsService;

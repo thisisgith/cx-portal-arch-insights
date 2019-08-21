@@ -197,7 +197,7 @@
 					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetLastScan_' | i18n }}">
 						</div>
-						<div innerText="{{ (selectedAssetData?.lastScan| date:mediumDate ) || ('_Never_' | i18n) }}">
+						<div innerText="{{ (selectedAssetData?.lastScan| date:'yyyy MMM dd' ) || ('_Never_' | i18n) }}">
 						</div>
 					</div>
 				</div>
