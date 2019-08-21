@@ -162,23 +162,5 @@ describe('AssetDetailsComponent', () => {
 		component.clear();
 		expect(component.assetDetails)
 			.toBeNull();
-
-	});
-
-	it('should call updateAsset on Accept', () => {
-		spyOn(component.selectedAssetChange, 'emit');
-		spyOn(component, 'setAcceptedVersion');
-		spyOn(osvService, 'updateAsset')
-			.and
-			.returnValue(of((<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[1]));
-		const params = (<any> OSVScenarios[3].scenarios.GET[0].response.body)[0];
-		component.onActionClick(params);
-		fixture.detectChanges();
-		expect(osvService.updateAsset)
-			.toHaveBeenCalled();
-		expect(component.setAcceptedVersion)
-			.toHaveBeenCalled();
-		expect(component.selectedAssetChange.emit)
-			.toHaveBeenCalled();
 	});
 });
