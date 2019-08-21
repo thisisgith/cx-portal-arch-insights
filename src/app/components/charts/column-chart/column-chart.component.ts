@@ -18,7 +18,9 @@ import * as _ from 'lodash-es';
 })
 export class ColumnChartComponent implements OnInit {
 
+	@Input() public loading;
 	@Input() public seriesData;
+	@Input() public width;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -72,7 +74,7 @@ export class ColumnChartComponent implements OnInit {
 				},
 				height: 100,
 				type: 'column',
-				width: 400,
+				width: this.width || 400,
 			},
 			credits: {
 				enabled: false,
@@ -90,7 +92,10 @@ export class ColumnChartComponent implements OnInit {
 			series: [
 				{
 					data,
+					enableMouseTracking: !this.loading,
+					minPointLength: 5,
 					name: '',
+					opacity: this.loading ? 0.5 : 1,
 					showInLegend: false,
 					type: undefined,
 				},
@@ -119,8 +124,8 @@ export class ColumnChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
-		this.subfilter.emit(filterName);
+		const filter = _.find(this.seriesData, { label: event.point.name });
+		this.subfilter.emit(filter);
 	}
 
 	/**

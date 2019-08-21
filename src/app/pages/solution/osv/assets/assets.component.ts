@@ -34,7 +34,6 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
-	@Output() public assetStatusUpdated = new EventEmitter<OSVAsset>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
 	private recommendationsTemplate: TemplateRef<{ }>;
@@ -87,20 +86,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
-		const selectedAsset = _.get(changes, ['selectedAsset', 'currentValue']);
 		if (currentFilter && !changes.filters.firstChange) {
 			this.setFilter(currentFilter);
 			this.loadData();
-		}
-		if (selectedAsset && !changes.selectedAsset.firstChange) {
-			const selected = _.filter(this.assets, { id: selectedAsset.id });
-			if (selected && selected.length > 0) {
-				selected[0].optimalVersion = selectedAsset.optimalVersion;
-				if (selected[0].deployment !== selectedAsset.deployment) {
-					selected[0].deployment = selectedAsset.deployment;
-					this.assetStatusUpdated.emit(selectedAsset);
-				}
-			}
 		}
 	}
 

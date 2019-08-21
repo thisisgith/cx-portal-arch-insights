@@ -67,13 +67,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * refresh the deploymentstatus pie chart
-	 */
-	public onAssetStatusUpdate () {
-		this.loadData();
-	}
-
-	/**
 	 * Initializes our visual filters
 	 * @param tab the tab we're building the filters for
 	 */
