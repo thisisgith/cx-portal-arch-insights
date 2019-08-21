@@ -4,22 +4,24 @@ import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/com
 import { BaseService as __BaseService } from '../base-service';
 import { ArchitectureConfiguration as __Configuration } from '../architecture-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { Observable as __Observable } from 'rxjs';
-import { Observable, Subject } from 'rxjs';
+import { Observable as __Observable, Subject } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 import { ContractDeviceCountsResponse } from '../models/contract-device-counts-response';
-import { IException } from '../models/exception';
-import { IAsset } from '../models/asset';
+
 
 @Injectable({
   providedIn: 'root',
 })
 class ArchitectureService extends __BaseService {
 
-
   static readonly getContractCountsPath = '/api/customerportal/contracts/v1/device/count';
-
   static readonly getAllCBPRules = '/cparchinsights/getAllCBPRules';
+  static readonly getCBPSeverityResponsePath = '/api/customerportal/archinsights/v1/cbprules';
+  static readonly getAllAssetsWithExceptionsResponsePath = '/api/customerportal/archinsights/v1/assets/exceptions';
+  static readonly getExceptionsCountResponsePath = '/api/customerportal/archinsights/v1/cbprules/count';
+  static readonly getAssetsExceptionsCountResponsePath = '/api/customerportal/archinsights/v1/assets/exceptions/count';
+  static readonly getAllCBPDeviceAffectedResponsePath = '/api/customerportal/archinsights/v1/assets/exceptions/devicedetails';
+  static readonly getAllCBPExceptionDetailsResponsePath = '/api/customerportal/archinsights/v1/cbprules/exceptiondetails';
 
   private AssetsExceptionsCount = new Subject<any>();
 
@@ -47,17 +49,17 @@ class ArchitectureService extends __BaseService {
   getCBPSeverityResponse(params: any): __Observable<__StrictHttpResponse<any>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
-    let __body: any = null;    
-    
+    let __body: any = null;
+
     if (params.page != null) __params = __params.set('page', params.page.toString());
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
     if (params.severity != null) __params = __params.set('severity', params.severity.toString());
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-    
+
     // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
-      'GET',
-      'https://api-stage.cisco.com/api/customerportal/archinsights/v1/cbprules', 
+	  'GET',
+	  this.rootUrl + `${ArchitectureService.getCBPSeverityResponsePath}`,
       __body,
       {
         headers: __headers,
@@ -108,12 +110,12 @@ class ArchitectureService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page);
     if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize);
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-    
+
     let req = new HttpRequest<any>(
-      'GET',
-      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/assets/exceptions`,
+	  'GET',
+	  this.rootUrl + `${ArchitectureService.getAllAssetsWithExceptionsResponsePath}`,
       __body,
-      
+
       {
         headers: __headers,
         params: __params,
@@ -141,8 +143,8 @@ class ArchitectureService extends __BaseService {
     let __params = this.newParams();
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     let req = new HttpRequest<any>(
-      'GET',
-      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/cbprules/count`,
+	  'GET',
+	  this.rootUrl + `${ArchitectureService.getExceptionsCountResponsePath}`,
       __body,
       {
         headers: __headers,
@@ -176,7 +178,7 @@ class ArchitectureService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/assets/exceptions/count`,
+	  this.rootUrl + `${ArchitectureService.getAssetsExceptionsCountResponsePath}`,
       __body,
       {
         headers: __headers,
@@ -196,7 +198,7 @@ class ArchitectureService extends __BaseService {
 
   /**
    * This function is used to get the asset details
-   * @param body This parameter containes array of assets 
+   * @param body This parameter containes array of assets
    * @returns only body part of the HTTp response
    */
   getAllCBPDeviceAffected(params: ArchitectureService.getAllCBPDeviceAffectedParams): __Observable<any> {
@@ -208,7 +210,7 @@ class ArchitectureService extends __BaseService {
   /**
    * This Function is used to get the asset detail by adding headers, params and body while sending the request
    * @param body This Parameter contains array of Assets
-   * @returns Entire HTTP response is returned 
+   * @returns Entire HTTP response is returned
    */
   getAllCBPDeviceAffectedResponse(params: ArchitectureService.getAllCBPDeviceAffectedParams): __Observable<__StrictHttpResponse<any>> {
 
@@ -222,7 +224,7 @@ class ArchitectureService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'POST',
-      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/assets/exceptions/devicedetails`,
+	  this.rootUrl + `${ArchitectureService.getAllCBPDeviceAffectedResponsePath}`,
       __body,
       {
         headers: __headers,
@@ -253,7 +255,7 @@ class ArchitectureService extends __BaseService {
   /**
    * This Function is used to get the Exceptions detail by adding headers, params and body while sending the request
    * @param body This Parameter contains array of Exceptions
-   * @returns Entire HTTP response is returned 
+   * @returns Entire HTTP response is returned
    */
   getAllCBPExceptionDetailsResponse(params: ArchitectureService.getAllCBPExceptionDetailsParams): __Observable<__StrictHttpResponse<any>> {
 
@@ -266,8 +268,8 @@ class ArchitectureService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 
     let req = new HttpRequest<any>(
-      'POST',
-      `https://api-stage.cisco.com/api/customerportal/archinsights/v1/cbprules/exceptiondetails`,
+	  'POST',
+	  this.rootUrl + `${ArchitectureService.getAllCBPExceptionDetailsResponsePath}`,
       __body,
       {
         headers: __headers,

@@ -13,10 +13,10 @@ import { ArchitectureService } from './services';
     ArchitectureService
   ],
 })
-export class ArchitectureModule {
+export class ArchitectureModules {
   static forRoot(customParams: ArchitectureConfigurationInterface): ModuleWithProviders {
     return {
-      ngModule: ArchitectureModule,
+      ngModule: ArchitectureModules,
       providers: [
         {
           provide: ArchitectureConfiguration,
