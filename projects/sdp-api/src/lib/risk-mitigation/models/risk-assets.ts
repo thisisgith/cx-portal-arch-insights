@@ -9,4 +9,5 @@ export interface RiskAssets {
   customerId?: string;
   data: Array<RiskAsset>;
   Pagination?: RiskPagination;
+  deviceDetails?: Array<RiskAsset>;
 }
