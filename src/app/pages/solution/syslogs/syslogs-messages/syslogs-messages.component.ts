@@ -28,6 +28,26 @@ import { UserResolve } from '@utilities';
 })
 export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public sysFilter;
+	public customerId;
+	public countSubscripion: Subscription;
+	public gridSubscripion: Subscription;
+	public totalSyslogsCount = { };
+	public tableOptions: CuiTableOptions;
+	public tableLimit = 10;
+	public pagerLimit = 10;
+	public tableOffset = 0;
+	public loading = false;
+	public totalItems = 0;
+	public tableData: SyslogGridData[] = [];
+	public pageLimit = 10;
+	public pageNum = 1;
+	public msgInclude = '';
+	public msgExclude = '';
+	public lastMsgType;
+	public selectedAsset;
+	public showAsset360 = false;
+	public fullscreen = false;
+	public searchVal = '';
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -66,26 +86,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			},
 		]);
 	}
-	public customerId;
-	public countSubscripion: Subscription;
-	public gridSubscripion: Subscription;
-	public totalSyslogsCount = { };
-	public tableOptions: CuiTableOptions;
-	public tableLimit = 10;
-	public pagerLimit = 10;
-	public tableOffset = 0;
-	public loading = false;
-	public totalItems = 0;
-	public tableData: SyslogGridData[] = [];
-	public pageLimit = 10;
-	public pageNum = 1;
-	public msgInclude = '';
-	public msgExclude = '';
-	public lastMsgType;
-	public selectedAsset;
-	public showAsset360 = false;
-	public fullscreen = false;
-	public searchVal = '';
 	/**
 	 * grid column template of syslogs grid
 	 */

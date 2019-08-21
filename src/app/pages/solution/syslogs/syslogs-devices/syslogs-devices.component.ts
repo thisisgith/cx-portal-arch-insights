@@ -26,6 +26,33 @@ import { UserResolve } from '@utilities';
 })
 export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public assetFilter;
+	public customerId;
+	public gridSubscripion: Subscription;
+	public fullResponse: SyslogDeviceData;
+	public tableOptions: CuiTableOptions;
+	public tableLimit = 10;
+	public pagerLimit = 10;
+	public tableOffset = 0;
+	public loading = false;
+	public totalItems = 0;
+	public tableData: SyslogDeviceDetailsdata[] = [];
+	public pageNum = 1;
+	public severity = 7;
+	public timeRange = 1;
+	public catalog = '';
+	public selectedAsset;
+	public showAsset360 = false;
+	public fullscreen = false;
+	public assetType = '';
+	public filters: SyslogFilter[];
+	public searchVal = '';
+	public syslogsParams: SyslogsService.GetSyslogsParams = {
+		customerId: this.customerId,
+		pageNo: this.pageNum,
+		size: this.pagerLimit,
+	};
+	public selected;
+	public destroy$ = new Subject();
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -63,33 +90,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			},
 		]);
 	}
-	public customerId;
-	public gridSubscripion: Subscription;
-	public fullResponse: SyslogDeviceData;
-	public tableOptions: CuiTableOptions;
-	public tableLimit = 10;
-	public pagerLimit = 10;
-	public tableOffset = 0;
-	public loading = false;
-	public totalItems = 0;
-	public tableData: SyslogDeviceDetailsdata[] = [];
-	public pageNum = 1;
-	public severity = 7;
-	public timeRange = 1;
-	public catalog = '';
-	public selectedAsset;
-	public showAsset360 = false;
-	public fullscreen = false;
-	public assetType = '';
-	public filters: SyslogFilter[];
-	public searchVal = '';
-	public syslogsParams: SyslogsService.GetSyslogsParams = {
-		customerId: this.customerId,
-		pageNo: this.pageNum,
-		size: this.pagerLimit,
-	};
-	public selected;
-	public destroy$ = new Subject();
 	/**
 	 * on changes
 	 * @param changes contains filterobj
