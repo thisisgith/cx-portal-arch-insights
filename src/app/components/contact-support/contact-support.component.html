@@ -34,7 +34,7 @@
 			<div class="col-md-12 text-center dbl-padding-top"
 				[ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
 				<button data-auto-id="submit" class="btn btn--primary"
-					[innerText]="'_SupportSubmit_' | i18n | uppercase" (click)="contactExpert? sendMessage() : submitMessage()">
+					[innerText]="'_SupportSubmit_' | i18n | uppercase" [disabled]="contactExpert && !supportForm.valid" (click)="contactExpert? sendMessage() : submitMessage()">
 				</button>
 			</div>
 		</form>
