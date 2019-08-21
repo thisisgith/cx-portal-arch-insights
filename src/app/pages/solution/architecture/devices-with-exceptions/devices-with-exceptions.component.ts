@@ -38,7 +38,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
 	public params = { customerId, page: 0, pageSize: 10 };
-	public fullscreen:any;
+	public fullscreen: any ;
 
 	/**
 	 * used to Intialize Table options

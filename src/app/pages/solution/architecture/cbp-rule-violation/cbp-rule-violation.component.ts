@@ -25,7 +25,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public totalItems = 0;
 	public cbpRuleExceptions: cbpRuleException[] = [];
 	public isLoading = true;
-	public fullscreen:any;
+	public fullscreen: any ;
 
 	public paramsType = {
 		customerId,
