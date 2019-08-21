@@ -52,9 +52,13 @@ export * from './racetrack/elearning';
 export * from './racetrack/info';
 export * from './racetrack/successPaths';
 
+export * from './riskmitigation/risk-mitigation';
+
 export * from './rma/rma';
 
 export * from './search/search';
 export * from './search/serialnumber';
 
 export * from './user/entitlement';
+
+export * from '../mock/afm/afm';

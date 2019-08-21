@@ -322,8 +322,5 @@
 			}
 		}
 	},
-	"cli": {
-		"defaultCollection": "@apollo/schematics"
-	},
 	"defaultProject": "persona-based-console"
 }

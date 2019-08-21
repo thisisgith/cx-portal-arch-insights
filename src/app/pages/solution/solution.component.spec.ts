@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject, of, throwError } from 'rxjs';
 import { SolutionComponent } from './solution.component';
 import { SolutionModule } from './solution.module';
@@ -22,6 +22,7 @@ import { RacetrackService, ProductAlertsService, ContractsService } from '@sdp-a
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AdvisoriesComponent } from './advisories/advisories.component';
 import { CaseService } from '@cui-x/services';
+import { UtilsService, RacetrackInfoService } from '@services';
 
 /**
  * MockRouter used to help show/hide the spinner
@@ -56,10 +57,12 @@ describe('SolutionComponent', () => {
 	let fixture: ComponentFixture<SolutionComponent>;
 	let router: Router;
 	let racetrackInfoSpy;
+	let racetrackInfoService: RacetrackInfoService;
 	let racetrackService: RacetrackService;
 	let caseService: CaseService;
 	let productAlertsService: ProductAlertsService;
 	let contractsService: ContractsService;
+	let utils: UtilsService;
 
 	/**
 	 * Restore spies
@@ -114,6 +117,9 @@ describe('SolutionComponent', () => {
 		productAlertsService = TestBed.get(ProductAlertsService);
 		caseService = TestBed.get(CaseService);
 		racetrackService = TestBed.get(RacetrackService);
+		utils = TestBed.get(UtilsService);
+		localStorage.removeItem('quickTourFirstTime');
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 	}));
 
 	beforeEach(() => {
@@ -163,6 +169,7 @@ describe('SolutionComponent', () => {
 		expect(component.selectedFacet.route)
 			.toEqual('/solution/lifecycle');
 
+		const lifecyclesFacet = _.find(component.facets, { route: '/solution/lifecycles' });
 		const assetsFacet = _.find(component.facets, { route: '/solution/assets' });
 
 		component.selectFacet(assetsFacet);
@@ -171,21 +178,38 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedFacet)
 			.toEqual(assetsFacet);
+		expect(component.quickTourActive)
+			.toBeFalsy();
+
+		component.selectFacet(lifecyclesFacet);
+		expect(component.quickTourActive)
+			.toBeFalsy();
 	});
 
-	it('should change the active solution', () => {
+	it('should change the active solution', fakeAsync(() => {
 		buildSpies();
-
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		tick();
 		fixture.detectChanges();
 
 		expect(component.selectedSolution.name)
 			.toEqual('IBN');
 
 		component.changeSolution(component.solutions[1]);
-	});
+	}));
 
-	it('should change the active technology', () => {
+	it('should change the active technology', fakeAsync(() => {
 		buildSpies();
+		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
+		racetrackInfoService.sendCurrentSolution(
+			getActiveBody(RacetrackScenarios[0]).solutions[0],
+		);
+		racetrackInfoService.sendCurrentTechnology(
+			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
+		);
 
 		fixture.detectChanges();
 
@@ -198,7 +222,7 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedTechnology.name)
 			.toEqual('Campus Network Segmentation');
-	});
+	}));
 
 	it('should always call getCaseAndRMACount', () => {
 		spyOn(component, 'getCaseAndRMACount');
@@ -273,4 +297,36 @@ describe('SolutionComponent', () => {
 			done();
 		});
 	});
+
+	it('should open Quick Tour when first time null', fakeAsync(async () => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.quickTourActive)
+				.toBeTruthy();
+		});
+	}));
+
+	it('should open Quick Tour when first time true', fakeAsync(async () => {
+		utils.setLocalStorage('quickTourFirstTime', { firstTime: true });
+		await router.navigate(['/solution/lifecycle']);
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.quickTourActive)
+				.toBeTruthy();
+		});
+	}));
+
+	it('should not open Quick Tour when not first time', fakeAsync(async () => {
+		utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
+		await router.navigate(['/solution/lifecycle']);
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.quickTourActive)
+				.toBeFalsy();
+		});
+	}));
+
 });

@@ -30,7 +30,13 @@
 
 .shift-button {
 	text-align: center;
-	width: 200px;
+	width: 100%;
+	padding: 0 30px 0 30px;
+	margin: 10px;
+}
+
+.button-row {
+	height: 100%;
 }
 
 select {
@@ -42,4 +48,8 @@ select {
 
 #timePeriod-select {
 	width: 110px;
+}
+
+#add {
+	margin-top: 100px;
 }
