@@ -16,7 +16,7 @@ import { ArchitectureModules } from '@sdp-api';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Child routes for OptimalSoftwareModule for lazy loading

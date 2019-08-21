@@ -20,7 +20,7 @@ import { SyslogsDevicesModule } from './syslogs-devices/syslogs-devices.module';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
+const rootUrl = environment.sdpServiceOrigin;
 /**
  * Child routes for Syslog Module for lazy loading
  */
