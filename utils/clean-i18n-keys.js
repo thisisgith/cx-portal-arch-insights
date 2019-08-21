@@ -41,7 +41,7 @@ Do you wish to continue? [y/n] `, response => {
 				orphans.forEach(key => {
 					delete i18nFile[key];
 				});
-				fs.writeFileSync(i18nFileName, JSON.stringify(i18nFile, null, 4));
+				fs.writeFileSync(i18nFileName, JSON.stringify(i18nFile, null, '\t'));
 			});
 			process.exit(0);
 		} else {

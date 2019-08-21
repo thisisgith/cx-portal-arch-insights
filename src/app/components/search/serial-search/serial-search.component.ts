@@ -251,7 +251,7 @@ implements OnInit, OnChanges, OnDestroy {
 	 */
 	 private getAssetInfo (customerId: string, serialNumber: string):
 	 Observable<Assets> {
-		 return this.inventoryService.getAssets({ customerId, serialNumber })
+		 return this.inventoryService.getAssets({ customerId, serialNumber: [serialNumber] })
 		 .pipe(
 			 catchError(err => {
 				 this.logger.error(`Hardware Data :: ${serialNumber} :: Error ${err}`);
@@ -321,11 +321,12 @@ implements OnInit, OnChanges, OnDestroy {
 			}),
 		);
 	}
-/**
-	* Fetch Case/RMA counts for the given serial number
-	* @param serialNumber sn to search on
-	* @returns Observable with array of case followed by RMA counts
-	*/
+
+	/**
+	 * Fetch Case/RMA counts for the given serial number
+	 * @param serialNumber sn to search on
+	 * @returns Observable with array of case followed by RMA counts
+	 */
 	private getCaseData (serialNumber: string) {
 	 const params = {
 		 nocache: Date.now(),
@@ -366,8 +367,9 @@ implements OnInit, OnChanges, OnDestroy {
 	 * Occurs when user clicks "View Device Details" button
 	 * @param serialNumber serial number of the device to view
 	 */
-	 public onViewDetails (serialNumber?: string) {
-		this.router.navigate(
+	 public async onViewDetails (serialNumber?: string) {
+		await this.router.navigate(['solution'], { skipLocationChange: true });
+		await this.router.navigate(
 			['solution/assets'],
 			{ queryParams: { serialNumber, select: true } },
 		);

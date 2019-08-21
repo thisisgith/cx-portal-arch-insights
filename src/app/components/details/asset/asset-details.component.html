@@ -1,162 +1,49 @@
-<cui-tabs>
-	<cui-tab [label]="'_Summary_' | i18n | uppercase">
-		<ng-container *ngTemplateOutlet="summary"></ng-container>
-	</cui-tab>
-	<cui-tab [label]="'_Hardware_' | i18n | uppercase">
-		<div class="half-margin-top" *ngIf="asset">
-			<asset-details-hardware [asset]="asset"></asset-details-hardware>
+<details-panel *ngIf="!isLoading" [hidden]="!asset" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelClose()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false">
+		<asset-details-header [asset]="asset"
+			[element]="element"
+			[customerId]="customerId"
+			(alert)="handleAlert($event)">
+		</asset-details-header>
+		<div detailsPanelTitle class="text-xlarge">
+			<span class="qtr-margin-right" *ngIf="element && getProductIcon(element)">
+				<img alt="{{ '_AssetIcon_' | i18n }}"
+					class="icon-asset"
+					attr.data-auto-id="DeviceIcon-{{ asset?.deviceName }}"
+					src="assets/img/assets/device-{{ getProductIcon(element) }}.svg">
+			</span>
+			<span [innerText]="asset?.deviceName"></span>
 		</div>
-	</cui-tab>
-	<cui-tab [label]="'_Software_' | i18n | uppercase" disabled="true"></cui-tab>
-	<cui-tab [label]="'_Advisories_' | i18n | uppercase">
-		<div class="dbl-margin-top" *ngIf="asset">
-			<asset-details-advisories [asset]="asset"></asset-details-advisories>
-		</div>
-	</cui-tab>
-</cui-tabs>
+	</details-panel-header>
+	<ng-container *ngTemplateOutlet="assetDetails"></ng-container>
+</details-panel>
 
-<ng-template #summary>
-	<div class="row base-margin-top">
-		<div class="col-md-4 flex flex-center">
-			<img alt="{{ '_StockPhoto_' | i18n }}"
-				src="assets/img/inventory/CAT-3650.png">
-		</div>
-		<div class="col-md-6" *ngIf="asset">
-			<div *ngIf="status.loading.overall">
-				<cui-loader></cui-loader>
+<ng-template #assetDetails>
+	<div class="half-margin-bottom">
+		<cui-alert [options]="alert"></cui-alert>
+	</div>
+	<cui-tabs id="assetDetailTabs" *ngIf="asset && customerId">
+		<cui-tab [label]="'_Summary_' | i18n | uppercase">
+			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+				<asset-details-summary [asset]="asset" [customerId]="customerId"></asset-details-summary>
 			</div>
-			<div *ngIf="!status.loading.overall">
-				<h4 [innerText]="assetData?.productId || asset?.productId"></h4>
-				<div data-auto-id="YouHaveInventory"
-					*ngIf="componentData.numberInInventory > 1"
-					[innerHtml]="'_YouHaveInventory_' | i18n:componentData.numberInInventory">
-				</div>
+		</cui-tab>
+		<cui-tab [label]="'_Hardware_' | i18n | uppercase">
+			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+				<asset-details-hardware [asset]="asset" [customerId]="customerId"></asset-details-hardware>
 			</div>
-		</div>
-	</div>
-		
-	<div class="row base-margin-top base-margin-left">
-		<div class="col-md-6">
-			<div class="row">
-				<div class="col-md-12">
-					<ng-container *ngTemplateOutlet="detailsData; context: {
-							title: '_ProductSeries_',
-							linkData: assetData?.productFamily
-						}">
-					</ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: {
-							title: '_ProductID_',
-							linkData: assetData?.productId || asset?.productId
-						}">
-					</ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: {
-							title: '_SoftwareVersion_',
-							linkData: assetData?.swVersion || asset?.osVersion
-						}">
-					</ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="supportData; context: {
-								title: '_SupportCoverage_',
-								expirationDate: coverageData?.contractEndDate,
-								linkData: coverageData?.contractNumber?
-								(coverageData?.contractNumber + (coverageData?.slaDescription ? ' ' + coverageData?.slaDescription : ''))
-								 : null,
-								url: '#',
-								supportType: 'support'
-							}">
-						</ng-container>
-					</div>
+		</cui-tab>
+		<cui-tab [label]="'_Software_' | i18n | uppercase">
+			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+				<asset-details-software [asset]="asset" [customerId]="customerId"></asset-details-software>
 			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="row">
-				<div class="col-md-12">
-					<ng-container *ngTemplateOutlet="detailsData; context: {
-							title: '_EndOfSale_',
-							data: assetData?.eoSaleDate | date:'yyyy MMM dd'
-						}">
-					</ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="detailsData; context: {
-							title: '_EndOfSupport_',
-							data: assetData?.lastDateOfSupport | date:'yyyy MMM dd'
-						}">
-					</ng-container>
-				</div>
-				<div class="col-md-12 base-margin-top">
-					<ng-container *ngTemplateOutlet="supportData; context: {
-							title: '_Warranty_',
-							expirationDate: coverageData?.warrantyEndDate,
-							linkData: coverageData?.warrantyType,
-							url: '#',
-							supportType: 'warranty'
-						}">
-					</ng-container>
-				</div>
+		</cui-tab>
+		<cui-tab [label]="'_Advisories_' | i18n | uppercase">
+			<div class="half-margin-top qtr-margin-left qtr-margin-right">
+				<asset-details-advisories [asset]="asset" [customerId]="customerId"></asset-details-advisories>
 			</div>
-		</div>
-	</div>
-
-	<!-- <div class="row dbl-margin-top">
-		<div class="col-md-12">
-			<ng-container *ngTemplateOutlet="detailsData; context: {
-					title: '_Location_',
-					titleOnly: true
-				}">
-			</ng-container>
-		</div>
-	</div> -->
-
-	<!-- <div class="flex map-box">
-		<div class="icon-chevron-left qtr-padding-left qtr-padding-right flex-center"></div>
-		<div class="flex-fluid flex-center map-box-content"></div>
-		<div class="icon-chevron-right qtr-padding-left qtr-padding-right flex-center"></div>
-	</div> -->
-
-</ng-template>
-
-<ng-template #supportData
-	let-title="title" let-expirationDate="expirationDate" let-linkData="linkData" let-url="url" let-supportType="supportType">
-	<div class="row">
-		<div class="col-md-12 text-bold" [innerText]="title | i18n | uppercase" attr.data-auto-id="{{ title }}"></div>
-	</div>
-	<div class="row">
-		<div *ngIf="expirationDate" class="col-md-12" >
-			<div *ngIf="expirationDate >= today" class="text-default" [innerText]="'_CoveredUntil_' | i18n:(expirationDate | date:'yyyy MMM dd')" attr.data-auto-id="{{ title }}-CoveredUntil"></div>
-			<div *ngIf="!(expirationDate >= today)" [ngClass]="{
-					'text-danger': (supportType === 'support'),
-					'text-warning': (supportType === 'warranty')
-				}"
-				attr.data-auto-id="{{ title }}-ExpiredOn">
-				<span class="text-bold" [innerText]="('_ExpiredOn_' | i18n | uppercase) + ' '"></span>
-				<span [innerText]="expirationDate | date:'yyyy MMM dd'"></span>
-			</div>
-		</div>
-		<div *ngIf="!expirationDate" class="col-md-12" [innerText]="'_NotCovered_' | i18n" attr.data-auto-id="{{ title }}-NotCovered"></div>
-		<a [href]="url" *ngIf="linkData">
-			<div class="col-md-12" [innerText]="linkData" attr.data-auto-id="{{ title }}-Link"></div>
-		</a>
-	</div>
-
-</ng-template>
-
-<ng-template #detailsData
-	let-title="title" let-data="data" let-linkData="linkData" let-url="url" let-titleOnly="titleOnly">
-	<div class="row">
-		<div class="col-md-12 text-bold" [innerText]="title | i18n | uppercase" attr.data-auto-id="{{ title }}"></div>
-	</div>
-	<div class="row" *ngIf="!titleOnly">
-		<div class="col-md-12" [innerText]="('_NA_' | i18n)" *ngIf="!(data || linkData)" attr.data-auto-id="{{ title }}-N/A"></div>
-		<div *ngIf="data" class="col-md-12" [innerText]="data || ('_NA_' | i18n)" attr.data-auto-id="{{ title }}-data"></div>
-		<div class="col-md-12" attr.data-auto-id="{{ title }}-Link">
-			<a *ngIf="linkData && url" [href]="url" [innerText]="linkData"></a>
-			<span *ngIf="linkData && !url" [innerText]="linkData"></span>
-		</div>
-	</div>
+		</cui-tab>
+	</cui-tabs>
 </ng-template>

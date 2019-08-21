@@ -1,0 +1,271 @@
+<div class="modal-container">
+	<div class="modal-backdrop force-left"></div>
+	<div class="modal modal--full">
+		<div class="modal__dialog">
+			<div id="policyRequestModal" class="modal__content no-padding" data-auto-id="policy-modal">
+				<div class="modal__header policy__header half-padding-left half-padding-bottom no-margin-bottom">
+					<div class="row half-padding-top dbl-padding-left">
+						<div class="col-md-11 half-margin-top text-left">
+							<span
+								class="text-xlarge"
+								[innerText]="this.title"
+								data-auto-id="policy-modal.title"
+							></span>
+							<span
+								*ngIf="type === 'editPolicy'"
+								class="icon-trash icon-small qtr-margin-bottom half-padding-left"
+								[ngClass]="'text-primary'"
+								(click)="deletePolicy()"
+								data-auto-id="policy-modal.trash"
+							></span>
+						</div>
+						<div class="col-md-1 half-margin-top">
+							<span (click)="closeRequestForm()" data-auto-id="policy-modal.close"
+								class="icon-close icon-medium text-right toggle"></span>
+						</div>
+					</div>
+					<ng-container
+						*ngIf="loadingListLeft || loadingListRight || error">
+						<ng-container *ngIf="loadingListLeft || loadingListRight">
+							<div class="row dbl-padding-left dbl-padding-right base-padding-top">
+								<div class="alert dbl-padding-left">
+									<div class="alert__icon icon-info-outline"></div>
+									<div class="alert__message text-info"
+										[innerText]="'_LoadingCustomerInfo_' | i18n"></div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-container *ngIf="error">
+							<div class="row dbl-padding-left dbl-padding-right base-padding-top">
+								<div class="alert alert--danger" role="alert">
+									<div class="alert__icon icon-error-outline"></div>
+									<div class="alert__message" [innerText]="errorMessage"></div>
+								</div>
+							</div>
+						</ng-container>
+					</ng-container>
+				</div>
+				<div class="modal__body policy__header half-padding-left half-padding-bottom no-margin-bottom">
+					<form class="form-inline no-margin-bottom"
+						[formGroup]="requestForm"
+						(ngSubmit)="onSubmit()">
+						<div class="row dbl-padding-left base-padding-top full-width">
+							<div class="col-md-6">
+								<div class="text-large text-left text-uppercase"
+									[innerText]="'_Schedule_' | i18n | uppercase" data-auto-id="policyRequestModal-Schedule">
+								</div>
+							</div>
+							<div *ngIf="type === 'editCollection'" class="col-md-6">
+								<div class="text-large text-left text-uppercase"
+									[innerText]="'_History_' | i18n | uppercase" data-auto-id="policy-modal.history">
+								</div>
+							</div>
+						</div>
+						<div class="row dbl-padding-left base-padding-top full-width">
+							<div class="col-md-6">
+								<div class="form-inline">
+									<select id="timePeriod-select" formControlName="timePeriod"
+										(change)="timePeriodChange()"
+										[value]="timePeriods?.selected"
+										data-auto-id="policy-modal.timePeriod-select">
+										<option
+											disabled selected hidden
+											value=""
+											[innerText]="'_Frequency_' | i18n | uppercase"></option>
+										<option *ngFor="let timePeriod of timePeriods.options"
+											[value]="timePeriod.value"
+											[innerText]="timePeriod.key"></option>
+									</select>
+									<ng-container *ngIf="timePeriod !== 'never'">
+										<ng-container *ngIf="timePeriod === 'monthly'">
+											<label class="collection-label" for="dates"
+												[innerText]="'_OnThe_' | i18n | lowercase"></label>
+											<select id="date-select" formControlName="dates"
+												(change)="timePeriodChange()"
+												[value]="dates?.selected"
+												data-auto-id="policy-modal.date-Select">
+												<option
+													disabled selected hidden
+													value=""
+													[innerText]="'_Date_' | i18n | uppercase"></option>
+												<option *ngFor="let date of dates.options"
+													[value]="date.value"
+													[innerText]="date.key">
+												</option>
+											</select>
+										</ng-container>
+										<ng-container *ngIf="timePeriod === 'weekly'">
+											<label class="collection-label" for="days"
+												[innerText]="'_On_' | i18n | lowercase"></label>
+											<select id="day-select" formControlName="days"
+												[value]="days?.selected"
+												data-auto-id="policy-modal.day-Select">
+												<option
+													disabled selected hidden
+													value=""
+													[innerText]="'_Day_' | i18n | uppercase"></option>
+												<option *ngFor="let day of days.options"
+													(change)="timePeriodChange()"
+													[value]="day.value"
+													[innerText]="day.key">
+												</option>
+											</select>
+										</ng-container>
+										<label class="collection-label" for="hourmins"
+										[innerText]="'_At_' | i18n | lowercase"></label>
+										<select id="hourmin-select" formControlName="hourmins"
+											[value]="hourmins?.selected"
+											data-auto-id="policy-modal.hourmin-Select">
+											<option
+												disabled selected hidden
+												value=""
+												[innerText]="'_Time_' | i18n | uppercase"></option>
+											<option *ngFor="let hourmin of hourmins.options"
+												[value]="hourmin.value"
+												[innerText]="hourmin.key"></option>
+										</select>
+										<span class="collection-label" [innerText]="'_UTC_' | i18n"></span>
+									</ng-container>
+								</div>
+							</div>
+							<div *ngIf="type === 'editCollection'" class="col-md-6">
+								<span [innerText]="'Created: ' + policy.createdDate"></span>
+							</div>
+						</div>
+						<div class="row dbl-padding-left dbl-padding-right base-padding-top full-width">
+							<div class="col-md-8">
+								<ng-container *ngIf="type !== 'editCollection'">
+									<div class="half-padding-top  text-large text-left text-uppercase"
+										[innerText]="'_ASSETS_' | i18n | uppercase" data-auto-id="policy-modal.assets">
+									</div>
+								</ng-container>
+							</div>
+							<div class="col-md-4 text-right">
+								<button type="submit" [disabled]="!requestForm.valid"
+									class="btn btn--small btn--wide btn--secondary"
+									[innerText]="(type === 'editCollection' ? '_SaveScheduledCollection_' : '_SaveScheduledScan_') | i18n"
+									data-auto-id="policy-modal.submit"></button>
+							</div>
+						</div>
+					</form>
+					<ng-container *ngIf="type !== 'editCollection'">
+						<ng-container *ngTemplateOutlet="modulesTables"></ng-container>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #modulesTables>
+	<div class="row half-padding-top dbl-padding-left dbl-padding-right">
+		<div class="col-md-5">
+			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListLeft, allDevicesSelected: allDevicesSelectedLeft, loadingList: loadingListLeft}"></ng-container>
+		</div>
+		<div class="col-md-2">
+			<button
+				class="btn btn--small btn--wide btn--secondary shift-button"
+				[innerText]="'_Add_' | i18n"
+				data-auto-id="policy-modal.add"
+				(click)="add()"
+			><i class="icon-chevron-right"></i></button>
+			<button
+				class="btn btn--small btn--wide btn--secondary shift-button no-margin-left"
+				[innerText]="'_Remove_' | i18n"
+				data-auto-id="policy-modal.remove"
+				(click)="remove()"
+			><i class="icon-chevron-left"></i></button>
+		</div>
+		<div class="col-md-5">
+			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListRight, allDevicesSelected: allDevicesSelectedRight, loadingList: loadingListRight}"></ng-container>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #deviceTableTemplate
+	let-devices="devices"
+	let-allDevicesSelected="allDevicesSelected"
+	let-loadingList="loadingList">
+	<div
+		class="row panel panel--bordered flex base-margin-right"
+	>
+		<div class="col-md-1 device-table">
+			<input class="text-xlarge"
+				type="checkbox"
+				(change)="allDevicesSelected = toggleAllDevicesSelected(allDevicesSelected, devices)"
+				[checked]="allDevicesSelected"
+			>
+			<span class="checkbox__input"></span>
+		</div>
+		<div class="col-md-3 device-table text-bold">
+			<span [innerText]="'_Device_' | i18n"></span>
+		</div>
+		<div class="col-md-3 device-table text-bold">
+			<span [innerText]="'_IPAddress_' | i18n"></span>
+		</div>
+		<div class="col-md-3 device-table text-bold">
+			<span [innerText]="'_LastScan_' | i18n"></span>
+		</div>
+	</div>
+	<div class="
+			row
+			panel
+			panel--bordered-top
+			panel--bordered-left
+			panel--bordered-right
+			panel--bordered-bottom
+			flex
+			base-margin-right"
+		*ngIf="loadingList">
+		<div class="col-md-12">
+			<cui-loader class="absolute-center"></cui-loader>
+		</div>
+	</div>
+	<div class="
+			row
+			panel
+			panel--bordered-top
+			panel--bordered-left
+			panel--bordered-right
+			panel--bordered-bottom
+			flex
+			base-margin-right"
+		*ngIf="devices.length === 0 && !loadingList">
+		<div class="col-md-12" [innerText]="'_NoDevicesInList_' | i18n">
+		</div>
+	</div>
+	<div
+		*ngFor="let device of devices; index as i"
+		class="
+			row
+			panel
+			panel--bordered-top
+			panel--bordered-left
+			panel--bordered-right
+			flex
+			base-margin-right"
+		[ngClass]="{
+			'panel--bordered-bottom': i === (devices.length - 1),
+			'selected': device.selected
+		}"
+		data-auto-id="device-row"
+		(click)="toggleDeviceSelected(device)">
+		<div class="col-md-1 device-table">
+			<input
+				class="text-xlarge"
+				type="checkbox"
+				[checked]="device.selected"
+			>
+			<span class="checkbox__input"></span>
+		</div>
+		<div class="col-md-3 device-table">
+			<span [innerText]="device.productId"></span>
+		</div>
+		<div class="col-md-3 device-table">
+			<span [innerText]="device.ipAddress"></span>
+		</div>
+		<div class="col-md-3 device-table">
+			<span [innerText]="device.lastScan ? (device.lastScan | fromNow) : ''"></span>
+		</div>
+	</div>
+</ng-template>

@@ -8,11 +8,14 @@ import {
 	RacetrackScenarios,
 	ATXScenarios,
 	ACCScenarios,
+	BookmarkScenarios,
 	ELearningScenarios,
 	SuccessPathScenarios,
 	ActionScenarios,
 	Mock,
 	user,
+	CGTScenarios,
+	CancelATXScenarios,
 } from '@mock';
 import { of, throwError } from 'rxjs';
 import { DebugElement } from '@angular/core';
@@ -45,11 +48,15 @@ describe('LifecycleComponent', () => {
 
 	let racetrackATXSpy;
 	let racetrackAccSpy;
+	let racetrackBookmarkSpy;
+	let racetrackCgtCompletedTrainigsSpy;
+	let racetrackCgtCustomerQuotaSpy;
 	let racetrackLearningSpy;
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
 	let racetrackActionSpy;
 	let racetrackAccBookmarkSpy;
+	let racetrackCancelAtxSessionSpy;
 
 	/**
 	 * Restore spies
@@ -58,10 +65,14 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackATXSpy, 'restore');
 		_.invoke(racetrackInfoSpy, 'restore');
 		_.invoke(racetrackAccSpy, 'restore');
+		_.invoke(racetrackBookmarkSpy, 'restore');
+		_.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
+		_.invoke(racetrackCgtCustomerQuotaSpy, 'restore');
 		_.invoke(racetrackLearningSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
 		_.invoke(racetrackAccBookmarkSpy, 'restore');
+		_.invoke(racetrackCancelAtxSessionSpy, 'restore');
 	};
 
 	/**
@@ -76,13 +87,37 @@ describe('LifecycleComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(ACCScenarios[0])));
 
+		racetrackBookmarkSpy = spyOn(racetrackContentService, 'updateBookmark')
+			.and
+			.returnValue(of(getActiveBody(BookmarkScenarios[0], 'POST')));
+
+		racetrackCancelAtxSessionSpy = spyOn(racetrackContentService, 'cancelSessionATX')
+			.and
+			.returnValue(of(getActiveBody(CancelATXScenarios[0], 'DELETE')));
+
+		racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService, 'getCompletedTrainings')
+			.and
+			.returnValue(of(getActiveBody(CGTScenarios[2])));
+
+		racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
+			.and
+			.returnValue(of(getActiveBody(CGTScenarios[1])));
+
 		racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
 			.and
 			.returnValue(of(getActiveBody(ELearningScenarios[0])));
 
 		racetrackSPSpy = spyOn(racetrackContentService, 'getRacetrackSuccessPaths')
 			.and
-			.returnValue(of(getActiveBody(SuccessPathScenarios[0])));
+			.callFake(args => {
+				// Product Guides call will never have solution or pitstop.
+				// Success Bytes call will always have solution and pitstop.
+				if (!args.solution && !args.pitstop) {
+					return of(getActiveBody(SuccessPathScenarios[5]));
+				}
+
+				return of(getActiveBody(SuccessPathScenarios[0]));
+			});
 
 		racetrackInfoSpy = spyOn(racetrackService, 'getRacetrack')
 			.and
@@ -154,15 +189,35 @@ describe('LifecycleComponent', () => {
 		.then(() => {
 			fixture.detectChanges();
 
-			expect(component.view)
+			component.selectView('list', 'SB');
+			fixture.detectChanges();
+			expect(component.sbview)
+				.toBe('list');
+
+			component.selectView('grid', 'SB');
+			fixture.detectChanges();
+			expect(component.sbview)
 				.toBe('grid');
 
-			component.selectView('list');
-
+			component.selectView('list', 'ACC');
 			fixture.detectChanges();
-
-			expect(component.view)
+			expect(component.accview)
 				.toBe('list');
+
+			component.selectView('grid', 'ACC');
+			fixture.detectChanges();
+			expect(component.accview)
+				.toBe('grid');
+
+			component.selectView('list', 'ATX');
+			fixture.detectChanges();
+			expect(component.atxview)
+				.toBe('list');
+
+			component.selectView('grid', 'ATX');
+			fixture.detectChanges();
+			expect(component.atxview)
+				.toBe('grid');
 
 			done();
 		});
@@ -178,7 +233,7 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.atx.sessions.length)
-						.toEqual(9);
+						.toEqual(4);
 				});
 		});
 
@@ -191,6 +246,21 @@ describe('LifecycleComponent', () => {
 				})));
 
 			racetrackAccSpy = spyOn(racetrackContentService, 'getRacetrackACC')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
+			racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService,
+				'getCompletedTrainings')
+				.and
+				.returnValue(throwError(new HttpErrorResponse({
+					status: 404,
+					statusText: 'Resource not found',
+				})));
+
+			racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
 				.and
 				.returnValue(throwError(new HttpErrorResponse({
 					status: 404,
@@ -230,6 +300,31 @@ describe('LifecycleComponent', () => {
 
 			expect(component.componentData.atx)
 				.toBeUndefined();
+
+			expect(component.componentData.cgt)
+				.toBeUndefined();
+		});
+
+		it('should call getPanel function upon clicking viewSessions', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#recommendedATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			el = de.nativeElement;
+
+			spyOn(component, 'getPanel');
+			el.click();
+			fixture.detectChanges();
+
+			expect(component.getPanel)
+				.toHaveBeenCalled();
+
 		});
 
 		it('should have a selected session', () => {
@@ -239,6 +334,23 @@ describe('LifecycleComponent', () => {
 			fixture.detectChanges();
 
 			const recommended = component.componentData.atx.recommended;
+
+			de = fixture.debugElement.query(By.css('#recommendedATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			component.eventXCoordinates = 0;
+			(<any> window).innerWidth = 1200;
+			let viewAtxSessions: HTMLElement;
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panel)
+				.toEqual('panel panel--open');
 
 			expect(component.sessionSelected)
 				.toBeUndefined();
@@ -256,6 +368,18 @@ describe('LifecycleComponent', () => {
 
 			expect(component.sessionSelected)
 				.toBeNull();
+
+			const atx1 = component.componentData.atx.sessions[0];
+			expect(atx1.status)
+				.toEqual('scheduled');
+			expect(atx1.sessions[1].scheduled)
+				.toBeTruthy();
+			component.cancelATXSession(atx1);
+			fixture.detectChanges();
+			expect(atx1.status)
+				.toEqual('recommended');
+			expect(atx1.sessions[1].scheduled)
+				.toBeFalsy();
 		});
 
 		it('should show the atx view-all modal', () => {
@@ -270,21 +394,109 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#atxModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__green'));
-			expect(de)
-				.toBeTruthy();
-
-			de = fixture.debugElement.query(By.css('.ribbon__clear'));
-			expect(de)
+			expect(component.componentData.atx.sessions[0].bookmark)
 				.toBeTruthy();
 
 			de = fixture.debugElement.query(By.css('.ribbon__blue'));
+
 			expect(de)
 				.toBeTruthy();
+
+			component.updateBookmark('ATX', component.componentData.atx.sessions[0]);
+			fixture.detectChanges();
+
+			expect(component.componentData.atx.sessions[0].bookmark)
+				.toBeFalsy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('#ATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			component.eventXCoordinates = 200;
+			component.atxview = 'grid';
+			(<any> window).innerWidth = 1200;
+			let viewAtxSessions: HTMLElement;
+			component.componentData.atx.interested = { };
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panel)
+				.toEqual('panel cardpanel--open');
+
+			component.atxview = 'grid';
+			component.eventXCoordinates = 1000;
+			(<any> window).innerWidth = 1200;
+			component.componentData.atx.interested = { };
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panelRight = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panelRight)
+				.toEqual('panel cardpanel--openright');
+
+			component.atxview = 'list';
+			component.eventXCoordinates = 1000;
+			(<any> window).innerWidth = 1200;
+			component.componentData.atx.interested = { };
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const listpanel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(listpanel)
+				.toEqual('panel listpanel--open');
+
+			expect(component.getTitle('ATX'))
+				.toEqual('Ask The Expert');
+
+			expect(component.getSubtitle('ATX'))
+				.toEqual('Interactive webinars available live or on-demand');
+
+			const atx1 = component.componentData.atx.sessions[2];
+			expect(component.componentData.atx.sessions[2].bookmark)
+				.toBeFalsy();
+			component.updateBookmark('ATX', atx1);
+			fixture.detectChanges();
+			expect(component.componentData.atx.sessions[2].bookmark)
+				.toBeTruthy();
+
+			component.onSort('title', 'asc', 'ATX');
+			fixture.detectChanges();
+			expect(component.atxTable.columns[1].sortDirection)
+				.toEqual('desc');
+
+			component.onSort('title', 'desc', 'ATX');
+			fixture.detectChanges();
+			expect(component.atxTable.columns[1].sortDirection)
+				.toEqual('asc');
+
+			component.selectedFilterForATX = 'isBookmarked';
+			component.selectFilter('ATX');
+			fixture.detectChanges();
+			expect(component.selectedATX.length)
+				.toEqual(1);
+
+			component.selectedFilterForATX = 'allTitles';
+			component.selectFilter('ATX');
+			fixture.detectChanges();
+			expect(component.selectedATX.length)
+				.toEqual(4);
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
@@ -296,7 +508,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('#atxModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
 		});
@@ -329,13 +541,15 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#accModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__green'));
-			expect(de)
-				.toBeTruthy();
+			expect(component.getTitle('ACC'))
+			 .toEqual('Accelerator');
+
+			expect(component.getSubtitle('ACC'))
+			 .toEqual('1-on-1 Coaching to put you in the fast lane');
 
 			de = fixture.debugElement.query(By.css('.ribbon__clear'));
 			expect(de)
@@ -359,8 +573,8 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			component.selectedStatus = 'isBookmarked';
-			component.selectFilter('acc');
+			component.selectedFilterForACC = 'isBookmarked';
+			component.selectFilter('ACC');
 			fixture.detectChanges();
 			expect(component.selectedACC.length)
 				.toEqual(2);
@@ -370,8 +584,8 @@ describe('LifecycleComponent', () => {
 			expect(component.componentData.acc.sessions[3].isFavorite)
 				.toBeFalsy();
 
-			component.selectedStatus = 'recommended';
-			component.selectFilter('acc');
+			component.selectedFilterForACC = 'recommended';
+			component.selectFilter('ACC');
 			fixture.detectChanges();
 
 			expect(component.componentData.acc.sessions[0].isFavorite)
@@ -385,6 +599,22 @@ describe('LifecycleComponent', () => {
 			expect(acc5.status)
 				.toEqual('in-progress');
 
+			component.onSort('title', 'asc', 'ACC');
+			fixture.detectChanges();
+			expect(component.accTable.columns[1].sortDirection)
+				.toEqual('desc');
+
+			component.onSort('title', 'desc', 'ACC');
+			fixture.detectChanges();
+			expect(component.accTable.columns[1].sortDirection)
+				.toEqual('asc');
+
+			component.selectedFilterForACC = 'allTitles';
+			component.selectFilter('ACC');
+			fixture.detectChanges();
+			expect(component.selectedACC.length)
+				.toEqual(5);
+
 			de = fixture.debugElement.query(By.css('.icon-close'));
 			el = de.nativeElement;
 
@@ -395,7 +625,7 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('#accModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
 		});
@@ -427,30 +657,58 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#successModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeTruthy();
 
-			component.selectedCategory = 'Project Planning';
-			component.selectFilter('successBytes');
+			de = fixture.debugElement.query(By.css('.ribbon__blue'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			expect(de)
+				.toBeTruthy();
+
+			expect(component.getTitle('SB'))
+				.toEqual('Success Bytes');
+
+			expect(component.getSubtitle('SB'))
+				.toEqual('Resources to fine-tune your tech');
+
+			const sb1 = component.componentData.learning.success[1];
+			expect(component.componentData.learning.success[1].bookmark)
+				.toBeFalsy();
+			component.updateBookmark('SB', sb1);
+			fixture.detectChanges();
+			expect(component.componentData.learning.success[1].bookmark)
+				.toBeTruthy();
+
+			component.selectedFilterForSB = 'Project Planning';
+			component.selectFilter('SB');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(2);
 
-			component.selectedCategory = 'Getting Started';
-			component.selectFilter('successBytes');
+			component.selectedFilterForSB = 'Getting Started';
+			component.selectFilter('SB');
 			fixture.detectChanges();
 			expect(component.selectedSuccessPaths.length)
 				.toEqual(1);
 
-			component.onSort('title', 'asc');
+			component.selectedFilterForSB = 'Not selected';
+			component.selectFilter('SB');
 			fixture.detectChanges();
-			expect(component.successBytesTable.columns[0].sortDirection)
+			expect(component.selectedSuccessPaths.length)
+				.toEqual(5);
+
+			component.onSort('title', 'asc', 'SB');
+			fixture.detectChanges();
+			expect(component.successBytesTable.columns[1].sortDirection)
 				.toEqual('desc');
 
-			component.onSort('title', 'desc');
+			component.onSort('title', 'desc', 'SB');
 			fixture.detectChanges();
-			expect(component.successBytesTable.columns[0].sortDirection)
+			expect(component.successBytesTable.columns[1].sortDirection)
 				.toEqual('asc');
 
 			de = fixture.debugElement.query(By.css('.icon-close'));
@@ -463,7 +721,119 @@ describe('LifecycleComponent', () => {
 			expect(component.modal.visible)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('#successModal'));
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
+			expect(de)
+				.toBeFalsy();
+		});
+
+		it('should load success bytes hover panel', () => {
+			buildSpies();
+			sendParams();
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#hover-panel-successbytes'));
+			expect(de)
+				.toBeTruthy();
+		});
+
+		it('should set bookmark on clicking the icon in hover panel', () => {
+			buildSpies();
+			sendParams();
+			spyOn(component, 'updateBookmark');
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#hover-panel-successbytes .icon-bookmark'));
+			de.nativeElement.click();
+			expect(component.updateBookmark)
+				.toHaveBeenCalledTimes(1);
+		});
+	});
+
+	describe('Product Guides', () => {
+		it('should have loaded the successPaths items for product guides', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.productGuides.length)
+						.toEqual(10);
+				});
+		});
+
+		it('should show the Product Guides view-all modal', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.showModal('_ProductGuides_');
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__blue'));
+			expect(de)
+				.toBeTruthy();
+
+			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			expect(de)
+				.toBeTruthy();
+
+			expect(component.getTitle('PG'))
+				.toEqual('Product Documentation and Videos');
+
+			expect(component.getSubtitle('PG'))
+				.toEqual('\"How-to\" resources for planning, installation and more');
+
+			const sb1 = component.componentData.learning.productGuides[1];
+			expect(component.componentData.learning.productGuides[1].bookmark)
+				.toBeFalsy();
+			component.updateBookmark('SB', sb1);
+			fixture.detectChanges();
+			expect(component.componentData.learning.productGuides[1].bookmark)
+				.toBeTruthy();
+
+			component.selectedFilterForPG = 'Project Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(3);
+
+			component.selectedFilterForPG = 'Getting Started';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(7);
+
+			component.onSort('title', 'asc', 'PG');
+			fixture.detectChanges();
+			expect(component.productGuidesTable.columns[1].sortDirection)
+				.toEqual('desc');
+
+			component.onSort('title', 'desc', 'PG');
+			fixture.detectChanges();
+			expect(component.productGuidesTable.columns[1].sortDirection)
+				.toEqual('asc');
+
+			de = fixture.debugElement.query(By.css('.icon-close'));
+			el = de.nativeElement;
+
+			el.click();
+
+			fixture.detectChanges();
+
+			expect(component.modal.visible)
+				.toBeFalsy();
+
+			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
 		});
@@ -479,7 +849,35 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.learning.elearning.length)
-						.toEqual(4);
+						.toEqual(5);
+				});
+		});
+		it('should have displayed progress bar', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.elearning[0].percentagecompleted)
+						.toBeUndefined();
+					expect(component.componentData.learning.elearning[1].percentagecompleted)
+						.toEqual(25);
+					expect(component.componentData.learning.elearning[2].percentagecompleted)
+						.toEqual(50);
+					expect(component.componentData.learning.elearning[3].percentagecompleted)
+						.toEqual(75);
+					expect(component.componentData.learning.elearning[4].percentagecompleted)
+						.toEqual(100);
+
+					de = fixture.debugElement.query(By.css('.learning-progress-col'));
+					expect(de)
+						.toBeTruthy();
+
+					de = fixture.debugElement.query(By.css('.learning-progressfill-col'));
+					expect(de)
+						.toBeTruthy();
 				});
 		});
 	});
@@ -497,11 +895,61 @@ describe('LifecycleComponent', () => {
 						.toEqual(8);
 				});
 		});
+		it('should have displayed progress bar', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.learning.certifications[0].percentagecompleted)
+						.toEqual(25);
+					expect(component.componentData.learning.certifications[1].percentagecompleted)
+						.toEqual(50);
+					expect(component.componentData.learning.certifications[2].percentagecompleted)
+						.toEqual(75);
+					expect(component.componentData.learning.certifications[3].percentagecompleted)
+						.toEqual(100);
+					expect(component.componentData.learning.certifications[4].percentagecompleted)
+						.toEqual(25);
+					expect(component.componentData.learning.certifications[5].percentagecompleted)
+						.toEqual(50);
+					expect(component.componentData.learning.certifications[6].percentagecompleted)
+						.toEqual(75);
+					expect(component.componentData.learning.certifications[7].percentagecompleted)
+						.toEqual(100);
+					de = fixture.debugElement.query(By.css('.learning-progress-col'));
+					expect(de)
+						.toBeTruthy();
+
+					de = fixture.debugElement.query(By.css('.learning-progressfill-col'));
+					expect(de)
+						.toBeTruthy();
+				});
+		});
+	});
+
+	describe('CGT', () => {
+		it('should have loaded the CGT', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			fixture.whenStable()
+				.then(() => {
+					expect(component.componentData.cgt.sessions.length)
+						.toEqual(3);
+					expect(component.componentData.cgt.trainingsAvailable)
+						.toEqual(1);
+				});
+		});
 	});
 
 	describe('PitstopActions', () => {
 
-		it('should show 25% in the prograss label', () => {
+		it('should show 25% in the progress label', () => {
 			buildSpies();
 			sendParams();
 			fixture.detectChanges();
@@ -574,6 +1022,49 @@ describe('LifecycleComponent', () => {
 			expect(racetrackContentService.getRacetrackATX)
 				.toHaveBeenCalledTimes(2);
 		});
+
+		it('should disable ATX Registration if not current or current+1 pitstop', () => {
+			buildSpies();
+			sendParams();
+			// verify that the current pitstop for this solution and use case is "Onboard"
+			const currentPitStop = component.currentPitstop.name;
+			expect(currentPitStop)
+				.toEqual('Onboard');
+
+			// change pitstop to "use" (current+2) and check if button is disabled
+			component.getRacetrackInfo('use');
+			component.recommendedAtxScheduleCardOpened = true;
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+				.toBeFalsy();
+
+			// change pitstop to "implement" (current+1) and check if button is enabled
+			component.getRacetrackInfo('implement');
+			component.recommendedAtxScheduleCardOpened = true;
+			component.sessionSelected = {
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
+				sessionStartDate: 1565127052000,
+			};
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+				.toBeTruthy();
+
+			// change pitstop to "Onboard" (current) and check if button is enabled
+			component.getRacetrackInfo('Onboard');
+			component.recommendedAtxScheduleCardOpened = true;
+			component.sessionSelected = {
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
+				sessionStartDate: 1565127052000,
+			};
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+				.toBeTruthy();
+		});
 	});
 
 	describe('Learn - Non-cypress', () => {
@@ -586,6 +1077,7 @@ describe('LifecycleComponent', () => {
 			window.Cypress = undefined;
 			window.elearningLoading = undefined;
 			window.successPathsLoading = undefined;
+			window.productGuidesLoading = undefined;
 		});
 
 		it('Should not set loading flags when loading without Cypress', () => {
@@ -613,6 +1105,7 @@ describe('LifecycleComponent', () => {
 			window.Cypress = undefined;
 			window.elearningLoading = undefined;
 			window.successPathsLoading = undefined;
+			window.productGuidesLoading = undefined;
 		});
 
 		it('Should set loading flags when loading with Cypress', () => {
@@ -626,6 +1119,8 @@ describe('LifecycleComponent', () => {
 			expect(window.elearningLoading)
 				.toBe(false);
 			expect(window.successPathsLoading)
+				.toBe(false);
+			expect(window.productGuidesLoading)
 				.toBe(false);
 		});
 	});

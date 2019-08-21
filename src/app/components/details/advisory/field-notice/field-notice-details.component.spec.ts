@@ -5,7 +5,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProductAlertsService, InventoryService } from '@sdp-api';
 import { environment } from '@environment';
 import { of, throwError } from 'rxjs';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import {
 	user,
 	MockFieldNoticeBulletins,
@@ -120,6 +120,7 @@ describe('FieldNoticeDetailsComponent', () => {
 			expect(d)
 				.toEqual({
 					advisory: MockFieldNoticeAdvisories[0],
+					assetIds: component.data.assetIds,
 					bulletin: _.head(bulletins),
 					notice: _.head(mockAdvisories),
 				});

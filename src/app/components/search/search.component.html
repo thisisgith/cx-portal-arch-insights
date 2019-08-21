@@ -1,6 +1,7 @@
 <app-search-bar
 	(searchChange)="onSearchChange($event)"
-	[(searchText)]="searchText">
+	[(searchText)]="searchText"
+	(searchFocus)="onSearchFocus($event)">
 </app-search-bar>
 
 <div class="modal-container" *ngIf="!status.hidden">

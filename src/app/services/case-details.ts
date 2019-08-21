@@ -44,6 +44,7 @@ export class CaseDetailsService {
 				catchError(err => {
 					this.logger.error('casedetails.component : getCaseFiles() ' +
 						`:: Error : (${err.status}) ${err.message}`);
+
 					return of({ });
 				}),
 			);

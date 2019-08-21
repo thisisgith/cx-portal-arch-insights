@@ -1,30 +1,63 @@
-<div class="half-margin-left base-margin-top">
-	<ng-container *ngTemplateOutlet="detailText; context: {
-			title: ('_Title_' | i18n),
-			text: data?.bulletin?.bulletinTitle
-		}">
-	</ng-container>
-	<ng-container *ngTemplateOutlet="detailText; context: {
-			title: ('_Summary_' | i18n),
-			text: data?.bulletin?.summaryText
-		}">
-	</ng-container>
-	<!-- Commenting out until fields exist -->
-	<!-- <ng-container *ngTemplateOutlet="detailText; context: {
-			title: ('_Workaround_' | i18n) + ' / ' + ('_Solution_' | i18n),
-			text: data?.bulletin?.workaround || ('_NoWorkarounds_' | i18n)
-		}">
-	</ng-container>
-	<ng-container *ngTemplateOutlet="detailText; context: {
-			title: ('_AdditionalResources_' | i18n),
-			text: data?.bulletin?.additional
-		}">
-	</ng-container> -->
-</div>
+<cui-tabs [activeTabIndex]="activeTab" (activeTabIndexChange)="activeTab = $event">
+	<cui-tab [label]="'_Summary_' | i18n | uppercase">
+		<ng-container *ngTemplateOutlet="summary"></ng-container>
+	</cui-tab>
+	<cui-tab label="{{ '_ImpactedAssets_' | i18n | uppercase }} ({{ impactedCount }})"
+		[disabled]="!impactedCount || impactedCount === 0">
+		<div class="half-margin-top">
+			<advisory-impacted-assets
+				*ngIf="data?.assetIds?.impacted || data?.assetIds?.potentiallyImpacted"
+				[customerId]="customerId"
+				[assetIds]="data.assetIds"
+				(impactedCount)="impactedCount = $event">
+			</advisory-impacted-assets>
+		</div>
+	</cui-tab>
+</cui-tabs>
+
+<ng-template #summary>
+	<div class="flex flex-column" *ngIf="!isLoading">
+		<div class="flex-fluid">
+			<ng-container *ngTemplateOutlet="detailText; context: {
+					title: ('_Title_' | i18n),
+					text: data?.bulletin?.bulletinTitle
+				}">
+			</ng-container>
+			<ng-container *ngTemplateOutlet="detailText; context: {
+					title: ('_Summary_' | i18n),
+					text: data?.bulletin?.summaryText
+				}">
+			</ng-container>
+			<ng-container *ngTemplateOutlet="detailText; context: {
+					title: ('_Workaround_' | i18n) + ' / ' + ('_Solution_' | i18n),
+					text: data?.bulletin?.workaround || ('_NoWorkarounds_' | i18n)
+				}">
+			</ng-container>
+			<ng-container *ngTemplateOutlet="detailText; context: {
+					title: ('_AdditionalResources_' | i18n),
+					text: data?.bulletin?.additional
+				}">
+			</ng-container>
+		</div>
+	
+		<div *ngIf="id && customerId">
+			<advisory-feedback class="flex-fill"
+				type="security"
+				[id]="id"
+				[customerId]="customerId"
+				(alert)="alertMessage.emit($event)">
+			</advisory-feedback>
+		</div>
+	</div>
+
+	<div *ngIf="isLoading" class="dbl-margin-top flex-center">
+		<cui-spinner></cui-spinner>
+	</div>
+</ng-template>
 
 <ng-template #detailText let-title="title" let-text="text">
 	<div class="base-margin-bottom">
 		<div [innerText]="title" class="text-uppercase text-bold qtr-margin-bottom"></div>
-		<div [innerText]="text || ('_NA_' | i18n)"></div>
+		<div [innerText]="text || ('_NA_' | i18n)" attr.data-auto-id="SecurityDetails{{title}}Text"></div>
 	</div>
 </ng-template>

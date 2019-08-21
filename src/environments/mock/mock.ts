@@ -5,10 +5,19 @@ import {
 	AdvisorySecurityAdvisoryScenarios,
 	AssetScenarios,
 	ATXScenarios,
+	BookmarkScenarios,
+	CalendarScenarios,
+	CancelATXScenarios,
 	CaseScenarios,
+	CGTScenarios,
 	ContractScenarios,
 	CoverageScenarios,
+	CreateRegistrationScenarios,
 	CriticalBugScenarios,
+	CriticalBugAssetsScenarios,
+	DeviceScenarios,
+	DevicePoliciesScenarios,
+	DNACStatusScenarios,
 	ELearningScenarios,
 	EntitlementScenarios,
 	FieldNoticeAdvisoryScenarios,
@@ -20,21 +29,24 @@ import {
 	HardwareEOLScenarios,
 	HardwareScenarios,
 	HealthStatusScenarios,
+	LicenseScenarios,
 	NetworkScenarios,
 	OSVScenarios,
+	PolicesScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
 	SecurityAdvisoryLastUpdatedCountScenarios,
-	SecurityAdvisorySeverityCountScenarios,
-	SecurityAdvisoryTopScenarios,
 	SecurityAdvisoryScenarios,
+	SecurityAdvisorySeverityCountScenarios,
 	SecurityAdvisorySummaryScenarios,
+	SecurityAdvisoryTopScenarios,
 	SerialNumberScenarios,
+	SoftwareEOLBulletinScenarios,
+	SoftwareEOLScenarios,
 	SuccessPathScenarios,
-	UserScenarios,
 	VulnerabilityScenarios,
 	ArchitectureScenarios,
 } from './';
@@ -45,12 +57,15 @@ import * as _ from 'lodash-es';
 import {
 	ACCResponse,
 	ACCUserInfoSchema,
+	ATXResponseModel,
 	AdvisoriesByLastUpdatedCount,
 	Assets,
 	AssetRecommendationsResponse,
-	ATXResponse,
+	BugImpactedAssetsResponse,
 	CDCSearchResponse,
+	CSDFResponseModel,
 	CommunitiesResponse,
+	ContractQuota,
 	CoverageCountsResponse,
 	CoverageResponse,
 	CriticalBugsCount,
@@ -62,11 +77,15 @@ import {
 	FieldNoticeBulletinResponse,
 	FieldNoticeResponse,
 	FieldNoticeUpdatedResponse,
+	GroupTrainingEntitySchema,
 	HardwareEOLBulletinResponse,
 	HardwareEOLCountResponse,
 	HardwareEOLResponse,
 	HardwareResponse,
+	IERegistrationResponseModel,
+	LicenseDataResponseModel,
 	PitstopActionUpdateResponse,
+	PoliciesGroupByDayInAMonthModel,
 	RacetrackResponse,
 	RoleCountResponse,
 	SecurityAdvisoriesResponse,
@@ -78,7 +97,10 @@ import {
 	ServiceInfoResponse,
 	SoftwareProfilesResponse,
 	SoftwareVersionsResponse,
+	SoftwareEOLResponse,
+	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
+	UserTraining,
 	VulnerabilityResponse,
 } from '@sdp-api';
 
@@ -90,14 +112,17 @@ type ResponseBody = (
 	ACCUserInfoSchema |
 	AdvisoriesByLastUpdatedCount |
 	Assets |
-	ATXResponse |
 	AssetRecommendationsResponse |
+	BugImpactedAssetsResponse |
+	ATXResponseModel |
 	CDCSearchResponse |
 	CommunitiesResponse |
+	ContractQuota[] |
 	CoverageCountsResponse |
 	CoverageResponse |
 	CriticalBugsCount |
 	CriticalBugsResponse |
+	CSDFResponseModel |
 	DeviceContractResponse |
 	ELearningResponse |
 	EntitledUser |
@@ -105,11 +130,15 @@ type ResponseBody = (
 	FieldNoticeBulletinResponse |
 	FieldNoticeResponse |
 	FieldNoticeUpdatedResponse |
+	GroupTrainingEntitySchema |
 	HardwareEOLBulletinResponse |
 	HardwareEOLCountResponse |
 	HardwareEOLResponse |
 	HardwareResponse |
+	IERegistrationResponseModel |
+	LicenseDataResponseModel |
 	PitstopActionUpdateResponse |
+	PoliciesGroupByDayInAMonthModel |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
@@ -122,7 +151,11 @@ type ResponseBody = (
 	ServiceInfoResponse |
 	SoftwareProfilesResponse |
 	SoftwareVersionsResponse |
+	SoftwareEOLResponse |
+	SoftwareEOLBulletinResponse |
+	SoftwareEOLResponse |
 	SuccessPathsResponse |
+	UserTraining[] |
 	VulnerabilityResponse
 );
 
@@ -170,14 +203,23 @@ export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
 		ACCUserInfoScenarios,
+		ATXScenarios,
 		ActionScenarios,
 		AdvisorySecurityAdvisoryScenarios,
 		AssetScenarios,
-		ATXScenarios,
+		BookmarkScenarios,
+		CGTScenarios,
+		CalendarScenarios,
+		CancelATXScenarios,
 		CaseScenarios,
 		ContractScenarios,
 		CoverageScenarios,
+		CreateRegistrationScenarios,
+		CriticalBugAssetsScenarios,
 		CriticalBugScenarios,
+		DNACStatusScenarios,
+		DeviceScenarios,
+		DevicePoliciesScenarios,
 		ELearningScenarios,
 		EntitlementScenarios,
 		FieldNoticeAdvisoryScenarios,
@@ -189,23 +231,26 @@ export const mockSettings: MockSettings = {
 		HardwareEOLScenarios,
 		HardwareScenarios,
 		HealthStatusScenarios,
+		LicenseScenarios,
 		NetworkScenarios,
 		OSVScenarios,
 		RMAScenarios,
-		RacetrackScenarios,
+		PolicesScenarios,
 		RMAScenarios,
+		RacetrackScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,
 		SecurityAdvisoryLastUpdatedCountScenarios,
-		SecurityAdvisoryTopScenarios,
 		SecurityAdvisoryScenarios,
 		SecurityAdvisorySeverityCountScenarios,
 		SecurityAdvisorySummaryScenarios,
 		SecurityAdvisoryTopScenarios,
+		SecurityAdvisoryTopScenarios,
 		SerialNumberScenarios,
+		SoftwareEOLBulletinScenarios,
+		SoftwareEOLScenarios,
 		SuccessPathScenarios,
-		UserScenarios,
 		VulnerabilityScenarios,
 		ArchitectureScenarios,
 	]),

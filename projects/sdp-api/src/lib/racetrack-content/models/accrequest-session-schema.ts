@@ -28,6 +28,11 @@ export interface ACCRequestSessionSchema {
   userPhoneNumber?: string;
 
   /**
+   * Full Name of the logged in user from profile.
+   */
+  userFullName?: string;
+
+  /**
    * Cisco Contact name or email for the logged in user.
    */
   ciscoContact?: string;

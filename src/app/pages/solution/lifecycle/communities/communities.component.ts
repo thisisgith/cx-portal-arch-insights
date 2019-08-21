@@ -2,13 +2,12 @@ import {
 	Component, OnDestroy,
 } from '@angular/core';
 import * as _ from 'lodash-es';
-
-import { LogService } from '@cisco-ngx/cui-services';
 import { RacetrackTechnology } from '@sdp-api';
 import { Subject } from 'rxjs';
 import { SolutionService } from '../../solution.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
+import { LifecycleComponent } from '../lifecycle.component';
 
 /** Interface of each Community info */
 interface CommunityDetail {
@@ -47,6 +46,9 @@ const publicCommunities: CommunityDetail[] = [
 	},
 ];
 
+/** Base of URL for Community */
+const api = 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel';
+
 /** Communities Component */
 @Component({
 	selector: 'app-communities',
@@ -54,28 +56,34 @@ const publicCommunities: CommunityDetail[] = [
 })
 export class CommunitiesComponent implements OnDestroy {
 	private selectedTechnology: string;
+	private currentPitstop: string;
 	public publicCommunity: CommunityDetail;
-	public privateCommunity: CommunityDetail;
+	public curatedCommunity: CommunityDetail;
 	public publicCommunityUrl: SafeUrl;
-	public privateCommunityUrl: SafeUrl;
+	public curatedCommunityUrl: SafeUrl;
 	private destroy$ = new Subject();
 
 	constructor (
-		private logger: LogService,
 		private solutionService: SolutionService,
+		private lifecycle: LifecycleComponent,
 		private sanitizer: DomSanitizer,
 	) {
-		this.logger.debug('CommunitiesComponent Created!');
-
 		this.solutionService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
 		)
 		.subscribe((technology: RacetrackTechnology) => {
 			this.selectedTechnology = technology.name;
+			this.currentPitstop = technology.currentPitstop;
 			this.getCommunities();
 			this.publicCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.publicCommunity.url);
-			this.privateCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.privateCommunity.url);
+			this.curatedCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.curatedCommunity.url);
+		});
+		this.lifecycle.getCurrentPitstop()
+		.subscribe((pitstop: string) => {
+			this.currentPitstop = pitstop;
+			this.getCuratedCommunities();
+			this.curatedCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.curatedCommunity.url);
 		});
 	}
 
@@ -84,7 +92,7 @@ export class CommunitiesComponent implements OnDestroy {
 	 */
 	private getCommunities () {
 		this.getPublicCommunities();
-		this.getPrivateCommunities();
+		this.getCuratedCommunities();
 	}
 
 	/**
@@ -100,12 +108,40 @@ export class CommunitiesComponent implements OnDestroy {
 	/**
 	 * Get the Public Communities
 	 */
-	 private getPrivateCommunities () {
-		// this is hardcoded for now, will change it later
-		if (publicCommunities) {
-			this.privateCommunity = _.find(publicCommunities,
-				{ usecase: this.selectedTechnology.toLowerCase() });
+	 private getCuratedCommunities () {
+		let board = '';
+
+		switch (this.selectedTechnology) {
+			case 'Campus Network Assurance': {
+				board = 'lifecycle-wireless-assurance';
+				break;
+			}
+			case 'Campus Network Segmentation': {
+				board = 'lifecycle-network-segmentation';
+				break;
+			}
+			case 'Scalable Access Policy': {
+				board = 'lifecycle-converged-mgmt';
+				break;
+			}
+			case 'Network Device Onboarding': {
+				board = 'lifecycle-onboard';
+				break;
+			}
+			case 'Campus Software Image Management': {
+				board = 'lifecycle-swim';
+				break;
+			}
+			default: {
+				break;
+			}
 		}
+
+		this.curatedCommunity = {
+			description: `${this.selectedTechnology} - ${this.currentPitstop}`,
+			url: `${api}?board=${board}&amp;labels=${this.currentPitstop}`,
+			usecase: this.selectedTechnology,
+		};
 	}
 
 	/**

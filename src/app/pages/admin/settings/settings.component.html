@@ -5,7 +5,7 @@
 			<div class="alert__message" [innerText]="errorMessage"></div>
 		</div>
 	</div>
-	<div *ngIf="!loading" class="container settings-container">
+	<div *ngIf="!loading && cpData?.length" class="container settings-container">
 		<div class="row">
 			<div class="col-lg-6" data-auto-id="settings.system.status">
 				<h5
@@ -57,7 +57,11 @@
 							<span [innerText]="data.dnac_details[0].status || ''"></span>
 						</div>
 						<div *ngIf="data.dnac_details[0]?.additional_details?.error" class="col-3 text-right">
-							<a data-auto-id="errorLink" (click)="data.showError = !data.showError">
+							<a
+								data-auto-id="errorLink"
+								(click)="data.showError = !data.showError"
+								class="no-link-hover"
+							>
 								<span [innerText]="!data.showError
 										? ('_ErrorDetails_' | i18n)
 										: ('_HideErrorDetails_' | i18n)"
@@ -171,5 +175,14 @@
 		*ngIf="loading"
 		class="absolute-center">
 		<cui-loader></cui-loader>
+	</div>
+	<div
+		class="absolute-center dbl-margin-top"
+		*ngIf="!loading && !cpData?.length"
+	>
+		<h2
+			class="dbl-margin-top"
+			[innerText]="'_NoResultsFound_' | i18n"
+		></h2>
 	</div>
 </admin-wrapper>

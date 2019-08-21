@@ -4,24 +4,36 @@ import {
 	OnInit,
 	OnChanges,
 	SimpleChanges,
+	OnDestroy,
+	EventEmitter,
+	Output,
 } from '@angular/core';
 import { CaseParams, CaseService } from '@cui-x/services';
 import {
 	Asset,
 	NetworkDataGatewayService,
 	TransactionRequest,
+	Transaction,
 	TransactionRequestResponse,
-	Connectivity,
+	TransactionStatusResponse,
+	ScanRequestResponse,
+	NetworkElement,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
+import { CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
 import { of, forkJoin, Subject } from 'rxjs';
 import {
 	map,
 	catchError,
 	takeUntil,
+	mergeMap,
+	delay,
 } from 'rxjs/operators';
-import { UserResolve } from '@utilities';
+import { CaseOpenComponent } from '../../../case/case-open/case-open.component';
+import { Alert } from '@interfaces';
+import { I18n } from '@cisco-ngx/cui-utils';
+import { CaseOpenData } from 'src/app/components/case/case-open/caseOpenData';
 
 /**
  * Asset Details Header Component
@@ -35,8 +47,12 @@ import { UserResolve } from '@utilities';
 	styleUrls: ['./header.component.scss'],
 	templateUrl: './header.component.html',
 })
-export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
+export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy {
+
+	@Input('element') public element: NetworkElement;
 	@Input('asset') public asset: Asset;
+	@Input('customerId') public customerId: string;
+	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 
 	public openCases: any[];
 	private caseParams: CaseParams = new CaseParams({
@@ -51,26 +67,20 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			eligibility: false,
 			overall: false,
 		},
-		scanEligible: false,
+		scan: {
+			eligible: false,
+			inProgress: false,
+		},
 	};
 	public casesDropdownActive = false;
 	private destroyed$: Subject<void> = new Subject<void>();
-	private customerId: string;
 
 	constructor (
 		private caseService: CaseService,
+		private cuiModalService: CuiModalService,
 		private logger: LogService,
 		private networkService: NetworkDataGatewayService,
-		private userResolve: UserResolve,
-	) {
-		this.userResolve.getCustomerId()
-		.pipe(
-			takeUntil(this.destroyed$),
-		)
-		.subscribe((id: string) => {
-			this.customerId = id;
-		});
-	}
+	) { }
 
 	/**
 	 * Toggle the open cases dropdown
@@ -90,6 +100,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 
 		return this.caseService.read(params)
 		.pipe(
+			takeUntil(this.destroyed$),
 			map(data => {
 				this.openCases = _.get(data, 'content', []);
 				this.status.loading.cases = false;
@@ -97,7 +108,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			catchError(err => {
 				this.openCases = [];
 				this.status.loading.cases = false;
-				this.logger.error('header.component : fetchCases()' +
+				this.logger.error('asset-details:header.component : fetchCases()' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
@@ -106,26 +117,55 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 	}
 
 	/**
-	 * Gets the eligibility of the device for scanning
+	 * Checks for a current scan status on an asset
 	 * @returns the observable
 	 */
-	private getEligibility () {
-		const params: NetworkDataGatewayService.GetEligibilityParams = {
+	private checkScanStatus () {
+		if (!this.status.scan.eligible) {
+			return of({ });
+		}
+
+		const getScanStatusParams: NetworkDataGatewayService.GetScanStatusBySerialParams = {
 			customerId: this.customerId,
 			productId: this.asset.productId,
 			serialNumber: this.asset.serialNumber,
 		};
 
-		return this.networkService.getEligibility(params)
+		return this.networkService.getScanStatusBySerial(getScanStatusParams)
 		.pipe(
-			map((response: Connectivity) => {
-				this.status.scanEligible = _.get(response, 'connected', false) &&
-					_.get(response, 'eligible', false);
+			takeUntil(this.destroyed$),
+			mergeMap((response: ScanRequestResponse) => {
+				const inProgress = _.find(response, { status: 'IN_PROGRESS' });
+				const received = _.find(response, { status: 'RECEIVED' });
+
+				if (inProgress && inProgress.transactionId) {
+					_.set(this.status, ['scan', 'inProgress'], true);
+
+					this.alertMessage.emit({
+						message: I18n.get('_ScanningCurrentlyInProgress_'), severity: 'info' });
+
+					return this.scanPolling({
+						customerId: this.customerId,
+						transactionId: inProgress.transactionId,
+					});
+				}
+				if (received && received.transactionId) {
+					_.set(this.status, ['scan', 'inProgress'], true);
+
+					this.alertMessage.emit({
+						message: I18n.get('_ScanningCurrentlyInProgress_'), severity: 'info' });
+
+					return this.scanPolling({
+						customerId: this.customerId,
+						transactionId: received.transactionId,
+					});
+				}
+
+				return of({ });
 			}),
 			catchError(err => {
-				this.status.loading.eligibility = false;
-				this.logger.error('details-header.component : getEligibility()' +
-					`:: Error : (${err.status}) ${err.message}`);
+				this.logger.error('asset-details:header.component : checkScanStatus() ' +
+				`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
@@ -142,6 +182,8 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			requestBody: {
 				deviceOptions: 'LIST',
 				devices: [{
+					hostname: this.asset.deviceName,
+					ipAddress: this.asset.ipAddress,
 					productId: this.asset.productId,
 					serialNumber: this.asset.serialNumber,
 				}],
@@ -150,31 +192,93 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 			transactionType: 'SCAN',
 		};
 
-		this.networkService.postDeviceTransactions(request)
+		if (!_.get(this.status, ['scan', 'inProgress'], false)) {
+			this.networkService.postDeviceTransactions(request)
+			.pipe(
+				takeUntil(this.destroyed$),
+				mergeMap((response: TransactionRequestResponse) => {
+					const transaction: Transaction = _.head(response);
+
+					if (_.get(transaction, 'transactionId')) {
+						_.set(this.status, ['scan', 'inProgress'], true);
+
+						return this.scanPolling(transaction);
+					}
+
+					return of({ });
+				}),
+				catchError(err => {
+					this.alertMessage.emit({
+						message: I18n.get('_UnableToInitiateScan_', this.asset.deviceName),
+						severity: 'danger',
+					});
+
+					this.logger.error('asset-details:header.component : initiateScan() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+			)
+			.subscribe();
+		}
+	}
+
+	/**
+	 * Initiate Polling
+	 * @param transaction the transaction
+	 * @returns the observable
+	 */
+	private scanPolling (transaction: Transaction) {
+		return this.networkService.getScanStatusByTransaction({
+			customerId: this.customerId,
+			transactionId: transaction.transactionId,
+		})
 		.pipe(
-			map((response: TransactionRequestResponse) => {
-				this.logger.debug('header.component :: initiateScan() ::' +
-					`Scan Request Response ${JSON.stringify(response)}`);
+			delay(3000),
+			takeUntil(this.destroyed$),
+			mergeMap((response: TransactionStatusResponse) => {
+				if (response.status === 'SUCCESS') {
+					this.alertMessage.emit({
+						message: I18n.get('_ScanningHasCompleted_'),
+						severity: 'success',
+					});
+
+					_.set(this.status, ['scan', 'inProgress'], false);
+
+					return of({ });
+				}
+
+				return this.scanPolling(transaction);
 			}),
 			catchError(err => {
-				this.logger.error('header.component : initiateScan() ' +
+				this.alertMessage.emit({
+					message: I18n.get('_UnableToInitiateScan_', this.asset.deviceName),
+					severity: 'danger',
+				});
+
+				_.set(this.status, ['scan', 'inProgress'], false);
+
+				this.logger.error('asset-details:header.component : initiatePolling() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
-		)
-		.subscribe();
+		);
 	}
 
 	/**
 	 * Refreshes the data
 	 */
 	public refresh () {
+		_.set(this.status, ['scan', 'inProgress'], false);
 		if (_.get(this.asset, 'serialNumber')) {
 			this.status.loading.overall = true;
+
+			this.status.scan.eligible = this.element ? true : false;
+
 			forkJoin(
 				this.fetchCases(),
-				this.getEligibility(),
+				this.checkScanStatus(),
 			)
 			.subscribe(() => {
 				this.status.loading.overall = false;
@@ -190,13 +294,37 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit {
 	}
 
 	/**
+	 * Destroys the component
+	 */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
+	}
+
+	/**
 	 * Checks if our currently selected asset has changed
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['asset', 'currentValue']);
 		if (currentAsset && !changes.asset.firstChange) {
+			this.ngOnDestroy();
 			this.refresh();
 		}
+	}
+
+	/**
+		* On "Open a Case" button pop up "Open Case" component
+		*/
+	public openCase () {
+		 this.cuiModalService.showComponent(CaseOpenComponent,
+			{ asset: this.asset, element: this.element }, 'full')
+			.then((response: CaseOpenData) => {
+				const scanStatus = _.get(response, 'scanStatus');
+				if (scanStatus && (scanStatus !== 'FAILURE' && scanStatus !== 'SUCCESS')) {
+					this.checkScanStatus()
+					.subscribe();
+				}
+			});
 	}
 }

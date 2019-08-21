@@ -1,5 +1,6 @@
 <advisory-details *ngIf="selectedAdvisory"
 	[advisoryId]="selectedAdvisory.id"
+	[selectedAsset]="asset"
 	[type]="selectedAdvisory.type"
 	(close)="onPanelClose()">
 </advisory-details>
@@ -19,12 +20,13 @@
 	</div>
 </div>
 <div class="base-margin-top" *ngIf="selectedTab">
-	<span *ngIf="selectedTab?.data?.pagination"
-		[innerText]="'_ShowingXofYZ_' | i18n:selectedTab?.data?.bulletin?.length:selectedTab?.data?.pagination?.total:selectedTab?.title"
+	<span *ngIf="selectedTab?.data?.length && selectedTab?.pagination"
+		[innerText]="'_ShowingXofYZ_' | i18n:selectedTab?.data?.length:selectedTab?.pagination?.total:selectedTab?.title"
 		data-auto-id="AdvisoryTab-ShowingTxt">
 	</span>
 	<ng-container *ngTemplateOutlet="displayTable; context: {
 			data: selectedTab?.data,
+			pagination: selectedTab?.pagination,
 			options: selectedTab?.table,
 			loading: selectedTab?.loading,
 			moreLoading: selectedTab?.moreLoading
@@ -32,15 +34,16 @@
 	</ng-container>
 </div>
 
-<ng-template #displayTable let-data="data" let-options="options" let-loading="loading" let-moreLoading="moreLoading">
-	<div *ngIf="!loading && options && data && data?.bulletin?.length > 0">
+<ng-template #displayTable let-data="data" let-pagination="pagination" let-options="options" let-loading="loading" let-moreLoading="moreLoading">
+	<div *ngIf="!loading && options && data && data?.length > 0">
 		<div class="advisoryTable">
 			<cui-table [options]="options"
-				[data]="data.bulletin"
-				(onTableRowClicked)="onRowSelect($event)">
+				[data]="data"
+				(onTableRowClicked)="onRowSelect($event)"
+				(onSortingChanged)="onColumnSort($event)">
 			</cui-table>
 		</div>
-		<div *ngIf="!moreLoading && data?.pagination?.total > data?.bulletin?.length"
+		<div *ngIf="!moreLoading && pagination?.total > data?.length"
 				class="flex-center-horizontal base-margin-top"
 				data-auto-id="LoadMoreButton"
 				(click)="loadMore()">
@@ -53,7 +56,7 @@
 	<div *ngIf="loading">
 		<cui-loader></cui-loader>
 	</div>
-	<div *ngIf="!loading && (!data?.bulletin || data?.bulletin?.length === 0)" class="flex-center">
+	<div *ngIf="!loading && (!data || data?.length === 0)" class="flex-center">
 		<span class="text-xlarge" [innerText]="'_NoResultsFound_' | i18n" data-auto-id="AdvisoriesNoResultsFound"></span>
 	</div>
 </ng-template>
@@ -64,7 +67,8 @@
 				'Critical': 'label--danger',
 				'High': 'label--warning-alt',
 				'Medium': 'label--warning',
-				'Low': 'label--success'
+				'Low': 'label--info',
+				'Info': 'label--info'
 		}[celldata.severity]"
 		data-auto-id="ImpactIcon">
 	</span>
@@ -78,9 +82,22 @@
 </ng-template>
 
 <ng-template #fieldNoticeID let-celldata="celldata">
-	<a innerText="FN {{ celldata.fieldNoticeId }}"
+	<span *ngIf="!celldata.url" innerText="FN {{ celldata.id }}"></span>
+	<a *ngIf="celldata.url"
+		innerText="FN {{ celldata.id }}"
 		target="_blank"
-		[href]="celldata.URL"
+		rel="noopener noreferrer"
+		[href]="celldata.url"
 		data-auto-id="FieldNoticeId">
+	</a>
+</ng-template>
+
+<ng-template #bugID let-celldata="celldata">
+	<span *ngIf="!celldata.url" [innerText]="celldata.id"></span>
+	<a *ngIf="celldata.url"
+		[innerText]="celldata.id"
+		target="_blank"
+		[href]="celldata.url"
+		data-auto-id="BugID">
 	</a>
 </ng-template>

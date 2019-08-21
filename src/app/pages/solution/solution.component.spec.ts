@@ -12,12 +12,17 @@ import { AdvisoriesModule } from './advisories/advisories.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
 	RacetrackScenarios,
+	VulnerabilityScenarios,
+	CoverageScenarios,
 	Mock,
+	user,
 } from '@mock';
 import * as _ from 'lodash-es';
-import { RacetrackService } from '@sdp-api';
+import { RacetrackService, ProductAlertsService, ContractsService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AdvisoriesComponent } from './advisories/advisories.component';
+import { CaseService } from '@cui-x/services';
+
 /**
  * MockRouter used to help show/hide the spinner
  */
@@ -52,6 +57,9 @@ describe('SolutionComponent', () => {
 	let router: Router;
 	let racetrackInfoSpy;
 	let racetrackService: RacetrackService;
+	let caseService: CaseService;
+	let productAlertsService: ProductAlertsService;
+	let contractsService: ContractsService;
 
 	/**
 	 * Restore spies
@@ -93,18 +101,7 @@ describe('SolutionComponent', () => {
 					useValue: {
 						snapshot: {
 							data: {
-								user: {
-									customerId: '2431199',
-									individual: {
-										ccoId: 'fakeCco',
-										cxBUId: '2431199',
-										emailAddress: 'fakeCco@cisco.com',
-										familyName: 'Test',
-										name: 'Demo',
-										role: 'admin',
-									},
-									name: 'Test User',
-								},
+								user,
 							},
 						},
 					},
@@ -113,6 +110,9 @@ describe('SolutionComponent', () => {
 		})
 			.compileComponents();
 
+		contractsService = TestBed.get(ContractsService);
+		productAlertsService = TestBed.get(ProductAlertsService);
+		caseService = TestBed.get(CaseService);
 		racetrackService = TestBed.get(RacetrackService);
 	}));
 
@@ -198,5 +198,79 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedTechnology.name)
 			.toEqual('Campus Network Segmentation');
+	});
+
+	it('should always call getCaseAndRMACount', () => {
+		spyOn(component, 'getCaseAndRMACount');
+		component.ngOnInit();
+		expect(component.getCaseAndRMACount)
+			.toHaveBeenCalled();
+	});
+
+	it('should handle failing api calls', done => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+
+		spyOn(caseService, 'read')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		spyOn(contractsService, 'getCoverageCounts')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		spyOn(productAlertsService, 'getVulnerabilityCounts')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			const assetsFacet = _.find(component.facets, { key: 'assets' });
+			const advisoryFacet = _.find(component.facets, { key: 'advisories' });
+			const resolutionFacet = _.find(component.facets, { key: 'resolution' });
+
+			expect(assetsFacet.loading)
+				.toBeFalsy();
+
+			expect(advisoryFacet.loading)
+				.toBeFalsy();
+
+			expect(resolutionFacet.loading)
+				.toBeFalsy();
+
+			done();
+		});
+	});
+
+	it('should load the advisoriesFacet', done => {
+		spyOn(productAlertsService, 'getVulnerabilityCounts')
+			.and
+			.returnValue(of(getActiveBody(VulnerabilityScenarios[0])));
+
+		spyOn(contractsService, 'getCoverageCounts')
+			.and
+			.returnValue(of(getActiveBody(CoverageScenarios[2])));
+
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			const assetsFacet = _.find(component.facets, { key: 'assets' });
+			const advisoryFacet = _.find(component.facets, { key: 'advisories' });
+
+			expect(assetsFacet.data)
+				.toEqual({ gaugePercent: 7, gaugeLabel: '7%' });
+
+			const values = _.sum(_.map(advisoryFacet.seriesData, 'value'));
+
+			expect(values)
+				.toEqual(11);
+
+			done();
+		});
 	});
 });

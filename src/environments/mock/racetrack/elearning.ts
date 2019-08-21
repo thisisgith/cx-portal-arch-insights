@@ -20,6 +20,16 @@ const onboardItems = [
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53991',
 	},
 	{
+		description: 'Implementing Cisco Wireless Network Fundamentals (WIFUND) v2.0',
+		duration: '18hr 0min',
+		ranking: 0,
+		rating: '4.5000',
+		title: 'Catalyst 9800 Wireless Lan Controller Overview 2',
+		type: 'E-Learning',
+		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53992',
+		percentagecompleted: 25,
+	},
+	{
 		description: 'Interconnecting Cisco Networking Devices, Part 2 (ICND2) v3.0',
 		duration: '40hr 0min',
 		ranking: 1,
@@ -27,6 +37,7 @@ const onboardItems = [
 		title: 'Configuring and Using Wireless Analytics in SDA',
 		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentagecompleted: 50,
 	},
 	{
 		description: 'Implementing Cisco IP Routing (ROUTE) v2.0',
@@ -36,6 +47,7 @@ const onboardItems = [
 		title: 'Implementing Cisco IP Routing (ROUTE) v2.0',
 		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53691',
+		percentagecompleted: 75,
 	},
 	{
 		description: 'Implementing Cisco IP Switched Networks (SWITCH) v2.0',
@@ -45,6 +57,7 @@ const onboardItems = [
 		title: 'Implementing Cisco IP Switched Networks (SWITCH) v2.0',
 		type: 'E-Learning',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53671',
+		percentagecompleted: 100,
 	},
 	{
 		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
@@ -54,6 +67,7 @@ const onboardItems = [
 		title: 'CCNA Wireless',
 		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentagecompleted: 25,
 	},
 	{
 		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
@@ -63,6 +77,7 @@ const onboardItems = [
 		title: 'Cisco Training on Demand Courses 2',
 		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentagecompleted: 50,
 	},
 	{
 		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
@@ -72,6 +87,7 @@ const onboardItems = [
 		title: 'Cisco Training on Demand Courses 3',
 		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentagecompleted: 75,
 	},
 	{
 		description: 'Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0',
@@ -81,6 +97,7 @@ const onboardItems = [
 		title: 'Cisco Training on Demand Courses 4',
 		type: 'Certification',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53686',
+		percentagecompleted: 100,
 	},
 	{
 		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
@@ -90,6 +107,7 @@ const onboardItems = [
 		title: 'CCNP Wireless',
 		type: 'Videos',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+		percentagecompleted: 25,
 	},
 	{
 		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
@@ -99,6 +117,7 @@ const onboardItems = [
 		title: 'Videos 2',
 		type: 'Videos',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+		percentagecompleted: 50,
 	},
 	{
 		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
@@ -108,6 +127,7 @@ const onboardItems = [
 		title: 'Videos 3',
 		type: 'Videos',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+		percentagecompleted: 75,
 	},
 	{
 		description: 'Troubleshooting Cisco Wireless Enterprise Networks (WITSHOOT) v1.1',
@@ -117,6 +137,7 @@ const onboardItems = [
 		title: 'Videos 4',
 		type: 'Videos',
 		url: 'https://pilot-digital-learning.cisco.com/cx/#/course/53996',
+		percentagecompleted: 100,
 	},
 	{
 		title: 'Designing Cisco Wireless Enterprise Networks',
@@ -159,10 +180,11 @@ const adoptItems = [
  * @param solution the solution we're at
  * @param usecase the use case
  * @param pitstop the pitstop
+ * @param mockFileName the name of the corresponding json file to pull mock data from
  * @returns response
  */
 function MockELearning (
-	solution: string, usecase: string, pitstop: string): ELearningResponse {
+	solution: string, usecase: string, pitstop: string, mockFileName?: string): ELearningResponse {
 	const response = {
 		pitstop,
 		solution,
@@ -174,6 +196,10 @@ function MockELearning (
 		response.items = adoptItems;
 	} else {
 		response.items = onboardItems;
+	}
+
+	if (mockFileName && mockFileName !== '') {
+		response.items = require(`./elearningMockData/${mockFileName}.json`);
 	}
 
 	return response;
@@ -194,6 +220,60 @@ export const ELearningScenarios = [
 						status: 200,
 					},
 					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description: '(E-Learning) IBN-Campus Network Assurance-Onboard-noProgress',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'noProgress'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description:
+						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress25Percent',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'progress25Percent'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description:
+						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress50Percent',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'progress50Percent'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description:
+						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress75Percent',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'progress75Percent'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 800,
+					description:
+						'(E-Learning) IBN-Campus Network Assurance-Onboard-progress100Percent',
+					response: {
+						body: MockELearning('IBN', 'Campus Network Assurance', 'Onboard',
+							'progress100Percent'),
+						status: 200,
+					},
+					selected: false,
 				},
 			],
 		},

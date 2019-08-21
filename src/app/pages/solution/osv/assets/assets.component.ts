@@ -8,18 +8,18 @@ import {
 	OnInit,
 	OnChanges,
 	SimpleChanges,
+	OnDestroy,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, OsvPagination } from '@sdp-api';
 import * as _ from 'lodash-es';
-
-/** Our current customerId */
-const customerId = '231215372';
+import { ActivatedRoute } from '@angular/router';
+import { ContactExpertComponent } from '../../contact-expert/contact-expert.component';
 
 /**
  * AssetSoftware Component
@@ -29,13 +29,16 @@ const customerId = '231215372';
 	styleUrls: ['./assets.component.scss'],
 	templateUrl: './assets.component.html',
 })
-export class AssetsComponent implements OnInit, OnChanges {
+export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public selectedAsset;
 	@Input() public filters;
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
-	@Output() public selectedAssetChange = new EventEmitter<any>();
+	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('recommendationsTemplate', { static: true })
+
+	private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -44,14 +47,9 @@ export class AssetsComponent implements OnInit, OnChanges {
 	public pagination: OsvPagination;
 	public paginationCount: string;
 	public destroy$ = new Subject();
-	public assetsParams: OSVService.GetAssetsParams = {
-		customerId,
-		filter: '',
-		pageIndex: 1,
-		pageSize: 10,
-		sortOrder: 'asc',
-	};
-
+	public assetsParams: OSVService.GetAssetsParams;
+	public customerId: string;
+	public sorting: 'asc' | 'desc';
 	public rowActions = [
 		{
 			label: I18n.get('_OsvBasicRecommendations_'),
@@ -61,8 +59,19 @@ export class AssetsComponent implements OnInit, OnChanges {
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
+		private route: ActivatedRoute,
+		private cuiModalService: CuiModalService,
 	) {
-		this.logger.debug('AssetComponent Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+		this.assetsParams = {
+			customerId: this.customerId,
+			filter: '',
+			pageIndex: 1,
+			pageSize: 10,
+			sort: 'hostName',
+			sortOrder: 'desc',
+		};
 	}
 
 	/**
@@ -81,8 +90,29 @@ export class AssetsComponent implements OnInit, OnChanges {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
 		if (currentFilter && !changes.filters.firstChange) {
+			this.setFilter(currentFilter);
 			this.loadData();
 		}
+	}
+
+	/**
+	 * set the filters are part of query params
+	 * @param currentFilter current filters selected by customer
+	 */
+	public setFilter (currentFilter) {
+		const deploymentStatus = _.get(currentFilter, 'deploymentStatus', []);
+		const assetType = _.get(currentFilter, 'assetType', []);
+		let filter = '';
+		if (deploymentStatus.length > 0) {
+			filter += `deployment:${deploymentStatus.toString()}`;
+		}
+		if (assetType.length === 1) {
+			filter += filter.length > 0 ? ';' : '';
+			filter += assetType.indexOf('assets_profile') > -1
+				? 'independent:no' : 'independent:yes';
+		}
+		this.assetsParams.pageIndex = 1;
+		this.assetsParams.filter = filter;
 	}
 
 	/**
@@ -121,6 +151,10 @@ export class AssetsComponent implements OnInit, OnChanges {
 					this.buildTable();
 				}),
 				catchError(err => {
+					this.assets = [];
+					this.pagination = {
+						total: 0,
+					};
 					this.logger.error('OSV Assets : getAssets() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -132,7 +166,7 @@ export class AssetsComponent implements OnInit, OnChanges {
 	/**
 	 * Will construct the assets table
 	 */
-	private buildTable () {
+	public buildTable () {
 		if (!this.assetsTable) {
 			this.assetsTable = new CuiTableOptions({
 				bordered: true,
@@ -141,37 +175,44 @@ export class AssetsComponent implements OnInit, OnChanges {
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
-						sortable: true,
+						sortable: false,
+						sortDirection: 'desc',
 						sorting: true,
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
+						sortable: false,
 					},
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
-						sortable: true,
+						sortable: false,
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
+						sortable: false,
 					},
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
+						sortable: false,
 					},
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
+						sortable: false,
 					},
 					{
 						key: 'deployment',
 						name: I18n.get('_OsvDeploymentStatus_'),
+						sortable: false,
 					},
 					{
-						key: 'recommendations',
 						name: I18n.get('_OsvRecommendations_'),
+						sortable: false,
+						template: this.recommendationsTemplate,
 					},
 					// {
 					// 	click: true,
@@ -196,9 +237,15 @@ export class AssetsComponent implements OnInit, OnChanges {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: any) {
+		this.assets.forEach((asset: any) => {
+			if (asset !== item) {
+				asset.rowSelected = false;
+			}
+		});
+		item.rowSelected = !item.rowSelected;
 		this.fullscreen = false;
 		this.fullscreenChange.emit(this.fullscreen);
-		this.selectedAsset = item;
+		this.selectedAsset = item.rowSelected ? item : null;
 		this.selectedAssetChange.emit(this.selectedAsset);
 	}
 
@@ -227,29 +274,25 @@ export class AssetsComponent implements OnInit, OnChanges {
 		if (!sortColumn.sortable) {
 			return;
 		}
-		sortColumn.sortDirection = sortColumn.sortDirection === 'asc' ? 'desc' : 'asc';
+		if (sortColumn.sortDirection === 'asc') {
+			sortColumn.sortDirection = 'desc';
+		} else {
+			sortColumn.sortDirection = 'asc';
+		}
+		this.assetsTable.columns.forEach(column => {
+			column.sorting = false;
+		});
+		sortColumn.sorting = true;
 		this.assetsParams.sortOrder = sortColumn.sortDirection;
 		this.assetsParams.sort = sortColumn.key;
+		this.assetsParams.pageIndex = 1;
 		this.loadData();
 	}
 
 	/**
-	 * Returns the row specific actions
-	 * @param asset the asset we're building the actions for
-	 * @returns the built actions
+	 * Open contact support modal
 	 */
-	public getRowActions (asset: OSVAsset) {
-		return [
-			[
-				{
-					asset,
-					label: I18n.get('_OsvBasicRecommendations_'),
-					onClick: (action: any) => {
-						this.logger.debug(action);
-					},
-				},
-			],
-		];
+	public openContactSupport () {
+		this.cuiModalService.showComponent(ContactExpertComponent, { });
 	}
-
 }

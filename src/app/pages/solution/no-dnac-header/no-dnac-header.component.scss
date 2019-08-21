@@ -1,0 +1,20 @@
+:host {
+	opacity: 0.95;
+	position: absolute !important;
+	left: 0;
+	right: 0;
+	z-index: 1;
+	min-height: 274px !important;
+	padding-top: 64px !important;
+
+	&.invisible { display: none; }
+
+	.btn { min-width: 260px; }
+
+	.close-button {
+		cursor: pointer;
+		position: absolute;
+		top: 20px;
+		right: 30px;
+	}
+}

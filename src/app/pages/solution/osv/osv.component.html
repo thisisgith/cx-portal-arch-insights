@@ -1,40 +1,27 @@
-<details-panel *ngIf="selectedProfileGroup" [hidden]="!selectedProfileGroup" [fullscreen]="fullscreen">
-	<details-panel-header (close)="selectedProfileGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
-		<div appPanel360Title class="row">
-			<span class="icon-laser-pointer icon-large col-2 icon-xlarge"></span>
-			<div class="col-10">
-				<div class="qtr-margin-left text-xlarge half-margin-bottom"
-					[innerText]="'_OsvOptimalSoftwareVersions_' | i18n "></div>
-				<div class="qtr-margin-left text-large" [innerText]="selectedProfileGroup?.softwareProfile"></div>
-			</div>
-		</div>
-	</details-panel-header>
-	<app-software-profile-detail></app-software-profile-detail>
-</details-panel>
 <details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
 	<details-panel-header (close)="selectedAsset = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
-		<div appPanel360Title class="row">
-			<span class="icon-laser-pointer icon-large col-2 icon-xlarge"></span>
-			<div class="col-10">
-				<div class="qtr-margin-left text-xlarge half-margin-bottom"
-					[innerText]="'_OsvOptimalSoftwareVersions_' | i18n "></div>
-				<div class="qtr-margin-left text-large" [innerText]="selectedAssetSoftware?.hostName"></div>
+		<div detailsPanelTitle>
+			<div class="qtr-margin-left text-xlarge half-margin-bottom" [innerText]="selectedAsset?.hostName"></div>
+			<div class="qtr-margin-left text-medium">
+				<span [innerText]="'_OsvIP_' | i18n"></span>
+				<span class="qtr-margin-left" [innerText]="selectedAsset?.ipAddress"></span>
 			</div>
 		</div>
 	</details-panel-header>
-	<asset-details [selectedAsset]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
+	<asset-details [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
 </details-panel>
 
 <div class="panel">
-	<div class="row" *ngIf="!status.isLoading">
+	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading">
 		<ng-container *ngFor="let filter of filters; index as i">
-			<div *ngIf="!filter.loading && filter.data.length && filter.view.indexOf(view) > -1"
+			<div *ngIf="!filter.loading && filter.seriesData.length && filter.view.indexOf(view) > -1"
 				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
-				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" class="panel col-md-3 filter" [ngClass]="{
+				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" class="panel flex-center filter"
+				[ngClass]="{
 					'filter__selected': filter.selected,
 					'filter__not-selected': !filter.selected
 				}">
-				<div class="base-margin-bottom relative max-height">
+				<div class="base-margin-bottom">
 					<div *ngIf="filter.template">
 						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
 					</div>
@@ -51,15 +38,13 @@
 		<cui-spinner></cui-spinner>
 	</div>
 	<ng-container *ngIf="filtered">
+		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
-		<div class="divider qtr-margin-top"></div>
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading"></div>
-	<div *ngIf="view == 'swProfiles'">
-		<app-software-profiles [(selectedProfileGroup)]="selectedProfileGroup"></app-software-profiles>
-	</div>
 	<div *ngIf="view == 'assets'">
-		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters" [(selectedAsset)]="selectedAsset"></app-assets>
+		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters"  [(selectedAsset)]="selectedAsset">
+		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
 		<app-software-versions></app-software-versions>
@@ -67,7 +52,7 @@
 </div>
 
 <ng-template #filterBar>
-	<div class="row">
+	<div class="row qtr-margin-top qtr-margin-bottom">
 		<div class="col-md-1 flex flex-center-vertical">
 			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
 		</div>
@@ -92,39 +77,21 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div class="max-width absolute-center" (click)="clearFilters()" data-auto-id="TotalVisualFilter">
-		<!-- <div class="row toggle" (click)="selectView('swProfiles')" [ngClass]="{'text-muted':view != 'swProfiles'}"
-			data-auto-id="TotalVisualFilterSoftwareProfiles">
-			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].profiles"></span>
-			</div>
-			<div class="col-7 margin-auto">
-				<span class="text-xlarge " [innerText]="'_OsvSoftwareProfiles_' | i18n"></span>
-				<span class="pull-right text-info relative">
-					<i class="icon-question-circle icon-small"
-						(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;"></i>
-					<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
-				</span>
-
-			</div>
-		</div> -->
-		<div class="row toggle" (click)="selectView('assets')" [ngClass]="{'text-muted':view != 'assets'}"
+	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter">
+		<div class="row toggle" (click)="selectView('assets')"
+			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			data-auto-id="TotalVisualFilterAssets">
 			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].assets"></span>
+				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
 			</div>
 			<div class="col-7 margin-auto">
 				<span class="text-xlarge " [innerText]="'_OsvAssets_' | i18n"></span>
-				<span class="text-info  pull-right" data-balloon-length="medium" data-balloon="Asset info coming soon!!"
-					data-balloon-pos="right">
-					<i class="icon-info icon-small"></i>
-				</span>
 			</div>
 		</div>
-		<div class="row toggle" (click)="selectView('swVersions')" [ngClass]="{'text-muted':view != 'swVersions'}"
+		<div class="row toggle" (click)="selectView('swVersions')" [ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
 			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.data[0].versions"></span>
+				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
 			</div>
 			<div class="col-7 margin-auto">
 				<span class="text-xlarge " [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
@@ -134,78 +101,14 @@
 </ng-template>
 
 <ng-template #deploymentStatusFilter let-filter="filter">
-	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
-	</assets-pie-chart>
+	<div>
+		<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
+		</pie-chart>
+	</div>
+
 </ng-template>
 
 <ng-template #assetTypeFilter let-filter="filter">
-	<assets-pie-chart [seriesData]="filter.data" (subfilter)="onSubfilterSelect($event, filter)">
-	</assets-pie-chart>
-</ng-template>
-
-<ng-template #softwareProfileInfo>
-	<div class="absolute profile-info text-default" *ngIf="showProfileInfo">
-		<div class="row">
-			<div class="col-12 text-xlarge base-margin-bottom">
-				<div class="row">
-					<div class="col-md-10" [innerText]="'_OsvSoftwareProfiles_' | i18n"></div>
-					<div class="col-md-2">
-						<i class="icon-close pull-right qtr-margin-right"
-							(click)="$event.stopPropagation();showProfileInfo = false;" data-auto-id="ToggleSoftwareProfileInfoVisibilty"></i>
-					</div>
-				</div>
-			</div>
-			<div class="col-12 base-margin-bottom">
-				<p>A <span class="text-bold">software profile</span> comprises of <span
-						class="text-bold">inventory</span> and <span class="text-bold">operational preferences</span>,
-					designed to process the
-					software recommendations</p>
-				<ul>
-					<li>
-						<span class="text-bold">Inventory Preferences:</span>
-						<ul>
-							<li>
-								This comprises all devices in the customer network organised via a group policy.
-							</li>
-							<li>
-								A policy group organises assets (currently bases on Software Type and Product Id).
-							</li>
-							<li>
-								It aggregates the inventory information from all the grouped assets.
-							</li>
-						</ul>
-					</li>
-					<li>
-						<span class="text-bold">Operational Preferences:</span>
-						<ul>
-							<li>
-								This comprises a set of attributes that define the preferred operational aspects for
-								software recommendation, such as Release Age and Release Popularity.
-							</li>
-							<li>
-								Based on release attributes, there are different categories such as Conservative,
-								Moderate and Aggressive.
-							</li>
-							<li>
-								Currently software profiles are set to Aggressive by default which will prefer latest
-								releases.
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
-			<div class="col-12 half-padding">
-				<div class="text-right">
-					<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();" data-auto-id="DonotShowProfileInfoAgain">
-						<input type="checkbox" [(ngModel)]="hideProfileInfo" (ngModelChange)="hideInfo($event)" data-auto-id="DonotShowProfileInfoAgainCheckbox">
-						<span class="checkbox__input"></span>
-						<span class="checkbox__label">Do not show this again, by default.</span>
-					</label>
-					<button class="btn btn--gray-ghost btn--small" [innerText]="'_OsvClose_' | i18n"
-						(click)="$event.stopPropagation();showProfileInfo = false" data-auto-id="CloseSoftwareProfileInfoDialog"></button>
-				</div>
-			</div>
-		</div>
-	</div>
+	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
+	</pie-chart>
 </ng-template>

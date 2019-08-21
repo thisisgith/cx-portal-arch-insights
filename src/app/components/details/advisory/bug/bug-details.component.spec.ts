@@ -5,11 +5,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { user, CriticalBugData } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
-import { CriticalBug } from '@sdp-api';
+import { DiagnosticsService } from '@sdp-api';
+import { of } from 'rxjs';
 
 describe('BugDetailsComponent', () => {
 	let component: BugDetailsComponent;
 	let fixture: ComponentFixture<BugDetailsComponent>;
+	let diagnosticsService: DiagnosticsService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -23,6 +25,8 @@ describe('BugDetailsComponent', () => {
 			],
 		})
 		.compileComponents();
+
+		diagnosticsService = TestBed.get(DiagnosticsService);
 	}));
 
 	beforeEach(() => {
@@ -45,7 +49,9 @@ describe('BugDetailsComponent', () => {
 		fixture.whenStable()
 		.then(() => {
 			expect(component.data)
-				.toEqual(CriticalBugData[0]);
+				.toEqual({
+					advisory: CriticalBugData[0],
+				});
 
 			done();
 		});
@@ -57,32 +63,30 @@ describe('BugDetailsComponent', () => {
 		component.customerId = user.info.customerId;
 
 		component.details
-		.subscribe((details: CriticalBug) => {
+		.subscribe((details => {
 			expect(details)
-				.toEqual(component.advisory);
+				.toEqual(component.data);
 
 			done();
-		});
+		}));
 
 		component.ngOnInit();
 		fixture.detectChanges();
 	});
 
-	it('should load the bug if only id passed', done => {
+	it('should load the bug if only id passed', () => {
+		spyOn(diagnosticsService, 'getCriticalBugs')
+			.and
+			.returnValue(of({ data: [CriticalBugData[0]] }));
+
 		component.id = CriticalBugData[0].id;
 		component.customerId = user.info.customerId;
 
-		component.details
-		.subscribe((details: CriticalBug) => {
-			fixture.detectChanges();
-			expect(details)
-				.toEqual(component.data);
-
-			done();
-		});
-
 		component.ngOnInit();
 		fixture.detectChanges();
+
+		expect(component.data)
+			.toEqual({ advisory: CriticalBugData[0] });
 	});
 
 	it('should handle changing bugs', () => {
@@ -103,7 +107,9 @@ describe('BugDetailsComponent', () => {
 		fixture.detectChanges();
 
 		expect(component.data)
-			.toEqual(CriticalBugData[0]);
+			.toEqual({
+				advisory: CriticalBugData[0],
+			});
 
 		component.advisory = CriticalBugData[1];
 		component.id = CriticalBugData[1].id;
@@ -118,6 +124,8 @@ describe('BugDetailsComponent', () => {
 
 		fixture.detectChanges();
 		expect(component.data)
-			.toEqual(CriticalBugData[1]);
+			.toEqual({
+				advisory: CriticalBugData[1],
+			});
 	});
 });

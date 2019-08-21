@@ -8,6 +8,7 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { ScanResultsResponse } from '../models/scan-results-response';
+import { BugImpactedAssetsResponse } from '../models/bug-impacted-assets-response';
 import { CriticalBugsCount } from '../models/critical-bugs-count';
 import { CriticalBugsResponse } from '../models/critical-bugs-response';
 @Injectable({
@@ -16,6 +17,7 @@ import { CriticalBugsResponse } from '../models/critical-bugs-response';
 class DiagnosticsService extends __BaseService {
   static readonly headScanResultsPath = '/scan-results';
   static readonly getScanResultsPath = '/scan-results';
+  static readonly getCriticalBugsAssetsPath = '/critical-bugs/assets';
   static readonly getCriticalBugsStateCountPath = '/critical-bugs/state/count';
   static readonly getCriticalBugsPath = '/critical-bugs';
 
@@ -49,7 +51,7 @@ class DiagnosticsService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/diagnostics/v1/scan-results`,
+      this.rootUrl + `/customerportal/diagnostics/v1/scan-results`,
       __body,
       {
         headers: __headers,
@@ -132,7 +134,7 @@ class DiagnosticsService extends __BaseService {
     (params.alertId || []).forEach(val => {if (val != null) __params = __params.append('alertId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/diagnostics/v1/scan-results`,
+      this.rootUrl + `/customerportal/diagnostics/v1/scan-results`,
       __body,
       {
         headers: __headers,
@@ -185,6 +187,72 @@ class DiagnosticsService extends __BaseService {
   }
 
   /**
+   * Impacted assets of a bug
+   * @param params The `DiagnosticsService.GetCriticalBugsAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `cdetId`: The CDET id
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `rows`: Number of rows of data per page
+   *
+   * - `page`: The page number of the response
+   *
+   * @return successful operation
+   */
+  getCriticalBugsAssetsResponse(params: DiagnosticsService.GetCriticalBugsAssetsParams): __Observable<__StrictHttpResponse<BugImpactedAssetsResponse>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    (params.cdetId || []).forEach(val => {if (val != null) __params = __params.append('cdetId', val.toString())});
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.page != null) __params = __params.set('page', params.page.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs/assets`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<BugImpactedAssetsResponse>;
+      })
+    );
+  }
+
+  /**
+   * Impacted assets of a bug
+   * @param params The `DiagnosticsService.GetCriticalBugsAssetsParams` containing the following parameters:
+   *
+   * - `customerId`: Unique identifier of a Cisco customer.
+   *
+   * - `cdetId`: The CDET id
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
+   * - `rows`: Number of rows of data per page
+   *
+   * - `page`: The page number of the response
+   *
+   * @return successful operation
+   */
+  getCriticalBugsAssets(params: DiagnosticsService.GetCriticalBugsAssetsParams): __Observable<BugImpactedAssetsResponse> {
+    return this.getCriticalBugsAssetsResponse(params).pipe(
+      __map(_r => _r.body as BugImpactedAssetsResponse)
+    );
+  }
+
+  /**
    * Provides number of critical bugs in each state
    * @param customerId Unique identifier of a Cisco customer.
    * @return successful operation
@@ -197,7 +265,7 @@ class DiagnosticsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/diagnostics/v1/critical-bugs/state/count`,
+      this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs/state/count`,
       __body,
       {
         headers: __headers,
@@ -230,15 +298,31 @@ class DiagnosticsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `title`: Security Advisory title
+   *
    * - `state`: State of the bugs
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: The page number of the response
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`: ID of the Bug
+   *
+   * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `cdetsId`: ID of the Bug
    *
    * @return successful operation
    */
@@ -248,14 +332,22 @@ class DiagnosticsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.title != null) __params = __params.set('title', params.title.toString());
     (params.state || []).forEach(val => {if (val != null) __params = __params.append('state', val.toString())});
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
-    if (params.id != null) __params = __params.set('id', params.id.toString());
+    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
+    if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
+    (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.cdetsId || []).forEach(val => {if (val != null) __params = __params.append('cdetsId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/diagnostics/v1/critical-bugs`,
+      this.rootUrl + `/customerportal/diagnostics/v1/critical-bugs`,
       __body,
       {
         headers: __headers,
@@ -277,15 +369,31 @@ class DiagnosticsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `title`: Security Advisory title
+   *
    * - `state`: State of the bugs
+   *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `serialNumber`: A serial number is a unique number used for identification
    *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: The page number of the response
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`: ID of the Bug
+   *
+   * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `cdetsId`: ID of the Bug
    *
    * @return successful operation
    */
@@ -391,9 +499,9 @@ module DiagnosticsService {
   }
 
   /**
-   * Parameters for getCriticalBugs
+   * Parameters for getCriticalBugsAssets
    */
-  export interface GetCriticalBugsParams {
+  export interface GetCriticalBugsAssetsParams {
 
     /**
      * Unique identifier of a Cisco customer.
@@ -401,14 +509,14 @@ module DiagnosticsService {
     customerId: string;
 
     /**
-     * State of the bugs
+     * The CDET id
      */
-    state?: Array<'new' | 'resolved' | 'verified' | 'duplicate' | 'closed'>;
+    cdetId: Array<string>;
 
     /**
-     * A serial number is a unique number used for identification
+     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
-    serialNumber?: Array<string>;
+    sort?: Array<string>;
 
     /**
      * Number of rows of data per page
@@ -419,11 +527,82 @@ module DiagnosticsService {
      * The page number of the response
      */
     page?: number;
+  }
+
+  /**
+   * Parameters for getCriticalBugs
+   */
+  export interface GetCriticalBugsParams {
+
+    /**
+     * Unique identifier of a Cisco customer.
+     */
+    customerId: string;
+
+    /**
+     * Security Advisory title
+     */
+    title?: string;
+
+    /**
+     * State of the bugs
+     */
+    state?: Array<'new' | 'resolved' | 'verified' | 'duplicate' | 'closed'>;
+
+    /**
+     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+     */
+    sort?: Array<string>;
+
+    /**
+     * A serial number is a unique number used for identification
+     */
+    serialNumber?: Array<string>;
+
+    /**
+     * Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
+     * Number of rows of data per page
+     */
+    rows?: number;
+
+    /**
+     * The date on which the Advisory was published
+     */
+    publishedOn?: string;
+
+    /**
+     * The page number of the response
+     */
+    page?: number;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+     */
+    lastUpdatedDateRange?: Array<string>;
+
+    /**
+     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     */
+    lastUpdated?: string;
 
     /**
      * ID of the Bug
      */
-    id?: string;
+    id?: Array<string>;
+
+    /**
+     * Requested fields in the response. Id field is by default
+     */
+    fields?: Array<string>;
+
+    /**
+     * ID of the Bug
+     */
+    cdetsId?: Array<string>;
   }
 }
 

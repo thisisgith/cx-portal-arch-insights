@@ -55,9 +55,17 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 	public custData: ACCUserInfoSchema;
 	public maxLength = 512;
 	public loading = false;
-	public custInfoError = false;
-	public submitSuccess = false;
-	public submitError = false;
+	public status = {
+		submitting: false,
+		success: false,
+		submitError: false,
+		infoError: false,
+	};
+
+	public get invalidSubmit () {
+		return !this.requestForm.valid || this.status.infoError ||
+			this.status.submitting || this.status.success;
+	}
 
 	public requestForm: FormGroup = this.fb.group({
 		acceleratorInterest: ['', [Validators.required, Validators.maxLength(this.maxLength)]],
@@ -118,8 +126,8 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 			attendeeArray.clear();
 			for (let i = 1; i < attendees; i = i + 1) {
 				const attendeeGroup = this.fb.group({
-					attendeeName: ['', Validators.required],
 					attendeeEmail: ['', [Validators.required, Validators.email]],
+					attendeeName: ['', Validators.required],
 				});
 				attendeeArray.push(attendeeGroup);
 			}
@@ -151,7 +159,7 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 		this.contentService.getACCUserInfo()
 			.pipe(
 				catchError(err =>  {
-					this.custInfoError = true;
+					this.status.infoError = true;
 					this.logger.error('acc-request-form.component : getACCUserInfo() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -169,27 +177,28 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 	 * Submit the completed ACC request form
 	 */
 	public onSubmit () {
+		this.status.submitting = true;
 		const requestSessionParams: ACCRequestSessionSchema = {
-			preferredLanguage: this.requestForm.get('language').value,
 			accTitle: this.accTitle,
+			additionalAttendees: this.requestForm.get('additionalAttendees').value,
+			businessOutcome: this.requestForm.get('desiredOutcome').value,
+			ccoId: this.custData.ccoId,
+			ciscoContact: this.custData.ciscoContact,
+			companyName: this.custData.companyName,
+			country: this.custData.country,
+			customerId: this.customerId,
+			dnacVersion: this.requestForm.get('dnacVersion').value,
+			environment: this.requestForm.get('environment').value,
 			jobTitle: this.custData.jobTitle,
+			pitstop: this.pitstop,
+			preferredLanguage: this.requestForm.get('language').value,
+			preferredSlot: this.requestForm.get('meetingTime').value,
+			reasonForInterest: this.requestForm.get('acceleratorInterest').value,
+			solution: this.solution,
+			timezone: this.requestForm.get('timeZone').value,
+			usecase: this.technology,
 			userEmail: this.custData.userEmail,
 			userPhoneNumber: this.custData.userPhoneNumber,
-			ciscoContact: this.custData.ciscoContact,
-			country: this.custData.country,
-			additionalAttendees: this.requestForm.get('additionalAttendees').value,
-			timezone: this.requestForm.get('timeZone').value,
-			preferredSlot: this.requestForm.get('meetingTime').value,
-			companyName: this.custData.companyName,
-			dnacVersion: this.requestForm.get('dnacVersion').value,
-			businessOutcome: this.requestForm.get('desiredOutcome').value,
-			reasonForInterest: this.requestForm.get('acceleratorInterest').value,
-			environment: this.requestForm.get('environment').value,
-			ccoId: this.custData.ccoId,
-			customerId: this.customerId,
-			solution: this.solution,
-			usecase: this.technology,
-			pitstop: this.pitstop,
 		};
 
 		const params: RacetrackContentService.RequestACCParams = {
@@ -201,14 +210,16 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 		.requestACC(params)
 			.pipe(
 				catchError(() => {
-					this.submitError = true;
+					this.status.submitError = true;
+					this.status.submitting = false;
 					return empty();
 				}),
 				takeUntil(this.destroyed$),
 			)
 			.subscribe(() => {
 				this.logger.debug('acc-request-form.component :: Submitted ACC response form');
-				this.submitSuccess = true;
+				this.status.success = true;
+				this.status.submitting = false;
 				setTimeout(() => {
 					this.submitted.emit(true);
 				}, this.timeout);

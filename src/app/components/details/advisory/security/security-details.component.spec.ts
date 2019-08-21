@@ -7,7 +7,7 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { ProductAlertsService, InventoryService } from '@sdp-api';
 import { environment } from '@environment';
 import { of, throwError } from 'rxjs';
-import * as _ from 'lodash';
+import * as _ from 'lodash-es';
 import {
 	user,
 	MockAdvisorySecurityAdvisories,
@@ -15,6 +15,7 @@ import {
 	MockSecurityAdvisories,
 } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SecurityDetailsComponent', () => {
 	let component: SecurityDetailsComponent;
@@ -28,6 +29,7 @@ describe('SecurityDetailsComponent', () => {
 				HttpClientTestingModule,
 				SecurityDetailsModule,
 				MicroMockModule,
+				RouterTestingModule,
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
@@ -121,6 +123,7 @@ describe('SecurityDetailsComponent', () => {
 			expect(d)
 				.toEqual({
 					advisory: MockAdvisorySecurityAdvisories[0],
+					assetIds: component.data.assetIds,
 					bulletin: _.head(bulletins),
 					notice: _.head(mockAdvisories),
 				});

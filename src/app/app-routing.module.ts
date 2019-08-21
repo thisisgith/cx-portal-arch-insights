@@ -8,15 +8,28 @@ import { UserResolve } from './utilities/user-resolve';
  */
 const routes: Routes = [
 	{
+		canActivate: [ClientSSOGuard],
 		loadChildren: () => import('./pages/admin/admin.module')
 			.then(m => m.AdminModule),
 		path: 'admin',
+		resolve: {
+			user: UserResolve,
+		},
 	},
 	{
 		loadChildren: () => import('./pages/cases/cases.module')
 			.then(m => m.CasesModule),
 		path: 'cases',
 		pathMatch: 'full',
+	},
+	{
+		canActivate: [ClientSSOGuard],
+		loadChildren: () => import('./pages/setup-ie/setup-ie.module')
+		 	.then(m => m.SetupIeModule),
+		path: 'setup-ie',
+		resolve: {
+			user: UserResolve,
+		},
 	},
 	{
 		canActivate: [ClientSSOGuard],

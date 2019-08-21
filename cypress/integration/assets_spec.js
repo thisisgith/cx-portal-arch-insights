@@ -16,7 +16,7 @@ const coverageElements = totalCountScenario.response.body;
 // const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
 // const advisoryCounts = advisoryScenario.response.body;
 const caseMock = new MockService('CaseScenarios');
-const caseScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
+const caseScenario = caseMock.getScenario('GET', 'Case Details');
 const caseResponse = caseScenario.response.body;
 const fnBulletinMock = new MockService('FieldNoticeBulletinScenarios');
 const hwMock = new MockService('HardwareScenarios');
@@ -25,11 +25,20 @@ const hwResponse = hwScenario.response.body.data;
 const hwEOLMock = new MockService('HardwareEOLBulletinScenarios');
 const hwEOLScenario = hwEOLMock.getScenario('GET', 'Hardware EOL Bulletins');
 const hwEOLResponse = hwEOLScenario.response.body.data[0];
+const assetSummaryMock = new MockService('AssetSummaryScenarios');
+const assetSummaryScenario = assetSummaryMock.getScenario('GET', 'Asset Summary');
+const assetSummary = assetSummaryScenario.response.body;
+const bugMock = new MockService('CriticalBugScenarios');
+const bugScenario = bugMock.getScenario('GET', 'Critical Bugs for FOC1544Y16T');
+const bugResponse = bugScenario.response.body;
 
 Cypress.moment.locale('en', {
-	// change moment's default '8d' format to '8 days' to match the app's format
-	relativeTime: { dd: '%d days' },
+	// change moment's default formatting to match the app's format
+	relativeTime: { dd: '%d days', M: 'a month', MM: '%d months' },
 });
+
+const dateFormat = 'YYYY MMM DD';
+const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('Assets', () => { // PBC-41
 	before(() => {
@@ -40,8 +49,7 @@ describe('Assets', () => { // PBC-41
 	});
 
 	context('PBC-151: Asset 360 view', () => {
-		// TODO: Unskip and modify to accomodate PBC-90 & 91
-		it.skip('Provides an Asset 360 view modal', () => { // PBC-152
+		it('Provides an Asset 360 view modal', () => { // PBC-152
 			/* TODO: Full screen view has been removed until a future sprint
 			// const { halfWidthInPx, widthInPx } = util.getViewportSize();
 			cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
@@ -69,6 +77,29 @@ describe('Assets', () => { // PBC-41
 				const haveVisibility = asset.supportCovered ? 'be.visible' : 'not.be.visible';
 				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-339
 				cy.getByAutoId('Asset360ScanBtn').should('be.visible');
+
+				// PBC-153
+				cy.get('asset-details img').should( // TODO: Placeholder until PBC-438 is fixed
+					'have.attr',
+					'src',
+					'assets/img/inventory/CAT-3650.png',
+				);
+				cy.getByAutoId('ProductId').should('have.text', asset.productId);
+				cy.getByAutoId('YouHaveInventory').should(
+					'have.text', `You have ${hwResponse.length} of these in your inventory`
+				);
+				cy.getByAutoId('_ProductSeries_-Link')
+					.should('have.text', hwResponse[6].productFamily);
+				cy.getByAutoId('_ProductID_-Link').should('have.text', asset.productId);
+				cy.getByAutoId('_SoftwareVersion_-Link').should('have.text', asset.osVersion);
+				cy.getByAutoId('_EndOfSale_-data').should(
+					'have.text',
+					Cypress.moment(assetSummary.eoSaleDate).format(dateFormat)
+				);
+				cy.getByAutoId('_EndOfSupport_-data').should(
+					'have.text',
+					Cypress.moment(assetSummary.lastDateOfSupport).format(dateFormat)
+				);
 			};
 
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
@@ -163,7 +194,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('details-panel').should('not.exist');
 		});
 
-		it.skip('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
+		it('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
 			const getPaginationText = (pagination, type) => {
 				let pageText = pagination.total < pagination.rows
 					? `Showing ${pagination.total} of `
@@ -177,9 +208,9 @@ describe('Assets', () => { // PBC-41
 					case 'Critical':
 						return 'label--danger';
 					case 'High':
-						return 'label--warning';
-					case 'Medium':
 						return 'label--warning-alt';
+					case 'Medium':
+						return 'label--warning';
 					case 'Low':
 					default:
 						return 'label--success';
@@ -188,13 +219,14 @@ describe('Assets', () => { // PBC-41
 
 			cy.server();
 			cy.route('**/product-alerts/v1/security-advisory-bulletins?*').as('security');
+			cy.route('**/product-alerts/v1/field-notice-bulletins?*').as('fn');
 			cy.get('tbody tr').eq(0).click();
 			let securityXHR;
 			let fnXHR;
-			cy.wait('Field Notice Bulletins').then(xhr => {
+			cy.wait('@fn', { timeout: 30000 }).then(xhr => {
 				fnXHR = xhr;
 			});
-			cy.wait('@security').then(xhr => {
+			cy.wait('@security', { timeout: 30000 }).then(xhr => {
 				securityXHR = xhr;
 			});
 			cy.getByAutoId('ADVISORIESTab').click();
@@ -206,7 +238,7 @@ describe('Assets', () => { // PBC-41
 					);
 					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 					Cypress._.each(securityXHR.response.body.data, (advisory, index) => {
-						cy.get('details-advisories tbody tr').eq(index).within(() => {
+						cy.get('asset-details tbody tr').eq(index).within(() => {
 							cy.getByAutoId('ImpactIcon')
 								.should('have.class', getImpactIcon(advisory.severity));
 							cy.getByAutoId('ImpactText').should('have.text', advisory.severity);
@@ -215,12 +247,12 @@ describe('Assets', () => { // PBC-41
 							cy.getByAutoId('AdvisoryLastUpdated')
 								.should('have.text',
 									Cypress.moment(advisory.bulletinFirstPublished)
-										.format('YYYY MMM DD'));
+										.format(dateFormat));
 						});
 					});
 					if (securityXHR.response.body.Pagination.total > securityXHR.response.body.data.length) {
 						cy.getByAutoId('LoadMoreButton').click();
-						cy.get('details-advisories tbody tr').should('have.length.greaterThan', 10);
+						cy.get('asset-details tbody tr').should('have.length.greaterThan', 10);
 					} else {
 						cy.getByAutoId('LoadMoreButton').should('not.be.visible');
 					}
@@ -229,14 +261,13 @@ describe('Assets', () => { // PBC-41
 
 			cy.wrap(fnXHR).then(() => {
 				if (fnXHR.response.body.data.length) {
-					cy.getByAutoId('AdvisoryTab-field').click();
 					const pageText = getPaginationText(
 						fnXHR.response.body.Pagination, 'Field Notices'
 					);
 					cy.getByAutoId('AdvisoryTab-field').click();
 					cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 					Cypress._.each(fnXHR.response.body.data, (advisory, index) => {
-						cy.get('details-advisories tbody tr').eq(index).within(() => {
+						cy.get('asset-details tbody tr').eq(index).within(() => {
 							cy.getByAutoId('FieldNoticeId')
 								.should('have.text', `FN ${advisory.fieldNoticeId}`)
 								.and('have.attr', 'href', advisory.URL)
@@ -248,17 +279,35 @@ describe('Assets', () => { // PBC-41
 							cy.getByAutoId('AdvisoryLastUpdated')
 								.should('have.text',
 									Cypress.moment(advisory.bulletinLastUpdated)
-										.format('YYYY MMM DD'));
+										.format(dateFormat));
 						});
 					});
 					if (fnXHR.response.body.Pagination.total > fnXHR.response.body.data.length) {
 						cy.getByAutoId('LoadMoreButton').click();
-						cy.get('details-advisories tbody tr').should('have.length.greaterThan', 10);
+						cy.get('asset-details tbody tr').should('have.length.greaterThan', 10);
 					} else {
 						cy.getByAutoId('LoadMoreButton').should('not.be.visible');
 					}
 				}
 			});
+
+			cy.getByAutoId('AdvisoryTab-bug').click();
+			const pageText = getPaginationText(
+				bugResponse.Pagination, 'Critical Bugs'
+			);
+			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+			Cypress._.each(bugResponse.data, (bug, index) => {
+				cy.get('asset-details tbody tr').eq(index).within(() => {
+					cy.getByAutoId('ID-Cell').should('have.text', bug.id);
+					cy.getByAutoId('Title-Cell').should('have.text', bug.title);
+					cy.getByAutoId('Status-Cell').should('have.text', startCase(bug.state));
+					cy.getByAutoId('Last Updated-Cell').should(
+						'have.text',
+						Cypress.moment(bug.lastUpdated).format(dateFormat)
+					);
+				});
+			});
+
 			cy.get('[data-auto-id*="Device-"]').eq(0).click();
 		});
 
@@ -272,8 +321,8 @@ describe('Assets', () => { // PBC-41
 				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			};
 
-			const contractEnd = Cypress.moment(coveredRes.contractEndDate).format('YYYY MMM DD');
-			const warrantyEnd = Cypress.moment(coveredRes.warrantyEndDate).format('YYYY MMM DD');
+			const contractEnd = Cypress.moment(coveredRes.contractEndDate).format(dateFormat);
+			const warrantyEnd = Cypress.moment(coveredRes.warrantyEndDate).format(dateFormat);
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.getByAutoId('_SupportCoverage_-data')
 				.should('have.text', `Covered until ${contractEnd}`);
@@ -303,18 +352,23 @@ describe('Assets', () => { // PBC-41
 			coverageMock.enable('Covered');
 		});
 
-		// TODO: Unskip and modify to accomodate PBC-90 & 91
-		// (The second tbody tr selection is now trying to incorrectly
-		// grab from the open cases dropdown instead of the assets table)
-		it.skip('Gracefully handles API failures', () => {
+		it('Gracefully handles API failures', () => {
 			fnBulletinMock.enable('Field Notice Bulletins - Unreachable'); // PBC-342
+			assetSummaryMock.enable('Asset Summary - Unreachable');
+			hwMock.enable('Hardware productId - Unreachable');
+
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
+			cy.getByAutoId('_ProductSeries_-N/A').should('have.text', 'N/A');
+			cy.getByAutoId('_EndOfSale_-N/A').should('have.text', 'N/A');
+			cy.getByAutoId('_EndOfSupport_-N/A').should('have.text', 'N/A');
 			cy.getByAutoId('ADVISORIESTab').click();
 			cy.getByAutoId('AdvisoryTab-field').click();
 			cy.getByAutoId('AdvisoriesNoResultsFound').should('have.text', 'No Results Found');
 
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			fnBulletinMock.disable('Field Notice Bulletins - Unreachable');
+			assetSummaryMock.enable('Asset Summary');
+			hwMock.enable('Hardware productId');
 		});
 	});
 
@@ -786,6 +840,121 @@ describe('Assets', () => { // PBC-41
 			validate360OpenCase(assets[0]); // Currently only first asset has the CaseOpen Button
 
 			cy.getByAutoId('CloseDetails').click();
+		});
+	});
+
+	context('PBC-90: Asset List -> Case List View', () => {
+		// Verify the Case List 360 view
+		it('Opens Case List 360 view when clicking asset cards', () => { // PBC-90
+			assetMock.enable('(Assets) Missing data - Grid View');
+			cy.getByAutoId('grid-view-btn').click();
+			const serial = assetCards[0].serialNumber;
+			cy.getByAutoId(`Device-${serial}`).click();
+			cy.getByAutoId('Asset360SerialNumber')
+				.should('have.text', `Serial Number${serial}`);
+			cy.getByAutoId('Asset360IPAddress')
+				.should('have.text', 'IP AddressN/A');
+			cy.getByAutoId('CloseDetails').click();
+			cy.getByAutoId('list-view-btn').click();
+			cy.getByAutoId(`Device-${serial}`).click();
+			cy.getByAutoId('ToggleActiveCases')
+				.should('be.visible');
+			cy.getByAutoId('Asset360OpenCaseBtn')
+				.should('be.visible');
+			// Check for Summary,Hardware and Advisories Tabs are enabled
+			cy.getByAutoId('SUMMARYTab')
+				.should('be.visible');
+			cy.getByAutoId('HARDWARETab')
+				.should('be.visible');
+			cy.getByAutoId('SOFTWARETab')
+				.should('not.be.visible');
+			cy.getByAutoId('ADVISORIESTab')
+				.should('be.visible');
+			cy.getByAutoId('ToggleActiveCases').click();
+			// Verify the data in Case List
+			const caseDetailNumber = caseResponse.caseNumber;
+			cy.getByAutoId(`caseId-${caseDetailNumber}`).eq(0)
+				.contains(/^[0-9]/)
+				.should('have.text', caseResponse.caseNumber);
+			cy.getByAutoId('Summary-Cell').eq(0)
+				.should('have.text', caseResponse.summary);
+			cy.get('div.grayBox.text-center.flex-center').eq(0)
+				.should('have.text', caseResponse.status);
+			// Verify the Table headers
+			cy.getByAutoId('Severity-Header')
+				.should('exist')
+				.should('contain', 'Severity');
+			cy.getByAutoId('Case ID-Header')
+				.should('exist')
+				.should('contain', 'Case ID');
+			cy.getByAutoId('Summary-Header')
+				.should('exist')
+				.should('contain', 'Summary');
+			cy.getByAutoId('Status-Header')
+				.should('exist')
+				.should('contain', 'Status');
+			cy.getByAutoId('Updated-Header')
+				.should('exist')
+				.should('contain', 'Updated');
+			expect(cy.getByAutoId('Summary-Cell')
+				.should('exist')
+				.its('length')
+				.should('be.gt', 0));
+			cy.getByAutoId('close').click();
+		});
+	});
+
+	context('PBC-91: Asset List -> Case Detail View', () => {
+		// Verify the Case Detail 360 view
+		it('Opens Case Detail 360 view ', () => { // PBC-91
+			// TODO: Add auto-ids
+			const serial = assetCards[0].serialNumber;
+			cy.getByAutoId(`Device-${serial}`).click();
+			cy.getByAutoId('ToggleActiveCases').click();
+			const caseDetailNumber = caseResponse.caseNumber;
+			cy.getByAutoId(`caseId-${caseDetailNumber}`).eq(0).click();
+			// Verify the Case Details Data
+			cy.getByAutoId('asset-details-toggle-fullscreen-icon')
+				.should('be.visible').click();
+			cy.get('ng-component details-panel').should('have.class', 'fullscreen');
+			cy.getByAutoId('asset-details-toggle-fullscreen-icon').click();
+			cy.get('ng-component details-panel').should('not.have.class', 'fullscreen');
+			cy.getByAutoId('CloseDetails').should('be.visible');
+			cy.get('[data-auto-id="relatedRMA"]', { timeout: 20000 }).should('be.visible');
+			cy.getByAutoId('CaseAttachFile').should('be.visible');
+			cy.getByAutoId('CaseAddNote').should('be.visible');
+			cy.getByAutoId('summaryTab').should('be.visible');
+			cy.getByAutoId('notesTab').should('be.visible');
+			cy.getByAutoId('filesTab').should('be.visible');
+			cy.getByAutoId('caseTechnology').should('contain', i18n._RMACaseTechnology_.toUpperCase());
+
+			// Related RMAs dropdown
+			cy.getByAutoId('relatedRMA').click();
+			cy.getByAutoId('Name-Header').should('contain', i18n._Name_);
+			cy.getByAutoId('Status-Header').eq(0).should('contain', i18n._Status_);
+			cy.getByAutoId('Ship To-Header').should('contain', i18n._ShipTo_);
+			cy.getByAutoId('Contract Number-Header').should('contain', i18n._ContractNumber_);
+			cy.getByAutoId('Created-Header').should('contain', i18n._Created_);
+			// TODO: Verify the RMA dropdown data from Mock API
+			cy.getByAutoId('close').click();
+			cy.getByAutoId('caseProbType').should('contain', i18n._RMACaseProblemType_.toUpperCase());
+			cy.getByAutoId('caseAsset').should('contain', i18n._RMACaseAsset_.toUpperCase());
+			cy.getByAutoId('caseSW').should('contain', i18n._RMACaseSoftwareVersion_.toUpperCase());
+			cy.getByAutoId('caseContract').should('contain', i18n._Contract_.toUpperCase());
+			cy.getByAutoId('caseTracking').should('contain', i18n._RMACaseTrackingNumber_.toUpperCase());
+			cy.getByAutoId('caseOwnerEmail').should('contain', i18n._RMACaseOwnerEmail_.toUpperCase());
+			cy.getByAutoId('caseTacEng').should('contain', i18n._TACEngineer_.toUpperCase());
+			cy.getByAutoId('caseSummaryTitle').should('contain', i18n._RMACaseSummaryTitle_.toUpperCase());
+			cy.getByAutoId('caseDescription').should('contain', i18n._RMACaseDescription_.toUpperCase());
+			cy.get('div.text-xlarge').eq(2)
+				.should('have.text', `Case ${caseResponse.caseNumber}`);
+			cy.get('div:nth-child(3) > div:nth-child(1) > div:nth-child(2)').should('have.text', caseResponse.contractId);
+			cy.getByAutoId('mailTacEngineer').should('have.text', caseResponse.ownerEmail);
+			cy.get('div:nth-child(5) > div > div:nth-child(2)').eq(1).should('have.text', caseResponse.summary);
+			cy.get('div.col-md-3 > div:nth-child(2)')
+				.should('have.text', caseResponse.status);
+			cy.getByAutoId('CloseDetails').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
 		});
 	});
 });

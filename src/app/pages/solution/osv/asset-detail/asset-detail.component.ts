@@ -16,9 +16,7 @@ import { Subject, of } from 'rxjs';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
-
-/** Our current customerId */
-const customerId = '231215372';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Asset Software Details Component
@@ -29,7 +27,7 @@ const customerId = '231215372';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	public assetDetails: AssetRecommendationsResponse;
@@ -39,20 +37,26 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	private destroy$ = new Subject();
 	public view: 'list' | 'timeline' = 'list';
 	public assetDetailsTable: CuiTableOptions;
-	public assetDetailsParams: OSVService.GetAssetDetailsParams = {
-		customerId,
-		id: '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
-	};
+	public assetDetailsParams: OSVService.GetAssetDetailsParams;
+	public customerId: string;
 
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
-	) { }
+		private route: ActivatedRoute,
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+		this.assetDetailsParams = {
+			customerId: this.customerId,
+			id: '',
+		};
+	}
 
 	/**
 	 * Resets data fields
 	 */
-	private clear () {
+	public clear () {
 		this.assetDetails = null;
 	}
 
@@ -78,9 +82,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Refreshes the component
 	 */
 	public refresh () {
-		if (this.selectedAsset) {
+		if (this.selectedAsset && !this.selectedAsset.statusUpdated) {
 			this.clear();
-			// this.assetDetailsParams.id = this.selectedAsset.id;
+			this.assetDetailsParams.id = this.selectedAsset.id;
 			this.fetchAssetDetails();
 		}
 	}
@@ -94,6 +98,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
 					this.sortData(response);
+					this.addVersionInfo(response);
 					this.assetDetails = response;
 					this.buildTable();
 				}),
@@ -101,6 +106,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				catchError(err => {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
+
 					return of({ });
 				}),
 			)
@@ -122,24 +128,22 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					{
 						key: 'name',
 						name: I18n.get('_OsvVersionSummary_'),
+						sortable: false,
 						width: '30%',
 					},
 					{
-						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						width: '10%',
+						sortable: false,
+						template: this.versionTemplate,
+						width: '40%',
 					},
 					{
 						key: 'postDate',
 						name: I18n.get('_OsvReleaseDate_'),
-						render: item =>
-							datePipe.transform(item.postDate, 'yyyy MMM dd'),
-						width: '20%',
-					},
-					{
-						name: I18n.get('_OsvStatusOrAction_'),
+						render: item => _.isNull(item.error) ?
+							datePipe.transform(item.postDate, 'yyyy MMM dd') : 'N/A',
+						sortable: false,
 						width: '30%',
-						template: this.actionsTemplate,
 					},
 				],
 				dynamicData: true,
@@ -163,32 +167,42 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	}
 
 	/**
-	 * accept recommendations
-	 * @param item accept recommendations for this selected item
-	 */
-	public onActionClick (item: AssetRecommendations) {
-		const body = {
-			customerId,
-			id: this.selectedAsset.id,
-			optimalVersion: item.swVersion,
-		};
-		this.status.isLoading = true;
-		this.osvService.updateAsset(body)
-		.subscribe(() => {
-			this.status.isLoading = false;
-			this.logger.debug('Updated');
-		}, () => {
-			this.status.isLoading = false;
-			this.logger.debug('Error in updating');
-		});
-	}
-
-	/**
 	 * Sort Asset Recommendations by postDate
 	 * @param data AssetDetails
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
 			<any> new Date(b.postDate) - <any> new Date(a.postDate));
+	}
+
+	/**
+	 * add tooltip info for recommended versions
+	 * @param data the asset recommendations
+	 */
+	public addVersionInfo (data: AssetRecommendationsResponse) {
+		_.map(data, (detail: AssetRecommendations) => {
+			switch (detail.name) {
+				case 'latest':
+					detail.info = I18n.get('_OsvLatestInfo_');
+					break;
+				case 'current':
+					detail.info = I18n.get('_OsvCurrentInfo_');
+					break;
+				case 'suggested':
+					detail.info = I18n.get('_OsvSuggestedInfo_');
+					break;
+				case 'minimum':
+					detail.info = I18n.get('_OsvMinimumInfo_');
+					break;
+				case 'golden':
+					detail.info = I18n.get('_OsvGoldenInfo_');
+					break;
+				case 'recommended':
+					detail.info = I18n.get('_OsvRecommendedInfo_');
+					break;
+				default:
+					break;
+			}
+		});
 	}
 }

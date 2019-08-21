@@ -9,20 +9,22 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { SoftwareProfilesResponse } from '../models/software-profiles-response';
 import { SoftwareVersionsResponse } from '../models/software-versions-response';
-import {  AssetRecommendationsResponse } from '../models/asset-recommendations-response';
+import { AssetRecommendationsResponse } from '../models/asset-recommendations-response';
 import { AssetsResponse } from '../models/assets-response';
 import { SummaryResponse } from '../models/summary-response';
+import { ContactSupportResponse } from '../models/contact-support-response';
 
 @Injectable({
 	providedIn: 'root',
 })
 class OSVService extends __BaseService {
-	static readonly getSummaryPath = '/api/dev/customerportal/osv-ui/v1/summary';
-	static readonly getSoftwareProfilesPath = '/api/dev/customerportal/osv-ui/v1/profiles';
-	static readonly getSoftwareVersionsPath = '/api/dev/customerportal/osv-ui/v1/versions';
-	static readonly getAssetDetailsPath = '/api/dev/customerportal/osv-ui/v1/assetDetails';
-	static readonly getAssetsPath = '/api/dev/customerportal/osv-ui/v1/assets';
-	static readonly updateAssetPath = '/api/dev/customerportal/osv-ui/v1/updateAsset';
+	static readonly getSummaryPath = '/api/customerportal/osv-ui/v1/summary';
+	static readonly getSoftwareProfilesPath = '/api/customerportal/osv-ui/v1/profiles';
+	static readonly getSoftwareVersionsPath = '/api/customerportal/osv-ui/v1/versions';
+	static readonly getAssetDetailsPath = '/api/customerportal/osv-ui/v1/assetDetails';
+	static readonly getAssetsPath = '/api/customerportal/osv-ui/v1/assets';
+	static readonly updateAssetPath = '/api/customerportal/osv-ui/v1/updateAsset';
+	static readonly contactSupportPath = '/api/customerportal/criticalBugs/v1/mail/sendEmail';
 
 	constructor (
 		config: __Configuration,
@@ -141,6 +143,8 @@ class OSVService extends __BaseService {
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		if (params.pageIndex != null) __params = __params.set('pageIndex', params.pageIndex.toString());
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
+		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
+		if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareVersionsPath}`,
@@ -286,7 +290,7 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 		__body = assetDetails;
 		let req = new HttpRequest<any>(
-			'POST',
+			'PUT',
 			this.rootUrl + `${OSVService.updateAssetPath}`,
 			__body,
 			{
@@ -314,6 +318,46 @@ class OSVService extends __BaseService {
 	updateAsset (params: OSVService.AssetDetailsPostData): __Observable<any> {
 		return this.updateAssetResponse(params).pipe(
 			__map(_r => _r.body as any)
+		);
+	}
+
+	/**
+	 * Contact Support Response
+	 * @param params The `OSVService.ContactSupportParams` containing the following parameters:
+	 * @return successful operation
+	 */
+	contactSupportResponse (contactSupportParams: OSVService.ContactSupportParams): __Observable<__StrictHttpResponse<ContactSupportResponse>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+		__body = contactSupportParams;
+		let req = new HttpRequest<any>(
+			'POST',
+			this.rootUrl + `${OSVService.contactSupportPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<ContactSupportResponse>;
+			})
+		);
+	}
+
+	/**
+	 * Contact Support
+	 * @param params The `OSVService.ContactSupportParams` containing the following parameters:
+	 *
+	 * @return successful operation
+	 */
+	contactSupport (params: OSVService.ContactSupportParams): __Observable<ContactSupportResponse> {
+		return this.contactSupportResponse(params).pipe(
+			__map(_r => _r.body as ContactSupportResponse)
 		);
 	}
 }
@@ -438,6 +482,24 @@ module OSVService {
 		 */
 		optimalVersion: string;
 
+	}
+
+	/**
+	 * Params for contact support
+	 */
+	export interface ContactSupportParams {
+		/**
+		 * subject of the email.
+		 */
+		subject: string;
+		/**
+		 * message of email.
+		 */
+		body: string;
+		/**
+		 * reciepients email addresses in cc
+		 */
+		cc: string;
 	}
 }
 

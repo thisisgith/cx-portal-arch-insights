@@ -1,21 +1,31 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, Subject, merge, of } from 'rxjs';
-import { catchError, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Subject, of, Observable } from 'rxjs';
+import { catchError, takeUntil, flatMap, mergeMap, map } from 'rxjs/operators';
 
-import { CaseRequestType } from '@classes';
-import { CaseOpenRequest, ProblemArea, Subtech, Tech } from '@interfaces';
+import { caseSeverities, CaseRequestType } from '@classes';
+import { CaseOpenRequest } from '@interfaces';
 import { CaseService } from '@cui-x/services';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiModalContent, CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
-import { Asset } from '@sdp-api';
-import { SelectOption } from './panel-select/panel-select.component';
+import { Asset,
+	DeviceContractResponse,
+	ContractsService,
+	NetworkElement,
+	NetworkDataGatewayService,
+	TransactionRequest,
+	Transaction,
+	TransactionRequestResponse,
+	TransactionStatusResponse,
+} from '@sdp-api';
 import { CaseOpenData } from './caseOpenData';
 import { CloseConfirmComponent } from './close-confirm/close-confirm.component';
+import { TechFormComponent } from './tech-form/tech-form.component';
 
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
 
 /**
  * Component for opening a new case in CSOne for a device
@@ -27,64 +37,63 @@ import * as _ from 'lodash-es';
 })
 export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	@Input() public asset: Asset;
+	@Input() public element: NetworkElement;
+	@ViewChild('techForm', { static: false }) public techForm: TechFormComponent;
 	public data: { };
 	public expand = false;
-	public loadingTech = false;
-	public loadingSubtech = false;
-	public loadingProblemAreas = false;
 	public submitted = false;
 	public submitting = false;
-	public sevOptions: SelectOption<number>[] = [
+	public sevOptions = [
 		{
-			name: I18n.get('_OpenCaseNetworkDown_'),
+			name: caseSeverities[1].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 1),
 			value: 1,
 		},
 		{
-			name: I18n.get('_OpenCaseSeverelyDegraded_'),
+			name: caseSeverities[2].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 2),
 			value: 2,
 		},
 		{
-			name: I18n.get('_OpenCaseNetworkImpaired_'),
+			name: caseSeverities[3].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 3),
 			value: 3,
 		},
 		{
-			name: I18n.get('_OpenCaseAskaQuestion_'),
+			name: caseSeverities[4].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 4),
 			value: 4,
 		},
 	];
-	public techOptions: Tech[];
-	public subtechOptions: Subtech[];
-	public problemAreaOptions: ProblemArea[];
-	public problemGroups: string[];
+	public descriptionMaxLength = 32000;
+	public titleMaxLength = 255;
 	public caseForm = new FormGroup({
-		description: new FormControl('', [Validators.required, Validators.maxLength(32000)]),
-		problemArea: new FormControl(null, Validators.required),
+		description: new FormControl('', [Validators.required,
+			Validators.maxLength(this.descriptionMaxLength)]),
 		requestRma: new FormControl(false),
 		severity: new FormControl(4, Validators.required),
-		subtech: new FormControl(null, Validators.required),
-		technology: new FormControl(null, Validators.required),
-		title: new FormControl('', [Validators.required, Validators.maxLength(255)]),
+		title: new FormControl('', [Validators.required,
+			Validators.maxLength(this.titleMaxLength)]),
 	});
+	public customerId: string;
+	public contractNumber: string;
+	public contractLoading = true;
 
 	/** 2 values to pass to "submitted" component post-request */
 	public errors: string[];
 	public caseOpenData: CaseOpenData;
 
 	private destroy$ = new Subject();
-	private refreshProblemArea$ = new Subject<CaseRequestType>();
-	private refreshSubtech$ = new Subject<string>();
 
 	constructor (
 		private caseService: CaseService,
 		public cuiModalService: CuiModalService,
 		private logger: LogService,
 		private profileService: ProfileService,
+		private contractsService: ContractsService,
+		private userResolve: UserResolve,
+		private networkService: NetworkDataGatewayService,
 	) {
-		this.logger.debug('CaseOpenComponent Created!');
 	}
 
 	/**
@@ -92,10 +101,20 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	 */
 	public ngOnInit () {
 		this.asset = _.get(this.data, 'asset');
-		this.fetchTechList();
-		this.subscribeSubtech();
-		this.subscribeProblemArea();
-		this.refreshProblemArea$.next(CaseRequestType.Diagnose);
+		this.element = _.get(this.data, 'element');
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+			flatMap((id: string) => {
+				this.customerId = id;
+
+				return this.getContractData(this.customerId, this.asset.serialNumber);
+			}),
+		)
+		.subscribe(response => {
+			this.contractNumber = _.get(response, ['data', 0, 'contractNumber'], null);
+			this.contractLoading = false;
+		});
 	}
 
 	/**
@@ -119,6 +138,23 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	}
 
 	/**
+	 * Register the tech/subtech/pc sub form group when it is ready
+	 * @param form the sub-group
+	 */
+	public onFormReady (form: FormGroup) {
+		this.caseForm.addControl('techInfo', form);
+	}
+
+	/**
+	 * Fire when user clicks "Next" button
+	 * Gather predictions based on title/description and expand form
+	 */
+	public onNext () {
+		this.expand = true;
+		this.techForm.refreshPredictions();
+	}
+
+	/**
 	 * Send API request to open case
 	 * When user clicks "Submit" button
 	 */
@@ -126,18 +162,32 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		this.submitting = true;
 		const caseDetails: CaseOpenRequest = {
 			contactId: this.profileService.getProfile().cpr.pf_auth_uid,
-			customerActivity: _.get(this.caseForm.controls.problemArea.value, 'customerActivity'),
+			contractNumber: this.contractNumber,
+			customerActivity: _.get(
+				// Have to explicitly cast it to a FormGroup
+				(<FormGroup> this.caseForm.controls.techInfo).controls.problemArea.value,
+				'customerActivity',
+			),
 			description: this.caseForm.controls.description.value,
 			deviceName: this.asset.deviceName,
 			priority: this.caseForm.controls.severity.value,
-			problemCode: _.get(this.caseForm.controls.problemArea.value, 'problemCode'),
+			problemCode: _.get(
+				(<FormGroup> this.caseForm.controls.techInfo).controls.problemArea.value,
+				'problemCode',
+			),
 			requestType: this.caseForm.controls.requestRma.value ?
 				CaseRequestType.RMA : CaseRequestType.Diagnose,
 			serialNumber: this.asset.serialNumber,
 			softwareVersion: this.asset.osVersion,
-			subTechId: _.get(this.caseForm.controls.subtech.value, '_id'),
+			subTechId: _.get(
+				(<FormGroup> this.caseForm.controls.techInfo).controls.subtech.value,
+				'_id',
+			),
 			summary: this.caseForm.controls.title.value,
-			techId: this.caseForm.controls.technology.value,
+			techId: _.get(
+				(<FormGroup> this.caseForm.controls.techInfo).controls.technology.value,
+				'_id',
+			),
 		};
 		this.caseService.createCase(caseDetails)
 		.pipe(
@@ -148,149 +198,140 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			}),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(result => {
-			if (!result) {
-				this.errors = [I18n.get('_ErrorReachingCSOne_')];
-			} else if (result.statusCode === 'ERROR') {
-				this.errors = result.errorMessages.map(
-					msg => msg.errorMessage,
-				);
-			} else {
-				this.caseOpenData = {
-					caseNum: result.caseNumber,
-					customerActivity:
-						_.get(this.caseForm.controls.problemArea.value, 'customerActivity'),
-					description: this.caseForm.controls.description.value,
-					problemArea:
-						_.get(this.caseForm.controls.problemArea.value, 'problemCodeName'),
-					requestRma: this.caseForm.controls.requestRma.value,
-					severity: this.caseForm.controls.severity.value,
-					severityName: _.get(_.find(this.sevOptions,
-						{ value: this.caseForm.controls.severity.value }), 'name'),
-					subtech: _.get(this.caseForm.controls.subtech.value, 'subTechName'),
-					technology: _.get(_.find(this.techOptions,
-						{ _id: this.caseForm.controls.technology.value }), 'techName'),
-					title: this.caseForm.controls.title.value,
-				};
-			}
+		.pipe(
+			mergeMap(result => {
+				if (!result) {
+					this.errors = [I18n.get('_ErrorReachingCSOne_')];
+				} else if (result.statusCode === 'ERROR') {
+					this.errors = result.errorMessages.map(
+						msg => msg.errorMessage,
+					);
+				} else {
+					this.caseOpenData = {
+						caseNum: result.caseNumber,
+						customerActivity:
+							_.get(
+								(<FormGroup> this.caseForm.controls.techInfo)
+									.controls.problemArea.value,
+								'customerActivity',
+							),
+						description: this.caseForm.controls.description.value,
+						problemArea:
+							_.get(
+								(<FormGroup> this.caseForm.controls.techInfo)
+									.controls.problemArea.value,
+								'problemCodeName',
+							),
+						requestRma: this.caseForm.controls.requestRma.value,
+						severity: this.caseForm.controls.severity.value,
+						severityName: _.get(_.find(this.sevOptions,
+							{ value: this.caseForm.controls.severity.value }), 'name'),
+						subtech: _.get(
+							(<FormGroup> this.caseForm.controls.techInfo).controls.subtech.value,
+							'subTechName',
+						),
+						technology: _.get(
+							(<FormGroup> this.caseForm.controls.techInfo).controls.technology.value,
+							'techName',
+						),
+						title: this.caseForm.controls.title.value,
+					};
+
+					return this.initiateScan()
+					.pipe(
+						map((response: TransactionStatusResponse) => {
+							if (_.get(response, 'status')) {
+								this.caseOpenData.scanStatus = response.status;
+							}
+							this.cuiModalService.onSuccess.emit(this.caseOpenData);
+						}),
+					);
+				}
+
+				return of({ });
+			}),
+		)
+		.subscribe(() => {
 			this.submitted = true;
 		});
 	}
 
 	/**
-	 * Fetch select options for tech/problem area from APIs
+	 * Checks the current scan status
+	 * @returns the observable
 	 */
-	private fetchTechList () {
-		this.loadingTech = true;
-		this.caseService.fetchTechList()
-			.pipe(
-				catchError(err => {
-					this.logger.error(`Fetch Tech :: Error ${err}`);
+	private initiateScan () {
+		if (!this.element) {
+			return of({ });
+		}
 
-					return of(null);
-				}),
-				takeUntil(this.destroy$),
-			)
-			.subscribe(result => {
-				this.loadingTech = false;
-				this.techOptions = _.get(result, 'techList');
-			});
-	}
+		const failureStatus = { status: 'FAILURE' };
+		const request: TransactionRequest = {
+			customerId: this.customerId,
+			neCount: 1,
+			requestBody: {
+				deviceOptions: 'LIST',
+				devices: [{
+					hostname: this.element.hostName,
+					ipAddress: this.element.ipAddress,
+					productId: this.element.productId,
+					serialNumber: this.element.serialNumber,
+				}],
+			},
+			requestType: 'PEC',
+			transactionType: 'SCAN',
+		};
 
-	/**
-	 * Fetch subtech options for a particular tech
-	 * @param techId tech id to fetch subtechs for
-	 * @returns Observable with results
-	 */
-	private fetchSubtechList (techId: string): Observable<{ subTechList: Subtech[] }> {
-		return this.caseService.fetchSubTechList(techId)
-			.pipe(
-				catchError(err => {
-					this.logger.error(`Fetch Subtech :: Error ${err}`);
-
-					return of(null);
-				}),
-			);
-	}
-
-	/**
-	 * Subscribe and listen for tech to change, refresh subtech options
-	 */
-	private subscribeSubtech () {
-		this.refreshSubtech$.pipe(
-			tap(() => this.loadingSubtech = true),
-			switchMap(techId => this.fetchSubtechList(techId)),
+		return this.networkService.postDeviceTransactions(request)
+		.pipe(
 			takeUntil(this.destroy$),
-		)
-		.subscribe(result => {
-			this.loadingSubtech = false;
-			this.subtechOptions = result.subTechList;
-		});
-		this.caseForm.controls.technology.valueChanges.pipe(
-			tap(() => this.caseForm.controls.subtech.setValue(null)),
-			takeUntil(this.destroy$),
-		)
-		.subscribe((techId: string) => {
-			this.refreshSubtech$.next(techId);
-		});
-	}
+			mergeMap((response: TransactionRequestResponse) => {
+				const transaction: Transaction = _.head(response);
 
-	/**
-	 * Listen for "Request RMA" change and update problem area options
-	 */
-	private subscribeProblemArea () {
-		this.refreshProblemArea$.pipe(
-			tap(() => this.loadingProblemAreas = true),
-			switchMap(type => this.fetchProblemAreas(type)),
-			takeUntil(this.destroy$),
-		)
-		.subscribe(result => {
-			this.loadingProblemAreas = false;
-			// If a subtech is selected, filter the problemAreas to only valid ones for that subtech
-			if (this.caseForm.controls.subtech.value) {
-				const validCodes = this.caseForm.controls.subtech.value.problemCodes;
-				result.problemArea.customerActivities =
-					_.filter(result.problemArea.customerActivities, activity =>
-						_.includes(validCodes, activity.problemCode),
-					);
-			}
-			const problemAreasGrouped = _.groupBy(
-				_.get(result, ['problemArea', 'customerActivities'], []),
-				'customerActivity',
-			);
-			this.problemAreaOptions = Object.values(problemAreasGrouped);
-			this.problemGroups = Object.keys(problemAreasGrouped);
-		});
-		// Listen for "requestType" or "subTech" to change, update problem areas.
-		merge(
-			this.caseForm.controls.requestRma.valueChanges,
-			this.caseForm.controls.subtech.valueChanges.pipe(
-				map(() => this.caseForm.controls.requestRma.value),
-			),
+				if (_.get(transaction, 'transactionId')) {
+					return this.networkService.getScanStatusByTransaction({
+						customerId: this.customerId,
+						transactionId: transaction.transactionId,
+					});
+				}
+
+				return of(failureStatus);
+			}),
+			catchError(err => {
+				this.logger.error('case-open.component : initiateScan() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of(failureStatus);
+			}),
 		)
 		.pipe(
-			tap(() => this.caseForm.controls.problemArea.setValue(null)),
-			takeUntil(this.destroy$),
-		)
-		.subscribe((rma: boolean) => {
-			this.refreshProblemArea$.next(rma ? CaseRequestType.RMA : CaseRequestType.Diagnose);
-		});
+			map((response: TransactionStatusResponse) => response),
+			catchError(err => {
+				this.logger.error('case-open.component : initiateScan() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of(failureStatus);
+			}),
+		);
 	}
 
 	/**
-	 * API request to get problem areas
-	 * @param requestType fetch "diagnose" or "rma" problem areas
-	 * @returns Observable with result
+	 * Fetch device contract data
+	 * @param customerId id of customer whose device we're searching
+	 * @param serialNumber serial number of the device we're fetching
+	 * @returns Observable with device data
 	 */
-	private fetchProblemAreas (requestType: CaseRequestType) {
-		return this.caseService.fetchProblemArea(requestType)
-			.pipe(
-				catchError(err => {
-					this.logger.error(`Fetch Problem Area :: Error ${err}`);
+	private getContractData (customerId: string, serialNumber: string):
+		Observable<DeviceContractResponse> {
+		const params = { customerId, serialNumber: [serialNumber] };
 
-					return of(null);
-				}),
-				takeUntil(this.destroy$),
-			);
+		return this.contractsService.getContractDetails(params)
+		.pipe(
+			catchError(err => {
+				this.logger.error(`Device Contract Data :: ${serialNumber} :: Error ${err}`);
+
+				return of(null);
+			}),
+		);
 	}
 }

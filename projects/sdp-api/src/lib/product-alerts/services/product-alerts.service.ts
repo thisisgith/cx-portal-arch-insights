@@ -23,7 +23,7 @@ import { HardwareEOLResponse } from '../models/hardware-eolresponse';
 import { HardwareEOLBulletinResponse } from '../models/hardware-eolbulletin-response';
 import { HardwareEOLCountResponse } from '../models/hardware-eolcount-response';
 import { SoftwareEOLResponse } from '../models/software-eolresponse';
-import { SofwareEOLBulletinResponse } from '../models/sofware-eolbulletin-response';
+import { SoftwareEOLBulletinResponse } from '../models/software-eolbulletin-response';
 @Injectable({
   providedIn: 'root',
 })
@@ -81,7 +81,7 @@ class ProductAlertsService extends __BaseService {
     (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/vulnerabilities/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/vulnerabilities/count`,
       __body,
       {
         headers: __headers,
@@ -125,7 +125,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories`,
       __body,
       {
         headers: __headers,
@@ -193,7 +193,7 @@ class ProductAlertsService extends __BaseService {
     (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories`,
       __body,
       {
         headers: __headers,
@@ -266,7 +266,7 @@ class ProductAlertsService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/list`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/list`,
       __body,
       {
         headers: __headers,
@@ -315,7 +315,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/summary`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/summary`,
       __body,
       {
         headers: __headers,
@@ -369,7 +369,7 @@ class ProductAlertsService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/top`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/top`,
       __body,
       {
         headers: __headers,
@@ -420,7 +420,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/severity/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/severity/count`,
       __body,
       {
         headers: __headers,
@@ -460,7 +460,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisories/last-updated/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisories/last-updated/count`,
       __body,
       {
         headers: __headers,
@@ -504,7 +504,7 @@ class ProductAlertsService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisory-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisory-bulletins`,
       __body,
       {
         headers: __headers,
@@ -585,7 +585,7 @@ class ProductAlertsService extends __BaseService {
     (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/security-advisory-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/security-advisory-bulletins`,
       __body,
       {
         headers: __headers,
@@ -645,11 +645,19 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `url`: URL of the Security Advisory
+   *
+   * - `title`: Security Advisory title
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `severity`: The severity
    *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: Page number of the response
    *
@@ -657,7 +665,17 @@ class ProductAlertsService extends __BaseService {
    *
    * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`:
+   *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `advisoryId`:
    *
    * @return successful operation
    */
@@ -667,16 +685,25 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.url != null) __params = __params.set('url', params.url.toString());
+    if (params.title != null) __params = __params.set('title', params.title.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
     (params.severity || []).forEach(val => {if (val != null) __params = __params.append('severity', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
+    if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
     (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
+    (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.advisoryId || []).forEach(val => {if (val != null) __params = __params.append('advisoryId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/advisories-security-advisories`,
+      this.rootUrl + `/customerportal/product-alerts/v1/advisories-security-advisories`,
       __body,
       {
         headers: __headers,
@@ -698,11 +725,19 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `url`: URL of the Security Advisory
+   *
+   * - `title`: Security Advisory title
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
    * - `severity`: The severity
    *
+   * - `search`: Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: Page number of the response
    *
@@ -710,7 +745,17 @@ class ProductAlertsService extends __BaseService {
    *
    * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`:
+   *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `fields`: Requested fields in the response. Id field is by default
+   *
+   * - `advisoryId`:
    *
    * @return successful operation
    */
@@ -732,7 +777,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notices`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notices`,
       __body,
       {
         headers: __headers,
@@ -782,6 +827,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `fields`: Requested fields in the response.
    *
+   * - `fieldNoticeId`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+   *
    * @return successful operation
    */
   getFieldNoticeResponse(params: ProductAlertsService.GetFieldNoticeParams): __Observable<__StrictHttpResponse<FieldNoticeResponse>> {
@@ -798,9 +845,10 @@ class ProductAlertsService extends __BaseService {
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notices`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notices`,
       __body,
       {
         headers: __headers,
@@ -840,6 +888,8 @@ class ProductAlertsService extends __BaseService {
    *
    * - `fields`: Requested fields in the response.
    *
+   * - `fieldNoticeId`: The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+   *
    * @return successful operation
    */
   getFieldNotice(params: ProductAlertsService.GetFieldNoticeParams): __Observable<FieldNoticeResponse> {
@@ -865,7 +915,7 @@ class ProductAlertsService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notice-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notice-bulletins`,
       __body,
       {
         headers: __headers,
@@ -934,7 +984,7 @@ class ProductAlertsService extends __BaseService {
     if (params.bulletinFirstPublished != null) __params = __params.set('bulletinFirstPublished', params.bulletinFirstPublished.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notice-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notice-bulletins`,
       __body,
       {
         headers: __headers,
@@ -993,7 +1043,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/field-notices/last-updated/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/field-notices/last-updated/count`,
       __body,
       {
         headers: __headers,
@@ -1026,9 +1076,15 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `url`: URL of the Security Advisory
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
+   * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: Page number of the response
    *
@@ -1036,7 +1092,17 @@ class ProductAlertsService extends __BaseService {
    *
    * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`:
+   *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `fields`: Requested fields in the response.
+   *
+   * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
    *
    * @return successful operation
    */
@@ -1046,15 +1112,23 @@ class ProductAlertsService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+    if (params.url != null) __params = __params.set('url', params.url.toString());
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
+    if (params.publishedOn != null) __params = __params.set('publishedOn', params.publishedOn.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.lastUpdatedDateRange || []).forEach(val => {if (val != null) __params = __params.append('lastUpdatedDateRange', val.toString())});
+    if (params.lastUpdated != null) __params = __params.set('lastUpdated', params.lastUpdated.toString());
     (params.id || []).forEach(val => {if (val != null) __params = __params.append('id', val.toString())});
+    (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
+    (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
+    (params.fieldNoticeId || []).forEach(val => {if (val != null) __params = __params.append('fieldNoticeId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/advisories-field-notices`,
+      this.rootUrl + `/customerportal/product-alerts/v1/advisories-field-notices`,
       __body,
       {
         headers: __headers,
@@ -1076,9 +1150,15 @@ class ProductAlertsService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `url`: URL of the Security Advisory
+   *
    * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
    *
+   * - `search`: Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+   *
    * - `rows`: Number of rows of data per page.
+   *
+   * - `publishedOn`: The date on which the Advisory was published
    *
    * - `page`: Page number of the response
    *
@@ -1086,7 +1166,17 @@ class ProductAlertsService extends __BaseService {
    *
    * - `managedNeId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
    *
+   * - `lastUpdatedDateRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+   *
+   * - `lastUpdated`: The date on which the Advisory was last updated. Currently this field in unavailable.
+   *
    * - `id`:
+   *
+   * - `hwInstanceId`: Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+   *
+   * - `fields`: Requested fields in the response.
+   *
+   * - `fieldNoticeId`: The Cisco.com bulletin number for Field Notices
    *
    * @return successful operation
    */
@@ -1108,7 +1198,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol`,
       __body,
       {
         headers: __headers,
@@ -1170,7 +1260,7 @@ class ProductAlertsService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol`,
       __body,
       {
         headers: __headers,
@@ -1231,7 +1321,7 @@ class ProductAlertsService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol-bulletins`,
       __body,
       {
         headers: __headers,
@@ -1321,7 +1411,7 @@ class ProductAlertsService extends __BaseService {
     (params.bulletinNumber || []).forEach(val => {if (val != null) __params = __params.append('bulletinNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol-bulletins`,
       __body,
       {
         headers: __headers,
@@ -1394,7 +1484,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/hardware-eol/top/count`,
+      this.rootUrl + `/customerportal/product-alerts/v1/hardware-eol/top/count`,
       __body,
       {
         headers: __headers,
@@ -1433,7 +1523,7 @@ class ProductAlertsService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol`,
+      this.rootUrl + `/customerportal/product-alerts/v1/software-eol`,
       __body,
       {
         headers: __headers,
@@ -1495,7 +1585,7 @@ class ProductAlertsService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol`,
+      this.rootUrl + `/customerportal/product-alerts/v1/software-eol`,
       __body,
       {
         headers: __headers,
@@ -1556,7 +1646,7 @@ class ProductAlertsService extends __BaseService {
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/software-eol-bulletins`,
       __body,
       {
         headers: __headers,
@@ -1624,7 +1714,7 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEoxBulletinResponse(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<__StrictHttpResponse<SofwareEOLBulletinResponse>> {
+  getSoftwareEoxBulletinResponse(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<__StrictHttpResponse<SoftwareEOLBulletinResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -1646,7 +1736,7 @@ class ProductAlertsService extends __BaseService {
     (params.bulletinNumber || []).forEach(val => {if (val != null) __params = __params.append('bulletinNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/product-alerts/v1/software-eol-bulletins`,
+      this.rootUrl + `/customerportal/product-alerts/v1/software-eol-bulletins`,
       __body,
       {
         headers: __headers,
@@ -1657,7 +1747,7 @@ class ProductAlertsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<SofwareEOLBulletinResponse>;
+        return _r as __StrictHttpResponse<SoftwareEOLBulletinResponse>;
       })
     );
   }
@@ -1700,9 +1790,9 @@ class ProductAlertsService extends __BaseService {
    *
    * @return successful operation
    */
-  getSoftwareEoxBulletin(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<SofwareEOLBulletinResponse> {
+  getSoftwareEoxBulletin(params: ProductAlertsService.GetSoftwareEoxBulletinParams): __Observable<SoftwareEOLBulletinResponse> {
     return this.getSoftwareEoxBulletinResponse(params).pipe(
-      __map(_r => _r.body as SofwareEOLBulletinResponse)
+      __map(_r => _r.body as SoftwareEOLBulletinResponse)
     );
   }
 }
@@ -1921,6 +2011,16 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * URL of the Security Advisory
+     */
+    url?: string;
+
+    /**
+     * Security Advisory title
+     */
+    title?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
@@ -1931,9 +2031,19 @@ module ProductAlertsService {
     severity?: Array<string>;
 
     /**
+     * Searchable fields - severity, title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
      * Number of rows of data per page.
      */
     rows?: number;
+
+    /**
+     * The date on which the Advisory was published
+     */
+    publishedOn?: string;
 
     /**
      * Page number of the response
@@ -1949,7 +2059,28 @@ module ProductAlertsService {
      * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
      */
     managedNeId?: Array<string>;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+     */
+    lastUpdatedDateRange?: Array<string>;
+
+    /**
+     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     */
+    lastUpdated?: string;
     id?: Array<string>;
+
+    /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    hwInstanceId?: Array<string>;
+
+    /**
+     * Requested fields in the response. Id field is by default
+     */
+    fields?: Array<string>;
+    advisoryId?: Array<string>;
   }
 
   /**
@@ -2001,6 +2132,11 @@ module ProductAlertsService {
      * Requested fields in the response.
      */
     fields?: Array<string>;
+
+    /**
+     * The vulnerability status of a Network element. For Example:- Vulnerable, Potentially Vulnerable, and Not Vulnerable.
+     */
+    fieldNoticeId?: Array<number>;
   }
 
   /**
@@ -2076,14 +2212,29 @@ module ProductAlertsService {
     customerId: string;
 
     /**
+     * URL of the Security Advisory
+     */
+    url?: string;
+
+    /**
      * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
      */
     sort?: Array<string>;
 
     /**
+     * Searchable fields - title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
+
+    /**
      * Number of rows of data per page.
      */
     rows?: number;
+
+    /**
+     * The date on which the Advisory was published
+     */
+    publishedOn?: string;
 
     /**
      * Page number of the response
@@ -2099,7 +2250,32 @@ module ProductAlertsService {
      * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
      */
     managedNeId?: Array<string>;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastUpdatedDateRange till particular date. Use <fromDateInMillis> format to filter advisories having lastUpdatedDateRange from a particular date.
+     */
+    lastUpdatedDateRange?: Array<string>;
+
+    /**
+     * The date on which the Advisory was last updated. Currently this field in unavailable.
+     */
+    lastUpdated?: string;
     id?: Array<string>;
+
+    /**
+     * Physical|logical hierarchy of the product (chassis to card, server to client, etc.)
+     */
+    hwInstanceId?: Array<string>;
+
+    /**
+     * Requested fields in the response.
+     */
+    fields?: Array<string>;
+
+    /**
+     * The Cisco.com bulletin number for Field Notices
+     */
+    fieldNoticeId?: Array<number>;
   }
 
   /**

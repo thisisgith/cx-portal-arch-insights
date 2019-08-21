@@ -1,47 +1,34 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
 :host {
-	.assets-header {
-		background-color: $light-gray-4;
-		border-bottom: solid 1px $light-gray-3;
-	}
-
-	.icon--mid {
-		font-size: 24px;
-	}
-
-	.icon--rotated {
-		color: $light-gray-2;
-
-		&:hover {
-			color: $cisco-blue;
-		}
-	}
-
-	.dropdown--actions.active {
-		.icon--rotated {
-			color: $cisco-blue;
-		}
-	}
-
-	.open-case-toggle {
-		color: $dark-gray-2 !important;
-
-		&:hover {
-			color: $cisco-blue !important;
-		}
-	}
-
 	.open-case-toggle-btn.active {
 		.open-case-toggle {
 			color: $cisco-blue !important;
 		}
 	}
+}
 
-	.dropdown-case {
-		&:not(:first-of-type) {
-			border-top: solid 1px $light-gray-3;
-			padding-top: 10px;
+.cx-details-header-button {
+	color: $base-font-color !important;
+	box-shadow: inset 0 0 0 1px $primary !important;
+
+	&:hover {
+		background-color: $primary !important;
+		color: $white !important;
+	}
+
+	&:focus {
+		background-color: $primary !important;
+		color: $white !important;
+		box-shadow: 0 0 1px 1px $primary !important;
+	}
+
+	&--solid {
+		background-color: $primary !important;
+		color: $white !important;
+
+		&:focus {
+			box-shadow: 0 0 1px 1px $primary !important;
 		}
 	}
 }

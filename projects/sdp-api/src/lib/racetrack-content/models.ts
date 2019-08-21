@@ -1,7 +1,7 @@
 export { ErrorResponse as RacetrackContentErrorResponse } from './models/error-response';
-export { ATXResponse } from './models/atxresponse';
-export { ATX } from './models/atx';
-export { ATXSession } from './models/atxsession';
+export { ATXResponseModel } from './models/atxresponse-model';
+export { AtxSchema } from './models/atx-schema';
+export { AtxSessionSchema } from './models/atx-session-schema';
 export { ACCResponse } from './models/accresponse';
 export { ACC } from './models/acc';
 export { ACCBookmarkSchema } from './models/accbookmark-schema';
@@ -16,3 +16,7 @@ export { ELearningResponse } from './models/elearning-response';
 export { ELearning } from './models/elearning';
 export { GroupTrainingEntitySchema } from './models/group-training-entity-schema';
 export { GroupTrainingRequestSchema } from './models/group-training-request-schema';
+export { ContractQuota } from './models/contract-quota';
+export { UserTraining } from './models/user-training';
+export { BookmarkRequestSchema } from './models/bookmark-request-schema';
+export { BookmarkResponseSchema } from './models/bookmark-response-schema';

@@ -5,6 +5,9 @@ import {
 	ViewEncapsulation,
 	SimpleChanges,
 	OnInit,
+	Output,
+	EventEmitter,
+	OnChanges,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -24,9 +27,10 @@ import { DatePipe } from '@angular/common';
 	styleUrls: ['./asset-timeline-chart.component.scss'],
 	template: '<div [chart]="chart"></div>',
 })
-export class AssetTimelineChartComponent implements OnInit {
+export class AssetTimelineChartComponent implements OnInit, OnChanges {
 	@Input() public data: AssetRecommendationsResponse;
 	@Input() public fullscreen;
+	@Output() public selectedPoint = new EventEmitter<any>();
 	public chart: Chart;
 	constructor (
 		private logger: LogService,
@@ -46,49 +50,12 @@ export class AssetTimelineChartComponent implements OnInit {
 	/**
 	 * Builds our bubble graph
 	 */
-	private buildGraph () {
-		const datePipe = new DatePipe('en-US');
-		const seriesData = _.compact(
-			_.map(this.data, (value: AssetRecommendations) => {
-				const releaseDate = new Date(value.postDate);
-				return {
-					color: 'blue',
-					description: value.name,
-					label: value.swVersion,
-					name: _.capitalize(value.name),
-					x: Date.UTC(
-						releaseDate.getFullYear(),
-						releaseDate.getMonth(),
-						releaseDate.getDate(),
-					),
-					releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
-				};
-			}));
-
+	public buildGraph () {
+		const seriesData = this.formatGraphData();
 		this.chart = new Chart({
 			chart: {
-				events: {
-					load: () => {
-						if (window.Cypress) {
-							// Hack to allow Cypress to click on highcharts series
-							_.each(this.chart.ref.series[0].points, point => {
-								point.graphic.element.setAttribute(
-									'data-auto-id', `${point.name}Point`,
-								);
-								// When a "normal" click event fires,
-								// turn it into a highcharts point event instead
-								point.graphic.element.addEventListener('click', () => {
-									const event = Object.assign(new MouseEvent('click'), { point });
-									point.firePointEvent('click', event);
-								});
-							});
-						}
-					},
-				},
 				styledMode: false,
 				type: 'timeline',
-				zoomType: 'x',
-				width: this.fullscreen ? 1600 : 800,
 			},
 			credits: {
 				enabled: false,
@@ -109,14 +76,20 @@ export class AssetTimelineChartComponent implements OnInit {
 						/* tslint:disable:object-literal-shorthand*/
 						/* tslint:disable:no-string-literal */
 						formatter: function () {
-							return `<span style="cursor:pointer;">
-							<span style='cursor:pointer;font-weight: bold;' >
+							let format = '';
+							format += `<span style="cursor:pointer;">
+							<span style='cursor:pointer;font-weight: bold;font-size:14px' >
 							${this['point'].name}</span>
-							<br/><span style='cursor:pointer;font-weight: normal;'>
+							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
 							${this['point'].label}</span>
-							<br/><span style='cursor:pointer;font-weight: normal;'>
-							${this['point'].releaseDate}</span>
+							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
+							${this['point'].releaseDate}</span><br/>
 							</span>`;
+							if (this['point'].accepted) {
+								format += '<span style=";font-size:12px;font-weight:bold';
+								format += 'color:#6ebe4a">Accepted</span>';
+							}
+							return format;
 						},
 						style: {
 							fontWeight: 'normal',
@@ -130,13 +103,6 @@ export class AssetTimelineChartComponent implements OnInit {
 						symbol: '',
 					},
 				},
-				series: {
-					point: {
-						events: {
-							click: event => this.selectSubfilter(event),
-						},
-					},
-				},
 			},
 			series: [
 				{
@@ -148,7 +114,11 @@ export class AssetTimelineChartComponent implements OnInit {
 				text: null,
 			},
 			tooltip: {
-				enabled: false,
+				enabled: true,
+				pointFormat: '{point.info}',
+				style: {
+					width: 300,
+				},
 			},
 			xAxis: {
 				lineColor: '#dfdfdf',
@@ -171,24 +141,47 @@ export class AssetTimelineChartComponent implements OnInit {
 	}
 
 	/**
+	 * format data for timeline graph
+	 * @returns formatted data
+	 */
+	public formatGraphData () {
+		const datePipe = new DatePipe('en-US');
+
+		return _.compact(
+			_.map(this.data, (value: AssetRecommendations) => {
+				const releaseDate = new Date(value.postDate);
+				if (!value.error) {
+					return {
+						accepted: value.accepted,
+						description: value.name,
+						info: value.info,
+						label: value.swVersion,
+						name: _.capitalize(value.name),
+						releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
+						swVersion: value.swVersion,
+						x: Date.UTC(
+							releaseDate.getFullYear(),
+							releaseDate.getMonth(),
+							releaseDate.getDate(),
+						),
+					};
+				}
+			}));
+	}
+
+	/**
 	 * OnChanges Functionality
 	 * @param changes change found
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const fullscreen = _.get(changes, 'fullscreen',
 			{ currentValue: null, firstChange: false });
-		if (!fullscreen.firstChange) {
-			this.buildGraph();
+		const assetDetails = _.get(changes, 'fullscreen');
+		if (!fullscreen.firstChange || !assetDetails.firstChange) {
+			setTimeout(() => {
+				this.buildGraph();
+			}, 250);
 		}
-	}
-
-	/**
-	 * Emits the subfilter selected
-	 * @param event highcharts click event
-	 */
-	public selectSubfilter (event: any) {
-		event.stopPropagation();
-		this.logger.debug(event.point.name);
 	}
 
 }

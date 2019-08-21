@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -6,9 +6,8 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, SoftwareVersionsResponse, OsvPagination, SoftwareVersion } from '@sdp-api';
-
-/** Our current customerId */
-const customerId = '231215372';
+import * as _ from 'lodash-es';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * SoftwareVersion Component
@@ -18,7 +17,7 @@ const customerId = '231215372';
 	styleUrls: ['./software-versions.component.scss'],
 	templateUrl: './software-versions.component.html',
 })
-export class SoftwareVersionsComponent {
+export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
 	public softwareVersionsTable: CuiTableOptions;
 	public status = {
@@ -28,17 +27,23 @@ export class SoftwareVersionsComponent {
 	public pagination: OsvPagination;
 	public paginationCount: string;
 	public destroy$ = new Subject();
-	public softwareVersionsParams: OSVService.GetSoftwarVersionsParams = {
-		customerId,
-		pageIndex: 1,
-		pageSize: 10,
-	};
+	public softwareVersionsParams: OSVService.GetSoftwarVersionsParams;
+	public customerId: string;
 
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
+		private route: ActivatedRoute,
 	) {
-		this.logger.debug('SoftwareVersionsComponent Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+		this.softwareVersionsParams = {
+			customerId: this.customerId,
+			pageIndex: 1,
+			pageSize: 10,
+			sort: 'swVersion',
+			sortOrder: 'desc',
+		};
 	}
 
 	/**
@@ -85,6 +90,7 @@ export class SoftwareVersionsComponent {
 					}
 					this.paginationCount = `${first}-${last}`;
 					this.buildTable();
+
 				}),
 				catchError(err => {
 					this.logger.error('OSV SoftwareVersions : getVersions() ' +
@@ -98,7 +104,7 @@ export class SoftwareVersionsComponent {
 	/**
 	 * Will construct the assets table
 	 */
-	private buildTable () {
+	public buildTable () {
 		if (!this.softwareVersionsTable) {
 			this.softwareVersionsTable = new CuiTableOptions({
 				bordered: false,
@@ -106,35 +112,44 @@ export class SoftwareVersionsComponent {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
+						sortable: false,
+						sortDirection: 'desc',
+						sorting: true,
 						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvReleaseDate_'),
+						sortable: false,
 						template: this.releaseDateTemplate,
 					},
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvIndependentAssets_'),
+						sortable: false,
 					},
 					{
 						key: 'profileAssetCount',
 						name: I18n.get('_OsvAssetsOfSoftwareProfiles_'),
+						sortable: false,
 					},
 					{
 						key: 'goldenVersion',
 						name: I18n.get('_OsvGoldenImage_'),
 						render: item => item.optimalVersion ? I18n.get('_OsvYes_')
 							: I18n.get('_OsvNo_'),
+						sortable: false,
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
+						sortable: false,
 					},
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersionY/N_'),
 						render: item => item.optimalVersion ? I18n.get('_OsvYes_')
 							: I18n.get('_OsvNo_'),
+						sortable: false,
 					},
 				],
 				dynamicData: true,
@@ -165,6 +180,15 @@ export class SoftwareVersionsComponent {
 	public onTableSortingChanged (evt: any) {
 		this.softwareVersionsParams.sortOrder = evt.sortDirection;
 		this.softwareVersionsParams.sort = evt.key;
+		this.softwareVersionsParams.pageIndex = 1;
 		this.loadData();
+	}
+
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 }

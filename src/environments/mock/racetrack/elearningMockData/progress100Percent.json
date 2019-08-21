@@ -1,0 +1,22 @@
+[
+	{
+		"description": "Implementing Cisco Wireless Network Fundamentals (WIFUND) v1.0",
+		"duration": "18hr 0min",
+		"ranking": 0,
+		"rating": "4.5000",
+		"title": "Catalyst 9800 Wireless Lan Controller Overview",
+		"type": "E-Learning",
+        "url": "https://pilot-digital-learning.cisco.com/cx/#/course/53991",
+        "percentagecompleted": 100
+	},
+	{
+		"description": "Troubleshooting and Maintaining Cisco IP Networks (TSHOOT) v2.0",
+		"duration": "40hr 0min",
+		"ranking": 4,
+		"rating": "4.1000",
+		"title": "CCNA Wireless",
+		"type": "Certification",
+		"url": "https://pilot-digital-learning.cisco.com/cx/#/course/53686",
+        "percentagecompleted": 100
+	}
+]

@@ -9,6 +9,7 @@ export {
 	Tech,
 } from './case';
 export { Contract } from './contract';
+export { SetupStep, SetupComponent } from './ie';
 export {
 	LaborLine,
 	PartsLineDetail,
@@ -18,7 +19,8 @@ export {
 	RMAResponse,
 } from './rma';
 export { SearchContext, SearchEnum, SearchType, SearchQuery } from './search';
-export { SetupStep, SetupComponent } from './ie';
 export { TimelineDatapoint, TimelineInternalDatapoint, TodayRelation } from './timelineDatapoint';
 export { VisualFilter } from './visualFilter';
 export { User } from './user';
+export { Alert } from './alert';
+export { GeoCodeResponse, GeoCodeParams, GeoCodeFeature } from './geocode';

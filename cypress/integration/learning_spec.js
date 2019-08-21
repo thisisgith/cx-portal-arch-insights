@@ -8,8 +8,16 @@ const successPathMock = new MockService('SuccessPathScenarios');
 const successPathOnboardScenario = successPathMock.getScenario('GET', '(SP) IBN-Campus Network Assurance-Onboard');
 const successPathItems = successPathOnboardScenario.response.body.items;
 
+const allProductGuidesScenario = successPathMock.getScenario('GET', 'Product Documenation & Videos response for all');
+const allProductGuidesItems = allProductGuidesScenario.response.body.items;
+
 // Strip out all possible archetypes
 const successPathArchetypes = Cypress._.chain(successPathItems)
+	.map('archetype')
+	.uniq()
+	.value();
+
+const allProductGuidesArchetypes = Cypress._.chain(allProductGuidesItems)
 	.map('archetype')
 	.uniq()
 	.value();
@@ -17,7 +25,6 @@ const successPathArchetypes = Cypress._.chain(successPathItems)
 // Split up the eLearning response by type
 const allELearningItems = [];
 const allCertificationsItems = [];
-const allRemoteItems = [];
 elearningItems.forEach(scenario => {
 	switch (scenario.type) {
 		case 'E-Learning':
@@ -28,7 +35,7 @@ elearningItems.forEach(scenario => {
 			allCertificationsItems.push(scenario);
 			break;
 		case 'training':
-			allRemoteItems.push(scenario);
+			// Remote learning labs has been removed, so any 'training' will be ignored
 			break;
 		default:
 			Cypress.log({
@@ -43,10 +50,10 @@ const visibleELearningItems = allELearningItems.slice(0, 3);
 const invisibleELearningItems = allELearningItems.slice(3);
 const visibleCertificationsItems = allCertificationsItems.slice(0, 3);
 const invisibleCertificationsItems = allCertificationsItems.slice(3);
-const visibleRemoteItems = allRemoteItems.slice(0, 3);
-const invisibleRemoteItems = allRemoteItems.slice(3);
 const visibleSuccessPathItems = successPathItems.slice(0, 3);
 const invisibleSuccessPathItems = successPathItems.slice(3);
+
+const i18n = require('../../src/assets/i18n/en-US.json');
 
 describe('Learn Panel', () => {
 	before(() => {
@@ -57,6 +64,9 @@ describe('Learn Panel', () => {
 		// Wait for both E-Learning and Success Paths to finish loading
 		cy.waitForAppLoading('elearningLoading', 15000);
 		cy.waitForAppLoading('successPathsLoading', 15000);
+
+		// Close the setup wizard so it doesn't block other elements
+		// cy.getByAutoId('setup-wizard-header-close-btn').click();
 	});
 
 	describe('PBC-125 Learning Content', () => {
@@ -67,7 +77,6 @@ describe('Learn Panel', () => {
 		it('Learning card sections only show when there is data in them', () => {
 			let elearningFound = false;
 			let certificationsFound = false;
-			let trainingFound = false;
 			elearningItems.forEach(scenario => {
 				switch (scenario.type) {
 					case 'E-Learning':
@@ -78,7 +87,7 @@ describe('Learn Panel', () => {
 						certificationsFound = true;
 						break;
 					case 'training':
-						trainingFound = true;
+						// Remote learning labs has been removed, so any 'training' will be ignored
 						break;
 					default:
 						Cypress.log({
@@ -97,18 +106,13 @@ describe('Learn Panel', () => {
 			} else {
 				cy.getByAutoId('LearnPanel-CertificationsBlock').should('not.exist');
 			}
-			if (trainingFound) {
-				cy.getByAutoId('LearnPanel-RemoteLearningLabsBlock').should('exist');
-			} else {
-				cy.getByAutoId('LearnPanel-RemoteLearningLabsBlock').should('not.exist');
-			}
 
 			if (successPathItems.length > 0) {
-				cy.getByAutoId('LearnPanel-SuccessPathsBlock').should('exist')
+				cy.getByAutoId('Success Bytes Panel').should('exist')
 					.and('contain', 'Success Bytes')
 					.and('contain', 'Resources to fine-tune your tech');
 			} else {
-				cy.getByAutoId('LearnPanel-SuccessPathsBlock').should('not.exist');
+				cy.getByAutoId('Success Bytes Panel').should('not.exist');
 			}
 		});
 
@@ -130,29 +134,30 @@ describe('Learn Panel', () => {
 				cy.getByAutoId('LearnPanel-CertificationsBlock')
 					.should('not.contain', scenario.title);
 			});
-			visibleRemoteItems.forEach(scenario => {
-				cy.getByAutoId('LearnPanel-RemoteLearningLabsBlock')
-					.should('contain', scenario.title);
-			});
-			invisibleRemoteItems.forEach(scenario => {
-				cy.getByAutoId('LearnPanel-RemoteLearningLabsBlock')
-					.should('not.contain', scenario.title);
-			});
 			visibleSuccessPathItems.forEach(scenario => {
-				cy.getByAutoId('LearnPanel-SuccessPathsBlock')
+				cy.getByAutoId('Success Bytes Panel')
 					.should('contain', scenario.title);
 			});
 			invisibleSuccessPathItems.forEach(scenario => {
-				cy.getByAutoId('LearnPanel-SuccessPathsBlock')
+				cy.getByAutoId('Success Bytes Panel')
 					.should('not.contain', scenario.title);
 			});
 		});
 	});
 
 	describe('PBC-15: (UI) View - Lifecycle - Success Bytes - View All Card View', () => {
-		it('PBC-142/PBC-143: View All Success Bytes link should open modal with all results', () => {
+		beforeEach(() => {
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist')
+			cy.getByAutoId('ViewAllModal').should('exist');
+		});
+
+		afterEach(() => {
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+
+		it('PBC-142/PBC-143: View All Success Bytes link should open modal with all results', () => {
+			cy.getByAutoId('ViewAllModal').should('exist')
 				.and('contain', 'Success Bytes')
 				.and('contain', 'Resources to fine-tune your tech')
 				.and('contain', `${successPathItems.length} topics available`);
@@ -164,13 +169,9 @@ describe('Learn Panel', () => {
 					// The UI will only display a duration if it is not null
 					.and('contain', (scenario.duration !== null ? scenario.duration : ''));
 			});
-			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
 		});
 
 		it('PBC-142/PBC-143: View All Success Bytes modal includes content type icons', () => {
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
 			successPathItems.forEach((scenario, index) => {
 				switch (scenario.type) {
 					case 'Video':
@@ -188,11 +189,16 @@ describe('Learn Panel', () => {
 							.get('span[class="icon-file-pdf-o icon-small half-padding-right"]')
 							.should('exist');
 						break;
+					case 'Data Sheet':
+						// Data Sheet should have document icon
+						cy.get('span').should('have.class', 'icon-document');
+						break;
 					default:
 						Cypress.log({
 							name: 'LOG',
-							message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${scenario.type}`,
+							message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${scenario.type} ! TREATING AS WEB PAGE...`,
 						});
+						cy.get('span').should('have.class', 'icon-apps');
 				}
 				// Should only display a clock icon if there is a duration
 				cy.getByAutoId('SuccessCard').eq(index).within(() => {
@@ -203,8 +209,20 @@ describe('Learn Panel', () => {
 					}
 				});
 			});
-			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+		});
+
+		it('PBC-199: View All Success Bytes modal should include bookmark ribbons', () => {
+			successPathItems.forEach((scenario, index) => {
+				cy.getByAutoId('SuccessCard').eq(index).within(() => {
+					if (scenario.bookmark) {
+						cy.getByAutoId('SBCardRibbon')
+							.should('have.class', 'ribbon__blue');
+					} else {
+						cy.getByAutoId('SBCardRibbon')
+							.should('have.class', 'ribbon__clear');
+					}
+				});
+			});
 		});
 	});
 
@@ -218,15 +236,17 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		it('PBC-188: All Success Path View All links should cross-launch to specified URL', () => {
+		// TODO: Needs to be re-worked due to changes for PBC-567
+		// Links are now only on title, not content type icon
+		it.skip('PBC-188: All Success Path View All links should cross-launch to specified URL', () => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Cypress does not and will never support multiple tabs, so just check the link element
 			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
 			successPathItems.forEach(scenario => {
-				cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				cy.getByAutoId('ViewAllModal').within(() => {
 					cy.get(`a[href="${scenario.url}"]`)
 						// Note that type: 'Web Page' gets displayed as 'Web'
 						.should('contain', (scenario.type === 'Web Page' ? 'Web' : scenario.type))
@@ -236,7 +256,112 @@ describe('Learn Panel', () => {
 			});
 
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+	});
+
+	describe('PBC-109: (UI) View - Solution Racetrack - Learning - Course Progress', () => {
+		after(() => {
+			// Ensure we are set back to default mock
+			elearningMock.enable('(E-Learning) IBN-Campus Network Assurance-Onboard');
+
+			// Reload the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(E-Learning) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('E-Learning/Ceritifcations items should NOT show progress at 0%', () => {
+			// Switch mock to one with all elearning/certifications at 0% progress
+			elearningMock.enable('(E-Learning) IBN-Campus Network Assurance-Onboard-noProgress');
+
+			// Reload the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(E-Learning) IBN-Campus Network Assurance-Onboard-noProgress');
+
+			// Verify all E-Learning and Certifications items do NOT have progress bar
+			cy.getByAutoId('recommendedElearningItem').each($elearningLink => {
+				cy.wrap($elearningLink).within(() => {
+					cy.getByAutoId('recommendedElearningItem-progressBar').should('not.exist');
+				});
+			});
+		});
+
+		it('E-Learning/Ceritifcations items should show progress at 25%', () => {
+			// Switch mock to one with all elearning/certifications at 25% progress
+			elearningMock.enable('(E-Learning) IBN-Campus Network Assurance-Onboard-progress25Percent');
+
+			// Reload the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(E-Learning) IBN-Campus Network Assurance-Onboard-progress25Percent');
+
+			// Verify all E-Learning and Certifications items have progress bar at 25%
+			cy.getByAutoId('recommendedElearningItem').each($elearningLink => {
+				cy.wrap($elearningLink).within(() => {
+					cy.getByAutoId('recommendedElearningItem-progressBar')
+						.should('be.visible')
+						.and('have.attr', 'data-percentage', '25');
+				});
+			});
+		});
+
+		it('E-Learning/Ceritifcations items should show progress at 50%', () => {
+			// Switch mock to one with all elearning/certifications at 50% progress
+			elearningMock.enable('(E-Learning) IBN-Campus Network Assurance-Onboard-progress50Percent');
+
+			// Reload the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(E-Learning) IBN-Campus Network Assurance-Onboard-progress50Percent');
+
+			// Verify all E-Learning and Certifications items have progress bar at 50%
+			cy.getByAutoId('recommendedElearningItem').each($elearningLink => {
+				cy.wrap($elearningLink).within(() => {
+					cy.getByAutoId('recommendedElearningItem-progressBar')
+						.should('be.visible')
+						.and('have.attr', 'data-percentage', '50');
+				});
+			});
+		});
+
+		it('E-Learning/Ceritifcations items should show progress at 75%', () => {
+			// Switch mock to one with all elearning/certifications at 75% progress
+			elearningMock.enable('(E-Learning) IBN-Campus Network Assurance-Onboard-progress75Percent');
+
+			// Reload the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(E-Learning) IBN-Campus Network Assurance-Onboard-progress75Percent');
+
+			// Verify all E-Learning and Certifications items have progress bar at 75%
+			cy.getByAutoId('recommendedElearningItem').each($elearningLink => {
+				cy.wrap($elearningLink).within(() => {
+					cy.getByAutoId('recommendedElearningItem-progressBar')
+						.should('be.visible')
+						.and('have.attr', 'data-percentage', '75');
+				});
+			});
+		});
+
+		it('E-Learning/Ceritifcations items should show completed at 100%', () => {
+			// Switch mock to one with all elearning/certifications at 100% progress
+			elearningMock.enable('(E-Learning) IBN-Campus Network Assurance-Onboard-progress100Percent');
+
+			// Reload the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(E-Learning) IBN-Campus Network Assurance-Onboard-progress100Percent');
+
+			// Verify all E-Learning and Certifications items have completed icon instead of
+			// progress bar
+			cy.getByAutoId('recommendedElearningItem').each($elearningLink => {
+				cy.wrap($elearningLink).within(() => {
+					cy.getByAutoId('recommendedElearningItem-progressBar').should('not.exist');
+					cy.getByAutoId('recommendedElearningItem-completedIcon').should('be.visible');
+				});
+			});
 		});
 	});
 
@@ -253,7 +378,7 @@ describe('Learn Panel', () => {
 		it('PBC-210: E-Learning View All should cross-launch to digital-learning', () => {
 			// Cypress does not and will never support multiple tabs, so just check the link element
 			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
-			cy.getByAutoId('_ELearning_-ViewAll').should('have.attr', 'href', 'https://pilot-digital-learning.cisco.com/cx#/')
+			cy.getByAutoId('_ELearning_-ViewAll').should('have.attr', 'href', 'https://pilot-digital-learning.cisco.com/cx/#/?type=e-learning')
 				.and('have.attr', 'target', '_blank');	// target: _blank indicates we'll open in a new tab
 		});
 	});
@@ -265,8 +390,10 @@ describe('Learn Panel', () => {
 				// that the hover modal and it's elements exist in the DOM. See below for reference:
 				// https://docs.cypress.io/api/commands/hover.html#Workarounds
 				// https://github.com/cypress-io/cypress/issues/10
-				cy.get(`a[href="${elearningItem.url}"]`).parent()
+				cy.get(`a[href="${elearningItem.url}"]`)
 					.should('contain', elearningItem.title)
+					.parent()
+					.parent()
 					.within(() => {
 						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', elearningItem.title);
 						cy.getByAutoId('recommendedElearning-HoverModal-Description').should('contain', elearningItem.description);
@@ -287,7 +414,7 @@ describe('Learn Panel', () => {
 		before(() => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('be.visible');
+			cy.getByAutoId('ViewAllModal').should('be.visible');
 
 			// Switch to table view
 			cy.getByAutoId('table-view-btn').click();
@@ -299,199 +426,204 @@ describe('Learn Panel', () => {
 
 			// Close the View All modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.be.visible');
+			cy.getByAutoId('ViewAllModal').should('not.be.visible');
 
 			// Reload the page to force-clear any sort/filter
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
+
+			// Close the setup wizard so it doesn't block other elements
+			// cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Success Bytes View All should be able to toggle between table and card views', () => {
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('SuccessCard').should('be.visible');
-			cy.getByAutoId('SuccessPathsTable').should('not.be.visible');
+			cy.getByAutoId('ViewAllTable').should('not.be.visible');
 
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('SuccessCard').should('not.be.visible');
-			cy.getByAutoId('SuccessPathsTable').should('be.visible');
+			cy.getByAutoId('ViewAllTable').should('be.visible');
 		});
 
 		it('Success Bytes View All table should have expected columns', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					cy.get('th').then($columnHeaders => {
-						// Should be 4 columns (Name, Category, Format, Bookmark)
-						expect($columnHeaders.length).to.eq(4);
+						// Should be 5 columns (Bookmark, Name, Category, Format, Action)
+						expect($columnHeaders.length).to.eq(5);
 					});
-					cy.getByAutoId('successBytesTable-columnHeader-Name').should('exist');
-					cy.getByAutoId('successBytesTable-columnHeader-Category').should('exist');
-					cy.getByAutoId('successBytesTable-columnHeader-Format').should('exist');
-					cy.getByAutoId('successBytesTable-columnHeader-Bookmark').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Category').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Format').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Action').should('exist');
 				});
 		});
 
 		it('Success Bytes View All table should not sort by default', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
 					successPathItems.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
-							cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
-							cy.getByAutoId('SuccessPathsTable-Category-rowValue').should('have.text', item.archetype);
-							cy.getByAutoId('SuccessPathsTable-Format-rowValue-link')
-								.should('have.attr', 'href', item.url)
-								.should('have.attr', 'target', '_blank')
-								.within(() => {
-									switch (item.type) {
-										case 'Video':
-											// Video should have play icon
-											cy.get('span').should('have.class', 'icon-play-contained');
-											break;
-										case 'Web Page':
-											// Web Page should have grid icon
-											cy.get('span').should('have.class', 'icon-apps');
-											break;
-										case 'PDF':
-											// PDF should have PDF icon
-											cy.get('span').should('have.class', 'icon-file-pdf-o');
-											break;
-										default:
-											Cypress.log({
-												name: 'LOG',
-												message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
-											});
-											cy.get('span').should('have.class', 'icon-apps');
-									}
-								});
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
+							switch (item.type) {
+								case 'Video':
+									// Video should have play icon
+									cy.get('span').should('have.class', 'icon-play-contained');
+									break;
+								case 'Web Page':
+									// Web Page should have grid icon
+									cy.get('span').should('have.class', 'icon-apps');
+									break;
+								case 'PDF':
+									// PDF should have PDF icon
+									cy.get('span').should('have.class', 'icon-file-pdf-o');
+									break;
+								case 'Data Sheet':
+									// Data Sheet should have document icon
+									cy.get('span').should('have.class', 'icon-document');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+									});
+									cy.get('span').should('have.class', 'icon-apps');
+							}
 						});
 					});
 				});
 		});
 
 		it('Success Bytes View All table should be sortable by Name', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 					const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['title'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 
 					// Reverse the sort and re-verify order
-					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 					const sortedItemsDesc = Cypress._.orderBy(successPathItems, ['title'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
 		});
 
 		it('Success Bytes View All table should be sortable by Category', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('successBytesTable-columnHeader-Category').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Category').click();
 					const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['archetype'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Category-rowValue').should('have.text', item.archetype);
+							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
 						});
 					});
 
 					// Reverse the sort and re-verify order
-					cy.getByAutoId('successBytesTable-columnHeader-Category').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Category').click();
 					const sortedItemsDesc = Cypress._.orderBy(successPathItems, ['archetype'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Category-rowValue').should('have.text', item.archetype);
+							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
 						});
 					});
 				});
 		});
 
 		it('Success Bytes View All table should be sortable by Format', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('successBytesTable-columnHeader-Format').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Format').click();
 					const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['type'], ['asc']);
 					sortedItemsAsc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Format-rowValue-link')
-								.within(() => {
-									switch (item.type) {
-										case 'Video':
-											// Video should have play icon
-											cy.get('span').should('have.class', 'icon-play-contained');
-											break;
-										case 'Web Page':
-											// Web Page should have grid icon
-											cy.get('span').should('have.class', 'icon-apps');
-											break;
-										case 'PDF':
-											// PDF should have PDF icon
-											cy.get('span').should('have.class', 'icon-file-pdf-o');
-											break;
-										default:
-											Cypress.log({
-												name: 'LOG',
-												message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
-											});
-											cy.get('span').should('have.class', 'icon-apps');
-									}
-								});
+							switch (item.type) {
+								case 'Video':
+									// Video should have play icon
+									cy.get('span').should('have.class', 'icon-play-contained');
+									break;
+								case 'Web Page':
+									// Web Page should have grid icon
+									cy.get('span').should('have.class', 'icon-apps');
+									break;
+								case 'PDF':
+									// PDF should have PDF icon
+									cy.get('span').should('have.class', 'icon-file-pdf-o');
+									break;
+								case 'Data Sheet':
+									// Data Sheet should have document icon
+									cy.get('span').should('have.class', 'icon-document');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+									});
+									cy.get('span').should('have.class', 'icon-apps');
+							}
 						});
 					});
 
 					// Reverse the sort and re-verify order
-					cy.getByAutoId('successBytesTable-columnHeader-Format').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Format').click();
 					const sortedItemsDesc = Cypress._.orderBy(successPathItems, ['type'], ['desc']);
 					sortedItemsDesc.forEach((item, index) => {
 						// Note that our actual data rows start at tr 1, because 0 is the headers
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Format-rowValue-link')
-								.within(() => {
-									switch (item.type) {
-										case 'Video':
-											// Video should have play icon
-											cy.get('span').should('have.class', 'icon-play-contained');
-											break;
-										case 'Web Page':
-											// Web Page should have grid icon
-											cy.get('span').should('have.class', 'icon-apps');
-											break;
-										case 'PDF':
-											// PDF should have PDF icon
-											cy.get('span').should('have.class', 'icon-file-pdf-o');
-											break;
-										default:
-											Cypress.log({
-												name: 'LOG',
-												message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
-											});
-											cy.get('span').should('have.class', 'icon-apps');
-									}
-								});
+							switch (item.type) {
+								case 'Video':
+									// Video should have play icon
+									cy.get('span').should('have.class', 'icon-play-contained');
+									break;
+								case 'Web Page':
+									// Web Page should have grid icon
+									cy.get('span').should('have.class', 'icon-apps');
+									break;
+								case 'PDF':
+									// PDF should have PDF icon
+									cy.get('span').should('have.class', 'icon-file-pdf-o');
+									break;
+								case 'Data Sheet':
+									// Data Sheet should have document icon
+									cy.get('span').should('have.class', 'icon-document');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+									});
+									cy.get('span').should('have.class', 'icon-apps');
+							}
 						});
 					});
 				});
@@ -500,12 +632,12 @@ describe('Learn Panel', () => {
 		successPathArchetypes.forEach(archetype => {
 			it(`View All Success Bytes modal (table view) can filter by archetype: ${archetype}`, () => {
 				// Filter by archetype, verify the count
-				cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				cy.getByAutoId('ViewAllModal').within(() => {
 					cy.getByAutoId('cui-select').click();
 					cy.get(`a[title="${archetype}"]`).click();
 
 					const filteredItems = successPathItems.filter(item => (item.archetype === archetype));
-					cy.getByAutoId('SuccessPathsTable')
+					cy.getByAutoId('ViewAllTable')
 						.should('be.visible')
 						.within(() => {
 							cy.get('tr').then(rows => {
@@ -519,11 +651,11 @@ describe('Learn Panel', () => {
 
 		it('View All Success Bytes modal (table view)  can filter by archetype: Not selected', () => {
 			// Filter by archetype, verify the count. Note: 'Not selected' should show all items
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Not selected"]').click();
 
-				cy.getByAutoId('SuccessPathsTable')
+				cy.getByAutoId('ViewAllTable')
 					.should('be.visible')
 					.within(() => {
 						cy.get('tr').then(rows => {
@@ -536,12 +668,12 @@ describe('Learn Panel', () => {
 
 		it('View All Success Bytes modal table view should support sort and filter combined', () => {
 			// Filter by archetype "Project Planning"
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click();
 
 				const filteredItems = successPathItems.filter(item => (item.archetype === 'Project Planning'));
-				cy.getByAutoId('SuccessPathsTable')
+				cy.getByAutoId('ViewAllTable')
 					.should('be.visible')
 					.within(() => {
 						cy.get('tr').then(rows => {
@@ -551,7 +683,7 @@ describe('Learn Panel', () => {
 
 						// Sort by name, verify the filter is still in place, and verify we sort within the
 						// existing filter
-						cy.getByAutoId('successBytesTable-columnHeader-Name').click();
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 
 						cy.get('tr').then(rows => {
 							// Note that the first tr is the column headers
@@ -564,12 +696,12 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 							});
 						});
 
 						// Reverse the sort and re-verify filter and order
-						cy.getByAutoId('successBytesTable-columnHeader-Name').click();
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 
 						cy.get('tr').then(rows => {
 							// Note that the first tr is the column headers
@@ -582,7 +714,7 @@ describe('Learn Panel', () => {
 							cy.get('tr').eq(index + 1).within(() => {
 								// Only check the field we've sorted by, since the sorting of items that have the
 								// same value depends on previous sorts
-								cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
+								cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 							});
 						});
 					});
@@ -594,7 +726,7 @@ describe('Learn Panel', () => {
 		beforeEach(() => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Switch to table view
 			cy.getByAutoId('table-view-btn').click();
@@ -606,11 +738,12 @@ describe('Learn Panel', () => {
 
 			// Close the View All modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			// Make sure we're on the lifecycle page and the default use case
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 		});
@@ -618,20 +751,20 @@ describe('Learn Panel', () => {
 		it('Success Bytes View All table sort should be sticky across modal close/re-open', () => {
 			const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['title'], ['asc']);
 
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Close and re-open the modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the still in table view and sort is still in place
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					sortedItemsAsc.forEach((item, index) => {
@@ -639,26 +772,24 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
 		});
 
-		// TODO: Fails due to PBC-374, as we have no good way to predict the previous sorting behavior
-		// http://swtg-jira-lnx.cisco.com:8080/browse/PBC-374
-		it.skip('Success Bytes View All table sort should be sticky across table/card view', () => {
+		it('Success Bytes View All table sort should be sticky across table/card view', () => {
 			const sortedItemsAsc = Cypress._.orderBy(successPathItems, ['title'], ['asc']);
 
 			// Sort the data
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Switch to card view, verify the sort is still in place
 			cy.getByAutoId('card-view-btn').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				sortedItemsAsc.forEach((item, index) => {
 					cy.getByAutoId('SuccessCard')
 						.eq(index)
@@ -668,7 +799,7 @@ describe('Learn Panel', () => {
 
 			// Switch back to table view, verify sort is still in place
 			cy.getByAutoId('table-view-btn').click();
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					sortedItemsAsc.forEach((item, index) => {
@@ -676,31 +807,31 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
 		});
 
 		it('Success Bytes View All table sort should NOT be sticky across use case changes', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Close the modal, switch use cases, and re-open the modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify still in table view and sort was reset to default
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					successPathItems.forEach((item, index) => {
@@ -708,36 +839,31 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
 		});
 
 		it('Success Bytes View All table sort should NOT be sticky across page navigation', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
-
-			// Verify we were reverted to card view (not sticky), and switch to table view
-			cy.getByAutoId('SuccessPathsTable').should('not.be.visible');
-			cy.getByAutoId('SuccessCard').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the sort was reset to default
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					successPathItems.forEach((item, index) => {
@@ -745,35 +871,33 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
 		});
 
 		it('Success Bytes View All table sort should NOT be sticky across page reload', () => {
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.within(() => {
-					cy.getByAutoId('successBytesTable-columnHeader-Name').click();
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
 				});
 
 			// Close the modal, reload the page, and re-open the modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			// Close the setup wizard so it doesn't block other elements
+			// cy.getByAutoId('setup-wizard-header-close-btn').click();
 
-			// Verify we were reverted to card view (not sticky), and switch to table view
-			cy.getByAutoId('SuccessPathsTable').should('not.be.visible');
-			cy.getByAutoId('SuccessCard').should('be.visible');
-			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the sort was reset to default
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					successPathItems.forEach((item, index) => {
@@ -781,10 +905,69 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							// Only check the field we've sorted by, since the sorting of items that have the
 							// same value depends on previous sorts
-							cy.getByAutoId('SuccessPathsTable-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 						});
 					});
 				});
+		});
+	});
+
+	describe('PBC-199: (UI) View - Lifecycle - Product Guides - Status Ribbons', () => {
+		before(() => {
+			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
+		});
+
+		after(() => {
+			cy.getByAutoId('SuccessPathCloseModal').click();
+
+			// Reload the page to force-reset any changed bookmarks
+			// This is required since the mock bookmark APIs don't actually bookmark the ACC items
+			cy.loadApp();
+			cy.waitForAppLoading();
+
+			// Wait for the ACC panel to finish loading
+			cy.waitForAppLoading('successPathsLoading', 15000);
+
+			// Close the setup wizard so it doesn't block other elements
+			// cy.getByAutoId('setup-wizard-header-close-btn').click();
+		});
+
+		it('Should be able to bookmark a Success Bytes item', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
+				successPathItems.forEach((item, index) => {
+					if (!item.bookmark) {
+						cy.getByAutoId('SBCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__clear')
+							.click();
+						// Wait for the Bookmark mock to be called
+						cy.wait('(SB) IBN-Bookmark');
+						cy.waitForAppLoading('successPathsLoading', 5000);
+						cy.getByAutoId('SBCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__blue');
+					}
+				});
+			});
+		});
+
+		it('Should be able to UN-bookmark a Success Bytes item', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
+				successPathItems.forEach((item, index) => {
+					if (item.bookmark) {
+						cy.getByAutoId('SBCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__blue')
+							.click();
+						// Wait for the Bookmark mock to be called
+						cy.wait('(SB) IBN-Bookmark');
+						cy.waitForAppLoading('successPathsLoading', 5000);
+						cy.getByAutoId('SBCardRibbon')
+							.eq(index)
+							.should('have.class', 'ribbon__clear');
+					}
+				});
+			});
 		});
 	});
 
@@ -792,13 +975,13 @@ describe('Learn Panel', () => {
 		before(() => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 		});
 
 		after(() => {
 			// Close the View All modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
 		it('View All Success Bytes modal shows all archetypes by default', () => {
@@ -811,7 +994,7 @@ describe('Learn Panel', () => {
 		successPathArchetypes.forEach(archetype => {
 			it(`View All Success Bytes modal (card view) can filter by archetype: ${archetype}`, () => {
 				// Filter by archetype, verify the count
-				cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+				cy.getByAutoId('ViewAllModal').within(() => {
 					cy.getByAutoId('cui-select').click();
 					cy.get(`a[title="${archetype}"]`).click();
 
@@ -825,7 +1008,7 @@ describe('Learn Panel', () => {
 
 		it('View All Success Bytes modal (card view) can filter by archetype: Not selected', () => {
 			// Filter by archetype, verify the count. Note: 'Not selected' should show all items
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Not selected"]').click();
 
@@ -836,7 +1019,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('View All Success Bytes modal filter should be searchable', () => {
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				// Start typing an archetype in the filter field
 				cy.getByAutoId('cui-select').click()
 					.get('input')
@@ -854,7 +1037,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('View All Success Bytes modal filter should be clearable', () => {
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Getting Started"]').click();
 
@@ -879,23 +1062,24 @@ describe('Learn Panel', () => {
 		beforeEach(() => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 		});
 
 		afterEach(() => {
 			// Close the View All modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			// Make sure we're on the lifecycle page and the default use case
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 		});
 
 		it('View All Success Bytes filter should be sticky', () => {
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click();
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
@@ -903,13 +1087,13 @@ describe('Learn Panel', () => {
 
 			// Close and re-open the modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter is still in place
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
 				const filteredItems = successPathItems.filter(item => (item.archetype === 'Project Planning'));
 				cy.getByAutoId('SuccessCard').then(cards => {
@@ -919,7 +1103,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('View All Success Bytes filter should NOT be sitcky across use case changes', () => {
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click();
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
@@ -927,14 +1111,14 @@ describe('Learn Panel', () => {
 
 			// Close the modal, change use cases, and re-open the modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
 			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
@@ -944,7 +1128,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('View All Success Bytes filter should NOT be sitcky across page navigation', () => {
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click();
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
@@ -952,14 +1136,14 @@ describe('Learn Panel', () => {
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
 			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
@@ -969,7 +1153,7 @@ describe('Learn Panel', () => {
 		});
 
 		it('View All Success Bytes filter should NOT be sitcky across page reload', () => {
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click();
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
@@ -977,13 +1161,16 @@ describe('Learn Panel', () => {
 
 			// Close the modal, reload the page, and re-open the modal
 			cy.getByAutoId('SuccessPathCloseModal').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('not.exist');
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
+			// Close the setup wizard so it doesn't block other elements
+			// cy.getByAutoId('setup-wizard-header-close-btn').click();
+
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
 			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
@@ -994,7 +1181,7 @@ describe('Learn Panel', () => {
 
 		it('PBC-198: View All Success Bytes filter should be sticky across table/card view', () => {
 			// Apply the filter
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Project Planning"]').click();
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
@@ -1003,7 +1190,7 @@ describe('Learn Panel', () => {
 			// Switch to table view, verify the filter is still in place
 			cy.getByAutoId('table-view-btn').click();
 			const filteredItems = successPathItems.filter(item => (item.archetype === 'Project Planning'));
-			cy.getByAutoId('SuccessPathsTable')
+			cy.getByAutoId('ViewAllTable')
 				.should('be.visible')
 				.within(() => {
 					cy.get('tr').then(rows => {
@@ -1014,11 +1201,851 @@ describe('Learn Panel', () => {
 
 			// Switch back to card view, verify the filter is still in place
 			cy.getByAutoId('card-view-btn').click();
-			cy.getByAutoId('SuccessPathsViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
 				cy.getByAutoId('SuccessCard').then(cards => {
 					expect(cards.length).to.eq(filteredItems.length);
 				});
+			});
+		});
+	});
+
+	describe('PBC-459: (UI) View - Lifecycle - All Product Documentation and Videos', () => {
+		it('Success Bytes section should include link to all docs', () => {
+			cy.getByAutoId('Success Bytes Panel').within(() => {
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').should('be.visible');
+			});
+			cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible').within(() => {
+				cy.getByAutoId('ViewAllModal-Title').should('have.text', i18n._ProductGuides_);
+				cy.getByAutoId('SuccessPathCloseModal').click();
+			});
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+
+		describe('Card View', () => {
+			before(() => {
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+			});
+
+			after(() => {
+				// Close the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the data to reset any bookmark changes
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
+			});
+
+			// TODO: Needs to be re-worked due to changes for PBC-567
+			// Links are now only on title, not content type icon
+			it.skip('All product guides modal card view should contain all items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					cy.getByAutoId('ProductGuidesCard').eq(index).within(() => {
+						cy.getByAutoId('ProductGuidesCard-Archetype').should('have.text', item.archetype);
+						cy.getByAutoId('ProductGuidesCard-Title').should('have.text', item.title);
+						cy.getByAutoId('productlink')
+							.should('have.attr', 'href', item.url)
+							.and('have.attr', 'target', '_blank');
+						// Handle duration text and clock icon
+						cy.getByAutoId('ProductGuidesCard-Duration').should('contain', item.duration);
+						cy.getByAutoId('ProductGuidesCard-Duration')
+							.get('.icon-clock')
+							.should('exist');
+						// Handle content type
+						switch (item.type) {
+							case 'Video':
+								cy.get('span[class="icon-play-contained icon-small half-padding-right"]')
+									.should('exist');
+								break;
+							case 'Web Page':
+								cy.get('span[class="icon-apps icon-small half-padding-right"]')
+									.should('exist');
+								break;
+							case 'PDF':
+								cy.get('span[class="icon-file-pdf-o icon-small half-padding-right"]')
+									.should('exist');
+								break;
+							case 'Data Sheet':
+								// Data Sheet should have document icon
+								cy.get('span').should('have.class', 'icon-document');
+								break;
+							default:
+								Cypress.log({
+									name: 'LOG',
+									message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+								});
+								cy.get('span').should('have.class', 'icon-apps');
+						}
+						// Handle bookmark ribbon
+						if (item.bookmark) {
+							cy.getByAutoId('ProductGuidesCard-Ribbon').should('have.class', 'ribbon__blue');
+						} else {
+							cy.getByAutoId('ProductGuidesCard-Ribbon').should('have.class', 'ribbon__clear');
+						}
+					});
+				});
+			});
+
+			it('All product guides modal card view can bookmark items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					if (!item.bookmark) {
+						cy.getByAutoId('ProductGuidesCard')
+							.eq(index)
+							.within(() => {
+								cy.getByAutoId('ProductGuidesCard-Ribbon')
+									.click();
+								cy.wait('(SB) IBN-Bookmark');
+								cy.getByAutoId('ProductGuidesCard-Ribbon')
+									.should('have.class', 'ribbon__blue');
+							});
+					}
+				});
+			});
+
+			it('All product guides modal card view can un-bookmark items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					if (item.bookmark) {
+						cy.getByAutoId('ProductGuidesCard')
+							.eq(index)
+							.within(() => {
+								cy.getByAutoId('ProductGuidesCard-Ribbon')
+									.click();
+								cy.wait('(SB) IBN-Bookmark');
+								cy.getByAutoId('ProductGuidesCard-Ribbon')
+									.should('have.class', 'ribbon__clear');
+							});
+					}
+				});
+			});
+		});
+
+		describe('Table View', () => {
+			before(() => {
+				// Open the modal and switch to table view
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			after(() => {
+				// Switch to back to card view and close the modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Refresh the data to reset any bookmark changes
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
+			});
+
+			it('All product guides modal table view should have expected columns', () => {
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						cy.get('th').then($columnHeaders => {
+							// Should be 4 columns (Bookmark, Name, Category, Format, Action)
+							expect($columnHeaders.length).to.eq(5);
+						});
+						cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').should('exist');
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').should('exist');
+						cy.getByAutoId('ViewAllTable-columnHeader-Category').should('exist');
+						cy.getByAutoId('ViewAllTable-columnHeader-Format').should('exist');
+						cy.getByAutoId('ViewAllTable-columnHeader-Action').should('exist');
+					});
+			});
+
+			it('All product guides modal table view should contain all items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					cy.getByAutoId('ViewAllTable').within(() => {
+						// Increase index by 1, since the first tr has the column headers
+						cy.get('tr').eq(index + 1).within(() => {
+							cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
+							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
+							// Handle duration text and clock icon
+							cy.getByAutoId('ViewAllTable-Format-rowValue-duration').should('contain', item.duration);
+							cy.getByAutoId('ViewAllTable-Format-rowValue-clock').should('exist');
+							// Handle content type
+							switch (item.type) {
+								case 'Video':
+									cy.get('span[class="icon-play-contained icon-small half-padding-right"]')
+										.should('exist');
+									break;
+								case 'Web Page':
+									cy.get('span[class="icon-apps icon-small half-padding-right"]')
+										.should('exist');
+									break;
+								case 'PDF':
+									cy.get('span[class="icon-file-pdf-o icon-small half-padding-right"]')
+										.should('exist');
+									break;
+								case 'Data Sheet':
+									// Data Sheet should have document icon
+									cy.get('span').should('have.class', 'icon-document');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+									});
+									cy.get('span').should('have.class', 'icon-apps');
+							}
+							// Handle bookmark ribbon
+							if (item.bookmark) {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+							} else {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+							}
+						});
+					});
+				});
+			});
+
+			it('All product guides modal table view should be sortable by Name', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+						const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['title'], ['asc']);
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
+							});
+						});
+
+						// Reverse the sort and re-verify order
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+						const sortedItemsDesc = Cypress._.orderBy(allProductGuidesItems, ['title'], ['desc']);
+						sortedItemsDesc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table view should be sortable by Category', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Category').click();
+						const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['archetype'], ['asc']);
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
+							});
+						});
+
+						// Reverse the sort and re-verify order
+						cy.getByAutoId('ViewAllTable-columnHeader-Category').click();
+						const sortedItemsDesc = Cypress._.orderBy(allProductGuidesItems, ['archetype'], ['desc']);
+						sortedItemsDesc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table view should be sortable by Format', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Format').click();
+						const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['type'], ['asc']);
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								switch (item.type) {
+									case 'Video':
+										// Video should have play icon
+										cy.get('span').should('have.class', 'icon-play-contained');
+										break;
+									case 'Web Page':
+										// Web Page should have grid icon
+										cy.get('span').should('have.class', 'icon-apps');
+										break;
+									case 'PDF':
+										// PDF should have PDF icon
+										cy.get('span').should('have.class', 'icon-file-pdf-o');
+										break;
+									case 'Data Sheet':
+										// Data Sheet should have document icon
+										cy.get('span').should('have.class', 'icon-document');
+										break;
+									default:
+										Cypress.log({
+											name: 'LOG',
+											message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+										});
+										cy.get('span').should('have.class', 'icon-apps');
+								}
+							});
+						});
+
+						// Reverse the sort and re-verify order
+						cy.getByAutoId('ViewAllTable-columnHeader-Format').click();
+						const sortedItemsDesc = Cypress._.orderBy(allProductGuidesItems, ['type'], ['desc']);
+						sortedItemsDesc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								switch (item.type) {
+									case 'Video':
+										// Video should have play icon
+										cy.get('span').should('have.class', 'icon-play-contained');
+										break;
+									case 'Web Page':
+										// Web Page should have grid icon
+										cy.get('span').should('have.class', 'icon-apps');
+										break;
+									case 'PDF':
+										// PDF should have PDF icon
+										cy.get('span').should('have.class', 'icon-file-pdf-o');
+										break;
+									case 'Data Sheet':
+										// Data Sheet should have document icon
+										cy.get('span').should('have.class', 'icon-document');
+										break;
+									default:
+										Cypress.log({
+											name: 'LOG',
+											message: `UNRECOGNIZED SUCCESS PATH CONTENT TYPE: ${item.type} ! TREATING AS WEB PAGE...`,
+										});
+										cy.get('span').should('have.class', 'icon-apps');
+								}
+							});
+						});
+					});
+			});
+
+			allProductGuidesArchetypes.forEach(archetype => {
+				it(`All product guides modal table view can filter by archetype: ${archetype}`, () => {
+					// Filter by archetype, verify the count
+					cy.getByAutoId('cui-select').click();
+					cy.get(`a[title="${archetype}"]`).click();
+
+					const filteredItems = allProductGuidesItems.filter(
+						item => (item.archetype === archetype)
+					);
+					cy.getByAutoId('ViewAllTable')
+						.should('be.visible')
+						.within(() => {
+							cy.get('tr').then(rows => {
+								// Note that the first tr is the column headers
+								expect(rows.length - 1).to.eq(filteredItems.length);
+							});
+						});
+				});
+			});
+
+			it('All product guides modal table view can filter by archetype: Not selected', () => {
+				// Filter by archetype, verify the count. Note: 'Not selected' should show all items
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Not selected"]').click();
+
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						cy.get('tr').then(rows => {
+							// Note that the first tr is the column headers
+							expect(rows.length - 1).to.eq(allProductGuidesItems.length);
+						});
+					});
+			});
+
+			it('All product guides modal table view can bookmark items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					if (!item.bookmark) {
+						cy.getByAutoId('ViewAllTable').within(() => {
+							// Increase index by 1, since the first tr has the column headers
+							cy.get('tr').eq(index + 1).within(() => {
+								cy.getByAutoId('SBListRibbon')
+									.click();
+								cy.wait('(SB) IBN-Bookmark');
+								cy.getByAutoId('SBListRibbon')
+									.should('have.class', 'text-indigo');
+							});
+						});
+					}
+				});
+			});
+
+			it('All product guides modal table view can un-bookmark items', () => {
+				allProductGuidesItems.forEach((item, index) => {
+					if (item.bookmark) {
+						cy.getByAutoId('ViewAllTable').within(() => {
+							// Increase index by 1, since the first tr has the column headers
+							cy.get('tr').eq(index + 1).within(() => {
+								cy.getByAutoId('SBListRibbon')
+									.click();
+								cy.wait('(SB) IBN-Bookmark');
+								cy.getByAutoId('SBListRibbon')
+									.should('have.class', 'icon-bookmark-clear');
+							});
+						});
+					}
+				});
+			});
+		});
+
+		describe('Sorting Stickiness', () => {
+			beforeEach(() => {
+				// Open the modal and switch to table view
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			afterEach(() => {
+				// Switch to back to card view and close the modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Make sure we're on the lifecycle page and the default use case
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+			});
+
+			it('All product guides modal table sort should be sticky across modal close/re-open', () => {
+				const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['title'], ['asc']);
+
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Close and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the still in table view and sort is still in place
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal sort should be sticky across table/card view', () => {
+				const sortedItemsAsc = Cypress._.orderBy(allProductGuidesItems, ['title'], ['asc']);
+
+				// Sort the data
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Switch to card view, verify the sort is still in place
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('ViewAllModal').within(() => {
+					sortedItemsAsc.forEach((item, index) => {
+						cy.getByAutoId('ProductGuidesCard-Title')
+							.eq(index)
+							.should('have.text', item.title);
+					});
+				});
+
+				// Switch back to table view, verify sort is still in place
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table sort should NOT be sticky across use case changes', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Close the modal, switch use cases, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify still in table view and sort was reset to default
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						allProductGuidesItems.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table sort should NOT be sticky across page navigation', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the sort was reset to default
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						allProductGuidesItems.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+
+			it('All product guides modal table sort should NOT be sticky across page reload', () => {
+				cy.getByAutoId('ViewAllTable')
+					.within(() => {
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					});
+
+				// Close the modal, reload the page, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the sort was reset to default
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						allProductGuidesItems.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
+							});
+						});
+					});
+			});
+		});
+
+		describe('Filter Stickiness', () => {
+			beforeEach(() => {
+				// Open the View All modal
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+			});
+
+			afterEach(() => {
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Make sure we're on the lifecycle page and the default use case
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+			});
+
+			it('All product guides modal filter should be sticky across modal close/re-open', () => {
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Close and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the filter is still in place
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+					const filteredItems = allProductGuidesItems.filter(item => (item.archetype === 'Project Planning'));
+					cy.getByAutoId('ProductGuidesCard').then(cards => {
+						expect(cards.length).to.eq(filteredItems.length);
+					});
+				});
+			});
+
+			it('All product guides modal filter should NOT be sticky across use case changes', () => {
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Close the modal, change use cases, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+				cy.wait('Product Documenation & Videos response for all');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the filter was cleared and all items are displayed
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+				cy.getByAutoId('ProductGuidesCard').then($cards => {
+					expect($cards.length).to.eq(allProductGuidesItems.length);
+				});
+			});
+
+			it('All product guides modal filter should NOT be sticky across page navigation', () => {
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the filter was cleared and all items are displayed
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+				cy.getByAutoId('ProductGuidesCard').then($cards => {
+					expect($cards.length).to.eq(allProductGuidesItems.length);
+				});
+			});
+
+			it('All product guides modal filter should NOT be sticky across page reload', () => {
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Close the modal, reload the page, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify the filter was cleared and all items are displayed
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+				cy.getByAutoId('ProductGuidesCard').then($cards => {
+					expect($cards.length).to.eq(allProductGuidesItems.length);
+				});
+			});
+
+			it('All product guides modal filter should be sticky across table/card view', () => {
+				// Apply the filter
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get('a[title="Project Planning"]').click();
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+				});
+
+				// Switch to table view, verify the filter is still in place
+				cy.getByAutoId('table-view-btn').click();
+				const filteredItems = allProductGuidesItems.filter(item => (item.archetype === 'Project Planning'));
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						cy.get('tr').then(rows => {
+							// Note that the first tr is the column headers
+							expect(rows.length - 1).to.eq(filteredItems.length);
+						});
+					});
+
+				// Switch back to card view, verify the filter is still in place
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Project Planning');
+					cy.getByAutoId('ProductGuidesCard').then(cards => {
+						expect(cards.length).to.eq(filteredItems.length);
+					});
+				});
+			});
+		});
+
+		describe('Table vs. Card View Stickiness', () => {
+			beforeEach(() => {
+				// Open the modal and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('ProductGuidesCard').should('be.visible');
+			});
+
+			afterEach(() => {
+				// Switch to back to card view and close the modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				// Make sure we're on the lifecycle page and the default use case
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+			});
+
+			it('All product guides modal table vs. card view should be sticky across modal close/re-open', () => {
+				// Switch to table view
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+
+				// Close and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify we're still in table view
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			it('All product guides modal table vs. card view should be sticky across usecase change', () => {
+				// Switch to table view
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+
+				// Close the modal, switch use cases, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('UseCaseDropdown').click();
+				cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify we're still in table view
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			it('All product guides modal table vs. card view should be sticky across page navigation', () => {
+				// Switch to table view
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+
+				// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('Product Documenation & Videos response for all');
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify we're still in table view
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+
+			it('All product guides modal table vs. card view should be sticky across page reload', () => {
+				// Switch to table view
+				cy.getByAutoId('table-view-btn').click();
+				cy.getByAutoId('ViewAllTable').should('be.visible');
+
+				// Close the modal, reload the page, and re-open the modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+
+				cy.loadApp();
+				cy.wait('Product Documenation & Videos response for all');
+
+				// Close the setup wizard so it doesn't block other elements
+				// cy.getByAutoId('setup-wizard-header-close-btn').click();
+
+				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+
+				// Verify we're still in table view
+				cy.getByAutoId('ViewAllTable').should('be.visible');
 			});
 		});
 	});

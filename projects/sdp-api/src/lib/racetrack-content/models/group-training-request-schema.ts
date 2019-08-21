@@ -5,6 +5,10 @@ export interface GroupTrainingRequestSchema {
    * Applicable Contract
    */
   contract?: string;
+
+  /**
+   * Pitstop
+   */
   pitstop?: string;
 
   /**
@@ -16,6 +20,10 @@ export interface GroupTrainingRequestSchema {
    * Preferred Time for Working Sessions
    */
   preferredSlot?: string;
+
+  /**
+   * Solution
+   */
   solution?: string;
 
   /**
@@ -32,5 +40,9 @@ export interface GroupTrainingRequestSchema {
    * Goal for this training session
    */
   trainingSessionGoal?: string;
+
+  /**
+   * Usecase
+   */
   usecase?: string;
 }

@@ -32,7 +32,7 @@ class UserService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/party/v1/system/users`,
+      this.rootUrl + `/customerportal/party/v1/system/users`,
       __body,
       {
         headers: __headers,

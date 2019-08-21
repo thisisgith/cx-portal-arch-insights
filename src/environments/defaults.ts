@@ -16,15 +16,42 @@ export const defaults = {
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/pbc/',
+	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
+	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
+	controlPointsOrigin: 'https://cpp-api.sdp12-istg.csco.cloud/controlpoint',
 	csc: {
 		fileDownloadURL: `https://largefile-stage.cloudapps.cisco.com/Web-Ui?srId=
 			{0}&fileName={1}&appId=cxportal`,
 		fileList: '/ws/csc/v3/caseFiles',
 	},
 	csone: {
-		clientId: '07e418ac71284560944ea92f653a01c2',
+		classifyAppId: 'CXPortal',
+		clientId: '07e418ac71284560944ea92f653a01c2', // TODO: Change this back
 	},
-	myCase: 'https://mycase.cloudapps.cisco.com',
+	emailFromID: 'cxportal-noreply@cisco.com',
+	emailToID: 'cx-portal-support-nonprod@cisco.com',
+	cuiColors: {
+		vibrantBlue: '#017cad',
+	},
+	ieSetup: {
+		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
+		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
+		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
+			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
+		mockRegistration: true,
+		pingURL: '/ie-commonapi/services/version',
+		telemetryGuideUrl: 'https://www-author3.cisco.com/c/en/us/td/docs/cloud-systems-' +
+			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
+			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
+	},
+	learningLink: 'https://pilot-digital-learning.cisco.com/cx/#/',
+	logoutUrl: 'https://www.cisco.com/autho/logout.html',
+	manageProfileUrl: 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do',
+	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
+	mapboxHost: 'https://api.mapbox.com',
+	mapboxToken:
+	'pk.eyJ1IjoibWlzY2htaTIiLCJhIjoiY2p4eDl2ODVnMGpmODNkcDhsbG5nNXQ0YyJ9.vpfGffFASSUfANAU4Yvtxg',
+	myCase: 'https://mycase2.cloudapps.cisco.com',
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	noAuthEndpoints: [
 		'https://xresps-stage.cloudapps.cisco.com/esps/search/suggest/cdcpr01zad',
@@ -35,7 +62,8 @@ export const defaults = {
 	rmaServicePaths: {
 		returns: '/return/v1.0/returns',
 	},
-	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa1/home',
+	rmaToolUrl: 'https://ibpm-stage.cisco.com/rma-qa3/home',
+	sdpServiceBasePath: '/api',
 	sdpServiceClientId: '4jr3csg78pg7ws7gwvj82sfa',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
@@ -48,5 +76,6 @@ export const defaults = {
 		customerportal: '/api/customerportal',
 		inventory: '/api/v1/inventory',
 	},
+	supportEmailLink: 'mailto:help@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',
 };

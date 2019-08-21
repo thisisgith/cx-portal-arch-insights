@@ -1,7 +1,7 @@
 /* tslint:disable max-line-length ter-max-len */
 
 import {
-	ATXResponse,
+	ATXResponseModel,
 } from '@sdp-api';
 
 /** Base of URL for SDP API */
@@ -13,208 +13,190 @@ const customerId = '2431199';
 /** Onboard ATX */
 const onboardItems = [
 	{
-		attendeeLink: '',
-		description: 'During this session, you will get a deep-dive look at wireless assurance, with a focus on troubleshooting. You also will learn how to use Wireless Client 360 to view device and client connectivity, as well as how to use wireless health metrics, configure wireless sensors, and use sensor tests.',
-		duration: '01:15:00',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: '',
-		registrationUrl: '',
-		sessions: [
-			{
-				date: '2019-03-13',
-				time: '7:00 AM PST',
-			},
-		],
-		status: 'completed',
-		title: 'Cisco DNA Center Getting started',
-		viewOnDemandUrl: '',
-	},
-	{
-		attendeeLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=eaf5d9a3c5ad34fc1c9a3e50568439563',
-		description: 'During this session, you will get a deep-dive look at wireless assurance, with a focus on troubleshooting. You also will learn how to use Wireless Client 360 to view device and client connectivity, as well as how to use wireless health metrics, configure wireless sensors, and use sensor tests.',
-		duration: '01:15:00',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=eadbe1210193b00b085825344d53f4631',
-		registrationUrl: '',
-		sessions: [
-			{
-				date: '2019-06-24',
-				time: '7:00 AM PST',
-			},
-		],
+		atxId: 'ATX1',
+		title: 'Cisco DNA Center Getting Started',
+		description: 'We cover subjects including interface and network design overview, policy \nmanagement and deployment, device provisioning, and automation/assurance.',
+		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Getting-Started.png',
 		status: 'scheduled',
-		title: 'Cisco DNA Project Plan Best Practices',
-		viewOnDemandUrl: '',
-	},
-	{
-		attendeeLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e87603adbd28cac08fe8abef0ad4f1d3b',
-		description: 'During this session, you will get a deep-dive look at wireless assurance, with a focus on troubleshooting. You also will learn how to use Wireless Client 360 to view device and client connectivity, as well as how to use wireless health metrics, configure wireless sensors, and use sensor tests.',
-		duration: '01:15:00',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e14e84f767a1ee65dbf94bcbfb3a0845a',
-		registrationUrl: '',
+		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052',
+		duration: 4500,
+		bookmark: true,
 		sessions: [
 			{
-				date: '2019-07-31',
-				time: '7:00 AM PST',
+				sessionId: 'Session1',
+				sessionStartDate: 1565127052000,
+				scheduled: false,
+				presenterName: 'John Doe',
+				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ec89a0c8c89abb903864c873b2a71ece2',
+			},
+			{
+				sessionId: 'Session2',
+				sessionStartDate: 1565082000000,
+				scheduled: true,
+				presenterName: 'Jakub Horbacewicz',
+				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ee54d58c50a23de754bd0616b5a21e9f1',
+			},
+			{
+				sessionId: 'Session3',
+				sessionStartDate: 1565060400000,
+				scheduled: false,
+				presenterName: 'Dheebshiba “D.B.” Dinakaran',
+				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e1543c7456f4a94a5f770842e5ca728b0',
+			},
+			{
+				sessionId: 'Session4',
+				sessionStartDate: 1566486000000,
+				scheduled: false,
+				presenterName: 'Mike Brown',
+				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e3b7dd5d97c4e380413e566793fd199a0',
+			},
+			{
+				sessionId: 'Session5',
+				sessionStartDate: 1566464400000,
+				scheduled: false,
+				presenterName: 'Jakub Horbacewicz',
+				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ec0bddbdce411e15f41eb5d991eb1d4b6',
+			},
+			{
+				sessionId: 'Session6',
+				sessionStartDate: 1566442800000,
+				scheduled: false,
+				presenterName: 'Dheebshiba “D.B.” Dinakaran',
+				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=eeb86d0ab10129d5f1ac30e416ffd5af7',
 			},
 		],
-		status: 'inProgress',
-		title: 'Cisco APIC-EM Infrastructure Transition Best Practices',
-		viewOnDemandUrl: '',
 	},
 	{
-		attendeeLink: '',
-		description: 'During this session, you will get a deep-dive look at wireless assurance, with a focus on troubleshooting. You also will learn how to use Wireless Client 360 to view device and client connectivity, as well as how to use wireless health metrics, configure wireless sensors, and use sensor tests.',
-		duration: '01:15:00',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: '',
-		registrationUrl: '',
+		atxId: 'ATX2',
+		title: 'Cisco DNA Center Project Plan Best Practices 1',
+		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
+		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-Center-Project-Plan-Best-Practices.png',
+		status: 'completed',
+		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
+		duration: 3600,
+		bookmark: false,
 		sessions: [
 			{
-				date: '2019-02-27',
-				time: '7:00 AM PST',
+				sessionId: 'Session7',
+				sessionStartDate: 1565190000000,
+				presenterName: 'Billy Manashi',
+				scheduled: false,
+				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=edfcb532bb594518ca707aa19c3a55feb',
+			},
+			{
+				sessionId: 'Session8',
+				sessionStartDate: 1565168400000,
+				presenterName: 'Angelique de Vos',
+				scheduled: false,
+				attendeeURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e823bc2471db63055c6d001a5e4212435',
+			},
+			{
+				sessionId: 'Session9',
+				sessionStartDate: 1565146800000,
+				presenterName: 'Induraj Nadarajan',
+				scheduled: false,
+				attendeeURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=efe04ab188b9e982b765c0f6f7fc6616e',
+			},
+			{
+				sessionId: 'Session10',
+				sessionStartDate: 1567004400000,
+				presenterName: 'Billy Manashi',
+				scheduled: false,
+				attendeeURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ec1974e4f4fb728e3515b3ae70fa49bd7',
+			},
+			{
+				sessionId: 'Session11',
+				sessionStartDate: 1566982800000,
+				presenterName: 'Angelique de Vos',
+				scheduled: false,
+				attendeeURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e72cdaec14f278787116bab2eff9fc8e9',
+			},
+			{
+				sessionId: 'Session12',
+				sessionStartDate: 1566961200000,
+				presenterName: 'Induraj Nadarajan',
+				scheduled: false,
+				attendeeURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e322a6bd38bc72e8d34057240ebd0be7e',
 			},
 		],
-		title: 'Some other Session title',
-		viewOnDemandUrl: '',
 	},
 	{
-		attendeeLink: '',
-		description: 'During this session, you will get a deep-dive look at wireless assurance, with a focus on troubleshooting. You also will learn how to use Wireless Client 360 to view device and client connectivity, as well as how to use wireless health metrics, configure wireless sensors, and use sensor tests.',
-		duration: '01:15:00',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: '',
-		registrationUrl: '',
+		atxId: 'DNA3',
+		title: 'Cisco DNA Center Project Plan Best Practices 2',
+		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
+		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Center-Wireless-Assurance.png',
+		status: 'in-progress',
+		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
+		duration: 3600,
+		bookmark: false,
 		sessions: [
 			{
-				date: '2019-04-15',
-				time: '7:00 AM PST',
+				sessionId: 'Session13',
+				sessionStartDate: 1565200000000,
+				presenterName: 'Billy Manashi',
+				scheduled: false,
+				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=edfcb532bb594518ca707aa19c3a55feb',
 			},
 		],
-		status: 'recommended',
-		title: 'Some other Session title',
-		viewOnDemandUrl: '',
 	},
 	{
-		attendeeLink: '',
-		description: 'During this session, you will get a deep-dive look at wireless assurance, with a focus on troubleshooting. You also will learn how to use Wireless Client 360 to view device and client connectivity, as well as how to use wireless health metrics, configure wireless sensors, and use sensor tests.',
-		duration: '01:15:00',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: '',
-		registrationUrl: '',
+		atxId: 'DNA4',
+		title: 'Cisco DNA Center Project Plan Best Practices 3',
+		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
+		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Center-Feature-Overview.png',
+		status: 'requested',
+		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/310232f0-0a44-4286-a374-71edb71835ee&activityId=2&fileId=123051',
+		duration: 3600,
+		bookmark: false,
 		sessions: [
 			{
-				date: '2019-04-29',
-				time: '7:00 AM PST',
+				sessionId: 'Session14',
+				sessionStartDate: 1565210000000,
+				presenterName: 'Billy Manashi',
+				scheduled: false,
+				registrationURL: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=edfcb532bb594518ca707aa19c3a55feb',
 			},
 		],
-		status: 'recommended',
-		title: 'Some other Session title',
-		viewOnDemandUrl: '',
-	},
-	{
-		attendeeLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e37fe9173068f6e3dc60b262e6e73f743',
-		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices, scale considerations, cloud connectivity, and the best conditions for setup.',
-		duration: '01:15:00',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=e32413dc94292e5a4850148d35f92e9cf',
-		registrationUrl: '',
-		sessions: [
-			{
-				date: '2019-06-19',
-				time: '7:00 AM PST',
-			},
-		],
-		status: 'recommended',
-		title: 'Some other Session title',
-		viewOnDemandUrl: '',
-	},
-	{
-		attendeeLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ef7077af8feecd236e9ffd7695e00b856',
-		description: 'During this session, you will get a deep-dive look at wireless assurance, with a focus on troubleshooting. You also will learn how to use Wireless Client 360 to view device and client connectivity, as well as how to use wireless health metrics, configure wireless sensors, and use sensor tests.',
-		duration: '01:15:00',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: 'https://cisco.webex.com/cisco/onstage/g.php?MTID=ef149fc7c21237c4d583e592ccdde042c',
-		registrationUrl: '',
-		sessions: [
-			{
-				date: '2019-06-26',
-				time: '7:00 AM PST',
-			},
-		],
-		status: 'recommended',
-		title: 'Some other Session title',
-		viewOnDemandUrl: '',
-	},
-	{
-		attendeeLink: '',
-		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices, scale considerations, cloud connectivity, and the best conditions for setup.',
-		duration: '01:15:00',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: '',
-		registrationUrl: '',
-		sessions: [
-			{
-				date: '2018-12-06',
-				time: '7:00 AM PST',
-			},
-		],
-		status: 'recommended',
-		title: 'Some other Session title',
-		viewOnDemandUrl: '',
 	},
 ];
 
-/** Items for Adoption Scenario */
-const adoptItems = [
+/** Implement ATX */
+const implementItems = [
 	{
-		attendeeLink: '',
-		description: 'Lorem Ipsum',
-		duration: '99:99:99',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: '',
-		registrationUrl: '',
+		atxId: 'ATX-01',
+		title: 'Cisco DNA Center Project Planning',
+		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
+		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_access-infra-readiness.png',
+		status: 'in-progress',
+		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052',
+		duration: 2323423,
+		bookmark: true,
 		sessions: [
 			{
-				date: '2018-12-06',
-				time: '7:00 AM PST',
+				sessionId: 'Session1',
+				sessionStartDate: 1565127052000,
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
 			},
 		],
-		title: 'A Different Session Title',
-		viewOnDemandUrl: '',
 	},
 	{
-		attendeeLink: '',
-		description: 'Lorem Ipsum',
-		duration: '99:99:99',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: '',
-		registrationUrl: '',
+		atxId: 'ATX-02',
+		title: 'Cisco DNA Install Appliance',
+		description: 'We cover subjects including interface and network design overview, policy \nmanagement and deployment, device provisioning, and automation/assurance.',
+		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_deployment-best-practices.png',
+		status: 'completed',
+		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052',
+		duration: 3600,
+		bookmark: true,
 		sessions: [
 			{
-				date: '2018-12-06',
-				time: '7:00 AM PST',
+				sessionId: 'Session2',
+				sessionStartDate: 1565127052000,
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
 			},
 		],
-		title: 'A Different Session Title',
-		viewOnDemandUrl: '',
-	},
-	{
-		attendeeLink: '',
-		description: 'Lorem Ipsum',
-		duration: '99:99:99',
-		moderator: 'Romeo Mazzaluna',
-		panelistLink: '',
-		registrationUrl: '',
-		sessions: [
-			{
-				date: '2018-12-06',
-				time: '7:00 AM PST',
-			},
-		],
-		title: 'A Different Session Title',
-		viewOnDemandUrl: '',
 	},
 ];
 
@@ -225,7 +207,7 @@ const adoptItems = [
  * @param pitstop the pitstop
  * @returns the ATXResponse
  */
-function MockATX (solution: string, usecase: string, pitstop: string): ATXResponse {
+function MockATX (solution: string, usecase: string, pitstop: string): ATXResponseModel {
 	const response = {
 		pitstop,
 		solution,
@@ -233,8 +215,8 @@ function MockATX (solution: string, usecase: string, pitstop: string): ATXRespon
 		items: [],
 	};
 
-	if (pitstop.toLowerCase() === 'adopt') {
-		response.items = adoptItems;
+	if (pitstop.toLowerCase() === 'implement') {
+		response.items = implementItems;
 	} else {
 		response.items = onboardItems;
 	}
@@ -278,6 +260,23 @@ export const ATXScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Use',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Use'),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Use&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -349,6 +348,44 @@ export const ATXScenarios = [
 		},
 		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
 			`pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
+];
+
+/**
+ * The scenarios
+ */
+export const CancelATXScenarios = [
+	{
+		scenarios: {
+			DELETE: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Cancel ATX Session1',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/registration?sessionId=Session1&atxId=ATX1`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			DELETE: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(ATX) IBN-Cancel ATX Session2',
+					response: {
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/registration?sessionId=Session2&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 ];

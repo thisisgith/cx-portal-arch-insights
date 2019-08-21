@@ -15,9 +15,7 @@ import {
 	SecurityAdvisoryBulletin,
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryInfo,
-	InventoryService,
-	Assets,
-	Asset,
+	SecurityAdvisoriesResponse,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -26,13 +24,15 @@ import {
 	catchError,
 } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
+import { AssetIds } from '../impacted-assets/impacted-assets.component';
+import { Alert } from '@interfaces';
 
 /** Data Interface */
 export interface Data {
 	advisory?: SecurityAdvisoryInfo;
 	notice?: SecurityAdvisory;
 	bulletin?: SecurityAdvisoryBulletin;
-	affected?: Asset[];
+	assetIds?: AssetIds;
 }
 
 /**
@@ -40,6 +40,7 @@ export interface Data {
  */
 @Component({
 	selector: 'security-details',
+	styleUrls: ['./security-details.component.scss'],
 	templateUrl: './security-details.component.html',
 })
 export class SecurityDetailsComponent implements OnInit, OnChanges {
@@ -48,21 +49,42 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	@Input('advisory') public advisory: SecurityAdvisoryInfo;
 	@Input('customerId') public customerId: string;
 	@Output('details') public details = new EventEmitter<Data>();
+	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 
 	private params: {
-		notice: ProductAlertsService.GetSecurityAdvisoriesParams;
-		bulletin: ProductAlertsService.GetPSIRTBulletinParams;
-		assets?: InventoryService.GetAssetsParams;
+		advisory?: ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams;
+		notice?: ProductAlertsService.GetSecurityAdvisoriesParams;
+		bulletin?: ProductAlertsService.GetPSIRTBulletinParams;
 	};
 
+	public impactedCount = 0;
+	public activeTab = 0;
 	public data: Data = { };
 	public isLoading = false;
 
 	constructor (
 		private logger: LogService,
-		private inventoryService: InventoryService,
 		private productAlertsService: ProductAlertsService,
 	) { }
+
+	/**
+	 * Fetches our advisory
+	 * @returns the observable
+	 */
+	private getAdvisory () {
+		return this.productAlertsService.getAdvisoriesSecurityAdvisories(this.params.advisory)
+		.pipe(
+			map((response: SecurityAdvisoriesResponse) => {
+				_.set(this.data, 'advisory', _.head(response.data));
+			}),
+			catchError(err => {
+				this.logger.error('security-details.component : getAdvisory() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
 
 	/**
 	 * Retrieves the security advisories
@@ -72,14 +94,23 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 		return this.productAlertsService.getSecurityAdvisories(this.params.notice)
 		.pipe(
 			mergeMap((response: SecurityAdvisoryResponse) => {
-				const affected = _.filter(response.data,
-						{ advisoryId: _.toSafeInteger(this.id) }) || [];
-				_.set(this.data, 'notice', _.head(affected));
+				const data = _.get(response, 'data', []);
+				_.set(this.data, 'notice', _.head(data));
 
-				return forkJoin(
-					this.getSecurityAdvisoryBulletin(),
-					this.getAssets(affected),
-				);
+				const vulAdvisories = _.filter(data, { vulnerabilityStatus: 'VUL' }) || [];
+				const vulIds = _.compact(_.map(vulAdvisories, 'managedNeId')) || [];
+
+				if (vulIds.length) {
+					_.set(this.data, ['assetIds', 'impacted'], vulIds);
+				}
+				const potVulAdvisories = _.filter(data, { vulnerabilityStatus: 'POTVUL' }) || [];
+				const potVulIds = _.compact(_.map(potVulAdvisories, 'managedNeId')) || [];
+
+				if (potVulIds.length) {
+					_.set(this.data, ['assetIds', 'potentiallyImpacted'], potVulIds);
+				}
+
+				return this.getSecurityAdvisoryBulletin();
 			}),
 			catchError(err => {
 				this.logger.error('security-details.component : getSecurityAdvisory() ' +
@@ -110,44 +141,18 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	}
 
 	/**
-	 * Fetches the assets affected by the security advisory
-	 * @param securityAdvisories the security advisories to look over
-	 * @returns the observable
-	 */
-	private getAssets (securityAdvisories: SecurityAdvisory[]) {
-		this.params.assets = {
-			customerId: this.customerId,
-			hwInstanceId: _.map(securityAdvisories, 'hwInstanceId'),
-		};
-
-		return this.inventoryService.getAssets(this.params.assets)
-		.pipe(
-			map((response: Assets) => {
-				_.set(this.data, 'affected', _.get(response, 'data', []));
-			}),
-			catchError(err => {
-				this.logger.error('security-details.component : getAssets() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
 	 * Refresh Function
 	 */
 	public refresh () {
 		const advisoryId = _.get(this.advisory, 'id');
+		this.data = { };
+		this.activeTab = 0;
+		this.impactedCount = 0;
 		if (this.id || advisoryId) {
 			if (!this.id) {
 				this.id = advisoryId;
 			}
-			if (this.advisory) {
-				_.set(this.data, 'advisory', this.advisory);
-			}
-
-			this.isLoading = true;
+			const obsBatch = [];
 
 			this.params = {
 				bulletin: {
@@ -159,8 +164,22 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 					vulnerabilityStatus: ['POTVUL', 'VUL'],
 				},
 			};
+			obsBatch.push(this.getSecurityAdvisory());
 
-			this.getSecurityAdvisory()
+			if (this.advisory) {
+				_.set(this.data, 'advisory', this.advisory);
+			} else {
+				this.params.advisory = {
+					advisoryId: [_.toSafeInteger(this.id)],
+					customerId: this.customerId,
+				};
+
+				obsBatch.push(this.getAdvisory());
+			}
+
+			this.isLoading = true;
+
+			forkJoin(obsBatch)
 			.subscribe(() => {
 				this.isLoading = false;
 				this.details.emit(this.data);

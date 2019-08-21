@@ -7,18 +7,27 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
-import { PolicyResponseModel } from '../models/policy-response-model';
 import { DevicePolicyResponseModel } from '../models/device-policy-response-model';
+import { IgnorePolicyRequestModel } from '../models/ignore-policy-request-model';
+import { IgnorePolicyUpdateRequestModel } from '../models/ignore-policy-update-request-model';
+import { DeviceDetailsByPage } from '../models/device-details-by-page';
+import { PolicyResponseModel } from '../models/policy-response-model';
+import { PoliciesGroupByDayInAMonthModel } from '../models/policies-group-by-day-in-amonth-model';
 import { DevicePolicyRequestModel } from '../models/device-policy-request-model';
 import { DevicePolicyUpdateRequestModel } from '../models/device-policy-update-request-model';
-import { DeviceDetailsByPage } from '../models/device-details-by-page';
 import { DevicePolicyStatusResponseModel } from '../models/device-policy-status-response-model';
 import { DefaultResponseModel } from '../models/default-response-model';
 @Injectable({
   providedIn: 'root',
 })
 class ControlPointDevicePolicyAPIService extends __BaseService {
+  static readonly createIgnoreScanPolicyUsingPOSTPath = '/ignorepolicy';
+  static readonly updateIgnoreScanPolicyUsingPATCHPath = '/ignorepolicy';
+  static readonly getEligibleDevicesForGivenIgnorePolicyUsingGETPath = '/ignorepolicy/devices/eligible/{customerId}/{policyId}/{pageNumber}/{rowsPerPage}';
+  static readonly getDevicesForGivenIgnorePolicyUsingGETPath = '/ignorepolicy/devices/existing/{customerId}/{policyId}/{pageNumber}/{rowsPerPage}';
+  static readonly getDevicesForIgnorePolicyCreationUsingGETPath = '/ignorepolicy/devices/{customerId}/{pageNumber}/{rowsPerPage}';
   static readonly getAllPolicyUsingGETPath = '/policies/{customerId}';
+  static readonly getAllPolicyForGivenMonthUsingGETPath = '/policies/{customerId}/{month}/{year}';
   static readonly createDevicePolicyUsingPOSTPath = '/policy';
   static readonly updateDevicePolicyUsingPATCHPath = '/policy';
   static readonly getDevicesForPolicyCreationUsingGETPath = '/policy/devices/{customerId}';
@@ -26,13 +35,263 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   static readonly getDevicesForGivenPolicyUsingGETPath = '/policy/devices/{customerId}/{policyId}';
   static readonly getDevicesForGivenPolicyUsingGET1Path = '/policy/devices/{customerId}/{policyId}/{pageNumber}/{rowsPerPage}';
   static readonly getPolicyStatusUsingGETPath = '/policy/status/{policyId}';
-  static readonly deletePolicyUsingDELETEPath = '/policy/{policyId}';
+  static readonly deletePolicyUsingDELETEPath = '/policy/{customerId}/{policyId}';
 
   constructor(
     config: __Configuration,
     http: HttpClient
   ) {
     super(config, http);
+  }
+
+  /**
+   * @param ignorePolicyRequestModel ignorePolicyRequestModel
+   * @return OK
+   */
+  createIgnoreScanPolicyUsingPOSTResponse(ignorePolicyRequestModel: IgnorePolicyRequestModel): __Observable<__StrictHttpResponse<DevicePolicyResponseModel>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = ignorePolicyRequestModel;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/customerportal/controlpoint/v1/ignorepolicy`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<DevicePolicyResponseModel>;
+      })
+    );
+  }
+
+  /**
+   * @param ignorePolicyRequestModel ignorePolicyRequestModel
+   * @return OK
+   */
+  createIgnoreScanPolicyUsingPOST(ignorePolicyRequestModel: IgnorePolicyRequestModel): __Observable<DevicePolicyResponseModel> {
+    return this.createIgnoreScanPolicyUsingPOSTResponse(ignorePolicyRequestModel).pipe(
+      __map(_r => _r.body as DevicePolicyResponseModel)
+    );
+  }
+
+  /**
+   * @param ignorePolicyUpdateRequestModel ignorePolicyUpdateRequestModel
+   * @return OK
+   */
+  updateIgnoreScanPolicyUsingPATCHResponse(ignorePolicyUpdateRequestModel: IgnorePolicyUpdateRequestModel): __Observable<__StrictHttpResponse<DevicePolicyResponseModel>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __headers = __headers.append("Content-Type", "application/json");
+    __body = ignorePolicyUpdateRequestModel;
+    let req = new HttpRequest<any>(
+      'PATCH',
+      this.rootUrl + `/customerportal/controlpoint/v1/ignorepolicy`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<DevicePolicyResponseModel>;
+      })
+    );
+  }
+
+  /**
+   * @param ignorePolicyUpdateRequestModel ignorePolicyUpdateRequestModel
+   * @return OK
+   */
+  updateIgnoreScanPolicyUsingPATCH(ignorePolicyUpdateRequestModel: IgnorePolicyUpdateRequestModel): __Observable<DevicePolicyResponseModel> {
+    return this.updateIgnoreScanPolicyUsingPATCHResponse(ignorePolicyUpdateRequestModel).pipe(
+      __map(_r => _r.body as DevicePolicyResponseModel)
+    );
+  }
+
+  /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams` containing the following parameters:
+   *
+   * - `rowsPerPage`: rowsPerPage
+   *
+   * - `policyId`: policyId
+   *
+   * - `pageNumber`: pageNumber
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getEligibleDevicesForGivenIgnorePolicyUsingGETResponse(params: ControlPointDevicePolicyAPIService.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams): __Observable<__StrictHttpResponse<DeviceDetailsByPage>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+
+
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/controlpoint/v1/ignorepolicy/devices/eligible/${params.customerId}/${params.policyId}/${params.pageNumber}/${params.rowsPerPage}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<DeviceDetailsByPage>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams` containing the following parameters:
+   *
+   * - `rowsPerPage`: rowsPerPage
+   *
+   * - `policyId`: policyId
+   *
+   * - `pageNumber`: pageNumber
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getEligibleDevicesForGivenIgnorePolicyUsingGET(params: ControlPointDevicePolicyAPIService.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams): __Observable<DeviceDetailsByPage> {
+    return this.getEligibleDevicesForGivenIgnorePolicyUsingGETResponse(params).pipe(
+      __map(_r => _r.body as DeviceDetailsByPage)
+    );
+  }
+
+  /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForGivenIgnorePolicyUsingGETParams` containing the following parameters:
+   *
+   * - `rowsPerPage`: rowsPerPage
+   *
+   * - `policyId`: policyId
+   *
+   * - `pageNumber`: pageNumber
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getDevicesForGivenIgnorePolicyUsingGETResponse(params: ControlPointDevicePolicyAPIService.GetDevicesForGivenIgnorePolicyUsingGETParams): __Observable<__StrictHttpResponse<DeviceDetailsByPage>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+
+
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/controlpoint/v1/ignorepolicy/devices/existing/${params.customerId}/${params.policyId}/${params.pageNumber}/${params.rowsPerPage}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<DeviceDetailsByPage>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForGivenIgnorePolicyUsingGETParams` containing the following parameters:
+   *
+   * - `rowsPerPage`: rowsPerPage
+   *
+   * - `policyId`: policyId
+   *
+   * - `pageNumber`: pageNumber
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getDevicesForGivenIgnorePolicyUsingGET(params: ControlPointDevicePolicyAPIService.GetDevicesForGivenIgnorePolicyUsingGETParams): __Observable<DeviceDetailsByPage> {
+    return this.getDevicesForGivenIgnorePolicyUsingGETResponse(params).pipe(
+      __map(_r => _r.body as DeviceDetailsByPage)
+    );
+  }
+
+  /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams` containing the following parameters:
+   *
+   * - `rowsPerPage`: rowsPerPage
+   *
+   * - `pageNumber`: pageNumber
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getDevicesForIgnorePolicyCreationUsingGETResponse(params: ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams): __Observable<__StrictHttpResponse<DeviceDetailsByPage>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/controlpoint/v1/ignorepolicy/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<DeviceDetailsByPage>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams` containing the following parameters:
+   *
+   * - `rowsPerPage`: rowsPerPage
+   *
+   * - `pageNumber`: pageNumber
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getDevicesForIgnorePolicyCreationUsingGET(params: ControlPointDevicePolicyAPIService.GetDevicesForIgnorePolicyCreationUsingGETParams): __Observable<DeviceDetailsByPage> {
+    return this.getDevicesForIgnorePolicyCreationUsingGETResponse(params).pipe(
+      __map(_r => _r.body as DeviceDetailsByPage)
+    );
   }
 
   /**
@@ -47,7 +306,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policies/${customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policies/${customerId}`,
       __body,
       {
         headers: __headers,
@@ -74,6 +333,60 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   }
 
   /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetAllPolicyForGivenMonthUsingGETParams` containing the following parameters:
+   *
+   * - `year`: year
+   *
+   * - `month`: month
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getAllPolicyForGivenMonthUsingGETResponse(params: ControlPointDevicePolicyAPIService.GetAllPolicyForGivenMonthUsingGETParams): __Observable<__StrictHttpResponse<Array<PoliciesGroupByDayInAMonthModel>>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+
+
+
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/customerportal/controlpoint/v1/policies/${params.customerId}/${params.month}/${params.year}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<Array<PoliciesGroupByDayInAMonthModel>>;
+      })
+    );
+  }
+
+  /**
+   * @param params The `ControlPointDevicePolicyAPIService.GetAllPolicyForGivenMonthUsingGETParams` containing the following parameters:
+   *
+   * - `year`: year
+   *
+   * - `month`: month
+   *
+   * - `customerId`: customerId
+   *
+   * @return OK
+   */
+  getAllPolicyForGivenMonthUsingGET(params: ControlPointDevicePolicyAPIService.GetAllPolicyForGivenMonthUsingGETParams): __Observable<Array<PoliciesGroupByDayInAMonthModel>> {
+    return this.getAllPolicyForGivenMonthUsingGETResponse(params).pipe(
+      __map(_r => _r.body as Array<PoliciesGroupByDayInAMonthModel>)
+    );
+  }
+
+  /**
    * @param devicePolicyRequestModel devicePolicyRequestModel
    * @return OK
    */
@@ -86,7 +399,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
     __body = devicePolicyRequestModel;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy`,
       __body,
       {
         headers: __headers,
@@ -125,7 +438,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
     __body = devicePolicyUpdateRequestModel;
     let req = new HttpRequest<any>(
       'PATCH',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy`,
       __body,
       {
         headers: __headers,
@@ -172,7 +485,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/devices/${params.customerId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/devices/${params.customerId}`,
       __body,
       {
         headers: __headers,
@@ -226,7 +539,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.pageNumber}/${params.rowsPerPage}`,
       __body,
       {
         headers: __headers,
@@ -283,7 +596,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.policyId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.policyId}`,
       __body,
       {
         headers: __headers,
@@ -342,7 +655,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.policyId}/${params.pageNumber}/${params.rowsPerPage}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/devices/${params.customerId}/${params.policyId}/${params.pageNumber}/${params.rowsPerPage}`,
       __body,
       {
         headers: __headers,
@@ -389,7 +702,7 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/status/${policyId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/status/${policyId}`,
       __body,
       {
         headers: __headers,
@@ -416,18 +729,24 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   }
 
   /**
-   * @param policyId policyId
+   * @param params The `ControlPointDevicePolicyAPIService.DeletePolicyUsingDELETEParams` containing the following parameters:
+   *
+   * - `policyId`: policyId
+   *
+   * - `customerId`: customerId
+   *
    * @return OK
    */
-  deletePolicyUsingDELETEResponse(policyId: string): __Observable<__StrictHttpResponse<DefaultResponseModel>> {
+  deletePolicyUsingDELETEResponse(params: ControlPointDevicePolicyAPIService.DeletePolicyUsingDELETEParams): __Observable<__StrictHttpResponse<DefaultResponseModel>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
 
+
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/api/customerportal/controlpoint/v1/policy/${policyId}`,
+      this.rootUrl + `/customerportal/controlpoint/v1/policy/${params.customerId}/${params.policyId}`,
       __body,
       {
         headers: __headers,
@@ -444,17 +763,116 @@ class ControlPointDevicePolicyAPIService extends __BaseService {
   }
 
   /**
-   * @param policyId policyId
+   * @param params The `ControlPointDevicePolicyAPIService.DeletePolicyUsingDELETEParams` containing the following parameters:
+   *
+   * - `policyId`: policyId
+   *
+   * - `customerId`: customerId
+   *
    * @return OK
    */
-  deletePolicyUsingDELETE(policyId: string): __Observable<DefaultResponseModel> {
-    return this.deletePolicyUsingDELETEResponse(policyId).pipe(
+  deletePolicyUsingDELETE(params: ControlPointDevicePolicyAPIService.DeletePolicyUsingDELETEParams): __Observable<DefaultResponseModel> {
+    return this.deletePolicyUsingDELETEResponse(params).pipe(
       __map(_r => _r.body as DefaultResponseModel)
     );
   }
 }
 
 module ControlPointDevicePolicyAPIService {
+
+  /**
+   * Parameters for getEligibleDevicesForGivenIgnorePolicyUsingGET
+   */
+  export interface GetEligibleDevicesForGivenIgnorePolicyUsingGETParams {
+
+    /**
+     * rowsPerPage
+     */
+    rowsPerPage: string;
+
+    /**
+     * policyId
+     */
+    policyId: string;
+
+    /**
+     * pageNumber
+     */
+    pageNumber: string;
+
+    /**
+     * customerId
+     */
+    customerId: string;
+  }
+
+  /**
+   * Parameters for getDevicesForGivenIgnorePolicyUsingGET
+   */
+  export interface GetDevicesForGivenIgnorePolicyUsingGETParams {
+
+    /**
+     * rowsPerPage
+     */
+    rowsPerPage: string;
+
+    /**
+     * policyId
+     */
+    policyId: string;
+
+    /**
+     * pageNumber
+     */
+    pageNumber: string;
+
+    /**
+     * customerId
+     */
+    customerId: string;
+  }
+
+  /**
+   * Parameters for getDevicesForIgnorePolicyCreationUsingGET
+   */
+  export interface GetDevicesForIgnorePolicyCreationUsingGETParams {
+
+    /**
+     * rowsPerPage
+     */
+    rowsPerPage: string;
+
+    /**
+     * pageNumber
+     */
+    pageNumber: string;
+
+    /**
+     * customerId
+     */
+    customerId: string;
+  }
+
+  /**
+   * Parameters for getAllPolicyForGivenMonthUsingGET
+   */
+  export interface GetAllPolicyForGivenMonthUsingGETParams {
+
+    /**
+     * year
+     */
+    year: string;
+
+    /**
+     * month
+     */
+    month: string;
+
+    /**
+     * customerId
+     */
+    customerId: string;
+  }
 
   /**
    * Parameters for getDevicesForPolicyCreationUsingGET
@@ -543,6 +961,22 @@ module ControlPointDevicePolicyAPIService {
      * pageNumber
      */
     pageNumber: string;
+
+    /**
+     * customerId
+     */
+    customerId: string;
+  }
+
+  /**
+   * Parameters for deletePolicyUsingDELETE
+   */
+  export interface DeletePolicyUsingDELETEParams {
+
+    /**
+     * policyId
+     */
+    policyId: string;
 
     /**
      * customerId

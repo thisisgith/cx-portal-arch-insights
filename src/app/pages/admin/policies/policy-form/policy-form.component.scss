@@ -1,0 +1,45 @@
+.force-left {
+	left: 0;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.form-group {
+	display: flex;
+	align-items: left;
+}
+
+.collection-label {
+	margin: 0 10px 0 10px;
+}
+
+.form-inline {
+	text-align: left;
+}
+
+.device-table {
+	text-align: left;
+}
+
+.selected {
+	// got color from mockup
+	background: rgba(229, 247, 251, 1);
+}
+
+.shift-button {
+	text-align: center;
+	width: 200px;
+}
+
+select {
+	width: 100px;
+	display: inline-block;
+	background-color: transparent;
+	border-width: 0 0 1px 0;
+}
+
+#timePeriod-select {
+	width: 110px;
+}

@@ -4,6 +4,7 @@ import {
 	ViewChild,
 	TemplateRef,
 	OnDestroy,
+	ElementRef,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -23,16 +24,18 @@ import {
 	SecurityAdvisoryInfo,
 	VulnerabilityResponse,
 } from '@sdp-api';
-import { of, forkJoin, Subject } from 'rxjs';
+import { of, forkJoin, Subject, fromEvent, Subscription } from 'rxjs';
 import * as _ from 'lodash-es';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { FormGroup, FormControl } from '@angular/forms';
+import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {
 	map,
 	catchError,
 	switchMap,
+	debounceTime,
+	distinctUntilChanged,
+	takeUntil,
 } from 'rxjs/operators';
-import { DatePipe } from '@angular/common';
 import { VisualFilter, AdvisoryType } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -59,10 +62,18 @@ interface Tab {
 		ProductAlertsService.GetAdvisoriesFieldNoticesParams;
 	route: string;
 	subject?: Subject<{ }>;
+	searchForm?: FormGroup;
+	searchInput?: ElementRef;
+	searchTemplate?: TemplateRef<{ }>;
+	searchSubscribe?: Subscription;
+	selectedSubfilters?: SelectedSubfilter[];
 }
 
-/** Our current customerId */
-const customerId = '2431199';
+/** Interface for selected subfilters */
+interface SelectedSubfilter {
+	subfilter: VisualFilter['seriesData'];
+	filter: string;
+}
 
 /**
  * Advisories Component
@@ -77,20 +88,17 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		filterCollapse: false,
 		isLoading: true,
 	};
-	public search: FormControl = new FormControl('');
-	public searchForm: FormGroup;
 	public searchOptions = {
-		debounce: 1500,
+		debounce: 200,
 		max: 100,
 		min: 3,
-		pattern: /^[a-zA-Z ]*$/,
+		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
 	};
 	public activeIndex = 0;
-
+	private destroy$ = new Subject();
 	public tabs: Tab[] = [];
 	private routeParam: string;
 	private customerId: string;
-
 	public fullscreen = false;
 	public selectedAdvisory: {
 		advisory: CriticalBug | FieldNoticeAdvisory | SecurityAdvisoryInfo;
@@ -98,27 +106,73 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		id: string;
 	};
 	public activeTab: number;
-	public selectedSubfilters: VisualFilter['seriesData'];
 	@ViewChild('impactTemplate', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('impactedCountTemplate', { static: true })
 		private impactedCountTemplate: TemplateRef<{ }>;
+	@ViewChild('impactedAssetsTemplate', { static: true })
+		private impactedAssetsTemplate: TemplateRef<{ }>;
+	@ViewChild('potentiallyImpactedAssetsTemplate', { static: true })
+		private potentiallyImpactedAssetsTemplate: TemplateRef<{ }>;
 	@ViewChild('content', { static: true }) private contentTemplate: TemplateRef<{ }>;
 	@ViewChild('totalFilter', { static: true }) private totalFilterTemplate: TemplateRef<{ }>;
 	@ViewChild('pieChartFilter', { static: true }) private pieChartFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('titleTemplate', { static: true }) private titleTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('stateTemplate', { static: true }) private stateTemplate: TemplateRef<{ }>;
+	@ViewChild('lastUpdatedTemplate', { static: true })
+		private lastUpdatedTemplate: TemplateRef<{ }>;
 	@ViewChild('columnChartFilter', { static: true })
 		private columnChartFilterTemplate: TemplateRef<{ }>;
 
+	@ViewChild('securitySearchTemplate', { static: true })
+		private securitySearchTemplate: TemplateRef<{ }>;
+	@ViewChild('fieldSearchTemplate', { static: true })
+		private fieldSearchTemplate: TemplateRef<{ }>;
+	@ViewChild('bugsSearchTemplate', { static: true })
+		private bugsSearchTemplate: TemplateRef<{ }>;
+	@ViewChild('securitySearchInput', { static: false }) set securityContent (content: ElementRef) {
+		if (content) {
+			const tab = _.find(this.tabs, { key: 'security' });
+			tab.searchInput = content;
+			this.searchSubscription(tab);
+		}
+	}
+	@ViewChild('fieldSearchInput', { static: false }) set fieldContent (content: ElementRef) {
+		if (content) {
+			const tab = _.find(this.tabs, { key: 'field' });
+			tab.searchInput = content;
+			this.searchSubscription(tab);
+		}
+	}
+	@ViewChild('bugsSearchInput', { static: false }) set bugsContent (content: ElementRef) {
+		if (content) {
+			const tab = _.find(this.tabs, { key: 'bug' });
+			tab.searchInput = content;
+			this.searchSubscription(tab);
+		}
+	}
 	constructor (
 		private diagnosticsService: DiagnosticsService,
 		private logger: LogService,
 		private productAlertsService: ProductAlertsService,
-		private route: ActivatedRoute,
-		private router: Router,
+		public route: ActivatedRoute,
+		public router: Router,
 	) {
 		this.routeParam = _.get(this.route, ['snapshot', 'params', 'advisory'], 'security');
 
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+	}
+
+	/**
+	 * Will adjust the browsers query params to preserve the current state
+	 */
+	private adjustQueryParams () {
+		const queryParams =
+			_.omit(_.cloneDeep(this.selectedTab.params), ['customerId', 'rows']);
+		this.router.navigate([`/solution/advisories/${this.routeParam}`], {
+			queryParams,
+		});
 	}
 
 	/**
@@ -141,7 +195,6 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * Initializes the tabs
 	 */
 	private buildTabs () {
-		const datePipe = new DatePipe('en-us');
 		this.tabs = [
 			{
 				data: [],
@@ -155,7 +208,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						title: I18n.get('_Total_'),
 					},
 					{
-						key: 'impact',
+						key: 'severity',
 						loading: true,
 						selected: false,
 						seriesData: [],
@@ -178,38 +231,35 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					bordered: true,
 					columns: [
 						{
+							key: 'severity',
 							name: I18n.get('_Impact_'),
-							sortable: false,
-							sortDirection: 'asc',
+							sortable: true,
 							template: this.impactTemplate,
 						},
 						{
 							key: 'title',
 							name: I18n.get('_Title_'),
-							sortable: false,
-							value: 'title',
+							sortable: true,
+							template: this.titleTemplate,
 						},
 						{
+							key: 'assetsImpacted',
 							name: `${I18n.get('_ImpactedAsset_')}
 								(${I18n.get('_PotentiallyImpacted_')})`,
-							sortable: false,
+							sortable: true,
 							template: this.impactedCountTemplate,
 						},
 						{
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-									I18n.get('_Never_'),
-							sortable: false,
-							value: 'lastUpdated',
+							sortable: true,
+							template: this.lastUpdatedTemplate,
 						},
 						{
 							key: 'version',
 							name: I18n.get('_Version_'),
-							sortable: false,
-							value: 'version',
+							sortable: true,
+							template: this.versionTemplate,
 						},
 					],
 					dynamicData: true,
@@ -224,7 +274,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					rows: 10,
 				},
 				route: 'security',
+				searchTemplate: this.securitySearchTemplate,
 				selected: this.routeParam === 'security',
+				selectedSubfilters: [],
 				subject: new Subject(),
 				template: this.contentTemplate,
 			},
@@ -257,49 +309,44 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						{
 							key: 'id',
 							name: I18n.get('_ID_'),
-							sortable: false,
-							sortDirection: 'asc',
-							value: 'id',
+							sortable: true,
 						},
 						{
 							key: 'title',
 							name: I18n.get('_Title_'),
-							sortable: false,
-							value: 'title',
+							sortable: true,
 						},
 						{
 							key: 'assetsImpacted',
 							name: I18n.get('_VulnerableAssets_'),
-							sortable: false,
-							value: 'assetsImpacted',
+							sortable: true,
+							template: this.impactedAssetsTemplate,
 						},
 						{
 							key: 'assetsPotentiallyImpacted',
 							name: I18n.get('_PotentiallyVulnerableAssets_'),
-							sortable: false,
-							value: 'assetsPotentiallyImpacted',
+							sortable: true,
+							template: this.potentiallyImpactedAssetsTemplate,
 						},
 						{
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-								I18n.get('_Never_'),
-							sortable: false,
-							value: 'lastUpdated',
+							sortable: true,
+							template: this.lastUpdatedTemplate,
 						},
 						{
 							key: 'version',
 							name: I18n.get('_Version_'),
-							sortable: false,
-							value: 'version',
+							sortable: true,
+							template: this.versionTemplate,
 						},
 					],
 					dynamicData: true,
+					multipleSort: true,
 					padding: 'loose',
 					singleSelect: true,
 					striped: false,
+					tableSort: false,
 					wrapText: true,
 				}),
 				params: {
@@ -308,7 +355,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					rows: 10,
 				},
 				route: 'field-notices',
+				searchTemplate: this.fieldSearchTemplate,
 				selected: this.routeParam === 'field-notices',
+				selectedSubfilters: [],
 				subject: new Subject(),
 				template: this.contentTemplate,
 			},
@@ -341,43 +390,40 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 						{
 							key: 'id',
 							name: I18n.get('_ID_'),
-							sortable: false,
-							sortDirection: 'asc',
+							sortable: true,
 							value: 'id',
 						},
 						{
 							key: 'title',
 							name: I18n.get('_Title_'),
-							sortable: false,
+							sortable: true,
 							value: 'title',
 						},
 						{
 							key: 'assetsImpacted',
 							name: I18n.get('_ImpactedAssets_'),
-							sortable: false,
+							sortable: true,
 							value: 'assetsImpacted',
 						},
 						{
 							key: 'state',
 							name: I18n.get('_State_'),
-							render: item =>
-								item.state ? _.capitalize(item.state) : I18n.get('_NA_'),
-							sortable: false,
+							sortable: true,
+							template: this.stateTemplate,
 						},
 						{
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-								I18n.get('_Never_'),
-							sortable: false,
+							sortable: true,
+							template: this.lastUpdatedTemplate,
 						},
 					],
 					dynamicData: true,
+					multipleSort: true,
 					padding: 'loose',
 					singleSelect: true,
 					striped: false,
+					tableSort: false,
 					wrapText: true,
 				}),
 				params: {
@@ -386,18 +432,65 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					rows: 10,
 				},
 				route: 'bugs',
+				searchTemplate: this.bugsSearchTemplate,
 				selected: this.routeParam === 'bugs',
+				selectedSubfilters: [],
 				subject: new Subject(),
 				template: this.contentTemplate,
 			},
 		];
 
-		this.activeIndex = _.findIndex(this.tabs, 'selected');
+		_.each(this.tabs, tab => {
+			tab.searchForm = new FormGroup({
+				search: new FormControl('',
+					[
+						Validators.minLength(this.searchOptions.min),
+						Validators.maxLength(this.searchOptions.max),
+						Validators.pattern(this.searchOptions.pattern),
+					]),
+			});
+		});
 
+		this.activeIndex = _.findIndex(this.tabs, 'selected');
 		this.buildSecurityAdvisoriesSubject();
 		this.buildFieldNoticesSubject();
 		this.buildBugsSubject();
-		this.loadData();
+	}
+
+	/**
+	 * Handler for performing a search
+	 * @param tab tab to perform query for
+	 */
+	public doSearch (tab: Tab) {
+		const query = tab.searchForm.controls.search.value;
+		if (tab.searchForm.valid && query) {
+			this.logger.debug('advisories.component :: doSearch()' +
+				` :: Searching for ${query} in ${tab.key}`);
+			_.set(tab, ['params', 'search'], query);
+			tab.filtered = true;
+			this.adjustQueryParams();
+			tab.subject.next();
+		} else if (!query && tab.filtered) {
+			_.unset(tab, ['params', 'search']);
+			this.adjustQueryParams();
+			tab.subject.next();
+		}
+	}
+
+	/**
+	 * Builds the search debounce subscription for Security Advisories
+	 * @param tab tab to perform search
+	 * @returns Search Subscription
+	 */
+	private searchSubscription (tab) {
+		fromEvent(tab.searchInput.nativeElement, 'keyup')
+		.pipe(
+			map((evt: KeyboardEvent) => (<HTMLInputElement> evt.target).value),
+			debounceTime(this.searchOptions.debounce),
+			distinctUntilChanged(),
+			takeUntil(this.destroy$),
+		)
+		.subscribe(() => this.doSearch(tab));
 	}
 
 	/**
@@ -406,16 +499,20 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 */
 	private getSeverityCount () {
 		const securityTab = _.find(this.tabs, { key: 'security' });
-		const impactFilter = _.find(securityTab.filters, { key: 'impact' });
+		const impactFilter = _.find(securityTab.filters, { key: 'severity' });
 
-		return this.productAlertsService.getSecurityAdvisorySeverityCount(customerId)
+		return this.productAlertsService.getSecurityAdvisorySeverityCount(this.customerId)
 		.pipe(
 			map((data: SecurityAdvisorySeverityCountResponse) => {
-				impactFilter.seriesData = _.map(data, (count, severity) => ({
-					filter: severity,
-					label: I18n.get(`_${_.startCase(severity)}_`),
-					selected: false,
-					value: count,
+				impactFilter.seriesData = _.compact(_.map(data, (count, severity) => {
+					if (count) {
+						return {
+							filter: severity,
+							label: I18n.get(`_${_.startCase(severity)}_`),
+							selected: false,
+							value: count,
+						};
+					}
 				}));
 
 				impactFilter.loading = false;
@@ -431,6 +528,20 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Sets the params for sorting
+	 * @param column column to set sorting
+	 */
+	public onColumnSort (column) {
+		if (column.sortable) {
+			const tab = this.selectedTab;
+			tab.filtered = true;
+			tab.params.sort = [`${column.key}:${column.sortDirection.toUpperCase()}`];
+			this.adjustQueryParams();
+			tab.subject.next();
+		}
+	}
+
+	/**
 	 * Gets the info for the Last Updated bar chart on the advisories tab
 	 * @returns the info for the Last Updated bar chart on the advisories tab
 	 */
@@ -439,35 +550,56 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const lastUpdateFilter =
 			_.find(securityTab.filters, { key: 'lastUpdate' });
 
-		return this.productAlertsService.getSecurityAdvisoryLastUpdatedCount(customerId)
+		return this.productAlertsService.getSecurityAdvisoryLastUpdatedCount(this.customerId)
 			.pipe(
 				map((data: AdvisoriesByLastUpdatedCount) => {
-					lastUpdateFilter.seriesData = [
-						{
+					const series = [];
+
+					const sub30 = _.get(data, ['gt-0-lt-30-days', 'numericValue'], 0);
+
+					if (sub30) {
+						series.push({
 							filter: 'gt-0-lt-30-days',
-							label: '< 30d',
+							label: `< 30 ${I18n.get('_Days_')}`,
 							selected: false,
-							value: _.get(data, 'gt-0-lt-30-days'),
-						},
-						{
+							value: sub30,
+						});
+					}
+
+					const sub60 = _.get(data, ['gt-30-lt-60-days', 'numericValue'], 0);
+
+					if (sub60) {
+						series.push({
 							filter: 'gt-30-lt-60-days',
-							label: '30 - 60d',
+							label: `30 - 60 ${I18n.get('_Days_')}`,
 							selected: false,
-							value: _.get(data, 'gt-30-lt-60-days'),
-						},
-						{
+							value: sub60,
+						});
+					}
+
+					const sub90 = _.get(data, ['gt-60-lt-90-days', 'numericValue'], 0);
+
+					if (sub90) {
+						series.push({
 							filter: 'gt-60-lt-90-days',
-							label: '60 - 90d',
+							label: `61 - 90 ${I18n.get('_Days_')}`,
 							selected: false,
-							value: _.get(data, 'gt-60-lt-90-days'),
-						},
-						{
+							value: sub90,
+						});
+					}
+
+					const furtherOut = _.get(data, ['further-out', 'numericValue'], 0);
+
+					if (furtherOut) {
+						series.push({
 							filter: 'gt-90-days',
-							label: _.lowerCase(I18n.get('_FurtherOut_')),
+							label: _.toLower(I18n.get('_FurtherOut_')),
 							selected: false,
-							value: _.get(data, 'further-out'),
-						},
-					];
+							value: furtherOut,
+						});
+					}
+
+					lastUpdateFilter.seriesData = series;
 					lastUpdateFilter.loading = false;
 				}),
 				catchError(err => {
@@ -494,9 +626,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			map((data: FieldNoticeUpdatedResponse) => {
 				const series = [];
 
-				const sub30 = _.get(data, 'gt-0-lt-30-days', 0);
+				const sub30 = _.get(data, ['gt-0-lt-30-days', 'numericValue'], 0);
 
-				if (sub30 && sub30 > 0) {
+				if (sub30) {
 					series.push({
 						filter: 'gt-0-lt-30-days',
 						label: `< 30 ${I18n.get('_Days_')}`,
@@ -505,9 +637,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					});
 				}
 
-				const sub60 = _.get(data, 'gt-30-lt-60-days', 0);
+				const sub60 = _.get(data, ['gt-30-lt-60-days', 'numericValue'], 0);
 
-				if (sub60 && sub60 > 0) {
+				if (sub60) {
 					series.push({
 						filter: 'gt-30-lt-60-days',
 						label: `30 - 60 ${I18n.get('_Days_')}`,
@@ -516,9 +648,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					});
 				}
 
-				const sub90 = _.get(data, 'gt-60-lt-90-days', 0);
+				const sub90 = _.get(data, ['gt-60-lt-90-days', 'numericValue'], 0);
 
-				if (sub90 && sub90 > 0) {
+				if (sub90) {
 					series.push({
 						filter: 'gt-60-lt-90-days',
 						label: `61 - 90 ${I18n.get('_Days_')}`,
@@ -527,9 +659,9 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					});
 				}
 
-				const furtherOut = _.get(data, 'further-out', 0);
+				const furtherOut = _.get(data, ['further-out', 'numericValue'], 0);
 
-				if (furtherOut && furtherOut > 0) {
+				if (furtherOut) {
 					series.push({
 						filter: 'further-out',
 						label: _.toLower(I18n.get('_FurtherOut_')),
@@ -683,8 +815,16 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	public getAllSelectedSubFilters () {
 		const tab = this.selectedTab;
 
-		return _.reduce(tab.filters, (memo, filter) =>
-			filter.seriesData ? _.concat(memo, _.filter(filter.seriesData, 'selected')) : memo, []);
+		return _.reduce(tab.filters, (memo, filter) => {
+			if (filter.seriesData) {
+				const selected = _.map(_.filter(filter.seriesData, 'selected'),
+				f => ({ filter, subfilter: f }));
+
+				return _.concat(memo, selected);
+			}
+
+			return memo;
+		}, []);
 	}
 
 	/**
@@ -705,9 +845,14 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 
 		filter.selected = _.some(filter.seriesData, 'selected');
 
-		this.selectedSubfilters = this.getAllSelectedSubFilters();
-		if (filter.key !== 'impact' && filter.key !== 'lastUpdate') {
-			tab.params[filter.key] = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+		tab.selectedSubfilters = this.getAllSelectedSubFilters();
+
+		const selectedSubfilters = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+		if (filter.key !== 'lastUpdate') {
+			_.set(tab, ['params', filter.key], selectedSubfilters);
+			tab.params.page = 1;
+		} else if (filter.key === 'lastUpdate') {
+			_.set(tab, ['params', 'lastUpdatedDateRange'], this.getLastUpdatedRange(subfilter));
 			tab.params.page = 1;
 		}
 
@@ -729,6 +874,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		}
 
 		if (reload) {
+			this.adjustQueryParams();
 			tab.subject.next();
 		}
 	}
@@ -738,15 +884,16 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * @param event the index of the tab we've selected
 	 */
 	public selectTab (event: number) {
+		const selectedTab = this.tabs[event];
 		_.each(this.tabs, (tab: Tab) => {
-			if (tab !== this.tabs[event]) {
+			if (tab !== selectedTab) {
 				tab.selected = false;
 			}
 		});
-
 		this.activeIndex = event;
-		this.tabs[event].selected = true;
-		this.router.navigate([`/solution/advisories/${this.tabs[event].route}`]);
+		selectedTab.selected = true;
+		this.routeParam = selectedTab.route;
+		this.adjustQueryParams();
 	}
 
 	/**
@@ -767,6 +914,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				tab.loading = false;
 			}),
 			catchError(err => {
+				tab.pagination = null;
 				tab.loading = false;
 				this.logger.error('advisories.component : fetchFieldNotices() ' +
 					`:: Error : (${err.status}) ${err.message}`);
@@ -794,6 +942,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				tab.loading = false;
 			}),
 			catchError(err => {
+				tab.pagination = null;
 				tab.loading = false;
 				this.logger.error('advisories.component : fetchBugs() ' +
 					`:: Error : (${err.status}) ${err.message}`);
@@ -816,11 +965,13 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: SecurityAdvisoriesResponse) => {
 					tab.data = _.get(response, 'data', []);
+					_.each(tab.data, d => d.severity = _.startCase(d.severity));
 					tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 
 					tab.loading = false;
 				}),
 				catchError(err => {
+					tab.pagination = null;
 					this.logger.error('advisories.component : fetchSecurityAdvisories() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					tab.loading = false;
@@ -861,6 +1012,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const tab = _.find(this.tabs, { key: 'security' });
 		tab.subject.pipe(
 			switchMap(() => this.fetchSecurityAdvisories()),
+			takeUntil(this.destroy$),
 		)
 		.subscribe();
 	}
@@ -898,6 +1050,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const tab = _.find(this.tabs, { key: 'field' });
 		tab.subject.pipe(
 			switchMap(() => this.fetchFieldNotices()),
+			takeUntil(this.destroy$),
 		)
 		.subscribe();
 	}
@@ -909,6 +1062,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const tab = _.find(this.tabs, { key: 'bug' });
 		tab.subject.pipe(
 			switchMap(() => this.fetchBugs()),
+			takeUntil(this.destroy$),
 		)
 		.subscribe();
 	}
@@ -926,7 +1080,31 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			this.getTotals(),
 		)
 		.pipe(
-			map(() => _.map(this.tabs, tab => tab.subject.next())),
+			map(() => _.map(this.tabs, tab => {
+
+				if (tab.key === 'security') {
+					if (tab.impact) {
+						this.onSubfilterSelect(tab.impact,
+							_.find(tab.filters, { key: 'impact' }));
+					}
+					if (tab.lastUpdate) {
+						this.onSubfilterSelect(tab.lastUpdate,
+							_.find(tab.filters, { key: 'lastUpdate' }));
+					}
+				}
+
+				if (tab.key === 'field' && tab.lastUpdate) {
+					this.onSubfilterSelect(tab.lastUpdate,
+						_.find(tab.filters, { key: 'lastUpdate' }));
+				}
+
+				if (tab.key === 'bug' && tab.state) {
+					this.onSubfilterSelect(tab.state,
+						_.find(tab.filters, { key: 'state' }));
+				}
+
+				tab.subject.next();
+			})),
 		)
 		.subscribe(() => {
 			this.status.isLoading = false;
@@ -947,8 +1125,44 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	public onPageChanged (event: any, tab: Tab) {
 		if (event.page + 1 !== tab.params.page) {
 			tab.params.page = (event.page + 1);
+			this.adjustQueryParams();
 			tab.subject.next();
 		}
+	}
+
+	/**
+	 * Given a filter key for lastUpdated, returns the date range
+	 * in the format of [<fromDateInMillis>, <toDateInMillis>).
+	 * @param subfilter date range subfilter
+	 * @returns The date range
+	 */
+	private getLastUpdatedRange (subfilter: string) {
+		const current = new Date();
+		const year = current.getUTCFullYear();
+		const month = current.getUTCMonth();
+		const day = current.getUTCDay();
+		const start = new Date(year, month, day);
+		const end = new Date(year, month, day);
+		switch (subfilter) {
+			case 'gt-0-lt-30-days':
+				start.setDate(start.getDate() - 30);
+				break;
+			case 'gt-30-lt-60-days':
+				start.setDate(start.getDate() - 60);
+				end.setDate(end.getDate() - 30);
+				break;
+			case 'gt-60-lt-90-days':
+				start.setDate(start.getDate() - 90);
+				end.setDate(end.getDate() - 60);
+				break;
+			case 'further-out':
+				end.setDate(end.getDate() - 90);
+
+				return [`,${end.getTime()
+					.toString()}`];
+		}
+
+		return [`${start.getTime()}, ${end.getTime()}`];
 	}
 
 	/** Initializer Function */
@@ -957,30 +1171,107 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			window.loading = true;
 		}
 		this.buildTabs();
-		this.searchForm = new FormGroup({
-			search: this.search,
+
+		this.route.queryParams.subscribe(params => {
+			const tab = this.selectedTab;
+
+			if (params.page) {
+				const page = _.toSafeInteger(params.page);
+				tab.params.page = (page < 1) ? 1 : page;
+			}
+
+			if (params.search &&
+				params.search.length >= this.searchOptions.min &&
+				params.search.length <= this.searchOptions.max &&
+				this.searchOptions.pattern.test(params.search)) {
+				tab.params.search = params.search;
+				tab.searchForm.controls.search.setValue(params.search);
+			}
+
+			if (params.sort) {
+				const sort = _.split(params.sort, ':');
+				_.each(tab.table.columns, c => {
+					if (sort.length === 2 &&
+						c.sortable &&
+						c.key &&
+						c.key.toLowerCase() === sort[0].toLowerCase()) {
+						c.sorting = true;
+						c.sortDirection = sort[1].toLowerCase();
+						tab.params.sort = _.castArray(`${sort[0]}:${sort[1].toUpperCase()}`);
+					} else {
+						c.sorting = false;
+					}
+				});
+			}
+
+			switch (tab.key) {
+				case 'security': {
+					if (params.severity) {
+						_.set(tab, ['params', 'severity'], _.castArray(params.severity));
+					}
+					if (params.lastUpdatedDateRange) {
+						_.set(tab, ['params', 'lastUpdatedDateRange'],
+							_.castArray(params.lastUpdatedDateRange));
+					}
+					break;
+				}
+				case 'field': {
+					if (params.lastUpdatedDateRange) {
+						_.set(tab, ['params', 'lastUpdatedDateRange'],
+							_.castArray(params.lastUpdatedDateRange));
+					}
+					break;
+				}
+				case 'bug': {
+					if (params.state) {
+						_.set(tab, ['params', 'state'], _.castArray(params.state));
+					}
+				}
+			}
+
+			tab.filtered = !_.isEmpty(
+				_.omit(_.cloneDeep(tab.params), ['customerId', 'rows', 'page', 'sort']));
 		});
+
+		this.loadData();
 	}
 
 	/**
 	 * Cancel all subjects
 	 */
 	public ngOnDestroy () {
-		_.every(this.tabs, tab => _.invoke(tab.subject, 'unsubscribe'));
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 
 	/**
 	 * Clears all filters for the currently selected tab
 	 */
 	public clearFilters () {
-		_.each(this.selectedTab.filters, (filter: VisualFilter) => {
+		const tab = this.selectedTab;
+		_.each(tab.filters, (filter: VisualFilter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, f => {
 				f.selected = false;
 			});
 		});
+		_.each(tab.options.columns, (c: CuiTableColumnOption) => {
+			c.sortDirection = 'desc';
+			c.sorting = false;
+		});
 
-		this.selectedSubfilters = [];
-		this.selectedTab.filtered = false;
+		tab.params = {
+			customerId: this.customerId,
+			page: 1,
+			rows: 10,
+		};
+
+		tab.searchForm.controls.search.setValue('');
+		tab.selectedSubfilters = [];
+		const totalFilter = _.find(tab.filters, { key: 'total' });
+		totalFilter.selected = true;
+		tab.filtered = false;
+		this.adjustQueryParams();
+		tab.subject.next();
 	}
 }

@@ -1,16 +1,26 @@
-<div class="row">
-	<div class="col-md-9 flex flex-fill" *ngIf="pagination">
-		<div class="flex-center-vertical">
+<div class="row qtr-margin-top">
+	<div class="col-md-9 flex flex-fill">
+		<div class="flex-center-vertical" *ngIf="pagination && assets?.length > 0">
 			<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
 			<span [innerText]="'_OsvShowingXofYAssets_' | i18n:paginationCount:pagination.total"
 				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 			</span>
 		</div>
 	</div>
+	<div class="col-md-3 text-right">
+		<div>
+			<span [innerText]="'_NeedSoftwareRecommendation_' | i18n"></span>
+			<br>
+			<a [title]="'_CSSupportLink_' | i18n" (click)="openContactSupport()" class="recommedation-link"
+				data-auto-id="ContactExpert">
+				{{'_RequestExpert_' | i18n}}
+			</a>
+		</div>
+	</div>
 </div>
 <div class="divider qtr-margin-top"></div>
 <ng-container *ngTemplateOutlet="tableProfileGroups"></ng-container>
-<div *ngIf="pagination" class="base-margin-top">
+<div *ngIf="pagination && assets?.length > 0" class="base-margin-top">
 	<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
 		(onPageChanged)="onPageChanged($event)">
 	</cui-pager>
@@ -34,7 +44,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor="let item of assets" (click)="onRowSelect(item)" [ngClass]="{ 'active': item.details }"
+				<tr *ngFor="let item of assets" (click)="onRowSelect(item)" [ngClass]="{ 'active': item.rowSelected }"
 					attr.data-auto-id="Asset-{{ item.hostName }}">
 					<td *ngFor="let column of assetsTable.columns" [ngStyle]="{ 'width': column.width }"
 						(click)="column.click ? $event.stopPropagation() : null"
@@ -59,17 +69,14 @@
 
 <ng-template #actionsTemplate let-item="celldata">
 	<cui-dropdown [actions]="getRowActions(item)" position="left" icon="icon-more icon-medium text-muted rotate-90">
-	</cui-dropdown>
-	<!-- <div class="dropdown dropdown--animated dropdown--left dropdown--tail" tabindex="-1"
-		[ngClass]="{'active': item.active }" (click)="item.active = !item.active" (blur)="doBlur(item)">
-		<span class="icon-more icon-medium text-muted rotate-90"></span>
-		<div class="dropdown__menu">
-			<ng-container *ngFor="let action of rowActions; index as i">
-				<div *ngIf="i > 0" class="dropdown__divider"></div>
-				<a href="javascript:void(0)" (click)="onActionClick(action,item)">
-					<span>{{action.label}}</span>
-				</a>
-			</ng-container>
-		</div>
-	</div> -->
+	</cui-dropdown>	
 </ng-template>
+
+<ng-template #recommendationsTemplate let-item="celldata">
+	<div *ngIf="item?.recommendations && item.recommendations.length >0 ">
+		<span class="icon-lightbulb icon-small"></span>
+		<sup>{{item.recommendations.length}}</sup>
+		<span class="qtr-margin-left" [innerText]="'_OsvAvailable_' | i18n"></span>
+	</div>
+</ng-template>
+<cui-modal></cui-modal>

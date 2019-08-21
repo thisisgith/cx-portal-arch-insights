@@ -9,8 +9,14 @@ import {
 	CuiPagerModule,
 	CuiSpinnerModule,
 	CuiDropdownModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
-import { InventoryModule, ContractsModule, ProductAlertsModule } from '@sdp-api';
+import {
+	InventoryModule,
+	ContractsModule,
+	ProductAlertsModule,
+	NetworkDataGatewayModule,
+} from '@sdp-api';
 import { environment } from '@environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -24,7 +30,7 @@ import {
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Child routes for Assets Module for lazy loading
@@ -47,6 +53,7 @@ const childRoutes: Routes = [
 		BubbleChartModule,
 		CommonModule,
 		ContractsModule.forRoot({ rootUrl }),
+		CuiAlertModule,
 		CuiDropdownModule,
 		CuiPagerModule,
 		CuiSpinnerModule,
@@ -57,6 +64,7 @@ const childRoutes: Routes = [
 		FromNowPipeModule,
 		I18nPipeModule,
 		InventoryModule.forRoot({ rootUrl }),
+		NetworkDataGatewayModule.forRoot({ rootUrl }),
 		PieChartModule,
 		ProductAlertsModule.forRoot({ rootUrl }),
 		ReactiveFormsModule,

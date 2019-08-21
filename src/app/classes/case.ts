@@ -8,30 +8,38 @@ import * as _ from 'lodash-es';
 export const caseSeverities = {
 	1: _.assignIn(
 		{ title:  I18n.get('_Critical_') },
-		_.pick(severityMap.DANGER, ['class', 'color'])),
+		_.pick(severityMap.DANGER, ['class', 'color']),
+		{ getCreateName () { return I18n.get('_OpenCaseNetworkDown_'); } },
+	),
 	2: _.assignIn(
 		{ title: I18n.get('_Degraded_') },
-		_.pick(severityMap.WARNING, ['class', 'color'])),
+		_.pick(severityMap.WARNING, ['class', 'color']),
+		{ getCreateName () { return I18n.get('_OpenCaseSeverelyDegraded_'); } },
+	),
 	3: _.assignIn(
 		{ title: I18n.get('_Impaired_') },
-		_.pick(severityMap['WARNING-ALT'], ['class', 'color'])),
+		_.pick(severityMap['WARNING-ALT'], ['class', 'color']),
+		{ getCreateName () { return I18n.get('_OpenCaseNetworkImpaired_'); } },
+	),
 	4: _.assignIn(
 		{ title: I18n.get('_Info_') },
-		_.pick(severityMap.INFO, ['class', 'color'])),
+		_.pick(severityMap.INFO, ['class', 'color']),
+		{ getCreateName () { return I18n.get('_OpenCaseAskaQuestion_'); } },
+	),
 };
 
 /**
  * The file extension to icon and label map for case files
  */
 export const caseFileIcons = {
-	'image/png': { icon: 'icon-file-image-o', label: 'Image (png)' },
-	'image/jpeg': { icon: 'icon-file-image-o', label: 'Image (jpeg)' },
 	'application/pdf': { icon: 'icon-file-pdf-o', label: 'PDF' },
-	'text/plain': { icon: 'icon-file-text-o', label: 'Plain Text' },
-	'text/csv': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
-	'application/xls': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
 	'application/x-tar': { icon: 'icon-file-archive-o', label: 'Archive' },
+	'application/xls': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
 	default: { icon: 'icon-file', label: 'File' },
+	'image/jpeg': { icon: 'icon-file-image-o', label: 'Image (jpeg)' },
+	'image/png': { icon: 'icon-file-image-o', label: 'Image (png)' },
+	'text/csv': { icon: 'icon-file-excel-o', label: 'Excel (csv)' },
+	'text/plain': { icon: 'icon-file-text-o', label: 'Plain Text' },
 };
 export enum CaseRequestType {
 	Diagnose = 'Diagnose and Fix my Problem',

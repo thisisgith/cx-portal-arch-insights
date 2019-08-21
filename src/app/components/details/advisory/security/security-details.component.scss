@@ -1,0 +1,13 @@
+.bottom-flex-box {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.box {
+	height: calc(100vh - 500px);
+	overflow-y: scroll;
+}

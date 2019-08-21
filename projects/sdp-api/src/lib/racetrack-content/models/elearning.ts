@@ -25,6 +25,10 @@ export interface ELearning {
    * http://elearning.com
    */
   url?: string;
+
+  /**
+   * ranking of the content
+   */
   ranking?: number;
 
   /**
@@ -36,4 +40,9 @@ export interface ELearning {
    * CX Level
    */
   cxlevel?: number;
+
+  /**
+   * Percentage completion of a given course
+   */
+  percentagecompleted?: number;
 }

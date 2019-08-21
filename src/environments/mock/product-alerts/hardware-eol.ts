@@ -1027,7 +1027,7 @@ export const MockHardwareEOLResponse: HardwareEOLResponse = {
 					"hwInstanceId": "FOC1544Y16T,WS-C2960S-24PS-L,NA,FOC1544Y16T,WS-C2960S-24PS-L,NA,NA",
 					"productId": "WS-C2960S-24PS-L",
 					"equipmentType": "CHASSIS",
-					"hwEolInstanceId": "304624",
+					"hwEolInstanceId": "318969",
 					"bulletinName": "Cisco Catalyst 2960-S Series and 2960-SF Series Switches"
 			},
 			{
@@ -4610,7 +4610,7 @@ export const HardwareEOLScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}`,
+		url: `${api}?customerId=${customerId}&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
 		usecases: ['Use Case 1'],
 	},
 ];

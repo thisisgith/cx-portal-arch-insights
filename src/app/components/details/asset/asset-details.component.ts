@@ -1,27 +1,25 @@
 import {
 	Component,
 	Input,
-	OnChanges,
-	OnInit,
-	SimpleChanges,
 	OnDestroy,
+	OnInit,
+	EventEmitter,
+	Output,
+	SimpleChanges,
 } from '@angular/core';
 import {
-	InventoryService,
-	Asset,
-	HardwareResponse,
-	AssetSummary,
+	Asset, NetworkElement, InventoryService, Assets, NetworkElementResponse,
 } from '@sdp-api';
 
-import * as _ from 'lodash-es';
-import { LogService } from '@cisco-ngx/cui-services';
-import { forkJoin, of, Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import {
-	map,
-	catchError,
-	takeUntil,
+	takeUntil, catchError, map, mergeMap,
 } from 'rxjs/operators';
 import { UserResolve } from '@utilities';
+import { Alert } from '@interfaces';
+import * as _ from 'lodash-es';
+import { LogService } from '@cisco-ngx/cui-services';
+import { getProductTypeImage } from '@classes';
 
 /**
  * Asset Details Component
@@ -31,35 +29,27 @@ import { UserResolve } from '@utilities';
 		'[class.hidden]': 'hidden',
 	},
 	selector: 'asset-details',
+	styleUrls: ['./asset-details.component.scss'],
 	templateUrl: './asset-details.component.html',
 })
+export class AssetDetailsComponent implements OnInit, OnDestroy {
 
-export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-
+	@Input('serialNumber') public serialNumber: string;
 	@Input('asset') public asset: Asset;
+	@Input('element') public element: NetworkElement;
+	@Output('close') public close = new EventEmitter<boolean>();
 
-	public assetData: AssetSummary;
-	private assetSummaryParams: InventoryService.GetAssetSummaryParams;
-	private hardwareParams: InventoryService.GetHardwareParams;
-
-	public status = {
-		loading: {
-			asset: false,
-			hardware: false,
-			overall: false,
-		},
-	};
-	public componentData = {
-		numberInInventory: 0,
-	};
+	public alert: any = { };
+	public isLoading = false;
 	public hidden = true;
 	public fullscreen = false;
-	private customerId: string;
+	public customerId: string;
+	public getProductIcon = getProductTypeImage;
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
-		private logger: LogService,
 		private inventoryService: InventoryService,
+		private logger: LogService,
 		private userResolve: UserResolve,
 	) {
 		this.userResolve.getCustomerId()
@@ -72,74 +62,27 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	}
 
 	/**
-	 * Resets data fields
+	 * Clears the variables
 	 */
 	private clear () {
-		this.componentData.numberInInventory = 0;
-		this.assetData = null;
+		this.asset = null;
 	}
 
 	/**
-	 * Fetches the summary data for the asset
-	 * @returns the asset info
+	 * Handles displaying an alert from its child components
+	 * @param alert the alert to display
 	 */
-	private fetchAssetData () {
-		this.status.loading.asset = true;
-
-		return this.inventoryService.getAssetSummary(this.assetSummaryParams)
-		.pipe(
-			map((response: AssetSummary) => {
-				this.assetData = response;
-			}),
-			catchError(err => {
-				this.status.loading.asset = false;
-				this.logger.error('details.component : fetchAssetData()' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
+	public handleAlert (alert: Alert) {
+		this.alert.show(alert.message, alert.severity);
 	}
 
 	/**
-	 * Fetch the hardware data for the selected asset
-	 * @returns the hardware data
+	 * determine if close from child data
+	 * @param $event gets the boolean value
 	 */
-	private fetchHardwareData () {
-		this.status.loading.hardware = true;
-
-		return this.inventoryService.getHardware(this.hardwareParams)
-		.pipe(
-			map((response: HardwareResponse) => {
-				this.componentData.numberInInventory = _.get(response, ['Pagination', 'total'], 1);
-				this.status.loading.hardware = false;
-			}),
-			catchError(err => {
-				this.status.loading.hardware = false;
-				this.logger.error('details.component : fetchHardwareData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-		);
-	}
-
-	/**
-	 * Checks if our currently selected asset has changed
-	 * @param changes the changes detected
-	 */
-	public ngOnChanges (changes: SimpleChanges) {
-		const currentAsset = _.get(changes, ['asset', 'currentValue']);
-		if (currentAsset && !changes.asset.firstChange) {
-			this.refresh();
-		}
-	}
-
-	/**
-	 * Initializer
-	 */
-	public ngOnInit () {
-		this.refresh();
+	public onPanelClose () {
+		this.clear();
+		this.close.emit(true);
 	}
 
 	/**
@@ -151,47 +94,112 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	}
 
 	/**
-	 * Refreshes the component
+	 * Fetches the asset
+	 * @returns the observable
 	 */
-	public refresh () {
+	private fetchAsset () {
 		if (this.asset) {
-			this.clear();
-			this.status.loading.overall = true;
+			return of(this.asset);
+		}
 
-			const productId = _.get(this.asset, 'productId');
-			const hwInstanceId = _.get(this.asset, 'hwInstanceId');
+		return this.inventoryService.getAssets({
+			customerId: this.customerId,
+			page: 1,
+			rows: 1,
+			serialNumber: [this.serialNumber],
+		})
+		.pipe(
+			map((response: Assets) => {
+				const asset: Asset = _.head(response.data);
 
-			const obsBatch = [];
+				this.asset = asset ? asset : null;
+			}),
+			catchError(err => {
+				this.logger.error('asset-details.component : fetchAsset()' +
+					`:: Error : (${err.status}) ${err.message}`);
 
-			if (productId) {
-				this.hardwareParams = {
-					customerId: this.customerId,
-					page: 1,
-					productId: [productId],
-					rows: 1,
-				};
+				return of({ });
+			}),
+		);
+	}
 
-				obsBatch.push(this.fetchHardwareData());
+	/**
+	 * Fetches the network element
+	 * @param asset the asset to use for lookup
+	 * @returns the observable
+	 */
+	private fetchNetworkElement (asset: Asset) {
+		if (this.element) {
+			return of(this.element);
+		}
+
+		return this.inventoryService.getNetworkElements({
+			customerId: this.customerId,
+			serialNumber: [asset.serialNumber],
+		})
+		.pipe(
+			map((response: NetworkElementResponse) => {
+				const networkElement: NetworkElement = _.head(response.data);
+
+				this.element = networkElement ? networkElement : null;
+			}),
+			catchError(err => {
+				this.logger.error('asset-details.component : fetchNetworkElement()' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
+
+	/**
+	 * Refreshes our data
+	 */
+	private refresh () {
+		this.isLoading = true;
+
+		// If our serial number and our asset/element don't match,
+		// we need to unset them so we can refetch them
+		const serial = this.serialNumber ? this.serialNumber : _.get(this.asset, 'serialNumber');
+		if (serial && this.element && _.get(this.element, 'serialNumber') !== serial) {
+			this.element = null;
+		}
+		if (serial && this.asset && _.get(this.asset, 'serialNumber') !== serial) {
+			this.asset = null;
+		}
+
+		this.fetchAsset()
+		.pipe(
+			mergeMap((asset: Asset) => this.fetchNetworkElement(asset)),
+		)
+		.subscribe(() => {
+			this.isLoading = false;
+		});
+	}
+
+	/**
+	 * Initializer
+	 */
+	public ngOnInit () {
+		this.refresh();
+	}
+
+	/**
+	 * Checks if our currently selected asset has changed
+	 * @param changes the changes detected
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+		const currentSerial = _.get(changes, ['serialNumber', 'currentValue']);
+
+		if ((currentAsset && !changes.asset.firstChange) ||
+			(currentSerial && !changes.serialNumber.firstChange)) {
+
+			if (currentAsset && !currentSerial) {
+				this.serialNumber = _.get(currentAsset, 'serialNumber');
 			}
-
-			if (hwInstanceId) {
-				this.assetSummaryParams = {
-					hwInstanceId,
-					customerId: this.customerId,
-				};
-
-				obsBatch.push(
-					this.fetchAssetData(),
-				);
-			}
-
-			this.hidden = false;
-			forkJoin(obsBatch)
-			.subscribe(() => {
-				this.status.loading.overall = false;
-
-				this.logger.debug('details.component : loadData() :: Finished Refresh');
-			});
+			_.invoke(this.alert, 'hide');
+			this.refresh();
 		}
 	}
 }

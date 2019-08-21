@@ -14,7 +14,7 @@ import {
 } from '@angular/router';
 
 import * as _ from 'lodash-es';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, of } from 'rxjs';
 import {
 	Asset,
 	ContractsService,
@@ -26,8 +26,10 @@ import {
 	ProductAlertsService,
 	VulnerabilityResponse,
 } from '@sdp-api';
+import { CaseService } from '@cui-x/services';
 import { SolutionService } from './solution.service';
 import { LogService } from '@cisco-ngx/cui-services';
+import { catchError } from 'rxjs/operators';
 
 /**
  * Interface representing a facet
@@ -52,7 +54,6 @@ interface Facet {
 })
 export class SolutionComponent implements OnInit, OnDestroy {
 
-	public shownTabs = 5;
 	public selectedFacet: Facet;
 	public selectedSolution: RacetrackSolution;
 	public selectedTechnology: RacetrackTechnology;
@@ -70,12 +71,13 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public selectedAsset: Asset;
 	private eventsSubscribe: Subscription;
 	public solutions: RacetrackSolution[];
+	public casesCount: number;
+	public RMACount: number;
 
-	@ViewChild('advisoriesFact', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
+	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
 	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
 	@ViewChild('resolutionFacet', { static: true }) public resolutionTemplate: TemplateRef<{ }>;
-	@ViewChild('securityFacet', { static: true }) public securityTemplate: TemplateRef<{ }>;
 	@ViewChild('insightsFacet', { static: true }) public insightsTemplate: TemplateRef<{ }>;
 
 	constructor (
@@ -85,6 +87,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private solutionService: SolutionService,
 		private racetrackService: RacetrackService,
 		private logger: LogService,
+		private caseService: CaseService,
 		private route: ActivatedRoute,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
@@ -112,10 +115,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const name = _.get(this.selectedSolution, 'name');
 
 		return _.get(_.find(this.solutions, { name }), 'technologies', []);
-	}
-
-	get advisoriesFacet () {
-		return _.find(this.facets, { key: 'advisories' });
 	}
 
 	/**
@@ -180,7 +179,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			},
 			{
 				key: 'resolution',
-				loading: false,
+				loading: true,
 				route: '/solution/resolution',
 				template: this.resolutionTemplate,
 				title: I18n.get('_ProblemResolution_'),
@@ -238,16 +237,16 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private fetchSolutions () {
 		this.status.loading = true;
 		this.racetrackService.getRacetrack({ customerId: this.customerId })
-			.subscribe((results: RacetrackResponse) => {
-				this.solutions = results.solutions;
-				this.changeSolution(_.head(this.solutions));
-				this.status.loading = false;
-			},
-				err => {
-					this.status.loading = false;
-					this.logger.error('solution.component : fetchSolutions() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-				});
+		.subscribe((results: RacetrackResponse) => {
+			this.solutions = results.solutions;
+			this.changeSolution(_.head(this.solutions));
+			this.status.loading = false;
+		},
+		err => {
+			this.status.loading = false;
+			this.logger.error('solution.component : fetchSolutions() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
 	}
 
 	/**
@@ -257,54 +256,122 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		const assetsFacet = _.find(this.facets, { key: 'assets' });
 		assetsFacet.loading = true;
 		this.contractsService.getCoverageCounts({ customerId: this.customerId })
-			.subscribe((counts: CoverageCountsResponse) => {
-				const covered = _.get(counts, 'covered', 0);
-				const total = _.reduce(counts, (memo, value) => (memo + value), 0);
+		.subscribe((counts: CoverageCountsResponse) => {
+			const covered = _.get(counts, 'covered', 0);
+			const total = _.reduce(counts, (memo, value) => (memo + value), 0);
 
-				const percent = ((covered / total) * 100);
-				const gaugePercent = Math.floor(percent) || 0;
-				assetsFacet.data = {
-					gaugePercent,
-					gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
-				};
+			const percent = ((covered / total) * 100);
+			const gaugePercent = Math.floor(percent) || 0;
+			assetsFacet.data = {
+				gaugePercent,
+				gaugeLabel: (percent > 0 && percent < 1) ? '<1%' : `${gaugePercent}%`,
+			};
 
-				assetsFacet.loading = false;
-			},
-				err => {
-					assetsFacet.loading = false;
-					this.logger.error('solution.component : fetchCoverageCount() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-				});
+			assetsFacet.loading = false;
+		},
+		err => {
+			assetsFacet.loading = false;
+			this.logger.error('solution.component : fetchCoverageCount() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
 	}
 
 	/**
 	 * Fetches the counts for the advisories chart
 	 */
 	private fetchAdvisoryCounts () {
-		this.advisoriesFacet.loading = true;
+		const advisoryFacet = _.find(this.facets, { key: 'advisories' });
+
+		advisoryFacet.loading = true;
 		this.productAlertsService.getVulnerabilityCounts({ customerId: this.customerId })
-			.subscribe((counts: VulnerabilityResponse) => {
-				this.advisoriesFacet.seriesData = [
+		.subscribe((counts: VulnerabilityResponse) => {
+			const seriesData = [];
+
+			const advisories = _.get(counts, 'security-advisories', 0);
+			const fieldNotices = _.get(counts, 'field-notices', 0);
+			const bugs = _.get(counts, 'bugs', 0);
+
+			if (advisories) {
+				seriesData.push(
 					{
 						label: I18n.get('_SecurityAdvisories_'),
-						value: _.get(counts, 'security-advisories'),
+						value: advisories,
 					},
+				);
+			}
+
+			if (fieldNotices) {
+				seriesData.push(
 					{
 						label: I18n.get('_FieldNotices_'),
-						value: _.get(counts, 'field-notices'),
+						value: fieldNotices,
 					},
+				);
+			}
+
+			if (bugs) {
+				seriesData.push(
 					{
 						label: I18n.get('_Bugs_'),
-						value: _.get(counts, 'bugs'),
+						value: bugs,
 					},
-				];
-				this.advisoriesFacet.loading = false;
-			},
-				err => {
-					this.advisoriesFacet.loading = false;
-					this.logger.error('solution.component : fetchAdvisoryCounts() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-				});
+				);
+			}
+
+			advisoryFacet.seriesData = seriesData;
+			advisoryFacet.loading = false;
+		},
+		err => {
+			advisoryFacet.loading = false;
+			this.logger.error('solution.component : fetchAdvisoryCounts() ' +
+			`:: Error : (${err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * Fetch Case/RMA counts for the given serial number
+	 * @returns Observable with array of case followed by RMA counts
+	 */
+	public getCaseAndRMACount () {
+		const resolutionFacet = _.find(this.facets, { key: 'resolution' });
+		const params = {
+			nocache: Date.now(),
+			page: 0,
+			size: 1,
+			sort: 'caseNumber,ASC',
+			statusTypes: 'O',
+		};
+
+		return forkJoin(
+			// Case Count
+			this.caseService.read(params)
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Case Data :: Case Count :: Error ${err}`);
+					return of(null);
+				}),
+			),
+			// RMA count
+			this.caseService.read({
+				...params,
+				hasRMAs: 'T',
+			})
+			.pipe(
+				catchError(err => {
+					this.logger.error(`RMA Data :: RMA Count :: Error ${err}`);
+					this.casesCount = 0;
+					this.RMACount = 0;
+
+					return of(null);
+				}),
+			),
+		)
+		.subscribe(counts => {
+			resolutionFacet.loading = false;
+
+			this.casesCount = _.get(counts, [0, 'totalElements'], 0);
+			this.RMACount = _.get(counts, [1, 'totalElements'], 0);
+		});
 	}
 
 	/**
@@ -315,6 +382,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		this.initializeFacets();
 		this.fetchCoverageCount();
 		this.fetchAdvisoryCounts();
+		this.getCaseAndRMACount();
 	}
 
 	/**

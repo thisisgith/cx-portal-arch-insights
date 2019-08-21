@@ -12,11 +12,12 @@ import {
 } from '@sdp-api';
 import { environment } from '@environment';
 import { BarChartModule, CaseModule } from '@components';
+import { NoDNACHeaderModule } from './no-dnac-header/no-dnac-header.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Module representing the Solution Pages
@@ -34,6 +35,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		I18nPipeModule,
 		CuiSpinnerModule,
 		InventoryModule.forRoot({ rootUrl }),
+		NoDNACHeaderModule,
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
 		SolutionRoutingModule,

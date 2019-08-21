@@ -52,3 +52,11 @@ export * from './lib/architecture/architecture.module';
 export * from './lib/osv/models';
 export * from './lib/osv/services';
 export * from './lib/osv/osv.module';
+
+export * from './lib/email/models';
+export * from './lib/email/services';
+export * from './lib/email/email.module';
+
+export * from './lib/feedback/models';
+export * from './lib/feedback/services';
+export * from './lib/feedback/feedback.module';

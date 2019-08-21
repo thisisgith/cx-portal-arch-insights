@@ -87,6 +87,7 @@ describe('General Spec', () => {
 
 	context('Case Search', () => {
 		const caseVal = '699159996';
+		const anotherCaseVal = '699160599';
 
 		before(() => {
 			cy.login();
@@ -149,6 +150,19 @@ describe('General Spec', () => {
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
 		});
+
+		it('PBC-483 Case Related RMA link', () => {
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(anotherCaseVal.concat('{enter}'));
+			cy.wait('@case').then(() => {
+				cy.getByAutoId('rmaNumber', { timeout: 10000 })
+					.should('have.attr', 'href');
+				cy.getByAutoId('rmaNumber')
+					.should('have.attr', 'target', '_blank');
+			});
+		});
 	});
 
 	context('RMA Search', () => {
@@ -199,7 +213,6 @@ describe('General Spec', () => {
 				win.mockService.enable('RMA with four replacement parts'); // enable the desired
 				cy.getByAutoId('Facet-Assets & Coverage').should('exist').click(); // refresh after making a mock change
 			});
-			// cy.log("one");
 			const rmaVal = '800000000';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('rma');
@@ -286,7 +299,7 @@ describe('General Spec', () => {
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('rma');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
-				.type(rmaVal.concat('{enter}'));
+				.type(rmaVal.concat('{ enter }'));
 
 			cy.wait('@rma').then(() => {
 				cy.wait(3000);

@@ -17,14 +17,33 @@ $vibblue: #017cad;
 	}
 
 	&__card {
+		padding: 0;
+		height: 525px;
+
 		&__background {
-			background: $light-gray-5;
+			background: $white;
+		}
+
+		&__header {
+			padding-right: 30px;
+			padding-left: 20px;
 		}
 
 		&__body {
-			height: 150px;
+			padding-right: 30px;
+			padding-left: 20px;
+			height: 100px;
 			overflow: auto;
 		}
+
+		&__footer {
+			padding-right: 30px;
+			padding-left: 20px;
+		}
+	}
+
+	&__card:hover {
+		border-left: 2px solid $vibblue !important;
 	}
 }
 
@@ -43,6 +62,15 @@ $vibblue: #017cad;
 	.icon-clock {
 		padding-right: 4px;
 	}
+}
+
+
+.successbytes-type-link {
+	padding: 10px;
+	font-size: 12px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
 }
 
 .small-panel {
@@ -68,6 +96,28 @@ $vibblue: #017cad;
 	height: 100px;
 }
 
+.success__card__title {
+	margin-bottom: 15px;
+}
+
+.success__card__icons {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: left;
+
+	.type {
+		margin-right: 15px;
+	}
+
+	.duration {
+		margin-left: 15px;
+	}
+}
+
+.success__card__launch {
+	text-align: left;
+}
+
 .round-edges {
 	border-radius: 15px;
 }
@@ -78,6 +128,10 @@ $vibblue: #017cad;
 
 .max-width {
 	width: 100%;
+}
+
+.table-img-width {
+	width: 80px;
 }
 
 .text-white {
@@ -96,13 +150,14 @@ $vibblue: #017cad;
 	color: $success;
 }
 
-.panel--open {
+.panel--open,
+.cardpanel--open,
+.cardpanel--openright,
+.listpanel--open {
 	box-shadow: $base-box-shadow;
-	height: 430px;
+	height: 325px;
 	width: 500px;
 	position: absolute;
-	bottom: -20px;
-	left: 70px;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
@@ -117,13 +172,69 @@ $vibblue: #017cad;
 	}
 }
 
+.cgtpanel--open {
+	box-shadow: $base-box-shadow;
+	height: 120px;
+	width: 400px;
+	position: absolute;
+	top: 40px;
+	left: 210px;
+	z-index: 3;
+	background-color: $white;
+	border-radius: 10px;
+}
+
+.cgtpanel--open::after {
+	content: "";
+	position: absolute;
+	top: 35%;
+	left: -18px;
+	border-top: 25px solid transparent;
+	border-right: 35px solid white;
+	border-bottom: 30px solid transparent;
+}
+
 .panel--open::after {
 	content: "";
 	position: absolute;
-	top: 60%;
+	top: 45%;
 	left: -15px;
+	z-index: -1;
 	border-top: 30px solid transparent;
 	border-right: 50px solid white;
+	border-bottom: 30px solid transparent;
+}
+
+.cardpanel--open::after {
+	content: "";
+	position: absolute;
+	top: 65%;
+	left: -15px;
+	z-index: -1;
+	border-top: 30px solid transparent;
+	border-right: 50px solid white;
+	border-bottom: 30px solid transparent;
+}
+
+.cardpanel--openright::after {
+	content: "";
+	position: absolute;
+	top: 65%;
+	right: -15px;
+	z-index: -1;
+	border-top: 30px solid transparent;
+	border-left: 50px solid white;
+	border-bottom: 30px solid transparent;
+}
+
+.listpanel--open::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: -15px;
+	z-index: -1;
+	border-top: 30px solid transparent;
+	border-left: 50px solid white;
 	border-bottom: 30px solid transparent;
 }
 
@@ -131,6 +242,12 @@ $vibblue: #017cad;
 	overflow-y: scroll;
 	height: 120px;
 	display: block;
+
+	tr td {
+		padding: 10px;
+		width: auto;
+		text-align: left;
+	}
 }
 
 
@@ -246,14 +363,16 @@ $vibblue: #017cad;
 	&-recommendedACC,
 	&-recommendedATX,
 	&-moreACCList,
-	&-recommendedElearning {
+	&-recommendedElearning,
+	&-successbytes {
 		display: none;
 	}
 
 	&-recommendedACC::after,
 	&-recommendedATX::after,
 	&-moreACCList::after,
-	&-recommendedElearning::after {
+	&-recommendedElearning::after,
+	&-successbytes::after {
 		content: "";
 		position: absolute;
 		top: 45%;
@@ -263,7 +382,8 @@ $vibblue: #017cad;
 
 	&-recommendedACC::after,
 	&-moreACCList::after,
-	&-recommendedElearning::after {
+	&-recommendedElearning::after,
+	&-successbytes::after {
 		right: -15px;
 		border-left: 15px solid white;
 	}
@@ -276,12 +396,14 @@ $vibblue: #017cad;
 
 #recommended-item:hover,
 #moreAccList-item:hover,
-#recommended-elearning-item:hover {
+#recommended-elearning-item:hover,
+#successbytes-item:hover {
 	#hover-panel {
 		&-recommendedACC,
 		&-recommendedATX,
 		&-moreACCList,
-		&-recommendedElearning {
+		&-recommendedElearning,
+		&-successbytes {
 			display: block;
 			position: absolute;
 			box-shadow: $base-box-shadow;
@@ -295,11 +417,16 @@ $vibblue: #017cad;
 
 		&-recommendedACC,
 		&-moreACCList,
-		&-recommendedElearning {
+		&-recommendedElearning,
+		&-successbytes {
 			left: -480px;
 		}
 
 		&-moreACCList {
+			top: -90px;
+		}
+
+		&-successbytes {
 			top: -90px;
 		}
 
@@ -324,7 +451,11 @@ $vibblue: #017cad;
 
 ::ng-deep #category-filter input,
 ::ng-deep #acc-filter input,
+::ng-deep #atx-filter input,
+::ng-deep #pg-category-filter input,
+::ng-deep #atx-filter input:focus,
 ::ng-deep #acc-filter input:focus,
+::ng-deep #pg-category-filter input:focus,
 ::ng-deep #category-filter input:focus {
 	border: 0 !important;
 	border-color: transparent;
@@ -368,6 +499,15 @@ tr.td-row td {
 	color: transparent;
 	-webkit-text-stroke-width: 1px;
 	-webkit-text-stroke-color: $info;
+}
+
+.learning-progress-col {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+.learning-progressfill-col {
+	margin-left: 0 !important;
 }
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {

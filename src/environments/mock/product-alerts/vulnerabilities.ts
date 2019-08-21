@@ -1,4 +1,5 @@
 import { VulnerabilityResponse } from '@sdp-api';
+import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
 const api = '/api/customerportal/product-alerts/v1/vulnerabilities/count';
@@ -9,7 +10,7 @@ const customerId = '2431199';
 const mockAdvisoryCounts: VulnerabilityResponse = {
 	bugs: 2,
 	'field-notices': 3,
-	'security-advisories': 3,
+	'security-advisories': 6,
 };
 
 /** The scenarios */
@@ -22,6 +23,24 @@ export const VulnerabilityScenarios = [
 					description: 'Advisory Counts',
 					response: {
 						body: mockAdvisoryCounts,
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: 0,
+					description: 'Advisory Counts - Unreachable',
+					response: {
+						body: { },
+						status: 503,
+					},
+					selected: false,
+				},
+				{
+					delay: 100,
+					description: 'Advisory Counts - Missing keys',
+					response: {
+						body: _.pick(mockAdvisoryCounts, ['bugs']),
 						status: 200,
 					},
 					selected: true,

@@ -1,0 +1,64 @@
+<div class="text-center">
+	<h6
+		class="dbl-xl-margin-top text-primary base-margin-bottom"
+		[innerText]="('_StepXColonY_' | i18n:'1':('_Prerequisites_' | i18n)) | uppercase"
+	></h6>
+	<h2 [innerText]="'_ConnectDevicesToCX_' | i18n"
+		class="dbl-xl-margin-bottom">
+	</h2>
+
+	<div class="base-margin-bottom text-large">
+		<span [innerText]="'_InstallCiscoIE_' | i18n"></span>
+	</div>
+	<div class="xl-margin-bottom text-large">
+		<span [innerText]="'_YoullNeedAnEnvironment_' | i18n"></span>
+	</div>
+	<div class="flex-center xl-margin-bottom">
+		<div class="flex-center-vertical text-left col-md-3">
+			<img
+				class="base-margin-right"
+				type="image/svg+xml"
+				alt="Chip Icon"
+				src="assets/img/setup-ie/icons/icon-chip.svg">
+			<span class="text-large flex-fluid">
+				<span [innerText]="'_HasVMWare_' | i18n"></span>
+				<span	tabindex="0"
+				[attr.data-balloon]="'_VMWareTooltip_' | i18n"
+				data-balloon-break
+				data-balloon-pos="right">
+					<span class="half-margin-left icon-info-outline text-info"></span>
+				</span>
+			</span>
+		</div>
+		<div class="flex-center-vertical text-left col-md-3">
+			<img
+				class="base-margin-right"
+				type="image/svg+xml"
+				alt="List Icon"
+				src="assets/img/setup-ie/icons/icon-gblist.svg">
+			<span class="text-large flex-fluid"
+				  [innerText]="'_HasAtLeastReqs_' | i18n">
+			</span>
+		</div>
+		<div class="flex-center-vertical text-left col-md-3">
+			<img
+				class="base-margin-right"
+				type="image/svg+xml"
+				alt="WWW Icon"
+				src="assets/img/setup-ie/icons/icon-www.svg">
+			<span class="text-large flex-fluid"
+				  [innerText]="'_CanConnectTo_' | i18n">
+			</span>
+		</div>
+	</div>
+	<button
+		data-auto-id="get-started-btn"
+		class="btn btn--wide btn--secondary qtr-margin-right"
+		[innerText]="'_GetStarted_' | i18n | uppercase"
+		(click)="onBegin()">
+	</button>
+
+	<span [innerText]="'_PressEnter_' | i18n"
+		class="text-large">
+	</span>
+</div>

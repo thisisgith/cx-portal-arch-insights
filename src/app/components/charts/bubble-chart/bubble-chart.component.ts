@@ -98,6 +98,7 @@ export class BubbleChartComponent implements OnInit {
 					minSize: '30%',
 				},
 				series: {
+					cursor: 'pointer',
 					point: {
 						events: {
 							click: event => this.selectSubfilter(event),
@@ -118,9 +119,8 @@ export class BubbleChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-
-		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
-		this.subfilter.emit(filterName);
+		const filter = _.find(this.seriesData, { label: event.point.name });
+		this.subfilter.emit(filter);
 	}
 
 	/**

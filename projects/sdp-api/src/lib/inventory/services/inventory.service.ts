@@ -40,7 +40,11 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
    * - `serialNumber`: The serial number of the device
+   *
+   * - `search`: Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
    *
    * - `rows`: Number of rows of data per page
    *
@@ -50,7 +54,15 @@ class InventoryService extends __BaseService {
    *
    * - `managedNeId`:
    *
+   * - `lastDateOfSupportRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
+   *
    * - `hwInstanceId`:
+   *
+   * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `hasFieldNotices`: Activates filter on assets having field notices. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `coverage`: The coverage
    *
@@ -64,17 +76,23 @@ class InventoryService extends __BaseService {
     let __body: any = null;
 
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-    if (params.serialNumber != null) __params = __params.set('serialNumber', params.serialNumber.toString());
+    (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
+    if (params.search != null) __params = __params.set('search', params.search.toString());
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
+    (params.lastDateOfSupportRange || []).forEach(val => {if (val != null) __params = __params.append('lastDateOfSupportRange', val.toString())});
     (params.hwInstanceId || []).forEach(val => {if (val != null) __params = __params.append('hwInstanceId', val.toString())});
+    if (params.hasSecurityAdvisories != null) __params = __params.set('hasSecurityAdvisories', params.hasSecurityAdvisories.toString());
+    if (params.hasFieldNotices != null) __params = __params.set('hasFieldNotices', params.hasFieldNotices.toString());
+    if (params.hasBugs != null) __params = __params.set('hasBugs', params.hasBugs.toString());
     (params.coverage || []).forEach(val => {if (val != null) __params = __params.append('coverage', val.toString())});
     (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/inventory/v1/assets`,
+      this.rootUrl + `/customerportal/inventory/v1/assets`,
       __body,
       {
         headers: __headers,
@@ -96,7 +114,11 @@ class InventoryService extends __BaseService {
    *
    * - `customerId`: Unique identifier of a Cisco customer.
    *
+   * - `sort`: Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+   *
    * - `serialNumber`: The serial number of the device
+   *
+   * - `search`: Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
    *
    * - `rows`: Number of rows of data per page
    *
@@ -106,7 +128,15 @@ class InventoryService extends __BaseService {
    *
    * - `managedNeId`:
    *
+   * - `lastDateOfSupportRange`: A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
+   *
    * - `hwInstanceId`:
+   *
+   * - `hasSecurityAdvisories`: Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `hasFieldNotices`: Activates filter on assets having field notices. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+   *
+   * - `hasBugs`: Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
    *
    * - `coverage`: The coverage
    *
@@ -139,7 +169,7 @@ class InventoryService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/inventory/v1/assets/summary`,
+      this.rootUrl + `/customerportal/inventory/v1/assets/summary`,
       __body,
       {
         headers: __headers,
@@ -183,7 +213,7 @@ class InventoryService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/inventory/v1/hardware`,
+      this.rootUrl + `/customerportal/inventory/v1/hardware`,
       __body,
       {
         headers: __headers,
@@ -257,7 +287,7 @@ class InventoryService extends __BaseService {
     (params.containingHwId || []).forEach(val => {if (val != null) __params = __params.append('containingHwId', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/inventory/v1/hardware`,
+      this.rootUrl + `/customerportal/inventory/v1/hardware`,
       __body,
       {
         headers: __headers,
@@ -321,7 +351,7 @@ class InventoryService extends __BaseService {
     if (customerId != null) __params = __params.set('customerId', customerId.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/inventory/v1/network-elements`,
+      this.rootUrl + `/customerportal/inventory/v1/network-elements`,
       __body,
       {
         headers: __headers,
@@ -363,6 +393,8 @@ class InventoryService extends __BaseService {
    *
    * - `sort`: ASC (ascending) or DESC (descending)
    *
+   * - `serialNumber`: The serial number of the device
+   *
    * - `rows`: Number of rows of data per page
    *
    * - `productFamily`: Unique identifier of a Cisco customer.
@@ -373,7 +405,7 @@ class InventoryService extends __BaseService {
    *
    * - `neInstanceId`: The unique, generated ID of the network element.
    *
-   * - `managedNeInstanceId`: Unique identifier of a Network Resource ID
+   * - `managedNeId`: Unique identifier of a Network Resource ID
    *
    * - `isManagedNe`: Is it a managed NE
    *
@@ -397,12 +429,13 @@ class InventoryService extends __BaseService {
     (params.swVersion || []).forEach(val => {if (val != null) __params = __params.append('swVersion', val.toString())});
     (params.swType || []).forEach(val => {if (val != null) __params = __params.append('swType', val.toString())});
     (params.sort || []).forEach(val => {if (val != null) __params = __params.append('sort', val.toString())});
+    (params.serialNumber || []).forEach(val => {if (val != null) __params = __params.append('serialNumber', val.toString())});
     if (params.rows != null) __params = __params.set('rows', params.rows.toString());
     if (params.productFamily != null) __params = __params.set('productFamily', params.productFamily.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     (params.neType || []).forEach(val => {if (val != null) __params = __params.append('neType', val.toString())});
     (params.neInstanceId || []).forEach(val => {if (val != null) __params = __params.append('neInstanceId', val.toString())});
-    (params.managedNeInstanceId || []).forEach(val => {if (val != null) __params = __params.append('managedNeInstanceId', val.toString())});
+    (params.managedNeId || []).forEach(val => {if (val != null) __params = __params.append('managedNeId', val.toString())});
     if (params.isManagedNe != null) __params = __params.set('isManagedNe', params.isManagedNe.toString());
     (params.ipAddress || []).forEach(val => {if (val != null) __params = __params.append('ipAddress', val.toString())});
     if (params.inventoryName != null) __params = __params.set('inventoryName', params.inventoryName.toString());
@@ -410,7 +443,7 @@ class InventoryService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/inventory/v1/network-elements`,
+      this.rootUrl + `/customerportal/inventory/v1/network-elements`,
       __body,
       {
         headers: __headers,
@@ -442,6 +475,8 @@ class InventoryService extends __BaseService {
    *
    * - `sort`: ASC (ascending) or DESC (descending)
    *
+   * - `serialNumber`: The serial number of the device
+   *
    * - `rows`: Number of rows of data per page
    *
    * - `productFamily`: Unique identifier of a Cisco customer.
@@ -452,7 +487,7 @@ class InventoryService extends __BaseService {
    *
    * - `neInstanceId`: The unique, generated ID of the network element.
    *
-   * - `managedNeInstanceId`: Unique identifier of a Network Resource ID
+   * - `managedNeId`: Unique identifier of a Network Resource ID
    *
    * - `isManagedNe`: Is it a managed NE
    *
@@ -495,7 +530,7 @@ class InventoryService extends __BaseService {
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'HEAD',
-      this.rootUrl + `/api/customerportal/inventory/v1/software`,
+      this.rootUrl + `/customerportal/inventory/v1/software`,
       __body,
       {
         headers: __headers,
@@ -583,7 +618,7 @@ class InventoryService extends __BaseService {
     (params.fields || []).forEach(val => {if (val != null) __params = __params.append('fields', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/inventory/v1/software`,
+      this.rootUrl + `/customerportal/inventory/v1/software`,
       __body,
       {
         headers: __headers,
@@ -658,7 +693,7 @@ class InventoryService extends __BaseService {
     (params.role || []).forEach(val => {if (val != null) __params = __params.append('role', val.toString())});
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/api/customerportal/inventory/v1/role/device/count`,
+      this.rootUrl + `/customerportal/inventory/v1/role/device/count`,
       __body,
       {
         headers: __headers,
@@ -704,9 +739,19 @@ module InventoryService {
     customerId: string;
 
     /**
+     * Supported sort criteria are either ‘asc’ for ascending or ‘desc’ for descending.
+     */
+    sort?: Array<string>;
+
+    /**
      * The serial number of the device
      */
-    serialNumber?: string;
+    serialNumber?: Array<string>;
+
+    /**
+     * Searchable field - title. Applied only when the length of this parameter is more than 3 characters.
+     */
+    search?: string;
 
     /**
      * Number of rows of data per page
@@ -723,7 +768,27 @@ module InventoryService {
      */
     page?: number;
     managedNeId?: Array<string>;
+
+    /**
+     * A date range in the format of <fromDateInMillis>,<toDateInMillis>. fromDateInMillis is inclusive and toDateInMillis is exclusive. <toDateInMillis> format supported to filter advisories having lastDateOfSupportRange till particular date. Use <fromDateInMillis> format to filter advisories having lastDateOfSupportRange from a particular date.
+     */
+    lastDateOfSupportRange?: Array<string>;
     hwInstanceId?: Array<string>;
+
+    /**
+     * Activates filter on assets having security advisories. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+     */
+    hasSecurityAdvisories?: string;
+
+    /**
+     * Activates filter on assets having field notices. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+     */
+    hasFieldNotices?: string;
+
+    /**
+     * Activates filter on assets having bugs. If multiple of these attributes are provided,  the last value would be considered. Values "true" or "1" are considered as boolean value  "True" and any other value is considered false. This filter is activated is attribute is present.
+     */
+    hasBugs?: string;
 
     /**
      * The coverage
@@ -844,6 +909,11 @@ module InventoryService {
     sort?: Array<string>;
 
     /**
+     * The serial number of the device
+     */
+    serialNumber?: Array<string>;
+
+    /**
      * Number of rows of data per page
      */
     rows?: number;
@@ -871,7 +941,7 @@ module InventoryService {
     /**
      * Unique identifier of a Network Resource ID
      */
-    managedNeInstanceId?: Array<number>;
+    managedNeId?: Array<number>;
 
     /**
      * Is it a managed NE
