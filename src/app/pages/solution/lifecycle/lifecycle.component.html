@@ -317,11 +317,11 @@
 		#viewAtxSessions
 		id="viewAtxPanel"
 		[ngClass]="getPanel(viewAtxSessions)" data-auto-id="atxScheduleCard">
-		<div class="row half-margin-top half-margin-left half-margin-right">
-			<div id="atxtitle" class="col-md-11 text-left">
+		<div class="atx-scheduler-one-line half-margin-top half-margin-left half-margin-right">
+			<div id="atxtitle" class="text-left">
 				<h5 [innerText]="data.title"></h5>
 			</div>
-			<div class="col-md-1">
+			<div>
 				<a class="no-link closebtn"
 					(click)="this.atxScheduleCardOpened = false; recommendedAtxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0"
 					data-auto-id="AtxScheduleCardClose">
@@ -330,14 +330,14 @@
 			</div>
 		</div>
 		<div class="divider divider--compressed"></div>
-		<div class="row half-margin-left half-margin-top half-margin-bottom base-margin-left">
-			<div class="col-md-8">
+		<div class="atx-scheduler-one-line half-margin-left half-margin-top half-margin-bottom base-margin-left">
+			<div>
 				<h6 class="text-left"
 					[innerText]="'_ChooseSession_' | i18n">
 				</h6>
 			</div>
-			<div class="col-md-4">
-				<div class="pull-right">
+			<div>
+				<div>
 					<span class="icon-clock icon-small half-padding-right"></span>
 					<span class="text-xsmall base-padding-right qtr-padding-top" innerText="{{ data.duration*1000 | date:'H:mm:ss':'UTC' }}"></span>
 				</div>
@@ -366,6 +366,7 @@
 		<div>
 			<a id="AtxScheduleCardRegisterButton"
 				class="pull-left half-padding-left"
+				target="_blank"
 				*ngIf="sessionSelected && !sessionSelected.scheduled && !notCurrentPitstop"
 				[href]="sessionSelected?.registrationURL">
 				<button class="btn btn--primary base-margin-top half-margin-left"

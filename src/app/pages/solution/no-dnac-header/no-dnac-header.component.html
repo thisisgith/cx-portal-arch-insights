@@ -4,7 +4,7 @@
 			<span
 				data-auto-id="setup-wizard-header-close-btn"
 				class="icon-close"
-				(click)="forceHidden = true"
+				(click)="forceHidden = true; refreshButton()"
 			></span>
 		</div>
 		<div>
@@ -23,6 +23,7 @@
 			></h3>
 		</div>
 		<button
+			#continueSetupButton
 			class="btn btn--secondary btn--wide flex-right"
 			[innerText]="'_ContinueSetup_' | i18n | uppercase"
 			[routerLink]="['/setup-ie']"
