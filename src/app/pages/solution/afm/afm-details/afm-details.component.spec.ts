@@ -86,8 +86,10 @@ describe('AfmDetailsComponent', () => {
 		spyOn(mockAfmService, 'revertIgnoreEvent')
 			.and
 			.returnValue(of(<any> AfmScenarios[0].scenarios.POST[0].response.body));
+
 		mockAlarm.customerId = '1234';
 		mockAlarm.faultIC = '%Fault';
+		mockAlarm.status = 'Success';
 
 		component.toggleEvent(mockAlarm);
 		fixture.detectChanges();
@@ -95,6 +97,7 @@ describe('AfmDetailsComponent', () => {
 		expect(mockAfmService.ignoreEvent)
 			.toHaveBeenCalled();
 
+		mockAlarm.status = 'Ignored';
 		component.toggleEvent(mockAlarm);
 		fixture.detectChanges();
 
