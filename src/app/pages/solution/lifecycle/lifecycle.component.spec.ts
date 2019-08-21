@@ -422,7 +422,9 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
+			let dummyClickedBtn = document.createElement('button');
 			component.eventXCoordinates = 200;
+			component.eventClickedElement = dummyClickedBtn;
 			component.atxview = 'grid';
 			(<any> window).innerWidth = 1200;
 			let viewAtxSessions: HTMLElement;
@@ -438,6 +440,7 @@ describe('LifecycleComponent', () => {
 
 			component.atxview = 'grid';
 			component.eventXCoordinates = 1000;
+			component.eventClickedElement = dummyClickedBtn;
 			(<any> window).innerWidth = 1200;
 			component.componentData.atx.interested = { };
 			viewAtxSessions = document.createElement('viewAtxSessions');
@@ -451,6 +454,7 @@ describe('LifecycleComponent', () => {
 
 			component.atxview = 'list';
 			component.eventXCoordinates = 1000;
+			component.eventClickedElement = dummyClickedBtn;
 			(<any> window).innerWidth = 1200;
 			component.componentData.atx.interested = { };
 			viewAtxSessions = document.createElement('viewAtxSessions');
