@@ -144,6 +144,11 @@
 	"_Critical_": "Critical",
 	"_CSETouch_": "Your CSE will be in touch shortly",
 	"_CSOneError_": "There was an error attempting to open your case with CSOne:",
+	"_CSErrorMessage_": "An error occured while sending the email. Please reach out to the support team.",
+	"_CSErrorTitle_": "Failed to Send",
+	"_CSTitle_": "Contact a Designated Expert",
+	"_CSDetailPlaceholder_": "Please include Product families, OS Version in your request, for which Software recommendation analysis is required",
+	"_CSSupportLink_": "Click here for DE recommendation report",
 	"_Curated_": "Curated",
 	"_CurrentAvailableMemory_": "Current Available Memory",
 	"_CurrentCPUUtilization_": "Current CPU Utilization",
@@ -827,5 +832,5 @@
 	"_YouHaveInventory_": "you have {0} of these in your inventory",
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:",
 	"_YourImpactedDevices_": "Your Impacted Devices",
-	"_YourProducts_": "Your products, documentation & Learning Library resources"
+	"_YourProducts_": "Your products, documentation & Learning Library resources"	
 }

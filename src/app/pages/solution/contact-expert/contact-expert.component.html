@@ -1,0 +1,63 @@
+	<a class="modal__close" (click)="cuiModalService.hide()" data-auto-id="CloseContactSupportModal"><span
+			class="icon-close"></span></a>
+	<div class="modal__header">
+		<h2 class="modal-heading">{{modelHeading}}</h2>
+	</div>
+	<div class="modal__body">
+		<form [formGroup]="supportForm" novalidate *ngIf="!responseAvailable">
+			<div class="col-md-12">
+				<div class="form-group">
+					<div class="form-group__text">
+						<label for="support-title" class="text-bold qtr-padding-bottom"
+							[innerText]="'_SupportTopic_' | i18n"></label>
+						<cui-select formControlName="title" #title id="support-title" [required]="true" [empty]="true"
+							[items]="items" placeholder="Select" [compressed]="false" optionsKey="name"
+							optionsValue="value" ></cui-select>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 base-padding-top">
+				<div class="form-group">
+					<div class="form-group__text">
+						<label for="support-description" class="text-bold qtr-padding-bottom"
+							[innerText]="'_SupportDescription_' | i18n"></label>
+						<cui-input #description id="support-description" rows="5"  formControlName="description" type="textarea"
+						[placeholder]="'_CSDetailPlaceholder_' | i18n" [options]="textareaOptions"></cui-input>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12 text-center dbl-padding-top">
+				<button data-auto-id="submit" class="btn btn--primary"
+					[innerText]="'_SupportSubmit_' | i18n | uppercase" (click)="submitMessage()" [disabled]="!(supportForm.valid)">
+				</button>
+			</div>
+		</form>
+		<div class="absolute-center" [hidden]="!showLoader">
+			<cui-spinner label="Sending..."></cui-spinner>
+		</div>
+		<div class="container text-left" [hidden]="!responseAvailable">
+			<div class="row">
+				<div class="col-md-10">
+					<p>{{emailMessage}}</p>
+					<div class="row">
+						<div class="col-md-12 text-bold">
+							{{'_SupportTopic_' | i18n}}
+						</div>
+						<div class="col-md-12">
+							<span>{{items[8].name}}</span>
+						</div>
+						<div class="col-md-12 base-margin-top text-bold">
+							{{'_SupportMessage_' | i18n}}
+						</div>
+						<div class="col-md-12">
+							<span class="text-break">{{description.value}}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal__footer">
+			<button class="btn" *ngIf="this.responseAvailable" (click)="cuiModalService.hide();"
+			data-auto-id="ContactSupportModalDone">{{'_SupportDone_' | i18n}}</button>
+	</div>
