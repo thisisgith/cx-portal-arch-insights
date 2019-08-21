@@ -31,7 +31,6 @@ import {
 	RacetrackResponse,
 } from '@sdp-api';
 
-import { SolutionService } from '../solution.service';
 import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
 import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, ReplaySubject, Subject } from 'rxjs';
@@ -40,6 +39,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Interface representing our data object
@@ -249,8 +249,8 @@ export class LifecycleComponent implements OnDestroy {
 		private logger: LogService,
 		private contentService: RacetrackContentService,
 		private racetrackService: RacetrackService,
-		private solutionService: SolutionService,
 		private route: ActivatedRoute,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -286,7 +286,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.pgview = <'list' | 'grid'> currentPGView;
 		}
 
-		this.solutionService.getCurrentSolution()
+		this.racetrackInfoService.getCurrentSolution()
 		.pipe(
 			takeUntil(this.destroy$),
 		)
@@ -295,7 +295,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
-		this.solutionService.getCurrentTechnology()
+		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
 		)
@@ -303,21 +303,21 @@ export class LifecycleComponent implements OnDestroy {
 			const currentSolution = this.componentData.params.solution;
 
 			const newTech = (currentSolution && technology !== this.selectedTechnology);
-			this.selectedTechnology = technology;
-
-			this.resetComponentData();
-
-			this.componentData.params.usecase = _.get(technology, 'name');
-			this.componentData.params.solution = currentSolution;
-
-			this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
-
-			let viewingIndex = racetrackComponent.stages
-				.indexOf(this.currentWorkingPitstop.toLowerCase()) + 1;
-			if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
-			this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
-
 			if (newTech) {
+				this.selectedTechnology = technology;
+
+				this.resetComponentData();
+
+				this.componentData.params.usecase = _.get(technology, 'name');
+				this.componentData.params.solution = currentSolution;
+
+				this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
+
+				let viewingIndex = racetrackComponent.stages
+					.indexOf(this.currentWorkingPitstop.toLowerCase()) + 1;
+				if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
+				this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
+
 				this.getRacetrackInfo(this.currentWorkingPitstop);
 			}
 		});
@@ -1024,7 +1024,7 @@ export class LifecycleComponent implements OnDestroy {
 				tech.name.toLowerCase() === this.selectedTechnology.name.toLowerCase());
 
 			if (responseTechnology) {
-				this.solutionService.sendCurrentTechnology(responseTechnology);
+				this.racetrackInfoService.sendCurrentTechnology(responseTechnology);
 			}
 		},
 		err => {
@@ -1645,7 +1645,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Returns the current pitStop
 	 * @returns the observable representing the pitstop
 	 */
-	 public getCurrentPitstop (): Observable<string>  {
+	public getCurrentPitstop (): Observable<string>  {
 		return this.stage.asObservable();
 	}
 
