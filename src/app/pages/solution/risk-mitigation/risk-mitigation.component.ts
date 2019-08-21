@@ -212,9 +212,13 @@ export class RiskMitigationComponent {
 	 * @returns the total crashes observable
 	 */
 	public getDeviceDetails (timePeriod: string) {
-		let params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.crashedAssetsGridDetails.tableData = [];
-		params = (timePeriod) ? timePeriod : _.unset(params, 'timePeriod');
+		if (timePeriod) {
+			params.timePeriod = timePeriod;
+		} else {
+			_.unset(params, 'timePeriod');
+		}
 
 		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
