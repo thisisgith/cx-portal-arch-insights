@@ -13,6 +13,7 @@ import {
 	HighCrashRiskDevices,
 	HighCrashRiskDeviceCount,
 	HighCrashRisk,
+	RiskAssets,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 
@@ -214,7 +215,7 @@ export class RiskMitigationComponent {
 		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
 					takeUntil(this.destroy$),
-					map((results: any) => {
+					map((results: RiskAssets) => {
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = _.size(results.deviceDetails);
 					}),
