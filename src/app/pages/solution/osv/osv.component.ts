@@ -37,17 +37,18 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	};
 	public customerId: string;
 	public fullScreen = false;
-	public selectedProfileGroup: any;
+	public selectedSoftwareGroup: any;
 	public selectedAsset: OSVAsset;
 	public filtered = false;
 	public filters: Filter[];
 	private destroy$ = new Subject();
-	public view: 'swProfiles' | 'assets' | 'swVersions'
-		= 'assets';
+	public view: 'swGroups' | 'assets' | 'swVersions' | undefined
+		= 'swGroups';
 	public appliedFilters = {
 		assetType: '',
 		deploymentStatus: [],
 	};
+	public noData = false;
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -79,7 +80,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				seriesData: [],
 				template: this.totalAssetsFilterTemplate,
 				title: '',
-				view: ['swProfiles', 'assets', 'swVersions'],
+				view: ['swGroups', 'assets', 'swVersions'],
 			},
 			{
 				key: 'assetType',
@@ -141,6 +142,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 						profiles: response.profiles,
 						versions: response.versions,
 					}];
+					this.decideView(response);
 					deploymentStatusFilter.seriesData = _.compact(
 						_.map(response.deployment, (value: number, key: string) => {
 							if (value !== 0) {
@@ -174,10 +176,29 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					totalAssetsFilter.loading = false;
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
+					this.noData = true;
+					this.view = undefined;
 
 					return of({ });
 				}),
 			);
+	}
+
+	/**
+	 * will show the default view based on response count
+	 * @param response the counts summary of assets
+	 */
+	public decideView (response: SummaryResponse) {
+		if (response.profiles > 0) {
+			this.view = 'swGroups';
+		} else if (response.assets > 0) {
+			this.view = 'assets';
+		} else if (response.versions > 0) {
+			this.view = 'swVersions';
+		} else {
+			this.view = undefined;
+			this.noData = true;
+		}
 	}
 
 	/**
@@ -192,7 +213,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * Changes the view to either swProfiles or assets
 	 * @param view view to set
 	 */
-	public selectView (view: 'swProfiles' | 'assets' | 'swVersions') {
+	public selectView (view: 'swGroups' | 'assets' | 'swVersions') {
 		if (this.view !== view) {
 			this.view = view;
 		}

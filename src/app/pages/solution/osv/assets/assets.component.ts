@@ -211,11 +211,6 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						sortable: false,
 						template: this.recommendationsTemplate,
 					},
-					// {
-					// 	click: true,
-					// 	sortable: false,
-					// 	template: this.actionsTemplate,
-					// },
 				],
 				dynamicData: true,
 				hover: true,

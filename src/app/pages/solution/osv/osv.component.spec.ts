@@ -8,8 +8,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { user } from '@mock';
-import { OSVService } from '@sdp-api';
+import { user, OSVScenarios } from '@mock';
+import { OSVService, SummaryResponse } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
@@ -58,7 +58,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should set null values on request errors', done => {
+	it('should set null values on request errors', () => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -67,14 +67,15 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
 
-				expect(_.find(component.filters, { key: 'totalAssets' }).seriesData.length)
-					.toBe(0);
-				done();
-			});
+		fixture.detectChanges();
+
+		expect(_.find(component.filters, { key: 'totalAssets' }).seriesData.length)
+			.toBe(0);
+		expect(component.noData)
+			.toBeTruthy();
+		expect(component.view)
+			.toBeUndefined();
 	});
 
 	it('should switch active filters', done => {
@@ -205,9 +206,87 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 	it('seleceView should change the view ', () => {
 		expect(component.view)
-			.toEqual('assets');
+			.toEqual('swGroups');
 		component.selectView('swVersions');
 		expect(component.view)
 			.toEqual('swVersions');
+	});
+
+	it('select softwareGroups view if the swProfile count is greater than zero', () => {
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of(<SummaryResponse> OSVScenarios[0].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.view)
+			.toEqual('swGroups');
+	});
+
+	it('select assets view if the assets count is equal to zero', () => {
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of({
+				asset_profile: {
+					assets_profile: 444,
+					assets_without_profile: 520,
+				},
+				assets: 964,
+				deployment: {
+					none: 963,
+					upgrade: 400,
+				},
+				profiles: 0,
+				versions: 50,
+			}));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.view)
+			.toEqual('assets');
+	});
+
+	it('select versions view if the versions count is equal to zero', () => {
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of({
+				asset_profile: {
+					assets_profile: 444,
+					assets_without_profile: 520,
+				},
+				assets: 0,
+				deployment: {
+					none: 963,
+					upgrade: 400,
+				},
+				profiles: 0,
+				versions: 50,
+			}));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.view)
+			.toEqual('swVersions');
+	});
+
+	it('select show no data if all counts are zero', () => {
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of({
+				asset_profile: {
+					assets_profile: 444,
+					assets_without_profile: 520,
+				},
+				assets: 0,
+				deployment: {
+					none: 963,
+					upgrade: 400,
+				},
+				profiles: 0,
+				versions: 0,
+			}));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.view)
+			.toBeUndefined();
+		expect(component.noData)
+			.toBeTruthy();
 	});
 });

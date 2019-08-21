@@ -7,7 +7,7 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-ht
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
-import { SoftwareProfilesResponse } from '../models/software-profiles-response';
+import { SoftwareGroupsResponse } from '../models/software-group-response';
 import { SoftwareVersionsResponse } from '../models/software-versions-response';
 import {  AssetRecommendationsResponse } from '../models/asset-recommendations-response';
 import { AssetsResponse } from '../models/assets-response';
@@ -18,7 +18,7 @@ import { SummaryResponse } from '../models/summary-response';
 })
 class OSVService extends __BaseService {
 	static readonly getSummaryPath = '/api/customerportal/osv-ui/v1/summary';
-	static readonly getSoftwareProfilesPath = '/api/customerportal/osv-ui/v1/profiles';
+	static readonly getSoftwareGroupsPath = '/api/customerportal/osv-ui/v1/profiles';
 	static readonly getSoftwareVersionsPath = '/api/customerportal/osv-ui/v1/versions';
 	static readonly getAssetDetailsPath = '/api/customerportal/osv-ui/v1/assetDetails';
 	static readonly getAssetsPath = '/api/customerportal/osv-ui/v1/assets';
@@ -80,21 +80,23 @@ class OSVService extends __BaseService {
 
 	/**
 	 * Sotware Profile of devices.
-	 * @param params The `OSVService.GetSoftwarProfilesParams` containing the following parameters:
+	 * @param params The `OSVService.GetSoftwareGroupsParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
 	 *
 	 * @return successful operation
 	 */
-	getSoftwareProfilesResponse (params: OSVService.GetSoftwarProfilesParams): __Observable<__StrictHttpResponse<SoftwareProfilesResponse>> {
+	getSoftwareGroupsResponse (params: OSVService.GetSoftwareGroupsParams): __Observable<__StrictHttpResponse<SoftwareGroupsResponse>> {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.pageIndex != null) __params = __params.set('pageIndex', params.pageIndex.toString());
+		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${OSVService.getSoftwareProfilesPath}`,
+			this.rootUrl + `${OSVService.getSoftwareGroupsPath}`,
 			__body,
 			{
 				headers: __headers,
@@ -105,22 +107,22 @@ class OSVService extends __BaseService {
 		return this.http.request<any>(req).pipe(
 			__filter(_r => _r instanceof HttpResponse),
 			__map((_r) => {
-				return _r as __StrictHttpResponse<SoftwareProfilesResponse>;
+				return _r as __StrictHttpResponse<SoftwareGroupsResponse>;
 			})
 		);
 	}
 
 	/**
 	 * Sotware Profile of devices
-	 * @param params The `OSVService.GetSoftwarProfilesParams` containing the following parameters:
+	 * @param params The `OSVService.GetSoftwareGroupsParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
 	 *
 	 * @return successful operation
 	 */
-	getSoftwareProfiles (params: OSVService.GetSoftwarProfilesParams): __Observable<SoftwareProfilesResponse> {
-		return this.getSoftwareProfilesResponse(params).pipe(
-			__map(_r => _r.body as SoftwareProfilesResponse)
+	getSoftwareGroups (params: OSVService.GetSoftwareGroupsParams): __Observable<SoftwareGroupsResponse> {
+		return this.getSoftwareGroupsResponse(params).pipe(
+			__map(_r => _r.body as SoftwareGroupsResponse)
 		);
 	}
 
@@ -335,7 +337,7 @@ module OSVService {
 	/**
 	 * Parameters for GetSoftwareProfileParams
 	 */
-	export interface GetSoftwarProfilesParams {
+	export interface GetSoftwareGroupsParams {
 
 		/**
 		 * Unique identifier of a Cisco customer.
@@ -344,11 +346,11 @@ module OSVService {
 		/**
 		 * pageNumber to be fetched.
 		 */
-		page: number;
+		pageIndex: number;
 		/**
 		 * No of rows to be fetched per page.
 		 */
-		rows: number;
+		pageSize: number;
 	}
 
 	/**
