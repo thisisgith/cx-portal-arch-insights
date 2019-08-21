@@ -47,7 +47,6 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 
 			categories.push(d.label);
 		});
-		let previousPoint;
 		this.chart = new Chart({
 			chart: {
 				events: {
@@ -85,11 +84,6 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 						events: {
 							click: event => {
 								this.selectSubfilter(event);
-								if (previousPoint) {
-									previousPoint.point.update({ className: 'highcharts-point' });
-								}
-								previousPoint = event;
-								event.point.update({ className: 'highcharts-point' });
 							},
 						},
 					},

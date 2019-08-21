@@ -184,7 +184,7 @@
 	></cui-table>
 	<div class="section">
 		<cui-pager
-			*ngIf="highCrashRiskAssetsGridDetails.tableData"
+			*ngIf="highCrashRiskAssetsGridDetails.totalItems"
 			[page]="highCrashRiskAssetsGridDetails.tableOffset"
 			[limit]="highCrashRiskAssetsGridDetails.tableLimit"
 			[totalItems]="highCrashRiskAssetsGridDetails.totalItems"

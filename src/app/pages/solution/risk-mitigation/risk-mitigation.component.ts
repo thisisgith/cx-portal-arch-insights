@@ -109,11 +109,11 @@ export class RiskMitigationComponent {
 		forkJoin(
 			this.getAllCrashesData(),
 			this.getHighCrashesDeviceData(),
-			this.getFingerPrintDeviceDetails(this.highCrashRiskParams),
 		)
 		.subscribe(() => {
 			this.status.isLoading = false;
 		});
+		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		this.onlyCrashes = true;
 	}
 	// tslint:disable-next-line: valid-jsdoc
@@ -249,7 +249,8 @@ export class RiskMitigationComponent {
 
 								return of({ });
 							}),
-						);
+						)
+						.subscribe();
 	}
 	/**
 	 * Fetches the device crashed history
