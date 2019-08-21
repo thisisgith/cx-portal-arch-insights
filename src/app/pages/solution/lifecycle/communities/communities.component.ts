@@ -4,10 +4,10 @@ import {
 import * as _ from 'lodash-es';
 import { RacetrackTechnology } from '@sdp-api';
 import { Subject } from 'rxjs';
-import { SolutionService } from '../../solution.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
 import { LifecycleComponent } from '../lifecycle.component';
+import { RacetrackInfoService } from '@services';
 
 /** Interface of each Community info */
 interface CommunityDetail {
@@ -52,6 +52,7 @@ const api = 'https://community.cisco.com/t5/custom/page/page-id/customFilteredBy
 /** Communities Component */
 @Component({
 	selector: 'app-communities',
+	styleUrls: ['./communities.component.scss'],
 	templateUrl: './communities.component.html',
 })
 export class CommunitiesComponent implements OnDestroy {
@@ -64,11 +65,11 @@ export class CommunitiesComponent implements OnDestroy {
 	private destroy$ = new Subject();
 
 	constructor (
-		private solutionService: SolutionService,
+		private racetrackInfoService: RacetrackInfoService,
 		private lifecycle: LifecycleComponent,
 		private sanitizer: DomSanitizer,
 	) {
-		this.solutionService.getCurrentTechnology()
+		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
 		)
