@@ -236,22 +236,27 @@ describe('Learn Panel', () => {
 			});
 		});
 
-		// TODO: Needs to be re-worked due to changes for PBC-567
-		// Links are now only on title, not content type icon
-		it.skip('PBC-188: All Success Path View All links should cross-launch to specified URL', () => {
+		it('PBC-188: All Success Path View All links should cross-launch to specified URL', () => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Cypress does not and will never support multiple tabs, so just check the link element
 			// Reference: https://docs.cypress.io/guides/references/trade-offs.html#Multiple-tabs
-			successPathItems.forEach(scenario => {
+			successPathItems.forEach((scenario, index) => {
 				cy.getByAutoId('ViewAllModal').within(() => {
-					cy.get(`a[href="${scenario.url}"]`)
-						// Note that type: 'Web Page' gets displayed as 'Web'
-						.should('contain', (scenario.type === 'Web Page' ? 'Web' : scenario.type))
-						// target: _blank indicates we'll open in a new tab
-						.and('have.attr', 'target', '_blank');
+					cy.getByAutoId('SuccessCard').eq(index).within(() => {
+						// PBC-567 Title and Launch button should have link to new tab
+						cy.getByAutoId('successtitle')
+							.should('have.text', scenario.title)
+							.and('have.attr', 'href', scenario.url)
+							.and('have.attr', 'target', '_blank');
+						cy.getByAutoId('LaunchButton')
+							.should('exist')
+							.parent()
+							.should('have.attr', 'href', scenario.url)
+							.and('have.attr', 'target', '_blank');
+					});
 				});
 			});
 
@@ -470,6 +475,16 @@ describe('Learn Panel', () => {
 						cy.get('tr').eq(index + 1).within(() => {
 							cy.getByAutoId('SB-Name-rowValue').should('have.text', item.title);
 							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
+							// PBC-567 Title and Launch button should have link to new tab
+							cy.getByAutoId('SB-Name-rowValue')
+								.should('have.text', item.title)
+								.and('have.attr', 'href', item.url)
+								.and('have.attr', 'target', '_blank');
+							cy.getByAutoId('LaunchButton')
+								.should('exist')
+								.parent()
+								.should('have.attr', 'href', item.url)
+								.and('have.attr', 'target', '_blank');
 							switch (item.type) {
 								case 'Video':
 									// Video should have play icon
@@ -1242,14 +1257,18 @@ describe('Learn Panel', () => {
 				// cy.getByAutoId('setup-wizard-header-close-btn').click();
 			});
 
-			// TODO: Needs to be re-worked due to changes for PBC-567
-			// Links are now only on title, not content type icon
-			it.skip('All product guides modal card view should contain all items', () => {
+			it('All product guides modal card view should contain all items', () => {
 				allProductGuidesItems.forEach((item, index) => {
 					cy.getByAutoId('ProductGuidesCard').eq(index).within(() => {
 						cy.getByAutoId('ProductGuidesCard-Archetype').should('have.text', item.archetype);
-						cy.getByAutoId('ProductGuidesCard-Title').should('have.text', item.title);
-						cy.getByAutoId('productlink')
+						// PBC-567 Title and Launch button should have link to new tab
+						cy.getByAutoId('ProductGuidesCard-Title')
+							.should('have.text', item.title)
+							.and('have.attr', 'href', item.url)
+							.and('have.attr', 'target', '_blank');
+						cy.getByAutoId('LaunchButton')
+							.should('exist')
+							.parent()
 							.should('have.attr', 'href', item.url)
 							.and('have.attr', 'target', '_blank');
 						// Handle duration text and clock icon
@@ -1369,7 +1388,16 @@ describe('Learn Panel', () => {
 					cy.getByAutoId('ViewAllTable').within(() => {
 						// Increase index by 1, since the first tr has the column headers
 						cy.get('tr').eq(index + 1).within(() => {
-							cy.getByAutoId('PG-Name-rowValue').should('have.text', item.title);
+							// PBC-567 Title and Launch button should have link to new tab
+							cy.getByAutoId('PG-Name-rowValue')
+								.should('have.text', item.title)
+								.and('have.attr', 'href', item.url)
+								.and('have.attr', 'target', '_blank');
+							cy.getByAutoId('LaunchButton')
+								.should('exist')
+								.parent()
+								.should('have.attr', 'href', item.url)
+								.and('have.attr', 'target', '_blank');
 							cy.getByAutoId('ViewAllTable-Category-rowValue').should('have.text', item.archetype);
 							// Handle duration text and clock icon
 							cy.getByAutoId('ViewAllTable-Format-rowValue-duration').should('contain', item.duration);
