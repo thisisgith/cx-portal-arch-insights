@@ -28,6 +28,11 @@ export class RiskMitigationComponent {
 	public customerId: number;
 	public clearAllFilters = false;
 	public searchQueryString: String = '';
+	public searchOptions = {
+		debounce: 1500,
+		max: 200,
+		min: 0,
+	};
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private logger: LogService,
@@ -303,11 +308,10 @@ export class RiskMitigationComponent {
 		this.highCrashRiskAssetsGridDetails.totalItems =
 		this.highCrashRiskAssetsGridDetails.totalItems + 10;
 	}
-
-	// tslint:disable-next-line: valid-jsdoc
 	/**
-	 * Function to capture High crash grid updation
-	 * @param searchText will have the high crash risk grid pagination info
+	 * Gets filter details for search query
+	 * @param searchText is the string contains search query value
+	 * @returns  time data with filter values
 	 */
 	public getFilterDetailsForSearchQuery (searchText: String) {
 		let time;

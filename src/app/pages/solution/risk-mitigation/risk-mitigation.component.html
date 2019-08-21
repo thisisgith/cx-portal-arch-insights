@@ -91,7 +91,7 @@
 		<div class="col-3" *ngIf="!onlyCrashes">
 			<cui-search
 				placeholder="Search"
-				[debounce]="1500"
+				[debounce]="searchOptions.debounce"
 				[compressed]="true"
 				(onUpdate)="onSearchQuery($event)"
 			>
