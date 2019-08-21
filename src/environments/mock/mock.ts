@@ -35,6 +35,7 @@ import {
 	OSVScenarios,
 	PolicesScenarios,
 	RacetrackScenarios,
+	RiskScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
@@ -95,7 +96,7 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
-	SoftwareProfilesResponse,
+	SoftwareGroupsResponse,
 	SoftwareVersionsResponse,
 	SoftwareEOLResponse,
 	SoftwareEOLBulletinResponse,
@@ -149,7 +150,7 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
-	SoftwareProfilesResponse |
+	SoftwareGroupsResponse |
 	SoftwareVersionsResponse |
 	SoftwareEOLResponse |
 	SoftwareEOLBulletinResponse |
@@ -237,6 +238,7 @@ export const mockSettings: MockSettings = {
 		OSVScenarios,
 		RMAScenarios,
 		PolicesScenarios,
+		RiskScenarios,
 		RMAScenarios,
 		RacetrackScenarios,
 		RoleScenarios,
