@@ -9,7 +9,7 @@ import {
 	CuiModalModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { ContactExpertModule } from '../../contact-expert/contact-expert.module';
+import { ContactSupportModule } from 'src/app/components/contact-support/contact-support.module';
 
 /**
  * AssetModule
@@ -24,8 +24,8 @@ import { ContactExpertModule } from '../../contact-expert/contact-expert.module'
 		I18nPipeModule,
 		CuiPagerModule,
 		CuiSpinnerModule,
-		ContactExpertModule,
 		CuiModalModule,
+		ContactSupportModule,
 	],
 })
 export class AssetsModule { }

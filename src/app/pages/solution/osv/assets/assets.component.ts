@@ -19,7 +19,9 @@ import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, OsvPagination } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
-import { ContactExpertComponent } from '../../contact-expert/contact-expert.component';
+import {
+	ContactSupportComponent,
+} from 'src/app/components/contact-support/contact-support.component';
 
 /**
  * AssetSoftware Component
@@ -305,6 +307,6 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 * Open contact support modal
 	 */
 	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactExpertComponent, { });
+		this.cuiModalService.showComponent(ContactSupportComponent, { contactExpert: true });
 	}
 }

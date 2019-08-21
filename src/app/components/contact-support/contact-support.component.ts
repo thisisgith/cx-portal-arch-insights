@@ -4,7 +4,7 @@ import { CuiModalService, CuiModalContent, CuiInputOptions } from '@cisco-ngx/cu
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
-import { EmailControllerService, EmailRequest } from '@sdp-api';
+import { EmailControllerService, EmailRequest, ContactSupportResponse } from '@sdp-api';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, empty } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -25,18 +25,14 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	public supportForm: FormGroup;
 	public data: any;
 	public success = false;
-	public title: FormControl = new FormControl('', Validators.required);
-	public description: FormControl = new FormControl('', Validators.required);
+	public title: FormControl;
+	public description: FormControl;
 	public userMailId: string = this.profileService.getProfile().cpr.pf_auth_email;
+	public modalHeading;
 	private destroy$ = new Subject();
-	public textOptions: CuiInputOptions = new CuiInputOptions({
-		autofocus: false,
-		required: true,
-		minLength: 0,
-		maxLength: 32000,
-		rows: 10,
-	});
+	public textOptions: CuiInputOptions;
 	public items: any[] = [];
+	public contactExpert = false;
 
 	constructor (
 		public cuiModalService: CuiModalService, private profileService: ProfileService,
@@ -48,6 +44,28 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
+		this.contactExpert = _.get(this.data, 'contactExpert');
+		this.title = this.contactExpert ? new FormControl(
+			{
+				value: '',
+				disabled: true,
+			}, Validators.required) : new FormControl('', Validators.required);
+		this.description = this.contactExpert ? new FormControl('', [
+			Validators.required,
+			Validators.maxLength(5000),
+		]) : new FormControl('', [
+			Validators.required,
+			Validators.maxLength(32000),
+		]);
+		this.modalHeading = this.contactExpert ? I18n.get('_CSTitle_') :
+		I18n.get('_SupportContact_');
+		this.textOptions = new CuiInputOptions({
+			autofocus: false,
+			required: true,
+			minLength: 0,
+			maxLength: this.contactExpert ? 5000 : 32000,
+			rows: 10,
+		});
 		this.supportForm = new FormGroup({
 			description: this.description,
 			title: this.title,
@@ -64,6 +82,9 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 		_.forEach(topicList, topic => {
 			this.items.push({ name: topic, value: topic });
 		});
+		if (this.contactExpert) {
+			this.supportForm.patchValue({ title: _.get(this.items, [8]) });
+		}
 	}
 
 	/**
@@ -102,6 +123,42 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 					this.loading = false;
 				});
 		}
+	}
+
+	/**
+	 * Contact a Designated Expert on done buttom
+	 */
+	public sendMessage () {
+		const userDetails = this.profileService.getProfile().cpr;
+		const params = {
+			body: this.supportForm.controls.description.value,
+			cc: _.get(userDetails, 'pf_auth_email'),
+			subject: this.items[8].name,
+		};
+		this.loading = true;
+		this.emailControllerService.contactSupport(params)
+			.pipe(
+				catchError(err => {
+					this.loading = false;
+					this.toggle = true;
+					this.success = false;
+					this.logger.error(err);
+
+					return empty();
+				}),
+				takeUntil(this.destroy$),
+			)
+			.subscribe((response: ContactSupportResponse) => {
+				if (response.status) {
+					this.loading = false;
+					this.toggle = true;
+					this.success = true;
+				} else {
+					this.loading = false;
+					this.toggle = true;
+					this.success = false;
+				}
+			});
 	}
 
 	/**

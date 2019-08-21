@@ -2,7 +2,7 @@
 		class="icon-close"></span></a>
 <ng-container *ngIf="!toggle; else messageSentTemplate" class="dbl-padding-left dbl-padding-right">
 	<div class="modal-header">
-		<h1 class="modal-title" [innerText]="'_SupportContact_' | i18n"></h1>
+		<h1 class="modal-title" [innerText]="modalHeading"></h1>
 	</div>
 	<div *ngIf="loading" class="dbl-margin-top dbl-margin-bottom">
 			<cui-spinner color="default" ></cui-spinner>
@@ -34,7 +34,7 @@
 			<div class="col-md-12 text-center dbl-padding-top"
 				[ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
 				<button data-auto-id="submit" class="btn btn--primary"
-					[innerText]="'_SupportSubmit_' | i18n | uppercase" (click)="submitMessage()">
+					[innerText]="'_SupportSubmit_' | i18n | uppercase" (click)="contactExpert? sendMessage() : submitMessage()">
 				</button>
 			</div>
 		</form>
