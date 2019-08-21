@@ -56,3 +56,7 @@ export * from './lib/email/email.module';
 export * from './lib/feedback/models';
 export * from './lib/feedback/services';
 export * from './lib/feedback/feedback.module';
+
+export * from './lib/syslogs/models';
+export * from './lib/syslogs/services';
+export * from './lib/syslogs/syslogs-data.module';
