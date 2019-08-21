@@ -477,7 +477,7 @@ export class RiskMitigationComponent {
 				},
 				{
 					key: 'productId',
-					name: I18n.get('_RMProductId'),
+					name: I18n.get('_RMProductId_'),
 					sortable: true,
 				},
 				{
@@ -519,7 +519,7 @@ export class RiskMitigationComponent {
 				},
 				{
 					key: 'productId',
-					name: I18n.get('_RMProductId'),
+					name: I18n.get('_RMProductId_'),
 					sortable: false,
 				},
 				{
