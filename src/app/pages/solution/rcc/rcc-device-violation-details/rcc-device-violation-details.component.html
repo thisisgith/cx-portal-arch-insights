@@ -1,16 +1,16 @@
 <div class="row">
 	<div class="col-8 base-margin-bottom">
 		<div data-auto-id="" class="dbl-margin-right">
-			<div class="text-small text-uppercase text-bold" innerText="{{ '_Policy Description_' | i18n }}"></div>
-			<div innerText="{{ policyRuleData.policy.desc || ('_NA_' | i18n) }}"></div>
+			<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetPolicyDescription_' | i18n }}"></div>
+			<div innerText="{{ policyRuleData.policy?.desc || ('_NA_' | i18n) }}"></div>
 		</div>
 	</div>
 </div>
 <div class="row ">
 	<div class="col-8 base-margin-bottom">
 		<div data-auto-id="" class="dbl-margin-right">
-			<div class="text-small text-uppercase text-bold" innerText="{{ '_Rule Description_' | i18n }}"></div>
-			<div innerText="{{ policyRuleData.rule.desc || ('_NA_' | i18n) }}"></div>
+			<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetRuleDescription_' | i18n }}"></div>
+			<div innerText="{{ policyRuleData?.rule.desc || ('_NA_' | i18n) }}"></div>
 		</div>
 	</div>
 </div>
@@ -18,7 +18,7 @@
 	<div class="col-8 base-margin-bottom">
 		<div data-auto-id="" class="dbl-margin-right">
 			<div class="text-muted text-large text-uppercase"
-				innerText="{{ '_Impacted Devices_' | i18n }} - {{ impactedAssetsCount || ('_NA_' | i18n) }}">
+				innerText="{{ '_RccImpactedDevice_' | i18n }} - {{ impactedAssetsCount || ('_NA_' | i18n) }}">
 			</div>
 		</div>
 	</div>
