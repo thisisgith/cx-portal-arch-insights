@@ -140,7 +140,7 @@
 				template: recommendedATX,
 				title: data.recommended.title,
 				description: data.recommended.description,
-				src: data.recommended.imageURL,
+				src: data.recommended.imageURL || 'assets/img/solutions/defaultLifecycleImage.png',
 				autoid: 'recommendedATX'
 			}">
 		</ng-container>
@@ -335,7 +335,7 @@
 				title: data.sessions[0].title,
 				description: data.sessions[0].description,
 				item: data.sessions[0],
-				src: data.sessions[0].url,
+				src: data.sessions[0].url || 'assets/img/solutions/defaultLifecycleImage.png',
 				autoid: 'recommendedACC'
 			}">
 		</ng-container>
@@ -686,7 +686,7 @@
 		*ngFor="let item of selectedATX"
 		[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 		data-auto-id="ATXCard">
-		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL" attr.data-auto-id="{{ autoid }}-Image">
+		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
 		<div class="text-left base-padding-left" [ngClass]="item.status === 'Recommended' ? 'text-dkgray-4' : 'text-clear'" data-auto-id="ATXCardHeader">
 			<span class="icon-flagged qtr-padding-right qtr-padding-bottom" data-auto-id="ATXCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
@@ -747,7 +747,7 @@
 <ng-template #cardACC>
 	<div class="card atx__card" *ngFor="let item of selectedACC"
 		[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null" data-auto-id="ACCCard">
-		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.url" attr.data-auto-id="{{ autoid }}-Image">
+		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.url || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
 		<div class="text-left base-padding-left" [ngClass]="item.status === 'recommended' ? 'text-dkgray-4' : 'text-clear'"
 			data-auto-id="ACCCardHeader">
 			<span class="icon-flagged qtr-padding-right qtr-padding-bottom" data-auto-id="ACCCard-Flag"></span>
@@ -1154,7 +1154,7 @@
 <ng-template #titleTemplate let-celldata="celldata" let-type="type">
 	<div class="row" *ngIf="type==='ATX'">
 		<div class="col-md-2">
-			<img *ngIf="celldata.imageURL" class="table-img-width" alt="'_Placeholder_' | i18n" [src]="celldata.imageURL"
+			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="celldata.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'"
 				attr.data-auto-id="{{ type }}-Image">
 		</div>
 		<div class="col-md-10">
@@ -1163,7 +1163,7 @@
 	</div>
 	<div class="row" *ngIf="type==='ACC'">
 		<div class="col-md-2">
-			<img *ngIf="celldata.url" class="table-img-width" alt="'_Placeholder_' | i18n" [src]="celldata.url"
+			<img class="table-img-width" alt="'_Placeholder_' | i18n" [src]="celldata.url || 'assets/img/solutions/defaultLifecycleImage.png'"
 				attr.data-auto-id="{{ type }}-Image">
 		</div>
 		<div class="col-md-10">
