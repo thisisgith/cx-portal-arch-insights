@@ -1,0 +1,56 @@
+<div #container class="list" (scroll)="refresh()">
+	<div class="list-view" [style.top]="(startIndex * rowHeight) + 'px'">
+		<div *ngFor="let device of itemsInView; index as i"
+			class="
+                row
+                panel
+                no-padding-top
+                no-padding-bottom
+				flex"
+			[ngClass]="{
+                'panel--bordered-bottom': (i !== endIndex),
+                'selected': device.selected
+			}"
+			[style.height]="rowHeight + 'px'"
+			[style.line-height]="rowHeight + 'px'"
+			(click)="toggleDeviceSelected(device)"
+			data-auto-id="list.item">
+			<div class="col-md-1 device-table">
+				<input
+					class="text-xlarge"
+					type="checkbox"
+					[checked]="device.selected">
+				<span class="checkbox__input"></span>
+			</div>
+			<div class="col-md-5 device-table">
+				<span [innerText]="device.productId"></span>
+			</div>
+			<div class="col-md-3 device-table">
+				<span [innerText]="device.ipAddress"></span>
+			</div>
+			<div class="col-md-3 device-table">
+				<span [innerText]="device.lastScan ? (device.lastScan | fromNow) : ''"></span>
+			</div>
+		</div>
+	</div>
+	<div
+		*ngIf="loading || items?.length === 0"
+		class="loading-blur-box">
+		<cui-loader
+			*ngIf="loading"
+			class="absolute-center"
+		></cui-loader>
+		<div
+			*ngIf="!loading && items?.length === 0"
+			class="absolute-center"
+			[innerText]="'_NoDevicesInList_' | i18n">
+		</div>
+	</div>
+	<div class="
+        list-filler
+        panel--bordered-left
+        panel--boredered-right
+		panel-bordered-bottom"
+		[style.height]="(items?.length * rowHeight) + 'px'">
+	</div>
+</div>

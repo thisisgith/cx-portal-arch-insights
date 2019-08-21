@@ -1,0 +1,8 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.panel-border-top {
+	border-top: 5px solid $cisco-blue !important;
+	border-left: 0 none !important;
+	border-right: 0 none !important;
+	border-bottom: 0 none !important;
+}

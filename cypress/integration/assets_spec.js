@@ -687,11 +687,11 @@ describe('Assets', () => { // PBC-41
 				}
 				cy.getByAutoId(`InventoryItem-${serial}`).within(() => {
 					// PBC-304
-					const name = Cypress._.truncate(asset.deviceName, {
+					let name = Cypress._.truncate(asset.deviceName, {
 						length: 20, separator: ' ', omission: '',
 					});
-					cy.getByAutoId(`Device-${serial}`)
-						.should('have.text', `${name}...`);
+					name = name === asset.deviceName ? name : `${name}...`;
+					cy.getByAutoId(`Device-${serial}`).should('have.text', name);
 					// Device image is a static placeholder for now
 					cy.getByAutoId(`DeviceImg-${serial}`).should('have.text', 'No Photo Available');
 					cy.getByAutoId(`IPAddress-${serial}`).should('have.text', asset.ipAddress);
