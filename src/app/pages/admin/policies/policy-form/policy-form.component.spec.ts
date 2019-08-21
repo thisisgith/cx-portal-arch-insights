@@ -326,11 +326,13 @@ describe('PolicyFormComponent', () => {
 		});
 
 		it('toggleAllDevicesSelected', () => {
-			let selected = component.toggleAllDevicesSelected(true, component.deviceListLeft);
+			let selected = component.toggleAllDevicesSelected(true,
+				component.deviceListLeft, 'left');
 			expect(selected)
 				.toBe(false);
 
-			selected = component.toggleAllDevicesSelected(false, component.deviceListLeft);
+			selected = component.toggleAllDevicesSelected(false,
+				component.deviceListLeft, 'left');
 			expect(selected)
 				.toBe(true);
 		});
