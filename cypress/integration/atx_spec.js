@@ -88,6 +88,127 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		});
 	});
 
+	describe('PBC-103: (UI) View - Solution Racetrack - Schedule an ATX', () => {
+		it('Should be able to schedule an ATX session from the Lifecycle page', () => {
+			cy.getByAutoId('recommendedATXScheduleButton').click();
+			cy.getByAutoId('atxScheduleCard')
+				.should('be.visible')
+				.within(() => {
+					// Register button should be disabled until a session is selected
+					cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
+
+					// Click the first session, verify the register button is enabled and has correct link
+					cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
+					cy.getByAutoId('AtxScheduleCardRegisterButton')
+						.should('not.have.class', 'disabled')
+						.parent()
+						.should('have.attr', 'href', firstATXSessions[0].registrationURL);
+					// TODO: Pending PBC-590: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-590
+					//	.and('have.attr', 'target', '_blank');
+				});
+
+			// Close the schedule pop-up
+			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('atxScheduleCard').should('not.exist');
+		});
+
+		it('Should be able to schedule an ATX session from View All card view', () => {
+			// Open the View All modal and switch to card view
+			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ATXCard').should('be.visible');
+
+			// Open the schedule pop-up
+			cy.getByAutoId('ATXCard').eq(0).within(() => {
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						// Register button should be disabled until a session is selected
+						cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
+
+						// Click the first session, verify the register button is enabled and has correct link
+						cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
+						cy.getByAutoId('AtxScheduleCardRegisterButton')
+							.should('not.have.class', 'disabled')
+							.parent()
+							.should('have.attr', 'href', firstATXSessions[0].registrationURL);
+						// TODO: Pending PBC-590: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-590
+						//	.and('have.attr', 'target', '_blank');
+					});
+			});
+
+			// Close the schedule pop-up
+			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('atxScheduleCard').should('not.exist');
+
+			// Close the View All modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+
+		it('Should be able to schedule an ATX session from View All table view', () => {
+			// Open the View All modal and switch to table view
+			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable')
+				.should('be.visible')
+				.within(() => {
+					// Open the schedule pop-up
+					cy.get('tr').eq(1).within(() => {
+						cy.getByAutoId('ViewSessionButton').click();
+					});
+				});
+
+			cy.getByAutoId('atxScheduleCard')
+				.should('be.visible')
+				.within(() => {
+					// Register button should be disabled until a session is selected
+					cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
+
+					// Click the first session, verify the register button is enabled and has
+					// correct link
+					cy.getByAutoId(`SelectSession-${firstATXSessions[0].sessionId}`).click();
+					cy.getByAutoId('AtxScheduleCardRegisterButton')
+						.should('not.have.class', 'disabled')
+						.parent()
+						.should('have.attr', 'href', firstATXSessions[0].registrationURL);
+					// TODO: Pending PBC-590: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-590
+					//	.and('have.attr', 'target', '_blank');
+				});
+
+			// Close the schedule pop-up
+			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('atxScheduleCard').should('not.exist');
+
+			// Switch back to card view and close the View All modal
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ATXCard').should('be.visible');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+
+		it('Should prevent registering for the same session twice', () => {
+			// Open the View Sessions pop-up
+			cy.getByAutoId('recommendedATXScheduleButton').click();
+			cy.getByAutoId('atxScheduleCard')
+				.should('be.visible')
+				.within(() => {
+					// Select an already registered session, verify "Register" button remains disabled
+					const scheduledSession = Cypress._.find(firstATXSessions,
+						session => session.scheduled === true);
+					cy.getByAutoId(`SelectSession-${scheduledSession.sessionId}`).click();
+					cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
+				});
+
+			// Close the schedule pop-up
+			cy.getByAutoId('AtxScheduleCardClose').click();
+			cy.getByAutoId('atxScheduleCard').should('not.exist');
+		});
+	});
+
 	describe('PBC-377: (UI View) - Lifecycle -  Register for ATX in Next Pitstop', () => {
 		after(() => {
 			// Reset the view to the currentPitstop
