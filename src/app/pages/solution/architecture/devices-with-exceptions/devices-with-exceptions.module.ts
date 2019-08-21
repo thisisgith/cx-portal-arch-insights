@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DevicesWithExceptionsComponent } from './devices-with-exceptions.component';
 import { CuiTableModule, CuiPagerModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
-import { ArchitectureModule } from '@sdp-api';
+import { ArchitectureModules } from '@sdp-api';
 import { environment } from '@environment';
 import { AssetDetailsHeaderModule, AssetDetailsModule, DetailsPanelModule } from '@components';
 import { CbpDetailsModule } from '../cbp-details/cbp-details.module';
@@ -27,7 +27,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		DetailsPanelModule,
 		I18nPipeModule,
 		CuiSpinnerModule,
-		ArchitectureModule.forRoot({ rootUrl }),
+		ArchitectureModules.forRoot({ rootUrl }),
 	],
 })
 export class DevicesWithExceptionsModule { }
