@@ -25,7 +25,7 @@ import {
 	Facets,
 	ELearning,
 } from '@sdp-api';
-import { SearchService as SearchUtils } from '@services';
+import { SearchService as SearchUtils, RacetrackInfoService } from '@services';
 import { SearchContext, SearchQuery } from '@interfaces';
 
 import * as _ from 'lodash-es';
@@ -93,6 +93,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 	public lastFiltered: string;
 
 	private customerId: string;
+	private pitStop: string;
 	private readonly pageSize = 10;
 	private pageOffset = 0;
 	private refresh$ = new Subject<RefreshType>();
@@ -103,6 +104,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		private service: SearchService,
 		private utils: SearchUtils,
 		private userResolve: UserResolve,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -110,6 +112,13 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 		)
 		.subscribe((id: string) => {
 			this.customerId = id;
+		});
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(currentTechnology => {
+			this.pitStop = currentTechnology.currentPitstop;
 		});
 	}
 
@@ -266,6 +275,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			),
 			limit: this.pageSize.toString(),
 			offset: offset.toString(),
+			pitStop: this.pitStop,
 			searchTokens: query.query,
 			...this.buildFilterParam(site, type),
 		})
@@ -291,6 +301,7 @@ export class GeneralSearchComponent implements OnInit, OnDestroy, OnChanges {
 			),
 			limit: '1',
 			offset: '0',
+			pitStop: this.pitStop,
 			searchTokens: query.query,
 		})
 		.pipe(
