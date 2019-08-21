@@ -8,14 +8,14 @@ import {
 	CuiSelectModule,
 	CuiDrawersModule,
 } from '@cisco-ngx/cui-components';
-import { SyslogsdevicedetailsComponent } from './syslogs-devices-details.component';
+import { SyslogsDeviceDetailsComponent } from './syslogs-devices-details.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 /**
  * Ng module
  */
 @NgModule({
-	declarations: [SyslogsdevicedetailsComponent],
-	exports: [SyslogsdevicedetailsComponent],
+	declarations: [SyslogsDeviceDetailsComponent],
+	exports: [SyslogsDeviceDetailsComponent],
 	imports: [
 		CommonModule,
 		CuiTabsModule,

@@ -29,7 +29,7 @@ class SyslogsService extends __BaseService {
 		let __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/syslog/v1/messages-assets/count?companyId='+customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/messages-assets/count?companyId='+customerId,
 			__body,
 			{
 			  headers: __headers,
@@ -66,7 +66,7 @@ class SyslogsService extends __BaseService {
 		const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/syslog/v1/message/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&includeMsgType='+syslogParams.includeMsgType+'&excludeMsgType='+syslogParams.excludeMsgType+"&companyId="+syslogParams.customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/message/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&includeMsgType='+syslogParams.includeMsgType+'&excludeMsgType='+syslogParams.excludeMsgType+"&companyId="+syslogParams.customerId,
 			__body,
 			{
 			  headers: __headers,
@@ -91,7 +91,7 @@ class SyslogsService extends __BaseService {
 		const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/syslog/v1/asset/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&asset='+syslogParams.asset+'&companyId='+syslogParams.customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/asset/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&asset='+syslogParams.asset+'&companyId='+syslogParams.customerId,
 			__body,
 			{
 			  headers: __headers,
@@ -122,7 +122,7 @@ class SyslogsService extends __BaseService {
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/syslog/v1/syslog-view/details?days=90&msgType="+syslog360Params.MsgType+"&companyId="+customerId,
+			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType="+syslog360Params.MsgType+"&companyId="+customerId,
 			__body,
 			{
 			  headers: __headers, 
@@ -153,7 +153,7 @@ class SyslogsService extends __BaseService {
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/syslog/v1/syslog-view/filters?msgType="+syslog360Params.MsgType+"&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily",
+			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/filters?msgType="+syslog360Params.MsgType+"&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily",
 			__body,
 			{
 			  headers: __headers, 
@@ -180,7 +180,7 @@ class SyslogsService extends __BaseService {
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"https://cpp-api.sdp11-idev.csco.cloud/syslog/v1/syslog-view/details?days=90&msgType="+syslogParams.MsgType+"&productFamily="+SyslogFilterParam.productFamily+"&productId="+SyslogFilterParam.productID+"&severity=3"+"&software="+SyslogFilterParam.Software,
+			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType="+syslogParams.MsgType+"&productFamily="+SyslogFilterParam.productFamily+"&productId="+SyslogFilterParam.productID+"&severity=3"+"&software="+SyslogFilterParam.Software,
 			__body,
 			{
 			  headers: __headers, 
@@ -208,7 +208,7 @@ class SyslogsService extends __BaseService {
 			let __body: any = null;
 			const req = new HttpRequest<any>(
 				'GET',
-				this.rootUrl+'/syslog/v1/asset/messages?fromSeverity=1&toSeverity=7&days=100&device='+devicedetailsdata.DeviceHost+"&companyId="+customerId,
+				this.rootUrl+'/api/customerportal/syslog/v1/asset/messages?fromSeverity=1&toSeverity=7&days=100&device='+devicedetailsdata.DeviceHost+"&companyId="+customerId,
 				__body,
 				{
 				  headers: __headers,

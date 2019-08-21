@@ -16,7 +16,7 @@ import { UserResolve } from '@utilities';
 	styleUrls: ['./syslogs-devices-details.component.scss'],
 	templateUrl: './syslogs-devices-details.component.html',
 })
-export class SyslogsdevicedetailsComponent implements OnChanges, OnDestroy {
+export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	@ViewChild('downArrow', { static: true }) public downArrow: TemplateRef<{ }>;
 	@Input('asset') public asset: any;
 	public tableOptions: CuiTableOptions;
@@ -31,7 +31,7 @@ export class SyslogsdevicedetailsComponent implements OnChanges, OnDestroy {
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 	) {
-		this.logger.debug('SyslogsdevicedetailsComponent Created!');
+		this.logger.debug('SyslogsDeviceDetailsComponent Created!');
 		this.userResolve.getCustomerId()
 			.pipe(
 			takeUntil(this.destroy$),
@@ -64,20 +64,21 @@ export class SyslogsdevicedetailsComponent implements OnChanges, OnDestroy {
 	}
 	/**
 	 * Response from the network
-		* @param griddata event values from input
+		* @param gridData event values from input
 	 * Onchanges lifecycle hook
 	 */
-	public syslogdevice360data (griddata) {
-		this.syslogsService.getdevice360details(griddata, this.customerId)
-		.pipe(takeUntil(this.destroy$))
-		.subscribe(response => {
-			this.tabledata = response;
-		});
+	public syslogdevice360data (gridData) {
+		this.syslogsService.getdevice360details(gridData, this.customerId)
+		.pipe(takeUntil(this.destroy$),
 		catchError(err => {
 			this.logger.error('syslog-messages-details.component : getdevice360details() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
 			return of({ });
+		}),
+		)
+		.subscribe((response: SyslogDevice360Outer[]) => {
+			this.tabledata = response;
 		});
 	}
 

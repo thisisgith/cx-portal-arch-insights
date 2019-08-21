@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SyslogsDevicesDetailsModule } from './syslogs-devices-details.module';
-import { SyslogsdevicedetailsComponent } from './syslogs-devices-details.component';
+import { SyslogsDeviceDetailsComponent } from './syslogs-devices-details.component';
 import { SyslogsService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
@@ -13,8 +13,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 
 describe('SyslogsdevicedetailsComponent', () => {
-	let component: SyslogsdevicedetailsComponent;
-	let fixture: ComponentFixture<SyslogsdevicedetailsComponent>;
+	let component: SyslogsDeviceDetailsComponent;
+	let fixture: ComponentFixture<SyslogsDeviceDetailsComponent>;
 	let syslogsService: SyslogsService;
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -44,7 +44,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(SyslogsdevicedetailsComponent);
+		fixture = TestBed.createComponent(SyslogsDeviceDetailsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

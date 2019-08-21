@@ -24,7 +24,7 @@ import { UserResolve } from '@utilities';
 	styleUrls: ['./syslog-messages-details.component.scss'],
 	templateUrl: './syslog-messages-details.component.html',
 })
-export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
+export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	@Input('asset') public asset: Syslog360GridData;
 	public tableOptions: CuiTableOptions;
 	public selectdrowpdown = {
@@ -61,7 +61,7 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 		public syslogsService: SyslogsService,
 		private userResolve: UserResolve,
 	) {
-		this.logger.debug('SyslogsdevicedetailsComponent Created!');
+		this.logger.debug('SyslogMessagesDetailsComponent Created!');
 		this.userResolve.getCustomerId()
 			.pipe(
 				takeUntil(this.destroy$),
@@ -160,12 +160,12 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 
 	/**
 	 * Used to  get the table grid
-	 * @param tablerowdata gives table row info
+	 * @param tableRowData gives table row info
 	 */
 
-	public loadSyslog360data (tablerowdata) {
+	public loadSyslog360data (tableRowData) {
 		if (this.asset) {
-			this.syslogsService.get360GridData(tablerowdata, this.customerId)
+			this.syslogsService.get360GridData(tableRowData, this.customerId)
 				.pipe(
 					takeUntil(this.destroy$),
 					catchError(err => {
@@ -184,12 +184,12 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 
 	/**
 	 * Used to  get the filter data grid
-	 * @param tablerowdata gives table row info
+	 * @param tableRowData gives table row info
 	 */
 
-	public loadSyslog360filter (tablerowdata) {
+	public loadSyslog360filter (tableRowData) {
 		if (this.asset) {
-			this.syslogsService.get360FilterData(tablerowdata)
+			this.syslogsService.get360FilterData(tableRowData)
 				.pipe(takeUntil(this.destroy$),
 				catchError(err => {
 					this.logger.error('syslog-messages-details.component : get360FilterData() ' +

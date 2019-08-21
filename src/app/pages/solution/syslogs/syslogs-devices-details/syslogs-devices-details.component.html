@@ -28,9 +28,9 @@
 	<tbody *ngFor="let item of tabledata; index as i ">
 		<ng-container></ng-container>
 		<tr>
-			<td>{{item['MsgType']}}</td>
+			<td>{{item.MsgType}}</td>
 			<td>{{item.SyslogSeverity}}</td>
-			<td>{{item['MessageCount']}}</td>
+			<td>{{item.MessageCount}}</td>
 			<td>
 				<a data-auto-id="expandAndContractRowLink" (click)="expandRow(item,i) "><span
 						[innerText]="'_ViewDescriptionReccomendations_' | i18n"></span></a>

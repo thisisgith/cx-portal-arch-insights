@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SyslogmessagesdetailsComponent } from './syslog-messages-details.component';
+import { SyslogMessagesDetailsComponent } from './syslog-messages-details.component';
 import { FormsModule } from '@angular/forms';
 import {
 	CuiTabsModule,
@@ -14,8 +14,8 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
  * Ng module
  */
 @NgModule({
-	declarations: [SyslogmessagesdetailsComponent],
-	exports: [SyslogmessagesdetailsComponent],
+	declarations: [SyslogMessagesDetailsComponent],
+	exports: [SyslogMessagesDetailsComponent],
 	imports: [
 		CommonModule,
 		CuiTabsModule,
@@ -26,4 +26,4 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		I18nPipeModule,
 	],
 })
-export class SyslogmessagesdetailsModule { }
+export class SyslogMessagesDetailsModule { }
