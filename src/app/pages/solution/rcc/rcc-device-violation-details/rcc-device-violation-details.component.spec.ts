@@ -16,7 +16,7 @@ import {
 	ComplianceScenarios,
 } from '@mock';
 
-describe('RccDeviceViolationDetailsComponent', () => {
+fdescribe('RccDeviceViolationDetailsComponent', () => {
 	let component: RccDeviceViolationDetailsComponent;
 	let fixture: ComponentFixture<RccDeviceViolationDetailsComponent>;
 	let rccTrackService: RccService;
@@ -101,7 +101,6 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		component.selectionObj = { osName: 'IOSXE', productModel: 'C9300-24P' };
 		spyOn(rccTrackService, 'getRccViolationDetailsData')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
