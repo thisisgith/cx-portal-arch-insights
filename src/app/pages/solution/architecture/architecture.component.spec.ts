@@ -7,6 +7,10 @@ import { ArchitectureService } from '@sdp-api';
 import { of } from 'rxjs';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MicroMockModule } from '@cui-x-views/mock';
+import { environment } from '@environment';
+import { ActivatedRoute } from '@angular/router';
+import { user } from '@mock';
 
 describe('ArchitectureComponent', () => {
 	let component: ArchitectureComponent;
@@ -15,12 +19,29 @@ describe('ArchitectureComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [ArchitectureModule,
+			imports: [
+				ArchitectureModule,
 				HttpClientTestingModule,
+				MicroMockModule,
 				RouterTestingModule,
 			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
+			],
 		})
-		.compileComponents();
+			.compileComponents();
+
 		service = TestBed.get(ArchitectureService);
 	}));
 
