@@ -47,7 +47,7 @@ export * from './lib/entitlement/entitlement.module';
 
 export * from './lib/architecture/models';
 export * from './lib/architecture/services';
-export * from './lib/architecture/architecture.module';
+export * from './lib/architecture/architecture.modules';
 
 export * from './lib/osv/models';
 export * from './lib/osv/services';

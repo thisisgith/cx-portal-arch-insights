@@ -19,6 +19,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
  */
 @NgModule({
 	declarations: [ContactSupportComponent],
+	entryComponents: [ContactSupportComponent],
 	exports: [ContactSupportComponent],
 	imports: [
 		CommonModule,
@@ -32,6 +33,5 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CharCountModule,
 		EmailModule.forRoot({ rootUrl }),
 	],
-	entryComponents: [ContactSupportComponent],
 })
 export class ContactSupportModule { }

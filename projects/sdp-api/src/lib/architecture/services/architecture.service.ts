@@ -4,9 +4,12 @@ import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/com
 import { BaseService as __BaseService } from '../base-service';
 import { ArchitectureConfiguration as __Configuration } from '../architecture-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { Observable as __Observable, Subject } from 'rxjs';
+import { Observable as __Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 import { ContractDeviceCountsResponse } from '../models/contract-device-counts-response';
+import { IException } from '../models/exception';
+import { IAsset } from '../models/asset';
 
 
 @Injectable({
