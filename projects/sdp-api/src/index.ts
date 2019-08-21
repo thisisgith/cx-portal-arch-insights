@@ -57,6 +57,10 @@ export * from './lib/feedback/models';
 export * from './lib/feedback/services';
 export * from './lib/feedback/feedback.module';
 
+export * from './lib/risk-mitigation/models';
+export * from './lib/risk-mitigation/services';
+export * from './lib/risk-mitigation/risk-mitigation.module';
+
 export * from './lib/afm/models';
 export * from './lib/afm/services';
 export * from './lib/afm/afm.module';
