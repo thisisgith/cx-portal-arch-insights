@@ -27,6 +27,7 @@ import { UserResolve } from '@utilities';
 	templateUrl: './syslogs-messages.component.html',
 })
 export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
+	@Input() public sysFilter;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -78,7 +79,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public tableData: SyslogGridData[] = [];
 	public pageLimit = 10;
 	public pageNum = 1;
-	@Input() public sysFilter;
 	public msgInclude = '';
 	public msgExclude = '';
 	public lastMsgType;
@@ -215,7 +215,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public onTableRowSelection (tableRowData: any) {
 		if (tableRowData.active) {
 			this.selectedAsset = tableRowData;
-		} else { this.selectedAsset = undefined; }
+		} else {
+			this.selectedAsset = undefined;
+		}
 
 	}
 

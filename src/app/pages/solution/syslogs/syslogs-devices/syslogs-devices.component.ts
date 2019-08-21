@@ -1,6 +1,3 @@
-
-/** Our current customerId */
-const customerId = '2431199';
 import {
 	Component,
 	OnInit,
@@ -28,6 +25,7 @@ import { UserResolve } from '@utilities';
 	templateUrl: './syslogs-devices.component.html',
 })
 export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
+	@Input() public assetFilter;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -83,11 +81,10 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public showAsset360 = false;
 	public fullscreen = false;
 	public assetType = '';
-	@Input() public assetFilter;
 	public filters: SyslogFilter[];
 	public searchVal = '';
 	public syslogsParams: SyslogsService.GetSyslogsParams = {
-		customerId,
+		customerId: this.customerId,
 		pageNo: this.pageNum,
 		size: this.pagerLimit,
 	};
@@ -192,7 +189,9 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public onTableRowSelection (tableRowData: any) {
 		if (tableRowData.active) {
 			this.selectedAsset = tableRowData;
-		} else { this.selectedAsset = undefined; }
+		} else {
+			this.selectedAsset = undefined;
+		}
 
 	}
 

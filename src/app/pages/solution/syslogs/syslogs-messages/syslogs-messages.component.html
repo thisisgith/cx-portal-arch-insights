@@ -138,25 +138,31 @@
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false"
 	>
-	<div class="row syslog360-header-title">
-		<div class="col-md-12">
-			<h2>Syslog Message Type: {{selectedAsset.MsgType}}</h2>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-2">
-			<div class="row">
-				<div class="col-md-12"  [innerText]="'Severity'"></div>
-				<div class="col-md-12"  [innerText]="selectedAsset.SyslogSeverity"></div>
+		<div class="row syslog360-header-title">
+			<div class="col-md-12">
+				<h2 [innerText]="'_SyslogMessageType_' | i18n">: {{ selectedAsset.MsgType }}</h2>
 			</div>
 		</div>
-		<div class="col-md-3">
-			<div class="row">
-				<div class="col-md-12"  [innerText]="'Syslog Count'"></div>
-				<div class="col-md-12"  [innerText]="selectedAsset.deviceCount"></div>
+		<div class="row">
+			<div class="col-md-2">
+				<div class="row">
+					<div class="col-md-12" [innerText]="'Severity'"></div>
+					<div
+						class="col-md-12"
+						[innerText]="selectedAsset.SyslogSeverity"
+					></div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12" [innerText]="'Syslog Count'"></div>
+					<div
+						class="col-md-12"
+						[innerText]="selectedAsset.deviceCount"
+					></div>
+				</div>
 			</div>
 		</div>
-	</div>
 		<div detailsPanelTitle class="text-xlarge"></div>
 	</details-panel-header>
 	<syslog-message-details [asset]="selectedAsset"></syslog-message-details>

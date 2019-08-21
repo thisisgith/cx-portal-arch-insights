@@ -93,4 +93,58 @@ describe('SyslogmessagesdetailsComponent', () => {
 			done();
 		});
 	});
+	it('Should get the syslog message details grid data After fileter', done => {
+		spyOn(syslogsService, 'get360FilterGridData')
+		.and
+		.returnValue(of(SyslogScenarios[5].scenarios.GET[0].response.body));
+		component.onSelection();
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.tabledata1)
+				.toBeDefined();
+			done();
+		});
+	});
+	it('should set null values on request errors', done => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(syslogsService, 'get360FilterGridData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const messagegrid = [];
+				expect(component.tabledata1)
+				.toEqual(messagegrid);
+
+				done();
+			});
+	});
+
+	it('Should get the syslog message details filter values', done => {
+		const param = {
+			active: true,
+			DeviceHost: '10.10.10.10',
+			ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
+			ProductId: 'WS-C2960S-24PS-L',
+			SoftwareType: 'IOS',
+			SoftwareVersion: '12.2(53)SE2',
+			syslogCount: 6,
+		};
+		spyOn(syslogsService, 'get360FilterData')
+		.and
+		.returnValue(of(SyslogScenarios[6].scenarios.GET[0].response.body));
+		component.loadSyslog360filter(param);
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.softwareItems)
+				.toBeUndefined();
+			done();
+		});
+	});
 });

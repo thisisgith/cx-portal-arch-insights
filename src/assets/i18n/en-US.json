@@ -830,5 +830,7 @@
 	"_DETAILEDDESCRIPTION_" : "DETAILED DESCRIPTION",
 	"_ViewDescriptionReccomendations_" : "View Description & Reccomendations",
 	"MessageText": "Message Text",
-	"NO" : "NO"
+	"NO" : "NO",
+	"_SyslogMessage_":"Syslog Message",
+	"_SyslogMessageType_":"Syslog Message Type"
 }

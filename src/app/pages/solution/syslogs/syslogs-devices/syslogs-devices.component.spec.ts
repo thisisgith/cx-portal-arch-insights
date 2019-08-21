@@ -140,4 +140,27 @@ describe('SyslogsMessagesComponent', () => {
 				done();
 			});
 	});
+	it('should refresh assetfilter data', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const selectedRowData1 = {
+					assetFilter: {
+						currentValue: {
+							asset: '',
+							catalog: '',
+							severity: 7,
+							timeRange: 1,
+						},
+						firstChange: true,
+						previousValue: undefined,
+						isFirstChange: () => false,
+					},
+				};
+				component.ngOnChanges(selectedRowData1);
+				expect(selectedRowData1.assetFilter.firstChange)
+				 .toBeTruthy();
+				done();
+			});
+	});
 });

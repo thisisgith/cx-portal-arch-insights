@@ -8,6 +8,7 @@ import {
 	SoftwareList,
 	ProductFamily,
 	Syslog360GridData,
+	Syslog360FilterData,
 } from '@sdp-api';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
@@ -144,16 +145,17 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 		this.syslogsService
 			.get360FilterGridData(
 				this.selectdrowpdown, this.asset)
-			.pipe(takeUntil(this.destroy$))
-			.subscribe(data => {
+			.pipe(takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error('syslog-messages-details.component : get360FilterGridData() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+			)
+			.subscribe((data: Syslog360GridData) => {
 				this.tabledata1 = data.responseData;
 			});
-		catchError(err => {
-			this.logger.error('syslog-messages-details.component : get360FilterGridData() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-
-			return of({ });
-		});
 	}
 
 	/**
@@ -188,18 +190,19 @@ export class SyslogmessagesdetailsComponent implements OnChanges, OnDestroy {
 	public loadSyslog360filter (tablerowdata) {
 		if (this.asset) {
 			this.syslogsService.get360FilterData(tablerowdata)
-				.pipe(takeUntil(this.destroy$))
-				.subscribe(data => {
+				.pipe(takeUntil(this.destroy$),
+				catchError(err => {
+					this.logger.error('syslog-messages-details.component : get360FilterData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({ });
+				}),
+				)
+				.subscribe((data: Syslog360FilterData) => {
 					this.productFamily = data.responseData[2].ProductFamily;
 					this.productIdItems = data.responseData[0].ProductId;
 					this.softwareItems = data.responseData[1].SoftwareType;
 				});
-			catchError(err => {
-				this.logger.error('syslog-messages-details.component : get360FilterData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			});
 		}
 	}
 	/**

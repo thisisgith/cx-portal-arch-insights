@@ -8,8 +8,12 @@ const messageParams = 'pageNo=1&size=10&severity=7&days=1&catalog=&includeMsgTyp
 const assetParams = 'pageNo=1&size=10&severity=7&days=1&catalog=&asset=';
 /** Device Message grid params */
 const devicemessageParams = 'fromSeverity=1&toSeverity=7&days=100&device=Device_6_0_3_115';
-/** Syslog Messages deatils data grid */
-const detailsgridParams = 'days=90&msgType=UPDOWN';
+/** Syslog grid data after filter */
+// tslint:disable-next-line: max-line-length
+const filterdetailsparams = 'https://cpp-api.sdp11-idev.csco.cloud/syslog/v1/syslog-view/details?days=90&msgType=CLNS-4-AUTH_FAIL&productFamily=&productId=WS-C2960S-24PS-L&severity=3&software=';
+/** Syslog folters dropdown data */
+// tslint:disable-next-line: max-line-length
+const filtergridparam = 'https://cpp-api.sdp11-idev.csco.cloud/syslog/v1/syslog-view/filters?msgType=CLNS-4-AUTH_FAIL&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily';
 /** The mock response for allCrashDetails */
 const syslogCount: any = {
 	assetsCount: '5',
@@ -93,26 +97,37 @@ const syslogdevicedetailsdata: any = [
 		],
 	},
 ];
-
-		// tslint:disable-next-line: completed-docs
-const syslogmessagedetailsdata: any = [
-	{
-		count: 10,
-		message: 'Success',
-		responseData: [
-			{
-				DeviceHost: 'N3K',
-				msgCount: 0,
-				MsgType: 'UPDOWN',
-				ProductFamily: 'Cisco Nexus 3000 Series Switches',
-				ProductId: 'N3K-C3048TP-1GE',
-				SoftwareType: 'NX-OS',
-				SoftwareVersion: '5.0(3)U2(2b)',
-				SyslogMsgDesc: ' Built ICMP connection for faddr 10.77.235.194/0 ',
-			},
-		],
-	},
-];
+/** filterdataresponse grid */
+const filterdataresponse: any = {
+	count: 3,
+	message: 'Success',
+	responseData: [
+		{
+			ProductId: [
+				{
+					count: 6,
+					value: 'WS-C2960S-24PS-L',
+				},
+			],
+		},
+		{
+			SoftwareType: [
+				{
+					count: 6,
+					value: 'IOS',
+				},
+			],
+		},
+		{
+			ProductFamily: [
+				{
+					count: 6,
+					value: 'Cisco Catalyst 2960-S Series Switches',
+				},
+			],
+		},
+	],
+};
 
 // tslint:disable-next-line: completed-docs
 export const SyslogScenarios = [
@@ -208,14 +223,32 @@ export const SyslogScenarios = [
 					delay: 100,
 					description: 'Summary',
 					response: {
-						body: syslogmessagedetailsdata,
+						body: syslogAssets,
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}/syslog-view/details?/${detailsgridParams}`,
+		url: `${api}/syslog-view/details?/${filterdetailsparams}`,
 		usecases: ['Use Case 6'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Summary',
+					response: {
+						body: filterdataresponse,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/syslog-view/filters?/${filtergridparam}`,
+		usecases: ['Use Case 7'],
+	},
+
 ];
