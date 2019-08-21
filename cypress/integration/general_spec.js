@@ -292,7 +292,7 @@ describe('General Spec', () => {
 				cy.getByAutoId('searchClose').should('exist').click();
 			});
 		});
-		it.only('RMA 800000000 click the case link', () => {
+		it('RMA 800000000 click the case link', () => {
 			// PBC-250
 			// mock set at "RMA with one replacement part"
 			const rmaVal = '800000000';
