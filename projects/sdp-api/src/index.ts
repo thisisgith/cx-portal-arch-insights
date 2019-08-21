@@ -49,6 +49,9 @@ export * from './lib/osv/models';
 export * from './lib/osv/services';
 export * from './lib/osv/osv.module';
 
+export * from './lib/rcc/models';
+export * from './lib/rcc/services';
+export * from './lib/rcc/rcc-data.module';
 export * from './lib/email/models';
 export * from './lib/email/services';
 export * from './lib/email/email.module';

@@ -52,6 +52,8 @@ export * from './racetrack/elearning';
 export * from './racetrack/info';
 export * from './racetrack/successPaths';
 
+export * from './rcc/rcc';
+export * from './rcc/rcc-asset';
 export * from './rma/rma';
 
 export * from './search/search';

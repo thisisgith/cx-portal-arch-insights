@@ -1,0 +1,130 @@
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
+
+.filter {
+	&__selected {
+		border-bottom: 4px solid $primary;
+	}
+
+	&__not-selected {
+		border-bottom: 4px solid $white;
+	}
+
+	&__title {
+		position: absolute;
+		bottom: 020px;
+	}
+}
+
+.visual-filter-container {
+	text-align: center;
+}
+
+.cout-contanier {
+	margin-bottom: 10px;
+}
+
+.cout-contanier h3 {
+	color: #58585b;
+	font-weight: 400;
+	font-size: 36px !important;
+	line-height: 48px !important;
+}
+
+.cout-contanier p {
+	margin-top: 0px;
+}
+
+.cui {
+	.panel--bordered-right {
+		border-right: none !important;
+	}
+
+	.base-margin-bottom {
+		margin-bottom: 20px !important;
+	}
+}
+
+.no-padding {
+	padding: 0;
+}
+
+.selected {
+	color: #00bceb !important;
+}
+
+.marginbotom10 {
+	margin-bottom: 10px;
+}
+
+.margintop10 {
+	margin-top: 10px;
+}
+
+.margintop30 {
+	margin-top: 30px !important;
+}
+
+.violationcount {
+	color: #58585b !important;
+	font-weight: 400;
+	font-size: 48px !important;
+	line-height: 72px !important;
+}
+
+.viocount {
+	margin-top: 0px;
+	color: #58585b !important;
+}
+
+.margintop15 {
+	margin-top: 15px;
+}
+
+.margintop21 {
+	margin-top: 21px;
+}
+
+.searchSection {
+	float: right;
+	margin-top: -27px;
+}
+
+.assetsCount{
+	display: flex !important;
+	flex-direction: column;
+	font-size: small;
+	margin: 6px;
+}
+
+.assetsCount:focus{
+	color: #64bbe3;
+}
+
+.p1class {
+	color: #D0021B; 
+}
+
+.p2class {
+	color: #FF7300;  
+}
+
+.p3class {
+	color: #FBAB18; 
+}
+
+.p4class {
+	color: #6EBE4A;  
+}
+
+.p5class {
+	color: #819AB7; 
+}
+
+.p6class{
+	color:white;
+}
+
+.cui .icon-small:before {
+	font-size: 10px !important;
+	vertical-align: text-bottom !important;
+}

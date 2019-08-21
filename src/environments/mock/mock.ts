@@ -10,6 +10,7 @@ import {
 	CancelATXScenarios,
 	CaseScenarios,
 	CGTScenarios,
+	ComplianceScenarios,
 	ContractScenarios,
 	CoverageScenarios,
 	CreateRegistrationScenarios,
@@ -34,6 +35,7 @@ import {
 	OSVScenarios,
 	PolicesScenarios,
 	RacetrackScenarios,
+	RCCScenarios,
 	RMAScenarios,
 	RoleScenarios,
 	SearchScenarios,
@@ -86,6 +88,7 @@ import {
 	PitstopActionUpdateResponse,
 	PoliciesGroupByDayInAMonthModel,
 	RacetrackResponse,
+	RccAssetFilterResponse,
 	RoleCountResponse,
 	SecurityAdvisoriesResponse,
 	SecurityAdvisoryBulletinResponse,
@@ -141,6 +144,7 @@ type ResponseBody = (
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
+	RccAssetFilterResponse |
 	SecurityAdvisoriesResponse |
 	SecurityAdvisoryBulletinResponse |
 	SecurityAdvisoryImpactCountResponse |
@@ -211,6 +215,7 @@ export const mockSettings: MockSettings = {
 		CalendarScenarios,
 		CancelATXScenarios,
 		CaseScenarios,
+		ComplianceScenarios,
 		ContractScenarios,
 		CoverageScenarios,
 		CreateRegistrationScenarios,
@@ -237,6 +242,7 @@ export const mockSettings: MockSettings = {
 		PolicesScenarios,
 		RMAScenarios,
 		RacetrackScenarios,
+		RCCScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,

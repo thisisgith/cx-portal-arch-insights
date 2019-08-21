@@ -1,0 +1,250 @@
+<!--<ng-template #rccContent let-filter="filter"></ng-template>-->
+<div class="col-md-12">
+	<div class="row">
+		<div class="col-md-2 filter__selected">
+			<div class="row">
+				<div class="col-md-12 panel flex-center flex-fill filter assetsCount margintop30"
+					(click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
+					<div class="text-huge flex-center dbl-padding-left dbl-padding-right">
+						{{ policyViolationCount }}
+					</div>
+					<div class="text-large flex-center" [innerText]="'_RccPolicyViolations' | i18n"></div>
+				</div>
+				<div data-auto-id="1" class="col-md-12 panel flex-center flex-fill filter assetsCount"
+					(click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
+					<div class="text-huge flex-center dbl-padding-left dbl-padding-right">
+						{{ assetCount }}
+					</div>
+					<div class="text-large flex-center" [innerText]= "'_RccAssetWithViolations' | i18n"></div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-10 no-padding">
+			<div class="flex flex-fill flex-fluid">
+				<!-- <div class="flex-center">
+					<span class="icon-chevron-left icon-medium text-muted toggle"></span>
+				</div> -->
+				<ng-container *ngFor="let filter of filters; index as i">
+					<div attr.id="RccSelectVisualFilter-{{ filter.key }}"
+						attr.data-auto-id="RccSelectVisualFilter-{{filter.key}}" [ngClass]="{filter__selected: filter.selected,
+								'filter__not-selected': !filter.selected}" class="panel flex-center flex-fill filter">
+						<div class="base-margin-bottom">
+							<div *ngIf="filter.template">
+								<ng-container *ngTemplateOutlet="filter.template;
+									context: { filter: filter }">
+								</ng-container>
+							</div>
+						</div>
+						<div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
+					</div>
+					<div *ngIf="filter.loading" class="base-margin-bottom">
+						<!-- <cui-spinner></cui-spinner> -->
+					</div>
+				</ng-container>
+				<!-- <div class="flex-center">
+						<span class="icon-chevron-right icon-medium text-muted toggle"></span>
+					</div> -->
+			</div>
+		</div>
+	</div>
+</div>
+<ng-container>
+	<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+	<div class="divider qtr-margin-top"></div>
+</ng-container>
+<div class="col-md-12 margintop15">
+	<div class="col-md-9 margintop21">
+		<span [innerText]="'_RccShowing' | i18n"></span>
+		<span> {{ tableConfig.totalItems }} </span>
+		<span [innerText]="'_RccViolations' | i18n"></span>&nbsp;
+		<span [innerText]="'_RccAcross' | i18n"></span>
+		<span> {{ assetCount }} </span>
+		<span [innerText]="'_RccAssets' | i18n"></span>
+	</div>
+	<div class="col-md-3 searchSection">
+		<div class="flex flex-fluid flex-right">
+			<div class="flex-fill form-group input--compressed input--icon half-margin-right">
+				<form [formGroup]="searchForm" novalidate id="searchForm" (keydown)="searchViolations($event)">
+					<div class="form-group__text">
+						<input id="searchInput" type="search" #searchInput1 [(ngModel)]="searchInput" name="searchInput"
+							[minlength]="searchOptions?.min" [maxlength]="searchOptions?.max"
+							[pattern]="searchOptions?.pattern" formControlName="search"
+							placeholder="{{ '_RccSearch_' | i18n }}">
+						<button type="button" class="link" (click)="clearSearch()">
+							<span class="icon-search"></span>
+						</button>
+					</div>
+				</form>
+			</div>
+			<cui-dropdown [actions]="dropdownActions" position="left" icon="icon-more icon-medium text-muted rotate-90">
+			</cui-dropdown>
+		</div>
+	</div>
+	<!-- <div class="col-md-3 searchSection">
+			<cui-search placeholder="Search" [debounce]="300" [typeaheadItems]="typeaheadItems" [compressed]="false" (onUpdate)="onUpdate($event)"></cui-search>
+	</div> -->
+</div>
+<div class="container base-margin-top" *ngIf="!isAssetView">
+	<cui-table [options]="policyViolationsTableOptions" [data]="policyViolationsGridData"
+		[limit]="tableConfig.tableLimit" [offset]="tableConfig.tableOffset"
+		(onSortingChanged)="onTableSortingChanged($event)" (onTableRowClicked)="onViolationRowClicked($event)"
+		*ngIf="!loading && policyViolationsGridData">
+	</cui-table>
+	<div class="section">
+		<cui-pager [page]="tableConfig.tableOffset" [limit]="tableConfig.tableLimit"
+			[totalItems]="tableConfig.totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+	</div>
+</div>
+<div class="container base-margin-top" *ngIf="isAssetView">
+	<cui-table [options]="assetTableOptions" [data]="tableAssetDataSample" [limit]="tableConfig.tableLimit"
+		[offset]="tableConfig.tableOffset" (onSortingChanged)="onTableSortingChanged($event)"
+		(onTableRowClicked)="onAssetRowClicked($event)" *ngIf="!loading && tableAssetDataSample">
+	</cui-table>
+	<div class="section">
+		<cui-pager [page]="tableConfig.tableOffset" [limit]="tableConfig.tableLimit"
+			[totalItems]="tableConfig.totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+	</div>
+</div>
+<!--</ng-template>-->
+<hr>
+<ng-template #policyFilter let-filter="filter">
+	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
+	</pie-chart>
+</ng-template>
+<ng-template #severityFilter let-filter="filter">
+	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
+	</pie-chart>
+</ng-template>
+<ng-template #assetOsTypeFilter let-filter="filter">
+	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
+	</pie-chart>
+</ng-template>
+<ng-template #assetSeverityFilter let-filter="filter">
+	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
+	</pie-chart>
+</ng-template>
+
+<ng-template #filterBar>
+	<div class="row margintop10">
+		<div class="col-md-1 flex flex-center-vertical">
+			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
+		</div>
+		<div class="col-md-10">
+			<ng-container *ngFor="let filter of selectedFilters">
+				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
+					<span class="label label--dkgray text-large"
+						(click)="onSubfilterSelect(subfilter.filter, filter, false)"
+						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
+						<span [innerText]="subfilter.label"></span>
+						<span class="icon-close"></span>
+					</span>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div class="col-md-1 text-center text-right">
+			<a (click)="clearFilters()" class="text-lowercase" [innerText]="'_ClearAll_' | i18n"
+				data-auto-id="FilterBarClearAllFilters">
+			</a>
+		</div>
+	</div>
+</ng-template>
+<!-- App Details 360 slide-out -->
+<details-panel [hidden]="!selectedViolationModal" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelClose('selectedViolationModal')" [(fullscreen)]="fullscreen"
+		[fullscreenToggle]="true">
+		<!-- <app-rcc-violation-details [policyViolationInfo]="policyViolationInfo"></app-rcc-violation-details> -->
+		<div detailsPanelTitle>
+			<span class="text-xlarge" [innerText]="'_Rule Name_' | i18n "></span>
+			<span class="text-xlarge"> : {{policyViolationInfo.ruletitle}}</span>
+		</div>
+		<div class="row ">
+			<div class="col-md-8 base-margin-bottom">
+				<div class="flex">
+					<div data-auto-id="RccPolicyGroup" class="dbl-margin-right">
+						<div class="text-small text-uppercase text-bold" innerText="{{ '_Poliy Group_' | i18n }}">
+						</div>
+						<div innerText="{{ policyViolationInfo.policygroupid || ('_NA_' | i18n) }}"></div>
+					</div>
+					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
+						<div class="text-small text-uppercase text-bold" innerText="{{ '_Poliy Category_' | i18n }}">
+						</div>
+						<div innerText="{{ policyViolationInfo.policycategory || ('_NA_' | i18n) }}"></div>
+					</div>
+					<div data-auto-id="RccPoliyName" class="dbl-margin-right">
+						<div class="text-small text-uppercase text-bold" innerText="{{ '_Poliy Name_' | i18n }}">
+						</div>
+						<div innerText="{{ policyViolationInfo.policyname  || ('_NA_' | i18n)  }}">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</details-panel-header>
+	<app-rcc-device-violation-details [policyViolationInfo]="policyViolationInfo">
+	</app-rcc-device-violation-details>
+</details-panel>
+<!-- App Details 360 slide-out -->
+<!-- App Details 360 slide-out -->
+<details-panel [hidden]="!selectedAssetModal" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelClose('selectedAssetModal')" [(fullscreen)]="fullscreen"
+		[fullscreenToggle]="true">
+		<div detailsPanelTitle>
+			<span class="text-xlarge" [innerText]="'_Violations_' | i18n "></span>
+			<span>:</span>
+			<span class="text-xlarge selected">{{selectedAssetData.deviceName}}</span>
+		</div>
+		<!-- <app-rcc-asset-details [selectedAssetData]="selectedAssetData"></app-rcc-asset-details> -->
+		<div class="row ">
+			<div class="col-md-8 base-margin-bottom">
+				<div class="flex">
+					<div data-auto-id="RccIPAddress" class="dbl-margin-right">
+						<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetIpAddress_' | i18n }}">
+						</div>
+						<div innerText="{{ selectedAssetData.ipaddress || ('_NA_' | i18n) }}"></div>
+					</div>
+					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
+						<div class="text-small text-uppercase text-bold"
+							innerText="{{ '_RccAssetSerialNumber_' | i18n }}">
+						</div>
+						<div innerText="{{ selectedAssetData.serialNumber || ('_NA_' | i18n) }}"></div>
+					</div>
+					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
+						<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetLastScan_' | i18n }}">
+						</div>
+						<div innerText="{{ (selectedAssetData.lastScan| date:mediumDate ) || ('_Never_' | i18n) }}">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</details-panel-header>
+	<app-rcc-asset-violation-details [selectedAssetData]="selectedAssetData"></app-rcc-asset-violation-details>
+	<!-- <ng-template #assetSlider>
+	 <app-rcc-asset-violation-details [selectedAssetData]="selectedAssetData"></app-rcc-asset-violation-details> 
+</ng-template> -->
+</details-panel>
+
+<ng-template #severityColor let-item="celldata">
+	<i class="qtr-margin-right icon-circle" iconSize="default" *ngIf="item.ruleseverity" [ngClass]="
+		{
+			'p1class': item.ruleseverity == 'P1',
+			'p2class': item.ruleseverity == 'P2',
+			'p3class': item.ruleseverity == 'P3',
+			'p4class': item.ruleseverity == 'P4',
+			'p5class': item.ruleseverity == 'P5'
+		}">
+	</i>
+	<span>{{item.ruleseverity}}</span>
+</ng-template>
+
+<ng-template #tableIcon let-item="celldata">
+	<i class="qtr-margin-right icon-circle icon-small" iconSize="default" *ngIf="item.severity" [ngClass]="{
+	  		'p1class': item.severity == 'P1',
+	  		'p2class': item.severity == 'P2',
+	  		'p3class': item.severity == 'P3',
+	  		'p4class': item.severity == 'P4',
+	  		'p5class': item.severity == 'P5'
+		}">
+	</i>
+	<span>{{item.violationCount}}</span>
+</ng-template>
