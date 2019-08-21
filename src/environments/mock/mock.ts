@@ -3,6 +3,7 @@ import {
 	ACCUserInfoScenarios,
 	ActionScenarios,
 	AdvisorySecurityAdvisoryScenarios,
+	AfmScenarios,
 	AssetScenarios,
 	ATXScenarios,
 	BookmarkScenarios,
@@ -95,7 +96,7 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
-	SoftwareProfilesResponse,
+	SoftwareGroupsResponse,
 	SoftwareVersionsResponse,
 	SoftwareEOLResponse,
 	SoftwareEOLBulletinResponse,
@@ -149,7 +150,7 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
-	SoftwareProfilesResponse |
+	SoftwareGroupsResponse |
 	SoftwareVersionsResponse |
 	SoftwareEOLResponse |
 	SoftwareEOLBulletinResponse |
@@ -206,6 +207,7 @@ export const mockSettings: MockSettings = {
 		ATXScenarios,
 		ActionScenarios,
 		AdvisorySecurityAdvisoryScenarios,
+		AfmScenarios,
 		AssetScenarios,
 		BookmarkScenarios,
 		CGTScenarios,
