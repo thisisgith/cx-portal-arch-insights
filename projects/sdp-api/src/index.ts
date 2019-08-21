@@ -57,12 +57,9 @@ export * from './lib/feedback/models';
 export * from './lib/feedback/services';
 export * from './lib/feedback/feedback.module';
 
-<<<<<<< HEAD
 export * from './lib/risk-mitigation/models';
 export * from './lib/risk-mitigation/services';
 export * from './lib/risk-mitigation/risk-mitigation.module';
-=======
 export * from './lib/syslogs/models';
 export * from './lib/syslogs/services';
 export * from './lib/syslogs/syslogs-data.module';
->>>>>>> 76991c806d6969b9615f5f5237d229a5ab388db8

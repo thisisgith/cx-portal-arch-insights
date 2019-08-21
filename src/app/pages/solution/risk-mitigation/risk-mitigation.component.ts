@@ -13,6 +13,7 @@ import {
 	RiskAsset,
 	HighCrashRiskDevices,
 	HighCrashRiskDeviceCount,
+	HighCrashRisk,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 
@@ -116,9 +117,9 @@ export class RiskMitigationComponent {
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		this.onlyCrashes = true;
 	}
-	// tslint:disable-next-line: valid-jsdoc
 	/**
-	 * Fetches the all the crashes data
+	 * Gets high crashes device data
+	 * @returns  the crashed device data
 	 */
 	public getHighCrashesDeviceData () {
 		this.onlyCrashes = true;
@@ -238,7 +239,7 @@ export class RiskMitigationComponent {
 		return this.riskMitigationService.getFingerPrintDeviceDetailsData(param)
 						.pipe(
 							takeUntil(this.destroy$),
-							map((results: any) => {
+							map((results: HighCrashRisk) => {
 								this.highCrashRiskAssetsGridDetails.tableData = results.devices;
 								this.highCrashRiskAssetsGridDetails.totalItems = results.count;
 							}),
@@ -376,12 +377,11 @@ export class RiskMitigationComponent {
 		} else { this.selectedAsset = undefined; }
 	}
 	/**
-	 * Function to open close FP page
+	 * Determines whether fpdpanel close on click
 	 */
 	public onFPDPanelClose () {
 		this.showFpDetails = false;
 	}
-	// tslint:disable-next-line: valid-jsdoc
 
 	/**
 	 * Connects to fp details
@@ -599,22 +599,18 @@ export class RiskMitigationComponent {
 		let filterSelected: string;
 		switch (sub.filter) {
 			case 'Time: Last 24h': {
-				// tslint:disable-next-line: no-parameter-reassignment
 				filterSelected = '1';
 				break;
 			}
 			case 'Time: Last 7d': {
-				// tslint:disable-next-line: no-parameter-reassignment
 				filterSelected = '7';
 				break;
 			}
 			case 'Time: Last 30d': {
-				// tslint:disable-next-line: no-parameter-reassignment
 				filterSelected = '30';
 				break;
 			}
 			case 'Time: Last 90d': {
-				// tslint:disable-next-line: no-parameter-reassignment
 				filterSelected = '90';
 				break;
 			}
