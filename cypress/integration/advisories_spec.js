@@ -1,4 +1,4 @@
-import { RouteWatch } from '@apollo/cypress-util';
+import { RouteWatch } from '../support/routeWatch';
 import MockService from '../support/mockService';
 
 const advisoryMock = new MockService('AdvisorySecurityAdvisoryScenarios');

@@ -76,7 +76,6 @@
 		"@angular/http": "^7.2.15",
 		"@angular/language-service": "^8.2.2",
 		"@apollo/configs": "^1.0.2",
-		"@apollo/cypress-util": "^2.3.2",
 		"@babel/core": "^7.5.5",
 		"@babel/preset-env": "^7.5.5",
 		"@cisco-ngx/cui-auth": "^7.14.8",
