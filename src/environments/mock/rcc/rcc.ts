@@ -6,7 +6,7 @@ import { RccData, RccGridData, RccAssetGridData } from '@sdp-api';
 const api = 'compliance/v1/service/';
 
 /** Default Customer ID */
-const customerId = '90019449';
+const customerId = '7293498';
 
 /** Default Asset Id */
 const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
@@ -20,7 +20,7 @@ const violationDetails : any = {
 	"status": 200,
 	"message": "SUCCESS",
 	"data": {
-	  "customerId": "90019449",
+	  "customerId": "7293498",
 	  "impactedAssetsCount": 7,
 	  "impactedAssets": [
 		{
@@ -172,7 +172,7 @@ const policyRuleDetails : any ={
         "IOSXE"
       ]
     },
-    "customerId": "90019449",
+    "customerId": "7293498",
     "rule": {
       "name": "All authentication methods should ask Username And Password [ IOS-XE ]",
       "desc": "It is always important to choose the right order for the methods on a method list for 'AAA authentication'. For AAA login authentication, the first method on the list determines whether the user will be prompted for a username. Methods requiring only a password (e.g. the line method) should never be placed ahead of methods requiring a both username and password, because the user will never be prompted for a username and the mechanism will always fail.",
@@ -217,7 +217,7 @@ const violationGridData: any = {
 		}],
 		"impassets": 7,
 		"violationcount": 77,
-		"customerId": "90019449"
+		"customerId": "7293498"
 	},
 	"error": null
 };
@@ -256,7 +256,7 @@ const rccPolicyRuleDetailsData: any = {
 			"productModel": ["C9300-24P"],
 			"osName": ["IOSXE"]
 		},
-		"customerId": "90019449",
+		"customerId": "7293498",
 		"rule": {
 			"name": "Check if configured number of NTP servers is present [ IOS-XE ]",
 			"desc": "All devices in the network should be configured to synchronize their times with an authoritative NTP Server. It is recommended that the border router be configured to synchronize time from at least two reliable NTP servers and all the devices in the protected network can be configured as clients to this border router.\n<br>\n<br>\n<b>Implementation details </b>\n<br>\n<br>\nRule checks for the count of occurences of  <i>‘ntp server hostname or ipaddress </i> command in configuration and compares with user input.\n<br>\n<br>\nRaises violation if user input count differs with servers count present in configuration\n<br>\n<br>\nFix CLI\n<br>\n<br>\nNA\n<br>",
@@ -278,7 +278,7 @@ const rccViolationDetailsData: any = {
 	"status": 200,
 	"message": "SUCCESS",
 	"data": {
-		"customerId": "90019449",
+		"customerId": "7293498",
 		"impactedAssetsCount": 1,
 		"impactedAssets": [{
 			"deviceId": "12345",
@@ -315,7 +315,7 @@ const violationFilterData: any = {
 			"label": "P3",
 			"value": 138
 		}],
-		"customerId": "90019449",
+		"customerId": "7293498",
 		"policyFilters": [{
 			"filter": "PCI",
 			"percentage": 56,

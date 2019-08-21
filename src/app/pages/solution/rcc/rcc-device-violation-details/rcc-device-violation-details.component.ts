@@ -36,7 +36,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	@ViewChild('policyRowWellTemplate', { static: true })
 	private policyRowWellTemplate: TemplateRef<{ }>;
 	public policyRuleData: any = { };
-	public customerId = '90019449';
+	public customerId = '7293498';
 	public impactedAssetsCount: any;
 	public selectionObj: object = { };
 	public destroy$ = new Subject();
@@ -71,27 +71,27 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				{ violationCount: this.policyViolationInfo.violationcount,
 					...this.queryParamMapObj }),
 		)
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(([policyRuleDetails, violationDetails]) => {
-			policyRuleDetails.data.deviceFilterDetails =
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe(([policyRuleDetails, violationDetails]) => {
+				policyRuleDetails.data.deviceFilterDetails =
 				this.rccUtilService.getSelectableData(policyRuleDetails.data.deviceFilterDetails);
-			this.policyRuleData = policyRuleDetails.data;
-			violationDetails.data.impactedAssets.forEach(asset => {
-				asset.violations.forEach((violation, i) => {
-					violation.index = i + 1;
+				this.policyRuleData = policyRuleDetails.data;
+				violationDetails.data.impactedAssets.forEach(asset => {
+					asset.violations.forEach((violation, i) => {
+						violation.index = i + 1;
+					});
 				});
-			});
-			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
-		// tslint:disable-next-line: no-empty
-		}, (_error: any) => {
+				this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+				// tslint:disable-next-line: no-empty
+			}, (_error: any) => {
 
-		},
-			// tslint:disable-next-line: no-empty
-			() => {
+			},
+				// tslint:disable-next-line: no-empty
+				() => {
 
-			});
+				});
 	}
 	/**
 	 * OnInit lifecycle hook
@@ -104,8 +104,10 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			productFamily: [],
 			productModel: [],
 		};
-		this.rccViolationInfoTableOptions = this.buildRccViolationInfoTableOptions();
-		this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
+		this.rccViolationInfoTableOptions = (this.rccViolationInfoTableOptions ?
+			this.rccViolationInfoTableOptions : this.buildRccViolationInfoTableOptions());
+		this.impactedDeviceTableOptions = (this.impactedDeviceTableOptions
+		? this.impactedDeviceTableOptions : this.buildImpactedDeviceTableOptions());
 	}
 	/**
 	 * method for build impacted device table
@@ -117,37 +119,37 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			columns: [
 				{
 					key: 'hostName',
-					name: 'Device',
+					name: I18n.get('_Device_'),
 					sortable: true,
 				},
 				{
 					key: 'ipAddress',
-					name: 'IP Address',
+					name: I18n.get('_IPAddress_'),
 					sortable: true,
 				},
 				{
 					key: 'productFamily',
-					name: 'Product Family',
+					name: I18n.get('_ProductFamily_'),
 					sortable: true,
 				},
 				{
 					key: 'productModel',
-					name: 'Product Model',
+					name: I18n.get('_ProductModel_'),
 					sortable: true,
 				},
 				{
 					key: 'osName',
-					name: 'OS Name',
+					name: I18n.get('_RccOSName_'),
 					sortable: true,
 				},
 				{
 					key: 'osVersion',
-					name: 'OS Version',
+					name: I18n.get('_OSVersion_'),
 					sortable: true,
 				},
 				{
 					key: 'violationCount',
-					name: 'Violation Count',
+					name: I18n.get('_RccViolationCount_'),
 					sortable: true,
 				},
 			],
@@ -163,27 +165,27 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			columns: [
 				{
 					key: 'index',
-					name: I18n.get('_No_'),
+					name: I18n.get('_RccAssetSNum_'),
 					sortable: false,
 				},
 				{
 					key: 'message',
-					name: I18n.get('_Message_'),
+					name: I18n.get('_RccAssetMessage_'),
 					sortable: false,
 				},
 				{
 					key: 'suggestedFix',
-					name: I18n.get('_Suggested Fix_'),
+					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
 				},
 				{
 					key: 'age',
-					name: I18n.get('_Violation Age_'),
+					name: I18n.get('_RccAssetViolationAge_'),
 					sortable: false,
 				},
 				{
 					key: 'severity',
-					name: I18n.get('_Severity_'),
+					name: I18n.get('_RccSeverity_'),
 					sortable: false,
 				},
 			],
@@ -210,19 +212,19 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			this.rccTrackService
 				.getRccViolationDetailsData(newQueryParamMapObj),
 		)
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(([violationDetails]) => {
-			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
-		// tslint:disable-next-line: no-empty
-		}, (_error: any) => {
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe(([violationDetails]) => {
+				this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+				// tslint:disable-next-line: no-empty
+			}, (_error: any) => {
 
-		},
-			// tslint:disable-next-line: no-empty
-			() => {
+			},
+				// tslint:disable-next-line: no-empty
+				() => {
 
-			});
+				});
 	}
 	/**
 	 * Function called when page changed

@@ -66,7 +66,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		};
 
 		component.queryParamMapObj = {
-			customerId: '90019449',
+			customerId: '7293498',
 			policyCategory: 'Audit and Management',
 			policyGroup: 'PCI_IOS_XE_GROUP',
 			policyName: '_Terminal_Access__IOSXE_',

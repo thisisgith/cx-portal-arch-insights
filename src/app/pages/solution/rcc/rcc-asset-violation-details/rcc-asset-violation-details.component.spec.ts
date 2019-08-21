@@ -43,7 +43,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(RccAssetViolationDetailsComponent);
 		component = fixture.componentInstance;
-		component.customerId = '90019449';
+		component.customerId = '7293498';
 		component.selectedAssetData = { };
 		component.selectedAssetData.violationCount = 10;
 		component.selectedAssetData.serialNumber = 'FCW2246E0PB';
@@ -69,7 +69,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.returnValue(of(RCCScenarios[0].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		component.assetRowParams = {
-			customerId: '90019449',
+			customerId: '7293498',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
@@ -79,7 +79,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortBy: '',
 			sortOrder: '',
 		};
-		component.customerId = '90019449';
+		component.customerId = '7293498';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
 		fixture.detectChanges();
 		component.loadData();
@@ -96,7 +96,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		component.assetRowParams = {
-			customerId: '90019449',
+			customerId: '7293498',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
@@ -106,7 +106,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortBy: '',
 			sortOrder: '',
 		};
-		component.customerId = '90019449';
+		component.customerId = '7293498';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
 		fixture.detectChanges();
 		component.onPolicyGroupSelection(component.assetRowParams);
@@ -121,7 +121,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		component.assetRowParams = {
-			customerId: '90019449',
+			customerId: '7293498',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
@@ -131,7 +131,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortBy: '',
 			sortOrder: '',
 		};
-		component.customerId = '90019449';
+		component.customerId = '7293498';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
 		fixture.detectChanges();
 		component.onPolicyNameSelection(component.assetRowParams);
@@ -147,7 +147,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		component.assetRowParams = {
-			customerId: '90019449',
+			customerId: '7293498',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
@@ -157,7 +157,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortBy: '',
 			sortOrder: '',
 		};
-		component.customerId = '90019449';
+		component.customerId = '7293498';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
 		fixture.detectChanges();
 		component.onPolicySeveritySelection(component.assetRowParams);

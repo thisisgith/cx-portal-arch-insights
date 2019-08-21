@@ -6,7 +6,7 @@ const assetFilterParams = `customerId=this.customerId&pageIndex=1&pageSize=10
 /** The mock response for allCrashDetails */
 const assetPolicyFilterInfo: any = {
 	data: {
-		customerid: '90019449',
+		customerid: '7293498',
 		policygroupname: [
 			'PCI',
 			'HIPAA',

@@ -39,7 +39,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public policyGroupSelection: string;
 	public policyNameSelection: string;
 	public policySeveritySelection: string;
-	public customerId = '90019449';
+	public customerId = '7293498';
 	private destroy$ = new Subject();
 	@Input() public selectedAssetData: any;
 	public assetModalFilter: RccAssetSelectReq;

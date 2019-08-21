@@ -18,14 +18,14 @@ class RccService extends __BaseService {
 
 	getViolationCount(): __Observable<any> {
 		let url = `https://violation.sdp11-idev.csco.cloud/compliance/violation/api/summary-filters`;
-		return this.invokeHTTPGet<RccData>(url, { customerId: "90019449" }).pipe(
+		return this.invokeHTTPGet<RccData>(url, { customerId: "7293498" }).pipe(
 			__map(_r => _r.body)
 		);
 	}
 
 	getAssetCount(): __Observable<any> {
 		let url = `https://compliancewrapper.sdp11-idev.csco.cloud/v1/service/severity-ostype-detail`;
-		return this.invokeHTTPGet<RccData>(url, { customerId: "90019449" }).pipe(
+		return this.invokeHTTPGet<RccData>(url, { customerId: "7293498" }).pipe(
 			__map(_r => _r.body)
 		);
 	}

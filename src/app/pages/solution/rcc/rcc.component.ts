@@ -75,7 +75,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public policyRuleData: object = { };
 	public impactedAssetDetails: object = { };
 	public isSlider = false;
-	public customerId = '90019449';
+	public customerId = '7293498';
 	public testData = [];
 	public policyViolationInfo = { };
 	public selectedViolationModal = false;
