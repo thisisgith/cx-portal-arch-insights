@@ -292,6 +292,7 @@
 	"_InstallCiscoIE_": "Install Cisco CX Collector and use its collector to connect devices to CX Portal.",
 	"_InstalledLocation_": "Installed Location",
 	"_InstructionsAndConditions_": "Instructions and Conditions",
+	"_InstructorX_": "Instructor: {0}",
 	"_IntentBasedNetworking": "Intent Based Networking",
 	"_InteractiveTraining_": "Interactive training, individual coaching, classes & certifications",
 	"_InteractiveWebinars_": "Interactive Webinars",

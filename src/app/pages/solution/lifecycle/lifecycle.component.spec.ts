@@ -411,18 +411,18 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			component.updateBookmark('ATX', component.componentData.atx.sessions[0]);
+			component.updateBookmark(component.componentData.atx.sessions[0], 'ATX');
 			fixture.detectChanges();
 
 			expect(component.componentData.atx.sessions[0].bookmark)
 				.toBeFalsy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			de = fixture.debugElement.query(By.css('.ribbon__white'));
 
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#ATXScheduleButton'));
+			de = fixture.debugElement.query(By.css('#cardRecommendedATXScheduleButton'));
 
 			expect(de)
 				.toBeTruthy();
@@ -476,7 +476,7 @@ describe('LifecycleComponent', () => {
 			const atx1 = component.componentData.atx.sessions[2];
 			expect(component.componentData.atx.sessions[2].bookmark)
 				.toBeFalsy();
-			component.updateBookmark('ATX', atx1);
+			component.updateBookmark(atx1, 'ATX');
 			fixture.detectChanges();
 			expect(component.componentData.atx.sessions[2].bookmark)
 				.toBeTruthy();
@@ -556,12 +556,12 @@ describe('LifecycleComponent', () => {
 			expect(component.getSubtitle('ACC'))
 			 .toEqual('1-on-1 Coaching to put you in the fast lane');
 
-			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			de = fixture.debugElement.query(By.css('.ribbon__white'));
 			expect(de)
 				.toBeTruthy();
 
 			const acc3 = component.componentData.acc.sessions[3];
-			component.setFavorite(acc3);
+			component.setACCBookmark(acc3);
 			fixture.detectChanges();
 			expect(component.componentData.acc.sessions[3].isFavorite)
 				.toBeTruthy();
@@ -584,7 +584,7 @@ describe('LifecycleComponent', () => {
 			expect(component.selectedACC.length)
 				.toEqual(2);
 
-			component.setFavorite(acc3);
+			component.setACCBookmark(acc3);
 			fixture.detectChanges();
 			expect(component.componentData.acc.sessions[3].isFavorite)
 				.toBeFalsy();
@@ -670,7 +670,7 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			de = fixture.debugElement.query(By.css('.ribbon__white'));
 			expect(de)
 				.toBeTruthy();
 
@@ -683,7 +683,7 @@ describe('LifecycleComponent', () => {
 			const sb1 = component.componentData.learning.success[1];
 			expect(component.componentData.learning.success[1].bookmark)
 				.toBeFalsy();
-			component.updateBookmark('SB', sb1);
+			component.updateBookmark(sb1, 'SB');
 			fixture.detectChanges();
 			expect(component.componentData.learning.success[1].bookmark)
 				.toBeTruthy();
@@ -736,7 +736,7 @@ describe('LifecycleComponent', () => {
 			sendParams();
 			fixture.detectChanges();
 
-			de = fixture.debugElement.query(By.css('#hover-panel-successbytes'));
+			de = fixture.debugElement.query(By.css('#sb-hover-panel-successbytes'));
 			expect(de)
 				.toBeTruthy();
 		});
@@ -747,7 +747,7 @@ describe('LifecycleComponent', () => {
 			spyOn(component, 'updateBookmark');
 			fixture.detectChanges();
 
-			de = fixture.debugElement.query(By.css('#hover-panel-successbytes .icon-bookmark'));
+			de = fixture.debugElement.query(By.css('#sb-hover-panel-successbytes .icon-bookmark'));
 			de.nativeElement.click();
 			expect(component.updateBookmark)
 				.toHaveBeenCalledTimes(1);
@@ -788,7 +788,7 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('.ribbon__clear'));
+			de = fixture.debugElement.query(By.css('.ribbon__white'));
 			expect(de)
 				.toBeTruthy();
 
@@ -801,7 +801,7 @@ describe('LifecycleComponent', () => {
 			const sb1 = component.componentData.learning.productGuides[1];
 			expect(component.componentData.learning.productGuides[1].bookmark)
 				.toBeFalsy();
-			component.updateBookmark('SB', sb1);
+			component.updateBookmark(sb1, 'SB');
 			fixture.detectChanges();
 			expect(component.componentData.learning.productGuides[1].bookmark)
 				.toBeTruthy();
