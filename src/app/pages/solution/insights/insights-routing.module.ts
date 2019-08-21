@@ -52,8 +52,8 @@ const routes: Routes = [
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
+				loadChildren: () => import('../syslogs/syslogs.module')
+					.then(m => m.SyslogsModule),
 				path: 'syslogs',
 				resolve: {
 					user: UserResolve,
