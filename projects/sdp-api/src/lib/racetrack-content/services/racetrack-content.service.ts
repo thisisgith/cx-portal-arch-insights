@@ -26,7 +26,7 @@ import { BookmarkRequestSchema } from '../models/bookmark-request-schema';
 })
 class RacetrackContentService extends __BaseService {
   static readonly getRacetrackATXPath = '/atx';
-  static readonly cancelSessionATXPath = '/atx/registration/{atxId}/{sessionId}';
+  static readonly cancelSessionATXPath = '/atx/registration';
   static readonly getRacetrackACCPath = '/acc';
   static readonly updateACCBookmarkPath = '/acc/{accId}/bookmark';
   static readonly requestACCPath = '/acc/{accId}/request';
@@ -152,12 +152,12 @@ class RacetrackContentService extends __BaseService {
     let __body: any = null;
 
     __headers = __headers.append("Content-Type", "application/json");
-
-
+    if (params.sessionId != null) __params = __params.set('sessionId', params.sessionId.toString());
+    if (params.atxId != null) __params = __params.set('atxId', params.atxId.toString());
     if (params.XMasheryHandshake != null) __headers = __headers.set('X-Mashery-Handshake', params.XMasheryHandshake.toString());
     let req = new HttpRequest<any>(
       'DELETE',
-      this.rootUrl + `/customerportal/racetrack/v1/atx/registration/${params.atxId}/${params.sessionId}`,
+      this.rootUrl + `/customerportal/racetrack/v1/atx/registration`,
       __body,
       {
         headers: __headers,

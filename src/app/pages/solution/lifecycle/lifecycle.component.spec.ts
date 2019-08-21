@@ -725,6 +725,28 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeFalsy();
 		});
+
+		it('should load success bytes hover panel', () => {
+			buildSpies();
+			sendParams();
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#hover-panel-successbytes'));
+			expect(de)
+				.toBeTruthy();
+		});
+
+		it('should set bookmark on clicking the icon in hover panel', () => {
+			buildSpies();
+			sendParams();
+			spyOn(component, 'updateBookmark');
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#hover-panel-successbytes .icon-bookmark'));
+			de.nativeElement.click();
+			expect(component.updateBookmark)
+				.toHaveBeenCalledTimes(1);
+		});
 	});
 
 	describe('Product Guides', () => {

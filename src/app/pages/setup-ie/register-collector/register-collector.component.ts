@@ -81,6 +81,31 @@ function passwordValidator (control: FormControl) {
 }
 
 /**
+ * Checks if the password and passwordConf field are equal
+ * @param control the FormGroup
+ * @returns validity
+ */
+function passwordsMatchValidator (control: FormGroup) {
+	const password = control.get('password');
+	const passwordConf = control.get('passwordConf');
+	const errors: {
+		doesNotMatch?: { value: string },
+	} = { };
+	if (password.value !== passwordConf.value) {
+		errors.doesNotMatch = { value: 'Passwords do not match' };
+	}
+	if (Object.entries((errors || { })).length) {
+		passwordConf.setErrors(errors);
+
+		return errors;
+	}
+
+	passwordConf.setErrors(null);
+
+	return null;
+}
+
+/**
  * Validator for proxy host criteria
  * @param control - FormControl
  * @returns validity
@@ -134,7 +159,6 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		]),
 		passwordConf: new FormControl(null, [
 			Validators.required,
-			this.confirmValidator.bind(this),
 		]),
 		proxyHost: new FormControl(null,
 			proxyHostValidator,
@@ -146,12 +170,18 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 		]),
 		proxyUser: new FormControl(null),
 		// virtualAccount: new FormControl(null, [Validators.required]),
-	});
+	}, { validators: passwordsMatchValidator });
 	public get pwErrors () {
 		return this.accountForm.get('password').errors;
 	}
 	public get pwControl () {
 		return this.accountForm.get('password');
+	}
+	public get confErrors () {
+		return this.accountForm.getError('doesNotMatch');
+	}
+	public get confControl () {
+		return this.accountForm.get('passwordConf');
 	}
 
 	private destroyed$: Subject<void> = new Subject<void>();
@@ -228,22 +258,6 @@ export class RegisterCollectorComponent implements OnDestroy, OnInit, SetupStep 
 			.subscribe(file => {
 				this.registrationFile = file;
 			});
-	}
-
-	/**
-	 * Custom Validator for ensuring password and confirm fields are in sync
-	 * @param control - FormControl passed to method
-	 * @returns error | null
-	 */
-	private confirmValidator (control: FormControl) {
-		if (this.accountForm) {
-			const password = this.accountForm.get('password').value;
-			if (password !== control.value) {
-				return { passwordMismatch: { value: control.value } };
-			}
-		}
-
-		return null;
 	}
 
 	/**

@@ -43,7 +43,7 @@
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading"></div>
 	<div *ngIf="view == 'assets'">
-		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters" (assetStatusUpdated)="onAssetStatusUpdate($event)" [(selectedAsset)]="selectedAsset">
+		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters"  [(selectedAsset)]="selectedAsset">
 		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">

@@ -8,3 +8,4 @@ export { OSVAsset } from './models/asset';
 export { AssetsResponse } from './models/assets-response';
 export { SummaryResponse } from './models/summary-response';
 export { OsvPagination } from './models/pagination';
+export { ContactSupportResponse } from './models/contact-support-response';
