@@ -9,7 +9,10 @@
 
 	&.invisible { display: none; }
 
-	.btn { min-width: 260px; }
+	.btn {
+		min-width: 260px;
+		margin: auto;
+	}
 
 	.close-button {
 		cursor: pointer;
