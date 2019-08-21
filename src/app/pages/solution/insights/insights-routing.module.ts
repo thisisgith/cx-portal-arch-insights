@@ -38,11 +38,6 @@ const routes: Routes = [
 				path: 'syslogs',
 			},
 			{
-				loadChildren: () => import('../architecture-review/architecture-review.module')
-					.then(m => m.ArchitectureReviewModule),
-				path: 'architecture-review',
-			},
-			{
 				path: '',
 				pathMatch: 'full',
 				redirectTo: 'compliance',

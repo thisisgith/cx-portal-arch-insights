@@ -55,11 +55,17 @@ describe('CbpRuleViolationComponent', () => {
 		.toBe(null);
 	});
 
-	// it('should close panel', () => {
-	// 	component.onPanelClose();
-	// 	expect(component.exceptionObject)
-	// 	.toBe(null);
-	// });
+	it('should modify the response', () => {
+		const Array = [
+			{ 	assetsAffected: 'bhbdsjhbhjds',
+				correctiveActionSummary: 'dsbjhfbdsjhfbdhjs',
+				recommendations : 'bhdbshd',
+			},
+		];
+		component.ModifyCbpRuleExceptions(Array);
+		expect(component.exceptionObject)
+		.toBe(null);
+	});
 
 	it('should pass data on row clicked', () => {
 		const tableEvent = {
