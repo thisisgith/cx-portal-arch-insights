@@ -1,4 +1,3 @@
-// tslint:disable: no-any
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { forkJoin, of, Subject } from 'rxjs';
 import { map, catchError, takeUntil } from 'rxjs/operators';
