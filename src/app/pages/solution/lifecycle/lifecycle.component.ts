@@ -301,8 +301,6 @@ export class LifecycleComponent implements OnDestroy {
 		)
 		.subscribe((technology: RacetrackTechnology) => {
 			const currentSolution = this.componentData.params.solution;
-
-			const newTech = (currentSolution && technology !== this.selectedTechnology);
 			this.selectedTechnology = technology;
 
 			this.resetComponentData();
@@ -317,9 +315,7 @@ export class LifecycleComponent implements OnDestroy {
 			if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
 			this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
 
-			if (newTech) {
-				this.getRacetrackInfo(this.currentWorkingPitstop);
-			}
+			this.getRacetrackInfo(this.currentWorkingPitstop);
 		});
 	}
 
