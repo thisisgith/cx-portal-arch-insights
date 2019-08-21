@@ -314,28 +314,4 @@ describe('RccComponent', () => {
 				done();
 			});
 	});
-
-	it('should invoke sub filter select method success', () => {
-		const filter: Filter = {
-			key: 'assetOsType',
-			loading: true,
-			seriesData: [],
-			template: null,
-			title: 'OS Type',
-		};
-		component.onSubfilterSelect('PCI', filter, false);
-		fixture.detectChanges();
-	});
-
-	it('should invoke sub filter select method filure', () => {
-		const filter: Filter = {
-			key: 'assetOsType',
-			loading: true,
-			seriesData: [],
-			template: null,
-			title: 'OS Type',
-		};
-		component.onSubfilterSelect('PCI', filter, true);
-		fixture.detectChanges();
-	});
 });
