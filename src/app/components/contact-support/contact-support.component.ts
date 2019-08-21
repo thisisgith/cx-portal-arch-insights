@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { CuiModalService, CuiModalContent, CuiInputOptions } from '@cisco-ngx/cui-components';
+import { CuiModalService, CuiModalContent } from '@cisco-ngx/cui-components';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
@@ -25,17 +25,12 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	public supportForm: FormGroup;
 	public data: any;
 	public success = false;
+	public descriptionMaxLength = 32000;
 	public title: FormControl = new FormControl('', Validators.required);
-	public description: FormControl = new FormControl('', Validators.required);
+	public description: FormControl = new FormControl('',
+		[Validators.required, Validators.maxLength(this.descriptionMaxLength)]);
 	public userMailId: string = this.profileService.getProfile().cpr.pf_auth_email;
 	private destroy$ = new Subject();
-	public textOptions: CuiInputOptions = new CuiInputOptions({
-		autofocus: false,
-		required: true,
-		minLength: 0,
-		maxLength: 32000,
-		rows: 10,
-	});
 	public items: any[] = [];
 
 	constructor (
@@ -116,7 +111,6 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			`${I18n.get('_SupportName_')}\n` +
 			`${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}\n\n` +
 			`${I18n.get('_SupportEmail_')}\n` + `${userDetails.pf_auth_email}\n\n` +
-			`${I18n.get('_SupportPhone_')}\n` + `${userDetails.pf_auth_email}\n\n` +
 			`${I18n.get('_SupportMessageSection_')}\n\n` +
 			`${I18n.get('_SupportEmailTopic_')}\n` +
 			`${this.supportForm.controls.title.value}\n\n` +
