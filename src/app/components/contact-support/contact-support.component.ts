@@ -58,7 +58,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			Validators.maxLength(32000),
 		]);
 		this.modalHeading = this.contactExpert ? I18n.get('_CSTitle_') :
-		I18n.get('_SupportContact_');
+			I18n.get('_SupportContact_');
 		this.textOptions = new CuiInputOptions({
 			autofocus: false,
 			required: true,
@@ -129,36 +129,38 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	 * Contact a Designated Expert on done buttom
 	 */
 	public sendMessage () {
-		const userDetails = this.profileService.getProfile().cpr;
-		const params = {
-			body: this.supportForm.controls.description.value,
-			cc: _.get(userDetails, 'pf_auth_email'),
-			subject: this.items[8].name,
-		};
-		this.loading = true;
-		this.emailControllerService.contactSupport(params)
-			.pipe(
-				catchError(err => {
-					this.loading = false;
-					this.toggle = true;
-					this.success = false;
-					this.logger.error(err);
+		if (this.supportForm.valid) {
+			const userDetails = this.profileService.getProfile().cpr;
+			const params = {
+				body: this.supportForm.controls.description.value,
+				cc: _.get(userDetails, 'pf_auth_email'),
+				subject: this.items[8].name,
+			};
+			this.loading = true;
+			this.emailControllerService.contactSupport(params)
+				.pipe(
+					catchError(err => {
+						this.loading = false;
+						this.toggle = true;
+						this.success = false;
+						this.logger.error(err);
 
-					return empty();
-				}),
-				takeUntil(this.destroy$),
-			)
-			.subscribe((response: ContactSupportResponse) => {
-				if (response.status) {
-					this.loading = false;
-					this.toggle = true;
-					this.success = true;
-				} else {
-					this.loading = false;
-					this.toggle = true;
-					this.success = false;
-				}
-			});
+						return empty();
+					}),
+					takeUntil(this.destroy$),
+				)
+				.subscribe((response: ContactSupportResponse) => {
+					if (response.status) {
+						this.loading = false;
+						this.toggle = true;
+						this.success = true;
+					} else {
+						this.loading = false;
+						this.toggle = true;
+						this.success = false;
+					}
+				});
+		}
 	}
 
 	/**

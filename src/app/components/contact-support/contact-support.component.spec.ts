@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { of } from 'rxjs';
 
-describe('ContactSupportComponent', () => {
+fdescribe('ContactSupportComponent', () => {
 	let component: ContactSupportComponent;
 	let service: EmailControllerService;
 	let fixture: ComponentFixture<ContactSupportComponent>;
@@ -82,5 +82,27 @@ describe('ContactSupportComponent', () => {
 		component.ngOnInit();
 		expect(component.getTopicList)
 			.toHaveBeenCalled();
+	});
+
+	it('should not call the contact support service if form is invalid', () => {
+		spyOn(service, 'contactSupport')
+			.and
+			.returnValue(of(<any> { }));
+		component.ngOnInit();
+		fixture.detectChanges();
+		component.sendMessage();
+		expect(service.contactSupport)
+			.toHaveBeenCalledTimes(0);
+	});
+
+	it('should not call the sendEmamil service if form is invalid', () => {
+		spyOn(service, 'sendEmail')
+			.and
+			.returnValue(of(<any> { }));
+		component.ngOnInit();
+		fixture.detectChanges();
+		component.submitMessage();
+		expect(service.sendEmail)
+			.toHaveBeenCalledTimes(0);
 	});
 });
