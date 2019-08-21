@@ -6,6 +6,7 @@ import {
 	ViewChild,
 	Output,
 	EventEmitter,
+	SimpleChanges,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
@@ -230,5 +231,16 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		this.refresh();
+	}
+
+	/**
+	 * Checks if our currently selected asset has changed
+	 * @param changes the changes detected
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentId = _.get(changes, ['id', 'currentValue']);
+		if (currentId && !changes.id.firstChange) {
+			this.refresh();
+		}
 	}
 }

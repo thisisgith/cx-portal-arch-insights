@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, of, Observable } from 'rxjs';
 import { catchError, takeUntil, flatMap, mergeMap, map } from 'rxjs/operators';
@@ -20,9 +20,9 @@ import { Asset,
 	TransactionRequestResponse,
 	TransactionStatusResponse,
 } from '@sdp-api';
-import { SelectOption } from './panel-select/panel-select.component';
 import { CaseOpenData } from './caseOpenData';
 import { CloseConfirmComponent } from './close-confirm/close-confirm.component';
+import { TechFormComponent } from './tech-form/tech-form.component';
 
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
@@ -38,11 +38,12 @@ import { UserResolve } from '@utilities';
 export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	@Input() public asset: Asset;
 	@Input() public element: NetworkElement;
+	@ViewChild('techForm', { static: false }) public techForm: TechFormComponent;
 	public data: { };
 	public expand = false;
 	public submitted = false;
 	public submitting = false;
-	public sevOptions: SelectOption<number>[] = [
+	public sevOptions = [
 		{
 			name: caseSeverities[1].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 1),
@@ -142,6 +143,15 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	 */
 	public onFormReady (form: FormGroup) {
 		this.caseForm.addControl('techInfo', form);
+	}
+
+	/**
+	 * Fire when user clicks "Next" button
+	 * Gather predictions based on title/description and expand form
+	 */
+	public onNext () {
+		this.expand = true;
+		this.techForm.refreshPredictions();
 	}
 
 	/**

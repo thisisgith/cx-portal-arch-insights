@@ -1,0 +1,11 @@
+export { SoftwareProfile } from './models/software-profile';
+export { SoftwareProfilesResponse } from './models/software-profiles-response';
+export { SoftwareVersion } from './models/software-version';
+export { SoftwareVersionsResponse } from './models/software-versions-response';
+export { AssetRecommendations } from './models/asset-recommendations';
+export { AssetRecommendationsResponse } from './models/asset-recommendations-response';
+export { OSVAsset } from './models/asset';
+export { AssetsResponse } from './models/assets-response';
+export { SummaryResponse } from './models/summary-response';
+export { OsvPagination } from './models/pagination';
+export { ContactSupportResponse } from './models/contact-support-response';

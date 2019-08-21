@@ -20,7 +20,7 @@ export class NoDNACHeaderComponent {
 	public hasCXCollector = this.utils.getLocalStorage(this.env.ieSetup.CX_Coll_Reg_LS_KEY);
 	public forceHidden = false;
 	@HostBinding('class.invisible') get isInvisible () {
-		return (!this.noDNAC && this.hasCXCollector) || this.forceHidden;
+		return (!this.noDNAC && this.hasCXCollector) || this.forceHidden || !this.production;
 	}
 	constructor (
 		@Inject('ENVIRONMENT') private env,

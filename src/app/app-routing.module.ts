@@ -1,7 +1,7 @@
 import { ExtraOptions, Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ClientSSOGuard } from '@cisco-ngx/cui-auth';
-import { UserResolve } from './utilities/user-resolve';
+import { UserResolve } from '@utilities';
 
 /**
  * Representation of the routes used by @angular/router
@@ -10,7 +10,7 @@ const routes: Routes = [
 	{
 		canActivate: [ClientSSOGuard],
 		loadChildren: () => import('./pages/admin/admin.module')
-		 	.then(m => m.AdminModule),
+			.then(m => m.AdminModule),
 		path: 'admin',
 		resolve: {
 			user: UserResolve,

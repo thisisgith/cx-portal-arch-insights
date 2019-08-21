@@ -1,16 +1,30 @@
-<div class="flex flex-wrap flex-row flex-grow justify-content-between">
-	<a *ngFor="let option of options; index as i;"
-		(click)="select(option)"
-		data-auto-id="DummyId"
-		[attr.data-auto-id]="'PanelSelectOption' + i">
-		<div class="panel panel--bordered base-padding"
-			[ngClass]="{ 'selected': option.selected }">
-			<div class="half-margin-bottom">
-				<span [innerText]="option.name"></span>
+<ng-container *ngIf="layout === 'default'; else verticalTemplate;">
+	<div class="flex flex-wrap flex-row flex-grow justify-content-between">
+		<a *ngFor="let option of options; index as i;"
+			(click)="select(option)"
+			data-auto-id="DummyId"
+			[attr.data-auto-id]="'PanelSelectOption' + i">
+			<div class="panel panel--bordered base-padding horizontal"
+				[ngClass]="{ 'selected': option.selected }">
+				<ng-container *ngTemplateOutlet="option.content"></ng-container>
 			</div>
-			<div>
-				<span class="text-small text-muted" [innerText]="option.subtitle | uppercase"></span>
-			</div>
+		</a>
+	</div>
+</ng-container>
+
+<ng-template #verticalTemplate>
+	<div *ngFor="let option of options; index as i;"
+		class="flex half-margin-top">
+		<div class="flex-fluid">
+			<a (click)="select(option)"
+				class="vertical flex-fluid"
+				data-auto-id="DummyId"
+				[attr.data-auto-id]="'PanelSelectOption' + i">
+				<div class="panel panel--bordered base-padding vertical flex-fluid"
+					[ngClass]="{ 'selected': option.selected }">
+					<ng-container *ngTemplateOutlet="option.content"></ng-container>
+				</div>
+			</a>
 		</div>
-	</a>
-</div>
+	</div>
+</ng-template>

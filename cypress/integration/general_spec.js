@@ -25,7 +25,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it.skip('General Search and close', () => { // PBC-167
@@ -94,7 +93,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Case Search', () => {
@@ -172,7 +170,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('RMA 800000000 one replacement parts', () => {
@@ -322,7 +319,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 		it('Contract Search 93425688', () => {
 			// PBC-172
@@ -378,7 +374,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Serial Search FOX1333GGGG', () => {

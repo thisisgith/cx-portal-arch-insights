@@ -24,6 +24,7 @@ export const environment = {
 		fileList: '/ws/csc/v3/caseFiles',
 	},
 	csone: {
+		classifyAppId: 'CXPortal',
 		clientId: '07e418ac71284560944ea92f653a01c2',
 	},
 	ieSetup: {

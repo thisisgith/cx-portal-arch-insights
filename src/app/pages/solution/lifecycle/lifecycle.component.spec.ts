@@ -1,9 +1,9 @@
+import * as enUSJson from 'src/assets/i18n/en-US.json';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LifecycleComponent } from './lifecycle.component';
 import { LifecycleModule } from './lifecycle.module';
 import { RacetrackService, RacetrackContentService } from '@sdp-api';
-import { SolutionService } from '../solution.service';
 import {
 	RacetrackScenarios,
 	ATXScenarios,
@@ -24,6 +24,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as _ from 'lodash-es';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { RacetrackInfoService } from '@services';
+import { AppService } from 'src/app/app.service';
+import { I18n } from '@cisco-ngx/cui-utils';
 
 /**
  * Will fetch the currently active response body from the mock object
@@ -44,7 +47,7 @@ describe('LifecycleComponent', () => {
 	let el: HTMLElement;
 	let racetrackService: RacetrackService;
 	let racetrackContentService: RacetrackContentService;
-	let solutionService: SolutionService;
+	let racetrackInfoService: RacetrackInfoService;
 
 	let racetrackATXSpy;
 	let racetrackAccSpy;
@@ -138,9 +141,9 @@ describe('LifecycleComponent', () => {
 	const sendParams = () => {
 		const racetrack = getActiveBody(RacetrackScenarios[0]);
 
-		solutionService.sendCurrentSolution(racetrack.solutions[0]);
+		racetrackInfoService.sendCurrentSolution(racetrack.solutions[0]);
 
-		solutionService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
+		racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
 	};
 
 	beforeEach(async(() => {
@@ -151,6 +154,7 @@ describe('LifecycleComponent', () => {
 				LifecycleModule,
 			],
 			providers: [
+				AppService,
 				{
 					provide: ActivatedRoute,
 					useValue: {
@@ -165,12 +169,13 @@ describe('LifecycleComponent', () => {
 		})
 		.compileComponents();
 
-		solutionService = TestBed.get(SolutionService);
+		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		racetrackService = TestBed.get(RacetrackService);
 		racetrackContentService = TestBed.get(RacetrackContentService);
 	}));
 
 	beforeEach(() => {
+		I18n.injectDictionary(enUSJson);
 		fixture = TestBed.createComponent(LifecycleComponent);
 		component = fixture.componentInstance;
 		restoreSpies();
@@ -340,7 +345,7 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			component.eventCoordinates = 0;
+			component.eventXCoordinates = 0;
 			(<any> window).innerWidth = 1200;
 			let viewAtxSessions: HTMLElement;
 			viewAtxSessions = document.createElement('viewAtxSessions');
@@ -422,7 +427,8 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			component.eventCoordinates = 200;
+			component.eventXCoordinates = 200;
+			component.atxview = 'grid';
 			(<any> window).innerWidth = 1200;
 			let viewAtxSessions: HTMLElement;
 			component.componentData.atx.interested = { };
@@ -435,8 +441,10 @@ describe('LifecycleComponent', () => {
 			expect(panel)
 				.toEqual('panel cardpanel--open');
 
-			component.eventCoordinates = 1000;
+			component.atxview = 'grid';
+			component.eventXCoordinates = 1000;
 			(<any> window).innerWidth = 1200;
+			component.componentData.atx.interested = { };
 			viewAtxSessions = document.createElement('viewAtxSessions');
 
 			const panelRight = component.getPanel(viewAtxSessions);
@@ -445,6 +453,20 @@ describe('LifecycleComponent', () => {
 
 			expect(panelRight)
 				.toEqual('panel cardpanel--openright');
+
+			component.atxview = 'list';
+			component.eventXCoordinates = 1000;
+			(<any> window).innerWidth = 1200;
+			component.componentData.atx.interested = { };
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const listpanel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(listpanel)
+				.toEqual('panel listpanel--open');
+
 			expect(component.getTitle('ATX'))
 				.toEqual('Ask The Expert');
 
@@ -707,6 +729,28 @@ describe('LifecycleComponent', () => {
 			de = fixture.debugElement.query(By.css('#viewAllModal'));
 			expect(de)
 				.toBeFalsy();
+		});
+
+		it('should load success bytes hover panel', () => {
+			buildSpies();
+			sendParams();
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#hover-panel-successbytes'));
+			expect(de)
+				.toBeTruthy();
+		});
+
+		it('should set bookmark on clicking the icon in hover panel', () => {
+			buildSpies();
+			sendParams();
+			spyOn(component, 'updateBookmark');
+			fixture.detectChanges();
+
+			de = fixture.debugElement.query(By.css('#hover-panel-successbytes .icon-bookmark'));
+			de.nativeElement.click();
+			expect(component.updateBookmark)
+				.toHaveBeenCalledTimes(1);
 		});
 	});
 
@@ -994,7 +1038,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "use" (current+2) and check if button is disabled
 			component.getRacetrackInfo('use');
-			component.atxScheduleCardOpened = true;
+			component.recommendedAtxScheduleCardOpened = true;
 			fixture.detectChanges();
 			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
 			expect(de)
@@ -1002,7 +1046,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "implement" (current+1) and check if button is enabled
 			component.getRacetrackInfo('implement');
-			component.atxScheduleCardOpened = true;
+			component.recommendedAtxScheduleCardOpened = true;
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
@@ -1015,7 +1059,7 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "Onboard" (current) and check if button is enabled
 			component.getRacetrackInfo('Onboard');
-			component.atxScheduleCardOpened = true;
+			component.recommendedAtxScheduleCardOpened = true;
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',

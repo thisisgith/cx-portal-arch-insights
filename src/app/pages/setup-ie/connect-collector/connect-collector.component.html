@@ -61,10 +61,23 @@
 				<h4 [innerText]="'_AwaitingCertAccept_' | i18n"></h4>
 				<span class="text-large" [innerText]="'_AcceptCertInstructionsVerbose_' | i18n"></span>
 			</div>
-			<img
-				alt="Accept Self-Signed Certificate"
-				src="assets/img/setup-ie/accept-certificate.png"
-			>
+
+			<div class="row">
+				<div class="col-md-6">
+					<p class="text-large" [innerText]="'_ClickAdvanced_' | i18n"></p>
+					<img
+						alt="Accept Self-Signed Certificate"
+						src="assets/img/setup-ie/accept-certificate-left.png"
+					>
+				</div>
+				<div class="col-md-6">
+					<p class="text-large" [innerText]="'_ClickProceedToIp_' | i18n"></p>
+					<img
+						alt="Accept Self-Signed Certificate"
+						src="assets/img/setup-ie/accept-certificate-right.png"
+					>
+				</div>
+			</div>
 			<div *ngIf="!ipAddressLink" class="base-margin-top flex-center-vertical">
 				<button
 					data-auto-id="submit-btn"

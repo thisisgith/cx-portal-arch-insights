@@ -16,6 +16,7 @@ import {
 	CreateRegistrationScenarios,
 	CriticalBugScenarios,
 	CriticalBugAssetsScenarios,
+	DeviceScenarios,
 	DevicePoliciesScenarios,
 	DNACStatusScenarios,
 	ELearningScenarios,
@@ -31,6 +32,7 @@ import {
 	HealthStatusScenarios,
 	LicenseScenarios,
 	NetworkScenarios,
+	OSVScenarios,
 	PolicesScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
@@ -58,6 +60,7 @@ import {
 	ATXResponseModel,
 	AdvisoriesByLastUpdatedCount,
 	Assets,
+	AssetRecommendationsResponse,
 	BugImpactedAssetsResponse,
 	CDCSearchResponse,
 	CSDFResponseModel,
@@ -92,8 +95,10 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
-	SoftwareEOLBulletinResponse,
+	SoftwareProfilesResponse,
+	SoftwareVersionsResponse,
 	SoftwareEOLResponse,
+	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
 	UserTraining,
 	VulnerabilityResponse,
@@ -107,6 +112,7 @@ type ResponseBody = (
 	ACCUserInfoSchema |
 	AdvisoriesByLastUpdatedCount |
 	Assets |
+	AssetRecommendationsResponse |
 	BugImpactedAssetsResponse |
 	ATXResponseModel |
 	CDCSearchResponse |
@@ -143,6 +149,9 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
+	SoftwareProfilesResponse |
+	SoftwareVersionsResponse |
+	SoftwareEOLResponse |
 	SoftwareEOLBulletinResponse |
 	SoftwareEOLResponse |
 	SuccessPathsResponse |
@@ -211,6 +220,7 @@ export const mockSettings: MockSettings = {
 		CriticalBugAssetsScenarios,
 		CriticalBugScenarios,
 		DNACStatusScenarios,
+		DeviceScenarios,
 		DevicePoliciesScenarios,
 		ELearningScenarios,
 		EntitlementScenarios,
@@ -225,6 +235,8 @@ export const mockSettings: MockSettings = {
 		HealthStatusScenarios,
 		LicenseScenarios,
 		NetworkScenarios,
+		OSVScenarios,
+		RMAScenarios,
 		PolicesScenarios,
 		RMAScenarios,
 		RacetrackScenarios,

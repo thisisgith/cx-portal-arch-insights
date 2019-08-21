@@ -4,6 +4,11 @@ import { Observable, of, forkJoin } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { I18n, Language } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
+import { RacetrackResponse, RacetrackService } from '@sdp-api';
+import { RacetrackInfoService } from '@services';
+import { UserResolve } from '@utilities';
+
+import * as _ from 'lodash-es';
 
 /**
  * Service which contains all calls uses for initialization
@@ -18,6 +23,9 @@ export class AppService {
 	constructor (
 		private http: HttpClient,
 		private logger: LogService,
+		private racetrackService: RacetrackService,
+		private racetrackInfoService: RacetrackInfoService,
+		private userResolve: UserResolve,
 	) { }
 
 	/**
@@ -76,5 +84,37 @@ export class AppService {
 				return of({ });
 			}),
 		);
+	}
+
+	/**
+	 * Fetch the current racetrack, solution and technology at application start
+	 * (selects first from list for each)
+	 * @param customerId customerId for whom to fetch information
+	 */
+	public initializeRacetrack (customerId: string) {
+
+		this.racetrackService.getRacetrack({ customerId })
+		.subscribe((results: RacetrackResponse) => {
+			this.racetrackInfoService.sendRacetrack(results);
+			const solutions = results.solutions;
+			const topSolution = _.head(solutions);
+			this.racetrackInfoService.sendCurrentSolution(topSolution);
+			const topTechnology = _.head(_.get(topSolution, 'technologies', []));
+			if (topTechnology) {
+				this.racetrackInfoService.sendCurrentTechnology(topTechnology);
+			}
+		},
+		err => {
+			this.logger.error('app.service : initializeRacetrack() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+		});
+	}
+
+	/**
+	 * Fetch user information and cache locally
+	 * @returns Observable with fetched user info
+	 */
+	public initializeUser () {
+		return this.userResolve.resolve();
 	}
 }

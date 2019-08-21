@@ -18,7 +18,7 @@ import { User } from '@interfaces';
 import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of } from 'rxjs';
-import { EntitlementService, ServiceInfo } from '@sdp-api';
+import { EntitlementService } from '@sdp-api';
 
 describe('AppComponent', () => {
 	let component: AppComponent;
@@ -133,15 +133,14 @@ describe('AppComponent', () => {
 				],
 			})
 			.compileComponents();
-
-			userResolve = TestBed.get(UserResolve);
-			entitlementService = TestBed.get(EntitlementService);
 		}));
 
 		beforeEach(() => {
 			fixture = TestBed.createComponent(AppComponent);
 			component = fixture.componentInstance;
 			router = fixture.debugElement.injector.get(Router);
+			userResolve = TestBed.get(UserResolve);
+			entitlementService = TestBed.get(EntitlementService);
 			fixture.detectChanges();
 		});
 
@@ -195,7 +194,7 @@ describe('AppComponent', () => {
 			fixture.whenStable()
 			.then(() => {
 				userResolve.resolve()
-				.subscribe((u: { info: User, service: ServiceInfo }) => {
+				.subscribe((u: User) => {
 					expect(u.info)
 						.toBeFalsy();
 				});

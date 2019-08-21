@@ -345,17 +345,12 @@ describe('AssetsComponent', () => {
 	it('should detect selection changes', done => {
 		fixture.whenStable()
 		.then(() => {
+			component.onSelectionChanged([]);
+
 			fixture.detectChanges();
 
 			expect(component.selectedAssets.length)
 				.toBe(0);
-
-			component.onSelectionChanged([{ }]);
-
-			fixture.detectChanges();
-
-			expect(component.selectedAssets.length)
-				.toBe(1);
 
 			done();
 		});
@@ -427,11 +422,12 @@ describe('AssetsComponent', () => {
 
 			expect(component.assetParams.search)
 				.toBeFalsy();
-			component.doSearch('query');
+			component.searchForm.controls.search.setValue('query');
+			component.doSearch();
 			fixture.detectChanges();
 
 			expect(component.assetParams.search)
-			.toBeTruthy();
+				.toBeTruthy();
 
 			done();
 		});
@@ -444,7 +440,8 @@ describe('AssetsComponent', () => {
 
 			expect(component.assetParams.search)
 				.toBeFalsy();
-			component.doSearch('');
+			component.searchForm.controls.search.setValue('');
+			component.doSearch();
 			fixture.detectChanges();
 
 			expect(component.assetParams.search)
@@ -460,8 +457,10 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 
 			_.set(component, ['assetParams', 'search'], 'search');
-			component.searchForm.setValue({ search: '' });
+			component.filtered = true;
+			component.searchForm.controls.search.setValue('');
 
+			component.doSearch();
 			fixture.detectChanges();
 
 			expect(_.get(component.assetParams, 'search'))
@@ -479,6 +478,7 @@ describe('AssetsComponent', () => {
 				.toBeTruthy();
 			const deviceNameCol = _.find(component.assetsTable.columns, { key: 'deviceName' });
 			deviceNameCol.sortable = false;
+			deviceNameCol.sorting = false;
 			deviceNameCol.sortDirection = 'asc';
 			const serialNumberCol = _.find(component.assetsTable.columns, { key: 'serialNumber' });
 			serialNumberCol.sorting = true;
@@ -518,6 +518,7 @@ describe('AssetsComponent', () => {
 			done();
 		});
 	});
+
 	it('should handle sortable column', done => {
 		fixture.whenStable()
 		.then(() => {
@@ -538,7 +539,7 @@ describe('AssetsComponent', () => {
 			expect(deviceNameCol.sorting)
 				.toBeFalsy();
 			expect(deviceNameCol.sortDirection)
-				.toBe('desc');
+				.toBe('asc');
 			expect(serialNumberCol.sorting)
 				.toBeTruthy();
 			expect(serialNumberCol.sortDirection)
