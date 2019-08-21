@@ -422,7 +422,7 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			let dummyClickedBtn = document.createElement('button');
+			const dummyClickedBtn = document.createElement('button');
 			component.eventXCoordinates = 200;
 			component.eventClickedElement = dummyClickedBtn;
 			component.atxview = 'grid';
