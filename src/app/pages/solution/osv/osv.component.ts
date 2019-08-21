@@ -48,7 +48,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		assetType: '',
 		deploymentStatus: [],
 	};
-	public noData = false;
+
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -176,7 +176,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					totalAssetsFilter.loading = false;
 					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
-					this.noData = true;
 					this.view = undefined;
 
 					return of({ });
@@ -197,7 +196,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			this.view = 'swVersions';
 		} else {
 			this.view = undefined;
-			this.noData = true;
 		}
 	}
 

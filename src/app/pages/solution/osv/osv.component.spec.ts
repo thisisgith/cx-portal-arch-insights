@@ -72,8 +72,6 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 		expect(_.find(component.filters, { key: 'totalAssets' }).seriesData.length)
 			.toBe(0);
-		expect(component.noData)
-			.toBeTruthy();
 		expect(component.view)
 			.toBeUndefined();
 	});
@@ -286,7 +284,5 @@ describe('OptimalSoftwareVersionComponent', () => {
 		fixture.detectChanges();
 		expect(component.view)
 			.toBeUndefined();
-		expect(component.noData)
-			.toBeTruthy();
 	});
 });

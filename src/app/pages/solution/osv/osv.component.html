@@ -12,7 +12,7 @@
 </details-panel>
 
 <div class="panel">
-	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading && !noData">
+	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading && view">
 		<ng-container *ngFor="let filter of filters; index as i">
 			<div *ngIf="!filter.loading && filter.seriesData.length && filter.view.indexOf(view) > -1"
 				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
@@ -41,7 +41,7 @@
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
-	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && !noData"></div>
+	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
 	<div *ngIf="view == 'swGroups'">
 		<app-software-groups [(fullscreen)]="fullscreen"  [(selectedSoftwareGroup)]="selectedSoftwareGroup">
 		</app-software-groups>
@@ -53,7 +53,7 @@
 	<div *ngIf="view == 'swVersions'">
 		<app-software-versions></app-software-versions>
 	</div>
-	<div *ngIf="noData" class="dbl-margin-top text-center text-xlarge">
+	<div *ngIf="!view" class="dbl-margin-top text-center text-xlarge">
 		<span [innerText]="'_OsvNoAssets_' | i18n"></span>
 	</div>
 </div>
