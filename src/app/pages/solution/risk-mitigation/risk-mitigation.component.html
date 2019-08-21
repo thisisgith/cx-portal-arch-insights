@@ -5,8 +5,7 @@
 					<div class="col-10 filter__selected">
 						<div data-auto-id="highCrashCount" class="base-margin-bottom qtr-margin-top cursor"
 						(click)="getHighCrashesDeviceData()" [ngClass]="{'text-primary': onlyCrashes}">
-						<div class="text-huge flex-center dbl-padding-left dbl-padding-right">
-							{{highCrashDeviceCount}}
+						<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="highCrashDeviceCount" *ngIf="highCrashDeviceCount">
 						</div>
 						<div class="text-large flex-center"  [innerText]="'_RMHighCrashRiskAssets_'  | i18n"></div>
 					</div>
@@ -26,7 +25,7 @@
 
 		<div class="col-2">
 			<div class="flex flex-fill flex-center flex-fluid">
-				<ng-container *ngFor="let filter of filters; index as i">
+				<ng-container *ngFor="let filter of filters;">
 					<div attr.id="RiskMitigationSelectVisualFilter?-{{ filter.key}}"
 						 attr.data-auto-id="RiskMitigationSelectVisualFilter?-{{filter.key}}">
 						<div class="base-margin-bottom">
@@ -90,7 +89,7 @@
 			  attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
 		<span [innerText]="'_RMTimeLast_'  | i18n"></span>
 		<span>{{subfilter.label}}</span>
-		<span data-auto-id="0" class="icon-close" (click)="clearFilters()"></span>
+		<span class="icon-close" (click)="clearFilters()"></span>
 		</span>
 				</ng-container>
 			</ng-container>
@@ -105,8 +104,6 @@
 	</div>
 	<div class="divider"></div>
 </ng-template>
-<!--<input data-auto-id="Sample360" type="checkbox" [(ngModel)]="openPanel" />-->
-
 <div *ngIf="!onlyCrashes; else assetsWithCrashRisk">
 	<cui-table (onTableRowClicked)="onRowClicked($event)"
 			   [data]="crashedAssetsGridDetails.tableData"
