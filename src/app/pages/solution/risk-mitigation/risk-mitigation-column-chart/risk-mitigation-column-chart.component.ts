@@ -135,7 +135,7 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 	 * @param changes The changes found
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		const seriesInfo = _.get(changes, 'seriesData',
+		const seriesInfo = _.find(changes, 'seriesData',
 			{ currentValue: null, firstChange: false });
 		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
 			this.buildGraph();

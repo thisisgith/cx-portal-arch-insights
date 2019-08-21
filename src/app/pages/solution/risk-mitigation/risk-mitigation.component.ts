@@ -212,10 +212,9 @@ export class RiskMitigationComponent {
 	 * @returns the total crashes observable
 	 */
 	public getDeviceDetails (timePeriod: string) {
-		let params: any = RiskMitigationService.GetAssetsParams;
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.crashedAssetsGridDetails.tableData = [];
-		params = (timePeriod) ? timePeriod : null;
-		params.customerId = this.customerId;
+		params.timePeriod = (timePeriod) ? timePeriod : null;
 
 		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
@@ -562,9 +561,7 @@ export class RiskMitigationComponent {
 	 * @param data advisoryFilter the subfilter selected
 	 */
 	public getAdvisoryCount (data) {
-		let advisoryFilter = {
-			seriesData: '',
-		};
+		let advisoryFilter = [];
 		advisoryFilter = _.find(this.filters, { key: 'advisories' });
 		advisoryFilter.seriesData = (data) ? data : '';
 	}
