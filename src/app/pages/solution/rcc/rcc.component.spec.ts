@@ -3,11 +3,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RccComponent } from './rcc.component';
 import { RccModule } from './rcc.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@environment';
-import { of, throwError } from 'rxjs';
-import * as _ from 'lodash-es';
+import { of } from 'rxjs';
 import { user, ComplianceScenarios } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -73,8 +71,8 @@ fdescribe('RccComponent', () => {
 		.then(() => {
 			fixture.detectChanges();
 			expect(component.tableData)
-				.toBeDefined();
-				expect(component.tableData)
+			.toBeDefined();
+			expect(component.tableData)
 				.toEqual(ComplianceScenarios[0].scenarios.GET[0].response.body);
 			done();
 		});
@@ -150,23 +148,11 @@ fdescribe('RccComponent', () => {
 		});
 	});
 
-	// it('should fetch selected data for violation slide in', done => {
-	// 	fixture.whenStable()
-	// 	.then(() => {
-	// 		fixture.detectChanges();
-	// 		const obj = { };
-	// 		component.getSelectableData(obj);
-	// 		expect(component.getSelectableData)
-	// 			.toBeTruthy();
-	// 		done();
-	// 	});
-	// });
-
 	it('should fetch selected row details on click of violation grid row', done => {
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();
-			const violationInfo = {};
+			const violationInfo = { };
 			component.onViolationRowClicked(violationInfo);
 			expect(component.policyViolationInfo)
 				.toBeTruthy();
@@ -218,37 +204,6 @@ fdescribe('RccComponent', () => {
 			component.selectedAssetView(view);
 			expect(component.tableConfig)
 				.toBeTruthy();
-			done();
-		});
-	});
-
-	it('should clear the filters on clear button', done => {
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			const policyFilter = _.find(component.filters,
-			{ key: 'policyGroup' });
-			component.onSubfilterSelect('PCI', policyFilter, true);
-			const severityFilter = _.find(component.filters,
-			{ key: 'severity' });
-			component.onSubfilterSelect('P2', severityFilter, true);
-			fixture.detectChanges();
-			expect(_.filter(component.filters, 'selected'))
-			.toContain(policyFilter);
-			expect(_.filter(component.filters, 'selected'))
-			.toContain(severityFilter);
-			const subfilter = _.find(policyFilter.seriesData, { filter: 'PCI' });
-			const subfilterSeverity = _.find(severityFilter.seriesData, { filter: 'P2' });
-			expect(subfilter.selected)
-			.toBeTruthy();
-			expect(subfilterSeverity.selected)
-			.toBeTruthy();
-			component.clearFilters();
-			fixture.detectChanges();
-			expect(subfilter.selected)
-			.toBeFalsy();
-			expect(subfilterSeverity.selected)
-			.toBeFalsy();
 			done();
 		});
 	});

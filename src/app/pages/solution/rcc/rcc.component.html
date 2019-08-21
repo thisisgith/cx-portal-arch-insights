@@ -1,10 +1,9 @@
-<!--<ng-template #rccContent let-filter="filter"></ng-template>-->
 <div class="col-md-12">
 	<div class="row">
 		<div class="col-md-2 filter__selected">
 			<div class="row">
 				<div class="col-md-12 panel flex-center flex-fill filter assetsCount margintop30"
-					(click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
+					data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
 					<div class="text-huge flex-center dbl-padding-left dbl-padding-right">
 						{{ policyViolationCount }}
 					</div>
@@ -21,9 +20,6 @@
 		</div>
 		<div class="col-md-10 no-padding">
 			<div class="flex flex-fill flex-fluid">
-				<!-- <div class="flex-center">
-					<span class="icon-chevron-left icon-medium text-muted toggle"></span>
-				</div> -->
 				<ng-container *ngFor="let filter of filters; index as i">
 					<div attr.id="RccSelectVisualFilter-{{ filter.key }}"
 						attr.data-auto-id="RccSelectVisualFilter-{{filter.key}}" [ngClass]="{filter__selected: filter.selected,
@@ -38,12 +34,8 @@
 						<div class="filter__title text-muted text-large" [innerText]="filter.title"></div>
 					</div>
 					<div *ngIf="filter.loading" class="base-margin-bottom">
-						<!-- <cui-spinner></cui-spinner> -->
 					</div>
 				</ng-container>
-				<!-- <div class="flex-center">
-						<span class="icon-chevron-right icon-medium text-muted toggle"></span>
-					</div> -->
 			</div>
 		</div>
 	</div>
@@ -64,13 +56,13 @@
 	<div class="col-md-3 searchSection">
 		<div class="flex flex-fluid flex-right">
 			<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-				<form [formGroup]="searchForm" novalidate id="searchForm" (keydown)="searchViolations($event)">
+				<form [formGroup]="searchForm" novalidate id="searchForm" (keydown)="searchViolations($event)" data-auto-id="searchViolations">
 					<div class="form-group__text">
-						<input id="searchInput" type="search" #searchInput1 [(ngModel)]="searchInput" name="searchInput"
+						<input data-auto-id="searchInput" id="searchInput" type="search" #searchInput1 [(ngModel)]="searchInput" name="searchInput"
 							[minlength]="searchOptions?.min" [maxlength]="searchOptions?.max"
 							[pattern]="searchOptions?.pattern" formControlName="search"
 							placeholder="{{ '_RccSearch_' | i18n }}">
-						<button type="button" class="link" (click)="clearSearch()">
+						<button data-auto-id="searchButton" type="button" class="link" (click)="clearSearch()">
 							<span class="icon-search"></span>
 						</button>
 					</div>
@@ -80,9 +72,6 @@
 			</cui-dropdown>
 		</div>
 	</div>
-	<!-- <div class="col-md-3 searchSection">
-			<cui-search placeholder="Search" [debounce]="300" [typeaheadItems]="typeaheadItems" [compressed]="false" (onUpdate)="onUpdate($event)"></cui-search>
-	</div> -->
 </div>
 <div class="container base-margin-top" *ngIf="!isAssetView">
 	<cui-table [options]="policyViolationsTableOptions" [data]="policyViolationsGridData"
@@ -105,7 +94,6 @@
 			[totalItems]="tableConfig.totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
 	</div>
 </div>
-<!--</ng-template>-->
 <hr>
 <ng-template #policyFilter let-filter="filter">
 	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
@@ -152,7 +140,6 @@
 <details-panel [hidden]="!selectedViolationModal" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose('selectedViolationModal')" [(fullscreen)]="fullscreen"
 		[fullscreenToggle]="true">
-		<!-- <app-rcc-violation-details [policyViolationInfo]="policyViolationInfo"></app-rcc-violation-details> -->
 		<div detailsPanelTitle>
 			<span class="text-xlarge" [innerText]="'_Rule Name_' | i18n "></span>
 			<span class="text-xlarge"> : {{policyViolationInfo.ruletitle}}</span>
@@ -193,7 +180,6 @@
 			<span>:</span>
 			<span class="text-xlarge selected">{{selectedAssetData.deviceName}}</span>
 		</div>
-		<!-- <app-rcc-asset-details [selectedAssetData]="selectedAssetData"></app-rcc-asset-details> -->
 		<div class="row ">
 			<div class="col-md-8 base-margin-bottom">
 				<div class="flex">
@@ -219,9 +205,6 @@
 		</div>
 	</details-panel-header>
 	<app-rcc-asset-violation-details [selectedAssetData]="selectedAssetData"></app-rcc-asset-violation-details>
-	<!-- <ng-template #assetSlider>
-	 <app-rcc-asset-violation-details [selectedAssetData]="selectedAssetData"></app-rcc-asset-violation-details> 
-</ng-template> -->
 </details-panel>
 
 <ng-template #severityColor let-item="celldata">

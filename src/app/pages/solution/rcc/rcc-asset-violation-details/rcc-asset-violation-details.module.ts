@@ -10,9 +10,12 @@ import {
 } from '@cisco-ngx/cui-components';
 import { HttpClientModule } from '@angular/common/http';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-
+/**
+ * Module representing Rcc track
+ */
 @NgModule({
 	declarations: [RccAssetViolationDetailsComponent],
+	exports: [RccAssetViolationDetailsComponent],
 	imports: [
 		CommonModule,
 		FormsModule,
@@ -24,6 +27,5 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		I18nPipeModule,
 		HttpClientModule,
 	],
-	exports: [RccAssetViolationDetailsComponent]
 })
 export class RccAssetViolationDetailsModule { }

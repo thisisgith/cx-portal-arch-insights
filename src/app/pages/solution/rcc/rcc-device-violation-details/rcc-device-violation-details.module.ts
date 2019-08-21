@@ -9,8 +9,12 @@ import {
 } from '@cisco-ngx/cui-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+/**
+ * Module representing Rcc track
+ */
 @NgModule({
 	declarations: [RccDeviceViolationDetailsComponent],
+	exports: [RccDeviceViolationDetailsComponent],
 	imports: [
 		CommonModule,
 		CuiTableModule,
@@ -21,6 +25,5 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		I18nPipeModule,
 		ReactiveFormsModule,
 	],
-	exports: [RccDeviceViolationDetailsComponent]
 })
 export class RccDeviceViolationDetailsModule { }

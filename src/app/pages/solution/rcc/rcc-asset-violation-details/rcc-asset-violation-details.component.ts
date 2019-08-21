@@ -1,13 +1,14 @@
 import { Component, Input, OnInit, ViewChild, TemplateRef, SimpleChanges } from '@angular/core';
-
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { Subscription, Subject, forkJoin, of } from 'rxjs';
+import { Subscription, Subject, forkJoin } from 'rxjs';
 import { RccAssetSelectReq, RccAssetDetailsService } from '@sdp-api';
-import { takeUntil, map, catchError } from 'rxjs/operators';
-import * as _ from 'lodash-es';
+import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 
+/**
+ * Component for portal support
+ */
 @Component({
 	selector: 'app-rcc-asset-violation-details',
 	styleUrls: ['./rcc-asset-violation-details.component.scss'],
@@ -16,7 +17,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 export class RccAssetViolationDetailsComponent implements OnInit {
 	constructor (
 		private logger: LogService,
-		private RccAssetDetailsService: RccAssetDetailsService,
+		private RccAssetDataDetailsService: RccAssetDetailsService,
 	) {
 		this.logger.debug('RccAssetViolationDetailsComponent Created!');
 	}
@@ -38,7 +39,6 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public policyGroupSelection: string;
 	public policyNameSelection: string;
 	public policySeveritySelection: string;
-	// @Input() public customerId: string;
 	public customerId = '90019449';
 	private destroy$ = new Subject();
 	@Input() public selectedAssetData: any;
@@ -56,12 +56,11 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 		{ id: 'P4', name: 'P4 - Minor' },
 		{ id: 'P5', name: 'P5 - Informational' },
 	];
-	/* on init method
-		will load on component loaded
-	*/
-	// tslint:disable-next-line: no-empty
+	/**
+	 * on init method
+	 * Initialize grid data for asset policy violations
+	 */
 	public ngOnInit () {
-
 		this.rccAssetPolicyTableOptions = new CuiTableOptions({
 			bordered: false,
 			columns: [
@@ -80,7 +79,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				{
 					key: 'ruleName',
 					name: I18n.get('_RccAssetRuleName_'),
-					sortable: false,
+					sortable: true,
 					width: '30%',
 				},
 				{
@@ -93,7 +92,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				{
 					key: 'violationCount',
 					name: I18n.get('_RccAssetViolationCount_'),
-					sortable: false,
+					sortable: true,
 					width: '5%',
 				},
 			],
@@ -141,8 +140,11 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			striped: false,
 		});
 	}
-	/* on changes of row item method */
-	// tslint:disable-next-line: completed-docs
+
+	/**
+	 * on changes method
+	 * @param changes gives the current value
+	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		if (changes.selectedAssetData.currentValue && !(changes.selectedAssetData.firstChange)) {
 			this.assetRowParams = {
@@ -154,19 +156,20 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				serialNumber: this.selectedAssetData.serialNumber,
 				severity: this.policySeveritySelection,
 				sortBy: '',
+				sortOrder: '',
 			};
 			this.loadData();
 	 }
 	}
-	/* loads the filter and asset data
-	   returns the filter and asset grid data
-	*/
-	// tslint:disable-next-line: completed-docs
+
+	/**
+	 * loads the filter and asset data
+	 */
 	public loadData () {
 		forkJoin(
-			this.RccAssetDetailsService
+			this.RccAssetDataDetailsService
 			.getAssetSummaryData(this.assetRowParams),
-			this.RccAssetDetailsService
+			this.RccAssetDataDetailsService
 			.getRccAssetFilterData(this.assetRowParams),
 			)
 			.pipe(
@@ -203,36 +206,15 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				this.totalItems = this.rccAssetPolicyTableData.length;
 			});
 	}
-	/* method to return table information
-	@params assetparams
-	returns the grid data
-	*/
-	// tslint:disable-next-line: completed-docs
+	/**
+	 * method to return table information
+	 * @param params is a request object
+	 * @returns empty on error
+	 */
 	public getAssetPolicyGridData (params: any) {
-		// this.RccAssetDetailsService
-		// 	.getAssetSummaryData(this.assetRowParams)
-		// 	.pipe(
-		// 		map((assetViolations: any) => {
-		// 			this.rccAssetPolicyTableData = [];
-		// 			this.rccAssetPolicyTableData = assetViolations.data.violation;
-		// 			this.totalItems = this.rccAssetPolicyTableData.length;
-		// 		}),
-		// 		catchError(err => {
-		// 			return of({ });
-		// 		}),
-		// 	);
-		// this.RccAssetDetailsService
-		// 	.getAssetSummaryData(this.assetRowParams)
-		// 	.subscribe(assetViolations => {
-		// 		this.rccAssetPolicyTableData = [];
-		// 		this.rccAssetPolicyTableData = assetViolations.data.violation;
-		// 		this.totalItems = this.rccAssetPolicyTableData.length;
-		// 		takeUntil(this.destroy$);
-		// 	}, err => {
-		// 		return;
-		// 	});
+		this.assetRowParams = params;
 		forkJoin(
-			this.RccAssetDetailsService
+			this.RccAssetDataDetailsService
 				.getAssetSummaryData(this.assetRowParams),
 		)
 		.pipe(
@@ -245,15 +227,14 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				this.totalItems = this.rccAssetPolicyTableData.length;
 			}
 		// tslint:disable-next-line: ter-arrow-body-style
-		}, (error: any) => {
-			return;
-		});
-
+		}, (error: any) =>
+			error);
 	}
-	/* To be called on policy group selection
-		@params event object contains the value
-		returns selected table asset grid data
-	*/
+
+	/**
+	 * To be called on policy group selection
+	 * @param event object contains the value
+	 */
 	public onPolicyGroupSelection (event: any) {
 		this.assetRowParams = {
 			customerId: this.customerId,
@@ -267,10 +248,11 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 		};
 		this.getAssetPolicyGridData(this.assetRowParams);
 	}
-	/*  Function called on selection of policy name from dropdown
-		@params event object contains the value
-		returns selected table asset grid data
-	*/
+
+	/**
+	 * To be called on policy name selection
+	 * @param event object contains the value
+	 */
 	public onPolicyNameSelection (event: any) {
 		this.assetRowParams = {
 			customerId: this.customerId,
@@ -281,15 +263,16 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			serialNumber: this.selectedAssetData.serialNumber,
 			severity: this.policySeveritySelection,
 			sortBy: '',
+			sortOrder: '',
 		};
 		this.getAssetPolicyGridData(this.assetRowParams);
 	}
-	/*  Function called on selection of policy name from dropdown
-		@params event object contains the value
-		returns selected table asset grid data
-	*/
-	// tslint:disable-next-line: typedef-whitespace
-	public onPolicySeveritySelection (event : any) {
+
+	/**
+	 * To be called on policy severity selection
+	 * @param event object contains the value
+	 */
+	public onPolicySeveritySelection (event: any) {
 		this.assetRowParams = {
 			customerId: this.customerId,
 			pageIndex: this.pageIndex,
@@ -299,9 +282,11 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			serialNumber: this.selectedAssetData.serialNumber,
 			severity: event,
 			sortBy: '',
+			sortOrder: '',
 		};
 		this.getAssetPolicyGridData(this.assetRowParams);
 	}
+
 	/**
 	 * Function called when page changed
 	 * @param pageInfo gives page number
@@ -310,14 +295,12 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 		this.tableOffset = pageInfo.page;
 		this.pageIndex = pageInfo.page + 1;
 	}
+
 	/**
-	 * Method to be called on sorting
-	 * @params event
-	 * returns table data
+	 * Function called when sort changed
+	 * @param event gives sort information
 	 */
-	public onTableSortingChanged (event :any) {
-		/* To Be Uncommented after sort implementation 
-		key: "policyGroupName",sortDirection: "asc"/"desc"
+	public onTableSortingChanged (event: any) {
 		this.assetRowParams = {
 			customerId: this.customerId,
 			pageIndex: this.pageIndex,
@@ -326,9 +309,10 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			policyName: this.policyNameSelection,
 			serialNumber: this.selectedAssetData.serialNumber,
 			severity: this.policySeveritySelection,
-			sortBy: '',
+			sortBy: event.key,
+			sortOrder: event.sortDirection,
 		};
-		*/
+		this.getAssetPolicyGridData(this.assetRowParams);
 	}
 	/**
 	 * destroy method to kill the services

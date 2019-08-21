@@ -64,6 +64,7 @@ export interface RccAssetSelectReq{
     pageIndex:number,
     pageSize:number,
     sortBy:string,
+    sortOrder:string,
     policyName:string,
     policyGroupName:string,
     severity:string,

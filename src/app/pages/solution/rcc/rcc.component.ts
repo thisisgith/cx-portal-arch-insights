@@ -13,8 +13,8 @@ import {
 	Filter,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
-import { Subscription, forkJoin, Subject, of } from 'rxjs';
-import { map, takeUntil, catchError } from 'rxjs/operators';
+import { Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -53,12 +53,12 @@ export class RccComponent implements OnInit, OnDestroy {
 		tableLimit: 10,
 		tableOffset: 0,
 		totalItems: 15,
-	}
+	};
 	public paginationConfig = {
 		pageLimit: 10,
 		pageNum: 1,
 		pagerLimit: 10,
-	}
+	};
 	public loading = false;
 	public tableData: RccGridData;
 	public policyViolationsGridData: RccGridDataSample[];
@@ -72,8 +72,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	public policyViolationCount: number;
 	public selectedAsset = false;
 	public selRowData = [];
-	public policyRuleData: object = {};
-	public impactedAssetDetails: object = {};
+	public policyRuleData: object = { };
+	public impactedAssetDetails: object = { };
 	public isSlider = false;
 	public customerId = '90019449';
 	public testData = [];
@@ -111,9 +111,9 @@ export class RccComponent implements OnInit, OnDestroy {
 	/**
 	 * Visual filters  of rcc component
 	 */
-	@ViewChild('policyFilter', { static: true }) private policyFilterTemplate: TemplateRef<{}>;
-	@ViewChild('severityFilter', { static: true }) private severityFilterTemplate: TemplateRef<{}>;
-	@ViewChild('severityColor', { static: true }) private severityColorTemplate: TemplateRef<{}>;
+	@ViewChild('policyFilter', { static: true }) private policyFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('severityFilter', { static: true }) private severityFilterTemplate: TemplateRef<{ }>;
+	@ViewChild('severityColor', { static: true }) private severityColorTemplate: TemplateRef<{ }>;
 	@ViewChild('tableIcon', { static: true }) private tableIconTemplate: TemplateRef<{ }>;
 	@ViewChild('assetSlider', { read: ViewContainerRef, static: true })
 	public entry: ViewContainerRef;
@@ -133,13 +133,12 @@ export class RccComponent implements OnInit, OnDestroy {
 		policyType: this.policyGroup,
 		search: this.searchInput,
 		severity: this.severity,
-	}
+	};
 	/**
 	 * ngOnInit method execution
 	 */
 	public ngOnInit () {
 		this.view = 'violation';
-		// this.fetchViolationsCount();
 		this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 		this.buildFilters();
 		this.getRCCData(this.violationGridObj);
@@ -232,29 +231,27 @@ export class RccComponent implements OnInit, OnDestroy {
 	}
 	/**
 	 * Gets selected sub filters
-	 * @param pageNum pagenumber
-	 * @param pageLimt page limit
+	 * @param pageNumber pagenumber
+	 * @param pageLimit page limit
 	 * @param policyGroup is policy group
-	 * @param severity key
+	 * @param severityNew key
 	 * @returns selected filters
 	 */
-	public getRCCAssetData (pageNum: number, pageLimt: number, policyGroup: string,
-		severity: string) {
+	public getRCCAssetData (pageNumber: number, pageLimit: number, policyGroup: string,
+		severityNew: string) {
 		this.loading = true;
 		const queryParamMapObj: object = {
-			pageNum: pageNum,
-			pageLimt: pageLimt,
+			customerId: this.customerId,
+			pageLimt: pageLimit,
+			pageNum: pageNumber,
 			policyType: policyGroup,
-			severity: severity,
-			customerId: this.customerId
-		}
+			severity: severityNew,
+		};
 		this.gridAssetSubscripion = this.RccTrackService
-			// .getAssetGridData(pageNum, pageLimt, policyGroup, severity, this.customerId)
 			.getAssetGridData(queryParamMapObj)
 			.subscribe(assetGridData => {
 				this.tableAssetData = assetGridData;
 				this.tableAssetDataSample = assetGridData.data.assetList;
-				// this.tableConfig.totalItems = this.tableAssetDataSample.length;
 			},
 		);
 		this.loading = false;
@@ -264,7 +261,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param policyViolationInfo object
 	 * @returns opens slider
 	 */
-	public onViolationRowClicked(policyViolationInfo: any) {
+	public onViolationRowClicked (policyViolationInfo: any) {
 		this.policyViolationInfo = policyViolationInfo;
 		this.selectedViolationModal = !this.selectedViolationModal;
 	}
@@ -273,7 +270,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param rowData object
 	 * @returns opens slider
 	 */
-	public onAssetRowClicked(rowData: any) {
+	public onAssetRowClicked (rowData: any) {
 		this.rowData = rowData;
 		this.selectedAssetData = rowData;
 		this.selectedAssetModal = !this.selectedAssetModal;
@@ -342,7 +339,6 @@ export class RccComponent implements OnInit, OnDestroy {
 	public onAssetPagerUpdated (pageInfo: any) {
 		this.tableConfig.tableOffset = pageInfo.page;
 		this.paginationConfig.pageNum = pageInfo.page + 1;
-		// this.getRCCAssetData(this.pageNum, this.pageLimit, this.policyGroup, this.severity);
 	}
 	/**
 	 * Determines whether pager updated on
@@ -369,8 +365,6 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.isAssetView = true;
 		this.assetTableOptions = new CuiTableOptions({
 			bordered: false,
-			dynamicData: false,
-			singleSelect: true,
 			columns: [
 				{
 					key: 'deviceName',
@@ -385,13 +379,8 @@ export class RccComponent implements OnInit, OnDestroy {
 				{
 					key: 'lastScan',
 					name: I18n.get('_RccAssetLastScan_'),
-					sortable: true,
 					render: item => item.lastScan ?
 						this.fromNow.transform(item.lastScan) : I18n.get('_Never_'),
-				},
-				{
-					key: 'serialNumber',
-					name: I18n.get('_RccAssetSerialNumber_'),
 					sortable: true,
 				},
 				{
@@ -410,12 +399,19 @@ export class RccComponent implements OnInit, OnDestroy {
 					sortable: true,
 				},
 				{
+					key: 'serialNumber',
+					name: I18n.get('_RccAssetSerialNumber_'),
+					sortable: true,
+				},
+				{
 					key: 'violationCount',
 					name: I18n.get('_RccAssetViolations_'),
 					sortable: true,
 					template: this.tableIconTemplate,
 				},
 			],
+			dynamicData: false,
+			singleSelect: true,
 		});
 		this.buildAssetFilters();
 		this.getRCCAssetData(this.paginationConfig.pageNum, this.paginationConfig.pageLimit,
@@ -427,8 +423,6 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	private loadData () {
 		this.status.isLoading = true;
-		// this.getAdvisoryCount();
-		// this.getCoverageCounts();
 	}
 	/**
 	 * method to build filters & to feed data to the filters

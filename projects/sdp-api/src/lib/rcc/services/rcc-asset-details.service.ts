@@ -31,6 +31,7 @@ GetAssetFilterSummaryData(params:RccAssetSelectReq){
 	//if (params.hostName != null) __params = __params.set('hostName', params.hostName.toString());
 	if (params.serialNumber != null) __params = __params.set('serialNumber', params.serialNumber.toString());
 	if (params.severity != null) __params = __params.set('severity', params.severity.toString());
+	if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 	//__params = params;
 	let req = new HttpRequest<any>(
 		'GET',
@@ -65,6 +66,7 @@ GetAssetFilterData(params:RccAssetSelectReq){
 	//if (params.hostName != null) __params = __params.set('hostName', params.hostName.toString());
 	if (params.serialNumber != null) __params = __params.set('serialNumber', params.serialNumber.toString());
 	if (params.severity != null) __params = __params.set('severity', params.severity.toString());
+	if (params.sortOrder != null) __params = __params.set('sortOrder', params.sortOrder.toString());
 	//__params = params;
 	let req = new HttpRequest<any>(
 		'GET',

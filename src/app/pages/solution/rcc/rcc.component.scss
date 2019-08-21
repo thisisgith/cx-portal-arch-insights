@@ -89,42 +89,37 @@
 	margin-top: -27px;
 }
 
-.assetsCount{
+.assetsCount {
 	display: flex !important;
 	flex-direction: column;
 	font-size: small;
 	margin: 6px;
 }
 
-.assetsCount:focus{
+.assetsCount:focus {
 	color: #64bbe3;
 }
 
 .p1class {
-	color: #D0021B; 
+	color: #d0021b;
 }
 
 .p2class {
-	color: #FF7300;  
+	color: #ff7300;
 }
 
 .p3class {
-	color: #FBAB18; 
+	color: #fbab18;
 }
 
 .p4class {
-	color: #6EBE4A;  
+	color: #6ebe4a;
 }
 
 .p5class {
-	color: #819AB7; 
+	color: #819ab7;
 }
 
-.p6class{
-	color:white;
-}
-
-.cui .icon-small:before {
-	font-size: 10px !important;
-	vertical-align: text-bottom !important;
+.p6class {
+	color: white;
 }

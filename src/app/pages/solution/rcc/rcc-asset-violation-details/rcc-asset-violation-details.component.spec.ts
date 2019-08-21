@@ -1,9 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RccAssetViolationDetailsComponent } from './rcc-asset-violation-details.component';
 import { RccAssetViolationDetailsModule } from './rcc-asset-violation-details.module';
 import { of } from 'rxjs';
-import { RCCScenarios,user } from '@mock';
+import { RCCScenarios, user } from '@mock';
 import { RccAssetDetailsService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
@@ -11,7 +10,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 
-describe('RccAssetViolationDetailsComponent', () => {
+fdescribe('RccAssetViolationDetailsComponent', () => {
 	let component: RccAssetViolationDetailsComponent;
 	let fixture: ComponentFixture<RccAssetViolationDetailsComponent>;
 	let rccAssetDetailsService: RccAssetDetailsService;
@@ -28,7 +27,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			}, {
 				provide: ActivatedRoute,
 				useValue: {
-					queryParams: of({}),
+					queryParams: of({ }),
 					snapshot: {
 						data: {
 							user,
@@ -71,21 +70,22 @@ describe('RccAssetViolationDetailsComponent', () => {
 		fixture.detectChanges();
 		component.assetRowParams = {
 			customerId: '90019449',
-			serialNumber: 'FCW2246E0PB',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
 			policyName: '',
+			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
+			sortOrder: '',
 		};
 		component.customerId = '90019449';
-		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' }
+		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
 		fixture.detectChanges();
 		component.loadData();
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
-		expect(component.totalItems )
+		expect(component.totalItems)
 			.toBeDefined();
 
 	});
@@ -97,13 +97,14 @@ describe('RccAssetViolationDetailsComponent', () => {
 		fixture.detectChanges();
 		component.assetRowParams = {
 			customerId: '90019449',
-			serialNumber: 'FCW2246E0PB',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
 			policyName: '',
+			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
+			sortOrder: '',
 		};
 		component.customerId = '90019449';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
@@ -113,24 +114,22 @@ describe('RccAssetViolationDetailsComponent', () => {
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
 		done();
-
-
 	});
 	it('should select value from policyname and load table data', done => {
-
 		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
 			.and
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		fixture.detectChanges();
 		component.assetRowParams = {
 			customerId: '90019449',
-			serialNumber: 'FCW2246E0PB',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
 			policyName: '',
+			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
+			sortOrder: '',
 		};
 		component.customerId = '90019449';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
@@ -149,13 +148,14 @@ describe('RccAssetViolationDetailsComponent', () => {
 		fixture.detectChanges();
 		component.assetRowParams = {
 			customerId: '90019449',
-			serialNumber: 'FCW2246E0PB',
 			pageIndex: 0,
 			pageSize: 10,
 			policyGroupName: '',
 			policyName: '',
+			serialNumber: 'FCW2246E0PB',
 			severity: '',
 			sortBy: '',
+			sortOrder: '',
 		};
 		component.customerId = '90019449';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
@@ -167,7 +167,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 		done();
 	});
 	it('should be called on policy pager filter updated', () => {
-		component.onPolicyAssetPagerUpdated({});
+		component.onPolicyAssetPagerUpdated({ });
 		fixture.detectChanges();
 	});
 });
