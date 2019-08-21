@@ -1,26 +1,39 @@
 <form [formGroup]="form">
 	<dl>
-		<dt [innerText]="'_Technology_' | i18n"></dt>
-		<dd>
-			<cui-select *ngIf="!loadingTech; else loadingTemplate;"
-				[items]="techOptions"
-				optionsKey="techName"
-				modelAsObject="true"
-				formControlName="technology">
-			</cui-select>
-		</dd>
-		<dt [innerText]="'_SubTech_' | i18n"></dt>
-		<dd>
-			<cui-select *ngIf="!loadingSubtech; else loadingTemplate;"
-				[items]="subtechOptions"
-				optionsKey="subTechName"
-				modelAsObject="true"
-				formControlName="subtech">
-			</cui-select>
-		</dd>
+		<dt>
+			{{ '_Technology_' | i18n }}
+			<span *ngIf="displayAll" class="subtitle" [innerText]="'(' + ('_ShowingAllTechs_' | i18n) + ')'"></span>
+			<span *ngIf="!displayAll" class="subtitle" [innerText]="'(' + ('_ShowingSuggestedTechs_' | i18n) + ')'"></span>
+			<a class="pull-right"
+				(click)="onRefreshSuggestions()"
+				[innerText]="'_RefreshSuggestions_' | i18n"
+				data-auto-id="RefreshSuggestions">
+			</a>
+		</dt>
+		<div heightTransition [heightTransitionExpanded]="displayAll" (collapsed)="showAllCollapse()">
+			<dd>
+				<cui-select *ngIf="!loadingTech; else loadingTemplate;"
+					[items]="techOptions"
+					optionsKey="techName"
+					modelAsObject="true"
+					formControlName="technology">
+				</cui-select>
+			</dd>
+			<dt [innerText]="'_SubTech_' | i18n"></dt>
+			<dd>
+				<cui-select *ngIf="!loadingSubtech; else loadingTemplate;"
+					[items]="subtechOptions"
+					optionsKey="subTechName"
+					modelAsObject="true"
+					formControlName="subtech">
+				</cui-select>
+			</dd>
+		</div>
+		<ng-container *ngTemplateOutlet="suggestedTechs"></ng-container>
 		<dt [innerText]="'_ProblemArea_' | i18n"></dt>
 		<dd>
-			<cui-select *ngIf="!loadingProblemAreas; else loadingTemplate;" [items]="problemAreaOptions"
+			<cui-select *ngIf="!loadingProblemAreas; else loadingTemplate;"
+				[items]="problemAreaOptions"
 				[groupNames]="problemGroups"
 				optionsKey="problemCodeName"
 				modelAsObject="true"
@@ -32,4 +45,34 @@
 
 <ng-template #loadingTemplate>
 	<cui-loader color="muted"></cui-loader>
+</ng-template>
+
+<ng-template #loadingSuggestionsTemplate>
+	<cui-spinner></cui-spinner>
+</ng-template>
+
+<ng-template #suggestedTechs>
+	<dd heightTransition [heightTransitionExpanded]="displaySuggestions" (collapsed)="showSuggestionsCollapse()">
+		<form [formGroup]="form" class="half-margin-bottom">
+			<ng-container *ngIf="loadingSuggestions">
+				<div *ngTemplateOutlet="loadingSuggestionsTemplate"></div>
+			</ng-container>
+			<div heightTransition [heightTransitionExpanded]="displaySuggestions && !loadingSuggestions">
+				<panel-select layout="vertical"
+					formControlName="suggestedTech">
+					<panel-select-option *ngFor="let option of recommendedTechs"
+						[value]="option">
+						<div class="flex-center-vertical">
+							<span class="icon icon-network base-margin-right"></span>
+							<span>{{ option.tech.name }} &gt; {{ option.sub_tech.name }} </span>
+						</div>
+					</panel-select-option>
+				</panel-select>
+				<a (click)="onSeeAll()"
+					[innerText]="'_SeeAllOptions_' | i18n"
+					data-auto-id="SeeAllTechs">
+				</a>
+			</div>
+		</form>
+	</dd>
 </ng-template>

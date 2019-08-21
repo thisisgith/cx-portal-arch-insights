@@ -45,6 +45,10 @@ export * from './lib/entitlement/models';
 export * from './lib/entitlement/services';
 export * from './lib/entitlement/entitlement.module';
 
+export * from './lib/osv/models';
+export * from './lib/osv/services';
+export * from './lib/osv/osv.module';
+
 export * from './lib/email/models';
 export * from './lib/email/services';
 export * from './lib/email/email.module';

@@ -16,6 +16,7 @@ export const defaults = {
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/pbc/',
+	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
 	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
 	controlPointsOrigin: 'https://cpp-api.sdp12-istg.csco.cloud/controlpoint',
 	csc: {
@@ -24,7 +25,8 @@ export const defaults = {
 		fileList: '/ws/csc/v3/caseFiles',
 	},
 	csone: {
-		clientId: '07e418ac71284560944ea92f653a01c2',
+		classifyAppId: 'CXPortal',
+		clientId: '07e418ac71284560944ea92f653a01c2', // TODO: Change this back
 	},
 	emailFromID: 'cxportal-noreply@cisco.com',
 	emailToID: 'cx-portal-support-nonprod@cisco.com',

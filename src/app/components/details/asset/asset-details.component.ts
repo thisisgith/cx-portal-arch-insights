@@ -36,11 +36,11 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 
 	@Input('serialNumber') public serialNumber: string;
 	@Input('asset') public asset: Asset;
+	@Input('element') public element: NetworkElement;
 	@Output('close') public close = new EventEmitter<boolean>();
 
 	public alert: any = { };
 	public isLoading = false;
-	public element: NetworkElement;
 	public hidden = true;
 	public fullscreen = false;
 	public customerId: string;
@@ -129,6 +129,9 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 	 * @returns the observable
 	 */
 	private fetchNetworkElement (asset: Asset) {
+		if (this.element) {
+			return of(this.element);
+		}
 
 		return this.inventoryService.getNetworkElements({
 			customerId: this.customerId,
@@ -154,6 +157,16 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 	 */
 	private refresh () {
 		this.isLoading = true;
+
+		// If our serial number and our asset/element don't match,
+		// we need to unset them so we can refetch them
+		const serial = this.serialNumber ? this.serialNumber : _.get(this.asset, 'serialNumber');
+		if (serial && this.element && _.get(this.element, 'serialNumber') !== serial) {
+			this.element = null;
+		}
+		if (serial && this.asset && _.get(this.asset, 'serialNumber') !== serial) {
+			this.asset = null;
+		}
 
 		this.fetchAsset()
 		.pipe(
@@ -181,6 +194,10 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 
 		if ((currentAsset && !changes.asset.firstChange) ||
 			(currentSerial && !changes.serialNumber.firstChange)) {
+
+			if (currentAsset && !currentSerial) {
+				this.serialNumber = _.get(currentAsset, 'serialNumber');
+			}
 			_.invoke(this.alert, 'hide');
 			this.refresh();
 		}

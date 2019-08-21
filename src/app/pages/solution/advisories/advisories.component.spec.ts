@@ -342,7 +342,7 @@ describe('AdvisoriesComponent', () => {
 			expect(currentTime - lastUpdatedDate6090[1])
 				.toBe(dayInMillis * 60);
 
-			component.onSubfilterSelect('gt-90-days', lastUpdatedFilter);
+			component.onSubfilterSelect('further-out', lastUpdatedFilter);
 
 			fixture.detectChanges();
 			const lastUpdatedDate90 = _.map(
@@ -484,21 +484,24 @@ describe('AdvisoriesComponent', () => {
 			fixture.detectChanges();
 
 			expect(component.router.navigate)
-				.toHaveBeenCalledWith(['/solution/advisories/bugs'], { queryParams: { } });
+				.toHaveBeenCalledWith(['/solution/advisories/bugs'],
+					{ queryParams: { page: 1 } });
 
 			// test field notices tab
 			component.selectTab(_.findIndex(component.tabs, { key: 'field' }));
 			fixture.detectChanges();
 
 			expect(component.router.navigate)
-				.toHaveBeenCalledWith(['/solution/advisories/field-notices'], { queryParams: { } });
+				.toHaveBeenCalledWith(['/solution/advisories/field-notices'],
+					{ queryParams: { page: 1 } });
 
 			// test security tab
 			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
 			fixture.detectChanges();
 
 			expect(component.router.navigate)
-				.toHaveBeenCalledWith(['/solution/advisories/security'], { queryParams: { } });
+				.toHaveBeenCalledWith(['/solution/advisories/security'],
+					{ queryParams: { page: 1 } });
 
 			done();
 		});
@@ -528,7 +531,7 @@ describe('AdvisoriesComponent', () => {
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(
 					['/solution/advisories/security'],
-					{ queryParams: { severity: ['info'] } });
+					{ queryParams: { page: 1, severity: ['info'] } });
 
 			done();
 		});
@@ -543,7 +546,8 @@ describe('AdvisoriesComponent', () => {
 
 			expect(tab.filtered)
 				.toBeFalsy();
-			component.doSearch('query', tab);
+			tab.searchForm.controls.search.setValue('query');
+			component.doSearch(tab);
 			fixture.detectChanges();
 
 			expect(tab.filtered)
@@ -562,11 +566,13 @@ describe('AdvisoriesComponent', () => {
 
 			expect(tab.filtered)
 				.toBeFalsy();
-			component.doSearch('', tab);
+
+			tab.searchForm.controls.search.setValue('');
+			component.doSearch(tab);
 			fixture.detectChanges();
 
 			expect(tab.filtered)
-			.toBeFalsy();
+				.toBeFalsy();
 
 			done();
 		});
@@ -578,7 +584,10 @@ describe('AdvisoriesComponent', () => {
 			fixture.detectChanges();
 			const tab = _.find(component.tabs, { key: 'security' });
 			_.set(tab, ['params', 'search'], 'search');
-			tab.searchForm.setValue({ search: '' });
+			tab.filtered = true;
+			tab.searchForm.controls.search.setValue('');
+
+			component.doSearch(tab);
 
 			fixture.detectChanges();
 
