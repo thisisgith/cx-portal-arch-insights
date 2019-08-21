@@ -38,9 +38,9 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public policyRuleData: any = { };
 	public customerId = '7293498';
 	public impactedAssetsCount: any;
-	public selectionObj: object = { };
+	public selectionObj: any = { };
 	public destroy$ = new Subject();
-	public queryParamMapObj: object = { };
+	public queryParamMapObj: any = { };
 	constructor (
 		private rccTrackService: RccService,
 		private rccUtilService: RccUtilService,
