@@ -76,6 +76,7 @@
 		"@angular/compiler-cli": "^8.2.2",
 		"@angular/http": "^7.2.15",
 		"@angular/language-service": "^8.2.2",
+		"@apollo/configs": "^1.0.2",
 		"@apollo/cypress-util": "^2.3.2",
 		"@apollo/ng-swagger-gen": "^1.0.3",
 		"@apollo/schematics": "^1.0.1",

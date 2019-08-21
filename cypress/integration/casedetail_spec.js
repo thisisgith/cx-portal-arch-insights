@@ -10,8 +10,6 @@ describe('Case Detail Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('PBC-231 Case List Assets', () => {
@@ -56,14 +54,30 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('invalidCaseNumber').should('exist').should('contain', i18n._RMAInvalidCaseNo_);
 			cy.getByAutoId('caseSearchBox').should('exist').clear();
 		});
+		it('PBC-537 Last Updated and Duration Open Visual Filters', () => {
+			cy.getByAutoId('Facet-Problem Resolution').click();
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
+			cy.getByAutoId('CasesSelectVisualFilter-lastUpdated').should('exist')
+				.should('contain', 'Last Updated');
+			cy.getByAutoId('lastUpdatedFilter').should('exist')
+				.should('contain', '≤ 24 hrs')
+				.should('contain', '> 1 day')
+				.should('contain', '> 1 week');
+			cy.getByAutoId('CasesSelectVisualFilter-durationOpen').should('exist')
+				.should('contain', 'Duration Open');
+			cy.getByAutoId('durationOpenFilter').should('exist')
+				.should('contain', '≤ 24 hrs')
+				.should('contain', '> 1 day')
+				.should('contain', '> 1 week')
+				.should('contain', '> 2 weeks');
+		});
 	});
 	context('Case Detail View', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('PBC-233 Case Details Click on case from List', () => {
@@ -116,13 +130,9 @@ describe('Case Detail Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 		beforeEach(() => {
 			cy.loadApp('/solution/resolution');
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 			cy.getByAutoId('Facet-Problem Resolution', { timeout: 10000 }).click();
 			cy.getByAutoId('caseSearchBox', { timeout: 10000 }).should('exist').clear()
 				.type(validCaseID.concat('{enter}'));
@@ -236,9 +246,6 @@ describe('Case Detail Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn')
-				.then(setupwizardclosebtn => setupwizardclosebtn.click());
 		});
 
 		it('PBC-83 Cases - Number of Open Cases', () => {

@@ -6,4 +6,5 @@ export interface AssetRecommendations {
 	postDate: string;
     recommendationSummary: string;	
 	swVersion: string;
+	info?: string;
 }
