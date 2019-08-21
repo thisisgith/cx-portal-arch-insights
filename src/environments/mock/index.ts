@@ -52,7 +52,7 @@ export * from './racetrack/elearning';
 export * from './racetrack/info';
 export * from './racetrack/successPaths';
 
-export * from './riskMitigation/riskMitigation';
+export * from './riskmitigation/risk-mitigation';
 
 export * from './rma/rma';
 
