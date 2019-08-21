@@ -47,7 +47,7 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 
 			categories.push(d.label);
 		});
-		let previousPoint;
+		let previousPoint:any;
 		this.chart = new Chart({
 			chart: {
 				events: {
