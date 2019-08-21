@@ -1,4 +1,7 @@
-<no-dnac-header></no-dnac-header>
+<no-dnac-header
+	(buttonData)="refreshButtonInfo($event)"
+></no-dnac-header>
+<quick-tour *ngIf="quickTourActive" [steps]="quickTourSteps"></quick-tour>
 <div class="page-container">
 	<div class="panel no-padding-left no-padding-right no-padding-bottom base-padding-top panel--bordered-bottom">
 		<div class="row base-margin-left half-margin-bottom">
@@ -11,7 +14,7 @@
 		</div>
 	</div>
 
-	<div class="base-margin">
+	<div #content class="base-margin">
 		<router-outlet></router-outlet>
 	</div>
 </div>
