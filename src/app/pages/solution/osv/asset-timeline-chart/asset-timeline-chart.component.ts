@@ -54,27 +54,8 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 		const seriesData = this.formatGraphData();
 		this.chart = new Chart({
 			chart: {
-				events: {
-					load: () => {
-						if (window.Cypress) {
-							// Hack to allow Cypress to click on highcharts series
-							_.each(this.chart.ref.series[0].points, point => {
-								point.graphic.element.setAttribute(
-									'data-auto-id', `${point.name}Point`,
-								);
-								// When a "normal" click event fires,
-								// turn it into a highcharts point event instead
-								point.graphic.element.addEventListener('click', () => {
-									const event = Object.assign(new MouseEvent('click'), { point });
-									point.firePointEvent('click', event);
-								});
-							});
-						}
-					},
-				},
 				styledMode: false,
 				type: 'timeline',
-				// width: this.fullscreen ? 1600 : 800,
 			},
 			credits: {
 				enabled: false,
@@ -86,13 +67,6 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				enabled: false,
 			},
 			plotOptions: {
-				series: {
-					point: {
-						events: {
-							click: event => this.selectSubfilter(event),
-						},
-					},
-				},
 				timeline: {
 					dataLabels: {
 						borderWidth: 0,
@@ -140,7 +114,11 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				text: null,
 			},
 			tooltip: {
-				enabled: false,
+				enabled: true,
+				pointFormat: '{point.info}',
+				style: {
+					width: 300,
+				},
 			},
 			xAxis: {
 				lineColor: '#dfdfdf',
@@ -176,6 +154,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 					return {
 						accepted: value.accepted,
 						description: value.name,
+						info: value.info,
 						label: value.swVersion,
 						name: _.capitalize(value.name),
 						releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
@@ -203,16 +182,6 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				this.buildGraph();
 			}, 250);
 		}
-	}
-
-	/**
-	 * Emits the subfilter selected
-	 * @param event highcharts click event
-	 */
-	public selectSubfilter (event: any) {
-		event.stopPropagation();
-		_.set(event, 'point.selected', true);
-		this.selectedPoint.emit(event.point);
 	}
 
 }

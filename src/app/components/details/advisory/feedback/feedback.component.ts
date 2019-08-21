@@ -1,7 +1,6 @@
 import {
 	Component,
 	Input,
-	OnInit,
 	EventEmitter,
 	Output,
 } from '@angular/core';
@@ -25,29 +24,39 @@ import { of } from 'rxjs';
 	styleUrls: ['./feedback.component.scss'],
 	templateUrl: './feedback.component.html',
 })
-export class AdvisoryFeedbackComponent implements OnInit {
+export class AdvisoryFeedbackComponent {
 
 	@Input('id') public id: string;
 	@Input('type') public type: AdvisoryType;
 	@Input('customerId') public customerId: string;
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 
-	public upVoteSelected = false;
-	public downVoteSelected = false;
-	public feedbackMaxLength = 150;
-	public feedbackDescription: FormControl = new FormControl('',
-		[
-			Validators.required,
-			Validators.maxLength(this.feedbackMaxLength),
-		]);
-	public feedbackForm: FormGroup;
+	public feedbackOptions = {
+		max: 150,
+		min: 5,
+		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
+	};
+	public feedbackForm = new FormGroup({
+		feedback: new FormControl('',
+			[
+				Validators.required,
+				Validators.minLength(this.feedbackOptions.min),
+				Validators.maxLength(this.feedbackOptions.max),
+				Validators.pattern(this.feedbackOptions.pattern),
+			]),
+	});
 	public isSubmitting = false;
-	private rating: string;
+	public rating: string;
 
 	constructor (
 		private logger: LogService,
 		private feedbackService: FeedbackService,
 	) { }
+
+	/** Returns the feedback form value */
+	public get feedbackValue () {
+		return _.get(this.feedbackForm, ['controls', 'feedback', 'value'], '');
+	}
 
 	/**
 	 * Submits the users feedback on the security advisory
@@ -56,7 +65,7 @@ export class AdvisoryFeedbackComponent implements OnInit {
 		this.isSubmitting = true;
 		const feedback: FeedbackRequest = {
 			customerId: this.customerId,
-			feedbackMsg: this.feedbackDescription.value,
+			feedbackMsg: this.feedbackForm.controls.feedback.value,
 			rating: this.rating ? this.rating : '',
 		};
 
@@ -64,7 +73,7 @@ export class AdvisoryFeedbackComponent implements OnInit {
 			feedback.cdetId = this.id;
 		} else if (this.type === 'field') {
 			feedback.fnId = this.id;
-		} else if (this.type === 'security') {
+		} else {
 			feedback.psirtId = this.id;
 		}
 
@@ -75,7 +84,11 @@ export class AdvisoryFeedbackComponent implements OnInit {
 					message: I18n.get('_SubmittedFeedbackForAdvisory_', this.id),
 					severity: 'success',
 				});
-				this.feedbackDescription.setValue('');
+				this.rating = null;
+				this.feedbackForm.controls.feedback.reset();
+				this.feedbackForm.controls.feedback.setValue('', {
+					emitModelToViewChange: true,
+				});
 				this.isSubmitting = false;
 			}),
 			catchError(err => {
@@ -94,33 +107,14 @@ export class AdvisoryFeedbackComponent implements OnInit {
 	}
 
 	/**
-	 * Initializer
-	 */
-	public ngOnInit () {
-		this.feedbackForm = new FormGroup({
-			description: this.feedbackDescription,
-		});
-	}
-
-	/**
 	 * Handles the clicking of vote buttons
-	 * @param event click event
+	 * @param thumbRating the thumb pressed
 	 */
-	public voteClicked (event: Event) {
-		const btnId = _.get(event, 'toElement.id');
-		if (btnId === 'upVoteBtn') {
-			this.upVoteSelected = !this.upVoteSelected;
-			this.downVoteSelected = false;
-		}
-		if (btnId === 'downVoteBtn') {
-			this.downVoteSelected = !this.downVoteSelected;
-			this.upVoteSelected = false;
-		}
-
-		if (this.upVoteSelected) {
-			this.rating = 'thumbsUp';
-		} else if (this.downVoteSelected) {
-			this.rating = 'thumbsDown';
+	public voteClicked (thumbRating: string) {
+		if (this.rating === thumbRating) {
+			this.rating = null;
+		} else {
+			this.rating = thumbRating;
 		}
 	}
 }

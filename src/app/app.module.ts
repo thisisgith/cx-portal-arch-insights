@@ -4,6 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,7 +27,7 @@ import {
 } from '@cisco-ngx/cui-services';
 import { HeaderModule } from '@components';
 import { NoResultsModule } from './components/search/no-results/no-results.module';
-import { EntitlementModule } from '@sdp-api';
+import { EntitlementModule, RacetrackModule } from '@sdp-api';
 import { CaseOpenModule } from './components/case/case-open/case-open.module';
 import { CloseConfirmModule } from './components/case/case-open/close-confirm/close-confirm.module';
 import { ContactSupportModule } from './components/contact-support/contact-support.module';
@@ -47,6 +49,27 @@ export function loadI18n (service: AppService) {
 }
 
 /**
+ * Initialization function to fetch user profile/solution/technology
+ * @param service The service to call
+ * @returns promise which resolves after information is fetched
+ */
+export function loadUserInfo (service: AppService) {
+	/* tslint:disable-next-line:ban */
+	return () => service.initializeUser()
+		.pipe(
+			map(user => {
+				if (user && user.info.customerId) {
+
+					return service.initializeRacetrack(user.info.customerId);
+				}
+
+				return of({ });
+			}),
+		)
+		.toPromise();
+}
+
+/**
  * Default module for the application
  */
 @NgModule({
@@ -62,6 +85,7 @@ export function loadI18n (service: AppService) {
 		CuiSpinnerModule,
 		CuiToastModule,
 		EntitlementModule.forRoot({ rootUrl }),
+		RacetrackModule.forRoot({ rootUrl }),
 		FormsModule,
 		HeaderModule,
 		HttpClientModule,
@@ -74,15 +98,21 @@ export function loadI18n (service: AppService) {
 	providers: [
 		AppService,
 		LogService,
+		{ provide: HTTP_INTERCEPTORS, useClass: APIxInterceptor, multi: true },
 		{
 			deps: [AppService],
 			multi: true,
 			provide: APP_INITIALIZER,
 			useFactory: loadI18n,
 		},
+		{
+			deps: [AppService],
+			multi: true,
+			provide: APP_INITIALIZER,
+			useFactory: loadUserInfo,
+		},
 		{ provide: APP_BASE_HREF, useValue: environment.baseHref },
 		{ provide: 'ENVIRONMENT', useValue: environment },
-		{ provide: HTTP_INTERCEPTORS, useClass: APIxInterceptor, multi: true },
 	],
 })
 

@@ -8,6 +8,7 @@ import { Data as BugData } from '../bug-details.component';
 import {
 	CaseOpenAdvisoriesComponent,
 } from '../../../../case/case-open/case-open-advisories/case-open-advisories.component';
+import { environment } from '@environment';
 
 /**
  * Bug Details Header
@@ -22,6 +23,7 @@ export class BugDetailsHeaderComponent {
 
 	@Input('details') public details: BugData;
 	@Input('selectedAsset') public selectedAsset: Asset;
+	public bugSearchToolURL = environment.bugSearchTool;
 
 	/**
 	 * Fires when user clicks "Open a Case" button
