@@ -1,0 +1,68 @@
+<ng-container *ngIf="open">
+	<div class="quick-tour-container" *ngFor="let step of steps">
+		<ng-container *ngTemplateOutlet="stepTemplate; context: { step: step }">
+		</ng-container>
+	</div>
+</ng-container>
+
+<ng-template #stepTemplate let-step="step">
+	<div
+		*ngIf="step.data?.active"
+		class="step-container"
+		[ngStyle]="{
+			'top': getTop(step),
+			'left': getLeft(step),
+			'max-height': step.maxHeight ? step.maxHeight + 'px' : undefined,
+			'max-width': step.maxWidth ? step.maxWidth + 'px' : undefined,
+			'width': step.width ? step.width + 'px' : undefined,
+			'height': step.height ? step.height + 'px' : undefined,
+			'position': step.relative ? 'relative' : 'absolute',
+			'transform': getTranslate(step)
+		}"
+		[ngClass]="{ 'invisible': step.stepIndex !== currentIndex }">
+		<ng-container *ngFor="let i of step.arrows | arrowPos">
+			<div
+				attr.data-auto-id="Arrow-{{ i }}-Step-{{ step.stepIndex }}"
+				class="arrow"
+				[ngStyle]="{
+					'left': getArrowLeft(step, i),
+					'top': getArrowTop(step, i)
+				}"></div>
+		</ng-container>
+		<div class="step-header qtr-margin">
+			<div>
+				<ng-container *ngFor="let i of lastIndex + 1 | times">
+					<span
+						attr.data-auto-id="Dot-{{ i }}-Step-{{ step.stepIndex }}"
+						[ngClass]="{ 'current-dot': i === currentIndex }"
+						class="dot"
+						>
+					</span>
+				</ng-container>
+			</div>
+			<div
+				attr.data-auto-id="CloseButton-Step-{{ step.stepIndex }}"
+				class="icon-close"
+				(click)="open = false"
+			></div>
+		</div>
+		<div class="step-content qtr-margin">
+			<div
+				attr.data-auto-id="Title-Step-{{ step.stepIndex }}"
+				[innerText]="step.title"
+				class="qtr-margin-bottom text-bold"></div>
+			<div
+				attr.data-auto-id="Description-Step-{{ step.stepIndex }}"
+				[innerText]="step.description"></div>
+		</div>
+		<div class="step-footer qtr-margin">
+			<button 
+				attr.data-auto-id="NextButton-Step-{{ step.stepIndex }}"
+				*ngIf="step.stepIndex < lastIndex"
+				class="btn override-button"
+				[innerText]="'_Next_' | i18n"
+				(click)="nextStep()"
+			></button>
+		</div>
+	</div>
+</ng-template>

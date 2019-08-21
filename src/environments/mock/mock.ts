@@ -95,7 +95,7 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
-	SoftwareProfilesResponse,
+	SoftwareGroupsResponse,
 	SoftwareVersionsResponse,
 	SoftwareEOLResponse,
 	SoftwareEOLBulletinResponse,
@@ -149,7 +149,7 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
-	SoftwareProfilesResponse |
+	SoftwareGroupsResponse |
 	SoftwareVersionsResponse |
 	SoftwareEOLResponse |
 	SoftwareEOLBulletinResponse |

@@ -52,6 +52,7 @@ const api = 'https://community.cisco.com/t5/custom/page/page-id/customFilteredBy
 /** Communities Component */
 @Component({
 	selector: 'app-communities',
+	styleUrls: ['./communities.component.scss'],
 	templateUrl: './communities.component.html',
 })
 export class CommunitiesComponent implements OnDestroy {

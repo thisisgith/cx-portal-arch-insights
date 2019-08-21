@@ -195,8 +195,8 @@ describe('AppComponent', () => {
 			.then(() => {
 				userResolve.resolve()
 				.subscribe((u: User) => {
-					expect(u.info)
-						.toBeFalsy();
+					expect(u)
+						.toBeNull();
 				});
 
 				done();
