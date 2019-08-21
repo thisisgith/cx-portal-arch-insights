@@ -561,9 +561,8 @@ export class RiskMitigationComponent {
 	 * @param data advisoryFilter the subfilter selected
 	 */
 	public getAdvisoryCount (data) {
-		let advisoryFilter = [];
-		advisoryFilter = _.find(this.filters, { key: 'advisories' });
-		advisoryFilter.seriesData = (data) ? data : '';
+		const advisoryFilter = _.find(this.filters, { key: 'advisories' });
+		advisoryFilter.seriesData = data;
 	}
 
 	/**
