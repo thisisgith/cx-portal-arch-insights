@@ -4,11 +4,10 @@ import { ArchitectureService } from '@sdp-api';
 import { forkJoin, of, Subject } from 'rxjs';
 import { VisualFilter } from '@interfaces';
 import { map, catchError, takeUntil } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 import { I18n } from '@cisco-ngx/cui-utils';
 
-/** Our current customerId */
-const customerId = '7293498';
 /**
  * it ccreates component
  */
@@ -20,15 +19,14 @@ const customerId = '7293498';
 
 export class ArchitectureComponent implements OnInit {
 
+	public customerId: string;
 	public filtered = false;
-
 	public selectedFilter = {
 		severity: '',
 	};
 	public filters: VisualFilter[];
 
 	public status = { inventoryLoading: true, isLoading: true };
-	public params = { customerId };
 
 	private destroy$ = new Subject();
 
@@ -40,8 +38,14 @@ export class ArchitectureComponent implements OnInit {
 		{ label: I18n.get('_AssetsWithExceptions_'), active: false, count: null },
 	];
 
-	constructor (private logger: LogService, private architectureService: ArchitectureService) {
+	constructor (
+		private logger: LogService,
+		private architectureService: ArchitectureService,
+		private route: ActivatedRoute,
+		) {
 		this.logger.debug('ArchitectureComponent Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 
 	/**
@@ -49,7 +53,7 @@ export class ArchitectureComponent implements OnInit {
 	 *  and buildFilters function for Updating the Table
 	 */
 	public ngOnInit (): void {
-		this.architectureService.getExceptionsCount(this.params)
+		this.architectureService.getExceptionsCount(this.customerId)
 			.pipe(
 				takeUntil(this.destroy$),
 			)
@@ -57,7 +61,7 @@ export class ArchitectureComponent implements OnInit {
 				this.visualLabels[0].count = res.TotalCounts;
 			});
 
-		this.architectureService.getAssetsExceptionsCount(this.params)
+		this.architectureService.getAssetsExceptionsCount(this.customerId)
 			.pipe(
 				takeUntil(this.destroy$),
 			)
@@ -161,7 +165,7 @@ export class ArchitectureComponent implements OnInit {
 	private getExceptionsCount () {
 		const exceptionFilter = _.find(this.filters, { key: 'exceptions' });
 
-		return this.architectureService.getExceptionsCount(this.params)
+		return this.architectureService.getExceptionsCount(this.customerId)
 			.pipe(
 				takeUntil(this.destroy$),
 				map((data: any) => {

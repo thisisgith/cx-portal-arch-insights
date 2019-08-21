@@ -6,9 +6,8 @@ import { ArchitectureService, IAsset, assetExceptionList } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { DatePipe } from '@angular/common';
-
-/** Our current customerId */
-const customerId = '7293498';
+import { ActivatedRoute } from '@angular/router';
+import * as _ from 'lodash-es';
 
 /**
  * Devices With Exceptions Component
@@ -21,11 +20,17 @@ const customerId = '7293498';
 
 export class DevicesWithExceptionsComponent implements OnInit {
 
+	/** Our current customerId */
+	public customerId: string;
+
 	constructor (
 		private logger: LogService,
 		private architectureService: ArchitectureService,
+		private route: ActivatedRoute,
 	) {
 		this.logger.debug('DevicesWithExceptionsComponent Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 
 	public assetObject: IAsset = null;
@@ -37,7 +42,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
-	public params = { customerId, page: 0, pageSize: 10 };
+	public params = { customerId : this.customerId, page: 0, pageSize: 10 };
 	public fullscreen: any ;
 
 	/**

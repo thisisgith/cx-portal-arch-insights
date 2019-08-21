@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AssetDetailsModule } from '../../../../../components/details/asset/asset-details.module';
-import {
-	AssetDetailsHeaderModule } from '../../../../../components/details/asset/header/header.module';
+import { AssetDetailsHeaderModule, AssetDetailsModule, DetailsPanelModule } from '@components';
 import { CbpDeviceAffectedComponent } from './cbp-device-affected.component';
 
 import {
@@ -10,7 +8,6 @@ import {
 	CuiPagerModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { DetailsPanelModule } from '@components';
 
 /** Module representing the CBP Device Affected Table Component */
 @NgModule({

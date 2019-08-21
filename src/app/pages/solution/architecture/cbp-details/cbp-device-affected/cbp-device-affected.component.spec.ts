@@ -1,9 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { environment } from '@environment';
 import { CbpDeviceAffectedComponent } from './cbp-device-affected.component';
 import { CbpDeviceAffectedModule } from './cbp-device-affected.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureService } from '@sdp-api';
+import { ActivatedRoute } from '@angular/router';
+import { user } from '@mock';
 import { of } from 'rxjs';
 
 describe('CbpDeviceAffectedComponent', () => {
@@ -13,8 +15,24 @@ describe('CbpDeviceAffectedComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [CbpDeviceAffectedModule,
-				HttpClientTestingModule],
+			imports: [
+				CbpDeviceAffectedModule,
+				HttpClientTestingModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
+			],
 		})
 		.compileComponents();
 	}));
@@ -39,18 +57,6 @@ describe('CbpDeviceAffectedComponent', () => {
 		expect(service.getAllCBPDeviceAffected)
 			.toHaveBeenCalled();
 	});
-
-	// it('should define data on ngChange', () => {
-	// 	component.ngOnChanges();
-	// 	expect(component.getData)
-	// 		.toHaveBeenCalled();
-	// 	expect(component.totalItems)
-	// 		.toBe(10);
-	// 	expect(component.params.page)
-	// 		.toBe(0);
-	// 	expect(component.isLoading)
-	// 		.toBeTruthy();
-	// });
 
 	it('should update pagination params', () => {
 		const pageEvent = { page: 1, limit : 10 };

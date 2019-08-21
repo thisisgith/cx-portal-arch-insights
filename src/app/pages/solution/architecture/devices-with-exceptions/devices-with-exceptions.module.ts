@@ -4,16 +4,14 @@ import { DevicesWithExceptionsComponent } from './devices-with-exceptions.compon
 import { CuiTableModule, CuiPagerModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { ArchitectureModule } from '@sdp-api';
 import { environment } from '@environment';
-import { DetailsPanelModule } from '@components';
+import { AssetDetailsHeaderModule, AssetDetailsModule, DetailsPanelModule } from '@components';
 import { CbpDetailsModule } from '../cbp-details/cbp-details.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import { AssetDetailsModule } from '../../../../components/details/asset/asset-details.module';
-import { AssetDetailsHeaderModule } from 'src/app/components/details/asset/header/header.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /** Module representing the Devices With Exceptions Component */
 @NgModule({

@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { environment } from '@environment';
 import { DevicesWithExceptionsComponent } from './devices-with-exceptions.component';
 import { DevicesWithExceptionsModule } from './devices-with-exceptions.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -8,6 +8,8 @@ import { ArchitectureService } from '@sdp-api';
 import { CuiTableModule, CuiPagerModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
+import { user } from '@mock';
 
 describe('DevicesWithExceptionsComponent', () => {
 	let component: DevicesWithExceptionsComponent;
@@ -23,6 +25,20 @@ describe('DevicesWithExceptionsComponent', () => {
 				CuiSpinnerModule,
 				MicroMockModule,
 				RouterTestingModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
 			],
 		})
 		.compileComponents();

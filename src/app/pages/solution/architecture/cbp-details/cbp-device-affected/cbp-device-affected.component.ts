@@ -13,9 +13,8 @@ import { ArchitectureService , IException, IAsset } from '@sdp-api';
 import { DatePipe } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-
- /** Our current customerId */
-const customerId = '7293498';
+import { ActivatedRoute } from '@angular/router';
+import * as _ from 'lodash-es';
 
 /**
  * CBP Device Affected Table Component
@@ -29,6 +28,9 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 
 	@Input('cbpDetails') public cbpDetails: IException;
 	@ViewChild('assetTmpl', { static: true }) public assetTemplate: TemplateRef<any>;
+
+	/** Our current customerId */
+	public customerId: string;
 	public tableOptions: CuiTableOptions;
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
@@ -36,16 +38,22 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public isLoading = true;
 	public assetDatas: IAsset[] = [];
 	public selectedAsset: IAsset = null;
+	public destroy$ = new Subject();
+
+	constructor (
+		private logger: LogService,
+		private architectureService: ArchitectureService,
+		private route: ActivatedRoute,
+	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+	}
 	public params: any = {
-		customerId,
 		body : [],
+		customerId: this.customerId,
 		page : 0,
 		pageSize : 8,
 	};
-	public destroy$ = new Subject();
-
-	constructor (private logger: LogService, private architectureService: ArchitectureService) {
-	}
 
 	/**
 	 * Used to Intialize Table options
