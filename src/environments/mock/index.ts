@@ -58,8 +58,3 @@ export * from './search/search';
 export * from './search/serialnumber';
 
 export * from './user/entitlement';
-<<<<<<< HEAD
-export * from './user/user';
-export * from './architecture/architecture';
-=======
->>>>>>> da47f8b232ff184aad0c52ee6a207ba3ad823b46
