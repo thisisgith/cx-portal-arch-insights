@@ -47,6 +47,13 @@ $vibblue: #017cad;
 	}
 }
 
+.panel-border-top {
+	border-top: 5px solid $cisco-blue !important;
+	border-left: 0 none !important;
+	border-right: 0 none !important;
+	border-bottom: 0 none !important;
+}
+
 #accModal,
 #successModal {
 	background-color: $light-gray-5;
@@ -330,6 +337,16 @@ $vibblue: #017cad;
 		color: $success;
 	}
 
+	&__white {
+		position: absolute;
+		right: 7px;
+		top: 0;
+		z-index: 2;
+		color: $white;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: $info;
+	}
+
 	&__clear {
 		position: absolute;
 		right: 7px;
@@ -359,9 +376,13 @@ $vibblue: #017cad;
 	gap: 20px 20px;
 }
 
-#hover-panel {
+#sb-hover-panel,
+#atx-hover-panel,
+#acc-hover-panel,
+#learn-hover-panel {
 	&-recommendedACC,
 	&-recommendedATX,
+	&-moreATXList,
 	&-moreACCList,
 	&-recommendedElearning,
 	&-successbytes {
@@ -371,6 +392,7 @@ $vibblue: #017cad;
 	&-recommendedACC::after,
 	&-recommendedATX::after,
 	&-moreACCList::after,
+	&-moreATXList::after,
 	&-recommendedElearning::after,
 	&-successbytes::after {
 		content: "";
@@ -388,6 +410,7 @@ $vibblue: #017cad;
 		border-left: 15px solid white;
 	}
 
+	&-moreATXList::after,
 	&-recommendedATX::after {
 		left: -15px;
 		border-right: 15px solid white;
@@ -396,14 +419,19 @@ $vibblue: #017cad;
 
 #recommended-item:hover,
 #moreAccList-item:hover,
-#recommended-elearning-item:hover,
-#successbytes-item:hover {
-	#hover-panel {
+#moreATXList-item:hover,
+#successbytes-item:hover,
+#recommended-elearning-item:hover {
+	#sb-hover-panel,
+	#atx-hover-panel,
+	#acc-hover-panel,
+	#learn-hover-panel {
 		&-recommendedACC,
 		&-recommendedATX,
 		&-moreACCList,
-		&-recommendedElearning,
-		&-successbytes {
+		&-moreATXList,
+		&-successbytes,
+		&-recommendedElearning {
 			display: block;
 			position: absolute;
 			box-shadow: $base-box-shadow;
@@ -422,6 +450,7 @@ $vibblue: #017cad;
 			left: -480px;
 		}
 
+		&-moreATXList,
 		&-moreACCList {
 			top: -90px;
 		}
@@ -443,8 +472,9 @@ $vibblue: #017cad;
 			}
 		}
 
+		&-moreATXList,
 		&-recommendedATX {
-			right: -480px;
+			right: -460px;
 		}
 	}
 }
@@ -508,6 +538,12 @@ tr.td-row td {
 
 .learning-progressfill-col {
 	margin-left: 0 !important;
+}
+
+.atx-scheduler-one-line {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: nowrap;
 }
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {
