@@ -15,6 +15,7 @@ describe('RccComponent', () => {
 	let component: RccComponent;
 	let fixture: ComponentFixture<RccComponent>;
 	let rccService: RccService;
+	const mockFilter: Filter = Object.create({ });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -313,5 +314,21 @@ describe('RccComponent', () => {
 					.toBeTruthy();
 				done();
 			});
+	});
+
+	it('should clear the filters on clear button if', done => {
+		mockFilter.key = 'policyGroup';
+		mockFilter.selected = true;
+		mockFilter.seriesData = [{
+			filter: 'policyGroup',
+			label: 'string',
+			selected: true,
+			value: 13,
+		}];
+		component.onSubfilterSelect('policyGroup', mockFilter, true);
+		fixture.detectChanges();
+		expect(component.loading)
+			.toBeTruthy();
+		done();
 	});
 });
