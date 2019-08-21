@@ -12,6 +12,7 @@ import {
 	RmFilter as Filter,
 	RiskAsset,
 	HighCrashRiskDevices,
+	HighCrashRiskDeviceCount,
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 
@@ -27,7 +28,7 @@ export class RiskMitigationComponent {
 	public clearAllFilters = false;
 	public searchQueryString: String = '';
 	constructor (
-		private riskmitigationservice: RiskMitigationService,
+		private riskMitigationService: RiskMitigationService,
 		private logger: LogService,
 		private route: ActivatedRoute,
 	) {
@@ -40,9 +41,9 @@ export class RiskMitigationComponent {
 	}
 
 	@ViewChild('contextualMenuTemplate',
-	{ static: true }) private contextualMenuTemplate: TemplateRef<any>;
-	@ViewChild('cardColors', { static: true }) public cardColorsTemplate: TemplateRef<any>;
-	@ViewChild('riskScore', { static: true }) public riskScoreTemplate: TemplateRef<any>;
+	{ static: true }) private contextualMenuTemplate: TemplateRef<string>;
+	@ViewChild('cardColors', { static: true }) public cardColorsTemplate: TemplateRef<string>;
+	@ViewChild('riskScore', { static: true }) public riskScoreTemplate: TemplateRef<string>;
 
 	public openPanel = false;
 	public fullscreen = false;
@@ -121,15 +122,12 @@ export class RiskMitigationComponent {
 	 */
 	public getHighCrashesDeviceData () {
 		this.onlyCrashes = true;
-		let params: any = RiskMitigationService.GetAssetsParams;
-		params = {
-			customerId: this.customerId,
-		};
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 
-		return this.riskmitigationservice.getHighCrashRiskDeviceCountData(params)
+		return this.riskMitigationService.getHighCrashRiskDeviceCountData(params)
 				.pipe(
 					takeUntil(this.destroy$),
-					map((results: any) => {
+					map((results: HighCrashRiskDeviceCount) => {
 						this.highCrashDeviceCount = results.crashRiskDeviceCount;
 					}),
 					catchError(err => {
@@ -147,13 +145,10 @@ export class RiskMitigationComponent {
 	 * @returns the total crashes observable
 	 */
 	public getAllCrashesData () {
-		let params: any = RiskMitigationService.GetAssetsParams;
-		params = {
-			customerId: this.customerId,
-		};
+		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
 
-		return this.riskmitigationservice.getAllCrashesData(params)
+		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
 				takeUntil(this.destroy$),
 				map((results: any) => {
@@ -216,12 +211,12 @@ export class RiskMitigationComponent {
 		params = (timePeriod) ? timePeriod : null;
 		params.customerId = this.customerId;
 
-		return this.riskmitigationservice.getDeviceDetails(params)
+		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
 					takeUntil(this.destroy$),
 					map((results: any) => {
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
-						this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
+						this.crashedAssetsGridDetails.totalItems = _.size(results.deviceDetails);
 					}),
 					catchError(err => {
 						this.crashedAssetsGridDetails.tableData = [];
@@ -240,7 +235,7 @@ export class RiskMitigationComponent {
 	 * @returns observable of crash devices
 	 */
 	private getFingerPrintDeviceDetails (param: HighCrashRiskPagination) {
-		return this.riskmitigationservice.getFingerPrintDeviceDetailsData(param)
+		return this.riskMitigationService.getFingerPrintDeviceDetailsData(param)
 						.pipe(
 							takeUntil(this.destroy$),
 							map((results: any) => {
@@ -267,7 +262,7 @@ export class RiskMitigationComponent {
 			customerId: this.customerId,
 		};
 
-		return this.riskmitigationservice.getCrashHistoryForDevice(params)
+		return this.riskMitigationService.getCrashHistoryForDevice(params)
 							.pipe(
 								takeUntil(this.destroy$),
 								map((results: any) => {
@@ -351,7 +346,7 @@ export class RiskMitigationComponent {
 		this.searchQueryString = searchText;
 		const params = this.getFilterDetailsForSearchQuery(this.searchQueryString);
 
-		return this.riskmitigationservice.getSearchedData(params)
+		return this.riskMitigationService.getSearchedData(params)
 				.pipe(
 					takeUntil(this.destroy$),
 					map((results: any) => {
@@ -386,30 +381,37 @@ export class RiskMitigationComponent {
 		this.showFpDetails = false;
 	}
 	// tslint:disable-next-line: valid-jsdoc
+
 	/**
-	 * Function to update pagination
+	 * Connects to fp details
+	 * @param asset is selected asset from grid
 	 */
+
 	public connectToFpDetails (asset: any) {
 		this.showFpDetails = true;
 		this.selectedFingerPrintdata = asset;
 	}
+
 	/**
-	 * Function to open close Asse360
+	 * Determines whether panel close on when grids open details of asset
 	 */
+
 	public onPanelClose () {
 		this.selectedAsset = undefined;
 		this.showAsset360 = false;
 	}
-	// tslint:disable-next-line: valid-jsdoc
+
 	/**
-	 * Function callback to table sort
+	 * Determines whether table sorting changed on
+	 * @param event is get sorting event
+	 * @returns  params from sorting data
 	 */
 	public onTableSortingChanged (event) {
 		 const params = this.getFilterDetailsForSearchQuery(this.searchQueryString);
 		 params.key = event.key;
 		 params.sortDirection = event.sortDirection;
 
-		 return this.riskmitigationservice.getSearchedData(params)
+		 return this.riskMitigationService.getSearchedData(params)
 			 .pipe(
 				map((results: any) => {
 					this.crashedAssetsGridDetails.tableData = results.deviceDetails;
@@ -425,10 +427,11 @@ export class RiskMitigationComponent {
 			)
 			.subscribe();
 	}
+
 	/**
-	 * Asset360 toggle
+	 * Redirects to asset360
 	 */
-	public reDirectToAsset360 () {
+	public redirectToAsset360 () {
 		this.showAsset360 = true;
 	}
 	/**
@@ -554,7 +557,10 @@ export class RiskMitigationComponent {
 	 * @param data advisoryFilter the subfilter selected
 	 */
 	public getAdvisoryCount (data) {
-		const advisoryFilter = _.find(this.filters, { key: 'advisories' });
+		let advisoryFilter = {
+			seriesData: '',
+		};
+		advisoryFilter = _.find(this.filters, { key: 'advisories' });
 		advisoryFilter.seriesData = (data) ? data : '';
 	}
 
@@ -581,6 +587,7 @@ export class RiskMitigationComponent {
 	 * @param subfilter the string of param
 	 * @param filter the string of param
 	 * getDeviceDetails of subFilter
+	 * @returns selected subfilter
 	 */
 
 	public onSubfilterSelect (subfilter: string, filter: Filter) {
@@ -588,29 +595,30 @@ export class RiskMitigationComponent {
 		const sub = _.find(filter.seriesData, { filter: subfilter });
 		sub.selected = (sub) ? !sub.selected : '';
 		filter.selected = _.some(filter.seriesData, 'selected');
+		let filterSelected: string;
 		switch (sub.filter) {
 			case 'Time: Last 24h': {
 				// tslint:disable-next-line: no-parameter-reassignment
-				subfilter = '1';
+				filterSelected = '1';
 				break;
 			}
 			case 'Time: Last 7d': {
 				// tslint:disable-next-line: no-parameter-reassignment
-				subfilter = '7';
+				filterSelected = '7';
 				break;
 			}
 			case 'Time: Last 30d': {
 				// tslint:disable-next-line: no-parameter-reassignment
-				subfilter = '30';
+				filterSelected = '30';
 				break;
 			}
 			case 'Time: Last 90d': {
 				// tslint:disable-next-line: no-parameter-reassignment
-				subfilter = '90';
+				filterSelected = '90';
 				break;
 			}
 		}
-		this.getDeviceDetails(subfilter);
+		this.getDeviceDetails(filterSelected);
 	}
 
 	/**
