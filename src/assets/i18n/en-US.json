@@ -812,7 +812,6 @@
 	"_YouHaveInventory_": "you have {0} of these in your inventory",
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:",
 	"_YourImpactedDevices_": "Your Impacted Devices",
-<<<<<<< HEAD
 	"_YourProducts_": "Your products, documentation & Learning Library resources",
 	"_1day_":"1day",
 	"_7days_":"7days",
@@ -851,7 +850,4 @@
 	"NO" : "NO",
 	"_SyslogMessage_":"Syslog Message",
 	"_SyslogMessageType_":"Syslog Message Type"
-=======
-	"_YourProducts_": "Your products, documentation & Learning Library resources"	
->>>>>>> da47f8b232ff184aad0c52ee6a207ba3ad823b46
 }
