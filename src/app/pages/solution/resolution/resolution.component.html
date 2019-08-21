@@ -41,7 +41,7 @@
 					'filter__selected': filter.selected,
 					'filter__not-selected': !filter.selected
 				}"
-				class="panel flex-center filter no-padding half-padding-bottom"
+				class="panel flex-center flex-fill filter no-padding half-padding-bottom"
 				*ngIf="filter.displayed">
 				<div>
 					<div *ngIf="filter.template">
@@ -77,7 +77,7 @@
 				<div class="form-group input--icon">
 					<div class="form-group__text">
 						<input id="input-type-search" type="text" data-auto-id="caseSearchBox"
-							[placeholder]="'_RMASearchCasePlaceholder_' | i18n" formControlName="caseNo">
+							[placeholder]="'_RMASearchCasePlaceholder_' | i18n" formControlName="caseNo" autocomplete="off">
 						<span class="icon-close has-label close" data-auto-id="closeButton"
 							(click)="clearSearch()"></span>
 						<button type="submit" class="link caseinput search">
@@ -112,9 +112,9 @@
 			<ng-container *ngFor="let filter of selectedFilters">
 				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
 					<span class="label label--dkgray text-large"
-						(click)="onSubfilterSelect(subfilter.filter, filter)"
+						(click)="onSubfilterSelect(subfilter.label, filter)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
-						<span [innerText]="subfilter.label"></span>
+						<span [innerText]="subfilter.barLabel || subfilter.label"></span>
 						<span class="icon-close"></span>
 					</span>
 				</ng-container>
@@ -152,7 +152,7 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalFilter let-filter="filter">
-	<div class="text-huge flex-center dbl-padding"
+	<div class="text-huge flex-center base-padding"
 		[ngClass]="{
 			'text-muted': filter.loading,
 			'text-default': !filter.loading
@@ -165,12 +165,18 @@
 
 <ng-template #pieChartFilter let-filter="filter">
 	<pie-chart id="pie" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
-		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
+		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
 	</pie-chart>
 </ng-template>
 
+<ng-template #columnChartFilter let-filter="filter">
+		<column-chart id="column" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
+			[width]="300" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
+		</column-chart>
+	</ng-template>
+
 <ng-template #barChartFilter let-filter="filter">
 	<bar-chart id="bar" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
-		[width]="250" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
+		[width]="300" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
 	</bar-chart>
 </ng-template>

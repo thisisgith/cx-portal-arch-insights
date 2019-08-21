@@ -64,6 +64,15 @@ $vibblue: #017cad;
 	}
 }
 
+
+.successbytes-type-link {
+	padding: 10px;
+	font-size: 12px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
 .small-panel {
 	padding: 0;
 	line-height: initial;
@@ -143,7 +152,8 @@ $vibblue: #017cad;
 
 .panel--open,
 .cardpanel--open,
-.cardpanel--openright {
+.cardpanel--openright,
+.listpanel--open {
 	box-shadow: $base-box-shadow;
 	height: 325px;
 	width: 500px;
@@ -217,10 +227,27 @@ $vibblue: #017cad;
 	border-bottom: 30px solid transparent;
 }
 
+.listpanel--open::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: -15px;
+	z-index: -1;
+	border-top: 30px solid transparent;
+	border-left: 50px solid white;
+	border-bottom: 30px solid transparent;
+}
+
 .session-table {
 	overflow-y: scroll;
 	height: 120px;
 	display: block;
+
+	tr td {
+		padding: 10px;
+		width: auto;
+		text-align: left;
+	}
 }
 
 
@@ -336,14 +363,16 @@ $vibblue: #017cad;
 	&-recommendedACC,
 	&-recommendedATX,
 	&-moreACCList,
-	&-recommendedElearning {
+	&-recommendedElearning,
+	&-successbytes {
 		display: none;
 	}
 
 	&-recommendedACC::after,
 	&-recommendedATX::after,
 	&-moreACCList::after,
-	&-recommendedElearning::after {
+	&-recommendedElearning::after,
+	&-successbytes::after {
 		content: "";
 		position: absolute;
 		top: 45%;
@@ -353,7 +382,8 @@ $vibblue: #017cad;
 
 	&-recommendedACC::after,
 	&-moreACCList::after,
-	&-recommendedElearning::after {
+	&-recommendedElearning::after,
+	&-successbytes::after {
 		right: -15px;
 		border-left: 15px solid white;
 	}
@@ -366,12 +396,14 @@ $vibblue: #017cad;
 
 #recommended-item:hover,
 #moreAccList-item:hover,
-#recommended-elearning-item:hover {
+#recommended-elearning-item:hover,
+#successbytes-item:hover {
 	#hover-panel {
 		&-recommendedACC,
 		&-recommendedATX,
 		&-moreACCList,
-		&-recommendedElearning {
+		&-recommendedElearning,
+		&-successbytes {
 			display: block;
 			position: absolute;
 			box-shadow: $base-box-shadow;
@@ -385,11 +417,16 @@ $vibblue: #017cad;
 
 		&-recommendedACC,
 		&-moreACCList,
-		&-recommendedElearning {
+		&-recommendedElearning,
+		&-successbytes {
 			left: -480px;
 		}
 
 		&-moreACCList {
+			top: -90px;
+		}
+
+		&-successbytes {
 			top: -90px;
 		}
 

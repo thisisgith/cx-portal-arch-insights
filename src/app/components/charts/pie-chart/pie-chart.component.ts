@@ -110,9 +110,8 @@ export class PieChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-
-		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
-		this.subfilter.emit(filterName);
+		const filter = _.find(this.seriesData, { label: event.point.name });
+		this.subfilter.emit(filter);
 	}
 
 	/**
