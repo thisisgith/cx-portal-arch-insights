@@ -4,8 +4,7 @@ import { Component, OnInit, Input, SimpleChanges,
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { ArchitectureService, IException } from '@sdp-api';
-import { cbpRuleException } from '@sdp-api';
+import { ArchitectureService, IException, cbpRuleException } from '@sdp-api';
 
 import * as _ from 'lodash-es';
 
@@ -26,6 +25,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public totalItems = 0;
 	public cbpRuleExceptions: cbpRuleException[] = [];
 	public isLoading = true;
+	public fullscreen:any;
 
 	public paramsType = {
 		customerId,
@@ -54,6 +54,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	/**
 	 * Used to detect the changes in input object and
 	 * call the getCBPRulesData function for Updating the Table
+	 * @param changes SimpleChanges
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);

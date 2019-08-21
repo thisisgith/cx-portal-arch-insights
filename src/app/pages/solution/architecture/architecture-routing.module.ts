@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ArchitectureComponent } from './architecture.component';
 
+/**
+ * creates routes
+ */
 const routes: Routes = [
   {  path: '', component: ArchitectureComponent },
 ];

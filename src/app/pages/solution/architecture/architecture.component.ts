@@ -9,7 +9,9 @@ import { I18n } from '@cisco-ngx/cui-utils';
 
 /** Our current customerId */
 const customerId = '7293498';
-
+/**
+ * it ccreates component
+ */
 @Component({
 	selector: 'app-architecture',
 	styleUrls: ['./architecture.component.scss'],
@@ -31,7 +33,7 @@ export class ArchitectureComponent implements OnInit {
 	private destroy$ = new Subject();
 
 	@ViewChild('exceptionsFilter', { static: true })
-	private exceptionsFilterTemplate: TemplateRef<{}>;
+	private exceptionsFilterTemplate: TemplateRef<{ }>;
 
 	public visualLabels = [
 		{ label: I18n.get('_ArchitectureConfigurationBestPractices_'), active: true, count: null },
@@ -46,7 +48,7 @@ export class ArchitectureComponent implements OnInit {
 	 * Used to call the getExceptionsCount,getAssetsExceptionsCount
 	 *  and buildFilters function for Updating the Table
 	 */
-	public ngOnInit(): void {
+	public ngOnInit (): void {
 		this.architectureService.getExceptionsCount(this.params)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -66,10 +68,11 @@ export class ArchitectureComponent implements OnInit {
 		this.buildFilters();
 	}
 
-	/*
+	/**
 	 * Used to toggle the active element in visual labels
+	 * @param label - pass the label
 	 */
-	public selectVisualLabel(label: any) {
+	public selectVisualLabel (label: any) {
 		label.active = true;
 		this.visualLabels.forEach(element => {
 			if (element !== label) {
@@ -81,7 +84,7 @@ export class ArchitectureComponent implements OnInit {
 	/**
 	 * Initializes our visual filters
 	 */
-	private buildFilters() {
+	private buildFilters () {
 		this.filters = [
 			{
 				key: 'exceptions',
@@ -100,7 +103,7 @@ export class ArchitectureComponent implements OnInit {
 	 * @param subfilter the subfilter selected
 	 * @param filter the filter we selected the subfilter on
 	 */
-	public onSubfilterSelect(subfilter: string, filter: VisualFilter) {
+	public onSubfilterSelect (subfilter: string, filter: VisualFilter) {
 		const sub = _.find(filter.seriesData, { filter: subfilter });
 		if (sub) {
 			sub.selected = !sub.selected;
@@ -109,10 +112,8 @@ export class ArchitectureComponent implements OnInit {
 		filter.selected = _.some(filter.seriesData, 'selected');
 
 		if (filter.key === 'exceptions') {
-			
 			this.selectedFilter[filter.key] =
 				_.map(_.filter(filter.seriesData, 'selected'), 'filter');
-			
 		}
 		this.selectedFilter = _.cloneDeep(this.selectedFilter);
 	}
@@ -120,7 +121,7 @@ export class ArchitectureComponent implements OnInit {
 	/**
 	 * Getter for selected filter
 	 */
-	get selectedFilters() {
+	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
 	}
 
@@ -130,7 +131,7 @@ export class ArchitectureComponent implements OnInit {
 	 * @param key - it contains selected object
 	 * @returns selectedSubFilter
 	 */
-	public getSelectedSubFilters(key: string) {
+	public getSelectedSubFilters (key: string) {
 		const filter = _.find(this.filters, { key });
 		if (filter) {
 			return _.filter(filter.seriesData, 'selected');
@@ -139,7 +140,7 @@ export class ArchitectureComponent implements OnInit {
 	/**
 	 * Clears filters
 	 */
-	public clearFilters() {
+	public clearFilters () {
 		// const totalFilter = _.find(this.filters, { key: 'total' });
 		this.filtered = false;
 		_.each(this.filters, (filter: VisualFilter) => {
@@ -157,7 +158,7 @@ export class ArchitectureComponent implements OnInit {
 	 * Fetches the exception counts for the visual filter
 	 * @returns the edvisory counts
 	 */
-	private getExceptionsCount() {
+	private getExceptionsCount () {
 		const exceptionFilter = _.find(this.filters, { key: 'exceptions' });
 
 		return this.architectureService.getExceptionsCount(this.params)
@@ -207,7 +208,7 @@ export class ArchitectureComponent implements OnInit {
 					this.logger.error('architecture.component : getExceptionsCount() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -215,14 +216,13 @@ export class ArchitectureComponent implements OnInit {
 	/**
 	 * Function used to load all of the data
 	 */
-	private loadData() {
+	private loadData () {
 		this.status.isLoading = true;
 		forkJoin(
 			this.getExceptionsCount(),
 		)
 			.pipe(
 				takeUntil(this.destroy$),
-				map(() => { }),
 			)
 			.subscribe(() => {
 				this.status.isLoading = false;

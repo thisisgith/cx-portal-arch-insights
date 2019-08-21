@@ -7,7 +7,7 @@
 			<span class="icon-right-arrow" disabled></span> -->
 
 			<span [innerText]="exceptionObject?.bpRuleTitle"></span>
-		</div> 
+		</div>
 		<div class="row ">
 
 			<div class="col-md-8 base-margin-bottom">
@@ -19,10 +19,10 @@
 												'Medium': 'text-warning',
 												'Low': 'text-warning-alt'
 											}[exceptionObject?.severity]"></span>
-						{{ exceptionObject?.severity }}
+							{{ exceptionObject?.severity }}
 						</div>
 					</div>
-		
+
 					<div class="dbl-margin-right">
 						<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSoftwareType_' | i18n"></div>
 						<div innerText="{{ exceptionObject?.softwareType }}"></div>
@@ -41,14 +41,14 @@
 </details-panel>
 
 <div class="row base-margin-top">
-		<div class="col-md-12">
-			<div class="container" *ngIf="cbpRuleExceptions.length > 0">
-				<span [innerText]="'_ArchitectureException_' | i18n" class="text-large"></span>
-				<span class="qtr-margin-left text-small text-muted">showing
-					{{ (tableStartIndex + 1) +' - ' +  tableEndIndex }}
-					of {{totalItems}} exceptions</span>
-			</div>
+	<div class="col-md-12">
+		<div class="container" *ngIf="cbpRuleExceptions.length > 0">
+			<span [innerText]="'_ArchitectureException_' | i18n" class="text-large"></span>
+			<span class="qtr-margin-left text-small text-muted">showing
+				{{ (tableStartIndex + 1) +' - ' +  tableEndIndex }}
+				of {{totalItems}} exceptions</span>
 		</div>
+	</div>
 </div>
 <div class="divider no-qtr-margin"></div>
 

@@ -10,18 +10,18 @@ import { CbpDeviceAffectedModule } from './cbp-device-affected/cbp-device-affect
  * and CBP-Device-affected table for  Components
  */
 @NgModule({
+	exports: [
+		CbpDeviceAffectedModule,
+		CbpTbdModule,
+	],
 	imports: [
-		CommonModule,		
+		CommonModule,
 		CbpDeviceAffectedModule,
 		CbpTbdModule,
 		CuiTabsModule,
 		CuiTableModule,
 		CuiPagerModule,
 		I18nPipeModule,
-	],
-	exports: [
-		CbpDeviceAffectedModule,
-		CbpTbdModule,
 	],
 })
 export class CbpDetailsModule { }

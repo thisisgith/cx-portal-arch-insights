@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
  /** Our current customerId */
- const customerId = '7293498';
+const customerId = '7293498';
 
 /**
  * CBP Device Affected Table Component
@@ -38,9 +38,9 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public selectedAsset: IAsset = null;
 	public params: any = {
 		customerId,
+		body : [],
 		page : 0,
 		pageSize : 8,
-		body : [],
 	};
 	public destroy$ = new Subject();
 

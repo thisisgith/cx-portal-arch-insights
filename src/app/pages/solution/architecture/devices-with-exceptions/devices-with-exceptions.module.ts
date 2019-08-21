@@ -8,7 +8,7 @@ import { DetailsPanelModule } from '@components';
 import { CbpDetailsModule } from '../cbp-details/cbp-details.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AssetDetailsModule } from '../../../../components/details/asset/asset-details.module';
-import { AssetDetailsHeaderModule } from '../../../../components/details/asset/header/header.module';
+import { AssetDetailsHeaderModule } from 'src/app/components/details/asset/header/header.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssetDetailsModule } from '../../../../../components/details/asset/asset-details.module';
-import { AssetDetailsHeaderModule } from '../../../../../components/details/asset/header/header.module';
+import {
+	AssetDetailsHeaderModule } from '../../../../../components/details/asset/header/header.module';
 import { CbpDeviceAffectedComponent } from './cbp-device-affected.component';
 
 import {

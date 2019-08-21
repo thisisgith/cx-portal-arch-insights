@@ -38,6 +38,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
 	public params = { customerId, page: 0, pageSize: 10 };
+	public fullscreen:any;
 
 	/**
 	 * used to Intialize Table options
@@ -46,6 +47,9 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		this.getAllAssetsWithExceptions();
 		this.buildTable();
 	}
+	/**
+	 * builds Table
+	 */
 
 	public buildTable () {
 		const datePipe = new DatePipe('en-US');
@@ -151,7 +155,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 
 	/**
 	 * This method is used to open Fly-out View on selection of Header
-	 * @param event - It contains the selected asset object
+	 * @param selectedAsset - It contains the selected asset object
 	 */
 	public openAsset360View (selectedAsset: IAsset) {
 		this.selectedAsset = selectedAsset;

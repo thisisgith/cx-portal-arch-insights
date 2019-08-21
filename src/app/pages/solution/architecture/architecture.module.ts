@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ArchitectureComponent } from './architecture.component';
 import { CbpRuleViolationModule } from './cbp-rule-violation/cbp-rule-violation.module';
-import { DevicesWithExceptionsModule } from './devices-with-exceptions/devices-with-exceptions.module';
+import {
+	DevicesWithExceptionsModule } from './devices-with-exceptions/devices-with-exceptions.module';
 import { ChartModule } from 'angular-highcharts';
 import { CuiTabsModule, CuiSpinnerModule , CuiTabsNavModule } from '@cisco-ngx/cui-components';
 import { ArchitectureRoutingModule } from './architecture-routing.module';
