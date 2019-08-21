@@ -30,8 +30,8 @@ import {
 import * as _ from 'lodash-es';
 import { CuiModalService, CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Subscription, forkJoin, fromEvent, of, Subject } from 'rxjs';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { forkJoin, fromEvent, of, Subject } from 'rxjs';
 import {
 	map,
 	debounceTime,
@@ -39,6 +39,7 @@ import {
 	distinctUntilChanged,
 	switchMap,
 	mergeMap,
+	takeUntil,
 } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
@@ -112,14 +113,20 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	};
 	public assetsTable: CuiTableOptions;
 	public searchOptions = {
-		debounce: 1500,
+		debounce: 200,
 		max: 100,
 		min: 3,
-		pattern: /^[a-zA-Z ]*$/,
+		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
 	};
-	public search: FormControl = new FormControl('');
-	public searchForm: FormGroup;
-	private searchSubscribe: Subscription;
+	public searchForm = new FormGroup({
+		search: new FormControl('',
+			[
+				Validators.minLength(this.searchOptions.min),
+				Validators.maxLength(this.searchOptions.max),
+				Validators.pattern(this.searchOptions.pattern),
+			]),
+	});
+	private destroy$ = new Subject();
 	public inventory: Item[] = [];
 	public assetsDropdown = false;
 	public allAssetsSelected = false;
@@ -328,7 +335,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Will adjust the browsers query params to preserve the current state
 	 */
 	private adjustQueryParams () {
-		const queryParams = _.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page']);
+		const queryParams = _.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows']);
+		if (!_.isEmpty(queryParams)) {
+			this.filtered = true;
+		} else {
+			this.filtered = false;
+		}
 		this.router.navigate([], {
 			queryParams,
 			relativeTo: this.route,
@@ -341,6 +353,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onPageChanged (event: any) {
 		this.assetParams.page = (event.page + 1);
+		this.adjustQueryParams();
 		this.InventorySubject.next();
 	}
 
@@ -416,7 +429,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			sort: ['deviceName:ASC'],
 		};
 
-		this.search.setValue('');
+		this.searchForm.controls.search.setValue('');
 		this.allAssetsSelected = false;
 		totalFilter.selected = true;
 		this.adjustQueryParams();
@@ -511,6 +524,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		this.assetParams.rows = this.view === 'list' ? 10 : 12;
 		this.buildTable();
 		this.route.queryParams.subscribe(params => {
+			if (params.page) {
+				const page = _.toSafeInteger(params.page);
+				this.assetParams.page = (page < 1) ? 1 : page;
+			}
+
 			if (params.contractNumber) {
 				this.assetParams.contractNumber = _.castArray(params.contractNumber);
 			}
@@ -539,20 +557,42 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.assetParams.hasSecurityAdvisories = params.hasSecurityAdvisories;
 			}
 
+			if (params.search &&
+				params.search.length >= this.searchOptions.min &&
+				params.search.length <= this.searchOptions.max &&
+				this.searchOptions.pattern.test(params.search)) {
+				this.assetParams.search = params.search;
+				this.searchForm.controls.search.setValue(params.search);
+			}
+
 			if (params.lastDateOfSupportRange) {
 				this.assetParams.lastDateOfSupportRange =
 					_.castArray(params.lastDateOfSupportRange);
 			}
 
 			if (params.sort) {
-				this.assetParams.sort = _.castArray(params.sort);
+				const sort = _.split(params.sort, ':');
+				_.each(this.assetsTable.columns, c => {
+					if (sort.length === 2 &&
+							c.sortable &&
+							c.key &&
+							c.key.toLowerCase() === sort[0].toLowerCase()) {
+						c.sorting = true;
+						c.sortDirection = sort[1].toLowerCase();
+						this.assetParams.sort = _.castArray(`${sort[0]}:${sort[1].toUpperCase()}`);
+					} else {
+						c.sorting = false;
+					}
+				});
+			}
+
+			if (params.select) {
+				this.selectOnLoad = true;
 			}
 
 			this.filtered = !_.isEmpty(
 				_.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page', 'sort']),
 			);
-
-			this.fetchInventory();
 		});
 		this.buildInventorySubject();
 		this.buildFilters();
@@ -676,11 +716,16 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Handler for performing a search
 	 * @param query search string
 	 */
-	public doSearch (query: string) {
-		if (query) {
+	public doSearch () {
+		const query = this.searchForm.controls.search.value;
+		if (this.searchForm.valid && query) {
 			this.logger.debug(`assets.component :: doSearch() :: Searching for ${query}`);
 			_.set(this.assetParams, 'search', query);
 			this.filtered = true;
+			this.adjustQueryParams();
+			this.InventorySubject.next();
+		} else if (!query && this.filtered) {
+			_.unset(this.assetParams, 'search');
 			this.adjustQueryParams();
 			this.InventorySubject.next();
 		}
@@ -690,11 +735,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Builds the search debounce subscription
 	 */
 	private searchSubscription () {
-		this.searchSubscribe = fromEvent(this.searchInput.nativeElement, 'keyup')
-			.pipe(map((evt: KeyboardEvent) => (<HTMLInputElement> evt.target).value))
-			.pipe(debounceTime(this.searchOptions.debounce))
-			.pipe(distinctUntilChanged())
-			.subscribe((query: string) => this.doSearch(query));
+		fromEvent(this.searchInput.nativeElement, 'keyup')
+			.pipe(
+				map((evt: KeyboardEvent) => (<HTMLInputElement> evt.target).value),
+				debounceTime(this.searchOptions.debounce),
+				distinctUntilChanged(),
+				takeUntil(this.destroy$),
+			)
+			.subscribe(() => this.doSearch());
 	}
 
 	/**
@@ -875,7 +923,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					{
 						key: 'criticalAdvisories',
 						name: I18n.get('_CriticalAdvisories_'),
-						sortable: true,
+						sortable: false,
 						template: this.criticalAdvisoriesTemplate,
 					},
 					{
@@ -914,7 +962,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 					},
 					{
 						click: true,
-						sortable: true,
+						sortable: false,
 						template: this.actionsTemplate,
 					},
 				],
@@ -929,18 +977,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				wrapText: true,
 			});
 		}
-
-		this.searchForm = new FormGroup({
-			search: this.search,
-		});
-
-		this.searchForm.valueChanges.subscribe(query => {
-			if (!query.search) {
-				_.unset(this.assetParams, 'search');
-				this.adjustQueryParams();
-				this.InventorySubject.next();
-			}
-		});
 	}
 
 	/**
@@ -1129,7 +1165,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		this.inventory = [];
 		this.pagination = null;
 
-		const assetParams = _.omit(_.cloneDeep(this.assetParams), ['advisories']);
+		const assetParams = _.cloneDeep(this.assetParams);
 
 		_.each(assetParams, (value, key) => {
 			if (_.isArray(value) && _.isEmpty(value)) {
@@ -1213,7 +1249,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 * Handler for destroying subscriptions
 	 */
 	public ngOnDestroy () {
-		_.invoke(this.searchSubscribe, 'unsubscribe');
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 
 	/**

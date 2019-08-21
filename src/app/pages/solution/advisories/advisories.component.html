@@ -18,7 +18,7 @@
 				<div class="divider no-margin-top qtr-margin-bottom"></div>
 				<ng-container *ngTemplateOutlet="visualFilters; context: { tab: tab }"></ng-container>
 			</ng-container>
-			<ng-container *ngIf="!selectedTab.loading && selectedTab.pagination">
+			<ng-container *ngIf="!selectedTab.loading && selectedTab.pagination && selectedTab.pagination.total">
 				<ng-container *ngTemplateOutlet="titleBar; context: { tab: tab }"></ng-container>
 				<div class="divider qtr-margin-top no-margin-bottom"></div>
 			</ng-container>
@@ -224,7 +224,7 @@
 				[maxlength]="searchOptions.max"
 				[pattern]="searchOptions.pattern"
 				formControlName="search"
-				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}"
 				ngDefaultControl>
 			<button type="button" class="link">
 				<span class="icon-search"></span>
@@ -244,7 +244,7 @@
 				[maxlength]="searchOptions.max"
 				[pattern]="searchOptions.pattern"
 				formControlName="search"
-				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}"
 				ngDefaultControl>
 			<button type="button" class="link">
 				<span class="icon-search"></span>
@@ -264,7 +264,7 @@
 				[maxlength]="searchOptions.max"
 				[pattern]="searchOptions.pattern"
 				formControlName="search"
-				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}"
 				ngDefaultControl>
 			<button type="button" class="link">
 				<span class="icon-search"></span>
