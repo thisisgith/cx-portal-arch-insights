@@ -16,6 +16,7 @@ export { AssetDetailsHeaderModule } from './details/asset/header/header.module';
 export { HeaderModule } from './header/header.module';
 export { HeightTransitionModule } from './height-transition/height-transition.module';
 export { PieChartModule } from './charts/pie-chart/pie-chart.module';
+export { QuickTourModule } from './quick-tour/quick-tour.module';
 export { RacetrackComponent } from './racetrack/racetrack.component';
 export { RacetrackComponentModule } from './racetrack/racetrack.module';
 export { SearchComponent } from './search/search.component';
