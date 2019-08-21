@@ -58,6 +58,9 @@
 								<label for="input-layout-default" [innerText]="'_ConfirmPassword_' | i18n">
 								</label>
 							</div>
+							<div class="help-block text-danger" role="alert" *ngIf="confErrors && confControl.dirty">
+								<span [innerText]="'_PasswordsDoNotMatch_' | i18n"></span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -97,7 +100,7 @@
 									<div class="form-group__text">
 										<input
 											id="input-proxy-port"
-											type="text"
+											type="number"
 											formControlName="proxyPort">
 										<label
 											for="input-proxy-port"

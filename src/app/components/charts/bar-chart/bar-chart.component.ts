@@ -96,7 +96,7 @@ export class BarChartComponent implements OnInit {
 				{
 					data,
 					enableMouseTracking: !this.loading,
-					minPointLength: 3,
+					minPointLength: 5,
 					name: '',
 					opacity: this.loading ? 0.5 : 1,
 					showInLegend: false,
@@ -127,8 +127,8 @@ export class BarChartComponent implements OnInit {
 	 */
 	public selectSubfilter (event: any) {
 		event.stopPropagation();
-		const filterName = _.find(this.seriesData, { label: event.point.name }).filter;
-		this.subfilter.emit(filterName);
+		const filter = _.find(this.seriesData, { label: event.point.name });
+		this.subfilter.emit(filter);
 	}
 
 	/**

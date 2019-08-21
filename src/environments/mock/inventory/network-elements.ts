@@ -680,4 +680,21 @@ export const NetworkScenarios = [
 		url: `${api}?customerId=${customerId}&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Network Elements for CAT2034B1H6',
+					response: {
+						body: MockNetwork(1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&serialNumber=CAT2034B1H6`,
+		usecases: ['Use Case 1'],
+	},
 ];

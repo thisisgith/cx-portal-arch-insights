@@ -64,6 +64,15 @@ $vibblue: #017cad;
 	}
 }
 
+
+.successbytes-type-link {
+	padding: 10px;
+	font-size: 12px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
 .small-panel {
 	padding: 0;
 	line-height: initial;
@@ -85,6 +94,28 @@ $vibblue: #017cad;
 
 .success__card__body {
 	height: 100px;
+}
+
+.success__card__title {
+	margin-bottom: 15px;
+}
+
+.success__card__icons {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: left;
+
+	.type {
+		margin-right: 15px;
+	}
+
+	.duration {
+		margin-left: 15px;
+	}
+}
+
+.success__card__launch {
+	text-align: left;
 }
 
 .round-edges {
@@ -119,13 +150,14 @@ $vibblue: #017cad;
 	color: $success;
 }
 
-.panel--open {
+.panel--open,
+.cardpanel--open,
+.cardpanel--openright,
+.listpanel--open {
 	box-shadow: $base-box-shadow;
 	height: 325px;
 	width: 500px;
 	position: absolute;
-	bottom: 10px;
-	left: 175px;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
@@ -138,18 +170,6 @@ $vibblue: #017cad;
 		height: 60px;
 		overflow-y: auto;
 	}
-}
-
-.cardpanel--open {
-	box-shadow: $base-box-shadow;
-	height: 325px;
-	width: 500px;
-	position: absolute;
-	bottom: -50px;
-	left: 175px;
-	z-index: 3;
-	background-color: $white;
-	border-radius: 10px;
 }
 
 .cgtpanel--open {
@@ -188,7 +208,7 @@ $vibblue: #017cad;
 .cardpanel--open::after {
 	content: "";
 	position: absolute;
-	top: 60%;
+	top: 65%;
 	left: -15px;
 	z-index: -1;
 	border-top: 30px solid transparent;
@@ -196,10 +216,38 @@ $vibblue: #017cad;
 	border-bottom: 30px solid transparent;
 }
 
+.cardpanel--openright::after {
+	content: "";
+	position: absolute;
+	top: 65%;
+	right: -15px;
+	z-index: -1;
+	border-top: 30px solid transparent;
+	border-left: 50px solid white;
+	border-bottom: 30px solid transparent;
+}
+
+.listpanel--open::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: -15px;
+	z-index: -1;
+	border-top: 30px solid transparent;
+	border-left: 50px solid white;
+	border-bottom: 30px solid transparent;
+}
+
 .session-table {
 	overflow-y: scroll;
 	height: 120px;
 	display: block;
+
+	tr td {
+		padding: 10px;
+		width: auto;
+		text-align: left;
+	}
 }
 
 
@@ -315,14 +363,16 @@ $vibblue: #017cad;
 	&-recommendedACC,
 	&-recommendedATX,
 	&-moreACCList,
-	&-recommendedElearning {
+	&-recommendedElearning,
+	&-successbytes {
 		display: none;
 	}
 
 	&-recommendedACC::after,
 	&-recommendedATX::after,
 	&-moreACCList::after,
-	&-recommendedElearning::after {
+	&-recommendedElearning::after,
+	&-successbytes::after {
 		content: "";
 		position: absolute;
 		top: 45%;
@@ -332,7 +382,8 @@ $vibblue: #017cad;
 
 	&-recommendedACC::after,
 	&-moreACCList::after,
-	&-recommendedElearning::after {
+	&-recommendedElearning::after,
+	&-successbytes::after {
 		right: -15px;
 		border-left: 15px solid white;
 	}
@@ -345,12 +396,14 @@ $vibblue: #017cad;
 
 #recommended-item:hover,
 #moreAccList-item:hover,
-#recommended-elearning-item:hover {
+#recommended-elearning-item:hover,
+#successbytes-item:hover {
 	#hover-panel {
 		&-recommendedACC,
 		&-recommendedATX,
 		&-moreACCList,
-		&-recommendedElearning {
+		&-recommendedElearning,
+		&-successbytes {
 			display: block;
 			position: absolute;
 			box-shadow: $base-box-shadow;
@@ -364,11 +417,16 @@ $vibblue: #017cad;
 
 		&-recommendedACC,
 		&-moreACCList,
-		&-recommendedElearning {
+		&-recommendedElearning,
+		&-successbytes {
 			left: -480px;
 		}
 
 		&-moreACCList {
+			top: -90px;
+		}
+
+		&-successbytes {
 			top: -90px;
 		}
 

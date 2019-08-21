@@ -3,6 +3,7 @@ export * from './case/case';
 export * from './contract/contract';
 export * from './contract/coverage';
 
+export * from './controlpoints/calendar';
 export * from './controlpoints/create-registration';
 export * from './controlpoints/dnac-status';
 export * from './controlpoints/health-status';
@@ -21,6 +22,8 @@ export * from './inventory/roles';
 
 export { Mock } from './mock';
 
+export * from './ndgw/device';
+
 export * from './product-alerts/advisories-field-notices';
 export * from './product-alerts/advisories-security-advisories';
 export * from './product-alerts/field-notice-bulletins';
@@ -38,7 +41,7 @@ export * from './product-alerts/software-eol-bulletins';
 export * from './product-alerts/software-eol';
 export * from './product-alerts/summary';
 export * from './product-alerts/vulnerabilities';
-
+export * from  './osv/osv';
 export * from './racetrack/acc';
 export * from './racetrack/accUserInfo';
 export * from './racetrack/action';

@@ -6,10 +6,16 @@ import {
 	ViewChild,
 	Output,
 	EventEmitter,
+	SimpleChanges,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
-	InventoryService, Assets, Asset, DiagnosticsService, BugImpactedAssetsResponse,
+	InventoryService,
+	Asset,
+	DiagnosticsService,
+	BugImpactedAssetsResponse,
+	NetworkElementResponse,
+	NetworkElement,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -20,6 +26,7 @@ import { of } from 'rxjs';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { AdvisoryType } from '@interfaces';
+import { getProductTypeImage } from '@classes';
 
 /**
  * The interface for impacted asset ids utilizing managedNeId
@@ -50,13 +57,14 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 
 	public assetsTable: CuiTableOptions;
 	public isLoading = false;
-	public potentiallyImpacted: Asset[] = [];
-	public impacted: Asset[] = [];
-	public selectedAsset: Asset;
+	public potentiallyImpacted: (Asset | NetworkElement)[] = [];
+	public impacted: (Asset | NetworkElement)[] = [];
+	public selectedAsset: Asset | NetworkElement;
 	private params: {
-		assets?: InventoryService.GetAssetsParams;
 		bugAssets?: DiagnosticsService.GetCriticalBugsAssetsParams;
+		elements?: InventoryService.GetNetworkElementsParams;
 	};
+	public getProductIcon = getProductTypeImage;
 
 	constructor (
 		private logger: LogService,
@@ -77,9 +85,9 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 		const impacted = _.get(this.assetIds, 'impacted', []);
 		const potentiallyImpacted = _.get(this.assetIds, 'potentiallyImpacted', []);
 
-		this.inventoryService.getAssets(this.params.assets)
+		this.inventoryService.getNetworkElements(this.params.elements)
 		.pipe(
-			map((response: Assets) => {
+			map((response: NetworkElementResponse) => {
 				const data = _.get(response, 'data', []);
 
 				this.impacted =
@@ -145,7 +153,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			bordered: true,
 			columns: [
 				{
-					key: this.type === 'bug' ? 'hostName' : 'deviceName',
+					key: 'hostName',
 					name: I18n.get('_Device_'),
 					sortable: true,
 					sortDirection: 'asc',
@@ -160,7 +168,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 					width: '100px',
 				},
 				{
-					key: this.type === 'bug' ? 'softwareVersion' : 'osVersion',
+					key: this.type === 'bug' ? 'softwareVersion' : 'swVersion',
 					name: I18n.get('_SoftwareVersion_'),
 					sortable: true,
 					template: this.softwareVersionColumn,
@@ -182,17 +190,21 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 			_.set(this.params, 'bugAssets', {
 				cdetId: [this.id],
 				customerId: this.customerId,
+				page: 1,
+				rows: 100,
 			});
 
 			this.fetchBugAssets();
 		} else if (this.assetIds) {
-			_.set(this.params, 'assets', {
+			_.set(this.params, 'elements', {
 				customerId: this.customerId,
 				managedNeId: _.concat(
 					_.get(this.assetIds, 'impacted', []),
 					_.get(this.assetIds, 'potentiallyImpacted', []),
 				),
-				sort: ['deviceName:ASC'],
+				page: 1,
+				rows: 100,
+				sort: ['hostName:ASC'],
 			});
 
 			this.getAssets();
@@ -204,7 +216,7 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 * @param options the selected column
 	 */
 	public onColumnSort (options: CuiTableColumnOption) {
-		_.set(this.params, [this.type === 'bug' ? 'bugAssets' : 'assets', 'sort'],
+		_.set(this.params, [this.type === 'bug' ? 'bugAssets' : 'elements', 'sort'],
 			[`${options.key}:${options.sortDirection.toUpperCase()}`]);
 
 		if (this.type === 'bug') {
@@ -219,5 +231,16 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	 */
 	public ngOnInit () {
 		this.refresh();
+	}
+
+	/**
+	 * Checks if our currently selected asset has changed
+	 * @param changes the changes detected
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentId = _.get(changes, ['id', 'currentValue']);
+		if (currentId && !changes.id.firstChange) {
+			this.refresh();
+		}
 	}
 }

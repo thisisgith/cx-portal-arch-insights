@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SecurityComponent } from './security.component';
 import { SecurityModule } from './security.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SecurityComponent', () => {
 	let component: SecurityComponent;
@@ -9,9 +10,12 @@ describe('SecurityComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [SecurityModule],
+			imports: [
+				SecurityModule,
+				HttpClientTestingModule,
+			],
 		})
-		.compileComponents();
+			.compileComponents();
 	}));
 
 	beforeEach(() => {

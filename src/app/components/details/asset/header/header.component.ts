@@ -17,6 +17,7 @@ import {
 	TransactionRequestResponse,
 	TransactionStatusResponse,
 	ScanRequestResponse,
+	NetworkElement,
 } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
@@ -32,6 +33,7 @@ import {
 import { CaseOpenComponent } from '../../../case/case-open/case-open.component';
 import { Alert } from '@interfaces';
 import { I18n } from '@cisco-ngx/cui-utils';
+import { CaseOpenData } from 'src/app/components/case/case-open/caseOpenData';
 
 /**
  * Asset Details Header Component
@@ -47,6 +49,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 })
 export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy {
 
+	@Input('element') public element: NetworkElement;
 	@Input('asset') public asset: Asset;
 	@Input('customerId') public customerId: string;
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
@@ -65,7 +68,7 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 			overall: false,
 		},
 		scan: {
-			eligible: true, // TODO: Update this based on eligibility when working
+			eligible: false,
 			inProgress: false,
 		},
 	};
@@ -114,37 +117,14 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 	}
 
 	/**
-	 * TODO: Add back eligibility check when it is actually working
-	 * Gets the eligibility of the device for scanning
+	 * Checks for a current scan status on an asset
 	 * @returns the observable
 	 */
-	// private getEligibility () {
-	// 	const params: NetworkDataGatewayService.GetEligibilityParams = {
-	// 		customerId: this.customerId,
-	// 		productId: this.asset.productId,
-	// 		serialNumber: this.asset.serialNumber,
-	// 	};
-
-	// 	return this.networkService.getEligibility(params)
-	// 	.pipe(
-	// 		map((response: Connectivity) => {
-	// 			this.status.scan.eligible = _.get(response, 'connected', false) &&
-	// 				_.get(response, 'eligible', false);
-	// 		}),
-	// 		catchError(err => {
-	// 			this.status.loading.eligibility = false;
-	// 			this.logger.error('details-header.component : getEligibility()' +
-	// 				`:: Error : (${err.status}) ${err.message}`);
-
-	// 			return of({ });
-	// 		}),
-	// 	);
-	// }
-
-	/**
-	 * Checks for a current scan status on an asset
-	 */
 	private checkScanStatus () {
+		if (!this.status.scan.eligible) {
+			return of({ });
+		}
+
 		const getScanStatusParams: NetworkDataGatewayService.GetScanStatusBySerialParams = {
 			customerId: this.customerId,
 			productId: this.asset.productId,
@@ -293,10 +273,12 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 		_.set(this.status, ['scan', 'inProgress'], false);
 		if (_.get(this.asset, 'serialNumber')) {
 			this.status.loading.overall = true;
+
+			this.status.scan.eligible = this.element ? true : false;
+
 			forkJoin(
 				this.fetchCases(),
 				this.checkScanStatus(),
-				// this.getEligibility(),
 			)
 			.subscribe(() => {
 				this.status.loading.overall = false;
@@ -331,10 +313,18 @@ export class AssetDetailsHeaderComponent implements OnChanges, OnInit, OnDestroy
 		}
 	}
 
-/**
-	* On "Open a Case" button pop up "Open Case" component
-	*/
+	/**
+		* On "Open a Case" button pop up "Open Case" component
+		*/
 	public openCase () {
-		 this.cuiModalService.showComponent(CaseOpenComponent, { asset: this.asset }, 'full');
+		 this.cuiModalService.showComponent(CaseOpenComponent,
+			{ asset: this.asset, element: this.element }, 'full')
+			.then((response: CaseOpenData) => {
+				const scanStatus = _.get(response, 'scanStatus');
+				if (scanStatus && (scanStatus !== 'FAILURE' && scanStatus !== 'SUCCESS')) {
+					this.checkScanStatus()
+					.subscribe();
+				}
+			});
 	}
 }

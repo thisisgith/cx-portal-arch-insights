@@ -251,7 +251,7 @@ implements OnInit, OnChanges, OnDestroy {
 	 */
 	 private getAssetInfo (customerId: string, serialNumber: string):
 	 Observable<Assets> {
-		 return this.inventoryService.getAssets({ customerId, serialNumber })
+		 return this.inventoryService.getAssets({ customerId, serialNumber: [serialNumber] })
 		 .pipe(
 			 catchError(err => {
 				 this.logger.error(`Hardware Data :: ${serialNumber} :: Error ${err}`);

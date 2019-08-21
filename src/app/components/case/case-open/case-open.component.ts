@@ -1,7 +1,7 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, of, Observable } from 'rxjs';
-import { catchError, takeUntil, flatMap } from 'rxjs/operators';
+import { catchError, takeUntil, flatMap, mergeMap, map } from 'rxjs/operators';
 
 import { caseSeverities, CaseRequestType } from '@classes';
 import { CaseOpenRequest } from '@interfaces';
@@ -10,10 +10,19 @@ import { ProfileService } from '@cisco-ngx/cui-auth';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { CuiModalContent, CuiModalService } from '@cisco-ngx/cui-components';
 import { LogService } from '@cisco-ngx/cui-services';
-import { Asset, DeviceContractResponse, ContractsService } from '@sdp-api';
-import { SelectOption } from './panel-select/panel-select.component';
+import { Asset,
+	DeviceContractResponse,
+	ContractsService,
+	NetworkElement,
+	NetworkDataGatewayService,
+	TransactionRequest,
+	Transaction,
+	TransactionRequestResponse,
+	TransactionStatusResponse,
+} from '@sdp-api';
 import { CaseOpenData } from './caseOpenData';
 import { CloseConfirmComponent } from './close-confirm/close-confirm.component';
+import { TechFormComponent } from './tech-form/tech-form.component';
 
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
@@ -28,11 +37,13 @@ import { UserResolve } from '@utilities';
 })
 export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	@Input() public asset: Asset;
+	@Input() public element: NetworkElement;
+	@ViewChild('techForm', { static: false }) public techForm: TechFormComponent;
 	public data: { };
 	public expand = false;
 	public submitted = false;
 	public submitting = false;
-	public sevOptions: SelectOption<number>[] = [
+	public sevOptions = [
 		{
 			name: caseSeverities[1].getCreateName(),
 			subtitle: I18n.get('_SeverityX_', 1),
@@ -81,6 +92,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 		private profileService: ProfileService,
 		private contractsService: ContractsService,
 		private userResolve: UserResolve,
+		private networkService: NetworkDataGatewayService,
 	) {
 	}
 
@@ -89,6 +101,7 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	 */
 	public ngOnInit () {
 		this.asset = _.get(this.data, 'asset');
+		this.element = _.get(this.data, 'element');
 		this.userResolve.getCustomerId()
 		.pipe(
 			takeUntil(this.destroy$),
@@ -130,6 +143,15 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 	 */
 	public onFormReady (form: FormGroup) {
 		this.caseForm.addControl('techInfo', form);
+	}
+
+	/**
+	 * Fire when user clicks "Next" button
+	 * Gather predictions based on title/description and expand form
+	 */
+	public onNext () {
+		this.expand = true;
+		this.techForm.refreshPredictions();
 	}
 
 	/**
@@ -176,46 +198,121 @@ export class CaseOpenComponent implements  CuiModalContent, OnInit, OnDestroy {
 			}),
 			takeUntil(this.destroy$),
 		)
-		.subscribe(result => {
-			if (!result) {
-				this.errors = [I18n.get('_ErrorReachingCSOne_')];
-			} else if (result.statusCode === 'ERROR') {
-				this.errors = result.errorMessages.map(
-					msg => msg.errorMessage,
-				);
-			} else {
-				this.caseOpenData = {
-					caseNum: result.caseNumber,
-					customerActivity:
-						_.get(
-							(<FormGroup> this.caseForm.controls.techInfo)
-								.controls.problemArea.value,
-							'customerActivity',
+		.pipe(
+			mergeMap(result => {
+				if (!result) {
+					this.errors = [I18n.get('_ErrorReachingCSOne_')];
+				} else if (result.statusCode === 'ERROR') {
+					this.errors = result.errorMessages.map(
+						msg => msg.errorMessage,
+					);
+				} else {
+					this.caseOpenData = {
+						caseNum: result.caseNumber,
+						customerActivity:
+							_.get(
+								(<FormGroup> this.caseForm.controls.techInfo)
+									.controls.problemArea.value,
+								'customerActivity',
+							),
+						description: this.caseForm.controls.description.value,
+						problemArea:
+							_.get(
+								(<FormGroup> this.caseForm.controls.techInfo)
+									.controls.problemArea.value,
+								'problemCodeName',
+							),
+						requestRma: this.caseForm.controls.requestRma.value,
+						severity: this.caseForm.controls.severity.value,
+						severityName: _.get(_.find(this.sevOptions,
+							{ value: this.caseForm.controls.severity.value }), 'name'),
+						subtech: _.get(
+							(<FormGroup> this.caseForm.controls.techInfo).controls.subtech.value,
+							'subTechName',
 						),
-					description: this.caseForm.controls.description.value,
-					problemArea:
-						_.get(
-							(<FormGroup> this.caseForm.controls.techInfo)
-								.controls.problemArea.value,
-							'problemCodeName',
+						technology: _.get(
+							(<FormGroup> this.caseForm.controls.techInfo).controls.technology.value,
+							'techName',
 						),
-					requestRma: this.caseForm.controls.requestRma.value,
-					severity: this.caseForm.controls.severity.value,
-					severityName: _.get(_.find(this.sevOptions,
-						{ value: this.caseForm.controls.severity.value }), 'name'),
-					subtech: _.get(
-						(<FormGroup> this.caseForm.controls.techInfo).controls.subtech.value,
-						'subTechName',
-					),
-					technology: _.get(
-						(<FormGroup> this.caseForm.controls.techInfo).controls.technology.value,
-						'techName',
-					),
-					title: this.caseForm.controls.title.value,
-				};
-			}
+						title: this.caseForm.controls.title.value,
+					};
+
+					return this.initiateScan()
+					.pipe(
+						map((response: TransactionStatusResponse) => {
+							if (_.get(response, 'status')) {
+								this.caseOpenData.scanStatus = response.status;
+							}
+							this.cuiModalService.onSuccess.emit(this.caseOpenData);
+						}),
+					);
+				}
+
+				return of({ });
+			}),
+		)
+		.subscribe(() => {
 			this.submitted = true;
 		});
+	}
+
+	/**
+	 * Checks the current scan status
+	 * @returns the observable
+	 */
+	private initiateScan () {
+		if (!this.element) {
+			return of({ });
+		}
+
+		const failureStatus = { status: 'FAILURE' };
+		const request: TransactionRequest = {
+			customerId: this.customerId,
+			neCount: 1,
+			requestBody: {
+				deviceOptions: 'LIST',
+				devices: [{
+					hostname: this.element.hostName,
+					ipAddress: this.element.ipAddress,
+					productId: this.element.productId,
+					serialNumber: this.element.serialNumber,
+				}],
+			},
+			requestType: 'PEC',
+			transactionType: 'SCAN',
+		};
+
+		return this.networkService.postDeviceTransactions(request)
+		.pipe(
+			takeUntil(this.destroy$),
+			mergeMap((response: TransactionRequestResponse) => {
+				const transaction: Transaction = _.head(response);
+
+				if (_.get(transaction, 'transactionId')) {
+					return this.networkService.getScanStatusByTransaction({
+						customerId: this.customerId,
+						transactionId: transaction.transactionId,
+					});
+				}
+
+				return of(failureStatus);
+			}),
+			catchError(err => {
+				this.logger.error('case-open.component : initiateScan() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of(failureStatus);
+			}),
+		)
+		.pipe(
+			map((response: TransactionStatusResponse) => response),
+			catchError(err => {
+				this.logger.error('case-open.component : initiateScan() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+
+				return of(failureStatus);
+			}),
+		);
 	}
 
 	/**

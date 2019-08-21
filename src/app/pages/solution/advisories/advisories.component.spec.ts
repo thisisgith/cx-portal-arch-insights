@@ -40,7 +40,7 @@ describe('AdvisoriesComponent', () => {
 							data: {
 								user,
 							},
-							params: of({ advisory: 'security' }),
+							params: { advisory: 'security' },
 						},
 					},
 				},
@@ -342,7 +342,7 @@ describe('AdvisoriesComponent', () => {
 			expect(currentTime - lastUpdatedDate6090[1])
 				.toBe(dayInMillis * 60);
 
-			component.onSubfilterSelect('gt-90-days', lastUpdatedFilter);
+			component.onSubfilterSelect('further-out', lastUpdatedFilter);
 
 			fixture.detectChanges();
 			const lastUpdatedDate90 = _.map(
@@ -484,21 +484,24 @@ describe('AdvisoriesComponent', () => {
 			fixture.detectChanges();
 
 			expect(component.router.navigate)
-				.toHaveBeenCalledWith(['/solution/advisories/bugs'], { queryParams: { } });
+				.toHaveBeenCalledWith(['/solution/advisories/bugs'],
+					{ queryParams: { page: 1 } });
 
 			// test field notices tab
 			component.selectTab(_.findIndex(component.tabs, { key: 'field' }));
 			fixture.detectChanges();
 
 			expect(component.router.navigate)
-				.toHaveBeenCalledWith(['/solution/advisories/field-notices'], { queryParams: { } });
+				.toHaveBeenCalledWith(['/solution/advisories/field-notices'],
+					{ queryParams: { page: 1 } });
 
 			// test security tab
 			component.selectTab(_.findIndex(component.tabs, { key: 'security' }));
 			fixture.detectChanges();
 
 			expect(component.router.navigate)
-				.toHaveBeenCalledWith(['/solution/advisories/security'], { queryParams: { } });
+				.toHaveBeenCalledWith(['/solution/advisories/security'],
+					{ queryParams: { page: 1 } });
 
 			done();
 		});
@@ -528,8 +531,225 @@ describe('AdvisoriesComponent', () => {
 			expect(component.router.navigate)
 				.toHaveBeenCalledWith(
 					['/solution/advisories/security'],
-					{ queryParams: { severity: ['info'] } });
+					{ queryParams: { page: 1, severity: ['info'] } });
 
+			done();
+		});
+	});
+
+	it('should search', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			const tab = _.find(component.tabs, { key: 'security' });
+
+			expect(tab.filtered)
+				.toBeFalsy();
+			tab.searchForm.controls.search.setValue('query');
+			component.doSearch(tab);
+			fixture.detectChanges();
+
+			expect(tab.filtered)
+			.toBeTruthy();
+
+			done();
+		});
+	});
+
+	it('should not search', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+
+			const tab = _.find(component.tabs, { key: 'security' });
+
+			expect(tab.filtered)
+				.toBeFalsy();
+
+			tab.searchForm.controls.search.setValue('');
+			component.doSearch(tab);
+			fixture.detectChanges();
+
+			expect(tab.filtered)
+				.toBeFalsy();
+
+			done();
+		});
+	});
+
+	it('should unset search param if search input is empty for refresh', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const tab = _.find(component.tabs, { key: 'security' });
+			_.set(tab, ['params', 'search'], 'search');
+			tab.filtered = true;
+			tab.searchForm.controls.search.setValue('');
+
+			component.doSearch(tab);
+
+			fixture.detectChanges();
+
+			expect(_.get(tab, ['params', 'search']))
+				.toBeFalsy();
+			done();
+		});
+	});
+
+	it('should not refresh when valid search query', done => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const tab = _.find(component.tabs, { key: 'security' });
+			_.set(tab, ['params', 'search'], 'search');
+			tab.searchForm.setValue({ search: 'search' });
+
+			fixture.detectChanges();
+
+			expect(_.get(tab, ['params', 'search']))
+				.toBe('search');
+			done();
+		});
+	});
+
+	it('should set query params on page load for security advisories', done => {
+		const queryParams = {
+			lastUpdatedDateRange: '1565624197000,1597246597000',
+			severity: 'low',
+		};
+		TestBed.resetTestingModule();
+		TestBed.configureTestingModule({
+			imports: [
+				AdvisoriesModule,
+				HttpClientTestingModule,
+				MicroMockModule,
+				RouterTestingModule.withRoutes([
+					{ path: 'solution/advisories/security', component: AdvisoriesComponent },
+					{ path: 'solution/advisories/field-notices', component: AdvisoriesComponent },
+					{ path: 'solution/advisories/bugs', component: AdvisoriesComponent },
+				]),
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of(queryParams),
+						snapshot: {
+							data: {
+								user,
+							},
+							params: { advisory: 'security' },
+						},
+					},
+				},
+			],
+		})
+		.compileComponents();
+		fixture = TestBed.createComponent(AdvisoriesComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		const tab = _.find(component.tabs, { key: 'security' });
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(_.get(tab.params, 'lastUpdatedDateRange'))
+				.toEqual(_.castArray('1565624197000,1597246597000'));
+			expect(_.get(tab.params, 'severity'))
+				.toEqual(_.castArray('low'));
+			done();
+		});
+	});
+
+	it('should set query params on page load for field notices', done => {
+		const queryParams = {
+			lastUpdatedDateRange: '1565624197000,1597246597000',
+		};
+		TestBed.resetTestingModule();
+		TestBed.configureTestingModule({
+			imports: [
+				AdvisoriesModule,
+				HttpClientTestingModule,
+				MicroMockModule,
+				RouterTestingModule.withRoutes([
+					{ path: 'solution/advisories/security', component: AdvisoriesComponent },
+					{ path: 'solution/advisories/field-notices', component: AdvisoriesComponent },
+					{ path: 'solution/advisories/bugs', component: AdvisoriesComponent },
+				]),
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of(queryParams),
+						snapshot: {
+							data: {
+								user,
+							},
+							params: { advisory: 'field-notices' },
+						},
+					},
+				},
+			],
+		})
+		.compileComponents();
+		fixture = TestBed.createComponent(AdvisoriesComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		const tab = _.find(component.tabs, { key: 'field' });
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(_.get(tab.params, 'lastUpdatedDateRange'))
+				.toEqual(_.castArray('1565624197000,1597246597000'));
+			done();
+		});
+	});
+
+	it('should set query params on page load for critical bugs', done => {
+		const queryParams = {
+			state: 'new',
+		};
+		TestBed.resetTestingModule();
+		TestBed.configureTestingModule({
+			imports: [
+				AdvisoriesModule,
+				HttpClientTestingModule,
+				MicroMockModule,
+				RouterTestingModule.withRoutes([
+					{ path: 'solution/advisories/security', component: AdvisoriesComponent },
+					{ path: 'solution/advisories/field-notices', component: AdvisoriesComponent },
+					{ path: 'solution/advisories/bugs', component: AdvisoriesComponent },
+				]),
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of(queryParams),
+						snapshot: {
+							data: {
+								user,
+							},
+							params: { advisory: 'bugs' },
+						},
+					},
+				},
+			],
+		})
+		.compileComponents();
+		fixture = TestBed.createComponent(AdvisoriesComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const tab = component.selectedTab;
+			expect(_.get(tab.params, 'state'))
+				.toEqual(_.castArray('new'));
 			done();
 		});
 	});

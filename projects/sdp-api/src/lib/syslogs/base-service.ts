@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { HttpClient, HttpParameterCodec, HttpParams } from '@angular/common/http';
-import { InventoryConfiguration } from './inventory-configuration';
+import { SyslogsConfiguration } from './syslogs-configuration';
 
 /**
  * Custom parameter codec to correctly handle the plus sign in parameter
@@ -30,7 +30,7 @@ const PARAMETER_CODEC = new ParameterCodec();
  */
 export class BaseService {
   constructor(
-    protected config: InventoryConfiguration,
+    protected config: SyslogsConfiguration,
     protected http: HttpClient
   ) {
   }

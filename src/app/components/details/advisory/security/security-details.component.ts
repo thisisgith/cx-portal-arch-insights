@@ -15,6 +15,7 @@ import {
 	SecurityAdvisoryBulletin,
 	SecurityAdvisoryBulletinResponse,
 	SecurityAdvisoryInfo,
+	SecurityAdvisoriesResponse,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -22,7 +23,7 @@ import {
 	mergeMap,
 	catchError,
 } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, forkJoin } from 'rxjs';
 import { AssetIds } from '../impacted-assets/impacted-assets.component';
 import { Alert } from '@interfaces';
 
@@ -51,8 +52,9 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
 
 	private params: {
-		notice: ProductAlertsService.GetSecurityAdvisoriesParams;
-		bulletin: ProductAlertsService.GetPSIRTBulletinParams;
+		advisory?: ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams;
+		notice?: ProductAlertsService.GetSecurityAdvisoriesParams;
+		bulletin?: ProductAlertsService.GetPSIRTBulletinParams;
 	};
 
 	public impactedCount = 0;
@@ -64,6 +66,25 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 		private logger: LogService,
 		private productAlertsService: ProductAlertsService,
 	) { }
+
+	/**
+	 * Fetches our advisory
+	 * @returns the observable
+	 */
+	private getAdvisory () {
+		return this.productAlertsService.getAdvisoriesSecurityAdvisories(this.params.advisory)
+		.pipe(
+			map((response: SecurityAdvisoriesResponse) => {
+				_.set(this.data, 'advisory', _.head(response.data));
+			}),
+			catchError(err => {
+				this.logger.error('security-details.component : getAdvisory() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+		);
+	}
 
 	/**
 	 * Retrieves the security advisories
@@ -131,11 +152,7 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 			if (!this.id) {
 				this.id = advisoryId;
 			}
-			if (this.advisory) {
-				_.set(this.data, 'advisory', this.advisory);
-			}
-
-			this.isLoading = true;
+			const obsBatch = [];
 
 			this.params = {
 				bulletin: {
@@ -147,8 +164,22 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 					vulnerabilityStatus: ['POTVUL', 'VUL'],
 				},
 			};
+			obsBatch.push(this.getSecurityAdvisory());
 
-			this.getSecurityAdvisory()
+			if (this.advisory) {
+				_.set(this.data, 'advisory', this.advisory);
+			} else {
+				this.params.advisory = {
+					advisoryId: [_.toSafeInteger(this.id)],
+					customerId: this.customerId,
+				};
+
+				obsBatch.push(this.getAdvisory());
+			}
+
+			this.isLoading = true;
+
+			forkJoin(obsBatch)
 			.subscribe(() => {
 				this.isLoading = false;
 				this.details.emit(this.data);

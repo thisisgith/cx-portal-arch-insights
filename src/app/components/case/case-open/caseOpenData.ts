@@ -5,12 +5,13 @@
 export interface CaseOpenData {
 	caseNum: string;
 	customerActivity: string;
-	subtech: string;
-	technology: string;
-	title: string;
 	description: string;
 	problemArea: string;
 	requestRma: boolean;
+	scanStatus?: string;
 	severity: number;
 	severityName: string;
+	subtech: string;
+	technology: string;
+	title: string;
 }

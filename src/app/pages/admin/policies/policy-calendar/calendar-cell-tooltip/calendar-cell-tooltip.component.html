@@ -1,0 +1,65 @@
+<div class="cal-cell-tooltip-container">
+	<h5
+		class="base-margin-bottom"
+		[innerText]="data.date | date:'MMMM d'"
+	></h5>
+	<div class="divider"></div>
+	<ng-container *ngIf="dailies.length">
+		<div
+			class="text-bold base-margin-top"
+			[innerText]="'_Daily_' | i18n | uppercase"
+		>
+		</div>
+		<div *ngFor="let policy of dailies" class="flex">
+			<ng-container *ngTemplateOutlet="policyRow; context: { policy: policy }"></ng-container>
+		</div>
+	</ng-container>
+	<ng-container *ngIf="weeklies.length">
+		<div
+			class="text-bold base-margin-top"
+			[innerText]="'_WeeklyOnDay_' | i18n:(data.date | date:'EEEE') | uppercase"
+			*ngIf="weeklies.length"
+		></div>
+		<div *ngFor="let policy of weeklies" class="flex">
+			<ng-container *ngTemplateOutlet="policyRow; context: { policy: policy }"></ng-container>
+		</div>
+	</ng-container>
+	<ng-container *ngIf="monthlies.length">
+		<div
+			class="text-bold base-margin-top"
+			[innerText]="'_MonthlyOnDate_' | i18n:(data.date | date:'d') | uppercase"
+			*ngIf="monthlies.length"
+		></div>
+		<div *ngFor="let policy of monthlies" class="flex">
+			<ng-container *ngTemplateOutlet="policyRow; context: { policy: policy }"></ng-container>
+		</div>
+	</ng-container>
+</div>
+
+<ng-template #policyRow let-policy="policy">
+	<div 
+	class="qtr-margin-right"
+	[ngClass]="{
+		'COLLECTION': 'icon-compliance text-primary',
+		'SCAN': 'icon-diagnostics text-success',
+		'IGNORE': 'icon-blocked text-muted'
+	}[policy.policyType]"
+	>
+	</div>
+		<div
+			class="qtr-margin-right"
+			[innerText]="policy.time + ':'"
+			></div>
+		<div
+			*ngIf="policy.policyType === 'SCAN'"
+			[innerText]="'_DevicesAreScanned_' | i18n:policy.numDevices"
+			></div>
+		<div
+			*ngIf="policy.policyType === 'COLLECTION'"
+			[innerText]="'_NetworkRunsCollection_' | i18n"
+			></div>
+		<div
+			*ngIf="policy.policyType === 'IGNORE'"
+			[innerText]="'_DevicesCannotBeScanned_' | i18n"
+			></div>
+</ng-template>

@@ -16,7 +16,7 @@ describe('Case Detail Spec', () => {
 			// PBC-231 - Check for expected assets on the case listing
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			cy.getByAutoId('OPEN CASESTab', { timeout: 10000 }).should('exist');
-			cy.getByAutoId('RMAsTab').should('exist');
+			// cy.getByAutoId('RMAsTab').should('exist');
 			cy.getByAutoId('rmaCasesHeader').should('exist');
 			cy.getByAutoId('rmaShowingXcasesHeader', { timeout: 15000 }).should('exist');
 			cy.getByAutoId('caseSearchBox').should('exist');
@@ -53,6 +53,24 @@ describe('Case Detail Spec', () => {
 				.type(invalidSearchVal.concat('{enter}'));
 			cy.getByAutoId('invalidCaseNumber').should('exist').should('contain', i18n._RMAInvalidCaseNo_);
 			cy.getByAutoId('caseSearchBox').should('exist').clear();
+		});
+		it('PBC-537 Last Updated and Duration Open Visual Filters', () => {
+			cy.getByAutoId('Facet-Problem Resolution').click();
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('case');
+			cy.getByAutoId('CasesSelectVisualFilter-lastUpdated').should('exist')
+				.should('contain', 'Last Updated');
+			cy.getByAutoId('lastUpdatedFilter').should('exist')
+				.should('contain', '≤ 24 hrs')
+				.should('contain', '> 1 day')
+				.should('contain', '> 1 week');
+			cy.getByAutoId('CasesSelectVisualFilter-durationOpen').should('exist')
+				.should('contain', 'Duration Open');
+			cy.getByAutoId('durationOpenFilter').should('exist')
+				.should('contain', '≤ 24 hrs')
+				.should('contain', '> 1 day')
+				.should('contain', '> 1 week')
+				.should('contain', '> 2 weeks');
 		});
 	});
 	context('Case Detail View', () => {
@@ -232,7 +250,7 @@ describe('Case Detail Spec', () => {
 
 		it('PBC-83 Cases - Number of Open Cases', () => {
 			cy.getByAutoId('openCases').should('exist').should('contain', i18n._OpenCases_);
-			cy.getByAutoId('openRMAs').should('exist').should('contain', i18n._OpenRMAs_);
+			cy.getByAutoId('openRMAs').should('exist').should('contain', i18n._WithRMAs_);
 			cy.getByAutoId('Facet-Problem Resolution').click();
 			// Look in Visual Filters of Open Cases
 			cy.getByAutoId('VisualFilterCollapse')
@@ -259,6 +277,22 @@ describe('Case Detail Spec', () => {
 				cy.get('tspan').contains('S3'); // The majority is P3
 				// FilterTag testing covered in assets_spec
 			});
+		});
+		it('PBC-85 Cases - Filter by RMA', () => {
+			cy.getByAutoId('Facet-Problem Resolution').click();
+			cy.getByAutoId('CasesSelectVisualFilter-rma', { timeout: 20000 }).should('exist');
+			cy.getByAutoId('No RMAsPoint', { timeout: 10000 }).should('exist');
+			cy.getByAutoId('With RMAsPoint', { timeout: 10000 }).should('exist');
+			// "No RMA" filter fails intermittently, comment out until end server is stable.
+			/* cy.getByAutoId('No RMAsPoint').click();
+			cy.getByAutoId('FilterTag-F', { timeout: 15000 }).within(() => {
+				cy.get('span').contains('No RMAs');
+			}); */
+			cy.getByAutoId('With RMAsPoint').click();
+			cy.getByAutoId('FilterTag-T', { timeout: 15000 }).within(() => {
+				cy.get('span').contains('With RMAs');
+			});
+			cy.getByAutoId('rmaCasesHeader').should('exist');
 		});
 	});
 });

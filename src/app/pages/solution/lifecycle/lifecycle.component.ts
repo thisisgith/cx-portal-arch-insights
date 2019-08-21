@@ -127,6 +127,7 @@ export class LifecycleComponent implements OnDestroy {
 	};
 	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
+	public recommendedAtxScheduleCardOpened = false;
 	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	private user: User;
@@ -137,6 +138,10 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForPG = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
+	public eventXCoordinates = 0;
+	public eventYCoordinates = 0;
+	public scrollY = 0;
+	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
 	// id of ACC in request form
 	public accTitleRequestForm: string;
@@ -296,8 +301,6 @@ export class LifecycleComponent implements OnDestroy {
 		)
 		.subscribe((technology: RacetrackTechnology) => {
 			const currentSolution = this.componentData.params.solution;
-
-			const newTech = (currentSolution && technology !== this.selectedTechnology);
 			this.selectedTechnology = technology;
 
 			this.resetComponentData();
@@ -312,9 +315,7 @@ export class LifecycleComponent implements OnDestroy {
 			if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
 			this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
 
-			if (newTech) {
-				this.getRacetrackInfo(this.currentWorkingPitstop);
-			}
+			this.getRacetrackInfo(this.currentWorkingPitstop);
 		});
 	}
 
@@ -422,6 +423,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortable: true,
 					sortDirection: 'asc',
 					sortKey: 'title',
+					template: this.titleTemplate,
 					value: 'title',
 					width: '35%',
 				},
@@ -473,6 +475,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortable: true,
 					sortDirection: 'asc',
 					sortKey: 'title',
+					template: this.titleTemplate,
 					value: 'title',
 					width: '35%',
 				},
@@ -738,27 +741,9 @@ export class LifecycleComponent implements OnDestroy {
 			visible: false,
 		};
 		this.atxScheduleCardOpened = false;
-	}
-
-	/**
-	 * Determines which modal to display
-	 * @param acc ACC item
-	 * @returns ribbon
-	 */
-	 public getACCRibbonClass (acc: ACC) {
-		let ribbon = 'ribbon__clear';
-		if (!acc) {
-			return ribbon;
-		}
-		if (acc.status === 'completed') {
-			ribbon = 'ribbon__green';
-		}
-
-		if (acc.isFavorite) {
-			ribbon = 'ribbon__blue';
-		}
-
-		return ribbon;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.eventXCoordinates = 0;
+		this.eventYCoordinates = 0;
 	}
 
 	/**
@@ -810,6 +795,39 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public selectSession (session: AtxSessionSchema) {
 		this.sessionSelected = (_.isEqual(this.sessionSelected, session)) ? null : session;
+	}
+
+	/**
+	 * Selects the session
+	 * @param atx the session we've clicked on
+	 */
+	 public cancelATXSession (atx: AtxSchema) {
+		const ssId = _.find(atx.sessions, { scheduled: true }).sessionId;
+		this.status.loading.atx = true;
+		if (window.Cypress) {
+			window.atxLoading = true;
+		}
+		const params: RacetrackContentService.CancelSessionATXParams = {
+			atxId: atx.atxId,
+			sessionId: ssId,
+		};
+		this.contentService.cancelSessionATX(params)
+		.subscribe(() => {
+			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
+			atx.status = 'recommended';
+			this.status.loading.atx = false;
+			if (window.Cypress) {
+				window.atxLoading = false;
+			}
+		},
+		err => {
+			this.status.loading.acc = false;
+			if (window.Cypress) {
+				window.accLoading = false;
+			}
+			this.logger.error(`lifecycle.component : cancelATXSession() :: Error  : (${
+				err.status}) ${err.message}`);
+		});
 	}
 
 	/**
@@ -1094,6 +1112,61 @@ export class LifecycleComponent implements OnDestroy {
 	 }
 
 	/**
+	 * Gets the scroll coordinates for viewAll Modal
+	 * @param scrollModal HTMLElement
+	 */
+	public getScrollCoordinates (scrollModal: HTMLElement) {
+		this.scrollY = scrollModal.scrollTop;
+	}
+
+	/**
+	 * Get the mouse click coordinates
+	 * @param event event
+	 */
+	public getCoordinates (event: MouseEvent) {
+		this.eventXCoordinates = event.clientX;
+		this.eventYCoordinates = event.clientY;
+	}
+
+	/**
+	 * Get the panel styles based on button coordinates
+	 * @param viewAtxSessions HTMLElement
+	 * @returns panel string
+	 */
+	public getPanel (viewAtxSessions: HTMLElement) {
+		let panel;
+		const _div = viewAtxSessions;
+		this.innerWidth = window.innerWidth;
+		if (this.componentData.atx.interested) {
+			switch (this.atxview) {
+				case 'grid': {
+					if ((this.eventXCoordinates + 500) > this.innerWidth) {
+						_div.style.right = '90%';
+						_div.style.bottom = '-50px';
+						panel = 'panel cardpanel--openright';
+					} else {
+						_div.style.left = '40%';
+						_div.style.bottom = '-50px';
+						panel = 'panel cardpanel--open';
+					}
+					break;
+				}
+				case 'list': {
+					_div.style.right = '30%';
+					_div.style.top = `${this.eventYCoordinates + this.scrollY - 210}px`;
+					panel = 'panel listpanel--open';
+				}
+			}
+		} else {
+			_div.style.left = '40%';
+			_div.style.bottom = '10px';
+			panel = 'panel panel--open';
+		}
+
+		return panel;
+	}
+
+	/**
 	 * Loads the ACC for the given params
 	 * @returns the accResponse
 	 */
@@ -1373,6 +1446,9 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	private loadCGT (): Observable<ContractQuota[]> | Observable<void | { }> {
 		this.status.loading.cgt = true;
+		if (window.Cypress) {
+			window.cgtLoading = true;
+		}
 		let startDate;
 		let endDate;
 		let trainingDuration;
@@ -1391,6 +1467,9 @@ export class LifecycleComponent implements OnDestroy {
 		.pipe(
 			map((result: ContractQuota[]) => {
 				this.status.loading.cgt = false;
+				if (window.Cypress) {
+					window.cgtLoading = false;
+				}
 				this.totalAllowedGroupTrainings = _.size(result) * 2;
 				_.each(result, training => {
 					if (new Date(_.get(training, 'contract_end_date')).getFullYear() ===
@@ -1489,6 +1568,9 @@ export class LifecycleComponent implements OnDestroy {
 			}),
 			catchError(err => {
 				this.status.loading.cgt = false;
+				if (window.Cypress) {
+					window.cgtLoading = false;
+				}
 				this.logger.error(`lifecycle.component : loadCGT() :: Error : (${
 					err.status}) ${err.message}`);
 

@@ -19,37 +19,30 @@
 <ng-template #breadcrumbs>
 	<div class="flex flex-fluid flex-center-vertical">
 		<div class="icon-home icon--mid"></div>
-		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right" *ngIf="selectedSolution"></div>
+		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"
+			*ngIf="selectedSolution"></div>
 		<div *ngIf="selectedSolution">
 			<div class="text-muted" [innerText]="'_Solution_' | i18n"></div>
-			<div class="dropdown dropdown--tail"
-				data-auto-id="SolutionDropdown"
+			<div class="dropdown dropdown--tail" data-auto-id="SolutionDropdown"
 				[ngClass]="{'active': solutionDropdown }"
 				(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
-				<a class="text-dkgray-4 text-large text-bold"
-					[innerText]="selectedSolution.name"></a>
+				<a class="text-dkgray-4 text-large text-bold" [innerText]="selectedSolution.name"></a>
 				<div class="dropdown__menu">
-					<a *ngFor="let solution of solutions"
-						attr.data-auto-id="SolutionDropdown-{{ solution.name }}"
-						class="text-uppercase"
-						(click)="changeSolution(solution)"
-						[ngClass]="{
+					<a *ngFor="let solution of solutions" attr.data-auto-id="SolutionDropdown-{{ solution.name }}"
+						class="text-uppercase" (click)="changeSolution(solution)" [ngClass]="{
 							'selected': selectedSolution.name === solution.name
-						}"
-						[innerText]="solution.name">
+						}" [innerText]="solution.name">
 					</a>
 				</div>
 			</div>
 		</div>
-		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right" *ngIf="selectedTechnology"></div>
+		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"
+			*ngIf="selectedTechnology"></div>
 		<div *ngIf="selectedTechnology">
 			<div class="text-muted" [innerText]="'_UseCase_' | i18n"></div>
-			<div class="dropdown dropdown--tail"
-				data-auto-id="UseCaseDropdown"
-				[ngClass]="{'active': useCaseDropdown }"
+			<div class="dropdown dropdown--tail" data-auto-id="UseCaseDropdown" [ngClass]="{'active': useCaseDropdown }"
 				(click)="solutionDropdown = false; useCaseDropdown = !useCaseDropdown">
-				<a class="text-dkgray-4 text-large text-bold"
-					[innerText]="selectedTechnology.name">
+				<a class="text-dkgray-4 text-large text-bold" [innerText]="selectedTechnology.name">
 				</a>
 				<div class="dropdown__menu">
 					<a *ngFor="let technology of technologies"
@@ -124,8 +117,8 @@
 			<ng-container *ngTemplateOutlet="noCaseContent"></ng-container>
 		</div>
 		<ng-template #noCaseContent>
-			<div class="text-muted text-large base-padding-left base-padding-right dbl-padding-top qtr-padding-bottom" [innerText]="'_NoOpenCases_' | i18n"></div>
-			<div class="text-muted text-large base-padding-left base-padding-right base-padding-bottom" [innerText]="'_NoOpenRMAs_' | i18n"></div>
+			<div class="text-muted text-xlarge base-padding-left base-padding-right dbl-padding-top qtr-padding-bottom" [innerText]="'_NoOpenCases_' | i18n"></div>
+			<div class="text-muted text-xlarge base-padding-left base-padding-right base-padding-bottom" [innerText]="'_NoOpenRMAs_' | i18n"></div>
 		</ng-template>
 		<ng-template #caseCountContent>
 			<div class="row no-margin base-padding-left base-padding-right">
@@ -133,13 +126,13 @@
 					<div data-auto-id="openCases" class="text-muted text-xlarge" [innerText]="'_OpenCases_' | i18n"></div>
 				</div>
 				<div class="col-7 no-padding-left">
-					<div class="text-huge opacity-50">{{casesCount}}</div>
+					<div class="text-xlarge opacity-50" [innerText]="casesCount"></div>
 				</div>
 				<div class="col-5 base-padding-top">
 					<div data-auto-id="openRMAs" class="text-primary text-xlarge" [innerText]="'_WithRMAs_' | i18n"></div>
 				</div>
 				<div class="col-7 no-padding-left base-padding-top">
-					<div class="text-huge opacity-50">{{RMACount}}</div>
+					<div class="text-xlarge opacity-50" [innerText]="RMACount"></div>
 				</div>
 			</div>
 		</ng-template>

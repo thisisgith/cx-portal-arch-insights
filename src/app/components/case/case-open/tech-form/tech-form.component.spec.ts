@@ -95,4 +95,90 @@ describe('TechFormComponent', () => {
 		expect(caseService.fetchProblemArea)
 			.toHaveBeenCalled();
 	}));
+
+	it('should refresh suggestions when called', fakeAsync(() => {
+		spyOn(caseService, 'fetchClassification')
+			.and
+			.returnValue(
+				of({
+					locatorId: '01fbb089ed4',
+					prcode_time: 44,
+					predictions: [
+						{
+							sub_tech: {
+								id: '1941',
+								name: 'Adaptive Security Appliance (ASA) non-VPN problem',
+								probab: 0.482,
+							},
+							tech: {
+								id: '54',
+								name:
+								'Security - Network Firewalls and Intrusion Prevention Systems',
+								probab: 0.482,
+							},
+						},
+					],
+					problem_code: ['Interop'],
+					Status: 'success',
+					subtech_time: 10,
+					tech_time: 10,
+					time_preprocessing: 4,
+					time_taken_mongo: 2,
+					time_taken_prediction: 123,
+					timestamp: 1565718186345,
+					total_time_taken: 132,
+				}),
+			);
+		component.refreshPredictions();
+		tick();
+		fixture.detectChanges();
+		expect(caseService.fetchClassification)
+			.toHaveBeenCalled();
+		expect(component.recommendedTechs.length)
+			.toEqual(1);
+	}));
+
+	it('should update tech/subtech form values when a suggested one is picked', fakeAsync(() => {
+		component.form.controls.suggestedTech.setValue({
+			sub_tech: {
+				id: '1941',
+				name: 'Adaptive Security Appliance (ASA) non-VPN problem',
+				probab: 0.482,
+			},
+			tech: {
+				id: '54',
+				name:
+				'Security - Network Firewalls and Intrusion Prevention Systems',
+				probab: 0.482,
+			},
+		});
+		tick();
+		expect(component.form.controls.subtech.value)
+			.toEqual({
+				_id: '1941',
+				subTechName: 'Adaptive Security Appliance (ASA) non-VPN problem',
+				techId: '54',
+			});
+	}));
+
+	it('should nullify tech/subtech when suggested value is cleared.', fakeAsync(() => {
+		component.form.controls.suggestedTech.setValue({
+			sub_tech: {
+				id: '1941',
+				name: 'Adaptive Security Appliance (ASA) non-VPN problem',
+				probab: 0.482,
+			},
+			tech: {
+				id: '54',
+				name:
+				'Security - Network Firewalls and Intrusion Prevention Systems',
+				probab: 0.482,
+			},
+		});
+		tick();
+		component.form.controls.suggestedTech.setValue(null);
+		tick();
+		expect(component.form.controls.subtech.value)
+			.toBeNull();
+	}));
 });

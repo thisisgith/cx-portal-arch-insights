@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ContactSupportComponent } from './contact-support.component';
 import { CuiSelectModule, CuiModalModule,
 	CuiInputModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import { CharCountModule } from '../char-count/char-count.module';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { EmailModule } from '@sdp-api';
@@ -27,6 +29,7 @@ const rootUrl = environment.sdpServiceOrigin;
 		CuiInputModule,
 		I18nPipeModule,
 		CuiSpinnerModule,
+		CharCountModule,
 		EmailModule.forRoot({ rootUrl }),
 	],
 	entryComponents: [ContactSupportComponent],

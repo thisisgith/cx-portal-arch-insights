@@ -4,6 +4,7 @@ import {
 	ViewChild,
 	TemplateRef,
 	OnDestroy,
+	ElementRef,
 } from '@angular/core';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -23,14 +24,17 @@ import {
 	SecurityAdvisoryInfo,
 	VulnerabilityResponse,
 } from '@sdp-api';
-import { of, forkJoin, Subject } from 'rxjs';
+import { of, forkJoin, Subject, fromEvent, Subscription } from 'rxjs';
 import * as _ from 'lodash-es';
 import { CuiTableOptions, CuiTableColumnOption } from '@cisco-ngx/cui-components';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {
 	map,
 	catchError,
 	switchMap,
+	debounceTime,
+	distinctUntilChanged,
+	takeUntil,
 } from 'rxjs/operators';
 import { VisualFilter, AdvisoryType } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -58,6 +62,10 @@ interface Tab {
 		ProductAlertsService.GetAdvisoriesFieldNoticesParams;
 	route: string;
 	subject?: Subject<{ }>;
+	searchForm?: FormGroup;
+	searchInput?: ElementRef;
+	searchTemplate?: TemplateRef<{ }>;
+	searchSubscribe?: Subscription;
 	selectedSubfilters?: SelectedSubfilter[];
 }
 
@@ -80,16 +88,14 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		filterCollapse: false,
 		isLoading: true,
 	};
-	public search: FormControl = new FormControl('');
-	public searchForm: FormGroup;
 	public searchOptions = {
-		debounce: 1500,
+		debounce: 200,
 		max: 100,
 		min: 3,
-		pattern: /^[a-zA-Z ]*$/,
+		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
 	};
 	public activeIndex = 0;
-
+	private destroy$ = new Subject();
 	public tabs: Tab[] = [];
 	private routeParam: string;
 	private customerId: string;
@@ -118,6 +124,33 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	@ViewChild('columnChartFilter', { static: true })
 		private columnChartFilterTemplate: TemplateRef<{ }>;
 
+	@ViewChild('securitySearchTemplate', { static: true })
+		private securitySearchTemplate: TemplateRef<{ }>;
+	@ViewChild('fieldSearchTemplate', { static: true })
+		private fieldSearchTemplate: TemplateRef<{ }>;
+	@ViewChild('bugsSearchTemplate', { static: true })
+		private bugsSearchTemplate: TemplateRef<{ }>;
+	@ViewChild('securitySearchInput', { static: false }) set securityContent (content: ElementRef) {
+		if (content) {
+			const tab = _.find(this.tabs, { key: 'security' });
+			tab.searchInput = content;
+			this.searchSubscription(tab);
+		}
+	}
+	@ViewChild('fieldSearchInput', { static: false }) set fieldContent (content: ElementRef) {
+		if (content) {
+			const tab = _.find(this.tabs, { key: 'field' });
+			tab.searchInput = content;
+			this.searchSubscription(tab);
+		}
+	}
+	@ViewChild('bugsSearchInput', { static: false }) set bugsContent (content: ElementRef) {
+		if (content) {
+			const tab = _.find(this.tabs, { key: 'bug' });
+			tab.searchInput = content;
+			this.searchSubscription(tab);
+		}
+	}
 	constructor (
 		private diagnosticsService: DiagnosticsService,
 		private logger: LogService,
@@ -136,7 +169,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 */
 	private adjustQueryParams () {
 		const queryParams =
-			_.omit(_.cloneDeep(this.selectedTab.params), ['customerId', 'rows', 'page']);
+			_.omit(_.cloneDeep(this.selectedTab.params), ['customerId', 'rows']);
 		this.router.navigate([`/solution/advisories/${this.routeParam}`], {
 			queryParams,
 		});
@@ -241,6 +274,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					rows: 10,
 				},
 				route: 'security',
+				searchTemplate: this.securitySearchTemplate,
 				selected: this.routeParam === 'security',
 				selectedSubfilters: [],
 				subject: new Subject(),
@@ -321,6 +355,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					rows: 10,
 				},
 				route: 'field-notices',
+				searchTemplate: this.fieldSearchTemplate,
 				selected: this.routeParam === 'field-notices',
 				selectedSubfilters: [],
 				subject: new Subject(),
@@ -397,6 +432,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					rows: 10,
 				},
 				route: 'bugs',
+				searchTemplate: this.bugsSearchTemplate,
 				selected: this.routeParam === 'bugs',
 				selectedSubfilters: [],
 				subject: new Subject(),
@@ -404,12 +440,57 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			},
 		];
 
-		this.activeIndex = _.findIndex(this.tabs, 'selected');
+		_.each(this.tabs, tab => {
+			tab.searchForm = new FormGroup({
+				search: new FormControl('',
+					[
+						Validators.minLength(this.searchOptions.min),
+						Validators.maxLength(this.searchOptions.max),
+						Validators.pattern(this.searchOptions.pattern),
+					]),
+			});
+		});
 
+		this.activeIndex = _.findIndex(this.tabs, 'selected');
 		this.buildSecurityAdvisoriesSubject();
 		this.buildFieldNoticesSubject();
 		this.buildBugsSubject();
-		this.loadData();
+	}
+
+	/**
+	 * Handler for performing a search
+	 * @param tab tab to perform query for
+	 */
+	public doSearch (tab: Tab) {
+		const query = tab.searchForm.controls.search.value;
+		if (tab.searchForm.valid && query) {
+			this.logger.debug('advisories.component :: doSearch()' +
+				` :: Searching for ${query} in ${tab.key}`);
+			_.set(tab, ['params', 'search'], query);
+			tab.filtered = true;
+			this.adjustQueryParams();
+			tab.subject.next();
+		} else if (!query && tab.filtered) {
+			_.unset(tab, ['params', 'search']);
+			this.adjustQueryParams();
+			tab.subject.next();
+		}
+	}
+
+	/**
+	 * Builds the search debounce subscription for Security Advisories
+	 * @param tab tab to perform search
+	 * @returns Search Subscription
+	 */
+	private searchSubscription (tab) {
+		fromEvent(tab.searchInput.nativeElement, 'keyup')
+		.pipe(
+			map((evt: KeyboardEvent) => (<HTMLInputElement> evt.target).value),
+			debounceTime(this.searchOptions.debounce),
+			distinctUntilChanged(),
+			takeUntil(this.destroy$),
+		)
+		.subscribe(() => this.doSearch(tab));
 	}
 
 	/**
@@ -803,15 +884,15 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * @param event the index of the tab we've selected
 	 */
 	public selectTab (event: number) {
+		const selectedTab = this.tabs[event];
 		_.each(this.tabs, (tab: Tab) => {
-			if (tab !== this.tabs[event]) {
+			if (tab !== selectedTab) {
 				tab.selected = false;
 			}
 		});
-
 		this.activeIndex = event;
-		this.tabs[event].selected = true;
-		this.routeParam = this.tabs[event].route;
+		selectedTab.selected = true;
+		this.routeParam = selectedTab.route;
 		this.adjustQueryParams();
 	}
 
@@ -931,6 +1012,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const tab = _.find(this.tabs, { key: 'security' });
 		tab.subject.pipe(
 			switchMap(() => this.fetchSecurityAdvisories()),
+			takeUntil(this.destroy$),
 		)
 		.subscribe();
 	}
@@ -968,6 +1050,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const tab = _.find(this.tabs, { key: 'field' });
 		tab.subject.pipe(
 			switchMap(() => this.fetchFieldNotices()),
+			takeUntil(this.destroy$),
 		)
 		.subscribe();
 	}
@@ -979,6 +1062,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const tab = _.find(this.tabs, { key: 'bug' });
 		tab.subject.pipe(
 			switchMap(() => this.fetchBugs()),
+			takeUntil(this.destroy$),
 		)
 		.subscribe();
 	}
@@ -998,29 +1082,25 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		.pipe(
 			map(() => _.map(this.tabs, tab => {
 
-				if (this.selectedTab.key === 'security') {
-					if (this.selectedTab.params.severity) {
-						this.onSubfilterSelect(this.selectedTab.impact,
-												_.find(this.selectedTab.filters,
-												{ key: 'impact' }));
+				if (tab.key === 'security') {
+					if (tab.impact) {
+						this.onSubfilterSelect(tab.impact,
+							_.find(tab.filters, { key: 'impact' }));
 					}
-					if (this.selectedTab.lastUpdate) {
-						this.onSubfilterSelect(this.selectedTab.lastUpdate,
-												_.find(this.selectedTab.filters,
-												{ key: 'lastUpdate' }));
+					if (tab.lastUpdate) {
+						this.onSubfilterSelect(tab.lastUpdate,
+							_.find(tab.filters, { key: 'lastUpdate' }));
 					}
 				}
 
-				if (this.selectedTab.key === 'field' && this.selectedTab.lastUpdate) {
-					this.onSubfilterSelect(this.selectedTab.lastUpdate,
-											_.find(this.selectedTab.filters,
-											{ key: 'lastUpdate' }));
+				if (tab.key === 'field' && tab.lastUpdate) {
+					this.onSubfilterSelect(tab.lastUpdate,
+						_.find(tab.filters, { key: 'lastUpdate' }));
 				}
 
-				if (this.selectedTab.key === 'bug' && this.selectedTab.state) {
-					this.onSubfilterSelect(this.selectedTab.state,
-											_.find(this.selectedTab.filters,
-											{ key: 'state' }));
+				if (tab.key === 'bug' && tab.state) {
+					this.onSubfilterSelect(tab.state,
+						_.find(tab.filters, { key: 'state' }));
 				}
 
 				tab.subject.next();
@@ -1045,6 +1125,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	public onPageChanged (event: any, tab: Tab) {
 		if (event.page + 1 !== tab.params.page) {
 			tab.params.page = (event.page + 1);
+			this.adjustQueryParams();
 			tab.subject.next();
 		}
 	}
@@ -1074,7 +1155,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				start.setDate(start.getDate() - 90);
 				end.setDate(end.getDate() - 60);
 				break;
-			case 'gt-90-days':
+			case 'further-out':
 				end.setDate(end.getDate() - 90);
 
 				return [`,${end.getTime()
@@ -1090,22 +1171,47 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			window.loading = true;
 		}
 		this.buildTabs();
-		this.searchForm = new FormGroup({
-			search: this.search,
-		});
 
 		this.route.queryParams.subscribe(params => {
 			const tab = this.selectedTab;
-			switch (this.selectedTab.key) {
+
+			if (params.page) {
+				const page = _.toSafeInteger(params.page);
+				tab.params.page = (page < 1) ? 1 : page;
+			}
+
+			if (params.search &&
+				params.search.length >= this.searchOptions.min &&
+				params.search.length <= this.searchOptions.max &&
+				this.searchOptions.pattern.test(params.search)) {
+				tab.params.search = params.search;
+				tab.searchForm.controls.search.setValue(params.search);
+			}
+
+			if (params.sort) {
+				const sort = _.split(params.sort, ':');
+				_.each(tab.table.columns, c => {
+					if (sort.length === 2 &&
+						c.sortable &&
+						c.key &&
+						c.key.toLowerCase() === sort[0].toLowerCase()) {
+						c.sorting = true;
+						c.sortDirection = sort[1].toLowerCase();
+						tab.params.sort = _.castArray(`${sort[0]}:${sort[1].toUpperCase()}`);
+					} else {
+						c.sorting = false;
+					}
+				});
+			}
+
+			switch (tab.key) {
 				case 'security': {
 					if (params.severity) {
 						_.set(tab, ['params', 'severity'], _.castArray(params.severity));
-						tab.filtered = true;
 					}
 					if (params.lastUpdatedDateRange) {
 						_.set(tab, ['params', 'lastUpdatedDateRange'],
 							_.castArray(params.lastUpdatedDateRange));
-						tab.filtered = true;
 					}
 					break;
 				}
@@ -1113,25 +1219,29 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					if (params.lastUpdatedDateRange) {
 						_.set(tab, ['params', 'lastUpdatedDateRange'],
 							_.castArray(params.lastUpdatedDateRange));
-						tab.filtered = true;
 					}
 					break;
 				}
 				case 'bug': {
 					if (params.state) {
 						_.set(tab, ['params', 'state'], _.castArray(params.state));
-						tab.filtered = true;
 					}
 				}
 			}
+
+			tab.filtered = !_.isEmpty(
+				_.omit(_.cloneDeep(tab.params), ['customerId', 'rows', 'page', 'sort']));
 		});
+
+		this.loadData();
 	}
 
 	/**
 	 * Cancel all subjects
 	 */
 	public ngOnDestroy () {
-		_.every(this.tabs, tab => _.invoke(tab.subject, 'unsubscribe'));
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 
 	/**
@@ -1155,6 +1265,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			page: 1,
 			rows: 10,
 		};
+
+		tab.searchForm.controls.search.setValue('');
 		tab.selectedSubfilters = [];
 		const totalFilter = _.find(tab.filters, { key: 'total' });
 		totalFilter.selected = true;

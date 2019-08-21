@@ -53,8 +53,8 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 
 	private params: {
 		advisory?: ProductAlertsService.GetAdvisoriesFieldNoticesParams;
-		notice: ProductAlertsService.GetFieldNoticeParams;
-		bulletin: ProductAlertsService.GetFieldNoticeBulletinParams;
+		notice?: ProductAlertsService.GetFieldNoticeParams;
+		bulletin?: ProductAlertsService.GetFieldNoticeBulletinParams;
 	};
 
 	public impactedCount = 0;
@@ -174,7 +174,7 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 			} else {
 				this.params.advisory = {
 					customerId: this.customerId,
-					id: [_.toSafeInteger(this.id)],
+					fieldNoticeId: [_.toSafeInteger(this.id)],
 				};
 
 				obsBatch.push(this.getAdvisory());

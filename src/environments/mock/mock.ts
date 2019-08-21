@@ -6,6 +6,8 @@ import {
 	AssetScenarios,
 	ATXScenarios,
 	BookmarkScenarios,
+	CalendarScenarios,
+	CancelATXScenarios,
 	CaseScenarios,
 	CGTScenarios,
 	ContractScenarios,
@@ -13,6 +15,7 @@ import {
 	CreateRegistrationScenarios,
 	CriticalBugScenarios,
 	CriticalBugAssetsScenarios,
+	DeviceScenarios,
 	DevicePoliciesScenarios,
 	DNACStatusScenarios,
 	ELearningScenarios,
@@ -28,6 +31,7 @@ import {
 	HealthStatusScenarios,
 	LicenseScenarios,
 	NetworkScenarios,
+	OSVScenarios,
 	PolicesScenarios,
 	RacetrackScenarios,
 	RMAScenarios,
@@ -52,18 +56,19 @@ import * as _ from 'lodash-es';
 import {
 	ACCResponse,
 	ACCUserInfoSchema,
+	ATXResponseModel,
 	AdvisoriesByLastUpdatedCount,
 	Assets,
+	AssetRecommendationsResponse,
 	BugImpactedAssetsResponse,
-	ATXResponseModel,
 	CDCSearchResponse,
+	CSDFResponseModel,
 	CommunitiesResponse,
 	ContractQuota,
 	CoverageCountsResponse,
 	CoverageResponse,
 	CriticalBugsCount,
 	CriticalBugsResponse,
-	CSDFResponseModel,
 	DeviceContractResponse,
 	ELearningResponse,
 	EntitledUser,
@@ -79,6 +84,7 @@ import {
 	IERegistrationResponseModel,
 	LicenseDataResponseModel,
 	PitstopActionUpdateResponse,
+	PoliciesGroupByDayInAMonthModel,
 	RacetrackResponse,
 	RoleCountResponse,
 	SecurityAdvisoriesResponse,
@@ -88,8 +94,10 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
-	SoftwareEOLBulletinResponse,
+	SoftwareProfilesResponse,
+	SoftwareVersionsResponse,
 	SoftwareEOLResponse,
+	SoftwareEOLBulletinResponse,
 	SuccessPathsResponse,
 	UserTraining,
 	VulnerabilityResponse,
@@ -103,6 +111,7 @@ type ResponseBody = (
 	ACCUserInfoSchema |
 	AdvisoriesByLastUpdatedCount |
 	Assets |
+	AssetRecommendationsResponse |
 	BugImpactedAssetsResponse |
 	ATXResponseModel |
 	CDCSearchResponse |
@@ -128,6 +137,7 @@ type ResponseBody = (
 	IERegistrationResponseModel |
 	LicenseDataResponseModel |
 	PitstopActionUpdateResponse |
+	PoliciesGroupByDayInAMonthModel |
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
@@ -138,6 +148,9 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
+	SoftwareProfilesResponse |
+	SoftwareVersionsResponse |
+	SoftwareEOLResponse |
 	SoftwareEOLBulletinResponse |
 	SoftwareEOLResponse |
 	SuccessPathsResponse |
@@ -189,20 +202,23 @@ export const mockSettings: MockSettings = {
 	mock: _.flatten([
 		ACCScenarios,
 		ACCUserInfoScenarios,
+		ATXScenarios,
 		ActionScenarios,
 		AdvisorySecurityAdvisoryScenarios,
 		AssetScenarios,
-		ATXScenarios,
 		BookmarkScenarios,
-		CaseScenarios,
 		CGTScenarios,
+		CalendarScenarios,
+		CancelATXScenarios,
+		CaseScenarios,
 		ContractScenarios,
 		CoverageScenarios,
 		CreateRegistrationScenarios,
 		CriticalBugAssetsScenarios,
 		CriticalBugScenarios,
-		DevicePoliciesScenarios,
 		DNACStatusScenarios,
+		DeviceScenarios,
+		DevicePoliciesScenarios,
 		ELearningScenarios,
 		EntitlementScenarios,
 		FieldNoticeAdvisoryScenarios,
@@ -216,9 +232,11 @@ export const mockSettings: MockSettings = {
 		HealthStatusScenarios,
 		LicenseScenarios,
 		NetworkScenarios,
-		PolicesScenarios,
-		RacetrackScenarios,
+		OSVScenarios,
 		RMAScenarios,
+		PolicesScenarios,
+		RMAScenarios,
+		RacetrackScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,

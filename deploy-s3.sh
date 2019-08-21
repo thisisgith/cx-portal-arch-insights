@@ -15,7 +15,8 @@ fi
 # set AWS session env vars
 resetAws $1
 # build the project
-npx ngdeploy cxportal-qa -vn --source='src' --gzip --no-push --no-validate --ng-build="--aot --optimization=true --baseHref /"
+npx ng build -c cxportal-qa --aot --build-optimizer --optimization=true --baseHref /
+npm run gzip
 # sync dist files to s3
 aws s3 sync dist s3://cisco-cx-customer-portal
 # invalidate the previous cache
