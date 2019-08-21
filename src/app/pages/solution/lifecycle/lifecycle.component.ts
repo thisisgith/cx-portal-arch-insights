@@ -449,7 +449,6 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
 					width: '15%',
@@ -501,7 +500,6 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
 					width: '15%',
@@ -531,7 +529,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '40%',
+					width: '50%',
 				},
 				{
 					key: 'status',
@@ -543,10 +541,9 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
-					width: '30%',
+					width: '20%',
 				},
 			],
 		});
@@ -573,7 +570,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '40%',
+					width: '50%',
 				},
 				{
 					key: 'status',
@@ -585,10 +582,9 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
-					width: '30%',
+					width: '20%',
 				},
 			],
 		});

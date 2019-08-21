@@ -1119,7 +1119,7 @@
 </ng-template>
 
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
-	<div *ngIf="type === 'ATX'">
+	<div class="text-right" *ngIf="type === 'ATX'">
 		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
 			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
 			[innerText]="'_ViewSessions_' | i18n">
@@ -1131,11 +1131,11 @@
 			[innerText]="'_Cancel_' | i18n">
 		</button-->
 		<a class="no-link" target="_blank" [href]="celldata.recordingURL">
-			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase half-margin-left"
 				[innerText]="'_WatchNow_' | i18n"></button>
 		</a>
 	</div>
-	<div *ngIf="type === 'ACC' && celldata.status === 'recommended'">
+	<div *ngIf="type === 'ACC' && celldata.status === 'recommended'" class="text-right">
 		<button data-auto-id="Request1on1ACCButton"
 			(click)="selectAccRequestForm(true, celldata.accId, celldata.title)"
 			class="btn btn--small btn--secondary text-uppercase"
@@ -1143,7 +1143,7 @@
 			[innerText]="'_Request1on1_' | i18n">
 		</button>
 	</div>
-	<div *ngIf="type === 'SB' || type==='PG'">
+	<div *ngIf="type === 'SB' || type==='PG'" class="text-right">
 		<a class="no-link" target="_blank" [href]="celldata.url">
 			<button data-auto-id="LaunchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 				[innerText]="'_Launch_' | i18n"></button>
