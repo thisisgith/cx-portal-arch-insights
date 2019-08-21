@@ -4,8 +4,9 @@ import { CbpRuleViolationComponent } from './cbp-rule-violation.component';
 import { CbpRuleViolationModule } from './cbp-rule-violation.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureService } from '@sdp-api';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('CbpRuleViolationComponent', () => {
 	let component: CbpRuleViolationComponent;
@@ -23,9 +24,7 @@ describe('CbpRuleViolationComponent', () => {
 
 	beforeEach(() => {
 		service = TestBed.get(ArchitectureService);
-		spyOn(service, 'getCBPSeverityList')
-			.and
-			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
+
 		fixture = TestBed.createComponent(CbpRuleViolationComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -37,7 +36,10 @@ describe('CbpRuleViolationComponent', () => {
 	});
 
 	it('should call getCBPSeverityList on init', () => {
-		component.getCBPRulesData();
+		spyOn(service, 'getCBPSeverityList')
+			.and
+			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
+		component.ngOnInit();
 		expect(service.getCBPSeverityList)
 			.toHaveBeenCalled();
 	});
@@ -47,6 +49,19 @@ describe('CbpRuleViolationComponent', () => {
 		component.onPagerUpdated(pageEvent);
 		expect(component.paramsType.page)
 		.toBe(1);
+	});
+
+	it('should set null values on request errors', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getCBPSeverityList')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+		);
+		component.ngOnInit();
 	});
 
 	it('should close panel', () => {
@@ -86,7 +101,6 @@ describe('CbpRuleViolationComponent', () => {
 			serialNumber: 'FDO1852E263',
 			softwareType: 'IOS-XE',
 			softwareVersion: '16.3.3',
-
 		};
 		component.onTableRowClicked(tableEvent);
 		expect(component.exceptionObject)

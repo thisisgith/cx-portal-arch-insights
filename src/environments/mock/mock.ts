@@ -3,6 +3,7 @@ import {
 	ACCUserInfoScenarios,
 	ActionScenarios,
 	AdvisorySecurityAdvisoryScenarios,
+	ArchitectureScenarios,
 	AssetScenarios,
 	ATXScenarios,
 	BookmarkScenarios,
@@ -48,7 +49,6 @@ import {
 	SoftwareEOLScenarios,
 	SuccessPathScenarios,
 	VulnerabilityScenarios,
-	ArchitectureScenarios,
 } from './';
 
 import { HttpHeaders } from '@angular/common/http';
@@ -206,6 +206,7 @@ export const mockSettings: MockSettings = {
 		ATXScenarios,
 		ActionScenarios,
 		AdvisorySecurityAdvisoryScenarios,
+		ArchitectureScenarios,
 		AssetScenarios,
 		BookmarkScenarios,
 		CGTScenarios,
@@ -252,6 +253,5 @@ export const mockSettings: MockSettings = {
 		SoftwareEOLScenarios,
 		SuccessPathScenarios,
 		VulnerabilityScenarios,
-		ArchitectureScenarios,
 	]),
 };
