@@ -9,8 +9,6 @@ const cardScenario = assetMock.getScenario('GET', 'Assets Page 1 - Grid View');
 const assets = networkScenario.response.body.data;
 const assetCards = cardScenario.response.body.data;
 const totalCountScenario = coverageMock.getScenario('GET', 'Coverage Counts');
-const coveredScenario = coverageMock.getScenario('GET', 'Coverage');
-const coveredRes = coveredScenario.response.body.data[0];
 const coverageElements = totalCountScenario.response.body;
 // const vulnMock = new MockService('VulnerabilityScenarios');
 // const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
@@ -88,7 +86,6 @@ describe('Assets', () => { // PBC-41
 				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-339
 
 				// PBC-153
-				// TODO: Check device image after PBC-438 is fixed
 				cy.getByAutoId('ProductId').should('have.text', asset.productId);
 				cy.getByAutoId('YouHaveInventory').should(
 					'have.text', `you have ${hwResponse.length} of these in your inventory`
@@ -111,7 +108,6 @@ describe('Assets', () => { // PBC-41
 				'have.text',
 				Cypress.moment(assetSummary.lastDateOfSupport).format(dateFormat)
 			);
-			// TODO: More tests for view open cases dropdown when it's implemented
 			cy.getByAutoId('ToggleActiveCases').should('be.visible')
 				.and('have.text', `View Open Cases (${caseListResponse.content.length})`);
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(3).click(); // switch to new asset without closing modal
@@ -173,8 +169,7 @@ describe('Assets', () => { // PBC-41
 			hwMock.enable('Hardware');
 		});
 
-		// TODO: Unskip and modify to accomodate PBC-90 & 91
-		it.skip('Opens Asset 360 view when clicking asset cards', () => {
+		it('Opens Asset 360 view when clicking asset cards', () => {
 			const advisoryAPI = new RouteWatch('**/product-alerts/**');
 			assetMock.enable('(Assets) Missing data - Grid View');
 			cy.getByAutoId('grid-view-btn').click();
@@ -190,8 +185,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('list-view-btn').click();
 		});
 
-		// TODO: Unskip and modify to accomodate PBC-90 & 91
-		it.skip('Closes 360 view when leaving the assets page', () => { // PBC-165
+		it('Closes 360 view when leaving the assets page', () => { // PBC-165
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.get('details-panel').should('be.visible');
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -200,16 +194,15 @@ describe('Assets', () => { // PBC-41
 			cy.get('details-panel').should('not.exist');
 		});
 
-		it('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
-			// TODO: Disabled for PBC-548
-			// const getPaginationText = (pagination, type) => {
-			// 	let pageText = pagination.total < pagination.rows
-			// 		? `Showing ${pagination.total} of `
-			// 		: `Showing ${pagination.rows} of `;
-			// 	pageText += `${pagination.total} ${type}`;
+		it('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240, PBC-548
+			const getPaginationText = (pagination, type) => {
+				let pageText = pagination.total < pagination.rows
+					? `Showing ${pagination.total} of `
+					: `Showing ${pagination.rows} of `;
+				pageText += `${pagination.total} ${type}`;
 
-			// 	return pageText;
-			// };
+				return pageText;
+			};
 			const getImpactIcon = severity => {
 				switch (severity) {
 					case 'Critical':
@@ -227,11 +220,8 @@ describe('Assets', () => { // PBC-41
 			cy.get('tbody tr').eq(0).click();
 			cy.getByAutoId('ADVISORIESTab').click();
 
-			// TODO: Disabled for PBC-548
-			// const pageText = getPaginationText(
-			// 	securityXHR.response.body.Pagination, 'Security Advisories'
-			// );
-			// cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+			let pageText = getPaginationText(advisorySec.Pagination, 'Security Advisories');
+			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 			Cypress._.each(advisorySec.data, (advisory, index) => {
 				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr').eq(index).within(() => {
 					if (advisory.severity) {
@@ -249,21 +239,17 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId('AdvisoryLastUpdated').should('have.text', date);
 				});
 			});
-			// TODO: Disabled for PBC-559
-			// if (advisorySec.Pagination.total > advisorySec.data.length) {
-			// 	cy.getByAutoId('LoadMoreButton').click();
-			// 	cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr')
-			// 		.should('have.length.greaterThan', 10);
-			// } else {
-			// 	cy.getByAutoId('LoadMoreButton').should('not.be.visible');
-			// }
+			if (advisorySec.Pagination.total > advisorySec.data.length) {
+				cy.getByAutoId('LoadMoreButton').click();
+				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr')
+					.should('have.length.greaterThan', 10);
+			} else {
+				cy.getByAutoId('LoadMoreButton').should('not.be.visible');
+			}
 
 			cy.getByAutoId('AdvisoryTab-field').click();
-			// TODO: Disabled for PBC-548
-			// const pageText = getPaginationText(
-			// 	fnXHR.response.body.Pagination, 'Field Notices'
-			// );
-			// cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+			pageText = getPaginationText(advisoryFN.Pagination, 'Field Notices');
+			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 			Cypress._.each(advisoryFN.data, (advisory, index) => {
 				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr').eq(index).within(() => {
 					cy.getByAutoId('FieldNoticeId')
@@ -286,11 +272,8 @@ describe('Assets', () => { // PBC-41
 			}
 
 			cy.getByAutoId('AdvisoryTab-bug').click();
-			// TODO: Disabled for PBC-548
-			// const pageText = getPaginationText(
-			// 	bugResponse.Pagination, 'Critical Bugs'
-			// );
-			// cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+			pageText = getPaginationText(bugResponse.Pagination, 'Critical Bugs');
+			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 			Cypress._.each(bugResponse.data, (bug, index) => {
 				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr').eq(index).within(() => {
 					cy.getByAutoId('BugID').should('have.text', bug.id);
@@ -306,46 +289,48 @@ describe('Assets', () => { // PBC-41
 			cy.get('[data-auto-id*="Device-"]').eq(0).click();
 		});
 
-		// TODO: Disabled for PBC-351
-		it.skip('Shows support and warranty coverage', () => { // PBC-52
+		it('Shows support and warranty coverage', () => { // PBC-52, PBC-351
 			const checkDataAndLink = (dataStatus, linkStatus) => {
 				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
-				cy.getByAutoId('_SupportCoverage_-CoveredUntil').should(dataStatus);
+				cy.getByAutoId('_SupportCoverage_-NotCovered').should(dataStatus);
 				cy.getByAutoId('_SupportCoverage_-Link').should(linkStatus);
-				cy.getByAutoId('_Warranty_-data').should(dataStatus);
+				cy.getByAutoId('_Warranty_-NotCovered').should(dataStatus);
 				cy.getByAutoId('_Warranty_-Link').should(linkStatus);
 				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			};
 
-			const contractEnd = Cypress.moment(coveredRes.contractEndDate).format(dateFormat);
-			const warrantyEnd = Cypress.moment(coveredRes.warrantyEndDate).format(dateFormat);
+			const contractEnd = Cypress.moment(assetSummary.coverageEndDate).format(dateFormat);
+			const warrantyEnd = Cypress.moment(assetSummary.warrantyEndDate).format(dateFormat);
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.getByAutoId('_SupportCoverage_-CoveredUntil')
 				.should('have.text', `Covered until ${contractEnd}`);
 			cy.getByAutoId('_SupportCoverage_-Link')
-				.should('have.text', `${coveredRes.contractNumber} ${coveredRes.slaDescription}`);
-			cy.getByAutoId('_Warranty_-data').should('have.text', `Covered until ${warrantyEnd}`);
-			cy.getByAutoId('_Warranty_-Link').should('have.text', coveredRes.warrantyType);
+				.should(
+					'have.text', `${assetSummary.contractNumber} ${assetSummary.slaDescription}`
+				);
+			cy.getByAutoId('_Warranty_-CoveredUntil')
+				.should('have.text', `Covered until ${warrantyEnd}`);
+			cy.getByAutoId('_Warranty_-Link').should('have.text', assetSummary.warrantyType);
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 
-			coverageMock.enable('Not Covered');
+			assetSummaryMock.enable('Not Covered');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
-			cy.getByAutoId('_SupportCoverage_-N/A').should('have.text', 'N/A');
-			cy.getByAutoId('_Warranty_-N/A').should('have.text', 'N/A');
+			cy.getByAutoId('_SupportCoverage_-NotCovered').should('have.text', 'Not Covered');
+			cy.getByAutoId('_Warranty_-NotCovered').should('have.text', 'Not Covered');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 
 			// PBC-352
-			coverageMock.enable('No keys');
-			checkDataAndLink('be.visible', 'not.exist');
-			coverageMock.enable('No dates');
-			checkDataAndLink('not.exist', 'be.visible');
-			coverageMock.enable('Null keys');
-			checkDataAndLink('be.visible', 'not.exist');
-			coverageMock.enable('Null dates');
-			checkDataAndLink('not.exist', 'be.visible');
+			assetSummaryMock.enable('No keys');
+			checkDataAndLink('be.visible', 'be.empty');
+			assetSummaryMock.enable('No dates');
+			checkDataAndLink('be.visible', 'be.empty');
+			assetSummaryMock.enable('Null keys');
+			checkDataAndLink('be.visible', 'be.empty');
+			assetSummaryMock.enable('Null dates');
+			checkDataAndLink('be.visible', 'be.empty');
 
 			// Cleanup
-			coverageMock.enable('Covered');
+			assetSummaryMock.enable('Asset Summary');
 		});
 
 		it('Gracefully handles API failures', () => {
