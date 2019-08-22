@@ -83,12 +83,22 @@ describe('RccDeviceViolationDetailsComponent', () => {
 
 	it('should invoke onPageIndexChange method', () => {
 		component.onPageIndexChange({ page: 1 });
+	});
+
+	it('should invoke loadData and call both APIs', () => {
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
+		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
+		component.loadData();
 		fixture.detectChanges();
+
 	});
 
 	it('Should invoke ngOnInit method which initializes both table options', () => {
 		component.ngOnInit();
-		fixture.detectChanges();
 		expect(component.rccViolationInfoTableOptions)
 			.toBeDefined();
 		expect(component.impactedDeviceTableOptions)
@@ -105,7 +115,6 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.onSelection();
-		fixture.detectChanges();
 		expect(component.impactedDeviceDetails)
 			.toEqual([]);
 	});
@@ -117,12 +126,21 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
 			.and
 			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
-		component.ngOnChanges();
+		const changes = {
+			policyViolationInfo: {
+				currentValue: {
+					policycategory: '',
+					policygroupid: '',
+					policyname: '',
+					ruletitle: '',
+				},
+				firstChange: true,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		};
+		component.ngOnChanges(changes);
 		fixture.detectChanges();
-		expect(component.impactedAssetsCount)
-			.toBeDefined();
-		expect(component.selectionObj)
-			.toBeDefined();
 		done();
 	});
 	it('Should not get the api data on ngonchanges when', done => {
@@ -136,14 +154,59 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		component.ngOnChanges();
+		const changes = {
+			policyViolationInfo: {
+				currentValue: {
+					policycategory: '',
+					policygroupid: '',
+					policyname: '',
+					ruletitle: '',
+				},
+				firstChange: true,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		};
+		component.ngOnChanges(changes);
 		fixture.detectChanges();
 		done();
 	});
 
 	it('Should get the api data ngonchanges empty info data', () => {
-		component.policyViolationInfo = { };
-		component.ngOnChanges();
-		fixture.detectChanges();
+		const changes = {
+			policyViolationInfo: {
+				currentValue: {
+					policycategory: '',
+					policygroupid: '',
+					policyname: '',
+					ruletitle: '',
+				},
+				firstChange: true,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		};
+		component.ngOnChanges(changes);
 	});
+
+	it('Should get the api data ngonchanges empty info data', () => {
+		const changes = {
+			policyViolationInfo: {
+				currentValue: {
+					policycategory: '',
+					policygroupid: '',
+					policyname: '',
+					ruletitle: '',
+				},
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		};
+		component.ngOnChanges(changes);
+		expect(component.queryParamMapObj)
+		.toBeDefined();
+		expect(component.loadData());
+	});
+
 });

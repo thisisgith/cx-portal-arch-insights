@@ -41,3 +41,13 @@ export interface Filter {
         value: number,
     }[];
 }
+
+export interface violationGridParams {
+    criteria: string,
+    customerId: number,
+    pageLimit: number,
+    pageNum: number,
+    policyType: string,
+    search: string,
+    severity: string,
+}

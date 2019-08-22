@@ -1,4 +1,7 @@
-import { Component, Input, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import {
+	Component, Input, OnInit, ViewChild, TemplateRef,
+	OnDestroy, SimpleChanges,
+} from '@angular/core';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -6,6 +9,9 @@ import {
 } from '@sdp-api';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
+import { ActivatedRoute } from '@angular/router';
 /**
  * Main component for the RCC track
  */
@@ -36,8 +42,9 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	@ViewChild('policyRowWellTemplate', { static: true })
 	private policyRowWellTemplate: TemplateRef<{ }>;
 	public policyRuleData: any = { };
-	public customerId = '7293498';
+	public customerId: number;
 	public impactedAssetsCount: any;
+	public loading = false;
 	public selectionObj = {
 		osName : '',
 		productFamily : '',
@@ -48,36 +55,51 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	constructor (
 		private rccTrackService: RccService,
 		private rccUtilService: RccUtilService,
+		public userResolve: UserResolve,
+		private route: ActivatedRoute,
 	) {
-
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 	/**
-	 * method for dropdown for export all
+	 * Method for getting data for slide in page from APIs
+	 * @param changes gives page changed data
 	 */
-	public ngOnChanges () {
-		this.queryParamMapObj = {
-			customerId: this.customerId,
-			policyCategory: this.policyViolationInfo.policycategory,
-			policyGroup: this.policyViolationInfo.policygroupid,
-			policyName: this.policyViolationInfo.policyid,
-			ruleName: this.policyViolationInfo.ruleid,
-			severity: this.policyViolationInfo.ruleseverity,
-		};
-		if (this.policyViolationInfo ===
-			null || Object.keys(this.policyViolationInfo).length === 0) { return; }
-		this.selectionObj = {
-			osName : '',
-			productFamily : '',
-			productModel : '',
-		};
-		this.impactedAssetsCount = this.policyViolationInfo.impassets;
+	public ngOnChanges (changes: SimpleChanges) {
+		if (changes.policyViolationInfo.currentValue
+				&& !(changes.policyViolationInfo.firstChange)) {
+			this.queryParamMapObj = {
+				customerId: this.customerId,
+				policyCategory: this.policyViolationInfo.policycategory,
+				policyGroup: this.policyViolationInfo.policygroupid,
+				policyName: this.policyViolationInfo.policyid,
+				ruleName: this.policyViolationInfo.ruleid,
+				severity: this.policyViolationInfo.ruleseverity,
+			};
+			if (this.policyViolationInfo ===
+				null || Object.keys(this.policyViolationInfo).length === 0) { return; }
+			this.selectionObj = {
+				osName : '',
+				productFamily : '',
+				productModel : '',
+			};
+			this.impactedAssetsCount = this.policyViolationInfo.impassets;
+			this.loadData();
+		}
+	}
+	/**
+	 * Method for load data on intial view
+	 */
+	public loadData () {
 		forkJoin(
 			this.rccTrackService
 				.getRccPolicyRuleDetailsData(this.queryParamMapObj),
 			this.rccTrackService
 				.getRccViolationDetailsData(
-				{ violationCount: this.policyViolationInfo.violationcount,
-					...this.queryParamMapObj }),
+				{
+					violationCount: this.policyViolationInfo.violationcount,
+					...this.queryParamMapObj,
+				}),
 		)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -92,14 +114,9 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					});
 				});
 				this.impactedDeviceDetails = violationDetails.data.impactedAssets;
-				// tslint:disable-next-line: no-empty
 			}, (_error: any) => {
-
-			},
-				// tslint:disable-next-line: no-empty
-				() => {
-
-				});
+				this.loading = false;
+			});
 	}
 	/**
 	 * OnInit lifecycle hook
@@ -123,7 +140,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 */
 	public buildImpactedDeviceTableOptions () {
 		return new CuiTableOptions({
-			bordered: true,
+			bordered: false,
 			columns: [
 				{
 					key: 'hostName',
@@ -161,6 +178,13 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					sortable: true,
 				},
 			],
+			dynamicData: false,
+			padding: 'regular',
+			rowWellColor: 'black',
+			rowWellTemplate: this.policyRowWellTemplate,
+			singleSelect: false,
+			striped: false,
+			wrapText: false,
 		});
 	}
 	/**
@@ -197,11 +221,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					sortable: false,
 				},
 			],
-			dynamicData: false,
-			rowWellColor: 'black',
-			rowWellTemplate: this.policyRowWellTemplate,
-			singleSelect: false,
-			striped: false,
 		});
 	}
 	/**
@@ -211,28 +230,20 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public onSelection () {
 		const newQueryParamMapObj = { violationCount:
 			this.policyViolationInfo.violationcount, ...this.queryParamMapObj };
-		for (const item in this.selectionObj) {
-			if (this.selectionObj[item] !== null && this.selectionObj[item] !== '') {
-				newQueryParamMapObj[item] = this.selectionObj[item];
-			}
-		}
-		forkJoin(
-			this.rccTrackService
-				.getRccViolationDetailsData(newQueryParamMapObj),
+		_.each(this.selectionObj,
+			(value, key) => {
+				if (value !== null && value !== '') { newQueryParamMapObj[key] = value; }
+			});
+		this.rccTrackService
+			.getRccViolationDetailsData(newQueryParamMapObj)
+		.pipe(
+			takeUntil(this.destroy$),
 		)
-			.pipe(
-				takeUntil(this.destroy$),
-			)
-			.subscribe(([violationDetails]) => {
-				this.impactedDeviceDetails = violationDetails.data.impactedAssets;
-				// tslint:disable-next-line: no-empty
-			}, (_error: any) => {
-
-			},
-				// tslint:disable-next-line: no-empty
-				() => {
-
-				});
+		.subscribe(violationDetails => {
+			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+		}, (_error: any) => {
+			this.loading = false;
+		});
 	}
 	/**
 	 * Function called when page changed

@@ -11,7 +11,7 @@
 
 	&__title {
 		position: absolute;
-		bottom: 020px;
+		bottom: 5px;
 	}
 }
 
@@ -24,7 +24,7 @@
 }
 
 .cout-contanier h3 {
-	color: #58585b;
+	color: $dark-gray-2;
 	font-weight: 400;
 	font-size: 36px !important;
 	line-height: 48px !important;
@@ -45,7 +45,7 @@
 }
 
 .selected {
-	color: #00bceb !important;
+	color: $cisco-blue !important;
 }
 
 .marginbotom10 {
@@ -61,7 +61,7 @@
 }
 
 .violationcount {
-	color: #58585b !important;
+	color: $dark-gray-2 !important;
 	font-weight: 400;
 	font-size: 48px !important;
 	line-height: 72px !important;
@@ -69,7 +69,7 @@
 
 .viocount {
 	margin-top: 1px;
-	color: #58585b !important;
+	color: $dark-gray-2 !important;
 }
 
 .margintoptable {
@@ -93,29 +93,29 @@
 }
 
 .assetsCount:focus {
-	color: #64bbe3;
+	color: $status-blue;
 }
 
 .p1class {
-	color: #d0021b;
+	color: $red;
 }
 
 .p2class {
-	color: #ff7300;
+	color: $orange;
 }
 
 .p3class {
-	color: #fbab18;
+	color: $status-orange;
 }
 
 .p4class {
-	color: #6ebe4a;
+	color: $success;
 }
 
 .p5class {
-	color: #819ab7;
+	color: $light-blue;
 }
 
 .p6class {
-	color: white;
+	color: $white;
 }

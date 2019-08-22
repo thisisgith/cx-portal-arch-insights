@@ -60,10 +60,6 @@ describe('RccComponent', () => {
 	 * @TODO: modify test to use UI
 	 */
 	it('should get the violation grid data success', done => {
-		// const error = {
-		// 	status: 404,
-		// 	statusText: 'Resource not found',
-		// };
 		spyOn(rccService, 'getGridData')
 			.and
 			.returnValue(of(ComplianceScenarios[0].scenarios.GET[0].response.body));
@@ -296,7 +292,7 @@ describe('RccComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const model = { };
+				const model = 'selectedModel';
 				component.onPanelClose(model);
 				expect(component.selRowData)
 					.toBeTruthy();

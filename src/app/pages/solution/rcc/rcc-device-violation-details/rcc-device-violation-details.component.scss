@@ -1,23 +1,23 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
 
 .p1class {
-	color: #e22318;
+	color: $red;
 }
 
 .p2class {
-	color: #ff7300;
+	color: $orange;
 }
 
 .p3class {
-	color: #fbab18;
+	color: $status-orange;
 }
 
 .p4class {
-	color: #6ebe4a;
+	color: $success;
 }
 
 .p5class {
-	color: #819ab7;
+	color: $light-blue;
 }
 
 .tabletext {

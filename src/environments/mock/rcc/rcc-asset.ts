@@ -1,6 +1,4 @@
 /** getRccAssetFilterData params */
-// tslint:disable-next-line: ter-max-len
-// tslint:disable-next-line: max-line-length
 const assetFilterParams = `customerId=this.customerId&pageIndex=1&pageSize=10
 &serialNumber=serialNumber&sortBy=asc&policyGroupName=&policyName=&severity=`;
 /** The mock response for allCrashDetails */

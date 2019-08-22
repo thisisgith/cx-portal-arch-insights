@@ -5,7 +5,9 @@ import { Subscription, Subject, forkJoin } from 'rxjs';
 import { RccAssetSelectReq, RccAssetDetailsService } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
-
+import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
+import { ActivatedRoute } from '@angular/router';
 /**
  * Component for portal support
  */
@@ -18,8 +20,12 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	constructor (
 		private logger: LogService,
 		private RccAssetDataDetailsService: RccAssetDetailsService,
+		public userResolve: UserResolve,
+		private route: ActivatedRoute,
 	) {
 		this.logger.debug('RccAssetViolationDetailsComponent Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 	public rccAssetPolicyTableOptions: CuiTableOptions;
 	public rccMessageTableOptions: CuiTableOptions;
@@ -27,19 +33,17 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public assetPolicyDropdownSubscripion: Subscription;
 	public assetPolicyTableSubscription: Subscription;
 	public tableLimit = 10;
-	public tableOffset = 0;
 	public totalItems = 0;
-	public pageIndex = 0;
 	public assetPolicyFilterInfo = { };
 	public rccAssetPolicyTableData = [];
 	public rccMessageTableData = [];
 	public assetPolicyGroupItems = [];
 	public assetPolicyNameItems = [];
 	public assetPolicySeverityItems = [];
-	public policyGroupSelection: string;
-	public policyNameSelection: string;
-	public policySeveritySelection: string;
-	public customerId = '7293498';
+	public policyGroupSelection = '';
+	public policyNameSelection = '';
+	public policySeveritySelection = '';
+	public customerId: string;
 	private destroy$ = new Subject();
 	@Input() public selectedAssetData: any;
 	public assetModalFilter: RccAssetSelectReq;
@@ -50,11 +54,11 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	@ViewChild('assetSeverityIconTemplate', { static: true })
 	private assetSeverityIconTemplate: TemplateRef<{ }>;
 	public severityMappings = { } = [
-		{ id: 'P1', name: 'P1 - Emergency' },
-		{ id: 'P2', name: 'P2 - Critical' },
-		{ id: 'P3', name: 'P3 - Major' },
-		{ id: 'P4', name: 'P4 - Minor' },
-		{ id: 'P5', name: 'P5 - Informational' },
+		{ id: 'P1', name: I18n.get('_RccSeverityValueP1_') },
+		{ id: 'P2', name: I18n.get('_RccSeverityValueP1_') },
+		{ id: 'P3', name: I18n.get('_RccSeverityValueP1_') },
+		{ id: 'P4', name: I18n.get('_RccSeverityValueP1_') },
+		{ id: 'P5', name: I18n.get('_RccSeverityValueP1_') },
 	];
 	/**
 	 * on init method
@@ -146,10 +150,11 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param changes gives the current value
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		if (changes.selectedAssetData.currentValue && !(changes.selectedAssetData.firstChange)) {
+		const selectedData = _.get(changes, ['selectedAssetData', 'currentValue']);
+		if (selectedData && !changes.selectedAssetData.firstChange) {
 			this.assetRowParams = {
 				customerId: this.customerId,
-				pageIndex: this.tableOffset,
+				pageIndex: 0,
 				pageSize: this.tableLimit,
 				policyGroupName: this.policyGroupSelection,
 				policyName: this.policyNameSelection,
@@ -212,11 +217,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @returns empty on error
 	 */
 	public getAssetPolicyGridData (params: any) {
-		this.assetRowParams = params;
-		forkJoin(
-			this.RccAssetDataDetailsService
-				.getAssetSummaryData(this.assetRowParams),
-		)
+		this.assetRowParams = _.cloneDeep(params);
+		this.RccAssetDataDetailsService
+				.getAssetSummaryData(this.assetRowParams)
 		.pipe(
 			takeUntil(this.destroy$),
 		)
@@ -226,7 +229,6 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			if (this.rccAssetPolicyTableData) {
 				this.totalItems = this.rccAssetPolicyTableData.length;
 			}
-		// tslint:disable-next-line: ter-arrow-body-style
 		}, (error: any) =>
 			error);
 	}
@@ -236,16 +238,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param event object contains the value
 	 */
 	public onPolicyGroupSelection (event: any) {
-		this.assetRowParams = {
-			customerId: this.customerId,
-			pageIndex: this.pageIndex,
-			pageSize: this.tableLimit,
-			policyGroupName: event,
-			policyName: this.policyNameSelection,
-			serialNumber: this.selectedAssetData.serialNumber,
-			severity: this.policySeveritySelection,
-			sortBy: '',
-		};
+		this.assetRowParams.policyGroupName = event;
 		this.getAssetPolicyGridData(this.assetRowParams);
 	}
 
@@ -254,17 +247,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param event object contains the value
 	 */
 	public onPolicyNameSelection (event: any) {
-		this.assetRowParams = {
-			customerId: this.customerId,
-			pageIndex: this.pageIndex,
-			pageSize: this.tableLimit,
-			policyGroupName: this.policyGroupSelection,
-			policyName: event,
-			serialNumber: this.selectedAssetData.serialNumber,
-			severity: this.policySeveritySelection,
-			sortBy: '',
-			sortOrder: '',
-		};
+		this.assetRowParams.policyName = event;
 		this.getAssetPolicyGridData(this.assetRowParams);
 	}
 
@@ -273,17 +256,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param event object contains the value
 	 */
 	public onPolicySeveritySelection (event: any) {
-		this.assetRowParams = {
-			customerId: this.customerId,
-			pageIndex: this.pageIndex,
-			pageSize: this.tableLimit,
-			policyGroupName: this.policyGroupSelection,
-			policyName: this.policyNameSelection,
-			serialNumber: this.selectedAssetData.serialNumber,
-			severity: event,
-			sortBy: '',
-			sortOrder: '',
-		};
+		this.assetRowParams.severity = event;
 		this.getAssetPolicyGridData(this.assetRowParams);
 	}
 
@@ -292,8 +265,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param pageInfo gives page number
 	 */
 	public onPolicyAssetPagerUpdated (pageInfo: any) {
-		this.tableOffset = pageInfo.page;
-		this.pageIndex = pageInfo.page + 1;
+		this.assetRowParams.pageSize = pageInfo.page;
+		this.assetRowParams.pageIndex = pageInfo.page + 1;
 	}
 
 	/**
@@ -301,17 +274,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param event gives sort information
 	 */
 	public onTableSortingChanged (event: any) {
-		this.assetRowParams = {
-			customerId: this.customerId,
-			pageIndex: this.pageIndex,
-			pageSize: this.tableLimit,
-			policyGroupName: this.policyGroupSelection,
-			policyName: this.policyNameSelection,
-			serialNumber: this.selectedAssetData.serialNumber,
-			severity: this.policySeveritySelection,
-			sortBy: event.key,
-			sortOrder: event.sortDirection,
-		};
+		this.assetRowParams.sortBy = event.key;
+		this.assetRowParams.sortOrder = event.sortDirection;
 		this.getAssetPolicyGridData(this.assetRowParams);
 	}
 	/**
