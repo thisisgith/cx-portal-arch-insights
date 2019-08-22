@@ -275,7 +275,7 @@ export class RiskMitigationComponent {
 		this.crashHistoryParams = {
 			customerId: _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']),
 			neInstanceId: asset.neInstanceId,
-		}
+		};
 
 		return this.riskMitigationService.getCrashHistoryForDevice(this.crashHistoryParams)
 							.pipe(
