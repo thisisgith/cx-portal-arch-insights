@@ -1,0 +1,32 @@
+<div class="eula-container text-left">
+	<div class="base-margin-bottom" [innerText]="'_IfYouDeclineK9Info_' | i18n"></div>
+	<div class="half-margin-bottom" [innerText]="'_PleaseLetUsKnowWhyDeclineK9_' | i18n"></div>
+	<cui-form-field>
+		<textarea
+			cuiInput
+			maxlength="500"
+			data-auto-id="k9-decline-textarea"
+			[(ngModel)]="reason"
+		></textarea>
+	</cui-form-field>
+	<div class="base-margin-bottom base-margin-top"
+		 [innerText]="'_K9Decline_ContinueInfo_' | i18n"></div>
+	<div class="base-margin-bottom" [innerText]="'_K9Decline_CancelInfo_' | i18n"></div>
+	<div class="flex-center-horizontal">
+		<button
+			data-auto-id="cancel-k9-decline"
+			[innerText]="'_Cancel_' | i18n"
+			class="btn btn--default"
+			(click)="cancel()"
+		>
+		</button>
+		<button
+			data-auto-id="continue-k9-decline"
+			[innerText]="'_Continue_' | i18n"
+			class="btn btn--primary-ghost"
+			[disabled]="!reason"
+			(click)="continue()"
+		>
+		</button>
+	</div>
+</div>

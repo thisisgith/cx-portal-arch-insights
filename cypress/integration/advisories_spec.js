@@ -1,4 +1,4 @@
-import { RouteWatch } from '@apollo/cypress-util';
+import RouteWatch from '../support/routeWatch';
 import MockService from '../support/mockService';
 
 const advisoryMock = new MockService('AdvisorySecurityAdvisoryScenarios');
@@ -32,9 +32,8 @@ const impactMap = severity => {
 		case 'Medium':
 			return 'label--warning-alt';
 		case 'Low':
-			return 'label--success';
 		case 'Info':
-			return 'label--indigo';
+			return 'label--info';
 		default:
 			return 'label--circle'; // gray by default
 	}
@@ -48,13 +47,15 @@ describe('Advisories', () => { // PBC-306
 	});
 
 	it('Does not make redundant API calls', () => {
-		MockService.disableAll();
-		const psirtAPI = new RouteWatch('**/advisories-security-advisories?customerId=2431199&rows=10&page=1');
+		advisoryMock.disable('Advisory Security Advisories');
+		fieldNoticeMock.disable('Field Notice Advisories');
+		bugMock.disable('Critical Bugs');
+		const psirtAPI = new RouteWatch('**/advisories-security-advisories?*');
 		const fnAPI = new RouteWatch('**/advisories-field-notices?*');
 		const bugAPI = new RouteWatch('**/critical-bugs?*');
 
 		cy.reload();
-		cy.waitForAppLoading().then(() => {
+		psirtAPI.wait().then(() => {
 			cy.wrap(psirtAPI.called).should('eq', 1);
 			cy.wrap(fnAPI.called).should('eq', 1);
 			cy.wrap(bugAPI.called).should('eq', 1);
@@ -108,7 +109,7 @@ describe('Advisories', () => { // PBC-306
 					cy.getByAutoId('ImpactIcon').should('have.class', impactMap(advisory.severity));
 					const impact = advisory.severity ? advisory.severity : 'N/A'; // PBC-362
 					cy.getByAutoId('ImpactText').should('have.text', impact);
-					cy.getByAutoId('Title-Cell').should('have.text', advisory.title);
+					cy.getByAutoId('TitleText').should('have.text', advisory.title);
 					let count = `${advisory.assetsImpacted} `;
 					if (advisory.assetsPotentiallyImpacted > 0) {
 						count += `(+${advisory.assetsPotentiallyImpacted})`;
@@ -120,9 +121,9 @@ describe('Advisories', () => { // PBC-306
 					} else {
 						date = 'Never';
 					}
-					cy.getByAutoId('Last Updated-Cell').should('have.text', date);
+					cy.getByAutoId('LastUpdatedText').should('have.text', date);
 					const version = advisory.version ? advisory.version.toString() : '';
-					cy.getByAutoId('Version-Cell').should('have.text', version); // PBC-363
+					cy.getByAutoId('VersionText').should('have.text', version); // PBC-363
 				});
 			});
 		});
@@ -166,34 +167,46 @@ describe('Advisories', () => { // PBC-306
 			});
 
 			cy.getByAutoId('CUIPager-Page1').click();
-			advisoryMock.disable('Advisory Security Advisories - Page 1');
+			advisoryMock.enable('Advisory Security Advisories');
 		});
 
 		context('Filtering', () => { // PBC-308
-			it.skip('Supports filtering on advisory Impact and/or Last Updated time', () => {
-				// TODO: Implement after CSCvq61853 is resolved
+			it('Supports filtering on advisory Impact and/or Last Updated time', () => {
+				cy.server();
+				cy.route('**/product-alerts/v1/advisories-security-advisories?*').as('advisories');
+				cy.getByAutoId('HighPoint').click({ force: true });
+				cy.wait('@advisories').its('url').should('contain', 'severity=high');
+				cy.getByAutoId('< 30 DaysPoint').click({ force: true });
+				cy.wait('@advisories').its('url')
+					.should('match', /lastUpdatedDateRange=[0-9]+, [0-9]+/);
+
+				cy.getByAutoId('FilterBarClearAllFilters').click(); // cleanup
 			});
 
-			// TODO: Skipped for PBC-433
-			it.skip('Clears applied filters one at a time', () => { // PBC-433
+			it('Clears applied filters one at a time', () => { // PBC-433
 				cy.getByAutoId('MediumPoint').click({ force: true });
-				cy.getByAutoId('< 30dPoint').click({ force: true });
+				// TODO: Disabled for PBC-608
+				// cy.getByAutoId('< 30 DaysPoint').click({ force: true });
 				cy.get('[data-auto-id="FilterTag-medium"] > span.icon-close').click();
 				cy.getByAutoId('FilterTag-medium').should('not.exist');
-				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
-				cy.get('[data-auto-id="FilterTag-gt-0-lt-30-days"] > span.icon-close').click();
-				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
+				// TODO: Disabled for PBC-608
+				// cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
+				// cy.get('[data-auto-id="FilterTag-gt-0-lt-30-days"] > span.icon-close').click();
+				// cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
 			});
 
 			it('Clears all applied filters with a "Clear All" link', () => {
 				cy.getByAutoId('MediumPoint').click({ force: true });
-				cy.getByAutoId('< 30dPoint').click({ force: true });
+				// TODO: Disabled for PBC-608
+				// cy.getByAutoId('< 30 DaysPoint').click({ force: true });
 				cy.getByAutoId('FilterTag-medium').should('be.visible');
-				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
+				// TODO: Disabled for PBC-608
+				// cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
 				// PBC-366
 				cy.getByAutoId('FilterBarClearAllFilters').click().should('not.exist');
 				cy.getByAutoId('FilterTag-medium').should('not.exist');
-				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
+				// TODO: Disabled for PBC-608
+				// cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
 			});
 
 			it('Visual filters can be collapsed/expanded', () => {
@@ -213,7 +226,7 @@ describe('Advisories', () => { // PBC-306
 				cy.getByAutoId('Facet-Advisories').click();
 
 				cy.getByAutoId('SelectVisualFilter-lastUpdate').should('not.be.visible');
-				cy.getByAutoId('SelectVisualFilter-impact').should('be.visible');
+				cy.getByAutoId('SelectVisualFilter-severity').should('be.visible');
 
 				advisoryCountMock.enable('Mock Last Updated Count');
 				cy.getByAutoId('Facet-Lifecycle').click();
@@ -234,8 +247,10 @@ describe('Advisories', () => { // PBC-306
 					.format(dateFormat);
 				cy.getByAutoId('SecurityAdvisoryPublished')
 					.should('have.text', `Published${publishedDate}`);
+				const updatedDate = Cypress.moment(advisories[0].lastUpdated)
+					.format(dateFormat);
 				cy.getByAutoId('SecurityAdvisoryLastUpdated')
-					.should('have.text', 'Last UpdatedNever'); // TODO: CSCvq80067
+					.should('have.text', `Last Updated${updatedDate}`);
 				cy.getByAutoId('SecurityAdvisoryVersion')
 					.should('have.text', `Version${secBulletin.bulletinVersion}`);
 				cy.getByAutoId('SecurityDetailsTitleText')
@@ -278,9 +293,9 @@ describe('Advisories', () => { // PBC-306
 					cy.getByAutoId('ID-Cell')
 						.should('have.text', fieldNotice.id.toString());
 					cy.getByAutoId('Title-Cell').should('have.text', fieldNotice.title);
-					cy.getByAutoId('Vulnerable Assets-Cell')
+					cy.getByAutoId('ImpactedAssetsText')
 						.should('have.text', fieldNotice.assetsImpacted.toString());
-					cy.getByAutoId('Potentially Vulnerable Assets-Cell')
+					cy.getByAutoId('PotentiallyImpactedAssetsText')
 						.should('have.text', fieldNotice.assetsPotentiallyImpacted.toString());
 					let date;
 					if (fieldNotice.lastUpdated) {
@@ -288,9 +303,9 @@ describe('Advisories', () => { // PBC-306
 					} else {
 						date = 'Never';
 					}
-					cy.getByAutoId('Last Updated-Cell').should('have.text', date);
-					const version = fieldNotice.version ? fieldNotice.version.toString() : '';
-					cy.getByAutoId('Version-Cell').should('have.text', version); // PBC-363
+					cy.getByAutoId('LastUpdatedText').should('have.text', date);
+					const version = fieldNotice.version ? fieldNotice.version.toString() : 'N/A';
+					cy.getByAutoId('VersionText').should('have.text', version); // PBC-363
 				});
 			});
 		});
@@ -340,12 +355,21 @@ describe('Advisories', () => { // PBC-306
 		});
 
 		context('Filtering', () => { // PBC-309
-			it.skip('Supports filtering on Field Notice Last Updated time', () => {
-				// TODO: Implement after CSCvq61901 is fixed
+			it('Supports filtering on Field Notice Last Updated time', () => {
+				cy.server();
+				cy.route('**//product-alerts/v1/advisories-field-notices?*').as('advisories');
+				cy.getByAutoId('< 30 DaysPoint').click({ force: true });
+				cy.wait('@advisories').its('url')
+					.should('match', /lastUpdatedDateRange=[0-9]+, [0-9]+/);
+
+				cy.getByAutoId('FilterBarClearAllFilters').click(); // cleanup
 			});
 
-			it.skip('Clears applied filters one at a time', () => {
-				// TODO: Implement after PBC-433 is fixed
+			it('Clears applied filters one at a time', () => {
+				cy.getByAutoId('< 30 DaysPoint').click({ force: true });
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('be.visible');
+				cy.get('[data-auto-id="FilterTag-gt-0-lt-30-days"] > span.icon-close').click();
+				cy.getByAutoId('FilterTag-gt-0-lt-30-days').should('not.exist');
 			});
 
 			it('Clears all applied filters with a "Clear All" link', () => {
@@ -385,7 +409,7 @@ describe('Advisories', () => { // PBC-306
 					cy.getByAutoId('Title-Cell').should('have.text', bug.title);
 					cy.getByAutoId('Impacted Assets-Cell')
 						.should('have.text', bug.assetsImpacted.toString());
-					cy.getByAutoId('State-Cell')
+					cy.getByAutoId('StateText')
 						.should('have.text', Cypress._.startCase(bug.state));
 					let date;
 					if (bug.lastUpdated) {
@@ -393,7 +417,7 @@ describe('Advisories', () => { // PBC-306
 					} else {
 						date = 'Never';
 					}
-					cy.getByAutoId('Last Updated-Cell').should('have.text', date);
+					cy.getByAutoId('LastUpdatedText').should('have.text', date);
 				});
 			});
 		});
@@ -458,8 +482,8 @@ describe('Advisories', () => { // PBC-306
 					.should('have.text', `Last Updated${updatedDate}`);
 				cy.getByAutoId('CriticalBugStatus')
 					.should('have.text', `Status${bug.state}`);
-				cy.getByAutoId('CriticalBugImpactedAssets')
-					.should('have.text', `Impacted Assets (${bug.assetsImpacted})`);
+				cy.get('[data-auto-id*="IMPACTED ASSETS"]')
+					.should('have.text', `IMPACTED ASSETS (${bug.assetsImpacted})`);
 				cy.getByAutoId('BugDetailsTitleText').should('have.text', bug.title);
 				cy.getByAutoId('BugDetailsDescriptionText').should('have.text', bug.description);
 				cy.get('app-advisories tbody [data-auto-id="ID-Cell"]').eq(0).click();
@@ -473,19 +497,25 @@ describe('Advisories', () => { // PBC-306
 					const params = new URLSearchParams(new URL(xhr.url).search);
 					expect(params.get('state')).to.eq('resolved');
 					cy.getByAutoId('FilterTag-resolved').should('be.visible');
-					cy.getByAutoId('State-Cell').each($cell => {
+					cy.getByAutoId('StateText').each($cell => {
 						cy.wrap($cell).should('have.text', 'Resolved');
 					});
 					cy.getByAutoId('ResolvedPoint').click({ force: true });
 				});
 			});
 
-			// TODO: Skipped for PBC-433
-			it.skip('Clears applied filters one at a time', () => { // PBC-433
+			it('Clears applied filters one at a time', () => { // PBC-433
+				cy.getByAutoId('ResolvedPoint').click({ force: true });
+				cy.getByAutoId('FilterTag-resolved').should('be.visible');
+				cy.get('[data-auto-id="FilterTag-resolved"] > span.icon-close').click();
+				cy.getByAutoId('FilterTag-resolved').should('not.exist');
 			});
 
-			// TODO: Skipped for PBC-434
-			it.skip('Clears all applied filters with a "Clear All" link', () => { // PBC-434
+			it('Clears all applied filters with a "Clear All" link', () => { // PBC-434
+				cy.getByAutoId('ResolvedPoint').click({ force: true });
+				cy.getByAutoId('FilterTag-resolved').should('be.visible');
+				cy.getByAutoId('FilterBarClearAllFilters').click().should('not.exist');
+				cy.getByAutoId('FilterTag-resolved').should('not.exist');
 			});
 
 			it('Hides visual filters when APIs are unavailable', () => {
