@@ -430,7 +430,7 @@ export class RiskMitigationComponent {
 				}),
 				catchError(err => {
 					this.crashedAssetsGridDetails.tableData   = [];
-					this.logger.error('Crash Assets : onTableSortingChanged() ' +
+					this.logger.error('Crash Assets : onTableSortingChanged()' +
 						`:: Error : (${err.status}) ${err.message}`);
 
 					return of({ });
