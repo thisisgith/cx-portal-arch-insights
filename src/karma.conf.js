@@ -40,7 +40,7 @@ module.exports = config => {
 					functions: 75,
 					lines: 75,
 					statements: 75,
-				}
+				},
 			},
 			reports: ['html', 'lcovonly', 'text', 'text-summary', 'json', 'json-summary'],
 			fixWebpackSourcePaths: true,

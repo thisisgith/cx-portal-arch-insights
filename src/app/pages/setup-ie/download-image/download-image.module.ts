@@ -1,10 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CuiLoaderModule } from '@cisco-ngx/cui-components';
 import { DownloadImageComponent } from './download-image.component';
 import { environment } from '../../../../environments/environment';
 import { AlertModule, HeightTransitionModule } from '@components';
+import { EULAFormModule } from './eula-form/eula-form.module';
+import { K9FormModule } from './k9-form/k9-form.module';
+import { K9DeclineModule } from './k9-decline/k9-decline.module';
 
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
@@ -21,11 +25,16 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 const imports = [
 	AlertModule,
 	CommonModule,
+	ControlPointsModule.forRoot({ rootUrl }),
 	CuiLoaderModule,
+	EULAFormModule,
 	FormsModule,
 	HeightTransitionModule,
 	I18nPipeModule,
-	ControlPointsModule.forRoot({ rootUrl }),
+	K9DeclineModule,
+	K9FormModule,
+	ReactiveFormsModule,
+	RouterModule,
 ];
 
 /**

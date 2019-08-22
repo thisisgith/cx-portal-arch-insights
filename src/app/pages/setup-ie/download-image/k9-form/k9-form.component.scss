@@ -1,6 +1,11 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
 :host {
+	.eula-container {
+		max-width: 700px;
+		margin: auto;
+	}
+
 	::ng-deep .checkbox__input {
 		position: static !important;
 	}

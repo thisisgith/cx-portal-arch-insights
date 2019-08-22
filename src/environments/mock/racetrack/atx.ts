@@ -205,9 +205,10 @@ const implementItems = [
  * @param solution the solution we're at
  * @param usecase the use case
  * @param pitstop the pitstop
+ * @param mockFileName the name of the corresponding json file to pull mock data from
  * @returns the ATXResponse
  */
-function MockATX (solution: string, usecase: string, pitstop: string): ATXResponseModel {
+function MockATX (solution: string, usecase: string, pitstop: string, mockFileName?: string): ATXResponseModel {
 	const response = {
 		pitstop,
 		solution,
@@ -219,6 +220,10 @@ function MockATX (solution: string, usecase: string, pitstop: string): ATXRespon
 		response.items = implementItems;
 	} else {
 		response.items = onboardItems;
+	}
+
+	if (mockFileName && mockFileName !== '') {
+		response.items = require(`./atxMockData/${mockFileName}.json`);
 	}
 
 	return response;
@@ -239,6 +244,15 @@ export const ATXScenarios = [
 						status: 200,
 					},
 					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'singleNoScheduled'),
+						status: 200,
+					},
+					selected: false,
 				},
 			],
 		},
