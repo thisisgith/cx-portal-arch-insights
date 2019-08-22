@@ -94,6 +94,7 @@ export class CaseOpenAdvisoriesComponent
 		this.otherAssets = _.get(this.data, 'otherAssets', []);
 		this.type = _.get(this.data, 'type');
 		this.allAssets = this.otherAssets;
+		// If coming from a selected asset 360, put it at the front
 		if (this.selectedAsset) {
 			this.allAssets.unshift(this.selectedAsset);
 		}
@@ -107,7 +108,8 @@ export class CaseOpenAdvisoriesComponent
 				_.get(this.advisory, 'title', ''),
 			);
 		}
-		this.note = this.noteBuilder.buildNote(this.type, this.advisory);
+		console.log(this.allAssets);
+		this.note = this.noteBuilder.buildNote(this.type, this.advisory, this.allAssets);
 		/** Add 5 newlines to start of description to give user space for input */
 		this.caseForm.controls.description.setValue(
 			`\n\n\n\n\n${this.note}`,
@@ -120,7 +122,7 @@ export class CaseOpenAdvisoriesComponent
 			flatMap((id: string) => {
 				this.customerId = id;
 
-				return this.getContractData(this.customerId, this.selectedAsset.serialNumber);
+				return this.getContractData(this.customerId, this.allAssets[0].serialNumber);
 			}),
 		)
 		.subscribe(response => {
