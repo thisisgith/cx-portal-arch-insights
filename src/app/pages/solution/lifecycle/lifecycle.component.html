@@ -263,8 +263,8 @@
 					<span class="text-info icon-calendar"></span>
 				</div>
 				<div class="col-md-11 no-padding-left">
-					<div class="text-bold" [innerText]="scheduledAtxMap[item.atxId].sessionStartDate | date:'medium'"></div>
-					<div [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[item.atxId].presenterName"></div>
+					<div class="text-bold" [innerText]="scheduledAtxMap[item.atxId].sessionStartDate | date:'medium'" attr.data-auto-id="{{ autoid }}-Date"></div>
+					<div [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[item.atxId].presenterName" attr.data-auto-id="{{ autoid }}-Presenter"></div>
 				</div>
 			</div>
 		</ng-container>
