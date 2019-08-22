@@ -21,8 +21,8 @@
 					'filter__selected': filter.selected,
 					'filter__not-selected': !filter.selected
 				}">
-				<div class="base-margin-bottom">
-					<div *ngIf="filter.template">
+				<div class="base-margin-bottom max-height">
+					<div *ngIf="filter.template" class="max-height">
 						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
 					</div>
 				</div>
@@ -84,7 +84,7 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter">
+	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter" class="flex justify-content-around flex-column max-height">
 		<div class="row toggle" (click)="selectView('swGroups')" *ngIf="filter.seriesData[0]?.profiles > 0"
 			[ngClass]="{'text-primary':view == 'swGroups','text-muted':view != 'swGroups'}"
 			data-auto-id="TotalVisualFilterSoftwareGroups">

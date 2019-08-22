@@ -112,7 +112,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						sortable: false,
+						sortable: true,
 						sortDirection: 'desc',
 						sorting: true,
 						width: '10%',

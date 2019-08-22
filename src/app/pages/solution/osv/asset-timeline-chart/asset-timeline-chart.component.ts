@@ -68,6 +68,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 			},
 			plotOptions: {
 				timeline: {
+					className: 'timeline',
 					dataLabels: {
 						borderWidth: 0,
 						connectorColor: '#049fd9',
@@ -114,13 +115,17 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				text: null,
 			},
 			tooltip: {
+				backgroundColor: '#39393b',
+				borderColor: '#39393b',
 				enabled: true,
 				/* tslint:disable:ter-max-len */
-				headerFormat: '<span style="font-size:12px;font-weight:bold">{point.key}</span><br/>',
+				headerFormat: '<span style="font-size:12px;font-weight:bold;">{point.key}</span><br/>',
 				pointFormat: '{point.info}',
 				style: {
 					width: 300,
+					color: '#fff',
 				},
+				useHTML: true,
 			},
 			xAxis: {
 				lineColor: '#dfdfdf',
