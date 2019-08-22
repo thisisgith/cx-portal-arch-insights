@@ -31,13 +31,6 @@ const routes: Routes = [
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
-				path: 'configuration',
-				resolve: {
-					user: UserResolve,
-				},
-			}, {
 				loadChildren: () => import('../osv/osv.module')
 					.then(m => m.OptimalSoftwareVersionModule),
 				path: 'osv',
@@ -45,8 +38,8 @@ const routes: Routes = [
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
+				loadChildren: () => import('../architecture/architecture.module')
+					.then(m => m.ArchitectureModule),
 				path: 'architecture',
 				resolve: {
 					user: UserResolve,
