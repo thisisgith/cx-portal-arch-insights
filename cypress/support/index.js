@@ -16,7 +16,6 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
 
-require('@apollo/cypress-util');
 const path = require('path');
 
 /**
