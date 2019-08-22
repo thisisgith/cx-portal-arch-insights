@@ -10,6 +10,8 @@ import {
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
+import { ActivatedRoute } from '@angular/router';
 /**
  * Main component for the RCC track
  */
@@ -40,7 +42,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	@ViewChild('policyRowWellTemplate', { static: true })
 	private policyRowWellTemplate: TemplateRef<{ }>;
 	public policyRuleData: any = { };
-	public customerId = '7293498';
+	public customerId: number;
 	public impactedAssetsCount: any;
 	public loading = false;
 	public selectionObj = {
@@ -53,8 +55,11 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	constructor (
 		private rccTrackService: RccService,
 		private rccUtilService: RccUtilService,
+		public userResolve: UserResolve,
+		private route: ActivatedRoute,
 	) {
-
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 	/**
 	 * Method for getting data for slide in page from APIs

@@ -93,8 +93,8 @@ fdescribe('RccDeviceViolationDetailsComponent', () => {
 			.and
 			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
 		component.loadData();
-		expect(component.policyRuleData)
-		.toBe(ComplianceScenarios[6].scenarios.GET[0].response.body.data);
+		fixture.detectChanges();
+
 	});
 
 	it('Should invoke ngOnInit method which initializes both table options', () => {
@@ -126,11 +126,21 @@ fdescribe('RccDeviceViolationDetailsComponent', () => {
 		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
 			.and
 			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
-		component.ngOnChanges({ });
-		expect(component.impactedAssetsCount)
-			.toBeDefined();
-		expect(component.selectionObj)
-			.toBeDefined();
+		const changes = {
+			policyViolationInfo: {
+				currentValue: {
+					policycategory: '',
+					policygroupid: '',
+					policyname: '',
+					ruletitle: '',
+				},
+				firstChange: true,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		};
+		component.ngOnChanges(changes);
+		fixture.detectChanges();
 		done();
 	});
 	it('Should not get the api data on ngonchanges when', done => {
@@ -144,12 +154,59 @@ fdescribe('RccDeviceViolationDetailsComponent', () => {
 		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		component.ngOnChanges({ });
+		const changes = {
+			policyViolationInfo: {
+				currentValue: {
+					policycategory: '',
+					policygroupid: '',
+					policyname: '',
+					ruletitle: '',
+				},
+				firstChange: true,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		};
+		component.ngOnChanges(changes);
+		fixture.detectChanges();
 		done();
 	});
 
 	it('Should get the api data ngonchanges empty info data', () => {
-		component.policyViolationInfo = null;
-		component.ngOnChanges({ });
+		const changes = {
+			policyViolationInfo: {
+				currentValue: {
+					policycategory: '',
+					policygroupid: '',
+					policyname: '',
+					ruletitle: '',
+				},
+				firstChange: true,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		};
+		component.ngOnChanges(changes);
 	});
+
+	it('Should get the api data ngonchanges empty info data', () => {
+		const changes = {
+			policyViolationInfo: {
+				currentValue: {
+					policycategory: '',
+					policygroupid: '',
+					policyname: '',
+					ruletitle: '',
+				},
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: undefined,
+			},
+		};
+		component.ngOnChanges(changes);
+		expect(component.queryParamMapObj)
+		.toBeDefined();
+		expect(component.loadData());
+	});
+
 });
