@@ -4,9 +4,11 @@
 	animation: fade-in 0.3s;
 	border-top: 2px solid $primary;
 	cursor: auto;
-	max-width: 250px;
+	max-width: 280px;
 	min-width: 245px;
+	max-height: calc(100vh - 200px);
 	position: absolute;
+	overflow-y: auto;
 	transform: translateX(-100%);
 	right: auto;
 	top: 54px;
