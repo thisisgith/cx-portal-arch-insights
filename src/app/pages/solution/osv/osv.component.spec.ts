@@ -8,8 +8,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { user, OSVScenarios } from '@mock';
-import { OSVService, SummaryResponse } from '@sdp-api';
+import { user } from '@mock';
+import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
@@ -204,16 +204,6 @@ describe('OptimalSoftwareVersionComponent', () => {
 		component.selectView('swVersions');
 		expect(component.view)
 			.toEqual('swVersions');
-	});
-
-	it('select softwareGroups view if the swProfile count is greater than zero', () => {
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(<SummaryResponse> OSVScenarios[0].scenarios.GET[0].response.body));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.view)
-			.toEqual('swGroups');
 	});
 
 	it('select assets view if the assets count is equal to zero', () => {

@@ -129,13 +129,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
 						sortable: false,
-						width: '40%',
+						width: '20%',
 					},
 					{
 						name: I18n.get('_OsvVersionSummary_'),
 						sortable: false,
 						template : this.versionTemplate,
-						width: '30%',
+						width: '50%',
 					},
 					{
 						key: 'postDate',
