@@ -11,3 +11,19 @@ export interface RiskAssets {
   Pagination?: RiskPagination;
   deviceDetails?: Array<RiskAsset>;
 }
+
+export interface CrashHistoryDeviceCount {
+	customerId?:string;
+	neInstanceId?:string;
+}
+
+export interface CrashHistoryDeviceList {
+	customerId?: string;
+	deviceId?: string;
+	crashes?: Array<CrashHistoryData>;
+}
+
+export interface CrashHistoryData {
+	resetReason?: string;
+	timeStamp?: string;
+}
