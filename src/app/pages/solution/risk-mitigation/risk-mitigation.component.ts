@@ -6,6 +6,7 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
+	CrashHistoryDeviceCount,
 	RiskMitigationService,
 	HighCrashRiskPagination,
 	RmFilter as Filter,
@@ -59,6 +60,7 @@ export class RiskMitigationComponent {
 	public selectedFingerPrintdata: HighCrashRiskDevices;
 	public showAsset360 = false;
 	public highCrashRiskParams: HighCrashRiskPagination;
+	public crashHistoryParams: CrashHistoryDeviceCount;
 	public highCrashDeviceCount: number;
 	public crashHistoryTableOptions: CuiTableOptions;
 
@@ -108,7 +110,7 @@ export class RiskMitigationComponent {
 	public loadData () {
 		this.highCrashRiskParams = {
 			customerId: this.customerId,
-			page: 1,
+			page: 0,
 			size: 10,
 		};
 		this.status.isLoading = true;
@@ -153,6 +155,7 @@ export class RiskMitigationComponent {
 	public getAllCrashesData () {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
+		this.getDeviceDetails('1');
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
@@ -261,18 +264,20 @@ export class RiskMitigationComponent {
 						)
 						.subscribe();
 	}
+
 	/**
-	 * Fetches the device crashed history
-	 * @returns the total crash history of particular device
+	 * Gets crashed device history
+	 * @param asset has the data of selected crashed details
+	 * @returns  Returns the particular device crash history data
 	 */
-	private getCrashedDeviceHistory () {
+	private getCrashedDeviceHistory (asset) {
 		this.crashHistoryGridDetails.tableData = [];
-		let params: any = RiskMitigationService.GetAssetsParams;
-		params = {
-			customerId: this.customerId,
+		this.crashHistoryParams = {
+			customerId: _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']),
+			neInstanceId: asset.neInstanceId,
 		};
 
-		return this.riskMitigationService.getCrashHistoryForDevice(params)
+		return this.riskMitigationService.getCrashHistoryForDevice(this.crashHistoryParams)
 							.pipe(
 								takeUntil(this.destroy$),
 								map((results: any) => {
@@ -303,13 +308,11 @@ export class RiskMitigationComponent {
 	 * @param param will have the high crash risk grid pagination info
 	 */
 	public onHcrPagerUpdated (param: HighCrashRiskPagination) {
-		this.highCrashRiskAssetsGridDetails.tableOffset = param.page + 1;
+		this.highCrashRiskAssetsGridDetails.tableOffset = param.page;
 		this.highCrashRiskAssetsGridDetails.tableLimit = param.limit;
 		this.highCrashRiskParams.size = this.highCrashRiskAssetsGridDetails.tableLimit;
 		this.highCrashRiskParams.page = this.highCrashRiskAssetsGridDetails.tableOffset;
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
-		this.highCrashRiskAssetsGridDetails.totalItems =
-		this.highCrashRiskAssetsGridDetails.totalItems + 10;
 	}
 	/**
 	 * Gets filter details for search query
@@ -380,7 +383,7 @@ export class RiskMitigationComponent {
 		this.showAsset360 = false;
 		if (asset.active) {
 			this.selectedAsset = asset;
-			this.getCrashedDeviceHistory();
+			this.getCrashedDeviceHistory(asset);
 		} else { this.selectedAsset = undefined; }
 	}
 	/**
@@ -427,7 +430,7 @@ export class RiskMitigationComponent {
 				}),
 				catchError(err => {
 					this.crashedAssetsGridDetails.tableData   = [];
-					this.logger.error('Crash Assets : onTableSortingChanged() ' +
+					this.logger.error('Crash Assets : onTableSortingChanged()' +
 						`:: Error : (${err.status}) ${err.message}`);
 
 					return of({ });
