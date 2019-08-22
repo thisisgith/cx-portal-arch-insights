@@ -16,7 +16,7 @@ describe('SyslogMessagesDetailsComponent', () => {
 	let component: SyslogMessagesDetailsComponent;
 	let fixture: ComponentFixture<SyslogMessagesDetailsComponent>;
 	let syslogsService: SyslogsService;
-	let mockAsset: Syslog360GridData = Object.create({ });
+	const mockAsset: Syslog360GridData = Object.create({ });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -31,7 +31,7 @@ describe('SyslogMessagesDetailsComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({}),
+						queryParams: of({ }),
 						snapshot: {
 							data: {
 								user,
