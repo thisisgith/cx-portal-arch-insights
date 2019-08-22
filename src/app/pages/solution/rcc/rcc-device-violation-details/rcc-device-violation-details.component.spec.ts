@@ -16,7 +16,7 @@ import {
 	ComplianceScenarios,
 } from '@mock';
 
-describe('RccDeviceViolationDetailsComponent', () => {
+fdescribe('RccDeviceViolationDetailsComponent', () => {
 	let component: RccDeviceViolationDetailsComponent;
 	let fixture: ComponentFixture<RccDeviceViolationDetailsComponent>;
 	let rccTrackService: RccService;
@@ -94,6 +94,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
 		component.loadData();
 		fixture.detectChanges();
+
 	});
 
 	it('Should invoke ngOnInit method which initializes both table options', () => {
@@ -114,7 +115,6 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.onSelection();
-		fixture.detectChanges();
 		expect(component.impactedDeviceDetails)
 			.toEqual([]);
 	});

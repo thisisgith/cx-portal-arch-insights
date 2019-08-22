@@ -1,3 +1,4 @@
+export { ASDAPIService } from './asd-api.service';
 export { CaseDetailsService } from './case-details';
 export { SearchService } from './search';
 export { UtilsService } from './utils';
