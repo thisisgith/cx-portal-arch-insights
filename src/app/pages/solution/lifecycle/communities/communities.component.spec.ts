@@ -100,12 +100,12 @@ describe('CommunitiesComponent', () => {
 					expect(component.publicCommunity.url)
 						.toEqual(
 							'https://community.cisco.com/t5/wireless-and-mobility' +
-						'/bd-p/5956-discussions-getting-started-wireles');
+							'/bd-p/5956-discussions-getting-started-wireles');
 					expect(component.curatedCommunity.url)
 						.toEqual(
 							'https://community.cisco.com/t5/campus-network-assurance' +
-						'/bd-p/ibn-assurance/customFilteredByMultiLabel' +
-						'?board=ibn-assurance&amp;labels=Onboard');
+							'/bd-p/ibn-assurance/customFilteredByMultiLabel' +
+							'?board=ibn-assurance&amp;labels=Onboard');
 				});
 		});
 
@@ -121,10 +121,10 @@ describe('CommunitiesComponent', () => {
 							'https://community.cisco.com/t5/software-defined-access-sd' +
 							'/bd-p/discussions-sd-access');
 					expect(component.curatedCommunity.url)
-					.toEqual(
-						'https://community.cisco.com/t5/campus-network-segmentation' +
-						'/bd-p/ibn-segmentation/customFilteredByMultiLabel' +
-						'?board=ibn-segmentation&amp;labels=Onboard');
+						.toEqual(
+							'https://community.cisco.com/t5/campus-network-segmentation' +
+							'/bd-p/ibn-segmentation/customFilteredByMultiLabel' +
+							'?board=ibn-segmentation&amp;labels=Onboard');
 				});
 		});
 
@@ -140,10 +140,10 @@ describe('CommunitiesComponent', () => {
 							'https://community.cisco.com/t5/software-defined-access-sd' +
 							'/bd-p/discussions-sd-access');
 					expect(component.curatedCommunity.url)
-					.toEqual(
-						'https://community.cisco.com/t5/scalable-access-policy' +
-						'/bd-p/ibn-policy/customFilteredByMultiLabel' +
-						'?board=ibn-policy&amp;labels=Onboard');
+						.toEqual(
+							'https://community.cisco.com/t5/scalable-access-policy' +
+							'/bd-p/ibn-policy/customFilteredByMultiLabel' +
+							'?board=ibn-policy&amp;labels=Onboard');
 				});
 		});
 
@@ -159,10 +159,10 @@ describe('CommunitiesComponent', () => {
 							'https://community.cisco.com/t5/cisco-digital-network' +
 							'/bd-p/discussions-dna');
 					expect(component.curatedCommunity.url)
-					.toEqual(
-						'https://community.cisco.com/t5/network-device-onboarding' +
-						'/bd-p/ibn-onboarding/customFilteredByMultiLabel' +
-						'?board=ibn-onboarding&amp;labels=Onboard');
+						.toEqual(
+							'https://community.cisco.com/t5/network-device-onboarding' +
+							'/bd-p/ibn-onboarding/customFilteredByMultiLabel' +
+							'?board=ibn-onboarding&amp;labels=Onboard');
 				});
 		});
 
@@ -178,10 +178,10 @@ describe('CommunitiesComponent', () => {
 							'https://community.cisco.com/t5/cisco-digital-network' +
 							'/bd-p/discussions-dna');
 					expect(component.curatedCommunity.url)
-					.toEqual(
-						'https://community.cisco.com/t5/campus-software-image-management' +
-						'/bd-p/ibn-swim/customFilteredByMultiLabel' +
-						'?board=ibn-swim&amp;labels=Onboard');
+						.toEqual(
+							'https://community.cisco.com/t5/campus-software-image-management' +
+							'/bd-p/ibn-swim/customFilteredByMultiLabel' +
+							'?board=ibn-swim&amp;labels=Onboard');
 				});
 		});
 	});
