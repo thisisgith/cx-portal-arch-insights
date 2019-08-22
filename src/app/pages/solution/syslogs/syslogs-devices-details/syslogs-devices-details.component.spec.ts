@@ -58,7 +58,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(syslogsService, 'getdevice360details')
+		spyOn(syslogsService, 'getdevicePanelDetails')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		fixture.whenStable()
@@ -80,10 +80,10 @@ describe('SyslogsdevicedetailsComponent', () => {
 			SoftwareVersion: '12.2(53)SE2',
 			syslogCount: 6,
 		};
-		spyOn(syslogsService, 'getdevice360details')
+		spyOn(syslogsService, 'getdevicePanelDetails')
 		.and
 		.returnValue(of(SyslogScenarios[4].scenarios.GET[0].response.body));
-		component.syslogdevice360data(param);
+		component.SyslogDevicePanelData(param);
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();

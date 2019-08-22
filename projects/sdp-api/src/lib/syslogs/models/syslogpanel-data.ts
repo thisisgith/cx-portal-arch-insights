@@ -1,8 +1,8 @@
-import { DeviceDetailsdata } from './syslog360details-data';
+import { DeviceDetailsdata } from './syslogpaneldetails-data';
 
 /** Grid Data Intereface
  */
-export interface Syslog360GridData {
+export interface SyslogPanelGridData {
 	count?: number;
 	message?: string;
 	responseData: DeviceDetailsdata[];
