@@ -108,7 +108,7 @@ export class RiskMitigationComponent {
 	public loadData () {
 		this.highCrashRiskParams = {
 			customerId: this.customerId,
-			page: 1,
+			page: 0,
 			size: 10,
 		};
 		this.status.isLoading = true;
@@ -153,6 +153,7 @@ export class RiskMitigationComponent {
 	public getAllCrashesData () {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
+		this.getDeviceDetails('1');
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
@@ -308,8 +309,6 @@ export class RiskMitigationComponent {
 		this.highCrashRiskParams.size = this.highCrashRiskAssetsGridDetails.tableLimit;
 		this.highCrashRiskParams.page = this.highCrashRiskAssetsGridDetails.tableOffset;
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
-		this.highCrashRiskAssetsGridDetails.totalItems =
-		this.highCrashRiskAssetsGridDetails.totalItems + 10;
 	}
 	/**
 	 * Gets filter details for search query
