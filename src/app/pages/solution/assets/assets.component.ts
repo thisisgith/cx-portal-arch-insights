@@ -1102,6 +1102,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.logger.error('assets.component : fetchNetworkElements() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 				this.status.inventoryLoading = false;
+				if (window.Cypress) {
+					window.inventoryLoading = false;
+				}
 
 				return of({ data: [] });
 			}),
@@ -1152,6 +1155,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				}
 
 				this.status.inventoryLoading = false;
+				if (window.Cypress) {
+					window.inventoryLoading = false;
+				}
 			}),
 		);
 	}
@@ -1162,6 +1168,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	private fetchInventory () {
 		this.status.inventoryLoading = true;
+		if (window.Cypress) {
+			window.inventoryLoading = true;
+		}
 		this.inventory = [];
 		this.pagination = null;
 
@@ -1182,6 +1191,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.logger.error('assets.component : fetchInventory() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 				this.status.inventoryLoading = false;
+				if (window.Cypress) {
+					window.inventoryLoading = false;
+				}
 
 				return of({ });
 			}),

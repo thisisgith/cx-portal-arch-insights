@@ -24,16 +24,9 @@ const routes: Routes = [
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
+				loadChildren: () => import('../afm/afm.module')
+					.then(m => m.FaultManagementModule),
 				path: 'fault-management',
-				resolve: {
-					user: UserResolve,
-				},
-			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
-				path: 'configuration',
 				resolve: {
 					user: UserResolve,
 				},
@@ -45,8 +38,8 @@ const routes: Routes = [
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
+				loadChildren: () => import('../architecture/architecture.module')
+					.then(m => m.ArchitectureModule),
 				path: 'architecture',
 				resolve: {
 					user: UserResolve,

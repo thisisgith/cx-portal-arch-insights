@@ -155,4 +155,31 @@ export const FieldNoticeAdvisoryScenarios = [
 		url: `${api}?customerId=${customerId}&rows=10&page=3`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Field Notice Advisories for FOC1544Y16T',
+					response: {
+						body: MockData(10, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: 0,
+					description: 'Field Notice Advisories for FOC1544Y16T - Unreachable',
+					response: {
+						body: { data: [] },
+						status: 503,
+					},
+					selected: false,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&sort=lastUpdated:DESC&rows=10&page=1` +
+			'&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
+		usecases: ['Use Case 1'],
+	},
 ];
