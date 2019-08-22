@@ -74,6 +74,9 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
+	public leftDevices = 'left';
+	public rightDevices = 'right';
+
 	private destroyed$: Subject<void> = new Subject<void>();
 	public timePeriod = '';
 	public title = '';
@@ -87,6 +90,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public allDevicesSelectedLeft = false;
 	public selectedRowsRight = { };
 	public selectedRowsLeft = { };
+	public selectedRowsLeftCount = 0;
+	public selectedRowsRightCount = 0;
 	public loadingListLeft = false;
 	public loadingListRight = false;
 	public error = false;
@@ -537,15 +542,21 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * Toggles is device row is selected
 	 * @param allDevicesSelected checkbox event
 	 * @param devices device row
+	 * @param selectorName The designated name of the device selector
+	 * firing this function off
 	 *
 	 * @returns if device header is selected or not
 	 */
-	public toggleAllDevicesSelected (allDevicesSelected: boolean, devices: DeviceListRow[]) {
+	public toggleAllDevicesSelected (allDevicesSelected: boolean,
+		devices: DeviceListRow[],
+		selectorName: string) {
 		const checked = !allDevicesSelected;
 
 		for (let devNum = 0; devNum < devices.length; devNum += 1) {
 			devices[devNum].selected = checked;
 		}
+
+		this.handleDeviceSelectionChanged(selectorName);
 
 		return checked;
 	}
@@ -577,6 +588,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		if (this.deviceListLeft.length === 0) {
 			this.allDevicesSelectedLeft = false;
 		}
+
+		this.handleLeftDeviceSelectionChanged();
 	}
 
 	/**
@@ -597,6 +610,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		if (this.deviceListRight.length === 0) {
 			this.allDevicesSelectedRight = false;
 		}
+
+		this.handleRightDeviceSelectionChanged();
 	}
 
 	/**
@@ -747,6 +762,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 					}
 
 				}
+
+				this.handleLeftDeviceSelectionChanged();
 			});
 	}
 
@@ -770,6 +787,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			)
 			.subscribe(response => {
 				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
+				this.handleRightDeviceSelectionChanged();
 			});
 	}
 
@@ -781,5 +799,37 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		this.pageNumber = (pageInfo.page + 1);
 
 		this.onLeftListCall();
+	}
+
+	/**
+	 * Handles when a device list selection change has been detected.
+	 * Delegates to the correct function based on a selection made on the
+	 * left or the right.
+	 * @param selectorName The designated name of the device selector firing
+	 * the event
+	 */
+	public handleDeviceSelectionChanged (selectorName: string) {
+		switch (selectorName) {
+			case this.leftDevices:
+				this.handleLeftDeviceSelectionChanged();
+				break;
+			case this.rightDevices:
+				this.handleRightDeviceSelectionChanged();
+				break;
+		}
+	}
+
+	/**
+	 * Handles all left device selection changes
+	 */
+	public handleLeftDeviceSelectionChanged () {
+		this.selectedRowsLeftCount = _.filter(this.deviceListLeft, ['selected', true]).length;
+	}
+
+	/**
+	 * Handles all right device selection changes
+	 */
+	public handleRightDeviceSelectionChanged () {
+		this.selectedRowsRightCount = _.filter(this.deviceListRight, ['selected', true]).length;
 	}
 }
