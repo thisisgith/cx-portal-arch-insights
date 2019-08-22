@@ -6,6 +6,7 @@ import {
 } from '@sdp-api';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import * as _ from 'lodash-es';
 /**
  * Main component for the RCC track
  */
@@ -38,11 +39,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public policyRuleData: any = { };
 	public customerId = '7293498';
 	public impactedAssetsCount: any;
-	public selectionObj = {
-		osName : '',
-		productFamily : '',
-		productModel : '',
-	};
+	public loading = false;
+	public selectionObj = {	};
 	public destroy$ = new Subject();
 	public queryParamMapObj = { };
 	constructor (
@@ -52,7 +50,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 
 	}
 	/**
-	 * method for dropdown for export all
+	 * Method for getting data for slide in page from APIs
 	 */
 	public ngOnChanges () {
 		this.queryParamMapObj = {
@@ -65,26 +63,30 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		};
 		if (this.policyViolationInfo ===
 			null || Object.keys(this.policyViolationInfo).length === 0) { return; }
-		this.selectionObj = {
-			osName : '',
-			productFamily : '',
-			productModel : '',
-		};
+		this.selectionObj = { };
 		this.impactedAssetsCount = this.policyViolationInfo.impassets;
+		this.loadData();
+	}
+	/**
+	 * Method for load data on intial view
+	 */
+	public loadData () {
 		forkJoin(
 			this.rccTrackService
 				.getRccPolicyRuleDetailsData(this.queryParamMapObj),
 			this.rccTrackService
 				.getRccViolationDetailsData(
-				{ violationCount: this.policyViolationInfo.violationcount,
-					...this.queryParamMapObj }),
+				{
+					violationCount: this.policyViolationInfo.violationcount,
+					...this.queryParamMapObj,
+				}),
 		)
 			.pipe(
 				takeUntil(this.destroy$),
 			)
 			.subscribe(([policyRuleDetails, violationDetails]) => {
 				policyRuleDetails.data.deviceFilterDetails =
-				this.rccUtilService.getSelectableData(policyRuleDetails.data.deviceFilterDetails);
+					this.rccUtilService.getSelectableData(policyRuleDetails.data.deviceFilterDetails);
 				this.policyRuleData = policyRuleDetails.data;
 				violationDetails.data.impactedAssets.forEach(asset => {
 					asset.violations.forEach((violation, i) => {
@@ -92,14 +94,9 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					});
 				});
 				this.impactedDeviceDetails = violationDetails.data.impactedAssets;
-				// tslint:disable-next-line: no-empty
 			}, (_error: any) => {
-
-			},
-				// tslint:disable-next-line: no-empty
-				() => {
-
-				});
+				this.loading = false;
+			});
 	}
 	/**
 	 * OnInit lifecycle hook
@@ -211,28 +208,21 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public onSelection () {
 		const newQueryParamMapObj = { violationCount:
 			this.policyViolationInfo.violationcount, ...this.queryParamMapObj };
-		for (const item in this.selectionObj) {
-			if (this.selectionObj[item] !== null && this.selectionObj[item] !== '') {
-				newQueryParamMapObj[item] = this.selectionObj[item];
-			}
-		}
-		forkJoin(
-			this.rccTrackService
-				.getRccViolationDetailsData(newQueryParamMapObj),
+		_.each(this.selectionObj,
+			(value, key) => {
+				if (value !== null && value !== '') { newQueryParamMapObj[key] = value; }
+			}); 
+		
+		this.rccTrackService
+			.getRccViolationDetailsData(newQueryParamMapObj)
+		.pipe(
+			takeUntil(this.destroy$),
 		)
-			.pipe(
-				takeUntil(this.destroy$),
-			)
-			.subscribe(([violationDetails]) => {
-				this.impactedDeviceDetails = violationDetails.data.impactedAssets;
-				// tslint:disable-next-line: no-empty
-			}, (_error: any) => {
-
-			},
-				// tslint:disable-next-line: no-empty
-				() => {
-
-				});
+		.subscribe(violationDetails => {
+			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+		}, (_error: any) => {
+			this.loading = false;
+		});
 	}
 	/**
 	 * Function called when page changed

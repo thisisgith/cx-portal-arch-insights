@@ -420,7 +420,7 @@
 	"_RccAssetPolicyDescription_": "Policy Description",
 	"_RccAssetViolationCount_": "Violation Count",
 	"_RccAssetRuleDescription_": "Rule Description",
-	"_RccImpactedDevices_":"Impacted Devices",
+	"_RccImpactedDevices_":"Impacted Devices - {0}",
 	"_RccAssetMessage_": "Message",
 	"_RccAssetSuggestedFix_": "Suggested Fix",
 	"_RccAssetViolationAge_": "Violation Age",
