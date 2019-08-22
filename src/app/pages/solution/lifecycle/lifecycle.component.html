@@ -260,7 +260,7 @@
 		<ng-container *ngIf="item.status === 'scheduled'">
 			<div class="row">
 				<div class="col-md-1">
-					<span class="text-info icon-calendar"></span>
+					<span class="text-info icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
 				</div>
 				<div class="col-md-11 no-padding-left">
 					<div class="text-bold" [innerText]="scheduledAtxMap[item.atxId].sessionStartDate | date:'medium'" attr.data-auto-id="{{ autoid }}-Date"></div>
@@ -784,8 +784,8 @@
 				</div>
 				<div class="text-left" *ngIf="item.status === 'scheduled'">
 					<div *ngFor="let session of item.sessions">
-						<span class="text-info icon-calendar half-padding-right" *ngIf="session.scheduled"></span>
-						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" *ngIf="session.scheduled"></span>
+						<span class="text-info icon-calendar half-padding-right" *ngIf="session.scheduled" data-auto-id="ATXCardFooter-ScheduledIcon"></span>
+						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" *ngIf="session.scheduled" data-auto-id="ATXCardFooter-ScheduledDate"></span>
 					</div>
 				</div>
 				<div class="divider divider--compressed"></div>
@@ -1167,7 +1167,7 @@
 	<div *ngIf="celldata.status ==='scheduled'" data-auto-id="Table-Status-Scheduled">
 		<div *ngFor="let session of celldata.sessions">
 			<div *ngIf="session.scheduled">
-				<span class="text-info icon-calendar icon-small"></span>
+				<span class="text-info icon-calendar icon-small" data-auto-id="Table-Status-Scheduled-Icon"></span>
 				<span class="qtr-margin-left"
 					innerText="{{ session.sessionStartDate | date:'medium'}}" data-auto-id="scheduledDate"></span>
 			</div>
