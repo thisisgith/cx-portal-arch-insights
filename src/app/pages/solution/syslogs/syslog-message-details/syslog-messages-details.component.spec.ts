@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { SyslogsService, Syslog360GridData } from '@sdp-api';
+import { SyslogsService, SyslogPanelGridData } from '@sdp-api';
 import { throwError, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -16,7 +16,7 @@ describe('SyslogMessagesDetailsComponent', () => {
 	let component: SyslogMessagesDetailsComponent;
 	let fixture: ComponentFixture<SyslogMessagesDetailsComponent>;
 	let syslogsService: SyslogsService;
-	const mockAsset: Syslog360GridData = Object.create({ });
+	const mockAsset: SyslogPanelGridData = Object.create({ });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -61,14 +61,14 @@ describe('SyslogMessagesDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(syslogsService, 'get360GridData')
+		spyOn(syslogsService, 'getPanelGridData')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
 				const messagegrid = [];
-				expect(component.tabledata1)
+				expect(component.tableData)
 					.toEqual(messagegrid);
 
 				done();
@@ -84,27 +84,27 @@ describe('SyslogMessagesDetailsComponent', () => {
 			SoftwareVersion: '12.2(53)SE2',
 			syslogCount: 6,
 		};
-		spyOn(syslogsService, 'get360GridData')
+		spyOn(syslogsService, 'getPanelGridData')
 			.and
 			.returnValue(of(SyslogScenarios[4].scenarios.GET[0].response.body));
-		component.loadSyslog360data(param);
+		component.loadSyslogPaneldata(param);
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.tabledata1)
+				expect(component.tableData)
 					.toBeDefined();
 				done();
 			});
 	});
 	it('Should get the syslog message details grid data After fileter', done => {
-		spyOn(syslogsService, 'get360FilterGridData')
+		spyOn(syslogsService, 'getPanelFilterGridData')
 			.and
 			.returnValue(of(SyslogScenarios[5].scenarios.GET[0].response.body));
 		component.onSelection();
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.tabledata1)
+				expect(component.tableData)
 					.toBeDefined();
 				done();
 			});
@@ -114,14 +114,14 @@ describe('SyslogMessagesDetailsComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(syslogsService, 'get360FilterGridData')
+		spyOn(syslogsService, 'getPanelFilterGridData')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
 				const messagegrid = [];
-				expect(component.tabledata1)
+				expect(component.tableData)
 					.toEqual(messagegrid);
 
 				done();
@@ -138,12 +138,12 @@ describe('SyslogMessagesDetailsComponent', () => {
 			SoftwareVersion: '12.2(53)SE2',
 			syslogCount: 6,
 		};
-		spyOn(syslogsService, 'get360FilterData')
+		spyOn(syslogsService, 'getPanelFilterData')
 			.and
 			.returnValue(of(SyslogScenarios[6].scenarios.GET[0].response.body));
 		mockAsset.count = 10;
 		component.asset = mockAsset;
-		component.loadSyslog360filter(param);
+		component.loadSyslogPanelFilter(param);
 		fixture.detectChanges();
 		expect(component.softwareItems)
 			.toBeDefined();
