@@ -1,16 +1,20 @@
 <div class="row">
 	<div class="col-8 base-margin-bottom">
 		<div data-auto-id="" class="dbl-margin-right">
-			<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetPolicyDescription_' | i18n }}"></div>
-			<div innerText="{{ policyRuleData.policy?.desc || ('_NA_' | i18n) }}"></div>
+			<div class="text-small text-uppercase text-bold" 
+				[innerText]="'_RccAssetPolicyDescription_' | i18n">
+			</div>
+			<div [innerText]="policyRuleData?.policy?.desc || ('_NA_' | i18n)"></div>
 		</div>
 	</div>
 </div>
 <div class="row ">
 	<div class="col-8 base-margin-bottom">
 		<div data-auto-id="" class="dbl-margin-right">
-			<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetRuleDescription_' | i18n }}"></div>
-			<div innerText="{{ policyRuleData?.rule.desc || ('_NA_' | i18n) }}"></div>
+			<div class="text-small text-uppercase text-bold" 
+				[innerText]="'_RccAssetRuleDescription_' | i18n">
+			</div>
+			<div [innerText]="policyRuleData?.rule?.desc || ('_NA_' | i18n)"></div>
 		</div>
 	</div>
 </div>
@@ -18,37 +22,53 @@
 	<div class="col-8 base-margin-bottom">
 		<div data-auto-id="" class="dbl-margin-right">
 			<div class="text-muted text-large text-uppercase"
-				innerText="{{ '_RccImpactedDevice_' | i18n }} - {{ impactedAssetsCount || ('_NA_' | i18n) }}">
-			</div>
+			[innerText]="'_RccImpactedDevices_' | i18n:impactedAssetsCount || ('_NA_' | i18n)">
+		</div>
 		</div>
 	</div>
 </div>
-<div class="half-margin-left base-padding-top half-padding-bottom base-margin-bottom text-medium text-uppercase text-bold"
-	data-auto-id="filterSearch" [innerText]="'_Filter_'| i18n ">
+<div class="half-margin-left base-padding-top half-padding-bottom 
+		base-margin-bottom text-medium text-uppercase text-bold"
+	data-auto-id="filterSearch" 
+	[innerText]="'_Filter_'| i18n">
 </div>
 <div class="row">
 	<div class="col-4 base-padding-top half-padding-left ">
 		<div [innerText]="'_RccProductFamily_' | i18n"></div>
-		<cui-select data-auto-id="filterSelect" [items]="policyRuleData.deviceFilterDetails.productFamily"
-			placeholder="{{'_RccProductFamilyPlaceHolder_' | i18n }}" [compressed]="true" [empty]="true"
-			[(ngModel)]="selectionObj.productFamily" (ngModelChange)="onSelection()" optionsKey="name"
+		<cui-select data-auto-id="filterSelect" 
+			[items]="policyRuleData.deviceFilterDetails.productFamily"
+			placeholder="{{'_RccProductFamilyPlaceHolder_' | i18n }}" 
+			[compressed]="true" 
+			[empty]="true"
+			[(ngModel)]="selectionObj.productFamily" 
+			(ngModelChange)="onSelection()" 
+			optionsKey="name"
 			optionsValue="name">
 		</cui-select>
 	</div>
-
 	<div class="col-4 base-padding-top half-padding-left">
 		<div [innerText]="'_RccProductModel_' | i18n"></div>
-		<cui-select data-auto-id="policyRuleSearch" [items]="policyRuleData.deviceFilterDetails.productModel"
-			placeholder="{{'_RccProductModelPlaceHolder_'| i18n }}" [compressed]="true" [empty]="true"
-			[(ngModel)]="selectionObj.productModel" (ngModelChange)="onSelection()" optionsKey="name"
+		<cui-select data-auto-id="policyRuleSearch" 
+			[items]="policyRuleData.deviceFilterDetails.productModel"
+			placeholder="{{'_RccProductModelPlaceHolder_'| i18n }}" 
+			[compressed]="true" 
+			[empty]="true"
+			[(ngModel)]="selectionObj.productModel" 
+			(ngModelChange)="onSelection()" 
+			optionsKey="name"
 			optionsValue="name">
 		</cui-select>
 	</div>
 	<div class="col-4 base-padding-top half-padding-left">
 		<div [innerText]="'_RccOSName_' | i18n"></div>
-		<cui-select data-auto-id="policyRule" [items]="policyRuleData.deviceFilterDetails.osName"
-			placeholder="{{'_RccOSNamePlaceHolder_'| i18n }}" [compressed]="true" [empty]="true"
-			[(ngModel)]="selectionObj.osName" (ngModelChange)="onSelection()" optionsKey="name"
+		<cui-select data-auto-id="policyRule" 
+			[items]="policyRuleData.deviceFilterDetails.osName"
+			placeholder="{{'_RccOSNamePlaceHolder_'| i18n }}" 
+			[compressed]="true" 
+			[empty]="true"
+			[(ngModel)]="selectionObj.osName" 
+			(ngModelChange)="onSelection()" 
+			optionsKey="name"
 			optionsValue="name">
 		</cui-select>
 	</div>
@@ -56,14 +76,20 @@
 <div class="row base-padding-top half-padding-left responsive-table">
 	<cui-table [options]="impactedDeviceTableOptions" [data]="impactedDeviceDetails"></cui-table>
 	<div class="section">
-		<cui-pager [page]="tableConfig.tableOffset" [limit]="tableConfig.tableLimit"
-			[totalItems]="tableConfig.totalItems" (onPageChanged)="onPageIndexChange($event)"></cui-pager>
+		<cui-pager [page]="tableConfig.tableOffset" 
+			[limit]="tableConfig.tableLimit"
+			[totalItems]="tableConfig.totalItems" 
+			(onPageChanged)="onPageIndexChange($event)">
+		</cui-pager>
 	</div>
 </div>
 <ng-template #policyRowWellTemplate let-item="item" class="half-margin-left">
 	<div class="base-margin-top text-small responsive-table">
-		<cui-table class="table--wrap table--nostripes" [options]="rccViolationInfoTableOptions"
-			[data]="item.violations" [limit]="tableConfig.tableLimit" [offset]="tableConfig.tableOffset"
+		<cui-table class="table--wrap table--nostripes" 
+			[options]="rccViolationInfoTableOptions"
+			[data]="item.violations" 
+			[limit]="tableConfig.tableLimit" 
+			[offset]="tableConfig.tableOffset"
 			*ngIf="!loading">
 		</cui-table>
 	</div>
