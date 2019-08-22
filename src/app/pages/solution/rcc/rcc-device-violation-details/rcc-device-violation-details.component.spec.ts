@@ -16,7 +16,7 @@ import {
 	ComplianceScenarios,
 } from '@mock';
 
-fdescribe('RccDeviceViolationDetailsComponent', () => {
+describe('RccDeviceViolationDetailsComponent', () => {
 	let component: RccDeviceViolationDetailsComponent;
 	let fixture: ComponentFixture<RccDeviceViolationDetailsComponent>;
 	let rccTrackService: RccService;
