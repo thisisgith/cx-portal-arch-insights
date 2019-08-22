@@ -10,9 +10,9 @@ const assets = networkScenario.response.body.data;
 const assetCards = cardScenario.response.body.data;
 const totalCountScenario = coverageMock.getScenario('GET', 'Coverage Counts');
 const coverageElements = totalCountScenario.response.body;
-// const vulnMock = new MockService('VulnerabilityScenarios');
-// const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
-// const advisoryCounts = advisoryScenario.response.body;
+const vulnMock = new MockService('VulnerabilityScenarios');
+const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts - Large');
+const advisoryCounts = advisoryScenario.response.body;
 const caseMock = new MockService('CaseScenarios');
 const caseScenario = caseMock.getScenario('GET', 'Case Details');
 const caseListScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
@@ -618,17 +618,19 @@ describe('Assets', () => { // PBC-41
 			});
 		});
 
-		it.skip('Properly closes the actions menu when clicking away', () => { // PBC-272
+		it('Properly closes the actions menu when clicking away', () => { // PBC-272, PBC-607
 			cy.get('tr cui-dropdown').eq(0).click();
 			cy.get('tr div.dropdown__menu').eq(0).should('be.visible');
-			cy.get('tr cui-dropdown').eq(5).click(); // another asset's menu
-			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
-			cy.get('tr cui-dropdown').eq(0).click();
+			// TODO: Disabled for PBC-607
+			// cy.get('tr cui-dropdown').eq(1).click(); // another asset's menu
+			// cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			// cy.get('tr cui-dropdown').eq(0).click();
 			cy.get('cui-dropdown').eq(0).click(); // bulk actions menu
 			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
-			cy.get('tr cui-dropdown').eq(0).click();
-			cy.get('[data-auto-id*="InventoryItemCheckbox"]').eq(0).click(); // select checkbox
-			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			// TODO: Disabled for PBC-607
+			// cy.get('tr cui-dropdown').eq(0).click();
+			// cy.get('[data-auto-id*="InventoryItemCheckbox"]').eq(0).click(); // select checkbox
+			// cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
 			cy.get('tr cui-dropdown').eq(0).click();
 			cy.getByAutoId('AssetsSelectVisualFilter-total').click(); // outside of table
 			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
@@ -668,12 +670,16 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Uses comma separator in visual filter tooltips', () => { // PBC-275
-			cy.getByAutoId('Security AdvisoriesPoint')
-				.each(x => {
-					x.hover();
-				});
-			// cy.getByAutoId('Security AdvisoriesTooltip')
-			// 	.should('contain', advisoryCounts['security-advisories'].toLocaleString());
+			vulnMock.enable('Advisory Counts - Large');
+			cy.reload();
+			cy.waitForAppLoading();
+
+			cy.getByAutoId('AssetsSelectVisualFilter-advisories').within(() => {
+				cy.getByAutoId('Security AdvisoriesPoint').hover();
+				cy.getByAutoId('Security AdvisoriesTooltip')
+					.should('contain', advisoryCounts['security-advisories'].toLocaleString());
+			});
+			vulnMock.enable('Advisory Counts');
 		});
 	});
 
