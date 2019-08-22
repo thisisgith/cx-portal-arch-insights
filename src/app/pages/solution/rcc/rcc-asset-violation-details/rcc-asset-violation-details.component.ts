@@ -6,7 +6,8 @@ import { RccAssetSelectReq, RccAssetDetailsService } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
-
+import { UserResolve } from '@utilities';
+import { ActivatedRoute } from '@angular/router';
 /**
  * Component for portal support
  */
@@ -19,8 +20,12 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	constructor (
 		private logger: LogService,
 		private RccAssetDataDetailsService: RccAssetDetailsService,
+		public userResolve: UserResolve,
+		private route: ActivatedRoute,
 	) {
 		this.logger.debug('RccAssetViolationDetailsComponent Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 	public rccAssetPolicyTableOptions: CuiTableOptions;
 	public rccMessageTableOptions: CuiTableOptions;
@@ -38,7 +43,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public policyGroupSelection = '';
 	public policyNameSelection = '';
 	public policySeveritySelection = '';
-	public customerId = '7293498';
+	public customerId: string;
 	private destroy$ = new Subject();
 	@Input() public selectedAssetData: any;
 	public assetModalFilter: RccAssetSelectReq;
