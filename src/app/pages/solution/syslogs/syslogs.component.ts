@@ -107,11 +107,11 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public visualLabels: any = [
 		{
 			active: true, count: null,
-			label: I18n.get('_TotalSyslogs_'),
+			label: I18n.get('_SyslogTotalSyslogs_'),
 			route: 'Exceptions'},
 		{
 			active: false, count: null,
-			label: I18n.get('_TotalAssets_'),
+			label: I18n.get('_SyslogTotalAssets_'),
 			route: 'AssetsWithExceptions' },
 	];
 	private destroy$ = new Subject();
@@ -154,25 +154,25 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		return (timeRangeFilter.seriesData = [
 			{
 				filter: '1',
-				label: I18n.get('_1day_'),
+				label: I18n.get('_SyslogDay1_'),
 				selected: false,
 				value: 10,
 			},
 			{
 				filter: '7',
-				label: I18n.get('_7days_'),
+				label: I18n.get('_SyslogDays7_'),
 				selected: false,
 				value: 15,
 			},
 			{
 				filter: '15',
-				label: I18n.get('_15days_'),
+				label: I18n.get('_SyslogDays15_'),
 				selected: false,
 				value: 20,
 			},
 			{
 				filter: '30',
-				label: I18n.get('_30days_'),
+				label: I18n.get('_SyslogDays30_'),
 				selected: false,
 				value: 25,
 			},
@@ -189,13 +189,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		return (catalogFilter.seriesData = [
 			{
 				filter: 'cisco Catalog',
-				label: I18n.get('_CiscoCatalog_'),
+				label: I18n.get('_SyslogCiscoCatalog_'),
 				selected: false,
 				value: 50,
 			},
 			{
 				filter: 'others',
-				label: I18n.get('_Others_'),
+				label: I18n.get('_SyslogOthers_'),
 				selected: false,
 				value: 50,
 			},
@@ -269,13 +269,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		return (assetFilter.seriesData = [
 			{
 				filter: 'noSyslog',
-				label: I18n.get('_NoSyslog_'),
+				label: I18n.get('_SyslogNoSyslog_'),
 				selected: false,
 				value: 50,
 			},
 			{
 				filter: 'withSyslog',
-				label: I18n.get('_WithSyslog_'),
+				label: I18n.get('_SyslogWithSyslog_'),
 				selected: false,
 				value: 50,
 			},
@@ -474,7 +474,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 				loading: true,
 				seriesData: [],
 				template: this.assetFilterTemplate,
-				title: I18n.get('_Asset_'),
+				title: I18n.get('_SyslogAsset_'),
 				view: ['syslogMessage', 'syslogAsset'],
 			});
 			this.getAssetCounts();

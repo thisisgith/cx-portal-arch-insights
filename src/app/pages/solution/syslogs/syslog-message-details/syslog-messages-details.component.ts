@@ -101,12 +101,12 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 			columns: [
 				{
 					key: 'DeviceHost',
-					name: I18n.get('_Asset_'),
+					name: I18n.get('_SyslogAsset_'),
 					sortable: true,
 				},
 				{
 					key: 'SyslogMsgDesc',
-					name: I18n.get('_Message_'),
+					name: I18n.get('_SyslogGridMessage_'),
 					sortable: true,
 				},
 				{
@@ -131,7 +131,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 				},
 				{
 					key: 'msgCount',
-					name: I18n.get('_Count_'),
+					name: I18n.get('_SyslogCount_'),
 					sortable: true,
 				},
 			],

@@ -156,7 +156,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 				},
 				{
 					key: 'syslogCount',
-					name: I18n.get('_UniqueSyslogCount_'),
+					name: I18n.get('_SyslogUniqueSyslogCount_'),
 					sortable: true,
 				},
 			],

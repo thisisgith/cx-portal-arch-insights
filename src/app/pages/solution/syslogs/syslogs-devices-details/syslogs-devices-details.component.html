@@ -1,11 +1,11 @@
-<div class="text-uppercase text-bold half-margin-top half-margin-bottom"><span [innerText]="'_FiltersBy_' | i18n"
+<div class="text-uppercase text-bold half-margin-top half-margin-bottom"><span [innerText]="'_SyslogFiltersBy_' | i18n"
 		class="text-large"></span></div>
 <div class="row half-margin-bottom ">
 	<div class="col-md-3">
-		<cui-select data-auto-id="selection" label="Message(include)" placeholder="enter_message_mnemonic"></cui-select>
+		<cui-select data-auto-id="selection" label="Message(include)" placeholder="enter_SyslogGridMessage_mnemonic"></cui-select>
 	</div>
 	<div class="col-md-3">
-		<cui-select data-auto-id="selection1" label="Message(exclude)" placeholder="enter_message_mnemonic">
+		<cui-select data-auto-id="selection1" label="Message(exclude)" placeholder="enter_SyslogGridMessage_mnemonic">
 		</cui-select>
 	</div>
 	<div class="col-md-3">
@@ -19,10 +19,10 @@
 <table class="table">
 	<thead>
 		<tr>
-			<th><span [innerText]="'_MessageType_' | i18n"></span></th>
+			<th><span [innerText]="'_SyslogMessageGrid_' | i18n"></span></th>
 			<th><span [innerText]="'_Severity_' | i18n"></span></th>
-			<th><span [innerText]="'_Count_' | i18n"></span></th>
-			<th><span [innerText]="'_RECOMMENDATIONS_' | i18n"></span></th>
+			<th><span [innerText]="'_SyslogCount_' | i18n"></span></th>
+			<th><span [innerText]="'_SyslogRecommendations_' | i18n"></span></th>
 		</tr>
 	</thead>
 	<tbody *ngFor="let item of tabledata; index as i ">
@@ -33,7 +33,7 @@
 			<td>{{item.MessageCount}}</td>
 			<td>
 				<a data-auto-id="expandAndContractRowLink" (click)="expandRow(item,i) "><span
-						[innerText]="'_ViewDescriptionReccomendations_' | i18n"></span></a>
+						[innerText]="'_SyslogViewDescriptionReccomendations_' | i18n"></span></a>
 			</td>
 		</tr>
 		<ng-container *ngTemplateOutlet=" downArrow;context: item">
@@ -49,7 +49,7 @@
 				<div class="col-md-12">
 					<div class="container">
 						<div class="text-uppercase text-bold half-margin-bottom"><span
-								[innerText]="'_DETAILEDDESCRIPTION_' | i18n"></span> </div>
+								[innerText]="'_SyslogDetailedDescription_' | i18n"></span> </div>
 						<div>{{details}}</div>
 					</div>
 				</div>
@@ -66,9 +66,9 @@
 			<table class="responsive-table">
 				<thead>
 					<tr>
-						<th><span [innerText]="'_NO_' | i18n"></span></th>
-						<th><span [innerText]="'_MessageText_' | i18n"></span></th>
-						<th><span [innerText]="'_Count_' | i18n"></span></th>
+						<th><span [innerText]="'_SyslogNumber_' | i18n"></span></th>
+						<th><span [innerText]="'__Syslog_SyslogMessageText___' | i18n"></span></th>
+						<th><span [innerText]="'_SyslogCount_' | i18n"></span></th>
 					</tr>
 				</thead>
 				<tbody *ngFor="let msg of msgDesc; index as i">
