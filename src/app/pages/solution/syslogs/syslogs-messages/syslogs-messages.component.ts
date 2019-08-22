@@ -45,7 +45,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public msgExclude = '';
 	public lastMsgType;
 	public selectedAsset;
-	public showAsset360 = false;
+	public showAssetPanel = false;
 	public fullscreen = false;
 	public searchVal = '';
 	constructor (
@@ -147,7 +147,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			columns: [
 				{
 					key: 'MsgType',
-					name: I18n.get('_MessageType_'),
+					name: I18n.get('_SyslogMessageGrid_'),
 					sortable: true,
 				},
 				{
@@ -157,20 +157,20 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				},
 				{
 					key: 'IcDesc',
-					name: I18n.get('_DetailedDescription_'),
+					name: I18n.get('_SyslogDetailedDescription_'),
 					sortable: true,
 					template: this.icDecTemplate,
 
 				},
 				{
 					key: 'Recommendation',
-					name: I18n.get('_Recommendation_'),
+					name: I18n.get('_SyslogRecommendation_'),
 					sortable: true,
 					template: this.actionTemplate,
 				},
 				{
 					key: 'deviceCount',
-					name: I18n.get('_DetailedDescription_'),
+					name: I18n.get('_SyslogDetailedDescription_'),
 					sortable: true,
 				},
 			],
@@ -226,7 +226,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPanelClose () {
 		this.selectedAsset = undefined;
-		this.showAsset360 = false;
+		this.showAssetPanel = false;
 	}
 	/**
 	 * Determines whether pager updated on

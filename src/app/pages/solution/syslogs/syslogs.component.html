@@ -67,28 +67,28 @@
 <ng-template #timeRangeFilter let-filter="filter">
 	<column-chart
 		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter, true)"
+		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
 	>
 	</column-chart>
 </ng-template>
 <ng-template #catalogFilter let-filter="filter">
 	<pie-chart
 		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter, true)"
+		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
 	>
 	</pie-chart>
 </ng-template>
 <ng-template #severityFilter let-filter="filter">
 	<column-chart
 		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter, true)"
+		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
 	>
 	</column-chart>
 </ng-template>
 <ng-template #assetFilter let-filter="filter">
 			<pie-chart
 				[seriesData]="filter.seriesData"
-				(subfilter)="onSubfilterSelect($event, filter,true)"
+				(subfilter)="onSubfilterSelect($event.filter, filter,true)"
 			>
 			</pie-chart>
 		</ng-template>

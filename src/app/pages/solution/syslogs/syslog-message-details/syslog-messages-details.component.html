@@ -1,6 +1,6 @@
 <div class="text-uppercase text-bold half-margin-bottom">
 	<span
-		[innerText]="'_DETAILEDDESCRIPTION_' | i18n"
+		[innerText]="'_SyslogDetailedDescription_' | i18n"
 		class="text-large"
 	></span>
 </div>
@@ -10,7 +10,7 @@
 <div>
 	<div class="text-uppercase text-bold half-margin-top half-margin-bottom">
 		<span
-			[innerText]="'_RECOMMENDATIONS_' | i18n"
+			[innerText]="'_SyslogRecommendations_' | i18n"
 			class="text-large"
 		></span>
 	</div>
@@ -19,7 +19,7 @@
 	</div>
 
 	<div *ngIf="asset" class="text-uppercase half-margin-top">
-		<span [innerText]="'_IMPACTEDASSETS_' | i18n" class="text-large"></span
+		<span [innerText]="'__SyslogImpactedAssets__' | i18n" class="text-large"></span
 		>-{{ asset.deviceCount }}
 	</div>
 </div>
@@ -83,18 +83,18 @@
 	</div>
 	<div class="container base-margin-top">
 		<cui-table
-			*ngIf="tabledata1"
-			data-auto-id="tabledata1"
+			*ngIf="tableData"
+			data-auto-id="tableData"
 			(click)="clickfunction()"
 			[options]="tableOptions"
-			[data]="tabledata1"
+			[data]="tableData"
 			[offset]="tableOffset"
 			[limit]="tableLimit"
 		>
 		</cui-table>
 		<div class="section">
 			<cui-pager
-				*ngIf="tabledata1.length"
+				*ngIf="tableData.length"
 				[page]="tableOffset"
 				[limit]="tableLimit"
 				[totalItems]="totalItems"

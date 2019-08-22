@@ -8,10 +8,10 @@ import { SyslogsConfiguration as __Configuration } from '../syslogs-configuratio
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { SyslogData } from '../models/syslog-data';
 import { SyslogGridData } from './../models/syslog-grid-data';
-import { Syslog360GridData } from './../models/syslog360-data';
-import { Syslog360FilterData } from '../models/syslog360filter-data';
+import { SyslogPanelGridData } from './../models/syslogpanel-data';
+import { SyslogPanelFilterData } from '../models/syslogpanelfilter-data';
 import { SyslogDeviceData } from './../models/syslog-device-data';
-import { SyslogDevice360Outer } from '../models/syslogdevice360-data';
+import { SyslogDevicePanelOuter } from '../models/syslogdevicepanel-data';
 @Injectable({
 	providedIn: 'root',
 })
@@ -109,20 +109,17 @@ class SyslogsService extends __BaseService {
 		return this.deviceGridData(syslogParams).pipe(
 		  __map(_r => <SyslogDeviceData> _r.body),
 		);
-	  }
-	   /**
-	 * Get  of syslogs360 service
-	 */
+	  }  
 	  /**
-	 * Get  of syslogs360 service
+	 * Get  of syslogspanel service
 	 */
-	sys360GridData(syslog360Params, customerId){
+	sysPanelGridData(syslogPanelParams, customerId){
 		const __params = this.newParams();
         const __headers = new HttpHeaders(); 
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType="+syslog360Params.MsgType+"&companyId="+customerId,
+			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType="+syslogPanelParams.MsgType+"&companyId="+customerId,
 			__body,
 			{
 			  headers: __headers, 
@@ -133,27 +130,27 @@ class SyslogsService extends __BaseService {
 			return this.http.request<any>(req).pipe(
 				__filter(_r => _r instanceof HttpResponse),
 				__map((_r) => {
-				  return _r as __StrictHttpResponse<Syslog360GridData>;
+				  return _r as __StrictHttpResponse<SyslogPanelGridData>;
 				})
 			  );
 		}
 
-	get360GridData(syslog360Params,customerId):  __Observable<Syslog360GridData>{
-		return this.sys360GridData(syslog360Params, customerId).pipe(
-			__map(_r => _r.body as Syslog360GridData)
+	getPanelGridData(syslogPanelParams,customerId):  __Observable<SyslogPanelGridData>{
+		return this.sysPanelGridData(syslogPanelParams, customerId).pipe(
+			__map(_r => _r.body as SyslogPanelGridData)
 		  );
 
 	}
 	/**
-	 * Get  of syslogs360filterdata service
+	 * Get  of syslogspanelfilterdata service
 	 */
-	sys360FilterData(syslog360Params){
+	sysPanelFilterData(syslogPanelParams){
 		const __params = this.newParams();
         const __headers = new HttpHeaders();
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/filters?msgType="+syslog360Params.MsgType+"&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily",
+			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/filters?msgType="+syslogPanelParams.MsgType+"&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily",
 			__body,
 			{
 			  headers: __headers, 
@@ -164,17 +161,17 @@ class SyslogsService extends __BaseService {
 			return this.http.request<any>(req).pipe(
 				__filter(_r => _r instanceof HttpResponse),
 				__map((_r) => {
-				  return _r as __StrictHttpResponse<Syslog360FilterData>;
+				  return _r as __StrictHttpResponse<SyslogPanelFilterData>;
 				})
 			  );
 	}
-	get360FilterData(syslog360Params):  __Observable<Syslog360FilterData>{
-		return this.sys360FilterData(syslog360Params).pipe(
-			__map(_r => _r.body as Syslog360FilterData)
+	getPanelFilterData(syslogPanelParams):  __Observable<SyslogPanelFilterData>{
+		return this.sysPanelFilterData(syslogPanelParams).pipe(
+			__map(_r => _r.body as SyslogPanelFilterData)
 		  );
 
 	}
-	sys360FilterGridData(SyslogFilterParam,syslogParams){
+	sysPanelFilterGridData(SyslogFilterParam,syslogParams){
 		const __params = this.newParams();
         const __headers = new HttpHeaders(); 
         const __body: any = null;
@@ -191,18 +188,18 @@ class SyslogsService extends __BaseService {
 			return this.http.request<any>(req).pipe(
 				__filter(_r => _r instanceof HttpResponse),
 				__map((_r) => {
-				  return _r as __StrictHttpResponse<Syslog360GridData>;
+				  return _r as __StrictHttpResponse<SyslogPanelGridData>;
 				})
 			  );
 		}
-		get360FilterGridData(SyslogFilterParam,syslogParams):  __Observable<Syslog360GridData>{
-			return this.sys360FilterGridData(SyslogFilterParam,syslogParams).pipe(
-				__map(_r => _r.body as Syslog360GridData)
+		getPanelFilterGridData(SyslogFilterParam,syslogParams):  __Observable<SyslogPanelGridData>{
+			return this.sysPanelFilterGridData(SyslogFilterParam,syslogParams).pipe(
+				__map(_r => _r.body as SyslogPanelGridData)
 			  );
 	
 		}
 
-		public device360details (devicedetailsdata, customerId) {
+		public devicePanelDetails (devicedetailsdata, customerId) {
 			let __params = this.newParams();
 			let __headers = new HttpHeaders();
 			let __body: any = null;
@@ -220,13 +217,13 @@ class SyslogsService extends __BaseService {
 			  .pipe(
 				__filter(_r => _r instanceof HttpResponse),
 				__map((_r) => {
-				  return <__StrictHttpResponse<SyslogDevice360Outer>>_r;
+				  return <__StrictHttpResponse<SyslogDevicePanelOuter>>_r;
 				}),
 			  );
 		}
-		public getdevice360details (devicedata, customerId): __Observable<SyslogDevice360Outer[]> {
-			return this.device360details(devicedata, customerId).pipe(
-			  __map(_r => <SyslogDevice360Outer[]>_r.body),
+		public getdevicePanelDetails (devicedata, customerId): __Observable<SyslogDevicePanelOuter[]> {
+			return this.devicePanelDetails(devicedata, customerId).pipe(
+			  __map(_r => <SyslogDevicePanelOuter[]>_r.body),
 			);
 		  }
 }

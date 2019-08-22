@@ -41,7 +41,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public timeRange = 1;
 	public catalog = '';
 	public selectedAsset;
-	public showAsset360 = false;
+	public showAssetPanel = false;
 	public fullscreen = false;
 	public assetType = '';
 	public filters: SyslogFilter[];
@@ -156,7 +156,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 				},
 				{
 					key: 'syslogCount',
-					name: I18n.get('_UniqueSyslogCount_'),
+					name: I18n.get('_SyslogUniqueSyslogCount_'),
 					sortable: true,
 				},
 			],
@@ -200,7 +200,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPanelClose () {
 		this.selectedAsset = undefined;
-		this.showAsset360 = false;
+		this.showAssetPanel = false;
 	}
 	/**
 	 * Determines whether pager updated on
