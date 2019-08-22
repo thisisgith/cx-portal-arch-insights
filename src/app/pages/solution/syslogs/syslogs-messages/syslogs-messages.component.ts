@@ -45,7 +45,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public msgExclude = '';
 	public lastMsgType;
 	public selectedAsset;
-	public showAsset360 = false;
+	public showAssetPanel = false;
 	public fullscreen = false;
 	public searchVal = '';
 	constructor (
@@ -226,7 +226,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPanelClose () {
 		this.selectedAsset = undefined;
-		this.showAsset360 = false;
+		this.showAssetPanel = false;
 	}
 	/**
 	 * Determines whether pager updated on

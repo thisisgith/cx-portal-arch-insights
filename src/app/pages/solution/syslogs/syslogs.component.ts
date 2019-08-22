@@ -69,7 +69,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public timeRange = 1;
 	public catalog = '';
 	public selectedAsset;
-	public showAsset360 = false;
+	public showAssetPanel = false;
 	public fullscreen = false;
 	public view: 'syslogMessage' | 'syslogAsset' = 'syslogMessage';
 	public appliedFilters = {

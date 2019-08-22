@@ -1,4 +1,4 @@
-/** Device Details 360 message object Grid Data Intereface
+/** Device Details panel message object Grid Data Intereface
  */
 export interface DeviceMessageDescObject {
 	SyslogMsgDesc?: string;
