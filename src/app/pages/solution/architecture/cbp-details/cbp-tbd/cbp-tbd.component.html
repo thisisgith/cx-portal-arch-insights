@@ -1,0 +1,107 @@
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container" *ngIf="exceptionDatas.length">
+			<span [innerText]="'_ArchitectureCBPExceptions_' | i18n" class="text-large"></span>
+			<span class="qtr-margin-left text-small text-muted">showing
+				{{ (tableStartIndex + 1) +' - ' +  tableEndIndex  }}
+				of {{totalItems}} exceptions</span>
+		</div>
+	</div>
+</div>
+
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
+			<!-- <cui-table [options]="tableOptions" [data]="exceptionDatas"></cui-table> -->
+			<table class="table" *ngIf="!isLoading">
+				<thead>
+					<tr>
+						<th [innerHTML]="('_ArchitectureSeverity_' | i18n)"></th>
+						<th [innerHTML]="('_ArchitectureRuleName_' | i18n)"></th>
+						<th [innerHTML]="('_ArchitectureException_' | i18n)"></th>
+					</tr>
+				</thead>
+				<tbody *ngIf="totalItems > 0">
+					<ng-container *ngFor="let item of exceptionDatas">
+						<tr>
+							<td>
+								<ng-container *ngTemplateOutlet=" riskTmpl;context: { itemSeverity : item.severity }">
+								</ng-container>
+							</td>
+							<td>
+								<span>{{(item['bpRuleTitle']).substr(0, 25).concat('...')}}</span>
+							</td>
+							<td>
+								<span>{{(item['exceptions']).substr(0, 25).concat('... ')}}</span>
+								<a data-auto-id="expandAndContractRowLink" (click)="expandRow(item) ">
+									<span *ngIf="!item.active" [innerHTML]="('_ArchitectureShowRecommendationAndCorrectiveAction_' | i18n)"></span>
+									<span *ngIf="item.active" [innerHTML]="('_ArchitectureHideRecommendationAndCorrectiveAction_' | i18n)"></span>
+									<span [ngClass]="{
+										'icon-chevron-down':!item.active,
+										'icon-chevron-up':item.active
+									}" class="icon-small hand-pointer"></span>
+								</a>
+							</td>
+						</tr>
+						<ng-container *ngTemplateOutlet=" dynamicRow;context: { item : item }">
+						</ng-container>
+					</ng-container>
+				</tbody>
+			</table>
+			<div class="section" *ngIf="!isLoading && totalItems > 0">
+				<cui-pager *ngIf="exceptionDatas.length" [page]="params.page" [limit]="params.pageSize"
+					[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+			</div>
+			<div class="container base-margin-top" *ngIf="isLoading">
+				<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
+					<div class="wrapper">
+						<div class="wheel"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #riskTmpl let-severity="itemSeverity">
+	<span class="qtr-margin-right icon-circle" [ngClass]="{
+		'High': 'text-danger',
+		'Medium': 'text-warning',
+		'Low': 'text-warning-alt'
+			}[severity]">
+	</span>
+	<span>{{severity}}</span>
+</ng-template>
+
+<ng-template #dynamicRow let-item="item">
+	<tr class="table--wrap" *ngIf="item.active">
+		<td colspan="3">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="container">
+						<div class="text-bold text-uppercase" [innerText]="('_Exception_' | i18n)">
+						</div>
+						<div>{{item['exceptions']}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="row base-margin-top">
+				<div class="col-md-12">
+					<div class="container">
+						<div class="text-bold text-uppercase" [innerText]="('_Recommendation_' | i18n)"></div>
+						<div>{{item['recommendations']}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="row base-margin-top base-margin-down">
+				<div class="col-md-12">
+					<div class="container">
+						<div class="text-bold text-uppercase" [innerText]="('_CorrectiveAction_' | i18n)">
+						</div>
+						<div> {{item['correctiveActions']}}</div>
+					</div>
+				</div>
+			</div>
+		</td>
+	</tr>
+</ng-template>

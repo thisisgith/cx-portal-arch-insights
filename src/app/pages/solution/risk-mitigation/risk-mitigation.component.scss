@@ -1,1 +1,22 @@
-/** Empty component SCSS file */
+.mid-icon-place {
+	margin-top: 40%;
+	font-size: x-large;
+}
+
+.space-between {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.font15 {
+	font-size: 15px;
+}
+
+.filter__selected {
+	border-bottom: 4px solid #00bceb;
+}
+
+.cursor {
+	cursor: pointer;
+}
