@@ -3,7 +3,7 @@ import { Component, Input, ViewChild,
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService, DeviceMessageDescObject, SyslogDevice360Outer } from '@sdp-api';
+import { SyslogsService, DeviceMessageDescObject, SyslogDevicePanelOuter } from '@sdp-api';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
@@ -20,7 +20,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	@ViewChild('downArrow', { static: true }) public downArrow: TemplateRef<{ }>;
 	@Input('asset') public asset: any;
 	public tableOptions: CuiTableOptions;
-	public tabledata: SyslogDevice360Outer[];
+	public tabledata: SyslogDevicePanelOuter[];
 	public tabledata1: DeviceMessageDescObject[];
 	public msgInclude = ' ';
 	public msgExclude = ' ';
@@ -47,7 +47,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	 * Onchanges lifecycle hook
 	 */
 	public ngOnChanges () {
-		this.syslogdevice360data(this.asset);
+		this.SyslogDevicePanelData(this.asset);
 	}
 
 	/**
@@ -67,17 +67,17 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		* @param gridData event values from input
 	 * Onchanges lifecycle hook
 	 */
-	public syslogdevice360data (gridData) {
-		this.syslogsService.getdevice360details(gridData, this.customerId)
+	public SyslogDevicePanelData (gridData) {
+		this.syslogsService.getdevicePanelDetails(gridData, this.customerId)
 		.pipe(takeUntil(this.destroy$),
 		catchError(err => {
-			this.logger.error('syslog-messages-details.component : getdevice360details() ' +
+			this.logger.error('syslog-messages-details.component : getdevicePanelDetails() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
 			return of({ });
 		}),
 		)
-		.subscribe((response: SyslogDevice360Outer[]) => {
+		.subscribe((response: SyslogDevicePanelOuter[]) => {
 			this.tabledata = response;
 		});
 	}
