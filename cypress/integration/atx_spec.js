@@ -102,9 +102,8 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					cy.getByAutoId('AtxScheduleCardRegisterButton')
 						.should('not.have.class', 'disabled')
 						.parent()
-						.should('have.attr', 'href', firstATXSessions[0].registrationURL);
-					// TODO: Pending PBC-590: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-590
-					//	.and('have.attr', 'target', '_blank');
+						.should('have.attr', 'href', firstATXSessions[0].registrationURL)
+						.and('have.attr', 'target', '_blank');
 				});
 
 			// Close the schedule pop-up
@@ -121,7 +120,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			// Open the schedule pop-up
 			cy.getByAutoId('ATXCard').eq(0).within(() => {
-				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('cardRecommendedATXScheduleButton').click();
 				cy.getByAutoId('atxScheduleCard')
 					.should('be.visible')
 					.within(() => {
@@ -133,9 +132,8 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						cy.getByAutoId('AtxScheduleCardRegisterButton')
 							.should('not.have.class', 'disabled')
 							.parent()
-							.should('have.attr', 'href', firstATXSessions[0].registrationURL);
-						// TODO: Pending PBC-590: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-590
-						//	.and('have.attr', 'target', '_blank');
+							.should('have.attr', 'href', firstATXSessions[0].registrationURL)
+							.and('have.attr', 'target', '_blank');
 					});
 			});
 
@@ -174,9 +172,8 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					cy.getByAutoId('AtxScheduleCardRegisterButton')
 						.should('not.have.class', 'disabled')
 						.parent()
-						.should('have.attr', 'href', firstATXSessions[0].registrationURL);
-					// TODO: Pending PBC-590: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-590
-					//	.and('have.attr', 'target', '_blank');
+						.should('have.attr', 'href', firstATXSessions[0].registrationURL)
+						.and('have.attr', 'target', '_blank');
 				});
 
 			// Close the schedule pop-up
