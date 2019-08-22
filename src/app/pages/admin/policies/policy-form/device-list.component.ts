@@ -3,6 +3,8 @@ import {
 	Input,
 	ViewChild,
 	ViewEncapsulation,
+	Output,
+	EventEmitter,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { DeviceListRow } from './policy-form.component';
@@ -22,6 +24,7 @@ export class DeviceListComponent {
 	@Input() public rowHeight = 50;
 	@Input() public items: DeviceListRow[];
 	@Input() public loading: true;
+	@Output() public selectionEvent = new EventEmitter<DeviceListRow>();
 	public itemsInView: DeviceListRow[];
 	public startIndex = 0;
 	public endIndex = 0;
@@ -47,10 +50,12 @@ export class DeviceListComponent {
 
 	/**
 	 * Toggles is device row is selected
+	 * Emits selection event with device info to parent component
 	 * @param device device row
 	 */
 	public toggleDeviceSelected (device: DeviceListRow) {
 		device.selected = !device.selected;
+		this.selectionEvent.emit(device);
 	}
 
 	/**
