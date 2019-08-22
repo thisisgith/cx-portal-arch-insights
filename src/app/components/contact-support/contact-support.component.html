@@ -12,7 +12,7 @@
 			<div class="col-md-12">
 				<div class="form-group">
 					<div class="form-group__text">
-						<label for="support-title" class="text-bold qtr-padding-bottom"
+						<label for="support-title" data-auto-id="supportTopic" class="text-bold qtr-padding-bottom"
 							[innerText]="'_SupportTopic_' | i18n"></label>
 						<cui-select formControlName="title" #title id="support-title" [required]="true" [empty]="true"
 							[items]="items" placeholder="Select" [compressed]="false" optionsKey="name"
@@ -24,16 +24,20 @@
 				[ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
 				<div class="form-group">
 					<div class="form-group__text">
-						<label for="support-description" class="text-bold qtr-padding-bottom"
+						<label for="support-description" data-auto-id="supportDescription" class="text-bold qtr-padding-bottom"
 							[innerText]="'_SupportDescription_' | i18n"></label>
-						<cui-input #description id="support-description" formControlName="description" type="textarea"
-							[(model)]="text" [options]="textOptions" [label]=""></cui-input>
+						<textarea class="textarea" rows="8" formControlName="description" [maxlength]="descriptionMaxLength"></textarea>
+					</div>
+					<div char-count
+						[value]="supportForm.controls.description.value.length"
+						[max]="descriptionMaxLength"
+						displayAt="31000">
 					</div>
 				</div>
 			</div>
 			<div class="col-md-12 text-center dbl-padding-top"
 				[ngStyle]="{'visibility':supportForm.controls.title.value ? 'visible' : 'hidden' }">
-				<button data-auto-id="submit" class="btn btn--primary"
+				<button data-auto-id="submit" class="btn btn--primary" [ngClass]="{ 'disabled': supportForm.invalid }"
 					[innerText]="'_SupportSubmit_' | i18n | uppercase" (click)="submitMessage()">
 				</button>
 			</div>

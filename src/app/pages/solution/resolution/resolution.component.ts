@@ -77,14 +77,17 @@ const otherFilters = ['hasRMAs', 'lastUpdateFrom', 'lastUpdateTo',
 /** 1 day ago */
 const oneDay = DateTime.local()
 	.minus({ days: 1 })
+	.toUTC()
 	.toISO();
 /** 1 week ago */
 const oneWeek = DateTime.local()
 	.minus({ weeks: 1 })
+	.toUTC()
 	.toISO();
 /** 2 weeks ago */
 const twoWeeks = DateTime.local()
 	.minus({ weeks: 2 })
+	.toUTC()
 	.toISO();
 
 /** Labels and subfilters maps for the last updated filter */

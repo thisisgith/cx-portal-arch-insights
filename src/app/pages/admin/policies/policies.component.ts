@@ -25,7 +25,7 @@ import * as _ from 'lodash-es';
 	templateUrl: './policies.component.html',
 })
 export class PoliciesComponent implements OnInit {
-	public selectEditCollectionComponent = false;
+	public modalVisible = false;
 	public loadedPolicy: PolicyResponseModel;
 	public customerId: string;
 
@@ -115,7 +115,7 @@ export class PoliciesComponent implements OnInit {
 			this.modalType = modalType;
 		}
 
-		this.selectEditCollectionComponent = selected;
+		this.modalVisible = selected;
 	}
 
 	/**
@@ -125,7 +125,7 @@ export class PoliciesComponent implements OnInit {
 	 */
 	public collectionRequestSubmit (submitted: boolean) {
 		if (submitted) {
-			this.selectEditCollectionComponent = false;
+			this.modalVisible = false;
 			this.loading = true;
 			this.getPoliciesData(this.customerId)
 				.subscribe(response => {

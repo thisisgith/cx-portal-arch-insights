@@ -1,5 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { NetworkElementResponse, NetworkElement } from '@sdp-api';
+import { MockAssetsData } from './assets';
 import * as _ from 'lodash-es';
 
 /** Base of URL for SDP API */
@@ -7,6 +8,14 @@ const api = '/api/customerportal/inventory/v1/network-elements';
 
 /** Default Customer ID */
 const customerId = '2431199';
+
+/** Serial Number filter based on the mocked asset list
+ * @param {number} count Number of serial numbers to filter on
+ * @returns {string} filter
+ */
+const serialNumberFilter = count => _.map(MockAssetsData, asset => asset.serialNumber)
+	.slice(0, count)
+	.join('&serialNumber=');
 
 /** Mock data for Network Elements API Results */
 export const MockNetworkElements: NetworkElement[] = [
@@ -18,13 +27,13 @@ export const MockNetworkElements: NetworkElement[] = [
 		lastUpdateDate: '2019-05-14T18:27:06',
 		managedNeId: '10.119.1.172,NA,NA,NA',
 		managementAddress: '10.119.1.172',
-		neInstanceId: 'NA,FOC1544Y175,WS-C2960S-24PS-L,NA',
+		neInstanceId: 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
 		neName: '1971THE2-swi-LIMDR_P7_1_SD_DR.tbc.limad.net',
 		neRegistrationStatus: '',
 		productFamily: 'Cisco Catalyst 2960-S Series Switches',
 		productId: 'WS-C2960S-24PS-L',
 		productType: 'LAN Switches',
-		serialNumber: 'FOC1544Y175',
+		serialNumber: 'FOC1544Y16T',
 		smartLicenseProductInstanceIdentifier: '',
 		smartLicenseVirtualAccountName: '',
 		swType: 'IOS',
@@ -695,6 +704,59 @@ export const NetworkScenarios = [
 			],
 		},
 		url: `${api}?customerId=${customerId}&serialNumber=CAT2034B1H6`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Network Elements for FOC1544Y16T',
+					response: {
+						body: MockNetwork(1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&serialNumber=FOC1544Y16T`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Network Elements by SN - List view',
+					response: {
+						body: MockNetwork(10, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&serialNumber=${serialNumberFilter(10)}` +
+			'&rows=10&page=1',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Network Elements by SN - Grid view',
+					response: {
+						body: MockNetwork(10, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&serialNumber=${serialNumberFilter(12)}` +
+			'&rows=10&page=1',
 		usecases: ['Use Case 1'],
 	},
 ];

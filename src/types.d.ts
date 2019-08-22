@@ -20,6 +20,7 @@ interface Window {
 	Cypress: any;
 	loading: boolean;
 	elearningLoading: boolean;
+	inventoryLoading: boolean;
 	successPathsLoading: boolean;
 	atxLoading: boolean;
 	accLoading: boolean;

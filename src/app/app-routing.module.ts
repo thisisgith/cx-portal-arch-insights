@@ -1,7 +1,7 @@
 import { ExtraOptions, Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ClientSSOGuard } from '@cisco-ngx/cui-auth';
-import { UserResolve } from './utilities/user-resolve';
+import { UserResolve } from '@utilities';
 
 /**
  * Representation of the routes used by @angular/router
