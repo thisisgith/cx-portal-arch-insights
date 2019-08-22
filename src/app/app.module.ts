@@ -32,6 +32,7 @@ import { CaseOpenModule } from './components/case/case-open/case-open.module';
 import { CloseConfirmModule } from './components/case/case-open/close-confirm/close-confirm.module';
 import { ContactSupportModule } from './components/contact-support/contact-support.module';
 import { CollapsibleModule } from './components/collapsible/collapsible.module';
+import { UnauthorizedUserModule } from './components/unauthorized-user/unauthorized-user.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -94,6 +95,7 @@ export function loadUserInfo (service: AppService) {
 		CloseConfirmModule,
 		ContactSupportModule,
 		CollapsibleModule,
+		UnauthorizedUserModule,
 	],
 	providers: [
 		AppService,
