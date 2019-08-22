@@ -36,6 +36,9 @@ const advisorySec = advisorySecScenario.response.body;
 const advisoryFNMock = new MockService('FieldNoticeAdvisoryScenarios');
 const advisoryFNScenario = advisoryFNMock.getScenario('GET', 'Field Notice Advisories for FOC1544Y16T');
 const advisoryFN = advisoryFNScenario.response.body;
+const neMock = new MockService('NetworkScenarios');
+const neScenario = neMock.getScenario('GET', 'Network Elements Page 1');
+const networkElements = neScenario.response.body.data;
 
 Cypress.moment.locale('en', {
 	// change moment's default formatting to match the app's format
@@ -409,32 +412,47 @@ describe('Assets', () => { // PBC-41
 	});
 
 	context('PBC-36: Asset List - Table View', () => {
-		// TODO: Unskip and fix to accomodate "Last Scan" implementation
-		it.skip('Displays assets correctly in list view', () => {
+		it('Displays assets correctly in list view', () => {
 			cy.get('tbody > tr').should('have.length', assets.length);
-			Cypress._.each(assets, asset => {
+			Cypress._.each(assets, (asset, index) => {
 				const serial = asset.serialNumber;
 				cy.getByAutoId(`InventoryItem-${serial}`).within(() => { // PBC-257
-					// Icon is a static placeholder for now
-					cy.getByAutoId(`DeviceIcon-${serial}`).should('have.class', 'icon-4-way-nav');
-					cy.getByAutoId(`Device-${serial}`).should('have.text', asset.deviceName);
-					cy.getByAutoId(`IP Address-${serial}`).should('have.text', asset.ipAddress);
-					// TODO: "Last Scan" is not implemented yet
-					cy.getByAutoId(`Last Scan-${serial}`).should('have.text', 'Never');
-					// TODO: "Critical Advisories" is not implemented yet
-					// cy.getByAutoId(`Critical Advisories-${serial}`).should('have.text', '');
-					if (asset.supportCovered) {
-						cy.getByAutoId('SupportCoveredIcon').should('be.visible');
-					} else {
-						cy.getByAutoId('SupportCoveredIcon').should('not.be.visible');
+					if (serial === networkElements[index].serialNumber) {
+						if (networkElements[index].productType === 'Routers') {
+							cy.get('[data-auto-id*="DeviceIcon-"]').should(
+								'have.attr', 'src',	'assets/img/assets/device-router-outline.svg'
+							);
+						} else if (networkElements[index].productType === 	'LAN Switches') {
+							cy.get('[data-auto-id*="DeviceIcon-"]').should(
+								'have.attr', 'src', 'assets/img/assets/device-switch-outline.svg'
+							);
+						} else {
+							cy.get('[data-auto-id*="DeviceIcon-"]').should('not.exist');
+						}
 					}
-					cy.getByAutoId(`Serial Number-${serial}`)
-						.should('have.text', asset.serialNumber);
+					const deviceName = Cypress._.truncate(asset.deviceName, { length: 53 });
+					cy.getByAutoId(`Device-${serial}`).should('have.text', deviceName);
+					cy.getByAutoId(`IP Address-${serial}`).should('have.text', asset.ipAddress);
+					const scan = asset.lastScan ? Cypress.moment(asset.lastScan).fromNow() : 'Never';
+					cy.getByAutoId(`Last Scan-${serial}`).should('have.text', scan);
+					if (asset.criticalAdvisories) {
+						cy.getByAutoId('CriticalAdvisoriesIcon')
+							.should('have.text', asset.criticalAdvisories);
+					} else {
+						cy.getByAutoId('CriticalAdvisoriesIcon').should('not.exist');
+					}
+					if (asset.supportCovered) {
+						cy.getByAutoId('SupportCoveredIcon').should('exist');
+					} else {
+						cy.getByAutoId('SupportCoveredIcon').should('not.exist');
+					}
+					cy.getByAutoId(`Serial Number-${serial}`).should('have.text', serial);
 					cy.getByAutoId(`Software Type-${serial}`).should('have.text', asset.osType);
 					cy.getByAutoId(`Software Version-${serial}`)
 						.should('have.text', asset.osVersion);
 					if (asset.role) { // PBC-297
-						cy.getByAutoId(`Role-${serial}`).should('have.text', startCase(toLower(asset.role)));
+						cy.getByAutoId(`Role-${serial}`)
+							.should('have.text', startCase(toLower(asset.role)));
 					}
 				});
 			});
@@ -504,6 +522,23 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Filters asset list with all visual filters', () => { // PBC-228, PBC-253
+			const checkAdvisoryFilters = () => {
+				cy.server();
+				cy.route('**/inventory/v1/assets?**').as('assets');
+				cy.get('[data-auto-id="AssetsSelectVisualFilter-advisories"] [data-auto-id="BugsPoint"]')
+					.click({ force: true });
+				cy.wait('@assets').its('url').should('contain', 'hasBugs=true');
+				cy.getByAutoId('FilterTag-bugs').should('exist');
+				cy.get('[data-auto-id="AssetsSelectVisualFilter-advisories"] [data-auto-id="Field NoticesPoint"]')
+					.click({ force: true });
+				cy.wait('@assets').its('url').should('contain', 'hasFieldNotices=true');
+				cy.getByAutoId('FilterTag-field-notices').should('exist');
+				cy.get('[data-auto-id="AssetsSelectVisualFilter-advisories"] [data-auto-id="Security AdvisoriesPoint"]')
+					.click({ force: true });
+				cy.wait('@assets').its('url').should('contain', 'hasSecurityAdvisories=true');
+				cy.getByAutoId('FilterTag-security-advisories').should('exist');
+			};
+
 			const { contractNumber, role } = assets[0];
 			cy.getByAutoId('CoveredPoint').click({ force: true });
 			cy.getByAutoId('FilterTag-covered').should('be.visible');
@@ -512,12 +547,12 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId(`${Cypress._.capitalize(role.toLowerCase())}Point`)
 				.click({ force: true });
 			cy.getByAutoId(`FilterTag-${role}`).should('be.visible');
-			// TODO: Field notice/security advisory filter (CSCvq32046)
 			cy.url().should('contain', 'coverage=covered')
 				.and('contain', `contractNumber=${contractNumber}`)
 				.and('contain', `role=${role}`);
 			cy.getByAutoId(`FilterTag-${contractNumber}`).click().should('not.exist');
 			cy.url().should('not.contain', 'contractNumber');
+			checkAdvisoryFilters();
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 			cy.getByAutoId('FilterTag-covered').should('not.exist');
 			cy.url().should('not.contain', 'coverage').and('not.contain', 'role');
@@ -537,24 +572,14 @@ describe('Assets', () => { // PBC-41
 			cy.waitForAppLoading();
 		});
 
-		// TODO: Need to investigate possible bug
-		// Sometimes, clicking the visual filters in this test is just refreshing the table
-		//  and not triggering any filtering
-		it.skip('Combines visual filters appropriately', () => {
+		it('Combines visual filters appropriately', () => {
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
 			cy.getByAutoId('CoveredPoint').click({ force: true }).wait('Covered Assets');
-			cy.getByAutoId('UncoveredPoint').click({ force: true })
-				.wait('@assets', { timeout: 10000 });
 			cy.getByAutoId(`${assets[0].contractNumber}Point`).click({ force: true });
-			cy.wait('@assets', { timeout: 10000 }).then(xhr => {
-				const params = new URLSearchParams(new URL(xhr.url).search);
-				expect(params.getAll('coverage')).to.have.length(2)
-					.and.include.members(['covered', 'uncovered']);
-				expect(params.getAll('contractNumber')).to.have.length(1)
-					.and.include.members([assets[0].contractNumber]);
-			});
+			cy.wait('@assets', { timeout: 30000 }).its('url').should('contain', 'coverage=covered')
+				.and('contain', `contractNumber=${assets[0].contractNumber}`);
 
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 		});
@@ -623,9 +648,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('[data-auto-id*="InventoryItemSelect-"]').eq(0).should('not.be.checked');
 		});
 
-		// TODO: Need to investigate possible bug
-		// Sometimes, clicking the visual filters in this test is just refreshing the table
-		//  and not triggering any filtering
+		// TODO: Disabled until PBC-593 is fixed
 		it.skip('Only shows asset results from the most recent query', () => { // PBC-274
 			assetMock.disable(['Assets Page 1', 'Covered Assets']);
 			const filteredXHR = new RouteWatch('**/inventory/v1/assets?*coverage=covered');
@@ -681,9 +704,8 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId(`DeviceImg-${serial}`).should('have.text', 'No Photo Available');
 					cy.getByAutoId(`IPAddress-${serial}`).should('have.text', asset.ipAddress);
 					if (asset.lastScan) { // PBC-355
-						// TODO: Fix the following assertion
-						// cy.getByAutoId(`LastScan-${serial}`)
-						// 	.should('have.text', Cypress.moment(asset.lastScan).fromNow());
+						cy.getByAutoId(`LastScan-${serial}`)
+							.should('have.text', Cypress.moment(asset.lastScan).fromNow());
 					}
 					cy.getByAutoId(`SerialNumber-${serial}`)
 						.should('have.text', asset.serialNumber);
