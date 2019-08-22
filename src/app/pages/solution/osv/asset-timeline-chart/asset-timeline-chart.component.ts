@@ -99,7 +99,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						fillColor: '#049fd9',
 						lineColor: '#049fd9',
 						lineWidth: 1,
-						radius: 6,
+						radius: 3,
 						symbol: '',
 					},
 				},
@@ -115,6 +115,8 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 			},
 			tooltip: {
 				enabled: true,
+				/* tslint:disable:ter-max-len */
+				headerFormat: '<span style="font-size:12px;font-weight:bold">{point.key}</span><br/>',
 				pointFormat: '{point.info}',
 				style: {
 					width: 300,

@@ -1,8 +1,6 @@
 <div class="row dbl-margin-top">
 	<div class="col-md-8">
-		<div class="text-large text-bold" [innerText]="'_OsvBasicRecommendations_' | i18n | uppercase"></div>
-		<div class="text-medium qtr-margin-top" *ngIf="view =='timeline' && assetDetails && assetDetails?.length > 0"
-			[innerText]="'_OsvClickToSelectRecommendation_' | i18n"></div>
+		<div class="text-large text-bold" [innerText]="'_OsvSoftwareVersionSummary_' | i18n | uppercase"></div>		
 	</div>
 	<div class="col-md-4 pull-right">
 		<div class="btn-group btn-group--square half-margin-right pull-right">
@@ -44,16 +42,15 @@
 <!-- view all os version link -->
 <div class="markup pull-right dbl-margin-top" *ngIf="!status.isLoading && assetDetails?.length > 0">
 	<a class="markup-toggle link">
-		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
-		<span class="icon-popout icon-small qtr-margin-left"></span>
+		<span class="markup-label text-primary" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
+		<span class="icon-popout icon-small qtr-margin-left text-primary"></span>
 	</a>
 </div>
 
 <ng-template #versionTemplate let-item="celldata">
-	<span *ngIf="item?.error">{{'_NA_' | i18n}}</span>
-	<div *ngIf="!item?.error">
-		<span >{{item.swVersion}}</span>
-		<span  class="qtr-margin-left text-info" [attr.data-balloon]="item.info" data-balloon-pos="right" data-balloon-length="xlarge">
+	<div>
+		<span class="text-capitalize" >{{item.name}}</span>
+		<span  class="qtr-margin-left text-primary" [attr.data-balloon]="item.info" data-balloon-pos="right" data-balloon-length="xlarge">
 				<i class="icon-info-outline icon-xsmall"></i>
 		</span>
 	</div>

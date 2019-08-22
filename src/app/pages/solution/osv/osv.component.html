@@ -3,7 +3,7 @@
 		<div detailsPanelTitle>
 			<div class="qtr-margin-left text-xlarge half-margin-bottom" [innerText]="selectedAsset?.hostName"></div>
 			<div class="qtr-margin-left text-medium">
-				<span [innerText]="'_OsvIP_' | i18n"></span>
+				<span class="text-bold" [innerText]="'_OsvIP_' | i18n"></span>
 				<span class="qtr-margin-left" [innerText]="selectedAsset?.ipAddress"></span>
 			</div>
 		</div>
@@ -92,7 +92,7 @@
 				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
 			</div>
 			<div class="col-7 margin-auto">
-				<span class="text-xlarge " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
+				<span class="text-large " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
 			</div>
 		</div>
 		<div class="row toggle" (click)="selectView('assets')" *ngIf="filter.seriesData[0]?.assets > 0"
@@ -102,7 +102,7 @@
 				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
 			</div>
 			<div class="col-7 margin-auto">
-				<span class="text-xlarge " [innerText]="'_OsvAssets_' | i18n"></span>
+				<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
 			</div>
 		</div>
 		<div class="row toggle" (click)="selectView('swVersions')" *ngIf="filter.seriesData[0]?.versions > 0" [ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
@@ -111,7 +111,7 @@
 				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
 			</div>
 			<div class="col-7 margin-auto">
-				<span class="text-xlarge " [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
+				<span class="text-large " [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
 			</div>
 		</div>
 	</div>

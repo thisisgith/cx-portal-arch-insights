@@ -200,16 +200,6 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						sortable: false,
 					},
 					{
-						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
-						sortable: false,
-					},
-					{
-						key: 'deployment',
-						name: I18n.get('_OsvDeploymentStatus_'),
-						sortable: false,
-					},
-					{
 						name: I18n.get('_OsvRecommendations_'),
 						sortable: false,
 						template: this.recommendationsTemplate,

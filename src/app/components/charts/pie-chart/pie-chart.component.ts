@@ -80,7 +80,7 @@ export class PieChartComponent implements OnInit {
 						distance: 15,
 						enabled: true,
 					},
-					innerSize: 60,
+					innerSize: '80%',
 				},
 				series: {
 					point: {
