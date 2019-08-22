@@ -102,9 +102,10 @@ describe('CommunitiesComponent', () => {
 							'https://community.cisco.com/t5/wireless-and-mobility' +
 						'/bd-p/5956-discussions-getting-started-wireles');
 					expect(component.curatedCommunity.url)
-					.toEqual(
-						'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel' +
-						'?board=lifecycle-wireless-assurance&amp;labels=Onboard');
+						.toEqual(
+							'https://community.cisco.com/t5/campus-network-assurance' +
+						'/bd-p/ibn-assurance/customFilteredByMultiLabel' +
+						'?board=ibn-assurance&amp;labels=Onboard');
 				});
 		});
 
@@ -121,8 +122,9 @@ describe('CommunitiesComponent', () => {
 							'/bd-p/discussions-sd-access');
 					expect(component.curatedCommunity.url)
 					.toEqual(
-						'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel' +
-						'?board=lifecycle-network-segmentation&amp;labels=Onboard');
+						'https://community.cisco.com/t5/campus-network-segmentation' +
+						'/bd-p/ibn-segmentation/customFilteredByMultiLabel' +
+						'?board=ibn-segmentation&amp;labels=Onboard');
 				});
 		});
 
@@ -139,8 +141,9 @@ describe('CommunitiesComponent', () => {
 							'/bd-p/discussions-sd-access');
 					expect(component.curatedCommunity.url)
 					.toEqual(
-						'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel' +
-						'?board=lifecycle-converged-mgmt&amp;labels=Onboard');
+						'https://community.cisco.com/t5/scalable-access-policy' +
+						'/bd-p/ibn-policy/customFilteredByMultiLabel' +
+						'?board=ibn-policy&amp;labels=Onboard');
 				});
 		});
 
@@ -157,8 +160,9 @@ describe('CommunitiesComponent', () => {
 							'/bd-p/discussions-dna');
 					expect(component.curatedCommunity.url)
 					.toEqual(
-						'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel' +
-						'?board=lifecycle-onboard&amp;labels=Onboard');
+						'https://community.cisco.com/t5/network-device-onboarding' +
+						'/bd-p/ibn-onboarding/customFilteredByMultiLabel' +
+						'?board=ibn-onboarding&amp;labels=Onboard');
 				});
 		});
 
@@ -175,8 +179,9 @@ describe('CommunitiesComponent', () => {
 							'/bd-p/discussions-dna');
 					expect(component.curatedCommunity.url)
 					.toEqual(
-						'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel' +
-						'?board=lifecycle-swim&amp;labels=Onboard');
+						'https://community.cisco.com/t5/campus-software-image-management' +
+						'/bd-p/ibn-swim/customFilteredByMultiLabel' +
+						'?board=ibn-swim&amp;labels=Onboard');
 				});
 		});
 	});
