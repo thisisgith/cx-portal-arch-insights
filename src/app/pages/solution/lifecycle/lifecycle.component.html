@@ -602,115 +602,132 @@
 		</div>
 		<div class="divider base-margin-left base-margin-right"></div>
 		<div class="modal__body base-padding">
-			<div class="row half-margin-left half-margin-right">
-				<div class="col-md-9 text-large text-bold text-left"
-					[innerText]="'_TopicsAvailableSolution_' | i18n:data?.length || 0:componentData.params.solution:componentData.params.usecase">
-				</div>
-				<div *ngIf="type ==='ACC'" class="col-md-2">
-					<cui-select id="acc-filter"
-						data-auto-id="acc-filter"
-						[items]="statusOptions"
-						[empty]="true"
-						[placeholder]="'_FilterBy_' | i18n"
-						[(ngModel)]="selectedFilterForACC"
-						(ngModelChange)="selectFilter('ACC')">
-					</cui-select>
-				</div>
-				<div *ngIf="type ==='ATX'" class="col-md-2">
-					<cui-select id="atx-filter"
-						data-auto-id="atx-filter"
-						[items]="statusOptions"
-						[empty]="true"
-						[placeholder]="'_FilterBy_' | i18n"
-						[(ngModel)]="selectedFilterForATX"
-						(ngModelChange)="selectFilter('ATX')">
-					</cui-select>
-				</div>
-				<div *ngIf="type==='SB'" class="col-md-2">
-					<cui-select id="category-filter"
-						data-auto-id="category-filter"
-						[items]="categoryOptions"
-						[empty]="true"
-						[placeholder]="'_FilterBy_' | i18n"
-						[(ngModel)]="selectedFilterForSB"
-						(ngModelChange)="selectFilter('SB')">
-					</cui-select>
-				</div>
-				<div *ngIf="type==='PG'" class="col-md-2">
-					<cui-select id="pg-category-filter"
-						data-auto-id="pg-category-filter"
-						[items]="pgCategoryOptions"
-						[empty]="true"
-						[placeholder]="'_FilterBy_' | i18n"
-						[(ngModel)]="selectedFilterForPG"
-						(ngModelChange)="selectFilter('PG')">
-					</cui-select>
-				</div>
-				<div *ngIf="type==='ACC'" class="col-md-1 text-right">
-					<div class="btn-group btn-group--square">
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': accview ==='list' }" (click)="selectView('list', type)">
-							<span class="icon-list-view"></span>
-						</button>
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': accview === 'grid' }" (click)="selectView('grid', type)">
-							<span class="icon-grid-view"></span>
-						</button>
+			<span [ngSwitch]="type">
+				<span *ngSwitchCase="'ACC'">
+					<div class="row half-margin-left half-margin-right">
+						<div class="col-md-9 text-large text-bold text-left"
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedACC?.length || 0:componentData.params.solution:componentData.params.usecase">
+						</div>
+						<div class="col-md-2">
+							<cui-select id="acc-filter"
+								data-auto-id="acc-filter"
+								[items]="statusOptions"
+								[empty]="true"
+								[placeholder]="'_FilterBy_' | i18n"
+								[(ngModel)]="selectedFilterForACC"
+								(ngModelChange)="selectFilter('ACC')">
+							</cui-select>
+						</div>
+						<div class="col-md-1 text-right">
+							<div class="btn-group btn-group--square">
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+									[ngClass]="{'selected': accview ==='list' }" (click)="selectView('list', type)">
+									<span class="icon-list-view"></span>
+								</button>
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+									[ngClass]="{'selected': accview === 'grid' }" (click)="selectView('grid', type)">
+									<span class="icon-grid-view"></span>
+								</button>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div *ngIf="type==='ATX'" class="col-md-1 text-right">
-					<div class="btn-group btn-group--square">
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
-							<span class="icon-list-view"></span>
-						</button>
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
-							<span class="icon-grid-view"></span>
-						</button>
+					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+				</span>
+					<span *ngSwitchCase="'ATX'">
+						<div class="row half-margin-left half-margin-right">
+						<div class="col-md-9 text-large text-bold text-left"
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedATX?.length || 0:componentData.params.solution:componentData.params.usecase">
+						</div>
+						<div class="col-md-2">
+							<cui-select id="atx-filter"
+								data-auto-id="atx-filter"
+								[items]="statusOptions"
+								[empty]="true"
+								[placeholder]="'_FilterBy_' | i18n"
+								[(ngModel)]="selectedFilterForATX"
+								(ngModelChange)="selectFilter('ATX')">
+							</cui-select>
+						</div>
+						<div class="col-md-1 text-right">
+							<div class="btn-group btn-group--square">
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+									[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
+									<span class="icon-list-view"></span>
+								</button>
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+									[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
+									<span class="icon-grid-view"></span>
+								</button>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div *ngIf="type==='SB'" class="col-md-1 text-right">
-					<div class="btn-group btn-group--square">
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': sbview ==='list' }" (click)="selectView('list', type)">
-							<span class="icon-list-view"></span>
-						</button>
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': sbview === 'grid' }" (click)="selectView('grid', type)">
-							<span class="icon-grid-view"></span>
-						</button>
+					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+				</span>
+				<span *ngSwitchCase="'SB'">
+						<div class="row half-margin-left half-margin-right">
+						<div class="col-md-9 text-large text-bold text-left"
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedSuccessPaths?.length || 0:componentData.params.solution:componentData.params.usecase">
+						</div>
+						<div class="col-md-2">
+							<cui-select id="category-filter"
+								data-auto-id="category-filter"
+								[items]="categoryOptions"
+								[empty]="true"
+								[placeholder]="'_FilterBy_' | i18n"
+								[(ngModel)]="selectedFilterForSB"
+								(ngModelChange)="selectFilter('SB')">
+							</cui-select>
+						</div>
+						<div class="col-md-1 text-right">
+							<div class="btn-group btn-group--square">
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+									[ngClass]="{'selected': sbview ==='list' }" (click)="selectView('list', type)">
+									<span class="icon-list-view"></span>
+								</button>
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+									[ngClass]="{'selected': sbview === 'grid' }" (click)="selectView('grid', type)">
+									<span class="icon-grid-view"></span>
+								</button>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div *ngIf="type==='PG'" class="col-md-1 text-right">
-					<div class="btn-group btn-group--square">
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': pgview ==='list' }" (click)="selectView('list', type)">
-							<span class="icon-list-view"></span>
-						</button>
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': pgview === 'grid' }" (click)="selectView('grid', type)">
-							<span class="icon-grid-view"></span>
-						</button>
+					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+				</span>
+				<span *ngSwitchCase="'PG'">
+						<div class="row half-margin-left half-margin-right">
+						<div class="col-md-9 text-large text-bold text-left"
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedProductGuides?.length || 0:componentData.params.solution:componentData.params.usecase">
+						</div>
+						<div class="col-md-2">
+							<cui-select id="pg-category-filter"
+								data-auto-id="pg-category-filter"
+								[items]="pgCategoryOptions"
+								[empty]="true"
+								[placeholder]="'_FilterBy_' | i18n"
+								[(ngModel)]="selectedFilterForPG"
+								(ngModelChange)="selectFilter('PG')">
+							</cui-select>
+						</div>
+						<div class="col-md-1 text-right">
+							<div class="btn-group btn-group--square">
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+									[ngClass]="{'selected': pgview ==='list' }" (click)="selectView('list', type)">
+									<span class="icon-list-view"></span>
+								</button>
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+									[ngClass]="{'selected': pgview === 'grid' }" (click)="selectView('grid', type)">
+									<span class="icon-grid-view"></span>
+								</button>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-			<div *ngIf="type === 'SB'">
-				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
-				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
-			</div>
-			<div *ngIf="type === 'ACC'">
-				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
-				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
-			</div>
-			<div *ngIf="type === 'ATX'">
-				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
-				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
-			</div>
-			<div *ngIf="type === 'PG'">
-				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-			</div>
+					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+				</span>
+			</span>	
 		</div>
 	</div>
 </ng-template>
