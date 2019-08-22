@@ -78,4 +78,6 @@ export const defaults = {
 	},
 	supportEmailLink: 'mailto:help@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',
+	webexUrl: 'https://cisco.webex.com/meet/',
+	webexTeamsUrl: 'webexteams://im?email=',
 };

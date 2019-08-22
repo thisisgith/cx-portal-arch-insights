@@ -197,9 +197,9 @@ describe('AppComponent', () => {
 				.subscribe((u: User) => {
 					expect(u)
 						.toBeNull();
-				});
 
-				done();
+					done();
+				});
 			});
 		});
 
