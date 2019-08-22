@@ -7,8 +7,8 @@ import {
 	ProductId,
 	SoftwareList,
 	ProductFamily,
-	Syslog360GridData,
-	Syslog360FilterData,
+	SyslogPanelGridData,
+	SyslogPanelFilterData,
 } from '@sdp-api';
 import { catchError, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
@@ -16,7 +16,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { UserResolve } from '@utilities';
 
 /**
- * Syslog360grid component
+ * Syslogpanelgrid component
  */
 
 @Component({
@@ -25,7 +25,7 @@ import { UserResolve } from '@utilities';
 	templateUrl: './syslog-messages-details.component.html',
 })
 export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
-	@Input('asset') public asset: Syslog360GridData;
+	@Input('asset') public asset: SyslogPanelGridData;
 	public tableOptions: CuiTableOptions;
 	public selectdrowpdown = {
 		productFamily: '',
@@ -34,7 +34,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 		timePeriod: '',
 	};
 	public customerId;
-	public tabledata1: DeviceDetailsdata[] = [];
+	public tableData: DeviceDetailsdata[] = [];
 	public tableOffset = 0;
 	public productIdItems: ProductId[];
 	public softwareItems: SoftwareList[];
@@ -77,8 +77,8 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 * Onchanges lifecycle hook
 	 */
 	public ngOnChanges () {
-		this.loadSyslog360data(this.asset);
-		this.loadSyslog360filter(this.asset);
+		this.loadSyslogPaneldata(this.asset);
+		this.loadSyslogPanelFilter(this.asset);
 	}
 
 	/**
@@ -101,12 +101,12 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 			columns: [
 				{
 					key: 'DeviceHost',
-					name: I18n.get('_Asset_'),
+					name: I18n.get('_SyslogAsset_'),
 					sortable: true,
 				},
 				{
 					key: 'SyslogMsgDesc',
-					name: I18n.get('_Message_'),
+					name: I18n.get('_SyslogGridMessage_'),
 					sortable: true,
 				},
 				{
@@ -131,7 +131,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 				},
 				{
 					key: 'msgCount',
-					name: I18n.get('_Count_'),
+					name: I18n.get('_SyslogCount_'),
 					sortable: true,
 				},
 			],
@@ -143,18 +143,18 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 
 	public onSelection () {
 		this.syslogsService
-			.get360FilterGridData(
+			.getPanelFilterGridData(
 				this.selectdrowpdown, this.asset)
 			.pipe(takeUntil(this.destroy$),
 			catchError(err => {
-				this.logger.error('syslog-messages-details.component : get360FilterGridData() ' +
+				this.logger.error('syslog-messages-details.component : getPanelFilterGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
 			}),
 			)
-			.subscribe((data: Syslog360GridData) => {
-				this.tabledata1 = data.responseData;
+			.subscribe((data: SyslogPanelGridData) => {
+				this.tableData = data.responseData;
 			});
 	}
 
@@ -163,20 +163,21 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 * @param tableRowData gives table row info
 	 */
 
-	public loadSyslog360data (tableRowData) {
+	public loadSyslogPaneldata (tableRowData) {
 		if (this.asset) {
-			this.syslogsService.get360GridData(tableRowData, this.customerId)
+			this.syslogsService.getPanelGridData(tableRowData, this.customerId)
 				.pipe(
 					takeUntil(this.destroy$),
 					catchError(err => {
-						this.logger.error('syslog-messages-details.component : get360GridData() ' +
+						// tslint:disable-next-line: ter-max-len
+						this.logger.error('syslog-messages-details.component : getPanelGridData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 
 						return of({ });
 					}),
 				)
-				.subscribe((data: Syslog360GridData) => {
-					this.tabledata1 = data.responseData;
+				.subscribe((data: SyslogPanelGridData) => {
+					this.tableData = data.responseData;
 				});
 
 		}
@@ -187,18 +188,18 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 * @param tableRowData gives table row info
 	 */
 
-	public loadSyslog360filter (tableRowData) {
+	public loadSyslogPanelFilter (tableRowData) {
 		if (this.asset) {
-			this.syslogsService.get360FilterData(tableRowData)
+			this.syslogsService.getPanelFilterData(tableRowData)
 				.pipe(takeUntil(this.destroy$),
 				catchError(err => {
-					this.logger.error('syslog-messages-details.component : get360FilterData() ' +
+					this.logger.error('syslog-messages-details.component : getPanelFilterData() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
 					return of({ });
 				}),
 				)
-				.subscribe((data: Syslog360FilterData) => {
+				.subscribe((data: SyslogPanelFilterData) => {
 					this.productFamily = data.responseData[2].ProductFamily;
 					this.productIdItems = data.responseData[0].ProductId;
 					this.softwareItems = data.responseData[1].SoftwareType;

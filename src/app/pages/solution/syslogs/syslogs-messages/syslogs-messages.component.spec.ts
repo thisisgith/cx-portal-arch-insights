@@ -114,7 +114,7 @@ describe('SyslogsMessagesComponent', () => {
 				component.onPanelClose();
 				expect(component.selectedAsset)
 				.toBeUndefined();
-				expect(component.showAsset360)
+				expect(component.showAssetPanel)
 				.toBeFalsy();
 				done();
 			});

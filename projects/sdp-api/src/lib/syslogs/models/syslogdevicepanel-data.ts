@@ -1,16 +1,16 @@
-import { DeviceMessageDescObject } from './syslogdevice360messageobject-data';
+import { DeviceMessageDescObject } from './syslogdevicepanelmessageobject-data';
 
-/** Device Details 360 Grid Data Intereface
+/** Device Details panel Grid Data Intereface
  */
-export interface SyslogDevice360Data {
-	Syslogtabledat?: SyslogDevice360Outer[ ];
+export interface SyslogDevicePanelData {
+	Syslogtabledat?: SyslogDevicePanelOuter[ ];
 	Messageobject?: DeviceMessageDescObject[ ];
 }
 
 /**
- * Syslog device360 outer
+ * Syslog devicePanel outer
  */
-export interface SyslogDevice360Outer {
+export interface SyslogDevicePanelOuter {
 	SyslogSeverity?: number;
 	showMessage?: boolean;
 	DeviceHost?: number;
