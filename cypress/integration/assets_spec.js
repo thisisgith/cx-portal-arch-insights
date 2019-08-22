@@ -1,5 +1,5 @@
-import { RouteWatch } from '@apollo/cypress-util';
 import { startCase, toLower } from 'lodash-es';
+import RouteWatch from '../support/routeWatch';
 import MockService from '../support/mockService';
 
 const assetMock = new MockService('AssetScenarios');
