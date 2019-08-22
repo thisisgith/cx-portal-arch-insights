@@ -1,4 +1,7 @@
-import { Component, Input, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import {
+	Component, Input, OnInit, ViewChild, TemplateRef,
+	OnDestroy, SimpleChanges,
+} from '@angular/core';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
@@ -7,6 +10,8 @@ import {
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
+import { UserResolve } from '@utilities';
+import { ActivatedRoute } from '@angular/router';
 /**
  * Main component for the RCC track
  */
@@ -37,35 +42,50 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	@ViewChild('policyRowWellTemplate', { static: true })
 	private policyRowWellTemplate: TemplateRef<{ }>;
 	public policyRuleData: any = { };
-	public customerId = '7293498';
+	public customerId: number;
 	public impactedAssetsCount: any;
 	public loading = false;
-	public selectionObj = {	};
+	public selectionObj = {
+		osName : '',
+		productFamily : '',
+		productModel : '',
+	};
 	public destroy$ = new Subject();
 	public queryParamMapObj = { };
 	constructor (
 		private rccTrackService: RccService,
 		private rccUtilService: RccUtilService,
+		public userResolve: UserResolve,
+		private route: ActivatedRoute,
 	) {
-
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 	/**
 	 * Method for getting data for slide in page from APIs
+	 * @param changes gives page changed data
 	 */
-	public ngOnChanges () {
-		this.queryParamMapObj = {
-			customerId: this.customerId,
-			policyCategory: this.policyViolationInfo.policycategory,
-			policyGroup: this.policyViolationInfo.policygroupid,
-			policyName: this.policyViolationInfo.policyid,
-			ruleName: this.policyViolationInfo.ruleid,
-			severity: this.policyViolationInfo.ruleseverity,
-		};
-		if (this.policyViolationInfo ===
-			null || Object.keys(this.policyViolationInfo).length === 0) { return; }
-		this.selectionObj = { };
-		this.impactedAssetsCount = this.policyViolationInfo.impassets;
-		this.loadData();
+	public ngOnChanges (changes: SimpleChanges) {
+		if (changes.policyViolationInfo.currentValue
+				&& !(changes.policyViolationInfo.firstChange)) {
+			this.queryParamMapObj = {
+				customerId: this.customerId,
+				policyCategory: this.policyViolationInfo.policycategory,
+				policyGroup: this.policyViolationInfo.policygroupid,
+				policyName: this.policyViolationInfo.policyid,
+				ruleName: this.policyViolationInfo.ruleid,
+				severity: this.policyViolationInfo.ruleseverity,
+			};
+			if (this.policyViolationInfo ===
+				null || Object.keys(this.policyViolationInfo).length === 0) { return; }
+			this.selectionObj = {
+				osName : '',
+				productFamily : '',
+				productModel : '',
+			};
+			this.impactedAssetsCount = this.policyViolationInfo.impassets;
+			this.loadData();
+		}
 	}
 	/**
 	 * Method for load data on intial view
@@ -86,7 +106,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			)
 			.subscribe(([policyRuleDetails, violationDetails]) => {
 				policyRuleDetails.data.deviceFilterDetails =
-					this.rccUtilService.getSelectableData(policyRuleDetails.data.deviceFilterDetails);
+				this.rccUtilService.getSelectableData(policyRuleDetails.data.deviceFilterDetails);
 				this.policyRuleData = policyRuleDetails.data;
 				violationDetails.data.impactedAssets.forEach(asset => {
 					asset.violations.forEach((violation, i) => {
@@ -120,7 +140,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 */
 	public buildImpactedDeviceTableOptions () {
 		return new CuiTableOptions({
-			bordered: true,
+			bordered: false,
 			columns: [
 				{
 					key: 'hostName',
@@ -158,6 +178,13 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					sortable: true,
 				},
 			],
+			dynamicData: false,
+			padding: 'regular',
+			rowWellColor: 'black',
+			rowWellTemplate: this.policyRowWellTemplate,
+			singleSelect: false,
+			striped: false,
+			wrapText: false,
 		});
 	}
 	/**
@@ -194,11 +221,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					sortable: false,
 				},
 			],
-			dynamicData: false,
-			rowWellColor: 'black',
-			rowWellTemplate: this.policyRowWellTemplate,
-			singleSelect: false,
-			striped: false,
 		});
 	}
 	/**
@@ -211,8 +233,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		_.each(this.selectionObj,
 			(value, key) => {
 				if (value !== null && value !== '') { newQueryParamMapObj[key] = value; }
-			}); 
-		
+			});
 		this.rccTrackService
 			.getRccViolationDetailsData(newQueryParamMapObj)
 		.pipe(
