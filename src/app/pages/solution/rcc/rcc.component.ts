@@ -10,15 +10,17 @@ import {
 	RccGridDataSample,
 	RccAssetGridData,
 	RccAssetGridDataSample,
+	violationGridParams,
 	Filter,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
-import { Subscription, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
+import { ActivatedRoute } from '@angular/router';
 
 /**
  * Main component for the RCC track
@@ -29,22 +31,22 @@ import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 	templateUrl: './rcc.component.html',
 })
 export class RccComponent implements OnInit, OnDestroy {
+	public customerId: number;
 	constructor (
 		private logger: LogService,
 		public RccTrackService: RccService,
 		public userResolve: UserResolve,
 		public fromNow: FromNowPipe,
+		private route: ActivatedRoute,
 	) {
-		this.logger.debug('Best practices Component Created!');
+		this.logger.debug('RCC Component Created!');
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
 	}
-	public view = 'violation';
-	public countSubscripion: Subscription;
-	public gridSubscripion: Subscription;
-	public gridAssetSubscripion: Subscription;
-	public gridViolationsSubscripion: Subscription;
+	public view: 'violation' | 'asset' = 'violation';
 	public totalViolationsCount = { };
 	public policyViolationsTableOptions: CuiTableOptions;
 	public assetTableOptions: CuiTableOptions;
@@ -75,7 +77,6 @@ export class RccComponent implements OnInit, OnDestroy {
 	public policyRuleData: object = { };
 	public impactedAssetDetails: object = { };
 	public isSlider = false;
-	public customerId = '7293498';
 	public testData = [];
 	public policyViolationInfo = {
 		policycategory: '',
@@ -135,19 +136,12 @@ export class RccComponent implements OnInit, OnDestroy {
 		inventoryLoading: true,
 		isLoading: true,
 	};
-	public violationGridObj: any = {
-		criteria: this.criteria,
-		customerId: this.customerId,
-		pageLimit: this.paginationConfig.pageNum,
-		pageNum: this.paginationConfig.pageNum,
-		policyType: this.policyGroup,
-		search: this.searchInput,
-		severity: this.severity,
-	};
+	public violationGridObj: violationGridParams;
 	/**
 	 * ngOnInit method execution
 	 */
 	public ngOnInit () {
+		this.loadData();
 		this.view = 'violation';
 		this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 		this.buildFilters();
@@ -156,15 +150,20 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.searchForm = new FormGroup({
 			search: this.search,
 		});
-		/* this.userResolve.getCustomerId()
-			.pipe(
-				// takeUntil(this.destroy$),
-			)
-			.subscribe((id: string) => {
-				console.log(id)
-				this.customerId = id;
-			}
-		); */
+	}
+	/**
+	 * to load data on page load
+	 */
+	public loadData () {
+		this.violationGridObj = {
+			criteria: this.criteria,
+			customerId: this.customerId,
+			pageLimit: this.paginationConfig.pageNum,
+			pageNum: this.paginationConfig.pageNum,
+			policyType: this.policyGroup,
+			search: this.searchInput,
+			severity: this.severity,
+		};
 	}
 	/**
 	 * Gets selected sub filters
@@ -175,7 +174,6 @@ export class RccComponent implements OnInit, OnDestroy {
 			bordered: false,
 			dynamicData: false,
 			singleSelect: true,
-			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'ruleseverity',
@@ -221,23 +219,22 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param violationGridObj pagenumber
 	 * @returns selected filters
 	 */
-	public getRCCData (violationGridObj: any) {
+	public getRCCData (violationGridObj: object) {
 		this.loading = true;
 		this.RccTrackService
 			.getGridData(violationGridObj)
-			.pipe(
-				takeUntil(this.destroy$),
-			)
 			.subscribe(gridData => {
-				this.tableData = gridData;
-				const responseData = gridData.data;
-				this.policyViolationsGridData = responseData.summary;
+				this.policyViolationsGridData = gridData.data.summary;
 				this.tableConfig.totalItems = this.policyViolationsGridData.length;
 				this.loading = false;
-			},
-			// () => { this.loading = false; },
-			// () => { }
-		);
+			});
+		catchError(err => {
+			this.loading = false;
+			this.logger.error(
+				`:: Error : (${err.status}) ${err.message}`);
+
+			return of({ });
+		});
 	}
 	/**
 	 * Gets selected sub filters
@@ -257,14 +254,20 @@ export class RccComponent implements OnInit, OnDestroy {
 			policyType: policyGroup,
 			severity: severityNew,
 		};
-		this.gridAssetSubscripion = this.RccTrackService
+		this.RccTrackService
 			.getAssetGridData(queryParamMapObj)
 			.subscribe(assetGridData => {
 				this.tableAssetData = assetGridData;
 				this.tableAssetDataSample = assetGridData.data.assetList;
-			},
-		);
-		this.loading = false;
+				this.loading = false;
+			});
+		catchError(err => {
+			this.loading = false;
+			this.logger.error(
+				`:: Error : (${err.status}) ${err.message}`);
+
+			return of({ });
+		});
 	}
 	/**
 	 * Gets row selected
@@ -295,7 +298,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public getFiltersData () {
 		this.loading = true;
-		this.gridSubscripion = this.RccTrackService
+		this.RccTrackService
 			.getViolationCount()
 			.subscribe(filterData => {
 				this.filterObj = filterData;
@@ -306,9 +309,13 @@ export class RccComponent implements OnInit, OnDestroy {
 				severityFilter.seriesData = filterObjRes.severityFilters;
 				this.assetCount = filterObjRes.assetCount;
 				this.policyViolationCount = filterObjRes.policyViolationCount;
-			},
-		);
-		this.loading = false;
+			});
+		catchError(err => {
+			this.logger.error(
+				`:: Error : (${err.status}) ${err.message}`);
+
+			return of({ });
+		});
 	}
 	/**
 	 * Gets selected sub filters
@@ -320,7 +327,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public getAssetFiltersData () {
 		this.loading = true;
-		this.gridSubscripion = this.RccTrackService
+		this.RccTrackService
 			.getAssetCount()
 			.subscribe(assetFilterData => {
 				this.assetFilterObj = assetFilterData;
@@ -329,9 +336,13 @@ export class RccComponent implements OnInit, OnDestroy {
 				assetSeverityFilter.seriesData = filterObjRes.ostypeList;
 				const assetOsTypeFilter = _.find(this.filters, { key: 'assetSeverity' });
 				assetOsTypeFilter.seriesData = filterObjRes.severityList;
-			},
-		);
-		this.loading = false;
+			});
+		catchError(err => {
+			this.logger.error(
+				`:: Error : (${err.status}) ${err.message}`);
+
+			return of({ });
+		});
 	}
 	/**
 	 * Determines whether pager updated on
@@ -354,7 +365,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * Determines whether pager updated on
 	 * @param view gives selected view
 	 */
-	public selectedView (view: string) {
+	public selectedView (view: any) {
 		if (view === 'violation') {
 			this.isAssetView = false;
 			this.buildFilters();
@@ -370,7 +381,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * Determines whether pager updated on
 	 * @param view gives selected view
 	 */
-	public selectedAssetView (view: string) {
+	public selectedAssetView (view: any) {
 		this.view = view;
 		this.isAssetView = true;
 		this.assetTableOptions = new CuiTableOptions({
@@ -429,12 +440,6 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.getAssetFiltersData();
 	}
 	/**
-	 * method to load al the data on page load
-	 */
-	private loadData () {
-		this.status.isLoading = true;
-	}
-	/**
 	 * method to build filters & to feed data to the filters
 	 */
 	private buildFilters () {
@@ -454,7 +459,6 @@ export class RccComponent implements OnInit, OnDestroy {
 				title: I18n.get('Severity'),
 			},
 		];
-		this.loadData();
 	}
 	/**
 	 * method to build filters & to feed data to the filters
@@ -476,7 +480,6 @@ export class RccComponent implements OnInit, OnDestroy {
 				title: I18n.get('Severity'),
 			},
 		];
-		this.loadData();
 	}
 	/**
 	 * Determines whether pager updated on
@@ -490,11 +493,11 @@ export class RccComponent implements OnInit, OnDestroy {
 			 	obj.selected = false;
 		 	});
 		}
-		const sub = _.find(filter.seriesData, { filter: subfilter });
+		const sub = typeof subfilter === 'string' ?
+		_.find(filter.seriesData, { filter: subfilter }) : _.find(filter.seriesData, subfilter);
 		if (sub) {
 			sub.selected = !sub.selected;
 		}
-		// this.appliedFilters.severity = +this.syslogsParams.severity[0];
 		if (filter.key === 'policyGroup') {
 			this.policyGroup = sub.filter;
 			if (triggeredFromGraph) {
@@ -511,7 +514,6 @@ export class RccComponent implements OnInit, OnDestroy {
 			}
 		}
 		this.getRCCData(this.violationGridObj);
-		// this.appliedFilters = _.cloneDeep(this.appliedFilters);
 		filter.selected = _.some(filter.seriesData, 'selected');
 	}
 	/**
@@ -529,7 +531,6 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * method to clear selected filters
 	 */
 	public clearFilters () {
-		// const totalFilter = _.find(this.filters, { key: 'total' });
 		this.filtered = false;
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
@@ -565,22 +566,13 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * method to close slider
 	 * @param model is the selected slider name
 	 */
-	public onPanelClose (model) {
+	public onPanelClose (model: string) {
 		this[model] = !this[model];
 	}
 	/**
 	 * destroy method to kill the services
 	 */
 	public ngOnDestroy () {
-		if (this.countSubscripion) {
-			this.countSubscripion.unsubscribe();
-		}
-		if (this.gridSubscripion) {
-			this.gridSubscripion.unsubscribe();
-		}
-		if (this.gridAssetSubscripion) {
-			this.gridAssetSubscripion.unsubscribe();
-		}
 		this.destroy$.next();
 		this.destroy$.complete();
 	}

@@ -14,7 +14,6 @@ import {
 	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
-// import { RccPieChartModule } from './rcc-pie-chart/rcc-pie-chart.module';
 import {
 	RccAssetViolationDetailsModule,
 } from './rcc-asset-violation-details/rcc-asset-violation-details.module';
@@ -23,6 +22,7 @@ import {
 } from './rcc-device-violation-details/rcc-device-violation-details.module';
 import { PieChartModule, DetailsPanelModule } from '@components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 /**
  * Child routes for RCC Module for lazy loading
  */
