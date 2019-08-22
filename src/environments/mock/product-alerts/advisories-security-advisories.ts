@@ -75,7 +75,6 @@ export const MockAdvisorySecurityAdvisories: SecurityAdvisoryInfo[] = [
 	},
 	{
 		"id": 520,
-		"severity": "Info",
 		"title": "GNU Bash Environment Variable Command Injection Vulnerability",
 		"summary": "On September 24, 2014, a vulnerability in the Bash shell was publicly announced. The vulnerability is related to the way in which shell functions are passed though environment variables. The vulnerability may allow an attacker to inject commands into a Bash shell, depending on how the shell is invoked. The Bash shell may be invoked by a number of processes including, but not limited to, telnet, SSH, DHCP, and scripts hosted on web servers. All versions of GNU Bash starting with version 1.14 are affected by this vulnerability and the specific impact is determined by the characteristics of the process using the Bash shell. In the worst case, an unauthenticated remote attacker would be able to execute commands on an affected server. However, in most cases involving Cisco products, authentication is required before exploitation could be attempted. A number of Cisco products ship with or use an affected version of the Bash shell. The Bash shell is a third-party software component that is part of the GNU software project and used by a number of software vendors. As of this version of the Security Advisory, there have been a number of vulnerabilities recently discovered in the Bash shell, and the investigation is ongoing. For vulnerable products, Cisco has included information on the product versions that will contain the fixed software, and the date these versions are expected to be published on the cisco.com download page. This advisory will be updated as additional information becomes available. Cisco may release free software updates that address this vulnerability if a product is determined to be affected by this vulnerability.",
 		"assetsImpacted": 0,
@@ -212,6 +211,40 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		},
 		/* tslint:disable */
 		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1&managedNeId=NA,FOC2045X0WJ,WS-C3850-48U-L,NA`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Security Advisories for FOC1544Y16T',
+					response: {
+						body: MockData(10, 1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Security Advisories for FOC1544Y16T - Page 2',
+					response: {
+						body: MockData(10, 2, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=2&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
 		usecases: ['Use Case 1'],
 	},
 ];
