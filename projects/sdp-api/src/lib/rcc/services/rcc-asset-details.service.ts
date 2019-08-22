@@ -12,7 +12,6 @@ import { RccAssetDetails ,RccAssetDetailsReqData, RccAssetSelectReq, RccAssetFil
   providedIn: 'root'
 })
 class RccAssetDetailsService extends __BaseService{
-//	static RccAssetDetailsReqData: { deviceId: string; hostName: string; ipAddress: string; serialNumber: string; customerId: string; lastScan: string; pageNum: number; pageLimit: number; violationCount: number; };
 
   constructor(config: __Configuration, http: HttpClient) {
 		super(config, http);

@@ -54,12 +54,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
-	it('should read the violation data and display', () => {
-		component.selectedAssetData.violationCount = 10;
-		fixture.detectChanges();
-		expect(component.selectedAssetData.violationCount)
-		.toBeDefined();
-	});
 	it('should load filter and table grid data and display', () => {
 		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
 			.and
@@ -94,7 +88,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
 			.and
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
-		fixture.detectChanges();
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -110,7 +103,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
 		fixture.detectChanges();
 		component.onPolicyGroupSelection(component.assetRowParams);
-		fixture.detectChanges();
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
 		done();
@@ -119,7 +111,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
 			.and
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
-		fixture.detectChanges();
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -133,7 +124,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 		};
 		component.customerId = '7293498';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
-		fixture.detectChanges();
 		component.onPolicyNameSelection(component.assetRowParams);
 		fixture.detectChanges();
 		expect(component.rccAssetPolicyTableData)
@@ -145,7 +135,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
 			.and
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
-		fixture.detectChanges();
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -159,7 +148,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 		};
 		component.customerId = '7293498';
 		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
-		fixture.detectChanges();
 		component.onPolicySeveritySelection(component.assetRowParams);
 		fixture.detectChanges();
 		expect(component.rccAssetPolicyTableData)

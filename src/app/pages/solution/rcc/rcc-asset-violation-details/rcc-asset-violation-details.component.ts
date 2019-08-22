@@ -226,7 +226,6 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			if (this.rccAssetPolicyTableData) {
 				this.totalItems = this.rccAssetPolicyTableData.length;
 			}
-		// tslint:disable-next-line: ter-arrow-body-style
 		}, (error: any) =>
 			error);
 	}

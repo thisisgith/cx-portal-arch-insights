@@ -3,7 +3,7 @@
 		<span [innerText]="'_RccAssetViolations_' | i18n" class="text-large text-uppercase"></span><span
 			class="qtr-padding-right qtr-padding-left">-</span>
 		<span class="text-large " data-auto-id="ShowingViolationCount"
-			innerText="{{ selectedAssetData?.violationCount  }}">
+			 [innerText]="selectedAssetData?.violationCount">
 		</span>
 	</div>
 	<div class="half-margin-left base-padding-top half-padding-bottom base-margin-bottom text-medium text-uppercase text-bold"
@@ -73,7 +73,8 @@
 	  'p3class': item.ruleHighSeverity === 'P3',
 	  'p4class': item.ruleHighSeverity === 'P4',
 	  'p5class': item.ruleHighSeverity === 'P5'
-	}"></span> <span>{{item.ruleHighSeverity}}</span>
+	}"></span> 
+	<span [innerText]="item.ruleHighSeverity"></span>
 </ng-template>
 <ng-template #assetSeverityIconTemplate let-item="celldata">
 	<span *ngIf="item.severity" class="qtr-margin-right icon-circle" iconSize="default" [ngClass]="{
@@ -82,5 +83,6 @@
 	  'p3class': item.severity == 'P3',
 	  'p4class': item.severity == 'P4',
 	  'p5class': item.severity == 'P5'
-	}"></span> <span>{{item.severity}}</span>
+	}"></span>
+	<span [innerText]="item.severity"></span>
 </ng-template>
