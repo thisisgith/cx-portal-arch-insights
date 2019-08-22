@@ -41,7 +41,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public selectionObj = {
 		osName : '',
 		productFamily : '',
-		productModel : ''
+		productModel : '',
 	};
 	public destroy$ = new Subject();
 	public queryParamMapObj = { };
@@ -68,7 +68,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		this.selectionObj = {
 			osName : '',
 			productFamily : '',
-			productModel : ''
+			productModel : '',
 		};
 		this.impactedAssetsCount = this.policyViolationInfo.impassets;
 		forkJoin(
