@@ -279,12 +279,12 @@ describe('RiskMitigationComponent', () => {
 		};
 		component.onHcrPagerUpdated(param);
 		expect(component.highCrashRiskAssetsGridDetails.tableOffset)
-			.toBe(3);
+			.toBe(2);
 		expect(component.highCrashRiskAssetsGridDetails.tableLimit)
 			.toBe(10);
 	});
 
-	xit('should return selected key of filter', () => {
+	it('should return selected key of filter', () => {
 		component.ngOnInit();
 		const key = 'advisories';
 		const result = [
