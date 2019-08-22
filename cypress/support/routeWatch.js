@@ -40,6 +40,11 @@ class RouteWatch {
 		 */
 		this.stubbed = false;
 
+		/**
+		 * A unique ID used to alias the route
+		 */
+		this.alias = `watch-${new Date().getTime()}`;
+
 		cy.server();
 		cy.route({
 			url: route,
@@ -55,7 +60,16 @@ class RouteWatch {
 				this.status = xhr.status;
 				this.response = xhr.response;
 			},
-		});
+		}).as(this.alias);
+	}
+
+	/**
+	 * Wait on the route request+response up to a specific timeout (30s by default)
+	 * @param {number} [timeout] Timeout in ms
+	 * @returns {Object} XHR request + response
+	 */
+	wait (timeout = 30000) {
+		return cy.wait(`@${this.alias}`, { timeout });
 	}
 }
 
