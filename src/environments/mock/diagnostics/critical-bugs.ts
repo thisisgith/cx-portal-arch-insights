@@ -254,7 +254,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=2431199&serialNumber=FOC1544Y16T`,
+		url: `${api}?customerId=2431199&serialNumber=FOC1544Y16T&rows=10&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{

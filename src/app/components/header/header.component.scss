@@ -1,6 +1,8 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import '../../../mixins.scss';
 
+$cx-dropdown-max-width: 280px;
+
 .header-bar__logo {
 	span.icon-cisco {
 		color: $primary !important;
@@ -87,4 +89,27 @@
 		height: 24px;
 		width: 24px;
 	}
+}
+
+.cx-user-icon + .cx-user-icon {
+	margin-left: 2px;
+}
+
+.cx-user-icon + span {
+	margin-left: 2px;
+}
+
+.cx-team-member-icon {
+	height: 40px;
+	width: 40px;
+	vertical-align: top;
+}
+
+.cx-team-member-info {
+	max-width: 170px;
+	display: inline-block;
+}
+
+.cx-cisco-team-dropdown {
+	width: calc(#{$cx-dropdown-max-width} - #{$base-spacing-dbl});
 }
