@@ -16,7 +16,7 @@ import {
 	ComplianceScenarios,
 } from '@mock';
 
-describe('RccDeviceViolationDetailsComponent', () => {
+fdescribe('RccDeviceViolationDetailsComponent', () => {
 	let component: RccDeviceViolationDetailsComponent;
 	let fixture: ComponentFixture<RccDeviceViolationDetailsComponent>;
 	let rccTrackService: RccService;
@@ -83,12 +83,22 @@ describe('RccDeviceViolationDetailsComponent', () => {
 
 	it('should invoke onPageIndexChange method', () => {
 		component.onPageIndexChange({ page: 1 });
-		fixture.detectChanges();
+	});
+
+	it('should invoke loadData and call both APIs', () => {
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
+		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
+		component.loadData();
+		expect(component.policyRuleData)
+		.toBe(ComplianceScenarios[6].scenarios.GET[0].response.body.data);
 	});
 
 	it('Should invoke ngOnInit method which initializes both table options', () => {
 		component.ngOnInit();
-		fixture.detectChanges();
 		expect(component.rccViolationInfoTableOptions)
 			.toBeDefined();
 		expect(component.impactedDeviceTableOptions)
@@ -105,7 +115,6 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.onSelection();
-		fixture.detectChanges();
 		expect(component.impactedDeviceDetails)
 			.toEqual([]);
 	});
@@ -117,8 +126,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
 			.and
 			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
-		component.ngOnChanges();
-		fixture.detectChanges();
+		component.ngOnChanges({ });
 		expect(component.impactedAssetsCount)
 			.toBeDefined();
 		expect(component.selectionObj)
@@ -136,14 +144,12 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		component.ngOnChanges();
-		fixture.detectChanges();
+		component.ngOnChanges({ });
 		done();
 	});
 
 	it('Should get the api data ngonchanges empty info data', () => {
-		component.policyViolationInfo = { };
-		component.ngOnChanges();
-		fixture.detectChanges();
+		component.policyViolationInfo = null;
+		component.ngOnChanges({ });
 	});
 });
