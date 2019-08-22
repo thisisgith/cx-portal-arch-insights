@@ -19,6 +19,8 @@ const atxFilters = [
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
 	'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+const i18n = require('../../src/assets/i18n/en-US.json');
+
 describe('Ask The Expert (ATX)', () => { // PBC-31
 	before(() => {
 		cy.login();
@@ -166,6 +168,80 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 						cy.getByAutoId('recommendedATX-Presenter').should('have.text', `Instructor: ${session.presenterName}`);
 					});
 			});
+		});
+	});
+
+	describe('PBC-101: (UI) View - Solution Racetrack - View Completed ATXs', () => {
+		before(() => {
+			// Switch to a mock with all completed items
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoCompleted');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoCompleted');
+		});
+
+		after(() => {
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('Should show completed icons on Lifecycle page', () => {
+			cy.getByAutoId('moreATXList-item').each($moreListItem => {
+				cy.wrap($moreListItem).within(() => {
+					cy.getByAutoId('moreATXList-Checkmark').should('exist');
+				});
+			});
+		});
+
+		it('Should show completed icons in View All modal card view', () => {
+			// Open the View All modal and ensure we're in card view
+			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ATXCard').should('be.visible');
+
+			// Verify each completed item's card includes the completed icon
+			cy.getByAutoId('ATXCardFooter').each($atxCard => {
+				cy.wrap($atxCard).within(() => {
+					cy.getByAutoId('ATXCardFooter-CompletedIcon').should('be.visible');
+					cy.getByAutoId('ATXCardFooter-CompletedText')
+						.should('be.visible')
+						.and('have.text', i18n._Completed_);
+				});
+			});
+
+			// Close the View All modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+		});
+
+		it('Should show completed icons in View All modal table view', () => {
+			// Open the View All modal and ensure we're in table view
+			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+
+			// Verify each completed item's card includes the completed icon
+			cy.getByAutoId('Table-Status-Completed').each($tableRowStatus => {
+				cy.wrap($tableRowStatus).within(() => {
+					cy.getByAutoId('Table-Status-Completed-Icon').should('be.visible');
+					cy.getByAutoId('Table-Status-Completed-Text')
+						.should('be.visible')
+						.and('have.text', i18n._Completed_);
+				});
+			});
+
+			// Close the View All modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 	});
 
