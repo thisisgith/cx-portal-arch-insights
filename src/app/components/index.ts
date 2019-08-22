@@ -24,3 +24,4 @@ export { SearchModule } from './search/search.module';
 export { TimelineComponent } from './timeline/timeline.component';
 export { TimelineModule } from './timeline/timeline.module';
 export { TooltipModule } from './tooltip/tooltip.module';
+export { UnauthorizedUserModule } from './unauthorized-user/unauthorized-user.module';
