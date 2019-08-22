@@ -223,8 +223,11 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.loading = true;
 		this.RccTrackService
 			.getGridData(violationGridObj)
+			.pipe(takeUntil(this.destroy$))
 			.subscribe(gridData => {
-				this.policyViolationsGridData = gridData.data.summary;
+				this.tableData = gridData;
+				const responseData = gridData.data;
+				this.policyViolationsGridData = responseData.summary;
 				this.tableConfig.totalItems = this.policyViolationsGridData.length;
 				this.loading = false;
 			});
@@ -256,6 +259,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		};
 		this.RccTrackService
 			.getAssetGridData(queryParamMapObj)
+			.pipe(takeUntil(this.destroy$))
 			.subscribe(assetGridData => {
 				this.tableAssetData = assetGridData;
 				this.tableAssetDataSample = assetGridData.data.assetList;
@@ -300,6 +304,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.loading = true;
 		this.RccTrackService
 			.getViolationCount()
+			.pipe(takeUntil(this.destroy$))
 			.subscribe(filterData => {
 				this.filterObj = filterData;
 				const filterObjRes = filterData.data;
@@ -329,6 +334,7 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.loading = true;
 		this.RccTrackService
 			.getAssetCount()
+			.pipe(takeUntil(this.destroy$))
 			.subscribe(assetFilterData => {
 				this.assetFilterObj = assetFilterData;
 				const filterObjRes = assetFilterData.data;
