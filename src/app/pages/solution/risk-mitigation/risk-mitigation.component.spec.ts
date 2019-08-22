@@ -287,17 +287,9 @@ describe('RiskMitigationComponent', () => {
 	it('should return selected key of filter', () => {
 		component.ngOnInit();
 		const key = 'advisories';
-		const result = [
-			{
-				filter: 'Time: Last 90d',
-				label: '90d',
-				selected: true,
-				value: 9,
-			},
-		];
 		const filter = component.getSelectedSubFilters(key);
 		expect(filter)
-			.toBe(result);
+		.toBeDefined();
 	});
 
 	it('should test high crash data params', () => {
