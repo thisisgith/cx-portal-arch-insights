@@ -34,10 +34,10 @@
 	</div>
 	<div class="row base-padding-top half-padding-left responsive-table">
 		<cui-table class="table" [options]="rccAssetPolicyTableOptions" [data]="rccAssetPolicyTableData"
-			[limit]="tableLimit" [offset]="tableOffset" (onSortingChanged)="onTableSortingChanged($event)">
+			[limit]="tableLimit" [offset]="assetRowParams?.tableOffset" (onSortingChanged)="onTableSortingChanged($event)">
 		</cui-table>
 		<div class="section">
-			<cui-pager [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
+			<cui-pager [page]="assetRowParams?.tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
 				(onPageChanged)="onPolicyAssetPagerUpdated($event)"></cui-pager>
 		</div>
 	</div>
@@ -48,7 +48,7 @@
 			<div class="base-margin-top">
 				<div class="text-bold text-small text-uppercase" [innerText]="'_RccAssetPolicyDescription_' | i18n">
 				</div>
-				<div class="text-small tabletext " innerText="{{ item.policyDesc }}"></div>
+				<div class="text-small tabletext " [innerText]="item.policyDesc"></div>
 			</div>
 		</div>
 	</div>
@@ -56,13 +56,13 @@
 		<div class="col-md-10">
 			<div class="base-margin-top ">
 				<div class="text-bold text-small text-uppercase" [innerText]="'_RccAssetRuleDescription_' | i18n"></div>
-				<div class=" text-small tabletext" innerText="{{ item.ruleDesc }}"></div>
+				<div class=" text-small tabletext" [innerText]="item.ruleDesc"></div>
 			</div>
 		</div>
 	</div>
 	<div class="base-margin-top text-small responsive-table">
 		<cui-table class="table--wrap table--nostripes" [options]="rccMessageTableOptions" [data]="item.conditionList"
-			[limit]="tableLimit" [offset]="tableOffset">
+			[limit]="tableLimit">
 		</cui-table>
 	</div>
 </ng-template>
