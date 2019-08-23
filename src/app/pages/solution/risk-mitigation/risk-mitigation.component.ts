@@ -156,6 +156,7 @@ export class RiskMitigationComponent {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
 		this.getDeviceDetails('1');
+		this.resetFilters();
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
@@ -273,7 +274,7 @@ export class RiskMitigationComponent {
 	private getCrashedDeviceHistory (asset) {
 		this.crashHistoryGridDetails.tableData = [];
 		this.crashHistoryParams = {
-			customerId: _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']),
+			customerId: _.cloneDeep(this.customerId),
 			neInstanceId: asset.neInstanceId,
 		};
 
