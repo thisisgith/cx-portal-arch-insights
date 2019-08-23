@@ -89,7 +89,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		isLoading: true,
 	};
 	public searchOptions = {
-		debounce: 200,
+		debounce: 600,
 		max: 100,
 		min: 3,
 		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
