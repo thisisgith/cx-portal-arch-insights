@@ -6,6 +6,7 @@ import {
 	CuiPagerModule,
 	CuiSearchModule,
 	CuiSelectModule,
+	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
@@ -21,6 +22,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		CuiPagerModule,
 		CuiSearchModule,
 		CuiSelectModule,
+		CuiSpinnerModule,
 		FormsModule,
 		I18nPipeModule,
 		ReactiveFormsModule,

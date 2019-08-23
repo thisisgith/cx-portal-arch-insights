@@ -44,7 +44,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public policyRuleData: any = { };
 	public customerId: number;
 	public impactedAssetsCount: any;
-	public loading = false;
+	public initialLoading = false;
+	public selectionLoading = false;
 	public selectionObj = {
 		osName : '',
 		productFamily : '',
@@ -91,6 +92,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 * Method for load data on intial view
 	 */
 	public loadData () {
+		this.initialLoading = true;
 		forkJoin(
 			this.rccTrackService
 				.getRccPolicyRuleDetailsData(this.queryParamMapObj),
@@ -114,8 +116,9 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					});
 				});
 				this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+				this.initialLoading = false;
 			}, (_error: any) => {
-				this.loading = false;
+				this.initialLoading = false;
 			});
 	}
 	/**
@@ -228,6 +231,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 * @param selectedItem gives page number
 	 */
 	public onSelection () {
+		this.selectionLoading = true;
 		const newQueryParamMapObj = { violationCount:
 			this.policyViolationInfo.violationcount, ...this.queryParamMapObj };
 		_.each(this.selectionObj,
@@ -241,8 +245,9 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		)
 		.subscribe(violationDetails => {
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+			this.selectionLoading = false;
 		}, (_error: any) => {
-			this.loading = false;
+			this.selectionLoading = false;
 		});
 	}
 	/**
