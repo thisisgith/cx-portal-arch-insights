@@ -108,9 +108,6 @@ export class AfmComponent {
 			.subscribe((id: string) => {
 				this.searchParams.customerId = id;
 			});
-		if (this.searchParams.customerId) {
-			this.searchParams.customerId = '7293498';
-		}
 	}
 
 	/**
@@ -359,12 +356,7 @@ export class AfmComponent {
 			this.allAlarmFilter();
 		} else {
 			this.resetValuesWhileFilter();
-			if (searchWord.toLowerCase()
-				.startsWith('p')) {
-				this.searchParams.searchTerm = searchWord.substring(1, 2);
-			} else {
-				this.searchParams.searchTerm = searchWord;
-			}
+			this.searchParams.searchTerm = searchWord;
 			this.searchParams.headerFilterType = this.AFM_CONSTANT.SEARCH;
 			this.getAfmSearchFilterInfo(this.searchParams);
 		}
@@ -451,8 +443,9 @@ export class AfmComponent {
 				err => {
 					this.logger.error('Export operation failed' +
 						`:: Error : (${err})`);
+					this.statusErrorMessage = `Export operation failed :: Error : (${err})`;
 				},
-				);
+			);
 	}
 
 	/**
