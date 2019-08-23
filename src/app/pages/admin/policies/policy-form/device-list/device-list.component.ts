@@ -7,7 +7,7 @@ import {
 	EventEmitter,
 } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { DeviceListRow } from './policy-form.component';
+import { DeviceListRow } from '../policy-form.component';
 
 /**
  * Component for list
