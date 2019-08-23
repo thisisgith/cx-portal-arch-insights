@@ -8,7 +8,7 @@ import { environment } from '@environment';
 import { of } from 'rxjs';
 import { user } from '@mock';
 import {
-	AfmService, AfmSearchParams, Alarm, AfmFilter,
+	AfmService, AfmSearchParams, Alarm,
 } from '@sdp-api';
 
 describe('AfmComponent', () => {
@@ -19,7 +19,6 @@ describe('AfmComponent', () => {
 	const mockAlarm: Alarm = new Object();
 	let afmService: AfmService;
 	const afmFilter: any = new Object();
-	const filters: AfmFilter[] = Object.create({ });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -341,7 +340,6 @@ describe('AfmComponent', () => {
 				.toHaveBeenCalled();
 		});
 
-		it('should ')
 	});
 
 });
