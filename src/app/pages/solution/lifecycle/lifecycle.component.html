@@ -220,7 +220,7 @@
 	<div id="acc-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="icon-bookmark icon-medium"
 			(click)="setACCBookmark(item)"
-			[ngClass]="getACCRibbonClass(item)"
+			[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="ACCCardRibbon">
 		</div>
 		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
@@ -230,7 +230,7 @@
 			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 			<span [innerText]="item.duration"></span>
 		</div>
-		<div class="base-padding-top half-padding-left" *ngIf= "item.status==='recommended'">
+		<div class="base-padding-top half-padding-left" *ngIf= "item.status.toLowerCase()==='recommended'">
 			<button data-auto-id="Request1on1ACCButton"
 				(click)="selectAccRequestForm(true, item.accId, item.title)"
 				class="btn btn--small btn--secondary text-uppercase"
@@ -238,11 +238,10 @@
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
 		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status==='requested' || item.status==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-CSEMessage">
+		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='requested' || item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-CSEMessage">
 			<span [innerText]="'_CSETouch_' | i18n"></span>
 		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
-			<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
+		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
 			<span [innerText]="'_Completed_' | i18n"></span>
 		</div>
 	</div>
@@ -286,7 +285,7 @@
 
 <ng-template #recommendedACC let-item="item" let-autoid="autoid" let-src="src">
 	<div class="icon-bookmark icon-medium"
-		[ngClass]="getACCRibbonClass(item)"
+		[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
 		(click)="setACCBookmark(item)"
 		data-auto-id="SBCardRibbon">
 	</div>
@@ -851,7 +850,8 @@
 			<span class="icon-flagged qtr-padding-right qtr-padding-bottom" data-auto-id="ACCCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<div class="icon-bookmark icon-medium" (click)="setACCBookmark(item)" [ngClass]="getACCRibbonClass(item)"
+		<div class="icon-bookmark icon-medium" (click)="setACCBookmark(item)"
+			[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="ACCCardRibbon">
 		</div>
 		<div class="card__header atx__card__header text-left text-bold"

@@ -754,37 +754,12 @@ export class LifecycleComponent implements OnDestroy {
 		this.eventYCoordinates = 0;
 	}
 
-	/**
-	 * Determines which modal to display
-	 * @param acc ACC item
-	 * @returns ribbon
-	 */
-	public getACCRibbonClass (acc: ACC) {
-		let ribbon = 'ribbon__white';
-		if (!acc) {
-			return ribbon;
-		}
-		if (acc.status.toLowerCase() === 'completed') {
-			ribbon = 'ribbon__green';
-		}
-
-		if (acc.isFavorite) {
-			ribbon = 'ribbon__blue';
-		}
-
-		return ribbon;
-	}
-
 	 /**
-	  * Determines which modal to display
+	  * Updates ACC bookmark
 	  * @param item ACC item
 	  * @returns ribbon
 	  */
 	 public setACCBookmark (item: ACC) {
-		if (item.status === 'completed') {
-			return;
-		}
-
 		this.status.loading.acc = true;
 		if (window.Cypress) {
 			window.accLoading = true;
