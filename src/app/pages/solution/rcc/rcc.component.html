@@ -5,7 +5,7 @@
 				<div class="col-md-12 panel flex-center flex-fill filter assetsCount base-margin-top"
 					data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
 					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="policyViolationCount  || ('_NA_' | i18n) "></div>
-					<div class="text-large flex-center" [innerText]="'_RccPolicyViolations' | i18n"></div>
+					<div class="text-large flex-center" [innerText]="'_RccPolicyViolations_' | i18n"></div>
 				</div>
 				<div data-auto-id="1" class="col-md-12 panel flex-center flex-fill filter assetsCount"
 					(click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
@@ -57,7 +57,7 @@
 						<input data-auto-id="searchInput" id="searchInput" type="search" #searchInput1 [(ngModel)]="searchInput" name="searchInput"
 							[minlength]="searchOptions?.min" [maxlength]="searchOptions?.max"
 							[pattern]="searchOptions?.pattern" formControlName="search"
-							placeholder="{{ '_RccSearch_' | i18n }}">
+							placeholder="{{ '_Search_' | i18n }}">
 						<button data-auto-id="searchButton" type="button" class="link">
 							<span class="icon-search"></span>
 						</button>
@@ -187,7 +187,7 @@
 	<details-panel-header (close)="onPanelClose('selectedAssetModal')" [(fullscreen)]="fullscreen"
 		[fullscreenToggle]="true">
 		<div detailsPanelTitle>
-			<span class="text-xlarge" [innerText]="'_Violations_' | i18n ">:</span>
+			<span class="text-xlarge" [innerText]="('_RccViolations_' | i18n | titlecase)+(': ')"></span>
 			<span class="text-xlarge selected" [innerText]="selectedAssetData?.deviceName || ('_NA_' | i18n)"></span>
 		</div>
 		<div class="row ">
@@ -196,7 +196,7 @@
 					<div data-auto-id="RccIPAddress" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold" [innerText]="'_RccAssetIpAddress_' | i18n">
 						</div>
-						<div [innerText]="selectedAssetData?.ipaddress || ('_NA_' | i18n) "></div>
+						<div [innerText]="selectedAssetData?.ipAddress || ('_NA_' | i18n) "></div>
 					</div>
 					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold"
