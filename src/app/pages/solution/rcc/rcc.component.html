@@ -182,8 +182,7 @@
 	<app-rcc-device-violation-details [policyViolationInfo]="policyViolationInfo">
 	</app-rcc-device-violation-details>
 </details-panel>
-<!-- App Details 360 slide-out -->
-<!-- App Details 360 slide-out -->
+
 <details-panel [hidden]="!selectedAssetModal" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose('selectedAssetModal')" [(fullscreen)]="fullscreen"
 		[fullscreenToggle]="true">
@@ -217,6 +216,7 @@
 	</details-panel-header>
 	<app-rcc-asset-violation-details [selectedAssetData]="selectedAssetData"></app-rcc-asset-violation-details>
 </details-panel>
+<!-- App Details 360 slide-out -->
 
 <ng-template #severityColor let-item="celldata">
 	<i class="qtr-margin-right icon-circle" 
