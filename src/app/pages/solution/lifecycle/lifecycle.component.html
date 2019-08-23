@@ -207,7 +207,7 @@
 				(click)="atxMoreViewSessions(item)"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<a class="no-link" target="_blank" [href]="item.recordingURL">
+			<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
 				<button class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 					[innerText]="'_WatchNow_' | i18n">
 				</button>
@@ -276,7 +276,12 @@
 			(click)="recommendedAtxScheduleCardOpened = true; atxScheduleCardOpened = false; componentData.atx.interested=''"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
-		<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="componentData.atx?.recommended?.recordingURL">
+		<a
+			*ngIf="componentData.atx?.recommended?.recordingURL"
+			class="no-link"
+			target="_blank"
+			rel="noopener noreferrer"
+			[href]="componentData.atx?.recommended?.recordingURL">
 			<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 				[innerText]="'_WatchNow_' | i18n"></button>
 		</a>
@@ -818,7 +823,7 @@
 						</button>
 					</div>
 					<div class="col-md-6 text-left">
-						<a class="no-link" target="_blank" [href]="item.recordingURL">
+						<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
 							<button data-auto-id="recommendedATXWatchButton"
 								class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 								[innerText]="'_WatchNow_' | i18n"></button>
@@ -1220,7 +1225,7 @@
 			(click)="cancelATXSession(celldata)"
 			[innerText]="'_Cancel_' | i18n">
 		</button-->
-		<a class="no-link" target="_blank" [href]="celldata.recordingURL">
+		<a *ngIf="celldata.recordingURL" class="no-link" target="_blank" [href]="celldata.recordingURL">
 			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase half-margin-left"
 				[innerText]="'_WatchNow_' | i18n"></button>
 		</a>
