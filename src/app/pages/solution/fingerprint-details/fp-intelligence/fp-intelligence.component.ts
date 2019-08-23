@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { FpIntelligenceService, SimilarDevicesDistribution } from '@sdp-api';
-import { UserResolve } from '@utilities';
 import { debounceTime } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { Subject } from 'rxjs';
@@ -44,7 +43,6 @@ export class FpIntelligenceComponent implements OnChanges {
 	});
 
 	constructor (
-		private userResolve: UserResolve,
 		private fpIntelligenceService: FpIntelligenceService,
 		private logger: LogService,
 		private fb: FormBuilder,
@@ -64,8 +62,9 @@ export class FpIntelligenceComponent implements OnChanges {
 	 * @param changes simplechange
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
-		if (changes.asset) {
-			this.deviceId = changes.asset.currentValue.deviceId;
+		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+		if (currentAsset) {
+			this.deviceId = currentAsset.deviceId;
 			this.loadSimilarDevicesDistribution();
 		}
 		this.requestForm.valueChanges.pipe(debounceTime(1000))

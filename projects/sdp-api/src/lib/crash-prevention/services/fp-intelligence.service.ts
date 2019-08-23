@@ -6,7 +6,6 @@ import { CrashPreventionConfiguration as __Configuration } from '../crash-preven
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
-import { ProductFamiliesList } from '../models/product-families-list';
 import { SimilarDevicesList } from '../models/similar-devices-list';
 import { SimilarDevicesDistribution } from '../models/similar-devices-distribution';
 import { environment } from '@environment';

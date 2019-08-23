@@ -1,6 +1,6 @@
 import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-
+import * as _ from 'lodash-es';
 /**
  * fingerprint-body Component
  */
@@ -27,12 +27,13 @@ export class FingerprintBodyComponent implements OnChanges {
 	 * @param changes selectedDevices
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
-		if (changes.asset) {
-			this.selectedDevice = changes.asset.currentValue.deviceId;
-			this.selectedAsset = changes.asset.currentValue;
+		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+		if (currentAsset) {
+			this.selectedDevice = currentAsset.deviceId;
+			this.selectedAsset = currentAsset;
 			this.selectedDevices = {
 				deviceId1: this.selectedDevice,
-				productId1: changes.asset.currentValue.productId,
+				productId1: currentAsset.productId,
 			};
 		}
 	}

@@ -113,9 +113,10 @@ export class FpSimilarAssetsComponent {
 	 * @param changes asset
 	 */
 	public ngOnChanges (changes: SimpleChanges): void {
-		if (changes.asset) {
-			this.deviceId = changes.asset.currentValue.deviceId;
-			this.productId = changes.asset.currentValue.productId;
+		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+		if (currentAsset) {
+			this.deviceId = currentAsset.deviceId;
+			this.productId = currentAsset.productId;
 			this.loadSimilarDevicesData();
 		}
 		this.requestForm.valueChanges
