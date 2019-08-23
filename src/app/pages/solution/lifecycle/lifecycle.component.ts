@@ -1741,6 +1741,10 @@ export class LifecycleComponent implements OnDestroy {
 		this.appHeaderHeight = _.get(appHeader, '[0].clientHeight', 0);
 	}
 
+	/**
+	 * Gets the height of the app header in pixels
+	 * @returns the height in px ready to be inserted as styling
+	 */
 	public getAppHeaderHeightPX (): string {
 		if (this.appHeaderHeight > 0) {
 			return `${this.appHeaderHeight}px`;
