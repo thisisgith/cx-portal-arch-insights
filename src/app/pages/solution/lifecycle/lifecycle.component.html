@@ -204,7 +204,7 @@
 		<div class="base-padding-top half-padding-left" *ngIf="autoid==='moreATXList'">
 			<button attr.data-auto-id="{{ autoid }}-HoverModal-ViewSessions"
 				class="btn btn--small btn--secondary text-uppercase"
-				(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; moreATXSelected = item; getCoordinates($event)"
+				(click)="atxMoreViewSessions(item)"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
 			<a class="no-link" target="_blank" [href]="item.recordingURL">
@@ -326,14 +326,7 @@
 			</div>
 			<div>
 				<a class="no-link closebtn"
-					(click)="this.atxScheduleCardOpened = false;
-						recommendedAtxScheduleCardOpened = false;
-						selectSession();
-						eventXCoordinates = 0;
-						eventYCoordinates = 0;
-						moreATXSelected = '';
-						moreXCoordinates = 0;
-						moreYCoordinates = 0"
+					(click)="closeViewSessions()"						
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
 				</a>
@@ -958,7 +951,7 @@
 			</ng-container>
 		</td>
 	</tr>
-	<ng-container *ngIf="atxScheduleCardOpened">
+	<ng-container *ngIf="atxScheduleCardOpened && componentData.atx.interested">
 			<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }"></ng-container>
 	</ng-container>
 </ng-template>

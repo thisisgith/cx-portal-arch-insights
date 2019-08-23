@@ -1153,6 +1153,31 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Changes the atxScheduleCardOpened flag and adds value to moreATXSelected
+	 * @param item ATXSchema
+	 */
+	 public atxMoreViewSessions (item: AtxSchema) {
+		this.atxScheduleCardOpened = true;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.moreATXSelected = item;
+	}
+
+	/**
+	 * Changes the atxScheduleCardOpened flags to false to close the popupmodal
+	 */
+	 public closeViewSessions () {
+		this.atxScheduleCardOpened = false;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.selectSession({ });
+		this.eventXCoordinates = 0;
+		this.eventYCoordinates = 0;
+		this.moreXCoordinates = 0;
+		this.moreYCoordinates = 0;
+		this.componentData.atx.interested = null;
+		this.moreATXSelected = null;
+	}
+
+	/**
 	 * Get the panel styles based on button coordinates
 	 * @param viewAtxSessions HTMLElement
 	 * @returns panel string
