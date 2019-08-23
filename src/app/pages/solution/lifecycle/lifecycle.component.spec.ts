@@ -393,13 +393,6 @@ describe('LifecycleComponent', () => {
 
 			fixture.detectChanges();
 
-			const recommended = component.componentData.atx.recommended;
-
-			de = fixture.debugElement.query(By.css('#recommendedATXScheduleButton'));
-
-			expect(de)
-				.toBeTruthy();
-
 			component.eventXCoordinates = 0;
 			(<any> window).innerWidth = 1200;
 			component.atxScheduleCardOpened = true;
@@ -414,6 +407,7 @@ describe('LifecycleComponent', () => {
 			expect(panel)
 				.toEqual('panel panel--open');
 
+			component.atxScheduleCardOpened = false;
 			component.getMoreCoordinates(viewAtxSessions, 'moreATXList');
 
 			expect(component.moreXCoordinates)
