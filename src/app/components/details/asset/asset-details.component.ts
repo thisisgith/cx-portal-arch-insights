@@ -16,10 +16,11 @@ import {
 	takeUntil, catchError, map, mergeMap,
 } from 'rxjs/operators';
 import { UserResolve } from '@utilities';
-import { Alert } from '@interfaces';
+import { Alert, Panel360 } from '@interfaces';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { getProductTypeImage } from '@classes';
+import { DetailsPanelStackService } from '../panel/details-panel.service';
 
 /**
  * Asset Details Component
@@ -32,7 +33,7 @@ import { getProductTypeImage } from '@classes';
 	styleUrls: ['./asset-details.component.scss'],
 	templateUrl: './asset-details.component.html',
 })
-export class AssetDetailsComponent implements OnInit, OnDestroy {
+export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 
 	@Input('serialNumber') public serialNumber: string;
 	@Input('asset') public asset: Asset;
@@ -51,6 +52,7 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 		private inventoryService: InventoryService,
 		private logger: LogService,
 		private userResolve: UserResolve,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -181,6 +183,7 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 	 * Initializer
 	 */
 	public ngOnInit () {
+		this.detailsPanelStackService.push(this);
 		this.refresh();
 	}
 
@@ -201,5 +204,13 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
 			_.invoke(this.alert, 'hide');
 			this.refresh();
 		}
+	}
+
+	public onPanelBack() {
+		this.detailsPanelStackService.pop();
+	}
+
+	public onAllPanelsClose() { 
+		this.detailsPanelStackService.reset();
 	}
 }

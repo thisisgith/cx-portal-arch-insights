@@ -1,5 +1,6 @@
 <details-panel *ngIf="advisoryId && customerId" [hidden]="!advisoryId && !advisory" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onPanelClose()"
+	<details-panel-header (close)="onAllPanelsClose()"
+		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false">
 		<ng-container *ngIf="details">

@@ -6,6 +6,7 @@ export { BubbleChartModule } from './charts/bubble-chart/bubble-chart.module';
 export { CharCountModule } from './char-count/char-count.module';
 export { ColumnChartModule } from './charts/column-chart/column-chart.module';
 export { DetailsPanelModule } from './details/panel/details-panel.module';
+export { DetailsPanelStackService } from './details/panel/details-panel.service';
 export { CaseModule } from './case/case.module';
 export { CaseOpenComponent } from './case/case-open/case-open.component';
 export {
