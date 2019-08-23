@@ -46,7 +46,6 @@ export class FingerprintHeaderComponent implements  OnChanges {
 
 	/**
 	 * Fetches the device information Assets360 header view
-	 * @param device will have the device details
 	 * @returns the total crash history of particular device
 	 */
 	private loadDeviceInfo () {
