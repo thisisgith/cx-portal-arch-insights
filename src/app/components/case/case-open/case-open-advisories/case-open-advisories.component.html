@@ -25,7 +25,7 @@
 									<div><span [innerText]="allAssets[0]?.productId"></span></div>
 								</dd>
 								<app-collapsible *ngIf="allAssets.length > 1"
-									[text]="'_AdditionalImpactedAssets_' | i18n:(allAssets.length - 1)">
+									[text]="'_AdditionalImpactedAssetsToBe_' | i18n:(allAssets.length - 1)">
 									<table class="table table--nostripes">
 										<thead>
 											<tr>
@@ -117,7 +117,7 @@
 <!-- Page that displays after a case submit success/fail -->
 <ng-template #submittedTemplate>
 	<app-case-submitted [errors]="errors"
-		[asset]="allAssets[0]"
+		[assets]="allAssets"
 		[caseData]="caseOpenData">
 	</app-case-submitted>
 </ng-template>

@@ -108,7 +108,6 @@ export class CaseOpenAdvisoriesComponent
 				_.get(this.advisory, 'title', ''),
 			);
 		}
-		console.log(this.allAssets);
 		this.note = this.noteBuilder.buildNote(this.type, this.advisory, this.allAssets);
 		/** Add 5 newlines to start of description to give user space for input */
 		this.caseForm.controls.description.setValue(
