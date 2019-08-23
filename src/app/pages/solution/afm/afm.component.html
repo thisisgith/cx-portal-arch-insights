@@ -258,7 +258,7 @@
 				>
 				</span>
 				<span class="base-margin-right base-margin-left">|</span>
-				<span [ngSwitch]="afmConnectionStatus?.statusMessage">
+				<span [ngSwitch]="afmConnectionStatus?.status">
 					<span *ngSwitchCase="'Success'">
 						<span
 							class="icon-check-outline icon-medium text-success"
@@ -296,12 +296,16 @@
 						</span>
 					</span>
 				</span>
-				<span class="base-margin-right base-margin-left"
-				*ngIf="statusErrorMessage?.length > 10" >|
-					<span class="qtr-margin-left text-medium text-danger"
-							[innerText]="statusErrorMessage">
-					</span>
-					</span>
+				<span *ngIf="statusErrorMessage?.length > 0" class="base-margin-right base-margin-left">
+						<div class="alert fade-and-slide-top text-left alert--danger" >
+								<div class="alert__icon icon-error-outline"></div>
+								<ng-container>
+									<div class="alert__message">
+										<span [innerHTML]="statusErrorMessage"></span>
+									</div>
+								</ng-container>
+							</div>
+				</span>
 			</div>
 		</div>
 		<div class="col-md-3">

@@ -621,7 +621,8 @@ export class AfmComponent {
 			} else if (response.status.toUpperCase() === this.AFM_CONSTANT.FAIL) {
 				this.tableData = response.eventList;
 				this.pagination = response.pagination;
-				this.statusErrorMessage = response.statusMessage;
+				this.logger.error(`Error while connecting apis :${response.statusMessage}`);
+				this.statusErrorMessage = 'Server is down, please try again.';
 				if (this.searchParams.firstTimeLoading) {
 					this.afmConnectionStatus = {
 						status: 'Error',

@@ -17,9 +17,9 @@ export class AfmDetailsComponent {
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private destroy$ = new Subject();
-	private searchParams: AfmSearchParams;
-	public ignoreStatus: string;
+	public searchParams: AfmSearchParams;
 	public errorDesc: string;
+	public options: any = { visible : false };
 
 	@Input('alarm') public alarm: Alarm;
 	@Output()
@@ -38,6 +38,7 @@ export class AfmDetailsComponent {
 			.subscribe((id: string) => {
 				this.searchParams.customerId = id;
 			});
+		this.errorDesc = '';
 	}
 
 	/**
@@ -63,17 +64,37 @@ export class AfmDetailsComponent {
 	public toggleEvent (alarmData: Alarm) {
 		this.searchParams.customerId = alarmData.customerId;
 		this.searchParams.faultIC = alarmData.faultIC;
-		if (alarmData.status.toUpperCase() !== 'IGNORED') {
+		if (!alarmData.status || alarmData.status.toUpperCase() !== 'IGNORED') {
 			this.afmService.ignoreEvent(this.searchParams)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
-					this.ignoreStatus = response.statusMessage;
+					this.options = {
+						alertIcon:  response.status.toUpperCase() === 'SUCCESS' ?
+						'icon-check-outline' : 'icon-error-outline',
+						message: response.statusMessage,
+						severity: response.status.toUpperCase() === 'SUCCESS' ?
+						 'alert--success' : 'alert--danger',
+						visible: true,
+					};
+					if (response.status.toUpperCase() !== 'SUCCESS') {
+						this.alarm.status = 'Success';
+					}
 				});
 		} else {
 			this.afmService.revertIgnoreEvent(this.searchParams)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
-					this.ignoreStatus = response.statusMessage;
+					this.options = {
+						alertIcon:  response.status.toUpperCase() === 'SUCCESS' ?
+						'icon-check-outline' : 'icon-error-outline',
+						message: response.statusMessage,
+						severity: response.status.toUpperCase() === 'SUCCESS' ?
+						 'alert--success' : 'alert--danger',
+						visible: true,
+					};
+					if (response.status.toUpperCase() !== 'SUCCESS') {
+						this.alarm.status = 'Ignored';
+					}
 				});
 		}
 	}
