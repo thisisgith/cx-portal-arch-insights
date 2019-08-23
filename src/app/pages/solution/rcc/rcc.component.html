@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-md-2 filter__selected">
 			<div class="row">
-				<div class="col-md-12 panel flex-center flex-fill filter assetsCount margintop30"
+				<div class="col-md-12 panel flex-center flex-fill filter assetsCount base-margin-top"
 					data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
 					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="policyViolationCount  || ('_NA_' | i18n) "></div>
 					<div class="text-large flex-center" [innerText]="'_RccPolicyViolations' | i18n"></div>
@@ -40,8 +40,8 @@
 	<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	<div class="divider qtr-margin-top"></div>
 </ng-container>
-<div class="col-md-12 margintoptable">
-	<div class="col-md-9 margintop21">
+<div class="col-md-12 base-margin-top">
+	<div class="col-md-9 base-margin-top">
 		<span [innerText]="'_RccShowing_' | i18n"></span>&nbsp;
 		<span [innerText]="policyViolationCount"></span>&nbsp;
 		<span [innerText]="'_RccViolations_' | i18n"></span>&nbsp;
@@ -124,7 +124,7 @@
 </ng-template>
 
 <ng-template #filterBar>
-	<div class="row margintop10">
+	<div class="row half-margin-top">
 		<div class="col-md-1 flex flex-center-vertical">
 			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
 		</div>
