@@ -7,7 +7,7 @@ import { Location } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CuiPagerModule } from '@cisco-ngx/cui-components';
-import { DeviceListModule } from './device-list.module';
+import { DeviceListModule } from './device-list/device-list.module';
 
 import { DevicePolicyResponseModel, CollectionPolicyResponseModel } from '@sdp-api';
 import { of } from 'rxjs';
