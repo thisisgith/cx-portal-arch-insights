@@ -4,7 +4,7 @@ import { PolicyFormComponent } from './policy-form.component';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CuiLoaderModule, CuiPagerModule } from '@cisco-ngx/cui-components';
-import { DeviceListModule } from './device-list.module';
+import { DeviceListModule } from './device-list/device-list.module';
 
 /**
  * Module representing form for Policies page

@@ -110,32 +110,25 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		timePeriod: ['', Validators.required],
 	});
 
-	public monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-		'July', 'August', 'September', 'October', 'November', 'December',
-	];
-
-	public dayNames = ['Sunday', 'Monday', 'Tuesday',
-		'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
 	public timePeriods: SelectOptions = {
 		options: [
-			{ key: 'Monthly', value: 'monthly' },
-			{ key: 'Weekly', value: 'weekly' },
-			{ key: 'Daily', value: 'daily' },
-			{ key: 'Never', value: 'never' },
+			{ key: I18n.get('_Monthly_'), value: 'monthly' },
+			{ key: I18n.get('_Weekly_'), value: 'weekly' },
+			{ key: I18n.get('_Daily_'), value: 'daily' },
+			{ key: I18n.get('_Never_'), value: 'never' },
 		],
 		selected: '',
 	};
 
 	public days: SelectOptions = {
 		options: [
-			{ key: 'Sunday', value: '0' },
-			{ key: 'Monday', value: '1' },
-			{ key: 'Tuesday', value: '2' },
-			{ key: 'Wednesday', value: '3' },
-			{ key: 'Thursday', value: '4' },
-			{ key: 'Friday', value: '5' },
-			{ key: 'Saturday', value: '6'  },
+			{ key: I18n.get('_Sunday_'), value: '0' },
+			{ key: I18n.get('_Monday_'), value: '1' },
+			{ key: I18n.get('_Tuesday_'), value: '2' },
+			{ key: I18n.get('_Wednesday_'), value: '3' },
+			{ key: I18n.get('_Thursday_'), value: '4' },
+			{ key: I18n.get('_Friday_'), value: '5' },
+			{ key: I18n.get('_Saturday_'), value: '6'  },
 		],
 		selected: '',
 	};
@@ -249,11 +242,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public editCollection () {
 		this.title = I18n.get('_ScheduledCollectionDetails_');
 
-		const dateTime = new Date(_.get(this.policy, 'createdDate'));
-		const formattedTime =
-`${this.monthNames[dateTime.getMonth()]} ${dateTime.getDate()}, ${dateTime.getFullYear()}`;
-
-		_.set(this.policy, 'createdDate', formattedTime);
+		this.leftListCall = undefined;
+		this.rightListCall = undefined;
 
 		this.leftListCall = undefined;
 		this.rightListCall = undefined;

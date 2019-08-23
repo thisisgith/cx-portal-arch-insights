@@ -117,7 +117,7 @@
 								</div>
 							</div>
 							<div *ngIf="type === 'editCollection'" class="col-md-6">
-								<span [innerText]="'Created: ' + policy.createdDate"></span>
+								<span [innerText]="'Created: ' + (policy.createdDate | date:'MMM dd, yyyy')"></span>
 							</div>
 						</div>
 						<div class="row dbl-padding-left dbl-padding-right base-padding-top full-width">
@@ -168,11 +168,10 @@
 				<div class="row button-row">
 					<div class="col-md-2">
 					</div>
-					<div class="col-md-8">
-						<span [innerText]="'_Add_' | i18n | uppercase"></span>
+					<div class="col-md-8 button-txt" [innerText]="'_Add_' | i18n | uppercase">
 					</div>
 					<div class="col-md-2">
-						<span _ngcontent-evb-c16="" class="text-right icon-chevron-right"></span>
+						<i class="button-txt text-right icon-chevron-right"></i>
 					</div>
 				</div>
 			</button>
@@ -185,10 +184,10 @@
 				>
 				<div class="row button-row">
 					<div class="col-md-2">
-						<span _ngcontent-evb-c16="" class="text-right icon-chevron-left"></span>
+						<i class="button-txt text-right icon-chevron-left"></i>
 					</div>
 					<div class="col-md-8">
-						<span [innerText]="'_Remove_' | i18n | uppercase"></span>
+						<span class="button-txt" [innerText]="'_Remove_' | i18n | uppercase"></span>
 					</div>
 					<div class="col-md-2">
 					</div>
@@ -244,6 +243,7 @@
 		*ngIf="paginator"
 		class="container base-margin-top">
 		<cui-pager
+			*ngIf="totalRows"
 			[page]="pageNumber - 1"
 			[limit]="rowsPerPage"
 			[totalItems]="totalRows"
