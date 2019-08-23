@@ -11,7 +11,7 @@ import { RccAssetDetailsService } from "./services/rcc-asset-details.service";
 	
 })
 export class RccDataModule {
-	static forRoot(customParams: RccConfiguration): ModuleWithProviders {
+	public static forRoot (customParams: RccConfiguration): ModuleWithProviders {
 		return {
 			ngModule: RccDataModule,
 			providers: [

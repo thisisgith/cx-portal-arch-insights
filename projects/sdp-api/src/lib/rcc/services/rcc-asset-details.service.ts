@@ -34,7 +34,7 @@ GetAssetFilterSummaryData(params:RccAssetSelectReq){
 	//__params = params;
 	let req = new HttpRequest<any>(
 		'GET',
-		'https://violationaudit.sdp11-idev.csco.cloud/compliance/violationaudit/api/fetch-violation-details',
+		'${this.UrlPrefix}/api/customerportal/compliance/v1/service/fetch-violation-details;',
 		__body,
 		{
 			headers: __headers,
@@ -69,7 +69,7 @@ GetAssetFilterData(params:RccAssetSelectReq){
 	//__params = params;
 	let req = new HttpRequest<any>(
 		'GET',
-		'https://violationaudit.sdp11-idev.csco.cloud/compliance/violationaudit/api/fetch-violation-details-filter',
+		'${this.UrlPrefix}/api/customerportal/compliance/v1/service/fetch-violation-details-filter',
 		__body,
 		{
 			headers: __headers,

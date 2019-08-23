@@ -17,42 +17,41 @@ class RccService extends __BaseService {
 	}
 
 	getViolationCount(queryParamMapObj: object): __Observable<any> {
-		let url = `https://violation.sdp11-idev.csco.cloud/compliance/violation/api/summary-filters`;
+		let url = `${this.rootUrl}+/api/customerportal/compliance/v1/service/summary-filters`;
 		return this.invokeHTTPGet<RccData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 
 	getAssetCount(queryParamMapObj: object): __Observable<any> {
-		let url = `https://compliancewrapper.sdp11-idev.csco.cloud/v1/service/severity-ostype-detail`;
+		let url = `${this.rootUrl}+/api/customerportal/compliance/v1/service/severity-ostype-detail`;
 		return this.invokeHTTPGet<RccData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 
 	getGridData(queryParamMapObj: object): __Observable<any> {
-		let url = `https://violation.sdp11-idev.csco.cloud/compliance/violation/api/violation-summary`;
-		// let url = 'https://api-stage.cisco.com/api/customerportal/compliance/v1/service/violation-summary'
+		let url = `${this.rootUrl}+/api/customerportal/compliance/v1/service/violation-summary`;
 		return this.invokeHTTPGet<RccGridData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 
 	getAssetGridData(queryParamMapObj: object): __Observable<any> {
-		let url = `https://compliancewrapper.sdp11-idev.csco.cloud/v1/service/filter-asset-detail`;
+		let url = `${this.rootUrl}+/api/customerportal/compliance/v1/service/filter-asset-detail`;
 		return this.invokeHTTPGet<RccAssetGridData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 	getRccPolicyRuleDetailsData(queryParamMapObj: object): __Observable<any> {
-		let url = `https://violation.sdp11-idev.csco.cloud/compliance/violation/api/policy-rule-details`;
+		let url = `${this.rootUrl}+/api/customerportal/compliance/v1/service/policy-rule-details`;
 		return this.invokeHTTPGet<RccAssetGridData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 
 	getRccViolationDetailsData(queryParamMapObj: object): __Observable<any> {
-		let url = `https://violation.sdp11-idev.csco.cloud/compliance/violation/api/violation-details`;
+		let url = `${this.rootUrl}+/api/customerportal/compliance/v1/service/violation-details`;
 		return this.invokeHTTPGet<RccAssetGridData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);

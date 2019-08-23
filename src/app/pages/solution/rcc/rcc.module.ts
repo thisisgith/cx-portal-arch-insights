@@ -22,7 +22,12 @@ import {
 } from './rcc-device-violation-details/rcc-device-violation-details.module';
 import { PieChartModule, DetailsPanelModule } from '@components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { RccDataModule } from '@sdp-api';
+import { environment } from '@environment';
+/**
+ * The SDP Origin URL used for passing to the SDP-API Modules
+ */
+const rootUrl = environment.sdpServiceOrigin;
 /**
  * Child routes for RCC Module for lazy loading
  */
@@ -46,6 +51,7 @@ const childRoutes: Routes = [
 		RccDeviceViolationDetailsModule,
 		CuiTableModule,
 		CuiPagerModule,
+		RccDataModule.forRoot({ rootUrl }),
 		RouterModule.forChild(childRoutes),
 		CuiSearchModule,
 		I18nPipeModule,
