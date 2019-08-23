@@ -100,7 +100,7 @@
 					<span [innerHTML]="options.message"></span>
 				</div>
 			</ng-container>
-			<a class="alert__close icon-close" (click)="options.visible = false;" [attr.aria-label]="'_Close_' | i18n"></a>
+			<a data-auto-id="alertClose" class="alert__close icon-close" (click)="options.visible = false;" [attr.aria-label]="'_Close_' | i18n"></a>
 		</div>
 	</div>
 </div>

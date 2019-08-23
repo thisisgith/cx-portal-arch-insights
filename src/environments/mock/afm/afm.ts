@@ -6,18 +6,32 @@ const api = '/pbc/solution/insights/fault-management';
 /**
  * Ignored event response
  */
-const getIgnoreEventData = [
-	{
-		connectionStatus: '',
-		data: '',
-		eventInfo: '',
-		eventList: '',
-		pagination: '',
-		status: 'Success',
-		statusCode: 'OK',
-		statusMessage: 'Ignored',
-	},
-];
+const getIgnoreEventData = {
+	aggregationsCount: '',
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: '',
+	pagination: '',
+	status: 'Success',
+	statusCode: 'OK',
+	statusMessage: 'Ignored',
+};
+
+/**
+ * Ignored event response
+ */
+const getIgnoreEventFailedData = {
+	aggregationsCount: '',
+	connectionStatus: '',
+	data: '',
+	eventInfo: '',
+	eventList: '',
+	pagination: '',
+	status: 'Fail',
+	statusCode: 'OK',
+	statusMessage: 'Unable to perform',
+};
 
 /**
  * Alarm data
@@ -476,5 +490,22 @@ export const AfmScenarios = [
 		},
 		url: api,
 		usecases: ['Use Case 9'],
+	},
+	{
+		scenarios: {
+			POST: [
+				{
+					delay: 100,
+					description: 'Failed Ignored',
+					response: {
+						body: getIgnoreEventFailedData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: api,
+		usecases: ['Use Case 10'],
 	},
 ];
