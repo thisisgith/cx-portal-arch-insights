@@ -1071,9 +1071,14 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param item bookmark item object
 	 * @param lifecycleCategory string of the category type
 	 */
-	 public updateBookmark (item: AtxSchema | SuccessPath, lifecycleCategory: 'ATX' | 'SB') {
+	 public updateBookmark (item: AtxSchema | SuccessPath, lifecycleCategory: 'ATX' | 'SB' | 'PG') {
 		let bookmark;
 		let id;
+
+		// Product Guides has to be submitted as a Success Bytes bookmark.
+		if (lifecycleCategory === 'PG') {
+			lifecycleCategory = 'SB';
+		}
 
 		switch (lifecycleCategory) {
 			case 'ATX':
