@@ -848,11 +848,20 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		tab.selectedSubfilters = this.getAllSelectedSubFilters();
 
 		const selectedSubfilters = _.map(_.filter(filter.seriesData, 'selected'), 'filter');
+
 		if (filter.key !== 'lastUpdate') {
-			_.set(tab, ['params', filter.key], selectedSubfilters);
+			if (filter.selected) {
+				_.set(tab, ['params', filter.key], selectedSubfilters);
+			} else {
+				_.unset(tab, ['params', filter.key]);
+			}
 			tab.params.page = 1;
 		} else if (filter.key === 'lastUpdate') {
-			_.set(tab, ['params', 'lastUpdatedDateRange'], this.getLastUpdatedRange(subfilter));
+			if (filter.selected) {
+				_.set(tab, ['params', 'lastUpdatedDateRange'], this.getLastUpdatedRange(subfilter));
+			} else {
+				_.unset(tab, ['params', 'lastUpdatedDateRange']);
+			}
 			tab.params.page = 1;
 		}
 
