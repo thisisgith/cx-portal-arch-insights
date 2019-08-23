@@ -36,7 +36,7 @@
 	<div class="col-4 base-padding-top half-padding-left ">
 		<div [innerText]="'_RccProductFamily_' | i18n"></div>
 		<cui-select data-auto-id="filterSelect" 
-			[items]="policyRuleData.deviceFilterDetails.productFamily"
+			[items]="policyRuleData?.deviceFilterDetails?.productFamily"
 			placeholder="{{'_RccProductFamilyPlaceHolder_' | i18n }}" 
 			[compressed]="true" 
 			[empty]="true"
@@ -49,7 +49,7 @@
 	<div class="col-4 base-padding-top half-padding-left">
 		<div [innerText]="'_RccProductModel_' | i18n"></div>
 		<cui-select data-auto-id="policyRuleSearch" 
-			[items]="policyRuleData.deviceFilterDetails.productModel"
+			[items]="policyRuleData?.deviceFilterDetails?.productModel"
 			placeholder="{{'_RccProductModelPlaceHolder_'| i18n }}" 
 			[compressed]="true" 
 			[empty]="true"
@@ -62,7 +62,7 @@
 	<div class="col-4 base-padding-top half-padding-left">
 		<div [innerText]="'_RccOSName_' | i18n"></div>
 		<cui-select data-auto-id="policyRule" 
-			[items]="policyRuleData.deviceFilterDetails.osName"
+			[items]="policyRuleData?.deviceFilterDetails?.osName"
 			placeholder="{{'_RccOSNamePlaceHolder_'| i18n }}" 
 			[compressed]="true" 
 			[empty]="true"
