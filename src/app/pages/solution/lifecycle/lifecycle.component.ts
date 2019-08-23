@@ -119,14 +119,13 @@ export class LifecycleComponent implements OnDestroy {
 		content: null,
 		context: null,
 		visible: false,
-		fullscreen: false,
 	};
 	public requestModal = {
 		content: null,
 		context: null,
 		visible: false,
 	};
-	public appHeaderHeight = '0px';
+	public appHeaderHeight = 0;
 	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
 	public recommendedAtxScheduleCardOpened = false;
@@ -710,7 +709,6 @@ export class LifecycleComponent implements OnDestroy {
 					type: 'ATX',
 				},
 				visible: true,
-				fullscreen: false,
 			};
 		} else if (type === 'acc') {
 			this.modal = {
@@ -720,7 +718,6 @@ export class LifecycleComponent implements OnDestroy {
 					type: 'ACC',
 				},
 				visible: true,
-				fullscreen: false,
 			};
 		} else if (type === '_SuccessBytes_') {
 			this.modal = {
@@ -730,7 +727,6 @@ export class LifecycleComponent implements OnDestroy {
 					type: 'SB',
 				},
 				visible: true,
-				fullscreen: false,
 			};
 		} else if (type === '_ProductGuides_') {
 			this.modal = {
@@ -740,7 +736,6 @@ export class LifecycleComponent implements OnDestroy {
 					type: 'PG',
 				},
 				visible: true,
-				fullscreen: true,
 			};
 		}
 	}
@@ -753,7 +748,6 @@ export class LifecycleComponent implements OnDestroy {
 			content: null,
 			context: null,
 			visible: false,
-			fullscreen: false,
 		};
 		this.atxScheduleCardOpened = false;
 		this.recommendedAtxScheduleCardOpened = false;
@@ -1226,7 +1220,7 @@ export class LifecycleComponent implements OnDestroy {
 					const ht = this.eventClickedElement.scrollHeight;
 
 					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
-					_div.style.top = `${(rect.top + (ht / 2)) + this.scrollY - 210}px`;
+					_div.style.top = `${(rect.top + (ht / 2)) + this.scrollY - 193 - this.appHeaderHeight}px`;
 					panel = 'panel listpanel--open';
 				}
 			}
@@ -1744,7 +1738,14 @@ export class LifecycleComponent implements OnDestroy {
 	 */
 	public ngOnInit () {
 		const appHeader = document.getElementsByTagName('app-header');
-		const appHeaderHeight = _.get(appHeader, '[0].clientHeight', 0);
-		this.appHeaderHeight = `${appHeaderHeight}px`;
+		this.appHeaderHeight = _.get(appHeader, '[0].clientHeight', 0);
+	}
+
+	public getAppHeaderHeightPX (): string {
+		if (this.appHeaderHeight > 0) {
+			return `${this.appHeaderHeight}px`;
+		}
+
+		return `${this.appHeaderHeight}`;
 	}
 }
