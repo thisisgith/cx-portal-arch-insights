@@ -189,7 +189,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="divider qtr-margin-top visual-filter-divider"></div>
+	<div class="divider qtr-margin-top visual-filter-divider" *ngIf="selectedFilters && selectedFilters.length > 0"></div>
 	<ng-container>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 		<div class="qtr-margin-top"></div>
