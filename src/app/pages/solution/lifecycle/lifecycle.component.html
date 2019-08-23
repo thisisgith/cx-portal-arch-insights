@@ -61,9 +61,9 @@
 </div>
 
 <div class="modal-container" *ngIf="modal.visible">
-	<div class="modal-backdrop" [ngClass]="{ hide: !modal.visible }"></div>
-	<div class="modal modal--full" [ngClass]="{ hide: !modal.visible }" #scrollModal (scroll)="getScrollCoordinates(scrollModal)">
-		<div class="modal__dialog">
+	<div class="modal-backdrop" [ngClass]="{ hide: !modal.visible || modal.fullscreen }"></div>
+	<div class="modal modal--full" [ngStyle]="{'margin-top': modal.fullscreen ? appHeaderHeight : 0}" [ngClass]="{ hide: !modal.visible }">
+		<div class="modal__dialog" [ngClass]="{ 'no-padding': modal.fullscreen }">
 			<ng-container *ngTemplateOutlet="modal.content; context: modal.context"></ng-container>
 		</div>
 	</div>
