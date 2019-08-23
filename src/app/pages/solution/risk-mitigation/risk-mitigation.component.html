@@ -284,6 +284,37 @@
 		[data]="crashHistoryGridDetails.tableData"
 	></cui-table>
 </details-panel>
+<details-panel
+	*ngIf="showFpDetails"
+	[hidden]="!showFpDetails"
+	[fullscreen]="fullscreen"
+>
+	<details-panel-header
+		(close)="onFPDPanelClose()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false"
+	>
+		<app-fingerprint-header
+			[asset]="selectedFingerPrintdata"
+		></app-fingerprint-header>
+		<div detailsPanelTitle class="text-xlarge">
+			<span
+				class="qtr-margin-left"
+				[innerText]="'_CP_FingerPrintDetailsFor_' | i18n"
+			></span>
+			<span class="qtr-margin-left">
+				<a
+					data-auto-id="selectedName"
+					(click)="redirectToAsset360()"
+					[innerHTML]="selectedFingerPrintdata.deviceName"
+				></a>
+			</span>
+		</div>
+	</details-panel-header>
+	<app-fingerprint-body
+		[asset]="selectedFingerPrintdata"
+	></app-fingerprint-body>
+</details-panel>
 <ng-template #cardColors let-item="celldata">
 <span [ngClass]="{ 'text-success': item.globalRiskRank === 'LOW', 'text-warning': item.globalRiskRank === 'MED', 'text-danger': item.globalRiskRank === 'HIGH' }"> </span>
 <span [innerText]="item.globalRiskRank"></span>
