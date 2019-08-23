@@ -199,13 +199,13 @@ class SyslogsService extends __BaseService {
 	
 		}
 
-		public devicePanelDetails (devicedetailsdata, customerId) {
+		public devicePanelDetails (devicedetails) {
 			let __params = this.newParams();
 			let __headers = new HttpHeaders();
 			let __body: any = null;
 			const req = new HttpRequest<any>(
 				'GET',
-				this.rootUrl+'/api/customerportal/syslog/v1/asset/messages?fromSeverity=1&toSeverity=7&days=100&device='+devicedetailsdata.DeviceHost+"&companyId="+customerId,
+				this.rootUrl+'/api/customerportal/syslog/v1/asset/messages?fromSeverity=1'+'&toSeverity='+devicedetails.severity+'&days='+devicedetails.days+'&device='+devicedetails.deviceHost+'&includeMsgType='+devicedetails.includeMsgType+'&excludeMsgType='+devicedetails.excludeMsgType+'&catalog=Cisco&companyId='+devicedetails.customerId,
 				__body,
 				{
 				  headers: __headers,
@@ -221,8 +221,8 @@ class SyslogsService extends __BaseService {
 				}),
 			  );
 		}
-		public getdevicePanelDetails (devicedata, customerId): __Observable<SyslogDevicePanelOuter[]> {
-			return this.devicePanelDetails(devicedata, customerId).pipe(
+		public getdevicePanelDetails (devicedata): __Observable<SyslogDevicePanelOuter[]> {
+			return this.devicePanelDetails(devicedata).pipe(
 			  __map(_r => <SyslogDevicePanelOuter[]>_r.body),
 			);
 		  }

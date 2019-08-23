@@ -71,6 +71,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public selectedAsset;
 	public showAssetPanel = false;
 	public fullscreen = false;
+	public width = 300;
 	public view: 'syslogMessage' | 'syslogAsset' = 'syslogMessage';
 	public appliedFilters = {
 		asset: '',

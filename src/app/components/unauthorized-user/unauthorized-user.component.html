@@ -1,0 +1,21 @@
+<div class="modal__header">
+	<a class="modal__close"
+		href="https://www.cisco.com"
+		data-auto-id="UnauthorizedUserClose">
+		<span class="icon-close icon--mid">
+		</span>
+	</a>
+</div>
+<h1 [innerText]="'_UnauthorizedUser_' | i18n"></h1>
+<div class="dbl-margin-top">
+	<span [innerText]="'_UnauthorizedUserNoAccess_' | i18n"></span>
+</div>
+<div class="flex-center-horizontal dbl-margin-top">
+	<a class="btn btn--primary half-margin-right"
+		data-auto-id="UnauthorizedUserOk"
+		type="button"
+		[innerText]="'_OK_' | i18n"
+		href="https://www.cisco.com"
+		>
+	</a>
+</div>
