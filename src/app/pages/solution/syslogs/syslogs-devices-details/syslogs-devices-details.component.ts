@@ -19,13 +19,69 @@ import { UserResolve } from '@utilities';
 export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	@ViewChild('downArrow', { static: true }) public downArrow: TemplateRef<{ }>;
 	@Input('asset') public asset: any;
+	@Input('selectedFilter') public selectedFilter: any;
 	public tableOptions: CuiTableOptions;
 	public tabledata: SyslogDevicePanelOuter[];
 	public tabledata1: DeviceMessageDescObject[];
-	public msgInclude = ' ';
-	public msgExclude = ' ';
 	public destroy$ = new Subject();
 	public customerId;
+	public includeMsgFilter = '';
+	public excludeMsgFilter = '';
+	public selectedSeverity = '';
+	public selectedTimeRange = '';
+	public deviceDetailsParams: SyslogsService.GetSyslogsParams = { };
+	public severityList = [
+		{
+			name: '0',
+			value: 0,
+		},
+		{
+			name: '1',
+			value: 1,
+		},
+		{
+			name: '2',
+			value: 2,
+		},
+		{
+			name: '3',
+			value: 3,
+		},
+		{
+			name: '4',
+			value: 4,
+		},
+		{
+			name: '5',
+			value: 5,
+		},
+		{
+			name: '6',
+			value: 6,
+		},
+		{
+			name: '7',
+			value: 7,
+		},
+	];
+	public timeRangeList = [
+		{
+			name: '1',
+			value: 1,
+		},
+		{
+			name: '2',
+			value: 2,
+		},
+		{
+			name: '3',
+			value: 3,
+		},
+		{
+			name: '4',
+			value: 4,
+		},
+	];
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -47,7 +103,17 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	 * Onchanges lifecycle hook
 	 */
 	public ngOnChanges () {
-		this.SyslogDevicePanelData(this.asset);
+		this.selectedTimeRange = this.selectedFilter.days;
+		this.selectedSeverity = this.selectedFilter.severity;
+		this.deviceDetailsParams = {
+			customerId: this.customerId,
+			days: +this.selectedTimeRange,
+			deviceHost: this.asset.DeviceHost,
+			excludeMsgType: this.excludeMsgFilter,
+			includeMsgType: this.includeMsgFilter,
+			severity: +this.selectedSeverity,
+		};
+		this.SyslogDevicePanelData();
 	}
 
 	/**
@@ -67,8 +133,8 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		* @param gridData event values from input
 	 * Onchanges lifecycle hook
 	 */
-	public SyslogDevicePanelData (gridData) {
-		this.syslogsService.getdevicePanelDetails(gridData, this.customerId)
+	public SyslogDevicePanelData () {
+		this.syslogsService.getdevicePanelDetails(this.deviceDetailsParams)
 		.pipe(takeUntil(this.destroy$),
 		catchError(err => {
 			this.logger.error('syslog-messages-details.component : getdevicePanelDetails() ' +
@@ -80,6 +146,25 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		.subscribe((response: SyslogDevicePanelOuter[]) => {
 			this.tabledata = response;
 		});
+	}
+	/**
+	 * Keys down function
+	 * @param event contains eventdata
+	 */
+	public keyDownFunction (event) {
+		if (event.keyCode === 13) {
+			this.deviceDetailsParams.includeMsgType = this.includeMsgFilter;
+			this.deviceDetailsParams.excludeMsgType = this.excludeMsgFilter;
+			this.SyslogDevicePanelData();
+		}
+	}
+	/**
+	 * Determines whether selection on
+	 */
+	public onSelection () {
+		this.deviceDetailsParams.severity = +this.selectedSeverity;
+		this.deviceDetailsParams.days = +this.selectedTimeRange;
+		this.SyslogDevicePanelData();
 	}
 
 	/**

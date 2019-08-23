@@ -204,6 +204,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public keyDownFunction (event) {
 		if (event.keyCode === 13) {
+			this.syslogsParams.includeMsgType = this.msgInclude.toUpperCase();
+			this.syslogsParams.excludeMsgType = this.msgExclude.toUpperCase();
 			this.getSyslogsData();
 		}
 	}
