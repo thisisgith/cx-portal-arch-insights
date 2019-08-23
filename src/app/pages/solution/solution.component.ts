@@ -29,6 +29,7 @@ import {
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
 import { RacetrackInfoService } from '@services';
+import { DetailsPanelStackService } from '@components';
 
 /**
  * Interface representing a facet
@@ -90,6 +91,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private caseService: CaseService,
 		private route: ActivatedRoute,
 		private racetrackInfoService: RacetrackInfoService,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -147,6 +149,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.racetrackInfoService.sendCurrentTechnology(this.selectedTechnology);
 				}
 			}
+
+			this.detailsPanelStackService.reset();
 		}
 	}
 

@@ -697,4 +697,23 @@ export const NetworkScenarios = [
 		url: `${api}?customerId=${customerId}&serialNumber=CAT2034B1H6`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Impacted Network Elements for Security Advisory',
+					response: {
+						body: MockNetwork(100, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}?customerId=${customerId}&sort=hostName:ASC&rows=100&page=1&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
+		usecases: ['Use Case 1'],
+	},
+
+	// https://api-stage.cisco.com/api/customerportal/inventory/v1/network-elements?customerId=2431199&sort=hostName:ASC&rows=100&page=1&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA
 ];

@@ -214,4 +214,22 @@ export const AdvisorySecurityAdvisoryScenarios = [
 		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1&managedNeId=NA,FOC2045X0WJ,WS-C3850-48U-L,NA`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Advisory Security Advisories for 360 overlay',
+					response: {
+						body: MockData(10, 1, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		/* tslint:disable */
+		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
+		usecases: ['Use Case 1'],
+	},
 ];

@@ -25,7 +25,13 @@ export class DetailsPanelStackService {
 	public reset (keepBottomPanel = false): void {
 		const panelsToClose = keepBottomPanel ? _.slice(this.panels, 1) : this.panels;
 		_.each(panelsToClose, (x: Panel360) => x.onPanelClose());
-		this.panels = keepBottomPanel ? _.get([this.panels], 0, []) : [];
+
+		const bottomPanel = _.get(this.panels, 0);
+		if (keepBottomPanel && bottomPanel) {
+			this.panels = [bottomPanel];
+		} else {
+			this.panels = [];
+		}
 	}
 
 	public canGoBack () {
