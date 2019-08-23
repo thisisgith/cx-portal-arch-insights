@@ -8,6 +8,8 @@ export { IListdevice } from './models/listdevice-info';
 export { listdeviceResponse } from './models/listdevice-response';
 export { SimilarDevice } from './models/similar-device';
 export { SimilarDevicesList } from './models/similar-devices-list';
+export { CPProductFamily } from './models/product-family';
+export { ProductFamiliesList } from './models/product-families-list';
 export {
     SimilarDevicesDistribution,
     DeviceSoftwareDistribution,
