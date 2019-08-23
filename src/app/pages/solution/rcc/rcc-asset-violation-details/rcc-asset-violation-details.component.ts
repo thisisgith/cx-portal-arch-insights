@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild, TemplateRef, SimpleChanges } from 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { Subscription, Subject, forkJoin } from 'rxjs';
-import { RccAssetSelectReq, RccAssetDetailsService } from '@sdp-api';
+import { RccAssetSelectReq, RccService } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
 export class RccAssetViolationDetailsComponent implements OnInit {
 	constructor (
 		private logger: LogService,
-		private RccAssetDataDetailsService: RccAssetDetailsService,
+		private rccService: RccService,
 		public userResolve: UserResolve,
 		private route: ActivatedRoute,
 	) {
@@ -172,9 +172,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public loadData () {
 		forkJoin(
-			this.RccAssetDataDetailsService
+			this.rccService
 			.getAssetSummaryData(this.assetRowParams),
-			this.RccAssetDataDetailsService
+			this.rccService
 			.getRccAssetFilterData(this.assetRowParams),
 			)
 			.pipe(
@@ -218,7 +218,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public getAssetPolicyGridData (params: any) {
 		this.assetRowParams = _.cloneDeep(params);
-		this.RccAssetDataDetailsService
+		this.rccService
 				.getAssetSummaryData(this.assetRowParams)
 		.pipe(
 			takeUntil(this.destroy$),
