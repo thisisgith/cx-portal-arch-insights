@@ -115,41 +115,25 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 						sortable: true,
 						sortDirection: 'desc',
 						sorting: true,
-						width: '10%',
+						width: '25%',
 					},
 					{
 						name: I18n.get('_OsvReleaseDate_'),
 						sortable: false,
 						template: this.releaseDateTemplate,
+						width: '25%',
 					},
 					{
 						key: 'assetCount',
 						name: I18n.get('_OsvIndependentAssets_'),
 						sortable: false,
-					},
-					{
-						key: 'profileAssetCount',
-						name: I18n.get('_OsvAssetsOfSoftwareProfiles_'),
-						sortable: false,
-					},
-					{
-						key: 'goldenVersion',
-						name: I18n.get('_OsvGoldenImage_'),
-						render: item => item.optimalVersion ? I18n.get('_OsvYes_')
-							: I18n.get('_OsvNo_'),
-						sortable: false,
+						width: '25%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
-					},
-					{
-						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersionY/N_'),
-						render: item => item.optimalVersion ? I18n.get('_OsvYes_')
-							: I18n.get('_OsvNo_'),
-						sortable: false,
+						width: '25%',
 					},
 				],
 				dynamicData: true,

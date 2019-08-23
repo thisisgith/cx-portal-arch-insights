@@ -157,7 +157,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 		return _.compact(
 			_.map(this.data, (value: AssetRecommendations) => {
 				const releaseDate = new Date(value.postDate);
-				if (!value.error) {
+				if (!value.error && !_.isNull(value.postDate)) {
 					return {
 						accepted: value.accepted,
 						description: value.name,
