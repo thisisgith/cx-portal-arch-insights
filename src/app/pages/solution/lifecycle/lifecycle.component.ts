@@ -144,6 +144,9 @@ export class LifecycleComponent implements OnDestroy {
 	public scrollY = 0;
 	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
+	public moreATXSelected: AtxSchema;
+	public moreXCoordinates = 0;
+	public moreYCoordinates = 0;
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
@@ -1163,6 +1166,18 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Gets the coordinates of the hovered ATX item
+	 * @param moreList HTMLElement
+	 * @param panel string
+	 */
+	 public getMoreCoordinates (moreList: HTMLElement, panel: string) {
+		if (_.isEqual(panel, 'moreATXList') && !this.atxScheduleCardOpened) {
+			this.moreXCoordinates = moreList.offsetWidth;
+			this.moreYCoordinates = moreList.offsetTop;
+		}
+	}
+
+	/**
 	 * Get the panel styles based on button coordinates
 	 * @param viewAtxSessions HTMLElement
 	 * @returns panel string
@@ -1194,6 +1209,10 @@ export class LifecycleComponent implements OnDestroy {
 					panel = 'panel listpanel--open';
 				}
 			}
+		} else if (this.atxScheduleCardOpened && this.moreATXSelected) {
+			_div.style.left = `${this.moreXCoordinates}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '40%';
 			_div.style.bottom = '10px';

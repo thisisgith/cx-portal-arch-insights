@@ -387,6 +387,42 @@ describe('LifecycleComponent', () => {
 				.toBeFalsy();
 		});
 
+		it('should show the selected atx sessions in ATX More', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			const recommended = component.componentData.atx.recommended;
+
+			de = fixture.debugElement.query(By.css('#recommendedATXScheduleButton'));
+
+			expect(de)
+				.toBeTruthy();
+
+			component.eventXCoordinates = 0;
+			(<any> window).innerWidth = 1200;
+			component.atxScheduleCardOpened = true;
+			component.moreATXSelected = { };
+			let viewAtxSessions: HTMLElement;
+			viewAtxSessions = document.createElement('viewAtxSessions');
+
+			const panel = component.getPanel(viewAtxSessions);
+
+			fixture.detectChanges();
+
+			expect(panel)
+				.toEqual('panel panel--open');
+
+			component.getMoreCoordinates(viewAtxSessions, 'moreATXList');
+
+			expect(component.moreXCoordinates)
+				.toBeGreaterThanOrEqual(0);
+
+			expect(component.moreYCoordinates)
+				.toBeGreaterThanOrEqual(0);
+		});
+
 		it('should show the atx view-all modal', () => {
 			buildSpies();
 			sendParams();
