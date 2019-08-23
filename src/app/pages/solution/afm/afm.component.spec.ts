@@ -8,7 +8,7 @@ import { environment } from '@environment';
 import { of } from 'rxjs';
 import { user } from '@mock';
 import {
-	AfmService, AfmSearchParams, Alarm,
+	AfmService, AfmSearchParams, Alarm, AfmFilter,
 } from '@sdp-api';
 
 describe('AfmComponent', () => {
@@ -19,6 +19,7 @@ describe('AfmComponent', () => {
 	const mockAlarm: Alarm = new Object();
 	let afmService: AfmService;
 	const afmFilter: any = new Object();
+	const filters: AfmFilter[] = Object.create({ });
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -177,8 +178,59 @@ describe('AfmComponent', () => {
 			.returnValue(of(<any> AfmScenarios[3].scenarios.POST[0].response.body));
 		const subfilter = 12;
 		afmFilter.seriesData = [];
-		component.onTimeRangefilterSelect(subfilter, afmFilter);
+		component.onTimeRangefilterSelect(subfilter, afmFilter, true);
 		expect(afmService.getTimeRangeFilteredEvents)
+			.toHaveBeenCalled();
+	});
+
+	it('should return filters', () => {
+		component.filters =  [
+			{
+				key: 'abc',
+				loading: true,
+				selected: true,
+				seriesData: [
+					{
+						filter: '',
+						label: '',
+						selected: true,
+						value: 12,
+					},
+				],
+				title: '',
+			}];
+		component.getSelectedSubFilters('abc');
+		expect(component.getSelectedSubFilters('abc'))
+		.toBeDefined();
+	});
+
+	it('should clear filters', () => {
+		component.filters =  [
+			{
+				key: 'abc',
+				loading: true,
+				selected: true,
+				seriesData: [
+					{
+						filter: '',
+						label: '',
+						selected: true,
+						value: 12,
+					},
+				],
+				title: '',
+			}];
+		component.clearFilters();
+		expect(component.filtered)
+		.toBeFalsy();
+	});
+
+	it('should export all events to csv', () => {
+		spyOn(afmService, 'exportAllRecords')
+			.and
+			.returnValue(of(<any> AfmScenarios[7].scenarios.GET[0].response.body));
+		component.exportAllEvents();
+		expect(afmService.exportAllRecords)
 			.toHaveBeenCalled();
 	});
 
@@ -242,6 +294,26 @@ describe('AfmComponent', () => {
 			mockAfmSearchParams.headerFilterType = 'ALARM';
 			mockAfmSearchParams.searchTerm = '';
 			fixture.detectChanges();
+			component.aggregationCount.set('Day1', 1)
+			.set('Days7', 1);
+			component.allAlarmFilter();
+			expect(component.loading)
+				.toBeFalsy();
+			expect(afmService.getAfmAlarms)
+				.toHaveBeenCalled();
+		});
+
+		it('should load afm alarms with failed status', () => {
+			spyOn(afmService, 'getAfmAlarms')
+				.and
+				.returnValue(of(<any> AfmScenarios[8].scenarios.POST[0].response.body));
+			mockAfmSearchParams.pageSize = 10;
+			mockAfmSearchParams.pageNumber = 1;
+			mockAfmSearchParams.headerFilterType = 'ALARM';
+			mockAfmSearchParams.searchTerm = '';
+			fixture.detectChanges();
+			component.aggregationCount.set('Day1', 1)
+			.set('Days7', 1);
 			component.allAlarmFilter();
 			expect(component.loading)
 				.toBeFalsy();
@@ -269,6 +341,7 @@ describe('AfmComponent', () => {
 				.toHaveBeenCalled();
 		});
 
+		it('should ')
 	});
 
 });

@@ -62,7 +62,7 @@
 	"_AfmShowingXofYAlarms_": "Showing {0} of {1} alarms",
 	"_AfmShowingXofYAlarmsAccrossZAlarms_": "Showing {0} of {1} alarms across {2} alarms",
 	"_AfmShwoingOfflineXError_": "Offline ({0})",
-	"_AfmShwoingOfflineXminutes_": "Offline (Last online : {0} mins ago)",
+	"_AfmShwoingOfflineXminutes_": "Offline (Last online : {0})",
 	"_AfmShwoingOnline_": "Connected",
 	"_AfmStatus_": "Event Status",
 	"_AfmSyslog_": "Syslog",

@@ -1,7 +1,9 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-
 import { LogService } from '@cisco-ngx/cui-services';
 import { Alarm, AfmSearchParams, AfmService } from '@sdp-api';
+import { Subject } from 'rxjs';
+import { UserResolve } from '@utilities';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Afm details panal header
@@ -13,8 +15,11 @@ import { Alarm, AfmSearchParams, AfmService } from '@sdp-api';
 })
 export class AfmDetailsComponent {
 
+	private destroyed$: Subject<void> = new Subject<void>();
+	private destroy$ = new Subject();
 	private searchParams: AfmSearchParams;
 	public ignoreStatus: string;
+	public errorDesc: string;
 
 	@Input('alarm') public alarm: Alarm;
 	@Output()
@@ -22,9 +27,24 @@ export class AfmDetailsComponent {
 
 	constructor (
 		private logger: LogService, private afmService: AfmService,
+		private userResolve: UserResolve,
 	) {
 		this.logger.debug('AFM Detaisls Component Created!');
 		this.searchParams = new Object();
+		this.userResolve.getCustomerId()
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe((id: string) => {
+				this.searchParams.customerId = id;
+			});
+	}
+
+	/**
+	 * Initialize error description
+	 */
+	public ngOnChanges () {
+		this.errorDesc = this.alarm.errorDesc;
 	}
 
 	/**
@@ -43,16 +63,25 @@ export class AfmDetailsComponent {
 	public toggleEvent (alarmData: Alarm) {
 		this.searchParams.customerId = alarmData.customerId;
 		this.searchParams.faultIC = alarmData.faultIC;
-		if (alarmData.status !== 'Ignored') {
+		if (alarmData.status.toUpperCase() !== 'IGNORED') {
 			this.afmService.ignoreEvent(this.searchParams)
+				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
 					this.ignoreStatus = response.statusMessage;
 				});
 		} else {
 			this.afmService.revertIgnoreEvent(this.searchParams)
+				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
 					this.ignoreStatus = response.statusMessage;
 				});
 		}
 	}
+
+	/** Function used to destroy the component */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
+	}
+
 }

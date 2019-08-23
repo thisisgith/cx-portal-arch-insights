@@ -74,15 +74,20 @@
 	<div class="flex col-md-12">
 		<div class="col-md-4">
 			<label class="switch">
-				<input type="checkbox" [checked]="alarm?.status === 'Ignored'" class="ng-valid ng-dirty ng-touched"
+				<input type="checkbox" [checked]="alarm?.status === 'IGNORED'" class="ng-valid ng-dirty ng-touched"
 					(change)="toggleEvent(alarm)">
 				<span class="switch__input"></span>
 				<span class="switch__label" [innerText]="'_AfmIgnoreEvent_'|i18n"></span>
 			</label>
 		</div>
-		<div class="col-md-8 text-right" *ngIf="alarm?.tacCaseNo">
-			<button class="btn btn--small btn--gray-ghost text-uppercase qtr-margin-bottom disabled"
+		<div class="col-md-8 text-right" *ngIf="alarm?.raiseSr && alarm?.tacCaseNo">
+			<button id="viewDisabled" class="btn btn--small btn--gray-ghost text-uppercase disabled"
 				[innerText]="'_AfmCaseIdX_'|i18n:alarm?.tacCaseNo"></button>
+		</div>
+		<div class="col-md-8 text-right" title="{{errorDesc}}"
+			*ngIf="alarm?.raiseSr && alarm?.srStatus === 'FAILED'">
+			<button id="opacity" class="btn btn--small btn--wide btn--gray-ghost text-uppercase disabled"
+				[innerText]="'_AfmCaseIdX_'|i18n:'entitlement failed'"></button>
 		</div>
 	</div>
 	<div class="col-md-12">
