@@ -73,6 +73,12 @@ export class FpSimilarAssetsComponent {
 			similarDevices: [],
 		};
 		this.similarDevicesGridInit();
+		this.requestForm.valueChanges
+		.pipe(debounceTime(1000))
+		.subscribe(val => {
+			this.loadSimilarDevicesData();
+			this.logger.info(val);
+		});
 	}
 
 	/**
@@ -119,12 +125,6 @@ export class FpSimilarAssetsComponent {
 			this.productId = currentAsset.productId;
 			this.loadSimilarDevicesData();
 		}
-		this.requestForm.valueChanges
-			.pipe(debounceTime(1000))
-			.subscribe(val => {
-				this.loadSimilarDevicesData();
-				this.logger.info(val);
-			});
 	}
 
 	/**

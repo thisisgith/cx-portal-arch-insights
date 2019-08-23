@@ -285,8 +285,8 @@
 	></cui-table>
 </details-panel>
 <details-panel
-	*ngIf="showFpDetails"
-	[hidden]="!showFpDetails"
+	*ngIf="showFpDetails  && !showAsset360"
+	[hidden]="!showFpDetails  && showAsset360"
 	[fullscreen]="fullscreen"
 >
 	<details-panel-header

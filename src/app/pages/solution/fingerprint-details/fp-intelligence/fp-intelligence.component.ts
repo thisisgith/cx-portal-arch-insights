@@ -56,6 +56,11 @@ export class FpIntelligenceComponent implements OnChanges {
 	 */
 	public ngOnInit (): void {
 		this.logger.info('Similar Device Distribution Loaded');
+		this.requestForm.valueChanges.pipe(debounceTime(1000))
+		.subscribe(val => {
+			this.logger.info(val);
+			this.loadSimilarDevicesDistribution();
+		});
 	}
 	/**
 	 * asset
@@ -67,11 +72,6 @@ export class FpIntelligenceComponent implements OnChanges {
 			this.deviceId = currentAsset.deviceId;
 			this.loadSimilarDevicesDistribution();
 		}
-		this.requestForm.valueChanges.pipe(debounceTime(1000))
-		.subscribe(val => {
-			this.logger.info(val);
-			this.loadSimilarDevicesDistribution();
-		});
 	}
 	/**
 	 * similarDevicesDisteribution
