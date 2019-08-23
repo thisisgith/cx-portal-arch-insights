@@ -9,7 +9,7 @@
 	[formGroup]="feedbackForm"
 	*ngIf="feedbackForm"
 	novalidate>
-	<div>
+	<div class="half-margin-bottom">
 		<a><span id="upVoteBtn" 
 			class="icon-like"
 			[ngClass]="{
@@ -27,7 +27,7 @@
 			(click)="voteClicked('thumbsDown')">
 		</span></a>
 	</div>
-	<div class="flex-fill form-group input--compressed base-margin-top half-margin-left half-margin-right">
+	<div class="flex-fill form-group input--compressed half-margin-top half-margin-left half-margin-right">
 		<div class="form-group__text">
 			<input #feedback
 				id="feedback"
@@ -39,7 +39,7 @@
 				[placeholder]="'_TellUsWhatYouThink_' | i18n">
 		</div>​
 	</div>
-	<button class="btn btn--small base-margin-right"
+	<button class="btn btn--small base-margin-right half-margin-bottom"
 		type="submit"
 		data-auto-id="SubmitFeedback"
 		[disabled]="(!feedbackForm.valid || !feedbackForm.dirty || isSubmitting)"
