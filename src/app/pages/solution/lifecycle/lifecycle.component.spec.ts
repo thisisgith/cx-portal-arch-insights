@@ -963,9 +963,9 @@ describe('LifecycleComponent', () => {
 			sendParams();
 			fixture.detectChanges();
 
-			de = fixture.debugElement.query(By.css('#compActPct'));
+			de = fixture.debugElement.query(By.css('.comPertText'));
 			el = de.nativeElement;
-			expect(el.innerText)
+			expect(el.innerHTML)
 				.toEqual('25%');
 		});
 
