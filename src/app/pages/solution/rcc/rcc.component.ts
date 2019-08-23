@@ -303,7 +303,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public getFiltersData () {
 		this.loading = true;
 		this.RccTrackService
-			.getViolationCount()
+			.getViolationCount({ customerId: this.customerId })
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(filterData => {
 				this.filterObj = filterData;
@@ -333,7 +333,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public getAssetFiltersData () {
 		this.loading = true;
 		this.RccTrackService
-			.getAssetCount()
+			.getAssetCount({ customerId: this.customerId })
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(assetFilterData => {
 				this.assetFilterObj = assetFilterData;

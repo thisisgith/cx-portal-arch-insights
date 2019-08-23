@@ -199,6 +199,7 @@ describe('RccComponent', () => {
 				fixture.detectChanges();
 				const view = 'asset';
 				component.selectedAssetView(view);
+				fixture.detectChanges();
 				expect(component.tableConfig)
 					.toBeTruthy();
 				done();
