@@ -1,0 +1,80 @@
+<div class="dbl-padding-right dbl-padding-left base-padding-top compare-body">
+	<div class="compare-area" data-simplebar>
+		<ng-container *ngIf="compareView == 'hardware'">
+			<div *ngFor="let hardware of hardwareData?.common">
+				<div class="row">
+					<div class="col-md-6 pull-left">{{hardware}}</div>
+					<div class="col-md-6 pull-right">{{hardware}}</div>
+				</div>
+			</div>
+			<div *ngFor="let hardware of hardwareData?.unique[0].data">
+				<div class="row">
+					<div class="uniquehighlight">
+						<div class="col-md-6 pull-left">{{hardware}}</div>
+						<div class="col-md-6 pull-right">&#8212;</div>
+					</div>
+				</div>
+			</div>
+			<div *ngFor="let hardware of hardwareData?.unique[1].data">
+				<div class="row">
+					<div class="uniquehighlight">
+						<div class="col-md-6 pull-left">&#8212;</div>
+						<div class="col-md-6 pull-right">{{hardware}}</div>
+					</div>
+				</div>
+			</div>
+		</ng-container>
+
+		<ng-container *ngIf="compareView == 'software'">
+			<div *ngFor="let software of softwareData?.common">
+				<div class="row">
+					<div class="col-md-6 pull-left">{{software}}</div>
+					<div class="col-md-6 pull-right">{{software}}</div>
+				</div>
+			</div>
+
+			<div *ngFor="let software of softwareData?.unique[0].data">
+				<div class="row">
+					<div class="uniquehighlight">
+						<div class="col-md-6 pull-left">{{software}}</div>
+						<div class="col-md-6 pull-right">&#8212;</div>
+					</div>
+				</div>
+			</div>
+			<div *ngFor="let software of softwareData?.unique[1].data">
+				<div class="row">
+					<div class="uniquehighlight">
+						<div class="col-md-6 pull-left">&#8212;</div>
+						<div class="col-md-6 pull-right">{{software}}</div>
+					</div>
+				</div>
+			</div>
+		</ng-container>
+
+		<ng-container *ngIf="compareView == 'feature'">
+			<div *ngFor="let features of featuresData?.common">
+				<div class="row">
+					<div class="col-md-6 pull-left">{{features}}</div>
+					<div class="col-md-6 pull-right">{{features}}</div>
+				</div>
+			</div>
+			<div *ngFor="let features of featuresData?.unique[0].data">
+				<div class="row">
+					<div class="uniquehighlight">
+						<div class="col-md-6 pull-left">{{features}}</div>
+						<div class="col-md-6 pull-right">&#8212;</div>
+					</div>
+				</div>
+			</div>
+			<div *ngFor="let features of featuresData?.unique[1].data">
+				<div class="row">
+					<div class="uniquehighlight">
+						<div class="col-md-6 pull-left">&#8212;</div>
+						<div class="col-md-6 pull-right">{{features}}</div>
+					</div>
+				</div>
+			</div>
+		</ng-container>
+
+	</div>
+</div>

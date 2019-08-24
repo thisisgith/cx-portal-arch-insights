@@ -8,8 +8,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { user, OSVScenarios } from '@mock';
-import { OSVService, SummaryResponse } from '@sdp-api';
+import { user } from '@mock';
+import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
@@ -81,20 +81,12 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				const totalFilter = _.find(component.filters, { key: 'totalAssets' });
-				const deploymentStatus = _.find(component.filters, { key: 'deploymentStatus' });
 				const assetType = _.find(component.filters, { key: 'assetType' });
 
 				expect(_.find(component.filters, 'selected'))
 					.toEqual(totalFilter);
 
-				component.onSubfilterSelect('none', deploymentStatus);
-
-				fixture.detectChanges();
-
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(deploymentStatus);
-
-				component.onSubfilterSelect('assets_profile', assetType);
+				component.onSubfilterSelect('assets_without_profile', assetType);
 
 				fixture.detectChanges();
 
@@ -105,20 +97,21 @@ describe('OptimalSoftwareVersionComponent', () => {
 			});
 	});
 
-	it('should select a deploymentStatus subfilter', done => {
+	it('should select a assetType subfilter', done => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const deploymentStatusFilter = _.find(component.filters,
-					{ key: 'deploymentStatus' });
-				component.onSubfilterSelect('none', deploymentStatusFilter);
+				const assetTypeFilter = _.find(component.filters,
+					{ key: 'assetType' });
+				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
 				fixture.detectChanges();
 
 				expect(_.filter(component.filters, 'selected'))
-					.toContain(deploymentStatusFilter);
+					.toContain(assetTypeFilter);
 
-				const subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
+				const subfilter = _.find(assetTypeFilter.seriesData,
+				{ filter: 'assets_without_profile' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();
@@ -131,25 +124,27 @@ describe('OptimalSoftwareVersionComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const deploymentStatusFilter = _.find(component.filters,
-					{ key: 'deploymentStatus' });
-				component.onSubfilterSelect('none', deploymentStatusFilter);
+				const assetTypeFilter = _.find(component.filters,
+					{ key: 'assetType' });
+				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
 				fixture.detectChanges();
 
 				expect(_.filter(component.filters, 'selected'))
-					.toContain(deploymentStatusFilter);
+					.toContain(assetTypeFilter);
 
-				let subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
+				let subfilter = _.find(assetTypeFilter.seriesData,
+					{ filter: 'assets_without_profile' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();
 
-				component.onSubfilterSelect('none', deploymentStatusFilter);
+				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
 				fixture.detectChanges();
 
-				subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
+				subfilter = _.find(assetTypeFilter.seriesData,
+					{ filter: 'assets_without_profile' });
 
 				expect(subfilter.selected)
 					.toBeFalsy();
@@ -162,16 +157,17 @@ describe('OptimalSoftwareVersionComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const deploymentStatusFilter = _.find(component.filters,
-					{ key: 'deploymentStatus' });
-				component.onSubfilterSelect('none', deploymentStatusFilter);
+				const assetTypeFilter = _.find(component.filters,
+					{ key: 'assetType' });
+				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
 				fixture.detectChanges();
 
 				expect(_.filter(component.filters, 'selected'))
-					.toContain(deploymentStatusFilter);
+					.toContain(assetTypeFilter);
 
-				const subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
+				const subfilter = _.find(assetTypeFilter.seriesData,
+					{ filter: 'assets_without_profile' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();
@@ -208,16 +204,6 @@ describe('OptimalSoftwareVersionComponent', () => {
 		component.selectView('swVersions');
 		expect(component.view)
 			.toEqual('swVersions');
-	});
-
-	it('select softwareGroups view if the swProfile count is greater than zero', () => {
-		spyOn(osvService, 'getSummary')
-			.and
-			.returnValue(of(<SummaryResponse> OSVScenarios[0].scenarios.GET[0].response.body));
-		component.ngOnInit();
-		fixture.detectChanges();
-		expect(component.view)
-			.toEqual('swGroups');
 	});
 
 	it('select assets view if the assets count is equal to zero', () => {

@@ -21,6 +21,13 @@ import {
 } from './risk-mitigation-column-chart/risk-mitigation-column-chart.module';
 import { RMModule } from '@sdp-api';
 import { environment } from '@environment';
+import {
+	FingerprintHeaderModule,
+} from '../fingerprint-details/fingerprint-header/fingerprint-header.module';
+import {
+	FingerprintBodyModule ,
+} from '../fingerprint-details/fingerprint-body/fingerprint-body.module';
+import { FingerprintDetailsModule } from '../fingerprint-details/fingerprint-details.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -60,6 +67,9 @@ const childRoutes: Routes = [
 		AssetDetailsModule,
 		AssetDetailsHeaderModule,
 		CuiSpinnerModule,
+		FingerprintDetailsModule,
+		FingerprintHeaderModule,
+		FingerprintBodyModule,
 	],
 })
 export class RiskMitigationModule { }

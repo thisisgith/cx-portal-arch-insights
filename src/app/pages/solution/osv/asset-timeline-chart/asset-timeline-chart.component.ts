@@ -68,6 +68,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 			},
 			plotOptions: {
 				timeline: {
+					className: 'timeline',
 					dataLabels: {
 						borderWidth: 0,
 						connectorColor: '#049fd9',
@@ -99,7 +100,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						fillColor: '#049fd9',
 						lineColor: '#049fd9',
 						lineWidth: 1,
-						radius: 6,
+						radius: 3,
 						symbol: '',
 					},
 				},
@@ -114,11 +115,17 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 				text: null,
 			},
 			tooltip: {
+				backgroundColor: '#39393b',
+				borderColor: '#39393b',
 				enabled: true,
+				/* tslint:disable:ter-max-len */
+				headerFormat: '<span style="font-size:12px;font-weight:bold;">{point.key}</span><br/>',
 				pointFormat: '{point.info}',
 				style: {
 					width: 300,
+					color: '#fff',
 				},
+				useHTML: true,
 			},
 			xAxis: {
 				lineColor: '#dfdfdf',
@@ -150,7 +157,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 		return _.compact(
 			_.map(this.data, (value: AssetRecommendations) => {
 				const releaseDate = new Date(value.postDate);
-				if (!value.error) {
+				if (!value.error && !_.isNull(value.postDate)) {
 					return {
 						accepted: value.accepted,
 						description: value.name,
