@@ -182,6 +182,11 @@ export class RccComponent implements OnInit, OnDestroy {
 					template: this.severityColorTemplate,
 				},
 				{
+					key: 'violationcount',
+					name: I18n.get('_RccViolationCount_'),
+					sortable: true,
+				},
+				{
 					key: 'policygroupid',
 					name: I18n.get('_RccPolicyGroup_'),
 					sortable: true,
@@ -199,11 +204,6 @@ export class RccComponent implements OnInit, OnDestroy {
 				{
 					key: 'ruletitle',
 					name: I18n.get('_RccRuleName_'),
-					sortable: true,
-				},
-				{
-					key: 'violationcount',
-					name: I18n.get('_RccViolationCount_'),
 					sortable: true,
 				},
 				{

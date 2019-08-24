@@ -3,7 +3,7 @@ import { RccAssetViolationDetailsComponent } from './rcc-asset-violation-details
 import { RccAssetViolationDetailsModule } from './rcc-asset-violation-details.module';
 import { of } from 'rxjs';
 import { RCCScenarios, user } from '@mock';
-import { RccAssetDetailsService } from '@sdp-api';
+import { RccService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 describe('RccAssetViolationDetailsComponent', () => {
 	let component: RccAssetViolationDetailsComponent;
 	let fixture: ComponentFixture<RccAssetViolationDetailsComponent>;
-	let rccAssetDetailsService: RccAssetDetailsService;
+	let rccAssetDetailsService: RccService;
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [RccAssetViolationDetailsModule,
@@ -37,7 +37,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			}],
 		})
 			.compileComponents();
-		rccAssetDetailsService = TestBed.get(RccAssetDetailsService);
+		rccAssetDetailsService = TestBed.get(RccService);
 	}));
 
 	beforeEach(() => {
@@ -193,6 +193,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortDirection: 'asc',
 		};
 		component.onTableSortingChanged(sortObj);
-		component.getAssetPolicyGridData(component.assetRowParams);
+		component.getAssetPolicyGridData();
 	});
 });

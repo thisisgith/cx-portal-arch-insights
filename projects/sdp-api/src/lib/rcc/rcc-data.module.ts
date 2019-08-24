@@ -3,11 +3,10 @@ import { NgModule, ModuleWithProviders } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RccConfiguration } from "./rcc-configuration";
 import { RccService } from "./services/rcc.service";
-import { RccAssetDetailsService } from "./services/rcc-asset-details.service";
 @NgModule({
 	declarations: [],
 	imports: [CommonModule],
-	providers: [RccConfiguration, RccService, RccAssetDetailsService ],
+	providers: [RccConfiguration, RccService, ],
 	
 })
 export class RccDataModule {

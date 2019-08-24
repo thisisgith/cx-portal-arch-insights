@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild, TemplateRef, SimpleChanges } from 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { Subscription, Subject, forkJoin } from 'rxjs';
-import { RccAssetSelectReq, RccAssetDetailsService } from '@sdp-api';
+import { RccAssetSelectReq, RccService } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
 export class RccAssetViolationDetailsComponent implements OnInit {
 	constructor (
 		private logger: LogService,
-		private RccAssetDataDetailsService: RccAssetDetailsService,
+		private rccService: RccService,
 		public userResolve: UserResolve,
 		private route: ActivatedRoute,
 	) {
@@ -151,7 +151,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const selectedData = _.get(changes, ['selectedAssetData', 'currentValue']);
-		if (selectedData && !changes.selectedAssetData.firstChange) {
+		const isFirstChange = _.get(changes, ['selectedAssetData', 'firstChange']);
+		if (selectedData && !isFirstChange) {
 			this.assetRowParams = {
 				customerId: this.customerId,
 				pageIndex: 0,
@@ -164,7 +165,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				sortOrder: '',
 			};
 			this.loadData();
-	 }
+		}
 	}
 
 	/**
@@ -172,9 +173,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public loadData () {
 		forkJoin(
-			this.RccAssetDataDetailsService
+			this.rccService
 			.getAssetSummaryData(this.assetRowParams),
-			this.RccAssetDataDetailsService
+			this.rccService
 			.getRccAssetFilterData(this.assetRowParams),
 			)
 			.pipe(
@@ -209,28 +210,38 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				this.rccAssetPolicyTableData = [];
 				this.rccAssetPolicyTableData = assetViolations.data.violation;
 				this.totalItems = this.rccAssetPolicyTableData.length;
-			});
+			},
+				error => {
+					this.logger.error(
+						'rcc-asset-violation-details.component : loadData() ' +
+					`:: Error : (${error.status}) ${error.message}`);
+				});
 	}
 	/**
 	 * method to return table information
 	 * @param params is a request object
 	 * @returns empty on error
 	 */
-	public getAssetPolicyGridData (params: any) {
-		this.assetRowParams = _.cloneDeep(params);
-		this.RccAssetDataDetailsService
-				.getAssetSummaryData(this.assetRowParams)
-		.pipe(
+	public getAssetPolicyGridData () {
+		const params = _.cloneDeep(this.assetRowParams);
+		this.rccService.getAssetSummaryData(params)
+			.pipe(
 			takeUntil(this.destroy$),
 		)
-		.subscribe(([assetViolations]) => {
-			this.rccAssetPolicyTableData = [];
-			this.rccAssetPolicyTableData = assetViolations.data.violation;
-			if (this.rccAssetPolicyTableData) {
-				this.totalItems = this.rccAssetPolicyTableData.length;
-			}
-		}, (error: any) =>
-			error);
+			.subscribe(
+				([assetViolations]) => {
+					this.rccAssetPolicyTableData = assetViolations.data.violation;
+					if (this.rccAssetPolicyTableData) {
+						this.totalItems = _.size(this.rccAssetPolicyTableData);
+					}
+				},
+				error => {
+					this.logger.error(
+						'rcc-asset-violation-details.component : getAssetPolicyGridData() ' +
+					`:: Error : (${error.status}) ${error.message}`);
+				},
+			);
+
 	}
 
 	/**
@@ -239,7 +250,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public onPolicyGroupSelection (event: any) {
 		this.assetRowParams.policyGroupName = event;
-		this.getAssetPolicyGridData(this.assetRowParams);
+		this.getAssetPolicyGridData();
 	}
 
 	/**
@@ -248,7 +259,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public onPolicyNameSelection (event: any) {
 		this.assetRowParams.policyName = event;
-		this.getAssetPolicyGridData(this.assetRowParams);
+		this.getAssetPolicyGridData();
 	}
 
 	/**
@@ -257,7 +268,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public onPolicySeveritySelection (event: any) {
 		this.assetRowParams.severity = event;
-		this.getAssetPolicyGridData(this.assetRowParams);
+		this.getAssetPolicyGridData();
 	}
 
 	/**
@@ -276,7 +287,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public onTableSortingChanged (event: any) {
 		this.assetRowParams.sortBy = event.key;
 		this.assetRowParams.sortOrder = event.sortDirection;
-		this.getAssetPolicyGridData(this.assetRowParams);
+		this.getAssetPolicyGridData();
 	}
 	/**
 	 * destroy method to kill the services

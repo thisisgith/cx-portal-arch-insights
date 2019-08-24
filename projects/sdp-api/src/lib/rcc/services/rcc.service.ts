@@ -7,52 +7,82 @@ import { Observable as __Observable } from 'rxjs';
 import { RccConfiguration as __Configuration } from "../rcc-configuration";
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { RccData } from "../models/rcc-data";
-import { RccGridData, RccAssetGridData } from './../models/rcc-grid-data';
+import { RccGridData, RccAssetGridData, } from './../models/rcc-grid-data';
+import { RccAssetDetails ,RccAssetDetailsReqData, RccAssetSelectReq, RccAssetFilterResponse, RccAssetFilterDetailsResponse } from './../models/rcc-asset-details';
+
 @Injectable({
 	providedIn: "root"
 })
 class RccService extends __BaseService {
+	
+	static readonly getViolationCount = '/api/customerportal/compliance/v1/service/summary-filters';
+	static readonly getAssetCount = '/api/customerportal/compliance/v1/service/severity-ostype-detail';
+	static readonly getGridData = '/api/customerportal/compliance/v1/service/violation-summary';
+	static readonly getAssetGridData = '/api/customerportal/compliance/v1/service/filter-asset-detail';
+	static readonly getRccPolicyRuleDetailsData = '/api/customerportal/compliance/v1/service/policy-rule-details';
+	static readonly getRccViolationDetailsData = '/api/customerportal/compliance/v1/service/violation-details';
+	static readonly getAssetSummaryData = '/api/customerportal/compliance/v1/service/fetch-violation-details';
+	static readonly getRccAssetFilterData = '/api/customerportal/compliance/v1/service/fetch-violation-details-filter';
+
 	constructor(config: __Configuration, http: HttpClient) {
 		super(config, http);
 	}
 
 	getViolationCount(queryParamMapObj: object): __Observable<any> {
-		let url = `${this.rootUrl}/api/customerportal/compliance/v1/service/summary-filters`;
+		let url = `${this.rootUrl}${RccService.getViolationCount}`;
 		return this.invokeHTTPGet<RccData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 
 	getAssetCount(queryParamMapObj: object): __Observable<any> {
-		let url = `${this.rootUrl}/api/customerportal/compliance/v1/service/severity-ostype-detail`;
+		let url = `${this.rootUrl}${RccService.getAssetCount}`;
 		return this.invokeHTTPGet<RccData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 
 	getGridData(queryParamMapObj: object): __Observable<any> {
-		let url = `${this.rootUrl}/api/customerportal/compliance/v1/service/violation-summary`;
+		let url = `${this.rootUrl}${RccService.getGridData}`;
 		return this.invokeHTTPGet<RccGridData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 
 	getAssetGridData(queryParamMapObj: object): __Observable<any> {
-		let url = `${this.rootUrl}/api/customerportal/compliance/v1/service/filter-asset-detail`;
+		let url = `${this.rootUrl}${RccService.getAssetGridData}`;
 		return this.invokeHTTPGet<RccAssetGridData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 	getRccPolicyRuleDetailsData(queryParamMapObj: object): __Observable<any> {
-		let url = `${this.rootUrl}/api/customerportal/compliance/v1/service/policy-rule-details`;
+		let url = `${this.rootUrl}${RccService.getRccPolicyRuleDetailsData}`;
 		return this.invokeHTTPGet<RccAssetGridData>(url, queryParamMapObj).pipe(
 			__map(_r => _r.body)
 		);
 	}
 
 	getRccViolationDetailsData(queryParamMapObj: object): __Observable<any> {
-		let url = `${this.rootUrl}/api/customerportal/compliance/v1/service/violation-details`;
+		let url = `${this.rootUrl}${RccService.getRccViolationDetailsData}`;
 		return this.invokeHTTPGet<RccAssetGridData>(url, queryParamMapObj).pipe(
+			__map(_r => _r.body)
+		);
+	}
+
+	getAssetSummaryData(queryParamMapObj: RccAssetSelectReq): __Observable<any> {
+		return this.invokeHTTPGet<RccAssetDetails>(
+			`${this.rootUrl}${RccService.getAssetSummaryData}`,
+			queryParamMapObj
+		).pipe(
+			__map(_r => _r.body)
+		);
+	}
+
+	getRccAssetFilterData(queryParamMapObj: RccAssetSelectReq): __Observable<any> {
+		return this.invokeHTTPGet<RccAssetFilterResponse>(
+			`${this.rootUrl}${RccService.getRccAssetFilterData}`,
+			queryParamMapObj
+		).pipe(
 			__map(_r => _r.body)
 		);
 	}
