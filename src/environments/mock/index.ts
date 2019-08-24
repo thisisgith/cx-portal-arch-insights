@@ -67,3 +67,5 @@ export * from './user/entitlement';
 export * from './architecture/architecture';
 
 export * from '../mock/afm/afm';
+
+export { ComparisonViewScenarios } from './crash-prevention/comparisonview';

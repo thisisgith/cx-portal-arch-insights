@@ -4,14 +4,6 @@ const api = 'compliance/v1/service/';
 /** Default Customer ID */
 const customerId = '7293498';
 
-/** Default Asset Id */
-const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
-
-/** softwareVersion Params */
-const violationParams = '&pageIndex=1&pageSize=10&sort=swVersion&sortOrder=desc';
-/** AssetList params */
-const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc&filter=';
-
 /** This is mock data for violationDetails  */
 const violationDetails: any = {
 	data: {
@@ -64,7 +56,7 @@ const policyRuleDetails: any = {
 			desc: 'By using AAA along with security server, you ',
 			group: 'PCI_IOS_XE_GROUP',
 			name: 'AAA Authentication - Login [ IOS-XE ]',
-			policyId: '_AAA_Authentication__Login__IOSXE_'
+			policyId: '_AAA_Authentication__Login__IOSXE_',
 		},
 		rule: {
 			desc: 'It is always important to choose the right order for the methods',
