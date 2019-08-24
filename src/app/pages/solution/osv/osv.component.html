@@ -8,7 +8,7 @@
 			</div>
 		</div>
 	</details-panel-header>
-	<asset-details [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
+	<asset-details  [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
 </details-panel>
 
 <div class="panel">
@@ -43,15 +43,15 @@
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
 	<div *ngIf="view == 'swGroups'">
-		<app-software-groups [(fullscreen)]="fullscreen"  [(selectedSoftwareGroup)]="selectedSoftwareGroup">
+		<app-software-groups (contactExpert)="openContactSupport()" [(fullscreen)]="fullscreen"  [(selectedSoftwareGroup)]="selectedSoftwareGroup">
 		</app-software-groups>
 	</div>
 	<div *ngIf="view == 'assets'">
-		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters"  [(selectedAsset)]="selectedAsset">
+		<app-assets (contactExpert)="openContactSupport()" [(fullscreen)]="fullscreen" [filters]="appliedFilters"  [(selectedAsset)]="selectedAsset">
 		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
-		<app-software-versions></app-software-versions>
+		<app-software-versions (contactExpert)="openContactSupport()"></app-software-versions>
 	</div>
 	<div *ngIf="!view" class="dbl-margin-top text-center text-xlarge">
 		<span [innerText]="'_OsvNoAssets_' | i18n"></span>
@@ -129,3 +129,4 @@
 	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
 	</pie-chart>
 </ng-template>
+<cui-modal></cui-modal>

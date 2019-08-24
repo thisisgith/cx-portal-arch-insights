@@ -1,0 +1,12 @@
+<cui-tabs>
+	<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
+		<ng-container *ngTemplateOutlet="compareRecommendations"></ng-container>
+	</cui-tab>
+	<cui-tab [label]="'_OsvSmartRecommendations' | i18n | uppercase" disabled="true">
+
+	</cui-tab>
+	<cui-tab [label]="'_OsvAssetsX_' | i18n:'0' | uppercase" disabled="true"></cui-tab>
+	<cui-tab [label]="'_OsvCurrentVersions_' | i18n:'0' | uppercase">
+
+	</cui-tab>
+</cui-tabs>

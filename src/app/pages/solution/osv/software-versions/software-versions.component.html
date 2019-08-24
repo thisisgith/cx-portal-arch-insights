@@ -7,6 +7,16 @@
 			</span>
 		</div>
 	</div>
+	<div class="col-md-3 text-right">
+		<div>
+			<span [innerText]="'_NeedSoftwareRecommendation_' | i18n"></span>
+			<br>
+			<a [title]="'_CSSupportLink_' | i18n" (click)="contactExpert.emit()" class="recommedation-link text-primary"
+				data-auto-id="ContactExpert">
+				{{'_RequestExpert_' | i18n}}
+			</a>
+		</div>
+	</div>
 </div>
 <div class="divider qtr-margin-top"></div>
 <ng-container *ngTemplateOutlet="tableSoftwareVersion"></ng-container>
@@ -22,9 +32,9 @@
 
 <ng-template #tableSoftwareVersion>
 	<div *ngIf="!status.isLoading &&  softwareVersions && softwareVersions?.length > 0">
-			<cui-table  [options]="softwareVersionsTable" [data]="softwareVersions"
+		<cui-table [options]="softwareVersionsTable" [data]="softwareVersions"
 			(onSortingChanged)="onTableSortingChanged($event)"></cui-table>
-	</div>	
+	</div>
 </ng-template>
 
 

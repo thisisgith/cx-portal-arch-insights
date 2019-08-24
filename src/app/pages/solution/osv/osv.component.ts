@@ -9,6 +9,8 @@ import {
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { ContactExpertComponent } from '../contact-expert/contact-expert.component';
 
 /**
  * Interface representing our visual filters
@@ -53,6 +55,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
+		private cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -126,8 +129,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				map((response: SummaryResponse) => {
 					totalAssetsFilter.loading = false;
 					assetTypeFilter.loading = false;
-					response.asset_profile.assets_profile = 0;
-					response.profiles = 0;
 					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
@@ -277,5 +278,12 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			assetType: '',
 			deploymentStatus: [],
 		};
+	}
+
+	/**
+	 * Open contact support modal
+	 */
+	public openContactSupport () {
+		this.cuiModalService.showComponent(ContactExpertComponent, { });
 	}
 }

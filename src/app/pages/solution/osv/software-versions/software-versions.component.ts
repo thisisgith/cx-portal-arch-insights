@@ -1,11 +1,24 @@
-import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
+import {
+	Component,
+	ViewChild,
+	TemplateRef,
+	OnInit,
+	OnDestroy,
+	EventEmitter,
+	Output,
+} from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { forkJoin, Subject, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
-import { OSVService, SoftwareVersionsResponse, OsvPagination, SoftwareVersion } from '@sdp-api';
+import {
+	OSVService,
+	SoftwareVersionsResponse,
+	OsvPagination,
+	SoftwareVersion,
+} from '@sdp-api';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
 
@@ -18,6 +31,7 @@ import { ActivatedRoute } from '@angular/router';
 	templateUrl: './software-versions.component.html',
 })
 export class SoftwareVersionsComponent implements OnInit, OnDestroy {
+	@Output() public contactExpert = new EventEmitter();
 	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
 	public softwareVersionsTable: CuiTableOptions;
 	public status = {
