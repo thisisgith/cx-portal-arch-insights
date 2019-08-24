@@ -9,7 +9,11 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService, SyslogDeviceData, SyslogDeviceDetailsdata, SyslogFilter, SyslogPanelIPSer } from '@sdp-api';
+import { SyslogsService,
+	SyslogDeviceData,
+	SyslogDeviceDetailsdata,
+	SyslogFilter,
+	SyslogPanelIPSer } from '@sdp-api';
 import { Subject, of, Subscription } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -220,7 +224,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public onPanelClose () {
 		this.selectedAsset = undefined;
 		this.showAssetPanel = false;
-	    this.showAsset360 = false;
+		this.showAsset360 = false;
 	}
 	/**
 	 * Determines whether pager updated on

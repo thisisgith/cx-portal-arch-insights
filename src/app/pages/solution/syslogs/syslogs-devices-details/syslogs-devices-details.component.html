@@ -32,13 +32,13 @@
 		</form>
 	</div>
 	<div class="col-md-3">
-		<cui-select label="Severity" [required]="false" [items]="severityList" placeholder="Select Severity"
+		<cui-select data-auto-id ="severity" label="Severity" [required]="false" [items]="severityList" placeholder="Select Severity"
 			[compressed]="false" [(ngModel)]="selectedSeverity" (ngModelChange)="onSelection()" optionsKey="name"
 			optionsValue="value">
 		</cui-select>
 	</div>
 	<div class="col-md-3">
-		<cui-select label="Time Range" [required]="false" [items]="timeRangeList" placeholder="Select timeRange"
+		<cui-select data-auto-id="timeRange" label="Time Range" [required]="false" [items]="timeRangeList" placeholder="Select timeRange"
 			[compressed]="false" [(ngModel)]="selectedTimeRange" (ngModelChange)="onSelection()" optionsKey="name"
 			optionsValue="value">
 		</cui-select>
