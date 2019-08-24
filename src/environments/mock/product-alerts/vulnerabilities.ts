@@ -13,6 +13,13 @@ const mockAdvisoryCounts: VulnerabilityResponse = {
 	'security-advisories': 6,
 };
 
+/** The mock response for a large coverage count */
+const mockLargeAdvisoryCounts: VulnerabilityResponse = {
+	bugs: 4562,
+	'field-notices': 67546,
+	'security-advisories': 4121,
+};
+
 /** The scenarios */
 export const VulnerabilityScenarios = [
 	{
@@ -41,6 +48,15 @@ export const VulnerabilityScenarios = [
 					description: 'Advisory Counts - Missing keys',
 					response: {
 						body: _.pick(mockAdvisoryCounts, ['bugs']),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: 100,
+					description: 'Advisory Counts - Large',
+					response: {
+						body: mockLargeAdvisoryCounts,
 						status: 200,
 					},
 					selected: true,

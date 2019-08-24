@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SyslogsComponent } from './syslogs.component';
@@ -41,7 +40,6 @@ const childRoutes: Routes = [
 		FormsModule,
 		ReactiveFormsModule,
 		CuiDropdownModule,
-		HttpClientModule,
 		I18nPipeModule,
 		CuiTabsModule,
 		CuiTableModule,

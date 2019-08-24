@@ -8,6 +8,7 @@ import {
 	OnInit,
 	OnDestroy,
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { MicroMockService } from '@cui-x-views/mock';
 import { HeaderDropdownComponent } from './header-dropdown/header-dropdown.component';
 import { SearchComponent } from '../search/search.component';
@@ -39,6 +40,9 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	public email: string;
 	public userImage: string;
 	public innerWidth: number;
+	public team: any[];
+	public webexUrl = environment.webexUrl;
+	public webexTeamsUrl = environment.webexTeamsUrl;
 	// TODO: Quick Help is not in the August release
 	// public quickHelpLinks = [{
 	// 	name: 'Open a Support Case',
@@ -65,6 +69,7 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	constructor (
 		private mockService: MicroMockService,
 		private userResolve: UserResolve,
+		private sanitizer: DomSanitizer,
 		private cuiModalService: CuiModalService,
 	) {
 		this.updateProfileImage();
@@ -78,6 +83,14 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 			this.fullName = `${this.name} ${lastName}`;
 			this.email = _.get(user, ['info', 'individual', 'emailAddress'], '');
 			this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
+			this.team = _.cloneDeep(_.get(user, ['info', 'account', 'team'], []));
+			this.team.forEach(member => {
+				_.set(
+					member,
+					'image',
+					this.generateAvatar(`${_.head(member.name)}${_.head(member.familyName)}`),
+				);
+			});
 			if (!this.userImage || this.initials === '??') {
 				this.initials = `${_.head(this.name)}${_.head(lastName)}`;
 				this.updateProfileImage();
@@ -225,5 +238,15 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	 */
 	public updateProfileImage () {
 		this.userImage = this.generateAvatar(this.initials);
+	}
+
+	/**
+	 * Sanitizes URL strings to bypass angular's
+	 * protocol whitelist and allow webexteams:// protocol
+	 * @param url an unsanitized url
+	 * @returns a sanitized url
+	 */
+	public sanitize (url: string) {
+		return this.sanitizer.bypassSecurityTrustUrl(url);
 	}
 }

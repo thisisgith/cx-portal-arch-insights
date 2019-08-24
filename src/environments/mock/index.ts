@@ -1,3 +1,5 @@
+export * from './asd';
+
 export * from './case/case';
 
 export * from './contract/contract';

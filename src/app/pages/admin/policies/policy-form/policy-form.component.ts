@@ -74,6 +74,9 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
+	public leftDevices = 'left';
+	public rightDevices = 'right';
+
 	private destroyed$: Subject<void> = new Subject<void>();
 	public timePeriod = '';
 	public title = '';
@@ -87,6 +90,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public allDevicesSelectedLeft = false;
 	public selectedRowsRight = { };
 	public selectedRowsLeft = { };
+	public selectedRowsLeftCount = 0;
+	public selectedRowsRightCount = 0;
 	public loadingListLeft = false;
 	public loadingListRight = false;
 	public error = false;
@@ -105,32 +110,25 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		timePeriod: ['', Validators.required],
 	});
 
-	public monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-		'July', 'August', 'September', 'October', 'November', 'December',
-	];
-
-	public dayNames = ['Sunday', 'Monday', 'Tuesday',
-		'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
 	public timePeriods: SelectOptions = {
 		options: [
-			{ key: 'Monthly', value: 'monthly' },
-			{ key: 'Weekly', value: 'weekly' },
-			{ key: 'Daily', value: 'daily' },
-			{ key: 'Never', value: 'never' },
+			{ key: I18n.get('_Monthly_'), value: 'monthly' },
+			{ key: I18n.get('_Weekly_'), value: 'weekly' },
+			{ key: I18n.get('_Daily_'), value: 'daily' },
+			{ key: I18n.get('_Never_'), value: 'never' },
 		],
 		selected: '',
 	};
 
 	public days: SelectOptions = {
 		options: [
-			{ key: 'Sunday', value: '0' },
-			{ key: 'Monday', value: '1' },
-			{ key: 'Tuesday', value: '2' },
-			{ key: 'Wednesday', value: '3' },
-			{ key: 'Thursday', value: '4' },
-			{ key: 'Friday', value: '5' },
-			{ key: 'Saturday', value: '6'  },
+			{ key: I18n.get('_Sunday_'), value: '0' },
+			{ key: I18n.get('_Monday_'), value: '1' },
+			{ key: I18n.get('_Tuesday_'), value: '2' },
+			{ key: I18n.get('_Wednesday_'), value: '3' },
+			{ key: I18n.get('_Thursday_'), value: '4' },
+			{ key: I18n.get('_Friday_'), value: '5' },
+			{ key: I18n.get('_Saturday_'), value: '6'  },
 		],
 		selected: '',
 	};
@@ -244,11 +242,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public editCollection () {
 		this.title = I18n.get('_ScheduledCollectionDetails_');
 
-		const dateTime = new Date(_.get(this.policy, 'createdDate'));
-		const formattedTime =
-`${this.monthNames[dateTime.getMonth()]} ${dateTime.getDate()}, ${dateTime.getFullYear()}`;
-
-		_.set(this.policy, 'createdDate', formattedTime);
+		this.leftListCall = undefined;
+		this.rightListCall = undefined;
 
 		this.leftListCall = undefined;
 		this.rightListCall = undefined;
@@ -537,15 +532,21 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	 * Toggles is device row is selected
 	 * @param allDevicesSelected checkbox event
 	 * @param devices device row
+	 * @param selectorName The designated name of the device selector
+	 * firing this function off
 	 *
 	 * @returns if device header is selected or not
 	 */
-	public toggleAllDevicesSelected (allDevicesSelected: boolean, devices: DeviceListRow[]) {
+	public toggleAllDevicesSelected (allDevicesSelected: boolean,
+		devices: DeviceListRow[],
+		selectorName: string) {
 		const checked = !allDevicesSelected;
 
 		for (let devNum = 0; devNum < devices.length; devNum += 1) {
 			devices[devNum].selected = checked;
 		}
+
+		this.handleDeviceSelectionChanged(selectorName);
 
 		return checked;
 	}
@@ -577,6 +578,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		if (this.deviceListLeft.length === 0) {
 			this.allDevicesSelectedLeft = false;
 		}
+
+		this.handleLeftDeviceSelectionChanged();
 	}
 
 	/**
@@ -597,6 +600,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		if (this.deviceListRight.length === 0) {
 			this.allDevicesSelectedRight = false;
 		}
+
+		this.handleRightDeviceSelectionChanged();
 	}
 
 	/**
@@ -747,6 +752,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 					}
 
 				}
+
+				this.handleLeftDeviceSelectionChanged();
 			});
 	}
 
@@ -770,6 +777,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 			)
 			.subscribe(response => {
 				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
+				this.handleRightDeviceSelectionChanged();
 			});
 	}
 
@@ -781,5 +789,37 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		this.pageNumber = (pageInfo.page + 1);
 
 		this.onLeftListCall();
+	}
+
+	/**
+	 * Handles when a device list selection change has been detected.
+	 * Delegates to the correct function based on a selection made on the
+	 * left or the right.
+	 * @param selectorName The designated name of the device selector firing
+	 * the event
+	 */
+	public handleDeviceSelectionChanged (selectorName: string) {
+		switch (selectorName) {
+			case this.leftDevices:
+				this.handleLeftDeviceSelectionChanged();
+				break;
+			case this.rightDevices:
+				this.handleRightDeviceSelectionChanged();
+				break;
+		}
+	}
+
+	/**
+	 * Handles all left device selection changes
+	 */
+	public handleLeftDeviceSelectionChanged () {
+		this.selectedRowsLeftCount = _.filter(this.deviceListLeft, ['selected', true]).length;
+	}
+
+	/**
+	 * Handles all right device selection changes
+	 */
+	public handleRightDeviceSelectionChanged () {
+		this.selectedRowsRightCount = _.filter(this.deviceListRight, ['selected', true]).length;
 	}
 }

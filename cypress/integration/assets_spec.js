@@ -1,5 +1,5 @@
-import { RouteWatch } from '@apollo/cypress-util';
 import { startCase, toLower } from 'lodash-es';
+import RouteWatch from '../support/routeWatch';
 import MockService from '../support/mockService';
 
 const assetMock = new MockService('AssetScenarios');
@@ -9,12 +9,10 @@ const cardScenario = assetMock.getScenario('GET', 'Assets Page 1 - Grid View');
 const assets = networkScenario.response.body.data;
 const assetCards = cardScenario.response.body.data;
 const totalCountScenario = coverageMock.getScenario('GET', 'Coverage Counts');
-const coveredScenario = coverageMock.getScenario('GET', 'Coverage');
-const coveredRes = coveredScenario.response.body.data[0];
 const coverageElements = totalCountScenario.response.body;
-// const vulnMock = new MockService('VulnerabilityScenarios');
-// const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts');
-// const advisoryCounts = advisoryScenario.response.body;
+const vulnMock = new MockService('VulnerabilityScenarios');
+const advisoryScenario = vulnMock.getScenario('GET', 'Advisory Counts - Large');
+const advisoryCounts = advisoryScenario.response.body;
 const caseMock = new MockService('CaseScenarios');
 const caseScenario = caseMock.getScenario('GET', 'Case Details');
 const caseListScenario = caseMock.getScenario('GET', `Cases for SN ${assets[0].serialNumber}`);
@@ -38,6 +36,9 @@ const advisorySec = advisorySecScenario.response.body;
 const advisoryFNMock = new MockService('FieldNoticeAdvisoryScenarios');
 const advisoryFNScenario = advisoryFNMock.getScenario('GET', 'Field Notice Advisories for FOC1544Y16T');
 const advisoryFN = advisoryFNScenario.response.body;
+const neMock = new MockService('NetworkScenarios');
+const neScenario = neMock.getScenario('GET', 'Network Elements Page 1');
+const networkElements = neScenario.response.body.data;
 
 Cypress.moment.locale('en', {
 	// change moment's default formatting to match the app's format
@@ -88,7 +89,6 @@ describe('Assets', () => { // PBC-41
 				cy.getByAutoId('Asset360OpenCaseBtn').should(haveVisibility); // PBC-339
 
 				// PBC-153
-				// TODO: Check device image after PBC-438 is fixed
 				cy.getByAutoId('ProductId').should('have.text', asset.productId);
 				cy.getByAutoId('YouHaveInventory').should(
 					'have.text', `you have ${hwResponse.length} of these in your inventory`
@@ -111,7 +111,6 @@ describe('Assets', () => { // PBC-41
 				'have.text',
 				Cypress.moment(assetSummary.lastDateOfSupport).format(dateFormat)
 			);
-			// TODO: More tests for view open cases dropdown when it's implemented
 			cy.getByAutoId('ToggleActiveCases').should('be.visible')
 				.and('have.text', `View Open Cases (${caseListResponse.content.length})`);
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(3).click(); // switch to new asset without closing modal
@@ -173,8 +172,7 @@ describe('Assets', () => { // PBC-41
 			hwMock.enable('Hardware');
 		});
 
-		// TODO: Unskip and modify to accomodate PBC-90 & 91
-		it.skip('Opens Asset 360 view when clicking asset cards', () => {
+		it('Opens Asset 360 view when clicking asset cards', () => {
 			const advisoryAPI = new RouteWatch('**/product-alerts/**');
 			assetMock.enable('(Assets) Missing data - Grid View');
 			cy.getByAutoId('grid-view-btn').click();
@@ -190,8 +188,7 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId('list-view-btn').click();
 		});
 
-		// TODO: Unskip and modify to accomodate PBC-90 & 91
-		it.skip('Closes 360 view when leaving the assets page', () => { // PBC-165
+		it('Closes 360 view when leaving the assets page', () => { // PBC-165
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.get('details-panel').should('be.visible');
 			cy.getByAutoId('Facet-Lifecycle').click();
@@ -200,16 +197,15 @@ describe('Assets', () => { // PBC-41
 			cy.get('details-panel').should('not.exist');
 		});
 
-		it('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240
-			// TODO: Disabled for PBC-548
-			// const getPaginationText = (pagination, type) => {
-			// 	let pageText = pagination.total < pagination.rows
-			// 		? `Showing ${pagination.total} of `
-			// 		: `Showing ${pagination.rows} of `;
-			// 	pageText += `${pagination.total} ${type}`;
+		it('Displays relevant asset advisories', () => { // PBC-56, PBC-239, PBC-240, PBC-548
+			const getPaginationText = (pagination, type) => {
+				let pageText = pagination.total < pagination.rows
+					? `Showing ${pagination.total} of `
+					: `Showing ${pagination.rows} of `;
+				pageText += `${pagination.total} ${type}`;
 
-			// 	return pageText;
-			// };
+				return pageText;
+			};
 			const getImpactIcon = severity => {
 				switch (severity) {
 					case 'Critical':
@@ -227,11 +223,8 @@ describe('Assets', () => { // PBC-41
 			cy.get('tbody tr').eq(0).click();
 			cy.getByAutoId('ADVISORIESTab').click();
 
-			// TODO: Disabled for PBC-548
-			// const pageText = getPaginationText(
-			// 	securityXHR.response.body.Pagination, 'Security Advisories'
-			// );
-			// cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+			let pageText = getPaginationText(advisorySec.Pagination, 'Security Advisories');
+			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 			Cypress._.each(advisorySec.data, (advisory, index) => {
 				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr').eq(index).within(() => {
 					if (advisory.severity) {
@@ -249,21 +242,17 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId('AdvisoryLastUpdated').should('have.text', date);
 				});
 			});
-			// TODO: Disabled for PBC-559
-			// if (advisorySec.Pagination.total > advisorySec.data.length) {
-			// 	cy.getByAutoId('LoadMoreButton').click();
-			// 	cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr')
-			// 		.should('have.length.greaterThan', 10);
-			// } else {
-			// 	cy.getByAutoId('LoadMoreButton').should('not.be.visible');
-			// }
+			if (advisorySec.Pagination.total > advisorySec.data.length) {
+				cy.getByAutoId('LoadMoreButton').click();
+				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr')
+					.should('have.length.greaterThan', 10);
+			} else {
+				cy.getByAutoId('LoadMoreButton').should('not.be.visible');
+			}
 
 			cy.getByAutoId('AdvisoryTab-field').click();
-			// TODO: Disabled for PBC-548
-			// const pageText = getPaginationText(
-			// 	fnXHR.response.body.Pagination, 'Field Notices'
-			// );
-			// cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+			pageText = getPaginationText(advisoryFN.Pagination, 'Field Notices');
+			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 			Cypress._.each(advisoryFN.data, (advisory, index) => {
 				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr').eq(index).within(() => {
 					cy.getByAutoId('FieldNoticeId')
@@ -286,11 +275,8 @@ describe('Assets', () => { // PBC-41
 			}
 
 			cy.getByAutoId('AdvisoryTab-bug').click();
-			// TODO: Disabled for PBC-548
-			// const pageText = getPaginationText(
-			// 	bugResponse.Pagination, 'Critical Bugs'
-			// );
-			// cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
+			pageText = getPaginationText(bugResponse.Pagination, 'Critical Bugs');
+			cy.getByAutoId('AdvisoryTab-ShowingTxt').should('have.text', pageText);
 			Cypress._.each(bugResponse.data, (bug, index) => {
 				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr').eq(index).within(() => {
 					cy.getByAutoId('BugID').should('have.text', bug.id);
@@ -306,46 +292,48 @@ describe('Assets', () => { // PBC-41
 			cy.get('[data-auto-id*="Device-"]').eq(0).click();
 		});
 
-		// TODO: Disabled for PBC-351
-		it.skip('Shows support and warranty coverage', () => { // PBC-52
+		it('Shows support and warranty coverage', () => { // PBC-52, PBC-351
 			const checkDataAndLink = (dataStatus, linkStatus) => {
 				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
-				cy.getByAutoId('_SupportCoverage_-CoveredUntil').should(dataStatus);
+				cy.getByAutoId('_SupportCoverage_-NotCovered').should(dataStatus);
 				cy.getByAutoId('_SupportCoverage_-Link').should(linkStatus);
-				cy.getByAutoId('_Warranty_-data').should(dataStatus);
+				cy.getByAutoId('_Warranty_-NotCovered').should(dataStatus);
 				cy.getByAutoId('_Warranty_-Link').should(linkStatus);
 				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			};
 
-			const contractEnd = Cypress.moment(coveredRes.contractEndDate).format(dateFormat);
-			const warrantyEnd = Cypress.moment(coveredRes.warrantyEndDate).format(dateFormat);
+			const contractEnd = Cypress.moment(assetSummary.coverageEndDate).format(dateFormat);
+			const warrantyEnd = Cypress.moment(assetSummary.warrantyEndDate).format(dateFormat);
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			cy.getByAutoId('_SupportCoverage_-CoveredUntil')
 				.should('have.text', `Covered until ${contractEnd}`);
 			cy.getByAutoId('_SupportCoverage_-Link')
-				.should('have.text', `${coveredRes.contractNumber} ${coveredRes.slaDescription}`);
-			cy.getByAutoId('_Warranty_-data').should('have.text', `Covered until ${warrantyEnd}`);
-			cy.getByAutoId('_Warranty_-Link').should('have.text', coveredRes.warrantyType);
+				.should(
+					'have.text', `${assetSummary.contractNumber} ${assetSummary.slaDescription}`
+				);
+			cy.getByAutoId('_Warranty_-CoveredUntil')
+				.should('have.text', `Covered until ${warrantyEnd}`);
+			cy.getByAutoId('_Warranty_-Link').should('have.text', assetSummary.warrantyType);
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 
-			coverageMock.enable('Not Covered');
+			assetSummaryMock.enable('Not Covered');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
-			cy.getByAutoId('_SupportCoverage_-N/A').should('have.text', 'N/A');
-			cy.getByAutoId('_Warranty_-N/A').should('have.text', 'N/A');
+			cy.getByAutoId('_SupportCoverage_-NotCovered').should('have.text', 'Not Covered');
+			cy.getByAutoId('_Warranty_-NotCovered').should('have.text', 'Not Covered');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 
 			// PBC-352
-			coverageMock.enable('No keys');
-			checkDataAndLink('be.visible', 'not.exist');
-			coverageMock.enable('No dates');
-			checkDataAndLink('not.exist', 'be.visible');
-			coverageMock.enable('Null keys');
-			checkDataAndLink('be.visible', 'not.exist');
-			coverageMock.enable('Null dates');
-			checkDataAndLink('not.exist', 'be.visible');
+			assetSummaryMock.enable('No keys');
+			checkDataAndLink('be.visible', 'be.empty');
+			assetSummaryMock.enable('No dates');
+			checkDataAndLink('be.visible', 'be.empty');
+			assetSummaryMock.enable('Null keys');
+			checkDataAndLink('be.visible', 'be.empty');
+			assetSummaryMock.enable('Null dates');
+			checkDataAndLink('be.visible', 'be.empty');
 
 			// Cleanup
-			coverageMock.enable('Covered');
+			assetSummaryMock.enable('Asset Summary');
 		});
 
 		it('Gracefully handles API failures', () => {
@@ -424,32 +412,47 @@ describe('Assets', () => { // PBC-41
 	});
 
 	context('PBC-36: Asset List - Table View', () => {
-		// TODO: Unskip and fix to accomodate "Last Scan" implementation
-		it.skip('Displays assets correctly in list view', () => {
+		it('Displays assets correctly in list view', () => {
 			cy.get('tbody > tr').should('have.length', assets.length);
-			Cypress._.each(assets, asset => {
+			Cypress._.each(assets, (asset, index) => {
 				const serial = asset.serialNumber;
 				cy.getByAutoId(`InventoryItem-${serial}`).within(() => { // PBC-257
-					// Icon is a static placeholder for now
-					cy.getByAutoId(`DeviceIcon-${serial}`).should('have.class', 'icon-4-way-nav');
-					cy.getByAutoId(`Device-${serial}`).should('have.text', asset.deviceName);
-					cy.getByAutoId(`IP Address-${serial}`).should('have.text', asset.ipAddress);
-					// TODO: "Last Scan" is not implemented yet
-					cy.getByAutoId(`Last Scan-${serial}`).should('have.text', 'Never');
-					// TODO: "Critical Advisories" is not implemented yet
-					// cy.getByAutoId(`Critical Advisories-${serial}`).should('have.text', '');
-					if (asset.supportCovered) {
-						cy.getByAutoId('SupportCoveredIcon').should('be.visible');
-					} else {
-						cy.getByAutoId('SupportCoveredIcon').should('not.be.visible');
+					if (serial === networkElements[index].serialNumber) {
+						if (networkElements[index].productType === 'Routers') {
+							cy.get('[data-auto-id*="DeviceIcon-"]').should(
+								'have.attr', 'src',	'assets/img/assets/device-router-outline.svg'
+							);
+						} else if (networkElements[index].productType === 	'LAN Switches') {
+							cy.get('[data-auto-id*="DeviceIcon-"]').should(
+								'have.attr', 'src', 'assets/img/assets/device-switch-outline.svg'
+							);
+						} else {
+							cy.get('[data-auto-id*="DeviceIcon-"]').should('not.exist');
+						}
 					}
-					cy.getByAutoId(`Serial Number-${serial}`)
-						.should('have.text', asset.serialNumber);
+					const deviceName = Cypress._.truncate(asset.deviceName, { length: 53 });
+					cy.getByAutoId(`Device-${serial}`).should('have.text', deviceName);
+					cy.getByAutoId(`IP Address-${serial}`).should('have.text', asset.ipAddress);
+					const scan = asset.lastScan ? Cypress.moment(asset.lastScan).fromNow() : 'Never';
+					cy.getByAutoId(`Last Scan-${serial}`).should('have.text', scan);
+					if (asset.criticalAdvisories) {
+						cy.getByAutoId('CriticalAdvisoriesIcon')
+							.should('have.text', asset.criticalAdvisories);
+					} else {
+						cy.getByAutoId('CriticalAdvisoriesIcon').should('not.exist');
+					}
+					if (asset.supportCovered) {
+						cy.getByAutoId('SupportCoveredIcon').should('exist');
+					} else {
+						cy.getByAutoId('SupportCoveredIcon').should('not.exist');
+					}
+					cy.getByAutoId(`Serial Number-${serial}`).should('have.text', serial);
 					cy.getByAutoId(`Software Type-${serial}`).should('have.text', asset.osType);
 					cy.getByAutoId(`Software Version-${serial}`)
 						.should('have.text', asset.osVersion);
 					if (asset.role) { // PBC-297
-						cy.getByAutoId(`Role-${serial}`).should('have.text', startCase(toLower(asset.role)));
+						cy.getByAutoId(`Role-${serial}`)
+							.should('have.text', startCase(toLower(asset.role)));
 					}
 				});
 			});
@@ -519,6 +522,23 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Filters asset list with all visual filters', () => { // PBC-228, PBC-253
+			const checkAdvisoryFilters = () => {
+				cy.server();
+				cy.route('**/inventory/v1/assets?**').as('assets');
+				cy.get('[data-auto-id="AssetsSelectVisualFilter-advisories"] [data-auto-id="BugsPoint"]')
+					.click({ force: true });
+				cy.wait('@assets').its('url').should('contain', 'hasBugs=true');
+				cy.getByAutoId('FilterTag-bugs').should('exist');
+				cy.get('[data-auto-id="AssetsSelectVisualFilter-advisories"] [data-auto-id="Field NoticesPoint"]')
+					.click({ force: true });
+				cy.wait('@assets').its('url').should('contain', 'hasFieldNotices=true');
+				cy.getByAutoId('FilterTag-field-notices').should('exist');
+				cy.get('[data-auto-id="AssetsSelectVisualFilter-advisories"] [data-auto-id="Security AdvisoriesPoint"]')
+					.click({ force: true });
+				cy.wait('@assets').its('url').should('contain', 'hasSecurityAdvisories=true');
+				cy.getByAutoId('FilterTag-security-advisories').should('exist');
+			};
+
 			const { contractNumber, role } = assets[0];
 			cy.getByAutoId('CoveredPoint').click({ force: true });
 			cy.getByAutoId('FilterTag-covered').should('be.visible');
@@ -527,12 +547,12 @@ describe('Assets', () => { // PBC-41
 			cy.getByAutoId(`${Cypress._.capitalize(role.toLowerCase())}Point`)
 				.click({ force: true });
 			cy.getByAutoId(`FilterTag-${role}`).should('be.visible');
-			// TODO: Field notice/security advisory filter (CSCvq32046)
 			cy.url().should('contain', 'coverage=covered')
 				.and('contain', `contractNumber=${contractNumber}`)
 				.and('contain', `role=${role}`);
 			cy.getByAutoId(`FilterTag-${contractNumber}`).click().should('not.exist');
 			cy.url().should('not.contain', 'contractNumber');
+			checkAdvisoryFilters();
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 			cy.getByAutoId('FilterTag-covered').should('not.exist');
 			cy.url().should('not.contain', 'coverage').and('not.contain', 'role');
@@ -552,24 +572,14 @@ describe('Assets', () => { // PBC-41
 			cy.waitForAppLoading();
 		});
 
-		// TODO: Need to investigate possible bug
-		// Sometimes, clicking the visual filters in this test is just refreshing the table
-		//  and not triggering any filtering
-		it.skip('Combines visual filters appropriately', () => {
+		it('Combines visual filters appropriately', () => {
 			cy.server();
 			cy.route('**/inventory/v1/assets?*').as('assets');
 
 			cy.getByAutoId('CoveredPoint').click({ force: true }).wait('Covered Assets');
-			cy.getByAutoId('UncoveredPoint').click({ force: true })
-				.wait('@assets', { timeout: 10000 });
 			cy.getByAutoId(`${assets[0].contractNumber}Point`).click({ force: true });
-			cy.wait('@assets', { timeout: 10000 }).then(xhr => {
-				const params = new URLSearchParams(new URL(xhr.url).search);
-				expect(params.getAll('coverage')).to.have.length(2)
-					.and.include.members(['covered', 'uncovered']);
-				expect(params.getAll('contractNumber')).to.have.length(1)
-					.and.include.members([assets[0].contractNumber]);
-			});
+			cy.wait('@assets', { timeout: 30000 }).its('url').should('contain', 'coverage=covered')
+				.and('contain', `contractNumber=${assets[0].contractNumber}`);
 
 			cy.getByAutoId('FilterBarClearAllFilters').click();
 		});
@@ -608,17 +618,19 @@ describe('Assets', () => { // PBC-41
 			});
 		});
 
-		it.skip('Properly closes the actions menu when clicking away', () => { // PBC-272
+		it('Properly closes the actions menu when clicking away', () => { // PBC-272, PBC-607
 			cy.get('tr cui-dropdown').eq(0).click();
 			cy.get('tr div.dropdown__menu').eq(0).should('be.visible');
-			cy.get('tr cui-dropdown').eq(5).click(); // another asset's menu
-			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
-			cy.get('tr cui-dropdown').eq(0).click();
+			// TODO: Disabled for PBC-607
+			// cy.get('tr cui-dropdown').eq(1).click(); // another asset's menu
+			// cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			// cy.get('tr cui-dropdown').eq(0).click();
 			cy.get('cui-dropdown').eq(0).click(); // bulk actions menu
 			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
-			cy.get('tr cui-dropdown').eq(0).click();
-			cy.get('[data-auto-id*="InventoryItemCheckbox"]').eq(0).click(); // select checkbox
-			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
+			// TODO: Disabled for PBC-607
+			// cy.get('tr cui-dropdown').eq(0).click();
+			// cy.get('[data-auto-id*="InventoryItemCheckbox"]').eq(0).click(); // select checkbox
+			// cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
 			cy.get('tr cui-dropdown').eq(0).click();
 			cy.getByAutoId('AssetsSelectVisualFilter-total').click(); // outside of table
 			cy.get('tr div.dropdown__menu').eq(0).should('not.be.visible');
@@ -638,9 +650,7 @@ describe('Assets', () => { // PBC-41
 			cy.get('[data-auto-id*="InventoryItemSelect-"]').eq(0).should('not.be.checked');
 		});
 
-		// TODO: Need to investigate possible bug
-		// Sometimes, clicking the visual filters in this test is just refreshing the table
-		//  and not triggering any filtering
+		// TODO: Disabled until PBC-593 is fixed
 		it.skip('Only shows asset results from the most recent query', () => { // PBC-274
 			assetMock.disable(['Assets Page 1', 'Covered Assets']);
 			const filteredXHR = new RouteWatch('**/inventory/v1/assets?*coverage=covered');
@@ -660,12 +670,16 @@ describe('Assets', () => { // PBC-41
 		});
 
 		it('Uses comma separator in visual filter tooltips', () => { // PBC-275
-			cy.getByAutoId('Security AdvisoriesPoint')
-				.each(x => {
-					x.hover();
-				});
-			// cy.getByAutoId('Security AdvisoriesTooltip')
-			// 	.should('contain', advisoryCounts['security-advisories'].toLocaleString());
+			vulnMock.enable('Advisory Counts - Large');
+			cy.reload();
+			cy.waitForAppLoading();
+
+			cy.getByAutoId('AssetsSelectVisualFilter-advisories').within(() => {
+				cy.getByAutoId('Security AdvisoriesPoint').hover();
+				cy.getByAutoId('Security AdvisoriesTooltip')
+					.should('contain', advisoryCounts['security-advisories'].toLocaleString());
+			});
+			vulnMock.enable('Advisory Counts');
 		});
 	});
 
@@ -696,9 +710,8 @@ describe('Assets', () => { // PBC-41
 					cy.getByAutoId(`DeviceImg-${serial}`).should('have.text', 'No Photo Available');
 					cy.getByAutoId(`IPAddress-${serial}`).should('have.text', asset.ipAddress);
 					if (asset.lastScan) { // PBC-355
-						// TODO: Fix the following assertion
-						// cy.getByAutoId(`LastScan-${serial}`)
-						// 	.should('have.text', Cypress.moment(asset.lastScan).fromNow());
+						cy.getByAutoId(`LastScan-${serial}`)
+							.should('have.text', Cypress.moment(asset.lastScan).fromNow());
 					}
 					cy.getByAutoId(`SerialNumber-${serial}`)
 						.should('have.text', asset.serialNumber);

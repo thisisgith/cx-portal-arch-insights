@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeviceListComponent } from './device-list.component';
 import { DeviceListModule } from './device-list.module';
-import { DeviceListRow } from './policy-form.component';
+import { DeviceListRow } from '../policy-form.component';
 
 describe('DeviceListComponent', () => {
 	let component: DeviceListComponent;
