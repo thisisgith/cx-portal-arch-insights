@@ -10,9 +10,6 @@ import { AssetsModule } from './assets/assets.module';
 import { SoftwareVersionsModule } from './software-versions/software-versions.module';
 import { environment } from '@environment';
 import { OSVModule } from '@sdp-api';
-import {
-	AssetTimelineChartModule,
-} from './asset-timeline-chart/asset-timeline-chart.module';
 
 import { DetailsPanelModule, PieChartModule } from '@components';
 import { SoftwareGroupsModule } from './software-groups/software-groups.module';
@@ -49,7 +46,6 @@ const childRoutes: Routes = [
 		AssetsModule,
 		SoftwareVersionsModule,
 		OSVModule.forRoot({ rootUrl }),
-		AssetTimelineChartModule,
 		PieChartModule,
 		SoftwareGroupsModule,
 	],

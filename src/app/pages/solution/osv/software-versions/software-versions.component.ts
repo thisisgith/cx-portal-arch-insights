@@ -42,7 +42,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 			pageIndex: 1,
 			pageSize: 10,
 			sort: 'swVersion',
-			sortOrder: 'desc',
+			sortOrder: 'asc',
 		};
 	}
 
@@ -113,7 +113,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
 						sortable: true,
-						sortDirection: 'desc',
+						sortDirection: 'asc',
 						sorting: true,
 						width: '25%',
 					},

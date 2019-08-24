@@ -70,7 +70,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			pageIndex: 1,
 			pageSize: 10,
 			sort: 'hostName',
-			sortOrder: 'desc',
+			sortOrder: 'asc',
 		};
 	}
 
@@ -176,7 +176,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
 						sortable: true,
-						sortDirection: 'desc',
+						sortDirection: 'asc',
 						sorting: true,
 					},
 					{
