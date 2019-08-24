@@ -38,6 +38,13 @@ describe('AfmDetailsComponent', () => {
 		})
 			.compileComponents();
 		mockAfmService = TestBed.get(AfmService);
+		spyOn(mockAfmService, 'ignoreEvent')
+			.and
+			.returnValue(of(<any> AfmScenarios[0].scenarios.POST[0].response.body));
+
+		spyOn(mockAfmService, 'revertIgnoreEvent')
+			.and
+			.returnValue(of(<any> AfmScenarios[0].scenarios.POST[0].response.body));
 	}));
 
 	beforeEach(() => {
@@ -82,13 +89,6 @@ describe('AfmDetailsComponent', () => {
 	});
 
 	it('should ignored the event and revert the ignored event', () => {
-		spyOn(mockAfmService, 'ignoreEvent')
-			.and
-			.returnValue(of(<any> AfmScenarios[0].scenarios.POST[0].response.body));
-
-		spyOn(mockAfmService, 'revertIgnoreEvent')
-			.and
-			.returnValue(of(<any> AfmScenarios[0].scenarios.POST[0].response.body));
 
 		mockAlarm.customerId = '1234';
 		mockAlarm.faultIC = '%Fault';
@@ -109,13 +109,6 @@ describe('AfmDetailsComponent', () => {
 	});
 
 	it('should failed to ignored the event and failed to revert the ignored event', () => {
-		spyOn(mockAfmService, 'ignoreEvent')
-			.and
-			.returnValue(of(<any> AfmScenarios[9].scenarios.POST[0].response.body));
-
-		spyOn(mockAfmService, 'revertIgnoreEvent')
-			.and
-			.returnValue(of(<any> AfmScenarios[9].scenarios.POST[0].response.body));
 
 		mockAlarm.customerId = '1234';
 		mockAlarm.faultIC = '%Fault';
