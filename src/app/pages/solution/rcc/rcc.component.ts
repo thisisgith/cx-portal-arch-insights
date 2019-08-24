@@ -32,7 +32,7 @@ import { ActivatedRoute } from '@angular/router';
 	templateUrl: './rcc.component.html',
 })
 export class RccComponent implements OnInit, OnDestroy {
-	public customerId: number;
+	public customerId: string;
 	constructor (
 		private logger: LogService,
 		public RccTrackService: RccService,

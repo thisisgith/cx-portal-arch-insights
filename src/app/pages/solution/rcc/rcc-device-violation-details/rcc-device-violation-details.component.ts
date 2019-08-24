@@ -44,7 +44,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	private policyRowWellTemplate: TemplateRef<{ }>;
 	@ViewChild('deviceLink', { static: true }) private deviceLinkTemplate: TemplateRef<{ }>;
 	public policyRuleData: any = { };
-	public customerId: number;
+	public customerId: string;
 	public impactedAssetsCount: any;
 	public initialLoading = false;
 	public selectionLoading = false;

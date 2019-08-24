@@ -44,7 +44,7 @@ export interface Filter {
 
 export interface violationGridParams {
     criteria: string,
-    customerId: number,
+    customerId: string,
     pageLimit: number,
     pageNum: number,
     policyType: string,
@@ -53,7 +53,7 @@ export interface violationGridParams {
 }
 
 export interface RccPolicyViolationData {
-    customerId: number,
+    customerId: string,
     policyCategory: string,
     policyGroup: string,
     policyName: string,
@@ -63,11 +63,11 @@ export interface RccPolicyViolationData {
 }
 
 export interface RccCustomer {
-    customerId: number 
+    customerId: string 
 }
 
 export interface AssetGridDataQueryParam {
-    customerId: number,
+    customerId: string,
     pageLimt:number, 
     pageNum:number, 
     policyType:string,
