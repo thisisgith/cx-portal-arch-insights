@@ -576,7 +576,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * method to close slider
 	 * @param model is the selected slider name
 	 */
-	public onPanelClose (model: 'selectedViolationModal' | 'selectedAssetModal') {
+	public onPanelClose (model: string) {
 		this[model] = !this[model];
 	}
 	/**
