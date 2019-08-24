@@ -70,7 +70,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			pageIndex: 1,
 			pageSize: 10,
 			sort: 'hostName',
-			sortOrder: 'desc',
+			sortOrder: 'asc',
 		};
 	}
 
@@ -175,8 +175,8 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
-						sortable: false,
-						sortDirection: 'desc',
+						sortable: true,
+						sortDirection: 'asc',
 						sorting: true,
 					},
 					{
@@ -187,7 +187,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
-						sortable: false,
+						sortable: true,
 					},
 					{
 						key: 'swType',
@@ -197,16 +197,6 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
-						sortable: false,
-					},
-					{
-						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
-						sortable: false,
-					},
-					{
-						key: 'deployment',
-						name: I18n.get('_OsvDeploymentStatus_'),
 						sortable: false,
 					},
 					{

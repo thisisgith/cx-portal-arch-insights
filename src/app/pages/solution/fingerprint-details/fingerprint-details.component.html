@@ -1,0 +1,13 @@
+<!-- App Details 360 slide-out -->
+<details-panel *ngIf="selectedDevice" [hidden]="!selectedDevice" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
+		<app-fingerprint-header [asset]="selectedDevice"></app-fingerprint-header>
+		<div detailsPanelTitle class="text-xlarge">
+			<span class="icon-chevron-left" disabled="true"></span>
+			<span class="icon-chevron-right" disabled="true"></span>
+			<span class="qtr-margin-left" [innerText]="'_CP_FingerPrintDetailsFor_' | i18n"></span>
+			<span class="qtr-margin-left" [innerText]="'_CP_Asset_' | i18n"></span>
+		</div>
+	</details-panel-header>
+	<app-fingerprint-body [asset]="selectedDevice"></app-fingerprint-body>
+</details-panel>
