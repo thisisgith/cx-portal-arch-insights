@@ -89,7 +89,7 @@
 		</div>
 		<div class="col-md-8 text-right" title="{{errorDesc}}" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
 			<button id="opacity" class="btn btn--small btn--wide btn--gray-ghost text-uppercase disabled"
-				[innerText]="'_AfmCaseIdX_'|i18n:'entitlement failed'"></button>
+				[innerText]="'_AfmCaseIdX_'|i18n:'_AfmEentitlementFailed_'|i18n"></button>
 		</div>
 	</div>
 	<div class="flex col-md-12 base-margin-top" >

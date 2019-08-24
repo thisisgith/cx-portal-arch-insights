@@ -116,54 +116,54 @@ describe('AfmComponent', () => {
 	it('should be called on table sorting changed', () => {
 		const eventSyslog = {
 			name: 'Syslog Event',
-			sortDirection: 'Abc',
+			sortDirection: 'Syslog Event Description',
 		};
 		component.searchParams.headerFilterType = 'TAC';
 		component.onTableSortingChanged(eventSyslog);
 		fixture.detectChanges();
 		const eventFault = {
 			name: 'Fault IC',
-			sortDirection: 'Abc',
+			sortDirection: 'Fault IC description',
 		};
 		component.searchParams.headerFilterType = 'SEARCH';
 		component.onTableSortingChanged(eventFault);
 		fixture.detectChanges();
 		const eventSerial = {
 			name: 'Serial Number',
-			sortDirection: 'Abc',
+			sortDirection: 'Serial number description',
 		};
 		component.searchParams.headerFilterType = 'IGNORE_EVENT';
 		component.onTableSortingChanged(eventSerial);
 		fixture.detectChanges();
 		const eventSeverity = {
 			name: 'Event Severity',
-			sortDirection: 'Abc',
+			sortDirection: 'Event Severity description',
 		};
 		component.searchParams.headerFilterType = 'CHATS';
 		component.onTableSortingChanged(eventSeverity);
 		fixture.detectChanges();
 		const eventCase = {
 			name: 'Case ID',
-			sortDirection: 'Abc',
+			sortDirection: 'Case Id description',
 		};
 		component.searchParams.headerFilterType = 'ALARM';
 		component.onTableSortingChanged(eventCase);
 		fixture.detectChanges();
 		const eventTime = {
 			name: 'Time Created',
-			sortDirection: 'Abc',
+			sortDirection: 'Time Created description',
 		};
 		component.onTableSortingChanged(eventTime);
 		fixture.detectChanges();
 		const eventStatus = {
 			name: 'Event Status',
-			sortDirection: 'Abc',
+			sortDirection: 'Event Status description',
 		};
 		component.onTableSortingChanged(eventStatus);
 		fixture.detectChanges();
 		const eventDefault = {
 			name: 'Default',
-			sortDirection: 'Abc',
+			sortDirection: 'Default description',
 		};
 		component.searchParams.headerFilterType = 'Default';
 		component.onTableSortingChanged(eventDefault);
@@ -185,7 +185,7 @@ describe('AfmComponent', () => {
 	it('should return filters', () => {
 		component.filters =  [
 			{
-				key: 'abc',
+				key: 'afmFilter',
 				loading: true,
 				selected: true,
 				seriesData: [
@@ -198,15 +198,15 @@ describe('AfmComponent', () => {
 				],
 				title: '',
 			}];
-		component.getSelectedSubFilters('abc');
-		expect(component.getSelectedSubFilters('abc'))
+		component.getSelectedSubFilters('afmFilter');
+		expect(component.getSelectedSubFilters('afmFilter'))
 		.toBeDefined();
 	});
 
 	it('should clear filters', () => {
 		component.filters =  [
 			{
-				key: 'abc',
+				key: 'afmFilter',
 				loading: true,
 				selected: true,
 				seriesData: [
