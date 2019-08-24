@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AfmResponse, AfmSearchParams, AfmConnectivity } from '../models/afm';
 import { AfmConfiguration } from '../afm-configuration';
 import { catchError, map as __map } from 'rxjs/operators';
@@ -19,8 +19,6 @@ import { BaseService } from '../../core/base-service';
 
 export class AfmService extends BaseService {
 
-	public afmRootUrl = 'https://cpp-api.sdp11-idev.csco.cloud/afm';
-
 	private alarmsPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/alarms`;
 	private tacCasesPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/taccases`;
 	private searchPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/search`;
@@ -30,6 +28,7 @@ export class AfmService extends BaseService {
 	private revertIgnoreEventPath =
 	`${this.rootUrl}/api/customerportal/afm/v1/fault/revertignoreevent`;
 	private timeRangePath = `${this.rootUrl}/api/customerportal/afm/v1/fault/timerangefilter`;
+	private exportAllPath =  `${this.rootUrl}/api/customerportal/afm/v1/fault/exportall/`;
 
 	constructor (config: AfmConfiguration, http: HttpClient) {
 		super(config, http);
@@ -133,6 +132,20 @@ export class AfmService extends BaseService {
 	}
 
 	/**
+	 * Export the all records
+	 *
+	 * @param customerId string
+	 * @returns AfmResponse object it will return
+	 * @memberof AfmService
+	 */
+	public exportAllRecords (customerId: string): Observable<AfmResponse> {
+		const path = `${this.exportAllPath}${customerId}`;
+
+		return this.http.get<AfmResponse>(path)
+		.pipe(__map(response => response), catchError(err => this.erroHandler(err)));
+	}
+
+	/**
 	 *
 	 * Handling error
 	 * @param error - HttpErrorResponse
@@ -140,16 +153,24 @@ export class AfmService extends BaseService {
 	 * @memberof AfmService
 	 */
 	private erroHandler (error: HttpErrorResponse) {
-		// return Observable.throw(error.message || 'Server Error');
 		let errorMessage = '';
-		if (error.error instanceof ErrorEvent) {
-			// Get client-side error
+		if (error.error && error.error.status) {
 			errorMessage = error.error.message;
+			errorMessage = `Error Code: ${error.error.status} - error : ${error.error.error}
+			- Message: ${error.error.message}`;
 		} else {
-			// Get server-side error
-			errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+			errorMessage = `Error Code: ${error.status} \nMessage: ${error.message}`;
 		}
 
-		return Observable.throw(errorMessage);
+		const response: AfmResponse = {
+			eventList : [],
+			pagination: {
+				total : 0,
+			},
+			status : 'Fail',
+			statusMessage: errorMessage,
+		};
+
+		return of(response);
 	}
 }

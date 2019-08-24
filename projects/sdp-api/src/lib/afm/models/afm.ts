@@ -24,6 +24,8 @@ export interface Alarm {
 	raiseSr?: boolean;
 	hostName?: string;
 	customerId?: string;  // this is a CustomerId
+	errorDesc?: string;
+	srStatus?: string;
 }
 
 /**
