@@ -8,7 +8,7 @@ import { RccConfiguration as __Configuration } from "../rcc-configuration";
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { RccData } from "../models/rcc-data";
 import { RccGridData, RccAssetGridData } from './../models/rcc-grid-data';
-import { RccAssetDetails, RccAssetSelectReq, RccAssetFilterResponse } from './../models/rcc-asset-details';
+import { RccAssetDetails ,RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterResponse, RccAssetFilterDetailsResponse } from './../models/rcc-asset-details';
 
 @Injectable({
 	providedIn: "root"
@@ -91,7 +91,7 @@ class RccService extends __BaseService {
 			);
 	}
 
-	getRccAssetFilterData(queryParamMapObj: RccAssetSelectReq): __Observable<any> {
+	getRccAssetFilterData(queryParamMapObj: RccAssetFilterReq): __Observable<any> {
 		return this.invokeHTTPGet<RccAssetFilterResponse>(
 			`${this.rootUrl}${RccService.getRccAssetFilterData}`,
 			queryParamMapObj)

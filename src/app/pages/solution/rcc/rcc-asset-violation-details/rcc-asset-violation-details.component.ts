@@ -55,10 +55,10 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	private assetSeverityIconTemplate: TemplateRef<{ }>;
 	public severityMappings = { } = [
 		{ id: 'P1', name: I18n.get('_RccSeverityValueP1_') },
-		{ id: 'P2', name: I18n.get('_RccSeverityValueP1_') },
-		{ id: 'P3', name: I18n.get('_RccSeverityValueP1_') },
-		{ id: 'P4', name: I18n.get('_RccSeverityValueP1_') },
-		{ id: 'P5', name: I18n.get('_RccSeverityValueP1_') },
+		{ id: 'P2', name: I18n.get('_RccSeverityValueP2_') },
+		{ id: 'P3', name: I18n.get('_RccSeverityValueP3_') },
+		{ id: 'P4', name: I18n.get('_RccSeverityValueP4_') },
+		{ id: 'P5', name: I18n.get('_RccSeverityValueP5_') },
 	];
 	/**
 	 * on init method
@@ -172,11 +172,15 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * loads the filter and asset data
 	 */
 	public loadData () {
+		const assetFilterReq = {
+			customerId : this.assetRowParams.customerId,
+			serialNumber : this.assetRowParams.serialNumber,
+		};
 		forkJoin(
 			this.rccService
 			.getAssetSummaryData(this.assetRowParams),
 			this.rccService
-			.getRccAssetFilterData(this.assetRowParams),
+			.getRccAssetFilterData(assetFilterReq),
 			)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -229,12 +233,16 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			takeUntil(this.destroy$),
 		)
 			.subscribe(
-				([assetViolations]) => {
-					this.rccAssetPolicyTableData = assetViolations.data.violation;
-					if (this.rccAssetPolicyTableData) {
-						this.totalItems = _.size(this.rccAssetPolicyTableData);
+				(assetViolations => {
+					const assetViolationsResponse = assetViolations;
+					if (assetViolationsResponse) {
+						this.rccAssetPolicyTableData = [];
+						this.rccAssetPolicyTableData = assetViolations.data.violation;
+						if (this.rccAssetPolicyTableData) {
+							this.totalItems = _.size(this.rccAssetPolicyTableData);
+						}
 					}
-				},
+				}),
 				error => {
 					this.logger.error(
 						'rcc-asset-violation-details.component : getAssetPolicyGridData() ' +
@@ -276,7 +284,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param pageInfo gives page number
 	 */
 	public onPolicyAssetPagerUpdated (pageInfo: any) {
-		this.assetRowParams.pageSize = pageInfo.page;
+		this.assetRowParams.pageSize = pageInfo.limit;
 		this.assetRowParams.pageIndex = pageInfo.page + 1;
 	}
 

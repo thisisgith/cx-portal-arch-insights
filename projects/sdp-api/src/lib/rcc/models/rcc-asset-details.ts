@@ -69,3 +69,7 @@ export interface RccAssetSelectReq{
     policyGroupName:string,
     severity:string,
 }
+export interface RccAssetFilterReq{
+    customerId: string,
+    serialNumber:string,
+}
