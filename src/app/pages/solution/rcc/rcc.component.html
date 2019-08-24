@@ -178,7 +178,18 @@
 					<div data-auto-id="highestSeverity" class="dbl-margin-right">
 						<div class="text-small text-bold" [innerText]="'_HighestSeverity_' | i18n">
 						</div>
-						<div [innerText]="policyViolationInfo?.ruleseverity  || ('_NA_' | i18n) ">
+						<div>
+							<i *ngIf="policyViolationInfo?.ruleseverity" 
+								class="qtr-margin-right icon-circle" 
+								iconSize="default" 
+								[ngClass]="{
+									'p1class': 'P1',
+									'p2class': 'P2',
+									'p3class': 'P3',
+									'p4class': 'P4',
+									'p5class': 'P5'
+								}[policyViolationInfo?.ruleseverity]"></i>
+							<span [innerText]="policyViolationInfo?.ruleseverity  || ('_NA_' | i18n) "></span>
 						</div>
 					</div>
 				</div>

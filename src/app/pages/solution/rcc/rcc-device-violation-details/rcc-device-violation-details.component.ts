@@ -109,15 +109,20 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				takeUntil(this.destroy$),
 			)
 			.subscribe(([policyRuleDetails, violationDetails]) => {
-				policyRuleDetails.data.deviceFilterDetails =
-				this.rccUtilService.getSelectableData(policyRuleDetails.data.deviceFilterDetails);
-				this.policyRuleData = policyRuleDetails.data;
-				violationDetails.data.impactedAssets.forEach(asset => {
-					asset.violations.forEach((violation, i) => {
-						violation.index = i + 1;
+				if (policyRuleDetails.data && _.size(policyRuleDetails.data) > 0) {
+					policyRuleDetails.data.deviceFilterDetails =
+					this.rccUtilService.getSelectableData(
+						policyRuleDetails.data.deviceFilterDetails);
+					this.policyRuleData = policyRuleDetails.data;
+				}
+				if (violationDetails.data && _.size(violationDetails.data) > 0) {
+					violationDetails.data.impactedAssets.forEach(asset => {
+						asset.violations.forEach((violation, i) => {
+							violation.index = i + 1;
+						});
 					});
-				});
-				this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+					this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+				}
 				this.initialLoading = false;
 			},
 			error => {
