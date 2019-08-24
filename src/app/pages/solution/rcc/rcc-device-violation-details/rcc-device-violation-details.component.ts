@@ -12,6 +12,7 @@ import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { UserResolve } from '@utilities';
 import { ActivatedRoute } from '@angular/router';
+import { LogService } from '@cisco-ngx/cui-services';
 /**
  * Main component for the RCC track
  */
@@ -54,11 +55,13 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public destroy$ = new Subject();
 	public queryParamMapObj = { };
 	constructor (
+		private logger: LogService,
 		private rccTrackService: RccService,
 		private rccUtilService: RccUtilService,
-		public userResolve: UserResolve,
 		private route: ActivatedRoute,
+		public userResolve: UserResolve,
 	) {
+		this.logger.debug('RccDeviceViolationDetailsComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 	}
@@ -67,8 +70,9 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 * @param changes gives page changed data
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		if (changes.policyViolationInfo.currentValue
-				&& !(changes.policyViolationInfo.firstChange)) {
+		const policyViolationInfo = _.get(changes, ['policyViolationInfo', 'currentValue']);
+		const isFirstChange = _.get(changes, ['policyViolationInfo', 'firstChange']);
+		if (policyViolationInfo && !isFirstChange) {
 			this.queryParamMapObj = {
 				customerId: this.customerId,
 				policyCategory: this.policyViolationInfo.policycategory,
@@ -77,8 +81,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				ruleName: this.policyViolationInfo.ruleid,
 				severity: this.policyViolationInfo.ruleseverity,
 			};
-			if (this.policyViolationInfo ===
-				null || Object.keys(this.policyViolationInfo).length === 0) { return; }
 			this.selectionObj = {
 				osName : '',
 				productFamily : '',
@@ -117,8 +119,12 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				});
 				this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 				this.initialLoading = false;
-			}, (_error: any) => {
+			},
+			error => {
 				this.initialLoading = false;
+				this.logger.error(
+					'RccDeviceViolationDetailsComponent : loadData() ' +
+				`:: Error : (${error.status}) ${error.message}`);
 			});
 	}
 	/**
@@ -246,8 +252,12 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		.subscribe(violationDetails => {
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
-		}, (_error: any) => {
+		},
+		error => {
 			this.selectionLoading = false;
+			this.logger.error(
+				'RccDeviceViolationDetailsComponent : onSelection() ' +
+			`:: Error : (${error.status}) ${error.message}`);
 		});
 	}
 	/**
