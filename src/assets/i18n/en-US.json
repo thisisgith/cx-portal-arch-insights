@@ -635,6 +635,8 @@
 	"_SyslogGridMessage_":"Message",
 	"_SyslogImpactedAssets_":"Impact Assets",
 	"_SyslogIncludeMessage_":"Include Message",
+	"_SyslogIPAddress_" :"IP Address",
+	"_SyslogSerialNumber_" : "Serial Number",
 	"_SyslogLastScan_": "Last Scan",
 	"_SyslogMessageGrid_":"Message Type",
 	"_SyslogMessageType_":"Syslog Message Type",

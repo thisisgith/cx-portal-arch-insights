@@ -1,26 +1,19 @@
 <div class="text-uppercase text-bold half-margin-bottom">
-	<span
-		[innerText]="'_SyslogDetailedDescription_' | i18n"
-		class="text-large"
-	></span>
+	<span [innerText]="'_SyslogDetailedDescription_' | i18n" class="text-large"></span>
 </div>
 <div *ngIf="asset">
 	{{ asset.IcDesc }}
 </div>
 <div>
 	<div class="text-uppercase text-bold half-margin-top half-margin-bottom">
-		<span
-			[innerText]="'_SyslogRecommendations_' | i18n"
-			class="text-large"
-		></span>
+		<span [innerText]="'_SyslogRecommendations_' | i18n" class="text-large"></span>
 	</div>
 	<div *ngIf="asset">
 		{{ asset.Recommendation }}
 	</div>
 
 	<div *ngIf="asset" class="text-uppercase half-margin-top">
-		<span [innerText]="'__SyslogImpactedAssets__' | i18n" class="text-large"></span
-		>-{{ asset.deviceCount }}
+		<span [innerText]="'__SyslogImpactedAssets__' | i18n" class="text-large"></span>-{{ asset.deviceCount }}
 	</div>
 </div>
 <div class="container base-margin-top">
@@ -29,90 +22,42 @@
 	</div>
 	<div class="row half-margin-bottom ">
 		<div class="col-3">
-			<cui-select
-				data-auto-id="productID"
-				label="Product ID"
-				[(ngModel)]="selectdrowpdown.productID"
-				(ngModelChange)="onSelection()"
-				[items]="productIdItems"
-				optionsKey="value"
-				optionsValue="value"
-				[empty]="true"
-			>
+			<cui-select data-auto-id="productID" label="Product ID" [(ngModel)]="selectdrowpdown.productID"
+				(ngModelChange)="onSelection()" [items]="productIdItems" optionsKey="value" optionsValue="value"
+				[empty]="true">
 			</cui-select>
 		</div>
 		<div class="col-3">
-			<cui-select
-				data-auto-id="Software"
-				label="Software"
-				[(ngModel)]="selectdrowpdown.Software"
-				(ngModelChange)="onSelection()"
-				[items]="softwareItems"
-				optionsKey="value"
-				optionsValue="value"
-				[empty]="true"
-			>
+			<cui-select data-auto-id="Software" label="Software" [(ngModel)]="selectdrowpdown.Software"
+				(ngModelChange)="onSelection()" [items]="softwareItems" optionsKey="value" optionsValue="value"
+				[empty]="true">
 			</cui-select>
 		</div>
 		<div class="col-3">
-			<cui-select
-				data-auto-id="productFamily"
-				label="Product Family"
-				[(ngModel)]="selectdrowpdown.productFamily"
-				(ngModelChange)="onSelection()"
-				[items]="productFamily"
-				optionsKey="value"
-				optionsValue="value"
-				[empty]="true"
-			>
+			<cui-select data-auto-id="productFamily" label="Product Family" [(ngModel)]="selectdrowpdown.productFamily"
+				(ngModelChange)="onSelection()" [items]="productFamily" optionsKey="value" optionsValue="value"
+				[empty]="true">
 			</cui-select>
 		</div>
 		<div class="col-3">
-			<cui-select
-				data-auto-id="timePeriod"
-				label="Time Period"
-				[(ngModel)]="selectdrowpdown.timePeriod"
-				(ngModelChange)="onSelection()"
-				[items]="timePeriod"
-				optionsKey="name"
-				optionsValue="name"
-				[empty]="true"
-			>
+			<cui-select data-auto-id="timePeriod" label="Time Period" [(ngModel)]="selectdrowpdown.timePeriod"
+				(ngModelChange)="onSelection()" [items]="timePeriod" optionsKey="name" optionsValue="value" [empty]="true">
 			</cui-select>
 		</div>
 	</div>
 	<div class="container base-margin-top">
-		<cui-table
-			*ngIf="tableData"
-			data-auto-id="tableData"
-			[options]="tableOptions"
-			[data]="tableData"
-			[offset]="tableOffset"
-			[limit]="tableLimit"
-		>
+		<cui-table *ngIf="tableData" data-auto-id="tableData" [options]="tableOptions" [data]="tableData"
+			[offset]="tableOffset" [limit]="tableLimit">
 		</cui-table>
 		<div class="section">
-			<cui-pager
-				*ngIf="tableData.length"
-				[page]="tableOffset"
-				[limit]="tableLimit"
-				[totalItems]="totalItems"
-				(onPageChanged)="onPagerUpdated($event)"
-			></cui-pager>
+			<cui-pager *ngIf="tableData.length" [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
+				(onPageChanged)="onPagerUpdated($event)"></cui-pager>
 		</div>
 	</div>
 </div>
 
-<ng-template #innertableref let-item ="item" >
-	<cui-table 
-			*ngIf="tableData"
-			data-auto-id="tableData"
-			[options]="innerTableOptions"
-			[data]="item.MessageDescObject"
-			[offset]="tableOffset"
-			[limit]="tableLimit"
-	>
+<ng-template #innertableref let-item="item">
+	<cui-table *ngIf="tableData" data-auto-id="tableData" [options]="innerTableOptions" [data]="item.MessageDescObject"
+		[offset]="tableOffset" [limit]="tableLimit">
 	</cui-table>
 </ng-template>
-
- 

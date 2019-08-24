@@ -3,35 +3,21 @@
 	<div class="col-md-3">
 		<div class="container">
 			<span [innerText]="'_Syslogs_' | i18n" class="text-large"></span>
-			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0"
-				>showing
+			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0">showing
 				{{ tableStartIndex  + " - " + tableEndIndex }}
-				of {{ totalItems }} syslog messages</span
-			>
+				of {{ totalItems }} syslog messages</span>
 		</div>
 	</div>
 	<div class="col-md-9">
 		<div>
-			<form
-				#f="ngForm"
-				class="row"
-				id="searchForm"
-				(keydown)="keyDownFunction($event)"
-			>
+			<form #f="ngForm" class="row" id="searchForm" (keydown)="keyDownFunction($event)">
 				<div class="col-md-3">
 					<div class="form-group input--icon input--compressed">
 						<div class="form-group__text">
-							<input
-								data-auto-id="includeMsg"
-								#includeMsg="ngModel"
-								[(ngModel)]="msgInclude"
-								name="includeMsg"
-								type="text"
-								class="form-control"
-								placeholder="{{
+							<input data-auto-id="includeMsg" #includeMsg="ngModel" [(ngModel)]="msgInclude"
+								name="includeMsg" type="text" class="form-control" placeholder="{{
 									'_SyslogIncludeMessage_' | i18n
-								}}"
-							/>
+								}}" />
 							<button type="button" class="link" tabindex="-1">
 								<span class="icon-search"></span>
 							</button>
@@ -41,15 +27,9 @@
 				<div class="col-md-3">
 					<div class="form-group input--icon input--compressed">
 						<div class="form-group__text">
-							<input
-								data-auto-id="excludeMsg"
-								#excludeMsg="ngModel"
-								[(ngModel)]="msgExclude"
-								name="excludeMsg"
-								type="text"
-								class="form-control"
-								placeholder="{{ 'ExcludeMessage' | i18n }}"
-							/>
+							<input data-auto-id="excludeMsg" #excludeMsg="ngModel" [(ngModel)]="msgExclude"
+								name="excludeMsg" type="text" class="form-control"
+								placeholder="{{ 'ExcludeMessage' | i18n }}" />
 
 							<button type="button" class="link" tabindex="-1">
 								<span class="icon-search"></span>
@@ -60,15 +40,8 @@
 				<div class="col-md-3">
 					<div class="form-group input--icon input--compressed">
 						<div class="form-group__text">
-							<input
-								data-auto-id="search"
-								#search="ngModel"
-								[(ngModel)]="searchVal"
-								name="search"
-								type="text"
-								class="form-control"
-								placeholder="{{ '_SyslogSearch_' | i18n }}"
-							/>
+							<input data-auto-id="search" #search="ngModel" [(ngModel)]="searchVal" name="search"
+								type="text" class="form-control" placeholder="{{ '_SyslogSearch_' | i18n }}" />
 							<button type="button" class="link" tabindex="-1">
 								<span class="icon-search"></span>
 							</button>
@@ -80,24 +53,15 @@
 						<button class="btn btn--small btn--gray-ghost disabled">
 							<span class="icon-location"></span>
 						</button>
-						<button
-							data-auto-id="list-view-btn"
-							class="btn btn--small btn--gray-ghost"
-						>
+						<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost">
 							<span class="icon-list-view"></span>
 						</button>
-						<button
-							data-auto-id="grid-view-btn"
-							class="btn btn--small btn--gray-ghost"
-						>
+						<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost">
 							<span class="icon-grid-view"></span>
 						</button>
 					</div>
-					<cui-dropdown
-						[actions]="dropdownActions"
-						position="left"
-						icon="icon-more icon-small text-muted rotate-90"
-					>
+					<cui-dropdown [actions]="dropdownActions" position="left"
+						icon="icon-more icon-small text-muted rotate-90">
 					</cui-dropdown>
 				</div>
 			</form>
@@ -105,23 +69,12 @@
 	</div>
 </div>
 <div class="container base-margin-top" data-auto-id="syslog-message-table">
-	<cui-table
-		[options]="tableOptions"
-		[data]="tableData"
-		[limit]="tableLimit"
-		[offset]="tableOffset"
-		(onSortingChanged)="onTableSortingChanged($event)"
-		(onTableRowClicked)="onTableRowSelection($event)"
-		*ngIf="!loading"
-	></cui-table>
+	<cui-table [options]="tableOptions" [data]="tableData" [limit]="tableLimit" [offset]="tableOffset"
+		(onSortingChanged)="onTableSortingChanged($event)" (onTableRowClicked)="onTableRowSelection($event)"
+		*ngIf="!loading"></cui-table>
 	<div class="section">
-		<cui-pager
-			*ngIf="tableData.length"
-			[page]="tableOffset"
-			[limit]="tableLimit"
-			[totalItems]="totalItems"
-			(onPageChanged)="onPagerUpdated($event)"
-		></cui-pager>
+		<cui-pager *ngIf="tableData.length" [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
+			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
 	</div>
 </div>
 <!-- grid-section ends -->
@@ -137,50 +90,33 @@
 	</div>
 </ng-template>
 
-<details-panel
-	*ngIf="selectedAsset"
-	[hidden]="!selectedAsset"
-	[fullscreen]="fullscreen"
->
-	<details-panel-header
-		(close)="onPanelClose()"
-		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false"
-	>
+<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div class="row syslog360-header-title">
 			<div class="col-md-12">
 				<div class="text-xlarge">
-					<span
-				 [innerText]="'_SyslogMessageType_' | i18n"></span>
-				 <span>
-					: {{ selectedAsset.MsgType }} </span>
+					<span [innerText]="'_SyslogMessageType_' | i18n"></span>
+					<span>
+						: {{ selectedAsset.MsgType }} </span>
 				</div>
-				
+
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-md-2">
 				<div class="row">
 					<div class="col-md-12" [innerText]="'Severity'"></div>
-					<div
-						class="col-md-12"
-						[innerText]="selectedAsset.SyslogSeverity"
-					></div>
+					<div class="col-md-12" [innerText]="selectedAsset.SyslogSeverity"></div>
 				</div>
 			</div>
 			<div class="col-md-3">
 				<div class="row">
 					<div class="col-md-12" [innerText]="'Syslog Count'"></div>
-					<div
-						class="col-md-12"
-						[innerText]="selectedAsset.syslogMsgCount"
-					></div>
+					<div class="col-md-12" [innerText]="selectedAsset.syslogMsgCount"></div>
 				</div>
 			</div>
 		</div>
 		<div detailsPanelTitle class="text-xlarge"></div>
 	</details-panel-header>
-	<syslog-message-details [asset]="selectedAsset"></syslog-message-details>
-	<!-- <asset-details [asset]="selectedAsset"></asset-details> -->
+	<syslog-message-details [asset]="selectedAsset" [selectedFilter]="syslogsParams"></syslog-message-details>
 </details-panel>
-

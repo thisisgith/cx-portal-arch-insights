@@ -9,7 +9,7 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService, SyslogDeviceData, SyslogDeviceDetailsdata, SyslogFilter } from '@sdp-api';
+import { SyslogsService, SyslogDeviceData, SyslogDeviceDetailsdata, SyslogFilter, SyslogPanelIPSer } from '@sdp-api';
 import { Subject, of, Subscription } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -56,6 +56,8 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	};
 	public selected;
 	public destroy$ = new Subject();
+	public deviceHeaderValues: SyslogPanelIPSer;
+	public notScaned: boolean;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -195,9 +197,23 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 		} else {
 			this.selectedAsset = undefined;
 		}
+		this.sysLogHeaderDetails(tableRowData);
 
 	}
 
+	/**
+	 * Headers Details
+	 * @param tableRowData contains table row data
+	 */
+	public sysLogHeaderDetails (tableRowData) {
+		this.syslogsService.getDeviceHeaderDetails(tableRowData)
+		.subscribe(data => {
+			this.deviceHeaderValues = data;
+			if (this.deviceHeaderValues.lastScan === null) {
+				this.notScaned = true;
+			}
+		});
+	}
 	/**
 	 * Determines whether panel close on
 	 */

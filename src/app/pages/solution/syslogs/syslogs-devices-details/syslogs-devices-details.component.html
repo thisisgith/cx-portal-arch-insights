@@ -2,58 +2,45 @@
 		class="text-large"></span></div>
 <div class="row half-margin-bottom ">
 	<div class="col-6">
-			<form
-			#f="ngForm"
-			class="row"
-			id="searchForm"
-			(keydown)="keyDownFunction($event)"
-		>
-	<div class="col-md-6">
-		<div class="form-group input--icon input--compressed">
-			<div class="form-group__text">
-				<input
-					data-auto-id="includeFilterId"
-					#includeFilter="ngModel"
-					[(ngModel)]="includeMsgFilter"
-					name="includeFilterName"
-					type="text"
-					class="form-control"
-					placeholder="{{ '_SyslogIncludeMessage_' | i18n }}"
-				/>
-				<label>Include Messages</label>
-				<button type="button" class="link" tabindex="-1">
-					<span class="icon-search"></span>
-				</button>
+		<form #f="ngForm" class="row" id="searchForm" (keydown)="keyDownFunction($event)">
+			<div class="col-md-6">
+				<div class="form-group input--icon input--compressed">
+					<div class="form-group__text">
+						<input data-auto-id="includeFilterId" #includeFilter="ngModel" [(ngModel)]="includeMsgFilter"
+							name="includeFilterName" type="text" class="form-control"
+							placeholder="{{ '_SyslogIncludeMessage_' | i18n }}" />
+						<label>Include Messages</label>
+						<button type="button" class="link" tabindex="-1">
+							<span class="icon-search"></span>
+						</button>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-	<div class="col-md-6">
-		<div class="form-group input--icon input--compressed">
-			<div class="form-group__text">
-				<input
-					data-auto-id="excludeMsgId"
-					#excludeFilter="ngModel"
-					[(ngModel)]="excludeMsgFilter"
-					name="excludeMsgName"
-					type="text"
-					class="form-control"
-					placeholder="{{ 'ExcludeMessage' | i18n }}"
-				/>
-                <label>Exclude Messages</label>
-				<button type="button" class="link" tabindex="-1">
-					<span class="icon-search"></span>
-				</button>
+			<div class="col-md-6">
+				<div class="form-group input--icon input--compressed">
+					<div class="form-group__text">
+						<input data-auto-id="excludeMsgId" #excludeFilter="ngModel" [(ngModel)]="excludeMsgFilter"
+							name="excludeMsgName" type="text" class="form-control"
+							placeholder="{{ 'ExcludeMessage' | i18n }}" />
+						<label>Exclude Messages</label>
+						<button type="button" class="link" tabindex="-1">
+							<span class="icon-search"></span>
+						</button>
+					</div>
+				</div>
 			</div>
-		</div>
+		</form>
 	</div>
-	</form>
- </div>
 	<div class="col-md-3">
-		<cui-select label="Severity" [required]="false"  [items]="severityList" placeholder="Select Severity" [compressed]="false" [(ngModel)]="selectedSeverity" (ngModelChange)="onSelection()" optionsKey="name" optionsValue="value">
+		<cui-select label="Severity" [required]="false" [items]="severityList" placeholder="Select Severity"
+			[compressed]="false" [(ngModel)]="selectedSeverity" (ngModelChange)="onSelection()" optionsKey="name"
+			optionsValue="value">
 		</cui-select>
 	</div>
 	<div class="col-md-3">
-	<cui-select label="Time Range" [required]="false"  [items]="timeRangeList" placeholder="Select timeRange" [compressed]="false" [(ngModel)]="selectedTimeRange" (ngModelChange)="onSelection()" optionsKey="name" optionsValue="value">
+		<cui-select label="Time Range" [required]="false" [items]="timeRangeList" placeholder="Select timeRange"
+			[compressed]="false" [(ngModel)]="selectedTimeRange" (ngModelChange)="onSelection()" optionsKey="name"
+			optionsValue="value">
 		</cui-select>
 	</div>
 </div>

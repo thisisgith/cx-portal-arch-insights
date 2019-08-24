@@ -28,6 +28,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	@Input('asset') public asset: SyslogPanelGridData;
 	@ViewChild('innertableref', { static: true }) public innertableref: TemplateRef<{ }>;
 	@ViewChild('numbervalueref', { static: true }) public numbervalueref: TemplateRef<{ }>;
+	@Input('selectedFilter') public selectedFilter: any;
 	public tableOptions: CuiTableOptions;
 	public innerTableOptions: CuiTableOptions;
 	public selectdrowpdown = {
@@ -49,15 +50,19 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	// tslint:disable-next-line: no-any
 	public timePeriod: any[] = [{
 		name: '24hr',
+		value: 1,
 	},
 	{
 		name: '7d',
+		value: 7,
 	},
 	{
 		name: '15d',
+		value: 15,
 	},
 	{
 		name: '30d',
+		value: 30,
 	}];
 	constructor (
 		private logger: LogService,
@@ -82,6 +87,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public ngOnChanges () {
 		this.loadSyslogPaneldata(this.asset);
 		this.loadSyslogPanelFilter(this.asset);
+		this.selectdrowpdown.timePeriod = this.selectedFilter.days;
 	}
 
 	/**

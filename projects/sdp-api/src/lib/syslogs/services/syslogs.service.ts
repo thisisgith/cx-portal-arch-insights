@@ -12,6 +12,7 @@ import { SyslogPanelGridData } from './../models/syslogpanel-data';
 import { SyslogPanelFilterData } from '../models/syslogpanelfilter-data';
 import { SyslogDeviceData } from './../models/syslog-device-data';
 import { SyslogDevicePanelOuter } from '../models/syslogdevicepanel-data';
+import { SyslogPanelIPSer } from '../models/syslogdeviceheaderdetails-data';
 @Injectable({
 	providedIn: 'root',
 })
@@ -91,7 +92,7 @@ class SyslogsService extends __BaseService {
 		const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/api/customerportal/syslog/v1/asset/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&asset='+syslogParams.asset+'&companyId='+syslogParams.customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/asset/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&asset='+syslogParams.asset+"&companyId="+syslogParams.customerId,
 			__body,
 			{
 			  headers: __headers,
@@ -119,7 +120,7 @@ class SyslogsService extends __BaseService {
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType="+syslogPanelParams.MsgType+"&companyId="+customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType='+syslogPanelParams.MsgType+"&companyId="+customerId,
 			__body,
 			{
 			  headers: __headers, 
@@ -150,7 +151,7 @@ class SyslogsService extends __BaseService {
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/filters?msgType="+syslogPanelParams.MsgType+"&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily",
+			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/filters?msgType='+syslogPanelParams.MsgType+"&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily",
 			__body,
 			{
 			  headers: __headers, 
@@ -172,12 +173,13 @@ class SyslogsService extends __BaseService {
 
 	}
 	sysPanelFilterGridData(SyslogFilterParam,syslogParams){
+		this.convertNullToEmpty(SyslogFilterParam)
 		const __params = this.newParams();
         const __headers = new HttpHeaders(); 
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType="+syslogParams.MsgType+"&productFamily="+SyslogFilterParam.productFamily+"&productId="+SyslogFilterParam.productID+"&severity=3"+"&software="+SyslogFilterParam.Software,
+			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days='+SyslogFilterParam.timePeriod+"&msgType="+syslogParams.MsgType+"&productFamily="+SyslogFilterParam.productFamily+"&productId="+SyslogFilterParam.productID+"&severity=3"+"&software="+SyslogFilterParam.Software,
 			__body,
 			{
 			  headers: __headers, 
@@ -225,6 +227,46 @@ class SyslogsService extends __BaseService {
 			return this.devicePanelDetails(devicedata).pipe(
 			  __map(_r => <SyslogDevicePanelOuter[]>_r.body),
 			);
+		  }
+
+		  public deviceHeaderDetails (tableRowData) {
+			let __params = this.newParams();
+			let __headers = new HttpHeaders();
+			let __body: any = null;
+			const req = new HttpRequest<any>(
+				'GET',
+				this.rootUrl+'/api/customerportal/syslog/v1/asset/viewDetails?deviceIp='+tableRowData.DeviceIp+"&customerId=7293498",
+				__body,
+				{
+				  headers: __headers,
+				  params: __params,
+				  responseType: 'json',
+				});
+	
+			  return this.http.request<any>(req)
+			  .pipe(
+				__filter(_r => _r instanceof HttpResponse),
+				__map((_r) => {
+				  return <__StrictHttpResponse<SyslogPanelIPSer>>_r;
+				}),
+			  );
+		}
+		public getDeviceHeaderDetails (tableRowData): __Observable<SyslogPanelIPSer> {
+			return this.deviceHeaderDetails(tableRowData).pipe(
+			  __map(_r => <SyslogPanelIPSer>_r.body),
+			);
+		  }
+
+
+		  public convertNullToEmpty(selectParams){
+			  let objectKeys= Object.keys(selectParams)
+			  for(let objectValue of objectKeys){
+				if (selectParams.hasOwnProperty(objectValue)) {
+					if(selectParams[objectValue] === null){
+						selectParams[objectValue] = '';
+					}
+				 }
+			  }
 		  }
 }
 
