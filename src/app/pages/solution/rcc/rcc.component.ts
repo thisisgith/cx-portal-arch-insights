@@ -82,12 +82,13 @@ export class RccComponent implements OnInit, OnDestroy {
 		policycategory: '',
 		policygroupid: '',
 		policyname: '',
+		ruleseverity: '',
 		ruletitle: '',
 	};
 	public selectedViolationModal = false;
 	public selectedAssetData = {
 		deviceName: '',
-		ipaddress: '',
+		ipAddress: '',
 		lastScan: '',
 		serialNumber: '',
 	};
