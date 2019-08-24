@@ -72,3 +72,7 @@ export * from './lib/afm/afm.module';
 export * from './lib/syslogs/models';
 export * from './lib/syslogs/services';
 export * from './lib/syslogs/syslogs-data.module';
+
+export * from './lib/crash-prevention/models';
+export * from './lib/crash-prevention/services';
+export * from './lib/crash-prevention/crash-prevention.module';
