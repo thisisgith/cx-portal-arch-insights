@@ -231,14 +231,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.policyViolationsGridData = responseData.summary;
 				this.tableConfig.totalItems = this.policyViolationsGridData.length;
 				this.loading = false;
-			});
-		catchError(err => {
-			this.loading = false;
-			this.logger.error(
-				`:: Error : (${err.status}) ${err.message}`);
-
-			return of({ });
-		});
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getRCCData() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * Gets selected sub filters
@@ -265,14 +265,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.tableAssetData = assetGridData;
 				this.tableAssetDataSample = assetGridData.data.assetList;
 				this.loading = false;
-			});
-		catchError(err => {
-			this.loading = false;
-			this.logger.error(
-				`:: Error : (${err.status}) ${err.message}`);
-
-			return of({ });
-		});
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getRCCAssetData() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * Gets row selected
@@ -315,13 +315,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				severityFilter.seriesData = filterObjRes.severityFilters;
 				this.assetCount = filterObjRes.assetCount;
 				this.policyViolationCount = filterObjRes.policyViolationCount;
-			});
-		catchError(err => {
-			this.logger.error(
-				`:: Error : (${err.status}) ${err.message}`);
-
-			return of({ });
-		});
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getFiltersData() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * Gets selected sub filters
@@ -343,13 +344,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				assetSeverityFilter.seriesData = filterObjRes.ostypeList;
 				const assetOsTypeFilter = _.find(this.filters, { key: 'assetSeverity' });
 				assetOsTypeFilter.seriesData = filterObjRes.severityList;
-			});
-		catchError(err => {
-			this.logger.error(
-				`:: Error : (${err.status}) ${err.message}`);
-
-			return of({ });
-		});
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getAssetFiltersData() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * Determines whether pager updated on
@@ -372,7 +374,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * Determines whether pager updated on
 	 * @param view gives selected view
 	 */
-	public selectedView (view: any) {
+	public selectedView (view: 'violation' | 'asset') {
 		if (view === 'violation') {
 			this.isAssetView = false;
 			this.buildFilters();
@@ -388,7 +390,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * Determines whether pager updated on
 	 * @param view gives selected view
 	 */
-	public selectedAssetView (view: any) {
+	public selectedAssetView (view: 'violation' | 'asset') {
 		this.view = view;
 		this.isAssetView = true;
 		this.assetTableOptions = new CuiTableOptions({
