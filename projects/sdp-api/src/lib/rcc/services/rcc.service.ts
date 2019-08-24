@@ -6,7 +6,7 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { Observable as __Observable } from 'rxjs';
 import { RccConfiguration as __Configuration } from "../rcc-configuration";
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { RccData } from "../models/rcc-data";
+import { RccData, RccPolicyViolationData, RccCustomer, violationGridParams,AssetGridDataQueryParam } from "../models/rcc-data";
 import { RccGridData, RccAssetGridData } from './../models/rcc-grid-data';
 import { RccAssetDetails ,RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterResponse, RccAssetFilterDetailsResponse } from './../models/rcc-asset-details';
 
@@ -28,7 +28,7 @@ class RccService extends __BaseService {
 		super(config, http);
 	}
 
-	getViolationCount(queryParamMapObj: object): __Observable<any> {
+	getViolationCount(queryParamMapObj: RccCustomer): __Observable<any> {
 		return this.invokeHTTPGet<RccData>(
 			`${this.rootUrl}${RccService.getViolationCount}`,
 			queryParamMapObj)
@@ -37,7 +37,7 @@ class RccService extends __BaseService {
 			);
 	}
 
-	getAssetCount(queryParamMapObj: object): __Observable<any> {
+	getAssetCount(queryParamMapObj: RccCustomer): __Observable<any> {
 		return this.invokeHTTPGet<RccData>(
 			`${this.rootUrl}${RccService.getAssetCount}`,
 			queryParamMapObj)
@@ -46,7 +46,7 @@ class RccService extends __BaseService {
 			);
 	}
 
-	getGridData(queryParamMapObj: object): __Observable<any> {
+	getGridData(queryParamMapObj: violationGridParams): __Observable<any> {
 		return this.invokeHTTPGet<RccGridData>(
 			`${this.rootUrl}${RccService.getGridData}`,
 			queryParamMapObj)
@@ -55,7 +55,7 @@ class RccService extends __BaseService {
 			);
 	}
 
-	getAssetGridData(queryParamMapObj: object): __Observable<any> {
+	getAssetGridData(queryParamMapObj: AssetGridDataQueryParam): __Observable<any> {
 		return this.invokeHTTPGet<RccAssetGridData>(
 			`${this.rootUrl}${RccService.getAssetGridData}`,
 			queryParamMapObj)
@@ -64,7 +64,7 @@ class RccService extends __BaseService {
 			);
 	}
 
-	getRccPolicyRuleDetailsData(queryParamMapObj: object): __Observable<any> {
+	getRccPolicyRuleDetailsData(queryParamMapObj: RccPolicyViolationData): __Observable<any> {
 		return this.invokeHTTPGet<RccAssetGridData>(
 			`${this.rootUrl}${RccService.getRccPolicyRuleDetailsData}`,
 			queryParamMapObj)
@@ -73,7 +73,7 @@ class RccService extends __BaseService {
 			);
 	}
 
-	getRccViolationDetailsData(queryParamMapObj: object): __Observable<any> {
+	getRccViolationDetailsData(queryParamMapObj: RccPolicyViolationData): __Observable<any> {
 		return this.invokeHTTPGet<RccAssetGridData>(
 			`${this.rootUrl}${RccService.getRccViolationDetailsData}`,
 			queryParamMapObj)

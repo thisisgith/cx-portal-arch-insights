@@ -51,3 +51,25 @@ export interface violationGridParams {
     search: string,
     severity: string,
 }
+
+export interface RccPolicyViolationData {
+    customerId: number,
+    policyCategory: string,
+    policyGroup: string,
+    policyName: string,
+    ruleName: string,
+    severity: string,
+    violationCount?:number
+}
+
+export interface RccCustomer {
+    customerId: number 
+}
+
+export interface AssetGridDataQueryParam {
+    customerId: number,
+    pageLimt:number, 
+    pageNum:number, 
+    policyType:string,
+    severity:string,
+}

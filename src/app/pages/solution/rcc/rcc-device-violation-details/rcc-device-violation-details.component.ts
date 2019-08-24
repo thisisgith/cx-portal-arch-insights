@@ -5,7 +5,7 @@ import {
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import {
-	RccService, RccUtilService,
+	RccService, RccUtilService, RccPolicyViolationData,
 } from '@sdp-api';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -54,7 +54,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		productModel : '',
 	};
 	public destroy$ = new Subject();
-	public queryParamMapObj = { };
+	public queryParamMapObj: RccPolicyViolationData;
 	constructor (
 		private logger: LogService,
 		private rccTrackService: RccService,

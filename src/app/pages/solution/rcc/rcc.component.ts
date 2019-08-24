@@ -12,6 +12,7 @@ import {
 	RccAssetGridDataSample,
 	violationGridParams,
 	Filter,
+	AssetGridDataQueryParam,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
 import { Subject } from 'rxjs';
@@ -220,7 +221,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param violationGridObj pagenumber
 	 * @returns selected filters
 	 */
-	public getRCCData (violationGridObj: object) {
+	public getRCCData (violationGridObj: violationGridParams) {
 		this.loading = true;
 		this.RccTrackService
 			.getGridData(violationGridObj)
@@ -251,7 +252,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public getRCCAssetData (pageNumber: number, pageLimit: number, policyGroup: string,
 		severityNew: string) {
 		this.loading = true;
-		const queryParamMapObj: object = {
+		const queryParamMapObj: AssetGridDataQueryParam = {
 			customerId: this.customerId,
 			pageLimt: pageLimit,
 			pageNum: pageNumber,
