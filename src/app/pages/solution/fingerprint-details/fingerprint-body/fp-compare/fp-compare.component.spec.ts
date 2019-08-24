@@ -69,8 +69,8 @@ describe('FpCompareComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.listdeviceDataA)
-					.toBeUndefined();
+				expect(component.listdeviceDataA.length)
+					.toEqual(0);
 				done();
 			});
 	});
@@ -187,7 +187,7 @@ describe('FpCompareComponent', () => {
 	it('should check onselection productFamilyA', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getListdevice')
 			.and
-			.returnValue(of(ComparisonViewScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
 		component.onSelection('AIR-CT5760');
 		tick();
 		fixture.detectChanges();
@@ -198,7 +198,7 @@ describe('FpCompareComponent', () => {
 	it('should check onselection productFamilyB', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getListdevice')
 			.and
-			.returnValue(of(ComparisonViewScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
 		component.onSelection3('AIR-CT5760');
 		tick();
 		fixture.detectChanges();

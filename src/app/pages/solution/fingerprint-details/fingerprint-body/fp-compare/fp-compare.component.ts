@@ -140,7 +140,7 @@ export class FpCompareComponent implements OnChanges {
 	 * productfamilyB
 	 * @param selection listdevice
 	 */
-	public onSelection3(selection: any) {
+	public onSelection3 (selection: any) {
 		this.productFamilyB = selection;
 		/*Asset B is disabled  */
 		this.assetsBactive = false;
