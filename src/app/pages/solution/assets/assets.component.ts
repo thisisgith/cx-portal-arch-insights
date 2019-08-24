@@ -132,6 +132,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public allAssetsSelected = false;
 	public filtered = false;
 	private InventorySubject: Subject<{ }>;
+	private openDropdown: HTMLElement;
 
 	public view: 'list' | 'grid' = 'list';
 	public selectOnLoad = false;
@@ -206,11 +207,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return _.filter([
 			_.get(item, ['data', 'supportCovered'], false) ? {
 				label: I18n.get('_OpenSupportCase_'),
-				onClick: () => this.cuiModalService.showComponent(
-					CaseOpenComponent,
-					{ asset: item.data },
-					'full',
-				),
+				onClick: () => {
+					if (this.openDropdown) {
+						this.openDropdown.click();
+						this.openDropdown = undefined;
+					}
+
+					return this.cuiModalService.showComponent(
+						CaseOpenComponent,
+						{ asset: item.data },
+						'full',
+					);
+				},
 			} : undefined,
 			_.get(item, ['element', 'isManagedNE'], false) ?
 				{
@@ -1289,5 +1297,26 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	private getRows () {
 		return this.view === 'list' ? 10 : 12;
+	}
+
+	/**
+	 * Click handler for asset action menu
+	 * @param {Event} event click event
+	 */
+	public onDropdownClick (event: Event) {
+		const target = <HTMLElement> event.target;
+		if (event.isTrusted && !target.childNodes.length) { // real user click on menu button
+			if (this.openDropdown && (this.openDropdown !== event.target)) {
+				// If a menu is open and user clicks a different menu, close the original menu
+				this.openDropdown.click();
+				this.openDropdown = target;
+			} else if (this.openDropdown === event.target) {
+				// If a menu is open and user clicks the same menu, all menus are now closed
+				this.openDropdown = undefined;
+			} else {
+				// If no menu is open and user clicks a menu, a menu is open
+				this.openDropdown = target;
+			}
+		}
 	}
 }

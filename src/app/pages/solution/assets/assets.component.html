@@ -363,7 +363,8 @@
 	<cui-dropdown *ngIf="actions.length"
 		[actions]="actions"
 		position="left"
-		icon="icon-more icon-medium text-muted rotate-90">
+		icon="icon-more icon-medium text-muted rotate-90"
+		(click)="onDropdownClick($event)">
 	</cui-dropdown>
 </ng-template>
 
