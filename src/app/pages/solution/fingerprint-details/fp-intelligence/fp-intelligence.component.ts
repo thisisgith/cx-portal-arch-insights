@@ -1,11 +1,11 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { LogService } from '@cisco-ngx/cui-services';
-import { FpIntelligenceService, SimilarDevicesDistribution } from '@sdp-api';
-import { debounceTime } from 'rxjs/operators';
-import * as _ from 'lodash-es';
-import { Subject } from 'rxjs';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { LogService } from "@cisco-ngx/cui-services";
+import { FpIntelligenceService, SimilarDevicesDistribution } from "@sdp-api";
+import { debounceTime } from "rxjs/operators";
+import * as _ from "lodash-es";
+import { Subject } from "rxjs";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
 
 /**
  * type seriesData
@@ -19,55 +19,57 @@ interface SeriesData {
  * fp-intelligence component
  */
 @Component({
-	selector: 'fp-intelligence',
-	templateUrl: './fp-intelligence.component.html',
+	selector: "fp-intelligence",
+	styleUrls: ["./fp-intelligence.component.scss"],
+	templateUrl: "./fp-intelligence.component.html"
 })
 export class FpIntelligenceComponent implements OnChanges {
-
 	@Input() public asset: any;
 	public deviceId: string;
 	public customerId: string;
 	private destroyed$: Subject<void> = new Subject<void>();
 	public minMatch = 50;
 	public deviceCount = 100;
-	public similarityCriteria = 'fingerprint';
+	public similarityCriteria = "fingerprint";
 	public similarDevicesDistribution: SimilarDevicesDistribution;
 	public softwareSeriesData: SeriesData[];
 	public productSeriesData: SeriesData[];
 	public productFamilySeriesData: SeriesData[];
 	public seriesDataLoading = false;
+	public noData = false;
 	public requestForm: FormGroup = this.fb.group({
-		similarityCriteria: ['fingerprint', Validators.required],
+		similarityCriteria: ["fingerprint", Validators.required],
 		deviceCount: [100, Validators.required],
-		minMatch: [50, Validators.required],
+		minMatch: [50, Validators.required]
 	});
 
-	constructor (
+	constructor(
 		private fpIntelligenceService: FpIntelligenceService,
 		private logger: LogService,
 		private fb: FormBuilder,
-		private route: ActivatedRoute,
+		private route: ActivatedRoute
 	) {
-		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.customerId = _.get(user, ['info', 'customerId']);
+		const user = _.get(this.route, ["snapshot", "data", "user"]);
+		this.customerId = _.get(user, ["info", "customerId"]);
 	}
 	/**
 	 * component init
 	 */
-	public ngOnInit (): void {
-		this.logger.info('Similar Device Distribution Loaded');
-		this.requestForm.valueChanges.pipe(debounceTime(1000))
-		.subscribe(val => {
-			this.logger.info(val);
-			this.loadSimilarDevicesDistribution();
-		});
+	public ngOnInit(): void {
+		this.logger.info("Similar Device Distribution Loaded");
+		this.requestForm.valueChanges
+			.pipe(debounceTime(1000))
+			.subscribe(val => {
+				this.logger.info(val);
+				this.loadSimilarDevicesDistribution();
+			});
 	}
 	/**
 	 * asset
 	 * @param changes simplechange
 	 */
-	public ngOnChanges (changes: SimpleChanges): void {
-		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+	public ngOnChanges(changes: SimpleChanges): void {
+		const currentAsset = _.get(changes, ["asset", "currentValue"]);
 		if (currentAsset) {
 			this.deviceId = currentAsset.deviceId;
 			this.loadSimilarDevicesDistribution();
@@ -76,61 +78,80 @@ export class FpIntelligenceComponent implements OnChanges {
 	/**
 	 * similarDevicesDisteribution
 	 */
-	public loadSimilarDevicesDistribution () {
+	public loadSimilarDevicesDistribution() {
 		this.seriesDataLoading = true;
-		const similarDeviceParams = this.getSimilarDeviceParams(this.requestForm.value);
-		this.fpIntelligenceService.getSimilarDevicesDistribution(similarDeviceParams)
+		const similarDeviceParams = this.getSimilarDeviceParams(
+			this.requestForm.value
+		);
+		this.fpIntelligenceService
+			.getSimilarDevicesDistribution(similarDeviceParams)
 			.subscribe(
-				similarDevieDistribution => this.updateSeriesData(similarDevieDistribution),
-				err => this.logger.error(err),
-				 () =>  { this.seriesDataLoading = false; },
-				);
+				similarDevieDistribution => {
+					this.updateSeriesData(similarDevieDistribution);
+					this.noData = false;
+				},
+				err => {
+					this.seriesDataLoading = false;
+					this.noData = true;
+					this.logger.error(err);
+				},
+				() => {
+					this.seriesDataLoading = false;
+				}
+			);
 	}
 	/**
 	 * SeriesData
 	 * @param similarDevieDistribution similarDeviceDistribution
 	 */
-	public updateSeriesData (similarDevieDistribution: SimilarDevicesDistribution): void {
-		this.softwareSeriesData = similarDevieDistribution.softwares
-		.map(item => {
-			const serData: SeriesData = { label: '', value: 0 };
-			serData.label = item.softwareVersion;
-			serData.value = parseInt(item.deviceCount, 10);
+	public updateSeriesData(
+		similarDevieDistribution: SimilarDevicesDistribution
+	): void {
+		this.softwareSeriesData = similarDevieDistribution.softwares.map(
+			item => {
+				const serData: SeriesData = { label: "", value: 0 };
+				serData.label = item.softwareVersion;
+				serData.value = parseInt(item.deviceCount, 10);
 
-			return serData;
-		});
-		this.productSeriesData = similarDevieDistribution.products
-		.map(item => {
-			const serData: SeriesData = { label: '', value: 0 };
+				return serData;
+			}
+		);
+		this.productSeriesData = similarDevieDistribution.products.map(item => {
+			const serData: SeriesData = { label: "", value: 0 };
 			serData.label = item.productId;
 			serData.value = parseInt(item.deviceCount, 10);
 
 			return serData;
 		});
-		this.productFamilySeriesData = similarDevieDistribution.productFamilies
-		.map(item => {
-			const serData: SeriesData = { label: '', value: 0 };
-			serData.label = item.productFamily;
-			serData.value = parseInt(item.deviceCount, 10);
+		this.productFamilySeriesData = similarDevieDistribution.productFamilies.map(
+			item => {
+				const serData: SeriesData = { label: "", value: 0 };
+				serData.label = item.productFamily;
+				serData.value = parseInt(item.deviceCount, 10);
 
-			return serData;
-		});
+				return serData;
+			}
+		);
 	}
-/**
- * similarDeviceparams
- * @param filterValues customerId
- * @returns deviceId
- */
-	public getSimilarDeviceParams (filterValues): FpIntelligenceService.GetSimilarDevicesParams {
-		return _.merge({
-			deviceId: this.deviceId,
-			customerId: this.customerId,
-		},
-		filterValues);
+	/**
+	 * similarDeviceparams
+	 * @param filterValues customerId
+	 * @returns deviceId
+	 */
+	public getSimilarDeviceParams(
+		filterValues
+	): FpIntelligenceService.GetSimilarDevicesParams {
+		return _.merge(
+			{
+				deviceId: this.deviceId,
+				customerId: this.customerId
+			},
+			filterValues
+		);
 	}
 
 	/** Function used to destroy the component */
-	public ngOnDestroy () {
+	public ngOnDestroy() {
 		this.destroyed$.next();
 		this.destroyed$.complete();
 	}

@@ -1,24 +1,24 @@
-<div class="row base-padding-top base-padding-left">
+<div class="row base-padding-top base-padding-left subheader text-bold">
 	<span class="text-bold" [innerText]="'_CP_Filter_' | i18n"></span>
 </div>
-<div class="flex-fill">
+<div class="flex-fill base-padding-top">
 	<form [formGroup]="requestForm" class="row">
 		<div class="col-6">
-			<div class="text-medium" [innerText]="'_CP_SimilarityCriteria_' | i18n"></div>
-			<div class="form-group form-group--inline">
-				<label class="radio">
-					<input type="radio" formControlName="similarityCriteria" value="features"
-						[(ngModel)]="similarityCriteria" data-auto-id="SimilarityCriteriaFeatures">
-					<span class="radio__input"></span>
-					<span class="radio__label hidden-xs" [innerText]="'_CP_FeaturesOnly_' | i18n"></span>
-				</label>
-			</div>
+			<div class="text-medium half-padding-top" [innerText]="'_CP_SimilarityCriteria_' | i18n"></div>
 			<div class="form-group form-group--inline">
 				<label class="radio">
 					<input type="radio" formControlName="similarityCriteria" value="fingerprint"
 						[(ngModel)]="similarityCriteria" data-auto-id="SimilarityCriteriaFingerprint">
 					<span class="radio__input"></span>
 					<span class="radio__label hidden-xs" [innerText]="'_CP_FeaturesHardwareandSoftware_' | i18n"></span>
+				</label>
+			</div>
+			<div class="form-group form-group--inline">
+				<label class="radio">
+					<input type="radio" formControlName="similarityCriteria" value="features"
+						[(ngModel)]="similarityCriteria" data-auto-id="SimilarityCriteriaFeatures">
+					<span class="radio__input"></span>
+					<span class="radio__label hidden-xs" [innerText]="'_CP_FeaturesOnly_' | i18n"></span>
 				</label>
 			</div>
 		</div>
@@ -30,6 +30,7 @@
 						<input id="input-size-compressed-match" type="number" min="0" max="100" formControlName="minMatch">
 					</div>
 				</div>
+				<span>&#37;</span>
 			</div>
 		</div>
 		<div class="col-3">
@@ -38,9 +39,10 @@
 				<div class="form-group input--compressed">
 					<div class="form-group__text">
 						<input id="input-size-compressed-count" type="number" min="0" max="1000" formControlName="deviceCount">
+						<span [innerText]="'_Assets_' | i18n | lowercase"></span>
 					</div>
-
 				</div>
+				<span [innerText]="'_Assets_' | i18n | lowercase"></span>
 			</div>
 		</div>
 	</form>
@@ -61,10 +63,10 @@
 	</div>
 </ng-template>
 <ng-template #crashRiskTemplate let-item="celldata">
-	<span class="text-dkgray-1" >{{ (item.riskScore / 100)| percent:'3.8' }}</span>
+	<span class="text-dkgray-1" >{{ (item.riskScore / 100)| percent:'2.2-4' }}</span>
 </ng-template>
 <ng-template #similarityMatchTemplate let-item="celldata">
-	<cui-progressbar [title]="'_CP_Match' | i18n:item.riskScore" [percentage]="item.similarityScore" color="default">
+	<cui-progressbar [title]="'_CP_Match' | i18n:(item.similarityScore/100 | percent:'2.2-4')" [percentage]="item.similarityScore" color="default">
 	</cui-progressbar>
 </ng-template>
 <ng-template #compareTemplate let-item="celldata">

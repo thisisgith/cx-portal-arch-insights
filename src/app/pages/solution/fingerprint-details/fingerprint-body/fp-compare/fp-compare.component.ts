@@ -28,8 +28,8 @@ export class FpCompareComponent implements OnChanges {
 	public riskScore: number;
 	public CpProductfamilyService: any;
 	public CpListdeviceService: any;
-	public listdeviceDataA: any;
-	public listdeviceDataB: any;
+	public listdeviceDataA: any[];
+	public listdeviceDataB: any[];
 	private destroy$ = new Subject();
 	public customerId: string;
 	public compareView: string;
@@ -38,24 +38,26 @@ export class FpCompareComponent implements OnChanges {
 	public comparisonInfo = {
 		customerId: this.customerId,
 		deviceId1: ' ',
-		deviceId2: ' ',
+		deviceId2: ' '
 	};
 
-	constructor (
+	constructor(
 		private crashPreventionService: CrashPreventionService,
 		private logger: LogService,
-		private route: ActivatedRoute,
+		private route: ActivatedRoute
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.compareView = 'hardware';
+		this.listdeviceDataA = [];
+		this.listdeviceDataB = [];
 	}
 
 	/**
 	 * deviceId1
 	 * @param changes simplechanges
 	 */
-	public ngOnChanges (changes: SimpleChanges): void {
+	public ngOnChanges(changes: SimpleChanges): void {
 		if (changes.devices.currentValue) {
 			this.deviceId1 = changes.devices.currentValue.deviceId1;
 			this.productId1 = changes.devices.currentValue.productId1;
@@ -74,7 +76,6 @@ export class FpCompareComponent implements OnChanges {
 				deviceId: this.deviceId1,
 				productId: this.productId1,
 			};
-
 			this.crashPreventionService
 				.getProductFamily(this.productFamilydetails)
 				.pipe(takeUntil(this.destroy$))
@@ -89,6 +90,25 @@ export class FpCompareComponent implements OnChanges {
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((results: IListdevice) => {
 					this.listdeviceDataA = results.deviceDetail;
+					const deviceFound = this.listdeviceDataA
+					.find(device => device.deviceId === this.deviceId1);
+					this.deviceId1 = deviceFound
+						? deviceFound.deviceId
+						: deviceFound;
+				});
+			this.crashPreventionService
+				.getListdevice({
+					customerId: this.customerId,
+					productId: this.productId2,
+				})
+				.pipe(takeUntil(this.destroy$))
+				.subscribe((results: IListdevice) => {
+					this.listdeviceDataB = results.deviceDetail;
+					const deviceFound = this.listdeviceDataB
+					.find(device => device.deviceId === this.deviceId2);
+					this.deviceId2 = deviceFound
+						? deviceFound.deviceId
+						: deviceFound;
 				});
 		}
 	}
@@ -109,31 +129,43 @@ export class FpCompareComponent implements OnChanges {
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((results: IListdevice) => {
 				this.listdeviceDataA = results.deviceDetail;
+				const deviceFound = this.listdeviceDataA.find(
+					device => device.deviceId === this.deviceId1
+				);
+				this.deviceId1 = deviceFound
+					? deviceFound.deviceId
+					: deviceFound;
 			});
 	}
 	/**
 	 * productfamilyB
 	 * @param selection listdevice
 	 */
-	public onSelection3 (selection: any) {
+	public onSelection3(selection: any) {
 		this.productFamilyB = selection;
 		/*Asset B is disabled  */
 		this.assetsBactive = false;
 		this.crashPreventionService
 			.getListdevice({
 				customerId: this.customerId,
-				productId: selection,
+				productId: selection
 			})
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((results: IListdevice) => {
 				this.listdeviceDataB = results.deviceDetail;
+				const deviceFound = this.listdeviceDataB.find(
+					device => device.deviceId === this.deviceId2
+				);
+				this.deviceId2 = deviceFound
+					? deviceFound.deviceId
+					: deviceFound;
 			});
 	}
 	/**
 	 * onSelection
 	 * @param selection deviceId1
 	 */
-	public onSelection1 (selection: any) {
+	public onSelection1(selection: any) {
 		this.deviceId1 = selection;
 		this.logger.info(selection);
 	}
@@ -141,7 +173,7 @@ export class FpCompareComponent implements OnChanges {
 	 * onSelection
 	 * @param selection deviceId2
 	 */
-	public onSelection2 (selection: any) {
+	public onSelection2(selection: any) {
 		this.deviceId2 = selection;
 		this.logger.info(selection);
 	}
@@ -149,7 +181,7 @@ export class FpCompareComponent implements OnChanges {
 	/**
 	 * Destroys the component
 	 */
-	public ngOnDestroy () {
+	public ngOnDestroy() {
 		this.destroy$.next();
 		this.destroy$.complete();
 	}
@@ -158,7 +190,7 @@ export class FpCompareComponent implements OnChanges {
 	 * @param event tab click event
 	 * @param selectedTab  compareview
 	 */
-	public updateCompareView (event, selectedTab) {
+	public updateCompareView(event, selectedTab) {
 		if (selectedTab) {
 			this.compareView = selectedTab;
 			this.logger.info(event);

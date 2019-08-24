@@ -1,29 +1,13 @@
-<div class="row base-padding-top base-padding-left">
+<div class="row base-padding-top base-padding-left subheader text-bold">
 	<h6 [innerText]="'_CP_Filter_' | i18n"></h6>
 </div>
-<div class="flex-fill">
+<div class="flex-fill base-padding-top">
 	<form [formGroup]="requestForm" class="row">
 		<div class="col-6">
 			<div
-				class="subheader text-bold"
+				class="text-medium  half-padding-top"
 				[innerText]="'_CP_SimilarityCriteria_' | i18n"
 			></div>
-			<div class="form-group form-group--inline">
-				<label class="radio">
-					<input
-						type="radio"
-						formControlName="similarityCriteria"
-						value="features"
-						[(ngModel)]="similarityCriteria"
-						data-auto-id="SimilarityCriteria"
-					/>
-					<span class="radio__input"></span>
-					<span
-						class="radio__label hidden-xs"
-						[innerText]="'_CP_FeaturesOnly_' | i18n"
-					></span>
-				</label>
-			</div>
 			<div class="form-group form-group--inline">
 				<label class="radio">
 					<input
@@ -37,6 +21,22 @@
 					<span
 						class="radio__label hidden-xs"
 						[innerText]="'_CP_FeaturesHardwareandSoftware_' | i18n"
+					></span>
+				</label>
+			</div>
+			<div class="form-group form-group--inline">
+				<label class="radio">
+					<input
+						type="radio"
+						formControlName="similarityCriteria"
+						value="features"
+						[(ngModel)]="similarityCriteria"
+						data-auto-id="SimilarityCriteria"
+					/>
+					<span class="radio__input"></span>
+					<span
+						class="radio__label hidden-xs"
+						[innerText]="'_CP_FeaturesOnly_' | i18n"
 					></span>
 				</label>
 			</div>
@@ -81,7 +81,11 @@
 		</div>
 	</form>
 </div>
-<div class="row flex">
+<div
+	class="row flex-fill sd-chart"
+	*ngIf="!seriesDataLoading; else loadingTemplate"
+>
+<ng-container *ngIf="!noData; else noDataTemplate">
 	<div class="col-6">
 		<div>
 			<span
@@ -126,7 +130,11 @@
 			[loading]="seriesDataLoading"
 		></bar-chart>
 	</div>
+</ng-container>
 </div>
+<ng-template #noDataTemplate>
+	<span class="text-center dbl-padding" [innerText]="'_NoResultsFound_' | i18n"></span>
+</ng-template>
 <ng-template #loadingTemplate>
 	<cui-loader color="muted"></cui-loader>
 </ng-template>
