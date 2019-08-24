@@ -1,6 +1,6 @@
 /* tslint:disable */
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpRequest, HttpResponse, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from "@angular/common/http";
 import { BaseService as __BaseService } from "../../core/base-service";
 import { map as __map, filter as __filter } from 'rxjs/operators';
 import { Observable as __Observable } from 'rxjs';
@@ -8,54 +8,96 @@ import { RccConfiguration as __Configuration } from "../rcc-configuration";
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
 import { RccData } from "../models/rcc-data";
 import { RccGridData, RccAssetGridData } from './../models/rcc-grid-data';
+import { RccAssetDetails ,RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterResponse, RccAssetFilterDetailsResponse } from './../models/rcc-asset-details';
+
 @Injectable({
 	providedIn: "root"
 })
 class RccService extends __BaseService {
+
+	static readonly getViolationCount = '/api/customerportal/compliance/v1/service/summary-filters';
+	static readonly getAssetCount = '/api/customerportal/compliance/v1/service/severity-ostype-detail';
+	static readonly getGridData = '/api/customerportal/compliance/v1/service/violation-summary';
+	static readonly getAssetGridData = '/api/customerportal/compliance/v1/service/filter-asset-detail';
+	static readonly getRccPolicyRuleDetailsData = '/api/customerportal/compliance/v1/service/policy-rule-details';
+	static readonly getRccViolationDetailsData = '/api/customerportal/compliance/v1/service/violation-details';
+	static readonly getAssetSummaryData = '/api/customerportal/compliance/v1/service/fetch-violation-details';
+	static readonly getRccAssetFilterData = '/api/customerportal/compliance/v1/service/fetch-violation-details-filter';
+
 	constructor(config: __Configuration, http: HttpClient) {
 		super(config, http);
 	}
 
 	getViolationCount(queryParamMapObj: object): __Observable<any> {
-		let url = `https://violation.sdp11-idev.csco.cloud/compliance/violation/api/summary-filters`;
-		return this.invokeHTTPGet<RccData>(url, queryParamMapObj).pipe(
-			__map(_r => _r.body)
-		);
+		return this.invokeHTTPGet<RccData>(
+			`${this.rootUrl}${RccService.getViolationCount}`,
+			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
 	}
 
 	getAssetCount(queryParamMapObj: object): __Observable<any> {
-		let url = `https://compliancewrapper.sdp11-idev.csco.cloud/v1/service/severity-ostype-detail`;
-		return this.invokeHTTPGet<RccData>(url, queryParamMapObj).pipe(
-			__map(_r => _r.body)
-		);
+		return this.invokeHTTPGet<RccData>(
+			`${this.rootUrl}${RccService.getAssetCount}`,
+			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
 	}
 
 	getGridData(queryParamMapObj: object): __Observable<any> {
-		let url = `https://violation.sdp11-idev.csco.cloud/compliance/violation/api/violation-summary`;
-		// let url = 'https://api-stage.cisco.com/api/customerportal/compliance/v1/service/violation-summary'
-		return this.invokeHTTPGet<RccGridData>(url, queryParamMapObj).pipe(
-			__map(_r => _r.body)
-		);
+		return this.invokeHTTPGet<RccGridData>(
+			`${this.rootUrl}${RccService.getGridData}`,
+			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
 	}
 
 	getAssetGridData(queryParamMapObj: object): __Observable<any> {
-		let url = `https://compliancewrapper.sdp11-idev.csco.cloud/v1/service/filter-asset-detail`;
-		return this.invokeHTTPGet<RccAssetGridData>(url, queryParamMapObj).pipe(
-			__map(_r => _r.body)
-		);
+		return this.invokeHTTPGet<RccAssetGridData>(
+			`${this.rootUrl}${RccService.getAssetGridData}`,
+			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
 	}
+
 	getRccPolicyRuleDetailsData(queryParamMapObj: object): __Observable<any> {
-		let url = `https://violation.sdp11-idev.csco.cloud/compliance/violation/api/policy-rule-details`;
-		return this.invokeHTTPGet<RccAssetGridData>(url, queryParamMapObj).pipe(
-			__map(_r => _r.body)
-		);
+		return this.invokeHTTPGet<RccAssetGridData>(
+			`${this.rootUrl}${RccService.getRccPolicyRuleDetailsData}`,
+			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
 	}
 
 	getRccViolationDetailsData(queryParamMapObj: object): __Observable<any> {
-		let url = `https://violation.sdp11-idev.csco.cloud/compliance/violation/api/violation-details`;
-		return this.invokeHTTPGet<RccAssetGridData>(url, queryParamMapObj).pipe(
-			__map(_r => _r.body)
-		);
+		return this.invokeHTTPGet<RccAssetGridData>(
+			`${this.rootUrl}${RccService.getRccViolationDetailsData}`,
+			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
+	}
+
+	getAssetSummaryData(queryParamMapObj: RccAssetSelectReq): __Observable<any> {
+		return this.invokeHTTPGet<RccAssetDetails>(
+			`${this.rootUrl}${RccService.getAssetSummaryData}`,
+			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
+	}
+
+	getRccAssetFilterData(queryParamMapObj: RccAssetFilterReq): __Observable<any> {
+		return this.invokeHTTPGet<RccAssetFilterResponse>(
+			`${this.rootUrl}${RccService.getRccAssetFilterData}`,
+			queryParamMapObj)
+			.pipe(
+				__map(_r => _r.body)
+			);
 	}
 
 	invokeHTTPGet<T>(url: string, queryParamMapObj: object): __Observable<any> {

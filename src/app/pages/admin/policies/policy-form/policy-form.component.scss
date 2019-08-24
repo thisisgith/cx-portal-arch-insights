@@ -39,6 +39,10 @@
 	height: 100%;
 }
 
+.button-txt {
+	line-height: 28px;
+}
+
 select {
 	width: 100px;
 	display: inline-block;
@@ -50,6 +54,6 @@ select {
 	width: 110px;
 }
 
-#add {
-	margin-top: 100px;
+.heading-row {
+	margin-right: 0;
 }

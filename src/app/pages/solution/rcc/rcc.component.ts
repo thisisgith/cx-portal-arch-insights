@@ -14,8 +14,8 @@ import {
 	Filter,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
-import { Subject, of } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -82,12 +82,13 @@ export class RccComponent implements OnInit, OnDestroy {
 		policycategory: '',
 		policygroupid: '',
 		policyname: '',
+		ruleseverity: '',
 		ruletitle: '',
 	};
 	public selectedViolationModal = false;
 	public selectedAssetData = {
 		deviceName: '',
-		ipaddress: '',
+		ipAddress: '',
 		lastScan: '',
 		serialNumber: '',
 	};
@@ -182,6 +183,11 @@ export class RccComponent implements OnInit, OnDestroy {
 					template: this.severityColorTemplate,
 				},
 				{
+					key: 'violationcount',
+					name: I18n.get('_RccViolationCount_'),
+					sortable: true,
+				},
+				{
 					key: 'policygroupid',
 					name: I18n.get('_RccPolicyGroup_'),
 					sortable: true,
@@ -199,11 +205,6 @@ export class RccComponent implements OnInit, OnDestroy {
 				{
 					key: 'ruletitle',
 					name: I18n.get('_RccRuleName_'),
-					sortable: true,
-				},
-				{
-					key: 'violationcount',
-					name: I18n.get('_RccViolationCount_'),
 					sortable: true,
 				},
 				{
@@ -230,14 +231,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.policyViolationsGridData = responseData.summary;
 				this.tableConfig.totalItems = this.policyViolationsGridData.length;
 				this.loading = false;
-			});
-		catchError(err => {
-			this.loading = false;
-			this.logger.error(
-				`:: Error : (${err.status}) ${err.message}`);
-
-			return of({ });
-		});
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getRCCData() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * Gets selected sub filters
@@ -264,14 +265,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.tableAssetData = assetGridData;
 				this.tableAssetDataSample = assetGridData.data.assetList;
 				this.loading = false;
-			});
-		catchError(err => {
-			this.loading = false;
-			this.logger.error(
-				`:: Error : (${err.status}) ${err.message}`);
-
-			return of({ });
-		});
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getRCCAssetData() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * Gets row selected
@@ -314,13 +315,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				severityFilter.seriesData = filterObjRes.severityFilters;
 				this.assetCount = filterObjRes.assetCount;
 				this.policyViolationCount = filterObjRes.policyViolationCount;
-			});
-		catchError(err => {
-			this.logger.error(
-				`:: Error : (${err.status}) ${err.message}`);
-
-			return of({ });
-		});
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getFiltersData() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * Gets selected sub filters
@@ -342,13 +344,14 @@ export class RccComponent implements OnInit, OnDestroy {
 				assetSeverityFilter.seriesData = filterObjRes.ostypeList;
 				const assetOsTypeFilter = _.find(this.filters, { key: 'assetSeverity' });
 				assetOsTypeFilter.seriesData = filterObjRes.severityList;
-			});
-		catchError(err => {
-			this.logger.error(
-				`:: Error : (${err.status}) ${err.message}`);
-
-			return of({ });
-		});
+			},
+			error => {
+				this.loading = false;
+				this.logger.error(
+					'RccComponent : getAssetFiltersData() ' +
+				`:: Error : (${error.status}) ${error.message}`);
+			},
+		);
 	}
 	/**
 	 * Determines whether pager updated on
@@ -371,7 +374,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * Determines whether pager updated on
 	 * @param view gives selected view
 	 */
-	public selectedView (view: any) {
+	public selectedView (view: 'violation' | 'asset') {
 		if (view === 'violation') {
 			this.isAssetView = false;
 			this.buildFilters();
@@ -387,7 +390,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * Determines whether pager updated on
 	 * @param view gives selected view
 	 */
-	public selectedAssetView (view: any) {
+	public selectedAssetView (view: 'violation' | 'asset') {
 		this.view = view;
 		this.isAssetView = true;
 		this.assetTableOptions = new CuiTableOptions({
@@ -572,7 +575,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * method to close slider
 	 * @param model is the selected slider name
 	 */
-	public onPanelClose (model: string) {
+	public onPanelClose (model: 'selectedViolationModal' | 'selectedAssetModal') {
 		this[model] = !this[model];
 	}
 	/**

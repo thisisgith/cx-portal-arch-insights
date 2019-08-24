@@ -6,29 +6,28 @@
                 panel
                 no-padding-top
                 no-padding-bottom
-				flex"
+				flex
+				panel--bordered-bottom"
 			[ngClass]="{
-                'panel--bordered-bottom': (i !== endIndex),
                 'selected': device.selected
 			}"
-			[style.height]="rowHeight + 'px'"
-			[style.line-height]="rowHeight + 'px'"
+			[style.min-height]="rowHeight + 'px'"
 			(click)="toggleDeviceSelected(device)"
 			data-auto-id="list.item">
-			<div class="col-md-1 device-table">
+			<div class="col-1 device-table">
 				<input
 					class="text-xlarge"
 					type="checkbox"
 					[checked]="device.selected">
 				<span class="checkbox__input"></span>
 			</div>
-			<div class="col-md-5 device-table">
+			<div class="col-5 device-table">
 				<span [innerText]="device.productId"></span>
 			</div>
-			<div class="col-md-3 device-table">
+			<div class="col-3 device-table">
 				<span [innerText]="device.ipAddress"></span>
 			</div>
-			<div class="col-md-3 device-table">
+			<div class="col-3 device-table">
 				<span [innerText]="device.lastScan ? (device.lastScan | fromNow) : ''"></span>
 			</div>
 		</div>

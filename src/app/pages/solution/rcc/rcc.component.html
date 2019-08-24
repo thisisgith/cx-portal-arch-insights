@@ -2,15 +2,15 @@
 	<div class="row">
 		<div class="col-md-2 filter__selected">
 			<div class="row">
-				<div class="col-md-12 panel flex-center flex-fill filter assetsCount margintop30"
+				<div class="col-md-12 panel flex-center flex-fill filter assetsCount base-margin-top"
 					data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
 					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="policyViolationCount  || ('_NA_' | i18n) "></div>
-					<div class="text-large flex-center" [innerText]="'_RccPolicyViolations' | i18n"></div>
+					<div class="text-large flex-center" [innerText]="'_RccViolations_' | i18n | titlecase"></div>
 				</div>
 				<div data-auto-id="1" class="col-md-12 panel flex-center flex-fill filter assetsCount"
 					(click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
 					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerText]="assetCount || ('_NA_' | i18n) "></div>
-					<div class="text-large flex-center" [innerText]= "'_RccAssetWithViolations' | i18n"></div>
+					<div class="text-large flex-center" [innerText]= "'_RccAssetWithViolations_' | i18n"></div>
 				</div>
 			</div>
 		</div>
@@ -40,14 +40,14 @@
 	<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	<div class="divider qtr-margin-top"></div>
 </ng-container>
-<div class="col-md-12 margintoptable">
-	<div class="col-md-9 margintop21">
-		<span [innerText]="'_RccShowing' | i18n"></span>&nbsp;
+<div class="col-md-12 base-margin-top">
+	<div class="col-md-9 base-margin-top">
+		<span [innerText]="'_RccShowing_' | i18n"></span>&nbsp;
 		<span [innerText]="policyViolationCount"></span>&nbsp;
-		<span [innerText]="'_RccViolations' | i18n"></span>&nbsp;
-		<span [innerText]="'_RccAcross' | i18n"></span>&nbsp;
+		<span [innerText]="'_RccConditionViolations_' | i18n"></span>&nbsp;
+		<span [innerText]="'_RccAcross_' | i18n"></span>&nbsp;
 		<span [innerText]="assetCount">  </span>&nbsp;
-		<span [innerText]="'_RccAssets' | i18n"></span>
+		<span [innerText]="'_RccAssets_' | i18n"></span>
 	</div>
 	<div class="col-md-3 searchSection">
 		<div class="flex flex-fluid flex-right">
@@ -57,7 +57,7 @@
 						<input data-auto-id="searchInput" id="searchInput" type="search" #searchInput1 [(ngModel)]="searchInput" name="searchInput"
 							[minlength]="searchOptions?.min" [maxlength]="searchOptions?.max"
 							[pattern]="searchOptions?.pattern" formControlName="search"
-							placeholder="{{ '_RccSearch_' | i18n }}">
+							placeholder="{{ '_Search_' | i18n }}">
 						<button data-auto-id="searchButton" type="button" class="link">
 							<span class="icon-search"></span>
 						</button>
@@ -124,7 +124,7 @@
 </ng-template>
 
 <ng-template #filterBar>
-	<div class="row margintop10">
+	<div class="row half-margin-top">
 		<div class="col-md-1 flex flex-center-vertical">
 			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
 		</div>
@@ -152,26 +152,44 @@
 	<details-panel-header (close)="onPanelClose('selectedViolationModal')" [(fullscreen)]="fullscreen"
 		[fullscreenToggle]="true">
 		<div detailsPanelTitle>
-			<span class="text-xlarge" [innerText]="'_Rule Name_' | i18n "></span>
-			<span class="text-xlarge" innerText=" : {{policyViolationInfo?.ruletitle}}"> </span>
+			<span class="text-xlarge" 
+				[innerText]="'_RccRuleNameArg_' | i18n:policyViolationInfo?.ruletitle || ('_NA_' | i18n)">
+			</span>
 		</div>
 		<div class="row ">
 			<div class="col-md-8 base-margin-bottom">
 				<div class="flex">
 					<div data-auto-id="RccPolicyGroup" class="dbl-margin-right">
-						<div class="text-small text-uppercase text-bold" innerText="{{ '_Poliy Group_' | i18n }}">
+						<div class="text-small text-bold" [innerText]="'_RccAssetPolicyGroup_' | i18n">
 						</div>
-						<div innerText="{{ policyViolationInfo?.policygroupid || ('_NA_' | i18n) }}"></div>
+						<div [innerText]="policyViolationInfo?.policygroupid || ('_NA_' | i18n)"></div>
 					</div>
 					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
-						<div class="text-small text-uppercase text-bold" innerText="{{ '_Poliy Category_' | i18n }}">
+						<div class="text-small text-bold" [innerText]="'_RccPolicyCategory_' | i18n">
 						</div>
-						<div innerText="{{ policyViolationInfo?.policycategory || ('_NA_' | i18n) }}"></div>
+						<div [innerText]="policyViolationInfo?.policycategory || ('_NA_' | i18n) "></div>
 					</div>
 					<div data-auto-id="RccPoliyName" class="dbl-margin-right">
-						<div class="text-small text-uppercase text-bold" innerText="{{ '_Poliy Name_' | i18n }}">
+						<div class="text-small text-bold" [innerText]="'_RccPolicyName_' | i18n">
 						</div>
-						<div innerText="{{ policyViolationInfo?.policyname  || ('_NA_' | i18n)  }}">
+						<div [innerText]="policyViolationInfo?.policyname  || ('_NA_' | i18n) ">
+						</div>
+					</div>
+					<div data-auto-id="highestSeverity" class="dbl-margin-right">
+						<div class="text-small text-bold" [innerText]="'_HighestSeverity_' | i18n">
+						</div>
+						<div>
+							<i *ngIf="policyViolationInfo?.ruleseverity" 
+								class="qtr-margin-right icon-circle" 
+								iconSize="default" 
+								[ngClass]="{
+								    'P1':'p1class',
+									'P2':'p2class',
+									'P3':'p3class',
+									'P4':'p4class',
+									'P5':'p5class'
+								}[policyViolationInfo?.ruleseverity]"></i>
+							<span [innerText]="policyViolationInfo?.ruleseverity  || ('_NA_' | i18n) "></span>
 						</div>
 					</div>
 				</div>
@@ -181,33 +199,32 @@
 	<app-rcc-device-violation-details [policyViolationInfo]="policyViolationInfo">
 	</app-rcc-device-violation-details>
 </details-panel>
-<!-- App Details 360 slide-out -->
-<!-- App Details 360 slide-out -->
+
 <details-panel [hidden]="!selectedAssetModal" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose('selectedAssetModal')" [(fullscreen)]="fullscreen"
 		[fullscreenToggle]="true">
 		<div detailsPanelTitle>
-			<span class="text-xlarge" [innerText]="'_Violations_' | i18n ">:</span>
-			<span class="text-xlarge selected" innerText="{{ selectedAssetData?.deviceName || ('_NA_' | i18n) }}"></span>
+			<span class="text-xlarge" [innerText]="('_RccViolations_' | i18n | titlecase)+(': ')"></span>
+			<a href="" class="text-xlarge selected" [innerText]="selectedAssetData?.deviceName || ('_NA_' | i18n)"></a>
 		</div>
-		<div class="row ">
+		<div class="row">
 			<div class="col-md-8 base-margin-bottom">
 				<div class="flex">
 					<div data-auto-id="RccIPAddress" class="dbl-margin-right">
-						<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetIpAddress_' | i18n }}">
+						<div class="text-small text-uppercase text-bold" [innerText]="'_RccAssetIpAddress_' | i18n">
 						</div>
-						<div innerText="{{ selectedAssetData?.ipaddress || ('_NA_' | i18n) }}"></div>
+						<div [innerText]="selectedAssetData?.ipAddress || ('_NA_' | i18n) "></div>
 					</div>
 					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
 						<div class="text-small text-uppercase text-bold"
-							innerText="{{ '_RccAssetSerialNumber_' | i18n }}">
+							[innerText]="'_RccAssetSerialNumber_' | i18n ">
 						</div>
-						<div innerText="{{ selectedAssetData?.serialNumber || ('_NA_' | i18n) }}"></div>
+						<div [innerText]="selectedAssetData?.serialNumber || ('_NA_' | i18n)"></div>
 					</div>
 					<div data-auto-id="RccSerialNumber" class="dbl-margin-right">
-						<div class="text-small text-uppercase text-bold" innerText="{{ '_RccAssetLastScan_' | i18n }}">
+						<div class="text-small text-uppercase text-bold" [innerText]="'_RccAssetLastScan_' | i18n ">
 						</div>
-						<div innerText="{{ (selectedAssetData?.lastScan| date:'yyyy MMM dd' ) || ('_Never_' | i18n) }}">
+						<div [innerText]=" (selectedAssetData?.lastScan| date:'yyyy MMM dd' ) || ('_Never_' | i18n) ">
 						</div>
 					</div>
 				</div>
@@ -216,28 +233,35 @@
 	</details-panel-header>
 	<app-rcc-asset-violation-details [selectedAssetData]="selectedAssetData"></app-rcc-asset-violation-details>
 </details-panel>
+<!-- App Details 360 slide-out -->
 
 <ng-template #severityColor let-item="celldata">
-	<i class="qtr-margin-right icon-circle" iconSize="default" *ngIf="item.ruleseverity" [ngClass]="
+	<i class="qtr-margin-right icon-circle" 
+		iconSize="default" 
+		*ngIf="item.ruleseverity" 
+		[ngClass]="
 		{
-			'p1class': item.ruleseverity == 'P1',
-			'p2class': item.ruleseverity == 'P2',
-			'p3class': item.ruleseverity == 'P3',
-			'p4class': item.ruleseverity == 'P4',
-			'p5class': item.ruleseverity == 'P5'
-		}">
+			'P1': 'p1class',
+			'P2': 'p2class',
+			'P3': 'p3class',
+			'P4': 'p4class',
+			'P5': 'p5class'
+		}[item.ruleseverity]">
 	</i>
 	<span [innerText]="item.ruleseverity"></span>
 </ng-template>
 
 <ng-template #tableIcon let-item="celldata">
-	<i class="qtr-margin-right icon-circle icon-small" iconSize="default" *ngIf="item.severity" [ngClass]="{
-	  		'p1class': item.severity == 'P1',
-	  		'p2class': item.severity == 'P2',
-	  		'p3class': item.severity == 'P3',
-	  		'p4class': item.severity == 'P4',
-	  		'p5class': item.severity == 'P5'
-		}">
+	<i class="qtr-margin-right icon-circle" 
+		iconSize="default" 
+		*ngIf="item.severity" 
+		[ngClass]="{
+			'P1': 'p1class',
+			'P2': 'p2class',
+			'P3': 'p3class',
+			'P4': 'p4class',
+			'P5': 'p5class'
+		}[item.severity]">
 	</i>
 	<span [innerText]="item.violationCount"></span>
 </ng-template>

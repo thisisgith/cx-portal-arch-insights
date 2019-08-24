@@ -1,6 +1,6 @@
 /** getRccAssetFilterData params */
-const assetFilterParams = `customerId=this.customerId&pageIndex=1&pageSize=10
-&serialNumber=serialNumber&sortBy=asc&policyGroupName=&policyName=&severity=`;
+const assetFilterParams = 'customerId=this.customerId&pageIndex=1&pageSize=10' +
+'&serialNumber=serialNumber&sortBy=asc&policyGroupName=&policyName=&severity=';
 /** The mock response for allCrashDetails */
 const assetPolicyFilterInfo: any = {
 	data: {
