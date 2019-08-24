@@ -34,7 +34,7 @@
 		[innerText]="'_Filter_'| i18n">
 	</div>
 	<div class="row">
-		<div class="col-4 base-padding-top half-padding-left ">
+		<div class="col-3 base-padding-top half-padding-left ">
 			<div [innerText]="'_RccProductFamily_' | i18n"></div>
 			<cui-select data-auto-id="filterSelect" 
 				[items]="policyRuleData?.deviceFilterDetails?.productFamily"
@@ -47,7 +47,7 @@
 				optionsValue="name">
 			</cui-select>
 		</div>
-		<div class="col-4 base-padding-top half-padding-left">
+		<div class="col-3 base-padding-top half-padding-left">
 			<div [innerText]="'_RccProductModel_' | i18n"></div>
 			<cui-select data-auto-id="policyRuleSearch" 
 				[items]="policyRuleData?.deviceFilterDetails?.productModel"
@@ -60,7 +60,7 @@
 				optionsValue="name">
 			</cui-select>
 		</div>
-		<div class="col-4 base-padding-top half-padding-left">
+		<div class="col-3 base-padding-top half-padding-left">
 			<div [innerText]="'_RccOSName_' | i18n"></div>
 			<cui-select data-auto-id="policyRule" 
 				[items]="policyRuleData?.deviceFilterDetails?.osName"
@@ -106,4 +106,7 @@
 	<div class="dbl-padding">
 		<cui-spinner color="default" label=""></cui-spinner>
 	</div>
+</ng-template>
+<ng-template #deviceLink let-item="celldata">
+	<a href="" [innerText]="item.hostName"></a>
 </ng-template>

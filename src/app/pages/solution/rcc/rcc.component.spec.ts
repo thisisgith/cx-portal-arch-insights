@@ -242,18 +242,18 @@ describe('RccComponent', () => {
 	});
 
 	it('should search in violation grid data if', done => {
+		const tableCofig = {
+			tableLimit: 10,
+			tableOffset: 0,
+			totalItems: 15,
+		};
+		const event = {
+			keyCode: 13,
+		};
+		component.searchInput = 'sample';
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const tableCofig = {
-					tableLimit: 10,
-					tableOffset: 0,
-					totalItems: 15,
-				};
-				const event = {
-					keyCode: 13,
-				};
-				component.searchInput = 'sample';
 				component.searchViolations(event);
 				expect(event.keyCode)
 					.toEqual(13);

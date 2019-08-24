@@ -42,6 +42,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	@Input('policyViolationInfo') public policyViolationInfo: any;
 	@ViewChild('policyRowWellTemplate', { static: true })
 	private policyRowWellTemplate: TemplateRef<{ }>;
+	@ViewChild('deviceLink', { static: true }) private deviceLinkTemplate: TemplateRef<{ }>;
 	public policyRuleData: any = { };
 	public customerId: number;
 	public impactedAssetsCount: any;
@@ -160,6 +161,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					key: 'hostName',
 					name: I18n.get('_Device_'),
 					sortable: true,
+					template: this.deviceLinkTemplate,
 				},
 				{
 					key: 'ipAddress',
