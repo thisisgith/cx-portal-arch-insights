@@ -76,7 +76,7 @@
 			'P2':'p2class',
 			'P3':'p3class',
 			'P4':'p4class',
-			'P5':'p5class',
+			'P5':'p5class'
 		}[item.ruleHighSeverity]">
 	</i> 
 	<span [innerText]="item.ruleHighSeverity"></span>
@@ -84,12 +84,13 @@
 <ng-template #assetSeverityIconTemplate let-item="celldata">
 	<i *ngIf="item.severity" 
 		class="qtr-margin-right icon-circle" 
-		iconSize="default" [ngClass]="{
+		iconSize="default" 
+		[ngClass]="{
 			'P1':'p1class',
 			'P2':'p2class',
 			'P3':'p3class',
 			'P4':'p4class',
-			'P5':'p5class',
+			'P5':'p5class'
 		}[item.severity]">
 	</i>
 	<span [innerText]="item.severity"></span>

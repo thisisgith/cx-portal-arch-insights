@@ -75,7 +75,7 @@
 		</div>
 	</div>
 	<div class="row base-padding-top half-padding-left responsive-table"
-		*ngIf="!selectionLoading; else loaderTableTemplate;">
+		*ngIf="!selectionLoading; else loaderTemplate;">
 		<cui-table [options]="impactedDeviceTableOptions" [data]="impactedDeviceDetails"></cui-table>
 		<div class="section">
 			<cui-pager [page]="tableConfig.tableOffset" 
@@ -98,11 +98,6 @@
 	</ng-template>
 </div>
 <ng-template #loaderTemplate>
-	<div class="dbl-padding">
-		<cui-spinner color="default" label=""></cui-spinner>
-	</div>
-</ng-template>
-<ng-template #loaderTableTemplate>
 	<div class="dbl-padding">
 		<cui-spinner color="default" label=""></cui-spinner>
 	</div>

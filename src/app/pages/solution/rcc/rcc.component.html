@@ -183,11 +183,11 @@
 								class="qtr-margin-right icon-circle" 
 								iconSize="default" 
 								[ngClass]="{
-									'p1class': 'P1',
-									'p2class': 'P2',
-									'p3class': 'P3',
-									'p4class': 'P4',
-									'p5class': 'P5'
+								    'P1':'p1class',
+									'P2':'p2class',
+									'P3':'p3class',
+									'P4':'p4class',
+									'P5':'p5class'
 								}[policyViolationInfo?.ruleseverity]"></i>
 							<span [innerText]="policyViolationInfo?.ruleseverity  || ('_NA_' | i18n) "></span>
 						</div>
