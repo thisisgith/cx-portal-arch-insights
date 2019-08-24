@@ -14,8 +14,8 @@ import {
 	Filter,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
-import { Subject, of } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
 import { FormControl, FormGroup } from '@angular/forms';
