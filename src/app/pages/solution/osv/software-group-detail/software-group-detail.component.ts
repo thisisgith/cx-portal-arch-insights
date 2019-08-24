@@ -14,6 +14,10 @@ import * as _ from 'lodash-es';
 import {
 	OSVService,
 	SoftwareGroup,
+	SoftwareGroupVersion,
+	SoftwareGroupAsset,
+	SoftwareGroupVersionsResponse,
+	SoftwareGroupAssetsResponse,
 } from '@sdp-api';
 import { forkJoin, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
@@ -56,7 +60,6 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		};
 		this.logger.debug('SoftwareGroupDetailComponent Created!');
 	}
-	public recommendations = [];
 
 	/**
 	 * Initialization hook
@@ -96,33 +99,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	}
 
 	/**
-	 * get profile recommendations list
-	 * @returns profile recommendation observable
-	 */
-	public getProfileRecommendations () {
-		return this.osvService.getProfileRecommendations(this.params)
-			.pipe(
-				map((response: any) => {
-					this.recommendations = response;
-				}),
-				catchError(err => {
-					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-
-					return of({});
-				}),
-			);
-	}
-
-	/**
-	 * get profile assets list
-	 * @returns profile assets list observable
+	 * get software group assets list
+	 * @returns software group assets list observable
 	 */
 	public getSoftwareGroupAssets () {
-		return this.osvService.getSoftwareGroupAsset(this.params)
+		return this.osvService.getSoftwareGroupAssets(this.params)
 			.pipe(
-				map((response: any) => {
-					this.softwareGroupAssets = response;
+				map((response: SoftwareGroupAssetsResponse) => {
+					this.softwareGroupAssets = response.uiAssetList;
 					this.buildSoftwareGroupAssetsTable();
 				}),
 				catchError(err => {
@@ -135,14 +119,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	}
 
 	/**
-	 * get profile versions list
-	 * @returns profile versions list observable
+	 * get software group versions list
+	 * @returns software group versions list observable
 	 */
 	public getSoftwareGroupVersions () {
 		return this.osvService.getSoftwareGroupVersions(this.params)
 			.pipe(
-				map((response: ProfileVersion[]) => {
-					this.softwareGroupVersions = response;
+				map((response: SoftwareGroupVersionsResponse) => {
+					this.softwareGroupVersions = response.uiSwVersionList;
 					this.buildSoftwareGroupVersionsTable();
 				}),
 				catchError(err => {
@@ -158,7 +142,6 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * Resets data fields
 	 */
 	public clear () {
-		// this.recommendations = null;
 		this.softwareGroupAssets = null;
 		this.softwareGroupVersions = null;
 	}

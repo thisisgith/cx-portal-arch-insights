@@ -13,6 +13,8 @@ import { AssetRecommendationsResponse } from '../models/asset-recommendations-re
 import { AssetsResponse } from '../models/assets-response';
 import { SummaryResponse } from '../models/summary-response';
 import { ContactSupportResponse } from '../models/contact-support-response';
+import { SoftwareGroupVersionsResponse } from '../models/software-group-version-response';
+import { SoftwareGroupAssetsResponse } from '../models/software-group-asset-response';
 
 @Injectable({
 	providedIn: 'root',
@@ -25,7 +27,8 @@ class OSVService extends __BaseService {
 	static readonly getAssetsPath = '/api/customerportal/osv-ui/v1/assets';
 	static readonly updateAssetPath = '/api/customerportal/osv-ui/v1/updateAsset';
 	static readonly contactSupportPath = '/api/customerportal/criticalBugs/v1/mail/sendEmail';
-
+	static readonly getSoftwareGroupVersionsPath = '/api/dev/customerportal/osv-ui/v1/profileVersions';
+	static readonly getSoftwareGroupAssetsPath = '/api/dev/customerportal/osv-ui/v1/profileAssets';
 	constructor (
 		config: __Configuration,
 		http: HttpClient
@@ -362,6 +365,100 @@ class OSVService extends __BaseService {
 			__map(_r => _r.body as ContactSupportResponse)
 		);
 	}
+
+	/**
+	 * Software Group Versions
+	 * @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 *
+	 * @return successful operation
+	 */
+	getSoftwareGroupVersionsResponse (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<__StrictHttpResponse<SoftwareGroupVersionsResponse>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+
+		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.id != null) __params = __params.set('id', params.id.toString());
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${OSVService.getSoftwareGroupVersionsPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<SoftwareGroupVersionsResponse>;
+			})
+		);
+	}
+
+	/**
+	 * Profile Versions
+	 * @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 *
+	 * @return successful operation
+	 */
+	getSoftwareGroupVersions (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<SoftwareGroupVersionsResponse> {
+		return this.getSoftwareGroupVersionsResponse(params).pipe(
+			__map(_r => _r.body as SoftwareGroupVersionsResponse)
+		);
+	}
+
+	/**
+	 * Software Group Assets
+	 * @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 *
+	 * @return successful operation
+	 */
+	getSoftwareGroupAssetsResponse (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<__StrictHttpResponse<SoftwareGroupAssetsResponse>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+
+		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.id != null) __params = __params.set('id', params.id.toString());
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${OSVService.getSoftwareGroupAssetsPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<SoftwareGroupAssetsResponse>;
+			})
+		);
+	}
+
+	/**
+	 * Software Group Assets
+	 * @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
+	 *
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 *
+	 * @return successful operation
+	 */
+	getSoftwareGroupAssets (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<SoftwareGroupAssetsResponse> {
+		return this.getSoftwareGroupAssetsResponse(params).pipe(
+			__map(_r => _r.body as SoftwareGroupAssetsResponse)
+		);
+	}
 }
 
 module OSVService {
@@ -484,6 +581,20 @@ module OSVService {
 		 */
 		optimalVersion: string;
 
+	}
+
+	/**
+	 * Parameters for GetSoftwareGroupDetailsParam
+	 */
+	export interface GetSoftwareGroupDetailsParam {
+		/**
+		 * Unique identifier of a Cisco customer.
+		 */
+		customerId: string;
+		/**
+		 * Unique identifier of a Software Group.
+		 */
+		id: string;
 	}
 
 	/**

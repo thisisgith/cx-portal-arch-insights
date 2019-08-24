@@ -1,12 +1,28 @@
 <cui-tabs>
 	<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
-		<ng-container *ngTemplateOutlet="compareRecommendations"></ng-container>
+		coming soon
 	</cui-tab>
-	<cui-tab [label]="'_OsvSmartRecommendations' | i18n | uppercase" disabled="true">
-
+	<cui-tab [label]="'_OsvRecommendations_' | i18n | uppercase">
+		coming soon
 	</cui-tab>
-	<cui-tab [label]="'_OsvAssetsX_' | i18n:'0' | uppercase" disabled="true"></cui-tab>
-	<cui-tab [label]="'_OsvCurrentVersions_' | i18n:'0' | uppercase">
-
+	<cui-tab [label]="'_OsvAssetsX_' | i18n:softwareGroupAssets?.length | uppercase">
+		<ng-container *ngTemplateOutlet="softwareGroupAssetsTemp"></ng-container>
+	</cui-tab>
+	<cui-tab [label]="'_OsvCurrentVersions_' | i18n:softwareGroupVersions?.length | uppercase">
+		<ng-container *ngTemplateOutlet="softwareGroupVersionsTemp"></ng-container>
 	</cui-tab>
 </cui-tabs>
+
+
+<ng-template #softwareGroupVersionsTemp>
+	<div class="base-margin-top" *ngIf="!status.isLoading && softwareGroupVersions && softwareGroupVersions?.length > 0">
+		<cui-table [options]="softwareGroupVersionsTable" [data]="softwareGroupVersions"></cui-table>
+	</div>
+</ng-template>
+
+
+<ng-template #softwareGroupAssetsTemp>
+	<div class="base-margin-top" *ngIf="!status.isLoading && softwareGroupAssets && softwareGroupAssets?.length > 0">
+		<cui-table [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets"></cui-table>
+	</div>
+</ng-template>
