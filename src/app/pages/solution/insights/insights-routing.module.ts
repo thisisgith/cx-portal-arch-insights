@@ -10,8 +10,8 @@ const routes: Routes = [
 	{
 		children: [
 			{
-				loadChildren: () => import('../osv/osv.module')
-				.then(m => m.OptimalSoftwareVersionModule),
+				loadChildren: () => import('../rcc/rcc.module')
+				.then(m => m.RccModule),
 				path: 'compliance',
 				resolve: {
 					user: UserResolve,
