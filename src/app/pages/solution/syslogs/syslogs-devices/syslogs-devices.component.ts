@@ -37,7 +37,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public totalItems = 0;
 	public tableData: SyslogDeviceDetailsdata[] = [];
 	public pageNum = 1;
-	public severity = 7;
+	public severity = 3;
 	public timeRange = 1;
 	public catalog = '';
 	public selectedAsset;
@@ -46,6 +46,9 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public assetType = '';
 	public filters: SyslogFilter[];
 	public searchVal = '';
+	public tableStartIndex = 0;
+	public tableEndIndex = 0;
+	public showAsset360 = false;
 	public syslogsParams: SyslogsService.GetSyslogsParams = {
 		customerId: this.customerId,
 		pageNo: this.pageNum,
@@ -72,7 +75,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			customerId: this.customerId,
 			days: 1,
 			pageNo: this.pageNum,
-			severity: 7,
+			severity: 3,
 			size: this.pagerLimit,
 		};
 	}
@@ -201,6 +204,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public onPanelClose () {
 		this.selectedAsset = undefined;
 		this.showAssetPanel = false;
+	    this.showAsset360 = false;
 	}
 	/**
 	 * Determines whether pager updated on
@@ -208,6 +212,12 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPagerUpdated (pageInfo: any) {
 		this.tableOffset = pageInfo.page;
+	}
+	/**
+	 * Redirects to asset360
+	 */
+	public redirectToAsset360 () {
+		this.showAsset360 = true;
 	}
 
 	/**

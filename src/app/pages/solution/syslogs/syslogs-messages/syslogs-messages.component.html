@@ -1,7 +1,14 @@
 <!-- grid section starts -->
 <div class="row">
 	<div class="col-md-3">
-		<span [innerText]="'_Syslogs_' | i18n" class="text-large"></span>
+		<div class="container">
+			<span [innerText]="'_Syslogs_' | i18n" class="text-large"></span>
+			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0"
+				>showing
+				{{ tableStartIndex  + " - " + tableEndIndex }}
+				of {{ totalItems }} syslog messages</span
+			>
+		</div>
 	</div>
 	<div class="col-md-9">
 		<div>
@@ -21,7 +28,9 @@
 								name="includeMsg"
 								type="text"
 								class="form-control"
-								placeholder="{{ '_SyslogIncludeMessage_' | i18n }}"
+								placeholder="{{
+									'_SyslogIncludeMessage_' | i18n
+								}}"
 							/>
 							<button type="button" class="link" tabindex="-1">
 								<span class="icon-search"></span>
@@ -140,7 +149,13 @@
 	>
 		<div class="row syslog360-header-title">
 			<div class="col-md-12">
-				<h2 [innerText]="'_SyslogMessageType_' | i18n">: {{ selectedAsset.syslogMsgCount }}</h2>
+				<div class="text-xlarge">
+					<span
+				 [innerText]="'_SyslogMessageType_' | i18n"></span>
+				 <span>
+					: {{ selectedAsset.MsgType }} </span>
+				</div>
+				
 			</div>
 		</div>
 		<div class="row">
@@ -158,7 +173,7 @@
 					<div class="col-md-12" [innerText]="'Syslog Count'"></div>
 					<div
 						class="col-md-12"
-						[innerText]="selectedAsset.deviceCount"
+						[innerText]="selectedAsset.syslogMsgCount"
 					></div>
 				</div>
 			</div>
@@ -168,3 +183,4 @@
 	<syslog-message-details [asset]="selectedAsset"></syslog-message-details>
 	<!-- <asset-details [asset]="selectedAsset"></asset-details> -->
 </details-panel>
+

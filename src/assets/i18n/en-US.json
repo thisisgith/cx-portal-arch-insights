@@ -628,6 +628,8 @@
 	"_SyslogDays30_":"30days",
 	"_SyslogDays7_":"7days",
 	"_SyslogDetailedDescription_":"Detailed Description",
+	"__SyslogDeviceCount__":"Device Count",
+	"__SyslogDeviceDetailsInfo__":"Syslogs Details For",
 	"_SyslogExcludeMessage_":"Exclude Message",
 	"_SyslogFiltersBy_":"Filter By",
 	"_SyslogGridMessage_":"Message",

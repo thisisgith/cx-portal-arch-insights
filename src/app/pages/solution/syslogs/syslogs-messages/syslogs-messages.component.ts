@@ -48,6 +48,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public showAssetPanel = false;
 	public fullscreen = false;
 	public searchVal = '';
+	public tableStartIndex = 1;
+	public tableEndIndex = 10;
+	public showAsset360 = false;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -68,7 +71,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			excludeMsgType: '',
 			includeMsgType: '',
 			pageNo: this.pageNum,
-			severity: 7,
+			severity: 3,
 			size: this.pageLimit,
 		};
 	}
@@ -170,7 +173,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				},
 				{
 					key: 'deviceCount',
-					name: I18n.get('_SyslogDetailedDescription_'),
+					name: I18n.get('__SyslogDeviceCount__'),
 					sortable: true,
 				},
 			],
@@ -229,6 +232,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public onPanelClose () {
 		this.selectedAsset = undefined;
 		this.showAssetPanel = false;
+		this.showAsset360 = false;
 	}
 	/**
 	 * Determines whether pager updated on
@@ -236,6 +240,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPagerUpdated (pageInfo: any) {
 		this.tableOffset = pageInfo.page;
+		this.tableStartIndex = (pageInfo.page * pageInfo.limit) + 1 ;
+		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10 ;
 	}
 	/**
 	 * on destroy

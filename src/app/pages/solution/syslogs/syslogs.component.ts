@@ -75,7 +75,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public view: 'syslogMessage' | 'syslogAsset' = 'syslogMessage';
 	public appliedFilters = {
 		asset: '',
-		catalog : '',
+		catalog : 'cisco catalog',
 		severity: 7,
 		timeRange: 1,
 	};
@@ -189,7 +189,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 
 		return (catalogFilter.seriesData = [
 			{
-				filter: 'cisco Catalog',
+				filter: 'cisco catalog',
 				label: I18n.get('_SyslogCiscoCatalog_'),
 				selected: false,
 				value: 50,
@@ -450,8 +450,8 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		}
 		this.appliedFilters = {
 			asset: '',
-			catalog: '',
-			severity: 7,
+			catalog: 'cisco catalog',
+			severity: 3,
 			timeRange: 1,
 		};
 		// this.getSyslogsData();
@@ -470,14 +470,16 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		} else {
 			this.visualLabels[0].active = false;
 			this.visualLabels[1].active = true;
-			this.filters.push({
-				key: 'asset',
-				loading: true,
-				seriesData: [],
-				template: this.assetFilterTemplate,
-				title: I18n.get('_SyslogAsset_'),
-				view: ['syslogMessage', 'syslogAsset'],
-			});
+			if (this.filters.length === 3) {
+				this.filters.push({
+					key: 'asset',
+					loading: true,
+					seriesData: [],
+					template: this.assetFilterTemplate,
+					title: I18n.get('_SyslogAsset_'),
+					view: ['syslogMessage', 'syslogAsset'],
+				});
+		  }
 			this.getAssetCounts();
 		}
 		this.loadData();

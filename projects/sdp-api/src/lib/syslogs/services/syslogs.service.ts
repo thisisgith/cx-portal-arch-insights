@@ -234,7 +234,7 @@ export interface GetSyslogsParams {
 	/**
      * Unique identifier of a Cisco customer.
      */
-	customerId: string;
+	customerId?: string;
 
 	/**
      * Number of rows of data per page
@@ -267,7 +267,7 @@ export interface GetSyslogsParams {
 	includeMsgType?: string;
 	excludeMsgType?: string;
 	asset?:string;
+	deviceHost?:string;
 }
 }
 export { SyslogsService };
-
