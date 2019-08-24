@@ -3,9 +3,13 @@
 	<div class="col-3">
 		<div class="container">
 			<span [innerText]="'_Asset_' | i18n" class="text-large"></span>
-			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0">showing
+			<span
+				class="qtr-margin-left text-small text-muted"
+				*ngIf="tableData.length > 0"
+				>showing
 				{{ tableStartIndex + 1 + " - " + tableEndIndex }}
-				of {{ totalItems }} assets</span>
+				of {{ totalItems }} assets</span
+			>
 		</div>
 	</div>
 	<div class="col-9">
@@ -15,8 +19,15 @@
 				<div class="col-3">
 					<div class="form-group input--icon input--compressed">
 						<div class="form-group__text">
-							<input data-auto-id="search" #search="ngModel" [(ngModel)]="searchVal" name="search"
-								type="text" class="form-control" placeholder="{{ '_SyslogSearch_' | i18n }}" />
+							<input
+								data-auto-id="search"
+								#search="ngModel"
+								[(ngModel)]="searchVal"
+								name="search"
+								type="text"
+								class="form-control"
+								placeholder="{{ '_SyslogSearch_' | i18n }}"
+							/>
 							<button type="button" class="link" tabindex="-1">
 								<span class="icon-search"></span>
 							</button>
@@ -28,15 +39,24 @@
 						<button class="btn btn--small btn--gray-ghost disabled">
 							<span class="icon-location"></span>
 						</button>
-						<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost">
+						<button
+							data-auto-id="list-view-btn"
+							class="btn btn--small btn--gray-ghost"
+						>
 							<span class="icon-list-view"></span>
 						</button>
-						<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost">
+						<button
+							data-auto-id="grid-view-btn"
+							class="btn btn--small btn--gray-ghost"
+						>
 							<span class="icon-grid-view"></span>
 						</button>
 					</div>
-					<cui-dropdown [actions]="dropdownActions" position="left"
-						icon="icon-more icon-small text-muted rotate-90">
+					<cui-dropdown
+						[actions]="dropdownActions"
+						position="left"
+						icon="icon-more icon-small text-muted rotate-90"
+					>
 					</cui-dropdown>
 				</div>
 			</form>
@@ -44,62 +64,114 @@
 	</div>
 </div>
 <div class="container base-margin-top">
-	<cui-table [options]="tableOptions" [data]="tableData" [limit]="tableLimit" [offset]="tableOffset"
-		(onSortingChanged)="onTableSortingChanged($event)" (onTableRowClicked)="onTableRowSelection($event)"
-		*ngIf="!loading"></cui-table>
+	<cui-table
+		[options]="tableOptions"
+		[data]="tableData"
+		[limit]="tableLimit"
+		[offset]="tableOffset"
+		(onSortingChanged)="onTableSortingChanged($event)"
+		(onTableRowClicked)="onTableRowSelection($event)"
+		*ngIf="!loading"
+	></cui-table>
 	<div class="section">
-		<cui-pager *ngIf="tableData.length" [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
-			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
+		<cui-pager
+			*ngIf="tableData.length"
+			[page]="tableOffset"
+			[limit]="tableLimit"
+			[totalItems]="totalItems"
+			(onPageChanged)="onPagerUpdated($event)"
+		></cui-pager>
 	</div>
 </div>
 <!-- grid-section ends -->
-<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
+<details-panel
+	*ngIf="selectedAsset"
+	[hidden]="!selectedAsset"
+	[fullscreen]="fullscreen"
+>
+	<details-panel-header
+		(close)="onPanelClose()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false"
+	>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="col-md-12">
 					<div class="text-xlarge">
-						<span [innerText]="'__SyslogDeviceDetailsInfo__' | i18n"></span>
-						<span>
-							: </span>
+						<span
+							[innerText]="'__SyslogDeviceDetailsInfo__' | i18n"
+						></span>
+						<span> : </span>
 						<span class="qtr-margin-left">
-							<a data-auto-id="selectedName" (click)="redirectToAsset360()"
-								[innerHTML]="selectedAsset.DeviceHost"></a>
+							<a
+								data-auto-id="selectedName"
+								(click)="redirectToAsset360()"
+								[innerHTML]="selectedAsset.DeviceHost"
+							></a>
 						</span>
 					</div>
-
 				</div>
 			</div>
-			<div class="row">
+		</div>
+		<div class="row">
+			<div>
+				<div
+					class="text-uppercase text-bold half-margin"
+					[innerText]="'_SyslogIPAddress_' | i18n"
+				></div>
+				<div class="half-margin">
+					{{ deviceHeaderValues?.ipAddress }}
+				</div>
 				<div>
-					<div class="text-uppercase text-bold half-margin" [innerText]="'_SyslogIPAddress_' | i18n">
-					</div>
-					<div class="half-margin">{{deviceHeaderValues?.ipAddress}}</div>
-					<div>
-						<div class="text-uppercase text-bold half-margin" [innerText]="'_SyslogSerialNumber_' | i18n">
-						</div>
-						<div class="half-margin">{{deviceHeaderValues?.serialNumber}}</div>
-					</div>
-					<div>
-						<div class="text-uppercase text-bold half-margin" [innerText]="'_SyslogLastScan_' | i18n">
-						</div>
-						<div class="half-margin" *ngIf="!notScaned; else noLastScan">
-							{{deviceHeaderValues?.lastScan}} </div>
-						<ng-template #noLastScan>
-							Not Scanned
-						</ng-template>
+					<div
+						class="text-uppercase text-bold half-margin"
+						[innerText]="'_SyslogSerialNumber_' | i18n"
+					></div>
+					<div class="half-margin">
+						{{ deviceHeaderValues?.serialNumber }}
 					</div>
 				</div>
-				<div detailsPanelTitle class="text-xlarge"></div>
+				<div>
+					<div
+						class="text-uppercase text-bold half-margin"
+						[innerText]="'_SyslogLastScan_' | i18n"
+					></div>
+					<div
+						class="half-margin"
+						*ngIf="!notScaned; else noLastScan"
+					>
+						{{ deviceHeaderValues?.lastScan }}
+					</div>
+					<ng-template #noLastScan>
+						Not Scanned
+					</ng-template>
+				</div>
+			</div>
+			<div detailsPanelTitle class="text-xlarge"></div>
+		</div>
 	</details-panel-header>
-	<syslogs-devices-details [asset]="selectedAsset" [selectedFilter]="syslogsParams"></syslogs-devices-details>
+	<syslogs-devices-details
+		[asset]="selectedAsset"
+		[selectedFilter]="syslogsParams"
+	></syslogs-devices-details>
 </details-panel>
-<details-panel *ngIf="showAsset360" [hidden]="!showAsset360" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
+<details-panel
+	*ngIf="showAsset360"
+	[hidden]="!showAsset360"
+	[fullscreen]="fullscreen"
+>
+	<details-panel-header
+		(close)="onPanelClose()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false"
+	>
 		<asset-details-header [asset]="selectedAsset"></asset-details-header>
 		<div detailsPanelTitle class="text-xlarge">
 			<span class="icon-wifi"></span>
-			<span class="qtr-margin-left" [innerText]="selectedAsset?.DeviceHost"></span>
+			<span
+				class="qtr-margin-left"
+				[innerText]="selectedAsset?.DeviceHost"
+			></span>
 		</div>
 	</details-panel-header>
 	<asset-details [asset]="selectedAsset"></asset-details>
