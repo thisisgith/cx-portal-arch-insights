@@ -57,7 +57,7 @@ export class FpCompareComponent implements OnChanges {
 	 * deviceId1
 	 * @param changes simplechanges
 	 */
-	public ngOnChanges(changes: SimpleChanges): void {
+	public ngOnChanges (changes: SimpleChanges): void {
 		if (changes.devices.currentValue) {
 			this.deviceId1 = changes.devices.currentValue.deviceId1;
 			this.productId1 = changes.devices.currentValue.productId1;
