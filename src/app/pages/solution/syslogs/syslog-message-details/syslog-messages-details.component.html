@@ -28,55 +28,55 @@
 		Filter
 	</div>
 	<div class="row half-margin-bottom ">
-		<div class="col-md-3">
+		<div class="col-3">
 			<cui-select
 				data-auto-id="productID"
 				label="Product ID"
-				placeholder="select_product_id"
 				[(ngModel)]="selectdrowpdown.productID"
 				(ngModelChange)="onSelection()"
 				[items]="productIdItems"
 				optionsKey="value"
 				optionsValue="value"
+				[empty]="true"
 			>
 			</cui-select>
 		</div>
-		<div class="col-md-3">
+		<div class="col-3">
 			<cui-select
 				data-auto-id="Software"
 				label="Software"
-				placeholder="select_software_type"
 				[(ngModel)]="selectdrowpdown.Software"
 				(ngModelChange)="onSelection()"
 				[items]="softwareItems"
 				optionsKey="value"
 				optionsValue="value"
+				[empty]="true"
 			>
 			</cui-select>
 		</div>
-		<div class="col-md-3">
+		<div class="col-3">
 			<cui-select
 				data-auto-id="productFamily"
 				label="Product Family"
-				placeholder="select_product_family"
 				[(ngModel)]="selectdrowpdown.productFamily"
 				(ngModelChange)="onSelection()"
 				[items]="productFamily"
 				optionsKey="value"
 				optionsValue="value"
+				[empty]="true"
 			>
 			</cui-select>
 		</div>
-		<div class="col-md-3">
+		<div class="col-3">
 			<cui-select
 				data-auto-id="timePeriod"
 				label="Time Period"
-				placeholder="select_time_period"
 				[(ngModel)]="selectdrowpdown.timePeriod"
 				(ngModelChange)="onSelection()"
 				[items]="timePeriod"
 				optionsKey="name"
 				optionsValue="name"
+				[empty]="true"
 			>
 			</cui-select>
 		</div>
@@ -85,7 +85,6 @@
 		<cui-table
 			*ngIf="tableData"
 			data-auto-id="tableData"
-			(click)="clickfunction()"
 			[options]="tableOptions"
 			[data]="tableData"
 			[offset]="tableOffset"
@@ -103,3 +102,17 @@
 		</div>
 	</div>
 </div>
+
+<ng-template #innertableref let-item ="item" >
+	<cui-table 
+			*ngIf="tableData"
+			data-auto-id="tableData"
+			[options]="innerTableOptions"
+			[data]="item.MessageDescObject"
+			[offset]="tableOffset"
+			[limit]="tableLimit"
+	>
+	</cui-table>
+</ng-template>
+
+ 

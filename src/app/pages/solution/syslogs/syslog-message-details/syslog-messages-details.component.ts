@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import {
@@ -26,7 +26,10 @@ import { UserResolve } from '@utilities';
 })
 export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	@Input('asset') public asset: SyslogPanelGridData;
+	@ViewChild('innertableref', { static: true }) public innertableref: TemplateRef<{ }>;
+	@ViewChild('numbervalueref', { static: true }) public numbervalueref: TemplateRef<{ }>;
 	public tableOptions: CuiTableOptions;
+	public innerTableOptions: CuiTableOptions;
 	public selectdrowpdown = {
 		productFamily: '',
 		productID: '',
@@ -88,6 +91,26 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 
 	public ngOnInit () {
 		this.tableInitialization();
+		this.innerTableOptions = new CuiTableOptions({
+			bordered: false,
+			dynamicData: false,
+			// tslint:disable-next-line: object-literal-sort-keys
+			columns: [
+				{
+					key: 'serialNumber',
+					name: 'NO',
+				},
+				{
+					key: 'SyslogMsgDesc',
+					name: 'Message Text',
+				},
+				{
+					key: 'MessageCount',
+					name: 'Count',
+
+				},
+			],
+		});
 	}
 	/**
 	 * Used to load the table grid
@@ -102,11 +125,6 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 				{
 					key: 'DeviceHost',
 					name: I18n.get('_SyslogAsset_'),
-					sortable: true,
-				},
-				{
-					key: 'SyslogMsgDesc',
-					name: I18n.get('_SyslogGridMessage_'),
 					sortable: true,
 				},
 				{
@@ -129,12 +147,14 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					name: I18n.get('_SoftwareVersion_'),
 					sortable: true,
 				},
-				{
-					key: 'msgCount',
-					name: I18n.get('_SyslogCount_'),
-					sortable: true,
-				},
 			],
+
+			padding: 'regular',
+			rowWellColor: 'black',
+			rowWellTemplate : this.innertableref,
+			singleSelect: true,
+			striped: false,
+			wrapText: false,
 		});
 	}
 	/**
@@ -154,8 +174,25 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 			}),
 			)
 			.subscribe((data: SyslogPanelGridData) => {
-				this.tableData = data.responseData;
+				this.tableData = this.marshalTableDataForInerGrid(data.responseData);
 			});
+	}
+
+	/***
+	 * To push the new serialNumber property for No c
+	 * @param innerData comtains the table data
+	 * @returns marshalled table data
+	 */
+	public marshalTableDataForInerGrid (innerData) {
+		for (const messageObject of innerData) {
+			for (const i in messageObject.MessageDescObject) {
+				if (messageObject.MessageDescObject) {
+					messageObject.MessageDescObject[i].serialNumber = parseInt(i, 10) + 1;
+				}
+			}
+		}
+
+		return innerData;
 	}
 
 	/**
@@ -177,7 +214,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					}),
 				)
 				.subscribe((data: SyslogPanelGridData) => {
-					this.tableData = data.responseData;
+					this.tableData = this.marshalTableDataForInerGrid(data.responseData);
 				});
 
 		}
