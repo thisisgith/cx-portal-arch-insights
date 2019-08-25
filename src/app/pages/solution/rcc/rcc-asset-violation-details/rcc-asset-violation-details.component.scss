@@ -1,0 +1,26 @@
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
+
+.p1class {
+	color: $red;
+}
+
+.p2class {
+	color: $orange;
+}
+
+.p3class {
+	color: $status-orange;
+}
+
+.p4class {
+	color: $success;
+}
+
+.p5class {
+	color: $light-blue;
+}
+
+.tabletext {
+	white-space: initial;
+	overflow-wrap: break-word;
+}
