@@ -5,14 +5,14 @@
 				class="text-bold text-uppercase"
 				[innerText]="'_CP_IpAddress_' | i18n"
 			></div>
-			<div>{{ deviceData.ipAddress }}</div>
+			<div [innerHTML]="deviceData.ipAddress"></div>
 		</div>
 		<div data-auto-id="serialNumber" class=" col-md-3">
 			<div
 				class="text-bold text-uppercase"
 				[innerText]="'_CP_SerialNumber_' | i18n"
 			></div>
-			<div>{{ deviceData.serialNumber }}</div>
+			<div [innerHTML]="deviceData.serialNumber"></div>
 		</div>
 		<div data-auto-id="riskScore" class="half-margin-left col-md-4">
 			<div class="row">
@@ -33,17 +33,19 @@
 				<div>
 					<div
 						class="qtr-margin-left gbl"
-						[ngClass]="{
-							'text-success': deviceData.globalRiskRank === 'LOW',
-							'text-warning': deviceData.globalRiskRank === 'MED',
-							'text-danger': deviceData.globalRiskRank === 'HIGH'
-						}"
+						[ngClass]="
+							{
+								LOW: 'text-success',
+								MED: 'text-warning',
+								HIGH: 'text-danger'
+							}[deviceData.globalRiskRank]
+						"
 					>
 						<span class="icon-stop"></span>
 					</div>
 				</div>
 				<div class=" gbl col-md-1">
-					<span>{{ deviceData.riskScore }}&#37;</span>
+					<span class="fp-header-percentage" [innerHTML]="deviceData.riskScore"></span>
 				</div>
 			</div>
 		</div>
@@ -66,17 +68,19 @@
 				<div>
 					<div
 						class="qtr-margin-left gbl"
-						[ngClass]="{
-							'text-success': deviceData.globalRiskRank === 'LOW',
-							'text-warning': deviceData.globalRiskRank === 'MED',
-							'text-danger': deviceData.globalRiskRank === 'HIGH'
-						}"
+						[ngClass]="
+							{
+								LOW: 'text-success',
+								MED: 'text-warning',
+								HIGH: 'text-danger'
+							}[deviceData.globalRiskRank]
+						"
 					>
 						<span class="icon-stop"></span>
 					</div>
 				</div>
 				<div class="gbl col-md-1 ">
-					<span>{{ deviceData.globalRiskRank }}</span>
+					<span [innerHTML]="deviceData.globalRiskRank"></span>
 				</div>
 			</div>
 		</div>
