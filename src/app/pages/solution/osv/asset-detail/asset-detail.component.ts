@@ -7,12 +7,16 @@ import {
 	OnDestroy,
 	ViewChild,
 	TemplateRef,
-	EventEmitter,
-	Output,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
-import { OSVService, AssetRecommendationsResponse, AssetRecommendations, OSVAsset, SoftwareGroup } from '@sdp-api';
+import {
+	OSVService,
+	AssetRecommendationsResponse,
+	AssetRecommendations,
+	OSVAsset,
+	SoftwareGroup,
+} from '@sdp-api';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -30,8 +34,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
@@ -109,9 +113,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.osvService.getAssetDetails(this.assetDetailsParams)
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
-					this.sortData(response);
 					this.addVersionInfo(response);
-					this.assetDetails = response;
+					this.assetDetails = this.groupData(response);
 					this.buildTable();
 				}),
 				takeUntil(this.destroy$),
@@ -119,12 +122,29 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
 				this.status.isLoading = false;
 			});
+	}
+
+	/**
+	 * group recommendations based on version
+	 * @param data Recommendations
+	 * @returns grouped data
+	 */
+	public groupData (data: AssetRecommendationsResponse) {
+		const groups = _.groupBy(data, 'swVersion');
+		const groupedData = [];
+		_.map(_.keys(groups), swVersion => {
+			const detail: AssetRecommendations = _.get(_.filter(data, { swVersion }), 0);
+			detail.swVersionGroup = groups[swVersion];
+			groupedData.push(detail);
+		});
+
+		return this.sortData(groupedData);
 	}
 
 	/**
@@ -135,9 +155,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.osvService.getAssetDetails(this.assetDetailsParams)
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
-					this.sortData(response);
 					this.addVersionInfo(response);
-					this.assetDetails = response;
+					this.assetDetails = this.groupData(response);
 					this.buildTable();
 				}),
 				takeUntil(this.destroy$),
@@ -145,7 +164,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -175,21 +194,16 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 
 	/**
 	 * get columns for the table view
+	 * @returns columns
 	 */
 	public getColumns () {
 		const datePipe = new DatePipe('en-US');
 		const columns = [
 			{
-				key: 'swVersion',
-				name: I18n.get('_OsvVersion_'),
-				sortable: false,
-				width: '23%',
-			},
-			{
 				name: I18n.get('_OsvVersionSummary_'),
 				sortable: false,
 				template: this.versionTemplate,
-				width: '25%',
+				width: '50%',
 			},
 			{
 				key: 'postDate',
@@ -207,7 +221,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				template: this.actionsTemplate,
 				width: '25%',
 			};
-			columns.splice(2, 0, acceptColumn);
+			columns.splice(1, 0, acceptColumn);
 		}
 		return columns;
 
@@ -224,10 +238,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	/**
 	 * Sort Asset Recommendations by postDate
 	 * @param data AssetDetails
+	 * @returns sorted data
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any>new Date(b.postDate) - <any>new Date(a.postDate));
+			<any> new Date(b.postDate) - <any> new Date(a.postDate));
+
+		return data;
 	}
 
 	/**
@@ -266,7 +283,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @param point one of the recommendations on timeline view
 	 */
 	public selectedPoint (point) {
-		if (this.accept && !point.accepted && point.label !== _.get(this.selectedAsset, 'swVersion')) {
+		if (this.accept && !point.accepted &&
+			point.label !== _.get(this.selectedAsset, 'swVersion')) {
 			this.selectedRecommendation = point;
 		}
 	}

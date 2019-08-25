@@ -35,7 +35,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 	@Output() public tabIndexChange = new EventEmitter<number>();
 	@ViewChild('recommendationsTemplate', { static: true })
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
-	private recommendationsTemplate: TemplateRef<{}>;
+	private recommendationsTemplate: TemplateRef<{ }>;
 	public softwareGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -105,7 +105,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV Profile Groups : getsoftwareGroups() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -164,7 +164,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 						sortable: false,
 						template: this.recommendationsTemplate,
 						width: '10%',
-					},					
+					},
 					{
 						click: true,
 						sortable: false,
@@ -219,7 +219,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 
 	/**
 	 * Returns the row specific actions
-	 * @param item the row we're building our actions for
+	 * @param softwareGroup the row we're building our actions for
 	 * @returns the built actions
 	 */
 	public getRowActions (softwareGroup: SoftwareGroup) {
@@ -231,7 +231,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 					this.tabIndex = 0;
 					this.tabIndexChange.emit(this.tabIndex);
-				}
+				},
 			},
 			{
 				label: I18n.get('_OsvRecommendations_'),
@@ -240,7 +240,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 					this.tabIndex = 1;
 					this.tabIndexChange.emit(this.tabIndex);
-				}
+				},
 			},
 			{
 				label: I18n.get('_OsvViewAssets_'),
@@ -249,8 +249,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 					this.tabIndex = 2;
 					this.tabIndexChange.emit(this.tabIndex);
-				}
-			},			
+				},
+			},
 			{
 				label: I18n.get('_OsvViewVersions_'),
 				onClick: () => {
@@ -258,8 +258,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 					this.tabIndex = 3;
 					this.tabIndexChange.emit(this.tabIndex);
-				}
-			}
+				},
+			},
 		]);
 	}
 

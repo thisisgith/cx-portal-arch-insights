@@ -39,6 +39,13 @@ const mockBasicRecommendations: AssetRecommendationsResponse = [
 	},
 	{
 		error: null,
+		name: 'minimum',
+		postDate: '2019-06-20T18:30:00.000+0000',
+		recommendationSummary: null,
+		swVersion: '16.11.1c',
+	},
+	{
+		error: null,
 		name: 'current',
 		postDate: '2018-07-17T18:30:00.000+0000',
 		recommendationSummary: null,
@@ -581,8 +588,7 @@ const mockSoftwareGroupAssets: SoftwareGroupAssetsResponse = {
 };
 
 /** The mock response for software gropu versions */
-const mockSoftwareGroupVersions: SoftwareGroupVersionsResponse =
-{
+const mockSoftwareGroupVersions: SoftwareGroupVersionsResponse = {
 	pagination: {
 		page: 1,
 		rows: 10,

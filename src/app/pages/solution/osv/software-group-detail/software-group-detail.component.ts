@@ -1,8 +1,6 @@
 import {
 	Component,
 	OnInit,
-	ViewChild,
-	TemplateRef,
 	Input,
 	SimpleChanges,
 	OnDestroy,
@@ -37,8 +35,8 @@ import { DatePipe } from '@angular/common';
 })
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
-	@Input() fullscreen;
-	@Input() public tabIndex: number = 0;
+	@Input() public fullscreen;
+	@Input() public tabIndex = 0;
 	public status = {
 		isLoading: true,
 	};
@@ -128,7 +126,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.softwareGroupAssets = response.uiAssetList;
 					this.assetsPagination = response.pagination;
 					this.assetsPagination.rows = this.softwareGroupAssetsParams.pageSize;
-					const first = (this.assetsPagination.rows * (this.assetsPagination.page - 1)) + 1;
+					const first = (this.assetsPagination.rows *
+						(this.assetsPagination.page - 1)) + 1;
 					let last = (this.assetsPagination.rows * this.assetsPagination.page);
 					if (last > this.assetsPagination.total) {
 						last = this.assetsPagination.total;
@@ -140,7 +139,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupAsset() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -156,7 +155,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.softwareGroupVersions = response.uiSwVersionList;
 					this.versionsPagination = response.pagination;
 					this.versionsPagination.rows = this.softwareGroupVersionsParams.pageSize;
-					const first = (this.versionsPagination.rows * (this.versionsPagination.page - 1)) + 1;
+					const first = (this.versionsPagination.rows *
+						(this.versionsPagination.page - 1)) + 1;
 					let last = (this.versionsPagination.rows * this.versionsPagination.page);
 					if (last > this.versionsPagination.total) {
 						last = this.versionsPagination.total;
@@ -168,7 +168,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -263,7 +263,6 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * build software group assets table
 	 */
 	public buildSoftwareGroupAssetsTable () {
-		const datePipe = new DatePipe('en-US');
 		if (!this.softwareGroupAssetsTable) {
 			this.softwareGroupAssetsTable = new CuiTableOptions({
 				bordered: true,

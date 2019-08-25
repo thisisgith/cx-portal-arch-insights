@@ -29,11 +29,11 @@ interface Filter extends VisualFilter {
 })
 export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	@ViewChild('assetTypeFilter', { static: true }) private assetTypeFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -159,7 +159,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					assetTypeFilter.loading = false;
 					this.view = undefined;
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -286,9 +286,12 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * Open contact support modal
 	 */
 	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactExpertComponent, {});
+		this.cuiModalService.showComponent(ContactExpertComponent, { });
 	}
 
+	/**
+	 * close all details panel
+	 */
 	public reset () {
 		this.selectedAsset = null;
 		this.selectedSoftwareGroup = null;
