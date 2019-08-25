@@ -297,6 +297,8 @@
 	"_CSOneError_": "There was an error attempting to open your case with CSOne:",
 	"_CSSupportLink_": "Click here for DE recommendation report",
 	"_CSTitle_": "Contact a Designated Expert",
+	"_CSRequestExpert_": "Request a Designated Expert",
+	"_CSNeedSoftwareRecommendation_": "Need a software recommendation?", 
 	"_CurrentAvailableMemory_": "Current Available Memory",
 	"_CurrentCPUUtilization_": "Current CPU Utilization",
 	"_CurrentVersion_": "Current Version",
