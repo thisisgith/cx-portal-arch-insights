@@ -195,6 +195,18 @@ describe('FpCompareComponent', () => {
 			.toHaveBeenCalled();
 	}));
 
+	it('should set deviceId1 as selected if it exists in the deviceList', fakeAsync(() => {
+		spyOn(crashPreventionService, 'getListdevice')
+			.and
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
+		component.deviceId2 = 'NA,60110,C9407R,NA';
+		component.onSelection('AIR-CT5760');
+		tick();
+		fixture.detectChanges();
+		expect(component.deviceId1)
+			.toEqual('NA,60110,C9407R,NA');
+	}));
+
 	it('should check onselection productFamilyB', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getListdevice')
 			.and
@@ -204,6 +216,18 @@ describe('FpCompareComponent', () => {
 		fixture.detectChanges();
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalled();
+	}));
+
+	it('should set deviceId2 as selected if it exists in the deviceList', fakeAsync(() => {
+		spyOn(crashPreventionService, 'getListdevice')
+			.and
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
+		component.deviceId2 = 'NA,6011,C9407R,NA';
+		component.onSelection3('AIR-CT5760');
+		tick();
+		fixture.detectChanges();
+		expect(component.deviceId2)
+			.toEqual('NA,6011,C9407R,NA');
 	}));
 
 	it('should work', () => {
