@@ -69,8 +69,8 @@ describe('FpCompareComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.listdeviceDataA)
-					.toBeUndefined();
+				expect(component.listdeviceDataA.length)
+					.toEqual(0);
 				done();
 			});
 	});
@@ -187,7 +187,7 @@ describe('FpCompareComponent', () => {
 	it('should check onselection productFamilyA', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getListdevice')
 			.and
-			.returnValue(of(ComparisonViewScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
 		component.onSelection('AIR-CT5760');
 		tick();
 		fixture.detectChanges();
@@ -195,15 +195,63 @@ describe('FpCompareComponent', () => {
 			.toHaveBeenCalled();
 	}));
 
+	it('should set deviceId1 as selected if it exists in the deviceList', fakeAsync(() => {
+		spyOn(crashPreventionService, 'getListdevice')
+			.and
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
+		component.deviceId1 = 'NA,60110,C9407R,NA';
+		component.onSelection('AIR-CT5760');
+		tick();
+		fixture.detectChanges();
+		expect(component.deviceId1)
+			.toEqual('NA,60110,C9407R,NA');
+	}));
+
+	it('should enable device selection when product family is selected', fakeAsync(() => {
+		spyOn(crashPreventionService, 'getListdevice')
+			.and
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
+		component.deviceId1 = 'NA,60110,C9407R,NA';
+		component.onSelection('AIR-CT5760');
+		tick();
+		fixture.detectChanges();
+		expect(component.assetsAactive)
+			.toBeFalsy();
+	}));
+
 	it('should check onselection productFamilyB', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getListdevice')
 			.and
-			.returnValue(of(ComparisonViewScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
 		component.onSelection3('AIR-CT5760');
 		tick();
 		fixture.detectChanges();
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalled();
+	}));
+
+	it('should set deviceId2 as selected if it exists in the deviceList', fakeAsync(() => {
+		spyOn(crashPreventionService, 'getListdevice')
+			.and
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
+		component.deviceId2 = 'NA,6011,C9407R,NA';
+		component.onSelection3('AIR-CT5760');
+		tick();
+		fixture.detectChanges();
+		expect(component.deviceId2)
+			.toEqual('NA,6011,C9407R,NA');
+	}));
+
+	it('should enable device selection when product family is selected', fakeAsync(() => {
+		spyOn(crashPreventionService, 'getListdevice')
+			.and
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
+		component.deviceId2 = 'NA,60110,C9407R,NA';
+		component.onSelection3('AIR-CT5760');
+		tick();
+		fixture.detectChanges();
+		expect(component.assetsBactive)
+			.toBeFalsy();
 	}));
 
 	it('should work', () => {

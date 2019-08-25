@@ -1,7 +1,6 @@
-@import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import "~cisco-ui/src/scss/utilities/_variables.scss";
 
 .compositerisk {
-	background-color: $light-gray-3;
 	width: 4px;
 	padding: 6px;
 	margin-top: $base-spacing;
@@ -9,4 +8,8 @@
 
 .gbl {
 	padding-top: 14px;
+}
+
+.fp-header-percentage::after {
+	content: " \0025";
 }
