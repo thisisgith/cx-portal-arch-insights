@@ -7,10 +7,12 @@ import {
 	OnDestroy,
 	ViewChild,
 	TemplateRef,
+	EventEmitter,
+	Output,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
-import { OSVService, AssetRecommendationsResponse, AssetRecommendations, OSVAsset } from '@sdp-api';
+import { OSVService, AssetRecommendationsResponse, AssetRecommendations, OSVAsset, SoftwareGroup } from '@sdp-api';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -23,13 +25,17 @@ import { ActivatedRoute } from '@angular/router';
  */
 @Component({
 	selector: 'asset-details',
+	styleUrls: ['./asset-detail.component.scss'],
 	templateUrl: './asset-detail.component.html',
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
+	@Input() public selectedSoftwareGroup: SoftwareGroup;
+	@Input() public accept = false;
 	public assetDetails: AssetRecommendationsResponse;
 	public status = {
 		isLoading: true,
@@ -39,6 +45,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public assetDetailsTable: CuiTableOptions;
 	public assetDetailsParams: OSVService.GetAssetDetailsParams;
 	public customerId: string;
+	public selectedRecommendation = {
+		name: 'None',
+	};
 
 	constructor (
 		private logger: LogService,
@@ -49,7 +58,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.assetDetailsParams = {
 			customerId: this.customerId,
-			id: '',
+			id: '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
 		};
 	}
 
@@ -82,10 +91,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Refreshes the component
 	 */
 	public refresh () {
-		if (this.selectedAsset && !this.selectedAsset.statusUpdated) {
+		if (this.selectedAsset) {
 			this.clear();
-			this.assetDetailsParams.id = this.selectedAsset.id;
+			// this.assetDetailsParams.id = this.selectedAsset.id;
 			this.fetchAssetDetails();
+		} else if (this.selectedSoftwareGroup) {
+			this.clear();
+			this.fetchSoftwareGroupDetails();
 		}
 	}
 
@@ -107,7 +119,33 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
+				}),
+			)
+			.subscribe(() => {
+				this.status.isLoading = false;
+			});
+	}
+
+	/**
+	 * Fetch Software Group details for the selected SoftwareGroup
+	 */
+	public fetchSoftwareGroupDetails () {
+		this.status.isLoading = true;
+		this.osvService.getAssetDetails(this.assetDetailsParams)
+			.pipe(
+				map((response: AssetRecommendationsResponse) => {
+					this.sortData(response);
+					this.addVersionInfo(response);
+					this.assetDetails = response;
+					this.buildTable();
+				}),
+				takeUntil(this.destroy$),
+				catchError(err => {
+					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({});
 				}),
 			)
 			.subscribe(() => {
@@ -119,33 +157,10 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Table view for basic recommendations
 	 */
 	public buildTable () {
-		const datePipe = new DatePipe('en-US');
-
 		if (!this.assetDetailsTable) {
 			this.assetDetailsTable = new CuiTableOptions({
 				bordered: true,
-				columns: [
-					{
-						key: 'swVersion',
-						name: I18n.get('_OsvVersion_'),
-						sortable: false,
-						width: '20%',
-					},
-					{
-						name: I18n.get('_OsvVersionSummary_'),
-						sortable: false,
-						template : this.versionTemplate,
-						width: '50%',
-					},
-					{
-						key: 'postDate',
-						name: I18n.get('_OsvReleaseDate_'),
-						render: item => _.isNull(item.error) ?
-							datePipe.transform(item.postDate, 'yyyy MMM dd') : 'N/A',
-						sortable: false,
-						width: '30%',
-					},
-				],
+				columns: this.getColumns(),
 				dynamicData: true,
 				hover: true,
 				padding: 'compressed',
@@ -156,6 +171,46 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				wrapText: true,
 			});
 		}
+	}
+
+	/**
+	 * get columns for the table view
+	 */
+	public getColumns () {
+		const datePipe = new DatePipe('en-US');
+		const columns = [
+			{
+				key: 'swVersion',
+				name: I18n.get('_OsvVersion_'),
+				sortable: false,
+				width: '23%',
+			},
+			{
+				name: I18n.get('_OsvVersionSummary_'),
+				sortable: false,
+				template: this.versionTemplate,
+				width: '25%',
+			},
+			{
+				key: 'postDate',
+				name: I18n.get('_OsvReleaseDate_'),
+				render: item => _.isNull(item.error) ?
+					datePipe.transform(item.postDate, 'yyyy MMM dd') : 'N/A',
+				sortable: false,
+				width: '25%',
+			},
+		];
+		if (this.accept) {
+			const acceptColumn = {
+				name: I18n.get('_OsvStatusOrAction_'),
+				sortable: false,
+				template: this.actionsTemplate,
+				width: '25%',
+			};
+			columns.splice(2, 0, acceptColumn);
+		}
+		return columns;
+
 	}
 
 	/**
@@ -172,7 +227,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any> new Date(b.postDate) - <any> new Date(a.postDate));
+			<any>new Date(b.postDate) - <any>new Date(a.postDate));
 	}
 
 	/**
@@ -204,5 +259,15 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					break;
 			}
 		});
+	}
+
+	/**
+	 * Selected Recommendations from timeline view
+	 * @param point one of the recommendations on timeline view
+	 */
+	public selectedPoint (point) {
+		if (this.accept && !point.accepted && point.label !== _.get(this.selectedAsset, 'swVersion')) {
+			this.selectedRecommendation = point;
+		}
 	}
 }

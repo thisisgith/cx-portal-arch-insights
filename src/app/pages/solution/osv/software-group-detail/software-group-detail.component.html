@@ -5,9 +5,7 @@
 		</div>
 	</cui-tab>
 	<cui-tab [label]="'_OsvRecommendations_' | i18n | uppercase">
-		<div class="base-margin-top">
-			<cui-spinner *ngIf="status.isLoading"></cui-spinner>
-		</div>
+		<ng-container *ngTemplateOutlet="softwareGroupRecommendations"></ng-container>
 	</cui-tab>
 	<cui-tab [label]="'_OsvAssetsX_' | i18n:softwareGroupAssets?.length | uppercase">
 		<ng-container *ngTemplateOutlet="softwareGroupAssetsTemp"></ng-container>
@@ -17,6 +15,11 @@
 	</cui-tab>
 </cui-tabs>
 
+<ng-template #softwareGroupRecommendations>	
+	<div class="base-margin-top">
+		<asset-details [accept]="true" [(selectedSoftwareGroup)]="selectedSoftwareGroup" [fullscreen]="fullscreen"></asset-details>
+	</div>
+</ng-template>
 
 <ng-template #softwareGroupAssetsTemp>
 	<div class="base-margin-top">

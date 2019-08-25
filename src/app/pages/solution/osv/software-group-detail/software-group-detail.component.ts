@@ -37,6 +37,7 @@ import { DatePipe } from '@angular/common';
 })
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
+	@Input() fullscreen;
 	@Input() public tabIndex: number = 0;
 	public status = {
 		isLoading: true,
