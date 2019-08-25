@@ -560,7 +560,7 @@ const mockSoftwareGroupAssets: SoftwareGroupAssetsResponse = {
 	pagination: {
 		page: 1,
 		rows: 10,
-		total: 6,
+		total: 11,
 	},
 	uiAssetList: [
 		{
@@ -586,7 +586,7 @@ const mockSoftwareGroupVersions: SoftwareGroupVersionsResponse =
 	pagination: {
 		page: 1,
 		rows: 10,
-		total: 6,
+		total: 11,
 	},
 	uiSwVersionList: [
 		{

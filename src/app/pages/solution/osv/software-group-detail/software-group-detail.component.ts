@@ -37,7 +37,6 @@ import { DatePipe } from '@angular/common';
 })
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
-	@Input() public fullscreen: boolean;
 	@Input() public tabIndex: number = 0;
 	public status = {
 		isLoading: true,
@@ -196,6 +195,10 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentSelectedGroup = _.get(changes, ['selectedProfileGroup', 'currentValue']);
 		const isFirstChange = _.get(changes, ['selectedProfileGroup', 'firstChange']);
+		const currentTabIndex = _.get(changes, ['tabIndex', 'currentValue'], 0);
+		if (currentTabIndex && isFirstChange) {
+			this.tabIndex = currentTabIndex;
+		}
 		this.tabIndex = _.get(changes, ['tabIndex', 'currentValue'], 0);
 		if (currentSelectedGroup && !isFirstChange) {
 			this.refresh();
@@ -214,9 +217,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					{
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
-						sortable: true,
-						sortDirection: 'desc',
-						sorting: true,
+						sortable: false,
+						sortDirection: 'asc',
+						sorting: false,
 						width: '10%',
 					},
 					{
@@ -268,9 +271,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
 						width: '10%',
-						sortable: true,
-						sortDirection: 'desc',
-						sorting: true,
+						sortable: false,
+						sortDirection: 'asc',
+						sorting: false,
 					},
 					{
 						key: 'ipAddress',

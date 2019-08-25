@@ -1,9 +1,13 @@
 <cui-tabs [(activeTabIndex)]="tabIndex">
 	<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
-		coming soon
+		<div class="base-margin-top">
+			<cui-spinner *ngIf="status.isLoading"></cui-spinner>
+		</div>
 	</cui-tab>
 	<cui-tab [label]="'_OsvRecommendations_' | i18n | uppercase">
-		coming soon
+		<div class="base-margin-top">
+			<cui-spinner *ngIf="status.isLoading"></cui-spinner>
+		</div>
 	</cui-tab>
 	<cui-tab [label]="'_OsvAssetsX_' | i18n:softwareGroupAssets?.length | uppercase">
 		<ng-container *ngTemplateOutlet="softwareGroupAssetsTemp"></ng-container>
@@ -15,20 +19,21 @@
 
 
 <ng-template #softwareGroupAssetsTemp>
+	<div class="base-margin-top">
+		<cui-spinner *ngIf="status.isLoading"></cui-spinner>
+	</div>
 	<div class="base-margin-top" *ngIf="!status.isLoading &&  softwareGroupAssets?.length > 0">
 		<div class="qtr-margin-top"
 			*ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize">
 			<div class="flex flex-fill">
-				<div class="flex-center-vertical" *ngIf="assetsPagination && assets?.length > 0">
+				<div class="flex-center-vertical" *ngIf="assetsPagination && softwareGroupAssets?.length > 0">
 					<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
 					<span [innerText]="'_OsvShowingXofYAssets_' | i18n:assetsPaginationCount:assetsPagination.total"
 						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 					</span>
 				</div>
 			</div>
-			<div class="divider qtr-margin-top"></div>
 		</div>
-		<cui-spinner *ngIf="status.isLoading"></cui-spinner>
 		<cui-table [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets"></cui-table>
 		<div *ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize"
 			class="base-margin-top">
@@ -41,20 +46,21 @@
 
 
 <ng-template #softwareGroupVersionsTemp>
+	<div class="base-margin-top">
+		<cui-spinner *ngIf="status.isLoading"></cui-spinner>
+	</div>
 	<div class="base-margin-top" *ngIf="!status.isLoading &&  softwareGroupVersions?.length > 0">
 		<div class="qtr-margin-top"
 			*ngIf="versionsPagination && softwareGroupVersions?.length > softwareGroupVersionsParams.pageSize">
 			<div class="flex flex-fill">
-				<div class="flex-center-vertical" *ngIf="versionsPagination && assets?.length > 0">
+				<div class="flex-center-vertical" *ngIf="versionsPagination && softwareGroupVersions?.length > 0">
 					<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
 					<span [innerText]="'_OsvShowingXofYAssets_' | i18n:versionsPaginationCount:versionsPagination.total"
 						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 					</span>
 				</div>
 			</div>
-			<div class="divider qtr-margin-top"></div>
 		</div>
-		<cui-spinner *ngIf="status.isLoading"></cui-spinner>
 		<cui-table [options]="softwareGroupVersionsTable" [data]="softwareGroupVersions"></cui-table>
 		<div *ngIf="versionsPagination && softwareGroupVersions?.length > softwareGroupVersionsParams.pageSize"
 			class="base-margin-top">
