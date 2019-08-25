@@ -4,6 +4,8 @@ import {
 	AssetRecommendationsResponse,
 	AssetsResponse,
 	SummaryResponse,
+	SoftwareGroupAssetsResponse,
+	SoftwareGroupVersionsResponse,
 } from '@sdp-api';
 
 /** Base of URL for SDP API */
@@ -553,6 +555,51 @@ const mockSummaryResponse: SummaryResponse = {
 	versions: 50,
 };
 
+/** The mock response for software group assets */
+const mockSoftwareGroupAssets: SoftwareGroupAssetsResponse = {
+	pagination: {
+		page: 1,
+		rows: 10,
+		total: 6,
+	},
+	uiAssetList: [
+		{
+			deployment: 'None',
+			id: '231215372_NA,FOC1842PJG4,EFOC1842PJG4',
+			ipAddress: '6.0.3.223',
+			hostName: 'Device_6_0_3_223',
+			optimalVersion: null,
+			postDate: '2018-04-06T00:00:00.000+0000',
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			recommAcceptedDate: null,
+			recommendationCount: 0,
+			recommendations: null,
+			swType: 'IOS-XE',
+			swVersion: '16.8.1a',
+		},
+	],
+};
+
+/** The mock response for software gropu versions */
+const mockSoftwareGroupVersions: SoftwareGroupVersionsResponse =
+{
+	pagination: {
+		page: 1,
+		rows: 10,
+		total: 6,
+	},
+	uiSwVersionList: [
+		{
+			assetCount: 1,
+			deploymentStatus: '',
+			optimalVersion: '',
+			postDate: '06 April 2018',
+			swType: 'IOS-XE',
+			swVersion: '16.8.1a',
+		},
+	],
+};
+
 /** The scenarios */
 export const OSVScenarios = [
 	{
@@ -672,6 +719,57 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}versions?customerId=${customerId}${svParams}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Software Group Assets',
+					response: {
+						body: mockSoftwareGroupAssets,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}profileAssets?customerId=${customerId}&id=${assetId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Software Group Versions',
+					response: {
+						body: mockSoftwareGroupVersions,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}profileVersions?customerId=${customerId}&id=${assetId}`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 200,
+					description: 'Software Profile Recommendations',
+					response: {
+						body: mockBasicRecommendations,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}profileRecommendations?customerId=${customerId}&id=${assetId}`,
 		usecases: ['Use Case 1'],
 	},
 ];
