@@ -14,6 +14,7 @@ import { OSVModule } from '@sdp-api';
 import { DetailsPanelModule, PieChartModule } from '@components';
 import { SoftwareGroupsModule } from './software-groups/software-groups.module';
 import { ContactExpertModule } from '../contact-expert/contact-expert.module';
+import { SoftwareGroupDetailModule } from './software-group-detail/software-group-detail.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -41,15 +42,16 @@ const childRoutes: Routes = [
 		I18nPipeModule,
 		DetailsPanelModule,
 		CuiTabsModule,
-		AssetDetailsModule,
 		CuiSpinnerModule,
 		FormsModule,
-		AssetsModule,
-		SoftwareVersionsModule,
-		OSVModule.forRoot({ rootUrl }),
 		PieChartModule,
-		SoftwareGroupsModule,
 		CuiModalModule,
+		OSVModule.forRoot({ rootUrl }),
+		AssetsModule,
+		AssetDetailsModule,
+		SoftwareVersionsModule,
+		SoftwareGroupsModule,
+		SoftwareGroupDetailModule,
 		ContactExpertModule,
 	],
 })

@@ -18,6 +18,7 @@ import {
 	SoftwareGroupAsset,
 	SoftwareGroupVersionsResponse,
 	SoftwareGroupAssetsResponse,
+	OsvPagination,
 } from '@sdp-api';
 import { forkJoin, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
@@ -35,8 +36,9 @@ import { DatePipe } from '@angular/common';
 	templateUrl: './software-group-detail.component.html',
 })
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
-	@Input() public selectedProfileGroup: SoftwareGroup;
+	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Input() public fullscreen: boolean;
+	@Input() public tabIndex: number = 0;
 	public status = {
 		isLoading: true,
 	};
@@ -45,8 +47,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	private params: OSVService.GetSoftwareGroupDetailsParam;
 	public softwareGroupVersions: SoftwareGroupVersion[];
 	public softwareGroupAssets: SoftwareGroupAsset[];
-	public profileVersionsTable: CuiTableOptions;
-	public profileAssetsTable: CuiTableOptions;
+	public softwareGroupVersionsTable: CuiTableOptions;
+	public softwareGroupAssetsTable: CuiTableOptions;
+	public softwareGroupAssetsParams: OSVService.GetAssetsParams;
+	public softwareGroupVersionsParams: OSVService.GetAssetsParams;
+	public assetsPagination: OsvPagination;
+	public assetsPaginationCount: string;
+	public versionsPagination: OsvPagination;
+	public versionsPaginationCount: string;
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -58,6 +66,17 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			customerId: this.customerId,
 			id: '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
 		};
+		this.softwareGroupAssetsParams = {
+			customerId: this.customerId,
+			pageIndex: 1,
+			pageSize: 10,
+		};
+		this.softwareGroupVersionsParams = {
+			customerId: this.customerId,
+			pageIndex: 1,
+			pageSize: 10,
+		};
+
 		this.logger.debug('SoftwareGroupDetailComponent Created!');
 	}
 
@@ -72,7 +91,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * Refreshes the component
 	 */
 	public refresh () {
-		if (this.selectedProfileGroup) {
+		if (this.selectedSoftwareGroup) {
 			this.clear();
 			// this.params.id = this.selectedProfileGroup.id;
 			this.loadData();
@@ -107,6 +126,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			.pipe(
 				map((response: SoftwareGroupAssetsResponse) => {
 					this.softwareGroupAssets = response.uiAssetList;
+					this.assetsPagination = response.pagination;
+					this.assetsPagination.rows = this.softwareGroupAssetsParams.pageSize;
+					const first = (this.assetsPagination.rows * (this.assetsPagination.page - 1)) + 1;
+					let last = (this.assetsPagination.rows * this.assetsPagination.page);
+					if (last > this.assetsPagination.total) {
+						last = this.assetsPagination.total;
+					}
+					this.assetsPaginationCount = `${first}-${last}`;
 					this.buildSoftwareGroupAssetsTable();
 				}),
 				catchError(err => {
@@ -127,6 +154,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			.pipe(
 				map((response: SoftwareGroupVersionsResponse) => {
 					this.softwareGroupVersions = response.uiSwVersionList;
+					this.versionsPagination = response.pagination;
+					this.versionsPagination.rows = this.softwareGroupVersionsParams.pageSize;
+					const first = (this.versionsPagination.rows * (this.versionsPagination.page - 1)) + 1;
+					let last = (this.versionsPagination.rows * this.versionsPagination.page);
+					if (last > this.versionsPagination.total) {
+						last = this.versionsPagination.total;
+					}
+					this.versionsPaginationCount = `${first}-${last}`;
 					this.buildSoftwareGroupVersionsTable();
 				}),
 				catchError(err => {
@@ -161,6 +196,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentSelectedGroup = _.get(changes, ['selectedProfileGroup', 'currentValue']);
 		const isFirstChange = _.get(changes, ['selectedProfileGroup', 'firstChange']);
+		this.tabIndex = _.get(changes, ['tabIndex', 'currentValue'], 0);
 		if (currentSelectedGroup && !isFirstChange) {
 			this.refresh();
 		}
@@ -171,8 +207,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public buildSoftwareGroupVersionsTable () {
 		const datePipe = new DatePipe('en-US');
-		if (!this.profileVersionsTable) {
-			this.profileVersionsTable = new CuiTableOptions({
+		if (!this.softwareGroupVersionsTable) {
+			this.softwareGroupVersionsTable = new CuiTableOptions({
 				bordered: true,
 				columns: [
 					{
@@ -224,8 +260,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public buildSoftwareGroupAssetsTable () {
 		const datePipe = new DatePipe('en-US');
-		if (!this.profileAssetsTable) {
-			this.profileAssetsTable = new CuiTableOptions({
+		if (!this.softwareGroupAssetsTable) {
+			this.softwareGroupAssetsTable = new CuiTableOptions({
 				bordered: true,
 				columns: [
 					{
@@ -272,5 +308,23 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				wrapText: true,
 			});
 		}
+	}
+
+	/**
+	 * Page change handler for SoftwareGroup Assets
+	 * @param event the event emitted
+	 */
+	public onAssetsPageChanged (event: any) {
+		this.softwareGroupAssetsParams.pageIndex = (event.page + 1);
+		this.getSoftwareGroupAssets();
+	}
+
+	/**
+	 * Page change handler for SoftwareGroup Versions
+	 * @param event the event emitted
+	 */
+	public onVersionsPageChanged (event: any) {
+		this.softwareGroupVersionsParams.pageIndex = (event.page + 1);
+		this.getSoftwareGroupVersions();
 	}
 }

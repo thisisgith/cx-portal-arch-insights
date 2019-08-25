@@ -27,8 +27,8 @@ class OSVService extends __BaseService {
 	static readonly getAssetsPath = '/api/customerportal/osv-ui/v1/assets';
 	static readonly updateAssetPath = '/api/customerportal/osv-ui/v1/updateAsset';
 	static readonly contactSupportPath = '/api/customerportal/criticalBugs/v1/mail/sendEmail';
-	static readonly getSoftwareGroupVersionsPath = '/api/dev/customerportal/osv-ui/v1/profileVersions';
-	static readonly getSoftwareGroupAssetsPath = '/api/dev/customerportal/osv-ui/v1/profileAssets';
+	static readonly getSoftwareGroupVersionsPath = '/api/customerportal/osv-ui/v1/profileVersions';
+	static readonly getSoftwareGroupAssetsPath = '/api/customerportal/osv-ui/v1/profileAssets';
 	constructor (
 		config: __Configuration,
 		http: HttpClient

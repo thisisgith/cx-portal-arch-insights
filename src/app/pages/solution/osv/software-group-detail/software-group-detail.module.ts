@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SoftwareGroupDetailComponent } from './software-group-detail.component';
-import { CuiTabsModule } from '@cisco-ngx/cui-components';
+import { CuiTabsModule, CuiTableModule, CuiPagerModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 
 /**
@@ -14,6 +14,9 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		CommonModule,
 		CuiTabsModule,
 		I18nPipeModule,
+		CuiTableModule,
+		CuiPagerModule,
+		CuiSpinnerModule,
 	],
 })
 export class SoftwareGroupDetailModule { }

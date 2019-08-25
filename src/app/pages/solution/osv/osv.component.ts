@@ -41,6 +41,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public fullScreen = false;
 	public selectedSoftwareGroup: any;
 	public selectedAsset: OSVAsset;
+	public tabIndex: number;
 	public filtered = false;
 	public filters: Filter[];
 	private destroy$ = new Subject();

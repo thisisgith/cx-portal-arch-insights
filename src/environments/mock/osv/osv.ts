@@ -725,7 +725,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 1000,
 					description: 'Software Group Assets',
 					response: {
 						body: mockSoftwareGroupAssets,
@@ -742,7 +742,7 @@ export const OSVScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 200,
+					delay: 100,
 					description: 'Software Group Versions',
 					response: {
 						body: mockSoftwareGroupVersions,

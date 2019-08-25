@@ -31,8 +31,11 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 	@Input() public selectedSoftwareGroup;
 	@Output() public contactExpert = new EventEmitter();
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
+	@Input() public tabIndex;
+	@Output() public tabIndexChange = new EventEmitter<number>();
 	@ViewChild('recommendationsTemplate', { static: true })
-	private recommendationsTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	private recommendationsTemplate: TemplateRef<{}>;
 	public softwareGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -82,6 +85,9 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 			.pipe(
 				map((response: SoftwareGroupsResponse) => {
 					this.status.isLoading = false;
+					response.uiProfileList.forEach((softwareGroup: SoftwareGroup) => {
+						_.set(softwareGroup, 'actions', this.getRowActions(softwareGroup));
+					});
 					this.softwareGroups = response.uiProfileList;
 					this.pagination = response.pagination;
 
@@ -99,7 +105,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV Profile Groups : getsoftwareGroups() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			)
 			.subscribe(() => {
@@ -158,6 +164,11 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 						sortable: false,
 						template: this.recommendationsTemplate,
 						width: '10%',
+					},					
+					{
+						click: true,
+						sortable: false,
+						template: this.actionsTemplate,
 					},
 				],
 				dynamicData: true,
@@ -204,6 +215,52 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+	}
+
+	/**
+	 * Returns the row specific actions
+	 * @param item the row we're building our actions for
+	 * @returns the built actions
+	 */
+	public getRowActions (softwareGroup: SoftwareGroup) {
+		return _.filter([
+			{
+				label: I18n.get('_OsvCompareRecommendations'),
+				onClick: () => {
+					this.selectedSoftwareGroup = softwareGroup;
+					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+					this.tabIndex = 0;
+					this.tabIndexChange.emit(this.tabIndex);
+				}
+			},
+			{
+				label: I18n.get('_OsvRecommendations_'),
+				onClick: () => {
+					this.selectedSoftwareGroup = softwareGroup;
+					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+					this.tabIndex = 1;
+					this.tabIndexChange.emit(this.tabIndex);
+				}
+			},
+			{
+				label: I18n.get('_OsvViewAssets_'),
+				onClick: () => {
+					this.selectedSoftwareGroup = softwareGroup;
+					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+					this.tabIndex = 2;
+					this.tabIndexChange.emit(this.tabIndex);
+				}
+			},			
+			{
+				label: I18n.get('_OsvViewVersions_'),
+				onClick: () => {
+					this.selectedSoftwareGroup = softwareGroup;
+					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+					this.tabIndex = 3;
+					this.tabIndexChange.emit(this.tabIndex);
+				}
+			}
+		]);
 	}
 
 }

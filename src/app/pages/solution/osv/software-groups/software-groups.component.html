@@ -31,7 +31,7 @@
 </div>
 
 <ng-template #tableSoftwareGroups>
-	<div class="responsive-table" *ngIf="!status.isLoading && softwareGroupsTable && softwareGroups?.length">
+	<div  *ngIf="!status.isLoading && softwareGroupsTable && softwareGroups?.length">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
 			<thead>
 				<tr>
@@ -54,7 +54,7 @@
 						(click)="column.click ? $event.stopPropagation() : null"
 						attr.data-auto-id="SoftwareGroupsItemClickHandler-{{ item.softwareProfile }}">
 						<ng-container *ngIf="column.template">
-							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data }">
+							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data ,actions: item.actions}">
 							</ng-container>
 						</ng-container>
 						<ng-container *ngIf="!column.template">
@@ -74,4 +74,10 @@
 		<sup>{{item.recommendations.length}}</sup>
 		<span class="qtr-margin-left" [innerText]="'_OsvAvailable_' | i18n"></span>
 	</div>
+</ng-template>
+
+<ng-template #actionsTemplate let-item="celldata" let-actions="actions" >
+	<cui-dropdown *ngIf="actions?.length > 0 " [actions]="actions" position="left"
+		icon="icon-more icon-medium text-muted rotate-90">
+	</cui-dropdown>
 </ng-template>
