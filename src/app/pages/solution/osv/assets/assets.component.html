@@ -73,9 +73,9 @@
 </ng-template>
 
 <ng-template #recommendationsTemplate let-item="celldata">
-	<div *ngIf="item?.recommendations && item.recommendations.length >0 ">
+	<div *ngIf="item?.recommendationCount && item.recommendationCount > 0 ">
 		<span class="icon-lightbulb icon-small"></span>
-		<sup>{{item.recommendations.length}}</sup>
+		<sup>{{item.recommendationCount}}</sup>
 		<span class="qtr-margin-left" [innerText]="'_OsvAvailable_' | i18n"></span>
 	</div>
 </ng-template>
