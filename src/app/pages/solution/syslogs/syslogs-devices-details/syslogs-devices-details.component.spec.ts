@@ -64,7 +64,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.tabledata)
+				expect(component.tableData)
 				.toBeUndefined();
 
 				done();
@@ -83,11 +83,11 @@ describe('SyslogsdevicedetailsComponent', () => {
 		spyOn(syslogsService, 'getdevicePanelDetails')
 		.and
 		.returnValue(of(SyslogScenarios[4].scenarios.GET[0].response.body));
-		component.SyslogDevicePanelData(param);
+		component.SyslogDevicePanelData();
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();
-			expect(component.tabledata)
+			expect(component.tableData)
 				.toBeDefined();
 			done();
 		});

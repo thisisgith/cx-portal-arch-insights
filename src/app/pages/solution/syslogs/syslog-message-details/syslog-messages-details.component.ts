@@ -44,9 +44,19 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public softwareItems: SoftwareList[];
 	public productFamily: ProductFamily[];
 	public totalItems = 0;
-	public tableLimit = 5;
+	public tableLimit = 10;
 	public pagerLimit = 5;
 	public destroy$ = new Subject();
+	public tableConfig = {
+		tableLimit: 10,
+		tableOffset: 0,
+		totalItems: 10,
+	};
+	public paginationConfig = {
+		pageLimit: 10,
+		pageNum: 1,
+		pagerLimit: 10,
+	}
 	// tslint:disable-next-line: no-any
 	public timePeriod: any[] = [{
 		name: '1day',
@@ -181,6 +191,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 			)
 			.subscribe((data: SyslogPanelGridData) => {
 				this.tableData = this.marshalTableDataForInerGrid(data.responseData);
+				this.tableConfig.totalItems = this.tableData.length;
 			});
 	}
 
@@ -221,6 +232,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 				)
 				.subscribe((data: SyslogPanelGridData) => {
 					this.tableData = this.marshalTableDataForInerGrid(data.responseData);
+					this.tableConfig.totalItems = this.tableData.length;
 				});
 
 		}
@@ -254,7 +266,8 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 * @param pageInfo contains page info
 	 */
 	public onPagerUpdated (pageInfo: any) {
-		this.tableOffset = pageInfo.page;
+		this.tableConfig.tableOffset = pageInfo.page;
+		this.paginationConfig.pageNum = pageInfo.page + 1;
 	}
 
 	/**
