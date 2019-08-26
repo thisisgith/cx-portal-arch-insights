@@ -32,6 +32,9 @@
 
 .device-table {
 	text-align: left;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .row.panel.selected {

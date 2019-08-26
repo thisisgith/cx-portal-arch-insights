@@ -156,6 +156,10 @@
 	<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
 		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.recommended }"></ng-container>
 	</ng-container>
+	<ng-container *ngIf="atxScheduleCardOpened && moreATXSelected">
+		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: moreATXSelected }">
+		</ng-container>
+	</ng-container>
 </ng-template>
 
 <ng-template #recommended let-src="src" let-title="title" let-description="description"
@@ -196,17 +200,17 @@
 </ng-template>
 
 <ng-template #atxHover let-title="title" let-description="description" let-autoid="autoid" let-item="item">
-	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
+	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" *ngIf="!atxScheduleCardOpened" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 		<div class="divider divider--compressed"></div>
 		<div class="half-margin-left" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 		<div class="base-padding-top half-padding-left" *ngIf="autoid==='moreATXList'">
 			<button attr.data-auto-id="{{ autoid }}-HoverModal-ViewSessions"
 				class="btn btn--small btn--secondary text-uppercase"
-				(click)="atxScheduleCardOpened = true"
+				(click)="atxMoreViewSessions(item)"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<a class="no-link" target="_blank" [href]="item.recordingURL">
+			<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
 				<button class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 					[innerText]="'_WatchNow_' | i18n">
 				</button>
@@ -219,7 +223,7 @@
 	<div id="acc-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="icon-bookmark icon-medium"
 			(click)="setACCBookmark(item)"
-			[ngClass]="getACCRibbonClass(item)"
+			[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="ACCCardRibbon">
 		</div>
 		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
@@ -229,7 +233,7 @@
 			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 			<span [innerText]="item.duration"></span>
 		</div>
-		<div class="base-padding-top half-padding-left" *ngIf= "item.status==='recommended'">
+		<div class="base-padding-top half-padding-left" *ngIf= "item.status.toLowerCase()==='recommended'">
 			<button data-auto-id="Request1on1ACCButton"
 				(click)="selectAccRequestForm(true, item.accId, item.title)"
 				class="btn btn--small btn--secondary text-uppercase"
@@ -237,11 +241,10 @@
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
 		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status==='requested' || item.status==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-CSEMessage">
+		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='requested' || item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-CSEMessage">
 			<span [innerText]="'_CSETouch_' | i18n"></span>
 		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
-			<div class="icon-star icon-tiny star" *ngIf="item.status === 'completed'"></div>
+		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
 			<span [innerText]="'_Completed_' | i18n"></span>
 		</div>
 	</div>
@@ -263,20 +266,25 @@
 		<ng-container *ngIf="item.status === 'scheduled'">
 			<div class="row">
 				<div class="col-md-1">
-					<span class="text-info icon-calendar"></span>
+					<span class="text-info icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
 				</div>
 				<div class="col-md-11 no-padding-left">
-					<div class="text-bold" [innerText]="scheduledAtxMap[item.atxId].sessionStartDate | date:'medium'"></div>
-					<div [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[item.atxId].presenterName"></div>
+					<div class="text-bold" [innerText]="scheduledAtxMap[item.atxId].sessionStartDate | date:'medium'" attr.data-auto-id="{{ autoid }}-Date"></div>
+					<div [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[item.atxId].presenterName" attr.data-auto-id="{{ autoid }}-Presenter"></div>
 				</div>
 			</div>
 		</ng-container>
 		<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 			class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-			(click)="recommendedAtxScheduleCardOpened = true; componentData.atx.interested=''"
+			(click)="recommendedAtxScheduleCardOpened = true; atxScheduleCardOpened = false; componentData.atx.interested=''"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
-		<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="componentData.atx?.recommended?.recordingURL">
+		<a
+			*ngIf="componentData.atx?.recommended?.recordingURL"
+			class="no-link"
+			target="_blank"
+			rel="noopener noreferrer"
+			[href]="componentData.atx?.recommended?.recordingURL">
 			<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 				[innerText]="'_WatchNow_' | i18n"></button>
 		</a>
@@ -285,7 +293,7 @@
 
 <ng-template #recommendedACC let-item="item" let-autoid="autoid" let-src="src">
 	<div class="icon-bookmark icon-medium"
-		[ngClass]="getACCRibbonClass(item)"
+		[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
 		(click)="setACCBookmark(item)"
 		data-auto-id="SBCardRibbon">
 	</div>
@@ -326,7 +334,7 @@
 			</div>
 			<div>
 				<a class="no-link closebtn"
-					(click)="this.atxScheduleCardOpened = false; recommendedAtxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0"
+					(click)="closeViewSessions()"						
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
 				</a>
@@ -414,7 +422,7 @@
 		<span class="text-large text-uppercase" [innerText]="'_More_' | i18n" data-auto-id="moreACCList-Header"></span>
 	</div>
 	<div class="base-padding-bottom" [attr.data-auto-id]="autoid">
-		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:1:3">
+		<div class="qtr-padding-bottom" #moreList (mouseenter)="getMoreCoordinates(moreList, autoid)" *ngFor="let item of data | slice:1:3">
 			<div id="moreAccList-item" class="panel small-panel" attr.data-auto-id="{{ autoid }}-item">
 				<div class="row">
 					<div class="col-md-11 text-blue" [innerText]="item.title"></div>
@@ -603,115 +611,132 @@
 		</div>
 		<div class="divider base-margin-left base-margin-right"></div>
 		<div class="modal__body base-padding">
-			<div class="row half-margin-left half-margin-right">
-				<div class="col-md-9 text-large text-bold text-left"
-					[innerText]="'_TopicsAvailableSolution_' | i18n:data?.length || 0:componentData.params.solution:componentData.params.usecase">
-				</div>
-				<div *ngIf="type ==='ACC'" class="col-md-2">
-					<cui-select id="acc-filter"
-						data-auto-id="acc-filter"
-						[items]="statusOptions"
-						[empty]="true"
-						[placeholder]="'_FilterBy_' | i18n"
-						[(ngModel)]="selectedFilterForACC"
-						(ngModelChange)="selectFilter('ACC')">
-					</cui-select>
-				</div>
-				<div *ngIf="type ==='ATX'" class="col-md-2">
-					<cui-select id="atx-filter"
-						data-auto-id="atx-filter"
-						[items]="statusOptions"
-						[empty]="true"
-						[placeholder]="'_FilterBy_' | i18n"
-						[(ngModel)]="selectedFilterForATX"
-						(ngModelChange)="selectFilter('ATX')">
-					</cui-select>
-				</div>
-				<div *ngIf="type==='SB'" class="col-md-2">
-					<cui-select id="category-filter"
-						data-auto-id="category-filter"
-						[items]="categoryOptions"
-						[empty]="true"
-						[placeholder]="'_FilterBy_' | i18n"
-						[(ngModel)]="selectedFilterForSB"
-						(ngModelChange)="selectFilter('SB')">
-					</cui-select>
-				</div>
-				<div *ngIf="type==='PG'" class="col-md-2">
-					<cui-select id="pg-category-filter"
-						data-auto-id="pg-category-filter"
-						[items]="pgCategoryOptions"
-						[empty]="true"
-						[placeholder]="'_FilterBy_' | i18n"
-						[(ngModel)]="selectedFilterForPG"
-						(ngModelChange)="selectFilter('PG')">
-					</cui-select>
-				</div>
-				<div *ngIf="type==='ACC'" class="col-md-1 text-right">
-					<div class="btn-group btn-group--square">
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': accview ==='list' }" (click)="selectView('list', type)">
-							<span class="icon-list-view"></span>
-						</button>
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': accview === 'grid' }" (click)="selectView('grid', type)">
-							<span class="icon-grid-view"></span>
-						</button>
+			<span [ngSwitch]="type">
+				<span *ngSwitchCase="'ACC'">
+					<div class="row half-margin-left half-margin-right">
+						<div class="col-md-9 text-large text-bold text-left"
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedACC?.length || 0:componentData.params.solution:componentData.params.usecase">
+						</div>
+						<div class="col-md-2">
+							<cui-select id="acc-filter"
+								data-auto-id="acc-filter"
+								[items]="statusOptions"
+								[empty]="true"
+								[placeholder]="'_FilterBy_' | i18n"
+								[(ngModel)]="selectedFilterForACC"
+								(ngModelChange)="selectFilter('ACC')">
+							</cui-select>
+						</div>
+						<div class="col-md-1 text-right">
+							<div class="btn-group btn-group--square">
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+									[ngClass]="{'selected': accview ==='list' }" (click)="selectView('list', type)">
+									<span class="icon-list-view"></span>
+								</button>
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+									[ngClass]="{'selected': accview === 'grid' }" (click)="selectView('grid', type)">
+									<span class="icon-grid-view"></span>
+								</button>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div *ngIf="type==='ATX'" class="col-md-1 text-right">
-					<div class="btn-group btn-group--square">
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
-							<span class="icon-list-view"></span>
-						</button>
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
-							<span class="icon-grid-view"></span>
-						</button>
+					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
+				</span>
+					<span *ngSwitchCase="'ATX'">
+						<div class="row half-margin-left half-margin-right">
+						<div class="col-md-9 text-large text-bold text-left"
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedATX?.length || 0:componentData.params.solution:componentData.params.usecase">
+						</div>
+						<div class="col-md-2">
+							<cui-select id="atx-filter"
+								data-auto-id="atx-filter"
+								[items]="statusOptions"
+								[empty]="true"
+								[placeholder]="'_FilterBy_' | i18n"
+								[(ngModel)]="selectedFilterForATX"
+								(ngModelChange)="selectFilter('ATX')">
+							</cui-select>
+						</div>
+						<div class="col-md-1 text-right">
+							<div class="btn-group btn-group--square">
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+									[ngClass]="{'selected': atxview ==='list' }" (click)="selectView('list', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
+									<span class="icon-list-view"></span>
+								</button>
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+									[ngClass]="{'selected': atxview === 'grid' }" (click)="selectView('grid', type); this.atxScheduleCardOpened = false; selectSession(); eventXCoordinates = 0; eventYCoordinates = 0">
+									<span class="icon-grid-view"></span>
+								</button>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div *ngIf="type==='SB'" class="col-md-1 text-right">
-					<div class="btn-group btn-group--square">
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': sbview ==='list' }" (click)="selectView('list', type)">
-							<span class="icon-list-view"></span>
-						</button>
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': sbview === 'grid' }" (click)="selectView('grid', type)">
-							<span class="icon-grid-view"></span>
-						</button>
+					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
+				</span>
+				<span *ngSwitchCase="'SB'">
+						<div class="row half-margin-left half-margin-right">
+						<div class="col-md-9 text-large text-bold text-left"
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedSuccessPaths?.length || 0:componentData.params.solution:componentData.params.usecase">
+						</div>
+						<div class="col-md-2">
+							<cui-select id="category-filter"
+								data-auto-id="category-filter"
+								[items]="categoryOptions"
+								[empty]="true"
+								[placeholder]="'_FilterBy_' | i18n"
+								[(ngModel)]="selectedFilterForSB"
+								(ngModelChange)="selectFilter('SB')">
+							</cui-select>
+						</div>
+						<div class="col-md-1 text-right">
+							<div class="btn-group btn-group--square">
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+									[ngClass]="{'selected': sbview ==='list' }" (click)="selectView('list', type)">
+									<span class="icon-list-view"></span>
+								</button>
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+									[ngClass]="{'selected': sbview === 'grid' }" (click)="selectView('grid', type)">
+									<span class="icon-grid-view"></span>
+								</button>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div *ngIf="type==='PG'" class="col-md-1 text-right">
-					<div class="btn-group btn-group--square">
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
-							[ngClass]="{'selected': pgview ==='list' }" (click)="selectView('list', type)">
-							<span class="icon-list-view"></span>
-						</button>
-						<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
-							[ngClass]="{'selected': pgview === 'grid' }" (click)="selectView('grid', type)">
-							<span class="icon-grid-view"></span>
-						</button>
+					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
+				</span>
+				<span *ngSwitchCase="'PG'">
+						<div class="row half-margin-left half-margin-right">
+						<div class="col-md-9 text-large text-bold text-left"
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedProductGuides?.length || 0:componentData.params.solution:componentData.params.usecase">
+						</div>
+						<div class="col-md-2">
+							<cui-select id="pg-category-filter"
+								data-auto-id="pg-category-filter"
+								[items]="pgCategoryOptions"
+								[empty]="true"
+								[placeholder]="'_FilterBy_' | i18n"
+								[(ngModel)]="selectedFilterForPG"
+								(ngModelChange)="selectFilter('PG')">
+							</cui-select>
+						</div>
+						<div class="col-md-1 text-right">
+							<div class="btn-group btn-group--square">
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="table-view-btn"
+									[ngClass]="{'selected': pgview ==='list' }" (click)="selectView('list', type)">
+									<span class="icon-list-view"></span>
+								</button>
+								<button class="btn btn--small btn--gray-ghost" data-auto-id="card-view-btn"
+									[ngClass]="{'selected': pgview === 'grid' }" (click)="selectView('grid', type)">
+									<span class="icon-grid-view"></span>
+								</button>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-			<div *ngIf="type === 'SB'">
-				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
-				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
-			</div>
-			<div *ngIf="type === 'ACC'">
-				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
-				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
-			</div>
-			<div *ngIf="type === 'ATX'">
-				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
-				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
-			</div>
-			<div *ngIf="type === 'PG'">
-				<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-				<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-			</div>
+					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
+				</span>
+			</span>	
 		</div>
 	</div>
 </ng-template>
@@ -776,17 +801,17 @@
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item"  data-auto-id="ATXCardFooter">
 				<div class="text-left">
-					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
-					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
-					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
-					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
-					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
-					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
+					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedIcon"></span>
+					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressIcon"></span>
+					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedIcon"></span>
+					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedText"></span>
+					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressText"></span>
+					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedText"></span>
 				</div>
 				<div class="text-left" *ngIf="item.status === 'scheduled'">
 					<div *ngFor="let session of item.sessions">
-						<span class="text-info icon-calendar half-padding-right" *ngIf="session.scheduled"></span>
-						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" *ngIf="session.scheduled"></span>
+						<span class="text-info icon-calendar half-padding-right" *ngIf="session.scheduled" data-auto-id="ATXCardFooter-ScheduledIcon"></span>
+						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" *ngIf="session.scheduled" data-auto-id="ATXCardFooter-ScheduledDate"></span>
 					</div>
 				</div>
 				<div class="divider divider--compressed"></div>
@@ -799,7 +824,7 @@
 						</button>
 					</div>
 					<div class="col-md-6 text-left">
-						<a class="no-link" target="_blank" [href]="item.recordingURL">
+						<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
 							<button data-auto-id="recommendedATXWatchButton"
 								class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 								[innerText]="'_WatchNow_' | i18n"></button>
@@ -824,7 +849,8 @@
 			<span class="icon-flagged qtr-padding-right qtr-padding-bottom" data-auto-id="ACCCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<div class="icon-bookmark icon-medium" (click)="setACCBookmark(item)" [ngClass]="getACCRibbonClass(item)"
+		<div class="icon-bookmark icon-medium" (click)="setACCBookmark(item)"
+			[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="ACCCardRibbon">
 		</div>
 		<div class="card__header atx__card__header text-left text-bold"
@@ -931,7 +957,7 @@
 			</ng-container>
 		</td>
 	</tr>
-	<ng-container *ngIf="atxScheduleCardOpened">
+	<ng-container *ngIf="atxScheduleCardOpened && componentData.atx.interested">
 			<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.interested }"></ng-container>
 	</ng-container>
 </ng-template>
@@ -1166,7 +1192,7 @@
 	<div *ngIf="celldata.status ==='scheduled'" data-auto-id="Table-Status-Scheduled">
 		<div *ngFor="let session of celldata.sessions">
 			<div *ngIf="session.scheduled">
-				<span class="text-info icon-calendar icon-small"></span>
+				<span class="text-info icon-calendar icon-small" data-auto-id="Table-Status-Scheduled-Icon"></span>
 				<span class="qtr-margin-left"
 					innerText="{{ session.sessionStartDate | date:'medium'}}" data-auto-id="scheduledDate"></span>
 			</div>
@@ -1181,8 +1207,8 @@
 		<span class="qtr-margin-left" [innerText]="'_InProgress_' | i18n"></span>
 	</div>
 	<div *ngIf="celldata.status ==='completed'" data-auto-id="Table-Status-Completed">
-		<span class="text-success icon-certified icon-small"></span>
-		<span class="qtr-margin-left" [innerText]="'_Completed_' | i18n"></span>
+		<span class="text-success icon-certified icon-small" data-auto-id="Table-Status-Completed-Icon"></span>
+		<span class="qtr-margin-left" [innerText]="'_Completed_' | i18n" data-auto-id="Table-Status-Completed-Text"></span>
 	</div>
 </ng-template>
 
@@ -1198,7 +1224,7 @@
 			(click)="cancelATXSession(celldata)"
 			[innerText]="'_Cancel_' | i18n">
 		</button-->
-		<a class="no-link" target="_blank" [href]="celldata.recordingURL">
+		<a *ngIf="celldata.recordingURL" class="no-link" target="_blank" [href]="celldata.recordingURL">
 			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase half-margin-left"
 				[innerText]="'_WatchNow_' | i18n"></button>
 		</a>

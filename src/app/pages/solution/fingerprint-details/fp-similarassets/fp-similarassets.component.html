@@ -1,0 +1,77 @@
+<div class="row base-padding-top base-padding-left subheader text-bold">
+	<span class="text-bold" [innerText]="'_CP_Filter_' | i18n"></span>
+</div>
+<div class="flex-fill base-padding-top">
+	<form [formGroup]="requestForm" class="row">
+		<div class="col-6">
+			<div class="text-medium half-padding-top" [innerText]="'_CP_SimilarityCriteria_' | i18n"></div>
+			<div class="form-group form-group--inline">
+				<label class="radio">
+					<input type="radio" formControlName="similarityCriteria" value="fingerprint"
+						[(ngModel)]="similarityCriteria" data-auto-id="SimilarityCriteriaFingerprint">
+					<span class="radio__input"></span>
+					<span class="radio__label hidden-xs" [innerText]="'_CP_FeaturesHardwareandSoftware_' | i18n"></span>
+				</label>
+			</div>
+			<div class="form-group form-group--inline">
+				<label class="radio">
+					<input type="radio" formControlName="similarityCriteria" value="features"
+						[(ngModel)]="similarityCriteria" data-auto-id="SimilarityCriteriaFeatures">
+					<span class="radio__input"></span>
+					<span class="radio__label hidden-xs" [innerText]="'_CP_FeaturesOnly_' | i18n"></span>
+				</label>
+			</div>
+		</div>
+		<div class="col-3">
+			<label for="input-size-compressed-match text-medium" [innerText]="'_CP_MinimumMatch_' | i18n"></label>
+			<div class="col-md-5 half-padding-top">
+				<div class="form-group input--compressed">
+					<div class="form-group__text">
+						<input id="input-size-compressed-match" type="number" min="0" max="100" formControlName="minMatch">
+					</div>
+				</div>
+				<span>&#37;</span>
+			</div>
+		</div>
+		<div class="col-3">
+			<label for="input-size-compressed-count text-medium" [innerText]="'_CP_Compareupto_' | i18n"></label>
+			<div class="col-md-8 half-padding-top">
+				<div class="form-group input--compressed">
+					<div class="form-group__text">
+						<input id="input-size-compressed-count" type="number" min="0" max="1000" formControlName="deviceCount">
+						<span [innerText]="'_Assets_' | i18n | lowercase"></span>
+					</div>
+				</div>
+				<span [innerText]="'_Assets_' | i18n | lowercase"></span>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="row flex">
+	<div class="container base-margin-top" data-auto-id="syslog-message-table">
+		<cui-table [options]="tableOptions" [data]="similarDevicesData?.similarDevices" [limit]="size" [offset]="page" *ngIf="!seriesDataLoading;else loadingTemplate;"></cui-table>
+		<div class="section">
+			<cui-pager [page]="page" [limit]="size" [bordered]="true" [totalItems]="similarDevicesData?.count" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+		</div>
+	</div>
+	<!-- grid-section ends -->
+</div>
+<ng-template #assetTemplate let-item="celldata">
+	<div class="syslog-column" title="{{ item.IcDesc }}">
+		<span class="text-info" [innerText]="item.deviceName"></span><br />
+		<span class="text-small" [innerText]="item.productFamily"></span>
+	</div>
+</ng-template>
+<ng-template #crashRiskTemplate let-item="celldata">
+	<span class="text-dkgray-1" >{{ (item.riskScore / 100)| percent:'2.2-4' }}</span>
+</ng-template>
+<ng-template #similarityMatchTemplate let-item="celldata">
+	<cui-progressbar [title]="'_CP_Match' | i18n:(item.similarityScore/100 | percent:'2.2-4')" [percentage]="item.similarityScore" color="default">
+	</cui-progressbar>
+</ng-template>
+<ng-template #compareTemplate let-item="celldata">
+		<a (click)="showDeviceComparison(item)" data-auto-id="CompareButton" [innerText]="'_CP_Compare_' | i18n">&gt;</a>
+</ng-template>
+<ng-template #loadingTemplate>
+	<cui-loader color="muted"></cui-loader>
+</ng-template>

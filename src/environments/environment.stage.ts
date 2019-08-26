@@ -23,6 +23,8 @@ export const environment = {
 	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	baseHref: '/pbc/',
 	ieSetup: {
+		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
+		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
