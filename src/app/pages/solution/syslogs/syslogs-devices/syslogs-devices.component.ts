@@ -239,6 +239,30 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public redirectToAsset360 () {
 		this.showAsset360 = true;
 	}
+	/**
+	 * Searchs all
+	 * @param event contains seach input data
+	 */
+	public searchAll (event) {
+		if (event.keyCode === 13) {
+		// tslint:disable-next-line: ban-comma-operator
+			this.syslogsService
+			.getSeachAllData(this.searchVal)
+			.pipe(takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error('syslogs-details.component : searchAll() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}),
+			)
+			.subscribe((gridData: SyslogDeviceDetailsdata[]) => {
+				this.tableData = gridData;
+				this.totalItems = gridData.length;
+			}),
+			this.loading = false;
+		}
+	}
 
 	/**
 	 * on destroy

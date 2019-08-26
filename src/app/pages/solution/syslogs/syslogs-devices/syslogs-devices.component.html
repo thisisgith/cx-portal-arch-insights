@@ -14,7 +14,7 @@
 	</div>
 	<div class="col-9">
 		<div>
-			<form #f="ngForm" class="row" id="searchForm">
+			<form #f="ngForm" class="row" id="searchForm" (keydown)="searchAll($event)">
 				<div class="col-6"></div>
 				<div class="col-3">
 					<div class="form-group input--icon input--compressed">
