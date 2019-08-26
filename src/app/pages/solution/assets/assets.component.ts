@@ -1305,6 +1305,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	public onDropdownClick (event: Event) {
 		const target = <HTMLElement> event.target;
+		// TODO: Temporary hack to fix actions menu behavior
+		//  Refactor this later on while taking into account issue #162 in cui-libraries
 		if (event.isTrusted && !target.childNodes.length) { // real user click on menu button
 			if (this.openDropdown && (this.openDropdown !== event.target)) {
 				// If a menu is open and user clicks a different menu, close the original menu
