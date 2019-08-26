@@ -1200,6 +1200,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
+		const atxPopupListViewAdjustPx = 193;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
@@ -1221,7 +1222,7 @@ export class LifecycleComponent implements OnDestroy {
 
 					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
 					_div.style.top = `${(rect.top + (ht / 2))
-						+ this.scrollY - 193 - this.appHeaderHeight}px`;
+						+ this.scrollY - atxPopupListViewAdjustPx - this.appHeaderHeight}px`;
 					panel = 'panel listpanel--open';
 				}
 			}
@@ -1746,7 +1747,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Gets the height of the app header in pixels
 	 * @returns the height in px ready to be inserted as styling
 	 */
-	public getAppHeaderHeightPX (): string {
+	get getAppHeaderHeightPX (): string {
 		if (this.appHeaderHeight > 0) {
 			return `${this.appHeaderHeight}px`;
 		}
