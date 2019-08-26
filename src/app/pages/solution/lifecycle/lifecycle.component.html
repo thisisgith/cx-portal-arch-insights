@@ -965,8 +965,7 @@
 
 <ng-template #cardPG>
 	<div class="card acc__card" *ngFor="let item of selectedProductGuides" data-auto-id="ProductGuidesCard">
-		<!-- product guides are still of type "SB" (Success Bytes) -->
-		<div class="icon-bookmark icon-medium" (click)="updateBookmark(item, 'SB')"
+		<div class="icon-bookmark icon-medium" (click)="updateBookmark(item, 'PG')"
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'" data-auto-id="ProductGuidesCard-Ribbon"></div>
 		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype" data-auto-id="ProductGuidesCard-Archetype"></div>
 		<div class="card__body success__card__body">
