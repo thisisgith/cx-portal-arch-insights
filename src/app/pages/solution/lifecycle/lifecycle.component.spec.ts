@@ -40,7 +40,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-describe('LifecycleComponent', () => {
+fdescribe('LifecycleComponent', () => {
 	let component: LifecycleComponent;
 	let fixture: ComponentFixture<LifecycleComponent>;
 	let de: DebugElement;
@@ -234,6 +234,31 @@ describe('LifecycleComponent', () => {
 
 			done();
 		});
+	});
+
+	it('should correctly get the height of the app-header', () => {
+		// Test to make sure that the calculations work correctly when there is no
+		// app-header element.
+		expect(component.appHeaderHeight)
+			.toBe(0);
+		expect(component.appHeaderHeightPX)
+			.toBe('0');
+
+		// Create a dummy app-header element for the component to find.
+		const expectedAppHeaderHeight = 50;
+		const expectedAppHeaderHeightPX = `${expectedAppHeaderHeight}px`;
+		const appHeader = document.createElement('app-header');
+		appHeader.style.display = 'block';
+		appHeader.style.height = expectedAppHeaderHeightPX;
+		document.body.append(appHeader);
+		component.ngOnInit();
+
+		fixture.detectChanges();
+
+		expect(component.appHeaderHeight)
+			.toBe(expectedAppHeaderHeight);
+		expect(component.appHeaderHeightPX)
+			.toBe(expectedAppHeaderHeightPX);
 	});
 
 	describe('ATX', () => {
