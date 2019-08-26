@@ -295,9 +295,9 @@ describe('Assets', () => { // PBC-41
 		it('Shows support and warranty coverage', () => { // PBC-52, PBC-351
 			const checkDataAndLink = (dataStatus, linkStatus) => {
 				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
-				cy.getByAutoId('_SupportCoverage_-NotCovered').should(dataStatus);
+				cy.getByAutoId('_SupportCoverage_-Uncovered').should(dataStatus);
 				cy.getByAutoId('_SupportCoverage_-Link').should(linkStatus);
-				cy.getByAutoId('_Warranty_-NotCovered').should(dataStatus);
+				cy.getByAutoId('_Warranty_-Uncovered').should(dataStatus);
 				cy.getByAutoId('_Warranty_-Link').should(linkStatus);
 				cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 			};
@@ -318,8 +318,8 @@ describe('Assets', () => { // PBC-41
 
 			assetSummaryMock.enable('Not Covered');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
-			cy.getByAutoId('_SupportCoverage_-NotCovered').should('have.text', 'Not Covered');
-			cy.getByAutoId('_Warranty_-NotCovered').should('have.text', 'Not Covered');
+			cy.getByAutoId('_SupportCoverage_-Uncovered').should('have.text', 'Uncovered');
+			cy.getByAutoId('_Warranty_-Uncovered').should('have.text', 'Uncovered');
 			cy.get('[data-auto-id="AssetsTableBody"] tr').eq(0).click();
 
 			// PBC-352
