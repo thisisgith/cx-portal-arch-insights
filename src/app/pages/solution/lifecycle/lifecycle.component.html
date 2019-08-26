@@ -207,7 +207,7 @@
 				(click)="atxMoreViewSessions(item)"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
-			<a class="no-link" target="_blank" [href]="item.recordingURL">
+			<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
 				<button class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 					[innerText]="'_WatchNow_' | i18n">
 				</button>
@@ -276,7 +276,12 @@
 			(click)="recommendedAtxScheduleCardOpened = true; atxScheduleCardOpened = false; componentData.atx.interested=''"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
-		<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="componentData.atx?.recommended?.recordingURL">
+		<a
+			*ngIf="componentData.atx?.recommended?.recordingURL"
+			class="no-link"
+			target="_blank"
+			rel="noopener noreferrer"
+			[href]="componentData.atx?.recommended?.recordingURL">
 			<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 				[innerText]="'_WatchNow_' | i18n"></button>
 		</a>
@@ -370,7 +375,7 @@
 			<a id="AtxScheduleCardRegisterButton"
 				class="pull-left half-padding-left"
 				target="_blank"
-				*ngIf="sessionSelected && !sessionSelected.scheduled && !notCurrentPitstop"
+				*ngIf="data.status !== 'scheduled' && sessionSelected && !notCurrentPitstop"
 				[href]="sessionSelected?.registrationURL">
 				<button class="btn btn--primary base-margin-top half-margin-left"
 					[disabled]="!sessionSelected?.registrationURL"
@@ -380,7 +385,7 @@
 			</a>
 			<div class="pull-left half-padding-left">
 				<button class="btn btn--primary disabled base-margin-top half-margin-left"
-					*ngIf="!sessionSelected || sessionSelected.scheduled || notCurrentPitstop"
+					*ngIf="!sessionSelected || notCurrentPitstop || data.status === 'scheduled'"
 					[innerText]="'_Register_' | i18n"
 					data-auto-id="AtxScheduleCardRegisterButton">
 				</button>
@@ -510,15 +515,15 @@
 	</div>
 	<div class="base-padding-bottom half-padding-top half-padding-left">
 		<div class="qtr-padding-bottom" *ngFor="let item of data | slice:0:3">
-			<div id="recommended-elearning-item" class=" panel small-panel" data-auto-id="recommendedElearningItem">
+			<div id="recommended-elearning-item" class=" panel small-panel" attr.data-auto-id="{{ title }}-Item">
 				<div class="row">
 					<div class="col-md-11">
 						<a class="no-link" target="_blank" rel="noopener noreferrer" [href]="item.url">
 							<span class="text-blue" [innerText]="item.title"></span>
 						</a>
 					</div>
-					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.percentagecompleted === 100" data-auto-id="recommendedElearningItem-completedIcon"></div> 
-					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom learning-progress-col" [attr.data-percentage]="item.percentagecompleted" *ngIf="item.percentagecompleted && item.percentagecompleted != 100" data-auto-id="recommendedElearningItem-progressBar">
+					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.percentagecompleted === 100" attr.data-auto-id="{{ title }}-completedIcon"></div> 
+					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom learning-progress-col" [attr.data-percentage]="item.percentagecompleted" *ngIf="item.percentagecompleted && item.percentagecompleted != 100" attr.data-auto-id="{{ title }}-progressBar">
 						<div class="progressbar__fill learning-progressfill-col"></div>
 					</div>
 					<ng-container *ngTemplateOutlet="learningHover; context: {
@@ -609,7 +614,8 @@
 				<span *ngSwitchCase="'ACC'">
 					<div class="row half-margin-left half-margin-right">
 						<div class="col-md-9 text-large text-bold text-left"
-							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedACC?.length || 0:componentData.params.solution:componentData.params.usecase">
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedACC?.length || 0:componentData.params.solution:componentData.params.usecase"
+							data-auto-id="ViewAllModal-TopicsAvailable">
 						</div>
 						<div class="col-md-2">
 							<cui-select id="acc-filter"
@@ -818,7 +824,7 @@
 						</button>
 					</div>
 					<div class="col-md-6 text-left">
-						<a class="no-link" target="_blank" [href]="item.recordingURL">
+						<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
 							<button data-auto-id="recommendedATXWatchButton"
 								class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 								[innerText]="'_WatchNow_' | i18n"></button>
@@ -851,7 +857,7 @@
 			*ngIf="item && item.title" [innerText]="item.title" data-auto-id="ACCCardTitle">
 		</div>
 		<div class="card__body atx__card__body text-left" *ngIf="item && item.description"
-			[innerText]="item.description"></div>
+			[innerText]="item.description" data-auto-id="ACCCardDescription"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
 				<div class="text-left">
@@ -1220,7 +1226,7 @@
 			(click)="cancelATXSession(celldata)"
 			[innerText]="'_Cancel_' | i18n">
 		</button-->
-		<a class="no-link" target="_blank" [href]="celldata.recordingURL">
+		<a *ngIf="celldata.recordingURL" class="no-link" target="_blank" [href]="celldata.recordingURL">
 			<button data-auto-id="WatchnowButton" class="btn btn--small btn--secondary text-uppercase half-margin-left"
 				[innerText]="'_WatchNow_' | i18n"></button>
 		</a>
@@ -1257,7 +1263,7 @@
 				attr.data-auto-id="{{ type }}-Image">
 		</div>
 		<div class="col-md-10">
-			<div class="half-margin-top" [innerText]="celldata.title"></div>
+			<div class="half-margin-top" [innerText]="celldata.title" attr.data-auto-id="{{ type }}-Title"></div>
 		</div>
 	</div>
 	<div *ngIf="type==='SB' || type==='PG'">
