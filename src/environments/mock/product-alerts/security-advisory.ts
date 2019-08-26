@@ -2175,7 +2175,7 @@ export const SecurityAdvisoryScenarios = [
 					delay: 350,
 					description: 'Security Advisories for advisory ID 485',
 					response: {
-						body: MockAdvisory([_.find(MockSecurityAdvisories, { advisoryId: 485 })]),
+						body: MockAdvisory(_.filter(MockSecurityAdvisories, { advisoryId: 485 })),
 						status: 200,
 					},
 					selected: true,

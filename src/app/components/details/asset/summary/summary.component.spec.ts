@@ -40,7 +40,7 @@ class WrapperComponent {
 	public asset;
 }
 
-describe('AssetDetailsSummaryComponent', () => {
+fdescribe('AssetDetailsSummaryComponent', () => {
 	let component: AssetDetailsSummaryComponent;
 	let componentFromWrapper: WrapperComponent;
 	let fixture: ComponentFixture<AssetDetailsSummaryComponent>;
@@ -207,6 +207,7 @@ describe('AssetDetailsSummaryComponent', () => {
 		tick();
 
 		fixture.detectChanges();
+		tick();
 
 		expect(component.isExpired(
 			componentFromWrapper.assetDetailsComponent.assetData.lastDateOfSupport,

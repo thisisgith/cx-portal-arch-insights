@@ -86,6 +86,7 @@ export class AssetDetailsSummaryComponent implements OnChanges, OnInit, OnDestro
 		return this.inventoryService.getAssetSummary(this.assetSummaryParams)
 		.pipe(
 			map((response: AssetSummary) => {
+				console.log(response);
 				this.assetData = response;
 			}),
 			catchError(err => {

@@ -93,7 +93,7 @@ export class CaseOpenAdvisoriesComponent
 		this.selectedAsset = _.get(this.data, 'selectedAsset');
 		this.otherAssets = _.get(this.data, 'otherAssets', []);
 		this.type = _.get(this.data, 'type');
-		this.allAssets = this.otherAssets;
+		this.allAssets = _.cloneDeep(this.otherAssets);
 		// If coming from a selected asset 360, put it at the front
 		if (this.selectedAsset) {
 			this.allAssets.unshift(this.selectedAsset);
