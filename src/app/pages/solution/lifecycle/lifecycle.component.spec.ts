@@ -1122,6 +1122,7 @@ describe('LifecycleComponent', () => {
 				.toHaveBeenCalledTimes(2);
 		});
 
+		// TODO: fix this test. skipped because failing for unknown reason.
 		xit('should disable ATX Registration if not current or current+1 pitstop', () => {
 			buildSpies();
 			sendParams();
