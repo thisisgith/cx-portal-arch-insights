@@ -49,19 +49,19 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public destroy$ = new Subject();
 	// tslint:disable-next-line: no-any
 	public timePeriod: any[] = [{
-		name: '24hr',
+		name: '1day',
 		value: 1,
 	},
 	{
-		name: '7d',
+		name: '7days',
 		value: 7,
 	},
 	{
-		name: '15d',
+		name: '15days',
 		value: 15,
 	},
 	{
-		name: '30d',
+		name: '30days',
 		value: 30,
 	}];
 	constructor (

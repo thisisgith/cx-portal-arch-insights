@@ -77,7 +77,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 		});
 		this.syslogsParams = {
 			asset: '',
-			catalog: '',
+			catalog: 'Cisco',
 			customerId: this.customerId,
 			days: 1,
 			pageNo: this.pageNum,

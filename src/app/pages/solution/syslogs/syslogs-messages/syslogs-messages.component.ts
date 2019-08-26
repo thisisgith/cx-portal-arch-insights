@@ -65,7 +65,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			this.customerId = id;
 		});
 		this.syslogsParams = {
-			catalog: '',
+			catalog: 'Cisco',
 			customerId: this.customerId,
 			days: 1,
 			excludeMsgType: '',

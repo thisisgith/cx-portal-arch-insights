@@ -65,9 +65,9 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public tableData: SyslogGridData[] = [];
 	public pageLimit = 10;
 	public pageNum = 1;
-	public severity = 7;
+	public severity = 3;
 	public timeRange = 1;
-	public catalog = '';
+	public catalog = 'Cisco';
 	public selectedAsset;
 	public showAssetPanel = false;
 	public fullscreen = false;
@@ -75,8 +75,8 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public view: 'syslogMessage' | 'syslogAsset' = 'syslogMessage';
 	public appliedFilters = {
 		asset: '',
-		catalog : 'cisco catalog',
-		severity: 7,
+		catalog : 'Cisco',
+		severity: 3,
 		timeRange: 1,
 	};
 	/**
@@ -99,10 +99,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		isLoading: true,
 	};
 	public syslogsParams: SyslogsService.GetSyslogsParams = {
+		catalogList: ['Cisco'],
 		customerId: this.customerId,
 		pageNo: this.pageNum,
+		severityList : ['3'],
 		size: this.pageLimit,
 		timeRange: ['1'],
+
 	};
 	public selected;
 	public visualLabels: any = [
@@ -189,13 +192,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 
 		return (catalogFilter.seriesData = [
 			{
-				filter: 'cisco catalog',
+				filter: 'Cisco',
 				label: I18n.get('_SyslogCiscoCatalog_'),
 				selected: false,
 				value: 50,
 			},
 			{
-				filter: 'others',
+				filter: 'Others',
 				label: I18n.get('_SyslogOthers_'),
 				selected: false,
 				value: 50,
@@ -301,6 +304,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 							'timeRange',
 						);
 					}
+
 				}),
 			)
 			.subscribe(() => {
@@ -394,7 +398,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		if (filter.key === 'severity') {
 			this.appliedFilters.severity = +this.syslogsParams.severity[0];
 			if (isNaN(this.appliedFilters.severity)) {
-				this.appliedFilters.severity = 7;
+				this.appliedFilters.severity = 3;
 			}
 		} else if (filter.key === 'timeRange') {
 			this.appliedFilters.timeRange = +this.syslogsParams.timeRange[0];
@@ -404,7 +408,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		} else if (filter.key === 'catalog') {
 			this.appliedFilters.catalog = this.syslogsParams.catalog[0];
 			if (!this.appliedFilters.catalog) {
-				this.appliedFilters.catalog = '';
+				this.appliedFilters.catalog = 'Cisco';
 			}
 		} else if (filter.key === 'asset') {
 			this.appliedFilters.asset = this.syslogsParams.asset[0];
@@ -450,7 +454,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		}
 		this.appliedFilters = {
 			asset: '',
-			catalog: 'cisco catalog',
+			catalog: 'Cisco',
 			severity: 3,
 			timeRange: 1,
 		};
