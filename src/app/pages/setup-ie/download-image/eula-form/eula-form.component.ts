@@ -23,6 +23,7 @@ export class EULAFormComponent implements OnDestroy {
 	@Input() public eulaData: Partial<EulaFormData> = { };
 	@Output() public loadingChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() public onDownload: EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() public onDecline: EventEmitter<boolean> = new EventEmitter<boolean>();
 	private destroyed$: Subject<void> = new Subject<void>();
 	public acceptedEULA: boolean;
 
@@ -46,5 +47,12 @@ export class EULAFormComponent implements OnDestroy {
 	 */
 	public onDownloadImage () {
 		this.onDownload.emit();
+	}
+
+	/**
+	 * Declines the eula
+	 */
+	public decline () {
+		this.onDecline.emit();
 	}
 }
