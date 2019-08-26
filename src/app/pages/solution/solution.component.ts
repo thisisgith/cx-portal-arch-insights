@@ -29,7 +29,7 @@ import {
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
 import { RacetrackInfoService } from '@services';
-import { DetailsPanelStackService } from '@components';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Interface representing a facet

@@ -39,7 +39,7 @@ import {
 import { VisualFilter, AdvisoryType } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DetailsPanelStackService } from '@components';
+import { DetailsPanelStackService } from '@services';
 
 /** Interface for a tab */
 interface Tab {

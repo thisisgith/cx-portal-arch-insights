@@ -20,7 +20,7 @@ import { Alert, Panel360 } from '@interfaces';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import { getProductTypeImage } from '@classes';
-import { DetailsPanelStackService } from '../panel/details-panel.service';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Asset Details Component

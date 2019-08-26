@@ -44,8 +44,9 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
-import { CaseOpenComponent, DetailsPanelStackService } from '@components';
+import { CaseOpenComponent } from '@components';
 import { getProductTypeImage } from '@classes';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Interface representing an item of our inventory in our assets table

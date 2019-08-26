@@ -23,7 +23,7 @@ import { UserResolve } from '@utilities';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { AdvisoryType, Alert, Panel360 } from '@interfaces';
-import { DetailsPanelStackService } from '../panel/details-panel.service';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Advisory Details Component

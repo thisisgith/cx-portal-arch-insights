@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
-import { DetailsPanelStackService } from '../details-panel.service';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Component representing 360 details pan./header.component
