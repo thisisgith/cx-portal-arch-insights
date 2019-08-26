@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SyslogsMessagesComponent } from './syslogs-messages.component';
 import { environment } from '@environment';
@@ -35,7 +34,6 @@ const rootUrl = environment.sdpServiceOrigin;
 		I18nPipeModule,
 		ReactiveFormsModule,
 		CuiDropdownModule,
-		HttpClientModule,
 		CuiTabsModule,
 		CuiTableModule,
 		CuiPagerModule,

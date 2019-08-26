@@ -17,7 +17,7 @@
 								name="search"
 								type="text"
 								class="form-control"
-								placeholder="{{ '_Search_' | i18n }}"
+								placeholder="{{ '_SyslogSearch_' | i18n }}"
 							/>
 							<button type="button" class="link" tabindex="-1">
 								<span class="icon-search"></span>
@@ -85,7 +85,7 @@
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false"
 	>
-		<div class="row syslog360-header-title">
+		<div class="row">
 			<div class="col-md-12">
 				<h2 [innerText]="'_SyslogMessage_' | i18n">
 					:{{ selectedAsset.MsgType }}

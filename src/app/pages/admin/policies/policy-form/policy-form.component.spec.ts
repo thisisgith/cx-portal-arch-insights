@@ -6,6 +6,11 @@ import { PolicyFormModule } from './policy-form.module';
 import { Location } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { CuiPagerModule } from '@cisco-ngx/cui-components';
+import { DeviceListModule } from './device-list/device-list.module';
+
+import { DevicePolicyResponseModel, CollectionPolicyResponseModel } from '@sdp-api';
+import { of } from 'rxjs';
 
 describe('PolicyFormComponent', () => {
 	let component: PolicyFormComponent;
@@ -21,6 +26,8 @@ describe('PolicyFormComponent', () => {
 				HttpClientTestingModule,
 				PolicyFormModule,
 				RouterTestingModule,
+				CuiPagerModule,
+				DeviceListModule,
 			],
 			providers: [
 				{
@@ -105,12 +112,40 @@ describe('PolicyFormComponent', () => {
 		};
 
 		it('editCollection', () => {
+			const response: CollectionPolicyResponseModel = {
+				customerId: '0',
+				policyId: '0',
+			};
+
 			component.policy = policy;
 			component.editCollection();
+
+			spyOn(component.collectionService, 'updateCollectionPolicyUsingPATCH')
+				.and
+				.returnValue(of(response));
+
+			component.onSubmit();
+
+			expect(component.collectionService.updateCollectionPolicyUsingPATCH)
+				.toHaveBeenCalled();
 		});
 
 		it('newPolicy', () => {
+			const response: DevicePolicyResponseModel = {
+				customerId: '0',
+				policyId: '0',
+			};
+
 			component.newPolicy();
+
+			spyOn(component.devicePolicyService, 'createDevicePolicyUsingPOST')
+				.and
+				.returnValue(of(response));
+
+			component.onSubmit();
+
+			expect(component.devicePolicyService.createDevicePolicyUsingPOST)
+				.toHaveBeenCalled();
 		});
 
 		it('newIgnorePolicy', () => {
@@ -118,7 +153,21 @@ describe('PolicyFormComponent', () => {
 		});
 
 		it('editPolicy', () => {
+			const response: DevicePolicyResponseModel = {
+				customerId: '0',
+				policyId: '0',
+			};
+
 			component.editPolicy();
+
+			spyOn(component.devicePolicyService, 'updateDevicePolicyUsingPATCH')
+				.and
+				.returnValue(of(response));
+
+			component.onSubmit();
+
+			expect(component.devicePolicyService.updateDevicePolicyUsingPATCH)
+				.toHaveBeenCalled();
 		});
 
 		it('editIgnorePolicy', () => {
@@ -275,26 +324,17 @@ describe('PolicyFormComponent', () => {
 				softwareVersion: '03.06.05E',
 			}];
 		});
+
 		it('toggleAllDevicesSelected', () => {
-			let selected = component.toggleAllDevicesSelected(true, component.deviceListLeft);
+			let selected = component.toggleAllDevicesSelected(true,
+				component.deviceListLeft, 'left');
 			expect(selected)
 				.toBe(false);
 
-			selected = component.toggleAllDevicesSelected(false, component.deviceListLeft);
+			selected = component.toggleAllDevicesSelected(false,
+				component.deviceListLeft, 'left');
 			expect(selected)
 				.toBe(true);
-		});
-
-		it('toggleDeviceSelected', () => {
-			component.toggleDeviceSelected(component.deviceListRight[0]);
-
-			expect(component.deviceListRight[0].selected)
-				.toBeFalsy();
-
-			component.toggleDeviceSelected(component.deviceListRight[0]);
-
-			expect(component.deviceListRight[0].selected)
-				.toBeTruthy();
 		});
 
 		it('add', () => {
@@ -318,6 +358,36 @@ describe('PolicyFormComponent', () => {
 			expect(component.deviceListRight.length)
 				.toBe(0);
 		});
+
+		it('paginator', () => {
+			spyOn(component, 'onLeftListCall');
+
+			const pageInfo = {
+				page: 0,
+			};
+
+			component.onPageChanged(pageInfo);
+
+			expect(component.pageNumber)
+				.toBe(1);
+
+			pageInfo.page = 999;
+
+			component.onPageChanged(pageInfo);
+
+			expect(component.pageNumber)
+				.toBe(1000);
+
+			expect(component.onLeftListCall)
+				.toHaveBeenCalled();
+		});
+
+		it('getDevieListNoSelect', () => {
+			const devList = component.getDeviceListNoSelect();
+
+			expect(devList[0].selected)
+				.toBeUndefined();
+		});
 	});
 
 	describe('should handle schedules', () => {
@@ -325,21 +395,21 @@ describe('PolicyFormComponent', () => {
 			const schedule = component.getSchedule('monthly', undefined, '1', '0 1');
 
 			expect(schedule)
-				.toBe('0 0 1 1 * *');
+				.toBe('0 0 1 1 * ?');
 		});
 
 		it('testWeeklySchedule', () => {
 			const schedule = component.getSchedule('weekly', '6', undefined, '0 1');
 
 			expect(schedule)
-				.toBe('0 0 1 * * 6');
+				.toBe('0 0 1 ? * 6');
 		});
 
 		it('testDailySchedule', () => {
 			const schedule = component.getSchedule('daily', undefined, undefined, '0 1');
 
 			expect(schedule)
-				.toBe('0 0 1 * * *');
+				.toBe('0 0 1 ? * *');
 		});
 
 		it('testBadSchedule', () => {
@@ -353,6 +423,24 @@ describe('PolicyFormComponent', () => {
 	describe('should handle form closes', () => {
 		it('closeRequestForm', () => {
 			component.closeRequestForm();
+		});
+	});
+
+	describe('should handle page changes', () => {
+		it('onPageChanged', () => {
+			spyOn(component, 'onLeftListCall');
+
+			const pageInfo = {
+				page: 0,
+			};
+
+			component.onPageChanged(pageInfo);
+
+			expect(component.pageNumber)
+				.toBe(1);
+
+			expect(component.onLeftListCall)
+				.toHaveBeenCalled();
 		});
 	});
 });

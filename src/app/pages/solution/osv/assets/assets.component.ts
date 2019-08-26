@@ -36,6 +36,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
 
 	private recommendationsTemplate: TemplateRef<{ }>;
@@ -70,7 +71,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			pageIndex: 1,
 			pageSize: 10,
 			sort: 'hostName',
-			sortOrder: 'desc',
+			sortOrder: 'asc',
 		};
 	}
 
@@ -174,51 +175,41 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
-						width: '10%',
-						sortable: false,
-						sortDirection: 'desc',
+						sortable: true,
+						sortDirection: 'asc',
 						sorting: true,
+						width: '20%',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
 						sortable: false,
+						width: '10%',
 					},
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
-						sortable: false,
+						sortable: true,
+						width: '20%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
+						width: '10%',
 					},
 					{
-						key: 'swVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
-					},
-					{
-						key: 'optimalVersion',
-						name: I18n.get('_OsvOptimalVersion_'),
-						sortable: false,
-					},
-					{
-						key: 'deployment',
-						name: I18n.get('_OsvDeploymentStatus_'),
-						sortable: false,
+						template: this.versionTemplate,
+						width: '20%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
 						sortable: false,
 						template: this.recommendationsTemplate,
+						width: '20%',
 					},
-					// {
-					// 	click: true,
-					// 	sortable: false,
-					// 	template: this.actionsTemplate,
-					// },
 				],
 				dynamicData: true,
 				hover: true,

@@ -12,9 +12,11 @@ export {
   CaseOpenAdvisoriesComponent,
 } from './case/case-open/case-open-advisories/case-open-advisories.component';
 export { HeaderComponent } from './header/header.component';
+export { AssetDetailsHeaderModule } from './details/asset/header/header.module';
 export { HeaderModule } from './header/header.module';
 export { HeightTransitionModule } from './height-transition/height-transition.module';
 export { PieChartModule } from './charts/pie-chart/pie-chart.module';
+export { QuickTourModule } from './quick-tour/quick-tour.module';
 export { RacetrackComponent } from './racetrack/racetrack.component';
 export { RacetrackComponentModule } from './racetrack/racetrack.module';
 export { SearchComponent } from './search/search.component';
@@ -22,3 +24,4 @@ export { SearchModule } from './search/search.module';
 export { TimelineComponent } from './timeline/timeline.component';
 export { TimelineModule } from './timeline/timeline.module';
 export { TooltipModule } from './tooltip/tooltip.module';
+export { UnauthorizedUserModule } from './unauthorized-user/unauthorized-user.module';

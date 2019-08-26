@@ -1,23 +1,33 @@
 import {
 	ACCScenarios,
 	ACCUserInfoScenarios,
+	ASDAcceptEulaScenarios,
+	ASDAcceptK9Scenarios,
+	ASDImageDownloadUrlScenarios,
+	ASDMetadataScenarios,
+	ASDTokenScenarios,
+	ATXScenarios,
 	ActionScenarios,
 	AdvisorySecurityAdvisoryScenarios,
+	AfmScenarios,
+	ArchitectureScenarios,
 	AssetScenarios,
-	ATXScenarios,
+	AssetSummaryScenarios,
 	BookmarkScenarios,
+	CGTScenarios,
 	CalendarScenarios,
 	CancelATXScenarios,
 	CaseScenarios,
-	CGTScenarios,
+	ComparisonViewScenarios,
+	ComplianceScenarios,
 	ContractScenarios,
 	CoverageScenarios,
 	CreateRegistrationScenarios,
-	CriticalBugScenarios,
 	CriticalBugAssetsScenarios,
-	DeviceScenarios,
-	DevicePoliciesScenarios,
+	CriticalBugScenarios,
 	DNACStatusScenarios,
+	DevicePoliciesScenarios,
+	DeviceScenarios,
 	ELearningScenarios,
 	EntitlementScenarios,
 	FieldNoticeAdvisoryScenarios,
@@ -33,8 +43,10 @@ import {
 	NetworkScenarios,
 	OSVScenarios,
 	PolicesScenarios,
-	RacetrackScenarios,
+	RCCScenarios,
 	RMAScenarios,
+	RacetrackScenarios,
+	RiskScenarios,
 	RoleScenarios,
 	SearchScenarios,
 	SecurityAdvisoryBulletinScenarios,
@@ -86,6 +98,7 @@ import {
 	PitstopActionUpdateResponse,
 	PoliciesGroupByDayInAMonthModel,
 	RacetrackResponse,
+	RccAssetFilterResponse,
 	RoleCountResponse,
 	SecurityAdvisoriesResponse,
 	SecurityAdvisoryBulletinResponse,
@@ -94,7 +107,7 @@ import {
 	SecurityAdvisorySeverityCountResponse,
 	SecurityAdvisorySummary,
 	ServiceInfoResponse,
-	SoftwareProfilesResponse,
+	SoftwareGroupsResponse,
 	SoftwareVersionsResponse,
 	SoftwareEOLResponse,
 	SoftwareEOLBulletinResponse,
@@ -141,6 +154,7 @@ type ResponseBody = (
 	RacetrackResponse |
 	RMAResponse |
 	RoleCountResponse |
+	RccAssetFilterResponse |
 	SecurityAdvisoriesResponse |
 	SecurityAdvisoryBulletinResponse |
 	SecurityAdvisoryImpactCountResponse |
@@ -148,7 +162,7 @@ type ResponseBody = (
 	SecurityAdvisorySeverityCountResponse |
 	SecurityAdvisorySummary |
 	ServiceInfoResponse |
-	SoftwareProfilesResponse |
+	SoftwareGroupsResponse |
 	SoftwareVersionsResponse |
 	SoftwareEOLResponse |
 	SoftwareEOLBulletinResponse |
@@ -205,12 +219,23 @@ export const mockSettings: MockSettings = {
 		ATXScenarios,
 		ActionScenarios,
 		AdvisorySecurityAdvisoryScenarios,
+		ArchitectureScenarios,
+		AfmScenarios,
+		ASDAcceptEulaScenarios,
+		ASDAcceptK9Scenarios,
+		ASDImageDownloadUrlScenarios,
+		ASDMetadataScenarios,
+		ASDTokenScenarios,
 		AssetScenarios,
+		AssetSummaryScenarios,
+		ATXScenarios,
 		BookmarkScenarios,
 		CGTScenarios,
 		CalendarScenarios,
 		CancelATXScenarios,
 		CaseScenarios,
+		ComplianceScenarios,
+		ComparisonViewScenarios,
 		ContractScenarios,
 		CoverageScenarios,
 		CreateRegistrationScenarios,
@@ -235,8 +260,10 @@ export const mockSettings: MockSettings = {
 		OSVScenarios,
 		RMAScenarios,
 		PolicesScenarios,
+		RiskScenarios,
 		RMAScenarios,
 		RacetrackScenarios,
+		RCCScenarios,
 		RoleScenarios,
 		SearchScenarios,
 		SecurityAdvisoryBulletinScenarios,

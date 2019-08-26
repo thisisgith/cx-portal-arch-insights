@@ -79,7 +79,7 @@ export const CriticalBugAssetsScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&cdetId=CSCto03123`,
+		url: `${api}?customerId=${customerId}&cdetId=CSCto03123&rows=100&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -96,7 +96,7 @@ export const CriticalBugAssetsScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&cdetId=CSCva61927`,
+		url: `${api}?customerId=${customerId}&cdetId=CSCva61927&rows=100&page=1`,
 		usecases: ['Use Case 1'],
 	},
 ];

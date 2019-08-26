@@ -114,7 +114,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	};
 	public assetsTable: CuiTableOptions;
 	public searchOptions = {
-		debounce: 200,
+		debounce: 600,
 		max: 100,
 		min: 3,
 		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
@@ -428,7 +428,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		this.assetParams = {
 			customerId: this.customerId,
 			page: 1,
-			rows: this.view === 'list' ? 10 : 12,
+			rows: this.getRows(),
 			sort: ['deviceName:ASC'],
 		};
 
@@ -524,7 +524,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.view = <'list' | 'grid'> currentView;
 		}
 
-		this.assetParams.rows = this.view === 'list' ? 10 : 12;
+		this.assetParams.rows = this.getRows();
 		this.buildTable();
 		this.route.queryParams.subscribe(params => {
 			if (params.page) {
@@ -1092,7 +1092,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		const params: InventoryService.GetNetworkElementsParams = {
 			customerId: this.customerId,
 			page: 1,
-			rows: 10,
+			rows: this.getRows(),
 			serialNumber: _.map(assets.data, 'serialNumber'),
 		};
 
@@ -1105,6 +1105,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.logger.error('assets.component : fetchNetworkElements() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 				this.status.inventoryLoading = false;
+				if (window.Cypress) {
+					window.inventoryLoading = false;
+				}
 
 				return of({ data: [] });
 			}),
@@ -1155,6 +1158,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				}
 
 				this.status.inventoryLoading = false;
+				if (window.Cypress) {
+					window.inventoryLoading = false;
+				}
 			}),
 		);
 	}
@@ -1165,6 +1171,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	private fetchInventory () {
 		this.status.inventoryLoading = true;
+		if (window.Cypress) {
+			window.inventoryLoading = true;
+		}
 		this.inventory = [];
 		this.pagination = null;
 
@@ -1185,6 +1194,9 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				this.logger.error('assets.component : fetchInventory() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 				this.status.inventoryLoading = false;
+				if (window.Cypress) {
+					window.inventoryLoading = false;
+				}
 
 				return of({ });
 			}),
@@ -1264,7 +1276,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		if (this.view !== view) {
 			this.view = view;
 			window.sessionStorage.setItem('view', this.view);
-			const newRows = this.view === 'list' ? 10 : 12;
+			const newRows = this.getRows();
 			this.assetParams.page =
 				Math.round(this.assetParams.page * this.assetParams.rows / newRows);
 			this.assetParams.rows = newRows;
@@ -1273,4 +1285,12 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	/**
+	 * Returns the number of rows for the page
+	 * depending on the view
+	 * @returns number of rows
+	 */
+	private getRows () {
+		return this.view === 'list' ? 10 : 12;
+	}
 }

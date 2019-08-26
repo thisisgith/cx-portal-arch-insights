@@ -3,7 +3,7 @@
 		<div detailsPanelTitle>
 			<div class="qtr-margin-left text-xlarge half-margin-bottom" [innerText]="selectedAsset?.hostName"></div>
 			<div class="qtr-margin-left text-medium">
-				<span [innerText]="'_OsvIP_' | i18n"></span>
+				<span class="text-bold" [innerText]="'_OsvIP_' | i18n"></span>
 				<span class="qtr-margin-left" [innerText]="selectedAsset?.ipAddress"></span>
 			</div>
 		</div>
@@ -12,7 +12,7 @@
 </details-panel>
 
 <div class="panel">
-	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading">
+	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading && view">
 		<ng-container *ngFor="let filter of filters; index as i">
 			<div *ngIf="!filter.loading && filter.seriesData.length && filter.view.indexOf(view) > -1"
 				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
@@ -21,8 +21,8 @@
 					'filter__selected': filter.selected,
 					'filter__not-selected': !filter.selected
 				}">
-				<div class="base-margin-bottom">
-					<div *ngIf="filter.template">
+				<div class="base-margin-bottom max-height">
+					<div *ngIf="filter.template" class="max-height">
 						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
 					</div>
 				</div>
@@ -41,13 +41,20 @@
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
-	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading"></div>
+	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
+	<div *ngIf="view == 'swGroups'">
+		<app-software-groups [(fullscreen)]="fullscreen"  [(selectedSoftwareGroup)]="selectedSoftwareGroup">
+		</app-software-groups>
+	</div>
 	<div *ngIf="view == 'assets'">
 		<app-assets [(fullscreen)]="fullscreen" [filters]="appliedFilters"  [(selectedAsset)]="selectedAsset">
 		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
 		<app-software-versions></app-software-versions>
+	</div>
+	<div *ngIf="!view" class="dbl-margin-top text-center text-xlarge">
+		<span [innerText]="'_OsvNoAssets_' | i18n"></span>
 	</div>
 </div>
 
@@ -77,24 +84,34 @@
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalAssetsFilter let-filter="filter">
-	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter">
-		<div class="row toggle" (click)="selectView('assets')"
+	<div (click)="clearFilters()" data-auto-id="TotalVisualFilter" class="flex justify-content-around flex-column max-height">
+		<div class="row toggle" (click)="selectView('swGroups')" *ngIf="filter.seriesData[0]?.profiles > 0"
+			[ngClass]="{'text-primary':view == 'swGroups','text-muted':view != 'swGroups'}"
+			data-auto-id="TotalVisualFilterSoftwareGroups">
+			<div class="col-5 text-right">
+				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].profiles"></span>
+			</div>
+			<div class="col-7 margin-auto">
+				<span class="text-large " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
+			</div>
+		</div>
+		<div class="row toggle" (click)="selectView('assets')" *ngIf="filter.seriesData[0]?.assets > 0"
 			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			data-auto-id="TotalVisualFilterAssets">
 			<div class="col-5 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
 			</div>
 			<div class="col-7 margin-auto">
-				<span class="text-xlarge " [innerText]="'_OsvAssets_' | i18n"></span>
+				<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
 			</div>
 		</div>
-		<div class="row toggle" (click)="selectView('swVersions')" [ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
+		<div class="row toggle" (click)="selectView('swVersions')" *ngIf="filter.seriesData[0]?.versions > 0" [ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
 			<div class="col-5 text-right">
 				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
 			</div>
 			<div class="col-7 margin-auto">
-				<span class="text-xlarge " [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
+				<span class="text-large " [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
 			</div>
 		</div>
 	</div>

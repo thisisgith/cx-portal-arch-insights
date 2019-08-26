@@ -46,12 +46,10 @@ const publicCommunities: CommunityDetail[] = [
 	},
 ];
 
-/** Base of URL for Community */
-const api = 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel';
-
 /** Communities Component */
 @Component({
 	selector: 'app-communities',
+	styleUrls: ['./communities.component.scss'],
 	templateUrl: './communities.component.html',
 })
 export class CommunitiesComponent implements OnDestroy {
@@ -110,26 +108,32 @@ export class CommunitiesComponent implements OnDestroy {
 	 */
 	 private getCuratedCommunities () {
 		let board = '';
+		let usecase = '';
 
 		switch (this.selectedTechnology) {
 			case 'Campus Network Assurance': {
-				board = 'lifecycle-wireless-assurance';
+				board = 'ibn-assurance';
+				usecase = 'campus-network-assurance';
 				break;
 			}
 			case 'Campus Network Segmentation': {
-				board = 'lifecycle-network-segmentation';
+				board = 'ibn-segmentation';
+				usecase = 'campus-network-segmentation';
 				break;
 			}
 			case 'Scalable Access Policy': {
-				board = 'lifecycle-converged-mgmt';
+				board = 'ibn-policy';
+				usecase = 'scalable-access-policy';
 				break;
 			}
 			case 'Network Device Onboarding': {
-				board = 'lifecycle-onboard';
+				board = 'ibn-onboarding';
+				usecase = 'network-device-onboarding';
 				break;
 			}
 			case 'Campus Software Image Management': {
-				board = 'lifecycle-swim';
+				board = 'ibn-swim';
+				usecase = 'campus-software-image-management';
 				break;
 			}
 			default: {
@@ -139,7 +143,8 @@ export class CommunitiesComponent implements OnDestroy {
 
 		this.curatedCommunity = {
 			description: `${this.selectedTechnology} - ${this.currentPitstop}`,
-			url: `${api}?board=${board}&amp;labels=${this.currentPitstop}`,
+			url: `https://community.cisco.com/t5/${usecase}/bd-p/${board}/` +
+			`customFilteredByMultiLabel?board=${board}&amp;labels=${this.currentPitstop}`,
 			usecase: this.selectedTechnology,
 		};
 	}

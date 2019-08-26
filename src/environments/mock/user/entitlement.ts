@@ -25,6 +25,37 @@ const mockUser1: EntitledUser = {
 		role: 'admin',
 	},
 	name: 'Test User',
+	account: {
+		team: [{
+			ccoId: 'agonzales',
+			emailAddress: 'agonzales@cisco.com',
+			familyName: 'Gonzales',
+			name: 'Ann',
+			phone: '+1-333-333-3333',
+			title: 'Customer Sales Specialist',
+		}, {
+			ccoId: 'mcho',
+			emailAddress: 'mcho@cisco.com',
+			familyName: 'Cho',
+			name: 'Michael',
+			phone: '+1-333-333-3333',
+			title: 'High Touch Operations Manager Very Long title (HTOM)',
+		}, {
+			ccoId: 'db',
+			emailAddress: 'db@cisco.com',
+			familyName: 'Brian',
+			name: 'Dan',
+			phone: '+1-333-333-3333',
+			title: 'High Touch Operations Manager',
+		}, {
+			ccoId: 'drwho',
+			emailAddress: 'drwho@cisco.com',
+			familyName: 'Doctor',
+			name: 'The',
+			phone: '+1-333-333-3333',
+			title: 'Time Lord',
+		}],
+	},
 };
 
 /**

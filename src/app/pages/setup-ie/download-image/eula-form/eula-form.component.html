@@ -1,0 +1,35 @@
+<div class="eula-container text-left">
+	<h4
+		class="half-margin-bottom"
+		[innerText]="eulaData.label"
+	></h4>
+	<div class="flex-center-horizontal dbl-margin-bottom">
+		<label class="checkbox half-margin-right">
+			<input type="checkbox" data-auto-id="setup.ova.eula1"
+				[(ngModel)]="acceptedEULA">
+			<span class="checkbox__input"></span>
+		</label>
+		<span
+			data-auto-id="i-agree-eula-checkbox"
+			class="checkbox__label"
+			[innerHTML]="eulaData.checkboxDescription">
+		</span>
+	</div>
+</div>
+<div class="flex-center-horizontal">
+	<button
+		data-auto-id="decline-k9"
+		[innerText]="'_Decline_' | i18n"
+		class="btn btn--default"
+		(click)="decline()"
+	>
+	</button>
+	<button
+	   data-auto-id="download-image-btn"
+	   [innerText]="'_DownloadImage_' | i18n | uppercase"
+	   class="btn btn--primary"
+	   [disabled]="isDisabled"
+	   (click)="onDownloadImage()"
+	>
+	</button>
+</div>

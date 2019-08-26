@@ -140,9 +140,13 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedSuccessPaths: SuccessPath[];
 	public eventXCoordinates = 0;
 	public eventYCoordinates = 0;
+	public eventClickedElement: HTMLElement;
 	public scrollY = 0;
 	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
+	public moreATXSelected: AtxSchema;
+	public moreXCoordinates = 0;
+	public moreYCoordinates = 0;
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
@@ -222,6 +226,10 @@ export class LifecycleComponent implements OnDestroy {
 			success: false,
 		},
 	};
+
+	// Map of all scheduled ATX's
+	// key: atx id, value: scheduled atx session
+	public scheduledAtxMap = { };
 
 	public componentData: ComponentData = {
 		params: {
@@ -449,7 +457,6 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
 					width: '15%',
@@ -501,7 +508,6 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
 					width: '15%',
@@ -531,7 +537,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '40%',
+					width: '50%',
 				},
 				{
 					key: 'status',
@@ -543,10 +549,9 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
-					width: '30%',
+					width: '20%',
 				},
 			],
 		});
@@ -573,7 +578,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '40%',
+					width: '50%',
 				},
 				{
 					key: 'status',
@@ -585,10 +590,9 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
-					width: '30%',
+					width: '20%',
 				},
 			],
 		});
@@ -748,18 +752,19 @@ export class LifecycleComponent implements OnDestroy {
 		this.recommendedAtxScheduleCardOpened = false;
 		this.eventXCoordinates = 0;
 		this.eventYCoordinates = 0;
+		this.moreXCoordinates = 0;
+		this.moreYCoordinates = 0;
+		this.selectSession({ });
+		this.componentData.atx.interested = null;
+		this.moreATXSelected = null;
 	}
 
-	/**
-	 * Determines which modal to display
-	 * @param item ACC item
-	 * @returns ribbon
-	 */
-	 public setFavorite (item: ACC) {
-		if (item.status === 'completed') {
-			return;
-		}
-
+	 /**
+	  * Updates ACC bookmark
+	  * @param item ACC item
+	  * @returns ribbon
+	  */
+	 public setACCBookmark (item: ACC) {
 		this.status.loading.acc = true;
 		if (window.Cypress) {
 			window.accLoading = true;
@@ -788,7 +793,7 @@ export class LifecycleComponent implements OnDestroy {
 			if (window.Cypress) {
 				window.accLoading = false;
 			}
-			this.logger.error(`lifecycle.component : setFavorite() :: Error  : (${
+			this.logger.error(`lifecycle.component : setACCBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
 	 }
@@ -1063,27 +1068,26 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Updates the bookmark of the item
-	 * @param type string
-	 * @param item SuccessPath | ATX
+	 * @param item bookmark item object
+	 * @param lifecycleCategory string of the category type
 	 */
-	 public updateBookmark (type: string, item: SuccessPath | AtxSchema) {
+	 public updateBookmark (item: AtxSchema | SuccessPath, lifecycleCategory: 'ATX' | 'SB') {
 		let bookmark;
 		let id;
-		let lifecycleCategory;
-		if (_.isEqual(type, 'ATX') && _.get(item, 'status') === 'completed') {
-			return;
+
+		switch (lifecycleCategory) {
+			case 'ATX':
+				this.status.loading.atx = true;
+				bookmark = !_.get(item, 'bookmark');
+				id = _.get(item, 'atxId');
+				break;
+			case 'SB':
+				this.status.loading.success = true;
+				bookmark = !_.get(item, 'bookmark');
+				id = _.get(item, 'successByteId');
+				break;
 		}
-		if (_.isEqual(type, 'SB')) {
-			bookmark = !_.get(item, 'bookmark');
-			id = _.get(item, 'successByteId');
-			lifecycleCategory = 'SB';
-			this.status.loading.success = true;
-		} else if (_.isEqual(type, 'ATX')) {
-			bookmark = !_.get(item, 'bookmark');
-			id = _.get(item, 'atxId');
-			lifecycleCategory = 'ATX';
-			this.status.loading.atx = true;
-		}
+
 		const bookmarkParams: BookmarkRequestSchema = {
 			bookmark,
 			id,
@@ -1095,24 +1099,32 @@ export class LifecycleComponent implements OnDestroy {
 		const params: RacetrackContentService.UpdateBookmarkParams = {
 			bookmarkRequestSchema: bookmarkParams,
 		};
+
 		this.contentService.updateBookmark(params)
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
-			if (_.isEqual(type, 'SB')) {
-				this.status.loading.success = false;
-			} else if (_.isEqual(type, 'ATX')) {
-				this.status.loading.atx = false;
+			switch (lifecycleCategory) {
+				case 'SB':
+					this.status.loading.success = false;
+					break;
+				case 'ATX':
+					this.status.loading.atx = false;
+					break;
 			}
 		},
 		err => {
-			if (_.isEqual(type, 'SB')) {
-				this.status.loading.success = false;
-			} else if (_.isEqual(type, 'ATX')) {
-				this.status.loading.atx = false;
+			switch (lifecycleCategory) {
+				case 'SB':
+					this.status.loading.success = false;
+					break;
+				case 'ATX':
+					this.status.loading.atx = false;
+					break;
 			}
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
+
 	 }
 
 	/**
@@ -1130,6 +1142,44 @@ export class LifecycleComponent implements OnDestroy {
 	public getCoordinates (event: MouseEvent) {
 		this.eventXCoordinates = event.clientX;
 		this.eventYCoordinates = event.clientY;
+		this.eventClickedElement = <HTMLElement> event.target;
+	}
+
+	/**
+	 * Gets the coordinates of the hovered ATX item
+	 * @param moreList HTMLElement
+	 * @param panel string
+	 */
+	 public getMoreCoordinates (moreList: HTMLElement, panel: string) {
+		if (_.isEqual(panel, 'moreATXList') && !this.atxScheduleCardOpened) {
+			this.moreXCoordinates = moreList.offsetWidth;
+			this.moreYCoordinates = moreList.offsetTop;
+		}
+	}
+
+	/**
+	 * Changes the atxScheduleCardOpened flag and adds value to moreATXSelected
+	 * @param item ATXSchema
+	 */
+	 public atxMoreViewSessions (item: AtxSchema) {
+		this.atxScheduleCardOpened = true;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.moreATXSelected = item;
+	}
+
+	/**
+	 * Changes the atxScheduleCardOpened flags to false to close the popupmodal
+	 */
+	 public closeViewSessions () {
+		this.atxScheduleCardOpened = false;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.selectSession({ });
+		this.eventXCoordinates = 0;
+		this.eventYCoordinates = 0;
+		this.moreXCoordinates = 0;
+		this.moreYCoordinates = 0;
+		this.componentData.atx.interested = null;
+		this.moreATXSelected = null;
 	}
 
 	/**
@@ -1156,11 +1206,18 @@ export class LifecycleComponent implements OnDestroy {
 					break;
 				}
 				case 'list': {
-					_div.style.right = '30%';
-					_div.style.top = `${this.eventYCoordinates + this.scrollY - 210}px`;
+					const rect = this.eventClickedElement.getBoundingClientRect();
+					const ht = this.eventClickedElement.scrollHeight;
+
+					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
+					_div.style.top = `${(rect.top + (ht / 2)) + this.scrollY - 210}px`;
 					panel = 'panel listpanel--open';
 				}
 			}
+		} else if (this.atxScheduleCardOpened && this.moreATXSelected) {
+			_div.style.left = `${this.moreXCoordinates}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '40%';
 			_div.style.bottom = '10px';
@@ -1239,6 +1296,15 @@ export class LifecycleComponent implements OnDestroy {
 					sessions: result.items,
 				};
 				this.selectedATX = this.componentData.atx.sessions;
+
+				_.each(this.selectedATX, (atx: AtxSchema) => {
+					_.each(atx.sessions, (session: AtxSessionSchema) => {
+						if (session.scheduled) {
+							this.scheduledAtxMap[atx.atxId] = session;
+						}
+					});
+				});
+
 				this.buildAtxTable();
 
 				this.status.loading.atx = false;

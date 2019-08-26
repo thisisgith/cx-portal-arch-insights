@@ -13,12 +13,13 @@ import { environment } from '@environment';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 /**
  * Module for portal support
  */
 @NgModule({
 	declarations: [ContactSupportComponent],
+	entryComponents: [ContactSupportComponent],
 	exports: [ContactSupportComponent],
 	imports: [
 		CommonModule,
@@ -32,6 +33,5 @@ const rootUrl = environment.sdpServiceOrigin;
 		CharCountModule,
 		EmailModule.forRoot({ rootUrl }),
 	],
-	entryComponents: [ContactSupportComponent],
 })
 export class ContactSupportModule { }

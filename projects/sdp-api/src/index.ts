@@ -45,10 +45,17 @@ export * from './lib/entitlement/models';
 export * from './lib/entitlement/services';
 export * from './lib/entitlement/entitlement.module';
 
+export * from './lib/architecture/models';
+export * from './lib/architecture/services';
+export * from './lib/architecture/architecture.modules';
+
 export * from './lib/osv/models';
 export * from './lib/osv/services';
 export * from './lib/osv/osv.module';
 
+export * from './lib/rcc/models';
+export * from './lib/rcc/services';
+export * from './lib/rcc/rcc-data.module';
 export * from './lib/email/models';
 export * from './lib/email/services';
 export * from './lib/email/email.module';
@@ -57,6 +64,18 @@ export * from './lib/feedback/models';
 export * from './lib/feedback/services';
 export * from './lib/feedback/feedback.module';
 
+export * from './lib/risk-mitigation/models';
+export * from './lib/risk-mitigation/services';
+export * from './lib/risk-mitigation/risk-mitigation.module';
+
+export * from './lib/afm/models';
+export * from './lib/afm/services';
+export * from './lib/afm/afm.module';
+
 export * from './lib/syslogs/models';
 export * from './lib/syslogs/services';
 export * from './lib/syslogs/syslogs-data.module';
+
+export * from './lib/crash-prevention/models';
+export * from './lib/crash-prevention/services';
+export * from './lib/crash-prevention/crash-prevention.module';

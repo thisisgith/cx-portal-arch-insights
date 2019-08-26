@@ -1,22 +1,22 @@
-<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom">
-	<div class="text-uppercase text-large base-padding-bottom" [innerText]="'_Communities_' | i18n" data-auto-id="PanelTitle-Communities"></div>
+<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom panel-border-top">
+	<div class="text-uppercase text-large base-padding-bottom" [innerText]="'_Communities_' | i18n" attr.data-auto-id="PanelTitle-Communities"></div>
 	<div class="half-margin-bottom">
 		<div class="half-padding-left half-margin-bottom" *ngIf="curatedCommunity" data-auto-id="CuratedCommunityLink">
 			<span class="icon-communities qtr-padding-right qtr-padding-bottom"></span>
-			<span><a class="no-link half-padding-left" 
+			<span><a class="no-link half-padding-left"
 					[href]="curatedCommunityUrl"
 					target="_blank"
 					rel="noopener noreferrer"
 					data-toggle="tooltip"
 					data-placement="bottom" title="{{curatedCommunity.description}}" id="curatedcommunitytitle"
 					attr.data-auto-id="communitytitle-{{curatedCommunity.description}}-Lifecycle"
-					[innerText]="'_Curated_' | i18n"></a>
+					[innerText]="'_SuccessTrack_' | i18n"></a>
 			</span>
 		</div>
 		<div class="half-padding-left" *ngIf="publicCommunity" data-auto-id="PublicCommunityLink">
 			<span class="icon-communities qtr-padding-right qtr-padding-bottom"></span>
-			<span><a class="no-link half-padding-left" 
-					[href]="publicCommunityUrl" 
+			<span><a class="no-link half-padding-left"
+					[href]="publicCommunityUrl"
 					target="_blank"
 					rel="noopener noreferrer"
 					data-toggle="tooltip"

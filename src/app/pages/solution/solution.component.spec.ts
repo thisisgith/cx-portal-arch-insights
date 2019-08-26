@@ -22,7 +22,7 @@ import { RacetrackService, ProductAlertsService, ContractsService } from '@sdp-a
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AdvisoriesComponent } from './advisories/advisories.component';
 import { CaseService } from '@cui-x/services';
-import { RacetrackInfoService } from '@services';
+import { UtilsService, RacetrackInfoService } from '@services';
 
 /**
  * MockRouter used to help show/hide the spinner
@@ -62,6 +62,7 @@ describe('SolutionComponent', () => {
 	let caseService: CaseService;
 	let productAlertsService: ProductAlertsService;
 	let contractsService: ContractsService;
+	let utils: UtilsService;
 
 	/**
 	 * Restore spies
@@ -116,6 +117,8 @@ describe('SolutionComponent', () => {
 		productAlertsService = TestBed.get(ProductAlertsService);
 		caseService = TestBed.get(CaseService);
 		racetrackService = TestBed.get(RacetrackService);
+		utils = TestBed.get(UtilsService);
+		localStorage.removeItem('quickTourFirstTime');
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 	}));
 
@@ -166,6 +169,7 @@ describe('SolutionComponent', () => {
 		expect(component.selectedFacet.route)
 			.toEqual('/solution/lifecycle');
 
+		const lifecyclesFacet = _.find(component.facets, { route: '/solution/lifecycles' });
 		const assetsFacet = _.find(component.facets, { route: '/solution/assets' });
 
 		component.selectFacet(assetsFacet);
@@ -174,6 +178,12 @@ describe('SolutionComponent', () => {
 
 		expect(component.selectedFacet)
 			.toEqual(assetsFacet);
+		expect(component.quickTourActive)
+			.toBeFalsy();
+
+		component.selectFacet(lifecyclesFacet);
+		expect(component.quickTourActive)
+			.toBeFalsy();
 	});
 
 	it('should change the active solution', fakeAsync(() => {
@@ -287,4 +297,36 @@ describe('SolutionComponent', () => {
 			done();
 		});
 	});
+
+	it('should open Quick Tour when first time null', fakeAsync(async () => {
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.quickTourActive)
+				.toBeTruthy();
+		});
+	}));
+
+	it('should open Quick Tour when first time true', fakeAsync(async () => {
+		utils.setLocalStorage('quickTourFirstTime', { firstTime: true });
+		await router.navigate(['/solution/lifecycle']);
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.quickTourActive)
+				.toBeTruthy();
+		});
+	}));
+
+	it('should not open Quick Tour when not first time', fakeAsync(async () => {
+		utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
+		await router.navigate(['/solution/lifecycle']);
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.quickTourActive)
+				.toBeFalsy();
+		});
+	}));
+
 });
