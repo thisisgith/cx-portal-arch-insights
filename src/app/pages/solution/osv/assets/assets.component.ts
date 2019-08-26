@@ -178,7 +178,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
-						width: '15%',
+						width: '20%',
 					},
 					{
 						key: 'ipAddress',
@@ -190,7 +190,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
 						sortable: true,
-						width: '15%',
+						width: '20%',
 					},
 					{
 						key: 'swType',
@@ -202,13 +202,13 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
 						template: this.versionTemplate,
-						width: '15%',
+						width: '20%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
 						sortable: false,
 						template: this.recommendationsTemplate,
-						width: '15%',
+						width: '20%',
 					},
 				],
 				dynamicData: true,
