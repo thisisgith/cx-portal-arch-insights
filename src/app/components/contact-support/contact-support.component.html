@@ -27,7 +27,7 @@
 						<label for="support-description" class="text-bold qtr-padding-bottom"
 							[innerText]="'_SupportDescription_' | i18n"></label>
 						<cui-input #description id="support-description" formControlName="description" type="textarea"
-							[(model)]="text" [options]="textOptions" [label]=""></cui-input>
+							[(model)]="text" [options]="textOptions" [placeholder]="!contactExpert ? '' : '_CSDetailPlaceholder_' | i18n"></cui-input>
 					</div>
 				</div>
 			</div>

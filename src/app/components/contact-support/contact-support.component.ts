@@ -83,7 +83,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			this.items.push({ name: topic, value: topic });
 		});
 		if (this.contactExpert) {
-			this.supportForm.patchValue({ title: _.get(this.items, [8]) });
+			this.supportForm.patchValue({ title: _.get(this.items, [8, 'name']) });
 		}
 	}
 
