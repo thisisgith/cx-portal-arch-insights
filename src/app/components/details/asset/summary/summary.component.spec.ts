@@ -40,7 +40,7 @@ class WrapperComponent {
 	public asset;
 }
 
-fdescribe('AssetDetailsSummaryComponent', () => {
+describe('AssetDetailsSummaryComponent', () => {
 	let component: AssetDetailsSummaryComponent;
 	let componentFromWrapper: WrapperComponent;
 	let fixture: ComponentFixture<AssetDetailsSummaryComponent>;
