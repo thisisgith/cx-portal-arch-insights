@@ -136,7 +136,7 @@ describe('DownloadImageComponent', () => {
 	}));
 
 	it('should trigger view changes', () => {
-		component.onDeclineK9();
+		component.onDecline();
 		expect(component.didDecline)
 			.toBe(true);
 		component.cancelK9Decline();

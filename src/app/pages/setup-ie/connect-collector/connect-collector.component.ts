@@ -1,9 +1,12 @@
-import { Component, EventEmitter, Inject, OnDestroy, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import {
+	Component, EventEmitter, HostListener, Inject, OnDestroy, OnInit, Output,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { interval, of, Subject } from 'rxjs';
 import { catchError, exhaustMap, map, takeUntil, takeWhile } from 'rxjs/operators';
 import { SetupIEStateService } from '../setup-ie-state.service';
+import { KEY_CODES } from '@classes';
 
 import { SetupStep } from '@interfaces';
 
@@ -40,13 +43,14 @@ function validateIpAddress (control: AbstractControl) {
 	styleUrls: ['./connect-collector.component.scss'],
 	templateUrl: './connect-collector.component.html',
 })
-export class ConnectCollectorComponent implements OnDestroy, SetupStep {
+export class ConnectCollectorComponent implements OnDestroy, OnInit, SetupStep {
 	@Output('onStepComplete') public onStepComplete = new EventEmitter<void>();
 	public hasVirtualAccount = false;
 	public virtualAccounts = [];
 	public DNACStep = false;
 	public ipFieldHidden = false;
 	public ipAddressLink: string;
+	public view: 'input' | 'connecting' | 'instruct' = 'input';
 
 	public accountForm = new FormGroup({
 		ipAddress: new FormControl(null, [
@@ -63,6 +67,7 @@ export class ConnectCollectorComponent implements OnDestroy, SetupStep {
 
 	constructor (
 		@Inject('ENVIRONMENT') private env,
+		private route: ActivatedRoute,
 		private router: Router,
 		private setupService: SetupIEService,
 		private state: SetupIEStateService,
@@ -77,16 +82,39 @@ export class ConnectCollectorComponent implements OnDestroy, SetupStep {
 	}
 
 	/**
+	 * NgOnInit
+	 */
+	public ngOnInit () {
+		this.route.queryParams
+			.pipe(
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(params => {
+				if (!params.collectorIP) {
+					this.view = 'input';
+				}
+			});
+	}
+
+	/**
 	 * Submits the user input IP Address
 	 */
-	public onSubmit () {
+	public async onSubmit () {
 		const url = `https://${_.trim(this.ipAddress)}`;
 		this.ipAddressLink = url;
+		this.view = 'connecting';
+		await this.router.navigate([], {
+			queryParams: {
+				collectorIP: this.ipAddress,
+			},
+			queryParamsHandling: 'merge',
+		});
 		this.checkIPConnection()
 				.pipe(takeUntil(this.destroyed$))
 				.subscribe(hasCert => {
 					if (!hasCert) {
-						this.openIpAddressInNewTab();
+						// this.openIpAddressInNewTab();
+						this.view = 'instruct';
 						this.pollIP();
 					} else {
 						this.onConnect();
@@ -144,14 +172,19 @@ export class ConnectCollectorComponent implements OnDestroy, SetupStep {
 		const state = this.state.getState() || { };
 		state.collectorIP = this.ipAddress;
 		this.state.setState(state);
-		await this.router.navigate([], {
-			queryParams: {
-				collectorIP: this.ipAddress,
-			},
-			queryParamsHandling: 'merge',
-			replaceUrl: true,
-		});
 
 		this.onStepComplete.emit();
 	}
+
+	/**
+	 * Listen for ENTER key events and page to next page
+	 * @param event incoming keyboard event
+	 */
+	@HostListener('window:keyup', ['$event'])
+	public keyEvent (event: KeyboardEvent) {
+		if (event.keyCode === KEY_CODES.ENTER && this.accountForm.valid) {
+			this.onSubmit();
+		}
+	}
+
 }

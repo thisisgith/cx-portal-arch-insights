@@ -30,7 +30,7 @@ import {
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
 import { UtilsService, RacetrackInfoService } from '@services';
 
@@ -258,29 +258,43 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	private fetchSolutions () {
 		this.status.loading = true;
+		this.racetrackInfoService.getRacetrack()
+		.pipe(
+			map(result => {
+				this.solutions = result.solutions;
+			}),
+			takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error(`Solution Data :: Get Racetrack :: Error ${err}`);
 
-		return forkJoin(
-			this.racetrackInfoService.getRacetrack()
-			.pipe(
-				map(result => {
-					this.solutions = result.solutions;
-					this.status.loading = false;
-				}),
-				takeUntil(this.destroy$),
-			),
+				return of({ });
+			}),
+		)
+		.subscribe();
 
-			this.racetrackInfoService.getCurrentSolution()
-			.pipe(
-				map(result => this.selectedSolution = result),
-				takeUntil(this.destroy$),
-			),
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			map(result => this.selectedSolution = result),
+			takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error(`Solution Data :: Get Current Solution :: Error ${err}`);
 
-			this.racetrackInfoService.getCurrentTechnology()
-			.pipe(
-				map(result => this.selectedTechnology = result),
-				takeUntil(this.destroy$),
-			),
-		);
+				return of({ });
+			}),
+		)
+		.subscribe();
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			map(result => this.selectedTechnology = result),
+			takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error(`Solution Data :: Get Current Technology :: Error ${err}`);
+
+				return of({ });
+			}),
+		)
+		.subscribe();
 	}
 
 	/**
@@ -534,14 +548,13 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public ngOnInit () {
 		this.initializeQuickTour();
 		this.initializeFacets();
+		this.fetchSolutions();
 		forkJoin(
-			this.fetchSolutions(),
 			this.fetchCoverageCount(),
 			this.fetchAdvisoryCounts(),
 			this.getCaseAndRMACount(),
 		)
 		.pipe(
-			tap(() => this.refreshQuickTour()),
 			catchError(err => {
 				this.status.loading = false;
 				this.logger.error('solution.component : ngOnInit() ' +
@@ -551,7 +564,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			}),
 			takeUntil(this.destroy$),
 		)
-		.subscribe();
+		.subscribe(() => {
+			this.refreshQuickTour();
+			this.status.loading = false;
+		});
 	}
 
 	/**

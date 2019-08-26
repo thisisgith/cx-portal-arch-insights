@@ -126,15 +126,16 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				bordered: true,
 				columns: [
 					{
-						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
+						render: item => item.swVersion === 'NA' ?
+							I18n.get('_OsvNotAvailable_') : item.swVersion,
 						sortable: false,
 						width: '20%',
 					},
 					{
 						name: I18n.get('_OsvVersionSummary_'),
 						sortable: false,
-						template : this.versionTemplate,
+						template: this.versionTemplate,
 						width: '50%',
 					},
 					{
@@ -204,5 +205,14 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					break;
 			}
 		});
+	}
+
+	/**
+	 * view all os version
+	 */
+	public viewAllVersions () {
+		const mdfId = _.get(this.selectedAsset, 'mdfId');
+		const url = `https://software.cisco.com/research/home?pid=${mdfId}`;
+		window.open(`${url}`, '_blank');
 	}
 }
