@@ -24,12 +24,13 @@
 		*ngIf="!loading && view === 'k9'"
 		[k9Data]="k9Data"
 		(onAccept)="onAcceptK9($event)"
-		(onDecline)="onDeclineK9()"
+		(onDecline)="onDecline()"
 	></k9-form>
 	<eula-form
 		*ngIf="!loading && view === 'eula'"
 		[eulaData]="eulaData"
 		(onDownload)="acceptEULAAndDownload()"
+		(onDecline)="onDecline()"
 	></eula-form>
 	<k9-decline
 		*ngIf="!loading && view === 'k9-decline'"

@@ -16,11 +16,20 @@
 		</span>
 	</div>
 </div>
-<button
-   data-auto-id="download-image-btn"
-   [innerText]="'_DownloadImage_' | i18n | uppercase"
-   class="btn btn--primary"
-   [disabled]="isDisabled"
-   (click)="onDownloadImage()"
->
-</button>
+<div class="flex-center-horizontal">
+	<button
+		data-auto-id="decline-k9"
+		[innerText]="'_Decline_' | i18n"
+		class="btn btn--default"
+		(click)="decline()"
+	>
+	</button>
+	<button
+	   data-auto-id="download-image-btn"
+	   [innerText]="'_DownloadImage_' | i18n | uppercase"
+	   class="btn btn--primary"
+	   [disabled]="isDisabled"
+	   (click)="onDownloadImage()"
+	>
+	</button>
+</div>

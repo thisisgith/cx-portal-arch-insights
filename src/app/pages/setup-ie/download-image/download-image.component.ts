@@ -90,52 +90,21 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 		this.refreshMetadata()
 			.pipe(
 				finalize(() => this.loading = false),
-				mergeMap(() => this.asdService
-					.getDownloadURL(this.metadataTransId, this.imageGuid)),
+				mergeMap(() => this.getDownloadURL()),
 				catchError(() => {
 					this.showError(I18n.get('_AnErrorOccurredDuringDownload_'));
 
 					return empty();
 				}),
 			)
-			.subscribe(response => {
-				this.downloadSessionId = _.get(response, 'download_session_id');
-				const eulaException = _.find(
-					_.get(response, 'asd_download_acceptance_exception'),
-					elem => _.get(elem, 'acceptance_form.eula_form_details'),
-				);
-				const k9Exception = _.find(
-					_.get(response, 'asd_download_acceptance_exception'),
-					elem => _.get(elem, 'acceptance_form.k9_form_details_response'),
-				);
-				const k9Data = _.get(k9Exception,
-					'acceptance_form.k9_form_details_response.form_details_type.field_details');
-				const eulaData = _.get(eulaException,
-					'acceptance_form.eula_form_details.form_details_type.field_details');
-				if (!eulaData) {
+			.subscribe(() => {
+				if (_.isEmpty(this.eulaData)) {
 					this.view = 'pre-download';
 				} else {
 					this.view = 'eula';
-					this.eulaData.checkboxDescription = _.get(eulaData, '[0].field_value');
-					this.eulaData.label = _.get(eulaData, '[2].field_value');
 				}
-				if (k9Data) {
+				if (!_.isEmpty(this.k9Data)) {
 					this.view = 'k9';
-					this.k9Data.k9FormText = _.get(k9Data, '[2].field_value');
-					this.k9Data.firstName = _.get(k9Data, '[10].field_display_value');
-					this.k9Data.lastName = _.get(k9Data, '[11].field_display_value');
-					this.k9Data.email = _.get(k9Data, '[12].field_display_value');
-					this.k9Data.ccoid = _.get(this, 'user.info.individual.ccoId');
-					this.k9Data.acceptK9CheckboxText = _.get(k9Data, '[8].field_display_value');
-					this.k9Data.commOrCivText = _.get(k9Data, '[13].child_field_details_type[0]' +
-						'.field_display_name');
-					this.k9Data.govOrMilText = _.get(k9Data, '[13].child_field_details_type[1]' +
-						'.field_display_name');
-					this.k9Data.countriesText = _.get(k9Data, '[14].field_value');
-					this.k9Data.yesText = _.get(k9Data, '[14].child_field_details_type[0]' +
-						'.field_value');
-					this.k9Data.noText = _.get(k9Data, '[14].child_field_details_type[1]' +
-						'.field_value');
 				}
 			});
 	}
@@ -164,17 +133,17 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 */
 	public onDownload () {
 		this.loading = true;
-		this.asdService.getDownloadURL(this.metadataTransId, this.imageGuid)
+		this.getDownloadURL()
 			.pipe(
 				finalize(() => this.loading = false),
-				map(response => {
-					const hasError = _.get(response, '.download_info_list[0]' +
+				mergeMap(response => {
+					const hasError = _.get(response, 'download_info_list[0]' +
 						'.asd_download_url_exception.length');
 					if (!hasError) {
 						const url = response.download_info_list[0].cloud_url;
 						this.utils.download(`${url}?access_token=${this.asdService.accessToken}`);
 					} else {
-						throwError('metadata trans id expired');
+						return throwError('metadata trans id expired');
 					}
 				}),
 				retryWhen(errors => errors
@@ -252,9 +221,9 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	}
 
 	/**
-	 * Handler for K9 Declination
+	 * Handler for Declination
 	 */
-	public onDeclineK9 () {
+	public onDecline () {
 		// this.view = 'k9-decline';
 		this.showError(I18n.get('_AgreementIsRequiredToProceed_'));
 		this.didDecline = true;
@@ -279,7 +248,6 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	 * @returns Observable
 	 */
 	private refreshMetadata () {
-
 		return this.asdService.getMetadata()
 			.pipe(
 				map(response => {
@@ -305,5 +273,56 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 		}
 
 		this.error = errorText;
+	}
+
+	/**
+	 * Gets the download URL and sets local variables
+	 * @returns Observable
+	 */
+	private getDownloadURL () {
+		return this.asdService
+			.getDownloadURL(this.metadataTransId, this.imageGuid)
+			.pipe(map(response => {
+				this.downloadSessionId = _.get(response, 'download_session_id');
+				const eulaException = _.find(
+					_.get(response, 'asd_download_acceptance_exception'),
+					elem => _.get(elem, 'acceptance_form.eula_form_details'),
+				);
+				const k9Exception = _.find(
+					_.get(response, 'asd_download_acceptance_exception'),
+					elem => _.get(elem, 'acceptance_form.k9_form_details_response'),
+				);
+				const k9Data = _.get(k9Exception,
+					'acceptance_form.k9_form_details_response.form_details_type.field_details');
+				const eulaData = _.get(eulaException,
+					'acceptance_form.eula_form_details.form_details_type.field_details');
+				if (eulaData) {
+					this.eulaData.checkboxDescription = _.get(eulaData, '[0].field_value');
+					this.eulaData.label = _.get(eulaData, '[2].field_value');
+				} else {
+					this.eulaData = { };
+				}
+				if (k9Data) {
+					this.k9Data.k9FormText = _.get(k9Data, '[2].field_value');
+					this.k9Data.firstName = _.get(k9Data, '[10].field_display_value');
+					this.k9Data.lastName = _.get(k9Data, '[11].field_display_value');
+					this.k9Data.email = _.get(k9Data, '[12].field_display_value');
+					this.k9Data.ccoid = _.get(this, 'user.info.individual.ccoId');
+					this.k9Data.acceptK9CheckboxText = _.get(k9Data, '[8].field_display_value');
+					this.k9Data.commOrCivText = _.get(k9Data, '[13].child_field_details_type[0]' +
+						'.field_display_name');
+					this.k9Data.govOrMilText = _.get(k9Data, '[13].child_field_details_type[1]' +
+						'.field_display_name');
+					this.k9Data.countriesText = _.get(k9Data, '[14].field_value');
+					this.k9Data.yesText = _.get(k9Data, '[14].child_field_details_type[0]' +
+						'.field_value');
+					this.k9Data.noText = _.get(k9Data, '[14].child_field_details_type[1]' +
+						'.field_value');
+				} else {
+					this.k9Data = { };
+				}
+
+				return response;
+			}));
 	}
 }
