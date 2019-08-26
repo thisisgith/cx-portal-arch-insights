@@ -261,7 +261,7 @@ export const AdvisorySecurityAdvisoryScenarios = [
 				},
 			],
 		},
-		/* tslint:disable */
+		// tslint:disable-next-line
 		url: `${api}?customerId=${customerId}&sort=severity:ASC&rows=10&page=1&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
 		usecases: ['Use Case 1'],
 	},
