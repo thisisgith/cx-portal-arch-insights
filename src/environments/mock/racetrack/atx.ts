@@ -200,6 +200,45 @@ const implementItems = [
 	},
 ];
 
+/** Use ATX */
+const useItems = [
+	{
+		atxId: 'ATX-01',
+		title: 'Cisco DNA Center Project Planning',
+		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
+		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_access-infra-readiness.png',
+		status: 'in-progress',
+		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052',
+		duration: 2323423,
+		bookmark: true,
+		sessions: [
+			{
+				sessionId: 'Session1',
+				sessionStartDate: 1565127052000,
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
+			},
+		],
+	},
+	{
+		atxId: 'ATX-02',
+		title: 'Cisco DNA Install Appliance',
+		description: 'We cover subjects including interface and network design overview, policy \nmanagement and deployment, device provisioning, and automation/assurance.',
+		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_deployment-best-practices.png',
+		status: 'completed',
+		recordingURL: 'https://tklcs.cloudapps.cisco.com/tklcs/TKLDownloadServlet?nodeRef=workspace://SpacesStore/2ccb9372-82dc-4700-afc7-0a4ed0630685&activityId=2&fileId=123052',
+		duration: 3600,
+		bookmark: true,
+		sessions: [
+			{
+				sessionId: 'Session2',
+				sessionStartDate: 1565127052000,
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
+			},
+		],
+	},
+];
 /**
  * Mock ATX Response
  * @param solution the solution we're at
@@ -218,6 +257,8 @@ function MockATX (solution: string, usecase: string, pitstop: string, mockFileNa
 
 	if (pitstop.toLowerCase() === 'implement') {
 		response.items = implementItems;
+	} else if (pitstop.toLowerCase() === 'use') {
+		response.items = useItems;
 	} else {
 		response.items = onboardItems;
 	}
@@ -241,6 +282,24 @@ export const ATXScenarios = [
 					description: '(ATX) IBN-Campus Network Assurance-Onboard',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Implement'),
+						status: 200,
+					},
+					selected: true,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Use'),
 						status: 200,
 					},
 					selected: true,

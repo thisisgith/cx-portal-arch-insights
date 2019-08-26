@@ -84,7 +84,15 @@ describe('LifecycleComponent', () => {
 	const buildSpies = () => {
 		racetrackATXSpy = spyOn(racetrackContentService, 'getRacetrackATX')
 			.and
-			.returnValue(of(getActiveBody(ATXScenarios[0])));
+			.callFake(args => {
+				if (args.pitstop === 'Implement') {
+					return of(getActiveBody(ATXScenarios[1]));
+				}else if (args.pitstop === 'Use') {
+					return of(getActiveBody(ATXScenarios[2]));
+				}else{
+					return of(getActiveBody(ATXScenarios[0])); 
+				}
+			});
 
 		racetrackAccSpy = spyOn(racetrackContentService, 'getRacetrackACC')
 			.and
