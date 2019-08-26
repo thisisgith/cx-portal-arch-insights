@@ -126,13 +126,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				}
 
 				// PBC-237 Check bookmark ribbon
-				if (acc.status === 'completed') {
-					// TODO: Green bookmarks are in the process of being removed
-					// See: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-606
-					// cy.getByAutoId('ACCCardRibbon')
-					// 	.should('have.class', 'ribbon__green');
-					// cy.get('.star').should('exist');
-				} else if (acc.isFavorite) {
+				if (acc.isFavorite) {
 					cy.getByAutoId('ACCCardRibbon')
 						.should('have.class', 'ribbon__blue');
 				} else {
@@ -336,7 +330,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('View All ACC filter should NOT be sitcky across use case changes', () => {
+		it('View All ACC filter should NOT be sticky across use case changes', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Completed"]').click();
@@ -361,7 +355,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('View All ACC filter should NOT be sitcky across page navigation', () => {
+		it('View All ACC filter should NOT be sticky across page navigation', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Completed"]').click();
@@ -386,7 +380,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('View All ACC filter should NOT be sitcky across page reload', () => {
+		it('View All ACC filter should NOT be sticky across page reload', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Completed"]').click();
@@ -1255,6 +1249,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Refresh the page to force-reset bookmarks
 			cy.loadApp();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			// Close the setup wizard so it doesn't block other elements
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('ACC View All should be able to toggle between table and card views', () => {
@@ -1533,22 +1530,20 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('ACC View All table view should allow bookmarking/unbookmarking items', () => {
 			accItems.forEach((item, index) => {
 				cy.get('tr').eq(index + 1).within(() => {
-					if (item.status !== 'completed') {
-						if (item.isFavorite) {
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'text-indigo')
-								.click();
-							cy.wait(`(ACC) IBN-Bookmark-${item.accId}`);
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'icon-bookmark-clear');
-						} else {
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'icon-bookmark-clear')
-								.click();
-							cy.wait(`(ACC) IBN-Bookmark-${item.accId}`);
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'text-indigo');
-						}
+					if (item.isFavorite) {
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'text-indigo')
+							.click();
+						cy.wait(`(ACC) IBN-Bookmark-${item.accId}`);
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'icon-bookmark-clear');
+					} else {
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'icon-bookmark-clear')
+							.click();
+						cy.wait(`(ACC) IBN-Bookmark-${item.accId}`);
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'text-indigo');
 					}
 				});
 			});
@@ -2074,10 +2069,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('Should be able to bookmark an ACC item', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
-					if (!acc.isFavorite && acc.status !== 'completed') {
+					if (!acc.isFavorite) {
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
-							.should('have.class', 'ribbon__clear')
+							.should('have.class', 'ribbon__white')
 							.click();
 						cy.waitForAppLoading('accLoading', 5000);
 						cy.getByAutoId('ACCCardRibbon')
@@ -2091,7 +2086,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		it('Should be able to UN-bookmark an ACC item', () => {
 			cy.getByAutoId('ViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
-					if (acc.isFavorite && acc.status !== 'completed') {
+					if (acc.isFavorite) {
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
 							.should('have.class', 'ribbon__blue')
@@ -2099,25 +2094,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						cy.waitForAppLoading('accLoading', 5000);
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
-							.should('have.class', 'ribbon__clear');
-					}
-				});
-			});
-		});
-
-		it('Should NOT be able to bookmark a completed ACC item', () => {
-			cy.getByAutoId('ViewAllModal').within(() => {
-				validACCItems.forEach((acc, index) => {
-					if (acc.status === 'completed') {
-						// For completed items, the ribbon is behind the star, so force the click through
-						cy.getByAutoId('ACCCardRibbon')
-							.eq(index)
-							.click({ force: true });
-						cy.waitForAppLoading('accLoading', 5000);
-						// Ribbon should remain green
-						cy.getByAutoId('ACCCardRibbon')
-							.eq(index)
-							.should('have.class', 'ribbon__green');
+							.should('have.class', 'ribbon__white');
 					}
 				});
 			});
@@ -2167,15 +2144,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						cy.getByAutoId('moreACCList-HoverModal-Description').should('have.text', acc.description);
 						cy.getByAutoId('ACCCardRibbon').should('exist');
 
-						// Ribbon is blue for bookmarked, green w/ star for completed, clear otherwise
+						// Ribbon is blue for bookmarked, white otherwise
 						if (acc.isFavorite) {
 							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__blue');
 							cy.getByAutoId('.star').should('not.exist');
-						} else if (acc.status === 'completed') {
-							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__green');
-							cy.getByAutoId('.star').should('exist');
 						} else {
-							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__clear');
+							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__white');
 							cy.getByAutoId('.star').should('not.exist');
 						}
 
