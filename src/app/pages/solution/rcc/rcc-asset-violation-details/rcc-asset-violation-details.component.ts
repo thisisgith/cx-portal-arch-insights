@@ -26,6 +26,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 		this.logger.debug('RccAssetViolationDetailsComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.customerId = '7293498';
+
 	}
 	public rccAssetPolicyTableOptions: CuiTableOptions;
 	public rccMessageTableOptions: CuiTableOptions;
@@ -43,6 +45,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public policyGroupSelection = '';
 	public policyNameSelection = '';
 	public policySeveritySelection = '';
+	public initialLoading = false;
+	public selectionLoading = false;
 	public customerId: string;
 	private destroy$ = new Subject();
 	@Input() public selectedAssetData: any;
@@ -53,6 +57,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	private assetSliderIconTemplate: TemplateRef<{ }>;
 	@ViewChild('assetSeverityIconTemplate', { static: true })
 	private assetSeverityIconTemplate: TemplateRef<{ }>;
+	@ViewChild('violationAgeTemplate', { static: true })
+	private violationAgeTemplate: TemplateRef<{ }>;
+	/* Will be used in next release*/
 	public severityMappings = { } = [
 		{ id: 'P1', name: I18n.get('_RccSeverityValueP1_') },
 		{ id: 'P2', name: I18n.get('_RccSeverityValueP2_') },
@@ -96,21 +103,21 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				{
 					key: 'violationCount',
 					name: I18n.get('_RccAssetViolationCount_'),
-					sortable: true,
-					width: '5%',
+					sortable: false,
+					width: '3%',
 				},
 			],
 			dynamicData: false,
 			padding: 'regular',
 			rowWellColor: 'black',
 			rowWellTemplate: this.assetRowWellTemplate,
-			singleSelect: true,
+			singleSelect: false,
 			striped: false,
-			wrapText: false,
+			wrapText: true,
 		});
 
 		this.rccMessageTableOptions = new CuiTableOptions({
-			bordered: true,
+			bordered: false,
 			columns: [
 				{
 					key: 'conditionCount',
@@ -131,6 +138,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 					key: 'age',
 					name: I18n.get('_RccAssetViolationAge_'),
 					sortable: false,
+					template: this.violationAgeTemplate,
 				},
 				{
 					key: 'severity',
@@ -141,7 +149,6 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			],
 			dynamicData: false,
 			singleSelect: false,
-			striped: false,
 		});
 	}
 
@@ -153,6 +160,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 		const selectedData = _.get(changes, ['selectedAssetData', 'currentValue']);
 		const isFirstChange = _.get(changes, ['selectedAssetData', 'firstChange']);
 		if (selectedData && !isFirstChange) {
+			this.policyGroupSelection = '';
+			this.policyNameSelection = '';
+			this.policySeveritySelection = '';
 			this.assetRowParams = {
 				customerId: this.customerId,
 				pageIndex: 0,
@@ -172,6 +182,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * loads the filter and asset data
 	 */
 	public loadData () {
+		this.initialLoading = true;
 		const assetFilterReq = {
 			customerId : this.assetRowParams.customerId,
 			serialNumber : this.assetRowParams.serialNumber,
@@ -214,8 +225,10 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				this.rccAssetPolicyTableData = [];
 				this.rccAssetPolicyTableData = assetViolations.data.violation;
 				this.totalItems = this.rccAssetPolicyTableData.length;
+				this.initialLoading = false;
 			},
 				error => {
+					this.initialLoading = false;
 					this.logger.error(
 						'rcc-asset-violation-details.component : loadData() ' +
 					`:: Error : (${error.status}) ${error.message}`);
@@ -284,8 +297,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param pageInfo gives page number
 	 */
 	public onPolicyAssetPagerUpdated (pageInfo: any) {
+		this.assetRowParams.tableOffset =  pageInfo.page;
 		this.assetRowParams.pageSize = pageInfo.limit;
-		this.assetRowParams.pageIndex = pageInfo.page + 1;
+		this.assetRowParams.pageIndex = pageInfo.page;
 	}
 
 	/**

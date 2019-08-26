@@ -721,6 +721,8 @@
 	"_RccSeverityValueP4_":"P4 - Minor",
 	"_RccSeverityValueP5_":"P5 - Informational",
 	"_RccShowing_": "Showing",
+	"_RccViolationAgeInDays_": " Days",
+	"_RccViolationAgeInDay_": " Day",
 	"_RccViolations_": "violations",
 	"_RccConditionViolations_": "condition violations",
 	"_RccViolationCount_": "Violation Count",
