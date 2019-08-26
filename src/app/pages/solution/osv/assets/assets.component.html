@@ -82,7 +82,7 @@
 <ng-template #versionTemplate let-item="celldata">
 	<div class="row">
 		<div class="col-1">
-			<span *ngIf="item?.alert != 'NA'" [ngClass]="{'information':'text-primary'}[item.alert]"
+			<span *ngIf="item?.alert && item?.alert != 'NA'" [ngClass]="{'information':'text-primary'}[item.alert]"
 				class="icon-circle"></span>
 		</div>
 		<div class="col-11" [innerText]="item.swVersion"></div>
