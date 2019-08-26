@@ -375,7 +375,7 @@
 			<a id="AtxScheduleCardRegisterButton"
 				class="pull-left half-padding-left"
 				target="_blank"
-				*ngIf="sessionSelected && !sessionSelected.scheduled && !notCurrentPitstop"
+				*ngIf="data.status !== 'scheduled' && sessionSelected && !notCurrentPitstop"
 				[href]="sessionSelected?.registrationURL">
 				<button class="btn btn--primary base-margin-top half-margin-left"
 					[disabled]="!sessionSelected?.registrationURL"
@@ -385,7 +385,7 @@
 			</a>
 			<div class="pull-left half-padding-left">
 				<button class="btn btn--primary disabled base-margin-top half-margin-left"
-					*ngIf="!sessionSelected || sessionSelected.scheduled || notCurrentPitstop"
+					*ngIf="!sessionSelected || notCurrentPitstop || data.status === 'scheduled'"
 					[innerText]="'_Register_' | i18n"
 					data-auto-id="AtxScheduleCardRegisterButton">
 				</button>
