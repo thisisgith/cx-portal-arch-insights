@@ -75,7 +75,10 @@
 			<h3 class="text-primary" *ngIf="currentWorkingPitstop" [innerText]="currentWorkingPitstop"></h3>
 		</div>
 		<div class="col-md-5 flex-center">
-			<span id="compActPct" class="text-white qtr-padding-top" [innerText]="currentActionsCompPert" data-auto-id="CompletedActionsPercent"></span>
+			<svg height="30" width="120">
+				<polygon points="0,0 100,0 100,50 20,50" />
+				<text class="comPertText text-bold" x="55" y="23" text-anchor="middle" [innerHTML]="currentActionsCompPert"></text>
+			</svg>
 			<span><img class="finishline qtr-margin-top" alt="'_FinishLine_' | i18n" src="assets/img/solutions/finishline_side.png"> </span>
 		</div>
 	</div>
@@ -496,12 +499,10 @@
 </ng-template>
 
 <ng-template #learningBlock let-title="title" let-data="data" let-icon="icon" let-link="link">
-	<div class="row">
-		<div class="col-md-9">
-			<span class="icon-{{ icon }} qtr-padding-right qtr-padding-bottom"></span>
-			<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
-		</div>
-		<div class="col-md-3 text-right"
+	<div>
+		<span class="icon-{{ icon }} icon-small qtr-padding-right qtr-padding-bottom"></span>
+		<span class="text-uppercase text-large text-muted" [innerText]="title | i18n"></span>
+		<div class="view-all pull-right toggle"
 			*ngIf="data">
 			<a class="no-link show"
 				target="_blank"
@@ -1109,13 +1110,11 @@
 
 <ng-template #panel let-template="template" let-title="title" let-loading="loading" let-data="data" let-viewAll="viewAll" let-viewAllLabel="viewAllLabel" let-icon="icon">
 	<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom panel-border-top" attr.data-auto-id="{{ title | i18n }} Panel" *ngIf="viewAll!=='acc' || data?.sessions?.length>0">
-		<div class="row half-padding-bottom">
-			<div class="col-md-9 flex-center-vertical">
-				<span class="icon-{{ icon }} icon-small qtr-padding-right qtr-padding-bottom" *ngIf="icon"></span>
-				<div class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></div>
-			</div>
-			<div class="col-md-3 text-right toggle" *ngIf="viewAll">
-				<div *ngIf="data"
+		<div class="half-padding-bottom">
+			<span class="icon-{{ icon }} icon-small qtr-padding-right qtr-padding-bottom" *ngIf="icon"></span>
+			<span class="text-uppercase text-large" [innerText]="title | i18n" attr.data-auto-id="PanelTitle-{{title}}"></span>
+			<div class="view-all pull-right toggle" *ngIf="viewAll">
+				<div  *ngIf="data"
 					(click)="showModal(viewAll)"
 					attr.data-auto-id="ShowModalPanel-{{ title }}">
 					<span class="text-indigo text-right text-med" [innerText]="viewAllLabel | i18n"></span>
