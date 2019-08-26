@@ -711,9 +711,8 @@ export const NetworkScenarios = [
 				},
 			],
 		},
+		// tslint:disable-next-line
 		url: `${api}?customerId=${customerId}&sort=hostName:ASC&rows=100&page=1&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
 		usecases: ['Use Case 1'],
 	},
-
-	// https://api-stage.cisco.com/api/customerportal/inventory/v1/network-elements?customerId=2431199&sort=hostName:ASC&rows=100&page=1&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA
 ];

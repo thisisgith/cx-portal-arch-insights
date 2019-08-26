@@ -206,11 +206,17 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 		}
 	}
 
-	public onPanelBack() {
+	/**
+	 * Removes the 360 panel from the stack when the back button is pressed
+	 */
+	public onPanelBack () {
 		this.detailsPanelStackService.pop();
 	}
 
-	public onAllPanelsClose() { 
+	/**
+	 * Closes all 360 panels
+	 */
+	public onAllPanelsClose () {
 		this.detailsPanelStackService.reset();
 	}
 }

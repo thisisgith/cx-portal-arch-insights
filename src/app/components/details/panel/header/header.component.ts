@@ -40,6 +40,9 @@ export class DetailsPanelHeaderComponent {
 		this.close.emit(true);
 	}
 
+	/**
+	 * emits true when 360 back button is pressed
+	 */
 	public backDetails () {
 		this.back.emit(true);
 	}

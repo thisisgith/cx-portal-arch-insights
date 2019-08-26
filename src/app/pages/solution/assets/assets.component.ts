@@ -152,7 +152,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		private fromNow: FromNowPipe,
 		private networkService: NetworkDataGatewayService,
 		private detailsPanelStackService: DetailsPanelStackService,
-	) { 
+	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 

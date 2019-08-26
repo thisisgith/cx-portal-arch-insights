@@ -156,10 +156,16 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, P
 		this.destroyed$.complete();
 	}
 
+	/**
+	 * Removes the 360 panel from the stack when the back button is pressed
+	 */
 	public onPanelBack () {
 		this.detailsPanelStackService.pop();
 	}
 
+	/**
+	 * Closes all 360 panels
+	 */
 	public onAllPanelsClose () {
 		this.detailsPanelStackService.reset();
 	}

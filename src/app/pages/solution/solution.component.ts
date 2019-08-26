@@ -28,8 +28,7 @@ import {
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
-import { RacetrackInfoService } from '@services';
-import { DetailsPanelStackService } from '@services';
+import { DetailsPanelStackService, RacetrackInfoService } from '@services';
 
 /**
  * Interface representing a facet

@@ -6,9 +6,15 @@ export declare interface Panel360 {
 	 * A method that performs custom clean-up, invoked
 	 * after a panel is closed
 	 */
-	onPanelClose(): void;
+	onPanelClose (): void;
 
-	onPanelBack(): void;
+	/**
+	 * closes current 360 panel
+	 */
+	onPanelBack (): void;
 
-	onAllPanelsClose(): void;
+	/**
+	 * closes all 360 panels
+	 */
+	onAllPanelsClose (): void;
 }
