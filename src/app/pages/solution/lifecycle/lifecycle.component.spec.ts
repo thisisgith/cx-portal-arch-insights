@@ -1159,19 +1159,22 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			// Commenting this temporarily as this is failing intermittently
 			// change pitstop to "Onboard" (current) and check if button is enabled
-			// component.getRacetrackInfo('Onboard');
-			// component.recommendedAtxScheduleCardOpened = true;
-			// component.sessionSelected = {
-			// 	presenterName: 'John Doe',
-			// 	registrationURL: 'https://www.cisco.com/register',
-			// 	sessionStartDate: 1565127052000,
-			// };
-			// fixture.detectChanges();
-			// de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
-			// expect(de)
-			// 	.toBeTruthy();
+			racetrackATXSpy = spyOn(racetrackContentService, 'getRacetrackATX')
+			.and
+			.returnValue(of(getActiveBody(ATXScenarios[3]))); 
+			
+			component.getRacetrackInfo('Onboard');
+			component.recommendedAtxScheduleCardOpened = true;
+			component.sessionSelected = {
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
+			    sessionStartDate: 1565127052000,
+			};
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+			 	.toBeTruthy();
 		});
 	});
 
