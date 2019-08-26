@@ -52,13 +52,16 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	before(() => {
 		cy.login();
 		cy.loadApp();
+
+		// Disable the setup wizard so it doesn't block other elements
+		cy.window().then(win => {
+			win.Cypress.hideDNACHeader = true;
+		});
+
 		cy.waitForAppLoading();
 
 		// Wait for the ACC panel to finish loading
 		cy.waitForAppLoading('accLoading', 15000);
-
-		// Close the setup wizard so it doesn't block other elements
-		cy.getByAutoId('setup-wizard-header-close-btn').click();
 	});
 
 	it('Renders Accelerator tile', () => {
@@ -393,9 +396,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 			cy.loadApp();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
-
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
@@ -1249,9 +1249,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Refresh the page to force-reset bookmarks
 			cy.loadApp();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
-
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('ACC View All should be able to toggle between table and card views', () => {
@@ -1761,9 +1758,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.loadApp();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
 
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
-
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
@@ -1927,9 +1921,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.loadApp();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
 
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
-
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
@@ -2032,12 +2023,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.loadApp();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
 
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
-
-			// Close the setup wizard so it doesn't block other elements
-			// cy.getByAutoId('setup-wizard-header-close-btn').click();
-
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 
@@ -2058,9 +2043,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// This is required since the mock bookmark APIs don't actually bookmark the ACC items
 			cy.loadApp();
 			cy.waitForAppLoading();
-
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 			// Wait for the ACC panel to finish loading
 			cy.waitForAppLoading('accLoading', 15000);
