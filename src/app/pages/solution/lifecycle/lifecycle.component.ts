@@ -752,6 +752,11 @@ export class LifecycleComponent implements OnDestroy {
 		this.recommendedAtxScheduleCardOpened = false;
 		this.eventXCoordinates = 0;
 		this.eventYCoordinates = 0;
+		this.moreXCoordinates = 0;
+		this.moreYCoordinates = 0;
+		this.selectSession({ });
+		this.componentData.atx.interested = null;
+		this.moreATXSelected = null;
 	}
 
 	 /**
