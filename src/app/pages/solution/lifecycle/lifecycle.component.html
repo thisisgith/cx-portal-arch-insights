@@ -62,7 +62,7 @@
 
 <div class="modal-container" *ngIf="modal.visible">
 	<div class="modal modal--full"
-		[ngStyle]="{'margin-top': getAppHeaderHeightPX }"
+		[ngStyle]="{'margin-top': appHeaderHeightPX }"
 		[ngClass]="{ hide: !modal.visible }"
 		#scrollModal (scroll)="getScrollCoordinates(scrollModal)"
 	>
