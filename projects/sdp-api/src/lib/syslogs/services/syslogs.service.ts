@@ -310,6 +310,8 @@ export interface GetSyslogsParams {
 	excludeMsgType?: string;
 	asset?:string;
 	deviceHost?:string;
+	catalogList?:Array<string>;
+	severityList?:Array<string>;
 }
 }
 export { SyslogsService };
