@@ -87,11 +87,11 @@ describe('LifecycleComponent', () => {
 			.callFake(args => {
 				if (args.pitstop === 'Implement') {
 					return of(getActiveBody(ATXScenarios[1]));
-				}else if (args.pitstop === 'Use') {
-					return of(getActiveBody(ATXScenarios[2]));
-				}else{
-					return of(getActiveBody(ATXScenarios[0])); 
 				}
+				if (args.pitstop === 'Use') {
+					return of(getActiveBody(ATXScenarios[2]));
+				}
+				return of(getActiveBody(ATXScenarios[0]));
 			});
 
 		racetrackAccSpy = spyOn(racetrackContentService, 'getRacetrackACC')
@@ -1161,15 +1161,15 @@ describe('LifecycleComponent', () => {
 
 			// change pitstop to "Onboard" (current) and check if button is enabled
 			racetrackATXSpy = spyOn(racetrackContentService, 'getRacetrackATX')
-			.and
-			.returnValue(of(getActiveBody(ATXScenarios[3]))); 
-			
+				.and
+				.returnValue(of(getActiveBody(ATXScenarios[3])));
+
 			component.getRacetrackInfo('Onboard');
 			component.recommendedAtxScheduleCardOpened = true;
 			component.sessionSelected = {
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
-			    sessionStartDate: 1565127052000,
+				sessionStartDate: 1565127052000,
 			};
 			fixture.detectChanges();
 			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
