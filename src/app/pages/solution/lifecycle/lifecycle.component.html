@@ -614,7 +614,8 @@
 				<span *ngSwitchCase="'ACC'">
 					<div class="row half-margin-left half-margin-right">
 						<div class="col-md-9 text-large text-bold text-left"
-							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedACC?.length || 0:componentData.params.solution:componentData.params.usecase">
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedACC?.length || 0:componentData.params.solution:componentData.params.usecase"
+							data-auto-id="ViewAllModal-TopicsAvailable">
 						</div>
 						<div class="col-md-2">
 							<cui-select id="acc-filter"
@@ -856,7 +857,7 @@
 			*ngIf="item && item.title" [innerText]="item.title" data-auto-id="ACCCardTitle">
 		</div>
 		<div class="card__body atx__card__body text-left" *ngIf="item && item.description"
-			[innerText]="item.description"></div>
+			[innerText]="item.description" data-auto-id="ACCCardDescription"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
 				<div class="text-left">
@@ -1262,7 +1263,7 @@
 				attr.data-auto-id="{{ type }}-Image">
 		</div>
 		<div class="col-md-10">
-			<div class="half-margin-top" [innerText]="celldata.title"></div>
+			<div class="half-margin-top" [innerText]="celldata.title" attr.data-auto-id="{{ type }}-Title"></div>
 		</div>
 	</div>
 	<div *ngIf="type==='SB' || type==='PG'">
