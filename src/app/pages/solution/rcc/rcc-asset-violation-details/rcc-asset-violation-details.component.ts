@@ -26,8 +26,6 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 		this.logger.debug('RccAssetViolationDetailsComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.customerId = '7293498';
-
 	}
 	public rccAssetPolicyTableOptions: CuiTableOptions;
 	public rccMessageTableOptions: CuiTableOptions;
