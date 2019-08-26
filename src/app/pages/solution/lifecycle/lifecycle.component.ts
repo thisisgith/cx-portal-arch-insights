@@ -1053,17 +1053,18 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns pertage string
 	 */
 	private calculateActionPercentage (pitstop: RacetrackPitstop) {
+		const start = I18n.get('_Start_');
 		if (pitstop) {
 			const completedActions = _.filter(pitstop.pitstopActions, 'isComplete').length;
 			const pct = Math.floor(
 				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
 
 			if (!_.isNil(pct)) {
-				return (pct === 0) ? 'start' : `${pct.toString()}%`;
+				return (pct === 0) ? start : `${pct.toString()}%`;
 			}
 		}
 
-		 return 'start';
+		return start;
 	}
 
 	/**
