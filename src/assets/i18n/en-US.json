@@ -616,6 +616,7 @@
 	"_OsvUpgrade_": "Upgrade",
 	"_OsvVersion_": "Version",
 	"_OsvViewAllOSVersions_": "View all OS Versions",
+	"_OsvNotAvailable_":"Not Available", 
 	"_OsvYes_": "Y",
 	"_Other_": "Other",
 	"_Others_": "Others",
