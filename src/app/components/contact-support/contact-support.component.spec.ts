@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { of } from 'rxjs';
 
-fdescribe('ContactSupportComponent', () => {
+describe('ContactSupportComponent', () => {
 	let component: ContactSupportComponent;
 	let service: EmailControllerService;
 	let fixture: ComponentFixture<ContactSupportComponent>;
@@ -24,10 +24,10 @@ fdescribe('ContactSupportComponent', () => {
 						getProfile () {
 							return {
 								cpr: {
+									pf_auth_email: 'susan@company.com',
 									pf_auth_firstname: 'Susan',
 									pf_auth_lastname: 'Swanson',
 									pf_auth_uid: 'susans',
-									pf_auth_email: 'susan@company.com',
 								},
 							};
 						},
