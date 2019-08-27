@@ -32,7 +32,7 @@
 						</div>
 						<div
 							class="text-large flex-center"
-							[innerText]="'_RMCrashedAssets_' | i18n"
+							[innerText]="'_RMCrashedAssetsInLast24Hrs_' | i18n"
 						></div>
 					</div>
 				</div>
@@ -75,18 +75,15 @@
 			</div>
 		</div>
 	</div>
-	<div class="divider qtr-margin-top"></div>
+	<div class="divider qtr-margin half-margin-bottom"></div>
 
 	<!-- filter tab -->
 	<ng-container>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
-	<div class="row space-between">
-		<div class="col-2">
-			<div
-				class="font15 qtr-margin-top"
-				[innerText]="'_RMAssets_' | i18n"
-			></div>
+	<div class="row">
+		<div class="col-9 qtr-margin-top">
+			<span class="font15 qtr-margin-top"[innerText]="'_RMAssets_' | i18n"></span>
 		</div>
 		<div class="col-3" *ngIf="!onlyCrashes">
 			<cui-search
@@ -98,7 +95,7 @@
 			</cui-search>
 		</div>
 	</div>
-	<div class="divider"></div>
+	<div class="divider qtr-margin"></div>
 </div>
 
 <ng-template #advisoryFilter let-filter="filter">
@@ -150,10 +147,23 @@
 			</a>
 		</div>
 	</div>
-	<div class="divider"></div>
+	<div class="divider qtr-margin"></div>
 </ng-template>
 <div *ngIf="!onlyCrashes; else assetsWithCrashRisk">
-	<cui-table
+		<div *ngIf="!crashedAssetsGridDetails.tableData.length ">
+				<div class="text-center dbl-margin-top dbl-margin-bottom">
+					<div>
+						<span class="text-muted text-xlarge"
+							[innerText]="'_NoResultsFound_' | i18n"
+							data-auto-id="NoResultsFoundTxt" >
+						</span>
+					</div>
+
+				</div>
+			</div>
+
+
+	<cui-table  *ngIf="crashedAssetsGridDetails.tableData.length"
 		(onTableRowClicked)="onRowClicked($event)"
 		[data]="crashedAssetsGridDetails.tableData"
 		[limit]="crashedAssetsGridDetails.tableLimit"
@@ -175,7 +185,20 @@
 	<cui-spinner></cui-spinner>
 </ng-template>
 <ng-template #assetsWithCrashRisk>
-	<cui-table
+
+		<div *ngIf="!highCrashRiskAssetsGridDetails.tableData.length">
+				<div class="text-center dbl-margin-top dbl-margin-bottom">
+					<div>
+						<span class="text-muted text-xlarge"
+							[innerText]="'_NoResultsFound_' | i18n"
+							data-auto-id="NoResultsFoundTxt" >
+						</span>
+					</div>
+				</div>
+			</div>
+
+
+	<cui-table *ngIf="highCrashRiskAssetsGridDetails.tableData.length"
 		[options]="highCrashRiskAssetsGridOptions"
 		[data]="highCrashRiskAssetsGridDetails.tableData"
 		(onTableRowClicked)="connectToFpDetails($event)"

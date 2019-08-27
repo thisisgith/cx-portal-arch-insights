@@ -41,6 +41,7 @@ export class RiskMitigationComponent {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.customerId = 7293498;
 	}
 
 	get selectedFilters () {
@@ -230,6 +231,7 @@ export class RiskMitigationComponent {
 					map((results: RiskAssets) => {
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = _.size(results.deviceDetails);
+						this.crashedAssetsGridDetails.tableOffset = 0;
 					}),
 					catchError(err => {
 						this.crashedAssetsGridDetails.tableData = [];
@@ -323,32 +325,44 @@ export class RiskMitigationComponent {
 	public getFilterDetailsForSearchQuery (searchText: String) {
 		let time;
 		const filter =  _.find(this.filters[0].seriesData, { selected: true });
-		switch (filter.label) {
-			case '24h': {
-				time = '1';
-				break;
+		if(filter){
+			switch (filter.label) {
+				case '24h': {
+					time = '1';
+					break;
+				}
+				case '7d': {
+					time = '7';
+					break;
+				}
+				case '30d': {
+					time = '30';
+					break;
+				}
+				case '90d': {
+					time = '90';
+					break;
+				}
 			}
-			case '7d': {
-				time = '7';
-				break;
-			}
-			case '30d': {
-				time = '30';
-				break;
-			}
-			case '90d': {
-				time = '90';
-				break;
-			}
+
+			return {
+				time,
+				customerId: this.customerId,
+				key: '',
+				search: searchText,
+				sortDirection: '',
+			};
+		} else {
+
+			return {
+				customerId: this.customerId,
+				key: '',
+				search: searchText,
+				sortDirection: '',
+				time: '1',
+			};
 		}
 
-		return {
-			time,
-			customerId: this.customerId,
-			key: '',
-			search: searchText,
-			sortDirection: '',
-		};
 	}
 	/**
 	 * Function to update pagination
@@ -365,6 +379,7 @@ export class RiskMitigationComponent {
 					map((results: any) => {
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
+						this.crashHistoryGridDetails.tableOffset = 0;
 					}),
 					catchError(err => {
 						this.crashedAssetsGridDetails.tableData   = [];
@@ -428,6 +443,7 @@ export class RiskMitigationComponent {
 				map((results: any) => {
 					this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 					this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
+					this.crashHistoryGridDetails.tableOffset = 0;
 				}),
 				catchError(err => {
 					this.crashedAssetsGridDetails.tableData   = [];
