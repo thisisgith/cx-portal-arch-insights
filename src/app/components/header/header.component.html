@@ -5,7 +5,7 @@
 		</a>
 		<div class="header-bar__main">
 			<div class="header-heading text-indigo">
-				<h5 *ngIf="searchBreakpointShow(600)" class="text-nowrap base-margin-right" [innerText]="'_ApplicationName_' | i18n"></h5>
+				<h5 *ngIf="searchBreakpointShow(600)" class="text-nowrap base-margin-right clickable" [innerText]="'_ApplicationName_' | i18n" (click)="navigateHome()"></h5>
 				<a *ngIf="searchBreakpointShow(1023)" class="cx-header-links" [href]="communityLink" target="_blank" data-auto-id="HeaderCommunityLink" [title]="'_Communities_' | i18n">
 					<div class="text-nowrap">
 						<span class="cx-header-icon icon-communities hidden-xs"></span>
