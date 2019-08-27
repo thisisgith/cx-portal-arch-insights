@@ -84,7 +84,15 @@ describe('LifecycleComponent', () => {
 	const buildSpies = () => {
 		racetrackATXSpy = spyOn(racetrackContentService, 'getRacetrackATX')
 			.and
-			.returnValue(of(getActiveBody(ATXScenarios[0])));
+			.callFake(args => {
+				if (args.pitstop === 'Implement') {
+					return of(getActiveBody(ATXScenarios[1]));
+				}
+				if (args.pitstop === 'Use') {
+					return of(getActiveBody(ATXScenarios[2]));
+				}
+				return of(getActiveBody(ATXScenarios[0]));
+			});
 
 		racetrackAccSpy = spyOn(racetrackContentService, 'getRacetrackACC')
 			.and
@@ -648,7 +656,7 @@ describe('LifecycleComponent', () => {
 			 .toEqual('Accelerator');
 
 			expect(component.getSubtitle('ACC'))
-			 .toEqual('1-on-1 Coaching to put you in the fast lane');
+			 .toEqual('1-on-1 coaching to put you in the fast lane');
 
 			de = fixture.debugElement.query(By.css('.ribbon__white'));
 			expect(de)
@@ -1151,19 +1159,21 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			// Commenting this temporarily as this is failing intermittently
 			// change pitstop to "Onboard" (current) and check if button is enabled
-			// component.getRacetrackInfo('Onboard');
-			// component.recommendedAtxScheduleCardOpened = true;
-			// component.sessionSelected = {
-			// 	presenterName: 'John Doe',
-			// 	registrationURL: 'https://www.cisco.com/register',
-			// 	sessionStartDate: 1565127052000,
-			// };
-			// fixture.detectChanges();
-			// de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
-			// expect(de)
-			// 	.toBeTruthy();
+			racetrackATXSpy.and
+				.returnValue(of(getActiveBody(ATXScenarios[7])));
+
+			component.getRacetrackInfo('Onboard');
+			component.recommendedAtxScheduleCardOpened = true;
+			component.sessionSelected = {
+				presenterName: 'John Doe',
+				registrationURL: 'https://www.cisco.com/register',
+				sessionStartDate: 1565127052000,
+			};
+			fixture.detectChanges();
+			de = fixture.debugElement.query(By.css('#AtxScheduleCardRegisterButton'));
+			expect(de)
+			 	.toBeTruthy();
 		});
 	});
 
