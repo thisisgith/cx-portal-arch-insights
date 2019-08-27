@@ -209,6 +209,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	/**
 	 * Headers Details
 	 * @param tableRowData contains table row data
+	 * @param customerId to set customer Id
 	 */
 	public sysLogHeaderDetails (tableRowData, customerId) {
 		this.syslogsService.getDeviceHeaderDetails(tableRowData, customerId)

@@ -83,19 +83,19 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	];
 	public timeRangeList = [
 		{
-			name: '1day',
+			name: '1 day',
 			value: 1,
 		},
 		{
-			name: '7days',
+			name: '7 days',
 			value: 7,
 		},
 		{
-			name: '15days',
+			name: '15 days',
 			value: 15,
 		},
 		{
-			name: '30days',
+			name: '30 days',
 			value: 30,
 		},
 	];
