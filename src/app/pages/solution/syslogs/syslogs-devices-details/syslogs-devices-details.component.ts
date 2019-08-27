@@ -106,6 +106,7 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		this.selectedTimeRange = this.selectedFilter.days;
 		this.selectedSeverity = this.selectedFilter.severity;
 		this.deviceDetailsParams = {
+			catalog: this.selectedFilter.catalog,
 			customerId: this.customerId,
 			days: +this.selectedTimeRange,
 			deviceHost: this.asset.DeviceHost,

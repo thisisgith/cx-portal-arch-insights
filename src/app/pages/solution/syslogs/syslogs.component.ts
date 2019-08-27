@@ -304,6 +304,18 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 							'timeRange',
 						);
 					}
+					if (this.syslogsParams.severityList) {
+						this.selectSubFilters(
+							this.syslogsParams.severityList,
+							'severity',
+						);
+					}
+					if (this.syslogsParams.catalogList) {
+						this.selectSubFilters(
+							this.syslogsParams.catalogList,
+							'catalog',
+						);
+					}
 
 				}),
 			)
@@ -446,12 +458,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 
 		this.allAssetsSelected = false;
 		this.syslogsParams.timeRange = ['1'];
-		if (this.syslogsParams.timeRange) {
-			this.selectSubFilters(
-				this.syslogsParams.timeRange,
-				'timeRange',
-			);
-		}
+		this.loadData();
 		this.appliedFilters = {
 			asset: '',
 			catalog: 'Cisco',
@@ -486,8 +493,8 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		  }
 			this.getAssetCounts();
 		}
-		this.loadData();
 		this.clearFilters();
+		this.loadData();
 	}
 	/**
 	 * on destroy

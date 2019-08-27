@@ -201,13 +201,13 @@ class SyslogsService extends __BaseService {
 	
 		}
 
-		public devicePanelDetails (devicedetails) {
+		public devicePanelDetails (deviceDetails) {
 			let __params = this.newParams();
 			let __headers = new HttpHeaders();
 			let __body: any = null;
 			const req = new HttpRequest<any>(
 				'GET',
-				this.rootUrl+'/api/customerportal/syslog/v1/asset/messages?fromSeverity=1'+'&toSeverity='+devicedetails.severity+'&days='+devicedetails.days+'&device='+devicedetails.deviceHost+'&includeMsgType='+devicedetails.includeMsgType+'&excludeMsgType='+devicedetails.excludeMsgType+'&catalog=Cisco&companyId='+devicedetails.customerId,
+				this.rootUrl+'/api/customerportal/syslog/v1/asset/messages?fromSeverity=1'+'&toSeverity='+deviceDetails.severity+'&days='+deviceDetails.days+'&device='+deviceDetails.deviceHost+'&includeMsgType='+deviceDetails.includeMsgType+'&excludeMsgType='+deviceDetails.excludeMsgType+'&catalog='+deviceDetails.catalog+'&companyId='+deviceDetails.customerId,
 				__body,
 				{
 				  headers: __headers,
