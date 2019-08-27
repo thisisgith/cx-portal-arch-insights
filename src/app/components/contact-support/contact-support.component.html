@@ -31,7 +31,7 @@
 					<div char-count
 						[value]="supportForm.controls.description.value.length"
 						[max]="descriptionMaxLength"
-						displayAt="31000">
+						[displayAt]="contactExpert? 0 : 31000">
 					</div>
 				</div>
 			</div>

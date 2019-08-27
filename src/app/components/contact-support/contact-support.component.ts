@@ -48,8 +48,8 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 		this.descriptionMaxLength = this.contactExpert ? 5000 : 32000;
 		this.title = this.contactExpert ? new FormControl(
 			{
-				value: '',
 				disabled: true,
+				value: '',
 			}, Validators.required) : new FormControl('', Validators.required);
 		this.description = this.contactExpert ? new FormControl('', [
 			Validators.required,
