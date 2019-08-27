@@ -40,7 +40,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-fdescribe('LifecycleComponent', () => {
+describe('LifecycleComponent', () => {
 	let component: LifecycleComponent;
 	let fixture: ComponentFixture<LifecycleComponent>;
 	let de: DebugElement;
