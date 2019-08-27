@@ -11,13 +11,13 @@
 								[innerText]="this.title"
 								data-auto-id="policy-modal.title"
 							></span>
-							<span
-								*ngIf="type === 'editPolicy'"
-								class="icon-trash icon-small qtr-margin-bottom half-padding-left"
-								[ngClass]="'text-primary'"
-								(click)="deletePolicy()"
+							<a
+								class="qtr-margin-bottom half-padding-left"
 								data-auto-id="policy-modal.trash"
-							></span>
+								(click)="deletePolicy()"
+								>
+								<span class="icon-trash icon-small" [ngClass]="'text-primary'"></span>
+							</a>
 						</div>
 						<div class="col-2 half-margin-top text-right">
 							<span (click)="closeRequestForm()" data-auto-id="policy-modal.close"
