@@ -64,7 +64,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.tabledata)
+				expect(component.tableData)
 				.toBeUndefined();
 
 				done();
@@ -87,7 +87,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();
-			expect(component.tabledata)
+			expect(component.tableData)
 				.toBeDefined();
 			done();
 		});

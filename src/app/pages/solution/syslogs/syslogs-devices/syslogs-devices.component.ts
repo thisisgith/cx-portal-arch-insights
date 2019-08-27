@@ -61,7 +61,8 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public selected;
 	public destroy$ = new Subject();
 	public deviceHeaderValues: SyslogPanelIPSer;
-	public notScaned: boolean;
+	public notScaned = true;
+	public serialNumberStatus = true;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -214,7 +215,10 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 		.subscribe(data => {
 			this.deviceHeaderValues = data;
 			if (this.deviceHeaderValues.lastScan === null) {
-				this.notScaned = true;
+				this.notScaned = false;
+			}
+			if (this.deviceHeaderValues.serialNumber === '') {
+				this.serialNumberStatus = false;
 			}
 		});
 	}
