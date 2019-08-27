@@ -229,13 +229,13 @@ class SyslogsService extends __BaseService {
 			);
 		  }
 
-		  public deviceHeaderDetails (tableRowData) {
+		  public deviceHeaderDetails (tableRowData,customerId) {
 			let __params = this.newParams();
 			let __headers = new HttpHeaders();
 			let __body: any = null;
 			const req = new HttpRequest<any>(
 				'GET',
-				this.rootUrl+'/api/customerportal/syslog/v1/asset/viewDetails?deviceIp='+tableRowData.DeviceIp+"&customerId=7293498",
+				this.rootUrl+'/api/customerportal/syslog/v1/asset/viewDetails?deviceIp='+tableRowData.DeviceIp+"&customerId="+customerId,
 				__body,
 				{
 				  headers: __headers,
@@ -251,8 +251,8 @@ class SyslogsService extends __BaseService {
 				}),
 			  );
 		}
-		public getDeviceHeaderDetails (tableRowData): __Observable<SyslogPanelIPSer> {
-			return this.deviceHeaderDetails(tableRowData).pipe(
+		public getDeviceHeaderDetails (tableRowData,customerId): __Observable<SyslogPanelIPSer> {
+			return this.deviceHeaderDetails(tableRowData,customerId).pipe(
 			  __map(_r => <SyslogPanelIPSer>_r.body),
 			);
 		  }
