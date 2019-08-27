@@ -1,11 +1,7 @@
-.version-info {
-	border: 1px solid transparent;
-	background: transparent;
-	color: #017cad;
-	box-shadow: inset 0 0 0 1px #017cad;
-	padding: 0 10px;
-	line-height: 25px;
-	border-radius: 15px;
-	display: inline-block;
-	min-width: 150px;
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.pointer {
+	width: 50px;
+	border: 1px solid $primary;
+	margin-right: -3px;
 }

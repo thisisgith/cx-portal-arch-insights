@@ -7,12 +7,12 @@
 	</div>
 	<div class="col-md-4 pull-right">
 		<div class="btn-group btn-group--square half-margin-right pull-right">
-			<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost"
-				[ngClass]="{ 'selected': view == 'list' }" (click)=" view = 'list'">
+			<button data-auto-id="list-view-btn" class="btn btn--small "
+				[ngClass]="{ 'btn--primary': view == 'list' }" (click)=" view = 'list'">
 				<span class="icon-list-view"></span>
 			</button>
-			<button data-auto-id="timeline-view-btn" class="btn btn--small btn--gray-ghost"
-				[ngClass]="{ 'selected': view == 'timeline' }"
+			<button data-auto-id="timeline-view-btn" class="btn btn--small "
+				[ngClass]="{ 'btn--primary': view == 'timeline' }"
 				(click)="view = 'timeline' ; selectedRecommendation.name = 'None';">
 				<span class="icon-time"></span>
 			</button>
@@ -51,7 +51,7 @@
 
 <!-- asset-details table view -->
 <div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view =='list'">
-	<table class="table table--selectable table--compressed table--wrap table--lined table--nostripes">
+	<table class="table table--selectable table--compressed table--wrap table--lined table--nostripes table--bordered">
 		<thead>
 			<tr>
 				<th *ngFor="let column of assetDetailsTable.columns"
@@ -93,18 +93,23 @@
 </div>
 
 <ng-template #versionTemplate let-item="celldata">
-	<div class="row">
-		<div [innerText]="item.swVersion" class="flex align-items-center col-3"></div>
-		<div class="col-9 half-margin-top">
-			<div class="qtr-margin-bottom" *ngFor="let version of item.swVersionGroup">
-				<span class="label label--large" [title]="version.name">
-					<span class="text-capitalize" [innerHTML]="version.name"></span>
-					<span class="text-primary qtr-margin-left" [attr.data-balloon]="version.info"
-						data-balloon-pos="down" data-balloon-length="xlarge">
-						<i class="icon-info-outline icon-xsmall"></i>
-					</span>
+	<div class="row flex align-items-center">
+		<div class="col-2">
+			<span *ngIf="item.name == 'current'" class="text-small">Current Version(s)</span>
+		</div>
+		<div  class="col-2 flex align-items-center">
+			<div *ngIf="item.name == 'current'" class="pointer"></div>
+			<span *ngIf="item.name == 'current'" class="icon-circle text-primary"></span>
+		</div>
+		<div class="col-2" [innerText]="item.swVersion" ></div>
+		<div class="col-6">
+			<span class="label label--large" [title]="version.name" *ngFor="let version of item.swVersionGroup">
+				<span class="text-capitalize" [innerHTML]="version.name"></span>
+				<span class="text-primary qtr-margin-left" [attr.data-balloon]="version.info" data-balloon-pos="down"
+					data-balloon-length="xlarge">
+					<i class="icon-info-outline icon-xsmall"></i>
 				</span>
-			</div>
+			</span>
 		</div>
 
 	</div>

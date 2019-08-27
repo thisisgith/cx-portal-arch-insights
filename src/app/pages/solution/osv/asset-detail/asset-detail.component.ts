@@ -36,6 +36,7 @@ import { ActivatedRoute } from '@angular/router';
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
+	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
@@ -198,12 +199,12 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public getColumns () {
 		const datePipe = new DatePipe('en-US');
-		const columns = [
+		const columns = [			
 			{
 				name: I18n.get('_OsvVersion_'),
 				sortable: false,
 				template: this.versionTemplate,
-				width: this.accept ? '50%' : '75%',
+				width: this.accept ? '70%' : '85%',
 			},
 			{
 				key: 'postDate',
@@ -211,7 +212,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				render: item => _.isNull(item.error) ?
 					datePipe.transform(item.postDate, 'MMM d, y') : 'N/A',
 				sortable: false,
-				width: '25%',
+				width: '15%',
 			},
 		];
 		if (this.accept) {
@@ -219,7 +220,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				name: I18n.get('_OsvStatusOrAction_'),
 				sortable: false,
 				template: this.actionsTemplate,
-				width: '25%',
+				width: '15%',
 			};
 			columns.push(acceptColumn);
 		}

@@ -1,4 +1,4 @@
-<cui-tabs [(activeTabIndex)]="tabIndex">
+<cui-tabs id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
 	<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
 		<div class="base-margin-top">
 			<cui-spinner *ngIf="status.isLoading"></cui-spinner>
