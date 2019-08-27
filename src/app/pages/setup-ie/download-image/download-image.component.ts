@@ -9,7 +9,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 
 import { ControlPointIERegistrationAPIService, User } from '@sdp-api';
 
-import { empty, Subject, throwError } from 'rxjs';
+import { empty, of, Subject, throwError } from 'rxjs';
 import { catchError, finalize, map, mergeMap, retryWhen, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
@@ -140,11 +140,17 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 					const hasError = _.get(response, 'download_info_list[0]' +
 						'.asd_download_url_exception.length');
 					if (!hasError) {
-						const url = response.download_info_list[0].cloud_url;
+						const url = _.get(
+							response,
+							'download_info_list[0].cloud_url',
+							_.get(response, 'download_info_list[0].download_url'),
+						);
 						this.utils.download(`${url}?access_token=${this.asdService.accessToken}`);
-					} else {
-						return throwError('metadata trans id expired');
+
+						return of();
 					}
+
+					return throwError('metadata trans id expired');
 				}),
 				retryWhen(errors => errors
 					.pipe(
