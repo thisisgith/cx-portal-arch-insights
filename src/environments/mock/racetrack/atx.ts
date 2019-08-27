@@ -68,7 +68,7 @@ const onboardItems = [
 	},
 	{
 		atxId: 'ATX2',
-		title: 'Cisco DNA Center Project Plan Best Practices',
+		title: 'Cisco DNA Center Project Plan Best Practices 1',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-Center-Project-Plan-Best-Practices.png',
 		status: 'completed',
@@ -122,7 +122,7 @@ const onboardItems = [
 	},
 	{
 		atxId: 'DNA3',
-		title: 'Cisco DNA Center Project Plan Best Practices',
+		title: 'Cisco DNA Center Project Plan Best Practices 2',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Center-Wireless-Assurance.png',
 		status: 'in-progress',
@@ -141,7 +141,7 @@ const onboardItems = [
 	},
 	{
 		atxId: 'DNA4',
-		title: 'Cisco DNA Center Project Plan Best Practices',
+		title: 'Cisco DNA Center Project Plan Best Practices 3',
 		description: 'This is a high-level look at the things you should consider as you’re planning your Cisco DNA Center project, including subjects such as prerequisites for network devices',
 		imageURL: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/atx/images/ATX-DNA-Center-Feature-Overview.png',
 		status: 'requested',
@@ -173,6 +173,7 @@ const implementItems = [
 		bookmark: true,
 		sessions: [
 			{
+				sessionId: 'Session1',
 				sessionStartDate: 1565127052000,
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
@@ -190,6 +191,7 @@ const implementItems = [
 		bookmark: true,
 		sessions: [
 			{
+				sessionId: 'Session2',
 				sessionStartDate: 1565127052000,
 				presenterName: 'John Doe',
 				registrationURL: 'https://www.cisco.com/register',
@@ -203,9 +205,10 @@ const implementItems = [
  * @param solution the solution we're at
  * @param usecase the use case
  * @param pitstop the pitstop
+ * @param mockFileName the name of the corresponding json file to pull mock data from
  * @returns the ATXResponse
  */
-function MockATX (solution: string, usecase: string, pitstop: string): ATXResponseModel {
+function MockATX (solution: string, usecase: string, pitstop: string, mockFileName?: string): ATXResponseModel {
 	const response = {
 		pitstop,
 		solution,
@@ -217,6 +220,10 @@ function MockATX (solution: string, usecase: string, pitstop: string): ATXRespon
 		response.items = implementItems;
 	} else {
 		response.items = onboardItems;
+	}
+
+	if (mockFileName && mockFileName !== '') {
+		response.items = require(`./atxMockData/${mockFileName}.json`);
 	}
 
 	return response;
@@ -238,6 +245,33 @@ export const ATXScenarios = [
 					},
 					selected: true,
 				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'singleNoScheduled'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoCompleted',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'twoCompleted'),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'twoScheduled'),
+						status: 200,
+					},
+					selected: false,
+				},
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
@@ -257,7 +291,7 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=implement&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -274,7 +308,7 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=use&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Use&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -367,7 +401,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration/ATX1/Session1`,
+		url: `${api}/registration?sessionId=Session1&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -383,7 +417,7 @@ export const CancelATXScenarios = [
 				},
 			],
 		},
-		url: `${api}/registration/ATX1/Session2`,
+		url: `${api}/registration?sessionId=Session2&atxId=ATX1`,
 		usecases: ['Use Case 1'],
 	},
 ];

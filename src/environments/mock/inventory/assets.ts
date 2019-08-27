@@ -96,19 +96,21 @@ export const MockAssetsData: Asset[] = [
  			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
-			"deviceName": "VWIC-2MFT-T1",
-			"ipAddress": "172.20.70.42",
-			"supportCovered": false,
-			"serialNumber": "35334200",
-			"osType": "IOS",
-			"osVersion": "12.4(15)T",
-			"role": "BORDER ROUTER",
-			"contractNumber": "UNKNOWN",
-			"managedNeId": "NA,FTX1046A57N,CISCO3825,NA",
-			"hwInstanceId": "35334200,VWIC-2MFT-T1=,NA,NA,FTX1046A57N,CISCO3825,NA",
 			"containingHwId": null,
-			"productId": "VWIC-2MFT-T1",
-			"equipmentType": "MODULE"
+			"criticalAdvisories": null,
+			"deviceName": "Cisco Network Convergence System 2002",
+			"equipmentType": "CHASSIS",
+			"hwInstanceId": "CAT2034B1H6,15454-M-TNCE-K9=,NA,CAT2034B1H6,15454-M-TNCE-K9=,NA,NA",
+			"ipAddress": "10.22.1.131",
+			"supportCovered": true,
+			"serialNumber": "CAT2034B1H6",
+			"osType": "IOS",
+			"osVersion": "15.0(2a)EX5",
+			"role": null,
+			"contractNumber": "1341394",
+			"managedNeId": "NA,CAT2034B1H6,15454-M-TNCE-K9=,NA",
+			"productId": "15454-M-TNCE-K9=",
+			"lastScan": "2019-07-09T09:27:32.483",
 	},
 	{
 			"deviceName": "PWR-C1-350WAC",
@@ -740,14 +742,14 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1&coverage=covered`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10&page=1&coverage=covered`,
 		usecases: ['Use Case 1'],
 	},
 	{
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 350,
 					description: 'Covered Assets - Grid View',
 					response: {
 						body: MockAssets(12, 1, null , [true]),
@@ -875,7 +877,7 @@ export const AssetScenarios = [
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 350,
 					description: 'Assets Page 1 - Grid View',
 					response: {
 						body: MockAssets(12, 1),
@@ -893,7 +895,7 @@ export const AssetScenarios = [
 					selected: false,
 				},
 				{
-					delay: 0,
+					delay: 250,
 					description: '(Assets) Missing data - Grid View',
 					response: {
 						body: (() => {
@@ -910,14 +912,14 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=12&page=1`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=12&page=1`,
 		usecases: ['Use Case 1'],
 	},
 	{
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 350,
 					description: 'Assets Page 2 - Grid View',
 					response: {
 						body: MockAssets(12, 2),
@@ -927,14 +929,14 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=12&page=2`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=12&page=2`,
 		usecases: ['Use Case 1'],
 	},
 	{
 		scenarios: {
 			GET: [
 				{
-					delay: 250,
+					delay: 350,
 					description: 'Assets Page 3 - Grid View',
 					response: {
 						body: MockAssets(12, 3),
@@ -944,14 +946,14 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=12&page=3`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=12&page=3`,
 		usecases: ['Use Case 1'],
 	},
 	{
 		scenarios: {
 			GET: [
 				{
-					delay: 100,
+					delay: 350,
 					description: 'Assets Page 4 - Grid View',
 					response: {
 						body: MockAssets(12, 4),
@@ -961,7 +963,7 @@ export const AssetScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=12&page=4`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=12&page=4`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -974,11 +976,12 @@ export const AssetScenarios = [
 						body: MockAssets(10, 1, ['93856991']),
 						status: 200,
 					},
-					selected: false,
+					selected: true,
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=10&page=1&contractNumber=93856991`,
+		url: `${api}?customerId=${customerId}&sort=deviceName:ASC&rows=10` +
+			'&page=1&contractNumber=93856991',
 		usecases: ['Use Case 1'],
 	},
 	{

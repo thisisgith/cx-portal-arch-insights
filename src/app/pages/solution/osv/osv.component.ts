@@ -37,17 +37,18 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	};
 	public customerId: string;
 	public fullScreen = false;
-	public selectedProfileGroup: any;
+	public selectedSoftwareGroup: any;
 	public selectedAsset: OSVAsset;
 	public filtered = false;
 	public filters: Filter[];
 	private destroy$ = new Subject();
-	public view: 'swProfiles' | 'assets' | 'swVersions'
-		= 'assets';
+	public view: 'swGroups' | 'assets' | 'swVersions' | undefined
+		= 'swGroups';
 	public appliedFilters = {
 		assetType: '',
 		deploymentStatus: [],
 	};
+
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -67,13 +68,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * refresh the deploymentstatus pie chart
-	 */
-	public onAssetStatusUpdate () {
-		this.loadData();
-	}
-
-	/**
 	 * Initializes our visual filters
 	 * @param tab the tab we're building the filters for
 	 */
@@ -86,7 +80,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				seriesData: [],
 				template: this.totalAssetsFilterTemplate,
 				title: '',
-				view: ['swProfiles', 'assets', 'swVersions'],
+				view: ['swGroups', 'assets', 'swVersions'],
 			},
 			{
 				key: 'assetType',
@@ -95,15 +89,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				seriesData: [],
 				template: this.assetTypeFilterTemplate,
 				title: I18n.get('_OsvAssets_'),
-				view: ['assets'],
-			},
-			{
-				key: 'deploymentStatus',
-				loading: true,
-				selected: false,
-				seriesData: [],
-				template: this.deploymentStatusFilterTemplate,
-				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
 				view: ['assets'],
 			},
 		];
@@ -134,31 +119,21 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	private getSummary () {
 
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
-		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
 		const assetTypeFilter = _.find(this.filters, { key: 'assetType' });
 
 		return this.osvService.getSummary({ customerId: this.customerId })
 			.pipe(
 				map((response: SummaryResponse) => {
 					totalAssetsFilter.loading = false;
-					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
+					response.asset_profile.assets_profile = 0;
+					response.profiles = 0;
 					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
 						versions: response.versions,
 					}];
-					deploymentStatusFilter.seriesData = _.compact(
-						_.map(response.deployment, (value: number, key: string) => {
-							if (value !== 0) {
-								return {
-									value,
-									filter: key,
-									label: _.capitalize(key),
-									selected: false,
-								};
-							}
-						}));
+					this.decideView(response);
 
 					assetTypeFilter.seriesData = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
@@ -179,12 +154,28 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV Summary : getSummary() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					totalAssetsFilter.loading = false;
-					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
+					this.view = undefined;
 
 					return of({ });
 				}),
 			);
+	}
+
+	/**
+	 * will show the default view based on response count
+	 * @param response the counts summary of assets
+	 */
+	public decideView (response: SummaryResponse) {
+		if (response.profiles > 0) {
+			this.view = 'swGroups';
+		} else if (response.assets > 0) {
+			this.view = 'assets';
+		} else if (response.versions > 0) {
+			this.view = 'swVersions';
+		} else {
+			this.view = undefined;
+		}
 	}
 
 	/**
@@ -199,7 +190,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * Changes the view to either swProfiles or assets
 	 * @param view view to set
 	 */
-	public selectView (view: 'swProfiles' | 'assets' | 'swVersions') {
+	public selectView (view: 'swGroups' | 'assets' | 'swVersions') {
 		if (this.view !== view) {
 			this.view = view;
 		}

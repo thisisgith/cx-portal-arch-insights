@@ -1,3 +1,330 @@
-<p>
-	risk-mitigation works!
-</p>
+<div class="panel">
+	<div class="row">
+		<div class="col-3 margin-bottom">
+			<div class="row">
+				<div class="col-10 filter__selected">
+					<div
+						data-auto-id="highCrashCount"
+						class="base-margin-bottom qtr-margin-top cursor"
+						(click)="getHighCrashesDeviceData()"
+						[ngClass]="{ 'text-primary': onlyCrashes }"
+					>
+						<div
+							class="text-huge flex-center dbl-padding-left dbl-padding-right"
+							[innerText]="highCrashDeviceCount"
+							*ngIf="highCrashDeviceCount"
+						></div>
+						<div
+							class="text-large flex-center"
+							[innerText]="'_RMHighCrashRiskAssets_' | i18n"
+						></div>
+					</div>
+					<div
+						data-auto-id="lastDayData"
+						class="half-margin-bottom qtr-margin-top cursor"
+						(click)="getAllCrashesData()"
+						[ngClass]="{ 'text-primary': !onlyCrashes }"
+					>
+						<div
+							class="text-huge flex-center dbl-padding-left dbl-padding-right"
+							[innerHTML]="last24hrsData"
+						>
+						</div>
+						<div
+							class="text-large flex-center"
+							[innerText]="'_RMCrashedAssets_' | i18n"
+						></div>
+					</div>
+				</div>
+				<div
+					class="col-2 qtr-margin-right flex flex-center flex-fill flex-fluid"
+				>
+					<div class="icon-chevron-left mid-icon-place"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-2">
+			<div class="flex flex-fill flex-center flex-fluid">
+				<ng-container *ngFor="let filter of filters">
+					<div
+						attr.id="RiskMitigationSelectVisualFilter?-{{
+							filter.key
+						}}"
+						attr.data-auto-id="RiskMitigationSelectVisualFilter?-{{
+							filter.key
+						}}"
+					>
+						<div class="base-margin-bottom">
+							<div *ngIf="filter.template">
+								<ng-container
+									*ngTemplateOutlet="
+										filter.template;
+										context: { filter: filter }
+									"
+								>
+								</ng-container>
+							</div>
+						</div>
+						<div
+							class="hide filter__title text-muted text-large"
+							[innerText]="filter.title"
+						></div>
+					</div>
+				</ng-container>
+			</div>
+		</div>
+	</div>
+	<div class="divider qtr-margin-top"></div>
+
+	<!-- filter tab -->
+	<ng-container>
+		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+	</ng-container>
+	<div class="row space-between">
+		<div class="col-2">
+			<div
+				class="font15 qtr-margin-top"
+				[innerText]="'_RMAssets_' | i18n"
+			></div>
+		</div>
+		<div class="col-3" *ngIf="!onlyCrashes">
+			<cui-search
+				placeholder="Search"
+				[debounce]="searchOptions.debounce"
+				[compressed]="true"
+				(onUpdate)="onSearchQuery($event)"
+			>
+			</cui-search>
+		</div>
+	</div>
+	<div class="divider"></div>
+</div>
+
+<ng-template #advisoryFilter let-filter="filter">
+	<div *ngIf="!onlyCrashes">
+		<risk-mitigation-column-chart
+			[resetChart]="clearAllFilters"
+			[seriesData]="filter.seriesData"
+			(subfilter)="onSubfilterSelect($event, filter)"
+		>
+		</risk-mitigation-column-chart>
+	</div>
+</ng-template>
+
+<ng-template #filterBar>
+	<div class="row">
+		<div class="col-2 flex flex-center-vertical">
+			<span
+				class="text-bold text-uppercase half-padding-right"
+				[innerText]="'_RMFiltered_' | i18n"
+			></span>
+		</div>
+		<div class="col-8">
+			<ng-container *ngFor="let filter of selectedFilters">
+				<ng-container
+					*ngFor="let subfilter of getSelectedSubFilters(filter.key)"
+				>
+					<span
+						class="label label--dkgray text-large"
+						(click)="onSubfilterSelect(subfilter.filter, filter)"
+						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
+					>
+						<span [innerText]="'_RMTimeLast_' | i18n"></span>
+						<span [innerHTML]="subfilter.label"></span>
+						<span
+							class="icon-close"
+							(click)="clearFilters()" data-auto-id="FilterBarClearAllFiltersIcon"
+						></span>
+					</span>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div class="col-2 text-center text-right">
+			<a
+				(click)="clearFilters()"
+				class="text-lowercase"
+				[innerText]="'_RMClearAll_' | i18n"
+				data-auto-id="FilterBarClearAllFilters"
+			>
+			</a>
+		</div>
+	</div>
+	<div class="divider"></div>
+</ng-template>
+<div *ngIf="!onlyCrashes; else assetsWithCrashRisk">
+	<cui-table
+		(onTableRowClicked)="onRowClicked($event)"
+		[data]="crashedAssetsGridDetails.tableData"
+		[limit]="crashedAssetsGridDetails.tableLimit"
+		[offset]="crashedAssetsGridDetails.tableOffset"
+		[options]="crashesAssetsGridOptions"
+		class="table--wrap"
+	></cui-table>
+	<div class="section">
+		<cui-pager
+			*ngIf="crashedAssetsGridDetails.tableData.length"
+			[page]="crashedAssetsGridDetails.tableOffset"
+			[limit]="crashedAssetsGridDetails.tableLimit"
+			[totalItems]="crashedAssetsGridDetails.totalItems"
+			(onPageChanged)="onPagerUpdated($event)"
+		></cui-pager>
+	</div>
+</div>
+<ng-template #showSpinner>
+	<cui-spinner></cui-spinner>
+</ng-template>
+<ng-template #assetsWithCrashRisk>
+	<cui-table
+		[options]="highCrashRiskAssetsGridOptions"
+		[data]="highCrashRiskAssetsGridDetails.tableData"
+		(onTableRowClicked)="connectToFpDetails($event)"
+		class="table--wrap"
+	></cui-table>
+	<div class="section">
+		<cui-pager
+			*ngIf="highCrashRiskAssetsGridDetails.totalItems"
+			[page]="highCrashRiskAssetsGridDetails.tableOffset"
+			[limit]="highCrashRiskAssetsGridDetails.tableLimit"
+			[totalItems]="highCrashRiskAssetsGridDetails.totalItems"
+			(onPageChanged)="onHcrPagerUpdated($event)"
+		></cui-pager>
+	</div>
+</ng-template>
+
+<details-panel
+	*ngIf="showAsset360"
+	[hidden]="!showAsset360"
+	[fullscreen]="fullscreen"
+>
+	<details-panel-header
+		(close)="onPanelClose()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false"
+	>
+		<asset-details-header [asset]="selectedAsset"></asset-details-header>
+		<div detailsPanelTitle class="text-xlarge">
+			<span class="icon-wifi"></span>
+			<span
+				class="qtr-margin-left"
+				[innerText]="selectedAsset?.neName"
+			></span>
+		</div>
+	</details-panel-header>
+	<asset-details [asset]="selectedAsset"></asset-details>
+</details-panel>
+
+<details-panel
+	*ngIf="selectedAsset && !showAsset360"
+	[hidden]="!selectedAsset && showAsset360"
+	[fullscreen]="fullscreen"
+>
+	<details-panel-header
+		(close)="onPanelClose()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false"
+	>
+		<div class="half-margin-left">
+			<div class="text-xlarge">
+				<span
+					class="qtr-margin-left"
+					[innerText]="'_RMCrashHistoryFor_' | i18n"
+				></span>
+				<span class="qtr-margin-left">
+					<a
+						data-auto-id="selectedName"
+						(click)="redirectToAsset360()"
+						[innerHTML]="selectedAsset.neName"
+						></a
+					>
+				</span>
+			</div>
+			<div class="divider"></div>
+			<div class="row">
+				<div class="col-4">
+					<div class="row">
+						<div
+							class="col-12"
+							[innerText]="'_IPAddress_' | i18n | uppercase"
+						></div>
+						<div
+							class="col-md-12"
+							[innerText]="selectedAsset?.ipAddress"
+						></div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="row">
+						<div
+							class="col-md-12"
+							[innerText]="'_SerialNumber_' | i18n | uppercase"
+						></div>
+						<div
+							class="col-md-12"
+							[innerText]="selectedAsset?.serialNumber"
+						></div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div
+						class="col-md-12"
+						[innerText]="'_NumberOfCrashes_' | i18n | uppercase"
+					></div>
+					<div
+						class="col-md-12"
+						[innerText]="crashHistoryGridDetails?.tableData.length"
+					></div>
+				</div>
+			</div>
+		</div>
+	</details-panel-header>
+	<cui-table
+		[options]="crashHistoryGridOptions"
+		class="table--wrap"
+		[data]="crashHistoryGridDetails.tableData"
+	></cui-table>
+</details-panel>
+<details-panel
+	*ngIf="showFpDetails  && !showAsset360"
+	[hidden]="!showFpDetails  && showAsset360"
+	[fullscreen]="fullscreen"
+>
+	<details-panel-header
+		(close)="onFPDPanelClose()"
+		[(fullscreen)]="fullscreen"
+		[fullscreenToggle]="false"
+	>
+		<app-fingerprint-header
+			[asset]="selectedFingerPrintdata"
+		></app-fingerprint-header>
+		<div detailsPanelTitle class="text-xlarge">
+			<span
+				class="qtr-margin-left"
+				[innerText]="'_CP_FingerPrintDetailsFor_' | i18n"
+			></span>
+			<span class="qtr-margin-left">
+				<a
+					data-auto-id="selectedName"
+					[innerHTML]="selectedFingerPrintdata.deviceName"
+				></a>
+			</span>
+		</div>
+	</details-panel-header>
+	<app-fingerprint-body
+		[asset]="selectedFingerPrintdata"
+	></app-fingerprint-body>
+</details-panel>
+<ng-template #cardColors let-item="celldata">
+	<span
+	  [ngClass]="{
+		'text-success': item.globalRiskRank === 'LOW',
+		'text-warning': item.globalRiskRank === 'MED',
+		'text-danger': item.globalRiskRank === 'HIGH'
+	  }"
+	>
+	</span>
+	<span [innerText]="item.globalRiskRank"></span>
+</ng-template>
+<ng-template #riskScore let-item="celldata">
+	<span [innerHTML]="item.riskScore"></span>
+</ng-template>

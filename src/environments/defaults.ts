@@ -16,6 +16,7 @@ export const defaults = {
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
 	baseHref: '/pbc/',
+	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
 	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
 	controlPointsOrigin: 'https://cpp-api.sdp12-istg.csco.cloud/controlpoint',
 	csc: {
@@ -33,6 +34,8 @@ export const defaults = {
 		vibrantBlue: '#017cad',
 	},
 	ieSetup: {
+		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
+		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
@@ -77,4 +80,6 @@ export const defaults = {
 	},
 	supportEmailLink: 'mailto:help@cisco.com',
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',
+	webexUrl: 'https://cisco.webex.com/meet/',
+	webexTeamsUrl: 'webexteams://im?email=',
 };

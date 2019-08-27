@@ -1,8 +1,6 @@
 <div class="row dbl-margin-top">
 	<div class="col-md-8">
-		<div class="text-large text-bold" [innerText]="'_OsvBasicRecommendations_' | i18n | uppercase"></div>
-		<div class="text-medium qtr-margin-top" *ngIf="view =='timeline' && assetDetails && assetDetails?.length > 0"
-			[innerText]="'_OsvClickToSelectRecommendation_' | i18n"></div>
+		<div class="text-large text-bold" [innerText]="'_OsvSoftwareVersionSummary_' | i18n | uppercase"></div>		
 	</div>
 	<div class="col-md-4 pull-right">
 		<div class="btn-group btn-group--square half-margin-right pull-right">
@@ -19,16 +17,6 @@
 	</div>
 </div>
 
-
-<div class="dbl-margin-top"
-	*ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view == 'timeline'">
-	<span class="text-large" [innerText]="'_OsvSelectedRecommendation_' | i18n"></span>
-	<span class="qtr-margin-left text-large">{{selectedRecommendation?.name | titlecase}}</span>
-	<button *ngIf="selectedRecommendation?.name != 'None'" class="qtr-margin-left" cuiButton [color]="'primary'"
-		[small]="true" [wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n"
-		(click)="onActionClick(selectedRecommendation)"
-		attr.data-auto-id="AcceptVersion-{{selectedRecommendation}}"></button>
-</div>
 
 <!-- spinner -->
 <div class="dbl-margin-top" *ngIf="status.isLoading">
@@ -49,26 +37,53 @@
 
 <!-- asset-details table view -->
 <div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view =='list'">
-	<cui-table [data]="assetDetails" [options]="assetDetailsTable"></cui-table>
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
+				<thead>
+					<tr>
+						<th *ngFor="let column of assetDetailsTable.columns"
+							[ngClass]="{ 'sortable': column.sortable, 'sorted': column.sorting }"
+							(click)="sortTable(column)" attr.data-auto-id="AssetDetailsTable-{{column.key}}">
+							<span [innerText]="column.name"></span>
+							<span *ngIf="column.sortable && column.sorting" class="qtr-margin-left" [ngClass]="{
+											'icon-chevron-down': column.sortDirection === 'asc',
+											'icon-chevron-up': column.sortDirection === 'desc'
+										}">
+							</span>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of assetDetails" (click)="onRowSelect(item)" [ngClass]="{ 'active': item.rowSelected }"
+						attr.data-auto-id="AssetDetails-{{ item.swVersion }}">
+						<td *ngFor="let column of assetDetailsTable.columns" [ngStyle]="{ 'width': column.width }"
+							(click)="column.click ? $event.stopPropagation() : null"
+							attr.data-auto-id="AssetDetailItemClickHandler-{{ item.swVersion }}">
+							<ng-container *ngIf="column.template">
+								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item }">
+								</ng-container>
+							</ng-container>
+							<ng-container *ngIf="!column.template">
+								<span *ngIf="column.render" [innerHTML]="column.render(item)"></span>
+								<span *ngIf="!column.render" [innerText]="item[column.key]"></span>
+							</ng-container>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 </div>
 <!-- view all os version link -->
 <div class="markup pull-right dbl-margin-top" *ngIf="!status.isLoading && assetDetails?.length > 0">
-	<a class="markup-toggle link">
+	<a data-auto-id="ViewAllOsVersions" class="markup-toggle text-primary" (click)="viewAllVersions()">
 		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
 		<span class="icon-popout icon-small qtr-margin-left"></span>
 	</a>
 </div>
 
-
-<ng-template #actionsTemplate let-item="celldata">
-	<button *ngIf="selectedAsset.swVersion != item.swVersion && !item.accepted && !item.error" cuiButton [color]="'gray-ghost'"
-		[small]="true" [wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
-		attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
-	<div *ngIf="selectedAsset.swVersion != item.swVersion && item.accepted">
-		<span class="text-success">{{'_OsvAccepted_' | i18n}}</span>
-		<span *ngIf="selectedAsset?.recommAcceptedDate"
-			class="qtr-padding-left qtr-padding-right text-large text-muted">|</span>
-		<span class="text-small"
-			*ngIf="selectedAsset?.recommAcceptedDate">{{selectedAsset?.recommAcceptedDate | date}}</span>
+<ng-template #versionTemplate let-item="celldata">
+	<div>
+		<span class="text-capitalize" [ngClass]="{'text-bold':item.name == 'current'}">{{item.name}}</span>
+		<span  class="qtr-margin-left text-primary" [attr.data-balloon]="item.info" data-balloon-pos="down" data-balloon-length="xlarge">
+				<i class="icon-info-outline icon-xsmall"></i>
+		</span>
 	</div>
 </ng-template>

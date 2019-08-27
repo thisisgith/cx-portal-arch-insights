@@ -31,7 +31,6 @@ import {
 	RacetrackResponse,
 } from '@sdp-api';
 
-import { SolutionService } from '../solution.service';
 import * as racetrackComponent from '../../../components/racetrack/racetrack.component';
 import * as _ from 'lodash-es';
 import { Observable, of, forkJoin, ReplaySubject, Subject } from 'rxjs';
@@ -40,6 +39,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@interfaces';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { RacetrackInfoService } from '@services';
 
 /**
  * Interface representing our data object
@@ -127,6 +127,7 @@ export class LifecycleComponent implements OnDestroy {
 	};
 	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
+	public recommendedAtxScheduleCardOpened = false;
 	public sessionSelected: AtxSessionSchema;
 	public customerId: string;
 	private user: User;
@@ -137,9 +138,15 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForPG = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
-	public eventCoordinates = 0;
+	public eventXCoordinates = 0;
+	public eventYCoordinates = 0;
+	public eventClickedElement: HTMLElement;
+	public scrollY = 0;
 	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
+	public moreATXSelected: AtxSchema;
+	public moreXCoordinates = 0;
+	public moreYCoordinates = 0;
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
@@ -220,6 +227,10 @@ export class LifecycleComponent implements OnDestroy {
 		},
 	};
 
+	// Map of all scheduled ATX's
+	// key: atx id, value: scheduled atx session
+	public scheduledAtxMap = { };
+
 	public componentData: ComponentData = {
 		params: {
 			customerId: '',
@@ -246,8 +257,8 @@ export class LifecycleComponent implements OnDestroy {
 		private logger: LogService,
 		private contentService: RacetrackContentService,
 		private racetrackService: RacetrackService,
-		private solutionService: SolutionService,
 		private route: ActivatedRoute,
+		private racetrackInfoService: RacetrackInfoService,
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
@@ -283,7 +294,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.pgview = <'list' | 'grid'> currentPGView;
 		}
 
-		this.solutionService.getCurrentSolution()
+		this.racetrackInfoService.getCurrentSolution()
 		.pipe(
 			takeUntil(this.destroy$),
 		)
@@ -292,7 +303,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.componentData.params.solution = _.get(solution, 'name');
 		});
 
-		this.solutionService.getCurrentTechnology()
+		this.racetrackInfoService.getCurrentTechnology()
 		.pipe(
 			takeUntil(this.destroy$),
 		)
@@ -300,21 +311,21 @@ export class LifecycleComponent implements OnDestroy {
 			const currentSolution = this.componentData.params.solution;
 
 			const newTech = (currentSolution && technology !== this.selectedTechnology);
-			this.selectedTechnology = technology;
-
-			this.resetComponentData();
-
-			this.componentData.params.usecase = _.get(technology, 'name');
-			this.componentData.params.solution = currentSolution;
-
-			this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
-
-			let viewingIndex = racetrackComponent.stages
-				.indexOf(this.currentWorkingPitstop.toLowerCase()) + 1;
-			if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
-			this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
-
 			if (newTech) {
+				this.selectedTechnology = technology;
+
+				this.resetComponentData();
+
+				this.componentData.params.usecase = _.get(technology, 'name');
+				this.componentData.params.solution = currentSolution;
+
+				this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
+
+				let viewingIndex = racetrackComponent.stages
+					.indexOf(this.currentWorkingPitstop.toLowerCase()) + 1;
+				if (viewingIndex === racetrackComponent.stages.length) { viewingIndex = 0; }
+				this.currentViewingPitstop = racetrackComponent.stages[viewingIndex];
+
 				this.getRacetrackInfo(this.currentWorkingPitstop);
 			}
 		});
@@ -446,7 +457,6 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
 					width: '15%',
@@ -498,7 +508,6 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
 					width: '15%',
@@ -528,7 +537,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '40%',
+					width: '50%',
 				},
 				{
 					key: 'status',
@@ -540,10 +549,9 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
-					width: '30%',
+					width: '20%',
 				},
 			],
 		});
@@ -570,7 +578,7 @@ export class LifecycleComponent implements OnDestroy {
 					sortDirection: 'asc',
 					sortKey: 'title',
 					template: this.titleTemplate,
-					width: '40%',
+					width: '50%',
 				},
 				{
 					key: 'status',
@@ -582,10 +590,9 @@ export class LifecycleComponent implements OnDestroy {
 					width: '20%',
 				},
 				{
-					name: I18n.get('_Action_'),
 					sortable: false,
 					template: this.actionTemplate,
-					width: '30%',
+					width: '20%',
 				},
 			],
 		});
@@ -742,19 +749,22 @@ export class LifecycleComponent implements OnDestroy {
 			visible: false,
 		};
 		this.atxScheduleCardOpened = false;
-		this.eventCoordinates = 0;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.eventXCoordinates = 0;
+		this.eventYCoordinates = 0;
+		this.moreXCoordinates = 0;
+		this.moreYCoordinates = 0;
+		this.selectSession({ });
+		this.componentData.atx.interested = null;
+		this.moreATXSelected = null;
 	}
 
-	/**
-	 * Determines which modal to display
-	 * @param item ACC item
-	 * @returns ribbon
-	 */
-	 public setFavorite (item: ACC) {
-		if (item.status === 'completed') {
-			return;
-		}
-
+	 /**
+	  * Updates ACC bookmark
+	  * @param item ACC item
+	  * @returns ribbon
+	  */
+	 public setACCBookmark (item: ACC) {
 		this.status.loading.acc = true;
 		if (window.Cypress) {
 			window.accLoading = true;
@@ -783,7 +793,7 @@ export class LifecycleComponent implements OnDestroy {
 			if (window.Cypress) {
 				window.accLoading = false;
 			}
-			this.logger.error(`lifecycle.component : setFavorite() :: Error  : (${
+			this.logger.error(`lifecycle.component : setACCBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
 	 }
@@ -1019,7 +1029,7 @@ export class LifecycleComponent implements OnDestroy {
 				tech.name.toLowerCase() === this.selectedTechnology.name.toLowerCase());
 
 			if (responseTechnology) {
-				this.solutionService.sendCurrentTechnology(responseTechnology);
+				this.racetrackInfoService.sendCurrentTechnology(responseTechnology);
 			}
 		},
 		err => {
@@ -1043,42 +1053,50 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns pertage string
 	 */
 	private calculateActionPercentage (pitstop: RacetrackPitstop) {
+		const start = I18n.get('_Start_');
 		if (pitstop) {
 			const completedActions = _.filter(pitstop.pitstopActions, 'isComplete').length;
 			const pct = Math.floor(
 				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
 
 			if (!_.isNil(pct)) {
-				return (pct === 0) ? 'start' : `${pct.toString()}%`;
+				return (pct === 0) ? start : `${pct.toString()}%`;
 			}
 		}
 
-		 return 'start';
+		return start;
 	}
 
 	/**
 	 * Updates the bookmark of the item
-	 * @param type string
-	 * @param item SuccessPath | ATX
+	 * @param item bookmark item object
+	 * @param inputCategory string of the category type
 	 */
-	 public updateBookmark (type: string, item: SuccessPath | AtxSchema) {
+	 public updateBookmark (item: AtxSchema | SuccessPath, inputCategory: 'ATX' | 'SB' | 'PG') {
 		let bookmark;
 		let id;
-		let lifecycleCategory;
-		if (_.isEqual(type, 'ATX') && _.get(item, 'status') === 'completed') {
-			return;
-		}
-		if (_.isEqual(type, 'SB')) {
-			bookmark = !_.get(item, 'bookmark');
-			id = _.get(item, 'successByteId');
+		let lifecycleCategory: 'ATX' | 'SB';
+
+		// Product Guides has to be submitted as a Success Bytes bookmark.
+		if (inputCategory === 'PG') {
 			lifecycleCategory = 'SB';
-			this.status.loading.success = true;
-		} else if (_.isEqual(type, 'ATX')) {
-			bookmark = !_.get(item, 'bookmark');
-			id = _.get(item, 'atxId');
-			lifecycleCategory = 'ATX';
-			this.status.loading.atx = true;
+		} else {
+			lifecycleCategory = <'ATX' | 'SB'> inputCategory;
 		}
+
+		switch (lifecycleCategory) {
+			case 'ATX':
+				this.status.loading.atx = true;
+				bookmark = !_.get(item, 'bookmark');
+				id = _.get(item, 'atxId');
+				break;
+			case 'SB':
+				this.status.loading.success = true;
+				bookmark = !_.get(item, 'bookmark');
+				id = _.get(item, 'successByteId');
+				break;
+		}
+
 		const bookmarkParams: BookmarkRequestSchema = {
 			bookmark,
 			id,
@@ -1090,32 +1108,87 @@ export class LifecycleComponent implements OnDestroy {
 		const params: RacetrackContentService.UpdateBookmarkParams = {
 			bookmarkRequestSchema: bookmarkParams,
 		};
+
 		this.contentService.updateBookmark(params)
 		.subscribe(() => {
 			item.bookmark = !item.bookmark;
-			if (_.isEqual(type, 'SB')) {
-				this.status.loading.success = false;
-			} else if (_.isEqual(type, 'ATX')) {
-				this.status.loading.atx = false;
+			switch (lifecycleCategory) {
+				case 'SB':
+					this.status.loading.success = false;
+					break;
+				case 'ATX':
+					this.status.loading.atx = false;
+					break;
 			}
 		},
 		err => {
-			if (_.isEqual(type, 'SB')) {
-				this.status.loading.success = false;
-			} else if (_.isEqual(type, 'ATX')) {
-				this.status.loading.atx = false;
+			switch (lifecycleCategory) {
+				case 'SB':
+					this.status.loading.success = false;
+					break;
+				case 'ATX':
+					this.status.loading.atx = false;
+					break;
 			}
 			this.logger.error(`lifecycle.component : updateBookmark() :: Error  : (${
 				err.status}) ${err.message}`);
 		});
+
 	 }
+
+	/**
+	 * Gets the scroll coordinates for viewAll Modal
+	 * @param scrollModal HTMLElement
+	 */
+	public getScrollCoordinates (scrollModal: HTMLElement) {
+		this.scrollY = scrollModal.scrollTop;
+	}
 
 	/**
 	 * Get the mouse click coordinates
 	 * @param event event
 	 */
 	public getCoordinates (event: MouseEvent) {
-		this.eventCoordinates = event.clientX;
+		this.eventXCoordinates = event.clientX;
+		this.eventYCoordinates = event.clientY;
+		this.eventClickedElement = <HTMLElement> event.target;
+	}
+
+	/**
+	 * Gets the coordinates of the hovered ATX item
+	 * @param moreList HTMLElement
+	 * @param panel string
+	 */
+	 public getMoreCoordinates (moreList: HTMLElement, panel: string) {
+		if (_.isEqual(panel, 'moreATXList') && !this.atxScheduleCardOpened) {
+			this.moreXCoordinates = moreList.offsetWidth;
+			this.moreYCoordinates = moreList.offsetTop;
+		}
+	}
+
+	/**
+	 * Changes the atxScheduleCardOpened flag and adds value to moreATXSelected
+	 * @param item ATXSchema
+	 */
+	 public atxMoreViewSessions (item: AtxSchema) {
+		this.atxScheduleCardOpened = true;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.moreATXSelected = item;
+	}
+
+	/**
+	 * Changes the atxScheduleCardOpened flags to false to close the popupmodal
+	 */
+	 public closeViewSessions () {
+		this.atxScheduleCardOpened = false;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.selectSession({ });
+		this.eventXCoordinates = 0;
+		this.eventYCoordinates = 0;
+		this.moreXCoordinates = 0;
+		this.moreYCoordinates = 0;
+		this.componentData.atx.interested = null;
+		this.moreATXSelected = null;
 	}
 
 	/**
@@ -1127,15 +1200,37 @@ export class LifecycleComponent implements OnDestroy {
 		let panel;
 		const _div = viewAtxSessions;
 		this.innerWidth = window.innerWidth;
-		if ((this.eventCoordinates + 500) > this.innerWidth) {
-			_div.style.right = '330px';
-			_div.style.bottom = '-50px';
-			panel = 'panel cardpanel--openright';
+		if (this.componentData.atx.interested) {
+			switch (this.atxview) {
+				case 'grid': {
+					if ((this.eventXCoordinates + 500) > this.innerWidth) {
+						_div.style.right = '90%';
+						_div.style.bottom = '-50px';
+						panel = 'panel cardpanel--openright';
+					} else {
+						_div.style.left = '40%';
+						_div.style.bottom = '-50px';
+						panel = 'panel cardpanel--open';
+					}
+					break;
+				}
+				case 'list': {
+					const rect = this.eventClickedElement.getBoundingClientRect();
+					const ht = this.eventClickedElement.scrollHeight;
+
+					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
+					_div.style.top = `${(rect.top + (ht / 2)) + this.scrollY - 210}px`;
+					panel = 'panel listpanel--open';
+				}
+			}
+		} else if (this.atxScheduleCardOpened && this.moreATXSelected) {
+			_div.style.left = `${this.moreXCoordinates}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+			panel = 'panel panel--open';
 		} else {
-			_div.style.left = '175px';
-			_div.style.bottom = this.componentData.atx.interested ? '-50px' : '10px';
-			panel = this.componentData.atx.interested ?
-				'panel cardpanel--open' : 'panel panel--open';
+			_div.style.left = '40%';
+			_div.style.bottom = '10px';
+			panel = 'panel panel--open';
 		}
 
 		return panel;
@@ -1210,6 +1305,15 @@ export class LifecycleComponent implements OnDestroy {
 					sessions: result.items,
 				};
 				this.selectedATX = this.componentData.atx.sessions;
+
+				_.each(this.selectedATX, (atx: AtxSchema) => {
+					_.each(atx.sessions, (session: AtxSessionSchema) => {
+						if (session.scheduled) {
+							this.scheduledAtxMap[atx.atxId] = session;
+						}
+					});
+				});
+
 				this.buildAtxTable();
 
 				this.status.loading.atx = false;
@@ -1616,7 +1720,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * Returns the current pitStop
 	 * @returns the observable representing the pitstop
 	 */
-	 public getCurrentPitstop (): Observable<string>  {
+	public getCurrentPitstop (): Observable<string>  {
 		return this.stage.asObservable();
 	}
 

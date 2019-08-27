@@ -1,0 +1,130 @@
+<div class="panel">
+	<div class="col-12">
+		<div class="row">
+			<div
+				class="col-2 text-center  panel panel--bordered-right  syslog-tab"
+			>
+				<div
+					*ngFor="let label of visualLabels; let i = index" data-auto-id="visualLabel"
+					[ngClass]="{ visualSelected: label.active == true }"
+					(click)="selectVisualLabel(i)"
+				>
+					<h1>{{ label.count }}</h1>
+					<div>{{ label.label }}</div>
+				</div>
+			</div>
+			<div class="col-10">
+				<div class="flex flex-fill flex-fluid">
+					<ng-container *ngFor="let filter of filters; index as i">
+						<div
+							attr.id="SyslogsSelectVisualFilter-{{ filter.key }}"
+							attr.data-auto-id="SyslogsSelectVisualFilter-{{
+								filter.key
+							}}"
+							[ngClass]="{
+								filter__selected: filter.selected,
+								'filter__not-selected': !filter.selected
+							}"
+							class="panel flex-center flex-fill filter"
+						>
+							<div class="base-margin-bottom">
+								<div *ngIf="filter.template">
+									<ng-container
+										*ngTemplateOutlet="
+											filter.template;
+											context: { filter: filter }
+										"
+									></ng-container>
+								</div>
+							</div>
+							<div
+								class="filter__title text-muted text-large"
+								[innerText]="filter.title"
+							></div>
+						</div>
+						<div *ngIf="filter.loading" class="base-margin-bottom">
+							<!-- <cui-spinner></cui-spinner> -->
+						</div>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="divider qtr-margin-top visual-filter-divider"></div>
+	<ng-container>
+		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+		<div class="divider qtr-margin-top"></div>
+	</ng-container>
+	<!-- <div class="divider qtr-margin-top"></div> -->
+</div>
+<div *ngIf="visualLabels[0].active">
+	<syslogs-details [sysFilter]="appliedFilters"></syslogs-details>
+</div>
+<div *ngIf="visualLabels[1].active">
+	<syslogs-devices [assetFilter]="appliedFilters"></syslogs-devices>
+</div>
+
+<ng-template #timeRangeFilter let-filter="filter">
+	<column-chart
+		[seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
+	>
+	</column-chart>
+</ng-template>
+<ng-template #catalogFilter let-filter="filter">
+	<pie-chart
+		[seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
+	>
+	</pie-chart>
+</ng-template>
+<ng-template #severityFilter let-filter="filter">
+	<column-chart
+		[seriesData]="filter.seriesData"
+		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
+	>
+	</column-chart>
+</ng-template>
+<ng-template #assetFilter let-filter="filter">
+			<pie-chart
+				[seriesData]="filter.seriesData"
+				(subfilter)="onSubfilterSelect($event.filter, filter,true)"
+			>
+			</pie-chart>
+		</ng-template>
+<ng-template #filterBar>
+	<div class="row">
+		<div class="col-2 flex flex-center-vertical">
+			<span
+				class="text-bold text-uppercase half-padding-right"
+				[innerText]="'_Filtered_' | i18n"
+			></span>
+		</div>
+		<div class="col-8">
+			<ng-container *ngFor="let filter of selectedFilters">
+				<ng-container
+					*ngFor="let subfilter of getSelectedSubFilters(filter.key)"
+				>
+					<span
+						class="label label--dkgray text-large"
+						(click)="onSubfilterSelect(subfilter.filter, filter, false)"
+						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
+					>
+						<span [innerText]="subfilter.label"></span>
+						<span class="icon-close"></span>
+					</span>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div class="col-2 text-center text-right">
+			<a
+				(click)="clearFilters()"
+				class="text-lowercase"
+				[innerText]="'_ClearAll_' | i18n"
+				data-auto-id="FilterBarClearAllFilters"
+			>
+			</a>
+		</div>
+	</div>
+</ng-template>
+

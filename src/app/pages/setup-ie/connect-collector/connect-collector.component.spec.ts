@@ -91,8 +91,8 @@ describe('ConnectCollectorComponent', () => {
 			.setValue('127.0.0.1');
 		component.onSubmit();
 		fixture.detectChanges();
-		expect(pingSpy)
-			.toHaveBeenCalled();
+		expect(component.view)
+			.toBe('connecting');
 	});
 
 	it('should move to next step when connected', fakeAsync(() => {

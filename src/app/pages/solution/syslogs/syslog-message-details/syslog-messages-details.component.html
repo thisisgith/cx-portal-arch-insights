@@ -1,0 +1,105 @@
+<div class="text-uppercase text-bold half-margin-bottom">
+	<span
+		[innerText]="'_SyslogDetailedDescription_' | i18n"
+		class="text-large"
+	></span>
+</div>
+<div *ngIf="asset">
+	{{ asset.IcDesc }}
+</div>
+<div>
+	<div class="text-uppercase text-bold half-margin-top half-margin-bottom">
+		<span
+			[innerText]="'_SyslogRecommendations_' | i18n"
+			class="text-large"
+		></span>
+	</div>
+	<div *ngIf="asset">
+		{{ asset.Recommendation }}
+	</div>
+
+	<div *ngIf="asset" class="text-uppercase half-margin-top">
+		<span [innerText]="'__SyslogImpactedAssets__' | i18n" class="text-large"></span
+		>-{{ asset.deviceCount }}
+	</div>
+</div>
+<div class="container base-margin-top">
+	<div class="text-uppercase text-bold half-margin-top half-margin-bottom">
+		Filter
+	</div>
+	<div class="row half-margin-bottom ">
+		<div class="col-md-3">
+			<cui-select
+				data-auto-id="productID"
+				label="Product ID"
+				placeholder="select_product_id"
+				[(ngModel)]="selectdrowpdown.productID"
+				(ngModelChange)="onSelection()"
+				[items]="productIdItems"
+				optionsKey="value"
+				optionsValue="value"
+			>
+			</cui-select>
+		</div>
+		<div class="col-md-3">
+			<cui-select
+				data-auto-id="Software"
+				label="Software"
+				placeholder="select_software_type"
+				[(ngModel)]="selectdrowpdown.Software"
+				(ngModelChange)="onSelection()"
+				[items]="softwareItems"
+				optionsKey="value"
+				optionsValue="value"
+			>
+			</cui-select>
+		</div>
+		<div class="col-md-3">
+			<cui-select
+				data-auto-id="productFamily"
+				label="Product Family"
+				placeholder="select_product_family"
+				[(ngModel)]="selectdrowpdown.productFamily"
+				(ngModelChange)="onSelection()"
+				[items]="productFamily"
+				optionsKey="value"
+				optionsValue="value"
+			>
+			</cui-select>
+		</div>
+		<div class="col-md-3">
+			<cui-select
+				data-auto-id="timePeriod"
+				label="Time Period"
+				placeholder="select_time_period"
+				[(ngModel)]="selectdrowpdown.timePeriod"
+				(ngModelChange)="onSelection()"
+				[items]="timePeriod"
+				optionsKey="name"
+				optionsValue="name"
+			>
+			</cui-select>
+		</div>
+	</div>
+	<div class="container base-margin-top">
+		<cui-table
+			*ngIf="tableData"
+			data-auto-id="tableData"
+			(click)="clickfunction()"
+			[options]="tableOptions"
+			[data]="tableData"
+			[offset]="tableOffset"
+			[limit]="tableLimit"
+		>
+		</cui-table>
+		<div class="section">
+			<cui-pager
+				*ngIf="tableData.length"
+				[page]="tableOffset"
+				[limit]="tableLimit"
+				[totalItems]="totalItems"
+				(onPageChanged)="onPagerUpdated($event)"
+			></cui-pager>
+		</div>
+	</div>
+</div>

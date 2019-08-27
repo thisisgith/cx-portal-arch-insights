@@ -25,7 +25,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it.skip('General Search and close', () => { // PBC-167
@@ -94,7 +93,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Case Search', () => {
@@ -172,7 +170,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('RMA 800000000 one replacement parts', () => {
@@ -302,7 +299,7 @@ describe('General Spec', () => {
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('rma');
 			cy.getByAutoId('searchBarInput').should('exist').clear()
-				.type(rmaVal.concat('{ enter }'));
+				.type(rmaVal.concat('{enter}'));
 
 			cy.wait('@rma').then(() => {
 				cy.wait(3000);
@@ -322,7 +319,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 		it('Contract Search 93425688', () => {
 			// PBC-172
@@ -378,7 +374,6 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Serial Search FOX1333GGGG', () => {
@@ -477,6 +472,32 @@ describe('General Spec', () => {
 				cy.getByAutoId('CaseOpenCancel').should('exist').click(); // Cancel case open
 				cy.getByAutoId('searchClose').should('exist').click(); // Close the search results - X
 			});
+		});
+	});
+
+	context('Portal Support', () => {
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('PBC-369 Portal Support', () => {
+			const DescriptionText = 'Sample Description Text for Portal Support';
+			cy.getByAutoId('HeaderPortalHelpButton').click();
+			cy.getByAutoId('HeaderDropdownClose').click(); // close it
+			cy.getByAutoId('HeaderPortalHelpButton').click(); // open it again
+			cy.getByAutoId('portalHelp').click(); // open the Contact Support modal
+			cy.getByAutoId('supportTopic').should('exist');
+			cy.getByAutoId('cui-select').click();
+			cy.get('a[title="CX Collector Support"]').click(); // select any value
+			cy.getByAutoId('supportDescription').should('exist');
+			cy.get('textarea').click()
+				.type(DescriptionText);
+			cy.getByAutoId('submit').click();
+			// Info: localhost blocked by CORS policy
+			cy.getByAutoId('portalSupportHide').should('exist');
+			cy.getByAutoId('done').should('exist').click();
 		});
 	});
 });

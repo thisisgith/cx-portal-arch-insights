@@ -18,7 +18,7 @@
 				<div class="divider no-margin-top qtr-margin-bottom"></div>
 				<ng-container *ngTemplateOutlet="visualFilters; context: { tab: tab }"></ng-container>
 			</ng-container>
-			<ng-container *ngIf="!selectedTab.loading && selectedTab.pagination">
+			<ng-container *ngIf="!selectedTab.loading && selectedTab.pagination && selectedTab.pagination.total">
 				<ng-container *ngTemplateOutlet="titleBar; context: { tab: tab }"></ng-container>
 				<div class="divider qtr-margin-top no-margin-bottom"></div>
 			</ng-container>
@@ -175,14 +175,14 @@
 <ng-template #pieChartFilter let-filter="filter">
 	<pie-chart *ngIf="filter?.seriesData?.length"
 		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
+		(subfilter)="onSubfilterSelect($event.filter, filter)">
 	</pie-chart>
 </ng-template>
 
 <ng-template #columnChartFilter let-filter="filter">
 	<column-chart *ngIf="filter?.seriesData?.length"
 		[seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
+		(subfilter)="onSubfilterSelect($event.filter, filter)">
 	</column-chart>
 </ng-template>
 
@@ -218,13 +218,13 @@
 		<div class="form-group__text">
 			<input id="searchInput-Security"
 				attr.data-auto-id="SearchInput-Security"
-				type="search"
+				type="text"
 				#securitySearchInput
 				[minlength]="searchOptions.min"
 				[maxlength]="searchOptions.max"
 				[pattern]="searchOptions.pattern"
 				formControlName="search"
-				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}"
 				ngDefaultControl>
 			<button type="button" class="link">
 				<span class="icon-search"></span>
@@ -238,13 +238,13 @@
 		<div class="form-group__text">
 			<input id="searchInput-Field"
 				attr.data-auto-id="SearchInput-Field"
-				type="search"
+				type="text"
 				#fieldSearchInput
 				[minlength]="searchOptions.min"
 				[maxlength]="searchOptions.max"
 				[pattern]="searchOptions.pattern"
 				formControlName="search"
-				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}"
 				ngDefaultControl>
 			<button type="button" class="link">
 				<span class="icon-search"></span>
@@ -258,13 +258,13 @@
 		<div class="form-group__text">
 			<input id="searchInput-Bugs"
 				attr.data-auto-id="SearchInput-Bugs"
-				type="search"
+				type="text"
 				#bugsSearchInput
 				[minlength]="searchOptions.min"
 				[maxlength]="searchOptions.max"
 				[pattern]="searchOptions.pattern"
 				formControlName="search"
-				placeholder="{{ '_Search_' | i18n }} {{ tab.options?.title }}"
+				placeholder="{{ '_Search_' | i18n }} {{ tab?.label }}"
 				ngDefaultControl>
 			<button type="button" class="link">
 				<span class="icon-search"></span>

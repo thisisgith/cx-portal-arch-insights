@@ -62,58 +62,9 @@
 	</ng-container>
 	<div>
 		<div>
-			<div class="row" *ngIf="!status.isLoading && pagination">
-				<div class="col-md-9 flex flex-fill">
-					<div class="flex-center-vertical">
-						<span [innerText]="'_Assets_' | i18n" class="text-large" *ngIf="!status.isLoading"></span>
-						<span *ngIf="!status.isLoading && pagination && pagination.total" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
-							class="qtr-margin-left text-small text-muted"
-							data-auto-id="ShowingAssetsCount">
-						</span>
-						<span *ngIf="selected > 0">
-							<span class="text-small text-muted qtr-margin-left qtr-margin-right">|</span>
-							<span [innerText]="'_XSelected_' | i18n:selected"
-								class="text-bold text-small text-muted" data-auto-id="TotalSelectedCount">
-							</span>
-						</span>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="flex flex-fluid flex-right">
-						<div class="flex-fill form-group input--compressed input--icon half-margin-right">
-							<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
-								<div class="form-group__text">
-									<input id="searchInput"
-										attr.data-auto-id="SearchInput"
-										type="search"
-										#searchInput
-										[minlength]="searchOptions.min"
-										[maxlength]="searchOptions.max"
-										[pattern]="searchOptions.pattern"
-										formControlName="search"
-										placeholder="{{ '_Search_' | i18n }} {{ options?.title }}"
-										ngDefaultControl>
-									<button type="button" class="link">
-										<span class="icon-search"></span>
-									</button>
-								</div>
-							</form>
-						</div>
-						<div class="btn-group btn-group--square half-margin-right">
-							<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'list' }" (click)="selectView('list')">
-								<span class="icon-list-view"></span>
-							</button>
-							<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'grid' }" (click)="selectView('grid')">
-								<span class="icon-grid-view"></span>
-							</button>
-						</div>
-						<cui-dropdown [actions]="dropdownActions"
-							position="left"
-							icon="icon-more icon-medium text-muted rotate-90">
-						</cui-dropdown>
-					</div>
-				</div>
-			</div>
+			<ng-container *ngIf="!status.isLoading && pagination">
+				<ng-container *ngTemplateOutlet="titleBar"></ng-container>
+			</ng-container>
 			<div class="divider qtr-margin-top" *ngIf="!status.isLoading && pagination"></div>
 			<ng-container *ngTemplateOutlet="tableAssets"></ng-container>
 			<div *ngIf="pagination && pagination.total" class="base-margin-top">
@@ -147,6 +98,60 @@
 	</div>
 </ng-template>
 
+<ng-template #titleBar>
+	<div class="row">
+		<div class="col-md-9 flex flex-fill">
+			<div class="flex-center-vertical">
+				<span [innerText]="'_Assets_' | i18n" class="text-large" *ngIf="!status.isLoading"></span>
+				<span *ngIf="!status.isLoading && pagination && pagination.total" [innerText]="'_ShowingXofYAssets_' | i18n:paginationCount:pagination.total"
+					class="qtr-margin-left text-small text-muted"
+					data-auto-id="ShowingAssetsCount">
+				</span>
+				<span *ngIf="selected > 0">
+					<span class="text-small text-muted qtr-margin-left qtr-margin-right">|</span>
+					<span [innerText]="'_XSelected_' | i18n:selected"
+						class="text-bold text-small text-muted" data-auto-id="TotalSelectedCount">
+					</span>
+				</span>
+			</div>
+		</div>
+		<div class="col-md-3">
+			<div class="flex flex-fluid flex-right">
+				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
+					<form *ngIf="searchForm" [formGroup]="searchForm" novalidate>
+						<div class="form-group__text">
+							<input id="searchInput"
+								attr.data-auto-id="SearchInput"
+								type="text"
+								#searchInput
+								[maxlength]="searchOptions.max"
+								[pattern]="searchOptions.pattern"
+								formControlName="search"
+								placeholder="{{ '_Search_' | i18n }} {{ options?.title }}"
+								ngDefaultControl>
+							<button type="button" class="link">
+								<span class="icon-search"></span>
+							</button>
+						</div>
+					</form>
+				</div>
+				<div class="btn-group btn-group--square half-margin-right">
+					<button data-auto-id="list-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'list' }" (click)="selectView('list')">
+						<span class="icon-list-view"></span>
+					</button>
+					<button data-auto-id="grid-view-btn" class="btn btn--small btn--gray-ghost" [ngClass]="{ 'selected': view == 'grid' }" (click)="selectView('grid')">
+						<span class="icon-grid-view"></span>
+					</button>
+				</div>
+				<cui-dropdown [actions]="dropdownActions"
+					position="left"
+					icon="icon-more icon-medium text-muted rotate-90">
+				</cui-dropdown>
+			</div>
+		</div>
+	</div>
+</ng-template>
+
 <ng-template #tableAssets>
 	<div class="responsive-table" *ngIf="assetsTable && inventory.length && (!view || view == 'list')">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover" data-auto-id="AssetsTable">
@@ -170,8 +175,8 @@
 							<span *ngIf="column.sortable && column.sorting"
 								class="qtr-margin-left"
 								[ngClass]="{
-									'icon-chevron-down': column.sortDirection === 'asc',
-									'icon-chevron-up': column.sortDirection === 'desc'
+									'icon-chevron-up': column.sortDirection === 'asc',
+									'icon-chevron-down': column.sortDirection === 'desc'
 								}">
 							</span>
 						</th>
@@ -387,18 +392,6 @@
 	</div>
 </ng-template>
 
-<ng-template #assetsWithChange let-assets="assets" let-trend="trend" let-trendCount="trendCount">
-	<div class="half-margin-bottom flex-center">
-		<span class="text-huge" [innerText]="assets"></span>
-		<span class="text-medium" [innerText]="'_Assets_' | i18n"></span>
-	</div>
-	<div>
-		<span class="icon-arrow-{{ trend }}-tail"></span>
-		<span class="qtr-margin-left" [innerText]="trendCount"></span>
-		<span class="qtr-margin-left">(24h change)</span>
-	</div>
-</ng-template>
-
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalFilter let-filter="filter">
 	<div class="text-huge flex-center dbl-padding-left dbl-padding-right"
@@ -410,18 +403,18 @@
 
 <ng-template #bubbleChartFilter let-filter="filter">
 	<bubble-chart [seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
+		(subfilter)="onSubfilterSelect($event.filter, filter)">
 	</bubble-chart>
 </ng-template>
 
 <ng-template #pieChartFilter let-filter="filter">
 	<pie-chart [seriesData]="filter.seriesData"
-		(subfilter)="onSubfilterSelect($event, filter)">
+		(subfilter)="onSubfilterSelect($event.filter, filter)">
 	</pie-chart>
 </ng-template>
 
 <ng-template #barChartFilter let-filter="filter">
 	<bar-chart [seriesData]="filter.seriesData" [width]="350"
-		(subfilter)="onSubfilterSelect($event, filter)">
+		(subfilter)="onSubfilterSelect($event.filter, filter)">
 	</bar-chart>
 </ng-template>

@@ -4,45 +4,33 @@
 		<div class="modal__dialog">
 			<div id="policyRequestModal" class="modal__content no-padding" data-auto-id="policy-modal">
 				<div class="modal__header policy__header half-padding-left half-padding-bottom no-margin-bottom">
-					<div class="row half-padding-top dbl-padding-left">
-						<div class="col-md-11 half-margin-top text-left">
+					<div class="row heading-row half-padding-top dbl-padding-left">
+						<div class="col-10 half-margin-top text-left">
 							<span
 								class="text-xlarge"
 								[innerText]="this.title"
 								data-auto-id="policy-modal.title"
 							></span>
-							<span
-								*ngIf="type === 'editPolicy'"
-								class="icon-trash icon-small qtr-margin-bottom half-padding-left"
-								[ngClass]="'text-primary'"
-								(click)="deletePolicy()"
+							<a
+								class="qtr-margin-bottom half-padding-left"
 								data-auto-id="policy-modal.trash"
-							></span>
+								(click)="deletePolicy()"
+								>
+								<span class="icon-trash icon-small" [ngClass]="'text-primary'"></span>
+							</a>
 						</div>
-						<div class="col-md-1 half-margin-top">
+						<div class="col-2 half-margin-top text-right">
 							<span (click)="closeRequestForm()" data-auto-id="policy-modal.close"
 								class="icon-close icon-medium text-right toggle"></span>
 						</div>
 					</div>
-					<ng-container
-						*ngIf="loadingListLeft || loadingListRight || error">
-						<ng-container *ngIf="loadingListLeft || loadingListRight">
-							<div class="row dbl-padding-left dbl-padding-right base-padding-top">
-								<div class="alert dbl-padding-left">
-									<div class="alert__icon icon-info-outline"></div>
-									<div class="alert__message text-info"
-										[innerText]="'_LoadingCustomerInfo_' | i18n"></div>
-								</div>
+					<ng-container *ngIf="error">
+						<div class="row dbl-padding-left dbl-padding-right base-padding-top">
+							<div class="alert alert--danger" role="alert">
+								<div class="alert__icon icon-error-outline"></div>
+								<div class="alert__message" [innerText]="errorMessage"></div>
 							</div>
-						</ng-container>
-						<ng-container *ngIf="error">
-							<div class="row dbl-padding-left dbl-padding-right base-padding-top">
-								<div class="alert alert--danger" role="alert">
-									<div class="alert__icon icon-error-outline"></div>
-									<div class="alert__message" [innerText]="errorMessage"></div>
-								</div>
-							</div>
-						</ng-container>
+						</div>
 					</ng-container>
 				</div>
 				<div class="modal__body policy__header half-padding-left half-padding-bottom no-margin-bottom">
@@ -129,7 +117,7 @@
 								</div>
 							</div>
 							<div *ngIf="type === 'editCollection'" class="col-md-6">
-								<span [innerText]="'Created: ' + policy.createdDate"></span>
+								<span [innerText]="'Created: ' + (policy.createdDate | date:'MMM dd, yyyy')"></span>
 							</div>
 						</div>
 						<div class="row dbl-padding-left dbl-padding-right base-padding-top full-width">
@@ -141,7 +129,8 @@
 								</ng-container>
 							</div>
 							<div class="col-md-4 text-right">
-								<button type="submit" [disabled]="!requestForm.valid"
+								<button type="submit"
+									[disabled]="!requestForm.valid || (type !== 'editCollection' && deviceListRight.length === 0)"
 									class="btn btn--small btn--wide btn--secondary"
 									[innerText]="(type === 'editCollection' ? '_SaveScheduledCollection_' : '_SaveScheduledScan_') | i18n"
 									data-auto-id="policy-modal.submit"></button>
@@ -159,113 +148,110 @@
 
 <ng-template #modulesTables>
 	<div class="row half-padding-top dbl-padding-left dbl-padding-right">
-		<div class="col-md-5">
-			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListLeft, allDevicesSelected: allDevicesSelectedLeft, loadingList: loadingListLeft}"></ng-container>
+		<div class="col-lg-5">
+			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {
+				name: leftDevices,
+				devices: deviceListLeft,
+				allDevicesSelected: allDevicesSelectedLeft,
+				loadingList: loadingListLeft,
+				paginator: true
+			}"></ng-container>
 		</div>
-		<div class="col-md-2">
+		<div class="col-lg-2">
 			<button
-				class="btn btn--small btn--wide btn--secondary shift-button"
-				[innerText]="'_Add_' | i18n"
+				class="btn btn--small btn--secondary shift-button"
+				id="add"
 				data-auto-id="policy-modal.add"
 				(click)="add()"
-			><i class="icon-chevron-right"></i></button>
+				[disabled]="selectedRowsLeftCount === 0"
+				>
+				<div class="row button-row">
+					<div class="col-2">
+					</div>
+					<div class="col-8 button-txt" [innerText]="'_Add_' | i18n | uppercase">
+					</div>
+					<div class="col-2">
+						<i class="button-txt text-right icon-chevron-right"></i>
+					</div>
+				</div>
+			</button>
 			<button
-				class="btn btn--small btn--wide btn--secondary shift-button no-margin-left"
-				[innerText]="'_Remove_' | i18n"
+				class="btn btn--small btn--secondary shift-button"
+				id="remove"
 				data-auto-id="policy-modal.remove"
 				(click)="remove()"
-			><i class="icon-chevron-left"></i></button>
+				[disabled]="selectedRowsRightCount === 0"
+				>
+				<div class="row button-row">
+					<div class="col-2">
+						<i class="button-txt text-right icon-chevron-left"></i>
+					</div>
+					<div class="col-8">
+						<span class="button-txt" [innerText]="'_Remove_' | i18n | uppercase"></span>
+					</div>
+					<div class="col-2">
+					</div>
+				</div>
+			</button>
 		</div>
-		<div class="col-md-5">
-			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {devices: deviceListRight, allDevicesSelected: allDevicesSelectedRight, loadingList: loadingListRight}"></ng-container>
+		<div class="col-lg-5">
+			<ng-container *ngTemplateOutlet="deviceTableTemplate; context: {
+				name: rightDevices,
+				devices: deviceListRight,
+				allDevicesSelected: allDevicesSelectedRight,
+				loadingList: loadingListRight,
+				paginator: false
+			}"></ng-container>
 		</div>
 	</div>
 </ng-template>
 
 <ng-template #deviceTableTemplate
+	let-name="name"
 	let-devices="devices"
 	let-allDevicesSelected="allDevicesSelected"
-	let-loadingList="loadingList">
+	let-loadingList="loadingList"
+	let-paginator="paginator">
 	<div
-		class="row panel panel--bordered flex base-margin-right"
+		class="row panel panel--bordered flex"
 	>
-		<div class="col-md-1 device-table">
+		<div class="col-1 device-table">
 			<input class="text-xlarge"
 				type="checkbox"
-				(change)="allDevicesSelected = toggleAllDevicesSelected(allDevicesSelected, devices)"
+				(change)="allDevicesSelected = toggleAllDevicesSelected(allDevicesSelected, devices, name)"
 				[checked]="allDevicesSelected"
 			>
 			<span class="checkbox__input"></span>
 		</div>
-		<div class="col-md-3 device-table text-bold">
+		<div class="col-5 device-table text-bold">
 			<span [innerText]="'_Device_' | i18n"></span>
 		</div>
-		<div class="col-md-3 device-table text-bold">
+		<div class="col-3 device-table text-bold">
 			<span [innerText]="'_IPAddress_' | i18n"></span>
 		</div>
-		<div class="col-md-3 device-table text-bold">
+		<div class="col-3 device-table text-bold">
 			<span [innerText]="'_LastScan_' | i18n"></span>
 		</div>
 	</div>
-	<div class="
-			row
-			panel
-			panel--bordered-top
-			panel--bordered-left
-			panel--bordered-right
-			panel--bordered-bottom
-			flex
-			base-margin-right"
-		*ngIf="loadingList">
-		<div class="col-md-12">
-			<cui-loader class="absolute-center"></cui-loader>
-		</div>
-	</div>
-	<div class="
-			row
-			panel
-			panel--bordered-top
-			panel--bordered-left
-			panel--bordered-right
-			panel--bordered-bottom
-			flex
-			base-margin-right"
-		*ngIf="devices.length === 0 && !loadingList">
-		<div class="col-md-12" [innerText]="'_NoDevicesInList_' | i18n">
-		</div>
-	</div>
+	<device-list
+		[items]="devices"
+		[loading]="loadingList"
+		rowHeight="50"
+		(selectionEvent)="handleDeviceSelectionChanged(name)">
+	</device-list>
 	<div
-		*ngFor="let device of devices; index as i"
-		class="
-			row
-			panel
-			panel--bordered-top
-			panel--bordered-left
-			panel--bordered-right
-			flex
-			base-margin-right"
-		[ngClass]="{
-			'panel--bordered-bottom': i === (devices.length - 1),
-			'selected': device.selected
-		}"
-		data-auto-id="device-row"
-		(click)="toggleDeviceSelected(device)">
-		<div class="col-md-1 device-table">
-			<input
-				class="text-xlarge"
-				type="checkbox"
-				[checked]="device.selected"
-			>
-			<span class="checkbox__input"></span>
-		</div>
-		<div class="col-md-3 device-table">
-			<span [innerText]="device.productId"></span>
-		</div>
-		<div class="col-md-3 device-table">
-			<span [innerText]="device.ipAddress"></span>
-		</div>
-		<div class="col-md-3 device-table">
-			<span [innerText]="device.lastScan ? (device.lastScan | fromNow) : ''"></span>
-		</div>
+		*ngIf="paginator"
+		class="container base-margin-top">
+		<cui-pager
+			*ngIf="totalRows"
+			[page]="pageNumber - 1"
+			[limit]="rowsPerPage"
+			[totalItems]="totalRows"
+			[changeLimit]="false"
+			[showPageDetails]="false"
+			[bordered]="true"
+			[size]="default"
+			(onPageChanged)="onPageChanged($event)">
+		</cui-pager>
 	</div>
 </ng-template>

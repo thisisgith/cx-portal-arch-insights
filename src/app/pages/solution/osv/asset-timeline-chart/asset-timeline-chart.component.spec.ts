@@ -79,14 +79,6 @@ describe('AssetTimelineChartComponent', () => {
 			.toHaveBeenCalledTimes(2);
 	}));
 
-	it('should select emit a selectectPoint event on accept', () => {
-		spyOn(component.selectedPoint, 'emit');
-		component.selectSubfilter(new Event('MouseEvent'));
-		fixture.detectChanges();
-		expect(component.selectedPoint.emit)
-			.toHaveBeenCalled();
-	});
-
 	it('format graph data for timeline', () => {
 		component.data = _.cloneDeep(<any> OSVScenarios[3].scenarios.GET[0].response.body);
 		const formattedData = component.formatGraphData();

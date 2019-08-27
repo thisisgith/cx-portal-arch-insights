@@ -47,6 +47,13 @@ $vibblue: #017cad;
 	}
 }
 
+.panel-border-top {
+	border-top: 5px solid $cisco-blue !important;
+	border-left: 0 none !important;
+	border-right: 0 none !important;
+	border-bottom: 0 none !important;
+}
+
 #accModal,
 #successModal {
 	background-color: $light-gray-5;
@@ -62,6 +69,15 @@ $vibblue: #017cad;
 	.icon-clock {
 		padding-right: 4px;
 	}
+}
+
+
+.successbytes-type-link {
+	padding: 10px;
+	font-size: 12px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
 }
 
 .small-panel {
@@ -143,7 +159,8 @@ $vibblue: #017cad;
 
 .panel--open,
 .cardpanel--open,
-.cardpanel--openright {
+.cardpanel--openright,
+.listpanel--open {
 	box-shadow: $base-box-shadow;
 	height: 325px;
 	width: 500px;
@@ -217,10 +234,27 @@ $vibblue: #017cad;
 	border-bottom: 30px solid transparent;
 }
 
+.listpanel--open::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	right: -15px;
+	z-index: -1;
+	border-top: 30px solid transparent;
+	border-left: 50px solid white;
+	border-bottom: 30px solid transparent;
+}
+
 .session-table {
 	overflow-y: scroll;
 	height: 120px;
 	display: block;
+
+	tr td {
+		padding: 10px;
+		width: auto;
+		text-align: left;
+	}
 }
 
 
@@ -256,27 +290,8 @@ $vibblue: #017cad;
 }
 
 .finishline {
-	width: 10px;
+	width: 15px;
 	height: 30px;
-}
-
-#compActPct {
-	width: 70px;
-	height: 30px;
-	text-align: center;
-	font-style: italic;
-	font-size: 20px;
-	background-color: $primary;
-	-webkit-text-stroke-width: 1px;
-}
-
-#compActPct::before {
-	content: '';
-	position: absolute;
-	bottom: 12%;
-	left: 4.5%;
-	border-right: 15px solid $primary;
-	border-bottom: 30px solid transparent;
 }
 
 .card_footer_item {
@@ -291,16 +306,16 @@ $vibblue: #017cad;
 		position: absolute;
 		right: 7px;
 		top: 0;
-		z-index: 1;
 		color: $indigo;
 	}
 
-	&__green {
+	&__white {
 		position: absolute;
 		right: 7px;
 		top: 0;
-		z-index: 2;
-		color: $success;
+		color: $white;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: $info;
 	}
 
 	&__clear {
@@ -332,18 +347,25 @@ $vibblue: #017cad;
 	gap: 20px 20px;
 }
 
-#hover-panel {
+#sb-hover-panel,
+#atx-hover-panel,
+#acc-hover-panel,
+#learn-hover-panel {
 	&-recommendedACC,
 	&-recommendedATX,
+	&-moreATXList,
 	&-moreACCList,
-	&-recommendedElearning {
+	&-recommendedElearning,
+	&-successbytes {
 		display: none;
 	}
 
 	&-recommendedACC::after,
 	&-recommendedATX::after,
 	&-moreACCList::after,
-	&-recommendedElearning::after {
+	&-moreATXList::after,
+	&-recommendedElearning::after,
+	&-successbytes::after {
 		content: "";
 		position: absolute;
 		top: 45%;
@@ -353,11 +375,13 @@ $vibblue: #017cad;
 
 	&-recommendedACC::after,
 	&-moreACCList::after,
-	&-recommendedElearning::after {
+	&-recommendedElearning::after,
+	&-successbytes::after {
 		right: -15px;
 		border-left: 15px solid white;
 	}
 
+	&-moreATXList::after,
 	&-recommendedATX::after {
 		left: -15px;
 		border-right: 15px solid white;
@@ -366,11 +390,18 @@ $vibblue: #017cad;
 
 #recommended-item:hover,
 #moreAccList-item:hover,
+#moreATXList-item:hover,
+#successbytes-item:hover,
 #recommended-elearning-item:hover {
-	#hover-panel {
+	#sb-hover-panel,
+	#atx-hover-panel,
+	#acc-hover-panel,
+	#learn-hover-panel {
 		&-recommendedACC,
 		&-recommendedATX,
 		&-moreACCList,
+		&-moreATXList,
+		&-successbytes,
 		&-recommendedElearning {
 			display: block;
 			position: absolute;
@@ -385,11 +416,17 @@ $vibblue: #017cad;
 
 		&-recommendedACC,
 		&-moreACCList,
-		&-recommendedElearning {
+		&-recommendedElearning,
+		&-successbytes {
 			left: -480px;
 		}
 
+		&-moreATXList,
 		&-moreACCList {
+			top: -90px;
+		}
+
+		&-successbytes {
 			top: -90px;
 		}
 
@@ -406,8 +443,9 @@ $vibblue: #017cad;
 			}
 		}
 
+		&-moreATXList,
 		&-recommendedATX {
-			right: -480px;
+			right: -460px;
 		}
 	}
 }
@@ -471,6 +509,36 @@ tr.td-row td {
 
 .learning-progressfill-col {
 	margin-left: 0 !important;
+}
+
+.atx-scheduler-one-line {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+}
+
+.view-all {
+	display: inline-block;
+}
+
+polygon {
+	fill: $primary;
+}
+
+.comPertText {
+	text-align: center;
+	font-style: italic;
+	font-style: bold;
+	font-size: 20px;
+	fill: white;
+}
+
+.racetrack-header {
+	display: inline-block;
+}
+
+.finishline-banner {
+	align-items: flex-end;
 }
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {

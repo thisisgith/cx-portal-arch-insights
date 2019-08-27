@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { CuiModalService, CuiModalContent, CuiInputOptions } from '@cisco-ngx/cui-components';
+import { CuiModalService, CuiModalContent } from '@cisco-ngx/cui-components';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { I18n } from '@cisco-ngx/cui-utils';
 import * as _ from 'lodash-es';
@@ -25,12 +25,12 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	public supportForm: FormGroup;
 	public data: any;
 	public success = false;
+	public descriptionMaxLength;
 	public title: FormControl;
 	public description: FormControl;
 	public userMailId: string = this.profileService.getProfile().cpr.pf_auth_email;
 	public modalHeading;
 	private destroy$ = new Subject();
-	public textOptions: CuiInputOptions;
 	public items: any[] = [];
 	public contactExpert = false;
 
@@ -45,6 +45,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	 */
 	public ngOnInit () {
 		this.contactExpert = _.get(this.data, 'contactExpert');
+		this.descriptionMaxLength = this.contactExpert ? 5000 : 32000;
 		this.title = this.contactExpert ? new FormControl(
 			{
 				value: '',
@@ -52,20 +53,13 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			}, Validators.required) : new FormControl('', Validators.required);
 		this.description = this.contactExpert ? new FormControl('', [
 			Validators.required,
-			Validators.maxLength(5000),
+			Validators.maxLength(this.descriptionMaxLength),
 		]) : new FormControl('', [
 			Validators.required,
-			Validators.maxLength(32000),
+			Validators.maxLength(this.descriptionMaxLength),
 		]);
 		this.modalHeading = this.contactExpert ? I18n.get('_CSTitle_') :
-			I18n.get('_SupportContact_');
-		this.textOptions = new CuiInputOptions({
-			autofocus: false,
-			required: true,
-			minLength: 0,
-			maxLength: this.contactExpert ? 5000 : 32000,
-			rows: 10,
-		});
+			I18n.get('_SupportContact_');		
 		this.supportForm = new FormGroup({
 			description: this.description,
 			title: this.title,
@@ -175,7 +169,6 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			`${I18n.get('_SupportName_')}\n` +
 			`${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}\n\n` +
 			`${I18n.get('_SupportEmail_')}\n` + `${userDetails.pf_auth_email}\n\n` +
-			`${I18n.get('_SupportPhone_')}\n` + `${userDetails.pf_auth_email}\n\n` +
 			`${I18n.get('_SupportMessageSection_')}\n\n` +
 			`${I18n.get('_SupportEmailTopic_')}\n` +
 			`${this.supportForm.controls.title.value}\n\n` +

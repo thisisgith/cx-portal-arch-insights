@@ -22,6 +22,7 @@ import {
 	DevicePolicyUpdateRequestModel,
 	IgnorePolicyUpdateRequestModel,
 	IgnorePolicyRequestModel,
+	DeviceDetailsByPage,
 } from '@sdp-api';
 import { catchError, takeUntil, finalize } from 'rxjs/operators';
 import { empty, Subject } from 'rxjs';
@@ -42,7 +43,7 @@ interface SelectOptions {
 /**
  * interface that represents row in device list tables
  */
-interface DeviceListRow extends DeviceInfo {
+export interface DeviceListRow extends DeviceInfo {
 	selected: boolean;
 }
 
@@ -58,7 +59,7 @@ enum ModalTypes {
 }
 
 /**
- * Component for the ACC Request form
+ * Component for the Policy form
  */
 @Component({
 	selector: 'policy-form',
@@ -73,22 +74,32 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
+	public leftDevices = 'left';
+	public rightDevices = 'right';
+
 	private destroyed$: Subject<void> = new Subject<void>();
 	public timePeriod = '';
 	public title = '';
 	public deviceListRight: DeviceListRow[] = [];
 	public deviceListLeft: DeviceListRow[] = [];
+	public paginationData = { };
+	public pageNumber = 1;
+	public totalRows = undefined;
+	public rowsPerPage = 10;
 	public allDevicesSelectedRight = false;
 	public allDevicesSelectedLeft = false;
 	public selectedRowsRight = { };
 	public selectedRowsLeft = { };
+	public selectedRowsLeftCount = 0;
+	public selectedRowsRightCount = 0;
 	public loadingListLeft = false;
 	public loadingListRight = false;
 	public error = false;
 	public errorMessage: string;
 
-	public getParams: Function;
 	public submitCall: Function;
+	public leftListCall: Function;
+	public rightListCall: Function;
 
 	public loading = false;
 
@@ -99,32 +110,25 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		timePeriod: ['', Validators.required],
 	});
 
-	public monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-		'July', 'August', 'September', 'October', 'November', 'December',
-	];
-
-	public dayNames = ['Sunday', 'Monday', 'Tuesday',
-		'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
 	public timePeriods: SelectOptions = {
 		options: [
-			{ key: 'Monthly', value: 'monthly' },
-			{ key: 'Weekly', value: 'weekly' },
-			{ key: 'Daily', value: 'daily' },
-			{ key: 'Never', value: 'never' },
+			{ key: I18n.get('_Monthly_'), value: 'monthly' },
+			{ key: I18n.get('_Weekly_'), value: 'weekly' },
+			{ key: I18n.get('_Daily_'), value: 'daily' },
+			{ key: I18n.get('_Never_'), value: 'never' },
 		],
 		selected: '',
 	};
 
 	public days: SelectOptions = {
 		options: [
-			{ key: 'Sunday', value: '0' },
-			{ key: 'Monday', value: '1' },
-			{ key: 'Tuesday', value: '2' },
-			{ key: 'Wednesday', value: '3' },
-			{ key: 'Thursday', value: '4' },
-			{ key: 'Friday', value: '5' },
-			{ key: 'Saturday', value: '6'  },
+			{ key: I18n.get('_Sunday_'), value: '0' },
+			{ key: I18n.get('_Monday_'), value: '1' },
+			{ key: I18n.get('_Tuesday_'), value: '2' },
+			{ key: I18n.get('_Wednesday_'), value: '3' },
+			{ key: I18n.get('_Thursday_'), value: '4' },
+			{ key: I18n.get('_Friday_'), value: '5' },
+			{ key: I18n.get('_Saturday_'), value: '6'  },
 		],
 		selected: '',
 	};
@@ -183,8 +187,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	constructor (
 		private logger: LogService,
 		private fb: FormBuilder,
-		private collectionService: ControlPointModifyCollectionPolicyAPIService,
-		private devicePolicyService: ControlPointDevicePolicyAPIService,
+		public collectionService: ControlPointModifyCollectionPolicyAPIService,
+		public devicePolicyService: ControlPointDevicePolicyAPIService,
 	) { }
 
 	/**
@@ -229,6 +233,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				break;
 			}
 		}
+		this.runListCalls();
 	}
 
 	/**
@@ -237,11 +242,11 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	public editCollection () {
 		this.title = I18n.get('_ScheduledCollectionDetails_');
 
-		const dateTime = new Date(_.get(this.policy, 'createdDate'));
-		const formattedTime =
-`${this.monthNames[dateTime.getMonth()]} ${dateTime.getDate()}, ${dateTime.getFullYear()}`;
+		this.leftListCall = undefined;
+		this.rightListCall = undefined;
 
-		_.set(this.policy, 'createdDate', formattedTime);
+		this.leftListCall = undefined;
+		this.rightListCall = undefined;
 
 		this.submitCall = function () {
 			const hourmin = this.requestForm.get('hourmins').value;
@@ -270,35 +275,21 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		this.loadingListLeft = true;
 		this.loadingListRight = false;
 
-		const params: ControlPointDevicePolicyAPIService
-		.GetDevicesForPolicyCreationUsingGETParams = {
-			customerId: this.customerId,
-			pageNumber: '1',
-			rowsPerPage: '9999',
+		this.leftListCall = function () {
+			const params: ControlPointDevicePolicyAPIService
+			.GetDevicesForPolicyCreationUsingGETParams = {
+				customerId: this.customerId,
+				pageNumber: String(this.pageNumber),
+				rowsPerPage: String(this.rowsPerPage),
+			};
+
+			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
 		};
 
-		this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params)
-			.pipe(
-				catchError(err => {
-					this.error = true;
-					this.errorMessage = err.message;
-
-					return empty();
-				}),
-				finalize(() => this.loadingListLeft = false),
-				takeUntil(this.destroyed$),
-			)
-			.subscribe(response => {
-				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
-			});
+		this.rightListCall = undefined;
 
 		this.submitCall = function () {
-			const devices = _.map(this.deviceListRight, item => {
-				const copy = this.jsonCopy(item);
-				delete copy.selected;
-
-				return copy;
-			});
+			const devices = this.getDeviceListNoSelect();
 
 			const hourmin = this.requestForm.get('hourmins').value;
 			const timePeriod = this.requestForm.get('timePeriod').value;
@@ -325,35 +316,21 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		this.loadingListLeft = true;
 		this.loadingListRight = false;
 
-		const params: ControlPointDevicePolicyAPIService
-		.GetDevicesForPolicyCreationUsingGETParams = {
-			customerId: this.customerId,
-			pageNumber: '1',
-			rowsPerPage: '9999',
+		this.leftListCall = function () {
+			const params: ControlPointDevicePolicyAPIService
+			.GetDevicesForPolicyCreationUsingGETParams = {
+				customerId: this.customerId,
+				pageNumber: String(this.pageNumber),
+				rowsPerPage: String(this.rowsPerPage),
+			};
+
+			return this.devicePolicyService.getDevicesForIgnorePolicyCreationUsingGET(params);
 		};
 
-		this.devicePolicyService.getDevicesForIgnorePolicyCreationUsingGET(params)
-			.pipe(
-				catchError(err => {
-					this.error = true;
-					this.errorMessage = err.message;
-
-					return empty();
-				}),
-				finalize(() => this.loadingListLeft = false),
-				takeUntil(this.destroyed$),
-			)
-			.subscribe(response => {
-				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
-			});
+		this.rightListCall = undefined;
 
 		this.submitCall = function () {
-			const devices = _.map(this.deviceListRight, item => {
-				const copy = this.jsonCopy(item);
-				delete copy.selected;
-
-				return copy;
-			});
+			const devices = this.getDeviceListNoSelect();
 
 			const parameters: IgnorePolicyRequestModel = {
 				devices,
@@ -374,29 +351,19 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		this.loadingListLeft = true;
 		this.loadingListRight = true;
 
-		const params: ControlPointDevicePolicyAPIService
-		.GetDevicesForPolicyCreationUsingGETParams = {
-			customerId: this.customerId,
-			pageNumber: '1',
-			rowsPerPage: '9999',
+		this.leftListCall = function () {
+			const params: ControlPointDevicePolicyAPIService
+			.GetDevicesForPolicyCreationUsingGETParams = {
+				customerId: this.customerId,
+				pageNumber: String(this.pageNumber),
+				rowsPerPage: String(this.rowsPerPage),
+			};
+
+			return this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params);
 		};
 
-		this.devicePolicyService.getDevicesForPolicyCreationUsingGET1(params)
-			.pipe(
-				catchError(err => {
-					this.error = true;
-					this.errorMessage = err.message;
-
-					return empty();
-				}),
-				finalize(() => this.loadingListLeft = false),
-				takeUntil(this.destroyed$),
-			)
-			.subscribe(response => {
-				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
-			});
-
-		const currentPolicyParams: ControlPointDevicePolicyAPIService
+		this.rightListCall = function () {
+			const params: ControlPointDevicePolicyAPIService
 			.GetDevicesForGivenPolicyUsingGETParams = {
 				customerId: this.customerId,
 				pageNumber: '1',
@@ -404,28 +371,11 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				rowsPerPage: '9999',
 			};
 
-		this.devicePolicyService.getDevicesForGivenPolicyUsingGET1(currentPolicyParams)
-			.pipe(
-				catchError(err => {
-					this.error = true;
-					this.errorMessage = err.message;
-
-					return empty();
-				}),
-				finalize(() => this.loadingListRight = false),
-				takeUntil(this.destroyed$),
-			)
-			.subscribe(response => {
-				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
-			});
+			return this.devicePolicyService.getDevicesForGivenPolicyUsingGET1(params);
+		};
 
 		this.submitCall = function () {
-			const devices = _.map(this.deviceListRight, item => {
-				const copy = this.jsonCopy(item);
-				delete copy.selected;
-
-				return copy;
-			});
+			const devices = this.getDeviceListNoSelect();
 
 			const hourmin = this.requestForm.get('hourmins').value;
 			const timePeriod = this.requestForm.get('timePeriod').value;
@@ -456,37 +406,23 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		this.timePeriods.selected = 'never';
 		this.timePeriod = this.timePeriods.selected;
 
-		this.requestForm.setValue({
-			dates: this.dates.selected,
-			days: this.days.selected,
-			hourmins: this.hourmins.selected,
-			timePeriod: 'never',
-		});
+		this.requestForm.get('timePeriod')
+			.setValue('never');
 
-		const params: ControlPointDevicePolicyAPIService
-		.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams = {
-			customerId: this.customerId,
-			pageNumber: '1',
-			policyId: _.get(this.policy, 'policyId'),
-			rowsPerPage: '9999',
+		this.leftListCall = function () {
+			const params: ControlPointDevicePolicyAPIService
+			.GetEligibleDevicesForGivenIgnorePolicyUsingGETParams = {
+				customerId: this.customerId,
+				pageNumber: String(this.pageNumber),
+				policyId: _.get(this.policy, 'policyId'),
+				rowsPerPage: String(this.rowsPerPage),
+			};
+
+			return this.devicePolicyService.getEligibleDevicesForGivenIgnorePolicyUsingGET(params);
 		};
 
-		this.devicePolicyService.getEligibleDevicesForGivenIgnorePolicyUsingGET(params)
-			.pipe(
-				catchError(err => {
-					this.error = true;
-					this.errorMessage = err.message;
-
-					return empty();
-				}),
-				finalize(() => this.loadingListLeft = false),
-				takeUntil(this.destroyed$),
-			)
-			.subscribe(response => {
-				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
-			});
-
-		const currentPolicyParams: ControlPointDevicePolicyAPIService
+		this.rightListCall = function () {
+			const params: ControlPointDevicePolicyAPIService
 			.GetDevicesForGivenIgnorePolicyUsingGETParams = {
 				customerId: this.customerId,
 				pageNumber: '1',
@@ -494,28 +430,11 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				rowsPerPage: '9999',
 			};
 
-		this.devicePolicyService.getDevicesForGivenIgnorePolicyUsingGET(currentPolicyParams)
-			.pipe(
-				catchError(err => {
-					this.error = true;
-					this.errorMessage = err.message;
-
-					return empty();
-				}),
-				finalize(() => this.loadingListRight = false),
-				takeUntil(this.destroyed$),
-			)
-			.subscribe(response => {
-				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
-			});
+			return this.devicePolicyService.getDevicesForGivenIgnorePolicyUsingGET(params);
+		};
 
 		this.submitCall = function () {
-			const devices = _.map(this.deviceListRight, item => {
-				const copy = this.jsonCopy(item);
-				delete copy.selected;
-
-				return copy;
-			});
+			const devices = this.getDeviceListNoSelect();
 
 			const parameters: IgnorePolicyUpdateRequestModel = {
 				devices,
@@ -561,46 +480,41 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		// toggle between newIgnorePolicy and newPolicy when never is changed
 		if (this.timePeriod === 'never' && this.type === ModalTypes.newPolicy) {
 			this.newIgnorePolicy();
+			this.runListCalls();
 		} else if (this.timePeriod !== 'never' && this.type === ModalTypes.newIgnorePolicy) {
 			this.newPolicy();
+			this.runListCalls();
 		}
 
 		// toggle between editIgnorePolicy and editPolicy when never is changed
 		if (this.timePeriod === 'never' && this.type === ModalTypes.editPolicy) {
 			this.editIgnorePolicy();
+			this.runListCalls();
 		} else if (this.timePeriod !== 'never' && this.type === ModalTypes.editIgnorePolicy) {
 			this.editPolicy();
+			this.runListCalls();
 		}
 
-		if (this.timePeriod === 'never') {
-			this.requestForm.get('dates')
-				.clearValidators();
-			this.requestForm.get('days')
-				.clearValidators();
-			this.requestForm.get('hourmins')
-				.clearValidators();
+		this.requestForm.get('dates')
+			.clearValidators();
+		this.requestForm.get('days')
+			.clearValidators();
+		this.requestForm.get('hourmins')
+			.clearValidators();
 
-		} else if (this.timePeriod === 'monthly') {
+		if (this.timePeriod === 'monthly') {
 			this.requestForm.get('dates')
 				.setValidators(Validators.required);
-			this.requestForm.get('days')
-				.clearValidators();
 			this.requestForm.get('hourmins')
 				.setValidators(Validators.required);
 
 		} else if (this.timePeriod === 'weekly') {
-			this.requestForm.get('dates')
-				.clearValidators();
 			this.requestForm.get('days')
 				.setValidators(Validators.required);
 			this.requestForm.get('hourmins')
 				.setValidators(Validators.required);
 
 		} else if (this.timePeriod === 'daily') {
-			this.requestForm.get('dates')
-				.clearValidators();
-			this.requestForm.get('days')
-				.clearValidators();
 			this.requestForm.get('hourmins')
 				.setValidators(Validators.required);
 
@@ -616,25 +530,23 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 	/**
 	 * Toggles is device row is selected
-	 * @param device device row
-	 */
-	public toggleDeviceSelected (device: DeviceListRow) {
-		device.selected = !device.selected;
-	}
-
-	/**
-	 * Toggles is device row is selected
 	 * @param allDevicesSelected checkbox event
 	 * @param devices device row
+	 * @param selectorName The designated name of the device selector
+	 * firing this function off
 	 *
 	 * @returns if device header is selected or not
 	 */
-	public toggleAllDevicesSelected (allDevicesSelected: boolean, devices: DeviceListRow[]) {
+	public toggleAllDevicesSelected (allDevicesSelected: boolean,
+		devices: DeviceListRow[],
+		selectorName: string) {
 		const checked = !allDevicesSelected;
 
 		for (let devNum = 0; devNum < devices.length; devNum += 1) {
 			devices[devNum].selected = checked;
 		}
+
+		this.handleDeviceSelectionChanged(selectorName);
 
 		return checked;
 	}
@@ -662,6 +574,12 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				this.deviceListLeft.splice(devNum, 1);
 			}
 		}
+
+		if (this.deviceListLeft.length === 0) {
+			this.allDevicesSelectedLeft = false;
+		}
+
+		this.handleLeftDeviceSelectionChanged();
 	}
 
 	/**
@@ -678,6 +596,25 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				this.deviceListRight.splice(devNum, 1);
 			}
 		}
+
+		if (this.deviceListRight.length === 0) {
+			this.allDevicesSelectedRight = false;
+		}
+
+		this.handleRightDeviceSelectionChanged();
+	}
+
+	/**
+	 * returns device list w/o the select attribute
+	 * @returns DeviceInfo[]
+	 */
+	public getDeviceListNoSelect () {
+		return  _.map(this.deviceListRight, item => {
+			const copy = this.jsonCopy(item);
+			delete copy.selected;
+
+			return copy;
+		});
 	}
 
 	/**
@@ -724,7 +661,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
-	 * Creates 6 field cron expression
+	 * Creates 6 field quartz cron expression
 	 * @param timePeriod "monthly", "weekly" or "daily"
 	 * @param day numbered day of the week "0-6"
 	 * @param date date in a month "1-31"
@@ -736,15 +673,15 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		let schedule: String = '';
 		switch (timePeriod) {
 			case 'monthly' : {
-				schedule = `0 ${hourmin} ${date} * *`;
+				schedule = `0 ${hourmin} ${date} * ?`;
 				break;
 			}
 			case 'weekly' : {
-				schedule = `0 ${hourmin} * * ${day}`;
+				schedule = `0 ${hourmin} ? * ${day}`;
 				break;
 			}
 			case 'daily' : {
-				schedule = `0 ${hourmin} * * *`;
+				schedule = `0 ${hourmin} ? * *`;
 				break;
 			}
 		}
@@ -770,5 +707,119 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				this.logger.debug('Submitted Policy Form');
 				this.submitted.emit(true);
 			});
+	}
+
+	/**
+	 * Calls for both lists
+	 */
+	public runListCalls () {
+		this.onLeftListCall();
+		this.onRightListCall();
+	}
+
+	/**
+	 * Calls api for getting left list data
+	 */
+	public onLeftListCall () {
+		if (!this.leftListCall) { return; }
+		this.loadingListLeft = true;
+
+		this.leftListCall()
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loadingListLeft = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe((response: DeviceDetailsByPage) => {
+				this.totalRows = _.get(response, ['pagination', 'totalRows']);
+
+				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
+
+				const rightSerialNums = _.map(this.deviceListRight, item =>
+					_.get(item, 'serialNumber'));
+
+				for (let index = this.deviceListLeft.length - 1; index >= 0; index -= 1) {
+					const leftSerialNum = _.get(this.deviceListLeft[index], 'serialNumber');
+
+					if (rightSerialNums.includes(leftSerialNum)) {
+						this.logger.debug(`already have sn ${leftSerialNum}`);
+						this.deviceListLeft.splice(index, 1);
+					}
+
+				}
+
+				this.handleLeftDeviceSelectionChanged();
+			});
+	}
+
+	/**
+	 * Calls api for getting right list data
+	 */
+	public onRightListCall () {
+		if (!this.rightListCall) { return; }
+		this.loadingListRight = true;
+
+		this.rightListCall()
+			.pipe(
+				catchError(err => {
+					this.error = true;
+					this.errorMessage = err.message;
+
+					return empty();
+				}),
+				finalize(() => this.loadingListRight = false),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(response => {
+				this.deviceListRight = this.jsonCopy(_.get(response, 'data'));
+				this.handleRightDeviceSelectionChanged();
+			});
+	}
+
+	/**
+	 * Called when page is changed in paginator
+	 * @param pageInfo: used to get info from paginator
+	 */
+	public onPageChanged (pageInfo: any) {
+		this.pageNumber = (pageInfo.page + 1);
+
+		this.onLeftListCall();
+	}
+
+	/**
+	 * Handles when a device list selection change has been detected.
+	 * Delegates to the correct function based on a selection made on the
+	 * left or the right.
+	 * @param selectorName The designated name of the device selector firing
+	 * the event
+	 */
+	public handleDeviceSelectionChanged (selectorName: string) {
+		switch (selectorName) {
+			case this.leftDevices:
+				this.handleLeftDeviceSelectionChanged();
+				break;
+			case this.rightDevices:
+				this.handleRightDeviceSelectionChanged();
+				break;
+		}
+	}
+
+	/**
+	 * Handles all left device selection changes
+	 */
+	public handleLeftDeviceSelectionChanged () {
+		this.selectedRowsLeftCount = _.filter(this.deviceListLeft, ['selected', true]).length;
+	}
+
+	/**
+	 * Handles all right device selection changes
+	 */
+	public handleRightDeviceSelectionChanged () {
+		this.selectedRowsRightCount = _.filter(this.deviceListRight, ['selected', true]).length;
 	}
 }

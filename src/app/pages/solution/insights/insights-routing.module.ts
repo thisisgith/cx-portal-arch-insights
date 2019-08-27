@@ -10,8 +10,8 @@ const routes: Routes = [
 	{
 		children: [
 			{
-				loadChildren: () => import('../osv/osv.module')
-				.then(m => m.OptimalSoftwareVersionModule),
+				loadChildren: () => import('../rcc/rcc.module')
+				.then(m => m.RccModule),
 				path: 'compliance',
 				resolve: {
 					user: UserResolve,
@@ -24,16 +24,9 @@ const routes: Routes = [
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
+				loadChildren: () => import('../afm/afm.module')
+					.then(m => m.FaultManagementModule),
 				path: 'fault-management',
-				resolve: {
-					user: UserResolve,
-				},
-			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
-				path: 'configuration',
 				resolve: {
 					user: UserResolve,
 				},
@@ -45,15 +38,15 @@ const routes: Routes = [
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
+				loadChildren: () => import('../architecture/architecture.module')
+					.then(m => m.ArchitectureModule),
 				path: 'architecture',
 				resolve: {
 					user: UserResolve,
 				},
 			}, {
-				loadChildren: () => import('../risk-mitigation/risk-mitigation.module')
-					.then(m => m.RiskMitigationModule),
+				loadChildren: () => import('../syslogs/syslogs.module')
+					.then(m => m.SyslogsModule),
 				path: 'syslogs',
 				resolve: {
 					user: UserResolve,

@@ -1,3 +1,3 @@
 module.exports = {
-	extends: '@apollo/javascript',
+	extends: './utils/lint/.eslintrc.js',
 };

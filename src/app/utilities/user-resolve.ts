@@ -7,6 +7,10 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { LogService } from '@cisco-ngx/cui-services';
 import { User } from '@interfaces';
 import * as _ from 'lodash-es';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import {
+	UnauthorizedUserComponent,
+} from '../components/unauthorized-user/unauthorized-user.component';
 
 /**
  * Resolver to fetch our user
@@ -24,6 +28,7 @@ export class UserResolve implements Resolve<any> {
 	private useCase = new ReplaySubject<string>(1);
 
 	constructor (
+		private cuiModalService: CuiModalService,
 		private entitlementService: EntitlementService,
 		private logger: LogService,
 	) { }
@@ -72,7 +77,7 @@ export class UserResolve implements Resolve<any> {
 	 * Function used to resolve a user
 	 * @returns the user
 	 */
-	public resolve (): Observable<User | { }> {
+	public resolve (): Observable<User> {
 		if (this.cachedUser) {
 			return of(this.cachedUser);
 		}
@@ -87,8 +92,9 @@ export class UserResolve implements Resolve<any> {
 			catchError(err => {
 				this.logger.error('user-resolve : loadUser() ' +
 					`:: Error : (${err.status}) ${err.message}`);
+				this.cuiModalService.showComponent(UnauthorizedUserComponent, { });
 
-				return of({ });
+				return of(null);
 			}),
 		);
 	}
@@ -99,7 +105,7 @@ export class UserResolve implements Resolve<any> {
 	 * @returns the user
 	 */
 	private getServiceInfo (user: EntitledUser):
-		Observable<User | { }> {
+		Observable<User> {
 		return this.entitlementService.getServiceInfo(_.get(user, 'customerId'))
 		.pipe(
 			map((response: ServiceInfoResponse) => {
@@ -121,7 +127,7 @@ export class UserResolve implements Resolve<any> {
 				this.logger.error('user-resolve : getServiceInfo() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
-				return of({ });
+				return of(null);
 			}),
 		);
 	}

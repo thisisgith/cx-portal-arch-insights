@@ -1,5 +1,5 @@
 import {
-	SoftwareProfilesResponse,
+	SoftwareGroupsResponse,
 	SoftwareVersionsResponse,
 	AssetRecommendationsResponse,
 	AssetsResponse,
@@ -16,9 +16,9 @@ const customerId = '2431199';
 const assetId = '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R';
 
 /** softwareVersion Params */
-const svParams = '&pageIndex=1&pageSize=10&sort=swVersion&sortOrder=desc';
+const svParams = '&pageIndex=1&pageSize=10&sort=swVersion&sortOrder=asc';
 /** AssetList params */
-const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=desc&filter=';
+const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc&filter=';
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
 	{
@@ -174,60 +174,155 @@ const mockSoftwareVersions1: SoftwareVersionsResponse = {
 	],
 };
 
-/** The mock response for software profiles */
-const mockSoftwareProfile: SoftwareProfilesResponse = {
-	data: [
-
-		{
-			assetCount: 2,
-			currentOSVersion: '3',
-			optimalVersion: '8.6.100.2',
-			osType: 'IOS-XE',
-			productFamily: 'XYZ',
-			recommendations: '',
-			softwareProfile: 'Profile 1',
-		},
-		{
-			assetCount: 2,
-			currentOSVersion: '3',
-			optimalVersion: '8.6.100.2',
-			osType: 'IOS-XE',
-			productFamily: 'XYZ',
-			recommendations: '',
-			softwareProfile: 'Profile 2',
-
-		}, {
-			assetCount: 2,
-			currentOSVersion: '3',
-			optimalVersion: '8.6.100.2',
-			osType: 'IOS-XE',
-			productFamily: 'XYZ',
-			recommendations: '',
-			softwareProfile: 'Profile 3',
-		}, {
-			assetCount: 2,
-			currentOSVersion: '3',
-			optimalVersion: '8.6.100.2',
-			osType: 'IOS-XE',
-			productFamily: 'XYZ',
-			recommendations: '',
-			softwareProfile: 'Profile 4',
-		}, {
-			assetCount: 2,
-			currentOSVersion: '3',
-			optimalVersion: '8.6.100.2',
-			osType: 'IOS-XE',
-			productFamily: 'XYZ',
-			recommendations: '',
-			softwareProfile: 'Profile 5',
-		},
-
-	],
+/** The mock response for software groups */
+const mockSoftwareGroups: SoftwareGroupsResponse = {
 	pagination: {
 		page: 1,
-		rows: 3,
-		total: 5,
+		rows: 10,
+		total: 10,
 	},
+	uiProfileList: [
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_73-14312-05, 73-14312-05, 73-14312-05',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: '73-14312-05, 73-14312-05, 73-14312-05',
+			profileName: '73-14312-05, 73-14312-05, 73-14312-05',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_73-15664-05, 73-15664-05, 73-15664-05',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: '73-15664-05, 73-15664-05, 73-15664-05',
+			profileName: '73-15664-05, 73-15664-05, 73-15664-05',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_73-14311-06, 73-14311-06, 73-14311-06',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: '73-14311-06, 73-14311-06, 73-14311-06',
+			profileName: '73-14311-06, 73-14311-06, 73-14311-06',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_QSFP-100G-SM-SR=, QSFP-100G-SM-SR=, QSFP-100G-SM-SR=',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: 'QSFP-100G-SM-SR=, QSFP-100G-SM-SR=, QSFP-100G-SM-SR=',
+			profileName: 'QSFP-100G-SM-SR=, QSFP-100G-SM-SR=, QSFP-100G-SM-SR=',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_CFP-100G-LR4=, CFP-100G-LR4=, CFP-100G-LR4=',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: 'CFP-100G-LR4=, CFP-100G-LR4=, CFP-100G-LR4=',
+			profileName: 'CFP-100G-LR4=, CFP-100G-LR4=, CFP-100G-LR4=',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_PK-SFP-10G-SR=, PK-SFP-10G-SR=, PK-SFP-10G-SR=',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: 'PK-SFP-10G-SR=, PK-SFP-10G-SR=, PK-SFP-10G-SR=',
+			profileName: 'PK-SFP-10G-SR=, PK-SFP-10G-SR=, PK-SFP-10G-SR=',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_C3850-NM-4-10G, C3850-NM-4-10G, C3850-NM-4-10G',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: 'C3850-NM-4-10G, C3850-NM-4-10G, C3850-NM-4-10G',
+			profileName: 'C3850-NM-4-10G, C3850-NM-4-10G, C3850-NM-4-10G',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_ASR1002X-10G-K9, ASR1002X-10G-K9, ASR1002X-10G-K9',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: 'ASR1002X-10G-K9, ASR1002X-10G-K9, ASR1002X-10G-K9',
+			profileName: 'ASR1002X-10G-K9, ASR1002X-10G-K9, ASR1002X-10G-K9',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_XFP-10G-MM-SR, XFP-10G-MM-SR, XFP-10G-MM-SR',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: 'XFP-10G-MM-SR, XFP-10G-MM-SR, XFP-10G-MM-SR',
+			profileName: 'XFP-10G-MM-SR, XFP-10G-MM-SR, XFP-10G-MM-SR',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+		{
+			assetCount: 1,
+			customerId: 231215372,
+			id: 'Prfoile_231215372_C3850-NM-4-10G=, C3850-NM-4-10G=, C3850-NM-4-10G=',
+			optimalVersion: null,
+			productFamily: 'Cisco Catalyst 9300 Series Switches',
+			productId: 'C3850-NM-4-10G=, C3850-NM-4-10G=, C3850-NM-4-10G=',
+			profileName: 'C3850-NM-4-10G=, C3850-NM-4-10G=, C3850-NM-4-10G=',
+			recommendation: null,
+			swType: 'IOS-XE',
+			swVersions: [
+				'16.8.1a',
+			],
+		},
+	],
 };
 /** The mock response for assets */
 const mockAssets: AssetsResponse = {
@@ -238,10 +333,12 @@ const mockAssets: AssetsResponse = {
 	},
 	uiAssetList: [
 		{
+			alert: 'information',
 			deployment: 'None',
 			hostName: 'AP4800.8DEC',
 			id: '231215372_NA,FCW2238N7LG,AIR-AP4800-B-K9,NA_AIR-AP4800-B-K9_FCW2238N7LG',
 			ipAddress: '10.13.5.117',
+			mdfId: '283915795',
 			optimalVersion: '16.11.1c',
 			productFamily: 'Cisco Aironet 4800 Series',
 			recommAcceptedDate: null,
@@ -482,16 +579,16 @@ export const OSVScenarios = [
 			GET: [
 				{
 					delay: 200,
-					description: 'Software Profiles',
+					description: 'Software Groups',
 					response: {
-						body: mockSoftwareProfile,
+						body: mockSoftwareGroups,
 						status: 200,
 					},
 					selected: true,
 				},
 			],
 		},
-		url: `${api}profiles?customerId=${customerId}`,
+		url: `${api}profiles?customerId=${customerId}&pageIndex=1&pageSize=10`,
 		usecases: ['Use Case 1'],
 	},
 	{

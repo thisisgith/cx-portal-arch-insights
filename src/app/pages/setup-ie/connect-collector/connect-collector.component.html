@@ -7,77 +7,121 @@
 		class="dbl-margin-bottom">
 	</h1>
 	<div class="form-container dbl-margin-bottom">
-		<div [hidden]="ipAddressLink">
-			<div class="secure-banner flex-center-vertical dbl-margin-bottom">
-				<span class="secure-banner__icon flex-center">
-					<span class="icon-lock"></span>
-				</span>
-				<span
-					class="base-margin-left"
-					[innerText]="'_IE_CiscoDoesNotStoreTheseCreds_' | i18n"
-				></span>
-			</div>
+		<div *ngIf="view === 'input' || view === 'connecting'">
 			<div class="base-margin-top base-margin-bottom">
 				<img
-					alt="CX Portal to CX Collector"
+					alt="placeholder"
+					[alt]="'_IE_ConnectLocalMachine_' | i18n"
 					src="assets/img/setup-ie/cxportal-cxcollector.png"
 				>
 				<h4
+					*ngIf="view === 'input'"
 					class="xl-margin-top"
 					[innerText]="'_IE_PleaseEnsureDirectAccess_' | i18n"
 				></h4>
-				<hr class="dbl-margin-top">
+				<div
+					*ngIf="view === 'connecting'"
+					class="base-margin-top"
+					[innerText]="'_AttemptingToConnect_' | i18n: ipAddress"
+				></div>
+				<hr [hidden]="view !== 'input'" class="dbl-margin-top">
 			</div>
 		</div>
 		<div class="text-left">
-			<form
-				class="dbl-margin-bottom"
-				[formGroup]="accountForm"
-				(ngSubmit)="onSubmit()"
-				[hidden]="ipAddressLink"
-			>
-				<div class="dbl-margin-bottom">
-					<h4 [innerText]="'_ConnectLocalMachine_' | i18n"></h4>
-					<span class="text-large" [innerText]="'_IE_EnterTheIPAddress_' | i18n"></span>
-				</div>
-				<div class="row dbl-margin-bottom">
-					<div class="col-md-6">
-						<div class="form-group">
-							<div class="form-group__text">
-								<input id="input-ip-address" type="text" formControlName  ="ipAddress">
-								<label for="input-layout-default"
-										[innerText]="'_IPAddress_' | i18n">
-								</label>
+			<div [hidden]="view !== 'input'">
+				<form
+					class="dbl-margin-bottom"
+					[formGroup]="accountForm"
+					(ngSubmit)="onSubmit()"
+				>
+					<div class="dbl-margin-bottom">
+						<h4 [innerText]="'_ConnectToCXCollector_' | i18n"></h4>
+						<span
+							class="text-large"
+							[innerText]="'_IE_EnterTheIPAddress_' | i18n"
+						></span>
+					</div>
+					<div class="row dbl-margin-bottom">
+						<div class="col-md-6">
+							<div class="form-group">
+								<div class="form-group__text">
+									<input
+										id="input-ip-address"
+										type="text"
+										formControlName="ipAddress"
+									>
+									<label for="input-layout-default"
+											[innerText]="'_IPAddress_' | i18n">
+									</label>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</form>
-			<div *ngIf="!ipAddressLink" class="dbl-margin-bottom">
-				<h4 [innerText]="'_AcceptCertificate_' | i18n"></h4>
-				<span class="text-large" [innerText]="'_AcceptCertInstructions_' | i18n"></span>
-			</div>
-			<div *ngIf="ipAddressLink" class="dbl-margin-bottom">
-				<h4 [innerText]="'_AwaitingCertAccept_' | i18n"></h4>
-				<span class="text-large" [innerText]="'_AcceptCertInstructionsVerbose_' | i18n"></span>
-			</div>
-			<img
-				alt="Accept Self-Signed Certificate"
-				src="assets/img/setup-ie/accept-certificate.png"
-			>
-			<div *ngIf="!ipAddressLink" class="base-margin-top flex-center-vertical">
-				<button
-					data-auto-id="submit-btn"
-					class="btn btn--secondary half-margin-right"
-					type="submit"
-					[disabled]="!accountForm.valid"
-					[innerText]="'_ProceedToCertificate_' | i18n | uppercase"
-					(click)="onSubmit()"
-				></button>
-				<span [innerText]="'_OpensNewTab_' | i18n"
+				</form>
+				<div class="flex-center">
+					<button
+						data-auto-id="connect-to-cx-collector-btn"
+						class="btn btn--secondary qtr-margin-right"
+						[innerText]="'_ConnectToCXCollector_' | i18n | uppercase"
+						(click)="onSubmit()"
+					>
+					</button>
+					<span [innerText]="'_PressEnter_' | i18n"
 						class="text-large">
-				</span>
+					</span>
+				</div>
 			</div>
+			<ng-container *ngIf="view === 'instruct'">
+				<div *ngIf="!ipAddressLink" class="dbl-margin-bottom">
+					<h4 [innerText]="'_AcceptCertificate_' | i18n"></h4>
+					<span
+						class="text-large"
+						[innerText]="'_AcceptCertInstructions_' | i18n"
+					></span>
+				</div>
+				<div *ngIf="ipAddressLink" class="dbl-margin-bottom">
+					<h4 [innerText]="'_AwaitingCertAccept_' | i18n"></h4>
+					<span
+						class="text-large"
+						[innerText]="'_AcceptCertInstructionsVerbose_' | i18n"
+					></span>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<p class="text-large" [innerText]="'_ClickAdvanced_' | i18n"></p>
+						<img
+							alt="placeholder"
+							[alt]="'_AcceptCertInstructionsVerbose_' | i18n"
+							src="assets/img/setup-ie/accept-certificate-left.png"
+						>
+					</div>
+					<div class="col-md-6">
+						<p
+							class="text-large"
+							[innerText]="'_ClickProceedToIp_' | i18n: 
+								(ipAddress || '[IP Address]')"
+						></p>
+						<img
+							alt="placeholder"
+							[alt]="'_AcceptCertInstructionsVerbose_' | i18n"
+							src="assets/img/setup-ie/accept-certificate-right.png"
+						>
+					</div>
+				</div>
+				<div class="base-margin-top flex-center-vertical">
+					<button
+						data-auto-id="submit-btn"
+						class="btn btn--secondary half-margin-right"
+						type="submit"
+						[innerText]="'_ProceedToCertificate_' | i18n | uppercase"
+						(click)="openIpAddressInNewTab()"
+					></button>
+					<span [innerText]="'_OpensNewTab_' | i18n"
+							class="text-large">
+					</span>
+				</div>
+			</ng-container>
 		</div>
 	</div>
 </div>

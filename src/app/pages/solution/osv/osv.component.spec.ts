@@ -58,7 +58,7 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should set null values on request errors', done => {
+	it('should set null values on request errors', () => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -67,14 +67,13 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
 
-				expect(_.find(component.filters, { key: 'totalAssets' }).seriesData.length)
-					.toBe(0);
-				done();
-			});
+		fixture.detectChanges();
+
+		expect(_.find(component.filters, { key: 'totalAssets' }).seriesData.length)
+			.toBe(0);
+		expect(component.view)
+			.toBeUndefined();
 	});
 
 	it('should switch active filters', done => {
@@ -82,20 +81,12 @@ describe('OptimalSoftwareVersionComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				const totalFilter = _.find(component.filters, { key: 'totalAssets' });
-				const deploymentStatus = _.find(component.filters, { key: 'deploymentStatus' });
 				const assetType = _.find(component.filters, { key: 'assetType' });
 
 				expect(_.find(component.filters, 'selected'))
 					.toEqual(totalFilter);
 
-				component.onSubfilterSelect('none', deploymentStatus);
-
-				fixture.detectChanges();
-
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(deploymentStatus);
-
-				component.onSubfilterSelect('assets_profile', assetType);
+				component.onSubfilterSelect('assets_without_profile', assetType);
 
 				fixture.detectChanges();
 
@@ -106,20 +97,21 @@ describe('OptimalSoftwareVersionComponent', () => {
 			});
 	});
 
-	it('should select a deploymentStatus subfilter', done => {
+	it('should select a assetType subfilter', done => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const deploymentStatusFilter = _.find(component.filters,
-					{ key: 'deploymentStatus' });
-				component.onSubfilterSelect('none', deploymentStatusFilter);
+				const assetTypeFilter = _.find(component.filters,
+					{ key: 'assetType' });
+				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
 				fixture.detectChanges();
 
 				expect(_.filter(component.filters, 'selected'))
-					.toContain(deploymentStatusFilter);
+					.toContain(assetTypeFilter);
 
-				const subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
+				const subfilter = _.find(assetTypeFilter.seriesData,
+				{ filter: 'assets_without_profile' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();
@@ -132,25 +124,27 @@ describe('OptimalSoftwareVersionComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const deploymentStatusFilter = _.find(component.filters,
-					{ key: 'deploymentStatus' });
-				component.onSubfilterSelect('none', deploymentStatusFilter);
+				const assetTypeFilter = _.find(component.filters,
+					{ key: 'assetType' });
+				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
 				fixture.detectChanges();
 
 				expect(_.filter(component.filters, 'selected'))
-					.toContain(deploymentStatusFilter);
+					.toContain(assetTypeFilter);
 
-				let subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
+				let subfilter = _.find(assetTypeFilter.seriesData,
+					{ filter: 'assets_without_profile' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();
 
-				component.onSubfilterSelect('none', deploymentStatusFilter);
+				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
 				fixture.detectChanges();
 
-				subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
+				subfilter = _.find(assetTypeFilter.seriesData,
+					{ filter: 'assets_without_profile' });
 
 				expect(subfilter.selected)
 					.toBeFalsy();
@@ -163,16 +157,17 @@ describe('OptimalSoftwareVersionComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const deploymentStatusFilter = _.find(component.filters,
-					{ key: 'deploymentStatus' });
-				component.onSubfilterSelect('none', deploymentStatusFilter);
+				const assetTypeFilter = _.find(component.filters,
+					{ key: 'assetType' });
+				component.onSubfilterSelect('assets_without_profile', assetTypeFilter);
 
 				fixture.detectChanges();
 
 				expect(_.filter(component.filters, 'selected'))
-					.toContain(deploymentStatusFilter);
+					.toContain(assetTypeFilter);
 
-				const subfilter = _.find(deploymentStatusFilter.seriesData, { filter: 'none' });
+				const subfilter = _.find(assetTypeFilter.seriesData,
+					{ filter: 'assets_without_profile' });
 
 				expect(subfilter.selected)
 					.toBeTruthy();
@@ -205,9 +200,75 @@ describe('OptimalSoftwareVersionComponent', () => {
 
 	it('seleceView should change the view ', () => {
 		expect(component.view)
-			.toEqual('assets');
+			.toEqual('swGroups');
 		component.selectView('swVersions');
 		expect(component.view)
 			.toEqual('swVersions');
+	});
+
+	it('select assets view if the assets count is equal to zero', () => {
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of({
+				asset_profile: {
+					assets_profile: 444,
+					assets_without_profile: 520,
+				},
+				assets: 964,
+				deployment: {
+					none: 963,
+					upgrade: 400,
+				},
+				profiles: 0,
+				versions: 50,
+			}));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.view)
+			.toEqual('assets');
+	});
+
+	it('select versions view if the versions count is equal to zero', () => {
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of({
+				asset_profile: {
+					assets_profile: 444,
+					assets_without_profile: 520,
+				},
+				assets: 0,
+				deployment: {
+					none: 963,
+					upgrade: 400,
+				},
+				profiles: 0,
+				versions: 50,
+			}));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.view)
+			.toEqual('swVersions');
+	});
+
+	it('select show no data if all counts are zero', () => {
+		spyOn(osvService, 'getSummary')
+			.and
+			.returnValue(of({
+				asset_profile: {
+					assets_profile: 444,
+					assets_without_profile: 520,
+				},
+				assets: 0,
+				deployment: {
+					none: 963,
+					upgrade: 400,
+				},
+				profiles: 0,
+				versions: 0,
+			}));
+		component.ngOnInit();
+		fixture.detectChanges();
+		expect(component.view)
+			.toBeUndefined();
 	});
 });

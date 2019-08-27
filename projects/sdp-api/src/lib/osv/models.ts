@@ -1,5 +1,5 @@
-export { SoftwareProfile } from './models/software-profile';
-export { SoftwareProfilesResponse } from './models/software-profiles-response';
+export { SoftwareGroup } from './models/software-group';
+export { SoftwareGroupsResponse } from './models/software-group-response';
 export { SoftwareVersion } from './models/software-version';
 export { SoftwareVersionsResponse } from './models/software-versions-response';
 export { AssetRecommendations } from './models/asset-recommendations';
