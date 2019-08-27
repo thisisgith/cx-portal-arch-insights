@@ -194,6 +194,10 @@
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 		<div class="qtr-margin-top"></div>
 	</ng-container>
+	<ng-container  *ngIf="afmConnectionStatus?.status === 'Error'">
+		<div class="divider qtr-margin-top qtr-margin-bottom visual-filter-divider"></div>
+		<ng-container *ngTemplateOutlet="serverError"></ng-container>
+	</ng-container>
 	<div *ngIf="filterSpinner" class="base-margin-bottom">
 		<cui-spinner></cui-spinner>
 	</div>
@@ -211,6 +215,19 @@
 		[ngClass]="{ 'text-primary': searchParams?.headerFilterType === 'CHATS' }"
 		[innerText]="filter.title"
 	></div>
+</ng-template>
+
+<ng-template #serverError>
+	<div *ngIf="statusErrorMessage?.length > 0">
+		<div class="alert fade-and-slide-top text-left alert--danger" >
+			<div class="alert__icon icon-error-outline"></div>
+				<ng-container>
+					<div class="alert__message">
+						<span [innerHTML]="statusErrorMessage"></span>
+					</div>
+				</ng-container>
+		</div>
+	</div>
 </ng-template>
 
 <ng-template #filterBar>
@@ -287,7 +304,7 @@
 						<span class="icon-info-outline icon-medium text-muted">
 						</span>
 						<span
-							class="qtr-margin-left text-medium text-danger"
+							class="qtr-margin-left text-medium"
 							[innerText]="
 								'_AfmShwoingOfflineXError_'
 									| i18n: afmConnectionStatus?.statusMessage
@@ -295,16 +312,6 @@
 						>
 						</span>
 					</span>
-				</span>
-				<span *ngIf="statusErrorMessage?.length > 0" class="base-margin-right base-margin-left">
-						<div class="alert fade-and-slide-top text-left alert--danger" >
-								<div class="alert__icon icon-error-outline"></div>
-								<ng-container>
-									<div class="alert__message">
-										<span [innerHTML]="statusErrorMessage"></span>
-									</div>
-								</ng-container>
-							</div>
 				</span>
 			</div>
 		</div>
@@ -363,6 +370,7 @@
 			<afm-details
 				[alarm]="tablePanelData"
 				(selectedAsset)="connectToAssetDetails($event)"
+				(eventUpdated)="eventUpdated($event)"
 			></afm-details>
 		</div>
 	</details-panel-header>

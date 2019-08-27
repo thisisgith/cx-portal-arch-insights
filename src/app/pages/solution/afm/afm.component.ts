@@ -16,7 +16,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { takeUntil } from 'rxjs/operators';
-import { ExportCsvService } from '../../../services/export-csv.service';
+import { ExportCsvService } from '@services';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -56,6 +56,7 @@ export class AfmComponent {
 	public statusErrorMessage = '';
 	public timeRangeFiltered = false;
 	public filterSpinner = false;
+	public eventStatus = false;
 	private destroy$ = new Subject();
 
 	public searchOptions = {
@@ -386,6 +387,9 @@ export class AfmComponent {
 	 */
 	public onAlarmPanelClose () {
 		this.showAlarmDetails = false;
+		if (this.eventStatus) {
+			this.allAlarmFilter();
+		}
 	}
 
 	/**
@@ -410,6 +414,13 @@ export class AfmComponent {
 	}
 
 	/**
+	 * Event Status
+	 * @param event event
+	 */
+	public eventUpdated (event) {
+		this.eventStatus = event;
+	}
+	/**
 	 * to close the panel
 	 */
 	public onPanelClose () {
@@ -428,7 +439,7 @@ export class AfmComponent {
 					if (response && response.status && response.status !== null &&
 						response.status.toUpperCase() === this.AFM_CONSTANT.SUCCESS) {
 						this.exportCsvService
-						.exportToCsv(I18n.get('_AfmExportFileName_'), response.data);
+						.exportToCsv('Total_Alarm_Cases_', response.data);
 					} else {
 						this.statusErrorMessage = response.statusMessage;
 						this.logger.error(response.statusMessage);

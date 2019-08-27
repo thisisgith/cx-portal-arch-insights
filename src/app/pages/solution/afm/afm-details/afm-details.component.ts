@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Alarm, AfmSearchParams, AfmService } from '@sdp-api';
 import { Subject } from 'rxjs';
@@ -13,17 +13,20 @@ import { takeUntil } from 'rxjs/operators';
 	styleUrls: ['./afm-details.component.scss'],
 	templateUrl: './afm-details.component.html',
 })
-export class AfmDetailsComponent {
+export class AfmDetailsComponent implements OnInit, OnChanges {
+
+	@Input('alarm') public alarm: Alarm;
+	@Output()
+	public selectedAsset = new EventEmitter();
+	@Output() public eventUpdated = new EventEmitter();
 
 	private destroyed$: Subject<void> = new Subject<void>();
 	private destroy$ = new Subject();
 	public searchParams: AfmSearchParams;
 	public errorDesc: string;
 	public options: any = { visible : false };
-
-	@Input('alarm') public alarm: Alarm;
-	@Output()
-	public selectedAsset = new EventEmitter();
+	public loading = false;
+	public status = 'Not Ignore';
 
 	constructor (
 		private logger: LogService, private afmService: AfmService,
@@ -38,14 +41,22 @@ export class AfmDetailsComponent {
 			.subscribe((id: string) => {
 				this.searchParams.customerId = id;
 			});
-		this.errorDesc = '';
 	}
 
+	/**
+	 * Initialize on loading
+	 */
+	public ngOnInit () {
+		this.errorDesc = '';
+		this.status = this.alarm.status;
+	}
 	/**
 	 * Initialize error description
 	 */
 	public ngOnChanges () {
 		this.errorDesc = this.alarm.errorDesc;
+		this.options.visible = false;
+		this.status = this.alarm.status;
 	}
 
 	/**
@@ -62,6 +73,7 @@ export class AfmDetailsComponent {
 	 * @param alarmData Alarm
 	 */
 	public toggleEvent (alarmData: Alarm) {
+		this.loading = true;
 		this.searchParams.customerId = alarmData.customerId;
 		this.searchParams.faultIC = alarmData.faultIC;
 		if (!alarmData.status || alarmData.status.toUpperCase() !== 'IGNORED') {
@@ -78,7 +90,10 @@ export class AfmDetailsComponent {
 					};
 					if (response.status.toUpperCase() !== 'SUCCESS') {
 						this.alarm.status = 'Success';
+					} else {
+						this.eventUpdated.emit(true);
 					}
+					this.loading = false;
 				});
 		} else {
 			this.afmService.revertIgnoreEvent(this.searchParams)
@@ -94,7 +109,10 @@ export class AfmDetailsComponent {
 					};
 					if (response.status.toUpperCase() !== 'SUCCESS') {
 						this.alarm.status = 'Ignored';
+					} else {
+						this.eventUpdated.emit(true);
 					}
+					this.loading = false;
 				});
 		}
 	}

@@ -20,8 +20,8 @@ describe('ExportCsvService', () => {
 
 	it('should export data to csv file', () => {
 		const fileName = 'exportFile';
-		const responseString = 'Event Severity,Syslog Event,Fault IC,Serial' +
-			'Number,Case ID,Time Created,Event Status,';
+		const responseString = 'column 1,column 2,column 3,column 4' +
+			'column 5,column 6,column 7,column 8,';
 
 		exportCsvService = new ExportCsvService();
 
