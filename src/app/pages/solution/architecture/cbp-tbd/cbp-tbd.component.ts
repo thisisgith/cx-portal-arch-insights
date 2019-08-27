@@ -46,7 +46,7 @@ export class CbpTbdComponent implements OnChanges {
 		private route: ActivatedRoute) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.params.customerId = this.customerId;
+		this.params.customerId =  _.cloneDeep(this.customerId);
 	}
 
 	/**

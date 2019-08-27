@@ -12,7 +12,6 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
 		<div class="container responsive-table">
-			<!-- <cui-table [options]="tableOptions" [data]="exceptionDatas"></cui-table> -->
 			<table class="table" *ngIf="!isLoading && totalItems">
 				<thead>
 					<tr>
@@ -93,7 +92,7 @@
 		'Low': 'text-warning-alt'
 			}[severity]">
 	</span>
-	<span>{{severity}}</span>
+	<span [innerText]="severity"></span>
 </ng-template>
 
 
@@ -105,7 +104,7 @@
 					<div class="container">
 						<div class="text-bold text-uppercase" [innerText]="('_ArchitectureException_' | i18n)">
 						</div>
-						<div>{{item['exceptions']}}</div>
+						<div [innerText]="item['exceptions']" ></div>
 					</div>
 				</div>
 			</div>
@@ -113,7 +112,7 @@
 				<div class="col-md-12">
 					<div class="container">
 						<div class="text-bold text-uppercase" [innerText]="('_ArchitectureRecommendation_' | i18n)"></div>
-						<div>{{item['recommendations']}}</div>
+						<div [innerText]="item['recommendations']"></div>
 					</div>
 				</div>
 			</div>
@@ -122,7 +121,7 @@
 					<div class="container">
 						<div class="text-bold text-uppercase" [innerText]="('_ArchitectureCorrectiveAction_' | i18n)">
 						</div>
-						<div> {{item['correctiveActions']}}</div>
+						<div [innerText]="item['correctiveActions']"></div>
 					</div>
 				</div>
 			</div>
