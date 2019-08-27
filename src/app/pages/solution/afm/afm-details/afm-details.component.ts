@@ -26,7 +26,6 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	public errorDesc: string;
 	public options: any = { visible : false };
 	public loading = false;
-	public status = 'Not Ignore';
 
 	constructor (
 		private logger: LogService, private afmService: AfmService,
@@ -48,7 +47,6 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	 */
 	public ngOnInit () {
 		this.errorDesc = '';
-		this.status = this.alarm.status;
 	}
 	/**
 	 * Initialize error description
@@ -56,7 +54,6 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	public ngOnChanges () {
 		this.errorDesc = this.alarm.errorDesc;
 		this.options.visible = false;
-		this.status = this.alarm.status;
 	}
 
 	/**
