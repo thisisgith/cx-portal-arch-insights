@@ -202,16 +202,16 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 		} else {
 			this.selectedAsset = undefined;
 		}
-		this.sysLogHeaderDetails(tableRowData);
 
+		this.sysLogHeaderDetails(tableRowData, this.customerId);
 	}
 
 	/**
 	 * Headers Details
 	 * @param tableRowData contains table row data
 	 */
-	public sysLogHeaderDetails (tableRowData) {
-		this.syslogsService.getDeviceHeaderDetails(tableRowData)
+	public sysLogHeaderDetails (tableRowData, customerId) {
+		this.syslogsService.getDeviceHeaderDetails(tableRowData, customerId)
 		.subscribe(data => {
 			this.deviceHeaderValues = data;
 			if (this.deviceHeaderValues.lastScan === null) {
