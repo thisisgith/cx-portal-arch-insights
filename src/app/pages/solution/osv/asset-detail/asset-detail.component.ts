@@ -34,8 +34,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
@@ -122,7 +122,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			)
 			.subscribe(() => {
@@ -164,7 +164,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			)
 			.subscribe(() => {
@@ -200,16 +200,16 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		const datePipe = new DatePipe('en-US');
 		const columns = [
 			{
-				name: I18n.get('_OsvVersionSummary_'),
+				name: I18n.get('_OsvVersion_'),
 				sortable: false,
 				template: this.versionTemplate,
-				width: '50%',
+				width: this.accept ? '50%' : '75%',
 			},
 			{
 				key: 'postDate',
 				name: I18n.get('_OsvReleaseDate_'),
 				render: item => _.isNull(item.error) ?
-					datePipe.transform(item.postDate, 'yyyy MMM dd') : 'N/A',
+					datePipe.transform(item.postDate, 'MMM d, y') : 'N/A',
 				sortable: false,
 				width: '25%',
 			},
@@ -221,7 +221,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				template: this.actionsTemplate,
 				width: '25%',
 			};
-			columns.splice(1, 0, acceptColumn);
+			columns.push(acceptColumn);
 		}
 		return columns;
 
@@ -242,7 +242,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any> new Date(b.postDate) - <any> new Date(a.postDate));
+			<any>new Date(b.postDate) - <any>new Date(a.postDate));
 
 		return data;
 	}
@@ -287,5 +287,14 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			point.label !== _.get(this.selectedAsset, 'swVersion')) {
 			this.selectedRecommendation = point;
 		}
+	}
+
+	/*
+	* view all os version
+	*/
+	public viewAllVersions () {
+		const mdfId = _.get(this.selectedAsset, 'mdfId');
+		const url = `https://software.cisco.com/research/home?pid=${mdfId}`;
+		window.open(`${url}`, '_blank');
 	}
 }

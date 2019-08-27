@@ -51,7 +51,7 @@
 
 <!-- asset-details table view -->
 <div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view =='list'">
-	<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
+	<table class="table table--selectable table--compressed table--wrap table--lined table--nostripes">
 		<thead>
 			<tr>
 				<th *ngFor="let column of assetDetailsTable.columns"
@@ -86,7 +86,7 @@
 </div>
 <!-- view all os version link -->
 <div class="markup pull-right dbl-margin-top" *ngIf="!status.isLoading && assetDetails?.length > 0">
-	<a class="markup-toggle text-primary">
+	<a data-auto-id="ViewAllOsVersions" class="markup-toggle text-primary" (click)="viewAllVersions()">
 		<span class="markup-label" [innerText]="'_OsvViewAllOSVersions_' | i18n"></span>
 		<span class="icon-popout icon-small qtr-margin-left"></span>
 	</a>
@@ -96,12 +96,13 @@
 	<div class="row">
 		<div [innerText]="item.swVersion" class="flex align-items-center col-3"></div>
 		<div class="col-9 half-margin-top">
-			<div class="version-info half-margin-bottom half-margin-right" *ngFor="let version of item.swVersionGroup">
-				<span class="text-capitalize text-default" [ngClass]="{'text-bold':version.name == 'current'}"
-					[innerText]="version.name"></span>
-				<span class="pull-right text-primary" [attr.data-balloon]="version.info" data-balloon-pos="down"
-					data-balloon-length="xlarge">
-					<i class="icon-info-outline icon-xsmall"></i>
+			<div class="qtr-margin-bottom" *ngFor="let version of item.swVersionGroup">
+				<span class="label label--large" [title]="version.name">
+					<span class="text-capitalize" [innerHTML]="version.name"></span>
+					<span class="text-primary qtr-margin-left" [attr.data-balloon]="version.info"
+						data-balloon-pos="down" data-balloon-length="xlarge">
+						<i class="icon-info-outline icon-xsmall"></i>
+					</span>
 				</span>
 			</div>
 		</div>
@@ -112,7 +113,7 @@
 <ng-template #actionsTemplate let-item="celldata">
 	<div *ngIf="selectedAsset">
 		<button *ngIf="selectedAsset.swVersion != item.swVersion && !item.accepted && !item.error" cuiButton
-			[color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n"
+			[color]="'secondary'" [small]="true" [wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n"
 			(click)="onActionClick(item)" attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
 		<div *ngIf="selectedAsset.swVersion != item.swVersion && item.accepted">
 			<span class="text-success" [innerText]="'_OsvAccepted_' | i18n"></span>
@@ -123,7 +124,7 @@
 		</div>
 	</div>
 	<div *ngIf="selectedSoftwareGroup">
-		<button cuiButton [color]="'gray-ghost'" [small]="true" [wide]="false" [animated]="true"
+		<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
 			[innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
 			attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
 		<div *ngIf="item.accepted">

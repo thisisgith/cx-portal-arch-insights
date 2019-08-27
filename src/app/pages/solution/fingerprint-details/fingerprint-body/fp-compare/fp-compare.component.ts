@@ -28,8 +28,8 @@ export class FpCompareComponent implements OnChanges {
 	public riskScore: number;
 	public CpProductfamilyService: any;
 	public CpListdeviceService: any;
-	public listdeviceDataA: any;
-	public listdeviceDataB: any;
+	public listdeviceDataA: any[];
+	public listdeviceDataB: any[];
 	private destroy$ = new Subject();
 	public customerId: string;
 	public compareView: string;
@@ -49,6 +49,8 @@ export class FpCompareComponent implements OnChanges {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.compareView = 'hardware';
+		this.listdeviceDataA = [];
+		this.listdeviceDataB = [];
 	}
 
 	/**
@@ -74,7 +76,6 @@ export class FpCompareComponent implements OnChanges {
 				deviceId: this.deviceId1,
 				productId: this.productId1,
 			};
-
 			this.crashPreventionService
 				.getProductFamily(this.productFamilydetails)
 				.pipe(takeUntil(this.destroy$))
@@ -89,6 +90,25 @@ export class FpCompareComponent implements OnChanges {
 				.pipe(takeUntil(this.destroy$))
 				.subscribe((results: IListdevice) => {
 					this.listdeviceDataA = results.deviceDetail;
+					const deviceFound = this.listdeviceDataA
+					.find(device => device.deviceId === this.deviceId1);
+					this.deviceId1 = deviceFound
+						? deviceFound.deviceId
+						: deviceFound;
+				});
+			this.crashPreventionService
+				.getListdevice({
+					customerId: this.customerId,
+					productId: this.productId2,
+				})
+				.pipe(takeUntil(this.destroy$))
+				.subscribe((results: IListdevice) => {
+					this.listdeviceDataB = results.deviceDetail;
+					const deviceFound = this.listdeviceDataB
+					.find(device => device.deviceId === this.deviceId2);
+					this.deviceId2 = deviceFound
+						? deviceFound.deviceId
+						: deviceFound;
 				});
 		}
 	}
@@ -109,6 +129,11 @@ export class FpCompareComponent implements OnChanges {
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((results: IListdevice) => {
 				this.listdeviceDataA = results.deviceDetail;
+				const deviceFound = this.listdeviceDataA
+				.find(device => device.deviceId === this.deviceId1);
+				this.deviceId1 = deviceFound
+					? deviceFound.deviceId
+					: deviceFound;
 			});
 	}
 	/**
@@ -127,6 +152,11 @@ export class FpCompareComponent implements OnChanges {
 			.pipe(takeUntil(this.destroy$))
 			.subscribe((results: IListdevice) => {
 				this.listdeviceDataB = results.deviceDetail;
+				const deviceFound = this.listdeviceDataB
+				.find(device => device.deviceId === this.deviceId2);
+				this.deviceId2 = deviceFound
+					? deviceFound.deviceId
+					: deviceFound;
 			});
 	}
 	/**

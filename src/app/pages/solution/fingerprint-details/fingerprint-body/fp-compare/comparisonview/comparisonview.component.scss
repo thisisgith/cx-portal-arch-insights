@@ -1,15 +1,14 @@
 .compare-body {
-	padding: 2rem;
-	background: #eee;
-}
-
-.compare-area {
-	padding: 1rem;
-	background: white;
-	height: 350;
+	display: block;
+	padding: 5px;
+	margin-top: 5px;
 	overflow: auto;
 }
 
 .uniquehighlight {
 	background: #c6c7ca;
+}
+
+.compare-em-dash::after {
+	content: " \2014";
 }

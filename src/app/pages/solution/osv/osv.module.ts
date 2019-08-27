@@ -52,7 +52,7 @@ const childRoutes: Routes = [
 		SoftwareVersionsModule,
 		SoftwareGroupsModule,
 		SoftwareGroupDetailModule,
-		ContactExpertModule,
+		ContactExpertModule,		
 	],
 })
 export class OptimalSoftwareVersionModule { }

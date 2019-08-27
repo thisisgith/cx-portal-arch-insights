@@ -36,6 +36,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@Output() public contactExpert = new EventEmitter();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
 		private recommendationsTemplate: TemplateRef<{ }>;
 	public assetsTable: CuiTableOptions;
@@ -172,35 +173,40 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
-						width: '10%',
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
+						width: '20%',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
 						sortable: false,
+						width: '10%',
 					},
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
 						sortable: true,
+						width: '20%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
+						width: '10%',
 					},
 					{
-						key: 'swVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
+						template: this.versionTemplate,
+						width: '20%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
 						sortable: false,
 						template: this.recommendationsTemplate,
+						width: '20%',
 					},
 				],
 				dynamicData: true,

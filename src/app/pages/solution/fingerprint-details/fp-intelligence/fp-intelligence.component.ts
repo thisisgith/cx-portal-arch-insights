@@ -20,10 +20,10 @@ interface SeriesData {
  */
 @Component({
 	selector: 'fp-intelligence',
+	styleUrls: ['./fp-intelligence.component.scss'],
 	templateUrl: './fp-intelligence.component.html',
 })
 export class FpIntelligenceComponent implements OnChanges {
-
 	@Input() public asset: any;
 	public deviceId: string;
 	public customerId: string;
@@ -36,6 +36,7 @@ export class FpIntelligenceComponent implements OnChanges {
 	public productSeriesData: SeriesData[];
 	public productFamilySeriesData: SeriesData[];
 	public seriesDataLoading = false;
+	public noData = false;
 	public requestForm: FormGroup = this.fb.group({
 		similarityCriteria: ['fingerprint', Validators.required],
 		deviceCount: [100, Validators.required],
@@ -56,11 +57,12 @@ export class FpIntelligenceComponent implements OnChanges {
 	 */
 	public ngOnInit (): void {
 		this.logger.info('Similar Device Distribution Loaded');
-		this.requestForm.valueChanges.pipe(debounceTime(1000))
-		.subscribe(val => {
-			this.logger.info(val);
-			this.loadSimilarDevicesDistribution();
-		});
+		this.requestForm.valueChanges
+			.pipe(debounceTime(1000))
+			.subscribe(val => {
+				this.logger.info(val);
+				this.loadSimilarDevicesDistribution();
+			});
 	}
 	/**
 	 * asset
@@ -79,54 +81,64 @@ export class FpIntelligenceComponent implements OnChanges {
 	public loadSimilarDevicesDistribution () {
 		this.seriesDataLoading = true;
 		const similarDeviceParams = this.getSimilarDeviceParams(this.requestForm.value);
-		this.fpIntelligenceService.getSimilarDevicesDistribution(similarDeviceParams)
+		this.fpIntelligenceService
+			.getSimilarDevicesDistribution(similarDeviceParams)
 			.subscribe(
-				similarDevieDistribution => this.updateSeriesData(similarDevieDistribution),
-				err => this.logger.error(err),
-				 () =>  { this.seriesDataLoading = false; },
-				);
+				similarDevieDistribution => {
+					this.updateSeriesData(similarDevieDistribution);
+					this.noData = false;
+				},
+				err => {
+					this.seriesDataLoading = false;
+					this.noData = true;
+					this.logger.error(err);
+				},
+				() => {
+					this.seriesDataLoading = false;
+				});
 	}
 	/**
 	 * SeriesData
 	 * @param similarDevieDistribution similarDeviceDistribution
 	 */
 	public updateSeriesData (similarDevieDistribution: SimilarDevicesDistribution): void {
-		this.softwareSeriesData = similarDevieDistribution.softwares
-		.map(item => {
-			const serData: SeriesData = { label: '', value: 0 };
-			serData.label = item.softwareVersion;
-			serData.value = parseInt(item.deviceCount, 10);
+		this.softwareSeriesData = similarDevieDistribution.softwares.map(
+			item => {
+				const serData: SeriesData = { label: '', value: 0 };
+				serData.label = item.softwareVersion;
+				serData.value = parseInt(item.deviceCount, 10);
 
-			return serData;
-		});
-		this.productSeriesData = similarDevieDistribution.products
-		.map(item => {
+				return serData;
+			});
+		this.productSeriesData = similarDevieDistribution.products.map(item => {
 			const serData: SeriesData = { label: '', value: 0 };
 			serData.label = item.productId;
 			serData.value = parseInt(item.deviceCount, 10);
 
 			return serData;
 		});
-		this.productFamilySeriesData = similarDevieDistribution.productFamilies
-		.map(item => {
-			const serData: SeriesData = { label: '', value: 0 };
-			serData.label = item.productFamily;
-			serData.value = parseInt(item.deviceCount, 10);
+		this.productFamilySeriesData = similarDevieDistribution.productFamilies.map(
+			item => {
+				const serData: SeriesData = { label: '', value: 0 };
+				serData.label = item.productFamily;
+				serData.value = parseInt(item.deviceCount, 10);
 
-			return serData;
-		});
+				return serData;
+			});
 	}
-/**
- * similarDeviceparams
- * @param filterValues customerId
- * @returns deviceId
- */
+	/**
+	 * similarDeviceparams
+	 * @param filterValues customerId
+	 * @returns deviceId
+	 */
 	public getSimilarDeviceParams (filterValues): FpIntelligenceService.GetSimilarDevicesParams {
-		return _.merge({
-			deviceId: this.deviceId,
-			customerId: this.customerId,
-		},
-		filterValues);
+		return _.merge(
+			{
+				deviceId: this.deviceId,
+				customerId: this.customerId,
+			},
+			filterValues,
+		);
 	}
 
 	/** Function used to destroy the component */

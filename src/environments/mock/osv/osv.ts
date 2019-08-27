@@ -342,10 +342,12 @@ const mockAssets: AssetsResponse = {
 	},
 	uiAssetList: [
 		{
+			alert: 'information',
 			deployment: 'None',
 			hostName: 'AP4800.8DEC',
 			id: '231215372_NA,FCW2238N7LG,AIR-AP4800-B-K9,NA_AIR-AP4800-B-K9_FCW2238N7LG',
 			ipAddress: '10.13.5.117',
+			mdfId: '283915795',
 			optimalVersion: '16.11.1c',
 			productFamily: 'Cisco Aironet 4800 Series',
 			recommAcceptedDate: null,

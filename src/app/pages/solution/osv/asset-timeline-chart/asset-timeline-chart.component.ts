@@ -189,7 +189,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						info: value.info,
 						label: value.swVersion,
 						name: _.capitalize(value.name),
-						releaseDate: datePipe.transform(new Date(value.postDate), 'dd MMM yyyy'),
+						releaseDate: datePipe.transform(new Date(value.postDate), 'MMM d, y'),
 						swVersion: value.swVersion,
 						x: Date.UTC(
 							releaseDate.getFullYear(),
