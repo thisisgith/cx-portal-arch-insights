@@ -40,6 +40,12 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	public assetDatas: IAsset[] = [];
 	public selectedAsset: IAsset = null;
 	public destroy$ = new Subject();
+	public params: any = {
+		body : [],
+		customerId: '',
+		page : 0,
+		pageSize : 10,
+	};
 
 	constructor (
 		private logger: LogService,
@@ -50,12 +56,6 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 		this.customerId =  _.get(user, ['info', 'customerId']);
 		this.params.customerId =  _.cloneDeep(this.customerId);
 	}
-	public params: any = {
-		body : [],
-		customerId: '',
-		page : 0,
-		pageSize : 10,
-	};
 
 	/**
 	 * Used to Intialize Table options
