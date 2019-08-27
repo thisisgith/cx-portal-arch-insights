@@ -152,4 +152,13 @@ describe('HeaderComponent', () => {
 		expect(component.dropdownComponents.first.open)
 			.toBe(false);
 	});
+
+	it('should try and open a case and scan if not success', () => {
+		component.navigateHome();
+		expect(component.router.navigate)
+			.toHaveBeenCalledWith(
+				['solution/lifecycle'],
+				{ },
+			);
+	});
 });
