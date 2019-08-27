@@ -119,7 +119,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	/**
 	 * Contact a Designated Expert on done buttom
 	 */
-	public sendMessage () {
+	public sendSupportEmail () {
 		if (this.supportForm.valid) {
 			const userDetails = this.profileService.getProfile().cpr;
 			const params = {

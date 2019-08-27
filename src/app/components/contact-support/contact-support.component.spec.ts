@@ -90,7 +90,7 @@ describe('ContactSupportComponent', () => {
 			.returnValue(of(<any> { }));
 		component.ngOnInit();
 		fixture.detectChanges();
-		component.sendMessage();
+		component.sendSupportEmail();
 		expect(service.contactSupport)
 			.toHaveBeenCalledTimes(0);
 	});
