@@ -11,7 +11,7 @@
 		<div>
 			<span [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></span>
 			<br>
-			<a [title]="'_CSSupportLink_' | i18n" (click)="openContactSupport()" class="recommedation-link text-primary"
+			<a  (click)="contactSupport.emit()" class="recommedation-link text-primary"
 				data-auto-id="ContactExpert">
 				{{'_CSRequestExpert_' | i18n}}
 			</a>
@@ -88,4 +88,3 @@
 		<div class="col-11" [innerText]="item.swVersion"></div>
 	</div>
 </ng-template>
-<cui-modal></cui-modal>

@@ -19,10 +19,6 @@ import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, OsvPagination } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
-import {
-	ContactSupportComponent,
-} from 'src/app/components/contact-support/contact-support.component';
-
 /**
  * AssetSoftware Component
  */
@@ -37,6 +33,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
+	@Output() public contactSupport = new EventEmitter();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
@@ -280,12 +277,5 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		this.assetsParams.sort = sortColumn.key;
 		this.assetsParams.pageIndex = 1;
 		this.loadData();
-	}
-
-	/**
-	 * Open contact support modal
-	 */
-	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, { contactExpert: true });
 	}
 }

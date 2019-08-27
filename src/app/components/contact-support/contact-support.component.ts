@@ -59,7 +59,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			Validators.maxLength(this.descriptionMaxLength),
 		]);
 		this.modalHeading = this.contactExpert ? I18n.get('_CSTitle_') :
-			I18n.get('_SupportContact_');		
+			I18n.get('_SupportContact_');
 		this.supportForm = new FormGroup({
 			description: this.description,
 			title: this.title,
