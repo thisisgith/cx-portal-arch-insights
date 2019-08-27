@@ -648,7 +648,7 @@ describe('LifecycleComponent', () => {
 			 .toEqual('Accelerator');
 
 			expect(component.getSubtitle('ACC'))
-			 .toEqual('1-on-1 Coaching to put you in the fast lane');
+			 .toEqual('1-on-1 coaching to put you in the fast lane');
 
 			de = fixture.debugElement.query(By.css('.ribbon__white'));
 			expect(de)
@@ -1053,9 +1053,9 @@ describe('LifecycleComponent', () => {
 			sendParams();
 			fixture.detectChanges();
 
-			de = fixture.debugElement.query(By.css('#compActPct'));
+			de = fixture.debugElement.query(By.css('.comPertText'));
 			el = de.nativeElement;
-			expect(el.innerText)
+			expect(el.innerHTML)
 				.toEqual('25%');
 		});
 

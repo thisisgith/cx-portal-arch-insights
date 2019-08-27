@@ -1053,27 +1053,36 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns pertage string
 	 */
 	private calculateActionPercentage (pitstop: RacetrackPitstop) {
+		const start = I18n.get('_Start_');
 		if (pitstop) {
 			const completedActions = _.filter(pitstop.pitstopActions, 'isComplete').length;
 			const pct = Math.floor(
 				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
 
 			if (!_.isNil(pct)) {
-				return (pct === 0) ? 'start' : `${pct.toString()}%`;
+				return (pct === 0) ? start : `${pct.toString()}%`;
 			}
 		}
 
-		 return 'start';
+		return start;
 	}
 
 	/**
 	 * Updates the bookmark of the item
 	 * @param item bookmark item object
-	 * @param lifecycleCategory string of the category type
+	 * @param inputCategory string of the category type
 	 */
-	 public updateBookmark (item: AtxSchema | SuccessPath, lifecycleCategory: 'ATX' | 'SB') {
+	 public updateBookmark (item: AtxSchema | SuccessPath, inputCategory: 'ATX' | 'SB' | 'PG') {
 		let bookmark;
 		let id;
+		let lifecycleCategory: 'ATX' | 'SB';
+
+		// Product Guides has to be submitted as a Success Bytes bookmark.
+		if (inputCategory === 'PG') {
+			lifecycleCategory = 'SB';
+		} else {
+			lifecycleCategory = <'ATX' | 'SB'> inputCategory;
+		}
 
 		switch (lifecycleCategory) {
 			case 'ATX':
