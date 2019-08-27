@@ -47,13 +47,14 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 		private route: ActivatedRoute,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.customerId = _.get(user, ['info', 'customerId']);
+		this.customerId =  _.get(user, ['info', 'customerId']);
+		this.params.customerId =  _.cloneDeep(this.customerId);
 	}
 	public params: any = {
 		body : [],
-		customerId: this.customerId,
+		customerId: '',
 		page : 0,
-		pageSize : 8,
+		pageSize : 10,
 	};
 
 	/**
@@ -88,7 +89,7 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 					key: 'lastUpdateDate',
 					name: I18n.get('_ArchitectureConfigCollectionDate_'),
 					render: item =>
-						datePipe.transform(item.lastUpdateDate, 'yyyy-MM-dd'),
+						datePipe.transform(item.lastUpdateDate, 'medium'),
 					sortable: false,
 				},
 				{
@@ -165,8 +166,12 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 	/**
 	 * This method is used to set the null to asset object
 	 * in order to Close Fly-out View
+	 * @param isClosed - should be true or false
 	 */
-	public onPanelClose () {
-		this.selectedAsset = null;
+	public onPanelClose (isClosed: Boolean) {
+		if (isClosed) {
+			this.selectedAsset = null;
+		}
 	}
+
 }

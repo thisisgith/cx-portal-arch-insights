@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AssetDetailsHeaderModule, AssetDetailsModule, DetailsPanelModule } from '@components';
+import { AssetDetailsModule, DetailsPanelModule } from '@components';
 import { CbpDeviceAffectedComponent } from './cbp-device-affected.component';
 
 import {
@@ -15,7 +15,6 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 	exports: [CbpDeviceAffectedComponent],
 	imports: [
 		AssetDetailsModule,
-		AssetDetailsHeaderModule,
 		CommonModule,
 		DetailsPanelModule,
 		CuiTableModule,

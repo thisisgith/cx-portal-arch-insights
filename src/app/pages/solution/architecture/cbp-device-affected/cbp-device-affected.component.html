@@ -1,6 +1,15 @@
 <div class="row base-margin-top">
 	<div class="col-md-12">
 		<div class="container base-margin-top">
+			<div class="text-bold text-uppercase" [innerText]="('_ArchitectureDescription_' | i18n)"></div>
+			<div>{{cbpDetails?.description}}</div>
+		</div>
+	</div>
+</div>
+
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
 			<div class="text-bold text-uppercase" [innerText]="('_ArchitectureException_' | i18n)"></div>
 			<div>{{cbpDetails?.exceptions}}</div>
 		</div>
@@ -39,7 +48,8 @@
 					of {{totalItems}} </span>
 			</div>
 			<div class="base-margin-top">
-				<cui-table *ngIf="!isLoading" [options]="tableOptions" [data]="assetDatas"></cui-table>
+				<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions"
+				[data]="assetDatas"></cui-table>
 				<div class="section" *ngIf="!isLoading && totalItems > 0">
 					<cui-pager [page]="params.page" [limit]="params.pageSize" [totalItems]="totalItems"
 						(onPageChanged)="onPagerUpdated($event)"></cui-pager>
@@ -49,6 +59,16 @@
 				<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
 					<div class="wrapper">
 						<div class="wheel"></div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="!assetDatas.length && !isLoading">
+				<div class="text-center dbl-margin-top dbl-margin-bottom">
+					<div>
+						<span class="text-muted text-xlarge"
+							[innerText]="'_NoResultsFound_' | i18n"
+							data-auto-id="NoResultsFoundTxt" >
+						</span>
 					</div>
 				</div>
 			</div>
@@ -63,13 +83,4 @@
 </ng-template>
 
 <!-- Fly-Out View Slide-out on Selection of Title -->
-<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
-		<asset-details-header [asset]="selectedAsset"></asset-details-header>
-		<div detailsPanelTitle class="text-xlarge">
-			<span class="icon-wifi"></span>
-			<span class="qtr-margin-left" [innerText]="selectedAsset?.neName"></span>
-		</div>
-	</details-panel-header>
-	<asset-details [asset]="selectedAsset"></asset-details>
-</details-panel>
+<asset-details *ngIf= "selectedAsset" [asset]="selectedAsset" (close)="onPanelClose($event)" ></asset-details>
