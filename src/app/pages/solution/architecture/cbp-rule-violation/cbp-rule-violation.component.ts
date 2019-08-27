@@ -1,13 +1,16 @@
-import { Component, OnInit, Input, SimpleChanges,
-	OnChanges, ViewChild, TemplateRef } from '@angular/core';
-
+import {
+	Component, OnInit, Input, SimpleChanges,
+	OnChanges, ViewChild, TemplateRef,
+} from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ArchitectureService, IException, cbpRuleException } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
-
+//  /** Our current customerId */
+// const customerId = '9482521';
 /**
  * CBP Rule Component
  */
@@ -23,12 +26,15 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public totalItems = 0;
 	public cbpRuleExceptions: cbpRuleException[] = [];
 	public isLoading = true;
-	public fullscreen: any ;
+	public fullscreen: any;
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
+	public lastCollectionTime = '';
 	public exceptionObject: IException = null;
 	@ViewChild('riskTemplate', { static: true })
 	private riskTemplate: TemplateRef<{ }>;
+
+	public globalSearchText = '';
 
 	constructor (
 		private logger: LogService,
@@ -38,12 +44,14 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		this.logger.debug('CbpRuleViolationComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.paramsType.customerId = this.customerId;
 	}
 
 	public paramsType = {
-		customerId: this.customerId,
+		customerId: '',
 		page: 0,
 		pageSize: 10,
+		searchText: '',
 		severity: '',
 	};
 
@@ -62,9 +70,11 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
-		if (selectedFilter && !changes.filters.firstChange) {
+		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
+		if (selectedFilter && !isFirstChange) {
 			this.paramsType.severity =
-			selectedFilter.exceptions ? selectedFilter.exceptions.toString() : '';
+				selectedFilter.exceptions ? selectedFilter.exceptions.toString() : '';
+			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
 			this.getCBPRulesData();
@@ -80,7 +90,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 			columns: [
 				{
 					key: 'bpRuleTitle',
-					name: I18n.get('_ArchitectureRuleTitle_'),
+					name: I18n.get('_ArchitectureRuleName_'),
 					sortable: false,
 				},
 				{
@@ -97,16 +107,28 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 				{
 					key: 'recommendations',
 					name: I18n.get('_ArchitectureRecommendation_'),
+					render: item =>
+						item.recommendations.substr(0, 30)
+							.concat('...'),
 					sortable: false,
 				},
 				{
-					key: 'correctiveActionSummary',
+					key: 'softwareType',
+					name: I18n.get('_ArchitectureSoftwareType_'),
+					sortable: false,
+				},
+				{
+					key: 'correctiveActions',
 					name: I18n.get('_ArchitectureCorrectiveAction_'),
+					render: item => item.correctiveActions.substr(0, 25)
+						.concat('...'),
 					sortable: false,
 				},
 				{
-					key: 'assetsAffected',
-					name: I18n.get('_ArchitectureAssetsAffected_'),
+					key: 'deviceIpsWithExceptions',
+					name: I18n.get('_ArchitectureAssetsImpacted_'),
+					render: item => item.deviceIpsWithExceptions.length !== 0
+						? item.deviceIpsWithExceptions.split(';').length : '0',
 					sortable: false,
 				},
 			],
@@ -115,20 +137,17 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	}
 
 	/**
- 	* Used for shinking the  Recommendation, correctiveActionSummary
-		* assetsAffected field
- 	* @param array - The Array Objects to be modified
- 	*/
-	public ModifyCbpRuleExceptions (array) {
-		array.map(obj => {
-			obj.recommendations = obj.recommendations.substr(0, 30)
-				.concat('...');
-			obj.correctiveActionSummary = obj.correctiveActions.substr(0, 25)
-				.concat('...');
-			obj.assetsAffected = obj.deviceIpsWithExceptions.length !== 0
-				? obj.deviceIpsWithExceptions.split(';').length : '0';
-		});
-		// }
+	 * Keys down function
+	 * @param event contains eventdata
+	 */
+	public globalSearchFunction (event) {
+		if (event.keyCode === 13) {
+			this.isLoading = true;
+			this.tableStartIndex = 0;
+			this.paramsType.page = 0;
+			this.paramsType.searchText = this.globalSearchText;
+			this.getCBPRulesData();
+		}
 	}
 
 	/**
@@ -152,11 +171,12 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		this.architectureService.
 			getCBPSeverityList(this.paramsType)
 			.subscribe(data => {
+				const datePipe = new DatePipe('en-US');
 				this.isLoading = false;
 				this.totalItems = data.TotalCounts;
 				this.cbpRuleExceptions = data.BPRulesDetails;
+				this.lastCollectionTime = datePipe.transform(data.CollectionDate, 'medium');
 				this.tableEndIndex = (this.tableStartIndex + this.cbpRuleExceptions.length);
-				this.ModifyCbpRuleExceptions(this.cbpRuleExceptions);
 			}, err => {
 				this.logger.error('CBP Rule Component View' +
 					'  : getCBPRulesData() ' +

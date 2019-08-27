@@ -36,7 +36,7 @@ describe('CbpRuleViolationComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 	}));
 
 	beforeEach(() => {
@@ -62,10 +62,10 @@ describe('CbpRuleViolationComponent', () => {
 	});
 
 	it('should update pagination params', () => {
-		const pageEvent = { page: 1, limit : 10 };
+		const pageEvent = { page: 1, limit: 10 };
 		component.onPagerUpdated(pageEvent);
 		expect(component.paramsType.page)
-		.toBe(1);
+			.toBe(1);
 	});
 
 	it('should set null values on request errors', () => {
@@ -77,14 +77,29 @@ describe('CbpRuleViolationComponent', () => {
 			.and
 			.returnValue(
 				throwError(new HttpErrorResponse(error)),
-		);
+			);
 		component.ngOnInit();
 	});
 
 	it('should close panel', () => {
 		component.onPanelClose();
 		expect(component.exceptionObject)
-		.toBe(null);
+			.toBe(null);
+	});
+
+	it('should trigger search function', () => {
+		const event = { keyCode: 13 };
+		component.globalSearchFunction(event.keyCode);
+		if (event.keyCode) {
+			expect(component.isLoading)
+				.toBeTruthy();
+			expect(component.tableStartIndex)
+				.toBe(0);
+			expect(component.paramsType.page)
+				.toBe(0);
+			expect(component.paramsType.searchText)
+				.toBe('');
+		}
 	});
 
 	it('should pass data on row clicked', () => {
@@ -109,11 +124,45 @@ describe('CbpRuleViolationComponent', () => {
 		};
 		component.onTableRowClicked(tableEvent);
 		expect(component.exceptionObject)
-		.toBeDefined();
+			.toBeDefined();
 	});
 
-	// it('should call build table on init', () => {
-	// 	expect(component.buildTable)
-	// 		.toHaveBeenCalled();
-	// });
+	it('should reload the data on filter change', () => {
+		spyOn(service, 'getCBPSeverityList')
+			.and
+			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
+		component.ngOnChanges({
+			filters: {
+				currentValue: { exceptions: [] },
+				firstChange: false,
+				isFirstChange: () => false,
+				previousValue: null,
+			},
+		});
+
+		fixture.detectChanges();
+		expect(service.getCBPSeverityList)
+			.toHaveBeenCalled();
+
+	});
+
+	it('should not reload the data on filter change if first change', () => {
+		spyOn(service, 'getCBPSeverityList')
+			.and
+			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
+		component.ngOnChanges({
+			filters: {
+				currentValue: { exceptions: [] },
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+
+		fixture.detectChanges();
+		expect(service.getCBPSeverityList)
+			.toHaveBeenCalledTimes(0);
+
+	});
+
 });

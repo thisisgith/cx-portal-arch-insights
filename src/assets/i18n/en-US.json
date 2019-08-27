@@ -105,6 +105,7 @@
 	"_ArchitectureHideRecommendationAndCorrectiveAction_": "Hide Recommendation and Corrective Action",
 	"_ArchitectureHigh_": "High",
 	"_ArchitectureHostName_": "Host Name",
+	"_ArchitectureConfiguration_" :"Configuration",
 	"_ArchitectureIP_": "IP",
 	"_ArchitectureIPAddress_": "IPAddress",
 	"_ArchitectureL3AccessSwitching_": "L3 Access Switching",
