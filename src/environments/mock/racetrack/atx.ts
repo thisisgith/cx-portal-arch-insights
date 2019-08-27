@@ -445,6 +445,24 @@ export const ATXScenarios = [
 			`pitstop=Onboard&customerId=${customerId}`,
 		usecases: ['Use Case 1'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: Math.floor(Math.random() * 2000) + 100,
+					description: '(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled',
+					response: {
+						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'singleNoScheduled'),
+						status: 200,
+					},
+					selected: false,
+				},
+			],
+		},
+		url: `${api}?usecase=Campus Software Image Management&solution=IBN&` +
+			`pitstop=Onboard&customerId=${customerId}`,
+		usecases: ['Use Case 1'],
+	},
 ];
 
 /**

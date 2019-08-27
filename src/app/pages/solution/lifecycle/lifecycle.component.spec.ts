@@ -1160,9 +1160,8 @@ describe('LifecycleComponent', () => {
 				.toBeTruthy();
 
 			// change pitstop to "Onboard" (current) and check if button is enabled
-			racetrackATXSpy = spyOn(racetrackContentService, 'getRacetrackATX')
-				.and
-				.returnValue(of(getActiveBody(ATXScenarios[3])));
+			racetrackATXSpy.and
+				.returnValue(of(getActiveBody(ATXScenarios[7])));
 
 			component.getRacetrackInfo('Onboard');
 			component.recommendedAtxScheduleCardOpened = true;
