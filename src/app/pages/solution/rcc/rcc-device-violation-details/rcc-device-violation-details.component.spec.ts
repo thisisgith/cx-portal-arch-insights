@@ -97,6 +97,18 @@ describe('RccDeviceViolationDetailsComponent', () => {
 
 	});
 
+	it('should invoke loadData and call both APIs with empty response', () => {
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[8].scenarios.GET[0].response.body));
+		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[8].scenarios.GET[0].response.body));
+		component.loadData();
+		fixture.detectChanges();
+
+	});
+
 	it('Should invoke ngOnInit method which initializes both table options', () => {
 		component.ngOnInit();
 		expect(component.rccViolationInfoTableOptions)
@@ -117,6 +129,15 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		component.onSelection();
 		expect(component.impactedDeviceDetails)
 			.toEqual([]);
+	});
+
+	it('Should invoke getRccViolationDetailsData api ', () => {
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
+		component.onSelection();
+		expect(component.impactedDeviceDetails)
+			.toEqual(ComplianceScenarios[6].scenarios.GET[0].response.body.data.impactedAssets);
 	});
 
 	it('Should get the api data on ngonchanges method', done => {
