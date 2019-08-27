@@ -34,6 +34,7 @@ export class RiskMitigationComponent {
 		max: 200,
 		min: 0,
 	};
+	public selectedFilters;
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private logger: LogService,
@@ -41,11 +42,6 @@ export class RiskMitigationComponent {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.customerId = 7293498;
-	}
-
-	get selectedFilters () {
-		return _.filter(this.filters, 'selected');
 	}
 
 	@ViewChild('contextualMenuTemplate',
@@ -125,6 +121,14 @@ export class RiskMitigationComponent {
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		this.onlyCrashes = true;
 	}
+
+	/**
+	 * Selected filter is for to assign default filter on page loads.
+	 */
+	public selectedTimeFilters () {
+		_.filter(this.filters, 'selected');
+		this.selectedFilters = this.filters;
+  	 }
 	/**
 	 * Gets high crashes device data
 	 * @returns  the crashed device data
@@ -157,7 +161,6 @@ export class RiskMitigationComponent {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
 		this.getDeviceDetails('1');
-		this.resetFilters();
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
@@ -587,6 +590,8 @@ export class RiskMitigationComponent {
 	public getAdvisoryCount (data) {
 		const advisoryFilter = _.find(this.filters, { key: 'advisories' });
 		advisoryFilter.seriesData = data;
+		this.selectedFilters = this.filters;
+		this.clearFilters();
 	}
 
 	/**
@@ -655,6 +660,14 @@ export class RiskMitigationComponent {
 		this.resetFilters();
 		this.getDeviceDetails('1');
 		this.clearAllFilters = true;
+		const filter = _.find(this.filters, { key: 'advisories' });
+		if (filter) {
+			filter.seriesData[0].selected = true;
+		}
+		this.filters[0] = filter;
+		this.getSelectedSubFilters('advisories');
+		this.selectedFilters = this.filters;
+		this.selectedTimeFilters();
 	}
 
 	/**
