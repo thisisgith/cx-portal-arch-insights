@@ -76,7 +76,7 @@
 	<div class="row base-padding-top half-padding-left responsive-table"
 		*ngIf="!selectionLoading; else loaderTemplate;">
 		<cui-table [options]="impactedDeviceTableOptions" [data]="impactedDeviceDetails"
-		[offset]="tableOffset" (onSortingChanged)="onTableSortingChanged($event)"></cui-table>
+		[offset]="tableOffset" (onSortingChanged)="onTableSortingChanged()"></cui-table>
 		<div class="section">
 			<cui-pager [page]="tableOffset"
 				[limit]="tableConfig.tableLimit"
