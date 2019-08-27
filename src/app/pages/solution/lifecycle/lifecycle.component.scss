@@ -11,6 +11,31 @@ $vibblue: #017cad;
 	margin-left: -20px;
 }
 
+:host ::ng-deep .modal__content {
+	position: fixed !important;
+	height: 90% !important;
+	width: 95% !important;
+}
+
+.scrollable-card-content {
+	position: fixed !important;
+	height: 50%;
+}
+
+.scrollable-list-content {
+	position: fixed !important;
+	overflow-y: scroll !important;
+	height: 60%;
+	width: 90%;
+}
+
+.grid {    
+	overflow-y: scroll !important;
+    height: 70%;
+    position: fixed;
+    width: 90%;
+}
+
 .atx {
 	&__header {
 		background: $indigo;
