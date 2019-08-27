@@ -5,6 +5,8 @@ const i18n = require('../../src/assets/i18n/en-US.json');
 const searchMock = new MockService('SearchScenarios');
 const coverageMock = new MockService('CoverageScenarios');
 const contractMock = new MockService('ContractScenrios');
+const searchVal = 'a';
+let pitstop;
 
 describe('General Spec', () => {
 	context('Basic Loading Sanity', () => {
@@ -82,6 +84,32 @@ describe('General Spec', () => {
 				.should($searchBarTypeahead => {
 					expect($searchBarTypeahead).to.have.length(7);
 				});
+		});
+	});
+
+	context('Verify pitStop Parameter w/ CDC search', () => {
+		before(() => {
+			cy.login();
+			cy.loadApp('/solution/lifecycle');
+			cy.waitForAppLoading();
+		});
+
+		it('verify pitstop', () => { // PBC-507
+			cy.server();
+			cy.route('POST', '**/search/v1/cdcSearch*').as('case');
+			searchMock.disable('Generic Example');
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
+			cy.get('h3[class="text-primary"]').then(str => {
+				pitstop = str.text();
+			});
+
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(searchVal.concat('{enter}'));
+			cy.wait('@case').then(xhr => {
+				const req = xhr.request.body;
+				cy.log(`req is ${req}`);
+				expect(req).to.include(`pitStop=${pitstop}`);
+			});
 		});
 	});
 
