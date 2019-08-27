@@ -89,7 +89,8 @@
 			<button id="viewDisabled" class="btn btn--gray-ghost text-tuppercase disabled"
 				[innerText]="'_AfmCaseIdX_'|i18n:alarm?.tacCaseNo"></button>
 		</div>
-		<div class="col-md-4 text-right whitespace" title="{{errorDesc}}" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
+		<div class="col-md-4" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'"></div>
+		<div class="col-md-4 text-right" title="{{errorDesc}}" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
 			<div id="opacity" class="btn btn--gray-ghost disabled"
 				[innerText]="'_AfmEntitlementFailed_'| i18n"></div>
 		</div>

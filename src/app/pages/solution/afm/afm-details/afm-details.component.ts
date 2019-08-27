@@ -47,6 +47,7 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	 */
 	public ngOnInit () {
 		this.errorDesc = '';
+		this.eventUpdated.emit(false);
 	}
 	/**
 	 * Initialize error description
