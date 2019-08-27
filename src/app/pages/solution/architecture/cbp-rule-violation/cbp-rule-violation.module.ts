@@ -6,8 +6,7 @@ import { CuiTableModule, CuiPagerModule, CuiLoaderModule,
 import { DetailsPanelModule } from '@components';
 import { FormsModule } from '@angular/forms';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
-import {
-	CbpDeviceAffectedModule } from '../cbp-details/cbp-device-affected/cbp-device-affected.module';
+import { CbpDeviceAffectedModule } from '../cbp-device-affected/cbp-device-affected.module';
 
 /** Module representing the CBP Rule Violation Component */
 @NgModule({
