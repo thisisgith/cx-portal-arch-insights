@@ -107,7 +107,7 @@
 	"_ArchitectureHostName_": "Host Name",
 	"_ArchitectureConfiguration_" :"Configuration",
 	"_ArchitectureIP_": "IP",
-	"_ArchitectureIPAddress_": "IPAddress",
+	"_ArchitectureIPAddress_": "IP Address",
 	"_ArchitectureL3AccessSwitching_": "L3 Access Switching",
 	"_ArchitectureLastCollectionTime_": "Last Collection Time",
 	"_ArchitectureLow_": "Low",

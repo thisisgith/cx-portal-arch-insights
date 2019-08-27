@@ -39,6 +39,14 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 
 	public globalSearchText = '';
 
+	public paramsType = {
+		customerId: '',
+		page: 0,
+		pageSize: 10,
+		searchText: '',
+		severity: '',
+	};
+
 	constructor (
 		private logger: LogService,
 		private architectureService: ArchitectureService,
@@ -49,14 +57,6 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.paramsType.customerId = _.cloneDeep(this.customerId);
 	}
-
-	public paramsType = {
-		customerId: '',
-		page: 0,
-		pageSize: 10,
-		searchText: '',
-		severity: '',
-	};
 
 	/**
 	 * Used to call the getCBPRulesData and buildTable function for Updating the Table

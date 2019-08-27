@@ -5,7 +5,6 @@
 			<span [innerText]="exceptionObject?.bpRuleTitle"></span>
 		</div>
 		<div class="row ">
-
 			<div class="col-md-8 base-margin-bottom">
 				<div class="flex" *ngIf="exceptionObject">
 					<div class="dbl-margin-right">
@@ -42,7 +41,6 @@
 				<span [innerText]="'_ArchitectureException_' | i18n" class="text-large"></span>
 					<span class="qtr-margin-left text-small text-muted" 
 					[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
-
 					</span>
 			</div>
 		</div>
@@ -114,13 +112,13 @@
 			'Low': 'text-warning-alt'
 	}[item.severity]">
 	</span>
-	<span [innerHTML]="item.severity"></span>
+	<span [innerHTML]="item?.severity"></span>
 </ng-template>
 
 <ng-template #recommendationTemplate let-item="celldata">
-	<span [innerHTML]="item.recommendations"></span>
+	<span [innerHTML]="item?.recommendations"></span>
 </ng-template>
 
 <ng-template #correctiveActionsTemplate let-item="celldata">
-	<span [innerHTML]="item.correctiveActions"></span>
+	<span [innerHTML]="item?.correctiveActions"></span>
 </ng-template>
