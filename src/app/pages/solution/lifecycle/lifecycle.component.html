@@ -565,18 +565,11 @@
 				<div class="half-margin-left" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 				<div>
 						<a class="no-link successbytes-type-link text-left" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
-							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
-								<span class="icon-apps icon-small half-padding-right"></span>
-								<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'Video'">
-								<span class="icon-play-contained icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-							</div>
-							<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
-								<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-								<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-							</div>
+								<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
+									item: item,
+									autoid: 'SuccessBytesHoverBlock'
+								}">
+								</ng-container>
 						</a>
 				</div>
 				<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
@@ -899,22 +892,11 @@
 			</div>
 			<div class="success__card__icons">
 				<div class="type">
-					<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
-						<span class="icon-apps icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Web_' | i18n"></span>
-					</div>
-					<div class="text-left text-muted" *ngIf="item.type === 'Video'">
-						<span class="icon-play-contained icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-					</div>
-					<div class="text-left text-muted" *ngIf="item.type === 'PDF'">
-						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-					</div>
-					<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'">
-						<span class="icon-document icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
-					</div>
+						<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
+							item: item,
+							autoid: 'SuccessBytesCard'
+						}">
+						</ng-container>
 				</div>
 				<div class="duration text-muted" *ngIf="item.duration">
 					<span class="icon-clock icon-small half-padding-right"></span>
@@ -975,22 +957,11 @@
 			</div>
 			<div class="success__card__icons">
 				<div class="type">
-					<div class="text-left text-muted" *ngIf="item.type === 'Web Page'" data-auto-id="ProductGuidesCard-WebIcon">
-						<span class="icon-apps icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Web_' | i18n"></span>
-					</div>
-					<div class="text-left text-muted" *ngIf="item.type === 'Video'" data-auto-id="ProductGuidesCard-VideoIcon">
-						<span class="icon-play-contained icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-					</div>
-					<div class="text-left text-muted" *ngIf="item.type === 'PDF'" data-auto-id="ProductGuidesCard-PDFIcon">
-						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-					</div>
-					<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'" data-auto-id="ProductGuidesCard-DataSheetIcon">
-						<span class="icon-document icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
-					</div>
+					<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
+						item: item,
+						autoid: 'ProductGuidesCard'
+					}">
+					</ng-container>
 				</div>
 				<div class="duration text-muted" *ngIf="item.duration" data-auto-id="ProductGuidesCard-Duration">
 					<span class="icon-clock icon-small half-padding-right"></span>
@@ -1146,22 +1117,11 @@
 	<div class="row">
 		<div class="col-md-5">
 			<div *ngIf="celldata.type">
-					<div class="text-left text-muted" *ngIf="celldata.type === 'Web Page'">
-						<span class="icon-apps icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Web_' | i18n"></span>
-					</div>
-					<div class="text-left text-muted" *ngIf="celldata.type === 'Video'">
-						<span class="icon-play-contained icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Video_' | i18n"></span>
-					</div>
-					<div class="text-left text-muted" *ngIf="celldata.type === 'PDF'">
-						<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
-					</div>
-					<div class="text-left text-muted" *ngIf="celldata.type === 'Data Sheet'">
-						<span class="icon-document icon-small half-padding-right"></span>
-						<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
-					</div>
+					<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
+						item: celldata,
+						autoid: 'TableView'
+					}">
+					</ng-container>
 			</div>
 		</div>
 		<div class="col-md-7">
@@ -1279,3 +1239,22 @@
 		(submitted)="cgtRequestSubmit($event)">
 	</cgt-request-form>
 </ng-container>
+
+<ng-template #itemTypeIcons let-item="item" let-autoid="autoid">
+	<div class="text-left text-muted" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
+		<span class="icon-apps icon-small half-padding-right"></span>
+		<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
+	</div>
+	<div class="text-left text-muted" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
+		<span class="icon-play-contained icon-small half-padding-right"></span>
+		<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+	</div>
+	<div class="text-left text-muted" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
+		<span class="icon-file-pdf-o icon-small half-padding-right"></span>
+		<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+	</div>
+	<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
+		<span class="icon-document icon-small half-padding-right"></span>
+		<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
+	</div>
+</ng-template>
