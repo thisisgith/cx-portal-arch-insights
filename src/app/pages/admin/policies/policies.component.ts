@@ -33,6 +33,7 @@ export class PoliciesComponent implements OnInit {
 	public policyData: PolicyResponseModel[];
 	public loading = true;
 	public error = false;
+	public ignorePolicyExists = false;
 	public errorMessage: string;
 	public modalType: string;
 	public scans: PolicyResponseModel[];
@@ -73,6 +74,8 @@ export class PoliciesComponent implements OnInit {
 	public handleData () {
 		this.scans = [];
 		this.collections = [];
+		this.ignorePolicyExists = false;
+
 		_.forEach(this.policyData, element => {
 			const schedule = _.get(element, 'schedule');
 			if (schedule) {
@@ -85,8 +88,13 @@ export class PoliciesComponent implements OnInit {
 			}
 
 			const ptype = _.get(element, 'policyType');
+
 			if (ptype === 'SCAN' || ptype === 'IGNORE') {
 				this.scans.push(element);
+
+				if (ptype === 'IGNORE') {
+					this.ignorePolicyExists = true;
+				}
 			} else if (ptype === 'COLLECTION') {
 				this.collections.push(element);
 			}

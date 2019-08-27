@@ -71,6 +71,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	@Input() public policy: { };
 	@Input() public type: string;
 	@Input() public customerId: string;
+	@Input() public ignorePolicyExists: boolean;
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
@@ -219,10 +220,18 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				break;
 			}
 			case ModalTypes.newPolicy: {
+				if (this.ignorePolicyExists) {
+					this.timePeriods.options.pop();
+				}
+
 				this.newPolicy();
 				break;
 			}
 			case ModalTypes.editPolicy: {
+				if (this.ignorePolicyExists) {
+					this.timePeriods.options.pop();
+				}
+
 				this.setSelectors();
 
 				this.editPolicy();
