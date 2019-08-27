@@ -9,8 +9,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { ArchitectureService, IException, cbpRuleException } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
-//  /** Our current customerId */
-// const customerId = '9482521';
+
 /**
  * CBP Rule Component
  */
@@ -33,6 +32,10 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	public exceptionObject: IException = null;
 	@ViewChild('riskTemplate', { static: true })
 	private riskTemplate: TemplateRef<{ }>;
+	@ViewChild('recommendationTemplate', { static: true })
+	private recommendationTemplate: TemplateRef<{ }>;
+	@ViewChild('correctiveActionsTemplate', { static: true })
+	private correctiveActionsTemplate: TemplateRef<{ }>;
 
 	public globalSearchText = '';
 
@@ -44,7 +47,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		this.logger.debug('CbpRuleViolationComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.paramsType.customerId = this.customerId;
+		this.paramsType.customerId = _.cloneDeep(this.customerId);
 	}
 
 	public paramsType = {
@@ -98,19 +101,15 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					sortable: false,
 					template: this.riskTemplate,
 				},
-				// { name: 'Software Type', sortable: false, key: 'swType' },
 				{
 					key: 'exceptions',
 					name: I18n.get('_ArchitectureException_'),
 					sortable: false,
 				},
 				{
-					key: 'recommendations',
 					name: I18n.get('_ArchitectureRecommendation_'),
-					render: item =>
-						item.recommendations.substr(0, 30)
-							.concat('...'),
 					sortable: false,
+					template: this.recommendationTemplate,
 				},
 				{
 					key: 'softwareType',
@@ -118,11 +117,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 				{
-					key: 'correctiveActions',
 					name: I18n.get('_ArchitectureCorrectiveAction_'),
-					render: item => item.correctiveActions.substr(0, 25)
-						.concat('...'),
 					sortable: false,
+					template: this.correctiveActionsTemplate,
 				},
 				{
 					key: 'deviceIpsWithExceptions',

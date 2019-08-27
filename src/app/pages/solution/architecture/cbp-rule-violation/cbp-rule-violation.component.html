@@ -1,11 +1,7 @@
 <!-- App Details 360 slide-out -->
 <details-panel *ngIf="exceptionObject" [hidden]="!exceptionObject" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
-		<!-- <cbp-header [cbpDetails]="exceptionObject"></cbp-header> -->
 		<div detailsPanelTitle class="text-xlarge">
-			<!-- <span class="icon-left-arrow"  data-auto-id="PanelClose" (click)="onPanelClose()"></span>
-			<span class="icon-right-arrow" disabled></span> -->
-
 			<span [innerText]="exceptionObject?.bpRuleTitle"></span>
 		</div>
 		<div class="row ">
@@ -42,11 +38,12 @@
 
 <div class="row base-margin-top">
 		<div class="col-md-4">
-			<div class="container" *ngIf="cbpRuleExceptions.length > 0">
+			<div class="container" *ngIf="cbpRuleExceptions?.length > 0">
 				<span [innerText]="'_ArchitectureException_' | i18n" class="text-large"></span>
-				<span class="qtr-margin-left text-small text-muted">showing
-					{{ (tableStartIndex + 1) +' - ' +  tableEndIndex }}
-					of {{totalItems}}</span>
+					<span class="qtr-margin-left text-small text-muted" 
+					[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
+
+					</span>
 			</div>
 		</div>
 		<div class="col-md-8">
@@ -60,7 +57,9 @@
 						<div class="qtr-padding-top">
 							<div class="container">
 								<span [innerText]="'_ArchitectureLastUpdated_' | i18n" class="text-large"></span>
-								<span class="qtr-margin-left text-small text-muted">{{lastCollectionTime}}</span>
+								<span data-auto-id="lastCollectionTime" 
+								class="qtr-margin-left text-small text-muted" 
+								[innerHtml]="lastCollectionTime"></span>
 							</div>
 						</div>
 						<div>
@@ -81,27 +80,6 @@
 								</div>
 							</div>
 						</div>
-						<div class="view-change-icons">
-								<!-- <div class="btn-group btn-group--square half-margin-right">
-									<button class="btn btn--small btn--gray-ghost disabled">
-										<span class="icon-location"></span>
-									</button>
-									<button
-										data-auto-id="list-view-btn"
-										class="btn btn--small btn--gray-ghost"
-									>
-										<span class="icon-list-view"></span>
-									</button>
-									<button
-										data-auto-id="grid-view-btn"
-										class="btn btn--small btn--gray-ghost"
-									>
-										<span class="icon-grid-view"></span>
-									</button>
-								</div> -->
-							</div>
-							<!-- <cui-dropdown position="left" icon="icon-more icon-small text-muted rotate-90">
-							</cui-dropdown> -->
 					</form>
 				</div>
 			</div>
@@ -112,7 +90,8 @@
 	<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions" [data]="cbpRuleExceptions"
 		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 	<div class="section" *ngIf="totalItems">
-		<cui-pager *ngIf="!isLoading" [page]="paramsType.page" [limit]="paramsType.pageSize" [totalItems]="totalItems"
+		<cui-pager *ngIf="!isLoading" [page]="paramsType.page" 
+		[limit]="paramsType.pageSize" [totalItems]="totalItems"
 			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
 	</div>
 	<div class="base-margin-top" *ngIf="isLoading">
@@ -135,5 +114,13 @@
 			'Low': 'text-warning-alt'
 	}[item.severity]">
 	</span>
-	<span>{{item.severity}}</span>
+	<span [innerHTML]="item.severity"></span>
+</ng-template>
+
+<ng-template #recommendationTemplate let-item="celldata">
+	<span [innerHTML]="item.recommendations"></span>
+</ng-template>
+
+<ng-template #correctiveActionsTemplate let-item="celldata">
+	<span [innerHTML]="item.correctiveActions"></span>
 </ng-template>
