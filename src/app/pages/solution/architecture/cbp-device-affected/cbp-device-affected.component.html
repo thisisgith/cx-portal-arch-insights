@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<div class="container base-margin-top">
 			<div class="text-bold text-uppercase" [innerText]="('_ArchitectureDescription_' | i18n)"></div>
-			<div>{{cbpDetails?.description}}</div>
+			<div [innerText]="cbpDetails?.description" ></div>
 		</div>
 	</div>
 </div>
@@ -11,7 +11,7 @@
 	<div class="col-md-12">
 		<div class="container">
 			<div class="text-bold text-uppercase" [innerText]="('_ArchitectureException_' | i18n)"></div>
-			<div>{{cbpDetails?.exceptions}}</div>
+			<div [innerText]="cbpDetails?.exceptions" ></div>
 		</div>
 	</div>
 </div>
@@ -20,7 +20,7 @@
 	<div class="col-md-12">
 		<div class="container">
 			<div class="text-bold text-uppercase" [innerText]="('_ArchitectureRecommendation_' | i18n)"></div>
-			<div>{{cbpDetails?.recommendations}}</div>
+			<div [innerText]="cbpDetails?.recommendations"></div>
 		</div>
 	</div>
 </div>
@@ -29,7 +29,7 @@
 	<div class="col-md-12">
 		<div class="container">
 			<div class="text-bold text-uppercase" [innerText]="('_ArchitectureCorrectiveAction_' | i18n)"></div>
-			<div> {{cbpDetails?.correctiveActions}}</div>
+			<div [innerText]="cbpDetails?.correctiveActions"></div>
 		</div>
 	</div>
 </div>
@@ -43,9 +43,10 @@
 			</div>
 			<div class="base-margin-top" *ngIf="!isLoading && totalItems > 0">
 				<span [innerText]="'_ArchitectureAssets_' | i18n" class="text-large"></span>
-				<span class="qtr-margin-left text-small text-muted">showing
-					{{ (tableStartIndex + 1) +' - ' +  tableEndIndex }}
-					of {{totalItems}} </span>
+				<span class="qtr-margin-left text-small text-muted" 
+			[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
+
+			</span>
 			</div>
 			<div class="base-margin-top">
 				<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions"
@@ -56,7 +57,7 @@
 				</div>
 			</div>
 			<div class="base-margin-top" *ngIf="isLoading">
-				<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
+				<div class="loading-spinner flex-center" aria-label="'_ArchitectureLoading_' | i18n">
 					<div class="wrapper">
 						<div class="wheel"></div>
 					</div>
@@ -78,7 +79,7 @@
 
 <ng-template #assetTmpl let-item="celldata">
 	<span>
-		<a data-auto-id="openAsset360View" (click)="openAsset360View(item)"> {{item.hostName}}</a>
+		<a data-auto-id="openAsset360View" [innerText]="item?.hostName" (click)="openAsset360View(item)"> </a>
 	</span>
 </ng-template>
 

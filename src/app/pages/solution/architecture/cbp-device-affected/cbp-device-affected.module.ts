@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AssetDetailsModule, DetailsPanelModule } from '@components';
 import { CbpDeviceAffectedComponent } from './cbp-device-affected.component';
-
 import {
 	CuiTableModule,
 	CuiPagerModule,
