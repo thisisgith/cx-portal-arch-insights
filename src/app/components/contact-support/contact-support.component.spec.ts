@@ -5,11 +5,14 @@ import { EmailControllerService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { of } from 'rxjs';
+import { UserResolve } from '@utilities';
+import { user } from '@mock';
 
 describe('ContactSupportComponent', () => {
 	let component: ContactSupportComponent;
 	let service: EmailControllerService;
 	let fixture: ComponentFixture<ContactSupportComponent>;
+	let userResolve: UserResolve;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -24,10 +27,10 @@ describe('ContactSupportComponent', () => {
 						getProfile () {
 							return {
 								cpr: {
+									pf_auth_email: 'susan@company.com',
 									pf_auth_firstname: 'Susan',
 									pf_auth_lastname: 'Swanson',
 									pf_auth_uid: 'susans',
-									pf_auth_email: 'susan@company.com',
 								},
 							};
 						},
@@ -39,6 +42,10 @@ describe('ContactSupportComponent', () => {
 	}));
 
 	beforeEach(() => {
+		userResolve = TestBed.get(UserResolve);
+		spyOn(userResolve, 'getCustomerId')
+			.and
+			.returnValue(of(user.info.customerId));
 		fixture = TestBed.createComponent(ContactSupportComponent);
 		service = TestBed.get(EmailControllerService);
 		component = fixture.componentInstance;
