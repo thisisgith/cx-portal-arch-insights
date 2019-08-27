@@ -128,10 +128,28 @@ describe('DevicesWithExceptionsComponent', () => {
 		.toBe(null);
 	});
 
-	it('should close the flyout', () => {
-		component.onFlyOutPanelClose();
-		expect(component.selectedAsset)
-		.toBe(null);
+	it('should close AssetView', () => {
+		const isClosed = true;
+		component.closeAsset360View(isClosed);
+		if (isClosed) {
+			expect(component.selectedAsset)
+			.toBe(null);
+		}
+	});
+
+	it('should trigger search function', () => {
+		const event = { keyCode: 13 };
+		component.globalSearchFunction(event.keyCode);
+		if (event.keyCode) {
+			expect(component.isLoading)
+				.toBeFalsy();
+			expect(component.tableStartIndex)
+				.toBe(0);
+			expect(component.params.page)
+				.toBe(0);
+			expect(component.params.searchText)
+				.toBe('');
+		}
 	});
 
 });

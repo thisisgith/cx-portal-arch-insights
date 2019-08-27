@@ -135,6 +135,7 @@
 	"_ArchitectureSwitchInterfaceMTU_": "Switch Interface MTU",
 	"_ArchitectureSwitchRedundancy_": "Switch Redundancy",
 	"_ArchitectureVersion_": "Version",
+	"_ArchitectureShowingXofYTotalItems_":"Showing {0} - {1} of {2}",
 	"_AskAQuestion_": "Ask a Question (S4)",
 	"_AskTheExpert_": "Ask The Expert",
 	"_Asset_": "Asset",
