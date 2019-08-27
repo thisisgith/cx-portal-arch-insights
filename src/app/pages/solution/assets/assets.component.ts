@@ -132,7 +132,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	public allAssetsSelected = false;
 	public filtered = false;
 	private InventorySubject: Subject<{ }>;
-	private openDropdown: HTMLElement;
 
 	public view: 'list' | 'grid' = 'list';
 	public selectOnLoad = false;
@@ -207,18 +206,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		return _.filter([
 			_.get(item, ['data', 'supportCovered'], false) ? {
 				label: I18n.get('_OpenSupportCase_'),
-				onClick: () => {
-					if (this.openDropdown) {
-						this.openDropdown.click();
-						this.openDropdown = undefined;
-					}
-
-					return this.cuiModalService.showComponent(
-						CaseOpenComponent,
-						{ asset: item.data },
-						'full',
-					);
-				},
+				onClick: () => this.cuiModalService.showComponent(
+					CaseOpenComponent,
+					{ asset: item.data },
+					'full',
+				),
 			} : undefined,
 			_.get(item, ['element', 'isManagedNE'], false) ?
 				{
@@ -1300,25 +1292,22 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Click handler for asset action menu
-	 * @param {Event} event click event
+	 * Click handler logic for the asset list
+	 * @param {string} type click target type (checkbox, item, or menu)
+	 * @param {Item} [item] Targeted item
 	 */
-	public onDropdownClick (event: Event) {
-		const target = <HTMLElement> event.target;
-		// TODO: Temporary hack to fix actions menu behavior
-		//  Refactor this later on while taking into account issue #162 in cui-libraries
-		if (event.isTrusted && !target.childNodes.length) { // real user click on menu button
-			if (this.openDropdown && (this.openDropdown !== event.target)) {
-				// If a menu is open and user clicks a different menu, close the original menu
-				this.openDropdown.click();
-				this.openDropdown = target;
-			} else if (this.openDropdown === event.target) {
-				// If a menu is open and user clicks the same menu, all menus are now closed
-				this.openDropdown = undefined;
-			} else {
-				// If no menu is open and user clicks a menu, a menu is open
-				this.openDropdown = target;
-			}
+	public onClick (type: 'checkbox' | 'item' | 'menu', item?: Item) {
+		this.logger.debug(type);
+		switch (type) {
+			case 'checkbox':
+				this.onItemSelect(item);
+				break;
+			case 'item':
+				this.onRowSelect(item);
+				break;
+			case 'menu':
+			default:
+				return;
 		}
 	}
 }

@@ -185,14 +185,12 @@
 				<tbody data-auto-id="AssetsTableBody">
 					<tr *ngFor="let item of inventory"
 						attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
-						(click)="onRowSelect(item)"
 						[ngClass]="{ 'active': item.details }">
-						<td (click)="$event.stopPropagation();"
-							attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}">
+						<td attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}">
 							<label class="checkbox">
 								<input type="checkbox"
 									[checked]="item.selected"
-									(click)="onItemSelect(item)"
+									(click)="onClick('checkbox', item)"
 									attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}" />
 								<span class="checkbox__input"
 									attr.data-auto-id="InventoryItemCheckbox-{{ item.data.serialNumber }}">
@@ -202,7 +200,7 @@
 						<td *ngFor="let column of assetsTable.columns"
 							[ngStyle]="{ 'width': column.width }"
 							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
-							(click)="column.click ? $event.stopPropagation() : null">
+							(click)="column.click ? onClick('menu') : onClick('item', item)">
 							<ng-container *ngIf="column.template">
 								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, element: item.element, actions: item.actions }"></ng-container>
 							</ng-container>
@@ -229,29 +227,31 @@
 <ng-template #cardTemplate let-item="item">
 	<div class="card curved-corners container-fluid card-content"
 		[ngClass]="{ 'card__selected': item.selected }"
-		(click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
+		attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}"
+		(click)="onClick('checkbox', item)">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
 				<a
 					attr.data-auto-id="Device-{{ item.data?.serialNumber }}"
 					class="text-large text-center"
 					[innerText]="item.data.deviceName | truncate:true:20"
-					(click)="onRowSelect(item); $event.stopPropagation();"
 				></a>
 			</div>
-			<div class="flex-center text-center">
-				<span *ngIf="item.data?.productName"
-					[innerText]="item.data?.productName"
-					attr.data-auto-id="ProductName-{{ item.data?.serialNumber }}">
-				</span>
-			</div>
-			<div class="flex-center dbl-margin-top dbl-margin-bottom">
-				<!-- ngIf's using literal values until source of image is confirmed -->
-				<img *ngIf="false" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}" [src]="" alt=""/>
-				<span *ngIf="true" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}"
-					class="col-md-6 text-muted text-center text-uppercase text-wrap-normal"
-					[innerText]="'_NoPhotoAvailable_' | i18n">
-				</span>
+			<div>
+				<div class="flex-center text-center">
+					<span *ngIf="item.data?.productName"
+						[innerText]="item.data?.productName"
+						attr.data-auto-id="ProductName-{{ item.data?.serialNumber }}">
+					</span>
+				</div>
+				<div class="flex-center dbl-margin-top dbl-margin-bottom">
+					<!-- ngIf's using literal values until source of image is confirmed -->
+					<img *ngIf="false" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}" [src]="" alt=""/>
+					<span *ngIf="true" attr.data-auto-id="DeviceImg-{{ item.data?.serialNumber }}"
+						class="col-md-6 text-muted text-center text-uppercase text-wrap-normal"
+						[innerText]="'_NoPhotoAvailable_' | i18n">
+					</span>
+				</div>
 			</div>
 		</div>
 		<div class="card__body text-small dbl-margin-bottom">
@@ -308,9 +308,9 @@
 			<div *ngIf="getRowActions(item).length">
 				<cui-dropdown
 					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
-					(click)="$event.stopPropagation()"
 					[actions]="getRowActions(item)"
-					icon="icon-more icon-small text-muted rotate-90">
+					icon="icon-more icon-small text-muted rotate-90"
+					(click)="onClick('menu')">
 				</cui-dropdown>
 			</div>
 		</div>
@@ -363,8 +363,7 @@
 	<cui-dropdown *ngIf="actions.length"
 		[actions]="actions"
 		position="left"
-		icon="icon-more icon-medium text-muted rotate-90"
-		(click)="onDropdownClick($event)">
+		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
 </ng-template>
 
