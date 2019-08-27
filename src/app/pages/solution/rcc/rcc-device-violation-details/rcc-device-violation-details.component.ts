@@ -240,8 +240,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		});
 	}
 	/**
-	 * Function called when page changed
-	 * @param selectedItem gives page number
+	 * Function called when page changes
+	 * @param selectedItem gives page number 
 	 */
 	public onSelection () {
 		this.selectionLoading = true;
