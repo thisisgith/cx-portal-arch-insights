@@ -292,24 +292,6 @@ export const ATXScenarios = [
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 100,
-					description: '(ATX) IBN-Campus Network Assurance-Implement',
-					response: {
-						body: MockATX('IBN', 'Campus Network Assurance', 'Implement'),
-						status: 200,
-					},
-					selected: true,
-				},
-				{
-					delay: Math.floor(Math.random() * 2000) + 100,
-					description: '(ATX) IBN-Campus Network Assurance-Use',
-					response: {
-						body: MockATX('IBN', 'Campus Network Assurance', 'Use'),
-						status: 200,
-					},
-					selected: true,
-				},
-				{
-					delay: Math.floor(Math.random() * 2000) + 100,
 					description: '(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled',
 					response: {
 						body: MockATX('IBN', 'Campus Network Assurance', 'Onboard', 'singleNoScheduled'),
