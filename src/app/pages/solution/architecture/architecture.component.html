@@ -30,7 +30,7 @@
 								attr.id="ArchitectureSelectVisualFilter-{{
 									filter.key
 								}}"
-								attr.data-auto-id="AssetsSelectVisualFilter-{{
+								attr.data-auto-id="ArchitectureSelectVisualFilter-{{
 									filter.key
 								}}"
 								[ngClass]="{
@@ -95,7 +95,7 @@
 			*ngIf="!status.isLoading"
 			[seriesData]="filter.seriesData"
 			[width]="350"
-			(subfilter)="onSubfilterSelect($event, filter)"
+			(subfilter)="onSubfilterSelect($event.filter, filter)"
 		>
 		</bar-chart>
 		<div class="base-margin-top" *ngIf="status.isLoading">

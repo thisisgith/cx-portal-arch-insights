@@ -34,8 +34,14 @@ export class ArchitectureComponent implements OnInit {
 	private exceptionsFilterTemplate: TemplateRef<{ }>;
 
 	public visualLabels = [
-		{ label: I18n.get('_ArchitectureConfigurationBestPractices_'), active: true, count: null },
-		{ label: I18n.get('_AssetsWithExceptions_'), active: false, count: null },
+		{
+			active: true, count: null,
+			label: I18n.get('_ArchitectureConfigurationBestPracticesExceptions_'),
+		},
+		{
+			active: false, count: null,
+			label: I18n.get('_ArchitectureAssetsWithExceptions_'),
+		},
 	];
 
 	constructor (
@@ -45,7 +51,7 @@ export class ArchitectureComponent implements OnInit {
 		) {
 		this.logger.debug('ArchitectureComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.customerId = _.get(user, ['info', 'customerId']);
+		this.customerId = _.cloneDeep(_.get(user, ['info', 'customerId']));
 	}
 
 	/**
@@ -53,23 +59,22 @@ export class ArchitectureComponent implements OnInit {
 	 *  and buildFilters function for Updating the Table
 	 */
 	public ngOnInit (): void {
-		this.architectureService.getExceptionsCount(this.customerId)
-			.pipe(
-				takeUntil(this.destroy$),
-			)
-			.subscribe(res => {
-				this.visualLabels[0].count = res.TotalCounts;
-			});
-
-		this.architectureService.getAssetsExceptionsCount(this.customerId)
-			.pipe(
-				takeUntil(this.destroy$),
-			)
-			.subscribe(res => {
-				this.visualLabels[1].count = res.TotalCounts;
-			});
-
+		this.getExceptionsCount();
+		this.getAssetsExceptionsCount();
 		this.buildFilters();
+	}
+
+	/**
+	 * used to get the count of assets with exceptions
+	 */
+	public getAssetsExceptionsCount () {
+		this.architectureService.getAssetsExceptionsCount({ customerId: this.customerId })
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe(res => {
+			this.visualLabels[1].count = res.TotalCounts;
+		});
 	}
 
 	/**
@@ -96,7 +101,7 @@ export class ArchitectureComponent implements OnInit {
 				selected: true,
 				seriesData: [],
 				template: this.exceptionsFilterTemplate,
-				title: I18n.get('_Exceptions_'),
+				title: I18n.get('_ArchitectureSeverity_'),
 			},
 		];
 		this.loadData();
@@ -165,10 +170,11 @@ export class ArchitectureComponent implements OnInit {
 	private getExceptionsCount () {
 		const exceptionFilter = _.find(this.filters, { key: 'exceptions' });
 
-		return this.architectureService.getExceptionsCount(this.customerId)
+		return this.architectureService.getExceptionsCount({ customerId: this.customerId })
 			.pipe(
 				takeUntil(this.destroy$),
 				map((data: any) => {
+					this.visualLabels[0].count = data.TotalCounts;
 					const series = [];
 
 					const High = _.get(data, 'High');
