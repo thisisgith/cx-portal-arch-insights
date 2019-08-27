@@ -26,7 +26,7 @@
 					<div class="form-group__text">
 						<label for="support-description" data-auto-id="supportDescription" class="text-bold qtr-padding-bottom"
 							[innerText]="'_SupportDescription_' | i18n"></label>
-						<textarea class="textarea" rows="8" formControlName="description" [maxlength]="descriptionMaxLength" [placeholder]="!contactExpert ? '' : '_CSDetailPlaceholder_' | i18n"></textarea>
+						<textarea class="textarea" rows="8" formControlName="description" [maxlength]="descriptionMaxLength" [placeholder]="contactExpert ? ('_CSDetailPlaceholder_' | i18n) : ''"></textarea>
 					</div>
 					<div char-count
 						[value]="supportForm.controls.description.value.length"
