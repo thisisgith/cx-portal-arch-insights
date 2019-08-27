@@ -190,7 +190,7 @@
 							<label class="checkbox">
 								<input type="checkbox"
 									[checked]="item.selected"
-									(click)="onClick('checkbox', item)"
+									(click)="onClick($event, 'checkbox', item)"
 									attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}" />
 								<span class="checkbox__input"
 									attr.data-auto-id="InventoryItemCheckbox-{{ item.data.serialNumber }}">
@@ -200,7 +200,7 @@
 						<td *ngFor="let column of assetsTable.columns"
 							[ngStyle]="{ 'width': column.width }"
 							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
-							(click)="column.click ? onClick('menu') : onClick('item', item)">
+							(click)="column.click ? onClick($event, 'menu') : onClick($event, 'item', item)">
 							<ng-container *ngIf="column.template">
 								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, element: item.element, actions: item.actions }"></ng-container>
 							</ng-container>
@@ -228,13 +228,14 @@
 	<div class="card curved-corners container-fluid card-content"
 		[ngClass]="{ 'card__selected': item.selected }"
 		attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}"
-		(click)="onClick('checkbox', item)">
+		(click)="onClick($event, 'checkbox', item)">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
 				<a
 					attr.data-auto-id="Device-{{ item.data?.serialNumber }}"
 					class="text-large text-center"
 					[innerText]="item.data.deviceName | truncate:true:20"
+					(click)="onClick($event, 'item', item)"
 				></a>
 			</div>
 			<div>
@@ -310,7 +311,7 @@
 					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
 					[actions]="getRowActions(item)"
 					icon="icon-more icon-small text-muted rotate-90"
-					(click)="onClick('menu')">
+					(click)="onClick($event, 'menu')">
 				</cui-dropdown>
 			</div>
 		</div>

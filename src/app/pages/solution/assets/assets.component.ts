@@ -1293,21 +1293,27 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 	/**
 	 * Click handler logic for the asset list
-	 * @param {string} type click target type (checkbox, item, or menu)
+	 * @param {Event} $event Click event
+	 * @param {string} type Click target type (checkbox, item, or menu)
 	 * @param {Item} [item] Targeted item
 	 */
-	public onClick (type: 'checkbox' | 'item' | 'menu', item?: Item) {
-		this.logger.debug(type);
+	public onClick ($event: Event, type: 'checkbox' | 'item' | 'menu', item?: Item) {
+		if ($event.defaultPrevented) {
+			// Event has already been handled
+			return;
+		}
 		switch (type) {
 			case 'checkbox':
 				this.onItemSelect(item);
+				// Don't mark event as handled so table row checkbox still works
 				break;
 			case 'item':
 				this.onRowSelect(item);
+				$event.preventDefault(); // mark this event as handled
 				break;
 			case 'menu':
 			default:
-				return;
+				$event.preventDefault(); // mark this event as handled
 		}
 	}
 }
