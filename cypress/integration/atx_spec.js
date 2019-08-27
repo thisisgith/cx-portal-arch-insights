@@ -27,6 +27,13 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	before(() => {
 		cy.login();
 		cy.loadApp();
+
+		// Disable the setup wizard and quick tour so they don't block other elements
+		cy.window().then(win => {
+			win.Cypress.hideDNACHeader = true;
+			win.Cypress.showQuickTour = false;
+		});
+
 		cy.waitForAppLoading();
 
 		// Wait for the ATX panel to finish loading
@@ -817,22 +824,20 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		it('ATX View All table view should allow bookmarking/unbookmarking items', () => {
 			atxItems.forEach((item, index) => {
 				cy.get('tr').eq(index + 1).within(() => {
-					if (item.status !== 'completed') {
-						if (item.bookmark) {
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'text-indigo')
-								.click();
-							cy.wait('(SB) IBN-Bookmark');
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'icon-bookmark-clear');
-						} else {
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'icon-bookmark-clear')
-								.click();
-							cy.wait('(SB) IBN-Bookmark');
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'text-indigo');
-						}
+					if (item.bookmark) {
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'text-indigo')
+							.click();
+						cy.wait('(SB) IBN-Bookmark');
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'icon-bookmark-clear');
+					} else {
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'icon-bookmark-clear')
+							.click();
+						cy.wait('(SB) IBN-Bookmark');
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'text-indigo');
 					}
 				});
 			});
@@ -1269,9 +1274,6 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
-
-			// Close the setup wizard so it doesn't block other elements
-			// cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
