@@ -207,6 +207,7 @@
 		<div class="base-padding-top half-padding-left" *ngIf="autoid==='moreATXList'">
 			<button attr.data-auto-id="{{ autoid }}-HoverModal-ViewSessions"
 				class="btn btn--small btn--secondary text-uppercase"
+				[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
 				(click)="atxMoreViewSessions(item)"
 				[innerText]="'_ViewSessions_' | i18n">
 			</button>
@@ -263,7 +264,7 @@
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
 		<div class="text-large half-padding-bottom text-capitalize" [innerText]="title" attr.data-auto-id="{{ autoid }}-Title"></div>
-		<ng-container *ngIf="item.status === 'scheduled'">
+		<ng-container *ngIf="item.status === 'scheduled' && scheduledAtxMap[item.atxId]">
 			<div class="row">
 				<div class="col-md-1">
 					<span class="text-info icon-calendar" attr.data-auto-id="{{ autoid }}-Calendar"></span>
@@ -276,6 +277,7 @@
 		</ng-container>
 		<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 			class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
+			[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
 			(click)="recommendedAtxScheduleCardOpened = true; atxScheduleCardOpened = false; componentData.atx.interested=''"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
@@ -820,6 +822,7 @@
 					<div class="col-md-6 text-left">
 						<button id="cardRecommendedATXScheduleButton" data-auto-id="cardRecommendedATXScheduleButton"
 							class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
+							[ngClass]="item?.sessions?.length > 0 ? null : 'disabled'"
 							(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = item; getCoordinates($event)"
 							[innerText]="'_ViewSessions_' | i18n">
 						</button>
@@ -1215,6 +1218,7 @@
 <ng-template #actionTemplate let-celldata="celldata" let-type="type">
 	<div class="text-right" *ngIf="type === 'ATX'">
 		<button data-auto-id="ViewSessionButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
+			[ngClass]="celldata?.sessions?.length > 0 ? null : 'disabled'"
 			(click)="atxScheduleCardOpened = true; recommendedAtxScheduleCardOpened = false; componentData.atx.interested = celldata; getCoordinates($event)"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
