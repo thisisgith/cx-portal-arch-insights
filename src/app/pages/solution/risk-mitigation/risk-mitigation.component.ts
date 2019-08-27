@@ -328,7 +328,7 @@ export class RiskMitigationComponent {
 	public getFilterDetailsForSearchQuery (searchText: String) {
 		let time;
 		const filter =  _.find(this.filters[0].seriesData, { selected: true });
-		if(filter){
+		if (filter) {
 			switch (filter.label) {
 				case '24h': {
 					time = '1';
@@ -347,24 +347,17 @@ export class RiskMitigationComponent {
 					break;
 				}
 			}
-
-			return {
-				time,
-				customerId: this.customerId,
-				key: '',
-				search: searchText,
-				sortDirection: '',
-			};
 		} else {
-
-			return {
-				customerId: this.customerId,
-				key: '',
-				search: searchText,
-				sortDirection: '',
-				time: '1',
-			};
+			time = '1';
 		}
+
+		return {
+			time,
+			customerId: this.customerId,
+			key: '',
+			search: searchText,
+			sortDirection: '',
+		};
 
 	}
 	/**
@@ -674,6 +667,7 @@ export class RiskMitigationComponent {
 	 * Function used to reset the filters
 	 */
 	public resetFilters () {
+		this.searchQueryString = '';
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {

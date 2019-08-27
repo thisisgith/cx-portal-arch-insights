@@ -16,7 +16,7 @@ import { catchError, switchMap, tap, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
 import { LogService } from '@cisco-ngx/cui-services';
-import { CaseService } from '@cui-x/services';
+import { CaseClassifyResponse, CaseService } from '@cui-x/services';
 import { CaseRequestType } from '@classes';
 import { ProblemArea, Subtech, Tech } from '@interfaces';
 import { environment } from '@environment';
@@ -323,6 +323,22 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param caseDescription case description
 	 * @returns Observable with result
 	 */
-	private fetchPredictions (caseTitle: string, caseDescription: string) {
+	private fetchPredictions (caseTitle: string, caseDescription: string):
+		Observable<CaseClassifyResponse> {
+		return this.caseService.fetchClassification({
+			data: {
+				caseTitle,
+				appId: environment.csone.classifyAppId,
+				caseClientTrxId: 'case-100777', // TODO: figure out this id
+				caseCsymptom: caseDescription,
+			},
+		})
+		.pipe(
+			catchError(err => {
+				this.logger.error(`Fetch Case Predictions :: Error ${err}`);
+
+				return of(null);
+			}),
+		);
 	}
 }

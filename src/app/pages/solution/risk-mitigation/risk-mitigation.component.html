@@ -83,13 +83,14 @@
 	</ng-container>
 	<div class="row">
 		<div class="col-9 qtr-margin-top">
-			<span class="font15 qtr-margin-top"[innerText]="'_RMAssets_' | i18n"></span>
+			<span class="font15 qtr-margin-top" [innerText]="'_RMAssets_' | i18n"></span>
 		</div>
 		<div class="col-3" *ngIf="!onlyCrashes">
 			<cui-search
 				placeholder="Search"
 				[debounce]="searchOptions.debounce"
 				[compressed]="true"
+				[searchText] = "searchQueryString"
 				(onUpdate)="onSearchQuery($event)"
 			>
 			</cui-search>
