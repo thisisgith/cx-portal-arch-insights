@@ -36,13 +36,11 @@ export class DetailsPanelStackService {
 	 * @param keepBottomPanel set to true to close all 360 panels except the bottom panel
 	 */
 	public reset (keepBottomPanel = false): void {
-		const panelsToClose = keepBottomPanel ? _.slice(this.panels, 1) : this.panels;
-		_.each(panelsToClose, (x: Panel360) => x.onPanelClose());
-
-		const bottomPanel = _.get(this.panels, 0);
-		if (keepBottomPanel && bottomPanel) {
-			this.panels = [bottomPanel];
+		if (keepBottomPanel) {
+			_.each(_.slice(this.panels, 1), (x: Panel360) => x.onPanelClose());
+			this.panels = _.slice(this.panels, 0, 1);
 		} else {
+			_.each(this.panels, (x: Panel360) => x.onPanelClose());
 			this.panels = [];
 		}
 	}
