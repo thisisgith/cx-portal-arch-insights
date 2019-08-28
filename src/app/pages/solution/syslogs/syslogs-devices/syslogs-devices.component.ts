@@ -219,7 +219,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			if (this.deviceHeaderValues.lastScan === null) {
 				this.notScaned = false;
 			}
-			if (this.deviceHeaderValues.serialNumber === '') {
+			if (this.deviceHeaderValues.serialNumber === '' || this.deviceHeaderValues.serialNumber === null) {
 				this.serialNumberStatus = false;
 			}
 		});
