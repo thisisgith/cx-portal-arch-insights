@@ -8,7 +8,6 @@ import {
 	CuiPagerModule,
 	CuiSpinnerModule,
 	CuiDropdownModule,
-	CuiButtonModule,
 } from '@cisco-ngx/cui-components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AfmComponent } from './afm.component';
@@ -51,7 +50,6 @@ const childRoutes: Routes = [
 		RouterModule.forChild(childRoutes),
 		AfmModule.forRoot({ rootUrl }),
 		DetailsPanelModule,
-		CuiButtonModule,
 		AssetDetailsModule,
 		AssetDetailsHeaderModule,
 		ColumnChartModule,
