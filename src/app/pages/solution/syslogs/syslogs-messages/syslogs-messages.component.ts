@@ -142,6 +142,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public messageGridInit () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
+			striped: false,
+			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'MsgType',

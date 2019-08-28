@@ -54,3 +54,21 @@
 		bottom: 0;
 	}
 }
+
+:host ::ng-deep .cui .icon-more::before {
+	// styling to make the more icon sizing more aligned with design
+	font-size: 20px !important;
+}
+
+/* CiscoUI input styling (for search) override start */
+#searchInput {
+	border: 0;
+	border-bottom: 1px solid #ced0d3;
+
+	&::placeholder {
+		color: #b6b6b6;
+		font-style: normal;
+	}
+}
+
+/* CiscoUI input styling (for search) override end */

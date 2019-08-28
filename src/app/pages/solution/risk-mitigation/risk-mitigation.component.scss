@@ -20,3 +20,13 @@
 .cursor {
 	cursor: pointer;
 }
+
+:host ::ng-deep .form-group__text > input {
+	border: 0 !important;
+	border-bottom: 1px solid #ced0d3 !important;
+
+	&::placeholder {
+		color: #b6b6b6 !important;
+		font-style: normal !important;
+	}
+}

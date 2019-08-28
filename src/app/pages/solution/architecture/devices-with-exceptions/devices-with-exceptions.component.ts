@@ -110,7 +110,9 @@ export class DevicesWithExceptionsComponent implements OnInit {
 					sortable: false,
 				},
 			],
+			hover: true,
 			singleSelect: true,
+			striped: false,
 		});
 	}
 

@@ -18,3 +18,13 @@
 	text-overflow: ellipsis;
 	width: 400px !important;
 }
+
+.form-group__text > input {
+	border: 0;
+	border-bottom: 1px solid #ced0d3;
+
+	&::placeholder {
+		color: #b6b6b6;
+		font-style: normal;
+	}
+}

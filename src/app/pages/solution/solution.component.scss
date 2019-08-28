@@ -58,3 +58,75 @@
 	color: #6b81a5;
 	box-shadow: 0 2px 5px #dbdbdb;
 }
+
+/* CiscoUI table styling override start */
+// Chose to use specificity instead of importants
+:host ::ng-deep .table {
+	border: none;
+	border-spacing: 2px;
+	border-collapse: collapse;
+	margin-top: 20px;
+	color: #6c757d;
+
+	thead::after {
+		border-bottom: 1px solid #e4e4e4;
+		content: '';
+		display: block;
+		position: absolute;
+		left: 12px;
+		width: calc(100% - 22px); // subtract left positioning + cui panel right padding
+	}
+
+	th {
+		background-color: transparent;
+		border-right: none;
+	}
+
+	td {
+		border-right: none;
+
+		.flex-center {
+			// looks off when header is longer, so just aligning to the left
+			justify-content: flex-start !important;
+		}
+	}
+
+	tr {
+		height: 42px;
+
+		&::after {
+			border-bottom: 1px solid #e4e4e4;
+			content: '';
+			display: block;
+			position: absolute;
+			left: 12px;
+			width: calc(100% - 22px);
+		}
+
+		&:first-of-type::after {
+			border-bottom: none;
+		}
+	}
+}
+
+::ng-deep .cui {
+	.table--hover > tbody > tr:hover {
+		background-color: rgba(236, 244, 252, 0.7);
+	}
+
+	.table--selectable > tbody {
+		> tr > td:first-child {
+			border-left: 0;
+		}
+
+		> tr.active {
+			background-color: #ecf4fc;
+
+			td:first-child {
+				border-left: 0;
+			}
+		}
+	}
+}
+
+/* CiscoUI table styling override end */

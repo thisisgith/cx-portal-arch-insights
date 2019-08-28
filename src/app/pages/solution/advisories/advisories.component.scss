@@ -1,17 +1,14 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
-:host ::ng-deep .table {
-	border: none;
-	border-bottom: 1px solid #dfdfdf;
+#searchInput-Security,
+#searchInput-Field,
+#searchInput-Bugs {
+	border: 0;
+	border-bottom: 1px solid #ced0d3;
 
-	th {
-		background-color: transparent;
-		border-right: none;
-		white-space: pre-line;
-	}
-
-	td {
-		border-right: none;
+	&::placeholder {
+		color: #b6b6b6;
+		font-style: normal;
 	}
 }
 

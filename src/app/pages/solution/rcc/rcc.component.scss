@@ -61,3 +61,13 @@
 .assetsCount:focus {
 	color: $status-blue;
 }
+
+#searchInput {
+	border: 0;
+	border-bottom: 1px solid #ced0d3;
+
+	&::placeholder {
+		color: #b6b6b6;
+		font-style: normal;
+	}
+}
