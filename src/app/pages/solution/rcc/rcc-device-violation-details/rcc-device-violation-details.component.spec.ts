@@ -34,7 +34,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({ }),
+						queryParams: of({}),
 						snapshot: {
 							data: {
 								user,
@@ -84,7 +84,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 	it('should invoke onPageIndexChange method', () => {
 		component.onPageIndexChange({ page: 1 });
 		expect(component.tableConfig.tableOffset)
-		.toEqual(1);
+			.toEqual(1);
 	});
 
 	it('should invoke loadData and call both APIs', () => {
@@ -97,9 +97,9 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		component.loadData();
 		fixture.detectChanges();
 		expect(component.impactedDeviceDetails)
-		.toEqual(ComplianceScenarios[6].scenarios.GET[0].response.body.data.impactedAssets);
+			.toEqual(ComplianceScenarios[6].scenarios.GET[0].response.body.data.impactedAssets);
 		expect(component.policyRuleData)
-		.toEqual(ComplianceScenarios[7].scenarios.GET[0].response.body.data);
+			.toEqual(ComplianceScenarios[7].scenarios.GET[0].response.body.data);
 
 	});
 
@@ -113,9 +113,9 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		component.loadData();
 		fixture.detectChanges();
 		expect(component.impactedDeviceDetails)
-		.toEqual([]);
+			.toEqual([]);
 		expect(component.policyRuleData.policy)
-		.toEqual({ });
+			.toEqual({});
 
 	});
 
@@ -162,9 +162,9 @@ describe('RccDeviceViolationDetailsComponent', () => {
 
 	it('Should invoke getRccViolationDetailsData api ', () => {
 		component.selectionObj = {
-			osName : 'IOS-XE',
-			productFamily : 'C2300',
-			productModel : 'WS-C2300',
+			osName: 'IOS-XE',
+			productFamily: 'C2300',
+			productModel: 'WS-C2300',
 		};
 		spyOn(rccTrackService, 'getRccViolationDetailsData')
 			.and
@@ -197,7 +197,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		component.ngOnChanges(changes);
 		fixture.detectChanges();
 		expect(component.policyRuleData.policy)
-		.toEqual({ });
+			.toEqual({});
 		done();
 	});
 	it('Should not get the api data on ngonchanges when', done => {
@@ -227,7 +227,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		component.ngOnChanges(changes);
 		fixture.detectChanges();
 		expect(component.errorResult)
-		.toBeFalsy();
+			.toBeFalsy();
 		done();
 	});
 
@@ -247,7 +247,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		};
 		component.ngOnChanges(changes);
 		expect(component.queryParamMapObj)
-		.toBeDefined();
+			.toBeDefined();
 		expect(component.loadData());
 	});
 
