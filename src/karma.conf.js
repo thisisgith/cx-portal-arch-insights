@@ -24,6 +24,7 @@ module.exports = config => {
 				random: true,
 				oneFailurePerSpec: true,
 				hideDisabled: true,
+				timeoutInterval: 20000,
 			},
 		},
 		coverageIstanbulReporter: {
