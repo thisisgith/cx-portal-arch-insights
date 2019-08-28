@@ -111,13 +111,17 @@
 </ng-template>
 <ng-template #noDataAvailable>
 	<div class="col-8 panel-group panel-group--compressed">
-			<div class="panel absolute-center">
-				<span class="text-large text-uppercase icon-warning" [innerText]="'_RccNoDataAvailable_' | i18n"
-					*ngIf="apiNoData"></span>
-				<span class="text-large text-uppercase icon-warning" [innerText]="'_RccNoResults_' | i18n"
-					*ngIf="errorResult"></span>
-			</div>
+		<div class="panel absolute-center">
+			<span class="text-large text-uppercase icon-warning" 
+				[innerText]="'_RccNoDataAvailable_' | i18n"
+				*ngIf="apiNoData">
+			</span>
+			<span class="text-large text-uppercase icon-warning" 
+				[innerText]="'_RccNoResults_' | i18n"
+				*ngIf="errorResult">
+			</span>
 		</div>
+	</div>
 </ng-template>
 <ng-template #commonTemplate>
 	<div *ngIf="(initialLoading && apiNoData);then loaderTemplate else noDataAvailable">
