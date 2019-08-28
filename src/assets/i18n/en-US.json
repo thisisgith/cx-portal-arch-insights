@@ -819,7 +819,7 @@
 	"_RMDevice_": "Device",
 	"_RMFiltered_": "Filtered",
 	"_RMFirstOccurance_": "First Occurance",
-	"_RMGlobalRisk_": "Global Risk",
+	"_RMGlobalRisk_": "Global Risk Rank",
 	"_RMHighCrashRiskAssets_": "High Crash Risk Assets",
 	"_RMLastOccurance_": "Last Occurance",
 	"_RMNumberOfCrashes_": "# Crashes",
