@@ -231,6 +231,44 @@ function getIESlides (ovaSelection: Selection) {
 }
 
 /**
+ * Slides for syslog
+ */
+const syslogSlides: Slide[] = [
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SyslogSlide1Text_'),
+		src: 'assets/img/setup-ie/syslog_1.png',
+		stepLabel: I18n.get('_CiscoDNACollector_'),
+		stepNum: 6,
+		type: 'image',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SyslogSlide2Text_'),
+		src: 'assets/img/setup-ie/syslog_2.png',
+		stepLabel: I18n.get('_CiscoDNACollector_'),
+		stepNum: 6,
+		type: 'image',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SyslogSlide3Text_'),
+		src: 'assets/img/setup-ie/syslog_3.png',
+		stepLabel: I18n.get('_CiscoDNACollector_'),
+		stepNum: 6,
+		type: 'image',
+	},
+	{
+		buttonText: I18n.get('_IveDoneThis_'),
+		content: I18n.get('_SyslogSlide4Text_'),
+		src: 'assets/img/setup-ie/syslog_4.png',
+		stepLabel: I18n.get('_CiscoDNACollector_'),
+		stepNum: 6,
+		type: 'image',
+	},
+];
+
+/**
  * Returns an array of slides given a slideset name
  * @param slideset - name of the slide set
  * @param ovaSelection - ovaSelection query param
@@ -246,5 +284,7 @@ export function getSlides (slideset: SlideSet, ovaSelection?: Selection): Slide[
 			return vboxSlides;
 		case 'ova':
 			return ovaSlides;
+		case 'syslog':
+			return syslogSlides;
 	}
 }

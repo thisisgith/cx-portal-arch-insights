@@ -304,10 +304,10 @@
 					<span class="badge badge--tiny badge--success icon-check"></span>
 				</span>
 			</div>
-			<div *ngIf="getRowActions(item).length">
+			<div *ngIf="item.actions.length">
 				<cui-dropdown
 					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
-					[actions]="getRowActions(item)"
+					[actions]="item.actions"
 					icon="icon-more icon-small text-muted rotate-90"
 					(click)="onClick($event, 'menu')">
 				</cui-dropdown>

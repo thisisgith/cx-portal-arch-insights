@@ -137,6 +137,19 @@ $vibblue: #017cad;
 	width: 100%;
 }
 
+.max-height {
+	height: 100% !important;
+}
+
+.line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 4;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
 .table-img-width {
 	width: 80px;
 }
@@ -179,18 +192,31 @@ $vibblue: #017cad;
 	}
 }
 
-.cgtpanel--open {
+.atxCancelpanel--open {
 	box-shadow: $base-box-shadow;
 	height: 120px;
 	width: 400px;
 	position: absolute;
-	top: 40px;
+	// top: 40px;
 	left: 210px;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
 }
 
+.cgtpanel--open {
+	box-shadow: $base-box-shadow;
+	height: 120px;
+	width: 400px;
+	position: absolute;
+	// top: 40px;
+	left: 210px;
+	z-index: 3;
+	background-color: $white;
+	border-radius: 10px;
+}
+
+.atxCancelpanel--open::after,
 .cgtpanel--open::after {
 	content: "";
 	position: absolute;
