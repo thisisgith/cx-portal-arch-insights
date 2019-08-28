@@ -76,7 +76,7 @@ describe('SetupIeComponent', () => {
 			},
 		});
 		expect(component.currentStep)
-			.toBe(7);
+			.toBe(8);
 	}));
 
 	it('should add NoDNACComponent step when no DNAC detected', fakeAsync(async () => {
@@ -88,7 +88,7 @@ describe('SetupIeComponent', () => {
 			},
 		});
 		expect(component.steps.length)
-			.toBe(9);
+			.toBe(10);
 	}));
 
 	it('should trigger a new step', fakeAsync(async () => {
@@ -131,6 +131,6 @@ describe('SetupIeComponent', () => {
 		});
 		component.activeComponent.instance.onStepComplete.emit();
 		expect(component.steps.length)
-			.toBe(8);
+			.toBe(9);
 	}));
 });
