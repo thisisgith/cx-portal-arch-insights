@@ -98,13 +98,13 @@ describe('SyslogsComponent', () => {
 				fixture.detectChanges();
 				const timeRangeFilter = _.find(component.filters,
 					{ key: 'timeRange' });
-				component.onSubfilterSelect('30', timeRangeFilter, true);
+				component.onSubfilterSelect('1', timeRangeFilter, true);
 				const severityFilter = _.find(component.filters,
 					{ key: 'severity' });
-				component.onSubfilterSelect('1', severityFilter, true);
+				component.onSubfilterSelect('3', severityFilter, true);
 				const catalogFilter = _.find(component.filters,
 					{ key: 'catalog' });
-				component.onSubfilterSelect('others', catalogFilter, true);
+				component.onSubfilterSelect('Cisco', catalogFilter, true);
 				fixture.detectChanges();
 
 				expect(_.filter(component.filters, 'selected'))
@@ -113,9 +113,9 @@ describe('SyslogsComponent', () => {
 					.toContain(severityFilter);
 				expect(_.filter(component.filters, 'selected'))
 					.toContain(catalogFilter);
-				const subfilter = _.find(timeRangeFilter.seriesData, { filter: '30' });
-				const subfilterSeverity = _.find(severityFilter.seriesData, { filter: '1' });
-				const subfilterCatalog = _.find(catalogFilter.seriesData, { filter: 'others' });
+				const subfilter = _.find(timeRangeFilter.seriesData, { filter: '1' });
+				const subfilterSeverity = _.find(severityFilter.seriesData, { filter: '3' });
+				const subfilterCatalog = _.find(catalogFilter.seriesData, { filter: 'Cisco' });
 				expect(subfilter.selected)
 					.toBeTruthy();
 				expect(subfilterSeverity.selected)

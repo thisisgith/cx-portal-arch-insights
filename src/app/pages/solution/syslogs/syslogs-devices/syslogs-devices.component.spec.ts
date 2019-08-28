@@ -153,8 +153,8 @@ describe('SyslogsMessagesComponent', () => {
 							timeRange: 1,
 						},
 						firstChange: true,
-						previousValue: undefined,
 						isFirstChange: () => false,
+						previousValue: undefined,
 					},
 				};
 				component.ngOnChanges(selectedRowData1);
@@ -162,5 +162,39 @@ describe('SyslogsMessagesComponent', () => {
 				 .toBeTruthy();
 				done();
 			});
+	});
+	it('Should Load device detail headers', done => {
+		spyOn(syslogsService, 'getDeviceHeaderDetails')
+		.and
+		.returnValue(of(SyslogScenarios[8].scenarios.GET[0].response.body));
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const devicetableParams = {
+				active: true,
+				DeviceHost: 'Device_6_0_10_1',
+				DeviceIp: '6.0.10.1',
+				ProductFamily: null,
+				ProductId: 'C9606R',
+				SoftwareType: '16.11.1',
+				SoftwareVersion: '16.11.1',
+				syslogCount: 1319,
+			};
+			const customerId = '123456';
+			component.sysLogHeaderDetails(devicetableParams, customerId);
+			expect(syslogsService.getDeviceHeaderDetails)
+			.toHaveBeenCalled();
+			expect(component.deviceHeaderValues)
+				.toBeDefined();
+			expect(component.deviceHeaderValues.lastScan)
+				.toBe(null);
+			expect(component.notScaned)
+				.toBeFalsy();
+			expect(component.deviceHeaderValues.serialNumber)
+				.toBe('');
+			expect(component.serialNumberStatus)
+				.toBeFalsy();
+			done();
+		});
 	});
 });

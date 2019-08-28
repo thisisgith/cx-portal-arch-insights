@@ -67,7 +67,7 @@ class SyslogsService extends __BaseService {
 		const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/api/customerportal/syslog/v1/message/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&includeMsgType='+syslogParams.includeMsgType+'&excludeMsgType='+syslogParams.excludeMsgType+"&companyId="+syslogParams.customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/message/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&includeMsgType='+syslogParams.includeMsgType+'&excludeMsgType='+syslogParams.excludeMsgType+'&globalSearch='+syslogParams.search+"&companyId="+syslogParams.customerId,
 			__body,
 			{
 			  headers: __headers,
@@ -92,7 +92,7 @@ class SyslogsService extends __BaseService {
 		const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/api/customerportal/syslog/v1/asset/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&asset='+syslogParams.asset+"&companyId="+syslogParams.customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/asset/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&asset='+syslogParams.asset+"&searchData="+syslogParams.search+"&companyId="+syslogParams.customerId,
 			__body,
 			{
 			  headers: __headers,
@@ -337,6 +337,7 @@ export interface GetSyslogsParams {
 	deviceHost?:string;
 	catalogList?:Array<string>;
 	severityList?:Array<string>;
+    search?:string;
 }
 }
 export { SyslogsService };
