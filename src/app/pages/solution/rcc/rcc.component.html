@@ -45,19 +45,19 @@
 </ng-container>
 <div class="col-md-12 base-margin-top">
 	<div class="col-md-9 base-margin-top" *ngIf="!isAssetView">
-		<span [innerText]="'_RccShowing_' | i18n"></span>&nbsp;
-		<span [innerText]="conditionViolations || ('_RccNoValue_' | i18n)"></span>&nbsp;
-		<span [innerText]="'_RccConditionViolations_' | i18n"></span>&nbsp;
-		<span [innerText]="'_RccAcross_' | i18n"></span>&nbsp;
-		<span [innerText]="conditionViolationsAssetCount || ('_RccNoValue_' | i18n)"></span>&nbsp;
-		<span [innerText]="'_RccAssets_' | i18n"></span>
+		<span [innerText]="'_RccShowing_' | i18n"></span>
+		<span class="qtr-margin-left" [innerText]="conditionViolations || ('_RccNoValue_' | i18n)"></span>
+		<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
+		<span class="qtr-margin-left" [innerText]="'_RccAcross_' | i18n"></span>
+		<span class="qtr-margin-left" [innerText]="conditionViolationsAssetCount || ('_RccNoValue_' | i18n)"></span>
+		<span class="qtr-margin-left" [innerText]="'_RccAssets_' | i18n"></span>
 	</div>
 	<div class="col-md-9 base-margin-top" *ngIf="isAssetView">
-		<span [innerText]="'_RccShowing_' | i18n"></span>&nbsp;
-		<span [innerText]="withViolationsAssetsCount || ('_RccNoValue_' | i18n)"></span>&nbsp;
-		<span [innerText]="'_RccAssetsWith_' | i18n"></span>&nbsp;
-		<span [innerText]="assetsConditionViolationsCount || ('_RccNoValue_' | i18n)"></span>&nbsp;
-		<span [innerText]="'_RccConditionViolations_' | i18n"></span>
+		<span [innerText]="'_RccShowing_' | i18n"></span>
+		<span class="qtr-margin-left" [innerText]="withViolationsAssetsCount || ('_RccNoValue_' | i18n)"></span>
+		<span class="qtr-margin-left" [innerText]="'_RccAssetsWith_' | i18n"></span>
+		<span class="qtr-margin-left" [innerText]="assetsConditionViolationsCount || ('_RccNoValue_' | i18n)"></span>
+		<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 	</div>
 	<div class="col-md-3 searchSection">
 		<div class="flex flex-fluid flex-right">
@@ -239,7 +239,7 @@
 	<details-panel-header (close)="onPanelClose('selectedAssetModal');slideinFullScreen.assetsFullScreen = false" [(fullscreen)]="slideinFullScreen.assetsFullScreen"
 		[fullscreenToggle]="true">
 		<div detailsPanelTitle>
-			<span class="text-xlarge" [innerText]="('_RccViolations_' | i18n | titlecase)+(': ')"></span>
+			<span class="text-xlarge" [innerText]="('_RccViolationsFor_' | i18n | titlecase)+(': ')"></span>
 			<a href="" class="text-xlarge selected" [innerText]="selectedAssetData?.deviceName || ('_NA_' | i18n)"></a>
 		</div>
 		<div class="row">
