@@ -105,7 +105,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			}
 
 			if (this.type === 'field') {
-				this.title = `${I18n.get('_FieldNotice_')}`;
+				this.title = `${I18n.get('_FieldNotice_')} FN ${this.advisoryId}`;
 			} else if (this.type === 'security') {
 				this.title = I18n.get('_SecurityAdvisory_');
 			} else if (this.type === 'bug') {

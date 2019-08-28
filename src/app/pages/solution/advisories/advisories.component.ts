@@ -893,19 +893,16 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * @param event the index of the tab we've selected
 	 */
 	public selectTab (event: number) {
-		if (this.activeIndex !== event) {
-			const selectedTab = this.tabs[event];
-			_.each(this.tabs, (tab: Tab) => {
-				if (tab !== selectedTab) {
-					tab.selected = false;
-				}
-			});
-			this.selectedAdvisory = null;
-			this.activeIndex = event;
-			selectedTab.selected = true;
-			this.routeParam = selectedTab.route;
-			this.adjustQueryParams();
-		}
+		const selectedTab = this.tabs[event];
+		_.each(this.tabs, (tab: Tab) => {
+			if (tab !== selectedTab) {
+				tab.selected = false;
+			}
+		});
+		this.activeIndex = event;
+		selectedTab.selected = true;
+		this.routeParam = selectedTab.route;
+		this.adjustQueryParams();
 	}
 
 	/**
