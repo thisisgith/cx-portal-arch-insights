@@ -4,8 +4,8 @@ import { CbpRuleViolationComponent } from './cbp-rule-violation.component';
 import { CuiTableModule, CuiPagerModule, CuiLoaderModule,
 	 CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { DetailsPanelModule } from '@components';
-import { CbpDetailsModule } from '../cbp-details/cbp-details.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { CbpDeviceAffectedModule } from '../cbp-device-affected/cbp-device-affected.module';
 
 /** Module representing the CBP Rule Violation Component */
 @NgModule({
@@ -16,8 +16,8 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		CuiTableModule,
 		CuiPagerModule,
 		DetailsPanelModule,
-		CbpDetailsModule,
 		CuiLoaderModule,
+		CbpDeviceAffectedModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
 	],

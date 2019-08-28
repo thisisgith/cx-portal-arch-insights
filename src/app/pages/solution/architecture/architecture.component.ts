@@ -34,12 +34,15 @@ export class ArchitectureComponent implements OnInit {
 	private exceptionsFilterTemplate: TemplateRef<{ }>;
 
 	public visualLabels = [
-		{
-			active: true, count: null,
+		{	active: true,
+			count: null,
+			key: 'cbp-exception',
 			label: I18n.get('_ArchitectureConfigurationBestPracticesExceptions_'),
 		},
 		{
-			active: false, count: null,
+			active: false,
+			count: null,
+			key: 'asset-exception',
 			label: I18n.get('_ArchitectureAssetsWithExceptions_'),
 		},
 	];
@@ -73,7 +76,8 @@ export class ArchitectureComponent implements OnInit {
 			takeUntil(this.destroy$),
 		)
 		.subscribe(res => {
-			this.visualLabels[1].count = res.TotalCounts;
+			const assetException = _.find(this.visualLabels, { key: 'asset-exception' });
+			assetException.count = res.TotalCounts;
 		});
 	}
 
@@ -174,7 +178,8 @@ export class ArchitectureComponent implements OnInit {
 			.pipe(
 				takeUntil(this.destroy$),
 				map((data: any) => {
-					this.visualLabels[0].count = data.TotalCounts;
+					const cbpException = _.find(this.visualLabels, { key: 'cbp-exception' });
+					cbpException.count = data.TotalCounts;
 					const series = [];
 
 					const High = _.get(data, 'High');
