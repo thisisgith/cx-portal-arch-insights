@@ -12,7 +12,7 @@ import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 
-fdescribe('SyslogsdevicedetailsComponent', () => {
+describe('SyslogsdevicedetailsComponent', () => {
 	let component: SyslogsDeviceDetailsComponent;
 	let fixture: ComponentFixture<SyslogsDeviceDetailsComponent>;
 	let syslogsService: SyslogsService;
