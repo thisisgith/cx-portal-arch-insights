@@ -70,7 +70,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		this.logger.debug('RccDeviceViolationDetailsComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.customerId = '7293498';
 	}
 	/**
 	 * Method for getting data for slide in page from APIs
