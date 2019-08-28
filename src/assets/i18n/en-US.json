@@ -633,7 +633,7 @@
 	"_SyslogExcludeMessage_":"Exclude Message",
 	"_SyslogFiltersBy_":"Filter By",
 	"_SyslogGridMessage_":"Message",
-	"_SyslogImpactedAssets_":"Impact Assets",
+	"_SyslogImpactedAssets_" :"Impact Assets",
 	"_SyslogIncludeMessage_":"Include Message",
 	"_SyslogIpAddress_": "IP Address",
 	"_SyslogSerialNumber_": "Serial Number",

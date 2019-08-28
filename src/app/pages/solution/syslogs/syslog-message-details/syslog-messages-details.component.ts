@@ -31,12 +31,15 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	@Input('selectedFilter') public selectedFilter: any;
 	public tableOptions: CuiTableOptions;
 	public innerTableOptions: CuiTableOptions;
-	public selectdrowpdown = {
+	public selectDropDown = {
+		assets: { },
 		productFamily: '',
 		productID: '',
+		selectedFilters : { },
 		Software: '',
 		timePeriod: '',
 	};
+
 	public customerId;
 	public tableData: DeviceDetailsdata[] = [];
 	public tableOffset = 0;
@@ -56,7 +59,13 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 		pageLimit: 10,
 		pageNum: 1,
 		pagerLimit: 10,
-	}
+	};
+	public panelDataParam = {
+		customerId: '',
+		selectedFilters: '',
+		selectedRowData: '',
+	};
+
 	// tslint:disable-next-line: no-any
 	public timePeriod: any[] = [{
 		name: '1 day',
@@ -97,7 +106,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public ngOnChanges () {
 		this.loadSyslogPaneldata(this.asset);
 		this.loadSyslogPanelFilter(this.asset);
-		this.selectdrowpdown.timePeriod = this.selectedFilter.days;
+		this.selectDropDown.timePeriod = this.selectedFilter.days;
 	}
 
 	/**
@@ -178,9 +187,11 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 */
 
 	public onSelection () {
+		this.selectDropDown.assets = this.asset;
+		this.selectDropDown.selectedFilters = this.selectedFilter;
 		this.syslogsService
 			.getPanelFilterGridData(
-				this.selectdrowpdown, this.asset)
+				this.selectDropDown)
 			.pipe(takeUntil(this.destroy$),
 			catchError(err => {
 				this.logger.error('syslog-messages-details.component : getPanelFilterGridData() ' +
@@ -219,7 +230,13 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 
 	public loadSyslogPaneldata (tableRowData) {
 		if (this.asset) {
-			this.syslogsService.getPanelGridData(tableRowData, this.customerId)
+			this.panelDataParam = {
+				customerId: this.customerId,
+				selectedFilters: this.selectedFilter,
+				selectedRowData : tableRowData,
+			};
+
+			this.syslogsService.getPanelGridData(this.panelDataParam)
 				.pipe(
 					takeUntil(this.destroy$),
 					catchError(err => {
