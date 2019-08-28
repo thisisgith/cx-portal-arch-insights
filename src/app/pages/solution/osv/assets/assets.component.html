@@ -10,8 +10,8 @@
 	<div class="col-md-3 text-right">
 		<div>
 			<span [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></span>
-			<a  (click)="contactSupport.emit()" class="recommedation-link text-primary"
-				data-auto-id="ContactExpert" [innerText]="'_CSRequestExpert_' | i18n">
+			<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert"
+				[innerText]="'_CSRequestExpert_' | i18n">
 			</a>
 		</div>
 	</div>
@@ -72,9 +72,11 @@
 
 <ng-template #recommendationsTemplate let-item="celldata">
 	<div *ngIf="item?.recommendationCount && item.recommendationCount > 0 ">
-		<span class="icon-lightbulb icon-small"></span>
-		<sup data-auto-id="AssetRecommendationCount" [innerHtml]="item.recommendations.length"></sup>
-		<span class="qtr-margin-left" [innerText]="'_OsvAvailable_' | i18n"></span>
+		<span class="badge-wrapper">
+			<span class="icon-lightbulb icon-small"></span>
+			<span class="badge badge--blue" [innerText]="item.recommendationCount"></span>
+		</span>
+		<span class="base-margin-left" [innerText]="'_OsvAvailable_' | i18n"></span>
 	</div>
 </ng-template>
 <ng-template #versionTemplate let-item="celldata">

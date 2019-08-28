@@ -352,6 +352,7 @@ const mockAssets: AssetsResponse = {
 			productFamily: 'Cisco Aironet 4800 Series',
 			recommAcceptedDate: null,
 			recommendations: null,
+			recommendationCount: 3,
 			swType: 'IOS',
 			swVersion: '16.10.1.130',
 		},

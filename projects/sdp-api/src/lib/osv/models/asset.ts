@@ -12,6 +12,7 @@ export interface OSVAsset {
 	productFamily: string;
 	recommendations: AssetRecommendations[];
 	recommAcceptedDate: string;
+	recommendationCount?: number;
 	swType: string;
 	swVersion: string;
 	statusUpdated?: boolean;
