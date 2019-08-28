@@ -186,66 +186,72 @@
 
 <ng-template #learningHover let-title="title" let-item="item" let-description="description" let-autoid="autoid">
 	<div id="learn-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
-		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
-		<div class="divider divider--compressed"></div>
-		<div *ngIf="item && item.fixedRating" class="half-margin-left half-margin-bottom">
-			<cui-rating [rating]="item.fixedRating" [alt]="true" [noClick]="true" [size]="small" attr.data-auto-id="{{ autoid }}-HoverModal-Rating"></cui-rating>
-		</div>
-		<div class="half-margin-left" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-		<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-			<span [innerText]="item.duration"></span>
+		<div class="flex flex-column max-height">
+			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<div class="divider divider--compressed"></div>
+			<div *ngIf="item && item.fixedRating" class="half-margin-left half-margin-bottom">
+				<cui-rating [rating]="item.fixedRating" [alt]="true" [noClick]="true" [size]="small" attr.data-auto-id="{{ autoid }}-HoverModal-Rating"></cui-rating>
+			</div>
+			<div class="half-margin-left line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
+				<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+				<span [innerText]="item.duration"></span>
+			</div>
 		</div>
 	</div>
 </ng-template>
 
 <ng-template #atxHover let-title="title" let-description="description" let-autoid="autoid" let-item="item">
 	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" *ngIf="!atxScheduleCardOpened" attr.data-auto-id="{{ autoid }}-HoverModal">
-		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
-		<div class="divider divider--compressed"></div>
-		<div class="half-margin-left" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-		<div class="base-padding-top half-padding-left" *ngIf="autoid==='moreATXList'">
-			<button attr.data-auto-id="{{ autoid }}-HoverModal-ViewSessions"
-				class="btn btn--small btn--secondary text-uppercase"
-				(click)="atxMoreViewSessions(item)"
-				[innerText]="'_ViewSessions_' | i18n">
-			</button>
-			<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
-				<button class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
-					[innerText]="'_WatchNow_' | i18n">
+		<div class="flex flex-column max-height">
+			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<div class="divider divider--compressed"></div>
+			<div class="half-margin-left line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+			<div class="base-padding-top half-padding-left" *ngIf="autoid==='moreATXList'">
+				<button attr.data-auto-id="{{ autoid }}-HoverModal-ViewSessions"
+					class="btn btn--small btn--secondary text-uppercase"
+					(click)="atxMoreViewSessions(item)"
+					[innerText]="'_ViewSessions_' | i18n">
 				</button>
-			</a>
+				<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
+					<button class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+						[innerText]="'_WatchNow_' | i18n">
+					</button>
+				</a>
+			</div>
 		</div>
 	</div>
 </ng-template>
 
 <ng-template #accHover let-autoid="autoid" let-title="title" let-description="description" let-item="item">
 	<div id="acc-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
-		<div class="icon-bookmark icon-medium"
-			(click)="setACCBookmark(item)"
-			[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
-			data-auto-id="ACCCardRibbon">
-		</div>
-		<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
-		<div class="divider divider--compressed"></div>
-		<div class="half-margin-left" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-		<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-			<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-			<span [innerText]="item.duration"></span>
-		</div>
-		<div class="base-padding-top half-padding-left" *ngIf= "item.status.toLowerCase()==='recommended'">
-			<button data-auto-id="Request1on1ACCButton"
-				(click)="selectAccRequestForm(true, item.accId, item.title)"
-				class="btn btn--small btn--secondary text-uppercase"
-				[ngClass]="{ 'disabled': notCurrentPitstop }"
-				[innerText]="'_Request1on1_' | i18n">
-			</button>
-		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='requested' || item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-CSEMessage">
-			<span [innerText]="'_CSETouch_' | i18n"></span>
-		</div>
-		<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
-			<span [innerText]="'_Completed_' | i18n"></span>
+		<div class="flex flex-column max-height">
+			<div class="icon-bookmark icon-medium"
+				(click)="setACCBookmark(item)"
+				[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
+				data-auto-id="ACCCardRibbon">
+			</div>
+			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<div class="divider divider--compressed"></div>
+			<div class="half-margin-left line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
+				<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+				<span [innerText]="item.duration"></span>
+			</div>
+			<div class="base-padding-top half-padding-left" *ngIf= "item.status.toLowerCase()==='recommended'">
+				<button data-auto-id="Request1on1ACCButton"
+					(click)="selectAccRequestForm(true, item.accId, item.title)"
+					class="btn btn--small btn--secondary text-uppercase"
+					[ngClass]="{ 'disabled': notCurrentPitstop }"
+					[innerText]="'_Request1on1_' | i18n">
+				</button>
+			</div>
+			<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='requested' || item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-CSEMessage">
+				<span [innerText]="'_CSETouch_' | i18n"></span>
+			</div>
+			<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
+				<span [innerText]="'_Completed_' | i18n"></span>
+			</div>
 		</div>
 	</div>
 </ng-template>
@@ -544,7 +550,7 @@
 	<div class="half-padding-top half-padding-left">
 		<div id="successbytes-item" class="panel small-panel qtr-padding-bottom" attr.data-auto-id="{{ autoid }}-item" *ngFor="let item of data | slice:0:3">
 			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
-			<ng-container *ngTemplateOutlet="succesBytesHoverBlock; context: {
+			<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
 				item: item,
 				autoid: 'successbytes'
 			}">
@@ -553,8 +559,9 @@
 	</div>
 </ng-template>
 
-<ng-template #succesBytesHoverBlock let-item="item" let-autoid="autoid">
+<ng-template #successBytesHoverBlock let-item="item" let-autoid="autoid">
 		<div id="sb-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
+			<div class="flex flex-column max-height">
 				<div class="icon-bookmark icon-medium"
 					(click)="updateBookmark('SB', item)"
 					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'"
@@ -562,7 +569,7 @@
 				</div>
 				<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 				<div class="divider divider--compressed"></div>
-				<div class="half-margin-left" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+				<div class="half-margin-left line-clamp" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 				<div>
 						<a class="no-link successbytes-type-link text-left" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
 							<div class="text-left text-muted" *ngIf="item.type === 'Web Page'">
@@ -584,6 +591,7 @@
 					<span [innerText]="item.duration"></span>
 				</div>
 			</div>
+		</div>
 </ng-template>
 
 <ng-template #productGuidesBlock let-title="title">
