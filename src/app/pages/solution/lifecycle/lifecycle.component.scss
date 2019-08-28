@@ -137,6 +137,19 @@ $vibblue: #017cad;
 	width: 100%;
 }
 
+.max-height {
+	height: 100% !important;
+}
+
+.line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 4;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
 .table-img-width {
 	width: 80px;
 }
