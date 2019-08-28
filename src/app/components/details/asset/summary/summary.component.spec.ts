@@ -30,7 +30,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 // tslint:disable-next-line: completed-docs
 @Component({
 	template: `
-		<asset-details-summary [asset]={}></asset-details-summary>
+		<asset-details-summary [asset]=asset></asset-details-summary>
 	`,
 })
 class WrapperComponent {
@@ -121,7 +121,7 @@ describe('AssetDetailsSummaryComponent', () => {
 			.toHaveBeenCalled();
 	}));
 
-	it('should handle failing hardware api call', () => {
+	it('should handle failing hardware api call', fakeAsync(() => {
 		contractsSpy = spyOn(inventoryService, 'getHardware')
 			.and
 			.returnValue(throwError(new HttpErrorResponse({
@@ -136,15 +136,14 @@ describe('AssetDetailsSummaryComponent', () => {
 
 		fixture.detectChanges();
 
-		fixture.whenStable()
-			.then(() => {
-				expect(component.status.loading.hardware)
-					.toEqual(false);
+		tick();
 
-				expect(component.componentData.numberInInventory)
-					.toEqual(0);
-			});
-	});
+		expect(component.status.loading.hardware)
+			.toEqual(false);
+
+		expect(component.componentData.numberInInventory)
+			.toEqual(0);
+	}));
 
 	it('should handle changing assets', () => {
 		buildSpies();
@@ -184,7 +183,7 @@ describe('AssetDetailsSummaryComponent', () => {
 			.toEqual('AAA');
 	});
 
-	it('should correctly determine whether a date is expired', () => {
+	it('should correctly determine whether a date is expired', fakeAsync(() => {
 
 		const futureDate = new Date();
 		futureDate.setDate(futureDate.getDate() + 100);
@@ -198,23 +197,25 @@ describe('AssetDetailsSummaryComponent', () => {
 
 		const deviceResponse = getActiveBody(AssetScenarios[0]);
 		const asset = _.cloneDeep(_.head(_.get(deviceResponse, 'data')));
-		componentFromWrapper.assetDetailsComponent.asset = asset;
-
-		componentFromWrapper.assetDetailsComponent.refresh();
+		componentFromWrapper.asset = asset;
 
 		wrapperComponentFixture.detectChanges();
+
 		expect(summarySpy)
 			.toHaveBeenCalled();
 
+		tick();
+
 		fixture.detectChanges();
 
-		fixture.whenStable()
-			.then(() => {
-				expect(component.isExpired(component.assetData.lastDateOfSupport))
-					.toEqual(false);
-				expect(component.isExpired(component.assetData.warrantyEndDate))
-					.toEqual(false);
-			});
+		expect(component.isExpired(
+			componentFromWrapper.assetDetailsComponent.assetData.lastDateOfSupport,
+		))
+			.toEqual(false);
+		expect(component.isExpired(
+			componentFromWrapper.assetDetailsComponent.assetData.warrantyEndDate,
+		))
+			.toEqual(false);
 
 		summarySpy.and.returnValue(of({
 			lastDateOfSupport: '2010-08-13T17:58:32.995Z',
@@ -223,25 +224,27 @@ describe('AssetDetailsSummaryComponent', () => {
 
 		const deviceResponse2 = getActiveBody(AssetScenarios[1]);
 		const asset2 = _.cloneDeep(_.head(_.get(deviceResponse2, 'data')));
-		componentFromWrapper.assetDetailsComponent.asset = asset2;
-
-		componentFromWrapper.assetDetailsComponent.refresh();
+		componentFromWrapper.asset = asset2;
 
 		wrapperComponentFixture.detectChanges();
+
 		expect(summarySpy)
 			.toHaveBeenCalled();
 
+		tick();
+
 		fixture.detectChanges();
 
-		fixture.whenStable()
-			.then(() => {
-				expect(component.isExpired(component.assetData.lastDateOfSupport))
-					.toEqual(true);
-				expect(component.isExpired(component.assetData.warrantyEndDate))
-					.toEqual(true);
-			});
+		expect(component.isExpired(
+			componentFromWrapper.assetDetailsComponent.assetData.lastDateOfSupport,
+		))
+			.toEqual(true);
+		expect(component.isExpired(
+			componentFromWrapper.assetDetailsComponent.assetData.warrantyEndDate,
+		))
+			.toEqual(true);
 
-	});
+	}));
 
 	// it('should handle fullscreen', () => {
 	// 	buildSpies();
