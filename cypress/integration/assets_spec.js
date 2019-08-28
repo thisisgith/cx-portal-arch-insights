@@ -256,7 +256,6 @@ describe('Assets', () => { // PBC-41
 			Cypress._.each(advisoryFN.data, (advisory, index) => {
 				cy.get('[data-auto-id="AssetDetailsAdvisoryTable"] tbody tr').eq(index).within(() => {
 					cy.getByAutoId('FieldNoticeId')
-						.should('have.text', `FN ${advisory.id}`)
 						.and('have.attr', 'href', advisory.url)
 						.and('have.attr', 'target', '_blank');
 					cy.getByAutoId('AdvisoryTitle').should('have.text', advisory.title);
