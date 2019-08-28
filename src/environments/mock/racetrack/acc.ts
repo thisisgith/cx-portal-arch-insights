@@ -92,7 +92,8 @@ function MockACC (
 				isFavorite: false,
 				status: 'completed',
 				title: 'This is a title for Adoption',
-				url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+				url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
+				'images/acc_access-overview-demo.png',
 			},
 		];
 	}
