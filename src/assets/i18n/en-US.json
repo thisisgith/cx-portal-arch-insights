@@ -483,6 +483,7 @@
 	"_Medium_": "Medium",
 	"_MemoryUsage_": "Memory Usage",
 	"_Message_": "Message",
+	"_MessageText_": "Message Text",
 	"_MessageType_": "Message Type",
 	"_MigrationOptions_": "Migration Options",
 	"_MissingLowercase_": "Missing Lowercase Character",
@@ -513,6 +514,7 @@
 	"_New_": "New",
 	"_NewScheduledScan_": "New Scheduled Scan",
 	"_Next_": "Next",
+	"_No_": "No",
 	"_NoDevicesInList_": "No Devices in List",
 	"_NoHardwareInformation_": "No Hardware Information",
 	"_NoImpactedAssetsFound_": "No impacted assets found",
@@ -943,10 +945,12 @@
 	"_Suggestions_": "Suggestions",
 	"_Sun_": "Sun",
 	"_Sunday_:": "Sunday",
+	"_SupportAccessLevel_": "Access Level",
 	"_SupportCiscoID_": "Cisco ID",
-	"_SupportContact_": "Contact Support",
 	"_SupportContactNumber_": "To contact us please call 1-800-553-2447 (US/Canada)",
+	"_SupportContact_": "Contact Support",
 	"_SupportCoverage_": "Support Coverage",
+	"_SupportCustomerId_": "Customer ID",
 	"_SupportDescription_": "How can we help?",
 	"_SupportDone_": "Done",
 	"_SupportEmail_": "Email",
@@ -1100,7 +1104,5 @@
 	"_YouHaveInventory_": "you have {0} of these in your inventory",
 	"_YoullNeedAnEnvironment_": "You'll need an environment that:",
 	"_YourImpactedDevices_": "Your Impacted Devices",
-	"_YourProducts_": "Your products, documentation & Learning Library resources",
-	"MessageText": "Message Text",
-	"NO": "NO"
+	"_YourProducts_": "Your products, documentation & Learning Library resources"
 }
