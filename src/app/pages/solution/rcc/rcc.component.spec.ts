@@ -10,12 +10,14 @@ import { user, ComplianceScenarios } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RccService, Filter } from '@sdp-api';
+import { FormBuilder } from '@angular/forms';
 
 describe('RccComponent', () => {
 	let component: RccComponent;
 	let fixture: ComponentFixture<RccComponent>;
 	let rccService: RccService;
 	const mockFilter: Filter = Object.create({ });
+	const formBuilder: FormBuilder = new FormBuilder();
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -27,6 +29,7 @@ describe('RccComponent', () => {
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
+				{ provide: FormBuilder, useValue: formBuilder },
 				{
 					provide: ActivatedRoute,
 					useValue: {
@@ -71,48 +74,6 @@ describe('RccComponent', () => {
 					.toBeDefined();
 				expect(component.tableData)
 					.toEqual(ComplianceScenarios[0].scenarios.GET[0].response.body);
-				done();
-			});
-	});
-
-	it('Should get the violation asset grid data success', done => {
-		spyOn(rccService, 'getAssetGridData')
-			.and
-			.returnValue(of(ComplianceScenarios[1].scenarios.GET[0].response.body));
-		component.selectedAssetView(component.view);
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.tableAssetData)
-					.toBeDefined();
-				done();
-			});
-	});
-
-	it('Should get the selected violation details', done => {
-		spyOn(rccService, 'getRccPolicyRuleDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[2].scenarios.GET[0].response.body));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.impactedAssetDetails)
-					.toBeDefined();
-				done();
-			});
-	});
-
-	it('Should get the selected asset details', done => {
-		spyOn(rccService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[3].scenarios.GET[0].response.body));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.policyRuleData)
-					.toBeDefined();
 				done();
 			});
 	});
@@ -242,19 +203,19 @@ describe('RccComponent', () => {
 	});
 
 	it('should search in violation grid data if', done => {
-		const tableCofig = {
-			tableLimit: 10,
-			tableOffset: 0,
-			totalItems: 15,
-		};
-		const event = {
-			keyCode: 13,
-		};
-		component.searchInput = 'sample';
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				component.searchViolations(event);
+				const tableCofig = {
+					tableLimit: 10,
+					tableOffset: 0,
+					totalItems: 0,
+				};
+				const event = {
+					keyCode: 13,
+				};
+				component.searchInput = '';
+				component.searchViolations(event, 'clear');
 				expect(event.keyCode)
 					.toEqual(13);
 				expect(component.violationGridObj.search)
@@ -270,11 +231,20 @@ describe('RccComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				const keyCode = 11;
-				component.searchViolations(keyCode);
+				component.searchViolations(keyCode, null);
 				expect(component.violationGridObj.search)
 					.toBeFalsy();
 				done();
 			});
+	});
+
+	it('should invoke clearSearchInput method', () => {
+		component.searchInput = '';
+		spyOn(component, 'searchViolations');
+		component.clearSearchInput();
+		fixture.detectChanges();
+		expect(component.searchViolations)
+		.toHaveBeenCalled();
 	});
 
 	it('should open the slider', done => {
@@ -328,4 +298,38 @@ describe('RccComponent', () => {
 			.toBeTruthy();
 		done();
 	});
+
+	it('should invoke searchViolations with keycode 8', () => {
+		component.searched = true;
+		component.searchForm = formBuilder.group({
+			search: 'PCI',
+		});
+		const event = {
+			keyCode: 8,
+		};
+		component.searchViolations(event, null);
+	});
+
+	it('should invoke searchViolations with keycode 13', () => {
+		component.searched = true;
+		component.searchForm = formBuilder.group({
+			search: 'PCI',
+		});
+		const event = {
+			keyCode: 13,
+		};
+		component.searchViolations(event, 'input');
+	});
+
+	it('should invoke searchViolations with keycode 8 and search type', () => {
+		component.searched = true;
+		component.searchForm = formBuilder.group({
+			search: 'PCI',
+		});
+		const event = {
+			keyCode: 8,
+		};
+		component.searchViolations(event, 'search');
+	});
+
 });

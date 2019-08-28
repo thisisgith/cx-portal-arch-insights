@@ -15,6 +15,13 @@
 	}
 }
 
+.page-spinner {
+	position: absolute;
+	top: 32%;
+	left: 47%;
+	z-index: 1000000;
+}
+
 .cui {
 	.panel--bordered-right {
 		border-right: none !important;
@@ -41,6 +48,11 @@
 	color: $dark-gray-2 !important;
 }
 
+.seperator-line {
+	border-left: 1px solid #dfdfdf;
+	margin-left: 10px;
+}
+
 .searchSection {
 	float: right;
 	margin-top: -27px;
@@ -51,6 +63,7 @@
 	flex-direction: column;
 	font-size: small;
 	margin: 5px;
+	cursor: pointer;
 }
 
 .assetsCount:focus {
@@ -66,7 +79,7 @@
 }
 
 .p3class {
-	color: $status-orange;
+	color: $yellow;
 }
 
 .p4class {
@@ -74,9 +87,13 @@
 }
 
 .p5class {
-	color: $light-blue;
+	color: $gray;
 }
 
 .p6class {
 	color: $white;
+}
+
+.err-text {
+	margin: 5px 0 0 5px;
 }
