@@ -47,6 +47,7 @@ describe('AfmDetailsComponent', () => {
 		window.localStorage.clear();
 		fixture = TestBed.createComponent(AfmDetailsComponent);
 		component = fixture.componentInstance;
+		component.alarm = mockAlarm;
 		fixture.detectChanges();
 	});
 
