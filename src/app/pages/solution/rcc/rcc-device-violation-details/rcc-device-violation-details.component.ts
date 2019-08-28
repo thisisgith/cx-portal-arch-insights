@@ -29,7 +29,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 		tableOffset: 0,
 		totalItems: 0,
 	};
-	public tableOffset = 0;
 	public paginationConfig = {
 		pageIndex: 0,
 		pageLimit: 10,
@@ -83,6 +82,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			productFamily: [],
 			productModel: [],
 		};
+		this.tableConfig.tableOffset = 0;
 		const policyViolationInfo = _.get(changes, ['policyViolationInfo', 'currentValue']);
 		const isFirstChange = _.get(changes, ['policyViolationInfo', 'firstChange']);
 		if (policyViolationInfo && !isFirstChange) {
@@ -276,7 +276,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			takeUntil(this.destroy$),
 		)
 		.subscribe(violationDetails => {
-			this.tableOffset = 0;
+			this.tableConfig.tableOffset = 0;
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
 			this.tableConfig.totalItems = this.impactedDeviceDetails.length;
@@ -294,14 +294,14 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 * @param pageInfo gives page number
 	 */
 	public onPageIndexChange (pageInfo: any) {
-		this.tableOffset = pageInfo.page;
+		this.tableConfig.tableOffset = pageInfo.page;
 	}
 	/**
 	 * Function called when sort changed
 	 * @param event gives sort information
 	 */
 	public onTableSortingChanged () {
-		this.tableOffset = 0;
+		this.tableConfig.tableOffset = 0;
 	}
 	/**
 	 * OnDestroy lifecycle hook

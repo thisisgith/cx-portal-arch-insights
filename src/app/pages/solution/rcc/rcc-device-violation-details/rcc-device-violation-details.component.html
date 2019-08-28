@@ -75,10 +75,14 @@
 	</div>
 	<div class="row base-padding-top half-padding-left responsive-table"
 		*ngIf="!selectionLoading; else loaderTemplate;">
-		<cui-table [options]="impactedDeviceTableOptions" [data]="impactedDeviceDetails"
-		[offset]="tableOffset" (onSortingChanged)="onTableSortingChanged()" [limit]="tableConfig.tableLimit"></cui-table>
+		<cui-table [options]="impactedDeviceTableOptions" 
+			[data]="impactedDeviceDetails"
+			[offset]="tableConfig.tableOffset" 
+			(onSortingChanged)="onTableSortingChanged()" 
+			[limit]="tableConfig.tableLimit">
+		</cui-table>
 		<div class="section">
-			<cui-pager [page]="tableOffset"
+			<cui-pager [page]="tableConfig.tableOffset"
 				[limit]="tableConfig.tableLimit"
 				[totalItems]="tableConfig.totalItems" 
 				(onPageChanged)="onPageIndexChange($event)">
@@ -89,7 +93,7 @@
 		<div class="base-margin-top text-small responsive-table">
 			<cui-table class="table--wrap table--nostripes" 
 				[options]="rccViolationInfoTableOptions"
-				[data]="item.violations" 
+				[data]="item.violations"
 				[limit]="tableConfig.tableLimit" 
 				[offset]="tableConfig.tableOffset"
 				*ngIf="!loading">
