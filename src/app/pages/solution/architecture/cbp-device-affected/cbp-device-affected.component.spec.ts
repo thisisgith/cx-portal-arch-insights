@@ -8,7 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
 import { of } from 'rxjs';
 
-describe('CbpDeviceAffectedComponent', () => {
+fdescribe('CbpDeviceAffectedComponent', () => {
 	let component: CbpDeviceAffectedComponent;
 	let fixture: ComponentFixture<CbpDeviceAffectedComponent>;
 	let service: ArchitectureService;

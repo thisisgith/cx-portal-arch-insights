@@ -4,7 +4,11 @@ import { CbpTbdComponent } from './cbp-tbd.component';
 import { CbpTbdModule } from './cbp-tbd.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureService } from '@sdp-api';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { user } from '@mock';
+import { environment } from '@environment';
+import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('CbpTbdComponent', () => {
 	let component: CbpTbdComponent;
@@ -15,6 +19,20 @@ describe('CbpTbdComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [CbpTbdModule,
 				HttpClientTestingModule,
+			],
+			providers: [
+				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ActivatedRoute,
+					useValue: {
+						queryParams: of({ }),
+						snapshot: {
+							data: {
+								user,
+							},
+						},
+					},
+				},
 			],
 		})
 		.compileComponents();
@@ -39,6 +57,19 @@ describe('CbpTbdComponent', () => {
 		component.getData();
 		expect(service.getAllCBPExceptionDetails)
 			.toHaveBeenCalled();
+	});
+
+	it('should set null values on request errors', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getAllCBPExceptionDetails')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+		);
+		component.getData();
 	});
 
 	it('should update pagination params', () => {
