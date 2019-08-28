@@ -18,14 +18,10 @@ const atxFilters = [
 	{ filter: 'Not bookmarked', field: 'bookmark', value: false },
 ];
 
-const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
-	'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
 const formatDate = atxItem => {
 	const scheduledSession = Cypress._.find(atxItem.sessions,
 		session => session.scheduled === true);
-	const expectedDate = new Date(scheduledSession.sessionStartDate);
-	return `${monthNames[expectedDate.getMonth()]} ${expectedDate.getDate()}, ${expectedDate.getFullYear()}, ${expectedDate.getHours() % 12}:${(`0${expectedDate.getMinutes()}`).slice(-2)}:${(`0${expectedDate.getSeconds()}`).slice(-2)}${expectedDate.getHours() > 12 ? ' PM' : ' AM'}`;
+	return Cypress.moment(new Date(scheduledSession.sessionStartDate)).format('MMM D, YYYY, h:mm:ss A');
 };
 
 const i18n = require('../../src/assets/i18n/en-US.json');
@@ -34,13 +30,17 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	before(() => {
 		cy.login();
 		cy.loadApp();
+
+		// Disable the setup wizard and quick tour so they don't block other elements
+		cy.window().then(win => {
+			win.Cypress.hideDNACHeader = true;
+			win.Cypress.showQuickTour = false;
+		});
+
 		cy.waitForAppLoading();
 
 		// Wait for the ATX panel to finish loading
 		cy.waitForAppLoading('atxLoading', 15000);
-
-		// Close the setup wizard so it doesn't block other elements
-		cy.getByAutoId('setup-wizard-header-close-btn').click();
 	});
 
 	it('Renders ATX tile', () => {
@@ -86,9 +86,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			'have.text', `${atxItems.length} topics available for IBN > Campus Network Assurance:`
 		);
 
-		cy.getByAutoId('ATXCard').then($cards => {
-			expect($cards.length).to.eq(atxItems.length);
-		});
+		cy.getByAutoId('ATXCard').should('have.length', atxItems.length);
 
 		atxItems.forEach((atx, index) => {
 			cy.getByAutoId('ATXCard').eq(index).within(() => {
@@ -530,9 +528,6 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Refresh the page to force-reset bookmarks
 			cy.loadApp();
 			cy.waitForAppLoading('atxLoading', 15000);
-
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('ATX View All should be able to toggle between table and card views', () => {
@@ -1040,9 +1035,6 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
-
 			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
@@ -1123,9 +1115,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			const filteredItems = atxItems.filter(item => (item.status === 'requested'));
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
-				cy.getByAutoId('ATXCard').then($cards => {
-					expect($cards.length).to.eq(filteredItems.length);
-				});
+				cy.getByAutoId('ATXCard').should('have.length', filteredItems.length);
 			});
 
 			// Switch back to table view, verify the filter is still in place
@@ -1205,9 +1195,6 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
-
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
@@ -1310,9 +1297,6 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
-
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
