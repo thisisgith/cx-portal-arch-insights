@@ -241,7 +241,7 @@
 			</div>
 			<div class="flex-center text-center">
 				<span *ngIf="item.data?.productName"
-					[innerText]="item.data?.productName"
+					[innerText]="item.data?.productName | truncate:true:20"
 					attr.data-auto-id="ProductName-{{ item.data?.serialNumber }}">
 				</span>
 			</div>
@@ -257,15 +257,15 @@
 		<div class="card__body text-small dbl-margin-bottom">
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_IPAddress_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.ipAddress || ('_NA_' | i18n)" attr.data-auto-id="IPAddress-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" [innerText]="(item.data?.ipAddress || ('_NA_' | i18n)) | truncate:true:15:'...'" attr.data-auto-id="IPAddress-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_LastScan_' | i18n"></div>
-				<div class="col-md-6" innerText="{{ item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n) }}" attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" [innerText]="(item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n)) | truncate:true:15:'...'" attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_SerialNumber_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.serialNumber || ('_NA_' | i18n)" attr.data-auto-id="SerialNumber-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" [innerText]="(item.data?.serialNumber || ('_NA_' | i18n)) | truncate:true:15:'...'" attr.data-auto-id="SerialNumber-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Software_' | i18n"></div>
@@ -278,7 +278,7 @@
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Role_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.role || ('_NA_' | i18n)" attr.data-auto-id="Role-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" [innerText]="(item.data?.role || ('_NA_' | i18n)) | truncate:true:15:'...'" attr.data-auto-id="Role-{{ item.data?.serialNumber }}"></div>
 			</div>
 		</div>
 		<div class="card__footer justify-content-between override-selected-z">
