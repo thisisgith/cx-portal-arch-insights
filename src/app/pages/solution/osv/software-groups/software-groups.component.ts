@@ -30,6 +30,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Input() public selectedSoftwareGroup;
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
+	@Output() public contactSupport = new EventEmitter();
 	@ViewChild('recommendationsTemplate', { static: true })
 	private recommendationsTemplate: TemplateRef<{ }>;
 	public softwareGroupsTable: CuiTableOptions;
