@@ -74,7 +74,7 @@ describe('SyslogMessagesDetailsComponent', () => {
 				done();
 			});
 	});
-	it('Should get the syslog device message grid data', done => {
+	it('Should get the syslog device message grid data', () => {
 		const param = {
 			active: true,
 			DeviceHost: '10.10.10.10',
@@ -86,15 +86,26 @@ describe('SyslogMessagesDetailsComponent', () => {
 		};
 		spyOn(syslogsService, 'getPanelGridData')
 			.and
-			.returnValue(of(SyslogScenarios[4].scenarios.GET[0].response.body));
+			.returnValue(of(SyslogScenarios[7].scenarios.GET[0].response.body));
+
+		const asset: SyslogPanelGridData = Object.create({ });
+		const assetFalse : SyslogPanelGridData = Object.create({ });
+		asset.count = 10;
+		asset.message = 'test';
+		asset.responseData = [];
+
+		component.asset = asset;
+		component.customerId = '12345';
 		component.loadSyslogPaneldata(param);
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.tableData)
-					.toBeDefined();
-				done();
-			});
+
+		expect(component.tableData)
+			.toBeDefined();
+
+		component.asset = assetFalse;
+		component.loadSyslogPaneldata(param);
+		fixture.detectChanges();
+		expect(component.asset).toBeUndefined();
+
 	});
 	it('Should get the syslog message details grid data After fileter', done => {
 		spyOn(syslogsService, 'getPanelFilterGridData')
@@ -149,4 +160,9 @@ describe('SyslogMessagesDetailsComponent', () => {
 			.toBeDefined();
 		done();
 	});
+
+	// it('Should get the syslog message details filter values', done => {
+	// 	component.ngOnChanges();
+	// 	done();
+	// });
 });
