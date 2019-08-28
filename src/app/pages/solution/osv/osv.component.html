@@ -111,7 +111,7 @@
 			<div class="col-7 margin-auto flex align-items-center">
 				<span class="text-large " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
 				<span class="pull-right text-primary relative" [title]="'_OsvSoftwareGroups_' | i18n">
-					<i class="icon-question-circle icon-small"
+					<i data-auto-id="SoftwareGroupInfo" class="icon-question-circle icon-small"
 						(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;"></i>
 					<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
 				</span>
@@ -153,7 +153,7 @@
 </ng-template>
 
 <ng-template #assetTypeFilter let-filter="filter">
-	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
+	<pie-chart [width]="400" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
 	</pie-chart>
 </ng-template>
 <cui-modal></cui-modal>
@@ -194,7 +194,7 @@
 				<div class="text-right">
 					<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();"
 						data-auto-id="DonotShowProfileInfoAgain">
-						<input type="checkbox" [(ngModel)]="hideProfileInfo" (ngModelChange)="hideInfo($event)"
+						<input type="checkbox" [(ngModel)]="doNotShowAgain" (ngModelChange)="hideInfo($event)"
 							data-auto-id="DonotShowProfileInfoAgainCheckbox">
 						<span class="checkbox__input"></span>
 						<span class="checkbox__label" [innerText]="'_OsvDoNotShowAgain_' | i18n"></span>

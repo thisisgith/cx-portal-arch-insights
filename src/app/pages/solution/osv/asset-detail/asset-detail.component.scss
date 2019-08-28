@@ -1,15 +1,16 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
-.pointer {
+.version-pointer {
 	width: 50px;
 	border: 1px solid $primary;
 	margin-left: -3px;
 }
 
-.selected-view  {
+.selected-view {
 	background: $primary;
-	
+
 	&:hover {
-		background: $primary;		
+		background: $primary;
 	}
+
 }

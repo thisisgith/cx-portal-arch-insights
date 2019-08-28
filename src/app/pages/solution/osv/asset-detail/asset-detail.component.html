@@ -124,13 +124,13 @@
 		</div>
 		<div class="col-2 flex align-items-center">
 			<span *ngIf="item.name == 'current'" class="icon-circle text-primary"></span>
-			<div *ngIf="item.name == 'current'" class="pointer"></div>
+			<div *ngIf="item.name == 'current'" class="version-pointer"></div>
 		</div>
 		<div class="col-2" [innerText]="item.swVersion"></div>
 		<div class="col-6">
-			<span class="label label--large" [title]="version.name" *ngFor="let version of item.swVersionGroup">
+			<span class="label label--large qtr-margin-left qtr-margin-top" [title]="version.name" *ngFor="let version of item.swVersionGroup">
 				<span class="text-capitalize" [innerHTML]="version.name"></span>
-				<span class="text-primary qtr-margin-left" [attr.data-balloon]="version.info" data-balloon-pos="down"
+				<span class="text-primary " [attr.data-balloon]="version.info" data-balloon-pos="down"
 					data-balloon-length="xlarge">
 					<i class="icon-info-outline icon-xsmall"></i>
 				</span>

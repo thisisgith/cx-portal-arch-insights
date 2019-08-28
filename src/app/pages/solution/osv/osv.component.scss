@@ -1,4 +1,14 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import 'src/mixins.scss';
+
+::ng-deep {
+	.profile-info {
+		@include md {
+			width: 600px !important;
+		}
+
+	}		
+}
 
 .filter {
 	min-height: 220px;
@@ -55,6 +65,7 @@
 		left: -7px;
 		top: 7px;
 	}
+
 }
 
 .close {

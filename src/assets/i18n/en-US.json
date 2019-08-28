@@ -577,7 +577,7 @@
 	"_OsvGoldenInfo_": "Are available from connected Cisco DNA Centers and represent images tagged by customers for deployment in the Software Image Management (SWIM) module [by family or role].",
 	"_OsvHigh_": "High",
 	"_OsvHostName": "Host Name",
-	"_OsvIndependentAssets_": "Independent Assets",
+	"_OsvIndependentAssets_": "Assets not in Software Group",
 	"_OsvIP_": "IP:",
 	"_OsvIpAddress_": "IP Address",
 	"_OsvLastRecommendedDate": "Last Recommeneded Date",
