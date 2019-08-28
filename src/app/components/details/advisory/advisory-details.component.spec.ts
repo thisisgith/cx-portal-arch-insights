@@ -202,6 +202,9 @@ describe('AdvisoryDetailsComponent', () => {
 		.then(() => {
 			expect(component.advisoryId)
 				.toEqual(_.toString(nextAdvisory.id));
+
+			expect(component.title)
+				.toContain(`FN ${nextAdvisory.id}`);
 		});
 	});
 
