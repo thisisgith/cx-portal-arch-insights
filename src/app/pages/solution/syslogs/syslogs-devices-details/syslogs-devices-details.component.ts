@@ -204,18 +204,6 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		});
 	}
 	/**
-	 * Used to toggle the inner table
-		* @param data event values
-	 * Onchanges lifecycle hook
-	 */
-	public expandRow (data) {
-		if (data.showMessage) {
-			data.showMessage = false;
-		} else {
-			data.showMessage = true;
-		}
-	}
-	/**
 	 * Response from the network
 		* @param gridData event values from input
 	 * Onchanges lifecycle hook
