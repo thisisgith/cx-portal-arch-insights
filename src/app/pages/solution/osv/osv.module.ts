@@ -13,8 +13,8 @@ import { OSVModule } from '@sdp-api';
 
 import { DetailsPanelModule, PieChartModule } from '@components';
 import { SoftwareGroupsModule } from './software-groups/software-groups.module';
-import { ContactExpertModule } from '../contact-expert/contact-expert.module';
 import { SoftwareGroupDetailModule } from './software-group-detail/software-group-detail.module';
+import { ContactSupportModule } from 'src/app/components/contact-support/contact-support.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -51,8 +51,9 @@ const childRoutes: Routes = [
 		AssetDetailsModule,
 		SoftwareVersionsModule,
 		SoftwareGroupsModule,
-		SoftwareGroupDetailModule,
-		ContactExpertModule,		
+		SoftwareGroupDetailModule,				
+		CuiModalModule,
+		ContactSupportModule,
 	],
 })
 export class OptimalSoftwareVersionModule { }

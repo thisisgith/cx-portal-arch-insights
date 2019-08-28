@@ -8,7 +8,6 @@ export { OSVAsset } from './models/asset';
 export { AssetsResponse } from './models/assets-response';
 export { SummaryResponse } from './models/summary-response';
 export { OsvPagination } from './models/pagination';
-export { ContactSupportResponse } from './models/contact-support-response';
 export { SoftwareGroupAsset } from './models/software-group-asset';
 export { SoftwareGroupVersion } from './models/software-group-version';
 export { SoftwareGroupVersionsResponse } from './models/software-group-version-response';

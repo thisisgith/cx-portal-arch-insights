@@ -10,7 +10,9 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
 import { CuiModalService } from '@cisco-ngx/cui-components';
-import { ContactExpertComponent } from '../contact-expert/contact-expert.component';
+import {
+	ContactSupportComponent,
+} from 'src/app/components/contact-support/contact-support.component';
 
 /**
  * Interface representing our visual filters
@@ -286,7 +288,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * Open contact support modal
 	 */
 	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactExpertComponent, { });
+		this.cuiModalService.showComponent(ContactSupportComponent, { });
 	}
 
 	/**

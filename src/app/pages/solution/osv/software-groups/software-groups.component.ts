@@ -28,11 +28,11 @@ import * as _ from 'lodash-es';
 export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
-	@Input() public selectedSoftwareGroup;
-	@Output() public contactExpert = new EventEmitter();
+	@Input() public selectedSoftwareGroup;	
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
+	@Output() public contactSupport = new EventEmitter();
 	@ViewChild('recommendationsTemplate', { static: true })
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	private recommendationsTemplate: TemplateRef<{ }>;

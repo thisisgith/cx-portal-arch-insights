@@ -33,6 +33,7 @@ import { ActivatedRoute } from '@angular/router';
 export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	@Output() public contactExpert = new EventEmitter();
 	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
+	@Output() public contactSupport = new EventEmitter();
 	public softwareVersionsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
