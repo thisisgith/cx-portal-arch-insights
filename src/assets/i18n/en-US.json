@@ -823,6 +823,7 @@
 	"_RMHighCrashRiskAssets_": "High Crash Risk Assets",
 	"_RMLastOccurance_": "Last Occurance",
 	"_RMNumberOfCrashes_": "# Crashes",
+	"_RMNumberOfCrashesInCrashHistory_": "Number of crashes",
 	"_RMProductFamily_": "Product Family",
 	"_RMProductId_": "Product ID",
 	"_RMRessetReason_": "Reset Reason",
