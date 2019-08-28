@@ -28,11 +28,12 @@ export const defaults = {
 		classifyAppId: 'CXPortal',
 		clientId: '07e418ac71284560944ea92f653a01c2', // TODO: Change this back
 	},
-	emailFromID: 'cxportal-noreply@cisco.com',
-	emailToID: 'cx-portal-support-nonprod@cisco.com',
 	cuiColors: {
 		vibrantBlue: '#017cad',
 	},
+	emailFromID: 'cxportal-noreply@cisco.com',
+	emailToID: 'cx-portal-support-nonprod@cisco.com',
+	feedbackToEmail: 'pbc-dev@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
