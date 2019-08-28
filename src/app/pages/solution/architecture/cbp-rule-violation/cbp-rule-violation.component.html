@@ -44,9 +44,10 @@
 	<div class="col-md-12">
 		<div class="container" *ngIf="cbpRuleExceptions.length > 0">
 			<span [innerText]="'_ArchitectureException_' | i18n" class="text-large"></span>
-			<span class="qtr-margin-left text-small text-muted">showing
-				{{ (tableStartIndex + 1) +' - ' +  tableEndIndex }}
-				of {{totalItems}} exceptions</span>
+			<span class="qtr-margin-left text-small text-muted" 
+			[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
+
+			</span>
 		</div>
 	</div>
 </div>
