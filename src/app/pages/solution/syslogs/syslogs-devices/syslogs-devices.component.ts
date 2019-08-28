@@ -114,6 +114,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 				customerId: this.customerId,
 				days: this.assetFilter.timeRange,
 				pageNo: this.pageNum,
+				search: this.searchVal,
 				severity: this.assetFilter.severity,
 				size: this.pagerLimit,
 			};
@@ -207,8 +208,9 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 	/**
-	 * Headers Details
-	 * @param tableRowData contains table row data
+	 * Sys log header details
+	 * @param tableRowData contains row data
+	 * @param customerId contains customerid
 	 */
 	public sysLogHeaderDetails (tableRowData, customerId) {
 		this.syslogsService.getDeviceHeaderDetails(tableRowData, customerId)
@@ -249,25 +251,10 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public searchAll (event) {
 		if (event.keyCode === 13) {
-		// tslint:disable-next-line: ban-comma-operator
-			this.syslogsService
-			.getSeachAllData(this.searchVal)
-			.pipe(takeUntil(this.destroy$),
-			catchError(err => {
-				this.logger.error('syslogs-details.component : searchAll() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-			)
-			.subscribe((gridData: SyslogDeviceDetailsdata[]) => {
-				this.tableData = gridData;
-				this.totalItems = gridData.length;
-			}),
-			this.loading = false;
+			this.syslogsParams.search = this.searchVal;
+			this.getAssetData();
 		}
 	}
-
 	/**
 	 * on destroy
 	 */

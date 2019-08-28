@@ -19,6 +19,8 @@ const syslogCount: any = {
 	assetsCount: '5',
 	sysLogMsgCount: '10',
 };
+/** The mock url for syslog deatil header */
+const messageDetailHeaderUrl = 'deviceIp=172.16.44.17&customerId=7293498';
 
 // tslint:disable-next-line: completed-docs
 const syslogMessages: any = [
@@ -127,6 +129,12 @@ const filterdataresponse: any = {
 			],
 		},
 	],
+};
+/** The mock response for MessageDetails */
+const messageDetailHeaderData = {
+	ipAddress: '6.0.10.1',
+	lastScan: null,
+	serialNumber: '',
 };
 
 // tslint:disable-next-line: completed-docs
@@ -249,6 +257,23 @@ export const SyslogScenarios = [
 		},
 		url: `${api}/syslog-view/filters?/${filtergridparam}`,
 		usecases: ['Use Case 7'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'messageHeaderDetails',
+					response: {
+						body: messageDetailHeaderData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/asset/viewDetails?/${messageDetailHeaderUrl}`,
+		usecases: ['Use Case 8'],
 	},
 
 ];

@@ -123,6 +123,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				excludeMsgType: this.msgExclude.toUpperCase(),
 				includeMsgType: this.msgInclude.toUpperCase(),
 				pageNo: this.pageNum,
+				search: this.searchVal,
 				severity: this.sysFilter.severity,
 				size: this.pageLimit,
 			};
@@ -209,6 +210,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		if (event.keyCode === 13) {
 			this.syslogsParams.includeMsgType = this.msgInclude.toUpperCase();
 			this.syslogsParams.excludeMsgType = this.msgExclude.toUpperCase();
+			this.syslogsParams.search = this.searchVal;
 			this.getSyslogsData();
 		}
 	}
@@ -242,31 +244,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.tableOffset = pageInfo.page;
 		this.tableStartIndex = (pageInfo.page * pageInfo.limit) + 1 ;
 		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10 ;
-	}
-
-	/**
-	 * Searchs all
-	 * @param event contains seach input data
-	 */
-	public searchAll (event) {
-		if (event.keyCode === 13) {
-		// tslint:disable-next-line: ban-comma-operator
-			this.syslogsService
-			.getSeachAllData(this.searchVal)
-			.pipe(takeUntil(this.destroy$),
-			catchError(err => {
-				this.logger.error('syslogs-details.component : getDeviceGridData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
-			}),
-			)
-			.subscribe((gridData: SyslogGridData[]) => {
-				this.tableData = gridData;
-				this.totalItems = gridData.length;
-			}),
-			this.loading = false;
-		}
 	}
 	/**
 	 * on destroy
