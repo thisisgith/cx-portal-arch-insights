@@ -166,7 +166,7 @@ describe('SyslogsMessagesComponent', () => {
 	it('Should Load device detail headers', done => {
 		spyOn(syslogsService, 'getDeviceHeaderDetails')
 		.and
-		.returnValue(of(SyslogScenarios[7].scenarios.GET[0].response.body));
+		.returnValue(of(SyslogScenarios[8].scenarios.GET[0].response.body));
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();

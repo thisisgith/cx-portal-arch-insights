@@ -297,5 +297,22 @@ export const SyslogScenarios = [
 		url: messageDetailsParam,
 		usecases: ['Use Case 8'],
 	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'messageHeaderDetails',
+					response: {
+						body: messageDetailHeaderData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/asset/viewDetails?/${messageDetailHeaderUrl}`,
+		usecases: ['Use Case 9'],
+	},
 
 ];
