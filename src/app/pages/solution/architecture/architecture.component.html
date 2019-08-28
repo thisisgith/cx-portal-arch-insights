@@ -11,11 +11,9 @@
 				(click)="selectVisualLabel(label)"
 				data-auto-id="SelectVisualLabelClick"
 			>
-				<h1 class="half-margin-top half-margin-bottom">
-					{{ label.count }}
+				<h1 [innerText]="label.count" class="half-margin-top half-margin-bottom">
 				</h1>
-				<div class="half-margin-bottom half-margin-top">
-					{{ label.label }}
+				<div [innerText]="label.label" class="half-margin-bottom half-margin-top">
 				</div>
 			</div>
 		</div>

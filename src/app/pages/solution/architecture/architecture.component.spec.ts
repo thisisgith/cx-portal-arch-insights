@@ -13,7 +13,7 @@ import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
 
-describe('ArchitectureComponent', () => {
+fdescribe('ArchitectureComponent', () => {
 	let component: ArchitectureComponent;
 	let fixture: ComponentFixture<ArchitectureComponent>;
 	let service: ArchitectureService;
