@@ -137,17 +137,18 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 						});
 					});
 					this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+					this.tableConfig.totalItems = this.impactedDeviceDetails.length;
 					if (this.impactedDeviceDetails.length > 0) {
 						this.apiNoData = false;
-					} else {
-						this.apiNoData = true;
 					}
 				}
 				this.initialLoading = false;
+				this.buildImpactedDeviceTableOptions();
 			},
 			error => {
 				this.initialLoading = false;
 				this.errorResult = true;
+				this.apiNoData = false;
 				this.logger.error(
 					'RccDeviceViolationDetailsComponent : loadData() ' +
 				`:: Error : (${error.status}) ${error.message}`);
@@ -164,10 +165,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			productFamily: [],
 			productModel: [],
 		};
-		this.rccViolationInfoTableOptions = (this.rccViolationInfoTableOptions ?
-			this.rccViolationInfoTableOptions : this.buildRccViolationInfoTableOptions());
-		this.impactedDeviceTableOptions = (this.impactedDeviceTableOptions
-		? this.impactedDeviceTableOptions : this.buildImpactedDeviceTableOptions());
+		this.rccViolationInfoTableOptions = this.buildRccViolationInfoTableOptions();
+		this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
 	}
 	/**
 	 * method for build impacted device table
@@ -281,6 +280,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			this.tableOffset = 0;
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
+			this.tableConfig.totalItems = this.impactedDeviceDetails.length;
+			this.buildImpactedDeviceTableOptions();
 		},
 		error => {
 			this.selectionLoading = false;
@@ -302,7 +303,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 * Function called when sort changed
 	 * @param event gives sort information
 	 */
-	public onTableSortingChanged ( ) {
+	public onTableSortingChanged () {
 		this.tableOffset = 0;
 	}
 	/**

@@ -33,7 +33,7 @@
 		[innerText]="'_Filter_'| i18n">
 	</div>
 	<div class="row">
-		<div class="col-3 half-padding-top half-padding-left">
+		<div class="col-4 half-padding-top half-padding-left">
 			<div [innerText]="'_RccProductFamily_' | i18n"></div>
 			<cui-select data-auto-id="filterSelect" 
 				[items]="policyRuleData?.deviceFilterDetails?.productFamily"
@@ -46,7 +46,7 @@
 				optionsValue="name">
 			</cui-select>
 		</div>
-		<div class="col-3 half-padding-top half-padding-left">
+		<div class="col-4 half-padding-top half-padding-left">
 			<div [innerText]="'_RccProductModel_' | i18n"></div>
 			<cui-select data-auto-id="policyRuleSearch" 
 				[items]="policyRuleData?.deviceFilterDetails?.productModel"
@@ -59,7 +59,7 @@
 				optionsValue="name">
 			</cui-select>
 		</div>
-		<div class="col-3 half-padding-top half-padding-left">
+		<div class="col-4 half-padding-top half-padding-left">
 			<div [innerText]="'_RccOSName_' | i18n"></div>
 			<cui-select data-auto-id="policyRule" 
 				[items]="policyRuleData?.deviceFilterDetails?.osName"
@@ -76,7 +76,7 @@
 	<div class="row base-padding-top half-padding-left responsive-table"
 		*ngIf="!selectionLoading; else loaderTemplate;">
 		<cui-table [options]="impactedDeviceTableOptions" [data]="impactedDeviceDetails"
-		[offset]="tableOffset" (onSortingChanged)="onTableSortingChanged()"></cui-table>
+		[offset]="tableOffset" (onSortingChanged)="onTableSortingChanged()" [limit]="tableConfig.tableLimit"></cui-table>
 		<div class="section">
 			<cui-pager [page]="tableOffset"
 				[limit]="tableConfig.tableLimit"
@@ -106,15 +106,17 @@
 	</div>
 </ng-template>
 <ng-template #deviceLink let-item="celldata">
-	<a href="" [innerText]="item.hostName"></a>
+	<span [innerText]="item.hostName"></span>
 </ng-template>
 <ng-template #noDataAvailable>
-	<div class="dbl-padding text-center" *ngIf="!errorResult">
-			  <p class="text-large text-uppercase icon-warning" [innerText]="'_RccNoDataAvailable_' | i18n"></p>
-	</div>
-	<div class="dbl-padding text-center" *ngIf="errorResult" >
-			<p class="text-large text-uppercase  icon-warning" [innerText]="'_RccNoResults_' | i18n"></p>
-	</div>
+	<div class="col-8 panel-group panel-group--compressed">
+			<div class="panel absolute-center">
+				<span class="text-large text-uppercase icon-warning" [innerText]="'_RccNoDataAvailable_' | i18n"
+					*ngIf="apiNoData"></span>
+				<span class="text-large text-uppercase icon-warning" [innerText]="'_RccNoResults_' | i18n"
+					*ngIf="errorResult"></span>
+			</div>
+		</div>
 </ng-template>
 <ng-template #commonTemplate>
 	<div *ngIf="(initialLoading && apiNoData);then loaderTemplate else noDataAvailable">
