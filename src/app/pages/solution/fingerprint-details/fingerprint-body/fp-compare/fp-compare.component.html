@@ -1,0 +1,53 @@
+<div class="row">
+	<div class="col-md-6 base-padding-top dbl-padding-right">
+		<div class="half-padding-bottom " [innerText]="'_ProductFamily_' | i18n"></div>
+		<div class="col-md-5"></div>
+		<cui-select data-auto-id="ProductFamilyAdrop" [required]="true" [empty]="true" [items]="productData"
+			placeholder="Select a Product Family" [compressed]="true" [(ngModel)]="productId1"
+			optionsKey="productFamily" optionsValue="productId" (ngModelChange)="onSelection($event)">
+		</cui-select>
+	</div>
+	<div class="col-md-6 base-padding-top dbl-padding-right">
+		<div class="half-padding-bottom" [innerText]="'_ProductFamily_' | i18n"></div>
+		<cui-select data-auto-id="ProductFamilyBdrop" [required]="true" [empty]="true" [items]="productData"
+			placeholder="Select a Product Family" [compressed]="true" [(ngModel)]="productId2"
+			(ngModelChange)="onSelection3($event)" optionsKey="productFamily" optionsValue="productId">
+		</cui-select>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6 half-padding-top dbl-padding-right">
+		<div class="half-padding-bottom" [innerText]="'_CP_AssetA_' | i18n"></div>
+		<cui-select data-auto-id="AssetAdrop" [empty]="true" [required]="true" [items]="listdeviceDataA"
+			[disabled]="assetsAactive" placeholder="Device of Series" [compressed]="true" [(ngModel)]="deviceId1"
+			(ngModelChange)="onSelection1($event)" optionsKey="deviceName" optionsValue="deviceId">
+		</cui-select>
+	</div>
+	<div class="col-md-6 half-padding-top dbl-padding-right">
+		<div class="half-padding-bottom" [innerText]="'_CP_AssetB_' | i18n"></div>
+		<cui-select data-auto-id="AssetBdrop" [empty]="true" [required]="true" [items]="listdeviceDataB"
+			[disabled]="assetsBactive" placeholder=" Device of Series" [compressed]="true" [(ngModel)]="deviceId2"
+			(ngModelChange)="onSelection2($event)" optionsKey="deviceName" optionsValue="deviceId">
+		</cui-select>
+	</div>
+</div>
+<div class="divider"></div>
+<div class="row">
+	<div class="flex flex-fluid flex-center-horizontal half-padding-top">
+		<div class="flex-fill  btn-group btn-group--wide">
+			<button data-auto-id="hardwarebtn" [ngClass]="{active: compareView ==='hardware'}"
+				(click)="updateCompareView($event,'hardware')" class="text-uppercase btn btn--secondary btn--small"
+				[innerText]="'_Hardware_' | i18n"></button>
+			<button data-auto-id="softwarebtn" [ngClass]="{active: compareView ==='software'}"
+				(click)="updateCompareView($event,'software')" class="text-uppercase btn btn--secondary btn--small "
+				[innerText]="'_Software_' | i18n"></button>
+			<button data-auto-id="featuresbtn" [ngClass]="{active: compareView ==='feature'}"
+				(click)="updateCompareView($event,'feature')" class="text-uppercase btn btn--secondary btn--small"
+				[innerText]="'_CP_Features_' | i18n"></button>
+		</div>
+	</div>
+</div>
+<div>
+	<app-comparisonview [compareView]="compareView" [deviceId1]="deviceId1" [deviceId2]="deviceId2">
+	</app-comparisonview>
+</div>

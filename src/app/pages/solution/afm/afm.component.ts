@@ -54,6 +54,8 @@ export class AfmComponent {
 	public paginationCount;
 	public aggregationCount: Map<string, number> = new Map();
 	public statusErrorMessage = '';
+	public timeRangeFiltered = false;
+	public filterSpinner = false;
 	private destroy$ = new Subject();
 
 	public searchOptions = {
@@ -106,9 +108,6 @@ export class AfmComponent {
 			.subscribe((id: string) => {
 				this.searchParams.customerId = id;
 			});
-		if (!this.searchParams.customerId) {
-			this.searchParams.customerId = '7293498';
-		}
 	}
 
 	/**
@@ -331,6 +330,7 @@ export class AfmComponent {
 	 */
 	public allAlarmFilter () {
 		this.resetValuesWhileFilter();
+		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.ALARM;
 		this.searchParams.firstTimeLoading = true;
 		this.getAfmAlarmData(this.searchParams);
@@ -341,7 +341,9 @@ export class AfmComponent {
 	 */
 	public tacCaseFilters () {
 		this.resetValuesWhileFilter();
+		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.TAC;
+		this.clearToken();
 		this.getAfmTacCaseData(this.searchParams);
 	}
 
@@ -354,12 +356,7 @@ export class AfmComponent {
 			this.allAlarmFilter();
 		} else {
 			this.resetValuesWhileFilter();
-			if (searchWord.toLowerCase()
-				.startsWith('p')) {
-				this.searchParams.searchTerm = searchWord.substring(1, 2);
-			} else {
-				this.searchParams.searchTerm = searchWord;
-			}
+			this.searchParams.searchTerm = searchWord;
 			this.searchParams.headerFilterType = this.AFM_CONSTANT.SEARCH;
 			this.getAfmSearchFilterInfo(this.searchParams);
 		}
@@ -370,6 +367,7 @@ export class AfmComponent {
 	 */
 	public onSubfilterSelect () {
 		this.tableData = [];
+		this.clearFilters();
 	}
 
 	/**
@@ -420,8 +418,34 @@ export class AfmComponent {
 	/**
 	 * Exoport events into CSV file need to implement
 	 */
-	private exportAllEvents () {
-		_.filter(this.alarmInfo); // just dummy
+	public exportAllEvents () {
+		this.filterSpinner = true;
+		this.afmService.exportAllRecords(this.searchParams.customerId)
+			.pipe(takeUntil(this.destroy$))
+			.subscribe(
+				response => {
+					if (response && response.status && response.status !== null &&
+						response.status.toUpperCase() === this.AFM_CONSTANT.SUCCESS) {
+						const downloadLink = document.createElement('a');
+						const blob = new Blob(['\ufeff', response.data]);
+						const url = URL.createObjectURL(blob);
+						downloadLink.href = url;
+						downloadLink.download = `events_export_file_${new Date().getTime()}.csv`;
+						document.body.appendChild(downloadLink);
+						downloadLink.click();
+						document.body.removeChild(downloadLink);
+					} else {
+						this.statusErrorMessage = response.statusMessage;
+						this.logger.error(response.statusMessage);
+					}
+					this.filterSpinner = false;
+				},
+				err => {
+					this.logger.error('Export operation failed' +
+						`:: Error : (${err})`);
+					this.statusErrorMessage = `Export operation failed :: Error : (${err})`;
+				},
+			);
 	}
 
 	/**
@@ -479,17 +503,26 @@ export class AfmComponent {
 	 *
 	 * @param subfilter number of days
 	 * @param filter AfmFilter
+	 * @param triggeredFromGraph boolean
 	 * @memberof AfmComponent
 	 */
-	public onTimeRangefilterSelect (subfilter: number, filter: AfmFilter) {
-		this.resetValuesWhileFilter();
-		const sub = _.find(filter.seriesData, { filter: subfilter });
+	public onTimeRangefilterSelect (subfilter: number,
+		filter: AfmFilter, triggeredFromGraph: boolean) {
+	   this.timeRangeFiltered = true;
+	   this.resetValuesWhileFilter();
+	   const sub = _.find(filter.seriesData, { filter: subfilter });
+	   if (triggeredFromGraph) {
+		   filter.seriesData.forEach(obj => {
+			obj.selected = false;
+		   });
+	   }
 		if (sub) {
 			sub.selected = !sub.selected;
 		}
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.CHATS;
 		this.searchParams.noOfDaysFilter = subfilter;
 		this.afmTimeRangeFilter(this.searchParams);
+		filter.selected = _.some(filter.seriesData, 'selected');
 	}
 
 	/**
@@ -514,7 +547,9 @@ export class AfmComponent {
 	 */
 	public ignoreAlarmFilters () {
 		this.resetValuesWhileFilter();
+		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.IGNORE_EVENT;
+		this.clearToken();
 		this.getAfmAlarmData(this.searchParams);
 	}
 
@@ -532,6 +567,7 @@ export class AfmComponent {
 		} else {
 			this.paginationCount = '0-0';
 		}
+		this.statusErrorMessage = null;
 	}
 
 	/**
@@ -574,16 +610,61 @@ export class AfmComponent {
 					this.aggregationCount = response.aggregationsCount;
 					this.buildFilters();
 				}
+				this.preparePaginationHeader();
 			} else if (response.status.toUpperCase() === this.AFM_CONSTANT.FAIL) {
 				this.tableData = response.eventList;
 				this.pagination = response.pagination;
-				this.statusErrorMessage = response.statusMessage;
+				this.logger.error(`Error while connecting apis :${response.statusMessage}`);
+				this.statusErrorMessage = 'Server is down, please try again.';
+				if (this.searchParams.firstTimeLoading) {
+					this.afmConnectionStatus = {
+						status: 'Error',
+						statusMessage: 'Not connected',
+					};
+				}
 			}
-			this.preparePaginationHeader();
 		} else {
 			this.tableData = Array<Alarm>();
 		}
 		this.loading = false;
+	}
+
+	get selectedFilters () {
+		return _.filter(this.filters, 'selected');
+	}
+
+	/**
+	 * Gets selected sub filters
+	 * @param key filter key
+	 * @returns  selected filters
+	 */
+	public getSelectedSubFilters (key: string) {
+		const filter = _.find(this.filters, { key });
+
+		if (filter) {
+			return _.filter(filter.seriesData, 'selected');
+		}
+	}
+
+	/**
+	 * Clears filters
+	 */
+	public clearFilters () {
+		this.allAlarmFilter();
+		this.clearToken();
+	}
+
+	/**
+	 * Clear all the filter tokens
+	 */
+	private clearToken () {
+		this.filtered = false;
+		_.each(this.filters, (filter: AfmFilter) => {
+			filter.selected = false;
+			_.each(filter.seriesData, f => {
+				f.selected = false;
+			});
+		});
 	}
 
 	/** Function used to destroy the component */

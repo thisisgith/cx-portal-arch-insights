@@ -290,27 +290,8 @@ $vibblue: #017cad;
 }
 
 .finishline {
-	width: 10px;
+	width: 15px;
 	height: 30px;
-}
-
-#compActPct {
-	width: 70px;
-	height: 30px;
-	text-align: center;
-	font-style: italic;
-	font-size: 20px;
-	background-color: $primary;
-	-webkit-text-stroke-width: 1px;
-}
-
-#compActPct::before {
-	content: '';
-	position: absolute;
-	bottom: 12%;
-	left: 4.5%;
-	border-right: 15px solid $primary;
-	border-bottom: 30px solid transparent;
 }
 
 .card_footer_item {
@@ -325,23 +306,13 @@ $vibblue: #017cad;
 		position: absolute;
 		right: 7px;
 		top: 0;
-		z-index: 1;
 		color: $indigo;
-	}
-
-	&__green {
-		position: absolute;
-		right: 7px;
-		top: 0;
-		z-index: 2;
-		color: $success;
 	}
 
 	&__white {
 		position: absolute;
 		right: 7px;
 		top: 0;
-		z-index: 2;
 		color: $white;
 		-webkit-text-stroke-width: 1px;
 		-webkit-text-stroke-color: $info;
@@ -544,6 +515,30 @@ tr.td-row td {
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: nowrap;
+}
+
+.view-all {
+	display: inline-block;
+}
+
+polygon {
+	fill: $primary;
+}
+
+.comPertText {
+	text-align: center;
+	font-style: italic;
+	font-style: bold;
+	font-size: 20px;
+	fill: white;
+}
+
+.racetrack-header {
+	display: inline-block;
+}
+
+.finishline-banner {
+	align-items: flex-end;
 }
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {

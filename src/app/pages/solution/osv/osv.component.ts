@@ -91,15 +91,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_OsvAssets_'),
 				view: ['assets'],
 			},
-			{
-				key: 'deploymentStatus',
-				loading: true,
-				selected: false,
-				seriesData: [],
-				template: this.deploymentStatusFilterTemplate,
-				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
-				view: ['assets'],
-			},
 		];
 		this.loadData();
 	}
@@ -128,32 +119,21 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	private getSummary () {
 
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
-		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
 		const assetTypeFilter = _.find(this.filters, { key: 'assetType' });
 
 		return this.osvService.getSummary({ customerId: this.customerId })
 			.pipe(
 				map((response: SummaryResponse) => {
 					totalAssetsFilter.loading = false;
-					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
+					response.asset_profile.assets_profile = 0;
+					response.profiles = 0;
 					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
 						versions: response.versions,
 					}];
 					this.decideView(response);
-					deploymentStatusFilter.seriesData = _.compact(
-						_.map(response.deployment, (value: number, key: string) => {
-							if (value !== 0) {
-								return {
-									value,
-									filter: key,
-									label: _.capitalize(key),
-									selected: false,
-								};
-							}
-						}));
 
 					assetTypeFilter.seriesData = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
@@ -174,7 +154,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV Summary : getSummary() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					totalAssetsFilter.loading = false;
-					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
 					this.view = undefined;
 

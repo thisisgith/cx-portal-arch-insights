@@ -116,54 +116,54 @@ describe('AfmComponent', () => {
 	it('should be called on table sorting changed', () => {
 		const eventSyslog = {
 			name: 'Syslog Event',
-			sortDirection: 'Abc',
+			sortDirection: 'Syslog Event Description',
 		};
 		component.searchParams.headerFilterType = 'TAC';
 		component.onTableSortingChanged(eventSyslog);
 		fixture.detectChanges();
 		const eventFault = {
 			name: 'Fault IC',
-			sortDirection: 'Abc',
+			sortDirection: 'Fault IC description',
 		};
 		component.searchParams.headerFilterType = 'SEARCH';
 		component.onTableSortingChanged(eventFault);
 		fixture.detectChanges();
 		const eventSerial = {
 			name: 'Serial Number',
-			sortDirection: 'Abc',
+			sortDirection: 'Serial number description',
 		};
 		component.searchParams.headerFilterType = 'IGNORE_EVENT';
 		component.onTableSortingChanged(eventSerial);
 		fixture.detectChanges();
 		const eventSeverity = {
 			name: 'Event Severity',
-			sortDirection: 'Abc',
+			sortDirection: 'Event Severity description',
 		};
 		component.searchParams.headerFilterType = 'CHATS';
 		component.onTableSortingChanged(eventSeverity);
 		fixture.detectChanges();
 		const eventCase = {
 			name: 'Case ID',
-			sortDirection: 'Abc',
+			sortDirection: 'Case Id description',
 		};
 		component.searchParams.headerFilterType = 'ALARM';
 		component.onTableSortingChanged(eventCase);
 		fixture.detectChanges();
 		const eventTime = {
 			name: 'Time Created',
-			sortDirection: 'Abc',
+			sortDirection: 'Time Created description',
 		};
 		component.onTableSortingChanged(eventTime);
 		fixture.detectChanges();
 		const eventStatus = {
 			name: 'Event Status',
-			sortDirection: 'Abc',
+			sortDirection: 'Event Status description',
 		};
 		component.onTableSortingChanged(eventStatus);
 		fixture.detectChanges();
 		const eventDefault = {
 			name: 'Default',
-			sortDirection: 'Abc',
+			sortDirection: 'Default description',
 		};
 		component.searchParams.headerFilterType = 'Default';
 		component.onTableSortingChanged(eventDefault);
@@ -177,8 +177,59 @@ describe('AfmComponent', () => {
 			.returnValue(of(<any> AfmScenarios[3].scenarios.POST[0].response.body));
 		const subfilter = 12;
 		afmFilter.seriesData = [];
-		component.onTimeRangefilterSelect(subfilter, afmFilter);
+		component.onTimeRangefilterSelect(subfilter, afmFilter, true);
 		expect(afmService.getTimeRangeFilteredEvents)
+			.toHaveBeenCalled();
+	});
+
+	it('should return filters', () => {
+		component.filters =  [
+			{
+				key: 'afmFilter',
+				loading: true,
+				selected: true,
+				seriesData: [
+					{
+						filter: '',
+						label: '',
+						selected: true,
+						value: 12,
+					},
+				],
+				title: '',
+			}];
+		component.getSelectedSubFilters('afmFilter');
+		expect(component.getSelectedSubFilters('afmFilter'))
+		.toBeDefined();
+	});
+
+	it('should clear filters', () => {
+		component.filters =  [
+			{
+				key: 'afmFilter',
+				loading: true,
+				selected: true,
+				seriesData: [
+					{
+						filter: '',
+						label: '',
+						selected: true,
+						value: 12,
+					},
+				],
+				title: '',
+			}];
+		component.clearFilters();
+		expect(component.filtered)
+		.toBeFalsy();
+	});
+
+	it('should export all events to csv', () => {
+		spyOn(afmService, 'exportAllRecords')
+			.and
+			.returnValue(of(<any> AfmScenarios[7].scenarios.GET[0].response.body));
+		component.exportAllEvents();
+		expect(afmService.exportAllRecords)
 			.toHaveBeenCalled();
 	});
 
@@ -242,6 +293,26 @@ describe('AfmComponent', () => {
 			mockAfmSearchParams.headerFilterType = 'ALARM';
 			mockAfmSearchParams.searchTerm = '';
 			fixture.detectChanges();
+			component.aggregationCount.set('Day1', 1)
+			.set('Days7', 1);
+			component.allAlarmFilter();
+			expect(component.loading)
+				.toBeFalsy();
+			expect(afmService.getAfmAlarms)
+				.toHaveBeenCalled();
+		});
+
+		it('should load afm alarms with failed status', () => {
+			spyOn(afmService, 'getAfmAlarms')
+				.and
+				.returnValue(of(<any> AfmScenarios[8].scenarios.POST[0].response.body));
+			mockAfmSearchParams.pageSize = 10;
+			mockAfmSearchParams.pageNumber = 1;
+			mockAfmSearchParams.headerFilterType = 'ALARM';
+			mockAfmSearchParams.searchTerm = '';
+			fixture.detectChanges();
+			component.aggregationCount.set('Day1', 1)
+			.set('Days7', 1);
 			component.allAlarmFilter();
 			expect(component.loading)
 				.toBeFalsy();

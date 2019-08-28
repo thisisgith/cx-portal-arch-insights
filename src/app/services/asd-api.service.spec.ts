@@ -38,6 +38,7 @@ describe('ASDAPIService', () => {
 			[ASDAPIService, HttpTestingController],
 			(service: ASDAPIService, httpMock: HttpTestingController) => {
 				const sub1 = service.getMetadata()
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						sub1.unsubscribe();
 					});
@@ -51,6 +52,7 @@ describe('ASDAPIService', () => {
 				mdReq.flush(ASDMetadataScenarios[0].scenarios.GET[0].response.body);
 
 				const sub2 = service.getMetadata()
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						sub2.unsubscribe();
 					});
@@ -66,6 +68,7 @@ describe('ASDAPIService', () => {
 			[ASDAPIService, HttpTestingController],
 			(service: ASDAPIService, httpMock: HttpTestingController) => {
 				const sub = service.getDownloadURL('<metadata_trans_id>', '<ImageGUID>')
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						sub.unsubscribe();
 					});
@@ -111,6 +114,7 @@ describe('ASDAPIService', () => {
 			[ASDAPIService, HttpTestingController],
 			(service: ASDAPIService, httpMock: HttpTestingController) => {
 				const sub = service.acceptEULA('test')
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						sub.unsubscribe();
 					});
@@ -133,6 +137,7 @@ describe('ASDAPIService', () => {
 			(service: ASDAPIService, httpMock: HttpTestingController) => {
 				let i = 0;
 				const sub1 = service.acceptEULA('test')
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						if (i === 1) {
 							sub1.unsubscribe();
