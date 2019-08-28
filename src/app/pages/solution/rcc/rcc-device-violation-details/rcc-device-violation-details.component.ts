@@ -294,8 +294,6 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 * @param pageInfo gives page number
 	 */
 	public onPageIndexChange (pageInfo: any) {
-		// this.tableConfig.tableOffset = pageInfo.page;
-		// this.paginationConfig.pageIndex = pageInfo.page + 1;
 		this.tableOffset = pageInfo.page;
 	}
 	/**
