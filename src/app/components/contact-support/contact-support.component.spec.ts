@@ -5,11 +5,14 @@ import { EmailControllerService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProfileService } from '@cisco-ngx/cui-auth';
 import { of } from 'rxjs';
+import { UserResolve } from '@utilities';
+import { user } from '@mock';
 
 describe('ContactSupportComponent', () => {
 	let component: ContactSupportComponent;
 	let service: EmailControllerService;
 	let fixture: ComponentFixture<ContactSupportComponent>;
+	let userResolve: UserResolve;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -24,10 +27,10 @@ describe('ContactSupportComponent', () => {
 						getProfile () {
 							return {
 								cpr: {
+									pf_auth_email: 'susan@company.com',
 									pf_auth_firstname: 'Susan',
 									pf_auth_lastname: 'Swanson',
 									pf_auth_uid: 'susans',
-									pf_auth_email: 'susan@company.com',
 								},
 							};
 						},
@@ -39,6 +42,10 @@ describe('ContactSupportComponent', () => {
 	}));
 
 	beforeEach(() => {
+		userResolve = TestBed.get(UserResolve);
+		spyOn(userResolve, 'getCustomerId')
+			.and
+			.returnValue(of(user.info.customerId));
 		fixture = TestBed.createComponent(ContactSupportComponent);
 		service = TestBed.get(EmailControllerService);
 		component = fixture.componentInstance;
@@ -82,5 +89,27 @@ describe('ContactSupportComponent', () => {
 		component.ngOnInit();
 		expect(component.getTopicList)
 			.toHaveBeenCalled();
+	});
+
+	it('should not call the contact support service if form is invalid', () => {
+		spyOn(service, 'contactSupport')
+			.and
+			.returnValue(of(<any> { }));
+		component.ngOnInit();
+		fixture.detectChanges();
+		component.sendSupportEmail();
+		expect(service.contactSupport)
+			.toHaveBeenCalledTimes(0);
+	});
+
+	it('should not call the sendEmamil service if form is invalid', () => {
+		spyOn(service, 'sendEmail')
+			.and
+			.returnValue(of(<any> { }));
+		component.ngOnInit();
+		fixture.detectChanges();
+		component.submitMessage();
+		expect(service.sendEmail)
+			.toHaveBeenCalledTimes(0);
 	});
 });
