@@ -126,8 +126,12 @@ export class RiskMitigationComponent {
 	 * Selected filter is for to assign default filter on page loads.
 	 */
 	public selectedTimeFilters () {
-		_.filter(this.filters, 'selected');
-		this.selectedFilters = this.filters;
+		if (this.selectedFilters !== undefined) {
+			this.resetFilters();
+			_.filter(this.filters, 'selected');
+			this.selectedFilters = this.filters;
+			this.selectedFilters[0].seriesData[0].selected = true;
+		}
   	 }
 	/**
 	 * Gets high crashes device data
@@ -161,7 +165,7 @@ export class RiskMitigationComponent {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
 		this.getDeviceDetails('1');
-
+		this.selectedTimeFilters();
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
 				takeUntil(this.destroy$),
