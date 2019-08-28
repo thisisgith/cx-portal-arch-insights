@@ -251,7 +251,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 		this.destroy$.complete();
 	}
 	/**
-	 * Function called when we load table 
+	 * Function called when we load table
 	 */
 	public buildGridTable () {
 		this.rccAssetPolicyTableOptions = new CuiTableOptions({

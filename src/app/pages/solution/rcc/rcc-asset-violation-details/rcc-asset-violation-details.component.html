@@ -70,14 +70,11 @@
 	</div>
 </ng-template>
 <ng-template #violationAgeTemplate let-item="celldata">
-		<span [innerHTML]="item?.age">
-				<span
-				[innerText]="
-				item?.age > 1
+		<span [innerHTML]="item?.age"></span>
+				<span [innerText]="item?.age > 1
 				? ('_RccViolationAgeInDays_' | i18n)
-				: ('_RccViolationAgeInDay_' | i18n)
-				"
-				>
+				: ('_RccViolationAgeInDay_' | i18n)">
+		</span>
 </ng-template>
 <ng-template #assetSliderIconTemplate let-item="celldata">
 	<i *ngIf="item?.ruleHighSeverity" class="qtr-margin-right icon-circle" iconSize="default" [ngClass]="{
