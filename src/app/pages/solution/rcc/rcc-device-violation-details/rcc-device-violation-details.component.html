@@ -124,6 +124,6 @@
 	</div>
 </ng-template>
 <ng-template #commonTemplate>
-	<div *ngIf="(initialLoading && apiNoData);then loaderTemplate else noDataAvailable">
+	<div *ngIf="(initialLoading && apiNoData); then loaderTemplate; else noDataAvailable;">
 	</div>
 </ng-template>
