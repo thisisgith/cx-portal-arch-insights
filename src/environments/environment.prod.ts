@@ -15,9 +15,7 @@ export const environment = {
 		accountUrl: `${origin}/ws/account/v2/`,
 		ciscoTokenUrl: `${origin}/ws/oauth/v3/token/cisco`,
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
-		tokenUrl: `${
-			origin
-		}/ws/oauth/v3/token/cway/e4f602992449cdb1d4aea2df5849f7d6ebd4280c1c8e1398fcfec534422533b8`,
+		tokenUrl: `${origin}/ws/oauth/v3/token/cway/e4f602992449cdb1d4aea2df5849f7d6ebd4280c1c8e1398fcfec534422533b8`,
 	},
 	baseHref: '/',
 	csc: {
@@ -53,18 +51,19 @@ export const environment = {
 		returns: '/return/v1.0/returns',
 	},
 	rmaToolUrl: 'https://ibpm.cisco.com/rma/home',
-	sdpServiceBasePath: '/api/stg',
-	sdpServiceClientId: 'ejw4cbpvp3s8cyh4ry8qcnff',
+	sdpServiceBasePath: '/api/usa',
+	sdpServiceClientId: '3t4uvkxxnpps49vcc4qsafuc',
 	/**
 	 * sdpServiceOrigin MUST be explicitly declared in every single environment file,
 	 * because it is used inside of a module forRoot() call
+	 * Redirect URL provisioned by SDP - https://cway.cisco.com/oauth/validate.html
 	 */
-	sdpServiceOrigin: 'https://api-test.cisco.com',
+	sdpServiceOrigin: 'https://api.cisco.com',
 	sdpServicePaths: {
-		contracts: '/api/stg/v1/contracts',
-		controlpoints: '/api/stg/customerportal/controlpoint',
-		customerportal: '/api/stg/customerportal',
-		inventory: '/api/stg/v1/inventory',
+		contracts: '/api/v1/contracts',
+		controlpoints: '/api/customerportal/controlpoint',
+		customerportal: '/api/customerportal',
+		inventory: '/api/v1/inventory',
 	},
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
