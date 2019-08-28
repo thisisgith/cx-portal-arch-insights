@@ -46,6 +46,13 @@ const mockBasicRecommendations: AssetRecommendationsResponse = [
 	},
 	{
 		error: null,
+		name: 'golden',
+		postDate: '2019-06-20T18:30:00.000+0000',
+		recommendationSummary: null,
+		swVersion: '16.11.1c',
+	},
+	{
+		error: null,
 		name: 'current',
 		postDate: '2018-07-17T18:30:00.000+0000',
 		recommendationSummary: null,

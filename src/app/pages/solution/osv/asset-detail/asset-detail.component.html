@@ -1,11 +1,12 @@
 <div class="row dbl-margin-top">
-	<div class="col-md-8">
-		<div class="text-large text-bold" [innerText]="'_OsvSoftwareVersionSummary_' | i18n | uppercase"></div>
-		<div class="text-medium qtr-margin-top"
+	<div class="col-md-10 flex align-items-center">
+		<div *ngIf="view =='list'" class="text-large text-bold"
+			[innerText]="'_OsvSoftwareVersionSummary_' | i18n | uppercase"></div>
+		<div class="text-large qtr-margin-top"
 			*ngIf=" accept && view =='timeline' && assetDetails && assetDetails?.length > 0"
 			[innerText]="'_OsvClickToSelectRecommendation_' | i18n"></div>
 	</div>
-	<div class="col-md-4 pull-right">
+	<div class="col-md-2 pull-right">
 		<div class="btn-group btn-group--square half-margin-right pull-right">
 			<button [title]="'_OsvListView_' | i18n" data-auto-id="list-view-btn" class="btn btn--small "
 				[ngClass]="{ 'selected-view': view == 'list' }" (click)=" view = 'list'">
@@ -13,23 +14,27 @@
 			</button>
 			<button [title]="'_OsvTimelineView_' | i18n" data-auto-id="timeline-view-btn" class="btn btn--small "
 				[ngClass]="{ 'selected-view': view == 'timeline' }"
-				(click)="view = 'timeline' ; selectedRecommendation.name = 'None';">
+				(click)="view = 'timeline' ; selectedRecommendation.name = 'none';">
 				<span class="icon-time"></span>
 			</button>
 		</div>
 
 	</div>
+	<div class="col-12 qtr-margin-top"
+	*ngIf="accept && !status.isLoading && assetDetails && assetDetails?.length > 0  && view == 'timeline'">
+	<span *ngIf="selectedRecommendation?.name == 'none'" class="text-medium"
+		[innerText]="'_OsvNoRecommendationSelected_' | i18n"></span>
+	<span class="text-medium" *ngIf="selectedRecommendation?.name != 'none'">
+		<span  [innerText]="'_OsvSelectedRecommendation_' | i18n"></span>
+		<span class="qtr-margin-left" [innerText]="selectedRecommendation?.name | titlecase"></span>
+		<button class="qtr-margin-left" cuiButton [color]="'secondary'" [small]="true" [wide]="false" [animated]="true"
+			[innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(selectedRecommendation)"
+			attr.data-auto-id="AcceptVersion-{{selectedRecommendation}}"></button>
+	</span>
+</div>
 </div>
 
-<div class="dbl-margin-top"
-	*ngIf="accept && !status.isLoading && assetDetails && assetDetails?.length > 0  && view == 'timeline'">
-	<span class="text-large" [innerText]="'_OsvSelectedRecommendation_' | i18n"></span>
-	<span class="qtr-margin-left text-large" [innerText]="selectedRecommendation?.name | titlecase"></span>
-	<button *ngIf="selectedRecommendation?.name != 'None'" class="qtr-margin-left" cuiButton [color]="'primary'"
-		[small]="true" [wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n"
-		(click)="onActionClick(selectedRecommendation)"
-		attr.data-auto-id="AcceptVersion-{{selectedRecommendation}}"></button>
-</div>
+
 
 
 <!-- spinner -->
@@ -83,6 +88,27 @@
 			</tr>
 		</tbody>
 	</table>
+	<div class="base-margin-top panel--ltgray panel--well">
+		<table class="table table--selectable table--compressed table--wrap table--lined table--nostripes">
+			<tbody>
+				<tr attr.data-auto-id="AssetDetails-{{ currentVersion.swVersion }}">
+					<td *ngFor="let column of assetDetailsTable.columns" [ngStyle]="{ 'width': column.width }"
+						(click)="column.click ? $event.stopPropagation() : null"
+						attr.data-auto-id="AssetDetailItemClickHandler-{{ currentVersion.swVersion }}">
+						<ng-container *ngIf="column.template">
+							<ng-container *ngTemplateOutlet="column.template; context: { celldata: currentVersion }">
+							</ng-container>
+						</ng-container>
+						<ng-container *ngIf="!column.template">
+							<span *ngIf="column.render" [innerHTML]="column.render(currentVersion)"></span>
+							<span *ngIf="!column.render" [innerText]="currentVersion[column.key]"></span>
+						</ng-container>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 </div>
 <!-- view all os version link -->
 <div class="markup pull-right dbl-margin-top" *ngIf="!status.isLoading && assetDetails?.length > 0">
@@ -93,13 +119,13 @@
 </div>
 
 <ng-template #versionTemplate let-item="celldata">
-	<div [ngClass]="{'invisible':item?.hidden}" class="row flex align-items-center">
+	<div class="row flex align-items-center">
 		<div class="col-2">
 			<span *ngIf="item.name == 'current'" class="text-small">Current Version(s)</span>
 		</div>
 		<div class="col-2 flex align-items-center">
-			<div *ngIf="item.name == 'current'" class="pointer"></div>
 			<span *ngIf="item.name == 'current'" class="icon-circle text-primary"></span>
+			<div *ngIf="item.name == 'current'" class="pointer"></div>
 		</div>
 		<div class="col-2" [innerText]="item.swVersion"></div>
 		<div class="col-6">
@@ -116,7 +142,7 @@
 </ng-template>
 
 <ng-template #actionsTemplate let-item="celldata">
-	<div [ngClass]="{'invisible':item?.hidden}" *ngIf="selectedAsset">
+	<div *ngIf="selectedAsset">
 		<button *ngIf="item.name != 'current' && !item.accepted" cuiButton [color]="'secondary'" [small]="true"
 			[wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
 			attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
@@ -129,7 +155,7 @@
 				[innerText]="selectedAsset?.recommAcceptedDate | date:mediumDate"></span>
 		</div>
 	</div>
-	<div [ngClass]="{'invisible':item?.hidden}" *ngIf="selectedSoftwareGroup">
+	<div *ngIf="selectedSoftwareGroup">
 		<button *ngIf="item.name != 'current' && !item.accepted" cuiButton [color]="'primary-ghost'" [small]="true"
 			[wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
 			attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
@@ -145,7 +171,7 @@
 </ng-template>
 
 <ng-template #releaseDateTemplate let-item="celldata">
-	<span [ngClass]="{'invisible':item?.hidden}">
+	<span>
 		<span *ngIf="!item.error && item.postDate != 'NA'" [innerText]="item?.postDate | date:mediumDate"></span>
 		<span *ngIf="item.error || item.postDate == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
 	</span>

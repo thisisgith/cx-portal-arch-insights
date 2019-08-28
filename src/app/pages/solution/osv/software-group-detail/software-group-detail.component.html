@@ -4,7 +4,7 @@
 			<cui-spinner *ngIf="status.isLoading"></cui-spinner>
 		</div>
 	</cui-tab>
-	<cui-tab [label]="'_OsvRecommendations_' | i18n | uppercase">
+	<cui-tab [label]="'_OsvSoftwareVersionSummary_' | i18n | uppercase">
 		<ng-container *ngTemplateOutlet="softwareGroupRecommendations"></ng-container>
 	</cui-tab>
 	<cui-tab [label]="'_OsvAssetsX_' | i18n:softwareGroupAssets?.length | uppercase">

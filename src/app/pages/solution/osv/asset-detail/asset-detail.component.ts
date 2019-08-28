@@ -51,8 +51,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public assetDetailsTable: CuiTableOptions;
 	public assetDetailsParams: OSVService.GetAssetDetailsParams;
 	public customerId: string;
+	public currentVersion: AssetRecommendations;
 	public selectedRecommendation = {
-		name: 'None',
+		name: 'none',
 	};
 
 	constructor (
@@ -147,11 +148,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			detail.swVersionGroup = groups[swVersion];
 			groupedData.push(detail);
 		});
-		const currentVersion = _.filter(data, {name : 'current'});
-		const sortedData = this.sortData(groupedData);
-		sortedData.push({ ...currentVersion[0], hidden: true });
-		sortedData.push(currentVersion[0])
-		return sortedData;
+		this.currentVersion = _.get(_.filter(data, { name: 'current' }), 0);
+
+		return this.sortData(groupedData);
 	}
 
 	/**
