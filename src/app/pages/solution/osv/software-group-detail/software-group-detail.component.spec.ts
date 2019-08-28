@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SoftwareGroupDetailComponent } from './software-group-detail.component';
 import { SoftwareGroupDetailModule } from './software-group-detail.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SoftwareGroupDetailComponent', () => {
 	let component: SoftwareGroupDetailComponent;
@@ -13,6 +14,7 @@ describe('SoftwareGroupDetailComponent', () => {
 			imports: [
 				SoftwareGroupDetailModule,
 				HttpClientTestingModule,
+				RouterTestingModule,
 			],
 		})
 			.compileComponents();

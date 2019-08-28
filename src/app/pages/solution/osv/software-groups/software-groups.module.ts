@@ -22,7 +22,6 @@ import {
 		CuiDropdownModule,
 		CuiSpinnerModule,
 		CuiPagerModule,
-		CuiDropdownModule,
 	],
 })
 export class SoftwareGroupsModule { }

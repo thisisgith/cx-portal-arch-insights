@@ -4,7 +4,6 @@ import { AssetDetailsComponent } from './asset-detail.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import {
 	CuiTabsModule,
-	CuiLoaderModule,
 	CuiSpinnerModule,
 	CuiTableModule,
 	CuiButtonModule,
@@ -19,15 +18,12 @@ import { AssetTimelineChartModule } from '../asset-timeline-chart/asset-timeline
 	exports: [AssetDetailsComponent],
 	imports: [
 		CommonModule,
-		CuiTabsModule,
 		I18nPipeModule,
-		CuiLoaderModule,
 		CuiTabsModule,
-		AssetTimelineChartModule,
 		CuiSpinnerModule,
 		CuiTableModule,
 		CuiButtonModule,
-		CuiButtonModule,
+		AssetTimelineChartModule,
 	],
 })
 export class AssetDetailsModule { }
