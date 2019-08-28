@@ -21,7 +21,6 @@ import { map, takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { DatePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 /**
@@ -34,10 +33,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
-	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{}>;
-	@ViewChild('releaseDateTemplate', { static: true }) private releaseDateTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{ }>;
+	@ViewChild('releaseDateTemplate', { static: true })
+		private releaseDateTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
@@ -125,7 +125,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -140,7 +140,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public groupData (data: AssetRecommendationsResponse) {
 		const recommendations = _.filter(data, (detail: AssetRecommendations) =>
-			detail.name != 'current')
+			detail.name !== 'current');
 		const groups = _.groupBy(recommendations, 'swVersion');
 		const groupedData = [];
 		_.map(_.keys(groups), swVersion => {
@@ -170,7 +170,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -203,7 +203,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @returns columns
 	 */
 	public getColumns () {
-		const datePipe = new DatePipe('en-US');
 		const columns = [
 			{
 				name: I18n.get('_OsvVersion_'),
@@ -247,7 +246,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any>new Date(b.postDate) - <any>new Date(a.postDate));
+			<any> new Date(b.postDate) - <any> new Date(a.postDate));
 
 		return data;
 	}
@@ -294,9 +293,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		}
 	}
 
-	/*
-	* view all os version
-	*/
+	/**
+	 * View All Os Version - link to software.cisco.com
+	 */
 	public viewAllVersions () {
 		const mdfId = _.get(this.selectedAsset, 'mdfId');
 		const url = `https://software.cisco.com/research/home?pid=${mdfId}`;

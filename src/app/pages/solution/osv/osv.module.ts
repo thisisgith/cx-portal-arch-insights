@@ -51,7 +51,7 @@ const childRoutes: Routes = [
 		AssetDetailsModule,
 		SoftwareVersionsModule,
 		SoftwareGroupsModule,
-		SoftwareGroupDetailModule,				
+		SoftwareGroupDetailModule,
 		CuiModalModule,
 		ContactSupportModule,
 	],

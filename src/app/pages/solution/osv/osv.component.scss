@@ -1,41 +1,6 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import 'src/mixins.scss';
 
-::ng-deep {
-	.profile-info {
-		@include md {
-			width: 600px !important;
-		}
-
-	}		
-}
-
-.filter {
-	min-height: 220px;
-
-	&__selected {
-		border-bottom: 4px solid $primary;
-	}
-
-	&__not-selected {
-		border-bottom: 4px solid $white;
-	}
-
-	&__title {
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-	}
-}
-
-.margin-auto {
-	margin: auto;
-}
-
-.vertical-center {
-	vertical-align: middle;
-}
-
 .profile-info {
 	z-index: 9;
 	border: 1px solid $med-gray-2;
@@ -65,10 +30,43 @@
 		left: -7px;
 		top: 7px;
 	}
+}
 
+::ng-deep {
+	.profile-info {
+		@include md {
+			width: 600px !important;
+		}
+	}
+}
+
+.filter {
+	min-height: 220px;
+
+	&__selected {
+		border-bottom: 4px solid $primary;
+	}
+
+	&__not-selected {
+		border-bottom: 4px solid $white;
+	}
+
+	&__title {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+	}
+}
+
+.margin-auto {
+	margin: auto;
+}
+
+.vertical-center {
+	vertical-align: middle;
 }
 
 .close {
-	font-size: 34px;    
-    color: $med-gray-2;
+	font-size: 34px;
+	color: $med-gray-2;
 }
