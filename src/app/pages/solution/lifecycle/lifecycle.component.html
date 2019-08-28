@@ -334,7 +334,7 @@
 			</div>
 			<div>
 				<a class="no-link closebtn"
-					(click)="closeViewSessions()"						
+					(click)="closeViewSessions()"
 					data-auto-id="AtxScheduleCardClose">
 					<span class="icon-close icon-small"></span>
 				</a>
@@ -523,7 +523,7 @@
 							<span class="text-blue" [innerText]="item.title"></span>
 						</a>
 					</div>
-					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.percentagecompleted === 100" attr.data-auto-id="{{ title }}-completedIcon"></div> 
+					<div class="col-md-1 text-success icon-certified qtr-padding-left" *ngIf="item.percentagecompleted === 100" attr.data-auto-id="{{ title }}-completedIcon"></div>
 					<div class="col-md-1 progressbar qtr-margin-top qtr-margin-bottom learning-progress-col" [attr.data-percentage]="item.percentagecompleted" *ngIf="item.percentagecompleted && item.percentagecompleted != 100" attr.data-auto-id="{{ title }}-progressBar">
 						<div class="progressbar__fill learning-progressfill-col"></div>
 					</div>
@@ -737,7 +737,7 @@
 					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
 					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
 				</span>
-			</span>	
+			</span>
 		</div>
 	</div>
 </ng-template>
@@ -965,8 +965,7 @@
 
 <ng-template #cardPG>
 	<div class="card acc__card" *ngFor="let item of selectedProductGuides" data-auto-id="ProductGuidesCard">
-		<!-- product guides are still of type "SB" (Success Bytes) -->
-		<div class="icon-bookmark icon-medium" (click)="updateBookmark(item, 'SB')"
+		<div class="icon-bookmark icon-medium" (click)="updateBookmark(item, 'PG')"
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'" data-auto-id="ProductGuidesCard-Ribbon"></div>
 		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype" data-auto-id="ProductGuidesCard-Archetype"></div>
 		<div class="card__body success__card__body">

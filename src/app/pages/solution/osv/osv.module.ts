@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { OptimalSoftwareVersionComponent } from './osv.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AssetDetailsModule } from './asset-detail/asset-detail.module';
-import { CuiTabsModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import { CuiTabsModule, CuiSpinnerModule, CuiModalModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
 import { AssetsModule } from './assets/assets.module';
 import { SoftwareVersionsModule } from './software-versions/software-versions.module';
@@ -13,6 +13,7 @@ import { OSVModule } from '@sdp-api';
 
 import { DetailsPanelModule, PieChartModule } from '@components';
 import { SoftwareGroupsModule } from './software-groups/software-groups.module';
+import { ContactSupportModule } from 'src/app/components/contact-support/contact-support.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
@@ -48,6 +49,8 @@ const childRoutes: Routes = [
 		OSVModule.forRoot({ rootUrl }),
 		PieChartModule,
 		SoftwareGroupsModule,
+		CuiModalModule,
+		ContactSupportModule,
 	],
 })
 export class OptimalSoftwareVersionModule { }

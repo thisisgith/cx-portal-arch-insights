@@ -124,6 +124,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 							'firstTime');
 						this.quickTourActive = this.quickTourFirstTime ||
 							_.isNil(this.quickTourFirstTime);
+						if (window.Cypress) {
+							this.quickTourActive = _.get(
+								window, 'Cypress.showQuickTour', this.quickTourActive);
+						}
 						this.utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
 					}
 				}

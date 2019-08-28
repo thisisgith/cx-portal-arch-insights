@@ -5,7 +5,7 @@
         "isFavorite": false,
         "status": "requested",
         "title": "Cisco Software-Defined Access Transition Planning",
-        "url": "https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest"
+        "url": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_policy-enforcement-sda.png"
     },
     {
         "accId": "222222",
@@ -13,7 +13,7 @@
         "isFavorite": false,
         "status": "in-progress",
         "title": "Cisco DNA Pilot Usecase Deployment",
-        "url": "https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest"
+        "url": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_sda-segregation-strategy.png"
     },
     {
         "accId": "111111",
@@ -21,6 +21,6 @@
         "isFavorite": false,
         "status": "completed",
         "title": "Cisco DNA Center Project Planning",
-        "url": "https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest"
+        "url": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_access-overview-demo.png"
     }
 ]
