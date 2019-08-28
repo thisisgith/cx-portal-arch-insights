@@ -2,7 +2,7 @@
 	<div class="qtr-padding-top qtr-padding-bottom  ">
 		<span [innerText]="'_RccAssetViolations_' | i18n" class="text-large text-uppercase"></span><span
 			class="qtr-padding-right qtr-padding-left">-</span>
-		<span class="text-large " data-auto-id="ShowingViolationCount" [innerText]="selectedAssetData?.violationCount">
+		<span class="text-large " data-auto-id="ShowingViolationCount" [innerHTML]="selectedAssetData?.violationCount">
 		</span>
 	</div>
 	<div class=" qtr-padding-top half-padding-bottom  text-medium text-uppercase text-bold"
@@ -19,7 +19,7 @@
 		</div>
 		<div class="col-4 qtr-padding-top qtr-padding-left">
 			<div [innerText]="'_RccAssetPolicyName_' | i18n"></div>
-			<cui-select class="text-break" [items]="assetPolicyNameItems"
+			<cui-select  [items]="assetPolicyNameItems"
 				placeholder="{{'_RccPolicyNamePlaceHolder_'| i18n}}" [compressed]="false" [empty]="true"
 				[(ngModel)]="policyNameSelection" data-auto-id="ShowingAssetPolicyValue"
 				(ngModelChange)="onPolicyNameSelection($event)" optionsKey="name" optionsValue="name">
@@ -51,7 +51,7 @@
 			<div class="base-margin-top">
 				<div class="text-bold text-small text-uppercase" [innerText]="'_RccAssetPolicyDescription_' | i18n">
 				</div>
-				<div class="text-small tabletext " [innerText]="item.policyDesc"></div>
+				<div class="text-small tabletext " [innerHTML]="item.policyDesc"></div>
 			</div>
 		</div>
 	</div>
@@ -59,7 +59,7 @@
 		<div class="col-12">
 			<div class="base-margin-top ">
 				<div class="text-bold text-small text-uppercase" [innerText]="'_RccAssetRuleDescription_' | i18n"></div>
-				<div class=" text-small tabletext" [innerText]="item.ruleDesc"></div>
+				<div class=" text-small tabletext" [innerHTML]="item.ruleDesc"></div>
 			</div>
 		</div>
 	</div>
