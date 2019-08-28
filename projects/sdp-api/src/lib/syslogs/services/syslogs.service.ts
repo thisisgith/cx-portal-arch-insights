@@ -120,7 +120,7 @@ class SyslogsService extends __BaseService {
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType='+syslogPanelParams.MsgType+"&companyId="+customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days='+syslogPanelParams.selectedFilters.days+'&msgType='+syslogPanelParams.selectedRowData.MsgType+"&companyId="+syslogPanelParams.customerId,
 			__body,
 			{
 			  headers: __headers, 
@@ -172,14 +172,14 @@ class SyslogsService extends __BaseService {
 		  );
 
 	}
-	sysPanelFilterGridData(SyslogFilterParam,syslogParams){
+	sysPanelFilterGridData(SyslogFilterParam){
 		this.convertNullToEmpty(SyslogFilterParam)
 		const __params = this.newParams();
         const __headers = new HttpHeaders(); 
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days='+SyslogFilterParam.timePeriod+"&msgType="+syslogParams.MsgType+"&productFamily="+SyslogFilterParam.productFamily+"&productId="+SyslogFilterParam.productID+"&severity=3"+"&software="+SyslogFilterParam.Software,
+			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days='+SyslogFilterParam.timePeriod+"&msgType="+SyslogFilterParam.assets.MsgType+"&productFamily="+SyslogFilterParam.productFamily+"&productId="+SyslogFilterParam.productID+"&severity="+SyslogFilterParam.selectedFilters.severity+"&software="+SyslogFilterParam.Software,
 			__body,
 			{
 			  headers: __headers, 
@@ -207,7 +207,7 @@ class SyslogsService extends __BaseService {
 			let __body: any = null;
 			const req = new HttpRequest<any>(
 				'GET',
-				this.rootUrl+'/api/customerportal/syslog/v1/asset/messages?fromSeverity=1'+'&toSeverity='+deviceDetails.severity+'&days='+deviceDetails.days+'&device='+deviceDetails.deviceHost+'&includeMsgType='+deviceDetails.includeMsgType+'&excludeMsgType='+deviceDetails.excludeMsgType+'&catalog='+deviceDetails.catalog+'&companyId='+deviceDetails.customerId,
+				this.rootUrl+'/api/customerportal/syslog/v1/asset/messages?fromSeverity=0'+'&toSeverity='+deviceDetails.severity+'&days='+deviceDetails.days+'&device='+deviceDetails.deviceHost+'&includeMsgType='+deviceDetails.includeMsgType+'&excludeMsgType='+deviceDetails.excludeMsgType+'&catalog='+deviceDetails.catalog+'&companyId='+deviceDetails.customerId,
 				__body,
 				{
 				  headers: __headers,
