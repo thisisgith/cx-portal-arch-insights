@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyslogsDevicesComponent } from './syslogs-devices.component';
 import { SyslogsDevicesModule } from './syslogs-devices.module';
@@ -55,7 +55,7 @@ describe('SyslogsMessagesComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
-	it('should set null values on request errors', () => {
+	it('should set null values on request errors', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -64,103 +64,90 @@ describe('SyslogsMessagesComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.ngOnInit();
+		tick();
 		fixture.detectChanges();
 		expect(syslogsService.getDeviceGridData)
 			.toHaveBeenCalled();
 		const syslogMessageGrid = [];
 		expect(component.tableData)
 			.toEqual(syslogMessageGrid);
-	 });
-	it('Should get the syslog message grid data', done => {
+	 }));
+
+	it('Should get the syslog message grid data', fakeAsync(() => {
 		spyOn(syslogsService, 'getDeviceGridData')
 		.and
 		.returnValue(of(SyslogScenarios[2].scenarios.GET[0].response.body));
 		component.ngOnInit();
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(syslogsService.getDeviceGridData)
-			.toHaveBeenCalled();
-			expect(component.tableData)
-				.toBeDefined();
-			done();
-		});
+		tick();
+		fixture.detectChanges();
+		expect(syslogsService.getDeviceGridData)
+		.toHaveBeenCalled();
+		expect(component.tableData)
+			.toBeDefined();
+	}));
+
+	it('should get selected table row data', () => {
+		fixture.detectChanges();
+		const selectedRowData = {
+			active: true,
+			deviceCount: 1,
+			IcDesc: '',
+			MsgType: 'INTERNAL',
+			Recommendation: '',
+			syslogMsgCount: 25,
+			SyslogSeverity: 3,
+		};
+		component.onTableRowSelection(selectedRowData);
+		expect(selectedRowData.active)
+		 .toBeTruthy();
+		 expect(component.selectedAsset)
+		 .toEqual(selectedRowData);
 	});
-	it('should get selected table row data', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const selectedRowData = {
-					active: true,
-					deviceCount: 1,
-					IcDesc: '',
-					MsgType: 'INTERNAL',
-					Recommendation: '',
-					syslogMsgCount: 25,
-					SyslogSeverity: 3,
-				};
-				component.onTableRowSelection(selectedRowData);
-				expect(selectedRowData.active)
-				 .toBeTruthy();
-				 expect(component.selectedAsset)
-				 .toEqual(selectedRowData);
-				done();
-			});
+
+	it('should reset tableRow row data on panel close', () => {
+		fixture.detectChanges();
+		component.onPanelClose();
+		expect(component.selectedAsset)
+		.toBeUndefined();
+		expect(component.showAssetPanel)
+		.toBeFalsy();
 	});
-	it('should reset tableRow row data on panel close', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				component.onPanelClose();
-				expect(component.selectedAsset)
-				.toBeUndefined();
-				expect(component.showAssetPanel)
-				.toBeFalsy();
-				done();
-			});
+	it('should reset tableRow row data when clicking twice on table row', () => {
+		fixture.detectChanges();
+		const selectedRowData = {
+			active: false,
+			deviceCount: 1,
+			IcDesc: '',
+			MsgType: 'INTERNAL',
+			Recommendation: '',
+			syslogMsgCount: 25,
+			SyslogSeverity: 3,
+		};
+		component.onTableRowSelection(selectedRowData);
+		expect(selectedRowData.active)
+		 .toBeFalsy();
+		 expect(component.selectedAsset)
+		 .toBeUndefined();
 	});
-	it('should reset tableRow row data when clicking twice on table row', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const selectedRowData = {
-					active: false,
-					deviceCount: 1,
-					IcDesc: '',
-					MsgType: 'INTERNAL',
-					Recommendation: '',
-					syslogMsgCount: 25,
-					SyslogSeverity: 3,
-				};
-				component.onTableRowSelection(selectedRowData);
-				expect(selectedRowData.active)
-				 .toBeFalsy();
-				 expect(component.selectedAsset)
-				 .toBeUndefined();
-				done();
-			});
-	});
-	it('should refresh assetfilter data', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const selectedRowData1 = {
-					assetFilter: {
-						currentValue: {
-							asset: '',
-							catalog: '',
-							severity: 7,
-							timeRange: 1,
-						},
-						firstChange: true,
-						previousValue: undefined,
-						isFirstChange: () => false,
-					},
-				};
-				component.ngOnChanges(selectedRowData1);
-				expect(selectedRowData1.assetFilter.firstChange)
-				 .toBeTruthy();
-				done();
-			});
-	});
+
+	it('should refresh assetfilter data', fakeAsync(() => {
+		fixture.detectChanges();
+		const selectedRowData1 = {
+			assetFilter: {
+				currentValue: {
+					asset: '',
+					catalog: '',
+					severity: 7,
+					timeRange: 1,
+				},
+				firstChange: true,
+				previousValue: undefined,
+				isFirstChange: () => false,
+			},
+		};
+		component.ngOnChanges(selectedRowData1);
+		tick();
+		expect(selectedRowData1.assetFilter.firstChange)
+		 .toBeTruthy();
+	}));
 });
