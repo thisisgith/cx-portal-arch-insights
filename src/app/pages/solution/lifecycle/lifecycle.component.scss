@@ -1,6 +1,7 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
 $vibblue: #017cad;
+
 $accent-dark-blue: #227bb1;
 $text-default-color: #394454;
 $text-dark-gray: #5d656c;
@@ -10,11 +11,13 @@ $text-light-gray: #8e8e8e;
 $icon-light-gray: #bdc5cf;
 $icon-light-gray-2: #7f7f86;
 $icon-green: #6abf4b;
-$icon-light-gray-border: #c1d8e2;
-$button-teal-border: #95d1d6;
+$bookmark-white-outline-color: #c1d8e2;
+$button-outline-color: #95d1d6;
 $border-light-gray: #e5e5e5;
 $border-dark-blue: #00a2cb;
 $divider-color: #e1e1e1;
+$bookmark-blue-outline-color: #5ddfff;
+$midnight-blue: #0d274d;
 
 %ribbon {
 	position: absolute;
@@ -25,7 +28,7 @@ $divider-color: #e1e1e1;
 
 %ribbon__outline {
 	-webkit-text-stroke-width: 1px;
-	-webkit-text-stroke-color: $icon-light-gray-border;
+	-webkit-text-stroke-color: $bookmark-white-outline-color;
 
 	@extend %ribbon;
 }
@@ -78,6 +81,8 @@ $divider-color: #e1e1e1;
 	}
 
 	&__card {
+		display: flex;
+		flex-direction: column;
 		padding: 0;
 		height: 525px;
 		box-shadow: -2px 0 transparent !important;
@@ -89,6 +94,7 @@ $divider-color: #e1e1e1;
 		&__header {
 			padding-right: 30px;
 			padding-left: 20px;
+			color: $midnight-blue;
 		}
 
 		&__body {
@@ -96,16 +102,37 @@ $divider-color: #e1e1e1;
 			padding-left: 20px;
 			height: 100px;
 			overflow: auto;
+			margin: 10px 0 20px 0;
+			font-size: 13px;
+			line-height: 17px;
 		}
 
 		&__footer {
-			padding-right: 30px;
-			padding-left: 20px;
-		}
-	}
+			margin-top: auto;
+			width: 100%;
 
-	&__card:hover {
-		box-shadow: -2px 0 $vibblue !important;
+			span:not([class*="icon-"]) {
+				color: $text-default-color;
+			}
+		}
+
+		&__status {
+			display: flex;
+			align-items: center;
+		}
+
+		&__label {
+			margin-top: 10px;
+			span {
+				font-size: 10px !important;
+			}
+		}
+
+		&__actions {
+			padding: 15px;
+			display: flex;
+			justify-content: space-between;
+		}
 	}
 }
 
@@ -135,7 +162,7 @@ $divider-color: #e1e1e1;
 		height: 25px;
 		padding: 0 10px;
 		color: $dark-gray-2;
-		border: 1px solid $button-teal-border;
+		border: 1px solid $button-outline-color;
 		border-radius: 12px;
 		font-size: 12px;
 		letter-spacing: 0.1px;
@@ -665,21 +692,60 @@ $divider-color: #e1e1e1;
 
 .card_footer_item {
 	width: 100%;
-	position: absolute;
-	bottom: 20px;
-	padding-right: 40px;
+}
+
+.card_footer_item button {
+	padding: 0 15px;
+	font-size: smaller;
+	color: $text-dark-gray;
+	box-shadow: inset 0 0 0 1px $button-outline-color;
+
+	&:hover, &:active, &:focus {
+		background-color: $button-outline-color;
+	}
+
+	&:focus {
+		box-shadow: 0 0 1px 1px $button-outline-color;
+	}
+
+}
+
+.card_footer_item .row {
+	align-items: center;
+}
+
+.card_footer_item span[class*="icon-"] {
+	font-size: 18px;
 }
 
 .ribbon {
 	&__blue,
 	&__blue__atx {
+		position: absolute;
+		right: 7px;
+		top: -1px;
 		color: $indigo;
+		color: $cisco-blue;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: $bookmark-blue-outline-color;
+	}
 
+	&__blue {
+		color: $indigo;
 		@extend %ribbon;
 	}
 
 	&__white,
 	&__white__atx {
+		position: absolute;
+		right: 7px;
+		top: -1px;
+		color: $white;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: $bookmark-white-outline-color;
+	}
+
+	&__white {
 		color: $white;
 
 		@extend %ribbon__outline;
@@ -706,6 +772,11 @@ $divider-color: #e1e1e1;
 .alignRibbon {
 	position: absolute;
 	right: -9px;
+}
+
+.grid {
+	gap: 25px 25px;
+	grid-template-columns: repeat(auto-fill, 280px);
 }
 
 .grid.grid--4up,

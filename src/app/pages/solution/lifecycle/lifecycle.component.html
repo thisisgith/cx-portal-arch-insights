@@ -854,8 +854,8 @@
 		[ngClass]="item.status === 'recommended' ? 'atx__card__recommended' : null"
 		data-auto-id="ATXCard">
 		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.imageURL || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
-		<div class="text-left base-padding-left" [ngClass]="item.status === 'Recommended' ? 'text-dkgray-4' : 'text-clear'" data-auto-id="ATXCardHeader">
-			<span class="icon-flagged" data-auto-id="ATXCard-Flag"></span>
+		<div class="text-left base-padding-left atx__card__label" [ngClass]="item.status === 'Recommended' ? 'text-dkgray-4' : 'text-clear'" data-auto-id="ATXCardHeader">
+			<span class="icon-flagged qtr-margin-right" data-auto-id="ATXCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
 		<div class="icon-bookmark toggle"
@@ -863,7 +863,7 @@
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="ATXCardRibbon">
 		</div>
-		<div class="card__header atx__card__header text-left text-bold"
+		<div class="card__header atx__card__header text-left"
 			*ngIf="item && item.title"
 			[innerText]="item.title"
 			data-auto-id="ATXCardTitle">
@@ -871,15 +871,16 @@
 		<div class="card__body atx__card__body text-left" *ngIf="item && item.description" [innerText]="item.description"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item"  data-auto-id="ATXCardFooter">
-				<div class="text-left">
-					<span class="icon-certified" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedIcon"></span>
-					<span class="icon-clock" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressIcon"></span>
-					<span class="icon-check-outline" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedIcon"></span>
+				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
+					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedIcon"></span>
+					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressIcon"></span>
+					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedIcon"></span>
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'" data-auto-id="ATXCardFooter-CompletedText"></span>
 					<span class="text-medium" [innerText]="'_InProgress_' | i18n" *ngIf="item.status === 'in-progress'" data-auto-id="ATXCardFooter-InProgressText"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'" data-auto-id="ATXCardFooter-RequestedText"></span>
 				</div>
-				<div class="text-left" *ngIf="item.status === 'scheduled'">
+				<div class="text-left base-padding-left base-padding-right base-margin-bottom"
+					*ngIf="item.status === 'scheduled'">
 					<div *ngFor="let session of item.sessions">
 						<div
 							*ngIf="session.scheduled"
@@ -889,26 +890,22 @@
 						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" data-auto-id="ATXCardFooter-ScheduledDate" *ngIf="session.scheduled"></span>
 					</div>
 				</div>
-				<div class="divider divider--compressed"></div>
-				<div class="row">
-					<div class="col-md-6 text-left">
-						<button id="cardRecommendedATXScheduleButton" data-auto-id="cardRecommendedATXScheduleButton"
-							class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
-							[ngClass]="item?.sessions?.length > 0 ? null : 'disabled'"
-							(click)="atxScheduleCardOpened = true;
-								recommendedAtxScheduleCardOpened = false;
-								componentData.atx.interested = item;
-								getCoordinates($event)"
-							[innerText]="'_ViewSessions_' | i18n">
-						</button>
-					</div>
-					<div class="col-md-6 text-left">
-						<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
-							<button data-auto-id="recommendedATXWatchButton"
-								class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
-								[innerText]="'_WatchNow_' | i18n"></button>
-						</a>
-					</div>
+				<div class="divider no-margin"></div>
+				<div class="atx__card__actions">
+					<button id="cardRecommendedATXScheduleButton" data-auto-id="cardRecommendedATXScheduleButton"
+						class="btn btn--small btn--secondary text-uppercase"
+						[ngClass]="item?.sessions?.length > 0 ? null : 'disabled'"
+						(click)="atxScheduleCardOpened = true;
+							recommendedAtxScheduleCardOpened = false;
+							componentData.atx.interested = item;
+							getCoordinates($event)"
+						[innerText]="'_ViewSessions_' | i18n">
+					</button>
+					<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
+						<button data-auto-id="recommendedATXWatchButton"
+							class="btn btn--small btn--secondary text-uppercase"
+							[innerText]="'_WatchNow_' | i18n"></button>
+					</a>
 				</div>
 			</div>
 		</div>
@@ -923,43 +920,41 @@
 	<div class="card atx__card" *ngFor="let item of selectedACC"
 		[ngClass]="item.status === 'recommended' ? 'acc__card__recommended' : null" data-auto-id="ACCCard">
 		<img class="max-width" alt="'_Placeholder_' | i18n" [src]="item.url || 'assets/img/solutions/defaultLifecycleImage.png'" attr.data-auto-id="{{ autoid }}-Image">
-		<div class="text-left base-padding-left" [ngClass]="item.status === 'recommended' ? 'text-dkgray-4' : 'text-clear'"
+		<div class="text-left base-padding-left atx__card__label" [ngClass]="item.status === 'recommended' ? 'text-dkgray-4' : 'text-clear'"
 			data-auto-id="ACCCardHeader">
-			<span class="icon-flagged" data-auto-id="ACCCard-Flag"></span>
+			<span class="icon-flagged qtr-margin-right" data-auto-id="ACCCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
 		<div class="icon-bookmark" (click)="setACCBookmark(item)"
 			[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="ACCCardRibbon">
 		</div>
-		<div class="card__header atx__card__header text-left text-bold"
+		<div class="card__header atx__card__header text-left"
 			*ngIf="item && item.title" [innerText]="item.title" data-auto-id="ACCCardTitle">
 		</div>
 		<div class="card__body atx__card__body text-left" *ngIf="item && item.description"
 			[innerText]="item.description" data-auto-id="ACCCardDescription"></div>
 		<div class="card__footer atx__card__footer">
 			<div class="card_footer_item" data-auto-id="ACCCardFooter">
-				<div class="text-left">
-					<span class="icon-certified" *ngIf="item.status === 'completed'"></span>
-					<span class="icon-clock" *ngIf="item.status === 'in-progress'"></span>
-					<span class="icon-check-outline" *ngIf="item.status === 'requested'"></span>
+				<div class="atx__card__status text-left base-padding-left base-padding-right base-margin-bottom flex-middle">
+					<span class="text-success icon-certified half-padding-right" *ngIf="item.status === 'completed'"></span>
+					<span class="text-info icon-clock half-padding-right" *ngIf="item.status === 'in-progress'"></span>
+					<span class="text-info icon-check-outline half-padding-right" *ngIf="item.status === 'requested'"></span>
 					<span class="text-medium" [innerText]="'_Completed_' | i18n" *ngIf="item.status === 'completed'"></span>
 					<span class="text-medium" [innerText]="'_SessionInProgress_' | i18n" *ngIf="item.status === 'in-progress'"></span>
 					<span class="text-medium" [innerText]="'_Requested_' | i18n" *ngIf="item.status === 'requested'"></span>
 				</div>
-				<div class="divider divider--compressed"></div>
-				<div class="row">
-					<div class="col-md-6 text-left">
-						<div class="text-left text-info" *ngIf="item.status === 'recommended'">
-							<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
-								accId: item.accId,
-								title: item.title,
-								dataAutoId: 'Request1on1ACCButton'
-								}">
-							</ng-container>
-						</div>
-						<div class="text-left text-info base-padding-bottom half-padding-top" *ngIf="item.status !== 'recommended'"></div>
+				<div class="divider no-margin"></div>
+				<div class="atx__card__actions">
+					<div class="text-left text-info" *ngIf="item.status === 'recommended'">
+						<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
+							accId: item.accId,
+							title: item.title,
+							dataAutoId: 'Request1on1ACCButton'
+							}">
+						</ng-container>
 					</div>
+					<div class="text-left text-info base-padding-bottom half-padding-top" *ngIf="item.status !== 'recommended'"></div>
 				</div>
 			</div>
 		</div>
