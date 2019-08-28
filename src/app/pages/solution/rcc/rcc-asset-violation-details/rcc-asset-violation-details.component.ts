@@ -88,7 +88,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			this.policyNameSelection = '';
 			this.policySeveritySelection = '';
 			this.assetRowParams = {
-				customerId: this.customerId,
+				customerId: _.cloneDeep(this.customerId),
 				pageIndex: 0,
 				pageSize: this.tableLimit,
 				policyGroupName: this.policyGroupSelection,

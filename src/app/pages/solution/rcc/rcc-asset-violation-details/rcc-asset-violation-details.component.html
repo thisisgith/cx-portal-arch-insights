@@ -51,7 +51,7 @@
 			<div class="base-margin-top">
 				<div class="text-bold text-small text-uppercase" [innerText]="'_RccAssetPolicyDescription_' | i18n">
 				</div>
-				<div class="text-small tabletext " [innerHTML]="item.policyDesc"></div>
+				<div class="text-small tabletext " [innerHTML]="item?.policyDesc"></div>
 			</div>
 		</div>
 	</div>
@@ -59,7 +59,7 @@
 		<div class="col-12">
 			<div class="base-margin-top ">
 				<div class="text-bold text-small text-uppercase" [innerText]="'_RccAssetRuleDescription_' | i18n"></div>
-				<div class=" text-small tabletext" [innerHTML]="item.ruleDesc"></div>
+				<div class=" text-small tabletext" [innerHTML]="item?.ruleDesc"></div>
 			</div>
 		</div>
 	</div>
@@ -70,31 +70,36 @@
 	</div>
 </ng-template>
 <ng-template #violationAgeTemplate let-item="celldata">
-	<span [innerText]="item.age"></span>
-	<span *ngIf="item.age === 0 || item.age === 1" [innerText]="'_RccViolationAgeInDay_' | i18n"></span>
-	<span *ngIf="item.age > 1" [innerText]="'_RccViolationAgeInDays_' | i18n"></span>
+		<span [innerHTML]="item?.age">
+				<span
+				[innerText]="
+				item?.age > 1
+				? ('_RccViolationAgeInDays_' | i18n)
+				: ('_RccViolationAgeInDay_' | i18n)
+				"
+				>
 </ng-template>
 <ng-template #assetSliderIconTemplate let-item="celldata">
-	<i *ngIf="item.ruleHighSeverity" class="qtr-margin-right icon-circle" iconSize="default" [ngClass]="{
+	<i *ngIf="item?.ruleHighSeverity" class="qtr-margin-right icon-circle" iconSize="default" [ngClass]="{
 			'P1':'p1class',
 			'P2':'p2class',
 			'P3':'p3class',
 			'P4':'p4class',
 			'P5':'p5class'
-		}[item.ruleHighSeverity]">
+		}[item?.ruleHighSeverity]">
 	</i>
-	<span [innerText]="item.ruleHighSeverity"></span>
+	<span [innerText]="item?.ruleHighSeverity"></span>
 </ng-template>
 <ng-template #assetSeverityIconTemplate let-item="celldata">
-	<i *ngIf="item.severity" class="qtr-margin-right icon-circle" iconSize="default" [ngClass]="{
+	<i *ngIf="item?.severity" class="qtr-margin-right icon-circle" iconSize="default" [ngClass]="{
 			'P1':'p1class',
 			'P2':'p2class',
 			'P3':'p3class',
 			'P4':'p4class',
 			'P5':'p5class'
-		}[item.severity]">
+		}[item?.severity]">
 	</i>
-	<span [innerText]="item.severity"></span>
+	<span [innerText]="item?.severity"></span>
 </ng-template>
 <ng-template #loaderTemplate>
 	<div class="dbl-padding">
