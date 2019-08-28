@@ -123,6 +123,15 @@ Cypress.Commands.overwrite('wait', (originalFn, subject, waitTarget, options) =>
 	cy.wrap(new Cypress.Promise((resolve, reject) => {
 		// Subscribe to the application's mockEvents subject and listen for events
 		cy.window({ log: false }).then(win => {
+			// Strip out the events subject, if available (default to mockEvents)
+			let events;
+			if (options && options.eventObj) {
+				// Example: { eventObj: 'racetrackEvents' }
+				events = win[options.eventObj];
+			} else {
+				events = win.mockEvents;
+			}
+
 			let sub;
 			// Schedule a timeout so we don't wait infinitely
 			const waitTime = Cypress._.get(options, 'timeout', 30000);
@@ -131,7 +140,7 @@ Cypress.Commands.overwrite('wait', (originalFn, subject, waitTarget, options) =>
 				reject(new Error(`No mock was detected for "${waitTarget}" in ${waitTime} ms`));
 			}, waitTime);
 
-			sub = win.mockEvents.subscribe(event => {
+			sub = events.subscribe(event => {
 				// If the event matches the target, stop the timeout and resolve
 				if (event.id === waitTarget) {
 					clearTimeout(timeout);
