@@ -8,6 +8,12 @@
 			</span>
 		</div>
 	</div>
+	<div class="col-md-3 text-right">
+		<div>
+			<span [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></span>
+			<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert" [innerText]="'_CSRequestExpert_' | i18n"></a>
+		</div>
+	</div>
 </div>
 <div class="divider qtr-margin-top"></div>
 <ng-container *ngTemplateOutlet="tableSoftwareGroups"></ng-container>
@@ -38,7 +44,8 @@
 			</thead>
 			<tbody>
 				<tr *ngFor="let item of softwareGroups" (click)="onRowSelect(item)"
-				[ngClass]="{ 'active': item.rowSelected }" attr.data-auto-id="SoftwareGroups-{{ item.softwareProfile }}">
+					[ngClass]="{ 'active': item.rowSelected }"
+					attr.data-auto-id="SoftwareGroups-{{ item.softwareProfile }}">
 					<td *ngFor="let column of softwareGroupsTable.columns" [ngStyle]="{ 'width': column.width }"
 						(click)="column.click ? $event.stopPropagation() : null"
 						attr.data-auto-id="SoftwareGroupsItemClickHandler-{{ item.softwareProfile }}">
