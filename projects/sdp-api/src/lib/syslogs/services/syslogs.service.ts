@@ -120,7 +120,7 @@ class SyslogsService extends __BaseService {
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days='+syslogPanelParams.selectedFilters.days+'&msgType='+syslogPanelParams.selectedRowData.MsgType+"&companyId="+syslogPanelParams.customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days='+syslogPanelParams.selectedFilters.days+'&msgType='+syslogPanelParams.selectedRowData.MsgType+"&companyId="+syslogPanelParams.customerId+"&catalog="+syslogPanelParams.selectedFilters.catalog,
 			__body,
 			{
 			  headers: __headers, 
