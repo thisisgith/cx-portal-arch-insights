@@ -72,14 +72,25 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 					},
 				},
 				height: 120,
+				marginBottom : 30,
 				type: 'column',
 				width: 160,
 			},
+			colors: [
+				'#000000',
+				'#696969',
+				'#A9A9A9',
+				'#C0C0C0',
+			],
 			credits: {
 				enabled: false,
 			},
 			plotOptions: {
+				column: {
+					colorByPoint: true,
+				},
 				series: {
+					cursor: 'pointer',
 					point: {
 						events: {
 							click: event => {
@@ -92,19 +103,25 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 			series: [
 				{
 					data,
-					color: '#58585b',
+					allowPointSelect: true,
 					name: '',
 					showInLegend: false,
+					states: {
+						select: {
+							borderColor: 'none',
+							color: '#00bceb',
+						},
+					},
 					type: undefined,
 				},
 			],
 			title: {
-				text: null,
+				text: '',
 			},
 			tooltip: { // Add data-auto-id to the default tooltip format
 				footerFormat: '</div>',
 				headerFormat: '<div data-auto-id="{point.key}Tooltip">' +
-					'<span style="font-size: 10px">{point.key}</span><br/>',
+					'<span style="font-size: 10px;">{point.key}</span><br/>',
 				useHTML: true,
 			},
 			xAxis: {
@@ -112,6 +129,10 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 				labels: {
 					rotation: 0,
 				},
+				lineColor: 'transparent',
+				lineWidth: 0,
+				minorGridLineWidth: 0,
+				visible: true,
 			},
 			yAxis: {
 				visible: false,
