@@ -1,44 +1,46 @@
-<div *ngIf="!initialLoading; else loaderTemplate;">
+<div *ngIf="(!initialLoading && !apiNoData); else commonTemplate;">
 	<div class="qtr-padding-top qtr-padding-bottom  ">
 		<span [innerText]="'_RccAssetViolations_' | i18n" class="text-large text-uppercase"></span><span
 			class="qtr-padding-right qtr-padding-left">-</span>
-		<span class="text-large " data-auto-id="ShowingViolationCount"
-			 [innerText]="selectedAssetData?.violationCount">
+		<span class="text-large " data-auto-id="ShowingViolationCount" [innerText]="selectedAssetData?.violationCount">
 		</span>
 	</div>
 	<div class=" qtr-padding-top half-padding-bottom  text-medium text-uppercase text-bold"
-	 data-auto-id="ShowingAssetFiltData" [innerText]="'_RccAssetFilter_'| i18n ">
+		data-auto-id="ShowingAssetFiltData" [innerText]="'_RccAssetFilter_'| i18n ">
 	</div>
 	<div class="row">
 		<div class="col-4 qtr-padding-top ">
-			<div [innerText]="'_RccAssetPolicyGroup_' | i18n"  data-auto-id="ShowingAssetPolicyGroup" ></div>
-			<cui-select data-auto-id="assetPolicyGroupItem" [items]="assetPolicyGroupItems" 
-			placeholder="{{'_RccPolicyGroupPlaceHolder_' | i18n }}"	[compressed]="true" [empty]="true" 
-			[(ngModel)]="policyGroupSelection"  (ngModelChange)="onPolicyGroupSelection($event)" 
-			optionsKey="name" optionsValue="name">
+			<div [innerText]="'_RccAssetPolicyGroup_' | i18n" data-auto-id="ShowingAssetPolicyGroup"></div>
+			<cui-select data-auto-id="assetPolicyGroupItem" [items]="assetPolicyGroupItems"
+				placeholder="{{'_RccPolicyGroupPlaceHolder_' | i18n }}" [compressed]="false" [empty]="true"
+				[(ngModel)]="policyGroupSelection" (ngModelChange)="onPolicyGroupSelection($event)" optionsKey="name"
+				optionsValue="name">
 			</cui-select>
 		</div>
 		<div class="col-4 qtr-padding-top qtr-padding-left">
-			<div [innerText]="'_RccAssetPolicyName_' | i18n" ></div>
-			<cui-select [items]="assetPolicyNameItems" placeholder="{{'_RccPolicyNamePlaceHolder_'| i18n }}"
-				[compressed]="true" [empty]="true" [(ngModel)]="policyNameSelection" data-auto-id="ShowingAssetPolicyValue"
+			<div [innerText]="'_RccAssetPolicyName_' | i18n"></div>
+			<cui-select class="text-break" [items]="assetPolicyNameItems"
+				placeholder="{{'_RccPolicyNamePlaceHolder_'| i18n}}" [compressed]="false" [empty]="true"
+				[(ngModel)]="policyNameSelection" data-auto-id="ShowingAssetPolicyValue"
 				(ngModelChange)="onPolicyNameSelection($event)" optionsKey="name" optionsValue="name">
 			</cui-select>
 		</div>
 		<div class="col-4 qtr-padding-top qtr-padding-left">
-			<div [innerText]="'_RccAssetSeverity_' | i18n" ></div>
+			<div [innerText]="'_RccAssetSeverity_' | i18n"></div>
 			<cui-select [items]="assetPolicySeverityItems" placeholder="{{'_RccPolicySeverityPlaceHolder_'| i18n }}"
-				[compressed]="true" [empty]="true" [(ngModel)]="policySeveritySelection" data-auto-id="ShowingAssetSeverity"
-				(ngModelChange)="onPolicySeveritySelection($event)" optionsKey="title" optionsValue="name">
+				[compressed]="false" [empty]="true" [(ngModel)]="policySeveritySelection"
+				data-auto-id="ShowingAssetSeverity" (ngModelChange)="onPolicySeveritySelection($event)"
+				optionsKey="name" optionsValue="name">
 			</cui-select>
 		</div>
 	</div>
-	<div class="row base-padding-top half-padding-left responsive-table" >
-		<cui-table class="table table--lined table--wrapped" [options]="rccAssetPolicyTableOptions" [data]="rccAssetPolicyTableData"
-			[limit]="tableLimit" [offset]="assetRowParams?.tableOffset" (onSortingChanged)="onTableSortingChanged($event)">
+	<div class="row base-padding-top half-padding-left responsive-table">
+		<cui-table class="table table--lined table--wrapped" [options]="rccAssetPolicyTableOptions"
+			[data]="rccAssetPolicyTableData" [limit]="tableLimit" [offset]="tableOffset"
+			(onSortingChanged)="onTableSortingChanged($event)">
 		</cui-table>
 		<div class="section">
-			<cui-pager [page]="assetRowParams?.pageIndex" [limit]="tableLimit" [totalItems]="totalItems"
+			<cui-pager [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
 				(onPageChanged)="onPolicyAssetPagerUpdated($event)"></cui-pager>
 		</div>
 	</div>
@@ -62,35 +64,29 @@
 		</div>
 	</div>
 	<div class="base-margin-top text-small responsive-table">
-		<cui-table class="table--wrap table--nostripes" [options]="rccMessageTableOptions" [data]="item.conditionList"
+		<cui-table class="table table--lined " [options]="rccMessageTableOptions" [data]="item.conditionList"
 			[limit]="tableLimit">
 		</cui-table>
 	</div>
 </ng-template>
 <ng-template #violationAgeTemplate let-item="celldata">
-	<span>{{item.age}}</span>
+	<span [innerText]="item.age"></span>
 	<span *ngIf="item.age === 0 || item.age === 1" [innerText]="'_RccViolationAgeInDay_' | i18n"></span>
 	<span *ngIf="item.age > 1" [innerText]="'_RccViolationAgeInDays_' | i18n"></span>
 </ng-template>
 <ng-template #assetSliderIconTemplate let-item="celldata">
-	<i *ngIf="item.ruleHighSeverity" 
-		class="qtr-margin-right icon-circle" 
-		iconSize="default" 
-		[ngClass]="{
+	<i *ngIf="item.ruleHighSeverity" class="qtr-margin-right icon-circle" iconSize="default" [ngClass]="{
 			'P1':'p1class',
 			'P2':'p2class',
 			'P3':'p3class',
 			'P4':'p4class',
 			'P5':'p5class'
 		}[item.ruleHighSeverity]">
-	</i> 
+	</i>
 	<span [innerText]="item.ruleHighSeverity"></span>
 </ng-template>
 <ng-template #assetSeverityIconTemplate let-item="celldata">
-	<i *ngIf="item.severity" 
-		class="qtr-margin-right icon-circle" 
-		iconSize="default" 
-		[ngClass]="{
+	<i *ngIf="item.severity" class="qtr-margin-right icon-circle" iconSize="default" [ngClass]="{
 			'P1':'p1class',
 			'P2':'p2class',
 			'P3':'p3class',
@@ -103,5 +99,19 @@
 <ng-template #loaderTemplate>
 	<div class="dbl-padding">
 		<cui-spinner color="default" label=""></cui-spinner>
+	</div>
+</ng-template>
+<ng-template #noDataAvailable>
+	<div class="col-8 panel-group panel-group--compressed">
+		<div class="panel absolute-center">
+			<span class="text-large text-uppercase icon-warning" [innerText]="'_RccNoDataAvailable_' | i18n"
+				*ngIf="apiNoData"></span>
+			<span class="text-large text-uppercase icon-warning" [innerText]="'_RccNoResults_' | i18n"
+				*ngIf="errorResult"></span>
+		</div>
+	</div>
+</ng-template>
+<ng-template #commonTemplate>
+	<div *ngIf="(initialLoading && apiNoData);then loaderTemplate else noDataAvailable">
 	</div>
 </ng-template>

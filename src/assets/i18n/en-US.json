@@ -700,6 +700,8 @@
 	"_RccAssetWithViolations_": "Assets with Violations",
 	"_RccImpactedAssets_": "Impacted Assets",
 	"_RccImpactedDevices_":"Impacted Devices - {0}",
+	"_RccNoDataAvailable_": " No Data Available",
+	"_RccNoResults_": " Unable to load",
 	"_RccOSName_": "OS Name",
 	"_RccOSNamePlaceHolder_": "Select OS Name",
 	"_RccPolicyCategory_": "Policy Category",

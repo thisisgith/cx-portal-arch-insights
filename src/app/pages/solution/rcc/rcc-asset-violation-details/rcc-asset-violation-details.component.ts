@@ -34,6 +34,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public assetPolicyTableSubscription: Subscription;
 	public tableLimit = 10;
 	public totalItems = 0;
+	public tableOffset = 0;
 	public assetPolicyFilterInfo = { };
 	public rccAssetPolicyTableData = [];
 	public rccMessageTableData = [];
@@ -46,6 +47,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public initialLoading = false;
 	public selectionLoading = false;
 	public customerId: string;
+	public apiNoData = true;
+	public errorResult = false;
 	private destroy$ = new Subject();
 	@Input() public selectedAssetData: any;
 	public assetModalFilter: RccAssetSelectReq;
@@ -70,84 +73,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * Initialize grid data for asset policy violations
 	 */
 	public ngOnInit () {
-		this.rccAssetPolicyTableOptions = new CuiTableOptions({
-			bordered: false,
-			columns: [
-				{
-					key: 'policyGroupName',
-					name: I18n.get('_RccAssetPolicyGroup_'),
-					sortable: true,
-					width: '20%',
-				},
-				{
-					key: 'policyName',
-					name: I18n.get('_RccAssetPolicyName_'),
-					sortable: true,
-					width: '25%',
-				},
-				{
-					key: 'ruleName',
-					name: I18n.get('_RccAssetRuleName_'),
-					sortable: true,
-					width: '30%',
-				},
-				{
-					key: 'ruleHighSeverity',
-					name: I18n.get('_RccAssetSeverity_'),
-					sortable: true,
-					template: this.assetSliderIconTemplate,
-					width: '15%',
-				},
-				{
-					key: 'violationCount',
-					name: I18n.get('_RccAssetViolationCount_'),
-					sortable: false,
-					width: '3%',
-				},
-			],
-			dynamicData: false,
-			padding: 'regular',
-			rowWellColor: 'black',
-			rowWellTemplate: this.assetRowWellTemplate,
-			singleSelect: false,
-			striped: false,
-			wrapText: true,
-		});
-
-		this.rccMessageTableOptions = new CuiTableOptions({
-			bordered: false,
-			columns: [
-				{
-					key: 'conditionCount',
-					name: I18n.get('_RccAssetSNum_'),
-					sortable: false,
-				},
-				{
-					key: 'message',
-					name: I18n.get('_RccAssetMessage_'),
-					sortable: false,
-				},
-				{
-					key: 'suggestedFix',
-					name: I18n.get('_RccAssetSuggestedFix_'),
-					sortable: false,
-				},
-				{
-					key: 'age',
-					name: I18n.get('_RccAssetViolationAge_'),
-					sortable: false,
-					template: this.violationAgeTemplate,
-				},
-				{
-					key: 'severity',
-					name: I18n.get('_RccAssetSeverity_'),
-					sortable: false,
-					template: this.assetSeverityIconTemplate,
-				},
-			],
-			dynamicData: false,
-			singleSelect: false,
-		});
+		this.buildGridTable();
 	}
 
 	/**
@@ -173,6 +99,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				sortOrder: '',
 			};
 			this.loadData();
+			this.tableOffset = 0;
 		}
 	}
 
@@ -181,6 +108,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 */
 	public loadData () {
 		this.initialLoading = true;
+		this.apiNoData = true;
 		const assetFilterReq = {
 			customerId : this.assetRowParams.customerId,
 			serialNumber : this.assetRowParams.serialNumber,
@@ -223,10 +151,17 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 				this.rccAssetPolicyTableData = [];
 				this.rccAssetPolicyTableData = assetViolations.data.violation;
 				this.totalItems = this.rccAssetPolicyTableData.length;
+				if (this.rccAssetPolicyTableData.length > 0) {
+					this.apiNoData = false;
+				 }
+				this.tableOffset = 0;
 				this.initialLoading = false;
+				this.buildGridTable();
 			},
 				error => {
 					this.initialLoading = false;
+					this.errorResult = true;
+					this.apiNoData = false;
 					this.logger.error(
 						'rcc-asset-violation-details.component : loadData() ' +
 					`:: Error : (${error.status}) ${error.message}`);
@@ -253,6 +188,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 							this.totalItems = _.size(this.rccAssetPolicyTableData);
 						}
 					}
+					this.tableOffset =  0;
+					this.buildGridTable();
+					this.selectionLoading = false;
 				}),
 				error => {
 					this.logger.error(
@@ -295,9 +233,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param pageInfo gives page number
 	 */
 	public onPolicyAssetPagerUpdated (pageInfo: any) {
-		this.assetRowParams.tableOffset =  pageInfo.page;
-		this.assetRowParams.pageSize = pageInfo.limit;
-		this.assetRowParams.pageIndex = pageInfo.page;
+		this.tableOffset = pageInfo.page;
 	}
 
 	/**
@@ -305,9 +241,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @param event gives sort information
 	 */
 	public onTableSortingChanged (event: any) {
-		this.assetRowParams.sortBy = event.key;
-		this.assetRowParams.sortOrder = event.sortDirection;
-		this.getAssetPolicyGridData();
+		this.tableOffset = 0;
 	}
 	/**
 	 * destroy method to kill the services
@@ -315,5 +249,87 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+	}
+	/**
+	 * Function called when we load table 
+	 */
+	public buildGridTable () {
+		this.rccAssetPolicyTableOptions = new CuiTableOptions({
+			bordered: false,
+			columns: [
+				{
+					key: 'policyGroupName',
+					name: I18n.get('_RccAssetPolicyGroup_'),
+					sortable: true,
+					width: '20%',
+				},
+				{
+					key: 'policyName',
+					name: I18n.get('_RccAssetPolicyName_'),
+					sortable: true,
+					width: '25%',
+				},
+				{
+					key: 'ruleName',
+					name: I18n.get('_RccAssetRuleName_'),
+					sortable: true,
+					width: '30%',
+				},
+				{
+					key: 'ruleHighSeverity',
+					name: I18n.get('_RccAssetSeverity_'),
+					sortable: true,
+					template: this.assetSliderIconTemplate,
+					width: '10%',
+				},
+				{
+					key: 'violationCount',
+					name: I18n.get('_RccAssetViolationCount_'),
+					sortable: false,
+					width: '3%',
+				},
+			],
+			dynamicData: false,
+			rowWellColor: 'bordered',
+			rowWellTemplate: this.assetRowWellTemplate,
+			singleSelect: false,
+			striped: false,
+			wrapText: true,
+		});
+
+		this.rccMessageTableOptions = new CuiTableOptions({
+			bordered: false,
+			columns: [
+				{
+					key: 'conditionCount',
+					name: I18n.get('_RccAssetSNum_'),
+					sortable: false,
+				},
+				{
+					key: 'message',
+					name: I18n.get('_RccAssetMessage_'),
+					sortable: false,
+				},
+				{
+					key: 'suggestedFix',
+					name: I18n.get('_RccAssetSuggestedFix_'),
+					sortable: false,
+				},
+				{
+					key: 'age',
+					name: I18n.get('_RccAssetViolationAge_'),
+					sortable: false,
+					template: this.violationAgeTemplate,
+				},
+				{
+					key: 'severity',
+					name: I18n.get('_RccAssetSeverity_'),
+					sortable: false,
+					template: this.assetSeverityIconTemplate,
+				},
+			],
+			dynamicData: false,
+			singleSelect: false,
+		});
 	}
 }
