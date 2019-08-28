@@ -655,7 +655,7 @@
 					<span *ngSwitchCase="'ATX'">
 						<div class="row half-margin-left half-margin-right">
 						<div class="col-md-9 text-large text-bold text-left"
-							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedATX?.length || 0:componentData.params.solution:componentData.params.usecase">
+							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedATX?.length || 0:componentData.params.solution:componentData.params.usecase" data-auto-id="ATXTopicsAvailable">
 						</div>
 						<div class="col-md-2">
 							<cui-select id="atx-filter"
