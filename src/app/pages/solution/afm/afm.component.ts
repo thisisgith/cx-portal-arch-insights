@@ -16,6 +16,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { UserResolve } from '@utilities';
 import { takeUntil } from 'rxjs/operators';
+import { ExportCsvService } from '@services';
 
 /**
  * AfmComponet which shows in Insight view for Fault Management tab
@@ -35,7 +36,6 @@ export class AfmComponent {
 	public syslogEvent: string;
 	public filters: AfmFilter[];
 	public ignoreStatus: string;
-	private alarmInfo: Alarm;
 	public searchParams: AfmSearchParams;
 	public pagination: AfmPagination;
 	public afmSearchInput = '';
@@ -56,6 +56,7 @@ export class AfmComponent {
 	public statusErrorMessage = '';
 	public timeRangeFiltered = false;
 	public filterSpinner = false;
+	public eventStatus = false;
 	private destroy$ = new Subject();
 
 	public searchOptions = {
@@ -94,7 +95,8 @@ export class AfmComponent {
 
 	constructor (private logger: LogService,
 		private afmService: AfmService,
-		private userResolve: UserResolve) {
+		private userResolve: UserResolve,
+		private exportCsvService: ExportCsvService) {
 		this.logger.debug('AFM Component Created!');
 		this.searchParams = new Object();
 		this.searchParams.pageNumber = 1;
@@ -385,6 +387,9 @@ export class AfmComponent {
 	 */
 	public onAlarmPanelClose () {
 		this.showAlarmDetails = false;
+		if (this.eventStatus) {
+			this.allAlarmFilter();
+		}
 	}
 
 	/**
@@ -409,6 +414,13 @@ export class AfmComponent {
 	}
 
 	/**
+	 * Event Status
+	 * @param event event
+	 */
+	public eventUpdated (event) {
+		this.eventStatus = event;
+	}
+	/**
 	 * to close the panel
 	 */
 	public onPanelClose () {
@@ -426,14 +438,8 @@ export class AfmComponent {
 				response => {
 					if (response && response.status && response.status !== null &&
 						response.status.toUpperCase() === this.AFM_CONSTANT.SUCCESS) {
-						const downloadLink = document.createElement('a');
-						const blob = new Blob(['\ufeff', response.data]);
-						const url = URL.createObjectURL(blob);
-						downloadLink.href = url;
-						downloadLink.download = `events_export_file_${new Date().getTime()}.csv`;
-						document.body.appendChild(downloadLink);
-						downloadLink.click();
-						document.body.removeChild(downloadLink);
+						this.exportCsvService
+						.exportToCsv('Total_Alarm_Cases_', response.data);
 					} else {
 						this.statusErrorMessage = response.statusMessage;
 						this.logger.error(response.statusMessage);
@@ -615,7 +621,7 @@ export class AfmComponent {
 				this.tableData = response.eventList;
 				this.pagination = response.pagination;
 				this.logger.error(`Error while connecting apis :${response.statusMessage}`);
-				this.statusErrorMessage = 'Server is down, please try again.';
+				this.statusErrorMessage = I18n.get('_AfmServerDown_');
 				if (this.searchParams.firstTimeLoading) {
 					this.afmConnectionStatus = {
 						status: 'Error',
