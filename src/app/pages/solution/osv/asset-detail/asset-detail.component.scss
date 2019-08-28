@@ -5,3 +5,11 @@
 	border: 1px solid $primary;
 	margin-right: -3px;
 }
+
+.selected-view  {
+	background: $primary;
+	
+	&:hover {
+		background: $primary;		
+	}
+}

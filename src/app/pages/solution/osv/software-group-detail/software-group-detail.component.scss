@@ -13,11 +13,11 @@
 			}
 
 			@include lg {
-				margin-right: $base-spacing-dbl !important;
+				margin-right: $base-spacing !important;
 			}
 
 			@include xl {
-				margin-right: $base-spacing-dbl * 2 !important;
+				margin-right: $base-spacing-dbl  !important;
 			}
 
 			> a {

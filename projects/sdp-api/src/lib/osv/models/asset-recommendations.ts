@@ -8,4 +8,5 @@ export interface AssetRecommendations {
 	swVersion: string;
 	info?: string;
 	swVersionGroup?: []
+	hidden?: boolean;
 }

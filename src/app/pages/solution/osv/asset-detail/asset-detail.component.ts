@@ -37,6 +37,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
 	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{}>;
+	@ViewChild('releaseDateTemplate', { static: true }) private releaseDateTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
@@ -137,15 +138,20 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @returns grouped data
 	 */
 	public groupData (data: AssetRecommendationsResponse) {
-		const groups = _.groupBy(data, 'swVersion');
+		const recommendations = _.filter(data, (detail: AssetRecommendations) =>
+			detail.name != 'current')
+		const groups = _.groupBy(recommendations, 'swVersion');
 		const groupedData = [];
 		_.map(_.keys(groups), swVersion => {
-			const detail: AssetRecommendations = _.get(_.filter(data, { swVersion }), 0);
+			const detail: AssetRecommendations = _.get(_.filter(recommendations, { swVersion }), 0);
 			detail.swVersionGroup = groups[swVersion];
 			groupedData.push(detail);
 		});
-
-		return this.sortData(groupedData);
+		const currentVersion = _.filter(data, {name : 'current'});
+		const sortedData = this.sortData(groupedData);
+		sortedData.push({ ...currentVersion[0], hidden: true });
+		sortedData.push(currentVersion[0])
+		return sortedData;
 	}
 
 	/**
@@ -199,7 +205,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public getColumns () {
 		const datePipe = new DatePipe('en-US');
-		const columns = [			
+		const columns = [
 			{
 				name: I18n.get('_OsvVersion_'),
 				sortable: false,
@@ -209,8 +215,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			{
 				key: 'postDate',
 				name: I18n.get('_OsvReleaseDate_'),
-				render: item => _.isNull(item.error) ?
-					datePipe.transform(item.postDate, 'MMM d, y') : 'N/A',
+				template: this.releaseDateTemplate,
 				sortable: false,
 				width: '15%',
 			},
