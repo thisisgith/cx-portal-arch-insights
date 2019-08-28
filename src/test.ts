@@ -22,7 +22,7 @@ getTestBed()
 /**
  * context represents all of the tests found via require
  */
-const context = require.context('./', true, /syslogs-devices-details.component\.spec\.ts$/);
+const context = require.context('./', true, /\.spec\.ts$/);
 
 // And load the modules.
 context.keys()

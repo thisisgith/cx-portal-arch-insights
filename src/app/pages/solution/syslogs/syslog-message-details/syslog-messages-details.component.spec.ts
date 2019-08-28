@@ -89,7 +89,6 @@ describe('SyslogMessagesDetailsComponent', () => {
 			.returnValue(of(SyslogScenarios[7].scenarios.GET[0].response.body));
 
 		const asset: SyslogPanelGridData = Object.create({ });
-		const assetFalse: SyslogPanelGridData = Object.create({ });
 		asset.count = 10;
 		asset.message = 'test';
 		asset.responseData = [];

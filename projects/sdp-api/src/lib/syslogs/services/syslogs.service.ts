@@ -114,7 +114,7 @@ class SyslogsService extends __BaseService {
 	  /**
 	 * Get  of syslogspanel service
 	 */
-	sysPanelGridData(syslogPanelParams, customerId){
+	sysPanelGridData(syslogPanelParams){
 		const __params = this.newParams();
         const __headers = new HttpHeaders(); 
         const __body: any = null;
@@ -136,8 +136,8 @@ class SyslogsService extends __BaseService {
 			  );
 		}
 
-	getPanelGridData(syslogPanelParams,customerId):  __Observable<SyslogPanelGridData>{
-		return this.sysPanelGridData(syslogPanelParams, customerId).pipe(
+	getPanelGridData(syslogPanelParams):  __Observable<SyslogPanelGridData>{
+		return this.sysPanelGridData(syslogPanelParams).pipe(
 			__map(_r => _r.body as SyslogPanelGridData)
 		  );
 
@@ -194,8 +194,8 @@ class SyslogsService extends __BaseService {
 				})
 			  );
 		}
-		getPanelFilterGridData(SyslogFilterParam,syslogParams):  __Observable<SyslogPanelGridData>{
-			return this.sysPanelFilterGridData(SyslogFilterParam,syslogParams).pipe(
+		getPanelFilterGridData(SyslogFilterParam):  __Observable<SyslogPanelGridData>{
+			return this.sysPanelFilterGridData(SyslogFilterParam).pipe(
 				__map(_r => _r.body as SyslogPanelGridData)
 			  );
 	

@@ -12,7 +12,7 @@ import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
 
-describe('SyslogsdevicedetailsComponent', () => {
+fdescribe('SyslogsdevicedetailsComponent', () => {
 	let component: SyslogsDeviceDetailsComponent;
 	let fixture: ComponentFixture<SyslogsDeviceDetailsComponent>;
 	let syslogsService: SyslogsService;
@@ -29,7 +29,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({ }),
+						queryParams: of({}),
 						snapshot: {
 							data: {
 								user,
@@ -39,7 +39,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 		syslogsService = TestBed.get(SyslogsService);
 	}));
 
@@ -65,7 +65,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				expect(component.tableData)
-				.toBeUndefined();
+					.toBeUndefined();
 
 				done();
 			});
@@ -81,35 +81,60 @@ describe('SyslogsdevicedetailsComponent', () => {
 			syslogCount: 6,
 		};
 		spyOn(syslogsService, 'getdevicePanelDetails')
-		.and
-		.returnValue(of(SyslogScenarios[4].scenarios.GET[0].response.body));
+			.and
+			.returnValue(of(SyslogScenarios[4].scenarios.GET[0].response.body));
 		component.SyslogDevicePanelData();
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.tableData)
-				.toBeDefined();
-			done();
-		});
-	});
-
-	it('should toggle the inner grid ', done => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const param = {
-					active: true,
-					DeviceHost: '10.10.10.10',
-					ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
-					ProductId: 'WS-C2960S-24PS-L',
-					SoftwareType: 'IOS',
-					SoftwareVersion: '12.2(53)SE2',
-					syslogCount: 6,
-				};
-				component.expandRow(param);
-				expect(param.active)
-				 .toBeTruthy();
+				expect(component.tableData)
+					.toBeDefined();
 				done();
 			});
 	});
+	it('should get selected messages value', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const includeMsg = '';
+				const event = {
+					keyCode: 13,
+				};
+				component.keyDownFunction(event);
+				expect(event.keyCode)
+					.toEqual(13);
+				expect(component.deviceDetailsParams.includeMsgType)
+					.toEqual(includeMsg);
+				expect(component.deviceDetailsParams.excludeMsgType)
+					.toEqual(includeMsg);
+				done();
+			});
+	});
+	it('should reset message value', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				component.keyDownFunction({ keyCode: null });
+				expect(component.deviceDetailsParams.includeMsgType)
+					.toBeUndefined();
+				expect(component.deviceDetailsParams.excludeMsgType)
+					.toBeUndefined();
+				done();
+			});
+	});
+	it('should get selected severity data', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const severity = 0;
+				const timeRange = 0;
+				component.onSelection();
+				expect(component.deviceDetailsParams.severity)
+					.toEqual(severity);
+				expect(component.deviceDetailsParams.days)
+					.toEqual(timeRange);
+				done();
+			});
+	});
+	
 });
