@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CuiModalService, CuiModalContent } from '@cisco-ngx/cui-components';
 import { ProfileService } from '@cisco-ngx/cui-auth';
@@ -9,6 +9,7 @@ import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, empty } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import { environment } from '@environment';
+import { UserResolve } from '@utilities';
 
 /**
  * Component for portal support
@@ -18,7 +19,7 @@ import { environment } from '@environment';
 	styleUrls: ['./contact-support.component.scss'],
 	templateUrl: './contact-support.component.html',
 })
-export class ContactSupportComponent implements OnInit, CuiModalContent {
+export class ContactSupportComponent implements OnInit, OnDestroy, CuiModalContent {
 
 	public toggle = false;
 	public loading = false;
@@ -33,12 +34,24 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	private destroy$ = new Subject();
 	public items: any[] = [];
 	public contactExpert = false;
+	private customerId: string;
 
 	constructor (
 		public cuiModalService: CuiModalService, private profileService: ProfileService,
 		public emailControllerService: EmailControllerService,
+		private userResolve: UserResolve,
 		private logger: LogService,
-	) { }
+	) {
+		this.loading = true;
+		this.userResolve.getCustomerId()
+		.pipe(
+			takeUntil(this.destroy$),
+		)
+		.subscribe((id: string) => {
+			this.customerId = id;
+			this.loading = false;
+		});
+	}
 
 	/**
 	 * OnInit lifecycle hook
@@ -62,6 +75,14 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			title: this.title,
 		});
 		this.getTopicList();
+	}
+
+	/**
+	 * OnDestroy lifecycle hook
+	 */
+	public ngOnDestroy () {
+		this.destroy$.next();
+		this.destroy$.complete();
 	}
 
 	/**
@@ -92,6 +113,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 				subject: I18n.get('_SupportEmailSubject_'),
 				to: environment.emailToID,
 			};
+
 			return this.emailControllerService.sendEmail(requestBody)
 				.pipe(
 					catchError(err => {
@@ -160,12 +182,15 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	 */
 	public createEmailTemplate () {
 		const userDetails = this.profileService.getProfile().cpr;
+
 		return `${userDetails.pf_auth_firstname}` +
 			` ${userDetails.pf_auth_lastname}` + ` ${I18n.get('_SupportSentBy_')}\n\n` +
 			`${I18n.get('_SupportCiscoID_')}\n` + `${userDetails.pf_auth_uid}\n\n` +
 			`${I18n.get('_SupportName_')}\n` +
 			`${userDetails.pf_auth_firstname} ${userDetails.pf_auth_lastname}\n\n` +
 			`${I18n.get('_SupportEmail_')}\n` + `${userDetails.pf_auth_email}\n\n` +
+			`${I18n.get('_SupportAccessLevel_')}\n` + `${userDetails.pf_auth_user_level}\n\n` +
+			`${I18n.get('_SupportCustomerId_')}\n` + `${this.customerId}\n\n` +
 			`${I18n.get('_SupportMessageSection_')}\n\n` +
 			`${I18n.get('_SupportEmailTopic_')}\n` +
 			`${this.supportForm.controls.title.value}\n\n` +
