@@ -185,15 +185,18 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		// tslint:disable-next-line: ban-comma-operator
 		this.gridSubscripion = this.syslogsService
 			.getGridData(this.syslogsParams)
-			.pipe(takeUntil(this.destroy$))
+			.pipe(
+				catchError(err => {
+					this.logger.error('syslogs-details.component : getDeviceGridData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of([]);
+				}),
+				takeUntil(this.destroy$),
+			)
 			.subscribe(gridData => {
 				this.tableData = gridData;
 				this.totalItems = gridData.length;
-			}), catchError(err => {
-				this.logger.error('syslogs-details.component : getDeviceGridData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-
-				return of({ });
 			});
 		this.loading = false;
 	}
