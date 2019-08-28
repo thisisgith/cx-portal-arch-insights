@@ -240,7 +240,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					sortable: false,
 				},
 				{
-					key: 'suggestedFix',
+					key: 'suggestedfix',
 					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
 				},
