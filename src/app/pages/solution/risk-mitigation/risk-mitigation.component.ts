@@ -644,9 +644,9 @@ export class RiskMitigationComponent {
 	 * Function used to clear the filters
 	 */
 	public clearFilters () {
-		_.each(this.filters, (filter: Filter) => {
-			filter.selected = false;
-			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
+		_.each(this.filters, (clearFilter: Filter) => {
+			clearFilter.selected = false;
+			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});
 		});
