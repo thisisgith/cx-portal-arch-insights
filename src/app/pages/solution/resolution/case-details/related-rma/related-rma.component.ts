@@ -1,4 +1,5 @@
-import { Component, Output, EventEmitter, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, Output, EventEmitter, TemplateRef,
+	ViewChild, Input, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -16,6 +17,7 @@ export class RelatedRmaComponent {
 	public rma: FormControl = new FormControl('');
 	public rmaForm: FormGroup;
 	public rmaTable: CuiTableOptions;
+	public loading = false;
 	@ViewChild('createdDateTmpl', { static: true }) private createdDateTemplate: TemplateRef<{ }>;
 	@ViewChild('shipToTmpl', { static: true }) private shipToTemplate: TemplateRef<{ }>;
 	@Output('close') public close = new EventEmitter<boolean>();
@@ -31,7 +33,7 @@ export class RelatedRmaComponent {
 	/**
 	 * builds RMA table
 	 */
-	private buildTable () {
+	public buildTable () {
 		if (!this.rmaTable) {
 			this.rmaTable = new CuiTableOptions({
 				bordered: true,
@@ -88,5 +90,19 @@ export class RelatedRmaComponent {
 	 */
 	public hide () {
 		this.close.emit(true);
+	}
+
+	/**
+	 * Checks if our currently selected case has changed
+	 * @param changes the changes detected
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		if (changes.rmaRecords) {
+			if (changes.rmaRecords.currentValue.length > 0 || !changes.rmaRecords.firstChange) {
+				this.loading = false;
+			} else {
+				this.loading = true;
+			}
+		}
 	}
 }

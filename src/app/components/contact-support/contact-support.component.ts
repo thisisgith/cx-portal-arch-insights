@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SecurityContext } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { CuiModalService, CuiModalContent } from '@cisco-ngx/cui-components';
 import { ProfileService } from '@cisco-ngx/cui-auth';
@@ -9,6 +9,7 @@ import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, empty } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import { environment } from '@environment';
+import { DomSanitizer } from '@angular/platform-browser';
 
 /**
  * Component for portal support
@@ -36,7 +37,7 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 	constructor (
 		public cuiModalService: CuiModalService, private profileService: ProfileService,
 		public emailControllerService: EmailControllerService,
-		private logger: LogService,
+		private logger: LogService, private sanitizer: DomSanitizer,
 	) { }
 
 	/**
@@ -115,7 +116,8 @@ export class ContactSupportComponent implements OnInit, CuiModalContent {
 			`${I18n.get('_SupportEmailTopic_')}\n` +
 			`${this.supportForm.controls.title.value}\n\n` +
 			`${I18n.get('_SupportEmailDescription_')}\n` +
-			`${this.supportForm.controls.description.value}\n\n` +
+			`${this.sanitizer.sanitize(SecurityContext.HTML,
+				this.supportForm.controls.description.value)}\n\n` +
 			`${I18n.get('_SupportMessageSection_')}\n\n` +
 			`${I18n.get('_SupportOriginURL_')}\n` + `${window.location.href}`;
 	}

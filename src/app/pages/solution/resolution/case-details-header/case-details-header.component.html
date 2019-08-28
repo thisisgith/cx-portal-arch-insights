@@ -29,9 +29,9 @@
 
 		<div class="row base-padding-top">
 			<div class="col-md-6">
-				<div *ngIf="rmaRecords?.length >= 1" class="dropdown">
+				<div *ngIf="rmaStrings?.length >= 1" class="dropdown">
 					<button data-auto-id="relatedRMA" class="btn btn--small btn--secondary" (click)="toggleRMAList()"
-						[innerText]="'Related RMAs (' + rmaRecords?.length + ')'"></button>
+						[innerText]="'Related RMAs (' + rmaStrings?.length + ')'"></button>
 				</div>
 			</div>
 			<div class="col-md-6 text-right">
