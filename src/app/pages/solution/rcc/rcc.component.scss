@@ -15,13 +15,6 @@
 	}
 }
 
-.page-spinner {
-	position: absolute;
-	top: 32%;
-	left: 47%;
-	z-index: 1000000;
-}
-
 .cui {
 	.panel--bordered-right {
 		border-right: none !important;
@@ -49,8 +42,7 @@
 }
 
 .seperator-line {
-	border-left: 1px solid #dfdfdf;
-	margin-left: 10px;
+	border-left: 1px solid $light-gray-3;
 }
 
 .searchSection {
@@ -68,32 +60,4 @@
 
 .assetsCount:focus {
 	color: $status-blue;
-}
-
-.p1class {
-	color: $red;
-}
-
-.p2class {
-	color: $orange;
-}
-
-.p3class {
-	color: $yellow;
-}
-
-.p4class {
-	color: $success;
-}
-
-.p5class {
-	color: $gray;
-}
-
-.p6class {
-	color: $white;
-}
-
-.err-text {
-	margin: 5px 0 0 5px;
 }

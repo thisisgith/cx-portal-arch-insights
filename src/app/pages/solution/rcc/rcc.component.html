@@ -1,6 +1,3 @@
-<div *ngIf="loading" class="base-margin-bottom page-spinner">
-	<cui-spinner></cui-spinner>
-</div>
 <div class="col-md-12">
 	<div class="row">
 		<div class="col-md-2 filter__selected">
@@ -18,7 +15,7 @@
 			</div>
 		</div>
 		<div class="col-md-10 no-padding">
-			<div class="col-md-8 seperator-line">
+			<div class="col-md-8 seperator-line half-margin-left">
 				<div class="flex flex-fill flex-fluid">
 					<ng-container *ngFor="let filter of filters">
 						<div attr.id="RccSelectVisualFilter-{{ filter.key }}"
@@ -79,6 +76,9 @@
 	</div>
 </div>
 <div class="container base-margin-top" *ngIf="!isAssetView">
+	<div *ngIf="loading" class="base-margin-bottom">
+		<cui-spinner></cui-spinner>
+	</div>
 	<cui-table 
 		[options]="policyViolationsTableOptions"
 		[data]="policyViolationsGridData"
@@ -88,16 +88,10 @@
 		(onTableRowClicked)="onViolationRowClicked($event)"
 		*ngIf="!loading && policyViolationsGridData">
 	</cui-table>
-	<div *ngIf="!policyViolationsGridData">
-		<div class="text-muted text-xlarge flex-center">
-			<span class="icon-warning"></span>
-			<span class="err-text" [innerText]="'_RccNoResults_' | i18n"></span>
-		</div>
-	</div>
-	<div *ngIf="errorPolicyView">
-		<div class="text-large flex-center">
-			<span class="icon-warning"></span>
-			<span class="err-text" [innerText]="'_RccNoResults_' | i18n"></span>
+	<div class="col-8 panel-group panel-group--compressed">
+		<div class="panel absolute-center">
+			<span class="text-large text-uppercase icon-warning " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+			<span *ngIf="noTableData " class="text-large text-uppercase icon-warning " [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 	</div>
 	<div class="section">
@@ -110,6 +104,9 @@
 	</div>
 </div>
 <div class="container base-margin-top" *ngIf="isAssetView">
+	<div *ngIf="loading" class="base-margin-bottom">
+		<cui-spinner></cui-spinner>
+	</div>
 	<cui-table
 		[options]="assetTableOptions"
 		[data]="tableAssetDataSample"
@@ -119,16 +116,10 @@
 		(onTableRowClicked)="onAssetRowClicked($event)"
 		*ngIf="!loading && tableAssetDataSample">
 	</cui-table>
-	<div *ngIf="!tableAssetDataSample">
-		<div class="text-muted text-xlarge flex-center">
-			<span class="icon-warning"></span>
-			<span class="err-text" [innerText]="'_RccNoResults_' | i18n"></span>
-		</div>
-	</div>
-	<div *ngIf="errorAssetView">
-		<div class="text-xlarge flex-center">
-			<span class="icon-warning"></span>
-			<span class="err-text" [innerText]="'_RccNoResults_' | i18n"></span>
+	<div class="col-8 panel-group panel-group--compressed">
+		<div class="panel absolute-center">
+			<span class="text-large text-uppercase icon-warning" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+			<span *ngIf="noTableData" class="text-large text-uppercase icon-warning" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 	</div>
 	<div class="section">
@@ -276,11 +267,11 @@
 		*ngIf="item.ruleseverity"
 		[ngClass]="
 		{
-			'P1': 'p1class',
-			'P2': 'p2class',
-			'P3': 'p3class',
-			'P4': 'p4class',
-			'P5': 'p5class'
+			'P1': 'text-danger',
+			'P2': 'text-warning',
+			'P3': 'text-warning-alt',
+			'P4': 'text-success',
+			'P5': 'text-muted'
 		}[item.ruleseverity]">
 	</i>
 	<span [innerHTML]="item.ruleseverity"></span>
@@ -291,11 +282,11 @@
 		iconSize="default"
 		*ngIf="item.severity"
 		[ngClass]="{
-			'P1': 'p1class',
-			'P2': 'p2class',
-			'P3': 'p3class',
-			'P4': 'p4class',
-			'P5': 'p5class'
+			'P1': 'text-danger',
+			'P2': 'text-warning',
+			'P3': 'text-warning-alt',
+			'P4': 'text-success',
+			'P5': 'text-muted'
 		}[item.severity]">
 	</i>
 	<span [innerHTML]="item.violationCount"></span>
