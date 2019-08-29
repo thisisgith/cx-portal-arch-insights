@@ -255,10 +255,15 @@
 					[innerText]="'_Request1on1_' | i18n">
 				</button>
 			</div>
-			<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='requested' || item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-CSEMessage">
-				<span [innerText]="'_CSETouch_' | i18n"></span>
+			<div class="base-padding-top half-padding-left text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-In-Progress">
+				<span class="text-info icon-clock qtr-padding-bottom half-padding-right" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
+				<span [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
 			</div>
-			<div class="base-padding-top half-padding-left text-left text-success" *ngIf="item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
+			<div class="base-padding-top half-padding-left text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='requested'" attr.data-auto-id="{{ autoid }}-HoverModal-Requested">
+				<span class="text-info icon-check-outline qtr-padding-bottom half-padding-right" attr.data-auto-id="{{ autoid }}-HoverModal-Requested-Icon"></span>
+				<span [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
+			</div>
+			<div class="base-padding-top half-padding-left text-left text-success" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
 				<span [innerText]="'_Completed_' | i18n"></span>
 			</div>
 		</div>
@@ -326,8 +331,13 @@
 				[innerText]="'_Request1on1_' | i18n">
 			</button>
 		</ng-container>
-		<ng-container *ngIf="item.status === 'in-progress' || item.status === 'requested'">
-			<span class="text-success" [innerText]="'_ACCRequestSubmitted_' | i18n" attr.data-auto-id="{{ autoid }}-CSEMessage"></span>
+		<ng-container *ngIf="item.status === 'in-progress'">
+			<span class="text-info icon-clock qtr-padding-bottom half-padding-right" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
+			<span [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
+		</ng-container>
+		<ng-container *ngIf="item.status === 'requested'">
+			<span class="text-info icon-check-outline qtr-padding-bottom half-padding-right" attr.data-auto-id="{{ autoid }}-Requested-Icon"></span>
+			<span [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-Requested"></span>
 		</ng-container>
 		<ng-container *ngIf="item.status === 'completed'">
 			<div class="text-success icon-certified qtr-padding-right" attr.data-auto-id="{{ autoid }}-Checkmark"></div>
