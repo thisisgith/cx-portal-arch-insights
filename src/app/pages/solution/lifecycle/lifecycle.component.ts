@@ -357,7 +357,7 @@ export class LifecycleComponent implements OnDestroy {
 				break;
 			}
 			case 'ATX': {
-				title = I18n.get('_AskTheExpert_');
+				title = I18n.get('_AskTheExperts_');
 				break;
 			}
 			case 'SB': {
@@ -1209,6 +1209,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.moreYCoordinates = 0;
 		this.componentData.atx.interested = null;
 		this.moreATXSelected = null;
+		this.atxMoreClicked = false;
 	}
 
 	/**
