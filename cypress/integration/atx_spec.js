@@ -183,7 +183,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					.within(() => {
 						// When the first item has a scheduled session, should show a calandar and
 						// first scheduled session's date and instructor
-						cy.get('span').should('have.class', 'icon-calendar');
+						cy.getByAutoId('recommendedATX-Calendar').should('be.visible');
 						const scheduledSession = Cypress._.find(
 							firstATXSessions, session => session.scheduled === true
 						);
@@ -342,6 +342,26 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	});
 
 	describe('PBC-103: (UI) View - Solution Racetrack - Schedule an ATX', () => {
+		before(() => {
+			// Switch to mock data with no scheduled items
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+		});
+
+		after(() => {
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
 		it('Should be able to schedule an ATX session from the Lifecycle page', () => {
 			cy.getByAutoId('recommendedATXScheduleButton').click();
 			cy.getByAutoId('atxScheduleCard')
@@ -440,16 +460,23 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
-		it('Should prevent registering for the same session twice', () => {
+		it('Should prevent registering for the same item twice', () => {
+			// User is not allowed to register for multiple sessions of the same item
+			// Change to the default mock data (includes a scheduled item with multiple sessions)
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+
 			// Open the View Sessions pop-up
 			cy.getByAutoId('recommendedATXScheduleButton').click();
 			cy.getByAutoId('atxScheduleCard')
 				.should('be.visible')
 				.within(() => {
-					// Select an already registered session, verify "Register" button remains disabled
-					const scheduledSession = Cypress._.find(firstATXSessions,
-						session => session.scheduled === true);
-					cy.getByAutoId(`SelectSession-${scheduledSession.sessionId}`).click();
+					// Select a non-registered session, verify "Register" button remains disabled
+					cy.getByAutoId('SelectSession-Session1').click();
 					cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
 				});
 
@@ -460,9 +487,27 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	});
 
 	describe('PBC-377: (UI View) - Lifecycle -  Register for ATX in Next Pitstop', () => {
+		before(() => {
+			// Switch to mock data with no scheduled items
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+		});
+
 		after(() => {
 			// Reset the view to the currentPitstop
 			cy.get('#racecar').click();
+
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 		});
 
 		it('Should allow scheduling of an ATX on the current pitstop', () => {
@@ -1301,6 +1346,212 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			// Verify we're still in table view
 			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+	});
+
+	describe('PBC-376: (UI) View - Solution Based - Cancel ATX Session', () => {
+		before(() => {
+			// Switch to a mock with scheduled sessions
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
+		});
+
+		after(() => {
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		describe('PBC-619: ATX Cancel UI', () => {
+			it('ATX (Lifecycle Page) View Sessions modal should include cancel button', () => {
+				// Cancel button should be present, but disabled by default
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						cy.getByAutoId('AtxScheduleCardCancelButton')
+							.should('exist')
+							.and('have.attr', 'disabled');
+					});
+
+				// Close the View Sessions modal
+				cy.getByAutoId('AtxScheduleCardClose').click();
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+
+			it('ATX (Card View) View Sessions modal should include cancel button', () => {
+				// Open the ATX View All modal and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('card-view-btn').click();
+
+				// Cancel button should be present, but disabled by default
+				cy.getByAutoId('ATXCard').each($card => {
+					cy.wrap($card).within(() => {
+						cy.getByAutoId('cardRecommendedATXScheduleButton').click();
+					});
+					cy.getByAutoId('atxScheduleCard')
+						.should('be.visible')
+						.within(() => {
+							cy.getByAutoId('AtxScheduleCardCancelButton')
+								.should('exist')
+								.and('have.attr', 'disabled');
+						});
+
+					// Close the View Sessions modal
+					cy.getByAutoId('AtxScheduleCardClose').click();
+					cy.getByAutoId('atxScheduleCard').should('not.exist');
+				});
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('ATX (Table View) View Sessions modal should include cancel button', () => {
+				// Open the ATX View All modal and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+
+				// Cancel button should be present, but disabled by default
+				cy.get('tr').each(($row, index) => {
+					// Skip the first tr, as those are the column headers
+					if (index !== 0) {
+						cy.wrap($row).within(() => {
+							cy.getByAutoId('ViewSessionButton').click();
+						});
+						cy.getByAutoId('atxScheduleCard')
+							.should('be.visible')
+							.within(() => {
+								cy.getByAutoId('AtxScheduleCardCancelButton')
+									.should('exist')
+									.and('have.attr', 'disabled');
+							});
+
+						// Close the View Sessions modal
+						cy.getByAutoId('AtxScheduleCardClose').click();
+						cy.getByAutoId('atxScheduleCard').should('not.exist');
+					}
+				});
+
+				// Switch back to card view and close the View All modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+		});
+
+		describe('API Integration', () => {
+			afterEach(() => {
+				// Nuke the local storage and refresh the page to reset local cancellation
+				cy.clearLocalStorage('MockDB');
+				cy.loadApp();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+
+				// Note that this resets the mocks as well, so switch back and refresh the data
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
+			});
+
+			it('ATX (Lifecycle Page) View Sessions cancel button should make API call', () => {
+				// Open the View Sessions modal
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						// Click the scheduled session, verify cancel button is enabled
+						cy.getByAutoId('SelectSession-Session1').click();
+						cy.getByAutoId('AtxScheduleCardCancelButton')
+							.should('exist')
+							.and('not.have.attr', 'disabled');
+
+						// Click the cancel button, verify the /cancel API is called
+						cy.getByAutoId('AtxScheduleCardCancelButton').click();
+						cy.wait('(ATX) IBN-Cancel ATX Session1');
+					});
+
+				// View Sessions modal should close automatically
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+
+			it('ATX (Card View) View Sessions cancel button should make API call', () => {
+				// Open the ATX View All modal and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('card-view-btn').click();
+
+				// Open the View Sessions modal
+				cy.getByAutoId('cardRecommendedATXScheduleButton')
+					.first()
+					.click();
+
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						// Click the scheduled session, verify cancel button is enabled
+						cy.getByAutoId('SelectSession-Session1').click();
+						cy.getByAutoId('AtxScheduleCardCancelButton')
+							.should('exist')
+							.and('not.have.attr', 'disabled');
+
+						// Click the cancel button, verify the /cancel API is called
+						cy.getByAutoId('AtxScheduleCardCancelButton').click();
+						cy.wait('(ATX) IBN-Cancel ATX Session1');
+					});
+
+				// View Sessions modal should close automatically
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('ATX (Table View) View Sessions cancel button should make API call', () => {
+				// Open the ATX View All modal and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+
+				// Open the View Sessions modal
+				cy.getByAutoId('ViewSessionButton')
+					.first()
+					.click();
+
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						// Click the scheduled session, verify cancel button is enabled
+						cy.getByAutoId('SelectSession-Session1').click();
+						cy.getByAutoId('AtxScheduleCardCancelButton')
+							.should('exist')
+							.and('not.have.attr', 'disabled');
+
+						// Click the cancel button, verify the /cancel API is called
+						cy.getByAutoId('AtxScheduleCardCancelButton').click();
+						cy.wait('(ATX) IBN-Cancel ATX Session1');
+					});
+
+				// View Sessions modal should close automatically
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+
+				// Switch back to card view and close the View All modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
 		});
 	});
 });
