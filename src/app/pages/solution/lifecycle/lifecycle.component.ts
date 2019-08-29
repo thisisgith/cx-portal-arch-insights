@@ -1167,7 +1167,8 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param panel string
 	 */
 	 public getMoreCoordinates (moreList: HTMLElement, panel: string) {
-		if (_.isEqual(panel, 'moreATXList') && !this.atxScheduleCardOpened && !this.atxMoreClicked) {
+		if (_.isEqual(panel, 'moreATXList') &&
+			!this.atxScheduleCardOpened && !this.atxMoreClicked) {
 			this.moreXCoordinates = moreList.offsetWidth;
 			this.moreYCoordinates = moreList.offsetTop;
 		}
@@ -1175,12 +1176,11 @@ export class LifecycleComponent implements OnDestroy {
 
 	/**
 	 * Changes the atxScheduleCardOpened flag and adds value to moreATXSelected
-	 * @param item ATXSchema
 	 */
-	 public atxMoreViewSessions (item: AtxSchema) {
+	 public atxMoreViewSessions () {
 		this.atxScheduleCardOpened = true;
 		this.recommendedAtxScheduleCardOpened = false;
-		this.moreATXSelected = item;
+		this.atxMoreClicked = false;
 	}
 
 	/**
@@ -1225,6 +1225,15 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Opens the given recordingURL in a new tab
+	 * @param recordingUrl string
+	 */
+	 public atxWatchNow (recordingUrl: string) {
+		window.open(`${recordingUrl}`, '_blank');
+		this.atxMoreClicked = false;
+	}
+
+	/**
 	 * Get the panel styles based on button coordinates
 	 * @param viewAtxSessions HTMLElement
 	 * @returns panel string
@@ -1256,9 +1265,9 @@ export class LifecycleComponent implements OnDestroy {
 					panel = 'panel listpanel--open';
 				}
 			}
-		} else if (this.atxScheduleCardOpened && this.moreATXSelected && this.atxMoreClicked) {
-			_div.style.left = '170px';
-			_div.style.top = '-10px';
+		} else if (this.atxScheduleCardOpened && this.moreATXSelected) {
+			_div.style.left = `${this.moreXCoordinates}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
 			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '40%';

@@ -160,6 +160,10 @@
 		<ng-container *ngTemplateOutlet="atxMoreClick; context: { data: moreATXSelected }">
 		</ng-container>
 	</ng-container>
+	<ng-container *ngIf="atxScheduleCardOpened && moreATXSelected">
+		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: moreATXSelected }">
+		</ng-container>
+	</ng-container>
 </ng-template>
 
 <ng-template #recommended let-src="src" let-title="title" let-description="description"
@@ -227,6 +231,7 @@
 				</div>
 				<div class="col-md-1">
 					<a class="no-link closebtn" 
+						data-auto-id = "closeMoreATXClickModal"
 						(click)="atxMoreClicked = false; moreATXSelected = ''">
 						<span class="icon-close icon-small"></span>
 					</a>
@@ -236,21 +241,19 @@
 			<div class="half-margin-left line-clamp" [innerText]="data.description"></div>
 			<div class="base-padding-top half-padding-left">
 				<button class="btn btn--small btn--secondary text-uppercase"
+					data-auto-id = "MoreATXViewSessions"
 					[ngClass]="data.sessions?.length > 0 ? null : 'disabled'"
-					(click)="atxMoreViewSessions(data)"
+					(click)="atxMoreViewSessions()"
 					[innerText]="'_ViewSessions_' | i18n">
 				</button>
-				<a *ngIf="data.recordingURL" class="no-link" target="_blank" [href]="data.recordingURL">
-					<button class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
-						[innerText]="'_WatchNow_' | i18n">
-					</button>
-				</a>
+				<button class="btn btn--small btn--secondary text-uppercase"
+					data-auto-id = "MoreATXWatchNow"
+					[ngClass]="data?.recordingURL ? null : 'disabled'"
+					(click)="atxWatchNow(data.recordingURL)"
+					[innerText]="'_WatchNow_' | i18n">
+				</button>
 			</div>
 		</div>
-		<ng-container *ngIf="atxScheduleCardOpened && moreATXSelected">
-			<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: moreATXSelected }">
-			</ng-container>
-		</ng-container>
 	</div>
 </ng-template>
 
@@ -469,6 +472,7 @@
 				<div class="col-md-11">
 					<div id="moreAccList-item" class="panel small-panel" attr.data-auto-id="{{ autoid }}-item">
 						<div class="text-blue" [innerText]="item.title"
+							data-auto-id = "ATXMoreClick"
 							(click)="atxMoreSelect(item)"></div>
 						<ng-container *ngIf="autoid==='moreACCList'">
 							<ng-container *ngTemplateOutlet="accHover; context: {

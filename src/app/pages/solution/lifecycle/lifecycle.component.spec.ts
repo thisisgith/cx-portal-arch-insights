@@ -91,6 +91,7 @@ describe('LifecycleComponent', () => {
 				if (args.pitstop === 'Use') {
 					return of(getActiveBody(ATXScenarios[2]));
 				}
+
 				return of(getActiveBody(ATXScenarios[0]));
 			});
 
@@ -473,16 +474,42 @@ describe('LifecycleComponent', () => {
 
 			component.atxScheduleCardOpened = false;
 			component.recommendedAtxScheduleCardOpened = true;
-			let item: AtxSchema;
-			item = { };
 
-			component.atxMoreViewSessions(item);
+			// Test atxMoreViewSessions()
+			component.atxMoreViewSessions();
 
 			expect(component.atxScheduleCardOpened)
 				.toBeTruthy();
 
 			expect(component.recommendedAtxScheduleCardOpened)
 				.toBeFalsy();
+
+			let item: AtxSchema;
+			item = { };
+			component.atxMoreClicked = false;
+
+			// Test atxMoreSelect()
+			component.atxMoreSelect(item);
+
+			expect(component.atxMoreClicked)
+				.toBeTruthy();
+
+			expect(component.atxScheduleCardOpened)
+				.toBeFalsy();
+
+			expect(component.recommendedAtxScheduleCardOpened)
+				.toBeFalsy();
+
+			let recordingUrl: string;
+			recordingUrl = '';
+			component.atxMoreClicked = true;
+
+			// Test atxWatchNow()
+			component.atxWatchNow(recordingUrl);
+
+			expect(component.atxMoreClicked)
+				.toBeFalsy();
+
 		});
 
 		it('should show the atx view-all modal', () => {
