@@ -5,6 +5,7 @@ import { CuiTableModule, CuiPagerModule, CuiLoaderModule,
 	 CuiSpinnerModule, CuiDropdownModule } from '@cisco-ngx/cui-components';
 import { DetailsPanelModule } from '@components';
 import { FormsModule } from '@angular/forms';
+
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CbpDeviceAffectedModule } from '../cbp-device-affected/cbp-device-affected.module';
 
@@ -18,6 +19,7 @@ import { CbpDeviceAffectedModule } from '../cbp-device-affected/cbp-device-affec
 		CuiPagerModule,
 		DetailsPanelModule,
 		CuiDropdownModule,
+		CbpDeviceAffectedModule,
 		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,

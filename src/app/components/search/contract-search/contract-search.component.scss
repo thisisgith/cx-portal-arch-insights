@@ -12,6 +12,10 @@ dt {
 	font-weight: $base-font-weight;
 }
 
+dd {
+	word-wrap: break-word;
+}
+
 .toast {
 	position: absolute;
 	z-index: 1;

@@ -5,7 +5,6 @@ import { CuiTableModule, CuiPagerModule, CuiSpinnerModule } from '@cisco-ngx/cui
 import { ArchitectureModules } from '@sdp-api';
 import { environment } from '@environment';
 import { AssetDetailsHeaderModule, AssetDetailsModule, DetailsPanelModule } from '@components';
-
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CbpTbdModule } from '../cbp-tbd/cbp-tbd.module';
 
