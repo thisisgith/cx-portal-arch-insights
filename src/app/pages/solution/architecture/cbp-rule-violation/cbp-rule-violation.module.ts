@@ -23,7 +23,6 @@ import { CbpDeviceAffectedModule } from '../cbp-device-affected/cbp-device-affec
 		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
-		CbpDeviceAffectedModule,
 		FormsModule,
 	],
 })
