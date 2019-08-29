@@ -1,12 +1,3 @@
-// import MockService from '../support/mockService';
-
-
-// const commMock = new MockService('CommunitiesScenarios'); // for future changes
-// environments/mock/communities.ts
-// const commOnboardScenario = commMock.getScenario('GET', '(Communities) IBN-Assurance-Onboard');
-// will give error if commItems is not used below
-// const commItems = commOnboardScenario.response.body.items;
-
 // Hard-coded URL and title mapping
 const communitiesMapping = [
 	{
@@ -17,32 +8,32 @@ const communitiesMapping = [
 			{
 				name: 'Onboard',
 				curatedTooltip: 'Campus Network Assurance - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-wireless-assurance&amp;labels=Onboard',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Onboard',
 			},
 			{
 				name: 'Implement',
 				curatedTooltip: 'Campus Network Assurance - Implement',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-wireless-assurance&amp;labels=Implement',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Implement',
 			},
 			{
 				name: 'Use',
 				curatedTooltip: 'Campus Network Assurance - Use',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-wireless-assurance&amp;labels=Use',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Use',
 			},
 			{
 				name: 'Engage',
 				curatedTooltip: 'Campus Network Assurance - Engage',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-wireless-assurance&amp;labels=Engage',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Engage',
 			},
 			{
 				name: 'Adopt',
 				curatedTooltip: 'Campus Network Assurance - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-wireless-assurance&amp;labels=Adopt',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Adopt',
 			},
 			{
 				name: 'Optimize',
 				curatedTooltip: 'Campus Network Assurance - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-wireless-assurance&amp;labels=Optimize',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-assurance/bd-p/ibn-assurance/customFilteredByMultiLabel?board=ibn-assurance&amp;labels=Optimize',
 			},
 		],
 	},
@@ -54,32 +45,32 @@ const communitiesMapping = [
 			{
 				name: 'Onboard',
 				curatedTooltip: 'Campus Network Segmentation - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-network-segmentation&amp;labels=Onboard',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Onboard',
 			},
 			{
 				name: 'Implement',
 				curatedTooltip: 'Campus Network Segmentation - Implement',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-network-segmentation&amp;labels=Implement',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Implement',
 			},
 			{
 				name: 'Use',
 				curatedTooltip: 'Campus Network Segmentation - Use',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-network-segmentation&amp;labels=Use',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Use',
 			},
 			{
 				name: 'Engage',
 				curatedTooltip: 'Campus Network Segmentation - Engage',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-network-segmentation&amp;labels=Engage',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Engage',
 			},
 			{
 				name: 'Adopt',
 				curatedTooltip: 'Campus Network Segmentation - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-network-segmentation&amp;labels=Adopt',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Adopt',
 			},
 			{
 				name: 'Optimize',
 				curatedTooltip: 'Campus Network Segmentation - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-network-segmentation&amp;labels=Optimize',
+				curatedURL: 'https://community.cisco.com/t5/campus-network-segmentation/bd-p/ibn-segmentation/customFilteredByMultiLabel?board=ibn-segmentation&amp;labels=Optimize',
 			},
 		],
 	},
@@ -91,32 +82,32 @@ const communitiesMapping = [
 			{
 				name: 'Onboard',
 				curatedTooltip: 'Scalable Access Policy - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-converged-mgmt&amp;labels=Onboard',
+				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Onboard',
 			},
 			{
 				name: 'Implement',
 				curatedTooltip: 'Scalable Access Policy - Implement',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-converged-mgmt&amp;labels=Implement',
+				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Implement',
 			},
 			{
 				name: 'Use',
 				curatedTooltip: 'Scalable Access Policy - Use',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-converged-mgmt&amp;labels=Use',
+				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Use',
 			},
 			{
 				name: 'Engage',
 				curatedTooltip: 'Scalable Access Policy - Engage',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-converged-mgmt&amp;labels=Engage',
+				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Engage',
 			},
 			{
 				name: 'Adopt',
 				curatedTooltip: 'Scalable Access Policy - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-converged-mgmt&amp;labels=Adopt',
+				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Adopt',
 			},
 			{
 				name: 'Optimize',
 				curatedTooltip: 'Scalable Access Policy - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-converged-mgmt&amp;labels=Optimize',
+				curatedURL: 'https://community.cisco.com/t5/scalable-access-policy/bd-p/ibn-policy/customFilteredByMultiLabel?board=ibn-policy&amp;labels=Optimize',
 			},
 		],
 	},
@@ -128,32 +119,32 @@ const communitiesMapping = [
 			{
 				name: 'Onboard',
 				curatedTooltip: 'Network Device Onboarding - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-onboard&amp;labels=Onboard',
+				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Onboard',
 			},
 			{
 				name: 'Implement',
 				curatedTooltip: 'Network Device Onboarding - Implement',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-onboard&amp;labels=Implement',
+				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Implement',
 			},
 			{
 				name: 'Use',
 				curatedTooltip: 'Network Device Onboarding - Use',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-onboard&amp;labels=Use',
+				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Use',
 			},
 			{
 				name: 'Engage',
 				curatedTooltip: 'Network Device Onboarding - Engage',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-onboard&amp;labels=Engage',
+				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Engage',
 			},
 			{
 				name: 'Adopt',
 				curatedTooltip: 'Network Device Onboarding - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-onboard&amp;labels=Adopt',
+				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Adopt',
 			},
 			{
 				name: 'Optimize',
 				curatedTooltip: 'Network Device Onboarding - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-onboard&amp;labels=Optimize',
+				curatedURL: 'https://community.cisco.com/t5/network-device-onboarding/bd-p/ibn-onboarding/customFilteredByMultiLabel?board=ibn-onboarding&amp;labels=Optimize',
 			},
 		],
 	},
@@ -165,32 +156,32 @@ const communitiesMapping = [
 			{
 				name: 'Onboard',
 				curatedTooltip: 'Campus Software Image Management - Onboard',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-swim&amp;labels=Onboard',
+				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Onboard',
 			},
 			{
 				name: 'Implement',
 				curatedTooltip: 'Campus Software Image Management - Implement',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-swim&amp;labels=Implement',
+				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Implement',
 			},
 			{
 				name: 'Use',
 				curatedTooltip: 'Campus Software Image Management - Use',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-swim&amp;labels=Use',
+				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Use',
 			},
 			{
 				name: 'Engage',
 				curatedTooltip: 'Campus Software Image Management - Engage',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-swim&amp;labels=Engage',
+				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Engage',
 			},
 			{
 				name: 'Adopt',
 				curatedTooltip: 'Campus Software Image Management - Adopt',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-swim&amp;labels=Adopt',
+				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Adopt',
 			},
 			{
 				name: 'Optimize',
 				curatedTooltip: 'Campus Software Image Management - Optimize',
-				curatedURL: 'https://community.cisco.com/t5/custom/page/page-id/customFilteredByMultiLabel?board=lifecycle-swim&amp;labels=Optimize',
+				curatedURL: 'https://community.cisco.com/t5/campus-software-image-management/bd-p/ibn-swim/customFilteredByMultiLabel?board=ibn-swim&amp;labels=Optimize',
 			},
 		],
 	},
@@ -200,6 +191,9 @@ describe('Communities Panel', () => {
 	before(() => {
 		cy.login();
 		cy.loadApp();
+		cy.window().then(win => { // Must be done after app loads
+			win.Cypress.hideDNACHeader = true;
+		});
 		cy.waitForAppLoading();
 	});
 
@@ -211,13 +205,13 @@ describe('Communities Panel', () => {
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 		});
 
-		it('Correctly formats the communities tile', () => { // PBC-126
+		it('Correctly formats the communities tile', () => { // PBC-126, PBC-585
 			cy.getByAutoId('PanelTitle-Communities')
 				.should('have.text', 'Cisco Community')
 				.and('have.class', 'text-uppercase');
 			cy.getByAutoId('CuratedCommunityLink').within(() => {
 				cy.get('.icon-communities').should('be.visible');
-				cy.get('#curatedcommunitytitle').should('have.text', 'Curated');
+				cy.get('#curatedcommunitytitle').should('have.text', 'Success Track');
 			});
 			cy.getByAutoId('PublicCommunityLink').within(() => {
 				cy.get('.icon-communities').should('be.visible');
@@ -240,7 +234,8 @@ describe('Communities Panel', () => {
 					.and('have.attr', 'data-toggle', 'tooltip');	// tooltip
 			});
 
-			context(`PBC-97: Curated Communities Link for ${mapping.usecase}`, () => { // PBC-451
+			// PBC-97, PBC-451, PBC-585
+			context(`PBC-97: Success Track Communities Link for ${mapping.usecase}`, () => {
 				beforeEach(() => {
 					// Switch to use case
 					cy.getByAutoId('UseCaseDropdown').click();
@@ -248,11 +243,11 @@ describe('Communities Panel', () => {
 				});
 
 				mapping.pitstops.forEach(pitstop => {
-					it(`Curated Community Links for pitstop: ${pitstop.name}`, () => {
+					it(`Success Track Community Links for pitstop: ${pitstop.name}`, () => {
 						cy.getByAutoId(`Racetrack-Point-${pitstop.name.toLowerCase()}`)
 							.click({ force: true });
 						cy.getByAutoId(`communitytitle-${pitstop.curatedTooltip}-Lifecycle`)
-							.should('have.text', 'Curated')
+							.should('have.text', 'Success Track')
 							.and('have.attr', 'title', pitstop.curatedTooltip)
 							.and('have.attr', 'target', '_blank')
 							.and('have.attr', 'href', pitstop.curatedURL);

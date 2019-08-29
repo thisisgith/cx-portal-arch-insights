@@ -48,12 +48,12 @@ describe('ArchitectureReviewComponent', () => {
 	}));
 
 	beforeEach(() => {
-		spyOn(service, 'getExceptionsCount')
+		spyOn(service, 'getDevicesCount')
 			.and
-			.returnValue(of({ CBPRulesCount: 5000 }));
-		spyOn(service, 'getAssetsExceptionsCount')
+			.returnValue(of({ TotalCounts: 50 }));
+		spyOn(service, 'getDnacCount')
 			.and
-			.returnValue(of({ AssetsExceptionCount: 5000 }));
+			.returnValue(of({ TotalCounts: 50 }));
 		fixture = TestBed.createComponent(ArchitectureReviewComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -64,14 +64,34 @@ describe('ArchitectureReviewComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should call exceptions count on init', () => {
-		expect(service.getExceptionsCount)
+	it('should call Devices count on init', () => {
+		expect(component.status.isLoading)
+		.toBeTruthy();
+		expect(service.getDevicesCount)
 			.toHaveBeenCalled();
 	});
 
-	it('should call assets exceptions count on init', () => {
-		expect(service.getAssetsExceptionsCount)
+	it('should call Devices count on init', () => {
+		expect(component.status.isLoading)
+		.toBeTruthy();
+		expect(service.getDevicesCount)
 			.toHaveBeenCalled();
+	});
+
+	it('customerId should be present', () => {
+		expect(component.customerId)
+			.toBeDefined();
+		expect(component.filtered)
+			.toBeDefined();
+		expect(component.selectedFilter)
+			.toBeDefined();
+		expect(component.status)
+			.toBeDefined();
+		expect(component.filters)
+			.toBeDefined();
+		const advisoryFilter = _.find(component.filters, { key: 'exceptions' });
+		expect(advisoryFilter)
+			.toBeDefined();
 	});
 
 	it('should call clear filters', () => {
@@ -80,26 +100,55 @@ describe('ArchitectureReviewComponent', () => {
 		.toBeFalsy();
 	});
 
-	it('should call selectVisualLabel', () => {
-		const visualLabels = { label: 'Configuration Best Practices', active: false, count: null };
+	xit('should call selectVisualLabel', () => {
+		const visualLabel = { label: 'Configuration Best Practices', active: false, count: null };
 
-		component.selectVisualLabel(visualLabels);
-		expect(visualLabels.active)
-		.toBeTruthy();
+		component.visualLabels =
+		[{ label: 'Configuration Best Practices', active: false, count: null }];
+		component.selectVisualLabel(visualLabel);
+		expect(component.visualLabels[0].active)
+		.toBeFalsy();
+		fixture.detectChanges();
+		visualLabel.active = true;
+		component.selectVisualLabel(visualLabel);
 	});
 
 	it('should call onsubfilterselect', () => {
 		mockVisualFilter.seriesData = [{
-			filter: '',
+			filter: 'high',
 			label: '',
 			selected: false,
 			value: 123,
 		},
 		];
+		mockVisualFilter.key = 'exception';
 		component.onSubfilterSelect('high', mockVisualFilter);
+		expect(mockVisualFilter.seriesData[0].selected)
+		.toBeTruthy();
 	});
 
-	xit('should clear the filter when selecting the same subfilter twice', done => {
+	it('should call getSelectedSubFilters ', () => {
+		component.filters = [mockVisualFilter];
+		component.getSelectedSubFilters('high');
+	});
+
+	it('should clear filters', () => {
+		component.filters = [];
+		component.clearFilters();
+		expect(component.selectedFilter)
+		.toEqual({ severity: '' });
+	});
+
+	it('should call load data on component loading', () => {
+		component.buildFilters();
+		expect(component.filters)
+		.toBeDefined();
+		spyOn(component, 'loadData');
+		expect(component.status.isLoading)
+		.toBeTruthy();
+	});
+
+	it('should clear the filter when selecting the same subfilter twice', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -124,8 +173,6 @@ describe('ArchitectureReviewComponent', () => {
 
 				expect(subfilter.selected)
 					.toBeFalsy();
-
-				done();
 			});
 	});
 });

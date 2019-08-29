@@ -3,26 +3,23 @@ import { environment } from '@environment';
 import { DnacListComponent } from './dnac-list.component';
 import { DnacListModule } from './dnac-list.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
-import { ArchitectureService } from '@sdp-api';
-import { CuiTableModule, CuiPagerModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
+import { of, throwError } from 'rxjs';
+import { ArchitectureReviewService } from '@sdp-api';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('DnacListComponent', () => {
 	let component: DnacListComponent;
 	let fixture: ComponentFixture<DnacListComponent>;
-	let service: ArchitectureService;
+	let service: ArchitectureReviewService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [DnacListModule,
 				HttpClientTestingModule,
-				CuiTableModule,
-				CuiPagerModule,
-				CuiSpinnerModule,
 				MicroMockModule,
 				RouterTestingModule,
 			],
@@ -41,13 +38,13 @@ describe('DnacListComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
+		service = TestBed.get(ArchitectureReviewService);
 	}));
 	beforeEach(() => {
-		service = TestBed.get(ArchitectureService);
-		spyOn(service, 'getAllAssetsWithExceptions')
-			.and
-			.returnValue(of({ TotalCounts: 1000, AssetsExceptionDetails: [] }));
+		// spyOn(service, 'getAllAssetsWithExceptions')
+		// 	.and
+		// 	.returnValue(of({ TotalCounts: 1000, AssetsExceptionDetails: [] }));
 		fixture = TestBed.createComponent(DnacListComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -58,17 +55,24 @@ describe('DnacListComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should call getAllAssetsWithExceptions on init', () => {
-		component.ngOnInit();
-		expect(service.getAllAssetsWithExceptions)
-			.toHaveBeenCalled();
+	it('should set null values on request errors', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getDnacList')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+			);
+		component.getDnacList();
 	});
 
 	it('should update pagination params', () => {
-		const pageEvent = { page: 1, limit : 10 };
+		const pageEvent = { page: 1, limit: 10 };
 		component.onPagerUpdated(pageEvent);
 		expect(component.params.page)
-		.toBe(1);
+			.toBe(1);
 	});
 
 	it('should pass data on row clicked', () => {
@@ -94,13 +98,83 @@ describe('DnacListComponent', () => {
 		};
 		component.onTableRowClicked(tableEvent);
 		expect(component.dnacDetails)
-		.toBeDefined();
+			.toBeDefined();
 	});
 
 	it('should close panel', () => {
 		component.onPanelClose();
 		expect(component.dnacDetails)
-		.toBe(null);
+			.toBe(null);
+	});
+
+	it('should call getDnacList service with null', () => {
+		// const fakeParams = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
+		component.isLoading = true;
+		component.totalItems = 5;
+		const spy = spyOn(service, 'getDnacList')
+			.and
+			.returnValue(of(null));
+		component.getDnacList();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(spy)
+					.toHaveBeenCalled();
+				expect(component.totalItems === 0)
+					.toBeTruthy();
+				expect(component.isLoading)
+					.toBeFalsy();
+			});
+	});
+
+	it('should call getDnacList service with object', () => {
+		// const fakeParams = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
+		component.isLoading = true;
+		component.totalItems = 5;
+		const spy = spyOn(service, 'getDnacList')
+			.and
+			.returnValue(of({
+				dnacDetails: [{ active: true, customerId: 'xyz' }],
+				TotalCounts: 10,
+			}));
+		component.getDnacList();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(spy)
+					.toHaveBeenCalled();
+				expect(component.totalItems === 10)
+					.toBeTruthy();
+				expect(component.dnacDetailsResponse)
+					.toBeDefined();
+				expect(component.isLoading)
+					.toBeFalsy();
+			});
+	});
+
+	it('should trigger search function for keycode 13', () => {
+		const event = { keyCode: 13 };
+		component.globalSearchFunction(event.keyCode);
+		expect(component.isLoading)
+			.toBeTruthy();
+		expect(component.tableStartIndex)
+			.toBe(0);
+		expect(component.params.page)
+			.toBe(0);
+	});
+
+	it('should not trigger search function for keycode not 13', () => {
+		component.isLoading = false;
+		component.tableStartIndex = 1;
+		component.params.page = 1;
+		const event = { keyCode: 10 };
+		component.globalSearchFunction(event.keyCode);
+		expect(component.isLoading)
+			.toBeFalsy();
+		expect(component.tableStartIndex === 0)
+			.toBeFalsy();
+		expect(component.params.page === 0)
+			.toBeFalsy();
 	});
 
 });

@@ -154,7 +154,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			getDevicesList(this.paramsType)
 			.subscribe(data => {
 				if (!data) {
-					return this.inValidResponseHandler();
+					return this.invalidResponseHandler();
 				}
 				const datePipe = new DatePipe('en-US');
 				this.isLoading = false;
@@ -166,14 +166,14 @@ export class DevicesListComponent implements OnInit, OnChanges {
 				this.logger.error('CBP Rule Component View' +
 					'  : getDevicesList() ' +
 					`:: Error : (${err.status}) ${err.message}`);
-				this.inValidResponseHandler();
+				this.invalidResponseHandler();
 			});
 	}
 
 	/**
 	 * This Function is used to handle the invalid Response
 	 */
-	public inValidResponseHandler () {
+	public invalidResponseHandler () {
 		this.isLoading = false;
 		this.dnacDeviceDetails = [];
 		this.totalItems = 0;

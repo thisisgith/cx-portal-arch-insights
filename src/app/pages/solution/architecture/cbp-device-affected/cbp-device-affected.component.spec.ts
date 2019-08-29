@@ -66,7 +66,8 @@ describe('CbpDeviceAffectedComponent', () => {
 	});
 
 	it('should close panel', () => {
-		component.onPanelClose();
+		const isClosed = true;
+		component.onPanelClose(isClosed);
 		expect(component.selectedAsset)
 		.toBe(null);
 	});

@@ -59,14 +59,18 @@ describe('Learn Panel', () => {
 	before(() => {
 		cy.login();
 		cy.loadApp();
+
+		// Disable the setup wizard and quick tour so they don't block other elements
+		cy.window().then(win => {
+			win.Cypress.hideDNACHeader = true;
+			win.Cypress.showQuickTour = false;
+		});
+
 		cy.waitForAppLoading();
 
 		// Wait for both E-Learning and Success Paths to finish loading
 		cy.waitForAppLoading('elearningLoading', 15000);
 		cy.waitForAppLoading('successPathsLoading', 15000);
-
-		// Close the setup wizard so it doesn't block other elements
-		cy.getByAutoId('setup-wizard-header-close-btn').click();
 	});
 
 	describe('PBC-125 Learning Content', () => {
@@ -402,7 +406,11 @@ describe('Learn Panel', () => {
 					.parent()
 					.within(() => {
 						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', elearningItem.title);
-						cy.getByAutoId('recommendedElearning-HoverModal-Description').should('contain', elearningItem.description);
+						cy.getByAutoId('recommendedElearning-HoverModal-Description')
+							.should('contain', elearningItem.description)
+							// PBC-611 Truncate description text
+							// Since this handled by the styles, just validate the class exists
+							.and('have.class', 'line-clamp');
 						cy.getByAutoId('recommendedElearning-HoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(elearningItem.rating).toString());
 						// Duration/clock are only displayed if duration is set
 						if (elearningItem.duration) {
@@ -437,9 +445,6 @@ describe('Learn Panel', () => {
 			// Reload the page to force-clear any sort/filter
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
-
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Success Bytes View All should be able to toggle between table and card views', () => {
@@ -905,9 +910,6 @@ describe('Learn Panel', () => {
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
-
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
@@ -942,9 +944,6 @@ describe('Learn Panel', () => {
 
 			// Wait for the ACC panel to finish loading
 			cy.waitForAppLoading('successPathsLoading', 15000);
-
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Should be able to bookmark a Success Bytes item', () => {
@@ -1181,9 +1180,6 @@ describe('Learn Panel', () => {
 			cy.loadApp();
 			cy.wait('(SP) IBN-Campus Network Assurance-Onboard');
 
-			// Close the setup wizard so it doesn't block other elements
-			cy.getByAutoId('setup-wizard-header-close-btn').click();
-
 			cy.getByAutoId('ShowModalPanel-_SuccessBytes_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
@@ -1239,7 +1235,11 @@ describe('Learn Panel', () => {
 					.parent()
 					.within(() => {
 						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', certificationItem.title);
-						cy.getByAutoId('recommendedElearning-HoverModal-Description').should('contain', certificationItem.description);
+						cy.getByAutoId('recommendedElearning-HoverModal-Description')
+							.should('contain', certificationItem.description)
+							// PBC-611 Truncate description text
+							// Since this handled by the styles, just validate the class exists
+							.and('have.class', 'line-clamp');
 						cy.getByAutoId('recommendedElearning-HoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(certificationItem.rating).toString());
 						// Duration/clock are only displayed if duration is set
 						if (certificationItem.duration) {
@@ -1280,9 +1280,6 @@ describe('Learn Panel', () => {
 				// Refresh the data to reset any bookmark changes
 				cy.loadApp();
 				cy.wait('Product Documenation & Videos response for all');
-
-				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
 			});
 
 			it('All product guides modal card view should contain all items', () => {
@@ -1390,9 +1387,6 @@ describe('Learn Panel', () => {
 				// Refresh the data to reset any bookmark changes
 				cy.loadApp();
 				cy.wait('Product Documenation & Videos response for all');
-
-				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
 			});
 
 			it('All product guides modal table view should have expected columns', () => {
@@ -1829,9 +1823,6 @@ describe('Learn Panel', () => {
 				cy.loadApp();
 				cy.wait('Product Documenation & Videos response for all');
 
-				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
-
 				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
 
@@ -1958,9 +1949,6 @@ describe('Learn Panel', () => {
 
 				cy.loadApp();
 				cy.wait('Product Documenation & Videos response for all');
-
-				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
@@ -2092,9 +2080,6 @@ describe('Learn Panel', () => {
 
 				cy.loadApp();
 				cy.wait('Product Documenation & Videos response for all');
-
-				// Close the setup wizard so it doesn't block other elements
-				cy.getByAutoId('setup-wizard-header-close-btn').click();
 
 				cy.getByAutoId('ShowModalPanel-_ProductGuides_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');

@@ -96,6 +96,6 @@ export class NoDNACComponent implements OnDestroy, OnInit, SetupStep {
 	 * Send user back to home page
 	 */
 	public goHome () {
-		this.onStepComplete.emit();
+		this.router.navigate(['/']);
 	}
 }
