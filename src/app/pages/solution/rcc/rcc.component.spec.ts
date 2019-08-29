@@ -96,12 +96,9 @@ fdescribe('RccComponent', () => {
 			.and
 			.returnValue(of(ComplianceScenarios[5].scenarios.GET[0].response.body));
 		component.selectedAssetView(component.view);
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.assetFilterObj)
-					.toBeDefined();
-			});
+		fixture.detectChanges();
+		expect(component.assetFilterObj)
+			.toBeDefined();
 	});
 
 	it('should fetch selected row details on click of violation grid row', () => {
