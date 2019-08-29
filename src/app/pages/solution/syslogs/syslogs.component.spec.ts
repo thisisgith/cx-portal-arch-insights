@@ -91,7 +91,6 @@ describe('SyslogsComponent', () => {
 		});
 	});
 
-	// tslint:disable-next-line: ter-prefer-arrow-callback
 	it('should clear the filters on clear button', done => {
 		fixture.whenStable()
 			.then(() => {

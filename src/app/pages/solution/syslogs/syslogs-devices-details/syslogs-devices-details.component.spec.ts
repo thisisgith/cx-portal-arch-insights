@@ -11,6 +11,7 @@ import { of, throwError } from 'rxjs';
 import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
+import { SimpleChanges, SimpleChange } from '@angular/core';
 
 describe('SyslogsdevicedetailsComponent', () => {
 	let component: SyslogsDeviceDetailsComponent;
@@ -127,5 +128,46 @@ describe('SyslogsdevicedetailsComponent', () => {
 					.toEqual(timeRange);
 				done();
 			});
+	});
+
+	it('should change current filter on changes', () => {
+		const changes: SimpleChanges = {
+			asset: new SimpleChange(
+				{
+				   active: true,
+				   DeviceHost: 'Router.cisco.com',
+				   DeviceIp: '10.126.77.249',
+				   ProductFamily: 'Cisco Carrier Routing System',
+				   ProductId: 'IOSXRV',
+				   SoftwareType: 'IOS XR',
+				   SoftwareVersion: '6.0.0[Default]',
+				   syslogCount: 1,
+				},
+				{
+				   active: true,
+				   DeviceHost: 'Router.cisco.com',
+				   DeviceIp: '10.126.77.249',
+				   ProductFamily: 'Cisco Carrier Routing System',
+				   ProductId: 'IOSXRV',
+				   SoftwareType: 'IOS XR',
+				   SoftwareVersion: '6.0.0[Default]',
+				   syslogCount: 1,
+				}, true,
+			),
+			selectedFilter: new SimpleChange(
+				{ }, {
+					asset: '',
+					catalog: 'Cisco',
+					customerId: '2431199',
+					days: 30,
+					pageNo: 1,
+					search: '',
+					severity: '7',
+					size: 10,
+			 }, false),
+		};
+		component.ngOnChanges(changes);
+		expect(component.selectedSeverity)
+		.toEqual('7');
 	});
 });

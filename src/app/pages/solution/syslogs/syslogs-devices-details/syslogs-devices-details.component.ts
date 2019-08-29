@@ -117,14 +117,15 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['selectedFilter', 'currentValue']);
-		if (currentFilter && !changes.selectedFilter.firstChange) {
-			this.selectedTimeRange = this.selectedFilter.days;
-			this.selectedSeverity = this.selectedFilter.severity;
+		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+		if (currentFilter) {
+			this.selectedTimeRange = currentFilter.days;
+			this.selectedSeverity = currentFilter.severity;
 			this.deviceDetailsParams = {
-				catalog: this.selectedFilter.catalog,
+				catalog: currentFilter.catalog,
 				customerId: this.customerId,
 				days: +this.selectedTimeRange,
-				deviceHost: this.asset.DeviceHost,
+				deviceHost: currentAsset.DeviceHost,
 				excludeMsgType: this.excludeMsgFilter,
 				includeMsgType: this.includeMsgFilter,
 				severity: +this.selectedSeverity,
