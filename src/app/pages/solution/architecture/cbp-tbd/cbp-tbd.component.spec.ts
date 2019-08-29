@@ -41,9 +41,6 @@ fdescribe('CbpTbdComponent', () => {
 
 	beforeEach(() => {
 		service = TestBed.get(ArchitectureService);
-		spyOn(service, 'getAllCBPExceptionDetails')
-			.and
-			.returnValue(of({ exceptionDatas: [] }));
 		fixture = TestBed.createComponent(CbpTbdComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -59,17 +56,24 @@ fdescribe('CbpTbdComponent', () => {
 			status: 404,
 			statusText: 'Resource not found',
 		};
-		spyOn(service, 'getAllCBPExceptionDetailsResponse')
+		spyOn(service, 'getAllCBPExceptionDetails')
 			.and
 			.returnValue(
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.getData();
-		expect(service.getAllCBPExceptionDetailsResponse)
-		.toThrowError();
+		expect(component.isLoading)
+		.toBeFalsy();
+		expect(component.exceptionDatas)
+		.toEqual([]);
+		expect(component.totalItems)
+		.toEqual(0);
 	});
 
 	it('should call getAllCBPExceptionDetails', () => {
+		spyOn(service, 'getAllCBPExceptionDetails')
+		.and
+		.returnValue(of({ exceptionDatas: [] }));
 		component.getData();
 		expect(service.getAllCBPExceptionDetails)
 			.toHaveBeenCalled();
@@ -80,6 +84,7 @@ fdescribe('CbpTbdComponent', () => {
 			customerId : '1234',
 			ruleIdWithExceptions : 'excep1;excep2;excep3',
 		};
+		fixture.detectChanges();
 		component.ngOnChanges();
 		expect(component.isLoading)
 			.toBeTruthy();
