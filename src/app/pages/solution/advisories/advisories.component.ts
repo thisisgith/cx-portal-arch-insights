@@ -39,6 +39,7 @@ import {
 import { VisualFilter, AdvisoryType } from '@interfaces';
 import { LogService } from '@cisco-ngx/cui-services';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DetailsPanelStackService } from '@services';
 
 /** Interface for a tab */
 interface Tab {
@@ -157,6 +158,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		private productAlertsService: ProductAlertsService,
 		public route: ActivatedRoute,
 		public router: Router,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		this.routeParam = _.get(this.route, ['snapshot', 'params', 'advisory'], 'security');
 
@@ -893,19 +895,17 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	 * @param event the index of the tab we've selected
 	 */
 	public selectTab (event: number) {
-		if (this.activeIndex !== event) {
-			const selectedTab = this.tabs[event];
-			_.each(this.tabs, (tab: Tab) => {
-				if (tab !== selectedTab) {
-					tab.selected = false;
-				}
-			});
-			this.selectedAdvisory = null;
-			this.activeIndex = event;
-			selectedTab.selected = true;
-			this.routeParam = selectedTab.route;
-			this.adjustQueryParams();
-		}
+		this.detailsPanelStackService.reset();
+		const selectedTab = this.tabs[event];
+		_.each(this.tabs, (tab: Tab) => {
+			if (tab !== selectedTab) {
+				tab.selected = false;
+			}
+		});
+		this.activeIndex = event;
+		selectedTab.selected = true;
+		this.routeParam = selectedTab.route;
+		this.adjustQueryParams();
 	}
 
 	/**
@@ -1038,6 +1038,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			FieldNoticeAdvisory |
 			CriticalBug) {
 		if (_.get(row, 'active', false)) {
+			this.detailsPanelStackService.reset(true);
 			this.selectedAdvisory = {
 				advisory: row,
 				id: _.get(row, 'id'),
@@ -1045,6 +1046,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			};
 		} else {
 			this.selectedAdvisory = null;
+			this.detailsPanelStackService.reset();
 		}
 	}
 

@@ -90,4 +90,26 @@ describe('ContactSupportComponent', () => {
 		expect(component.getTopicList)
 			.toHaveBeenCalled();
 	});
+
+	it('should not call the contact support service if form is invalid', () => {
+		spyOn(service, 'contactSupport')
+			.and
+			.returnValue(of(<any> { }));
+		component.ngOnInit();
+		fixture.detectChanges();
+		component.sendSupportEmail();
+		expect(service.contactSupport)
+			.toHaveBeenCalledTimes(0);
+	});
+
+	it('should not call the sendEmamil service if form is invalid', () => {
+		spyOn(service, 'sendEmail')
+			.and
+			.returnValue(of(<any> { }));
+		component.ngOnInit();
+		fixture.detectChanges();
+		component.submitMessage();
+		expect(service.sendEmail)
+			.toHaveBeenCalledTimes(0);
+	});
 });

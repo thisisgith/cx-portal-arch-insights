@@ -138,6 +138,9 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForPG = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
+	public selectedScheduledATX: AtxSchema;
+	public atxCancelCoordinatesX = 0;
+	public atxCancelCoordinatesY = 0;
 	public eventXCoordinates = 0;
 	public eventYCoordinates = 0;
 	public eventClickedElement: HTMLElement;
@@ -353,7 +356,7 @@ export class LifecycleComponent implements OnDestroy {
 				break;
 			}
 			case 'ATX': {
-				title = I18n.get('_AskTheExpert_');
+				title = I18n.get('_AskTheExperts_');
 				break;
 			}
 			case 'SB': {
@@ -824,6 +827,8 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe(() => {
 			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
 			atx.status = 'recommended';
+			this.atxScheduleCardOpened = false;
+			this.recommendedAtxScheduleCardOpened = false;
 			this.status.loading.atx = false;
 			if (window.Cypress) {
 				window.atxLoading = false;

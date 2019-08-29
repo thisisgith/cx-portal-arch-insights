@@ -23,6 +23,7 @@ import { takeUntil } from 'rxjs/operators';
 const tutorialTypeMap = {
 	ie: I18n.get('_CiscoCXCollector_'),
 	ova: I18n.get('_VSphere_'),
+	syslog: I18n.get('_Syslog_'),
 	vbox: I18n.get('_VirtualBox_'),
 	vcenter: I18n.get('_VCenter_'),
 };
@@ -145,6 +146,9 @@ export class DeployStepsComponent implements SetupStep, OnChanges, OnDestroy, On
 				break;
 			case SlideSet.IE:
 				this.title = I18n.get('_SetUpCXCollector_');
+				break;
+			case SlideSet.SYSLOG:
+				this.title = I18n.get('_SetupSyslogForwarding_');
 				break;
 		}
 		this.setTutorialType();

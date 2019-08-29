@@ -12,6 +12,7 @@
 								data-auto-id="policy-modal.title"
 							></span>
 							<a
+								*ngIf="type === 'editPolicy' || type === 'editIgnorePolicy'"
 								class="qtr-margin-bottom half-padding-left"
 								data-auto-id="policy-modal.trash"
 								(click)="deletePolicy()"
@@ -218,8 +219,9 @@
 		<div class="col-1 device-table">
 			<input class="text-xlarge"
 				type="checkbox"
-				(change)="allDevicesSelected = toggleAllDevicesSelected(allDevicesSelected, devices, name)"
+				(change)="toggleAllDevicesSelected(devices, name)"
 				[checked]="allDevicesSelected"
+				[disabled]="devices.length === 0"
 			>
 			<span class="checkbox__input"></span>
 		</div>

@@ -30,9 +30,11 @@ import {
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
+import { FeedbackComponent } from '../../components/feedback/feedback.component';
+import { CuiModalService } from '@cisco-ngx/cui-components';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
-import { UtilsService, RacetrackInfoService } from '@services';
+import { DetailsPanelStackService, UtilsService, RacetrackInfoService } from '@services';
 
 /**
  * Interface representing a facet
@@ -93,6 +95,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 	constructor (
 		private contractsService: ContractsService,
+		private cuiModalService: CuiModalService,
 		private productAlertsService: ProductAlertsService,
 		private router: Router,
 		private racetrackService: RacetrackService,
@@ -102,6 +105,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private utils: UtilsService,
 		private cdr: ChangeDetectorRef,
 		private racetrackInfoService: RacetrackInfoService,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -123,6 +127,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 							'firstTime');
 						this.quickTourActive = this.quickTourFirstTime ||
 							_.isNil(this.quickTourFirstTime);
+						if (window.Cypress) {
+							this.quickTourActive = _.get(
+								window, 'Cypress.showQuickTour', this.quickTourActive);
+						}
 						this.utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
 					}
 				}
@@ -167,6 +175,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.racetrackInfoService.sendCurrentTechnology(this.selectedTechnology);
 				}
 			}
+
+			this.detailsPanelStackService.reset();
 		}
 	}
 
@@ -568,6 +578,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			this.refreshQuickTour();
 			this.status.loading = false;
 		});
+		this.collapseFeedbackTab();
 	}
 
 	/**
@@ -586,5 +597,23 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public async ngAfterViewInit () {
 		this.cdr.detectChanges();
+	}
+
+	/**
+	 * Opens the feedback modal
+	 * @param app the app to delete
+	 */
+	 public async openFeedbackModal () {
+		await this.cuiModalService.showComponent(FeedbackComponent, { }, 'normal');
+	}
+
+	/**
+	 * Collapses the initially opened feedback tab
+	 */
+	public collapseFeedbackTab () {
+		window.addEventListener('scroll', () => {
+			document.getElementById('slideout').classList
+				.remove('expand-on-load');
+		}, { once: true, capture: true });
 	}
 }

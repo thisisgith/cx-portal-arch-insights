@@ -188,11 +188,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortBy: '',
 			sortOrder: '',
 		};
-		const sortObj = {
-			key: 'policyName',
-			sortDirection: 'asc',
-		};
-		component.onTableSortingChanged(sortObj);
+		component.onTableSortingChanged();
 		component.getAssetPolicyGridData();
 	});
 });
