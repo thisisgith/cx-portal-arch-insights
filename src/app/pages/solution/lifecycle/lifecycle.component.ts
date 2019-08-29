@@ -1353,7 +1353,7 @@ export class LifecycleComponent implements OnDestroy {
 
 		return this.contentService.getRacetrackSuccessPaths(
 			_.pick(this.componentData.params,
-				['customerId']))
+				['customerId', 'solution', 'usecase', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
 				this.selectedFilterForPG = '';
