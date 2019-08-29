@@ -9,7 +9,6 @@ import { Case } from '@interfaces';
 import { RMAService } from '@services';
 import { CaseDetailsHeaderModule } from './case-details-header.module';
 import { HttpErrorResponse } from '@angular/common/http';
-import { By } from '@angular/platform-browser';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { UploadFilesContent } from '@cui-x-views/csc';
 
@@ -136,7 +135,7 @@ describe('CaseDetailsHeaderComponent', () => {
 				currentValue: { rmaNumber: '800000000' },
 				firstChange: false,
 				isFirstChange: () => false,
-				previousValue: {},
+				previousValue: { },
 			},
 		});
 		fixture.detectChanges();
@@ -179,6 +178,6 @@ describe('CaseDetailsHeaderComponent', () => {
 		component.toggleAddFile();
 
 		expect(cuiModalService.showComponent)
-			.toHaveBeenCalledWith(UploadFilesContent, { caseNum: '92511831'});
+			.toHaveBeenCalledWith(UploadFilesContent, { caseNum: '92511831' });
 	}));
 });

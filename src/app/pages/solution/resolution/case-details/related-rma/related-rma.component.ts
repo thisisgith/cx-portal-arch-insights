@@ -40,7 +40,6 @@ export class RelatedRmaComponent {
 				columns: [
 					{
 						key: 'rmaNo',
-						// name: I18n.get('_Device_'),
 						name: I18n.get('_Name_'),
 						sortable: true,
 						sorting: true,
@@ -53,7 +52,6 @@ export class RelatedRmaComponent {
 						value: 'status',
 					},
 					{
-						// name: I18n.get('_Device_'),
 						name: I18n.get('_ShipTo_'),
 						sortable: true,
 						template: this.shipToTemplate,

@@ -53,7 +53,7 @@ describe('RelatedRmaComponent', () => {
 				currentValue: [],
 				firstChange: true,
 				isFirstChange: () => false,
-				previousValue: {},
+				previousValue: { },
 			},
 		});
 		fixture.detectChanges();
@@ -67,7 +67,7 @@ describe('RelatedRmaComponent', () => {
 				currentValue: [{ }],
 				firstChange: false,
 				isFirstChange: () => false,
-				previousValue: {},
+				previousValue: { },
 			},
 		});
 		fixture.detectChanges();
