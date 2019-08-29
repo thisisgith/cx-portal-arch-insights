@@ -262,7 +262,7 @@ $vibblue: #017cad;
 .listpanel--open::after {
 	content: "";
 	position: absolute;
-	top: 50%;
+	top: 10%;
 	right: -15px;
 	z-index: -1;
 	border-top: 30px solid transparent;
