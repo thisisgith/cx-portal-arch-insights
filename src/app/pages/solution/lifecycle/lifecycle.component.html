@@ -61,9 +61,12 @@
 </div>
 
 <div class="modal-container" *ngIf="modal.visible">
-	<div class="modal-backdrop" [ngClass]="{ hide: !modal.visible }"></div>
-	<div class="modal modal--full" [ngClass]="{ hide: !modal.visible }" #scrollModal (scroll)="getScrollCoordinates(scrollModal)">
-		<div class="modal__dialog">
+	<div class="modal modal--full"
+		[ngStyle]="{'margin-top': appHeaderHeightPX }"
+		[ngClass]="{ hide: !modal.visible }"
+		#scrollModal (scroll)="getScrollCoordinates(scrollModal)"
+	>
+		<div class="lifecycle-modal modal__dialog no-padding">
 			<ng-container *ngTemplateOutlet="modal.content; context: modal.context"></ng-container>
 		</div>
 	</div>
@@ -277,7 +280,7 @@
 		<div class="text-large half-padding-bottom text-capitalize" [innerText]="title" attr.data-auto-id="{{ autoid }}-Title"></div>
 		<ng-container *ngIf="item.status === 'scheduled' && scheduledAtxMap[item.atxId]">
 			<div class="row half-padding-bottom">
-				<div class="col-md-1 text-info icon-calendar qtr-padding-left"></div>
+				<div class="col-md-1 text-info icon-calendar qtr-padding-left" attr.data-auto-id="{{ autoid }}-Calendar"></div>
 				<div class="col-md-11 no-padding-left">
 					<div class="text-bold" [innerText]="scheduledAtxMap[item.atxId].sessionStartDate | date:'medium'" attr.data-auto-id="{{ autoid }}-Date"></div>
 					<div [innerText]="'_InstructorX_' | i18n:scheduledAtxMap[item.atxId].presenterName" attr.data-auto-id="{{ autoid }}-Presenter"></div>
@@ -440,9 +443,9 @@
 	</div>
 	<div class="base-padding-bottom" [attr.data-auto-id]="autoid">
 		<div class="qtr-padding-bottom" #moreList (mouseenter)="getMoreCoordinates(moreList, autoid)" *ngFor="let item of data | slice:1:3">
-			<div class="row">
+			<div class="row" attr.data-auto-id="{{ autoid }}-item">
 				<div class="col-md-11">
-					<div id="moreAccList-item" class="panel small-panel" attr.data-auto-id="{{ autoid }}-item">
+					<div id="moreAccList-item" class="panel small-panel">
 						<div class="text-blue" [innerText]="item.title"></div>
 						<ng-container *ngIf="autoid==='moreACCList'">
 							<ng-container *ngTemplateOutlet="accHover; context: {
@@ -606,7 +609,7 @@
 </ng-template>
 
 <ng-template #viewAllModal let-data="data" let-type="type">
-	<div id="viewAllModal" class="modal__content no-padding" data-auto-id="ViewAllModal">
+	<div id="viewAllModal" class="lifecycle-viewall-modal modal__content no-padding" data-auto-id="ViewAllModal">
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top">
 				<div class="col-md-11 half-margin-top base-padding-left">
@@ -824,6 +827,7 @@
 						<div
 							*ngIf="session.scheduled"
 							class="col-md-1 text-info icon-calendar qtr-padding-left"
+							data-auto-id="ATXCardFooter-ScheduledIcon"
 						></div>
 						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" data-auto-id="ATXCardFooter-ScheduledDate" *ngIf="session.scheduled"></span>
 					</div>
@@ -1177,7 +1181,7 @@
 	<div *ngIf="celldata.status ==='scheduled'" data-auto-id="Table-Status-Scheduled">
 		<div *ngFor="let session of celldata.sessions">
 			<div *ngIf="session.scheduled">
-				<span class="col-md-1 text-info icon-calendar qtr-padding-left"></span>
+				<span class="col-md-1 text-info icon-calendar qtr-padding-left" data-auto-id="Table-Status-Scheduled-Icon"></span>
 				<span class="qtr-margin-left"
 					innerText="{{ session.sessionStartDate | date:'medium'}}" data-auto-id="scheduledDate"></span>
 			</div>
