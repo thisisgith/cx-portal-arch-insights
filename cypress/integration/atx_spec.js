@@ -44,7 +44,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	});
 
 	it('Renders ATX tile', () => {
-		cy.getByAutoId('PanelTitle-_AskTheExpert_').should('have.text', 'Ask The Expert');
+		cy.getByAutoId('PanelTitle-_AskTheExperts_').should('have.text', 'Ask The Experts');
 		cy.getByAutoId('recommendedATX')
 			.should('be.visible')
 			.within(() => {
@@ -79,8 +79,8 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	});
 
 	it('Displays a modal with all available sessions', () => {
-		cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
-		cy.getByAutoId('ViewAllModal-Title').should('contain', i18n._AskTheExpert_);
+		cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+		cy.getByAutoId('ViewAllModal-Title').should('contain', i18n._AskTheExperts_);
 		cy.getByAutoId('ViewAllModal-Subtitle').should('contain', i18n._AvailableLive_);
 		cy.getByAutoId('ATXTopicsAvailable').should(
 			'have.text', `${atxItems.length} topics available for IBN > Campus Network Assurance:`
@@ -225,7 +225,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should show completed icons in View All modal card view', () => {
 			// Open the View All modal and ensure we're in card view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
@@ -247,7 +247,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should show completed icons in View All modal table view', () => {
 			// Open the View All modal and ensure we're in table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -302,7 +302,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should show scheduled icons/dates in View All modal card view', () => {
 			// Open the View All modal and ensure we're in card view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
@@ -322,7 +322,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should show scheduled icons/dates in View All modal table view', () => {
 			// Open the View All modal and ensure we're in table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -386,7 +386,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should be able to schedule an ATX session from View All card view', () => {
 			// Open the View All modal and switch to card view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
@@ -421,7 +421,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should be able to schedule an ATX session from View All table view', () => {
 			// Open the View All modal and switch to table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable')
@@ -557,7 +557,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	describe('PBC-452: (UI) View - ATX Table View', () => {
 		before(() => {
 			// Open the View All modal and switch to table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -915,7 +915,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	describe('PBC-452: ATX View All table sorting stickiness', () => {
 		beforeEach(() => {
 			// Open the View All modal and switch to table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -948,7 +948,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('SuccessPathCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the still in table view and sort is still in place
@@ -1015,7 +1015,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify still in table view and sort was reset to default
@@ -1047,7 +1047,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the sort was reset to default
@@ -1078,7 +1078,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the sort was reset to default
@@ -1100,7 +1100,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	describe('PBC-452: ATX View All table filter stickiness', () => {
 		beforeEach(() => {
 			// Open the View All modal and switch to table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -1132,7 +1132,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('SuccessPathCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter is still in place
@@ -1188,7 +1188,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
@@ -1214,7 +1214,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
@@ -1239,7 +1239,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
@@ -1254,7 +1254,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	describe('PBC-452: ATX View All table vs card view stickiness', () => {
 		beforeEach(() => {
 			// Open the modal and ensure we're in card view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
@@ -1283,7 +1283,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('SuccessPathCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 
 			// Verify we're still in table view
@@ -1302,7 +1302,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 
 			// Verify we're still in table view
@@ -1322,7 +1322,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 
 			// Verify we're still in table view
@@ -1341,7 +1341,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 
 			// Verify we're still in table view
@@ -1389,7 +1389,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			it('ATX (Card View) View Sessions modal should include cancel button', () => {
 				// Open the ATX View All modal and ensure we're in card view
-				cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
 				cy.getByAutoId('card-view-btn').click();
 
@@ -1418,7 +1418,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			it('ATX (Table View) View Sessions modal should include cancel button', () => {
 				// Open the ATX View All modal and ensure we're in table view
-				cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
 				cy.getByAutoId('table-view-btn').click();
 
@@ -1488,7 +1488,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			it('ATX (Card View) View Sessions cancel button should make API call', () => {
 				// Open the ATX View All modal and ensure we're in card view
-				cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
 				cy.getByAutoId('card-view-btn').click();
 
@@ -1521,7 +1521,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 			it('ATX (Table View) View Sessions cancel button should make API call', () => {
 				// Open the ATX View All modal and ensure we're in table view
-				cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 				cy.getByAutoId('ViewAllModal').should('be.visible');
 				cy.getByAutoId('table-view-btn').click();
 
