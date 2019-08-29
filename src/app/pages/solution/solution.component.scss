@@ -31,3 +31,23 @@
 	line-height: 0;
 	padding: 20px;
 }
+
+#slideout {
+	position: absolute;
+	top: 15px;
+	width: 120px;
+	right: -75px;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+
+#slideout.expand-on-load,
+#slideout:hover {
+	right: 0;
+}
+
+.panel--blgray {
+	background: #f6faff;
+	color: #6b81a5;
+	box-shadow: 0 2px 5px #dbdbdb;
+}

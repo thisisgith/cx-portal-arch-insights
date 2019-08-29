@@ -522,10 +522,50 @@ describe('General Spec', () => {
 			cy.getByAutoId('supportDescription').should('exist');
 			cy.get('textarea').click()
 				.type(DescriptionText);
+				// PBC- 393: Typing 32000 characters into text box test case
+				// was manually verified
 			cy.getByAutoId('submit').click();
 			// Info: localhost blocked by CORS policy
 			cy.getByAutoId('portalSupportHide').should('exist');
 			cy.getByAutoId('done').should('exist').click();
+		});
+	});
+
+	context('PBC-25: Header View', () => {
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('Verify the Header links', () => { // PBC-25
+			// Cisco Logo
+			cy.getByAutoId('HeaderCiscoLink').should('exist').should('have.attr', 'href', 'https://www.cisco.com');
+			cy.get('h5.text-nowrap.base-margin-right').contains(i18n._ApplicationName_);
+			cy.getByAutoId('HeaderCommunityLink').should('exist').should('have.attr', 'href', 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support');
+			cy.getByAutoId('HeaderLearningLink').should('exist').should('have.attr', 'href', 'https://pilot-digital-learning.cisco.com/cx/#/');
+			cy.getByAutoId('searchBarInput').should('exist').should('have.attr', 'placeholder', 'Products, Docs, Serial #, Case #, Contract #, RMA #...');
+			cy.getByAutoId('SearchBarButton').should('exist');
+			cy.getByAutoId('HeaderUserProfileButton').should('exist');
+			cy.getByAutoId('HeaderUserProfileButton').click();
+			cy.getByAutoId('HeaderUserProfileDropdownImage').should('exist');
+			cy.getByAutoId('HeaderUserFullName').should('exist');
+			cy.getByAutoId('HeaderUserEmail').should('exist');
+			cy.get('header-dropdown > div > div > div:nth-child(3) > a').should('have.attr', 'href', 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do');
+			cy.get('header-dropdown > div > div > div:nth-child(4) > a').should('have.attr', 'href', 'https://www.cisco.com/autho/logout.html');
+			cy.getByAutoId('HeaderDropdownClose').click();
+			// Admin icon
+			cy.getByAutoId('Admin').should('have.attr', 'title', 'Admin');
+			cy.getByAutoId('Admin').should('have.attr', 'ng-reflect-router-link', 'admin'); // URL is : pbc/admin/settings
+			// Portal Help
+			cy.getByAutoId('HeaderPortalHelpButton').should('exist').should('have.attr', 'title', 'Portal Help');
+			cy.getByAutoId('HeaderPortalHelpButton').click();
+			cy.get('header-dropdown > div > div > div.text-muted.text-small.text-uppercase').contains(i18n._PortalHelp_);
+			cy.get('a[data-auto-id="portalHelp"]').contains('Portal Support');
+			cy.get('a[data-auto-id="portalHelp"]').click();
+			cy.get('h1.modal-title').contains(i18n._ContactSupport_);
+		    // Test cases covered in PBC-369
+			cy.getByAutoId('portalSupportHide').click();
 		});
 	});
 });
