@@ -39,10 +39,9 @@
 							</td>
 							<td>
 								<a data-auto-id="expandAndContractRowTextLink" (click)="expandRow(item) ">
-									<span *ngIf="!item.active"
-										[innerHTML]="('_ArchitectureShowRecommendationAndCorrectiveAction_' | i18n)"></span>
-									<span *ngIf="item.active"
-										[innerHTML]="('_ArchitectureHideRecommendationAndCorrectiveAction_' | i18n)"></span>
+									<span [innerText]="item?.active ? ('_ArchitectureShowRecommendationAndCorrectiveAction_' | i18n)
+										: ('_ArchitectureHideRecommendationAndCorrectiveAction_' | i18n)">
+									</span>
 								</a>
 							</td>
 							<td>
@@ -130,19 +129,9 @@
 </ng-template>
 
 <ng-template #ruleName let-rule="rule">
-	<span *ngIf="rule.length > 20;else elseBlock;">
-			{{rule.substr(0, 20).concat('... ')}}
-	</span>
-	<ng-template #elseBlock>
-			{{rule}}
-	</ng-template>
+	<div class="architecture-ellipsis" [innerText]="rule"></div>
 </ng-template>
 
 <ng-template #exception let-exception="exception">
-		<span *ngIf="exception.length > 20; else elseBlock;">
-			{{exception.substr(0, 20).concat('... ')}}
-		</span>
-		<ng-template #elseBlock>
-			{{exception}}
-		</ng-template>
+	<div class="architecture-ellipsis" [innerText]="exception"></div>
 </ng-template>
