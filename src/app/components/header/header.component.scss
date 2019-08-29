@@ -1,4 +1,4 @@
-@import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../variables.scss';
 @import '../../../mixins.scss';
 
 $cx-dropdown-max-width: 280px;
@@ -73,7 +73,7 @@ $cx-dropdown-max-width: 280px;
 .cx-header-arrow {
 	display: inline-block;
 	transition: transform 0.2s ease-in-out;
-	color: $light-gray-compliant;
+	color: $secondary-and-button-text-color;
 }
 
 .cx-search-button {

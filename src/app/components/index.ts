@@ -25,3 +25,5 @@ export { TimelineComponent } from './timeline/timeline.component';
 export { TimelineModule } from './timeline/timeline.module';
 export { TooltipModule } from './tooltip/tooltip.module';
 export { UnauthorizedUserModule } from './unauthorized-user/unauthorized-user.module';
+export { GaugeModule } from './charts/gauge/gauge.module';
+export { MultiGaugeModule } from './charts/multi-gauge/multi-gauge.module';

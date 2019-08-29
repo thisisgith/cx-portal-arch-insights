@@ -1,68 +1,101 @@
-<no-dnac-header
-	(buttonData)="refreshButtonInfo($event)"
-></no-dnac-header>
 <quick-tour *ngIf="quickTourActive" [steps]="quickTourSteps"></quick-tour>
 <div class="page-container">
-	<div class="panel no-padding-left no-padding-right no-padding-bottom base-padding-top panel--bordered-bottom">
-		<div class="row base-margin-left half-margin-bottom">
-			<div class="col-md-12">
-				<ng-container *ngTemplateOutlet="breadcrumbs; context: {}"></ng-container>
-			</div>
-			<div id="slideout" class="expand-on-load">
-				<div class="panel--blgray panel" (click)="openFeedbackModal()" data-auto-id="FeedbackModal">
-					<div class="row flex-center-vertical">
-						<span class="icon-feedback icon-small half-margin-left half-margin-right"></span>
-						<span class="qtr-margin-left qtr-margin-right text-small" [innerText]="'_Feedback' | i18n"></span>
-					</div>
+	<div>
+		<div class="cx-breadcrumb-bar">
+			<ng-container *ngTemplateOutlet="breadcrumbs; context: {}"></ng-container>
+		</div>
+		<div id="slideout" class="expand-on-load">
+			<div class="panel--blgray panel" (click)="openFeedbackModal()" data-auto-id="FeedbackModal">
+				<div class="row flex-center-vertical">
+					<span class="icon-feedback icon-small half-margin-left half-margin-right"></span>
+					<span class="qtr-margin-left qtr-margin-right text-small" [innerText]="'_Feedback' | i18n"></span>
 				</div>
 			</div>
 		</div>
-
-		<div class="flex flex-fluid no-margin-bottom">
-			<ng-container *ngTemplateOutlet="facetPanel; context: {}"></ng-container>
+		<div class="km" #km>
+			<div
+				class="km__left"
+				inlineSVG="assets/icons/icon-metrics-arrow-left.svg"
+				(click)="shiftCarousel(-2)"
+				data-auto-id="carousel-left">
+			</div>
+			<div class="km__items__wrapper" #kmWrapper>
+				<div class="km__items">
+					<ng-container *ngFor="let facet of facets; index as i">
+						<div
+							[id]="facet.key"
+							attr.data-auto-id="Facet-{{ facet.title }}"
+							(click)="selectFacet(facet, true)"
+							class="km__items__item"
+							[class.km__items__item--selected]="facet.selected">
+							<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
+						</div>
+					</ng-container>
+				</div>
+			</div>
+			<div
+				class="km__right"
+				inlineSVG="assets/icons/icon-metrics-arrow-right.svg"
+				(click)="shiftCarousel(2)"
+				data-auto-id="carousel-right"
+			></div>
 		</div>
+		<no-dnac-header (buttonData)="refreshButtonInfo($event)"></no-dnac-header>
 	</div>
-
 	<div #content class="base-margin">
 		<router-outlet></router-outlet>
 	</div>
 </div>
 
 <ng-template #breadcrumbs>
-	<div class="flex flex-fluid flex-center-vertical">
-		<div class="icon-home icon--mid"></div>
-		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"
-			*ngIf="selectedSolution"></div>
-		<div *ngIf="selectedSolution">
-			<div class="text-muted" [innerText]="'_Solution_' | i18n"></div>
-			<div class="dropdown dropdown--tail" data-auto-id="SolutionDropdown"
-				[ngClass]="{'active': solutionDropdown }"
-				(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
-				<a class="text-dkgray-4 text-large text-bold" [innerText]="selectedSolution.name"></a>
-				<div class="dropdown__menu">
-					<a *ngFor="let solution of solutions" attr.data-auto-id="SolutionDropdown-{{ solution.name }}"
-						class="text-uppercase" (click)="changeSolution(solution)" [ngClass]="{
-							'selected': selectedSolution.name === solution.name
-						}" [innerText]="solution.name">
-					</a>
+	<div class="cs">
+		<div class="cs__home" inlineSVG="assets/icons/icon-home.svg"></div>
+
+		<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg"></div>
+
+		<div class="cs__context">
+			<div class="cs__context__label" [innerText]="'_Solution_' | i18n"></div>
+			<div class="cs__context__dropdown">
+				<div data-auto-id="SolutionDropdown"
+					class="dropdown"
+					[class.active]="solutionDropdown"
+					(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
+					<div class="flex-center">
+						<div class="cs__dropdown__title" [innerText]="selectedSolution.name"></div>
+						<span class="cs__header__arrow qtr-margin-left" [class.rotate-180]="solutionDropdown">&#9662;</span>
+					</div>
+					<div class="dropdown__menu">
+						<a *ngFor="let solution of solutions" attr.data-auto-id="SolutionDropdown-{{ solution.name }}"
+							class="text-uppercase" (click)="changeSolution(solution)" [ngClass]="{
+								'selected': selectedSolution.name === solution.name
+							}" [innerText]="solution.name">
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"
-			*ngIf="selectedTechnology"></div>
-		<div *ngIf="selectedTechnology">
-			<div class="text-muted" [innerText]="'_UseCase_' | i18n"></div>
-			<div class="dropdown dropdown--tail" data-auto-id="UseCaseDropdown" [ngClass]="{'active': useCaseDropdown }"
-				(click)="solutionDropdown = false; useCaseDropdown = !useCaseDropdown">
-				<a class="text-dkgray-4 text-large text-bold" [innerText]="selectedTechnology.name">
-				</a>
-				<div class="dropdown__menu">
-					<a *ngFor="let technology of technologies"
-						attr.data-auto-id="TechnologyDropdown-{{ technology.name }}"
-						(click)="changeTechnology(technology)"
-						[ngClass]="{ 'selected': selectedTechnology.name === technology.name }"
-						[innerText]="technology.name">
-					</a>
+
+		<div class="cs__next-icon" inlineSVG="assets/icons/icon-arrow-breadcrumb.svg"></div>
+
+		<div class="cs__context">
+			<div class="cs__context__label" [innerText]="'_UseCase_' | i18n"></div>
+			<div class="cs__context__dropdown">
+				<div data-auto-id="UseCaseDropdown"
+					class="dropdown"
+					[class.active]="useCaseDropdown"
+					(click)="solutionDropdown = false; useCaseDropdown = !useCaseDropdown">
+					<div class="flex-center">
+						<div class="cs__dropdown__title" [innerText]="selectedTechnology.name"></div>
+						<span class="cs__header__arrow qtr-margin-left" [class.rotate-180]="useCaseDropdown">&#9662;</span>
+					</div>
+					<div class="dropdown__menu">
+						<a *ngFor="let technology of technologies"
+							attr.data-auto-id="TechnologyDropdown-{{ technology.name }}"
+							(click)="changeTechnology(technology)"
+							[ngClass]="{ 'selected': selectedTechnology.name === technology.name }"
+							[innerText]="technology.name">
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -80,74 +113,116 @@
 		}">
 		<div class="flex-fluid flex-center base-margin-bottom">
 			<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
-			<div class="half-margin-left text-small facetLabel" *ngIf="facet.label">
-				<span [innerText]="facet.label"></span>
-			</div>
-		</div>
-		<div class="flex-center-horizontal">
-			<span [ngClass]="{ 'text-primary': facet.selected }" [innerText]="facet.title | uppercase"></span>
 		</div>
 	</div>
 </ng-template>
 
 <ng-template #lifecycleFacet let-facet="facet">
-	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugeLabel || '0%' }}"
-		color="primary">
-	</cui-gauge>
-</ng-template>
-
-<ng-template #assetsFacet let-facet="facet">
-	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugeLabel || '0%' }}"
-		color="primary">
-	</cui-gauge>
-</ng-template>
-
-<ng-template #insightsFacet let-facet="facet">
-		<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-			value="{{ facet?.data?.gaugeLabel || '0%' }}"
-			color="primary">
-		</cui-gauge>
-	</ng-template>
-
-<ng-template #advisoriesFacet let-facet="facet">
-	<div class="base-padding-bottom flex-fluid">
-		<bar-chart *ngIf="facet?.seriesData && !facet?.loading" [seriesData]="facet?.seriesData" width="350"></bar-chart>
-		<div *ngIf="!facet?.seriesData && !facet?.loading"
-			class="text-muted flex-center text-large base-padding-left base-padding-right dbl-padding-top dbl-padding-bottom"
-			[innerText]="'_NoOpenAdvisories_' | i18n">
-		</div>
-		<div class="dbl-margin-top base-margin-bottom" *ngIf="facet?.loading">
-			<cui-spinner></cui-spinner>
-		</div>
+	<app-gauge
+		textColor="#243034"
+		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
+		[percentage]="facet?.data?.gaugePercent || 0"
+		[label]="facet?.label">
+	</app-gauge>
+	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
+	<div
+		class="kmii__border"
+		[class.kmii__border--selected]="facet?.selected">
 	</div>
 </ng-template>
 
-<ng-template #resolutionFacet let-facet="facet">
-		<div *ngIf="(casesCount == 0 && RMACount == 0); else caseCountContent">
-			<ng-container *ngTemplateOutlet="noCaseContent"></ng-container>
+<ng-template #assetsFacet let-facet="facet">
+	<app-gauge
+		textColor="#243034"
+		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
+		[percentage]="facet?.data?.gaugePercent || 0"
+		[label]="facet?.label">
+	</app-gauge>
+	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
+	<div
+		class="kmii__border"
+		[class.kmii__border--selected]="facet?.selected">
+	</div>
+</ng-template>
+
+<ng-template #insightsFacet let-facet="facet">
+	<!-- TODO: Insights track needs to wire this up with some sort of data, nothing here is real -->
+	<div class="kmii__detailed">
+		<div class="kmii__insights">
+			<span class="kmii__insights__num"
+				[class.kmii__insights__num--selected]="facet?.selected"
+				[innerText]="'0'">
+			</span>
+			<div class="kmii__insights__title">
+				<span [innerText]=""></span>
+				<br>
+				<span></span>
+			</div>
+			<div class="kmii__insights__change" *ngIf="false">
+				<div  class="kmii__insights__arrow"
+					inlineSVG="assets/icons/icon-arrow-down.svg">
+				</div>
+				<span [innerText]="'+2'"></span>
+			</div>
 		</div>
-		<ng-template #noCaseContent>
-			<div class="text-muted text-xlarge base-padding-left base-padding-right dbl-padding-top qtr-padding-bottom" [innerText]="'_NoOpenCases_' | i18n"></div>
-			<div class="text-muted text-xlarge base-padding-left base-padding-right base-padding-bottom" [innerText]="'_NoOpenRMAs_' | i18n"></div>
-		</ng-template>
-		<ng-template #caseCountContent>
-			<div class="row no-margin base-padding-left base-padding-right">
-				<div class="col-5">
-					<div data-auto-id="openCases" class="text-muted text-xlarge" [innerText]="'_OpenCases_' | i18n"></div>
+	</div>
+	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
+	<div
+		class="kmii__border"
+		[class.kmii__border--selected]="facet?.selected"
+	></div>
+</ng-template>
+
+<ng-template #advisoriesFacet let-facet="facet">
+	<div class="kmii__detailed" *ngIf="!facet?.loading">
+		<app-multi-gauge
+			arcColor="#92dde4"
+			*ngIf="facet?.seriesData"
+			[data]="facet?.seriesData"
+			[selected]="facet?.selected"
+			[idx]="advisoryIndex"
+		>
+		</app-multi-gauge>
+		<div
+			*ngIf="!facet?.seriesData"
+			class="text-muted flex-center text-large base-padding-left base-padding-right dbl-padding-top dbl-padding-bottom"
+			[innerText]="'_NoOpenAdvisories_' | i18n">
+		</div>
+	</div>
+	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
+	<div
+		class="kmii__border"
+		[class.kmii__border--selected]="facet?.selected"
+	></div>
+</ng-template>
+
+<ng-template #resolutionFacet let-facet="facet">
+	<!-- TODO: Cases track needs to get trend data to draw the trend chart here -->
+	<div class="kmii__detailed">
+		<div class="text-left">
+			<div class="kmii__resolution__item">
+				<div
+					class="kmii__resolution__label"
+					[class.kmii__resolution__label--selected]="facet?.selected"
+					[innerText]="'_OpenCases_' | i18n">
 				</div>
-				<div class="col-7 no-padding-left">
-					<div class="text-xlarge opacity-50" [innerText]="casesCount"></div>
-				</div>
-				<div class="col-5 base-padding-top">
-					<div data-auto-id="openRMAs" class="text-primary text-xlarge" [innerText]="'_WithRMAs_' | i18n"></div>
-				</div>
-				<div class="col-7 no-padding-left base-padding-top">
-					<div class="text-xlarge opacity-50" [innerText]="RMACount"></div>
+				<div
+					class="kmii_resolution__value"
+					[class.kmii_resolution__value--selected]="facet?.selected"
+					[innerText]="casesCount || 0">
 				</div>
 			</div>
-		</ng-template>
-	</ng-template>
+			<div class="kmii__resolution__item qtr-margin-top">
+				<div class="kmii__resolution__label" [innerText]="'_WithRMAs_' | i18n"></div>
+				<div class="kmii_resolution__value" [innerText]="RMACount || 0"></div>
+			</div>
+		</div>
+	</div>
+	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
+	<div
+		class="kmii__border"
+		[class.kmii__border--selected]="facet?.selected">
+	</div>
+</ng-template>
 
 <cui-modal></cui-modal>
