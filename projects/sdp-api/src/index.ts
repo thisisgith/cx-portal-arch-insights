@@ -49,6 +49,10 @@ export * from './lib/architecture/models';
 export * from './lib/architecture/services';
 export * from './lib/architecture/architecture.modules';
 
+export * from './lib/architecture-review/models';
+export * from './lib/architecture-review/services';
+export * from './lib/architecture-review/architecture-review.modules';
+
 export * from './lib/osv/models';
 export * from './lib/osv/services';
 export * from './lib/osv/osv.module';
