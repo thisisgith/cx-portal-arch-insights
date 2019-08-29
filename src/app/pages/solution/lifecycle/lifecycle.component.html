@@ -228,6 +228,11 @@
 		#atxMoreClick [ngClass]="getATXMorePanel(atxMoreClick)"
 		*ngIf="atxMoreClicked" attr.data-auto-id="atxMoreClickModal">
 		<div class="flex flex-column max-height">
+			<div class="icon-bookmark icon-medium"
+				[ngClass]="data.bookmark ? 'ribbon__blue__atx' : 'ribbon__white__atx'"
+				(click)="updateBookmark(data, 'ATX')"
+				data-auto-id="ATXMoreRibbon">
+			</div>
 			<div class="row half-margin-top half-margin-left half-margin-right">
 				<div class="col-md-11 text-left">
 					<h6 class="text-indigo" [innerText]="data.title"></h6>

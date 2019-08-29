@@ -336,14 +336,16 @@ $vibblue: #017cad;
 }
 
 .ribbon {
-	&__blue {
+	&__blue,
+	&__blue__atx {
 		position: absolute;
 		right: 7px;
 		top: 0;
 		color: $indigo;
 	}
 
-	&__white {
+	&__white,
+	&__white__atx {
 		position: absolute;
 		right: 7px;
 		top: 0;
@@ -360,6 +362,11 @@ $vibblue: #017cad;
 		color: transparent;
 		-webkit-text-stroke-width: 1px;
 		-webkit-text-stroke-color: $info;
+	}
+
+	&__blue__atx,
+	&__white__atx {
+		right: 55px;
 	}
 }
 
