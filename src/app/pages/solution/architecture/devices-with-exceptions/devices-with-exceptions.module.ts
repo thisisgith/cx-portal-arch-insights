@@ -5,10 +5,11 @@ import { CuiTableModule, CuiPagerModule, CuiSpinnerModule,
 	CuiDropdownModule } from '@cisco-ngx/cui-components';
 import { ArchitectureModules } from '@sdp-api';
 import { environment } from '@environment';
-import { AssetDetailsModule, DetailsPanelModule } from '@components';
+import { AssetDetailsModule, DetailsPanelModule, AssetDetailsHeaderModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule } from '@angular/forms';
 import { CbpTbdModule } from '../cbp-tbd/cbp-tbd.module';
+
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -20,6 +21,8 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	exports : [DevicesWithExceptionsComponent],
 	imports: [
 		CbpTbdModule,
+		AssetDetailsModule,
+		AssetDetailsHeaderModule,
 		CommonModule,
 		CuiDropdownModule,
 		CuiTableModule,
