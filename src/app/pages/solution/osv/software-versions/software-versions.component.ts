@@ -1,4 +1,12 @@
-import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
+import {
+	Component,
+	ViewChild,
+	TemplateRef,
+	OnInit,
+	OnDestroy,
+	EventEmitter,
+	Output,
+} from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -19,6 +27,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	@ViewChild('releaseDate', { static: true }) private releaseDateTemplate: TemplateRef<{ }>;
+	@Output() public contactSupport = new EventEmitter();
 	public softwareVersionsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,

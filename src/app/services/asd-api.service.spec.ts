@@ -1,4 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed, async, inject } from '@angular/core/testing';
 import {
 	ASDAPIService,
 	GET_METADATA_PATH,
@@ -34,10 +34,11 @@ describe('ASDAPIService', () => {
 
 	it(
 		'should get metadata',
-		inject(
+		async(inject(
 			[ASDAPIService, HttpTestingController],
 			(service: ASDAPIService, httpMock: HttpTestingController) => {
 				const sub1 = service.getMetadata()
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						sub1.unsubscribe();
 					});
@@ -51,21 +52,23 @@ describe('ASDAPIService', () => {
 				mdReq.flush(ASDMetadataScenarios[0].scenarios.GET[0].response.body);
 
 				const sub2 = service.getMetadata()
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						sub2.unsubscribe();
 					});
 				mdReq = httpMock
 					.expectOne(`${environment.ieSetup.asdBaseURL}${GET_METADATA_PATH}`);
 				mdReq.flush(ASDMetadataScenarios[0].scenarios.GET[0].response.body);
-			}),
+			})),
 	);
 
 	it(
 		'should get download url',
-		inject(
+		async(inject(
 			[ASDAPIService, HttpTestingController],
 			(service: ASDAPIService, httpMock: HttpTestingController) => {
 				const sub = service.getDownloadURL('<metadata_trans_id>', '<ImageGUID>')
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						sub.unsubscribe();
 					});
@@ -77,12 +80,12 @@ describe('ASDAPIService', () => {
 				const req = httpMock
 					.expectOne(`${environment.ieSetup.asdBaseURL}${GET_DOWNLOAD_PATH}`);
 				req.flush(ASDImageDownloadUrlScenarios[0].scenarios.GET[0].response.body);
-			}),
+			})),
 	);
 
 	it(
 		'should accept K9',
-		inject(
+		async(inject(
 			[ASDAPIService, HttpTestingController],
 			(service: ASDAPIService, httpMock: HttpTestingController) => {
 				const sub = service.acceptK9('GOV_OR_MIL', 'test', 'Yes')
@@ -102,15 +105,16 @@ describe('ASDAPIService', () => {
 						'&user_action=Accepted&' +
 						'gov_mil_defense_contractor=Yes'}`);
 				req.flush(ASDImageDownloadUrlScenarios[0].scenarios.GET[0].response.body);
-			}),
+			})),
 	);
 
 	it(
 		'should accept EULA',
-		inject(
+		async(inject(
 			[ASDAPIService, HttpTestingController],
 			(service: ASDAPIService, httpMock: HttpTestingController) => {
 				const sub = service.acceptEULA('test')
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						sub.unsubscribe();
 					});
@@ -123,16 +127,17 @@ describe('ASDAPIService', () => {
 					.expectOne(`${environment.ieSetup.asdBaseURL}${ACCEPT_EULA_PATH}${'?download' +
 							'_session_id=test&user_action=Accepted'}`);
 				req.flush(ASDImageDownloadUrlScenarios[0].scenarios.GET[0].response.body);
-			}),
+			})),
 	);
 
 	it(
 		'should retry with new bearer token',
-		inject(
+		async(inject(
 			[ASDAPIService, HttpTestingController],
 			(service: ASDAPIService, httpMock: HttpTestingController) => {
 				let i = 0;
 				const sub1 = service.acceptEULA('test')
+					.pipe(catchError(() => empty()))
 					.subscribe(() => {
 						if (i === 1) {
 							sub1.unsubscribe();
@@ -158,6 +163,6 @@ describe('ASDAPIService', () => {
 					.expectOne(`${environment.ieSetup.asdBaseURL}${ACCEPT_EULA_PATH}${'?download' +
 						'_session_id=test&user_action=Accepted'}`);
 				req.error(new ErrorEvent('401'), { status: 401, statusText: 'Bad Request' });
-			}),
+			})),
 	);
 });

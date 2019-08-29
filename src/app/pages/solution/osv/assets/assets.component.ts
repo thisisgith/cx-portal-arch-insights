@@ -19,8 +19,6 @@ import { map, takeUntil, catchError } from 'rxjs/operators';
 import { OSVService, AssetsResponse, OSVAsset, OsvPagination } from '@sdp-api';
 import * as _ from 'lodash-es';
 import { ActivatedRoute } from '@angular/router';
-import { ContactExpertComponent } from '../../contact-expert/contact-expert.component';
-
 /**
  * AssetSoftware Component
  */
@@ -35,7 +33,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
+	@Output() public contactSupport = new EventEmitter();
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
 	@ViewChild('recommendationsTemplate', { static: true })
 
 	private recommendationsTemplate: TemplateRef<{ }>;
@@ -174,35 +174,40 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					{
 						key: 'hostName',
 						name: I18n.get('_OsvHostName'),
-						width: '10%',
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
+						width: '20%',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
 						sortable: false,
+						width: '10%',
 					},
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
 						sortable: true,
+						width: '20%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
+						width: '10%',
 					},
 					{
-						key: 'swVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
+						template: this.versionTemplate,
+						width: '20%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
 						sortable: false,
 						template: this.recommendationsTemplate,
+						width: '20%',
 					},
 				],
 				dynamicData: true,
@@ -272,12 +277,5 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 		this.assetsParams.sort = sortColumn.key;
 		this.assetsParams.pageIndex = 1;
 		this.loadData();
-	}
-
-	/**
-	 * Open contact support modal
-	 */
-	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactExpertComponent, { });
 	}
 }

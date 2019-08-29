@@ -138,6 +138,9 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForPG = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
+	public selectedScheduledATX: AtxSchema;
+	public atxCancelCoordinatesX = 0;
+	public atxCancelCoordinatesY = 0;
 	public eventXCoordinates = 0;
 	public eventYCoordinates = 0;
 	public eventClickedElement: HTMLElement;
@@ -752,6 +755,11 @@ export class LifecycleComponent implements OnDestroy {
 		this.recommendedAtxScheduleCardOpened = false;
 		this.eventXCoordinates = 0;
 		this.eventYCoordinates = 0;
+		this.moreXCoordinates = 0;
+		this.moreYCoordinates = 0;
+		this.selectSession({ });
+		this.componentData.atx.interested = null;
+		this.moreATXSelected = null;
 	}
 
 	 /**
@@ -819,6 +827,8 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe(() => {
 			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
 			atx.status = 'recommended';
+			this.atxScheduleCardOpened = false;
+			this.recommendedAtxScheduleCardOpened = false;
 			this.status.loading.atx = false;
 			if (window.Cypress) {
 				window.atxLoading = false;
@@ -1048,27 +1058,36 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns pertage string
 	 */
 	private calculateActionPercentage (pitstop: RacetrackPitstop) {
+		const start = I18n.get('_Start_');
 		if (pitstop) {
 			const completedActions = _.filter(pitstop.pitstopActions, 'isComplete').length;
 			const pct = Math.floor(
 				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
 
 			if (!_.isNil(pct)) {
-				return (pct === 0) ? 'start' : `${pct.toString()}%`;
+				return (pct === 0) ? start : `${pct.toString()}%`;
 			}
 		}
 
-		 return 'start';
+		return start;
 	}
 
 	/**
 	 * Updates the bookmark of the item
 	 * @param item bookmark item object
-	 * @param lifecycleCategory string of the category type
+	 * @param inputCategory string of the category type
 	 */
-	 public updateBookmark (item: AtxSchema | SuccessPath, lifecycleCategory: 'ATX' | 'SB') {
+	 public updateBookmark (item: AtxSchema | SuccessPath, inputCategory: 'ATX' | 'SB' | 'PG') {
 		let bookmark;
 		let id;
+		let lifecycleCategory: 'ATX' | 'SB';
+
+		// Product Guides has to be submitted as a Success Bytes bookmark.
+		if (inputCategory === 'PG') {
+			lifecycleCategory = 'SB';
+		} else {
+			lifecycleCategory = <'ATX' | 'SB'> inputCategory;
+		}
 
 		switch (lifecycleCategory) {
 			case 'ATX':

@@ -162,7 +162,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		const times = [];
 		const amPms = ['am', 'pm'];
 		const minutes = ['00', '30'];
-		const hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+		const hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 		for (const amPm of amPms) {
 			for (const hour of hours) {
 				for (const minute of minutes) {
@@ -171,7 +171,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 						militaryHour += 12;
 					}
 					times.push({
-						key: `${hour}:${minute}${amPm}`,
+						// 00 in military time is 12 civilian
+						key: `${hour === 0 ? 12 : hour}:${minute}${amPm}`,
 						value: `${Number(minute)} ${Number(militaryHour)}`,
 					});
 				}
