@@ -42,9 +42,6 @@ describe('DnacListComponent', () => {
 		service = TestBed.get(ArchitectureReviewService);
 	}));
 	beforeEach(() => {
-		// spyOn(service, 'getAllAssetsWithExceptions')
-		// 	.and
-		// 	.returnValue(of({ TotalCounts: 1000, AssetsExceptionDetails: [] }));
 		fixture = TestBed.createComponent(DnacListComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -66,6 +63,12 @@ describe('DnacListComponent', () => {
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.getDnacList();
+		expect(component.dnacDetailsResponse)
+		.toEqual([]);
+		expect(component.isLoading)
+		.toBeFalsy();
+		expect(component.totalItems)
+		.toEqual(0);
 	});
 
 	it('should update pagination params', () => {
@@ -104,11 +107,10 @@ describe('DnacListComponent', () => {
 	it('should close panel', () => {
 		component.onPanelClose();
 		expect(component.dnacDetails)
-			.toBe(null);
+			.toBeNull();
 	});
 
 	it('should call getDnacList service with null', () => {
-		// const fakeParams = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
 		component.isLoading = true;
 		component.totalItems = 5;
 		const spy = spyOn(service, 'getDnacList')
@@ -128,7 +130,6 @@ describe('DnacListComponent', () => {
 	});
 
 	it('should call getDnacList service with object', () => {
-		// const fakeParams = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
 		component.isLoading = true;
 		component.totalItems = 5;
 		const spy = spyOn(service, 'getDnacList')

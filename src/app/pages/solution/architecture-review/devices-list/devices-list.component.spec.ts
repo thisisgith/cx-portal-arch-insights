@@ -8,9 +8,8 @@ import { of, throwError } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { user } from '@mock';
+import { user, ArchitectureReviewScenarios } from '@mock';
 import { SimpleChanges, SimpleChange } from '@angular/core';
-import { ArchitectureReviewScenarios } from 'src/environments/mock/architecture-review/architecture-review';
 
 describe('DevicesListComponent', () => {
 	let component: DevicesListComponent;
@@ -63,7 +62,7 @@ describe('DevicesListComponent', () => {
 	it('should close panel', () => {
 		component.onPanelClose();
 		expect(component.deviceDetails)
-		.toBe(null);
+		.toBeNull();
 	});
 
 	it('should pass data on row clicked', () => {
