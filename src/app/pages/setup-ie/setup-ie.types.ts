@@ -11,10 +11,11 @@ export enum Selection {
  * Represents the 3 possible sets of slides, OVA, vcenter or IE
  */
 export enum SlideSet {
-	OVA = 'ova',
-	VCENTER = 'vcenter',
-	VBOX = 'vbox',
 	IE = 'ie',
+	OVA = 'ova',
+	SYSLOG = 'syslog',
+	VBOX = 'vbox',
+	VCENTER = 'vcenter',
 }
 
 /**

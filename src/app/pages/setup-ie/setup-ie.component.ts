@@ -22,6 +22,7 @@ import { SelectInstructionsComponent } from './select-instructions/select-instru
 import { getSlides } from './select-instructions/slide-getter.function';
 import { IESetupWizardState, SetupIEStateService } from './setup-ie-state.service';
 import { Selection } from './setup-ie.types';
+import { ConnectDNACenterComponent } from './connect-dna-center/connect-dna-center.component';
 
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { ResetCacheModal } from './reset-cache-modal/reset-cache-modal.component';
@@ -165,8 +166,10 @@ export class SetupIeComponent implements AfterViewInit, OnInit, OnDestroy {
 				...(getSlides(ovaSelection) || []),
 			];
 			const noDNAC = this.utils.getLocalStorage(this.env.ieSetup.DNAC_LS_KEY);
+			const connectDnacIdx = _.indexOf(this.steps, step =>
+				_.isEqual(step.type, ConnectDNACenterComponent));
 			if (noDNAC) {
-				this.steps.push({
+				this.steps.splice(connectDnacIdx, 0, {
 					state: SETUP_STATES.COLLECTOR,
 					type: NoDNACComponent,
 				});
