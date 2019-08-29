@@ -48,6 +48,17 @@ export function getSlides (selection: Selection) {
 					state: SETUP_STATES.COLLECTOR,
 					type: ConnectDNACenterComponent,
 				},
+				{
+					state: SETUP_STATES.COLLECTOR,
+					type: ConnectDNACenterComponent,
+				},
+				{
+					inputs: {
+						slideSet: 'syslog',
+					},
+					state: SETUP_STATES.COLLECTOR,
+					type: DeployStepsComponent,
+				},
 			];
 		case Selection.VCENTER:
 			return [
@@ -81,6 +92,13 @@ export function getSlides (selection: Selection) {
 					state: SETUP_STATES.COLLECTOR,
 					type: ConnectDNACenterComponent,
 				},
+				{
+					inputs: {
+						slideSet: 'syslog',
+					},
+					state: SETUP_STATES.COLLECTOR,
+					type: DeployStepsComponent,
+				},
 			];
 		case Selection.VBOX:
 			return [
@@ -113,6 +131,13 @@ export function getSlides (selection: Selection) {
 				{
 					state: SETUP_STATES.COLLECTOR,
 					type: ConnectDNACenterComponent,
+				},
+				{
+					inputs: {
+						slideSet: 'syslog',
+					},
+					state: SETUP_STATES.COLLECTOR,
+					type: DeployStepsComponent,
 				},
 			];
 		default:
