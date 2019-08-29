@@ -23,7 +23,7 @@ class MockRouter {
 	public navigateByUrl () { }
 }
 
-fdescribe('InsightsComponent', () => {
+describe('InsightsComponent', () => {
 	let router;
 	let component: InsightsComponent;
 	let fixture: ComponentFixture<InsightsComponent>;
