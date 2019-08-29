@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { ArchitectureService, IException, cbpRuleException } from '@sdp-api';
+import { ArchitectureService, IException, cbpRuleException, params } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 
@@ -15,7 +15,6 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'app-cbp-rule-violation',
-	styleUrls: ['./cbp-rule-violation.component.scss'],
 	templateUrl: './cbp-rule-violation.component.html',
 })
 export class CbpRuleViolationComponent implements OnInit, OnChanges {
@@ -39,12 +38,12 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 
 	public globalSearchText = '';
 
-	public paramsType = {
+	public paramsType: params = {
 		customerId: '',
 		page: 0,
 		pageSize: 10,
-		searchText: '',
-		severity: '',
+		searchText: undefined,
+		severity: undefined,
 	};
 
 	constructor (
@@ -75,8 +74,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
 		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
 		if (selectedFilter && !isFirstChange) {
+			const severityType = _.get(selectedFilter, { key: 'exceptions' });
 			this.paramsType.severity =
-				selectedFilter.exceptions ? selectedFilter.exceptions.toString() : '';
+				severityType ? severityType.toString() : '';
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
@@ -136,6 +136,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	/**
 	 * Keys down function
 	 * @param event contains eventdata
+	 * key code 13 refers to enter key
 	 */
 	public globalSearchFunction (event) {
 		if (event.keyCode === 13) {

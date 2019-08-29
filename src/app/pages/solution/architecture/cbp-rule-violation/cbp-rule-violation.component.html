@@ -9,25 +9,25 @@
 				<div class="flex" *ngIf="exceptionObject">
 					<div class="dbl-margin-right">
 						<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSeverity_' | i18n"></div>
-						<div><span class="qtr-margin-right icon-circle" [ngClass]="{
+						<div [innerText]="exceptionObject?.severity"><span class="qtr-margin-right icon-circle" [ngClass]="{
 												'High': 'text-danger',
 												'Medium': 'text-warning',
 												'Low': 'text-warning-alt'
 											}[exceptionObject?.severity]"></span>
-							{{ exceptionObject?.severity }}
+							
 						</div>
 					</div>
 
 					<div class="dbl-margin-right">
 						<div class="text-bold text-uppercase" [innerText]="'_ArchitectureSoftwareType_' | i18n"></div>
-						<div innerText="{{ exceptionObject?.softwareType }}"></div>
+						<div [innerText]="exceptionObject?.softwareType"></div>
 					</div>
 				</div>
 			</div>
 			<div class="col-md-12 base-margin-bottom">
 				<div class="dbl-margin-right">
 					<div class="text-bold text-uppercase" [innerText]="('_ArchitectureSummary_' | i18n)+':'"></div>
-					<div>{{exceptionObject?.bpRuleSummary}}</div>
+					<div [innerText]="exceptionObject?.bpRuleSummary"></div>
 				</div>
 			</div>
 		</div>
@@ -57,7 +57,7 @@
 								<span [innerText]="'_ArchitectureLastUpdated_' | i18n" class="text-large"></span>
 								<span data-auto-id="lastCollectionTime" 
 								class="qtr-margin-left text-small text-muted" 
-								[innerHtml]="lastCollectionTime"></span>
+								[innerText]="lastCollectionTime"></span>
 							</div>
 						</div>
 						<div>
@@ -112,13 +112,13 @@
 			'Low': 'text-warning-alt'
 	}[item.severity]">
 	</span>
-	<span [innerHTML]="item?.severity"></span>
+	<span [innerText]="item?.severity"></span>
 </ng-template>
 
 <ng-template #recommendationTemplate let-item="celldata">
-	<span [innerHTML]="item?.recommendations"></span>
+	<span class="elipsis" [innerText]="item?.recommendations"></span>
 </ng-template>
 
 <ng-template #correctiveActionsTemplate let-item="celldata">
-	<span [innerHTML]="item?.correctiveActions"></span>
+	<span class="elipsis" [innerText]="item?.correctiveActions"></span>
 </ng-template>
