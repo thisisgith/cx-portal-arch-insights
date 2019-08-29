@@ -509,6 +509,16 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				// PBC-611 Truncate description text
 				// Since this handled by the styles, just validate the class exists
 				.and('have.class', 'line-clamp');
+			// PBC-603 Hover should include bookmark ribbon
+			if (twoRecommendedItems[0].isFavorite) {
+				cy.getByAutoId('recommendedACC-HoverModal-BookmarkRibbon')
+					.should('exist')
+					.and('have.class', 'ribbon__blue');
+			} else {
+				cy.getByAutoId('recommendedACC-HoverModal-BookmarkRibbon')
+					.should('exist')
+					.and('have.class', 'ribbon__white');
+			}
 		});
 
 		it('PBC-279: When there are no recommended ACCs, use the first requested item', () => {
@@ -2128,14 +2138,14 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					cy.getByAutoId('moreACCList-HoverModal').should('exist').within(() => {
 						cy.getByAutoId('moreACCList-HoverModal-Title').should('have.text', acc.title);
 						cy.getByAutoId('moreACCList-HoverModal-Description').should('have.text', acc.description);
-						cy.getByAutoId('ACCCardRibbon').should('exist');
+						cy.getByAutoId('moreACCList-HoverModal-BookmarkRibbon').should('exist');
 
 						// Ribbon is blue for bookmarked, white otherwise
 						if (acc.isFavorite) {
-							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__blue');
+							cy.getByAutoId('moreACCList-HoverModal-BookmarkRibbon').should('have.class', 'ribbon__blue');
 							cy.getByAutoId('.star').should('not.exist');
 						} else {
-							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__white');
+							cy.getByAutoId('moreACCList-HoverModal-BookmarkRibbon').should('have.class', 'ribbon__white');
 							cy.getByAutoId('.star').should('not.exist');
 						}
 
