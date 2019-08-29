@@ -36,7 +36,7 @@ fdescribe('CbpTbdComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 	}));
 
 	beforeEach(() => {
@@ -93,7 +93,7 @@ fdescribe('CbpTbdComponent', () => {
 	});
 
 	it('should update pagination params', () => {
-		const pageEvent = { page: 1, limit : 10 };
+		const pageEvent = { page: 1, limit: 10 };
 		component.onPagerUpdated(pageEvent);
 		expect(component.params.page)
 			.toBe(1);
