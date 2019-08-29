@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { InsightsComponent } from './insights.component';
 import { InsightsModule } from './insights.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -10,11 +9,27 @@ import { OptimalSoftwareVersionModule } from '../osv/osv.module';
 import { RiskMitigationModule } from '../risk-mitigation/risk-mitigation.module';
 import { RccService } from '@sdp-api';
 import { of } from 'rxjs';
+import { PermissionGuard } from './permission-guard';
+import { UserResolve } from '@utilities';
+/**
+ * class to mock router
+ */
+class MockRouter {
+	/**
+	 * method for navigate routes
+	 * @param path refers path
+	 */
+	// tslint:disable-next-line: no-empty
+	public navigateByUrl () { }
+}
 
 describe('InsightsComponent', () => {
+	let router;
 	let component: InsightsComponent;
 	let fixture: ComponentFixture<InsightsComponent>;
 	let rccService: RccService;
+	let userResolve: UserResolve;
+	let permissionGuard: PermissionGuard;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -25,18 +40,22 @@ describe('InsightsComponent', () => {
 				HttpClientTestingModule,
 				RouterTestingModule.withRoutes([
 					{
-						path: 'solution/best-practices/osv',
 						component: OptimalSoftwareVersionComponent,
+						path: 'solution/best-practices/osv',
 					},
 					{
-						path: 'solution/best-practices/risk-mitigation',
 						component: RiskMitigationComponent,
+						path: 'solution/best-practices/risk-mitigation',
 					},
 				]),
+			],
+			providers: [
+				UserResolve,
 			],
 		})
 			.compileComponents();
 		rccService = TestBed.get(RccService);
+		userResolve = TestBed.get(UserResolve);
 	}));
 
 	beforeEach(() => {
@@ -51,37 +70,36 @@ describe('InsightsComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should get the optin status for loggedIn user', done => {
-		const response = true;
+	it('should return true if the user has permission', done => {
 		spyOn(rccService, 'checkPermissions')
 			.and
-			.returnValue(of(response));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.hasPermission)
-					.toBeDefined();
-				expect(component.hasPermission)
-					.toEqual(response);
+			.returnValue(of(true));
+		spyOn(userResolve, 'getCustomerId')
+			.and
+			.returnValue(of('1234'));
+		router = new MockRouter();
+		permissionGuard = new PermissionGuard(rccService, userResolve, router);
+		permissionGuard.canActivate(null, null)
+			.subscribe(response => {
+				expect(response)
+					.toEqual(true);
 				done();
 			});
 	});
 
-	it('should get the optin status for loggedIn user', done => {
-		const response = false;
+	it('should return false and reroute if the user has permission', () => {
 		spyOn(rccService, 'checkPermissions')
 			.and
-			.returnValue(of(response));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.hasPermission)
-					.toBeDefined();
-				expect(component.hasPermission)
-					.toEqual(response);
-				done();
+			.returnValue(of(false));
+		spyOn(userResolve, 'getCustomerId')
+			.and
+			.returnValue(of('1234'));
+		router = new MockRouter();
+		permissionGuard = new PermissionGuard(rccService, userResolve, router);
+		permissionGuard.canActivate(null, null)
+			.subscribe(response => {
+				expect(response)
+					.toEqual(false);
 			});
 	});
 });
