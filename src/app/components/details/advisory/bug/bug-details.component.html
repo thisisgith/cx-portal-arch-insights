@@ -9,7 +9,8 @@
 				[customerId]="customerId"
 				type="bug"
 				[id]="id"
-				(impactedCount)="impactedCount = $event">
+				(impactedCount)="impactedCount = $event"
+				(assets)="assets.emit($event)">
 			</advisory-impacted-assets>
 		</div>
 	</cui-tab>
@@ -17,7 +18,7 @@
 
 <ng-template #summary>
 	<div *ngIf="!isLoading">
-		<div class="half-margin-left base-margin-top">
+		<div class="half-margin-left base-margin-top base-margin-bottom descriptionHeight">
 			<ng-container *ngTemplateOutlet="detailText; context: {
 					title: ('_Title_' | i18n),
 					text: data?.advisory?.title
@@ -29,22 +30,21 @@
 				}">
 			</ng-container>
 		</div>
-	
-		<div class="bottom-flex-box" *ngIf="id && customerId">
-			<advisory-feedback class="flex-fill"
-				type="bug"
-				[id]="id"
-				[customerId]="customerId"
-				(alert)="alertMessage.emit($event)">
-			</advisory-feedback>
-		</div>
+
+		<advisory-feedback *ngIf="id && customerId"
+			class="flex-fill"
+			type="bug"
+			[id]="id"
+			[customerId]="customerId"
+			(alert)="alertMessage.emit($event)">
+		</advisory-feedback>
 	</div>
 
 	<div *ngIf="isLoading" class="dbl-margin-top flex-center">
 		<cui-spinner></cui-spinner>
 	</div>
 </ng-template>
-	
+
 <ng-template #detailText let-title="title" let-text="text">
 	<div class="base-margin-bottom">
 		<div [innerText]="title" class="text-uppercase text-bold qtr-margin-bottom"></div>

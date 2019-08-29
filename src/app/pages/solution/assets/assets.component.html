@@ -122,7 +122,7 @@
 						<div class="form-group__text">
 							<input id="searchInput"
 								attr.data-auto-id="SearchInput"
-								type="search"
+								type="text"
 								#searchInput
 								[maxlength]="searchOptions.max"
 								[pattern]="searchOptions.pattern"
@@ -185,14 +185,12 @@
 				<tbody data-auto-id="AssetsTableBody">
 					<tr *ngFor="let item of inventory"
 						attr.data-auto-id="InventoryItem-{{ item.data.serialNumber }}"
-						(click)="onRowSelect(item)"
 						[ngClass]="{ 'active': item.details }">
-						<td (click)="$event.stopPropagation();"
-							attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}">
+						<td attr.data-auto-id="InventoryItemSelectTD-{{ item.data.serialNumber }}">
 							<label class="checkbox">
 								<input type="checkbox"
 									[checked]="item.selected"
-									(click)="onItemSelect(item)"
+									(click)="onClick($event, 'checkbox', item)"
 									attr.data-auto-id="InventoryItemSelect-{{ item.data.serialNumber }}" />
 								<span class="checkbox__input"
 									attr.data-auto-id="InventoryItemCheckbox-{{ item.data.serialNumber }}">
@@ -202,7 +200,7 @@
 						<td *ngFor="let column of assetsTable.columns"
 							[ngStyle]="{ 'width': column.width }"
 							attr.data-auto-id="InventoryItemClickHandler-{{ item.data.serialNumber }}"
-							(click)="column.click ? $event.stopPropagation() : null">
+							(click)="column.click ? onClick($event, 'menu') : onClick($event, 'item', item)">
 							<ng-container *ngIf="column.template">
 								<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data, element: item.element, actions: item.actions }"></ng-container>
 							</ng-container>
@@ -229,19 +227,20 @@
 <ng-template #cardTemplate let-item="item">
 	<div class="card curved-corners container-fluid card-content"
 		[ngClass]="{ 'card__selected': item.selected }"
-		(click)="onItemSelect(item)" attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}">
+		attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}"
+		(click)="onClick($event, 'checkbox', item)">
 		<div class="card__header">
 			<div class="card__title flex-center card-title-height">
 				<a
 					attr.data-auto-id="Device-{{ item.data?.serialNumber }}"
 					class="text-large text-center"
 					[innerText]="item.data.deviceName | truncate:true:20"
-					(click)="onRowSelect(item); $event.stopPropagation();"
+					(click)="onClick($event, 'item', item)"
 				></a>
 			</div>
 			<div class="flex-center text-center">
 				<span *ngIf="item.data?.productName"
-					[innerText]="item.data?.productName"
+					[innerText]="item.data?.productName | truncate:true:20"
 					attr.data-auto-id="ProductName-{{ item.data?.serialNumber }}">
 				</span>
 			</div>
@@ -257,15 +256,15 @@
 		<div class="card__body text-small dbl-margin-bottom">
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_IPAddress_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.ipAddress || ('_NA_' | i18n)" attr.data-auto-id="IPAddress-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" [innerText]="(item.data?.ipAddress || ('_NA_' | i18n)) | truncate:true:15:'...'" attr.data-auto-id="IPAddress-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_LastScan_' | i18n"></div>
-				<div class="col-md-6" innerText="{{ item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n) }}" attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" [innerText]="(item.data?.lastScan ? (item.data.lastScan | fromNow) : ('_Never_' | i18n)) | truncate:true:15:'...'" attr.data-auto-id="LastScan-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_SerialNumber_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.serialNumber || ('_NA_' | i18n)" attr.data-auto-id="SerialNumber-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" [innerText]="(item.data?.serialNumber || ('_NA_' | i18n)) | truncate:true:15:'...'" attr.data-auto-id="SerialNumber-{{ item.data?.serialNumber }}"></div>
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Software_' | i18n"></div>
@@ -278,7 +277,7 @@
 			</div>
 			<div class="row qtr-margin-top">
 				<div class="col-md-6 text-right text-dkgray-4" [innerText]="'_Role_' | i18n"></div>
-				<div class="col-md-6" [innerText]="item.data?.role || ('_NA_' | i18n)" attr.data-auto-id="Role-{{ item.data?.serialNumber }}"></div>
+				<div class="col-md-6" [innerText]="(item.data?.role || ('_NA_' | i18n)) | truncate:true:15:'...'" attr.data-auto-id="Role-{{ item.data?.serialNumber }}"></div>
 			</div>
 		</div>
 		<div class="card__footer justify-content-between override-selected-z">
@@ -305,12 +304,12 @@
 					<span class="badge badge--tiny badge--success icon-check"></span>
 				</span>
 			</div>
-			<div *ngIf="getRowActions(item).length">
+			<div *ngIf="item.actions.length">
 				<cui-dropdown
 					attr.data-auto-id="InventoryItem-{{ item.data?.serialNumber }}-dropdown"
-					(click)="$event.stopPropagation()"
-					[actions]="getRowActions(item)"
-					icon="icon-more icon-small text-muted rotate-90">
+					[actions]="item.actions"
+					icon="icon-more icon-small text-muted rotate-90"
+					(click)="onClick($event, 'menu')">
 				</cui-dropdown>
 			</div>
 		</div>

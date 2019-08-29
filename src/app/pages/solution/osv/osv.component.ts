@@ -9,6 +9,10 @@ import {
 } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import { VisualFilter } from '@interfaces';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import {
+	ContactSupportComponent,
+} from 'src/app/components/contact-support/contact-support.component';
 
 /**
  * Interface representing our visual filters
@@ -53,6 +57,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
+		private cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -91,15 +96,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_OsvAssets_'),
 				view: ['assets'],
 			},
-			{
-				key: 'deploymentStatus',
-				loading: true,
-				selected: false,
-				seriesData: [],
-				template: this.deploymentStatusFilterTemplate,
-				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
-				view: ['assets'],
-			},
 		];
 		this.loadData();
 	}
@@ -128,32 +124,21 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	private getSummary () {
 
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
-		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
 		const assetTypeFilter = _.find(this.filters, { key: 'assetType' });
 
 		return this.osvService.getSummary({ customerId: this.customerId })
 			.pipe(
 				map((response: SummaryResponse) => {
 					totalAssetsFilter.loading = false;
-					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
+					response.asset_profile.assets_profile = 0;
+					response.profiles = 0;
 					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
 						versions: response.versions,
 					}];
 					this.decideView(response);
-					deploymentStatusFilter.seriesData = _.compact(
-						_.map(response.deployment, (value: number, key: string) => {
-							if (value !== 0) {
-								return {
-									value,
-									filter: key,
-									label: _.capitalize(key),
-									selected: false,
-								};
-							}
-						}));
 
 					assetTypeFilter.seriesData = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
@@ -174,7 +159,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV Summary : getSummary() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					totalAssetsFilter.loading = false;
-					deploymentStatusFilter.loading = false;
 					assetTypeFilter.loading = false;
 					this.view = undefined;
 
@@ -298,5 +282,12 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 			assetType: '',
 			deploymentStatus: [],
 		};
+	}
+
+	/**
+	 * Open contact support modal
+	 */
+	public openContactSupport () {
+		this.cuiModalService.showComponent(ContactSupportComponent, { contactExpert: true });
 	}
 }

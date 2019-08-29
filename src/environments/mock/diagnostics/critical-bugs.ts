@@ -123,15 +123,6 @@ export const CriticalBugScenarios = [
 					},
 					selected: false,
 				},
-				{
-					delay: 200,
-					description: 'Critical Bugs - Page 1',
-					response: {
-						body: MockData(10, 1, null, null, 4),
-						status: 200,
-					},
-					selected: false,
-				},
 			],
 		},
 		url: `${api}/state/count?customerId=${customerId}`,
@@ -185,7 +176,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=1&page=1&id=CSCto03123`,
+		url: `${api}?customerId=${customerId}&rows=1&page=1&cdetsId=CSCto03123`,
 		usecases: ['Use Case 1'],
 	},
 	{

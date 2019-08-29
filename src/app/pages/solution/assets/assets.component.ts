@@ -46,6 +46,7 @@ import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
 import { CaseOpenComponent } from '@components';
 import { getProductTypeImage } from '@classes';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Interface representing an item of our inventory in our assets table
@@ -113,7 +114,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	};
 	public assetsTable: CuiTableOptions;
 	public searchOptions = {
-		debounce: 200,
+		debounce: 600,
 		max: 100,
 		min: 3,
 		pattern: /^[a-zA-Z0-9\s\-\/\(\).]*$/,
@@ -150,6 +151,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		public router: Router,
 		private fromNow: FromNowPipe,
 		private networkService: NetworkDataGatewayService,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -387,6 +389,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 		item.details = !item.details;
+		this.detailsPanelStackService.reset(item.details);
 		this.selectedAsset = item.details ? item : null;
 	}
 
@@ -425,7 +428,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		this.assetParams = {
 			customerId: this.customerId,
 			page: 1,
-			rows: this.view === 'list' ? 10 : 12,
+			rows: this.getRows(),
 			sort: ['deviceName:ASC'],
 		};
 
@@ -521,7 +524,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.view = <'list' | 'grid'> currentView;
 		}
 
-		this.assetParams.rows = this.view === 'list' ? 10 : 12;
+		this.assetParams.rows = this.getRows();
 		this.buildTable();
 		this.route.queryParams.subscribe(params => {
 			if (params.page) {
@@ -1089,7 +1092,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		const params: InventoryService.GetNetworkElementsParams = {
 			customerId: this.customerId,
 			page: 1,
-			rows: 10,
+			rows: this.getRows(),
 			serialNumber: _.map(assets.data, 'serialNumber'),
 		};
 
@@ -1273,7 +1276,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		if (this.view !== view) {
 			this.view = view;
 			window.sessionStorage.setItem('view', this.view);
-			const newRows = this.view === 'list' ? 10 : 12;
+			const newRows = this.getRows();
 			this.assetParams.page =
 				Math.round(this.assetParams.page * this.assetParams.rows / newRows);
 			this.assetParams.rows = newRows;
@@ -1282,4 +1285,38 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	/**
+	 * Returns the number of rows for the page
+	 * depending on the view
+	 * @returns number of rows
+	 */
+	private getRows () {
+		return this.view === 'list' ? 10 : 12;
+	}
+
+	/**
+	 * Click handler logic for the asset list
+	 * @param {Event} $event Click event
+	 * @param {string} type Click target type (checkbox, item, or menu)
+	 * @param {Item} [item] Targeted item
+	 */
+	public onClick ($event: Event, type: 'checkbox' | 'item' | 'menu', item?: Item) {
+		if ($event.defaultPrevented) {
+			// Event has already been handled
+			return;
+		}
+		switch (type) {
+			case 'checkbox':
+				this.onItemSelect(item);
+				// Don't mark event as handled so table row checkbox still works
+				break;
+			case 'item':
+				this.onRowSelect(item);
+				$event.preventDefault(); // mark this event as handled
+				break;
+			case 'menu':
+			default:
+				$event.preventDefault(); // mark this event as handled
+		}
+	}
 }

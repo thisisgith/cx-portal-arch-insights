@@ -51,6 +51,10 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 	@Input('assetIds') public assetIds: AssetIds;
 	@Input('customerId') public customerId: string;
 	@Output('impactedCount') public impactedCount = new EventEmitter<number>();
+	@Output('assets') public assets = new EventEmitter<{
+		impacted: (Asset | NetworkElement)[];
+		potentiallyImpacted: (Asset | NetworkElement)[];
+	}>();
 	@ViewChild('deviceColumn', null) public deviceColumn: TemplateRef<{ }>;
 	@ViewChild('versionColumn', null) public softwareVersionColumn: TemplateRef<{ }>;
 	@ViewChild('recommendedVersionColumn', null) public recommendedVersionColumn: TemplateRef<{ }>;
@@ -99,6 +103,10 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 						x => _.includes(potentiallyImpacted, _.get(x, 'managedNeId'))) || [];
 
 				this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
+				this.assets.emit({
+					impacted: this.impacted,
+					potentiallyImpacted: this.potentiallyImpacted,
+				});
 			}),
 			catchError(err => {
 				this.impactedCount.emit(0);
@@ -130,6 +138,10 @@ export class AdvisoryImpactedAssetsComponent implements OnInit {
 				this.impacted = data;
 
 				this.impactedCount.emit(this.impacted.length + this.potentiallyImpacted.length);
+				this.assets.emit({
+					impacted: this.impacted,
+					potentiallyImpacted: this.potentiallyImpacted,
+				});
 			}),
 			catchError(err => {
 				this.impactedCount.emit(0);

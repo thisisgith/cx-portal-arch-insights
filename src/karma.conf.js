@@ -24,6 +24,7 @@ module.exports = config => {
 				random: true,
 				oneFailurePerSpec: true,
 				hideDisabled: true,
+				timeoutInterval: 20000,
 			},
 		},
 		coverageIstanbulReporter: {
@@ -40,7 +41,7 @@ module.exports = config => {
 					functions: 75,
 					lines: 75,
 					statements: 75,
-				}
+				},
 			},
 			reports: ['html', 'lcovonly', 'text', 'text-summary', 'json', 'json-summary'],
 			fixWebpackSourcePaths: true,

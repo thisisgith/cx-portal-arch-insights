@@ -6,6 +6,7 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
+	CrashHistoryDeviceCount,
 	RiskMitigationService,
 	HighCrashRiskPagination,
 	RmFilter as Filter,
@@ -33,6 +34,7 @@ export class RiskMitigationComponent {
 		max: 200,
 		min: 0,
 	};
+	public selectedFilters;
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private logger: LogService,
@@ -40,10 +42,6 @@ export class RiskMitigationComponent {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-	}
-
-	get selectedFilters () {
-		return _.filter(this.filters, 'selected');
 	}
 
 	@ViewChild('contextualMenuTemplate',
@@ -59,6 +57,7 @@ export class RiskMitigationComponent {
 	public selectedFingerPrintdata: HighCrashRiskDevices;
 	public showAsset360 = false;
 	public highCrashRiskParams: HighCrashRiskPagination;
+	public crashHistoryParams: CrashHistoryDeviceCount;
 	public highCrashDeviceCount: number;
 	public crashHistoryTableOptions: CuiTableOptions;
 
@@ -108,7 +107,7 @@ export class RiskMitigationComponent {
 	public loadData () {
 		this.highCrashRiskParams = {
 			customerId: this.customerId,
-			page: 1,
+			page: 0,
 			size: 10,
 		};
 		this.status.isLoading = true;
@@ -122,6 +121,18 @@ export class RiskMitigationComponent {
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		this.onlyCrashes = true;
 	}
+
+	/**
+	 * Selected filter is for to assign default filter on page loads.
+	 */
+	public selectedTimeFilters () {
+		if (this.selectedFilters !== undefined) {
+			this.resetFilters();
+			_.filter(this.filters, 'selected');
+			this.selectedFilters = this.filters;
+			this.selectedFilters[0].seriesData[0].selected = true;
+		}
+  	 }
 	/**
 	 * Gets high crashes device data
 	 * @returns  the crashed device data
@@ -153,7 +164,8 @@ export class RiskMitigationComponent {
 	public getAllCrashesData () {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
-
+		this.getDeviceDetails('1');
+		this.selectedTimeFilters();
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -226,6 +238,7 @@ export class RiskMitigationComponent {
 					map((results: RiskAssets) => {
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = _.size(results.deviceDetails);
+						this.crashedAssetsGridDetails.tableOffset = 0;
 					}),
 					catchError(err => {
 						this.crashedAssetsGridDetails.tableData = [];
@@ -261,18 +274,20 @@ export class RiskMitigationComponent {
 						)
 						.subscribe();
 	}
+
 	/**
-	 * Fetches the device crashed history
-	 * @returns the total crash history of particular device
+	 * Gets crashed device history
+	 * @param asset has the data of selected crashed details
+	 * @returns  Returns the particular device crash history data
 	 */
-	private getCrashedDeviceHistory () {
+	private getCrashedDeviceHistory (asset) {
 		this.crashHistoryGridDetails.tableData = [];
-		let params: any = RiskMitigationService.GetAssetsParams;
-		params = {
-			customerId: this.customerId,
+		this.crashHistoryParams = {
+			customerId: _.cloneDeep(this.customerId),
+			neInstanceId: asset.neInstanceId,
 		};
 
-		return this.riskMitigationService.getCrashHistoryForDevice(params)
+		return this.riskMitigationService.getCrashHistoryForDevice(this.crashHistoryParams)
 							.pipe(
 								takeUntil(this.destroy$),
 								map((results: any) => {
@@ -303,13 +318,11 @@ export class RiskMitigationComponent {
 	 * @param param will have the high crash risk grid pagination info
 	 */
 	public onHcrPagerUpdated (param: HighCrashRiskPagination) {
-		this.highCrashRiskAssetsGridDetails.tableOffset = param.page + 1;
+		this.highCrashRiskAssetsGridDetails.tableOffset = param.page;
 		this.highCrashRiskAssetsGridDetails.tableLimit = param.limit;
 		this.highCrashRiskParams.size = this.highCrashRiskAssetsGridDetails.tableLimit;
 		this.highCrashRiskParams.page = this.highCrashRiskAssetsGridDetails.tableOffset;
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
-		this.highCrashRiskAssetsGridDetails.totalItems =
-		this.highCrashRiskAssetsGridDetails.totalItems + 10;
 	}
 	/**
 	 * Gets filter details for search query
@@ -319,23 +332,27 @@ export class RiskMitigationComponent {
 	public getFilterDetailsForSearchQuery (searchText: String) {
 		let time;
 		const filter =  _.find(this.filters[0].seriesData, { selected: true });
-		switch (filter.label) {
-			case '24h': {
-				time = '1';
-				break;
+		if (filter) {
+			switch (filter.label) {
+				case '24h': {
+					time = '1';
+					break;
+				}
+				case '7d': {
+					time = '7';
+					break;
+				}
+				case '30d': {
+					time = '30';
+					break;
+				}
+				case '90d': {
+					time = '90';
+					break;
+				}
 			}
-			case '7d': {
-				time = '7';
-				break;
-			}
-			case '30d': {
-				time = '30';
-				break;
-			}
-			case '90d': {
-				time = '90';
-				break;
-			}
+		} else {
+			time = '1';
 		}
 
 		return {
@@ -345,6 +362,7 @@ export class RiskMitigationComponent {
 			search: searchText,
 			sortDirection: '',
 		};
+
 	}
 	/**
 	 * Function to update pagination
@@ -361,6 +379,7 @@ export class RiskMitigationComponent {
 					map((results: any) => {
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
+						this.crashHistoryGridDetails.tableOffset = 0;
 					}),
 					catchError(err => {
 						this.crashedAssetsGridDetails.tableData   = [];
@@ -380,7 +399,7 @@ export class RiskMitigationComponent {
 		this.showAsset360 = false;
 		if (asset.active) {
 			this.selectedAsset = asset;
-			this.getCrashedDeviceHistory();
+			this.getCrashedDeviceHistory(asset);
 		} else { this.selectedAsset = undefined; }
 	}
 	/**
@@ -424,10 +443,11 @@ export class RiskMitigationComponent {
 				map((results: any) => {
 					this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 					this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
+					this.crashHistoryGridDetails.tableOffset = 0;
 				}),
 				catchError(err => {
 					this.crashedAssetsGridDetails.tableData   = [];
-					this.logger.error('Crash Assets : onTableSortingChanged() ' +
+					this.logger.error('Crash Assets : onTableSortingChanged()' +
 						`:: Error : (${err.status}) ${err.message}`);
 
 					return of({ });
@@ -567,6 +587,8 @@ export class RiskMitigationComponent {
 	public getAdvisoryCount (data) {
 		const advisoryFilter = _.find(this.filters, { key: 'advisories' });
 		advisoryFilter.seriesData = data;
+		this.selectedFilters = this.filters;
+		this.clearFilters();
 	}
 
 	/**
@@ -626,21 +648,30 @@ export class RiskMitigationComponent {
 	 * Function used to clear the filters
 	 */
 	public clearFilters () {
-		_.each(this.filters, (filter: Filter) => {
-			filter.selected = false;
-			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
+		_.each(this.filters, (clearFilter: Filter) => {
+			clearFilter.selected = false;
+			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});
 		});
 		this.resetFilters();
 		this.getDeviceDetails('1');
 		this.clearAllFilters = true;
+		const filter = _.find(this.filters, { key: 'advisories' });
+		if (filter) {
+			filter.seriesData[0].selected = true;
+		}
+		this.filters[0] = filter;
+		this.getSelectedSubFilters('advisories');
+		this.selectedFilters = this.filters;
+		this.selectedTimeFilters();
 	}
 
 	/**
 	 * Function used to reset the filters
 	 */
 	public resetFilters () {
+		this.searchQueryString = '';
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {

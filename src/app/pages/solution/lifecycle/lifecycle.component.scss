@@ -137,6 +137,19 @@ $vibblue: #017cad;
 	width: 100%;
 }
 
+.max-height {
+	height: 100% !important;
+}
+
+.line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 4;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
 .table-img-width {
 	width: 80px;
 }
@@ -179,18 +192,31 @@ $vibblue: #017cad;
 	}
 }
 
-.cgtpanel--open {
+.atxCancelpanel--open {
 	box-shadow: $base-box-shadow;
 	height: 120px;
 	width: 400px;
 	position: absolute;
-	top: 40px;
+	// top: 40px;
 	left: 210px;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
 }
 
+.cgtpanel--open {
+	box-shadow: $base-box-shadow;
+	height: 120px;
+	width: 400px;
+	position: absolute;
+	// top: 40px;
+	left: 210px;
+	z-index: 3;
+	background-color: $white;
+	border-radius: 10px;
+}
+
+.atxCancelpanel--open::after,
 .cgtpanel--open::after {
 	content: "";
 	position: absolute;
@@ -290,27 +316,8 @@ $vibblue: #017cad;
 }
 
 .finishline {
-	width: 10px;
+	width: 15px;
 	height: 30px;
-}
-
-#compActPct {
-	width: 70px;
-	height: 30px;
-	text-align: center;
-	font-style: italic;
-	font-size: 20px;
-	background-color: $primary;
-	-webkit-text-stroke-width: 1px;
-}
-
-#compActPct::before {
-	content: '';
-	position: absolute;
-	bottom: 12%;
-	left: 4.5%;
-	border-right: 15px solid $primary;
-	border-bottom: 30px solid transparent;
 }
 
 .card_footer_item {
@@ -325,23 +332,13 @@ $vibblue: #017cad;
 		position: absolute;
 		right: 7px;
 		top: 0;
-		z-index: 1;
 		color: $indigo;
-	}
-
-	&__green {
-		position: absolute;
-		right: 7px;
-		top: 0;
-		z-index: 2;
-		color: $success;
 	}
 
 	&__white {
 		position: absolute;
 		right: 7px;
 		top: 0;
-		z-index: 2;
 		color: $white;
 		-webkit-text-stroke-width: 1px;
 		-webkit-text-stroke-color: $info;
@@ -545,8 +542,35 @@ tr.td-row td {
 	justify-content: space-between;
 	flex-wrap: nowrap;
 }
-// leave the following here, just in case we will use this style
-// ::ng-deep .cui .dropdown__menu a.selected {
-// 	color:$vibblue !important;
-// 	background-color: transparent !important;
-// }
+
+.view-all {
+	display: inline-block;
+}
+
+polygon {
+	fill: $primary;
+}
+
+.comPertText {
+	text-align: center;
+	font-style: italic;
+	font-style: bold;
+	font-size: 20px;
+	fill: white;
+}
+
+.racetrack-header {
+	display: inline-block;
+}
+
+.finishline-banner {
+	align-items: flex-end;
+}
+
+.lifecycle-modal {
+	height: 100%;
+}
+
+.lifecycle-viewall-modal {
+	min-height: 100%;
+}

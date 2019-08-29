@@ -125,6 +125,7 @@ export class LifecycleComponent implements OnDestroy {
 		context: null,
 		visible: false,
 	};
+	public appHeaderHeight = 0;
 	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
 	public recommendedAtxScheduleCardOpened = false;
@@ -138,12 +139,18 @@ export class LifecycleComponent implements OnDestroy {
 	public selectedFilterForPG = '';
 	public groupTrainingsAvailable = 0;
 	public selectedSuccessPaths: SuccessPath[];
+	public selectedScheduledATX: AtxSchema;
+	public atxCancelCoordinatesX = 0;
+	public atxCancelCoordinatesY = 0;
 	public eventXCoordinates = 0;
 	public eventYCoordinates = 0;
 	public eventClickedElement: HTMLElement;
 	public scrollY = 0;
 	public innerWidth: number;
 	public selectedProductGuides: SuccessPath[];
+	public moreATXSelected: AtxSchema;
+	public moreXCoordinates = 0;
+	public moreYCoordinates = 0;
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
@@ -350,7 +357,7 @@ export class LifecycleComponent implements OnDestroy {
 				break;
 			}
 			case 'ATX': {
-				title = I18n.get('_AskTheExpert_');
+				title = I18n.get('_AskTheExperts_');
 				break;
 			}
 			case 'SB': {
@@ -749,39 +756,19 @@ export class LifecycleComponent implements OnDestroy {
 		this.recommendedAtxScheduleCardOpened = false;
 		this.eventXCoordinates = 0;
 		this.eventYCoordinates = 0;
-	}
-
-	/**
-	 * Determines which modal to display
-	 * @param acc ACC item
-	 * @returns ribbon
-	 */
-	public getACCRibbonClass (acc: ACC) {
-		let ribbon = 'ribbon__white';
-		if (!acc) {
-			return ribbon;
-		}
-		if (acc.status.toLowerCase() === 'completed') {
-			ribbon = 'ribbon__green';
-		}
-
-		if (acc.isFavorite) {
-			ribbon = 'ribbon__blue';
-		}
-
-		return ribbon;
+		this.moreXCoordinates = 0;
+		this.moreYCoordinates = 0;
+		this.selectSession({ });
+		this.componentData.atx.interested = null;
+		this.moreATXSelected = null;
 	}
 
 	 /**
-	  * Determines which modal to display
+	  * Updates ACC bookmark
 	  * @param item ACC item
 	  * @returns ribbon
 	  */
 	 public setACCBookmark (item: ACC) {
-		if (item.status === 'completed') {
-			return;
-		}
-
 		this.status.loading.acc = true;
 		if (window.Cypress) {
 			window.accLoading = true;
@@ -841,6 +828,8 @@ export class LifecycleComponent implements OnDestroy {
 		.subscribe(() => {
 			_.find(atx.sessions, { sessionId: ssId }).scheduled = false;
 			atx.status = 'recommended';
+			this.atxScheduleCardOpened = false;
+			this.recommendedAtxScheduleCardOpened = false;
 			this.status.loading.atx = false;
 			if (window.Cypress) {
 				window.atxLoading = false;
@@ -1070,27 +1059,36 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns pertage string
 	 */
 	private calculateActionPercentage (pitstop: RacetrackPitstop) {
+		const start = I18n.get('_Start_');
 		if (pitstop) {
 			const completedActions = _.filter(pitstop.pitstopActions, 'isComplete').length;
 			const pct = Math.floor(
 				(completedActions / pitstop.pitstopActions.length) * 100) || 0;
 
 			if (!_.isNil(pct)) {
-				return (pct === 0) ? 'start' : `${pct.toString()}%`;
+				return (pct === 0) ? start : `${pct.toString()}%`;
 			}
 		}
 
-		 return 'start';
+		return start;
 	}
 
 	/**
 	 * Updates the bookmark of the item
 	 * @param item bookmark item object
-	 * @param lifecycleCategory string of the category type
+	 * @param inputCategory string of the category type
 	 */
-	 public updateBookmark (item: AtxSchema | SuccessPath, lifecycleCategory: 'ATX' | 'SB') {
+	 public updateBookmark (item: AtxSchema | SuccessPath, inputCategory: 'ATX' | 'SB' | 'PG') {
 		let bookmark;
 		let id;
+		let lifecycleCategory: 'ATX' | 'SB';
+
+		// Product Guides has to be submitted as a Success Bytes bookmark.
+		if (inputCategory === 'PG') {
+			lifecycleCategory = 'SB';
+		} else {
+			lifecycleCategory = <'ATX' | 'SB'> inputCategory;
+		}
 
 		switch (lifecycleCategory) {
 			case 'ATX':
@@ -1163,6 +1161,43 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Gets the coordinates of the hovered ATX item
+	 * @param moreList HTMLElement
+	 * @param panel string
+	 */
+	 public getMoreCoordinates (moreList: HTMLElement, panel: string) {
+		if (_.isEqual(panel, 'moreATXList') && !this.atxScheduleCardOpened) {
+			this.moreXCoordinates = moreList.offsetWidth;
+			this.moreYCoordinates = moreList.offsetTop;
+		}
+	}
+
+	/**
+	 * Changes the atxScheduleCardOpened flag and adds value to moreATXSelected
+	 * @param item ATXSchema
+	 */
+	 public atxMoreViewSessions (item: AtxSchema) {
+		this.atxScheduleCardOpened = true;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.moreATXSelected = item;
+	}
+
+	/**
+	 * Changes the atxScheduleCardOpened flags to false to close the popupmodal
+	 */
+	 public closeViewSessions () {
+		this.atxScheduleCardOpened = false;
+		this.recommendedAtxScheduleCardOpened = false;
+		this.selectSession({ });
+		this.eventXCoordinates = 0;
+		this.eventYCoordinates = 0;
+		this.moreXCoordinates = 0;
+		this.moreYCoordinates = 0;
+		this.componentData.atx.interested = null;
+		this.moreATXSelected = null;
+	}
+
+	/**
 	 * Get the panel styles based on button coordinates
 	 * @param viewAtxSessions HTMLElement
 	 * @returns panel string
@@ -1170,6 +1205,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
+		const atxPopupListViewAdjustPx = 193;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
@@ -1190,10 +1226,15 @@ export class LifecycleComponent implements OnDestroy {
 					const ht = this.eventClickedElement.scrollHeight;
 
 					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
-					_div.style.top = `${(rect.top + (ht / 2)) + this.scrollY - 210}px`;
+					_div.style.top = `${(rect.top + (ht / 2))
+						+ this.scrollY - atxPopupListViewAdjustPx - this.appHeaderHeight}px`;
 					panel = 'panel listpanel--open';
 				}
 			}
+		} else if (this.atxScheduleCardOpened && this.moreATXSelected) {
+			_div.style.left = `${this.moreXCoordinates}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '40%';
 			_div.style.bottom = '10px';
@@ -1697,5 +1738,25 @@ export class LifecycleComponent implements OnDestroy {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+	}
+
+	/**
+	 * Handler for component intialization
+	 */
+	public ngOnInit () {
+		const appHeader = document.getElementsByTagName('app-header');
+		this.appHeaderHeight = _.get(appHeader, '[0].clientHeight', 0);
+	}
+
+	/**
+	 * Gets the height of the app header in pixels
+	 * @returns the height in px ready to be inserted as styling
+	 */
+	get appHeaderHeightPX (): string {
+		if (this.appHeaderHeight > 0) {
+			return `${this.appHeaderHeight}px`;
+		}
+
+		return `${this.appHeaderHeight}`;
 	}
 }

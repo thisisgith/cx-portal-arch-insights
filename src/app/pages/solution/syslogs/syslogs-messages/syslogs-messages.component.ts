@@ -114,14 +114,14 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		const currentFilter = _.get(changes, ['sysFilter', 'currentValue']);
 		if (currentFilter && !changes.sysFilter.firstChange) {
 			this.syslogsParams = {
-				catalog: this.sysFilter.catalog,
+				catalog: currentFilter.catalog,
 				customerId: this.customerId,
-				days: this.sysFilter.timeRange,
+				days: currentFilter.timeRange,
 				excludeMsgType: this.msgExclude.toUpperCase(),
 				includeMsgType: this.msgInclude.toUpperCase(),
 				pageNo: this.pageNum,
 				search: this.searchVal,
-				severity: this.sysFilter.severity,
+				severity: currentFilter.severity,
 				size: this.pageLimit,
 			};
 			this.getSyslogsData();
@@ -186,7 +186,15 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 		this.tableData = [];
 		this.gridSubscripion = this.syslogsService
 			.getGridData(this.syslogsParams)
-			.pipe(takeUntil(this.destroy$))
+			.pipe(
+				catchError(err => {
+					this.logger.error('syslogs-details.component : getDeviceGridData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of([]);
+				}),
+				takeUntil(this.destroy$),
+			)
 			.subscribe(gridData => {
 				this.tableData = gridData;
 				this.totalItems = gridData.length;

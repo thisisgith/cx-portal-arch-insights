@@ -49,10 +49,17 @@ export * from './lib/architecture/models';
 export * from './lib/architecture/services';
 export * from './lib/architecture/architecture.modules';
 
+export * from './lib/architecture-review/models';
+export * from './lib/architecture-review/services';
+export * from './lib/architecture-review/architecture-review.modules';
+
 export * from './lib/osv/models';
 export * from './lib/osv/services';
 export * from './lib/osv/osv.module';
 
+export * from './lib/rcc/models';
+export * from './lib/rcc/services';
+export * from './lib/rcc/rcc-data.module';
 export * from './lib/email/models';
 export * from './lib/email/services';
 export * from './lib/email/email.module';
@@ -72,3 +79,7 @@ export * from './lib/afm/afm.module';
 export * from './lib/syslogs/models';
 export * from './lib/syslogs/services';
 export * from './lib/syslogs/syslogs-data.module';
+
+export * from './lib/crash-prevention/models';
+export * from './lib/crash-prevention/services';
+export * from './lib/crash-prevention/crash-prevention.module';

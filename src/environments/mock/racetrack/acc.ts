@@ -92,7 +92,8 @@ function MockACC (
 				isFavorite: false,
 				status: 'completed',
 				title: 'This is a title for Adoption',
-				url: 'https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest',
+				url: 'https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/' +
+				'images/acc_access-overview-demo.png',
 			},
 		];
 	}
@@ -295,7 +296,7 @@ export const ACCScenarios = [
 			POST: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Bookmark1',
+					description: `(ACC) IBN-Bookmark-${accId1}`,
 					response: {
 						status: 200,
 					},
@@ -311,7 +312,7 @@ export const ACCScenarios = [
 			POST: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Bookmark2',
+					description: `(ACC) IBN-Bookmark-${accId2}`,
 					response: {
 						status: 200,
 					},
@@ -327,7 +328,7 @@ export const ACCScenarios = [
 			POST: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Bookmark3',
+					description: `(ACC) IBN-Bookmark-${accId3}`,
 					response: {
 						status: 200,
 					},
@@ -343,7 +344,7 @@ export const ACCScenarios = [
 			POST: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Bookmark4',
+					description: `(ACC) IBN-Bookmark-${accId4}`,
 					response: {
 						status: 200,
 					},
@@ -383,7 +384,7 @@ export const ACCScenarios = [
 			POST: [
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
-					description: '(ACC) IBN-Bookmark6',
+					description: `(ACC) IBN-Bookmark-${accId6}`,
 					response: {
 						status: 200,
 					},

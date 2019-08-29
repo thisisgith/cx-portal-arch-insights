@@ -14,4 +14,5 @@ export interface IException {
   exceptions?: string,
   uuid?: string,
   softwareType?: string,
+  description?: string,
 }

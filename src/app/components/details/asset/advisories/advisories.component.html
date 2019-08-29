@@ -88,7 +88,8 @@
 		target="_blank"
 		rel="noopener noreferrer"
 		[href]="celldata.url"
-		data-auto-id="FieldNoticeId">
+		data-auto-id="FieldNoticeId"
+		(click)="$event.stopPropagation()">
 	</a>
 </ng-template>
 
@@ -98,6 +99,7 @@
 		[innerText]="celldata.id"
 		target="_blank"
 		[href]="celldata.url"
-		data-auto-id="BugID">
+		data-auto-id="BugID"
+		(click)="$event.stopPropagation()">
 	</a>
 </ng-template>

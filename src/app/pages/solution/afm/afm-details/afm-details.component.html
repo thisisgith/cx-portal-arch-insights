@@ -60,7 +60,7 @@
 			</div>
 			<div class="base-margin-left">
 				<div class="text-bold" [innerText]="'_AfmRaiseCase_' | i18n"></div>
-				<div innerText="{{alarm.raiseSr}}"></div>
+				<div [innerText]="alarm.raiseSr" class="text-capitalize"></div>
 			</div>
 			<div class="base-margin-left">
 				<div class="text-bold" [innerText]="'_AfmTimeCreated_' | i18n"></div>
@@ -72,20 +72,38 @@
 	</div>
 
 	<div class="flex col-md-12">
-		<div class="col-md-4">
+		<div *ngIf="loading" class="base-margin-bottom">
+			<cui-spinner></cui-spinner>
+		</div>
+		<div class="col-md-3">
 			<label class="switch">
-				<input type="checkbox" [checked]="alarm?.status === 'Ignored'" class="ng-valid ng-dirty ng-touched"
+				<input type="checkbox"
+					[checked]="alarm?.status?.toUpperCase() === 'IGNORED'"
+					class="ng-valid ng-dirty ng-touched"
 					(change)="toggleEvent(alarm)">
 				<span class="switch__input"></span>
 				<span class="switch__label" [innerText]="'_AfmIgnoreEvent_'|i18n"></span>
 			</label>
 		</div>
-		<div class="col-md-8 text-right" *ngIf="alarm?.tacCaseNo">
-			<button class="btn btn--small btn--gray-ghost text-uppercase qtr-margin-bottom disabled"
+		<div class="col-md-8 text-right dbl-margin-left" *ngIf="alarm?.raiseSr && alarm?.tacCaseNo">
+			<button id="viewDisabled" class="btn btn--gray-ghost text-tuppercase disabled"
 				[innerText]="'_AfmCaseIdX_'|i18n:alarm?.tacCaseNo"></button>
 		</div>
+		<div class="col-md-4" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'"></div>
+		<div class="col-md-4 text-right" title="{{errorDesc}}" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
+			<div id="opacity" class="btn btn--gray-ghost disabled"
+				[innerText]="'_AfmEntitlementFailed_'| i18n"></div>
+		</div>
 	</div>
-	<div class="col-md-12">
-		<span innerText="{{ignoreStatus}}"></span>
+	<div class="flex col-md-12 base-margin-top" >
+		<div class="alert fade-and-slide-top text-left" [ngClass]="options.severity" *ngIf="options.visible">
+			<div class="alert__icon" [ngClass]="options.alertIcon"></div>
+			<ng-container>
+				<div class="alert__message">
+					<span [innerHTML]="options.message"></span>
+				</div>
+			</ng-container>
+			<a data-auto-id="alertClose" class="alert__close icon-close" (click)="options.visible = false;" [attr.aria-label]="'_Close_' | i18n"></a>
+		</div>
 	</div>
 </div>

@@ -23,7 +23,7 @@
 			<span [innerText]="'_AfmP2Critical_' | i18n"></span>
 		</span>
 		<span *ngSwitchCase="'3'">
-			<span class="qtr-margin-right icon-circle text-warning-alt"></span>
+			<span class="qtr-margin-right icon-circle text-muted"></span>
 			<span [innerText]="'_AfmP3Major_' | i18n"></span>
 		</span>
 		<span *ngSwitchCase="'4'">
@@ -31,7 +31,7 @@
 			<span [innerText]="'_AfmP4Minor_' | i18n"></span>
 		</span>
 		<span *ngSwitchCase="'5'">
-			<span class="qtr-margin-right icon-circle text-muted"></span>
+			<span class="qtr-margin-right icon-circle text-warning-alt"></span>
 			<span [innerText]="'_AfmP5Warning_' | i18n"></span>
 		</span>
 		<span *ngSwitchCase="'6'">
@@ -160,12 +160,7 @@
 			</div>
 		</div>
 		<div class="col-md-3">
-			<div
-				class="flex flex-fill flex-fluid"
-				[ngClass]="{
-					filter__selected: searchParams.headerFilterType == 'CHATS'
-				}"
-			>
+			<div class="flex flex-fill flex-fluid">
 				<ng-container *ngFor="let filter of filters; index as i">
 					<div
 						attr.id="AfmSelectVisualFilter-{{ filter.key }}"
@@ -176,7 +171,7 @@
 							filter__selected: filter.selected,
 							'filter__not-selected': !filter.selected
 						}"
-						class="flex filter"
+						class="panel flex-center flex-fill filter"
 					>
 						<div class="dbl-margin-top">
 							<div *ngIf="filter.template">
@@ -194,20 +189,72 @@
 			</div>
 		</div>
 	</div>
+	<div class="divider qtr-margin-top visual-filter-divider" *ngIf="selectedFilters?.length > 0"></div>
+	<ng-container>
+		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+		<div class="qtr-margin-top"></div>
+	</ng-container>
+	<ng-container  *ngIf="afmConnectionStatus?.status === 'Error'">
+		<div class="divider qtr-margin-top qtr-margin-bottom visual-filter-divider"></div>
+		<ng-container *ngTemplateOutlet="serverError"></ng-container>
+	</ng-container>
+	<div *ngIf="filterSpinner" class="base-margin-bottom">
+		<cui-spinner></cui-spinner>
+	</div>
 </ng-template>
 
 <ng-template #timeRangeFilter let-filter="filter">
 	<column-chart
 		*ngIf="filter?.seriesData?.length"
 		[seriesData]="filter.seriesData"
-		(subfilter)="onTimeRangefilterSelect($event, filter)"
+		(subfilter)="onTimeRangefilterSelect($event.filter, filter, true)"
 	>
 	</column-chart>
 	<div
 		class="text-large flex-center"
-		[ngClass]="{ 'text-primary': searchParams.headerFilterType == 'CHATS' }"
+		[ngClass]="{ 'text-primary': searchParams?.headerFilterType === 'CHATS' }"
 		[innerText]="filter.title"
 	></div>
+</ng-template>
+
+<ng-template #serverError>
+	<div *ngIf="statusErrorMessage?.length > 0">
+		<div class="alert fade-and-slide-top text-left alert--danger" >
+			<div class="alert__icon icon-error-outline"></div>
+				<ng-container>
+					<div class="alert__message">
+						<span [innerHTML]="statusErrorMessage"></span>
+					</div>
+				</ng-container>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #filterBar>
+	<div *ngIf="timeRangeFiltered" class="row">
+		<div class="col-md-1 flex flex-center-vertical">
+			<span class="text-bold text-uppercase half-padding-right"
+				[innerText]="'_AfmFiltered_'| i18n"></span>
+		</div>
+		<div class="col-md-10">
+			<ng-container *ngFor="let filter of selectedFilters">
+				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
+					<span class="label label--dkgray text-large"
+						(click)="onSubfilterSelect(subfilter.filter, filter)"
+						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
+						<span [innerText]="subfilter.label"></span>
+						<span class="icon-close"></span>
+					</span>
+				</ng-container>
+			</ng-container>
+		</div>
+		<div class="col-md-1 text-center text-right">
+			<a (click)="clearFilters()" class="text-lowercase"
+				[innerText]="'_AfmClearAll_'| i18n"
+				data-auto-id="FilterBarClearAllFilters">
+			</a>
+		</div>
+	</div>
 </ng-template>
 
 <ng-template #searchFilters>
@@ -248,7 +295,7 @@
 							class="qtr-margin-left text-medium text-muted"
 							[innerText]="
 								'_AfmShwoingOfflineXminutes_'
-									| i18n: afmConnectionStatus?.timeInMins
+									| i18n: afmConnectionStatus?.statusMessage
 							"
 						>
 						</span>
@@ -257,7 +304,7 @@
 						<span class="icon-info-outline icon-medium text-muted">
 						</span>
 						<span
-							class="qtr-margin-left text-medium text-danger"
+							class="qtr-margin-left text-medium"
 							[innerText]="
 								'_AfmShwoingOfflineXError_'
 									| i18n: afmConnectionStatus?.statusMessage
@@ -323,6 +370,7 @@
 			<afm-details
 				[alarm]="tablePanelData"
 				(selectedAsset)="connectToAssetDetails($event)"
+				(eventUpdated)="eventUpdated($event)"
 			></afm-details>
 		</div>
 	</details-panel-header>

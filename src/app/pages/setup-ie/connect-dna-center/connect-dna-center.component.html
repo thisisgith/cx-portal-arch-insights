@@ -11,6 +11,43 @@
 			<span class="base-margin-left" [innerText]="'_IE_CiscoDoesNotStoreTheseCreds_' | i18n"></span>
 		</div>
 		<div class="text-left">
+			<form
+				heightTransition
+				[heightTransitionExpanded]="promptForCreds"
+				class="dbl-margin-bottom"
+				[formGroup]="credsForm"
+			>
+				<alert
+					[title]="'_InvalidCXCollectorPassword_' | i18n | uppercase"
+					[(visible)]="passwordError"
+				>
+				</alert>
+				<div class="dbl-margin-bottom">
+					<h4 [innerText]="'_ReconnectToCXCollector_' | i18n"></h4>
+					<span
+						class="text-large"
+						[innerText]="'_ReconnectCXCollectorSubText_' | i18n"
+					></span>
+				</div>
+				<div class="row dbl-margin-bottom">
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="form-group__text">
+								<input
+									id="input-cx-collector-password"
+									type="password"
+									formControlName="password"
+								>
+								<label
+									for="input-layout-default"
+									[innerText]="'_Password_' | i18n"
+								>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
 			<form class="dbl-margin-bottom" [formGroup]="accountForm" (ngSubmit)="onSubmit()">
 				<div class="dbl-margin-bottom">
 					<h4 [innerText]="'_ConnectDNACToCXPortal_' | i18n"></h4>

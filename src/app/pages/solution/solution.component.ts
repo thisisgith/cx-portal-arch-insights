@@ -30,9 +30,11 @@ import {
 } from '@sdp-api';
 import { CaseService } from '@cui-x/services';
 import { LogService } from '@cisco-ngx/cui-services';
-import { catchError, map, takeUntil, tap } from 'rxjs/operators';
+import { FeedbackComponent } from '../../components/feedback/feedback.component';
+import { CuiModalService } from '@cisco-ngx/cui-components';
+import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
-import { UtilsService, RacetrackInfoService } from '@services';
+import { DetailsPanelStackService, UtilsService, RacetrackInfoService } from '@services';
 
 /**
  * Interface representing a facet
@@ -93,6 +95,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 
 	constructor (
 		private contractsService: ContractsService,
+		private cuiModalService: CuiModalService,
 		private productAlertsService: ProductAlertsService,
 		private router: Router,
 		private racetrackService: RacetrackService,
@@ -102,6 +105,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private utils: UtilsService,
 		private cdr: ChangeDetectorRef,
 		private racetrackInfoService: RacetrackInfoService,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -123,6 +127,10 @@ export class SolutionComponent implements OnInit, OnDestroy {
 							'firstTime');
 						this.quickTourActive = this.quickTourFirstTime ||
 							_.isNil(this.quickTourFirstTime);
+						if (window.Cypress) {
+							this.quickTourActive = _.get(
+								window, 'Cypress.showQuickTour', this.quickTourActive);
+						}
 						this.utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
 					}
 				}
@@ -167,6 +175,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.racetrackInfoService.sendCurrentTechnology(this.selectedTechnology);
 				}
 			}
+
+			this.detailsPanelStackService.reset();
 		}
 	}
 
@@ -258,29 +268,43 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	private fetchSolutions () {
 		this.status.loading = true;
+		this.racetrackInfoService.getRacetrack()
+		.pipe(
+			map(result => {
+				this.solutions = result.solutions;
+			}),
+			takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error(`Solution Data :: Get Racetrack :: Error ${err}`);
 
-		return forkJoin(
-			this.racetrackInfoService.getRacetrack()
-			.pipe(
-				map(result => {
-					this.solutions = result.solutions;
-					this.status.loading = false;
-				}),
-				takeUntil(this.destroy$),
-			),
+				return of({ });
+			}),
+		)
+		.subscribe();
 
-			this.racetrackInfoService.getCurrentSolution()
-			.pipe(
-				map(result => this.selectedSolution = result),
-				takeUntil(this.destroy$),
-			),
+		this.racetrackInfoService.getCurrentSolution()
+		.pipe(
+			map(result => this.selectedSolution = result),
+			takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error(`Solution Data :: Get Current Solution :: Error ${err}`);
 
-			this.racetrackInfoService.getCurrentTechnology()
-			.pipe(
-				map(result => this.selectedTechnology = result),
-				takeUntil(this.destroy$),
-			),
-		);
+				return of({ });
+			}),
+		)
+		.subscribe();
+
+		this.racetrackInfoService.getCurrentTechnology()
+		.pipe(
+			map(result => this.selectedTechnology = result),
+			takeUntil(this.destroy$),
+			catchError(err => {
+				this.logger.error(`Solution Data :: Get Current Technology :: Error ${err}`);
+
+				return of({ });
+			}),
+		)
+		.subscribe();
 	}
 
 	/**
@@ -534,14 +558,13 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	public ngOnInit () {
 		this.initializeQuickTour();
 		this.initializeFacets();
+		this.fetchSolutions();
 		forkJoin(
-			this.fetchSolutions(),
 			this.fetchCoverageCount(),
 			this.fetchAdvisoryCounts(),
 			this.getCaseAndRMACount(),
 		)
 		.pipe(
-			tap(() => this.refreshQuickTour()),
 			catchError(err => {
 				this.status.loading = false;
 				this.logger.error('solution.component : ngOnInit() ' +
@@ -551,7 +574,11 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			}),
 			takeUntil(this.destroy$),
 		)
-		.subscribe();
+		.subscribe(() => {
+			this.refreshQuickTour();
+			this.status.loading = false;
+		});
+		this.collapseFeedbackTab();
 	}
 
 	/**
@@ -570,5 +597,23 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 */
 	public async ngAfterViewInit () {
 		this.cdr.detectChanges();
+	}
+
+	/**
+	 * Opens the feedback modal
+	 * @param app the app to delete
+	 */
+	 public async openFeedbackModal () {
+		await this.cuiModalService.showComponent(FeedbackComponent, { }, 'normal');
+	}
+
+	/**
+	 * Collapses the initially opened feedback tab
+	 */
+	public collapseFeedbackTab () {
+		window.addEventListener('scroll', () => {
+			document.getElementById('slideout').classList
+				.remove('expand-on-load');
+		}, { once: true, capture: true });
 	}
 }

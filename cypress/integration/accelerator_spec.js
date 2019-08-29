@@ -28,6 +28,16 @@ const firstRecommendedACC = Cypress._.head(Cypress._.filter(accItems, { status: 
 
 const possibleAttendeesValues = [1, 2, 3, 4, 5];
 
+const accFilters = [
+	{ filter: 'Recommended', field: 'status', value: 'recommended' },
+	{ filter: 'Requested', field: 'status', value: 'requested' },
+	{ filter: 'Scheduled', field: 'status', value: 'scheduled' },
+	{ filter: 'In progress', field: 'status', value: 'in-progress' },
+	{ filter: 'Completed', field: 'status', value: 'completed' },
+	{ filter: 'Bookmarked', field: 'isFavorite', value: true },
+	{ filter: 'Not bookmarked', field: 'isFavorite', value: false },
+];
+
 const i18n = require('../../src/assets/i18n/en-US.json');
 
 // Mapped list of possible statuses to filters
@@ -42,6 +52,13 @@ describe('Accelerator (ACC)', () => { // PBC-32
 	before(() => {
 		cy.login();
 		cy.loadApp();
+
+		// Disable the setup wizard and quick tour so they don't block other elements
+		cy.window().then(win => {
+			win.Cypress.hideDNACHeader = true;
+			win.Cypress.showQuickTour = false;
+		});
+
 		cy.waitForAppLoading();
 
 		// Wait for the ACC panel to finish loading
@@ -59,9 +76,14 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					.should('have.text', i18n._Completed_);
 				break;
 			case 'in-progress':
+				cy.getByAutoId('recommendedACC-In-Progress-Icon').should('exist')
+				cy.getByAutoId('recommendedACC-In-Progress')
+					.should('have.text', i18n._Requested_);
+				break;
 			case 'requested':
-				cy.getByAutoId('recommendedACC-CSEMessage')
-					.should('have.text', i18n._ACCRequestSubmitted_);
+				cy.getByAutoId('recommendedACC-Requested-Icon').should('exist')
+				cy.getByAutoId('recommendedACC-Requested')
+					.should('have.text', i18n._Requested_);
 				break;
 			default:	// Default: recommended
 				cy.getByAutoId('recommendedACCWatchButton')
@@ -77,7 +99,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 		cy.get('.modal__header.acc__header').should('contain', i18n._Accelerator_)
 			.and('contain', i18n._1on1Coaching_);
-		cy.getByAutoId('ACCTopicsAvailable').should(
+		cy.getByAutoId('ViewAllModal-TopicsAvailable').should(
 			'have.text', `${validACCItems.length} topics available for ${solution} > ${useCase}:`
 		);
 
@@ -88,21 +110,24 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		validACCItems.forEach((acc, index) => {
 			cy.getByAutoId('ACCCard').eq(index).within(() => {
 				if (acc.status === 'recommended') {
-					cy.getByAutoId('ACCCardHeader').should('have.class', 'text-info');
+					cy.getByAutoId('ACCCardHeader').should('have.class', 'text-dkgray-4');
 				} else {
 					cy.getByAutoId('ACCCardHeader').should('have.class', 'text-clear');
 				}
 				cy.getByAutoId('ACCCardTitle').should('have.text', acc.title);
-				cy.get('.atx-card__body').should('contain', acc.description);
+				cy.getByAutoId('ACCCardDescription').should('contain', acc.description);
 				switch (acc.status) {
 					case 'completed':
 						cy.getByAutoId('ACCCardFooter')
 							.should('contain', i18n._Completed_);
 						break;
 					case 'in-progress':
+						cy.getByAutoId('ACCCardFooter')
+							.should('contain', i18n._SessionInProgress_);
+						break;
 					case 'requested':
 						cy.getByAutoId('ACCCardFooter')
-							.should('contain', i18n._CSETouch_);
+							.should('contain', i18n._Requested_);
 						break;
 					default:	// Default: recommended
 						cy.getByAutoId('Request1on1Button')
@@ -110,20 +135,16 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				}
 
 				// PBC-237 Check bookmark ribbon
-				if (acc.status === 'completed') {
-					cy.getByAutoId('ACCCardRibbon')
-						.should('have.class', 'ribbon__green');
-					cy.get('.star').should('exist');
-				} else if (acc.isFavorite) {
+				if (acc.isFavorite) {
 					cy.getByAutoId('ACCCardRibbon')
 						.should('have.class', 'ribbon__blue');
 				} else {
 					cy.getByAutoId('ACCCardRibbon')
-						.should('have.class', 'ribbon__clear');
+						.should('have.class', 'ribbon__white');
 				}
 			});
 		});
-		cy.getByAutoId('ACCCloseModal').click();
+		cy.getByAutoId('SuccessPathCloseModal').click();
 	});
 
 	describe('PBC-33: (UI) View - Solution Based: ACC Details', () => {
@@ -171,13 +192,13 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		before(() => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('accViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 		});
 
 		after(() => {
 			// Close the View All modal
-			cy.getByAutoId('ACCCloseModal').click();
-			cy.getByAutoId('accViewAllModal').should('not.exist');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
 		it('View All ACC modal shows all items by default', () => {
@@ -188,7 +209,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 		Object.keys(accStatuses).forEach(status => {
 			it(`View All ACC modal can filter by status: ${accStatuses[status]}`, () => {
-				cy.getByAutoId('accViewAllModal').within(() => {
+				cy.getByAutoId('ViewAllModal').within(() => {
 					cy.getByAutoId('cui-select').click();
 					cy.get(`a[title="${accStatuses[status]}"]`).click();
 
@@ -201,7 +222,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('View All ACC modal can filter by status: Bookmarked', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get(`a[title="${i18n._Bookmarked_}"]`).click();
 
@@ -213,7 +234,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('View All ACC modal can filter by status: Not bookmarked', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get(`a[title="${i18n._NotBookmarked_}"]`).click();
 
@@ -225,7 +246,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('View All ACC modal can filter by status: All Titles', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get(`a[title="${i18n._AllTitles_}"]`).click();
 
@@ -236,7 +257,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('View All ACC modal should be searchable', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				// Start typing an archetype in the filter field
 				cy.getByAutoId('cui-select').click()
 					.get('input')
@@ -254,7 +275,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('View All ACC modal should be clearable', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Completed"]').click();
 
@@ -279,13 +300,13 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		beforeEach(() => {
 			// Open the View All modal
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('accViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 		});
 
 		afterEach(() => {
 			// Close the View All modal
-			cy.getByAutoId('ACCCloseModal').click();
-			cy.getByAutoId('accViewAllModal').should('not.exist');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			// Make sure we're on the lifecycle page and the default use case
 			cy.getByAutoId('UseCaseDropdown').click();
@@ -296,20 +317,20 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('View All ACC filter should be sticky across modal close/re-open', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Completed"]').click();
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
 			});
 
 			// Close and re-open the modal
-			cy.getByAutoId('ACCCloseModal').click();
-			cy.getByAutoId('accViewAllModal').should('not.exist');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('accViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Check that the filter is still in place
-			cy.getByAutoId('accViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
 				const filteredItems = validACCItems.filter(item => (item.status === 'completed'));
 				cy.getByAutoId('ACCCard').then(cards => {
@@ -318,23 +339,23 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('View All ACC filter should NOT be sitcky across use case changes', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+		it('View All ACC filter should NOT be sticky across use case changes', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Completed"]').click();
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
 			});
 
 			// Close the modal, change use cases, and re-open the modal
-			cy.getByAutoId('ACCCloseModal').click();
-			cy.getByAutoId('accViewAllModal').should('not.exist');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 			cy.wait('(ACC) IBN-Campus Network Segmentation-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('accViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
 			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
@@ -343,23 +364,23 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('View All ACC filter should NOT be sitcky across page navigation', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+		it('View All ACC filter should NOT be sticky across page navigation', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Completed"]').click();
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
 			});
 
 			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
-			cy.getByAutoId('ACCCloseModal').click();
-			cy.getByAutoId('accViewAllModal').should('not.exist');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.getByAutoId('Facet-Assets & Coverage').click();
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('accViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
 			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
@@ -368,22 +389,22 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			});
 		});
 
-		it('View All ACC filter should NOT be sitcky across page reload', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+		it('View All ACC filter should NOT be sticky across page reload', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').click();
 				cy.get('a[title="Completed"]').click();
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Completed');
 			});
 
 			// Close the modal, reload the page, and re-open the modal
-			cy.getByAutoId('ACCCloseModal').click();
-			cy.getByAutoId('accViewAllModal').should('not.exist');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
 
 			cy.loadApp();
 			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
 
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-			cy.getByAutoId('accViewAllModal').should('exist');
+			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
 			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
@@ -480,7 +501,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('recommendedACC-Title').should('exist')
 				.and('contain', twoRecommendedItems[0].title);
 			cy.getByAutoId('recommendedACC-Image').should('exist')
-				.and('have.attr', 'src', 'assets/img/solutions/acc.png');
+				.and('have.attr', 'src', twoRecommendedItems[0].url);
 			cy.getByAutoId('recommendedACCWatchButton').should('exist')
 				.and('have.text', 'Request a 1-on-1');
 
@@ -489,7 +510,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('recommendedACC-HoverModal-Title').should('exist')
 				.and('contain', twoRecommendedItems[0].title);
 			cy.getByAutoId('recommendedACC-HoverModal-Description').should('exist')
-				.and('contain', twoRecommendedItems[0].description);
+				.and('contain', twoRecommendedItems[0].description)
+				// PBC-611 Truncate description text
+				// Since this handled by the styles, just validate the class exists
+				.and('have.class', 'line-clamp');
 		});
 
 		it('PBC-279: When there are no recommended ACCs, use the first requested item', () => {
@@ -504,8 +528,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('recommendedACC').should('exist').within(() => {
 				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
 				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('not.exist');
-
-				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('exist');
 			});
 		});
 
@@ -521,8 +543,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('recommendedACC').should('exist').within(() => {
 				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
 				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('not.exist');
-
-				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('exist');
 			});
 		});
 
@@ -537,7 +557,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Completed hover should have the completed text, not CSE text or request button
 			cy.getByAutoId('recommendedACC').should('exist').within(() => {
 				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
-				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('not.exist');
 
 				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('exist');
 				cy.getByAutoId('recommendedACC-Checkmark').should('exist');
@@ -579,7 +598,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('accRequestModal').should('be.visible');
 			cy.getByAutoId('ACCCloseRequestModal').click();
 			cy.getByAutoId('accRequestModal').should('not.exist');
-			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('SuccessPathCloseModal').click();
 		});
 
 		it('PBC-260: Should be able to close or cancel request form', () => {
@@ -635,7 +654,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 			it('PBC-260: Request 1-on-1 form should have employee information pre-filled', () => {
 				cy.getByAutoId('accRequestModal-CompanyName-Value').should('have.text', accUserInfoResponse.companyName);
-				cy.getByAutoId('accRequestModal-CustomerUserName-Value').should('have.text', accUserInfoResponse.ccoId);
+				cy.getByAutoId('accRequestModal-CustomerUserName-Value').should('have.text', accUserInfoResponse.userFullName);
 				cy.getByAutoId('accRequestModal-JobTitle-Value').should('have.text', accUserInfoResponse.jobTitle);
 				cy.getByAutoId('accRequestModal-Email-Value').should('have.text', accUserInfoResponse.userEmail);
 				cy.getByAutoId('accRequestModal-Phone-Value').should('have.text', accUserInfoResponse.userPhoneNumber);
@@ -964,6 +983,15 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					status: 500,
 					response: 'Forced error from QA',
 				}).as('failedPostRequestForm');
+				cy.route({
+					method: 'GET',
+					url: /.*\/oauth\/.*/,
+					status: 200,
+					response: {
+						token: 'junk',
+						expiration: '3599',
+					},
+				}).as('oauthMock');
 				accMock.disable('(ACC) IBN-ACCRequestSubmit1');
 
 				// Open the request form modal
@@ -1001,6 +1029,17 @@ describe('Accelerator (ACC)', () => { // PBC-32
 				cy.route({
 					method: 'GET',
 					url: '/api/customerportal/racetrack/v1/acc/request/user-info',
+					delay: 750,
+					response: {
+						ccoId: 'vpriyata',
+						ciscoContact: 'John Doe',
+						companyName: 'Cisco Systems',
+						country: 'USA',
+						jobTitle: 'NETWORK SPECIALIST',
+						userEmail: 'johndoe@cisco.com',
+						userFullName: 'John Doe',
+						userPhoneNumber: '1-888-555-5555',
+					},
 				}).as('getUserInfo');
 				cy.route({
 					method: 'POST',
@@ -1029,7 +1068,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 				cy.wait('@getUserInfo').its('response.body').then(body => {
 					cy.getByAutoId('accRequestModal-CompanyName-Value').should('have.text', body.companyName);
-					cy.getByAutoId('accRequestModal-CustomerUserName-Value').should('have.text', body.ccoId);
+					cy.getByAutoId('accRequestModal-CustomerUserName-Value').should('have.text', body.userFullName);
 					cy.getByAutoId('accRequestModal-JobTitle-Value').should('have.text', body.jobTitle);
 					cy.getByAutoId('accRequestModal-Email-Value').should('have.text', body.userEmail);
 					cy.getByAutoId('accRequestModal-Phone-Value').should('have.text', body.userPhoneNumber);
@@ -1158,13 +1197,13 @@ describe('Accelerator (ACC)', () => { // PBC-32
 
 				// Open the ACC View All modal
 				cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
-				cy.getByAutoId('accViewAllModal').should('exist');
+				cy.getByAutoId('ViewAllModal').should('exist');
 			});
 
 			after(() => {
 				// Close the ACC View All modal
-				cy.getByAutoId('ACCCloseModal').click();
-				cy.getByAutoId('accViewAllModal').should('not.exist');
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
 
 				// Ensure we are using the default mock data
 				accMock.enable('(ACC) IBN-Campus Network Assurance-Onboard');
@@ -1195,13 +1234,814 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 	});
 
+	describe('PBC-236: (UI View) - Lifecycle: ACC - View All Table View', () => {
+		before(() => {
+			// Open the View All modal and switch to table view
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+
+		after(() => {
+			// Switch back to card view and close View All modal
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ACCCard').should('be.visible');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.be.visible');
+
+			// Refresh the page to force-reset bookmarks
+			cy.loadApp();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('ACC View All should be able to toggle between table and card views', () => {
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ACCCard').should('be.visible');
+			cy.getByAutoId('ViewAllTable').should('not.be.visible');
+
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ACCCard').should('not.be.visible');
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+
+		it('ACC View All table view should have expected columns', () => {
+			cy.getByAutoId('ViewAllTable')
+				.should('be.visible')
+				.within(() => {
+					cy.get('th').then($columnHeaders => {
+						// Should be 4 columns (Bookmark, Name, Status, Buttons)
+						expect($columnHeaders.length).to.eq(4);
+					});
+					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').should('exist');
+					cy.getByAutoId('ViewAllTable-columnHeader-Status').should('exist');
+					// Buttons column has no title
+					cy.getByAutoId('ViewAllTable-columnHeader-').should('exist');
+				});
+		});
+
+		it('ACC View All table view should have all data', () => {
+			accItems.forEach((item, index) => {
+				cy.get('tr').eq(index + 1).within(() => {
+					cy.getByAutoId('ACC-Title').should('have.text', item.title);
+					// Handle bookmark
+					if (item.isFavorite) {
+						cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+					} else {
+						cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+					}
+					// Handle status
+					switch (item.status) {
+						case 'requested':
+							cy.getByAutoId('Table-Status-Requested').within(() => {
+								cy.get('span').should('have.class', 'icon-check-outline');
+								cy.get('span').should('have.text', i18n._Requested_);
+							});
+							break;
+						case 'in-progress':
+							cy.getByAutoId('Table-Status-InProgress').within(() => {
+								cy.get('span').should('have.class', 'icon-clock');
+								cy.get('span').should('have.text', i18n._InProgress_);
+							});
+							break;
+						case 'recommended':
+							// For recommended, status column is blank, we have a Request button instead
+							cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+							break;
+						case 'completed':
+							cy.getByAutoId('Table-Status-Completed').within(() => {
+								cy.get('span').should('have.class', 'icon-certified');
+								cy.get('span').should('have.text', i18n._Completed_);
+							});
+							break;
+						default:
+							Cypress.log({
+								name: 'LOG',
+								message: `UNRECOGNIZED ACC STATUS TYPE: ${item.type} ! TREATING AS RECOMMENDED...`,
+							});
+							cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+					}
+				});
+			});
+		});
+
+		it('ACC View All table should not sort by default', () => {
+			cy.getByAutoId('ViewAllTable')
+				.within(() => {
+					accItems.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							cy.getByAutoId('ACC-Title').should('have.text', item.title);
+						});
+					});
+				});
+		});
+
+		it('ACC View All table should be sortable by Bookmark', () => {
+			cy.getByAutoId('ViewAllTable')
+				.within(() => {
+					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').click();
+					const sortedItemsAsc = Cypress._.orderBy(accItems, ['isFavorite'], ['asc']);
+					sortedItemsAsc.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							if (item.isFavorite) {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+							} else {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+							}
+						});
+					});
+
+					// Reverse the sort and re-verify order
+					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').click();
+					const sortedItemsDesc = Cypress._.orderBy(accItems, ['isFavorite'], ['desc']);
+					sortedItemsDesc.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							if (item.isFavorite) {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'text-indigo');
+							} else {
+								cy.getByAutoId('SBListRibbon').should('have.class', 'icon-bookmark-clear');
+							}
+						});
+					});
+				});
+		});
+
+		it('ACC View All table should be sortable by Name', () => {
+			cy.getByAutoId('ViewAllTable')
+				.within(() => {
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					const sortedItemsAsc = Cypress._.orderBy(accItems, ['title'], ['asc']);
+					sortedItemsAsc.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							cy.getByAutoId('ACC-Title').should('have.text', item.title);
+						});
+					});
+
+					// Reverse the sort and re-verify order
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+					const sortedItemsDesc = Cypress._.orderBy(accItems, ['title'], ['desc']);
+					sortedItemsDesc.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							cy.getByAutoId('ACC-Title').should('have.text', item.title);
+						});
+					});
+				});
+		});
+
+		it('ACC View All table should be sortable by Status', () => {
+			cy.getByAutoId('ViewAllTable')
+				.within(() => {
+					cy.getByAutoId('ViewAllTable-columnHeader-Status').click();
+					const sortedItemsAsc = Cypress._.orderBy(accItems, ['status'], ['asc']);
+					sortedItemsAsc.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							switch (item.status) {
+								case 'requested':
+									cy.getByAutoId('Table-Status-Requested').should('be.visible');
+									break;
+								case 'in-progress':
+									cy.getByAutoId('Table-Status-InProgress').should('be.visible');
+									break;
+								case 'recommended':
+									// For recommended, status column is blank, we have a Request button instead
+									cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+									break;
+								case 'completed':
+									cy.getByAutoId('Table-Status-Completed').should('be.visible');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED ACC STATUS TYPE: ${item.type} ! TREATING AS RECOMMENDED...`,
+									});
+									cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+							}
+						});
+					});
+
+					// Reverse the sort and re-verify order
+					cy.getByAutoId('ViewAllTable-columnHeader-Status').click();
+					const sortedItemsDesc = Cypress._.orderBy(accItems, ['status'], ['desc']);
+					sortedItemsDesc.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							switch (item.status) {
+								case 'requested':
+									cy.getByAutoId('Table-Status-Requested').should('be.visible');
+									break;
+								case 'in-progress':
+									cy.getByAutoId('Table-Status-InProgress').should('be.visible');
+									break;
+								case 'recommended':
+									// For recommended, status column is blank, we have a Request button instead
+									cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+									break;
+								case 'completed':
+									cy.getByAutoId('Table-Status-Completed').should('be.visible');
+									break;
+								default:
+									Cypress.log({
+										name: 'LOG',
+										message: `UNRECOGNIZED ACC STATUS TYPE: ${item.type} ! TREATING AS RECOMMENDED...`,
+									});
+									cy.getByAutoId('Request1on1ACCButton').should('be.visible');
+							}
+						});
+					});
+				});
+		});
+
+		accFilters.forEach(filterMap => {
+			it(`ACC View All table should be able to filter by status: ${filterMap.filter}`, () => {
+				// Filter by status, verify the count
+				cy.getByAutoId('ViewAllModal').within(() => {
+					cy.getByAutoId('cui-select').click();
+					cy.get(`a[title="${filterMap.filter}"]`).click();
+
+					const filteredItems = accItems.filter(
+						item => (item[filterMap.field] === filterMap.value)
+					);
+					cy.getByAutoId('ViewAllTable')
+						.should('be.visible')
+						.within(() => {
+							cy.get('tr').then(rows => {
+								// Note that the first tr is the column headers
+								expect(rows.length - 1).to.eq(filteredItems.length);
+							});
+						});
+				});
+			});
+		});
+
+		it('ACC View All table should be able to filter by status: All titles', () => {
+			// Filter by status, verify the count
+			cy.getByAutoId('ViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="All titles"]').click();
+
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						cy.get('tr').then(rows => {
+							// Note that the first tr is the column headers
+							expect(rows.length - 1).to.eq(accItems.length);
+						});
+					});
+			});
+		});
+
+		it('ACC View All table view should allow requesting 1-on-1', () => {
+			// Verify a Request 1-on-1 button is available for all recommended items, and clicking
+			// it opens the request form
+			accItems.forEach((item, index) => {
+				if (item.status === 'recommended') {
+					cy.get('tr').eq(index + 1).within(() => {
+						cy.getByAutoId('Request1on1ACCButton')
+							.should('be.visible')
+							.click();
+					});
+					cy.getByAutoId('accRequestModal').should('be.visible');
+
+					// Close the request form
+					cy.getByAutoId('ACCCloseRequestModal').click();
+					cy.getByAutoId('accRequestModal').should('not.exist');
+				}
+			});
+		});
+
+		it('ACC View All table view should allow bookmarking/unbookmarking items', () => {
+			accItems.forEach((item, index) => {
+				cy.get('tr').eq(index + 1).within(() => {
+					if (item.isFavorite) {
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'text-indigo')
+							.click();
+						cy.wait(`(ACC) IBN-Bookmark-${item.accId}`);
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'icon-bookmark-clear');
+					} else {
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'icon-bookmark-clear')
+							.click();
+						cy.wait(`(ACC) IBN-Bookmark-${item.accId}`);
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'text-indigo');
+					}
+				});
+			});
+		});
+
+		it('ACC View All table should be able filter and sort together', () => {
+			// Filter by status and sort
+			cy.getByAutoId('ViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="In progress"]').click();
+
+				const filteredItems = accItems.filter(
+					item => (item.status === 'in-progress')
+				);
+				cy.getByAutoId('ViewAllTable')
+					.should('be.visible')
+					.within(() => {
+						// Verify the filtered count
+						cy.get('tr').then(rows => {
+							// Note that the first tr is the column headers
+							expect(rows.length - 1).to.eq(filteredItems.length);
+						});
+
+						// Verify the sort order
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+						const sortedItemsAsc = Cypress._.orderBy(filteredItems, ['title'], ['asc']);
+						sortedItemsAsc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ACC-Title').should('have.text', item.title);
+							});
+						});
+
+						// Reverse the sort and re-verify order
+						cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+						const sortedItemsDesc = Cypress._.orderBy(filteredItems, ['title'], ['desc']);
+						sortedItemsDesc.forEach((item, index) => {
+							// Note that our actual data rows start at tr 1, because 0 is the headers
+							cy.get('tr').eq(index + 1).within(() => {
+								// Only check the field we've sorted by, since the sorting of items that have the
+								// same value depends on previous sorts
+								cy.getByAutoId('ACC-Title').should('have.text', item.title);
+							});
+						});
+					});
+			});
+		});
+	});
+
+	describe('PBC-236: ACC View All table sorting stickiness', () => {
+		beforeEach(() => {
+			// Open the View All modal and switch to table view
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+
+		afterEach(() => {
+			// Switch back to card view and close View All modal
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ACCCard').should('be.visible');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.be.visible');
+
+			// Make sure we're on the lifecycle page and the default use case
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('ACC View All table sort should be sticky across modal close/re-open', () => {
+			const sortedItemsAsc = Cypress._.orderBy(accItems, ['title'], ['asc']);
+
+			cy.getByAutoId('ViewAllTable')
+				.within(() => {
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+				});
+
+			// Close and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
+
+			// Verify the still in table view and sort is still in place
+			cy.getByAutoId('ViewAllTable')
+				.should('be.visible')
+				.within(() => {
+					sortedItemsAsc.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							cy.getByAutoId('ACC-Title').should('have.text', item.title);
+						});
+					});
+				});
+		});
+
+		it('ACC View All table sort should be sticky across table/card view', () => {
+			const sortedItemsAsc = Cypress._.orderBy(accItems, ['title'], ['asc']);
+
+			// Sort the data
+			cy.getByAutoId('ViewAllTable')
+				.within(() => {
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+				});
+
+			// Switch to card view, verify the sort is still in place
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ViewAllModal').within(() => {
+				sortedItemsAsc.forEach((item, index) => {
+					cy.getByAutoId('ACCCard')
+						.eq(index)
+						.should('contain', item.title);
+				});
+			});
+
+			// Switch back to table view, verify sort is still in place
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable')
+				.should('be.visible')
+				.within(() => {
+					sortedItemsAsc.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							cy.getByAutoId('ACC-Title').should('have.text', item.title);
+						});
+					});
+				});
+		});
+
+		it('ACC View All table sort should NOT be sticky across use case changes', () => {
+			cy.getByAutoId('ViewAllTable')
+				.within(() => {
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+				});
+
+			// Close the modal, switch use cases, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
+
+			// Verify still in table view and sort was reset to default
+			cy.getByAutoId('ViewAllTable')
+				.should('be.visible')
+				.within(() => {
+					accItems.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							cy.getByAutoId('ACC-Title').should('have.text', item.title);
+						});
+					});
+				});
+		});
+
+		it('ACC View All table sort should NOT be sticky across page navigation', () => {
+			cy.getByAutoId('ViewAllTable')
+				.within(() => {
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+				});
+
+			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
+
+			// Verify the sort was reset to default
+			cy.getByAutoId('ViewAllTable')
+				.should('be.visible')
+				.within(() => {
+					accItems.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							cy.getByAutoId('ACC-Title').should('have.text', item.title);
+						});
+					});
+				});
+		});
+
+		it('ACC View All table sort should NOT be sticky across page reload', () => {
+			cy.getByAutoId('ViewAllTable')
+				.within(() => {
+					cy.getByAutoId('ViewAllTable-columnHeader-Name').click();
+				});
+
+			// Close the modal, reload the page, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.loadApp();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
+
+			// Verify the sort was reset to default
+			cy.getByAutoId('ViewAllTable')
+				.should('be.visible')
+				.within(() => {
+					accItems.forEach((item, index) => {
+						// Note that our actual data rows start at tr 1, because 0 is the headers
+						cy.get('tr').eq(index + 1).within(() => {
+							// Only check the field we've sorted by, since the sorting of items that have the
+							// same value depends on previous sorts
+							cy.getByAutoId('ACC-Title').should('have.text', item.title);
+						});
+					});
+				});
+		});
+	});
+
+	describe('PBC-236: ACC View All table filter stickiness', () => {
+		beforeEach(() => {
+			// Open the View All modal and switch to table view
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+
+		afterEach(() => {
+			// Switch back to card view and close View All modal
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ACCCard').should('be.visible');
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.be.visible');
+
+			// Make sure we're on the lifecycle page and the default use case
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('ACC View All table filter should be sticky across modal close/re-open', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Requested"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
+			});
+
+			// Close and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
+
+			// Verify the filter is still in place
+			cy.getByAutoId('ViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
+				const filteredItems = accItems.filter(item => (item.status === 'requested'));
+				cy.get('tr').then($rows => {
+					// Note that the first tr is the column headers
+					expect($rows.length - 1).to.eq(filteredItems.length);
+				});
+			});
+		});
+
+		it('ACC View All table filter should be sticky across table/card view', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Requested"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
+			});
+
+			// Switch to card view, verify the filter is still in place
+			cy.getByAutoId('card-view-btn').click();
+			const filteredItems = accItems.filter(item => (item.status === 'requested'));
+			cy.getByAutoId('ViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
+				cy.getByAutoId('ACCCard').then($cards => {
+					expect($cards.length).to.eq(filteredItems.length);
+				});
+			});
+
+			// Switch back to table view, verify the filter is still in place
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable')
+				.should('be.visible')
+				.within(() => {
+					cy.get('tr').then($rows => {
+						// Note that the first tr is the column headers
+						expect($rows.length - 1).to.eq(filteredItems.length);
+					});
+				});
+		});
+
+		it('ACC View All table filter should NOT be sticky across use case changes', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Requested"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
+			});
+
+			// Close the modal, change use cases, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.get('tr').then($rows => {
+				// Note that the first tr is the column headers
+				expect($rows.length - 1).to.eq(accItems.length);
+			});
+		});
+
+		it('ACC View All table filter should NOT be sticky across page navigation', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Requested"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
+			});
+
+			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.get('tr').then($rows => {
+				// Note that the first tr is the column headers
+				expect($rows.length - 1).to.eq(accItems.length);
+			});
+		});
+
+		it('ACC View All table filter should NOT be sticky across page reload', () => {
+			cy.getByAutoId('ViewAllModal').within(() => {
+				cy.getByAutoId('cui-select').click();
+				cy.get('a[title="Requested"]').click();
+				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
+			});
+
+			// Close the modal, reload the page, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.loadApp();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('exist');
+
+			// Verify the filter was cleared and all items are displayed
+			cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', '');
+			cy.get('tr').then($rows => {
+				// Note that the first tr is the column headers
+				expect($rows.length - 1).to.eq(accItems.length);
+			});
+		});
+	});
+
+	describe('PBC-236: ACC View All table vs card view stickiness', () => {
+		beforeEach(() => {
+			// Open the modal and ensure we're in card view
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('ACCCard').should('be.visible');
+		});
+
+		afterEach(() => {
+			// Switch to back to card view and close the modal
+			cy.getByAutoId('card-view-btn').click();
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			// Make sure we're on the lifecycle page and the default use case
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-Campus Network Assurance').click();
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+		});
+
+		it('ACC View All table vs. card view should be sticky across modal close/re-open', () => {
+			// Switch to table view
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+
+			// Close and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+
+			// Verify we're still in table view
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+
+		it('ACC View All table vs. card view should be sticky across usecase change', () => {
+			// Switch to table view
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+
+			// Close the modal, switch use cases, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.getByAutoId('UseCaseDropdown').click();
+			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+
+			// Verify we're still in table view
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+
+		it('ACC View All table vs. card view should be sticky across page navigation', () => {
+			// Switch to table view
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+
+			// Close the modal, change to Assets & Coverage, back to Lifecycle, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+
+			// Verify we're still in table view
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+
+		it('ACC View All table vs. card view should be sticky across page reload', () => {
+			// Switch to table view
+			cy.getByAutoId('table-view-btn').click();
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+
+			// Close the modal, reload the page, and re-open the modal
+			cy.getByAutoId('SuccessPathCloseModal').click();
+			cy.getByAutoId('ViewAllModal').should('not.exist');
+
+			cy.loadApp();
+			cy.wait('(ACC) IBN-Campus Network Assurance-Onboard');
+
+			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
+			cy.getByAutoId('ViewAllModal').should('be.visible');
+
+			// Verify we're still in table view
+			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+	});
+
 	describe('PBC-237: (UI) View -  Lifecycle - ACC Status Ribbons', () => {
 		before(() => {
 			cy.getByAutoId('ShowModalPanel-_Accelerator_').click();
 		});
 
 		after(() => {
-			cy.getByAutoId('ACCCloseModal').click();
+			cy.getByAutoId('SuccessPathCloseModal').click();
 
 			// Reload the page to force-reset any changed bookmarks
 			// This is required since the mock bookmark APIs don't actually bookmark the ACC items
@@ -1213,12 +2053,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('Should be able to bookmark an ACC item', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
-					if (!acc.isFavorite && acc.status !== 'completed') {
+					if (!acc.isFavorite) {
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
-							.should('have.class', 'ribbon__clear')
+							.should('have.class', 'ribbon__white')
 							.click();
 						cy.waitForAppLoading('accLoading', 5000);
 						cy.getByAutoId('ACCCardRibbon')
@@ -1230,9 +2070,9 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		});
 
 		it('Should be able to UN-bookmark an ACC item', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
+			cy.getByAutoId('ViewAllModal').within(() => {
 				validACCItems.forEach((acc, index) => {
-					if (acc.isFavorite && acc.status !== 'completed') {
+					if (acc.isFavorite) {
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
 							.should('have.class', 'ribbon__blue')
@@ -1240,25 +2080,7 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						cy.waitForAppLoading('accLoading', 5000);
 						cy.getByAutoId('ACCCardRibbon')
 							.eq(index)
-							.should('have.class', 'ribbon__clear');
-					}
-				});
-			});
-		});
-
-		it('Should NOT be able to bookmark a completed ACC item', () => {
-			cy.getByAutoId('accViewAllModal').within(() => {
-				validACCItems.forEach((acc, index) => {
-					if (acc.status === 'completed') {
-						// For completed items, the ribbon is behind the star, so force the click through
-						cy.getByAutoId('ACCCardRibbon')
-							.eq(index)
-							.click({ force: true });
-						cy.waitForAppLoading('accLoading', 5000);
-						// Ribbon should remain green
-						cy.getByAutoId('ACCCardRibbon')
-							.eq(index)
-							.should('have.class', 'ribbon__green');
+							.should('have.class', 'ribbon__white');
 					}
 				});
 			});
@@ -1308,15 +2130,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 						cy.getByAutoId('moreACCList-HoverModal-Description').should('have.text', acc.description);
 						cy.getByAutoId('ACCCardRibbon').should('exist');
 
-						// Ribbon is blue for bookmarked, green w/ star for completed, clear otherwise
+						// Ribbon is blue for bookmarked, white otherwise
 						if (acc.isFavorite) {
 							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__blue');
 							cy.getByAutoId('.star').should('not.exist');
-						} else if (acc.status === 'completed') {
-							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__green');
-							cy.getByAutoId('.star').should('exist');
 						} else {
-							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__clear');
+							cy.getByAutoId('ACCCardRibbon').should('have.class', 'ribbon__white');
 							cy.getByAutoId('.star').should('not.exist');
 						}
 

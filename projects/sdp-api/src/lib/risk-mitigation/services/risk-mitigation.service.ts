@@ -6,7 +6,7 @@ import { RiskMitigationConfiguration as __Configuration } from '../risk-mitigati
 import { Observable as __Observable, from } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { RiskAssets } from '../models/risk-assets';
+import { RiskAssets, CrashHistoryDeviceCount, CrashHistoryDeviceList } from '../models/risk-assets';
 import { HighCrashRisk, HighCrashRiskPagination, HighCrashRiskDeviceCount } from '../models/high-crash-risk';
 import { CrashCount } from '../models/crash-count';
 
@@ -161,7 +161,7 @@ class RiskMitigationService extends __BaseService {
 		);
 	}
 
-	getCrashHistoryForDeviceResponse(params: RiskMitigationService.GetAssetsParams): __Observable<__StrictHttpResponse<RiskAssets>> {
+	getCrashHistoryForDeviceResponse(params: CrashHistoryDeviceCount): __Observable<__StrictHttpResponse<CrashHistoryDeviceList>> {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
@@ -169,7 +169,7 @@ class RiskMitigationService extends __BaseService {
 
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${RiskMitigationService.getCrashHistoryForDevicePath}` + params.customerId + '/' + params.neInstanceId,
+			this.rootUrl + `${RiskMitigationService.getCrashHistoryForDevicePath}` + params.customerId + '?deviceId=' + params.neInstanceId,
 			__body,
 			{
 				headers: __headers,
@@ -180,7 +180,7 @@ class RiskMitigationService extends __BaseService {
 		return this.http.request<any>(req).pipe(
 			__filter(_r => _r instanceof HttpResponse),
 			__map((_r) => {
-				return _r as __StrictHttpResponse<RiskAssets>;
+				return _r as __StrictHttpResponse<CrashHistoryDeviceList>;
 			})
 		);
 	}
@@ -209,9 +209,9 @@ class RiskMitigationService extends __BaseService {
 		);
 	}
 
-	getCrashHistoryForDevice(params: RiskMitigationService.GetAssetsParams): __Observable<RiskAssets> {
+	getCrashHistoryForDevice(params: CrashHistoryDeviceCount): __Observable<CrashHistoryDeviceList> {
 		return this.getCrashHistoryForDeviceResponse(params).pipe(
-			__map(_r => _r.body as RiskAssets)
+			__map(_r => _r.body as CrashHistoryDeviceList)
 		);
 	}
 	getSearchedData(params: any): __Observable<RiskAssets> {
