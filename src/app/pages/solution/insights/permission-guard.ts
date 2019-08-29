@@ -1,4 +1,3 @@
-/* tslint:disable */
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -22,19 +21,20 @@ export class PermissionGuard implements CanActivate {
 	 * @returns can activate boolean value
 	 */
 	public canActivate (
+		// tslint:disable-next-line: no-unused
 		next: ActivatedRouteSnapshot,
+		// tslint:disable-next-line: no-unused
 		state: RouterStateSnapshot): Observable<boolean> {
 		return this.userResolve.getCustomerId()
-		.pipe(
-			flatMap(id => { return this.rccService.checkPermissions({ customerId: id });
-		}),
+		.pipe(flatMap(id => this.rccService.checkPermissions({ customerId: id })),
 		map((response: boolean) => {
 			if (response) {
 				return true;
-			} else {
-				this.router.navigateByUrl('/solution/insights/risk-mitigation');
-				return false;
 			}
-		})
-	)}
+			this.router.navigateByUrl('/solution/insights/risk-mitigation');
+
+			return false;
+		}),
+		);
+	}
 }

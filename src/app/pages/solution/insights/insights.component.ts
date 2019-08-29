@@ -11,7 +11,7 @@ import * as _ from 'lodash-es';
 })
 export class InsightsComponent {
 	public customerId;
-	public hasPermission = true;
+	public hasPermission = false;
 	constructor (private rccService: RccService, private route: ActivatedRoute) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -22,7 +22,9 @@ export class InsightsComponent {
 	public ngOnInit (): void {
 		this.rccService.checkPermissions({ customerId: this.customerId })
 		.subscribe(response => {
-			if (!response) {
+			if (response) {
+				this.hasPermission = true;
+			} else {
 				this.hasPermission = false;
 			}
 		});
