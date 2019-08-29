@@ -8,10 +8,13 @@ import { OptimalSoftwareVersionComponent } from '../osv/osv.component';
 import { RiskMitigationComponent } from '../risk-mitigation/risk-mitigation.component';
 import { OptimalSoftwareVersionModule } from '../osv/osv.module';
 import { RiskMitigationModule } from '../risk-mitigation/risk-mitigation.module';
+import { RccService } from '@sdp-api';
+import { of } from 'rxjs';
 
 describe('InsightsComponent', () => {
 	let component: InsightsComponent;
 	let fixture: ComponentFixture<InsightsComponent>;
+	let rccService: RccService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -33,6 +36,7 @@ describe('InsightsComponent', () => {
 			],
 		})
 			.compileComponents();
+		rccService = TestBed.get(RccService);
 	}));
 
 	beforeEach(() => {
@@ -45,5 +49,39 @@ describe('InsightsComponent', () => {
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
+	});
+
+	it('should get the optin status for loggedIn user', done => {
+		const response = true;
+		spyOn(rccService, 'checkPermissions')
+			.and
+			.returnValue(of(response));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.hasPermission)
+					.toBeDefined();
+				expect(component.hasPermission)
+					.toEqual(response);
+				done();
+			});
+	});
+
+	it('should get the optin status for loggedIn user', done => {
+		const response = false;
+		spyOn(rccService, 'checkPermissions')
+			.and
+			.returnValue(of(response));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.hasPermission)
+					.toBeDefined();
+				expect(component.hasPermission)
+					.toEqual(response);
+				done();
+			});
 	});
 });

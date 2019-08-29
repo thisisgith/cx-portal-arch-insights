@@ -5,6 +5,13 @@ import { InsightsComponent } from './insights.component';
 import { CuiTabsNavModule } from '@cisco-ngx/cui-components';
 import { InsightsRoutingModule } from './insights-routing.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { RccDataModule } from '@sdp-api';
+import { environment } from '@environment';
+
+/**
+ * The SDP Origin URL used for passing to the SDP-API Modules
+ */
+const rootUrl = environment.sdpServiceOrigin;
 
 /**
  * Module representing the Insights track of the Solution Page
@@ -17,6 +24,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 		InsightsRoutingModule,
 		CuiTabsNavModule,
 		I18nPipeModule,
+		RccDataModule.forRoot({ rootUrl }),
 	],
 })
 export class InsightsModule { }

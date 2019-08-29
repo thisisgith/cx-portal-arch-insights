@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-
-import { LogService } from '@cisco-ngx/cui-services';
+import { RccService } from '@sdp-api';
+import { ActivatedRoute } from '@angular/router';
+import * as _ from 'lodash-es';
 /**
  * InsightsComponent
  */
@@ -9,9 +10,21 @@ import { LogService } from '@cisco-ngx/cui-services';
 	templateUrl: './insights.component.html',
 })
 export class InsightsComponent {
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('InsightsComponent Created!');
+	public customerId;
+	public hasPermission = true;
+	constructor (private rccService: RccService, private route: ActivatedRoute) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+	}
+	/**
+	 * ngOnInit method execution
+	 */
+	public ngOnInit (): void {
+		this.rccService.checkPermissions({ customerId: this.customerId })
+		.subscribe(response => {
+			if (!response) {
+				this.hasPermission = false;
+			}
+		});
 	}
 }
