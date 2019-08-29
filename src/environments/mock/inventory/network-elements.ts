@@ -711,6 +711,24 @@ export const NetworkScenarios = [
 			GET: [
 				{
 					delay: 100,
+					description: 'Impacted Network Elements for Security Advisory',
+					response: {
+						body: MockNetwork(100, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		// tslint:disable-next-line
+		url: `${api}?customerId=${customerId}&sort=hostName:ASC&rows=100&page=1&managedNeId=NA,FOC1544Y16T,WS-C2960S-24PS-L,NA`,
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
 					description: 'Network Elements for FOC1544Y16T',
 					response: {
 						body: MockNetwork(1, 1),

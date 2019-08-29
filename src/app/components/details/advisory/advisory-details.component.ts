@@ -23,7 +23,8 @@ import {
 import { UserResolve } from '@utilities';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { AdvisoryType, Alert } from '@interfaces';
+import { AdvisoryType, Alert, Panel360 } from '@interfaces';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Advisory Details Component
@@ -35,7 +36,7 @@ import { AdvisoryType, Alert } from '@interfaces';
 	selector: 'advisory-details',
 	templateUrl: './advisory-details.component.html',
 })
-export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
+export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy, Panel360 {
 
 	@Input('advisory') public advisory: CriticalBug | FieldNoticeAdvisory | SecurityAdvisoryInfo;
 	@Input('advisoryId') public advisoryId: string;
@@ -56,6 +57,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 
 	constructor (
 		private userResolve: UserResolve,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		this.userResolve.getCustomerId()
 		.pipe(
@@ -144,6 +146,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Initializer
 	 */
 	public ngOnInit () {
+		this.detailsPanelStackService.push(this);
 		this.refresh();
 	}
 
@@ -153,5 +156,19 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public ngOnDestroy () {
 		this.destroyed$.next();
 		this.destroyed$.complete();
+	}
+
+	/**
+	 * Removes the 360 panel from the stack when the back button is pressed
+	 */
+	public onPanelBack () {
+		this.detailsPanelStackService.pop();
+	}
+
+	/**
+	 * Closes all 360 panels
+	 */
+	public onAllPanelsClose () {
+		this.detailsPanelStackService.reset();
 	}
 }
