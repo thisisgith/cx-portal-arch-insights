@@ -125,19 +125,19 @@ describe('DevicesWithExceptionsComponent', () => {
 	it('should close panel', () => {
 		component.onPanelClose();
 		expect(component.assetObject)
-			.toBe(null);
+			.toBeNull();
 	});
 
 	it('should close AssetView', () => {
 		const isClosed = true;
 		component.closeAssetDetailsView(isClosed);
 		expect(component.selectedAsset)
-				.toBe(null);
+			.toBeNull();
 	});
 
 	it('should trigger search function', () => {
-		const event = { keyCode: 13 };
-		component.globalSearchFunction(event.keyCode);
+		const enterKeyCode = 13;
+		component.globalSearchFunction(enterKeyCode);
 		expect(component.isLoading)
 			.toBeFalsy();
 		expect(component.tableStartIndex)
@@ -145,7 +145,7 @@ describe('DevicesWithExceptionsComponent', () => {
 		expect(component.params.page)
 			.toBe(0);
 		expect(component.params.searchText)
-				.toBe('');
+			.toBe('');
 	});
 
 });

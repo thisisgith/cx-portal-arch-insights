@@ -128,10 +128,10 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	/**
 	 * Keys down function
 	 * @param event contains eventdata
-	 * keyCode 13 refers to the enter key
 	 */
 	public globalSearchFunction (event) {
-		if (event.keyCode === 13) {
+		const enterKeyCode = 13;
+		if (event.keyCode === enterKeyCode) {
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.params.page = 0;
