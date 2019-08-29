@@ -114,7 +114,7 @@
 				<span [innerText]="expirationDate | date:'yyyy MMM dd'"></span>
 			</div>
 		</div>
-		<div *ngIf="!expirationDate" class="col-md-12" [innerText]="'_NotCovered_' | i18n" attr.data-auto-id="{{ title }}-NotCovered"></div>
+		<div *ngIf="!expirationDate" class="col-md-12" [innerText]="'_Uncovered_' | i18n" attr.data-auto-id="{{ title }}-Uncovered"></div>
 		<div class="col-md-12" attr.data-auto-id="{{ title }}-Link">
 			<a *ngIf="linkData && url" [href]="url" [innerText]="linkData"></a>
 			<span *ngIf="linkData && !url" [innerText]="linkData"></span>

@@ -1,10 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CbpTbdComponent } from './cbp-tbd.component';
-import { CbpTbdModule } from './cbp-tbd.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureService } from '@sdp-api';
 import { of } from 'rxjs';
+import { CbpTbdModule } from './cbp-tbd.module';
 
 describe('CbpTbdComponent', () => {
 	let component: CbpTbdComponent;

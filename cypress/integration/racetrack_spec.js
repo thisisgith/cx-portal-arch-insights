@@ -22,6 +22,13 @@ describe('Racetrack Content', () => {
 	before(() => {
 		cy.login();
 		cy.loadApp();
+
+		// Disable the setup wizard and quick tour so they don't block other elements
+		cy.window().then(win => {
+			win.Cypress.hideDNACHeader = true;
+			win.Cypress.showQuickTour = false;
+		});
+
 		cy.waitForAppLoading();
 
 		// Pull all the points off the track for rotation and position calculations
@@ -36,30 +43,48 @@ describe('Racetrack Content', () => {
 	});
 
 	const stages = [
-		'need',
-		'evaluate',
-		'select',
-		'purchase',
-		'onboard',
+		// 'onboard', // Can not click current pitstop, as it is covered by the car
 		'implement',
 		'use',
 		'engage',
 		'adopt',
 		'optimize',
-		'renew',
-		'recommend',
-		'advocate',
 	];
 	stages.forEach(stageName => {
-		context.skip(`"${stageName}" Stage`, () => {
-			let expectedCoords;
-			let expectedRotations;
-
+		context.skip(`Click to preview "${stageName}" Stage`, () => {
 			before(() => {
 				// Click the stage circle to move the car there
 				// When scaling, points can end up "behind" the car or the secrettrack, so we need to
 				// force the click
 				cy.getByAutoId(`Racetrack-Point-${stageName}`).click({ force: true });
+
+				// Wait for the progress to finish moving
+				cy.wait('progressMovingEnd', { eventObj: 'racetrackEvents' });
+			});
+
+			it('Progress Position', () => {
+				cy.get('#progress').then(progressPath => {
+					const progressStrokeDasharray = progressPath.attr('stroke-dasharray');
+					const expectedStrokeDasharray = racetrackHelper
+						.calculateTrackProgress(stageName);
+
+					expect(progressStrokeDasharray).eq(expectedStrokeDasharray);
+				});
+			});
+		});
+	});
+
+	stages.forEach(stageName => {
+		context.skip(`Car Position - currentPitstop: "${stageName}"`, () => {
+			let expectedCoords;
+			let expectedRotations;
+
+			before(() => {
+				// Change the mock data to put the car on each pitstop
+				infoMock.enable(`(Racetrack) IBN-Assurance-${stageName.charAt(0).toUpperCase() + stageName.slice(1)}`);
+				// Unfortunately for Cypress, the racetrack panel only reloads data on page load...
+				cy.loadApp();
+				cy.waitForAppLoading();
 
 				// Wait for the car to finish moving
 				cy.wait('carMovingEnd', { eventObj: 'racetrackEvents' });
@@ -74,6 +99,14 @@ describe('Racetrack Content', () => {
 					expectedCoords = racetrackHelper
 						.calculateRacecarCoords(pointCX, pointCY, expectedRotations);
 				});
+			});
+
+			after(() => {
+				// Switch back to the default mock data
+				infoMock.enable('(Racetrack) IBN-Assurance-Onboard');
+				// Unfortunately for Cypress, the racetrack panel only reloads data on page load...
+				cy.loadApp();
+				cy.waitForAppLoading();
 			});
 
 			it('Car Position', () => {
@@ -107,15 +140,45 @@ describe('Racetrack Content', () => {
 					}
 				});
 			});
+		});
+	});
 
-			it('Progress Position', () => {
-				cy.get('#progress').then(progressPath => {
-					const progressStrokeDasharray = progressPath.attr('stroke-dasharray');
-					const expectedStrokeDasharray = racetrackHelper
-						.calculateTrackProgress(stageName);
+	describe('Racetrack Arrows', () => {
+		before(() => {
+			// Ensure we are using the default mock data
+			infoMock.enable('(Racetrack) IBN-Assurance-Onboard');
+			// Unfortunately for Cypress, the racetrack panel only reloads data on page load...
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
 
-					expect(progressStrokeDasharray).eq(expectedStrokeDasharray);
-				});
+		afterEach(() => {
+			// Refresh the page to reset any preview movement
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		it('Clicking right arrow should advance preview one pitstop', () => {
+			cy.getByAutoId('Racetrack-RightArrow').click();
+			cy.wait('progressMovingEnd', { eventObj: 'racetrackEvents' });
+			cy.get('#progress').then(progressPath => {
+				const progressStrokeDasharray = progressPath.attr('stroke-dasharray');
+				const expectedStrokeDasharray = racetrackHelper
+					.calculateTrackProgress('implement');
+
+				expect(progressStrokeDasharray).eq(expectedStrokeDasharray);
+			});
+		});
+
+		it('Clicking left arrow should move preview back one pitstop', () => {
+			cy.getByAutoId('Racetrack-LeftArrow').click();
+			cy.wait('progressMovingEnd', { eventObj: 'racetrackEvents' });
+			cy.get('#progress').then(progressPath => {
+				const progressStrokeDasharray = progressPath.attr('stroke-dasharray');
+				const expectedStrokeDasharray = racetrackHelper
+					.calculateTrackProgress('optimize');
+
+				expect(progressStrokeDasharray).eq(expectedStrokeDasharray);
 			});
 		});
 	});
@@ -326,7 +389,7 @@ describe('Racetrack Content', () => {
 			});
 		});
 
-		it('Should show "start" when 0% complete, instead of 0%', () => {
+		it('Should show "Start" when 0% complete, instead of 0%', () => {
 			// Switch to a mock dataset with no completed items and refresh the data
 			infoMock.enable('(Racetrack) IBN-Assurance-Use');
 			// Unfortunately for Cypress, the racetrack panel only reloads data on page load...
@@ -334,7 +397,7 @@ describe('Racetrack Content', () => {
 			cy.waitForAppLoading();
 
 			cy.getByAutoId('CompletedActionsPercent')
-				.should('contain', 'start');
+				.should('contain', 'Start');
 		});
 	});
 });
