@@ -53,9 +53,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 		cy.login();
 		cy.loadApp();
 
-		// Disable the setup wizard so it doesn't block other elements
+		// Disable the setup wizard and quick tour so they don't block other elements
 		cy.window().then(win => {
 			win.Cypress.hideDNACHeader = true;
+			win.Cypress.showQuickTour = false;
 		});
 
 		cy.waitForAppLoading();
@@ -504,7 +505,10 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('recommendedACC-HoverModal-Title').should('exist')
 				.and('contain', twoRecommendedItems[0].title);
 			cy.getByAutoId('recommendedACC-HoverModal-Description').should('exist')
-				.and('contain', twoRecommendedItems[0].description);
+				.and('contain', twoRecommendedItems[0].description)
+				// PBC-611 Truncate description text
+				// Since this handled by the styles, just validate the class exists
+				.and('have.class', 'line-clamp');
 		});
 
 		it('PBC-279: When there are no recommended ACCs, use the first requested item', () => {
