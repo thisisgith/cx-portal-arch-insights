@@ -207,6 +207,7 @@ describe('AssetDetailsSummaryComponent', () => {
 		tick();
 
 		fixture.detectChanges();
+		tick();
 
 		expect(component.isExpired(
 			componentFromWrapper.assetDetailsComponent.assetData.lastDateOfSupport,
