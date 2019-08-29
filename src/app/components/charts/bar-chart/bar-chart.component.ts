@@ -21,7 +21,7 @@ export class BarChartComponent implements OnInit {
 	@Input() public loading;
 	@Input() public seriesData;
 	@Input() public width;
-	@Input() dataLabels = false;
+	@Input() public dataLabels = false;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -86,7 +86,7 @@ export class BarChartComponent implements OnInit {
 			plotOptions: {
 				series: {
 					cursor: 'pointer',
-					dataLabels:{
+					dataLabels: {
 						enabled: this.dataLabels,
 					},
 					point: {

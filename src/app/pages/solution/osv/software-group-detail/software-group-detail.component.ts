@@ -76,7 +76,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.params = {
 			customerId: this.customerId,
-			id: '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
+			id: '7293498_NA',
 		};
 		this.softwareGroupAssetsParams = {
 			customerId: this.customerId,

@@ -33,11 +33,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
-	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{ }>;
 	@ViewChild('releaseDateTemplate', { static: true })
-	private releaseDateTemplate: TemplateRef<{}>;
+	private releaseDateTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
@@ -65,7 +65,12 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.assetDetailsParams = {
 			customerId: this.customerId,
-			id: '231215372_NA,FXS2202Q11R,C9407R,NA_C9407R_FXS2202Q11R',
+			id: '7293498_NA',
+			image: 'NA',
+			pf: 'Cisco_5500',
+			pid: 'AIR-CT5520-K9',
+			swType: 'IOS',
+			swVersions: '8',
 		};
 	}
 
@@ -100,7 +105,12 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public refresh () {
 		if (this.selectedAsset) {
 			this.clear();
-			// this.assetDetailsParams.id = this.selectedAsset.id;
+			this.assetDetailsParams.id = _.get(this.selectedAsset, 'id');
+			this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
+			this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
+			this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
+			this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
+			this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
 			this.fetchAssetDetails();
 		} else if (this.selectedSoftwareGroup) {
 			this.clear();
@@ -125,7 +135,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -174,7 +184,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -222,8 +232,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			{
 				key: 'postDate',
 				name: I18n.get('_OsvReleaseDate_'),
-				template: this.releaseDateTemplate,
 				sortable: false,
+				template: this.releaseDateTemplate,
 				width: '15%',
 			},
 		];
@@ -236,8 +246,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			};
 			columns.push(acceptColumn);
 		}
-		return columns;
 
+		return columns;
 	}
 
 	/**
@@ -255,7 +265,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any>new Date(b.postDate) - <any>new Date(a.postDate));
+			<any> new Date(b.postDate) - <any> new Date(a.postDate));
 
 		return data;
 	}
@@ -316,7 +326,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @param data AssetDetails
 	 * @param selectedItem can be selectedAsset or selectedProfileGroup
 	 */
-	public setAcceptedVersion (data: AssetRecommendationsResponse, selectedItem: OSVAsset | SoftwareGroup) {
+	public setAcceptedVersion (data: AssetRecommendationsResponse,
+		selectedItem: OSVAsset | SoftwareGroup) {
 		_.forEach(data, (recommendation: AssetRecommendations) => {
 			recommendation.accepted = recommendation.swVersion === selectedItem.optimalVersion
 				? true : false;

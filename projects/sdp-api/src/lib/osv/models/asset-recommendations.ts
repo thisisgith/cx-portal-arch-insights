@@ -1,12 +1,10 @@
 /* tslint:disable */
 export interface AssetRecommendations {
 	accepted?: boolean;
+	info?: string;
 	error: string;
 	name: string;
 	postDate: string;
-	recommendationSummary: string;
 	swVersion: string;
-	info?: string;
-	swVersionGroup?: []
-	hidden?: boolean;
+	swVersionGroup?: [];
 }
