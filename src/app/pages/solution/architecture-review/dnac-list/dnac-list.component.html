@@ -49,14 +49,14 @@
 		<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions" [data]="dnacDetailsResponse" 
 		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 		<div class="section" *ngIf="totalItems">
-			<cui-pager *ngIf="!isLoading" [page]="params.page"
-			[limit]="params.pageSize" [totalItems]="totalItems" 
+			<cui-pager *ngIf="!isLoading" [page]="params?.page"
+			[limit]="params?.pageSize" [totalItems]="totalItems" 
 			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
 		</div>
 		<div class="base-margin-top" *ngIf="isLoading">
 			<cui-spinner></cui-spinner>
 		</div>
-		<div *ngIf="!dnacDetailsResponse.length && !isLoading">
+		<div *ngIf="!dnacDetailsResponse?.length && !isLoading">
 			<div class="text-center dbl-margin-top dbl-margin-bottom">
 				<div>
 					<span class="text-muted text-xlarge"
@@ -69,25 +69,34 @@
 </div>
 
 <ng-template #devicesTemplate let-item="celldata">
-	<span *ngIf="item.devicesPublishedViolated === 'Yes'" 
-		class="qtr-margin-right icon-circle text-danger">
+	<span 
+		[ngClass]="{
+			'text-danger': item?.devicesPublishedViolated === 'No',
+			'transparent-style': item?.devicesPublishedViolated === 'Yes'
+		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item.noOfDevices+'('+item.devicesPublishedLimits+')'"> 
+	<span [innerText]="item?.noOfDevices+'('+item?.devicesPublishedLimits+')'"> 
 	</span>
 </ng-template>
 
 <ng-template #endPointsTemplate let-item="celldata">
-	<span *ngIf="item.endpointsPublishedViolated === 'Yes'" 
-		class="qtr-margin-right icon-circle text-danger">
+	<span 
+		[ngClass]="{
+			'text-danger': item?.endpointsPublishedViolated === 'No',
+			'transparent-style': item?.endpointsPublishedViolated === 'Yes'
+		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item.noOfEndpoints+'('+item.endpointsPublishedLimits+')'"> 
+	<span [innerText]="item?.noOfEndpoints+'('+item?.endpointsPublishedLimits+')'"> 
 	</span>
 </ng-template>
 
 <ng-template #fabricsTemplate let-item="celldata">
-	<span *ngIf="item.fabricsPublishedViolated === 'Yes'" 
-		class="qtr-margin-right icon-circle text-danger">
+	<span 
+		[ngClass]="{
+			'text-danger': item?.fabricsPublishedViolated === 'No',
+			'transparent-style': item?.fabricsPublishedViolated === 'Yes'
+		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item.noOfFabrics+'('+item.fabricsPublishedLimits+')'"> 
+	<span [innerText]="item?.noOfFabrics+'('+item?.fabricsPublishedLimits+')'"> 
 	</span>
 </ng-template>
