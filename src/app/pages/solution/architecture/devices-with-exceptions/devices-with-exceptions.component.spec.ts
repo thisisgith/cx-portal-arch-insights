@@ -94,7 +94,7 @@ describe('DevicesWithExceptionsComponent', () => {
 		};
 		component.onTableRowClicked(tableEvent);
 		expect(component.assetObject)
-			.toBeDefined();
+			.toEqual(tableEvent);
 	});
 
 	it('should open asset view on click of table row', () => {
@@ -119,7 +119,7 @@ describe('DevicesWithExceptionsComponent', () => {
 		};
 		component.openAssetDetailsView(selectedAsset);
 		expect(component.selectedAsset)
-			.toBeDefined();
+			.toEqual(selectedAsset);
 	});
 
 	it('should close panel', () => {
