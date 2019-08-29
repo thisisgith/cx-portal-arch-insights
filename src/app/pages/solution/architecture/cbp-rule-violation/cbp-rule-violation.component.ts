@@ -139,9 +139,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	/**
 	 * Keys down function
 	 * @param event contains eventdata
-	 * key code 13 refers to enter key
 	 */
 	public globalSearchFunction (event) {
+		// key code 13 refers to enter key
 		const eventKeycode = 13;
 		if (event.keyCode === eventKeycode) {
 			this.isLoading = true;
