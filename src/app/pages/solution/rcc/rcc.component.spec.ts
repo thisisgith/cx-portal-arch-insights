@@ -280,6 +280,111 @@ describe('RccComponent', () => {
 			.toBeTruthy();
 	});
 
+	it('should invoke with severity filters ', () => {
+		mockFilter.key = 'severity';
+		mockFilter.selected = true;
+		mockFilter.seriesData = [{
+			filter: 'severity',
+			label: 'string',
+			selected: true,
+			value: 13,
+		}];
+		component.onSubfilterSelect('severity', mockFilter, true);
+		fixture.detectChanges();
+		expect(component.violationGridObj.severity)
+			.toEqual(mockFilter.seriesData[0].filter);
+	});
+
+	it('should invoke with severity filters ', () => {
+		mockFilter.key = 'severity';
+		mockFilter.selected = true;
+		mockFilter.seriesData = [{
+			filter: 'severity',
+			label: 'string',
+			selected: true,
+			value: 13,
+		}];
+		component.onSubfilterSelect('severity', mockFilter, false);
+		fixture.detectChanges();
+		expect(component.violationGridObj.severity)
+			.toBeNull();
+	});
+
+	it('should invoke with assetOsType filters ', () => {
+		mockFilter.key = 'assetOsType';
+		mockFilter.selected = true;
+		mockFilter.seriesData = [{
+			filter: 'assetOsType',
+			label: 'string',
+			selected: true,
+			value: 13,
+		}];
+		component.onSubfilterSelect('assetOsType', mockFilter, true);
+		fixture.detectChanges();
+		expect(component.assetGridObj.osType)
+			.toEqual(mockFilter.seriesData[0].filter);
+	});
+
+	it('should invoke with assetOsType filters ', () => {
+		mockFilter.key = 'assetOsType';
+		mockFilter.selected = true;
+		mockFilter.seriesData = [{
+			filter: 'assetOsType',
+			label: 'string',
+			selected: true,
+			value: 13,
+		}];
+		component.onSubfilterSelect('assetOsType', mockFilter, false);
+		fixture.detectChanges();
+		expect(component.assetGridObj.osType)
+			.toBeNull();
+	});
+
+	it('should invoke with assetSeverity filters ', () => {
+		mockFilter.key = 'assetSeverity';
+		mockFilter.selected = true;
+		mockFilter.seriesData = [{
+			filter: 'assetSeverity',
+			label: 'string',
+			selected: true,
+			value: 13,
+		}];
+		component.onSubfilterSelect('assetSeverity', mockFilter, true);
+		fixture.detectChanges();
+		expect(component.assetGridObj.severity)
+			.toEqual(mockFilter.seriesData[0].filter);
+	});
+
+	it('should invoke with assetSeverity filters ', () => {
+		mockFilter.key = 'assetSeverity';
+		mockFilter.selected = true;
+		mockFilter.seriesData = [{
+			filter: 'assetSeverity',
+			label: 'string',
+			selected: true,
+			value: 13,
+		}];
+		component.onSubfilterSelect('assetSeverity', mockFilter, false);
+		fixture.detectChanges();
+		expect(component.assetGridObj.severity)
+			.toBeNull();
+	});
+
+	it('should invoke with others filters ', () => {
+		mockFilter.key = 'others';
+		mockFilter.selected = true;
+		mockFilter.seriesData = [{
+			filter: 'others',
+			label: 'string',
+			selected: true,
+			value: 13,
+		}];
+		component.onSubfilterSelect('others', mockFilter, false);
+		fixture.detectChanges();
+		expect(component.tableConfig.tableOffset)
+			.toEqual(0);
+	});
+
 	it('should invoke searchViolations with keycode 8', () => {
 		component.searched = false;
 		component.searchForm = formBuilder.group({
