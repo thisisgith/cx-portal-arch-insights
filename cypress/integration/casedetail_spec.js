@@ -295,4 +295,36 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('rmaCasesHeader').should('exist');
 		});
 	});
+	context.only('Search enhancements - PBC-92 PBC-591', () => {
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			cy.waitForAppLoading();
+		});
+
+		beforeEach(() => {
+			// Search for the chosen Serial Number
+			const serialVal = 'FOX1333GGGG'; // Mock SN
+			cy.server();
+			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial');
+			// cy.getByAutoId('setup-wizard-header-close-btn').click();
+			cy.getByAutoId('searchBarInput').should('exist').clear()
+				.type(serialVal.concat('{enter}'));
+			cy.wait('@serial');
+		});
+
+		it('PBC-92 - Assets - Cases - Event Based Case Open (Single Asset)', () => {
+		});
+
+		it('PBC-591 - Assets - Cases - Event Based Case Open (Multiple Assets)', () => {
+			cy.getByAutoId('openCaseButton').should('exist').should('contain', 'Open a Case') // PBC-249 specific
+				.click();
+			cy.getByAutoId('CaseOpenNextButton').should('exist');
+			cy.getByAutoId('CaseOpenCancelButton').should('exist');
+			cy.getByAutoId('CaseOpenClose').should('exist').click(); // Click the X
+			cy.getByAutoId('CaseOpenContinue').should('exist');
+			cy.getByAutoId('CaseOpenCancel').should('exist').click(); // Cancel case open
+			cy.getByAutoId('searchClose').should('exist').click(); // Close the search results - X
+		});
+	});
 });

@@ -488,18 +488,6 @@ describe('General Spec', () => {
 				cy.getByAutoId('Asset360SerialNumber').should('exist'); // app360 panel opened
 				cy.getByAutoId('CloseDetails').should('exist').click();
 			});
-
-			it('Serial Number Intercept - Open a Case', () => {
-				// PBC-249
-				cy.getByAutoId('openCaseButton').should('exist').should('contain', 'Open a Case') // PBC-249 specific
-					.click(); // PBC-249 specific
-				cy.getByAutoId('CaseOpenNextButton').should('exist');
-				cy.getByAutoId('CaseOpenCancelButton').should('exist');
-				cy.getByAutoId('CaseOpenClose').should('exist').click(); // Click the X
-				cy.getByAutoId('CaseOpenContinue').should('exist');
-				cy.getByAutoId('CaseOpenCancel').should('exist').click(); // Cancel case open
-				cy.getByAutoId('searchClose').should('exist').click(); // Close the search results - X
-			});
 		});
 	});
 
@@ -522,8 +510,8 @@ describe('General Spec', () => {
 			cy.getByAutoId('supportDescription').should('exist');
 			cy.get('textarea').click()
 				.type(DescriptionText);
-				// PBC- 393: Typing 32000 characters into text box test case
-				// was manually verified
+			// PBC- 393: Typing 32000 characters into text box test case
+			// was manually verified
 			cy.getByAutoId('submit').click();
 			// Info: localhost blocked by CORS policy
 			cy.getByAutoId('portalSupportHide').should('exist');
