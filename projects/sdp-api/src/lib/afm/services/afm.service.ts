@@ -5,8 +5,8 @@ import { AfmResponse, AfmSearchParams } from '../models/afm';
 import { AfmConfiguration } from '../afm-configuration';
 import { catchError, map as __map } from 'rxjs/operators';
 import { BaseService } from '../../core/base-service';
+
 /**
- *
  * Afm Service class which will used as service for am componet
  * it has a rest calls retrive information
  * @export
@@ -22,7 +22,6 @@ export class AfmService extends BaseService {
 	private alarmsPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/alarms`;
 	private tacCasesPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/taccases`;
 	private searchPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/search`;
-	private afmConnectivityPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/connectivity`;
 	private eventPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/event`;
 	private ignoreEventPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/ignoreevent`;
 	private revertIgnoreEventPath =

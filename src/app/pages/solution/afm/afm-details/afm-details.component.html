@@ -73,21 +73,22 @@
 
 	<div class="flex col-md-12">
 		<div class="col-md-3">
-			<label class="switch">
-				<input type="checkbox"
-					[checked]="alarm?.status?.toUpperCase() === 'IGNORED'"
+			<label class="switch" >
+				<input type="checkbox" [(ngModel)]="status"
+					[checked]="status"
+					(change)="toggleEvent(alarm)"
 					class="ng-valid ng-dirty ng-touched"
-					(change)="toggleEvent(alarm)">
+					>
 				<span class="switch__input"></span>
 				<span class="switch__label half-margin-left" [innerText]="'_AfmIgnoreEvent_'|i18n"></span>
 			</label>
 		</div>
-		<div class="col-md-8 text-right dbl-margin-left" *ngIf="alarm?.raiseSr && alarm?.tacCaseNo">
+		<div class="col-md-9 text-right dbl-margin-left" *ngIf="alarm?.raiseSr && alarm?.tacCaseNo">
 			<button id="viewDisabled" class="btn btn--gray-ghost text-tuppercase disabled"
 				[innerText]="'_AfmCaseIdX_'|i18n:alarm?.tacCaseNo"></button>
 		</div>
-		<div class="col-md-4" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'"></div>
-		<div class="col-md-4 text-right" title="{{errorDesc}}" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
+		<div class="col-md-5" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'"></div>
+		<div class="col-md-4 text-right" title="{{alarm?.errorDesc}}" *ngIf="alarm?.raiseSr && alarm?.srStatus?.toUpperCase() === 'FAILED'">
 			<div id="opacity" class="btn btn--gray-ghost disabled"
 				[innerText]="'_AfmEntitlementFailed_'| i18n"></div>
 		</div>
