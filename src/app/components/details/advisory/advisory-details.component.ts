@@ -17,6 +17,7 @@ import {
 	Asset,
 	CriticalBug,
 	FieldNoticeAdvisory,
+	NetworkElement,
 	SecurityAdvisoryInfo,
 } from '@sdp-api';
 import { UserResolve } from '@utilities';
@@ -51,6 +52,7 @@ export class AdvisoryDetailsComponent implements OnChanges, OnInit, OnDestroy {
 
 	public hidden = true;
 	public fullscreen = false;
+	public impactedAssets: (Asset | NetworkElement)[];
 
 	constructor (
 		private userResolve: UserResolve,

@@ -25,15 +25,15 @@ export const MockNetworkElements: NetworkElement[] = [
 		ipAddress: '10.119.1.171',
 		isManagedNE: true,
 		lastUpdateDate: '2019-05-14T18:27:06',
-		managedNeId: '10.119.1.172,NA,NA,NA',
+		managedNeId: 'NA,FOX1335GRHG,WS-C4506-E,NA',
 		managementAddress: '10.119.1.172',
-		neInstanceId: 'NA,FOC1544Y16T,WS-C2960S-24PS-L,NA',
+		neInstanceId: 'NA,FOX1335GRHG,WS-C4506-E,NA',
 		neName: '1971THE2-swi-LIMDR_P7_1_SD_DR.tbc.limad.net',
 		neRegistrationStatus: '',
 		productFamily: 'Cisco Catalyst 2960-S Series Switches',
 		productId: 'WS-C2960S-24PS-L',
 		productType: 'LAN Switches',
-		serialNumber: 'FOC1544Y16T',
+		serialNumber: '35641136A1621',
 		smartLicenseProductInstanceIdentifier: '',
 		smartLicenseVirtualAccountName: '',
 		swType: 'IOS',
@@ -48,9 +48,9 @@ export const MockNetworkElements: NetworkElement[] = [
 		ipAddress: '10.119.1.151',
 		isManagedNE: true,
 		lastUpdateDate: '2019-05-14T18:27:06',
-		managedNeId: '10.119.1.172,NA,NA,NA',
+		managedNeId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
 		managementAddress: '10.119.1.172',
-		neInstanceId: 'NA,FOC1544Y1AV,WS-C2960S-24PS-L,NA',
+		neInstanceId: 'NA,FOX1306GFKH,WS-C4506-E,NA',
 		neName: '1971THE2-swi-LIMDR_P5_1_SD_DR.tbc.limad.net',
 		neRegistrationStatus: '',
 		productFamily: 'Cisco Catalyst 2960-S Series Switches',
@@ -757,6 +757,28 @@ export const NetworkScenarios = [
 		},
 		url: `${api}?customerId=${customerId}&serialNumber=${serialNumberFilter(12)}` +
 			'&rows=10&page=1',
+		usecases: ['Use Case 1'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 350,
+					description: 'Network Elements for SA',
+					response: {
+						body: MockNetwork(2, 1),
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${
+			api
+		}?customerId=${
+			customerId
+		/* tslint:disable-next-line:ter-max-len max-line-length */
+		}&sort=hostName:ASC&rows=100&page=1&managedNeId=NA,FOX1335GRHG,WS-C4506-E,NA&managedNeId=NA,FOX1306GFKH,WS-C4506-E,NA`,
 		usecases: ['Use Case 1'],
 	},
 ];
