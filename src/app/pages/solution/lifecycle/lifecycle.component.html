@@ -10,7 +10,7 @@
 					<app-communities></app-communities>
 					<ng-container *ngTemplateOutlet="panel; context: {
 							template: atxPanel,
-							title: '_AskTheExpert_',
+							title: '_AskTheExperts_',
 							loading: status.loading.atx,
 							data: componentData.atx,
 							viewAllLabel: '_ViewAll_',
@@ -61,9 +61,12 @@
 </div>
 
 <div class="modal-container" *ngIf="modal.visible">
-	<div class="modal-backdrop" [ngClass]="{ hide: !modal.visible }"></div>
-	<div class="modal modal--full" [ngClass]="{ hide: !modal.visible }" #scrollModal (scroll)="getScrollCoordinates(scrollModal)">
-		<div class="modal__dialog">
+	<div class="modal modal--full"
+		[ngStyle]="{'margin-top': appHeaderHeightPX }"
+		[ngClass]="{ hide: !modal.visible }"
+		#scrollModal (scroll)="getScrollCoordinates(scrollModal)"
+	>
+		<div class="lifecycle-modal modal__dialog no-padding">
 			<ng-container *ngTemplateOutlet="modal.content; context: modal.context"></ng-container>
 		</div>
 	</div>
@@ -204,6 +207,11 @@
 <ng-template #atxHover let-title="title" let-description="description" let-autoid="autoid" let-item="item">
 	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" *ngIf="!atxScheduleCardOpened" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="flex flex-column max-height">
+			<div class="icon-bookmark icon-medium"
+				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
+				(click)="updateBookmark(item, 'ATX')"
+				data-auto-id="ACCCardRibbon">
+			</div>
 			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="half-margin-left line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
@@ -601,7 +609,7 @@
 </ng-template>
 
 <ng-template #viewAllModal let-data="data" let-type="type">
-	<div id="viewAllModal" class="modal__content no-padding" data-auto-id="ViewAllModal">
+	<div id="viewAllModal" class="lifecycle-viewall-modal modal__content no-padding" data-auto-id="ViewAllModal">
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top">
 				<div class="col-md-11 half-margin-top base-padding-left">

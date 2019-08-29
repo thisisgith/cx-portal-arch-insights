@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 import { CuiModalService } from '@cisco-ngx/cui-components';
 
-import { Asset } from '@sdp-api';
+import { Asset, NetworkElement } from '@sdp-api';
 import { CaseOpenData } from '../caseOpenData';
 
 /**
@@ -16,7 +16,7 @@ import { CaseOpenData } from '../caseOpenData';
 })
 export class CaseSubmittedComponent {
 	@Input() public errors: string[];
-	@Input() public asset: Asset;
+	@Input() public assets: (Asset | NetworkElement)[];
 	@Input() public caseData: CaseOpenData;
 
 	public requestRma = false;
