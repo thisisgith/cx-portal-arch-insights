@@ -406,7 +406,11 @@ describe('Learn Panel', () => {
 					.parent()
 					.within(() => {
 						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', elearningItem.title);
-						cy.getByAutoId('recommendedElearning-HoverModal-Description').should('contain', elearningItem.description);
+						cy.getByAutoId('recommendedElearning-HoverModal-Description')
+							.should('contain', elearningItem.description)
+							// PBC-611 Truncate description text
+							// Since this handled by the styles, just validate the class exists
+							.and('have.class', 'line-clamp');
 						cy.getByAutoId('recommendedElearning-HoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(elearningItem.rating).toString());
 						// Duration/clock are only displayed if duration is set
 						if (elearningItem.duration) {
@@ -1231,7 +1235,11 @@ describe('Learn Panel', () => {
 					.parent()
 					.within(() => {
 						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', certificationItem.title);
-						cy.getByAutoId('recommendedElearning-HoverModal-Description').should('contain', certificationItem.description);
+						cy.getByAutoId('recommendedElearning-HoverModal-Description')
+							.should('contain', certificationItem.description)
+							// PBC-611 Truncate description text
+							// Since this handled by the styles, just validate the class exists
+							.and('have.class', 'line-clamp');
 						cy.getByAutoId('recommendedElearning-HoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(certificationItem.rating).toString());
 						// Duration/clock are only displayed if duration is set
 						if (certificationItem.duration) {
