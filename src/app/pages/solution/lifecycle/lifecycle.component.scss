@@ -192,36 +192,44 @@ $vibblue: #017cad;
 	}
 }
 
-.atxCancelpanel--open {
-	box-shadow: $base-box-shadow;
-	height: 120px;
-	width: 400px;
-	position: absolute;
-	// top: 40px;
-	left: 210px;
-	z-index: 3;
-	background-color: $white;
-	border-radius: 10px;
-}
-
 .cgtpanel--open {
 	box-shadow: $base-box-shadow;
 	height: 120px;
 	width: 400px;
 	position: absolute;
-	// top: 40px;
+	top: 40px;
 	left: 210px;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
 }
 
-.atxCancelpanel--open::after,
 .cgtpanel--open::after {
 	content: "";
 	position: absolute;
 	top: 35%;
 	left: -18px;
+	border-top: 25px solid transparent;
+	border-right: 35px solid white;
+	border-bottom: 30px solid transparent;
+}
+
+.atxMorepanel--open {
+	box-shadow: $base-box-shadow;
+	height: 200px;
+	width: 500px;
+	position: absolute;
+	z-index: 3;
+	background-color: $white;
+	border-radius: 10px;
+}
+
+.atxMorepanel--open::after {
+	content: "";
+	position: absolute;
+	top: 40%;
+	left: -15px;
+	z-index: -1;
 	border-top: 25px solid transparent;
 	border-right: 35px solid white;
 	border-bottom: 30px solid transparent;

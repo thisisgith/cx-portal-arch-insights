@@ -150,6 +150,7 @@ export class LifecycleComponent implements OnDestroy {
 	public moreATXSelected: AtxSchema;
 	public moreXCoordinates = 0;
 	public moreYCoordinates = 0;
+	public atxMoreClicked = false;
 	// id of ACC in request form
 	public accTitleRequestForm: string;
 	public accIdRequestForm: string;
@@ -760,6 +761,7 @@ export class LifecycleComponent implements OnDestroy {
 		this.selectSession({ });
 		this.componentData.atx.interested = null;
 		this.moreATXSelected = null;
+		this.atxMoreClicked = false;
 	}
 
 	 /**
@@ -1165,7 +1167,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @param panel string
 	 */
 	 public getMoreCoordinates (moreList: HTMLElement, panel: string) {
-		if (_.isEqual(panel, 'moreATXList') && !this.atxScheduleCardOpened) {
+		if (_.isEqual(panel, 'moreATXList') && !this.atxScheduleCardOpened && !this.atxMoreClicked) {
 			this.moreXCoordinates = moreList.offsetWidth;
 			this.moreYCoordinates = moreList.offsetTop;
 		}
@@ -1182,6 +1184,19 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Changes the atxMoreClicked flag and adds value to moreATXSelected
+	 * @param item ATXSchema
+	 */
+	 public atxMoreSelect (item: AtxSchema) {
+		 if (!this.atxMoreClicked) {
+			this.atxScheduleCardOpened = false;
+			this.recommendedAtxScheduleCardOpened = false;
+			this.moreATXSelected = item;
+			this.atxMoreClicked = true;
+		 }
+	}
+
+	/**
 	 * Changes the atxScheduleCardOpened flags to false to close the popupmodal
 	 */
 	 public closeViewSessions () {
@@ -1194,6 +1209,18 @@ export class LifecycleComponent implements OnDestroy {
 		this.moreYCoordinates = 0;
 		this.componentData.atx.interested = null;
 		this.moreATXSelected = null;
+	}
+
+	/**
+	 * Get the panel styles based on button coordinates
+	 * @param atxMoreClick HTMLElement
+	 */
+	 public getATXMorePanel (atxMoreClick: HTMLElement) {
+		const _div = atxMoreClick;
+		if (this.atxMoreClicked && this.moreATXSelected && !this.atxScheduleCardOpened) {
+			_div.style.left = `${this.moreXCoordinates}px`;
+			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+		}
 	}
 
 	/**
@@ -1228,9 +1255,9 @@ export class LifecycleComponent implements OnDestroy {
 					panel = 'panel listpanel--open';
 				}
 			}
-		} else if (this.atxScheduleCardOpened && this.moreATXSelected) {
-			_div.style.left = `${this.moreXCoordinates}px`;
-			_div.style.top = `${this.moreYCoordinates - _div.offsetHeight / 2}px`;
+		} else if (this.atxScheduleCardOpened && this.moreATXSelected && this.atxMoreClicked) {
+			_div.style.left = '170px';
+			_div.style.top = '-10px';
 			panel = 'panel panel--open';
 		} else {
 			_div.style.left = '40%';

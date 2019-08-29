@@ -156,8 +156,8 @@
 	<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
 		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.recommended }"></ng-container>
 	</ng-container>
-	<ng-container *ngIf="atxScheduleCardOpened && moreATXSelected">
-		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: moreATXSelected }">
+	<ng-container *ngIf="atxMoreClicked && moreATXSelected">
+		<ng-container *ngTemplateOutlet="atxMoreClick; context: { data: moreATXSelected }">
 		</ng-container>
 	</ng-container>
 </ng-template>
@@ -202,24 +202,49 @@
 </ng-template>
 
 <ng-template #atxHover let-title="title" let-description="description" let-autoid="autoid" let-item="item">
-	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" *ngIf="!atxScheduleCardOpened" attr.data-auto-id="{{ autoid }}-HoverModal">
+	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" *ngIf="!atxScheduleCardOpened && !atxMoreClicked" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="flex flex-column max-height">
 			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="half-margin-left line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-			<div class="base-padding-top half-padding-left" *ngIf="autoid==='moreATXList'">
-				<button attr.data-auto-id="{{ autoid }}-HoverModal-ViewSessions"
-					class="btn btn--small btn--secondary text-uppercase"
-					(click)="atxMoreViewSessions(item)"
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #atxMoreClick let-data="data">
+	<div class="panel atxMorepanel--open panel--bordered"
+		#atxMoreClick [ngClass]="getATXMorePanel(atxMoreClick)"
+		*ngIf="atxMoreClicked" attr.data-auto-id="atxMoreClickModal">
+		<div class="flex flex-column max-height">
+			<div class="row half-margin-top half-margin-left half-margin-right">
+				<div class="col-md-11 text-left">
+					<h6 class="text-indigo" [innerText]="data.title"></h6>
+				</div>
+				<div class="col-md-1">
+					<a class="no-link closebtn" 
+						(click)="atxMoreClicked = false; moreATXSelected = ''">
+						<span class="icon-close icon-small"></span>
+					</a>
+				</div>
+			</div>
+			<div class="divider divider--compressed"></div>
+			<div class="half-margin-left line-clamp" [innerText]="data.description"></div>
+			<div class="base-padding-top half-padding-left">
+				<button class="btn btn--small btn--secondary text-uppercase"
+					(click)="atxMoreViewSessions(data)"
 					[innerText]="'_ViewSessions_' | i18n">
 				</button>
-				<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
+				<a *ngIf="data.recordingURL" class="no-link" target="_blank" [href]="data.recordingURL">
 					<button class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
 						[innerText]="'_WatchNow_' | i18n">
 					</button>
 				</a>
 			</div>
 		</div>
+		<ng-container *ngIf="atxScheduleCardOpened && moreATXSelected">
+			<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: moreATXSelected }">
+			</ng-container>
+		</ng-container>
 	</div>
 </ng-template>
 
@@ -437,7 +462,8 @@
 			<div class="row">
 				<div class="col-md-11">
 					<div id="moreAccList-item" class="panel small-panel" attr.data-auto-id="{{ autoid }}-item">
-						<div class="text-blue" [innerText]="item.title"></div>
+						<div class="text-blue" [innerText]="item.title"
+							(click)="atxMoreSelect(item)"></div>
 						<ng-container *ngIf="autoid==='moreACCList'">
 							<ng-container *ngTemplateOutlet="accHover; context: {
 								title: item.title,
