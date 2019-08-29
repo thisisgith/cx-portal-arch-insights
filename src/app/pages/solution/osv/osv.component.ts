@@ -53,6 +53,11 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		assetType: '',
 		deploymentStatus: [],
 	};
+	public assetGroupList: string[] = [];
+	public operationalPreferencesList: string[] = [];
+	public showProfileInfo = true;
+	public doNotShowAgain = false;
+
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -68,7 +73,20 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * @param tab the tab we've clicked on
 	 * OnInit lifecycle hook
 	 */
-	public ngOnInit () {		
+	public ngOnInit () {
+		let list = I18n.get('_OsvAssetGroupList_');
+		_.forEach(list, (item: string) => {
+			this.assetGroupList.push(item);
+		});
+		list = I18n.get('_OsvOperationalPreferencesList_');
+		_.forEach(list, (item: string) => {
+			this.operationalPreferencesList.push(item);
+		});
+		if (window.localStorage.getItem('doNotShowSGInfo') === 'true') {
+			this.showProfileInfo = false;
+			this.doNotShowAgain = true;
+		}
+
 		this.buildFilters();
 	}
 
@@ -96,6 +114,16 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_OsvAssets_'),
 				view: ['assets'],
 			},
+			{
+				key: 'deploymentStatus',
+				loading: true,
+				selected: false,
+				seriesData: [],
+				template: this.deploymentStatusFilterTemplate,
+				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
+				view: ['swGroups'],
+			},
+
 		];
 		this.loadData();
 	}
@@ -125,18 +153,31 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
 		const assetTypeFilter = _.find(this.filters, { key: 'assetType' });
-
+		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
 		return this.osvService.getSummary({ customerId: this.customerId })
 			.pipe(
 				map((response: SummaryResponse) => {
 					totalAssetsFilter.loading = false;
 					assetTypeFilter.loading = false;
+					deploymentStatusFilter.loading = false;
 					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
 						versions: response.versions,
 					}];
 					this.decideView(response);
+
+					deploymentStatusFilter.seriesData = _.compact(
+						_.map(response.deployment, (value: number, key: string) => {
+							if (value !== 0) {
+								return {
+									value,
+									filter: key,
+									label: _.capitalize(key),
+									selected: false,
+								};
+							}
+						}));
 
 					assetTypeFilter.seriesData = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
@@ -158,6 +199,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 						`:: Error : (${err.status}) ${err.message}`);
 					totalAssetsFilter.loading = false;
 					assetTypeFilter.loading = false;
+					deploymentStatusFilter.loading = false;
 					this.view = undefined;
 
 					return of({ });
@@ -296,6 +338,17 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public reset () {
 		this.selectedAsset = null;
 		this.selectedSoftwareGroup = null;
+	}
+
+	/**
+	 * hide/show profile Info modal on ngModal change
+	 */
+	public hideInfo () {
+		if (this.doNotShowAgain) {
+			window.localStorage.setItem('doNotShowSGInfo', 'true');
+		} else {
+			window.localStorage.setItem('doNotShowSGInfo', 'false');
+		}
 	}
 
 }

@@ -14,7 +14,8 @@
 <details-panel *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup" [fullscreen]="fullscreen">
 	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
 		<div detailsPanelTitle>
-			<div class="qtr-margin-left text-xlarge half-margin-bottom" [innerText]="selectedSoftwareGroup?.profileName"></div>
+			<div class="qtr-margin-left text-xlarge half-margin-bottom"
+				[innerText]="selectedSoftwareGroup?.profileName"></div>
 		</div>
 	</details-panel-header>
 	<app-software-group-detail [tabIndex]="tabIndex" [(selectedSoftwareGroup)]="selectedSoftwareGroup">
@@ -106,9 +107,10 @@
 			</div>
 			<div class="col-7 margin-auto flex align-items-center">
 				<span class="text-large " [innerText]="'_OsvSoftwareGroups_' | i18n"></span>
-				<span [title]="'_OsvSoftwareGroups_' | i18n" class="text-primary pull-right"
-					data-balloon-length="medium" [attr.data-balloon]="'_OsvSoftwareProfileInfo_' | i18n" data-balloon-pos="down">
-					<i class="icon-info icon-small"></i>
+				<span class="pull-right text-primary relative" [title]="'_OsvSoftwareGroups_' | i18n">
+					<i data-auto-id="SoftwareGroupInfo" class="icon-question-circle icon-small"
+						(click)="$event.stopPropagation();showProfileInfo = !showProfileInfo;"></i>
+					<ng-container *ngTemplateOutlet="softwareProfileInfo"></ng-container>
 				</span>
 			</div>
 		</div>
@@ -141,7 +143,7 @@
 
 <ng-template #deploymentStatusFilter let-filter="filter">
 	<div>
-		<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
+		<pie-chart [width]="400" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
 		</pie-chart>
 	</div>
 
@@ -152,3 +154,51 @@
 	</pie-chart>
 </ng-template>
 <cui-modal></cui-modal>
+<ng-template #softwareProfileInfo>
+	<div class="absolute profile-info text-default" *ngIf="showProfileInfo">
+		<div class="row">
+			<div class="col-12 text-xlarge half-margin-bottom">
+				<div class="row">
+					<div class="col-md-10" [innerHTML]="'_OsvSoftwareGroups_' | i18n"></div>
+					<div class="col-md-2 close">
+						<i class=" icon-close pull-right qtr-margin-right"
+							(click)="$event.stopPropagation();showProfileInfo = false;"
+							data-auto-id="ToggleSoftwareProfileInfoVisibilty"></i>
+					</div>
+				</div>
+			</div>
+			<div class="col-12 base-margin-bottom">
+				<div [innerText]="'_OsvSoftwareGroupInfoHeader_' | i18n"></div>
+				<ul class="half-margin-top list">
+					<li>
+						<span class="text-bold" [innerText]="'_OsvAssetGroup_' | i18n"></span>
+						<ul>
+							<li *ngFor="let item of assetGroupList" [innerText]="item"></li>
+						</ul>
+					</li>
+					<li class="half-margin-top">
+						<span class="text-bold" [innerText]="'_OsvOperationalPreferences_' | i18n"></span>
+						<ul>
+							<li *ngFor="let item of operationalPreferencesList" [innerText]="item"></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
+			<div class="col-12 half-padding">
+				<div class="text-right">
+					<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();"
+						data-auto-id="DonotShowProfileInfoAgain">
+						<input type="checkbox" [(ngModel)]="doNotShowAgain" (ngModelChange)="hideInfo($event)"
+							data-auto-id="DonotShowProfileInfoAgainCheckbox">
+						<span class="checkbox__input"></span>
+						<span class="checkbox__label" [innerText]="'_OsvDoNotShowAgain_' | i18n"></span>
+					</label>
+					<button class="btn btn--gray-ghost btn--small" [innerText]="'_OsvClose_' | i18n"
+						(click)="$event.stopPropagation();showProfileInfo = false"
+						data-auto-id="CloseSoftwareProfileInfoDialog"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</ng-template>

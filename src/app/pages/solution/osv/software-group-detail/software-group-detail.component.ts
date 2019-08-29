@@ -53,6 +53,20 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public assetsPaginationCount: string;
 	public versionsPagination: OsvPagination;
 	public versionsPaginationCount: string;
+	public seriesData = [
+		{
+			label: 'H',
+			value: 5,
+		},
+		{
+			label: 'M',
+			value: 3,
+		},
+		{
+			label: 'L',
+			value: 7,
+		},
+	];
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,

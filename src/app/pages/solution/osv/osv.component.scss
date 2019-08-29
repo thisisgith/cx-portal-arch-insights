@@ -37,6 +37,10 @@
 		@include md {
 			width: 600px !important;
 		}
+
+		@include xl {
+			width: 800px !important;
+		}
 	}
 }
 

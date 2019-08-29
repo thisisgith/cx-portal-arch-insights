@@ -27,7 +27,7 @@ fdescribe('AssetDetailsComponent', () => {
 		})
 			.compileComponents();
 		osvService = TestBed.get(OSVService);
-		selectedAsset = (<any>OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
+		selectedAsset = (<any> OSVScenarios[4].scenarios.GET[0].response.body).uiAssetList[0];
 	}));
 
 	beforeEach(() => {
@@ -150,8 +150,8 @@ fdescribe('AssetDetailsComponent', () => {
 	it('should reset the assetDetails on clear', () => {
 		spyOn(osvService, 'getAssetDetails')
 			.and
-			.returnValue(of(<any>OSVScenarios[3].scenarios.GET[0].response.body));
-		component.selectedAsset = <any>OSVScenarios[4].scenarios.GET[0].response.body;
+			.returnValue(of(<any> OSVScenarios[3].scenarios.GET[0].response.body));
+		component.selectedAsset = <any> OSVScenarios[4].scenarios.GET[0].response.body;
 		component.ngOnInit();
 		fixture.detectChanges();
 		expect(component.assetDetails)
