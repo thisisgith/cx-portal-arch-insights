@@ -13,7 +13,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RccService, Filter } from '@sdp-api';
 import { FormBuilder } from '@angular/forms';
 
-fdescribe('RccComponent', () => {
+describe('RccComponent', () => {
 	let component: RccComponent;
 	let fixture: ComponentFixture<RccComponent>;
 	let rccService: RccService;
