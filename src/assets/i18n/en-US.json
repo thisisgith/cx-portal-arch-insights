@@ -558,7 +558,7 @@
 	"_OSType_": "OS Type",
 	"_OsvAccept_": "Accept",
 	"_OsvAcceptedOn_": "Accepted on",
-	"_OsvAssetCount_": "Asset Count",
+	"_OsvAssetCount_": "# Asset",
 	"_OsvAssets_": "Assets",
 	"_OsvAssetsOfSoftwareProfiles_": "Assets of Software Groups",
 	"_OsvAssetsX_": "Assets ({0})",
@@ -571,10 +571,12 @@
 	"_OsvCurrentOSVersion_": "Current OS Version",
 	"_OsvCurrentVersions_": "Current Versions ({0})",
 	"_OsvDeploymentStatus_": "Deployment Status",
+	"_OsvCurrentVersion_": "Current Version(s)",
 	"_OsvDERecommendation_": "Request for DE Recommendation",
 	"_OSVersion_": "OS Version",
 	"_OsvGoldenImage_": "Golden Image Y/N",
 	"_OsvGoldenInfo_": "Are available from connected Cisco DNA Centers and represent images tagged by customers for deployment in the Software Image Management (SWIM) module [by family or role].",
+	"_OsvSoftwareProfileInfo_":"Represents products with common network roles, requirements, and operational risk preferences so that all members of the Software Group can run the same OS version.",
 	"_OsvHigh_": "High",
 	"_OsvHostName": "Host Name",
 	"_OsvIndependentAssets_": "Assets not in Software Group",
@@ -621,17 +623,7 @@
 	"_OsvSuggestedInfo_": "Are available in Cisco Software Central on cisco.com, and represent a collaboration from product engineering,release operations and Customer Experience (CX) teams on what is the best choice of software for most customers.",
 	"_OsvSoftwareGroupInfoHeader_": "A software group comprises of inventory and operational preferences, designed to process the software recommendations",
 	"_OsvUngroupedAssetsCount_": "Ungrouped Assets Count",
-	"_OsvInventoryPreferences_": "Inventory Preferences :",
-	"_OsvInventoryPreferencesList_": [
-		"This comprises all devices in the customer network organised via a group policy.",
-		"A policy group organises assets (currently bases on Software Type and Product Id).",
-		"It aggregates the inventory information from all the grouped assets."
-	],
-	"_OsvOperationalPreferencesList_": [
-		"This comprises a set of attributes that define the preferred operational aspects for software recommendation, such as Release Age and Release Popularity.",
-		"Based on release attributes, there are different categories such as Conservative, Moderate and Aggressive.",
-		"Currently software profiles are set to Aggressive by default which will prefer latest releases."
-	],
+	
 	"_OsvDoNotShowAgain_":"Do not show this again, by default.",
 	"_OsvOperationalPreferences_": "Operational Preferences :",
 	"_OsvUpgrade_": "Upgrade",

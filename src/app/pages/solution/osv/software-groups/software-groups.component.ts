@@ -127,7 +127,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 						sortable: true,
 						sortDirection: 'desc',
 						sorting: false,
-						width: '30%',
+						width: '25%',
 					},
 					{
 						key: 'productFamily',
@@ -139,11 +139,17 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 						key: 'assetCount',
 						name: I18n.get('_OsvAssetCount_'),
 						sortable: false,
-						width: '10%',
+						width: '5%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
+						sortable: false,
+						width: '10%',
+					},
+					{
+						key: 'deployment',
+						name: I18n.get('_OsvDeploymentStatus_'),
 						sortable: false,
 						width: '10%',
 					},

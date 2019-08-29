@@ -53,10 +53,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		assetType: '',
 		deploymentStatus: [],
 	};
-	public inventoryPreferencesList: string[] = [];
-	public operationalPreferencesList: string[] = [];
-	public showProfileInfo = true;
-	public doNotShowAgain = false;
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -72,20 +68,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * @param tab the tab we've clicked on
 	 * OnInit lifecycle hook
 	 */
-	public ngOnInit () {
-		let list = I18n.get('_OsvInventoryPreferencesList_');
-		_.forEach(list, (item: string) => {
-			this.inventoryPreferencesList.push(item);
-		})
-		list = I18n.get('_OsvOperationalPreferencesList_')
-		_.forEach(list, (item: string) => {
-			this.operationalPreferencesList.push(item);
-		})
-
-		if (window.localStorage.getItem('doNotShowSGInfo') === 'true') {
-			this.showProfileInfo = false;
-			this.doNotShowAgain = true;
-		}
+	public ngOnInit () {		
 		this.buildFilters();
 	}
 
@@ -313,17 +296,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public reset () {
 		this.selectedAsset = null;
 		this.selectedSoftwareGroup = null;
-	}
-
-	/**
-	 * hide/show profile Info modal on ngModal change
-	 */
-	public hideInfo () {
-		if (this.doNotShowAgain) {
-			window.localStorage.setItem('doNotShowSGInfo', 'true');
-		} else {
-			window.localStorage.setItem('doNotShowSGInfo', 'false');
-		}
 	}
 
 }

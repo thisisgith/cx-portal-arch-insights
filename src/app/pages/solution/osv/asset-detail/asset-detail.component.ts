@@ -206,10 +206,15 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public getColumns () {
 		const columns = [
 			{
+				sortable: false,
+				template: this.currentTemplate,
+				width: '10%',
+			},
+			{
 				name: I18n.get('_OsvVersion_'),
 				sortable: false,
 				template: this.versionTemplate,
-				width: this.accept ? '70%' : '85%',
+				width: this.accept ? '60%' : '75%',
 			},
 			{
 				key: 'postDate',
