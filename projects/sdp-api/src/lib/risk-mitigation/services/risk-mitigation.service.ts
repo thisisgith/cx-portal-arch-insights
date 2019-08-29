@@ -169,7 +169,7 @@ class RiskMitigationService extends __BaseService {
 
 		let req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl + `${RiskMitigationService.getCrashHistoryForDevicePath}` + params.customerId + '/' + params.neInstanceId,
+			this.rootUrl + `${RiskMitigationService.getCrashHistoryForDevicePath}` + params.customerId + '?deviceId=' + params.neInstanceId,
 			__body,
 			{
 				headers: __headers,

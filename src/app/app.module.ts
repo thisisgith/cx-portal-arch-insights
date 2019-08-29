@@ -32,6 +32,12 @@ import { CaseOpenModule } from './components/case/case-open/case-open.module';
 import { CloseConfirmModule } from './components/case/case-open/close-confirm/close-confirm.module';
 import { ContactSupportModule } from './components/contact-support/contact-support.module';
 import { CollapsibleModule } from './components/collapsible/collapsible.module';
+import { FeedbackModule } from './components/feedback/feedback.module';
+import { FeedbackComponent } from './components/feedback/feedback.component';
+import { FeedbackFailedModule } from './components/feedback/feedback-failed/feedback-failed.module';
+import {
+	FeedbackSuccessModule,
+} from './components/feedback/feedback-success/feedback-success.module';
 import { UnauthorizedUserModule } from './components/unauthorized-user/unauthorized-user.module';
 
 /**
@@ -76,6 +82,9 @@ export function loadUserInfo (service: AppService) {
 @NgModule({
 	bootstrap: [AppComponent],
 	declarations: [AppComponent],
+	entryComponents: [
+		FeedbackComponent,
+	],
 	imports: [
 		AppRoutingModule,
 		BrowserAnimationsModule,
@@ -95,6 +104,9 @@ export function loadUserInfo (service: AppService) {
 		CloseConfirmModule,
 		ContactSupportModule,
 		CollapsibleModule,
+		FeedbackModule,
+		FeedbackFailedModule,
+		FeedbackSuccessModule,
 		UnauthorizedUserModule,
 	],
 	providers: [

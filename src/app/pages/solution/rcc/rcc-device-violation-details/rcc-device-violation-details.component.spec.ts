@@ -83,6 +83,8 @@ describe('RccDeviceViolationDetailsComponent', () => {
 
 	it('should invoke onPageIndexChange method', () => {
 		component.onPageIndexChange({ page: 1 });
+		expect(component.tableConfig.tableOffset)
+			.toEqual(1);
 	});
 
 	it('should invoke loadData and call both APIs', () => {
@@ -94,6 +96,26 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
 		component.loadData();
 		fixture.detectChanges();
+		expect(component.impactedDeviceDetails)
+			.toEqual(ComplianceScenarios[6].scenarios.GET[0].response.body.data.impactedAssets);
+		expect(component.policyRuleData)
+			.toEqual(ComplianceScenarios[7].scenarios.GET[0].response.body.data);
+
+	});
+
+	it('should invoke loadData and call both APIs with empty response', () => {
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[8].scenarios.GET[0].response.body));
+		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[8].scenarios.GET[0].response.body));
+		component.loadData();
+		fixture.detectChanges();
+		expect(component.impactedDeviceDetails)
+			.toEqual([]);
+		expect(component.policyRuleData.policy)
+			.toEqual({ });
 
 	});
 
@@ -104,6 +126,12 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		expect(component.impactedDeviceTableOptions)
 			.toBeDefined();
 
+	});
+
+	it('Should invoke onTableSortingChanged and assign tableOffset to 0', () => {
+		component.onTableSortingChanged();
+		expect(component.tableConfig.tableOffset)
+			.toBe(0);
 	});
 
 	it('Should invoke api and error response should keep impactedDeviceDetails empty array', () => {
@@ -117,6 +145,33 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		component.onSelection();
 		expect(component.impactedDeviceDetails)
 			.toEqual([]);
+	});
+
+	it('Should invoke api and errorResult should be true', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.loadData();
+		expect(component.errorResult)
+			.toBeTruthy();
+	});
+
+	it('Should invoke getRccViolationDetailsData api ', () => {
+		component.selectionObj = {
+			osName: 'IOS-XE',
+			productFamily: 'C2300',
+			productModel: 'WS-C2300',
+		};
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
+		component.onSelection();
+		expect(component.impactedDeviceDetails)
+			.toEqual(ComplianceScenarios[6].scenarios.GET[0].response.body.data.impactedAssets);
 	});
 
 	it('Should get the api data on ngonchanges method', done => {
@@ -141,6 +196,8 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		};
 		component.ngOnChanges(changes);
 		fixture.detectChanges();
+		expect(component.policyRuleData.policy)
+			.toEqual({ });
 		done();
 	});
 	it('Should not get the api data on ngonchanges when', done => {
@@ -169,24 +226,9 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		};
 		component.ngOnChanges(changes);
 		fixture.detectChanges();
+		expect(component.errorResult)
+			.toBeFalsy();
 		done();
-	});
-
-	it('Should get the api data ngonchanges empty info data', () => {
-		const changes = {
-			policyViolationInfo: {
-				currentValue: {
-					policycategory: '',
-					policygroupid: '',
-					policyname: '',
-					ruletitle: '',
-				},
-				firstChange: true,
-				isFirstChange: () => false,
-				previousValue: undefined,
-			},
-		};
-		component.ngOnChanges(changes);
 	});
 
 	it('Should get the api data ngonchanges empty info data', () => {
@@ -205,8 +247,21 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		};
 		component.ngOnChanges(changes);
 		expect(component.queryParamMapObj)
-		.toBeDefined();
+			.toBeDefined();
 		expect(component.loadData());
+	});
+
+	it('Should invoke getRccViolationDetailsData api and return empty decive list ', () => {
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[9].scenarios.GET[0].response.body));
+		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
+		component.loadData();
+		fixture.detectChanges();
+		expect(component.impactedDeviceDetails)
+			.toEqual([]);
 	});
 
 });

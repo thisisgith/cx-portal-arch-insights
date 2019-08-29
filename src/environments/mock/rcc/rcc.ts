@@ -43,6 +43,18 @@ const violationDetails: any = {
 	status: 200,
 };
 
+/** This is mock data for violationDetails with empty impacted assets  */
+const emptyViolationDetails: any = {
+	data: {
+	  customerId: '7293498',
+	  impactedAssets: [],
+	  impactedAssetsCount: 0,
+	},
+	error: null,
+	message: 'SUCCESS',
+	status: 200,
+};
+
 /** This is mock data for policyRuleDetails  */
 const policyRuleDetails: any = {
 	data: {
@@ -434,5 +446,22 @@ export const ComplianceScenarios = [
 		},
 		url: `${api}/violation-details`,
 		usecases: ['Use Case 9'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Violation 360 Details',
+					response: {
+						body: emptyViolationDetails,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/violation-details`,
+		usecases: ['Use Case 10'],
 	},
 ];
