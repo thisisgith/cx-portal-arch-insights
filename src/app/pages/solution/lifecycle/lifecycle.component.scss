@@ -14,19 +14,19 @@ $vibblue: #017cad;
 :host ::ng-deep .modal__content {
 	position: fixed !important;
 	height: 90% !important;
-	width: 95% !important;
+	width: 100% !important;
 }
 
 .scrollable-card-content {
 	position: fixed !important;
-	height: 50%;
+	height: 100%;
 }
 
 .scrollable-list-content {
 	position: fixed !important;
 	overflow-y: scroll !important;
-	height: 60%;
-	width: 90%;
+	height: 100%;
+	width: 100%;
 }
 
 .grid {
@@ -162,6 +162,19 @@ $vibblue: #017cad;
 	width: 100%;
 }
 
+.max-height {
+	height: 100% !important;
+}
+
+.line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 4;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
 .table-img-width {
 	width: 80px;
 }
@@ -204,18 +217,31 @@ $vibblue: #017cad;
 	}
 }
 
-.cgtpanel--open {
+.atxCancelpanel--open {
 	box-shadow: $base-box-shadow;
 	height: 120px;
 	width: 400px;
 	position: absolute;
-	top: 40px;
+	// top: 40px;
 	left: 210px;
 	z-index: 3;
 	background-color: $white;
 	border-radius: 10px;
 }
 
+.cgtpanel--open {
+	box-shadow: $base-box-shadow;
+	height: 120px;
+	width: 400px;
+	position: absolute;
+	// top: 40px;
+	left: 210px;
+	z-index: 3;
+	background-color: $white;
+	border-radius: 10px;
+}
+
+.atxCancelpanel--open::after,
 .cgtpanel--open::after {
 	content: "";
 	position: absolute;
@@ -565,8 +591,11 @@ polygon {
 .finishline-banner {
 	align-items: flex-end;
 }
-// leave the following here, just in case we will use this style
-// ::ng-deep .cui .dropdown__menu a.selected {
-// 	color:$vibblue !important;
-// 	background-color: transparent !important;
-// }
+
+.lifecycle-modal {
+	height: 100%;
+}
+
+.lifecycle-viewall-modal {
+	min-height: 100%;
+}

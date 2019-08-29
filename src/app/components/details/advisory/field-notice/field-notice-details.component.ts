@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
+	Asset,
 	FieldNotice,
 	FieldNoticeBulletin,
 	FieldNoticeResponse,
@@ -16,6 +17,7 @@ import {
 	ProductAlertsService,
 	FieldNoticeAdvisory,
 	FieldNoticeAdvisoryResponse,
+	NetworkElement,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -50,6 +52,10 @@ export class FieldNoticeDetailsComponent implements OnInit, OnChanges {
 	@Input('customerId') public customerId: string;
 	@Output('details') public details = new EventEmitter<Data>();
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
+	@Output('assets') public assets = new EventEmitter<{
+		impacted: (Asset | NetworkElement)[];
+		potentiallyImpacted: (Asset | NetworkElement)[];
+	}>();
 
 	private params: {
 		advisory?: ProductAlertsService.GetAdvisoriesFieldNoticesParams;
