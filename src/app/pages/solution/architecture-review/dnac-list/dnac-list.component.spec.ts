@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 
-fdescribe('DnacListComponent', () => {
+describe('DnacListComponent', () => {
 	let component: DnacListComponent;
 	let fixture: ComponentFixture<DnacListComponent>;
 	let service: ArchitectureReviewService;
@@ -28,7 +28,7 @@ fdescribe('DnacListComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({ }),
+						queryParams: of({}),
 						snapshot: {
 							data: {
 								user,
@@ -64,15 +64,15 @@ fdescribe('DnacListComponent', () => {
 			.and
 			.returnValue(
 				throwError(new HttpErrorResponse(error)),
-		);
+			);
 		component.getDnacList();
 	});
 
 	it('should update pagination params', () => {
-		const pageEvent = { page: 1, limit : 10 };
+		const pageEvent = { page: 1, limit: 10 };
 		component.onPagerUpdated(pageEvent);
 		expect(component.params.page)
-		.toBe(1);
+			.toBe(1);
 	});
 
 	it('should pass data on row clicked', () => {
@@ -98,40 +98,69 @@ fdescribe('DnacListComponent', () => {
 		};
 		component.onTableRowClicked(tableEvent);
 		expect(component.dnacDetails)
-		.toBeDefined();
+			.toBeDefined();
 	});
 
 	it('should close panel', () => {
 		component.onPanelClose();
 		expect(component.dnacDetails)
-		.toBe(null);
+			.toBe(null);
 	});
 
-	it('should call getDnacList service with undefined', () => {
-		const fakeParams = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
-		spyOn(service, 'getDnacList')
-			.withArgs(fakeParams)
+	it('should call getDnacList service with null', () => {
+		// const fakeParams = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
+		component.isLoading = true;
+		component.totalItems = 5;
+		const spy = spyOn(service, 'getDnacList')
 			.and
-			.returnValue(of(undefined));
-		service.getDnacList(fakeParams);
-		fixture.detectChanges();
-		expect(component.totalItems)
-			.toEqual(0);
-		expect(component.dnacDetailsResponse)
-			.toEqual([]);
+			.returnValue(of(null));
+		component.getDnacList();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(spy)
+					.toHaveBeenCalled();
+				expect(component.totalItems === 0)
+					.toBeTruthy();
+				expect(component.isLoading)
+					.toBeFalsy();
+			});
+	});
+
+	it('should call getDnacList service with object', () => {
+		// const fakeParams = { customerId : '' , page: 0, pageSize: 10, searchText : '' };
+		component.isLoading = true;
+		component.totalItems = 5;
+		const spy = spyOn(service, 'getDnacList')
+			.and
+			.returnValue(of({
+				dnacDetails: [{ active: true, customerId: 'xyz' }],
+				TotalCounts: 10,
+			}));
+		component.getDnacList();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(spy)
+					.toHaveBeenCalled();
+				expect(component.totalItems === 10)
+					.toBeTruthy();
+				expect(component.dnacDetailsResponse)
+					.toBeDefined();
+				expect(component.isLoading)
+					.toBeFalsy();
+			});
 	});
 
 	it('should trigger search function for keycode 13', () => {
 		const event = { keyCode: 13 };
 		component.globalSearchFunction(event.keyCode);
 		expect(component.isLoading)
-		.toBeTruthy();
+			.toBeTruthy();
 		expect(component.tableStartIndex)
-		.toBe(0);
+			.toBe(0);
 		expect(component.params.page)
-		.toBe(0);
-		expect(component.params.searchText)
-		.toBe('');
+			.toBe(0);
 	});
 
 	it('should not trigger search function for keycode not 13', () => {
@@ -141,11 +170,11 @@ fdescribe('DnacListComponent', () => {
 		const event = { keyCode: 10 };
 		component.globalSearchFunction(event.keyCode);
 		expect(component.isLoading)
-		.toBeFalsy();
+			.toBeFalsy();
 		expect(component.tableStartIndex === 0)
-		.toBeFalsy();
+			.toBeFalsy();
 		expect(component.params.page === 0)
-		.toBeFalsy();
+			.toBeFalsy();
 	});
 
 });
