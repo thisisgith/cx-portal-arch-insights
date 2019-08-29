@@ -94,10 +94,14 @@ export class AccRequestFormComponent implements OnDestroy, OnInit, OnDestroy {
 
 	public languageOptions: SelectOption[] = [
 		{ key: I18n.get('_English_'), value: I18n.get('_English_') },
+		{ key: I18n.get('_Spanish_'), value: I18n.get('_Spanish_') },
+		{ key: I18n.get('_German_'), value: I18n.get('_German_') },
 	];
 
 	public dnacOptions: SelectOption[] = [
+		{ key: '1.21', value: '1.21' },
 		{ key: '1.20', value: '1.20' },
+		{ key: '1.19', value: '1.19' },
 	];
 
 	constructor (
