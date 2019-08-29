@@ -7,7 +7,7 @@
 		>
 			<div
 				*ngFor="let label of visualLabels; let i = index"
-				[ngClass]="{ visualSelected: label?.active == true }"
+				[ngClass]="{ visualSelected: label?.active === true }"
 				(click)="selectVisualLabel(label)"
 				data-auto-id="SelectVisualLabelClick"
 			>

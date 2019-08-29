@@ -1,6 +1,6 @@
 <div class="row">
 		<div class="col-md-4">
-			<div class="container" *ngIf="dnacDetailsResponse.length > 0">
+			<div class="container" *ngIf="dnacDetailsResponse?.length > 0">
 				<span [innerText]="'_ArchitectureDNAC_' | i18n" class="text-large"></span>
 				<span class="qtr-margin-left text-small text-muted"
 					[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
