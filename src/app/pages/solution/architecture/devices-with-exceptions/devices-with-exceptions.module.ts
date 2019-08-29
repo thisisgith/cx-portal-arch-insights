@@ -11,7 +11,7 @@ import { CbpTbdModule } from '../cbp-tbd/cbp-tbd.module';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
+const rootUrl = environment.sdpServiceOrigin;
 
 /** Module representing the Devices With Exceptions Component */
 @NgModule({
