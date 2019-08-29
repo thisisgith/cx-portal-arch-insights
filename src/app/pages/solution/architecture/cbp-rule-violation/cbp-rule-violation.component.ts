@@ -42,8 +42,8 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		customerId: '',
 		page: 0,
 		pageSize: 10,
-		searchText: undefined,
-		severity: undefined,
+		searchText: '',
+		severity: '',
 	};
 
 	constructor (
@@ -75,8 +75,11 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
 		if (selectedFilter && !isFirstChange) {
 			const severityType = _.get(selectedFilter, { key: 'exceptions' });
-			this.paramsType.severity =
-				severityType ? severityType.toString() : '';
+			if (severityType) {
+				_.set(this.paramsType.severity, severityType);
+			} else {
+				_.unset(this.paramsType.severity);
+			}
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
@@ -125,7 +128,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					key: 'deviceIpsWithExceptions',
 					name: I18n.get('_ArchitectureAssetsImpacted_'),
 					render: item => item.deviceIpsWithExceptions.length !== 0
-						? item.deviceIpsWithExceptions.split(';').length : '0',
+					? item.deviceIpsWithExceptions.split(';').length : '0',
 					sortable: false,
 				},
 			],
@@ -168,22 +171,22 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		const endIndex = (this.tableStartIndex + this.cbpRuleExceptions.length);
 		this.tableEndIndex = (endIndex) > this.totalItems ? this.totalItems : endIndex;
 		this.architectureService.
-			getCBPSeverityList(this.paramsType)
-			.subscribe(data => {
-				const datePipe = new DatePipe('en-US');
-				this.isLoading = false;
-				this.totalItems = data.TotalCounts;
-				this.cbpRuleExceptions = data.BPRulesDetails;
-				this.lastCollectionTime = datePipe.transform(data.CollectionDate, 'medium');
-				this.tableEndIndex = (this.tableStartIndex + this.cbpRuleExceptions.length);
-			}, err => {
-				this.logger.error('CBP Rule Component View' +
-					'  : getCBPRulesData() ' +
-					`:: Error : (${err.status}) ${err.message}`);
-				this.isLoading = false;
-				this.cbpRuleExceptions = [];
-				this.totalItems = 0;
-			});
+		getCBPSeverityList(this.paramsType)
+		.subscribe(data => {
+			const datePipe = new DatePipe('en-US');
+			this.isLoading = false;
+			this.totalItems = data.TotalCounts;
+			this.cbpRuleExceptions = data.BPRulesDetails;
+			this.lastCollectionTime = datePipe.transform(data.CollectionDate, 'medium');
+			this.tableEndIndex = (this.tableStartIndex + this.cbpRuleExceptions.length);
+		}, err => {
+			this.logger.error('CBP Rule Component View' +
+				'  : getCBPRulesData() ' +
+				`:: Error : (${err.status}) ${err.message}`);
+			this.isLoading = false;
+			this.cbpRuleExceptions = [];
+			this.totalItems = 0;
+		});
 	}
 
 	/**
