@@ -51,8 +51,8 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public filters: SyslogFilter[];
 	public searchVal = '';
 	public tableStartIndex = 0;
-	public tableEndIndex = 0;
-	public showAsset360 = false;
+	public tableEndIndex = 10;
+	public showAssetDetails = false;
 	public syslogsParams: SyslogsService.GetSyslogsParams = {
 		customerId: this.customerId,
 		pageNo: this.pageNum,
@@ -77,7 +77,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			this.customerId = id;
 		});
 		this.syslogsParams = {
-			asset: '',
 			catalog: 'Cisco',
 			customerId: this.customerId,
 			days: 1,
@@ -105,7 +104,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param changes contains filterobj
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		// changes.prop contains the old and the new value...
 		const currentFilter = _.get(changes, ['assetFilter', 'currentValue']);
 		if (currentFilter && !changes.assetFilter.firstChange) {
 			this.syslogsParams = {
@@ -136,9 +134,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public deviceGridInit () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
-			dynamicData: false,
-			singleSelect: true,
-			// tslint:disable-next-line: object-literal-sort-keys
+
 			columns: [
 				{
 					key: 'DeviceHost',
@@ -171,6 +167,8 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 					sortable: true,
 				},
 			],
+			dynamicData: false,
+			singleSelect: true,
 		});
 	}
 
@@ -178,20 +176,19 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 * Gets asset data
 	 */
 	public getAssetData () {
-		// tslint:disable-next-line: ban-comma-operator
 		this.gridSubscripion = this.syslogsService
 			.getDeviceGridData(this.syslogsParams)
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(gridData => {
 				this.tableData = gridData.responseData;
 				this.totalItems = gridData.responseData.length;
-			}),
+			},
 			catchError(err => {
 				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			});
+			}));
 	}
 	/**
 	 * Determines whether table row selection on
@@ -214,15 +211,23 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public sysLogHeaderDetails (tableRowData, customerId) {
 		this.syslogsService.getDeviceHeaderDetails(tableRowData, customerId)
+		.pipe(takeUntil(this.destroy$))
 		.subscribe(data => {
 			this.deviceHeaderValues = data;
-			if (this.deviceHeaderValues.lastScan === null) {
-				this.notScaned = false;
-			}
-			if (this.deviceHeaderValues.serialNumber === '' || this.deviceHeaderValues.serialNumber === null) {
-				this.serialNumberStatus = false;
-			}
-		});
+			this.deviceHeaderValues.lastScan =
+			(this.deviceHeaderValues.lastScan) ?
+			 this.deviceHeaderValues.lastScan : I18n.get('_SylogNotAvailable_');
+
+			 this.deviceHeaderValues.serialNumber =
+			(this.deviceHeaderValues.serialNumber) ?
+			 this.deviceHeaderValues.serialNumber : I18n.get('_SylogNotAvailable_');
+		},
+			catchError(err => {
+				this.logger.error('syslogs-devices.component : sysLogHeaderDetails() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
 	}
 	/**
 	 * Determines whether panel close on
@@ -230,7 +235,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public onPanelClose () {
 		this.selectedAsset = undefined;
 		this.showAssetPanel = false;
-		this.showAsset360 = false;
+		this.showAssetDetails = false;
 	}
 	/**
 	 * Determines whether pager updated on
@@ -242,8 +247,8 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	/**
 	 * Redirects to asset360
 	 */
-	public redirectToAsset360 () {
-		this.showAsset360 = true;
+	public redirectToAssetDetails () {
+		this.showAssetDetails = true;
 	}
 	/**
 	 * Searchs all

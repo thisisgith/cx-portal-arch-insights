@@ -153,9 +153,4 @@ describe('SyslogMessagesDetailsComponent', () => {
 			.toBeDefined();
 		done();
 	});
-
-	// it('Should get the syslog message details filter values', done => {
-	// 	component.ngOnChanges();
-	// 	done();
-	// });
 });

@@ -29,7 +29,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({}),
+						queryParams: of({ }),
 						snapshot: {
 							data: {
 								user,
@@ -71,15 +71,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 			});
 	});
 	it('Should get the syslog device message grid data', done => {
-		const param = {
-			active: true,
-			DeviceHost: '10.10.10.10',
-			ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
-			ProductId: 'WS-C2960S-24PS-L',
-			SoftwareType: 'IOS',
-			SoftwareVersion: '12.2(53)SE2',
-			syslogCount: 6,
-		};
+
 		spyOn(syslogsService, 'getdevicePanelDetails')
 			.and
 			.returnValue(of(SyslogScenarios[4].scenarios.GET[0].response.body));
@@ -136,5 +128,4 @@ describe('SyslogsdevicedetailsComponent', () => {
 				done();
 			});
 	});
-	
 });

@@ -187,13 +187,10 @@ describe('SyslogsMessagesComponent', () => {
 			expect(component.deviceHeaderValues)
 				.toBeDefined();
 			expect(component.deviceHeaderValues.lastScan)
-				.toBe(null);
-			expect(component.notScaned)
-				.toBeFalsy();
+				.toEqual('1day');
 			expect(component.deviceHeaderValues.serialNumber)
-				.toBe('');
-			expect(component.serialNumberStatus)
-				.toBeFalsy();
+				.toEqual('123');
+
 			done();
 		});
 	});

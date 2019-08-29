@@ -81,8 +81,8 @@ describe('SyslogsMessagesComponent', () => {
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();
-			expect(component.tableData)
-				.toBeDefined();
+			expect(component.tableData.length)
+				.toBeGreaterThan(1);
 			done();
 		});
 	});

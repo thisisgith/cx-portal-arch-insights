@@ -3,13 +3,9 @@
 	<div class="col-3">
 		<div class="container">
 			<span [innerText]="'_Syslogs_' | i18n" class="text-large"></span>
-			<span
-				class="qtr-margin-left text-small text-muted"
-				*ngIf="tableData.length > 0"
-				>showing
-				{{ tableStartIndex + " - " + tableEndIndex }}
-				of {{ totalItems }} syslog messages</span
-			>
+			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0"
+				[innerText]="'_SyslogShowingXofYMessages_' | i18n:(tableStartIndex + 1):tableEndIndex:totalItems">
+			</span>
 		</div>
 	</div>
 	<div class="col-md-9">
@@ -96,13 +92,11 @@
 <!-- grid-section ends -->
 
 <ng-template #icdecTemplate let-item="celldata">
-	<div class="syslog-column" title="{{ item.IcDesc }}">
-		{{ item.IcDesc }}
+	<div class="syslog-column" title="{{ item.IcDesc }}" [innerText]="item.IcDesc">
 	</div>
 </ng-template>
 <ng-template #actionTemplate let-item="celldata">
-	<div class="syslog-column" title="{{ item.Recommendation }}">
-		{{ item.Recommendation }}
+	<div class="syslog-column" title="{{ item.Recommendation }}" [innerText]="item.Recommendation">
 	</div>
 </ng-template>
 
@@ -116,11 +110,11 @@
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false"
 	>
-		<div class="row syslog360-header-title">
+		<div class="row">
 			<div class="col-md-12">
 				<div class="text-xlarge">
 					<span [innerText]="'_SyslogMessageType_' | i18n"></span>
-					<span> : {{ selectedAsset.MsgType }} </span>
+					<span [innerText]="selectedAsset.MsgType "> </span>
 				</div>
 			</div>
 		</div>

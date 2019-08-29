@@ -48,9 +48,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public showAssetPanel = false;
 	public fullscreen = false;
 	public searchVal = '';
-	public tableStartIndex = 1;
+	public tableStartIndex = 0;
 	public tableEndIndex = 10;
-	public showAsset360 = false;
+	public showAssetDetails = false;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -68,8 +68,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			catalog: 'Cisco',
 			customerId: this.customerId,
 			days: 1,
-			excludeMsgType: '',
-			includeMsgType: '',
 			pageNo: this.pageNum,
 			severity: 3,
 			size: this.pageLimit,
@@ -113,7 +111,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param changes contains filterobj
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		// changes.prop contains the old and the new value...
 		const currentFilter = _.get(changes, ['sysFilter', 'currentValue']);
 		if (currentFilter && !changes.sysFilter.firstChange) {
 			this.syslogsParams = {
@@ -145,9 +142,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public messageGridInit () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
-			dynamicData: false,
-			singleSelect: true,
-			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'MsgType',
@@ -178,27 +172,30 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 					sortable: true,
 				},
 			],
+			dynamicData: false,
+			singleSelect: true,
 
 		});
 	}
 
-	// tslint:disable-next-line: completed-docs
+	/**
+	 * Gets syslogs data
+	 */
 	public getSyslogsData () {
 		this.loading = true;
 		this.tableData = [];
-		// tslint:disable-next-line: ban-comma-operator
 		this.gridSubscripion = this.syslogsService
 			.getGridData(this.syslogsParams)
 			.pipe(takeUntil(this.destroy$))
 			.subscribe(gridData => {
 				this.tableData = gridData;
 				this.totalItems = gridData.length;
-			}), catchError(err => {
+			}, catchError(err => {
 				this.logger.error('syslogs-details.component : getDeviceGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			});
+			}));
 		this.loading = false;
 	}
 
@@ -234,7 +231,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public onPanelClose () {
 		this.selectedAsset = undefined;
 		this.showAssetPanel = false;
-		this.showAsset360 = false;
+		this.showAssetDetails = false;
 	}
 	/**
 	 * Determines whether pager updated on

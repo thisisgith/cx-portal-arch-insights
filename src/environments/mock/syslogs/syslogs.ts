@@ -9,15 +9,15 @@ const assetParams = 'pageNo=1&size=10&severity=7&days=1&catalog=&asset=';
 /** Device Message grid params */
 const devicemessageParams = 'fromSeverity=1&toSeverity=7&days=100&device=Device_6_0_3_115';
 /** Syslog grid data after filter */
-// tslint:disable-next-line: max-line-length
-const filterdetailsparams = 'https://cpp-api.sdp11-idev.csco.clou/syslog/v1/syslog-view/details?days=90&msgType=CLNS-4-AUTH_FAIL&productFamily=&productId=WS-C2960S-24PS-L&severity=3&software=';
+const filterdetailsparams = `syslog-view/details?days=90&msgType=CLNS-4-AUTH_FAIL&
+  productFamily=&productId=WS-C2960S-24PS-L&severity=3&software=`;
 /** Syslog filters dropdown data */
-// tslint:disable-next-line: max-line-length
-const filtergridparam = 'https://cpp-api.sdp11-idev.csco.cloud/syslog/v1/syslog-view/filters?msgType=CLNS-4-AUTH_FAIL&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily';
+const filtergridparam = `syslog-view/filters?msgType=CLNS-4-AUTH_FAIL&
+ filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily`;
 
 /** Syslog message details grid */
 const messageDetailsParam = '/pbc/solution/insights/syslogs';
-/** The mock response for allCrashDetails */
+/** The mock response for syslogCount */
 const syslogCount: any = {
 	assetsCount: '5',
 	sysLogMsgCount: '10',
@@ -25,7 +25,7 @@ const syslogCount: any = {
 /** The mock url for syslog deatil header */
 const messageDetailHeaderUrl = 'deviceIp=172.16.44.17&customerId=7293498';
 
-// tslint:disable-next-line: completed-docs
+/** The mock data for syslogMessages */
 const syslogMessages: any = [
 	{
 		deviceCount: 1,
@@ -53,7 +53,7 @@ const syslogMessages: any = [
 	},
 ];
 
-// tslint:disable-next-line: completed-docs
+/** The mock data for syslogAssets */
 const syslogAssets: any = {
 	count: 3,
 	message: 'Success',
@@ -83,22 +83,22 @@ const syslogAssets: any = {
 		},
 	],
 };
-// tslint:disable-next-line: completed-docs
+/** The mock data for syslogdevicedetailsdata */
 const syslogdevicedetailsdata: any = {
 	DeviceHost: 'Device_6_0_3_115',
 	IcDesc: 'Bug:This message seen when MD5 authentication is enabled in the ISIS network ',
 	MessageCount: 3,
-	MsgType: 'CLNS-4-AUTH_FAIL',
-	Recommendation: 'Disable ISIS LSP MD5 authentication.',
-	SyslogMsgDesc: 'MPLS packet received on non MPLS enabled interface',
-	SyslogSeverity: 4,
-		// tslint:disable-next-line: object-literal-sort-keys
 	MessageDescObject: [
 		{
 			MessageCount: '3',
 			SyslogMsgDesc: 'MPLS packet received on non MPLS',
 		},
-	]};
+	],
+	MsgType: 'CLNS-4-AUTH_FAIL',
+	Recommendation: 'Disable ISIS LSP MD5 authentication.',
+	SyslogMsgDesc: 'MPLS packet received on non MPLS enabled interface',
+	SyslogSeverity: 4,
+};
 
 /** filterdataresponse grid */
 const filterdataresponse: any = {
@@ -134,8 +134,8 @@ const filterdataresponse: any = {
 /** The mock response for MessageDetails */
 const messageDetailHeaderData = {
 	ipAddress: '6.0.10.1',
-	lastScan: null,
-	serialNumber: '',
+	lastScan: '1day',
+	serialNumber: '123',
 };
 
 /** message details response */
@@ -143,23 +143,21 @@ const messagegriddetailsresponse: any = {
 	count: 1,
 	message: 'Success',
 	responseData: [{
+		DeviceHost: '172.16.44.17',
+		MessageDescObject: [{
+			MessageCount: '2',
+			SyslogMsgDesc: 'MPLS packet received on non MPLS enabled interface',
+		}],
 		msgCount: 2,
 		MsgType: 'ENVM-DFC3-4-LONGBUSYREAD',
-		// tslint:disable-next-line: object-literal-sort-keys
-		DeviceHost: '172.16.44.17',
-		SyslogMsgDesc: 'MPLS packet received on non MPLS enabled interface',
-		ProductId: 'WS-C2960S-24PS-L',
 		ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
+		ProductId: 'WS-C2960S-24PS-L',
 		SoftwareType: 'IOS',
 		SoftwareVersion: '12.2(53)SE2',
-		MessageDescObject: [{
-			SyslogMsgDesc: 'MPLS packet received on non MPLS enabled interface',
-			// tslint:disable-next-line: object-literal-sort-keys
-			MessageCount: '2',
-		}],
+		SyslogMsgDesc: 'MPLS packet received on non MPLS enabled interface',
 	}],
 };
-// tslint:disable-next-line: completed-docs
+/** SyslogScenarios */
 export const SyslogScenarios = [
 	{
 		scenarios: {

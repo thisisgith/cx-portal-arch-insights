@@ -9,7 +9,7 @@
 						<input data-auto-id="includeFilterId" #includeFilter="ngModel" [(ngModel)]="includeMsgFilter"
 							name="includeFilterName" type="text" class="form-control"
 							placeholder="{{ '_SyslogIncludeMessage_' | i18n }}" />
-						<label>Include Messages</label>
+						<label [innerText]="'_SyslogIncludeMessageType_' | i18n"></label>
 						<button type="button" class="link" tabindex="-1">
 							<span class="icon-search"></span>
 						</button>
@@ -21,8 +21,8 @@
 					<div class="form-group__text">
 						<input data-auto-id="excludeMsgId" #excludeFilter="ngModel" [(ngModel)]="excludeMsgFilter"
 							name="excludeMsgName" type="text" class="form-control"
-							placeholder="{{ 'ExcludeMessage' | i18n }}" />
-						<label>Exclude Messages</label>
+							placeholder="{{ '_SyslogExcludeMessage_' | i18n }}" />
+						<label [innerText]="'_SyslogExcludeMessageType_' | i18n"></label>
 						<button type="button" class="link" tabindex="-1">
 							<span class="icon-search"></span>
 						</button>
@@ -32,56 +32,76 @@
 		</form>
 	</div>
 	<div class="col-md-3">
-		<cui-select data-auto-id ="severity" label="Severity" [required]="false" [items]="severityList" placeholder="Select Severity"
-			[compressed]="false" [(ngModel)]="selectedSeverity" (ngModelChange)="onSelection()" optionsKey="name"
-			optionsValue="value">
+		<cui-select 
+		data-auto-id="severity" 
+		label="{{ '_SyslogSeverity_' | i18n }}" 
+		[required]="false"
+		[items]="severityList" 
+		[compressed]="false" 
+		[(ngModel)]="selectedSeverity"
+		(ngModelChange)="onSelection()" 
+		optionsKey="name" 
+		optionsValue="value">
 		</cui-select>
 	</div>
 	<div class="col-md-3">
-		<cui-select data-auto-id="timeRange" label="Time Range" [required]="false" [items]="timeRangeList" placeholder="Select timeRange"
-			[compressed]="false" [(ngModel)]="selectedTimeRange" (ngModelChange)="onSelection()" optionsKey="name"
-			optionsValue="value">
+		<cui-select data-auto-id="timeRange" 
+		label="{{ '_SyslogTimeRange_' | i18n }}"
+		[required]="false"
+		[items]="timeRangeList" 
+		[compressed]="false" 
+		[(ngModel)]="selectedTimeRange"
+		(ngModelChange)="onSelection()" 
+		optionsKey="name" 
+		optionsValue="value">
 		</cui-select>
 	</div>
 </div>
 <div class="container base-margin-top">
-	<cui-table *ngIf="tableData" data-auto-id="tableData" [options]="tableOptions" [data]="tableData"
-		[offset]="tableConfig.tableOffset" [limit]="tableLimit">
+	<cui-table *ngIf="tableData" 
+	data-auto-id="tableData"
+	 [options]="tableOptions" 
+	 [data]="tableData"
+	 [offset]="tableConfig.tableOffset"
+	 [limit]="tableConfig.tableLimit">
 	</cui-table>
 	<div class="section">
-			<cui-pager
-			[page]="tableConfig.tableOffset"
-			[limit]="tableConfig.tableLimit" 
-			[totalItems]="tableConfig.totalItems" 
-			(onPageChanged)="onPagerUpdated($event)">
-			</cui-pager>	
+		<cui-pager [page]="tableConfig.tableOffset" 
+		[limit]="tableConfig.tableLimit"
+		[totalItems]="tableConfig.totalItems" 
+		(onPageChanged)="onPagerUpdated($event)">
+		</cui-pager>
 	</div>
 </div>
 
-<ng-template #innertableref let-item="item">
-		<div class="row">
-				<div class="col-md-12">
-					<div class="container">
-						<div class="text-uppercase text-bold half-margin-bottom"><span
-								[innerText]="'_SyslogDetailedDescription_' | i18n"></span> </div>
-						<div>{{item.IcDesc}}</div>
-					</div>
+<ng-template #innerTableRef let-item="item">
+	<div class="row">
+		<div class="col-12">
+			<div class="container">
+				<div class="text-uppercase text-bold half-margin-bottom"><span
+						[innerText]="'_SyslogDetailedDescription_' | i18n"></span> </div>
+				<div><span [innerText]="item.IcDesc"></span></div>
+			</div>
+		</div>
+	</div>
+	<div class="row base-margin-top">
+		<div class="col-md-12">
+			<div class="container">
+				<div class="text-uppercase text-bold half-margin-top half-margin-bottom"><span
+						[innerText]="'_RECOMMENDATIONS_' | i18n"></span></div>
+					<div><span [innerText]="item.Recommendation"></span></div>
 				</div>
 			</div>
-			<div class="row base-margin-top">
-					<div class="col-md-12">
-						<div class="container">
-							<div class="text-uppercase text-bold half-margin-top half-margin-bottom"><span
-									[innerText]="'_RECOMMENDATIONS_' | i18n"></span></div>
-							<div>{{item.Recommendation}}</div>
-						</div>
-					</div>
-				</div>
+		</div>
 
-			<cui-table *ngIf="tableData" data-auto-id="tableData" [options]="innerTableOptions" [data]="item.MessageDescObject"
-			[offset]="tableOffset" [limit]="tableLimit">
-		</cui-table>
+	<cui-table *ngIf="tableData" 
+	data-auto-id="tableData" 
+	[options]="innerTableOptions" 
+	[data]="item.MessageDescObject"
+	[offset]="tableConfig.tableOffset" 
+	[limit]="tableConfig.tableLimit">
+	</cui-table>
 </ng-template>
-<ng-template #recommandation >
-	<span>View Description & Recommendation</span>
+<ng-template #recommendation>
+	<span [innerText]="'_SyslogViewDescriptionReccomendations_' | i18n"></span>
 </ng-template>

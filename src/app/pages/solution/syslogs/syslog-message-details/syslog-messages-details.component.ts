@@ -14,6 +14,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { UserResolve } from '@utilities';
+import { MarshalTableData } from '../syslogs.utils';
 
 /**
  * Syslogpanelgrid component
@@ -25,9 +26,8 @@ import { UserResolve } from '@utilities';
 	templateUrl: './syslog-messages-details.component.html',
 })
 export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
-	@Input('asset') public asset: SyslogPanelGridData;
-	@ViewChild('innertableref', { static: true }) public innertableref: TemplateRef<{ }>;
-	@ViewChild('numbervalueref', { static: true }) public numbervalueref: TemplateRef<{ }>;
+	@Input('asset') public asset: any;
+	@ViewChild('innerTableRef', { static: true }) public innerTableRef: TemplateRef<{ }>;
 	@Input('selectedFilter') public selectedFilter: any;
 	public tableOptions: CuiTableOptions;
 	public innerTableOptions: CuiTableOptions;
@@ -42,12 +42,9 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 
 	public customerId;
 	public tableData: DeviceDetailsdata[] = [];
-	public tableOffset = 0;
 	public productIdItems: ProductId[];
 	public softwareItems: SoftwareList[];
 	public productFamily: ProductFamily[];
-	public totalItems = 0;
-	public tableLimit = 10;
 	public pagerLimit = 5;
 	public destroy$ = new Subject();
 	public tableConfig = {
@@ -66,21 +63,20 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 		selectedRowData: '',
 	};
 
-	// tslint:disable-next-line: no-any
 	public timePeriod: any[] = [{
-		name: '1 day',
+		name: I18n.get('_SyslogDay1_'),
 		value: 1,
 	},
 	{
-		name: '7 days',
+		name: I18n.get('_SyslogDays7_'),
 		value: 7,
 	},
 	{
-		name: '15 days',
+		name: I18n.get('_SyslogDays15_'),
 		value: 15,
 	},
 	{
-		name: '30 days',
+		name: I18n.get('_SyslogDays30_'),
 		value: 30,
 	}];
 	constructor (
@@ -118,23 +114,22 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 		this.tableInitialization();
 		this.innerTableOptions = new CuiTableOptions({
 			bordered: false,
-			dynamicData: false,
-			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'serialNumber',
-					name: 'NO',
+					name: I18n.get('_SyslogNumber_'),
 				},
 				{
 					key: 'SyslogMsgDesc',
-					name: 'Message Text',
+					name: I18n.get('_Syslog_SyslogMessageText_'),
 				},
 				{
 					key: 'MessageCount',
-					name: 'Count',
+					name: I18n.get('_SyslogCount_'),
 
 				},
 			],
+			dynamicData: false,
 		});
 	}
 	/**
@@ -144,8 +139,6 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public tableInitialization () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
-			dynamicData: false,
-			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'DeviceHost',
@@ -173,10 +166,10 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					sortable: true,
 				},
 			],
-
+			dynamicData: false,
 			padding: 'regular',
 			rowWellColor: 'black',
-			rowWellTemplate : this.innertableref,
+			rowWellTemplate : this.innerTableRef,
 			singleSelect: true,
 			striped: false,
 			wrapText: false,
@@ -201,26 +194,9 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 			}),
 			)
 			.subscribe((data: SyslogPanelGridData) => {
-				this.tableData = this.marshalTableDataForInerGrid(data.responseData);
+				this.tableData = MarshalTableData.marshalTableDataForInerGrid(data.responseData);
 				this.tableConfig.totalItems = this.tableData.length;
 			});
-	}
-
-	/***
-	 * To push the new serialNumber property for No c
-	 * @param innerData comtains the table data
-	 * @returns marshalled table data
-	 */
-	public marshalTableDataForInerGrid (innerData) {
-		for (const messageObject of innerData) {
-			for (const i in messageObject.MessageDescObject) {
-				if (messageObject.MessageDescObject) {
-					messageObject.MessageDescObject[i].serialNumber = parseInt(i, 10) + 1;
-				}
-			}
-		}
-
-		return innerData;
 	}
 
 	/**
@@ -240,15 +216,16 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 				.pipe(
 					takeUntil(this.destroy$),
 					catchError(err => {
-						// tslint:disable-next-line: ter-max-len
-						this.logger.error('syslog-messages-details.component : getPanelGridData() ' +
+						this.logger
+						.error('syslog-messages-details.component : getPanelGridData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 
 						return of({ });
 					}),
 				)
 				.subscribe((data: SyslogPanelGridData) => {
-					this.tableData = this.marshalTableDataForInerGrid(data.responseData);
+					this.tableData = MarshalTableData
+					.marshalTableDataForInerGrid(data.responseData);
 					this.tableConfig.totalItems = this.tableData.length;
 				});
 

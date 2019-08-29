@@ -3,9 +3,9 @@
 	<div class="col-3">
 		<div class="container">
 			<span [innerText]="'_Asset_' | i18n" class="text-large"></span>
-			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0">showing
-				{{ tableStartIndex + 1 + " - " + tableEndIndex }}
-				of {{ totalItems }} assets</span>
+			<span class="qtr-margin-left text-small text-muted" *ngIf="tableData.length > 0"
+				[innerText]="'_SyslogShowingXofYAssets_' | i18n:(tableStartIndex + 1):tableEndIndex:totalItems">
+			</span>
 		</div>
 	</div>
 	<div class="col-9">
@@ -44,12 +44,22 @@
 	</div>
 </div>
 <div class="container base-margin-top">
-	<cui-table [options]="tableOptions" [data]="tableData" [limit]="tableLimit" [offset]="tableOffset"
-		(onSortingChanged)="onTableSortingChanged($event)" (onTableRowClicked)="onTableRowSelection($event)"
-		*ngIf="!loading"></cui-table>
+	<cui-table 
+	[options]="tableOptions" 
+	[data]="tableData"
+	[limit]="tableLimit" 
+	[offset]="tableOffset"
+	(onTableRowClicked)="onTableRowSelection($event)"
+	*ngIf="!loading">
+	</cui-table>
 	<div class="section">
-		<cui-pager *ngIf="tableData.length" [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"
-			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
+	<cui-pager 
+		*ngIf="tableData.length" 
+		[page]="tableOffset" 
+		[limit]="tableLimit" 
+		[totalItems]="totalItems"
+		(onPageChanged)="onPagerUpdated($event)">
+	</cui-pager>
 	</div>
 </div>
 <!-- grid-section ends -->
@@ -60,9 +70,8 @@
 				<div class="col-md-12">
 					<div class="text-xlarge">
 						<span [innerText]="'__SyslogDeviceDetailsInfo__' | i18n"></span>
-						<span> : </span>
 						<span class="qtr-margin-left">
-							<a data-auto-id="selectedName" (click)="redirectToAsset360()"
+							<a data-auto-id="selectedName" (click)="redirectToAssetDetails()"
 								[innerHTML]="selectedAsset.DeviceHost"></a>
 						</span>
 					</div>
@@ -72,30 +81,22 @@
 		<div class="row">
 			<div class="base-margin-left">
 				<div class="text-uppercase text-bold half-margin" [innerText]="'_SyslogIpAddress_' | i18n"></div>
-				<div class="half-margin">
-					{{ deviceHeaderValues?.ipAddress }}
+				<div class="half-margin" [innerText] = "deviceHeaderValues?.ipAddress">
 				</div>
 			</div>
 			<div class="base-margin-left">
 				<div>
 					<div class="text-uppercase text-bold half-margin" [innerText]="'_SyslogSerialNumber_' | i18n"></div>
-					<div class="half-margin" *ngIf="serialNumberStatus; else noSerialNumber">
-						{{ deviceHeaderValues?.serialNumber }}
-					</div>
-					<ng-template #noSerialNumber>
-						Not Available
-					</ng-template>
+					<div class="half-margin" [innerText] = "deviceHeaderValues?.serialNumber">
+				</div>
 				</div>
 			</div>
 			<div class="base-margin-left">
 				<div>
 					<div class="text-uppercase text-bold half-margin" [innerText]="'_SyslogLastScan_' | i18n"></div>
-					<div class="half-margin" *ngIf="notScaned; else noLastScan">
-						{{ deviceHeaderValues?.lastScan }}
+					<div class="half-margin"
+					[innerText] = "deviceHeaderValues?.lastScan">
 					</div>
-					<ng-template #noLastScan>
-						Not Scanned
-					</ng-template>
 				</div>
 			</div>
 		</div>
@@ -103,7 +104,7 @@
 	</details-panel-header>
 	<syslogs-devices-details [asset]="selectedAsset" [selectedFilter]="syslogsParams"></syslogs-devices-details>
 </details-panel>
-<details-panel *ngIf="showAsset360" [hidden]="!showAsset360" [fullscreen]="fullscreen">
+<details-panel *ngIf="showAssetDetails" [hidden]="!showAssetDetails" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<asset-details-header [asset]="selectedAsset"></asset-details-header>
 		<div detailsPanelTitle class="text-xlarge">
