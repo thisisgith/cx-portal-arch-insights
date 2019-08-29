@@ -33,11 +33,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
-	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{ }>;
 	@ViewChild('releaseDateTemplate', { static: true })
-	private releaseDateTemplate: TemplateRef<{}>;
+	private releaseDateTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
@@ -125,7 +125,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -174,7 +174,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -255,7 +255,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any>new Date(b.postDate) - <any>new Date(a.postDate));
+			<any> new Date(b.postDate) - <any> new Date(a.postDate));
 
 		return data;
 	}
@@ -316,7 +316,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @param data AssetDetails
 	 * @param selectedItem can be selectedAsset or selectedProfileGroup
 	 */
-	public setAcceptedVersion (data: AssetRecommendationsResponse, selectedItem: OSVAsset | SoftwareGroup) {
+	public setAcceptedVersion (data: AssetRecommendationsResponse,
+		selectedItem: OSVAsset | SoftwareGroup) {
 		_.forEach(data, (recommendation: AssetRecommendations) => {
 			recommendation.accepted = recommendation.swVersion === selectedItem.optimalVersion
 				? true : false;
