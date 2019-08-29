@@ -143,8 +143,13 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 						const url = _.get(response, 'download_info_list[0].cloud_url')
 							|| _.get(response, 'download_info_list[0].download_url');
 						if (url) {
-							this.utils
-								.download(`${url}?access_token=${this.asdService.accessToken}`);
+							if (/[?]/.test(url)) {
+								this.utils
+									.download(`${url}&access_token=${this.asdService.accessToken}`);
+							} else {
+								this.utils
+									.download(`${url}?access_token=${this.asdService.accessToken}`);
+							}
 						}
 
 						return of(response);
