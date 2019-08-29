@@ -300,16 +300,16 @@ describe('RccComponent', () => {
 	});
 
 	it('should invoke searchViolations with keycode 8', () => {
-		component.searched = true;
+		component.searched = false;
 		component.searchForm = formBuilder.group({
-			search: 'PCI',
+			search: null,
 		});
 		const event = {
 			keyCode: 8,
 		};
-		component.searchViolations(event, null);
+		component.searchViolations(event, 'clear');
 		expect(component.searched)
-			.toBeFalsy();
+			.toBeTruthy();
 	});
 
 	it('should invoke searchViolations with keycode 13', () => {
@@ -326,17 +326,32 @@ describe('RccComponent', () => {
 	});
 
 	it('should invoke searchViolations with keycode 8 and search type', () => {
-		component.searched = true;
+		component.searched = false;
 		component.view = 'violation';
+		component.searchInput = 'PCI';
 		component.searchForm = formBuilder.group({
 			search: 'PCI',
 		});
 		const event = {
 			keyCode: 8,
 		};
-		component.searchViolations(event, 'search');
+		component.searchViolations(event, 'clear');
 		expect(component.violationGridObj.search)
-			.toEqual('PCI');
+			.toEqual(component.searchInput);
 	});
 
+	it('should invoke searchViolations with keycode 8 and search type null', () => {
+		component.searched = true;
+		component.view = 'violation';
+		component.searchInput = 'PCI';
+		component.searchForm = formBuilder.group({
+			search: 'PCI',
+		});
+		const event = {
+			keyCode: 8,
+		};
+		component.searchViolations(event, null);
+		expect(component.searched)
+			.toBeTruthy();
+	});
 });
