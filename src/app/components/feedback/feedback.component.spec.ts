@@ -1,5 +1,6 @@
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { ProfileService } from '@cisco-ngx/cui-auth';
 import { FeedbackComponent } from './feedback.component';
 import { FeedbackModule } from './feedback.module';
 import { environment } from '@environment';
@@ -21,6 +22,21 @@ describe('FeedbackComponent', () => {
 			],
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
+				{
+					provide: ProfileService,
+					useValue: {
+						getProfile () {
+							return {
+								cpr: {
+									pf_auth_email: 'susan@company.com',
+									pf_auth_firstname: 'Susan',
+									pf_auth_lastname: 'Swanson',
+									pf_auth_uid: 'susans',
+								},
+							};
+						},
+					},
+				},
 			],
 		})
 		.compileComponents();

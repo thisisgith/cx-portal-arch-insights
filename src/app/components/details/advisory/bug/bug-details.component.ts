@@ -9,7 +9,11 @@ import {
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
-	CriticalBug, DiagnosticsService, CriticalBugsResponse,
+	Asset,
+	CriticalBug,
+	NetworkElement,
+	DiagnosticsService,
+	CriticalBugsResponse,
 } from '@sdp-api';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
@@ -39,6 +43,10 @@ export class BugDetailsComponent implements OnInit, OnChanges {
 	@Input('customerId') public customerId: string;
 	@Output('details') public details = new EventEmitter<Data>();
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
+	@Output('assets') public assets = new EventEmitter<{
+		impacted: (Asset | NetworkElement)[];
+		potentiallyImpacted: (Asset | NetworkElement)[];
+	}>();
 
 	private params: DiagnosticsService.GetCriticalBugsParams;
 
