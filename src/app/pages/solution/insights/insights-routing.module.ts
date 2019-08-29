@@ -51,6 +51,13 @@ const routes: Routes = [
 				resolve: {
 					user: UserResolve,
 				},
+			}, {
+				loadChildren: () => import('../architecture-review/architecture-review.module')
+					.then(m => m.ArchitectureReviewModule),
+				path: 'architecture-review',
+				resolve: {
+					user: UserResolve,
+				},
 			},
 			{
 				path: '',

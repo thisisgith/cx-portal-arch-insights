@@ -4,6 +4,14 @@ const api = 'compliance/v1/service/';
 /** Default Customer ID */
 const customerId = '7293498';
 
+/** This is mock data for empty response  */
+const emptyData: any = {
+	data: { },
+	error: null,
+	message: 'SUCCESS',
+	status: 200,
+};
+
 /** This is mock data for violationDetails  */
 const violationDetails: any = {
 	data: {
@@ -29,6 +37,18 @@ const violationDetails: any = {
 		},
 	  ],
 	  impactedAssetsCount: 7,
+	},
+	error: null,
+	message: 'SUCCESS',
+	status: 200,
+};
+
+/** This is mock data for violationDetails with empty impacted assets  */
+const emptyViolationDetails: any = {
+	data: {
+	  customerId: '7293498',
+	  impactedAssets: [],
+	  impactedAssetsCount: 0,
 	},
 	error: null,
 	message: 'SUCCESS',
@@ -92,30 +112,62 @@ const violationGridData: any = {
 	message: 'SUCCESS',
 };
 
+/** The empty mock response for violation grid data */
+const emptyViolationGridData: any = {
+	data: {
+		customerId: '7293498',
+		impassets: 0,
+		summary: [],
+		violationcount: 0,
+	},
+	error: null,
+	message: 'SUCCESS',
+};
+
 /** The mock response for asset grid data */
 const assetGridData: any = {
 	data: {
-		assetData: [{
-			containingHwId: 'FOC1844X089,WS-C3850-24S,NA,FOC1844X089,WS-C3850-24S,NA,NA',
-			contractNumber: 'UNKNOWN',
+		assetList: [{
+			containingHwId: null,
+			contractNumber: '',
 			criticalAdvisories: null,
-			deviceName: 'border_2.dnaauto.cisco.com',
+			deviceName: '5520-1',
 			equipmentType: 'CHASSIS',
-			hwInstanceId: 'FOC1446W5E3,WS-C2960S-24PS-L,NA,FOC1446W5E3,WS-C2960S-24PS-L,NA,NA',
-			ipaddress: '10.109.1.122',
-			lastScan: '2019-06-01T09:27:32.482',
-			managedNeId: 'NA,FOC1446W5E3,WS-C2960S-24PS-L,NA',
-			osType: 'IOS',
-			osVersion: '12.2(53)SE2',
-			productId: 'WS-C2960S-24PS-L',
+			hwInstanceId: 'FCH2139V1B0,AIR-CT5520-K9,NA,FCH2139V1B0,AIR-CT5520-K9,NA,NA',
+			ipAddress: '10.105.218.192',
+			lastScan: null,
+			managedNeId: 'NA,FCH2139V1B0,AIR-CT5520-K9,NA',
+			osType: 'AireOS',
+			osVersion: '8.8.125.0',
+			productId: 'AIR-CT5520-K9',
 			role: 'ACCESS',
-			serialNumber: 'FOC2246Z0MU',
-			severity: 'p1',
+			serialNumber: 'FCH2139V1B0',
+			severity: 'P1',
 			supportCovered: false,
-			violationCount: 0,
+			violationCount: 3,
 		}],
+		percentage: 94,
+		totalDeviceCount: 63,
+		totalViolatedDevices: 59,
+		totalViolationCount: 459,
 	},
 	message: 'SUCCESS',
+	pagination: null,
+	status: 200,
+};
+
+/** The empryt mock response for asset grid data */
+const emprytAssetGridData: any = {
+	data: {
+		assetList: [],
+		percentage: 0,
+		totalDeviceCount: 0,
+		totalViolatedDevices: 0,
+		totalViolationCount: 0,
+	},
+	message: 'SUCCESS',
+	pagination: null,
+	status: 200,
 };
 
 /** The mock response for rccPolicyRuleDetailsData data */
@@ -403,5 +455,107 @@ export const ComplianceScenarios = [
 		},
 		url: `${api}/policy-rule-details`,
 		usecases: ['Use Case 8'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Violation 360 Details',
+					response: {
+						body: emptyData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/violation-details`,
+		usecases: ['Use Case 9'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Violation 360 Details',
+					response: {
+						body: emptyViolationDetails,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/violation-details`,
+		usecases: ['Use Case 10'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Summary',
+					response: {
+						body: emptyViolationGridData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/violation-summary/${customerId}`,
+		usecases: ['Use Case 11'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Filter Asset Details Empty',
+					response: {
+						body: emptyViolationGridData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/filter-asset-detail`,
+		usecases: ['Use Case 12'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Filter Asset Details Empty',
+					response: {
+						body: assetGridData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/filter-asset-detail`,
+		usecases: ['Use Case 13'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Filter Asset Details Empty',
+					response: {
+						body: emprytAssetGridData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/filter-asset-detail`,
+		usecases: ['Use Case 14'],
 	},
 ];

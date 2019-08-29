@@ -33,7 +33,7 @@ import { FeedbackComponent } from '../../components/feedback/feedback.component'
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 import { Step } from '../../../../src/app/components/quick-tour/quick-tour.component';
-import { UtilsService, RacetrackInfoService } from '@services';
+import { DetailsPanelStackService, UtilsService, RacetrackInfoService } from '@services';
 
 /**
  * Interface representing a facet
@@ -104,6 +104,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private utils: UtilsService,
 		private cdr: ChangeDetectorRef,
 		private racetrackInfoService: RacetrackInfoService,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -205,6 +206,8 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					this.racetrackInfoService.sendCurrentTechnology(this.selectedTechnology);
 				}
 			}
+
+			this.detailsPanelStackService.reset();
 		}
 	}
 

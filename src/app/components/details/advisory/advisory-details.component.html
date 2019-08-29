@@ -1,19 +1,23 @@
 <details-panel *ngIf="advisoryId && customerId" [hidden]="!advisoryId && !advisory" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onPanelClose()"
+	<details-panel-header (close)="onAllPanelsClose()"
+		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false">
 		<ng-container *ngIf="details">
 			<security-details-header *ngIf="type === 'security'"
 				[details]="details"
-				[selectedAsset]="selectedAsset">
+				[selectedAsset]="selectedAsset"
+				[impactedAssets]="impactedAssets">
 			</security-details-header>
 			<field-notice-details-header *ngIf="type === 'field'"
 				[details]="details"
-				[selectedAsset]="selectedAsset">
+				[selectedAsset]="selectedAsset"
+				[impactedAssets]="impactedAssets">
 			</field-notice-details-header>
 			<bug-details-header *ngIf="type === 'bug'"
 				[details]="details"
-				[selectedAsset]="selectedAsset">
+				[selectedAsset]="selectedAsset"
+				[impactedAssets]="impactedAssets">
 			</bug-details-header>
 		</ng-container>
 		<div detailsPanelTitle *ngIf="title" class="text-xlarge">
@@ -27,21 +31,24 @@
 			[advisory]="advisory"
 			[customerId]="customerId"
 			(alert)="handleAlert($event)"
-			(details)="onDetailsLoad($event)">
+			(details)="onDetailsLoad($event)"
+			(assets)="impactedAssets = $event.impacted">
 		</security-details>
 		<field-notice-details *ngIf="type === 'field'"
 			[id]="advisoryId"
 			[advisory]="advisory"
 			[customerId]="customerId"
 			(alert)="handleAlert($event)"
-			(details)="onDetailsLoad($event)">
+			(details)="onDetailsLoad($event)"
+			(assets)="impactedAssets = $event.impacted">
 		</field-notice-details>
 		<bug-details *ngIf="type === 'bug'"
 			[id]="advisoryId"
 			[advisory]="advisory"
 			[customerId]="customerId"
 			(alert)="handleAlert($event)"
-			(details)="onDetailsLoad($event)">
+			(details)="onDetailsLoad($event)"
+			(assets)="impactedAssets = $event.impacted">
 		</bug-details>
 	</ng-container>
 </details-panel>

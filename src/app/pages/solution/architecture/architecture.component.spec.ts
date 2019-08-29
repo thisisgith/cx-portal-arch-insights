@@ -6,7 +6,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureService } from '@sdp-api';
 import { of } from 'rxjs';
 import { VisualFilter } from '@interfaces';
-import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
@@ -67,9 +66,6 @@ describe('ArchitectureComponent', () => {
 	it('should call exceptions count on init', () => {
 		expect(service.getExceptionsCount)
 			.toHaveBeenCalled();
-	});
-
-	it('should call assets exceptions count on init', () => {
 		expect(service.getAssetsExceptionsCount)
 			.toHaveBeenCalled();
 	});
@@ -97,35 +93,5 @@ describe('ArchitectureComponent', () => {
 		},
 		];
 		component.onSubfilterSelect('high', mockVisualFilter);
-	});
-
-	xit('should clear the filter when selecting the same subfilter twice', done => {
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				const exceptionFilter = _.find(this.filters, { key: 'exceptions' });
-				component.onSubfilterSelect('none', exceptionFilter);
-
-				fixture.detectChanges();
-
-				expect(_.filter(component.filters, 'selected'))
-					.toContain(exceptionFilter);
-
-				let subfilter = _.find(exceptionFilter.seriesData, { filter: 'none' });
-
-				expect(subfilter.selected)
-					.toBeTruthy();
-
-				component.onSubfilterSelect('none', exceptionFilter);
-
-				fixture.detectChanges();
-
-				subfilter = _.find(exceptionFilter.seriesData, { filter: 'none' });
-
-				expect(subfilter.selected)
-					.toBeFalsy();
-
-				done();
-			});
 	});
 });

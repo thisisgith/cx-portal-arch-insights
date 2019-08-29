@@ -6,9 +6,9 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { Observable as __Observable } from 'rxjs';
 import { RccConfiguration as __Configuration } from "../rcc-configuration";
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { RccData, RccPolicyViolationData, RccCustomer, violationGridParams,AssetGridDataQueryParam } from "../models/rcc-data";
+import { RccData, RccPolicyViolationData, RccCustomer, violationGridParams, assetGridParams } from "../models/rcc-data";
 import { RccGridData, RccAssetGridData } from './../models/rcc-grid-data';
-import { RccAssetDetails ,RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterResponse, RccAssetFilterDetailsResponse } from './../models/rcc-asset-details';
+import { RccAssetDetails, RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterResponse, RccAssetFilterDetailsResponse } from './../models/rcc-asset-details';
 
 @Injectable({
 	providedIn: "root"
@@ -55,7 +55,7 @@ class RccService extends __BaseService {
 			);
 	}
 
-	getAssetGridData(queryParamMapObj: AssetGridDataQueryParam): __Observable<any> {
+	getAssetGridData (queryParamMapObj: assetGridParams): __Observable<any> {
 		return this.invokeHTTPGet<RccAssetGridData>(
 			`${this.rootUrl}${RccService.getAssetGridData}`,
 			queryParamMapObj)

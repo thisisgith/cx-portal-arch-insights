@@ -3,6 +3,10 @@
 
 $cx-dropdown-max-width: 280px;
 
+.clickable {
+	cursor: pointer;
+}
+
 .header-bar__logo {
 	span.icon-cisco {
 		color: $primary !important;

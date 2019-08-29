@@ -9,12 +9,13 @@
 			<advisory-impacted-assets
 				[customerId]="customerId"
 				[assetIds]="data.assetIds"
-				(impactedCount)="impactedCount = $event">
+				(impactedCount)="impactedCount = $event"
+				(assets)="assets.emit($event)">
 			</advisory-impacted-assets>
 		</div>
 	</cui-tab>
 </cui-tabs>
-	
+
 
 <ng-template #summary>
 	<div *ngIf="!isLoading">
@@ -45,7 +46,7 @@
 				}">
 			</ng-container>
 		</div>
-		
+
 		<advisory-feedback *ngIf="id && customerId"
 			class="flex-fill"
 			type="field"
