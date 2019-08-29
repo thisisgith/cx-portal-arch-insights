@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 
+import * as _ from 'lodash';
+
 @Injectable({
 	providedIn: "root"
 })
@@ -19,7 +21,7 @@ class RccUtilService {
 			let tempArr = [];
 			for (let j = 0; j < obj[item].length; j++) {
 				tempArr.push({
-					name: obj[item][j],
+					name: _.toString(obj[item][j]),
 					value: j
 				})
 			}

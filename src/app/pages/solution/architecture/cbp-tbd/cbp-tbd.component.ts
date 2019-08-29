@@ -11,9 +11,8 @@ import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { ArchitectureService, IException, IAsset } from '@sdp-api';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-
- /** Our current customerId */
-const customerId = '7293498';
+import { ActivatedRoute } from '@angular/router';
+import * as _ from 'lodash-es';
 
 /**
  * CBP TBD table Component
@@ -33,15 +32,21 @@ export class CbpTbdComponent implements OnChanges {
 	public tableEndIndex = 0;
 	public exceptionDatas: IException[] = [];
 	public isLoading = true;
+	public customerId = '';
 	public params: any = {
-		 customerId,
 		 body : [],
+		 customerId: '',
 		page : 0,
-		pageSize : 8,
+		pageSize : 10,
 	};
 	public destroy$ = new Subject();
 
-	constructor (private logger: LogService, private architectureService: ArchitectureService) {
+	constructor (private logger: LogService,
+		private architectureService: ArchitectureService,
+		private route: ActivatedRoute) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+		this.params.customerId =  _.cloneDeep(this.customerId);
 	}
 
 	/**
