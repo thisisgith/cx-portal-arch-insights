@@ -63,11 +63,11 @@ fdescribe('CbpTbdComponent', () => {
 			);
 		component.getData();
 		expect(component.isLoading)
-		.toBeFalsy();
+			.toBeFalsy();
 		expect(component.exceptionDatas)
-		.toEqual([]);
+			.toEqual([]);
 		expect(component.totalItems)
-		.toEqual(0);
+			.toEqual(0);
 	});
 
 	it('should call getAllCBPExceptionDetails', () => {
