@@ -308,10 +308,12 @@ describe('RccComponent', () => {
 			keyCode: 8,
 		};
 		component.searchViolations(event, null);
+		expect(component.searched)
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 13', () => {
-		component.searched = true;
+		component.searched = false;
 		component.searchForm = formBuilder.group({
 			search: 'PCI',
 		});
@@ -319,10 +321,13 @@ describe('RccComponent', () => {
 			keyCode: 13,
 		};
 		component.searchViolations(event, 'input');
+		expect(component.searched)
+			.toBeTruthy();
 	});
 
 	it('should invoke searchViolations with keycode 8 and search type', () => {
 		component.searched = true;
+		component.view = 'violation';
 		component.searchForm = formBuilder.group({
 			search: 'PCI',
 		});
@@ -330,6 +335,8 @@ describe('RccComponent', () => {
 			keyCode: 8,
 		};
 		component.searchViolations(event, 'search');
+		expect(component.violationGridObj.search)
+			.toEqual('PCI');
 	});
 
 });
