@@ -20,7 +20,6 @@ import { takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { ContactSupportComponent } from '../contact-support/contact-support.component';
-import { Router } from '@angular/router';
 
 /**
  * Main Header Component
@@ -72,7 +71,6 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 		private userResolve: UserResolve,
 		private sanitizer: DomSanitizer,
 		private cuiModalService: CuiModalService,
-		public router: Router,
 	) {
 		this.updateProfileImage();
 		this.userResolve.getUser()
