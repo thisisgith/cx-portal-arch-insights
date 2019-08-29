@@ -16,18 +16,17 @@ export class PermissionGuard implements CanActivate {
 	private router: Router) { }
 	/**
 	 * canActivate method execution
-	 * @param next is next
-	 * @param state is state
+	 * @param _next is next
+	 * @param _state is state
 	 * @returns can activate boolean value
 	 */
 	public canActivate (
-		// tslint:disable-next-line: no-unused
-		next: ActivatedRouteSnapshot,
-		// tslint:disable-next-line: no-unused
-		state: RouterStateSnapshot): Observable<boolean> {
+		_next: ActivatedRouteSnapshot,
+		_state: RouterStateSnapshot): Observable<boolean> {
 		return this.userResolve.getCustomerId()
 		.pipe(flatMap(id => this.rccService.checkPermissions({ customerId: id })),
 		map((response: boolean) => {
+
 			if (response) {
 				return true;
 			}
