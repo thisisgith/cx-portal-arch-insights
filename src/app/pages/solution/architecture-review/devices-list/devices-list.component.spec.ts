@@ -3,17 +3,19 @@ import { environment } from '@environment';
 import { DevicesListComponent } from './devices-list.component';
 import { DevicesListModule } from './devices-list.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ArchitectureService } from '@sdp-api';
+import { ArchitectureReviewService } from '@sdp-api';
 import { of, throwError } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
+import { SimpleChanges, SimpleChange } from '@angular/core';
+import { ArchitectureReviewScenarios } from 'src/environments/mock/architecture-review/architecture-review';
 
 describe('DevicesListComponent', () => {
 	let component: DevicesListComponent;
 	let fixture: ComponentFixture<DevicesListComponent>;
-	let service: ArchitectureService;
+	let service: ArchitectureReviewService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -33,15 +35,14 @@ describe('DevicesListComponent', () => {
 							},
 						},
 					},
-				},
+				}, ArchitectureReviewService,
 			],
 		})
 		.compileComponents();
+		service = TestBed.get(ArchitectureReviewService);
 	}));
 
 	beforeEach(() => {
-		service = TestBed.get(ArchitectureService);
-
 		fixture = TestBed.createComponent(DevicesListComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -52,33 +53,11 @@ describe('DevicesListComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should call getCBPSeverityList on init', () => {
-		spyOn(service, 'getCBPSeverityList')
-			.and
-			.returnValue(of({ TotalCounts: 1000, BPRulesDetails: [] }));
-		component.ngOnInit();
-		expect(service.getCBPSeverityList)
-			.toHaveBeenCalled();
-	});
-
 	it('should update pagination params', () => {
 		const pageEvent = { page: 1, limit : 10 };
 		component.onPagerUpdated(pageEvent);
 		expect(component.paramsType.page)
 		.toBe(1);
-	});
-
-	it('should set null values on request errors', () => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(service, 'getCBPSeverityList')
-			.and
-			.returnValue(
-				throwError(new HttpErrorResponse(error)),
-		);
-		component.ngOnInit();
 	});
 
 	it('should close panel', () => {
@@ -112,8 +91,94 @@ describe('DevicesListComponent', () => {
 		.toBeDefined();
 	});
 
-	// it('should call build table on init', () => {
-	// 	expect(component.buildTable)
-	// 		.toHaveBeenCalled();
-	// });
+	it('should global search for that event', () => {
+		const otherEvent = {
+			keyCode: 7,
+		};
+		component.globalSearchFunction(otherEvent);
+		const event = {
+			keyCode: 13,
+		};
+		component.globalSearchFunction(event);
+		expect(component.isLoading)
+		.toBeTruthy();
+		expect(component.tableStartIndex)
+		.toEqual(0);
+	});
+
+	it('should invalid response handler', () => {
+		component.invalidResponseHandler();
+		expect(component.isLoading)
+		.toBeFalsy();
+		expect(component.totalItems)
+		.toEqual(0);
+	});
+
+	it('should open asset details view', () => {
+		const item = {
+			customerId: '7293498',
+			hostName: 'LA1-AP3802-21',
+		};
+		component.openAssetDetailsView(item);
+		expect(component.selectedAsset)
+		.toEqual(item);
+	});
+
+	it('should close asset details view', () => {
+		const notClose = false;
+		component.closeAssetDetailsView(notClose);
+		const isClose = true;
+		component.closeAssetDetailsView(isClose);
+		expect(component.selectedAsset)
+		.toBeNull();
+	});
+
+	it('should get the Devices data' , () => {
+		spyOn(service, 'getDevicesList')
+			.and
+			.returnValue(of(ArchitectureReviewScenarios[0].scenarios.GET[0].response.body));
+
+		component.getDevicesList();
+		expect(service.getDevicesList)
+		.toHaveBeenCalled();
+	});
+
+	it('should get empty devices data', () => {
+		spyOn(service, 'getDevicesList')
+			.and
+			.returnValue(of(ArchitectureReviewScenarios[1].scenarios.GET[0].response.body));
+
+		component.getDevicesList();
+		expect(service.getDevicesList)
+		.toHaveBeenCalled();
+		expect(component.isLoading)
+		.toBeFalsy();
+	});
+
+	it('should throw errors', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getDevicesList')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+		);
+		component.getDevicesList();
+		expect(component.dnacDeviceDetails)
+		.toEqual([]);
+	});
+
+	it('should filter the changes', () => {
+		const changes: SimpleChanges = {
+			filters: new SimpleChange({ severity: '' }, { severity: '' }, false),
+		};
+		component.ngOnChanges(changes);
+		expect(component.isLoading)
+		.toBeTruthy();
+		expect(component.tableStartIndex)
+		.toEqual(0);
+	});
+
 });

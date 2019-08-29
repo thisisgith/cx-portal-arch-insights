@@ -154,7 +154,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 			getDevicesList(this.paramsType)
 			.subscribe(data => {
 				if (!data) {
-					return this.inValidResponseHandler();
+					return this.invalidResponseHandler();
 				}
 				const datePipe = new DatePipe('en-US');
 				this.isLoading = false;
@@ -166,14 +166,14 @@ export class DevicesListComponent implements OnInit, OnChanges {
 				this.logger.error('CBP Rule Component View' +
 					'  : getDevicesList() ' +
 					`:: Error : (${err.status}) ${err.message}`);
-				this.inValidResponseHandler();
+				this.invalidResponseHandler();
 			});
 	}
 
 	/**
 	 * This Function is used to handle the invalid Response
 	 */
-	public inValidResponseHandler () {
+	public invalidResponseHandler () {
 		this.isLoading = false;
 		this.dnacDeviceDetails = [];
 		this.totalItems = 0;
@@ -201,7 +201,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 * in order to Close Fly-out View
 	 * @param isClosed - should be true or false
 	 */
-	public closeAsset360View (isClosed: Boolean) {
+	public closeAssetDetailsView (isClosed: Boolean) {
 		if (isClosed) {
 			this.selectedAsset = null;
 		}
@@ -211,7 +211,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 * Used for Opening the Asset 360 View the data for table
 	 * @param item - The Item to which Asset 360 needs to shown
 	 */
-	public openAsset360View (item: any) {
+	public openAssetDetailsView (item: any) {
 		this.selectedAsset = _.cloneDeep(item);
 	}
 

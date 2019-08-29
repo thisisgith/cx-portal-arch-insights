@@ -5,10 +5,10 @@
 		<div detailsPanelTitle class="text-xlarge">
 			<span [innerText]="('_ArchitectureArchitectureInsightsFor_' | i18n)">
 			</span>
-			<a  
-				data-auto-id="openAssetsView" 
-				(click)="openAsset360View(deviceDetails)"
-				class="qtr-margin-left" 
+			<a
+				data-auto-id="openAssetsView"
+				(click)="openAssetDetailsView(deviceDetails)"
+				class="qtr-margin-left"
 				[innerText]="deviceDetails?.hostName">
 			</a>
 		</div>
@@ -41,9 +41,9 @@
 </details-panel>
 
 <!-- Asset 360 Fly-out View-->
-<asset-details *ngIf="selectedAsset" [asset]="selectedAsset" 
-	(close)="closeAsset360View($event)" ></asset-details>
-	
+<asset-details *ngIf="selectedAsset" [asset]="selectedAsset"
+	(close)="closeAssetDetailsView($event)" ></asset-details>
+
 <div class="row">
 		<div class="col-md-4">
 			<div class="container" *ngIf="dnacDeviceDetails.length > 0">
@@ -93,7 +93,7 @@
 <div class="divider no-qtr-margin"></div>
 
 <div class="panel">
-	<cui-table *ngIf="!isLoading && totalItems" 
+	<cui-table *ngIf="!isLoading && totalItems"
 		[options]="tableOptions" [data]="dnacDeviceDetails"
 		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 	<div class="section" *ngIf="totalItems">
@@ -115,7 +115,7 @@
 	</div>
 </div>
 <ng-template #productFamilyTemplate let-item="celldata">
-	<span 
+	<span
 	[ngClass]="{
 		'text-danger': item.hardwareCompliance === 'No',
 		'transparent-style': item.hardwareCompliance === 'Yes'
@@ -130,7 +130,7 @@
 	<span
 	[ngClass]="{
 		'text-danger': item.softwareCompliance === 'No',
-		'transparent-style': item.softwareCompliance === 'Yes' 
+		'transparent-style': item.softwareCompliance === 'Yes'
 	}"
 	 class="qtr-margin-right icon-circle">
 	</span>
