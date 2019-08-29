@@ -251,11 +251,4 @@ export class HeaderComponent implements AfterViewChecked, OnInit, OnDestroy {
 	public sanitize (url: string) {
 		return this.sanitizer.bypassSecurityTrustUrl(url);
 	}
-
-	/**
-	 * Navigates user back to the CP home page
-	 */
-	public navigateHome () {
-		this.router.navigate(['/solution/lifecycle'], { });
-	}
 }

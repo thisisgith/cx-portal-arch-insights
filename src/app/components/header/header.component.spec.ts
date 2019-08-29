@@ -152,19 +152,4 @@ describe('HeaderComponent', () => {
 		expect(component.dropdownComponents.first.open)
 			.toBe(false);
 	});
-
-	it('should try and open a case and scan if not success', () => {
-		spyOn(component.router, 'navigate');
-		component.navigateHome();
-
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.router.navigate)
-			.toHaveBeenCalledWith(
-				['solution/lifecycle'],
-				{ },
-			);
-		});
-	});
 });
