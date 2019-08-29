@@ -34,7 +34,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 				{
 					provide: ActivatedRoute,
 					useValue: {
-						queryParams: of({}),
+						queryParams: of({ }),
 						snapshot: {
 							data: {
 								user,
@@ -115,7 +115,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		expect(component.impactedDeviceDetails)
 			.toEqual([]);
 		expect(component.policyRuleData.policy)
-			.toEqual({});
+			.toEqual({ });
 
 	});
 
@@ -197,7 +197,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 		component.ngOnChanges(changes);
 		fixture.detectChanges();
 		expect(component.policyRuleData.policy)
-			.toEqual({});
+			.toEqual({ });
 		done();
 	});
 	it('Should not get the api data on ngonchanges when', done => {
