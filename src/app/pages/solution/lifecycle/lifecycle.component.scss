@@ -68,11 +68,39 @@ $midnight-blue: #0d274d;
 	height: 100%;
 }
 
-.grid {
+.scrollable-list-content {
+	position: fixed !important;
 	overflow-y: scroll !important;
-	height: 70%;
-	position: fixed;
-	width: 90%;
+	width: 100%;
+}
+
+.card_footer_item {
+	width: 100%;
+}
+
+.card_footer_item button {
+	padding: 0 13px;
+	font-size: 13px;
+	color: $text-dark-gray;
+	box-shadow: inset 0 0 0 1px $button-outline-color;
+
+	&:hover,
+	&:active,
+	&:focus {
+		background-color: $button-outline-color;
+	}
+
+	&:focus {
+		box-shadow: 0 0 1px 1px $button-outline-color;
+	}
+}
+
+.card_footer_item .row {
+	align-items: center;
+}
+
+.card_footer_item span[class*="icon-"] {
+	font-size: 18px;
 }
 
 .atx {
@@ -107,6 +135,14 @@ $midnight-blue: #0d274d;
 			line-height: 17px;
 		}
 
+		&__label {
+			margin-top: 10px;
+
+			span {
+				font-size: 10px !important;
+			}
+		}
+
 		&__footer {
 			margin-top: auto;
 			width: 100%;
@@ -119,13 +155,6 @@ $midnight-blue: #0d274d;
 		&__status {
 			display: flex;
 			align-items: center;
-		}
-
-		&__label {
-			margin-top: 10px;
-			span {
-				font-size: 10px !important;
-			}
 		}
 
 		&__actions {
@@ -419,19 +448,25 @@ $midnight-blue: #0d274d;
 
 	&__card {
 		background: $white;
-	}
+		min-height: unset;
+		padding: 20px;
 
-	&__card:hover {
-		border-left: 2px solid $vibblue !important;
+		&__header {
+			font-size: 11px !important;
+			line-height: 11px;
+		}
 	}
 }
 
 .success__card__body {
 	height: 100px;
+	margin: 10px 0;
 }
 
 .success__card__title {
-	margin-bottom: 15px;
+	margin-bottom: 5px;
+	font-size: 16px;
+	color: $text-default-color;
 }
 
 .success__card__icons {
@@ -439,12 +474,18 @@ $midnight-blue: #0d274d;
 	flex-wrap: nowrap;
 	justify-content: left;
 
-	.type {
-		margin-right: 15px;
-	}
-
+	.type,
 	.duration {
-		margin-left: 15px;
+		margin-right: 15px;
+
+		span {
+			font-size: 11px;
+			color: $light-gray-1;
+
+			&[class*="icon-"] {
+				font-size: 14px;
+			}
+		}
 	}
 }
 
@@ -724,15 +765,17 @@ $midnight-blue: #0d274d;
 		position: absolute;
 		right: 7px;
 		top: -1px;
-		color: $indigo;
 		color: $cisco-blue;
 		-webkit-text-stroke-width: 1px;
 		-webkit-text-stroke-color: $bookmark-blue-outline-color;
 	}
 
 	&__blue {
-		color: $indigo;
 		@extend %ribbon;
+		color: $cisco-blue;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: $bookmark-blue-outline-color;
+
 	}
 
 	&__white,
@@ -777,6 +820,7 @@ $midnight-blue: #0d274d;
 .grid {
 	gap: 25px 25px;
 	grid-template-columns: repeat(auto-fill, 280px);
+	grid-template-rows: auto;
 }
 
 .grid.grid--4up,

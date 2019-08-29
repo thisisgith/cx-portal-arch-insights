@@ -810,7 +810,7 @@
 </ng-template>
 
 <ng-template #cardViewTemplate let-type="type" let-view="view">
-	<div class="scrollable-card-content base-padding-right grid grid--4up base-padding-top" *ngIf="(!view || view === 'grid')"
+	<div class="base-padding-right grid base-padding-top" *ngIf="(!view || view === 'grid')"
 	#scrollModal (scroll)="getScrollCoordinates(scrollModal)">
 		<ng-container *ngIf="type === 'ATX'">
 			<ng-container *ngTemplateOutlet="cardATX"></ng-container>
@@ -884,7 +884,7 @@
 					<div *ngFor="let session of item.sessions">
 						<div
 							*ngIf="session.scheduled"
-							class="col-md-1 icon-calendar"
+							class="text-info icon-calendar half-padding-right"
 							data-auto-id="ATXCardFooter-ScheduledIcon"
 						></div>
 						<span class="text-medium" innerText="{{session.sessionStartDate | date:'medium'}}" data-auto-id="ATXCardFooter-ScheduledDate" *ngIf="session.scheduled"></span>
@@ -965,9 +965,9 @@
 	<div class="card acc__card" *ngFor="let item of selectedSuccessPaths" data-auto-id="SuccessCard">
 		<div class="icon-bookmark" (click)="updateBookmark(item, 'SB')"
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'" data-auto-id="SBCardRibbon"></div>
-		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype"></div>
+		<div class="card__header acc__card__header text-left text-small qtr-margin-top text-uppercase" [innerText]="item.archetype"></div>
 		<div class="card__body success__card__body">
-			<div class="success__card__title text-left text-bold text-large">
+			<div class="success__card__title text-left">
 				<a class="no-link" data-auto-id="successtitle" target="_blank" rel="noopener noreferrer"
 					[href]="item.url" [innerText]="item.title"></a>
 			</div>
@@ -980,8 +980,8 @@
 						</ng-container>
 				</div>
 				<div class="duration text-muted" *ngIf="item.duration">
-					<span class="icon-clock icon-small"></span>
-					<span class="text-small" [innerText]="item.duration"></span>
+					<span class="icon-clock qtr-padding-right"></span>
+					<span [innerText]="item.duration"></span>
 				</div>
 			</div>
 		</div>
@@ -1030,9 +1030,9 @@
 	<div class="card acc__card" *ngFor="let item of selectedProductGuides" data-auto-id="ProductGuidesCard">
 		<div class="icon-bookmark" (click)="updateBookmark(item, 'PG')"
 			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'" data-auto-id="ProductGuidesCard-Ribbon"></div>
-		<div class="card__header text-left text-small base-margin-top" [innerText]="item.archetype" data-auto-id="ProductGuidesCard-Archetype"></div>
+		<div class="card__header acc__card__header text-left text-small qtr-margin-top text-uppercase" [innerText]="item.archetype" data-auto-id="ProductGuidesCard-Archetype"></div>
 		<div class="card__body success__card__body">
-			<div class="success__card__title text-left text-bold text-large">
+			<div class="success__card__title text-left">
 				<a class="no-link" target="_blank" rel="noopener noreferrer"
 					[href]="item.url" [innerText]="item.title" data-auto-id="ProductGuidesCard-Title"></a>
 			</div>
@@ -1045,8 +1045,8 @@
 					</ng-container>
 				</div>
 				<div class="duration text-muted" *ngIf="item.duration" data-auto-id="ProductGuidesCard-Duration">
-					<span class="icon-clock icon-small"></span>
-					<span class="text-small" [innerText]="item.duration"></span>
+					<span class="icon-clock qtr-padding-right"></span>
+					<span [innerText]="item.duration"></span>
 				</div>
 			</div>
 		</div>
@@ -1335,19 +1335,19 @@
 
 <ng-template #itemTypeIcons let-item="item" let-autoid="autoid">
 	<div class="text-left text-muted" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
-		<span class="icon-apps qtr-margin-right"></span>
+		<span class="icon-link qtr-padding-right"></span>
 		<span [innerText]="'_Web_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
-		<span class="icon-play-contained qtr-margin-right"></span>
+		<span class="icon-video qtr-padding-right"></span>
 		<span [innerText]="'_Video_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
-		<span class="icon-file-pdf-o qtr-margin-right"></span>
+		<span class="icon-file-pdf-o qtr-padding-right"></span>
 		<span [innerText]="'_PDF_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
-		<span class="icon-document qtr-margin-right"></span>
+		<span class="icon-document qtr-padding-right"></span>
 		<span [innerText]="'_Datasheet_' | i18n"></span>
 	</div>
 </ng-template>
