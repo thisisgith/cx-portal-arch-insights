@@ -87,22 +87,6 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			.toEqual(1);
 	});
 
-	it('should invoke loadData and call both APIs', () => {
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
-		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
-		component.loadData();
-		fixture.detectChanges();
-		expect(component.impactedDeviceDetails)
-			.toEqual(ComplianceScenarios[6].scenarios.GET[0].response.body.data.impactedAssets);
-		expect(component.policyRuleData)
-			.toEqual(ComplianceScenarios[7].scenarios.GET[0].response.body.data);
-
-	});
-
 	it('should invoke loadData and call both APIs with empty response', () => {
 		spyOn(rccTrackService, 'getRccViolationDetailsData')
 			.and
