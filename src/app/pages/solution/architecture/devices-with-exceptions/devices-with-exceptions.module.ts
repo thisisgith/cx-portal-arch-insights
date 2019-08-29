@@ -21,7 +21,6 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 		CbpTbdModule,
 		AssetDetailsModule,
 		AssetDetailsHeaderModule,
-		CbpTbdModule,
 		CommonModule,
 		CuiTableModule,
 		CuiPagerModule,

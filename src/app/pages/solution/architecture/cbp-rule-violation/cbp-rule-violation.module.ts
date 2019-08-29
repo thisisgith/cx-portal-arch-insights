@@ -18,7 +18,6 @@ import { CbpDeviceAffectedModule } from '../cbp-device-affected/cbp-device-affec
 		DetailsPanelModule,
 		CbpDeviceAffectedModule,
 		CuiLoaderModule,
-		CbpDeviceAffectedModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
 	],
