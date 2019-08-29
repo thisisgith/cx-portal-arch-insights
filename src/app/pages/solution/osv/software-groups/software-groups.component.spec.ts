@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { OSVScenarios } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 
-describe('SoftwareGroupsComponent', () => {
+fdescribe('SoftwareGroupsComponent', () => {
 	let component: SoftwareGroupsComponent;
 	let fixture: ComponentFixture<SoftwareGroupsComponent>;
 	let osvService: OSVService;

@@ -45,7 +45,6 @@ const childRoutes: Routes = [
 		CuiSpinnerModule,
 		FormsModule,
 		PieChartModule,
-		CuiModalModule,
 		OSVModule.forRoot({ rootUrl }),
 		AssetsModule,
 		AssetDetailsModule,

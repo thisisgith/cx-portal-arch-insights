@@ -7,7 +7,7 @@ import { OSVScenarios } from '@mock';
 import * as _ from 'lodash-es';
 import { MicroMockModule } from '@cui-x-views/mock';
 
-describe('AssetTimelineChartComponent', () => {
+fdescribe('AssetTimelineChartComponent', () => {
 	let component: AssetTimelineChartComponent;
 	let fixture: ComponentFixture<AssetTimelineChartComponent>;
 	beforeEach(async(() => {

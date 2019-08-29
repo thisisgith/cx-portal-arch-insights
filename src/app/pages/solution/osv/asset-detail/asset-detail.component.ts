@@ -33,11 +33,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
-	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
+	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{}>;
 	@ViewChild('releaseDateTemplate', { static: true })
-		private releaseDateTemplate: TemplateRef<{ }>;
+	private releaseDateTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
@@ -125,7 +125,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			)
 			.subscribe(() => {
@@ -139,13 +139,14 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @returns grouped data
 	 */
 	public groupData (data: AssetRecommendationsResponse) {
+		this.logger.error('group data called');
 		const recommendations = _.filter(data, (detail: AssetRecommendations) =>
 			detail.name !== 'current');
 		const groups = _.groupBy(recommendations, 'swVersion');
 		const groupedData = [];
 		_.map(_.keys(groups), swVersion => {
 			const detail: AssetRecommendations = _.get(_.filter(recommendations, { swVersion }), 0);
-			detail.swVersionGroup = groups[swVersion];
+			detail.swVersionGroup = _.cloneDeep(groups[swVersion]);
 			groupedData.push(detail);
 		});
 		this.currentVersion = _.get(_.filter(data, { name: 'current' }), 0);
@@ -170,7 +171,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			)
 			.subscribe(() => {
@@ -246,7 +247,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public sortData (data: AssetRecommendationsResponse) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any> new Date(b.postDate) - <any> new Date(a.postDate));
+			<any>new Date(b.postDate) - <any>new Date(a.postDate));
 
 		return data;
 	}

@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 
-describe('AssetsComponent', () => {
+fdescribe('AssetsComponent', () => {
 	let component: AssetsComponent;
 	let fixture: ComponentFixture<AssetsComponent>;
 

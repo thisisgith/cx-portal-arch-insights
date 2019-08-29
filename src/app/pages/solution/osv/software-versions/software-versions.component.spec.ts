@@ -12,7 +12,7 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@environment';
 
-describe('SoftwareVersionsComponent', () => {
+fdescribe('SoftwareVersionsComponent', () => {
 	let component: SoftwareVersionsComponent;
 	let fixture: ComponentFixture<SoftwareVersionsComponent>;
 	let osvService: OSVService;

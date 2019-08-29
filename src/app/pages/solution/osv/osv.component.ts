@@ -53,8 +53,8 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		assetType: '',
 		deploymentStatus: [],
 	};
-	public inventoryPreferencesList;
-	public operationalPreferencesList;
+	public inventoryPreferencesList: string[] = [];
+	public operationalPreferencesList: string[] = [];
 	public showProfileInfo = true;
 	public doNotShowAgain = false;
 	constructor (
@@ -73,8 +73,15 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * OnInit lifecycle hook
 	 */
 	public ngOnInit () {
-		this.inventoryPreferencesList = I18n.get('_OsvInventoryPreferencesList_');
-		this.operationalPreferencesList = I18n.get('_OsvOperationalPreferencesList_');
+		let list = I18n.get('_OsvInventoryPreferencesList_');
+		_.forEach(list, (item: string) => {
+			this.inventoryPreferencesList.push(item);
+		})
+		list = I18n.get('_OsvOperationalPreferencesList_')
+		_.forEach(list, (item: string) => {
+			this.operationalPreferencesList.push(item);
+		})
+
 		if (window.localStorage.getItem('doNotShowSGInfo') === 'true') {
 			this.showProfileInfo = false;
 			this.doNotShowAgain = true;

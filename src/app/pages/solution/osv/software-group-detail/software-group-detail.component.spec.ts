@@ -5,7 +5,7 @@ import { SoftwareGroupDetailModule } from './software-group-detail.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('SoftwareGroupDetailComponent', () => {
+fdescribe('SoftwareGroupDetailComponent', () => {
 	let component: SoftwareGroupDetailComponent;
 	let fixture: ComponentFixture<SoftwareGroupDetailComponent>;
 
