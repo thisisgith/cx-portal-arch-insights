@@ -112,6 +112,18 @@ const violationGridData: any = {
 	message: 'SUCCESS',
 };
 
+/** The empty mock response for violation grid data */
+const emptyViolationGridData: any = {
+	data: {
+		customerId: '7293498',
+		impassets: 0,
+		summary: [],
+		violationcount: 0,
+	},
+	error: null,
+	message: 'SUCCESS',
+};
+
 /** The mock response for asset grid data */
 const assetGridData: any = {
 	data: {
@@ -138,6 +150,20 @@ const assetGridData: any = {
 		totalDeviceCount: 63,
 		totalViolatedDevices: 59,
 		totalViolationCount: 459,
+	},
+	message: 'SUCCESS',
+	pagination: null,
+	status: 200,
+};
+
+/** The empryt mock response for asset grid data */
+const emprytAssetGridData: any = {
+	data: {
+		assetList: [],
+		percentage: 0,
+		totalDeviceCount: 0,
+		totalViolatedDevices: 0,
+		totalViolationCount: 0,
 	},
 	message: 'SUCCESS',
 	pagination: null,
@@ -463,5 +489,73 @@ export const ComplianceScenarios = [
 		},
 		url: `${api}/violation-details`,
 		usecases: ['Use Case 10'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Summary',
+					response: {
+						body: emptyViolationGridData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/violation-summary/${customerId}`,
+		usecases: ['Use Case 11'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Filter Asset Details Empty',
+					response: {
+						body: emptyViolationGridData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/filter-asset-detail`,
+		usecases: ['Use Case 12'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Filter Asset Details Empty',
+					response: {
+						body: assetGridData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/filter-asset-detail`,
+		usecases: ['Use Case 13'],
+	},
+	{
+		scenarios: {
+			GET: [
+				{
+					delay: 100,
+					description: 'Filter Asset Details Empty',
+					response: {
+						body: emprytAssetGridData,
+						status: 200,
+					},
+					selected: true,
+				},
+			],
+		},
+		url: `${api}/filter-asset-detail`,
+		usecases: ['Use Case 14'],
 	},
 ];

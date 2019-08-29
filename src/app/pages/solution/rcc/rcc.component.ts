@@ -252,6 +252,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	 */
 	public getRCCData (violationGridObj: violationGridParams) {
 		this.loading = true;
+		this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 		this.RccTrackService
 			.getGridData(violationGridObj)
 			.pipe(takeUntil(this.destroy$))
@@ -445,7 +446,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			columns: [
 				{
 					key: 'deviceName',
-					name: I18n.get('_RccHostName_'),
+					name: I18n.get('_RccDevice_'),
 					sortable: true,
 				},
 				{

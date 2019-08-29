@@ -5,14 +5,15 @@ import { RccModule } from './rcc.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '@environment';
-import { of } from 'rxjs';
+import { throwError, of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 import { user, ComplianceScenarios } from '@mock';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { RccService, Filter } from '@sdp-api';
 import { FormBuilder } from '@angular/forms';
 
-describe('RccComponent', () => {
+fdescribe('RccComponent', () => {
 	let component: RccComponent;
 	let fixture: ComponentFixture<RccComponent>;
 	let rccService: RccService;
@@ -62,7 +63,7 @@ describe('RccComponent', () => {
 	/**
 	 * @TODO: modify test to use UI
 	 */
-	it('should get the violation grid data success', done => {
+	it('should get the violation grid data success', () => {
 		spyOn(rccService, 'getGridData')
 			.and
 			.returnValue(of(ComplianceScenarios[0].scenarios.GET[0].response.body));
@@ -74,11 +75,10 @@ describe('RccComponent', () => {
 					.toBeDefined();
 				expect(component.tableData)
 					.toEqual(ComplianceScenarios[0].scenarios.GET[0].response.body);
-				done();
 			});
 	});
 
-	it('Should return the violation filter data', done => {
+	it('Should return the violation filter data', () => {
 		spyOn(rccService, 'getViolationCount')
 			.and
 			.returnValue(of(ComplianceScenarios[4].scenarios.GET[0].response.body));
@@ -88,11 +88,10 @@ describe('RccComponent', () => {
 				fixture.detectChanges();
 				expect(component.filterObj)
 					.toBeDefined();
-				done();
 			});
 	});
 
-	it('Should return the asset filter data', done => {
+	it('Should return the asset filter data', () => {
 		spyOn(rccService, 'getAssetCount')
 			.and
 			.returnValue(of(ComplianceScenarios[5].scenarios.GET[0].response.body));
@@ -102,11 +101,10 @@ describe('RccComponent', () => {
 				fixture.detectChanges();
 				expect(component.assetFilterObj)
 					.toBeDefined();
-				done();
 			});
 	});
 
-	it('should fetch selected row details on click of violation grid row', done => {
+	it('should fetch selected row details on click of violation grid row', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -114,11 +112,10 @@ describe('RccComponent', () => {
 				component.onViolationRowClicked(violationInfo);
 				expect(component.policyViolationInfo)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('should fetch selected row details on click of asset grid row', done => {
+	it('should fetch selected row details on click of asset grid row', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -126,11 +123,10 @@ describe('RccComponent', () => {
 				component.onAssetRowClicked(assetInfo);
 				expect(component.selectedAssetData)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('on violation grid pagination selection', done => {
+	it('on violation grid pagination selection', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -138,11 +134,10 @@ describe('RccComponent', () => {
 				component.onPagerUpdated(pageInfo);
 				expect(component.tableConfig)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('on asset grid pagination selection', done => {
+	it('on asset grid pagination selection', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -150,11 +145,10 @@ describe('RccComponent', () => {
 				component.onAssetPagerUpdated(pageInfo);
 				expect(component.tableConfig)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('on asset view selection', done => {
+	it('on asset view selection', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -163,11 +157,10 @@ describe('RccComponent', () => {
 				fixture.detectChanges();
 				expect(component.tableConfig)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('should open asset view', done => {
+	it('should open asset view', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -175,11 +168,10 @@ describe('RccComponent', () => {
 				component.selectedView(view);
 				expect(component.selectedView)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('should open violation view', done => {
+	it('should open violation view', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -187,22 +179,20 @@ describe('RccComponent', () => {
 				component.selectedView(view);
 				expect(component.selectedView)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('should clear all the selected filters', done => {
+	it('should clear all the selected filters', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
 				component.clearFilters();
 				expect(component.filtered)
 					.toBeFalsy();
-				done();
 			});
 	});
 
-	it('should search in violation grid data if', done => {
+	it('should search in violation grid data if', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -222,11 +212,10 @@ describe('RccComponent', () => {
 					.toEqual(component.searchInput);
 				expect(component.tableConfig)
 					.toEqual(tableCofig);
-				done();
 			});
 	});
 
-	it('should search in violation grid data else', done => {
+	it('should search in violation grid data else', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -234,7 +223,6 @@ describe('RccComponent', () => {
 				component.searchViolations(keyCode, null);
 				expect(component.violationGridObj.search)
 					.toBeFalsy();
-				done();
 			});
 	});
 
@@ -244,10 +232,10 @@ describe('RccComponent', () => {
 		component.clearSearchInput();
 		fixture.detectChanges();
 		expect(component.searchViolations)
-		.toHaveBeenCalled();
+			.toHaveBeenCalled();
 	});
 
-	it('should open the slider', done => {
+	it('should open the slider', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -255,11 +243,10 @@ describe('RccComponent', () => {
 				component.openSlider(selData);
 				expect(component.selRowData)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('should close the panel', done => {
+	it('should close the panel', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -267,11 +254,10 @@ describe('RccComponent', () => {
 				component.onPanelClose(model);
 				expect(component.selRowData)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('should get the selected sub filters list', done => {
+	it('should get the selected sub filters list', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -279,11 +265,10 @@ describe('RccComponent', () => {
 				component.getSelectedSubFilters(key);
 				expect(component.filters)
 					.toBeTruthy();
-				done();
 			});
 	});
 
-	it('should clear the filters on clear button if', done => {
+	it('should clear the filters on clear button if', () => {
 		mockFilter.key = 'policyGroup';
 		mockFilter.selected = true;
 		mockFilter.seriesData = [{
@@ -296,7 +281,6 @@ describe('RccComponent', () => {
 		fixture.detectChanges();
 		expect(component.loading)
 			.toBeTruthy();
-		done();
 	});
 
 	it('should invoke searchViolations with keycode 8', () => {
@@ -340,6 +324,21 @@ describe('RccComponent', () => {
 			.toEqual(component.searchInput);
 	});
 
+	it('should invoke searchViolations with keycode 8 and search type PCI', () => {
+		component.searched = false;
+		component.view = 'asset';
+		component.searchInput = 'HIPAA';
+		component.searchForm = formBuilder.group({
+			search: 'HIPAA',
+		});
+		const event = {
+			keyCode: 8,
+		};
+		component.searchViolations(event, 'clear');
+		expect(component.assetGridObj.searchParam)
+			.toEqual(component.searchInput);
+	});
+
 	it('should invoke searchViolations with keycode 8 and search type null', () => {
 		component.searched = true;
 		component.view = 'violation';
@@ -353,5 +352,124 @@ describe('RccComponent', () => {
 		component.searchViolations(event, null);
 		expect(component.searched)
 			.toBeTruthy();
+	});
+
+	it('should invoke searchViolations with keycode 8 and search type asset', () => {
+		component.searched = true;
+		component.view = 'asset';
+		component.searchInput = 'PCI';
+		component.searchForm = formBuilder.group({
+			search: 'PCI',
+		});
+		const event = {
+			keyCode: 8,
+		};
+		component.searchViolations(event, null);
+		expect(component.searched)
+			.toBeTruthy();
+	});
+
+	it('should call getGridData to get empty data', () => {
+		const violationGridObj = {
+			criteria: '',
+			customerId: '7293498',
+			pageLimit: 10,
+			pageNum: 1,
+			policyType: 'PCI',
+			search: 'HIPAA',
+			severity: 'P1',
+		};
+		spyOn(rccService, 'getGridData')
+			.and
+			.returnValue(of(ComplianceScenarios[10].scenarios.GET[0].response.body));
+		component.getRCCData(violationGridObj);
+		expect(component.noTableData)
+			.toBeTruthy();
+	});
+
+	it('should call getGridData and return error', () => {
+		const violationGridObj = {
+			criteria: '',
+			customerId: '7293498',
+			pageLimit: 10,
+			pageNum: 1,
+			policyType: 'PCI',
+			search: 'HIPAA',
+			severity: 'P1',
+		};
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(rccService, 'getGridData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.getRCCData(violationGridObj);
+		expect(component.errorPolicyView)
+			.toBeTruthy();
+	});
+
+	it('should call getRCCAssetData and return error', () => {
+		const violationGridObj = {
+			criteria: '',
+			customerId: '7293498',
+			osType: 'IOS-XE',
+			pageLimit: 10,
+			pageNum: 1,
+			searchParam: 'HIPAA',
+			severity: 'P1',
+		};
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(rccService, 'getAssetGridData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.getRCCAssetData(violationGridObj);
+		expect(component.errorPolicyView)
+			.toBeTruthy();
+	});
+
+	it('should call getRCCAssetData and return data', () => {
+		const violationGridObj = {
+			criteria: '',
+			customerId: '7293498',
+			osType: 'IOS-XE',
+			pageLimit: 10,
+			pageNum: 1,
+			searchParam: 'HIPAA',
+			severity: 'P1',
+		};
+		spyOn(rccService, 'getAssetGridData')
+			.and
+			.returnValue(of(ComplianceScenarios[12].scenarios.GET[0].response.body));
+		component.getRCCAssetData(violationGridObj);
+		expect(component.errorPolicyView)
+			.toBeFalsy();
+	});
+
+	it('should call getRCCAssetData and return empty data', () => {
+		const violationGridObj = {
+			criteria: '',
+			customerId: '7293498',
+			osType: 'IOS-XE',
+			pageLimit: 10,
+			pageNum: 1,
+			searchParam: 'HIPAA',
+			severity: 'P1',
+		};
+		spyOn(rccService, 'getAssetGridData')
+			.and
+			.returnValue(of(ComplianceScenarios[13].scenarios.GET[0].response.body));
+		component.getRCCAssetData(violationGridObj);
+		expect(component.noTableData)
+			.toBeTruthy();
+	});
+
+	it('Should invoke onTableSortingChanged and assign tableOffset to 0', () => {
+		component.onTableSortingChanged();
+		expect(component.tableConfig.tableOffset)
+			.toBe(0);
 	});
 });
