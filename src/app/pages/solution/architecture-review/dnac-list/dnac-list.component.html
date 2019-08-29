@@ -1,29 +1,3 @@
-<!-- Fly-Out View Slide-out -->
-<details-panel *ngIf="dnacDetails" [hidden]="!dnacDetails" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
-		<div class="row ">
-			<div class="col-md-8 base-margin-bottom">
-				<div *ngIf="dnacDetails?.version">
-					<span class="text-large" innerText="{{ ('_ArchitectureVersion_' | i18n) + ' : '}}">
-					</span>
-					<span class="text-large" innerText="{{ dnacDetails?.version }}">
-					</span>
-				</div>
-			</div>
-		</div>		
-		<div detailsPanelTitle class="text-xlarge">
-			<span  class="qtr-margin-left"  innerText="{{ dnacDetails?.dnacHostname }}">
-			</span>
-			<div class="text-medium  base-margin-top">
-				<span [innerText]="('_ArchitectureVersion_' | i18n)+ ' : '"></span>
-				<span class="qtr-margin-left" [innerText]="dnacDetails?.dnacIpaddress">
-				</span>
-			</div>
-		</div>
-	</details-panel-header>
-	<dnac-details [dnacDetails]="dnacDetails"></dnac-details>
-</details-panel>
-
 <div class="row">
 		<div class="col-md-4">
 			<div class="container" *ngIf="dnacDetailsResponse.length > 0">
