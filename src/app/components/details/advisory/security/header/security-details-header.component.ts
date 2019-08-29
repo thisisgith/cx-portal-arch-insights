@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 
-import { Asset } from '@sdp-api';
+import { Asset, NetworkElement } from '@sdp-api';
 import {
 	CaseOpenAdvisoriesComponent,
 } from '../../../../case/case-open/case-open-advisories/case-open-advisories.component';
@@ -23,6 +23,7 @@ export class SecurityDetailsHeaderComponent {
 
 	@Input('details') public details: SecurityData;
 	@Input('selectedAsset') public selectedAsset: Asset;
+	@Input('impactedAssets') public impactedAssets: (Asset | NetworkElement)[] = [];
 
 	/**
 	 * Fires when user clicks "Open a Case" button
@@ -30,6 +31,7 @@ export class SecurityDetailsHeaderComponent {
 	public onOpenCase () {
 		this.cuiModalService.showComponent(CaseOpenAdvisoriesComponent, {
 			advisory: this.details.bulletin,
+			otherAssets: this.impactedAssets,
 			selectedAsset: this.selectedAsset,
 			type: 'security',
 		}, 'full');

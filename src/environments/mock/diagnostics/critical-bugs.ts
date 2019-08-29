@@ -176,7 +176,7 @@ export const CriticalBugScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&rows=1&page=1&id=CSCto03123`,
+		url: `${api}?customerId=${customerId}&rows=1&page=1&cdetsId=CSCto03123`,
 		usecases: ['Use Case 1'],
 	},
 	{

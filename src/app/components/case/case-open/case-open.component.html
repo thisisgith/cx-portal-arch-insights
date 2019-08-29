@@ -20,8 +20,8 @@
 								<dt [innerText]="'_Product_' | i18n"></dt>
 								<dd>
 									<div><span [innerText]="asset?.serialNumber"></span></div>
-									<div><span [innerText]="asset?.productId"></span></div>
 									<div><span [innerText]="asset?.deviceName"></span></div>
+									<div><span [innerText]="asset?.productId"></span></div>
 								</dd>
 								<dt [innerText]="'_CaseTitle_' | i18n"></dt>
 								<dd>
@@ -123,7 +123,7 @@
 <!-- Page that displays after a case submit success/fail -->
 <ng-template #submittedTemplate>
 	<app-case-submitted [errors]="errors"
-		[asset]="asset"
+		[assets]="[asset]"
 		[caseData]="caseOpenData">
 	</app-case-submitted>
 </ng-template>

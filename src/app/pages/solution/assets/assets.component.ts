@@ -46,6 +46,7 @@ import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
 import { CaseOpenComponent } from '@components';
 import { getProductTypeImage } from '@classes';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Interface representing an item of our inventory in our assets table
@@ -150,6 +151,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		public router: Router,
 		private fromNow: FromNowPipe,
 		private networkService: NetworkDataGatewayService,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -387,6 +389,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 		item.details = !item.details;
+		this.detailsPanelStackService.reset(item.details);
 		this.selectedAsset = item.details ? item : null;
 	}
 
