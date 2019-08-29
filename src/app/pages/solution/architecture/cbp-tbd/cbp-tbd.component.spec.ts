@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CbpTbdModule } from './cbp-tbd.module';
 
-fdescribe('CbpTbdComponent', () => {
+describe('CbpTbdComponent', () => {
 	let component: CbpTbdComponent;
 	let fixture: ComponentFixture<CbpTbdComponent>;
 	let service: ArchitectureService;
