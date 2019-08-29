@@ -42,7 +42,6 @@ export class FingerprintBodyComponent implements OnChanges {
 	 * @param event sshowComparison
 	 */
 	public showComparison (event) {
-		this.tabIndex = 2;
 		this.selectedDevices = event;
 	}
 }

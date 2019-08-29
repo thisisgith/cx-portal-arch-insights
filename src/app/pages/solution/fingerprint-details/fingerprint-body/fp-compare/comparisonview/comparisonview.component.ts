@@ -27,6 +27,7 @@ export class ComparisonviewComponent {
 	public featuresdetails: any;
 	public featuresData = null;
 	public comparisonInfo: any;
+	public initialLoading = false;
 
 	constructor (
 		private logger: LogService,
@@ -77,6 +78,7 @@ export class ComparisonviewComponent {
 	 * invoke getComparison
 	 */
 	public loadData () {
+		this.initialLoading = true;
 		this.initReqObj();
 		this.crashPreventionService.getComparison(this.comparisonInfo)
 			.pipe(takeUntil(this.destroy$))
@@ -85,6 +87,7 @@ export class ComparisonviewComponent {
 				this.softwareData = results.software;
 				this.featuresData = results.feature;
 				this.logger.info(JSON.stringify(results));
+				this.initialLoading = false;
 			});
 	}
 }

@@ -297,4 +297,11 @@ describe('FpCompareComponent', () => {
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalledTimes(0);
 	});
+
+	it('should return false if product ID or device ID is null', () => {
+		component.productId1 = undefined;
+		const result = component.checkForAllCompareDetails();
+		expect(result)
+		.toBeFalsy();
+	});
 });

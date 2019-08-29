@@ -112,6 +112,19 @@ export class FpCompareComponent implements OnChanges {
 				});
 		}
 	}
+	/**
+	 * this will check all the compare parameters
+	 * @returns a boolean
+	 */
+	public checkForAllCompareDetails () {
+		if (this.productId1 && this.productId2
+			&& this.deviceId1 && this.deviceId2) {
+
+			return true;
+		}
+
+		return false;
+	}
 
 	/**
 	 * productFamilyA
