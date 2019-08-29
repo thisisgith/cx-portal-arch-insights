@@ -55,7 +55,7 @@
 	}
 }
 
-:host ::ng-deep .cui .icon-more::before {
+::ng-deep .cui .icon-more::before {
 	// styling to make the more icon sizing more aligned with design
 	font-size: 20px !important;
 }
