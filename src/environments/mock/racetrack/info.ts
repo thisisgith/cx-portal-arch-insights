@@ -999,6 +999,33 @@ export const RacetrackScenarios = [
 				},
 				{
 					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Engage',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Engage', ''),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Adopt',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Adopt', ''),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
+					description: '(Racetrack) IBN-Assurance-Optimize',
+					response: {
+						body: MockRacetrack('ibn', 'assurance', 'Optimize', ''),
+						status: 200,
+					},
+					selected: false,
+				},
+				{
+					delay: Math.floor(Math.random() * 2000) + 250,
 					description: '(Racetrack) IBN-Assurance-Onboard-allManualCheckable',
 					response: {
 						body: MockRacetrack('ibn', 'assurance', 'Onboard', 'allManualCheckable'),
