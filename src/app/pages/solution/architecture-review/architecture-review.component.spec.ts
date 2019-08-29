@@ -13,7 +13,7 @@ import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
 
-describe('ArchitectureReviewComponent', () => {
+fdescribe('ArchitectureReviewComponent', () => {
 	let component: ArchitectureReviewComponent;
 	let fixture: ComponentFixture<ArchitectureReviewComponent>;
 	let service: ArchitectureReviewService;
@@ -48,12 +48,12 @@ describe('ArchitectureReviewComponent', () => {
 	}));
 
 	beforeEach(() => {
-		// spyOn(service, 'getExceptionsCount')
-		// 	.and
-		// 	.returnValue(of({ CBPRulesCount: 5000 }));
-		// spyOn(service, 'getAssetsExceptionsCount')
-		// 	.and
-		// 	.returnValue(of({ AssetsExceptionCount: 5000 }));
+		spyOn(service, 'getDevicesCount')
+			.and
+			.returnValue(of({ TotalCounts: 50 }));
+		spyOn(service, 'getDnacCount')
+			.and
+			.returnValue(of({ TotalCounts: 50 }));
 		fixture = TestBed.createComponent(ArchitectureReviewComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -64,15 +64,35 @@ describe('ArchitectureReviewComponent', () => {
 			.toBeTruthy();
 	});
 
-	// it('should call exceptions count on init', () => {
-	// 	expect(service.getExceptionsCount)
-	// 		.toHaveBeenCalled();
-	// });
+	it('should call Devices count on init', () => {
+		expect(component.status.isLoading)
+		.toBeTruthy();
+		expect(service.getDevicesCount)
+			.toHaveBeenCalled();
+	});
 
-	// it('should call assets exceptions count on init', () => {
-	// 	expect(service.getAssetsExceptionsCount)
-	// 		.toHaveBeenCalled();
-	// });
+	it('should call Devices count on init', () => {
+		expect(component.status.isLoading)
+		.toBeTruthy();
+		expect(service.getDevicesCount)
+			.toHaveBeenCalled();
+	});
+
+	it('customerId should be present', () => {
+		expect(component.customerId)
+			.toBeDefined();
+		expect(component.filtered)
+			.toBeDefined();
+		expect(component.selectedFilter)
+			.toBeDefined();
+		expect(component.status)
+			.toBeDefined();
+		expect(component.filters)
+			.toBeDefined();
+		const advisoryFilter = _.find(component.filters, { key: 'exceptions' });
+		expect(advisoryFilter)
+			.toBeDefined();
+	});
 
 	it('should call clear filters', () => {
 		component.clearFilters();
@@ -81,25 +101,59 @@ describe('ArchitectureReviewComponent', () => {
 	});
 
 	it('should call selectVisualLabel', () => {
-		const visualLabels = { label: 'Configuration Best Practices', active: false, count: null };
-
+		const visualLabels = { label: 'Configuration Best Practices', active: true, count: null };
+		component.visualLabels =
+		 [{ label: 'Configuration Best Practices', active: true, count: null }];
 		component.selectVisualLabel(visualLabels);
-		expect(visualLabels.active)
-		.toBeTruthy();
+		expect(component.visualLabels[0].active)
+		.toBeFalsy();
+		fixture.detectChanges();
+		const dummyLabel = { label: 'Configuration Best', active: false };
+		component.selectVisualLabel(dummyLabel);
+		expect(component.visualLabels[0].active)
+		.toBeFalsy();
 	});
 
 	it('should call onsubfilterselect', () => {
 		mockVisualFilter.seriesData = [{
-			filter: '',
+			filter: 'high',
 			label: '',
 			selected: false,
 			value: 123,
 		},
 		];
+		mockVisualFilter.key = 'exception';
 		component.onSubfilterSelect('high', mockVisualFilter);
+		expect(mockVisualFilter.seriesData[0].selected)
+		.toBeTruthy();
+		fixture.detectChanges();
+		component.onSubfilterSelect('low', mockVisualFilter);
+		expect(mockVisualFilter.seriesData[0].selected)
+		.toBeFalsy();
 	});
 
-	xit('should clear the filter when selecting the same subfilter twice', done => {
+	it('should call getSelectedSubFilters ', () => {
+		component.filters = [mockVisualFilter];
+		component.getSelectedSubFilters('high');
+	});
+
+	it('should clear filters', () => {
+		component.filters = [];
+		component.clearFilters();
+		expect(component.selectedFilter)
+		.toEqual({ severity: '' });
+	});
+
+	it('should call load data on component loading', () => {
+		component.buildFilters();
+		expect(component.filters)
+		.toBeDefined();
+		spyOn(component, 'loadData');
+		expect(component.status.isLoading)
+		.toBeTruthy();
+	});
+
+	it('should clear the filter when selecting the same subfilter twice', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
@@ -124,8 +178,6 @@ describe('ArchitectureReviewComponent', () => {
 
 				expect(subfilter.selected)
 					.toBeFalsy();
-
-				done();
 			});
 	});
 });

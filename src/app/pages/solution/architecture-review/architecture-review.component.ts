@@ -88,7 +88,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	/**
 	 * Initializes our visual filters
 	 */
-	private buildFilters () {
+	public buildFilters () {
 		this.filters = [
 			{
 				key: 'exceptions',
@@ -161,7 +161,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	 * Fetches the exception counts for the visual filter
 	 * @returns the edvisory counts
 	 */
-	private getDevicesCount () {
+	public getDevicesCount () {
 		const exceptionFilter = _.find(this.filters, { key: 'exceptions' });
 
 		return this.architectureService.getSDAReadinessCount({ customerId: this.customerId })
@@ -208,7 +208,7 @@ export class ArchitectureReviewComponent implements OnInit {
 	/**
 	 * Function used to load all of the data
 	 */
-	private loadData () {
+	public loadData () {
 		this.status.isLoading = true;
 		forkJoin(
 			this.getDevicesCount(),
