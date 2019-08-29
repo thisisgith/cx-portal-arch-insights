@@ -18,6 +18,7 @@ const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	declarations: [DevicesWithExceptionsComponent],
 	exports : [DevicesWithExceptionsComponent],
 	imports: [
+		CbpTbdModule,
 		AssetDetailsModule,
 		AssetDetailsHeaderModule,
 		CbpTbdModule,

@@ -5,7 +5,7 @@
         "isFavorite": false,
         "status": "completed",
         "title": "Cisco DNA Center Project Planning",
-        "url": "https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest"
+        "url": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_access-overview-demo.png"
     },
     {
         "accId": "222222",
@@ -13,6 +13,6 @@
         "isFavorite": false,
         "status": "completed",
         "title": "Cisco DNA Pilot Usecase Deployment",
-        "url": "https://gtcroutingops.cloudapps.cisco.com/RDMT/CSSRequest"
+        "url": "https://www.cisco.com/web/fw/tools/ssue/cp/lifecycle/acc/images/acc_sda-segregation-strategy.png"
     }
 ]
