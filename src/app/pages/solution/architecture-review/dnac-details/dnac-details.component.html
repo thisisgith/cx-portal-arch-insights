@@ -1,0 +1,21 @@
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
+			<cui-drawer projection="true" [expanded]="true" *ngIf="dnacDetails">
+				<div class="cui-drawer-label text-large"
+					[innerText]="'_ArchitectureSDAScaleUtilization_' | i18n | uppercase">
+				</div>
+				<div class="cui-drawer-content">
+					<ng-container 
+					*ngTemplateOutlet="SDAScaleUtilizationChart; context: { dnacDetails: dnacDetails }">
+					</ng-container>
+				</div>
+			</cui-drawer>
+		</div>
+	</div>
+</div>
+
+
+<ng-template #SDAScaleUtilizationChart let-dnac="dnacDetails">
+	<p>temprary chart</p>
+</ng-template>

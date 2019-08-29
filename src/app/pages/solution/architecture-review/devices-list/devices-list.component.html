@@ -1,0 +1,138 @@
+
+<!-- App Details 360 slide-out -->
+<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" [fullscreen]="fullscreen">
+	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
+		<div detailsPanelTitle class="text-xlarge">
+			<span [innerText]="('_ArchitectureArchitectureInsightsFor_' | i18n)">
+			</span>
+			<a  
+				data-auto-id="openAssetsView" 
+				(click)="openAsset360View(deviceDetails)"
+				class="qtr-margin-left" 
+				[innerText]="deviceDetails?.hostName">
+			</a>
+		</div>
+		<div class="row ">
+			<div class="col-md-8 base-margin-bottom">
+				<div>
+					<span class="text-large" innerText="{{ ('_ArchitectureIP_' | i18n) + ' : '}}">
+					</span>
+					<span class="text-large" innerText="{{ deviceDetails?.ipAddress }}"></span>
+				</div>
+				<div>
+					<span class="text-large" innerText="{{ ('_ArchitectureSN_' | i18n) + ' : '}}">
+					</span>
+					<span class="text-large" innerText="{{ deviceDetails?.serialNumber }}"></span>
+				</div>
+			</div>
+		</div>
+	</details-panel-header>
+	<cui-tabs [(activeTabIndex)]="tabIndex">
+		<cui-tab [label]="'_ArchitectureSDAProductCompatibility_' | i18n | uppercase">
+			<devices-sda [deviceDetails]="deviceDetails"></devices-sda>
+		</cui-tab>
+		<cui-tab [label]="'_ArchitectureL3AccessSwitching_' | i18n | uppercase">
+		</cui-tab>
+		<cui-tab [label]="'_ArchitectureSwitchRedundancy_' | i18n | uppercase">
+		</cui-tab>
+		<cui-tab [label]="'_ArchitectureSwitchInterfaceMTU_'  | i18n | uppercase">
+		</cui-tab>
+	</cui-tabs>
+</details-panel>
+
+<!-- Asset 360 Fly-out View-->
+<asset-details *ngIf="selectedAsset" [asset]="selectedAsset" 
+	(close)="closeAsset360View($event)" ></asset-details>
+	
+<div class="row">
+		<div class="col-md-4">
+			<div class="container" *ngIf="dnacDeviceDetails.length > 0">
+				<span [innerText]="'_ArchitectureDevices_' | i18n" class="text-large"></span>
+				<span class="qtr-margin-left text-small text-muted"
+					[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
+				</span>
+			</div>
+		</div>
+		<div class="col-md-8">
+				<div>
+					<form
+						#f="ngForm"
+						class="row flex flex-fluid flex-right qtr-margin-right"
+						id="searchForm"
+						(keydown)="globalSearchFunction($event)"
+					>
+						<div class="qtr-padding-top">
+							<div class="container">
+								<span [innerText]="'_ArchitectureLastUpdated_' | i18n" class="text-large"></span>
+								<span class="qtr-margin-left text-large"
+								[innerText]="lastCollectionTime"></span>
+							</div>
+						</div>
+						<div>
+							<div class="flex-fill form-group input--compressed input--icon half-margin-right">
+								<div class="form-group__text">
+									<input
+										data-auto-id="globalSearch"
+										#globalSearch="ngModel"
+										[(ngModel)]="globalSearchText"
+										name="globalSearch"
+										type="text"
+										class="form-control"
+										placeholder="{{ '_ArchitectureSearch_' | i18n }}"
+									/>
+									<button type="button" class="link" tabindex="-1">
+										<span class="icon-search"></span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+</div>
+<div class="divider no-qtr-margin"></div>
+
+<div class="panel">
+	<cui-table *ngIf="!isLoading && totalItems" 
+		[options]="tableOptions" [data]="dnacDeviceDetails"
+		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
+	<div class="section" *ngIf="totalItems">
+		<cui-pager *ngIf="!isLoading" [page]="paramsType.page" [limit]="paramsType.pageSize" [totalItems]="totalItems"
+			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
+	</div>
+	<div class="base-margin-top" *ngIf="isLoading">
+		<cui-spinner></cui-spinner>
+	</div>
+	<div *ngIf="!dnacDeviceDetails.length && !isLoading">
+		<div class="text-center dbl-margin-top dbl-margin-bottom">
+			<div>
+				<span class="text-muted text-xlarge"
+					[innerText]="'_NoResultsFound_' | i18n"
+					data-auto-id="NoResultsFoundTxt" >
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+<ng-template #productFamilyTemplate let-item="celldata">
+	<span 
+	[ngClass]="{
+		'text-danger': item.hardwareCompliance === 'No',
+		'transparent-style': item.hardwareCompliance === 'Yes'
+	}"
+	class="qtr-margin-right icon-circle">
+	</span>
+	<span [innerText]="item.productFamily"></span>
+</ng-template>
+
+
+<ng-template #softwareVersionTemplate let-item="celldata">
+	<span
+	[ngClass]="{
+		'text-danger': item.softwareCompliance === 'No',
+		'transparent-style': item.softwareCompliance === 'Yes' 
+	}"
+	 class="qtr-margin-right icon-circle">
+	</span>
+	<span [innerText]="item.softwareVersion"></span>
+</ng-template>
