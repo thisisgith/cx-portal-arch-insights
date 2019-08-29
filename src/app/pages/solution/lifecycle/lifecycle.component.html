@@ -10,7 +10,7 @@
 					<app-communities></app-communities>
 					<ng-container *ngTemplateOutlet="panel; context: {
 							template: atxPanel,
-							title: '_AskTheExpert_',
+							title: '_AskTheExperts_',
 							loading: status.loading.atx,
 							data: componentData.atx,
 							viewAllLabel: '_ViewAll_',
@@ -204,6 +204,11 @@
 <ng-template #atxHover let-title="title" let-description="description" let-autoid="autoid" let-item="item">
 	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" *ngIf="!atxScheduleCardOpened" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="flex flex-column max-height">
+			<div class="icon-bookmark icon-medium"
+				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
+				(click)="updateBookmark(item, 'ATX')"
+				data-auto-id="ACCCardRibbon">
+			</div>
 			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="half-margin-left line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
