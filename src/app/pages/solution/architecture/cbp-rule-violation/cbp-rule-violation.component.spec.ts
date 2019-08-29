@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
 
-fdescribe('CbpRuleViolationComponent', () => {
+describe('CbpRuleViolationComponent', () => {
 	let component: CbpRuleViolationComponent;
 	let fixture: ComponentFixture<CbpRuleViolationComponent>;
 	let service: ArchitectureService;
