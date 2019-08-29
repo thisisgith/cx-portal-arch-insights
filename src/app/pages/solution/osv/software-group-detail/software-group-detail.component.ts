@@ -64,7 +64,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		},
 		{
 			label: 'L',
-			value: 7,
+			value: 99,
 		},
 	];
 	constructor (

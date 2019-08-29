@@ -21,6 +21,7 @@ export class BarChartComponent implements OnInit {
 	@Input() public loading;
 	@Input() public seriesData;
 	@Input() public width;
+	@Input() dataLabels = false;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -85,6 +86,9 @@ export class BarChartComponent implements OnInit {
 			plotOptions: {
 				series: {
 					cursor: 'pointer',
+					dataLabels:{
+						enabled: this.dataLabels,
+					},
 					point: {
 						events: {
 							click: event => this.selectSubfilter(event),
