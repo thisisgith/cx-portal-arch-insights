@@ -1219,7 +1219,7 @@ export class LifecycleComponent implements OnDestroy {
 					const ht = this.eventClickedElement.scrollHeight;
 
 					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
-					_div.style.top = `${(rect.top + (ht / 2)) + this.scrollY - 210}px`;
+					_div.style.top = `${(rect.top + (ht / 2)) + this.scrollY - 390}px`;
 					panel = 'panel listpanel--open';
 				}
 			}
