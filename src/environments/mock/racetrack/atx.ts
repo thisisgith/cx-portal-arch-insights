@@ -328,7 +328,7 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -345,7 +345,7 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Implement&customerId=${customerId}&suggestedAction=Build your network & site hierarchy`,
 		usecases: ['Use Case 1'],
 	},
 	{

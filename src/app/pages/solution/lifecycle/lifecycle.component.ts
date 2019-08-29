@@ -181,6 +181,7 @@ export class LifecycleComponent implements OnDestroy {
 	private destroy$ = new Subject();
 	private selectedSolution: RacetrackSolution;
 	private selectedTechnology: RacetrackTechnology;
+	private currentPitstopCompPert: string;
 
 	public categoryOptions: [];
 	public pgCategoryOptions: [];
@@ -254,7 +255,7 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	get currentActionsCompPert () {
-		return _.get(this.componentData, ['racetrack', 'actionsCompPercent'], '0%');
+		return _.get(this.componentData, ['racetrack', 'actionsCompPercent'], I18n.get('_Start_'));
 	}
 
 	constructor (
@@ -324,6 +325,11 @@ export class LifecycleComponent implements OnDestroy {
 				this.componentData.params.solution = currentSolution;
 
 				this.currentWorkingPitstop = _.get(this.selectedTechnology, 'currentPitstop');
+				const currentPitstop = _.find(
+					_.get(this.selectedTechnology, 'pitstops', []), (stop: RacetrackPitstop) =>
+					stop.name.toLowerCase() === this.currentWorkingPitstop.toLowerCase());
+				this.currentPitstopCompPert =
+					this.calculateActionPercentage(currentPitstop);
 
 				let viewingIndex = racetrackComponent.stages
 					.indexOf(this.currentWorkingPitstop.toLowerCase()) + 1;
@@ -1015,6 +1021,27 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * function to reset PitstopAction Checklist filter
+	 */
+	public resetFilter () {
+		this.resetSelectStatus();
+		const nextAction =  _.find(this.componentData.racetrack.pitstop.pitstopActions,
+			{ isComplete: false });
+		if (this.componentData.params.suggestedAction !== nextAction.name) {
+			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
+			this.loadRacetrackInfo();
+		}
+	}
+
+	/**
+	 * function to find out if any Action has been selected
+	 * @returns boolean
+	 */
+	public hasSelectedAction () {
+		return  (_.filter(this.currentPitActionsWithStatus, { selected: true }).length > 0);
+	}
+
+	/**
 	 * Get updated racetrack info once all pitstops actions are complete
 	 */
 	private completePitstop () {
@@ -1254,11 +1281,9 @@ export class LifecycleComponent implements OnDestroy {
 			window.accLoading = true;
 		}
 
-		// Temporarily not pick up optional query param suggestedAction
-		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
-
 		return this.contentService.getRacetrackACC(
-			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+			_.pick(this.componentData.params,
+				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
 		.pipe(
 			map((result: ACCResponse) => {
 				this.selectedFilterForACC = '';
@@ -1300,11 +1325,10 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.atxLoading = true;
 		}
-		// Temporarily not pick up optional query param suggestedAction
-		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackATX(
-			_.pick(this.componentData.params, ['customerId', 'solution', 'usecase', 'pitstop']))
+			_.pick(this.componentData.params,
+				['customerId', 'solution', 'usecase', 'pitstop', 'suggestedAction']))
 		.pipe(
 			map((result: ATXResponseModel) => {
 				this.selectedFilterForATX = '';
@@ -1405,12 +1429,10 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.successPathsLoading = true;
 		}
-		// Temporarily not pick up optional query param suggestedAction
-		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackSuccessPaths(
 			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
+				['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
 				this.selectedFilterForSB = '';
@@ -1457,12 +1479,10 @@ export class LifecycleComponent implements OnDestroy {
 		if (window.Cypress) {
 			window.elearningLoading = true;
 		}
-		// Temporarily not pick up optional query param suggestedAction
-		// this.logger.debug(`suggestedAction is ${this.componentData.params.suggestedAction}`);
 
 		return this.contentService.getRacetrackElearning(
 			_.pick(this.componentData.params,
-				['customerId', 'solution', 'usecase', 'pitstop', 'rows']))
+			['customerId', 'solution', 'usecase', 'pitstop', 'rows', 'suggestedAction']))
 		.pipe(
 			map((result: ELearningResponse) => {
 				if (result.items.length) {
@@ -1696,7 +1716,7 @@ export class LifecycleComponent implements OnDestroy {
 
 			this.componentData.racetrack = {
 				pitstop,
-				actionsCompPercent: this.calculateActionPercentage(pitstop),
+				actionsCompPercent: this.currentPitstopCompPert,
 				stage: stage.toLowerCase(),
 			};
 

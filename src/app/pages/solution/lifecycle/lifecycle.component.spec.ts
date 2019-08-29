@@ -1108,10 +1108,21 @@ describe('LifecycleComponent', () => {
 			expect(component.currentPitActionsWithStatus[1].selected)
 				.toBeTruthy();
 
-			// click the same action again, will unselect the action
-			component.selectAction(component.currentPitActionsWithStatus[1]);
+			// ResetFilter should be shown up
+			de = fixture.debugElement.query(By.css('#ResetFilter'));
+			expect(de)
+				.toBeTruthy();
 
+			de = fixture.debugElement.query(By.css('#ResetFilter'));
+			expect(de)
+				.toBeTruthy();
+			el = de.nativeElement;
+			el.click();
 			expect(component.currentPitActionsWithStatus[1].selected)
+				.toBeFalsy();
+
+			de = fixture.debugElement.query(By.css('#ResetFilter'));
+			expect(de)
 				.toBeFalsy();
 
 			// since suggestedAction does not change, so will not trigger ATX API call
