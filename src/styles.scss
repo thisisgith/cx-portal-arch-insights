@@ -63,6 +63,10 @@ $cui-resource-path: "../node_modules/cisco-ui/dist";
 	color: #fff;
 }
 
+.cui .content {
+	background: unset;
+}
+
 .highcharts-container,
 .highcharts-container svg {
 	overflow: visible !important;
