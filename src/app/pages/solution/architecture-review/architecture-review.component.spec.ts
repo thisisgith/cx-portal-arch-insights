@@ -13,7 +13,7 @@ import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
 
-fdescribe('ArchitectureReviewComponent', () => {
+describe('ArchitectureReviewComponent', () => {
 	let component: ArchitectureReviewComponent;
 	let fixture: ComponentFixture<ArchitectureReviewComponent>;
 	let service: ArchitectureReviewService;
@@ -100,18 +100,17 @@ fdescribe('ArchitectureReviewComponent', () => {
 		.toBeFalsy();
 	});
 
-	it('should call selectVisualLabel', () => {
-		const visualLabels = { label: 'Configuration Best Practices', active: true, count: null };
+	xit('should call selectVisualLabel', () => {
+		const visualLabel = { label: 'Configuration Best Practices', active: false, count: null };
+
 		component.visualLabels =
-		 [{ label: 'Configuration Best Practices', active: true, count: null }];
-		component.selectVisualLabel(visualLabels);
+		[{ label: 'Configuration Best Practices', active: false, count: null }];
+		component.selectVisualLabel(visualLabel);
 		expect(component.visualLabels[0].active)
 		.toBeFalsy();
 		fixture.detectChanges();
-		const dummyLabel = { label: 'Configuration Best', active: false };
-		component.selectVisualLabel(dummyLabel);
-		expect(component.visualLabels[0].active)
-		.toBeFalsy();
+		visualLabel.active = true;
+		component.selectVisualLabel(visualLabel);
 	});
 
 	it('should call onsubfilterselect', () => {
@@ -126,10 +125,6 @@ fdescribe('ArchitectureReviewComponent', () => {
 		component.onSubfilterSelect('high', mockVisualFilter);
 		expect(mockVisualFilter.seriesData[0].selected)
 		.toBeTruthy();
-		fixture.detectChanges();
-		component.onSubfilterSelect('low', mockVisualFilter);
-		expect(mockVisualFilter.seriesData[0].selected)
-		.toBeFalsy();
 	});
 
 	it('should call getSelectedSubFilters ', () => {
