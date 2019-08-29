@@ -32,7 +32,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		this.logger.debug('DevicesWithExceptionsComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.params.customerId =  _.cloneDeep(this.customerId);
+		this.params.customerId = _.cloneDeep(this.customerId);
 	}
 
 	public assetObject: IAsset = null;
@@ -44,10 +44,10 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
-	public globalSearchText  = '';
+	public globalSearchText = '';
 	public lastCollectionTime = '';
-	public params = { customerId: '', page: 0, pageSize: 10, searchText : '' };
-	public fullscreen: any ;
+	public params = { customerId: '', page: 0, pageSize: 10, searchText: '' };
+	public fullscreen: any;
 
 	/**
 	 * used to Intialize Table options
@@ -106,7 +106,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 					key: 'ruleIdWithExceptions',
 					name: I18n.get('_ArchitectureCBPExceptions_'),
 					render: item =>
-					item.ruleIdWithExceptions.split(';').length,
+						item.ruleIdWithExceptions.split(';').length,
 					sortable: false,
 				},
 			],
@@ -128,6 +128,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	/**
 	 * Keys down function
 	 * @param event contains eventdata
+	 * keyCode 13 refers to the enter key
 	 */
 	public globalSearchFunction (event) {
 		if (event.keyCode === 13) {
@@ -147,24 +148,24 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		this.tableEndIndex = (endIndex) > this.totalItems ? this.totalItems : endIndex;
 
 		this.architectureService.getAllAssetsWithExceptions(this.params)
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(res => {
-			const datePipe = new DatePipe('en-US');
-			this.isLoading = false;
-			this.totalItems = res.TotalCounts;
-			this.lastCollectionTime = datePipe.transform(res.CollectionDate, 'medium');
-			this.assetsExceptionDetails = res.AssetsExceptionDetails;
-			this.tableEndIndex = (this.tableStartIndex + this.assetsExceptionDetails.length);
-		}, err => {
-			this.logger.error('Devices With Exceptions View' +
-				'  : getAllAssetsWithExceptions() ' +
-				`:: Error : (${err.status}) ${err.message}`);
-			this.isLoading = false;
-			this.assetsExceptionDetails = [];
-			this.totalItems = 0;
-		});
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe(res => {
+				const datePipe = new DatePipe('en-US');
+				this.isLoading = false;
+				this.totalItems = res.TotalCounts;
+				this.lastCollectionTime = datePipe.transform(res.CollectionDate, 'medium');
+				this.assetsExceptionDetails = res.AssetsExceptionDetails;
+				this.tableEndIndex = (this.tableStartIndex + this.assetsExceptionDetails.length);
+			}, err => {
+				this.logger.error('Devices With Exceptions View' +
+					'  : getAllAssetsWithExceptions() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				this.isLoading = false;
+				this.assetsExceptionDetails = [];
+				this.totalItems = 0;
+			});
 	}
 
 	/**
@@ -187,7 +188,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		* in order to Close Fly-out View
 		* @param isClosed - should be true or false
 		*/
-	public closeAsset360View (isClosed: Boolean) {
+	public closeAssetDetailsView (isClosed: Boolean) {
 		if (isClosed) {
 			this.selectedAsset = null;
 		}
@@ -197,7 +198,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	 * Used for Opening the Asset 360 View the data for table
 	 * @param item - The Item to which Asset 360 needs to shown
 	 */
-	public openAsset360View (item: IAsset) {
+	public openAssetDetailsView (item: IAsset) {
 		this.selectedAsset = item;
 	}
 
