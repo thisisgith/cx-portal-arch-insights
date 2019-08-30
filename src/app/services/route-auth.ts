@@ -1,13 +1,21 @@
 
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
-import { HttpRequest, HttpClient } from '@angular/common/http';
-import { catchError, map } from 'rxjs/operators';
+import { HttpRequest, HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { map as __map, filter as __filter } from 'rxjs/operators';
+import { Observable as __Observable } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import { environment } from '@environment';
 /**
  * Service which helps in refreshing notes list if a new note is added
  */
+
+/**
+* Constrains the http to not expand the response type with `| null`
+*/
+export type StrictHttpResponse<T> = HttpResponse<T> & {
+	readonly body: T;
+}
+
 @Injectable({
 	providedIn: 'root',
 })
@@ -21,26 +29,35 @@ export class RouteAuthService {
 	 * @param customerId  customer id of logged in customer
 	 * @returns Observable with response data.
 	 */
-	public checkRccPermission (customerId) {
-		const req = new HttpRequest<any>(
-			'GET',
-			`${environment.sdpServiceOrigin}${this.rccPath}?customerId=${customerId}`,
-		);
-
-		return this.http.request<any>(req)
+	checkPermissions (customerId: any): __Observable<any> {
+		return this.invokeHTTPGet<any>(
+			`${environment.sdpServiceOrigin}${this.rccPath}?customerId=${customerId}`)
 			.pipe(
-				map((res: any) => res.body),
-				map(res => {
-					this.hasRccPermission = res;
-					return res;
-				}),
-				catchError(err => {
-					this.hasRccPermission = false;
-					this.logger.error('Rcc Route Permission Check' +
-						`:: Error : (${err.status}) ${err.message}`);
-
-					return of({ });
-				}),
+				__map(_r => _r.body),
+				__map(_r => this.hasRccPermission = _r),
 			);
 	}
+
+	invokeHTTPGet<T> (url: string): __Observable<any> {
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+		let req = new HttpRequest<any>(
+			'GET',
+			url,
+			__body,
+			{
+				headers: __headers,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req)
+		.pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as StrictHttpResponse<T>;
+			})
+		);
+	}
+
+
 }

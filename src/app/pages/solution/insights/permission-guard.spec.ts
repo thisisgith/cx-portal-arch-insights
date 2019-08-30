@@ -7,10 +7,10 @@ import { OptimalSoftwareVersionComponent } from '../osv/osv.component';
 import { RiskMitigationComponent } from '../risk-mitigation/risk-mitigation.component';
 import { OptimalSoftwareVersionModule } from '../osv/osv.module';
 import { RiskMitigationModule } from '../risk-mitigation/risk-mitigation.module';
-import { RccService } from '@sdp-api';
 import { of } from 'rxjs';
 import { PermissionGuard } from './permission-guard';
 import { UserResolve } from '@utilities';
+import { RouteAuthService } from '@services';
 /**
  * class to mock router
  */
@@ -27,7 +27,7 @@ describe('InsightsComponent', () => {
 	let router;
 	let component: InsightsComponent;
 	let fixture: ComponentFixture<InsightsComponent>;
-	let rccService: RccService;
+	let routeAuthService: RouteAuthService;
 	let userResolve: UserResolve;
 	let permissionGuard: PermissionGuard;
 
@@ -54,7 +54,7 @@ describe('InsightsComponent', () => {
 			],
 		})
 			.compileComponents();
-		rccService = TestBed.get(RccService);
+		routeAuthService = TestBed.get(RouteAuthService);
 		userResolve = TestBed.get(UserResolve);
 	}));
 
@@ -71,14 +71,14 @@ describe('InsightsComponent', () => {
 	});
 
 	it('should return true if the user has permission', done => {
-		spyOn(rccService, 'checkPermissions')
+		spyOn(routeAuthService, 'checkPermissions')
 			.and
 			.returnValue(of(true));
 		spyOn(userResolve, 'getCustomerId')
 			.and
 			.returnValue(of('1234'));
 		router = new MockRouter();
-		permissionGuard = new PermissionGuard(rccService, userResolve, router);
+		permissionGuard = new PermissionGuard(routeAuthService, userResolve, router);
 		permissionGuard.canActivate(null, null)
 			.subscribe(response => {
 				expect(response)
@@ -88,14 +88,14 @@ describe('InsightsComponent', () => {
 	});
 
 	it('should return false and reroute if the user has permission', () => {
-		spyOn(rccService, 'checkPermissions')
+		spyOn(routeAuthService, 'checkPermissions')
 			.and
 			.returnValue(of(false));
 		spyOn(userResolve, 'getCustomerId')
 			.and
 			.returnValue(of('1234'));
 		router = new MockRouter();
-		permissionGuard = new PermissionGuard(rccService, userResolve, router);
+		permissionGuard = new PermissionGuard(routeAuthService, userResolve, router);
 		permissionGuard.canActivate(null, null)
 			.subscribe(response => {
 				expect(response)

@@ -24,7 +24,7 @@ export class PermissionGuard implements CanActivate {
 		_next: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<boolean> {
 		return this.userResolve.getCustomerId()
-			.pipe(flatMap(id => this.routeAuthService.checkRccPermission(id)),
+			.pipe(flatMap(id => this.routeAuthService.checkPermissions(id)),
 				map((response: boolean) => {
 
 					if (response) {
