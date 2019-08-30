@@ -71,8 +71,8 @@ describe('ComparisonviewComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				expect(component.featuresData)
-				.not
-				.toBeTruthy();
+					.not
+					.toBeTruthy();
 				done();
 			});
 	});
@@ -86,9 +86,9 @@ describe('ComparisonviewComponent', () => {
 				fixture.detectChanges();
 				expect(component.featuresData)
 					.toBeDefined();
-					expect(component.hardwareData)
+				expect(component.hardwareData)
 					.toBeDefined();
-					expect(component.softwareData)
+				expect(component.softwareData)
 					.toBeDefined();
 				done();
 			});
