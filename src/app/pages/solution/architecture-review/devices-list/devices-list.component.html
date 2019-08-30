@@ -1,14 +1,13 @@
-
 <!-- App Details 360 slide-out -->
-<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" [fullscreen]="fullscreen">
+<details-panel [hidden]="!deviceDetails" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div detailsPanelTitle class="text-xlarge">
-			<span [innerText]="('_ArchitectureArchitectureInsightsFor_' | i18n)">
+			<span [innerText]="('_ArchitectureArchitectureReviewFor_' | i18n)">
 			</span>
-			<a
-				data-auto-id="openAssetsView"
-				(click)="openAssetDetailsView(deviceDetails)"
-				class="qtr-margin-left"
+			<a  
+				data-auto-id="openAssetsView" 
+				(click)="openDeviceView(deviceDetails)"
+				class="qtr-margin-left" 
 				[innerText]="deviceDetails?.hostName">
 			</a>
 		</div>
@@ -41,12 +40,12 @@
 </details-panel>
 
 <!-- Asset 360 Fly-out View-->
-<asset-details *ngIf="selectedAsset" [asset]="selectedAsset"
-	(close)="closeAssetDetailsView($event)" ></asset-details>
-
+<asset-details *ngIf="selectedAsset" [asset]="selectedAsset" 
+	(close)="closeDeviceView($event)" ></asset-details>
+	
 <div class="row">
 		<div class="col-md-4">
-			<div class="container" *ngIf="dnacDeviceDetails.length > 0">
+			<div class="container" *ngIf="dnacDeviceDetails?.length > 0">
 				<span [innerText]="'_ArchitectureDevices_' | i18n" class="text-large"></span>
 				<span class="qtr-margin-left text-small text-muted"
 					[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
@@ -97,13 +96,13 @@
 		[options]="tableOptions" [data]="dnacDeviceDetails"
 		(onTableRowClicked)="onTableRowClicked($event)"></cui-table>
 	<div class="section" *ngIf="totalItems">
-		<cui-pager *ngIf="!isLoading" [page]="paramsType.page" [limit]="paramsType.pageSize" [totalItems]="totalItems"
+		<cui-pager *ngIf="!isLoading" [page]="paramsType?.page" [limit]="paramsType?.pageSize" [totalItems]="totalItems"
 			(onPageChanged)="onPagerUpdated($event)"></cui-pager>
 	</div>
 	<div class="base-margin-top" *ngIf="isLoading">
 		<cui-spinner></cui-spinner>
 	</div>
-	<div *ngIf="!dnacDeviceDetails.length && !isLoading">
+	<div *ngIf="!dnacDeviceDetails?.length && !isLoading">
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
 			<div>
 				<span class="text-muted text-xlarge"
@@ -117,22 +116,22 @@
 <ng-template #productFamilyTemplate let-item="celldata">
 	<span
 	[ngClass]="{
-		'text-danger': item.hardwareCompliance === 'No',
-		'transparent-style': item.hardwareCompliance === 'Yes'
+		'text-danger': item?.hardwareCompliance === 'No',
+		'transparent-style': item?.hardwareCompliance === 'Yes'
 	}"
 	class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item.productFamily"></span>
+	<span [innerText]="item?.productFamily"></span>
 </ng-template>
 
 
 <ng-template #softwareVersionTemplate let-item="celldata">
 	<span
 	[ngClass]="{
-		'text-danger': item.softwareCompliance === 'No',
-		'transparent-style': item.softwareCompliance === 'Yes'
+		'text-danger': item?.softwareCompliance === 'No',
+		'transparent-style': item?.softwareCompliance === 'Yes' 
 	}"
 	 class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item.softwareVersion"></span>
+	<span [innerText]="item?.softwareVersion"></span>
 </ng-template>
