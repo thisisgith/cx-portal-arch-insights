@@ -56,7 +56,7 @@
 							<div class="container">
 								<span [innerText]="'_ArchitectureLastUpdated_' | i18n" class="text-large"></span>
 								<span data-auto-id="lastCollectionTime" 
-								class="qtr-margin-left text-small text-muted" 
+								class="qtr-margin-left text-large" 
 								[innerText]="lastCollectionTime"></span>
 							</div>
 						</div>
@@ -70,7 +70,7 @@
 										name="globalSearch"
 										type="text"
 										class="form-control"
-										placeholder="{{ '_ArchitectureGlobalSearch_' | i18n }}"
+										placeholder="{{ '_ArchitectureSearch_' | i18n }}"
 									/>
 									<button type="button" class="link" tabindex="-1">
 										<span class="icon-search"></span>
@@ -116,9 +116,14 @@
 </ng-template>
 
 <ng-template #recommendationTemplate let-item="celldata">
-	<span class="elipsis" [innerText]="item?.recommendations"></span>
+	<div class="architecture-column" [innerText]="item?.recommendations">
+	</div>
 </ng-template>
 
 <ng-template #correctiveActionsTemplate let-item="celldata">
-	<span class="elipsis" [innerText]="item?.correctiveActions"></span>
+	<div class="architecture-column" [innerText]="item?.correctiveActions"></div>
+</ng-template>
+
+<ng-template #exceptionsTemplate let-item="celldata">
+	<div class="architecture-column" [innerText]="item?.exceptions"></div>
 </ng-template>
