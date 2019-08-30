@@ -165,7 +165,23 @@
 						</div>
 					</td>
 					<td>
-						<div class="flex flex  justify-content-between">
+						<div class="flex justify-content-between">
+							<div class="flex-shrink-0" [innerText]="'_OsvFixed_' | i18n"></div>
+							<div [innerText]="'_OsvWillExposed_' | i18n"></div>
+						</div>
+						<div class="half-margin-top flex justify-content-between">
+							<div>
+								<span class="text-xlarge" [innerText]="'13/15'"></span>
+								<span class="icon-dropdown text-success text-large"></span>
+							</div>
+							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
+						</div>
+						<div class="qtr-margin-top">
+							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+						</div>
+					</td>
+					<td>
+						<div class="flex justify-content-between">
 							<div [innerText]="'_OsvFixed_' | i18n"></div>
 							<div [innerText]="'_OsvWillExposed_' | i18n"></div>
 						</div>
@@ -181,23 +197,7 @@
 						</div>
 					</td>
 					<td>
-						<div class="flex flex  justify-content-between">
-							<div [innerText]="'_OsvFixed_' | i18n"></div>
-							<div [innerText]="'_OsvWillExposed_' | i18n"></div>
-						</div>
-						<div class="half-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="'13/15'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
-							</div>
-							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
-						</div>
-						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
-						</div>
-					</td>
-					<td>
-						<div class="flex flex  justify-content-between">
+						<div class="flex justify-content-between">
 							<div [innerText]="'_OsvFixed_' | i18n"></div>
 							<div [innerText]="'_OsvWillExposed_' | i18n"></div>
 						</div>
