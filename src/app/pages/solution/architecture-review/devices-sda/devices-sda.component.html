@@ -22,7 +22,7 @@
 					</div>
 				</div>
 			</div>
-			<div *ngIf="!deviceSDAdatas.length && !isLoading">
+			<div *ngIf="!deviceSDAdatas?.length && !isLoading">
 				<div class="text-center dbl-margin-top dbl-margin-bottom">
 					<div>
 						<span class="text-muted text-xlarge"
@@ -37,7 +37,7 @@
 </div>
 
 <ng-template #recommendedVersions let-item="celldata">
-	<div *ngFor="let version of item.recommendedSwVersions">
+	<div *ngFor="let version of item?.recommendedSwVersions">
 			<span [innerText]="version"></span>
 	</div>		
 </ng-template>
