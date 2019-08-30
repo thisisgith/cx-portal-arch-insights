@@ -43,7 +43,12 @@ export class FpIntelligenceComponent implements OnChanges {
 	public requestForm: FormGroup = this.fb.group({
 		deviceCount: [
 			1000,
-			[Validators.required, Validators.min(1), Validators.max(1000)],
+			[
+				Validators.required,
+				Validators.min(1),
+				Validators.max(1000),
+				Validators.pattern('[0-9]*'),
+			],
 		],
 		minMatch: [
 			50,
