@@ -88,11 +88,9 @@
 		(onTableRowClicked)="onViolationRowClicked($event)"
 		*ngIf="!loading && policyViolationsGridData">
 	</cui-table>
-	<div class="col-8 panel-group panel-group--compressed">
-		<div class="panel absolute-center">
-			<span class="text-large text-uppercase icon-warning " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-			<span *ngIf="noTableData " class="text-large text-uppercase icon-warning " [innerText]="'_RccNoDataAvailable_' | i18n"></span>
-		</div>
+	<div class="text-center dbl-margin-top dbl-margin-bottom">
+			<span class="text-muted text-xlarge " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+			<span *ngIf="noTableData " class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 	</div>
 	<div class="section">
 		<cui-pager *ngIf="policyViolationsGridData"
@@ -116,11 +114,9 @@
 		(onTableRowClicked)="onAssetRowClicked($event)"
 		*ngIf="!loading && tableAssetDataSample">
 	</cui-table>
-	<div class="col-8 panel-group panel-group--compressed">
-		<div class="panel absolute-center">
-			<span class="text-large text-uppercase icon-warning" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-			<span *ngIf="noTableData" class="text-large text-uppercase icon-warning" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
-		</div>
+	<div class="text-center dbl-margin-top dbl-margin-bottom">
+			<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+			<span *ngIf="noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 	</div>
 	<div class="section">
 		<cui-pager *ngIf="tableAssetDataSample"
@@ -231,7 +227,7 @@
 		[fullscreenToggle]="true">
 		<div detailsPanelTitle>
 			<span class="text-xlarge" [innerText]="('_RccViolationsFor_' | i18n)"></span>
-			<a href="" class="text-xlarge selected" [innerText]="selectedAssetData?.deviceName || ('_NA_' | i18n)"></a>
+			<span class="text-xlarge" [innerHTML]="selectedAssetData?.deviceName || ('_NA_' | i18n)"></span>
 		</div>
 		<div class="row">
 			<div class="col-md-8 base-margin-bottom">

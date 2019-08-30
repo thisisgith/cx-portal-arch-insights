@@ -22,13 +22,13 @@
 				<span class="checkbox__input"></span>
 			</div>
 			<div class="col-5 device-table">
-				<span [innerText]="device.productId"></span>
+				<span [innerText]="device.hostname"></span>
 			</div>
 			<div class="col-3 device-table">
 				<span [innerText]="device.ipAddress"></span>
 			</div>
 			<div class="col-3 device-table">
-				<span [innerText]="device.lastScan ? (device.lastScan | fromNow) : ''"></span>
+				<span [innerText]="device.lastScanDate ? (device.lastScanDate | fromNow) : ''"></span>
 			</div>
 		</div>
 	</div>
