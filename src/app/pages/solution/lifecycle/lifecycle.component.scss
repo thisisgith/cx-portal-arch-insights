@@ -489,7 +489,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		}
 
 		&-recommendedElearning {
-			top: -90px;
+			top: -82px;
 
 			.icon-star,
 			.icon-star-half {
@@ -593,6 +593,44 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 					font-size: 10px;
 					color: #bdc5cf;
 				}
+			}
+		}
+	}
+}
+
+#recommended-elearning-item:hover #learn-hover-panel {
+	&-recommendedElearning {
+		padding: 20px 0 25px 28px;
+		width: 450px;
+		height: 180px;
+
+		.learning-popover__title {
+			color: #767676;
+			font-size: 16px;
+			line-height: 19px;
+		}
+
+		.learning-popover__description {
+			font-size: 13px;
+			line-height: 19px;
+			color: #394454;
+			padding-right: 28px;
+			min-height: 38px;
+		}
+
+		.learning-popover__footer {
+			margin-top: 14px;
+			display: flex;
+			justify-content: flex-end;
+			padding-right: 28px;
+			font-size: 10px;
+			color: #929bab;
+			letter-spacing: 0.07px;
+			line-height: 14px;
+
+			/* stylelint-disable-next-line no-descending-specificity */
+			.icon-clock {
+				padding-right: 6px;
 			}
 		}
 	}
