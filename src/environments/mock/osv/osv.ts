@@ -36,6 +36,7 @@ const assetDetailsParams = `&id=${assetId}&pid=${pid}&pf=${pf}&swType=IOS&swVers
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
 	{
+		accepted: true,
 		error: null,
 		name: 'suggested',
 		postDate: '2019-05-16T00:00:00.000+0000',
@@ -214,6 +215,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productId: '73-14312-05, 73-14312-05, 73-14312-05',
 			profileName: '73-14312-05, 73-14312-05, 73-14312-05',
 			recommendation: null,
+			recommAcceptedDate:'2014-05-30T00:00:00.000+0000',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -368,7 +370,7 @@ const mockAssets: AssetsResponse = {
 			postDate: '2019-07-02T00:00:00.000+0000',
 			productFamily: 'Cisco 5500 Series Wireless Controllers',
 			productId: 'AIR-CT5520-K9',
-			recommAcceptedDate: null,
+			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			recommendationCount: 3,
 			swType: 'AireOS',
 			swVersion: '8.8.125.0',

@@ -122,7 +122,7 @@
 
 <ng-template #currentTemplate let-item="celldata">
 	<div *ngIf="item.name == 'current'" class="version-pointer half-padding-left relative">
-		<span  [innerText]="'_OsvCurrentVersion_' | i18n"></span>
+		<span [innerText]="'_OsvCurrentVersion_' | i18n"></span>
 	</div>
 </ng-template>
 
@@ -159,16 +159,18 @@
 	<button *ngIf="item.name != 'current' && !item.accepted" cuiButton [color]="'primary-ghost'" [small]="true"
 		[wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n" (click)="onActionClick(item)"
 		attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
-	<div *ngIf="item.accepted">
-		<button class="btn btn--icon btn--small btn--success"><span class="icon-check"></span></button>
-		<span class="qtr-margin-left text-success" [innerText]="'_OsvAccepted_' | i18n"></span>
-		<span *ngIf="selectedItem.recommAcceptedDate"
-			class="qtr-padding-left qtr-padding-right text-large text-muted">|</span>
-		<span class="text-small" *ngIf="selectedItem.recommAcceptedDate"
-			[innerText]="selectedItem?.recommAcceptedDate | date:mediumDate"></span>
-		<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
-			[innerText]="'_Cancel_' | i18n" (click)="onActionClick(item)"
-			attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
+	<div *ngIf="item.accepted" class="row">
+		<div class="col-1 icon-check-outline text-success"></div>
+		<div class="col-6 ">
+			<div class="text-success" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
+			<div class="text-small" *ngIf="selectedItem.recommAcceptedDate"
+				[innerText]="selectedItem?.recommAcceptedDate | date:mediumDate"></div>
+		</div>
+		<div class="col-5">
+			<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
+				[innerText]="'_Cancel_' | i18n" (click)="onCancel(item)"
+				attr.data-auto-id="AcceptVersion-{{item.version}}"></button>
+		</div>
 	</div>
 </ng-template>
 
@@ -178,3 +180,5 @@
 		<span *ngIf="item.error || item.postDate == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
 	</span>
 </ng-template>
+
+<cui-modal></cui-modal>

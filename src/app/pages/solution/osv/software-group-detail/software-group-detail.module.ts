@@ -11,6 +11,7 @@ import {
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AssetDetailsModule } from '../asset-detail/asset-detail.module';
 import { BarChartModule } from '@components';
+import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
 
 /**
  * SoftwareGroupDetail Module
@@ -28,6 +29,7 @@ import { BarChartModule } from '@components';
 		AssetDetailsModule,
 		CuiButtonModule,
 		BarChartModule,
+		CancelConfirmModule,
 	],
 })
 export class SoftwareGroupDetailModule { }

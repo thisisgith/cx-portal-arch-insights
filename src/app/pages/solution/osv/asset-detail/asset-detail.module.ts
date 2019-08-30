@@ -7,8 +7,10 @@ import {
 	CuiSpinnerModule,
 	CuiTableModule,
 	CuiButtonModule,
+	CuiModalModule,
 } from '@cisco-ngx/cui-components';
 import { AssetTimelineChartModule } from '../asset-timeline-chart/asset-timeline-chart.module';
+import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
 
 /** Module representing the Asset Software Details Component */
 @NgModule({
@@ -24,6 +26,8 @@ import { AssetTimelineChartModule } from '../asset-timeline-chart/asset-timeline
 		CuiTableModule,
 		CuiButtonModule,
 		AssetTimelineChartModule,
+		CancelConfirmModule,
+		CuiModalModule,
 	],
 })
 export class AssetDetailsModule { }

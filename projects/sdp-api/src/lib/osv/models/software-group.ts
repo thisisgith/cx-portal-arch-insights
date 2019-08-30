@@ -11,4 +11,5 @@ export interface SoftwareGroup {
 	swType
 	swVersions: string[],
 	recommendation: string;
+	recommAcceptedDate?: string;
 }

@@ -223,7 +223,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		if (currentTabIndex && isFirstChange) {
 			this.tabIndex = currentTabIndex;
 		}
-		this.tabIndex = _.get(changes, ['tabIndex', 'currentValue'], 0);
+		// this.tabIndex = _.get(changes, ['tabIndex', 'currentValue'], 0);
 		if (currentSelectedGroup && !isFirstChange) {
 			this.refresh();
 		}
