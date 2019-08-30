@@ -4,12 +4,12 @@
 			<div class="row">
 				<div class="col-md-12 panel flex-center flex-fill filter assetsCount base-margin-top"
 					data-auto-id="selectedView" (click)="selectedView('violation')" [ngClass]="{'text-primary': !isAssetView}">
-					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerHTML]="policyViolationsTotalCount"></div>
+					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerHTML]="policyViolationsTotalCount | number"></div>
 					<div class="text-large flex-center" [innerText]="'_RccViolations_' | i18n | titlecase"></div>
 				</div>
 				<div data-auto-id="1" class="col-md-12 panel flex-center flex-fill filter assetsCount"
 					(click)="selectedView('asset')" [ngClass]="{'text-primary': isAssetView}">
-					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerHTML]="assetsTotalCount"></div>
+					<div class="text-huge flex-center dbl-padding-left dbl-padding-right" [innerHTML]="assetsTotalCount | number"></div>
 					<div class="text-large flex-center" [innerText]= "'_RccAssetWithViolations_' | i18n"></div>
 				</div>
 			</div>
@@ -43,17 +43,17 @@
 <div class="col-md-12 base-margin-top">
 	<div class="col-md-9 base-margin-top" *ngIf="!isAssetView">
 		<span [innerText]="'_RccShowing_' | i18n"></span>
-		<span class="qtr-margin-left" [innerText]="conditionViolations || ('_RccNoValue_' | i18n)"></span>
+		<span class="qtr-margin-left" [innerText]="(conditionViolations | number) || ('_RccNoValue_' | i18n)"></span>
 		<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 		<span class="qtr-margin-left" [innerText]="'_RccAcross_' | i18n"></span>
-		<span class="qtr-margin-left" [innerText]="conditionViolationsAssetCount || ('_RccNoValue_' | i18n)"></span>
+		<span class="qtr-margin-left" [innerText]="(conditionViolationsAssetCount | number) || ('_RccNoValue_' | i18n)"></span>
 		<span class="qtr-margin-left" [innerText]="'_RccAssets_' | i18n"></span>
 	</div>
 	<div class="col-md-9 base-margin-top" *ngIf="isAssetView">
 		<span [innerText]="'_RccShowing_' | i18n"></span>
-		<span class="qtr-margin-left" [innerText]="withViolationsAssetsCount || ('_RccNoValue_' | i18n)"></span>
+		<span class="qtr-margin-left" [innerText]="(withViolationsAssetsCount | number) || ('_RccNoValue_' | i18n)"></span>
 		<span class="qtr-margin-left" [innerText]="'_RccAssetsWith_' | i18n"></span>
-		<span class="qtr-margin-left" [innerText]="assetsConditionViolationsCount || ('_RccNoValue_' | i18n)"></span>
+		<span class="qtr-margin-left" [innerText]="(assetsConditionViolationsCount | number)  || ('_RccNoValue_' | i18n)"></span>
 		<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 	</div>
 	<div class="col-md-3 searchSection">
