@@ -145,5 +145,8 @@ export class BarChartComponent implements OnInit {
 		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
 			this.buildGraph();
 		}
+		if (_.get(changes, 'width')) {
+			this.buildGraph();			
+		}
 	}
 }

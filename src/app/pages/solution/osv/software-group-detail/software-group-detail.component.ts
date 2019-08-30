@@ -53,6 +53,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public assetsPaginationCount: string;
 	public versionsPagination: OsvPagination;
 	public versionsPaginationCount: string;
+	public headingClass = this.fullscreen ? 'text-xlarge' : 'text-large';
+	public subHeadingClass = this.fullscreen ? 'text-large' : 'text-medium';
+	public chartWidth = this.fullscreen ? 200 : 140;
 	public seriesData = [
 		{
 			label: 'H',
@@ -153,7 +156,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupAsset() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}
@@ -182,7 +185,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}
@@ -211,6 +214,12 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		const currentSelectedGroup = _.get(changes, ['selectedProfileGroup', 'currentValue']);
 		const isFirstChange = _.get(changes, ['selectedProfileGroup', 'firstChange']);
 		const currentTabIndex = _.get(changes, ['tabIndex', 'currentValue'], 0);
+		const fullscreen = _.get(changes, ['fullscreen', 'currentValue']);
+		if (!_.isNull(fullscreen)) {
+			this.headingClass = fullscreen ? 'text-xlarge' : 'text-large';
+			this.subHeadingClass = fullscreen ? 'text-large' : 'text-medium';
+			this.chartWidth = fullscreen ? 200 : 140;
+		}
 		if (currentTabIndex && isFirstChange) {
 			this.tabIndex = currentTabIndex;
 		}

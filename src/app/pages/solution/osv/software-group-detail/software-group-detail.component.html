@@ -85,29 +85,29 @@
 				<tr>
 					<td></td>
 					<td>
-						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'current' | titlecase"></div>
+						<div [ngClass]="headingClass"  [innerText]="'current' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v3'"></div>
 						<div [innerText]="'-'"></div>
 					</td>
 					<td>
-						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'recommended #1' | titlecase"></div>
+						<div [ngClass]="headingClass"  [innerText]="'recommended #1' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 					<td>
-						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'recommended #2' | titlecase"></div>
+						<div [ngClass]="headingClass"  [innerText]="'recommended #2' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 					<td>
-						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'recommended #3' | titlecase"></div>
+						<div [ngClass]="headingClass"  [innerText]="'recommended #3' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 				</tr>
 				<!-- status or action -->
 				<tr>
-					<td [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_OsvStatusOrAction_' | i18n"></td>
+					<td [ngClass]="headingClass"  [innerText]="'_OsvStatusOrAction_' | i18n"></td>
 					<td></td>
 					<td>
 						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
@@ -125,7 +125,7 @@
 				<!-- risk score -->
 				<tr>
 					<td class="overflow-unset">
-						<span [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_OsvRiskScore_' | i18n"></span>
+						<span [ngClass]="headingClass"  [innerText]="'_OsvRiskScore_' | i18n"></span>
 						<span class="qtr-margin-left  text-primary" data-balloon-length="large"
 							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="down">
 							<i class="icon-info icon-small qtr-margin-bottom"></i>
@@ -156,12 +156,12 @@
 				</tr>
 				<!-- bugs -->
 				<tr>
-					<td [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_Bugs_' | i18n"></td>
+					<td [ngClass]="headingClass"  [innerText]="'_Bugs_' | i18n"></td>
 					<td>
 						<div [innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
 						<div class="text-xlarge" [innerText]="'15'"></div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -177,7 +177,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -193,7 +193,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -209,17 +209,17 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 				</tr>
 				<!-- security advisories -->
 				<tr>
-					<td [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_SecurityAdvisories_' | i18n"></td>
+					<td [ngClass]="headingClass"  [innerText]="'_SecurityAdvisories_' | i18n"></td>
 					<td>
 						<div class="text-xlarge" [innerText]="'32'"></div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -231,7 +231,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -243,7 +243,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -255,15 +255,15 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 				</tr>
 				<!-- features -->
 				<tr>
 					<td>
-						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_OsvFeatures_' | i18n"></div>
-						<div [ngClass]="{'text-large':fullscreen,'text-small':!fullscreen}" class="qtr-margin-top" [innerText]="'_OsvActiveAvailable_' | i18n"></div>
+						<div [ngClass]="headingClass"  [innerText]="'_OsvFeatures_' | i18n"></div>
+						<div [ngClass]="subHeadingClass" class="qtr-margin-top" [innerText]="'_OsvActiveAvailable_' | i18n"></div>
 					</td>
 					<td>
 						<div class="text-xlarge" [innerText]="'3/17'"></div>
