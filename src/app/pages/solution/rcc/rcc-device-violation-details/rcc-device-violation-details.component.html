@@ -92,7 +92,7 @@
 </div>
 <ng-template #policyRowWellTemplate let-item="item" class="half-margin-left">
 	<div class="base-margin-top text-small responsive-table">
-		<cui-table class="table--wrap table--nostripes" 
+		<cui-table class="table table--lined " 
 			[options]="rccViolationInfoTableOptions"
 			[data]="item.violations">
 		</cui-table>
@@ -110,20 +110,32 @@
 	<span [innerText]="item?.hostName"></span>
 </ng-template>
 <ng-template #noDataAvailable>
-	<div class="col-8 panel-group panel-group--compressed">
-		<div class="panel absolute-center">
-			<span class="text-large text-uppercase icon-warning" 
-				[innerText]="'_RccNoDataAvailable_' | i18n"
-				*ngIf="apiNoData">
-			</span>
-			<span class="text-large text-uppercase icon-warning" 
-				[innerText]="'_RccNoResults_' | i18n"
-				*ngIf="errorResult">
-			</span>
-		</div>
+	<div>
+		<span class="text-center dbl-margin-top dbl-margin-bottom" 
+			[innerText]="'_RccNoDataAvailable_' | i18n"
+			*ngIf="apiNoData">
+		</span>
+		<span class="text-center dbl-margin-top dbl-margin-bottom" 
+			[innerText]="'_RccNoResults_' | i18n"
+			*ngIf="errorResult">
+		</span>
 	</div>
 </ng-template>
 <ng-template #commonTemplate>
 	<div *ngIf="(initialLoading && apiNoData); then loaderTemplate; else noDataAvailable;">
 	</div>
+</ng-template>
+<ng-template #severityIconTemplate let-item="celldata">
+	<i *ngIf="item.severity" 
+		class="qtr-margin-right icon-circle" 
+		iconSize="default" 
+		[ngClass]="{
+		'P1': 'text-danger',
+		'P2': 'text-warning',
+		'P3': 'text-warning-alt',
+		'P4': 'text-success',
+		'P5': 'text-muted'
+		}[item.severity]">
+	</i>
+	<span [innerText]="item.severity"></span>
 </ng-template>
