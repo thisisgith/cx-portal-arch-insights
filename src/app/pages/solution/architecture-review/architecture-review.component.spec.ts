@@ -188,7 +188,7 @@ describe('ArchitectureReviewComponent', () => {
 			});
 	});
 
-	it('should load the data', () => {
+	it('should get the total count', () => {
 		spyOn(service, 'getSDAReadinessCountResponse')
 			.and
 			.returnValue(of(ArchitectureReviewScenarios[0]
