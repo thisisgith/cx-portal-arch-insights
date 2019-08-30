@@ -9,8 +9,8 @@
 					[ngClass]="{ visualSelected: label.active == true }"
 					(click)="selectVisualLabel(i)"
 				>
-					<h1>{{ label.count }}</h1>
-					<div>{{ label.label }}</div>
+					<h1 [innerText]="label.count"></h1>
+					<div [innerText]="label.label"></div>
 				</div>
 			</div>
 			<div class="col-10">
@@ -67,6 +67,7 @@
 <ng-template #timeRangeFilter let-filter="filter">
 	<column-chart
 		[seriesData]="filter.seriesData"
+		[width]="width"
 		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
 	>
 	</column-chart>
@@ -81,6 +82,7 @@
 <ng-template #severityFilter let-filter="filter">
 	<column-chart
 		[seriesData]="filter.seriesData"
+		[width]="width"
 		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
 	>
 	</column-chart>
@@ -107,11 +109,10 @@
 				>
 					<span
 						class="label label--dkgray text-large"
-						(click)="onSubfilterSelect(subfilter.filter, filter, false)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 					>
-						<span [innerText]="subfilter.label"></span>
-						<span class="icon-close"></span>
+					<span [innerText]="subfilter.label"></span>
+						
 					</span>
 				</ng-container>
 			</ng-container>
