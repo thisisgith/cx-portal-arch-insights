@@ -267,6 +267,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				} else {
 					this.noTableData = true;
 				}
+				this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 				this.loading = false;
 				this.errorPolicyView = false;
 			},
@@ -479,7 +480,6 @@ export class RccComponent implements OnInit, OnDestroy {
 			],
 			dynamicData: false,
 			singleSelect: true,
-			wrapText: true,
 		});
 		this.buildAssetFilters();
 		// this.getRCCAssetData(this.assetGridObj);
