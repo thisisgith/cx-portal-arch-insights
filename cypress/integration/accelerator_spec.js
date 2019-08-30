@@ -76,9 +76,14 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					.should('have.text', i18n._Completed_);
 				break;
 			case 'in-progress':
+				cy.getByAutoId('recommendedACC-In-Progress-Icon').should('exist')
+				cy.getByAutoId('recommendedACC-In-Progress')
+					.should('have.text', i18n._Requested_);
+				break;
 			case 'requested':
-				cy.getByAutoId('recommendedACC-CSEMessage')
-					.should('have.text', i18n._ACCRequestSubmitted_);
+				cy.getByAutoId('recommendedACC-Requested-Icon').should('exist')
+				cy.getByAutoId('recommendedACC-Requested')
+					.should('have.text', i18n._Requested_);
 				break;
 			default:	// Default: recommended
 				cy.getByAutoId('recommendedACCWatchButton')
@@ -523,8 +528,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('recommendedACC').should('exist').within(() => {
 				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
 				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('not.exist');
-
-				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('exist');
 			});
 		});
 
@@ -540,8 +543,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			cy.getByAutoId('recommendedACC').should('exist').within(() => {
 				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
 				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('not.exist');
-
-				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('exist');
 			});
 		});
 
@@ -556,7 +557,6 @@ describe('Accelerator (ACC)', () => { // PBC-32
 			// Completed hover should have the completed text, not CSE text or request button
 			cy.getByAutoId('recommendedACC').should('exist').within(() => {
 				cy.getByAutoId('Request1on1ACCButton').should('not.exist');
-				cy.getByAutoId('recommendedACC-HoverModal-CSEMessage').should('not.exist');
 
 				cy.getByAutoId('recommendedACC-HoverModal-CompletedMessage').should('exist');
 				cy.getByAutoId('recommendedACC-Checkmark').should('exist');

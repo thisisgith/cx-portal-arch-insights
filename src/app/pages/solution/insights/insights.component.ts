@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { RccService } from '@sdp-api';
-import { ActivatedRoute } from '@angular/router';
-import * as _ from 'lodash-es';
+import { RouteAuthService } from 'src/app/services';
 /**
  * InsightsComponent
  */
@@ -12,21 +10,13 @@ import * as _ from 'lodash-es';
 export class InsightsComponent {
 	public customerId;
 	public hasPermission = false;
-	constructor (private rccService: RccService, private route: ActivatedRoute) {
-		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.customerId = _.get(user, ['info', 'customerId']);
+	constructor (private routeAuthService: RouteAuthService) {
+
 	}
 	/**
 	 * ngOnInit method execution
 	 */
 	public ngOnInit (): void {
-		this.rccService.checkPermissions({ customerId: this.customerId })
-		.subscribe(response => {
-			if (response) {
-				this.hasPermission = true;
-			} else {
-				this.hasPermission = false;
-			}
-		});
+		this.hasPermission = this.routeAuthService.hasRccPermission;
 	}
 }

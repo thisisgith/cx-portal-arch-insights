@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { RccService } from '@sdp-api';
 import { UserResolve } from '@utilities';
 import { map, flatMap } from 'rxjs/operators';
+import { RouteAuthService } from 'src/app/services';
 /**
  *  Injectable declaration
  */
@@ -11,9 +11,9 @@ import { map, flatMap } from 'rxjs/operators';
 	providedIn: 'root',
 })
 export class PermissionGuard implements CanActivate {
-	constructor (private rccService: RccService,
-	private userResolve: UserResolve,
-	private router: Router) { }
+	constructor (private routeAuthService: RouteAuthService,
+		private userResolve: UserResolve,
+		private router: Router) { }
 	/**
 	 * canActivate method execution
 	 * @param _next is next
@@ -24,16 +24,16 @@ export class PermissionGuard implements CanActivate {
 		_next: ActivatedRouteSnapshot,
 		_state: RouterStateSnapshot): Observable<boolean> {
 		return this.userResolve.getCustomerId()
-		.pipe(flatMap(id => this.rccService.checkPermissions({ customerId: id })),
-		map((response: boolean) => {
+			.pipe(flatMap(id => this.routeAuthService.checkRccPermission(id)),
+				map((response: boolean) => {
 
-			if (response) {
-				return true;
-			}
-			this.router.navigateByUrl('/solution/insights/risk-mitigation');
+					if (response) {
+						return true;
+					}
+					this.router.navigateByUrl('/solution/insights/risk-mitigation');
 
-			return false;
-		}),
-		);
+					return false;
+				}),
+			);
 	}
 }
