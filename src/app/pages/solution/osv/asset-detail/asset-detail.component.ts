@@ -49,12 +49,12 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.assetDetailsParams = {
 			customerId: this.customerId,
-			id: '7293498_NA',
-			pid: 'AIR-CT5520-K9',
-			pf: 'Cisco_5500',
-			swType: 'IOS',
-			swVersions: '8',
-			image: 'NA',
+			id: '',
+			pid: '',
+			pf: '',
+			swType: '',
+			swVersions: '',
+			image: '',
 		};
 	}
 
