@@ -82,10 +82,16 @@ describe('ArchitectureReviewComponent', () => {
 	});
 
 	it('should call selectVisualLabel', () => {
-		const visualLabel = { label: 'Configuration Best', active: false, count: null };
+		const visualLabel = { label: 'DNAC', active: false, count: null };
+
 		component.visualLabels =
-		[{ label: 'Devices', active: false, count: null },
-		{ label: 'DNAC', active: true, count: null }];
+		[{
+			active: false,
+			count: null,
+			key: 'devices',
+			label: 'Devices',
+		},
+		{ label: 'DNAC', active: true, count: null, key: 'dnac' }];
 		component.selectVisualLabel(visualLabel);
 		expect(component.visualLabels[0].active)
 		.toBeFalsy();

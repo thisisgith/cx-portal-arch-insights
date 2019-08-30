@@ -9,7 +9,11 @@ import {
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { ArchitectureReviewService, IDeviceRecommendedVersions } from '@sdp-api';
+import {
+	ArchitectureReviewService,
+	IDeviceRecommendedVersions,
+	IParamType,
+} from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 
@@ -36,7 +40,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 	public isLoading = true;
 	public sdaVersion = '';
 	public customerId = '';
-	public params: any = {
+	public params: IParamType = {
 		body : [],
 		customerId: '',
 		page : 0,
@@ -64,7 +68,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 				},
 				{
 					key: 'hardware',
-					name: I18n.get('_ArchitectureRecommendedProductFamily_'),
+					name: I18n.get('_ArchitectureCompliantProductFamily_'),
 					sortable: false,
 				},
 				{
