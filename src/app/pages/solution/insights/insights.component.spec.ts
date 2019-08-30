@@ -8,10 +8,13 @@ import { OptimalSoftwareVersionComponent } from '../osv/osv.component';
 import { RiskMitigationComponent } from '../risk-mitigation/risk-mitigation.component';
 import { OptimalSoftwareVersionModule } from '../osv/osv.module';
 import { RiskMitigationModule } from '../risk-mitigation/risk-mitigation.module';
+import { RouteAuthService } from 'src/app/services';
+import { of } from 'rxjs';
 
 describe('InsightsComponent', () => {
 	let component: InsightsComponent;
 	let fixture: ComponentFixture<InsightsComponent>;
+	let routeAuthService: RouteAuthService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -33,6 +36,7 @@ describe('InsightsComponent', () => {
 			],
 		})
 			.compileComponents();
+		routeAuthService = TestBed.get(RouteAuthService);
 	}));
 
 	beforeEach(() => {
@@ -44,14 +48,38 @@ describe('InsightsComponent', () => {
 
 	it('should create', () => {
 		expect(component)
-			.toBeTruthy();
+			.toBeDefined();
 	});
 
-	it('should get the optin status for loggedIn user', () => {
+	it('should get the optin status for loggedIn user true', () => {
 		const response = true;
-		expect(component.hasPermission)
-				.toBeDefined();
-		expect(component.hasPermission)
-				.toEqual(response);
+		spyOn(routeAuthService, 'checkPermissions')
+			.and
+			.returnValue(of(response));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.hasPermission)
+					.toBeDefined();
+				expect(component.hasPermission)
+					.toEqual(response);
+			});
+	});
+
+	it('should get the optin status for loggedIn user false', () => {
+		const response = false;
+		spyOn(routeAuthService, 'checkPermissions')
+			.and
+			.returnValue(of(response));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.hasPermission)
+					.toBeDefined();
+				expect(component.hasPermission)
+					.toEqual(response);
+			});
 	});
 });
