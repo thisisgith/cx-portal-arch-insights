@@ -13,7 +13,7 @@ describe('RccService', () => {
 		],
 	}));
 
-	fit('should be created', inject([RouteAuthService], (service: RouteAuthService) => {
+	it('should be created', inject([RouteAuthService], (service: RouteAuthService) => {
 		expect(service)
 			.toBeTruthy();
 	}));
