@@ -63,7 +63,7 @@ describe('InsightsComponent', () => {
 		spyOn(routeAuthService, 'checkPermissions')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		tick();
+		tick(1000);
 		fixture.detectChanges();
 		expect(component.hasPermission)
 			.toEqual(false);
