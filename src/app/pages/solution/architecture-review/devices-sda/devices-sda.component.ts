@@ -64,7 +64,7 @@ export class DevicesSdaComponent implements OnInit, OnChanges {
 				},
 				{
 					key: 'hardware',
-					name: I18n.get('_ArchitectureRecommendedProductFamily_'),
+					name: I18n.get('_ArchitectureCompliantProductFamily_'),
 					sortable: false,
 				},
 				{
