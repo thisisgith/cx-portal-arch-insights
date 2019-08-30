@@ -51,37 +51,11 @@ describe('InsightsComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should get the optin status for loggedIn user', done => {
+	fit('should get the optin status for loggedIn user', () => {
 		const response = true;
-		spyOn(rccService, 'checkPermissions')
-			.and
-			.returnValue(of(response));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.hasPermission)
-					.toBeDefined();
-				expect(component.hasPermission)
-					.toEqual(response);
-				done();
-			});
-	});
-
-	it('should get the optin status for loggedIn user', done => {
-		const response = false;
-		spyOn(rccService, 'checkPermissions')
-			.and
-			.returnValue(of(response));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.hasPermission)
-					.toBeDefined();
-				expect(component.hasPermission)
-					.toEqual(response);
-				done();
-			});
+		expect(component.hasPermission)
+				.toBeDefined();
+		expect(component.hasPermission)
+				.toEqual(response);
 	});
 });
