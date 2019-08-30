@@ -186,7 +186,6 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 					sortable: true,
 				},
 				{
-					key: '',
 					name: I18n.get('_SyslogRecommendations_'),
 					sortable: true,
 					template: this.recommendation,

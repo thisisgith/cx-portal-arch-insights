@@ -107,13 +107,13 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 		const currentFilter = _.get(changes, ['assetFilter', 'currentValue']);
 		if (currentFilter && !changes.assetFilter.firstChange) {
 			this.syslogsParams = {
-				asset: this.assetFilter.asset,
-				catalog: this.assetFilter.catalog,
+				asset: currentFilter.asset,
+				catalog: currentFilter.catalog,
 				customerId: this.customerId,
-				days: this.assetFilter.timeRange,
+				days: currentFilter.timeRange,
 				pageNo: this.pageNum,
 				search: this.searchVal,
-				severity: this.assetFilter.severity,
+				severity: currentFilter.severity,
 				size: this.pagerLimit,
 			};
 			this.getAssetData();
