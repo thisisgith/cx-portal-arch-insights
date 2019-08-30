@@ -626,26 +626,28 @@
 <ng-template #successBytesHoverBlock let-item="item" let-autoid="autoid">
 		<div id="sb-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
 			<div class="flex flex-column max-height">
-				<div class="icon-bookmark icon-medium"
+				<div class="icon-bookmark icon-medium ribbon--hover"
 					(click)="updateBookmark('SB', item)"
 					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'"
 					attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 				</div>
-				<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+				<h6 class="sb-popover__title" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 				<div class="divider divider--compressed"></div>
-				<div class="half-margin-left line-clamp" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-				<div>
-						<a class="no-link successbytes-type-link text-left" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
-								<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
-									item: item,
-									autoid: 'SuccessBytesHoverBlock'
-								}">
-								</ng-container>
+				<div class="line-clamp sb-popover__description" [innerText]="item.description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+				<div class="sb-popover__footer">
+					<div>
+						<a class="no-link successbytes-type-link" data-auto-id="successlink" target="_blank" rel="noopener noreferrer" [href]="item.url">
+							<ng-container *ngTemplateOutlet="itemTypeIcons; context: {
+								item: item,
+								autoid: 'SuccessBytesHoverBlock'
+							}">
+							</ng-container>
 						</a>
-				</div>
-				<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
-					<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
-					<span [innerText]="item.duration"></span>
+					</div>
+					<div *ngIf="item && item.duration" class="learning-duration" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
+						<span class="icon-clock" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
+						<span [innerText]="item.duration"></span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1318,19 +1320,19 @@
 
 <ng-template #itemTypeIcons let-item="item" let-autoid="autoid">
 	<div class="text-left text-muted" *ngIf="item.type === 'Web Page'" attr.data-auto-id="{{ autoid }}-WebIcon">
-		<span class="icon-apps icon-small half-padding-right"></span>
-		<span class="text-samll" [innerText]="'_Web_' | i18n"></span>
+		<span class="icon-apps"></span>
+		<span [innerText]="'_Web_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'Video'" attr.data-auto-id="{{ autoid }}-VideoIcon">
-		<span class="icon-play-contained icon-small half-padding-right"></span>
-		<span class="text-small" [innerText]="'_Video_' | i18n"></span>
+		<span class="icon-play-contained"></span>
+		<span [innerText]="'_Video_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'PDF'" attr.data-auto-id="{{ autoid }}-PDFIcon">
-		<span class="icon-file-pdf-o icon-small half-padding-right"></span>
-		<span class="text-small" [innerText]="'_PDF_' | i18n"></span>
+		<span class="icon-file-pdf-o"></span>
+		<span [innerText]="'_PDF_' | i18n"></span>
 	</div>
 	<div class="text-left text-muted" *ngIf="item.type === 'Data Sheet'" attr.data-auto-id="{{ autoid }}-DataSheetIcon">
-		<span class="icon-document icon-small half-padding-right"></span>
-		<span class="text-small" [innerText]="'_Datasheet_' | i18n"></span>
+		<span class="icon-document"></span>
+		<span [innerText]="'_Datasheet_' | i18n"></span>
 	</div>
 </ng-template>

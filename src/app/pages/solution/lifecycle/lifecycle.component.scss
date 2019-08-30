@@ -59,27 +59,6 @@ $vibblue: #017cad;
 	background-color: $light-gray-5;
 }
 
-.learning-duration {
-	padding: 10px;
-	font-size: 12px;
-	position: absolute;
-	bottom: 0;
-	right: 0;
-
-	.icon-clock {
-		padding-right: 4px;
-	}
-}
-
-
-.successbytes-type-link {
-	padding: 10px;
-	font-size: 12px;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-}
-
 .small-panel {
 	padding: 0;
 	line-height: initial;
@@ -506,7 +485,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		}
 
 		&-successbytes {
-			top: -90px;
+			top: -80px;
 		}
 
 		&-recommendedElearning {
@@ -561,6 +540,59 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 				font-size: 12px;
 				line-height: 16px;
 				padding: 3px 12px;
+			}
+		}
+	}
+}
+
+#successbytes-item:hover #sb-hover-panel {
+	&-successbytes {
+		padding: 20px 0 25px 28px;
+		width: 450px;
+		height: 180px;
+
+		.sb-popover__title {
+			color: #767676;
+			font-size: 16px;
+			line-height: 19px;
+		}
+
+		.sb-popover__description {
+			font-size: 13px;
+			line-height: 19px;
+			color: #394454;
+			padding-right: 28px;
+		}
+
+		.sb-popover__footer {
+			position: absolute;
+			bottom: 25px;
+			left: 28px;
+			display: flex;
+			font-size: 10px;
+			color: #929bab;
+			letter-spacing: 0.07px;
+			line-height: 14px;
+
+			.learning-duration {
+				margin-left: 27px;
+
+				.icon-clock {
+					padding-right: 6px;
+					font-size: 10px;
+					color: #bdc5cf;
+				}
+			}
+
+			.successbytes-type-link {
+				.icon-apps,
+				.icon-play-contained,
+				.icon-file-pdf-o,
+				.icon-document {
+					padding-right: 6px;
+					font-size: 10px;
+					color: #bdc5cf;
+				}
 			}
 		}
 	}
