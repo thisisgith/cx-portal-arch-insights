@@ -49,7 +49,12 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.assetDetailsParams = {
 			customerId: this.customerId,
-			id: '',
+			id: '7293498_NA',
+			pid: 'AIR-CT5520-K9',
+			pf: 'Cisco_5500',
+			swType: 'IOS',
+			swVersions: '8',
+			image: 'NA',
 		};
 	}
 
@@ -84,7 +89,12 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public refresh () {
 		if (this.selectedAsset && !this.selectedAsset.statusUpdated) {
 			this.clear();
-			this.assetDetailsParams.id = this.selectedAsset.id;
+			this.assetDetailsParams.id = _.get(this.selectedAsset, 'id');
+			this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
+			this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
+			this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
+			this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
+			this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
 			this.fetchAssetDetails();
 		}
 	}
