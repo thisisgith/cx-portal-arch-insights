@@ -1,24 +1,14 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import '../../../../mixins.scss';
 
+$default-text-color: #394454;
+
 ::ng-deep {
 	#assetDetailTabs &.tabs {
 		box-shadow: 0 -2px 0 $light-gray-3 inset !important;
 
 		> li {
-			margin-right: 2px !important;
-
-			@include md {
-				margin-right: $base-spacing !important;
-			}
-
-			@include lg {
-				margin-right: $base-spacing-dbl !important;
-			}
-
-			@include xl {
-				margin-right: $base-spacing-dbl * 2 !important;
-			}
+			margin-right: 50px !important;
 
 			> a {
 				text-transform: uppercase;
@@ -78,6 +68,27 @@
 			border-collapse: collapse;
 			table-layout: fixed;
 		}
+	}
+
+	#details-panel .details-header .text-xlarge {
+		font-weight: 300;
+		font-size: 28px !important;
+		line-height: 28px !important;
+		color: $default-text-color;
+	}
+
+	#details-panel .details-header {
+		padding: 15px 35px !important;
+		background: #f4f6f8;
+		border-bottom: unset;
+	}
+
+	#details-panel .details-header .icon-close .icon--mid {
+		font-size: 18px
+	}
+
+	#details-panel {
+		width: 590px;
 	}
 }
 
