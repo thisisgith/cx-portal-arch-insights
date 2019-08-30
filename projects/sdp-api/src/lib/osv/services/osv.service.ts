@@ -22,7 +22,7 @@ class OSVService extends __BaseService {
 	static readonly getSoftwareVersionsPath = '/api/customerportal/osv-ui/v1/versions';
 	static readonly getAssetDetailsPath = '/api/customerportal/osv-ui/v1/assetDetails';
 	static readonly getAssetsPath = '/api/customerportal/osv-ui/v1/assets';
-	static readonly updateAssetPath = '/api/customerportal/osv-ui/v1/updateAsset';	
+	static readonly updateAssetPath = '/api/customerportal/osv-ui/v1/updateAsset';
 
 	constructor (
 		config: __Configuration,
@@ -180,9 +180,13 @@ class OSVService extends __BaseService {
 	/**
 	 * Basic Recommendations of asset
 	 * @param params The `OSVService.GetAssetDetailsParams` containing the following parameters:
-	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
-	 *
+	 * - `id`: Unique identifier of a asset.
+	 * - `pid`: Product Id of the Asset
+	 * - `pf`: Product Family of Asset
+	 * - `swType`: Software Type of Asset
+	 * - `swVersions`: Software Version of Asset
+	 * - `image`: image of the asset
 	 * @return successful operation
 	 */
 	getAssetDetailsResponse (params: OSVService.GetAssetDetailsParams): __Observable<__StrictHttpResponse<AssetRecommendationsResponse>> {
@@ -192,6 +196,11 @@ class OSVService extends __BaseService {
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
 		if (params.id != null) __params = __params.set('id', params.id.toString());
+		if (params.pid != null) __params = __params.set('pid', params.pid.toString());
+		if (params.pf != null) __params = __params.set('pf', params.pf.toString());
+		if (params.swType != null) __params = __params.set('swType', params.swType.toString());
+		if (params.swVersions != null) __params = __params.set('swVersions', params.swVersions.toString());
+		if (params.image != null) __params = __params.set('image', params.image.toString());
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getAssetDetailsPath}`,
@@ -213,9 +222,13 @@ class OSVService extends __BaseService {
 	/**
 	 * Basic Recommendations of asset
 	 * @param params The `OSVService.GetAssetDetailsParams` containing the following parameters:
-	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
-	 *
+	 * - `id`: Unique identifier of a asset.
+	 * - `pid`: Product Id of the Asset
+	 * - `pf`: Product Family of Asset
+	 * - `swType`: Software Type of Asset
+	 * - `swVersions`: Software Version of Asset
+	 * - `image`: image of the asset 
 	 * @return successful operation
 	 */
 	getAssetDetails (params: OSVService.GetAssetDetailsParams): __Observable<AssetRecommendationsResponse> {
@@ -319,7 +332,7 @@ class OSVService extends __BaseService {
 		return this.updateAssetResponse(params).pipe(
 			__map(_r => _r.body as any)
 		);
-	}	
+	}
 }
 
 module OSVService {
@@ -393,6 +406,27 @@ module OSVService {
 		 * Unique identifier of a Asset.
 		 */
 		id: string;
+		/**
+		 * unique productid
+		 */
+		pid: string;
+		/**
+		 * product family
+		 */
+		pf: string;
+		/**
+		 * Software Type
+		 */
+		swType: string;
+		/**
+		 * software version
+		 */
+		swVersions: string;
+		/**
+		 * image
+		 */
+		image: string;
+
 	}
 	/**
 	 * Parameters for GetAssetsParams
@@ -442,7 +476,7 @@ module OSVService {
 		 */
 		optimalVersion: string;
 
-	}	
+	}
 }
 
 export { OSVService }
