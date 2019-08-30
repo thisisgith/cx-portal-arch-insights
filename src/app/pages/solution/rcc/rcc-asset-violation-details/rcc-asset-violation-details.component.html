@@ -38,7 +38,7 @@
 	<div class="row base-padding-top half-padding-left responsive-table" *ngIf="(!isLoading && totalItems > 0) else commonMsgTemplate">
 		<cui-table class="table table--lined table--wrapped" [options]="rccAssetPolicyTableOptions"
 			[data]="rccAssetPolicyTableData" [limit]="tableLimit" [offset]="tableOffset"
-			(onSortingChanged)="onTableSortingChanged($event)" >
+			(onSortingChanged)="onTableSortingChanged()" >
 		</cui-table>
 		<div class="section">
 			<cui-pager [page]="tableOffset" [limit]="tableLimit" [totalItems]="totalItems"

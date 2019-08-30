@@ -245,7 +245,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * Function called when sort changed
 	 * @param event gives sort information
 	 */
-	public onTableSortingChanged (event: any) {
+	public onTableSortingChanged ( ) {
 		this.tableOffset = 0;
 	}
 	/**
