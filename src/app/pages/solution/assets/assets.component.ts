@@ -46,6 +46,7 @@ import { FromNowPipe } from '@cisco-ngx/cui-pipes';
 import { VisualFilter } from '@interfaces';
 import { CaseOpenComponent } from '@components';
 import { getProductTypeImage } from '@classes';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Interface representing an item of our inventory in our assets table
@@ -150,6 +151,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		public router: Router,
 		private fromNow: FromNowPipe,
 		private networkService: NetworkDataGatewayService,
+		private detailsPanelStackService: DetailsPanelStackService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -387,6 +389,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			}
 		});
 		item.details = !item.details;
+		this.detailsPanelStackService.reset(item.details);
 		this.selectedAsset = item.details ? item : null;
 	}
 
@@ -1289,5 +1292,31 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	 */
 	private getRows () {
 		return this.view === 'list' ? 10 : 12;
+	}
+
+	/**
+	 * Click handler logic for the asset list
+	 * @param {Event} $event Click event
+	 * @param {string} type Click target type (checkbox, item, or menu)
+	 * @param {Item} [item] Targeted item
+	 */
+	public onClick ($event: Event, type: 'checkbox' | 'item' | 'menu', item?: Item) {
+		if ($event.defaultPrevented) {
+			// Event has already been handled
+			return;
+		}
+		switch (type) {
+			case 'checkbox':
+				this.onItemSelect(item);
+				// Don't mark event as handled so table row checkbox still works
+				break;
+			case 'item':
+				this.onRowSelect(item);
+				$event.preventDefault(); // mark this event as handled
+				break;
+			case 'menu':
+			default:
+				$event.preventDefault(); // mark this event as handled
+		}
 	}
 }
