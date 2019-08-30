@@ -7,6 +7,8 @@ import {
 	OnDestroy,
 	ViewChild,
 	TemplateRef,
+	SimpleChanges,
+	OnChanges,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -25,7 +27,7 @@ import * as _ from 'lodash-es';
 	selector: 'app-software-groups',
 	templateUrl: './software-groups.component.html',
 })
-export class SoftwareGroupsComponent implements OnInit, OnDestroy {
+export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public fullscreen;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Input() public selectedSoftwareGroup;
@@ -33,9 +35,10 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
 	@Output() public contactSupport = new EventEmitter();
+	@Input() public filters;
 	@ViewChild('recommendationsTemplate', { static: true })
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
-	private recommendationsTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	private recommendationsTemplate: TemplateRef<{}>;
 	public softwareGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -58,6 +61,9 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 			customerId: this.customerId,
 			pageIndex: 1,
 			pageSize: 10,
+			sort: 'profileName',
+			sortOrder: 'asc',
+			filter: '',
 		};
 	}
 
@@ -66,6 +72,33 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 	 */
 	public ngOnInit () {
 		this.loadData();
+	}
+
+
+	/**
+	 * lifecycle hook
+	 * @param changes: changes
+	 */
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentFilter = _.get(changes, ['filters', 'currentValue']);
+		if (currentFilter && !changes.filters.firstChange) {
+			this.setFilter(currentFilter);
+			this.loadData();
+		}
+	}
+
+	/**
+	 * set the filters are part of query params
+	 * @param currentFilter current filters selected by customer
+	 */
+	public setFilter (currentFilter) {
+		const deploymentStatus = _.get(currentFilter, 'deploymentStatus', []);
+		let filter = '';
+		if (deploymentStatus.length > 0) {
+			filter += `deployment:${deploymentStatus.toString()}`;
+		}
+		this.softwareGroupsParams.pageIndex = 1;
+		this.softwareGroupsParams.filter = filter;
 	}
 
 	/**
@@ -105,7 +138,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV Profile Groups : getsoftwareGroups() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			)
 			.subscribe(() => {
@@ -125,14 +158,14 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy {
 						key: 'profileName',
 						name: I18n.get('_OsvSoftwareGroup_'),
 						sortable: true,
-						sortDirection: 'desc',
+						sortDirection: 'asc',
 						sorting: false,
 						width: '25%',
 					},
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
-						sortable: false,
+						sortable: true,
 						width: '20%',
 					},
 					{

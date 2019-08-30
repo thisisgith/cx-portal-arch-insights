@@ -571,6 +571,7 @@
 	"_OsvWillExposed_": "Will Be Exposed To ",
 	"_OsvFeatures_": "Features",
 	"_OsvActiveAvailable_": "Active/Available",
+	"_OsvSureToCancel_": "Are you sure you want to cancel?",
 	"_OsvCompareRecommendations": "Compare Recommendations",
 	"_OsvCurrentInfo_": "Is active and running on the Cisco product.",
 	"_OsvCurrentOSVersion_": "Current OS Version",

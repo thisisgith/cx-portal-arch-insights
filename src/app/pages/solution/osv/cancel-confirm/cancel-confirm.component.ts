@@ -15,8 +15,7 @@ export class CancelConfirmComponent {
 	) { }
 
 	/**
-	 * Cancel the modal and delete all components
-	 * when the user confirms to Cancel or clicks the 'X'
+	 * Continue the cancel request 
 	 */
 	public close () {
 		this.cuiModalService.onCancel.next();

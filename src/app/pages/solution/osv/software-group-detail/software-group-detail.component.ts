@@ -36,7 +36,7 @@ import { DatePipe } from '@angular/common';
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Input() public fullscreen;
-	@Input() public tabIndex = 0;
+	@Input() public tabIndex;
 	public status = {
 		isLoading: true,
 	};
@@ -47,8 +47,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public softwareGroupAssets: SoftwareGroupAsset[];
 	public softwareGroupVersionsTable: CuiTableOptions;
 	public softwareGroupAssetsTable: CuiTableOptions;
-	public softwareGroupAssetsParams: OSVService.GetAssetsParams;
-	public softwareGroupVersionsParams: OSVService.GetAssetsParams;
+	public softwareGroupAssetsParams: OSVService.GetSoftwareGroupAssetsParams;
+	public softwareGroupVersionsParams: OSVService.GetSoftwareGroupAssetsParams;
 	public assetsPagination: OsvPagination;
 	public assetsPaginationCount: string;
 	public versionsPagination: OsvPagination;
@@ -79,17 +79,23 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.params = {
 			customerId: this.customerId,
-			id: '7293498_NA',
+			profileName: '7293498_NA',
 		};
 		this.softwareGroupAssetsParams = {
 			customerId: this.customerId,
+			profileName: '7293498_NA',
 			pageIndex: 1,
 			pageSize: 10,
+			sort: 'hostName',
+			sortOrder: 'asc',
 		};
 		this.softwareGroupVersionsParams = {
 			customerId: this.customerId,
+			profileName: '7293498_NA',
 			pageIndex: 1,
 			pageSize: 10,
+			sort: 'swType',
+			sortOrder: 'asc',
 		};
 
 		this.logger.debug('SoftwareGroupDetailComponent Created!');
@@ -119,7 +125,6 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public loadData () {
 		this.status.isLoading = true;
 		forkJoin(
-			// this.getProfileRecommendations(),
 			this.getSoftwareGroupAssets(),
 			this.getSoftwareGroupVersions(),
 		)
@@ -137,7 +142,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @returns software group assets list observable
 	 */
 	public getSoftwareGroupAssets () {
-		return this.osvService.getSoftwareGroupAssets(this.params)
+		return this.osvService.getSoftwareGroupAssets(this.softwareGroupAssetsParams)
 			.pipe(
 				map((response: SoftwareGroupAssetsResponse) => {
 					this.softwareGroupAssets = response.uiAssetList;
@@ -166,7 +171,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @returns software group versions list observable
 	 */
 	public getSoftwareGroupVersions () {
-		return this.osvService.getSoftwareGroupVersions(this.params)
+		return this.osvService.getSoftwareGroupVersions(this.softwareGroupVersionsParams)
 			.pipe(
 				map((response: SoftwareGroupVersionsResponse) => {
 					this.softwareGroupVersions = response.uiSwVersionList;
@@ -213,17 +218,19 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentSelectedGroup = _.get(changes, ['selectedProfileGroup', 'currentValue']);
 		const isFirstChange = _.get(changes, ['selectedProfileGroup', 'firstChange']);
-		const currentTabIndex = _.get(changes, ['tabIndex', 'currentValue'], 0);
+		const currentTabIndex = _.get(changes, ['tabIndex', 'currentValue']);
+		const previousTabIndex = _.get(changes, ['tabIndex', 'previousValue']);
 		const fullscreen = _.get(changes, ['fullscreen', 'currentValue']);
 		if (!_.isNull(fullscreen)) {
 			this.headingClass = fullscreen ? 'text-xlarge' : 'text-large';
 			this.subHeadingClass = fullscreen ? 'text-large' : 'text-medium';
 			this.chartWidth = fullscreen ? 200 : 140;
 		}
-		if (currentTabIndex && isFirstChange) {
+		if (_.isUndefined(currentTabIndex) && _.isUndefined(previousTabIndex)) {
+			this.tabIndex = 0;
+		} else if (!_.isNull(currentTabIndex)) {
 			this.tabIndex = currentTabIndex;
 		}
-		// this.tabIndex = _.get(changes, ['tabIndex', 'currentValue'], 0);
 		if (currentSelectedGroup && !isFirstChange) {
 			this.refresh();
 		}

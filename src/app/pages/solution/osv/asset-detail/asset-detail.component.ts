@@ -18,7 +18,7 @@ import {
 	SoftwareGroup,
 } from '@sdp-api';
 import { map, takeUntil, catchError } from 'rxjs/operators';
-import { Subject, of } from 'rxjs';
+import { Subject, of, Subscription } from 'rxjs';
 import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
@@ -51,11 +51,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public view: 'list' | 'timeline' = 'list';
 	public assetDetailsTable: CuiTableOptions;
 	public assetDetailsParams: OSVService.GetAssetDetailsParams;
+	public softwareGroupDetailsParams: OSVService.GetSoftwareGroupDetailsParam;
 	public customerId: string;
 	public currentVersion: AssetRecommendations;
 	public selectedRecommendation = {
 		name: 'none',
 	};
+	onCancelSusbcription: Subscription;
 
 	constructor (
 		private logger: LogService,
@@ -74,6 +76,10 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			swType: 'IOS',
 			swVersions: '8',
 		};
+		this.softwareGroupDetailsParams = {
+			customerId: this.customerId,
+			profileName: '7293498_NA',
+		}
 	}
 
 	/**
@@ -99,6 +105,10 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public ngOnInit () {
 		this.refresh();
+		this.onCancelSusbcription = this.cuiModalService.onCancel
+			.subscribe(() => {
+				console.log("call the cancel api");
+			});
 	}
 
 	/**
@@ -107,15 +117,16 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public refresh () {
 		if (this.selectedAsset) {
 			this.clear();
-			this.assetDetailsParams.id = _.get(this.selectedAsset, 'id');
-			this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
-			this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
-			this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
-			this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
-			this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
+			// this.assetDetailsParams.id = _.get(this.selectedAsset, 'id');
+			// this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
+			// this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
+			// this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
+			// this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
+			// this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
 			this.fetchAssetDetails();
 		} else if (this.selectedSoftwareGroup) {
 			this.clear();
+			// this.softwareGroupDetailsParams.profileName = _.get(this.selectedSoftwareGroup, 'profileName');
 			this.fetchSoftwareGroupDetails();
 		}
 	}
@@ -172,7 +183,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public fetchSoftwareGroupDetails () {
 		this.status.isLoading = true;
-		this.osvService.getAssetDetails(this.assetDetailsParams)
+		this.osvService.getSoftwareGroupRecommendations(this.softwareGroupDetailsParams)
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
 					this.assetDetails = this.groupData(response);
@@ -253,6 +264,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
+		if (this.onCancelSusbcription) {
+			_.invoke(this.onCancelSusbcription, 'unsubscribe');
+		}
 		this.destroy$.next();
 		this.destroy$.complete();
 	}

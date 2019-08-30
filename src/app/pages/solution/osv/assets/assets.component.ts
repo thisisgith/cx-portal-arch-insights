@@ -98,14 +98,9 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param currentFilter current filters selected by customer
 	 */
 	public setFilter (currentFilter) {
-		const deploymentStatus = _.get(currentFilter, 'deploymentStatus', []);
 		const assetType = _.get(currentFilter, 'assetType', []);
-		let filter = '';
-		if (deploymentStatus.length > 0) {
-			filter += `deployment:${deploymentStatus.toString()}`;
-		}
-		if (assetType.length === 1) {
-			filter += filter.length > 0 ? ';' : '';
+		let filter = '';		
+		if (assetType.length === 1) {			
 			filter += assetType.indexOf('assets_profile') > -1
 				? 'independent:no' : 'independent:yes';
 		}

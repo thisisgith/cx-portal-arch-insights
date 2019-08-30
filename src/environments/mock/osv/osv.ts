@@ -33,6 +33,15 @@ const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc&filter
 /** Asset Details Params */
 const assetDetailsParams = `&id=${assetId}&pid=${pid}&pf=${pf}&swType=IOS&swVersions=8&image=NA`;
 
+/**Software Group Params*/
+const sgParams = `&pageIndex=1&pageSize=10&sort=profileName&sortOrder=asc&filter=`;
+
+/** SoftwareGroup Assets*/
+const sgAssetsParams = `&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc`
+
+/** SoftwareGroup Versions*/
+const sgVersionParams = `&pageIndex=1&pageSize=10&sort=swType&sortOrder=asc`
+
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
 	{
@@ -215,7 +224,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 			productId: '73-14312-05, 73-14312-05, 73-14312-05',
 			profileName: '73-14312-05, 73-14312-05, 73-14312-05',
 			recommendation: null,
-			recommAcceptedDate:'2014-05-30T00:00:00.000+0000',
+			recommAcceptedDate: '2014-05-30T00:00:00.000+0000',
 			swType: 'IOS-XE',
 			swVersions: [
 				'16.8.1a',
@@ -750,7 +759,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profiles?customerId=${customerId}&pageIndex=1&pageSize=10`,
+		url: `${api}profiles?customerId=${customerId}${sgParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -852,7 +861,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileAssets?customerId=${customerId}&id=${assetId}`,
+		url: `${api}profileAssets?customerId=${customerId}&profileName=${assetId}${sgAssetsParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -869,7 +878,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileVersions?customerId=${customerId}&id=${assetId}`,
+		url: `${api}profileVersions?customerId=${customerId}&profileName=${assetId}${sgVersionParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -886,7 +895,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileRecommendations?customerId=${customerId}&id=${assetId}`,
+		url: `${api}profileRecommendations?customerId=${customerId}&profileName=${assetId}`,
 		usecases: ['Use Case 1'],
 	},
 ];

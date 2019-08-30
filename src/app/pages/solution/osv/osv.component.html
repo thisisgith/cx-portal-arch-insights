@@ -18,7 +18,8 @@
 				[innerText]="selectedSoftwareGroup?.profileName"></div>
 		</div>
 	</details-panel-header>
-	<app-software-group-detail [fullscreen]="fullscreen" [tabIndex]="tabIndex" [(selectedSoftwareGroup)]="selectedSoftwareGroup">
+	<app-software-group-detail [fullscreen]="fullscreen" [tabIndex]="tabIndex"
+		[(selectedSoftwareGroup)]="selectedSoftwareGroup">
 	</app-software-group-detail>
 </details-panel>
 
@@ -55,7 +56,7 @@
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
 	<div *ngIf="view == 'swGroups'">
 		<app-software-groups [(tabIndex)]="tabIndex" (contactSupport)="openContactSupport()" [(fullscreen)]="fullscreen"
-			[(selectedSoftwareGroup)]="selectedSoftwareGroup">
+			[(selectedSoftwareGroup)]="selectedSoftwareGroup" [filters]="appliedFilters">
 		</app-software-groups>
 	</div>
 	<div *ngIf="view == 'assets'">
@@ -143,14 +144,14 @@
 
 <ng-template #deploymentStatusFilter let-filter="filter">
 	<div>
-		<pie-chart [width]="400" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
+		<pie-chart [width]="400" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
 		</pie-chart>
 	</div>
 
 </ng-template>
 
 <ng-template #assetTypeFilter let-filter="filter">
-	<pie-chart [width]="400" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter)">
+	<pie-chart [width]="400" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
 	</pie-chart>
 </ng-template>
 <cui-modal></cui-modal>
