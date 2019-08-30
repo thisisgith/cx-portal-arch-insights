@@ -251,7 +251,7 @@ describe('FpCompareComponent', () => {
 			.toBeFalsy();
 	}));
 
-	it('should work', fakeAsync(() => {
+	it('Should return the searched getListdevice response', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getProductFamily')
 			.and
 			.returnValue(of(<any> []));
@@ -274,7 +274,7 @@ describe('FpCompareComponent', () => {
 			.toHaveBeenCalled();
 	}));
 
-	it('should work', () => {
+	it('should check for ngOnchanges in ProductFamily and getListdevice', () => {
 		spyOn(crashPreventionService, 'getProductFamily')
 			.and
 			.returnValue(of(<any> []));
