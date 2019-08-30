@@ -90,8 +90,6 @@ export interface AfmPagination {
 	pages?: number;
 	rows?: number;
 	total?: number;
-	totalTacCases?: number;
-	ignoredEventCount?: number;
 }
 
 /**

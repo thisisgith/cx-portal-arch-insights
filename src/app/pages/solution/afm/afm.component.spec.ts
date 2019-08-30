@@ -254,13 +254,6 @@ describe('AfmComponent', () => {
 				.toHaveBeenCalled();
 		});
 
-		it('should call allAlarmFilter', () => {
-			spyOn(component, 'allAlarmFilter');
-			component.searchFilter();
-			expect(component.allAlarmFilter)
-				.toHaveBeenCalled();
-		});
-
 		it('should call tac case filters', () => {
 			spyOn(afmService, 'getTacCases')
 				.and
@@ -321,22 +314,22 @@ describe('AfmComponent', () => {
 		});
 
 		it('should load Afm Search Filter Info with lower case p', () => {
-			spyOn(afmService, 'getAfmSearchFilterInfo')
+			spyOn(afmService, 'getAfmAlarms')
 				.and
 				.returnValue(of(<any> AfmScenarios[5].scenarios.POST[0].response.body));
 			component.afmSearchInput = 'parabola';
 			component.searchFilter();
-			expect(afmService.getAfmSearchFilterInfo)
+			expect(afmService.getAfmAlarms)
 				.toHaveBeenCalled();
 		});
 
 		it('should load Afm Search Filter Info with ', () => {
-			spyOn(afmService, 'getAfmSearchFilterInfo')
+			spyOn(afmService, 'getAfmAlarms')
 				.and
 				.returnValue(of(<any> AfmScenarios[5].scenarios.POST[0].response.body));
 			component.afmSearchInput = 'Square';
 			component.searchFilter();
-			expect(afmService.getAfmSearchFilterInfo)
+			expect(afmService.getAfmAlarms)
 				.toHaveBeenCalled();
 		});
 

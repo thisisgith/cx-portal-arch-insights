@@ -59,7 +59,7 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	 * Toogle event status update
 	 */
 	private statusUpdate () {
-		if (!this.alarm || this.alarm.status.toUpperCase() === 'IGNORED') {
+		if (!this.alarm || (this.alarm.status && this.alarm.status.toUpperCase() === 'IGNORED')) {
 			this.status = true;
 		} else {
 			this.status = false;
@@ -80,6 +80,7 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	 */
 	public toggleEvent (alarmData: Alarm) {
 		this.loading = true;
+		this.options.visible = false;
 		this.searchParams.customerId = alarmData.customerId;
 		this.searchParams.faultIC = alarmData.faultIC;
 		if (!alarmData.status || alarmData.status.toUpperCase() !== 'IGNORED') {

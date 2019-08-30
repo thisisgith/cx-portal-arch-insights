@@ -58,7 +58,7 @@ export class AfmComponent {
 	public filterSpinner = false;
 	public eventStatus = false;
 	private destroy$ = new Subject();
-	private lastHeaderFilter: string;
+	private exportFileName: string;
 
 	public searchOptions = {
 		debounce: 1500,
@@ -68,6 +68,7 @@ export class AfmComponent {
 
 	private AFM_CONSTANT = {
 		ALARM: 'ALARM',
+		ALARM_TOTAL_COUNT: 'alarmCount',
 		CHATS: 'CHATS',
 		DAY1: 'Day1',
 		DAYS30: 'Days30',
@@ -75,10 +76,12 @@ export class AfmComponent {
 		DAYS90: 'Days90',
 		EXCEPTION: 'Exception',
 		FAIL: 'FAIL',
+		IGNORE_ALARM_TOTAL_COUNT: 'ignoredCount',
 		IGNORE_EVENT: 'IGNORE_EVENT',
 		SEARCH: 'SEARCH',
 		SUCCESS: 'SUCCESS',
 		TAC: 'TAC',
+		TAC_CASES_TOTAL_COUNT: 'tacCaseCount',
 	};
 
 	public headerCount = {
@@ -314,6 +317,7 @@ export class AfmComponent {
 	 * it will retrive the All alarmds records only
 	 */
 	public allAlarmFilter () {
+		this.exportFileName = I18n.get('_AfmFileTotalAlarms_');
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.ALARM;
@@ -325,19 +329,36 @@ export class AfmComponent {
 	 * it will retrive the TAC Case records only
 	 */
 	public tacCaseFilters () {
+		this.exportFileName = I18n.get('_AfmFileTotalTacCases_');
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.TAC;
+		this.searchParams.firstTimeLoading = true;
 		this.clearToken();
 		this.getAfmTacCaseData(this.searchParams);
+	}
+
+	/**
+	 * it will retrive the Ignored Alarms only
+	 */
+	public ignoreAlarmFilters () {
+		this.exportFileName = I18n.get('_AfmFileTotalIgnoredAlarms_');
+		this.resetValuesWhileFilter();
+		this.timeRangeFiltered = false;
+		this.searchParams.headerFilterType = this.AFM_CONSTANT.IGNORE_EVENT;
+		this.searchParams.firstTimeLoading = true;
+		this.clearToken();
+		this.getAfmAlarmData(this.searchParams);
 	}
 
 	/**
 	 * it will retrive the Search records only
 	 */
 	public searchFilter () {
+		this.exportFileName = I18n.get('_AfmFileTotalAlarmsFiltered_');
+		const searchTerm = this.afmSearchInput;
 		this.resetValuesWhileFilter();
-		this.searchParams.searchTerm = this.afmSearchInput;
+		this.searchParams.searchTerm = this.afmSearchInput = searchTerm;
 		this.getAfmAlarmData(this.searchParams);
 	}
 
@@ -408,6 +429,7 @@ export class AfmComponent {
 	 * Exoport events into CSV file need to implement
 	 */
 	public exportAllEvents () {
+		this.searchParams.firstTimeLoading = false;
 		this.filterSpinner = true;
 		this.afmService.exportAllRecords(this.searchParams)
 			.pipe(takeUntil(this.destroy$))
@@ -416,7 +438,7 @@ export class AfmComponent {
 					if (response && response.status && response.status !== null &&
 						response.status.toUpperCase() === this.AFM_CONSTANT.SUCCESS) {
 						this.exportCsvService
-						.exportToCsv('alarm_details_', response.data);
+						.exportToCsv(this.exportFileName, response.data);
 					} else if (response.status.toUpperCase() === this.AFM_CONSTANT.FAIL) {
 						this.statusErrorMessage = response.statusMessage;
 					} else if (response.status.toUpperCase() === this.AFM_CONSTANT.EXCEPTION) {
@@ -493,7 +515,8 @@ export class AfmComponent {
 	 */
 	public onTimeRangefilterSelect (subfilter: number,
 		filter: AfmFilter, triggeredFromGraph: boolean) {
-	   this.timeRangeFiltered = true;
+		this.exportFileName = I18n.get('_AfmFileTotalAlarmsFiltered_');
+		this.timeRangeFiltered = true;
 	   this.resetValuesWhileFilter();
 	   const sub = _.find(filter.seriesData, { filter: subfilter });
 	   if (triggeredFromGraph) {
@@ -528,17 +551,6 @@ export class AfmComponent {
 	}
 
 	/**
-	 * Ignore Event function
-	 */
-	public ignoreAlarmFilters () {
-		this.resetValuesWhileFilter();
-		this.timeRangeFiltered = false;
-		this.searchParams.headerFilterType = this.AFM_CONSTANT.IGNORE_EVENT;
-		this.clearToken();
-		this.getAfmAlarmData(this.searchParams);
-	}
-
-	/**
 	 * it will prepare Pagination header to show from which to which records showing
 	 */
 	private preparePaginationHeader () {
@@ -559,7 +571,7 @@ export class AfmComponent {
 	 * setting default values while filtering
 	 */
 	private resetValuesWhileFilter () {
-		this.lastHeaderFilter = this.searchParams.headerFilterType;
+		this.afmSearchInput = '';
 		this.searchParams.pageSize = this.tableLimit;
 		this.searchParams.pageNumber = 1;
 		this.searchParams.searchTerm = '';
@@ -579,20 +591,25 @@ export class AfmComponent {
 				this.tableData = response.eventList;
 				this.pagination = response.pagination;
 				if (this.searchParams.firstTimeLoading) {
+					this.aggregationCount = response.aggregationsCount;
 					/**
 					 * first time loading we are setting the
 					 * Banner part for Total Alarms Count
 					 */
-					this.headerCount = {
-						totalAlarmCount: this.pagination.total,
-						totalIgnoreEventCount: this.pagination.ignoredEventCount,
-						totalTacCaseCount: this.pagination.totalTacCases,
-					};
+					if (this.aggregationCount !== null) {
+						this.headerCount = {
+							totalAlarmCount:
+							this.aggregationCount[this.AFM_CONSTANT.ALARM_TOTAL_COUNT],
+							totalIgnoreEventCount:
+							this.aggregationCount[this.AFM_CONSTANT.IGNORE_ALARM_TOTAL_COUNT],
+							totalTacCaseCount:
+							this.aggregationCount[this.AFM_CONSTANT.TAC_CASES_TOTAL_COUNT],
+						};
+					}
 					this.searchParams.firstTimeLoading = false;
 					if (response.connectionStatus !== null) {
 						this.afmConnectionStatus = response.connectionStatus;
 					}
-					this.aggregationCount = response.aggregationsCount;
 					this.buildFilters();
 				}
 				this.preparePaginationHeader();
