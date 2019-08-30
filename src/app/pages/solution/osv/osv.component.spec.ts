@@ -13,7 +13,7 @@ import { OSVService } from '@sdp-api';
 import { HttpErrorResponse } from '@angular/common/http';
 import * as _ from 'lodash-es';
 
-fdescribe('OptimalSoftwareVersionComponent', () => {
+describe('OptimalSoftwareVersionComponent', () => {
 	let component: OptimalSoftwareVersionComponent;
 	let fixture: ComponentFixture<OptimalSoftwareVersionComponent>;
 

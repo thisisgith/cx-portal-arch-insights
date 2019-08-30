@@ -78,7 +78,7 @@
 
 
 <ng-template #compareRecommendationsTemp>
-	<div>
+	<div class="compare-recommendations">
 		<table class="table table--bordered table--nostripes table--wrap">
 			<tbody>
 				<!-- version and release date -->
@@ -89,17 +89,17 @@
 						<div class="half-margin-top" [innerText]="'v3'"></div>
 						<div [innerText]="'-'"></div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div [ngClass]="headingClass"  [innerText]="'recommended #1' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div [ngClass]="headingClass"  [innerText]="'recommended #2' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div [ngClass]="headingClass"  [innerText]="'recommended #3' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
@@ -108,16 +108,16 @@
 				<!-- status or action -->
 				<tr>
 					<td [ngClass]="headingClass"  [innerText]="'_OsvStatusOrAction_' | i18n"></td>
-					<td></td>
-					<td>
+					<td ></td>
+					<td class="recommendation">
 						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
 							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
 					</td>
-					<td>
+					<td class="recommendation">
 						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
 							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
 					</td>
-					<td>
+					<td class="recommendation">
 						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
 							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
 					</td>
@@ -127,26 +127,26 @@
 					<td class="overflow-unset">
 						<span [ngClass]="headingClass"  [innerText]="'_OsvRiskScore_' | i18n"></span>
 						<span class="qtr-margin-left  text-primary" data-balloon-length="large"
-							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="down">
+							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="right">
 							<i class="icon-info icon-small qtr-margin-bottom"></i>
 						</span>
 					</td>
 					<td class="text-xlarge" [innerText]="'35%'"></td>
-					<td>
+					<td class="recommendation">
 						<div class="flex align-items-center">
 							<span class="text-xlarge" [innerText]="'<'"></span>
 							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
 							<span class="icon-dropdown text-success text-large"></span>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="flex align-items-center">
 							<span class="text-xlarge" [innerText]="'<'"></span>
 							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
 							<span class="icon-dropdown text-success text-large"></span>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="flex align-items-center">
 							<span class="text-xlarge" [innerText]="'<'"></span>
 							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
@@ -161,10 +161,10 @@
 						<div [innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
 						<div class="text-xlarge" [innerText]="'15'"></div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart barColor="#00bceb" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="flex justify-content-between">
 							<div class="flex-shrink-0 base-margin-right" [innerText]="'_OsvFixed_' | i18n"></div>
 							<div [innerText]="'_OsvWillExposed_' | i18n" class="half-margin-left"></div>
@@ -177,10 +177,10 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="flex justify-content-between">
 							<div [innerText]="'_OsvFixed_' | i18n" class="base-margin-right"></div>
 							<div [innerText]="'_OsvWillExposed_' | i18n" class="half-margin-left"></div>
@@ -193,10 +193,10 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="flex justify-content-between">
 							<div [innerText]="'_OsvFixed_' | i18n" class="base-margin-right"></div>
 							<div [innerText]="'_OsvWillExposed_' | i18n" class="half-margin-left"></div>
@@ -209,7 +209,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 				</tr>
@@ -219,10 +219,10 @@
 					<td>
 						<div class="text-xlarge" [innerText]="'32'"></div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart barColor="#00bceb" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'32/32'"></span>
@@ -231,10 +231,10 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'32/32'"></span>
@@ -243,10 +243,10 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'32/32'"></span>
@@ -255,7 +255,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 				</tr>
@@ -268,7 +268,7 @@
 					<td>
 						<div class="text-xlarge" [innerText]="'3/17'"></div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'3/36'"></span>
@@ -276,7 +276,7 @@
 							</div>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'3/36'"></span>
@@ -284,7 +284,7 @@
 							</div>
 						</div>
 					</td>
-					<td>
+					<td class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'3/36'"></span>

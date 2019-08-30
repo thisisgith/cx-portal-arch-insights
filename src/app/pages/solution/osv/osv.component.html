@@ -174,13 +174,13 @@
 					<li>
 						<span class="text-bold" [innerText]="'_OsvAssetGroup_' | i18n"></span>
 						<ul>
-							<li *ngFor="let item of assetGroupList" [innerText]="item"></li>
+							<li *ngFor="let item of assetGroupList" [innerHTML]="item"></li>
 						</ul>
 					</li>
 					<li class="half-margin-top">
 						<span class="text-bold" [innerText]="'_OsvOperationalPreferences_' | i18n"></span>
 						<ul>
-							<li *ngFor="let item of operationalPreferencesList" [innerText]="item"></li>
+							<li *ngFor="let item of operationalPreferencesList" [innerHTML]="item"></li>
 						</ul>
 					</li>
 				</ul>

@@ -10,7 +10,7 @@ import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 
-fdescribe('AssetDetailsComponent', () => {
+describe('AssetDetailsComponent', () => {
 	let component: AssetDetailsComponent;
 	let fixture: ComponentFixture<AssetDetailsComponent>;
 

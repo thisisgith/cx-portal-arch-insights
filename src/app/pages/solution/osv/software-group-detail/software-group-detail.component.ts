@@ -55,7 +55,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public versionsPaginationCount: string;
 	public headingClass = this.fullscreen ? 'text-xlarge' : 'text-large';
 	public subHeadingClass = this.fullscreen ? 'text-large' : 'text-medium';
-	public chartWidth = this.fullscreen ? 200 : 140;
+	public chartWidth = this.fullscreen ? 250 : 140;
 	public seriesData = [
 		{
 			label: 'H',
@@ -224,7 +224,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		if (!_.isNull(fullscreen)) {
 			this.headingClass = fullscreen ? 'text-xlarge' : 'text-large';
 			this.subHeadingClass = fullscreen ? 'text-large' : 'text-medium';
-			this.chartWidth = fullscreen ? 200 : 140;
+			this.chartWidth = fullscreen ? 250 : 140;
 		}
 		if (_.isUndefined(currentTabIndex) && _.isUndefined(previousTabIndex)) {
 			this.tabIndex = 0;

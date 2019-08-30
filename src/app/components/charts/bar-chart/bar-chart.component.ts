@@ -22,6 +22,8 @@ export class BarChartComponent implements OnInit {
 	@Input() public seriesData;
 	@Input() public width;
 	@Input() public dataLabels = false;
+	@Input() public backgroundColor = '#ffffff';
+	@Input() public barColor = '#7cb5ec';
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -51,6 +53,7 @@ export class BarChartComponent implements OnInit {
 
 		this.chart = new Chart({
 			chart: {
+				backgroundColor: this.backgroundColor,
 				events: {
 					load: () => {
 						if (window.Cypress) {
@@ -99,6 +102,7 @@ export class BarChartComponent implements OnInit {
 			series: [
 				{
 					data,
+					color: this.barColor,
 					enableMouseTracking: !this.loading,
 					minPointLength: 5,
 					name: '',
@@ -146,7 +150,7 @@ export class BarChartComponent implements OnInit {
 			this.buildGraph();
 		}
 		if (_.get(changes, 'width')) {
-			this.buildGraph();			
+			this.buildGraph();
 		}
 	}
 }

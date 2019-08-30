@@ -629,7 +629,7 @@
 	"_OsvSoftwareVersionSummary_": "Software Version Summary",
 	"_OsvStatusOrAction_": "Status/Action",
 	"_OsvSuggestedInfo_": "Are available in Cisco Software Central on cisco.com, and represent a collaboration from product engineering,release operations and Customer Experience (CX) teams on what is the best choice of software for most customers.",
-	"_OsvSoftwareGroupInfoHeader_": "A <b>software group</b> comprises assets with common network roles, requirements, and operational preferences and is designed to process software recommendations. The goal is to identify the minimum number of software groups and software versions that can be standardized on for operational efficiency.",
+	"_OsvSoftwareGroupInfoHeader_": "A <b>software group</b> comprises <b>assets</b> with common network roles, <b>requirements</b>, and <b>operational preferences</b> and is designed to process software recommendations. The goal is to identify the minimum number of software groups and software versions that can be standardized on for operational efficiency.",
 	"_OsvUngroupedAssetsCount_": "Ungrouped Assets Count",
 	"_OsvAssetGroup_": "Asset Group :",
 	"_OsvAssetGroupList_": [
@@ -638,8 +638,8 @@
 		"The group is dynamically updated as matching assets are added or removed from the network."
 	],
 	"_OsvOperationalPreferencesList_": [
-		"Requirements are the set of Product IDs and Features discovered and aggregated by asset groups [and in future will be configurable for proactive planning purposes or to capture bugs and Security Advisories to avoid].",
-		"Operational Preferences are comprised of attributes like Risk Tolerance Level [and in future Release Age and Release Population].",
+		"Requirements are the set of <b>Product IDs</b> and <b>Features</b> discovered and aggregated by asset groups [and in future will be configurable for proactive planning purposes or to capture bugs and Security Advisories to avoid].",
+		"Operational Preferences are comprised of attributes like <b>Risk Tolerance Level</b> [and in future Release Age and Release Population].",
 		"By default, Risk Tolerance Level is set to Aggressive and prefer newer software releases [and in future Conservative, Moderate levels will be configurable]."
 	],
 	"_OsvDoNotShowAgain_": "Do not show this again, by default.",

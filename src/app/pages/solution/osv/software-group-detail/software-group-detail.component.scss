@@ -57,3 +57,7 @@
 .overflow-unset {
 	overflow: unset !important;
 }
+
+.compare-recommendations table tbody tr td.recommendation {
+	background-color: $light-gray-5;
+}
