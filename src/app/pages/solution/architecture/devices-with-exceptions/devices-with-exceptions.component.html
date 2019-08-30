@@ -1,5 +1,5 @@
 <!-- Fly-Out View Slide-out -->
-<details-panel *ngIf="assetObject" [fullscreen]="fullscreen">
+<details-panel [hidden]="!assetObject" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div class="row ">
 			<div class="col-md-8 base-margin-bottom">
@@ -46,7 +46,7 @@
 			<div class="qtr-padding-top">
 				<div class="container">
 					<span [innerText]="'_ArchitectureLastUpdated_' | i18n" class="text-large"></span>
-					<span [innerText]="lastCollectionTime" class="qtr-margin-left text-small text-muted"></span>
+					<span [innerText]="lastCollectionTime" class="qtr-margin-left text-large"></span>
 				</div>
 			</div>
 			<div>
@@ -54,7 +54,7 @@
 					<div class="form-group__text">
 						<input data-auto-id="globalSearch" #globalSearch="ngModel" [(ngModel)]="globalSearchText"
 							name="globalSearch" type="text" class="form-control"
-							placeholder="{{ '_ArchitectureGlobalSearch_' | i18n }}" />
+							placeholder="{{ '_ArchitectureSearch_' | i18n }}" />
 						<button type="button" class="link" tabindex="-1">
 							<span class="icon-search"></span>
 						</button>
