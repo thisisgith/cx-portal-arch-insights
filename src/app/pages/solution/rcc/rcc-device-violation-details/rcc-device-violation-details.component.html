@@ -77,14 +77,14 @@
 		*ngIf="!selectionLoading; else loaderTemplate;">
 		<cui-table [options]="impactedDeviceTableOptions" 
 			[data]="impactedDeviceDetails"
-			[offset]="tableConfig.tableOffset" 
+			[offset]="tableConfig?.tableOffset" 
 			(onSortingChanged)="onTableSortingChanged()" 
-			[limit]="tableConfig.tableLimit">
+			[limit]="tableConfig?.tableLimit">
 		</cui-table>
 		<div class="section">
 			<cui-pager [page]="tableConfig.tableOffset"
-				[limit]="tableConfig.tableLimit"
-				[totalItems]="tableConfig.totalItems" 
+				[limit]="tableConfig?.tableLimit"
+				[totalItems]="tableConfig?.totalItems" 
 				(onPageChanged)="onPageIndexChange($event)">
 			</cui-pager>
 		</div>
@@ -94,7 +94,7 @@
 	<div class="base-margin-top text-small responsive-table">
 		<cui-table class="table table--lined " 
 			[options]="rccViolationInfoTableOptions"
-			[data]="item.violations">
+			[data]="item?.violations">
 		</cui-table>
 	</div>
 </ng-template>
@@ -126,7 +126,7 @@
 	</div>
 </ng-template>
 <ng-template #severityIconTemplate let-item="celldata">
-	<i *ngIf="item.severity" 
+	<i *ngIf="item?.severity" 
 		class="qtr-margin-right icon-circle" 
 		iconSize="default" 
 		[ngClass]="{
@@ -135,7 +135,7 @@
 		'P3': 'text-warning-alt',
 		'P4': 'text-success',
 		'P5': 'text-muted'
-		}[item.severity]">
+		}[item?.severity]">
 	</i>
-	<span [innerText]="item.severity"></span>
+	<span [innerText]="item?.severity"></span>
 </ng-template>
