@@ -344,7 +344,7 @@ $vibblue: #017cad;
 	&__blue__atx {
 		position: absolute;
 		right: 7px;
-		top: 0;
+		top: -1px;
 		color: $indigo;
 	}
 
@@ -352,7 +352,7 @@ $vibblue: #017cad;
 	&__white__atx {
 		position: absolute;
 		right: 7px;
-		top: 0;
+		top: -1px;
 		color: $white;
 		-webkit-text-stroke-width: 1px;
 		-webkit-text-stroke-color: $info;
@@ -361,7 +361,7 @@ $vibblue: #017cad;
 	&__clear {
 		position: absolute;
 		right: 7px;
-		top: 0;
+		top: -1px;
 		z-index: 2;
 		color: transparent;
 		-webkit-text-stroke-width: 1px;
@@ -436,8 +436,6 @@ $vibblue: #017cad;
 	}
 }
 
-$popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
-
 #recommended-item:hover,
 #moreAccList-item:hover,
 #moreATXList-item:hover,
@@ -455,7 +453,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		&-recommendedElearning {
 			display: block;
 			position: absolute;
-			box-shadow: $popover-box-shadow;
+			box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			z-index: 1;
 			background-color: $white;
 			border-radius: 5px;
@@ -464,11 +462,14 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			top: 100px;
 		}
 
-		&-recommendedACC,
+		&-recommendedACC {
+			left: -460px;
+		}
+
 		&-moreACCList,
 		&-recommendedElearning,
 		&-successbytes {
-			left: -480px;
+			left: -475px;
 		}
 
 		&-moreATXList,
@@ -477,7 +478,7 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 		}
 
 		&-successbytes {
-			top: -80px;
+			top: -82px;
 		}
 
 		&-recommendedElearning {
@@ -493,9 +494,12 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			}
 		}
 
-		&-moreATXList,
+		&-moreATXList {
+			right: -450px;
+		}
+
 		&-recommendedATX {
-			right: -360px;
+			right: -410px;
 		}
 	}
 }
