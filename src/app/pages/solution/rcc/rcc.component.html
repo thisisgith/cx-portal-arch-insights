@@ -18,17 +18,17 @@
 			<div class="col-md-8 seperator-line half-margin-left">
 				<div class="flex flex-fill flex-fluid">
 					<ng-container *ngFor="let filter of filters">
-						<div attr.id="RccSelectVisualFilter-{{ filter.key }}"
-							attr.data-auto-id="RccSelectVisualFilter-{{filter.key}}" [ngClass]="{filter__selected: filter.selected,
-								'filter__not-selected': !filter.selected}" class="panel flex-center flex-fill filter">
+						<div attr.id="RccSelectVisualFilter-{{ filter?.key }}"
+							attr.data-auto-id="RccSelectVisualFilter-{{filter?.key}}" [ngClass]="{filter__selected: filter?.selected,
+								'filter__not-selected': !filter?.selected}" class="panel flex-center flex-fill filter">
 							<div>
-								<div *ngIf="filter.template">
-									<ng-container *ngTemplateOutlet="filter.template;
+								<div *ngIf="filter?.template">
+									<ng-container *ngTemplateOutlet="filter?.template;
 										context: { filter: filter }">
 									</ng-container>
 								</div>
 							</div>
-							<div class="filter__title text-muted text-large" [innerHTML]="filter.title"></div>
+							<div class="filter__title text-muted text-large" [innerHTML]="filter?.title"></div>
 						</div>
 					</ng-container>
 				</div>
@@ -82,23 +82,21 @@
 	<cui-table 
 		[options]="policyViolationsTableOptions"
 		[data]="policyViolationsGridData"
-		[limit]="tableConfig.tableLimit"
-		[offset]="tableConfig.tableOffset"
+		[limit]="tableConfig?.tableLimit"
+		[offset]="tableConfig?.tableOffset"
 		(onSortingChanged)="onTableSortingChanged()"
 		(onTableRowClicked)="onViolationRowClicked($event)"
 		*ngIf="!loading && policyViolationsGridData">
 	</cui-table>
-	<div class="col-8 panel-group panel-group--compressed">
-		<div class="panel absolute-center">
-			<span class="text-large text-uppercase icon-warning " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-			<span *ngIf="noTableData " class="text-large text-uppercase icon-warning " [innerText]="'_RccNoDataAvailable_' | i18n"></span>
-		</div>
+	<div class="text-center dbl-margin-top dbl-margin-bottom">
+			<span class="text-muted text-xlarge " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+			<span *ngIf="noTableData " class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 	</div>
 	<div class="section">
 		<cui-pager *ngIf="policyViolationsGridData"
-			[page]="tableConfig.tableOffset"
-			[limit]="tableConfig.tableLimit"
-			[totalItems]="tableConfig.totalItems" 
+			[page]="tableConfig?.tableOffset"
+			[limit]="tableConfig?.tableLimit"
+			[totalItems]="tableConfig?.totalItems" 
 			(onPageChanged)="onPagerUpdated($event)">
 		</cui-pager>
 	</div>
@@ -110,42 +108,40 @@
 	<cui-table
 		[options]="assetTableOptions"
 		[data]="tableAssetDataSample"
-		[limit]="tableConfig.tableLimit"
-		[offset]="tableConfig.tableOffset"
+		[limit]="tableConfig?.tableLimit"
+		[offset]="tableConfig?.tableOffset"
 		(onSortingChanged)="onTableSortingChanged()"
 		(onTableRowClicked)="onAssetRowClicked($event)"
 		*ngIf="!loading && tableAssetDataSample">
 	</cui-table>
-	<div class="col-8 panel-group panel-group--compressed">
-		<div class="panel absolute-center">
-			<span class="text-large text-uppercase icon-warning" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-			<span *ngIf="noTableData" class="text-large text-uppercase icon-warning" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
-		</div>
+	<div class="text-center dbl-margin-top dbl-margin-bottom">
+			<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+			<span *ngIf="noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 	</div>
 	<div class="section">
 		<cui-pager *ngIf="tableAssetDataSample"
-			[page]="tableConfig.tableOffset"
-			[limit]="tableConfig.tableLimit"
-			[totalItems]="tableConfig.totalItems" 
+			[page]="tableConfig?.tableOffset"
+			[limit]="tableConfig?.tableLimit"
+			[totalItems]="tableConfig?.totalItems" 
 			(onPageChanged)="onAssetPagerUpdated($event)">
 		</cui-pager>
 	</div>
 </div>
 <hr>
 <ng-template #policyFilter let-filter="filter">
-	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
+	<pie-chart [seriesData]="filter?.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
 	</pie-chart>
 </ng-template>
 <ng-template #severityFilter let-filter="filter">
-	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
+	<pie-chart [seriesData]="filter?.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
 	</pie-chart>
 </ng-template>
 <ng-template #assetOsTypeFilter let-filter="filter">
-	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
+	<pie-chart [seriesData]="filter?.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
 	</pie-chart>
 </ng-template>
 <ng-template #assetSeverityFilter let-filter="filter">
-	<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
+	<pie-chart [seriesData]="filter?.seriesData" (subfilter)="onSubfilterSelect($event, filter, true)">
 	</pie-chart>
 </ng-template>
 
@@ -156,11 +152,11 @@
 		</div>
 		<div class="col-md-10">
 			<ng-container *ngFor="let filter of selectedFilters">
-				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
+				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter?.key)">
 					<span class="label label--dkgray text-large"
-						(click)="onSubfilterSelect(subfilter.filter, filter, false)"
-						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
-						<span [innerHTML]="subfilter.label"></span>
+						(click)="onSubfilterSelect(subfilter?.filter, filter, false)"
+						attr.data-auto-id="FilterTag-{{ subfilter?.filter }}">
+						<span [innerHTML]="subfilter?.label"></span>
 						<span class="icon-close"></span>
 					</span>
 				</ng-container>
@@ -231,7 +227,7 @@
 		[fullscreenToggle]="true">
 		<div detailsPanelTitle>
 			<span class="text-xlarge" [innerText]="('_RccViolationsFor_' | i18n)"></span>
-			<a href="" class="text-xlarge selected" [innerText]="selectedAssetData?.deviceName || ('_NA_' | i18n)"></a>
+			<span class="text-xlarge" [innerHTML]="selectedAssetData?.deviceName || ('_NA_' | i18n)"></span>
 		</div>
 		<div class="row">
 			<div class="col-md-8 base-margin-bottom">
@@ -264,7 +260,7 @@
 <ng-template #severityColor let-item="celldata">
 	<i class="qtr-margin-right icon-circle"
 		iconSize="default"
-		*ngIf="item.ruleseverity"
+		*ngIf="item?.ruleseverity"
 		[ngClass]="
 		{
 			'P1': 'text-danger',
@@ -272,22 +268,22 @@
 			'P3': 'text-warning-alt',
 			'P4': 'text-success',
 			'P5': 'text-muted'
-		}[item.ruleseverity]">
+		}[item?.ruleseverity]">
 	</i>
-	<span [innerHTML]="item.ruleseverity"></span>
+	<span [innerHTML]="item?.ruleseverity"></span>
 </ng-template>
 
 <ng-template #tableIcon let-item="celldata">
 	<i class="qtr-margin-right icon-circle"
 		iconSize="default"
-		*ngIf="item.severity"
+		*ngIf="item?.severity"
 		[ngClass]="{
 			'P1': 'text-danger',
 			'P2': 'text-warning',
 			'P3': 'text-warning-alt',
 			'P4': 'text-success',
 			'P5': 'text-muted'
-		}[item.severity]">
+		}[item?.severity]">
 	</i>
-	<span [innerHTML]="item.violationCount"></span>
+	<span [innerHTML]="item?.violationCount"></span>
 </ng-template>
