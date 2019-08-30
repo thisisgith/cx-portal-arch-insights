@@ -1,18 +1,18 @@
 <div class="compare-text-warp dbl-margin-top" *ngIf="!compareviewLoading; else loaderTemplate;">
 	<ng-container *ngIf="compareView === 'hardware'">
-		<div class="panel no-padding" *ngFor="let hardware of hardwareData?.common">
+		<div class="panel qtr-padding" *ngFor="let hardware of hardwareData?.common">
 			<div class="row">
 				<div class="col-md-6 pull-left" [innerHTML]="hardware"></div>
 				<div class="col-md-6 pull-left" [innerHTML]="hardware"></div>
 			</div>
 		</div>
-		<div class="panel panel--ltgray no-padding" *ngFor="let hardware of hardwareData?.unique[0].data">
+		<div class="panel panel--mdgray qtr-padding" *ngFor="let hardware of hardwareData?.unique[0].data">
 			<div class="row">
 				<div class="col-md-6 pull-left" [innerHTML]="hardware"></div>
 				<div class="col-md-6 pull-left compare-em-dash "></div>
 			</div>
 		</div>
-		<div class="panel panel--ltgray no-padding" *ngFor="let hardware of hardwareData?.unique[1].data">
+		<div class="panel panel--mdgray qtr-padding" *ngFor="let hardware of hardwareData?.unique[1].data">
 			<div class="row">
 				<div class="col-md-6 pull-left compare-em-dash"></div>
 				<div class="col-md-6 pull-left" [innerHTML]="hardware"></div>
@@ -20,19 +20,19 @@
 		</div>
 	</ng-container>
 	<ng-container *ngIf="compareView === 'software'">
-		<div class="panel no-padding" *ngFor="let software of softwareData?.common">
+		<div class="panel qtr-padding" *ngFor="let software of softwareData?.common">
 			<div class="row">
 				<div class="col-md-6 pull-left" [innerHTML]="software"></div>
 				<div class="col-md-6 pull-left" [innerHTML]="software"></div>
 			</div>
 		</div>
-		<div class="panel panel--ltgray no-padding" *ngFor="let software of softwareData?.unique[0].data">
+		<div class="panel panel--mdgray qtr-padding" *ngFor="let software of softwareData?.unique[0].data">
 			<div class="row">
 				<div class="col-md-6 pull-left" [innerHTML]="software"></div>
 				<div class="col-md-6 pull-left compare-em-dash"></div>
 			</div>
 		</div>
-		<div class="panel panel--ltgray no-padding" *ngFor="let software of softwareData?.unique[1].data">
+		<div class="panel panel--mdgray qtr-padding" *ngFor="let software of softwareData?.unique[1].data">
 			<div class="row">
 				<div class="col-md-6 pull-left compare-em-dash"></div>
 				<div class="col-md-6 pull-left" [innerHTML]="software"></div>
@@ -40,19 +40,19 @@
 		</div>
 	</ng-container>
 	<ng-container *ngIf="compareView === 'feature'">
-		<div class="panel no-padding" *ngFor="let features of featuresData?.common">
+		<div class="panel qtr-padding" *ngFor="let features of featuresData?.common">
 			<div class="row">
 				<div class="col-md-6 pull-left" [innerHTML]="features"></div>
 				<div class="col-md-6 pull-left" [innerHTML]="features"></div>
 			</div>
 		</div>
-		<div class="panel panel--ltgray no-padding" *ngFor="let features of featuresData?.unique[0].data">
+		<div class="panel panel--mdgray qtr-padding" *ngFor="let features of featuresData?.unique[0].data">
 			<div class="row">
 				<div class="col-md-6 pull-left" [innerHTML]="features"></div>
 				<div class="col-md-6 pull-left compare-em-dash "></div>
 			</div>
 		</div>
-		<div class="panel panel--ltgray no-padding" *ngFor="let features of featuresData?.unique[1].data">
+		<div class="panel panel--mdgray qtr-padding" *ngFor="let features of featuresData?.unique[1].data">
 			<div class="row">
 				<div class="col-md-6 pull-left compare-em-dash"></div>
 				<div class="col-md-6 pull-left" [innerHTML]="features"></div>
