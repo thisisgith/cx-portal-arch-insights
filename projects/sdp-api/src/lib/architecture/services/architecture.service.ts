@@ -60,7 +60,6 @@ class ArchitectureService extends __BaseService {
     if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
     if (params.searchText != null) __params = __params.set('searchText', params.searchText.toString());
 
-    // (params.contractNumber || []).forEach(val => {if (val != null) __params = __params.append('contractNumber', val.toString())});
     let req = new HttpRequest<any>(
 	  'GET',
 	  this.rootUrl + `${ArchitectureService.getCBPSeverityResponsePath}`,
