@@ -10,7 +10,7 @@ import { RouteAuthService } from 'src/app/services';
 export class InsightsComponent {
 	public customerId;
 	public hasPermission = false;
-	constructor (private routeAuthService: RouteAuthService) {}
+	constructor (private routeAuthService: RouteAuthService) { }
 	/**
 	 * ngOnInit method execution
 	 */

@@ -23,7 +23,7 @@ class RccService extends __BaseService {
 	static readonly getRccViolationDetailsData = '/api/customerportal/compliance/v1/service/violation-details';
 	static readonly getAssetSummaryData = '/api/customerportal/compliance/v1/service/fetch-violation-details';
 	static readonly getRccAssetFilterData = '/api/customerportal/compliance/v1/service/fetch-violation-details-filter';
-	static readonly checkPermissions = 'https://api-stage.cisco.com/api/customerportal/compliance/v1/service/checkOptInStatus';
+
 	constructor (config: __Configuration, http: HttpClient) {
 		super(config, http);
 	}
@@ -94,16 +94,6 @@ class RccService extends __BaseService {
 	getRccAssetFilterData(queryParamMapObj: RccAssetFilterReq): __Observable<any> {
 		return this.invokeHTTPGet<RccAssetFilterResponse>(
 			`${this.rootUrl}${RccService.getRccAssetFilterData}`,
-			queryParamMapObj)
-			.pipe(
-				__map(_r => _r.body)
-			);
-	}
-
-
-	checkPermissions (queryParamMapObj: RccCustomer): __Observable<any> {
-		return this.invokeHTTPGet<RccData>(
-			`${RccService.checkPermissions}`,
 			queryParamMapObj)
 			.pipe(
 				__map(_r => _r.body)

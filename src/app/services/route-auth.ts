@@ -5,17 +5,17 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { Observable as __Observable } from 'rxjs';
 import { LogService } from '@cisco-ngx/cui-services';
 import { environment } from '@environment';
+
+/**
+ * Constrains the http to not expand the response type with `| null`
+ */
+export type StrictHttpResponse<T> = HttpResponse<T> & {
+	readonly body: T;
+};
+
 /**
  * Service which helps in refreshing notes list if a new note is added
  */
-
-/**
-* Constrains the http to not expand the response type with `| null`
-*/
-export type StrictHttpResponse<T> = HttpResponse<T> & {
-	readonly body: T;
-}
-
 @Injectable({
 	providedIn: 'root',
 })
@@ -29,7 +29,8 @@ export class RouteAuthService {
 	 * @param customerId  customer id of logged in customer
 	 * @returns Observable with response data.
 	 */
-	checkPermissions (customerId: any): __Observable<any> {
+
+	public checkPermissions (customerId: any): __Observable<any> {
 		return this.invokeHTTPGet<any>(
 			`${environment.sdpServiceOrigin}${this.rccPath}?customerId=${customerId}`)
 			.pipe(
@@ -38,10 +39,15 @@ export class RouteAuthService {
 			);
 	}
 
-	invokeHTTPGet<T> (url: string): __Observable<any> {
-		let __headers = new HttpHeaders();
-		let __body: any = null;
-		let req = new HttpRequest<any>(
+	/**
+	 * invoke HTTP get
+	 * @param url is a string
+	 * @returns Observable with response data.
+	 */
+	public invokeHTTPGet<T> (url: string): __Observable<any> {
+		const __headers = new HttpHeaders();
+		const __body: any = null;
+		const req = new HttpRequest<any>(
 			'GET',
 			url,
 			__body,
@@ -53,11 +59,7 @@ export class RouteAuthService {
 		return this.http.request<any>(req)
 		.pipe(
 			__filter(_r => _r instanceof HttpResponse),
-			__map((_r) => {
-				return _r as StrictHttpResponse<T>;
-			})
+			__map(_r => (<StrictHttpResponse<T>> _r)),
 		);
 	}
-
-
 }
