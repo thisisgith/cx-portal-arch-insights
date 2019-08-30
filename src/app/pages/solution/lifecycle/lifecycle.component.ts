@@ -994,6 +994,7 @@ export class LifecycleComponent implements OnDestroy {
 			this.status.loading.racetrack = false;
 			this.componentData.racetrack.actionsCompPercent =
 				this.calculateActionPercentage(this.componentData.racetrack.pitstop);
+			this.currentPitstopCompPert = this.componentData.racetrack.actionsCompPercent;
 
 			const source = [];
 			if (results.isAtxChanged) { source.push(this.loadATX()); }

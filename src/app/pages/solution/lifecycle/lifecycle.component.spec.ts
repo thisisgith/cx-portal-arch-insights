@@ -1112,18 +1112,16 @@ describe('LifecycleComponent', () => {
 			de = fixture.debugElement.query(By.css('#ResetFilter'));
 			expect(de)
 				.toBeTruthy();
-
-			de = fixture.debugElement.query(By.css('#ResetFilter'));
-			expect(de)
-				.toBeTruthy();
 			el = de.nativeElement;
 			el.click();
 			expect(component.currentPitActionsWithStatus[1].selected)
 				.toBeFalsy();
 
+			spyOn(component, 'hasSelectedAction');
+
 			de = fixture.debugElement.query(By.css('#ResetFilter'));
 			expect(de)
-				.toBeFalsy();
+				.toBeTruthy();
 
 			// since suggestedAction does not change, so will not trigger ATX API call
 			expect(racetrackContentService.getRacetrackATX)
