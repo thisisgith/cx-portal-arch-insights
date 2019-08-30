@@ -10,7 +10,12 @@ import {
 import { LogService } from '@cisco-ngx/cui-services';
 import { Subject } from 'rxjs';
 import { FpIntelligenceService, SimilarDevicesList } from '@sdp-api';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import {
+	FormGroup,
+	Validators,
+	FormBuilder,
+	AbstractControl,
+} from '@angular/forms';
 import { UserResolve } from '@utilities';
 import { takeUntil, debounceTime } from 'rxjs/operators';
 import * as _ from 'lodash-es';
@@ -23,6 +28,7 @@ import { ActivatedRoute } from '@angular/router';
  */
 @Component({
 	selector: 'app-fp-similarassets',
+	styleUrls: ['./fp-similarassets.component.scss'],
 	templateUrl: './fp-similarassets.component.html',
 })
 export class FpSimilarAssetsComponent {
@@ -37,9 +43,20 @@ export class FpSimilarAssetsComponent {
 	public size = 10;
 	public similarityCriteria = 'fingerprint';
 	public requestForm: FormGroup = this.fb.group({
+		deviceCount: [
+			1000,
+			[
+				Validators.required,
+				Validators.min(1),
+				Validators.max(1000),
+				Validators.pattern('[0-9]*'),
+			],
+		],
+		minMatch: [
+			50,
+			[Validators.required, Validators.min(1), Validators.max(100)],
+		],
 		similarityCriteria: ['fingerprint', Validators.required],
-		deviceCount: [100, Validators.required],
-		minMatch: [50, Validators.required],
 	});
 	public similarDevicesData: SimilarDevicesList;
 	@Output() public devicesSelected: EventEmitter<any> = new EventEmitter<any>();
@@ -52,6 +69,13 @@ export class FpSimilarAssetsComponent {
 	private similarityMatchTemplate: TemplateRef<[]>;
 	@ViewChild('compareTemplate', { static: true })
 	private compareTemplate: TemplateRef<[]>;
+
+	public get deviceCount (): AbstractControl {
+		return this.requestForm.get('deviceCount');
+	}
+	public get minMatch (): AbstractControl {
+		return this.requestForm.get('minMatch');
+	}
 
 	constructor (
 		private userResolve: UserResolve,
@@ -74,11 +98,13 @@ export class FpSimilarAssetsComponent {
 		};
 		this.similarDevicesGridInit();
 		this.requestForm.valueChanges
-		.pipe(debounceTime(1000))
-		.subscribe(val => {
-			this.loadSimilarDevicesData();
-			this.logger.info(val);
-		});
+			.pipe(debounceTime(1000))
+			.subscribe(val => {
+				if (this.requestForm.valid) {
+					this.loadSimilarDevicesData();
+				}
+				this.logger.info(val);
+			});
 	}
 
 	/**
@@ -90,6 +116,7 @@ export class FpSimilarAssetsComponent {
 			dynamicData: true,
 			singleSelect: false,
 			striped: false,
+			padding: 'compressed',
 			columns: [
 				{
 					key: 'deviceId',
