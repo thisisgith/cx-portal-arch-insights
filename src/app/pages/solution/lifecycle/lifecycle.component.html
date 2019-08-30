@@ -275,16 +275,17 @@
 </ng-template>
 
 <ng-template #accHover let-autoid="autoid" let-title="title" let-description="description" let-item="item">
-	<div id="acc-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
+	<div id="acc-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
+		<div class="popover-tail"></div>
 		<div class="flex flex-column max-height">
-			<div class="icon-bookmark icon-medium"
+			<div class="icon-bookmark icon-medium ribbon--hover"
 				(click)="setACCBookmark(item)"
 				[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
-			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
+			<h6 class="acc-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
-			<div class="half-margin-left line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
+			<div class="line-clamp acc-popover__description" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
 			<div *ngIf="item && item.duration" class="learning-duration text-right text-muted flex-fluid half-margin-left" attr.data-auto-id="{{ autoid }}-HoverModal-Duration">
 				<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 				<span [innerText]="item.duration"></span>

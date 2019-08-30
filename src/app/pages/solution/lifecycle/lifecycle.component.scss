@@ -628,6 +628,27 @@ $popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 	}
 }
 
+#recommended-item:hover #acc-hover-panel {
+	&-recommendedACC {
+		padding: 20px 0 25px 28px;
+		width: 450px;
+		height: 180px;
+
+		.acc-popover__title {
+			color: #767676;
+			font-size: 16px;
+			line-height: 19px;
+		}
+
+		.acc-popover__description {
+			font-size: 13px;
+			line-height: 19px;
+			color: #394454;
+			padding-right: 28px;
+		}
+	}
+}
+
 :host ::ng-deep input.checked,
 :host ::ng-deep input:checked {
 	~ .checkbox__input::before {
