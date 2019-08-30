@@ -76,7 +76,7 @@ describe('ComparisonviewComponent', () => {
 				done();
 			});
 	});
-	it('Should return the searched response', done => {
+	it('Should return the searched features response', done => {
 		spyOn(crashPreventionService, 'getComparison')
 			.and
 			.returnValue(of(ComparisonViewScenarios[2].scenarios.GET[0].response.body));
@@ -89,5 +89,54 @@ describe('ComparisonviewComponent', () => {
 				done();
 			});
 	});
+	it('Should return the searched hardware response', done => {
+		spyOn(crashPreventionService, 'getComparison')
+			.and
+			.returnValue(of(ComparisonViewScenarios[2].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.hardwareData)
+					.toBeDefined();
+				done();
+			});
+	});
+	it('Should return the searched software response', done => {
+		spyOn(crashPreventionService, 'getComparison')
+			.and
+			.returnValue(of(ComparisonViewScenarios[2].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(component.softwareData)
+					.toBeDefined();
+				done();
+			});
+	});
 
+	it('should work', () => {
+		spyOn(crashPreventionService, 'getComparison')
+			.and
+			.returnValue(of(<any> []));
+		component.ngOnChanges({
+			devices: {
+				currentValue: null,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(crashPreventionService.getComparison)
+			.toHaveBeenCalledTimes(1);
+	});
+// 	it('cechk amp to be undef', getComparison (){
+// 		expect(getComparison('deviceId1')).toBe(undef);
+// 	});
+// 	it('gives true if number', getComparison (){
+// 		expect(getComparison('deviceId2'))
+// .toBe('this.deviceId1 = changes.deviceId1.currentValue');
+//     });
 });

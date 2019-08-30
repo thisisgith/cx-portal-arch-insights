@@ -1,4 +1,4 @@
-<div class="compare-text-warp dbl-margin-top" *ngIf="!initialLoading; else loaderTemplate;">
+<div class="compare-text-warp dbl-margin-top" *ngIf="!compareviewLoading; else loaderTemplate;">
 	<ng-container *ngIf="compareView === 'hardware'">
 		<div class="panel no-padding" *ngFor="let hardware of hardwareData?.common">
 			<div class="row">

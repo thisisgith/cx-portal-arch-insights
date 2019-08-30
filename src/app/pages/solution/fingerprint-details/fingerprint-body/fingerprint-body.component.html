@@ -1,5 +1,5 @@
 <div class="base-margin">
-<cui-tabs>
+<cui-tabs [(activeTabIndex)]="tabIndex">
 	<cui-tab [label]="'_CP_SimilarAssets_'| i18n |uppercase">
 		<app-fp-similarassets [asset]="selectedAsset" (devicesSelected)="showComparison($event)"></app-fp-similarassets>
 	</cui-tab>

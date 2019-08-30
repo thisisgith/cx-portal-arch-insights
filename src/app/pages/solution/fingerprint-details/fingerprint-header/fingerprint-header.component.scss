@@ -1,11 +1,5 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
 
-.compositerisk {
-	width: 4px;
-	padding: 6px;
-	margin-top: $base-spacing;
-}
-
 .fp-header-percentage::after {
 	content: " \0025";
 }

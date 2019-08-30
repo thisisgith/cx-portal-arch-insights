@@ -48,7 +48,7 @@
 		</div>
 	</div>
 </div>
-<div class="comper-body" *ngIf="checkForAllCompareDetails()">
+<div class="comper-body" *ngIf="compareDetailsExist">
 	<app-comparisonview [compareView]="compareView" [deviceId1]="deviceId1" [deviceId2]="deviceId2">
 	</app-comparisonview>
 </div>
