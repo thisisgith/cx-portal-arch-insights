@@ -157,6 +157,7 @@
 	"_ArchitectureShowingXofYTotalItems_": "Showing {0} - {1} of {2}",
 	"_ArchitectureLoading_": "Loading, please wait...",
 	"_ArchitectureCompliantVersion_":"Compliant Version",
+	"_ArchitectureCompliantProductFamily_":"Compliant Product Family",
 	"_AskAQuestion_": "Ask a Question (S4)",
 	"_AskTheExperts_": "Ask The Experts",
 	"_Asset_": "Asset",

@@ -10,7 +10,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { user } from '@mock';
 import { SimpleChanges, SimpleChange } from '@angular/core';
-import { ArchitectureReviewScenarios } from 'src/environments/mock/architecture-review/architecture-review';
+import {
+	ArchitectureReviewScenarios } from 'src/environments/mock/architecture-review/architecture-review';
 
 describe('DevicesListComponent', () => {
 	let component: DevicesListComponent;
@@ -119,16 +120,16 @@ describe('DevicesListComponent', () => {
 			customerId: '7293498',
 			hostName: 'LA1-AP3802-21',
 		};
-		component.openAssetDetailsView(item);
+		component.openDeviceView(item);
 		expect(component.selectedAsset)
 		.toEqual(item);
 	});
 
 	it('should close asset details view', () => {
 		const notClose = false;
-		component.closeAssetDetailsView(notClose);
+		component.closeDeviceView(notClose);
 		const isClose = true;
-		component.closeAssetDetailsView(isClose);
+		component.closeDeviceView(isClose);
 		expect(component.selectedAsset)
 		.toBeNull();
 	});
