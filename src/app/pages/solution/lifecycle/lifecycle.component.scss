@@ -393,6 +393,17 @@ $vibblue: #017cad;
 	&__white__atx {
 		right: 55px;
 	}
+
+	&--hover {
+		right: 54px;
+	}
+}
+
+.ribbon__blue::before,
+.ribbon__white::before,
+.ribbon__clear::before {
+	font-size: 18px !important;
+	line-height: 18px !important;
 }
 
 .star {
@@ -454,6 +465,8 @@ $vibblue: #017cad;
 	}
 }
 
+$popover-box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
+
 #recommended-item:hover,
 #moreAccList-item:hover,
 #moreATXList-item:hover,
@@ -471,7 +484,7 @@ $vibblue: #017cad;
 		&-recommendedElearning {
 			display: block;
 			position: absolute;
-			box-shadow: $base-box-shadow;
+			box-shadow: $popover-box-shadow;
 			z-index: 1;
 			background-color: $white;
 			border-radius: 5px;
@@ -511,7 +524,44 @@ $vibblue: #017cad;
 
 		&-moreATXList,
 		&-recommendedATX {
-			right: -460px;
+			right: -360px;
+		}
+	}
+}
+
+#moreATXList-item:hover,
+#recommended-item:hover {
+	#atx-hover-panel {
+		&-moreATXList,
+		&-recommendedATX {
+			padding: 22px 0 22px 28px;
+			width: 400px;
+
+			.atx-popover__title {
+				color: #767676;
+				font-size: 16px;
+				line-height: 19px;
+			}
+
+			.atx-popover__description {
+				font-size: 13px;
+				line-height: 17px;
+				color: #394454;
+				padding-right: 28px;
+			}
+
+			.atx-popover__footer {
+				margin-top: 18px;
+			}
+
+			.atx-popover__btn {
+				border: 1px solid #95d1d6;
+				border-radius: 12.5px;
+				color: #58585b;
+				font-size: 12px;
+				line-height: 16px;
+				padding: 3px 12px;
+			}
 		}
 	}
 }
