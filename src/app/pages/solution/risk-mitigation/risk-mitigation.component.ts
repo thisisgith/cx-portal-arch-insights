@@ -35,6 +35,12 @@ export class RiskMitigationComponent {
 		min: 0,
 	};
 	public selectedFilters;
+	public hcrPagination;
+	public paginationParams = {
+		limit: 10,
+		page: 0,
+	};
+	crashPagination: string;
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private logger: LogService,
@@ -97,7 +103,6 @@ export class RiskMitigationComponent {
 	@ViewChild('advisoryFilter', { static: true }) private advisoryFilterTemplate: TemplateRef<{ }>;
 
 	public status = {
-		inventoryLoading: true,
 		isLoading: true,
 	};
 
@@ -105,6 +110,7 @@ export class RiskMitigationComponent {
 	 * Load data of risk details
 	 */
 	public loadData () {
+		this.status.isLoading = true;
 		this.highCrashRiskParams = {
 			customerId: this.customerId,
 			page: 0,
@@ -118,7 +124,6 @@ export class RiskMitigationComponent {
 		.subscribe(() => {
 			this.status.isLoading = false;
 		});
-		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		this.onlyCrashes = true;
 	}
 
@@ -138,16 +143,26 @@ export class RiskMitigationComponent {
 	 * @returns  the crashed device data
 	 */
 	public getHighCrashesDeviceData () {
+		this.highCrashRiskAssetsGridDetails.tableOffset = 0;
 		this.onlyCrashes = true;
+		this.highCrashRiskParams = {
+			customerId: this.customerId,
+			page: 0,
+			size: 10,
+		};
+		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
+		this.status.isLoading = true;
 
 		return this.riskMitigationService.getHighCrashRiskDeviceCountData(params)
 				.pipe(
 					takeUntil(this.destroy$),
 					map((results: HighCrashRiskDeviceCount) => {
+						this.status.isLoading = false;
 						this.highCrashDeviceCount = results.crashRiskDeviceCount;
 					}),
 					catchError(err => {
+						this.status.isLoading = false;
 						this.highCrashDeviceCount = undefined;
 						this.logger.error('High Crash Assets : getHighCrashesDeviceData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
@@ -166,6 +181,7 @@ export class RiskMitigationComponent {
 		this.onlyCrashes = false;
 		this.getDeviceDetails('1');
 		this.selectedTimeFilters();
+
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -231,16 +247,25 @@ export class RiskMitigationComponent {
 		} else {
 			_.unset(params, 'timePeriod');
 		}
+		this.status.isLoading = true;
 
 		return this.riskMitigationService.getDeviceDetails(params)
 				.pipe(
 					takeUntil(this.destroy$),
 					map((results: RiskAssets) => {
+						this.status.isLoading = false;
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = _.size(results.deviceDetails);
 						this.crashedAssetsGridDetails.tableOffset = 0;
+
+						this.paginationParams.page = 0;
+						const first = (this.paginationParams.page * 10) + 1;
+						const last = (this.paginationParams.page * 10) +
+						this.paginationParams.limit;
+						this.crashPagination = `${first}-${last}`;
 					}),
 					catchError(err => {
+						this.status.isLoading = false;
 						this.crashedAssetsGridDetails.tableData = [];
 						this.logger.error('Crash Assets : getDeviceDetails() ' +
 							`:: Error : (${err.status}) ${err.message}`);
@@ -257,12 +282,21 @@ export class RiskMitigationComponent {
 	 * @returns observable of crash devices
 	 */
 	private getFingerPrintDeviceDetails (param: HighCrashRiskPagination) {
+		this.status.isLoading = true;
+
 		return this.riskMitigationService.getFingerPrintDeviceDetailsData(param)
 						.pipe(
 							takeUntil(this.destroy$),
 							map((results: HighCrashRisk) => {
+								this.status.isLoading = false;
 								this.highCrashRiskAssetsGridDetails.tableData = results.devices;
 								this.highCrashRiskAssetsGridDetails.totalItems = results.count;
+
+								const first = (this.highCrashRiskParams.page * 10) + 1;
+								const last = (this.highCrashRiskParams.page * 10) +
+								this.highCrashRiskAssetsGridDetails.tableData.length;
+								this.hcrPagination = `${first}-${last}`;
+
 							}),
 							catchError(err => {
 								this.highCrashRiskAssetsGridDetails.tableData  = [];
@@ -311,6 +345,11 @@ export class RiskMitigationComponent {
 	 */
 	public onPagerUpdated (pageInfo: any) {
 		this.crashedAssetsGridDetails.tableOffset = pageInfo.page;
+		this.paginationParams.page = pageInfo.page;
+		const first = (this.paginationParams.page * 10) + 1;
+		const last = (this.paginationParams.page * 10) +
+		this.paginationParams.limit;
+		this.crashPagination = `${first}-${last}`;
 	}
 
 	/**
@@ -372,16 +411,19 @@ export class RiskMitigationComponent {
 	public onSearchQuery (searchText: string) {
 		this.searchQueryString = searchText;
 		const params = this.getFilterDetailsForSearchQuery(this.searchQueryString);
+		this.status.isLoading = true;
 
 		return this.riskMitigationService.getSearchedData(params)
 				.pipe(
 					takeUntil(this.destroy$),
 					map((results: any) => {
+						this.status.isLoading = false;
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
 						this.crashHistoryGridDetails.tableOffset = 0;
 					}),
 					catchError(err => {
+						this.status.isLoading = false;
 						this.crashedAssetsGridDetails.tableData   = [];
 						this.logger.error('Crash Assets : onSearchQuery() ' +
 							`:: Error : (${err.status}) ${err.message}`);
