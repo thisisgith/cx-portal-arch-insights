@@ -414,33 +414,25 @@ $vibblue: #017cad;
 	&-recommendedElearning,
 	&-successbytes {
 		display: none;
-	}
+		position: relative;
 
-	&-recommendedACC::after,
-	&-recommendedATX::after,
-	&-moreACCList::after,
-	&-moreATXList::after,
-	&-recommendedElearning::after,
-	&-successbytes::after {
-		content: "";
-		position: absolute;
-		top: 45%;
-		border-top: 10px solid transparent;
-		border-bottom: 10px solid transparent;
-	}
+		.popover-tail {
+			// default styling to right
+			position: absolute;
+			top: calc(50% - 7px);
+			right: -7px;
+			height: 0;
+			width: 0;
+			border: 7px solid #000;
+			border-color: transparent transparent #fff #fff;
+			box-shadow: -2px 2px 3px 0 rgba(0, 0, 0, 0.06);
+			transform: rotate(-135deg);
 
-	&-recommendedACC::after,
-	&-moreACCList::after,
-	&-recommendedElearning::after,
-	&-successbytes::after {
-		right: -15px;
-		border-left: 15px solid white;
-	}
-
-	&-moreATXList::after,
-	&-recommendedATX::after {
-		left: -15px;
-		border-right: 15px solid white;
+			&--left {
+				left: -7px;
+				transform: rotate(45deg);
+			}
+		}
 	}
 }
 

@@ -199,7 +199,8 @@
 </ng-template>
 
 <ng-template #learningHover let-title="title" let-item="item" let-description="description" let-autoid="autoid">
-	<div id="learn-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
+	<div id="learn-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
+		<div class="popover-tail"></div>
 		<div class="flex flex-column max-height">
 			<h6 class="learning-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
@@ -216,7 +217,8 @@
 </ng-template>
 
 <ng-template #atxHover let-title="title" let-description="description" let-autoid="autoid" let-item="item">
-	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" *ngIf="!atxScheduleCardOpened && !atxMoreClicked" attr.data-auto-id="{{ autoid }}-HoverModal">
+	<div id="atx-hover-panel-{{ autoid }}" class="panel" *ngIf="!atxScheduleCardOpened && !atxMoreClicked" attr.data-auto-id="{{ autoid }}-HoverModal">
+		<div class="popover-tail popover-tail--left"></div>
 		<div class="flex flex-column max-height">
 			<div class="icon-bookmark icon-medium ribbon--hover"
 				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
@@ -624,7 +626,8 @@
 </ng-template>
 
 <ng-template #successBytesHoverBlock let-item="item" let-autoid="autoid">
-		<div id="sb-hover-panel-{{ autoid }}" class="panel panel--bordered" attr.data-auto-id="{{ autoid }}-HoverModal">
+		<div id="sb-hover-panel-{{ autoid }}" class="panel" attr.data-auto-id="{{ autoid }}-HoverModal">
+			<div class="popover-tail"></div>
 			<div class="flex flex-column max-height">
 				<div class="icon-bookmark icon-medium ribbon--hover"
 					(click)="updateBookmark('SB', item)"
