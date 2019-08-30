@@ -78,36 +78,36 @@
 
 
 <ng-template #compareRecommendationsTemp>
-	<div class="responsive-table">
-		<table class="table table--bordered table--nostripes">
+	<div>
+		<table class="table table--bordered table--nostripes table--wrap">
 			<tbody>
 				<!-- version and release date -->
 				<tr>
 					<td></td>
 					<td>
-						<div class="text-xlarge" [innerText]="'current' | titlecase"></div>
+						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'current' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v3'"></div>
 						<div [innerText]="'-'"></div>
 					</td>
 					<td>
-						<div class="text-xlarge" [innerText]="'recommended #1' | titlecase"></div>
+						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'recommended #1' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 					<td>
-						<div class="text-xlarge" [innerText]="'recommended #2' | titlecase"></div>
+						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'recommended #2' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 					<td>
-						<div class="text-xlarge" [innerText]="'recommended #3' | titlecase"></div>
+						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'recommended #3' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 				</tr>
 				<!-- status or action -->
 				<tr>
-					<td class="text-xlarge" [innerText]="'_OsvStatusOrAction_' | i18n"></td>
+					<td [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_OsvStatusOrAction_' | i18n"></td>
 					<td></td>
 					<td>
 						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
@@ -124,32 +124,44 @@
 				</tr>
 				<!-- risk score -->
 				<tr>
-					<td class="text-xlarge" [innerText]="'_OsvRiskScore_' | i18n"></td>
+					<td class="overflow-unset">
+						<span [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_OsvRiskScore_' | i18n"></span>
+						<span class="qtr-margin-left  text-primary" data-balloon-length="large"
+							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="down">
+							<i class="icon-info icon-small qtr-margin-bottom"></i>
+						</span>
+					</td>
 					<td class="text-xlarge" [innerText]="'35%'"></td>
-					<td class="flex align-items-center">
-						<span class="text-xlarge" [innerText]="'<'"></span>
-						<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
-						<span class="icon-dropdown text-success text-large"></span>
+					<td>
+						<div class="flex align-items-center">
+							<span class="text-xlarge" [innerText]="'<'"></span>
+							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
+							<span class="icon-dropdown text-success text-large"></span>
+						</div>
 					</td>
-					<td class="flex align-items-center">
-						<span class="text-xlarge" [innerText]="'<'"></span>
-						<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
-						<span class="icon-dropdown text-success text-large"></span>
+					<td>
+						<div class="flex align-items-center">
+							<span class="text-xlarge" [innerText]="'<'"></span>
+							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
+							<span class="icon-dropdown text-success text-large"></span>
+						</div>
 					</td>
-					<td class="flex align-items-center">
-						<span class="text-xlarge" [innerText]="'<'"></span>
-						<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
-						<span class="icon-dropdown text-success text-large"></span>
+					<td>
+						<div class="flex align-items-center">
+							<span class="text-xlarge" [innerText]="'<'"></span>
+							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
+							<span class="icon-dropdown text-success text-large"></span>
+						</div>
 					</td>
 				</tr>
 				<!-- bugs -->
 				<tr>
-					<td class="text-xlarge" [innerText]="'_Bugs_' | i18n"></td>
+					<td [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_Bugs_' | i18n"></td>
 					<td>
 						<div [innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
 						<div class="text-xlarge" [innerText]="'15'"></div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="200"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -165,7 +177,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="200"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -181,7 +193,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="200"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -197,17 +209,17 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="200"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
 						</div>
 					</td>
 				</tr>
 				<!-- security advisories -->
 				<tr>
-					<td class="text-xlarge" [innerText]="'_SecurityAdvisories_' | i18n"></td>
+					<td [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_SecurityAdvisories_' | i18n"></td>
 					<td>
 						<div class="text-xlarge" [innerText]="'32'"></div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="200"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -219,7 +231,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="200"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -231,7 +243,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="200"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
 						</div>
 					</td>
 					<td>
@@ -243,15 +255,15 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart dataLabels="true" [seriesData]="seriesData" width="200"></bar-chart>
+							<bar-chart dataLabels="true" [seriesData]="seriesData" width="140"></bar-chart>
 						</div>
 					</td>
 				</tr>
 				<!-- features -->
 				<tr>
 					<td>
-						<div class="text-xlarge" [innerText]="'_OsvFeatures_' | i18n"></div>
-						<div class="text-large" [innerText]="'_OsvActiveAvailable_' | i18n"></div>
+						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"  [innerText]="'_OsvFeatures_' | i18n"></div>
+						<div [ngClass]="{'text-large':fullscreen,'text-small':!fullscreen}" class="qtr-margin-top" [innerText]="'_OsvActiveAvailable_' | i18n"></div>
 					</td>
 					<td>
 						<div class="text-xlarge" [innerText]="'3/17'"></div>
