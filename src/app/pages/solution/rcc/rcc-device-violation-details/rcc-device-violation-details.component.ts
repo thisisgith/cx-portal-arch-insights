@@ -142,7 +142,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					}
 				}
 				this.initialLoading = false;
-				this.buildImpactedDeviceTableOptions();
+				this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
 			},
 			error => {
 				this.initialLoading = false;
@@ -280,7 +280,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
 			this.tableConfig.totalItems = this.impactedDeviceDetails.length;
-			this.buildImpactedDeviceTableOptions();
+			this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
 		},
 		error => {
 			this.selectionLoading = false;

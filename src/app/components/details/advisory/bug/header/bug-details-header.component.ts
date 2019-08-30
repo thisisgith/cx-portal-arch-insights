@@ -2,7 +2,7 @@ import {
 	Component,
 	Input,
 } from '@angular/core';
-import { Asset } from '@sdp-api';
+import { Asset, NetworkElement } from '@sdp-api';
 import { CuiModalService } from '@cisco-ngx/cui-components';
 import { Data as BugData } from '../bug-details.component';
 import {
@@ -23,6 +23,7 @@ export class BugDetailsHeaderComponent {
 
 	@Input('details') public details: BugData;
 	@Input('selectedAsset') public selectedAsset: Asset;
+	@Input('impactedAssets') public impactedAssets: (Asset | NetworkElement)[];
 	public bugSearchToolURL = environment.bugSearchTool;
 
 	/**
@@ -31,6 +32,7 @@ export class BugDetailsHeaderComponent {
 	public onOpenCase () {
 		this.cuiModalService.showComponent(CaseOpenAdvisoriesComponent, {
 			advisory: this.details.advisory,
+			otherAssets: this.impactedAssets,
 			selectedAsset: this.selectedAsset,
 			type: 'bug',
 		}, 'full');

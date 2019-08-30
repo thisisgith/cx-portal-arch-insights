@@ -41,6 +41,10 @@
 	color: $dark-gray-2 !important;
 }
 
+.seperator-line {
+	border-left: 1px solid $light-gray-3;
+}
+
 .searchSection {
 	float: right;
 	margin-top: -27px;
@@ -51,32 +55,9 @@
 	flex-direction: column;
 	font-size: small;
 	margin: 5px;
+	cursor: pointer;
 }
 
 .assetsCount:focus {
 	color: $status-blue;
-}
-
-.p1class {
-	color: $red;
-}
-
-.p2class {
-	color: $orange;
-}
-
-.p3class {
-	color: $status-orange;
-}
-
-.p4class {
-	color: $success;
-}
-
-.p5class {
-	color: $light-blue;
-}
-
-.p6class {
-	color: $white;
 }

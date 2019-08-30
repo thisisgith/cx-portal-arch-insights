@@ -12,6 +12,7 @@ import {
 	CuiTabsModule,
 	CuiSelectModule,
 	CuiDropdownModule,
+	CuiSpinnerModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import {
@@ -62,6 +63,7 @@ const childRoutes: Routes = [
 		FormsModule,
 		ReactiveFormsModule,
 		CuiDropdownModule,
+		CuiSpinnerModule,
 	],
 })
 export class RccModule { }

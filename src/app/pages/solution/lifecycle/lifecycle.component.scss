@@ -566,8 +566,11 @@ polygon {
 .finishline-banner {
 	align-items: flex-end;
 }
-// leave the following here, just in case we will use this style
-// ::ng-deep .cui .dropdown__menu a.selected {
-// 	color:$vibblue !important;
-// 	background-color: transparent !important;
-// }
+
+.lifecycle-modal {
+	height: 100%;
+}
+
+.lifecycle-viewall-modal {
+	min-height: 100%;
+}
