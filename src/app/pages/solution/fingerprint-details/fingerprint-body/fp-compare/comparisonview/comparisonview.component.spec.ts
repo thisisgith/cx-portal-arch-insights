@@ -86,37 +86,15 @@ describe('ComparisonviewComponent', () => {
 				fixture.detectChanges();
 				expect(component.featuresData)
 					.toBeDefined();
-				done();
-			});
-	});
-	it('Should return the searched hardware response', done => {
-		spyOn(crashPreventionService, 'getComparison')
-			.and
-			.returnValue(of(ComparisonViewScenarios[2].scenarios.GET[0].response.body));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.hardwareData)
+					expect(component.hardwareData)
 					.toBeDefined();
-				done();
-			});
-	});
-	it('Should return the searched software response', done => {
-		spyOn(crashPreventionService, 'getComparison')
-			.and
-			.returnValue(of(ComparisonViewScenarios[2].scenarios.GET[0].response.body));
-		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.softwareData)
+					expect(component.softwareData)
 					.toBeDefined();
 				done();
 			});
 	});
 
-	it('should work', () => {
+	it('should check for ngOnchanges in comparison view component', () => {
 		spyOn(crashPreventionService, 'getComparison')
 			.and
 			.returnValue(of(<any> []));
@@ -132,11 +110,4 @@ describe('ComparisonviewComponent', () => {
 		expect(crashPreventionService.getComparison)
 			.toHaveBeenCalledTimes(1);
 	});
-// 	it('cechk amp to be undef', getComparison (){
-// 		expect(getComparison('deviceId1')).toBe(undef);
-// 	});
-// 	it('gives true if number', getComparison (){
-// 		expect(getComparison('deviceId2'))
-// .toBe('this.deviceId1 = changes.deviceId1.currentValue');
-//     });
 });
