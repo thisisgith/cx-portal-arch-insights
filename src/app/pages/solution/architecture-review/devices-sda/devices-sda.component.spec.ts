@@ -5,8 +5,9 @@ import { DevicesSdaModule } from './devices-sda.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureReviewService } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
-import { user } from '@mock';
-import { of } from 'rxjs';
+import { user, ArchitectureReviewScenarios } from '@mock';
+import { of, throwError } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('DevicesSdaComponent', () => {
 	let component: DevicesSdaComponent;
@@ -31,7 +32,7 @@ describe('DevicesSdaComponent', () => {
 							},
 						},
 					},
-				},
+				}, ArchitectureReviewService,
 			],
 		})
 		.compileComponents();
@@ -41,9 +42,6 @@ describe('DevicesSdaComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(DevicesSdaComponent);
 		component = fixture.componentInstance;
-		spyOn(service, 'getDevicesSDA')
-			.and
-			.returnValue(of({ deviceSDAdatas: [] }));
 		fixture = TestBed.createComponent(DevicesSdaComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -54,10 +52,53 @@ describe('DevicesSdaComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should call getDevicesSDA', () => {
-		component.getSdaDeviceData();
-		expect(service.getDevicesSDA)
-			.toHaveBeenCalled();
+	it('should check for invalidResponseHandler', () => {
+		component.inValidResponseHandler();
+		expect(component.sdaVersion)
+		.toEqual('');
+		expect(component.isLoading)
+		.toBeFalsy();
+		expect(component.deviceDetails)
+		.toBeNull();
+		expect(component.totalItems)
+		.toEqual(0);
 	});
 
+	it('should call deviceDetails on change', () => {
+		component.ngOnChanges();
+		fixture.detectChanges();
+		component.deviceDetails = {
+			ipAddress: '1.1.1.1',
+			recommendedVersions: 'recommended, versions',
+		};
+
+		component.ngOnChanges();
+		expect(component.isLoading)
+		.toBeTruthy();
+	});
+
+	it('should call getDevicesSDA service', () => {
+		spyOn(service, 'getDevicesSDAResponse')
+		.and
+		.returnValue(of(<any> ArchitectureReviewScenarios[2].scenarios.POST[0].response.body));
+
+		component.getSdaDeviceData();
+		expect(service.getDevicesSDAResponse)
+		.toHaveBeenCalled();
+	});
+
+	it('should throw errors', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getDevicesSDA')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+		);
+		component.getSdaDeviceData();
+		expect(component.sdaVersion)
+		.toEqual('');
+	});
 });

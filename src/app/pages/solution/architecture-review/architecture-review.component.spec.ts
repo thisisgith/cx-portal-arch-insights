@@ -4,14 +4,15 @@ import { ArchitectureReviewComponent } from './architecture-review.component';
 import { ArchitectureReviewModule } from './architecture-review.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ArchitectureReviewService } from '@sdp-api';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { VisualFilter } from '@interfaces';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MicroMockModule } from '@cui-x-views/mock';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
-import { user } from '@mock';
+import { user, ArchitectureReviewScenarios } from '@mock';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('ArchitectureReviewComponent', () => {
 	let component: ArchitectureReviewComponent;
@@ -48,12 +49,6 @@ describe('ArchitectureReviewComponent', () => {
 	}));
 
 	beforeEach(() => {
-		spyOn(service, 'getDevicesCount')
-			.and
-			.returnValue(of({ TotalCounts: 50 }));
-		spyOn(service, 'getDnacCount')
-			.and
-			.returnValue(of({ TotalCounts: 50 }));
 		fixture = TestBed.createComponent(ArchitectureReviewComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
@@ -62,20 +57,6 @@ describe('ArchitectureReviewComponent', () => {
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
-	});
-
-	it('should call Devices count on init', () => {
-		expect(component.status.isLoading)
-		.toBeTruthy();
-		expect(service.getDevicesCount)
-			.toHaveBeenCalled();
-	});
-
-	it('should call Devices count on init', () => {
-		expect(component.status.isLoading)
-		.toBeTruthy();
-		expect(service.getDevicesCount)
-			.toHaveBeenCalled();
 	});
 
 	it('customerId should be present', () => {
@@ -104,19 +85,16 @@ describe('ArchitectureReviewComponent', () => {
 		const visualLabel = { label: 'DNAC', active: false, count: null };
 
 		component.visualLabels =
-		[{ label: 'DNAC', active: true, count: null, key: 'dnac' },
-		{
+		[{
 			active: false,
 			count: null,
 			key: 'devices',
 			label: 'Devices',
-		}];
+		},
+		{ label: 'DNAC', active: true, count: null, key: 'dnac' }];
 		component.selectVisualLabel(visualLabel);
 		expect(component.visualLabels[0].active)
 		.toBeFalsy();
-		fixture.detectChanges();
-		visualLabel.active = true;
-		component.selectVisualLabel(visualLabel);
 	});
 
 	it('should call onsubfilterselect', () => {
@@ -133,16 +111,45 @@ describe('ArchitectureReviewComponent', () => {
 		.toBeTruthy();
 	});
 
+	it('should call selected filter onsubfilterselect', () => {
+		mockVisualFilter.seriesData = [{
+			filter: '',
+			label: '',
+			selected: false,
+			value: 123,
+		},
+		];
+		mockVisualFilter.key = 'exceptions';
+		component.onSubfilterSelect('high', mockVisualFilter);
+		expect(mockVisualFilter.seriesData[0].selected)
+		.toBeFalsy();
+	});
+
 	it('should call getSelectedSubFilters ', () => {
+		mockVisualFilter.seriesData = [{
+			filter: 'high',
+			label: '',
+			selected: false,
+			value: 123,
+		},
+		];
 		component.filters = [mockVisualFilter];
-		component.getSelectedSubFilters('high');
+		expect(component.getSelectedSubFilters('high'))
+		.toBeFalsy();
 	});
 
 	it('should clear filters', () => {
-		component.filters = [];
+		mockVisualFilter.seriesData = [{
+			filter: 'high',
+			label: '',
+			selected: true,
+			value: 123,
+		},
+		];
+		component.filters = [mockVisualFilter];
 		component.clearFilters();
-		expect(component.selectedFilter)
-		.toEqual({ severity: '' });
+		expect(component.filters[0].selected)
+		.toBeFalsy();
 	});
 
 	it('should call load data on component loading', () => {
@@ -180,5 +187,46 @@ describe('ArchitectureReviewComponent', () => {
 				expect(subfilter.selected)
 					.toBeFalsy();
 			});
+	});
+
+	it('should load the data', () => {
+		spyOn(service, 'getSDAReadinessCountResponse')
+			.and
+			.returnValue(of(ArchitectureReviewScenarios[0].scenarios.GET[0].response.body));
+
+		component.loadData();
+		expect(service.getSDAReadinessCountResponse)
+		.toHaveBeenCalled();
+	});
+
+	it('should call getDevicesCount on init', () => {
+		spyOn(service, 'getDevicesCountResponse')
+			.and
+			.returnValue(of(ArchitectureReviewScenarios[0].scenarios.GET[0].response.body));
+
+		spyOn(service, 'getDnacCountResponse')
+			.and
+			.returnValue(of(ArchitectureReviewScenarios[0].scenarios.GET[0].response.body));
+
+		component.ngOnInit();
+		expect(service.getDevicesCountResponse)
+		.toHaveBeenCalled();
+		expect(service.getDnacCountResponse)
+		.toHaveBeenCalled();
+	});
+
+	it('should throw errors', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(service, 'getSDAReadinessCountResponse')
+			.and
+			.returnValue(
+				throwError(new HttpErrorResponse(error)),
+		);
+		component.loadData();
+		expect(component.getDevicesCount)
+		.toThrowError();
 	});
 });
