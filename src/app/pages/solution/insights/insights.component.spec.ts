@@ -63,6 +63,7 @@ describe('InsightsComponent', () => {
 		spyOn(routeAuthService, 'checkPermissions')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.ngOnInit();
 		tick(1000);
 		fixture.detectChanges();
 		expect(component.hasPermission)
@@ -74,6 +75,7 @@ describe('InsightsComponent', () => {
 		spyOn(routeAuthService, 'checkPermissions')
 			.and
 			.returnValue(of(response));
+		component.ngOnInit();
 		tick(1000);
 		fixture.detectChanges();
 		expect(component.hasPermission)
@@ -85,6 +87,7 @@ describe('InsightsComponent', () => {
 		spyOn(routeAuthService, 'checkPermissions')
 			.and
 			.returnValue(of(response));
+		component.ngOnInit();
 		tick(1000);
 		fixture.detectChanges();
 		expect(component.hasPermission)
