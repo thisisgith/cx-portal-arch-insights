@@ -52,6 +52,16 @@ export interface violationGridParams {
     severity: string,
 }
 
+export interface assetGridParams {
+    criteria: string,
+    customerId: string,
+    osType: string,
+    pageLimit: number,
+    pageNum: number,
+    searchParam: string,
+    severity: string,
+}
+
 export interface RccPolicyViolationData {
     customerId: string,
     policyCategory: string,
@@ -64,12 +74,4 @@ export interface RccPolicyViolationData {
 
 export interface RccCustomer {
     customerId: string 
-}
-
-export interface AssetGridDataQueryParam {
-    customerId: string,
-    pageLimt:number, 
-    pageNum:number, 
-    policyType:string,
-    severity:string,
 }

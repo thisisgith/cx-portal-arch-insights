@@ -73,7 +73,7 @@ export class ASDAPIService {
 			return of(this.authToken);
 		}
 
-		return this.http.get<AuthTokenResponse>(this.asdAuthURL)
+		return this.http.get<AuthTokenResponse>(this.asdAuthURL, { withCredentials: true })
 			.pipe(map(response => {
 				this.authToken = `Bearer ${response.token}`;
 
