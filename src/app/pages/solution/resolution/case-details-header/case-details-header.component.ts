@@ -123,7 +123,9 @@ export class CaseDetailsHeaderComponent {
 						this.logger.error('case-details-header.component : getRmaDetails() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 
-						return of(null);
+						const newRecord = { returns: { RmaRecord:
+							[{ rmaNo: Number(rmaNum.trim()) }] } };
+						return of(newRecord);
 					}),
 				),
 		);

@@ -807,7 +807,6 @@
 	"_RMACaseNumberTitle_": "Case {0}",
 	"_RMACaseOwnerEmail_": "Case Owner",
 	"_RMACaseProblemType_": "Problem Type",
-	"_RMACaseRMADetailError_": "Something went wrong. Please try again.",
 	"_RMACases_": "Cases ",
 	"_RMACaseSeverity_": "Severity",
 	"_RMACaseSoftwareVersion_": "Software Version",
