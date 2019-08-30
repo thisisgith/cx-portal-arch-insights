@@ -131,7 +131,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					key: 'deviceIpsWithExceptions',
 					name: I18n.get('_ArchitectureAssetsImpacted_'),
 					render: item => item.deviceIpsWithExceptions.length !== 0
-								? item.deviceIpsWithExceptions.split(';').length : '0',
+								? _.split(item.deviceIpsWithExceptions, ';').length : '0',
 					sortable: false,
 				},
 			],
@@ -177,7 +177,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		getCBPSeverityList(this.paramsType)
 		.subscribe(data => {
 			if (!data) {
-				this.inValidResponseHandler();
+				return this.inValidResponseHandler();
 			}
 			const datePipe = new DatePipe('en-US');
 			this.isLoading = false;
