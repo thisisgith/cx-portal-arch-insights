@@ -51,7 +51,7 @@ describe('InsightsComponent', () => {
 			.toBeTruthy();
 	});
 
-	fit('should get the optin status for loggedIn user', () => {
+	it('should get the optin status for loggedIn user', () => {
 		const response = true;
 		expect(component.hasPermission)
 				.toBeDefined();
