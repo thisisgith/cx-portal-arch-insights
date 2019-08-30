@@ -211,7 +211,7 @@ export class DnacListComponent implements OnInit {
 	 * @param item - Contains dnac info
 	 * @returns - Returns the formatted string
 	 */
-	public getdevicesPublishedTemplate (item) {
+	public getdevicesTemplate (item) {
 		return `${item.noOfDevices }(${item.devicesPublishedLimits})`;
 	}
 
