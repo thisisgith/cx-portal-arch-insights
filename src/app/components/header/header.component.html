@@ -1,11 +1,11 @@
 <header class="header header--compressed">
 	<div class="header-bar flex-center-sm container-fluid">
-		<a class="header-bar__logo half-margin-left hidden-xs" href="https://www.cisco.com" target="_blank" data-auto-id="HeaderCiscoLink">
+		<a class="header-bar__logo half-margin-left hidden-xs" href="/" target="_blank" data-auto-id="HeaderCiscoLink">
 			<span class="icon-cisco"></span>
 		</a>
 		<div class="header-bar__main">
 			<div class="header-heading text-indigo">
-				<h5 *ngIf="searchBreakpointShow(600)" class="text-nowrap base-margin-right" [innerText]="'_ApplicationName_' | i18n"></h5>
+				<h5 *ngIf="searchBreakpointShow(600)" class="text-nowrap base-margin-right clickable" [innerText]="'_ApplicationName_' | i18n" [routerLink]="['/solution/lifecycle']" data-auto-id="HeaderCPLogoLink"></h5>
 				<a *ngIf="searchBreakpointShow(1023)" class="cx-header-links" [href]="communityLink" target="_blank" data-auto-id="HeaderCommunityLink" [title]="'_Communities_' | i18n">
 					<div class="text-nowrap">
 						<span class="cx-header-icon icon-communities hidden-xs"></span>

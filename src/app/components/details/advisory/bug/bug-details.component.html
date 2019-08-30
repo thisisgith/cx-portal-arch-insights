@@ -9,7 +9,8 @@
 				[customerId]="customerId"
 				type="bug"
 				[id]="id"
-				(impactedCount)="impactedCount = $event">
+				(impactedCount)="impactedCount = $event"
+				(assets)="assets.emit($event)">
 			</advisory-impacted-assets>
 		</div>
 	</cui-tab>
@@ -43,7 +44,7 @@
 		<cui-spinner></cui-spinner>
 	</div>
 </ng-template>
-	
+
 <ng-template #detailText let-title="title" let-text="text">
 	<div class="base-margin-bottom">
 		<div [innerText]="title" class="text-uppercase text-bold qtr-margin-bottom"></div>

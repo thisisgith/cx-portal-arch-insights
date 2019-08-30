@@ -143,7 +143,7 @@ describe('CaseOpenComponent', () => {
 			.toEqual('IN_PROGRESS');
 	});
 
-	it('should handle failure when attempting to scan after case open', () => {
+	it('should handle failure when attempting to scan after case open', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -158,13 +158,15 @@ describe('CaseOpenComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		component.submit();
+		tick();
 		fixture.detectChanges();
 
 		expect(component.caseOpenData.scanStatus)
 			.toEqual('FAILURE');
-	});
+	}));
 
-	it('should handle failure when attempting to get transaction of scan after case open', () => {
+	it('should handle failure when attempting to get transaction of scan after case open',
+	fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -184,9 +186,10 @@ describe('CaseOpenComponent', () => {
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
 		component.submit();
+		tick();
 		fixture.detectChanges();
 
 		expect(component.caseOpenData.scanStatus)
 			.toEqual('FAILURE');
-	});
+	}));
 });

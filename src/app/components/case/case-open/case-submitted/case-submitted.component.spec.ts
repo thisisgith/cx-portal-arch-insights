@@ -52,9 +52,11 @@ describe('CaseSubmittedComponent', () => {
 			technology: '12',
 			title: 'A Test Case',
 		};
-		component.asset = {
-			serialNumber: '1234',
-		};
+		component.assets = [
+			{
+				serialNumber: '1234',
+			},
+		];
 		fixture.detectChanges();
 	});
 

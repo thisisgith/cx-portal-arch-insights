@@ -27,7 +27,7 @@ export class FeedbackComponent implements OnInit {
 	private feedbackMaxLength = 2000;
 	public thumbValue = '-';
 	public okayToContact = 'No';
-	private userEmail = this.user.email ? this.user.email : this.user.emailAddress;
+	private userEmail = this.user.cpr.pf_auth_email;
 	public emailParams = {
 		from: this.userEmail,
 		subject: I18n.get('_FeedbackEmailSubject_'),
