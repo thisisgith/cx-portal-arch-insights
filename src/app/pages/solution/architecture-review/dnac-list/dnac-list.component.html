@@ -75,7 +75,7 @@
 			'transparent-style': item?.devicesPublishedViolated === 'Yes'
 		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.noOfDevices+'('+item?.devicesPublishedLimits+')'"> 
+	<span [innerText]="getfabricsTemplate(item)"> 
 	</span>
 </ng-template>
 
@@ -86,7 +86,7 @@
 			'transparent-style': item?.endpointsPublishedViolated === 'Yes'
 		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.noOfEndpoints+'('+item?.endpointsPublishedLimits+')'"> 
+	<span [innerText]="getendPointsTemplate(item)"> 
 	</span>
 </ng-template>
 
@@ -97,6 +97,6 @@
 			'transparent-style': item?.fabricsPublishedViolated === 'Yes'
 		}" class="qtr-margin-right icon-circle">
 	</span>
-	<span [innerText]="item?.noOfFabrics+'('+item?.fabricsPublishedLimits+')'"> 
+	<span [innerText]="getfabricsTemplate(item)"> 
 	</span>
 </ng-template>

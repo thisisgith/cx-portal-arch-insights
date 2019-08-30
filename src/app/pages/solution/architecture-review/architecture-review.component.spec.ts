@@ -81,7 +81,7 @@ describe('ArchitectureReviewComponent', () => {
 		.toBeFalsy();
 	});
 
-	xit('should call selectVisualLabel', () => {
+	it('should call selectVisualLabel', () => {
 		const visualLabel = { label: 'DNAC', active: false, count: null };
 
 		component.visualLabels =

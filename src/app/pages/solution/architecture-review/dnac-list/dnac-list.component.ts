@@ -185,4 +185,34 @@ export class DnacListComponent implements OnInit {
 		this.dnacDetails = null;
 	}
 
+	/**
+	 * This function is used to concate the noOfFabrics and fabricsPublishedLimits
+	 * in specific format
+	 * @param item - Contains dnac info
+	 * @returns - Returns the formatted string
+	 */
+	public getfabricsTemplate (item) {
+		return `${item.noOfFabrics }(${item.fabricsPublishedLimits})`;
+	}
+
+	/**
+	 * This function is used to concate the noOfEndpoints and endpointsPublishedLimits
+	 * in specific format
+	 * @param item - Contains dnac info
+	 * @returns - Returns the formatted string
+	 */
+	public getendPointsTemplate (item) {
+		return `${item.noOfEndpoints }(${item.endpointsPublishedLimits})`;
+	}
+
+	/**
+	 * This function is used to concate the noOfDevices and devicesPublishedLimits
+	 * in specific format
+	 * @param item - Contains dnac info
+	 * @returns - Returns the formatted string
+	 */
+	public getdevicesPublishedTemplate (item) {
+		return `${item.noOfDevices }(${item.devicesPublishedLimits})`;
+	}
+
 }
