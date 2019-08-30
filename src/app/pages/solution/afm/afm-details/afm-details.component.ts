@@ -7,7 +7,7 @@ import {
 	OnChanges,
  } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { Alarm, AfmSearchParams, AfmService } from '@sdp-api';
+import { Alarm, AfmSearchParams, AfmService, AfmResponse } from '@sdp-api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -87,45 +87,48 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 			this.afmService.ignoreEvent(this.searchParams)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
-					this.options = {
-						alertIcon:  response.status.toUpperCase() === 'SUCCESS' ?
-						'icon-check-outline' : 'icon-error-outline',
-						message: response.statusMessage,
-						severity: response.status.toUpperCase() === 'SUCCESS' ?
-						 'alert--success' : 'alert--danger',
-						visible: true,
-					};
-					if (response.status.toUpperCase() !== 'SUCCESS') {
-						this.status = false;
-					} else {
-						this.eventUpdated.emit(true);
-						this.status = true;
-						alarmData.status = 'Ignored';
-					}
-					this.loading = false;
+					this.changeStatus('ignored', response, alarmData);
 				});
 		} else {
 			this.afmService.revertIgnoreEvent(this.searchParams)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
-					this.options = {
-						alertIcon:  response.status.toUpperCase() === 'SUCCESS' ?
-						'icon-check-outline' : 'icon-error-outline',
-						message: response.statusMessage,
-						severity: response.status.toUpperCase() === 'SUCCESS' ?
-						 'alert--success' : 'alert--danger',
-						visible: true,
-					};
-					if (response.status.toUpperCase() !== 'SUCCESS') {
-						this.status = true;
-					} else {
-						this.eventUpdated.emit(true);
-						this.status = false;
-						alarmData.status = 'Success';
-					}
-					this.loading = false;
+					this.changeStatus('revert', response, alarmData);
 				});
 		}
+	}
+
+	/**
+	 * it will change the status of ignore event
+	 *
+	 * @private
+	 * @param eventName name of event ignore/revert ignore
+	 * @param response AfmResponse  of the operation
+	 * @param alarmData alarmData
+	 * @memberof AfmDetailsComponent
+	 */
+	private changeStatus (eventName: string, response: AfmResponse, alarmData: Alarm) {
+		this.options = {
+			alertIcon:  response.status.toUpperCase() === 'SUCCESS' ?
+			'icon-check-outline' : 'icon-error-outline',
+			message: response.statusMessage,
+			severity: response.status.toUpperCase() === 'SUCCESS' ?
+			 'alert--success' : 'alert--danger',
+			visible: true,
+		};
+		if (response.status.toUpperCase() !== 'SUCCESS') {
+			eventName === 'revert' ? this.status = true  : this.status = false;
+		} else {
+			this.eventUpdated.emit(true);
+			if (eventName === 'revert') {
+				 this.status = false ;
+				 alarmData.status = 'Success';
+			} else {
+				this.status = true;
+				alarmData.status = 'Ignored';
+			}
+		}
+		this.loading = false;
 	}
 
 	/** Function used to destroy the component */
