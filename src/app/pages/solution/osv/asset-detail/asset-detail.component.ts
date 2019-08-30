@@ -186,6 +186,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.osvService.getSoftwareGroupRecommendations(this.softwareGroupDetailsParams)
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
+					this.addVersionInfo(response);
 					this.assetDetails = this.groupData(response);
 					this.buildTable();
 				}),

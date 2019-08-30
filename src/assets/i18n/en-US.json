@@ -629,7 +629,7 @@
 	"_OsvSoftwareVersionSummary_": "Software Version Summary",
 	"_OsvStatusOrAction_": "Status/Action",
 	"_OsvSuggestedInfo_": "Are available in Cisco Software Central on cisco.com, and represent a collaboration from product engineering,release operations and Customer Experience (CX) teams on what is the best choice of software for most customers.",
-	"_OsvSoftwareGroupInfoHeader_": "A software group comprises assets with common network roles, requirements, and operational preferences and is designed to process software recommendations. The goal is to identify the minimum number of software groups and software versions that can be standardized on for operational efficiency.",
+	"_OsvSoftwareGroupInfoHeader_": "A <b>software group</b> comprises assets with common network roles, requirements, and operational preferences and is designed to process software recommendations. The goal is to identify the minimum number of software groups and software versions that can be standardized on for operational efficiency.",
 	"_OsvUngroupedAssetsCount_": "Ungrouped Assets Count",
 	"_OsvAssetGroup_": "Asset Group :",
 	"_OsvAssetGroupList_": [
