@@ -110,7 +110,8 @@
 
 <ng-template #currentTemplate let-item="celldata">
 	<div *ngIf="item.name == 'current'" class="version-pointer half-padding-left relative">
-		<span [innerText]="'_OsvCurrentVersion_' | i18n"></span>
+		<span *ngIf="accept" [innerText]="'_OsvCurrentVersion_' | i18n"></span>
+		<span *ngIf="!accept" [innerText]="'_CurrentVersion_' | i18n"></span>
 	</div>
 </ng-template>
 

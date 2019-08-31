@@ -24,9 +24,10 @@ import {
 import { forkJoin, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { CuiTableOptions } from '@cisco-ngx/cui-components';
+import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { DatePipe } from '@angular/common';
+import { CancelConfirmComponent } from '../cancel-confirm/cancel-confirm.component';
 
 /**
  * SoftwareGroupDetail Component
@@ -83,6 +84,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		private logger: LogService,
 		private osvService: OSVService,
 		private route: ActivatedRoute,
+		private cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
@@ -407,5 +409,12 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public onAcceptClick () {
 		this.selectedMachineRecommendation = { };
+	}
+
+	/**
+	 * on machine recommendation cancel click
+	 */
+	public onCancel () {
+		this.cuiModalService.showComponent(CancelConfirmComponent, { });
 	}
 }

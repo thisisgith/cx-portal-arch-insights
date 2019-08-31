@@ -1,15 +1,24 @@
 <details-panel *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup" [fullscreen]="fullscreen">
 	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
 		<div detailsPanelTitle>
-			<div class="qtr-margin-left text-xlarge half-margin-bottom"
+			<div *ngIf="!showBugs; else bugsTemplateHeader" class="qtr-margin-left text-xlarge half-margin-bottom"
 				[innerText]="selectedSoftwareGroup?.profileName"></div>
 		</div>
 	</details-panel-header>
 	<ng-container *ngTemplateOutlet="softwareGroupDetails"></ng-container>
 </details-panel>
 
+<ng-template #bugsTemplateHeader>
+	<div class="text-xlarge">
+		<span class="icon-chevron-left toggle" data-auto-id="ShowBugs" (click)="showBugs = true"></span>
+		<span class="icon-chevron-right qtr-margin-left text-muted"></span>
+		<span class="qtr-margin-left" [innerText]="'|'"></span>
+		<span class="qtr-margin-left" [innerText]="'_Bugs_' | i18n"></span>
+	</div>
+</ng-template>
+
 <ng-template #softwareGroupDetails>
-	<cui-tabs id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
+	<cui-tabs *ngIf="!showBugs; else bugTabs" id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
 		<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
 			<div class="base-margin-top">
 				<cui-spinner *ngIf="status.isLoading"></cui-spinner>
@@ -29,10 +38,22 @@
 		</cui-tab>
 	</cui-tabs>
 </ng-template>
+
+<ng-template #bugTabs>
+	<cui-tabs>
+		<cui-tab [label]="'_OsvCurrentVersion_' | i18n"></cui-tab>
+		<cui-tab [label]="('_OsvRecommended_' | i18n:'#1')"></cui-tab>
+		<cui-tab [label]="('_OsvRecommended_' | i18n:'#2')"></cui-tab>
+		<cui-tab [label]="('_OsvRecommended_' | i18n:'#3')"></cui-tab>
+	</cui-tabs>
+</ng-template>
+
 <ng-template #softwareGroupRecommendations>
 	<div class="base-margin-top">
-		<asset-details [selectedMachineRecommendation]="selectedMachineRecommendation" [recommendations]="recommendations" [accept]="true"
-			(onRecommendationAccept)="onRecommendationAccept($event)" [selectedSoftwareGroup]="selectedSoftwareGroup" [fullscreen]="fullscreen">
+		<asset-details [selectedMachineRecommendation]="selectedMachineRecommendation"
+			[recommendations]="recommendations" [accept]="true"
+			(onRecommendationAccept)="onRecommendationAccept($event)" [selectedSoftwareGroup]="selectedSoftwareGroup"
+			[fullscreen]="fullscreen">
 		</asset-details>
 	</div>
 </ng-template>
@@ -99,40 +120,48 @@
 				<tr>
 					<td class="no-border-bottom no-border-top"></td>
 					<td class="no-border-top">
-						<div [ngClass]="headingClass" [innerText]="'current' | titlecase"></div>
+						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
+							[innerText]="'current' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v3'"></div>
 						<div [innerText]="'-'"></div>
 					</td>
-					<td class="recommendation no-border-top">
+					<td class="recommendation no-border-top ">
 						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
 							[innerText]="'recommended #1' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
-					<td class="recommendation no-border-top">
-						<div [ngClass]="headingClass" [innerText]="'recommended #2' | titlecase"></div>
+					<td class="recommendation no-border-top ">
+						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
+							[innerText]="'recommended #2' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
-					<td class="recommendation no-border-top">
-						<div [ngClass]="headingClass" [innerText]="'recommended #3' | titlecase"></div>
+					<td class="recommendation no-border-top ">
+						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
+							[innerText]="'recommended #3' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 				</tr>
 				<!-- status or action -->
 				<tr>
-					<td class="no-border-bottom no-border-top" [ngClass]="headingClass" [innerText]="'_OsvStatusOrAction_' | i18n"></td>
+					<td class="no-border-bottom no-border-toptext-large"
+						[innerText]="'_OsvStatusOrAction_' | i18n"></td>
 					<td></td>
-					<td class="recommendation">
-						<button (click)="onAcceptClick()" cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
-							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
+					<td class="recommendation ">
+						<button (click)="onAcceptClick()" cuiButton [color]="'primary-ghost'" [small]="true"
+							[wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n"
+							attr.data-auto-id="AcceptVersion-"></button>
+						<button (click)="onCancel()" cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false"
+							[animated]="true" [innerText]="'_Cancel_' | i18n"
+							attr.data-auto-id="CancelAcceptVersion-"></button>
 					</td>
-					<td class="recommendation">
+					<td class="recommendation border-left">
 						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
 							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
 					</td>
-					<td class="recommendation">
+					<td class="recommendation ">
 						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
 							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
 					</td>
@@ -140,7 +169,7 @@
 				<!-- risk score -->
 				<tr>
 					<td class="overflow-unset no-border-bottom no-border-top">
-						<span [ngClass]="headingClass" [innerText]="'_OsvRiskScore_' | i18n"></span>
+						<span class="text-large" [innerText]="'_OsvRiskScore_' | i18n"></span>
 						<span class="qtr-margin-left  text-primary" data-balloon-length="large"
 							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="right">
 							<i class="icon-info icon-small qtr-margin-bottom"></i>
@@ -234,7 +263,8 @@
 				</tr>
 				<!-- security advisories -->
 				<tr>
-					<td class="headingClass no-border-bottom no-border-top" [innerText]="'_SecurityAdvisories_' | i18n"></td>
+					<td class="headingClass no-border-bottom no-border-top" [innerText]="'_SecurityAdvisories_' | i18n">
+					</td>
 					<td>
 						<div class="text-xlarge" [innerText]="'32'"></div>
 						<div class="qtr-margin-top">
@@ -285,7 +315,7 @@
 				<!-- features -->
 				<tr>
 					<td class="no-border-bottom no-border-top">
-						<div [ngClass]="headingClass" [innerText]="'_OsvFeatures_' | i18n"></div>
+						<div class="text-large" [innerText]="'_OsvFeatures_' | i18n"></div>
 						<div [ngClass]="subHeadingClass" class="qtr-margin-top"
 							[innerText]="'_OsvActiveAvailable_' | i18n"></div>
 					</td>
@@ -321,3 +351,4 @@
 		</table>
 	</div>
 </ng-template>
+<cui-modal></cui-modal>

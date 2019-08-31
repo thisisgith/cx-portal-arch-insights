@@ -20,7 +20,7 @@ fdescribe('NoDNACHeaderComponent', () => {
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
 		})
-			.compileComponents();		
+			.compileComponents();
 	}));
 
 	beforeEach(() => {
@@ -32,5 +32,5 @@ fdescribe('NoDNACHeaderComponent', () => {
 	it('should create', () => {
 		expect(component)
 			.toBeTruthy();
-	});	
+	});
 });

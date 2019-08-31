@@ -643,6 +643,7 @@
 	"_OsvProductFamily_": "Product Family",
 	"_OsvProduction_": "Production",
 	"_OsvRecommendations_": "Recommendations",
+	"_OsvRecommended_": "Recommended {0}",
 	"_OsvRecommendedInfo_": "[Are] available from Cisco Customer Experience (CX) Optimal Software Version feature or CX Designated Expert consulting and represent an in-depth analysis of current and planned customer requirements, risk, and operational preferences to help customers confidently deploy new software on the network.",
 	"_OsvRefreshRecommendations_": "Refresh Recommendations",
 	"_OsvReleaseDate_": "Release Date",

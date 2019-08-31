@@ -58,12 +58,13 @@
 	overflow: unset !important;
 }
 
-.compare-recommendations table{
-	border: 0px;
+.compare-recommendations table {
+	border: 0;
 }
 
 .compare-recommendations table tbody tr td.recommendation {
 	background-color: $light-gray-5;
+	border-left: 1px solid $med-gray-3;
 }
 
 .compare-recommendations table tbody tr td.no-border-top {
