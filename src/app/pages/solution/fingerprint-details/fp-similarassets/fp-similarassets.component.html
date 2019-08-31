@@ -160,7 +160,11 @@
 	</form>
 </div>
 <div class="row flex">
-	<div *ngIf="!seriesDataLoading; else loadingTemplate" class="container base-margin-top" data-auto-id="similar-assets-table" >
+	<div
+		*ngIf="!seriesDataLoading; else loadingTemplate"
+		class="container base-margin-top"
+		data-auto-id="similar-assets-table"
+	>
 		<cui-table
 			[options]="tableOptions"
 			[data]="similarDevicesData?.similarDevices"
@@ -181,15 +185,16 @@
 	<!-- grid-section ends -->
 </div>
 <ng-template #assetTemplate let-item="celldata">
-	<div class="syslog-column" title="{{ item.IcDesc }}">
+	<div>
 		<span class="text-info" [innerText]="item.deviceName"></span><br />
 		<span class="text-small" [innerText]="item.productFamily"></span>
 	</div>
 </ng-template>
 <ng-template #crashRiskTemplate let-item="celldata">
-	<span class="text-dkgray-1">{{
-		item.riskScore / 100 | percent: "2.2-4"
-	}}</span>
+	<span
+		class="text-dkgray-1"
+		[innerHTML]="item.riskScore / 100 | percent: '2.2-4'"
+	></span>
 </ng-template>
 <ng-template #similarityMatchTemplate let-item="celldata">
 	<div
