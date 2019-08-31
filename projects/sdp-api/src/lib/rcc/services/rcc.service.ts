@@ -24,7 +24,7 @@ class RccService extends __BaseService {
 	static readonly getAssetSummaryData = '/api/customerportal/compliance/v1/service/fetch-violation-details';
 	static readonly getRccAssetFilterData = '/api/customerportal/compliance/v1/service/fetch-violation-details-filter';
 
-	constructor(config: __Configuration, http: HttpClient) {
+	constructor (config: __Configuration, http: HttpClient) {
 		super(config, http);
 	}
 
