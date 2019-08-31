@@ -15,6 +15,7 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'app-cbp-rule-violation',
+	styleUrls: ['./cbp-rule-violation.component.scss'],
 	templateUrl: './cbp-rule-violation.component.html',
 })
 export class CbpRuleViolationComponent implements OnInit, OnChanges {
@@ -35,6 +36,8 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 	private recommendationTemplate: TemplateRef<{ }>;
 	@ViewChild('correctiveActionsTemplate', { static: true })
 	private correctiveActionsTemplate: TemplateRef<{ }>;
+	@ViewChild('exceptionsTemplate', { static: true })
+	private exceptionsTemplate: TemplateRef<{ }>;
 
 	public globalSearchText = '';
 
@@ -74,11 +77,11 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
 		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
 		if (selectedFilter && !isFirstChange) {
-			const severityType = _.get(selectedFilter, { key: 'exceptions' });
+			const severityType = _.get(selectedFilter,  'exceptions');
 			if (severityType) {
-				_.set(this.paramsType.severity, severityType);
+				this.paramsType.severity = _.cloneDeep(severityType.toString());
 			} else {
-				_.unset(this.paramsType.severity);
+				this.paramsType.severity = '';
 			}
 			this.isLoading = true;
 			this.tableStartIndex = 0;
@@ -105,9 +108,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					template: this.riskTemplate,
 				},
 				{
-					key: 'exceptions',
 					name: I18n.get('_ArchitectureException_'),
 					sortable: false,
+					template: this.exceptionsTemplate,
 				},
 				{
 					name: I18n.get('_ArchitectureRecommendation_'),
@@ -128,7 +131,7 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					key: 'deviceIpsWithExceptions',
 					name: I18n.get('_ArchitectureAssetsImpacted_'),
 					render: item => item.deviceIpsWithExceptions.length !== 0
-					? item.deviceIpsWithExceptions.split(';').length : '0',
+								? _.split(item.deviceIpsWithExceptions, ';').length : '0',
 					sortable: false,
 				},
 			],
@@ -173,6 +176,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		this.architectureService.
 		getCBPSeverityList(this.paramsType)
 		.subscribe(data => {
+			if (!data) {
+				return this.inValidResponseHandler();
+			}
 			const datePipe = new DatePipe('en-US');
 			this.isLoading = false;
 			this.totalItems = data.TotalCounts;
@@ -189,6 +195,14 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 		});
 	}
 
+	/**
+	 * This Function is used to handle the invalid Response
+	 */
+	public inValidResponseHandler () {
+		this.isLoading = false;
+		this.cbpRuleExceptions = [];
+		this.totalItems = 0;
+	}
 	/**
  	* This method is used to set the exception object in order to open Fly-out View
  	* @param event - It contains the selected Exception

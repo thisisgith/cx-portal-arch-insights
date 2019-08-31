@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
-import { ArchitectureReviewService } from '@sdp-api';
+import { ArchitectureReviewService, IParamType } from '@sdp-api';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash-es';
 /**
@@ -48,7 +48,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 		this.paramsType.customerId = _.cloneDeep(this.customerId);
 	}
 
-	public paramsType = {
+	public paramsType: IParamType = {
 		customerId : '',
 		deviceCompliance: '',
 		page: 0,
@@ -60,7 +60,6 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 * Used to call the getDevicesList and buildTable function for Updating the Table
 	 */
 	public ngOnInit () {
-		// this.getDevicesList();
 		this.buildTable();
 	}
 
@@ -71,9 +70,10 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const selectedFilter = _.get(changes, ['filters', 'currentValue']);
-		if (selectedFilter && !changes.filters.firstChange) {
-			this.paramsType.deviceCompliance =
-			selectedFilter.exceptions ? selectedFilter.exceptions.toString() : '';
+		const isFirstChange = _.get(changes, ['filters', 'firstChange']);
+		if (selectedFilter && !isFirstChange) {
+			const compliantType = _.get(selectedFilter,  'exceptions');
+			this.paramsType.deviceCompliance = compliantType ? compliantType.toString() : '';
 			this.isLoading = true;
 			this.tableStartIndex = 0;
 			this.paramsType.page = 0;
@@ -177,7 +177,6 @@ export class DevicesListComponent implements OnInit, OnChanges {
 		this.isLoading = false;
 		this.dnacDeviceDetails = [];
 		this.totalItems = 0;
-		// this.lastCollectionTime = '';
 	}
 
 	/**
@@ -190,7 +189,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 
 	/**
 	 * This method is used to set the null to exception object
-	 * in order to Close Fly-out View
+	 * in order to Close device View
 	 */
 	public onPanelClose () {
 		this.deviceDetails = null;
@@ -198,10 +197,10 @@ export class DevicesListComponent implements OnInit, OnChanges {
 
 	/**
 	 * This method is used to set the null to asset object
-	 * in order to Close Fly-out View
+	 * in order to Close Device View
 	 * @param isClosed - should be true or false
 	 */
-	public closeAssetDetailsView (isClosed: Boolean) {
+	public closeDeviceView (isClosed: Boolean) {
 		if (isClosed) {
 			this.selectedAsset = null;
 		}
@@ -211,7 +210,7 @@ export class DevicesListComponent implements OnInit, OnChanges {
 	 * Used for Opening the Asset 360 View the data for table
 	 * @param item - The Item to which Asset 360 needs to shown
 	 */
-	public openAssetDetailsView (item: any) {
+	public openDeviceView (item: any) {
 		this.selectedAsset = _.cloneDeep(item);
 	}
 

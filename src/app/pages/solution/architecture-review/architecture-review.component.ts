@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
-import { ArchitectureReviewService } from '@sdp-api';
+import { ArchitectureReviewService, ISeverity, IStatus } from '@sdp-api';
 import { forkJoin, of, Subject } from 'rxjs';
 import { VisualFilter } from '@interfaces';
 import { map, catchError, takeUntil } from 'rxjs/operators';
@@ -21,12 +21,12 @@ export class ArchitectureReviewComponent implements OnInit {
 
 	public customerId: string;
 	public filtered = false;
-	public selectedFilter = {
+	public selectedFilter: ISeverity = {
 		severity: '',
 	};
 	public filters: VisualFilter[];
 
-	public status = { inventoryLoading: true, isLoading: true };
+	public status: IStatus = { inventoryLoading: true, isLoading: true };
 
 	private destroy$ = new Subject();
 
@@ -34,8 +34,13 @@ export class ArchitectureReviewComponent implements OnInit {
 	private exceptionsFilterTemplate: TemplateRef<{ }>;
 
 	public visualLabels = [
-		{ label: I18n.get('_ArchitectureDNAC_'), active: true, count: null },
-		{ label: I18n.get('_ArchitectureDevices_'), active: false, count: null },
+		{ label: I18n.get('_ArchitectureDNAC_'), active: true, count: null, key: 'dnac' },
+		{
+			active: false,
+			count: null,
+			key: 'devices',
+			label: I18n.get('_ArchitectureDevices_'),
+		},
 	];
 
 	constructor (
@@ -58,7 +63,13 @@ export class ArchitectureReviewComponent implements OnInit {
 				takeUntil(this.destroy$),
 			)
 			.subscribe(res => {
-				this.visualLabels[1].count = res.TotalCounts;
+				const devices = _.find(this.visualLabels, { key: 'devices' });
+				devices.count = res.TotalCounts;
+			},
+			err => {
+				this.logger.error('Count of Devices' +
+					'  : getDevicesCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
 			});
 
 		this.architectureService.getDnacCount({ customerId: this.customerId })
@@ -66,7 +77,13 @@ export class ArchitectureReviewComponent implements OnInit {
 				takeUntil(this.destroy$),
 			)
 			.subscribe(res => {
-				this.visualLabels[0].count = res.TotalCounts;
+				const dnac = _.find(this.visualLabels, { key: 'dnac' });
+				dnac.count = res.TotalCounts;
+			},
+			err => {
+				this.logger.error('Count of Dnac' +
+					'  : getDnacCount() ' +
+					`:: Error : (${err.status}) ${err.message}`);
 			});
 
 		this.buildFilters();
@@ -220,6 +237,11 @@ export class ArchitectureReviewComponent implements OnInit {
 				this.status.isLoading = false;
 
 				this.logger.debug('architecture.component : loadData() :: Finished Loading');
+			},
+			err => {
+				this.logger.error('architecture component : loadData()' +
+						'  : loadData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
 			});
 	}
 

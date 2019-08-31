@@ -9,7 +9,6 @@ import {
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import { SyslogsService, SyslogGridData, SyslogFilter } from '@sdp-api';
-// tslint:disable-next-line: max-line-length
 import { Subscription, Subject, forkJoin, of } from 'rxjs';
 import { map, takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -65,17 +64,18 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	public tableData: SyslogGridData[] = [];
 	public pageLimit = 10;
 	public pageNum = 1;
-	public severity = 7;
+	public severity = 3;
 	public timeRange = 1;
-	public catalog = '';
+	public catalog = 'Cisco';
 	public selectedAsset;
 	public showAssetPanel = false;
 	public fullscreen = false;
+	public width = 300;
 	public view: 'syslogMessage' | 'syslogAsset' = 'syslogMessage';
 	public appliedFilters = {
 		asset: '',
-		catalog : '',
-		severity: 7,
+		catalog : 'Cisco',
+		severity: 3,
 		timeRange: 1,
 	};
 	/**
@@ -98,10 +98,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		isLoading: true,
 	};
 	public syslogsParams: SyslogsService.GetSyslogsParams = {
+		catalogList: ['Cisco'],
 		customerId: this.customerId,
 		pageNo: this.pageNum,
+		severityList : ['3'],
 		size: this.pageLimit,
 		timeRange: ['1'],
+
 	};
 	public selected;
 	public visualLabels: any = [
@@ -128,7 +131,6 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 	 * Fetchs syslogs count
 	 */
 	public fetchSyslogsCount () {
-		// tslint:disable-next-line: ban-comma-operator
 		this.countSubscripion = this.syslogsService
 			.getSyslogsCount(this.customerId)
 			.pipe(takeUntil(this.destroy$))
@@ -136,13 +138,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 				this.totalSyslogsCount = counts;
 				this.visualLabels[0].count = counts.sysLogMsgCount;
 				this.visualLabels[1].count = counts.assetsCount;
-			}),
+			},
 			catchError(err => {
 				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			});
+			}));
 	}
 	/**
 	 * Gets time range count
@@ -188,13 +190,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 
 		return (catalogFilter.seriesData = [
 			{
-				filter: 'cisco Catalog',
+				filter: 'Cisco',
 				label: I18n.get('_SyslogCiscoCatalog_'),
 				selected: false,
 				value: 50,
 			},
 			{
-				filter: 'others',
+				filter: 'Others',
 				label: I18n.get('_SyslogOthers_'),
 				selected: false,
 				value: 50,
@@ -211,49 +213,49 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		return (severityFilter.seriesData = [
 			{
 				filter: '0',
-				label: '0',
+				label: I18n.get('_SyslogSeverity0_'),
 				selected: false,
 				value: 10,
 			},
 			{
 				filter: '1',
-				label: '0-1',
+				label: I18n.get('_SyslogSeverity1_'),
 				selected: false,
 				value: 15,
 			},
 			{
 				filter: '2',
-				label: '0-2',
+				label: I18n.get('_SyslogSeverity2_'),
 				selected: false,
 				value: 20,
 			},
 			{
 				filter: '3',
-				label: '0-3',
+				label: I18n.get('_SyslogSeverity3_'),
 				selected: false,
 				value: 25,
 			},
 			{
 				filter: '4',
-				label: '0-4',
+				label: I18n.get('_SyslogSeverity4_'),
 				selected: false,
 				value: 30,
 			},
 			{
 				filter: '5',
-				label: '0-5',
+				label: I18n.get('_SyslogSeverity5_'),
 				selected: false,
 				value: 35,
 			},
 			{
 				filter: '6',
-				label: '0-6',
+				label: I18n.get('_SyslogSeverity6_'),
 				selected: false,
 				value: 40,
 			},
 			{
 				filter: '7',
-				label: '0-7',
+				label: I18n.get('_SyslogSeverity7_'),
 				selected: false,
 				value: 45,
 			},
@@ -300,6 +302,19 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 							'timeRange',
 						);
 					}
+					if (this.syslogsParams.severityList) {
+						this.selectSubFilters(
+							this.syslogsParams.severityList,
+							'severity',
+						);
+					}
+					if (this.syslogsParams.catalogList) {
+						this.selectSubFilters(
+							this.syslogsParams.catalogList,
+							'catalog',
+						);
+					}
+
 				}),
 			)
 			.subscribe(() => {
@@ -393,7 +408,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		if (filter.key === 'severity') {
 			this.appliedFilters.severity = +this.syslogsParams.severity[0];
 			if (isNaN(this.appliedFilters.severity)) {
-				this.appliedFilters.severity = 7;
+				this.appliedFilters.severity = 3;
 			}
 		} else if (filter.key === 'timeRange') {
 			this.appliedFilters.timeRange = +this.syslogsParams.timeRange[0];
@@ -403,7 +418,7 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		} else if (filter.key === 'catalog') {
 			this.appliedFilters.catalog = this.syslogsParams.catalog[0];
 			if (!this.appliedFilters.catalog) {
-				this.appliedFilters.catalog = '';
+				this.appliedFilters.catalog = 'Cisco';
 			}
 		} else if (filter.key === 'asset') {
 			this.appliedFilters.asset = this.syslogsParams.asset[0];
@@ -441,19 +456,13 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 
 		this.allAssetsSelected = false;
 		this.syslogsParams.timeRange = ['1'];
-		if (this.syslogsParams.timeRange) {
-			this.selectSubFilters(
-				this.syslogsParams.timeRange,
-				'timeRange',
-			);
-		}
+		this.loadData();
 		this.appliedFilters = {
 			asset: '',
-			catalog: '',
-			severity: 7,
+			catalog: 'Cisco',
+			severity: 3,
 			timeRange: 1,
 		};
-		// this.getSyslogsData();
 	}
 	/**
 	 * Selects visual label
@@ -469,18 +478,20 @@ export class SyslogsComponent implements OnInit, OnDestroy {
 		} else {
 			this.visualLabels[0].active = false;
 			this.visualLabels[1].active = true;
-			this.filters.push({
-				key: 'asset',
-				loading: true,
-				seriesData: [],
-				template: this.assetFilterTemplate,
-				title: I18n.get('_SyslogAsset_'),
-				view: ['syslogMessage', 'syslogAsset'],
-			});
+			if (this.filters.length === 3) {
+				this.filters.push({
+					key: 'asset',
+					loading: true,
+					seriesData: [],
+					template: this.assetFilterTemplate,
+					title: I18n.get('_SyslogAsset_'),
+					view: ['syslogMessage', 'syslogAsset'],
+				});
+		  }
 			this.getAssetCounts();
 		}
-		this.loadData();
 		this.clearFilters();
+		this.loadData();
 	}
 	/**
 	 * on destroy
