@@ -326,15 +326,37 @@ describe('PolicyFormComponent', () => {
 		});
 
 		it('toggleAllDevicesSelected', () => {
-			let selected = component.toggleAllDevicesSelected(true,
-				component.deviceListLeft, 'left');
-			expect(selected)
+			component.allDevicesSelectedLeft = true;
+			component.toggleAllDevicesSelected(
+				component.deviceListLeft, component.leftDevices);
+
+			expect(component.allDevicesSelectedLeft)
 				.toBe(false);
 
-			selected = component.toggleAllDevicesSelected(false,
-				component.deviceListLeft, 'left');
-			expect(selected)
+			component.toggleAllDevicesSelected(
+				component.deviceListLeft, component.leftDevices);
+
+			expect(component.allDevicesSelectedLeft)
 				.toBe(true);
+
+			component.allDevicesSelectedRight = true;
+			component.toggleAllDevicesSelected(
+				component.deviceListRight, component.rightDevices);
+
+			expect(component.allDevicesSelectedRight)
+				.toBe(false);
+
+			component.toggleAllDevicesSelected(
+				component.deviceListRight, component.rightDevices);
+
+			expect(component.allDevicesSelectedRight)
+				.toBe(true);
+
+			component.deviceListRight = [];
+			component.toggleAllDevicesSelected(
+				component.deviceListRight,
+				component.rightDevices,
+			);
 		});
 
 		it('add', () => {

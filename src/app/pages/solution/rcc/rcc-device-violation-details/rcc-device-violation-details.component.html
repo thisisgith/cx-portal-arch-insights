@@ -1,26 +1,26 @@
-<div *ngIf="!initialLoading; else loaderTemplate;">
+<div *ngIf="(!initialLoading && !apiNoData); else commonTemplate;">
 	<div class="row">
-		<div class="col-8 base-margin-bottom">
+		<div class="col-12 base-margin-bottom">
 			<div data-auto-id="" class="dbl-margin-right">
 				<div class="text-small text-uppercase text-bold" 
 					[innerText]="'_RccAssetPolicyDescription_' | i18n">
 				</div>
-				<div [innerText]="policyRuleData?.policy?.desc || ('_NA_' | i18n)"></div>
+				<div [innerHTML]="policyRuleData?.policy?.desc || ('_NA_' | i18n)"></div>
 			</div>
 		</div>
 	</div>
-	<div class="row ">
-		<div class="col-8 base-margin-bottom">
+	<div class="row">
+		<div class="col-12 base-margin-bottom">
 			<div data-auto-id="" class="dbl-margin-right">
 				<div class="text-small text-uppercase text-bold" 
 					[innerText]="'_RccAssetRuleDescription_' | i18n">
 				</div>
-				<div [innerText]="policyRuleData?.rule?.desc || ('_NA_' | i18n)"></div>
+				<div [innerHTML]="policyRuleData?.rule?.desc || ('_NA_' | i18n)"></div>
 			</div>
 		</div>
 	</div>
 	<div class="row ">
-		<div class="col-8 base-margin-bottom">
+		<div class="col-12 base-margin-bottom">
 			<div data-auto-id="" class="dbl-margin-right">
 				<div class="text-muted text-large text-uppercase"
 				[innerText]="'_RccImpactedDevices_' | i18n:impactedAssetsCount || ('_NA_' | i18n)">
@@ -28,13 +28,12 @@
 			</div>
 		</div>
 	</div>
-	<div class="half-margin-left base-padding-top half-padding-bottom 
-			base-margin-bottom text-medium text-uppercase text-bold"
+	<div class="text-medium text-uppercase text-bold"
 		data-auto-id="filterSearch" 
 		[innerText]="'_Filter_'| i18n">
 	</div>
 	<div class="row">
-		<div class="col-3 base-padding-top half-padding-left ">
+		<div class="col-4 half-padding-top half-padding-left">
 			<div [innerText]="'_RccProductFamily_' | i18n"></div>
 			<cui-select data-auto-id="filterSelect" 
 				[items]="policyRuleData?.deviceFilterDetails?.productFamily"
@@ -47,7 +46,7 @@
 				optionsValue="name">
 			</cui-select>
 		</div>
-		<div class="col-3 base-padding-top half-padding-left">
+		<div class="col-4 half-padding-top half-padding-left">
 			<div [innerText]="'_RccProductModel_' | i18n"></div>
 			<cui-select data-auto-id="policyRuleSearch" 
 				[items]="policyRuleData?.deviceFilterDetails?.productModel"
@@ -60,7 +59,7 @@
 				optionsValue="name">
 			</cui-select>
 		</div>
-		<div class="col-3 base-padding-top half-padding-left">
+		<div class="col-4 half-padding-top half-padding-left">
 			<div [innerText]="'_RccOSName_' | i18n"></div>
 			<cui-select data-auto-id="policyRule" 
 				[items]="policyRuleData?.deviceFilterDetails?.osName"
@@ -76,32 +75,67 @@
 	</div>
 	<div class="row base-padding-top half-padding-left responsive-table"
 		*ngIf="!selectionLoading; else loaderTemplate;">
-		<cui-table [options]="impactedDeviceTableOptions" [data]="impactedDeviceDetails"></cui-table>
+		<cui-table [options]="impactedDeviceTableOptions" 
+			[data]="impactedDeviceDetails"
+			[offset]="tableConfig?.tableOffset" 
+			(onSortingChanged)="onTableSortingChanged()" 
+			[limit]="tableConfig?.tableLimit">
+		</cui-table>
 		<div class="section">
-			<cui-pager [page]="tableConfig.tableOffset" 
-				[limit]="tableConfig.tableLimit"
-				[totalItems]="tableConfig.totalItems" 
+			<cui-pager [page]="tableConfig.tableOffset"
+				[limit]="tableConfig?.tableLimit"
+				[totalItems]="tableConfig?.totalItems" 
 				(onPageChanged)="onPageIndexChange($event)">
 			</cui-pager>
 		</div>
 	</div>
-	<ng-template #policyRowWellTemplate let-item="item" class="half-margin-left">
-		<div class="base-margin-top text-small responsive-table">
-			<cui-table class="table--wrap table--nostripes" 
-				[options]="rccViolationInfoTableOptions"
-				[data]="item.violations" 
-				[limit]="tableConfig.tableLimit" 
-				[offset]="tableConfig.tableOffset"
-				*ngIf="!loading">
-			</cui-table>
-		</div>
-	</ng-template>
 </div>
+<ng-template #policyRowWellTemplate let-item="item" class="half-margin-left">
+	<div class="base-margin-top text-small responsive-table">
+		<cui-table class="table table--lined " 
+			[options]="rccViolationInfoTableOptions"
+			[data]="item?.violations">
+		</cui-table>
+	</div>
+</ng-template>
+<ng-template #violationAgeTemplate let-item="celldata">
+	<span [innerText]="(item?.age === 1 ) ? (item?.age + ('_RccDay_' | i18n)) : (item?.age + ('_RccDays_' | i18n))"></span>
+</ng-template>
 <ng-template #loaderTemplate>
 	<div class="dbl-padding">
 		<cui-spinner color="default" label=""></cui-spinner>
 	</div>
 </ng-template>
 <ng-template #deviceLink let-item="celldata">
-	<a href="" [innerText]="item.hostName"></a>
+	<span [innerText]="item?.hostName"></span>
+</ng-template>
+<ng-template #noDataAvailable>
+	<div>
+		<span class="text-center dbl-margin-top dbl-margin-bottom" 
+			[innerText]="'_RccNoDataAvailable_' | i18n"
+			*ngIf="apiNoData">
+		</span>
+		<span class="text-center dbl-margin-top dbl-margin-bottom" 
+			[innerText]="'_RccNoResults_' | i18n"
+			*ngIf="errorResult">
+		</span>
+	</div>
+</ng-template>
+<ng-template #commonTemplate>
+	<div *ngIf="(initialLoading && apiNoData); then loaderTemplate; else noDataAvailable;">
+	</div>
+</ng-template>
+<ng-template #severityIconTemplate let-item="celldata">
+	<i *ngIf="item?.severity" 
+		class="qtr-margin-right icon-circle" 
+		iconSize="default" 
+		[ngClass]="{
+		'P1': 'text-danger',
+		'P2': 'text-warning',
+		'P3': 'text-warning-alt',
+		'P4': 'text-success',
+		'P5': 'text-muted'
+		}[item?.severity]">
+	</i>
+	<span [innerText]="item?.severity"></span>
 </ng-template>

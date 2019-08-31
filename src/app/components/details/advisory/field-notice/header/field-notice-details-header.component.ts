@@ -7,7 +7,7 @@ import { CuiModalService } from '@cisco-ngx/cui-components';
 import {
 	CaseOpenAdvisoriesComponent,
 } from '../../../../case/case-open/case-open-advisories/case-open-advisories.component';
-import { Asset } from '@sdp-api';
+import { Asset, NetworkElement } from '@sdp-api';
 
 /**
  * Field Notice Details Header
@@ -23,6 +23,7 @@ export class FieldNoticeDetailsHeaderComponent {
 
 	@Input('details') public details: FieldNoticeData;
 	@Input('selectedAsset') public selectedAsset: Asset;
+	@Input('impactedAssets') public impactedAssets: (Asset | NetworkElement)[];
 
 	/**
 	 * Fires when user clicks "Open a Case" button
@@ -30,6 +31,7 @@ export class FieldNoticeDetailsHeaderComponent {
 	public onOpenCase () {
 		this.cuiModalService.showComponent(CaseOpenAdvisoriesComponent, {
 			advisory: this.details.bulletin,
+			otherAssets: this.impactedAssets,
 			selectedAsset: this.selectedAsset,
 			type: 'field',
 		}, 'full');

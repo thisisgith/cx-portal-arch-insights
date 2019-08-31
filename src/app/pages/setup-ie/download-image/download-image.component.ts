@@ -140,14 +140,19 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 					const hasError = _.get(response, 'download_info_list[0]' +
 						'.asd_download_url_exception.length');
 					if (!hasError) {
-						const url = _.get(
-							response,
-							'download_info_list[0].cloud_url',
-							_.get(response, 'download_info_list[0].download_url'),
-						);
-						this.utils.download(`${url}?access_token=${this.asdService.accessToken}`);
+						const url = _.get(response, 'download_info_list[0].cloud_url')
+							|| _.get(response, 'download_info_list[0].download_url');
+						if (url) {
+							if (/[?]/.test(url)) {
+								this.utils
+									.download(`${url}&access_token=${this.asdService.accessToken}`);
+							} else {
+								this.utils
+									.download(`${url}?access_token=${this.asdService.accessToken}`);
+							}
+						}
 
-						return of();
+						return of(response);
 					}
 
 					return throwError('metadata trans id expired');

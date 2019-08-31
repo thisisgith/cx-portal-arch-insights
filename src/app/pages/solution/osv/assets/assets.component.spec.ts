@@ -242,6 +242,6 @@ describe('AssetsComponent', () => {
 		expect(component.assetsTable)
 			.toBeDefined();
 		expect(component.pagination.total)
-			.toEqual(10);
+			.toEqual(120);
 	});
 });

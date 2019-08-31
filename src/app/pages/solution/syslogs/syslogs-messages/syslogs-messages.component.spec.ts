@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { user } from '@mock';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
+import { SimpleChanges, SimpleChange } from '@angular/core';
 describe('SyslogsMessagesComponent', () => {
 	let component: SyslogsMessagesComponent;
 	let fixture: ComponentFixture<SyslogsMessagesComponent>;
@@ -81,8 +82,8 @@ describe('SyslogsMessagesComponent', () => {
 		fixture.whenStable()
 		.then(() => {
 			fixture.detectChanges();
-			expect(component.tableData)
-				.toBeDefined();
+			expect(component.tableData.length)
+				.toBeGreaterThan(0);
 			done();
 		});
 	});
@@ -139,5 +140,27 @@ describe('SyslogsMessagesComponent', () => {
 				 .toBeUndefined();
 				done();
 			});
+	});
+
+	it('should take currentFilter on changes', () => {
+		const changes: SimpleChanges = {
+			sysFilter: new SimpleChange(
+				{
+					asset: '',
+					catalog: 'Cisco',
+					severity: 3,
+					timeRange: 30,
+				},
+				{
+					asset: '',
+					catalog: 'Cisco',
+					severity: 3,
+					timeRange: 30,
+				}, false,
+			),
+		};
+		component.ngOnChanges(changes);
+		expect(component.syslogsParams.catalog)
+		.toEqual('Cisco');
 	});
 });

@@ -363,7 +363,7 @@ const mockAssets: AssetsResponse = {
 	pagination: {
 		page: 1,
 		rows: 10,
-		total: 10,
+		total: 120,
 	},
 	uiAssetList: [
 		{
