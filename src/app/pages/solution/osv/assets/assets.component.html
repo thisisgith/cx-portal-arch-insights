@@ -1,17 +1,19 @@
 <div class="row qtr-margin-top">
 	<div class="col-md-6 flex flex-fill">
-		<div class="flex-center-vertical" *ngIf="pagination && assets?.length > 0">
+		<div class="flex-center-vertical" *ngIf="pagination && assets?.length > 0" >
 			<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
 			<span [innerText]="'_OsvShowingXofYAssets_' | i18n:paginationCount:pagination.total"
 				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 			</span>
 		</div>
 	</div>
-	<div class="col-md-6 text-right">
-		<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
-		<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert"
-			[innerText]="'_CSRequestExpert_' | i18n">
-		</a>
+	<div class="col-md-6 text-right" >
+		<div>
+			<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
+			<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert"
+				[innerText]="'_CSRequestExpert_' | i18n">
+			</a>
+		</div>
 	</div>
 </div>
 <div class="divider qtr-margin-top"></div>
