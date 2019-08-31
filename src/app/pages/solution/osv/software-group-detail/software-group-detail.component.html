@@ -97,24 +97,24 @@
 			<tbody>
 				<!-- version and release date -->
 				<tr>
-					<td></td>
-					<td>
+					<td class="no-border-bottom no-border-top"></td>
+					<td class="no-border-top">
 						<div [ngClass]="headingClass" [innerText]="'current' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v3'"></div>
 						<div [innerText]="'-'"></div>
 					</td>
-					<td class="recommendation">
+					<td class="recommendation no-border-top">
 						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
 							[innerText]="'recommended #1' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
-					<td class="recommendation">
+					<td class="recommendation no-border-top">
 						<div [ngClass]="headingClass" [innerText]="'recommended #2' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
-					<td class="recommendation">
+					<td class="recommendation no-border-top">
 						<div [ngClass]="headingClass" [innerText]="'recommended #3' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
@@ -122,7 +122,7 @@
 				</tr>
 				<!-- status or action -->
 				<tr>
-					<td [ngClass]="headingClass" [innerText]="'_OsvStatusOrAction_' | i18n"></td>
+					<td class="no-border-bottom no-border-top" [ngClass]="headingClass" [innerText]="'_OsvStatusOrAction_' | i18n"></td>
 					<td></td>
 					<td class="recommendation">
 						<button (click)="onAcceptClick()" cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
@@ -139,7 +139,7 @@
 				</tr>
 				<!-- risk score -->
 				<tr>
-					<td class="overflow-unset">
+					<td class="overflow-unset no-border-bottom no-border-top">
 						<span [ngClass]="headingClass" [innerText]="'_OsvRiskScore_' | i18n"></span>
 						<span class="qtr-margin-left  text-primary" data-balloon-length="large"
 							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="right">
@@ -171,7 +171,7 @@
 				</tr>
 				<!-- bugs -->
 				<tr>
-					<td [ngClass]="headingClass" [innerText]="'_Bugs_' | i18n"></td>
+					<td class="headingClass no-border-bottom no-border-top" [innerText]="'_Bugs_' | i18n"></td>
 					<td>
 						<div [innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
 						<div class="text-xlarge" [innerText]="'15'"></div>
@@ -234,7 +234,7 @@
 				</tr>
 				<!-- security advisories -->
 				<tr>
-					<td [ngClass]="headingClass" [innerText]="'_SecurityAdvisories_' | i18n"></td>
+					<td class="headingClass no-border-bottom no-border-top" [innerText]="'_SecurityAdvisories_' | i18n"></td>
 					<td>
 						<div class="text-xlarge" [innerText]="'32'"></div>
 						<div class="qtr-margin-top">
@@ -284,7 +284,7 @@
 				</tr>
 				<!-- features -->
 				<tr>
-					<td>
+					<td class="no-border-bottom no-border-top">
 						<div [ngClass]="headingClass" [innerText]="'_OsvFeatures_' | i18n"></div>
 						<div [ngClass]="subHeadingClass" class="qtr-margin-top"
 							[innerText]="'_OsvActiveAvailable_' | i18n"></div>
