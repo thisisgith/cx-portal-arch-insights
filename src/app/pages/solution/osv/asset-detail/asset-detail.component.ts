@@ -46,6 +46,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	@Input() public accept = false;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Input() public recommendations;
+	@Input() selectedMachineRecommendation;
 	@Output() public onRecommendationAccept = new EventEmitter();
 	public assetDetails: AssetRecommendationsResponse;
 	public status = {
@@ -92,14 +93,17 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['selectedAsset', 'currentValue']);
 		const recommendations = _.get(changes, ['recommendations', 'currentValue']);
+		const selectedMachineRecommendation = _.get(changes, ['selectedMachineRecommendation', 'currentValue']);
 		if (currentAsset && !changes.selectedAsset.firstChange) {
 			this.refresh();
 		}
 		if (recommendations) {
 			this.status.isLoading = false;
-
 			this.assetDetails = this.groupData(recommendations);
 			this.buildTable();
+		}
+		if (selectedMachineRecommendation) {
+			this.onAccept(selectedMachineRecommendation);
 		}
 	}
 
@@ -325,13 +329,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.status.isLoading = true;
 		// this.osvService.updateAsset(body)
 		// 	.subscribe((response: OSVAsset) => {
-		const response = { ...this.selectedSoftwareGroup, optimalVersion: '15.7(3)M4b' };
+		const response = { ...this.selectedSoftwareGroup, optimalVersion: '15.7(3)M4b', deployment: 'upgrade' };
 		response.statusUpdated = true;
 		this.setAcceptedVersion(this.recommendations, response);
 		this.recommendations = _.cloneDeep(this.recommendations);
 		this.selectedSoftwareGroup.recommAcceptedDate = response.recommAcceptedDate;
 		this.onRecommendationAccept.emit({
-			softwareGroupDetail: response,
+			selectedSoftwareGroup: response,
 			recommendation: this.recommendations
 		});
 		this.status.isLoading = false;

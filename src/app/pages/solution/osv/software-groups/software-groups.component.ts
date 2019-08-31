@@ -82,21 +82,20 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
 		const selectedSoftwareGroup = _.get(changes, ['selectedSoftwareGroup', 'currentValue']);
 
-		if (currentFilter && !changes.filters.firstChange) {
+		if (currentFilter && !_.get(changes, 'filters.firstChange')) {
 			this.setFilter(currentFilter);
 			this.loadData();
 		}
-		if (selectedSoftwareGroup && !_.get(changes, 'selectedSoftwareGroup.firstChange')) {
+		if (selectedSoftwareGroup && _.get(selectedSoftwareGroup, 'statusUpdated') && !_.get(changes, 'selectedSoftwareGroup.firstChange')) {
 			const selected = _.filter(this.softwareGroups, { id: selectedSoftwareGroup.id });
 			if (selected && selected.length > 0) {
-				selected[0].optimalVersion = selectedSoftwareGroup.optimalVersion;
-				if (selected[0].deployment !== selectedSoftwareGroup.deployment) {
-					selected[0].deployment = selectedSoftwareGroup.deployment;
+				selected[0].optimalVersion = _.get(selectedSoftwareGroup, 'optimalVersion');
+				if (selected[0].deployment !== _.get(selectedSoftwareGroup, 'deployment')) {
+					selected[0].deployment = _.get(selectedSoftwareGroup, 'deployment');
 					this.softwareGroupStatusUpdated.emit(selectedSoftwareGroup);
 				}
 			}
 		}
-
 	}
 
 	/**

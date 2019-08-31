@@ -31,7 +31,7 @@
 </ng-template>
 <ng-template #softwareGroupRecommendations>
 	<div class="base-margin-top">
-		<asset-details [recommendations]="recommendations" [accept]="true"
+		<asset-details [selectedMachineRecommendation]="selectedMachineRecommendation" [recommendations]="recommendations" [accept]="true"
 			(onRecommendationAccept)="onRecommendationAccept($event)" [selectedSoftwareGroup]="selectedSoftwareGroup" [fullscreen]="fullscreen">
 		</asset-details>
 	</div>
@@ -125,7 +125,7 @@
 					<td [ngClass]="headingClass" [innerText]="'_OsvStatusOrAction_' | i18n"></td>
 					<td></td>
 					<td class="recommendation">
-						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
+						<button (click)="onAcceptClick()" cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
 							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
 					</td>
 					<td class="recommendation">

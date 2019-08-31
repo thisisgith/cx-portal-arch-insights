@@ -5,6 +5,8 @@ import {
 	SimpleChanges,
 	OnDestroy,
 	OnChanges,
+	Output,
+	EventEmitter
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -36,7 +38,9 @@ import { DatePipe } from '@angular/common';
 })
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
+	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
 	@Input() public tabIndex;
+
 	public status = {
 		isLoading: true,
 	};
@@ -60,6 +64,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public assetAlert: any = {};
 	public versionAlert: any = {};
 	public recommendations;
+	public selectedMachineRecommendation;
 	public seriesData = [
 		{
 			label: 'H',
@@ -249,14 +254,13 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		const currentSelectedGroup = _.get(changes, ['selectedProfileGroup', 'currentValue']);
 		const isFirstChange = _.get(changes, ['selectedProfileGroup', 'firstChange']);
 		const currentTabIndex = _.get(changes, ['tabIndex', 'currentValue']);
-		const previousTabIndex = _.get(changes, ['tabIndex', 'previousValue']);
 
-		if (_.isUndefined(currentTabIndex) && _.isUndefined(previousTabIndex)) {
-			this.tabIndex = 0;
-		} else if (!_.isNull(currentTabIndex)) {
+		if (currentTabIndex) {
 			this.tabIndex = currentTabIndex;
+		} else {
+			this.tabIndex = _.isUndefined(this.tabIndex) ? 0 : this.tabIndex;
 		}
-		if (currentSelectedGroup && !isFirstChange) {
+		if (currentSelectedGroup && _.get(currentSelectedGroup, 'statusUpdated') && !isFirstChange) {
 			this.refresh();
 		}
 	}
@@ -387,6 +391,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	}
 
 	public onRecommendationAccept (event: any) {
-		this.logger.info('updated!!');
+		this.selectedSoftwareGroup = event.selectedSoftwareGroup;
+		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+		this.recommendations = event.recommendations;
 	}
+
+	public onAcceptClick () {
+		this.selectedMachineRecommendation = {};
+	}
+
+
 }

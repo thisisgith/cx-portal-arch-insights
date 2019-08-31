@@ -49,7 +49,7 @@
 	<div *ngIf="view == 'swGroups'">
 		<app-software-groups [(tabIndex)]="tabIndex" (contactSupport)="openContactSupport()"
 			[(selectedSoftwareGroup)]="selectedSoftwareGroup" [filters]="appliedFilters"
-			(softwareGroupStatusUpdated)="onsoftwareGroupStatusUpdate($event)">
+			(softwareGroupStatusUpdated)="onSoftwareGroupStatusUpdate($event)">
 		</app-software-groups>
 	</div>
 	<div *ngIf="view == 'assets'">

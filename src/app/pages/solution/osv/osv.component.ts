@@ -65,7 +65,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		private cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.customerId = _.get(user, ['info', 'customerId']);
+		this.customerId = _.get(user, ['info', 'customerId']);		
 	}
 
 	/**
@@ -359,7 +359,9 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * refresh the deploymentstatus pie chart
 	 */
 	public onSoftwareGroupStatusUpdate () {
-		this.loadData();
+		setTimeout(() => {
+			this.loadData();
+		})
 	}
 
 
