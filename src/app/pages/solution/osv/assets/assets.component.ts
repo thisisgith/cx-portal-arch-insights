@@ -34,10 +34,10 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@Output() public contactSupport = new EventEmitter();
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
 	@ViewChild('recommendationsTemplate', { static: true })
-		private recommendationsTemplate: TemplateRef<{ }>;
+	private recommendationsTemplate: TemplateRef<{}>;
 	public assetsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -54,6 +54,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 			label: I18n.get('_OsvBasicRecommendations_'),
 		},
 	];
+	public alert: any = {};
 
 	constructor (
 		private logger: LogService,
@@ -99,8 +100,8 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public setFilter (currentFilter) {
 		const assetType = _.get(currentFilter, 'assetType', []);
-		let filter = '';		
-		if (assetType.length === 1) {			
+		let filter = '';
+		if (assetType.length === 1) {
 			filter += assetType.indexOf('assets_profile') > -1
 				? 'independent:no' : 'independent:yes';
 		}
@@ -144,6 +145,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					this.buildTable();
 				}),
 				catchError(err => {
+					this.alert.show(I18n.get('_OsvGenericError_'), 'danger');
 					this.assets = [];
 					this.pagination = {
 						total: 0,
@@ -151,7 +153,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 					this.logger.error('OSV Assets : getAssets() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}

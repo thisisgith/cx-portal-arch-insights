@@ -7,10 +7,11 @@ import {
 	CuiPagerModule,
 	CuiSpinnerModule,
 	CuiButtonModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AssetDetailsModule } from '../asset-detail/asset-detail.module';
-import { BarChartModule } from '@components';
+import { BarChartModule, DetailsPanelModule } from '@components';
 import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
 
 /**
@@ -30,6 +31,8 @@ import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
 		CuiButtonModule,
 		BarChartModule,
 		CancelConfirmModule,
+		CuiAlertModule,
+		DetailsPanelModule,
 	],
 })
 export class SoftwareGroupDetailModule { }

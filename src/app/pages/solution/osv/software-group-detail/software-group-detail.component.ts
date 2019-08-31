@@ -17,6 +17,7 @@ import {
 	SoftwareGroupVersionsResponse,
 	SoftwareGroupAssetsResponse,
 	OsvPagination,
+	AssetRecommendationsResponse,
 } from '@sdp-api';
 import { forkJoin, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
@@ -35,17 +36,18 @@ import { DatePipe } from '@angular/common';
 })
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
-	@Input() public fullscreen;
 	@Input() public tabIndex;
 	public status = {
 		isLoading: true,
 	};
+	public fullscreen = false;
 	private destroy$ = new Subject();
-	public customerId: string;	
+	public customerId: string;
 	public softwareGroupVersions: SoftwareGroupVersion[];
 	public softwareGroupAssets: SoftwareGroupAsset[];
 	public softwareGroupVersionsTable: CuiTableOptions;
 	public softwareGroupAssetsTable: CuiTableOptions;
+	public softwareGroupDetailsParams: OSVService.GetSoftwareGroupDetailsParam;
 	public softwareGroupAssetsParams: OSVService.GetSoftwareGroupAssetsParams;
 	public softwareGroupVersionsParams: OSVService.GetSoftwareGroupAssetsParams;
 	public assetsPagination: OsvPagination;
@@ -55,6 +57,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public headingClass = this.fullscreen ? 'text-xlarge' : 'text-large';
 	public subHeadingClass = this.fullscreen ? 'text-large' : 'text-medium';
 	public chartWidth = this.fullscreen ? 250 : 140;
+	public assetAlert: any = {};
+	public versionAlert: any = {};
+	public recommendations;
 	public seriesData = [
 		{
 			label: 'H',
@@ -76,6 +81,10 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.softwareGroupDetailsParams = {
+			customerId: this.customerId,
+			profileName: '7293498_NA',
+		}
 		this.softwareGroupAssetsParams = {
 			customerId: this.customerId,
 			profileName: '7293498_NA',
@@ -107,9 +116,11 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * Refreshes the component
 	 */
 	public refresh () {
-		if (this.selectedSoftwareGroup) {
+		if (this.selectedSoftwareGroup && !this.selectedSoftwareGroup.statusUpdated) {
 			this.clear();
-			// this.params.id = this.selectedProfileGroup.id;
+			// this.softwareGroupDetailsParams.profileName = _.get(this.selectedSoftwareGroup, 'profileName');
+			// this.this.softwareGroupAssetsParams.profileName = _.get(this.selectedSoftwareGroup, 'profileName');
+			// this.this.softwareGroupVersionsParams.profileName = _.get(this.selectedSoftwareGroup, 'profileName');
 			this.loadData();
 		}
 	}
@@ -120,6 +131,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public loadData () {
 		this.status.isLoading = true;
 		forkJoin(
+			this.fetchSoftwareGroupDetails(),
 			this.getSoftwareGroupAssets(),
 			this.getSoftwareGroupVersions(),
 		)
@@ -130,6 +142,26 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				this.status.isLoading = false;
 				this.logger.debug('assets software.component: loadData()::Done Loading');
 			});
+	}
+
+	/**
+ * Fetch Software Group details for the selected SoftwareGroup
+ */
+	public fetchSoftwareGroupDetails () {
+		this.status.isLoading = true;
+		return this.osvService.getSoftwareGroupRecommendations(this.softwareGroupDetailsParams)
+			.pipe(
+				map((response: AssetRecommendationsResponse) => {
+					this.recommendations = response;
+				}),
+				takeUntil(this.destroy$),
+				catchError(err => {
+					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({});
+				}),
+			)
 	}
 
 	/**
@@ -153,6 +185,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.buildSoftwareGroupAssetsTable();
 				}),
 				catchError(err => {
+					this.assetAlert.show(I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV SG : getSoftwareGroupAsset() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -182,6 +215,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.buildSoftwareGroupVersionsTable();
 				}),
 				catchError(err => {
+					this.versionAlert.show(I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV SG : getSoftwareGroupVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -194,6 +228,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * Resets data fields
 	 */
 	public clear () {
+		this.recommendations = null;
 		this.softwareGroupAssets = null;
 		this.softwareGroupVersions = null;
 	}
@@ -215,12 +250,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		const isFirstChange = _.get(changes, ['selectedProfileGroup', 'firstChange']);
 		const currentTabIndex = _.get(changes, ['tabIndex', 'currentValue']);
 		const previousTabIndex = _.get(changes, ['tabIndex', 'previousValue']);
-		const fullscreen = _.get(changes, ['fullscreen', 'currentValue']);
-		if (!_.isNull(fullscreen)) {
-			this.headingClass = fullscreen ? 'text-xlarge' : 'text-large';
-			this.subHeadingClass = fullscreen ? 'text-large' : 'text-medium';
-			this.chartWidth = fullscreen ? 250 : 140;
-		}
+
 		if (_.isUndefined(currentTabIndex) && _.isUndefined(previousTabIndex)) {
 			this.tabIndex = 0;
 		} else if (!_.isNull(currentTabIndex)) {

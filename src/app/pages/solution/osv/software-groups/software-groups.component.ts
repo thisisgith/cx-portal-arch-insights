@@ -28,14 +28,13 @@ import * as _ from 'lodash-es';
 	templateUrl: './software-groups.component.html',
 })
 export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
-	@Input() public fullscreen;
-	@Output() public fullscreenChange = new EventEmitter<boolean>();
+	@Input() public filters;
+	@Output() public contactSupport = new EventEmitter();
 	@Input() public selectedSoftwareGroup;
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
-	@Output() public contactSupport = new EventEmitter();
-	@Input() public filters;
+	@Output() public softwareGroupStatusUpdated = new EventEmitter();
 	@ViewChild('recommendationsTemplate', { static: true })
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
 	private recommendationsTemplate: TemplateRef<{}>;
@@ -49,7 +48,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	public destroy$ = new Subject();
 	public softwareGroupsParams: OSVService.GetSoftwareGroupsParams;
 	public customerId: string;
-
+	public alert: any = {};
 	constructor (
 		public logger: LogService,
 		public osvService: OSVService,
@@ -81,10 +80,23 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
+		const selectedSoftwareGroup = _.get(changes, ['selectedSoftwareGroup', 'currentValue']);
+
 		if (currentFilter && !changes.filters.firstChange) {
 			this.setFilter(currentFilter);
 			this.loadData();
 		}
+		if (selectedSoftwareGroup && !_.get(changes, 'selectedSoftwareGroup.firstChange')) {
+			const selected = _.filter(this.softwareGroups, { id: selectedSoftwareGroup.id });
+			if (selected && selected.length > 0) {
+				selected[0].optimalVersion = selectedSoftwareGroup.optimalVersion;
+				if (selected[0].deployment !== selectedSoftwareGroup.deployment) {
+					selected[0].deployment = selectedSoftwareGroup.deployment;
+					this.softwareGroupStatusUpdated.emit(selectedSoftwareGroup);
+				}
+			}
+		}
+
 	}
 
 	/**
@@ -135,6 +147,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 				}),
 				takeUntil(this.destroy$),
 				catchError(err => {
+					this.alert.show(I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV Profile Groups : getsoftwareGroups() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -233,8 +246,6 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		});
 		item.rowSelected = !item.rowSelected;
-		this.fullscreen = false;
-		this.fullscreenChange.emit(this.fullscreen);
 		this.selectedSoftwareGroup = item.rowSelected ? item : null;
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 	}

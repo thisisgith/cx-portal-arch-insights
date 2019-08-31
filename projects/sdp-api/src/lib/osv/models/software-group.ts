@@ -8,6 +8,7 @@ export interface SoftwareGroup {
 	productId: string;
 	profileName: string;
 	optimalVersion: string;
+	statusUpdated?: boolean;
 	swType
 	swVersions: string[],
 	recommendation: string;

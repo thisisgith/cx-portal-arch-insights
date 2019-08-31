@@ -17,6 +17,7 @@
 	</div>
 </div>
 <div class="divider qtr-margin-top"></div>
+<cui-alert [options]="alert"></cui-alert>
 <ng-container *ngTemplateOutlet="tableSoftwareVersion"></ng-container>
 <div *ngIf="pagination && softwareVersions?.length > 0" class="base-margin-top">
 	<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"

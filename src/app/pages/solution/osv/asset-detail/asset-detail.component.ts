@@ -7,6 +7,8 @@ import {
 	OnDestroy,
 	ViewChild,
 	TemplateRef,
+	Output,
+	EventEmitter,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
@@ -41,8 +43,11 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	private releaseDateTemplate: TemplateRef<{}>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
-	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Input() public accept = false;
+	@Input() public selectedSoftwareGroup: SoftwareGroup;
+	@Output() public selectedSoftwareGroupChange = new EventEmitter();
+	@Input() public recommendations;
+	@Output() public recommendationsChange = new EventEmitter();
 	public assetDetails: AssetRecommendationsResponse;
 	public status = {
 		isLoading: true,
@@ -51,12 +56,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public view: 'list' | 'timeline' = 'list';
 	public assetDetailsTable: CuiTableOptions;
 	public assetDetailsParams: OSVService.GetAssetDetailsParams;
-	public softwareGroupDetailsParams: OSVService.GetSoftwareGroupDetailsParam;
 	public customerId: string;
 	public currentVersion: AssetRecommendations;
-	public selectedRecommendation = {
-		name: 'none',
-	};
 	onCancelSusbcription: Subscription;
 
 	constructor (
@@ -76,10 +77,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			swType: 'IOS',
 			swVersions: '8',
 		};
-		this.softwareGroupDetailsParams = {
-			customerId: this.customerId,
-			profileName: '7293498_NA',
-		}
 	}
 
 	/**
@@ -95,8 +92,15 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['selectedAsset', 'currentValue']);
+		const recommendations = _.get(changes, ['recommendations', 'currentValue']);
 		if (currentAsset && !changes.selectedAsset.firstChange) {
 			this.refresh();
+		}
+		if (recommendations) {
+			this.status.isLoading = false;
+
+			this.assetDetails = this.groupData(recommendations);
+			this.buildTable();
 		}
 	}
 
@@ -124,10 +128,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			// this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
 			// this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
 			this.fetchAssetDetails();
-		} else if (this.selectedSoftwareGroup) {
-			this.clear();
-			// this.softwareGroupDetailsParams.profileName = _.get(this.selectedSoftwareGroup, 'profileName');
-			this.fetchSoftwareGroupDetails();
 		}
 	}
 
@@ -139,7 +139,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.osvService.getAssetDetails(this.assetDetailsParams)
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
-					this.addVersionInfo(response);
 					this.assetDetails = this.groupData(response);
 					this.buildTable();
 				}),
@@ -163,7 +162,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public groupData (data: AssetRecommendationsResponse) {
 		const selectedItem = this.selectedAsset ? this.selectedAsset : this.selectedSoftwareGroup;
-		// this.setAcceptedVersion(data, selectedItem);
+		this.setAcceptedVersion(data, selectedItem);
+		this.addVersionInfo(data);
 		const recommendations = _.filter(data, (detail: AssetRecommendations) =>
 			detail.name !== 'current');
 		const groups = _.groupBy(recommendations, 'swVersion');
@@ -176,31 +176,6 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.currentVersion = _.get(_.filter(data, { name: 'current' }), 0);
 
 		return this.sortData(groupedData);
-	}
-
-	/**
-	 * Fetch Software Group details for the selected SoftwareGroup
-	 */
-	public fetchSoftwareGroupDetails () {
-		this.status.isLoading = true;
-		this.osvService.getSoftwareGroupRecommendations(this.softwareGroupDetailsParams)
-			.pipe(
-				map((response: AssetRecommendationsResponse) => {
-					this.addVersionInfo(response);
-					this.assetDetails = this.groupData(response);
-					this.buildTable();
-				}),
-				takeUntil(this.destroy$),
-				catchError(err => {
-					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-
-					return of({});
-				}),
-			)
-			.subscribe(() => {
-				this.status.isLoading = false;
-			});
 	}
 
 	/**
@@ -316,21 +291,11 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	}
 
 	/**
-	 * Selected Recommendations from timeline view
-	 * @param point one of the recommendations on timeline view
-	 */
-	public selectedPoint (point) {
-		if (this.accept && !point.accepted &&
-			point.label !== _.get(this.selectedAsset, 'swVersion')) {
-			this.selectedRecommendation = point;
-		}
-	}
-
-	/**
 	 * View All Os Version - link to software.cisco.com
 	 */
 	public viewAllVersions () {
-		const mdfId = _.get(this.selectedAsset, 'mdfId');
+		const selectedItem = this.selectedAsset ? this.selectedAsset : this.selectedSoftwareGroup;
+		const mdfId = _.get(selectedItem, 'mdfId');
 		const url = `https://software.cisco.com/research/home?pid=${mdfId}`;
 		window.open(`${url}`, '_blank');
 	}
@@ -350,28 +315,30 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 
 	/**
 	 * accept recommendations
-	 * @param item accept recommendations for this selected item
+	 * @param item accept recommendations for this selected profile
 	 */
-	public onActionClick (item: AssetRecommendations) {
+	public onAccept (item: AssetRecommendations) {
 		const body = {
 			customerId: this.customerId,
-			id: this.selectedAsset.id,
+			id: this.selectedSoftwareGroup.id,
 			optimalVersion: item.swVersion,
 		};
 		this.status.isLoading = true;
-		this.osvService.updateAsset(body)
-			.subscribe((response: OSVAsset) => {
-				this.setAcceptedVersion(this.assetDetails, response);
-				this.assetDetails = _.cloneDeep(this.assetDetails);
-				this.selectedRecommendation = { name: 'None' };
-				this.selectedAsset.recommAcceptedDate = response.recommAcceptedDate;
-				response.statusUpdated = true;
-				this.status.isLoading = false;
-				this.logger.debug('Updated');
-			}, () => {
-				this.status.isLoading = false;
-				this.logger.debug('Error in updating');
-			});
+		// this.osvService.updateAsset(body)
+		// 	.subscribe((response: OSVAsset) => {
+		const response = { ...this.selectedSoftwareGroup, optimalVersion: '15.7(3)M4b' };
+		response.statusUpdated = true;
+		this.setAcceptedVersion(this.recommendations, response);
+		this.recommendations = _.cloneDeep(this.recommendations);
+		this.selectedSoftwareGroup.recommAcceptedDate = response.recommAcceptedDate;
+		this.selectedSoftwareGroupChange.emit(response);
+		this.recommendationsChange.emit(this.recommendations);
+		this.status.isLoading = false;
+		this.logger.debug('Updated');
+		// }, () => {
+		// 	this.status.isLoading = false;
+		// 	this.logger.debug('Error in updating');
+		// });
 	}
 
 	public onCancel () {

@@ -355,4 +355,12 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	/**
+	 * refresh the deploymentstatus pie chart
+	 */
+	public onSoftwareGroupStatusUpdate () {
+		this.loadData();
+	}
+
+
 }

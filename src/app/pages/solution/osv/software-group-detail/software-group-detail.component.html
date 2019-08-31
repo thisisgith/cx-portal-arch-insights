@@ -1,24 +1,38 @@
-<cui-tabs id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
-	<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
-		<div class="base-margin-top">
-			<cui-spinner *ngIf="status.isLoading"></cui-spinner>
-			<ng-container *ngTemplateOutlet="compareRecommendationsTemp"></ng-container>
+<details-panel *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup" [fullscreen]="fullscreen">
+	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
+		<div detailsPanelTitle>
+			<div class="qtr-margin-left text-xlarge half-margin-bottom"
+				[innerText]="selectedSoftwareGroup?.profileName"></div>
 		</div>
-	</cui-tab>
-	<cui-tab [label]="'_OsvSoftwareVersionSummary_' | i18n | uppercase">
-		<ng-container *ngTemplateOutlet="softwareGroupRecommendations"></ng-container>
-	</cui-tab>
-	<cui-tab [label]="'_OsvAssetsX_' | i18n:softwareGroupAssets?.length | uppercase">
-		<ng-container *ngTemplateOutlet="softwareGroupAssetsTemp"></ng-container>
-	</cui-tab>
-	<cui-tab [label]="'_OsvCurrentVersions_' | i18n:softwareGroupVersions?.length | uppercase">
-		<ng-container *ngTemplateOutlet="softwareGroupVersionsTemp"></ng-container>
-	</cui-tab>
-</cui-tabs>
+	</details-panel-header>
+	<ng-container *ngTemplateOutlet="softwareGroupDetails"></ng-container>
+</details-panel>
 
+<ng-template #softwareGroupDetails>
+	<cui-tabs id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
+		<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
+			<div class="base-margin-top">
+				<cui-spinner *ngIf="status.isLoading"></cui-spinner>
+				<ng-container *ngTemplateOutlet="compareRecommendationsTemp"></ng-container>
+			</div>
+		</cui-tab>
+		<cui-tab [label]="'_OsvSoftwareVersionSummary_' | i18n | uppercase">
+			<ng-container *ngTemplateOutlet="softwareGroupRecommendations"></ng-container>
+		</cui-tab>
+		<cui-tab [label]="'_OsvAssetsX_' | i18n:softwareGroupAssets?.length | uppercase">
+			<cui-alert [options]="assetAlert"></cui-alert>
+			<ng-container *ngTemplateOutlet="softwareGroupAssetsTemp"></ng-container>
+		</cui-tab>
+		<cui-tab [label]="'_OsvCurrentVersions_' | i18n:softwareGroupVersions?.length | uppercase">
+			<cui-alert [options]="versionAlert"></cui-alert>
+			<ng-container *ngTemplateOutlet="softwareGroupVersionsTemp"></ng-container>
+		</cui-tab>
+	</cui-tabs>
+</ng-template>
 <ng-template #softwareGroupRecommendations>
 	<div class="base-margin-top">
-		<asset-details [accept]="true" [(selectedSoftwareGroup)]="selectedSoftwareGroup" [fullscreen]="fullscreen">
+		<asset-details [recommendations]="recommendations" [accept]="true"
+			[(selectedSoftwareGroup)]="selectedSoftwareGroup" [fullscreen]="fullscreen">
 		</asset-details>
 	</div>
 </ng-template>
@@ -85,30 +99,31 @@
 				<tr>
 					<td></td>
 					<td>
-						<div [ngClass]="headingClass"  [innerText]="'current' | titlecase"></div>
+						<div [ngClass]="headingClass" [innerText]="'current' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v3'"></div>
 						<div [innerText]="'-'"></div>
 					</td>
 					<td class="recommendation">
-						<div [ngClass]="headingClass"  [innerText]="'recommended #1' | titlecase"></div>
+						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
+							[innerText]="'recommended #1' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 					<td class="recommendation">
-						<div [ngClass]="headingClass"  [innerText]="'recommended #2' | titlecase"></div>
+						<div [ngClass]="headingClass" [innerText]="'recommended #2' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 					<td class="recommendation">
-						<div [ngClass]="headingClass"  [innerText]="'recommended #3' | titlecase"></div>
+						<div [ngClass]="headingClass" [innerText]="'recommended #3' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
 						<div [innerText]="'Jun 07 2018'"></div>
 					</td>
 				</tr>
 				<!-- status or action -->
 				<tr>
-					<td [ngClass]="headingClass"  [innerText]="'_OsvStatusOrAction_' | i18n"></td>
-					<td ></td>
+					<td [ngClass]="headingClass" [innerText]="'_OsvStatusOrAction_' | i18n"></td>
+					<td></td>
 					<td class="recommendation">
 						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
 							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
@@ -125,7 +140,7 @@
 				<!-- risk score -->
 				<tr>
 					<td class="overflow-unset">
-						<span [ngClass]="headingClass"  [innerText]="'_OsvRiskScore_' | i18n"></span>
+						<span [ngClass]="headingClass" [innerText]="'_OsvRiskScore_' | i18n"></span>
 						<span class="qtr-margin-left  text-primary" data-balloon-length="large"
 							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="right">
 							<i class="icon-info icon-small qtr-margin-bottom"></i>
@@ -156,12 +171,13 @@
 				</tr>
 				<!-- bugs -->
 				<tr>
-					<td [ngClass]="headingClass"  [innerText]="'_Bugs_' | i18n"></td>
+					<td [ngClass]="headingClass" [innerText]="'_Bugs_' | i18n"></td>
 					<td>
 						<div [innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
 						<div class="text-xlarge" [innerText]="'15'"></div>
 						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart barColor="#00bceb" dataLabels="true" [seriesData]="seriesData"
+								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -177,7 +193,8 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+								[width]="fullscreen ? '250' : '130' "></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -193,7 +210,8 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -209,17 +227,19 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 				</tr>
 				<!-- security advisories -->
 				<tr>
-					<td [ngClass]="headingClass"  [innerText]="'_SecurityAdvisories_' | i18n"></td>
+					<td [ngClass]="headingClass" [innerText]="'_SecurityAdvisories_' | i18n"></td>
 					<td>
 						<div class="text-xlarge" [innerText]="'32'"></div>
 						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart barColor="#00bceb" dataLabels="true" [seriesData]="seriesData"
+								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -231,7 +251,8 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -243,7 +264,8 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -255,15 +277,17 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData" [width]="chartWidth"></bar-chart>
+							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 				</tr>
 				<!-- features -->
 				<tr>
 					<td>
-						<div [ngClass]="headingClass"  [innerText]="'_OsvFeatures_' | i18n"></div>
-						<div [ngClass]="subHeadingClass" class="qtr-margin-top" [innerText]="'_OsvActiveAvailable_' | i18n"></div>
+						<div [ngClass]="headingClass" [innerText]="'_OsvFeatures_' | i18n"></div>
+						<div [ngClass]="subHeadingClass" class="qtr-margin-top"
+							[innerText]="'_OsvActiveAvailable_' | i18n"></div>
 					</td>
 					<td>
 						<div class="text-xlarge" [innerText]="'3/17'"></div>

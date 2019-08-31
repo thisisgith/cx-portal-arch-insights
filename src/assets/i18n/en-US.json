@@ -689,6 +689,7 @@
 	"_OsvListView_": "List View",
 	"_OsvTimelineView_": "Timeline View",
 	"_OsvYes_": "Y",
+	"_OsvGenericError_":"Internal Error Occurred. Please try again later.",
 	"_Other_": "Other",
 	"_Others_": "Others",
 	"_OVA_BrowseForIE_": "Browse for the OVA file you just downloaded and select it.",

@@ -44,7 +44,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	public destroy$ = new Subject();
 	public softwareVersionsParams: OSVService.GetSoftwarVersionsParams;
 	public customerId: string;
-
+	public alert: any = {};
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -108,6 +108,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 
 				}),
 				catchError(err => {
+					this.alert.show(I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV SoftwareVersions : getVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 

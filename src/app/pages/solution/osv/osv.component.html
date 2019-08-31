@@ -11,17 +11,9 @@
 	<asset-details [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
 </details-panel>
 
-<details-panel *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup" [fullscreen]="fullscreen">
-	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
-		<div detailsPanelTitle>
-			<div class="qtr-margin-left text-xlarge half-margin-bottom"
-				[innerText]="selectedSoftwareGroup?.profileName"></div>
-		</div>
-	</details-panel-header>
-	<app-software-group-detail [fullscreen]="fullscreen" [tabIndex]="tabIndex"
-		[(selectedSoftwareGroup)]="selectedSoftwareGroup">
-	</app-software-group-detail>
-</details-panel>
+<app-software-group-detail *ngIf="selectedSoftwareGroup" [tabIndex]="tabIndex"
+	[(selectedSoftwareGroup)]="selectedSoftwareGroup">
+</app-software-group-detail>
 
 <div class="panel">
 	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading && view">
@@ -55,8 +47,9 @@
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
 	<div *ngIf="view == 'swGroups'">
-		<app-software-groups [(tabIndex)]="tabIndex" (contactSupport)="openContactSupport()" [(fullscreen)]="fullscreen"
-			[(selectedSoftwareGroup)]="selectedSoftwareGroup" [filters]="appliedFilters">
+		<app-software-groups [(tabIndex)]="tabIndex" (contactSupport)="openContactSupport()"
+			[(selectedSoftwareGroup)]="selectedSoftwareGroup" [filters]="appliedFilters"
+			(softwareGroupStatusUpdated)="onsoftwareGroupStatusUpdate($event)">
 		</app-software-groups>
 	</div>
 	<div *ngIf="view == 'assets'">
@@ -144,7 +137,8 @@
 
 <ng-template #deploymentStatusFilter let-filter="filter">
 	<div>
-		<pie-chart [width]="400" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
+		<pie-chart [width]="400" [seriesData]="filter.seriesData"
+			(subfilter)="onSubfilterSelect($event.filter, filter)">
 		</pie-chart>
 	</div>
 
