@@ -45,9 +45,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	@Input() public selectedAsset: OSVAsset;
 	@Input() public accept = false;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
-	@Output() public selectedSoftwareGroupChange = new EventEmitter();
 	@Input() public recommendations;
-	@Output() public recommendationsChange = new EventEmitter();
+	@Output() public onRecommendationAccept = new EventEmitter();
 	public assetDetails: AssetRecommendationsResponse;
 	public status = {
 		isLoading: true,
@@ -331,8 +330,10 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.setAcceptedVersion(this.recommendations, response);
 		this.recommendations = _.cloneDeep(this.recommendations);
 		this.selectedSoftwareGroup.recommAcceptedDate = response.recommAcceptedDate;
-		this.selectedSoftwareGroupChange.emit(response);
-		this.recommendationsChange.emit(this.recommendations);
+		this.onRecommendationAccept.emit({
+			softwareGroupDetail: response,
+			recommendation: this.recommendations
+		});
 		this.status.isLoading = false;
 		this.logger.debug('Updated');
 		// }, () => {

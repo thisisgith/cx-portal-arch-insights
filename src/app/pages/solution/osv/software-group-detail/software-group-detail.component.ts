@@ -385,4 +385,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.softwareGroupVersionsParams.pageIndex = (event.page + 1);
 		this.getSoftwareGroupVersions();
 	}
+
+	public onRecommendationAccept (event: any) {
+		this.logger.info('updated!!');
+	}
 }

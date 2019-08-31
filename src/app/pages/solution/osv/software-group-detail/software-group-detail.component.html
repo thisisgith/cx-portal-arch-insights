@@ -32,7 +32,7 @@
 <ng-template #softwareGroupRecommendations>
 	<div class="base-margin-top">
 		<asset-details [recommendations]="recommendations" [accept]="true"
-			[(selectedSoftwareGroup)]="selectedSoftwareGroup" [fullscreen]="fullscreen">
+			(onRecommendationAccept)="onRecommendationAccept($event)" [selectedSoftwareGroup]="selectedSoftwareGroup" [fullscreen]="fullscreen">
 		</asset-details>
 	</div>
 </ng-template>
