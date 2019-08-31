@@ -1,24 +1,19 @@
 <details-panel *ngIf="!isLoading" [hidden]="!asset" [fullscreen]="fullscreen">
-	<details-panel-header (close)="onAllPanelsClose()"
-		(back)="onPanelBack()"
-		[(fullscreen)]="fullscreen"
+	<details-panel-header (close)="onAllPanelsClose()" (back)="onPanelBack()" [(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false">
-		<asset-details-header [asset]="asset"
-			[element]="element"
-			[customerId]="customerId"
+		<asset-details-header [asset]="asset" [element]="element" [customerId]="customerId"
 			(alert)="handleAlert($event)">
 		</asset-details-header>
 		<div detailsPanelTitle class="text-xlarge">
 			<span class="qtr-margin-right" *ngIf="element && getProductIcon(element)">
-				<img alt="{{ '_AssetIcon_' | i18n }}"
-					class="icon-asset"
+				<img alt="{{ '_AssetIcon_' | i18n }}" class="icon-asset"
 					attr.data-auto-id="DeviceIcon-{{ asset?.deviceName }}"
 					src="assets/img/assets/device-{{ getProductIcon(element) }}.svg">
 			</span>
 			<span [innerText]="asset?.deviceName"></span>
 		</div>
 	</details-panel-header>
-	 <ng-container *ngTemplateOutlet="assetDetails"></ng-container>
+	<ng-container *ngTemplateOutlet="assetDetails"></ng-container>
 </details-panel>
 
 <ng-template #assetDetails>

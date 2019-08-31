@@ -1,5 +1,5 @@
 <div class="row qtr-margin-top">
-	<div class="col-md-9 flex flex-fill">
+	<div class="col-md-6 flex flex-fill">
 		<div class="flex-center-vertical" *ngIf="pagination && assets?.length > 0">
 			<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
 			<span [innerText]="'_OsvShowingXofYAssets_' | i18n:paginationCount:pagination.total"
@@ -7,13 +7,11 @@
 			</span>
 		</div>
 	</div>
-	<div class="col-md-3 text-right">
-		<div>
-			<span [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></span>
-			<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert"
-				[innerText]="'_CSRequestExpert_' | i18n">
-			</a>
-		</div>
+	<div class="col-md-6 text-right">
+		<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
+		<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert"
+			[innerText]="'_CSRequestExpert_' | i18n">
+		</a>
 	</div>
 </div>
 <div class="divider qtr-margin-top"></div>

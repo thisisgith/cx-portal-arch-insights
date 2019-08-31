@@ -6,7 +6,7 @@ import {
 	OnDestroy,
 	OnChanges,
 	Output,
-	EventEmitter
+	EventEmitter,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -61,8 +61,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public headingClass = this.fullscreen ? 'text-xlarge' : 'text-large';
 	public subHeadingClass = this.fullscreen ? 'text-large' : 'text-medium';
 	public chartWidth = this.fullscreen ? 250 : 140;
-	public assetAlert: any = {};
-	public versionAlert: any = {};
+	public assetAlert: any = { };
+	public versionAlert: any = { };
 	public recommendations;
 	public selectedMachineRecommendation;
 	public seriesData = [
@@ -89,7 +89,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.softwareGroupDetailsParams = {
 			customerId: this.customerId,
 			profileName: '7293498_NA',
-		}
+		};
 		this.softwareGroupAssetsParams = {
 			customerId: this.customerId,
 			profileName: '7293498_NA',
@@ -123,9 +123,10 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public refresh () {
 		if (this.selectedSoftwareGroup && !this.selectedSoftwareGroup.statusUpdated) {
 			this.clear();
-			// this.softwareGroupDetailsParams.profileName = _.get(this.selectedSoftwareGroup, 'profileName');
-			// this.this.softwareGroupAssetsParams.profileName = _.get(this.selectedSoftwareGroup, 'profileName');
-			// this.this.softwareGroupVersionsParams.profileName = _.get(this.selectedSoftwareGroup, 'profileName');
+			// const profileName = _.get(this.selectedSoftwareGroup, 'profileName');
+			// this.softwareGroupDetailsParams.profileName = profileName;
+			// this.this.softwareGroupAssetsParams.profileName = profileName;
+			// this.this.softwareGroupVersionsParams.profileName = profileName;
 			this.loadData();
 		}
 	}
@@ -150,8 +151,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	}
 
 	/**
- * Fetch Software Group details for the selected SoftwareGroup
- */
+	 * Fetch Software Group details for the selected SoftwareGroup
+	 * @returns software group details list observable
+	 */
 	public fetchSoftwareGroupDetails () {
 		this.status.isLoading = true;
 		return this.osvService.getSoftwareGroupRecommendations(this.softwareGroupDetailsParams)
@@ -164,9 +166,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
-			)
+			);
 	}
 
 	/**
@@ -194,7 +196,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupAsset() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -224,7 +226,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -260,7 +262,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		} else {
 			this.tabIndex = _.isUndefined(this.tabIndex) ? 0 : this.tabIndex;
 		}
-		if (currentSelectedGroup && _.get(currentSelectedGroup, 'statusUpdated') && !isFirstChange) {
+		if (currentSelectedGroup  && !isFirstChange) {
 			this.refresh();
 		}
 	}
@@ -390,15 +392,20 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.getSoftwareGroupVersions();
 	}
 
+	/**
+	 * called after the recommendation is accepted
+	 * @param event contains updated data about the accepted recommendation
+	 */
 	public onRecommendationAccept (event: any) {
 		this.selectedSoftwareGroup = event.selectedSoftwareGroup;
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 		this.recommendations = event.recommendations;
 	}
 
+	/**
+	 * on machine recommendation accept click
+	 */
 	public onAcceptClick () {
-		this.selectedMachineRecommendation = {};
+		this.selectedMachineRecommendation = { };
 	}
-
-
 }

@@ -31,11 +31,11 @@ interface Filter extends VisualFilter {
 })
 export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	@ViewChild('assetTypeFilter', { static: true }) private assetTypeFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('totalAssetsFilter', { static: true }) private totalAssetsFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	@ViewChild('deploymentStatusFilter', { static: true }) private deploymentStatusFilterTemplate:
-		TemplateRef<{}>;
+		TemplateRef<{ }>;
 	public status = {
 		isLoading: true,
 	};
@@ -65,7 +65,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		private cuiModalService: CuiModalService,
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
-		this.customerId = _.get(user, ['info', 'customerId']);		
+		this.customerId = _.get(user, ['info', 'customerId']);
 	}
 
 	/**
@@ -202,7 +202,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					deploymentStatusFilter.loading = false;
 					this.view = undefined;
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -329,7 +329,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	 * Open contact support modal
 	 */
 	public openContactSupport () {
-		this.cuiModalService.showComponent(ContactSupportComponent, {});
+		this.cuiModalService.showComponent(ContactSupportComponent, { });
 	}
 
 	/**
@@ -339,7 +339,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		this.appliedFilters = {
 			assetType: '',
 			deploymentStatus: [],
-		}
+		};
 		this.selectedAsset = null;
 		this.selectedSoftwareGroup = null;
 	}
@@ -361,8 +361,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 	public onSoftwareGroupStatusUpdate () {
 		setTimeout(() => {
 			this.loadData();
-		})
+		});
 	}
-
-
 }

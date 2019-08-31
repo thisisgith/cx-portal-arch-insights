@@ -36,8 +36,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Output() public tabIndexChange = new EventEmitter<number>();
 	@Output() public softwareGroupStatusUpdated = new EventEmitter();
 	@ViewChild('recommendationsTemplate', { static: true })
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
-	private recommendationsTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	private recommendationsTemplate: TemplateRef<{ }>;
 	public softwareGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
@@ -48,7 +48,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	public destroy$ = new Subject();
 	public softwareGroupsParams: OSVService.GetSoftwareGroupsParams;
 	public customerId: string;
-	public alert: any = {};
+	public alert: any = { };
 	constructor (
 		public logger: LogService,
 		public osvService: OSVService,
@@ -73,7 +73,6 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 		this.loadData();
 	}
 
-
 	/**
 	 * lifecycle hook
 	 * @param changes: changes
@@ -81,12 +80,13 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentFilter = _.get(changes, ['filters', 'currentValue']);
 		const selectedSoftwareGroup = _.get(changes, ['selectedSoftwareGroup', 'currentValue']);
-
+		const statusUpdated = _.get(selectedSoftwareGroup, 'statusUpdated');
+		const isFirstChange = _.get(changes, 'selectedSoftwareGroup.firstChange');
 		if (currentFilter && !_.get(changes, 'filters.firstChange')) {
 			this.setFilter(currentFilter);
 			this.loadData();
 		}
-		if (selectedSoftwareGroup && _.get(selectedSoftwareGroup, 'statusUpdated') && !_.get(changes, 'selectedSoftwareGroup.firstChange')) {
+		if (selectedSoftwareGroup &&  statusUpdated && !isFirstChange) {
 			const selected = _.filter(this.softwareGroups, { id: selectedSoftwareGroup.id });
 			if (selected && selected.length > 0) {
 				selected[0].optimalVersion = _.get(selectedSoftwareGroup, 'optimalVersion');
@@ -146,11 +146,11 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 				}),
 				takeUntil(this.destroy$),
 				catchError(err => {
-					this.alert.show(I18n.get('_OsvGenericError_'), 'danger');
+					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV Profile Groups : getsoftwareGroups() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -276,40 +276,40 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			{
 				label: I18n.get('_OsvCompareRecommendations'),
 				onClick: () => {
-					this.selectedSoftwareGroup = softwareGroup;
-					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
-					this.tabIndex = 0;
-					this.tabIndexChange.emit(this.tabIndex);
+					this.openSoftwareGroupDetails(0, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvRecommendations_'),
 				onClick: () => {
-					this.selectedSoftwareGroup = softwareGroup;
-					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
-					this.tabIndex = 1;
-					this.tabIndexChange.emit(this.tabIndex);
+					this.openSoftwareGroupDetails(1, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewAssets_'),
 				onClick: () => {
-					this.selectedSoftwareGroup = softwareGroup;
-					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
-					this.tabIndex = 2;
-					this.tabIndexChange.emit(this.tabIndex);
+					this.openSoftwareGroupDetails(2, softwareGroup);
 				},
 			},
 			{
 				label: I18n.get('_OsvViewVersions_'),
 				onClick: () => {
-					this.selectedSoftwareGroup = softwareGroup;
-					this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
-					this.tabIndex = 3;
-					this.tabIndexChange.emit(this.tabIndex);
+					this.openSoftwareGroupDetails(3, softwareGroup);
 				},
 			},
 		]);
+	}
+
+	/**
+	 * * open software group details
+	 * @param tabIndex tab to open
+	 * @param softwareGroup software group data for details
+	 */
+	public openSoftwareGroupDetails (tabIndex, softwareGroup) {
+		this.selectedSoftwareGroup = softwareGroup;
+		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+		this.tabIndex = tabIndex;
+		this.tabIndexChange.emit(this.tabIndex);
 	}
 
 }

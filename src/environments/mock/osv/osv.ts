@@ -33,14 +33,14 @@ const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc&filter
 /** Asset Details Params */
 const assetDetailsParams = `&id=${assetId}&pid=${pid}&pf=${pf}&swType=IOS&swVersions=8&image=NA`;
 
-/**Software Group Params*/
-const sgParams = `&pageIndex=1&pageSize=10&sort=profileName&sortOrder=asc&filter=`;
+/** Software Group Params */
+const sgParams = '&pageIndex=1&pageSize=10&sort=profileName&sortOrder=asc&filter=';
 
-/** SoftwareGroup Assets*/
-const sgAssetsParams = `&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc`
+/** SoftwareGroup Assets */
+const sgAssetsParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc';
 
-/** SoftwareGroup Versions*/
-const sgVersionParams = `&pageIndex=1&pageSize=10&sort=swType&sortOrder=asc`
+/** SoftwareGroup Versions */
+const sgVerParams = '&pageIndex=1&pageSize=10&sort=swType&sortOrder=asc';
 
 /** The mock response for basic recommendations */
 const mockBasicRecommendations: AssetRecommendationsResponse = [
@@ -878,7 +878,7 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileVersions?customerId=${customerId}&profileName=${assetId}${sgVersionParams}`,
+		url: `${api}profileVersions?customerId=${customerId}&profileName=${assetId}${sgVerParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{

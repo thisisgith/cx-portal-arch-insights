@@ -15,7 +15,7 @@ export class CancelConfirmComponent {
 	) { }
 
 	/**
-	 * Continue the cancel request 
+	 * Continue the cancel request
 	 */
 	public close () {
 		this.cuiModalService.onCancel.next();

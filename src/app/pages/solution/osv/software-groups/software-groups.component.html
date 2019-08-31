@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-md-9 flex flex-fill">
+	<div class="col-md-6 flex flex-fill">
 		<div class="flex-center-vertical" *ngIf="pagination && softwareGroups?.length > 0">
 			<span [innerText]="'_OsvSoftwareGroups_' | i18n" class="text-large"></span>
 			<span *ngIf="pagination"
@@ -8,11 +8,10 @@
 			</span>
 		</div>
 	</div>
-	<div class="col-md-3 text-right">
-		<div>
-			<span [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></span>
-			<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert" [innerText]="'_CSRequestExpert_' | i18n"></a>
-		</div>
+	<div class="col-md-6 text-right">
+		<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
+		<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert"
+			[innerText]="'_CSRequestExpert_' | i18n"></a>
 	</div>
 </div>
 <div class="divider qtr-margin-top"></div>
@@ -28,7 +27,7 @@
 </div>
 
 <ng-template #tableSoftwareGroups>
-	<div  *ngIf="!status.isLoading && softwareGroupsTable && softwareGroups?.length">
+	<div *ngIf="!status.isLoading && softwareGroupsTable && softwareGroups?.length">
 		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
 			<thead>
 				<tr>
@@ -51,7 +50,8 @@
 						(click)="column.click ? $event.stopPropagation() : null"
 						attr.data-auto-id="SoftwareGroupsItemClickHandler-{{ item.softwareProfile }}">
 						<ng-container *ngIf="column.template">
-							<ng-container *ngTemplateOutlet="column.template; context: { celldata: item.data ,actions: item.actions}">
+							<ng-container
+								*ngTemplateOutlet="column.template; context: { celldata: item.data ,actions: item.actions}">
 							</ng-container>
 						</ng-container>
 						<ng-container *ngIf="!column.template">
@@ -73,7 +73,7 @@
 	</div>
 </ng-template>
 
-<ng-template #actionsTemplate let-item="celldata" let-actions="actions" >
+<ng-template #actionsTemplate let-item="celldata" let-actions="actions">
 	<cui-dropdown *ngIf="actions?.length > 0 " [actions]="actions" position="left"
 		icon="icon-more icon-medium text-muted rotate-90">
 	</cui-dropdown>
