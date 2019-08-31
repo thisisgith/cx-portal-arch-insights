@@ -73,19 +73,30 @@
 						"
 					>
 						<span class="icon-error"></span>
-						<span *ngIf="!!minMatch.errors.required">
-							Minimum Match criteria is required.</span
-						>
-						<span *ngIf="!!minMatch.errors.min">
-							Minimum Match criteria must be at least 1.</span
-						>
-						<span *ngIf="!!minMatch.errors.max">
-							Minimum Match criteria cannot be more than 100</span
-						>
+						<span
+							*ngIf="!!minMatch.errors.required"
+							[innerText]="'_CP_MinimumMatch_Required' | i18n"
+						></span>
+						<span
+							*ngIf="!!minMatch.errors.min"
+							[innerText]="
+								'_CP_MinimumMatch_Validation_Minimum' | i18n
+							"
+						></span>
+						<span
+							*ngIf="!!minMatch.errors.max"
+							[innerText]="
+								'_CP_MinimumMatch_Validation_Maximum' | i18n
+							"
+						></span>
+						<span
+							*ngIf="!!minMatch.errors.pattern"
+							[innerText]="'_CP_Decimal_Invalid_' | i18n"
+						></span>
 					</div>
 				</div>
-				<div class="col-3 no-padding-left">
-					<span class="percent-symbol  qtr-padding-top"></span>
+				<div class="col-3 no-padding-left text-center qtr-padding-top">
+					<span class="percent-symbol"></span>
 				</div>
 			</div>
 		</div>
@@ -116,18 +127,26 @@
 						"
 					>
 						<span class="icon-error"></span>
-						<span *ngIf="!!deviceCount.errors.required">
-							Device Count criteria is required.</span
-						>
-						<span *ngIf="!!deviceCount.errors.min">
-							Device Count must be at least 1.</span
-						>
-						<span *ngIf="!!deviceCount.errors.max">
-							Device Count cannot be more than 1000</span
-						>
-						<span *ngIf="!!deviceCount.errors.pattern">
-							Decimal numbers are not allowed.</span
-						>
+						<span
+							*ngIf="!!deviceCount.errors.required"
+							[innerText]="'_CP_DeviceCount_Required' | i18n"
+						></span>
+						<span
+							*ngIf="!!deviceCount.errors.min"
+							[innerText]="
+								'_CP_DeviceCount_Validation_Minimum' | i18n
+							"
+						></span>
+						<span
+							*ngIf="!!deviceCount.errors.max"
+							[innerText]="
+								'_CP_DeviceCount_Validation_Maximum' | i18n
+							"
+						></span>
+						<span
+							*ngIf="!!deviceCount.errors.pattern"
+							[innerText]="'_CP_Decimal_Invalid_' | i18n"
+						></span>
 					</div>
 				</div>
 				<div class="col-3">
@@ -141,13 +160,13 @@
 	</form>
 </div>
 <div class="row flex">
-	<div class="container base-margin-top" data-auto-id="similar-assets-table">
+	<div *ngIf="!seriesDataLoading; else loadingTemplate" class="container base-margin-top" data-auto-id="similar-assets-table" >
 		<cui-table
 			[options]="tableOptions"
 			[data]="similarDevicesData?.similarDevices"
 			[limit]="size"
 			[offset]="page"
-			*ngIf="!seriesDataLoading; else loadingTemplate"
+			*ngIf="!noData; else noDataTemplate"
 		></cui-table>
 		<div class="section">
 			<cui-pager
@@ -192,10 +211,17 @@
 		(click)="showDeviceComparison(item)"
 		data-auto-id="CompareButton"
 		[innerText]="'_CP_Compare_' | i18n"
-		class="gt-symbol"
-		></a
-	>
+		class="gt-symbol text-right"
+	></a>
+</ng-template>
+<ng-template #noDataTemplate>
+	<span
+		class="text-center dbl-padding-top"
+		[innerText]="'_NoResultsFound_' | i18n"
+	></span>
 </ng-template>
 <ng-template #loadingTemplate>
-	<cui-loader color="muted"></cui-loader>
+	<div class="col-12 dbl-padding-top">
+		<cui-loader color="muted"></cui-loader>
+	</div>
 </ng-template>

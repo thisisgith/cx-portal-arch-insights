@@ -52,7 +52,12 @@ export class FpIntelligenceComponent implements OnChanges {
 		],
 		minMatch: [
 			50,
-			[Validators.required, Validators.min(1), Validators.max(100)],
+			[
+				Validators.required,
+				Validators.min(1),
+				Validators.max(100),
+				Validators.pattern('[0-9]*'),
+			],
 		],
 		similarityCriteria: ['fingerprint', Validators.required],
 	});

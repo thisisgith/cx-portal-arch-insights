@@ -42,6 +42,7 @@ export class FpSimilarAssetsComponent {
 	public page = 0;
 	public size = 10;
 	public similarityCriteria = 'fingerprint';
+	public noData = false;
 	public requestForm: FormGroup = this.fb.group({
 		deviceCount: [
 			1000,
@@ -49,12 +50,17 @@ export class FpSimilarAssetsComponent {
 				Validators.required,
 				Validators.min(1),
 				Validators.max(1000),
-				Validators.pattern('[0-9]*'),
+				Validators.pattern('^[0-9]*$'),
 			],
 		],
 		minMatch: [
 			50,
-			[Validators.required, Validators.min(1), Validators.max(100)],
+			[
+				Validators.required,
+				Validators.min(1),
+				Validators.max(100),
+				Validators.pattern('^[0-9]*$'),
+			],
 		],
 		similarityCriteria: ['fingerprint', Validators.required],
 	});
@@ -166,9 +172,15 @@ export class FpSimilarAssetsComponent {
 			.getSimilarDevices(similarDeviceParams)
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(
-				similarDevicesData =>
-					(this.similarDevicesData = similarDevicesData),
-				err => this.logger.error(err),
+				similarDevicesData => {
+					this.similarDevicesData = similarDevicesData;
+					this.noData = false;
+				},
+				err => {
+					this.seriesDataLoading = false;
+					this.noData = true;
+					this.logger.error(err);
+				},
 				() => (this.seriesDataLoading = false),
 			);
 	}
