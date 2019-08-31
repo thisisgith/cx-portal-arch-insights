@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-md-9 flex flex-fill" *ngIf="pagination && softwareVersions?.length > 0">
+	<div class="col-md-6 flex flex-fill" >
 		<div class="flex-center-vertical">
 			<span [innerText]="'_OsvSoftwareVersions_' | i18n" class="text-large"></span>
 			<span [innerText]="'_OsvShowingXofYSoftwareVersions_' | i18n:paginationCount:pagination.total"
@@ -7,9 +7,9 @@
 			</span>
 		</div>
 	</div>
-	<div class="col-md-3 text-right">
+	<div class="col-md-6 text-right" *ngIf="pagination && softwareVersions?.length > 0">
 		<div>
-			<span [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></span>
+			<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
 			<a  (click)="contactSupport.emit()" class="recommedation-link text-primary"
 				data-auto-id="ContactExpert" [innerText]="'_CSRequestExpert_' | i18n">
 			</a>
