@@ -162,7 +162,6 @@ describe('AssetsComponent', () => {
 		component.ngOnChanges({
 			filters: {
 				currentValue: {
-					deploymentStatus: ['none', 'upgrade'],
 					assetType: ['assets_profile', 'assets_without_profile'],
 				},
 				firstChange: false,
@@ -173,7 +172,7 @@ describe('AssetsComponent', () => {
 		tick();
 		fixture.detectChanges();
 		expect(component.assetsParams.filter)
-			.toBe('deployment:none,upgrade');
+			.toBe('');
 	}));
 
 	it('should not set filter if first change', fakeAsync(() => {
