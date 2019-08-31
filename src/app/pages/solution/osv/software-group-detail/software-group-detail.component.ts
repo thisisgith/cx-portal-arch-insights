@@ -41,8 +41,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		isLoading: true,
 	};
 	private destroy$ = new Subject();
-	public customerId: string;
-	private params: OSVService.GetSoftwareGroupDetailsParam;
+	public customerId: string;	
 	public softwareGroupVersions: SoftwareGroupVersion[];
 	public softwareGroupAssets: SoftwareGroupAsset[];
 	public softwareGroupVersionsTable: CuiTableOptions;
@@ -77,10 +76,6 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.params = {
-			customerId: this.customerId,
-			profileName: '7293498_NA',
-		};
 		this.softwareGroupAssetsParams = {
 			customerId: this.customerId,
 			profileName: '7293498_NA',
