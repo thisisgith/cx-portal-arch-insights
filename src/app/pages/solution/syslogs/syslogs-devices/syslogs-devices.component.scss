@@ -1,4 +1,5 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
+@import '../../../../../mixins.scss';
 
 #searchForm {
 	width: 100%;
@@ -9,21 +10,5 @@
 }
 
 .form-group__text > input {
-	border: 0;
-	border-bottom: 1px solid #ced0d3;
-	color: #394454;
-
-	&::placeholder {
-		color: #b6b6b6;
-		font-style: normal;
-	}
-
-	&:focus {
-		border-bottom-color: #00bceb;
-		box-shadow: none;
-	}
-
-	&:hover:not(:focus) {
-		border-color: #ced0d3;
-	}
+	@include filter-search;
 }

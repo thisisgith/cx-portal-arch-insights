@@ -1,4 +1,5 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
+@import '../../../../mixins.scss';
 
 .filter {
 	&__selected {
@@ -62,18 +63,6 @@
 	color: $status-blue;
 }
 
-#searchInput {
-	border: 0;
-	border-bottom: 1px solid #ced0d3;
-	color: #394454;
-
-	&::placeholder {
-		color: #b6b6b6;
-		font-style: normal;
-	}
-
-	&:focus {
-		border-bottom-color: #00bceb;
-		box-shadow: none;
-	}
+.form-group__text .rcc-search {
+	@include filter-search;
 }
