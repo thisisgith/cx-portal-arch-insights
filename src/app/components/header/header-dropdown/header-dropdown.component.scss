@@ -1,32 +1,45 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
+$close-default-color: #6e7580;
+
 .cx-header-dropdown {
 	animation: fade-in 0.3s;
+	border: unset;
 	border-top: 2px solid $primary;
 	cursor: auto;
 	max-width: 280px;
 	min-width: 245px;
-	max-height: calc(100vh - 200px);
+	max-height: calc(100vh - 254px);
 	position: absolute;
 	overflow-y: auto;
 	transform: translateX(-100%);
-	right: auto;
-	top: 54px;
+	top: 47px;
+	padding: 17px 0 10px 0 !important;
 	user-select: text;
 	z-index: 999999;
 
 	#parent > * {
 		padding-left: $base-spacing-qtr;
 	}
+
+	& > div {
+		margin: unset !important;
+	}
 }
 
 .cx-dropdown-close {
-	color: $base-muted-color !important;
+	color: $close-default-color !important;
 	text-decoration: none !important;
 	position: absolute;
-	right: 10px;
+	right: 13px;
+	top: 16px;
 
 	:hover {
 		color: $primary !important;
+	}
+
+	.icon-exit {
+		font-size: 10px !important;
+		line-height: 10px;
 	}
 }

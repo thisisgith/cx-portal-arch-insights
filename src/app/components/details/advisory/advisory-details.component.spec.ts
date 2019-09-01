@@ -204,7 +204,7 @@ describe('AdvisoryDetailsComponent', () => {
 				.toEqual(_.toString(nextAdvisory.id));
 
 			expect(component.title)
-			.toContain(`FN ${nextAdvisory.id}`);
+				.toContain(`FN ${nextAdvisory.id}`);
 		});
 	});
 

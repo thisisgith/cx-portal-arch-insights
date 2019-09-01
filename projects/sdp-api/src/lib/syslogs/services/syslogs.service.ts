@@ -12,6 +12,7 @@ import { SyslogPanelGridData } from './../models/syslogpanel-data';
 import { SyslogPanelFilterData } from '../models/syslogpanelfilter-data';
 import { SyslogDeviceData } from './../models/syslog-device-data';
 import { SyslogDevicePanelOuter } from '../models/syslogdevicepanel-data';
+import { SyslogPanelIPSer } from '../models/syslogdeviceheaderdetails-data';
 @Injectable({
 	providedIn: 'root',
 })
@@ -66,7 +67,7 @@ class SyslogsService extends __BaseService {
 		const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/api/customerportal/syslog/v1/message/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&includeMsgType='+syslogParams.includeMsgType+'&excludeMsgType='+syslogParams.excludeMsgType+"&companyId="+syslogParams.customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/message/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&includeMsgType='+syslogParams.includeMsgType+'&excludeMsgType='+syslogParams.excludeMsgType+'&globalSearch='+syslogParams.search+"&companyId="+syslogParams.customerId,
 			__body,
 			{
 			  headers: __headers,
@@ -91,7 +92,7 @@ class SyslogsService extends __BaseService {
 		const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+'/api/customerportal/syslog/v1/asset/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&asset='+syslogParams.asset+'&companyId='+syslogParams.customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/asset/details?pageNo='+syslogParams.pageNo+'&size='+syslogParams.size+'&severity='+syslogParams.severity+'&days='+syslogParams.days+'&catalog='+syslogParams.catalog+'&asset='+syslogParams.asset+"&searchData="+syslogParams.search+"&companyId="+syslogParams.customerId,
 			__body,
 			{
 			  headers: __headers,
@@ -113,13 +114,13 @@ class SyslogsService extends __BaseService {
 	  /**
 	 * Get  of syslogspanel service
 	 */
-	sysPanelGridData(syslogPanelParams, customerId){
+	sysPanelGridData(syslogPanelParams){
 		const __params = this.newParams();
         const __headers = new HttpHeaders(); 
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType="+syslogPanelParams.MsgType+"&companyId="+customerId,
+			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days='+syslogPanelParams.selectedFilters.days+'&msgType='+syslogPanelParams.selectedRowData.MsgType+"&companyId="+syslogPanelParams.customerId+"&catalog="+syslogPanelParams.selectedFilters.catalog,
 			__body,
 			{
 			  headers: __headers, 
@@ -135,8 +136,8 @@ class SyslogsService extends __BaseService {
 			  );
 		}
 
-	getPanelGridData(syslogPanelParams,customerId):  __Observable<SyslogPanelGridData>{
-		return this.sysPanelGridData(syslogPanelParams, customerId).pipe(
+	getPanelGridData(syslogPanelParams):  __Observable<SyslogPanelGridData>{
+		return this.sysPanelGridData(syslogPanelParams).pipe(
 			__map(_r => _r.body as SyslogPanelGridData)
 		  );
 
@@ -150,7 +151,7 @@ class SyslogsService extends __BaseService {
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/filters?msgType="+syslogPanelParams.MsgType+"&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily",
+			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/filters?msgType='+syslogPanelParams.MsgType+"&filterTypes=ProductId&filterTypes=SoftwareType&filterTypes=ProductFamily",
 			__body,
 			{
 			  headers: __headers, 
@@ -171,13 +172,14 @@ class SyslogsService extends __BaseService {
 		  );
 
 	}
-	sysPanelFilterGridData(SyslogFilterParam,syslogParams){
+	sysPanelFilterGridData(SyslogFilterParam){
+		this.convertNullToEmpty(SyslogFilterParam)
 		const __params = this.newParams();
         const __headers = new HttpHeaders(); 
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
-			this.rootUrl+"/api/customerportal/syslog/v1/syslog-view/details?days=90&msgType="+syslogParams.MsgType+"&productFamily="+SyslogFilterParam.productFamily+"&productId="+SyslogFilterParam.productID+"&severity=3"+"&software="+SyslogFilterParam.Software,
+			this.rootUrl+'/api/customerportal/syslog/v1/syslog-view/details?days='+SyslogFilterParam.timePeriod+"&msgType="+SyslogFilterParam.assets.MsgType+"&productFamily="+SyslogFilterParam.productFamily+"&productId="+SyslogFilterParam.productID+"&severity="+SyslogFilterParam.selectedFilters.severity+"&software="+SyslogFilterParam.Software,
 			__body,
 			{
 			  headers: __headers, 
@@ -192,20 +194,20 @@ class SyslogsService extends __BaseService {
 				})
 			  );
 		}
-		getPanelFilterGridData(SyslogFilterParam,syslogParams):  __Observable<SyslogPanelGridData>{
-			return this.sysPanelFilterGridData(SyslogFilterParam,syslogParams).pipe(
+		getPanelFilterGridData(SyslogFilterParam):  __Observable<SyslogPanelGridData>{
+			return this.sysPanelFilterGridData(SyslogFilterParam).pipe(
 				__map(_r => _r.body as SyslogPanelGridData)
 			  );
 	
 		}
 
-		public devicePanelDetails (devicedetailsdata, customerId) {
+		public devicePanelDetails (deviceDetails) {
 			let __params = this.newParams();
 			let __headers = new HttpHeaders();
 			let __body: any = null;
 			const req = new HttpRequest<any>(
 				'GET',
-				this.rootUrl+'/api/customerportal/syslog/v1/asset/messages?fromSeverity=1&toSeverity=7&days=100&device='+devicedetailsdata.DeviceHost+"&companyId="+customerId,
+				this.rootUrl+'/api/customerportal/syslog/v1/asset/messages?fromSeverity=0'+'&toSeverity='+deviceDetails.severity+'&days='+deviceDetails.days+'&device='+deviceDetails.deviceHost+'&includeMsgType='+deviceDetails.includeMsgType+'&excludeMsgType='+deviceDetails.excludeMsgType+'&catalog='+deviceDetails.catalog+'&companyId='+deviceDetails.customerId,
 				__body,
 				{
 				  headers: __headers,
@@ -221,9 +223,74 @@ class SyslogsService extends __BaseService {
 				}),
 			  );
 		}
-		public getdevicePanelDetails (devicedata, customerId): __Observable<SyslogDevicePanelOuter[]> {
-			return this.devicePanelDetails(devicedata, customerId).pipe(
+		public getdevicePanelDetails (devicedata): __Observable<SyslogDevicePanelOuter[]> {
+			return this.devicePanelDetails(devicedata).pipe(
 			  __map(_r => <SyslogDevicePanelOuter[]>_r.body),
+			);
+		  }
+
+		  public deviceHeaderDetails (tableRowData,customerId) {
+			let __params = this.newParams();
+			let __headers = new HttpHeaders();
+			let __body: any = null;
+			const req = new HttpRequest<any>(
+				'GET',
+				this.rootUrl+'/api/customerportal/syslog/v1/asset/viewDetails?deviceIp='+tableRowData.DeviceIp+"&customerId="+customerId,
+				__body,
+				{
+				  headers: __headers,
+				  params: __params,
+				  responseType: 'json',
+				});
+	
+			  return this.http.request<any>(req)
+			  .pipe(
+				__filter(_r => _r instanceof HttpResponse),
+				__map((_r) => {
+				  return <__StrictHttpResponse<SyslogPanelIPSer>>_r;
+				}),
+			  );
+		}
+		public getDeviceHeaderDetails (tableRowData,customerId): __Observable<SyslogPanelIPSer> {
+			return this.deviceHeaderDetails(tableRowData,customerId).pipe(
+			  __map(_r => <SyslogPanelIPSer>_r.body),
+			);
+		  }
+
+
+		  public convertNullToEmpty(selectParams){
+			  let objectKeys= Object.keys(selectParams)
+			  for(let objectValue of objectKeys){
+				if (selectParams.hasOwnProperty(objectValue)) {
+					if(selectParams[objectValue] === null){
+						selectParams[objectValue] = '';
+					}
+				 }
+			  }
+		  }
+		  public searchAllGridData (searchVal) {
+			let __params = this.newParams();
+			let __headers = new HttpHeaders();
+			const __body: any = null;
+			const req = new HttpRequest<any>(
+				'GET',
+				this.rootUrl+'/api/customerportal/syslog/v1/message/globalSearch?searchData='+searchVal,
+				__body,
+				{
+				  headers: __headers,
+				  params: __params,
+				  responseType: 'json',
+				});
+			  return this.http.request<any>(req).pipe(
+				__filter(_r => _r instanceof HttpResponse),
+				__map((_r) => {
+				  return <__StrictHttpResponse<SyslogGridData[]>>_r;
+				}),
+			  );
+		}
+		public getSeachAllData (searchVal): __Observable<SyslogGridData[]> {
+			return this.searchAllGridData(searchVal).pipe(
+			  __map(_r => <SyslogGridData[]> _r.body),
 			);
 		  }
 }
@@ -234,7 +301,7 @@ export interface GetSyslogsParams {
 	/**
      * Unique identifier of a Cisco customer.
      */
-	customerId: string;
+	customerId?: string;
 
 	/**
      * Number of rows of data per page
@@ -267,7 +334,10 @@ export interface GetSyslogsParams {
 	includeMsgType?: string;
 	excludeMsgType?: string;
 	asset?:string;
+	deviceHost?:string;
+	catalogList?:Array<string>;
+	severityList?:Array<string>;
+    search?:string;
 }
 }
 export { SyslogsService };
-
