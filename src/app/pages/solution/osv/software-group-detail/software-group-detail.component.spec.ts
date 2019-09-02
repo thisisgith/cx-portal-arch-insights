@@ -69,7 +69,7 @@ describe('SoftwareGroupDetailComponent', () => {
 		const selectedSG = (<any> OSVScenarios[1].scenarios.GET[0].response.body).uiProfileList[0];
 		component.selectedSoftwareGroup = selectedSG;
 		component.ngOnChanges({
-			selectedProfileGroup: {
+			selectedSoftwareGroup: {
 				currentValue: selectedSG,
 				firstChange: false,
 				isFirstChange: () => false,

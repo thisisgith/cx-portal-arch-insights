@@ -238,7 +238,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
-		this.assets.forEach((asset: any) => {
+		_.map(this.assets, (asset: any) => {
 			asset.rowSelected = false;
 		});
 		this.destroy$.next();

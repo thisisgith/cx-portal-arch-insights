@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { environment } from '@environment';
 import { RouterTestingModule } from '@angular/router/testing';
 
-fdescribe('NoDNACHeaderComponent', () => {
+describe('NoDNACHeaderComponent', () => {
 	let component: NoDNACHeaderComponent;
 	let fixture: ComponentFixture<NoDNACHeaderComponent>;
 	beforeEach(async(() => {

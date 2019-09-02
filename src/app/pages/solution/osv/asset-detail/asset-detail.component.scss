@@ -34,3 +34,7 @@
 .label {
 	border-radius: 15px;
 }
+
+.assetDetailsTable tbody tr td.bordered-bottom {
+	border-bottom: 1px solid $light-gray-3;
+}

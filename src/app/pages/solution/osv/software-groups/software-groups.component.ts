@@ -264,7 +264,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
-		this.softwareGroups.forEach((softwareGroup: any) => {
+		_.map(this.softwareGroups, (softwareGroup: any) => {
 			softwareGroup.rowSelected = false;
 		});
 		this.destroy$.next();
