@@ -105,7 +105,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 							let format = '';
 							format += `<span style="cursor:pointer;">
 							<span style='cursor:pointer;font-weight: bold;font-size:14px' >
-							${this['point'].name}</span>
+							${this['point'].groupedLabels}</span>
 							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
 							${this['point'].label}</span>
 							<br/><span style='cursor:pointer;font-weight: normal;;font-size:11px'>
@@ -187,6 +187,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						accepted: value.accepted,
 						description: value.name,
 						info: value.info,
+						groupedLabels: value.groupedLabels,
 						label: value.swVersion,
 						name: _.capitalize(value.name),
 						releaseDate: datePipe.transform(new Date(value.postDate), 'MMM d, y'),

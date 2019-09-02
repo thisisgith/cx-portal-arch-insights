@@ -8,6 +8,7 @@ import {
 	CuiTableModule,
 	CuiButtonModule,
 	CuiModalModule,
+	CuiAlertModule,
 } from '@cisco-ngx/cui-components';
 import { AssetTimelineChartModule } from '../asset-timeline-chart/asset-timeline-chart.module';
 import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
@@ -28,6 +29,7 @@ import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
 		AssetTimelineChartModule,
 		CancelConfirmModule,
 		CuiModalModule,
+		CuiAlertModule,
 	],
 })
 export class AssetDetailsModule { }

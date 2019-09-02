@@ -1,4 +1,4 @@
-<details-panel *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup" [fullscreen]="fullscreen">
+<details-panel [minWidth]="'840px'" *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup" [fullscreen]="fullscreen">
 	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
 		<div detailsPanelTitle>
 			<div *ngIf="!showBugs; else bugsTemplateHeader" class="qtr-margin-left text-xlarge half-margin-bottom"
@@ -49,16 +49,18 @@
 </ng-template>
 
 <ng-template #softwareGroupRecommendations>
+	<cui-alert [options]="recommendationAlert"></cui-alert>
 	<div class="base-margin-top">
 		<asset-details [selectedMachineRecommendation]="selectedMachineRecommendation"
 			[recommendations]="recommendations" [accept]="true"
 			(onRecommendationAccept)="onRecommendationAccept($event)" [selectedSoftwareGroup]="selectedSoftwareGroup"
-			[fullscreen]="fullscreen">
+			[fullscreen]="fullscreen" (showMultipleVersions)="tabIndex = 3">
 		</asset-details>
 	</div>
 </ng-template>
 
 <ng-template #softwareGroupAssetsTemp>
+	<cui-alert [options]="assetAlert"></cui-alert>
 	<div class="base-margin-top">
 		<cui-spinner *ngIf="status.isLoading"></cui-spinner>
 	</div>
@@ -86,6 +88,7 @@
 
 
 <ng-template #softwareGroupVersionsTemp>
+	<cui-alert [options]="versionAlert"></cui-alert>
 	<div class="base-margin-top">
 		<cui-spinner *ngIf="status.isLoading"></cui-spinner>
 	</div>
@@ -113,6 +116,7 @@
 
 
 <ng-template #compareRecommendationsTemp>
+	<cui-alert [options]="recommendationAlert"></cui-alert>
 	<div class="compare-recommendations">
 		<table class="table table--bordered table--nostripes table--wrap">
 			<tbody>
@@ -146,8 +150,8 @@
 				</tr>
 				<!-- status or action -->
 				<tr>
-					<td class="no-border-bottom no-border-toptext-large"
-						[innerText]="'_OsvStatusOrAction_' | i18n"></td>
+					<td class="no-border-bottom no-border-toptext-large" [innerText]="'_OsvStatusOrAction_' | i18n">
+					</td>
 					<td></td>
 					<td class="recommendation ">
 						<button (click)="onAcceptClick()" cuiButton [color]="'primary-ghost'" [small]="true"

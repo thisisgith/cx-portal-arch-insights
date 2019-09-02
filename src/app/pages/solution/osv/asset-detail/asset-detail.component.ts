@@ -43,11 +43,17 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	private releaseDateTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
+	/** show accept button if accept is true */
 	@Input() public accept = false;
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
+	/** recommendations from the software group details */
 	@Input() public recommendations;
+	/** user accepts a machine recommendation */
 	@Input() public selectedMachineRecommendation;
+	/** return result of accepting recommendation */
 	@Output() public onRecommendationAccept = new EventEmitter();
+	/** show multiple version */
+	@Output() public showMultipleVersions = new EventEmitter();
 	public assetDetails: AssetRecommendationsResponse;
 	public status = {
 		isLoading: true,
@@ -59,6 +65,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public customerId: string;
 	public currentVersion: AssetRecommendations;
 	public onCancelSusbcription: Subscription;
+	public alert: any = { };
 
 	constructor (
 		private logger: LogService,
@@ -83,6 +90,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Resets data fields
 	 */
 	public clear () {
+		_.invoke(this.alert, 'hide');
 		this.assetDetails = null;
 	}
 
@@ -99,6 +107,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			this.refresh();
 		}
 		if (recommendations) {
+			this.clear();
 			this.status.isLoading = false;
 			this.assetDetails = this.groupData(recommendations);
 			this.buildTable();
@@ -148,6 +157,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				}),
 				takeUntil(this.destroy$),
 				catchError(err => {
+					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -174,6 +184,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		const groupedData = [];
 		_.map(_.keys(groups), swVersion => {
 			const detail: AssetRecommendations = _.get(_.filter(recommendations, { swVersion }), 0);
+			detail.groupedLabels = _.join(_.map(groups[swVersion], recommendation =>
+				_.capitalize(recommendation.name),
+			), '/');
 			detail.swVersionGroup = _.cloneDeep(groups[swVersion]);
 			groupedData.push(detail);
 		});
@@ -211,13 +224,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			{
 				sortable: false,
 				template: this.currentTemplate,
-				width: '15%',
+				width: '20%',
 			},
 			{
 				name: I18n.get('_OsvVersion_'),
 				sortable: false,
 				template: this.versionTemplate,
-				width: this.accept ? '40%' : '70%',
+				width: this.accept ? '35%' : '65%',
 			},
 			{
 				key: 'postDate',
@@ -340,12 +353,19 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				this.recommendations = _.cloneDeep(this.recommendations);
 				this.selectedSoftwareGroup.recommAcceptedDate = response.recommAcceptedDate;
 				this.onRecommendationAccept.emit({
-					selectedSoftwareGroup: response,
 					recommendation: this.recommendations,
+					selectedSoftwareGroup: response,
 				});
 				this.status.isLoading = false;
 				this.logger.debug('Updated');
-			}, () => {
+			}, err => {
+				if (this.selectedMachineRecommendation) {
+					this.onRecommendationAccept.emit({
+						err,
+					});
+				} else {
+					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
+				}
 				this.status.isLoading = false;
 				this.logger.debug('Error in updating');
 			});

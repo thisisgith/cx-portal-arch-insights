@@ -64,6 +64,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public chartWidth = this.fullscreen ? 250 : 140;
 	public assetAlert: any = { };
 	public versionAlert: any = { };
+	public recommendationAlert = { };
 	public recommendations;
 	public selectedMachineRecommendation;
 	public seriesData = [
@@ -165,6 +166,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				}),
 				takeUntil(this.destroy$),
 				catchError(err => {
+					_.invoke(this.recommendationAlert, 'show',
+						I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -194,7 +197,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.buildSoftwareGroupAssetsTable();
 				}),
 				catchError(err => {
-					this.assetAlert.show(I18n.get('_OsvGenericError_'), 'danger');
+					_.invoke(this.assetAlert, 'show',
+						I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV SG : getSoftwareGroupAsset() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -224,7 +228,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.buildSoftwareGroupVersionsTable();
 				}),
 				catchError(err => {
-					this.versionAlert.show(I18n.get('_OsvGenericError_'), 'danger');
+					_.invoke(this.versionAlert, 'show',
+						I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV SG : getSoftwareGroupVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -255,8 +260,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @param changes the changes detected
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		const currentSelectedGroup = _.get(changes, ['selectedProfileGroup', 'currentValue']);
-		const isFirstChange = _.get(changes, ['selectedProfileGroup', 'firstChange']);
+		const currentSelectedGroup = _.get(changes, ['selectedSoftwareGroup', 'currentValue']);
+		const isFirstChange = _.get(changes, ['selectedSoftwareGroup', 'firstChange']);
 		const currentTabIndex = _.get(changes, ['tabIndex', 'currentValue']);
 
 		if (currentTabIndex) {
@@ -264,7 +269,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		} else {
 			this.tabIndex = _.isUndefined(this.tabIndex) ? 0 : this.tabIndex;
 		}
-		if (currentSelectedGroup  && !isFirstChange) {
+		if (currentSelectedGroup && !isFirstChange) {
 			this.refresh();
 		}
 	}
@@ -399,6 +404,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @param event contains updated data about the accepted recommendation
 	 */
 	public onRecommendationAccept (event: any) {
+		if (event.err) {
+			setTimeout(() => {
+				_.invoke(this.recommendationAlert, 'show',
+				I18n.get('_OsvGenericError_'), 'danger');
+			});
+
+			return;
+		}
 		this.selectedSoftwareGroup = event.selectedSoftwareGroup;
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 		this.recommendations = event.recommendations;

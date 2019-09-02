@@ -610,6 +610,7 @@
 	"_OsvCurrentInfo_": "Is active and running on the Cisco product.",
 	"_OsvCurrentOSVersion_": "Current OS Version",
 	"_OsvCurrentVersions_": "Current Versions ({0})",
+	"_OsvMultipleVersions_":"Multiple Version ({0})",
 	"_OsvDeploymentStatus_": "Deployment Status",
 	"_OsvCurrentVersion_": "Current Version(s)",
 	"_OsvDERecommendation_": "Request for DE Recommendation",
