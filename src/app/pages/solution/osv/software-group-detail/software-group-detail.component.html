@@ -1,4 +1,4 @@
-<details-panel [minWidth]="'840px'" *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup" [fullscreen]="fullscreen">
+<details-panel [minWidth]="'1024px'" *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup" [fullscreen]="fullscreen">
 	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
 		<div detailsPanelTitle>
 			<div *ngIf="!showBugs; else bugsTemplateHeader" class="qtr-margin-left text-xlarge half-margin-bottom"
@@ -118,7 +118,7 @@
 <ng-template #compareRecommendationsTemp>
 	<cui-alert [options]="recommendationAlert"></cui-alert>
 	<div class="compare-recommendations">
-		<table class="table table--bordered table--nostripes table--wrap">
+		<table class="table table--bordered table--nostripes table--wrap table--fixed">
 			<tbody>
 				<!-- version and release date -->
 				<tr>
@@ -176,7 +176,7 @@
 						<span class="text-large" [innerText]="'_OsvRiskScore_' | i18n"></span>
 						<span class="qtr-margin-left  text-primary" data-balloon-length="large"
 							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="right">
-							<i class="icon-info icon-small qtr-margin-bottom"></i>
+							<i class="icon-info qtr-margin-bottom"></i>
 						</span>
 					</td>
 					<td class="text-xlarge" [innerText]="'35%'"></td>
