@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ArchitectureReviewComponent } from './architecture-review.component';
 import { ArchitectureReviewModule } from './architecture-review.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -78,7 +77,7 @@ describe('ArchitectureReviewComponent', () => {
 	it('should call clear filters', () => {
 		component.clearFilters();
 		expect(component.filtered)
-		.toBeFalsy();
+			.toBeFalsy();
 	});
 
 	it('should call selectVisualLabel', () => {
@@ -94,7 +93,7 @@ describe('ArchitectureReviewComponent', () => {
 		{ label: 'DNAC', active: true, count: null, key: 'dnac' }];
 		component.selectVisualLabel(visualLabel);
 		expect(component.visualLabels[0].active)
-		.toBeFalsy();
+			.toBeFalsy();
 	});
 
 	it('should call onsubfilterselect', () => {
@@ -108,7 +107,7 @@ describe('ArchitectureReviewComponent', () => {
 		mockVisualFilter.key = 'exception';
 		component.onSubfilterSelect('high', mockVisualFilter);
 		expect(mockVisualFilter.seriesData[0].selected)
-		.toBeTruthy();
+			.toBeTruthy();
 	});
 
 	it('should call selected filter onsubfilterselect', () => {
@@ -122,7 +121,7 @@ describe('ArchitectureReviewComponent', () => {
 		mockVisualFilter.key = 'exceptions';
 		component.onSubfilterSelect('high', mockVisualFilter);
 		expect(mockVisualFilter.seriesData[0].selected)
-		.toBeFalsy();
+			.toBeFalsy();
 	});
 
 	it('should call getSelectedSubFilters ', () => {
@@ -135,7 +134,7 @@ describe('ArchitectureReviewComponent', () => {
 		];
 		component.filters = [mockVisualFilter];
 		expect(component.getSelectedSubFilters('high'))
-		.toBeFalsy();
+			.toBeFalsy();
 	});
 
 	it('should clear filters', () => {
@@ -149,16 +148,16 @@ describe('ArchitectureReviewComponent', () => {
 		component.filters = [mockVisualFilter];
 		component.clearFilters();
 		expect(component.filters[0].selected)
-		.toBeFalsy();
+			.toBeFalsy();
 	});
 
 	it('should call load data on component loading', () => {
 		component.buildFilters();
 		expect(component.filters)
-		.toBeDefined();
+			.toBeDefined();
 		spyOn(component, 'loadData');
 		expect(component.status.isLoading)
-		.toBeTruthy();
+			.toBeTruthy();
 	});
 
 	it('should clear the filter when selecting the same subfilter twice', () => {
@@ -189,30 +188,33 @@ describe('ArchitectureReviewComponent', () => {
 			});
 	});
 
-	it('should load the data', () => {
+	it('should get the total count', () => {
 		spyOn(service, 'getSDAReadinessCountResponse')
 			.and
-			.returnValue(of(ArchitectureReviewScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(ArchitectureReviewScenarios[0]
+				.scenarios.GET[0].response.body.TotalCounts));
 
 		component.loadData();
 		expect(service.getSDAReadinessCountResponse)
-		.toHaveBeenCalled();
+			.toHaveBeenCalled();
 	});
 
 	it('should call getDevicesCount on init', () => {
 		spyOn(service, 'getDevicesCountResponse')
 			.and
-			.returnValue(of(ArchitectureReviewScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(ArchitectureReviewScenarios[0]
+				.scenarios.GET[0].response.body.TotalCounts));
 
 		spyOn(service, 'getDnacCountResponse')
 			.and
-			.returnValue(of(ArchitectureReviewScenarios[0].scenarios.GET[0].response.body));
+			.returnValue(of(ArchitectureReviewScenarios[0]
+				.scenarios.GET[0].response.body.TotalCounts));
 
 		component.ngOnInit();
 		expect(service.getDevicesCountResponse)
-		.toHaveBeenCalled();
+			.toHaveBeenCalled();
 		expect(service.getDnacCountResponse)
-		.toHaveBeenCalled();
+			.toHaveBeenCalled();
 	});
 
 	it('should throw errors', () => {
@@ -224,9 +226,9 @@ describe('ArchitectureReviewComponent', () => {
 			.and
 			.returnValue(
 				throwError(new HttpErrorResponse(error)),
-		);
+			);
 		component.loadData();
 		expect(component.getDevicesCount)
-		.toThrowError();
+			.toThrowError();
 	});
 });

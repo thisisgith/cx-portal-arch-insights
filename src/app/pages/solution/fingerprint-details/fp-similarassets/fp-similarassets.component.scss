@@ -1,0 +1,7 @@
+.percent-symbol::after {
+	content: "\0025";
+}
+
+.gt-symbol::after {
+	content: "\003E";
+}
