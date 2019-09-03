@@ -1,0 +1,43 @@
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
+			<div *ngIf="!isLoading && totalItems > 0">
+				<span [innerText]="'_ArchitectureSdaVersion_' | i18n" class="text-large"></span>
+				<span class="qtr-margin-left text-small text-muted" [innerText]="sdaVersion">
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row base-margin-top">
+	<div class="col-md-12">
+		<div class="container">
+			<cui-table *ngIf="!isLoading && totalItems" [options]="tableOptions"
+				 [data]="deviceSDAdatas"></cui-table>
+			<div class="base-margin-top" *ngIf="isLoading">
+				<div class="loading-spinner flex-center" [attr.aria-label]="'_ArchitectureLoading_' | i18n">
+					<div class="wrapper">
+						<div class="wheel"></div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="!deviceSDAdatas?.length && !isLoading">
+				<div class="text-center dbl-margin-top dbl-margin-bottom">
+					<div>
+						<span class="text-muted text-xlarge"
+							[innerText]="'_NoResultsFound_' | i18n"
+							data-auto-id="NoResultsFoundTxt" >
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #recommendedVersions let-item="celldata">
+	<div *ngFor="let version of item?.recommendedSwVersions">
+			<span [innerText]="version"></span>
+	</div>		
+</ng-template>

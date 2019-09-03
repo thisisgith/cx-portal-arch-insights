@@ -48,6 +48,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public showAssetPanel = false;
 	public fullscreen = false;
 	public searchVal = '';
+	public tableStartIndex = 0;
+	public tableEndIndex = 10;
+	public showAssetDetails = false;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -62,13 +65,11 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			this.customerId = id;
 		});
 		this.syslogsParams = {
-			catalog: '',
+			catalog: 'Cisco',
 			customerId: this.customerId,
 			days: 1,
-			excludeMsgType: '',
-			includeMsgType: '',
 			pageNo: this.pageNum,
-			severity: 7,
+			severity: 3,
 			size: this.pageLimit,
 		};
 	}
@@ -110,17 +111,17 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param changes contains filterobj
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		// changes.prop contains the old and the new value...
 		const currentFilter = _.get(changes, ['sysFilter', 'currentValue']);
 		if (currentFilter && !changes.sysFilter.firstChange) {
 			this.syslogsParams = {
-				catalog: this.sysFilter.catalog,
+				catalog: currentFilter.catalog,
 				customerId: this.customerId,
-				days: this.sysFilter.timeRange,
+				days: currentFilter.timeRange,
 				excludeMsgType: this.msgExclude.toUpperCase(),
 				includeMsgType: this.msgInclude.toUpperCase(),
 				pageNo: this.pageNum,
-				severity: this.sysFilter.severity,
+				search: this.searchVal,
+				severity: currentFilter.severity,
 				size: this.pageLimit,
 			};
 			this.getSyslogsData();
@@ -141,9 +142,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public messageGridInit () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
-			dynamicData: false,
-			singleSelect: true,
-			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'MsgType',
@@ -170,31 +168,42 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 				},
 				{
 					key: 'deviceCount',
-					name: I18n.get('_SyslogDetailedDescription_'),
+					name: I18n.get('__SyslogDeviceCount__'),
 					sortable: true,
 				},
 			],
+			dynamicData: false,
+			singleSelect: true,
 
 		});
 	}
 
-	// tslint:disable-next-line: completed-docs
+	/**
+	 * Gets syslogs data
+	 */
 	public getSyslogsData () {
 		this.loading = true;
 		this.tableData = [];
-		// tslint:disable-next-line: ban-comma-operator
 		this.gridSubscripion = this.syslogsService
 			.getGridData(this.syslogsParams)
-			.pipe(takeUntil(this.destroy$))
+			.pipe(
+				catchError(err => {
+					this.logger.error('syslogs-details.component : getDeviceGridData() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of([]);
+				}),
+				takeUntil(this.destroy$),
+			)
 			.subscribe(gridData => {
 				this.tableData = gridData;
 				this.totalItems = gridData.length;
-			}), catchError(err => {
+			}, catchError(err => {
 				this.logger.error('syslogs-details.component : getDeviceGridData() ' +
 					`:: Error : (${err.status}) ${err.message}`);
 
 				return of({ });
-			});
+			}));
 		this.loading = false;
 	}
 
@@ -204,6 +213,9 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public keyDownFunction (event) {
 		if (event.keyCode === 13) {
+			this.syslogsParams.includeMsgType = this.msgInclude.toUpperCase();
+			this.syslogsParams.excludeMsgType = this.msgExclude.toUpperCase();
+			this.syslogsParams.search = this.searchVal;
 			this.getSyslogsData();
 		}
 	}
@@ -227,6 +239,7 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	public onPanelClose () {
 		this.selectedAsset = undefined;
 		this.showAssetPanel = false;
+		this.showAssetDetails = false;
 	}
 	/**
 	 * Determines whether pager updated on
@@ -234,6 +247,8 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 	 */
 	public onPagerUpdated (pageInfo: any) {
 		this.tableOffset = pageInfo.page;
+		this.tableStartIndex = (pageInfo.page * pageInfo.limit) + 1 ;
+		this.tableEndIndex = (pageInfo.page * pageInfo.limit) + 10 ;
 	}
 	/**
 	 * on destroy

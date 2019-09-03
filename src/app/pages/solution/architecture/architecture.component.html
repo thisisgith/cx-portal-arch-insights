@@ -11,11 +11,9 @@
 				(click)="selectVisualLabel(label)"
 				data-auto-id="SelectVisualLabelClick"
 			>
-				<h1 class="half-margin-top half-margin-bottom">
-					{{ label.count }}
+				<h1 [innerText]="label.count" class="half-margin-top half-margin-bottom">
 				</h1>
-				<div class="half-margin-bottom half-margin-top">
-					{{ label.label }}
+				<div [innerText]="label.label" class="half-margin-bottom half-margin-top">
 				</div>
 			</div>
 		</div>
@@ -30,7 +28,7 @@
 								attr.id="ArchitectureSelectVisualFilter-{{
 									filter.key
 								}}"
-								attr.data-auto-id="AssetsSelectVisualFilter-{{
+								attr.data-auto-id="ArchitectureSelectVisualFilter-{{
 									filter.key
 								}}"
 								[ngClass]="{
@@ -95,7 +93,7 @@
 			*ngIf="!status.isLoading"
 			[seriesData]="filter.seriesData"
 			[width]="350"
-			(subfilter)="onSubfilterSelect($event, filter)"
+			(subfilter)="onSubfilterSelect($event.filter, filter)"
 		>
 		</bar-chart>
 		<div class="base-margin-top" *ngIf="status.isLoading">
@@ -135,7 +133,7 @@
 				<a
 					(click)="clearFilters()"
 					class="text-lowercase"
-					[innerText]="'ClearAll'"
+					[innerText]="'_ArchitectureClearAll_' | i18n"
 					data-auto-id="FilterBarClearAllFilters"
 				>
 				</a>

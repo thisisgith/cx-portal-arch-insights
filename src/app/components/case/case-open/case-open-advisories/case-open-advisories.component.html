@@ -21,9 +21,28 @@
 								<dt [innerText]="'_AssetAssociated_' | i18n"></dt>
 								<dd>
 									<div><span [innerText]="allAssets[0]?.serialNumber"></span></div>
+									<div><span [innerText]="allAssets[0]?.deviceName || allAssets[0]?.hostName"></span></div>
 									<div><span [innerText]="allAssets[0]?.productId"></span></div>
-									<div><span [innerText]="allAssets[0]?.deviceName"></span></div>
 								</dd>
+								<app-collapsible *ngIf="allAssets.length > 1"
+									[text]="'_AdditionalImpactedAssetsToBe_' | i18n:(allAssets.length - 1)">
+									<table class="table table--nostripes">
+										<thead>
+											<tr>
+												<th [innerText]="'_SerialNumber_' | i18n"></th>
+												<th [innerText]="'_HostName_' | i18n"></th>
+												<th [innerText]="'_Model_' | i18n"></th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr *ngFor="let asset of allAssets | slice:1">
+												<td [innerText]="asset.serialNumber"></td>
+												<td [innerText]="asset.deviceName || asset.hostName"></td>
+												<td [innerText]="asset.productId"></td>
+											</tr>
+										</tbody>
+									</table>
+								</app-collapsible>
 								<dt [innerText]="'_CaseTitle_' | i18n"></dt>
 								<dd>
 									<div class="form-group">
@@ -98,7 +117,7 @@
 <!-- Page that displays after a case submit success/fail -->
 <ng-template #submittedTemplate>
 	<app-case-submitted [errors]="errors"
-		[asset]="allAssets[0]"
+		[assets]="allAssets"
 		[caseData]="caseOpenData">
 	</app-case-submitted>
 </ng-template>

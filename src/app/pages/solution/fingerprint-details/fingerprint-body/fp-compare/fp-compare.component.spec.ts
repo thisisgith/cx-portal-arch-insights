@@ -58,7 +58,7 @@ describe('FpCompareComponent', () => {
 	/**
 	 * @TODO: modify test to use UI
 	 */
-	it('should set empty select', done => {
+	it('should set empty select', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -66,16 +66,13 @@ describe('FpCompareComponent', () => {
 		spyOn(crashPreventionService, 'getListdevice')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.listdeviceDataA.length)
-					.toEqual(0);
-				done();
-			});
-	});
+		tick();
+		fixture.detectChanges();
+		expect(component.listdeviceDataA.length)
+			.toEqual(0);
+	}));
 
-	it('should test data supplied to render chart', () => {
+	it('should test data supplied to render chart', fakeAsync(() => {
 		const deviceDetails = {
 			customerId: '7293498',
 			deviceDetail: [
@@ -98,11 +95,12 @@ describe('FpCompareComponent', () => {
 			],
 		};
 		component.onSelection1(deviceDetails);
+		tick();
 		expect(component.deviceId1)
 			.toBeDefined();
-	});
+	}));
 
-	it('should test data supplied to a render chart', () => {
+	it('should test data supplied to a render chart', fakeAsync(() => {
 		const deviceDetails = {
 			customerId: '7293498',
 			deviceDetail: [
@@ -125,26 +123,24 @@ describe('FpCompareComponent', () => {
 			],
 		};
 		component.onSelection2(deviceDetails);
+		tick();
 		expect(component.deviceId2)
 			.toBeDefined();
-	});
+	}));
 	/**
 	 * ProductFamily response
 	 */
-	it('Should return the searched response', done => {
+	it('Should return the searched response', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getProductFamily')
 			.and
 			.returnValue(of(ComparisonViewScenarios[0].scenarios.GET[0].response.body));
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(component.productData)
-					.toBeDefined();
-				done();
-			});
-	});
+		tick();
+		fixture.detectChanges();
+		expect(component.productData)
+			.toBeDefined();
+	}));
 
-	it('should test data supplied to comparisonview', () => {
+	it('should test data supplied to comparisonview', fakeAsync(() => {
 		const productFamilyDetails = {
 			customerId: '7293498',
 			productFamily: [
@@ -155,11 +151,12 @@ describe('FpCompareComponent', () => {
 			],
 		};
 		component.onSelection3(productFamilyDetails);
+		tick();
 		expect(component.productFamilyB)
 			.toBeDefined();
-	});
+	}));
 
-	it('should test data supplied to comparisonviewA ', () => {
+	it('should test data supplied to comparisonviewA ', fakeAsync(() => {
 		const productFamilyDetails = {
 			customerId: '7293498',
 			productFamily: [
@@ -172,7 +169,7 @@ describe('FpCompareComponent', () => {
 		component.onSelection(productFamilyDetails);
 		expect(component.productFamilyA)
 			.toBeDefined();
-	});
+	}));
 
 	it('should check compare view value', fakeAsync(() => {
 		const button = fixture.debugElement.query(
@@ -254,13 +251,13 @@ describe('FpCompareComponent', () => {
 			.toBeFalsy();
 	}));
 
-	it('should work', () => {
+	it('Should return the searched getListdevice response', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getProductFamily')
 			.and
 			.returnValue(of(<any> []));
 		spyOn(crashPreventionService, 'getListdevice')
 			.and
-			.returnValue(of(<any> []));
+			.returnValue(of(ComparisonViewScenarios[1].scenarios.GET[0].response.body));
 		component.ngOnChanges({
 			devices: {
 				currentValue: { deviceId1: '' },
@@ -269,14 +266,15 @@ describe('FpCompareComponent', () => {
 				previousValue: null,
 			},
 		});
+		tick();
 		fixture.detectChanges();
 		expect(crashPreventionService.getProductFamily)
 			.toHaveBeenCalled();
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalled();
-	});
+	}));
 
-	it('should work', () => {
+	it('should check for ngOnchanges in ProductFamily and getListdevice', () => {
 		spyOn(crashPreventionService, 'getProductFamily')
 			.and
 			.returnValue(of(<any> []));

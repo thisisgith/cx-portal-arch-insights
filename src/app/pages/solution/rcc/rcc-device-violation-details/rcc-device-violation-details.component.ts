@@ -27,7 +27,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	public tableConfig = {
 		tableLimit: 10,
 		tableOffset: 0,
-		totalItems: 5,
+		totalItems: 0,
 	};
 	public paginationConfig = {
 		pageIndex: 0,
@@ -43,11 +43,17 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	@ViewChild('policyRowWellTemplate', { static: true })
 	private policyRowWellTemplate: TemplateRef<{ }>;
 	@ViewChild('deviceLink', { static: true }) private deviceLinkTemplate: TemplateRef<{ }>;
+	@ViewChild('violationAgeTemplate', { static: true })
+	private violationAgeTemplate: TemplateRef<{ }>;
+	@ViewChild('severityIconTemplate', { static: true })
+	private severityIconTemplate: TemplateRef<{ }>;
 	public policyRuleData: any = { };
 	public customerId: string;
 	public impactedAssetsCount: any;
 	public initialLoading = false;
+	public apiNoData = true;
 	public selectionLoading = false;
+	public errorResult = false;
 	public selectionObj = {
 		osName : '',
 		productFamily : '',
@@ -71,6 +77,14 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 * @param changes gives page changed data
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
+		this.policyRuleData.policy = { };
+		this.policyRuleData.rule = { };
+		this.policyRuleData.deviceFilterDetails = {
+			osName: [],
+			productFamily: [],
+			productModel: [],
+		};
+		this.tableConfig.tableOffset = 0;
 		const policyViolationInfo = _.get(changes, ['policyViolationInfo', 'currentValue']);
 		const isFirstChange = _.get(changes, ['policyViolationInfo', 'firstChange']);
 		if (policyViolationInfo && !isFirstChange) {
@@ -96,6 +110,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 */
 	public loadData () {
 		this.initialLoading = true;
+		this.apiNoData = true;
 		forkJoin(
 			this.rccTrackService
 				.getRccPolicyRuleDetailsData(this.queryParamMapObj),
@@ -123,11 +138,18 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 						});
 					});
 					this.impactedDeviceDetails = violationDetails.data.impactedAssets;
+					this.tableConfig.totalItems = this.impactedDeviceDetails.length;
+					if (this.impactedDeviceDetails.length > 0) {
+						this.apiNoData = false;
+					}
 				}
 				this.initialLoading = false;
+				this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
 			},
 			error => {
 				this.initialLoading = false;
+				this.errorResult = true;
+				this.apiNoData = false;
 				this.logger.error(
 					'RccDeviceViolationDetailsComponent : loadData() ' +
 				`:: Error : (${error.status}) ${error.message}`);
@@ -144,10 +166,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			productFamily: [],
 			productModel: [],
 		};
-		this.rccViolationInfoTableOptions = (this.rccViolationInfoTableOptions ?
-			this.rccViolationInfoTableOptions : this.buildRccViolationInfoTableOptions());
-		this.impactedDeviceTableOptions = (this.impactedDeviceTableOptions
-		? this.impactedDeviceTableOptions : this.buildImpactedDeviceTableOptions());
+		this.rccViolationInfoTableOptions = this.buildRccViolationInfoTableOptions();
+		this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
 	}
 	/**
 	 * method for build impacted device table
@@ -191,7 +211,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				{
 					key: 'violationCount',
 					name: I18n.get('_RccViolationCount_'),
-					sortable: true,
+					sortable: false,
 				},
 			],
 			dynamicData: false,
@@ -200,7 +220,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			rowWellTemplate: this.policyRowWellTemplate,
 			singleSelect: false,
 			striped: false,
-			wrapText: false,
+			wrapText: true,
 		});
 	}
 	/**
@@ -209,7 +229,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 */
 	public buildRccViolationInfoTableOptions () {
 		return new CuiTableOptions({
-			bordered: true,
+			bordered: false,
 			columns: [
 				{
 					key: 'index',
@@ -222,7 +242,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					sortable: false,
 				},
 				{
-					key: 'suggestedFix',
+					key: 'suggestedfix',
 					name: I18n.get('_RccAssetSuggestedFix_'),
 					sortable: false,
 				},
@@ -230,17 +250,20 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					key: 'age',
 					name: I18n.get('_RccAssetViolationAge_'),
 					sortable: false,
+					template: this.violationAgeTemplate,
 				},
 				{
 					key: 'severity',
 					name: I18n.get('_RccSeverity_'),
 					sortable: false,
+					template: this.severityIconTemplate,
 				},
 			],
+			striped: false,
 		});
 	}
 	/**
-	 * Function called when page changed
+	 * Function called when page changes
 	 * @param selectedItem gives page number
 	 */
 	public onSelection () {
@@ -257,8 +280,11 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			takeUntil(this.destroy$),
 		)
 		.subscribe(violationDetails => {
+			this.tableConfig.tableOffset = 0;
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
+			this.tableConfig.totalItems = this.impactedDeviceDetails.length;
+			this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
 		},
 		error => {
 			this.selectionLoading = false;
@@ -273,7 +299,13 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 */
 	public onPageIndexChange (pageInfo: any) {
 		this.tableConfig.tableOffset = pageInfo.page;
-		this.paginationConfig.pageIndex = pageInfo.page + 1;
+	}
+	/**
+	 * Function called when sort changed
+	 * @param event gives sort information
+	 */
+	public onTableSortingChanged () {
+		this.tableConfig.tableOffset = 0;
 	}
 	/**
 	 * OnDestroy lifecycle hook

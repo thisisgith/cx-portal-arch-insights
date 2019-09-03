@@ -2,25 +2,122 @@
 @import '../../../mixins.scss';
 
 $cx-dropdown-max-width: 280px;
+$accent-light-gray-1: #8e8e8e;
+$text-light-gray-1: #6c757d;
+$text-light-gray-2: #5d656c;
+$text-dark-blue: #394454;
+$icon-light-gray-1: #bdc5cf;
+$icon-light-gray-2: #a5afbf;
+$icon-dark-gray-1: #6a80a5;
+$separator-light-gray: #d9d9da;
+$divider-light-gray: #dfdede;
+$link-light-blue: #227bb1;
+$link-hover-background: #ecf4fc;
+
+%cx-dropdown-menu-item {
+	padding: 0 20px;
+	font-size: 13px !important;
+	line-height: 34px;
+}
+
+%cx-dropdown-link {
+	width: 100%;
+	margin: unset !important;
+
+	@extend %cx-dropdown-menu-item;
+
+	&:hover {
+		text-decoration: unset;
+		background-color: $link-hover-background;
+	}
+}
+
+a {
+	color: $link-light-blue !important;
+
+	&.text-small {
+		@extend %cx-dropdown-link;
+
+		& + div {
+			@extend %cx-dropdown-menu-item;
+		}
+	}
+}
+
+.clickable {
+	cursor: pointer;
+}
 
 .header-bar__logo {
+	margin-left: 19px !important;
+
 	span.icon-cisco {
 		color: $primary !important;
+		font-size: 29px;
 	}
 }
 
 .v-separator {
-	height: 35px;
-	border-right: 2px solid $light-gray-disabled;
+	height: 30px;
+	border-right: 1px solid $separator-light-gray;
+	margin-right: 14px;
+	padding: unset;
 }
 
-.cx-header-label {
-	color: $light-gray-compliant;
+.v-separator--mock {
+	margin-left: 14px;
+}
+
+.header-bar__main {
+	margin-right: unset !important;
+
+	& .header-heading h5 {
+		margin-right: 25px !important;
+		font-size: 17px;
+		letter-spacing: -0.3px;
+		line-height: 23px;
+	}
+
+	.cx-header-search {
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
+.header-toolbar {
+	height: 38px;
+	margin-left: 35px !important;
+}
+
+.cx-user-label--container {
+	display: flex;
+	margin-top: 2px;
+	line-height: 14px;
+	align-items: center;
+	justify-content: center;
+}
+
+.cx-header-label,
+.cx-user-label {
+	color: $text-light-gray-1;
 	font-size: $small-font-size;
-	margin-right: 4px;
+}
+
+.header-bar__main .cx-header-label {
+	font-size: 12px;
+	letter-spacing: -0.34px;
+	line-height: 16px;
 }
 
 .cx-header-links {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	height: 38px;
+	margin-right: 14px !important;
+	margin-left: unset !important;
+	align-items: center;
+	justify-content: center;
 	cursor: pointer;
 	user-select: none;
 	text-decoration: unset !important;
@@ -60,10 +157,10 @@ $cx-dropdown-max-width: 280px;
 	margin-right: $base-spacing * 0.25 !important;
 	line-height: 24px !important;
 	font-size: 24px !important;
-	color: $med-gray-4;
+	color: $icon-light-gray-1;
 
 	&--small {
-		color: $med-gray-4;
+		color: $icon-light-gray-1;
 		margin-right: $base-spacing * 0.25 !important;
 		line-height: 18px !important;
 		font-size: 18px !important;
@@ -73,7 +170,103 @@ $cx-dropdown-max-width: 280px;
 .cx-header-arrow {
 	display: inline-block;
 	transition: transform 0.2s ease-in-out;
-	color: $light-gray-compliant;
+	color: $accent-light-gray-1;
+	font-size: 11px;
+}
+
+.header-toolbar .cx-header-links .cx-user-label {
+	margin-top: unset !important;
+	letter-spacing: -0.18px;
+	line-height: 14px !important;
+}
+
+.header-toolbar .cx-header-arrow {
+	position: relative;
+	bottom: 1px;
+	line-height: 14px;
+}
+
+a.cx-header-links.base-margin-right {
+	margin-right: 70px !important;
+}
+
+.cx-header-links--teams {
+	a {
+		margin-left: 8px !important;
+		font-size: 12px;
+		line-height: 14px;
+	}
+
+	::ng-deep .cx-header-dropdown {
+		left: 98px;
+	}
+}
+
+.cx-header-links--portal-help {
+	margin-right: 0 !important;
+
+	a.text-small {
+		margin-top: 12px !important;
+	}
+
+	.cx-header-arrow {
+		bottom: 0;
+	}
+
+	::ng-deep .cx-header-dropdown {
+		left: 45px;
+	}
+}
+
+.cx-header-links--user {
+	.text-small {
+		margin: unset !important;
+
+		a {
+			@extend %cx-dropdown-link;
+		}
+	}
+
+	.cx-user-icon + .cx-header-arrow {
+		bottom: 0;
+	}
+
+	.flex-center-vertical {
+		align-items: unset !important;
+	}
+
+	::ng-deep .cx-header-dropdown {
+		left: 60px;
+
+		@media only screen and (max-width: 991px) {
+			left: 40px;
+		}
+	}
+}
+
+.cx-header-links--settings {
+	margin-right: 13px !important;
+}
+
+.cx-header-links--more {
+	margin-right: 0 !important;
+	width: 3px;
+
+	::ng-deep .cx-header-dropdown {
+		left: 13px;
+	}
+}
+
+.cx-header-links--mock {
+	margin-right: unset !important;
+
+	a.text-small {
+		margin-top: 12px !important;
+	}
+
+	::ng-deep .cx-header-dropdown {
+		left: 40px;
+	}
 }
 
 .cx-search-button {
@@ -83,11 +276,11 @@ $cx-dropdown-max-width: 280px;
 .cx-user-icon {
 	height: 28px;
 	width: 28px;
-	border: 1px solid $light-gray-3;
+	border: 1px solid $icon-light-gray-2;
 
 	@include lg {
-		height: 24px;
-		width: 24px;
+		height: 22px;
+		width: 22px;
 	}
 }
 
@@ -97,6 +290,7 @@ $cx-dropdown-max-width: 280px;
 
 .cx-user-icon + span {
 	margin-left: 2px;
+	color: $text-light-gray-2;
 }
 
 .cx-team-member-icon {
@@ -105,11 +299,105 @@ $cx-dropdown-max-width: 280px;
 	vertical-align: top;
 }
 
+.icon-more {
+	font-size: 19px !important;
+}
+
+.icon-cog {
+	margin-right: unset !important;
+}
+
+.icon-help-alt {
+	font-size: 22px !important;
+}
+
 .cx-team-member-info {
 	max-width: 170px;
 	display: inline-block;
 }
 
+.text-muted {
+	padding: 0 20px;
+	color: $accent-light-gray-1;
+	letter-spacing: -0.12px;
+	line-height: 14px;
+}
+
 .cx-cisco-team-dropdown {
-	width: calc(#{$cx-dropdown-max-width} - #{$base-spacing-dbl});
+	width: calc(#{$cx-dropdown-max-width} - #{$base-spacing-dbl} + 40px);
+	padding: 0 20px;
+
+	.text-muted {
+		margin-bottom: 18px;
+		line-height: 16px;
+	}
+}
+
+.cx-team-member--full-name {
+	margin-bottom: 2px;
+	line-height: 14px;
+
+	span {
+		color: $text-light-gray-2;
+		font-size: 14px;
+		line-height: 14px;
+	}
+}
+
+.cx-team-member--title {
+	color: $text-light-gray-2;
+	font-size: 11px !important;
+	line-height: 14px !important;
+}
+
+.cx-team-member--contact {
+	margin-top: 22px !important;
+	margin-bottom: 0 !important;
+	line-height: 14px;
+
+	span {
+		color: $icon-dark-gray-1 !important;
+	}
+}
+
+.cx-team-member--phone {
+	margin-top: 17px !important;
+	margin-bottom: 0 !important;
+	line-height: 14px;
+
+	.icon-mobile-phone {
+		color: $icon-dark-gray-1 !important;
+
+		& + span {
+			margin-left: 8px !important;
+			color: $text-dark-blue;
+			line-height: 14px;
+		}
+	}
+}
+
+.divider {
+	border-top: 1px solid $divider-light-gray;
+}
+
+.thumb--medium {
+	height: 43px;
+	width: 43px;
+	margin: 0 3px 8px 20px;
+}
+
+.thumb--bordered {
+	border: 1px solid $icon-light-gray-1;
+}
+
+.cx-user--full-name {
+	margin-bottom: 2px;
+	color: $text-light-gray-2;
+	font-size: 14px;
+
+	& + .text-xsmall {
+		color: $text-light-gray-2;
+		font-size: 10px;
+		line-height: 14px;
+	}
 }

@@ -10,7 +10,7 @@ const firstATXSessions = atxItems[0].sessions;
 const scheduledItems = atxMock.getScenario('GET', '(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled').response.body.items;
 
 const atxFilters = [
-	{ filter: 'Recommended', field: 'status', value: null },
+	{ filter: 'Recommended', field: 'status', value: 'recommended' },
 	{ filter: 'Requested', field: 'status', value: 'requested' },
 	{ filter: 'Scheduled', field: 'status', value: 'scheduled' },
 	{ filter: 'Completed', field: 'status', value: 'completed' },
@@ -18,8 +18,11 @@ const atxFilters = [
 	{ filter: 'Not bookmarked', field: 'bookmark', value: false },
 ];
 
-const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
-	'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const formatDate = atxItem => {
+	const scheduledSession = Cypress._.find(atxItem.sessions,
+		session => session.scheduled === true);
+	return Cypress.moment(new Date(scheduledSession.sessionStartDate)).format('MMM D, YYYY, h:mm:ss A');
+};
 
 const i18n = require('../../src/assets/i18n/en-US.json');
 
@@ -27,6 +30,13 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	before(() => {
 		cy.login();
 		cy.loadApp();
+
+		// Disable the setup wizard and quick tour so they don't block other elements
+		cy.window().then(win => {
+			win.Cypress.hideDNACHeader = true;
+			win.Cypress.showQuickTour = false;
+		});
+
 		cy.waitForAppLoading();
 
 		// Wait for the ATX panel to finish loading
@@ -34,7 +44,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	});
 
 	it('Renders ATX tile', () => {
-		cy.getByAutoId('PanelTitle-_AskTheExpert_').should('have.text', 'Ask The Expert');
+		cy.getByAutoId('PanelTitle-_AskTheExperts_').should('have.text', 'Ask The Experts');
 		cy.getByAutoId('recommendedATX')
 			.should('be.visible')
 			.within(() => {
@@ -60,6 +70,15 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			visibleATXItems.forEach((item, index) => {
 				if (index !== 0) { // Ignore recommended title
 					cy.wrap($list).should('contain', item.title);
+
+					// PBC-603 Hover should include bookmark ribbon
+					if (item.bookmark) {
+						cy.getByAutoId('moreATXList-HoverModal-BookmarkRibbon')
+							.should('have.class', 'ribbon__blue');
+					} else {
+						cy.getByAutoId('moreATXList-HoverModal-BookmarkRibbon')
+							.should('have.class', 'ribbon__white');
+					}
 				}
 			});
 			invisibleATXItems.forEach(item => {
@@ -68,44 +87,89 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		});
 	});
 
-	// TODO: Will be re-written when PBC-31 is finished updating the card view:
-	// http://swtg-jira-lnx.cisco.com:8080/browse/PBC-31
-	it.skip('Displays a modal with all available sessions', () => {
-		cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
-		cy.get('#atxModal').should('be.visible');
-		cy.get('#atxModal .modal__header')
-			.should('contain', 'Ask The Expert')
-			.and('contain', 'Available live or on-demand');
-		cy.get('#atxModal .modal__body')
-			.should('contain', `${atxItems.length} Topics Available`);
-		cy.get('#atxModal .card').each(($card, index) => {
-			const atxItem = atxItems[index];
-			cy.wrap($card).within(() => {
-				cy.get('.card__header').should('have.text', atxItem.title);
-				cy.get('.card__body').should('have.text', atxItem.description);
-				cy.get('.card__footer').should('contain', atxItem.duration);
-			});
-		});
-		cy.getByAutoId('ATXCloseModal').click();
-	});
+	it('Displays a modal with all available sessions', () => {
+		cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+		cy.getByAutoId('ViewAllModal-Title').should('contain', i18n._AskTheExperts_);
+		cy.getByAutoId('ViewAllModal-Subtitle').should('contain', i18n._AvailableLive_);
+		cy.getByAutoId('ATXTopicsAvailable').should(
+			'have.text', `${atxItems.length} topics available for IBN > Campus Network Assurance:`
+		);
 
-	// TODO: Fails, needs rework after PBC-282 is complete:
-	// http://swtg-jira-lnx.cisco.com:8080/browse/PBC-282
-	it.skip('ATX Tile Tooltip', () => { // PBC-166
-		// Don't assume there is only one recommended item, so ensure the shown tooltip is recommended
-		cy.get('#hover-panel-recommendedATX h6').then($panel => {
-			let foundItem;
-			Cypress._.each(atxItems, item => {
-				// TODO: Resolving PBC-189 should change 'completed' to 'recommended' below
-				if ($panel[0].innerText === item.title && item.status === 'completed') {
-					foundItem = item;
+		cy.getByAutoId('ATXCard').should('have.length', atxItems.length);
+
+		atxItems.forEach((atx, index) => {
+			cy.getByAutoId('ATXCard').eq(index).within(() => {
+				cy.getByAutoId('ATXCardTitle').should('have.text', atx.title);
+				cy.getByAutoId('cardRecommendedATXScheduleButton')
+					.should('contain', i18n._ViewSessions_);
+				cy.getByAutoId('recommendedATXWatchButton')
+					.should('contain', i18n._WatchNow_);
+				// If the description contains \n, those get converted to <br>, which breaks text
+				// matching. Thus, split the string on \n, and verify each section exists
+				const splitDescription = atx.description.split('\n');
+				splitDescription.forEach(substring => {
+					cy.get('.atx__card__body').should('contain', substring);
+				});
+				switch (atx.status) {
+					case 'completed':
+						cy.getByAutoId('ATXCardFooter')
+							.should('contain', i18n._Completed_);
+						break;
+					case 'in-progress':
+						cy.getByAutoId('ATXCardFooter')
+							.should('contain', i18n._InProgress_);
+						break;
+					case 'requested':
+						cy.getByAutoId('ATXCardFooter')
+							.should('contain', i18n._Requested_);
+						break;
+					case 'scheduled':
+						cy.getByAutoId('ATXCardFooter-ScheduledIcon').should('be.visible');
+						cy.getByAutoId('ATXCardFooter-ScheduledDate').should('have.text', formatDate(atx));
+						break;
+					default:
+						// Default: recommended, has nothing special
+				}
+
+				// PBC-237 Check bookmark ribbon
+				if (atx.bookmark) {
+					cy.getByAutoId('ATXCardRibbon')
+						.should('have.class', 'ribbon__blue');
+				} else {
+					cy.getByAutoId('ATXCardRibbon')
+						.should('have.class', 'ribbon__white');
 				}
 			});
-			cy.get('#hover-panel-recommendedATX').should('exist');
-			cy.get('#hover-panel-recommendedATX h6').should('have.text', foundItem.title);
-			cy.get('#hover-panel-recommendedATX div:first').should('have.class', 'divider');
-			cy.get('#hover-panel-recommendedATX div').should('have.text', foundItem.description);
 		});
+		cy.getByAutoId('SuccessPathCloseModal').click();
+	});
+
+	it('ATX Tile Tooltip', () => {
+		// PBC-282: We will show the first item in the tile, regardless of status (we rely on API
+		// to perform our default sort). Mock data has a 'scheduled' item first
+		cy.getByAutoId('recommendedATX')
+			.should('be.visible')
+			.within(() => {
+				const firstItem = atxItems[0];
+				const scheduledSession = Cypress._.find(firstItem.sessions,
+					session => session.scheduled === true);
+				cy.getByAutoId('SBCardRibbon').should('have.class', firstItem.bookmark ? 'ribbon__blue' : 'ribbon__white');
+				cy.getByAutoId('recommendedATX-Image').should('have.attr', 'src', firstItem.imageURL);
+				cy.getByAutoId('recommendedATX-Title').should('have.text', firstItem.title);
+				cy.getByAutoId('recommendedATX-Calendar').should('be.visible');
+				cy.getByAutoId('recommendedATX-Date').should('have.text', formatDate(firstItem));
+				cy.getByAutoId('recommendedATX-Presenter').should('have.text', `Instructor: ${scheduledSession.presenterName}`);
+				cy.getByAutoId('recommendedATXScheduleButton').should('be.visible');
+				cy.getByAutoId('recommendedATXWatchButton').should('be.visible');
+				// PBC-603 Hover should include bookmark ribbon
+				if (firstItem.bookmark) {
+					cy.getByAutoId('recommendedATX-HoverModal-BookmarkRibbon')
+						.should('have.class', 'ribbon__blue');
+				} else {
+					cy.getByAutoId('recommendedATX-HoverModal-BookmarkRibbon')
+						.should('have.class', 'ribbon__white');
+				}
+			});
 	});
 
 	describe('PBC-14: (UI) View - Solution Based: ATX Details', () => {
@@ -136,38 +200,12 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					.within(() => {
 						// When the first item has a scheduled session, should show a calandar and
 						// first scheduled session's date and instructor
-						cy.get('span').should('have.class', 'icon-calendar');
+						cy.getByAutoId('recommendedATX-Calendar').should('be.visible');
 						const scheduledSession = Cypress._.find(
 							firstATXSessions, session => session.scheduled === true
 						);
-						const expectedDate = new Date(scheduledSession.sessionStartDate);
-						const expectedDateString = `${monthNames[expectedDate.getMonth()]} ${expectedDate.getDate()}, ${expectedDate.getFullYear()}, ${expectedDate.getHours() % 12}:${(`0${expectedDate.getMinutes()}`).slice(-2)}:${(`0${expectedDate.getSeconds()}`).slice(-2)}${expectedDate.getHours() > 12 ? ' PM' : ' AM'}`;
-						cy.getByAutoId('recommendedATX-Date').should('have.text', expectedDateString);
+						cy.getByAutoId('recommendedATX-Date').should('have.text', formatDate(atxItems[0]));
 						cy.getByAutoId('recommendedATX-Presenter').should('have.text', `Instructor: ${scheduledSession.presenterName}`);
-					});
-			});
-
-			// TODO: Failing due to PBC-605: http://swtg-jira-lnx.cisco.com:8080/browse/PBC-605
-			it.skip('First ATX item should show first session date if NOT scheduled', () => {
-				// Switch to a mock with no scheduled sessions
-				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled');
-
-				// Refresh the data
-				cy.getByAutoId('Facet-Assets & Coverage').click();
-				cy.getByAutoId('Facet-Lifecycle').click();
-				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-singleNoScheduled');
-
-				cy.getByAutoId('recommendedATX')
-					.should('be.visible')
-					.within(() => {
-						// When the first item does NOT have a scheduled session, should show a calandar and
-						// first session's date and instructor
-						cy.get('span').should('have.class', 'icon-calendar');
-						const session = firstATXSessions[0];
-						const expectedDate = new Date(session.sessionStartDate);
-						const expectedDateString = `${monthNames[expectedDate.getMonth()]} ${expectedDate.getDate()}, ${expectedDate.getFullYear()}, ${expectedDate.getHours() % 12}:${(`0${expectedDate.getMinutes()}`).slice(-2)}:${(`0${expectedDate.getSeconds()}`).slice(-2)}${expectedDate.getHours() > 12 ? ' PM' : ' AM'}`;
-						cy.getByAutoId('recommendedATX-Date').should('have.text', expectedDateString);
-						cy.getByAutoId('recommendedATX-Presenter').should('have.text', `Instructor: ${session.presenterName}`);
 					});
 			});
 		});
@@ -204,7 +242,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should show completed icons in View All modal card view', () => {
 			// Open the View All modal and ensure we're in card view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
@@ -226,7 +264,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should show completed icons in View All modal table view', () => {
 			// Open the View All modal and ensure we're in table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -273,9 +311,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				.should('be.visible')
 				.within(() => {
 					const session = scheduledItems[0].sessions[0];
-					const expectedDate = new Date(session.sessionStartDate);
-					const expectedDateString = `${monthNames[expectedDate.getMonth()]} ${expectedDate.getDate()}, ${expectedDate.getFullYear()}, ${expectedDate.getHours() % 12}:${(`0${expectedDate.getMinutes()}`).slice(-2)}:${(`0${expectedDate.getSeconds()}`).slice(-2)}${expectedDate.getHours() > 12 ? ' PM' : ' AM'}`;
-					cy.getByAutoId('recommendedATX-Date').should('have.text', expectedDateString);
+					cy.getByAutoId('recommendedATX-Date').should('have.text', formatDate(scheduledItems[0]));
 					cy.getByAutoId('recommendedATX-Presenter').should('have.text', `Instructor: ${session.presenterName}`);
 					cy.getByAutoId('recommendedATX-Calendar').should('exist');
 				});
@@ -283,7 +319,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should show scheduled icons/dates in View All modal card view', () => {
 			// Open the View All modal and ensure we're in card view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
@@ -291,11 +327,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Verify each completed item's card includes the completed icon
 			cy.getByAutoId('ATXCardFooter').each(($atxCard, index) => {
 				cy.wrap($atxCard).within(() => {
-					const expectedDate = new Date(Cypress._.find(
-						scheduledItems[index].sessions, session => session.scheduled === true
-					).sessionStartDate);
-					const expectedDateString = `${monthNames[expectedDate.getMonth()]} ${expectedDate.getDate()}, ${expectedDate.getFullYear()}, ${expectedDate.getHours() % 12}:${(`0${expectedDate.getMinutes()}`).slice(-2)}:${(`0${expectedDate.getSeconds()}`).slice(-2)}${expectedDate.getHours() > 12 ? ' PM' : ' AM'}`;
-					cy.getByAutoId('ATXCardFooter-ScheduledDate').should('have.text', expectedDateString);
+					cy.getByAutoId('ATXCardFooter-ScheduledDate').should('have.text', formatDate(scheduledItems[index]));
 					cy.getByAutoId('ATXCardFooter-ScheduledIcon').should('exist');
 				});
 			});
@@ -307,7 +339,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should show scheduled icons/dates in View All modal table view', () => {
 			// Open the View All modal and ensure we're in table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -315,11 +347,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			// Verify each completed item's card includes the completed icon
 			cy.getByAutoId('Table-Status-Scheduled').each(($tableRowStatus, index) => {
 				cy.wrap($tableRowStatus).within(() => {
-					const expectedDate = new Date(Cypress._.find(
-						scheduledItems[index].sessions, session => session.scheduled === true
-					).sessionStartDate);
-					const expectedDateString = `${monthNames[expectedDate.getMonth()]} ${expectedDate.getDate()}, ${expectedDate.getFullYear()}, ${expectedDate.getHours() % 12}:${(`0${expectedDate.getMinutes()}`).slice(-2)}:${(`0${expectedDate.getSeconds()}`).slice(-2)}${expectedDate.getHours() > 12 ? ' PM' : ' AM'}`;
-					cy.getByAutoId('scheduledDate').should('have.text', expectedDateString);
+					cy.getByAutoId('scheduledDate').should('have.text', formatDate(scheduledItems[index]));
 					cy.getByAutoId('Table-Status-Scheduled-Icon').should('exist');
 				});
 			});
@@ -331,6 +359,26 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	});
 
 	describe('PBC-103: (UI) View - Solution Racetrack - Schedule an ATX', () => {
+		before(() => {
+			// Switch to mock data with no scheduled items
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+		});
+
+		after(() => {
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
 		it('Should be able to schedule an ATX session from the Lifecycle page', () => {
 			cy.getByAutoId('recommendedATXScheduleButton').click();
 			cy.getByAutoId('atxScheduleCard')
@@ -355,7 +403,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should be able to schedule an ATX session from View All card view', () => {
 			// Open the View All modal and switch to card view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
@@ -390,7 +438,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 
 		it('Should be able to schedule an ATX session from View All table view', () => {
 			// Open the View All modal and switch to table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable')
@@ -429,16 +477,23 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 		});
 
-		it('Should prevent registering for the same session twice', () => {
+		it('Should prevent registering for the same item twice', () => {
+			// User is not allowed to register for multiple sessions of the same item
+			// Change to the default mock data (includes a scheduled item with multiple sessions)
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+
 			// Open the View Sessions pop-up
 			cy.getByAutoId('recommendedATXScheduleButton').click();
 			cy.getByAutoId('atxScheduleCard')
 				.should('be.visible')
 				.within(() => {
-					// Select an already registered session, verify "Register" button remains disabled
-					const scheduledSession = Cypress._.find(firstATXSessions,
-						session => session.scheduled === true);
-					cy.getByAutoId(`SelectSession-${scheduledSession.sessionId}`).click();
+					// Select a non-registered session, verify "Register" button remains disabled
+					cy.getByAutoId('SelectSession-Session1').click();
 					cy.getByAutoId('AtxScheduleCardRegisterButton').should('have.class', 'disabled');
 				});
 
@@ -449,9 +504,27 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	});
 
 	describe('PBC-377: (UI View) - Lifecycle -  Register for ATX in Next Pitstop', () => {
+		before(() => {
+			// Switch to mock data with no scheduled items
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoRecommended');
+		});
+
 		after(() => {
 			// Reset the view to the currentPitstop
 			cy.get('#racecar').click();
+
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 		});
 
 		it('Should allow scheduling of an ATX on the current pitstop', () => {
@@ -501,7 +574,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	describe('PBC-452: (UI) View - ATX Table View', () => {
 		before(() => {
 			// Open the View All modal and switch to table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -540,7 +613,6 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 					cy.getByAutoId('ViewAllTable-columnHeader-Bookmark').should('exist');
 					cy.getByAutoId('ViewAllTable-columnHeader-Name').should('exist');
 					cy.getByAutoId('ViewAllTable-columnHeader-Status').should('exist');
-					cy.getByAutoId('ViewAllTable-columnHeader-Action').should('exist');
 				});
 		});
 
@@ -576,11 +648,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 								.within(() => {
 									// Scheduled items should show a calandar, and the scheduled date
 									cy.get('span').should('have.class', 'icon-calendar');
-									const expectedDate = new Date(Cypress._.find(
-										item.sessions, session => session.scheduled === true
-									).sessionStartDate);
-									const expectedDateString = `${monthNames[expectedDate.getMonth()]} ${expectedDate.getDate()}, ${expectedDate.getFullYear()}, ${expectedDate.getHours() % 12}:${(`0${expectedDate.getMinutes()}`).slice(-2)}:${(`0${expectedDate.getSeconds()}`).slice(-2)}${expectedDate.getHours() > 12 ? ' PM' : ' AM'}`;
-									cy.getByAutoId('scheduledDate').should('have.text', expectedDateString);
+									cy.getByAutoId('scheduledDate').should('have.text', formatDate(item));
 								});
 							break;
 						case 'completed':
@@ -590,10 +658,18 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 									cy.get('span').should('have.class', 'icon-certified');
 								});
 							break;
+						case 'recommended':
+							// Recommended items have no status text according to mockups:
+							// https://cisco.invisionapp.com/d/main#/console/17190680/374150316/preview
+							Cypress.log({
+								name: 'LOG',
+								message: `IGNORING ATX STATUS TYPE: ${item.status}`,
+							});
+							break;
 						default:
 							Cypress.log({
 								name: 'LOG',
-								message: `UNRECOGNIZED ATX STATUS TYPE: ${item.type} ! TREATING AS COMPLETED...`,
+								message: `UNRECOGNIZED ATX STATUS TYPE: ${item.status} ! TREATING AS COMPLETED...`,
 							});
 							cy.getByAutoId('Table-Status-Completed').should('be.visible');
 					}
@@ -700,10 +776,18 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 								case 'completed':
 									cy.getByAutoId('Table-Status-Completed').should('be.visible');
 									break;
+								case 'recommended':
+									// Recommended items have no status text according to mockups:
+									// https://cisco.invisionapp.com/d/main#/console/17190680/374150316/preview
+									Cypress.log({
+										name: 'LOG',
+										message: `IGNORING ATX STATUS TYPE: ${item.status}`,
+									});
+									break;
 								default:
 									Cypress.log({
 										name: 'LOG',
-										message: `UNRECOGNIZED ATX STATUS TYPE: ${item.type} ! TREATING AS COMPLETED...`,
+										message: `UNRECOGNIZED ATX STATUS TYPE: ${item.status} ! TREATING AS COMPLETED...`,
 									});
 									cy.getByAutoId('Table-Status-Completed').should('be.visible');
 							}
@@ -731,10 +815,18 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 								case 'completed':
 									cy.getByAutoId('Table-Status-Completed').should('be.visible');
 									break;
+								case 'recommended':
+									// Recommended items have no status text according to mockups:
+									// https://cisco.invisionapp.com/d/main#/console/17190680/374150316/preview
+									Cypress.log({
+										name: 'LOG',
+										message: `IGNORING ATX STATUS TYPE: ${item.status}`,
+									});
+									break;
 								default:
 									Cypress.log({
 										name: 'LOG',
-										message: `UNRECOGNIZED ATX STATUS TYPE: ${item.type} ! TREATING AS COMPLETED...`,
+										message: `UNRECOGNIZED ATX STATUS TYPE: ${item.status} ! TREATING AS COMPLETED...`,
 									});
 									cy.getByAutoId('Table-Status-Completed').should('be.visible');
 							}
@@ -817,22 +909,20 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 		it('ATX View All table view should allow bookmarking/unbookmarking items', () => {
 			atxItems.forEach((item, index) => {
 				cy.get('tr').eq(index + 1).within(() => {
-					if (item.status !== 'completed') {
-						if (item.bookmark) {
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'text-indigo')
-								.click();
-							cy.wait('(SB) IBN-Bookmark');
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'icon-bookmark-clear');
-						} else {
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'icon-bookmark-clear')
-								.click();
-							cy.wait('(SB) IBN-Bookmark');
-							cy.getByAutoId('SBListRibbon')
-								.should('have.class', 'text-indigo');
-						}
+					if (item.bookmark) {
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'text-indigo')
+							.click();
+						cy.wait('(SB) IBN-Bookmark');
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'icon-bookmark-clear');
+					} else {
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'icon-bookmark-clear')
+							.click();
+						cy.wait('(SB) IBN-Bookmark');
+						cy.getByAutoId('SBListRibbon')
+							.should('have.class', 'text-indigo');
 					}
 				});
 			});
@@ -842,7 +932,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	describe('PBC-452: ATX View All table sorting stickiness', () => {
 		beforeEach(() => {
 			// Open the View All modal and switch to table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -875,7 +965,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('SuccessPathCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the still in table view and sort is still in place
@@ -942,7 +1032,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify still in table view and sort was reset to default
@@ -974,7 +1064,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the sort was reset to default
@@ -1005,7 +1095,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the sort was reset to default
@@ -1027,7 +1117,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	describe('PBC-452: ATX View All table filter stickiness', () => {
 		beforeEach(() => {
 			// Open the View All modal and switch to table view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('table-view-btn').click();
 			cy.getByAutoId('ViewAllTable').should('be.visible');
@@ -1059,7 +1149,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('SuccessPathCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter is still in place
@@ -1085,9 +1175,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			const filteredItems = atxItems.filter(item => (item.status === 'requested'));
 			cy.getByAutoId('ViewAllModal').within(() => {
 				cy.getByAutoId('cui-select').should('have.attr', 'ng-reflect-model', 'Requested');
-				cy.getByAutoId('ATXCard').then($cards => {
-					expect($cards.length).to.eq(filteredItems.length);
-				});
+				cy.getByAutoId('ATXCard').should('have.length', filteredItems.length);
 			});
 
 			// Switch back to table view, verify the filter is still in place
@@ -1117,7 +1205,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 			cy.wait('(SP) IBN-Campus Network Segmentation-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
@@ -1143,7 +1231,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
@@ -1168,7 +1256,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('exist');
 
 			// Verify the filter was cleared and all items are displayed
@@ -1183,7 +1271,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 	describe('PBC-452: ATX View All table vs card view stickiness', () => {
 		beforeEach(() => {
 			// Open the modal and ensure we're in card view
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 			cy.getByAutoId('card-view-btn').click();
 			cy.getByAutoId('ATXCard').should('be.visible');
@@ -1212,7 +1300,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('SuccessPathCloseModal').click();
 			cy.getByAutoId('ViewAllModal').should('not.exist');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 
 			// Verify we're still in table view
@@ -1231,7 +1319,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('UseCaseDropdown').click();
 			cy.getByAutoId('TechnologyDropdown-Campus Network Segmentation').click();
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 
 			// Verify we're still in table view
@@ -1251,7 +1339,7 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.getByAutoId('Facet-Lifecycle').click();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 
 			// Verify we're still in table view
@@ -1270,14 +1358,217 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			cy.loadApp();
 			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
 
-			// Close the setup wizard so it doesn't block other elements
-			// cy.getByAutoId('setup-wizard-header-close-btn').click();
-
-			cy.getByAutoId('ShowModalPanel-_AskTheExpert_').click();
+			cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
 			cy.getByAutoId('ViewAllModal').should('be.visible');
 
 			// Verify we're still in table view
 			cy.getByAutoId('ViewAllTable').should('be.visible');
+		});
+	});
+
+	describe('PBC-376: (UI) View - Solution Based - Cancel ATX Session', () => {
+		before(() => {
+			// Switch to a mock with scheduled sessions
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
+		});
+
+		after(() => {
+			// Switch back to the default mock data
+			atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard');
+
+			// Refresh the data
+			cy.getByAutoId('Facet-Assets & Coverage').click();
+			cy.getByAutoId('Facet-Lifecycle').click();
+			cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+		});
+
+		describe('PBC-619: ATX Cancel UI', () => {
+			it('ATX (Lifecycle Page) View Sessions modal should include cancel button', () => {
+				// Cancel button should be present, but disabled by default
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						cy.getByAutoId('AtxScheduleCardCancelButton')
+							.should('exist')
+							.and('have.attr', 'disabled');
+					});
+
+				// Close the View Sessions modal
+				cy.getByAutoId('AtxScheduleCardClose').click();
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+
+			it('ATX (Card View) View Sessions modal should include cancel button', () => {
+				// Open the ATX View All modal and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('card-view-btn').click();
+
+				// Cancel button should be present, but disabled by default
+				cy.getByAutoId('ATXCard').each($card => {
+					cy.wrap($card).within(() => {
+						cy.getByAutoId('cardRecommendedATXScheduleButton').click();
+					});
+					cy.getByAutoId('atxScheduleCard')
+						.should('be.visible')
+						.within(() => {
+							cy.getByAutoId('AtxScheduleCardCancelButton')
+								.should('exist')
+								.and('have.attr', 'disabled');
+						});
+
+					// Close the View Sessions modal
+					cy.getByAutoId('AtxScheduleCardClose').click();
+					cy.getByAutoId('atxScheduleCard').should('not.exist');
+				});
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('ATX (Table View) View Sessions modal should include cancel button', () => {
+				// Open the ATX View All modal and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+
+				// Cancel button should be present, but disabled by default
+				cy.get('tr').each(($row, index) => {
+					// Skip the first tr, as those are the column headers
+					if (index !== 0) {
+						cy.wrap($row).within(() => {
+							cy.getByAutoId('ViewSessionButton').click();
+						});
+						cy.getByAutoId('atxScheduleCard')
+							.should('be.visible')
+							.within(() => {
+								cy.getByAutoId('AtxScheduleCardCancelButton')
+									.should('exist')
+									.and('have.attr', 'disabled');
+							});
+
+						// Close the View Sessions modal
+						cy.getByAutoId('AtxScheduleCardClose').click();
+						cy.getByAutoId('atxScheduleCard').should('not.exist');
+					}
+				});
+
+				// Switch back to card view and close the View All modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+		});
+
+		describe('API Integration', () => {
+			afterEach(() => {
+				// Nuke the local storage and refresh the page to reset local cancellation
+				cy.clearLocalStorage('MockDB');
+				cy.loadApp();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard');
+
+				// Note that this resets the mocks as well, so switch back and refresh the data
+				atxMock.enable('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
+				cy.getByAutoId('Facet-Assets & Coverage').click();
+				cy.getByAutoId('Facet-Lifecycle').click();
+				cy.wait('(ATX) IBN-Campus Network Assurance-Onboard-twoScheduled');
+			});
+
+			it('ATX (Lifecycle Page) View Sessions cancel button should make API call', () => {
+				// Open the View Sessions modal
+				cy.getByAutoId('recommendedATXScheduleButton').click();
+
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						// Click the scheduled session, verify cancel button is enabled
+						cy.getByAutoId('SelectSession-Session1').click();
+						cy.getByAutoId('AtxScheduleCardCancelButton')
+							.should('exist')
+							.and('not.have.attr', 'disabled');
+
+						// Click the cancel button, verify the /cancel API is called
+						cy.getByAutoId('AtxScheduleCardCancelButton').click();
+						cy.wait('(ATX) IBN-Cancel ATX Session1');
+					});
+
+				// View Sessions modal should close automatically
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+			});
+
+			it('ATX (Card View) View Sessions cancel button should make API call', () => {
+				// Open the ATX View All modal and ensure we're in card view
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('card-view-btn').click();
+
+				// Open the View Sessions modal
+				cy.getByAutoId('cardRecommendedATXScheduleButton')
+					.first()
+					.click();
+
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						// Click the scheduled session, verify cancel button is enabled
+						cy.getByAutoId('SelectSession-Session1').click();
+						cy.getByAutoId('AtxScheduleCardCancelButton')
+							.should('exist')
+							.and('not.have.attr', 'disabled');
+
+						// Click the cancel button, verify the /cancel API is called
+						cy.getByAutoId('AtxScheduleCardCancelButton').click();
+						cy.wait('(ATX) IBN-Cancel ATX Session1');
+					});
+
+				// View Sessions modal should close automatically
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+
+				// Close the View All modal
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
+
+			it('ATX (Table View) View Sessions cancel button should make API call', () => {
+				// Open the ATX View All modal and ensure we're in table view
+				cy.getByAutoId('ShowModalPanel-_AskTheExperts_').click();
+				cy.getByAutoId('ViewAllModal').should('be.visible');
+				cy.getByAutoId('table-view-btn').click();
+
+				// Open the View Sessions modal
+				cy.getByAutoId('ViewSessionButton')
+					.first()
+					.click();
+
+				cy.getByAutoId('atxScheduleCard')
+					.should('be.visible')
+					.within(() => {
+						// Click the scheduled session, verify cancel button is enabled
+						cy.getByAutoId('SelectSession-Session1').click();
+						cy.getByAutoId('AtxScheduleCardCancelButton')
+							.should('exist')
+							.and('not.have.attr', 'disabled');
+
+						// Click the cancel button, verify the /cancel API is called
+						cy.getByAutoId('AtxScheduleCardCancelButton').click();
+						cy.wait('(ATX) IBN-Cancel ATX Session1');
+					});
+
+				// View Sessions modal should close automatically
+				cy.getByAutoId('atxScheduleCard').should('not.exist');
+
+				// Switch back to card view and close the View All modal
+				cy.getByAutoId('card-view-btn').click();
+				cy.getByAutoId('SuccessPathCloseModal').click();
+				cy.getByAutoId('ViewAllModal').should('not.exist');
+			});
 		});
 	});
 });
