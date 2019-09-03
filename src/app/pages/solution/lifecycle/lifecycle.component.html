@@ -333,7 +333,7 @@
 		<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 			class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
 			[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
-			(click)="recommendedAtxScheduleCardOpened = true; atxScheduleCardOpened = false; componentData.atx.interested=''"
+			(click)="recommendedATXViewSessions()"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
 		<a

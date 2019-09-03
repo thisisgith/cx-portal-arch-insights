@@ -1229,6 +1229,18 @@ export class LifecycleComponent implements OnDestroy {
 	}
 
 	/**
+	 * Changes the recommendedAtxScheduleCardOpened flag
+	 */
+	 public recommendedATXViewSessions () {
+		if (!this.recommendedAtxScheduleCardOpened) {
+		   this.recommendedAtxScheduleCardOpened = true;
+		   this.atxScheduleCardOpened = false;
+		   this.componentData.atx.interested = null;
+		   this.atxMoreClicked = false;
+		}
+   }
+
+	/**
 	 * Changes the atxScheduleCardOpened flags to false to close the popupmodal
 	 */
 	 public closeViewSessions () {
