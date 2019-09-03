@@ -290,23 +290,23 @@
 				<span class="icon-clock icon-small" attr.data-auto-id="{{ autoid }}-HoverModal-DurationClock"></span>
 				<span [innerText]="item.duration"></span>
 			</div>
-			<div class="base-padding-top half-padding-left" *ngIf= "item.status.toLowerCase()==='recommended'">
+			<div *ngIf= "item.status.toLowerCase()==='recommended'">
 				<button data-auto-id="Request1on1ACCButton"
 					(click)="selectAccRequestForm(true, item.accId, item.title)"
-					class="btn btn--small btn--secondary text-uppercase"
+					class="acc-popover__btn text-uppercase"
 					[ngClass]="{ 'disabled': notCurrentPitstop }"
 					[innerText]="'_Request1on1_' | i18n">
 				</button>
 			</div>
-			<div class="base-padding-top half-padding-left text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-In-Progress">
+			<div class="text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-In-Progress">
 				<span class="text-info icon-clock qtr-padding-bottom half-padding-right" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
 				<span [innerText]="'_SessionInProgress_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
 			</div>
-			<div class="base-padding-top half-padding-left text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='requested'" attr.data-auto-id="{{ autoid }}-HoverModal-Requested">
+			<div class="text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='requested'" attr.data-auto-id="{{ autoid }}-HoverModal-Requested">
 				<span class="text-info icon-check-outline qtr-padding-bottom half-padding-right" attr.data-auto-id="{{ autoid }}-HoverModal-Requested-Icon"></span>
 				<span [innerText]="'_Requested_' | i18n" attr.data-auto-id="{{ autoid }}-In-Progress"></span>
 			</div>
-			<div class="base-padding-top half-padding-left text-left text-success" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
+			<div class="text-left text-success" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='completed'" attr.data-auto-id="{{ autoid }}-HoverModal-CompletedMessage">
 				<span [innerText]="'_Completed_' | i18n"></span>
 			</div>
 		</div>

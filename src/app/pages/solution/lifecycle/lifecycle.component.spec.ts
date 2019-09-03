@@ -754,7 +754,7 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#moreAccList-item'));
+			de = fixture.debugElement.query(By.css('#moreACCList-item'));
 			expect(de)
 				.toBeTruthy();
 

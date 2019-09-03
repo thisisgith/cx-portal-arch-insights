@@ -437,7 +437,7 @@ $vibblue: #017cad;
 }
 
 #recommended-item:hover,
-#moreAccList-item:hover,
+#moreACCList-item:hover,
 #moreATXList-item:hover,
 #successbytes-item:hover,
 #recommended-elearning-item:hover {
@@ -466,7 +466,10 @@ $vibblue: #017cad;
 			left: -460px;
 		}
 
-		&-moreACCList,
+		&-moreACCList {
+			left: -415px;
+		}
+
 		&-recommendedElearning,
 		&-successbytes {
 			left: -475px;
@@ -505,31 +508,41 @@ $vibblue: #017cad;
 }
 
 #moreATXList-item:hover,
+#moreACCList-item:hover,
 #recommended-item:hover {
-	#atx-hover-panel {
+	#atx-hover-panel,
+	#acc-hover-panel {
 		&-moreATXList,
+		&-moreACCList,
 		&-recommendedATX {
 			padding: 22px 0 22px 28px;
 			width: 400px;
 
-			.atx-popover__title {
+			.atx-popover__title,
+			.acc-popover__title {
 				color: #767676;
 				font-size: 16px;
 				line-height: 19px;
 			}
 
-			.atx-popover__description {
+			.atx-popover__description,
+			.acc-popover__description {
 				font-size: 13px;
 				line-height: 17px;
 				color: #394454;
 				padding-right: 28px;
 			}
 
+			.acc-popover__description {
+				margin-bottom: 18px;
+			}
+
 			.atx-popover__footer {
 				margin-top: 18px;
 			}
 
-			.atx-popover__btn {
+			.atx-popover__btn,
+			.acc-popover__btn {
 				border: 1px solid #95d1d6;
 				border-radius: 12.5px;
 				color: #58585b;
