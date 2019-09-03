@@ -288,10 +288,14 @@ export class AssetDetailsAdvisoriesComponent
 							autoId: 'AdvisoryLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-									I18n.get('_Never_'),
+							render: item => {
+								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
+								if (date) {
+									return datePipe.transform(new Date(date), 'yyyy MMM dd');
+								}
+
+								return I18n.get('_Never_');
+							},
 							sortable: false,
 							width: '125px',
 						},
@@ -338,10 +342,14 @@ export class AssetDetailsAdvisoriesComponent
 							autoId: 'AdvisoryLastUpdated',
 							key: 'lastUpdated',
 							name: I18n.get('_LastUpdated_'),
-							render: item => item.lastUpdated ?
-								datePipe.transform(
-									new Date(item.lastUpdated), 'yyyy MMM dd') :
-									I18n.get('_Never_'),
+							render: item => {
+								const date = item.lastUpdated ? item.lastUpdated : item.publishedOn;
+								if (date) {
+									return datePipe.transform(new Date(date), 'yyyy MMM dd');
+								}
+
+								return I18n.get('_Never_');
+							},
 							sortable: true,
 							sortDirection: 'desc',
 							sorting: true,
