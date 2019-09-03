@@ -32,6 +32,7 @@ describe('MultiGaugeComponent', () => {
 			percentage: 10,
 		}];
 		typelessComponent.drawGauge();
-		expect(typelessComponent.initialized).toBeTruthy();
+		expect(typelessComponent.initialized)
+			.toBeTruthy();
 	});
 });

@@ -1,12 +1,15 @@
 import {
 	Component,
-	ViewChild
+	ViewChild,
 } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GaugeComponent } from './gauge.component';
 import { GaugeModule } from './gauge.module';
 
+/**
+ * Wrapper component for unit testing ngOnInit
+ */
 @Component({
 	template: `
 	<app-gauge
