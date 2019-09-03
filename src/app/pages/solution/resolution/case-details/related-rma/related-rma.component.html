@@ -1,10 +1,10 @@
 <div class="absolute related-rma qtr-padding-bottom">
 	<cui-spinner class="base-padding" *ngIf="loading"></cui-spinner>
 	<div *ngIf="!loading">
-		<div *ngIf="rmaRecords?.length > 0" class="col-md-12">
+		<div *ngIf="rmaRecords?.length > 0" class="col-md-12 half-padding">
 			<cui-table [options]="rmaTable" [data]="rmaRecords"></cui-table>
 		</div>
-		<div class="col-md-12 text-center">
+		<div class="col-md-12 text-center half-padding">
 			<button data-auto-id="close" class="btn btn--small" [innerText]="'_RMACaseClose_' | i18n" (click)="hide()">
 			</button>
 		</div>
@@ -16,7 +16,10 @@
 <ng-template #shipToTmpl let-item="celldata">
 	<div [innerText]="item?.shipToInfo?.ackName"></div>
 	<div [innerText]="item?.shipToInfo?.address1"></div>
-	<div>{{item?.shipToInfo?.city}}{{item?.shipToInfo?.city ? ', ' : ''}} {{item?.shipToInfo?.state}}
-		{{item?.shipToInfo?.postalCode}}
+	<div>
+		<span [innerText]="item?.shipToInfo?.city"></span>
+		<span [innerText]="item?.shipToInfo?.city ? ',' : ''"></span>
+		<span class="qtr-padding-left" [innerText]="item?.shipToInfo?.state"></span>
+		<span class="qtr-padding-left" [innerText]="item?.shipToInfo?.postalCode"></span>
 	</div>
 </ng-template>

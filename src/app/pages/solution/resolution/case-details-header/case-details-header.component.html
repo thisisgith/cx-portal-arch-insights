@@ -31,7 +31,7 @@
 			<div class="col-md-6">
 				<div *ngIf="rmaStrings?.length >= 1" class="dropdown">
 					<button data-auto-id="relatedRMA" class="btn btn--small btn--secondary" (click)="toggleRMAList()"
-						[innerText]="'Related RMAs (' + rmaStrings?.length + ')'"></button>
+						[innerText]="'_RMACaseRelatedRMA_' | i18n:rmaStrings?.length"></button>
 				</div>
 			</div>
 			<div class="col-md-6 text-right">
