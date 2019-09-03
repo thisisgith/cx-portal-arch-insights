@@ -5,7 +5,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { ResolutionComponent } from './resolution.component';
 import { CaseDetailsModule } from './case-details/case-details.module';
 import { CaseDetailsHeaderModule } from './case-details-header/case-details-header.module';
-import { PieChartModule, ColumnChartModule, BarChartModule } from '@components';
+import {
+	PieChartModule,
+	ColumnChartModule,
+	BarChartModule,
+	VisualFilterBarModule,
+} from '@components';
 
 import {
 	CuiTableModule,
@@ -52,6 +57,7 @@ const childRoutes: Routes = [
 		I18nPipeModule,
 		ReactiveFormsModule,
 		RouterModule.forChild(childRoutes),
+		VisualFilterBarModule,
 	],
 })
 export class ResolutionModule { }
