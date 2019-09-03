@@ -1077,6 +1077,7 @@ describe('LifecycleComponent', () => {
 	});
 
 	// Skip these tests as we are disabling CGT
+	// TODO enable these when CGT has to be enabled
 	xdescribe('CGT', () => {
 		it('should have loaded the CGT', () => {
 			buildSpies();
