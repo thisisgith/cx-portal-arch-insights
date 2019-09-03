@@ -45,6 +45,8 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	@ViewChild('deviceLink', { static: true }) private deviceLinkTemplate: TemplateRef<{ }>;
 	@ViewChild('violationAgeTemplate', { static: true })
 	private violationAgeTemplate: TemplateRef<{ }>;
+	@ViewChild('severityIconTemplate', { static: true })
+	private severityIconTemplate: TemplateRef<{ }>;
 	public policyRuleData: any = { };
 	public customerId: string;
 	public impactedAssetsCount: any;
@@ -142,7 +144,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					}
 				}
 				this.initialLoading = false;
-				this.buildImpactedDeviceTableOptions();
+				this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
 			},
 			error => {
 				this.initialLoading = false;
@@ -209,7 +211,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				{
 					key: 'violationCount',
 					name: I18n.get('_RccViolationCount_'),
-					sortable: true,
+					sortable: false,
 				},
 			],
 			dynamicData: false,
@@ -227,7 +229,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 	 */
 	public buildRccViolationInfoTableOptions () {
 		return new CuiTableOptions({
-			bordered: true,
+			bordered: false,
 			columns: [
 				{
 					key: 'index',
@@ -254,8 +256,10 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 					key: 'severity',
 					name: I18n.get('_RccSeverity_'),
 					sortable: false,
+					template: this.severityIconTemplate,
 				},
 			],
+			striped: false,
 		});
 	}
 	/**
@@ -280,7 +284,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 			this.impactedDeviceDetails = violationDetails.data.impactedAssets;
 			this.selectionLoading = false;
 			this.tableConfig.totalItems = this.impactedDeviceDetails.length;
-			this.buildImpactedDeviceTableOptions();
+			this.impactedDeviceTableOptions = this.buildImpactedDeviceTableOptions();
 		},
 		error => {
 			this.selectionLoading = false;

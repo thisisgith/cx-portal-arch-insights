@@ -9,8 +9,8 @@
 					[ngClass]="{ visualSelected: label.active == true }"
 					(click)="selectVisualLabel(i)"
 				>
-					<h1>{{ label.count }}</h1>
-					<div>{{ label.label }}</div>
+					<h1 [innerText]="label.count"></h1>
+					<div [innerText]="label.label"></div>
 				</div>
 			</div>
 			<div class="col-10">
@@ -107,11 +107,10 @@
 				>
 					<span
 						class="label label--dkgray text-large"
-						(click)="onSubfilterSelect(subfilter.filter, filter, false)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 					>
-						<span [innerText]="subfilter.label"></span>
-						<span class="icon-close"></span>
+					<span [innerText]="subfilter.label"></span>
+						
 					</span>
 				</ng-container>
 			</ng-container>

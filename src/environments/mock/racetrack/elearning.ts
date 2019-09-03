@@ -278,7 +278,8 @@ export const ELearningScenarios = [
 			],
 		},
 		url: `${api}?usecase=Campus Network Assurance&solution=IBN` +
-			`&pitstop=Onboard&customerId=${customerId}&rows=100`,
+			`&pitstop=Onboard&customerId=${customerId}&suggestedAction=` +
+			'Get to know Cisco DNA Center&rows=100',
 		usecases: ['Use Case 1'],
 	},
 	{

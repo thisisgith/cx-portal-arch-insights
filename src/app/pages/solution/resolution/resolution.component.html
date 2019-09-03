@@ -9,22 +9,20 @@
 	</app-case-details>
 </details-panel>
 
-<div class="panel">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
 	<cui-tabs inline="true">
-		<cui-tab [label]="'_OpenCases_' | i18n | uppercase">
-			<div class="divider no-margin"></div>
-			<ng-container *ngTemplateOutlet="casesContent"></ng-container>
+		<cui-tab data-auto-id="openCasesTab" [label]="'_OpenCases_' | i18n" (click)="mainContent = 'cases'">
+			<visual-filter-bar [filters]="filters" [filterCollapse]="filterCollapse"></visual-filter-bar>
 		</cui-tab>
 		<ng-template cuiTabPost>
 			<div class="text-right">
-				<div (click)="filterCollapse = !filterCollapse"
+				<div (click)="filterCollapse = !filterCollapse" class="half-margin-right"
 					data-auto-id="VisualFilterCollapse">
-					<span class="icon-filter icon-medium text-muted qtr-margin-right toggle"></span>
-					<span class="text-large text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
-					<span class="qtr-padding-left icon-small text-muted toggle"
+					<span class="icon-filter icon-small text-muted qtr-margin-right toggle"></span>
+					<span class="text-muted toggle" [innerText]="'_VisualFilters_' | i18n"></span>
+					<span class="qtr-margin-left icon-tiny icon-dropdown text-muted toggle"
 						[ngClass]="{
-							'icon-chevron-up': !filterCollapse,
-							'icon-chevron-down': filterCollapse
+							'rotate-180': filterCollapse
 						}">
 					</span>
 				</div>
@@ -32,38 +30,15 @@
 		</ng-template>
 	</cui-tabs>
 </div>
-<ng-template #casesContent>
-	<div class="flex flex-fluid flex-fill qtr-margin-bottom" *ngIf="!filterCollapse">
-		<ng-container *ngFor="let filter of filters; index as i">
-			<div id="CasesSelectVisualFilter-{{ filter.key }}"
-				attr.data-auto-id="CasesSelectVisualFilter-{{ filter.key }}"
-				[ngClass]="{
-					'filter__selected': filter.selected,
-					'filter__not-selected': !filter.selected
-				}"
-				class="panel flex-center flex-fill filter no-padding half-padding-bottom"
-				*ngIf="filter.displayed">
-				<div>
-					<div *ngIf="filter.template">
-						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
-					</div>
-				</div>
-				<div class="filter__title text-large half-padding-top half-padding-bottom" [ngClass]="{
-					'text-primary': filter.selected,
-					'text-muted': !filter.selected
-				}"
-				[innerText]="filter.title"></div>
-			</div>
-		</ng-container>
-	</div>
+
+<div *ngIf="mainContent === 'cases'" class="panel panel--bordered base-margin-top">
 	<ng-container *ngIf="filtered">
-		<div class="divider qtr-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
-	<div class="divider qtr-margin-top half-margin-bottom"></div>
 	<div class="row align-items-center justify-content-between">
 		<div class="col-auto text-large">
-			<span data-auto-id="rmaCasesHeader" [innerText]="'_RMACases_' | i18n" class="text-large qtr-margin-right"></span>
+			<span data-auto-id="caseListHeader" [innerText]="'_ProblemResolutions_' | i18n"
+				class="base-margin-left base-margin-right"></span>
 			<span *ngIf="caseListData?.length==0" class="text-muted text-medium"
 				data-auto-id="rmaShowingXcasesHeader"
 				[innerText]="'_RMAShowingXCases_' | i18n:paginationInfo.totalElements"></span>
@@ -77,11 +52,11 @@
 				<div class="form-group input--icon">
 					<div class="form-group__text">
 						<input id="input-type-search" type="text" data-auto-id="caseSearchBox"
-							[placeholder]="'_RMASearchCasePlaceholder_' | i18n" formControlName="caseNo" autocomplete="off">
+							[placeholder]="'_SearchOpenCases_' | i18n" formControlName="caseNo" autocomplete="off">
 						<span class="icon-close has-label close" data-auto-id="closeButton"
 							(click)="clearSearch()"></span>
 						<button type="submit" class="link caseinput search">
-							<span class="icon-search"></span>	
+							<span class="icon-search"></span>
 						</button>
 					</div>
 					<div *ngIf="isSearchCaseFormInvalid" class="help-block text-danger" role="alert">
@@ -101,17 +76,15 @@
 	<div *ngIf="caseListData?.length == 0 && !isLoading">
 		<ng-container *ngTemplateOutlet="noCases"></ng-container>
 	</div>
-</ng-template>
+</div>
 
 <ng-template #filterBar>
-	<div class="row flex-center-vertical half-margin-top half-margin-bottom">
-		<div class="col-md-1 flex">
-			<span class="text-bold text-uppercase half-padding-right" [innerText]="'_Filtered_' | i18n"></span>
-		</div>
-		<div class="col-md-10">
+	<div class="row flex-center-vertical half-margin-top base-margin-bottom">
+		<div class="col-md-11 flex">
+			<span class="text-large flex flex-center-vertical base-margin-left half-margin-right" [innerText]="'_Filtered_' | i18n"></span>
 			<ng-container *ngFor="let filter of selectedFilters">
 				<ng-container *ngFor="let subfilter of getSelectedSubFilters(filter.key)">
-					<span class="label label--dkgray text-large"
+					<span class="label text-large"
 						(click)="onSubfilterSelect(subfilter.label, filter)"
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}">
 						<span [innerText]="subfilter.barLabel || subfilter.label"></span>
@@ -120,9 +93,8 @@
 				</ng-container>
 			</ng-container>
 		</div>
-		<div class="col-md-1 text-center text-right">
+		<div class="col-md-1 text-large text-center text-right">
 			<a (click)="clearFilters()"
-				class="text-lowercase"
 				[innerText]="'_ClearAll_' | i18n"
 				data-auto-id="FilterBarClearAllFilters">
 			</a>
@@ -147,36 +119,36 @@
 
 <ng-template #severityTmpl let-item="celldata"><span data-auto-id="severityValue" ><span class="icon-circle icon-small"
 			data-auto-id="severityIcon" [ngClass]="getSeverityColor(item['priority'])"></span> S{{item["priority"]}}</span></ng-template>
-			
+
 <ng-template #updatedTmpl let-item="celldata"><span [innerText]="item['lastModifiedDate'] | date"></span></ng-template>
 
 <!-- Templates for our Visual Filters for the Assets Tab -->
 <ng-template #totalFilter let-filter="filter">
-	<div class="text-huge flex-center base-padding"
+	<div class="dbl-padding-bottom"
 		[ngClass]="{
 			'text-muted': filter.loading,
-			'text-default': !filter.loading
+			'text-black': !filter.loading
 		}"
 		(click)="clearFilters()"
 		data-auto-id="TotalVisualFilter"
-		[innerText]="filter.seriesData[0]?.value">
+		[innerText]="filter.seriesData[0]?.value.toLocaleString('en', {useGrouping:true})">
 	</div>
 </ng-template>
 
 <ng-template #pieChartFilter let-filter="filter">
-	<pie-chart id="pie" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
+	<pie-chart id="pie" attr.data-auto-id="{{filter.key}}Filter"
 		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
 	</pie-chart>
 </ng-template>
 
 <ng-template #columnChartFilter let-filter="filter">
-		<column-chart id="column" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
-			[width]="300" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
-		</column-chart>
-	</ng-template>
+	<column-chart id="column" attr.data-auto-id="{{filter.key}}Filter"
+		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
+	</column-chart>
+</ng-template>
 
 <ng-template #barChartFilter let-filter="filter">
-	<bar-chart id="bar" attr.data-auto-id="{{filter.key}}Filter" [loading]="filter.loading"
-		[width]="300" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
+	<bar-chart id="bar" attr.data-auto-id="{{filter.key}}Filter"
+		[seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.label, filter)">
 	</bar-chart>
 </ng-template>

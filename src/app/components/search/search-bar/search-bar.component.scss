@@ -1,6 +1,11 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 @import '../../../../mixins.scss';
 
+$icon-light-gray: #bdc5cf;
+$search-bar-bg-color: #f4f6f8;
+$text-dark-blue: #394454;
+$placeholder-light-gray: #767676;
+
 .dropdown__menu {
 	max-height: 170px;
 	max-width: none;
@@ -27,6 +32,35 @@ a {
 }
 
 .cx-search-input {
-	min-height: 32px;
-	font-size: 13px;
+	min-height: 32px !important;
+	padding: 8px 5px 6px 33px !important;
+	color: $text-dark-blue;
+	background-color: $search-bar-bg-color !important;
+	border: none !important;
+	font-size: 12px;
+	letter-spacing: -0.34px;
+	opacity: 0.81;
+
+	&::placeholder {
+		color: $placeholder-light-gray;
+		font-size: 12px;
+		font-style: normal !important;
+		letter-spacing: -0.34px;
+		opacity: 0.81;
+	}
+
+	&:hover,
+	&:focus {
+		border: 1px solid $vibrant-blue !important;
+		padding-left: 32px !important;
+	}
+}
+
+.icon-search {
+	color: $icon-light-gray;
+}
+
+.cx-search-bar .form-group__text button.link {
+	height: 32px;
+	width: 32px;
 }

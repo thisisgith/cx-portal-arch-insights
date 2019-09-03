@@ -10,7 +10,7 @@ import { I18n } from '@cisco-ngx/cui-utils';
 import { ControlPointIERegistrationAPIService, User } from '@sdp-api';
 
 import { empty, of, Subject, throwError } from 'rxjs';
-import { catchError, finalize, map, mergeMap, retryWhen, takeUntil } from 'rxjs/operators';
+import { catchError, finalize, mergeMap, retryWhen, takeUntil, tap } from 'rxjs/operators';
 import * as _ from 'lodash-es';
 
 import { K9FormData } from './k9-form/k9-form.component';
@@ -137,14 +137,21 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 			.pipe(
 				finalize(() => this.loading = false),
 				mergeMap(response => {
-					const hasError = _.get(response, 'download_info_list[0]' +
-						'.asd_download_url_exception.length');
+					const hasError = _.get(
+						response,
+						'download_info_list[0].asd_download_url_exception.length',
+					);
 					if (!hasError) {
 						const url = _.get(response, 'download_info_list[0].cloud_url')
 							|| _.get(response, 'download_info_list[0].download_url');
 						if (url) {
-							this.utils
-								.download(`${url}?access_token=${this.asdService.accessToken}`);
+							if (/[?]/.test(url)) {
+								this.utils
+									.download(`${url}&access_token=${this.asdService.accessToken}`);
+							} else {
+								this.utils
+									.download(`${url}?access_token=${this.asdService.accessToken}`);
+							}
 						}
 
 						return of(response);
@@ -256,13 +263,11 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	private refreshMetadata () {
 		return this.asdService.getMetadata()
 			.pipe(
-				map(response => {
+				tap(response => {
 					this.metadataTransId = _.get(response, 'metadata_response.metadata_trans_id');
 					this.imageGuid = _.get(response, 'metadata_response.metadata_mdfid_list[0]' +
 						'.software_response_list[0].platform_list[0]' +
 						'.release_list[0].image_details[0].image_guid');
-
-					return response;
 				}),
 			);
 	}
@@ -288,47 +293,51 @@ export class DownloadImageComponent implements OnDestroy, OnInit, SetupStep {
 	private getDownloadURL () {
 		return this.asdService
 			.getDownloadURL(this.metadataTransId, this.imageGuid)
-			.pipe(map(response => {
-				this.downloadSessionId = _.get(response, 'download_session_id');
-				const eulaException = _.find(
-					_.get(response, 'asd_download_acceptance_exception'),
-					elem => _.get(elem, 'acceptance_form.eula_form_details'),
-				);
-				const k9Exception = _.find(
-					_.get(response, 'asd_download_acceptance_exception'),
-					elem => _.get(elem, 'acceptance_form.k9_form_details_response'),
-				);
-				const k9Data = _.get(k9Exception,
-					'acceptance_form.k9_form_details_response.form_details_type.field_details');
-				const eulaData = _.get(eulaException,
-					'acceptance_form.eula_form_details.form_details_type.field_details');
-				if (eulaData) {
-					this.eulaData.checkboxDescription = _.get(eulaData, '[0].field_value');
-					this.eulaData.label = _.get(eulaData, '[2].field_value');
-				} else {
-					this.eulaData = { };
-				}
-				if (k9Data) {
-					this.k9Data.k9FormText = _.get(k9Data, '[2].field_value');
-					this.k9Data.firstName = _.get(k9Data, '[10].field_display_value');
-					this.k9Data.lastName = _.get(k9Data, '[11].field_display_value');
-					this.k9Data.email = _.get(k9Data, '[12].field_display_value');
-					this.k9Data.ccoid = _.get(this, 'user.info.individual.ccoId');
-					this.k9Data.acceptK9CheckboxText = _.get(k9Data, '[8].field_display_value');
-					this.k9Data.commOrCivText = _.get(k9Data, '[13].child_field_details_type[0]' +
-						'.field_display_name');
-					this.k9Data.govOrMilText = _.get(k9Data, '[13].child_field_details_type[1]' +
-						'.field_display_name');
-					this.k9Data.countriesText = _.get(k9Data, '[14].field_value');
-					this.k9Data.yesText = _.get(k9Data, '[14].child_field_details_type[0]' +
-						'.field_value');
-					this.k9Data.noText = _.get(k9Data, '[14].child_field_details_type[1]' +
-						'.field_value');
-				} else {
-					this.k9Data = { };
-				}
-
-				return response;
-			}));
+			.pipe(
+				tap(response => {
+					this.downloadSessionId = _.get(response, 'download_session_id');
+					const eulaException = _.find(
+						_.get(response, 'asd_download_acceptance_exception'),
+						elem => _.get(elem, 'acceptance_form.eula_form_details'),
+					);
+					const k9Exception = _.find(
+						_.get(response, 'asd_download_acceptance_exception'),
+						elem => _.get(elem, 'acceptance_form.k9_form_details_response'),
+					);
+					const k9Data = _.get(k9Exception,
+						'acceptance_form.k9_form_details_response.form_details_type.field_details');
+					const eulaData = _.get(eulaException,
+						'acceptance_form.eula_form_details.form_details_type.field_details');
+					if (eulaData) {
+						this.eulaData.checkboxDescription = _.get(eulaData, '[0].field_value');
+						this.eulaData.label = _.get(eulaData, '[2].field_value');
+					} else {
+						this.eulaData = { };
+					}
+					if (k9Data) {
+						this.k9Data.k9FormText = _.get(k9Data, '[2].field_value');
+						this.k9Data.firstName = _.get(k9Data, '[10].field_display_value');
+						this.k9Data.lastName = _.get(k9Data, '[11].field_display_value');
+						this.k9Data.email = _.get(k9Data, '[12].field_display_value');
+						this.k9Data.ccoid = _.get(this, 'user.info.individual.ccoId');
+						this.k9Data.acceptK9CheckboxText = _.get(k9Data, '[8].field_display_value');
+						this.k9Data.commOrCivText = _.get(
+							k9Data,
+							'[13].child_field_details_type[0].field_display_name',
+						);
+						this.k9Data.govOrMilText = _.get(
+							k9Data,
+							'[13].child_field_details_type[1].field_display_name',
+						);
+						this.k9Data.countriesText = _.get(k9Data, '[14].field_value');
+						this.k9Data.yesText = _.get(k9Data, '[14].child_field_details_type[0]' +
+							'.field_value');
+						this.k9Data.noText = _.get(k9Data, '[14].child_field_details_type[1]' +
+							'.field_value');
+					} else {
+						this.k9Data = { };
+					}
+				}),
+			);
 	}
 }

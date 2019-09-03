@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
 import {
@@ -14,6 +14,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { UserResolve } from '@utilities';
+import { MarshalTableData } from '../syslogs.utils';
 
 /**
  * Syslogpanelgrid component
@@ -25,36 +26,58 @@ import { UserResolve } from '@utilities';
 	templateUrl: './syslog-messages-details.component.html',
 })
 export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
-	@Input('asset') public asset: SyslogPanelGridData;
+	@Input('asset') public asset: any;
+	@ViewChild('innerTableRef', { static: true }) public innerTableRef: TemplateRef<{ }>;
+	@Input('selectedFilter') public selectedFilter: any;
 	public tableOptions: CuiTableOptions;
-	public selectdrowpdown = {
+	public innerTableOptions: CuiTableOptions;
+	public selectDropDown = {
+		assets: { },
 		productFamily: '',
 		productID: '',
+		selectedFilters : { },
 		Software: '',
 		timePeriod: '',
 	};
+
 	public customerId;
 	public tableData: DeviceDetailsdata[] = [];
-	public tableOffset = 0;
 	public productIdItems: ProductId[];
 	public softwareItems: SoftwareList[];
 	public productFamily: ProductFamily[];
-	public totalItems = 0;
-	public tableLimit = 5;
 	public pagerLimit = 5;
 	public destroy$ = new Subject();
-	// tslint:disable-next-line: no-any
+	public tableConfig = {
+		tableLimit: 10,
+		tableOffset: 0,
+		totalItems: 10,
+	};
+	public paginationConfig = {
+		pageLimit: 10,
+		pageNum: 1,
+		pagerLimit: 10,
+	};
+	public panelDataParam = {
+		customerId: '',
+		selectedFilters: '',
+		selectedRowData: '',
+	};
+
 	public timePeriod: any[] = [{
-		name: '24hr',
+		name: I18n.get('_SyslogDay1_'),
+		value: 1,
 	},
 	{
-		name: '7d',
+		name: I18n.get('_SyslogDays7_'),
+		value: 7,
 	},
 	{
-		name: '15d',
+		name: I18n.get('_SyslogDays15_'),
+		value: 15,
 	},
 	{
-		name: '30d',
+		name: I18n.get('_SyslogDays30_'),
+		value: 30,
 	}];
 	constructor (
 		private logger: LogService,
@@ -79,6 +102,7 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public ngOnChanges () {
 		this.loadSyslogPaneldata(this.asset);
 		this.loadSyslogPanelFilter(this.asset);
+		this.selectDropDown.timePeriod = this.selectedFilter.days;
 	}
 
 	/**
@@ -88,6 +112,25 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 
 	public ngOnInit () {
 		this.tableInitialization();
+		this.innerTableOptions = new CuiTableOptions({
+			bordered: false,
+			columns: [
+				{
+					key: 'serialNumber',
+					name: I18n.get('_SyslogNumber_'),
+				},
+				{
+					key: 'SyslogMsgDesc',
+					name: I18n.get('_Syslog_SyslogMessageText_'),
+				},
+				{
+					key: 'MessageCount',
+					name: I18n.get('_SyslogCount_'),
+
+				},
+			],
+			dynamicData: false,
+		});
 	}
 	/**
 	 * Used to load the table grid
@@ -96,17 +139,10 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	public tableInitialization () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
-			dynamicData: false,
-			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
 					key: 'DeviceHost',
 					name: I18n.get('_SyslogAsset_'),
-					sortable: true,
-				},
-				{
-					key: 'SyslogMsgDesc',
-					name: I18n.get('_SyslogGridMessage_'),
 					sortable: true,
 				},
 				{
@@ -129,12 +165,14 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 					name: I18n.get('_SoftwareVersion_'),
 					sortable: true,
 				},
-				{
-					key: 'msgCount',
-					name: I18n.get('_SyslogCount_'),
-					sortable: true,
-				},
 			],
+			dynamicData: false,
+			padding: 'regular',
+			rowWellColor: 'black',
+			rowWellTemplate : this.innerTableRef,
+			singleSelect: true,
+			striped: false,
+			wrapText: false,
 		});
 	}
 	/**
@@ -142,9 +180,11 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 */
 
 	public onSelection () {
+		this.selectDropDown.assets = this.asset;
+		this.selectDropDown.selectedFilters = this.selectedFilter;
 		this.syslogsService
 			.getPanelFilterGridData(
-				this.selectdrowpdown, this.asset)
+				this.selectDropDown)
 			.pipe(takeUntil(this.destroy$),
 			catchError(err => {
 				this.logger.error('syslog-messages-details.component : getPanelFilterGridData() ' +
@@ -154,7 +194,8 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 			}),
 			)
 			.subscribe((data: SyslogPanelGridData) => {
-				this.tableData = data.responseData;
+				this.tableData = MarshalTableData.marshalTableDataForInerGrid(data.responseData);
+				this.tableConfig.totalItems = this.tableData.length;
 			});
 	}
 
@@ -165,19 +206,27 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 
 	public loadSyslogPaneldata (tableRowData) {
 		if (this.asset) {
-			this.syslogsService.getPanelGridData(tableRowData, this.customerId)
+			this.panelDataParam = {
+				customerId: this.customerId,
+				selectedFilters: this.selectedFilter,
+				selectedRowData : tableRowData,
+			};
+
+			this.syslogsService.getPanelGridData(this.panelDataParam)
 				.pipe(
 					takeUntil(this.destroy$),
 					catchError(err => {
-						// tslint:disable-next-line: ter-max-len
-						this.logger.error('syslog-messages-details.component : getPanelGridData() ' +
+						this.logger
+						.error('syslog-messages-details.component : getPanelGridData() ' +
 							`:: Error : (${err.status}) ${err.message}`);
 
 						return of({ });
 					}),
 				)
 				.subscribe((data: SyslogPanelGridData) => {
-					this.tableData = data.responseData;
+					this.tableData = MarshalTableData
+					.marshalTableDataForInerGrid(data.responseData);
+					this.tableConfig.totalItems = this.tableData.length;
 				});
 
 		}
@@ -211,7 +260,8 @@ export class SyslogMessagesDetailsComponent implements OnChanges, OnDestroy {
 	 * @param pageInfo contains page info
 	 */
 	public onPagerUpdated (pageInfo: any) {
-		this.tableOffset = pageInfo.page;
+		this.tableConfig.tableOffset = pageInfo.page;
+		this.paginationConfig.pageNum = pageInfo.page + 1;
 	}
 
 	/**

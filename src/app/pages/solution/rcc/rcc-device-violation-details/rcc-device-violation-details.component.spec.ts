@@ -87,40 +87,6 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			.toEqual(1);
 	});
 
-	it('should invoke loadData and call both APIs', fakeAsync(() => {
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
-		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
-		component.loadData();
-		tick();
-		fixture.detectChanges();
-		expect(component.impactedDeviceDetails)
-			.toEqual(ComplianceScenarios[6].scenarios.GET[0].response.body.data.impactedAssets);
-		expect(component.policyRuleData)
-			.toEqual(ComplianceScenarios[7].scenarios.GET[0].response.body.data);
-
-	}));
-
-	it('should invoke loadData and call both APIs with empty response', fakeAsync(() => {
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[8].scenarios.GET[0].response.body));
-		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[8].scenarios.GET[0].response.body));
-		component.loadData();
-		tick();
-		fixture.detectChanges();
-		expect(component.impactedDeviceDetails)
-			.toEqual([]);
-		expect(component.policyRuleData.policy)
-			.toEqual({ });
-
-	}));
-
 	it('Should invoke ngOnInit method which initializes both table options', () => {
 		component.ngOnInit();
 		expect(component.rccViolationInfoTableOptions)
