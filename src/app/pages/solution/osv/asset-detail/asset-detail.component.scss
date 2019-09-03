@@ -5,6 +5,7 @@
 	color: $white;
 	border: 1px solid $primary;
 	width: 65px;
+	line-height: 16px;
 
 	&.versions {
 		width: 75px;
@@ -14,9 +15,9 @@
 		content: "";
 		width: 0;
 		height: 0;
-		border: 1.8em solid transparent;
+		border: 1.4em solid transparent;
 		position: absolute;
-		right: -37px;
+		right: -32px;
 		top: 50%;
 		transform: translateY(-50%);
 		border-left: 14px solid $primary;
@@ -37,4 +38,8 @@
 
 .assetDetailsTable tbody tr td.bordered-bottom {
 	border-bottom: 1px solid $light-gray-3;
+}
+
+.background-light-blue {
+	background: $light-blue;
 }

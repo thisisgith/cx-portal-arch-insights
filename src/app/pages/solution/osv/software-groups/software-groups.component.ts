@@ -37,6 +37,8 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Output() public softwareGroupStatusUpdated = new EventEmitter();
 	@ViewChild('recommendationsTemplate', { static: true })
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('currentOSVersionsTemp', { static: true })
+	private currentOSVersionsTemp: TemplateRef<{ }>;
 	private recommendationsTemplate: TemplateRef<{ }>;
 	public softwareGroupsTable: CuiTableOptions;
 	public status = {
@@ -86,7 +88,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			this.setFilter(currentFilter);
 			this.loadData();
 		}
-		if (selectedSoftwareGroup &&  statusUpdated && !isFirstChange) {
+		if (selectedSoftwareGroup && statusUpdated && !isFirstChange) {
 			const selected = _.filter(this.softwareGroups, { id: selectedSoftwareGroup.id });
 			if (selected && selected.length > 0) {
 				selected[0].optimalVersion = _.get(selectedSoftwareGroup, 'optimalVersion');
@@ -199,9 +201,9 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						width: '10%',
 					},
 					{
-						key: 'currentOSVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
+						template: this.currentOSVersionsTemp,
 						width: '10%',
 					},
 					{
@@ -245,7 +247,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			}
 		});
 		item.rowSelected = !item.rowSelected;
-		this.tabIndex = 0 ;
+		this.tabIndex = 0;
 		this.tabIndexChange.emit(this.tabIndex);
 		this.selectedSoftwareGroup = item.rowSelected ? item : null;
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
@@ -311,10 +313,20 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * @param softwareGroup software group data for details
 	 */
 	public openSoftwareGroupDetails (tabIndex, softwareGroup) {
-		this.selectedSoftwareGroup = softwareGroup;
+		this.selectedSoftwareGroup = _.cloneDeep(softwareGroup);
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
 		this.tabIndex = tabIndex;
 		this.tabIndexChange.emit(this.tabIndex);
+	}
+
+	/**
+	 * open up the versions tab in software group detail
+	 * @param event click event
+	 * @param item software groups row item
+	 */
+	public openCurrentVersionsTab (event: any, item: SoftwareGroup) {
+		event.stopPropagation();
+		this.openSoftwareGroupDetails(3, item);
 	}
 
 }

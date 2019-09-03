@@ -52,7 +52,7 @@
 		</tbody>
 	</table>
 	<!-- current version well -->
-	<div class="base-margin-top panel--ltgray panel--well">
+	<div class="base-margin-top panel--ltgray panel--well half-padding background-light-blue">
 		<table class="table table--compressed table--wrap table--lined table--nostripes">
 			<tbody>
 				<tr attr.data-auto-id="AssetDetails-{{ currentVersion.swVersion }}">
@@ -135,7 +135,7 @@
 	</div>
 	<div *ngIf="item.name == 'current'">
 		<span *ngIf="!accept" [innerText]="item.swVersion"></span>
-		<span data-auto-id="SoftwareGroupVersions" *ngIf="accept" class="toggle"  (click)="showMultipleVersions.emit()" [innerText]="'_OsvMultipleVersions_' | i18n:'0'"></span>
+		<span data-auto-id="SoftwareGroupVersions" *ngIf="accept" class="toggle"  (click)="showMultipleVersions.emit()" [innerText]="'_OsvMultipleVersions_' | i18n:'1'"></span>
 	</div>
 </ng-template>
 

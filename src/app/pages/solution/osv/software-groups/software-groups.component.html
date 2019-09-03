@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-6 flex flex-fill">
-		<div class="flex-center-vertical"  *ngIf="pagination && softwareGroups?.length > 0">
+		<div class="flex-center-vertical" *ngIf="pagination && softwareGroups?.length > 0">
 			<span [innerText]="'_OsvSoftwareGroups_' | i18n" class="text-large"></span>
 			<span *ngIf="pagination"
 				[innerText]="'_OsvShowingXofYSoftwareGroups_' | i18n:paginationCount:pagination.total"
@@ -51,7 +51,7 @@
 						attr.data-auto-id="SoftwareGroupsItemClickHandler-{{ item.softwareProfile }}">
 						<ng-container *ngIf="column.template">
 							<ng-container
-								*ngTemplateOutlet="column.template; context: { celldata: item.data ,actions: item.actions}">
+								*ngTemplateOutlet="column.template; context: { celldata: item ,actions: item.actions}">
 							</ng-container>
 						</ng-container>
 						<ng-container *ngIf="!column.template">
@@ -66,15 +66,25 @@
 </ng-template>
 
 <ng-template #recommendationsTemplate let-item="celldata">
-	<div *ngIf="item?.recommendations && item.recommendations.length >0 ">
+	<div *ngIf="item?.recommendations && item.recommendations.length >0;else noRecommendationsTemp ">
 		<span class="icon-lightbulb icon-small"></span>
-		<sup>{{item.recommendations.length}}</sup>
+		<sup [innerText]="item.recommendations.length"></sup>
 		<span class="qtr-margin-left" [innerText]="'_OsvAvailable_' | i18n"></span>
 	</div>
 </ng-template>
+
+<ng-template #noRecommendationsTemp>
+	<span [innerText]="'_OsvNone_' | i18n"></span>
+</ng-template>
+
 
 <ng-template #actionsTemplate let-item="celldata" let-actions="actions">
 	<cui-dropdown *ngIf="actions?.length > 0 " [actions]="actions" position="left"
 		icon="icon-more icon-small text-muted rotate-90">
 	</cui-dropdown>
+</ng-template>
+
+<ng-template #currentOSVersionsTemp let-item="celldata">
+	<span *ngIf="item?.currentOSVersion" data-auto-id="SoftwareGroupCurrentVersions" class="link toggle" (click)="openCurrentVersionsTab($event,item)"
+		[innerText]="'_OsvMultipleVersions_' | i18n:item?.currentOSVersion"></span>
 </ng-template>

@@ -1,3 +1,9 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
 .color-tranparent {
 	color: transparent;
+}
+
+.text-white {
+	color: $white !important;
 }

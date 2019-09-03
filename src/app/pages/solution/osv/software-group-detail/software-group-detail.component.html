@@ -150,7 +150,7 @@
 				</tr>
 				<!-- status or action -->
 				<tr>
-					<td class="no-border-bottom no-border-toptext-large" [innerText]="'_OsvStatusOrAction_' | i18n">
+					<td class="no-border-bottom no-border-top text-large" [innerText]="'_OsvStatusOrAction_' | i18n">
 					</td>
 					<td></td>
 					<td class="recommendation ">
@@ -172,39 +172,37 @@
 				</tr>
 				<!-- risk score -->
 				<tr>
-					<td class="overflow-unset no-border-bottom no-border-top">
+					<td class="overflow-unset no-border-bottom no-border-top text-large">
 						<span class="text-large" [innerText]="'_OsvRiskScore_' | i18n"></span>
 						<span class="qtr-margin-left  text-primary" data-balloon-length="large"
 							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="right">
 							<i class="icon-info qtr-margin-bottom"></i>
 						</span>
 					</td>
-					<td class="text-xlarge" [innerText]="'35%'"></td>
+					<td class="text-xlarge" [innerText]="'35'"></td>
 					<td class="recommendation">
 						<div class="flex align-items-center">
 							<span class="text-xlarge" [innerText]="'<'"></span>
 							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
-							<span class="icon-dropdown text-success text-large"></span>
+							
 						</div>
 					</td>
 					<td class="recommendation">
-						<div class="flex align-items-center">
-							<span class="text-xlarge" [innerText]="'<'"></span>
-							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
-							<span class="icon-dropdown text-success text-large"></span>
+						<div class="flex align-items-center">							
+							<span class="text-xlarge qtr-margin-left" [innerText]="'10'"></span>
+							
 						</div>
 					</td>
 					<td class="recommendation">
-						<div class="flex align-items-center">
-							<span class="text-xlarge" [innerText]="'<'"></span>
-							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
-							<span class="icon-dropdown text-success text-large"></span>
+						<div class="flex align-items-center">							
+							<span class="text-xlarge qtr-margin-left" [innerText]="'10'"></span>
+							
 						</div>
 					</td>
 				</tr>
 				<!-- bugs -->
 				<tr>
-					<td class="headingClass no-border-bottom no-border-top" [innerText]="'_Bugs_' | i18n"></td>
+					<td class="headingClass no-border-bottom no-border-top text-large" [innerText]="'_Bugs_' | i18n"></td>
 					<td>
 						<div [innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
 						<div class="text-xlarge" [innerText]="'15'"></div>
@@ -221,12 +219,12 @@
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'13/15'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
+								
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
 								[width]="fullscreen ? '250' : '130' "></bar-chart>
 						</div>
 					</td>
@@ -238,12 +236,12 @@
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'13/15'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
+								
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
 								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
@@ -255,19 +253,19 @@
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'13/15'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
+								
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
 								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
 				</tr>
 				<!-- security advisories -->
 				<tr>
-					<td class="headingClass no-border-bottom no-border-top" [innerText]="'_SecurityAdvisories_' | i18n">
+					<td class="headingClass no-border-bottom no-border-top text-large" [innerText]="'_SecurityAdvisories_' | i18n">
 					</td>
 					<td>
 						<div class="text-xlarge" [innerText]="'32'"></div>
@@ -280,12 +278,12 @@
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'32/32'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
+								
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
 								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
@@ -293,12 +291,12 @@
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'32/32'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
+								
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
 								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
@@ -306,51 +304,16 @@
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'32/32'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
+								
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="qtr-margin-top">
-							<bar-chart backgroundColor="#f2f2f2" dataLabels="true" [seriesData]="seriesData"
+							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
 								[width]="chartWidth"></bar-chart>
 						</div>
 					</td>
-				</tr>
-				<!-- features -->
-				<tr>
-					<td class="no-border-bottom no-border-top">
-						<div class="text-large" [innerText]="'_OsvFeatures_' | i18n"></div>
-						<div [ngClass]="subHeadingClass" class="qtr-margin-top"
-							[innerText]="'_OsvActiveAvailable_' | i18n"></div>
-					</td>
-					<td>
-						<div class="text-xlarge" [innerText]="'3/17'"></div>
-					</td>
-					<td class="recommendation">
-						<div class="half-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="'3/36'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
-							</div>
-						</div>
-					</td>
-					<td class="recommendation">
-						<div class="half-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="'3/36'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
-							</div>
-						</div>
-					</td>
-					<td class="recommendation">
-						<div class="half-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="'3/36'"></span>
-								<span class="icon-dropdown text-success text-large"></span>
-							</div>
-						</div>
-					</td>
-				</tr>
+				</tr>				
 			</tbody>
 		</table>
 	</div>

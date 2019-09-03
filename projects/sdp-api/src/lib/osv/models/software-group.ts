@@ -2,6 +2,7 @@
 export interface SoftwareGroup {
 	assetCount: number;
 	customerId: number;
+	currentOSVersion?: string;
 	deployment?: string;
 	id: string;
 	productFamily : string;

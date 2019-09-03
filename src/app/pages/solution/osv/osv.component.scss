@@ -7,7 +7,7 @@
 	background-color: $white;
 	left: 30px;
 	width: 800px;
-	top: -1px;
+	top: -15px;
 
 	> div {
 		padding: 10px;
@@ -28,7 +28,7 @@
 		transform-origin: center center;
 		width: 0;
 		left: -7px;
-		top: 7px;
+		top: 16px;
 	}
 }
 
@@ -71,6 +71,5 @@
 }
 
 .close {
-	font-size: 34px;
 	color: $med-gray-2;
 }

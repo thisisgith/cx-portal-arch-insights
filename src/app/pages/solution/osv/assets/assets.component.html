@@ -72,10 +72,10 @@
 </ng-template>
 
 <ng-template #recommendationsTemplate let-item="celldata">
-	<div *ngIf="item?.recommendationCount && item.recommendationCount > 0 ">
+	<div *ngIf="item?.recommendationCount && item.recommendationCount > 0 ;else noRecommendationsTemp">
 		<span class="badge-wrapper">
 			<span class="icon-lightbulb icon-small"></span>
-			<span class="badge badge--blue" [innerText]="item.recommendationCount"></span>
+			<span class="badge badge--blue text-white" [innerText]="item.recommendationCount"></span>
 		</span>
 		<span class="base-margin-left" [innerText]="'_OsvAvailable_' | i18n"></span>
 	</div>
@@ -87,3 +87,6 @@
 	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-tranparent"></span>
 	<span class="col-11" [innerText]="item.swVersion"></span>
 </ng-template>
+<ng-template #noRecommendationsTemp>
+		<span class="dbl-margin-left" [innerText]="'_OsvNone_' | i18n"></span>
+	</ng-template>

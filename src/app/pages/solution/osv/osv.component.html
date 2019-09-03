@@ -117,7 +117,7 @@
 			<div class="col-7 margin-auto">
 				<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
 				<span class="text-primary pull-right" data-balloon-length="medium"
-					[attr.data-balloon]="'_OsvAssetInfo_' | i18n" data-balloon-pos="down">
+					[attr.data-balloon]="'_OsvAssetInfo_' | i18n" data-balloon-pos="right">
 					<i class="icon-info icon-small"></i>
 				</span>
 			</div>
@@ -129,7 +129,7 @@
 				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
 			</div>
 			<div class="col-7 margin-auto">
-				<span class="text-large " [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
+				<span class="text-large half-margin-right" [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
 			</div>
 		</div>
 	</div>
@@ -151,7 +151,7 @@
 <cui-modal></cui-modal>
 <ng-template #softwareProfileInfo>
 	<div class="absolute profile-info text-default" *ngIf="showProfileInfo">
-		<div class="row">
+		<div class="row no-margin">
 			<div class="col-12 text-xlarge half-margin-bottom">
 				<div class="row">
 					<div class="col-md-10" [innerHTML]="'_OsvSoftwareGroups_' | i18n"></div>
@@ -162,9 +162,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-12 base-margin-bottom">
+			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
+			<div class="col-12 base-margin-bottom half-margin-left half-margin-top">
 				<div [innerHTML]="'_OsvSoftwareGroupInfoHeader_' | i18n"></div>
-				<ul class="half-margin-top list">
+				<ul class="half-margin-top">
 					<li>
 						<span class="text-bold" [innerText]="'_OsvAssetGroup_' | i18n"></span>
 						<ul>
@@ -180,19 +181,19 @@
 				</ul>
 			</div>
 			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
-			<div class="col-12 half-padding">
-				<div class="text-right">
-					<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();"
-						data-auto-id="DonotShowProfileInfoAgain">
-						<input type="checkbox" [(ngModel)]="doNotShowAgain" (ngModelChange)="hideInfo($event)"
-							data-auto-id="DonotShowProfileInfoAgainCheckbox">
-						<span class="checkbox__input"></span>
-						<span class="checkbox__label" [innerText]="'_OsvDoNotShowAgain_' | i18n"></span>
-					</label>
-					<button class="btn btn--gray-ghost btn--small" [innerText]="'_OsvClose_' | i18n"
-						(click)="$event.stopPropagation();showProfileInfo = false"
-						data-auto-id="CloseSoftwareProfileInfoDialog"></button>
-				</div>
+			<div class="col-6">
+				<button class="btn btn--primary-ghost btn--small" [innerText]="'_OsvClose_' | i18n"
+					(click)="$event.stopPropagation();showProfileInfo = false"
+					data-auto-id="CloseSoftwareProfileInfoDialog"></button>
+			</div>
+			<div class="text-right col-6 qtr-margin-top">
+				<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();"
+					data-auto-id="DonotShowProfileInfoAgain">
+					<input type="checkbox" [(ngModel)]="doNotShowAgain" (ngModelChange)="hideInfo($event)"
+						data-auto-id="DonotShowProfileInfoAgainCheckbox">
+					<span class="checkbox__input"></span>
+					<span class="checkbox__label" [innerText]="'_OsvDoNotShowAgain_' | i18n"></span>
+				</label>
 			</div>
 		</div>
 	</div>

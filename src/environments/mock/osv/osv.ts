@@ -217,6 +217,7 @@ const mockSoftwareGroups: SoftwareGroupsResponse = {
 	uiProfileList: [
 		{
 			assetCount: 1,
+			currentOSVersion: '2',
 			customerId: 231215372,
 			id: 'Prfoile_231215372_73-14312-05, 73-14312-05, 73-14312-05',
 			optimalVersion: null,
