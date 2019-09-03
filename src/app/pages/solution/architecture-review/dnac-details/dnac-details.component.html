@@ -6,7 +6,7 @@
 					[innerText]="'_ArchitectureSDAScaleUtilization_' | i18n | uppercase">
 				</div>
 				<div class="cui-drawer-content">
-					<ng-container 
+					<ng-container
 					*ngTemplateOutlet="SDAScaleUtilizationChart; context: { dnacDetails: dnacDetails }">
 					</ng-container>
 				</div>
@@ -16,5 +16,5 @@
 </div>
 
 <ng-template #SDAScaleUtilizationChart let-dnac="dnacDetails">
-	<p>temprary chart</p>
+	<bullet-chart [seriesData]="seriesData" ></bullet-chart>
 </ng-template>

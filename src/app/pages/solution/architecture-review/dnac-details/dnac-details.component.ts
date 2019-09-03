@@ -15,4 +15,10 @@ export class DnacDetailsComponent {
 	@Input('dnacDetails') public dnacDetails: any = null;
 	constructor (private logger: LogService) {
 	}
+
+	public seriesData = {
+		target: 1000,
+		xLabel: 'Network Devices',
+		y: 850,
+	};
 }
