@@ -166,6 +166,10 @@
 	<ng-container *ngIf="componentData?.atx?.recommended && recommendedAtxScheduleCardOpened">
 		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: componentData.atx.recommended }"></ng-container>
 	</ng-container>
+	<ng-container *ngIf="atxMoreClicked && moreATXSelected">
+		<ng-container *ngTemplateOutlet="atxMoreClick; context: { data: moreATXSelected }">
+		</ng-container>
+	</ng-container>
 	<ng-container *ngIf="atxScheduleCardOpened && moreATXSelected">
 		<ng-container *ngTemplateOutlet="recommendedATXSchedule; context: { data: moreATXSelected }">
 		</ng-container>
@@ -212,7 +216,7 @@
 </ng-template>
 
 <ng-template #atxHover let-title="title" let-description="description" let-autoid="autoid" let-item="item">
-	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" *ngIf="!atxScheduleCardOpened" attr.data-auto-id="{{ autoid }}-HoverModal">
+	<div id="atx-hover-panel-{{ autoid }}" class="panel panel--bordered" *ngIf="!atxScheduleCardOpened && !atxMoreClicked" attr.data-auto-id="{{ autoid }}-HoverModal">
 		<div class="flex flex-column max-height">
 			<div class="icon-bookmark icon-medium"
 				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
@@ -222,18 +226,47 @@
 			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
 			<div class="half-margin-left line-clamp" [innerText]="description" attr.data-auto-id="{{ autoid }}-HoverModal-Description"></div>
-			<div class="base-padding-top half-padding-left" *ngIf="autoid==='moreATXList'">
-				<button attr.data-auto-id="{{ autoid }}-HoverModal-ViewSessions"
-					class="btn btn--small btn--secondary text-uppercase"
-					[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
-					(click)="atxMoreViewSessions(item)"
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #atxMoreClick let-data="data">
+	<div class="panel atxMorepanel--open panel--bordered"
+		#atxMoreClick [ngClass]="getATXMorePanel(atxMoreClick)"
+		*ngIf="atxMoreClicked" attr.data-auto-id="atxMoreClickModal">
+		<div class="flex flex-column max-height">
+			<div class="icon-bookmark icon-medium"
+				[ngClass]="data.bookmark ? 'ribbon__blue__atx' : 'ribbon__white__atx'"
+				(click)="updateBookmark(data, 'ATX')"
+				data-auto-id="ATXMoreRibbon">
+			</div>
+			<div class="row half-margin-top half-margin-left half-margin-right">
+				<div class="col-md-11 text-left">
+					<h6 class="text-indigo" [innerText]="data.title"></h6>
+				</div>
+				<div class="col-md-1">
+					<a class="no-link closebtn" 
+						data-auto-id = "closeMoreATXClickModal"
+						(click)="atxMoreClicked = false; moreATXSelected = ''">
+						<span class="icon-close icon-small"></span>
+					</a>
+				</div>
+			</div>
+			<div class="divider divider--compressed"></div>
+			<div class="half-margin-left line-clamp" [innerText]="data.description"></div>
+			<div class="base-padding-top half-padding-left">
+				<button class="btn btn--small btn--secondary text-uppercase"
+					data-auto-id = "MoreATXViewSessions"
+					[ngClass]="data.sessions?.length > 0 ? null : 'disabled'"
+					(click)="atxMoreViewSessions()"
 					[innerText]="'_ViewSessions_' | i18n">
 				</button>
-				<a *ngIf="item.recordingURL" class="no-link" target="_blank" [href]="item.recordingURL">
-					<button class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
-						[innerText]="'_WatchNow_' | i18n">
-					</button>
-				</a>
+				<button class="btn btn--small btn--secondary text-uppercase"
+					data-auto-id = "MoreATXWatchNow"
+					[ngClass]="data?.recordingURL ? null : 'disabled'"
+					(click)="atxWatchNow(data.recordingURL)"
+					[innerText]="'_WatchNow_' | i18n">
+				</button>
 			</div>
 		</div>
 	</div>
@@ -302,7 +335,7 @@
 		<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
 			class="btn btn--small btn--secondary text-uppercase qtr-margin-bottom"
 			[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
-			(click)="recommendedAtxScheduleCardOpened = true; atxScheduleCardOpened = false; componentData.atx.interested=''"
+			(click)="recommendedATXViewSessions()"
 			[innerText]="'_ViewSessions_' | i18n">
 		</button>
 		<a
@@ -462,8 +495,10 @@
 		<div class="qtr-padding-bottom" #moreList (mouseenter)="getMoreCoordinates(moreList, autoid)" *ngFor="let item of data | slice:1:3">
 			<div class="row" attr.data-auto-id="{{ autoid }}-item">
 				<div class="col-md-11">
-					<div id="moreAccList-item" class="panel small-panel">
-						<div class="text-blue" [innerText]="item.title"></div>
+					<div id="moreAccList-item" class="panel small-panel" attr.data-auto-id="{{ autoid }}-item">
+						<div class="text-blue" [innerText]="item.title"
+							data-auto-id = "ATXMoreClick"
+							(click)="atxMoreSelect(item)"></div>
 						<ng-container *ngIf="autoid==='moreACCList'">
 							<ng-container *ngTemplateOutlet="accHover; context: {
 								title: item.title,

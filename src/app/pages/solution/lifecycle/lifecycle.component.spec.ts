@@ -398,9 +398,6 @@ describe('LifecycleComponent', () => {
 			expect(panel)
 				.toEqual('panel panel--open');
 
-			expect(component.sessionSelected)
-				.toBeUndefined();
-
 			component.selectSession(recommended.sessions[0]);
 
 			fixture.detectChanges();
@@ -498,7 +495,7 @@ describe('LifecycleComponent', () => {
 				.toBeNull();
 		});
 
-		it('atxMoreViewSessions shouldset data to moreAtxSelected', () => {
+		it('atxMoreViewSessions should set data to moreAtxSelected', () => {
 			buildSpies();
 			sendParams();
 
@@ -506,16 +503,64 @@ describe('LifecycleComponent', () => {
 
 			component.atxScheduleCardOpened = false;
 			component.recommendedAtxScheduleCardOpened = true;
-			let item: AtxSchema;
-			item = { };
 
-			component.atxMoreViewSessions(item);
+			// Test atxMoreViewSessions()
+			component.atxMoreViewSessions();
 
 			expect(component.atxScheduleCardOpened)
 				.toBeTruthy();
 
 			expect(component.recommendedAtxScheduleCardOpened)
 				.toBeFalsy();
+
+			let item: AtxSchema;
+			item = { };
+			component.atxMoreClicked = false;
+
+			// Test atxMoreSelect()
+			component.atxMoreSelect(item);
+
+			expect(component.atxMoreClicked)
+				.toBeTruthy();
+
+			expect(component.atxScheduleCardOpened)
+				.toBeFalsy();
+
+			expect(component.recommendedAtxScheduleCardOpened)
+				.toBeFalsy();
+
+			let recordingUrl: string;
+			recordingUrl = '';
+			component.atxMoreClicked = true;
+
+			// Test atxWatchNow()
+			component.atxWatchNow(recordingUrl);
+
+			expect(component.atxMoreClicked)
+				.toBeFalsy();
+
+		});
+
+		it('recommendedATXViewSessions should set recommendedAtxScheduleCardOpened to true', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.recommendedAtxScheduleCardOpened = false;
+
+			// Test recommendedATXViewSessions()
+			component.recommendedATXViewSessions();
+
+			expect(component.recommendedAtxScheduleCardOpened)
+				.toBeTruthy();
+
+			expect(component.atxScheduleCardOpened)
+				.toBeFalsy();
+
+			expect(component.atxMoreClicked)
+				.toBeFalsy();
+
 		});
 
 		it('should show the atx view-all modal', () => {
