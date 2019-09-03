@@ -162,7 +162,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		const times = [];
 		const amPms = ['am', 'pm'];
 		const minutes = ['00', '30'];
-		const hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+		const hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 		for (const amPm of amPms) {
 			for (const hour of hours) {
 				for (const minute of minutes) {
@@ -171,7 +171,8 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 						militaryHour += 12;
 					}
 					times.push({
-						key: `${hour}:${minute}${amPm}`,
+						// 00 in military time is 12 civilian
+						key: `${hour === 0 ? 12 : hour}:${minute}${amPm}`,
 						value: `${Number(minute)} ${Number(militaryHour)}`,
 					});
 				}
@@ -529,26 +530,34 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
-	 * Toggles is device row is selected
-	 * @param allDevicesSelected checkbox event
+	 * Toggles whether or not all devices are selected
 	 * @param devices device row
 	 * @param selectorName The designated name of the device selector
 	 * firing this function off
-	 *
-	 * @returns if device header is selected or not
 	 */
-	public toggleAllDevicesSelected (allDevicesSelected: boolean,
+	public toggleAllDevicesSelected (
 		devices: DeviceListRow[],
 		selectorName: string) {
-		const checked = !allDevicesSelected;
+
+		if (devices.length === 0) {
+			return;
+		}
+
+		let selected = false;
+
+		if (selectorName === this.leftDevices) {
+			this.allDevicesSelectedLeft = !this.allDevicesSelectedLeft;
+			selected = this.allDevicesSelectedLeft;
+		} else if (selectorName === this.rightDevices) {
+			this.allDevicesSelectedRight = !this.allDevicesSelectedRight;
+			selected = this.allDevicesSelectedRight;
+		}
 
 		for (let devNum = 0; devNum < devices.length; devNum += 1) {
-			devices[devNum].selected = checked;
+			devices[devNum].selected = selected;
 		}
 
 		this.handleDeviceSelectionChanged(selectorName);
-
-		return checked;
 	}
 
 	/**

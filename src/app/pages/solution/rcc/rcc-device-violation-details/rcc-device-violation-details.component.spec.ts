@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RccDeviceViolationDetailsComponent } from './rcc-device-violation-details.component';
 import { RccDeviceViolationDetailsModule } from './rcc-device-violation-details.module';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -83,18 +83,8 @@ describe('RccDeviceViolationDetailsComponent', () => {
 
 	it('should invoke onPageIndexChange method', () => {
 		component.onPageIndexChange({ page: 1 });
-	});
-
-	it('should invoke loadData and call both APIs', () => {
-		spyOn(rccTrackService, 'getRccViolationDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
-		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
-			.and
-			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
-		component.loadData();
-		fixture.detectChanges();
-
+		expect(component.tableConfig.tableOffset)
+			.toEqual(1);
 	});
 
 	it('Should invoke ngOnInit method which initializes both table options', () => {
@@ -106,7 +96,14 @@ describe('RccDeviceViolationDetailsComponent', () => {
 
 	});
 
-	it('Should invoke api and error response should keep impactedDeviceDetails empty array', () => {
+	it('Should invoke onTableSortingChanged and assign tableOffset to 0', () => {
+		component.onTableSortingChanged();
+		expect(component.tableConfig.tableOffset)
+			.toBe(0);
+	});
+
+	it('Should invoke api and error response should keep impactedDeviceDetails empty array',
+	fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -115,11 +112,41 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 		component.onSelection();
+		tick();
 		expect(component.impactedDeviceDetails)
 			.toEqual([]);
-	});
+	}));
 
-	it('Should get the api data on ngonchanges method', done => {
+	it('Should invoke api and errorResult should be true', fakeAsync(() => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.loadData();
+		tick();
+		expect(component.errorResult)
+			.toBeTruthy();
+	}));
+
+	it('Should invoke getRccViolationDetailsData api ', fakeAsync(() => {
+		component.selectionObj = {
+			osName: 'IOS-XE',
+			productFamily: 'C2300',
+			productModel: 'WS-C2300',
+		};
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
+		component.onSelection();
+		tick();
+		expect(component.impactedDeviceDetails)
+			.toEqual(ComplianceScenarios[6].scenarios.GET[0].response.body.data.impactedAssets);
+	}));
+
+	it('Should get the api data on ngonchanges method', fakeAsync(() => {
 		spyOn(rccTrackService, 'getRccViolationDetailsData')
 			.and
 			.returnValue(of(ComplianceScenarios[6].scenarios.GET[0].response.body));
@@ -140,10 +167,13 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			},
 		};
 		component.ngOnChanges(changes);
+		tick();
 		fixture.detectChanges();
-		done();
-	});
-	it('Should not get the api data on ngonchanges when', done => {
+		expect(component.policyRuleData.policy)
+			.toEqual({ });
+	}));
+
+	it('Should not get the api data on ngonchanges when', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -168,28 +198,13 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			},
 		};
 		component.ngOnChanges(changes);
+		tick();
 		fixture.detectChanges();
-		done();
-	});
+		expect(component.errorResult)
+			.toBeFalsy();
+	}));
 
-	it('Should get the api data ngonchanges empty info data', () => {
-		const changes = {
-			policyViolationInfo: {
-				currentValue: {
-					policycategory: '',
-					policygroupid: '',
-					policyname: '',
-					ruletitle: '',
-				},
-				firstChange: true,
-				isFirstChange: () => false,
-				previousValue: undefined,
-			},
-		};
-		component.ngOnChanges(changes);
-	});
-
-	it('Should get the api data ngonchanges empty info data', () => {
+	it('Should get the api data ngonchanges empty info data', fakeAsync(() => {
 		const changes = {
 			policyViolationInfo: {
 				currentValue: {
@@ -204,9 +219,25 @@ describe('RccDeviceViolationDetailsComponent', () => {
 			},
 		};
 		component.ngOnChanges(changes);
+		tick();
 		expect(component.queryParamMapObj)
-		.toBeDefined();
+			.toBeDefined();
 		expect(component.loadData());
-	});
+	}));
+
+	it('Should invoke getRccViolationDetailsData api and return empty decive list ',
+	fakeAsync(() => {
+		spyOn(rccTrackService, 'getRccViolationDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[9].scenarios.GET[0].response.body));
+		spyOn(rccTrackService, 'getRccPolicyRuleDetailsData')
+			.and
+			.returnValue(of(ComplianceScenarios[7].scenarios.GET[0].response.body));
+		component.loadData();
+		tick();
+		fixture.detectChanges();
+		expect(component.impactedDeviceDetails)
+			.toEqual([]);
+	}));
 
 });

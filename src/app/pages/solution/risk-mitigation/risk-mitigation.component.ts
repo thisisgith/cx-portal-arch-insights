@@ -34,6 +34,7 @@ export class RiskMitigationComponent {
 		max: 200,
 		min: 0,
 	};
+	public selectedFilters;
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private logger: LogService,
@@ -41,10 +42,6 @@ export class RiskMitigationComponent {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-	}
-
-	get selectedFilters () {
-		return _.filter(this.filters, 'selected');
 	}
 
 	@ViewChild('contextualMenuTemplate',
@@ -124,6 +121,18 @@ export class RiskMitigationComponent {
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		this.onlyCrashes = true;
 	}
+
+	/**
+	 * Selected filter is for to assign default filter on page loads.
+	 */
+	public selectedTimeFilters () {
+		if (this.selectedFilters !== undefined) {
+			this.resetFilters();
+			_.filter(this.filters, 'selected');
+			this.selectedFilters = this.filters;
+			this.selectedFilters[0].seriesData[0].selected = true;
+		}
+  	 }
 	/**
 	 * Gets high crashes device data
 	 * @returns  the crashed device data
@@ -156,8 +165,7 @@ export class RiskMitigationComponent {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
 		this.getDeviceDetails('1');
-		this.resetFilters();
-
+		this.selectedTimeFilters();
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
 				takeUntil(this.destroy$),
@@ -230,6 +238,7 @@ export class RiskMitigationComponent {
 					map((results: RiskAssets) => {
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = _.size(results.deviceDetails);
+						this.crashedAssetsGridDetails.tableOffset = 0;
 					}),
 					catchError(err => {
 						this.crashedAssetsGridDetails.tableData = [];
@@ -323,23 +332,27 @@ export class RiskMitigationComponent {
 	public getFilterDetailsForSearchQuery (searchText: String) {
 		let time;
 		const filter =  _.find(this.filters[0].seriesData, { selected: true });
-		switch (filter.label) {
-			case '24h': {
-				time = '1';
-				break;
+		if (filter) {
+			switch (filter.label) {
+				case '24h': {
+					time = '1';
+					break;
+				}
+				case '7d': {
+					time = '7';
+					break;
+				}
+				case '30d': {
+					time = '30';
+					break;
+				}
+				case '90d': {
+					time = '90';
+					break;
+				}
 			}
-			case '7d': {
-				time = '7';
-				break;
-			}
-			case '30d': {
-				time = '30';
-				break;
-			}
-			case '90d': {
-				time = '90';
-				break;
-			}
+		} else {
+			time = '1';
 		}
 
 		return {
@@ -349,6 +362,7 @@ export class RiskMitigationComponent {
 			search: searchText,
 			sortDirection: '',
 		};
+
 	}
 	/**
 	 * Function to update pagination
@@ -365,6 +379,7 @@ export class RiskMitigationComponent {
 					map((results: any) => {
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
+						this.crashHistoryGridDetails.tableOffset = 0;
 					}),
 					catchError(err => {
 						this.crashedAssetsGridDetails.tableData   = [];
@@ -428,6 +443,7 @@ export class RiskMitigationComponent {
 				map((results: any) => {
 					this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 					this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
+					this.crashHistoryGridDetails.tableOffset = 0;
 				}),
 				catchError(err => {
 					this.crashedAssetsGridDetails.tableData   = [];
@@ -571,6 +587,8 @@ export class RiskMitigationComponent {
 	public getAdvisoryCount (data) {
 		const advisoryFilter = _.find(this.filters, { key: 'advisories' });
 		advisoryFilter.seriesData = data;
+		this.selectedFilters = this.filters;
+		this.clearFilters();
 	}
 
 	/**
@@ -630,21 +648,30 @@ export class RiskMitigationComponent {
 	 * Function used to clear the filters
 	 */
 	public clearFilters () {
-		_.each(this.filters, (filter: Filter) => {
-			filter.selected = false;
-			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {
+		_.each(this.filters, (clearFilter: Filter) => {
+			clearFilter.selected = false;
+			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
 				currentFilter.selected = false;
 			});
 		});
 		this.resetFilters();
 		this.getDeviceDetails('1');
 		this.clearAllFilters = true;
+		const filter = _.find(this.filters, { key: 'advisories' });
+		if (filter) {
+			filter.seriesData[0].selected = true;
+		}
+		this.filters[0] = filter;
+		this.getSelectedSubFilters('advisories');
+		this.selectedFilters = this.filters;
+		this.selectedTimeFilters();
 	}
 
 	/**
 	 * Function used to reset the filters
 	 */
 	public resetFilters () {
+		this.searchQueryString = '';
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {

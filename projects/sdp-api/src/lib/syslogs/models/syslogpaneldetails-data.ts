@@ -1,4 +1,4 @@
-/** Device Details Data
+/** Device Details Table Data
  */
 export interface DeviceDetailsdata {
 	msgCount: number;
@@ -9,4 +9,12 @@ export interface DeviceDetailsdata {
 	ProductFamily: string;
 	SoftwareType: string;
 	SoftwareVersion: string;
+	MessageDescObject: DeviceDetailsMsgData[];
+}
+
+/** Device Details Inner Table Data
+ */
+export interface DeviceDetailsMsgData {
+	SyslogMsgDesc: 'Dev Test';
+	MessageCount: '987';
 }

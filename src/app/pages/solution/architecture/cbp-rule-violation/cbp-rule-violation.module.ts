@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CbpRuleViolationComponent } from './cbp-rule-violation.component';
 import { CuiTableModule, CuiPagerModule, CuiLoaderModule,
-	 CuiSpinnerModule } from '@cisco-ngx/cui-components';
+	 CuiSpinnerModule, CuiDropdownModule } from '@cisco-ngx/cui-components';
 import { DetailsPanelModule } from '@components';
+import { FormsModule } from '@angular/forms';
 
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CbpDeviceAffectedModule } from '../cbp-device-affected/cbp-device-affected.module';
@@ -17,10 +18,12 @@ import { CbpDeviceAffectedModule } from '../cbp-device-affected/cbp-device-affec
 		CuiTableModule,
 		CuiPagerModule,
 		DetailsPanelModule,
+		CuiDropdownModule,
 		CbpDeviceAffectedModule,
 		CuiLoaderModule,
 		CuiSpinnerModule,
 		I18nPipeModule,
+		FormsModule,
 	],
 })
 export class CbpRuleViolationModule { }
