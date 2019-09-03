@@ -324,12 +324,12 @@
 		</div>
 		<div class="text-large base-padding-bottom" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-Title"></div>
 		<ng-container *ngIf="item.status === 'recommended'">
-				<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
-					accId: item.accId,
-					title: item.title,
-					dataAutoId: 'Request1on1ACCButton'
-					}">
-				</ng-container>
+			<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
+				accId: item.accId,
+				title: item.title,
+				dataAutoId: 'Request1on1ACCButton'
+				}">
+			</ng-container>
 		</ng-container>
 		<ng-container *ngIf="item.status === 'in-progress'">
 			<span class="text-info icon-clock qtr-padding-bottom half-padding-right" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
@@ -1225,12 +1225,12 @@
 		</a>
 	</div>
 	<div *ngIf="type === 'ACC' && celldata.status === 'recommended'" class="text-right">
-			<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
-				accId: celldata.accId,
-				title: celldata.title,
-				dataAutoId: 'Request1on1ACCButton'
-				}">
-			</ng-container>
+		<ng-container *ngTemplateOutlet="!notCurrentPitstop ? enabledAccButton : disabledAccButton; context: {
+			accId: celldata.accId,
+			title: celldata.title,
+			dataAutoId: 'Request1on1ACCButton'
+			}">
+		</ng-container>
 	</div>
 	<div *ngIf="type === 'SB' || type==='PG'" class="text-right">
 		<a class="no-link" target="_blank" [href]="celldata.url">
@@ -1260,7 +1260,7 @@
 	</div>
 </ng-template>
 
-<ng-template #accDisableTooltip><p>{{ '_DisableACCRegister_' | i18n}}</p></ng-template>
+<ng-template #accDisableTooltip><p [innerText]="'_DisableACCRegister_' | i18n"></p></ng-template>
 <ng-template #titleTemplate let-celldata="celldata" let-type="type">
 	<div class="row" *ngIf="type==='ATX'">
 		<div class="col-md-2">
