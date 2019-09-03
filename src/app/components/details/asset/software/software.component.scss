@@ -18,22 +18,3 @@
 		font-style: italic;
 	}
 }
-
-.software-table ::ng-deep table {
-	table-layout: fixed;
-
-	thead::after {
-		left: 2px;
-		width: 100%;
-	}
-
-	tr::after {
-		left: 2px;
-		width: 100%;
-	}
-
-	th,
-	td {
-		font-size: 12px;
-	}
-}
