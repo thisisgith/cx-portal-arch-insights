@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-
-import { LogService } from '@cisco-ngx/cui-services';
+import { RouteAuthService } from 'src/app/services';
 /**
  * InsightsComponent
  */
@@ -9,9 +8,13 @@ import { LogService } from '@cisco-ngx/cui-services';
 	templateUrl: './insights.component.html',
 })
 export class InsightsComponent {
-	constructor (
-		private logger: LogService,
-	) {
-		this.logger.debug('InsightsComponent Created!');
+	public customerId;
+	public hasPermission = false;
+	constructor (private routeAuthService: RouteAuthService) { }
+	/**
+	 * ngOnInit method execution
+	 */
+	public ngOnInit (): void {
+		this.hasPermission = this.routeAuthService.hasRccPermission;
 	}
 }

@@ -8,3 +8,4 @@ export { RMAService } from './rma';
 export { GeoCodeService } from './geocode';
 export { RacetrackInfoService } from './racetrack-info';
 export { ExportCsvService } from './export-csv.service';
+export { RouteAuthService } from './route-auth';
