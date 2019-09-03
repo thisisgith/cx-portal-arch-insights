@@ -1,17 +1,11 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../../mixins.scss';
 
-:host ::ng-deep .table {
-	border: none;
-	border-bottom: 1px solid #dfdfdf;
-
-	th {
-		background-color: transparent;
-		border-right: none;
-		white-space: pre-line;
-	}
-
-	td {
-		border-right: none;
+.form-group__text {
+	.bugs-search,
+	.field-search,
+	.security-search {
+		@include filter-search;
 	}
 }
 
