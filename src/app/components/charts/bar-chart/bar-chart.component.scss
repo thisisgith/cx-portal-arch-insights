@@ -1,0 +1,17 @@
+:host {
+	position: relative;
+	height: 93px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+}
+
+.hbar__divider {
+	position: absolute;
+	bottom: 16px;
+	left: 35px;
+	height: 1px;
+	width: 137px;
+	background-color: #323c47;
+	opacity: 0.16;
+}
