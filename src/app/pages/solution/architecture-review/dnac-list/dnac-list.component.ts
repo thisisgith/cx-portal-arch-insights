@@ -104,6 +104,7 @@ export class DnacListComponent implements OnInit {
 					sortable: false,
 				},
 			],
+			singleSelect: true,
 		});
 	}
 
