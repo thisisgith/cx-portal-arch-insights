@@ -1,30 +1,30 @@
 <div class="row" *ngIf="deviceData">
-	<div class="flex base-margin-bottom col-md-10 ">
-		<div data-auto-id="ipAddress" class="dbl-margin-left col-md-2">
+	<div class="flex base-margin-top col-md-12 ">
+		<div data-auto-id="ipAddress" class="base-margin-left col-md-2">
 			<div
-				class="text-bold text-uppercase"
+				class="text-bold text-uppercase text-small"
 				[innerText]="'_CP_IpAddress_' | i18n"
 			></div>
 			<div [innerHTML]="deviceData.ipAddress"></div>
 		</div>
-		<div data-auto-id="serialNumber" class=" col-md-3">
+		<div data-auto-id="serialNumber" class=" col-md-2">
 			<div
-				class="text-bold text-uppercase"
+				class="text-bold text-uppercase text-small"
 				[innerText]="'_CP_SerialNumber_' | i18n"
 			></div>
 			<div [innerHTML]="deviceData.serialNumber"></div>
 		</div>
-		<div data-auto-id="riskScore" class="half-margin-left col-md-4">
+		<div data-auto-id="riskScore" class="qtr-margin-left col-md-4">
 			<div class="row">
 				<div
-					class="text-bold"
+					class="text-small"
 					[innerText]="'_CP_CompositeRisk_' | i18n"
 				></div>
 			</div>
 			<div class="row">
-				<div class="col-md-8">
+				<div class="col-md-8 no-padding-left">
 					<div
-						class="progressbar progressbar--large"
+						class="progressbar progressbar--large qtr-margin-top"
 						[attr.data-percentage]="riskScore"
 					>
 						<div class="progressbar__fill"></div>
@@ -32,7 +32,7 @@
 				</div>
 				<div>
 					<div
-						class="qtr-margin-left gbl"
+						class="qtr-margin-left "
 						[ngClass]="
 							{
 								LOW: 'text-success',
@@ -44,7 +44,7 @@
 						<span class="icon-stop"></span>
 					</div>
 				</div>
-				<div class=" gbl col-md-1">
+				<div class="col-md-3 no-padding-right">
 					<span class="fp-header-percentage" [innerHTML]="deviceData.riskScore"></span>
 				</div>
 			</div>
@@ -52,14 +52,14 @@
 		<div data-auto-id="globalRiskRank" class="qtr-margin-left col-md-4">
 			<div class="row">
 				<div
-					class="text-bold"
+					class="text-small"
 					[innerText]="'_CP_GlobalRiskRank_' | i18n"
 				></div>
 			</div>
 			<div class="row">
-				<div class="col-md-8">
+				<div class="col-md-8 no-padding-left">
 					<div
-						class="progressbar progressbar--large"
+						class="progressbar progressbar--large qtr-margin-top"
 						[attr.data-percentage]="riskScore"
 					>
 						<div class="progressbar__fill"></div>
@@ -67,7 +67,7 @@
 				</div>
 				<div>
 					<div
-						class="qtr-margin-left gbl"
+						class="qtr-margin-left "
 						[ngClass]="
 							{
 								LOW: 'text-success',
@@ -79,7 +79,7 @@
 						<span class="icon-stop"></span>
 					</div>
 				</div>
-				<div class="gbl col-md-1 ">
+				<div class=" col-md-2 no-padding-right">
 					<span [innerHTML]="deviceData.globalRiskRank"></span>
 				</div>
 			</div>

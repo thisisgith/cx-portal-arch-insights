@@ -41,6 +41,20 @@ export class FpCompareComponent implements OnChanges {
 		deviceId2: ' ',
 	};
 
+	/**
+	 * this will check all the compare parameters
+	 * @returns a boolean
+	 */
+	public get compareDetailsExist (): boolean {
+		if (this.productId1 && this.productId2
+			&& this.deviceId1 && this.deviceId2) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	constructor (
 		private crashPreventionService: CrashPreventionService,
 		private logger: LogService,

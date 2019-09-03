@@ -214,7 +214,7 @@
 			<div class="icon-bookmark icon-medium"
 				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 				(click)="updateBookmark(item, 'ATX')"
-				data-auto-id="ACCCardRibbon">
+				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
 			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
@@ -271,7 +271,7 @@
 			<div class="icon-bookmark icon-medium"
 				(click)="setACCBookmark(item)"
 				[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
-				data-auto-id="ACCCardRibbon">
+				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
 			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
@@ -605,7 +605,7 @@
 
 <ng-template #successBlock let-title="title" let-data="data">
 	<div class="half-padding-top half-padding-left">
-		<div id="successbytes-item" class="panel small-panel qtr-padding-bottom" attr.data-auto-id="{{ autoid }}-item" *ngFor="let item of data | slice:0:3">
+		<div id="successbytes-item" class="panel small-panel qtr-padding-bottom" data-auto-id="successbytes-item" *ngFor="let item of data | slice:0:3">
 			<a class="text-blue toggle" target="_blank" rel="noopener noreferrer" [href]="item.url" [innerText]="item.title"></a>
 			<ng-container *ngTemplateOutlet="successBytesHoverBlock; context: {
 				item: item,
@@ -622,7 +622,7 @@
 				<div class="icon-bookmark icon-medium"
 					(click)="updateBookmark('SB', item)"
 					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__clear'"
-					data-auto-id="SBCardRibbon">
+					attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 				</div>
 				<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 				<div class="divider divider--compressed"></div>
