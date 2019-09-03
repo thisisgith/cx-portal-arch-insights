@@ -574,3 +574,12 @@ polygon {
 .lifecycle-viewall-modal {
 	min-height: 100%;
 }
+// leave the following here, just in case we will use this style
+// ::ng-deep .cui .dropdown__menu a.selected {
+// 	color:$vibblue !important;
+// 	background-color: transparent !important;
+// }
+
+.accDisableTooltipMessage {
+	width: 400px;
+}

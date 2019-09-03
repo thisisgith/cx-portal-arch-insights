@@ -248,12 +248,13 @@
 				<span [innerText]="item.duration"></span>
 			</div>
 			<div class="base-padding-top half-padding-left" *ngIf= "item.status.toLowerCase()==='recommended'">
-				<button data-auto-id="Request1on1ACCButton"
-					(click)="selectAccRequestForm(true, item.accId, item.title)"
-					class="btn btn--small btn--secondary text-uppercase"
-					[ngClass]="{ 'disabled': notCurrentPitstop }"
-					[innerText]="'_Request1on1_' | i18n">
-				</button>
+				<div *ngIf="!notCurrentPitstop; else disabledAccButton">
+					<button data-auto-id="Request1on1Button"
+						(click)="selectAccRequestForm(true, item.accId, item.title)"
+						class="btn btn--small btn--secondary text-uppercase"
+						[innerText]="'_Request1on1_' | i18n">
+					</button>
+				</div>
 			</div>
 			<div class="base-padding-top half-padding-left text-left" *ngIf="autoid==='moreACCList' && item.status.toLowerCase()==='in-progress'" attr.data-auto-id="{{ autoid }}-HoverModal-In-Progress">
 				<span class="text-info icon-clock qtr-padding-bottom half-padding-right" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
@@ -324,12 +325,13 @@
 		</div>
 		<div class="text-large base-padding-bottom" [innerText]="item.title" attr.data-auto-id="{{ autoid }}-Title"></div>
 		<ng-container *ngIf="item.status === 'recommended'">
-			<button data-auto-id="recommendedACCWatchButton"
-				(click)="selectAccRequestForm(true, item.accId, item.title)"
-				class="btn btn--small btn--secondary text-uppercase"
-				[ngClass]="{ 'disabled': notCurrentPitstop }"
-				[innerText]="'_Request1on1_' | i18n">
-			</button>
+			<div *ngIf="!notCurrentPitstop; else disabledAccButton">
+				<button data-auto-id="Request1on1Button"
+					(click)="selectAccRequestForm(true, item.accId, item.title)"
+					class="btn btn--small btn--secondary text-uppercase"
+					[innerText]="'_Request1on1_' | i18n">
+				</button>
+			</div>
 		</ng-container>
 		<ng-container *ngIf="item.status === 'in-progress'">
 			<span class="text-info icon-clock qtr-padding-bottom half-padding-right" attr.data-auto-id="{{ autoid }}-In-Progress-Icon"></span>
@@ -904,11 +906,13 @@
 				<div class="row">
 					<div class="col-md-6 text-left">
 						<div class="text-left text-info" *ngIf="item.status === 'recommended'">
-							<button data-auto-id="Request1on1Button"
-								(click)="selectAccRequestForm(true, item.accId, item.title)"
-								class="btn btn--small btn--secondary text-uppercase"
-								[ngClass]="{ 'disabled': notCurrentPitstop }" [innerText]="'_Request1on1_' | i18n">
-							</button>
+								<div *ngIf="!notCurrentPitstop; else disabledAccButton">
+									<button data-auto-id="Request1on1Button"
+										(click)="selectAccRequestForm(true, item.accId, item.title)"
+										class="btn btn--small btn--secondary text-uppercase"
+										[innerText]="'_Request1on1_' | i18n">
+									</button>
+								</div>
 						</div>
 						<div class="text-left text-info base-padding-bottom half-padding-top" *ngIf="item.status !== 'recommended'"></div>
 					</div>
@@ -1224,12 +1228,13 @@
 		</a>
 	</div>
 	<div *ngIf="type === 'ACC' && celldata.status === 'recommended'" class="text-right">
-		<button data-auto-id="Request1on1ACCButton"
-			(click)="selectAccRequestForm(true, celldata.accId, celldata.title)"
-			class="btn btn--small btn--secondary text-uppercase"
-			[ngClass]="{ 'disabled': notCurrentPitstop }"
-			[innerText]="'_Request1on1_' | i18n">
-		</button>
+		<div *ngIf="!notCurrentPitstop; else disabledAccButton">
+			<button data-auto-id="Request1on1ACCButton"
+				(click)="selectAccRequestForm(true, celldata.accId, celldata.title)"
+				class="btn btn--small btn--secondary text-uppercase"
+				[innerText]="'_Request1on1_' | i18n">
+			</button>
+		</div>
 	</div>
 	<div *ngIf="type === 'SB' || type==='PG'" class="text-right">
 		<a class="no-link" target="_blank" [href]="celldata.url">
@@ -1239,6 +1244,20 @@
 	</div>
 </ng-template>
 
+<ng-template #disabledAccButton>
+	<div tooltip
+		[tooltipTemplate]="accDisableTooltip"
+		tooltipDelay="500"
+		tooltipMaxWidth="400">
+		<button data-auto-id="Request1on1ACCButton"
+			(click)="selectAccRequestForm(true, celldata.accId, celldata.title)"
+			class="btn btn--small btn--secondary text-uppercase disabled"
+			[innerText]="'_Request1on1_' | i18n">
+		</button>
+	</div>
+</ng-template>
+
+<ng-template #accDisableTooltip><span class="accDisableTooltipMessage"><p>You can request this Accelerator once <br/>you've moved forward on the track </p></span></ng-template>
 <ng-template #titleTemplate let-celldata="celldata" let-type="type">
 	<div class="row" *ngIf="type==='ATX'">
 		<div class="col-md-2">
