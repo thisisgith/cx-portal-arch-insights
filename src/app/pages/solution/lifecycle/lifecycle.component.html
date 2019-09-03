@@ -35,13 +35,15 @@
 							data: componentData.learning
 						}">
 					</ng-container>
-					<ng-container *ngTemplateOutlet="panel; context: {
-						template: cgtPanel,
-						icon: 'communities',
-						title: '_CustomizedGroupTraining_',
-						loading: status.loading.cgt,
-						data: componentData.cgt
-					}">
+					<ng-container *ngIf="enableCGT">
+						<ng-container *ngTemplateOutlet="panel; context: {
+							template: cgtPanel,
+							icon: 'communities',
+							title: '_CustomizedGroupTraining_',
+							loading: status.loading.cgt,
+							data: componentData.cgt
+						}">
+						</ng-container>
 					</ng-container>
 				</div>
 				<div class="col-md-4">
