@@ -51,7 +51,7 @@ describe('LifecycleComponent', () => {
 	let racetrackATXSpy;
 	let racetrackAccSpy;
 	let racetrackBookmarkSpy;
-	// Skip these tests as we are disbaling CGT
+	// TODO Skip these tests as we are disbaling CGT
 	// Enable them when CGT is enabled
 	// let racetrackCgtCompletedTrainigsSpy;
 	// let racetrackCgtCustomerQuotaSpy;
@@ -70,7 +70,7 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackInfoSpy, 'restore');
 		_.invoke(racetrackAccSpy, 'restore');
 		_.invoke(racetrackBookmarkSpy, 'restore');
-		// Skip these tests as we are disbaling CGT
+		// TODO Skip these tests as we are disbaling CGT
 		// Enable them when CGT is enabled
 		// _.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
 		// _.invoke(racetrackCgtCustomerQuotaSpy, 'restore');
@@ -110,7 +110,7 @@ describe('LifecycleComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(CancelATXScenarios[0], 'DELETE')));
 
-		// Skip these tests as we are disbaling CGT
+		// TODO Skip these tests as we are disbaling CGT
 		// Enable them when CGT is enabled
 		// racetrackCgtCompletedTrainigsSpy =
 		// spyOn(racetrackContentService, 'getCompletedTrainings').and
@@ -296,7 +296,7 @@ describe('LifecycleComponent', () => {
 					statusText: 'Resource not found',
 				})));
 
-			// Skip these tests as we are disbaling CGT
+			// TODO Skip these tests as we are disbaling CGT
 			// Enable them when CGT is enabled
 			// racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService,
 			// 	'getCompletedTrainings')
