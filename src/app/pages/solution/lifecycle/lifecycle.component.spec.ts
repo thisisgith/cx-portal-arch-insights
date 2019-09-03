@@ -14,7 +14,6 @@ import {
 	ActionScenarios,
 	Mock,
 	user,
-	CGTScenarios,
 	CancelATXScenarios,
 } from '@mock';
 import { of, throwError } from 'rxjs';
@@ -113,8 +112,8 @@ describe('LifecycleComponent', () => {
 
 		// Skip these tests as we are disbaling CGT
 		// Enable them when CGT is enabled
-		// racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService, 'getCompletedTrainings')
-		// 	.and
+		// racetrackCgtCompletedTrainigsSpy =
+		// spyOn(racetrackContentService, 'getCompletedTrainings').and
 		// 	.returnValue(of(getActiveBody(CGTScenarios[2])));
 
 		// racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
