@@ -1,17 +1,17 @@
 <cui-drawer projection="true" [expanded]="true" *ngIf="softwareLicenses?.length">
-	<div class="cui-drawer-label text-large" [innerText]="'_Licenses_' | i18n | uppercase"></div>
+	<div class="cui-drawer-label custom-text-large" [innerText]="'_Licenses_' | i18n | uppercase"></div>
 	<div class="cui-drawer-content">
 		<ng-container *ngTemplateOutlet="licensesTable; context: { licenses: softwareLicenses, options: softwareLicensesTable }"></ng-container>
 	</div>
 </cui-drawer>
 <cui-drawer projection="true" [expanded]="true" *ngIf="operatingSystem">
-	<div class="cui-drawer-label text-large" [innerText]="'_OperatingSystem_' | i18n | uppercase"></div>
+	<div class="cui-drawer-label custom-text-large" [innerText]="'_OperatingSystem_' | i18n | uppercase"></div>
 	<div class="cui-drawer-content">
 		<ng-container *ngTemplateOutlet="operatingSystemInfo; context: { data: operatingSystem }"></ng-container>
 	</div>
 </cui-drawer>
 <cui-drawer projection="true" [expanded]="true" *ngIf="timelineData?.length">
-	<div class="cui-drawer-label text-large" [innerText]="'_EOX_' | i18n | uppercase"></div>
+	<div class="cui-drawer-label custom-text-large" [innerText]="'_EOX_' | i18n | uppercase"></div>
 	<div class="cui-drawer-content">
 		<pbc-timeline class="no-margin" [data]="timelineData"></pbc-timeline>
 	</div>
