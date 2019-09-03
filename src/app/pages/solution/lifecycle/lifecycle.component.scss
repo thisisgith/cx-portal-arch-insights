@@ -19,6 +19,7 @@ $vibblue: #017cad;
 	&__card {
 		padding: 0;
 		height: 525px;
+		box-shadow: -2px 0 transparent !important;
 
 		&__background {
 			background: $white;
@@ -43,7 +44,7 @@ $vibblue: #017cad;
 	}
 
 	&__card:hover {
-		border-left: 2px solid $vibblue !important;
+		box-shadow: -2px 0 $vibblue !important;
 	}
 }
 
