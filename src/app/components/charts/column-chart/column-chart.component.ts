@@ -20,7 +20,6 @@ export class ColumnChartComponent implements OnInit {
 
 	@Input() public loading;
 	@Input() public seriesData;
-	@Input() public width;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -41,6 +40,7 @@ export class ColumnChartComponent implements OnInit {
 		const categories = [];
 		_.each(this.seriesData, d => {
 			data.push({
+				color: '#92dde4',
 				name: d.label,
 				y: d.value,
 			});
@@ -72,14 +72,17 @@ export class ColumnChartComponent implements OnInit {
 						}
 					},
 				},
-				height: 100,
+				height: 125,
 				type: 'column',
-				width: this.width || 400,
+				width: 225,
 			},
 			credits: {
 				enabled: false,
 			},
 			plotOptions: {
+				column: {
+					pointWidth: 25,
+				},
 				series: {
 					cursor: 'pointer',
 					point: {
@@ -111,6 +114,15 @@ export class ColumnChartComponent implements OnInit {
 			},
 			xAxis: {
 				categories,
+				labels: {
+					rotation: 0,
+					style: {
+						color: '#6c757d',
+						fontFamily: 'CiscoSans, Arial, sans-serif',
+						fontSize: '10px',
+						fontWeight: '400',
+					},
+				},
 			},
 			yAxis: {
 				visible: false,

@@ -1,10 +1,10 @@
 <div class="panel panel--ltgray panel--bordered no-padding base-padding-right">
 	<div class="row base-padding-top">
-		<div class="col-md-2" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
+		<div class="col-md-3" *ngIf="!status.loading.racetrack && componentData?.racetrack?.stage">
 			<ng-container *ngTemplateOutlet="racetrack"></ng-container>
 		</div>
 
-		<div class="col-md-10">
+		<div class="col-md-9">
 			<div class="row">
 				<div class="col-md-4">
 					<app-communities></app-communities>
@@ -73,12 +73,13 @@
 </div>
 
 <ng-template #racetrack>
-	<div class="row base-padding-left">
-		<div class="col-md-7">
+	<div class="base-padding-left">
+		<div class="pitstop-title">
 			<h3 class="text-primary" *ngIf="currentWorkingPitstop" [innerText]="currentWorkingPitstop"></h3>
 		</div>
-		<div class="col-md-5 flex-center">
-			<svg height="30" width="120">
+		<div class="pitstop-margin"></div>
+		<div class="pitstop-finishline">
+			<svg class="pitstop-banner">
 				<polygon points="0,0 100,0 100,50 20,50" />
 				<text class="comPertText text-bold" x="55" y="23" text-anchor="middle" [innerHTML]="currentActionsCompPert" data-auto-id="CompletedActionsPercent"></text>
 			</svg>
@@ -111,29 +112,33 @@
 		<p class="text-small no-margin-top" [innerText]="'_ChecklistDesc_' | i18n"></p>
 		<div *ngFor="let action of currentPitActionsWithStatus" class="form-group form-group select" data-auto-id="pitstopAction">
 			<div class="actionname row qtr-padding-top qtr-padding-bottom" [ngClass]="{selected: action.selected}">
-				<div class="col-md-2">
-					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name || !action.action.manualCheckAllowed}" data-auto-id="pitstopCheckboxLabel">
+				<div class="col-md-1">
+					<label class="checkbox" [ngClass]="{'disabled': action.action.isComplete || currentWorkingPitstop !== currentPitstop.name }" data-auto-id="pitstopCheckboxLabel">
 						<input data-auto-id="pitstopCheckbox" type="checkbox" [(ngModel)]="action.action.isComplete"
 							(change)="completeAction(action.action)" [checked]="action.action.isComplete">
 						<span class="checkbox__input" data-auto-id="pitstopCheckboxSpan"></span>
 					</label>
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-11">
 					<a data-auto-id="actionlink"
 						class="no-link"
 						[ngClass]="{'disabled': action?.action?.isComplete, 'selected': action?.selected}"
 						data-toggle="tooltip" data-placement="bottom" title="{{action?.action?.description}}"
 						(click)="selectAction(action)">
-						<div>
-							<span class="checkbox__label text-medium"
-								[innerText]="action?.action?.name">
-							</span>
-							<span *ngIf="action.action.isCompleteAuto" class="qtr-padding-top">
-								<img class="small-size" alt="'_Auto_' | i18n" src="assets/img/solutions/auto_img.png" data-auto-id="pitstopCheckboxAutoIcon">
-							</span>
+						<div class="checkbox__label text-medium"
+							[innerText]="action?.action?.name">
 						</div>
 					</a>
 				</div>
+			</div>
+		</div>
+		<div *ngIf="hasSelectedAction()">
+			<div class="divider divider--compressed"></div>
+			<div class="text-vibblue base-margin-top base-margin-bottom toggle" 
+				id="ResetFilter"
+				[innerText]="'_ResetFilter_' | i18n" 
+				(click)="resetFilter()" 
+				data-auto-id="ResetFilter">
 			</div>
 		</div>
 	</div>
@@ -677,7 +682,7 @@
 							data-auto-id="ViewAllModal-TopicsAvailable">
 						</div>
 						<div class="col-md-2">
-							<cui-select id="acc-filter"
+							<cui-select class="lifecycle-filter"
 								data-auto-id="acc-filter"
 								[items]="statusOptions"
 								[empty]="true"
@@ -708,7 +713,7 @@
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedATX?.length || 0:componentData.params.solution:componentData.params.usecase" data-auto-id="ATXTopicsAvailable">
 						</div>
 						<div class="col-md-2">
-							<cui-select id="atx-filter"
+							<cui-select class="lifecycle-filter"
 								data-auto-id="atx-filter"
 								[items]="statusOptions"
 								[empty]="true"
@@ -739,7 +744,7 @@
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedSuccessPaths?.length || 0:componentData.params.solution:componentData.params.usecase">
 						</div>
 						<div class="col-md-2">
-							<cui-select id="category-filter"
+							<cui-select class="lifecycle-filter"
 								data-auto-id="category-filter"
 								[items]="categoryOptions"
 								[empty]="true"
@@ -770,7 +775,7 @@
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedProductGuides?.length || 0:componentData.params.solution:componentData.params.usecase">
 						</div>
 						<div class="col-md-2">
-							<cui-select id="pg-category-filter"
+							<cui-select class="lifecycle-filter"
 								data-auto-id="pg-category-filter"
 								[items]="pgCategoryOptions"
 								[empty]="true"

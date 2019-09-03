@@ -170,6 +170,10 @@ $vibblue: #017cad;
 	color: $success;
 }
 
+.text-vibblue {
+	color: $vibblue;
+}
+
 .panel--open,
 .cardpanel--open,
 .cardpanel--openright,
@@ -291,7 +295,6 @@ $vibblue: #017cad;
 	}
 }
 
-
 .actionname.selected {
 	background-color: $vibblue;
 }
@@ -323,9 +326,31 @@ $vibblue: #017cad;
 	height: 20px;
 }
 
-.finishline {
-	width: 15px;
+.pitstop-title {
+	float: left;
+	width: 33%;
+}
+
+.pitstop-margin {
+	float: left;
+	width: 33%;
+}
+
+.pitstop-finishline {
+	float: right;
+	width: 34%;
+}
+
+.pitstop-banner {
 	height: 30px;
+	max-width: 100px;
+	width: 90%;
+}
+
+.finishline {
+	max-width: 15px;
+	height: 30px;
+	width: 10%;
 }
 
 .card_footer_item {
@@ -491,21 +516,27 @@ $vibblue: #017cad;
 	}
 }
 
-::ng-deep #category-filter input,
-::ng-deep #acc-filter input,
-::ng-deep #atx-filter input,
-::ng-deep #pg-category-filter input,
-::ng-deep #atx-filter input:focus,
-::ng-deep #acc-filter input:focus,
-::ng-deep #pg-category-filter input:focus,
-::ng-deep #category-filter input:focus {
+:host ::ng-deep input.checked,
+:host ::ng-deep input:checked {
+	~ .checkbox__input::before {
+		box-shadow: inset 0 0 0 $cui-checkbox-border-width transparent !important;
+		background-color: transparent !important;
+	}
+
+	~ .checkbox__input::after {
+		color: #007493 !important;
+	}
+}
+
+:host ::ng-deep .lifecycle-filter input,
+:host ::ng-deep .lifecycle-filter input:focus {
 	border: 0 !important;
 	border-color: transparent;
 	background: transparent !important;
 	border-bottom: 2px solid $vibblue !important;
 }
 
-::ng-deep .progressbar__fill {
+:host ::ng-deep .progressbar__fill {
 	margin-left: -10px !important;
 }
 
@@ -572,14 +603,6 @@ polygon {
 	font-style: bold;
 	font-size: 20px;
 	fill: white;
-}
-
-.racetrack-header {
-	display: inline-block;
-}
-
-.finishline-banner {
-	align-items: flex-end;
 }
 
 .lifecycle-modal {
