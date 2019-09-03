@@ -23,21 +23,6 @@
 	color: $cisco-blue;
 }
 
-.filter {
-	&__selected {
-		border-bottom: 4px solid $primary;
-	}
-
-	&__not-selected {
-		border-bottom: 4px solid $white;
-	}
-
-	&__title {
-		position: absolute;
-		bottom: 0;
-	}
-}
-
 .close {
 	font-size: 1.2rem;
 	position: absolute;
@@ -64,9 +49,4 @@
 	padding: 0;
 	margin: 0;
 	bottom: 0;
-}
-
-.highcharts-container,
-.highcharts-container svg {
-	overflow: visible !important;
 }

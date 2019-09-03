@@ -23,7 +23,7 @@
 		</div>
 	</div>
 
-	<div #content class="base-margin">
+	<div #content class="content base-padding">
 		<router-outlet></router-outlet>
 	</div>
 </div>
@@ -112,8 +112,8 @@
 	</ng-template>
 
 <ng-template #advisoriesFacet let-facet="facet">
-	<div class="base-padding-bottom flex-fluid">
-		<bar-chart *ngIf="facet?.seriesData && !facet?.loading" [seriesData]="facet?.seriesData" width="350"></bar-chart>
+	<div class="base-padding-bottom flex-fluid flex-center-horizontal">
+		<bar-chart *ngIf="facet?.seriesData && !facet?.loading" [seriesData]="facet?.seriesData" [width]="350"></bar-chart>
 		<div *ngIf="!facet?.seriesData && !facet?.loading"
 			class="text-muted flex-center text-large base-padding-left base-padding-right dbl-padding-top dbl-padding-bottom"
 			[innerText]="'_NoOpenAdvisories_' | i18n">
