@@ -1,5 +1,5 @@
 <!-- App Details 360 slide-out -->
-<details-panel [hidden]="!deviceDetails" [fullscreen]="fullscreen">
+<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div detailsPanelTitle class="text-xlarge">
 			<span [innerText]="('_ArchitectureArchitectureReviewFor_' | i18n)">
