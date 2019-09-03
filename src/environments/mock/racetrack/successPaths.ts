@@ -207,7 +207,7 @@ export const SuccessPathScenarios = [
 				},
 			],
 		},
-		url: `${api}?customerId=${customerId}&usecase=Campus Network Assurance` +
+		url: `${api}?customerId=${customerId}&usecase=Campus Network Assurance&suggestedAction=Get to know Cisco DNA Center` +
 			'&solution=IBN&rows=100&pitstop=Onboard',
 		usecases: ['Use Case 1'],
 	},
