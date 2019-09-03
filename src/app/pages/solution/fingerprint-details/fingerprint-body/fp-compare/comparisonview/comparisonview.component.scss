@@ -1,14 +1,7 @@
-.compare-body {
-	display: block;
-	padding: 5px;
-	margin-top: 5px;
-	overflow: auto;
-}
-
-.uniquehighlight {
-	background: #c6c7ca;
-}
-
 .compare-em-dash::after {
 	content: " \2014";
+}
+
+.compare-text-warp {
+	word-wrap: break-word;
 }

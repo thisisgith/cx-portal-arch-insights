@@ -31,3 +31,37 @@
 .cx-text-soft-black {
 	color: $soft-black;
 }
+
+/** Altering tabs css to match Demo app */
+
+.tab__heading {
+	font-size: 14px;
+	padding: 0 !important;
+}
+
+.cui .nav-tabs > li,
+.cui ul.tabs > li {
+	height: 26px;
+	margin-right: 25px;
+	margin-left: 25px;
+	font-weight: 400;
+	font-size: 14px;
+}
+
+.cui .nav-tabs > li.active > a,
+.cui .nav-tabs > li:hover > a,
+.cui ul.tabs > li.active > a,
+.cui ul.tabs > li:hover > a {
+	box-shadow: 0 -2px 0 #00bceb inset;
+	color: var(--accent-color1, #00bceb);
+}
+
+.cui .label {
+	background: #6a80a5;
+	color: #fff;
+}
+
+.highcharts-container,
+.highcharts-container svg {
+	overflow: visible !important;
+}

@@ -27,3 +27,5 @@ export { TooltipModule } from './tooltip/tooltip.module';
 export { UnauthorizedUserModule } from './unauthorized-user/unauthorized-user.module';
 export { GaugeModule } from './charts/gauge/gauge.module';
 export { MultiGaugeModule } from './charts/multi-gauge/multi-gauge.module';
+export { VisualFilterBarModule } from './visual-filter-bar/visual-filter-bar.module';
+export { VisualFilterBarComponent } from './visual-filter-bar/visual-filter-bar.component';
