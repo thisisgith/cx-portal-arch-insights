@@ -1239,9 +1239,11 @@ export class LifecycleComponent implements OnDestroy {
 		this.eventYCoordinates = 0;
 		this.moreXCoordinates = 0;
 		this.moreYCoordinates = 0;
-		this.componentData.atx.interested = null;
 		this.moreATXSelected = null;
 		this.atxMoreClicked = false;
+		if (this.componentData.atx) {
+			this.componentData.atx.interested = null;
+		}
 	}
 
 	/**
@@ -1362,6 +1364,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns the ATXResponse
 	 */
 	private loadATX (): Observable<ATXResponseModel> {
+		this.closeViewSessions();
 		this.status.loading.atx = true;
 		if (window.Cypress) {
 			window.atxLoading = true;
