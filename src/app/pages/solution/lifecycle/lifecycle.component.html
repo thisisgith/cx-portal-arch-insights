@@ -61,7 +61,6 @@
 </div>
 
 <div class="modal-container" *ngIf="modal.visible">
-	<!-- <div class="modal-backdrop" [ngClass]="{ hide: !modal.visible }"></div> -->
 	<div class="modal modal--full" [ngClass]="{ hide: !modal.visible }" [ngStyle]="{'margin-top': appHeaderHeightPX }">
 		<div class="lifecycle-modal modal__dialog no-padding" >
 			<ng-container *ngTemplateOutlet="modal.content; context: modal.context"></ng-container>
