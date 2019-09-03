@@ -25,6 +25,7 @@ import {
 	BarChartModule,
 	PieChartModule,
 	BubbleChartModule,
+	VisualFilterBarModule,
 } from '@components';
 
 /**
@@ -70,6 +71,7 @@ const childRoutes: Routes = [
 		ReactiveFormsModule,
 		RouterModule.forChild(childRoutes),
 		TruncatePipeModule,
+		VisualFilterBarModule,
 	],
 })
 export class AssetsModule { }
