@@ -14,7 +14,6 @@ import {
 	ActionScenarios,
 	Mock,
 	user,
-	CGTScenarios,
 	CancelATXScenarios,
 } from '@mock';
 import { of, throwError } from 'rxjs';
@@ -52,8 +51,10 @@ describe('LifecycleComponent', () => {
 	let racetrackATXSpy;
 	let racetrackAccSpy;
 	let racetrackBookmarkSpy;
-	let racetrackCgtCompletedTrainigsSpy;
-	let racetrackCgtCustomerQuotaSpy;
+	// TODO Skip these tests as we are disbaling CGT
+	// Enable them when CGT is enabled
+	// let racetrackCgtCompletedTrainigsSpy;
+	// let racetrackCgtCustomerQuotaSpy;
 	let racetrackLearningSpy;
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
@@ -69,8 +70,10 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackInfoSpy, 'restore');
 		_.invoke(racetrackAccSpy, 'restore');
 		_.invoke(racetrackBookmarkSpy, 'restore');
-		_.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
-		_.invoke(racetrackCgtCustomerQuotaSpy, 'restore');
+		// TODO Skip these tests as we are disbaling CGT
+		// Enable them when CGT is enabled
+		// _.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
+		// _.invoke(racetrackCgtCustomerQuotaSpy, 'restore');
 		_.invoke(racetrackLearningSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
@@ -107,13 +110,15 @@ describe('LifecycleComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(CancelATXScenarios[0], 'DELETE')));
 
-		racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService, 'getCompletedTrainings')
-			.and
-			.returnValue(of(getActiveBody(CGTScenarios[2])));
+		// TODO Skip these tests as we are disbaling CGT
+		// Enable them when CGT is enabled
+		// racetrackCgtCompletedTrainigsSpy =
+		// spyOn(racetrackContentService, 'getCompletedTrainings').and
+		// 	.returnValue(of(getActiveBody(CGTScenarios[2])));
 
-		racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
-			.and
-			.returnValue(of(getActiveBody(CGTScenarios[1])));
+		// racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
+		// 	.and
+		// 	.returnValue(of(getActiveBody(CGTScenarios[1])));
 
 		racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
 			.and
@@ -291,20 +296,22 @@ describe('LifecycleComponent', () => {
 					statusText: 'Resource not found',
 				})));
 
-			racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService,
-				'getCompletedTrainings')
-				.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-					statusText: 'Resource not found',
-				})));
+			// TODO Skip these tests as we are disbaling CGT
+			// Enable them when CGT is enabled
+			// racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService,
+			// 	'getCompletedTrainings')
+			// 	.and
+			// 	.returnValue(throwError(new HttpErrorResponse({
+			// 		status: 404,
+			// 		statusText: 'Resource not found',
+			// 	})));
 
-			racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
-				.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-					statusText: 'Resource not found',
-				})));
+			// racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
+			// 	.and
+			// 	.returnValue(throwError(new HttpErrorResponse({
+			// 		status: 404,
+			// 		statusText: 'Resource not found',
+			// 	})));
 
 			racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
 				.and
@@ -1069,7 +1076,9 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
-	describe('CGT', () => {
+	// Skip these tests as we are disabling CGT
+	// TODO enable these when CGT has to be enabled
+	xdescribe('CGT', () => {
 		it('should have loaded the CGT', () => {
 			buildSpies();
 			sendParams();
