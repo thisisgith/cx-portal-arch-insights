@@ -43,7 +43,6 @@ export class RccComponent implements OnInit, OnDestroy {
 		this.logger.debug('RCC Component Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
-		this.customerId = '7293498';
 	}
 	get selectedFilters () {
 		return _.filter(this.filters, 'selected');
@@ -268,6 +267,7 @@ export class RccComponent implements OnInit, OnDestroy {
 				} else {
 					this.noTableData = true;
 				}
+				this.policyViolationsTableOptions = this.getPolicyViolationsTableOptions();
 				this.loading = false;
 				this.errorPolicyView = false;
 			},
@@ -480,7 +480,6 @@ export class RccComponent implements OnInit, OnDestroy {
 			],
 			dynamicData: false,
 			singleSelect: true,
-			wrapText: true,
 		});
 		this.buildAssetFilters();
 		// this.getRCCAssetData(this.assetGridObj);
