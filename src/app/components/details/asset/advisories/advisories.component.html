@@ -57,7 +57,7 @@
 		<cui-loader></cui-loader>
 	</div>
 	<div *ngIf="!loading && (!data || data?.length === 0)" class="flex-center">
-		<span class="text-xlarge" [innerText]="'_NoResultsFound_' | i18n" data-auto-id="AdvisoriesNoResultsFound"></span>
+		<span class="text-xlarge" [innerText]="(asset.lastScan ? '_NoCriticalBugsFound_' : '_NoScanCompleted_') | i18n " data-auto-id="AdvisoriesNoResultsFound"></span>
 	</div>
 </ng-template>
 
