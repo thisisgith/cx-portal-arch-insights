@@ -210,7 +210,7 @@
 			<div class="icon-bookmark icon-medium"
 				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 				(click)="updateBookmark(item, 'ATX')"
-				data-auto-id="ACCCardRibbon">
+				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
 			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
@@ -238,7 +238,7 @@
 			<div class="icon-bookmark icon-medium"
 				(click)="setACCBookmark(item)"
 				[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
-				data-auto-id="ACCCardRibbon">
+				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
 			<h6 class="text-indigo half-margin-top half-margin-left" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
 			<div class="divider divider--compressed"></div>
