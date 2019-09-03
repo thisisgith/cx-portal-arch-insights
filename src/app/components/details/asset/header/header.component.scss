@@ -12,7 +12,7 @@ $default-text-color: #394454;
 
 
 :host {
-	.open-case-toggle-btn a{
+	.open-case-toggle-btn a {
 		color: #465f7e !important;
 	}
 }
@@ -22,7 +22,10 @@ $default-text-color: #394454;
 	font-size: 13px;
 	box-shadow: 0 0 1px 1px $button-outline-color !important;
 
-	&:hover, &:active, &:focus, &--solid {
+	&:hover,
+	&:active,
+	&:focus,
+	&--solid {
 		background-color: $button-outline-color !important;
 		color: $white !important;
 		box-shadow: inset 0 0 0 1px $button-outline-color !important;
@@ -33,7 +36,7 @@ $default-text-color: #394454;
 	color: $secondary-text-color;
 	font-size: 13px;
 
-	&__label:after{
+	&__label::after {
 		content: '\003a';
 	}
 }
