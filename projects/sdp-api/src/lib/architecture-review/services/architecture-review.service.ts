@@ -273,52 +273,6 @@ class ArchitectureReviewService extends __BaseService {
       })
     );
   }
-
-  /**
-   * This function is used to get the Exceptions details
-   * @param body This Parameter contains array of Exceptions
-   * @returns only body part of the HTTp response
-   */
-  getAllCBPExceptionDetails(params: ArchitectureReviewService.getAllCBPExceptionDetailsParams): __Observable<any> {
-    return this.getAllCBPExceptionDetailsResponse(params).pipe(
-      __map(_r => _r.body)
-    );
-  }
-
-  /**
-   * This Function is used to get the Exceptions detail by adding headers, params and body while sending the request
-   * @param body This Parameter contains array of Exceptions
-   * @returns Entire HTTP response is returned
-   */
-  getAllCBPExceptionDetailsResponse(params: ArchitectureReviewService.getAllCBPExceptionDetailsParams): __Observable<__StrictHttpResponse<any>> {
-
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = params.body;
-
-    if (params.page != null) __params = __params.set('page', params.page.toString());
-    if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
-    if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-
-    let req = new HttpRequest<any>(
-	  'POST',
-	  this.rootUrl + `${ArchitectureReviewService.getDevicesCountResponsePath}`,
-      __body,
-      {
-        headers: __headers,
-        params : __params,
-        responseType: 'json',
-        //        withCredentials: true,
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<any>;
-      })
-    );
-  }
-
 }
 
 module ArchitectureReviewService {
@@ -348,49 +302,22 @@ module ArchitectureReviewService {
     /**
      * Page which is requested.
      */
-    page: number;
+    page?: number;
 
     /**
      * unique identifier of a cisco customer
      */
-    customerId: string;
+    customerId?: string;
 
     /**
      * Number of records in a page
      */
-    pageSize: number;
+    pageSize?: number;
 
     /**
      * The Id's of the Assets Affected . Example:- 2689444; 91488861, 92246411
      */
-     body :Array<string>;
-  }
-
-  /**
-   * Parameters for getAllCBPExceptionDetails
-   */
-  export interface getAllCBPExceptionDetailsParams {
-
-    /**
-     * Page which is requested.
-     */
-    page: number;
-
-    /**
-     * Number of records in a page
-     */
-    pageSize: number;
-
-     /**
-     * unique identifier of a cisco customer
-     */
-    customerId: string;
-
-    /**
-     * The Id's of the Devices with Exceptions . Example:- 2689444; 91488861, 92246411
-     */
-     body :Array<string>;
-
+     body?: Array<string>;
   }
 
 }

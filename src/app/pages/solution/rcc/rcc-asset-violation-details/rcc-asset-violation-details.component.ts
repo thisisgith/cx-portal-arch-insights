@@ -44,9 +44,9 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public policyGroupSelection = '';
 	public policyNameSelection = '';
 	public policySeveritySelection = '';
-	public initialLoading = false;
-	public selectionLoading = false;
 	public customerId: string;
+	public initialLoading = false;
+	public isLoading = false;
 	public apiNoData = true;
 	public errorResult = false;
 	private destroy$ = new Subject();
@@ -88,7 +88,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			this.policyNameSelection = '';
 			this.policySeveritySelection = '';
 			this.assetRowParams = {
-				customerId: _.cloneDeep(this.customerId),
+				customerId: this.customerId,
 				pageIndex: 0,
 				pageSize: this.tableLimit,
 				policyGroupName: this.policyGroupSelection,
@@ -109,6 +109,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	public loadData () {
 		this.initialLoading = true;
 		this.apiNoData = true;
+		this.errorResult = false;
 		const assetFilterReq = {
 			customerId : this.assetRowParams.customerId,
 			serialNumber : this.assetRowParams.serialNumber,
@@ -173,6 +174,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * @returns empty on error
 	 */
 	public getAssetPolicyGridData () {
+		this.isLoading = true;
+		this.errorResult = false;
 		const params = _.cloneDeep(this.assetRowParams);
 		this.rccService.getAssetSummaryData(params)
 			.pipe(
@@ -187,12 +190,14 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 						if (this.rccAssetPolicyTableData) {
 							this.totalItems = _.size(this.rccAssetPolicyTableData);
 						}
+						this.isLoading = false;
 					}
 					this.tableOffset =  0;
 					this.buildGridTable();
-					this.selectionLoading = false;
 				}),
 				error => {
+					this.isLoading = false;
+					this.errorResult = true;
 					this.logger.error(
 						'rcc-asset-violation-details.component : getAssetPolicyGridData() ' +
 					`:: Error : (${error.status}) ${error.message}`);
@@ -240,7 +245,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 	 * Function called when sort changed
 	 * @param event gives sort information
 	 */
-	public onTableSortingChanged () {
+	public onTableSortingChanged ( ) {
 		this.tableOffset = 0;
 	}
 	/**
@@ -251,7 +256,8 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 		this.destroy$.complete();
 	}
 	/**
-	 * Function called when we load table
+	 * Function called when sort changed
+	 * @param event gives sort information
 	 */
 	public buildGridTable () {
 		this.rccAssetPolicyTableOptions = new CuiTableOptions({
@@ -330,6 +336,7 @@ export class RccAssetViolationDetailsComponent implements OnInit {
 			],
 			dynamicData: false,
 			singleSelect: false,
+			striped: false,
 		});
 	}
 }

@@ -11,7 +11,7 @@ import * as _ from 'lodash-es';
 })
 export class FingerprintBodyComponent implements OnChanges {
 
-	public tabIndex = 2;
+	public tabIndex = 0;
 	public selectedDevices: any;
 	@Input() public asset: any;
 	public selectedDevice: string;

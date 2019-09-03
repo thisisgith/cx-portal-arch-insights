@@ -994,7 +994,9 @@ export class LifecycleComponent implements OnDestroy {
 			this.status.loading.racetrack = false;
 			this.componentData.racetrack.actionsCompPercent =
 				this.calculateActionPercentage(this.componentData.racetrack.pitstop);
-			this.currentPitstopCompPert = this.componentData.racetrack.actionsCompPercent;
+
+			this.currentPitstopCompPert = _.get(this.componentData,
+				['racetrack', 'actionsCompPercent']);
 
 			const source = [];
 			if (results.isAtxChanged) { source.push(this.loadATX()); }
@@ -1028,8 +1030,9 @@ export class LifecycleComponent implements OnDestroy {
 		this.resetSelectStatus();
 		const nextAction =  _.find(this.componentData.racetrack.pitstop.pitstopActions,
 			{ isComplete: false });
-		if (this.componentData.params.suggestedAction !== nextAction.name) {
-			this.componentData.params.suggestedAction = nextAction ? nextAction.name : null;
+		const actionName = nextAction ? nextAction.name : null;
+		if (this.componentData.params.suggestedAction !== actionName) {
+			this.componentData.params.suggestedAction = actionName;
 			this.loadRacetrackInfo();
 		}
 	}
@@ -1039,7 +1042,7 @@ export class LifecycleComponent implements OnDestroy {
 	 * @returns boolean
 	 */
 	public hasSelectedAction () {
-		return  (_.filter(this.currentPitActionsWithStatus, { selected: true }).length > 0);
+		return !_.isEmpty(_.filter(this.currentPitActionsWithStatus, { selected: true }));
 	}
 
 	/**
@@ -1733,10 +1736,10 @@ export class LifecycleComponent implements OnDestroy {
 							action: pitstopAction,
 							selected: false,
 						}));
+				this.componentData.params.pitstop = pitstop.name;
+				this.stage.next(pitstop.name);
 			}
 
-			this.componentData.params.pitstop = pitstop.name;
-			this.stage.next(pitstop.name);
 			// UI not handling pagination for now, temporarily set to a large number
 			this.componentData.params.rows = 100;
 			this.loadRacetrackInfo();
