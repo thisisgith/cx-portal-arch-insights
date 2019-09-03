@@ -1252,7 +1252,7 @@
 	<div tooltip
 		[tooltipTemplate]="accDisableTooltip"
 		tooltipDelay="500"
-		tooltipMaxWidth="400">
+		tooltipMaxWidth="275">
 		<button data-auto-id="Request1on1ACCButton"
 			class="btn btn--small btn--secondary text-uppercase disabled"
 			[innerText]="'_Request1on1_' | i18n">
@@ -1260,7 +1260,7 @@
 	</div>
 </ng-template>
 
-<ng-template #accDisableTooltip><span class="accDisableTooltipMessage"><p>{{ '_DisableACCRegisterLine1_' | i18n}} <br/>{{ '_DisableACCRegisterLine2_' | i18n}} </p></span></ng-template>
+<ng-template #accDisableTooltip><p>{{ '_DisableACCRegister_' | i18n}}</p></ng-template>
 <ng-template #titleTemplate let-celldata="celldata" let-type="type">
 	<div class="row" *ngIf="type==='ATX'">
 		<div class="col-md-2">
