@@ -1,6 +1,6 @@
 <div class="panel">
 	<cui-tabs-nav>
-		<cui-tab-link [url]="['/solution/insights/compliance']" [label]="'_Compliance_' | i18n">
+		<cui-tab-link *ngIf="hasPermission" [url]="['/solution/insights/compliance']" [label]="'_Compliance_' | i18n">
 		</cui-tab-link>
 		<cui-tab-link [url]="['/solution/insights/risk-mitigation']" [label]="'_RiskMitigation_' | i18n">
 		</cui-tab-link>
@@ -11,6 +11,8 @@
 		<cui-tab-link [url]="['/solution/insights/architecture']" [label]="'_ArchitectureConfiguration_' | i18n">
 		</cui-tab-link>
 		<cui-tab-link [url]="['/solution/insights/syslogs']" [label]="'_Syslogs_' | i18n">
+		</cui-tab-link>
+		<cui-tab-link [url]="['/solution/insights/architecture-review']" [label]="'_ArchitectureReview_' | i18n">
 		</cui-tab-link>
 	</cui-tabs-nav>
 	<router-outlet></router-outlet>

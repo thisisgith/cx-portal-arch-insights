@@ -20,9 +20,10 @@ import * as _ from 'lodash-es';
 
 export class DevicesWithExceptionsComponent implements OnInit {
 
-	/** Our current customerId */
+	/**
+	 * Our current customerId
+	 */
 	public customerId: string;
-
 	constructor (
 		private logger: LogService,
 		private architectureService: ArchitectureService,
@@ -31,6 +32,7 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		this.logger.debug('DevicesWithExceptionsComponent Created!');
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.params.customerId = _.cloneDeep(this.customerId);
 	}
 
 	public assetObject: IAsset = null;
@@ -42,8 +44,10 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	public tableStartIndex = 0;
 	public tableEndIndex = 0;
 	private destroy$ = new Subject();
-	public params = { customerId : this.customerId, page: 0, pageSize: 10 };
-	public fullscreen: any ;
+	public globalSearchText = '';
+	public lastCollectionTime = '';
+	public params = { customerId: '', page: 0, pageSize: 10, searchText: '' };
+	public fullscreen: any;
 
 	/**
 	 * used to Intialize Table options
@@ -95,12 +99,14 @@ export class DevicesWithExceptionsComponent implements OnInit {
 					key: 'lastUpdateDate',
 					name: I18n.get('_ArchitectureConfigCollectionDate_'),
 					render: item =>
-						datePipe.transform(item.lastUpdateDate, 'yyyy-MM-dd'),
+						datePipe.transform(item.lastUpdateDate, 'medium'),
 					sortable: false,
 				},
 				{
-					key: 'ruleIdsWithExceptionsCount',
+					key: 'ruleIdWithExceptions',
 					name: I18n.get('_ArchitectureCBPExceptions_'),
+					render: item =>
+						item.ruleIdWithExceptions.split(';').length,
 					sortable: false,
 				},
 			],
@@ -120,6 +126,20 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	}
 
 	/**
+	 * Keys down function
+	 * @param event contains eventdata
+	 */
+	public globalSearchFunction (event) {
+		const enterKeyCode = 13;
+		if (event.keyCode === enterKeyCode) {
+			this.isLoading = true;
+			this.tableStartIndex = 0;
+			this.params.page = 0;
+			this.params.searchText = this.globalSearchText;
+			this.getAllAssetsWithExceptions();
+		}
+	}
+	/**
 	 * used for setting the data for table
 	 */
 	public getAllAssetsWithExceptions () {
@@ -128,42 +148,43 @@ export class DevicesWithExceptionsComponent implements OnInit {
 		this.tableEndIndex = (endIndex) > this.totalItems ? this.totalItems : endIndex;
 
 		this.architectureService.getAllAssetsWithExceptions(this.params)
-		.pipe(
-			takeUntil(this.destroy$),
-		)
-		.subscribe(res => {
-			this.isLoading = false;
-			this.totalItems = res.TotalCounts;
-			this.assetsExceptionDetails = res.AssetsExceptionDetails;
-			this.tableEndIndex = (this.tableStartIndex + this.assetsExceptionDetails.length);
-			this.assetsExceptionDetails.map(asset => {
-				asset.ruleIdsWithExceptionsCount = asset.ruleIdWithExceptions.split(';').length;
-			},
-				err => {
-					this.logger.error('Devices With Exceptions View' +
-						'  : getAllAssetsWithExceptions() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-					this.isLoading = false;
-					this.assetsExceptionDetails = [];
-					this.totalItems = 0;
-				});
-		});
+			.pipe(
+				takeUntil(this.destroy$),
+			)
+			.subscribe(res => {
+				if (!res) {
+					return this.inValidResponseHandler();
+				}
+				const datePipe = new DatePipe('en-US');
+				this.isLoading = false;
+				this.totalItems = res.TotalCounts;
+				this.lastCollectionTime = datePipe.transform(res.CollectionDate, 'medium');
+				this.assetsExceptionDetails = res.AssetsExceptionDetails;
+				this.tableEndIndex = (this.tableStartIndex + this.assetsExceptionDetails.length);
+			}, err => {
+				this.logger.error('Devices With Exceptions View' +
+					'  : getAllAssetsWithExceptions() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+				this.isLoading = false;
+				this.assetsExceptionDetails = [];
+				this.totalItems = 0;
+			});
 	}
 
+	/**
+	 * This Function is used to handle the invalid Response
+	 */
+	public inValidResponseHandler () {
+		this.isLoading = false;
+		this.assetsExceptionDetails = [];
+		this.totalItems = 0;
+	}
 	/**
 	 * This method is used to set the exception object in order to open Fly-out View
 	 * @param event - It contains the selected asset object
 	 */
 	public onTableRowClicked (event: IAsset) {
 		this.assetObject = event;
-	}
-
-	/**
-	 * This method is used to open Fly-out View on selection of Header
-	 * @param selectedAsset - It contains the selected asset object
-	 */
-	public openAsset360View (selectedAsset: IAsset) {
-		this.selectedAsset = selectedAsset;
 	}
 	/**
 	 * This method is used to set the null to asset object
@@ -174,10 +195,22 @@ export class DevicesWithExceptionsComponent implements OnInit {
 	}
 
 	/**
-	 * This method is used to set the null to selectedAsset object
-	 * in order to Close Fly-out View
-	 */
-	public onFlyOutPanelClose () {
-		this.selectedAsset = null;
+		* This method is used to set the null to asset object
+		* in order to Close Fly-out View
+		* @param isClosed - should be true or false
+		*/
+	public closeAssetDetailsView (isClosed: Boolean) {
+		if (isClosed) {
+			this.selectedAsset = null;
+		}
 	}
+
+	/**
+	 * Used for Opening the Asset 360 View the data for table
+	 * @param item - The Item to which Asset 360 needs to shown
+	 */
+	public openAssetDetailsView (item: IAsset) {
+		this.selectedAsset = item;
+	}
+
 }

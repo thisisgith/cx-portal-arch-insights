@@ -71,12 +71,12 @@ describe('ComparisonviewComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				expect(component.featuresData)
-				.not
-				.toBeTruthy();
+					.not
+					.toBeTruthy();
 				done();
 			});
 	});
-	it('Should return the searched response', done => {
+	it('Should return the searched features response', done => {
 		spyOn(crashPreventionService, 'getComparison')
 			.and
 			.returnValue(of(ComparisonViewScenarios[2].scenarios.GET[0].response.body));
@@ -86,8 +86,28 @@ describe('ComparisonviewComponent', () => {
 				fixture.detectChanges();
 				expect(component.featuresData)
 					.toBeDefined();
+				expect(component.hardwareData)
+					.toBeDefined();
+				expect(component.softwareData)
+					.toBeDefined();
 				done();
 			});
 	});
 
+	it('should check for ngOnchanges in comparison view component', () => {
+		spyOn(crashPreventionService, 'getComparison')
+			.and
+			.returnValue(of(<any> []));
+		component.ngOnChanges({
+			devices: {
+				currentValue: null,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(crashPreventionService.getComparison)
+			.toHaveBeenCalledTimes(1);
+	});
 });
