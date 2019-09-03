@@ -6,6 +6,7 @@ import {
 	PieChartModule,
 	ColumnChartModule,
 	AdvisoryDetailsModule,
+	VisualFilterBarModule,
 } from '@components';
 import { RouterModule, Routes } from '@angular/router';
 import {
@@ -56,6 +57,7 @@ const childRoutes: Routes = [
 		ProductAlertsModule.forRoot({ rootUrl }),
 		ReactiveFormsModule,
 		RouterModule.forChild(childRoutes),
+		VisualFilterBarModule,
 	],
 })
 export class AdvisoriesModule { }

@@ -1,11 +1,11 @@
 <header class="header header--compressed">
 	<div class="header-bar flex-center-sm container-fluid">
-		<a class="header-bar__logo half-margin-left hidden-xs" href="https://www.cisco.com" target="_blank" data-auto-id="HeaderCiscoLink">
+		<a class="header-bar__logo half-margin-left hidden-xs" href="/" target="_blank" data-auto-id="HeaderCiscoLink">
 			<span class="icon-cisco"></span>
 		</a>
 		<div class="header-bar__main">
 			<div class="header-heading text-indigo">
-				<h5 *ngIf="searchBreakpointShow(600)" class="text-nowrap base-margin-right" [innerText]="'_ApplicationName_' | i18n"></h5>
+				<h5 *ngIf="searchBreakpointShow(600)" class="text-nowrap base-margin-right clickable" [innerText]="'_ApplicationName_' | i18n" [routerLink]="['/solution/lifecycle']" data-auto-id="HeaderCPLogoLink"></h5>
 				<a *ngIf="searchBreakpointShow(1023)" class="cx-header-links" [href]="communityLink" target="_blank" data-auto-id="HeaderCommunityLink" [title]="'_Communities_' | i18n">
 					<div class="text-nowrap">
 						<span class="cx-header-icon icon-communities hidden-xs"></span>
@@ -18,7 +18,7 @@
 						<span class="cx-header-label hidden-sm hidden-xs" [innerText]="'_Learning_' | i18n"></span>
 					</div>
 				</a>
-				<app-search [ngClass]="{
+				<app-search class="cx-header-search" [ngClass]="{
 					'hidden-xs hidden-sm hidden-md': !searchExpanded
 				}" (searchFocus)="onSearchFocus($event)"></app-search>
 			</div>
@@ -43,12 +43,12 @@
 			</span>
 			<span class="v-separator" *ngIf="searchBreakpointShow(445, true)"></span> -->
 			<!-- User Profile -->
-			<span #userProfile class="cx-header-links" [ngClass]="{ 'cx-header-links--active': userProfile.active }" (click)="toggleDropdown(userProfileDropdown, userProfile)" [title]="'_UserProfile_' | i18n" [hidden]="!searchBreakpointShow(445, true)" data-auto-id="HeaderUserProfileButton">
+			<span #userProfile class="cx-header-links cx-header-links--user" [ngClass]="{ 'cx-header-links--active': userProfile.active }" (click)="toggleDropdown(userProfileDropdown, userProfile)" [title]="'_UserProfile_' | i18n" [hidden]="!searchBreakpointShow(445, true)" data-auto-id="HeaderUserProfileButton">
 				<div class="flex-center">
 					<img class="cx-user-icon thumb thumb--bordered" [src]="userImage" alt="{{ '_UserProfile_' | i18n }}" (error)="updateProfileImage()">
 					<span class="cx-header-arrow qtr-margin-left hidden-lg hidden-xl hidden-xxl" [ngClass]="{ 'rotate-180': userProfile.active }">&#9662;</span>
 				</div>
-				<div class="hidden-md hidden-sm hidden-xs">
+				<div class="cx-user-label--container hidden-md hidden-sm hidden-xs">
 					<span class="cx-user-label text-xsmall text-center qtr-margin-top" [innerText]="'_HiX_' | i18n:name"></span>
 					<span class="cx-header-arrow qtr-margin-left" [ngClass]="{ 'rotate-180': userProfile.active }">&#9662;</span>
 				</div>
@@ -60,14 +60,14 @@
 			</span>
 			<!-- Cisco Team -->
 			<span *ngIf="team?.length" class="v-separator hidden-md hidden-sm hidden-xs"></span>
-			<span #ciscoTeam *ngIf="team?.length" class="cx-header-links hidden-md hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': ciscoTeam.active }" (click)="toggleDropdown(ciscoTeamDropdown, ciscoTeam)" [title]="'_CiscoTeam_' | i18n" [hidden]="!searchBreakpointShow(445, true)" data-auto-id="HeaderCiscoTeamButton">
+			<span #ciscoTeam *ngIf="team?.length" class="cx-header-links cx-header-links--teams hidden-md hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': ciscoTeam.active }" (click)="toggleDropdown(ciscoTeamDropdown, ciscoTeam)" [title]="'_CiscoTeam_' | i18n" [hidden]="!searchBreakpointShow(445, true)" data-auto-id="HeaderCiscoTeamButton">
 				<div class="flex-center">
 					<ng-container *ngFor="let member of team; let i = index">
 						<img *ngIf="i < 3" class="cx-user-icon thumb thumb--bordered" [src]="member.image" alt="{{ '_CiscoTeam_' | i18n }}">
 						<span *ngIf="i === 3" class="text-xsmall">+{{ team.length - 3 }}</span>
 					</ng-container>
 				</div>
-				<div class="flex-center">
+				<div class="cx-user-label--container flex-center">
 					<span class="cx-user-label text-xsmall text-center qtr-margin-top" [innerText]="'_CiscoTeam_' | i18n"></span>
 					<span class="cx-header-arrow qtr-margin-left" [ngClass]="{ 'rotate-180': ciscoTeam.active }">&#9662;</span>
 				</div>
@@ -79,12 +79,12 @@
 			</span>
 			<!-- Settings and Help -->
 			<span class="v-separator hidden-md hidden-sm hidden-xs"></span>
-			<span class="cx-header-links qtr-margin-right hidden-md hidden-sm hidden-xs">
+			<span class="cx-header-links cx-header-links--settings qtr-margin-right hidden-md hidden-sm hidden-xs">
 				<div data-auto-id="Admin" [title]="'_Admin_' | i18n" [routerLink]="['admin']">
 					<span class="cx-header-icon icon-cog"></span>
 				</div>
 			</span>
-			<span #portalHelp class="cx-header-links hidden-md hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': portalHelp.active }" (click)="toggleDropdown(portalHelpDropdown, portalHelp)" [title]="'_PortalHelp_' | i18n" data-auto-id="HeaderPortalHelpButton">
+			<span #portalHelp class="cx-header-links cx-header-links--portal-help hidden-md hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': portalHelp.active }" (click)="toggleDropdown(portalHelpDropdown, portalHelp)" [title]="'_PortalHelp_' | i18n" data-auto-id="HeaderPortalHelpButton">
 				<div>
 					<span class="cx-header-icon icon-help-alt" [ngClass]="{ 'text-primary': portalHelp.active }"></span>
 					<span></span>
@@ -96,7 +96,7 @@
 					</header-dropdown>
 				</div>
 			</span>
-			<span #menuButton *ngIf="searchBreakpointShow(445)" class="cx-header-links qtr-margin-left hidden-lg hidden-xl" (click)="toggleDropdown(menuButtonDropdown, menuButton)" data-auto-id="HeaderMenuButton">
+			<span #menuButton *ngIf="searchBreakpointShow(445)" class="cx-header-links cx-header-links--more qtr-margin-left hidden-lg hidden-xl" (click)="toggleDropdown(menuButtonDropdown, menuButton)" data-auto-id="HeaderMenuButton">
 				<span class="cx-header-icon icon-more rotate-90" [ngClass]="{ 'text-primary': menuButton.active }"></span>
 				<div class="pull-right">
 					<header-dropdown #menuButtonDropdown (click)="$event.stopPropagation();" (toggle)="menuButton.active = $event; menuButton.swap = null;" data-auto-id="HeaderMenuDropdown">
@@ -131,8 +131,8 @@
 				</div>
 			</span>
 			<!-- Mock should only be in dev builds -->
-			<span class="v-separator"></span>
-			<span #mock class="cx-header-links" [ngClass]="{ 'cx-header-links--active': mock.active }" (click)="toggleDropdown(mockDropdown, mock)" title="Mock - DevTest Only" data-auto-id="HeaderMockButton">
+			<span class="v-separator v-separator--mock"></span>
+			<span #mock class="cx-header-links cx-header-links--mock" [ngClass]="{ 'cx-header-links--active': mock.active }" (click)="toggleDropdown(mockDropdown, mock)" title="Mock - DevTest Only" data-auto-id="HeaderMockButton">
 				<div>
 					<span class="cx-header-icon--small icon-terminalalt" [ngClass]="{ 'text-primary': mock.active }"></span>
 					<span></span>
@@ -169,7 +169,7 @@
 	<div class="flex-center-vertical">
 		<img class="thumb thumb--bordered thumb--medium" [src]="userImage" alt="{{ '_UserProfile_' | i18n }}" (error)="updateProfileImage()" data-auto-id="HeaderUserProfileDropdownImage">
 		<span class="half-margin-left">
-			<div [innerText]="fullName" data-auto-id="HeaderUserFullName"></div>
+			<div class="cx-user--full-name" [innerText]="fullName" data-auto-id="HeaderUserFullName"></div>
 			<div class="text-xsmall" [innerText]="email" data-auto-id="HeaderUserEmail"></div>
 		</span>
 	</div>
@@ -195,23 +195,23 @@
 			<div class="divider" *ngIf="i > 0"></div>
 			<img class="cx-team-member-icon thumb thumb--bordered class" [src]="member.image" alt="{{ '_CiscoTeamMember_' | i18n }}" (error)="updateProfileImage()" attr.data-auto-id="CiscoTeamMemberDropdownImage--{{ member.ccoId }}">
 			<div class="cx-team-member-info half-margin-left">
-				<div>
+				<div class="cx-team-member--full-name">
 					<span [innerText]="member.name"></span>&nbsp;<span [innerText]="member.familyName"></span>
 				</div>
-				<div class="text-xsmall" [innerText]="member.title"></div>
-				<div class="qtr-margin=top qtr-margin-bottom text small flex-center-vertical half-margin-top">
+				<div class="cx-team-member--title text-xsmall" [innerText]="member.title"></div>
+				<div class="cx-team-member--phone qtr-margin=top qtr-margin-bottom text small flex-center-vertical half-margin-top">
 					<span class="text-indigo icon-mobile-phone"></span>
 					<span class="half-margin-left" [innerText]="member.phone"></span>
 				</div>
-				<div class="qtr-margin=top qtr-margin-bottom text small flex-center-vertical half-margin-top">
+				<div class="cx-team-member--contact qtr-margin=top qtr-margin-bottom text small flex-center-vertical half-margin-top">
 					<span class="text-indigo icon-email"></span>
 					<a class="half-margin-left" href="mailto:{{ member.emailAddress }}" [innerText]="member.emailAddress" attr.data-auto-id="Cisco TeamMemberEmailLink-{{ member.emailAddress }}"></a>
 				</div>
-				<div class="qtr-margin=top qtr-margin-bottom text small flex-center-vertical half-margin-top">
+				<div class="cx-team-member--contact qtr-margin=top qtr-margin-bottom text small flex-center-vertical half-margin-top">
 					<span class="text-indigo icon-webex"></span>
 					<a class="half-margin-left" [innerText]="'_Webex_' | i18n" [href]="webexUrl + member.ccoId" attr.data-auto-id="CiscoTeamMemberWebexLink-{{ member.ccoid }}"></a>
 				</div>
-				<div class="qtr-margin=top qtr-margin-bottom text small flex-center-vertical half-margin-top">
+				<div class="cx-team-member--contact qtr-margin=top qtr-margin-bottom text small flex-center-vertical half-margin-top">
 					<span class="text-indigo icon-webex-teams-16"></span>
 					<a class="half-margin-left" [innerText]="'_WebexTeams_' | i18n" [href]="sanitize(webexTeamsUrl + member.emailAddress)" attr.data-auto-id="CiscoTeamMemberWebexTeamsLink-{{ member.emailAddress }}"></a>
 				</div>

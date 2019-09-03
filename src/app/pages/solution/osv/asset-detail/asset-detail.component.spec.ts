@@ -107,11 +107,11 @@ describe('AssetDetailsComponent', () => {
 		const data = _.cloneDeep(<any> OSVScenarios[3].scenarios.GET[0].response.body);
 		component.sortData(data);
 		expect(data[0].name)
-			.toEqual('latest');
-		expect(data[1].name)
 			.toEqual('suggested');
+		expect(data[1].name)
+			.toEqual('latest');
 		expect(data[2].name)
-			.toEqual('current');
+			.toEqual('golden');
 	});
 
 	it('should build table only if we get recommendations', () => {

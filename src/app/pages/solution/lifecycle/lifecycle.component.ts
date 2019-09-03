@@ -125,6 +125,7 @@ export class LifecycleComponent implements OnDestroy {
 		context: null,
 		visible: false,
 	};
+	public appHeaderHeight = 0;
 	public visibleContext: AtxSchema[];
 	public atxScheduleCardOpened = false;
 	public recommendedAtxScheduleCardOpened = false;
@@ -1204,6 +1205,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
+		const atxPopupListViewAdjustPx = 193;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
@@ -1224,7 +1226,8 @@ export class LifecycleComponent implements OnDestroy {
 					const ht = this.eventClickedElement.scrollHeight;
 
 					_div.style.left = `${(rect.left - _div.scrollWidth)}px`;
-					_div.style.top = `${(rect.top + (ht / 2)) + this.scrollY - 210}px`;
+					_div.style.top = `${(rect.top + (ht / 2))
+						+ this.scrollY - atxPopupListViewAdjustPx - this.appHeaderHeight}px`;
 					panel = 'panel listpanel--open';
 				}
 			}
@@ -1735,5 +1738,25 @@ export class LifecycleComponent implements OnDestroy {
 	public ngOnDestroy () {
 		this.destroy$.next();
 		this.destroy$.complete();
+	}
+
+	/**
+	 * Handler for component intialization
+	 */
+	public ngOnInit () {
+		const appHeader = document.getElementsByTagName('app-header');
+		this.appHeaderHeight = _.get(appHeader, '[0].clientHeight', 0);
+	}
+
+	/**
+	 * Gets the height of the app header in pixels
+	 * @returns the height in px ready to be inserted as styling
+	 */
+	get appHeaderHeightPX (): string {
+		if (this.appHeaderHeight > 0) {
+			return `${this.appHeaderHeight}px`;
+		}
+
+		return `${this.appHeaderHeight}`;
 	}
 }

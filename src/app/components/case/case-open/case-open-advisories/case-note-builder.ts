@@ -1,4 +1,10 @@
-import { CriticalBug, FieldNoticeBulletin, SecurityAdvisoryBulletin } from '@sdp-api';
+import {
+	Asset,
+	CriticalBug,
+	FieldNoticeBulletin,
+	NetworkElement,
+	SecurityAdvisoryBulletin,
+} from '@sdp-api';
 import { I18n } from '@cisco-ngx/cui-utils';
 
 import { AdvisoryType } from '@interfaces';
@@ -101,11 +107,13 @@ export class CaseNoteBuilder {
 	 * Build a note from proivded details
 	 * @param type Type of advisory (SA, FN, Critical Bug)
 	 * @param advisory The advisory details
-	 * @param asset the asset details
+	 * @param assets associtated assets
 	 * @returns string with note
 	 */
 	public buildNote (
-		type: AdvisoryType, advisory: SecurityAdvisoryBulletin | FieldNoticeBulletin | CriticalBug,
+		type: AdvisoryType,
+		advisory: SecurityAdvisoryBulletin | FieldNoticeBulletin | CriticalBug,
+		assets?: (Asset | NetworkElement)[],
 	) {
 		let fields: Fields;
 		let title: string;
@@ -128,6 +136,13 @@ export class CaseNoteBuilder {
 		fields.forEach(f => {
 			outText.push(`${f.displayName}: ${_.get(advisory, f.key, '')}`);
 		});
+		if (assets && assets.length > 1) {
+			outText.push(`${I18n.get('_AdditionalAssetSerialNumbers_')}:`);
+			assets.slice(1)
+			.forEach(asset => {
+				outText.push(asset.serialNumber);
+			});
+		}
 
 		return outText.join('\n');
 	}

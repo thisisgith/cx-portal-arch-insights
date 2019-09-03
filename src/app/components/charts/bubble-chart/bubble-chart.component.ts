@@ -9,6 +9,15 @@ import {
 import { Chart } from 'angular-highcharts';
 import * as _ from 'lodash-es';
 
+/** All possible colors for the pie chart subfilters. */
+const filterColors = [
+	'#92dde4',
+	'#8ab6d0',
+	'#c8d4d7',
+	'#c8e4e6',
+	'#e4f0f1',
+];
+
 /**
  * Main component for the Bubble Chart
  */
@@ -35,9 +44,10 @@ export class BubbleChartComponent implements OnInit {
 	 * Builds our bubble graph
 	 */
 	private buildGraph () {
-		const series = _.map(this.seriesData, d => ({
+		const series = _.map(this.seriesData, (d, index) => ({
 			data: [
 				{
+					color: _.get(filterColors, index, '#000'),
 					name: d.label,
 					value: d.value,
 				},
@@ -71,9 +81,9 @@ export class BubbleChartComponent implements OnInit {
 						}
 					},
 				},
-				height: 200,
+				height: 125,
 				type: 'packedbubble',
-				width: 250,
+				width: 225,
 			},
 			credits: {
 				enabled: false,
@@ -84,8 +94,10 @@ export class BubbleChartComponent implements OnInit {
 						enabled: true,
 						format: '{point.name}',
 						style: {
-							color: 'black',
-							fontWeight: 'normal',
+							color: '#6c757d',
+							fontFamily: 'CiscoSans, Arial, sans-serif',
+							fontSize: '10px',
+							fontWeight: '400',
 							textOutline: 'none',
 						},
 						textPath: undefined,
