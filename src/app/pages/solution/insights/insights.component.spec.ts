@@ -22,12 +22,12 @@ describe('InsightsComponent', () => {
 				HttpClientTestingModule,
 				RouterTestingModule.withRoutes([
 					{
-						path: 'solution/best-practices/osv',
 						component: OptimalSoftwareVersionComponent,
+						path: 'solution/best-practices/osv',
 					},
 					{
-						path: 'solution/best-practices/risk-mitigation',
 						component: RiskMitigationComponent,
+						path: 'solution/best-practices/risk-mitigation',
 					},
 				]),
 			],
@@ -36,7 +36,6 @@ describe('InsightsComponent', () => {
 	}));
 
 	beforeEach(() => {
-		window.sessionStorage.clear();
 		fixture = TestBed.createComponent(InsightsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

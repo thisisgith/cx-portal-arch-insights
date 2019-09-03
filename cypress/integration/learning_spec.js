@@ -402,11 +402,13 @@ describe('Learn Panel', () => {
 				cy.getByAutoId('_ELearning_-Item')
 					.eq(index)
 					.should('contain', elearningItem.title)
-					.parent()
-					.parent()
 					.within(() => {
 						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', elearningItem.title);
-						cy.getByAutoId('recommendedElearning-HoverModal-Description').should('contain', elearningItem.description);
+						cy.getByAutoId('recommendedElearning-HoverModal-Description')
+							.should('contain', elearningItem.description)
+							// PBC-611 Truncate description text
+							// Since this handled by the styles, just validate the class exists
+							.and('have.class', 'line-clamp');
 						cy.getByAutoId('recommendedElearning-HoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(elearningItem.rating).toString());
 						// Duration/clock are only displayed if duration is set
 						if (elearningItem.duration) {
@@ -1231,7 +1233,11 @@ describe('Learn Panel', () => {
 					.parent()
 					.within(() => {
 						cy.getByAutoId('recommendedElearning-HoverModal-Title').should('contain', certificationItem.title);
-						cy.getByAutoId('recommendedElearning-HoverModal-Description').should('contain', certificationItem.description);
+						cy.getByAutoId('recommendedElearning-HoverModal-Description')
+							.should('contain', certificationItem.description)
+							// PBC-611 Truncate description text
+							// Since this handled by the styles, just validate the class exists
+							.and('have.class', 'line-clamp');
 						cy.getByAutoId('recommendedElearning-HoverModal-Rating').should('have.attr', 'ng-reflect-rating', parseFloat(certificationItem.rating).toString());
 						// Duration/clock are only displayed if duration is set
 						if (certificationItem.duration) {
@@ -2078,6 +2084,66 @@ describe('Learn Panel', () => {
 
 				// Verify we're still in table view
 				cy.getByAutoId('ViewAllTable').should('be.visible');
+			});
+		});
+	});
+
+	describe('Success Bytes: Hover-over to show more content about the module', () => {
+		visibleSuccessPathItems.forEach((successItem, index) => {
+			it(`Should have hover modal on Success Bytes links: ${successItem.title}`, () => {
+				// NOTE: Cypress can not trigger elements with :hover css property, so we'll just check
+				// that the hover modal and it's elements exist in the DOM. See below for reference:
+				// https://docs.cypress.io/api/commands/hover.html#Workarounds
+				// https://github.com/cypress-io/cypress/issues/10
+				cy.getByAutoId('successbytes-item')
+					.eq(index)
+					.should('contain', successItem.title)
+					.within(() => {
+						cy.getByAutoId('successbytes-HoverModal-Title').should('contain', successItem.title);
+						cy.getByAutoId('successbytes-HoverModal-Description')
+							.should('contain', successItem.description)
+							// PBC-611 Truncate description text
+							// Since this handled by the styles, just validate the class exists
+							.and('have.class', 'line-clamp');
+						// Duration/clock are only displayed if duration is set
+						if (successItem.duration) {
+							cy.getByAutoId('successbytes-HoverModal-DurationClock').should('exist');
+							cy.getByAutoId('successbytes-HoverModal-Duration').should('contain', successItem.duration);
+						} else {
+							cy.getByAutoId('successbytes-HoverModal-DurationClock').should('not.exist');
+						}
+						// Handle bookmark
+						if (successItem.bookmark) {
+							cy.getByAutoId('successbytes-HoverModal-BookmarkRibbon')
+								.should('exist')
+								.and('have.class', 'ribbon__blue');
+						} else {
+							cy.getByAutoId('successbytes-HoverModal-BookmarkRibbon')
+								.should('exist')
+								.and('have.class', 'ribbon__clear');
+						}
+						// Handle type
+						switch (successItem.type) {
+							case 'Web Page':
+								cy.getByAutoId('SuccessBytesHoverBlock-WebIcon').should('exist');
+								break;
+							case 'Video':
+								cy.getByAutoId('SuccessBytesHoverBlock-VideoIcon').should('exist');
+								break;
+							case 'PDF':
+								cy.getByAutoId('SuccessBytesHoverBlock-PDFIcon').should('exist');
+								break;
+							case 'Data Sheet':
+								cy.getByAutoId('SuccessBytesHoverBlock-DataSheetIcon').should('exist');
+								break;
+							default:
+								Cypress.log({
+									name: 'LOG',
+									message: `UNRECOGNIZED SUCCESS BYTES TYPE: ${successItem.type} ! TREATING AS WEB PAGE...`,
+								});
+								cy.getByAutoId('SuccessBytesHoverBlock-WebIcon').should('exist');
+						}
+					});
 			});
 		});
 	});

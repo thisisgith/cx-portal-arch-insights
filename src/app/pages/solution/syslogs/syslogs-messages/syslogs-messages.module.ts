@@ -11,9 +11,9 @@ import {
 	CuiPagerModule,
 	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
-import { DetailsPanelModule } from '@components';
-// tslint:disable-next-line: max-line-length
-import { SyslogMessagesDetailsModule } from '../syslog-message-details/syslog-messages-details.module';
+import { DetailsPanelModule, AssetDetailsModule, AssetDetailsHeaderModule } from '@components';
+import { SyslogMessagesDetailsModule,
+} from '../syslog-message-details/syslog-messages-details.module';
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -40,6 +40,8 @@ const rootUrl = environment.sdpServiceOrigin;
 		SyslogsDataModule.forRoot({ rootUrl }),
 		SyslogMessagesDetailsModule,
 		DetailsPanelModule,
+		AssetDetailsModule,
+		AssetDetailsHeaderModule,
 	],
 })
 export class SyslogsMessagesModule { }
