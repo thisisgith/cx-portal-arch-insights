@@ -1,5 +1,7 @@
-<details-panel [minWidth]="'1024px'" *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup" [fullscreen]="fullscreen">
-	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
+<details-panel [minWidth]="'1024px'" *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup"
+	[fullscreen]="fullscreen">
+	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen"
+		[fullscreenToggle]="screenWidth > 1024 ? true : false">
 		<div detailsPanelTitle>
 			<div *ngIf="!showBugs; else bugsTemplateHeader" class="qtr-margin-left text-xlarge half-margin-bottom"
 				[innerText]="selectedSoftwareGroup?.profileName"></div>
@@ -182,138 +184,149 @@
 					<td class="text-xlarge" [innerText]="'35'"></td>
 					<td class="recommendation">
 						<div class="flex align-items-center">
-							<span class="text-xlarge" [innerText]="'<'"></span>
 							<span class="text-xlarge qtr-margin-left" [innerText]="'10%'"></span>
-							
 						</div>
 					</td>
 					<td class="recommendation">
-						<div class="flex align-items-center">							
+						<div class="flex align-items-center">
 							<span class="text-xlarge qtr-margin-left" [innerText]="'10'"></span>
-							
+
 						</div>
 					</td>
 					<td class="recommendation">
-						<div class="flex align-items-center">							
+						<div class="flex align-items-center">
 							<span class="text-xlarge qtr-margin-left" [innerText]="'10'"></span>
-							
+
 						</div>
 					</td>
 				</tr>
 				<!-- bugs -->
 				<tr>
-					<td class="headingClass no-border-bottom no-border-top text-large" [innerText]="'_Bugs_' | i18n"></td>
+					<td class="headingClass no-border-bottom no-border-top text-large" [innerText]="'_Bugs_' | i18n">
+					</td>
 					<td>
-						<div [innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
-						<div class="text-xlarge" [innerText]="'15'"></div>
-						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" dataLabels="true" [seriesData]="seriesData"
-								[width]="chartWidth"></bar-chart>
+						<div class="base-margin-bottom"
+							[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
+							[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
+						<div class=" text-xlarge" [innerText]="'15'" [ngClass]="{'base-padding-top':!fullscreen}"></div>
+						<div class="base-margin-top">
+							<bar-chart barColor="#00bceb" dataLabels="true" [seriesData]="seriesData" width="200">
+							</bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
-						<div class="flex justify-content-between">
-							<div class="flex-shrink-0 base-margin-right" [innerText]="'_OsvFixed_' | i18n"></div>
-							<div [innerText]="'_OsvWillExposed_' | i18n" class="half-margin-left"></div>
+						<div class="flex justify-content-around" [ngClass]="{'base-margin-top':fullscreen}">
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="dbl-margin-right"
+								[innerText]="'_OsvFixed_' | i18n"></div>
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
+								[innerText]="'_OsvWillExposed_' | i18n"
+								class="base-margin-left text-small half-padding-left"></div>
 						</div>
-						<div class="half-margin-top flex justify-content-between">
+						<div class="base-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'13/15'"></span>
-								
+
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
-						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
-								[width]="fullscreen ? '250' : '130' "></bar-chart>
+						<div class="base-margin-top">
+							<bar-chart width="200" barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true"
+								[seriesData]="seriesData" ></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
-						<div class="flex justify-content-between">
-							<div [innerText]="'_OsvFixed_' | i18n" class="base-margin-right"></div>
-							<div [innerText]="'_OsvWillExposed_' | i18n" class="half-margin-left"></div>
+						<div class="flex justify-content-around" [ngClass]="{'base-margin-top':fullscreen}">
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="dbl-margin-right"
+								[innerText]="'_OsvFixed_' | i18n"></div>
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
+								[innerText]="'_OsvWillExposed_' | i18n"
+								class="base-margin-left text-small half-padding-left"></div>
 						</div>
-						<div class="half-margin-top flex justify-content-between">
+						<div class="base-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'13/15'"></span>
-								
+
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
-						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
-								[width]="chartWidth"></bar-chart>
+						<div class="base-margin-top">
+							<bar-chart width="200" barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true"
+								[seriesData]="seriesData"></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
-						<div class="flex justify-content-between">
-							<div [innerText]="'_OsvFixed_' | i18n" class="base-margin-right"></div>
-							<div [innerText]="'_OsvWillExposed_' | i18n" class="half-margin-left"></div>
+						<div class="flex justify-content-around" [ngClass]="{'base-margin-top':fullscreen}">
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="dbl-margin-right"
+								[innerText]="'_OsvFixed_' | i18n"></div>
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
+								[innerText]="'_OsvWillExposed_' | i18n"
+								class="base-margin-left text-small half-padding-left"></div>
 						</div>
-						<div class="half-margin-top flex justify-content-between">
+						<div class="base-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'13/15'"></span>
-								
+
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
-						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
-								[width]="chartWidth"></bar-chart>
+						<div class="base-margin-top">
+							<bar-chart width="200" barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true"
+								[seriesData]="seriesData" ></bar-chart>
 						</div>
 					</td>
 				</tr>
 				<!-- security advisories -->
 				<tr>
-					<td class="headingClass no-border-bottom no-border-top text-large" [innerText]="'_SecurityAdvisories_' | i18n">
+					<td class="headingClass no-border-bottom no-border-top text-large"
+						[innerText]="'_SecurityAdvisories_' | i18n">
 					</td>
 					<td>
-						<div class="text-xlarge" [innerText]="'32'"></div>
-						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" dataLabels="true" [seriesData]="seriesData"
-								[width]="chartWidth"></bar-chart>
+						<div class="text-xlarge half-margin-top" [innerText]="'32'"></div>
+						<div class="base-margin-top">
+							<bar-chart width="200" barColor="#00bceb" dataLabels="true" [seriesData]="seriesData">
+							</bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'32/32'"></span>
-								
+
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
-						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
-								[width]="chartWidth"></bar-chart>
+						<div class="base-margin-top">
+							<bar-chart width="200" barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true"
+								[seriesData]="seriesData"></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'32/32'"></span>
-								
+
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
-						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
-								[width]="chartWidth"></bar-chart>
+						<div class="base-margin-top">
+							<bar-chart width="200" barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true"
+								[seriesData]="seriesData"></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
 								<span class="text-xlarge" [innerText]="'32/32'"></span>
-								
+
 							</div>
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
-						<div class="qtr-margin-top">
-							<bar-chart barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true" [seriesData]="seriesData"
-								[width]="chartWidth"></bar-chart>
+						<div class="base-margin-top">
+							<bar-chart width="200" barColor="#00bceb" backgroundColor="#f2fbfd" dataLabels="true"
+								[seriesData]="seriesData"></bar-chart>
 						</div>
 					</td>
-				</tr>				
+				</tr>
 			</tbody>
 		</table>
 	</div>

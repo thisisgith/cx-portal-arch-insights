@@ -67,6 +67,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public recommendationAlert = { };
 	public recommendations;
 	public selectedMachineRecommendation;
+	public screenWidth = window.innerWidth;
 	public seriesData = [
 		{
 			label: 'H',
