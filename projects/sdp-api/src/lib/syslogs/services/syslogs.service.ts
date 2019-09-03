@@ -319,31 +319,7 @@ class SyslogsService extends __BaseService {
 				 }
 			  }
 		  }
-		  public searchAllGridData (searchVal) {
-			let __params = this.newParams();
-			let __headers = new HttpHeaders();
-			const __body: any = null;
-			const req = new HttpRequest<any>(
-				'GET',
-				this.rootUrl+'/api/customerportal/syslog/v1/message/globalSearch?searchData='+searchVal,
-				__body,
-				{
-				  headers: __headers,
-				  params: __params,
-				  responseType: 'json',
-				});
-			  return this.http.request<any>(req).pipe(
-				__filter(_r => _r instanceof HttpResponse),
-				__map((_r) => {
-				  return <__StrictHttpResponse<SyslogGridData[]>>_r;
-				}),
-			  );
-		}
-		public getSeachAllData (searchVal): __Observable<SyslogGridData[]> {
-			return this.searchAllGridData(searchVal).pipe(
-			  __map(_r => <SyslogGridData[]> _r.body),
-			);
-		  }
+
 }
 
 module SyslogsService {
