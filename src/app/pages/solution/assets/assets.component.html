@@ -96,6 +96,7 @@
 						<div class="form-group__text">
 							<input id="searchInput"
 								attr.data-auto-id="SearchInput"
+								class="assets-search"
 								type="text"
 								#searchInput
 								[maxlength]="searchOptions.max"
@@ -128,7 +129,7 @@
 
 <ng-template #tableAssets>
 	<div class="responsive-table" *ngIf="assetsTable && inventory.length && (!view || view == 'list')">
-		<table class="table table--selectable table--compressed table--wrap table--lined table--hover" data-auto-id="AssetsTable">
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes" data-auto-id="AssetsTable">
 				<thead data-auto-id="AssetsTableHeader">
 					<tr>
 						<th>

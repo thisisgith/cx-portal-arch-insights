@@ -90,7 +90,7 @@
 		"@cui-x/cui-x-components": "^7.3.0",
 		"@cui-x/services": "^1.0.4",
 		"@cui-x/utilities": "^1.0.0",
-		"@cx-portal/metrics": "^1.0.7",
+		"@cx-portal/metrics": "^1.0.8",
 		"@cypress/webpack-preprocessor": "^4.0.4",
 		"@swagger/cx-portal": "^2.0.11",
 		"@swagger/ng-swagger-gen": "^1.0.0",
