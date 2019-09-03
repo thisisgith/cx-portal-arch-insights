@@ -25,7 +25,6 @@ $vibblue: #017cad;
 .scrollable-list-content {
 	position: fixed !important;
 	overflow-y: scroll !important;
-	height: 100%;
 	width: 100%;
 }
 
@@ -521,6 +520,8 @@ $vibblue: #017cad;
 
 .table-responsive {
 	margin-top: 20px;
+	overflow-y: scroll;
+	height: 70%;
 }
 
 %tr-shared {

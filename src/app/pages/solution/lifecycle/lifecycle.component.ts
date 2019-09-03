@@ -1205,7 +1205,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		const atxPopupListViewAdjustPx = 240;
+		const atxPopupListViewAdjustPx = 255;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {

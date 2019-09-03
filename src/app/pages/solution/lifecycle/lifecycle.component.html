@@ -771,9 +771,8 @@
 </ng-template>
 
 <ng-template #listViewTemplate let-type="type" let-view="view">
-	<div class="scrollable-list-content base-padding-right" *ngIf="view === 'list'"
-	#scrollModal (scroll)="getScrollCoordinates(scrollModal)">
-			<div class="table-responsive"  data-auto-id="ViewAllTable">
+		<div class="base-padding-right" *ngIf="view === 'list'" #scrollModal (scroll)="getScrollCoordinates(scrollModal)">
+			<div class="scrollable-list-content table-responsive"  data-auto-id="ViewAllTable">
 					<table class="table table--nostripes table--wrap table--hover table--loose">
 					<ng-container *ngIf="type === 'ATX'">
 						<ng-container *ngTemplateOutlet="listView; context: { type: type, columns: atxTable.columns, data: selectedATX }"></ng-container>
