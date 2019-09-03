@@ -48,7 +48,7 @@ export const defaults = {
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
 	learningLink: 'https://pilot-digital-learning.cisco.com/cx/#/',
-	logoutUrl: 'https://www.cisco.com/autho/logout.html',
+	logoutUrl: 'https://www-stage.cisco.com/autho/logout.html',
 	manageProfileUrl: 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do',
 	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
 	mapboxHost: 'https://api.mapbox.com',
