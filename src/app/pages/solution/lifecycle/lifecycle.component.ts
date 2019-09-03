@@ -1238,7 +1238,7 @@ export class LifecycleComponent implements OnDestroy {
 		   this.componentData.atx.interested = null;
 		   this.atxMoreClicked = false;
 		}
-   }
+	}
 
 	/**
 	 * Changes the atxScheduleCardOpened flags to false to close the popupmodal
