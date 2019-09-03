@@ -24,7 +24,6 @@ const d3 = { format, select, arc, transition, active, easeLinear, interpolate };
  */
 @Component({
 	selector: 'app-gauge',
-	styleUrls: ['./gauge.component.scss'],
 	templateUrl: './gauge.component.html',
 })
 export class GaugeComponent implements OnInit, OnChanges {

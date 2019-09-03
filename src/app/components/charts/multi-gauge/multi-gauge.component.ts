@@ -32,7 +32,6 @@ interface GaugeDatum {
  */
 @Component({
 	selector: 'app-multi-gauge',
-	styleUrls: ['./multi-gauge.component.scss'],
 	templateUrl: './multi-gauge.component.html',
 })
 export class MultiGaugeComponent implements OnInit, OnChanges {
@@ -66,7 +65,9 @@ export class MultiGaugeComponent implements OnInit, OnChanges {
 		this.meter = this.svg.append('g')
 			.attr('class', 'gauge');
 
-		this.drawGauge();
+		if (this.data) {
+			this.drawGauge();
+		}
 	}
 
 	/**

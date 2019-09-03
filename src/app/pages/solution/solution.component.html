@@ -62,14 +62,14 @@
 					[class.active]="solutionDropdown"
 					(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
 					<div class="flex-center">
-						<div class="cs__dropdown__title" [innerText]="selectedSolution.name"></div>
+						<div class="cs__dropdown__title" [innerText]="selectedSolution?.name"></div>
 						<span class="cs__header__arrow qtr-margin-left" [class.rotate-180]="solutionDropdown">&#9662;</span>
 					</div>
 					<div class="dropdown__menu">
-						<a *ngFor="let solution of solutions" attr.data-auto-id="SolutionDropdown-{{ solution.name }}"
+						<a *ngFor="let solution of solutions" attr.data-auto-id="SolutionDropdown-{{ solution?.name }}"
 							class="text-uppercase" (click)="changeSolution(solution)" [ngClass]="{
-								'selected': selectedSolution.name === solution.name
-							}" [innerText]="solution.name">
+								'selected': selectedSolution?.name === solution?.name
+							}" [innerText]="solution?.name">
 						</a>
 					</div>
 				</div>
@@ -86,15 +86,15 @@
 					[class.active]="useCaseDropdown"
 					(click)="solutionDropdown = false; useCaseDropdown = !useCaseDropdown">
 					<div class="flex-center">
-						<div class="cs__dropdown__title" [innerText]="selectedTechnology.name"></div>
+						<div class="cs__dropdown__title" [innerText]="selectedTechnology?.name"></div>
 						<span class="cs__header__arrow qtr-margin-left" [class.rotate-180]="useCaseDropdown">&#9662;</span>
 					</div>
 					<div class="dropdown__menu">
 						<a *ngFor="let technology of technologies"
-							attr.data-auto-id="TechnologyDropdown-{{ technology.name }}"
+							attr.data-auto-id="TechnologyDropdown-{{ technology?.name }}"
 							(click)="changeTechnology(technology)"
-							[ngClass]="{ 'selected': selectedTechnology.name === technology.name }"
-							[innerText]="technology.name">
+							[ngClass]="{ 'selected': selectedTechnology?.name === technology?.name }"
+							[innerText]="technology?.name">
 						</a>
 					</div>
 				</div>
@@ -156,8 +156,6 @@
 			</span>
 			<div class="kmii__insights__title">
 				<span [innerText]=""></span>
-				<br>
-				<span></span>
 			</div>
 			<div class="kmii__insights__change" *ngIf="false">
 				<div  class="kmii__insights__arrow"

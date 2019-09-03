@@ -24,4 +24,14 @@ describe('MultiGaugeComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
+	it('should initialize', () => {
+		const typelessComponent = (<any> component);
+		typelessComponent.data = [{
+			label: 'test',
+			percentage: 10,
+		}];
+		typelessComponent.drawGauge();
+		expect(typelessComponent.initialized).toBeTruthy();
+	});
 });

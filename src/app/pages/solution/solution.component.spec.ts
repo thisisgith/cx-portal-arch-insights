@@ -12,8 +12,6 @@ import { AdvisoriesModule } from './advisories/advisories.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
 	RacetrackScenarios,
-	VulnerabilityScenarios,
-	CoverageScenarios,
 	Mock,
 	user,
 } from '@mock';
@@ -192,7 +190,7 @@ describe('SolutionComponent', () => {
 		racetrackInfoService.sendCurrentSolution(
 			getActiveBody(RacetrackScenarios[0]).solutions[0],
 		);
-		tick();
+		tick(15000);
 		fixture.detectChanges();
 
 		expect(component.selectedSolution.name)
@@ -210,7 +208,7 @@ describe('SolutionComponent', () => {
 		racetrackInfoService.sendCurrentTechnology(
 			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
 		);
-
+		tick();
 		fixture.detectChanges();
 
 		expect(component.selectedTechnology.name)
@@ -270,63 +268,20 @@ describe('SolutionComponent', () => {
 		});
 	});
 
-	it('should load the advisoriesFacet', done => {
-		spyOn(productAlertsService, 'getVulnerabilityCounts')
-			.and
-			.returnValue(of(getActiveBody(VulnerabilityScenarios[0])));
-
-		spyOn(contractsService, 'getCoverageCounts')
-			.and
-			.returnValue(of(getActiveBody(CoverageScenarios[2])));
-
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-
-			const assetsFacet = _.find(component.facets, { key: 'assets' });
-			const advisoryFacet = _.find(component.facets, { key: 'advisories' });
-
-			expect(assetsFacet.data)
-				.toEqual({ gaugePercent: 7, gaugeLabel: '7%' });
-
-			const values = _.sum(_.map(advisoryFacet.seriesData, 'value'));
-
-			expect(values)
-				.toEqual(11);
-
-			done();
-		});
-	});
-
-	it('should open Quick Tour when first time null', fakeAsync(async () => {
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.quickTourActive)
-				.toBeTruthy();
-		});
+	it('should open Quick Tour when first time null', fakeAsync(() => {
+		tick(15000);
+		fixture.detectChanges();
+		expect(component.quickTourActive)
+			.toBeTruthy();
 	}));
 
-	it('should open Quick Tour when first time true', fakeAsync(async () => {
-		utils.setLocalStorage('quickTourFirstTime', { firstTime: true });
-		await router.navigate(['/solution/lifecycle']);
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.quickTourActive)
-				.toBeTruthy();
-		});
-	}));
-
-	it('should not open Quick Tour when not first time', fakeAsync(async () => {
+	it('should not open Quick Tour when not first time', fakeAsync(() => {
 		utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
-		await router.navigate(['/solution/lifecycle']);
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.quickTourActive)
-				.toBeFalsy();
-		});
+		router.navigate(['/solution/lifecycle']);
+		tick();
+		fixture.detectChanges();
+		expect(component.quickTourActive)
+			.toBeFalsy();
 	}));
 
 });
