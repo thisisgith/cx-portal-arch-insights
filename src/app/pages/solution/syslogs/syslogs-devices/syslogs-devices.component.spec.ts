@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { user } from '@mock';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
+import { SimpleChanges, SimpleChange } from '@angular/core';
 describe('SyslogsMessagesComponent', () => {
 	let component: SyslogsDevicesComponent;
 	let fixture: ComponentFixture<SyslogsDevicesComponent>;
@@ -98,8 +99,6 @@ describe('SyslogsMessagesComponent', () => {
 			SyslogSeverity: 3,
 		};
 		component.onTableRowSelection(selectedRowData);
-		expect(selectedRowData.active)
-		 .toBeTruthy();
 		 expect(component.selectedAsset)
 		 .toEqual(selectedRowData);
 	});
@@ -116,22 +115,25 @@ describe('SyslogsMessagesComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const selectedRowData1 = {
-					assetFilter: {
-						currentValue: {
+				const changes: SimpleChanges = {
+					assetFilter: new SimpleChange(
+						{
 							asset: '',
-							catalog: '',
-							severity: 7,
-							timeRange: 1,
+							catalog: 'Cisco',
+							severity: 3,
+							timeRange: 30,
 						},
-						firstChange: true,
-						isFirstChange: () => false,
-						previousValue: undefined,
-					},
+						{
+							asset: '',
+							catalog: 'Cisco',
+							severity: 3,
+							timeRange: 30,
+						}, false,
+					),
 				};
-				component.ngOnChanges(selectedRowData1);
-				expect(selectedRowData1.assetFilter.firstChange)
-				 .toBeTruthy();
+				component.ngOnChanges(changes);
+				expect(component.syslogsParams.catalog)
+				 .toEqual('Cisco');
 				done();
 			});
 	});
@@ -165,5 +167,26 @@ describe('SyslogsMessagesComponent', () => {
 
 			done();
 		});
+	});
+	it('should not trigger search function for keycode 10', () => {
+		const event = { keyCode: 10 };
+		component.searchAll(event.keyCode);
+		expect(component.syslogsParams.search)
+			.toBeUndefined();
+	});
+	it('should get reset selected table row data', () => {
+		fixture.detectChanges();
+		const selectedRowData = {
+			active: false,
+			deviceCount: 1,
+			IcDesc: '',
+			MsgType: 'INTERNAL',
+			Recommendation: '',
+			syslogMsgCount: 25,
+			SyslogSeverity: 3,
+		};
+		component.onTableRowSelection(selectedRowData);
+		 expect(component.selectedAsset)
+		 .toBeUndefined();
 	});
 });

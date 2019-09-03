@@ -94,8 +94,6 @@ describe('SyslogsdevicedetailsComponent', () => {
 					keyCode: 13,
 				};
 				component.keyDownFunction(event);
-				expect(event.keyCode)
-					.toEqual(13);
 				expect(component.deviceDetailsParams.includeMsgType)
 					.toEqual(includeMsg);
 				expect(component.deviceDetailsParams.excludeMsgType)
