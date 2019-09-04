@@ -26,3 +26,5 @@ export { TimelineComponent } from './timeline/timeline.component';
 export { TimelineModule } from './timeline/timeline.module';
 export { TooltipModule } from './tooltip/tooltip.module';
 export { UnauthorizedUserModule } from './unauthorized-user/unauthorized-user.module';
+export { VisualFilterBarModule } from './visual-filter-bar/visual-filter-bar.module';
+export { VisualFilterBarComponent } from './visual-filter-bar/visual-filter-bar.component';

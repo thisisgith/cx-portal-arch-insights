@@ -240,7 +240,9 @@ export class RccComponent implements OnInit, OnDestroy {
 				},
 			],
 			dynamicData: false,
+			hover: true,
 			singleSelect: true,
+			striped: false,
 			wrapText: true,
 		});
 	}
@@ -479,7 +481,9 @@ export class RccComponent implements OnInit, OnDestroy {
 				},
 			],
 			dynamicData: false,
+			hover: true,
 			singleSelect: true,
+			striped: false,
 		});
 		this.buildAssetFilters();
 		// this.getRCCAssetData(this.assetGridObj);

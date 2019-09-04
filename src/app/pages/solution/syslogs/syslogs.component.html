@@ -67,7 +67,6 @@
 <ng-template #timeRangeFilter let-filter="filter">
 	<column-chart
 		[seriesData]="filter.seriesData"
-		[width]="width"
 		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
 	>
 	</column-chart>
@@ -82,7 +81,6 @@
 <ng-template #severityFilter let-filter="filter">
 	<column-chart
 		[seriesData]="filter.seriesData"
-		[width]="width"
 		(subfilter)="onSubfilterSelect($event.filter, filter, true)"
 	>
 	</column-chart>
