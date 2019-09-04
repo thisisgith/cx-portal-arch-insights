@@ -48,6 +48,7 @@ export class RiskMitigationComponent {
 	) {
 		const user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(user, ['info', 'customerId']);
+		this.customerId = 7293498;
 	}
 
 	@ViewChild('contextualMenuTemplate',
@@ -259,9 +260,15 @@ export class RiskMitigationComponent {
 						this.crashedAssetsGridDetails.tableOffset = 0;
 
 						this.paginationParams.page = 0;
-						const first = (this.paginationParams.page * 10) + 1;
-						const last = (this.paginationParams.page * 10) +
+						let first = (this.paginationParams.page * 10) + 1;
+						let last = (this.paginationParams.page * 10) +
 						this.paginationParams.limit;
+						if (first > this.crashedAssetsGridDetails.totalItems) {
+							first = this.crashedAssetsGridDetails.totalItems;
+						}
+						if (last > this.crashedAssetsGridDetails.totalItems) {
+							last = this.crashedAssetsGridDetails.totalItems;
+						}
 						this.crashPagination = `${first}-${last}`;
 					}),
 					catchError(err => {
@@ -346,9 +353,16 @@ export class RiskMitigationComponent {
 	public onPagerUpdated (pageInfo: any) {
 		this.crashedAssetsGridDetails.tableOffset = pageInfo.page;
 		this.paginationParams.page = pageInfo.page;
-		const first = (this.paginationParams.page * 10) + 1;
-		const last = (this.paginationParams.page * 10) +
+		let first = (this.paginationParams.page * 10) + 1;
+		let last = (this.paginationParams.page * 10) +
 		this.paginationParams.limit;
+
+		if (first > this.crashedAssetsGridDetails.totalItems) {
+			first = this.crashedAssetsGridDetails.totalItems;
+		}
+		if (last > this.crashedAssetsGridDetails.totalItems) {
+			last = this.crashedAssetsGridDetails.totalItems;
+		}
 		this.crashPagination = `${first}-${last}`;
 	}
 
@@ -420,7 +434,19 @@ export class RiskMitigationComponent {
 						this.status.isLoading = false;
 						this.crashedAssetsGridDetails.tableData = results.deviceDetails;
 						this.crashedAssetsGridDetails.totalItems = results.deviceDetails.length;
-						this.crashHistoryGridDetails.tableOffset = 0;
+						this.crashedAssetsGridDetails.tableOffset = 0;
+
+						this.paginationParams.page = 0;
+						let first = (this.paginationParams.page * 10) + 1;
+						let last = (this.paginationParams.page * 10) +
+						this.paginationParams.limit;
+						if (first > this.crashedAssetsGridDetails.totalItems) {
+							first = this.crashedAssetsGridDetails.totalItems;
+						}
+						if (last > this.crashedAssetsGridDetails.totalItems) {
+							last = this.crashedAssetsGridDetails.totalItems;
+						}
+						this.crashPagination = `${first}-${last}`;
 					}),
 					catchError(err => {
 						this.status.isLoading = false;
@@ -587,7 +613,7 @@ export class RiskMitigationComponent {
 			columns: [
 				{
 					key: 'deviceName',
-					name: I18n.get('_RMDevice_'),
+					name: I18n.get('_RMAsset_'),
 					sortable: false,
 				},
 				{
@@ -660,6 +686,7 @@ export class RiskMitigationComponent {
 	 */
 
 	public onSubfilterSelect (subfilter: string, filter: Filter) {
+		this.clearAllFilters = true;
 		this.resetFilters();
 		const sub = _.find(filter.seriesData, { filter: subfilter });
 		sub.selected = (sub) ? !sub.selected : '';
@@ -690,6 +717,7 @@ export class RiskMitigationComponent {
 	 * Function used to clear the filters
 	 */
 	public clearFilters () {
+		this.clearAllFilters = !this.clearAllFilters;
 		_.each(this.filters, (clearFilter: Filter) => {
 			clearFilter.selected = false;
 			_.each(clearFilter.seriesData, (currentFilter: { selected: boolean; }) => {
@@ -698,7 +726,6 @@ export class RiskMitigationComponent {
 		});
 		this.resetFilters();
 		this.getDeviceDetails('1');
-		this.clearAllFilters = true;
 		const filter = _.find(this.filters, { key: 'advisories' });
 		if (filter) {
 			filter.seriesData[0].selected = true;

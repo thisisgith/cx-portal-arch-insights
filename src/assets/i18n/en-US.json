@@ -859,7 +859,7 @@
 	"_RMASearchCasePlaceholder_": "Enter Case Number",
 	"_RMAShowingXCases_": "Showing {0} cases",
 	"_RMAShowingXofYCases_": "Showing {0} of {1} cases",
-	"_RMAsset_": "Asset",
+	"_RMAsset_": "Host Name",
 	"_RMAssets_": "Assets",
 	"_RMATitle_": "RMA: {0}",
 	"_RMClearAll_": "Clear All",
