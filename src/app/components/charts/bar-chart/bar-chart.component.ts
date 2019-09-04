@@ -164,6 +164,6 @@ export class BarChartComponent implements OnInit {
 			{ currentValue: null, firstChange: false });
 		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
 			this.buildGraph();
-		}		
+		}
 	}
 }
