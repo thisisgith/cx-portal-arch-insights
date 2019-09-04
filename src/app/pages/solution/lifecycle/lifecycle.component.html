@@ -336,7 +336,7 @@
 			</div>
 		</ng-container>
 		<button id="recommendedATXScheduleButton" data-auto-id="recommendedATXScheduleButton"
-			class="btn btn--small btn--secondary text-uppercase"
+			class="btn btn--small btn--secondary text-uppercase qtr-margin-right"
 			[ngClass]="item.sessions?.length > 0 ? null : 'disabled'"
 			(click)="recommendedATXViewSessions()"
 			[innerText]="'_ViewSessions_' | i18n">
@@ -347,7 +347,7 @@
 			target="_blank"
 			rel="noopener noreferrer"
 			[href]="componentData.atx?.recommended?.recordingURL">
-			<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase qtr-margin-left"
+			<button data-auto-id="recommendedATXWatchButton" class="btn btn--small btn--secondary text-uppercase"
 				[innerText]="'_WatchNow_' | i18n"></button>
 		</a>
 	</div>
