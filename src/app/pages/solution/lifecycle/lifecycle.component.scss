@@ -776,26 +776,28 @@ $divider-color: #e1e1e1;
 			background-color: $white;
 			border-radius: 5px;
 			height: 200px;
-			width: 500px;
+			width: 400px;
 			top: 100px;
 		}
 
 		&-recommendedACC {
-			left: -460px;
+			left: -415px;
+			top: 75px;
 		}
 
 		&-moreACCList {
 			left: -415px;
+			top: -90px;
 		}
 
 		&-recommendedElearning,
 		&-successbytes {
-			left: -475px;
+			left: -415px;
 		}
 
-		&-moreATXList,
-		&-moreACCList {
-			top: -90px;
+		&-moreATXList {
+			top: -70px;
+			right: -440px;
 		}
 
 		&-successbytes {
@@ -815,12 +817,9 @@ $divider-color: #e1e1e1;
 			}
 		}
 
-		&-moreATXList {
-			right: -450px;
-		}
-
 		&-recommendedATX {
 			right: -410px;
+			top: 105px;
 		}
 	}
 }
@@ -834,7 +833,6 @@ $divider-color: #e1e1e1;
 		&-moreACCList,
 		&-recommendedATX {
 			padding: 22px 0 22px 28px;
-			width: 400px;
 
 			.atx-popover__title,
 			.acc-popover__title {
@@ -869,13 +867,17 @@ $divider-color: #e1e1e1;
 				padding: 3px 12px;
 			}
 		}
+
+		&-moreATXList,
+		&-recommendedATX {
+			height: 160px;
+		}
 	}
 }
 
 #successbytes-item:hover #sb-hover-panel {
 	&-successbytes {
 		padding: 20px 0 25px 28px;
-		width: 450px;
 		height: 180px;
 
 		.sb-popover__title {
@@ -928,7 +930,6 @@ $divider-color: #e1e1e1;
 #recommended-elearning-item:hover #learn-hover-panel {
 	&-recommendedElearning {
 		padding: 20px 0 25px 28px;
-		width: 450px;
 		height: 180px;
 
 		.learning-popover__title {
@@ -966,8 +967,7 @@ $divider-color: #e1e1e1;
 #recommended-item:hover #acc-hover-panel {
 	&-recommendedACC {
 		padding: 20px 0 25px 28px;
-		width: 450px;
-		height: 180px;
+		height: 220px;
 
 		.acc-popover__title {
 			color: #767676;
