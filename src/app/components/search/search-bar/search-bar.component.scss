@@ -31,12 +31,12 @@ a {
 	z-index: 999999;
 }
 
-.cx-search-input {
-	min-height: 32px !important;
-	padding: 8px 5px 6px 33px !important;
+.cx-search-bar .form-group__text .cx-search-input {
+	min-height: 32px;
+	padding: 8px 5px 6px 33px;
 	color: $text-dark-blue;
-	background-color: $search-bar-bg-color !important;
-	border: none !important;
+	background-color: $search-bar-bg-color;
+	border: none;
 	font-size: 12px;
 	letter-spacing: -0.34px;
 	opacity: 0.81;
@@ -44,15 +44,15 @@ a {
 	&::placeholder {
 		color: $placeholder-light-gray;
 		font-size: 12px;
-		font-style: normal !important;
+		font-style: normal;
 		letter-spacing: -0.34px;
 		opacity: 0.81;
 	}
 
 	&:hover,
 	&:focus {
-		border: 1px solid $vibrant-blue !important;
-		padding-left: 32px !important;
+		border: 1px solid $vibrant-blue;
+		padding-left: 32px;
 	}
 }
 
@@ -60,7 +60,7 @@ a {
 	color: $icon-light-gray;
 }
 
-// Z-index was added due to opactiy of cx-search-input causing blur on FF
+// z-index was added due to opactiy of cx-search-input causing blur on Firefox
 .cx-search-bar .form-group__text button.link {
 	z-index: 1;
 	height: 32px;
