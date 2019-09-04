@@ -54,6 +54,30 @@ $divider-color: #e1e1e1;
 	margin-left: -20px;
 }
 
+:host ::ng-deep .modal__content {
+	position: fixed !important;
+	height: 90% !important;
+	width: 100% !important;
+}
+
+.scrollable-card-content {
+	position: fixed !important;
+	height: 100%;
+}
+
+.scrollable-list-content {
+	position: fixed !important;
+	overflow-y: scroll !important;
+	width: 100%;
+}
+
+.grid {
+	overflow-y: scroll !important;
+	height: 70%;
+	position: fixed;
+	width: 90%;
+}
+
 .atx {
 	&__header {
 		background: $indigo;
@@ -549,7 +573,7 @@ $divider-color: #e1e1e1;
 .listpanel--open::after {
 	content: "";
 	position: absolute;
-	top: 50%;
+	top: 10%;
 	right: -15px;
 	z-index: -1;
 	border-top: 30px solid transparent;
@@ -994,6 +1018,8 @@ $divider-color: #e1e1e1;
 
 .table-responsive {
 	margin-top: 20px;
+	overflow-y: scroll;
+	height: 70%;
 }
 
 %tr-shared {
