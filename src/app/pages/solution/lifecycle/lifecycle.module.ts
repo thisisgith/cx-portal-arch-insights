@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { RacetrackComponentModule } from '@components';
+import { RacetrackComponentModule, TooltipModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { CuiSpinnerModule, CuiSelectModule, CuiRatingModule } from '@cisco-ngx/cui-components';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +11,6 @@ import { environment } from '@environment';
 import { AccRequestFormModule } from './acc-request-form/acc-request-form.module';
 import { CgtRequestFormModule } from './cgt-request-form/cgt-request-form.module';
 import { CommunitiesModule } from './communities/communities.module';
-
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
@@ -46,6 +45,7 @@ const childRoutes: Routes = [
 		RacetrackContentModule.forRoot({ rootUrl }),
 		RacetrackModule.forRoot({ rootUrl }),
 		RouterModule.forChild(childRoutes),
+		TooltipModule,
 	],
 	providers: [
 		{ provide: 'ENVIRONMENT', useValue: environment },

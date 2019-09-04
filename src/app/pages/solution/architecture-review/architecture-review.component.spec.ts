@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ArchitectureReviewComponent } from './architecture-review.component';
 import { ArchitectureReviewModule } from './architecture-review.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -188,36 +188,38 @@ describe('ArchitectureReviewComponent', () => {
 			});
 	});
 
-	it('should get the total count', () => {
+	it('should get the total count', fakeAsync(() => {
 		spyOn(service, 'getSDAReadinessCountResponse')
 			.and
 			.returnValue(of(ArchitectureReviewScenarios[0]
 				.scenarios.GET[0].response.body.TotalCounts));
 
 		component.loadData();
+		tick();
 		expect(service.getSDAReadinessCountResponse)
 			.toHaveBeenCalled();
-	});
+	}));
 
-	it('should call getDevicesCount on init', () => {
-		spyOn(service, 'getDevicesCountResponse')
+	it('should call getDevicesCount on init', fakeAsync(() => {
+		spyOn(service, 'getDevicesCount')
 			.and
 			.returnValue(of(ArchitectureReviewScenarios[0]
 				.scenarios.GET[0].response.body.TotalCounts));
 
-		spyOn(service, 'getDnacCountResponse')
+		spyOn(service, 'getDnacCount')
 			.and
 			.returnValue(of(ArchitectureReviewScenarios[0]
 				.scenarios.GET[0].response.body.TotalCounts));
 
 		component.ngOnInit();
-		expect(service.getDevicesCountResponse)
+		tick();
+		expect(service.getDevicesCount)
 			.toHaveBeenCalled();
-		expect(service.getDnacCountResponse)
+		expect(service.getDnacCount)
 			.toHaveBeenCalled();
-	});
+	}));
 
-	it('should throw errors', () => {
+	it('should throw errors', fakeAsync(() => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -228,7 +230,8 @@ describe('ArchitectureReviewComponent', () => {
 				throwError(new HttpErrorResponse(error)),
 			);
 		component.loadData();
+		tick();
 		expect(component.getDevicesCount)
 			.toThrowError();
-	});
+	}));
 });

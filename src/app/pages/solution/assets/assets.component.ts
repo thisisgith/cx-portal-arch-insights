@@ -432,7 +432,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			rows: this.getRows(),
 			sort: ['deviceName:ASC'],
 		};
-
+		this.selectedSubfilters = [];
 		this.searchForm.controls.search.setValue('');
 		this.allAssetsSelected = false;
 		totalFilter.selected = true;
@@ -527,6 +527,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 		this.assetParams.rows = this.getRows();
 		this.buildTable();
+		this.buildInventorySubject();
+		this.buildFilters();
 		this.route.queryParams.subscribe(params => {
 			if (params.page) {
 				const page = _.toSafeInteger(params.page);
@@ -597,9 +599,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.filtered = !_.isEmpty(
 				_.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page', 'sort']),
 			);
+			const totalFilter = _.find(this.filters, { key: 'total' });
+			totalFilter.selected = !this.filtered;
+			this.loadData();
 		});
-		this.buildInventorySubject();
-		this.buildFilters();
 	}
 
 	/**
@@ -713,7 +716,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				title: I18n.get('_NetworkRole_'),
 			},
 		];
-		this.loadData();
 	}
 
 	/**
