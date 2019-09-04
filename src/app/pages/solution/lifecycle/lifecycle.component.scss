@@ -59,27 +59,6 @@ $vibblue: #017cad;
 	background-color: $light-gray-5;
 }
 
-.learning-duration {
-	padding: 10px;
-	font-size: 12px;
-	position: absolute;
-	bottom: 0;
-	right: 0;
-
-	.icon-clock {
-		padding-right: 4px;
-	}
-}
-
-
-.successbytes-type-link {
-	padding: 10px;
-	font-size: 12px;
-	position: absolute;
-	bottom: 0;
-	left: 0;
-}
-
 .small-panel {
 	padding: 0;
 	line-height: initial;
@@ -365,7 +344,7 @@ $vibblue: #017cad;
 	&__blue__atx {
 		position: absolute;
 		right: 7px;
-		top: 0;
+		top: -1px;
 		color: $indigo;
 	}
 
@@ -373,7 +352,7 @@ $vibblue: #017cad;
 	&__white__atx {
 		position: absolute;
 		right: 7px;
-		top: 0;
+		top: -1px;
 		color: $white;
 		-webkit-text-stroke-width: 1px;
 		-webkit-text-stroke-color: $info;
@@ -382,7 +361,7 @@ $vibblue: #017cad;
 	&__clear {
 		position: absolute;
 		right: 7px;
-		top: 0;
+		top: -1px;
 		z-index: 2;
 		color: transparent;
 		-webkit-text-stroke-width: 1px;
@@ -393,6 +372,17 @@ $vibblue: #017cad;
 	&__white__atx {
 		right: 55px;
 	}
+
+	&--hover {
+		right: 54px;
+	}
+}
+
+.ribbon__blue::before,
+.ribbon__white::before,
+.ribbon__clear::before {
+	font-size: 18px !important;
+	line-height: 18px !important;
 }
 
 .star {
@@ -424,38 +414,30 @@ $vibblue: #017cad;
 	&-recommendedElearning,
 	&-successbytes {
 		display: none;
-	}
+		position: relative;
 
-	&-recommendedACC::after,
-	&-recommendedATX::after,
-	&-moreACCList::after,
-	&-moreATXList::after,
-	&-recommendedElearning::after,
-	&-successbytes::after {
-		content: "";
-		position: absolute;
-		top: 45%;
-		border-top: 10px solid transparent;
-		border-bottom: 10px solid transparent;
-	}
+		.popover-tail {
+			// default styling to right
+			position: absolute;
+			top: calc(50% - 7px);
+			right: -7px;
+			height: 0;
+			width: 0;
+			border: 7px solid #000;
+			border-color: transparent transparent #fff #fff;
+			box-shadow: -2px 2px 3px 0 rgba(0, 0, 0, 0.06);
+			transform: rotate(-135deg);
 
-	&-recommendedACC::after,
-	&-moreACCList::after,
-	&-recommendedElearning::after,
-	&-successbytes::after {
-		right: -15px;
-		border-left: 15px solid white;
-	}
-
-	&-moreATXList::after,
-	&-recommendedATX::after {
-		left: -15px;
-		border-right: 15px solid white;
+			&--left {
+				left: -7px;
+				transform: rotate(45deg);
+			}
+		}
 	}
 }
 
 #recommended-item:hover,
-#moreAccList-item:hover,
+#moreACCList-item:hover,
 #moreATXList-item:hover,
 #successbytes-item:hover,
 #recommended-elearning-item:hover {
@@ -471,7 +453,7 @@ $vibblue: #017cad;
 		&-recommendedElearning {
 			display: block;
 			position: absolute;
-			box-shadow: $base-box-shadow;
+			box-shadow: 0 1px 12px 0 rgba(0, 0, 0, 0.17);
 			z-index: 1;
 			background-color: $white;
 			border-radius: 5px;
@@ -480,11 +462,17 @@ $vibblue: #017cad;
 			top: 100px;
 		}
 
-		&-recommendedACC,
-		&-moreACCList,
+		&-recommendedACC {
+			left: -460px;
+		}
+
+		&-moreACCList {
+			left: -415px;
+		}
+
 		&-recommendedElearning,
 		&-successbytes {
-			left: -480px;
+			left: -475px;
 		}
 
 		&-moreATXList,
@@ -493,11 +481,11 @@ $vibblue: #017cad;
 		}
 
 		&-successbytes {
-			top: -90px;
+			top: -82px;
 		}
 
 		&-recommendedElearning {
-			top: -90px;
+			top: -82px;
 
 			.icon-star,
 			.icon-star-half {
@@ -509,9 +497,171 @@ $vibblue: #017cad;
 			}
 		}
 
-		&-moreATXList,
+		&-moreATXList {
+			right: -450px;
+		}
+
 		&-recommendedATX {
-			right: -460px;
+			right: -410px;
+		}
+	}
+}
+
+#moreATXList-item:hover,
+#moreACCList-item:hover,
+#recommended-item:hover {
+	#atx-hover-panel,
+	#acc-hover-panel {
+		&-moreATXList,
+		&-moreACCList,
+		&-recommendedATX {
+			padding: 22px 0 22px 28px;
+			width: 400px;
+
+			.atx-popover__title,
+			.acc-popover__title {
+				color: #767676;
+				font-size: 16px;
+				line-height: 19px;
+			}
+
+			.atx-popover__description,
+			.acc-popover__description {
+				font-size: 13px;
+				line-height: 17px;
+				color: #394454;
+				padding-right: 28px;
+			}
+
+			.acc-popover__description {
+				margin-bottom: 18px;
+			}
+
+			.atx-popover__footer {
+				margin-top: 18px;
+			}
+
+			.atx-popover__btn,
+			.acc-popover__btn {
+				border: 1px solid #95d1d6;
+				border-radius: 12.5px;
+				color: #58585b;
+				font-size: 12px;
+				line-height: 16px;
+				padding: 3px 12px;
+			}
+		}
+	}
+}
+
+#successbytes-item:hover #sb-hover-panel {
+	&-successbytes {
+		padding: 20px 0 25px 28px;
+		width: 450px;
+		height: 180px;
+
+		.sb-popover__title {
+			color: #767676;
+			font-size: 16px;
+			line-height: 19px;
+		}
+
+		.sb-popover__description {
+			font-size: 13px;
+			line-height: 19px;
+			color: #394454;
+			padding-right: 28px;
+		}
+
+		.sb-popover__footer {
+			position: absolute;
+			bottom: 25px;
+			left: 28px;
+			display: flex;
+			font-size: 10px;
+			color: #929bab;
+			letter-spacing: 0.07px;
+			line-height: 14px;
+
+			.learning-duration {
+				margin-left: 27px;
+
+				.icon-clock {
+					padding-right: 6px;
+					font-size: 10px;
+					color: #bdc5cf;
+				}
+			}
+
+			.successbytes-type-link {
+				.icon-apps,
+				.icon-play-contained,
+				.icon-file-pdf-o,
+				.icon-document {
+					padding-right: 6px;
+					font-size: 10px;
+					color: #bdc5cf;
+				}
+			}
+		}
+	}
+}
+
+#recommended-elearning-item:hover #learn-hover-panel {
+	&-recommendedElearning {
+		padding: 20px 0 25px 28px;
+		width: 450px;
+		height: 180px;
+
+		.learning-popover__title {
+			color: #767676;
+			font-size: 16px;
+			line-height: 19px;
+		}
+
+		.learning-popover__description {
+			font-size: 13px;
+			line-height: 19px;
+			color: #394454;
+			padding-right: 28px;
+			min-height: 38px;
+		}
+
+		.learning-popover__footer {
+			margin-top: 14px;
+			display: flex;
+			justify-content: flex-end;
+			padding-right: 28px;
+			font-size: 10px;
+			color: #929bab;
+			letter-spacing: 0.07px;
+			line-height: 14px;
+
+			/* stylelint-disable-next-line no-descending-specificity */
+			.icon-clock {
+				padding-right: 6px;
+			}
+		}
+	}
+}
+
+#recommended-item:hover #acc-hover-panel {
+	&-recommendedACC {
+		padding: 20px 0 25px 28px;
+		width: 450px;
+		height: 180px;
+
+		.acc-popover__title {
+			color: #767676;
+			font-size: 16px;
+			line-height: 19px;
+		}
+
+		.acc-popover__description {
+			font-size: 13px;
+			line-height: 19px;
+			color: #394454;
+			padding-right: 28px;
 		}
 	}
 }
