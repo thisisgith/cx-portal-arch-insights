@@ -1,25 +1,6 @@
 <div class="visual-filter__carousel" *ngIf="!filterCollapse">
-	<ng-container *ngFor="let filter of filters | slice:0:1">
-		<div id="VisualFilter-{{ filter.key }}"
-			attr.data-auto-id="VisualFilter-{{ filter.key }}"
-			[ngClass]="{
-				'visual-filter__card__selected': filter.selected,
-				'visual-filter__card__not-selected': !filter.selected
-			}"
-			class="filter visual-filter__card"
-			*ngIf="filter.seriesData">
-			<div>
-				<div *ngIf="filter.template">
-					<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
-				</div>
-			</div>
-			<div class="visual-filter__card__title text-uppercase" [ngClass]="{
-					'text-primary': filter.selected,
-					'text-default': !filter.selected
-				}"
-				[innerText]="filter.title">
-			</div>
-		</div>
+	<ng-container *ngIf="customCard; else firstCard;">
+		<ng-container *ngTemplateOutlet="customCard"></ng-container>
 	</ng-container>
 	<div (click)="shiftCarousel(-1)"
 		data-auto-id="carousel-left"
@@ -28,7 +9,7 @@
 		<img src="assets/img/filters/icon-metrics-arrow-left.svg" alt="arrow-left">
 	</div>
 	<div #carousel class="visual-filter__remaining">
-		<ng-container *ngFor="let filter of filters | slice:1; index as i">
+		<ng-container *ngFor="let filter of filters | slice:startIndex">
 			<div id="{{ 'VisualFilter-' + filter.key }}"
 				attr.data-auto-id="VisualFilter-{{ filter.key }}"
 				[ngClass]="{
@@ -36,7 +17,7 @@
 					'visual-filter__card__not-selected': !filter.selected
 				}"
 				class="filter visual-filter__card"
-				*ngIf="filter.seriesData && !filter.loading">
+				*ngIf="filter.seriesData || filter.loading">
 				<div *ngIf="filter.template">
 					<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
 				</div>
@@ -59,3 +40,30 @@
 		<img src="assets/img/filters/icon-metrics-arrow-right.svg" alt="arrow-right">
 	</div>
 </div>
+
+<ng-template #firstCard>
+	<ng-container *ngFor="let filter of filters | slice:0:1">
+		<div id="VisualFilter-{{ filter.key }}"
+			attr.data-auto-id="VisualFilter-{{ filter.key }}"
+			[ngClass]="{
+				'visual-filter__card__selected': filter.selected,
+				'visual-filter__card__not-selected': !filter.selected
+			}"
+			class="filter visual-filter__card"
+			*ngIf="filter.loading || filter.seriesData">
+			<div>
+				<div *ngIf="filter.template">
+					<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
+				</div>
+			</div>
+			<div *ngIf="filter.title"
+				class="visual-filter__card__title text-uppercase"
+				[ngClass]="{
+					'text-primary': filter.selected,
+					'text-default': !filter.selected
+				}"
+				[innerText]="filter.title">
+			</div>
+		</div>
+	</ng-container>
+</ng-template>

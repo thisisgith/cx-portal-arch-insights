@@ -12,7 +12,12 @@ import {
 	CuiPagerModule,
 	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
-import { PieChartModule, DetailsPanelModule, ColumnChartModule } from '@components';
+import {
+	PieChartModule,
+	DetailsPanelModule,
+	ColumnChartModule,
+	VisualFilterBarModule,
+} from '@components';
 import { SyslogsMessagesModule } from './syslogs-messages/syslogs-messages.module';
 import { SyslogsDevicesModule } from './syslogs-devices/syslogs-devices.module';
 
@@ -51,7 +56,7 @@ const childRoutes: Routes = [
 		SyslogsMessagesModule,
 		SyslogsDevicesModule,
 		ColumnChartModule,
-
+		VisualFilterBarModule,
 	],
 })
 export class SyslogsModule { }
