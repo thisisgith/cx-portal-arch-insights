@@ -127,9 +127,7 @@ describe('LifecycleComponent', () => {
 		racetrackSPSpy = spyOn(racetrackContentService, 'getRacetrackSuccessPaths')
 			.and
 			.callFake(args => {
-				// Product Guides call will never have solution or pitstop.
-				// Success Bytes call will always have solution and pitstop.
-				if (!args.solution && !args.pitstop) {
+				if (!args.pitstop) {
 					return of(getActiveBody(SuccessPathScenarios[5]));
 				}
 
@@ -950,7 +948,7 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.learning.productGuides.length)
-						.toEqual(10);
+						.toEqual(81);
 				});
 		});
 
@@ -986,23 +984,104 @@ describe('LifecycleComponent', () => {
 
 			const sb1 = component.componentData.learning.productGuides[1];
 			expect(component.componentData.learning.productGuides[1].bookmark)
-				.toBeFalsy();
-			component.updateBookmark(sb1, 'SB');
+				.toBeTruthy();
+			component.updateBookmark(sb1, 'PG');
 			fixture.detectChanges();
 			expect(component.componentData.learning.productGuides[1].bookmark)
-				.toBeTruthy();
+				.toBeFalsy();
+
+			expect(component.selectedProductGuides.length)
+				.toEqual(81);
 
 			component.selectedFilterForPG = 'Project Planning';
 			component.selectFilter('PG');
 			fixture.detectChanges();
 			expect(component.selectedProductGuides.length)
-				.toEqual(3);
+				.toEqual(6);
 
 			component.selectedFilterForPG = 'Getting Started';
 			component.selectFilter('PG');
 			fixture.detectChanges();
 			expect(component.selectedProductGuides.length)
-				.toEqual(7);
+				.toEqual(8);
+
+			component.selectedFilterForPG = 'Architecture Transition Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Use Cases';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Installation';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(15);
+
+			component.selectedFilterForPG = 'Migration Readiness';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(1);
+
+			component.selectedFilterForPG = 'Design/Config Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Operations';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(23);
+
+			component.selectedFilterForPG = 'Feature Overview';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(4);
+
+			component.selectedFilterForPG = 'Troubleshooting';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(5);
+
+			component.selectedFilterForPG = 'ROI Business Assessment';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(1);
+
+			component.selectedFilterForPG = 'Adoption Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Expert Features Overview';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Performance/Health Monitoring';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(5);
+
+			component.selectedFilterForPG = 'Asset/License Management';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(3);
 
 			component.onSort('title', 'asc', 'PG');
 			fixture.detectChanges();
