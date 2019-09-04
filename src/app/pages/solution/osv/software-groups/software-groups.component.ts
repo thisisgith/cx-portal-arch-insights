@@ -36,10 +36,10 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
 	@ViewChild('recommendationsTemplate', { static: true })
+	private recommendationsTemplate: TemplateRef<{ }>;
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('currentOSVersionsTemp', { static: true })
 	private currentOSVersionsTemp: TemplateRef<{ }>;
-	private recommendationsTemplate: TemplateRef<{ }>;
 	public softwareGroupsTable: CuiTableOptions;
 	public status = {
 		isLoading: true,
