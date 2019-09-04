@@ -55,6 +55,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	/** show multiple version */
 	@Output() public showMultipleVersions = new EventEmitter();
 	public assetDetails: AssetRecommendationsResponse;
+	public timelineData: AssetRecommendationsResponse;
 	public status = {
 		isLoading: true,
 	};
@@ -134,12 +135,12 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public refresh () {
 		if (this.selectedAsset) {
 			this.clear();
-			// this.assetDetailsParams.id = _.get(this.selectedAsset, 'id');
-			// this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
-			// this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
-			// this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
-			// this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
-			// this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
+			this.assetDetailsParams.id = _.get(this.selectedAsset, 'id');
+			this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
+			this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
+			this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
+			this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
+			this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
 			this.fetchAssetDetails();
 		}
 	}
@@ -153,6 +154,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			.pipe(
 				map((response: AssetRecommendationsResponse) => {
 					this.assetDetails = this.groupData(response);
+					this.timelineData = this.sortData(response);
 					this.buildTable();
 				}),
 				takeUntil(this.destroy$),
