@@ -11,29 +11,10 @@
 	<asset-details [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
 </details-panel>
 
-<div class="panel">
-	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading && view">
-		<ng-container *ngFor="let filter of filters; index as i">
-			<div *ngIf="!filter.loading && filter.seriesData.length && filter.view.indexOf(view) > -1"
-				attr.id="AssetsSelectVisualFilter-{{ filter.key }}"
-				attr.data-auto-id="AssetsSelectVisualFilter-{{ filter.key }}" class="panel flex-center filter"
-				[ngClass]="{
-					'filter__selected': filter.selected,
-					'filter__not-selected': !filter.selected
-				}">
-				<div class="base-margin-bottom max-height">
-					<div *ngIf="filter.template" class="max-height">
-						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
-					</div>
-				</div>
-				<div class="filter__title text-muted text-large text-center" *ngIf="filter.title"
-					[innerText]="filter.title"></div>
-			</div>
-			<div *ngIf="filter.loading" class="base-margin-bottom">
-				<cui-spinner></cui-spinner>
-			</div>
-		</ng-container>
-	</div>
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+	<visual-filter-bar [filters]="filters"></visual-filter-bar>
+</div>
+<div class="panel panel--bordered base-margin-top">
 	<div *ngIf="status.isLoading">
 		<cui-spinner></cui-spinner>
 	</div>
