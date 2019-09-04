@@ -16,17 +16,17 @@ import { CrashCount } from '../models/crash-count';
 
 class RiskMitigationService extends __BaseService {
 	static GetAssetsParams: any;
-	static readonly getAllCrashesDataPath = '/api/customerportal/rmc/v1/crash-count/';
+	static readonly getAllCrashesDataPath = '/customerportal/rmc/v1/crash-count/';
 	static readonly getHighCrashRiskDeviceCountDataPath =
-	'/api/customerportal/fingerprint/v1/crash-risk-device-count/';
+	'/customerportal/fingerprint/v1/crash-risk-device-count/';
 	static readonly getDeviceDetailsPath =
-	'/api/customerportal/rmc/v1/crash-detail/';
+	'/customerportal/rmc/v1/crash-detail/';
 	static readonly getSearchedDataPath =
-	'/api/customerportal/rmc/v1/crash-detail/';
+	'/customerportal/rmc/v1/crash-detail/';
 	static readonly getFingerPrintDeviceDetailsDataPath =
-		'/api/customerportal/fingerprint/v1/crash-risk-devices/';
+		'/customerportal/fingerprint/v1/crash-risk-devices/';
 	static readonly getCrashHistoryForDevicePath =
-		'/api/customerportal/rmc/v1/device-frequent-crash-detail/';
+		'/customerportal/rmc/v1/device-frequent-crash-detail/';
 
 	constructor(
 		config: __Configuration,
