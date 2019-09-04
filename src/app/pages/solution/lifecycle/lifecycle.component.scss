@@ -2,6 +2,10 @@
 
 $vibblue: #017cad;
 
+:host > .panel {
+	background: #f5f6f9;
+}
+
 .more-scroll {
 	height: 43px;
 	overflow: scroll;
