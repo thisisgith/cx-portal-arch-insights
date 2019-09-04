@@ -98,6 +98,8 @@ export class CbpDeviceAffectedComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 			],
+			hover: true,
+			striped: false,
 		});
 
 	}

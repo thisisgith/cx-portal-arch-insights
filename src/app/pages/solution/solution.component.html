@@ -30,7 +30,7 @@
 
 <ng-template #breadcrumbs>
 	<div class="flex flex-fluid flex-center-vertical">
-		<div class="icon-home icon--mid"></div>
+		<div class="icon-home icon--mid clickable"  [routerLink]="['/solution/lifecycle']"></div>
 		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"
 			*ngIf="selectedSolution"></div>
 		<div *ngIf="selectedSolution">
