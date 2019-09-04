@@ -36,7 +36,11 @@
 .compare-recommendations table {
 	border: 0;
 
-	& tbody {		
+	& tbody {
+		
+		& tr::after{
+			content: unset !important;
+		}
 
 		& tr td.recommendation {
 			background-color: $light-blue;
