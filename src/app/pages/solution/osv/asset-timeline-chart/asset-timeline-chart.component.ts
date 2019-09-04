@@ -104,7 +104,7 @@ export class AssetTimelineChartComponent implements OnInit, OnChanges {
 						formatter: function () {
 							let format = '';
 							const name = this['point'].groupedLabels ?
-							this['point'].groupedLabels: this['point'].name;
+							this['point'].groupedLabels : this['point'].name;
 							format += `<span style="cursor:pointer;">
 							<span style='cursor:pointer;font-weight: bold;font-size:14px' >
 							${name}</span>
