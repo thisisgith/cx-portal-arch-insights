@@ -1,17 +1,28 @@
-<details-panel *ngIf="selectedAsset" [hidden]="!selectedAsset" [fullscreen]="fullscreen">
-	<details-panel-header (close)="selectedAsset = false" [(fullscreen)]="fullscreen" [fullscreenToggle]="true">
-		<div detailsPanelTitle>
-			<div class="qtr-margin-left text-xlarge half-margin-bottom" [innerText]="selectedAsset?.hostName"></div>
-			<div class="qtr-margin-left text-medium">
-				<span class="text-bold" [innerText]="'_OsvIP_' | i18n"></span>
-				<span class="qtr-margin-left" [innerText]="selectedAsset?.ipAddress"></span>
+<details-panel 
+	*ngIf="selectedAsset" 
+	[hidden]="!selectedAsset" 
+	[fullscreen]="fullscreen">
+		<details-panel-header 
+			(close)="selectedAsset = false" 
+			[(fullscreen)]="fullscreen" 
+			[fullscreenToggle]="true">
+			<div detailsPanelTitle>
+				<div class="qtr-margin-left text-xlarge half-margin-bottom" [innerText]="selectedAsset?.hostName"></div>
+				<div class="qtr-margin-left text-medium">
+					<span class="text-bold" [innerText]="'_OsvIP_' | i18n"></span>
+					<span class="qtr-margin-left" [innerText]="selectedAsset?.ipAddress"></span>
+				</div>
 			</div>
-		</div>
-	</details-panel-header>
-	<asset-details [(selectedAsset)]="selectedAsset" [fullscreen]="fullscreen"></asset-details>
+		</details-panel-header>
+		<asset-details 
+			[(selectedAsset)]="selectedAsset" 
+			[fullscreen]="fullscreen">
+		</asset-details>
 </details-panel>
 
-<app-software-group-detail *ngIf="selectedSoftwareGroup" [tabIndex]="tabIndex"
+<app-software-group-detail 
+	*ngIf="selectedSoftwareGroup" 
+	[tabIndex]="tabIndex"
 	[(selectedSoftwareGroup)]="selectedSoftwareGroup">
 </app-software-group-detail>
 
@@ -47,8 +58,11 @@
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
 	<div *ngIf="view == 'swGroups'">
-		<app-software-groups [(tabIndex)]="tabIndex" (contactSupport)="openContactSupport()"
-			[(selectedSoftwareGroup)]="selectedSoftwareGroup" [filters]="appliedFilters">
+		<app-software-groups 
+			[(tabIndex)]="tabIndex" 
+			(contactSupport)="openContactSupport()"
+			[(selectedSoftwareGroup)]="selectedSoftwareGroup" 
+			[filters]="appliedFilters">
 		</app-software-groups>
 	</div>
 	<div *ngIf="view == 'assets'">
@@ -107,36 +121,44 @@
 				</span>
 			</div>
 		</div>
-		<div class="row toggle" (click)="selectView('assets')" *ngIf="filter.seriesData[0]?.assets > 0"
+		<div class="row toggle" 
+			(click)="selectView('assets')" 
+			*ngIf="filter.seriesData[0]?.assets > 0"
 			[ngClass]="{'text-primary':view == 'assets','text-muted':view != 'assets'}"
 			data-auto-id="TotalVisualFilterAssets">
-			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
-			</div>
-			<div class="col-7 margin-auto">
-				<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
-				<span class="text-primary pull-right" data-balloon-length="medium"
-					[attr.data-balloon]="'_OsvAssetInfo_' | i18n" data-balloon-pos="right">
-					<i class="icon-info icon-small"></i>
-				</span>
-			</div>
+				<div class="col-5 text-right">
+					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].assets"></span>
+				</div>
+				<div class="col-7 margin-auto">
+					<span class="text-large " [innerText]="'_OsvAssets_' | i18n"></span>
+					<span class="text-primary pull-right" 
+						data-balloon-length="medium"
+						[attr.data-balloon]="'_OsvAssetInfo_' | i18n" 
+						data-balloon-pos="right">
+							<i class="icon-info icon-small"></i>
+					</span>
+				</div>
 		</div>
-		<div class="row toggle" (click)="selectView('swVersions')" *ngIf="filter.seriesData[0]?.versions > 0"
+		<div class="row toggle" 
+			(click)="selectView('swVersions')" 
+			*ngIf="filter.seriesData[0]?.versions > 0"
 			[ngClass]="{'text-primary':view == 'swVersions','text-muted':view != 'swVersions'}"
 			data-auto-id="TotalVisualFilterSoftwareVersions">
-			<div class="col-5 text-right">
-				<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
-			</div>
-			<div class="col-7 margin-auto">
-				<span class="text-large half-margin-right" [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
-			</div>
+				<div class="col-5 text-right">
+					<span class="qtr-margin-right text-huge" [innerText]="filter.seriesData[0].versions"></span>
+				</div>
+				<div class="col-7 margin-auto">
+					<span class="text-large half-margin-right" [innerText]="'_OsvSoftwareVersions_' | i18n"></span>
+				</div>
 		</div>
 	</div>
 </ng-template>
 
 <ng-template #assetTypeFilter let-filter="filter">
 	<div class="max-height flex align-items-center">
-		<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
+		<pie-chart 
+			[seriesData]="filter.seriesData" 
+			(subfilter)="onSubfilterSelect($event.filter, filter)">
 		</pie-chart>
 	</div>
 </ng-template>
@@ -174,17 +196,20 @@
 			</div>
 			<div class="col-12 divider qtr-margin-top qtr-margin-bottom"></div>
 			<div class="col-6">
-				<button class="btn btn--primary-ghost btn--small" [innerText]="'_OsvClose_' | i18n"
+				<button class="btn btn--primary-ghost btn--small" 
+					[innerText]="'_OsvClose_' | i18n"
 					(click)="$event.stopPropagation();showProfileInfo = false"
-					data-auto-id="CloseSoftwareProfileInfoDialog"></button>
+					data-auto-id="CloseSoftwareProfileInfoDialog">
+				</button>
 			</div>
 			<div class="text-right col-6 qtr-margin-top">
-				<label class="checkbox vertical-center half-margin-right" (click)="$event.stopPropagation();"
+				<label class="checkbox vertical-center half-margin-right" 
+					(click)="$event.stopPropagation();"
 					data-auto-id="DonotShowProfileInfoAgain">
-					<input type="checkbox" [(ngModel)]="doNotShowAgain" (ngModelChange)="hideInfo($event)"
-						data-auto-id="DonotShowProfileInfoAgainCheckbox">
-					<span id="softwareGroupInfo" class="checkbox__input"></span>
-					<span class="checkbox__label" [innerText]="'_OsvDoNotShowAgain_' | i18n"></span>
+						<input type="checkbox" [(ngModel)]="doNotShowAgain" (ngModelChange)="hideInfo($event)"
+							data-auto-id="DonotShowProfileInfoAgainCheckbox">
+						<span id="softwareGroupInfo" class="checkbox__input"></span>
+						<span class="checkbox__label" [innerText]="'_OsvDoNotShowAgain_' | i18n"></span>
 				</label>
 			</div>
 		</div>

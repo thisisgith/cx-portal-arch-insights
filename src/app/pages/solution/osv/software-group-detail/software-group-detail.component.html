@@ -1,12 +1,19 @@
-<details-panel [minWidth]="'1024px'" *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup"
+<details-panel 
+	[minWidth]="'1024px'" 
+	*ngIf="selectedSoftwareGroup" 
+	[hidden]="!selectedSoftwareGroup"
 	[fullscreen]="fullscreen">
-	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen"
-		[fullscreenToggle]="screenWidth > 1024 ? true : false">
-		<div detailsPanelTitle>
-			<div *ngIf="!showBugs; else bugsTemplateHeader" class="qtr-margin-left text-xlarge half-margin-bottom"
-				[innerText]="selectedSoftwareGroup?.profileName"></div>
-		</div>
-	</details-panel-header>
+		<details-panel-header 
+			(close)="selectedSoftwareGroup = false" 
+			[(fullscreen)]="fullscreen"
+			[fullscreenToggle]="screenWidth > 1024 ? true : false">
+				<div detailsPanelTitle>
+					<div 						 
+						class="qtr-margin-left text-xlarge half-margin-bottom"
+						[innerText]="selectedSoftwareGroup?.profileName">
+					</div>
+				</div>
+		</details-panel-header>
 	<ng-container *ngTemplateOutlet="softwareGroupDetails"></ng-container>
 </details-panel>
 
@@ -35,10 +42,14 @@
 <ng-template #softwareGroupRecommendations>
 	<cui-alert [options]="recommendationAlert"></cui-alert>
 	<div class="base-margin-top">
-		<asset-details [selectedMachineRecommendation]="selectedMachineRecommendation"
-			[recommendations]="recommendations" [accept]="true"
-			(onRecommendationAccept)="onRecommendationAccept($event)" [selectedSoftwareGroup]="selectedSoftwareGroup"
-			[fullscreen]="fullscreen" (showMultipleVersions)="tabIndex = 3">
+		<asset-details 
+			[selectedMachineRecommendation]="selectedMachineRecommendation"
+			[recommendations]="recommendations" 
+			[accept]="true"
+			(onRecommendationAccept)="onRecommendationAccept($event)" 
+			[selectedSoftwareGroup]="selectedSoftwareGroup"
+			[fullscreen]="fullscreen" 
+			(showMultipleVersions)="tabIndex = 3">
 		</asset-details>
 	</div>
 </ng-template>
@@ -54,17 +65,25 @@
 			<div class="flex flex-fill">
 				<div class="flex-center-vertical" *ngIf="assetsPagination && softwareGroupAssets?.length > 0">
 					<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
-					<span [innerText]="'_OsvShowingXofYAssets_' | i18n:assetsPaginationCount:assetsPagination.total"
-						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+					<span 
+						[innerText]="'_OsvShowingXofYAssets_' | i18n:assetsPaginationCount:assetsPagination.total"
+						class="qtr-margin-left text-small text-muted" 
+						data-auto-id="ShowingAssetsCount">
 					</span>
 				</div>
 			</div>
 		</div>
-		<cui-table [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets"></cui-table>
+		<cui-table 
+			[options]="softwareGroupAssetsTable" 
+			[data]="softwareGroupAssets">
+		</cui-table>
 		<div *ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize"
 			class="base-margin-top">
-			<cui-pager [page]="assetsPagination.page - 1" [limit]="assetsPagination.rows"
-				[totalItems]="assetsPagination.total || 0" (onPageChanged)="onAssetsPageChanged($event)">
+			<cui-pager 
+				[page]="assetsPagination.page - 1" 
+				[limit]="assetsPagination.rows"
+				[totalItems]="assetsPagination.total || 0" 
+				(onPageChanged)="onAssetsPageChanged($event)">
 			</cui-pager>
 		</div>
 	</div>
@@ -82,17 +101,25 @@
 			<div class="flex flex-fill">
 				<div class="flex-center-vertical" *ngIf="versionsPagination && softwareGroupVersions?.length > 0">
 					<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
-					<span [innerText]="'_OsvShowingXofYAssets_' | i18n:versionsPaginationCount:versionsPagination.total"
-						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
+					<span 
+						[innerText]="'_OsvShowingXofYAssets_' | i18n:versionsPaginationCount:versionsPagination.total"
+						class="qtr-margin-left text-small text-muted" 
+						data-auto-id="ShowingAssetsCount">
 					</span>
 				</div>
 			</div>
 		</div>
-		<cui-table [options]="softwareGroupVersionsTable" [data]="softwareGroupVersions"></cui-table>
+		<cui-table 
+			[options]="softwareGroupVersionsTable" 
+			[data]="softwareGroupVersions">
+		</cui-table>
 		<div *ngIf="versionsPagination && softwareGroupVersions?.length > softwareGroupVersionsParams.pageSize"
 			class="base-margin-top">
-			<cui-pager [page]="versionsPagination.page - 1" [limit]="versionsPagination.rows"
-				[totalItems]="versionsPagination.total || 0" (onPageChanged)="onVersionsPageChanged($event)">
+			<cui-pager 
+				[page]="versionsPagination.page - 1" 
+				[limit]="versionsPagination.rows"
+				[totalItems]="versionsPagination.total || 0" 
+				(onPageChanged)="onVersionsPageChanged($event)">
 			</cui-pager>
 		</div>
 	</div>
@@ -138,20 +165,32 @@
 					</td>
 					<td class="recommendation"></td>
 					<td class="recommendation ">
-						<button (click)="onAcceptClick()" cuiButton [color]="'primary-ghost'" [small]="true"
-							[wide]="false" [animated]="true" [innerText]="'_OsvAccept_' | i18n"
-							attr.data-auto-id="AcceptVersion-"></button>
-						<button (click)="onCancel()" cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false"
-							[animated]="true" [innerText]="'_Cancel_' | i18n"
-							attr.data-auto-id="CancelAcceptVersion-"></button>
+						<button
+							(click)="onAcceptClick()"
+							class="btn btn--secondary btn--smalle"
+							[innerText]="'_OsvAccept_' | i18n" 
+							attr.data-auto-id="AcceptVersion-">
+						</button>						
+						<button
+							(click)="onCancel()"
+							class="btn btn--secondary btn--smalle"
+							[innerText]="'_Cancel_' | i18n" 
+							attr.data-auto-id="CancelAcceptVersion-">
+						</button>						
 					</td>
 					<td class="recommendation border-left">
-						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
-							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
+						<button 
+							class="btn btn--secondary btn--smalle"
+							[innerText]="'_OsvAccept_' | i18n" 
+							attr.data-auto-id="AcceptVersion-">
+						</button>
 					</td>
 					<td class="recommendation ">
-						<button cuiButton [color]="'primary-ghost'" [small]="true" [wide]="false" [animated]="true"
-							[innerText]="'_OsvAccept_' | i18n" attr.data-auto-id="AcceptVersion-"></button>
+						<button 
+							class="btn btn--secondary btn--smalle"
+							[innerText]="'_OsvAccept_' | i18n" 
+							attr.data-auto-id="AcceptVersion-">
+						</button>
 					</td>
 				</tr>
 				<!-- risk score -->
@@ -192,7 +231,10 @@
 							[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
 						<div class=" text-xlarge" [innerText]="'15'" [ngClass]="{'base-padding-top':!fullscreen}"></div>
 						<div class="base-margin-top">
-							<bar-chart dataLabels="true" backgroundColor="#f2fbfd" [seriesData]="seriesData"
+							<bar-chart 
+								dataLabels="true" 
+								backgroundColor="#f2fbfd" 
+								[seriesData]="seriesData"
 								width="200">
 							</bar-chart>
 						</div>
@@ -212,8 +254,12 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
-								[seriesData]="seriesData"></bar-chart>
+							<bar-chart 
+								width="200" 
+								backgroundColor="#f2fbfd" 
+								dataLabels="true"
+								[seriesData]="seriesData">
+							</bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -231,8 +277,12 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
-								[seriesData]="seriesData"></bar-chart>
+							<bar-chart 
+								width="200" 
+								backgroundColor="#f2fbfd" 
+								dataLabels="true"
+								[seriesData]="seriesData">
+							</bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -250,8 +300,12 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
-								[seriesData]="seriesData"></bar-chart>
+							<bar-chart 
+								width="200" 
+								backgroundColor="#f2fbfd" 
+								dataLabels="true"
+								[seriesData]="seriesData">
+							</bar-chart>
 						</div>
 					</td>
 				</tr>
@@ -263,7 +317,10 @@
 					<td class="recommendation">
 						<div class="text-xlarge half-margin-top" [innerText]="'32'"></div>
 						<div class="base-margin-top">
-							<bar-chart width="200" dataLabels="true" backgroundColor="#f2fbfd"
+							<bar-chart 
+								width="200" 
+								dataLabels="true" 
+								backgroundColor="#f2fbfd"
 								[seriesData]="seriesData">
 							</bar-chart>
 						</div>
@@ -277,8 +334,12 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
-								[seriesData]="seriesData"></bar-chart>
+							<bar-chart 
+								width="200" 
+								backgroundColor="#f2fbfd" 
+								dataLabels="true"
+								[seriesData]="seriesData">
+							</bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -290,8 +351,12 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
-								[seriesData]="seriesData"></bar-chart>
+							<bar-chart 
+								width="200" 
+								backgroundColor="#f2fbfd" 
+								dataLabels="true"
+								[seriesData]="seriesData">
+							</bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
@@ -303,8 +368,12 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
-								[seriesData]="seriesData"></bar-chart>
+							<bar-chart 
+								width="200" 
+								backgroundColor="#f2fbfd" 
+								dataLabels="true"
+								[seriesData]="seriesData">
+							</bar-chart>
 						</div>
 					</td>
 				</tr>

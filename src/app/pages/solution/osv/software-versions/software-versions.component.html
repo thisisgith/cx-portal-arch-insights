@@ -20,7 +20,10 @@
 <cui-alert [options]="alert"></cui-alert>
 <ng-container *ngTemplateOutlet="tableSoftwareVersion"></ng-container>
 <div *ngIf="pagination && softwareVersions?.length > 0" class="base-margin-top">
-	<cui-pager [page]="pagination.page - 1" [limit]="pagination.rows" [totalItems]="pagination.total || 0"
+	<cui-pager 
+		[page]="pagination.page - 1" 
+		[limit]="pagination.rows" 
+		[totalItems]="pagination.total || 0"
 		(onPageChanged)="onPageChanged($event)">
 	</cui-pager>
 </div>
@@ -31,14 +34,15 @@
 
 <ng-template #tableSoftwareVersion>
 	<div *ngIf="!status.isLoading &&  softwareVersions && softwareVersions?.length > 0">
-		<cui-table [options]="softwareVersionsTable" [data]="softwareVersions"
-			(onSortingChanged)="onTableSortingChanged($event)"></cui-table>
+		<cui-table 
+			[options]="softwareVersionsTable" 
+			[data]="softwareVersions"
+			(onSortingChanged)="onTableSortingChanged($event)">
+		</cui-table>
 	</div>
 </ng-template>
 
 
 <ng-template #releaseDate let-item="celldata">
-	<span *ngIf="item?.postDate">
-		{{item.postDate | date}}
-	</span>
+	<span *ngIf="item.postDate" [innerText]="item.postDate | date:medium"></span>
 </ng-template>

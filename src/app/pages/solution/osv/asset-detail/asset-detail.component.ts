@@ -135,12 +135,12 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public refresh () {
 		if (this.selectedAsset) {
 			this.clear();
-			this.assetDetailsParams.id = _.get(this.selectedAsset, 'id');
-			this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
-			this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
-			this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
-			this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
-			this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
+			// this.assetDetailsParams.id = _.get(this.selectedAsset, 'id');
+			// this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
+			// this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
+			// this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
+			// this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
+			// this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
 			this.fetchAssetDetails();
 		}
 	}
