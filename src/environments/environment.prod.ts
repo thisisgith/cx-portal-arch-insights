@@ -42,6 +42,7 @@ export const environment = {
 			'management/network-automation-and-management/dna-center/1-4/user_guide/' +
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
+	logoutUrl: 'https://www.cisco.com/autho/logout.html',
 	mock: [],
 	myCase: 'https://mycase.cloudapps.cisco.com',
 	noAuthEndpoints: [
