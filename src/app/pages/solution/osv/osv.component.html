@@ -43,7 +43,7 @@
 	</ng-container>
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
 	<div *ngIf="view == 'swGroups'">
-		<app-software-groups (contactSupport)="openContactSupport()" [(fullscreen)]="fullscreen"  [(selectedSoftwareGroup)]="selectedSoftwareGroup">
+		<app-software-groups (contactSupport)="openContactSupport()" [(fullscreen)]="fullscreen"  [(selectedSoftwareGroup)]="selectedSoftwareGroup" [cxLevel]="cxLevel">
 		</app-software-groups>
 	</div>
 	<div *ngIf="view == 'assets'">
@@ -51,7 +51,7 @@
 		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">
-		<app-software-versions (contactSupport)="openContactSupport()" ></app-software-versions>
+		<app-software-versions (contactSupport)="openContactSupport()" [cxLevel]="cxLevel"></app-software-versions>
 	</div>
 	<div *ngIf="!view" class="dbl-margin-top text-center text-xlarge">
 		<span [innerText]="'_OsvNoAssets_' | i18n"></span>

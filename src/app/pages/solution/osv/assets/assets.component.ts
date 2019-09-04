@@ -32,6 +32,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	@Input() public selectedAsset;
 	@Input() public filters;
 	@Input() public fullscreen;
+	@Input() public cxLevel;
 	@Output() public fullscreenChange = new EventEmitter<boolean>();
 	@Output() public selectedAssetChange = new EventEmitter<OSVAsset>();
 	@Output() public contactSupport = new EventEmitter();
