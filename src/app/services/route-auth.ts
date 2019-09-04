@@ -21,7 +21,8 @@ export type StrictHttpResponse<T> = HttpResponse<T> & {
 })
 export class RouteAuthService {
 	public hasRccPermission;
-	private rccPath = '/api/customerportal/compliance/v1/service/checkOptInStatus';
+	private rccPath = '/customerportal/compliance/v1/service/checkOptInStatus';
+	public rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 	constructor (private http: HttpClient, private logger: LogService) { }
 
 	/**
@@ -32,7 +33,7 @@ export class RouteAuthService {
 
 	public checkPermissions (customerId: any): __Observable<any> {
 		return this.invokeHTTPGet<any>(
-			`${environment.sdpServiceOrigin}${this.rccPath}?customerId=${customerId}`)
+			`${this.rootUrl}${this.rccPath}?customerId=${customerId}`)
 			.pipe(
 				__map(_r => _r.body),
 				__map(_r => this.hasRccPermission = _r),
