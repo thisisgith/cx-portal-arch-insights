@@ -222,6 +222,9 @@ export class AssetDetailsAdvisoriesComponent
 	public loadMore () {
 		const tab = this.selectedTab;
 		tab.moreLoading = true;
+		if (window.Cypress) {
+			window.loading = true;
+		}
 
 		_.set(tab.params, 'page', _.get(tab.params, 'page') + 1);
 
@@ -242,6 +245,9 @@ export class AssetDetailsAdvisoriesComponent
 		obs.subscribe(
 			() => {
 				tab.moreLoading = false;
+				if (window.Cypress) {
+					window.loading = false;
+				}
 			},
 		);
 	}

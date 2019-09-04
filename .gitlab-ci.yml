@@ -46,11 +46,12 @@ unit:
   script:
     - npm run test:ci
 
-# run our test:automation process for the commit
-# automation:
-#   stage: test
-#   allow_failure: true
-#   before_script:
-#     - npm run start:background
-#   script:
-#     - CYPRESS_CI=$CI CYPRESS_CI_JOB_URL=$CI_JOB_URL CYPRESS_REPORT_URL=https://swtg-qa-apollo-2.cisco.com/ws/cypress-reporting/v1/report npm run test:automation
+# run automated Cypress tests for the commit
+automation:
+  stage: test
+  allow_failure: true
+  before_script:
+    - npm run start:background
+  script:
+    # TODO: Add more spec files (comma separated) once they are stable
+    - npm run test:automation -- --spec "cypress/integration/assets_spec.js"
