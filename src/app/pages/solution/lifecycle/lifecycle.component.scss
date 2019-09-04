@@ -62,6 +62,7 @@ $divider-color: #e1e1e1;
 	&__card {
 		padding: 0;
 		height: 525px;
+		box-shadow: -2px 0 transparent !important;
 
 		&__background {
 			background: $white;
@@ -86,7 +87,7 @@ $divider-color: #e1e1e1;
 	}
 
 	&__card:hover {
-		border-left: 2px solid $vibblue !important;
+		box-shadow: -2px 0 $vibblue !important;
 	}
 }
 
