@@ -6,6 +6,7 @@ import { CuiTableModule, CuiPagerModule, CuiSpinnerModule,
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule } from '@angular/forms';
 import { DnacDetailsModule } from '../dnac-details/dnac-details.module';
+import { DetailsPanelModule } from '@components';
 
 /** Module representing the Devices With Exceptions Component */
 @NgModule({
@@ -18,7 +19,8 @@ import { DnacDetailsModule } from '../dnac-details/dnac-details.module';
 		CuiPagerModule,
 		I18nPipeModule,
 		CuiSpinnerModule,
-		DnacDetailsModule ,
+		DnacDetailsModule,
+		DetailsPanelModule,
 		FormsModule,
 	],
 })
