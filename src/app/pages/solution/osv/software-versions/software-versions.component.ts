@@ -194,6 +194,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
+		_.invoke(this.alert, 'hide');
 		this.destroy$.next();
 		this.destroy$.complete();
 	}

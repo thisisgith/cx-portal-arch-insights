@@ -48,8 +48,7 @@
 	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
 	<div *ngIf="view == 'swGroups'">
 		<app-software-groups [(tabIndex)]="tabIndex" (contactSupport)="openContactSupport()"
-			[(selectedSoftwareGroup)]="selectedSoftwareGroup" [filters]="appliedFilters"
-			(softwareGroupStatusUpdated)="onSoftwareGroupStatusUpdate($event)">
+			[(selectedSoftwareGroup)]="selectedSoftwareGroup" [filters]="appliedFilters">
 		</app-software-groups>
 	</div>
 	<div *ngIf="view == 'assets'">

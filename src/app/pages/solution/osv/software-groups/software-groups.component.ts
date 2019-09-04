@@ -26,7 +26,7 @@ import * as _ from 'lodash-es';
 @Component({
 	selector: 'app-software-groups',
 	styleUrls: ['./software-groups.component.scss'],
-	templateUrl: './software-groups.component.html',	
+	templateUrl: './software-groups.component.html',
 })
 export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public filters;
@@ -35,7 +35,6 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
 	@Input() public tabIndex;
 	@Output() public tabIndexChange = new EventEmitter<number>();
-	@Output() public softwareGroupStatusUpdated = new EventEmitter();
 	@ViewChild('recommendationsTemplate', { static: true })
 	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
 	@ViewChild('currentOSVersionsTemp', { static: true })
@@ -93,10 +92,6 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 			const selected = _.filter(this.softwareGroups, { id: selectedSoftwareGroup.id });
 			if (selected && selected.length > 0) {
 				selected[0].optimalVersion = _.get(selectedSoftwareGroup, 'optimalVersion');
-				if (selected[0].deployment !== _.get(selectedSoftwareGroup, 'deployment')) {
-					selected[0].deployment = _.get(selectedSoftwareGroup, 'deployment');
-					this.softwareGroupStatusUpdated.emit(selectedSoftwareGroup);
-				}
 			}
 		}
 	}
@@ -137,7 +132,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 					});
 					this.softwareGroups = response.uiProfileList;
 					this.pagination = response.pagination;
-
+					this.pagination.rows = this.softwareGroupsParams.pageSize;
 					const first = (this.pagination.rows * (this.pagination.page - 1)) + 1;
 					let last = (this.pagination.rows * this.pagination.page);
 					if (last > this.pagination.total) {
@@ -175,7 +170,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: false,
-						width: '30%',
+						width: '20%',
 					},
 					{
 						key: 'productFamily',
@@ -199,19 +194,19 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
 						template: this.currentOSVersionsTemp,
-						width: '10%',
+						width: '20%',
 					},
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
 						sortable: false,
-						width: '10%',
+						width: '15%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
 						sortable: false,
 						template: this.recommendationsTemplate,
-						width: '10%',
+						width: '15%',
 					},
 					{
 						click: true,
@@ -261,6 +256,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
+		_.invoke(this.alert, 'hide');
 		_.map(this.softwareGroups, (softwareGroup: any) => {
 			softwareGroup.rowSelected = false;
 		});

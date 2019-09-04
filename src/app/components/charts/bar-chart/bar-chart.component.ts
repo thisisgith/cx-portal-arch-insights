@@ -108,7 +108,7 @@ export class BarChartComponent implements OnInit {
 			},
 			series: [
 				{
-					data,					
+					data,
 					enableMouseTracking: !this.loading,
 					minPointLength: 5,
 					name: '',

@@ -37,8 +37,7 @@
 	border: 0;
 
 	& tbody {
-		
-		& tr::after{
+		& tr::after {
 			content: unset !important;
 		}
 

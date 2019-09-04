@@ -153,7 +153,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 						profiles: response.profiles,
 						versions: response.versions,
 					}];
-					this.decideView(response);					
+					this.decideView(response);
 
 					assetTypeFilter.seriesData = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
@@ -174,7 +174,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV Summary : getSummary() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					totalAssetsFilter.loading = false;
-					assetTypeFilter.loading = false;					
+					assetTypeFilter.loading = false;
 					this.view = undefined;
 
 					return of({ });
@@ -328,14 +328,5 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 		} else {
 			window.localStorage.setItem('doNotShowSGInfo', 'false');
 		}
-	}
-
-	/**
-	 * refresh the deploymentstatus pie chart
-	 */
-	public onSoftwareGroupStatusUpdate () {
-		setTimeout(() => {
-			this.loadData();
-		});
 	}
 }

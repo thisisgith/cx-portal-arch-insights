@@ -127,10 +127,10 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public refresh () {
 		if (this.selectedSoftwareGroup && !this.selectedSoftwareGroup.statusUpdated) {
 			this.clear();
-			// const profileName = _.get(this.selectedSoftwareGroup, 'profileName');
-			// this.softwareGroupDetailsParams.profileName = profileName;
-			// this.this.softwareGroupAssetsParams.profileName = profileName;
-			// this.this.softwareGroupVersionsParams.profileName = profileName;
+			const profileName = _.get(this.selectedSoftwareGroup, 'profileName');
+			this.softwareGroupDetailsParams.profileName = profileName;
+			this.softwareGroupAssetsParams.profileName = profileName;
+			this.softwareGroupVersionsParams.profileName = profileName;
 			this.loadData();
 		}
 	}
@@ -294,7 +294,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					},
 					{
 						name: I18n.get('_OsvReleaseDate_'),
-						render: item => item.postDate ?
+						render: item => !_.isNull(item.postDate) ?
 							datePipe.transform(
 								new Date(item.postDate), 'yyyy MMM dd') :
 							'',

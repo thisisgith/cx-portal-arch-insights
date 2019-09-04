@@ -185,7 +185,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						name: I18n.get('_OsvSoftwareGroup_'),
 						sortable: false,
 						width: '10%',
-					},					
+					},
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
@@ -199,16 +199,22 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						width: '10%',
 					},
 					{
-						key: 'deployment',
-						name: I18n.get('_OsvDeploymentStatus_'),
-						sortable: false,						
-						width: '10%',
-					},
-					{
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
 						template: this.versionTemplate,
-						width: '20%',
+						width: '10%',
+					},
+					{
+						key: 'optimalVersion',
+						name: I18n.get('_OsvOptimalVersion_'),
+						sortable: false,
+						width: '10%',
+					},
+					{
+						key: 'deployment',
+						name: I18n.get('_OsvDeploymentStatus_'),
+						sortable: false,
+						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
@@ -250,6 +256,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
+		_.invoke(this.alert, 'hide');
 		_.map(this.assets, (asset: any) => {
 			asset.rowSelected = false;
 		});
