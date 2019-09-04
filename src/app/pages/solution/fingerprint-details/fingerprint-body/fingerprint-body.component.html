@@ -3,10 +3,10 @@
 	<cui-tab [label]="'_CP_SimilarAssets_'| i18n |uppercase">
 		<app-fp-similarassets [asset]="selectedAsset" (devicesSelected)="showComparison($event)"></app-fp-similarassets>
 	</cui-tab>
-	<cui-tab [label]="'_CP_FingerprintIntelligence_' | i18n | uppercase">
+	<cui-tab [label]="'_CP_FingerprintIntelligence_' | i18n | uppercase" *ngIf="cxLevel === 3">
 		<fp-intelligence [asset]="selectedAsset"></fp-intelligence>
 	</cui-tab>
-	<cui-tab [label]="'_CP_Compare_' | i18n | uppercase">
+	<cui-tab [label]="'_CP_Compare_' | i18n | uppercase" *ngIf="cxLevel === 3">
 		<app-fp-compare [devices]="selectedDevices"></app-fp-compare>
 	</cui-tab>
 </cui-tabs>

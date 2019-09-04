@@ -252,6 +252,7 @@ export class LifecycleComponent implements OnDestroy {
 	public selectAccComponent = false;
 	public selectCgtComponent = false;
 	public cgtRequestTrainingClicked = false;
+	public cxLevel: number;
 
 	get currentPitstop () {
 		return _.get(this.componentData, ['racetrack', 'pitstop']);
@@ -270,7 +271,7 @@ export class LifecycleComponent implements OnDestroy {
 	) {
 		this.user = _.get(this.route, ['snapshot', 'data', 'user']);
 		this.customerId = _.get(this.user, ['info', 'customerId']);
-
+		this.cxLevel = _.get(this.user, ['service', 'cxLevel'], 0);
 		const currentSBView = window.sessionStorage.getItem('cxportal.cisco.com:lifecycle:sbview');
 		if (!currentSBView) {
 			window.sessionStorage.setItem('cxportal.cisco.com:lifecycle:sbview', this.sbview);

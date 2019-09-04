@@ -47,7 +47,7 @@
 		</app-software-groups>
 	</div>
 	<div *ngIf="view == 'assets'">
-		<app-assets (contactSupport)="openContactSupport()" [(fullscreen)]="fullscreen" [filters]="appliedFilters"  [(selectedAsset)]="selectedAsset">
+		<app-assets (contactSupport)="openContactSupport()" [(fullscreen)]="fullscreen" [filters]="appliedFilters"  [(selectedAsset)]="selectedAsset" [cxLevel]="cxLevel">
 		</app-assets>
 	</div>
 	<div *ngIf="view == 'swVersions'">

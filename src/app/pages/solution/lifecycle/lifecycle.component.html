@@ -35,7 +35,7 @@
 							data: componentData.learning
 						}">
 					</ng-container>
-					<ng-container *ngIf="enableCGT">
+					<ng-container *ngIf="enableCGT || cxLevel === 3">
 						<ng-container *ngTemplateOutlet="panel; context: {
 							template: cgtPanel,
 							icon: 'communities',
