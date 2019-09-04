@@ -18,8 +18,8 @@ $divider-color: #e1e1e1;
 
 %ribbon {
 	position: absolute;
-	right: 15px;
-	top: -3px;
+	top: 0;
+	right: 11px;
 	font-size: 21px;
 }
 
@@ -659,29 +659,15 @@ $divider-color: #e1e1e1;
 }
 
 .ribbon {
+	&__blue,
 	&__blue__atx {
-		position: absolute;
-		right: 7px;
-		top: -1px;
-		color: $indigo;
-	}
-
-	&__blue {
 		color: $indigo;
 
 		@extend %ribbon;
 	}
 
+	&__white,
 	&__white__atx {
-		position: absolute;
-		right: 7px;
-		top: -1px;
-		color: $white;
-		-webkit-text-stroke-width: 1px;
-		-webkit-text-stroke-color: $info;
-	}
-
-	&__white {
 		color: $white;
 
 		@extend %ribbon__outline;
@@ -695,12 +681,6 @@ $divider-color: #e1e1e1;
 	&--hover {
 		right: 54px;
 	}
-}
-
-.ribbon__blue::before,
-.ribbon__white::before {
-	font-size: 18px !important;
-	line-height: 18px !important;
 }
 
 .star {
