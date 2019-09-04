@@ -7,7 +7,7 @@ import {
 	DevicesWithExceptionsModule } from './devices-with-exceptions/devices-with-exceptions.module';
 import { ChartModule } from 'angular-highcharts';
 import { CuiTabsModule, CuiSpinnerModule , CuiTabsNavModule } from '@cisco-ngx/cui-components';
-import { BarChartModule } from '@components';
+import { BarChartModule, VisualFilterBarModule } from '@components';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { environment } from '@environment';
 import { ArchitectureModules } from '@sdp-api';
@@ -43,6 +43,7 @@ const childRoutes: Routes = [
 		ArchitectureModules.forRoot({ rootUrl }),
 		CuiSpinnerModule,
 		I18nPipeModule,
+		VisualFilterBarModule,
 	],
 })
 export class ArchitectureModule { }
