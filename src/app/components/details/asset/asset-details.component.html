@@ -1,4 +1,4 @@
-<details-panel *ngIf="!isLoading" [hidden]="!asset" [fullscreen]="fullscreen">
+<details-panel *ngIf="!isLoading" [hidden]="!asset" [fullscreen]="fullscreen" id="details-panel">
 	<details-panel-header (close)="onAllPanelsClose()"
 		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
@@ -8,8 +8,9 @@
 			[customerId]="customerId"
 			(alert)="handleAlert($event)">
 		</asset-details-header>
-		<div detailsPanelTitle class="text-xlarge">
-			<span class="qtr-margin-right" *ngIf="element && getProductIcon(element)">
+		<div detailsPanelTitle class="text-xlarge flex-center-vertical">
+			<span class="half-margin-right flex-center-vertical" 
+				*ngIf="element && getProductIcon(element)">
 				<img alt="{{ '_AssetIcon_' | i18n }}"
 					class="icon-asset"
 					attr.data-auto-id="DeviceIcon-{{ asset?.deviceName }}"

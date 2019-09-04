@@ -1,4 +1,5 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
+@import '../../../../mixins.scss';
 
 .filter {
 	&__selected {
@@ -60,4 +61,8 @@
 
 .assetsCount:focus {
 	color: $status-blue;
+}
+
+.form-group__text .rcc-search {
+	@include filter-search;
 }

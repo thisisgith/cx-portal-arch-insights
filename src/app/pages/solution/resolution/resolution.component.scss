@@ -1,5 +1,6 @@
 /* SCSS Component File */
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../../mixins.scss';
 
 .base-list {
 	width: 100%;
@@ -49,4 +50,8 @@
 	padding: 0;
 	margin: 0;
 	bottom: 0;
+}
+
+.form-group__text .resolution-search {
+	@include filter-search;
 }
