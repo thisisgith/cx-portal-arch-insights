@@ -135,7 +135,9 @@ export class CbpRuleViolationComponent implements OnInit, OnChanges {
 					sortable: false,
 				},
 			],
+			hover: true,
 			singleSelect: true,
+			striped: false,
 		});
 	}
 

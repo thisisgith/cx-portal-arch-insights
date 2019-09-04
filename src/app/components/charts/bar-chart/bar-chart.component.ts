@@ -14,13 +14,17 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'bar-chart',
-	template: '<div [chart]="chart"></div>',
+	styleUrls: ['./bar-chart.component.scss'],
+	template: `
+		<div [chart]="chart"></div>
+		<div class="hbar__divider"></div>
+	`,
 })
 export class BarChartComponent implements OnInit {
 
+	@Input() public width;
 	@Input() public loading;
 	@Input() public seriesData;
-	@Input() public width;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -41,6 +45,7 @@ export class BarChartComponent implements OnInit {
 		const categories = [];
 		_.each(this.seriesData, d => {
 			data.push({
+				color: '#92dde4',
 				name: d.label,
 				y: d.value,
 			});
@@ -75,14 +80,17 @@ export class BarChartComponent implements OnInit {
 						}
 					},
 				},
-				height: 100,
+				height: this.seriesData.length * 25,
 				type: 'bar',
-				width: this.width,
+				width: this.width || 225,
 			},
 			credits: {
 				enabled: false,
 			},
 			plotOptions: {
+				bar: {
+					pointWidth: 12,
+				},
 				series: {
 					cursor: 'pointer',
 					point: {
@@ -114,6 +122,16 @@ export class BarChartComponent implements OnInit {
 			},
 			xAxis: {
 				categories,
+				labels: {
+					rotation: 0,
+					style: {
+						color: '#6c757d',
+						fontFamily: 'CiscoSans, Arial, sans-serif',
+						fontSize: '10px',
+						fontWeight: '400',
+					},
+				},
+				lineColor: 'transparent',
 			},
 			yAxis: {
 				visible: false,

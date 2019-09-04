@@ -76,12 +76,12 @@ describe('Accelerator (ACC)', () => { // PBC-32
 					.should('have.text', i18n._Completed_);
 				break;
 			case 'in-progress':
-				cy.getByAutoId('recommendedACC-In-Progress-Icon').should('exist')
+				cy.getByAutoId('recommendedACC-In-Progress-Icon').should('exist');
 				cy.getByAutoId('recommendedACC-In-Progress')
 					.should('have.text', i18n._Requested_);
 				break;
 			case 'requested':
-				cy.getByAutoId('recommendedACC-Requested-Icon').should('exist')
+				cy.getByAutoId('recommendedACC-Requested-Icon').should('exist');
 				cy.getByAutoId('recommendedACC-Requested')
 					.should('have.text', i18n._Requested_);
 				break;
@@ -2158,9 +2158,13 @@ describe('Accelerator (ACC)', () => { // PBC-32
 									.should('not.exist');
 								break;
 							case 'in-progress':
+								cy.getByAutoId('moreACCList-HoverModal-In-Progress')
+									.should('contain', i18n._SessionInProgress_);
+								cy.getByAutoId('Request1on1Button')
+									.should('not.exist');
+								break;
 							case 'requested':
-								cy.getByAutoId('moreACCList-HoverModal-CSEMessage')
-									.should('contain', i18n._CSETouch_);
+								// PBC-602 Green CSE message has been removed
 								cy.getByAutoId('Request1on1Button')
 									.should('not.exist');
 								break;

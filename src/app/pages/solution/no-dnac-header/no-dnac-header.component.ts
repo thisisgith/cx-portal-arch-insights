@@ -1,16 +1,13 @@
 import {
-	Component,
-	HostBinding,
-	Inject,
-	ViewChild,
-	ElementRef,
-	Output,
-	EventEmitter,
-	HostListener,
+	Component, ElementRef, EventEmitter, HostBinding, HostListener, Inject, OnDestroy, OnInit,
+	Output, ViewChild,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { InventoryService } from '@sdp-api';
 import { UtilsService } from '@services';
+import { empty, Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash-es';
-import { environment } from '@environment';
 
 /**
  * Panel for displaying sub-header content
@@ -23,13 +20,15 @@ import { environment } from '@environment';
 	styleUrls: ['./no-dnac-header.component.scss'],
 	templateUrl: './no-dnac-header.component.html',
 })
-export class NoDNACHeaderComponent {
-	public production = _.get(environment, 'production', false);
+export class NoDNACHeaderComponent implements OnDestroy, OnInit {
+	public production = _.get(this.env, 'production', false);
 	public noDNAC = this.utils.getLocalStorage(this.env.ieSetup.DNAC_LS_KEY);
-	public hasCXCollector = this.utils.getLocalStorage(this.env.ieSetup.CX_Coll_Reg_LS_KEY);
+	public hasCXCollector = true;
 	public forceHidden = false;
 	@Output() public buttonData: EventEmitter<{ }> = new EventEmitter<{ }>();
 	private continueSetupButton: ElementRef;
+	private customerId: string;
+	private destroyed$: Subject<void> = new Subject<void>();
 	@ViewChild('continueSetupButton', { static: false }) set button (button: ElementRef) {
 		if (button) {
 			this.continueSetupButton = button;
@@ -42,6 +41,8 @@ export class NoDNACHeaderComponent {
 	}
 	constructor (
 		@Inject('ENVIRONMENT') private env,
+		private inventoryService: InventoryService,
+		private route: ActivatedRoute,
 		private utils: UtilsService,
 	) {
 		if (window.Cypress) {
@@ -56,6 +57,31 @@ export class NoDNACHeaderComponent {
 	@HostListener('window:resize')
 	public onResize () {
 		this.refreshButton();
+	}
+
+	/**
+	 * NgOnDestroy
+	 */
+	public ngOnDestroy () {
+		this.destroyed$.next();
+		this.destroyed$.complete();
+	}
+
+	/**
+	 * NgOnInit
+	 */
+	public ngOnInit () {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.customerId = _.get(user, ['info', 'customerId']);
+		this.inventoryService.getNetworkElements({ customerId: this.customerId })
+			.pipe(
+				catchError(() => empty()),
+				takeUntil(this.destroyed$),
+			)
+			.subscribe(res => {
+				this.hasCXCollector = res.Pagination.total !== 0;
+			});
+
 	}
 
 	/**

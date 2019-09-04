@@ -37,7 +37,7 @@
 
 <!-- asset-details table view -->
 <div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view =='list'">
-		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
 				<thead>
 					<tr>
 						<th *ngFor="let column of assetDetailsTable.columns"
