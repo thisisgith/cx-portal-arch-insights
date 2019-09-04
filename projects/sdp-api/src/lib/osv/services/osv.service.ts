@@ -17,12 +17,12 @@ import { SummaryResponse } from '../models/summary-response';
 	providedIn: 'root',
 })
 class OSVService extends __BaseService {
-	static readonly getSummaryPath = '/api/customerportal/osv-ui/v1/summary';
-	static readonly getSoftwareGroupsPath = '/api/customerportal/osv-ui/v1/profiles';
-	static readonly getSoftwareVersionsPath = '/api/customerportal/osv-ui/v1/versions';
-	static readonly getAssetDetailsPath = '/api/customerportal/osv-ui/v1/assetDetails';
-	static readonly getAssetsPath = '/api/customerportal/osv-ui/v1/assets';
-	static readonly updateAssetPath = '/api/customerportal/osv-ui/v1/updateAsset';
+	static readonly getSummaryPath = '/customerportal/osv-ui/v1/summary';
+	static readonly getSoftwareGroupsPath = '/customerportal/osv-ui/v1/profiles';
+	static readonly getSoftwareVersionsPath = '/customerportal/osv-ui/v1/versions';
+	static readonly getAssetDetailsPath = '/customerportal/osv-ui/v1/assetDetails';
+	static readonly getAssetsPath = '/customerportal/osv-ui/v1/assets';
+	static readonly updateAssetPath = '/customerportal/osv-ui/v1/updateAsset';
 
 	constructor (
 		config: __Configuration,
@@ -228,7 +228,7 @@ class OSVService extends __BaseService {
 	 * - `pf`: Product Family of Asset
 	 * - `swType`: Software Type of Asset
 	 * - `swVersions`: Software Version of Asset
-	 * - `image`: image of the asset 
+	 * - `image`: image of the asset
 	 * @return successful operation
 	 */
 	getAssetDetails (params: OSVService.GetAssetDetailsParams): __Observable<AssetRecommendationsResponse> {

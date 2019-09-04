@@ -12,14 +12,19 @@ import {
 	CuiPagerModule,
 	CuiDropdownModule,
 } from '@cisco-ngx/cui-components';
-import { PieChartModule, DetailsPanelModule, ColumnChartModule } from '@components';
+import {
+	PieChartModule,
+	DetailsPanelModule,
+	ColumnChartModule,
+	VisualFilterBarModule,
+} from '@components';
 import { SyslogsMessagesModule } from './syslogs-messages/syslogs-messages.module';
 import { SyslogsDevicesModule } from './syslogs-devices/syslogs-devices.module';
 
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 /**
  * Child routes for Syslog Module for lazy loading
  */
@@ -51,7 +56,7 @@ const childRoutes: Routes = [
 		SyslogsMessagesModule,
 		SyslogsDevicesModule,
 		ColumnChartModule,
-
+		VisualFilterBarModule,
 	],
 })
 export class SyslogsModule { }

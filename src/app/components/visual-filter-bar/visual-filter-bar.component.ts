@@ -1,9 +1,12 @@
 import {
 	AfterViewChecked,
 	ChangeDetectorRef,
+	ContentChild,
 	Component,
 	ElementRef,
 	Input,
+	OnInit,
+	TemplateRef,
 	ViewChild,
 } from '@angular/core';
 
@@ -17,16 +20,29 @@ import { VisualFilter } from '@interfaces';
 	styleUrls: ['./visual-filter-bar.component.scss'],
 	templateUrl: './visual-filter-bar.component.html',
 })
-export class VisualFilterBarComponent implements AfterViewChecked {
+export class VisualFilterBarComponent implements AfterViewChecked, OnInit {
+	@ContentChild('startingCard', { static: true }) public customCard: TemplateRef<any>;
 	@ViewChild('carousel', { static: false }) public carouselRef: ElementRef;
 	@Input() public filters: VisualFilter[];
 	@Input() public filterCollapse = false;
 	public isOverflowing = false;
+	/* starting index for the carousel. If no custom card is provided,
+	we fill that static slot with the first card,
+	so the carousel starts at the 2nd one (index 1) */
+	public startIndex = 1;
 
 	constructor (
 		private cdr: ChangeDetectorRef,
 	) { }
 
+	/**
+	 * OnInit Lifecycle hook
+	 */
+	public ngOnInit () {
+		if (this.customCard) {
+			this.startIndex = 0;
+		}
+	}
 	/**
 	 * AfterViewChecked lifecycle hook
 	 */
@@ -52,7 +68,7 @@ export class VisualFilterBarComponent implements AfterViewChecked {
 	 */
 	public shiftCarousel (shift: number) {
 		const carousel = this.carouselRef.nativeElement;
-		const itemWidth = carousel.children[1].offsetWidth; // all children should be same width
+		const itemWidth = carousel.children[0].offsetWidth; // all children should be same width
 		carousel.scrollTo(carousel.scrollLeft + (shift * itemWidth), 0);
 	}
 

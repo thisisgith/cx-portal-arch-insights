@@ -1,5 +1,5 @@
 <!-- App Details 360 slide-out -->
-<details-panel [hidden]="!deviceDetails" [fullscreen]="fullscreen">
+<details-panel *ngIf="deviceDetails" [hidden]="!deviceDetails" [fullscreen]="fullscreen">
 	<details-panel-header (close)="onPanelClose()" [(fullscreen)]="fullscreen" [fullscreenToggle]="false">
 		<div detailsPanelTitle class="text-xlarge">
 			<span [innerText]="('_ArchitectureArchitectureReviewFor_' | i18n)">
@@ -30,11 +30,11 @@
 		<cui-tab [label]="'_ArchitectureSDAProductCompatibility_' | i18n | uppercase">
 			<devices-sda [deviceDetails]="deviceDetails"></devices-sda>
 		</cui-tab>
-		<cui-tab [label]="'_ArchitectureL3AccessSwitching_' | i18n | uppercase">
+		<cui-tab [label]="'_ArchitectureL3AccessSwitching_' | i18n | uppercase" disabled="true">
 		</cui-tab>
-		<cui-tab [label]="'_ArchitectureSwitchRedundancy_' | i18n | uppercase">
+		<cui-tab [label]="'_ArchitectureSwitchRedundancy_' | i18n | uppercase" disabled="true">
 		</cui-tab>
-		<cui-tab [label]="'_ArchitectureSwitchInterfaceMTU_'  | i18n | uppercase">
+		<cui-tab [label]="'_ArchitectureSwitchInterfaceMTU_'  | i18n | uppercase" disabled="true">
 		</cui-tab>
 	</cui-tabs>
 </details-panel>

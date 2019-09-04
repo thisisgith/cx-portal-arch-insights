@@ -1,8 +1,8 @@
-<div class="panel">
-	<div class="col-12">
-		<div class="row">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+	<visual-filter-bar [filters]="filters">
+		<ng-template #startingCard>
 			<div
-				class="col-2 text-center  panel panel--bordered-right  syslog-tab"
+				class="text-center  panel panel--bordered-right  syslog-tab"
 			>
 				<div
 					*ngFor="let label of visualLabels; let i = index" data-auto-id="visualLabel"
@@ -13,55 +13,22 @@
 					<div [innerText]="label.label"></div>
 				</div>
 			</div>
-			<div class="col-10">
-				<div class="flex flex-fill flex-fluid">
-					<ng-container *ngFor="let filter of filters; index as i">
-						<div
-							attr.id="SyslogsSelectVisualFilter-{{ filter.key }}"
-							attr.data-auto-id="SyslogsSelectVisualFilter-{{
-								filter.key
-							}}"
-							[ngClass]="{
-								filter__selected: filter.selected,
-								'filter__not-selected': !filter.selected
-							}"
-							class="panel flex-center flex-fill filter"
-						>
-							<div class="base-margin-bottom">
-								<div *ngIf="filter.template">
-									<ng-container
-										*ngTemplateOutlet="
-											filter.template;
-											context: { filter: filter }
-										"
-									></ng-container>
-								</div>
-							</div>
-							<div
-								class="filter__title text-muted text-large"
-								[innerText]="filter.title"
-							></div>
-						</div>
-						<div *ngIf="filter.loading" class="base-margin-bottom">
-							<!-- <cui-spinner></cui-spinner> -->
-						</div>
-					</ng-container>
-				</div>
-			</div>
-		</div>
-	</div>
+		</ng-template>
+	</visual-filter-bar>
+	<!-- <div class="divider qtr-margin-top"></div> -->
+</div>
+<div class="panel panel--bordered base-margin-top">
 	<div class="divider qtr-margin-top visual-filter-divider"></div>
 	<ng-container>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
-	<!-- <div class="divider qtr-margin-top"></div> -->
-</div>
-<div *ngIf="visualLabels[0].active">
-	<syslogs-details [sysFilter]="appliedFilters"></syslogs-details>
-</div>
-<div *ngIf="visualLabels[1].active">
-	<syslogs-devices [assetFilter]="appliedFilters"></syslogs-devices>
+	<div *ngIf="visualLabels[0].active">
+		<syslogs-details [sysFilter]="appliedFilters"></syslogs-details>
+	</div>
+	<div *ngIf="visualLabels[1].active">
+		<syslogs-devices [assetFilter]="appliedFilters"></syslogs-devices>
+	</div>
 </div>
 
 <ng-template #timeRangeFilter let-filter="filter">
@@ -110,7 +77,7 @@
 						attr.data-auto-id="FilterTag-{{ subfilter.filter }}"
 					>
 					<span [innerText]="subfilter.label"></span>
-						
+
 					</span>
 				</ng-container>
 			</ng-container>
@@ -126,4 +93,3 @@
 		</div>
 	</div>
 </ng-template>
-
