@@ -34,6 +34,18 @@ $cui-resource-path: "../node_modules/cisco-ui/dist";
 	color: $soft-black;
 }
 
+.cx-text-default {
+	color: #394454;
+}
+
+.cx-text-secondary {
+	color: #5d656c;
+}
+
+.cx-text-gray {
+	color: #6c757d;
+}
+
 /** Altering tabs css to match Demo app */
 
 .tab__heading {
