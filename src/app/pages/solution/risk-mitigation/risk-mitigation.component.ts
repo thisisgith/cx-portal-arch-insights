@@ -627,6 +627,11 @@ export class RiskMitigationComponent {
 					sortable: false,
 				},
 				{
+					key: 'softwareType',
+					name: I18n.get('_RMSoftwareType_'),
+					sortable: false,
+				},
+				{
 					key: 'softwareVersion',
 					name: I18n.get('_RMSoftwareVersion_'),
 					sortable: false,
