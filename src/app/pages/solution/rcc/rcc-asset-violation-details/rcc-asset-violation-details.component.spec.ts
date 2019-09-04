@@ -84,7 +84,7 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.toBeDefined();
 
 	});
-	it('should select value from policygroup and load table data', done => {
+	it('should select value from policygroup and load table data', () => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -105,10 +105,9 @@ describe('RccAssetViolationDetailsComponent', () => {
 				fixture.detectChanges();
 				expect(component.rccAssetPolicyTableData)
 					.toBeDefined();
-				done();
 			});
 	});
-	it('should select value from policyname and load table data', done => {
+	it('should select value from policyname and load table data', () => {
 
 		component.assetRowParams = {
 			customerId: '7293498',
@@ -127,10 +126,9 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
-		done();
 	});
 
-	it('should select value from policy severity and load table data', done => {
+	it('should select value from policy severity and load table data', () => {
 		component.assetRowParams = {
 			customerId: '7293498',
 			pageIndex: 0,
@@ -148,7 +146,6 @@ describe('RccAssetViolationDetailsComponent', () => {
 			.returnValue(of(RCCScenarios[1].scenarios.GET[0].response.body));
 		expect(component.rccAssetPolicyTableData)
 			.toBeDefined();
-		done();
 	});
 	it('should be used to check on ng on changes', () => {
 		expect(component.selectedAssetData)
@@ -178,19 +175,9 @@ describe('RccAssetViolationDetailsComponent', () => {
 
 	});
 	it('to be called on table sorting changed', () => {
-		component.assetRowParams = {
-			customerId: '7293498',
-			pageIndex: 0,
-			pageSize: 10,
-			policyGroupName: '',
-			policyName: '',
-			serialNumber: 'FCW2246E0PB',
-			severity: '',
-			sortBy: '',
-			sortOrder: '',
-		};
 		component.onTableSortingChanged();
-		component.getAssetPolicyGridData();
+		expect(component.tableOffset)
+			.toEqual(0);
 	});
 
 	it('to be called on getAssetPolicyGridData', () => {
@@ -214,6 +201,10 @@ describe('RccAssetViolationDetailsComponent', () => {
 		.and
 		.returnValue(throwError(new HttpErrorResponse(error)));
 		component.getAssetPolicyGridData();
+		expect(component.errorResult)
+			.toBeTruthy();
+		expect(component.isLoading)
+			.toBeFalsy();
 	});
 
 	it('should invoke onPageIndexChange method', () => {
@@ -229,6 +220,8 @@ describe('RccAssetViolationDetailsComponent', () => {
 			sortOrder: '',
 		};
 		component.onPolicyAssetPagerUpdated({ page: 1, limit : 10 });
+		expect(component.tableOffset)
+			.toEqual(1);
 	});
 
 	it('Should invoke api with error', () => {
