@@ -299,25 +299,33 @@ describe('Case Detail Spec', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
+			// Disable the setup wizard and quick tour so they don't block other elements
+			cy.window().then(win => {
+				win.Cypress.hideDNACHeader = true;
+				win.Cypress.showQuickTour = false;
+			});
 			cy.waitForAppLoading();
 		});
 
 		beforeEach(() => {
-			// Load Advisories
-			cy.server();
 			cy.getByAutoId('Facet-Advisories').click();
-			cy.route('**/customerportal/product-alerts/v1/advisories-security-advisories?*').as('adv');
-			cy.wait('@adv');
 		});
 
-		it('PBC-92 - Assets - Cases - Event Based Case Open (Single Asset)', () => {
+		it.skip('PBC-92 - Assets - Cases - Event Based Case Open (Single Asset)', () => {
 		});
 
 		it('PBC-591 - Assets - Cases - Event Based Case Open (Multiple Assets)', () => {
 			cy.getByAutoId('Showing-Security Advisories-Count').should('exist');
 
-			cy.getByAutoId('Showing-Security Advisories-Count').should('have.value', '1 ').click();
-			// cy.getByAutoId('CaseOpenNextButton').should('exist');
+			cy.getByAutoId('ImpactedCountText').each($row => {
+				if ($row.text() === '2 ') {
+					cy.wrap($row).click();
+				}
+			});
+
+			cy.getByAutoId('SecurityAdvisoryOpenCaseBtn').click();
+			cy.getByAutoId('PanelSelectOption0').click();
+			// TODO - continue selecting to click submit and create a case
 			// cy.getByAutoId('CaseOpenCancelButton').should('exist');
 			// cy.getByAutoId('CaseOpenClose').should('exist').click(); // Click the X
 			// cy.getByAutoId('CaseOpenContinue').should('exist');
