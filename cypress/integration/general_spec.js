@@ -121,6 +121,7 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('Case Search', () => {
@@ -198,6 +199,7 @@ describe('General Spec', () => {
 			cy.login();
 			cy.loadApp();
 			cy.waitForAppLoading();
+			cy.getByAutoId('setup-wizard-header-close-btn').click();
 		});
 
 		it('RMA 800000000 one replacement parts', () => {
@@ -348,8 +350,8 @@ describe('General Spec', () => {
 			cy.loadApp();
 			cy.waitForAppLoading();
 		});
-		it('Contract Search 93425688', () => {
-			// PBC-172
+		it.skip('PBC-172 Contract Search 93425688', () => {
+			// skip: Contract number data missing
 			coverageMock.enable('HEAD Coverage 93425688');
 			coverageMock.enable('GET Coverage 93425688');
 			const contractVal = '93425688';
@@ -374,15 +376,14 @@ describe('General Spec', () => {
 			cy.getByAutoId('relGenRes').should('exist');
 			cy.getByAutoId('searchClose').should('exist').click();
 		});
-		it('Contract search not found 93425333', () => {
-			// PBC-172
+		it('PBC-172 Contract search not found 93425333', () => {
 			coverageMock.enable('HEAD Coverage 93425688');
 			contractMock.enable('Contract Details Success Other Other');
-			const serialVal = '93425333';
+			const contractVal = '93425333';
 			cy.server();
 			cy.route('**/esps/search/suggest/cdcpr01zad?*').as('contract'); // TODO might need to update route
 			cy.getByAutoId('searchBarInput').should('exist').clear()
-				.type(serialVal.concat('{enter}'));
+				.type(contractVal.concat('{enter}'));
 			cy.wait('@contract').then(() => {
 				cy.getByAutoId('serialHeader').should('not.exist');
 				cy.get('app-general-search').should('contain', '10 Results for "contract"');
@@ -468,7 +469,8 @@ describe('General Spec', () => {
 		describe('Search enhancements - PBC-247 PBC-248 PBC-249', () => {
 			beforeEach(() => {
 				// Search for the chosen Serial Number
-				const serialVal = 'FOC1544Y16T'; // real SN
+				// const serialVal = 'FOC1544Y16T'; // real SN
+				const serialVal = 'FOX1333GGGG';
 				cy.server();
 				cy.route('**/esps/search/suggest/cdcpr01zad?*').as('serial');
 				cy.getByAutoId('searchBarInput').should('exist').clear()
@@ -476,14 +478,14 @@ describe('General Spec', () => {
 				cy.wait('@serial');
 			});
 
-			it('Serial Number Intercept - Last Scan Text', () => {
-				// PBC-247
+			it.skip('PBC-247 Serial Number Intercept - Last Scan Text', () => {
+				// TODO  Need to mock lastScan with data in FOX1333GGGG
+				// TODO First need to find sample SN with lastScan populated
 				cy.getByAutoId('clockIcon').should('exist'); // PBC-247 specific
 				cy.getByAutoId('lastScanText').should('exist').should('contain', 'Based on last scan'); // PBC-247 specific
 			});
 
-			it('Serial Number intercept - View Device Details', () => {
-				// PBC-248
+			it('PBC-248 Serial Number intercept - View Device Details', () => {
 				cy.getByAutoId('viewDeviceButton').should('exist').click(); // PBC-248 specific
 				cy.getByAutoId('Asset360SerialNumber').should('exist'); // app360 panel opened
 				cy.getByAutoId('CloseDetails').should('exist').click();
