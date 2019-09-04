@@ -38,6 +38,8 @@ export const defaults = {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
 		CX_Coll_Reg_LS_KEY: 'cxportal.cisco.com:setup-ie:HAS_CX_COLLECTOR',
+		cxCollectorUserGuideLink: 'https://www.cisco.com/c/dam/en/us/support/docs/cloud-' +
+			'systems-management/Cisco-CX-Collector/CX_Collector_FAQ_TB_Guide.pdf',
 		DNAC_LS_KEY: 'cxportal.cisco.com:setup-ie:NO_DNAC',
 		downloadOvaLink: 'http://engci-maven-master.cisco.com/artifactory/services-cf-insight' +
 			'_engine-release/ie/Insight_Engine_1.0/ubuntu/103/CXC_1.0_Build-103.ova',
@@ -48,7 +50,7 @@ export const defaults = {
 			'b_cisco_dna_center_ug_1_4/b_cisco_dna_center_ug_1_4_chapter_01001.html',
 	},
 	learningLink: 'https://pilot-digital-learning.cisco.com/cx/#/',
-	logoutUrl: 'https://www.cisco.com/autho/logout.html',
+	logoutUrl: 'https://www-stage.cisco.com/autho/logout.html',
 	manageProfileUrl: 'https://rpfa.cloudapps.cisco.com/rpfa/profile/profile_management.do',
 	mapboxForwardGeocodePath: '/geocoding/v5/mapbox.places',
 	mapboxHost: 'https://api.mapbox.com',
