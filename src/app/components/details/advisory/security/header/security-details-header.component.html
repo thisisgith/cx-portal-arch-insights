@@ -25,7 +25,7 @@
 
 	<div data-auto-id="SecurityAdvisoryLastUpdated" class="dbl-margin-right">
 		<div class="text-bold text-uppercase" [innerText]="'_LastUpdated_' | i18n"></div>
-		<div [innerText]="(details?.advisory?.lastUpdated | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
+		<div [innerText]="(details?.advisory?.lastUpdated | date:'MMM dd, yyyy') || (details?.advisory?.publishedOn | date:'MMM dd, yyyy') || ('_Never_' | i18n)"></div>
 	</div>
 
 	<div data-auto-id="SecurityAdvisoryVersion" class="dbl-margin-right">
