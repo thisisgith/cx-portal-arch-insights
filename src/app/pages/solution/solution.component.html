@@ -1,6 +1,4 @@
-<no-dnac-header
-	(buttonData)="refreshButtonInfo($event)"
-></no-dnac-header>
+<no-dnac-header (buttonData)="refreshButtonInfo($event)"></no-dnac-header>
 <quick-tour *ngIf="quickTourActive" [steps]="quickTourSteps"></quick-tour>
 <div class="page-container">
 	<div class="panel no-padding-left no-padding-right no-padding-bottom base-padding-top panel--bordered-bottom">
@@ -12,7 +10,8 @@
 				<div class="panel--blgray panel" (click)="openFeedbackModal()" data-auto-id="FeedbackModal">
 					<div class="row flex-center-vertical">
 						<span class="icon-feedback icon-small half-margin-left half-margin-right"></span>
-						<span class="qtr-margin-left qtr-margin-right text-small" [innerText]="'_Feedback' | i18n"></span>
+						<span class="qtr-margin-left qtr-margin-right text-small"
+							[innerText]="'_Feedback' | i18n"></span>
 					</div>
 				</div>
 			</div>
@@ -30,7 +29,7 @@
 
 <ng-template #breadcrumbs>
 	<div class="flex flex-fluid flex-center-vertical">
-		<div class="icon-home icon--mid clickable"  [routerLink]="['/solution/lifecycle']"></div>
+		<div class="icon-home icon--mid clickable" [routerLink]="['/solution/lifecycle']"></div>
 		<div class="icon-chevron-right icon--mid text-muted base-margin-left base-margin-right"
 			*ngIf="selectedSolution"></div>
 		<div *ngIf="selectedSolution">
@@ -70,11 +69,8 @@
 </ng-template>
 
 <ng-template #facetPanel>
-	<div *ngFor="let facet of facets; index as i"
-		attr.data-auto-id="Facet-{{ facet.title }}"
-		(click)="selectFacet(facet, true)"
-		class="flex flex-column panel panel--bordered-right flex-fill"
-		[ngClass]="{
+	<div *ngFor="let facet of facets; index as i" attr.data-auto-id="Facet-{{ facet.title }}"
+		(click)="selectFacet(facet, true)" class="flex flex-column panel panel--bordered-right flex-fill" [ngClass]="{
 			'panel--bordered-left': i === 0,
 			'facet--selected': facet.selected
 		}">
@@ -91,29 +87,40 @@
 </ng-template>
 
 <ng-template #lifecycleFacet let-facet="facet">
-	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugeLabel || '0%' }}"
+	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0" value="{{ facet?.data?.gaugeLabel || '0%' }}"
 		color="primary">
 	</cui-gauge>
 </ng-template>
 
 <ng-template #assetsFacet let-facet="facet">
-	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-		value="{{ facet?.data?.gaugeLabel || '0%' }}"
+	<cui-gauge [percentage]="facet?.data?.gaugePercent || 0" value="{{ facet?.data?.gaugeLabel || '0%' }}"
 		color="primary">
 	</cui-gauge>
 </ng-template>
 
 <ng-template #insightsFacet let-facet="facet">
-		<cui-gauge [percentage]="facet?.data?.gaugePercent || 0"
-			value="{{ facet?.data?.gaugeLabel || '0%' }}"
-			color="primary">
-		</cui-gauge>
-	</ng-template>
+	<div class="row">
+		<div class="col-md-3 insights-total base-padding-top half-padding-right">
+			8
+		</div>
+		<div class="col-md-9">
+			<div class="col-md-12 no-padding-left">
+				<div class="opacity-50">0 Compliance issues</div>
+			</div>
+			<div class="col-md-12 no-padding-left">
+				<div class="opacity-50">3 Predicted crashes</div>
+			</div>
+			<div class="col-md-12 no-padding-left">
+				<div class="opacity-50">5 Recent crashes</div>
+			</div>
+		</div>
+	</div>
+</ng-template>
 
 <ng-template #advisoriesFacet let-facet="facet">
 	<div class="base-padding-bottom flex-fluid flex-center-horizontal">
-		<bar-chart *ngIf="facet?.seriesData && !facet?.loading" [seriesData]="facet?.seriesData" [width]="350"></bar-chart>
+		<bar-chart *ngIf="facet?.seriesData && !facet?.loading" [seriesData]="facet?.seriesData" [width]="350">
+		</bar-chart>
 		<div *ngIf="!facet?.seriesData && !facet?.loading"
 			class="text-muted flex-center text-large base-padding-left base-padding-right dbl-padding-top dbl-padding-bottom"
 			[innerText]="'_NoOpenAdvisories_' | i18n">
@@ -125,29 +132,31 @@
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
-		<div *ngIf="(casesCount == 0 && RMACount == 0); else caseCountContent">
-			<ng-container *ngTemplateOutlet="noCaseContent"></ng-container>
-		</div>
-		<ng-template #noCaseContent>
-			<div class="text-muted text-xlarge base-padding-left base-padding-right dbl-padding-top qtr-padding-bottom" [innerText]="'_NoOpenCases_' | i18n"></div>
-			<div class="text-muted text-xlarge base-padding-left base-padding-right base-padding-bottom" [innerText]="'_NoOpenRMAs_' | i18n"></div>
-		</ng-template>
-		<ng-template #caseCountContent>
-			<div class="row no-margin base-padding-left base-padding-right">
-				<div class="col-5">
-					<div data-auto-id="openCases" class="text-muted text-xlarge" [innerText]="'_OpenCases_' | i18n"></div>
-				</div>
-				<div class="col-7 no-padding-left">
-					<div class="text-xlarge opacity-50" [innerText]="casesCount"></div>
-				</div>
-				<div class="col-5 base-padding-top">
-					<div data-auto-id="openRMAs" class="text-primary text-xlarge" [innerText]="'_WithRMAs_' | i18n"></div>
-				</div>
-				<div class="col-7 no-padding-left base-padding-top">
-					<div class="text-xlarge opacity-50" [innerText]="RMACount"></div>
-				</div>
-			</div>
-		</ng-template>
+	<div *ngIf="(casesCount == 0 && RMACount == 0); else caseCountContent">
+		<ng-container *ngTemplateOutlet="noCaseContent"></ng-container>
+	</div>
+	<ng-template #noCaseContent>
+		<div class="text-muted text-xlarge base-padding-left base-padding-right dbl-padding-top qtr-padding-bottom"
+			[innerText]="'_NoOpenCases_' | i18n"></div>
+		<div class="text-muted text-xlarge base-padding-left base-padding-right base-padding-bottom"
+			[innerText]="'_NoOpenRMAs_' | i18n"></div>
 	</ng-template>
+	<ng-template #caseCountContent>
+		<div class="row no-margin base-padding-left base-padding-right">
+			<div class="col-5">
+				<div data-auto-id="openCases" class="text-muted text-xlarge" [innerText]="'_OpenCases_' | i18n"></div>
+			</div>
+			<div class="col-7 no-padding-left">
+				<div class="text-xlarge opacity-50" [innerText]="casesCount"></div>
+			</div>
+			<div class="col-5 base-padding-top">
+				<div data-auto-id="openRMAs" class="text-primary text-xlarge" [innerText]="'_WithRMAs_' | i18n"></div>
+			</div>
+			<div class="col-7 no-padding-left base-padding-top">
+				<div class="text-xlarge opacity-50" [innerText]="RMACount"></div>
+			</div>
+		</div>
+	</ng-template>
+</ng-template>
 
 <cui-modal></cui-modal>
