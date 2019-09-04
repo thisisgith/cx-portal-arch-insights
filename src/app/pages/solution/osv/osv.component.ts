@@ -114,16 +114,6 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_OsvAssets_'),
 				view: ['assets'],
 			},
-			{
-				key: 'deploymentStatus',
-				loading: true,
-				selected: false,
-				seriesData: [],
-				template: this.deploymentStatusFilterTemplate,
-				title: I18n.get('_OsvOptimalSoftwareDeploymentStatus_'),
-				view: ['swGroups'],
-			},
-
 		];
 		this.loadData();
 	}
@@ -153,31 +143,17 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 
 		const totalAssetsFilter = _.find(this.filters, { key: 'totalAssets' });
 		const assetTypeFilter = _.find(this.filters, { key: 'assetType' });
-		const deploymentStatusFilter = _.find(this.filters, { key: 'deploymentStatus' });
 		return this.osvService.getSummary({ customerId: this.customerId })
 			.pipe(
 				map((response: SummaryResponse) => {
 					totalAssetsFilter.loading = false;
 					assetTypeFilter.loading = false;
-					deploymentStatusFilter.loading = false;
 					totalAssetsFilter.seriesData = [{
 						assets: response.assets,
 						profiles: response.profiles,
 						versions: response.versions,
 					}];
-					this.decideView(response);
-
-					deploymentStatusFilter.seriesData = _.compact(
-						_.map(response.deployment, (value: number, key: string) => {
-							if (value !== 0) {
-								return {
-									value,
-									filter: key,
-									label: _.capitalize(key),
-									selected: false,
-								};
-							}
-						}));
+					this.decideView(response);					
 
 					assetTypeFilter.seriesData = _.compact(
 						_.map(response.asset_profile, (value: number, key: string) => {
@@ -198,8 +174,7 @@ export class OptimalSoftwareVersionComponent implements OnInit, OnDestroy {
 					this.logger.error('OSV Summary : getSummary() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 					totalAssetsFilter.loading = false;
-					assetTypeFilter.loading = false;
-					deploymentStatusFilter.loading = false;
+					assetTypeFilter.loading = false;					
 					this.view = undefined;
 
 					return of({ });

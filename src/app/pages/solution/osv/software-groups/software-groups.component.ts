@@ -25,7 +25,7 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'app-software-groups',
-	templateUrl: './software-groups.component.html',
+	templateUrl: './software-groups.component.html',	
 })
 export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public filters;
@@ -174,7 +174,7 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: false,
-						width: '25%',
+						width: '30%',
 					},
 					{
 						key: 'productFamily',
@@ -186,17 +186,11 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 						key: 'assetCount',
 						name: I18n.get('_OsvAssetCount_'),
 						sortable: false,
-						width: '5%',
+						width: '10%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
-						sortable: false,
-						width: '10%',
-					},
-					{
-						key: 'deployment',
-						name: I18n.get('_OsvDeploymentStatus_'),
 						sortable: false,
 						width: '10%',
 					},

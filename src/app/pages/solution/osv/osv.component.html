@@ -30,7 +30,7 @@
 						<ng-container *ngTemplateOutlet="filter.template; context: { filter: filter }"></ng-container>
 					</div>
 				</div>
-				<div class="filter__title text-muted text-large text-center" *ngIf="filter.title"
+				<div class="filter__title text-muted text-large text-center dbl-padding-left dbl-padding-right" *ngIf="filter.title"
 					[innerText]="filter.title"></div>
 			</div>
 			<div *ngIf="filter.loading" class="base-margin-bottom">
@@ -135,18 +135,11 @@
 	</div>
 </ng-template>
 
-<ng-template #deploymentStatusFilter let-filter="filter">
-	<div>
-		<pie-chart [width]="400" [seriesData]="filter.seriesData"
-			(subfilter)="onSubfilterSelect($event.filter, filter)">
+<ng-template #assetTypeFilter let-filter="filter">
+	<div class="max-height flex align-items-center">
+		<pie-chart [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
 		</pie-chart>
 	</div>
-
-</ng-template>
-
-<ng-template #assetTypeFilter let-filter="filter">
-	<pie-chart [width]="400" [seriesData]="filter.seriesData" (subfilter)="onSubfilterSelect($event.filter, filter)">
-	</pie-chart>
 </ng-template>
 <cui-modal></cui-modal>
 <ng-template #softwareProfileInfo>

@@ -70,6 +70,15 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 			visibleATXItems.forEach((item, index) => {
 				if (index !== 0) { // Ignore recommended title
 					cy.wrap($list).should('contain', item.title);
+
+					// PBC-603 Hover should include bookmark ribbon
+					if (item.bookmark) {
+						cy.getByAutoId('moreATXList-HoverModal-BookmarkRibbon')
+							.should('have.class', 'ribbon__blue');
+					} else {
+						cy.getByAutoId('moreATXList-HoverModal-BookmarkRibbon')
+							.should('have.class', 'ribbon__white');
+					}
 				}
 			});
 			invisibleATXItems.forEach(item => {
@@ -152,6 +161,14 @@ describe('Ask The Expert (ATX)', () => { // PBC-31
 				cy.getByAutoId('recommendedATX-Presenter').should('have.text', `Instructor: ${scheduledSession.presenterName}`);
 				cy.getByAutoId('recommendedATXScheduleButton').should('be.visible');
 				cy.getByAutoId('recommendedATXWatchButton').should('be.visible');
+				// PBC-603 Hover should include bookmark ribbon
+				if (firstItem.bookmark) {
+					cy.getByAutoId('recommendedATX-HoverModal-BookmarkRibbon')
+						.should('have.class', 'ribbon__blue');
+				} else {
+					cy.getByAutoId('recommendedATX-HoverModal-BookmarkRibbon')
+						.should('have.class', 'ribbon__white');
+				}
 			});
 	});
 

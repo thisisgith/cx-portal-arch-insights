@@ -26,8 +26,8 @@
 </div>
 
 <ng-template #tableProfileGroups>
-	<div *ngIf="!status.isLoading && assetsTable && assets?.length">
-		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
+	<div class="responsive-table" *ngIf="!status.isLoading && assetsTable && assets?.length">
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
 			<thead>
 				<tr>
 					<th *ngFor="let column of assetsTable.columns"
@@ -65,11 +65,6 @@
 <div *ngIf="status.isLoading">
 	<cui-spinner></cui-spinner>
 </div>
-
-<ng-template #actionsTemplate let-item="celldata">
-	<cui-dropdown [actions]="getRowActions(item)" position="left" icon="icon-more icon-medium text-muted rotate-90">
-	</cui-dropdown>
-</ng-template>
 
 <ng-template #recommendationsTemplate let-item="celldata">
 	<div *ngIf="item?.recommendationCount && item.recommendationCount > 0 ;else noRecommendationsTemp">

@@ -27,8 +27,8 @@
 </div>
 
 <ng-template #tableSoftwareGroups>
-	<div *ngIf="!status.isLoading && softwareGroupsTable && softwareGroups?.length">
-		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
+	<div class="responsive-table" *ngIf="!status.isLoading && softwareGroupsTable && softwareGroups?.length">
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
 			<thead>
 				<tr>
 					<th *ngFor="let column of softwareGroupsTable.columns"

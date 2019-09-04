@@ -19,31 +19,6 @@
 			@include xl {
 				margin-right: $base-spacing * 1.5 !important;
 			}
-
-			> a {
-				text-transform: uppercase;
-				font-size: $base-font-size !important;
-				padding-bottom: 0 !important;
-
-				&:hover {
-					color: $primary !important;
-					transition: box-shadow 0.2s linear;
-					box-shadow: 0 -3px 0 $primary inset !important;
-				}
-			}
-
-			&.active {
-				> a {
-					color: $primary !important;
-					box-shadow: 0 -3px 0 $primary inset !important;
-				}
-			}
-
-			&:hover {
-				color: $primary !important;
-				transition: box-shadow 0.2s linear;
-				box-shadow: 0 -3px 0 $primary inset !important;
-			}
 		}
 	}
 }
@@ -61,9 +36,11 @@
 .compare-recommendations table {
 	border: 0;
 
-	& tbody {
+	& tbody {		
+
 		& tr td.recommendation {
 			background-color: $light-blue;
+			border-left: 1px solid $light-gray-5;
 		}
 
 		& td.no-border-top {

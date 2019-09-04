@@ -18,7 +18,7 @@
 </div>
 
 <!-- asset-details table view -->
-<div class="dbl-margin-top" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view =='list'">
+<div class="dbl-margin-top responsive-table" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view =='list'">
 	<table class="table table--compressed table--wrap table--lined table--nostripes assetDetailsTable">
 		<thead>
 			<tr>
@@ -52,8 +52,8 @@
 		</tbody>
 	</table>
 	<!-- current version well -->
-	<div class="base-margin-top panel--ltgray panel--well half-padding background-light-blue">
-		<table class="table table--compressed table--wrap table--lined table--nostripes">
+	<div class=" responsive-table base-margin-top panel--ltgray panel--well half-padding background-light-blue">
+		<table class="table table--compressed table--wrap table--lined table--nostripes no-margin-top">
 			<tbody>
 				<tr attr.data-auto-id="AssetDetails-{{ currentVersion.swVersion }}">
 					<td *ngFor="let column of assetDetailsTable.columns" [ngStyle]="{ 'width': column.width }"

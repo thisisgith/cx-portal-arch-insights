@@ -164,7 +164,7 @@ export class SoftwareVersionsComponent implements OnInit, OnDestroy {
 				selectable: false,
 				singleSelect: false,
 				sortable: true,
-				striped: true,
+				striped: false,
 				wrapText: true,
 			});
 		}

@@ -215,6 +215,7 @@ export class RccDeviceViolationDetailsComponent implements OnInit, OnDestroy {
 				},
 			],
 			dynamicData: false,
+			hover: true,
 			padding: 'regular',
 			rowWellColor: 'black',
 			rowWellTemplate: this.policyRowWellTemplate,

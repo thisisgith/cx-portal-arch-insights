@@ -20,7 +20,7 @@ import { ContactSupportResponse } from '../models/contact-support-response';
 class EmailControllerService extends __BaseService {
 	static readonly getEmailsByFilterPath = '/list';
 	static readonly sendEmailPath = '/send';
-	static readonly contactSupportPath = '/api/customerportal/criticalBugs/v1/mail/sendEmail';
+	static readonly contactSupportPath = '/customerportal/criticalBugs/v1/mail/sendEmail';
 
 	constructor (
 		config: __Configuration,
