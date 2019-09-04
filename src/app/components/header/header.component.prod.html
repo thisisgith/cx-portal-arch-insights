@@ -8,7 +8,7 @@
 					<h5 *ngIf="searchBreakpointShow(600)" class="text-nowrap" [innerText]="'_ApplicationName_' | i18n" data-auto-id="HeaderCPLogoLink"></h5>
 					<a *ngIf="searchBreakpointShow(1023)" class="cx-header-links" [href]="communityLink" target="_blank" data-auto-id="HeaderCommunityLink" [title]="'_Communities_' | i18n">
 						<div class="text-nowrap">
-							<span class="cx-header-icon icon-communities hidden-xs"></span>
+							<span class="cx-header-icon text-xlarge icon-communities hidden-xs"></span>
 							<span class="cx-header-label hidden-sm hidden-xs" [innerText]="'_Communities_' | i18n"></span>
 						</div>
 					</a>
@@ -25,7 +25,7 @@
 			</div>
 			<div class="header-toolbar">
 				<div *ngIf="!searchExpanded" class="hidden-lg hidden-xl half-margin-right cx-search-button" (click)="expandSearch()" (focus)="expandSearch()" tabindex="0" data-auto-id="HeaderSearchExpandButton">
-					<span class="cx-header-icon--small icon-search"></span>
+					<span class="cx-header-icon--small text-large icon-search"></span>
 				</div>
 				<!-- TODO: Quick Help is not part of the August release -->
 				<!-- <span #quickHelp class="cx-header-links hidden-xs" [ngClass]="{ 'cx-header-links--active': quickHelp.active }" (click)="toggleDropdown(quickHelpDropdown, quickHelp)" [title]="'_QuickHelp_' | i18n">
@@ -81,12 +81,12 @@
 				<span class="v-separator hidden-md hidden-sm hidden-xs"></span>
 				<span class="cx-header-links cx-header-links--settings hidden-md hidden-sm hidden-xs">
 					<div data-auto-id="Admin" [title]="'_Admin_' | i18n" [routerLink]="['admin']">
-						<span class="cx-header-icon icon-cog"></span>
+						<span class="cx-header-icon text-xlarge icon-cog"></span>
 					</div>
 				</span>
 				<span #portalHelp class="cx-header-links cx-header-links--portal-help hidden-md hidden-sm hidden-xs" [ngClass]="{ 'cx-header-links--active': portalHelp.active }" (click)="toggleDropdown(portalHelpDropdown, portalHelp)" [title]="'_PortalHelp_' | i18n" data-auto-id="HeaderPortalHelpButton">
 					<div>
-						<span class="cx-header-icon icon-help-alt" [ngClass]="{ 'text-primary': portalHelp.active }"></span>
+						<span class="cx-header-icon text-xlarge icon-help-alt" [ngClass]="{ 'text-primary': portalHelp.active }"></span>
 						<span></span>
 						<span class="cx-header-arrow" [ngClass]="{ 'rotate-180': portalHelp.active }">&#9662;</span>
 					</div>
@@ -180,19 +180,19 @@
 					<div class="cx-team-member--title" [innerText]="member.title"></div>
 					<div class="cx-team-member--phone flex-center-vertical">
 						<span class="icon-mobile-phone"></span>
-						<span [innerText]="member.phone"></span>
+						<span class="text-small" [innerText]="member.phone"></span>
 					</div>
 					<div class="cx-team-member--contact flex-center-vertical">
 						<span class="icon-email"></span>
-						<a href="mailto:{{ member.emailAddress }}" [innerText]="member.emailAddress" attr.data-auto-id="Cisco TeamMemberEmailLink-{{ member.emailAddress }}"></a>
+						<a class="text-small" href="mailto:{{ member.emailAddress }}" [innerText]="member.emailAddress" attr.data-auto-id="Cisco TeamMemberEmailLink-{{ member.emailAddress }}"></a>
 					</div>
 					<div class="cx-team-member--contact flex-center-vertical">
 						<span class="icon-webex"></span>
-						<a [innerText]="'_Webex_' | i18n" [href]="webexUrl + member.ccoId" attr.data-auto-id="CiscoTeamMemberWebexLink-{{ member.ccoid }}"></a>
+						<a class="text-small" [innerText]="'_Webex_' | i18n" [href]="webexUrl + member.ccoId" attr.data-auto-id="CiscoTeamMemberWebexLink-{{ member.ccoid }}"></a>
 					</div>
 					<div class="cx-team-member--contact flex-center-vertical">
 						<span class="icon-webex-teams-16"></span>
-						<a [innerText]="'_WebexTeams_' | i18n" [href]="sanitize(webexTeamsUrl + member.emailAddress)" attr.data-auto-id="CiscoTeamMemberWebexTeamsLink-{{ member.emailAddress }}"></a>
+						<a class="text-small" [innerText]="'_WebexTeams_' | i18n" [href]="sanitize(webexTeamsUrl + member.emailAddress)" attr.data-auto-id="CiscoTeamMemberWebexTeamsLink-{{ member.emailAddress }}"></a>
 					</div>
 				</div>
 			</div>

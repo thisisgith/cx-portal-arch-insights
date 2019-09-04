@@ -13,6 +13,8 @@ $separator-light-gray: #d9d9da;
 $divider-light-gray: #dfdede;
 $link-light-blue: #227bb1;
 $link-hover-background: #ecf4fc;
+$text-xsmall: 10px;
+$text-larger: 19px;
 
 %cx-dropdown-menu-item {
 	padding: 0 20px;
@@ -54,11 +56,10 @@ $link-hover-background: #ecf4fc;
 }
 
 .header-bar__logo {
-	margin-left: 19px;
+	margin-left: 20px;
 
 	span.icon-cisco {
 		color: $primary;
-		font-size: 29px;
 	}
 }
 
@@ -114,7 +115,7 @@ $link-hover-background: #ecf4fc;
 	display: flex;
 	flex-direction: column;
 	height: 38px;
-	margin-right: 14px;
+	margin-right: 15px;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
@@ -136,8 +137,6 @@ $link-hover-background: #ecf4fc;
 
 .cx-header-icon {
 	margin-right: $base-spacing * 0.25;
-	line-height: 24px;
-	font-size: 24px;
 	color: $icon-light-gray-1;
 
 	&--small {
@@ -157,7 +156,7 @@ $link-hover-background: #ecf4fc;
 
 .header-toolbar .cx-header-links .cx-user-label {
 	letter-spacing: -0.18px;
-	font-size: 10px;
+	font-size: $text-xsmall;
 	line-height: 14px;
 }
 
@@ -171,23 +170,11 @@ $link-hover-background: #ecf4fc;
 	margin-right: 70px;
 }
 
-.cx-header-links--teams {
-	a {
-		margin-left: 8px;
-		font-size: 12px;
-		line-height: 14px;
-	}
-
-	::ng-deep .cx-header-dropdown {
-		left: 98px;
-	}
-}
-
 .cx-header-links--portal-help {
 	margin-right: unset;
 
 	a.text-small {
-		margin-top: 12px;
+		margin-top: 10px;
 	}
 
 	.cx-header-arrow {
@@ -196,6 +183,35 @@ $link-hover-background: #ecf4fc;
 
 	::ng-deep .cx-header-dropdown {
 		left: 45px;
+	}
+}
+
+.cx-header-links--mock {
+	margin-right: unset;
+
+	a.text-small {
+		margin-top: 10px;
+	}
+
+	::ng-deep .cx-header-dropdown {
+		left: 40px;
+	}
+}
+
+.cx-header-links--teams {
+	a.text-small {
+		margin-left: 8px;
+		padding: unset;
+		line-height: unset;
+
+		&:hover {
+			background-color: unset;
+			text-decoration: underline;
+		}
+	}
+
+	::ng-deep .cx-header-dropdown {
+		left: 98px;
 	}
 }
 
@@ -218,7 +234,7 @@ $link-hover-background: #ecf4fc;
 }
 
 .cx-header-links--settings {
-	margin-right: 13px;
+	margin-right: 15px;
 }
 
 .cx-header-links--more {
@@ -227,18 +243,6 @@ $link-hover-background: #ecf4fc;
 
 	::ng-deep .cx-header-dropdown {
 		left: 13px;
-	}
-}
-
-.cx-header-links--mock {
-	margin-right: unset;
-
-	a.text-small {
-		margin-top: 12px;
-	}
-
-	::ng-deep .cx-header-dropdown {
-		left: 40px;
 	}
 }
 
@@ -273,7 +277,9 @@ $link-hover-background: #ecf4fc;
 }
 
 .icon-more {
-	font-size: 19px;
+	position: relative;
+	left: 2px;
+	font-size: $text-larger;
 }
 
 .icon-cog {
