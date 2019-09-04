@@ -25,7 +25,7 @@ const pf = 'Cisco_5500';
 const assetId = '7293498_NA';
 
 /** softwareVersion Params */
-const svParams = '&pageIndex=1&pageSize=10&sort=swVersion&sortOrder=asc';
+const svParams = '&pageIndex=1&pageSize=10&sort=swType&sortOrder=asc';
 
 /** AssetList params */
 const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc&filter=';

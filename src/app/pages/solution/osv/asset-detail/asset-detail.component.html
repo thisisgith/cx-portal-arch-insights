@@ -18,7 +18,8 @@
 </div>
 
 <!-- asset-details table view -->
-<div class="dbl-margin-top responsive-table" *ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view =='list'">
+<div class="dbl-margin-top responsive-table"
+	*ngIf="!status.isLoading && assetDetails && assetDetails?.length > 0  && view =='list'">
 	<table class="table table--compressed table--wrap table--lined table--nostripes assetDetailsTable">
 		<thead>
 			<tr>
@@ -135,7 +136,8 @@
 	</div>
 	<div *ngIf="item.name == 'current'">
 		<span *ngIf="!accept" [innerText]="item.swVersion"></span>
-		<span data-auto-id="SoftwareGroupVersions" *ngIf="accept" class="toggle"  (click)="showMultipleVersions.emit()" [innerText]="'_OsvMultipleVersions_' | i18n:'1'"></span>
+		<span data-auto-id="SoftwareGroupVersions" *ngIf="accept" class="toggle" (click)="showMultipleVersions.emit()"
+			[innerText]="'_OsvMultipleVersions_' | i18n:'1'"></span>
 	</div>
 </ng-template>
 
@@ -171,14 +173,16 @@
 
 <ng-template #releaseDateTemplate let-item="celldata">
 	<div *ngIf="item.name != 'current'">
-		<span *ngIf="!item.error && item.postDate != 'NA'" [innerText]="item?.postDate | date:mediumDate"></span>
+		<span *ngIf="!item.error && item.postDate != 'NA' && item.postDate"
+			[innerText]="item?.postDate | date:mediumDate"></span>
 		<span *ngIf="item.error || item.postDate == 'NA'" [innerText]="'_OsvNotAvailable_' | i18n"></span>
 	</div>
 	<div *ngIf="item.name == 'current'">
-		<span *ngIf="!item.error && item.postDate != 'NA' && !accept"
-			[innerText]="item?.postDate | date:mediumDate"></span>
-		<span *ngIf="!item.error && item.postDate != 'NA' && accept" [innerText]="'-'"></span>
-		<span *ngIf="item.error || item.postDate == 'NA' && !accept" [innerText]="'_OsvNotAvailable_' | i18n"></span>
+		<span *ngIf="!item.error && item.postDate && item.postDate != 'NA'">
+			<span *ngIf="!accept" [innerText]="item?.postDate | date:mediumDate"></span>
+			<span *ngIf="accept" [innerText]="'-'"></span>
+		</span>
+		<span *ngIf="(item.error || item.postDate == 'NA') && !accept" [innerText]="'_OsvNotAvailable_' | i18n"></span>
 	</div>
 </ng-template>
 

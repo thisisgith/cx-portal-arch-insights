@@ -27,7 +27,6 @@ export class BarChartComponent implements OnInit {
 	@Input() public seriesData;
 	@Input() public dataLabels = false;
 	@Input() public backgroundColor = '#ffffff';
-	@Input() public barColor = '#7cb5ec';
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -109,8 +108,7 @@ export class BarChartComponent implements OnInit {
 			},
 			series: [
 				{
-					data,
-					color: this.barColor,
+					data,					
 					enableMouseTracking: !this.loading,
 					minPointLength: 5,
 					name: '',

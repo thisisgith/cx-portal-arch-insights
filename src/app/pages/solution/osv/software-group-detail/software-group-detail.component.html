@@ -11,7 +11,7 @@
 </details-panel>
 
 <ng-template #softwareGroupDetails>
-	<cui-tabs  id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
+	<cui-tabs id="assetDetailTabs" [(activeTabIndex)]="tabIndex">
 		<cui-tab [label]="'_OsvCompareRecommendations' | i18n | uppercase">
 			<div class="base-margin-top">
 				<cui-spinner *ngIf="status.isLoading"></cui-spinner>
@@ -192,17 +192,17 @@
 							[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
 						<div class=" text-xlarge" [innerText]="'15'" [ngClass]="{'base-padding-top':!fullscreen}"></div>
 						<div class="base-margin-top">
-							<bar-chart  dataLabels="true" backgroundColor="#f2fbfd" [seriesData]="seriesData" width="200">
+							<bar-chart dataLabels="true" backgroundColor="#f2fbfd" [seriesData]="seriesData"
+								width="200">
 							</bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
-						<div class="flex justify-content-around" [ngClass]="{'base-margin-top':fullscreen}">
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="dbl-margin-right"
+						<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6"
 								[innerText]="'_OsvFixed_' | i18n"></div>
 							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
-								[innerText]="'_OsvWillExposed_' | i18n"
-								class="base-margin-left text-small half-padding-left"></div>
+								[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
 						</div>
 						<div class="base-margin-top flex justify-content-between">
 							<div>
@@ -212,37 +212,16 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200"  backgroundColor="#f2fbfd" dataLabels="true"
-								[seriesData]="seriesData" ></bar-chart>
-						</div>
-					</td>
-					<td class="recommendation">
-						<div class="flex justify-content-around" [ngClass]="{'base-margin-top':fullscreen}">
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="dbl-margin-right"
-								[innerText]="'_OsvFixed_' | i18n"></div>
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
-								[innerText]="'_OsvWillExposed_' | i18n"
-								class="base-margin-left text-small half-padding-left"></div>
-						</div>
-						<div class="base-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="'13/15'"></span>
-
-							</div>
-							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
-						</div>
-						<div class="base-margin-top">
-							<bar-chart width="200"  backgroundColor="#f2fbfd" dataLabels="true"
+							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
 								[seriesData]="seriesData"></bar-chart>
 						</div>
 					</td>
 					<td class="recommendation">
-						<div class="flex justify-content-around" [ngClass]="{'base-margin-top':fullscreen}">
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="dbl-margin-right"
+						<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6"
 								[innerText]="'_OsvFixed_' | i18n"></div>
 							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
-								[innerText]="'_OsvWillExposed_' | i18n"
-								class="base-margin-left text-small half-padding-left"></div>
+								[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
 						</div>
 						<div class="base-margin-top flex justify-content-between">
 							<div>
@@ -252,8 +231,27 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200"  backgroundColor="#f2fbfd" dataLabels="true"
-								[seriesData]="seriesData" ></bar-chart>
+							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
+								[seriesData]="seriesData"></bar-chart>
+						</div>
+					</td>
+					<td class="recommendation">
+						<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6"
+								[innerText]="'_OsvFixed_' | i18n"></div>
+							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
+								[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
+						</div>
+						<div class="base-margin-top flex justify-content-between">
+							<div>
+								<span class="text-xlarge" [innerText]="'13/15'"></span>
+
+							</div>
+							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
+						</div>
+						<div class="base-margin-top">
+							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
+								[seriesData]="seriesData"></bar-chart>
 						</div>
 					</td>
 				</tr>
@@ -265,7 +263,8 @@
 					<td class="recommendation">
 						<div class="text-xlarge half-margin-top" [innerText]="'32'"></div>
 						<div class="base-margin-top">
-							<bar-chart width="200"  dataLabels="true" backgroundColor="#f2fbfd" [seriesData]="seriesData">
+							<bar-chart width="200" dataLabels="true" backgroundColor="#f2fbfd"
+								[seriesData]="seriesData">
 							</bar-chart>
 						</div>
 					</td>
@@ -278,7 +277,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200"  backgroundColor="#f2fbfd" dataLabels="true"
+							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
 								[seriesData]="seriesData"></bar-chart>
 						</div>
 					</td>
@@ -291,7 +290,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200"  backgroundColor="#f2fbfd" dataLabels="true"
+							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
 								[seriesData]="seriesData"></bar-chart>
 						</div>
 					</td>
@@ -304,7 +303,7 @@
 							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
 						</div>
 						<div class="base-margin-top">
-							<bar-chart width="200"  backgroundColor="#f2fbfd" dataLabels="true"
+							<bar-chart width="200" backgroundColor="#f2fbfd" dataLabels="true"
 								[seriesData]="seriesData"></bar-chart>
 						</div>
 					</td>

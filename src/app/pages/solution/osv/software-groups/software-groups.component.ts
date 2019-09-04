@@ -25,6 +25,7 @@ import * as _ from 'lodash-es';
  */
 @Component({
 	selector: 'app-software-groups',
+	styleUrls: ['./software-groups.component.scss'],
 	templateUrl: './software-groups.component.html',	
 })
 export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
