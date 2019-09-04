@@ -60,7 +60,9 @@ a {
 	color: $icon-light-gray;
 }
 
+// Z-index was added due to opactiy of cx-search-input causing blur on FF
 .cx-search-bar .form-group__text button.link {
+	z-index: 1;
 	height: 32px;
 	width: 32px;
 }
