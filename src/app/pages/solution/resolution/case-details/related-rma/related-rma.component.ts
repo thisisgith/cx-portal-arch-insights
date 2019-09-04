@@ -1,4 +1,5 @@
-import { Component, Output, EventEmitter, TemplateRef,
+import {
+	Component, Output, EventEmitter, TemplateRef,
 	ViewChild, Input, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
@@ -26,7 +27,7 @@ export class RelatedRmaComponent {
 	/**
  	* OnInit lifecycle hook
  	*/
-	 public ngOnInit () {
+	public ngOnInit () {
 		this.buildTable();
 	}
 
@@ -96,11 +97,8 @@ export class RelatedRmaComponent {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		if (changes.rmaRecords) {
-			if (changes.rmaRecords.currentValue.length > 0 || !changes.rmaRecords.firstChange) {
-				this.loading = false;
-			} else {
-				this.loading = true;
-			}
+			this.loading = (changes.rmaRecords.currentValue.length > 0
+				|| !changes.rmaRecords.firstChange) ? false : true;
 		}
 	}
 }
