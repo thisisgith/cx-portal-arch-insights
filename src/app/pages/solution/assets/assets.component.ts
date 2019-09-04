@@ -89,6 +89,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	@ViewChild('criticalAdvisories', { static: true })
 		private criticalAdvisoriesTemplate: TemplateRef<{ }>;
 
+	@ViewChild('tableContainer', { static: false }) private tableContainer: ElementRef;
+
 	private searchInput: ElementRef;
 	@ViewChild('searchInput', { static: false }) set content (content: ElementRef) {
 		if (content) {
@@ -129,6 +131,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			]),
 	});
 	private destroy$ = new Subject();
+	public tableContainerHeight: string;
 	public inventory: Item[] = [];
 	public assetsDropdown = false;
 	public allAssetsSelected = false;
@@ -1159,6 +1162,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				}
 
 				this.status.inventoryLoading = false;
+				this.tableContainerHeight = undefined;
+
 				if (window.Cypress) {
 					window.inventoryLoading = false;
 				}
@@ -1175,6 +1180,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		if (window.Cypress) {
 			window.inventoryLoading = true;
 		}
+
+		if (_.size(this.inventory) && this.tableContainer) {
+			this.tableContainerHeight = `${this.tableContainer.nativeElement.offsetHeight}px`;
+		}
+
 		this.inventory = [];
 		this.pagination = null;
 
