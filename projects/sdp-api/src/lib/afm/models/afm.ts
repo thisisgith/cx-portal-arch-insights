@@ -26,6 +26,11 @@ export interface Alarm {
 	customerId?: string;  // this is a CustomerId
 	errorDesc?: string;
 	srStatus?: string;
+	deviceName?: string;
+	hwInstanceId?: string;
+	managedNeId?: string;
+	supportCovered?: string;
+	lastScan?: string;
 }
 
 /**

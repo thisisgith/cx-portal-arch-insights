@@ -297,7 +297,7 @@ describe('AfmComponent', () => {
 		expect(afmService.exportAllRecords)
 			.toHaveBeenCalled();
 		expect(component.statusErrorMessage)
-			.toEqual('AfmServerDown');
+			.toEqual('Server is down, please try again.');
 	});
 
 	it('should throw an error in export all service', () => {
