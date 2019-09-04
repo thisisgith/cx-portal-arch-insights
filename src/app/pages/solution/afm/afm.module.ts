@@ -20,7 +20,7 @@ import { ColumnChartModule, VisualFilterBarModule } from '@components';
 import { AfmDetailsModule } from './afm-details/afm-details.module';
 
 /** rootUrl for rest call */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 /**
  * Child routes for Assets Module for lazy loading
  */

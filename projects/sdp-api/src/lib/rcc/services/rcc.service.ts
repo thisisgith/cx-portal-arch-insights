@@ -15,14 +15,14 @@ import { RccAssetDetails, RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterRe
 })
 class RccService extends __BaseService {
 
-	static readonly getViolationCount = '/api/customerportal/compliance/v1/service/summary-filters';
-	static readonly getAssetCount = '/api/customerportal/compliance/v1/service/severity-ostype-detail';
-	static readonly getGridData = '/api/customerportal/compliance/v1/service/violation-summary';
-	static readonly getAssetGridData = '/api/customerportal/compliance/v1/service/filter-asset-detail';
-	static readonly getRccPolicyRuleDetailsData = '/api/customerportal/compliance/v1/service/policy-rule-details';
-	static readonly getRccViolationDetailsData = '/api/customerportal/compliance/v1/service/violation-details';
-	static readonly getAssetSummaryData = '/api/customerportal/compliance/v1/service/fetch-violation-details';
-	static readonly getRccAssetFilterData = '/api/customerportal/compliance/v1/service/fetch-violation-details-filter';
+	static readonly getViolationCount = '/customerportal/compliance/v1/service/summary-filters';
+	static readonly getAssetCount = '/customerportal/compliance/v1/service/severity-ostype-detail';
+	static readonly getGridData = '/customerportal/compliance/v1/service/violation-summary';
+	static readonly getAssetGridData = '/customerportal/compliance/v1/service/filter-asset-detail';
+	static readonly getRccPolicyRuleDetailsData = '/customerportal/compliance/v1/service/policy-rule-details';
+	static readonly getRccViolationDetailsData = '/customerportal/compliance/v1/service/violation-details';
+	static readonly getAssetSummaryData = '/customerportal/compliance/v1/service/fetch-violation-details';
+	static readonly getRccAssetFilterData = '/customerportal/compliance/v1/service/fetch-violation-details-filter';
 
 	constructor (config: __Configuration, http: HttpClient) {
 		super(config, http);
