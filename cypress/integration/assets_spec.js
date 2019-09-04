@@ -236,9 +236,12 @@ describe('Assets', () => { // PBC-41
 					}
 					cy.getByAutoId('AdvisoryTitle')
 						.should('have.text', advisory.title);
-					const date = advisory.lastUpdated
-						? Cypress.moment(advisory.lastUpdated).format(dateFormat)
-						: 'Never';
+					let date = advisory.lastUpdated ? advisory.lastUpdated : advisory.publishedOn;
+					if (date) {
+						date = Cypress.moment(date).format(dateFormat);
+					} else {
+						date = 'Never';
+					}
 					cy.getByAutoId('AdvisoryLastUpdated').should('have.text', date);
 				});
 			});
@@ -260,9 +263,12 @@ describe('Assets', () => { // PBC-41
 						.and('have.attr', 'href', advisory.url)
 						.and('have.attr', 'target', '_blank');
 					cy.getByAutoId('AdvisoryTitle').should('have.text', advisory.title);
-					const date = advisory.lastUpdated
-						? Cypress.moment(advisory.lastUpdated).format(dateFormat)
-						: 'Never';
+					let date = advisory.lastUpdated ? advisory.lastUpdated : advisory.publishedOn;
+					if (date) {
+						date = Cypress.moment(date).format(dateFormat);
+					} else {
+						date = 'Never';
+					}
 					cy.getByAutoId('AdvisoryLastUpdated').should('have.text', date);
 				});
 			});

@@ -1,30 +1,29 @@
-<div class="row half-padding-left" *ngIf="asset">
-	<div class="col-md-8 flex base-margin-bottom">
-		<div data-auto-id="Asset360IPAddress" class="dbl-margin-right">
-			<div class="text-bold text-uppercase text-small" [innerText]="'_IPAddress_' | i18n"></div>
-			<div innerText="{{ asset.ipAddress || ('_NA_' | i18n) }}"></div>
-		</div>
-		<div data-auto-id="Asset360SerialNumber" class="dbl-margin-right">
-			<div class="text-bold text-uppercase text-small" [innerText]="'_SerialNumber_' | i18n"></div>
-			<div innerText="{{ asset.serialNumber || ('_NA_' | i18n) }}"></div>
-		</div>
-		<div data-auto-id="Asset360LastScan" class="dbl-margin-right">
-			<div class="text-bold text-uppercase text-small" [innerText]="'_LastScan_' | i18n"></div>
-			<div innerText="{{ (asset.lastScan | fromNow) || ('_Never_' | i18n) }}"></div>
-		</div>
+<div *ngIf="asset" class="asset base-margin-bottom">
+	<div data-auto-id="Asset360IPAddress" class="asset__info flex-center-vertical">
+		<div class=" asset__info__label qtr-margin-right" [innerText]="'_IPAddress_' | i18n"></div>
+		<div innerText="{{ asset.ipAddress || ('_NA_' | i18n) }}"></div>
+	</div>
+	<div data-auto-id="Asset360SerialNumber" class="asset__info flex-center-vertical">
+		<div class=" asset__info__label qtr-margin-right" [innerText]="'_SN_' | i18n"></div>
+		<div innerText="{{ asset.serialNumber || ('_NA_' | i18n) }}"></div>
+	</div>
+	<div data-auto-id="Asset360LastScan" class="asset__info flex-center-vertical">
+		<div class=" asset__info__label qtr-margin-right" [innerText]="'_LastScan_' | i18n"></div>
+		<div innerText="{{ (asset.lastScan | fromNow) || ('_Never_' | i18n) }}"></div>
 	</div>
 </div>
 <div class="row qtr-margin-top">
 	<div class="col-md-6">
-		<div *ngIf="!status?.loading?.cases && openCases?.length > 0" class="dropdown open-case-toggle-btn"
+		<div *ngIf="!status?.loading?.cases && openCases?.length > 0"
+			class="dropdown dropdown--tail open-case-toggle-btn"
 			[ngClass]="{
 				'active': casesDropdownActive
 			}">
-			<button class="btn btn--small btn--secondary cx-details-header-button"
+			<a
 				data-auto-id="ToggleActiveCases"
 				(click)="toggleActiveCases()"
 				innerText="{{ '_ViewOpenCases_' | i18n }} ({{ openCases.length }})">
-			</button>
+			</a>
 		</div>
 	</div>
 	<div class="col-md-6 text-right">

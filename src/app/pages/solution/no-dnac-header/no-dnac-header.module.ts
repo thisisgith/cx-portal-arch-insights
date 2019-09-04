@@ -3,6 +3,11 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NoDNACHeaderComponent } from './no-dnac-header.component';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
+import { InventoryModule } from '@sdp-api';
+import { environment } from '@environment';
+
+/** SDP API rootUrl */
+const rootUrl = `${environment.sdpServiceOrigin}${environment.sdpServiceBasePath}`;
 
 /**
  * Module representing the SubHeader
@@ -13,6 +18,7 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 	imports: [
 		CommonModule,
 		I18nPipeModule,
+		InventoryModule.forRoot({ rootUrl }),
 		RouterModule,
 	],
 })

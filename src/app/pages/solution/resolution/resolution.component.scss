@@ -1,5 +1,6 @@
 /* SCSS Component File */
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../../mixins.scss';
 
 .base-list {
 	width: 100%;
@@ -21,21 +22,6 @@
 
 .info {
 	color: $cisco-blue;
-}
-
-.filter {
-	&__selected {
-		border-bottom: 4px solid $primary;
-	}
-
-	&__not-selected {
-		border-bottom: 4px solid $white;
-	}
-
-	&__title {
-		position: absolute;
-		bottom: 0;
-	}
 }
 
 .close {
@@ -66,7 +52,6 @@
 	bottom: 0;
 }
 
-.highcharts-container,
-.highcharts-container svg {
-	overflow: visible !important;
+.form-group__text .resolution-search {
+	@include filter-search;
 }

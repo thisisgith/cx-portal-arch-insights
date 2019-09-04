@@ -225,7 +225,7 @@ describe('ResolutionComponent', () => {
 
 	it('should select the lastUpdated filter properly', fakeAsync(() => {
 		const lastUpdatedFilter = _.find(component.filters, { key: 'lastUpdated' });
-		component.onSubfilterSelect('≤ 24 hrs', lastUpdatedFilter);
+		component.onSubfilterSelect('≤24 hr', lastUpdatedFilter);
 
 		tick();
 		fixture.detectChanges();
@@ -233,21 +233,21 @@ describe('ResolutionComponent', () => {
 		expect(component.selectedFilters)
 			.toContain(lastUpdatedFilter);
 
-		component.onSubfilterSelect('> 1 day', lastUpdatedFilter);
+		component.onSubfilterSelect('>1 day', lastUpdatedFilter);
 
 		tick();
 		fixture.detectChanges();
 
-		expect(_.get(_.find(lastUpdatedFilter.seriesData, { label: '> 1 day' }), 'selected'))
+		expect(_.get(_.find(lastUpdatedFilter.seriesData, { label: '>1 day' }), 'selected'))
 			.toBeTruthy();
 
-		expect(_.get(_.find(lastUpdatedFilter.seriesData, { label: '≤ 24 hrs' }), 'selected'))
+		expect(_.get(_.find(lastUpdatedFilter.seriesData, { label: '≤24 hr' }), 'selected'))
 			.toBeFalsy();
 	}));
 
 	it('should select the durationOpen filter properly', fakeAsync(() => {
 		const durationOpen = _.find(component.filters, { key: 'durationOpen' });
-		component.onSubfilterSelect('≤ 24 hrs', durationOpen);
+		component.onSubfilterSelect('≤24 hr', durationOpen);
 
 		tick();
 		fixture.detectChanges();
@@ -255,15 +255,15 @@ describe('ResolutionComponent', () => {
 		expect(component.selectedFilters)
 			.toContain(durationOpen);
 
-		component.onSubfilterSelect('> 1 day', durationOpen);
+		component.onSubfilterSelect('>1 day', durationOpen);
 
 		tick();
 		fixture.detectChanges();
 
-		expect(_.get(_.find(durationOpen.seriesData, { label: '> 1 day' }), 'selected'))
+		expect(_.get(_.find(durationOpen.seriesData, { label: '>1 day' }), 'selected'))
 			.toBeTruthy();
 
-		expect(_.get(_.find(durationOpen.seriesData, { label: '≤ 24 hrs' }), 'selected'))
+		expect(_.get(_.find(durationOpen.seriesData, { label: '≤24 hr' }), 'selected'))
 			.toBeFalsy();
 	}));
 

@@ -134,8 +134,6 @@ describe('SyslogsMessagesComponent', () => {
 					SyslogSeverity: 3,
 				};
 				component.onTableRowSelection(selectedRowData);
-				expect(selectedRowData.active)
-				 .toBeFalsy();
 				 expect(component.selectedAsset)
 				 .toBeUndefined();
 				done();
