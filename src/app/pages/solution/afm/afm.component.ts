@@ -74,7 +74,7 @@ export class AfmComponent {
 		DAYS30: 'Days30',
 		DAYS7: 'Days7',
 		DAYS90: 'Days90',
-		EXCEPTION: 'Exception',
+		EXCEPTION: 'EXCEPTION',
 		FAIL: 'FAIL',
 		IGNORE_ALARM_TOTAL_COUNT: 'ignoredCount',
 		IGNORE_EVENT: 'IGNORE_EVENT',

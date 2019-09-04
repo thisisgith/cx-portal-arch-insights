@@ -3,13 +3,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FaultManagementModule } from './afm.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
-import { AfmScenarios } from 'src/environments/mock/afm/afm';
 import { environment } from '@environment';
-import { of } from 'rxjs';
-import { user } from '@mock';
+import { of, throwError } from 'rxjs';
+import { user, AfmScenarios } from '@mock';
 import {
 	AfmService, AfmSearchParams, Alarm,
 } from '@sdp-api';
+import { HttpErrorResponse } from '@angular/common/http';
 
 describe('AfmComponent', () => {
 	let component: AfmComponent;
@@ -99,11 +99,19 @@ describe('AfmComponent', () => {
 
 	it('should show alarm details', () => {
 		component.onAlarmPanelClose();
+		fixture.detectChanges();
+		component.eventStatus = true;
+		component.onAlarmPanelClose();
 		expect(component.showAlarmDetails)
 			.toBeFalsy();
 	});
 
 	it('should call search filter', () => {
+		const mockEvent = {
+			keyCode: 12,
+		};
+		component.keyDownAfmSearchFilter(mockEvent);
+		fixture.detectChanges();
 		spyOn(component, 'searchFilter');
 		const event = {
 			keyCode: 13,
@@ -171,18 +179,55 @@ describe('AfmComponent', () => {
 			.toBeTruthy();
 	});
 
-	it('should time range filter', () => {
+	it('should select time range filter', () => {
 		spyOn(afmService, 'getTimeRangeFilteredEvents')
 			.and
 			.returnValue(of(<any> AfmScenarios[3].scenarios.POST[0].response.body));
-		const subfilter = 12;
-		afmFilter.seriesData = [];
+		const subfilter = 1;
+		afmFilter.seriesData = [
+			{
+				filter: 1,
+				label: '24hr',
+				selected: false,
+				value: 0,
+			},
+			{
+				filter: 7,
+				label: '7Days',
+				selected: false,
+				value: 2,
+			},
+		];
 		component.onTimeRangefilterSelect(subfilter, afmFilter, true);
 		expect(afmService.getTimeRangeFilteredEvents)
 			.toHaveBeenCalled();
+		expect(afmFilter.seriesData[0].selected)
+			.toBeTruthy();
+	});
+
+	it('should not select time range filter', () => {
+		spyOn(afmService, 'getTimeRangeFilteredEvents')
+			.and
+			.returnValue(of(<any> AfmScenarios[3].scenarios.POST[0].response.body));
+		const subfilter = 7;
+		afmFilter.seriesData = [
+			{
+				filter: 1,
+				label: '24hr',
+				selected: false,
+				value: 0,
+			},
+		];
+		component.onTimeRangefilterSelect(subfilter, afmFilter, false);
+		expect(afmService.getTimeRangeFilteredEvents)
+			.toHaveBeenCalled();
+		expect(afmFilter.seriesData[0].selected)
+			.toBeFalsy();
 	});
 
 	it('should return filters', () => {
+		component.getSelectedSubFilters('Filter');
+		fixture.detectChanges();
 		component.filters =  [
 			{
 				key: 'afmFilter',
@@ -231,6 +276,50 @@ describe('AfmComponent', () => {
 		component.exportAllEvents();
 		expect(afmService.exportAllRecords)
 			.toHaveBeenCalled();
+	});
+
+	it('should fail the export all service', () => {
+		spyOn(afmService, 'exportAllRecords')
+			.and
+			.returnValue(of(<any> AfmScenarios[10].scenarios.GET[0].response.body));
+		component.exportAllEvents();
+		expect(afmService.exportAllRecords)
+			.toHaveBeenCalled();
+		expect(component.statusErrorMessage)
+			.toEqual('failed retrived records');
+	});
+
+	it('should exception happen in export all service', () => {
+		spyOn(afmService, 'exportAllRecords')
+			.and
+			.returnValue(of(<any> AfmScenarios[11].scenarios.GET[0].response.body));
+		component.exportAllEvents();
+		expect(afmService.exportAllRecords)
+			.toHaveBeenCalled();
+		expect(component.statusErrorMessage)
+			.toEqual('AfmServerDown');
+	});
+
+	it('should throw an error in export all service', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(afmService, 'exportAllRecords')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error).statusText));
+		component.exportAllEvents();
+		expect(component.statusErrorMessage)
+			.toEqual('Export operation failed :: Error : (Resource not found)');
+	});
+
+	it('should update the event', () => {
+		const event = {
+			status: true,
+		};
+		component.eventUpdated(event);
+		expect(component.eventStatus)
+		.toBeTruthy();
 	});
 
 	describe('connectToAlarmDetails', () => {
@@ -332,7 +421,5 @@ describe('AfmComponent', () => {
 			expect(afmService.getAfmAlarms)
 				.toHaveBeenCalled();
 		});
-
 	});
-
 });

@@ -5,11 +5,13 @@ import {
 	EventEmitter,
 	OnInit,
 	OnChanges,
+	SimpleChanges,
  } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import { Alarm, AfmSearchParams, AfmService, AfmResponse } from '@sdp-api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import * as _ from 'lodash-es';
 
 /**
  * Afm details panal header
@@ -44,27 +46,23 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 	 */
 	public ngOnInit () {
 		this.eventUpdated.emit(false);
-		this.statusUpdate();
-	}
-	/**
-	 * Initialize error description
-	 * @param change SimpleChanges
-	 */
-	public ngOnChanges () {
-		this.options.visible = false;
-		this.statusUpdate();
 	}
 
 	/**
-	 * Toogle event status update
+	 * Initialize error description
+	 * @param changes SimpleChanges
 	 */
-	private statusUpdate () {
-		if (!this.alarm || (this.alarm.status && this.alarm.status.toUpperCase() === 'IGNORED')) {
+	public ngOnChanges (changes: SimpleChanges) {
+		const alarmData = _.get(changes, ['alarm', 'currentValue']);
+		const isFirstChange = _.get(changes, ['alarm', 'firstChange']);
+		this.options.visible = false;
+		if (!isFirstChange && alarmData.status.toUpperCase() === 'IGNORED') {
 			this.status = true;
 		} else {
 			this.status = false;
 		}
 	}
+
 	/**
 	 * which will call asset details componet
 	 * @param alarm -- alarm info

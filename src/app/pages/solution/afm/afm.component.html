@@ -65,7 +65,7 @@
 	<div *ngIf="loading" class="base-margin-bottom">
 		<cui-spinner></cui-spinner>
 	</div>
-	<div class=" responsive-table" *ngIf="!loading">
+	<div class="responsive-table" *ngIf="!loading">
 		<cui-table
 			[options]="tableOptions"
 			[data]="tableData"
@@ -84,7 +84,7 @@
 				(onPageChanged)="onPagerUpdated($event)"
 			></cui-pager>
 		</div>
-		<div *ngIf="tableData.length == 0">
+		<div *ngIf="tableData.length === 0">
 			<div
 				class="text-muted text-xlarge flex-center"
 				[innerText]="'_AfmNoResults_' | i18n"
@@ -436,7 +436,7 @@
 			<span class="icon-wifi"></span>
 			<span
 				class="qtr-margin-left"
-				[innerText]="tablePanelData?.hostName"
+				[innerText]="selectedAsset?.hostName"
 			></span>
 		</div>
 	</details-panel-header>
