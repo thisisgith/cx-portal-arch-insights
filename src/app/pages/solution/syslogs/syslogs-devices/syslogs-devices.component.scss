@@ -1,4 +1,5 @@
 @import "~cisco-ui/src/scss/utilities/_variables.scss";
+@import '../../../../../mixins.scss';
 
 #searchForm {
 	width: 100%;
@@ -6,4 +7,8 @@
 
 .view-change-icons {
 	text-align: right;
+}
+
+.form-group__text > input {
+	@include filter-search;
 }

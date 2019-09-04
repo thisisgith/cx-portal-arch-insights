@@ -62,6 +62,7 @@
 				<form [formGroup]="searchForm" novalidate id="searchForm" (keyup)="searchViolations($event,'input')" data-auto-id="searchViolations">
 					<div class="form-group__text">
 						<input data-auto-id="searchInput" id="searchInput" type="search"
+							class="rcc-search"
 							 #searchInput1 [(ngModel)]="searchInput" name="searchInput"
 							[minlength]="searchOptions?.min" [maxlength]="searchOptions?.max"
 							[pattern]="searchOptions?.pattern" formControlName="search"

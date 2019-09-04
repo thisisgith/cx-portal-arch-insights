@@ -1,9 +1,9 @@
-<div class="panel base-padding-top base-padding-left base-padding-right base-margin-bottom panel-border-top">
-	<div class="text-uppercase text-large base-padding-bottom" [innerText]="'_Communities_' | i18n" data-auto-id="PanelTitle-Communities"></div>
-	<div class="half-margin-bottom">
-		<div class="half-padding-left half-margin-bottom" *ngIf="curatedCommunity" data-auto-id="CuratedCommunityLink">
-			<span class="icon-communities qtr-padding-right qtr-padding-bottom"></span>
-			<span><a class="no-link half-padding-left"
+<div class="cx-lifecycle-card panel panel-border-top">
+	<div class="cx-lifecycle-card--title text-uppercase" [innerText]="'_Communities_' | i18n" data-auto-id="PanelTitle-Communities"></div>
+	<div>
+		<div class="flex-center-vertical" *ngIf="curatedCommunity" data-auto-id="CuratedCommunityLink">
+			<span class="icon-communities"></span>
+			<span><a class="cx-lifecycle-card--link no-link half-padding-left"
 					[href]="curatedCommunityUrl"
 					target="_blank"
 					rel="noopener noreferrer"
@@ -13,9 +13,9 @@
 					[innerText]="'_SuccessTrack_' | i18n"></a>
 			</span>
 		</div>
-		<div class="half-padding-left" *ngIf="publicCommunity" data-auto-id="PublicCommunityLink">
-			<span class="icon-communities qtr-padding-right qtr-padding-bottom"></span>
-			<span><a class="no-link half-padding-left"
+		<div class="flex-center-vertical" *ngIf="publicCommunity" data-auto-id="PublicCommunityLink">
+			<span class="icon-communities"></span>
+			<span><a class="cx-lifecycle-card--link no-link half-padding-left"
 					[href]="publicCommunityUrl"
 					target="_blank"
 					rel="noopener noreferrer"

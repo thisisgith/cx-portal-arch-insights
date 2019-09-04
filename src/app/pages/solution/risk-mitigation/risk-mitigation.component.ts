@@ -538,7 +538,9 @@ export class RiskMitigationComponent {
 				},
 			],
 			dynamicData: false,
+			hover: true,
 			singleSelect: true,
+			striped: false,
 		});
 		this.highCrashRiskAssetsGridOptions = new CuiTableOptions({
 			bordered: false,
@@ -577,7 +579,9 @@ export class RiskMitigationComponent {
 				},
 			],
 			dynamicData: false,
+			hover: true,
 			singleSelect: true,
+			striped: false,
 		});
 	}
 	/**
