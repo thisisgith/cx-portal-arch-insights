@@ -88,14 +88,14 @@
 			[offset]="tableConfig?.tableOffset"
 			(onSortingChanged)="onTableSortingChanged()"
 			(onTableRowClicked)="onViolationRowClicked($event)"
-			*ngIf="!loading && policyViolationsGridData">
+			*ngIf="!loading && policyViolationsGridData.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-				<span class="text-muted text-xlarge " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-				<span *ngIf="noTableData " class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
+			<span class="text-muted text-xlarge " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+			<span *ngIf="!loading && noTableData " class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
-			<cui-pager *ngIf="policyViolationsGridData"
+			<cui-pager *ngIf="!loading && policyViolationsGridData.length > 0"
 				[page]="tableConfig?.tableOffset"
 				[limit]="tableConfig?.tableLimit"
 				[totalItems]="tableConfig?.totalItems" 
@@ -114,14 +114,14 @@
 			[offset]="tableConfig?.tableOffset"
 			(onSortingChanged)="onTableSortingChanged()"
 			(onTableRowClicked)="onAssetRowClicked($event)"
-			*ngIf="!loading && tableAssetDataSample">
+			*ngIf="!loading && tableAssetDataSample.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-				<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-				<span *ngIf="noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
+			<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
-			<cui-pager *ngIf="tableAssetDataSample"
+			<cui-pager *ngIf="!loading && tableAssetDataSample.length > 0"
 				[page]="tableConfig?.tableOffset"
 				[limit]="tableConfig?.tableLimit"
 				[totalItems]="tableConfig?.totalItems" 

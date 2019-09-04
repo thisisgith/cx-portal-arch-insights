@@ -11,7 +11,7 @@ import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
-fdescribe('RccAssetViolationDetailsComponent', () => {
+describe('RccAssetViolationDetailsComponent', () => {
 	let component: RccAssetViolationDetailsComponent;
 	let fixture: ComponentFixture<RccAssetViolationDetailsComponent>;
 	let rccAssetDetailsService: RccService;
