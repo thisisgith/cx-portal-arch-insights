@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RccAssetViolationDetailsComponent } from './rcc-asset-violation-details.component';
 import { RccAssetViolationDetailsModule } from './rcc-asset-violation-details.module';
-import { of } from 'rxjs';
+import { throwError, of } from 'rxjs';
 import { RCCScenarios, user } from '@mock';
 import { RccService } from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -9,8 +9,9 @@ import { MicroMockModule } from '@cui-x-views/mock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
-describe('RccAssetViolationDetailsComponent', () => {
+fdescribe('RccAssetViolationDetailsComponent', () => {
 	let component: RccAssetViolationDetailsComponent;
 	let fixture: ComponentFixture<RccAssetViolationDetailsComponent>;
 	let rccAssetDetailsService: RccService;
@@ -190,5 +191,82 @@ describe('RccAssetViolationDetailsComponent', () => {
 		};
 		component.onTableSortingChanged();
 		component.getAssetPolicyGridData();
+	});
+
+	it('to be called on getAssetPolicyGridData', () => {
+		component.assetRowParams = {
+			customerId: '7293498',
+			pageIndex: 0,
+			pageSize: 10,
+			policyGroupName: '',
+			policyName: '',
+			serialNumber: 'FCW2246E0PB',
+			severity: '',
+			sortBy: '',
+			sortOrder: '',
+		};
+
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+		.and
+		.returnValue(throwError(new HttpErrorResponse(error)));
+		component.getAssetPolicyGridData();
+	});
+
+	it('should invoke onPageIndexChange method', () => {
+		component.assetRowParams = {
+			customerId: '7293498',
+			pageIndex: 0,
+			pageSize: 10,
+			policyGroupName: '',
+			policyName: '',
+			serialNumber: 'FCW2246E0PB',
+			severity: '',
+			sortBy: '',
+			sortOrder: '',
+		};
+		component.onPolicyAssetPagerUpdated({ page: 1, limit : 10 });
+	});
+
+	it('Should invoke api with error', () => {
+		const error = {
+			status: 404,
+			statusText: 'Resource not found',
+		};
+		spyOn(rccAssetDetailsService, 'getAssetSummaryData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		spyOn(rccAssetDetailsService, 'getRccAssetFilterData')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+		component.assetRowParams = {
+			customerId: '7293498',
+			pageIndex: 0,
+			pageSize: 10,
+			policyGroupName: '',
+			policyName: '',
+			serialNumber: 'FCW2246E0PB',
+			severity: '',
+			sortBy: '',
+			sortOrder: '',
+		};
+		component.loadData();
+		expect(component.rccAssetPolicyTableData)
+			.toEqual([]);
+	});
+	it('should be called on asset information get updated', () => {
+		component.selectedAssetData = { serialNumber: 'FCW2246E0PB' };
+		const selectedPreviousAssetData = { serialNumber: 'FCW2246E0P9' };
+		component.ngOnChanges({
+			selectedAssetData: {
+				currentValue: component.selectedAssetData,
+				firstChange: false,
+				isFirstChange: () => true,
+				previousValue: selectedPreviousAssetData,
+			},
+		});
 	});
 });

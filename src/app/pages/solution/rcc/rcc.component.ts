@@ -121,8 +121,8 @@ export class RccComponent implements OnInit, OnDestroy {
 	public searchOptions = {
 		debounce: 1500,
 		max: 100,
-		min: 3,
-		pattern: /^[a-zA-Z-_]*$/,
+		min: 2,
+		pattern: /^[a-zA-Z0-9_]*$/,
 	};
 	public search: FormControl = new FormControl('');
 	public searchForm: FormGroup;
@@ -450,6 +450,7 @@ export class RccComponent implements OnInit, OnDestroy {
 					key: 'deviceName',
 					name: I18n.get('_RccDevice_'),
 					sortable: true,
+					width: '24%',
 				},
 				{
 					key: 'lastScan',
@@ -540,8 +541,11 @@ export class RccComponent implements OnInit, OnDestroy {
 	public onSubfilterSelect (subfilter: string, filter: Filter, triggeredFromGraph) {
 		if (triggeredFromGraph) {
 			filter.seriesData.forEach(obj => {
-			 	obj.selected = false;
+				obj.selected = false;
+				this.filtered = true;
 		 	});
+		} else {
+			this.filtered = false;
 		}
 		const sub = typeof subfilter === 'string' ?
 		_.find(filter.seriesData, { filter: subfilter }) : _.find(filter.seriesData, subfilter);
