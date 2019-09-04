@@ -97,6 +97,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	public mainContent = 'assets';
 	public alert: any = { };
 	public bulkDropdown = false;
 	public selectedAssets: Item[] = [];

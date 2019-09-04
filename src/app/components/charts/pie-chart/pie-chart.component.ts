@@ -9,6 +9,27 @@ import {
 import { Chart } from 'angular-highcharts';
 import * as _ from 'lodash-es';
 
+/** All possible colors for the pie chart subfilters with 5 possible values. */
+const filterColors5Max = [
+	'#92dde4',
+	'#8ab6d0',
+	'#c8d4d7',
+	'#c8e4e6',
+	'#e4f0f1',
+];
+
+/** All possible colors for the pie chart subfilters with 8 possible values. */
+const filterColors8Max = [
+	'#92dde4',
+	'#8ab6d0',
+	'#c8d4d7',
+	'#c8e4e6',
+	'#92dde4',
+	'#8ab6d0',
+	'#c8d4d7',
+	'#e4f0f1',
+];
+
 /**
  * Main component for the Pie Chart
  */
@@ -36,8 +57,9 @@ export class PieChartComponent implements OnInit {
 	 * Initializes the pie chart
 	 */
 	private buildGraph () {
-		const data = _.map(this.seriesData, d => ({
-			color: d.color,
+		const data = _.map(this.seriesData, (d, index) => ({
+			color: _.get(this.seriesData.length <= 5 ?
+				filterColors5Max : filterColors8Max, index, '#000'),
 			name: d.label,
 			y: d.value,
 		}));
@@ -62,12 +84,12 @@ export class PieChartComponent implements OnInit {
 						}
 					},
 				},
-				height: 200,
+				height: 125,
 				plotBackgroundColor: null,
 				plotBorderWidth: null,
 				plotShadow: false,
 				type: 'pie',
-				width: 250,
+				width: 225,
 			},
 			credits: {
 				enabled: false,
@@ -76,11 +98,22 @@ export class PieChartComponent implements OnInit {
 				pie: {
 					cursor: 'pointer',
 					dataLabels: {
+						alignTo: 'plotEdges',
 						allowOverlap: false,
-						distance: 15,
+						connectorShape: 'straight',
+						distance: 1,
 						enabled: true,
+						style: {
+							color: '#6c757d',
+							fontFamily: 'CiscoSans, Arial, sans-serif',
+							fontSize: '10px',
+							fontWeight: '400',
+						},
 					},
-					innerSize: '80%',
+					innerSize: '75%',
+					tooltip: {
+						pointFormat: '{point.percentage:.1f}%',
+					},
 				},
 				series: {
 					point: {

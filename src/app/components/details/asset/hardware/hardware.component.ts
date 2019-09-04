@@ -283,6 +283,7 @@ export class AssetDetailsHardwareComponent implements OnInit, OnChanges, OnDestr
 								name: `${I18n.get('_ProductFamily_')} / ${I18n.get('_ID_')}`,
 								sortable: false,
 								template: this.familyTemplate,
+								width: '50%',
 							},
 							{
 								key: 'serialNumber',

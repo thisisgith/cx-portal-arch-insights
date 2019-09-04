@@ -1,8 +1,56 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
 
+$text-default-color: #394454;
+$text-dark-gray: #5d656c;
+$icon-light-gray: #bdc5cf;
+$ciso-dark-blue: #00a2cb;
+
 .panel-border-top {
 	border-top: 5px solid $cisco-blue !important;
 	border-left: 0 none !important;
 	border-right: 0 none !important;
 	border-bottom: 0 none !important;
+}
+
+.cx-lifecycle-card {
+	padding: 23px 19px 30px;
+	margin-bottom: 9px;
+}
+
+.cx-lifecycle-card--title {
+	position: relative;
+	display: inline-block;
+	padding-bottom: 19px;
+	color: $text-dark-gray;
+	font-size: 16px;
+	letter-spacing: -0.33px;
+	line-height: 18px;
+
+	&::after {
+		position: absolute;
+		left: 0;
+		top: -28px;
+		height: 4px;
+		width: 100%;
+		background-color: $ciso-dark-blue;
+		content: "";
+	}
+}
+
+.cx-lifecycle-card--link {
+	color: $text-default-color !important;
+	font-size: 14px;
+	letter-spacing: 0.51px;
+	line-height: 25px;
+
+	&:hover {
+		color: $base-link-color !important;
+	}
+}
+
+.icon-communities {
+	width: 16px;
+	padding: unset;
+	color: $icon-light-gray;
+	font-size: 15px;
 }
