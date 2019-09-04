@@ -50,7 +50,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-describe('SolutionComponent', () => {
+fdescribe('SolutionComponent', () => {
 	let component: SolutionComponent;
 	let fixture: ComponentFixture<SolutionComponent>;
 	let router: Router;
@@ -190,13 +190,14 @@ describe('SolutionComponent', () => {
 		racetrackInfoService.sendCurrentSolution(
 			getActiveBody(RacetrackScenarios[0]).solutions[0],
 		);
-		tick(15000);
+		tick();
 		fixture.detectChanges();
 
 		expect(component.selectedSolution.name)
 			.toEqual('IBN');
 
 		component.changeSolution(component.solutions[1]);
+		tick();
 	}));
 
 	it('should change the active technology', fakeAsync(() => {
@@ -269,7 +270,6 @@ describe('SolutionComponent', () => {
 	});
 
 	it('should open Quick Tour when first time null', fakeAsync(() => {
-		tick(15000);
 		fixture.detectChanges();
 		expect(component.quickTourActive)
 			.toBeTruthy();
