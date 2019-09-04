@@ -295,7 +295,7 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('rmaCasesHeader').should('exist');
 		});
 	});
-	context.only('Asset Case Open: PBC-92 PBC-591', () => {
+	context('Asset Case Open: PBC-92 PBC-591', () => {
 		before(() => {
 			cy.login();
 			cy.loadApp();
