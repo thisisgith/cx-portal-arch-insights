@@ -3,7 +3,9 @@
 		(back)="onPanelBack()"
 		[(fullscreen)]="fullscreen"
 		[fullscreenToggle]="false">
-		<asset-details-header [asset]="asset" [element]="element" [customerId]="customerId"
+		<asset-details-header [asset]="asset"
+			[element]="element" 
+			[customerId]="customerId"
 			(alert)="handleAlert($event)">
 		</asset-details-header>
 		<div detailsPanelTitle class="text-xlarge flex-center-vertical">
