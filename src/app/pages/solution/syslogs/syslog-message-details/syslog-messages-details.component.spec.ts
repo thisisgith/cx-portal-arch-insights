@@ -156,4 +156,14 @@ describe('SyslogMessagesDetailsComponent', () => {
 			.toBeDefined();
 		done();
 	});
+
+	it('should update pager', () => {
+		component.onPagerUpdated({
+			page: 1,
+		});
+		expect(component.tableConfig.tableOffset)
+			.toEqual(1);
+		expect(component.paginationConfig.pageNum)
+			.toEqual(2);
+	});
 });

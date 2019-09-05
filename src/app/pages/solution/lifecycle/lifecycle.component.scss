@@ -65,12 +65,6 @@ $divider-color: #e1e1e1;
 	height: 100%;
 }
 
-.scrollable-list-content {
-	position: fixed !important;
-	overflow-y: scroll !important;
-	width: 100%;
-}
-
 .grid {
 	overflow-y: scroll !important;
 	height: 70%;
@@ -447,6 +441,16 @@ $divider-color: #e1e1e1;
 	/* autoprefixer: off */
 	-webkit-box-orient: vertical;
 }
+
+.title-line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 2;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
 
 .table-img-width {
 	width: 80px;
@@ -1008,12 +1012,6 @@ $divider-color: #e1e1e1;
 	margin-left: -10px !important;
 }
 
-.table-responsive {
-	margin-top: 20px;
-	overflow-y: scroll;
-	height: 70%;
-}
-
 %tr-shared {
 	border-bottom-style: solid;
 	border-bottom-color: $light-gray-3;
@@ -1036,6 +1034,20 @@ tr.td-row td {
 ::ng-deep .cui .table th {
 	margin-top: 10px;
 	border-right: transparent !important;
+}
+
+.icon-bookmark {
+	-webkit-text-stroke-width: 1px;
+
+	&--on {
+		color: $cisco-blue;
+		-webkit-text-stroke-color: #5ddfff;
+	}
+
+	&--off {
+		color: #fff;
+		-webkit-text-stroke-color: #c1d8e2;
+	}
 }
 
 .icon-bookmark-clear {
@@ -1081,10 +1093,18 @@ polygon {
 
 .lifecycle-viewall-modal {
 	min-height: 100%;
+	overflow-y: scroll;
 }
+
 // leave the following here, just in case we will use this style
 // ::ng-deep .cui .dropdown__menu a.selected {
 // 	color:$vibblue !important;
 // 	background-color: transparent !important;
 // }
 
+/* Viewall List-view table styles */
+
+.bookmark-column .icon-bookmark {
+	font-size: 20px;
+	line-height: 20px;
+}

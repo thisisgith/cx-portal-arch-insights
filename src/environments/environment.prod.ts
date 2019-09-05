@@ -29,6 +29,7 @@ export const environment = {
 		classifyAppId: 'CXPortal',
 		clientId: '262556217fbe45ecbbe27af70e443e78',
 	},
+	feedbackToEmail: 'cx-portal-support@cisco.com',
 	ieSetup: {
 		asdAuthURL: 'https://cway.cisco.com/ws/oauth/v3/token/cisco/ae95x38c7zgu5fas59gseyfk',
 		asdBaseURL: 'https://api.cisco.com/software/preview/v3.0',
