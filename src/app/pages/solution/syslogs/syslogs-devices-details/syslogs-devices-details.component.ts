@@ -1,12 +1,15 @@
 import { Component, Input, ViewChild,
-	TemplateRef, OnChanges, OnDestroy } from '@angular/core';
+	TemplateRef, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService, DeviceMessageDescObject, SyslogDevicePanelOuter } from '@sdp-api';
+import { SyslogsService, SyslogDevicePanelOuter } from '@sdp-api';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 import { UserResolve } from '@utilities';
+import { I18n } from '@cisco-ngx/cui-utils';
+import * as _ from 'lodash-es';
+import { MarshalTableData } from '../syslogs.utils';
 
 /**
  * Device view component
@@ -17,15 +20,81 @@ import { UserResolve } from '@utilities';
 	templateUrl: './syslogs-devices-details.component.html',
 })
 export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
-	@ViewChild('downArrow', { static: true }) public downArrow: TemplateRef<{ }>;
+	@ViewChild('recommendation', { static: true }) public recommendation: TemplateRef <{ }>;
+	@ViewChild('innerTableRef', { static: true }) public innerTableRef: TemplateRef<{ }>;
 	@Input('asset') public asset: any;
+	@Input('selectedFilter') public selectedFilter: any;
 	public tableOptions: CuiTableOptions;
-	public tabledata: SyslogDevicePanelOuter[];
-	public tabledata1: DeviceMessageDescObject[];
-	public msgInclude = ' ';
-	public msgExclude = ' ';
+	public innerTableOptions: CuiTableOptions;
+	public tableData: SyslogDevicePanelOuter[];
 	public destroy$ = new Subject();
 	public customerId;
+	public includeMsgFilter = '';
+	public excludeMsgFilter = '';
+	public selectedSeverity = '';
+	public selectedTimeRange = '';
+	public deviceDetailsParams: SyslogsService.GetSyslogsParams = { };
+	public tableConfig = {
+		tableLimit: 10,
+		tableOffset: 0,
+		totalItems: 10,
+	};
+	public paginationConfig = {
+		pageLimit: 10,
+		pageNum: 1,
+		pagerLimit: 10,
+	};
+
+	public severityList = [
+		{
+			name: I18n.get('_SyslogSeverity0_'),
+			value: 0,
+		},
+		{
+			name: I18n.get('_SyslogSeverity1_'),
+			value: 1,
+		},
+		{
+			name: I18n.get('_SyslogSeverity2_'),
+			value: 2,
+		},
+		{
+			name: I18n.get('_SyslogSeverity3_'),
+			value: 3,
+		},
+		{
+			name: I18n.get('_SyslogSeverity4_'),
+			value: 4,
+		},
+		{
+			name: I18n.get('_SyslogSeverity5_'),
+			value: 5,
+		},
+		{
+			name: I18n.get('_SyslogSeverity6_'),
+			value: 6,
+		},
+		{
+			name: I18n.get('_SyslogSeverity7_'),
+			value: 7,
+		},
+	];
+	public timeRangeList = [{
+		name: I18n.get('_SyslogDay1_'),
+		value: 1,
+	},
+	{
+		name: I18n.get('_SyslogDays7_'),
+		value: 7,
+	},
+	{
+		name: I18n.get('_SyslogDays15_'),
+		value: 15,
+	},
+	{
+		name: I18n.get('_SyslogDays30_'),
+		value: 30,
+	}];
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -43,32 +112,102 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 
 	/**
 	 * Used to load the table grid
-		* @param changes contains changes
+	 * @param changes contains changes
 	 * Onchanges lifecycle hook
 	 */
-	public ngOnChanges () {
-		this.SyslogDevicePanelData(this.asset);
+	public ngOnChanges (changes: SimpleChanges) {
+		const currentFilter = _.get(changes, ['selectedFilter', 'currentValue']);
+		const currentAsset = _.get(changes, ['asset', 'currentValue']);
+		if (currentFilter) {
+			this.selectedTimeRange = currentFilter.days;
+			this.selectedSeverity = currentFilter.severity;
+			this.deviceDetailsParams = {
+				catalog: currentFilter.catalog,
+				customerId: this.customerId,
+				days: +this.selectedTimeRange,
+				deviceHost: currentAsset.DeviceHost,
+				excludeMsgType: this.excludeMsgFilter,
+				includeMsgType: this.includeMsgFilter,
+				severity: +this.selectedSeverity,
+			};
+			this.SyslogDevicePanelData();
+		}
 	}
 
 	/**
-	 * Used to toggle the inner table
-		* @param data event values
-	 * Onchanges lifecycle hook
+	 * Used to load the table grid
+	 * OnInit lifecycle hook
 	 */
-	public expandRow (data) {
-		if (data.showMessage) {
-			data.showMessage = false;
-		} else {
-			data.showMessage = true;
-		}
+
+	public ngOnInit () {
+		this.tableInitialization();
+		this.SyslogDevicePanelData();
+		this.innerTableOptions = new CuiTableOptions({
+			bordered: false,
+			columns: [
+				{
+					key: 'serialNumber',
+					name: I18n.get('_SyslogNumber_'),
+				},
+				{
+					key: 'SyslogMsgDesc',
+					name:  I18n.get('_Syslog_SyslogMessageText_'),
+				},
+				{
+					key: 'MessageCount',
+					name:  I18n.get('_SyslogCount_'),
+
+				},
+			],
+			dynamicData: false,
+		});
+	}
+	/**
+	 * Used to load the table grid
+	 * Cui table values
+	 */
+	public tableInitialization () {
+		this.tableOptions = new CuiTableOptions({
+			bordered: false,
+			columns: [
+				{
+					key: 'MsgType',
+					name: I18n.get('_SyslogMessageGrid_'),
+					sortable: true,
+				},
+				{
+					key: 'SyslogSeverity',
+					name: I18n.get('_Severity_'),
+					sortable: true,
+				},
+				{
+					key: 'MessageCount',
+					name: I18n.get('_SyslogCount_'),
+					sortable: true,
+				},
+				{
+					name: I18n.get('_SyslogRecommendations_'),
+					sortable: true,
+					template: this.recommendation,
+				},
+			],
+
+			dynamicData: false,
+			padding: 'regular',
+			rowWellColor: 'black',
+			rowWellTemplate : this.innerTableRef,
+			singleSelect: true,
+			striped: false,
+			wrapText: false,
+		});
 	}
 	/**
 	 * Response from the network
-		* @param gridData event values from input
+	 * @param gridData event values from input
 	 * Onchanges lifecycle hook
 	 */
-	public SyslogDevicePanelData (gridData) {
-		this.syslogsService.getdevicePanelDetails(gridData, this.customerId)
+	public SyslogDevicePanelData () {
+		this.syslogsService.getdevicePanelDetails(this.deviceDetailsParams)
 		.pipe(takeUntil(this.destroy$),
 		catchError(err => {
 			this.logger.error('syslog-messages-details.component : getdevicePanelDetails() ' +
@@ -78,8 +217,37 @@ export class SyslogsDeviceDetailsComponent implements OnChanges, OnDestroy {
 		}),
 		)
 		.subscribe((response: SyslogDevicePanelOuter[]) => {
-			this.tabledata = response;
+			this.tableData = MarshalTableData.marshalTableDataForInerGrid(response);
+			this.tableConfig.totalItems = response.length;
 		});
+	}
+	/**
+	 * Keys down function
+	 * @param event contains eventdata
+	 */
+	public keyDownFunction (event) {
+		if (event.keyCode === 13) {
+			this.deviceDetailsParams.includeMsgType = this.includeMsgFilter;
+			this.deviceDetailsParams.excludeMsgType = this.excludeMsgFilter;
+			this.SyslogDevicePanelData();
+		}
+	}
+	/**
+	 * Determines whether selection on
+	 */
+	public onSelection () {
+		this.deviceDetailsParams.severity = +this.selectedSeverity;
+		this.deviceDetailsParams.days = +this.selectedTimeRange;
+		this.SyslogDevicePanelData();
+	}
+
+	/**Determain the Pagination
+ 	* @param pageInfo input for page info
+	 */
+
+	 public onPagerUpdated (pageInfo: any) {
+		this.tableConfig.tableOffset = pageInfo.page;
+		this.paginationConfig.pageNum = pageInfo.page + 1;
 	}
 
 	/**

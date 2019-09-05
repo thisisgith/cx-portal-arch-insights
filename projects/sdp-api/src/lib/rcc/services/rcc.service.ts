@@ -6,25 +6,25 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 import { Observable as __Observable } from 'rxjs';
 import { RccConfiguration as __Configuration } from "../rcc-configuration";
 import { StrictHttpResponse as __StrictHttpResponse } from '../../core/strict-http-response';
-import { RccData, RccPolicyViolationData, RccCustomer, violationGridParams,AssetGridDataQueryParam } from "../models/rcc-data";
+import { RccData, RccPolicyViolationData, RccCustomer, violationGridParams, assetGridParams } from "../models/rcc-data";
 import { RccGridData, RccAssetGridData } from './../models/rcc-grid-data';
-import { RccAssetDetails ,RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterResponse, RccAssetFilterDetailsResponse } from './../models/rcc-asset-details';
+import { RccAssetDetails, RccAssetFilterReq, RccAssetSelectReq, RccAssetFilterResponse, RccAssetFilterDetailsResponse } from './../models/rcc-asset-details';
 
 @Injectable({
 	providedIn: "root"
 })
 class RccService extends __BaseService {
 
-	static readonly getViolationCount = '/api/customerportal/compliance/v1/service/summary-filters';
-	static readonly getAssetCount = '/api/customerportal/compliance/v1/service/severity-ostype-detail';
-	static readonly getGridData = '/api/customerportal/compliance/v1/service/violation-summary';
-	static readonly getAssetGridData = '/api/customerportal/compliance/v1/service/filter-asset-detail';
-	static readonly getRccPolicyRuleDetailsData = '/api/customerportal/compliance/v1/service/policy-rule-details';
-	static readonly getRccViolationDetailsData = '/api/customerportal/compliance/v1/service/violation-details';
-	static readonly getAssetSummaryData = '/api/customerportal/compliance/v1/service/fetch-violation-details';
-	static readonly getRccAssetFilterData = '/api/customerportal/compliance/v1/service/fetch-violation-details-filter';
+	static readonly getViolationCount = '/customerportal/compliance/v1/service/summary-filters';
+	static readonly getAssetCount = '/customerportal/compliance/v1/service/severity-ostype-detail';
+	static readonly getGridData = '/customerportal/compliance/v1/service/violation-summary';
+	static readonly getAssetGridData = '/customerportal/compliance/v1/service/filter-asset-detail';
+	static readonly getRccPolicyRuleDetailsData = '/customerportal/compliance/v1/service/policy-rule-details';
+	static readonly getRccViolationDetailsData = '/customerportal/compliance/v1/service/violation-details';
+	static readonly getAssetSummaryData = '/customerportal/compliance/v1/service/fetch-violation-details';
+	static readonly getRccAssetFilterData = '/customerportal/compliance/v1/service/fetch-violation-details-filter';
 
-	constructor(config: __Configuration, http: HttpClient) {
+	constructor (config: __Configuration, http: HttpClient) {
 		super(config, http);
 	}
 
@@ -55,7 +55,7 @@ class RccService extends __BaseService {
 			);
 	}
 
-	getAssetGridData(queryParamMapObj: AssetGridDataQueryParam): __Observable<any> {
+	getAssetGridData (queryParamMapObj: assetGridParams): __Observable<any> {
 		return this.invokeHTTPGet<RccAssetGridData>(
 			`${this.rootUrl}${RccService.getAssetGridData}`,
 			queryParamMapObj)

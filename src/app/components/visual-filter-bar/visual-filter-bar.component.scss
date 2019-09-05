@@ -1,0 +1,102 @@
+/* SCSS Component File */
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.filter {
+	&__selected {
+		border-bottom: 4px solid $primary;
+	}
+
+	&__not-selected {
+		border-bottom: 4px solid $white;
+	}
+
+	&__title {
+		position: absolute;
+		bottom: 4px;
+	}
+}
+
+.vfca--hidden ::ng-deep img {
+	display: none;
+}
+
+.visual-filter__carousel__arrow {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	padding: 10px 5px;
+	position: relative;
+	min-width: 25px;
+
+	::ng-deep {
+		img {
+			width: 15px;
+			opacity: 0.6;
+
+			&:hover {
+				opacity: 1;
+			}
+		}
+	}
+}
+
+.vfca--left::after,
+.vfca--right::after {
+	content: '';
+	display: inline-block;
+	height: 77%;
+	background: rgba(#909090, 0.2);
+	width: 1px;
+	position: absolute;
+}
+
+.vfca--right::after {
+	left: 0;
+}
+
+.vfca--left::after {
+	right: 0;
+}
+
+.visual-filter__carousel {
+	min-height: 140px;
+	display: grid;
+	grid-template-columns: auto auto 1fr auto;
+	width: 100%;
+}
+
+.visual-filter__remaining {
+	display: flex;
+	overflow: hidden;
+	scroll-behavior: smooth;
+}
+
+.visual-filter__card {
+	color: black;
+	display: flex;
+	flex-direction: column;
+	font-size: 65px;
+	font-weight: 300;
+	justify-content: flex-end;
+	align-items: center;
+	min-width: 223px;
+	cursor: pointer;
+	background: #fff;
+
+	&__selected {
+		border-bottom: 4px solid $primary;
+	}
+
+	&__not-selected {
+		border-bottom: 4px solid transparent;
+	}
+}
+
+.visual-filter__card__title {
+	margin-top: 5px;
+	color: var(--default-text-color, #394454);
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 20px;
+	text-align: center;
+}

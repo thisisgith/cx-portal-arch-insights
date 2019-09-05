@@ -221,7 +221,7 @@ export class AfmComponent {
 			selectable: false,
 			singleSelect: true,
 			sortable: true,
-			striped: true,
+			striped: false,
 			updateParams: false,
 			wrapText: false,
 		});

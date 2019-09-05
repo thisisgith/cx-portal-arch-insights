@@ -2,26 +2,27 @@
 	<div class="col-md-12">
 		<div class="container" *ngIf="exceptionDatas.length">
 			<span [innerText]="'_ArchitectureCBPExceptions_' | i18n" class="text-large"></span>
-			<span class="qtr-margin-left text-small text-muted">showing
-				{{ (tableStartIndex + 1) +' - ' +  tableEndIndex  }}
-				of {{totalItems}} exceptions</span>
+				<span class="qtr-margin-left text-small text-muted"
+					[innerText]="'_ArchitectureShowingXofYTotalItems_' | i18n:(tableStartIndex+1):tableEndIndex:totalItems">
+				</span>
 		</div>
 	</div>
 </div>
 
 <div class="row base-margin-top">
 	<div class="col-md-12">
-		<div class="container">
-			<!-- <cui-table [options]="tableOptions" [data]="exceptionDatas"></cui-table> -->
-			<table class="table" *ngIf="!isLoading">
+		<div class="container responsive-table">
+			<table class="table table--nostripes table--hover" *ngIf="!isLoading && totalItems">
 				<thead>
 					<tr>
 						<th [innerHTML]="('_ArchitectureSeverity_' | i18n)"></th>
 						<th [innerHTML]="('_ArchitectureRuleName_' | i18n)"></th>
 						<th [innerHTML]="('_ArchitectureException_' | i18n)"></th>
+						<th></th>
+						<th></th>
 					</tr>
 				</thead>
-				<tbody *ngIf="totalItems > 0">
+				<tbody>
 					<ng-container *ngFor="let item of exceptionDatas">
 						<tr>
 							<td>
@@ -29,16 +30,25 @@
 								</ng-container>
 							</td>
 							<td>
-								<span>{{(item['bpRuleTitle']).substr(0, 25).concat('...')}}</span>
+								<ng-container *ngTemplateOutlet=" ruleName;context: { rule : item.bpRuleTitle }">
+								</ng-container>
 							</td>
 							<td>
-								<span>{{(item['exceptions']).substr(0, 25).concat('... ')}}</span>
-								<a data-auto-id="expandAndContractRowLink" (click)="expandRow(item) ">
-									<span *ngIf="!item.active" [innerHTML]="('_ArchitectureShowRecommendationAndCorrectiveAction_' | i18n)"></span>
-									<span *ngIf="item.active" [innerHTML]="('_ArchitectureHideRecommendationAndCorrectiveAction_' | i18n)"></span>
+								<ng-container *ngTemplateOutlet="exception;context: { exception : item.exceptions }">
+								</ng-container>
+							</td>
+							<td>
+								<a data-auto-id="expandAndContractRowTextLink" (click)="expandRow(item) ">
+									<span [innerText]="item?.active ? ('_ArchitectureShowRecommendationAndCorrectiveAction_' | i18n)
+										: ('_ArchitectureHideRecommendationAndCorrectiveAction_' | i18n)">
+									</span>
+								</a>
+							</td>
+							<td>
+								<a data-auto-id="expandAndContractRowArrowLink" (click)="expandRow(item) ">
 									<span [ngClass]="{
-										'icon-chevron-down':!item.active,
-										'icon-chevron-up':item.active
+														'icon-chevron-down':!item.active,
+														'icon-chevron-up':item.active
 									}" class="icon-small hand-pointer"></span>
 								</a>
 							</td>
@@ -48,15 +58,26 @@
 					</ng-container>
 				</tbody>
 			</table>
-			<div class="section" *ngIf="!isLoading && totalItems > 0">
-				<cui-pager *ngIf="exceptionDatas.length" [page]="params.page" [limit]="params.pageSize"
-					[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+			
+		</div>
+		<div class="section" *ngIf="!isLoading && totalItems">
+			<cui-pager *ngIf="exceptionDatas.length" [page]="params.page" [limit]="params.pageSize"
+				[totalItems]="totalItems" (onPageChanged)="onPagerUpdated($event)"></cui-pager>
+		</div>
+		<div class="container base-margin-top" *ngIf="isLoading">
+			<div class="loading-spinner flex-center" aria-label="''">
+				<div class="wrapper">
+					<div class="wheel"></div>
+				</div>
 			</div>
-			<div class="container base-margin-top" *ngIf="isLoading">
-				<div class="loading-spinner flex-center" aria-label="Loading, please wait...">
-					<div class="wrapper">
-						<div class="wheel"></div>
-					</div>
+		</div>
+		<div *ngIf="!exceptionDatas.length && !isLoading">
+			<div class="text-center dbl-margin-top dbl-margin-bottom">
+				<div>
+					<span class="text-muted text-xlarge"
+						[innerText]="'_NoResultsFound_' | i18n"
+						data-auto-id="NoResultsFoundTxt" >
+					</span>
 				</div>
 			</div>
 		</div>
@@ -70,38 +91,49 @@
 		'Low': 'text-warning-alt'
 			}[severity]">
 	</span>
-	<span>{{severity}}</span>
+	<span [innerText]="severity"></span>
 </ng-template>
+
 
 <ng-template #dynamicRow let-item="item">
 	<tr class="table--wrap" *ngIf="item.active">
-		<td colspan="3">
+		<td colspan="5">
 			<div class="row">
 				<div class="col-md-12">
 					<div class="container">
-						<div class="text-bold text-uppercase" [innerText]="('_Exception_' | i18n)">
+						<div class="text-bold text-uppercase" [innerText]="('_ArchitectureException_' | i18n)">
 						</div>
-						<div>{{item['exceptions']}}</div>
+						<div [innerText]="item['exceptions']" ></div>
 					</div>
 				</div>
 			</div>
 			<div class="row base-margin-top">
 				<div class="col-md-12">
 					<div class="container">
-						<div class="text-bold text-uppercase" [innerText]="('_Recommendation_' | i18n)"></div>
-						<div>{{item['recommendations']}}</div>
+						<div class="text-bold text-uppercase" [innerText]="('_ArchitectureRecommendation_' | i18n)"></div>
+						<div [innerText]="item['recommendations']"></div>
 					</div>
 				</div>
 			</div>
 			<div class="row base-margin-top base-margin-down">
 				<div class="col-md-12">
 					<div class="container">
-						<div class="text-bold text-uppercase" [innerText]="('_CorrectiveAction_' | i18n)">
+						<div class="text-bold text-uppercase" [innerText]="('_ArchitectureCorrectiveAction_' | i18n)">
 						</div>
-						<div> {{item['correctiveActions']}}</div>
+						<div [innerText]="item['correctiveActions']"></div>
 					</div>
 				</div>
 			</div>
 		</td>
 	</tr>
+</ng-template>
+
+<ng-template #ruleName let-rule="rule">
+	<div class="architecture-column" [innerText]="rule">
+	</div>
+</ng-template>
+
+<ng-template #exception let-exception="exception">
+	<div class="architecture-column" [innerText]="exception">
+	</div>
 </ng-template>

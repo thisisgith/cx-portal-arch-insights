@@ -1,84 +1,107 @@
 <div class="text-uppercase text-bold half-margin-top half-margin-bottom"><span [innerText]="'_SyslogFiltersBy_' | i18n"
 		class="text-large"></span></div>
 <div class="row half-margin-bottom ">
-	<div class="col-md-3">
-		<cui-select data-auto-id="selection" label="Message(include)" placeholder="enter_SyslogGridMessage_mnemonic"></cui-select>
+	<div class="col-6">
+		<form #f="ngForm" class="row" id="searchForm" (keydown)="keyDownFunction($event)">
+			<div class="col-md-6">
+				<div class="form-group input--icon input--compressed">
+					<div class="form-group__text">
+						<input data-auto-id="includeFilterId" #includeFilter="ngModel" [(ngModel)]="includeMsgFilter"
+							name="includeFilterName" type="text" class="form-control"
+							placeholder="{{ '_SyslogIncludeMessage_' | i18n }}" />
+						<label [innerText]="'_SyslogIncludeMessageType_' | i18n"></label>
+						<button type="button" class="link" tabindex="-1">
+							<span class="icon-search"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group input--icon input--compressed">
+					<div class="form-group__text">
+						<input data-auto-id="excludeMsgId" #excludeFilter="ngModel" [(ngModel)]="excludeMsgFilter"
+							name="excludeMsgName" type="text" class="form-control"
+							placeholder="{{ '_SyslogExcludeMessage_' | i18n }}" />
+						<label [innerText]="'_SyslogExcludeMessageType_' | i18n"></label>
+						<button type="button" class="link" tabindex="-1">
+							<span class="icon-search"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
 	</div>
 	<div class="col-md-3">
-		<cui-select data-auto-id="selection1" label="Message(exclude)" placeholder="enter_SyslogGridMessage_mnemonic">
+		<cui-select 
+		data-auto-id="severity" 
+		label="{{ '_SyslogSeverity_' | i18n }}" 
+		[required]="false"
+		[items]="severityList" 
+		[compressed]="false" 
+		[(ngModel)]="selectedSeverity"
+		(ngModelChange)="onSelection()" 
+		optionsKey="name" 
+		optionsValue="value">
 		</cui-select>
 	</div>
 	<div class="col-md-3">
-		<cui-select data-auto-id="selection2" label="Severity" placeholder="select_severity">
+		<cui-select data-auto-id="timeRange" 
+		label="{{ '_SyslogTimeRange_' | i18n }}"
+		[required]="false"
+		[items]="timeRangeList" 
+		[compressed]="false" 
+		[(ngModel)]="selectedTimeRange"
+		(ngModelChange)="onSelection()" 
+		optionsKey="name" 
+		optionsValue="value">
 		</cui-select>
-	</div>
-	<div class="col-md-3">
-		<cui-select data-auto-id="selection3" label="Time Period" placeholder="select_time_period"></cui-select>
 	</div>
 </div>
-<table class="table">
-	<thead>
-		<tr>
-			<th><span [innerText]="'_SyslogMessageGrid_' | i18n"></span></th>
-			<th><span [innerText]="'_Severity_' | i18n"></span></th>
-			<th><span [innerText]="'_SyslogCount_' | i18n"></span></th>
-			<th><span [innerText]="'_SyslogRecommendations_' | i18n"></span></th>
-		</tr>
-	</thead>
-	<tbody *ngFor="let item of tabledata; index as i ">
-		<ng-container></ng-container>
-		<tr>
-			<td>{{item.MsgType}}</td>
-			<td>{{item.SyslogSeverity}}</td>
-			<td>{{item.MessageCount}}</td>
-			<td>
-				<a data-auto-id="expandAndContractRowLink" (click)="expandRow(item,i) "><span
-						[innerText]="'_SyslogViewDescriptionReccomendations_' | i18n"></span></a>
-			</td>
-		</tr>
-		<ng-container *ngTemplateOutlet=" downArrow;context: item">
-		</ng-container>
-	</tbody>
-</table>
-<ng-template #downArrow let-msgDesc="MessageDescObject" let-showMessage="showMessage" let-details="IcDesc"
-	let-Rcmd="Recommendation">
-	<tr class="container" *ngIf="showMessage">
+<div class="container base-margin-top">
+	<cui-table *ngIf="tableData" 
+	data-auto-id="tableData"
+	 [options]="tableOptions" 
+	 [data]="tableData"
+	 [offset]="tableConfig.tableOffset"
+	 [limit]="tableConfig.tableLimit">
+	</cui-table>
+	<div class="section">
+		<cui-pager [page]="tableConfig.tableOffset" 
+		[limit]="tableConfig.tableLimit"
+		[totalItems]="tableConfig.totalItems" 
+		(onPageChanged)="onPagerUpdated($event)">
+		</cui-pager>
+	</div>
+</div>
 
-		<td colspan="4">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="container">
-						<div class="text-uppercase text-bold half-margin-bottom"><span
-								[innerText]="'_SyslogDetailedDescription_' | i18n"></span> </div>
-						<div>{{details}}</div>
-					</div>
+<ng-template #innerTableRef let-item="item">
+	<div class="row">
+		<div class="col-12">
+			<div class="container">
+				<div class="text-uppercase text-bold half-margin-bottom"><span
+						[innerText]="'_SyslogDetailedDescription_' | i18n"></span> </div>
+				<div><span [innerText]="item.IcDesc"></span></div>
+			</div>
+		</div>
+	</div>
+	<div class="row base-margin-top">
+		<div class="col-md-12">
+			<div class="container">
+				<div class="text-uppercase text-bold half-margin-top half-margin-bottom"><span
+						[innerText]="'_SyslogRecommendations_' | i18n"></span></div>
+					<div><span [innerText]="item.Recommendation"></span></div>
 				</div>
 			</div>
-			<div class="row base-margin-top">
-				<div class="col-md-12">
-					<div class="container">
-						<div class="text-uppercase text-bold half-margin-top half-margin-bottom"><span
-								[innerText]="'_RECOMMENDATIONS_' | i18n"></span></div>
-						<div>{{Rcmd}}</div>
-					</div>
-				</div>
-			</div>
-			<table class="responsive-table">
-				<thead>
-					<tr>
-						<th><span [innerText]="'_SyslogNumber_' | i18n"></span></th>
-						<th><span [innerText]="'__Syslog_SyslogMessageText___' | i18n"></span></th>
-						<th><span [innerText]="'_SyslogCount_' | i18n"></span></th>
-					</tr>
-				</thead>
-				<tbody *ngFor="let msg of msgDesc; index as i">
-					<tr>
-						<td>{{i+1}}</td>
-						<td>{{msg.SyslogMsgDesc}}</td>
-						<td>{{msg.MessageCount}}</td>
-					</tr>
-				</tbody>
-			</table>
-		</td>
-	</tr>
+		</div>
+
+	<cui-table *ngIf="tableData" 
+	data-auto-id="tableData" 
+	[options]="innerTableOptions" 
+	[data]="item.MessageDescObject"
+	[offset]="tableConfig.tableOffset" 
+	[limit]="tableConfig.tableLimit">
+	</cui-table>
+</ng-template>
+<ng-template #recommendation>
+	<span [innerText]="'_SyslogViewDescriptionReccomendations_' | i18n"></span>
 </ng-template>

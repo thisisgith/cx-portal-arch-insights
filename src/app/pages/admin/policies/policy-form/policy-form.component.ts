@@ -71,6 +71,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	@Input() public policy: { };
 	@Input() public type: string;
 	@Input() public customerId: string;
+	@Input() public ignorePolicyExists: boolean;
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
@@ -220,10 +221,18 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				break;
 			}
 			case ModalTypes.newPolicy: {
+				if (this.ignorePolicyExists) {
+					this.timePeriods.options.pop();
+				}
+
 				this.newPolicy();
 				break;
 			}
 			case ModalTypes.editPolicy: {
+				if (this.ignorePolicyExists) {
+					this.timePeriods.options.pop();
+				}
+
 				this.setSelectors();
 
 				this.editPolicy();
@@ -530,26 +539,34 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	}
 
 	/**
-	 * Toggles is device row is selected
-	 * @param allDevicesSelected checkbox event
+	 * Toggles whether or not all devices are selected
 	 * @param devices device row
 	 * @param selectorName The designated name of the device selector
 	 * firing this function off
-	 *
-	 * @returns if device header is selected or not
 	 */
-	public toggleAllDevicesSelected (allDevicesSelected: boolean,
+	public toggleAllDevicesSelected (
 		devices: DeviceListRow[],
 		selectorName: string) {
-		const checked = !allDevicesSelected;
+
+		if (devices.length === 0) {
+			return;
+		}
+
+		let selected = false;
+
+		if (selectorName === this.leftDevices) {
+			this.allDevicesSelectedLeft = !this.allDevicesSelectedLeft;
+			selected = this.allDevicesSelectedLeft;
+		} else if (selectorName === this.rightDevices) {
+			this.allDevicesSelectedRight = !this.allDevicesSelectedRight;
+			selected = this.allDevicesSelectedRight;
+		}
 
 		for (let devNum = 0; devNum < devices.length; devNum += 1) {
-			devices[devNum].selected = checked;
+			devices[devNum].selected = selected;
 		}
 
 		this.handleDeviceSelectionChanged(selectorName);
-
-		return checked;
 	}
 
 	/**

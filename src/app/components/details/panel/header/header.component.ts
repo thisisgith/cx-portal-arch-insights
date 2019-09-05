@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { DetailsPanelStackService } from '@services';
 
 /**
  * Component representing 360 details pan./header.component
@@ -13,7 +14,16 @@ export class DetailsPanelHeaderComponent {
 	@Input('fullscreen') public fullscreen = false;
 	@Input('fullscreenToggle') public fullscreenToggle = true;
 	@Output('close') public close = new EventEmitter<boolean>();
+	@Output('back') public back = new EventEmitter<boolean>();
 	@Output('fullscreenChange') public fullscreenChange = new EventEmitter<boolean>();
+
+	constructor (
+		private detailsPanelStackService: DetailsPanelStackService,
+	) { }
+
+	get canGoBack () {
+		return this.detailsPanelStackService.canGoBack();
+	}
 
 	/**
 	 * determine if fullscreen from child data
@@ -28,5 +38,12 @@ export class DetailsPanelHeaderComponent {
 	 */
 	public closeDetails () {
 		this.close.emit(true);
+	}
+
+	/**
+	 * emits true when 360 back button is pressed
+	 */
+	public backDetails () {
+		this.back.emit(true);
 	}
 }

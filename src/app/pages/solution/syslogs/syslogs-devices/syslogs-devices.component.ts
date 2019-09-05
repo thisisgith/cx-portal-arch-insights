@@ -9,7 +9,11 @@ import {
 
 import { LogService } from '@cisco-ngx/cui-services';
 import { CuiTableOptions } from '@cisco-ngx/cui-components';
-import { SyslogsService, SyslogDeviceData, SyslogDeviceDetailsdata, SyslogFilter } from '@sdp-api';
+import { SyslogsService,
+	SyslogDeviceData,
+	SyslogDeviceDetailsdata,
+	SyslogFilter,
+	SyslogPanelIPSer } from '@sdp-api';
 import { Subject, of, Subscription } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -37,7 +41,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public totalItems = 0;
 	public tableData: SyslogDeviceDetailsdata[] = [];
 	public pageNum = 1;
-	public severity = 7;
+	public severity = 3;
 	public timeRange = 1;
 	public catalog = '';
 	public selectedAsset;
@@ -46,6 +50,9 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public assetType = '';
 	public filters: SyslogFilter[];
 	public searchVal = '';
+	public tableStartIndex = 0;
+	public tableEndIndex = 10;
+	public showAssetDetails = false;
 	public syslogsParams: SyslogsService.GetSyslogsParams = {
 		customerId: this.customerId,
 		pageNo: this.pageNum,
@@ -53,6 +60,9 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	};
 	public selected;
 	public destroy$ = new Subject();
+	public deviceHeaderValues: SyslogPanelIPSer;
+	public notScaned = true;
+	public serialNumberStatus = true;
 	constructor (
 		private logger: LogService,
 		public syslogsService: SyslogsService,
@@ -67,12 +77,11 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			this.customerId = id;
 		});
 		this.syslogsParams = {
-			asset: '',
-			catalog: '',
+			catalog: 'Cisco',
 			customerId: this.customerId,
 			days: 1,
 			pageNo: this.pageNum,
-			severity: 7,
+			severity: 3,
 			size: this.pagerLimit,
 		};
 	}
@@ -95,16 +104,16 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 * @param changes contains filterobj
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
-		// changes.prop contains the old and the new value...
 		const currentFilter = _.get(changes, ['assetFilter', 'currentValue']);
 		if (currentFilter && !changes.assetFilter.firstChange) {
 			this.syslogsParams = {
-				asset: this.assetFilter.asset,
-				catalog: this.assetFilter.catalog,
+				asset: currentFilter.asset,
+				catalog: currentFilter.catalog,
 				customerId: this.customerId,
-				days: this.assetFilter.timeRange,
+				days: currentFilter.timeRange,
 				pageNo: this.pageNum,
-				severity: this.assetFilter.severity,
+				search: this.searchVal,
+				severity: currentFilter.severity,
 				size: this.pagerLimit,
 			};
 			this.getAssetData();
@@ -125,8 +134,7 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public deviceGridInit () {
 		this.tableOptions = new CuiTableOptions({
 			bordered: false,
-			dynamicData: false,
-			singleSelect: true,
+			striped: false,
 			// tslint:disable-next-line: object-literal-sort-keys
 			columns: [
 				{
@@ -160,6 +168,8 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 					sortable: true,
 				},
 			],
+			dynamicData: false,
+			singleSelect: true,
 		});
 	}
 
@@ -167,7 +177,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	 * Gets asset data
 	 */
 	public getAssetData () {
-		// tslint:disable-next-line: ban-comma-operator
 		this.gridSubscripion = this.syslogsService
 			.getDeviceGridData(this.syslogsParams)
 			.pipe(
@@ -182,7 +191,13 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			.subscribe(gridData => {
 				this.tableData = gridData.responseData;
 				this.totalItems = gridData.responseData.length;
-			});
+			},
+			catchError(err => {
+				this.logger.error('syslogs-devices.component : getDeviceGridData() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
 	}
 	/**
 	 * Determines whether table row selection on
@@ -195,14 +210,41 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			this.selectedAsset = undefined;
 		}
 
+		this.sysLogHeaderDetails(tableRowData, this.customerId);
 	}
 
+	/**
+	 * Sys log header details
+	 * @param tableRowData contains row data
+	 * @param customerId contains customerid
+	 */
+	public sysLogHeaderDetails (tableRowData, customerId) {
+		this.syslogsService.getDeviceHeaderDetails(tableRowData, customerId)
+		.pipe(takeUntil(this.destroy$))
+		.subscribe(data => {
+			this.deviceHeaderValues = data;
+			this.deviceHeaderValues.lastScan =
+			(this.deviceHeaderValues.lastScan) ?
+			 this.deviceHeaderValues.lastScan : I18n.get('_SylogNotAvailable_');
+
+			 this.deviceHeaderValues.serialNumber =
+			(this.deviceHeaderValues.serialNumber) ?
+			 this.deviceHeaderValues.serialNumber : I18n.get('_SylogNotAvailable_');
+		},
+			catchError(err => {
+				this.logger.error('syslogs-devices.component : sysLogHeaderDetails() ' +
+					`:: Error : (${err.status}) ${err.message}`);
+
+				return of({ });
+			}));
+	}
 	/**
 	 * Determines whether panel close on
 	 */
 	public onPanelClose () {
 		this.selectedAsset = undefined;
 		this.showAssetPanel = false;
+		this.showAssetDetails = false;
 	}
 	/**
 	 * Determines whether pager updated on
@@ -211,7 +253,22 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 	public onPagerUpdated (pageInfo: any) {
 		this.tableOffset = pageInfo.page;
 	}
-
+	/**
+	 * Redirects to asset360
+	 */
+	public redirectToAssetDetails () {
+		this.showAssetDetails = true;
+	}
+	/**
+	 * Searchs all
+	 * @param event contains seach input data
+	 */
+	public searchAll (event) {
+		if (event.keyCode === 13) {
+			this.syslogsParams.search = this.searchVal;
+			this.getAssetData();
+		}
+	}
 	/**
 	 * on destroy
 	 */

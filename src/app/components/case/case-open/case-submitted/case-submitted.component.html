@@ -41,10 +41,29 @@
 	<dl class="base-margin-top">
 		<dt [innerText]="'_Asset_' | i18n"></dt>
 		<dd>
-			<div><span [innerText]="asset.serialNumber"></span></div>
-			<div><span [innerText]="asset.productId"></span></div>
-			<div><span [innerText]="asset.deviceName"></span></div>
+			<div><span [innerText]="assets[0]?.serialNumber"></span></div>
+			<div><span [innerText]="assets[0]?.deviceName || assets[0]?.hostName"></span></div>
+			<div><span [innerText]="assets[0]?.productId"></span></div>
 		</dd>
+		<app-collapsible *ngIf="assets.length > 1"
+			[text]="'_AdditionalImpactedAssets_' | i18n:(assets.length - 1)">
+			<table class="table table--nostripes">
+				<thead>
+					<tr>
+						<th [innerText]="'_SerialNumber_' | i18n"></th>
+						<th [innerText]="'_HostName_' | i18n"></th>
+						<th [innerText]="'_Model_' | i18n"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let asset of assets | slice:1">
+						<td [innerText]="asset.serialNumber"></td>
+						<td [innerText]="asset.deviceName || asset.hostName"></td>
+						<td [innerText]="asset.productId"></td>
+					</tr>
+				</tbody>
+			</table>
+		</app-collapsible>
 		<dt [innerText]="'_CaseTitle_' | i18n"></dt>
 		<dd>
 			<span [innerText]="caseData.title"></span>

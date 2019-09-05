@@ -1,4 +1,4 @@
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyslogsMessagesComponent } from './syslogs-messages.component';
 import { SyslogsMessagesModule } from './syslogs-messages.module';
@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { user } from '@mock';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
+import { SimpleChanges, SimpleChange } from '@angular/core';
 describe('SyslogsMessagesComponent', () => {
 	let component: SyslogsMessagesComponent;
 	let fixture: ComponentFixture<SyslogsMessagesComponent>;
@@ -46,15 +47,16 @@ describe('SyslogsMessagesComponent', () => {
 
 	beforeEach(() => {
 		window.localStorage.clear();
+		fixture = TestBed.createComponent(SyslogsMessagesComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
 	});
 
 	it('should create', () => {
-		fixture = TestBed.createComponent(SyslogsMessagesComponent);
-		component = fixture.componentInstance;
 		expect(component)
 			.toBeTruthy();
 	});
-	it('should set null values on request errors', fakeAsync(() => {
+	it('should set null values on request errors', done => {
 		const error = {
 			status: 404,
 			statusText: 'Resource not found',
@@ -62,79 +64,101 @@ describe('SyslogsMessagesComponent', () => {
 		spyOn(syslogsService, 'getGridData')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
-		fixture = TestBed.createComponent(SyslogsMessagesComponent);
-		component = fixture.componentInstance;
-		tick();
-		fixture.detectChanges();
-		tick();
-		const syslogMessageGrid = [];
-		expect(component.tableData)
-		.toEqual(syslogMessageGrid);
-	}));
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const syslogMessageGrid = [];
+				expect(component.tableData)
+				.toEqual(syslogMessageGrid);
 
-	it('Should get the syslog message grid data', fakeAsync(() => {
+				done();
+			});
+	});
+	it('Should get the syslog message grid data', done => {
 		spyOn(syslogsService, 'getGridData')
 		.and
 		.returnValue(of(SyslogScenarios[1].scenarios.GET[0].response.body));
-		fixture = TestBed.createComponent(SyslogsMessagesComponent);
-		component = fixture.componentInstance;
-		tick();
-		fixture.detectChanges();
-		expect(component.tableData)
-			.toBeDefined();
-	}));
+		component.ngOnInit();
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			expect(component.tableData.length)
+				.toBeGreaterThan(0);
+			done();
+		});
+	});
+	it('should get selected table row data', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const selectedRowData = {
+					active: true,
+					deviceCount: 1,
+					IcDesc: '',
+					MsgType: 'INTERNAL',
+					Recommendation: '',
+					syslogMsgCount: 25,
+					SyslogSeverity: 3,
+				};
+				component.onTableRowSelection(selectedRowData);
+				expect(selectedRowData.active)
+				 .toBeTruthy();
+				 expect(component.selectedAsset)
+				 .toEqual(selectedRowData);
+				done();
+			});
+	});
+	it('should reset tableRow row data on panel close', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				component.onPanelClose();
+				expect(component.selectedAsset)
+				.toBeUndefined();
+				expect(component.showAssetPanel)
+				.toBeFalsy();
+				done();
+			});
+	});
+	it('should reset tableRow row data when clicking twice on table row', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const selectedRowData = {
+					active: false,
+					deviceCount: 1,
+					IcDesc: '',
+					MsgType: 'INTERNAL',
+					Recommendation: '',
+					syslogMsgCount: 25,
+					SyslogSeverity: 3,
+				};
+				component.onTableRowSelection(selectedRowData);
+				 expect(component.selectedAsset)
+				 .toBeUndefined();
+				done();
+			});
+	});
 
-	it('should get selected table row data', fakeAsync(() => {
-		fixture = TestBed.createComponent(SyslogsMessagesComponent);
-		component = fixture.componentInstance;
-		tick();
-		fixture.detectChanges();
-		const selectedRowData = {
-			active: true,
-			deviceCount: 1,
-			IcDesc: '',
-			MsgType: 'INTERNAL',
-			Recommendation: '',
-			syslogMsgCount: 25,
-			SyslogSeverity: 3,
+	it('should take currentFilter on changes', () => {
+		const changes: SimpleChanges = {
+			sysFilter: new SimpleChange(
+				{
+					asset: '',
+					catalog: 'Cisco',
+					severity: 3,
+					timeRange: 30,
+				},
+				{
+					asset: '',
+					catalog: 'Cisco',
+					severity: 3,
+					timeRange: 30,
+				}, false,
+			),
 		};
-		component.onTableRowSelection(selectedRowData);
-		expect(selectedRowData.active)
-		 .toBeTruthy();
-		 expect(component.selectedAsset)
-		 .toEqual(selectedRowData);
-	}));
-
-	it('should reset tableRow row data on panel close', fakeAsync(() => {
-		fixture = TestBed.createComponent(SyslogsMessagesComponent);
-		component = fixture.componentInstance;
-		tick();
-		fixture.detectChanges();
-		component.onPanelClose();
-		expect(component.selectedAsset)
-		.toBeUndefined();
-		expect(component.showAssetPanel)
-		.toBeFalsy();
-	}));
-
-	it('should reset tableRow row data when clicking twice on table row', fakeAsync(() => {
-		fixture = TestBed.createComponent(SyslogsMessagesComponent);
-		component = fixture.componentInstance;
-		tick();
-		fixture.detectChanges();
-		const selectedRowData = {
-			active: false,
-			deviceCount: 1,
-			IcDesc: '',
-			MsgType: 'INTERNAL',
-			Recommendation: '',
-			syslogMsgCount: 25,
-			SyslogSeverity: 3,
-		};
-		component.onTableRowSelection(selectedRowData);
-		expect(selectedRowData.active)
-		 .toBeFalsy();
-		 expect(component.selectedAsset)
-		 .toBeUndefined();
-	}));
+		component.ngOnChanges(changes);
+		expect(component.syslogsParams.catalog)
+		.toEqual('Cisco');
+	});
 });

@@ -251,7 +251,7 @@ describe('FpCompareComponent', () => {
 			.toBeFalsy();
 	}));
 
-	it('should work', fakeAsync(() => {
+	it('Should return the searched getListdevice response', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getProductFamily')
 			.and
 			.returnValue(of(<any> []));
@@ -273,4 +273,26 @@ describe('FpCompareComponent', () => {
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalled();
 	}));
+
+	it('should check for ngOnchanges in ProductFamily and getListdevice', () => {
+		spyOn(crashPreventionService, 'getProductFamily')
+			.and
+			.returnValue(of(<any> []));
+		spyOn(crashPreventionService, 'getListdevice')
+			.and
+			.returnValue(of(<any> []));
+		component.ngOnChanges({
+			devices: {
+				currentValue: null,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(crashPreventionService.getProductFamily)
+			.toHaveBeenCalledTimes(0);
+		expect(crashPreventionService.getListdevice)
+			.toHaveBeenCalledTimes(0);
+	});
 });

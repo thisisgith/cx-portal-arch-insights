@@ -1,15 +1,15 @@
 <div class="row qtr-margin-top">
-	<div class="col-md-9 flex flex-fill">
-		<div class="flex-center-vertical" *ngIf="pagination && assets?.length > 0">
+	<div class="col-md-6 flex flex-fill">
+		<div class="flex-center-vertical" *ngIf="pagination && assets?.length > 0" >
 			<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
 			<span [innerText]="'_OsvShowingXofYAssets_' | i18n:paginationCount:pagination.total"
 				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 			</span>
 		</div>
 	</div>
-	<div class="col-md-3 text-right">
+	<div class="col-md-6 text-right" >
 		<div>
-			<span [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></span>
+			<div [innerText]="'_CSNeedSoftwareRecommendation_' | i18n"></div>
 			<a (click)="contactSupport.emit()" class="recommedation-link text-primary" data-auto-id="ContactExpert"
 				[innerText]="'_CSRequestExpert_' | i18n">
 			</a>
@@ -26,7 +26,7 @@
 
 <ng-template #tableProfileGroups>
 	<div *ngIf="!status.isLoading && assetsTable && assets?.length">
-		<table class="table table--selectable table--compressed table--wrap table--lined table--hover">
+		<table class="table table--selectable table--compressed table--wrap table--lined table--hover table--nostripes">
 			<thead>
 				<tr>
 					<th *ngFor="let column of assetsTable.columns"

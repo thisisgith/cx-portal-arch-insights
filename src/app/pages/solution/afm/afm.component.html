@@ -1,5 +1,11 @@
-<div class="panel">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
 	<ng-container *ngTemplateOutlet="visualFilters"></ng-container>
+</div>
+<div class="panel panel--bordered base-margin-top">
+	<ng-container>
+		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
+		<div class="qtr-margin-top"></div>
+	</ng-container>
 	<div class="divider qtr-margin-top"></div>
 	<ng-container *ngTemplateOutlet="searchFilters"></ng-container>
 	<div class="divider qtr-margin-top"></div>
@@ -94,106 +100,75 @@
 </ng-template>
 
 <ng-template #visualFilters>
-	<div class="row col-md-12">
-		<div
-			class="col-md-3 panel panel--bordered-right"
-			[ngClass]="{
-				filter__selected:
-					searchParams.headerFilterType !== 'CHATS' &&
-					searchParams.headerFilterType !== 'SEARCH'
-			}"
-		>
+	<visual-filter-bar [filters]="filters">
+		<ng-template #startingCard>
 			<div
-				class="col-md-12 flex cursor"
+				class="panel panel--bordered-right"
 				[ngClass]="{
-					'text-primary': searchParams.headerFilterType === 'ALARM'
+					filter__selected:
+						searchParams.headerFilterType !== 'CHATS' &&
+						searchParams.headerFilterType !== 'SEARCH'
 				}"
-				(click)="allAlarmFilter()"
-				data-auto-id="TotalAlarm"
 			>
 				<div
-					class="text-huge col-md-4 text-right"
-					data-auto-id="TotalVisualFilter"
-					[innerText]="headerCount?.totalAlarmCount"
-				></div>
-				<div
-					class="text-large col-md-8 base-margin-top"
-					[innerText]="'_AfmTotalAlarms_' | i18n"
-				></div>
-			</div>
-			<div
-				class="col-md-12 flex cursor"
-				[ngClass]="{
-					'text-primary': searchParams.headerFilterType === 'TAC'
-				}"
-				(click)="tacCaseFilters()"
-				data-auto-id="TacCase"
-			>
-				<div
-					class="text-huge col-md-4 text-right"
-					data-auto-id="TotalVisualFilter"
-					[innerText]="headerCount?.totalTacCaseCount"
-				></div>
-				<div
-					class="text-large col-md-8 base-margin-top"
-					[innerText]="'_AfmTacCases_' | i18n"
-				></div>
-			</div>
-			<div
-				class="col-md-12 flex cursor"
-				[ngClass]="{
-					'text-primary':
-						searchParams.headerFilterType === 'IGNORE_EVENT'
-				}"
-				(click)="ignoreAlarmFilters()"
-				data-auto-id="IgnoreEvent"
-			>
-				<div
-					class="text-huge col-md-4 text-right"
-					data-auto-id="TotalVisualFilter"
-					[innerText]="headerCount?.totalIgnoreEventCount"
-				></div>
-				<div
-					class="text-large col-md-8 base-margin-top"
-					[innerText]="'_AfmIgnoredAlarms_' | i18n"
-				></div>
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="flex flex-fill flex-fluid">
-				<ng-container *ngFor="let filter of filters; index as i">
+					class="col-md-12 flex cursor"
+					[ngClass]="{
+						'text-primary': searchParams.headerFilterType === 'ALARM'
+					}"
+					(click)="allAlarmFilter()"
+					data-auto-id="TotalAlarm"
+				>
 					<div
-						attr.id="AfmSelectVisualFilter-{{ filter.key }}"
-						attr.data-auto-id="AfmSelectVisualFilter-{{
-							filter.key
-						}}"
-						[ngClass]="{
-							filter__selected: filter.selected,
-							'filter__not-selected': !filter.selected
-						}"
-						class="panel flex-center flex-fill filter"
-					>
-						<div class="dbl-margin-top">
-							<div *ngIf="filter.template">
-								<ng-container
-									*ngTemplateOutlet="
-										filter.template;
-										context: { filter: filter }
-									"
-								>
-								</ng-container>
-							</div>
-						</div>
-					</div>
-				</ng-container>
+						class="text-huge col-md-4 text-right"
+						data-auto-id="TotalVisualFilter"
+						[innerText]="headerCount?.totalAlarmCount"
+					></div>
+					<div
+						class="text-large col-md-8 base-margin-top"
+						[innerText]="'_AfmTotalAlarms_' | i18n"
+					></div>
+				</div>
+				<div
+					class="col-md-12 flex cursor"
+					[ngClass]="{
+						'text-primary': searchParams.headerFilterType === 'TAC'
+					}"
+					(click)="tacCaseFilters()"
+					data-auto-id="TacCase"
+				>
+					<div
+						class="text-huge col-md-4 text-right"
+						data-auto-id="TotalVisualFilter"
+						[innerText]="headerCount?.totalTacCaseCount"
+					></div>
+					<div
+						class="text-large col-md-8 base-margin-top"
+						[innerText]="'_AfmTacCases_' | i18n"
+					></div>
+				</div>
+				<div
+					class="col-md-12 flex cursor"
+					[ngClass]="{
+						'text-primary':
+							searchParams.headerFilterType === 'IGNORE_EVENT'
+					}"
+					(click)="ignoreAlarmFilters()"
+					data-auto-id="IgnoreEvent"
+				>
+					<div
+						class="text-huge col-md-4 text-right"
+						data-auto-id="TotalVisualFilter"
+						[innerText]="headerCount?.totalIgnoreEventCount"
+					></div>
+					<div
+						class="text-large col-md-8 base-margin-top"
+						[innerText]="'_AfmIgnoredAlarms_' | i18n"
+					></div>
+				</div>
 			</div>
-		</div>
-	</div>
+		</ng-template>
+	</visual-filter-bar>
 	<div class="divider qtr-margin-top visual-filter-divider" *ngIf="selectedFilters?.length > 0"></div>
-	<ng-container>
-		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
-		<div class="qtr-margin-top"></div>
-	</ng-container>
 	<ng-container  *ngIf="afmConnectionStatus?.status === 'Error'">
 		<div class="divider qtr-margin-top qtr-margin-bottom visual-filter-divider"></div>
 		<ng-container *ngTemplateOutlet="serverError"></ng-container>
@@ -329,6 +304,7 @@
 						<div class="form-group__text">
 							<input
 								id="afmSearchInput"
+								class="afm-search"
 								type="search"
 								[(ngModel)]="afmSearchInput"
 								name="afmSearchInput"

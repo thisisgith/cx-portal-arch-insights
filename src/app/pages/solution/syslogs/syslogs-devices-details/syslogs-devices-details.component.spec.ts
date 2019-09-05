@@ -11,6 +11,7 @@ import { of, throwError } from 'rxjs';
 import { user } from '@mock';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
+import { SimpleChanges, SimpleChange } from '@angular/core';
 
 describe('SyslogsdevicedetailsComponent', () => {
 	let component: SyslogsDeviceDetailsComponent;
@@ -39,7 +40,7 @@ describe('SyslogsdevicedetailsComponent', () => {
 				},
 			],
 		})
-		.compileComponents();
+			.compileComponents();
 		syslogsService = TestBed.get(SyslogsService);
 	}));
 
@@ -64,52 +65,107 @@ describe('SyslogsdevicedetailsComponent', () => {
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				expect(component.tabledata)
-				.toBeUndefined();
+				expect(component.tableData)
+					.toBeUndefined();
 
 				done();
 			});
 	});
 	it('Should get the syslog device message grid data', done => {
-		const param = {
-			active: true,
-			DeviceHost: '10.10.10.10',
-			ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
-			ProductId: 'WS-C2960S-24PS-L',
-			SoftwareType: 'IOS',
-			SoftwareVersion: '12.2(53)SE2',
-			syslogCount: 6,
-		};
-		spyOn(syslogsService, 'getdevicePanelDetails')
-		.and
-		.returnValue(of(SyslogScenarios[4].scenarios.GET[0].response.body));
-		component.SyslogDevicePanelData(param);
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.tabledata)
-				.toBeDefined();
-			done();
-		});
-	});
 
-	it('should toggle the inner grid ', done => {
+		spyOn(syslogsService, 'getdevicePanelDetails')
+			.and
+			.returnValue(of(SyslogScenarios[4].scenarios.GET[0].response.body));
+		component.SyslogDevicePanelData();
 		fixture.whenStable()
 			.then(() => {
 				fixture.detectChanges();
-				const param = {
-					active: true,
-					DeviceHost: '10.10.10.10',
-					ProductFamily: 'Cisco Catalyst 2960-S Series Switches',
-					ProductId: 'WS-C2960S-24PS-L',
-					SoftwareType: 'IOS',
-					SoftwareVersion: '12.2(53)SE2',
-					syslogCount: 6,
-				};
-				component.expandRow(param);
-				expect(param.active)
-				 .toBeTruthy();
+				expect(component.tableData)
+					.toBeDefined();
 				done();
 			});
+	});
+	it('should get selected messages value', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const includeMsg = '';
+				const event = {
+					keyCode: 13,
+				};
+				component.keyDownFunction(event);
+				expect(component.deviceDetailsParams.includeMsgType)
+					.toEqual(includeMsg);
+				expect(component.deviceDetailsParams.excludeMsgType)
+					.toEqual(includeMsg);
+				done();
+			});
+	});
+	it('should reset message value', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				component.keyDownFunction({ keyCode: null });
+				expect(component.deviceDetailsParams.includeMsgType)
+					.toBeUndefined();
+				expect(component.deviceDetailsParams.excludeMsgType)
+					.toBeUndefined();
+				done();
+			});
+	});
+	it('should get selected severity data', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const severity = 0;
+				const timeRange = 0;
+				component.onSelection();
+				expect(component.deviceDetailsParams.severity)
+					.toEqual(severity);
+				expect(component.deviceDetailsParams.days)
+					.toEqual(timeRange);
+				done();
+			});
+	});
+
+	it('should change current filter on changes', () => {
+		const changes: SimpleChanges = {
+			asset: new SimpleChange(
+				{
+				   active: true,
+				   DeviceHost: 'Router.cisco.com',
+				   DeviceIp: '10.126.77.249',
+				   ProductFamily: 'Cisco Carrier Routing System',
+				   ProductId: 'IOSXRV',
+				   SoftwareType: 'IOS XR',
+				   SoftwareVersion: '6.0.0[Default]',
+				   syslogCount: 1,
+				},
+				{
+				   active: true,
+				   DeviceHost: 'Router.cisco.com',
+				   DeviceIp: '10.126.77.249',
+				   ProductFamily: 'Cisco Carrier Routing System',
+				   ProductId: 'IOSXRV',
+				   SoftwareType: 'IOS XR',
+				   SoftwareVersion: '6.0.0[Default]',
+				   syslogCount: 1,
+				}, true,
+			),
+			selectedFilter: new SimpleChange(
+				{ }, {
+					asset: '',
+					catalog: 'Cisco',
+					customerId: '2431199',
+					days: 30,
+					pageNo: 1,
+					search: '',
+					severity: '7',
+					size: 10,
+			 }, false),
+		};
+		component.ngOnChanges(changes);
+		expect(component.selectedSeverity)
+		.toEqual('7');
 	});
 });

@@ -1,82 +1,46 @@
-<div class="panel">
-	<div class="row">
-		<div class="col-3 margin-bottom">
-			<div class="row">
-				<div class="col-10 filter__selected">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+	<visual-filter-bar [filters]="filters">
+		<ng-template #startingCard>
+			<div class="filter__selected">
+				<div
+					data-auto-id="highCrashCount"
+					class="base-margin-bottom qtr-margin-top cursor"
+					(click)="getHighCrashesDeviceData()"
+					[ngClass]="{ 'text-primary': onlyCrashes }"
+				>
 					<div
-						data-auto-id="highCrashCount"
-						class="base-margin-bottom qtr-margin-top cursor"
-						(click)="getHighCrashesDeviceData()"
-						[ngClass]="{ 'text-primary': onlyCrashes }"
-					>
-						<div
-							class="text-huge flex-center dbl-padding-left dbl-padding-right"
-							[innerText]="highCrashDeviceCount"
-							*ngIf="highCrashDeviceCount"
-						></div>
-						<div
-							class="text-large flex-center"
-							[innerText]="'_RMHighCrashRiskAssets_' | i18n"
-						></div>
-					</div>
+						class="text-huge flex-center dbl-padding-left dbl-padding-right"
+						[innerText]="highCrashDeviceCount"
+						*ngIf="highCrashDeviceCount"
+					></div>
 					<div
-						data-auto-id="lastDayData"
-						class="half-margin-bottom qtr-margin-top cursor"
-						(click)="getAllCrashesData()"
-						[ngClass]="{ 'text-primary': !onlyCrashes }"
-					>
-						<div
-							class="text-huge flex-center dbl-padding-left dbl-padding-right"
-							[innerHTML]="last24hrsData"
-						>
-						</div>
-						<div
-							class="text-large flex-center"
-							[innerText]="'_RMCrashedAssetsInLast24Hrs_' | i18n"
-						></div>
-					</div>
+						class="text-large flex-center"
+						[innerText]="'_RMHighCrashRiskAssets_' | i18n"
+					></div>
 				</div>
 				<div
-					class="col-2 qtr-margin-right flex flex-center flex-fill flex-fluid"
+					data-auto-id="lastDayData"
+					class="half-margin-bottom qtr-margin-top cursor"
+					(click)="getAllCrashesData()"
+					[ngClass]="{ 'text-primary': !onlyCrashes }"
 				>
-					<div class="icon-chevron-left mid-icon-place"></div>
+					<div
+						class="text-huge flex-center dbl-padding-left dbl-padding-right"
+						[innerHTML]="last24hrsData"
+					>
+					</div>
+					<div
+						class="text-large flex-center"
+						[innerText]="'_RMCrashedAssetsInLast24Hrs_' | i18n"
+					></div>
 				</div>
 			</div>
-		</div>
-
-		<div class="col-2">
-			<div class="flex flex-fill flex-center flex-fluid">
-				<ng-container *ngFor="let filter of filters">
-					<div
-						attr.id="RiskMitigationSelectVisualFilter?-{{
-							filter.key
-						}}"
-						attr.data-auto-id="RiskMitigationSelectVisualFilter?-{{
-							filter.key
-						}}"
-					>
-						<div class="base-margin-bottom">
-							<div *ngIf="filter.template">
-								<ng-container
-									*ngTemplateOutlet="
-										filter.template;
-										context: { filter: filter }
-									"
-								>
-								</ng-container>
-							</div>
-						</div>
-						<div
-							class="hide filter__title text-muted text-large"
-							[innerText]="filter.title"
-						></div>
-					</div>
-				</ng-container>
-			</div>
-		</div>
+		</ng-template>
+	</visual-filter-bar>
 	</div>
-	<div class="divider qtr-margin half-margin-bottom"></div>
 
+
+<div class="panel panel--bordered base-margin-top">
 	<!-- filter tab -->
 	<ng-container>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
@@ -92,11 +56,45 @@
 				[compressed]="true"
 				[searchText] = "searchQueryString"
 				(onUpdate)="onSearchQuery($event)"
+				class="risk-mitigation-search"
 			>
 			</cui-search>
 		</div>
 	</div>
 	<div class="divider qtr-margin"></div>
+
+	<div *ngIf="!onlyCrashes; else assetsWithCrashRisk">
+			<div *ngIf="!crashedAssetsGridDetails.tableData.length ">
+					<div class="text-center dbl-margin-top dbl-margin-bottom">
+						<div>
+							<span class="text-muted text-xlarge"
+								[innerText]="'_NoResultsFound_' | i18n"
+								data-auto-id="NoResultsFoundTxt" >
+							</span>
+						</div>
+
+					</div>
+				</div>
+
+
+		<cui-table  *ngIf="crashedAssetsGridDetails.tableData.length"
+			(onTableRowClicked)="onRowClicked($event)"
+			[data]="crashedAssetsGridDetails.tableData"
+			[limit]="crashedAssetsGridDetails.tableLimit"
+			[offset]="crashedAssetsGridDetails.tableOffset"
+			[options]="crashesAssetsGridOptions"
+			class="table--wrap"
+		></cui-table>
+		<div class="section">
+			<cui-pager
+				*ngIf="crashedAssetsGridDetails.tableData.length"
+				[page]="crashedAssetsGridDetails.tableOffset"
+				[limit]="crashedAssetsGridDetails.tableLimit"
+				[totalItems]="crashedAssetsGridDetails.totalItems"
+				(onPageChanged)="onPagerUpdated($event)"
+			></cui-pager>
+		</div>
+	</div>
 </div>
 
 <ng-template #advisoryFilter let-filter="filter">
@@ -151,38 +149,7 @@
 	</div>
 	<div class="divider qtr-margin"></div>
 </ng-template>
-<div *ngIf="!onlyCrashes; else assetsWithCrashRisk">
-		<div *ngIf="!crashedAssetsGridDetails.tableData.length ">
-				<div class="text-center dbl-margin-top dbl-margin-bottom">
-					<div>
-						<span class="text-muted text-xlarge"
-							[innerText]="'_NoResultsFound_' | i18n"
-							data-auto-id="NoResultsFoundTxt" >
-						</span>
-					</div>
 
-				</div>
-			</div>
-
-
-	<cui-table  *ngIf="crashedAssetsGridDetails.tableData.length"
-		(onTableRowClicked)="onRowClicked($event)"
-		[data]="crashedAssetsGridDetails.tableData"
-		[limit]="crashedAssetsGridDetails.tableLimit"
-		[offset]="crashedAssetsGridDetails.tableOffset"
-		[options]="crashesAssetsGridOptions"
-		class="table--wrap"
-	></cui-table>
-	<div class="section">
-		<cui-pager
-			*ngIf="crashedAssetsGridDetails.tableData.length"
-			[page]="crashedAssetsGridDetails.tableOffset"
-			[limit]="crashedAssetsGridDetails.tableLimit"
-			[totalItems]="crashedAssetsGridDetails.totalItems"
-			(onPageChanged)="onPagerUpdated($event)"
-		></cui-pager>
-	</div>
-</div>
 <ng-template #showSpinner>
 	<cui-spinner></cui-spinner>
 </ng-template>
@@ -324,7 +291,7 @@
 		></app-fingerprint-header>
 		<div detailsPanelTitle class="text-xlarge">
 			<span
-				class="qtr-margin-left"
+				class="base-margin-left"
 				[innerText]="'_CP_FingerPrintDetailsFor_' | i18n"
 			></span>
 			<span class="qtr-margin-left">

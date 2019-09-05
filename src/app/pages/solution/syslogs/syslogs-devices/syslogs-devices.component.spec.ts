@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { user } from '@mock';
 import { SyslogScenarios } from 'src/environments/mock/syslogs/syslogs';
+import { SimpleChanges, SimpleChange } from '@angular/core';
 describe('SyslogsMessagesComponent', () => {
 	let component: SyslogsDevicesComponent;
 	let fixture: ComponentFixture<SyslogsDevicesComponent>;
@@ -98,8 +99,6 @@ describe('SyslogsMessagesComponent', () => {
 			SyslogSeverity: 3,
 		};
 		component.onTableRowSelection(selectedRowData);
-		expect(selectedRowData.active)
-		 .toBeTruthy();
 		 expect(component.selectedAsset)
 		 .toEqual(selectedRowData);
 	});
@@ -112,7 +111,70 @@ describe('SyslogsMessagesComponent', () => {
 		expect(component.showAssetPanel)
 		.toBeFalsy();
 	});
-	it('should reset tableRow row data when clicking twice on table row', () => {
+	it('should refresh assetfilter data', done => {
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				const changes: SimpleChanges = {
+					assetFilter: new SimpleChange(
+						{
+							asset: '',
+							catalog: 'Cisco',
+							severity: 3,
+							timeRange: 30,
+						},
+						{
+							asset: '',
+							catalog: 'Cisco',
+							severity: 3,
+							timeRange: 30,
+						}, false,
+					),
+				};
+				component.ngOnChanges(changes);
+				expect(component.syslogsParams.catalog)
+				 .toEqual('Cisco');
+				done();
+			});
+	});
+	it('Should Load device detail headers', done => {
+		spyOn(syslogsService, 'getDeviceHeaderDetails')
+		.and
+		.returnValue(of(SyslogScenarios[8].scenarios.GET[0].response.body));
+		fixture.whenStable()
+		.then(() => {
+			fixture.detectChanges();
+			const devicetableParams = {
+				active: true,
+				DeviceHost: 'Device_6_0_10_1',
+				DeviceIp: '6.0.10.1',
+				ProductFamily: null,
+				ProductId: 'C9606R',
+				SoftwareType: '16.11.1',
+				SoftwareVersion: '16.11.1',
+				syslogCount: 1319,
+			};
+			const customerId = '123456';
+			component.sysLogHeaderDetails(devicetableParams, customerId);
+			expect(syslogsService.getDeviceHeaderDetails)
+			.toHaveBeenCalled();
+			expect(component.deviceHeaderValues)
+				.toBeDefined();
+			expect(component.deviceHeaderValues.lastScan)
+				.toEqual('1day');
+			expect(component.deviceHeaderValues.serialNumber)
+				.toEqual('123');
+
+			done();
+		});
+	});
+	it('should not trigger search function for keycode 10', () => {
+		const event = { keyCode: 10 };
+		component.searchAll(event.keyCode);
+		expect(component.syslogsParams.search)
+			.toBeUndefined();
+	});
+	it('should get reset selected table row data', () => {
 		fixture.detectChanges();
 		const selectedRowData = {
 			active: false,
@@ -124,30 +186,7 @@ describe('SyslogsMessagesComponent', () => {
 			SyslogSeverity: 3,
 		};
 		component.onTableRowSelection(selectedRowData);
-		expect(selectedRowData.active)
-		 .toBeFalsy();
 		 expect(component.selectedAsset)
 		 .toBeUndefined();
 	});
-
-	it('should refresh assetfilter data', fakeAsync(() => {
-		fixture.detectChanges();
-		const selectedRowData1 = {
-			assetFilter: {
-				currentValue: {
-					asset: '',
-					catalog: '',
-					severity: 7,
-					timeRange: 1,
-				},
-				firstChange: true,
-				previousValue: undefined,
-				isFirstChange: () => false,
-			},
-		};
-		component.ngOnChanges(selectedRowData1);
-		tick();
-		expect(selectedRowData1.assetFilter.firstChange)
-		 .toBeTruthy();
-	}));
 });

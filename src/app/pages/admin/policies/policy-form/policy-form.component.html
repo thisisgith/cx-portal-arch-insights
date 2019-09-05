@@ -12,6 +12,7 @@
 								data-auto-id="policy-modal.title"
 							></span>
 							<a
+								*ngIf="type === 'editPolicy' || type === 'editIgnorePolicy'"
 								class="qtr-margin-bottom half-padding-left"
 								data-auto-id="policy-modal.trash"
 								(click)="deletePolicy()"
@@ -157,7 +158,7 @@
 				paginator: true
 			}"></ng-container>
 		</div>
-		<div class="col-lg-2">
+		<div id="button-column" class="col-lg-2">
 			<button
 				class="btn btn--small btn--secondary shift-button"
 				id="add"
@@ -166,11 +167,11 @@
 				[disabled]="selectedRowsLeftCount === 0"
 				>
 				<div class="row button-row">
-					<div class="col-2">
+					<div class="col-2 no-padding">
 					</div>
 					<div class="col-8 button-txt" [innerText]="'_Add_' | i18n | uppercase">
 					</div>
-					<div class="col-2">
+					<div class="col-2 no-padding">
 						<i class="button-txt text-right icon-chevron-right"></i>
 					</div>
 				</div>
@@ -183,13 +184,13 @@
 				[disabled]="selectedRowsRightCount === 0"
 				>
 				<div class="row button-row">
-					<div class="col-2">
+					<div class="col-2 no-padding">
 						<i class="button-txt text-right icon-chevron-left"></i>
 					</div>
 					<div class="col-8">
 						<span class="button-txt" [innerText]="'_Remove_' | i18n | uppercase"></span>
 					</div>
-					<div class="col-2">
+					<div class="col-2 no-padding">
 					</div>
 				</div>
 			</button>
@@ -218,8 +219,9 @@
 		<div class="col-1 device-table">
 			<input class="text-xlarge"
 				type="checkbox"
-				(change)="allDevicesSelected = toggleAllDevicesSelected(allDevicesSelected, devices, name)"
+				(change)="toggleAllDevicesSelected(devices, name)"
 				[checked]="allDevicesSelected"
+				[disabled]="devices.length === 0"
 			>
 			<span class="checkbox__input"></span>
 		</div>

@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import {
+	Asset,
+	NetworkElement,
 	ProductAlertsService,
 	SecurityAdvisoryResponse,
 	SecurityAdvisory,
@@ -50,6 +52,10 @@ export class SecurityDetailsComponent implements OnInit, OnChanges {
 	@Input('customerId') public customerId: string;
 	@Output('details') public details = new EventEmitter<Data>();
 	@Output('alert') public alertMessage = new EventEmitter<Alert>();
+	@Output('assets') public assets = new EventEmitter<{
+		impacted: (Asset | NetworkElement)[];
+		potentiallyImpacted: (Asset | NetworkElement)[];
+	}>();
 
 	private params: {
 		advisory?: ProductAlertsService.GetAdvisoriesSecurityAdvisoriesParams;
