@@ -687,13 +687,6 @@ $divider-color: #e1e1e1;
 		@extend %ribbon__outline;
 	}
 
-	&__clear {
-		z-index: 2;
-		color: transparent;
-
-		@extend %ribbon__outline;
-	}
-
 	&__blue__atx,
 	&__white__atx {
 		right: 55px;
@@ -705,8 +698,7 @@ $divider-color: #e1e1e1;
 }
 
 .ribbon__blue::before,
-.ribbon__white::before,
-.ribbon__clear::before {
+.ribbon__white::before {
 	font-size: 18px !important;
 	line-height: 18px !important;
 }

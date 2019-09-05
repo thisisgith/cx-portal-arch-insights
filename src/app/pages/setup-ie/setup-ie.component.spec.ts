@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -21,7 +22,7 @@ describe('SetupIeComponent', () => {
 	let router: Router;
 	let utils: UtilsService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				CuiModalModule,
@@ -33,8 +34,10 @@ describe('SetupIeComponent', () => {
 				{ provide: 'ENVIRONMENT', useValue: environment },
 				UtilsService,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		router = TestBed.get(Router);
 		stateService = TestBed.get(SetupIEStateService);
 		stateService.clearState();

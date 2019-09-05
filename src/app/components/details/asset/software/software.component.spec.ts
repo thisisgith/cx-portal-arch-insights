@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
 	AssetScenarios,
@@ -40,7 +41,7 @@ describe('AssetDetailsSoftwareComponent', () => {
 	let controlPointService: ControlPointLicenseAPIService;
 	let userResolve;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetDetailsSoftwareModule,
@@ -51,8 +52,10 @@ describe('AssetDetailsSoftwareComponent', () => {
 				{ provide: 'ENVIRONMENT', useValue: environment },
 				UserResolve,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		controlPointService = TestBed.get(ControlPointLicenseAPIService);
 		productAlertsService = TestBed.get(ProductAlertsService);

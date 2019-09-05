@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
@@ -28,14 +29,14 @@ describe('AppComponent', () => {
 	let service: AppService;
 
 	describe('Spinner', () => {
-		beforeEach(async(() => {
+		configureTestSuite(() => {
 			TestBed.configureTestingModule({
 				imports: [AppTestModule],
 			})
 				.compileComponents();
 
 			service = TestBed.get(AppService);
-		}));
+		});
 
 		beforeEach(() => {
 			fixture = TestBed.createComponent(AppComponent);
@@ -275,9 +276,7 @@ describe('AppComponent', () => {
 					RouterTestingModule,
 					AppModule,
 				],
-			})
-				.compileComponents();
-
+			});
 			service = TestBed.get(AppService);
 		}));
 

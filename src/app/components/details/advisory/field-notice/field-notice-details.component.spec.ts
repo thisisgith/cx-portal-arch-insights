@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FieldNoticeDetailsComponent } from './field-notice-details.component';
 import { FieldNoticeDetailsModule } from './field-notice-details.module';
@@ -21,7 +22,7 @@ describe('FieldNoticeDetailsComponent', () => {
 	let productAlertsService: ProductAlertsService;
 	let inventoryService: InventoryService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				FieldNoticeDetailsModule,
@@ -31,8 +32,10 @@ describe('FieldNoticeDetailsComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		inventoryService = TestBed.get(InventoryService);
 		productAlertsService = TestBed.get(ProductAlertsService);

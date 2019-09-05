@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AssetDetailsComponent } from './asset-details.component';
 import { AssetDetailsModule } from './asset-details.module';
@@ -15,7 +16,7 @@ describe('AssetDetailsComponent', () => {
 	let fixture: ComponentFixture<AssetDetailsComponent>;
 	let userResolve: UserResolve;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetDetailsModule,
@@ -25,8 +26,10 @@ describe('AssetDetailsComponent', () => {
 			providers: [
 				UserResolve,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		userResolve = TestBed.get(UserResolve);
 	}));

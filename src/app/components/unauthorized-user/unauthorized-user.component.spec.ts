@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UnauthorizedUserComponent } from './unauthorized-user.component';
 import { UnauthorizedUserModule } from './unauthorized-user.module';
@@ -7,12 +8,11 @@ describe('UnauthorizedUserComponent', () => {
 	let component: UnauthorizedUserComponent;
 	let fixture: ComponentFixture<UnauthorizedUserComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [UnauthorizedUserModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(UnauthorizedUserComponent);

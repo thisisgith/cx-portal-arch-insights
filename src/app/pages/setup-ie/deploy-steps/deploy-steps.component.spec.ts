@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SetupIEStateService } from '../setup-ie-state.service';
@@ -13,7 +14,7 @@ describe('DeployStepsComponent', () => {
 	let fixture: ComponentFixture<DeployStepsComponent>;
 	let stateService: SetupIEStateService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				DeployStepsModule,
@@ -23,8 +24,10 @@ describe('DeployStepsComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		stateService = TestBed.get(SetupIEStateService);
 		stateService.clearState();
 		stateService.setState({

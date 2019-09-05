@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AccRequestFormComponent } from './acc-request-form.component';
 import { AccRequestFormModule } from './acc-request-form.module';
@@ -55,7 +56,7 @@ describe('AccRequestFormComponent', () => {
 			})));
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AccRequestFormModule,
@@ -63,8 +64,10 @@ describe('AccRequestFormComponent', () => {
 				HttpClientTestingModule,
 				ReactiveFormsModule,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		contentService = TestBed.get(RacetrackContentService);
 	}));
