@@ -19,15 +19,15 @@ import { SoftwareGroupAssetsResponse } from '../models/software-group-asset-resp
 	providedIn: 'root',
 })
 class OSVService extends __BaseService {
-	static readonly getSummaryPath = '/api/customerportal/osv-ui/v1/summary';
-	static readonly getSoftwareGroupsPath = '/api/customerportal/osv-ui/v1/profiles';
-	static readonly getSoftwareVersionsPath = '/api/customerportal/osv-ui/v1/versions';
-	static readonly getAssetDetailsPath = '/api/customerportal/osv-ui/v1/assetDetails';
-	static readonly getAssetsPath = '/api/customerportal/osv-ui/v1/assets';
-	static readonly updateAssetPath = '/api/customerportal/osv-ui/v1/updateAsset';
-	static readonly getSoftwareGroupVersionsPath = '/api/customerportal/osv-ui/v1/profileVersions';
-	static readonly getSoftwareGroupAssetsPath = '/api/customerportal/osv-ui/v1/profileAssets';
-	static readonly getSoftwareGroupRecommendationPath = '/api/customerportal/osv-ui/v1/profileRecommendations';
+	static readonly getSummaryPath = '/customerportal/osv-ui/v1/summary';
+	static readonly getSoftwareGroupsPath = '/customerportal/osv-ui/v1/profiles';
+	static readonly getSoftwareVersionsPath = '/customerportal/osv-ui/v1/versions';
+	static readonly getAssetDetailsPath = '/customerportal/osv-ui/v1/assetDetails';
+	static readonly getAssetsPath = '/customerportal/osv-ui/v1/assets';
+	static readonly updateAssetPath = '/customerportal/osv-ui/v1/updateAsset';
+	static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profileVersions';
+	static readonly getSoftwareGroupAssetsPath = '/customerportal/osv-ui/v1/profileAssets';
+	static readonly getSoftwareGroupRecommendationPath = '/customerportal/osv-ui/v1/profileRecommendations';
 
 	constructor (
 		config: __Configuration,

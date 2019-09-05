@@ -73,7 +73,6 @@ class CrashPreventionService extends __BaseService {
     let __headers = new HttpHeaders();
     let __body: any = null;
     let pfURL: string = '';
-	console.log(params);
     if (params.customerId != null && params.customerId != '') {
       pfURL = this.rootUrl + `${CrashPreventionService.getDeviceInfoPath}` + params.customerId + '/' + encodeURIComponent(params.deviceId) + '/';
     }

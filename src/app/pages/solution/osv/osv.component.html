@@ -26,7 +26,7 @@
 	[(selectedSoftwareGroup)]="selectedSoftwareGroup">
 </app-software-group-detail>
 
-<div class="panel">
+<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
 	<div class="flex flex-fill flex-fluid" *ngIf="!status.isLoading && view">
 		<ng-container *ngFor="let filter of filters; index as i">
 			<div *ngIf="!filter.loading && filter.seriesData.length && filter.view.indexOf(view) > -1"
