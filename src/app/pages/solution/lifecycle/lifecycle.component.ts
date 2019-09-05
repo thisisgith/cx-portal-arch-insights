@@ -1290,7 +1290,7 @@ export class LifecycleComponent implements OnDestroy {
 	public getPanel (viewAtxSessions: HTMLElement) {
 		let panel;
 		const _div = viewAtxSessions;
-		const atxPopupListViewAdjustPx = 193;
+		const atxPopupListViewAdjustPx = 255;
 		this.innerWidth = window.innerWidth;
 		if (this.componentData.atx.interested) {
 			switch (this.atxview) {
@@ -1439,7 +1439,7 @@ export class LifecycleComponent implements OnDestroy {
 
 		return this.contentService.getRacetrackSuccessPaths(
 			_.pick(this.componentData.params,
-				['customerId']))
+				['customerId', 'solution', 'usecase', 'rows']))
 		.pipe(
 			map((result: SuccessPathsResponse) => {
 				this.selectedFilterForPG = '';

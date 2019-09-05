@@ -17,14 +17,14 @@ import { SyslogPanelIPSer } from '../models/syslogdeviceheaderdetails-data';
 	providedIn: 'root',
 })
 class SyslogsService extends __BaseService {
-	static readonly getSyslogCountPath = '/api/customerportal/syslog/v1/messages-assets/count';
-	static readonly getSysGridDataPath = '/api/customerportal/syslog/v1/message/details';
-	static readonly getDeviceGridDataPath = '/api/customerportal/syslog/v1/asset/details';
-	static readonly getSysPanelGridDataPath = '/api/customerportal/syslog/v1/syslog-view/details';
-	static readonly getSysPanelFilterPath = '/api/customerportal/syslog/v1/syslog-view/filters';
-	static readonly getsysPanelFilterGridPath = '/api/customerportal/syslog/v1/syslog-view/details';
-	static readonly getDevicePanelDetailsPath = '/api/customerportal/syslog/v1/asset/messages';
-	static readonly getDeviceHeaderDetailsPath = '/api/customerportal/syslog/v1/asset/viewDetails';
+	static readonly getSyslogCountPath = '/customerportal/syslog/v1/messages-assets/count';
+	static readonly getSysGridDataPath = '/customerportal/syslog/v1/message/details';
+	static readonly getDeviceGridDataPath = '/customerportal/syslog/v1/asset/details';
+	static readonly getSysPanelGridDataPath = '/customerportal/syslog/v1/syslog-view/details';
+	static readonly getSysPanelFilterPath = '/customerportal/syslog/v1/syslog-view/filters';
+	static readonly getsysPanelFilterGridPath = '/customerportal/syslog/v1/syslog-view/details';
+	static readonly getDevicePanelDetailsPath = '/customerportal/syslog/v1/asset/messages';
+	static readonly getDeviceHeaderDetailsPath = '/customerportal/syslog/v1/asset/viewDetails';
 	constructor (config: __Configuration, http: HttpClient) {
 		super(config, http);
 	}
@@ -136,7 +136,7 @@ class SyslogsService extends __BaseService {
 		return this.deviceGridData(syslogParams).pipe(
 		  __map(_r => <SyslogDeviceData> _r.body),
 		);
-	  }  
+	  }
 	  /**
 	 * Get  of syslogspanel service
 	 */
@@ -146,19 +146,19 @@ class SyslogsService extends __BaseService {
 		__params=__params.set('msgType',syslogPanelParams.selectedRowData.MsgType);
 		__params=__params.set('companyId',syslogPanelParams.customerId);
 		__params=__params.set('catalog',syslogPanelParams.selectedFilters.catalog);
-		
-        const __headers = new HttpHeaders(); 
+
+        const __headers = new HttpHeaders();
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl+ `${SyslogsService.getSysPanelGridDataPath}`,
 			__body,
 			{
-			  headers: __headers, 
+			  headers: __headers,
 			  params: __params,
 			  responseType: 'json',
 			});
-			 
+
 			return this.http.request<any>(req).pipe(
 				__filter(_r => _r instanceof HttpResponse),
 				__map((_r) => {
@@ -189,11 +189,11 @@ class SyslogsService extends __BaseService {
 			this.rootUrl+ `${SyslogsService.getSysPanelFilterPath}`,
 			__body,
 			{
-			  headers: __headers, 
+			  headers: __headers,
 			  params: __params,
 			  responseType: 'json',
 			});
-			 
+
 			return this.http.request<any>(req).pipe(
 				__filter(_r => _r instanceof HttpResponse),
 				__map((_r) => {
@@ -216,18 +216,18 @@ class SyslogsService extends __BaseService {
 		__params=__params.set('productId',SyslogFilterParam.productID);
 		__params=__params.set('severity',SyslogFilterParam.selectedFilters.severity);
 		__params=__params.set('software',SyslogFilterParam.Software);
-        const __headers = new HttpHeaders(); 
+        const __headers = new HttpHeaders();
         const __body: any = null;
 		const req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl+ `${SyslogsService.getsysPanelFilterGridPath}`,
 			__body,
 			{
-			  headers: __headers, 
+			  headers: __headers,
 			  params: __params,
 			  responseType: 'json',
 			});
-			 
+
 			return this.http.request<any>(req).pipe(
 				__filter(_r => _r instanceof HttpResponse),
 				__map((_r) => {
@@ -239,7 +239,7 @@ class SyslogsService extends __BaseService {
 			return this.sysPanelFilterGridData(SyslogFilterParam).pipe(
 				__map(_r => _r.body as SyslogPanelGridData)
 			  );
-	
+
 		}
 
 		public devicePanelDetails (deviceDetails) {
@@ -263,7 +263,7 @@ class SyslogsService extends __BaseService {
 				  params: __params,
 				  responseType: 'json',
 				});
-	
+
 			  return this.http.request<any>(req)
 			  .pipe(
 				__filter(_r => _r instanceof HttpResponse),
@@ -293,7 +293,7 @@ class SyslogsService extends __BaseService {
 				  params: __params,
 				  responseType: 'json',
 				});
-	
+
 			  return this.http.request<any>(req)
 			  .pipe(
 				__filter(_r => _r instanceof HttpResponse),

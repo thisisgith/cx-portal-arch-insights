@@ -130,7 +130,7 @@ describe('DownloadImageComponent', () => {
 
 	it('should accept EULA', fakeAsync(() => {
 		component.acceptEULAAndDownload();
-		tick(1000);
+		tick(10000);
 		expect(acceptEULASpy)
 			.toHaveBeenCalled();
 	}));
