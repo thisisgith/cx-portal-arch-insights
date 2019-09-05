@@ -246,8 +246,8 @@
 </details-panel>
 
 <details-panel
-	*ngIf="selectedAsset && !showAsset360"
-	[hidden]="!selectedAsset && showAsset360"
+	*ngIf="selectedAsset.active && !showAsset360"
+	[hidden]="!selectedAsset.active && showAsset360"
 	[fullscreen]="fullscreen"
 >
 	<details-panel-header
@@ -262,12 +262,14 @@
 					[innerText]="'_RMCrashHistoryFor_' | i18n"
 				></span>
 				<span class="qtr-margin-left">
+						<span class="text-info">&#60;</span>
 					<a
 						data-auto-id="selectedName"
 						(click)="redirectToAsset360()"
 						[innerHTML]="selectedAsset.neName"
 						></a
 					>
+					<span class="text-info">&#62;</span>
 				</span>
 			</div>
 			<div class="divider"></div>
@@ -296,7 +298,7 @@
 						></div>
 					</div>
 				</div>
-				<div class="col-3">
+				<div class="col-6">
 					<div
 						class="col-md-12 text-bold"
 						[innerText]="'_RMNumberOfCrashesInCrashHistory_' | i18n | uppercase"

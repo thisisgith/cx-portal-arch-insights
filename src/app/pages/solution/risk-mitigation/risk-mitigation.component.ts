@@ -61,7 +61,7 @@ export class RiskMitigationComponent {
 	public fullscreen = false;
 	public filters: Filter[];
 	public onlyCrashes = true;
-	public selectedAsset: RiskAsset;
+	public selectedAsset: RiskAsset = { active: false };
 	public selectedFingerPrintdata: HighCrashRiskDevices;
 	public showAsset360 = false;
 	public highCrashRiskParams: HighCrashRiskPagination;
@@ -470,7 +470,7 @@ export class RiskMitigationComponent {
 		if (asset.active) {
 			this.selectedAsset = asset;
 			this.getCrashedDeviceHistory(asset);
-		} else { this.selectedAsset = undefined; }
+		} else { this.selectedAsset.active = false; }
 	}
 	/**
 	 * Determines whether fpdpanel close on click
@@ -494,7 +494,7 @@ export class RiskMitigationComponent {
 	 */
 
 	public onPanelClose () {
-		this.selectedAsset = undefined;
+		this.selectedAsset.active = false;
 		this.showAsset360 = false;
 	}
 
