@@ -448,6 +448,16 @@ $divider-color: #e1e1e1;
 	-webkit-box-orient: vertical;
 }
 
+.title-line-clamp {
+	display: -webkit-box;
+	overflow: hidden;
+	-webkit-line-clamp: 2;
+
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+}
+
+
 .table-img-width {
 	width: 80px;
 }
