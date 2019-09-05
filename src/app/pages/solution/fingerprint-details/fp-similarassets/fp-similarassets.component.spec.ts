@@ -144,7 +144,7 @@ describe('FpSimilarassetsComponent', () => {
 			.and
 			.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
-		tick();
+		tick(1000);
 		fixture.detectChanges();
 		expect(fpIntelligenceService.getSimilarDevices).not
 			.toHaveBeenCalled();
