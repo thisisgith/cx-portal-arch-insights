@@ -1,5 +1,5 @@
 
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FpSimilarAssetsComponent } from './fp-similarassets.component';
 import { FpSimilarAssetsModule } from './fp-similarassets.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -135,21 +135,19 @@ describe('FpSimilarassetsComponent', () => {
 			.toBeFalsy();
 	});
 
-	it('should not load data if form is invalid', done => {
+	it('should not load data if form is invalid', fakeAsync(() => {
 		component.requestForm.setValue({
 			deviceCount : 50,
 			minMatch: 0 ,
 			similarityCriteria: 'fingerprint'});
 		spyOn(fpIntelligenceService, 'getSimilarDevices')
-		.and
-		.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
+			.and
+			.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
 		component.ngOnInit();
-		fixture.whenStable()
-			.then(() => {
-				fixture.detectChanges();
-				expect(fpIntelligenceService.getSimilarDevices).not
-					.toHaveBeenCalled();
-				done();
-			});
-	});
+		tick();
+		fixture.detectChanges();
+		expect(fpIntelligenceService.getSimilarDevices).not
+			.toHaveBeenCalled();
+	}));
+
 });

@@ -114,12 +114,13 @@ export class FpIntelligenceComponent implements OnChanges {
 		this.fpIntelligenceService
 			.getSimilarDevicesDistribution(similarDeviceParams)
 			.subscribe(
-				similarDevieDistribution => {
-					if (_.get(similarDevieDistribution, ['softwares', 'length'], 0) +
-					_.get(similarDevieDistribution, ['productFamilies', 'length'], 0) +
-					_.get(similarDevieDistribution, ['products', 'length'], 0)
-					 > 0) {
-						this.updateSeriesData(similarDevieDistribution);
+				similarDeviceDistribution => {
+					const similarDeviceDistributionDataCount =
+					_.get(similarDeviceDistribution, ['softwares', 'length'], 0) +
+					_.get(similarDeviceDistribution, ['productFamilies', 'length'], 0) +
+					_.get(similarDeviceDistribution, ['products', 'length'], 0);
+					if (similarDeviceDistributionDataCount > 0) {
+						this.updateSeriesData(similarDeviceDistribution);
 						this.noData = false;
 						this.reqError.emit();
 					} else {
