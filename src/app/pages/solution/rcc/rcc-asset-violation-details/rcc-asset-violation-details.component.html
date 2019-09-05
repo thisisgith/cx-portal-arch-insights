@@ -1,7 +1,8 @@
 <div *ngIf="(!initialLoading && !apiNoData); else commonTemplate;">
 	<div class="qtr-padding-top qtr-padding-bottom ">
-		<span [innerText]="'_RccAssetViolationsArg_' | i18n:selectedAssetData?.violationCount || ('_NA_' | i18n)" 
-		class="text-large text-uppercase"></span>
+		<span [innerText]="'_RccAssetViolations_' | i18n" class="text-large text-uppercase violation-hipen"></span>
+		<span class="text-large" data-auto-id="ShowingViolationCount" [innerHTML]="selectedAssetData?.violationCount">
+		</span>
 	</div>
 	<div class=" base-padding-top half-padding-bottom  text-medium text-uppercase text-bold"
 		data-auto-id="ShowingAssetFiltData" [innerText]="'_RccAssetFilter_'| i18n ">
