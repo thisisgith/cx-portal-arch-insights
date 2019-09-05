@@ -159,12 +159,11 @@ export class RiskMitigationColumnChartComponent implements OnInit {
 	public ngOnChanges (changes: SimpleChanges) {
 		const seriesInfo = _.get(changes, 'seriesData',
 			{ currentValue: null, firstChange: false });
-		if (seriesInfo.currentValue && !seriesInfo.firstChange) {
+		if (!seriesInfo.currentValue && !seriesInfo.firstChange) {
+			this.buildGraph();
+		} else if (seriesInfo.currentValue) {
 			this.buildGraph();
 		}
-		if (_.get(changes, ['resetChart', 'currentValue'])) {
-			this.buildGraph();
-			changes.resetChart.previousValue = false;
-		}
+
 	}
 }

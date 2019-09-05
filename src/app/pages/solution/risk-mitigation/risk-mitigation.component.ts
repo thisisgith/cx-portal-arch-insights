@@ -41,6 +41,7 @@ export class RiskMitigationComponent {
 		page: 0,
 	};
 	crashPagination: string;
+	crashedAssetsCount: any;
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private logger: LogService,
@@ -125,6 +126,7 @@ export class RiskMitigationComponent {
 		.subscribe(() => {
 			this.status.isLoading = false;
 		});
+		this.getDeviceDetails('1');
 		this.onlyCrashes = true;
 	}
 
@@ -180,8 +182,6 @@ export class RiskMitigationComponent {
 	public getAllCrashesData () {
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.onlyCrashes = false;
-		this.getDeviceDetails('1');
-		this.selectedTimeFilters();
 
 		return this.riskMitigationService.getAllCrashesData(params)
 			.pipe(
@@ -189,10 +189,12 @@ export class RiskMitigationComponent {
 				map((results: any) => {
 					const seriesData = this.marshallResultsObjectForGraph(results);
 					this.last24hrsData = results.devicesCrashCount_1d;
+					this.crashedAssetsCount = this.last24hrsData;
 					this.getAdvisoryCount(seriesData);
 				}),
 				catchError(err => {
 					this.last24hrsData = undefined;
+					this.crashedAssetsCount = undefined;
 					this.logger.error('Crash Assets : getAllCrashesData() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
@@ -529,6 +531,7 @@ export class RiskMitigationComponent {
 	 */
 	public redirectToAsset360 () {
 		this.showAsset360 = true;
+		this.selectedAsset.deviceName = this.selectedAsset.neName;
 	}
 	/**
 	 * Used to select which tab we want to view the data for
@@ -691,9 +694,9 @@ export class RiskMitigationComponent {
 	 */
 
 	public onSubfilterSelect (subfilter: string, filter: Filter) {
-		this.clearAllFilters = true;
 		this.resetFilters();
 		const sub = _.find(filter.seriesData, { filter: subfilter });
+		this.crashedAssetsCount = sub.value;
 		sub.selected = (sub) ? !sub.selected : '';
 		filter.selected = _.some(filter.seriesData, 'selected');
 		let filterSelected: string;
@@ -739,6 +742,7 @@ export class RiskMitigationComponent {
 		this.getSelectedSubFilters('advisories');
 		this.selectedFilters = this.filters;
 		this.selectedTimeFilters();
+		this.crashedAssetsCount = this.last24hrsData;
 	}
 
 	/**

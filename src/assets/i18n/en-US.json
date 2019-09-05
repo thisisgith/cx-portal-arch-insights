@@ -863,7 +863,7 @@
 	"_RMAssets_": "Assets",
 	"_RMATitle_": "RMA: {0}",
 	"_RMClearAll_": "Clear All",
-	"_RMCrashedAssetsInLast24Hrs_": "Crashed Assets in last 24hrs",
+	"_RMCrashedAssets_": "Crashed Assets",
 	"_RMCrashes_": "Crashes",
 	"_RMCrashHistoryFor_": "Crash History for",
 	"_RMDevice_": "Device",

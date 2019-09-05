@@ -12,7 +12,6 @@
 						<div
 							class="text-huge flex-center dbl-padding-left dbl-padding-right"
 							[innerText]="highCrashDeviceCount"
-							*ngIf="highCrashDeviceCount"
 						></div>
 						<div
 							class="text-large flex-center"
@@ -27,12 +26,12 @@
 					>
 						<div
 							class="text-huge flex-center dbl-padding-left dbl-padding-right"
-							[innerHTML]="last24hrsData"
+							[innerHTML]="crashedAssetsCount"
 						>
 						</div>
 						<div
 							class="text-large flex-center"
-							[innerText]="'_RMCrashedAssetsInLast24Hrs_' | i18n"
+							[innerText]="'_RMCrashedAssets_' | i18n"
 						></div>
 					</div>
 				</div>
@@ -106,7 +105,7 @@
 </div>
 
 <ng-template #advisoryFilter let-filter="filter">
-	<div *ngIf="!onlyCrashes">
+	<div [hidden]="onlyCrashes">
 		<risk-mitigation-column-chart
 			[resetChart]="clearAllFilters"
 			[seriesData]="filter.seriesData"
