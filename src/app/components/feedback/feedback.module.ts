@@ -9,6 +9,7 @@ import { FeedbackFailedComponent } from './feedback-failed/feedback-failed.compo
 import { FeedbackFailedModule } from './feedback-failed/feedback-failed.module';
 import { EmailModule } from '@sdp-api';
 import { environment } from '@environment';
+import { CharCountModule } from '@components';
 
 /**
  * Ng Module
@@ -28,6 +29,7 @@ import { environment } from '@environment';
 		FeedbackSuccessModule,
 		I18nPipeModule,
 		ReactiveFormsModule,
+		CharCountModule,
 	],
 })
 export class FeedbackModule { }

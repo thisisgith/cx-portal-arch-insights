@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
 import { Subject } from 'rxjs';
+import { AppService } from 'src/app/app.service';
 
 import * as _ from 'lodash-es';
 
@@ -18,9 +18,9 @@ export class AdminWrapperComponent {
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
-		private location: Location,
-		private route: ActivatedRoute,
 		private router: Router,
+		private route: ActivatedRoute,
+		public appService: AppService,
 	) {
 		this.routerPath = _.get(this, 'route.snapshot.routeConfig.path', 'settings');
 	}
@@ -29,9 +29,14 @@ export class AdminWrapperComponent {
 	 * Goes back to the previous page
 	 */
 	public goBack () {
-		// TODO: It might be better to only go back when the previous location is part of this App.
-		// If not, it should navigate to the home page. We would have to start storing the previous
-		// location in a service to accomplish this.
-		this.location.back();
+		let lastRoute = this.appService.popRoute();
+		lastRoute = lastRoute ? lastRoute : '';
+
+		while (lastRoute.includes('admin')) {
+			lastRoute = this.appService.popRoute();
+			lastRoute = lastRoute ? lastRoute : '';
+		}
+
+		this.router.navigateByUrl(lastRoute);
 	}
 }

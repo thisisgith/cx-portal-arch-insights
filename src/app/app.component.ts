@@ -13,6 +13,7 @@ import { environment } from '@environment';
 import { setOptions } from 'highcharts';
 import { UserResolve } from '@utilities';
 import { User } from '@interfaces';
+import { AppService } from 'src/app/app.service';
 import * as _ from 'lodash-es';
 
 /**
@@ -36,6 +37,7 @@ export class AppComponent {
 	constructor (
 		private router: Router,
 		private userResolve: UserResolve,
+		private appService: AppService,
 	) {
 		setOptions({ lang: { thousandsSep: ',' } });
 
@@ -51,6 +53,12 @@ export class AppComponent {
 						|| event instanceof NavigationError) {
 					this.status.loading = false;
 					if (window.Cypress) { window.loading = false; }
+				}
+
+				if (event instanceof NavigationEnd) {
+					const url = event.urlAfterRedirects;
+
+					this.appService.addRouteToList(url);
 				}
 			},
 		);
