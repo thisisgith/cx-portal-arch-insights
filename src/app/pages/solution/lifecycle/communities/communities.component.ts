@@ -21,28 +21,28 @@ interface CommunityDetail {
 const publicCommunities: CommunityDetail[] = [
 	{
 		description: 'Wireless & Mobility',
-		url: 'https://community.cisco.com/t5/wireless-and-mobility' +
-		'/bd-p/5956-discussions-getting-started-wireles',
+		url: `${environment.publicCommunityUrl}/wireless-and-mobility` + 
+			'/bd-p/5956-discussions-getting-started-wireles',
 		usecase: 'campus network assurance'	,
 	},
 	{
 		description: 'Software-Defined Access (SD-Access)',
-		url: 'https://community.cisco.com/t5/software-defined-access-sd/bd-p/discussions-sd-access',
+		url: `${environment.publicCommunityUrl}/software-defined-access-sd/bd-p/discussions-sd-access`,
 		usecase: 'campus network segmentation',
 	},
 	{
 		description: 'Software-Defined Access (SD-Access)',
-		url: 'https://community.cisco.com/t5/software-defined-access-sd/bd-p/discussions-sd-access',
+		url: `${environment.publicCommunityUrl}/software-defined-access-sd/bd-p/discussions-sd-access`,
 		usecase: 'scalable access policy',
 	},
 	{
 		description: 'Cisco Digital Network Architecture (DNA)',
-		url: 'https://community.cisco.com/t5/cisco-digital-network/bd-p/discussions-dna',
+		url: `${environment.publicCommunityUrl}/cisco-digital-network/bd-p/discussions-dna`,
 		usecase: 'network device onboarding',
 	},
 	{
 		description: 'Cisco Digital Network Architecture (DNA)',
-		url: 'https://community.cisco.com/t5/cisco-digital-network/bd-p/discussions-dna',
+		url: `${environment.publicCommunityUrl}/cisco-digital-network/bd-p/discussions-dna`,
 		usecase: 'campus software image management',
 	},
 ];

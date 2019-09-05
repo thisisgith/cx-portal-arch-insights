@@ -75,4 +75,7 @@ export const environment = {
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
 	// Curated Communities/Private Communitites/SuccessTrack URL
 	curatedCommunityUrl: 'https://community.cisco.com/t5',
+	//Public community URL
+	publicCommunityUrl: 'https://cloudsso.cisco.com/idp/startSSO.ping?PartnerSpId=' +
+		'https://community.cisco.com/auth/saml&TARGET=https://community.cisco.com/t5',
 };

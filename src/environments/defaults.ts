@@ -88,4 +88,7 @@ export const defaults = {
 	webexTeamsUrl: 'webexteams://im?email=',
 	// Curated Communities/Private Communitites/SuccessTrack URL
 	curatedCommunityUrl: 'https://community-stage.cisco.com/t5',
+	//Public community URL
+	publicCommunityUrl: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=' +
+		'https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/t5',
 };
