@@ -13,6 +13,8 @@ import { AdvisoriesModule } from './advisories/advisories.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
 	RacetrackScenarios,
+	VulnerabilityScenarios,
+	CoverageScenarios,
 	Mock,
 	user,
 } from '@mock';
@@ -51,7 +53,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-fdescribe('SolutionComponent', () => {
+describe('SolutionComponent', () => {
 	let component: SolutionComponent;
 	let fixture: ComponentFixture<SolutionComponent>;
 	let router: Router;
@@ -204,6 +206,7 @@ fdescribe('SolutionComponent', () => {
 	}));
 
 	it('should change the active technology', fakeAsync(() => {
+		tick();
 		buildSpies();
 		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
 		racetrackInfoService.sendCurrentSolution(
@@ -273,12 +276,24 @@ fdescribe('SolutionComponent', () => {
 	});
 
 	it('should open Quick Tour when first time null', fakeAsync(() => {
+		tick();
+		fixture.detectChanges();
+		expect(component.quickTourActive)
+			.toBeTruthy();
+	}));
+
+	it('should open Quick Tour when first time true', fakeAsync(() => {
+		tick();
+		utils.setLocalStorage('quickTourFirstTime', { firstTime: true });
+		router.navigate(['/solution/lifecycle']);
+		tick();
 		fixture.detectChanges();
 		expect(component.quickTourActive)
 			.toBeTruthy();
 	}));
 
 	it('should not open Quick Tour when not first time', fakeAsync(() => {
+		tick();
 		utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
 		router.navigate(['/solution/lifecycle']);
 		tick();
@@ -287,4 +302,23 @@ fdescribe('SolutionComponent', () => {
 			.toBeFalsy();
 	}));
 
+	it('should load the advisoriesFacet', fakeAsync(() => {
+		tick();
+		(<any> component).router.url = '';
+		spyOn(productAlertsService, 'getVulnerabilityCounts')
+			.and
+			.returnValue(of(getActiveBody(VulnerabilityScenarios[0])));
+
+		spyOn(contractsService, 'getCoverageCounts')
+			.and
+			.returnValue(of(getActiveBody(CoverageScenarios[2])));
+
+		tick(5000);
+		fixture.detectChanges();
+		const assetsFacet = _.find(component.facets, { key: 'assets' });
+		const advisoryFacet = _.find(component.facets, { key: 'advisories' });
+
+		expect(assetsFacet.data)
+			.toEqual({ gaugePercent: 7, gaugeLabel: '7%' });
+	}));
 });
