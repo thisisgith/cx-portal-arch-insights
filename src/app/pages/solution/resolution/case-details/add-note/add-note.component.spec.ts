@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
 
@@ -12,7 +13,7 @@ describe('AddNoteComponent', () => {
 	let service: CaseService;
 	let fixture: ComponentFixture<AddNoteComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AddNoteModule,
@@ -34,9 +35,8 @@ describe('AddNoteComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AddNoteComponent);

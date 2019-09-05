@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContactSupportComponent } from './contact-support.component';
 import { ContactSupportModule } from './contact-support.module';
 import { EmailControllerService } from '@sdp-api';
@@ -14,7 +15,7 @@ describe('ContactSupportComponent', () => {
 	let fixture: ComponentFixture<ContactSupportComponent>;
 	let userResolve: UserResolve;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				ContactSupportModule,
@@ -37,9 +38,8 @@ describe('ContactSupportComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		userResolve = TestBed.get(UserResolve);

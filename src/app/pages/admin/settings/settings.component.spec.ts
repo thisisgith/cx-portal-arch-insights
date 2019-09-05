@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SettingsComponent } from './settings.component';
 import { SettingsModule } from './settings.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -15,7 +16,7 @@ describe('SettingsComponent', () => {
 		back: jasmine.createSpy('back'),
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RouterTestingModule,
@@ -30,9 +31,8 @@ describe('SettingsComponent', () => {
 					useValue: locationStub,
 				},
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(SettingsComponent);
