@@ -316,7 +316,6 @@ describe('SolutionComponent', () => {
 		tick(5000);
 		fixture.detectChanges();
 		const assetsFacet = _.find(component.facets, { key: 'assets' });
-		const advisoryFacet = _.find(component.facets, { key: 'advisories' });
 
 		expect(assetsFacet.data)
 			.toEqual({ gaugePercent: 7, gaugeLabel: '7%' });

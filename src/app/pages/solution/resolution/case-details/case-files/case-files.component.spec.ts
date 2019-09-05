@@ -92,7 +92,7 @@ describe('CaseFilesComponent', () => {
 	});
 
 	it('should sort file list based on selected column', () => {
-		(<any>component).caseFiles = [{
+		(<any> component).caseFiles = [{
 			downloadURL: '',
 			fileCategory: '',
 			fileContentType: '',
