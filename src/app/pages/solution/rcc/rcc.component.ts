@@ -64,9 +64,9 @@ export class RccComponent implements OnInit, OnDestroy {
 	};
 	public loading = false;
 	public tableData: RccGridData;
-	public policyViolationsGridData: RccGridDataSample[];
+	public policyViolationsGridData: RccGridDataSample[] = [];
 	public tableAssetData: RccAssetGridData;
-	public tableAssetDataSample: RccAssetGridDataSample[];
+	public tableAssetDataSample: RccAssetGridDataSample[] = [];
 	public slideinFullScreen = {
 		assetsFullScreen : false,
 		violationFullScreen : false,
@@ -122,10 +122,11 @@ export class RccComponent implements OnInit, OnDestroy {
 		debounce: 1500,
 		max: 100,
 		min: 2,
-		pattern: /^[a-zA-Z0-9_]*$/,
+		pattern: /^[a-zA-Z0-9_ ]*$/,
 	};
 	public search: FormControl = new FormControl('');
 	public searchForm: FormGroup;
+	public prevSearchText = '';
 	/**
 	 * method for dropdown for export all
 	 */
@@ -541,12 +542,12 @@ export class RccComponent implements OnInit, OnDestroy {
 	public onSubfilterSelect (subfilter: string, filter: Filter, triggeredFromGraph) {
 		if (triggeredFromGraph) {
 			filter.seriesData.forEach(obj => {
-				obj.selected = false;
+			 	obj.selected = false;
 				this.filtered = true;
-		 	});
-		} else {
-			this.filtered = false;
-		}
+			});
+		   } else {
+			   this.filtered = false;
+		   }
 		const sub = typeof subfilter === 'string' ?
 		_.find(filter.seriesData, { filter: subfilter }) : _.find(filter.seriesData, subfilter);
 		if (sub) {
@@ -618,7 +619,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			});
 		});
 		this.searchInput = '';
-		this.searchInput = null;
+		this.prevSearchText = '';
 		if (this.view === 'violation') {
 			this.violationGridObj.policyType = null;
 			this.violationGridObj.severity = null;
@@ -653,18 +654,21 @@ export class RccComponent implements OnInit, OnDestroy {
 			}
 			this.searched = false;
 		}
+		if (this.prevSearchText.toLowerCase() === this.searchInput.trim()
+			.toLowerCase()) { return; }
 		if (type === 'clear' || (this.searchForm.valid &&
 			(event.keyCode === 8 || (!_.isEmpty(this.searchForm.value.search) &&
 			(event && event.keyCode && event.keyCode === 13)
 			|| (!_.isEmpty(this.searchForm.value.search) && type === 'search'))))) {
+			this.prevSearchText = this.searchForm.value.search.trim();
 			this.tableConfig.tableOffset = 0;
 			this.tableConfig.totalItems = 0;
 			this.searched = true;
 			if (this.view === 'violation') {
-				this.violationGridObj.search = this.searchInput;
+				this.violationGridObj.search = this.searchInput.trim();
 				this.getRCCData(this.violationGridObj);
 			} else {
-				this.assetGridObj.searchParam = this.searchInput;
+				this.assetGridObj.searchParam = this.searchInput.trim();
 				this.getRCCAssetData(this.assetGridObj);
 			}
 		}
