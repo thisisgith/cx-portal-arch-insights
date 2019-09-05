@@ -338,5 +338,23 @@ describe('AppComponent', () => {
 		it('should attempt to load foreign language i18n if requested', () => {
 			service.loadI18n(true, 'es');
 		});
+
+		it('should append path to routeStack', () => {
+			service.addRouteToList('test/route/1');
+		});
+
+		it('should get last item from routeStack', () => {
+			service.addRouteToList('test/route/2');
+
+			expect(service.getLastRoute())
+				.toBe('test/route/2');
+		});
+
+		it('should pop items from route stack', () => {
+			service.addRouteToList('test/route/3');
+
+			expect(service.popRoute())
+				.toBe('test/route/3');
+		});
 	});
 });
