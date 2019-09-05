@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FpIntelligenceService } from '@sdp-api';
 import { environment } from '@environment';
 import { ActivatedRoute } from '@angular/router';
-import { user } from '@mock';
+import { user, ComparisonViewScenarios } from '@mock';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SimpleChanges, SimpleChange } from '@angular/core';
@@ -133,5 +133,23 @@ describe('FpSimilarassetsComponent', () => {
 		component.onTableRowSelection(fakeTableRoeData);
 		expect(component.selectedDevice2 === fakeTableRoeData)
 			.toBeFalsy();
+	});
+
+	it('should not load data if form is invalid', done => {
+		component.requestForm.setValue({
+			deviceCount : 50,
+			minMatch: 0 ,
+			similarityCriteria: 'fingerprint'});
+		spyOn(fpIntelligenceService, 'getSimilarDevices')
+		.and
+		.returnValue(of(ComparisonViewScenarios[4].scenarios.GET[0].response.body));
+		component.ngOnInit();
+		fixture.whenStable()
+			.then(() => {
+				fixture.detectChanges();
+				expect(fpIntelligenceService.getSimilarDevices).not
+					.toHaveBeenCalled();
+				done();
+			});
 	});
 });

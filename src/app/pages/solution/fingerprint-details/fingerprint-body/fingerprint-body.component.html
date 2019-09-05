@@ -1,13 +1,28 @@
 <div class="base-margin">
-<cui-tabs [(activeTabIndex)]="tabIndex">
-	<cui-tab [label]="'_CP_SimilarAssets_'| i18n |uppercase">
-		<app-fp-similarassets [asset]="selectedAsset" (devicesSelected)="showComparison($event)"></app-fp-similarassets>
-	</cui-tab>
-	<cui-tab [label]="'_CP_FingerprintIntelligence_' | i18n | uppercase">
-		<fp-intelligence [asset]="selectedAsset"></fp-intelligence>
-	</cui-tab>
-	<cui-tab [label]="'_CP_Compare_' | i18n | uppercase">
-		<app-fp-compare [devices]="selectedDevices"></app-fp-compare>
-	</cui-tab>
-</cui-tabs>
+	<div class="half-padding-bottom">
+		<cui-alert [options]="alertFPSimilarAssets" *ngIf="tabIndex === 0"></cui-alert>
+		<cui-alert [options]="alertFPIntelligence" *ngIf="tabIndex === 1"></cui-alert>
+		<cui-alert [options]="alertFPCompare" *ngIf="tabIndex === 2"></cui-alert>
+	</div>
+	<cui-tabs [(activeTabIndex)]="tabIndex">
+		<cui-tab [label]="'_CP_SimilarAssets_' | i18n | uppercase">
+			<app-fp-similarassets
+				[asset]="selectedAsset"
+				(devicesSelected)="showComparison($event)"
+				(reqError)="$event?alertFPSimilarAssets.show($event,'danger'):alertFPSimilarAssets.hide();"
+			></app-fp-similarassets>
+		</cui-tab>
+		<cui-tab [label]="'_CP_FingerprintIntelligence_' | i18n | uppercase" *ngIf="cxLevel === 3">
+			<fp-intelligence
+				[asset]="selectedAsset"
+				(reqError)="$event?alertFPIntelligence.show($event,'danger'):alertFPIntelligence.hide();"
+			></fp-intelligence>
+		</cui-tab>
+		<cui-tab [label]="'_CP_Compare_' | i18n | uppercase" *ngIf="cxLevel === 3">
+			<app-fp-compare
+				[devices]="selectedDevices"
+				(reqError)="$event?alertFPCompare.show($event,'danger'):alertFPCompare.hide();"
+			></app-fp-compare>
+		</cui-tab>
+	</cui-tabs>
 </div>
