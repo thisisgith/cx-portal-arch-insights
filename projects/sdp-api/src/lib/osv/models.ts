@@ -16,3 +16,4 @@ export { OsvBug } from './models/bugs';
 export { OsvPsirt } from './models/psrits';
 export { MachineRecommendations } from './models/machine-recommendations'
 export { MachineRecommendationsResponse } from './models/machine-recommendations-response'
+export { OsvSeverity } from './models/osv-severity';

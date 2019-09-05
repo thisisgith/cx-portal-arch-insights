@@ -75,20 +75,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public machineRecommendations: MachineRecommendations[];
 	public selectedMachineRecommendation;
 	public screenWidth = window.innerWidth;
-	public seriesData = [
-		{
-			label: 'H',
-			value: 5,
-		},
-		{
-			label: 'M',
-			value: 3,
-		},
-		{
-			label: 'L',
-			value: 99,
-		},
-	];
+	public barChartBackgroundColor= "#f2fbfd";
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -174,7 +161,38 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				{ swVersion: machineRecommendation.release });
 			machineRecommendation.name = _.get(recommendation, ['0', 'name']);
 			machineRecommendation.postDate = _.get(recommendation, ['0', 'postDate']);
+			if (machineRecommendation.bugSeverity) {
+				machineRecommendation.bugsExposed = Object.values(machineRecommendation.bugSeverity)
+					.reduce((a: number, b: number) => a + b);
+			}
+			if (machineRecommendation.psirtSeverity) {
+				machineRecommendation.psirtExposed = Object.values(machineRecommendation.psirtSeverity)
+					.reduce((a: number, b: number) => a + b);
+			}
+			machineRecommendation.bugSeriesData = _.compact(
+				_.map(machineRecommendation.bugSeverity, (value: number, key: string) => {
+					return {
+						value,
+						filter: key,
+						label: key === 'critical' ?
+							I18n.get('_OsvCritical_')
+							: key === 'high' ? I18n.get('_OsvHigh_') : I18n.get('_OsvLow_'),
+						selected: false,
+					};
+				}));
+			machineRecommendation.psritSeriesData = _.compact(
+				_.map(machineRecommendation.psirtSeverity, (value: number, key: string) => {
+					return {
+						value,
+						filter: key,
+						label: key === 'critical' ?
+							I18n.get('_OsvCritical_')
+							: key === 'high' ? I18n.get('_OsvHigh_') : I18n.get('_OsvLow_'),
+						selected: false,
+					};
+				}));
 		});
+		this.sortData(this.machineRecommendationsResponse);
 		this.machineRecommendations = this.machineRecommendationsResponse;
 	}
 
@@ -482,5 +500,17 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public onCancel () {
 		this.cuiModalService.showComponent(CancelConfirmComponent, {});
+	}
+
+	/**
+	 * Sort Machine Recommendations by name
+	 * @param data MachineRecommendations
+	 * @returns sorted data
+	 */
+	public sortData (data: MachineRecommendationsResponse) {
+		data.sort((a: MachineRecommendations, b: MachineRecommendations) =>
+			<any>new Date(a.name) - <any>new Date(b.name));
+
+		return data;
 	}
 }

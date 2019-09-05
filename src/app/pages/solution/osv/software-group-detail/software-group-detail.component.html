@@ -138,59 +138,35 @@
 						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
 							[innerText]="'current' | titlecase"></div>
 						<div class="half-margin-top" [innerText]="'v3'"></div>
-						<div [innerText]="'-'"></div>
+						<div class="half-margin-top" [innerText]="'-'"></div>
 					</td>
-					<td class="recommendation no-border-top ">
+					<td *ngFor="let recommendation of machineRecommendations" class="recommendation no-border-top ">
 						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
-							[innerText]="'recommended #1' | titlecase"></div>
-						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
-						<div [innerText]="'Jun 07 2018'"></div>
-					</td>
-					<td class="recommendation no-border-top ">
-						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
-							[innerText]="'recommended #2' | titlecase"></div>
-						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
-						<div [innerText]="'Jun 07 2018'"></div>
-					</td>
-					<td class="recommendation no-border-top ">
-						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
-							[innerText]="'recommended #3' | titlecase"></div>
-						<div class="half-margin-top" [innerText]="'v8.8.100.9'"></div>
-						<div [innerText]="'Jun 07 2018'"></div>
-					</td>
+							[innerText]="recommendation.name"></div>
+						<div class="half-margin-top" [innerText]="recommendation.release"></div>
+						<div class="half-margin-top" [innerText]="recommendation.postDate | date:medium"></div>
+					</td>					
 				</tr>
 				<!-- status or action -->
 				<tr>
 					<td class="no-border-bottom no-border-top text-large" [innerText]="'_OsvStatusOrAction_' | i18n">
 					</td>
 					<td class="recommendation"></td>
-					<td class="recommendation ">
+					<td *ngFor="let recommendation of machineRecommendations" class="recommendation ">
 						<button
+							*ngIf="recommendation.accepted"
 							(click)="onAcceptClick()"
-							class="btn btn--secondary btn--smalle"
+							class="btn btn--secondary btn--small"
 							[innerText]="'_OsvAccept_' | i18n" 
 							attr.data-auto-id="AcceptVersion-">
 						</button>						
 						<button
+							*ngIf="!recommendation.accepted"
 							(click)="onCancel()"
-							class="btn btn--secondary btn--smalle"
+							class="btn btn--secondary btn--small"
 							[innerText]="'_Cancel_' | i18n" 
 							attr.data-auto-id="CancelAcceptVersion-">
 						</button>						
-					</td>
-					<td class="recommendation border-left">
-						<button 
-							class="btn btn--secondary btn--smalle"
-							[innerText]="'_OsvAccept_' | i18n" 
-							attr.data-auto-id="AcceptVersion-">
-						</button>
-					</td>
-					<td class="recommendation ">
-						<button 
-							class="btn btn--secondary btn--smalle"
-							[innerText]="'_OsvAccept_' | i18n" 
-							attr.data-auto-id="AcceptVersion-">
-						</button>
 					</td>
 				</tr>
 				<!-- risk score -->
@@ -203,21 +179,9 @@
 						</span>
 					</td>
 					<td class="text-xlarge recommendation" [innerText]="'35'"></td>
-					<td class="recommendation">
+					<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
 						<div class="flex align-items-center">
-							<span class="text-xlarge qtr-margin-left" [innerText]="'10'"></span>
-						</div>
-					</td>
-					<td class="recommendation">
-						<div class="flex align-items-center">
-							<span class="text-xlarge qtr-margin-left" [innerText]="'10'"></span>
-
-						</div>
-					</td>
-					<td class="recommendation">
-						<div class="flex align-items-center">
-							<span class="text-xlarge qtr-margin-left" [innerText]="'10'"></span>
-
+							<span class="text-xlarge qtr-margin-left" [innerText]="recommendation.score"></span>
 						</div>
 					</td>
 				</tr>
@@ -233,13 +197,13 @@
 						<div class="base-margin-top">
 							<bar-chart 
 								dataLabels="true" 
-								backgroundColor="#f2fbfd" 
+								[backgroundColor]="barChartBackgroundColor" 
 								[seriesData]="seriesData"
 								width="200">
 							</bar-chart>
 						</div>
 					</td>
-					<td class="recommendation">
+					<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
 						<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
 							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6"
 								[innerText]="'_OsvFixed_' | i18n"></div>
@@ -248,63 +212,19 @@
 						</div>
 						<div class="base-margin-top flex justify-content-between">
 							<div>
-								<span class="text-xlarge" [innerText]="'13/15'"></span>
+								<span class="text-xlarge" [innerText]="recommendation.bugFixed"></span>
+								<span class="text-xlarge" [innerText]="'/'"></span>
+								<span class="text-xlarge" [innerText]="'15'"></span>
 
 							</div>
-							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
+							<div class="text-xlarge" [innerText]="recommendation.bugsExposed"></div>
 						</div>
 						<div class="base-margin-top">
 							<bar-chart 
 								width="200" 
-								backgroundColor="#f2fbfd" 
+								[backgroundColor]="barChartBackgroundColor" 
 								dataLabels="true"
-								[seriesData]="seriesData">
-							</bar-chart>
-						</div>
-					</td>
-					<td class="recommendation">
-						<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6"
-								[innerText]="'_OsvFixed_' | i18n"></div>
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
-								[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
-						</div>
-						<div class="base-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="'13/15'"></span>
-
-							</div>
-							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
-						</div>
-						<div class="base-margin-top">
-							<bar-chart 
-								width="200" 
-								backgroundColor="#f2fbfd" 
-								dataLabels="true"
-								[seriesData]="seriesData">
-							</bar-chart>
-						</div>
-					</td>
-					<td class="recommendation">
-						<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6"
-								[innerText]="'_OsvFixed_' | i18n"></div>
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
-								[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
-						</div>
-						<div class="base-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="'13/15'"></span>
-
-							</div>
-							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
-						</div>
-						<div class="base-margin-top">
-							<bar-chart 
-								width="200" 
-								backgroundColor="#f2fbfd" 
-								dataLabels="true"
-								[seriesData]="seriesData">
+								[seriesData]="recommendation.bugSeriesData">
 							</bar-chart>
 						</div>
 					</td>
@@ -320,62 +240,31 @@
 							<bar-chart 
 								width="200" 
 								dataLabels="true" 
-								backgroundColor="#f2fbfd"
+								[backgroundColor]="barChartBackgroundColor"
 								[seriesData]="seriesData">
 							</bar-chart>
 						</div>
 					</td>
-					<td class="recommendation">
+					<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
 						<div class="half-margin-top flex justify-content-between">
 							<div>
-								<span class="text-xlarge" [innerText]="'32/32'"></span>
+								<span class="text-xlarge" [innerText]="recommendation.psirtFixed"></span>
+								<span class="text-xlarge" [innerText]="'/'"></span>
+								<span class="text-xlarge" [innerText]="'32'"></span>
 
 							</div>
-							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
+							<div class="text-xlarge" [innerText]="recommendation.psirtExposed"></div>
 						</div>
 						<div class="base-margin-top">
 							<bar-chart 
 								width="200" 
-								backgroundColor="#f2fbfd" 
+								[backgroundColor]="barChartBackgroundColor" 
 								dataLabels="true"
-								[seriesData]="seriesData">
+								[seriesData]="recommendation.psritSeriesData">
 							</bar-chart>
 						</div>
 					</td>
-					<td class="recommendation">
-						<div class="half-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="'32/32'"></span>
-
-							</div>
-							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
-						</div>
-						<div class="base-margin-top">
-							<bar-chart 
-								width="200" 
-								backgroundColor="#f2fbfd" 
-								dataLabels="true"
-								[seriesData]="seriesData">
-							</bar-chart>
-						</div>
-					</td>
-					<td class="recommendation">
-						<div class="half-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="'32/32'"></span>
-
-							</div>
-							<div class="text-xlarge" [innerText]="'1' | i18n"></div>
-						</div>
-						<div class="base-margin-top">
-							<bar-chart 
-								width="200" 
-								backgroundColor="#f2fbfd" 
-								dataLabels="true"
-								[seriesData]="seriesData">
-							</bar-chart>
-						</div>
-					</td>
+					
 				</tr>
 			</tbody>
 		</table>

@@ -135,23 +135,59 @@ const mockSoftwareGroupRecommendations: AssetRecommendationsResponse = [
 /** The mock response for machine recommendations */
 const mockMachineRecommendations: MachineRecommendationsResponse = [
 	{
+		bugFixed: 13,
 		bugs: [],
+		bugSeverity: {
+			high: 0,
+			critical: 0,
+			low: 1
+		},
 		osType: 'NX-OS',
 		psirts: [],
+		psirtFixed: 32,
+		psirtSeverity: {
+			high: 0,
+			critical: 0,
+			low: 1
+		},
 		release: '7.3(2)N1(1b)',
 		score: 640,
 	},
 	{
+		bugFixed: 12,
 		bugs: [],
+		bugSeverity: {
+			high: 0,
+			critical: 0,
+			low: 2
+		},
 		osType: 'NX-OS',
 		psirts: [],
+		psirtFixed: 32,
+		psirtSeverity: {
+			high: 0,
+			critical: 0,
+			low: 1
+		},
 		release: '7.3(2)N1(1c)',
 		score: 640,
 	},
 	{
+		bugFixed: 11,
 		bugs: [],
+		bugSeverity: {
+			high: 0,
+			critical: 0,
+			low: 1
+		},
 		osType: 'NX-OS',
 		psirts: [],
+		psirtFixed: 32,
+		psirtSeverity: {
+			high: 0,
+			critical: 0,
+			low: 1
+		},
 		release: '7.3(4)N1(1)',
 		score: 640,
 	}
