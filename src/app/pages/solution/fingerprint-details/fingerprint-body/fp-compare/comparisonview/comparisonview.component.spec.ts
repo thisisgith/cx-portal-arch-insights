@@ -102,8 +102,8 @@ describe('ComparisonviewComponent', () => {
 			.and
 			.returnValue(of(<any> []));
 		component.ngOnChanges({
-			devices: {
-				currentValue: null,
+			deviceId1: {
+				currentValue: 'Device_123',
 				firstChange: true,
 				isFirstChange: () => true,
 				previousValue: null,
