@@ -395,7 +395,7 @@ describe('RccComponent', () => {
 		};
 		component.searchViolations(event, 'clear');
 		expect(component.searched)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 13', () => {
@@ -408,7 +408,7 @@ describe('RccComponent', () => {
 		};
 		component.searchViolations(event, 'input');
 		expect(component.searched)
-			.toBeTruthy();
+			.toBeFalsy();
 	});
 
 	it('should invoke searchViolations with keycode 8 and search type', () => {
