@@ -19,6 +19,7 @@ import * as _ from 'lodash-es';
 export class AppService {
 
 	public i18nLoaded = false;
+	private routeStack: string[] = [];
 
 	constructor (
 		private http: HttpClient,
@@ -116,5 +117,34 @@ export class AppService {
 	 */
 	public initializeUser () {
 		return this.userResolve.resolve();
+	}
+
+	/**
+	 * Returns last route from routeStack
+	 * @returns string of route url
+	 */
+	public getLastRoute () {
+		return this.routeStack[this.routeStack.length - 1];
+	}
+
+	/**
+	 * Pops off last item from routeStack
+	 * @returns string of route url
+	 */
+	public popRoute () {
+		return this.routeStack.pop();
+	}
+
+	/**
+	 * Adds item to routeStack
+	 * @param path string of loaded route
+	 */
+	public addRouteToList (path: string) {
+		const lastPath = this.routeStack[this.routeStack.length - 1];
+
+		// Don't store same path if current path = last path
+		if (lastPath !== path) {
+			this.routeStack.push(path);
+		}
 	}
 }

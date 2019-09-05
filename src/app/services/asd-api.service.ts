@@ -1,12 +1,17 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { of, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { map, mergeMap, retryWhen } from 'rxjs/operators';
 import {
 	AcceptFormResponse,
 	ImageDownloadUrlResponse,
 	MetadataResponse,
 } from '@interfaces';
+import {
+	ASDImageDownloadUrlScenarios,
+	ASDMetadataScenarios,
+	ASDTokenScenarios,
+} from '@mock';
 import * as _ from 'lodash-es';
 
 /** AuthTokenResponse Interface */
@@ -14,6 +19,9 @@ export interface AuthTokenResponse {
 	expiration: string;
 	token: string;
 }
+
+/** Used for mocking API calls */
+export type ASDResponse = AuthTokenResponse | MetadataResponse | ImageDownloadUrlResponse;
 
 /** Accept K9 Request Params */
 export interface AcceptK9RequestParams {
@@ -73,9 +81,14 @@ export class ASDAPIService {
 			return of(this.authToken);
 		}
 
-		return this.http.get<AuthTokenResponse>(this.asdAuthURL, { withCredentials: true })
+		const getTokenObservable = this.http.get<AuthTokenResponse>(
+			this.asdAuthURL,
+			{ withCredentials: true },
+		);
+
+		return this.requestOrMock<AuthTokenResponse>(getTokenObservable, 'auth')
 			.pipe(map(response => {
-				this.authToken = `Bearer ${response.token}`;
+				this.authToken = `Bearer ${(<AuthTokenResponse> response).token}`;
 
 				return this.authToken;
 			}));
@@ -86,12 +99,17 @@ export class ASDAPIService {
 	 * @returns Observable
 	 */
 	public getMetadata () {
+
 		return this.getAuthToken()
 			.pipe(
-				mergeMap(authToken => this.http.get<MetadataResponse>(
-					`${this.asdBaseURL}${GET_METADATA_PATH}`,
-					{ headers: { Authorization: authToken } }),
-				),
+				mergeMap(authToken => {
+					const getMetadataObservable = this.http.get<MetadataResponse>(
+						`${this.asdBaseURL}${GET_METADATA_PATH}`,
+						{ headers: { Authorization: authToken } },
+					);
+
+					return this.requestOrMock<MetadataResponse>(getMetadataObservable, 'meta');
+				}),
 				retryWhen(this.getRetryFn.bind(this)),
 			);
 	}
@@ -105,18 +123,21 @@ export class ASDAPIService {
 	public getDownloadURL (metadataTransId: string, imageGuid: string) {
 		return this.getAuthToken()
 			.pipe(
-				mergeMap(authToken => this.http.get<ImageDownloadUrlResponse>(
-						`${this.asdBaseURL}${
-							GET_DOWNLOAD_PATH
-								.replace(/<metadata_trans_id>/, metadataTransId)
-								.replace(/<ImageGUID>/, imageGuid)
-						}`,
-						{ headers: { Authorization: authToken } },
-					)
-					.pipe(
-						retryWhen(this.getRetryFn.bind(this)),
-					),
-				),
+				mergeMap(authToken => {
+					const getUrlObservable = this.http.get<ImageDownloadUrlResponse>(
+							`${this.asdBaseURL}${
+								GET_DOWNLOAD_PATH
+									.replace(/<metadata_trans_id>/, metadataTransId)
+									.replace(/<ImageGUID>/, imageGuid)
+							}`,
+							{ headers: { Authorization: authToken } },
+						)
+						.pipe(
+							retryWhen(this.getRetryFn.bind(this)),
+						);
+
+					return this.requestOrMock<ImageDownloadUrlResponse>(getUrlObservable, 'url');
+				}),
 			);
 	}
 
@@ -201,5 +222,29 @@ export class ASDAPIService {
 					return throwError(err);
 				}),
 			);
+	}
+
+	/**
+	 * Mocks api calls when an environment flag is set
+	 * @param actual - Observable
+	 * @param caller - 'auth' | 'meta' | 'url'
+	 * @returns Observable
+	 */
+	private requestOrMock<T extends ASDResponse> (
+		actual: Observable<T>,
+		caller: 'auth' | 'meta' | 'url',
+	): Observable<ASDResponse> {
+		if (this.env.ieSetup.mockASD) {
+			switch (caller) {
+				case 'auth':
+					return of(ASDTokenScenarios[0].scenarios.GET[0].response.body);
+				case 'meta':
+					return of(ASDMetadataScenarios[0].scenarios.GET[0].response.body);
+				case 'url':
+					return of(ASDImageDownloadUrlScenarios[0].scenarios.GET[2].response.body);
+			}
+		}
+
+		return actual;
 	}
 }
