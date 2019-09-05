@@ -25,6 +25,7 @@ export const environment = {
 			{0}&fileName={1}&appId=cxportal`,
 		fileList: '/ws/csc/v3/caseFiles',
 	},
+	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
 	csone: {
 		classifyAppId: 'CXPortal',
 		clientId: '262556217fbe45ecbbe27af70e443e78',

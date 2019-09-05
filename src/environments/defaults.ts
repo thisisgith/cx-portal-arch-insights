@@ -17,7 +17,7 @@ export const defaults = {
 	},
 	baseHref: '/pbc/',
 	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
-	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
+	communityLink: 'https://community-stage.cisco.com',
 	controlPointsOrigin: 'https://cpp-api.sdp12-istg.csco.cloud/controlpoint',
 	csc: {
 		fileDownloadURL: `https://largefile-stage.cloudapps.cisco.com/Web-Ui?srId=
