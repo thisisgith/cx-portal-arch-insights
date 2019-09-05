@@ -1,5 +1,5 @@
 import { configureTestSuite } from 'ng-bullet';
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, flush, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject, of, throwError } from 'rxjs';
 import { SolutionComponent } from './solution.component';
 import { SolutionModule } from './solution.module';
@@ -280,6 +280,9 @@ describe('SolutionComponent', () => {
 		fixture.detectChanges();
 		expect(component.quickTourActive)
 			.toBeTruthy();
+		// Get rid of remaining timers which are still in queue for some reason
+		fixture.destroy();
+		flush();
 	}));
 
 	it('should open Quick Tour when first time true', fakeAsync(() => {
@@ -290,6 +293,9 @@ describe('SolutionComponent', () => {
 		fixture.detectChanges();
 		expect(component.quickTourActive)
 			.toBeTruthy();
+		// Get rid of remaining timers which are still in queue for some reason
+		fixture.destroy();
+		flush();
 	}));
 
 	it('should not open Quick Tour when not first time', fakeAsync(() => {
@@ -300,6 +306,9 @@ describe('SolutionComponent', () => {
 		fixture.detectChanges();
 		expect(component.quickTourActive)
 			.toBeFalsy();
+		// Get rid of remaining timers which are still in queue for some reason
+		fixture.destroy();
+		flush();
 	}));
 
 	it('should load the advisoriesFacet', fakeAsync(() => {
