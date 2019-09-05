@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InsightsComponent } from './insights.component';
 import { InsightsModule } from './insights.module';
@@ -13,7 +14,7 @@ describe('InsightsComponent', () => {
 	let component: InsightsComponent;
 	let fixture: ComponentFixture<InsightsComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				InsightsModule,
@@ -31,9 +32,8 @@ describe('InsightsComponent', () => {
 					},
 				]),
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(InsightsComponent);

@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { environment } from '@environment';
 import { CbpDeviceAffectedComponent } from './cbp-device-affected.component';
 import { CbpDeviceAffectedModule } from './cbp-device-affected.module';
@@ -13,7 +14,7 @@ describe('CbpDeviceAffectedComponent', () => {
 	let fixture: ComponentFixture<CbpDeviceAffectedComponent>;
 	let service: ArchitectureService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				CbpDeviceAffectedModule,
@@ -33,9 +34,8 @@ describe('CbpDeviceAffectedComponent', () => {
 					},
 				},
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		service = TestBed.get(ArchitectureService);

@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -33,7 +34,7 @@ describe('ConnectCollectorComponent', () => {
 		_.invoke(pingSpy, 'restore');
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				ConnectCollectorModule,
@@ -44,8 +45,10 @@ describe('ConnectCollectorComponent', () => {
 				SetupIEService,
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		setupService = TestBed.get(SetupIEService);
 		setupSpies();

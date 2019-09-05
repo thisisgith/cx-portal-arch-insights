@@ -126,6 +126,7 @@
 		"karma-jasmine-html-reporter": "^1.4.2",
 		"karma-spec-reporter": "0.0.32",
 		"luxon": "^1.17.2",
+		"ng-bullet": "^1.0.3",
 		"ng-packagr": "^5.5.0",
 		"ngdeploy": "^2.1.2",
 		"papaparse": "^4.4.0",
