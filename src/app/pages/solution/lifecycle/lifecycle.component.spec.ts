@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import * as enUSJson from 'src/assets/i18n/en-US.json';
 import { async, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -158,7 +159,7 @@ describe('LifecycleComponent', () => {
 		racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
@@ -178,8 +179,10 @@ describe('LifecycleComponent', () => {
 					},
 				},
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		racetrackService = TestBed.get(RacetrackService);

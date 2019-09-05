@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyslogsDevicesComponent } from './syslogs-devices.component';
@@ -17,7 +18,7 @@ describe('SyslogsMessagesComponent', () => {
 	let component: SyslogsDevicesComponent;
 	let fixture: ComponentFixture<SyslogsDevicesComponent>;
 	let syslogsService: SyslogsService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SyslogsDevicesModule,
@@ -39,8 +40,10 @@ describe('SyslogsMessagesComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		syslogsService = TestBed.get(SyslogsService);
 	}));

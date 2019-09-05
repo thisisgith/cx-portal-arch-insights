@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DeviceListComponent } from './device-list.component';
 import { DeviceListModule } from './device-list.module';
@@ -8,14 +9,13 @@ describe('DeviceListComponent', () => {
 	let component: DeviceListComponent;
 	let fixture: ComponentFixture<DeviceListComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				DeviceListModule,
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(DeviceListComponent);

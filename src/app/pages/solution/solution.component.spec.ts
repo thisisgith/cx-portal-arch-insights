@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject, of, throwError } from 'rxjs';
 import { SolutionComponent } from './solution.component';
@@ -80,7 +81,7 @@ describe('SolutionComponent', () => {
 			.returnValue(of(getActiveBody(RacetrackScenarios[0])));
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetsModule,
@@ -110,8 +111,10 @@ describe('SolutionComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		contractsService = TestBed.get(ContractsService);
 		productAlertsService = TestBed.get(ProductAlertsService);

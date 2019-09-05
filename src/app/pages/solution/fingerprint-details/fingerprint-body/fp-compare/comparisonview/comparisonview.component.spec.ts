@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComparisonviewComponent } from './comparisonview.component';
 import { ComparisonviewModule } from './comparisonview.module';
@@ -16,7 +17,7 @@ describe('ComparisonviewComponent', () => {
 	let fixture: ComponentFixture<ComparisonviewComponent>;
 	let crashPreventionService: CrashPreventionService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [ComparisonviewModule,
 				HttpClientTestingModule,
@@ -37,8 +38,10 @@ describe('ComparisonviewComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		crashPreventionService = TestBed.get(CrashPreventionService);
 	}));
 

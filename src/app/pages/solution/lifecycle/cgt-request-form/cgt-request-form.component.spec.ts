@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CgtRequestFormComponent } from './cgt-request-form.component';
 import { CgtRequestFormModule } from './cgt-request-form.module';
@@ -55,7 +56,7 @@ describe('CgtRequestFormComponent', () => {
 			.returnValue(of(getActiveBody(CGTScenarios[0], 'POST')));
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				CgtRequestFormModule,
@@ -63,8 +64,10 @@ describe('CgtRequestFormComponent', () => {
 				HttpClientTestingModule,
 				ReactiveFormsModule,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		contentService = TestBed.get(RacetrackContentService);
 	}));

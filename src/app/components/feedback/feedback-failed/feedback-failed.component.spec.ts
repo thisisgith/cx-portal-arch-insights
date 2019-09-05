@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FeedbackFailedComponent } from './feedback-failed.component';
 import { FeedbackFailedModule } from './feedback-failed.module';
@@ -7,12 +8,11 @@ describe('FeedbackFailedComponent', () => {
 	let component: FeedbackFailedComponent;
 	let fixture: ComponentFixture<FeedbackFailedComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [FeedbackFailedModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(FeedbackFailedComponent);

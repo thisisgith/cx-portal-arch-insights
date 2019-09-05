@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PolicyCalendarComponent } from './policy-calendar.component';
@@ -16,15 +17,17 @@ describe('PolicyCalendarComponent', () => {
 	let cpService: ControlPointDevicePolicyAPIService;
 	let getMonthSpy: jasmine.Spy;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
 				PoliciesModule,
 				RouterTestingModule,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		cpService = TestBed.get(ControlPointDevicePolicyAPIService);
 		getMonthSpy = spyOn(cpService, 'getAllPolicyForGivenMonthUsingGET')
 			.and
