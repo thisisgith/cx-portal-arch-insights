@@ -23,4 +23,25 @@ describe('BarChartComponent', () => {
 		expect(component)
 			.toBeTruthy();
 	});
+
+	it('should select a subfilter', done => {
+		component.seriesData = [{
+			label: 'test',
+			value: 10,
+		}];
+		component.subfilter.subscribe(filter => {
+			expect(filter)
+				.toEqual({
+					label: 'test',
+					value: 10,
+				});
+			done();
+		});
+		component.selectSubfilter({
+			point: {
+				name: 'test',
+			},
+			stopPropagation: () => { /** do nothing */},
+		});
+	});
 });
