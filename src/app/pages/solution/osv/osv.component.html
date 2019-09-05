@@ -49,6 +49,8 @@
 			</div>
 		</ng-container>
 	</div>
+</div>
+<div class="panel panel--bordered base-margin-top">	
 	<div *ngIf="status.isLoading">
 		<cui-spinner></cui-spinner>
 	</div>
@@ -56,7 +58,6 @@
 		<div class="divider half-margin-top qtr-margin-bottom"></div>
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
-	<div class="divider no-margin-top qtr-margin-bottom" *ngIf="!status.isLoading && view"></div>
 	<div *ngIf="view == 'swGroups'">
 		<app-software-groups 
 			[(tabIndex)]="tabIndex" 

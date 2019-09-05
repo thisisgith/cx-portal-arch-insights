@@ -20,6 +20,8 @@ import {
 	SoftwareGroupAssetsResponse,
 	OsvPagination,
 	AssetRecommendationsResponse,
+	MachineRecommendationsResponse,
+	MachineRecommendations,
 } from '@sdp-api';
 import { forkJoin, Subject, of } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
@@ -62,10 +64,11 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public headingClass = this.fullscreen ? 'text-xlarge' : 'text-large';
 	public subHeadingClass = this.fullscreen ? 'text-large' : 'text-medium';
 	public chartWidth = this.fullscreen ? 250 : 140;
-	public assetAlert: any = { };
-	public versionAlert: any = { };
-	public recommendationAlert = { };
-	public recommendations;
+	public assetAlert: any = {};
+	public versionAlert: any = {};
+	public recommendationAlert = {};
+	public recommendations: AssetRecommendationsResponse;
+	public machineRecommendations: MachineRecommendations[];
 	public selectedMachineRecommendation;
 	public screenWidth = window.innerWidth;
 	public seriesData = [
@@ -172,7 +175,30 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
+				}),
+			);
+	}
+
+	/**
+	 * Fetch Machine Recommendations for the selected SoftwareGroup
+	 * @returns Machine Recommendations list observable
+	 */
+	public fetchMachineRecommendations () {
+		this.status.isLoading = true;
+		return this.osvService.getMachineRecommendations(this.softwareGroupDetailsParams)
+			.pipe(
+				map((response: MachineRecommendationsResponse) => {
+					this.machineRecommendations = response;
+				}),
+				takeUntil(this.destroy$),
+				catchError(err => {
+					_.invoke(this.recommendationAlert, 'show',
+						I18n.get('_OsvGenericError_'), 'danger');
+					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
+						`:: Error : (${err.status}) ${err.message}`);
+
+					return of({});
 				}),
 			);
 	}
@@ -203,7 +229,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupAsset() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}
@@ -234,7 +260,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.logger.error('OSV SG : getSoftwareGroupVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({ });
+					return of({});
 				}),
 			);
 	}
@@ -408,7 +434,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		if (event.err) {
 			setTimeout(() => {
 				_.invoke(this.recommendationAlert, 'show',
-				I18n.get('_OsvGenericError_'), 'danger');
+					I18n.get('_OsvGenericError_'), 'danger');
 			});
 
 			return;
@@ -422,13 +448,13 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * on machine recommendation accept click
 	 */
 	public onAcceptClick () {
-		this.selectedMachineRecommendation = { };
+		this.selectedMachineRecommendation = {};
 	}
 
 	/**
 	 * on machine recommendation cancel click
 	 */
 	public onCancel () {
-		this.cuiModalService.showComponent(CancelConfirmComponent, { });
+		this.cuiModalService.showComponent(CancelConfirmComponent, {});
 	}
 }

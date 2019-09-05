@@ -12,3 +12,7 @@ export { SoftwareGroupAsset } from './models/software-group-asset';
 export { SoftwareGroupVersion } from './models/software-group-version';
 export { SoftwareGroupVersionsResponse } from './models/software-group-version-response';
 export { SoftwareGroupAssetsResponse } from './models/software-group-asset-response';
+export { OsvBug } from './models/bugs';
+export { OsvPsirt } from './models/psrits';
+export { MachineRecommendations } from './models/machine-recommendations'
+export { MachineRecommendationsResponse } from './models/machine-recommendations-response'

@@ -9,11 +9,12 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { SoftwareGroupsResponse } from '../models/software-group-response';
 import { SoftwareVersionsResponse } from '../models/software-versions-response';
-import { AssetRecommendationsResponse } from '../models/asset-recommendations-response';
+import { AssetRecommendationsResponse } from '../models/machine-recommendations-response';
 import { AssetsResponse } from '../models/assets-response';
 import { SummaryResponse } from '../models/summary-response';
 import { SoftwareGroupVersionsResponse } from '../models/software-group-version-response';
 import { SoftwareGroupAssetsResponse } from '../models/software-group-asset-response';
+import { MachineRecommendationsResponse } from '../models/machine-recommendations';
 
 @Injectable({
 	providedIn: 'root',
@@ -24,10 +25,12 @@ class OSVService extends __BaseService {
 	static readonly getSoftwareVersionsPath = '/customerportal/osv-ui/v1/versions';
 	static readonly getAssetDetailsPath = '/customerportal/osv-ui/v1/assetDetails';
 	static readonly getAssetsPath = '/customerportal/osv-ui/v1/assets';
-	static readonly updateAssetPath = '/customerportal/osv-ui/v1/updateAsset';
+	static readonly updateProfilePath = '/customerportal/osv-ui/v1/updateProfile';
+	static readonly cancelUpdateProfilePath = '/customerportal/osv-ui/v1/cancelUpdateProfile';
 	static readonly getSoftwareGroupVersionsPath = '/customerportal/osv-ui/v1/profileVersions';
 	static readonly getSoftwareGroupAssetsPath = '/customerportal/osv-ui/v1/profileAssets';
 	static readonly getSoftwareGroupRecommendationPath = '/customerportal/osv-ui/v1/profileRecommendations';
+	static readonly getMachineRecommendationsPath = '/customerportal/osv-ui/v1/machineRecommendations';
 
 	constructor (
 		config: __Configuration,
@@ -319,14 +322,14 @@ class OSVService extends __BaseService {
 	 *
 	 * @return successful operation
 	 */
-	updateAssetResponse (assetDetails: OSVService.GetAssetsParams): __Observable<__StrictHttpResponse<any>> {
+	updateProfileResponse (body: OSVService.UpdateProfileParams): __Observable<__StrictHttpResponse<any>> {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
-		__body = assetDetails;
+		__body = body;
 		let req = new HttpRequest<any>(
 			'PUT',
-			this.rootUrl + `${OSVService.updateAssetPath}`,
+			this.rootUrl + `${OSVService.updateProfilePath}`,
 			__body,
 			{
 				headers: __headers,
@@ -343,11 +346,49 @@ class OSVService extends __BaseService {
 	}
 
 	/**
-	 * Update Asset Optimal Version
+	 * Update Profile Optimal Version
 	 * @return successful operation
 	 */
-	updateAsset (params: OSVService.AssetDetailsPostData): __Observable<any> {
-		return this.updateAssetResponse(params).pipe(
+	updateProfile (params: OSVService.UpdateProfileParams): __Observable<any> {
+		return this.updateProfileResponse(params).pipe(
+			__map(_r => _r.body as any)
+		);
+	}
+
+	/**
+ * Basic Recommendations of asset
+ *
+ * @return successful operation
+ */
+	cancelUpdateProfileResponse (body: OSVService.UpdateProfileParams): __Observable<__StrictHttpResponse<any>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+		__body = body;
+		let req = new HttpRequest<any>(
+			'PUT',
+			this.rootUrl + `${OSVService.cancelUpdateProfilePath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<any>;
+			})
+		);
+	}
+
+	/**
+	 * Update Profile Optimal Version
+	 * @return successful operation
+	 */
+	cancelUpdateProfile (params: OSVService.UpdateProfileParams): __Observable<any> {
+		return this.updateProfileResponse(params).pipe(
 			__map(_r => _r.body as any)
 		);
 	}
@@ -471,14 +512,14 @@ class OSVService extends __BaseService {
 	}
 
 	/**
- * Software Group Assets
- * @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
- *
- * - `customerId`: Unique identifier of a Cisco customer.
- * - `profileName` : unique identifier of software group
- *
- * @return successful operation
- */
+ 	* Software Group Assets
+ 	* @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
+ 	*
+ 	* - `customerId`: Unique identifier of a Cisco customer.
+ 	* - `profileName` : unique identifier of software group
+ 	*
+ 	* @return successful operation
+ 	*/
 	getSoftwareGroupRecommendationsResponse (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<__StrictHttpResponse<AssetRecommendationsResponse>> {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
@@ -514,6 +555,53 @@ class OSVService extends __BaseService {
 	getSoftwareGroupRecommendations (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<AssetRecommendationsResponse> {
 		return this.getSoftwareGroupRecommendationsResponse(params).pipe(
 			__map(_r => _r.body as AssetRecommendationsResponse)
+		);
+	}
+
+	/**
+ 	* Software Group Assets
+ 	* @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
+ 	*
+ 	* - `customerId`: Unique identifier of a Cisco customer.
+ 	* - `profileName` : unique identifier of software group
+ 	*
+ 	* @return successful operation
+ 	*/
+	getMachineRecommendationsResponse (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<__StrictHttpResponse<MachineRecommendationsResponse>> {
+		let __params = this.newParams();
+		let __headers = new HttpHeaders();
+		let __body: any = null;
+
+		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.profileName != null) __params = __params.set('profileName', params.profileName.toString());
+		let req = new HttpRequest<any>(
+			'GET',
+			this.rootUrl + `${OSVService.getMachineRecommendationsPath}`,
+			__body,
+			{
+				headers: __headers,
+				params: __params,
+				responseType: 'json',
+			});
+
+		return this.http.request<any>(req).pipe(
+			__filter(_r => _r instanceof HttpResponse),
+			__map((_r) => {
+				return _r as __StrictHttpResponse<MachineRecommendationsResponse>;
+			})
+		);
+	}
+
+	/**
+	 * Software Group Assets
+	 * @param params The `OSVService.GetSoftwareGroupDetailsParam` containing the following parameters:
+	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `profileName` : unique identifier of software group	
+	 * @return successful operation
+	 */
+	getMachineRecommendations (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<MachineRecommendationsResponse> {
+		return this.getMachineRecommendationsResponse(params).pipe(
+			__map(_r => _r.body as MachineRecommendationsResponse)
 		);
 	}
 
@@ -715,6 +803,24 @@ module OSVService {
 		 * sortorder.
 		 */
 		sortOrder?: string;
+	}
+
+	/**
+	 * Parameters for updating Profile
+	 */
+	export interface UpdateProfileParams {
+		/**
+				 * Unique identifier of a Cisco customer.
+				 */
+		customerId: string;
+		/**
+		 * Unique identifier of a Software Group.
+		 */
+		profileName: string;
+		/**
+		 * optimal version to be updated
+		 */
+		optimalVersion: string;
 	}
 }
 

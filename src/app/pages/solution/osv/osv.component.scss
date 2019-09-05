@@ -5,7 +5,7 @@
 	z-index: 9;
 	background-color: $white;
 	left: 30px;
-	width: 800px;
+	width: 600px;
 	top: -30px;
 	box-shadow: 0 0 10px 0 $med-gray-2;
 	border-radius: 5px;
@@ -30,18 +30,6 @@
 		width: 0;
 		left: -7px;
 		top: 30px;
-	}
-}
-
-::ng-deep {
-	.profile-info {
-		@include md {
-			width: 600px !important;
-		}
-
-		@include xl {
-			width: 800px !important;
-		}
 	}
 }
 
