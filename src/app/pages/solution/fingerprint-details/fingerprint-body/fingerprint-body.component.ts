@@ -1,6 +1,7 @@
 import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { LogService } from '@cisco-ngx/cui-services';
 import * as _ from 'lodash-es';
+import { ActivatedRoute } from '@angular/router';
 /**
  * fingerprint-body Component
  */
@@ -16,10 +17,17 @@ export class FingerprintBodyComponent implements OnChanges {
 	@Input() public asset: any;
 	public selectedDevice: string;
 	public selectedAsset: any;
+	public alertFPCompare: any = { };
+	public alertFPSimilarAssets: any = { };
+	public alertFPIntelligence: any = { };
+	public cxLevel: number;
 
 	constructor (
 		private logger: LogService,
+		private route: ActivatedRoute,
 	) {
+		const user = _.get(this.route, ['snapshot', 'data', 'user']);
+		this.cxLevel = _.get(user, ['service', 'cxLevel'], 0);
 		this.logger.debug('FingerprintBodyComponent Created!');
 	}
 	/**
@@ -45,4 +53,5 @@ export class FingerprintBodyComponent implements OnChanges {
 		this.tabIndex = 2;
 		this.selectedDevices = event;
 	}
+
 }
