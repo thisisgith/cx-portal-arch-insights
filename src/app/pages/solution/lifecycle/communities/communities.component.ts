@@ -21,18 +21,20 @@ interface CommunityDetail {
 const publicCommunities: CommunityDetail[] = [
 	{
 		description: 'Wireless & Mobility',
-		url: `${environment.publicCommunityUrl}/wireless-and-mobility` + 
+		url: `${environment.publicCommunityUrl}/wireless-and-mobility` +
 			'/bd-p/5956-discussions-getting-started-wireles',
 		usecase: 'campus network assurance'	,
 	},
 	{
 		description: 'Software-Defined Access (SD-Access)',
-		url: `${environment.publicCommunityUrl}/software-defined-access-sd/bd-p/discussions-sd-access`,
+		url: `${environment.publicCommunityUrl}/software-defined-access-sd` +
+			'/bd-p/discussions-sd-access',
 		usecase: 'campus network segmentation',
 	},
 	{
 		description: 'Software-Defined Access (SD-Access)',
-		url: `${environment.publicCommunityUrl}/software-defined-access-sd/bd-p/discussions-sd-access`,
+		url: `${environment.publicCommunityUrl}/software-defined-access-sd` +
+			'/bd-p/discussions-sd-access',
 		usecase: 'scalable access policy',
 	},
 	{
