@@ -57,21 +57,17 @@ $midnight-blue: #0d274d;
 	margin-left: -20px;
 }
 
+:host ::ng-deep .modal__body  {
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
 :host ::ng-deep .modal__content {
 	position: fixed !important;
 	height: 90% !important;
 	width: 100% !important;
-}
-
-.scrollable-card-content {
-	position: fixed !important;
-	height: 100%;
-}
-
-.scrollable-list-content {
-	position: fixed !important;
-	overflow-y: scroll !important;
-	width: 100%;
 }
 
 .card_footer_item {
@@ -1134,6 +1130,10 @@ tr.td-row td {
 	border-bottom-width: 1px;
 }
 
+tr.td-row::after {
+	display: none;
+}
+
 ::ng-deep .cui .table th {
 	margin-top: 10px;
 	border-right: transparent !important;
@@ -1196,7 +1196,9 @@ polygon {
 
 .lifecycle-viewall-modal {
 	min-height: 100%;
-	overflow-y: scroll;
+	overflow-y: hidden;
+	display: flex;
+	flex-direction: column;
 }
 
 // leave the following here, just in case we will use this style
@@ -1206,6 +1208,16 @@ polygon {
 // }
 
 /* Viewall List-view table styles */
+.list-view,
+.card-view {
+	height: 100%;
+	max-height: -webkit-fill-available;
+	overflow: scroll;
+}
+
+list-view table {
+	margin-top: unset;
+}
 
 .bookmark-column .icon-bookmark {
 	font-size: 20px;

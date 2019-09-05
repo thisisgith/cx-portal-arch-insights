@@ -663,7 +663,7 @@
 </ng-template>
 
 <ng-template #viewAllModal let-data="data" let-type="type">
-	<div id="viewAllModal" class="lifecycle-viewall-modal modal__content no-padding" data-auto-id="ViewAllModal">
+	<div id="viewAllModal" class="flex lifecycle-viewall-modal modal__content no-padding" data-auto-id="ViewAllModal">
 		<div class="modal__header acc__header half-padding-left half-padding-bottom no-margin-bottom">
 			<div class="row half-padding-top">
 				<div class="col-md-11 half-margin-top base-padding-left">
@@ -678,8 +678,8 @@
 		</div>
 		<div class="divider base-margin-left base-margin-right"></div>
 		<div class="modal__body base-padding">
-			<span [ngSwitch]="type">
-				<span *ngSwitchCase="'ACC'">
+			<ng-container [ngSwitch]="type">
+				<ng-container *ngSwitchCase="'ACC'">
 					<div class="row half-margin-left half-margin-right">
 						<div class="col-md-9 text-large text-bold text-left"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedACC?.length || 0:componentData.params.solution:componentData.params.usecase"
@@ -710,9 +710,9 @@
 					</div>
 					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.accview }"></ng-container>
 					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.accview }"></ng-container>
-				</span>
-					<span *ngSwitchCase="'ATX'">
-						<div class="row half-margin-left half-margin-right">
+				</ng-container>
+				<ng-container *ngSwitchCase="'ATX'">
+					<div class="row half-margin-left half-margin-right">
 						<div class="col-md-9 text-large text-bold text-left"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedATX?.length || 0:componentData.params.solution:componentData.params.usecase" data-auto-id="ATXTopicsAvailable">
 						</div>
@@ -741,9 +741,9 @@
 					</div>
 					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
 					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.atxview }"></ng-container>
-				</span>
-				<span *ngSwitchCase="'SB'">
-						<div class="row half-margin-left half-margin-right">
+				</ng-container>
+				<ng-container *ngSwitchCase="'SB'">
+					<div class="row half-margin-left half-margin-right">
 						<div class="col-md-9 text-large text-bold text-left"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedSuccessPaths?.length || 0:componentData.params.solution:componentData.params.usecase">
 						</div>
@@ -772,9 +772,9 @@
 					</div>
 					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
 					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.sbview }"></ng-container>
-				</span>
-				<span *ngSwitchCase="'PG'">
-						<div class="row half-margin-left half-margin-right">
+				</ng-container>
+				<ng-container *ngSwitchCase="'PG'">
+					<div class="row half-margin-left half-margin-right">
 						<div class="col-md-9 text-large text-bold text-left"
 							[innerText]="'_TopicsAvailableSolution_' | i18n:selectedProductGuides?.length || 0:componentData.params.solution:componentData.params.usecase">
 						</div>
@@ -803,14 +803,14 @@
 					</div>
 					<ng-container *ngTemplateOutlet="cardViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
 					<ng-container *ngTemplateOutlet="listViewTemplate; context: { type: type, view: this.pgview }"></ng-container>
-				</span>
-			</span>
+				</ng-container>
+			</ng-container>
 		</div>
 	</div>
 </ng-template>
 
 <ng-template #cardViewTemplate let-type="type" let-view="view">
-	<div class="base-padding-right grid base-padding-top" *ngIf="(!view || view === 'grid')"
+	<div class="base-padding-right grid base-padding-top card-view" *ngIf="(!view || view === 'grid')"
 	#scrollModal (scroll)="getScrollCoordinates(scrollModal)">
 		<ng-container *ngIf="type === 'ATX'">
 			<ng-container *ngTemplateOutlet="cardATX"></ng-container>
@@ -828,7 +828,7 @@
 </ng-template>
 
 <ng-template #listViewTemplate let-type="type" let-view="view">
-		<div class="base-padding-right" *ngIf="view === 'list'" #scrollModal (scroll)="getScrollCoordinates(scrollModal)">
+		<div class="base-padding-right base-margin-top list-view" *ngIf="view === 'list'" #scrollModal (scroll)="getScrollCoordinates(scrollModal)">
 			<div class="base-margin-top"  data-auto-id="ViewAllTable">
 					<table class="table table--nostripes table--wrap table--hover table--loose">
 					<ng-container *ngIf="type === 'ATX'">
