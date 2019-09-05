@@ -86,4 +86,6 @@ export const defaults = {
 	typeaheadServiceOrigin: 'https://xresps-stage.cloudapps.cisco.com',
 	webexUrl: 'https://cisco.webex.com/meet/',
 	webexTeamsUrl: 'webexteams://im?email=',
+	// Curated Communities/Private Communitites/SuccessTrack URL
+	curatedCommunityUrl: 'https://community-stage.cisco.com/t5',
 };

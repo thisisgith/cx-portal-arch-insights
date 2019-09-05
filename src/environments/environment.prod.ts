@@ -72,4 +72,6 @@ export const environment = {
 	},
 	// ClientSSOInterceptor: No auth token for the typeahead url
 	typeaheadServiceOrigin: 'https://xresps.cloudapps.cisco.com',
+	// Curated Communities/Private Communitites/SuccessTrack URL
+	curatedCommunityUrl: 'https://community.cisco.com/t5',
 };

@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { RacetrackTechnology } from '@sdp-api';
+import { environment } from '@environment';
 import { Subject } from 'rxjs';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { takeUntil } from 'rxjs/operators';
@@ -143,8 +144,7 @@ export class CommunitiesComponent implements OnDestroy {
 
 		this.curatedCommunity = {
 			description: `${this.selectedTechnology} - ${this.currentPitstop}`,
-			url: `https://community.cisco.com/t5/${usecase}/bd-p/${board}/` +
-			`customFilteredByMultiLabel?board=${board}&amp;labels=${this.currentPitstop}`,
+			url: `${environment.curatedCommunityUrl}/${usecase}/bd-p/${board}`,
 			usecase: this.selectedTechnology,
 		};
 	}
