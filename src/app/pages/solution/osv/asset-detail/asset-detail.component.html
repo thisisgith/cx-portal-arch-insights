@@ -173,7 +173,7 @@
 </ng-template>
 
 <ng-template #actionTemp let-item="celldata" let-selectedItem="selectedItem">
-	<button *ngIf="item.name != 'current' && !item.accepted" 
+	<button *ngIf="item.name != 'current' && !item.accepted && item.swVersion != 'NA'" 
 		class="btn btn--secondary btn--small"
 		[innerText]="'_OsvAccept_' | i18n"
 		(click)="onAccept(item,selectedItem)"

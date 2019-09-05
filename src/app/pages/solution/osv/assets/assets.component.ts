@@ -211,7 +211,7 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						width: '10%',
 					},
 					{
-						key: 'deployment',
+						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
 						sortable: false,
 						width: '10%',

@@ -1,6 +1,6 @@
 /* tslint:disable */
 export interface SoftwareGroupAsset {
-	deployment: string;
+	deploymentStatus: string;
 	id: string;
 	ipAddress: string;
 	hostName: string;

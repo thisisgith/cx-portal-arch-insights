@@ -158,6 +158,7 @@
 <ng-template #assetTypeFilter let-filter="filter">
 	<div class="max-height flex align-items-center">
 		<pie-chart 
+			width = '300'
 			[seriesData]="filter.seriesData" 
 			(subfilter)="onSubfilterSelect($event.filter, filter)">
 		</pie-chart>

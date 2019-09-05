@@ -41,6 +41,7 @@ export class PieChartComponent implements OnInit {
 
 	@Input() public loading;
 	@Input() public seriesData;
+	@Input() public width = 225;
 	@Output() public subfilter = new EventEmitter<string>();
 	public chart: Chart;
 
@@ -89,7 +90,7 @@ export class PieChartComponent implements OnInit {
 				plotBorderWidth: null,
 				plotShadow: false,
 				type: 'pie',
-				width: 225,
+				width: this.width,
 			},
 			credits: {
 				enabled: false,

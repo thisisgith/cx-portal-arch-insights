@@ -66,6 +66,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public customerId: string;
 	public currentVersion: AssetRecommendations;
 	public onCancelSusbcription: Subscription;
+	public cancelledRecommendation: AssetRecommendations;
 	public alert: any = {};
 
 	constructor (
@@ -78,12 +79,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.customerId = _.get(user, ['info', 'customerId']);
 		this.assetDetailsParams = {
 			customerId: this.customerId,
-			id: '7293498_NA',
+			profileName: '7293498_NA',
 			image: 'NA',
 			pf: 'Cisco_5500',
 			pid: 'AIR-CT5520-K9',
 			swType: 'IOS',
 			swVersions: '8',
+			postDate: null
 		};
 	}
 
@@ -125,9 +127,10 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.refresh();
 		this.onCancelSusbcription = this.cuiModalService.onCancel
 			.subscribe(() => {
-				this.logger.info('cancel subscription');
+				this.cancelRecommendation();
 			});
 	}
+
 
 	/**
 	 * Refreshes the component
@@ -135,12 +138,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public refresh () {
 		if (this.selectedAsset) {
 			this.clear();
-			// this.assetDetailsParams.id = _.get(this.selectedAsset, 'id');
+			// this.assetDetailsParams.profileName = _.get(this.selectedAsset, 'profileName');
 			// this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
 			// this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
 			// this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
 			// this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
 			// this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
+			// this.assetDetailsParams.postDate = _.get(this.selectedAsset, 'postDate');
 			this.fetchAssetDetails();
 		}
 	}
@@ -300,7 +304,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 				case 'golden':
 					detail.info = I18n.get('_OsvGoldenInfo_');
 					break;
-				case 'recommended':
+				case 'Recommendation #1':
+				case 'Recommendation #2':
+				case 'Recommendation #3':
 					detail.info = I18n.get('_OsvRecommendedInfo_');
 					break;
 				default:
@@ -371,7 +377,44 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	/**
 	 * show the cancel confirm modal
 	 */
-	public onCancel () {
+	public onCancel (recommendation: AssetRecommendations) {
+		this.cancelledRecommendation = recommendation;
 		this.cuiModalService.showComponent(CancelConfirmComponent, {});
 	}
+
+	/**
+	 * cancel the accepted Recommendation
+	 */
+	public cancelRecommendation () {
+		const body = {
+			customerId: this.customerId,
+			profileName: this.selectedSoftwareGroup.profileName,
+			optimalVersion: this.cancelledRecommendation.swVersion,
+		};
+		this.osvService.cancelUpdateProfileResponse(body)
+			.subscribe((response: any) => {
+				response.statusUpdated = true;
+				this.setAcceptedVersion(this.recommendations, response);
+				this.recommendations = _.cloneDeep(this.recommendations);
+				this.selectedSoftwareGroup.recommAcceptedDate = response.recommAcceptedDate;
+				this.onRecommendationAccept.emit({
+					recommendation: this.recommendations,
+					selectedSoftwareGroup: response,
+				});
+				this.status.isLoading = false;
+				this.logger.debug('Updated');
+			}, err => {
+				if (this.selectedMachineRecommendation) {
+					this.onRecommendationAccept.emit({
+						err,
+					});
+				} else {
+					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
+				}
+				this.status.isLoading = false;
+				this.logger.debug('Error in updating');
+			});
+
+	}
+
 }

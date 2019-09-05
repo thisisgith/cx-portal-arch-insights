@@ -7,6 +7,8 @@ import {
 	OnChanges,
 	Output,
 	EventEmitter,
+	ViewChild,
+	TemplateRef,
 } from '@angular/core';
 
 import { LogService } from '@cisco-ngx/cui-services';
@@ -42,6 +44,7 @@ import { CancelConfirmComponent } from '../cancel-confirm/cancel-confirm.compone
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
 	@Input() public tabIndex;
 
 	public status = {
@@ -68,6 +71,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public versionAlert: any = {};
 	public recommendationAlert = {};
 	public recommendations: AssetRecommendationsResponse;
+	public machineRecommendationsResponse: MachineRecommendationsResponse;
 	public machineRecommendations: MachineRecommendations[];
 	public selectedMachineRecommendation;
 	public screenWidth = window.innerWidth;
@@ -144,6 +148,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public loadData () {
 		this.status.isLoading = true;
 		forkJoin(
+			this.fetchMachineRecommendations(),
 			this.fetchSoftwareGroupDetails(),
 			this.getSoftwareGroupAssets(),
 			this.getSoftwareGroupVersions(),
@@ -151,10 +156,26 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			.pipe(
 				takeUntil(this.destroy$),
 			)
-			.subscribe(() => {
+			.subscribe((responses) => {
+				if (this.machineRecommendationsResponse && this.recommendations) {
+					this.populateMachineRecommendationsInfo();
+				}
 				this.status.isLoading = false;
 				this.logger.debug('assets software.component: loadData()::Done Loading');
 			});
+	}
+
+	/**
+	 * merge recommendations and machine recommendation info required for compare view
+	 */
+	public populateMachineRecommendationsInfo () {
+		_.map(this.machineRecommendationsResponse, (machineRecommendation) => {
+			const recommendation = _.filter(this.recommendations,
+				{ swVersion: machineRecommendation.release });
+			machineRecommendation.name = _.get(recommendation, ['0', 'name']);
+			machineRecommendation.postDate = _.get(recommendation, ['0', 'postDate']);
+		});
+		this.machineRecommendations = this.machineRecommendationsResponse;
 	}
 
 	/**
@@ -189,7 +210,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		return this.osvService.getMachineRecommendations(this.softwareGroupDetailsParams)
 			.pipe(
 				map((response: MachineRecommendationsResponse) => {
-					this.machineRecommendations = response;
+					this.machineRecommendationsResponse = response;
 				}),
 				takeUntil(this.destroy$),
 				catchError(err => {
@@ -314,8 +335,6 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 						key: 'swVersion',
 						name: I18n.get('_OsvVersion_'),
 						sortable: false,
-						sortDirection: 'asc',
-						sorting: false,
 						width: '10%',
 					},
 					{
@@ -324,12 +343,14 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 							datePipe.transform(
 								new Date(item.postDate), 'yyyy MMM dd') :
 							'',
-						sortable: false,
+						sortable: true,
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
-						sortable: false,
+						sortable: true,
+						sortDirection: 'asc',
+						sorting: true,
 					},
 					{
 						key: 'assetCount',
@@ -381,8 +402,8 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 						sortable: false,
 					},
 					{
-						key: 'swVersion',
 						name: I18n.get('_OsvCurrentOSVersion_'),
+						template: this.versionTemplate,
 						sortable: false,
 					},
 					{
@@ -441,7 +462,12 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		}
 		this.selectedSoftwareGroup = event.selectedSoftwareGroup;
 		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
-		this.recommendations = event.recommendations;
+		_.map(this.machineRecommendations, (machineRecommendation) => {
+			const recommendation = _.filter(event.recommendations,
+				{ swVersion: machineRecommendation.release });
+			machineRecommendation.accpeted = _.get(recommendation, ['0', 'accepted']);
+		});
+		this.getSoftwareGroupAssets();
 	}
 
 	/**

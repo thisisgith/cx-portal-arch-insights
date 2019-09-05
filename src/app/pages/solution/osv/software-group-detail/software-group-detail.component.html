@@ -382,3 +382,14 @@
 	</div>
 </ng-template>
 <cui-modal></cui-modal>
+
+<ng-template #versionTemplate let-item="celldata">
+	<span 
+		[title]="item.alert | uppercase" 
+		*ngIf="item?.alert && item?.alert != 'NA'"
+		[ngClass]="{'information':'text-primary'}[item.alert]" 
+		class="icon-circle">
+	</span>
+	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-tranparent"></span>
+	<span class="col-11" [innerText]="item.swVersion"></span>
+</ng-template>

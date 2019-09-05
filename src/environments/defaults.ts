@@ -15,7 +15,7 @@ export const defaults = {
 		referUrl: `${origin}/ws/oauth/v3/sso/`,
 		tokenUrl: `${origin}/ws/oauth/v3/token/cway/35ae50e6ff5843f59183da19cc44245d`,
 	},
-	baseHref: '/pbc/',
+	baseHref: '/osv/',
 	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
 	communityLink: 'https://community.cisco.com/t5/technology-and-support/ct-p/technology-support',
 	controlPointsOrigin: 'https://cpp-api.sdp12-istg.csco.cloud/controlpoint',
