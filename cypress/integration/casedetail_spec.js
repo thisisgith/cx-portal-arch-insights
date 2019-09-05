@@ -324,13 +324,19 @@ describe('Case Detail Spec', () => {
 			});
 
 			cy.getByAutoId('SecurityAdvisoryOpenCaseBtn').click();
-			cy.getByAutoId('PanelSelectOption0').click();
-			// TODO - continue selecting to click submit and create a case
-			// cy.getByAutoId('CaseOpenCancelButton').should('exist');
-			// cy.getByAutoId('CaseOpenClose').should('exist').click(); // Click the X
-			// cy.getByAutoId('CaseOpenContinue').should('exist');
-			// cy.getByAutoId('CaseOpenCancel').should('exist').click(); // Cancel case open
-			// cy.getByAutoId('searchClose').should('exist').click(); // Close the search results - X
+			cy.getByAutoId('PanelSelectOption1', { timeout: 10000 }).click();
+			// Select the dropdown option
+			cy.get('[ng-reflect-klass="dropdown-chevron"]').click({ force: true });
+			cy.get('[title="Configuration Assistance"]').click({ force: true });
+			cy.getByAutoId('CaseOpenSubmitButton').click();
+
+			cy.get('[class="icon-check-outline icon-small text-success qtr-margin-right"]')
+				.should('exist');
+
+			cy.getByAutoId('CaseOpenClose').should('exist');
+			cy.getByAutoId('CaseNumberButton').should('exist');
+			cy.getByAutoId('CaseOpenDoneButton').click();
+			cy.getByAutoId('CloseDetails').click();
 		});
 	});
 });
