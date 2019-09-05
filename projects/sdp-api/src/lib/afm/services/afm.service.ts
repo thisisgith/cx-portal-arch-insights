@@ -19,16 +19,16 @@ import { BaseService } from '../../core/base-service';
 
 export class AfmService extends BaseService {
 
-	private alarmsPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/alarms`;
-	private tacCasesPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/taccases`;
-	private searchPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/search`;
-	private afmConnectivityPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/connectivity`;
-	private eventPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/event`;
-	private ignoreEventPath = `${this.rootUrl}/api/customerportal/afm/v1/fault/ignoreevent`;
+	private alarmsPath = `${this.rootUrl}/customerportal/afm/v1/fault/alarms`;
+	private tacCasesPath = `${this.rootUrl}/customerportal/afm/v1/fault/taccases`;
+	private searchPath = `${this.rootUrl}/customerportal/afm/v1/fault/search`;
+	private afmConnectivityPath = `${this.rootUrl}/customerportal/afm/v1/fault/connectivity`;
+	private eventPath = `${this.rootUrl}/customerportal/afm/v1/fault/event`;
+	private ignoreEventPath = `${this.rootUrl}/customerportal/afm/v1/fault/ignoreevent`;
 	private revertIgnoreEventPath =
-	`${this.rootUrl}/api/customerportal/afm/v1/fault/revertignoreevent`;
-	private timeRangePath = `${this.rootUrl}/api/customerportal/afm/v1/fault/timerangefilter`;
-	private exportAllPath =  `${this.rootUrl}/api/customerportal/afm/v1/fault/exportall/`;
+	`${this.rootUrl}/customerportal/afm/v1/fault/revertignoreevent`;
+	private timeRangePath = `${this.rootUrl}/customerportal/afm/v1/fault/timerangefilter`;
+	private exportAllPath =  `${this.rootUrl}/customerportal/afm/v1/fault/exportall/`;
 
 	constructor (config: AfmConfiguration, http: HttpClient) {
 		super(config, http);

@@ -2120,7 +2120,7 @@ describe('Learn Panel', () => {
 						} else {
 							cy.getByAutoId('successbytes-HoverModal-BookmarkRibbon')
 								.should('exist')
-								.and('have.class', 'ribbon__clear');
+								.and('have.class', 'ribbon__white');
 						}
 						// Handle type
 						switch (successItem.type) {
