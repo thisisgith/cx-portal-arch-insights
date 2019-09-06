@@ -73,6 +73,7 @@ describe('Racetrack Content', () => {
 				cy.wait('progressMovingEnd', { eventObj: 'racetrackEvents' });
 			});
 
+			// TODO: This test "works", but introduces flake, so stability needs investigating
 			it.skip('Progress Position', () => {
 				cy.get('#progress').then(progressPath => {
 					const progressStrokeDasharray = progressPath.attr('stroke-dasharray');
@@ -118,6 +119,7 @@ describe('Racetrack Content', () => {
 	});
 
 	stages.forEach(stageName => {
+		// TODO: This test "works", but introduces flake, so stability needs investigating
 		context.skip(`Car Position - currentPitstop: "${stageName}"`, () => {
 			let expectedCoords;
 			let expectedRotations;
