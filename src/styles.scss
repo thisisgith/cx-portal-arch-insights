@@ -92,6 +92,32 @@
 	color: #fff;
 }
 
+/**
+ * .label class above is overriding cisco ui label modifiers
+ * Need to redefine label modifiers to take precedence over override
+ */
+.cui .label--danger {
+	background: #e2231a;
+	color: #fff;
+}
+
+.cui .label--warning-alt {
+	background: #fc0;
+	color: #39393b;
+}
+
+.cui .label--warning {
+	background: #fbab18;
+	color: #39393b;
+}
+
+.cui .label--info {
+	background: #64bbe3;
+	color: #39393b;
+}
+
+/* End redefinition of label modifiers */
+
 .cui .content {
 	background: unset;
 }
