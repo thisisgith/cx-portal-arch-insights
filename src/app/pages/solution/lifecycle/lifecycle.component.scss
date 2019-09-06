@@ -116,6 +116,17 @@ $divider-color: #e1e1e1;
 	border-bottom: 0 none !important;
 }
 
+.icon-check-outline,
+.icon-clock,
+.icon-calendar {
+	color: $cisco-blue;
+}
+
+.icon-certified {
+	color: $icon-green;
+}
+
+
 .cx-lifecycle-card {
 	padding-top: 23px;
 	padding-bottom: 22px;
@@ -163,12 +174,7 @@ $divider-color: #e1e1e1;
 	.icon-certified {
 		height: 17px;
 		padding: unset;
-		color: $cisco-blue;
 		font-size: 17px;
-	}
-
-	.icon-certified {
-		color: $icon-green;
 	}
 
 	.icon-communities {
@@ -181,7 +187,6 @@ $divider-color: #e1e1e1;
 
 	.icon-calendar {
 		padding: unset;
-		color: $cisco-blue;
 		font-size: 16px;
 	}
 
