@@ -362,7 +362,7 @@ export const ATXScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Use&customerId=${customerId}`,
+		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Use&customerId=${customerId}&suggestedAction=Monitor Health of the Network`,
 		usecases: ['Use Case 1'],
 	},
 	{

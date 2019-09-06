@@ -73,7 +73,7 @@
 <ng-template #racetrack>
 	<div class="base-padding-left">
 		<div class="pitstop-title">
-			<h3 class="text-primary" *ngIf="currentWorkingPitstop" [innerText]="currentWorkingPitstop"></h3>
+			<h3 class="text-primary" *ngIf="currentWorkingPitstop" [innerText]="currentWorkingPitstop" data-auto-id="CurrentPitstopTitle"></h3>
 		</div>
 		<div class="pitstop-margin"></div>
 		<div class="pitstop-finishline">
@@ -231,7 +231,7 @@
 <ng-template #atxMoreClick let-data="data">
 	<div class="panel atxMorepanel--open panel--bordered"
 		#atxMoreClick [ngClass]="getATXMorePanel(atxMoreClick)"
-		*ngIf="atxMoreClicked" attr.data-auto-id="atxMoreClickModal">
+		*ngIf="atxMoreClicked" data-auto-id="atxMoreClickModal">
 		<div class="flex flex-column max-height">
 			<div class="icon-bookmark icon-medium"
 				[ngClass]="data.bookmark ? 'ribbon__blue__atx' : 'ribbon__white__atx'"
@@ -240,7 +240,7 @@
 			</div>
 			<div class="row half-margin-top half-margin-left half-margin-right">
 				<div class="col-md-11 text-left">
-					<h6 class="text-indigo" [innerText]="data.title"></h6>
+					<h6 class="text-indigo" [innerText]="data.title" data-auto-id="atxMoreClickModal-Title"></h6>
 				</div>
 				<div class="col-md-1">
 					<a class="no-link closebtn"
@@ -251,7 +251,7 @@
 				</div>
 			</div>
 			<div class="divider divider--compressed"></div>
-			<div class="half-margin-left line-clamp" [innerText]="data.description"></div>
+			<div class="half-margin-left line-clamp" [innerText]="data.description" data-auto-id="atxMoreClickModal-Description"></div>
 			<div class="base-padding-top half-padding-left">
 				<button class="btn btn--small btn--secondary text-uppercase"
 					data-auto-id = "MoreATXViewSessions"
@@ -260,7 +260,7 @@
 					[innerText]="'_ViewSessions_' | i18n">
 				</button>
 				<button class="btn btn--small btn--secondary text-uppercase"
-					data-auto-id = "MoreATXWatchNow"
+					attr.data-auto-id = "MoreATXWatchNow-{{ data.recordingURL }}"
 					[ngClass]="data?.recordingURL ? null : 'disabled'"
 					(click)="atxWatchNow(data.recordingURL)"
 					[innerText]="'_WatchNow_' | i18n">
@@ -393,7 +393,7 @@
 		[ngClass]="getPanel(viewAtxSessions)" data-auto-id="atxScheduleCard">
 		<div class="atx-scheduler-one-line half-margin-top half-margin-left half-margin-right">
 			<div id="atxtitle" class="text-left title-line-clamp">
-				<h5 [innerText]="data.title"></h5>
+				<h5 [innerText]="data.title" data-auto-id="atxScheduleCard-Title"></h5>
 			</div>
 			<div>
 				<a class="no-link closebtn"
@@ -494,7 +494,7 @@
 		<div class="cx-lifecycle-card--more-link" #moreList (mouseenter)="getMoreCoordinates(moreList, autoid)" *ngFor="let item of data | slice:1:3">
 			<div class="row" attr.data-auto-id="{{ autoid }}-item">
 				<div class="col-md-11">
-					<div id="{{ autoid }}-item" class="panel small-panel" attr.data-auto-id="{{ autoid }}-item">
+					<div id="{{ autoid }}-item" class="panel small-panel">
 						<div class="text-blue" [innerText]="item.title"
 							data-auto-id = "ATXMoreClick"
 							(click)="atxMoreSelect(item)"></div>

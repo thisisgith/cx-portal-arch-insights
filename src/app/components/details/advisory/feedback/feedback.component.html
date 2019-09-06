@@ -11,17 +11,19 @@
 	novalidate>
 	<div class="half-margin-bottom">
 		<a><span id="upVoteBtn" 
-			class="icon-like"
+			class="icon-like text-xlarge"
 			[ngClass]="{
-				'text-dkgray-4': rating !== 'thumbsUp'
+				'text-dkgray-4': rating !== 'thumbsUp',
+				'text-success': rating === 'thumbsUp'
 			}"
 			data-auto-id="upVoteBtn"
 			(click)="voteClicked('thumbsUp')">
 		</span></a>
 		<a><span id="downVoteBtn" 
-			class="icon-like rotate-180 qtr-margin-left"
+			class="icon-like rotate-180 qtr-margin-left text-xlarge"
 			[ngClass]="{
-				'text-dkgray-4': rating !== 'thumbsDown'
+				'text-dkgray-4': rating !== 'thumbsDown',
+				'text-danger': rating === 'thumbsDown'
 			}"
 			data-auto-id="downVoteBtn"
 			(click)="voteClicked('thumbsDown')">
