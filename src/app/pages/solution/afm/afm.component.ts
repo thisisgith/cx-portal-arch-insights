@@ -317,7 +317,7 @@ export class AfmComponent {
 	 * it will retrive the All alarmds records only
 	 */
 	public allAlarmFilter () {
-		this.exportFileName = I18n.get('_AfmFileTotalAlarms_');
+		this.exportFileName = 'Total_Alarms_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.ALARM;
@@ -329,7 +329,7 @@ export class AfmComponent {
 	 * it will retrive the TAC Case records only
 	 */
 	public tacCaseFilters () {
-		this.exportFileName = I18n.get('_AfmFileTotalTacCases_');
+		this.exportFileName = 'Total_TacCases_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.TAC;
@@ -342,7 +342,7 @@ export class AfmComponent {
 	 * it will retrive the Ignored Alarms only
 	 */
 	public ignoreAlarmFilters () {
-		this.exportFileName = I18n.get('_AfmFileTotalIgnoredAlarms_');
+		this.exportFileName = 'Total_Ignored_Alarms_';
 		this.resetValuesWhileFilter();
 		this.timeRangeFiltered = false;
 		this.searchParams.headerFilterType = this.AFM_CONSTANT.IGNORE_EVENT;
@@ -355,7 +355,7 @@ export class AfmComponent {
 	 * it will retrive the Search records only
 	 */
 	public searchFilter () {
-		this.exportFileName = I18n.get('_AfmFileTotalAlarmsFiltered_');
+		this.exportFileName = 'Total_Alarms_Filtered_';
 		const searchTerm = this.afmSearchInput;
 		this.resetValuesWhileFilter();
 		this.searchParams.searchTerm = this.afmSearchInput = searchTerm;
@@ -418,6 +418,7 @@ export class AfmComponent {
 	public eventUpdated (event) {
 		this.eventStatus = event;
 	}
+
 	/**
 	 * to close the panel
 	 */

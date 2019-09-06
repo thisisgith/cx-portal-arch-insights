@@ -48,10 +48,6 @@
 			<span class="qtr-margin-right icon-circle"></span>
 			<span [innerText]="'_AfmP7Low_' | i18n"></span>
 		</span>
-		<span *ngSwitchDefault>
-			<!-- <span class="qtr-margin-right icon-circle "></span>
-            <span [innerText]="'_AfmP7Low_'|i18n"></span> -->
-		</span>
 	</div>
 </ng-template>
 
@@ -397,24 +393,10 @@
 </details-panel>
 
 <!-- App Details slide-out -->
-<details-panel
-	*ngIf="selectedAsset"
-	[hidden]="!selectedAsset"
-	[fullscreen]="fullscreen"
+<asset-details *ngIf="selectedAsset"
+	[asset]="selectedAsset"
+	[serialNumber]="selectedAsset?.serialNumber"
+	[element]=""
+	(close)="onPanelClose()"
 >
-	<details-panel-header
-		(close)="onPanelClose()"
-		[(fullscreen)]="fullscreen"
-		[fullscreenToggle]="false"
-	>
-		<asset-details-header [asset]="selectedAsset"></asset-details-header>
-		<div detailsPanelTitle class="text-xlarge">
-			<span class="icon-wifi"></span>
-			<span
-				class="qtr-margin-left"
-				[innerText]="selectedAsset?.hostName"
-			></span>
-		</div>
-	</details-panel-header>
-	<asset-details [asset]="selectedAsset"></asset-details>
-</details-panel>
+</asset-details>

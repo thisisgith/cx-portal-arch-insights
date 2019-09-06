@@ -56,11 +56,8 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 		const alarmData = _.get(changes, ['alarm', 'currentValue']);
 		const isFirstChange = _.get(changes, ['alarm', 'firstChange']);
 		this.options.visible = false;
-		if (!isFirstChange && alarmData.status.toUpperCase() === 'IGNORED') {
-			this.status = true;
-		} else {
-			this.status = false;
-		}
+		this.status = (!isFirstChange
+			&& alarmData.status.toUpperCase() === 'IGNORED') ?  true  : false;
 	}
 
 	/**
@@ -85,13 +82,13 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 			this.afmService.ignoreEvent(this.searchParams)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
-					this.changeStatus('ignored', response, alarmData);
+					this.changeStatus('IGNORED', response, alarmData);
 				});
 		} else {
 			this.afmService.revertIgnoreEvent(this.searchParams)
 				.pipe(takeUntil(this.destroy$))
 				.subscribe(response => {
-					this.changeStatus('revert', response, alarmData);
+					this.changeStatus('REVERT', response, alarmData);
 				});
 		}
 	}
@@ -115,15 +112,15 @@ export class AfmDetailsComponent implements OnInit, OnChanges {
 			visible: true,
 		};
 		if (response.status.toUpperCase() !== 'SUCCESS') {
-			eventName === 'revert' ? this.status = true  : this.status = false;
+			this.status = eventName === 'REVERT' ?  true  : false;
 		} else {
 			this.eventUpdated.emit(true);
-			if (eventName === 'revert') {
-				 this.status = false ;
-				 alarmData.status = 'Success';
+			if (eventName === 'REVERT') {
+				this.status = false ;
+				alarmData.status = 'SUCCESS';
 			} else {
 				this.status = true;
-				alarmData.status = 'Ignored';
+				alarmData.status = 'IGNORED';
 			}
 		}
 		this.loading = false;
