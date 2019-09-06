@@ -90,7 +90,10 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						},
 						"tie": {
 							"aot": true,
@@ -173,7 +176,10 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						},
 						"cxportal-lt": {
 							"aot": true,
@@ -213,7 +219,10 @@
 							"optimization": true,
 							"outputHashing": "all",
 							"sourceMap": false,
-							"vendorChunk": false
+							"vendorChunk": false,
+							"scripts": [
+								"node_modules/@cx-portal/metrics/cx_portal_metrics_rules.js"
+							]
 						}
 					},
 					"options": {

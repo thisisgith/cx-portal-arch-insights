@@ -215,8 +215,9 @@ export const ACCScenarios = [
 				},
 			],
 		},
-		url: `${api}?usecase=Campus Network Assurance&solution=IBN&pitstop=Onboard&` +
-				'customerId=${customerId}&suggestedAction=Get to know Cisco DNA Center',
+		url: `${api}?usecase=Campus Network Assurance&` +
+			`solution=IBN&pitstop=Onboard&customerId=${customerId}&` +
+			'suggestedAction=Get to know Cisco DNA Center',
 		usecases: ['Use Case 1'],
 	},
 	{

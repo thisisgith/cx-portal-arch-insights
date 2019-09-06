@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CloseConfirmComponent } from './close-confirm.component';
 import { CloseConfirmModule } from './close-confirm.module';
@@ -7,12 +8,11 @@ describe('CloseConfirmComponent', () => {
 	let component: CloseConfirmComponent;
 	let fixture: ComponentFixture<CloseConfirmComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [CloseConfirmModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CloseConfirmComponent);

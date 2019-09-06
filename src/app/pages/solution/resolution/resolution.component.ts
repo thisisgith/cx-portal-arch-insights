@@ -330,7 +330,6 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		this.refresh$.next();
 		this.buildFilters();
 		this.getFilterData();
-		this.buildFilters();
 	}
 
 	/**

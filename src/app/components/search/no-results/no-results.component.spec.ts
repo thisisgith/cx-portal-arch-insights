@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NoResultsComponent } from './no-results.component';
 import { NoResultsModule } from './no-results.module';
@@ -7,12 +8,11 @@ describe('NoResultsComponent', () => {
 	let component: NoResultsComponent;
 	let fixture: ComponentFixture<NoResultsComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [NoResultsModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(NoResultsComponent);

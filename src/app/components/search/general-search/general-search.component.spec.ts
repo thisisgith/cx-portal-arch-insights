@@ -1,4 +1,5 @@
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { By } from '@angular/platform-browser';
 import { of, throwError } from 'rxjs';
@@ -14,15 +15,14 @@ describe('GeneralSearchComponent', () => {
 	let service: SearchService;
 	let fixture: ComponentFixture<GeneralSearchComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				GeneralSearchModule,
 				HttpClientTestingModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		service = TestBed.get(SearchService);

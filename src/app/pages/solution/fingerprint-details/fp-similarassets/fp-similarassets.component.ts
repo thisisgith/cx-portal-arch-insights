@@ -66,6 +66,7 @@ export class FpSimilarAssetsComponent {
 	});
 	public similarDevicesData: SimilarDevicesList;
 	@Output() public devicesSelected: EventEmitter<any> = new EventEmitter<any>();
+	@Output() public reqError: EventEmitter<any> = new EventEmitter<any>();
 	public selectedDevice2: any;
 	@ViewChild('assetTemplate', { static: true })
 	private assetTemplate: TemplateRef<[]>;
@@ -173,12 +174,20 @@ export class FpSimilarAssetsComponent {
 			.pipe(takeUntil(this.destroyed$))
 			.subscribe(
 				similarDevicesData => {
-					this.similarDevicesData = similarDevicesData;
-					this.noData = false;
+					if (_.get(similarDevicesData, ['similarDevices', 'length'], 0) > 0) {
+						this.similarDevicesData = similarDevicesData;
+						this.noData = false;
+						this.reqError.emit();
+					} else {
+						this.seriesDataLoading = false;
+						this.noData = true;
+						this.reqError.emit(I18n.get('_CP_SimilarAssets_Error_'));
+					}
 				},
 				err => {
 					this.seriesDataLoading = false;
 					this.noData = true;
+					this.reqError.emit(I18n.get('_CP_SimilarAssets_Error_'));
 					this.logger.error(err);
 				},
 				() => (this.seriesDataLoading = false),

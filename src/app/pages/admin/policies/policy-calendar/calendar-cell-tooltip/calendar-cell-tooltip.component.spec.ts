@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatePipe } from '@angular/common';
 
 import { CalendarCellTooltipComponent  } from './calendar-cell-tooltip.component';
@@ -11,7 +12,7 @@ describe('PolicyCalendarTooltipComponent', () => {
 	let component: CalendarCellTooltipComponent;
 	let fixture: ComponentFixture<CalendarCellTooltipComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
@@ -19,9 +20,8 @@ describe('PolicyCalendarTooltipComponent', () => {
 				RouterTestingModule,
 			],
 			providers: [DatePipe],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CalendarCellTooltipComponent);

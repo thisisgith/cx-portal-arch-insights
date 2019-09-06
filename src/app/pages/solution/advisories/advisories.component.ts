@@ -68,6 +68,7 @@ interface Tab {
 	searchTemplate?: TemplateRef<{ }>;
 	searchSubscribe?: Subscription;
 	selectedSubfilters?: SelectedSubfilter[];
+	contentContainerHeight?: string;
 }
 
 /** Interface for selected subfilters */
@@ -106,6 +107,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		type: AdvisoryType;
 		id: string;
 	};
+	public contentContainerHeight: string;
 	public activeTab: number;
 	@ViewChild('impactTemplate', { static: true }) private impactTemplate: TemplateRef<{ }>;
 	@ViewChild('impactedCountTemplate', { static: true })
@@ -152,6 +154,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			this.searchSubscription(tab);
 		}
 	}
+	@ViewChild('contentContainer', { static: false }) private contentContainer: ElementRef;
+
 	constructor (
 		private diagnosticsService: DiagnosticsService,
 		private logger: LogService,
@@ -919,6 +923,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 		const tab = _.find(this.tabs, { key: 'field' });
 		tab.params.page = tab.params.page;
 		tab.loading = true;
+		if (_.size(tab.data) && this.contentContainer) {
+			tab.contentContainerHeight =
+				`${this.contentContainer.nativeElement.offsetHeight}px`;
+		}
 		tab.data = [];
 
 		return this.productAlertsService.getAdvisoriesFieldNotices(tab.params)
@@ -927,6 +935,7 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 				tab.data = _.get(response, 'data', []);
 				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
 				tab.loading = false;
+				_.unset(tab, 'contentContainerHeight');
 			}),
 			catchError(err => {
 				tab.pagination = null;
@@ -946,6 +955,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	private fetchBugs () {
 		const tab = _.find(this.tabs, { key: 'bug' });
 		tab.loading = true;
+		if (_.size(tab.data) && this.contentContainer) {
+			tab.contentContainerHeight =
+				`${this.contentContainer.nativeElement.offsetHeight}px`;
+		}
 		tab.data = [];
 
 		return this.diagnosticsService.getCriticalBugs(tab.params)
@@ -953,8 +966,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 			map((response: CriticalBugsResponse) => {
 				tab.data = _.get(response, 'data', []);
 				tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
-
 				tab.loading = false;
+				_.unset(tab, 'contentContainerHeight');
 			}),
 			catchError(err => {
 				tab.pagination = null;
@@ -974,6 +987,10 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 	private fetchSecurityAdvisories () {
 		const tab = _.find(this.tabs, { key: 'security' });
 		tab.loading = true;
+		if (_.size(tab.data) && this.contentContainer) {
+			tab.contentContainerHeight =
+				`${this.contentContainer.nativeElement.offsetHeight}px`;
+		}
 		tab.data = [];
 
 		return this.productAlertsService.getAdvisoriesSecurityAdvisories(tab.params)
@@ -982,8 +999,8 @@ export class AdvisoriesComponent implements OnInit, OnDestroy {
 					tab.data = _.get(response, 'data', []);
 					_.each(tab.data, d => d.severity = _.startCase(d.severity));
 					tab.pagination = this.buildPagination(_.get(response, 'Pagination', { }));
-
 					tab.loading = false;
+					_.unset(tab, 'contentContainerHeight');
 				}),
 				catchError(err => {
 					tab.pagination = null;

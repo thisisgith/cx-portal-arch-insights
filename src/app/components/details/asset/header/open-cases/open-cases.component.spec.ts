@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { OpenCasesComponent } from './open-cases.component';
@@ -8,15 +9,14 @@ describe('OpenCasesComponent', () => {
 	let component: OpenCasesComponent;
 	let fixture: ComponentFixture<OpenCasesComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				OpenCasesModule,
 				RouterTestingModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(OpenCasesComponent);

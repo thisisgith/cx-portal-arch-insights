@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SecurityComponent } from './security.component';
 import { SecurityModule } from './security.module';
@@ -8,15 +9,14 @@ describe('SecurityComponent', () => {
 	let component: SecurityComponent;
 	let fixture: ComponentFixture<SecurityComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SecurityModule,
 				HttpClientTestingModule,
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(SecurityComponent);

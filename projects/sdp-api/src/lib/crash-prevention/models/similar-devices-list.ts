@@ -1,7 +1,10 @@
-import { SimilarDevice } from "./similar-device";
+import { SimilarDevice } from './similar-device';
 
-export interface SimilarDevicesList{
-    customerId: string;
-    count: number;
-    similarDevices : Array<SimilarDevice>;
+/**
+ * Model for List of similar devices matching the given criteria.
+ */
+export interface SimilarDevicesList {
+	customerId: string;
+	count: number;
+	similarDevices: SimilarDevice[];
 }

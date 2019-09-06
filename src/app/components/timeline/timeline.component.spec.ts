@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { I18n } from '@cisco-ngx/cui-utils';
@@ -17,15 +18,14 @@ describe('TimelineComponent', () => {
 	let component: TimelineComponent;
 	let fixture: ComponentFixture<TimelineComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
 				TimelineModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		I18n.injectDictionary(enUSJson);
