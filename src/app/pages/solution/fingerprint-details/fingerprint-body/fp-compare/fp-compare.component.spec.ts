@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FpCompareComponent } from '../fp-compare/fp-compare.component';
 import { FpCompareModule } from '../fp-compare/fp-compare.module';
@@ -16,7 +17,7 @@ describe('FpCompareComponent', () => {
 	let component: FpCompareComponent;
 	let fixture: ComponentFixture<FpCompareComponent>;
 	let crashPreventionService: CrashPreventionService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				FpCompareModule,
@@ -38,8 +39,10 @@ describe('FpCompareComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		crashPreventionService = TestBed.get(CrashPreventionService);
 	}));
@@ -251,7 +254,7 @@ describe('FpCompareComponent', () => {
 			.toBeFalsy();
 	}));
 
-	it('should work', fakeAsync(() => {
+	it('Should return the searched getListdevice response', fakeAsync(() => {
 		spyOn(crashPreventionService, 'getProductFamily')
 			.and
 			.returnValue(of(<any> []));
@@ -273,4 +276,26 @@ describe('FpCompareComponent', () => {
 		expect(crashPreventionService.getListdevice)
 			.toHaveBeenCalled();
 	}));
+
+	it('should check for ngOnchanges in ProductFamily and getListdevice', () => {
+		spyOn(crashPreventionService, 'getProductFamily')
+			.and
+			.returnValue(of(<any> []));
+		spyOn(crashPreventionService, 'getListdevice')
+			.and
+			.returnValue(of(<any> []));
+		component.ngOnChanges({
+			devices: {
+				currentValue: null,
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(crashPreventionService.getProductFamily)
+			.toHaveBeenCalledTimes(0);
+		expect(crashPreventionService.getListdevice)
+			.toHaveBeenCalledTimes(0);
+	});
 });

@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ComparisonviewComponent } from './comparisonview.component';
 import { ComparisonviewModule } from './comparisonview.module';
@@ -16,7 +17,7 @@ describe('ComparisonviewComponent', () => {
 	let fixture: ComponentFixture<ComparisonviewComponent>;
 	let crashPreventionService: CrashPreventionService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [ComparisonviewModule,
 				HttpClientTestingModule,
@@ -37,8 +38,10 @@ describe('ComparisonviewComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		crashPreventionService = TestBed.get(CrashPreventionService);
 	}));
 
@@ -71,12 +74,12 @@ describe('ComparisonviewComponent', () => {
 			.then(() => {
 				fixture.detectChanges();
 				expect(component.featuresData)
-				.not
-				.toBeTruthy();
+					.not
+					.toBeTruthy();
 				done();
 			});
 	});
-	it('Should return the searched response', done => {
+	it('Should return the searched features response', done => {
 		spyOn(crashPreventionService, 'getComparison')
 			.and
 			.returnValue(of(ComparisonViewScenarios[2].scenarios.GET[0].response.body));
@@ -86,8 +89,28 @@ describe('ComparisonviewComponent', () => {
 				fixture.detectChanges();
 				expect(component.featuresData)
 					.toBeDefined();
+				expect(component.hardwareData)
+					.toBeDefined();
+				expect(component.softwareData)
+					.toBeDefined();
 				done();
 			});
 	});
 
+	it('should check for ngOnchanges in comparison view component', () => {
+		spyOn(crashPreventionService, 'getComparison')
+			.and
+			.returnValue(of(<any> []));
+		component.ngOnChanges({
+			deviceId1: {
+				currentValue: 'Device_123',
+				firstChange: true,
+				isFirstChange: () => true,
+				previousValue: null,
+			},
+		});
+		fixture.detectChanges();
+		expect(crashPreventionService.getComparison)
+			.toHaveBeenCalledTimes(1);
+	});
 });

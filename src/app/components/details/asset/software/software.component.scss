@@ -13,41 +13,14 @@
 		padding-left: 0 !important;
 	}
 
-	.table {
-		table-layout: fixed;
-
-		th {
-			background-color: $white !important;
-			border-top: none !important;
-			border-left: none !important;
-			border-right: none !important;
-			border-bottom: 3px solid $light-gray-3 !important;
-		}
-
-		tr {
-			border-top: none !important;
-			border-left: none !important;
-			border-right: none !important;
-			border-bottom: 1px solid $light-gray-3 !important;
-		}
-	}
-
-	.table--bordered {
-		border-top: none !important;
-		border-left: none !important;
-		border-right: none !important;
-		border-bottom: none !important;
-
-		td {
-			border-top: none !important;
-			border-left: none !important;
-			border-right: none !important;
-			border-bottom: 1px solid $light-gray-3 !important;
-		}
-	}
-
 	.small {
 		font-size: x-small;
 		font-style: italic;
 	}
+}
+
+.custom-text-large {
+	// Workaround for PBC-624
+	// Can be removed if we migrate to cisco-ui@2.0.0 w/ text-size-*
+	font-size: 1.6rem !important;
 }

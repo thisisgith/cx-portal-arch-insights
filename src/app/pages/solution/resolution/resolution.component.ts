@@ -52,7 +52,6 @@ _.map(statusList, status => ({
 	filter: status,
 	label: status,
 	selected: false,
-	value: 1,
 }));
 
 /**
@@ -64,7 +63,6 @@ _.map(Object.entries(caseSeverities), severityMap => ({
 	filter: severityMap[0],
 	label: `S${severityMap[0]}`,
 	selected: false,
-	value: 1,
 }));
 
 /**
@@ -94,18 +92,18 @@ const twoWeeks = DateTime.local()
 const lastUpdatedFilters = [
 	{
 		barLabel: 'Updated ≤24H Ago',
-		label: '≤ 24 hrs',
+		label: '≤24 hr',
 		lastUpdateFrom: oneDay,
 	},
 	{
 		barLabel: 'Updated 1D-1W Ago',
-		label: '> 1 day',
+		label: '>1 day',
 		lastUpdateFrom: oneWeek,
 		lastUpdateTo: oneDay,
 	},
 	{
 		barLabel: 'Updated >1W Ago',
-		label: '> 1 week',
+		label: '>1 week',
 		lastUpdateTo: oneWeek,
 	},
 ];
@@ -115,24 +113,24 @@ const durationOpenFilters = [
 	{
 		barLabel: 'Opened ≤24H Ago',
 		dateCreatedFrom: oneDay,
-		label: '≤ 24 hrs',
+		label: '≤24 hr',
 	},
 	{
 		barLabel: 'Opened 1D-1W Ago',
 		dateCreatedFrom: oneWeek,
 		dateCreatedTo: oneDay,
-		label: '> 1 day',
+		label: '>1 day',
 	},
 	{
 		barLabel: 'Opened 1W-2W Ago',
 		dateCreatedFrom: twoWeeks,
 		dateCreatedTo: oneWeek,
-		label: '> 1 week',
+		label: '>1 week',
 	},
 	{
 		barLabel: 'Opened >2W Ago',
 		dateCreatedTo: twoWeeks,
-		label: '> 2 weeks',
+		label: '>2 weeks',
 	},
 ];
 
@@ -145,7 +143,6 @@ _.map(lastUpdatedFilters, fields => ({
 	filter: _.pick(fields, ['lastUpdateFrom', 'lastUpdateTo']),
 	label: fields.label,
 	selected: false,
-	value: 1,
 }));
 
 /**
@@ -157,7 +154,6 @@ _.map(durationOpenFilters, fields => ({
 	filter: _.pick(fields, ['dateCreatedFrom', 'dateCreatedTo']),
 	label: fields.label,
 	selected: false,
-	value: 1,
 }));
 
 /**
@@ -168,7 +164,6 @@ _.map(['No RMAs', 'With RMAs'], label => ({
 	label,
 	filter: label === 'No RMAs' ? 'F' : 'T',
 	selected: false,
-	value: 1,
 }));
 
 /**
@@ -193,15 +188,14 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	public fullscreen = false;
 
 	public caseListData: any[];
-	public savedFilterData;
 	public caseListTableOptions: CuiTableOptions;
 	public filters: VisualFilter[];
+	public mainContent = 'cases';
 	public filterCollapse = false;
 	public filtered = false;
 	private refresh$ = new Subject();
 	private destroy$ = new Subject();
 	public isLoading = true;
-	public totalCases: number;
 	public rmaCases: number;
 	public paginationInfo = {
 		currentPage: 0,
@@ -332,107 +326,10 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			}
 		});
 
-		this.buildFilters();
 		this.buildRefreshSubject();
 		this.refresh$.next();
+		this.buildFilters();
 		this.getFilterData();
-	}
-
-	/**
-	 * Initializes the visual filters with default values
-	 */
-	private buildFilters () {
-		// Initialize filters
-		this.savedFilterData = JSON.parse(localStorage.getItem('savedFilterData')) || { };
-		this.filters = [
-			{
-				displayed: true,
-				key: 'total',
-				loading: true,
-				selected: true,
-				seriesData: _.get(this.savedFilterData, 'total', [{ value: 0 }]),
-				template: this.totalFilterTemplate,
-				title: I18n.get('_Total_'),
-			},
-			{
-				displayed: true,
-				key: 'status',
-				loading: true,
-				seriesData: _.get(this.savedFilterData, 'status', defaultStatusFilterData),
-				template: this.pieChartFilterTemplate,
-				title: I18n.get('_Status_'),
-			},
-			{
-				displayed: true,
-				key: 'severity',
-				loading: true,
-				seriesData: _.get(this.savedFilterData, 'severity', defaultSeverityFilterData),
-				template: this.pieChartFilterTemplate,
-				title: I18n.get('_Severity_'),
-			},
-			{
-				displayed: true,
-				key: 'lastUpdated',
-				loading: true,
-				seriesData: _.get(this.savedFilterData, 'lastUpdated',
-									defaultLastUpdatedFilterData),
-				template: this.columnChartFilterTemplate,
-				title: I18n.get('_LastUpdated_'),
-			},
-			{
-				displayed: true,
-				key: 'durationOpen',
-				loading: true,
-				seriesData: _.get(this.savedFilterData, 'durationOpen',
-									defaultDurationOpenFilterData),
-				template: this.columnChartFilterTemplate,
-				title: I18n.get('_DurationOpen_'),
-			},
-			{
-				displayed: true,
-				key: 'rma',
-				loading: true,
-				seriesData: _.get(this.savedFilterData, 'rma', defaultRmaFilterData),
-				template: this.barChartFilterTemplate,
-				title: I18n.get('_RMAs_'),
-			},
-		];
-		// Select filters based on query params so they show up
-		// before waiting for all filters to load in
-		_.each(this.filters, filter => {
-			_.each(filter.seriesData, data => {
-				const caseParams = this.caseParams;
-				if (filter.key === 'status' || filter.key === 'severity') {
-					const caseParamsFilter = _.find(caseParams.filter,
-						param => _.includes(param, filter.key));
-					if (_.includes(caseParamsFilter, `:${data.filter}`) ||
-						_.includes(caseParamsFilter, `:O-${data.filter}`) ||
-						_.includes(caseParamsFilter, `,${data.filter}`)) {
-						this.onSubfilterSelect(data.label, filter, false);
-					}
-				} else if (filter.key === 'lastUpdated') {
-					const lastUpdateFilter = _.find(defaultLastUpdatedFilterData,
-						defaultData => defaultData.label === data.label).filter;
-					const lastUpdateFrom = lastUpdateFilter.lastUpdateFrom;
-					const lastUpdateTo = lastUpdateFilter.lastUpdateTo;
-					if (lastUpdateFrom === caseParams.lastUpdateFrom &&
-						lastUpdateTo === caseParams.lastUpdateTo) {
-						this.onSubfilterSelect(data.label, filter, false);
-					}
-				} else if (filter.key === 'durationOpen') {
-					const durationOpenFilter = _.find(defaultDurationOpenFilterData,
-						defaultData => defaultData.label === data.label).filter;
-					const dateCreatedFrom = durationOpenFilter.dateCreatedFrom;
-					const dateCreatedTo = durationOpenFilter.dateCreatedTo;
-					if (dateCreatedFrom === caseParams.dateCreatedFrom &&
-						dateCreatedTo === caseParams.dateCreatedTo) {
-						this.onSubfilterSelect(data.label, filter, false);
-					}
-				} else if (filter.key === 'rma' && caseParams.hasRMAs === data.filter) {
-					this.onSubfilterSelect(data.label, filter, false);
-				}
-			}, this, filter);
-		}, this);
 	}
 
 	/**
@@ -477,86 +374,100 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * get the color of severity icon
-	 * @param severity of case
-	 * @returns void
+	 * Initializes the visual filters with default values
 	 */
-	public getSeverityColor (severity: string) {
-		const severityInt = parseInt(severity, 10);
-
-		return _.get(caseSeverities[severityInt], 'class');
+	private buildFilters () {
+		// Initialize filters
+		this.filters = [
+			{
+				key: 'total',
+				loading: true,
+				selected: true,
+				seriesData: [{
+					filter: null,
+					label: null,
+					selected: true,
+					value: 0 }],
+				template: this.totalFilterTemplate,
+				title: I18n.get('_Total_'),
+			},
+			{
+				key: 'status',
+				loading: true,
+				seriesData: defaultStatusFilterData,
+				template: this.pieChartFilterTemplate,
+				title: I18n.get('_Status_'),
+			},
+			{
+				key: 'severity',
+				loading: true,
+				seriesData: defaultSeverityFilterData,
+				template: this.pieChartFilterTemplate,
+				title: I18n.get('_Severity_'),
+			},
+			{
+				key: 'lastUpdated',
+				loading: true,
+				seriesData: defaultLastUpdatedFilterData,
+				template: this.columnChartFilterTemplate,
+				title: I18n.get('_LastUpdated_'),
+			},
+			{
+				key: 'durationOpen',
+				loading: true,
+				seriesData: defaultDurationOpenFilterData,
+				template: this.columnChartFilterTemplate,
+				title: I18n.get('_TotalTimeOpen_'),
+			},
+			{
+				key: 'rma',
+				loading: true,
+				seriesData: defaultRmaFilterData,
+				template: this.barChartFilterTemplate,
+				title: I18n.get('_RMAs_'),
+			},
+		];
+		// Select filters based on query params so they show up
+		// before waiting for all filters to load in
+		_.each(this.filters, filter => {
+			_.each(filter.seriesData, data => {
+				const caseParams = this.caseParams;
+				if (filter.key === 'status' || filter.key === 'severity') {
+					const caseParamsFilter = _.find(caseParams.filter,
+						param => _.includes(param, filter.key));
+					if (_.includes(caseParamsFilter, `:${data.filter}`) ||
+						_.includes(caseParamsFilter, `:O-${data.filter}`) ||
+						_.includes(caseParamsFilter, `,${data.filter}`)) {
+						this.onSubfilterSelect(data.label, filter, false);
+					}
+				} else if (filter.key === 'lastUpdated') {
+					const lastUpdateFilter = _.find(defaultLastUpdatedFilterData,
+						defaultData => defaultData.label === data.label).filter;
+					const lastUpdateFrom = lastUpdateFilter.lastUpdateFrom;
+					const lastUpdateTo = lastUpdateFilter.lastUpdateTo;
+					if (lastUpdateFrom === caseParams.lastUpdateFrom &&
+						lastUpdateTo === caseParams.lastUpdateTo) {
+						this.onSubfilterSelect(data.label, filter, false);
+					}
+				} else if (filter.key === 'durationOpen') {
+					const durationOpenFilter = _.find(defaultDurationOpenFilterData,
+						defaultData => defaultData.label === data.label).filter;
+					const dateCreatedFrom = durationOpenFilter.dateCreatedFrom;
+					const dateCreatedTo = durationOpenFilter.dateCreatedTo;
+					if (dateCreatedFrom === caseParams.dateCreatedFrom &&
+						dateCreatedTo === caseParams.dateCreatedTo) {
+						this.onSubfilterSelect(data.label, filter, false);
+					}
+				} else if (filter.key === 'rma' && caseParams.hasRMAs === data.filter) {
+					this.onSubfilterSelect(data.label, filter, false);
+				}
+			}, this, filter);
+		}, this);
 	}
 
-	/**
-	 * sort each column in case table view
-	 * @param evt for table sort information
-	 */
-	public onTableSortingChanged (evt: any) {
-		this.caseParams.sort = `${evt.key},${evt.sortDirection}`;
-		this.refresh$.next();
-	}
-
-	/**
-	 * update the page records based on page number
-	 * @param pageInfo used in pagination of table
-	 */
-	public onPagerUpdated (pageInfo: any) {
-		this.paginationInfo.currentPage = pageInfo.page;
-		this.caseParams.page = pageInfo.page;
-		this.refresh$.next();
-	}
-
-	/**
-	 * search for input case number
-	 */
-	public searchCaseNumber () {
-		if (this.searchCasesForm.invalid) {
-			this.isSearchCaseFormInvalid = true;
-
-			return;
-		}
-
-		this.isSearchCaseFormInvalid = false;
-		this.caseParams.search = '';
-
-		if (this.searchCasesForm.get('caseNo').value) {
-			this.caseParams.search = this.searchCasesForm.get('caseNo').value;
-		}
-
-		this.caseParams.sort = 'lastModifiedDate,DESC';
-		this.paginationInfo.currentPage = 0;
-		this.caseParams.page = 0;
-		this.refresh$.next();
-	}
-
-	/**
-	 * clear search
-	 */
-	public clearSearch () {
-		this.searchCasesForm.setValue({ caseNo: '' });
-		this.searchCaseNumber();
-	}
-
-	/**
-	 * Call CSOne's API to get the case list
-	 * @returns Observable with response data.
-	 */
-	public getCaseList (): Observable<any> {
-		return this.caseService.read(this.caseParams);
-	}
-
-	/**
-	 * Calls CSOne's API to get case details
-	 * @param caseNo to be searched for
-	 * @returns void
-	 */
-	public getCaseDetails (caseNo: string): Observable<any> {
-		return this.caseService.fetchCaseDetails(caseNo);
-	}
-
-	/**
-	 * Gets the real values for the visual filters
-	 */
+/**
+	* Gets the real values for the visual filters
+	*/
 	private getFilterData () {
 		forkJoin(
 			this.getTotalFilterData(),
@@ -567,7 +478,6 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			this.getRmaFilterData(),
 		)
 		.subscribe(() => {
-			localStorage.setItem('savedFilterData', JSON.stringify(this.savedFilterData));
 			if (window.Cypress) {
 				window.loading = false;
 			}
@@ -585,7 +495,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * Fetch the number of open cases and displays it in the total filter
 	 * @returns null observable
 	 */
-	 private getTotalFilterData () {
+	private getTotalFilterData () {
 		const params = {
 			nocache: Date.now(),
 			page: 0,
@@ -597,19 +507,13 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 		return this.caseService.read(params)
 		.pipe(
 			map(result => {
-				this.totalCases = result.totalElements || 0;
 				const totalFilter = _.find(this.filters, { key: 'total' });
-				totalFilter.seriesData = [{ value: this.totalCases }];
-				totalFilter.loading = false;
-				this.savedFilterData.total = totalFilter.seriesData;
-				if (this.totalCases) {
-					_.forEach(this.filters, filter => {
-						filter.displayed = true;
-					});
+				if (result.totalElements) {
+					totalFilter.seriesData = [{ value: result.totalElements }];
 				}
+				totalFilter.loading = false;
 			}),
 			catchError(err => {
-				this.totalCases = 0;
 				this.logger.error('resolution.component : buildTotalFilter() ' +
 									`:: Error : (${err.status}) ${err.message}`);
 
@@ -622,7 +526,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * Fetch the number of open cases and displays it in the total filter
 	 * @returns null observable
 	 */
-	 private getStatusFilterData () {
+	private getStatusFilterData () {
 		const params = {
 			nocache: Date.now(),
 			page: 0,
@@ -652,7 +556,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * Fetch the number of open cases and displays it in the total filter
 	 * @returns null observable
 	 */
-	 private getSeverityFilterData () {
+	private getSeverityFilterData () {
 		const params = {
 			nocache: Date.now(),
 			page: 0,
@@ -743,7 +647,7 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 	 * Fetch Case/RMA counts and displays them in the given filter
 	 * @returns null observable
 	 */
-	 public getRmaFilterData () {
+	public getRmaFilterData () {
 		const params: CaseParams = {
 			nocache: Date.now(),
 			page: 0,
@@ -789,8 +693,84 @@ export class ResolutionComponent implements OnInit, OnDestroy {
 			_.remove(filter.seriesData, data => !data.value);
 		}
 		filter.loading = false;
-		_.set(this.savedFilterData, key, _.map(filter.seriesData,
-			data => _.omit(data, ['displayed', 'selected'])));
+	}
+
+	/**
+	 * get the color of severity icon
+	 * @param severity of case
+	 * @returns void
+	 */
+	public getSeverityColor (severity: string) {
+		const severityInt = parseInt(severity, 10);
+
+		return _.get(caseSeverities[severityInt], 'class');
+	}
+
+	/**
+	 * sort each column in case table view
+	 * @param evt for table sort information
+	 */
+	public onTableSortingChanged (evt: any) {
+		this.caseParams.sort = `${evt.key},${evt.sortDirection}`;
+		this.refresh$.next();
+	}
+
+	/**
+	 * update the page records based on page number
+	 * @param pageInfo used in pagination of table
+	 */
+	public onPagerUpdated (pageInfo: any) {
+		this.paginationInfo.currentPage = pageInfo.page;
+		this.caseParams.page = pageInfo.page;
+		this.refresh$.next();
+	}
+
+	/**
+	 * search for input case number
+	 */
+	public searchCaseNumber () {
+		if (this.searchCasesForm.invalid) {
+			this.isSearchCaseFormInvalid = true;
+
+			return;
+		}
+
+		this.isSearchCaseFormInvalid = false;
+		this.caseParams.search = '';
+
+		if (this.searchCasesForm.get('caseNo').value) {
+			this.caseParams.search = this.searchCasesForm.get('caseNo').value;
+		}
+
+		this.caseParams.sort = 'lastModifiedDate,DESC';
+		this.paginationInfo.currentPage = 0;
+		this.caseParams.page = 0;
+		this.refresh$.next();
+	}
+
+	/**
+	 * clear search
+	 */
+	public clearSearch () {
+		this.searchCasesForm.setValue({ caseNo: '' });
+		this.searchCaseNumber();
+	}
+
+	/**
+	 * Call CSOne's API to get the case list
+	 * @returns Observable with response data.
+	 */
+	public getCaseList (): Observable<any> {
+		return this.caseService.read(this.caseParams);
+	}
+
+	/**
+	 * Calls CSOne's API to get case details
+	 * @param caseNo to be searched for
+	 * @returns void
+	 */
+	public getCaseDetails (caseNo: string): Observable<any> {
+		return this.caseService.fetchCaseDetails(caseNo);
 	}
 
 	/**

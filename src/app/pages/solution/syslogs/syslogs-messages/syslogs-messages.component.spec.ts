@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SyslogsMessagesComponent } from './syslogs-messages.component';
@@ -17,7 +18,7 @@ describe('SyslogsMessagesComponent', () => {
 	let component: SyslogsMessagesComponent;
 	let fixture: ComponentFixture<SyslogsMessagesComponent>;
 	let syslogsService: SyslogsService;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				SyslogsMessagesModule,
@@ -39,8 +40,10 @@ describe('SyslogsMessagesComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		syslogsService = TestBed.get(SyslogsService);
 	}));
@@ -134,8 +137,6 @@ describe('SyslogsMessagesComponent', () => {
 					SyslogSeverity: 3,
 				};
 				component.onTableRowSelection(selectedRowData);
-				expect(selectedRowData.active)
-				 .toBeFalsy();
 				 expect(component.selectedAsset)
 				 .toBeUndefined();
 				done();

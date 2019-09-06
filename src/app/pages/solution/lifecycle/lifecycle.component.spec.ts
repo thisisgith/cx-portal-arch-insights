@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import * as enUSJson from 'src/assets/i18n/en-US.json';
 import { async, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -14,7 +15,6 @@ import {
 	ActionScenarios,
 	Mock,
 	user,
-	CGTScenarios,
 	CancelATXScenarios,
 } from '@mock';
 import { of, throwError } from 'rxjs';
@@ -52,8 +52,10 @@ describe('LifecycleComponent', () => {
 	let racetrackATXSpy;
 	let racetrackAccSpy;
 	let racetrackBookmarkSpy;
-	let racetrackCgtCompletedTrainigsSpy;
-	let racetrackCgtCustomerQuotaSpy;
+	// TODO Skip these tests as we are disbaling CGT
+	// Enable them when CGT is enabled
+	// let racetrackCgtCompletedTrainigsSpy;
+	// let racetrackCgtCustomerQuotaSpy;
 	let racetrackLearningSpy;
 	let racetrackInfoSpy;
 	let racetrackSPSpy;
@@ -69,8 +71,10 @@ describe('LifecycleComponent', () => {
 		_.invoke(racetrackInfoSpy, 'restore');
 		_.invoke(racetrackAccSpy, 'restore');
 		_.invoke(racetrackBookmarkSpy, 'restore');
-		_.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
-		_.invoke(racetrackCgtCustomerQuotaSpy, 'restore');
+		// TODO Skip these tests as we are disbaling CGT
+		// Enable them when CGT is enabled
+		// _.invoke(racetrackCgtCompletedTrainigsSpy, 'restore');
+		// _.invoke(racetrackCgtCustomerQuotaSpy, 'restore');
 		_.invoke(racetrackLearningSpy, 'restore');
 		_.invoke(racetrackSPSpy, 'restore');
 		_.invoke(racetrackActionSpy, 'restore');
@@ -107,13 +111,15 @@ describe('LifecycleComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(CancelATXScenarios[0], 'DELETE')));
 
-		racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService, 'getCompletedTrainings')
-			.and
-			.returnValue(of(getActiveBody(CGTScenarios[2])));
+		// TODO Skip these tests as we are disbaling CGT
+		// Enable them when CGT is enabled
+		// racetrackCgtCompletedTrainigsSpy =
+		// spyOn(racetrackContentService, 'getCompletedTrainings').and
+		// 	.returnValue(of(getActiveBody(CGTScenarios[2])));
 
-		racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
-			.and
-			.returnValue(of(getActiveBody(CGTScenarios[1])));
+		// racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
+		// 	.and
+		// 	.returnValue(of(getActiveBody(CGTScenarios[1])));
 
 		racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
 			.and
@@ -122,9 +128,7 @@ describe('LifecycleComponent', () => {
 		racetrackSPSpy = spyOn(racetrackContentService, 'getRacetrackSuccessPaths')
 			.and
 			.callFake(args => {
-				// Product Guides call will never have solution or pitstop.
-				// Success Bytes call will always have solution and pitstop.
-				if (!args.solution && !args.pitstop) {
+				if (!args.pitstop) {
 					return of(getActiveBody(SuccessPathScenarios[5]));
 				}
 
@@ -155,7 +159,7 @@ describe('LifecycleComponent', () => {
 		racetrackInfoService.sendCurrentTechnology(racetrack.solutions[0].technologies[0]);
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
@@ -175,8 +179,10 @@ describe('LifecycleComponent', () => {
 					},
 				},
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		racetrackInfoService = TestBed.get(RacetrackInfoService);
 		racetrackService = TestBed.get(RacetrackService);
@@ -291,20 +297,22 @@ describe('LifecycleComponent', () => {
 					statusText: 'Resource not found',
 				})));
 
-			racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService,
-				'getCompletedTrainings')
-				.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-					statusText: 'Resource not found',
-				})));
+			// TODO Skip these tests as we are disbaling CGT
+			// Enable them when CGT is enabled
+			// racetrackCgtCompletedTrainigsSpy = spyOn(racetrackContentService,
+			// 	'getCompletedTrainings')
+			// 	.and
+			// 	.returnValue(throwError(new HttpErrorResponse({
+			// 		status: 404,
+			// 		statusText: 'Resource not found',
+			// 	})));
 
-			racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
-				.and
-				.returnValue(throwError(new HttpErrorResponse({
-					status: 404,
-					statusText: 'Resource not found',
-				})));
+			// racetrackCgtCustomerQuotaSpy = spyOn(racetrackContentService, 'getTrainingQuotas')
+			// 	.and
+			// 	.returnValue(throwError(new HttpErrorResponse({
+			// 		status: 404,
+			// 		statusText: 'Resource not found',
+			// 	})));
 
 			racetrackLearningSpy = spyOn(racetrackContentService, 'getRacetrackElearning')
 				.and
@@ -390,9 +398,6 @@ describe('LifecycleComponent', () => {
 
 			expect(panel)
 				.toEqual('panel panel--open');
-
-			expect(component.sessionSelected)
-				.toBeUndefined();
 
 			component.selectSession(recommended.sessions[0]);
 
@@ -491,7 +496,7 @@ describe('LifecycleComponent', () => {
 				.toBeNull();
 		});
 
-		it('atxMoreViewSessions shouldset data to moreAtxSelected', () => {
+		it('atxMoreViewSessions should set data to moreAtxSelected', () => {
 			buildSpies();
 			sendParams();
 
@@ -499,16 +504,64 @@ describe('LifecycleComponent', () => {
 
 			component.atxScheduleCardOpened = false;
 			component.recommendedAtxScheduleCardOpened = true;
-			let item: AtxSchema;
-			item = { };
 
-			component.atxMoreViewSessions(item);
+			// Test atxMoreViewSessions()
+			component.atxMoreViewSessions();
 
 			expect(component.atxScheduleCardOpened)
 				.toBeTruthy();
 
 			expect(component.recommendedAtxScheduleCardOpened)
 				.toBeFalsy();
+
+			let item: AtxSchema;
+			item = { };
+			component.atxMoreClicked = false;
+
+			// Test atxMoreSelect()
+			component.atxMoreSelect(item);
+
+			expect(component.atxMoreClicked)
+				.toBeTruthy();
+
+			expect(component.atxScheduleCardOpened)
+				.toBeFalsy();
+
+			expect(component.recommendedAtxScheduleCardOpened)
+				.toBeFalsy();
+
+			let recordingUrl: string;
+			recordingUrl = '';
+			component.atxMoreClicked = true;
+
+			// Test atxWatchNow()
+			component.atxWatchNow(recordingUrl);
+
+			expect(component.atxMoreClicked)
+				.toBeFalsy();
+
+		});
+
+		it('recommendedATXViewSessions should set recommendedAtxScheduleCardOpened to true', () => {
+			buildSpies();
+			sendParams();
+
+			fixture.detectChanges();
+
+			component.recommendedAtxScheduleCardOpened = false;
+
+			// Test recommendedATXViewSessions()
+			component.recommendedATXViewSessions();
+
+			expect(component.recommendedAtxScheduleCardOpened)
+				.toBeTruthy();
+
+			expect(component.atxScheduleCardOpened)
+				.toBeFalsy();
+
+			expect(component.atxMoreClicked)
+				.toBeFalsy();
+
 		});
 
 		it('should show the atx view-all modal', () => {
@@ -702,7 +755,7 @@ describe('LifecycleComponent', () => {
 			expect(de)
 				.toBeTruthy();
 
-			de = fixture.debugElement.query(By.css('#moreAccList-item'));
+			de = fixture.debugElement.query(By.css('#moreACCList-item'));
 			expect(de)
 				.toBeTruthy();
 
@@ -898,7 +951,7 @@ describe('LifecycleComponent', () => {
 			fixture.whenStable()
 				.then(() => {
 					expect(component.componentData.learning.productGuides.length)
-						.toEqual(10);
+						.toEqual(81);
 				});
 		});
 
@@ -934,23 +987,104 @@ describe('LifecycleComponent', () => {
 
 			const sb1 = component.componentData.learning.productGuides[1];
 			expect(component.componentData.learning.productGuides[1].bookmark)
-				.toBeFalsy();
-			component.updateBookmark(sb1, 'SB');
+				.toBeTruthy();
+			component.updateBookmark(sb1, 'PG');
 			fixture.detectChanges();
 			expect(component.componentData.learning.productGuides[1].bookmark)
-				.toBeTruthy();
+				.toBeFalsy();
+
+			expect(component.selectedProductGuides.length)
+				.toEqual(81);
 
 			component.selectedFilterForPG = 'Project Planning';
 			component.selectFilter('PG');
 			fixture.detectChanges();
 			expect(component.selectedProductGuides.length)
-				.toEqual(3);
+				.toEqual(6);
 
 			component.selectedFilterForPG = 'Getting Started';
 			component.selectFilter('PG');
 			fixture.detectChanges();
 			expect(component.selectedProductGuides.length)
-				.toEqual(7);
+				.toEqual(8);
+
+			component.selectedFilterForPG = 'Architecture Transition Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Use Cases';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Installation';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(15);
+
+			component.selectedFilterForPG = 'Migration Readiness';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(1);
+
+			component.selectedFilterForPG = 'Design/Config Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Operations';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(23);
+
+			component.selectedFilterForPG = 'Feature Overview';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(4);
+
+			component.selectedFilterForPG = 'Troubleshooting';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(5);
+
+			component.selectedFilterForPG = 'ROI Business Assessment';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(1);
+
+			component.selectedFilterForPG = 'Adoption Planning';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Expert Features Overview';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(2);
+
+			component.selectedFilterForPG = 'Performance/Health Monitoring';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(5);
+
+			component.selectedFilterForPG = 'Asset/License Management';
+			component.selectFilter('PG');
+			fixture.detectChanges();
+			expect(component.selectedProductGuides.length)
+				.toEqual(3);
 
 			component.onSort('title', 'asc', 'PG');
 			fixture.detectChanges();
@@ -1069,7 +1203,9 @@ describe('LifecycleComponent', () => {
 		});
 	});
 
-	describe('CGT', () => {
+	// Skip these tests as we are disabling CGT
+	// TODO enable these when CGT has to be enabled
+	xdescribe('CGT', () => {
 		it('should have loaded the CGT', () => {
 			buildSpies();
 			sendParams();
@@ -1108,11 +1244,20 @@ describe('LifecycleComponent', () => {
 			expect(component.currentPitActionsWithStatus[1].selected)
 				.toBeTruthy();
 
-			// click the same action again, will unselect the action
-			component.selectAction(component.currentPitActionsWithStatus[1]);
-
+			// ResetFilter should be shown up
+			de = fixture.debugElement.query(By.css('#ResetFilter'));
+			expect(de)
+				.toBeTruthy();
+			el = de.nativeElement;
+			el.click();
 			expect(component.currentPitActionsWithStatus[1].selected)
 				.toBeFalsy();
+
+			spyOn(component, 'hasSelectedAction');
+
+			de = fixture.debugElement.query(By.css('#ResetFilter'));
+			expect(de)
+				.toBeTruthy();
 
 			// since suggestedAction does not change, so will not trigger ATX API call
 			expect(racetrackContentService.getRacetrackATX)

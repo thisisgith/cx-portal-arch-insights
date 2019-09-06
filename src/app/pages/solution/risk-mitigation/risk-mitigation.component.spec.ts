@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RiskMitigationComponent } from './risk-mitigation.component';
@@ -18,7 +19,7 @@ describe('RiskMitigationComponent', () => {
 	let fixture: ComponentFixture<RiskMitigationComponent>;
 	let riskMitigationService: RiskMitigationService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RiskMitigationModule,
@@ -40,8 +41,10 @@ describe('RiskMitigationComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		riskMitigationService = TestBed.get(RiskMitigationService);
 	}));
 

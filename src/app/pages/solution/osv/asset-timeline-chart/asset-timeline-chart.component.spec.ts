@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { AssetTimelineChartComponent } from './asset-timeline-chart.component';
 import { AssetTimelineChartModule } from './asset-timeline-chart.module';
@@ -10,16 +11,15 @@ import { MicroMockModule } from '@cui-x-views/mock';
 describe('AssetTimelineChartComponent', () => {
 	let component: AssetTimelineChartComponent;
 	let fixture: ComponentFixture<AssetTimelineChartComponent>;
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetTimelineChartModule,
 				HttpClientTestingModule,
 				MicroMockModule,
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AssetTimelineChartComponent);

@@ -1,4 +1,5 @@
-import { async, fakeAsync, tick, ComponentFixture, TestBed, flush } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { fakeAsync, tick, ComponentFixture, TestBed, flush } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
@@ -16,16 +17,15 @@ describe('caseSearchComponent', () => {
 	let inventoryService: InventoryService;
 	let fixture: ComponentFixture<CaseSearchComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				CaseSearchModule,
 				HttpClientTestingModule,
 				RouterTestingModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		caseService = TestBed.get(CaseService);

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RelatedRmaComponent } from './related-rma.component';
-import { CuiTableModule } from '@cisco-ngx/cui-components';
+import { CuiTableModule, CuiSpinnerModule } from '@cisco-ngx/cui-components';
 import { I18nPipeModule, FromNowPipeModule } from '@cisco-ngx/cui-pipes';
 import { FormsModule } from '@angular/forms';
 
@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 		I18nPipeModule,
 		FormsModule,
 		FromNowPipeModule,
+		CuiSpinnerModule,
 	],
 })
 export class RelatedRmaModule { }

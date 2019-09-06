@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { RiskMitigationColumnChartComponent } from './risk-mitigation-column-chart.component';
 import { RiskMitigationColumnChartModule } from './risk-mitigation-column-chart.module';
@@ -14,7 +15,7 @@ describe('RiskMitigationColumnChartComponent', () => {
 	let component: RiskMitigationColumnChartComponent;
 	let fixture: ComponentFixture<RiskMitigationColumnChartComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RiskMitigationColumnChartModule,
@@ -36,9 +37,8 @@ describe('RiskMitigationColumnChartComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(RiskMitigationColumnChartComponent);

@@ -251,7 +251,7 @@ export class AssetDetailsSoftwareComponent implements OnInit, OnChanges, OnDestr
 					};
 
 					this.softwareLicensesTable = new CuiTableOptions({
-						bordered: true,
+						bordered: false,
 						columns: [
 							{
 								key: 'licenseName',

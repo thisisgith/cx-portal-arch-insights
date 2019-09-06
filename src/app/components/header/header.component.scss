@@ -1,4 +1,4 @@
-@import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../variables.scss';
 @import '../../../mixins.scss';
 
 $cx-dropdown-max-width: 280px;
@@ -42,10 +42,6 @@ a {
 			@extend %cx-dropdown-menu-item;
 		}
 	}
-}
-
-.clickable {
-	cursor: pointer;
 }
 
 .header-bar__logo {
@@ -170,7 +166,7 @@ a {
 .cx-header-arrow {
 	display: inline-block;
 	transition: transform 0.2s ease-in-out;
-	color: $accent-light-gray-1;
+	color: $secondary-and-button-text-color;
 	font-size: 11px;
 }
 

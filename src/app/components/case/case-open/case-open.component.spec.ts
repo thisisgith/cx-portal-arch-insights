@@ -1,4 +1,5 @@
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -23,7 +24,7 @@ describe('CaseOpenComponent', () => {
 	let networkService: NetworkDataGatewayService;
 	let userResolve: UserResolve;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				CaseOpenModule,
@@ -40,9 +41,8 @@ describe('CaseOpenComponent', () => {
 					},
 				},
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		userResolve = TestBed.get(UserResolve);

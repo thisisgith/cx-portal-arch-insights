@@ -43,6 +43,9 @@ describe('Advisories', () => { // PBC-306
 	before(() => {
 		cy.login();
 		cy.loadApp('/solution/advisories');
+		cy.window().then(win => { // Must be done after app loads
+			win.Cypress.hideDNACHeader = true;
+		});
 		cy.waitForAppLoading();
 	});
 
@@ -115,9 +118,9 @@ describe('Advisories', () => { // PBC-306
 						count += `(+${advisory.assetsPotentiallyImpacted})`;
 					}
 					cy.getByAutoId('ImpactedCountText').should('have.text', count);
-					let date;
-					if (advisory.lastUpdated) {
-						date = Cypress.moment(advisory.lastUpdated).format('YYYY MMM DD');
+					let date = advisory.lastUpdated ? advisory.lastUpdated : advisory.publishedOn;
+					if (date) {
+						date = Cypress.moment(date).format('YYYY MMM DD');
 					} else {
 						date = 'Never';
 					}
@@ -297,9 +300,9 @@ describe('Advisories', () => { // PBC-306
 						.should('have.text', fieldNotice.assetsImpacted.toString());
 					cy.getByAutoId('PotentiallyImpactedAssetsText')
 						.should('have.text', fieldNotice.assetsPotentiallyImpacted.toString());
-					let date;
-					if (fieldNotice.lastUpdated) {
-						date = Cypress.moment(fieldNotice.lastUpdated).format('YYYY MMM DD');
+					let date = fieldNotice.lastUpdated ? fieldNotice.lastUpdated : fieldNotice.publishedOn;
+					if (date) {
+						date = Cypress.moment(date).format('YYYY MMM DD');
 					} else {
 						date = 'Never';
 					}
@@ -411,9 +414,9 @@ describe('Advisories', () => { // PBC-306
 						.should('have.text', bug.assetsImpacted.toString());
 					cy.getByAutoId('StateText')
 						.should('have.text', Cypress._.startCase(bug.state));
-					let date;
-					if (bug.lastUpdated) {
-						date = Cypress.moment(bug.lastUpdated).format('YYYY MMM DD');
+					let date = bug.lastUpdated ? bug.lastUpdated : bug.publishedOn;
+					if (date) {
+						date = Cypress.moment(date).format('YYYY MMM DD');
 					} else {
 						date = 'Never';
 					}

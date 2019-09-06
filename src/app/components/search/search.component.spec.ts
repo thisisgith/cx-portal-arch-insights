@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
 import { SearchModule } from './search.module';
 import { CaseService } from '@cui-x/services';
@@ -17,16 +18,15 @@ describe('SearchComponent', () => {
 	let fixture: ComponentFixture<SearchComponent>;
 	let caseService: CaseService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HttpClientTestingModule,
 				SearchModule,
 				RouterTestingModule.withRoutes([]),
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		I18n.injectDictionary(enUSJson);

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RiskMitigationComponent } from './risk-mitigation.component';
-import { AssetDetailsModule, DetailsPanelModule } from '@components';
+import { AssetDetailsModule, DetailsPanelModule, VisualFilterBarModule } from '@components';
 import { AssetDetailsHeaderModule } from '../../../components/details/asset/header/header.module';
 import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import {
@@ -32,7 +32,7 @@ import { FingerprintDetailsModule } from '../fingerprint-details/fingerprint-det
 /**
  * The SDP Origin URL used for passing to the SDP-API Modules
  */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 
 /**
  * Child routes for Assets Module for lazy loading
@@ -70,6 +70,7 @@ const childRoutes: Routes = [
 		FingerprintDetailsModule,
 		FingerprintHeaderModule,
 		FingerprintBodyModule,
+		VisualFilterBarModule,
 	],
 })
 export class RiskMitigationModule { }

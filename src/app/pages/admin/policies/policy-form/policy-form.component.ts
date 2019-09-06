@@ -71,6 +71,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 	@Input() public policy: { };
 	@Input() public type: string;
 	@Input() public customerId: string;
+	@Input() public ignorePolicyExists: boolean;
 	@Output() public visibleComponent = new EventEmitter<boolean>();
 	@Output() public submitted = new EventEmitter<boolean>();
 
@@ -220,10 +221,18 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 				break;
 			}
 			case ModalTypes.newPolicy: {
+				if (this.ignorePolicyExists) {
+					this.timePeriods.options.pop();
+				}
+
 				this.newPolicy();
 				break;
 			}
 			case ModalTypes.editPolicy: {
+				if (this.ignorePolicyExists) {
+					this.timePeriods.options.pop();
+				}
+
 				this.setSelectors();
 
 				this.editPolicy();
@@ -640,7 +649,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		const date = matches[6];
 		const dayOfWeek = matches[7];
 
-		const milHour = amPm === 'pm' ? hour + 12 : hour;
+		const milHour = amPm === 'am' ? hour - 12 : hour;
 
 		if (!date && !dayOfWeek) {
 			this.timePeriods.selected = 'daily';
@@ -749,14 +758,14 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
 
-				const rightSerialNums = _.map(this.deviceListRight, item =>
-					_.get(item, 'serialNumber'));
+				const rightHwIds = _.map(this.deviceListRight, item =>
+					_.get(item, 'hwId'));
 
 				for (let index = this.deviceListLeft.length - 1; index >= 0; index -= 1) {
-					const leftSerialNum = _.get(this.deviceListLeft[index], 'serialNumber');
+					const leftHwIds = _.get(this.deviceListLeft[index], 'hwId');
 
-					if (rightSerialNums.includes(leftSerialNum)) {
-						this.logger.debug(`already have sn ${leftSerialNum}`);
+					if (rightHwIds.includes(leftHwIds)) {
+						this.logger.debug(`already have hwId ${leftHwIds}`);
 						this.deviceListLeft.splice(index, 1);
 					}
 

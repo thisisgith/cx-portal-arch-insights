@@ -40,8 +40,8 @@ export class RiskMitigationComponent {
 		limit: 10,
 		page: 0,
 	};
-	crashPagination: string;
-	crashedAssetsCount: any;
+	public crashPagination: string;
+	public crashedAssetsCount = 0;
 	constructor (
 		private riskMitigationService: RiskMitigationService,
 		private logger: LogService,
@@ -609,7 +609,9 @@ export class RiskMitigationComponent {
 				},
 			],
 			dynamicData: false,
+			hover: true,
 			singleSelect: true,
+			striped: false,
 		});
 		this.highCrashRiskAssetsGridOptions = new CuiTableOptions({
 			bordered: false,
@@ -653,7 +655,9 @@ export class RiskMitigationComponent {
 				},
 			],
 			dynamicData: false,
+			hover: true,
 			singleSelect: true,
+			striped: false,
 		});
 	}
 	/**

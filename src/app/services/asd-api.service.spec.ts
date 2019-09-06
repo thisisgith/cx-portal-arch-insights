@@ -16,6 +16,8 @@ import {
 import { empty } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+environment.ieSetup.mockASD = false;
+
 describe('ASDAPIService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({

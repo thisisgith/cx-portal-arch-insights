@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import {
 	HardwareScenarios,
@@ -75,7 +76,7 @@ describe('AssetDetailsSummaryComponent', () => {
 			.callThrough();
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [
 				WrapperComponent,
@@ -84,8 +85,10 @@ describe('AssetDetailsSummaryComponent', () => {
 				AssetDetailsSummaryModule,
 				HttpClientTestingModule,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		caseService = TestBed.get(CaseService);
 		inventoryService = TestBed.get(InventoryService);

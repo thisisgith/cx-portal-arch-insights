@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { HeaderDropdownComponent } from './header-dropdown.component';
@@ -8,15 +9,14 @@ describe('HeaderDropdownComponent', () => {
 	let component: HeaderDropdownComponent;
 	let fixture: ComponentFixture<HeaderDropdownComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				HeaderDropdownModule,
 				RouterTestingModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(HeaderDropdownComponent);

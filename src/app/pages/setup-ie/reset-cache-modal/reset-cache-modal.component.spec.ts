@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -16,7 +17,7 @@ describe('ResetCacheModal', () => {
 	let clearStateSpy: jasmine.Spy;
 	let modalHideSpy: jasmine.Spy;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [ResetCacheModal],
 			imports: [
@@ -27,8 +28,10 @@ describe('ResetCacheModal', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		stateService = TestBed.get(SetupIEStateService);
 		modalService = TestBed.get(CuiModalService);
 		clearStateSpy = spyOn(stateService, 'clearState')

@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import {
 	async,
 	ComponentFixture,
@@ -61,15 +62,17 @@ describe('AssetDetailsHeaderComponent', () => {
 			.returnValue(of(CaseScenarios[4].scenarios.GET[0].response.body));
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetDetailsHeaderModule,
 				HttpClientTestingModule,
 				RouterTestingModule,
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		networkService = TestBed.get(NetworkDataGatewayService);
 		caseService = TestBed.get(CaseService);

@@ -52,6 +52,8 @@ export class DnacListComponent implements OnInit {
 	private endPointsTemplate: TemplateRef<{ }>;
 	@ViewChild('fabricsTemplate', { static: true })
 	private fabricsTemplate: TemplateRef<{ }>;
+	@ViewChild('wlcTemplate', { static: true })
+	private wlcTemplate: TemplateRef<{ }>;
 
 	/**
 	 * used to Intialize Table options
@@ -74,6 +76,11 @@ export class DnacListComponent implements OnInit {
 					sortable: false,
 				},
 				{
+					key: 'dnacVersion',
+					name: I18n.get('_ArchitectureDNACVersion_'),
+					sortable: false,
+				},
+				{
 					name: I18n.get('_ArchitectureDevices(DevicesPublishedLimit)_'),
 					sortable: false,
 					template : this.devicesTemplate,
@@ -87,6 +94,11 @@ export class DnacListComponent implements OnInit {
 					name: I18n.get('_ArchitectureFabrics(FabricsPublishedLimit)_'),
 					sortable: false,
 					template : this.fabricsTemplate,
+				},
+				{
+					name: I18n.get('_ArchitectureWLC(WLCPublishedLimit)_'),
+					sortable: false,
+					template : this.wlcTemplate,
 				},
 				{
 					key: 'dnacCpu',
@@ -191,7 +203,7 @@ export class DnacListComponent implements OnInit {
 	 * @param item - Contains dnac info
 	 * @returns - Returns the formatted string
 	 */
-	public getfabricsTemplate (item) {
+	public getFabricsTemplate (item) {
 		return `${item.noOfFabrics }(${item.fabricsPublishedLimits})`;
 	}
 
@@ -201,7 +213,7 @@ export class DnacListComponent implements OnInit {
 	 * @param item - Contains dnac info
 	 * @returns - Returns the formatted string
 	 */
-	public getendPointsTemplate (item) {
+	public getEndPointsTemplate (item) {
 		return `${item.noOfEndpoints }(${item.endpointsPublishedLimits})`;
 	}
 
@@ -211,8 +223,18 @@ export class DnacListComponent implements OnInit {
 	 * @param item - Contains dnac info
 	 * @returns - Returns the formatted string
 	 */
-	public getdevicesTemplate (item) {
+	public getDevicesTemplate (item) {
 		return `${item.noOfDevices }(${item.devicesPublishedLimits})`;
+	}
+
+	/**
+	 * This function is used to concate the noOfWlc and wlcPublishedLimits
+	 * in specific format
+	 * @param item - Contains dnac info
+	 * @returns - Returns the formatted string
+	 */
+	public getWlcTemplate (item) {
+		return `${item.noOfWlc }(${item.wlcPublishedLimits})`;
 	}
 
 }
