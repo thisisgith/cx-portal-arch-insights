@@ -23,7 +23,7 @@ function getActiveBody (mock: Mock, type: string = 'GET') {
 	return active.response.body;
 }
 
-describe('CommunitiesComponent', () => {
+fdescribe('CommunitiesComponent', () => {
 	let component: CommunitiesComponent;
 	let fixture: ComponentFixture<CommunitiesComponent>;
 	let racetrackInfoService: RacetrackInfoService;
@@ -118,7 +118,7 @@ describe('CommunitiesComponent', () => {
 				.then(() => {
 					expect(component.publicCommunity.url)
 						.toContain(
-							'software-defined-access-sd/bd-p/discussions-sd-access');
+							'software-defined-access-sda/bd-p/discussions-sd-access');
 					expect(component.curatedCommunity.url)
 						.toContain(
 							'campus-network-segmentation');
@@ -134,7 +134,7 @@ describe('CommunitiesComponent', () => {
 				.then(() => {
 					expect(component.publicCommunity.url)
 						.toContain(
-							'software-defined-access-sd/bd-p/discussions-sd-access');
+							'software-defined-access-sda/bd-p/discussions-sd-access');
 					expect(component.curatedCommunity.url)
 						.toContain(
 							'scalable-access-policy');
@@ -150,7 +150,7 @@ describe('CommunitiesComponent', () => {
 				.then(() => {
 					expect(component.publicCommunity.url)
 						.toContain(
-							'cisco-digital-network/bd-p/discussions-dna');
+							'digital-network-architecture/bd-p/discussions-dna');
 					expect(component.curatedCommunity.url)
 						.toContain(
 							'network-device-onboarding');
@@ -166,7 +166,7 @@ describe('CommunitiesComponent', () => {
 				.then(() => {
 					expect(component.publicCommunity.url)
 						.toContain(
-							'cisco-digital-network/bd-p/discussions-dna');
+							'digital-network-architecture/bd-p/discussions-dna');
 					expect(component.curatedCommunity.url)
 						.toContain(
 							'campus-software-image-management');
