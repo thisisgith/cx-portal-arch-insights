@@ -175,55 +175,46 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 						sortable: true,
 						sortDirection: 'asc',
 						sorting: true,
-						width: '10%',
 					},
 					{
 						key: 'ipAddress',
 						name: I18n.get('_OsvIpAddress_'),
 						sortable: false,
-						width: '10%',
 					},
 					{
 						key: 'profileName',
 						name: I18n.get('_OsvSoftwareGroup_'),
 						sortable: false,
-						width: '10%',
 					},
 					{
 						key: 'productFamily',
 						name: I18n.get('_OsvProductFamily_'),
 						sortable: true,
-						width: '20%',
 					},
 					{
 						key: 'swType',
 						name: I18n.get('_OsvOSType_'),
 						sortable: false,
-						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvCurrentOSVersion_'),
 						sortable: false,
 						template: this.versionTemplate,
-						width: '10%',
 					},
 					{
 						key: 'optimalVersion',
 						name: I18n.get('_OsvOptimalVersion_'),
 						sortable: false,
-						width: '10%',
 					},
 					{
 						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
 						sortable: false,
-						width: '10%',
 					},
 					{
 						name: I18n.get('_OsvRecommendations_'),
 						sortable: false,
 						template: this.recommendationsTemplate,
-						width: '10%',
 					},
 				],
 				dynamicData: true,
@@ -233,7 +224,6 @@ export class AssetsComponent implements OnInit, OnChanges, OnDestroy {
 				singleSelect: true,
 				sortable: true,
 				striped: false,
-				wrapText: true,
 			});
 		}
 	}

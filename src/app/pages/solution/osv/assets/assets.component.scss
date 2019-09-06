@@ -1,4 +1,5 @@
 @import '~cisco-ui/src/scss/utilities/_variables.scss';
+@import '../../../../../mixins.scss';
 
 .text-white {
 	color: $white !important;
@@ -11,4 +12,12 @@
 
 .color-transparent {
 	color: transparent;
+}
+
+.table {
+	@include table-ellipse;
+
+	th:first-child {
+		width: unset;
+	}
 }
