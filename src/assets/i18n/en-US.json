@@ -533,6 +533,7 @@
 	"_KernelVersion_": "Kernel Version",
 	"_KubernetesVersion_": "Kubernetes Version",
 	"_LanguagePreference_": "Language Preference",
+	"_LastDataSent_": "Last data sent {0}",
 	"_LastDateOfSupport_": "Last Date of Support",
 	"_LastName_": "Last Name",
 	"_LastQuestion_": "Last question.  What have you done so far to troubleshoot the problem?",
