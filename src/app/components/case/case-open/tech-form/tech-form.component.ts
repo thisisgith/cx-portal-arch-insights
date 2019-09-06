@@ -305,11 +305,10 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 						_id: value.tech.id,
 						techName: value.tech.name,
 					});
-					this.form.controls.subtech.setValue({
-						_id: value.sub_tech.id,
-						subTechName: value.sub_tech.name,
-						techId: value.tech.id,
-					});
+					this.fetchSubtechByName(value.sub_tech.name)
+					.pipe(takeUntil(this.destroy$))
+					.subscribe(response =>
+						this.form.controls.subtech.setValue(response.subTech));
 				} else {
 					this.form.controls.technology.setValue(null);
 					this.form.controls.subtech.setValue(null);
@@ -341,4 +340,21 @@ export class TechFormComponent implements OnInit, OnChanges, OnDestroy {
 			}),
 		);
 	}
+
+	/**
+	 * Fetches the subtech matching a specific name.
+	 * @param subTechName The name of the subtech to fetch.
+	 * @returns observable with results.
+	 */
+	private fetchSubtechByName (subTechName: string) {
+		return this.caseService.fetchSubTechByName(subTechName)
+			.pipe(
+				catchError(err => {
+					this.logger.error(`Fetch Subtech :: Error ${err}`);
+
+					return of(null);
+				}),
+			);
+	}
+
 }
