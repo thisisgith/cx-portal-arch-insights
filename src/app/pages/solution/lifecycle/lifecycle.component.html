@@ -275,8 +275,8 @@
 		<div class="popover-tail"></div>
 		<div class="flex flex-column max-height">
 			<div class="icon-bookmark ribbon--hover"
-				(click)="setACCBookmark(item)"
-				[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
+				(click)="updateBookmark(item, 'ACC')"
+				[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 				attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 			</div>
 			<h6 class="acc-popover__title" [innerText]="title" attr.data-auto-id="{{ autoid }}-HoverModal-Title"></h6>
@@ -351,8 +351,8 @@
 
 <ng-template #recommendedACC let-item="item" let-autoid="autoid" let-src="src">
 	<div class="icon-bookmark"
-		[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
-		(click)="setACCBookmark(item)"
+		[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
+		(click)="updateBookmark(item, 'ACC')"
 		data-auto-id="SBCardRibbon">
 	</div>
 	<img class="max-width" alt="'_Placeholder_' | i18n" [src]="src" attr.data-auto-id="{{ autoid }}-Image">
@@ -627,7 +627,7 @@
 			<div class="popover-tail"></div>
 			<div class="flex flex-column max-height">
 				<div class="icon-bookmark ribbon--hover"
-					(click)="updateBookmark('SB', item)"
+					(click)="updateBookmark(item, 'SB')"
 					[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 					attr.data-auto-id="{{ autoid }}-HoverModal-BookmarkRibbon">
 				</div>
@@ -927,8 +927,8 @@
 			<span class="icon-flagged qtr-margin-right" data-auto-id="ACCCard-Flag"></span>
 			<span class="text-small" [innerText]="'_Recommended_' | i18n"></span>
 		</div>
-		<div class="icon-bookmark" (click)="setACCBookmark(item)"
-			[ngClass]="item.isFavorite ? 'ribbon__blue' : 'ribbon__white'"
+		<div class="icon-bookmark" (click)="updateBookmark(item, 'ACC')"
+			[ngClass]="item.bookmark ? 'ribbon__blue' : 'ribbon__white'"
 			data-auto-id="ACCCardRibbon">
 		</div>
 		<div class="card__header atx__card__header text-left"
@@ -1219,13 +1219,7 @@
 
 <ng-template #bookmarkTemplate let-celldata="celldata" let-type="type">
 	<div class="flex-center-vertical justify-content-between bookmark-column">
-		<div *ngIf="type === 'ACC'">
-			<div *ngIf="celldata.isFavorite" class="icon-bookmark icon-bookmark--on half-margin-right"
-				(click)="setACCBookmark(celldata)" data-auto-id="SBListRibbon"></div>
-			<div *ngIf="!celldata.isFavorite" class="icon-bookmark icon-bookmark--off half-margin-right"
-				(click)="setACCBookmark(celldata)" data-auto-id="SBListRibbon"></div>
-		</div>
-		<div *ngIf="type === 'ATX' || type === 'SB' || type === 'PG'">
+		<div>
 			<div *ngIf="celldata.bookmark" class="icon-bookmark icon-bookmark--on half-margin-right"
 				(click)="updateBookmark(celldata, type)" data-auto-id="SBListRibbon"></div>
 			<div *ngIf="!celldata.bookmark" class="icon-bookmark icon-bookmark--off half-margin-right"
