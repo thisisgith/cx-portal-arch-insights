@@ -541,7 +541,9 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param triggeredFromGraph gives page info
 	 */
 	public onSubfilterSelect (subfilter: string, filter: Filter, triggeredFromGraph) {
-		if (!this.searchForm.valid) {
+		this.errorPolicyView = false;
+		if (!this.searchForm.valid ||
+				(!_.isEmpty(this.searchInput.trim()) && this.searchInput.trim().length < 2)) {
 			this.invalidSearchInput = true;
 
 			return;
@@ -552,13 +554,29 @@ export class RccComponent implements OnInit, OnDestroy {
 				this.filtered = true;
 		 	});
 		} else {
-			this.filtered = false;
+			let isFilterEmpty = true;
+			_.each(this.selectedFilters, (filterItem: Filter) => {
+				_.each(filterItem.seriesData, item => {
+					if (item.selected){
+						isFilterEmpty = false;
+
+						return;
+					}
+				});
+			});
+			if (isFilterEmpty) {
+				this.filtered = false;
+			}
 		}
 		const sub = typeof subfilter === 'string' ?
 		_.find(filter.seriesData, { filter: subfilter }) : _.find(filter.seriesData, subfilter);
 		if (sub) {
 			sub.selected = !sub.selected;
 		}
+		(filter.key === 'policyGroup' || filter.key === 'severity')
+			? this.violationGridObj.search = this.searchInput.trim()
+			: this.assetGridObj.searchParam = this.searchInput.trim();
+		this.prevSearchText = this.searchInput.trim();
 		if (filter.key === 'policyGroup') {
 			this.policyGroup = sub.filter;
 			if (triggeredFromGraph) {
@@ -669,10 +687,16 @@ export class RccComponent implements OnInit, OnDestroy {
 		}
 		if (this.prevSearchText.toLowerCase() === this.searchInput.trim()
 		.toLowerCase()) { return; }
+		if (((event && event.keyCode && event.keyCode === 13) ||
+			type === 'search') && (this.searchInput.trim().length < 2)) {
+			this.searchInput = this.searchInput.trim();
+			this.invalidSearchInput = true;
+		}
 		if (type === 'clear' || (this.searchForm.valid &&
 			(event.keyCode === 8 || (!_.isEmpty(this.searchForm.value.search) &&
 			(event && event.keyCode && event.keyCode === 13)
 			|| (!_.isEmpty(this.searchForm.value.search) && type === 'search'))))) {
+			this.errorPolicyView = false;
 			this.invalidSearchInput = false;
 			this.prevSearchText = this.searchForm.value.search.trim();
 			this.tableConfig.tableOffset = 0;
