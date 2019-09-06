@@ -179,7 +179,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 
 /** The mock response for basic recommendations */
 const mockSoftwareGroupRecommendations: ProfileRecommendationsResponse = {
-	recomm: [
+	recommendations: [
 		{
 			accepted: true,
 			error: null,
@@ -206,7 +206,7 @@ const mockSoftwareGroupRecommendations: ProfileRecommendationsResponse = {
 			swVersion: 'NA',
 		},
 	],
-	recommSummary: mockMachineRecommendations,
+	recommendationSummaries: mockMachineRecommendations,
 };
 
 /** The mock response for software versions */

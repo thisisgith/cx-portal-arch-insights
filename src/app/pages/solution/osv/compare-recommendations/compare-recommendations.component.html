@@ -8,7 +8,17 @@
 				<td class="recommendation no-border-top">
 					<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
 						[innerText]="'_OsvCurrent_' | i18n | titlecase"></div>
-					<div class="half-margin-top" [innerText]="currentRecommendation?.release"></div>
+					<div class="half-margin-top">
+						<span *ngIf="selectedSoftwareGroup?.swVersionCount > 1"
+							data-auto-id="SoftwareGroupCurrentVersions" class="link toggle"
+							(click)="showVersions.emit()"
+							[innerText]="'_OsvMultipleVersions_' | i18n:selectedSoftwareGroup?.swVersionCount">
+						</span>
+						<span *ngIf="selectedSoftwareGroup?.swVersionCount == 1"
+							data-auto-id="SoftwareGroupCurrentVersion" class="link toggle" (click)="showVersions.emit()"
+							[innerText]="selectedSoftwareGroup?.swVersions">
+						</span>
+					</div>
 					<div class="half-margin-top">
 						<span *ngIf="currentRecommendation?.postDate"
 							[innerText]="currentRecommendation?.postDate | date:medium"></span>
@@ -37,10 +47,11 @@
 						<div class="icon-check-outline text-success flex align-items-center"></div>
 						<div>
 							<div class="text-small half-padding-left" [innerText]="'_OsvAcceptedOn_' | i18n"></div>
-							<div class="text-small half-padding-left" [innerText]="recommendation.acceptedDate | date:mediumDate"></div>
+							<div class="text-small half-padding-left"
+								[innerText]="recommendation.acceptedDate | date:mediumDate"></div>
 						</div>
-						<button (click)="onCancelClick(recommendation.release)" class="btn btn--secondary btn--small qtr-margin-left"
-							[innerText]="'_Cancel_' | i18n"
+						<button (click)="onCancelClick(recommendation.release)"
+							class="btn btn--secondary btn--small qtr-margin-left" [innerText]="'_Cancel_' | i18n"
 							attr.data-auto-id="CancelAcceptVersion-{{recommendation.release}}">
 						</button>
 					</div>

@@ -222,12 +222,12 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-		if (params.profileName != null) __params = __params.set('profileName', params.profileName.toString());
-		if (params.pid != null) __params = __params.set('pid', params.pid.toString());
-		if (params.pf != null) __params = __params.set('pf', params.pf.toString());
-		if (params.swType != null) __params = __params.set('swType', params.swType.toString());
-		if (params.swVersion != null) __params = __params.set('swVersion', params.swVersion.toString());
-		if (params.image != null) __params = __params.set('image', params.image.toString());
+		 __params = __params.set('profileName', params.profileName);
+		 __params = __params.set('pid', params.pid);
+		 __params = __params.set('pf', params.pf);
+		 __params = __params.set('swType', params.swType);
+		 __params = __params.set('swVersion', params.swVersion);
+		 __params = __params.set('image', params.image);
 		__params = __params.set('postDate', params.postDate);
 		let req = new HttpRequest<any>(
 			'GET',
@@ -416,8 +416,8 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-		if (params.id != null) __params = __params.set('id', params.id.toString());
-		if (params.profileName != null) __params = __params.set('profileName', params.profileName.toString());
+		__params = __params.set('id', params.id);
+		__params = __params.set('profileName', params.profileName);
 		if (params.pageIndex != null) __params = __params.set('pageIndex', params.pageIndex.toString());
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
@@ -480,8 +480,8 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-		if (params.id != null) __params = __params.set('id', params.id.toString());
-		if (params.profileName != null) __params = __params.set('profileName', params.profileName.toString());
+		 __params = __params.set('id', params.id);
+		 __params = __params.set('profileName', params.profileName);
 		if (params.pageIndex != null) __params = __params.set('pageIndex', params.pageIndex.toString());
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
 		if (params.sort != null) __params = __params.set('sort', params.sort.toString());
@@ -537,7 +537,7 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-		if (params.profileName != null) __params = __params.set('profileName', params.profileName.toString());
+		__params = __params.set('profileName', params.profileName);
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getSoftwareGroupRecommendationPath}`,
@@ -584,7 +584,7 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
-		if (params.profileName != null) __params = __params.set('profileName', params.profileName.toString());
+		__params = __params.set('profileName', params.profileName);
 		let req = new HttpRequest<any>(
 			'GET',
 			this.rootUrl + `${OSVService.getMachineRecommendationsPath}`,

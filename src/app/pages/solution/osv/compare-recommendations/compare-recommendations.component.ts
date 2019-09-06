@@ -24,6 +24,7 @@ export class CompareRecommendationsComponent implements OnChanges {
 	@Input() public recommendations: MachineRecommendations[];
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Output() public onAction = new EventEmitter();
+	@Output() public showVersions = new EventEmitter();
 	public currentRecommendation: MachineRecommendations;
 	public machineRecommendations: MachineRecommendations[];
 	public barChartBackgroundColor = '#f2fbfd';

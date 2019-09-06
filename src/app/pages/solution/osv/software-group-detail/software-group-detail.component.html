@@ -114,7 +114,8 @@
 			<compare-recommendations 
 				[selectedSoftwareGroup]="selectedSoftwareGroup" 
 				[recommendations]="machineRecommendations"
-				(onAction)="onAction($event)">
+				(onAction)="onAction($event)"
+				(showVersions) = "tabIndex = 3;">
 			</compare-recommendations>
 		</div>
 	</div>

@@ -83,7 +83,7 @@ describe('AssetDetailsComponent', () => {
 			.toBeDefined();
 		expect(component.buildTable)
 			.toHaveBeenCalled();
-		expect(component.assetDetailsParams.id.length)
+		expect(component.assetDetailsParams.profileName.length)
 			.toBeGreaterThan(0);
 		expect(component.sortData)
 			.toHaveBeenCalled();

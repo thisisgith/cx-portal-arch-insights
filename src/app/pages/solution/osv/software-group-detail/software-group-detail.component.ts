@@ -180,20 +180,20 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				map((response: ProfileRecommendationsResponse) => {
 					this.status.machineRecommendationsLoading = false;
 					this.status.profileRecommendations = false;
-					response.recomm = _.compact(response.recomm);
-					response.recommSummary = _.compact(response.recommSummary);
+					response.recommendations = _.compact(response.recommendations);
+					response.recommendationSummaries = _.compact(response.recommendationSummaries);
 					this.setAcceptedVersion({
-						data: response.recomm,
+						data: response.recommendations,
 						acceptedDate: response.recommAcceptedDate,
 						key: 'swVersion',
 					});
 					this.setAcceptedVersion({
-						data: response.recommSummary,
+						data: response.recommendationSummaries,
 						acceptedDate: response.recommAcceptedDate,
 						key: 'release',
 					});
 					this.recommendations = this.mergeMachineRecommendations(response);
-					this.machineRecommendations = response.recommSummary;
+					this.machineRecommendations = response.recommendationSummaries;
 					this.recommendationAcceptedDate = response.recommAcceptedDate;
 				}),
 				takeUntil(this.destroy$),
@@ -553,22 +553,22 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @returns merged array of software recommendations
 	 */
 	public mergeMachineRecommendations (response) {
-		if (response.recommSummary && response.recommSummary.length > 0) {
-			_.map(response.recommSummary, (machineRecomm: MachineRecommendations) => {
+		if (response.recommendationSummaries && response.recommendationSummaries.length > 0) {
+			_.map(response.recommendationSummaries, (machineRecomm: MachineRecommendations) => {
 				machineRecomm.swVersion = machineRecomm.release;
 			});
 
-			return [...response.recomm, ...response.recommSummary];
+			return [...response.recommendations, ...response.recommendationSummaries];
 		}
-		if (response.recomm && response.recomm.length > 0) {
-			response.recomm.push({
+		if (response.recommendations && response.recommendations.length > 0) {
+			response.recommendations.push({
 				error: null,
 				name: 'profile current',
 				postDate: null,
 				swVersion: 'NA',
 			});
 
-			return response.recomm;
+			return response.recommendations;
 		}
 	}
 
