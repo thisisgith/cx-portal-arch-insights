@@ -28,7 +28,8 @@ import { ActivatedRoute } from '@angular/router';
 export class RiskMitigationComponent {
 	public customerId: number;
 	public clearAllFilters = false;
-	public searchQueryString: String = '';
+	public searchQueryInCrashGrid: String = '';
+	public searchQueryInHighCrashGrid: String = '';
 	public searchOptions = {
 		debounce: 1500,
 		max: 200,
@@ -65,7 +66,7 @@ export class RiskMitigationComponent {
 	public showAsset360 = false;
 	public highCrashRiskParams: HighCrashRiskPagination;
 	public crashHistoryParams: CrashHistoryDeviceCount;
-	public highCrashDeviceCount: number;
+	public highCrashDeviceCount = 0;
 	public crashHistoryTableOptions: CuiTableOptions;
 
 	public crashesAssetsGridOptions: CuiTableOptions;
@@ -115,7 +116,9 @@ export class RiskMitigationComponent {
 		this.highCrashRiskParams = {
 			customerId: this.customerId,
 			page: 0,
+			search: '',
 			size: 10,
+			sort: '',
 		};
 		this.status.isLoading = true;
 		forkJoin(
@@ -142,16 +145,12 @@ export class RiskMitigationComponent {
   	 }
 	/**
 	 * Gets high crashes device data
+	 * @param searchString will have search string
 	 * @returns  the crashed device data
 	 */
 	public getHighCrashesDeviceData () {
 		this.highCrashRiskAssetsGridDetails.tableOffset = 0;
 		this.onlyCrashes = true;
-		this.highCrashRiskParams = {
-			customerId: this.customerId,
-			page: 0,
-			size: 10,
-		};
 		this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 		const params = _.pick(_.cloneDeep(this.highCrashRiskParams), ['customerId']);
 		this.status.isLoading = true;
@@ -289,7 +288,7 @@ export class RiskMitigationComponent {
 	 * @param param service params
 	 * @returns observable of crash devices
 	 */
-	private getFingerPrintDeviceDetails (param: HighCrashRiskPagination) {
+	public getFingerPrintDeviceDetails (param: HighCrashRiskPagination) {
 		this.status.isLoading = true;
 
 		return this.riskMitigationService.getFingerPrintDeviceDetailsData(param)
@@ -300,9 +299,12 @@ export class RiskMitigationComponent {
 								this.highCrashRiskAssetsGridDetails.tableData = results.devices;
 								this.highCrashRiskAssetsGridDetails.totalItems = results.count;
 
-								const first = (this.highCrashRiskParams.page * 10) + 1;
+								let first = (this.highCrashRiskParams.page * 10) + 1;
 								const last = (this.highCrashRiskParams.page * 10) +
 								this.highCrashRiskAssetsGridDetails.tableData.length;
+								if (first > this.highCrashRiskAssetsGridDetails.tableData.length) {
+									first = this.highCrashRiskAssetsGridDetails.tableData.length;
+								}
 								this.hcrPagination = `${first}-${last}`;
 
 							}),
@@ -418,16 +420,13 @@ export class RiskMitigationComponent {
 		};
 
 	}
+
 	/**
 	 * Function to update pagination
-	 * @param searchText will have the device details
+	 * @param params have the search string
 	 * @returns new table details
 	 */
-	public onSearchQuery (searchText: string) {
-		this.searchQueryString = searchText;
-		const params = this.getFilterDetailsForSearchQuery(this.searchQueryString);
-		this.status.isLoading = true;
-
+	public searchInCrashedAssetsGrid (params) {
 		return this.riskMitigationService.getSearchedData(params)
 				.pipe(
 					takeUntil(this.destroy$),
@@ -459,6 +458,35 @@ export class RiskMitigationComponent {
 					}),
 				)
 				.subscribe();
+	}
+
+	/**
+	 * Function to update pagination
+	 * @param searchText will have the device details
+	 * @returns new table details
+	 */
+	public onSearchQuery (searchText: string) {
+
+		if (!this.onlyCrashes) {
+			this.searchQueryInCrashGrid = searchText;
+			const params = this.getFilterDetailsForSearchQuery(this.searchQueryInCrashGrid);
+			this.searchInCrashedAssetsGrid(params);
+		} else {
+			this.searchQueryInHighCrashGrid = searchText;
+			this.highCrashRiskParams.page = 0;
+			this.highCrashRiskParams.search = searchText;
+			this.highCrashRiskParams.size = 10;
+			this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
+		}
+
+	}
+	/**
+	 * Function to capture the row click on grid
+	 * @param event will have the device details
+	 */
+	public highCrashTableSorted (event) {
+		this.highCrashRiskParams.sort = `${event.key}.${event.sortDirection}`;
+		 this.getFingerPrintDeviceDetails(this.highCrashRiskParams);
 	}
 	/**
 	 * Function to capture the row click on grid
@@ -503,7 +531,7 @@ export class RiskMitigationComponent {
 	 * @returns  params from sorting data
 	 */
 	public onTableSortingChanged (event) {
-		 const params = this.getFilterDetailsForSearchQuery(this.searchQueryString);
+		 const params = this.getFilterDetailsForSearchQuery(this.searchQueryInCrashGrid);
 		 params.key = event.key;
 		 params.sortDirection = event.sortDirection;
 
@@ -618,38 +646,38 @@ export class RiskMitigationComponent {
 				{
 					key: 'deviceName',
 					name: I18n.get('_RMAsset_'),
-					sortable: false,
+					sortable: true,
 				},
 				{
 					key: 'productId',
 					name: I18n.get('_RMProductId_'),
-					sortable: false,
+					sortable: true,
 				},
 				{
 					key: 'productFamily',
 					name: I18n.get('_RMProductFamily_'),
-					sortable: false,
+					sortable: true,
 				},
 				{
 					key: 'softwareType',
 					name: I18n.get('_RMSoftwareType_'),
-					sortable: false,
+					sortable: true,
 				},
 				{
 					key: 'softwareVersion',
 					name: I18n.get('_RMSoftwareVersion_'),
-					sortable: false,
+					sortable: true,
 				},
 				{
 					key: 'riskScore',
 					name: I18n.get('_RMRisk_'),
-					sortable: false,
+					sortable: true,
 					template: this.riskScoreTemplate,
 				},
 				{
 					key: 'globalRiskRank',
 					name: I18n.get('_RMGlobalRisk_'),
-					sortable: false,
+					sortable: true,
 					template: this.cardColorsTemplate,
 				},
 			],
@@ -752,7 +780,7 @@ export class RiskMitigationComponent {
 	 * Function used to reset the filters
 	 */
 	public resetFilters () {
-		this.searchQueryString = '';
+		this.searchQueryInCrashGrid = '';
 		_.each(this.filters, (filter: Filter) => {
 			filter.selected = false;
 			_.each(filter.seriesData, (currentFilter: { selected: boolean; }) => {

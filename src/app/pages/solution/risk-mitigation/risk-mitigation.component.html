@@ -90,12 +90,20 @@
 				class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 			</span>
 		</div>
-		<div class="col-3" *ngIf="!onlyCrashes">
-			<cui-search
+		<div class="col-3">
+			<cui-search *ngIf="!onlyCrashes"
 				placeholder="Search"
 				[debounce]="searchOptions.debounce"
 				[compressed]="true"
-				[searchText] = "searchQueryString"
+				[searchText] = "searchQueryInCrashGrid"
+				(onUpdate)="onSearchQuery($event)"
+			>
+			</cui-search>
+			<cui-search *ngIf="onlyCrashes"
+				placeholder="Search"
+				[debounce]="searchOptions.debounce"
+				[compressed]="true"
+				[searchText] = "searchQueryInHighCrashGrid"
 				(onUpdate)="onSearchQuery($event)"
 			>
 			</cui-search>
@@ -205,11 +213,11 @@
 				</div>
 			</div>
 
-
-	<cui-table *ngIf="highCrashRiskAssetsGridDetails.tableData.length && !status.isLoading"
+	<cui-table [hidden]="!highCrashRiskAssetsGridDetails.tableData.length || status.isLoading"
 		[options]="highCrashRiskAssetsGridOptions"
 		[data]="highCrashRiskAssetsGridDetails.tableData"
 		(onTableRowClicked)="connectToFpDetails($event)"
+		(onSortingChanged)="highCrashTableSorted($event)"
 		class="table--wrap"
 	></cui-table>
 	<div class="section" *ngIf="!status.isLoading">
