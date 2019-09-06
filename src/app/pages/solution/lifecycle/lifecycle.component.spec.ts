@@ -145,7 +145,7 @@ describe('LifecycleComponent', () => {
 
 		racetrackAccBookmarkSpy = spyOn(racetrackContentService, 'updateACCBookmark')
 			.and
-			.returnValue(of(getActiveBody(ACCScenarios[6], 'POST')));
+			.returnValue(of(getActiveBody(ACCScenarios[8], 'POST')));
 	};
 
 	/**
