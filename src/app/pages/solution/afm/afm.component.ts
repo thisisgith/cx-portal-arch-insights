@@ -153,7 +153,7 @@ export class AfmComponent {
 	 */
 	public ngOnInit () {
 		this.buildTable();
-		this.getAfmAlarmData(this.searchParams);
+		this.allAlarmFilter();
 	}
 
 	/**
