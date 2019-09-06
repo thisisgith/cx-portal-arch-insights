@@ -57,12 +57,12 @@ export class SettingsComponent  implements OnInit {
 				value: '',
 			},
 			{
-				label: I18n.get('_CurrentAvailableMemory_'),
+				label: I18n.get('_MemoryUtilization_'),
 				percentage: 100,
 				value: '',
 			},
 			{
-				label: I18n.get('_FreeDiskSpace_'),
+				label: I18n.get('_DiskSpaceUtilization_'),
 				percentage: 0,
 				value: '',
 			},
@@ -123,19 +123,30 @@ export class SettingsComponent  implements OnInit {
 	}
 
 	/**
-	 * Converts free and total strings to free resources percent
-	 * @param {String} free - String w/ free resource info
+	 * Converts used and total strings to utilization percent
+	 * @param {String} used - String w/ used resource info
 	 * @param {String} total - String w/ total resource info
-	 * @returns - Int representing free resources out of 100
+	 * @returns - Int representing used resources out of 100
 	 */
-	public getResourcePercent (free, total) {
-		const freeNum = parseInt(free, 10);
+	public getResourcePercent (used, total) {
+		const usedNum = parseInt(used, 10);
 		const totalNum = parseInt(total, 10);
-		if (!freeNum || !totalNum) {
+		if (!usedNum || !totalNum) {
 			return NaN;
 		}
 
-		return Math.ceil((freeNum / totalNum) * 100);
+		return Math.ceil((usedNum / totalNum) * 100);
+	}
+
+	/**
+	 * Gets units from resource strings
+	 * @param resourceVal - String w/ resource info
+	 * @returns - string containing unit represented
+	 */
+	public getUnits (resourceVal: string) {
+		const results = resourceVal.match(/(\D+)/g);
+
+		return results ? results[0] : undefined;
 	}
 
 	/**
@@ -156,17 +167,33 @@ export class SettingsComponent  implements OnInit {
 
 		const freeMemory = _.get(hardware_details, 'free_memory');
 		const totalMemory = _.get(hardware_details, 'total_memory');
+		const memoryUnit = this.getUnits(freeMemory);
+
+		const usedMemory = `${_.parseInt(totalMemory, 10) - _.parseInt(freeMemory, 10)}\
+${memoryUnit}`;
+
 		const freeHDD = _.get(hardware_details, 'free_hdd_size');
 		const totalHDD = _.get(hardware_details, 'hdd_size');
+		const HDDSizeUnit = this.getUnits(freeHDD);
+
+		const usedHDD = `${_.parseInt(totalHDD, 10) - _.parseInt(freeHDD, 10)}\
+${HDDSizeUnit}`;
+
 		this.data.memoryUsage[MemoryUsage.MEMORY].percentage = this.getResourcePercent(
-			freeMemory,
+			usedMemory,
 			totalMemory,
 		);
-		this.data.memoryUsage[MemoryUsage.MEMORY].value = `${freeMemory} of ${totalMemory}`;
+		this.data.memoryUsage[MemoryUsage.MEMORY].value =
+			usedMemory && totalMemory ?
+			`${usedMemory} of ${totalMemory}` :
+			I18n.get('_ErrorDisplayingData_');
 
 		this.data.memoryUsage[MemoryUsage.DISK_SPACE].percentage =
-			this.getResourcePercent(freeHDD, totalHDD);
-		this.data.memoryUsage[MemoryUsage.DISK_SPACE].value = `${freeHDD} of ${totalHDD}`;
+			this.getResourcePercent(usedHDD, totalHDD);
+		this.data.memoryUsage[MemoryUsage.DISK_SPACE].value =
+			usedHDD && totalHDD ?
+			`${usedHDD} of ${totalHDD}` :
+			I18n.get('_ErrorDisplayingData_');
 
 		this.data.systemInfo[SystemInfo.OS_IMAGE].value = _.get(os_details, 'osImage');
 		this.data.systemInfo[SystemInfo.KERNEL_VERSION].value = _.get(os_details, 'kernelVersion');
