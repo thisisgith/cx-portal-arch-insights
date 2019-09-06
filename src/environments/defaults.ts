@@ -17,7 +17,7 @@ export const defaults = {
 	},
 	baseHref: '/pbc/',
 	bugSearchTool: 'https://bst.cloudapps.cisco.com/bugsearch/bug/',
-	communityLink: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=' + 
+	communityLink: 'https://cloudsso-test.cisco.com/idp/startSSO.ping?PartnerSpId=' +
 		'https://community-stage.cisco.com/auth/saml&TARGET=https://community-stage.cisco.com/',
 	controlPointsOrigin: 'https://cpp-api.sdp12-istg.csco.cloud/controlpoint',
 	csc: {
