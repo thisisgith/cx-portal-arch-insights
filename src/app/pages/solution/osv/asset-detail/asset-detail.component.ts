@@ -7,24 +7,19 @@ import {
 	OnDestroy,
 	ViewChild,
 	TemplateRef,
-	Output,
-	EventEmitter,
 } from '@angular/core';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
 import {
 	OSVService,
-	AssetRecommendationsResponse,
 	AssetRecommendations,
 	OSVAsset,
-	SoftwareGroup,
 } from '@sdp-api';
 import { map, takeUntil, catchError } from 'rxjs/operators';
-import { Subject, of, Subscription } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
 import { I18n } from '@cisco-ngx/cui-utils';
 import { ActivatedRoute } from '@angular/router';
-import { CancelConfirmComponent } from '../cancel-confirm/cancel-confirm.component';
 
 /**
  * Asset Software Details Component
@@ -36,26 +31,14 @@ import { CancelConfirmComponent } from '../cancel-confirm/cancel-confirm.compone
 })
 
 export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
-	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{}>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{  }>;
+	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{ }>;
 	@ViewChild('releaseDateTemplate', { static: true })
-	private releaseDateTemplate: TemplateRef<{}>;
+		private releaseDateTemplate: TemplateRef<{ }>;
 	@Input() public fullscreen;
 	@Input() public selectedAsset: OSVAsset;
-	/** show accept button if accept is true */
-	@Input() public accept = false;
-	@Input() public selectedSoftwareGroup: SoftwareGroup;
-	/** recommendations from the software group details */
-	@Input() public recommendations;
-	/** user accepts a machine recommendation */
-	@Input() public selectedMachineRecommendation;
-	/** return result of accepting recommendation */
-	@Output() public onRecommendationAccept = new EventEmitter();
-	/** show multiple version */
-	@Output() public showMultipleVersions = new EventEmitter();
-	public assetDetails: AssetRecommendationsResponse;
-	public timelineData: AssetRecommendationsResponse;
+	public assetDetails: AssetRecommendations[];
+	public timelineData: AssetRecommendations[];
 	public status = {
 		isLoading: true,
 	};
@@ -65,9 +48,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public assetDetailsParams: OSVService.GetAssetDetailsParams;
 	public customerId: string;
 	public currentVersion: AssetRecommendations;
-	public onCancelSusbcription: Subscription;
-	public cancelledRecommendation: AssetRecommendations;
-	public alert: any = {};
+	public alert: any = { };
 
 	constructor (
 		private logger: LogService,
@@ -84,8 +65,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 			pf: 'Cisco_5500',
 			pid: 'AIR-CT5520-K9',
 			swType: 'IOS',
-			swVersions: '8',
-			postDate: null
+			swVersion: '8',
+			postDate: null,
 		};
 	}
 
@@ -103,20 +84,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 */
 	public ngOnChanges (changes: SimpleChanges) {
 		const currentAsset = _.get(changes, ['selectedAsset', 'currentValue']);
-		const recommendations = _.get(changes, ['recommendations', 'currentValue']);
-		const selectedMachineRecommendation =
-			_.get(changes, ['selectedMachineRecommendation', 'currentValue']);
 		if (currentAsset && !changes.selectedAsset.firstChange) {
 			this.refresh();
-		}
-		if (recommendations) {
-			this.clear();
-			this.status.isLoading = false;
-			this.assetDetails = this.groupData(recommendations);
-			this.buildTable();
-		}
-		if (selectedMachineRecommendation) {
-			this.onAccept(selectedMachineRecommendation);
 		}
 	}
 
@@ -124,13 +93,8 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Initializer
 	 */
 	public ngOnInit () {
-		this.refresh();
-		this.onCancelSusbcription = this.cuiModalService.onCancel
-			.subscribe(() => {
-				this.cancelRecommendation();
-			});
+		this.refresh();	
 	}
-
 
 	/**
 	 * Refreshes the component
@@ -138,13 +102,13 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	public refresh () {
 		if (this.selectedAsset) {
 			this.clear();
-			// this.assetDetailsParams.profileName = _.get(this.selectedAsset, 'profileName');
-			// this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
-			// this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
-			// this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
-			// this.assetDetailsParams.swVersions = _.get(this.selectedAsset, 'swVersion');
-			// this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
-			// this.assetDetailsParams.postDate = _.get(this.selectedAsset, 'postDate');
+			this.assetDetailsParams.profileName = _.get(this.selectedAsset, 'profileName');
+			this.assetDetailsParams.pf = _.get(this.selectedAsset, 'productFamily');
+			this.assetDetailsParams.pid = _.get(this.selectedAsset, 'productId');
+			this.assetDetailsParams.swType = _.get(this.selectedAsset, 'swType');
+			this.assetDetailsParams.swVersion = _.get(this.selectedAsset, 'swVersion');
+			this.assetDetailsParams.image = _.get(this.selectedAsset, 'imageName');
+			this.assetDetailsParams.postDate = _.get(this.selectedAsset, 'postDate');
 			this.fetchAssetDetails();
 		}
 	}
@@ -156,7 +120,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.status.isLoading = true;
 		this.osvService.getAssetDetails(this.assetDetailsParams)
 			.pipe(
-				map((response: AssetRecommendationsResponse) => {
+				map((response: AssetRecommendations[]) => {					
 					this.assetDetails = this.groupData(response);
 					this.timelineData = this.sortData(response);
 					this.buildTable();
@@ -167,7 +131,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			)
 			.subscribe(() => {
@@ -180,9 +144,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @param data Recommendations
 	 * @returns grouped data
 	 */
-	public groupData (data: AssetRecommendationsResponse) {
-		const selectedItem = this.selectedAsset ? this.selectedAsset : this.selectedSoftwareGroup;
-		this.setAcceptedVersion(data, selectedItem);
+	public groupData (data: AssetRecommendations[]) {		
 		this.addVersionInfo(data);
 		const recommendations = _.filter(data, (detail: AssetRecommendations) =>
 			detail.name !== 'current');
@@ -208,7 +170,26 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		if (!this.assetDetailsTable) {
 			this.assetDetailsTable = new CuiTableOptions({
 				bordered: true,
-				columns: this.getColumns(),
+				columns: [
+					{
+						sortable: false,
+						template: this.currentTemplate,
+						width: '20%',
+					},
+					{
+						name: I18n.get('_OsvVersion_'),
+						sortable: false,
+						template: this.versionTemplate,
+						width: '65%',
+					},
+					{
+						key: 'postDate',
+						name: I18n.get('_OsvReleaseDate_'),
+						sortable: false,
+						template: this.releaseDateTemplate,
+						width: '15%',
+					},
+				],
 				dynamicData: true,
 				hover: true,
 				padding: 'compressed',
@@ -222,50 +203,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	}
 
 	/**
-	 * get columns for the table view
-	 * @returns columns
-	 */
-	public getColumns () {
-		const columns = [
-			{
-				sortable: false,
-				template: this.currentTemplate,
-				width: '20%',
-			},
-			{
-				name: I18n.get('_OsvVersion_'),
-				sortable: false,
-				template: this.versionTemplate,
-				width: this.accept ? '35%' : '65%',
-			},
-			{
-				key: 'postDate',
-				name: I18n.get('_OsvReleaseDate_'),
-				sortable: false,
-				template: this.releaseDateTemplate,
-				width: '15%',
-			},
-		];
-		if (this.accept) {
-			const acceptColumn = {
-				name: I18n.get('_OsvStatusOrAction_'),
-				sortable: false,
-				template: this.actionsTemplate,
-				width: '30%',
-			};
-			columns.push(acceptColumn);
-		}
-
-		return columns;
-	}
-
-	/**
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
-		if (this.onCancelSusbcription) {
-			_.invoke(this.onCancelSusbcription, 'unsubscribe');
-		}
 		this.destroy$.next();
 		this.destroy$.complete();
 	}
@@ -275,9 +215,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @param data AssetDetails
 	 * @returns sorted data
 	 */
-	public sortData (data: AssetRecommendationsResponse) {
+	public sortData (data: AssetRecommendations[]) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any>new Date(b.postDate) - <any>new Date(a.postDate));
+			<any> new Date(b.postDate) - <any> new Date(a.postDate));
 
 		return data;
 	}
@@ -286,7 +226,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * add tooltip info for recommended versions
 	 * @param data the asset recommendations
 	 */
-	public addVersionInfo (data: AssetRecommendationsResponse) {
+	public addVersionInfo (data: AssetRecommendations[]) {
 		_.map(data, (detail: AssetRecommendations) => {
 			switch (detail.name) {
 				case 'latest':
@@ -318,103 +258,10 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	/**
 	 * View All Os Version - link to software.cisco.com
 	 */
-	public viewAllVersions () {
-		const selectedItem = this.selectedAsset ? this.selectedAsset : this.selectedSoftwareGroup;
-		const mdfId = _.get(selectedItem, 'mdfId');
+	public viewAllVersions () {		
+		const mdfId = _.get(this.selectedAsset, 'mdfId');
 		const url = `https://software.cisco.com/research/home?pid=${mdfId}`;
 		window.open(`${url}`, '_blank');
 	}
-
-	/**
-	 * Set AcceptedVersion
-	 * @param data AssetDetails
-	 * @param selectedItem can be selectedAsset or selectedProfileGroup
-	 */
-	public setAcceptedVersion (data: AssetRecommendationsResponse,
-		selectedItem: OSVAsset | SoftwareGroup) {
-		_.forEach(data, (recommendation: AssetRecommendations) => {
-			recommendation.accepted = recommendation.swVersion === selectedItem.optimalVersion
-				? true : false;
-		});
-	}
-
-	/**
-	 * accept recommendations
-	 * @param item accept recommendations for this selected profile
-	 */
-	public onAccept (item: AssetRecommendations) {
-		const body = {
-			customerId: this.customerId,
-			profileName: this.selectedSoftwareGroup.profileName,
-			optimalVersion: item.swVersion,
-		};
-		this.status.isLoading = true;
-		this.osvService.updateProfile(body)
-			.subscribe((response: OSVAsset) => {
-				response.statusUpdated = true;
-				this.setAcceptedVersion(this.recommendations, response);
-				this.recommendations = _.cloneDeep(this.recommendations);
-				this.selectedSoftwareGroup.recommAcceptedDate = response.recommAcceptedDate;
-				this.onRecommendationAccept.emit({
-					recommendation: this.recommendations,
-					selectedSoftwareGroup: response,
-				});
-				this.status.isLoading = false;
-				this.logger.debug('Updated');
-			}, err => {
-				if (this.selectedMachineRecommendation) {
-					this.onRecommendationAccept.emit({
-						err,
-					});
-				} else {
-					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
-				}
-				this.status.isLoading = false;
-				this.logger.debug('Error in updating');
-			});
-	}
-
-	/**
-	 * show the cancel confirm modal
-	 */
-	public onCancel (recommendation: AssetRecommendations) {
-		this.cancelledRecommendation = recommendation;
-		this.cuiModalService.showComponent(CancelConfirmComponent, {});
-	}
-
-	/**
-	 * cancel the accepted Recommendation
-	 */
-	public cancelRecommendation () {
-		const body = {
-			customerId: this.customerId,
-			profileName: this.selectedSoftwareGroup.profileName,
-			optimalVersion: this.cancelledRecommendation.swVersion,
-		};
-		this.osvService.cancelUpdateProfileResponse(body)
-			.subscribe((response: any) => {
-				response.statusUpdated = true;
-				this.setAcceptedVersion(this.recommendations, response);
-				this.recommendations = _.cloneDeep(this.recommendations);
-				this.selectedSoftwareGroup.recommAcceptedDate = response.recommAcceptedDate;
-				this.onRecommendationAccept.emit({
-					recommendation: this.recommendations,
-					selectedSoftwareGroup: response,
-				});
-				this.status.isLoading = false;
-				this.logger.debug('Updated');
-			}, err => {
-				if (this.selectedMachineRecommendation) {
-					this.onRecommendationAccept.emit({
-						err,
-					});
-				} else {
-					_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
-				}
-				this.status.isLoading = false;
-				this.logger.debug('Error in updating');
-			});
-
-	}
-
+	
 }

@@ -14,6 +14,12 @@ import { I18nPipeModule } from '@cisco-ngx/cui-pipes';
 import { AssetDetailsModule } from '../asset-detail/asset-detail.module';
 import { BarChartModule, DetailsPanelModule } from '@components';
 import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
+import {
+	SoftwareGroupRecommendationsModule,
+} from '../software-group-recommendations/software-group-recommendations.module';
+import {
+	CompareRecommendationsModule,
+} from '../compare-recommendations/compare-recommendations.module';
 
 /**
  * SoftwareGroupDetail Module
@@ -35,6 +41,8 @@ import { CancelConfirmModule } from '../cancel-confirm/cancel-confirm.module';
 		CuiAlertModule,
 		DetailsPanelModule,
 		CuiModalModule,
+		SoftwareGroupRecommendationsModule,
+		CompareRecommendationsModule,
 	],
 })
 export class SoftwareGroupDetailModule { }

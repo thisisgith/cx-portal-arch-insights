@@ -16,6 +16,7 @@ import { SoftwareGroupVersionsResponse } from '../models/software-group-version-
 import { SoftwareGroupAssetsResponse } from '../models/software-group-asset-response';
 import { MachineRecommendationsResponse } from '../models/machine-recommendations-response';
 import { SoftwareGroup } from '../models/software-group';
+import { ProfileRecommendationsResponse } from '../models/profile-recommendations-response';
 
 @Injectable({
 	providedIn: 'root',
@@ -210,7 +211,7 @@ class OSVService extends __BaseService {
 	 * - `pid`: Product Id of the Asset
 	 * - `pf`: Product Family of Asset
 	 * - `swType`: Software Type of Asset
-	 * - `swVersions`: Software Version of Asset
+	 * - `swVersion`: Software Version of Asset
 	 * - `image`: image of the asset
 	 * - `postDate` : postDate 
 	 * @return successful operation
@@ -225,7 +226,7 @@ class OSVService extends __BaseService {
 		if (params.pid != null) __params = __params.set('pid', params.pid.toString());
 		if (params.pf != null) __params = __params.set('pf', params.pf.toString());
 		if (params.swType != null) __params = __params.set('swType', params.swType.toString());
-		if (params.swVersions != null) __params = __params.set('swVersions', params.swVersions.toString());
+		if (params.swVersion != null) __params = __params.set('swVersion', params.swVersion.toString());
 		if (params.image != null) __params = __params.set('image', params.image.toString());
 		__params = __params.set('postDate', params.postDate);
 		let req = new HttpRequest<any>(
@@ -254,7 +255,7 @@ class OSVService extends __BaseService {
 	 * - `pid`: Product Id of the Asset
 	 * - `pf`: Product Family of Asset
 	 * - `swType`: Software Type of Asset
-	 * - `swVersions`: Software Version of Asset
+	 * - `swVersion`: Software Version of Asset
 	 * - `image`: image of the asset
 	 * - `postDate` : postDate 
 	 * @return successful operation
@@ -401,7 +402,8 @@ class OSVService extends __BaseService {
 	 * Software Group Versions
 	 * @param params The `OSVService.GetSoftwareGroupAssetsParams` containing the following parameters:
 	 * - `customerId`: Unique identifier of a Cisco customer.
-	 * - `profileName` : unique identifier of software group
+	 * - `id` : unique identifier of software group
+	 * - `profileName` - profileName
 	 * - `sort` : sort column
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
@@ -414,6 +416,7 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.id != null) __params = __params.set('id', params.id.toString());
 		if (params.profileName != null) __params = __params.set('profileName', params.profileName.toString());
 		if (params.pageIndex != null) __params = __params.set('pageIndex', params.pageIndex.toString());
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
@@ -442,7 +445,8 @@ class OSVService extends __BaseService {
 	 * @param params The `OSVService.GetSoftwareGroupAssetsParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
-	 * - `profileName` : unique identifier of software group
+	 * - `id` : unique identifier of software group
+	 * - `profileName` : profileName
 	 * - `sort` : sort column
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
@@ -461,7 +465,8 @@ class OSVService extends __BaseService {
 	 * @param params The `OSVService.GetSoftwareGroupAssetsParams` containing the following parameters:
 	 *
 	 * - `customerId`: Unique identifier of a Cisco customer.
-	 * - `profileName` : unique identifier of software group
+	 * - `id` : unique identifier of software group
+	 * - `profileName` : profileName
 	 * - `sort` : sort column
 	 * - `sortOrder` : sort order
 	 * - `pageIndex` : pageIndex
@@ -475,6 +480,7 @@ class OSVService extends __BaseService {
 		let __body: any = null;
 
 		if (params.customerId != null) __params = __params.set('customerId', params.customerId.toString());
+		if (params.id != null) __params = __params.set('id', params.id.toString());
 		if (params.profileName != null) __params = __params.set('profileName', params.profileName.toString());
 		if (params.pageIndex != null) __params = __params.set('pageIndex', params.pageIndex.toString());
 		if (params.pageSize != null) __params = __params.set('pageSize', params.pageSize.toString());
@@ -502,6 +508,7 @@ class OSVService extends __BaseService {
 	 * Software Group Assets
 	 * @param params The `OSVService.GetSoftwareGroupAssetsParams` containing the following parameters:
 	 * - `customerId`: Unique identifier of a Cisco customer.
+	 * - `id` : unique identifier of software group 
 	 * - `profileName` : unique identifier of software group
 	 * - `sort` : sort column
 	 * - `sortOrder` : sort order
@@ -524,7 +531,7 @@ class OSVService extends __BaseService {
  	*
  	* @return successful operation
  	*/
-	getSoftwareGroupRecommendationsResponse (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<__StrictHttpResponse<AssetRecommendationsResponse>> {
+	getSoftwareGroupRecommendationsResponse (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<__StrictHttpResponse<ProfileRecommendationsResponse>> {
 		let __params = this.newParams();
 		let __headers = new HttpHeaders();
 		let __body: any = null;
@@ -544,7 +551,7 @@ class OSVService extends __BaseService {
 		return this.http.request<any>(req).pipe(
 			__filter(_r => _r instanceof HttpResponse),
 			__map((_r) => {
-				return _r as __StrictHttpResponse<AssetRecommendationsResponse>;
+				return _r as __StrictHttpResponse<ProfileRecommendationsResponse>;
 			})
 		);
 	}
@@ -556,9 +563,9 @@ class OSVService extends __BaseService {
 	 * - `profileName` : unique identifier of software group	
 	 * @return successful operation
 	 */
-	getSoftwareGroupRecommendations (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<AssetRecommendationsResponse> {
+	getSoftwareGroupRecommendations (params: OSVService.GetSoftwareGroupDetailsParam): __Observable<ProfileRecommendationsResponse> {
 		return this.getSoftwareGroupRecommendationsResponse(params).pipe(
-			__map(_r => _r.body as AssetRecommendationsResponse)
+			__map(_r => _r.body as ProfileRecommendationsResponse)
 		);
 	}
 
@@ -708,7 +715,7 @@ module OSVService {
 		/**
 		 * software version
 		 */
-		swVersions: string;
+		swVersion: string;
 		/**
 		 * image
 		 */
@@ -793,6 +800,10 @@ module OSVService {
 		customerId: string;
 		/**
 		 * Unique identifier of a Software Group.
+		 */
+		id: string;
+		/**
+		 * profileName
 		 */
 		profileName: string;
 		/**

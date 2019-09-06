@@ -231,10 +231,11 @@ export class SoftwareGroupsComponent implements OnInit, OnDestroy, OnChanges {
 	 * @param item the item we selected
 	 */
 	public onRowSelect (item: any) {
-		this.softwareGroups.forEach((asset: any) => {
-			if (asset !== item) {
-				asset.rowSelected = false;
+		this.softwareGroups.forEach((softwareGroup: any) => {
+			if (softwareGroup !== item) {
+				softwareGroup.rowSelected = false;
 			}
+			softwareGroup.statusUpdated = false;
 		});
 		item.rowSelected = !item.rowSelected;
 		this.tabIndex = 0;

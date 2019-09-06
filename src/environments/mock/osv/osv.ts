@@ -8,6 +8,7 @@ import {
 	SoftwareGroupAssetsResponse,
 	SoftwareGroupVersionsResponse,
 	MachineRecommendationsResponse,
+	ProfileRecommendationsResponse,
 } from '@sdp-api';
 
 /** Base of URL for SDP API */
@@ -30,9 +31,6 @@ const svParams = '&pageIndex=1&pageSize=10&sort=swType&sortOrder=asc';
 
 /** AssetList params */
 const assetParams = '&pageIndex=1&pageSize=10&sort=hostName&sortOrder=asc&filter=';
-
-/** Asset Details Params */
-const assetDetailsParams = `&profileName=${assetId}&pid=${pid}&pf=${pf}&swType=IOS&swVersions=8&image=NA&postDate=null`;
 
 /** Software Group Params */
 const sgParams = '&pageIndex=1&pageSize=10&sort=profileName&sortOrder=asc&filter=';
@@ -78,77 +76,28 @@ const mockBasicRecommendations: AssetRecommendationsResponse = [
 	},
 ];
 
-/** The mock response for basic recommendations */
-const mockSoftwareGroupRecommendations: AssetRecommendationsResponse = [
-	{
-		accepted: true,
-		error: null,
-		name: 'suggested',
-		postDate: '2019-05-16T00:00:00.000+0000',
-		swVersion: '15.7(3)M4b',
-	},
-	{
-		error: null,
-		name: 'latest',
-		postDate: '2019-05-16T00:00:00.000+0000',
-		swVersion: '15.7(3)M4b',
-	},
-	{
-		error: null,
-		name: 'minimum',
-		postDate: null,
-		swVersion: 'NA',
-	},
-	{
-		error: null,
-		name: 'golden',
-		postDate: '2019-04-16T00:00:00.000+0000',
-		swVersion: 'NA',
-	},
-	{
-		error: null,
-		name: 'current',
-		postDate: '2014-05-30T00:00:00.000+0000',
-		swVersion: '15.3(3)M3',
-	},
-	{
-		name: "Recommendation #1",
-		swVersion: "7.3(2)N1(1b)",
-		postDate: "2017-11-14T18:30:00.000+0000",
-		error: null
-	},
-	{
-		name: "Recommendation #2",
-		swVersion: "7.3(2)N1(1c)",
-		postDate: "2017-12-13T18:30:00.000+0000",
-		error: null
-	},
-	{
-		name: "Recommendation #3",
-		swVersion: "7.3(4)N1(1)",
-		postDate: "2018-09-14T18:30:00.000+0000",
-		error: null
-	}
-];
-
-
 /** The mock response for machine recommendations */
 const mockMachineRecommendations: MachineRecommendationsResponse = [
 	{
 		bugFixed: 13,
 		bugs: [],
 		bugSeverity: {
-			high: 0,
-			critical: 0,
-			low: 1
+			RESOLVED: {
+				Critical: 0,
+				High: 0,
+				Low: 1,
+			},
 		},
+		name: 'Recommendation #1',
 		osType: 'NX-OS',
 		psirts: [],
 		psirtFixed: 32,
 		psirtSeverity: {
-			high: 0,
-			critical: 0,
-			low: 1
+			RESOLVED: {
+				Critical: 0,
+				High: 0,
+				Low: 1,
+			},
 		},
 		release: '7.3(2)N1(1b)',
 		score: 640,
@@ -157,17 +106,22 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugFixed: 12,
 		bugs: [],
 		bugSeverity: {
-			high: 0,
-			critical: 0,
-			low: 2
+			RESOLVED: {
+				Critical: 0,
+				High: 0,
+				Low: 2,
+			},
 		},
+		name: 'Recommendation #2',
 		osType: 'NX-OS',
 		psirts: [],
 		psirtFixed: 32,
 		psirtSeverity: {
-			high: 0,
-			critical: 0,
-			low: 1
+			RESOLVED: {
+				Critical: 0,
+				High: 0,
+				Low: 1,
+			},
 		},
 		release: '7.3(2)N1(1c)',
 		score: 640,
@@ -176,23 +130,84 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugFixed: 11,
 		bugs: [],
 		bugSeverity: {
-			high: 0,
-			critical: 0,
-			low: 1
+			RESOLVED: {
+				Critical: 0,
+				High: 0,
+				Low: 1,
+			},
 		},
+		name: 'Recommendation #3',
 		osType: 'NX-OS',
 		psirts: [],
 		psirtFixed: 32,
 		psirtSeverity: {
-			high: 0,
-			critical: 0,
-			low: 1
+			RESOLVED: {
+				Critical: 0,
+				High: 0,
+				Low: 1,
+			},
 		},
 		release: '7.3(4)N1(1)',
 		score: 640,
 	}
+	,
+	{
+		bugFixed: 11,
+		bugs: [],
+		bugSeverity: {
+			RESOLVED: {
+				Critical: 0,
+				High: 0,
+				Low: 1,
+			},
+		},
+		name: 'profile current',
+		osType: 'NX-OS',
+		psirts: [],
+		psirtFixed: 32,
+		psirtSeverity: {
+			RESOLVED: {
+				Critical: 0,
+				High: 0,
+				Low: 1,
+			},
+		},
+		release: '7.3(4)N1(1)',
+		score: 640,
+	},
 ];
 
+/** The mock response for basic recommendations */
+const mockSoftwareGroupRecommendations: ProfileRecommendationsResponse = {
+	recomm: [
+		{
+			accepted: true,
+			error: null,
+			name: 'suggested',
+			postDate: '2019-05-16T00:00:00.000+0000',
+			swVersion: '15.7(3)M4b',
+		},
+		{
+			error: null,
+			name: 'latest',
+			postDate: '2019-05-16T00:00:00.000+0000',
+			swVersion: '15.7(3)M4b',
+		},
+		{
+			error: null,
+			name: 'minimum',
+			postDate: null,
+			swVersion: 'NA',
+		},
+		{
+			error: null,
+			name: 'golden',
+			postDate: '2019-04-16T00:00:00.000+0000',
+			swVersion: 'NA',
+		},
+	],
+	recommSummary: mockMachineRecommendations,
+};
 
 /** The mock response for software versions */
 const mockSoftwareVersions: SoftwareVersionsResponse = {
@@ -833,7 +848,7 @@ const mockSoftwareGroupVersions: SoftwareGroupVersionsResponse = {
 		rows: 10,
 		total: 11,
 	},
-	uiSwVersionList: [
+	uiProfileSwVersion: [
 		{
 			assetCount: 1,
 			deploymentStatus: '',
@@ -911,7 +926,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}assetDetails?customerId=${customerId}${assetDetailsParams}`,
+		url: `${api}assetDetails?customerId=2431199&&profileName=${assetId}&pid=${pid}` +
+			`&pf=${pf}&swType=IOS&swVersions=8&image=NA&postDate=null`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -979,7 +995,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileAssets?customerId=${customerId}&profileName=${assetId}${sgAssetsParams}`,
+		url: `${api}profileAssets?customerId=2431199&id=7293498_NA` +
+					`&profileName=7293498_NA${sgAssetsParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -996,7 +1013,8 @@ export const OSVScenarios = [
 				},
 			],
 		},
-		url: `${api}profileVersions?customerId=${customerId}&profileName=${assetId}${sgVerParams}`,
+		url: `${api}profileVersions?customerId=2431199&id=7293498_NA` +
+					`&profileName=7293498_NA${sgVerParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{

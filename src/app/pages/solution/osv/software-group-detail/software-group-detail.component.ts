@@ -24,8 +24,9 @@ import {
 	AssetRecommendationsResponse,
 	MachineRecommendationsResponse,
 	MachineRecommendations,
+	ProfileRecommendationsResponse,
 } from '@sdp-api';
-import { forkJoin, Subject, of } from 'rxjs';
+import { forkJoin, Subject, of, Subscription } from 'rxjs';
 import { takeUntil, map, catchError } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { CuiTableOptions, CuiModalService } from '@cisco-ngx/cui-components';
@@ -44,38 +45,51 @@ import { CancelConfirmComponent } from '../cancel-confirm/cancel-confirm.compone
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
+	@ViewChild('versionTemplate', { static: true }) 
+		private versionTemplate: TemplateRef<{ }>;
 	@Input() public tabIndex;
 
 	public status = {
-		isLoading: true,
+		profileRecommendations: true,
+		assetsLoading: true,
+		versionsLoading: true,
+		machineRecommendationsLoading: true,
 	};
 	public fullscreen = false;
 	private destroy$ = new Subject();
 	public customerId: string;
+
 	public softwareGroupVersions: SoftwareGroupVersion[];
 	public softwareGroupAssets: SoftwareGroupAsset[];
+
 	public softwareGroupVersionsTable: CuiTableOptions;
 	public softwareGroupAssetsTable: CuiTableOptions;
+
 	public softwareGroupDetailsParams: OSVService.GetSoftwareGroupDetailsParam;
 	public softwareGroupAssetsParams: OSVService.GetSoftwareGroupAssetsParams;
 	public softwareGroupVersionsParams: OSVService.GetSoftwareGroupAssetsParams;
+
 	public assetsPagination: OsvPagination;
 	public assetsPaginationCount: string;
+
 	public versionsPagination: OsvPagination;
 	public versionsPaginationCount: string;
-	public headingClass = this.fullscreen ? 'text-xlarge' : 'text-large';
-	public subHeadingClass = this.fullscreen ? 'text-large' : 'text-medium';
-	public chartWidth = this.fullscreen ? 250 : 140;
-	public assetAlert: any = {};
-	public versionAlert: any = {};
-	public recommendationAlert = {};
+
+	public assetAlert: any = { };
+	public versionAlert: any = { };
+	public recommendationAlert = { };
+
 	public recommendations: AssetRecommendationsResponse;
 	public machineRecommendationsResponse: MachineRecommendationsResponse;
+	public profileRecommendationResponse: AssetRecommendationsResponse;
 	public machineRecommendations: MachineRecommendations[];
-	public selectedMachineRecommendation;
+
 	public screenWidth = window.innerWidth;
-	public barChartBackgroundColor= "#f2fbfd";
+
+	public recommendationAcceptedDate: string;
+	public cancelSubscription: Subscription;
+	public actionData: any;
+
 	constructor (
 		private logger: LogService,
 		private osvService: OSVService,
@@ -91,6 +105,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.softwareGroupAssetsParams = {
 			customerId: this.customerId,
 			profileName: '7293498_NA',
+			id: '7293498_NA',
 			pageIndex: 1,
 			pageSize: 10,
 			sort: 'hostName',
@@ -99,6 +114,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 		this.softwareGroupVersionsParams = {
 			customerId: this.customerId,
 			profileName: '7293498_NA',
+			id: '7293498_NA',
 			pageIndex: 1,
 			pageSize: 10,
 			sort: 'swType',
@@ -113,6 +129,10 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 */
 	public ngOnInit (): void {
 		this.refresh();
+		this.cancelSubscription = this.cuiModalService.onCancel
+			.subscribe(() => {
+				this.onCancel();
+			});
 	}
 
 	/**
@@ -121,10 +141,13 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	public refresh () {
 		if (this.selectedSoftwareGroup && !this.selectedSoftwareGroup.statusUpdated) {
 			this.clear();
-			// const profileName = _.get(this.selectedSoftwareGroup, 'profileName');
-			// this.softwareGroupDetailsParams.profileName = profileName;
-			// this.softwareGroupAssetsParams.profileName = profileName;
-			// this.softwareGroupVersionsParams.profileName = profileName;
+			const profileName = _.get(this.selectedSoftwareGroup, 'profileName');
+			const profileId = _.get(this.selectedSoftwareGroup, 'id');
+			this.softwareGroupDetailsParams.profileName = profileName;
+			this.softwareGroupAssetsParams.id = profileId;
+			this.softwareGroupAssetsParams.profileName = profileName;
+			this.softwareGroupVersionsParams.id = profileId;
+			this.softwareGroupVersionsParams.profileName = profileName;
 			this.loadData();
 		}
 	}
@@ -133,9 +156,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * load data
 	 */
 	public loadData () {
-		this.status.isLoading = true;
 		forkJoin(
-			this.fetchMachineRecommendations(),
 			this.fetchSoftwareGroupDetails(),
 			this.getSoftwareGroupAssets(),
 			this.getSoftwareGroupVersions(),
@@ -143,57 +164,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 			.pipe(
 				takeUntil(this.destroy$),
 			)
-			.subscribe((responses) => {
-				if (this.machineRecommendationsResponse && this.recommendations) {
-					this.populateMachineRecommendationsInfo();
-				}
-				this.status.isLoading = false;
+			.subscribe(() => {
 				this.logger.debug('assets software.component: loadData()::Done Loading');
 			});
-	}
-
-	/**
-	 * merge recommendations and machine recommendation info required for compare view
-	 */
-	public populateMachineRecommendationsInfo () {
-		_.map(this.machineRecommendationsResponse, (machineRecommendation) => {
-			const recommendation = _.filter(this.recommendations,
-				{ swVersion: machineRecommendation.release });
-			machineRecommendation.name = _.get(recommendation, ['0', 'name']);
-			machineRecommendation.postDate = _.get(recommendation, ['0', 'postDate']);
-			if (machineRecommendation.bugSeverity) {
-				machineRecommendation.bugsExposed = Object.values(machineRecommendation.bugSeverity)
-					.reduce((a: number, b: number) => a + b);
-			}
-			if (machineRecommendation.psirtSeverity) {
-				machineRecommendation.psirtExposed = Object.values(machineRecommendation.psirtSeverity)
-					.reduce((a: number, b: number) => a + b);
-			}
-			machineRecommendation.bugSeriesData = _.compact(
-				_.map(machineRecommendation.bugSeverity, (value: number, key: string) => {
-					return {
-						value,
-						filter: key,
-						label: key === 'critical' ?
-							I18n.get('_OsvCritical_')
-							: key === 'high' ? I18n.get('_OsvHigh_') : I18n.get('_OsvLow_'),
-						selected: false,
-					};
-				}));
-			machineRecommendation.psritSeriesData = _.compact(
-				_.map(machineRecommendation.psirtSeverity, (value: number, key: string) => {
-					return {
-						value,
-						filter: key,
-						label: key === 'critical' ?
-							I18n.get('_OsvCritical_')
-							: key === 'high' ? I18n.get('_OsvHigh_') : I18n.get('_OsvLow_'),
-						selected: false,
-					};
-				}));
-		});
-		this.sortData(this.machineRecommendationsResponse);
-		this.machineRecommendations = this.machineRecommendationsResponse;
 	}
 
 	/**
@@ -201,43 +174,38 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @returns software group details list observable
 	 */
 	public fetchSoftwareGroupDetails () {
-		this.status.isLoading = true;
+		this.status.profileRecommendations = true;
 		return this.osvService.getSoftwareGroupRecommendations(this.softwareGroupDetailsParams)
 			.pipe(
-				map((response: AssetRecommendationsResponse) => {
-					this.recommendations = response;
+				map((response: ProfileRecommendationsResponse) => {
+					this.status.machineRecommendationsLoading = false;
+					this.status.profileRecommendations = false;
+					response.recomm = _.compact(response.recomm);
+					response.recommSummary = _.compact(response.recommSummary);
+					this.setAcceptedVersion({
+						data: response.recomm,
+						acceptedDate: response.recommAcceptedDate,
+						key: 'swVersion',
+					});
+					this.setAcceptedVersion({
+						data: response.recommSummary,
+						acceptedDate: response.recommAcceptedDate,
+						key: 'release',
+					});
+					this.recommendations = this.mergeMachineRecommendations(response);
+					this.machineRecommendations = response.recommSummary;
+					this.recommendationAcceptedDate = response.recommAcceptedDate;
 				}),
 				takeUntil(this.destroy$),
 				catchError(err => {
+					this.status.machineRecommendationsLoading = false;
+					this.status.profileRecommendations = false;
 					_.invoke(this.recommendationAlert, 'show',
 						I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
-				}),
-			);
-	}
-
-	/**
-	 * Fetch Machine Recommendations for the selected SoftwareGroup
-	 * @returns Machine Recommendations list observable
-	 */
-	public fetchMachineRecommendations () {
-		this.status.isLoading = true;
-		return this.osvService.getMachineRecommendations(this.softwareGroupDetailsParams)
-			.pipe(
-				map((response: MachineRecommendationsResponse) => {
-					this.machineRecommendationsResponse = response;
-				}),
-				takeUntil(this.destroy$),
-				catchError(err => {
-					_.invoke(this.recommendationAlert, 'show',
-						I18n.get('_OsvGenericError_'), 'danger');
-					this.logger.error('OSV Asset Recommendations : getAssetDetails() ' +
-						`:: Error : (${err.status}) ${err.message}`);
-
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -247,9 +215,11 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @returns software group assets list observable
 	 */
 	public getSoftwareGroupAssets () {
+		this.status.assetsLoading = true;
 		return this.osvService.getSoftwareGroupAssets(this.softwareGroupAssetsParams)
 			.pipe(
 				map((response: SoftwareGroupAssetsResponse) => {
+					this.status.assetsLoading = false;
 					this.softwareGroupAssets = response.uiAssetList;
 					this.assetsPagination = response.pagination;
 					this.assetsPagination.rows = this.softwareGroupAssetsParams.pageSize;
@@ -263,12 +233,13 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.buildSoftwareGroupAssetsTable();
 				}),
 				catchError(err => {
+					this.status.assetsLoading = false;
 					_.invoke(this.assetAlert, 'show',
 						I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV SG : getSoftwareGroupAsset() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -278,10 +249,12 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * @returns software group versions list observable
 	 */
 	public getSoftwareGroupVersions () {
+		this.status.versionsLoading = true;
 		return this.osvService.getSoftwareGroupVersions(this.softwareGroupVersionsParams)
 			.pipe(
 				map((response: SoftwareGroupVersionsResponse) => {
-					this.softwareGroupVersions = response.uiSwVersionList;
+					this.status.versionsLoading = false;
+					this.softwareGroupVersions = response.uiProfileSwVersion;
 					this.versionsPagination = response.pagination;
 					this.versionsPagination.rows = this.softwareGroupVersionsParams.pageSize;
 					const first = (this.versionsPagination.rows *
@@ -294,12 +267,13 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 					this.buildSoftwareGroupVersionsTable();
 				}),
 				catchError(err => {
+					this.status.versionsLoading = false;
 					_.invoke(this.versionAlert, 'show',
 						I18n.get('_OsvGenericError_'), 'danger');
 					this.logger.error('OSV SG : getSoftwareGroupVersions() ' +
 						`:: Error : (${err.status}) ${err.message}`);
 
-					return of({});
+					return of({ });
 				}),
 			);
 	}
@@ -308,6 +282,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * Resets data fields
 	 */
 	public clear () {
+		this.machineRecommendations = null;
 		this.recommendations = null;
 		this.softwareGroupAssets = null;
 		this.softwareGroupVersions = null;
@@ -317,6 +292,9 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	 * OnDestroy lifecycle hook
 	 */
 	public ngOnDestroy () {
+		if (this.cancelSubscription) {
+			_.invoke(this.cancelSubscription, 'unsubscribe');
+		}
 		this.destroy$.next();
 		this.destroy$.complete();
 	}
@@ -430,7 +408,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 						sortable: false,
 					},
 					{
-						key: 'deployment',
+						key: 'deploymentStatus',
 						name: I18n.get('_OsvDeploymentStatus_'),
 						sortable: false,
 					},
@@ -466,51 +444,128 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	}
 
 	/**
-	 * called after the recommendation is accepted
-	 * @param event contains updated data about the accepted recommendation
+	 * triggerd whenever user accepts or cancels recommendation
+	 * @param data emitted from the action or cancel actions
 	 */
-	public onRecommendationAccept (event: any) {
-		if (event.err) {
-			setTimeout(() => {
-				_.invoke(this.recommendationAlert, 'show',
-					I18n.get('_OsvGenericError_'), 'danger');
-			});
-
-			return;
+	public onAction (data: any) {
+		this.actionData = data;
+		if (data.type === 'accept') {
+			this.onAccept(data.version);
+		} else if (data.type === 'cancel') {
+			this.cuiModalService.showComponent(CancelConfirmComponent, { });
 		}
-		this.selectedSoftwareGroup = event.selectedSoftwareGroup;
-		this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
-		_.map(this.machineRecommendations, (machineRecommendation) => {
-			const recommendation = _.filter(event.recommendations,
-				{ swVersion: machineRecommendation.release });
-			machineRecommendation.accpeted = _.get(recommendation, ['0', 'accepted']);
-		});
-		this.getSoftwareGroupAssets();
 	}
 
 	/**
-	 * on machine recommendation accept click
+	 * accept recommendations
+	 * @param acceptedVersion accept version for this selected profile
 	 */
-	public onAcceptClick () {
-		this.selectedMachineRecommendation = {};
+	public onAccept (acceptedVersion: string) {
+		const body = {
+			customerId: this.customerId,
+			profileName: this.selectedSoftwareGroup.profileName,
+			optimalVersion: acceptedVersion,
+		};
+		this.status.profileRecommendations = true;
+		this.osvService.updateProfile(body)
+			.subscribe((response: SoftwareGroup) => {
+				this.status.profileRecommendations = false;
+				this.selectedSoftwareGroup.statusUpdated = true;
+				this.selectedSoftwareGroup.optimalVersion = response.optimalVersion;
+				this.setAcceptedVersion({
+					data: this.recommendations,
+					acceptedDate: response.recommAcceptedDate,
+					key: 'swVersion',
+				});
+				this.setAcceptedVersion({
+					data: this.machineRecommendations,
+					accpetedVersion: response.recommAcceptedDate,
+					key: 'release',
+				});
+				this.getSoftwareGroupAssets()
+					.subscribe();
+				this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+				this.logger.debug('Updated');
+			}, () => {
+				this.status.profileRecommendations = false;
+				// _.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');	
+				this.logger.debug('Error in updating');
+			});
 	}
 
 	/**
-	 * on machine recommendation cancel click
+	 * cancel the accepted Recommendation
 	 */
 	public onCancel () {
-		this.cuiModalService.showComponent(CancelConfirmComponent, {});
+		const body = {
+			customerId: this.customerId,
+			profileName: this.selectedSoftwareGroup.profileName,
+			optimalVersion: this.actionData.version,
+		};
+		this.status.profileRecommendations = true;
+		this.osvService.cancelUpdateProfileResponse(body)
+			.subscribe((response: any) => {
+				this.status.profileRecommendations = false;
+				this.selectedSoftwareGroup.statusUpdated = true;
+				this.selectedSoftwareGroup.statusUpdated = true;
+				this.selectedSoftwareGroup.optimalVersion = response.optimalVersion;				
+				this.setAcceptedVersion({
+					data: this.recommendations,
+					acceptedData: response.recommAcceptedDate,
+					key: 'swVersion',
+				});
+				this.setAcceptedVersion({
+					data: this.machineRecommendations,
+					acceptedData: response.recommAcceptedDate,
+					key: 'release',
+				});
+				this.getSoftwareGroupAssets()
+					.subscribe();
+				this.selectedSoftwareGroupChange.emit(this.selectedSoftwareGroup);
+				this.logger.debug('Updated');
+			}, () => {
+				this.status.profileRecommendations = false;
+				// 	_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');				
+				this.logger.debug('Error in updating');
+			});
+
 	}
 
 	/**
-	 * Sort Machine Recommendations by name
-	 * @param data MachineRecommendations
-	 * @returns sorted data
+	 * 
+	 * @param params containing recommendations,accepted date	
 	 */
-	public sortData (data: MachineRecommendationsResponse) {
-		data.sort((a: MachineRecommendations, b: MachineRecommendations) =>
-			<any>new Date(a.name) - <any>new Date(b.name));
-
-		return data;
+	setAcceptedVersion (params) {
+		const optimalVersion =this.selectedSoftwareGroup.optimalVersion;
+		_.map(params.data, (recommendation: any) => {
+			if (recommendation) {
+				recommendation.accepted = recommendation[params.key] === optimalVersion
+					? true : false;
+				recommendation.acceptedDate = params.acceptedDate;
+			}
+		});
 	}
+
+	/**
+	 * merge machine recommendations to basic recommendations otherwise add current recommendation to basic
+	 * @param response profile recommendations response	 
+	 */
+	mergeMachineRecommendations (response) {
+		if (response.recommSummary && response.recommSummary.length > 0) {
+			_.map(response.recommSummary, (machineRecomm: MachineRecommendations) => {
+				machineRecomm.swVersion = machineRecomm.release;
+			})
+			return [...response.recomm, ...response.recommSummary];
+		} else if (response.recomm && response.recomm.length > 0) {
+			response.recomm.push({
+				error: null,
+				name: 'profile current',
+				postDate: null,
+				swVersion: 'NA',
+			});
+
+			return response.recomm;
+		}
+	}
+
 }

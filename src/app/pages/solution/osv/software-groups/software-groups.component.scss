@@ -1,3 +1,5 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
 .cui .icon-more::before {
 	// styling to make the more icon sizing more aligned with design
 	font-size: 20px !important;
@@ -6,4 +8,17 @@
 .responsive-table {
 	overflow: hidden;
 	padding-bottom: 140px;
+}
+
+.text-white {
+	color: $white !important;
+}
+
+.badge.badge--blue.text-white.color-transparent {
+	color: transparent;
+	background: transparent;
+}
+
+.color-transparent {
+	color: transparent;
 }

@@ -1,6 +1,6 @@
 /* tslint:disable */
 export interface OsvSeverity {
-	high: number,
-	critical: number,
-	low: number;
+	High: number,
+	Critical: number,
+	Low: number;
 }

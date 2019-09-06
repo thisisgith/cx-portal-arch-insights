@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserResolve } from '@utilities';
-import { map, flatMap } from 'rxjs/operators';
+import { map, flatMap, catchError } from 'rxjs/operators';
 import { RouteAuthService } from 'src/app/services';
 /**
  *  Injectable declaration
@@ -33,7 +33,7 @@ export class PermissionGuard implements CanActivate {
 					this.router.navigateByUrl('/solution/insights/risk-mitigation');
 
 					return false;
-				}),
+				}),				
 			);
 	}
 }

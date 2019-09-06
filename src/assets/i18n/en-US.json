@@ -634,6 +634,7 @@
 	"_OsvClickToSelectRecommendation_": "You may accept a recommendation given below. Click a version to select.",
 	"_OsvClose_": "Close",
 	"_OsvCurrentlyExposed_": "Currently Exposed To",
+	"_OsvCurrent_":"Current",
 	"_OsvFixed_": "Fixed",
 	"_OsvWillExposed_": "Will Be Exposed To ",
 	"_OsvFeatures_": "Active Features",

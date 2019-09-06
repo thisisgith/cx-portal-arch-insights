@@ -1,6 +1,6 @@
 import { OsvBug } from './bugs';
 import { OsvPsirt } from './psrits';
-import { OsvSeverity } from './osv-severity';
+import { OsvSeverityTypes } from './severity-types';
 
 /* tslint:disable */
 
@@ -12,13 +12,15 @@ export interface MachineRecommendations {
 	postDate?: string;
 	psirts: OsvPsirt[];
 	release: string;
-	score: number;
+	swVersion?: string;
+	score: any;
 	bugFixed: number;
 	bugsExposed?: number;
 	psirtExposed?: number;
 	psirtFixed: number;
-	bugSeverity: OsvSeverity;
-	psirtSeverity: OsvSeverity;
+	bugSeverity: OsvSeverityTypes;
+	psirtSeverity: OsvSeverityTypes;
 	bugSeriesData?: [],
-	psritSeriesData?: []
+	psirtSeriesData?: [],
+	acceptedDate?: string;
 }

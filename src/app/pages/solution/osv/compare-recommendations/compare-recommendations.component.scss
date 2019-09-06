@@ -1,0 +1,29 @@
+@import '~cisco-ui/src/scss/utilities/_variables.scss';
+
+.compare-recommendations table {
+	border: 0;
+
+	& tbody {
+		& tr::after {
+			content: unset !important;
+		}
+
+		& tr td.recommendation {
+			vertical-align: top;
+			background-color: $light-blue;
+			border-left: 1px solid $light-gray-5;
+		}
+
+		& td.no-border-top {
+			border-top: 0;
+		}
+
+		& td.no-border-bottom {
+			border-bottom: 0;
+		}
+
+		& td.first-column-width {
+			width: 15%;
+		}
+	}
+}

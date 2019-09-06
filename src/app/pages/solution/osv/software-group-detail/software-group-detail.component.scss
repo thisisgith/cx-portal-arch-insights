@@ -33,29 +33,12 @@
 	overflow: unset !important;
 }
 
-.compare-recommendations table {
-	border: 0;
 
-	& tbody {
-		& tr::after {
-			content: unset !important;
-		}
-
-		& tr td.recommendation {
-			background-color: $light-blue;
-			border-left: 1px solid $light-gray-5;
-		}
-
-		& td.no-border-top {
-			border-top: 0;
-		}
-
-		& td.no-border-bottom {
-			border-bottom: 0;
-		}
-	}
+.badge.badge--blue.text-white.color-transparent {
+	color: transparent;
+	background: transparent;
 }
 
-.color-tranparent {
+.color-transparent {
 	color: transparent;
 }

@@ -1,19 +1,13 @@
-<details-panel 
-	[minWidth]="'1024px'" 
-	*ngIf="selectedSoftwareGroup" 
-	[hidden]="!selectedSoftwareGroup"
+<details-panel [minWidth]="'1024px'" *ngIf="selectedSoftwareGroup" [hidden]="!selectedSoftwareGroup"
 	[fullscreen]="fullscreen">
-		<details-panel-header 
-			(close)="selectedSoftwareGroup = false" 
-			[(fullscreen)]="fullscreen"
-			[fullscreenToggle]="screenWidth > 1024 ? true : false">
-				<div detailsPanelTitle>
-					<div 						 
-						class="qtr-margin-left text-xlarge half-margin-bottom"
-						[innerText]="selectedSoftwareGroup?.profileName">
-					</div>
-				</div>
-		</details-panel-header>
+	<details-panel-header (close)="selectedSoftwareGroup = false" [(fullscreen)]="fullscreen"
+		[fullscreenToggle]="screenWidth > 1024 ? true : false">
+		<div detailsPanelTitle>
+			<div class="qtr-margin-left text-xlarge half-margin-bottom"
+				[innerText]="selectedSoftwareGroup?.profileName">
+			</div>
+		</div>
+	</details-panel-header>
 	<ng-container *ngTemplateOutlet="softwareGroupDetails"></ng-container>
 </details-panel>
 
@@ -40,50 +34,43 @@
 </ng-template>
 
 <ng-template #softwareGroupRecommendations>
-	<cui-alert [options]="recommendationAlert"></cui-alert>
-	<div class="base-margin-top">
-		<asset-details 
-			[selectedMachineRecommendation]="selectedMachineRecommendation"
-			[recommendations]="recommendations" 
-			[accept]="true"
-			(onRecommendationAccept)="onRecommendationAccept($event)" 
-			[selectedSoftwareGroup]="selectedSoftwareGroup"
-			[fullscreen]="fullscreen" 
-			(showMultipleVersions)="tabIndex = 3">
-		</asset-details>
+	<cui-spinner *ngIf="status.profileRecommendations"></cui-spinner>
+	<div *ngIf="!status.profileRecommendations">
+		<cui-alert [options]="recommendationAlert"></cui-alert>
+		<div class="base-margin-top">
+			<software-group-recommendations 
+				[selectedSoftwareGroup]="selectedSoftwareGroup"
+				[recommendations]="recommendations"
+				(onAction)="onAction($event)"
+				(showVersions) = "tabIndex = 3;"
+			></software-group-recommendations>
+		</div>
 	</div>
 </ng-template>
 
 <ng-template #softwareGroupAssetsTemp>
 	<cui-alert [options]="assetAlert"></cui-alert>
 	<div class="base-margin-top">
-		<cui-spinner *ngIf="status.isLoading"></cui-spinner>
+		<cui-spinner *ngIf="status.assetsLoading"></cui-spinner>
 	</div>
-	<div class="base-margin-top" *ngIf="!status.isLoading &&  softwareGroupAssets?.length > 0">
+	<div class="base-margin-top" *ngIf="!status.assetsLoading &&  softwareGroupAssets?.length > 0">
 		<div class="qtr-margin-top"
 			*ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize">
 			<div class="flex flex-fill">
 				<div class="flex-center-vertical" *ngIf="assetsPagination && softwareGroupAssets?.length > 0">
 					<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
-					<span 
-						[innerText]="'_OsvShowingXofYAssets_' | i18n:assetsPaginationCount:assetsPagination.total"
-						class="qtr-margin-left text-small text-muted" 
-						data-auto-id="ShowingAssetsCount">
+					<span [innerText]="'_OsvShowingXofYAssets_' | i18n:assetsPaginationCount:assetsPagination.total"
+						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 					</span>
 				</div>
 			</div>
 		</div>
-		<cui-table 
-			[options]="softwareGroupAssetsTable" 
-			[data]="softwareGroupAssets">
+		<cui-table [options]="softwareGroupAssetsTable" [data]="softwareGroupAssets">
 		</cui-table>
 		<div *ngIf="assetsPagination && softwareGroupAssets?.length > softwareGroupAssetsParams.pageSize"
 			class="base-margin-top">
-			<cui-pager 
-				[page]="assetsPagination.page - 1" 
-				[limit]="assetsPagination.rows"
-				[totalItems]="assetsPagination.total || 0" 
-				(onPageChanged)="onAssetsPageChanged($event)">
+			<cui-pager [page]="assetsPagination.page - 1" [limit]="assetsPagination.rows"
+				[totalItems]="assetsPagination.total || 0" (onPageChanged)="onAssetsPageChanged($event)">
 			</cui-pager>
 		</div>
 	</div>
@@ -93,33 +80,26 @@
 <ng-template #softwareGroupVersionsTemp>
 	<cui-alert [options]="versionAlert"></cui-alert>
 	<div class="base-margin-top">
-		<cui-spinner *ngIf="status.isLoading"></cui-spinner>
+		<cui-spinner *ngIf="status.versionsLoading"></cui-spinner>
 	</div>
-	<div class="base-margin-top" *ngIf="!status.isLoading &&  softwareGroupVersions?.length > 0">
+	<div class="base-margin-top" *ngIf="!status.versionsLoading &&  softwareGroupVersions?.length > 0">
 		<div class="qtr-margin-top"
 			*ngIf="versionsPagination && softwareGroupVersions?.length > softwareGroupVersionsParams.pageSize">
 			<div class="flex flex-fill">
 				<div class="flex-center-vertical" *ngIf="versionsPagination && softwareGroupVersions?.length > 0">
 					<span [innerText]="'_OsvAssets_' | i18n" class="text-large"></span>
-					<span 
-						[innerText]="'_OsvShowingXofYAssets_' | i18n:versionsPaginationCount:versionsPagination.total"
-						class="qtr-margin-left text-small text-muted" 
-						data-auto-id="ShowingAssetsCount">
+					<span [innerText]="'_OsvShowingXofYAssets_' | i18n:versionsPaginationCount:versionsPagination.total"
+						class="qtr-margin-left text-small text-muted" data-auto-id="ShowingAssetsCount">
 					</span>
 				</div>
 			</div>
 		</div>
-		<cui-table 
-			[options]="softwareGroupVersionsTable" 
-			[data]="softwareGroupVersions">
+		<cui-table [options]="softwareGroupVersionsTable" [data]="softwareGroupVersions">
 		</cui-table>
 		<div *ngIf="versionsPagination && softwareGroupVersions?.length > softwareGroupVersionsParams.pageSize"
 			class="base-margin-top">
-			<cui-pager 
-				[page]="versionsPagination.page - 1" 
-				[limit]="versionsPagination.rows"
-				[totalItems]="versionsPagination.total || 0" 
-				(onPageChanged)="onVersionsPageChanged($event)">
+			<cui-pager [page]="versionsPagination.page - 1" [limit]="versionsPagination.rows"
+				[totalItems]="versionsPagination.total || 0" (onPageChanged)="onVersionsPageChanged($event)">
 			</cui-pager>
 		</div>
 	</div>
@@ -127,158 +107,26 @@
 
 
 <ng-template #compareRecommendationsTemp>
-	<cui-alert [options]="recommendationAlert"></cui-alert>
-	<div class="compare-recommendations responsive-table">
-		<table class="table table--bordered table--nostripes table--wrap table--fixed">
-			<tbody>
-				<!-- version and release date -->
-				<tr>
-					<td class="no-border-bottom no-border-top"></td>
-					<td class="recommendation no-border-top">
-						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
-							[innerText]="'current' | titlecase"></div>
-						<div class="half-margin-top" [innerText]="'v3'"></div>
-						<div class="half-margin-top" [innerText]="'-'"></div>
-					</td>
-					<td *ngFor="let recommendation of machineRecommendations" class="recommendation no-border-top ">
-						<div [ngClass]="{'text-xlarge':fullscreen,'text-large':!fullscreen}"
-							[innerText]="recommendation.name"></div>
-						<div class="half-margin-top" [innerText]="recommendation.release"></div>
-						<div class="half-margin-top" [innerText]="recommendation.postDate | date:medium"></div>
-					</td>					
-				</tr>
-				<!-- status or action -->
-				<tr>
-					<td class="no-border-bottom no-border-top text-large" [innerText]="'_OsvStatusOrAction_' | i18n">
-					</td>
-					<td class="recommendation"></td>
-					<td *ngFor="let recommendation of machineRecommendations" class="recommendation ">
-						<button
-							*ngIf="recommendation.accepted"
-							(click)="onAcceptClick()"
-							class="btn btn--secondary btn--small"
-							[innerText]="'_OsvAccept_' | i18n" 
-							attr.data-auto-id="AcceptVersion-">
-						</button>						
-						<button
-							*ngIf="!recommendation.accepted"
-							(click)="onCancel()"
-							class="btn btn--secondary btn--small"
-							[innerText]="'_Cancel_' | i18n" 
-							attr.data-auto-id="CancelAcceptVersion-">
-						</button>						
-					</td>
-				</tr>
-				<!-- risk score -->
-				<tr>
-					<td class="overflow-unset no-border-bottom no-border-top text-large">
-						<span class="text-large" [innerText]="'_OsvRiskScore_' | i18n"></span>
-						<span class="qtr-margin-left  text-primary" data-balloon-length="large"
-							[attr.data-balloon]="'_OsvRiskScoreInfo_' | i18n" data-balloon-pos="right">
-							<i class="icon-info qtr-margin-bottom"></i>
-						</span>
-					</td>
-					<td class="text-xlarge recommendation" [innerText]="'35'"></td>
-					<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
-						<div class="flex align-items-center">
-							<span class="text-xlarge qtr-margin-left" [innerText]="recommendation.score"></span>
-						</div>
-					</td>
-				</tr>
-				<!-- bugs -->
-				<tr>
-					<td class="headingClass no-border-bottom no-border-top text-large" [innerText]="'_Bugs_' | i18n">
-					</td>
-					<td class="recommendation">
-						<div class="base-margin-bottom"
-							[ngClass]="{'text-small':!fullscreen,'text-large base-margin-top':fullscreen}"
-							[innerText]="'_OsvCurrentlyExposed_' | i18n | uppercase"></div>
-						<div class=" text-xlarge" [innerText]="'15'" [ngClass]="{'base-padding-top':!fullscreen}"></div>
-						<div class="base-margin-top">
-							<bar-chart 
-								dataLabels="true" 
-								[backgroundColor]="barChartBackgroundColor" 
-								[seriesData]="seriesData"
-								width="200">
-							</bar-chart>
-						</div>
-					</td>
-					<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
-						<div class="row" [ngClass]="{'base-margin-top':fullscreen}">
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}" class="col-6"
-								[innerText]="'_OsvFixed_' | i18n"></div>
-							<div [ngClass]="{'text-small':!fullscreen,'text-large':fullscreen}"
-								[innerText]="'_OsvWillExposed_' | i18n" class="text-small col-6"></div>
-						</div>
-						<div class="base-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="recommendation.bugFixed"></span>
-								<span class="text-xlarge" [innerText]="'/'"></span>
-								<span class="text-xlarge" [innerText]="'15'"></span>
-
-							</div>
-							<div class="text-xlarge" [innerText]="recommendation.bugsExposed"></div>
-						</div>
-						<div class="base-margin-top">
-							<bar-chart 
-								width="200" 
-								[backgroundColor]="barChartBackgroundColor" 
-								dataLabels="true"
-								[seriesData]="recommendation.bugSeriesData">
-							</bar-chart>
-						</div>
-					</td>
-				</tr>
-				<!-- security advisories -->
-				<tr>
-					<td class="headingClass no-border-bottom no-border-top text-large"
-						[innerText]="'_SecurityAdvisories_' | i18n">
-					</td>
-					<td class="recommendation">
-						<div class="text-xlarge half-margin-top" [innerText]="'32'"></div>
-						<div class="base-margin-top">
-							<bar-chart 
-								width="200" 
-								dataLabels="true" 
-								[backgroundColor]="barChartBackgroundColor"
-								[seriesData]="seriesData">
-							</bar-chart>
-						</div>
-					</td>
-					<td *ngFor="let recommendation of machineRecommendations" class="recommendation">
-						<div class="half-margin-top flex justify-content-between">
-							<div>
-								<span class="text-xlarge" [innerText]="recommendation.psirtFixed"></span>
-								<span class="text-xlarge" [innerText]="'/'"></span>
-								<span class="text-xlarge" [innerText]="'32'"></span>
-
-							</div>
-							<div class="text-xlarge" [innerText]="recommendation.psirtExposed"></div>
-						</div>
-						<div class="base-margin-top">
-							<bar-chart 
-								width="200" 
-								[backgroundColor]="barChartBackgroundColor" 
-								dataLabels="true"
-								[seriesData]="recommendation.psritSeriesData">
-							</bar-chart>
-						</div>
-					</td>
-					
-				</tr>
-			</tbody>
-		</table>
+	<cui-spinner *ngIf="status.profileRecommendations"></cui-spinner>
+	<div *ngIf="!status.profileRecommendations">
+		<cui-alert [options]="recommendationAlert"></cui-alert>
+		<div class="base-margin-top">
+			<compare-recommendations 
+				[selectedSoftwareGroup]="selectedSoftwareGroup" 
+				[recommendations]="machineRecommendations"
+				(onAction)="onAction($event)">
+			</compare-recommendations>
+		</div>
 	</div>
 </ng-template>
+
 <cui-modal></cui-modal>
 
+<!-- version template view for group assets -->
 <ng-template #versionTemplate let-item="celldata">
-	<span 
-		[title]="item.alert | uppercase" 
-		*ngIf="item?.alert && item?.alert != 'NA'"
-		[ngClass]="{'information':'text-primary'}[item.alert]" 
-		class="icon-circle">
+	<span [title]="item.alert | uppercase" *ngIf="item?.alert && item?.alert != 'NA'"
+		[ngClass]="{'information':'text-primary','critical':text-danger}[item.alert]" class="icon-circle">
 	</span>
-	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-tranparent"></span>
+	<span *ngIf="!item?.alert || item?.alert == 'NA'" class="icon-circle color-transparent"></span>
 	<span class="col-11" [innerText]="item.swVersion"></span>
 </ng-template>

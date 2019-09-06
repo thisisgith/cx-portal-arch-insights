@@ -3,6 +3,6 @@ import { OsvPagination } from './pagination';
 import { SoftwareGroupVersion } from './software-group-version';
 
 export type SoftwareGroupVersionsResponse = {
-	uiSwVersionList: Array<SoftwareGroupVersion>;
+	uiProfileSwVersion: Array<SoftwareGroupVersion>;
 	pagination: OsvPagination;
 };
