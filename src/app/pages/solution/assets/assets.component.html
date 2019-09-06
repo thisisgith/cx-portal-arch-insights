@@ -36,7 +36,7 @@
 	<ng-container *ngIf="filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
-	<div>
+	<div #tableContainer [ngStyle]="{ 'height': tableContainerHeight }">
 		<div>
 			<ng-container *ngIf="!status.isLoading && pagination">
 				<ng-container *ngTemplateOutlet="titleBar"></ng-container>

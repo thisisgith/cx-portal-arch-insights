@@ -38,7 +38,12 @@
 	</cui-tabs>
 </div>
 
-<div *ngIf="selectedTab" class="panel panel--bordered base-margin-top">
+<div
+	#contentContainer
+	*ngIf="selectedTab"
+	class="panel panel--bordered base-margin-top"
+	[ngStyle]="{ 'height': selectedTab.contentContainerHeight }"
+>
 	<ng-container *ngIf="selectedTab.filtered">
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 	</ng-container>
@@ -270,7 +275,7 @@
 
 <ng-template #lastUpdatedTemplate let-celldata="celldata">
 	<div class="flex flex-fill flex-center">
-		<span 
+		<span
 			[innerText]="(celldata?.lastUpdated | date:'yyyy MMM dd') || (celldata?.publishedOn | date:'yyyy MMM dd') || ('_Never_' | i18n)"
 			data-auto-id="LastUpdatedText"
 		></span>

@@ -16,11 +16,11 @@ import { environment } from '@environment';
 import { DetailsPanelModule } from 'src/app/components/details/panel/details-panel.module';
 import { AssetDetailsModule } from '../../../components/details/asset/asset-details.module';
 import { AssetDetailsHeaderModule } from '../../../components/details/asset/header/header.module';
-import { ColumnChartModule } from '@components';
+import { ColumnChartModule, VisualFilterBarModule } from '@components';
 import { AfmDetailsModule } from './afm-details/afm-details.module';
 
 /** rootUrl for rest call */
-const rootUrl = environment.sdpServiceOrigin;
+const rootUrl = environment.sdpServiceOrigin + environment.sdpServiceBasePath;
 /**
  * Child routes for Assets Module for lazy loading
  */
@@ -54,6 +54,7 @@ const childRoutes: Routes = [
 		AssetDetailsHeaderModule,
 		ColumnChartModule,
 		AfmDetailsModule,
+		VisualFilterBarModule,
 	],
 })
 

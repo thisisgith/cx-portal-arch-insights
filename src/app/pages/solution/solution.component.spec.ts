@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject, of, throwError } from 'rxjs';
 import { SolutionComponent } from './solution.component';
@@ -80,7 +81,7 @@ describe('SolutionComponent', () => {
 			.returnValue(of(getActiveBody(RacetrackScenarios[0])));
 	};
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetsModule,
@@ -110,8 +111,10 @@ describe('SolutionComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		contractsService = TestBed.get(ContractsService);
 		productAlertsService = TestBed.get(ProductAlertsService);
@@ -199,9 +202,11 @@ describe('SolutionComponent', () => {
 			.toEqual('IBN');
 
 		component.changeSolution(component.solutions[1]);
+		tick();
 	}));
 
 	it('should change the active technology', fakeAsync(() => {
+		tick();
 		buildSpies();
 		racetrackInfoService.sendRacetrack(getActiveBody(RacetrackScenarios[0]));
 		racetrackInfoService.sendCurrentSolution(
@@ -210,7 +215,7 @@ describe('SolutionComponent', () => {
 		racetrackInfoService.sendCurrentTechnology(
 			getActiveBody(RacetrackScenarios[0]).solutions[0].technologies[0],
 		);
-
+		tick();
 		fixture.detectChanges();
 
 		expect(component.selectedTechnology.name)
@@ -270,7 +275,36 @@ describe('SolutionComponent', () => {
 		});
 	});
 
-	it('should load the advisoriesFacet', done => {
+	it('should open Quick Tour when first time null', fakeAsync(() => {
+		tick();
+		fixture.detectChanges();
+		expect(component.quickTourActive)
+			.toBeTruthy();
+	}));
+
+	it('should open Quick Tour when first time true', fakeAsync(() => {
+		tick();
+		utils.setLocalStorage('quickTourFirstTime', { firstTime: true });
+		router.navigate(['/solution/lifecycle']);
+		tick();
+		fixture.detectChanges();
+		expect(component.quickTourActive)
+			.toBeTruthy();
+	}));
+
+	it('should not open Quick Tour when not first time', fakeAsync(() => {
+		tick();
+		utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
+		router.navigate(['/solution/lifecycle']);
+		tick();
+		fixture.detectChanges();
+		expect(component.quickTourActive)
+			.toBeFalsy();
+	}));
+
+	it('should load the advisoriesFacet', fakeAsync(() => {
+		tick();
+		(<any> component).router.url = '';
 		spyOn(productAlertsService, 'getVulnerabilityCounts')
 			.and
 			.returnValue(of(getActiveBody(VulnerabilityScenarios[0])));
@@ -279,54 +313,11 @@ describe('SolutionComponent', () => {
 			.and
 			.returnValue(of(getActiveBody(CoverageScenarios[2])));
 
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
+		tick(5000);
+		fixture.detectChanges();
+		const assetsFacet = _.find(component.facets, { key: 'assets' });
 
-			const assetsFacet = _.find(component.facets, { key: 'assets' });
-			const advisoryFacet = _.find(component.facets, { key: 'advisories' });
-
-			expect(assetsFacet.data)
-				.toEqual({ gaugePercent: 7, gaugeLabel: '7%' });
-
-			const values = _.sum(_.map(advisoryFacet.seriesData, 'value'));
-
-			expect(values)
-				.toEqual(11);
-
-			done();
-		});
-	});
-
-	it('should open Quick Tour when first time null', fakeAsync(async () => {
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.quickTourActive)
-				.toBeTruthy();
-		});
+		expect(assetsFacet.data)
+			.toEqual({ gaugePercent: 7, gaugeLabel: '7%' });
 	}));
-
-	it('should open Quick Tour when first time true', fakeAsync(async () => {
-		utils.setLocalStorage('quickTourFirstTime', { firstTime: true });
-		await router.navigate(['/solution/lifecycle']);
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.quickTourActive)
-				.toBeTruthy();
-		});
-	}));
-
-	it('should not open Quick Tour when not first time', fakeAsync(async () => {
-		utils.setLocalStorage('quickTourFirstTime', { firstTime: false });
-		await router.navigate(['/solution/lifecycle']);
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			expect(component.quickTourActive)
-				.toBeFalsy();
-		});
-	}));
-
 });

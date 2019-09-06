@@ -21,7 +21,6 @@ import { Subscription, forkJoin, of, Subject } from 'rxjs';
 import {
 	Asset,
 	ContractsService,
-	RacetrackService,
 	RacetrackSolution,
 	RacetrackTechnology,
 	CoverageCountsResponse,
@@ -87,6 +86,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	private quickTourFirstTime: boolean;
 	private destroy$ = new Subject();
 
+	@ViewChild('kmWrapper', { static: true }) private kmWrapperRef: ElementRef;
 	@ViewChild('advisoriesFacet', { static: true }) public advisoriesTemplate: TemplateRef<{ }>;
 	@ViewChild('assetsFacet', { static: true }) public assetsTemplate: TemplateRef<{ }>;
 	@ViewChild('lifecycleFacet', { static: true }) public lifecycleTemplate: TemplateRef<{ }>;
@@ -99,7 +99,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 		private cuiModalService: CuiModalService,
 		private productAlertsService: ProductAlertsService,
 		private router: Router,
-		private racetrackService: RacetrackService,
 		private logger: LogService,
 		private caseService: CaseService,
 		private route: ActivatedRoute,
@@ -148,6 +147,35 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * Shifts the Key metrics carousel items.
+	 * Positive values shift right, negative values shift left.
+	 * Shift is multiplied with the width of a single item.
+	 * @param {number} shift The direction and magnitude of shift.
+	 */
+	public shiftCarousel (shift) {
+		const wrapper = this.kmWrapperRef.nativeElement;
+		const itemWidth = wrapper.querySelector('.km__items__item').offsetWidth;
+		wrapper.scrollTo(wrapper.scrollLeft + (shift * itemWidth), 0);
+	}
+
+	/**
+	 * Checks if clicked key metric is out of view and brings it into view if needed
+	 * @param {Element} target the target key metric element
+	 */
+	public repositionCarousel (target) {
+		const wrapper = this.kmWrapperRef.nativeElement;
+		const wrapperBounds = wrapper.getBoundingClientRect();
+		const targetBounds = target.getBoundingClientRect();
+		const itemWidth = wrapper.querySelector('.km__items__item').offsetWidth;
+
+		if (targetBounds.left < wrapperBounds.left) {
+			wrapper.scrollTo(wrapper.scrollLeft - itemWidth, 0);
+		} else if (targetBounds.right > wrapperBounds.right) {
+			wrapper.scrollTo(wrapper.scrollLeft + itemWidth, 0);
+		}
+	}
+
+	/**
 	 * Change the selected fact
 	 * @param facet the facet we've clicked on
 	 * @param navigate whether to adjust the route params
@@ -159,6 +187,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					f.selected = false;
 				}
 			});
+
+			const element = document.getElementById(facet.key);
+			this.repositionCarousel(element);
 
 			facet.selected = true;
 			this.selectedFacet = facet;
@@ -225,10 +256,6 @@ export class SolutionComponent implements OnInit, OnDestroy {
 				title: I18n.get('_Insights_'),
 			},
 		];
-
-		if (this.activeRoute) {
-			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
-		}
 	}
 
 	/**
@@ -365,7 +392,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					seriesData.push(
 						{
 							label: I18n.get('_SecurityAdvisories_'),
-							value: advisories,
+							percentage: advisories,
 						},
 					);
 				}
@@ -374,7 +401,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					seriesData.push(
 						{
 							label: I18n.get('_FieldNotices_'),
-							value: fieldNotices,
+							percentage: fieldNotices,
 						},
 					);
 				}
@@ -383,7 +410,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					seriesData.push(
 						{
 							label: I18n.get('_Bugs_'),
-							value: bugs,
+							percentage: bugs,
 						},
 					);
 				}
@@ -400,6 +427,22 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			}),
 			takeUntil(this.destroy$),
 		);
+	}
+
+	public get advisoryIndex () {
+		if (this.router.url.indexOf('/solution/advisories/security') !== -1) {
+			return 0;
+		}
+
+		if (this.router.url.indexOf('/solution/advisories/field-notices') !== -1) {
+			return 1;
+		}
+
+		if (this.router.url.indexOf('/solution/advisories/bugs') !== -1) {
+			return 2;
+		}
+
+		return null;
 	}
 
 	/**
@@ -635,6 +678,9 @@ export class SolutionComponent implements OnInit, OnDestroy {
 	 * Detects changes to the view after init
 	 */
 	public async ngAfterViewInit () {
+		if (this.activeRoute) {
+			this.selectFacet(this.getFacetFromRoute(this.activeRoute));
+		}
 		this.cdr.detectChanges();
 	}
 

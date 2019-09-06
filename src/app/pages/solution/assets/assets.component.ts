@@ -89,6 +89,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 	@ViewChild('criticalAdvisories', { static: true })
 		private criticalAdvisoriesTemplate: TemplateRef<{ }>;
 
+	@ViewChild('tableContainer', { static: false }) private tableContainer: ElementRef;
+
 	private searchInput: ElementRef;
 	@ViewChild('searchInput', { static: false }) set content (content: ElementRef) {
 		if (content) {
@@ -129,6 +131,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			]),
 	});
 	private destroy$ = new Subject();
+	public tableContainerHeight: string;
 	public inventory: Item[] = [];
 	public assetsDropdown = false;
 	public allAssetsSelected = false;
@@ -432,7 +435,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			rows: this.getRows(),
 			sort: ['deviceName:ASC'],
 		};
-
+		this.selectedSubfilters = [];
 		this.searchForm.controls.search.setValue('');
 		this.allAssetsSelected = false;
 		totalFilter.selected = true;
@@ -527,6 +530,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
 		this.assetParams.rows = this.getRows();
 		this.buildTable();
+		this.buildInventorySubject();
+		this.buildFilters();
 		this.route.queryParams.subscribe(params => {
 			if (params.page) {
 				const page = _.toSafeInteger(params.page);
@@ -597,9 +602,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 			this.filtered = !_.isEmpty(
 				_.omit(_.cloneDeep(this.assetParams), ['customerId', 'rows', 'page', 'sort']),
 			);
+			const totalFilter = _.find(this.filters, { key: 'total' });
+			totalFilter.selected = !this.filtered;
+			this.loadData();
 		});
-		this.buildInventorySubject();
-		this.buildFilters();
 	}
 
 	/**
@@ -713,7 +719,6 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				title: I18n.get('_NetworkRole_'),
 			},
 		];
-		this.loadData();
 	}
 
 	/**
@@ -1159,6 +1164,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 				}
 
 				this.status.inventoryLoading = false;
+				this.tableContainerHeight = undefined;
+
 				if (window.Cypress) {
 					window.inventoryLoading = false;
 				}
@@ -1175,6 +1182,11 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		if (window.Cypress) {
 			window.inventoryLoading = true;
 		}
+
+		if (_.size(this.inventory) && this.tableContainer) {
+			this.tableContainerHeight = `${this.tableContainer.nativeElement.offsetHeight}px`;
+		}
+
 		this.inventory = [];
 		this.pagination = null;
 

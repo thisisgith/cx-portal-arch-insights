@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RccDeviceViolationDetailsComponent } from './rcc-device-violation-details.component';
 import { RccDeviceViolationDetailsModule } from './rcc-device-violation-details.module';
@@ -21,7 +22,7 @@ describe('RccDeviceViolationDetailsComponent', () => {
 	let fixture: ComponentFixture<RccDeviceViolationDetailsComponent>;
 	let rccTrackService: RccService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				RccDeviceViolationDetailsModule,
@@ -43,8 +44,10 @@ describe('RccDeviceViolationDetailsComponent', () => {
 					},
 				},
 			],
-		})
-			.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		rccTrackService = TestBed.get(RccService);
 	}));
 

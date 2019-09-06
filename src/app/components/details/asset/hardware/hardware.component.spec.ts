@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import {
 	AssetScenarios,
@@ -36,7 +37,7 @@ describe('AssetDetailsHardwareComponent', () => {
 	let inventoryService: InventoryService;
 	let userResolve: UserResolve;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				AssetDetailsHardwareModule,
@@ -47,8 +48,10 @@ describe('AssetDetailsHardwareComponent', () => {
 			providers: [
 				{ provide: 'ENVIRONMENT', useValue: environment },
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 
 		inventoryService = TestBed.get(InventoryService);
 		productAlertsService = TestBed.get(ProductAlertsService);

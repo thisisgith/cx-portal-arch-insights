@@ -1,5 +1,6 @@
+import { configureTestSuite } from 'ng-bullet';
 import { Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { DetailsPanelModule } from '../details-panel.module';
@@ -32,13 +33,12 @@ describe('DetailsPanelHeaderComponent', () => {
 	let component: DetailsPanelHeaderComponent;
 	let fixture: ComponentFixture<WrapperComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			declarations: [WrapperComponent],
 			imports: [DetailsPanelModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(WrapperComponent);

@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CaseFilesComponent } from './case-files.component';
 import { CaseFilesModule } from './case-files.module';
@@ -7,15 +8,14 @@ describe('CaseFilesComponent', () => {
 	let component: CaseFilesComponent;
 	let fixture: ComponentFixture<CaseFilesComponent>;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				CaseFilesModule,
 				HttpClientTestingModule,
 			],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(CaseFilesComponent);
@@ -69,5 +69,71 @@ describe('CaseFilesComponent', () => {
 		});
 		expect(component.refresh)
 			.toHaveBeenCalled();
+	});
+
+	it('should rebuild table when refreshing', () => {
+		const spy = spyOn(component, 'buildTable')
+			.and
+			.callThrough();
+		component.caseFiles = [{
+			fileSize: 0,
+			fileId: 0,
+			visibilityFlag: '',
+			fileContentType: '',
+			fileStatus: '',
+			fileName: '',
+			fileCategory: '',
+			fileUploadDate: '',
+			downloadURL: '',
+		}];
+		component.refresh();
+		expect(spy)
+			.toHaveBeenCalled();
+	});
+
+	it('should sort file list based on selected column', () => {
+		(<any> component).caseFiles = [{
+			downloadURL: '',
+			fileCategory: '',
+			fileContentType: '',
+			fileId: 0,
+			fileInfo: {
+				a: 0,
+			},
+			fileName: '',
+			fileSize: 0,
+			fileStatus: '',
+			fileUploadDate: '',
+			visibilityFlag: '',
+		}, {
+			downloadURL: '',
+			fileCategory: '',
+			fileContentType: '',
+			fileId: 0,
+			fileInfo: {
+				a: 1,
+			},
+			fileName: '',
+			fileSize: 1,
+			fileStatus: '',
+			fileUploadDate: '',
+			visibilityFlag: '',
+		}];
+		component.onTableSortingChanged({
+			key: 'a',
+			sortDirection: 'asc',
+		});
+		expect((<any> component).caseFiles[0].fileInfo.a)
+			.toEqual(0);
+		expect((<any> component).caseFiles[1].fileInfo.a)
+			.toEqual(1);
+		component.onTableSortingChanged({
+			key: 'fileSize',
+			sortDirection: 'desc',
+		});
+		expect((<any> component).caseFiles[0].fileInfo.a)
+			.toEqual(1);
+		expect((<any> component).caseFiles[1].fileInfo.a)
+			.toEqual(0);
 	});
 });
