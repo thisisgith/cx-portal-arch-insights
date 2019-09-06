@@ -19,7 +19,7 @@ import { UserResolve } from '@utilities';
 import { Alert, Panel360 } from '@interfaces';
 import * as _ from 'lodash-es';
 import { LogService } from '@cisco-ngx/cui-services';
-import { getProductTypeImage } from '@classes';
+import { getProductTypeImage, getProductTypeTitle } from '@classes';
 import { DetailsPanelStackService } from '@services';
 
 /**
@@ -46,6 +46,7 @@ export class AssetDetailsComponent implements OnInit, OnDestroy, Panel360 {
 	public fullscreen = false;
 	public customerId: string;
 	public getProductIcon = getProductTypeImage;
+	public getProductTitle = getProductTypeTitle;
 	private destroyed$: Subject<void> = new Subject<void>();
 
 	constructor (
