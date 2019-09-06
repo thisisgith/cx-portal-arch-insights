@@ -5,7 +5,7 @@
 	(close)="onPanelClose()">
 </advisory-details>
 
-<div class="panel panel--bordered base-padding-left base-padding-top no-padding-bottom">
+<div class="panel panel--bordered base-padding-left no-padding-bottom">
 	<cui-tabs inline="true"
 		*ngIf="tabs.length"
 		[activeTabIndex]="activeIndex"
@@ -41,7 +41,7 @@
 <div
 	#contentContainer
 	*ngIf="selectedTab"
-	class="panel panel--bordered base-margin-top"
+	class="panel panel--bordered half-margin-top"
 	[ngStyle]="{ 'height': selectedTab.contentContainerHeight }"
 >
 	<ng-container *ngIf="selectedTab.filtered">
