@@ -26,7 +26,12 @@ import {
 	Mock,
 } from '@mock';
 import * as _ from 'lodash-es';
-import { RacetrackService, ProductAlertsService, ContractsService } from '@sdp-api';
+import {
+	RacetrackService,
+	ProductAlertsService,
+	ContractsService,
+	DiagnosticsService,
+} from '@sdp-api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AdvisoriesComponent } from './advisories/advisories.component';
 import { CaseService } from '@cui-x/services';
@@ -51,6 +56,7 @@ describe('SolutionComponent', () => {
 	let racetrackInfoSpy;
 	let racetrackInfoService: RacetrackInfoService;
 	let racetrackService: RacetrackService;
+	let diagnosticsService: DiagnosticsService;
 	let caseService: CaseService;
 	let productAlertsService: ProductAlertsService;
 	let contractsService: ContractsService;
@@ -99,6 +105,7 @@ describe('SolutionComponent', () => {
 	beforeEach(() => {
 		contractsService = TestBed.get(ContractsService);
 		productAlertsService = TestBed.get(ProductAlertsService);
+		diagnosticsService = TestBed.get(DiagnosticsService);
 		caseService = TestBed.get(CaseService);
 		racetrackService = TestBed.get(RacetrackService);
 		utils = TestBed.get(UtilsService);
@@ -241,7 +248,15 @@ describe('SolutionComponent', () => {
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
-		spyOn(productAlertsService, 'getVulnerabilityCounts')
+		spyOn(productAlertsService, 'getAdvisoriesFieldNotices')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		spyOn(productAlertsService, 'getAdvisoriesSecurityAdvisories')
+			.and
+			.returnValue(throwError(new HttpErrorResponse(error)));
+
+		spyOn(diagnosticsService, 'getCriticalBugs')
 			.and
 			.returnValue(throwError(new HttpErrorResponse(error)));
 
@@ -312,7 +327,7 @@ describe('SolutionComponent', () => {
 		const assetsFacet = _.find(component.facets, { key: 'assets' });
 
 		expect(assetsFacet.data)
-			.toEqual({ gaugePercent: 7, gaugeLabel: '7%' });
+			.toEqual({ gaugePercent: 7.920792079207921 });
 		discardPeriodicTasks();
 	}));
 });

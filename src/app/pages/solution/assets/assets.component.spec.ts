@@ -123,9 +123,6 @@ describe('AssetsComponent', () => {
 				.toBeTruthy();
 		});
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should set null values on request errors', fakeAsync(() => {
 			const error = {
 				status: 404,
@@ -168,9 +165,6 @@ describe('AssetsComponent', () => {
 				.toBe(0);
 		}));
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should switch active filters', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
@@ -190,75 +184,37 @@ describe('AssetsComponent', () => {
 				.toContain(coverageFilter);
 		}));
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should set query params for Hardware EOX filter', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
 			tick(1000);
-			spyOn(Date.prototype, 'getUTCFullYear').and
-				.callFake(() => 2013);
-			spyOn(Date.prototype, 'getUTCMonth').and
-				.callFake(() => 9);
-			spyOn(Date.prototype, 'getUTCDay').and
-				.callFake(() => 23);
-			const currentTime = new Date(2013, 9, 23).getTime();
+
 			const eoxFilter = _.find(component.filters, { key: 'eox' });
-			const dayInMillis = 24 * 60 * 60 * 1000;
 
 			component.onSubfilterSelect('gt-0-lt-30-days', eoxFilter);
 			tick(1000);
 
 			fixture.detectChanges();
-			const lastDateOfSupport30 = _.map(
-				_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0]
-					.split(','),
-				t => _.toSafeInteger(t));
 
-			expect(lastDateOfSupport30.length)
-				.toBe(2);
-			expect(currentTime - lastDateOfSupport30[0])
-				.toBe(dayInMillis * 30);
-			expect(currentTime - lastDateOfSupport30[1])
-				.toBe(0);
+			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
+				.toEqual('gt-0-lt-30-days');
 
 			component.onSubfilterSelect('gt-30-lt-60-days', eoxFilter);
 			tick(1000);
 
 			fixture.detectChanges();
-			const lastDateOfSupport3060 = _.map(
-				_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0]
-					.split(','),
-				t => _.toSafeInteger(t));
 
-			expect(lastDateOfSupport3060.length)
-				.toBe(2);
-			expect(currentTime - lastDateOfSupport3060[0])
-				.toBe(dayInMillis * 60);
-			expect(currentTime - lastDateOfSupport3060[1])
-				.toBe(dayInMillis * 30);
+			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
+				.toEqual('gt-30-lt-60-days');
 
 			component.onSubfilterSelect('gt-60-lt-90-days', eoxFilter);
 			tick(1000);
 
 			fixture.detectChanges();
-			const lastDateOfSupport6090 = _.map(
-				_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0]
-					.split(','),
-				t => _.toSafeInteger(t));
-
-			expect(lastDateOfSupport6090.length)
-				.toBe(2);
-			expect(currentTime - lastDateOfSupport6090[0])
-				.toBe(dayInMillis * 90);
-			expect(currentTime - lastDateOfSupport6090[1])
-				.toBe(dayInMillis * 60);
+			expect(_.get(component, ['assetParams', 'lastDateOfSupportRange'])[0])
+				.toEqual('gt-60-lt-90-days');
 		}));
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should set query params for Advisories filter', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
@@ -266,7 +222,7 @@ describe('AssetsComponent', () => {
 			fixture.detectChanges();
 			const advisoriesFilter = _.find(component.filters, { key: 'advisories' });
 
-			component.onSubfilterSelect('bugs', advisoriesFilter);
+			component.onSubfilterSelect('hasBugs', advisoriesFilter);
 			tick();
 			expect(_.get(component, ['assetParams', 'hasBugs']))
 				.toBeTruthy();
@@ -275,7 +231,7 @@ describe('AssetsComponent', () => {
 			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
 				.toBeFalsy();
 
-			component.onSubfilterSelect('field-notices', advisoriesFilter);
+			component.onSubfilterSelect('hasFieldNotices', advisoriesFilter);
 			tick();
 			expect(_.get(component, ['assetParams', 'hasBugs']))
 				.toBeFalsy();
@@ -284,7 +240,7 @@ describe('AssetsComponent', () => {
 			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
 				.toBeFalsy();
 
-			component.onSubfilterSelect('security-advisories', advisoriesFilter);
+			component.onSubfilterSelect('hasSecurityAdvisories', advisoriesFilter);
 			tick();
 			expect(_.get(component, ['assetParams', 'hasBugs']))
 				.toBeFalsy();
@@ -294,9 +250,6 @@ describe('AssetsComponent', () => {
 				.toBeTruthy();
 		}));
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should select a coverage subfilter', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
@@ -316,9 +269,6 @@ describe('AssetsComponent', () => {
 				.toBeTruthy();
 		}));
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
@@ -346,9 +296,6 @@ describe('AssetsComponent', () => {
 				.toBeFalsy();
 		}));
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should select view', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
@@ -368,9 +315,6 @@ describe('AssetsComponent', () => {
 			tick();
 		}));
 
-		/**
-		 * @TODO: modify test to use UI
-		 */
 		it('should detect selection changes', fakeAsync(() => {
 			buildSpies();
 			fixture.detectChanges();
@@ -664,9 +608,7 @@ describe('AssetsComponent', () => {
 			contractNumber: '1234',
 			coverage: 'covered',
 			hasBugs: true,
-			hasFieldNotices: true,
-			hasSecurityAdvisories: true,
-			lastDateOfSupportRange: '1565624197000,1597246597000',
+			lastDateOfSupportRange: 'gt-30-lt-60-days',
 			role: 'access',
 		};
 
@@ -717,12 +659,8 @@ describe('AssetsComponent', () => {
 				.toEqual(['access']);
 			expect(_.get(component.assetParams, 'hasBugs'))
 				.toBe(true);
-			expect(_.get(component.assetParams, 'hasFieldNotices'))
-				.toBe(true);
-			expect(_.get(component.assetParams, 'hasSecurityAdvisories'))
-				.toBe(true);
 			expect(_.get(component.assetParams, 'lastDateOfSupportRange'))
-				.toEqual(['1565624197000,1597246597000']);
+				.toEqual(['gt-30-lt-60-days']);
 		}));
 	});
 });
