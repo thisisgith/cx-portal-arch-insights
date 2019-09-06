@@ -61,6 +61,7 @@ import {
 	SoftwareEOLScenarios,
 	SuccessPathScenarios,
 	VulnerabilityScenarios,
+	InsightsScenarios,
 } from './';
 
 import { HttpHeaders } from '@angular/common/http';
@@ -115,6 +116,7 @@ import {
 	SuccessPathsResponse,
 	UserTraining,
 	VulnerabilityResponse,
+	// InsightsResponse,
 } from '@sdp-api';
 
 import { RMAResponse } from '@interfaces';
@@ -171,6 +173,7 @@ type ResponseBody = (
 	SuccessPathsResponse |
 	UserTraining[] |
 	VulnerabilityResponse
+	//InsightsResponse
 );
 
 /**
@@ -280,5 +283,6 @@ export const mockSettings: MockSettings = {
 		SoftwareEOLScenarios,
 		SuccessPathScenarios,
 		VulnerabilityScenarios,
+		InsightsScenarios,
 	]),
 };

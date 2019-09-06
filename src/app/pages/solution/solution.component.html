@@ -101,17 +101,17 @@
 <ng-template #insightsFacet let-facet="facet">
 	<div class="row">
 		<div class="col-md-3 insights-total base-padding-top half-padding-right">
-			8
+			{{facet?.seriesData?.totalCnt}}
 		</div>
 		<div class="col-md-9">
 			<div class="col-md-12 no-padding-left">
-				<div class="opacity-50">0 Compliance issues</div>
+				<div class="opacity-50">{{facet?.seriesData?.complianceIssueCnt}} <span [innerText]="'_InsightsComplianceIssues_' | i18n"></span></div>
 			</div>
 			<div class="col-md-12 no-padding-left">
-				<div class="opacity-50">3 Predicted crashes</div>
+				<div class="opacity-50">{{facet?.seriesData?.predictedCrashCnt}} <span [innerText]="'_InsightsPredictedCrashes_' | i18n"></span></div>
 			</div>
 			<div class="col-md-12 no-padding-left">
-				<div class="opacity-50">5 Recent crashes</div>
+				<div class="opacity-50">{{facet?.seriesData?.recentCrashCnt}} <span [innerText]="'_InsightsRecentCrashes_' | i18n"></span></div>
 			</div>
 		</div>
 	</div>
