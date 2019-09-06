@@ -1,11 +1,12 @@
+@import '../../../../variables.scss';
+
 :host {
-	opacity: 0.95;
-	position: absolute !important;
+	background-color: rgba(255, 255, 255, 0.8) !important;
 	left: 0;
 	right: 0;
 	z-index: 1;
-	min-height: 274px !important;
-	padding-top: 64px !important;
+	height: 148px !important;
+	margin-top: -146px !important;
 
 	&.invisible { display: none; }
 
@@ -20,4 +21,26 @@
 		top: 20px;
 		right: 30px;
 	}
+}
+
+.cx-no-dnac-container {
+	height: 100%;
+	align-items: center !important;
+}
+
+.cx-no-dnac-label {
+	font-size: 26px;
+	color: $default-text-color;
+	line-height: 36px;
+}
+
+.cx-no-dnac-status {
+	font-size: 20px;
+	color: #848484;
+	line-height: 36px;
+}
+
+.cx-no-dnac-description {
+	font-size: 20px;
+	color: #767676;
 }

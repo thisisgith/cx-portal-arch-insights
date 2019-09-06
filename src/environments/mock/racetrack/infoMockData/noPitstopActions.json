@@ -1,0 +1,23 @@
+{
+    "solutions": [
+        {
+            "description": "Campus Network Assurance Solution",
+            "name": "Campus Network Assurance",
+            "technologies": [
+                {
+                    "currentPitstop": "Onboard",
+                    "description": "Campus Network Assurance Solution",
+                    "name": "Campus Network Assurance",
+                    "pitstops": [
+                        {
+                            "description": "The first pitstop",
+                            "isComplete": false,
+                            "name": "Onboard",
+                            "pitstopActions": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

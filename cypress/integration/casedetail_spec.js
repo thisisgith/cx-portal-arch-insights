@@ -295,4 +295,48 @@ describe('Case Detail Spec', () => {
 			cy.getByAutoId('rmaCasesHeader').should('exist');
 		});
 	});
+	context('Asset Case Open: PBC-92 PBC-591', () => {
+		before(() => {
+			cy.login();
+			cy.loadApp();
+			// Disable the setup wizard and quick tour so they don't block other elements
+			cy.window().then(win => {
+				win.Cypress.hideDNACHeader = true;
+				win.Cypress.showQuickTour = false;
+			});
+			cy.waitForAppLoading();
+		});
+
+		beforeEach(() => {
+			cy.getByAutoId('Facet-Advisories').click();
+		});
+
+		it.skip('PBC-92 - Assets - Cases - Event Based Case Open (Single Asset)', () => {
+		});
+
+		it('PBC-591 - Assets - Cases - Event Based Case Open (Multiple Assets)', () => {
+			cy.getByAutoId('Showing-Security Advisories-Count').should('exist');
+
+			cy.getByAutoId('ImpactedCountText').each($row => {
+				if ($row.text() === '2 ') {
+					cy.wrap($row).click();
+				}
+			});
+
+			cy.getByAutoId('SecurityAdvisoryOpenCaseBtn').click();
+			cy.getByAutoId('PanelSelectOption1', { timeout: 10000 }).click();
+			// Select the dropdown option
+			cy.get('[ng-reflect-klass="dropdown-chevron"]').click({ force: true });
+			cy.get('[title="Configuration Assistance"]').click({ force: true });
+			cy.getByAutoId('CaseOpenSubmitButton').click();
+
+			cy.get('[class="icon-check-outline icon-small text-success qtr-margin-right"]')
+				.should('exist');
+
+			cy.getByAutoId('CaseOpenClose').should('exist');
+			cy.getByAutoId('CaseNumberButton').should('exist');
+			cy.getByAutoId('CaseOpenDoneButton').click();
+			cy.getByAutoId('CloseDetails').click();
+		});
+	});
 });

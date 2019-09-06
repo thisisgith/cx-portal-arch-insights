@@ -649,7 +649,7 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 		const date = matches[6];
 		const dayOfWeek = matches[7];
 
-		const milHour = amPm === 'pm' ? hour + 12 : hour;
+		const milHour = amPm === 'am' ? hour - 12 : hour;
 
 		if (!date && !dayOfWeek) {
 			this.timePeriods.selected = 'daily';
@@ -758,14 +758,14 @@ export class PolicyFormComponent implements OnDestroy, OnInit {
 
 				this.deviceListLeft = this.jsonCopy(_.get(response, 'data'));
 
-				const rightSerialNums = _.map(this.deviceListRight, item =>
-					_.get(item, 'serialNumber'));
+				const rightHwIds = _.map(this.deviceListRight, item =>
+					_.get(item, 'hwId'));
 
 				for (let index = this.deviceListLeft.length - 1; index >= 0; index -= 1) {
-					const leftSerialNum = _.get(this.deviceListLeft[index], 'serialNumber');
+					const leftHwIds = _.get(this.deviceListLeft[index], 'hwId');
 
-					if (rightSerialNums.includes(leftSerialNum)) {
-						this.logger.debug(`already have sn ${leftSerialNum}`);
+					if (rightHwIds.includes(leftHwIds)) {
+						this.logger.debug(`already have hwId ${leftHwIds}`);
 						this.deviceListLeft.splice(index, 1);
 					}
 

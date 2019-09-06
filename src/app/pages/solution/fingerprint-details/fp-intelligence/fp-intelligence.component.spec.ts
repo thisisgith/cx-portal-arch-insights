@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FpIntelligenceComponent } from './fp-intelligence.component';
 import { FpIntelligenceModule } from './fp-intelligence.module';
@@ -18,7 +19,7 @@ describe('FpIntelligenceComponent', () => {
 	let fixture: ComponentFixture<FpIntelligenceComponent>;
 	let fpIntelligenceService: FpIntelligenceService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [FpIntelligenceModule,
 				HttpClientTestingModule,
@@ -39,9 +40,10 @@ describe('FpIntelligenceComponent', () => {
 					},
 				},
 			],
-		})
+		});
+	});
 
-			.compileComponents();
+	beforeEach(async(() => {
 		userResolve = TestBed.get(UserResolve);
 		fpIntelligenceService = TestBed.get(FpIntelligenceService);
 	}));

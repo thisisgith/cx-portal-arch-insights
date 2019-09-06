@@ -1,3 +1,4 @@
+import { configureTestSuite } from 'ng-bullet';
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ProfileService } from '@cisco-ngx/cui-auth';
@@ -14,7 +15,7 @@ describe('FeedbackComponent', () => {
 	let fixture: ComponentFixture<FeedbackComponent>;
 	let emailControllerService: EmailControllerService;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [
 				FeedbackModule,
@@ -38,8 +39,10 @@ describe('FeedbackComponent', () => {
 					},
 				},
 			],
-		})
-		.compileComponents();
+		});
+	});
+
+	beforeEach(async(() => {
 		emailControllerService = TestBed.get(EmailControllerService);
 	}));
 

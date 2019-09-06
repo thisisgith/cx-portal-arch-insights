@@ -49,6 +49,6 @@
 	</div>
 </div>
 <div class="compare-body" *ngIf="compareDetailsExist">
-	<app-comparisonview [compareView]="compareView" [deviceId1]="deviceId1" [deviceId2]="deviceId2">
+	<app-comparisonview [compareView]="compareView" [deviceId1]="deviceId1" [deviceId2]="deviceId2" (reqError)="showError($event)">
 	</app-comparisonview>
 </div>

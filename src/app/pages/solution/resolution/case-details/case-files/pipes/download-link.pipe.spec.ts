@@ -15,4 +15,13 @@ describe('DownloadLinkPipe', () => {
 			.toBeNull();
 	});
 
+	it('should return a download link', () => {
+		const pipe = new DownloadLinkPipe();
+		const fileName = 'file.txt';
+		const caseNo = '123';
+		const correctLink = pipe.transform(fileName, caseNo);
+		expect(correctLink)
+			.toBeTruthy();
+	});
+
 });

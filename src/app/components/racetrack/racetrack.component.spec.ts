@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { RacetrackComponent, stages } from './racetrack.component';
@@ -9,12 +10,11 @@ describe('RacetrackComponent', () => {
 	let fixture: ComponentFixture<RacetrackComponent>;
 	let de: DebugElement;
 
-	beforeEach(async(() => {
+	configureTestSuite(() => {
 		TestBed.configureTestingModule({
 			imports: [RacetrackComponentModule],
-		})
-		.compileComponents();
-	}));
+		});
+	});
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(RacetrackComponent);
