@@ -72,7 +72,7 @@ const serviceApi2 = `/api/customerportal/entitlement/v1/party/service-info/${moc
  */
 const mockServiceInfo: ServiceInfoResponse = [
 	{
-		cxLevel: 2,
+		cxLevel: 3,
 		solution: 'IBN',
 		useCase: 'Wireless Assurance',
 	},
