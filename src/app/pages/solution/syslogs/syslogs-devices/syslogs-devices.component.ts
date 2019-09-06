@@ -85,20 +85,6 @@ export class SyslogsDevicesComponent implements OnInit, OnChanges, OnDestroy {
 			size: this.pagerLimit,
 		};
 	}
-	get dropdownActions () {
-		return _.filter([
-			this.selected
-				? {
-					label: `${I18n.get('_ExportSelected_')} (${
-						this.selected
-						})`,
-				}
-				: undefined,
-			{
-				label: I18n.get('_ExportAll_'),
-			},
-		]);
-	}
 	/**
 	 * on changes
 	 * @param changes contains filterobj

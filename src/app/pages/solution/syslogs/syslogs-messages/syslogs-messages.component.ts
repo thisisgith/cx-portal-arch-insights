@@ -73,20 +73,6 @@ export class SyslogsMessagesComponent implements OnInit, OnChanges, OnDestroy {
 			size: this.pageLimit,
 		};
 	}
-	get dropdownActions () {
-		return _.filter([
-			this.selected
-				? {
-					label: `${I18n.get('_ExportSelected_')} (${
-						this.selected
-						})`,
-				}
-				: undefined,
-			{
-				label: I18n.get('_ExportAll_'),
-			},
-		]);
-	}
 	/**
 	 * grid column template of syslogs grid
 	 */
