@@ -82,7 +82,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugFixed: 13,
 		bugs: [],
 		bugSeverity: {
-			RESOLVED: {
+			OPEN: {
 				Critical: 0,
 				High: 0,
 				Low: 1,
@@ -93,7 +93,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		psirts: [],
 		psirtFixed: 32,
 		psirtSeverity: {
-			RESOLVED: {
+			OPEN: {
 				Critical: 0,
 				High: 0,
 				Low: 1,
@@ -106,7 +106,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugFixed: 12,
 		bugs: [],
 		bugSeverity: {
-			RESOLVED: {
+			OPEN: {
 				Critical: 0,
 				High: 0,
 				Low: 2,
@@ -117,7 +117,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		psirts: [],
 		psirtFixed: 32,
 		psirtSeverity: {
-			RESOLVED: {
+			OPEN: {
 				Critical: 0,
 				High: 0,
 				Low: 1,
@@ -130,7 +130,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugFixed: 11,
 		bugs: [],
 		bugSeverity: {
-			RESOLVED: {
+			OPEN: {
 				Critical: 0,
 				High: 0,
 				Low: 1,
@@ -141,7 +141,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		psirts: [],
 		psirtFixed: 32,
 		psirtSeverity: {
-			RESOLVED: {
+			OPEN: {
 				Critical: 0,
 				High: 0,
 				Low: 1,
@@ -155,7 +155,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		bugFixed: 11,
 		bugs: [],
 		bugSeverity: {
-			RESOLVED: {
+			OPEN: {
 				Critical: 0,
 				High: 0,
 				Low: 1,
@@ -166,7 +166,7 @@ const mockMachineRecommendations: MachineRecommendationsResponse = [
 		psirts: [],
 		psirtFixed: 32,
 		psirtSeverity: {
-			RESOLVED: {
+			OPEN: {
 				Critical: 0,
 				High: 0,
 				Low: 1,
@@ -996,7 +996,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileAssets?customerId=2431199&id=7293498_NA` +
-					`&profileName=7293498_NA${sgAssetsParams}`,
+			`&profileName=7293498_NA${sgAssetsParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
@@ -1014,7 +1014,7 @@ export const OSVScenarios = [
 			],
 		},
 		url: `${api}profileVersions?customerId=2431199&id=7293498_NA` +
-					`&profileName=7293498_NA${sgVerParams}`,
+			`&profileName=7293498_NA${sgVerParams}`,
 		usecases: ['Use Case 1'],
 	},
 	{
