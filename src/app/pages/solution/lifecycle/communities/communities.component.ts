@@ -57,7 +57,6 @@ const publicCommunities: CommunityDetail[] = [
 })
 export class CommunitiesComponent implements OnDestroy {
 	private selectedTechnology: string;
-	private currentPitstop: string;
 	public publicCommunity: CommunityDetail;
 	public curatedCommunity: CommunityDetail;
 	public publicCommunityUrl: SafeUrl;
@@ -75,15 +74,8 @@ export class CommunitiesComponent implements OnDestroy {
 		)
 		.subscribe((technology: RacetrackTechnology) => {
 			this.selectedTechnology = technology.name;
-			this.currentPitstop = technology.currentPitstop;
 			this.getCommunities();
 			this.publicCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.publicCommunity.url);
-			this.curatedCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.curatedCommunity.url);
-		});
-		this.lifecycle.getCurrentPitstop()
-		.subscribe((pitstop: string) => {
-			this.currentPitstop = pitstop;
-			this.getCuratedCommunities();
 			this.curatedCommunityUrl = sanitizer.bypassSecurityTrustUrl(this.curatedCommunity.url);
 		});
 	}
@@ -145,7 +137,7 @@ export class CommunitiesComponent implements OnDestroy {
 		}
 
 		this.curatedCommunity = {
-			description: `${this.selectedTechnology} - ${this.currentPitstop}`,
+			description: `${this.selectedTechnology}`,
 			url: `${environment.curatedCommunityUrl}/${usecase}/bd-p/${board}`,
 			usecase: this.selectedTechnology,
 		};
