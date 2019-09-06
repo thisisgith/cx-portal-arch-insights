@@ -1085,6 +1085,7 @@ export class AssetsComponent implements OnInit, OnDestroy {
 		this.InventorySubject
 		.pipe(
 			switchMap(() => this.fetchInventory()),
+			takeUntil(this.destroy$),
 		)
 		.subscribe();
 	}

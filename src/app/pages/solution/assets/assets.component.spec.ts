@@ -1,4 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { configureTestSuite } from 'ng-bullet';
+import { fakeAsync, tick, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssetsComponent } from './assets.component';
 import { AssetsModule } from './assets.module';
@@ -9,6 +10,8 @@ import { environment } from '@environment';
 import * as _ from 'lodash-es';
 import { RouterTestingModule } from '@angular/router/testing';
 import {
+	ContractDeviceCountsResponse,
+	CoverageCountsResponse,
 	InventoryService,
 	ProductAlertsService,
 	ContractsService,
@@ -20,6 +23,12 @@ import {
 	user,
 	Mock,
 	AssetScenarios,
+	ContractScenarios,
+	CoverageScenarios,
+	HardwareEOLCountScenarios,
+	NetworkScenarios,
+	RoleScenarios,
+	VulnerabilityScenarios,
 } from '@mock';
 
 /**
@@ -42,83 +51,111 @@ describe('AssetsComponent', () => {
 	let productAlertsService: ProductAlertsService;
 	let contractsService: ContractsService;
 
-	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			imports: [
-				AssetsModule,
-				HttpClientTestingModule,
-				MicroMockModule,
-				RouterTestingModule,
-			],
-			providers: [
-				{ provide: 'ENVIRONMENT', useValue: environment },
-				{
-					provide: ActivatedRoute,
-					useValue: {
-						queryParams: of({ }),
-						snapshot: {
-							data: {
-								user,
+	const buildSpies = () => {
+		const assets = getActiveBody(AssetScenarios[5]);
+		spyOn(inventoryService, 'getAssets')
+			.and
+			.returnValue(of(assets));
+		spyOn(inventoryService, 'getNetworkElements')
+			.and
+			.returnValue(of(NetworkScenarios[1].scenarios.GET[0].response.body));
+		spyOn(inventoryService, 'getRoleCount')
+			.and
+			.returnValue(of(RoleScenarios[0].scenarios.GET[0].response.body));
+		spyOn(productAlertsService, 'getVulnerabilityCounts')
+			.and
+			.returnValue(of(VulnerabilityScenarios[0].scenarios.GET[0].response.body));
+		spyOn(contractsService, 'getContractCounts')
+			.and
+			.returnValue(
+				of(
+					<ContractDeviceCountsResponse> ContractScenarios[3]
+					.scenarios.GET[0].response.body,
+				),
+			);
+		spyOn(contractsService, 'getCoverageCounts')
+			.and
+			.returnValue(
+				of(<CoverageCountsResponse> (CoverageScenarios[2].scenarios.GET[0].response.body)),
+			);
+		spyOn(productAlertsService, 'getHardwareEolTopCount')
+			.and
+			.returnValue(of(HardwareEOLCountScenarios[0].scenarios.GET[0].response.body));
+	};
+
+	describe('Without Query Params', () => {
+		configureTestSuite(() => {
+			TestBed.configureTestingModule({
+				imports: [
+					AssetsModule,
+					HttpClientTestingModule,
+					MicroMockModule,
+					RouterTestingModule,
+				],
+				providers: [
+					{ provide: 'ENVIRONMENT', useValue: environment },
+					{
+						provide: ActivatedRoute,
+						useValue: {
+							queryParams: of({ }),
+							snapshot: {
+								data: {
+									user,
+								},
 							},
 						},
 					},
-				},
-			],
-		})
-		.compileComponents();
+				],
+			});
+		});
 
-		inventoryService = TestBed.get(InventoryService);
-		productAlertsService = TestBed.get(ProductAlertsService);
-		contractsService = TestBed.get(ContractsService);
-	}));
+		beforeEach(() => {
+			window.sessionStorage.clear();
+			inventoryService = TestBed.get(InventoryService);
+			productAlertsService = TestBed.get(ProductAlertsService);
+			contractsService = TestBed.get(ContractsService);
+			fixture = TestBed.createComponent(AssetsComponent);
+			component = fixture.componentInstance;
+		});
 
-	beforeEach(() => {
-		window.sessionStorage.clear();
-		fixture = TestBed.createComponent(AssetsComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-	});
+		it('should create', () => {
+			expect(component)
+				.toBeTruthy();
+		});
 
-	it('should create', () => {
-		expect(component)
-			.toBeTruthy();
-	});
+		/**
+		 * @TODO: modify test to use UI
+		 */
+		it('should set null values on request errors', fakeAsync(() => {
+			const error = {
+				status: 404,
+				statusText: 'Resource not found',
+			};
+			spyOn(inventoryService, 'getAssets')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(inventoryService, 'getNetworkElements')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(inventoryService, 'getRoleCount')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(productAlertsService, 'getVulnerabilityCounts')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(contractsService, 'getContractCounts')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(contractsService, 'getCoverageCounts')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
+			spyOn(productAlertsService, 'getHardwareEolTopCount')
+				.and
+				.returnValue(throwError(new HttpErrorResponse(error)));
 
-	/**
-	 * @TODO: modify test to use UI
-	 */
-	it('should set null values on request errors', done => {
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-		spyOn(inventoryService, 'getAssets')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getNetworkElements')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(inventoryService, 'getRoleCount')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getVulnerabilityCounts')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(contractsService, 'getContractCounts')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(contractsService, 'getCoverageCounts')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-		spyOn(productAlertsService, 'getHardwareEolTopCount')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		component.ngOnInit();
-		fixture.whenStable()
-		.then(() => {
 			fixture.detectChanges();
-
+			tick(1000);
+			fixture.detectChanges();
 			expect(component.inventory.length)
 				.toBe(0);
 			expect(_.find(component.filters, { key: 'role' }).seriesData.length)
@@ -129,17 +166,15 @@ describe('AssetsComponent', () => {
 				.toBe(0);
 			expect(_.find(component.filters, { key: 'coverage' }).seriesData.length)
 				.toBe(0);
+		}));
 
-			done();
-		});
-	});
-
-	/**
-	 * @TODO: modify test to use UI
-	 */
-	it('should switch active filters', done => {
-		fixture.whenStable()
-		.then(() => {
+		/**
+		 * @TODO: modify test to use UI
+		 */
+		it('should switch active filters', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
 			fixture.detectChanges();
 			const totalFilter = _.find(component.filters, { key: 'total' });
 			const coverageFilter = _.find(component.filters, { key: 'coverage' });
@@ -153,18 +188,15 @@ describe('AssetsComponent', () => {
 
 			expect(_.filter(component.filters, 'selected'))
 				.toContain(coverageFilter);
+		}));
 
-			done();
-		});
-	});
-
-	/**
-	 * @TODO: modify test to use UI
-	 */
-	it('should set query params for Hardware EOX filter', done => {
-		fixture.whenStable()
-		.then(() => {
+		/**
+		 * @TODO: modify test to use UI
+		 */
+		it('should set query params for Hardware EOX filter', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 			spyOn(Date.prototype, 'getUTCFullYear').and
 				.callFake(() => 2013);
 			spyOn(Date.prototype, 'getUTCMonth').and
@@ -176,6 +208,7 @@ describe('AssetsComponent', () => {
 			const dayInMillis = 24 * 60 * 60 * 1000;
 
 			component.onSubfilterSelect('gt-0-lt-30-days', eoxFilter);
+			tick(1000);
 
 			fixture.detectChanges();
 			const lastDateOfSupport30 = _.map(
@@ -191,6 +224,7 @@ describe('AssetsComponent', () => {
 				.toBe(0);
 
 			component.onSubfilterSelect('gt-30-lt-60-days', eoxFilter);
+			tick(1000);
 
 			fixture.detectChanges();
 			const lastDateOfSupport3060 = _.map(
@@ -206,6 +240,7 @@ describe('AssetsComponent', () => {
 				.toBe(dayInMillis * 30);
 
 			component.onSubfilterSelect('gt-60-lt-90-days', eoxFilter);
+			tick(1000);
 
 			fixture.detectChanges();
 			const lastDateOfSupport6090 = _.map(
@@ -219,21 +254,20 @@ describe('AssetsComponent', () => {
 				.toBe(dayInMillis * 90);
 			expect(currentTime - lastDateOfSupport6090[1])
 				.toBe(dayInMillis * 60);
+		}));
 
-			done();
-		});
-	});
-
-	/**
-	 * @TODO: modify test to use UI
-	 */
-	it('should set query params for Advisories filter', done => {
-		fixture.whenStable()
-		.then(() => {
+		/**
+		 * @TODO: modify test to use UI
+		 */
+		it('should set query params for Advisories filter', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
 			fixture.detectChanges();
 			const advisoriesFilter = _.find(component.filters, { key: 'advisories' });
 
 			component.onSubfilterSelect('bugs', advisoriesFilter);
+			tick();
 			expect(_.get(component, ['assetParams', 'hasBugs']))
 				.toBeTruthy();
 			expect(_.get(component, ['assetParams', 'hasFieldNotices']))
@@ -242,6 +276,7 @@ describe('AssetsComponent', () => {
 				.toBeFalsy();
 
 			component.onSubfilterSelect('field-notices', advisoriesFilter);
+			tick();
 			expect(_.get(component, ['assetParams', 'hasBugs']))
 				.toBeFalsy();
 			expect(_.get(component, ['assetParams', 'hasFieldNotices']))
@@ -250,22 +285,22 @@ describe('AssetsComponent', () => {
 				.toBeFalsy();
 
 			component.onSubfilterSelect('security-advisories', advisoriesFilter);
+			tick();
 			expect(_.get(component, ['assetParams', 'hasBugs']))
 				.toBeFalsy();
 			expect(_.get(component, ['assetParams', 'hasFieldNotices']))
 				.toBeFalsy();
 			expect(_.get(component, ['assetParams', 'hasSecurityAdvisories']))
 				.toBeTruthy();
-			done();
-		});
-	});
+		}));
 
-	/**
-	 * @TODO: modify test to use UI
-	 */
-	it('should select a coverage subfilter', done => {
-		fixture.whenStable()
-		.then(() => {
+		/**
+		 * @TODO: modify test to use UI
+		 */
+		it('should select a coverage subfilter', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
 			fixture.detectChanges();
 			const coverageFilter = _.find(component.filters, { key: 'coverage' });
 			component.onSubfilterSelect('covered', coverageFilter);
@@ -279,18 +314,15 @@ describe('AssetsComponent', () => {
 
 			expect(subfilter.selected)
 				.toBeTruthy();
+		}));
 
-			done();
-		});
-	});
-
-	/**
-	 * @TODO: modify test to use UI
-	 */
-	it('should clear the filter when selecting the same subfilter twice', done => {
-		fixture.whenStable()
-		.then(() => {
+		/**
+		 * @TODO: modify test to use UI
+		 */
+		it('should clear the filter when selecting the same subfilter twice', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 			const coverageFilter = _.find(component.filters, { key: 'coverage' });
 			component.onSubfilterSelect('covered', coverageFilter);
 
@@ -312,18 +344,15 @@ describe('AssetsComponent', () => {
 
 			expect(subfilter.selected)
 				.toBeFalsy();
+		}));
 
-			done();
-		});
-	});
-
-	/**
-	 * @TODO: modify test to use UI
-	 */
-	it('should select view', done => {
-		fixture.whenStable()
-		.then(() => {
+		/**
+		 * @TODO: modify test to use UI
+		 */
+		it('should select view', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 
 			expect(component.view)
 				.toBe('list');
@@ -335,45 +364,41 @@ describe('AssetsComponent', () => {
 			expect(component.view)
 				.toBe('grid');
 
-			done();
-		});
-	});
+			fixture.destroy(); // Remove leftover "fromNow" timers
+			tick();
+		}));
 
-	/**
-	 * @TODO: modify test to use UI
-	 */
-	it('should detect selection changes', done => {
-		fixture.whenStable()
-		.then(() => {
+		/**
+		 * @TODO: modify test to use UI
+		 */
+		it('should detect selection changes', fakeAsync(() => {
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
 			component.onSelectionChanged([]);
 
 			fixture.detectChanges();
 
 			expect(component.selectedAssets.length)
 				.toBe(0);
+		}));
 
-			done();
-		});
-	});
-
-	it('should clear selected filters', done => {
-		fixture.whenStable()
-		.then(() => {
+		it('should clear selected filters', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 
 			component.clearSelectedFilters();
+			tick(1000);
 
 			expect(_.some(component.filters, 'selected'))
 				.toBeFalsy();
+		}));
 
-			done();
-		});
-	});
-
-	it('should clear filters', done => {
-		fixture.whenStable()
-		.then(() => {
+		it('should clear filters', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 			const totalFilter = _.find(component.filters, { key: 'total' });
 			totalFilter.selected = false;
 			const coverageFilter = _.find(component.filters, { key: 'coverage' });
@@ -387,6 +412,7 @@ describe('AssetsComponent', () => {
 				},
 			];
 			component.clearFilters();
+			tick(1000);
 
 			_.each(_.omitBy(component.filters, { key: 'total' }), filter => {
 				expect(filter.selected)
@@ -397,82 +423,72 @@ describe('AssetsComponent', () => {
 
 			expect(totalFilter.selected)
 				.toBeTruthy();
-			done();
-		});
-	});
+		}));
 
-	it('should close panel', done => {
-		fixture.whenStable()
-		.then(() => {
+		it('should close panel', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 
 			component.onPanelClose();
 
 			expect(component.selectedAsset)
 				.toBeFalsy();
+		}));
 
-			done();
-		});
-	});
-
-	it('should search', done => {
-		fixture.whenStable()
-		.then(() => {
+		it('should search', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 
 			expect(component.assetParams.search)
 				.toBeFalsy();
 			component.searchForm.controls.search.setValue('query');
 			component.doSearch();
+			tick(1000);
 			fixture.detectChanges();
 
 			expect(component.assetParams.search)
 				.toBeTruthy();
+		}));
 
-			done();
-		});
-	});
-
-	it('should not search', done => {
-		fixture.whenStable()
-		.then(() => {
+		it('should not search', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 
 			expect(component.assetParams.search)
 				.toBeFalsy();
 			component.searchForm.controls.search.setValue('');
 			component.doSearch();
+			tick(1000);
 			fixture.detectChanges();
 
 			expect(component.assetParams.search)
 				.toBeFalsy();
+		}));
 
-			done();
-		});
-	});
-
-	it('should unset search param if search input is empty for refresh', done => {
-		fixture.whenStable()
-		.then(() => {
+		it('should unset search param if search input is empty for refresh', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 
 			_.set(component, ['assetParams', 'search'], 'search');
 			component.filtered = true;
 			component.searchForm.controls.search.setValue('');
 
 			component.doSearch();
+			tick(1000);
 			fixture.detectChanges();
 
 			expect(_.get(component.assetParams, 'search'))
 				.toBeFalsy();
-			done();
-		});
-	});
+		}));
 
-	it('should handle unsortable column', done => {
-		fixture.whenStable()
-		.then(() => {
+		it('should handle unsortable column', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 			component.filtered = false;
 			expect(component.assetsTable)
 				.toBeTruthy();
@@ -480,13 +496,14 @@ describe('AssetsComponent', () => {
 			deviceNameCol.sortable = false;
 			deviceNameCol.sorting = false;
 			deviceNameCol.sortDirection = 'asc';
-			const serialNumberCol = _.find(component.assetsTable.columns, { key: 'serialNumber' });
+			const serialNumberCol = _.find(
+				component.assetsTable.columns, { key: 'serialNumber' },
+			);
 			serialNumberCol.sorting = true;
 			serialNumberCol.sortDirection = 'desc';
 
-			fixture.detectChanges();
-
 			component.onColumnSort(deviceNameCol);
+			tick(1000);
 			expect(component.filtered)
 				.toBeFalsy();
 			expect(deviceNameCol.sorting)
@@ -499,40 +516,35 @@ describe('AssetsComponent', () => {
 				.toBe('desc');
 			expect(_.get(component, ['params', 'sort']))
 				.toBeFalsy();
-			done();
-		});
-	});
+		}));
 
-	it('should not refresh when valid search query', done => {
-		fixture.whenStable()
-		.then(() => {
+		it('should not refresh when valid search query', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 
 			_.set(component, ['assetParams', 'search'], 'search');
 			component.searchForm.setValue({ search: 'search' });
 
-			fixture.detectChanges();
-
 			expect(_.get(component.assetParams, 'search'))
 				.toBe('search');
-			done();
-		});
-	});
+		}));
 
-	it('should handle sortable column', done => {
-		fixture.whenStable()
-		.then(() => {
+		it('should handle sortable column', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 			component.filtered = false;
 			const deviceNameCol = _.find(component.assetsTable.columns, { key: 'deviceName' });
 			deviceNameCol.sorting = true;
-			const serialNumberCol = _.find(component.assetsTable.columns, { key: 'serialNumber' });
+			const serialNumberCol = _.find(
+				component.assetsTable.columns, { key: 'serialNumber' },
+			);
 			serialNumberCol.sorting = false;
 			serialNumberCol.sortDirection = 'desc';
 
-			fixture.detectChanges();
-
 			component.onColumnSort(serialNumberCol);
+			tick(1000);
 
 			expect(component.filtered)
 				.toBeTruthy();
@@ -546,27 +558,108 @@ describe('AssetsComponent', () => {
 				.toBe('asc');
 			expect(_.get(component, ['assetParams', 'sort']))
 				.toEqual(['serialNumber:ASC']);
-			done();
-		});
+		}));
+
+		it('should create our pagination after results load', fakeAsync(() => {
+			buildSpies();
+			const assets = getActiveBody(AssetScenarios[5]);
+
+			fixture.detectChanges();
+			tick(1000);
+			fixture.detectChanges();
+			const pagination = assets.Pagination;
+			const first = (pagination.rows * (pagination.page - 1)) + 1;
+			const last = (pagination.rows * pagination.page);
+
+			expect(component.paginationCount)
+				.toEqual(`${first}-${last}`);
+		}));
+
+		it('should set the coverage filter if param selected', fakeAsync(() => {
+			buildSpies();
+			_.set(component.assetParams, 'coverage', ['covered']);
+			fixture.detectChanges();
+			tick(1000);
+
+			const coverageFilter = _.find(component.filters, { key: 'coverage' });
+
+			expect(_.filter(component.filters, 'selected'))
+				.toContain(coverageFilter);
+		}));
+
+		it('should set the role filter if param selected', fakeAsync(() => {
+			buildSpies();
+			_.set(component.assetParams, 'role', ['ACCESS']);
+			fixture.detectChanges();
+			tick(1000);
+			const roleFilter = _.find(component.filters, { key: 'role' });
+
+			expect(_.filter(component.filters, 'selected'))
+				.toContain(roleFilter);
+		}));
+
+		it('should set the contract filter if param selected', fakeAsync(() => {
+			buildSpies();
+			_.set(component.assetParams, 'contractNumber', ['UNKNOWN']);
+			fixture.detectChanges();
+			tick(1000);
+			const contractFilter = _.find(component.filters, { key: 'contractNumber' });
+
+			expect(_.filter(component.filters, 'selected'))
+				.toContain(contractFilter);
+		}));
+
+		it('should set the appropriate device icon based on type', fakeAsync(() => {
+			const WLC: NetworkElement = {
+				customerId: user.info.customerId,
+				isManagedNE: true,
+				managementAddress: 'address',
+				neInstanceId: 'id',
+				productFamily: 'Wireless Controller',
+				productType: 'Wireless',
+			};
+			const AP = {
+				customerId: user.info.customerId,
+				isManagedNE: true,
+				managementAddress: 'address',
+				neInstanceId: 'id',
+				productFamily: 'Access Point Controller',
+				productType: 'Wireless',
+			};
+			const Switch = {
+				customerId: user.info.customerId,
+				isManagedNE: true,
+				managementAddress: 'address',
+				neInstanceId: 'id',
+				productFamily: 'Some Switch Family',
+				productType: 'Switches',
+			};
+			const Router = {
+				customerId: user.info.customerId,
+				isManagedNE: true,
+				managementAddress: 'address',
+				neInstanceId: 'id',
+				productFamily: 'Some Router Family',
+				productType: 'Routers',
+			};
+			buildSpies();
+			fixture.detectChanges();
+			tick(1000);
+			expect(component.getProductIcon(WLC))
+				.toEqual('wlc-outline');
+
+			expect(component.getProductIcon(AP))
+				.toEqual('accesspoint-outline');
+
+			expect(component.getProductIcon(Switch))
+				.toEqual('switch-outline');
+
+			expect(component.getProductIcon(Router))
+				.toEqual('router-outline');
+		}));
 	});
 
-	it('should set a loading boolean for Cypress runs', () => {
-		expect(window.loading)
-			.toBeUndefined();
-		window.Cypress = true;
-
-		component.ngOnInit();
-
-		fixture.detectChanges();
-		expect(window.loading)
-			.toBe(true);
-
-		// cleanup
-		window.Cypress = undefined;
-		window.loading = undefined;
-	});
-
-	it('should set query params on page load', done => {
+	describe('With Query Params', () => {
 		const queryParams = {
 			contractNumber: '1234',
 			coverage: 'covered',
@@ -576,36 +669,45 @@ describe('AssetsComponent', () => {
 			lastDateOfSupportRange: '1565624197000,1597246597000',
 			role: 'access',
 		};
-		TestBed.resetTestingModule();
-		TestBed.configureTestingModule({
-			imports: [
-				AssetsModule,
-				HttpClientTestingModule,
-				MicroMockModule,
-				RouterTestingModule,
-			],
-			providers: [
-				{ provide: 'ENVIRONMENT', useValue: environment },
-				{
-					provide: ActivatedRoute,
-					useValue: {
-						queryParams: of(queryParams),
-						snapshot: {
-							data: {
-								user,
+
+		configureTestSuite(() => {
+			TestBed.configureTestingModule({
+				imports: [
+					AssetsModule,
+					HttpClientTestingModule,
+					MicroMockModule,
+					RouterTestingModule,
+				],
+				providers: [
+					{ provide: 'ENVIRONMENT', useValue: environment },
+					{
+						provide: ActivatedRoute,
+						useValue: {
+							queryParams: of(queryParams),
+							snapshot: {
+								data: {
+									user,
+								},
 							},
 						},
 					},
-				},
-			],
-		})
-		.compileComponents();
-		fixture = TestBed.createComponent(AssetsComponent);
-		component = fixture.componentInstance;
-		fixture.detectChanges();
-		fixture.whenStable()
-		.then(() => {
+				],
+			});
+		});
+
+		beforeEach(() => {
+			window.sessionStorage.clear();
+			inventoryService = TestBed.get(InventoryService);
+			productAlertsService = TestBed.get(ProductAlertsService);
+			contractsService = TestBed.get(ContractsService);
+			fixture = TestBed.createComponent(AssetsComponent);
+			component = fixture.componentInstance;
+		});
+
+		it('should set query params on page load', fakeAsync(() => {
+			buildSpies();
 			fixture.detectChanges();
+			tick(1000);
 
 			expect(_.get(component.assetParams, 'contractNumber'))
 				.toEqual(['1234']);
@@ -621,131 +723,6 @@ describe('AssetsComponent', () => {
 				.toBe(true);
 			expect(_.get(component.assetParams, 'lastDateOfSupportRange'))
 				.toEqual(['1565624197000,1597246597000']);
-			done();
-		});
-	});
-
-	it('should create our pagination after results load', done => {
-		const assets = getActiveBody(AssetScenarios[5]);
-
-		const error = {
-			status: 404,
-			statusText: 'Resource not found',
-		};
-
-		spyOn(inventoryService, 'getAssets')
-			.and
-			.returnValue(of(assets));
-
-		spyOn(inventoryService, 'getNetworkElements')
-			.and
-			.returnValue(throwError(new HttpErrorResponse(error)));
-
-		fixture.whenStable()
-		.then(() => {
-			const pagination = assets.Pagination;
-			const first = (pagination.rows * (pagination.page - 1)) + 1;
-			const last = (pagination.rows * pagination.page);
-
-			expect(component.paginationCount)
-				.toEqual(`${first}-${last}`);
-			done();
-		});
-	});
-
-	it('should set the coverage filter if param selected', done => {
-		_.set(component.assetParams, 'coverage', ['covered']);
-
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			const coverageFilter = _.find(component.filters, { key: 'coverage' });
-
-			expect(_.filter(component.filters, 'selected'))
-				.toContain(coverageFilter);
-
-			done();
-		});
-	});
-
-	it('should set the role filter if param selected', done => {
-		_.set(component.assetParams, 'role', ['ACCESS']);
-
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			const roleFilter = _.find(component.filters, { key: 'role' });
-
-			expect(_.filter(component.filters, 'selected'))
-				.toContain(roleFilter);
-
-			done();
-		});
-	});
-
-	it('should set the contract filter if param selected', done => {
-		_.set(component.assetParams, 'contractNumber', ['UNKNOWN']);
-
-		fixture.whenStable()
-		.then(() => {
-			fixture.detectChanges();
-			const contractFilter = _.find(component.filters, { key: 'contractNumber' });
-
-			expect(_.filter(component.filters, 'selected'))
-				.toContain(contractFilter);
-
-			done();
-		});
-	});
-
-	it('should set the appropriate device icon based on type', done => {
-		const WLC: NetworkElement = {
-			customerId: user.info.customerId,
-			isManagedNE: true,
-			managementAddress: 'address',
-			neInstanceId: 'id',
-			productFamily: 'Wireless Controller',
-			productType: 'Wireless',
-		};
-		const AP = {
-			customerId: user.info.customerId,
-			isManagedNE: true,
-			managementAddress: 'address',
-			neInstanceId: 'id',
-			productFamily: 'Access Point Controller',
-			productType: 'Wireless',
-		};
-		const Switch = {
-			customerId: user.info.customerId,
-			isManagedNE: true,
-			managementAddress: 'address',
-			neInstanceId: 'id',
-			productFamily: 'Some Switch Family',
-			productType: 'Switches',
-		};
-		const Router = {
-			customerId: user.info.customerId,
-			isManagedNE: true,
-			managementAddress: 'address',
-			neInstanceId: 'id',
-			productFamily: 'Some Router Family',
-			productType: 'Routers',
-		};
-		fixture.whenStable()
-		.then(() => {
-			expect(component.getProductIcon(WLC))
-				.toEqual('wlc-outline');
-
-			expect(component.getProductIcon(AP))
-				.toEqual('accesspoint-outline');
-
-			expect(component.getProductIcon(Switch))
-				.toEqual('switch-outline');
-
-			expect(component.getProductIcon(Router))
-				.toEqual('router-outline');
-
-			done();
-		});
+		}));
 	});
 });
