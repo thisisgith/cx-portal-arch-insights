@@ -13,32 +13,22 @@
 			</div>
 		</div>
 		<div class="km" #km>
-			<div
-				class="km__left"
-				inlineSVG="assets/icons/icon-metrics-arrow-left.svg"
-				(click)="shiftCarousel(-2)"
+			<div class="km__left" inlineSVG="assets/icons/icon-metrics-arrow-left.svg" (click)="shiftCarousel(-2)"
 				data-auto-id="carousel-left">
 			</div>
 			<div class="km__items__wrapper" #kmWrapper>
 				<div class="km__items">
 					<ng-container *ngFor="let facet of facets; index as i">
-						<div
-							[id]="facet.key"
-							attr.data-auto-id="Facet-{{ facet.title }}"
-							(click)="selectFacet(facet, true)"
-							class="km__items__item"
+						<div [id]="facet.key" attr.data-auto-id="Facet-{{ facet.title }}"
+							(click)="selectFacet(facet, true)" class="km__items__item"
 							[class.km__items__item--selected]="facet.selected">
 							<ng-container *ngTemplateOutlet="facet.template; context: { facet: facet }"></ng-container>
 						</div>
 					</ng-container>
 				</div>
 			</div>
-			<div
-				class="km__right"
-				inlineSVG="assets/icons/icon-metrics-arrow-right.svg"
-				(click)="shiftCarousel(2)"
-				data-auto-id="carousel-right"
-			></div>
+			<div class="km__right" inlineSVG="assets/icons/icon-metrics-arrow-right.svg" (click)="shiftCarousel(2)"
+				data-auto-id="carousel-right"></div>
 		</div>
 		<no-dnac-header (buttonData)="refreshButtonInfo($event)"></no-dnac-header>
 	</div>
@@ -57,13 +47,12 @@
 		<div class="cs__context">
 			<div class="cs__context__label" [innerText]="'_Solution_' | i18n"></div>
 			<div class="cs__context__dropdown">
-				<div data-auto-id="SolutionDropdown"
-					class="dropdown"
-					[class.active]="solutionDropdown"
+				<div data-auto-id="SolutionDropdown" class="dropdown" [class.active]="solutionDropdown"
 					(click)="useCaseDropdown = false; solutionDropdown = !solutionDropdown">
 					<div class="flex-center">
 						<div class="cs__dropdown__title" [innerText]="selectedSolution?.name"></div>
-						<span class="cs__header__arrow qtr-margin-left" [class.rotate-180]="solutionDropdown">&#9662;</span>
+						<span class="cs__header__arrow qtr-margin-left"
+							[class.rotate-180]="solutionDropdown">&#9662;</span>
 					</div>
 					<div class="dropdown__menu">
 						<a *ngFor="let solution of solutions" attr.data-auto-id="SolutionDropdown-{{ solution?.name }}"
@@ -81,13 +70,12 @@
 		<div class="cs__context">
 			<div class="cs__context__label" [innerText]="'_UseCase_' | i18n"></div>
 			<div class="cs__context__dropdown">
-				<div data-auto-id="UseCaseDropdown"
-					class="dropdown"
-					[class.active]="useCaseDropdown"
+				<div data-auto-id="UseCaseDropdown" class="dropdown" [class.active]="useCaseDropdown"
 					(click)="solutionDropdown = false; useCaseDropdown = !useCaseDropdown">
 					<div class="flex-center">
 						<div class="cs__dropdown__title" [innerText]="selectedTechnology?.name"></div>
-						<span class="cs__header__arrow qtr-margin-left" [class.rotate-180]="useCaseDropdown">&#9662;</span>
+						<span class="cs__header__arrow qtr-margin-left"
+							[class.rotate-180]="useCaseDropdown">&#9662;</span>
 					</div>
 					<div class="dropdown__menu">
 						<a *ngFor="let technology of technologies"
@@ -116,30 +104,20 @@
 </ng-template>
 
 <ng-template #lifecycleFacet let-facet="facet">
-	<app-gauge
-		textColor="#243034"
-		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
-		[percentage]="facet?.data?.gaugePercent || 0"
-		[label]="facet?.label">
+	<app-gauge textColor="#243034" [arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
+		[percentage]="facet?.data?.gaugePercent || 0" [label]="facet?.label">
 	</app-gauge>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
-	<div
-		class="kmii__border"
-		[class.kmii__border--selected]="facet?.selected">
+	<div class="kmii__border" [class.kmii__border--selected]="facet?.selected">
 	</div>
 </ng-template>
 
 <ng-template #assetsFacet let-facet="facet">
-	<app-gauge
-		textColor="#243034"
-		[arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
-		[percentage]="facet?.data?.gaugePercent || 0"
-		[label]="facet?.label">
+	<app-gauge textColor="#243034" [arcColor]="facet?.selected ? '#00bceb' : '#92dde4'"
+		[percentage]="facet?.data?.gaugePercent || 0" [label]="facet?.label">
 	</app-gauge>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
-	<div
-		class="kmii__border"
-		[class.kmii__border--selected]="facet?.selected">
+	<div class="kmii__border" [class.kmii__border--selected]="facet?.selected">
 	</div>
 </ng-template>
 
@@ -147,14 +125,24 @@
 	<!-- TODO: Insights track needs to wire this up with some sort of data, nothing here is real -->
 	<div class="kmii__detailed">
 		<div class="kmii__insights">
-			<span class="kmii__insights__num"
-				[class.kmii__insights__num--selected]="facet?.selected"
+			<span class="kmii__insights__num" [class.kmii__insights__num--selected]="facet?.selected"
 				[innerText]="facet?.seriesData?.totalCnt">
 			</span>
 			<div class="kmii__insights__title">
-				<span [innerText]=""></span>
+				<div>
+					<span [innerText]="facet?.seriesData?.complianceIssueCnt"></span>
+					<span class="qtr-padding-left" [innerText]="'_InsightsComplianceIssues_' | i18n"></span>
+				</div>
+				<div>
+					<span [innerText]="facet?.seriesData?.predictedCrashCnt"></span>
+					<span class="qtr-padding-left" [innerText]="'_InsightsPredictedCrashes_' | i18n"></span>
+				</div>
+				<div>
+					<span [innerText]="facet?.seriesData?.recentCrashCnt"></span>
+					<span class="qtr-padding-left" [innerText]="'_InsightsRecentCrashes_' | i18n"></span>
+				</div>
 			</div>
-				<!--     <div class="row">
+			<!--     <div class="row">
 				        <div class="col-md-3 insights-total base-padding-top half-padding-right">
 				            {{facet?.seriesData?.totalCnt}}
 				        </div>
@@ -171,41 +159,28 @@
 				        </div>
 				    </div> -->
 			<div class="kmii__insights__change" *ngIf="false">
-				<div  class="kmii__insights__arrow"
-					inlineSVG="assets/icons/icon-arrow-down.svg">
+				<div class="kmii__insights__arrow" inlineSVG="assets/icons/icon-arrow-down.svg">
 				</div>
 				<span [innerText]="'+2'"></span>
 			</div>
 		</div>
 	</div>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
-	<div
-		class="kmii__border"
-		[class.kmii__border--selected]="facet?.selected"
-	></div>
+	<div class="kmii__border" [class.kmii__border--selected]="facet?.selected"></div>
 </ng-template>
 
 <ng-template #advisoriesFacet let-facet="facet">
 	<div class="kmii__detailed" *ngIf="!facet?.loading">
-		<app-multi-gauge
-			arcColor="#92dde4"
-			*ngIf="facet?.seriesData"
-			[data]="facet?.seriesData"
-			[selected]="facet?.selected"
-			[idx]="advisoryIndex"
-		>
+		<app-multi-gauge arcColor="#92dde4" *ngIf="facet?.seriesData" [data]="facet?.seriesData"
+			[selected]="facet?.selected" [idx]="advisoryIndex">
 		</app-multi-gauge>
-		<div
-			*ngIf="!facet?.seriesData"
+		<div *ngIf="!facet?.seriesData"
 			class="text-muted flex-center text-large base-padding-left base-padding-right dbl-padding-top dbl-padding-bottom"
 			[innerText]="'_NoOpenAdvisories_' | i18n">
 		</div>
 	</div>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
-	<div
-		class="kmii__border"
-		[class.kmii__border--selected]="facet?.selected"
-	></div>
+	<div class="kmii__border" [class.kmii__border--selected]="facet?.selected"></div>
 </ng-template>
 
 <ng-template #resolutionFacet let-facet="facet">
@@ -213,14 +188,10 @@
 	<div class="kmii__detailed">
 		<div class="text-left">
 			<div class="kmii__resolution__item">
-				<div
-					class="kmii__resolution__label"
-					[class.kmii__resolution__label--selected]="facet?.selected"
+				<div class="kmii__resolution__label" [class.kmii__resolution__label--selected]="facet?.selected"
 					[innerText]="'_OpenCases_' | i18n">
 				</div>
-				<div
-					class="kmii_resolution__value"
-					[class.kmii_resolution__value--selected]="facet?.selected"
+				<div class="kmii_resolution__value" [class.kmii_resolution__value--selected]="facet?.selected"
 					[innerText]="casesCount || 0">
 				</div>
 			</div>
@@ -231,9 +202,7 @@
 		</div>
 	</div>
 	<p class="km__items__item__label" [innerText]="facet?.title | uppercase"></p>
-	<div
-		class="kmii__border"
-		[class.kmii__border--selected]="facet?.selected">
+	<div class="kmii__border" [class.kmii__border--selected]="facet?.selected">
 	</div>
 </ng-template>
 

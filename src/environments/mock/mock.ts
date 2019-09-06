@@ -173,7 +173,7 @@ type ResponseBody = (
 	SuccessPathsResponse |
 	UserTraining[] |
 	VulnerabilityResponse
-	//InsightsResponse
+	// InsightsResponse
 );
 
 /**

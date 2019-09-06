@@ -468,7 +468,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 					predictedCrashCnt: 4,
 					recentCrashCnt: 5,
 					totalCnt: 8,
-				}
+				};
 				this.logger.error('solution.component : fetchInsightsCounts() ' +
 				`:: Error : (${err.status}) ${err.message}`);
 
@@ -476,10 +476,7 @@ export class SolutionComponent implements OnInit, OnDestroy {
 			}),
 			takeUntil(this.destroy$),
 		);
-		
-
 	}
-
 
 	/**
 	 * Fetch Case/RMA counts for the given serial number
