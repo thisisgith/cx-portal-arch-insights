@@ -264,5 +264,8 @@ describe('RccAssetViolationDetailsComponent', () => {
 				previousValue: selectedPreviousAssetData,
 			},
 		});
+		expect(component.loadData)
+		.not
+		.toHaveBeenCalled();
 	});
 });
