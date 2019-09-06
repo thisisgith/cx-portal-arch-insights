@@ -41,8 +41,8 @@
 		<ng-container *ngTemplateOutlet="filterBar"></ng-container>
 		<div class="divider qtr-margin-top"></div>
 	</ng-container>
-	<div class="col-md-12 base-margin-top">
-		<div class="col-md-9 base-margin-top" *ngIf="!isAssetView">
+	<div class="row container">
+		<div class="col-md-9 flex align-items-center" *ngIf="!isAssetView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(conditionViolations | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
@@ -50,14 +50,14 @@
 			<span class="qtr-margin-left" [innerText]="(conditionViolationsAssetCount | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccAssets_' | i18n"></span>
 		</div>
-		<div class="col-md-9 base-margin-top" *ngIf="isAssetView">
+		<div class="col-md-9 flex align-items-center" *ngIf="isAssetView">
 			<span [innerText]="'_RccShowing_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(withViolationsAssetsCount | number) || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccAssetsWith_' | i18n"></span>
 			<span class="qtr-margin-left" [innerText]="(assetsConditionViolationsCount | number)  || ('_RccNoValue_' | i18n)"></span>
 			<span class="qtr-margin-left" [innerText]="'_RccConditionViolations_' | i18n"></span>
 		</div>
-		<div class="col-md-3 searchSection">
+		<div class="col-md-3">
 			<div class="flex flex-fluid flex-right">
 				<div class="flex-fill form-group input--compressed input--icon half-margin-right">
 					<form [formGroup]="searchForm" novalidate id="searchForm" (keyup)="searchViolations($event,'input')" data-auto-id="searchViolations">
@@ -71,6 +71,10 @@
 							<button data-auto-id="searchButton" type="button" class="link" (click)="searchViolations($event,'search')">
 								<span class="icon-search"></span>
 							</button>
+						</div>
+						<div class="help-block text-danger flex" 
+							role="alert" *ngIf="invalidSearchInput">
+							<span [innerText]="'_RccInvalidSearchInput_' | i18n" ></span>
 						</div>
 					</form>
 				</div>
@@ -91,8 +95,8 @@
 			*ngIf="!loading && policyViolationsGridData.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-			<span class="text-muted text-xlarge " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-			<span *ngIf="!loading && noTableData " class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
+				<span class="text-muted text-xlarge " [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+				<span *ngIf="!loading && noTableData " class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
 			<cui-pager *ngIf="!loading && policyViolationsGridData.length > 0"
@@ -117,8 +121,8 @@
 			*ngIf="!loading && tableAssetDataSample.length > 0">
 		</cui-table>
 		<div class="text-center dbl-margin-top dbl-margin-bottom">
-			<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
-			<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
+				<span class="text-muted text-xlarge" [innerText]="'_RccNoResults_' | i18n" *ngIf="errorPolicyView"></span>
+				<span *ngIf="!loading && noTableData" class="text-muted text-xlarge" [innerText]="'_RccNoDataAvailable_' | i18n"></span>
 		</div>
 		<div class="section">
 			<cui-pager *ngIf="!loading && tableAssetDataSample.length > 0"

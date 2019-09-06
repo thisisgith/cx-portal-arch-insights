@@ -127,6 +127,7 @@ export class RccComponent implements OnInit, OnDestroy {
 	public search: FormControl = new FormControl('');
 	public searchForm: FormGroup;
 	public prevSearchText = '';
+	public invalidSearchInput = false;
 	/**
 	 * method for dropdown for export all
 	 */
@@ -540,14 +541,19 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param triggeredFromGraph gives page info
 	 */
 	public onSubfilterSelect (subfilter: string, filter: Filter, triggeredFromGraph) {
+		if (!this.searchForm.valid) {
+			this.invalidSearchInput = true;
+
+			return;
+		}
 		if (triggeredFromGraph) {
 			filter.seriesData.forEach(obj => {
-			 	obj.selected = false;
+				obj.selected = false;
 				this.filtered = true;
-			});
-		   } else {
-			   this.filtered = false;
-		   }
+		 	});
+		} else {
+			this.filtered = false;
+		}
 		const sub = typeof subfilter === 'string' ?
 		_.find(filter.seriesData, { filter: subfilter }) : _.find(filter.seriesData, subfilter);
 		if (sub) {
@@ -619,6 +625,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			});
 		});
 		this.searchInput = '';
+		this.invalidSearchInput = false;
 		this.prevSearchText = '';
 		if (this.view === 'violation') {
 			this.violationGridObj.policyType = null;
@@ -648,18 +655,25 @@ export class RccComponent implements OnInit, OnDestroy {
 	 * @param type for enter or search icon click
 	 */
 	public searchViolations (event: any, type: string) {
+		this.invalidSearchInput = false;
 		if (event && event.keyCode === 8 && this.searched) {
 			if (!_.isEmpty(this.searchForm.value.search)) {
 				return;
 			}
 			this.searched = false;
 		}
+		if (!this.searchForm.valid && type !== 'clear'
+			&& ((event && event.keyCode && event.keyCode === 13) ||
+			type === 'search')) {
+			this.invalidSearchInput = true;
+		}
 		if (this.prevSearchText.toLowerCase() === this.searchInput.trim()
-			.toLowerCase()) { return; }
+		.toLowerCase()) { return; }
 		if (type === 'clear' || (this.searchForm.valid &&
 			(event.keyCode === 8 || (!_.isEmpty(this.searchForm.value.search) &&
 			(event && event.keyCode && event.keyCode === 13)
 			|| (!_.isEmpty(this.searchForm.value.search) && type === 'search'))))) {
+			this.invalidSearchInput = false;
 			this.prevSearchText = this.searchForm.value.search.trim();
 			this.tableConfig.tableOffset = 0;
 			this.tableConfig.totalItems = 0;
