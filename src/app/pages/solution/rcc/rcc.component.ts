@@ -557,7 +557,7 @@ export class RccComponent implements OnInit, OnDestroy {
 			let isFilterEmpty = true;
 			_.each(this.selectedFilters, (filterItem: Filter) => {
 				_.each(filterItem.seriesData, item => {
-					if (item.selected){
+					if (item.selected) {
 						isFilterEmpty = false;
 
 						return;
