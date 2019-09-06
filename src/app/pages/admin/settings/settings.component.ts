@@ -50,6 +50,7 @@ export class SettingsComponent  implements OnInit {
 		dnac_details: [],
 		ieStatus: '',
 		ieVersion: '',
+		lastUploadDate: '',
 		memoryUsage: [
 			{
 				label: I18n.get('_CurrentCPUUtilization_'),
@@ -202,6 +203,7 @@ ${HDDSizeUnit}`;
 		this.data.systemInfo[SystemInfo.KUBERNETES_VERSION].value =
 			_.get(os_details, 'kubeletVersion');
 
+		this.data.lastUploadDate = _.get(this, 'cpData[0].lastUploadDate');
 		this.data.ieStatus = _.get(this, 'cpData[0].ieStatus');
 		this.data.ieVersion = _.get(this, 'cpData[0].ie_version');
 		this.prefixWithV(this.data, 'ieVersion');
@@ -239,7 +241,7 @@ ${HDDSizeUnit}`;
 	 * @returns object
 	 */
 	private prefixWithV (obj: object, field: string) {
-		if (!/^v/.test(obj[field])) {
+		if (!/^v/.test(obj[field]) && obj[field]) {
 			obj[field] = `v${obj[field]}`;
 		}
 
