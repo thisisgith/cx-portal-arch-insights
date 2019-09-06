@@ -135,7 +135,8 @@
 					<span class="text-primary pull-right" 
 						data-balloon-length="medium"
 						[attr.data-balloon]="'_OsvAssetInfo_' | i18n" 
-						data-balloon-pos="down">
+						data-auto-id="AssetsToolTip"
+						data-balloon-pos="down" (click)="$event.stopPropagation();">
 							<i class="icon-info icon-small"></i>
 					</span>
 				</div>
@@ -158,7 +159,7 @@
 <ng-template #assetTypeFilter let-filter="filter">
 	<div class="max-height flex align-items-center">
 		<pie-chart 
-			[width] = "'300'"
+			[width] = "'400'"
 			[seriesData]="filter.seriesData" 
 			(subfilter)="onSubfilterSelect($event.filter, filter)">
 		</pie-chart>

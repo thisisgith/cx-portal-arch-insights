@@ -18,16 +18,16 @@ import { LogService } from '@cisco-ngx/cui-services';
  * Software Group Recommendations Component
  */
 @Component({
-	templateUrl: './software-group-recommendations.component.html',
 	selector: 'software-group-recommendations',
 	styleUrls: ['./software-group-recommendations.component.scss'],
+	templateUrl: './software-group-recommendations.component.html',
 })
 export class SoftwareGroupRecommendationsComponent implements OnChanges {
-	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{}>;
-	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{}>;
-	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{}>;
+	@ViewChild('actionsTemplate', { static: true }) private actionsTemplate: TemplateRef<{ }>;
+	@ViewChild('versionTemplate', { static: true }) private versionTemplate: TemplateRef<{ }>;
+	@ViewChild('currentTemplate', { static: true }) private currentTemplate: TemplateRef<{ }>;
 	@ViewChild('releaseDateTemplate', { static: true })
-	private releaseDateTemplate: TemplateRef<{}>;
+	private releaseDateTemplate: TemplateRef<{ }>;
 	@Input() public recommendations: AssetRecommendations[];
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Output() public onAction = new EventEmitter();
@@ -56,7 +56,7 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 	 * @param version accepted version
 	 */
 	public onAcceptClick (version: string) {
-		this.onAction.emit({ version, type: 'accept', });
+		this.onAction.emit({ version, type: 'accept' });
 	}
 
 	/**
@@ -64,7 +64,7 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 	 * @param version cancelled version
 	 */
 	public onCancelClick (version: string) {
-		this.onAction.emit({ version, type: 'cancel', });
+		this.onAction.emit({ version, type: 'cancel' });
 	}
 
 	/**
@@ -74,7 +74,7 @@ export class SoftwareGroupRecommendationsComponent implements OnChanges {
 	 */
 	public sortData (data: AssetRecommendations[]) {
 		data.sort((a: AssetRecommendations, b: AssetRecommendations) =>
-			<any>new Date(b.postDate) - <any>new Date(a.postDate));
+			<any> new Date(b.postDate) - <any> new Date(a.postDate));
 
 		return data;
 	}

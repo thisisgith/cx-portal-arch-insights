@@ -16,11 +16,11 @@ import { LogService } from '@cisco-ngx/cui-services';
  * Compare Recommendations Component
  */
 @Component({
-	templateUrl: './compare-recommendations.component.html',
 	selector: 'compare-recommendations',
-	styleUrls: ['./compare-recommendations.component.scss']
+	styleUrls: ['./compare-recommendations.component.scss'],
+	templateUrl: './compare-recommendations.component.html',
 })
-export class CompareRecommendationsComponent implements  OnChanges {
+export class CompareRecommendationsComponent implements OnChanges {
 	@Input() public recommendations: MachineRecommendations[];
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Output() public onAction = new EventEmitter();
@@ -48,14 +48,14 @@ export class CompareRecommendationsComponent implements  OnChanges {
 	 */
 	public formatData () {
 		_.map(this.recommendations, (recommendation: MachineRecommendations) => {
-			const resolvedBugs =_.get(recommendation, ['bugSeverity.RESOLVED']);
-			const resolvedPsirts =_.get(recommendation, ['bugSeverity.RESOLVED']);
-			recommendation.score = _.isNumber(recommendation.score) ? 
+			const openBugs = _.get(recommendation, ['bugSeverity.OPEN']);
+			const openPsirts = _.get(recommendation, ['bugSeverity.OPEN']);
+			recommendation.score = _.isNumber(recommendation.score) ?
 				recommendation.score.toFixed() : recommendation.score;
-			recommendation.bugsExposed = this.calculateExposed(resolvedBugs);
-			recommendation.psirtExposed = this.calculateExposed(resolvedBugs);
-			recommendation.bugSeriesData = this.populateBarGraphData(resolvedPsirts);
-			recommendation.psirtSeriesData = this.populateBarGraphData(resolvedPsirts);
+			recommendation.bugsExposed = this.calculateExposed(openBugs);
+			recommendation.psirtExposed = this.calculateExposed(openBugs);
+			recommendation.bugSeriesData = this.populateBarGraphData(openPsirts);
+			recommendation.psirtSeriesData = this.populateBarGraphData(openPsirts);
 		});
 		this.currentRecommendation = _.get(_.filter(this.recommendations,
 			(recomm: MachineRecommendations) => recomm.name === 'profile current'), 0);
@@ -67,6 +67,7 @@ export class CompareRecommendationsComponent implements  OnChanges {
 	/**
 	 * calculate the number of exposed bugs
 	 * @param data machine recommention severity info
+	 * @returns the number of bugs exposed
 	 */
 	public calculateExposed (data: any): any {
 		if (_.keys(data).length > 0) {
@@ -80,9 +81,11 @@ export class CompareRecommendationsComponent implements  OnChanges {
 
 	/**
 	 * add graph data
-	 * @param data machine recommention severity info
+	 * @param severityInfo machine recommention severity info
+	 * @returns seriesData for bar Chart
 	 */
-	populateBarGraphData (data: any) {
+	public populateBarGraphData (severityInfo: any) {
+		let data = severityInfo;
 		if (_.keys(data).length > 0) {
 			data = {
 				High: data.High || 0,
@@ -93,16 +96,17 @@ export class CompareRecommendationsComponent implements  OnChanges {
 
 		return _.compact(
 			_.map(data, (value: number, key: string) => {
-				key = key.toLowerCase();
-
-				return {
-					value,
-					filter: key,
-					label: key === 'critical' ?
-						I18n.get('_OsvCritical_')
-						: key === 'high' ? I18n.get('_OsvHigh_') : I18n.get('_OsvLow_'),
-					selected: false,
-				};
+				if (!_.isNull(value)) {
+					return {
+						value,
+						filter: key.toLowerCase(),
+						label: key.toLowerCase() === 'critical' ?
+							I18n.get('_OsvCritical_')
+							: key.toLowerCase() === 'high' ?
+								I18n.get('_OsvHigh_') : I18n.get('_OsvLow_'),
+						selected: false,
+					};
+				}
 			}));
 	}
 
@@ -123,7 +127,7 @@ export class CompareRecommendationsComponent implements  OnChanges {
 	 * @param version accepted version
 	 */
 	public onAcceptClick (version: string) {
-		this.onAction.emit({ type: 'accept', version: version });
+		this.onAction.emit({ version, type: 'accept' });
 	}
 
 	/**
@@ -131,6 +135,6 @@ export class CompareRecommendationsComponent implements  OnChanges {
 	 * @param version cancelled version
 	 */
 	public onCancelClick (version: string) {
-		this.onAction.emit({ type: 'cancel', version: version });
+		this.onAction.emit({ version, type: 'cancel' });
 	}
 }

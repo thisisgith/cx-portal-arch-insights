@@ -45,7 +45,7 @@ import { CancelConfirmComponent } from '../cancel-confirm/cancel-confirm.compone
 export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChanges {
 	@Input() public selectedSoftwareGroup: SoftwareGroup;
 	@Output() public selectedSoftwareGroupChange = new EventEmitter<SoftwareGroup>();
-	@ViewChild('versionTemplate', { static: true }) 
+	@ViewChild('versionTemplate', { static: true })
 		private versionTemplate: TemplateRef<{ }>;
 	@Input() public tabIndex;
 
@@ -488,7 +488,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				this.logger.debug('Updated');
 			}, () => {
 				this.status.profileRecommendations = false;
-				// _.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');	
+				// _.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
 				this.logger.debug('Error in updating');
 			});
 	}
@@ -508,7 +508,7 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				this.status.profileRecommendations = false;
 				this.selectedSoftwareGroup.statusUpdated = true;
 				this.selectedSoftwareGroup.statusUpdated = true;
-				this.selectedSoftwareGroup.optimalVersion = response.optimalVersion;				
+				this.selectedSoftwareGroup.optimalVersion = response.optimalVersion;
 				this.setAcceptedVersion({
 					data: this.recommendations,
 					acceptedData: response.recommAcceptedDate,
@@ -525,18 +525,18 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 				this.logger.debug('Updated');
 			}, () => {
 				this.status.profileRecommendations = false;
-				// 	_.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');				
+				// _.invoke(this.alert, 'show', I18n.get('_OsvGenericError_'), 'danger');
 				this.logger.debug('Error in updating');
 			});
 
 	}
 
 	/**
-	 * 
-	 * @param params containing recommendations,accepted date	
+	 * set Accepted version and accpeted date
+	 * @param params containing recommendations,accepted date
 	 */
-	setAcceptedVersion (params) {
-		const optimalVersion =this.selectedSoftwareGroup.optimalVersion;
+	public setAcceptedVersion (params) {
+		const optimalVersion = this.selectedSoftwareGroup.optimalVersion;
 		_.map(params.data, (recommendation: any) => {
 			if (recommendation) {
 				recommendation.accepted = recommendation[params.key] === optimalVersion
@@ -547,16 +547,20 @@ export class SoftwareGroupDetailComponent implements OnInit, OnDestroy, OnChange
 	}
 
 	/**
-	 * merge machine recommendations to basic recommendations otherwise add current recommendation to basic
-	 * @param response profile recommendations response	 
+	 * merge machine recommendations to basic recommendations otherwise
+	 *  add current recommendation to basic
+	 * @param response profile recommendations response
+	 * @returns merged array of software recommendations
 	 */
-	mergeMachineRecommendations (response) {
+	public mergeMachineRecommendations (response) {
 		if (response.recommSummary && response.recommSummary.length > 0) {
 			_.map(response.recommSummary, (machineRecomm: MachineRecommendations) => {
 				machineRecomm.swVersion = machineRecomm.release;
-			})
+			});
+
 			return [...response.recomm, ...response.recommSummary];
-		} else if (response.recomm && response.recomm.length > 0) {
+		}
+		if (response.recomm && response.recomm.length > 0) {
 			response.recomm.push({
 				error: null,
 				name: 'profile current',

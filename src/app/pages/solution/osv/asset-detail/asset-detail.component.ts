@@ -93,7 +93,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * Initializer
 	 */
 	public ngOnInit () {
-		this.refresh();	
+		this.refresh();
 	}
 
 	/**
@@ -120,7 +120,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 		this.status.isLoading = true;
 		this.osvService.getAssetDetails(this.assetDetailsParams)
 			.pipe(
-				map((response: AssetRecommendations[]) => {					
+				map((response: AssetRecommendations[]) => {
 					this.assetDetails = this.groupData(response);
 					this.timelineData = this.sortData(response);
 					this.buildTable();
@@ -144,7 +144,7 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	 * @param data Recommendations
 	 * @returns grouped data
 	 */
-	public groupData (data: AssetRecommendations[]) {		
+	public groupData (data: AssetRecommendations[]) {
 		this.addVersionInfo(data);
 		const recommendations = _.filter(data, (detail: AssetRecommendations) =>
 			detail.name !== 'current');
@@ -258,10 +258,9 @@ export class AssetDetailsComponent implements OnChanges, OnInit, OnDestroy {
 	/**
 	 * View All Os Version - link to software.cisco.com
 	 */
-	public viewAllVersions () {		
+	public viewAllVersions () {
 		const mdfId = _.get(this.selectedAsset, 'mdfId');
 		const url = `https://software.cisco.com/research/home?pid=${mdfId}`;
 		window.open(`${url}`, '_blank');
 	}
-	
 }
